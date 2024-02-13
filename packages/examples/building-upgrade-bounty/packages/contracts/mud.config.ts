@@ -8,9 +8,9 @@ export default mudConfig({
       openAccess: true,
       name: "AgreementMembersSystem",
     },
-    BuildingUpgradeBountySystem: {
+    UpgrBounSystem: {
       openAccess: true,
-      name: "BuildingUpgradeBountySystem",
+      name: "UpgrBounSystem",
       // deposits and withdrawals track the depositor and amount
     },
     MessageSystem: {

@@ -19,7 +19,8 @@ interface WorldWithUpgradeBuilding {
 // !! verify usage of msg.sender vs _msgSender()
 // !! technically users can deposit upgrade bounties at any coordinate, regardless of building existence
 // !! technically Alice can issue an upgrade bounty at Bob's building, and Bob can claim it
-contract BuildingUpgradeBountySystem is System {
+contract UpgrBounSystem is System {
+  /* ----------------------------- Picked from Library --------------------------------- */
   // circumvented LibEncode library
   function getHash(bytes32 key, PositionData memory position) internal pure returns (bytes32) {
     return keccak256(abi.encode(key, position.x, position.y, position.parent));
@@ -31,6 +32,7 @@ contract BuildingUpgradeBountySystem is System {
     return OwnedBy.get(buildingTile);
   }
 
+  /* ------------------------------ Actual Contract ----------------------------------- */
   function depositBounty(PositionData memory coord) public payable returns (uint256 bountyValue) {
     bytes32 buildingEntity = getBuildingFromCoord(coord);
 
@@ -41,7 +43,7 @@ contract BuildingUpgradeBountySystem is System {
     );
 
     // Receive ETH deposit and verify it is nonzero
-    bountyValue = msg.value;
+    bountyValue = _msgValue();
     require(bountyValue > 0, "Bounty value must be greater than 0");
 
     // record the value, buildingEntity, and depositor address in a mapping in the UpgradeBounty table

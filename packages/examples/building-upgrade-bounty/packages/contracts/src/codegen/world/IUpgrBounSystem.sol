@@ -6,17 +6,17 @@ pragma solidity >=0.8.21;
 import { PositionData } from "./../index.sol";
 
 /**
- * @title IBuildingUpgradeBountySystem
+ * @title IUpgrBounSystem
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
-interface IBuildingUpgradeBountySystem {
-  function upgradeBounty_BuildingUpgradeB_depositBounty(
+interface IUpgrBounSystem {
+  function upgradeBounty_UpgrBounSystem_depositBounty(
     PositionData memory coord
   ) external payable returns (uint256 bountyValue);
 
-  function upgradeBounty_BuildingUpgradeB_withdrawBounty(PositionData memory coord) external;
+  function upgradeBounty_UpgrBounSystem_withdrawBounty(PositionData memory coord) external;
 
-  function upgradeBounty_BuildingUpgradeB_upgradeForBounty(
+  function upgradeBounty_UpgrBounSystem_upgradeForBounty(
     address bountyPublisher,
     PositionData memory coord
   ) external returns (bytes32 newBuildingEntity);
