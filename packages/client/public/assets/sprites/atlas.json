@@ -5,7 +5,7 @@
     },
     "textures": [
         {
-            "image": "atlas.png?timestamp=1707415063545",
+            "image": "atlas.png?timestamp=1707853267715",
             "format": "RGBA8888",
             "size": {
                 "w": 2045,
@@ -10409,7 +10409,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/icons/upgrade/Upgrade_Indicator1.png",
+                    "filename": "sprites/icons/resources/alloy_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10430,7 +10430,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/icons/upgrade/Upgrade_Indicator10.png",
+                    "filename": "sprites/icons/resources/copper_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10451,7 +10451,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/icons/upgrade/Upgrade_Indicator12.png",
+                    "filename": "sprites/icons/resources/iridium_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10472,7 +10472,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/icons/upgrade/Upgrade_Indicator2.png",
+                    "filename": "sprites/icons/resources/iron_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10493,7 +10493,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/icons/upgrade/Upgrade_Indicator3.png",
+                    "filename": "sprites/icons/resources/ironplate.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10514,7 +10514,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/icons/upgrade/Upgrade_Indicator4.png",
+                    "filename": "sprites/icons/resources/kimberlite_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10535,7 +10535,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/icons/upgrade/Upgrade_Indicator5.png",
+                    "filename": "sprites/icons/resources/lithium_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10556,7 +10556,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/icons/upgrade/Upgrade_Indicator6.png",
+                    "filename": "sprites/icons/resources/photovoltaiccell_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10577,7 +10577,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/icons/upgrade/Upgrade_Indicator7.png",
+                    "filename": "sprites/icons/resources/platinum_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10598,7 +10598,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/icons/upgrade/Upgrade_Indicator9.png",
+                    "filename": "sprites/icons/resources/sulfur_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10616,6 +10616,258 @@
                         "y": 2013,
                         "w": 32,
                         "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/icons/resources/titanium_resource.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1600,
+                        "y": 2013,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/icons/upgrade/Upgrade_Indicator1.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1632,
+                        "y": 2013,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/icons/upgrade/Upgrade_Indicator10.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1664,
+                        "y": 2013,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/icons/upgrade/Upgrade_Indicator12.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1696,
+                        "y": 2013,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/icons/upgrade/Upgrade_Indicator2.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1728,
+                        "y": 2013,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/icons/upgrade/Upgrade_Indicator3.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1760,
+                        "y": 2013,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/icons/upgrade/Upgrade_Indicator4.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1792,
+                        "y": 2013,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/icons/upgrade/Upgrade_Indicator5.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1824,
+                        "y": 2013,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/icons/upgrade/Upgrade_Indicator6.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1856,
+                        "y": 2013,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/icons/upgrade/Upgrade_Indicator7.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1888,
+                        "y": 2013,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/icons/upgrade/Upgrade_Indicator9.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1920,
+                        "y": 2013,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/icons/resources/defense_resource.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 16,
+                        "h": 16
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 16,
+                        "h": 16
+                    },
+                    "frame": {
+                        "x": 1812,
+                        "y": 1698,
+                        "w": 16,
+                        "h": 16
                     }
                 },
                 {
@@ -10969,8 +11221,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1625,
-                        "y": 1344,
+                        "x": 1632,
+                        "y": 2013,
                         "w": 32,
                         "h": 32
                     }
@@ -10990,7 +11242,7 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1408,
+                        "x": 1760,
                         "y": 2013,
                         "w": 32,
                         "h": 32

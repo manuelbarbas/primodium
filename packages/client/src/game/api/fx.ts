@@ -2,10 +2,11 @@ import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Coord, uuid } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 import { getDistance, getRandomRange } from "src/util/common";
-import { ObjectPosition, OnComponentSystem, Tween } from "../lib/common/object-components/common";
-import { DepthLayers } from "@game/constants";
+import { ObjectPosition, OnComponentSystem, SetValue, Tween } from "../lib/common/object-components/common";
+import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import { ObjectText } from "../lib/common/object-components/text";
 import { components } from "src/network/components";
+import { Texture } from "../lib/common/object-components/sprite";
 
 export const createFxApi = (scene: Scene) => {
   function outline(
@@ -89,20 +90,71 @@ export const createFxApi = (scene: Scene) => {
     return animationTime;
   }
 
-  function emitFloatingText(text: string, coord: Coord) {
+  function emitFloatingText(
+    text: string,
+    coord: Coord,
+    options: {
+      icon?: SpriteKeys;
+    } = {}
+  ) {
     const { tileWidth, tileHeight } = scene.tilemap;
     const pixelCoord = tileCoordToPixelCoord({ x: coord.x, y: -coord.y }, tileWidth, tileHeight);
     const id = uuid();
     const group = scene.objectPool.getGroup(id);
+    const { icon } = options;
+
+    const _coord = { x: pixelCoord.x, y: pixelCoord.y };
+    const duration = getRandomRange(1000, 1500);
+    const delay = getRandomRange(0, 1000);
+    const xMove = getRandomRange(-10, 10);
+    const yMove = getRandomRange(30, 50);
+
+    const tweenConfig: Parameters<typeof Tween>["1"] = {
+      duration,
+      delay,
+      onStart: () => {
+        // Change the opacity of the object here
+        scene.objectPool.getGroup(id).objects.forEach((entity) => {
+          entity.setComponent(SetValue({ alpha: 1 }));
+        });
+      },
+      props: {
+        x: `+=${xMove}`,
+        y: `-=${yMove}`,
+        alpha: 0, // fade out
+      },
+      onComplete: () => scene.objectPool.removeGroup(id),
+    };
+
+    if (icon) {
+      group.add("Sprite").setComponents([
+        ObjectPosition({ x: _coord.x, y: _coord.y }, DepthLayers.Path),
+        SetValue({
+          scale: 0.5,
+          originY: 0.5,
+          originX: 1.5,
+          alpha: 0,
+        }),
+        OnComponentSystem(
+          components.MapOpen,
+          (_, { value }) => {
+            if (value[1]?.value) return;
+
+            scene.objectPool.removeGroup(id);
+          },
+          { runOnInit: false }
+        ),
+        Texture(Assets.SpriteAtlas, icon),
+        Tween(scene, tweenConfig),
+      ]);
+    }
 
     group.add("BitmapText").setComponents([
-      ObjectPosition(
-        { x: pixelCoord.x + getRandomRange(-10, 10), y: pixelCoord.y + getRandomRange(-10, 10) },
-        DepthLayers.Path
-      ),
+      ObjectPosition({ x: _coord.x, y: _coord.y }, DepthLayers.Path),
       ObjectText(text, {
-        fontSize: getRandomRange(8, 14),
-        stroke: 0xff0000,
+        fontSize: getRandomRange(8, 12),
+        color: 0xffffff,
+        stroke: 0x000000,
       }),
       OnComponentSystem(
         components.MapOpen,
@@ -113,14 +165,10 @@ export const createFxApi = (scene: Scene) => {
         },
         { runOnInit: false }
       ),
-      Tween(scene, {
-        duration: getRandomRange(700, 1500),
-        props: {
-          y: `-=${getRandomRange(30, 50)}`,
-          x: `+=${getRandomRange(-10, 10)}`,
-          alpha: 0, // fade out
-        },
-        onComplete: () => scene.objectPool.removeGroup(id),
+      Tween(scene, tweenConfig),
+      SetValue({
+        alpha: 0,
+        originY: 0.5,
       }),
     ]);
   }

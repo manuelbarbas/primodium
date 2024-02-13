@@ -1,4 +1,4 @@
-import { Assets, DepthLayers, EntityIDtoAnimationKey, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
+import { Assets, DepthLayers, EntityIDtoAnimationKey, EntitytoBuildingSpriteKey, SpriteKeys } from "@game/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   ComponentUpdate,
@@ -50,7 +50,7 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
 
     const buildingTool = scene.objectPool.get(objIndex, "Sprite");
 
-    const sprite = EntitytoSpriteKey[selectedBuilding][0];
+    const sprite = EntitytoBuildingSpriteKey[selectedBuilding][0];
     const animation = EntityIDtoAnimationKey[selectedBuilding]
       ? EntityIDtoAnimationKey[selectedBuilding][0]
       : undefined;

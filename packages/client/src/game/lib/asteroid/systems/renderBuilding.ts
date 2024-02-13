@@ -16,12 +16,20 @@ import { Scene } from "engine/types";
 import { world } from "src/network/world";
 import { safeIndex } from "src/util/array";
 
-import { Assets, AudioKeys, DepthLayers, EntityIDtoAnimationKey, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
+import {
+  Assets,
+  AudioKeys,
+  DepthLayers,
+  EntityIDtoAnimationKey,
+  EntityToResourceSpriteKey,
+  EntitytoBuildingSpriteKey,
+  SpriteKeys,
+} from "@game/constants";
 import { createAudioApi } from "src/game/api/audio";
 import { createFxApi } from "src/game/api/fx";
 import { components } from "src/network/components";
 import { getBuildingDimensions, getBuildingTopLeft } from "src/util/building";
-import { getBlockTypeName, getRandomRange } from "src/util/common";
+import { getRandomRange } from "src/util/common";
 import { Action, ResourceEntityLookup, ResourceStorages, SPEED_SCALE } from "src/util/constants";
 import {
   ObjectPosition,
@@ -122,7 +130,7 @@ export const renderBuilding = (scene: Scene) => {
         }),
         SetValue({ tint: active ? 0xffffff : 0x777777 }),
         assetPair.animation ? Animation(assetPair.animation, !active) : undefined,
-        OnComponentSystem(components.IsActive, (object, { entity: _entity }) => {
+        OnComponentSystem(components.IsActive, (_, { entity: _entity }) => {
           if (entity !== _entity) return;
           const updatedAssetPair = getAssetKeyPair(entity, buildingType);
           const isActive = components.IsActive.get(entity)?.value;
@@ -158,7 +166,10 @@ export const renderBuilding = (scene: Scene) => {
         OnComponentSystem(
           components.Time,
           (_, { value }) => {
-            if ((value[0]?.value ?? 0n) % 2n !== 0n) return;
+            //show resource updates slow for larger buildings
+            const timeDelay = BigInt(Math.max(buildingDimensions.width, buildingDimensions.height) * 4);
+
+            if ((value[0]?.value ?? 0n) % timeDelay !== 0n) return;
 
             if (components.BuildRock.get()?.value !== activeRock || !scene.phaserScene.scene.isActive()) return;
 
@@ -178,13 +189,16 @@ export const renderBuilding = (scene: Scene) => {
 
               const productionMin = (production * worldSpeed) / SPEED_SCALE;
               fx.emitFloatingText(
-                `+ ${formatResourceCount(resourceEntity, productionMin * 2n, {
+                `${formatResourceCount(resourceEntity, productionMin * timeDelay, {
                   short: true,
                   fractionDigits: 2,
-                })} ${getBlockTypeName(resourceEntity)}`,
+                })}`,
                 {
-                  x: tilePosition.x,
+                  x: tilePosition.x + buildingDimensions.width / 2,
                   y: tilePosition.y,
+                },
+                {
+                  icon: EntityToResourceSpriteKey[resourceEntity],
                 }
               );
             });
@@ -278,7 +292,7 @@ export const renderBuilding = (scene: Scene) => {
 };
 
 function getAssetKeyPair(entityId: Entity, buildingType: Entity) {
-  const sprites = EntitytoSpriteKey[buildingType];
+  const sprites = EntitytoBuildingSpriteKey[buildingType];
   const animations = EntityIDtoAnimationKey[buildingType];
 
   const level = components.Level.get(entityId)?.value ? parseInt(components.Level.get(entityId)!.value.toString()) : 1;

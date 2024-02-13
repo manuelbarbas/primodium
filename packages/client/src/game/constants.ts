@@ -214,6 +214,11 @@ export enum SpriteKeys {
 
   // GRACE PERIOD
   GracePeriod = "sprites/icons/grace.png",
+  Iron = "sprites/icons/resources/iron_resource.png",
+  Copper = "sprites/icons/resources/copper_resource.png",
+  Lithium = "sprites/icons/resources/lithium_resource.png",
+  IronPlate = "sprites/icons/resources/ironplate.png",
+  PVCell = "sprites/icons/resources/photovoltaiccell_resource.png",
 }
 
 export enum AnimationKeys {
@@ -283,7 +288,6 @@ export enum AnimationKeys {
 
 export enum AudioKeys {
   Background = "background",
-  Background2 = "background2",
   Bleep = "Bleep_01",
   Bleep2 = "Bleep_02",
   Bleep3 = "Bleep_03",
@@ -323,7 +327,15 @@ export const ResourceToTilesetKey: { [key: number]: ResourceTilekeys } = {
   [EResource.Lithium]: ResourceTilekeys.Lithium,
 };
 
-export const EntitytoSpriteKey = {
+export const EntityToResourceSpriteKey = {
+  [EntityType.Iron]: SpriteKeys.Iron,
+  [EntityType.Copper]: SpriteKeys.Copper,
+  [EntityType.Lithium]: SpriteKeys.Lithium,
+  [EntityType.IronPlate]: SpriteKeys.IronPlate,
+  [EntityType.PVCell]: SpriteKeys.PVCell,
+};
+
+export const EntitytoBuildingSpriteKey = {
   [EntityType.MainBase]: [
     SpriteKeys.Mainbase1,
     SpriteKeys.Mainbase2,
