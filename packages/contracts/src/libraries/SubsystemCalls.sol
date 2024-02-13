@@ -10,9 +10,9 @@ import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 import { BuildSystem } from "systems/BuildSystem.sol";
 import { S_InitializeSpaceRockOwnershipSystem } from "systems/subsystems/S_InitializeSpaceRockOwnershipSystem.sol";
 import { S_TransferSpaceRockOwnershipSystem } from "systems/subsystems/S_TransferSpaceRockOwnershipSystem.sol";
-import { S_FleetBattleApplyDamageSystem } from "systems/subsystems/S_FleetBattleApplyDamageSystem.sol";
-import { S_FleetBattleResolveRaidSystem } from "systems/subsystems/S_FleetBattleResolveRaidSystem.sol";
-import { S_FleetBattleResolveEncryptionSystem } from "systems/subsystems/S_FleetBattleResolveEncryptionSystem.sol";
+import { S_BattleApplyDamageSystem } from "systems/subsystems/S_BattleApplyDamageSystem.sol";
+import { S_BattleRaidResolveSystem } from "systems/subsystems/S_BattleRaidResolveSystem.sol";
+import { S_BattleEncryptionResolveSystem } from "systems/subsystems/S_BattleEncryptionResolveSystem.sol";
 import { S_FleetResetIfNoUnitsLeftSystem } from "systems/subsystems/S_FleetResetIfNoUnitsLeftSystem.sol";
 import { S_FleetResolvePirateAsteroidSystem } from "systems/subsystems/S_FleetResolvePirateAsteroidSystem.sol";
 import { S_CreateSecondaryAsteroidSystem } from "systems/subsystems/S_CreateSecondaryAsteroidSystem.sol";
@@ -24,28 +24,23 @@ import { S_SpendResourcesSystem } from "systems/subsystems/S_SpendResourcesSyste
 
 /* --------------------------------- BATTLE --------------------------------- */
 
-function fleetBattleApplyDamage(
-  bytes32 battleId,
-  bytes32 damageDealerPlayerEntity,
-  bytes32 targetEntity,
-  uint256 damage
-) {
+function battleApplyDamage(bytes32 battleId, bytes32 damageDealerPlayerEntity, bytes32 targetEntity, uint256 damage) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
-    getSystemResourceId("S_FleetBattleApplyDamageSystem"),
+    getSystemResourceId("S_BattleApplyDamageSystem"),
     abi.encodeCall(
-      S_FleetBattleApplyDamageSystem.applyDamageToWithAllies,
+      S_BattleApplyDamageSystem.applyDamageToWithAllies,
       (battleId, damageDealerPlayerEntity, targetEntity, damage)
     ),
     0
   );
 }
 
-function fleetBattleResolveRaid(bytes32 battleId, bytes32 raider, bytes32 target) {
+function battleRaidResolve(bytes32 battleId, bytes32 raider, bytes32 target) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
-    getSystemResourceId("S_FleetBattleResolveRaidSystem"),
-    abi.encodeCall(S_FleetBattleResolveRaidSystem.battleResolveRaid, (battleId, raider, target)),
+    getSystemResourceId("S_BattleRaidResolveSystem"),
+    abi.encodeCall(S_BattleRaidResolveSystem.battleRaidResolve, (battleId, raider, target)),
     0
   );
 }
@@ -59,9 +54,9 @@ function fleetResolveBattleEncryption(
 ) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
-    getSystemResourceId("S_FleetBattleResolveEncryptionSystem"),
+    getSystemResourceId("S_BattleEncryptionResolveSystem"),
     abi.encodeCall(
-      S_FleetBattleResolveEncryptionSystem.resolveBattleEncryption,
+      S_BattleEncryptionResolveSystem.resolveBattleEncryption,
       (battleId, targetSpaceRock, aggressorEntity, unitWithDecryptionPrototype, decryption)
     ),
     0

@@ -6,7 +6,7 @@ import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
 import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
 import { EFleetStance, EResource } from "src/Types.sol";
-import { fleetBattleResolveRaid, fleetBattleApplyDamage, fleetResolveBattleEncryption, transferSpaceRockOwnership, initializeSpaceRockOwnership, fleetResolvePirateAsteroid } from "libraries/SubsystemCalls.sol";
+import { battleRaidResolve, battleApplyDamage, fleetResolveBattleEncryption, transferSpaceRockOwnership, initializeSpaceRockOwnership, fleetResolvePirateAsteroid } from "libraries/SubsystemCalls.sol";
 
 contract FleetCombatSystem is FleetBaseSystem {
   modifier _onlyWhenNotInGracePeriod(bytes32 entity) {
@@ -96,10 +96,10 @@ contract FleetCombatSystem is FleetBaseSystem {
     bool isRaid = isAggressorWinner && (isTargetFleet || aggressorDecryption == 0 || isPirateAsteroid);
 
     bool isDecryption = !isRaid && isAggressorWinner && !isTargetFleet && aggressorDecryption > 0 && !isPirateAsteroid;
-    fleetBattleApplyDamage(battleId, defendingPlayerEntity, battleResult.aggressorEntity, battleResult.targetDamage);
+    battleApplyDamage(battleId, defendingPlayerEntity, battleResult.aggressorEntity, battleResult.targetDamage);
 
     if (isRaid) {
-      fleetBattleResolveRaid(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
+      battleRaidResolve(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
     }
     if (isDecryption) {
       //in decryption we resolve encryption first so the fleet decryption unit isn't lost before decrypting
@@ -118,7 +118,7 @@ contract FleetCombatSystem is FleetBaseSystem {
         }
       }
     }
-    fleetBattleApplyDamage(battleId, _player(), battleResult.targetEntity, battleResult.aggressorDamage);
+    battleApplyDamage(battleId, _player(), battleResult.targetEntity, battleResult.aggressorDamage);
     if (isPirateAsteroid && isAggressorWinner) {
       fleetResolvePirateAsteroid(_player(), battleResult.targetEntity);
     }

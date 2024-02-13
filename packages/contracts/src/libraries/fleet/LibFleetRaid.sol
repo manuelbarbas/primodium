@@ -40,7 +40,7 @@ library LibFleetRaid {
     return IsFleet.get(entity) ? LibFleetStance.getFollowerFleets(entity) : LibFleetStance.getDefendingFleets(entity);
   }
 
-  function battleResolveRaid(bytes32 battleId, bytes32 raider, bytes32 target) internal {
+  function battleRaidResolve(bytes32 battleId, bytes32 raider, bytes32 target) internal {
     //maximum amount of resources the fleet can raid
     (
       uint256 freeCargoSpace,
