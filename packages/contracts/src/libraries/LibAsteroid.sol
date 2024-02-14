@@ -29,7 +29,7 @@ library LibAsteroid {
 
     Level.set(asteroidEntity, 1);
     Position.set(asteroidEntity, coord);
-    Asteroid.set(asteroidEntity, AsteroidData({ isAsteroid: true, maxLevel: 8, mapId: 1, spawnsSecondary: true }));
+    Asteroid.set(asteroidEntity, AsteroidData({ isAsteroid: true, maxLevel: 5, mapId: 1, spawnsSecondary: true }));
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
     OwnedBy.set(asteroidEntity, ownerEntity);
     AsteroidCount.set(asteroidCount);
@@ -70,8 +70,23 @@ library LibAsteroid {
   }
 
   function getAsteroidData(bytes32 asteroidEntity, bool spawnsSecondary) internal view returns (AsteroidData memory) {
-    // number between 1 and 4
-    uint256 maxLevel = (LibEncode.getByteUInt(uint256(asteroidEntity), 3, 12) % 4) + 1;
+    uint256 distributionVal = (LibEncode.getByteUInt(uint256(asteroidEntity), 3, 12) % 100);
+
+    uint256 maxLevel;
+    //micro
+    if (distributionVal <= 50) {
+      maxLevel = 1;
+      //small
+    } else if (distributionVal <= 75) {
+      maxLevel = 3;
+      //medium
+    } else if (distributionVal <= 90) {
+      maxLevel = 5;
+      //large
+    } else {
+      maxLevel = 8;
+    }
+
     // number between 2 and 5
     uint8 mapId = uint8((LibEncode.getByteUInt(uint256(asteroidEntity), 3, 20) % 4) + 2);
     return AsteroidData({ isAsteroid: true, maxLevel: maxLevel, mapId: mapId, spawnsSecondary: spawnsSecondary });
