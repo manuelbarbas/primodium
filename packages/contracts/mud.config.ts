@@ -36,20 +36,20 @@ export const config = mudConfig({
       accessList: [DUMMY_ADDRESS],
     },
 
-    S_FleetBattleApplyDamageSystem: {
+    S_BattleApplyDamageSystem: {
       openAccess: false,
       accessList: [DUMMY_ADDRESS],
-      name: "S_FleetBattleApplyDamageSystem",
+      name: "S_BattleApplyDamageSystem",
     },
-    S_FleetBattleResolveRaidSystem: {
+    S_BattleRaidResolveSystem: {
       openAccess: false,
       accessList: [DUMMY_ADDRESS],
-      name: "S_FleetBattleResolveRaidSystem",
+      name: "S_BattleRaidResolveSystem",
     },
-    S_FleetBattleResolveEncryptionSystem: {
+    S_BattleEncryptionResolveSystem: {
       openAccess: false,
       accessList: [DUMMY_ADDRESS],
-      name: "S_FleetBattleResolveEncryptionSystem",
+      name: "S_BattleEncryptionResolveSystem",
     },
     S_FleetResetIfNoUnitsLeftSystem: {
       openAccess: false,

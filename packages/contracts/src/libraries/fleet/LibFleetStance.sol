@@ -15,13 +15,28 @@ import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleetStance {
+  function setFleetStance(bytes32 fleetId, uint8 stance, bytes32 target) internal {
+    clearFleetStance(fleetId);
+    clearFollowingFleets(fleetId);
+    FleetStance.set(fleetId, stance, target);
+    if (target != bytes32(0)) {
+      FleetsMap.add(target, P_EnumToPrototype.get(FleetStanceKey, stance), fleetId);
+    }
+  }
+
   function clearFleetStance(bytes32 fleetId) internal {
     FleetStanceData memory fleetStance = FleetStance.get(fleetId);
 
     if (fleetStance.stance == uint8(EFleetStance.NULL)) return;
-
     FleetsMap.remove(fleetStance.target, P_EnumToPrototype.get(FleetStanceKey, fleetStance.stance), fleetId);
     FleetStance.deleteRecord(fleetId);
+  }
+
+  function removeFollower(bytes32 fleetId, bytes32 followerFleetId) internal {
+    bytes32 fleetFollowKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
+    require(FleetsMap.has(fleetId, fleetFollowKey, followerFleetId), "[Fleet] Target fleet is not following");
+    FleetStance.deleteRecord(followerFleetId);
+    FleetsMap.remove(fleetId, fleetFollowKey, followerFleetId);
   }
 
   function clearFollowingFleets(bytes32 fleetId) internal {
@@ -42,10 +57,6 @@ library LibFleetStance {
     FleetsMap.clear(spaceRock, fleetDefendKey);
   }
 
-  function getAllies(bytes32 entity) internal view returns (bytes32[] memory) {
-    IsFleet.get(entity) ? getFollowerFleets(entity) : getDefendingFleets(entity);
-  }
-
   function getFollowerFleets(bytes32 fleetId) internal view returns (bytes32[] memory) {
     bytes32 fleetFollowKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
     return FleetsMap.getFleetIds(fleetId, fleetFollowKey);
@@ -56,19 +67,7 @@ library LibFleetStance {
     return FleetsMap.getFleetIds(spaceRock, fleetDefendKey);
   }
 
-  function setFleetStance(bytes32 fleetId, uint8 stance, bytes32 target) internal {
-    clearFleetStance(fleetId);
-    clearFollowingFleets(fleetId);
-    FleetStance.set(fleetId, stance, target);
-    if (target != bytes32(0)) {
-      FleetsMap.add(target, P_EnumToPrototype.get(FleetStanceKey, stance), fleetId);
-    }
-  }
-
-  function removeFollower(bytes32 fleetId, bytes32 followerFleetId) internal {
-    bytes32 fleetFollowKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
-    require(FleetsMap.has(fleetId, fleetFollowKey, followerFleetId), "[Fleet] Target fleet is not following");
-    FleetStance.deleteRecord(followerFleetId);
-    FleetsMap.remove(fleetId, fleetFollowKey, followerFleetId);
+  function getAllies(bytes32 entity) internal view returns (bytes32[] memory) {
+    return IsFleet.get(entity) ? getFollowerFleets(entity) : getDefendingFleets(entity);
   }
 }
