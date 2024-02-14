@@ -1,8 +1,6 @@
 import { GameObjectComponent } from "engine/types";
 import { createFxApi } from "src/game/api/fx";
 
-const { outline, removeOutline } = createFxApi();
-
 export const Texture = (key: string, frame?: string): GameObjectComponent<"Sprite"> => {
   return {
     id: "texture",
@@ -22,6 +20,7 @@ export const Animation = (key: string, stop?: boolean): GameObjectComponent<"Spr
 };
 
 export const Outline = (options?: Parameters<typeof outline>[1] & { id?: string }): GameObjectComponent<"Sprite"> => {
+  const { outline, removeOutline } = createFxApi();
   return {
     id: options?.id ?? "outline",
     once: (gameObject) => {

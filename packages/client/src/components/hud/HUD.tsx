@@ -13,16 +13,16 @@ import { Profile } from "./Profile";
 import { SpectatingDetails } from "./SpectatingDetails";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { HoverInfo } from "./hover/HoverInfo";
+import { HoverTarget } from "./markers/HoverTarget";
+import { AsteroidTarget } from "./markers/starmap/AsteroidTarget";
 import { BuildMarker } from "./markers/starmap/BuildMarker";
+import { FleetTarget } from "./markers/starmap/FleetTarget";
 import { HomeMarker } from "./markers/starmap/HomeMarker";
 import HackerConsole from "./modals/HackerConsole";
 import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 import { Blueprints } from "./panes/blueprints/Blueprints";
 import { Hangar as HangarComponent } from "./panes/hangar/Hangar";
 import { Resources } from "./panes/resources/Resources";
-import { AsteroidTarget } from "./markers/starmap/AsteroidTarget";
-import { FleetTarget } from "./markers/starmap/FleetTarget";
-import { HoverTarget } from "./markers/HoverTarget";
 
 export const GameHUD = () => {
   const {

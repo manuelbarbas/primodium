@@ -41,7 +41,7 @@ export const hydrateInitialGameState = (
         { tableId: tables.Score.tableId! },
         { tableId: tables.Alliance.tableId! },
         { tableId: tables.Reserves.tableId! },
-        // //get asteroids
+        //get asteroids
         {
           tableId: tables.Position.tableId!,
           where: {
@@ -432,7 +432,6 @@ export const hydrateAllianceData = (allianceEntity: Entity | undefined, mud: MUD
       address: networkConfig.worldAddress as Hex,
       queries: [
         {
-          //todo switch query decoded with table id
           tableId: tables.AllianceJoinRequest.tableId,
           where: {
             column: "alliance",

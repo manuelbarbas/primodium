@@ -2,7 +2,6 @@
   "name": "primodium",
   "private": true,
   "scripts": {
-    "assets:export": "pnpm --filter 'assets' export",
     "build": "pnpm recursive run build",
     "clean": "bash clean.sh",
     "clean:indexer": "pnpm clean-local-docker-indexer",
@@ -16,6 +15,7 @@
     "dev:node": "pnpm --filter 'contracts' devnode",
     "dev:pty": "run-pty % pnpm dev:vercel % pnpm --filter 'contracts' dev % pnpm dev:indexer ",
     "dev:vercel": "vercel dev --local-config packages/client/vercel-dev.json",
+    "export:assets": "pnpm --filter 'assets' export",
     "foundry:up": "curl -L https://foundry.paradigm.xyz | bash && bash $HOME/.foundry/bin/foundryup",
     "mud:up": "pnpm mud set-version --tag main && pnpm install",
     "prepare": "husky install && (forge --version || pnpm foundry:up)",
