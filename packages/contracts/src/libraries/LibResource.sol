@@ -259,22 +259,4 @@ library LibResource {
       totalResources += resourceCounts[i];
     }
   }
-
-  function updateScore(bytes32 player, bytes32 spaceRock, uint8 resource, uint256 value) internal {
-    uint256 count = ResourceCount.get(spaceRock, resource);
-    uint256 currentScore = Score.get(player);
-    uint256 scoreChangeAmount = P_ScoreMultiplier.get(resource);
-
-    if (value < count) {
-      scoreChangeAmount *= (count - value);
-      if (scoreChangeAmount > currentScore) {
-        scoreChangeAmount = currentScore;
-      }
-      currentScore -= scoreChangeAmount;
-    } else {
-      scoreChangeAmount *= (value - count);
-      currentScore += scoreChangeAmount;
-    }
-    Score.set(player, currentScore);
-  }
 }
