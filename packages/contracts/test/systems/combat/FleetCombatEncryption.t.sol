@@ -233,4 +233,92 @@ contract FleetCombatSystemTest is PrimodiumTest {
     );
     console.log("end");
   }
+
+  function testFleetAttackMultipleCapitalShips() public {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    uint256 numberOfUnits = 10;
+
+    //create fleet with 1 minuteman marine
+    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    bytes32 capitalShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
+    uint256 decryption = P_Unit.getDecryption(
+      capitalShipPrototype,
+      UnitLevel.get(aliceHomeSpaceRock, capitalShipPrototype)
+    );
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = numberOfUnits;
+      if (unitPrototypes[i] == capitalShipPrototype) unitCounts[i] = 2;
+    }
+
+    //create fleet with 1 iron
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+
+    //provide resource and unit requirements to create fleet
+    setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
+    setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
+
+    vm.startPrank(alice);
+    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    console.log("number of capital ships:", UnitCount.get(fleetId, capitalShipPrototype));
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    world.sendFleet(fleetId, bobHomeSpaceRock);
+    vm.stopPrank();
+
+    vm.startPrank(creator);
+    GracePeriod.set(bobHomeSpaceRock, block.timestamp);
+    vm.stopPrank();
+
+    uint256 defense = (numberOfUnits *
+      P_Unit.getAttack(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype))) / 2;
+    uint256 hpProduction = 1;
+    uint256 hp = defense;
+    uint256 encryption = ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption));
+    increaseResource(bobHomeSpaceRock, EResource.U_Defense, defense);
+    increaseResource(bobHomeSpaceRock, EResource.R_HP, hp);
+    increaseProduction(bobHomeSpaceRock, EResource.R_HP, hpProduction);
+
+    uint256 ironAmount = numberOfUnits *
+      P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
+    increaseResource(bobHomeSpaceRock, EResource.Iron, ironAmount);
+
+    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    vm.startPrank(alice);
+    world.attack(fleetId, bobHomeSpaceRock);
+    vm.stopPrank();
+
+    assertEq(
+      ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_HP)),
+      0,
+      "space rock hp should have been reduced by unit attack"
+    );
+
+    assertEq(LibCombatAttributes.getCargo(fleetId), 0, "fleet should not have raided");
+
+    assertEq(
+      ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)),
+      ironAmount,
+      "space rock should not have been raided"
+    );
+
+    console.log("curr encryption: %s", ResourceCount.get(fleetId, uint8(EResource.R_Encryption)));
+    assertEq(
+      ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)),
+      encryption - decryption,
+      "encryption should have been reduced by decryption"
+    );
+
+    vm.warp(block.timestamp + 5);
+    claimResources(bobHomeSpaceRock);
+    assertEq(
+      ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)),
+      encryption - decryption + ProductionRate.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)) * 5,
+      "encryption should recovered by production"
+    );
+
+    console.log("end");
+  }
 }
