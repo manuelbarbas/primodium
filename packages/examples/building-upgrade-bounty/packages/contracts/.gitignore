@@ -4,6 +4,7 @@ node_modules/
 bindings/
 artifacts/
 broadcast/
+srd/codegen/
 
 # Ignore MUD deploy artifacts
 deploys/**/*.json
