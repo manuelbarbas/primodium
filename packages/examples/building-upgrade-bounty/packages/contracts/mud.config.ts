@@ -10,18 +10,6 @@ export default mudConfig({
     },
   },
   tables: {
-    Counter: {
-      keySchema: {},
-      valueSchema: "uint32",
-    },
-    Messages: {
-      keySchema: {
-        counterValue: "uint32",
-      },
-      valueSchema: {
-        message: "string",
-      },
-    },
     UpgradeBounty: {
       keySchema: {
         depositor: "address",

@@ -5,6 +5,3 @@ procs:
   client:
     cwd: packages/client
     shell: pnpm run dev
-  primodium-contracts:
-    cwd: packages/primodium-contracts
-    shell: pnpm run primodium dev
