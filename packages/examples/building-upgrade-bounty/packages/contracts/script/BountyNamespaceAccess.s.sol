@@ -14,7 +14,7 @@ import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 
 //
 import { IWorld } from "../src/codegen/world/IWorld.sol";
-import { PositionData, Level } from "../src/codegen/index.sol";
+import { PositionData } from "../src/codegen/index.sol";
 
 contract BountyNamespaceAccess is Script {
   function run() external {
