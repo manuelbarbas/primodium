@@ -38,7 +38,7 @@ export const HealthBar: React.FC<Props> = ({
         <div className="w-full bg-slate-700 h-2">
           <div
             className={`h-2 ${getBarColor()} animate transition-width duration-300 opacity-80`}
-            style={{ width: `${Math.min(maxHealth, health)}%` }}
+            style={{ width: `${Math.min(100, (100 * health) / maxHealth)}%` }}
           ></div>
         </div>
       </div>
