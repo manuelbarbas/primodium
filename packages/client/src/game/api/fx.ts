@@ -95,6 +95,8 @@ export const createFxApi = (scene: Scene) => {
     coord: Coord,
     options: {
       icon?: SpriteKeys;
+      color?: number;
+      delay?: number;
     } = {}
   ) {
     if (!scene.phaserScene.scene.isActive() || scene.phaserScene.scene.isPaused() || document.hidden) return;
@@ -103,7 +105,7 @@ export const createFxApi = (scene: Scene) => {
     const pixelCoord = tileCoordToPixelCoord({ x: coord.x, y: -coord.y }, tileWidth, tileHeight);
     const id = uuid();
     const group = scene.objectPool.getGroup(id);
-    const { icon } = options;
+    const { icon, color = 0xffffff, delay = 0 } = options;
 
     const _coord = { x: pixelCoord.x, y: pixelCoord.y };
     const duration = getRandomRange(1500, 2000);
@@ -112,6 +114,7 @@ export const createFxApi = (scene: Scene) => {
 
     const tweenConfig: Parameters<typeof Tween>["1"] = {
       duration,
+      delay,
       onStart: () => {
         // Change the opacity of the object here
         scene.objectPool.getGroup(id).objects.forEach((entity) => {
@@ -121,7 +124,7 @@ export const createFxApi = (scene: Scene) => {
       props: {
         x: `+=${xMove}`,
         y: `-=${yMove}`,
-        alpha: 0, // fade out
+        alpha: 0,
       },
       onComplete: () => {
         scene.objectPool.removeGroup(id);
@@ -158,7 +161,7 @@ export const createFxApi = (scene: Scene) => {
     group.add("BitmapText").setComponents([
       ObjectText(text, {
         fontSize: getRandomRange(8, 12),
-        color: 0xffffff,
+        color,
       }),
       SetValue({
         alpha: 0,

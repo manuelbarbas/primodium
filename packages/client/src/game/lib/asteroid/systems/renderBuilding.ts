@@ -165,7 +165,7 @@ export const renderBuilding = (scene: Scene) => {
         ),
         OnComponentSystem(
           components.Time,
-          (gameObject, { value }) => {
+          (_, { value }) => {
             const hoverEntity = components.HoverEntity.get()?.value;
             const selectedBuilding = components.SelectedBuilding.get()?.value;
 
@@ -175,6 +175,11 @@ export const renderBuilding = (scene: Scene) => {
             if ((value[0]?.value ?? 0n) % frequency !== 0n) return;
 
             if (components.BuildRock.get()?.value !== activeRock || !components.IsActive.get(entity)?.value) return;
+
+            const textCoord = {
+              x: tilePosition.x + buildingDimensions.width / 2,
+              y: tilePosition.y,
+            };
 
             const producedResource = components.P_Production.getWithKeys({
               level: components.Level.get(entity)?.value ?? 1n,
@@ -187,24 +192,62 @@ export const renderBuilding = (scene: Scene) => {
 
               if (!ResourceStorages.has(resourceEntity)) return;
 
-              const { production } = getFullResourceCount(resourceEntity, activeRock);
+              const { production, resourceStorage, resourceCount } = getFullResourceCount(resourceEntity, activeRock);
 
-              if (production <= 0) return;
-
-              const productionMin = (amount * worldSpeed) / SPEED_SCALE;
-              fx.emitFloatingText(
-                `${formatResourceCount(resourceEntity, productionMin * frequency, {
+              const productionScaled = (amount * worldSpeed) / SPEED_SCALE;
+              let text = "";
+              let color = 0xffffff;
+              if (resourceCount >= resourceStorage) {
+                text = "full";
+                color = 0x00ffff;
+              } else if (production <= 0) return;
+              else {
+                text = formatResourceCount(resourceEntity, productionScaled * frequency, {
                   short: true,
                   fractionDigits: 2,
-                })}`,
-                {
-                  x: tilePosition.x + buildingDimensions.width / 2,
-                  y: tilePosition.y,
-                },
-                {
-                  icon: EntityToResourceSpriteKey[resourceEntity],
-                }
-              );
+                });
+              }
+
+              fx.emitFloatingText(text, textCoord, {
+                icon: EntityToResourceSpriteKey[resourceEntity],
+                color,
+              });
+            });
+
+            const consumedResource = components.P_RequiredDependency.getWithKeys({
+              level: components.Level.get(entity)?.value ?? 1n,
+              prototype: buildingType as Hex,
+            });
+
+            if (!consumedResource) return;
+
+            //render consumed resources
+            const consumedResourceEntity = ResourceEntityLookup[consumedResource.resource as EResource];
+            const consumedResourceAmount = consumedResource.amount;
+
+            const { resourceCount, production: consumption } = getFullResourceCount(consumedResourceEntity, activeRock);
+
+            if (Math.abs(Number(consumption)) > resourceCount) {
+              fx.emitFloatingText("empty", textCoord, {
+                icon: EntityToResourceSpriteKey[consumedResourceEntity],
+                color: 0xff6e63,
+                delay: 500,
+              });
+
+              return;
+            }
+
+            const consumptionScaled = (consumedResourceAmount * worldSpeed) / SPEED_SCALE;
+
+            const text = formatResourceCount(consumedResourceEntity, consumptionScaled * frequency, {
+              short: true,
+              fractionDigits: 2,
+            });
+
+            fx.emitFloatingText(text, textCoord, {
+              icon: EntityToResourceSpriteKey[consumedResourceEntity],
+              color: 0xff6e63,
+              delay: 500,
             });
           },
           { runOnInit: false }
@@ -289,7 +332,7 @@ export const renderBuilding = (scene: Scene) => {
     });
 
     defineExitSystem(spectateWorld, positionQuery, ({ entity }) => {
-      const renderId = `${entity}_entitySprite`;
+      const renderId = `${entity} _entitySprite`;
       scene.objectPool.removeGroup(renderId);
     });
   });
