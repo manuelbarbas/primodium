@@ -143,20 +143,21 @@ library LibUnit {
     }
   }
 
-  function getNextColonyShipResourceCostMultiplier(bytes32 asteroid) internal view returns (uint256) {
-    bytes32 playerEntity = OwnedBy.get(asteroid);
-    bytes32[] memory ownedAsteroids = ColoniesMap.getAsteroidIds(playerEntity, AsteroidOwnedByKey);
-    uint256 exponant = 0;
-    for (uint256 i = 0; i < ownedAsteroids.length; i++) {
-      exponant += 1 + LibUnit.getNumberOfActiveColonyShips(ownedAsteroids[i]);
-    }
-    return 2 ** exponant;
+  function getCapitalShipCostMultiplier(bytes32 playerEntity) internal view returns (uint256) {
+    uint256 ships = getCapitalShips(playerEntity);
+    return 2 ** ships;
   }
 
-  function getNumberOfActiveColonyShips(bytes32 asteroid) internal view returns (uint256) {
-    return
-      MaxResourceCount.get(asteroid, uint8(EResource.U_Vessel)) -
-      ResourceCount.get(asteroid, uint8(EResource.U_Vessel));
+  function getCapitalShips(bytes32 playerEntity) internal view returns (uint256) {
+    bytes32[] memory ownedAsteroids = ColoniesMap.getAsteroidIds(playerEntity, AsteroidOwnedByKey);
+    uint256 ret = 0;
+    for (uint256 i = 0; i < ownedAsteroids.length; i++) {
+      uint256 ships = MaxResourceCount.get(ownedAsteroids[i], uint8(EResource.U_CapitalShipCapacity)) -
+        ResourceCount.get(ownedAsteroids[i], uint8(EResource.U_CapitalShipCapacity));
+
+      ret += ships;
+    }
+    return ret;
   }
 
   /**

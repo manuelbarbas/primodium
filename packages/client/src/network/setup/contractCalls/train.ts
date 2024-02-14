@@ -4,7 +4,6 @@ import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { MUD } from "src/network/types";
-import { world } from "src/network/world";
 import { getBlockTypeName } from "src/util/common";
 import { UnitEntityLookup } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
@@ -22,7 +21,7 @@ export const train = async (mud: MUD, buildingEntity: Entity, unit: EUnit, count
       delegate: true,
     },
     {
-      id: world.registerEntity(),
+      id: "TRAIN" as Entity,
     },
     (receipt) => {
       const buildingType = components.BuildingType.get(buildingEntity)?.value as Entity;

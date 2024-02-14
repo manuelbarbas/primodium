@@ -1,5 +1,5 @@
 import { Assets, DepthLayers, RENDER_INTERVAL, SpriteKeys } from "@game/constants";
-import { Entity, Has, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
+import { Entity, Has, Not, defineComponentSystem, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import { EFleetStance } from "contracts/config/enums";
@@ -269,6 +269,11 @@ export const renderAsteroid = (scene: Scene) => {
   };
 
   const query = [Has(components.Asteroid), Has(components.Position), Not(components.PirateAsteroid)];
+
+  defineComponentSystem(systemsWorld, components.ActiveRock, ({ value: [val] }) => {
+    if (!val) return;
+    components.SelectedRock.set(val);
+  });
 
   defineEnterSystem(systemsWorld, query, ({ entity }) => {
     asteroidQueue.push(entity);
