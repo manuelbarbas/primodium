@@ -212,7 +212,7 @@ export enum SpriteKeys {
   Construction4x4 = "sprites/construction/4x4.png",
   Construction2x3 = "sprites/construction/2x3.png",
 
-  // GRACE PERIOD
+  // Resource Icons
   GracePeriod = "sprites/icons/grace.png",
   Iron = "sprites/icons/resources/iron_resource.png",
   Copper = "sprites/icons/resources/copper_resource.png",
@@ -220,6 +220,15 @@ export enum SpriteKeys {
   IronPlate = "sprites/icons/resources/ironplate.png",
   PVCell = "sprites/icons/resources/photovoltaiccell_resource.png",
   Alloy = "sprites/icons/resources/alloy_resource.png",
+
+  // Unit Icons
+  StingerDrone = "sprites/icons/units/stingerdrone.png",
+  AegisDrone = "sprites/icons/units/aegisdrone.png",
+  AnvilDrone = "sprites/icons/units/anvildrone.png",
+  HammerDrone = "sprites/icons/units/hammerdrone.png",
+  TridentMarine = "sprites/icons/units/trident_marine.png",
+  MinutemanMarine = "sprites/icons/units/minutemen_marine.png",
+  LightningCraft = "sprites/icons/units/lightningcraft.png",
 }
 
 export enum AnimationKeys {
@@ -335,6 +344,16 @@ export const EntityToResourceSpriteKey = {
   [EntityType.IronPlate]: SpriteKeys.IronPlate,
   [EntityType.PVCell]: SpriteKeys.PVCell,
   [EntityType.Alloy]: SpriteKeys.Alloy,
+};
+
+export const EntityToUnitSpriteKey = {
+  [EntityType.AegisDrone]: SpriteKeys.AegisDrone,
+  [EntityType.AnvilDrone]: SpriteKeys.AnvilDrone,
+  [EntityType.HammerDrone]: SpriteKeys.HammerDrone,
+  [EntityType.StingerDrone]: SpriteKeys.StingerDrone,
+  [EntityType.TridentMarine]: SpriteKeys.TridentMarine,
+  [EntityType.LightningCraft]: SpriteKeys.LightningCraft,
+  [EntityType.MinutemanMarine]: SpriteKeys.MinutemanMarine,
 };
 
 export const EntitytoBuildingSpriteKey = {

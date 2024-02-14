@@ -22,6 +22,7 @@ import {
   DepthLayers,
   EntityIDtoAnimationKey,
   EntityToResourceSpriteKey,
+  EntityToUnitSpriteKey,
   EntitytoBuildingSpriteKey,
   SpriteKeys,
 } from "@game/constants";
@@ -248,6 +249,33 @@ export const renderBuilding = (scene: Scene) => {
               icon: EntityToResourceSpriteKey[consumedResourceEntity],
               color: 0xff6e63,
               delay: 500,
+            });
+          },
+          { runOnInit: false }
+        ),
+        OnComponentSystem(
+          components.TrainingQueue,
+          (_, { entity: trainingBuildingEntity, value }) => {
+            if (entity !== trainingBuildingEntity || !value[0]) return;
+
+            const queue = value[0];
+
+            if (queue.units.length === 0 || queue.timeRemaining[0] !== 1n) return;
+
+            //its the last tick for the queue, so show floating text of unit produced
+
+            //
+            const unit = queue.units[0];
+            const textCoord = {
+              x: tilePosition.x + buildingDimensions.width / 2 - 0.5,
+              y: tilePosition.y + buildingDimensions.height / 2,
+            };
+
+            fx.emitFloatingText("+", textCoord, {
+              icon: EntityToUnitSpriteKey[unit],
+              color: 0x00ffff,
+              delay: 1000,
+              prefixText: true,
             });
           },
           { runOnInit: false }

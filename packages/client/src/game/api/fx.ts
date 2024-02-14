@@ -97,15 +97,17 @@ export const createFxApi = (scene: Scene) => {
       icon?: SpriteKeys;
       color?: number;
       delay?: number;
+      prefixText?: boolean;
     } = {}
   ) {
+    const { icon, color = 0xffffff, delay = 0, prefixText = false } = options;
+
     if (!scene.phaserScene.scene.isActive() || scene.phaserScene.scene.isPaused() || document.hidden) return;
 
     const { tileWidth, tileHeight } = scene.tilemap;
     const pixelCoord = tileCoordToPixelCoord({ x: coord.x, y: -coord.y }, tileWidth, tileHeight);
     const id = uuid();
     const group = scene.objectPool.getGroup(id);
-    const { icon, color = 0xffffff, delay = 0 } = options;
 
     const _coord = { x: pixelCoord.x, y: pixelCoord.y };
     const duration = getRandomRange(1500, 2000);
@@ -150,7 +152,8 @@ export const createFxApi = (scene: Scene) => {
         SetValue({
           scale: 0.5,
           originY: 0.5,
-          originX: 1.5,
+          //dont like this but janky positioning works for now
+          originX: prefixText ? -0.2 : 1,
           alpha: 0,
         }),
         Texture(Assets.SpriteAtlas, icon),
@@ -166,6 +169,8 @@ export const createFxApi = (scene: Scene) => {
       SetValue({
         alpha: 0,
         originY: 0.5,
+        //dont like this but janky positioning works for now
+        originX: icon ? (prefixText ? 0.2 : -0.2) : 0,
       }),
       ...sharedComponents,
     ]);
