@@ -31,12 +31,12 @@ interface WorldWithUpgradeBuilding {
 // !! technically Alice can issue an upgrade bounty at Bob's building, and Bob can claim it
 contract UpgrBounSystem is System {
   /* ----------------------------- Picked from Library --------------------------------- */
-  // circumvented LibEncode library
+  // circumvented LibEncode library, will fix DevEx in future update (only necessary for coord)
   function getHash(bytes32 key, PositionData memory position) internal pure returns (bytes32) {
     return keccak256(abi.encode(key, position.x, position.y, position.parent));
   }
 
-  // circumvented LibBuilding library
+  // circumvented LibBuilding library, will fix DevEx in future update by refactoring buildings/coord
   function getBuildingFromCoord(PositionData memory coord) internal view returns (bytes32) {
     bytes32 buildingTile = getHash(BuildingTileKey, coord);
     return OwnedBy.get(buildingTile);
@@ -44,22 +44,25 @@ contract UpgrBounSystem is System {
 
   /* ------------------------------ Actual Contract ----------------------------------- */
   function depositBounty(PositionData memory coord) public payable returns (uint256 bountyValue) {
+    // artefact of how Primodium handles buildings and coordinates, will be fixed in future update
     bytes32 buildingEntity = getBuildingFromCoord(coord);
 
-    // Check there isn't an existing bounty on that coord
+    // Check that the sender doesn't already have a live bounty on that buildingEntity
     require(
       UpgradeBounty.get(_msgSender(), buildingEntity) == 0,
       "You already have an upgrade building bounty on that coord"
     );
 
     // Receive ETH deposit and verify it is nonzero
+    require(_msgValue() > 0, "Bounty value must be greater than 0");
     bountyValue = _msgValue();
-    require(bountyValue > 0, "Bounty value must be greater than 0");
 
-    // record the value, buildingEntity, and depositor address in a mapping in the UpgradeBounty table
+    // record the depositor address, buildingEntity, and value in the UpgradeBounty table
     UpgradeBounty.set(_msgSender(), buildingEntity, bountyValue);
   }
 
+  // !! If Alice gives Bob system access, Bob could try to call this function but only can claim his own deposted bounty
+  // !!? If Alice delegates her system access to Bob and Bob uses callFrom() on this function, who does Alice's bounty go to?
   function withdrawBounty(PositionData memory coord) public returns (uint256 bountyValue) {
     bytes32 buildingEntity = getBuildingFromCoord(coord);
 
@@ -69,14 +72,15 @@ contract UpgrBounSystem is System {
       "You do not have a live upgrade building bounty at that coord"
     );
 
-    // Transfer the bounty value to the caller
-
-    bountyValue = UpgradeBounty.get(_msgSender(), buildingEntity);
+    // Prep params for the transferBalanceToAddress function
     IWorld world = IWorld(_world());
     ResourceId namespaceResource = WorldResourceIdLib.encodeNamespace(bytes14("upgradeBounty"));
+    bountyValue = UpgradeBounty.get(_msgSender(), buildingEntity);
+
+    // Transfer the bounty value to the caller
     world.transferBalanceToAddress(namespaceResource, _msgSender(), bountyValue);
 
-    // Remove the bounty from the UpgradeBounty table
+    // Remove the claimed bounty from the UpgradeBounty table
     UpgradeBounty.set(_msgSender(), buildingEntity, 0);
   }
 
@@ -91,7 +95,7 @@ contract UpgrBounSystem is System {
       "That address does not have a live upgrade building bounty at that coord"
     );
 
-    // call the upgradeBuilding function from the World contract
+    // Call the upgradeBuilding function from the World contract
     ResourceId upgradeBuildingSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, ROOT_NAMESPACE, "UpgradeBuildingS");
     newBuildingEntity = WorldWithUpgradeBuilding(_world()).callFrom(
       bountyPublisher,
@@ -100,13 +104,12 @@ contract UpgrBounSystem is System {
       //"upgradeBuilding(coord)"
     );
 
-    // prep params for the transferBalanceToAddress function
+    // Prep params for the transferBalanceToAddress function
     uint256 bountyValue = UpgradeBounty.get(bountyPublisher, oldBuildingEntity);
     IWorld world = IWorld(_world());
     ResourceId namespaceResource = WorldResourceIdLib.encodeNamespace(bytes14("upgradeBounty"));
 
     // Distribute the bounty value from the UpgradeBounty table to the collector
-    // payable(_msgSender()).transfer(UpgradeBounty.get(bountyPublisher, oldBuildingEntity));
     world.transferBalanceToAddress(namespaceResource, _msgSender(), bountyValue);
 
     // Remove the bounty from the UpgradeBounty table

@@ -12,7 +12,7 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 
-//
+// For getting world and table data
 import { IWorld } from "../src/codegen/world/IWorld.sol";
 import { PositionData } from "../src/codegen/index.sol";
 
@@ -34,7 +34,8 @@ contract BountyNamespaceAccess is Script {
     ResourceId upgrBounSystemResource = WorldResourceIdLib.encode(RESOURCE_SYSTEM, "upgradeBounty", "UpgrBounSystem");
     // Visual debug check
     console.log("System ID:    %x", uint256(ResourceId.unwrap(upgrBounSystemResource)));
-    // Add access control
+
+    // Alice uses her namespace admin rights to give Bob system access control
     vm.startBroadcast(deployerPrivateKey);
     worldAccess.grantAccess(upgrBounSystemResource, delegateeAddress);
     vm.stopBroadcast();
@@ -71,16 +72,6 @@ contract BountyNamespaceAccess is Script {
     bytes memory newBuildingEntity = world.upgradeBounty_UpgrBounSystem_upgradeForBounty(deployerAddress, bountyCoord);
     vm.stopBroadcast();
 
-    // // Alice uses UpgrBounSystem's incrementMessage to increment UpgrBounSystem's counter
-    // vm.startBroadcast(deployerPrivateKey);
-    // newValue = world.upgradeBounty_UpgrBounSystem_incrementMessage(
-    //   "Hi Bob, it's Alice responding. I'm now incrementing the UpgrBounSystem's counter."
-    // );
-    // vm.stopBroadcast();
-    // console.log(
-    //   "Alice incremented the UpgrBounSystem counter to %x. Check the localhost:3001 client to see the message.",
-    //   newValue
-    // );
     /*
     // quick test: does anyone have access to the system?
     uint256 hostilePrivateKey = vm.envUint("PRIVATE_KEY_MALLORY");
