@@ -27,11 +27,11 @@ export const FleetHeader = (props: {
           <p className="scale-95 opacity-70"> DEF</p>
         </Badge>
         <Badge className="flex gap-1 w-full uppercase font-bold text-xs items-center">
-          <p className="text-secondary">{formatNumber(props.decryption, { short: true })}</p>
+          <p className="text-secondary">{formatResourceCount(EntityType.Iron, props.decryption, { short: true })}</p>
           <p className="scale-95 opacity-70"> DEC</p>
         </Badge>
         <Badge className="flex gap-1 w-full uppercase font-bold text-xs items-center">
-          <p className="text-secondary">{formatResourceCount(EntityType.Iron, props.cargo)}</p>
+          <p className="text-secondary">{formatResourceCount(EntityType.Iron, props.cargo, { short: true })}</p>
           <p className="scale-95 opacity-70"> CRG</p>
         </Badge>
         <Badge className="flex gap-1 w-full uppercase font-bold text-xs items-center">

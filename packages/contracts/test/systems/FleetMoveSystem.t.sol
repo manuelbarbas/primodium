@@ -151,12 +151,12 @@ contract FleetMoveSystemTest is PrimodiumTest {
 
     //create fleet with 1 minuteman marine
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
-    bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
+    bytes32 capitalShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
     uint256 cargo = P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == unitPrototype) unitCounts[i] = numberOfUnits;
-      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 2;
+      if (unitPrototypes[i] == capitalShipPrototype) unitCounts[i] = 2;
     }
 
     //create fleet with 1 iron
@@ -179,7 +179,7 @@ contract FleetMoveSystemTest is PrimodiumTest {
     spawnPirateAsteroid.resourceAmounts[0] =
       cargo *
       numberOfUnits +
-      (P_Unit.getCargo(colonyShipPrototype, UnitLevel.get(aliceHomeSpaceRock, colonyShipPrototype)) * 2);
+      (P_Unit.getCargo(capitalShipPrototype, UnitLevel.get(aliceHomeSpaceRock, capitalShipPrototype)) * 2);
     spawnPirateAsteroid.units = new bytes32[](1);
     spawnPirateAsteroid.units[0] = unitPrototype;
     spawnPirateAsteroid.unitAmounts = new uint256[](1);
@@ -211,12 +211,12 @@ contract FleetMoveSystemTest is PrimodiumTest {
 
     //create fleet with 1 minuteman marine
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
-    bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
+    bytes32 capitalShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
     uint256 cargo = P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == unitPrototype) unitCounts[i] = numberOfUnits;
-      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 2;
+      if (unitPrototypes[i] == capitalShipPrototype) unitCounts[i] = 2;
     }
 
     //create fleet with 1 iron
@@ -239,7 +239,7 @@ contract FleetMoveSystemTest is PrimodiumTest {
     spawnPirateAsteroid.resourceAmounts[0] =
       cargo *
       numberOfUnits +
-      (P_Unit.getCargo(colonyShipPrototype, UnitLevel.get(aliceHomeSpaceRock, colonyShipPrototype)) * 2);
+      (P_Unit.getCargo(capitalShipPrototype, UnitLevel.get(aliceHomeSpaceRock, capitalShipPrototype)) * 2);
     spawnPirateAsteroid.units = new bytes32[](1);
     spawnPirateAsteroid.units[0] = unitPrototype;
     spawnPirateAsteroid.unitAmounts = new uint256[](1);
@@ -272,12 +272,12 @@ contract FleetMoveSystemTest is PrimodiumTest {
 
     //create fleet with 1 minuteman marine
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
-    bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
+    bytes32 capitalShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
     uint256 cargo = P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == unitPrototype) unitCounts[i] = numberOfUnits;
-      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 2;
+      if (unitPrototypes[i] == capitalShipPrototype) unitCounts[i] = 2;
     }
 
     //create fleet with 1 iron
@@ -300,7 +300,7 @@ contract FleetMoveSystemTest is PrimodiumTest {
     spawnPirateAsteroid.resourceAmounts[0] =
       cargo *
       numberOfUnits +
-      (P_Unit.getCargo(colonyShipPrototype, UnitLevel.get(aliceHomeSpaceRock, colonyShipPrototype)) * 2);
+      (P_Unit.getCargo(capitalShipPrototype, UnitLevel.get(aliceHomeSpaceRock, capitalShipPrototype)) * 2);
     spawnPirateAsteroid.units = new bytes32[](1);
     spawnPirateAsteroid.units[0] = unitPrototype;
     spawnPirateAsteroid.unitAmounts = new uint256[](1);

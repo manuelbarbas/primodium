@@ -393,14 +393,14 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     //create fleet with 1 minuteman marine
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
-    bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
+    bytes32 capitalShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
     uint256 decryption = P_Unit.getDecryption(
-      colonyShipPrototype,
-      UnitLevel.get(aliceHomeSpaceRock, colonyShipPrototype)
+      capitalShipPrototype,
+      UnitLevel.get(aliceHomeSpaceRock, capitalShipPrototype)
     );
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == unitPrototype) unitCounts[i] = numberOfUnits;
-      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 2;
+      if (unitPrototypes[i] == capitalShipPrototype) unitCounts[i] = 2;
     }
 
     //create fleet with 1 iron
@@ -481,15 +481,15 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     //create fleet with 1 minuteman marine
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
-    bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
+    bytes32 capitalShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
     uint256 decryption = P_Unit.getDecryption(
-      colonyShipPrototype,
-      UnitLevel.get(aliceHomeSpaceRock, colonyShipPrototype)
+      capitalShipPrototype,
+      UnitLevel.get(aliceHomeSpaceRock, capitalShipPrototype)
     );
     console.log("decryption: %s", decryption);
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == unitPrototype) unitCounts[i] = numberOfUnits;
-      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 1;
+      if (unitPrototypes[i] == capitalShipPrototype) unitCounts[i] = 1;
     }
     uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
 
@@ -575,7 +575,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     assertEq(UnitCount.get(bobFleet, unitPrototype), 0, "fleet should have been disbanded and marine units");
     assertEq(
-      UnitCount.get(bobFleet, colonyShipPrototype),
+      UnitCount.get(bobFleet, capitalShipPrototype),
       0,
       "fleet should have been disbanded and colony ship unit lost"
     );
@@ -599,7 +599,6 @@ contract FleetCombatSystemTest is PrimodiumTest {
   }
 
   function testAttackPirateAsteroid() public {
-    console.log("start");
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
@@ -607,12 +606,12 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     //create fleet with 1 minuteman marine
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
-    bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
+    bytes32 capitalShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
     uint256 cargo = P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == unitPrototype) unitCounts[i] = numberOfUnits;
-      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 2;
+      if (unitPrototypes[i] == capitalShipPrototype) unitCounts[i] = 2;
     }
 
     //create fleet with 1 iron
@@ -621,33 +620,28 @@ contract FleetCombatSystemTest is PrimodiumTest {
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
-    vm.startPrank(alice);
+    vm.prank(alice);
     bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
-    vm.stopPrank();
-    console.log("created fleet 1");
 
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
+    vm.prank(alice);
+    bytes32 secondFleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
 
-    vm.startPrank(alice);
-    bytes32 secondFlleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
-    vm.stopPrank();
+    P_SpawnPirateAsteroidData memory spawnPirateAsteroid = P_SpawnPirateAsteroidData({
+      x: 5,
+      y: 5,
+      resources: new uint8[](1),
+      resourceAmounts: new uint256[](1),
+      units: new bytes32[](1),
+      unitAmounts: new uint256[](1)
+    });
 
-    console.log("created fleet 2");
-
-    P_SpawnPirateAsteroidData memory spawnPirateAsteroid;
-
-    spawnPirateAsteroid.x = 5;
-    spawnPirateAsteroid.y = 5;
-    spawnPirateAsteroid.resources = new uint8[](1);
     spawnPirateAsteroid.resources[0] = uint8(EResource.Iron);
-    spawnPirateAsteroid.resourceAmounts = new uint256[](1);
     spawnPirateAsteroid.resourceAmounts[0] =
       cargo *
       numberOfUnits +
-      (P_Unit.getCargo(colonyShipPrototype, UnitLevel.get(aliceHomeSpaceRock, colonyShipPrototype)) * 2);
-    spawnPirateAsteroid.units = new bytes32[](1);
+      (P_Unit.getCargo(capitalShipPrototype, UnitLevel.get(aliceHomeSpaceRock, capitalShipPrototype)) * 2);
     spawnPirateAsteroid.units[0] = unitPrototype;
-    spawnPirateAsteroid.unitAmounts = new uint256[](1);
     spawnPirateAsteroid.unitAmounts[0] = 5;
 
     vm.startPrank(creator);
@@ -681,11 +675,11 @@ contract FleetCombatSystemTest is PrimodiumTest {
     vm.warp(FleetMovement.getArrivalTime(fleetId));
     console.log("sent fleet from bob to pirate asteroid");
 
-    world.sendFleet(secondFlleetId, pirateAsteroid);
-    uint256 halfWayAmount = (FleetMovement.getArrivalTime(secondFlleetId) - FleetMovement.getSendTime(secondFlleetId)) /
+    world.sendFleet(secondFleetId, pirateAsteroid);
+    uint256 halfWayAmount = (FleetMovement.getArrivalTime(secondFleetId) - FleetMovement.getSendTime(secondFleetId)) /
       2;
     vm.warp(block.timestamp + halfWayAmount);
-    assertEq(block.timestamp, FleetMovement.getSendTime(secondFlleetId) + halfWayAmount, "time passed should match");
+    assertEq(block.timestamp, FleetMovement.getSendTime(secondFleetId) + halfWayAmount, "time passed should match");
     console.log("sent second fleet from alice to pirate asteroid: $s", halfWayAmount);
 
     vm.stopPrank();
@@ -708,18 +702,18 @@ contract FleetCombatSystemTest is PrimodiumTest {
     );
 
     assertEq(
-      FleetMovement.getDestination(secondFlleetId),
+      FleetMovement.getDestination(secondFleetId),
       aliceHomeSpaceRock,
       "fleet should be moving back to home space rock through recall"
     );
     assertEq(
-      FleetMovement.getOrigin(secondFlleetId),
+      FleetMovement.getOrigin(secondFleetId),
       pirateAsteroid,
       "fleet should be moving back from pirate asteroid through recall"
     );
     //todo don't understand why this is failing will test with client
     assertEq(
-      FleetMovement.getArrivalTime(secondFlleetId),
+      FleetMovement.getArrivalTime(secondFleetId),
       block.timestamp + halfWayAmount,
       "fleet should take same amount to get back that has moved up to that point"
     );
@@ -742,8 +736,6 @@ contract FleetCombatSystemTest is PrimodiumTest {
       DefeatedPirate.get(aliceEntity, objectivePrototype),
       "pirate asteroid should be marked as defeated for alice"
     );
-
-    console.log("end");
   }
 
   function testFailAttackPirateAsteroidAfterDefeated() public {
@@ -755,12 +747,12 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     //create fleet with 1 minuteman marine
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
-    bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
+    bytes32 capitalShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
     uint256 cargo = P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == unitPrototype) unitCounts[i] = numberOfUnits;
-      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 2;
+      if (unitPrototypes[i] == capitalShipPrototype) unitCounts[i] = 2;
     }
 
     //create fleet with 1 iron
@@ -783,7 +775,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     spawnPirateAsteroid.resourceAmounts[0] =
       cargo *
       numberOfUnits +
-      (P_Unit.getCargo(colonyShipPrototype, UnitLevel.get(aliceHomeSpaceRock, colonyShipPrototype)) * 2);
+      (P_Unit.getCargo(capitalShipPrototype, UnitLevel.get(aliceHomeSpaceRock, capitalShipPrototype)) * 2);
     spawnPirateAsteroid.units = new bytes32[](1);
     spawnPirateAsteroid.units[0] = unitPrototype;
     spawnPirateAsteroid.unitAmounts = new uint256[](1);

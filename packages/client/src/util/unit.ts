@@ -1,6 +1,5 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
-import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { Scene } from "engine/types";
 import { components, components as comps } from "src/network/components";
 import { Hex } from "viem";
@@ -126,7 +125,8 @@ export const getFleetTilePosition = (scene: Scene, fleet: Entity) => {
   const { tileHeight, tileWidth } = scene.tilemap;
   const pixelPosition = getFleetPixelPosition(scene, fleet);
 
-  return pixelCoordToTileCoord({ x: pixelPosition.x, y: -pixelPosition.y }, tileWidth, tileHeight);
+  // using the helper function rounds to the nearest tile which doesnt work here
+  return { x: pixelPosition.x / tileWidth, y: -pixelPosition.y / tileHeight };
 };
 
 export const getFleetPixelPosition = (scene: Scene, fleet: Entity) => {
@@ -183,12 +183,12 @@ export function getCanAttackSomeone(entity: Entity) {
   const isFleet = components.IsFleet.get(entity);
   const spaceRock = (isFleet ? components.FleetMovement.get(entity)?.destination : entity) as Entity | undefined;
   if (!spaceRock) return false;
-  [spaceRock, ...getOrbitingFleets(spaceRock)].some((target) => getCanAttack(entity, target));
+  return [spaceRock, ...getOrbitingFleets(spaceRock)].some((target) => getCanAttack(entity, target));
 }
 
 export function getCanAttack(originEntity: Entity, targetEntity: Entity) {
   if (originEntity === targetEntity) return false;
-  if (getInGracePeriod(targetEntity)) return false;
+  if (getInGracePeriod(targetEntity).inGracePeriod) return false;
   const isOriginFleet = components.IsFleet.get(originEntity);
   const isTargetFleet = components.IsFleet.get(targetEntity);
   if (!isOriginFleet && !isTargetFleet) return false;

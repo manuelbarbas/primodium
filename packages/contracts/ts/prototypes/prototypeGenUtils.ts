@@ -10,6 +10,8 @@ export const encodeArray = (names: string[]) => names.map(encodeBytes32);
 
 export const indexifyResourceArray = (resources: string[]) =>
   resources.map((resource) => MUDEnums.EResource.indexOf(resource));
+const BASE_RESERVE = 10000000;
+const RESERVE_RESOURCE = EResource.Kimberlite;
 
 /**
  * Generates a supply table for a marketplace given a resource and its ratio to the reserve currency.
@@ -20,8 +22,6 @@ export const indexifyResourceArray = (resources: string[]) =>
  *          The keys array contains objects with resource types and their corresponding data types.
  *          The tables object includes 'Reserves' with 'amountB' and 'amountA', calculated based on the provided ratio.
  */
-const BASE_RESERVE = 10000000;
-const RESERVE_RESOURCE = EResource.Kimberlite;
 
 export const marketplaceSupplyTable = (resource: EResource, ratio: number, reserveSize?: number) => {
   const reserve = (reserveSize ?? BASE_RESERVE) * SCALE;

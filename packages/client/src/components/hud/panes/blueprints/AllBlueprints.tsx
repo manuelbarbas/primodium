@@ -24,7 +24,7 @@ const BlueprintButton: React.FC<{
     hooks: { useKeybinds },
   } = usePrimodium().api();
   const keybinds = useKeybinds();
-  const selectedRockEntity = components.SelectedRock.use()?.value;
+  const selectedRockEntity = components.ActiveRock.use()?.value;
   const rockMainBase = components.Home.use(selectedRockEntity)?.value;
   const selectedBuilding = components.SelectedBuilding.use()?.value;
   const mainbaseLevel = components.Level.use(rockMainBase as Entity)?.value ?? 1n;
@@ -205,6 +205,12 @@ export const AllBlueprints = () => {
               tooltipDirection="top"
               buildingType={EntityType.Market}
               keybind={KeybindActions.Hotbar5}
+              keybindActive={index === 2}
+            />
+            <BlueprintButton
+              tooltipDirection="top"
+              buildingType={EntityType.Shipyard}
+              keybind={KeybindActions.Hotbar6}
               keybindActive={index === 2}
             />
           </div>

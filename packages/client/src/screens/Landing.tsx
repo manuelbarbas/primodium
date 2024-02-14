@@ -93,14 +93,14 @@ export const Landing: React.FC<{ children: React.ReactNode }> = ({ children }) =
                 delay: 0,
               },
             }}
-            src={ResourceImage.get(EntityType.MiningVessel)}
+            src={ResourceImage.get(EntityType.CapitalShip)}
             className="absolute -top-0 left-10 p-0 w-44 pixel-images scale-x-[-1]"
           />
           <div className="w-full h-full absolute top-0 overflow-hidden"></div>
         </div>
       </motion.div>
       <div className="fixed bottom-10 w-screen left-0 text-center flex flex-row justify-center items-center gap-2 font-mono uppercase font-bold">
-        <FaRegCopyright size={12} /> 2023 Primodium
+        <FaRegCopyright size={12} /> 2024 Primodium
       </div>
     </AnimatePresence>
   );

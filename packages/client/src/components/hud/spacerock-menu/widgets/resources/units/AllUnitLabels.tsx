@@ -75,11 +75,7 @@ export const AllUnitLabels = () => {
           resource={EntityType.StingerDrone}
         />
         <UnitLabel name={"Aegis Drone"} count={getUnitCount(EntityType.AegisDrone)} resource={EntityType.AegisDrone} />
-        <UnitLabel
-          name={"Mining Vessel"}
-          count={getUnitCount(EntityType.MiningVessel)}
-          resource={EntityType.MiningVessel}
-        />
+        <UnitLabel name={"Cargo Ship"} count={getUnitCount(EntityType.CargoShip)} resource={EntityType.CargoShip} />
       </SecondaryCard>
       <div className="text-xs opacity-75 font-bold w-full flex justify-around items-center mb-1 gap-2">
         <Badge className="flex items-center gap-1">
