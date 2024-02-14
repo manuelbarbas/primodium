@@ -8,7 +8,8 @@ import { UpgradeBounty } from "../codegen/index.sol";
 import { OwnedBy } from "../codegen/index.sol";
 import { IWorld } from "../codegen/world/IWorld.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
+import { WorldResourceIdLib, ROOT_NAMESPACE } from "@latticexyz/world/src/WorldResourceId.sol";
+import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 
 // import { LibEncode } from "prim-codegen/Libraries.sol";
 
@@ -16,6 +17,12 @@ bytes32 constant BuildingTileKey = bytes32("building:tile");
 
 interface WorldWithUpgradeBuilding {
   function upgradeBuilding(PositionData memory coord) external returns (bytes32 buildingEntity);
+
+  function callFrom(
+    address delegator,
+    ResourceId systemId,
+    bytes memory callData
+  ) external payable returns (bytes memory);
 }
 
 // !! Note: Building owner must delegate to this contract to upgrade their building
@@ -76,7 +83,7 @@ contract UpgrBounSystem is System {
   function upgradeForBounty(
     address bountyPublisher,
     PositionData memory coord
-  ) public returns (bytes32 newBuildingEntity) {
+  ) public returns (bytes memory newBuildingEntity) {
     bytes32 oldBuildingEntity = getBuildingFromCoord(coord);
     // Check that there is a bounty on that coord
     require(
@@ -85,7 +92,13 @@ contract UpgrBounSystem is System {
     );
 
     // call the upgradeBuilding function from the World contract
-    newBuildingEntity = WorldWithUpgradeBuilding(_world()).upgradeBuilding(coord);
+    ResourceId upgradeBuildingSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, ROOT_NAMESPACE, "UpgradeBuildingS");
+    newBuildingEntity = WorldWithUpgradeBuilding(_world()).callFrom(
+      bountyPublisher,
+      upgradeBuildingSystemId,
+      abi.encodeWithSignature("upgradeBuilding((int32,int32,bytes32))", (coord))
+      //"upgradeBuilding(coord)"
+    );
 
     // prep params for the transferBalanceToAddress function
     uint256 bountyValue = UpgradeBounty.get(bountyPublisher, oldBuildingEntity);

@@ -18,6 +18,8 @@ import { PositionData, Level } from "../src/codegen/index.sol";
 
 contract BountyNamespaceAccess is Script {
   function run() external {
+    address deployerAddress = address(uint160(vm.envUint("ADDRESS_ALICE")));
+    console.log("Alice address: %x", deployerAddress);
     uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY_ALICE");
     console.log("Alice private key: %x", deployerPrivateKey);
     address delegateeAddress = address(uint160(vm.envUint("ADDRESS_BOB")));
@@ -39,7 +41,11 @@ contract BountyNamespaceAccess is Script {
     console.log("Alice granted Bob access to UpgrBounSystem.");
 
     // Establish the bounty coordinates.
-    PositionData memory bountyCoord = PositionData({ x: 1, y: 2, parent: bytes32(0) }); // is bytes32(0) correct?
+    PositionData memory bountyCoord = PositionData({
+      x: 20,
+      y: 15,
+      parent: 0x7ceb58780fb137bb02223b79c88bc6404f736f8bb4d1f0895d9884122804fb73
+    });
     uint256 oneEther = 1 ether;
 
     // Alice deposits a bounty at a coordinate
@@ -61,6 +67,9 @@ contract BountyNamespaceAccess is Script {
     console.log("Alice set another bounty for %d wei.", bountyValue);
 
     // Bob upgrades Alice's building. Note it needs the requisite resources to succeed.
+    vm.startBroadcast(delegateePrivateKey);
+    bytes memory newBuildingEntity = world.upgradeBounty_UpgrBounSystem_upgradeForBounty(deployerAddress, bountyCoord);
+    vm.stopBroadcast();
 
     // // Alice uses UpgrBounSystem's incrementMessage to increment UpgrBounSystem's counter
     // vm.startBroadcast(deployerPrivateKey);

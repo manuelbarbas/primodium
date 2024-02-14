@@ -79,6 +79,17 @@ contract UpgradeBountyExtension is Script {
     );
     console.log("Alice successfully registered her systembound delegation to the UpgrBounSystem contract address.");
 
+    // DEBUG
+    // Alice delegates to Bob
+    world.registerDelegation(
+      address(vm.envAddress("ADDRESS_BOB")),
+      SYSTEMBOUND_DELEGATION,
+      abi.encodeCall(
+        SystemboundDelegationControl.initDelegation,
+        (address(upgrBounSystem), upgradeBuildingSystemId, 100)
+      )
+    );
+
     vm.stopBroadcast();
   }
 }

@@ -21,5 +21,5 @@ interface IUpgrBounSystem {
   function upgradeBounty_UpgrBounSystem_upgradeForBounty(
     address bountyPublisher,
     PositionData memory coord
-  ) external returns (bytes32 newBuildingEntity);
+  ) external returns (bytes memory newBuildingEntity);
 }
