@@ -23,6 +23,7 @@ import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 import { Blueprints } from "./panes/blueprints/Blueprints";
 import { Hangar as HangarComponent } from "./panes/hangar/Hangar";
 import { Resources } from "./panes/resources/Resources";
+import { Chat } from "./panes/chat/Chat";
 
 export const GameHUD = () => {
   const {
@@ -102,7 +103,9 @@ export const GameHUD = () => {
         )}
 
         <HUD.BottomLeft>{isSpectating && !mapOpen && <SpectatingDetails />}</HUD.BottomLeft>
-        <HUD.BottomRight></HUD.BottomRight>
+        <HUD.BottomRight>
+          <Chat />
+        </HUD.BottomRight>
 
         <HUD.BottomMiddle>
           <BuildingMenu />

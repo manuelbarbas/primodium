@@ -1,19 +1,16 @@
 import { Entity } from "@latticexyz/recs";
 import { uuid } from "@latticexyz/utils";
-import PusherJS from "pusher-js";
-import { useEffect, useRef, useState } from "react";
-import { Button } from "src/components/core/Button";
-import { Card, SecondaryCard } from "src/components/core/Card";
-import { Join } from "src/components/core/Join";
-import { Loader } from "src/components/core/Loader";
-import { Tabs } from "src/components/core/Tabs";
-import { TextInput } from "src/components/core/TextInput";
-import { AccountDisplay } from "src/components/shared/AccountDisplay";
+import { useState, useRef, useEffect } from "react";
+import { SecondaryCard, Card } from "src/components/core/Card";
 import { useMud } from "src/hooks";
 import { useFetch } from "src/hooks/useFetch";
-import { components } from "src/network/components";
+import { client } from "./Client";
+import { Button } from "src/components/core/Button";
+import { TextInput } from "src/components/core/TextInput";
+import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { isPlayer } from "src/util/common";
 import { censorText } from "src/util/profanity";
+import { Loader } from "src/components/core/Loader";
 
 const COOLDOWN = 1.5;
 
@@ -24,16 +21,6 @@ type message = {
   pending?: boolean;
   uuid?: string;
 };
-
-export const client = new PusherJS(import.meta.env.PRI_PUSHER_APP_KEY ?? "", {
-  wsHost: import.meta.env.PRI_PUSHER_APP_HOST ?? "",
-  wsPort: 443,
-  wssPort: 443,
-  forceTLS: true,
-  disableStats: true,
-  enabledTransports: ["ws", "wss"],
-  cluster: "NA",
-});
 
 export const Channel: React.FC<{ className?: string; channel: string }> = ({ className, channel }) => {
   const { playerAccount } = useMud();
@@ -167,7 +154,7 @@ export const Channel: React.FC<{ className?: string; channel: string }> = ({ cla
       >
         JUMP TO NEWEST
       </button>
-      <SecondaryCard className={`"flex flex-col h-72 w-96 items-center ${loading ? "justify-center" : "justify-end"}`}>
+      <SecondaryCard className={`"flex flex-col h-56 w-120 items-center ${loading ? "justify-center" : "justify-end"}`}>
         {!loading && (
           <div
             ref={chatRef}
@@ -220,34 +207,5 @@ export const Channel: React.FC<{ className?: string; channel: string }> = ({ cla
         </Button>
       </form>
     </div>
-  );
-};
-
-export const Chat = () => {
-  const {
-    playerAccount: { entity: playerEntity },
-  } = useMud();
-  const playerAlliance = components.PlayerAlliance.use(playerEntity)?.alliance;
-
-  return (
-    <Tabs defaultIndex={0}>
-      <Join className="w-full border border-secondary/25 border-b-0">
-        <Tabs.Button showActive index={0} className="w-1/2">
-          GENERAL
-        </Tabs.Button>
-        <Tabs.Button showActive index={1} disabled={!playerAlliance} className="w-1/2">
-          ALLIANCE
-        </Tabs.Button>
-      </Join>
-
-      <Tabs.Pane index={0} fragment>
-        <Channel channel="general" />
-      </Tabs.Pane>
-      {playerAlliance && (
-        <Tabs.Pane index={1} fragment>
-          <Channel channel={playerAlliance} />
-        </Tabs.Pane>
-      )}
-    </Tabs>
   );
 };
