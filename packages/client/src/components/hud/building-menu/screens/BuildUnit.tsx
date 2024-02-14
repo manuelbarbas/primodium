@@ -1,5 +1,6 @@
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { useEntityQuery } from "@latticexyz/react";
+import { Entity, Has, HasValue } from "@latticexyz/recs";
+import { EResource } from "contracts/config/enums";
 import { useEffect, useMemo, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
@@ -11,8 +12,10 @@ import { useMaxCountOfRecipe } from "src/hooks/useMaxCountOfRecipe";
 import { components } from "src/network/components";
 import { train } from "src/network/setup/contractCalls/train";
 import { getBlockTypeName } from "src/util/common";
-import { BackgroundImage, EntityType, ResourceImage, UnitEnumLookup } from "src/util/constants";
+import { BackgroundImage, EntityType, ResourceEntityLookup, ResourceImage, UnitEnumLookup } from "src/util/constants";
+import { formatNumber, formatResourceCount } from "src/util/number";
 import { getRecipe } from "src/util/recipe";
+import { getFullResourceCount } from "src/util/resource";
 import { getUnitStats } from "src/util/unit";
 import { Hex } from "viem";
 import { ResourceIconTooltip } from "../../../shared/ResourceIconTooltip";
@@ -23,10 +26,10 @@ export const BuildUnit: React.FC<{
   const mud = useMud();
   const { playerAccount } = mud;
   const [selectedUnit, setSelectedUnit] = useState<Entity>();
-  const [count, setCount] = useState(1);
 
-  const { UnitLevel, P_UnitProdTypes, BuildingType, Level } = components;
-  const activeRock = components.ActiveRock.use()?.value ?? singletonEntity;
+  const { P_UnitProdTypes, BuildingType, Level } = components;
+  const selectedRock = components.ActiveRock.use()?.value;
+  if (!selectedRock) throw new Error("[BuildUnit] No active rock selected");
 
   const buildingType = (BuildingType.get(building)?.value as Entity) ?? EntityType.NULL;
   const buildingLevel = Level.use(building)?.value ?? 1n;
@@ -35,22 +38,6 @@ export const BuildUnit: React.FC<{
       (P_UnitProdTypes.getWithKeys({ prototype: buildingType as Hex, level: buildingLevel })?.value as Entity[]) ?? []
     );
   }, [buildingType, buildingLevel, P_UnitProdTypes]);
-
-  useEffect(() => {
-    setCount(1);
-  }, [selectedUnit]);
-
-  const unitLevel = useMemo(() => {
-    if (!selectedUnit) return 1n;
-
-    return UnitLevel.getWithKeys({ entity: playerAccount.entity as Hex, unit: selectedUnit as Hex })?.value ?? 1n;
-  }, [selectedUnit, UnitLevel, playerAccount.entity]);
-
-  const requiredResources = useMemo(() => {
-    return getRecipe(selectedUnit ?? EntityType.NULL, unitLevel);
-  }, [selectedUnit, unitLevel]);
-
-  const maximum = useMaxCountOfRecipe(requiredResources);
 
   useEffect(() => {
     if (trainableUnits.length == 0) return;
@@ -74,7 +61,7 @@ export const BuildUnit: React.FC<{
                 >
                   <img
                     src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}
-                    className={`border w-[64px] h-[64px] group-hover:opacity-50 rounded-xl ${
+                    className={`border w-[72px] p-2 group-hover:opacity-50 rounded-xl ${
                       selectedUnit == unit ? "border-2 border-accent" : "border-secondary/75"
                     }`}
                   />
@@ -94,56 +81,131 @@ export const BuildUnit: React.FC<{
             <>
               <p className="uppercase font-bold">{getBlockTypeName(selectedUnit)}</p>
 
-              <div className="grid grid-cols-5 gap-2 border-y border-cyan-400/30">
-                {Object.entries(getUnitStats(selectedUnit, activeRock)).map(([name, value]) => (
+              <div className="grid grid-cols-6 gap-2 border-y border-cyan-400/30">
+                {Object.entries(getUnitStats(selectedUnit, selectedRock)).map(([name, value]) => (
                   <div key={name} className="flex flex-col items-center">
                     <p className="text-xs opacity-50">{name}</p>
-                    <p>{value.toLocaleString()}</p>
+                    <p>
+                      {["CRG", "DEC"].includes(name)
+                        ? formatResourceCount(EntityType.Iron, value)
+                        : formatNumber(value)}
+                    </p>
                   </div>
                 ))}
               </div>
 
-              <p className="text-sm leading-none opacity-75">COST</p>
-
-              {requiredResources && (
-                <div className="flex justify-center items-center gap-1">
-                  {requiredResources.map((resource, i) => (
-                    <Badge key={`resource-${i}`}>
-                      <ResourceIconTooltip
-                        image={ResourceImage.get(resource.id) ?? ""}
-                        resource={resource.id}
-                        name={getBlockTypeName(resource.id)}
-                        amount={resource.amount * BigInt(count)}
-                        fontSize="sm"
-                        validate
-                      />
-                    </Badge>
-                  ))}
-                </div>
+              {selectedUnit && selectedUnit !== EntityType.CapitalShip && (
+                <TrainNonCapitalShip building={building} unit={selectedUnit} />
               )}
-
-              <hr className="border-t border-cyan-600 w-full" />
-
-              <NumberInput max={maximum} onChange={(val) => setCount(val)} />
-
-              <div className="flex gap-2 pt-5">
-                <Navigator.BackButton
-                  className="btn-sm btn-secondary"
-                  disabled={maximum < count || count < 1}
-                  onClick={() => {
-                    if (!selectedUnit) return;
-
-                    train(mud, building, UnitEnumLookup[selectedUnit], BigInt(count));
-                  }}
-                >
-                  Train
-                </Navigator.BackButton>
-                <Navigator.BackButton className="btn-sm border-secondary" />
-              </div>
+              {selectedUnit === EntityType.CapitalShip && <TrainCapitalShip building={building} />}
             </>
           )}
         </div>
       </SecondaryCard>
     </Navigator.Screen>
+  );
+};
+
+const TrainNonCapitalShip = ({ building, unit }: { building: Entity; unit: Entity }) => {
+  const [count, setCount] = useState(1);
+  const mud = useMud();
+  const { playerAccount } = mud;
+  const unitLevel = useMemo(() => {
+    return components.UnitLevel.getWithKeys({ entity: playerAccount.entity as Hex, unit: unit as Hex })?.value ?? 1n;
+  }, [unit, playerAccount.entity]);
+
+  const requiredResources = useMemo(() => {
+    return getRecipe(unit, unitLevel);
+  }, [unit, unitLevel]);
+
+  const maximum = useMaxCountOfRecipe(requiredResources);
+  return (
+    <>
+      <p className="text-sm leading-none opacity-75">COST</p>
+
+      {requiredResources && (
+        <div className="flex justify-center items-center gap-1">
+          {requiredResources.map((resource, i) => (
+            <Badge key={`resource-${i}`}>
+              <ResourceIconTooltip
+                image={ResourceImage.get(resource.id) ?? ""}
+                resource={resource.id}
+                name={getBlockTypeName(resource.id)}
+                amount={resource.amount * BigInt(count)}
+                fontSize="sm"
+                validate
+              />
+            </Badge>
+          ))}
+        </div>
+      )}
+
+      <hr className="border-t border-cyan-600 w-full" />
+
+      <NumberInput max={maximum} onChange={(val) => setCount(val)} />
+
+      <div className="flex gap-2 pt-5">
+        <Navigator.BackButton
+          className="btn-sm btn-secondary"
+          disabled={maximum < count || count < 1}
+          onClick={() => {
+            if (!unit) return;
+
+            train(mud, building, UnitEnumLookup[unit], BigInt(count));
+          }}
+        >
+          Train
+        </Navigator.BackButton>
+        <Navigator.BackButton className="btn-sm border-secondary" />
+      </div>
+    </>
+  );
+};
+
+const TrainCapitalShip = ({ building }: { building: Entity }) => {
+  const mud = useMud();
+  const { playerAccount } = mud;
+  const capitalShipResourceData = components.P_CapitalShipConfig.get();
+  if (!capitalShipResourceData) throw new Error("No capital ship resource data found");
+  const resource = ResourceEntityLookup[capitalShipResourceData.resource as EResource];
+
+  const playerAsteroidsQuery = [
+    Has(components.Asteroid),
+    HasValue(components.OwnedBy, { value: playerAccount.entity as Hex }),
+  ];
+  const ships = useEntityQuery(playerAsteroidsQuery).reduce((acc, entity) => {
+    const data = getFullResourceCount(EntityType.CapitalShipCapacity, entity);
+    return acc + data.resourceStorage - data.resourceCount;
+  }, 0n);
+
+  const cost = capitalShipResourceData.initialCost * 2n ** ships;
+
+  return (
+    <>
+      <div className="flex justify-center items-center gap-1">COST</div>
+      <Badge>
+        <ResourceIconTooltip
+          image={ResourceImage.get(resource) ?? ""}
+          resource={resource}
+          name={getBlockTypeName(resource)}
+          amount={cost}
+          fontSize="sm"
+          validate
+        />
+      </Badge>
+      <hr className="border-t border-cyan-600 w-full" />
+
+      <div className="flex gap-2 pt-5">
+        <Navigator.BackButton
+          className="btn-sm btn-secondary"
+          onClick={() => {
+            train(mud, building, UnitEnumLookup[EntityType.CapitalShip], 1n);
+          }}
+        >
+          Train
+        </Navigator.BackButton>
+        <Navigator.BackButton className="btn-sm border-secondary" />
+      </div>
+    </>
   );
 };

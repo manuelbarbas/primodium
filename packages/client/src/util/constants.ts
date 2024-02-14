@@ -168,6 +168,7 @@ export const EntityType = {
   ShieldGenerator: toHex32("ShieldGenerator") as Entity,
   Vault: toHex32("Vault") as Entity,
   Market: toHex32("Market") as Entity,
+  Shipyard: toHex32("Shipyard") as Entity,
 
   Alloy: toHex32("Alloy") as Entity,
   PVCell: toHex32("PVCell") as Entity,
@@ -179,6 +180,7 @@ export const EntityType = {
   FleetMoves: toHex32("U_MaxMoves") as Entity,
   Unraidable: toHex32("U_Unraidable") as Entity,
   AdvancedUnraidable: toHex32("U_AdvancedUnraidable") as Entity,
+  CapitalShipCapacity: toHex32("U_CapitalShip") as Entity,
 
   Defense: toHex32("U_Defense") as Entity,
   DefenseMultiplier: toHex32("M_DefenseMultiplier") as Entity,
@@ -205,7 +207,7 @@ export const EntityType = {
   StingerDrone: toHex32("StingerDrone") as Entity,
   AnvilDrone: toHex32("AnvilDrone") as Entity,
   AegisDrone: toHex32("AegisDrone") as Entity,
-  MiningVessel: toHex32("MiningVessel") as Entity,
+  CapitalShip: toHex32("CapitalShip") as Entity,
 
   MinutemanMarine: toHex32("MinutemanMarine") as Entity,
   TridentMarine: toHex32("TridentMarine") as Entity,
@@ -244,11 +246,11 @@ export const EntityType = {
   StingerDroneUpgrade4: encodeEntityLevel("StingerDrone", 4) as Entity,
   StingerDroneUpgrade5: encodeEntityLevel("StingerDrone", 5) as Entity,
 
-  MiningVesselUpgrade1: encodeEntityLevel("MiningVessel", 1) as Entity,
-  MiningVesselUpgrade2: encodeEntityLevel("MiningVessel", 2) as Entity,
-  MiningVesselUpgrade3: encodeEntityLevel("MiningVessel", 3) as Entity,
-  MiningVesselUpgrade4: encodeEntityLevel("MiningVessel", 4) as Entity,
-  MiningVesselUpgrade5: encodeEntityLevel("MiningVessel", 5) as Entity,
+  CapitalShipUpgrade1: encodeEntityLevel("CapitalShip", 1) as Entity,
+  CapitalShipUpgrade2: encodeEntityLevel("CapitalShip", 2) as Entity,
+  CapitalShipUpgrade3: encodeEntityLevel("CapitalShip", 3) as Entity,
+  CapitalShipUpgrade4: encodeEntityLevel("CapitalShip", 4) as Entity,
+  CapitalShipUpgrade5: encodeEntityLevel("CapitalShip", 5) as Entity,
 
   MinutemanMarineUpgrade1: toHex32("MinutemanMarineUpgrade") as Entity,
   MinutemanMarineUpgrade2: toHex32("MinutemanMarineUpgrade") as Entity,
@@ -261,12 +263,6 @@ export const EntityType = {
   TridentMarineUpgrade3: toHex32("TridentMarineUpgrade") as Entity,
   TridentMarineUpgrade4: toHex32("TridentMarineUpgrade") as Entity,
   TridentMarineUpgrade5: toHex32("TridentMarineUpgrade") as Entity,
-
-  MiningResearch1: toHex32("MiningResearch") as Entity,
-  MiningResearch2: toHex32("MiningResearch") as Entity,
-  MiningResearch3: toHex32("MiningResearch") as Entity,
-  MiningResearch4: toHex32("MiningResearch") as Entity,
-  MiningResearch5: toHex32("MiningResearch") as Entity,
 
   //Objectives
   ...Object.keys(EObjectives).reduce((acc, key) => {
@@ -302,7 +298,7 @@ export const BackgroundImage = new Map<Entity, string[]>([
   [EntityType.StingerDrone, ["/img/unit/stingerdrone.png"]],
   [EntityType.AnvilDrone, ["/img/unit/anvildrone.png"]],
   [EntityType.AegisDrone, ["/img/unit/aegisdrone.png"]],
-  [EntityType.MiningVessel, ["/img/unit/miningvessel.png"]],
+  [EntityType.CapitalShip, ["/img/unit/capitalship.png"]],
   [EntityType.LightningCraft, ["/img/unit/lightningcraft.png"]],
   [EntityType.MinutemanMarine, ["/img/unit/minutemen_marine.png"]],
   [EntityType.TridentMarine, ["/img/unit/trident_marine.png"]],
@@ -351,17 +347,11 @@ export const ResearchImage = new Map<Entity, string>([
   [EntityType.StingerDroneUpgrade4, "/img/unit/stingerdrone.png"],
   [EntityType.StingerDroneUpgrade5, "/img/unit/stingerdrone.png"],
 
-  [EntityType.MiningResearch1, "/img/unit/miningvessel.png"],
-  [EntityType.MiningResearch2, "/img/unit/miningvessel.png"],
-  [EntityType.MiningResearch3, "/img/unit/miningvessel.png"],
-  [EntityType.MiningResearch4, "/img/unit/miningvessel.png"],
-  [EntityType.MiningResearch5, "/img/unit/miningvessel.png"],
-
-  [EntityType.MiningVesselUpgrade1, "/img/unit/miningvessel.png"],
-  [EntityType.MiningVesselUpgrade2, "/img/unit/miningvessel.png"],
-  [EntityType.MiningVesselUpgrade3, "/img/unit/miningvessel.png"],
-  [EntityType.MiningVesselUpgrade4, "/img/unit/miningvessel.png"],
-  [EntityType.MiningVesselUpgrade5, "/img/unit/miningvessel.png"],
+  [EntityType.CapitalShipUpgrade1, "/img/unit/capitalship.png"],
+  [EntityType.CapitalShipUpgrade2, "/img/unit/capitalship.png"],
+  [EntityType.CapitalShipUpgrade3, "/img/unit/capitalship.png"],
+  [EntityType.CapitalShipUpgrade4, "/img/unit/capitalship.png"],
+  [EntityType.CapitalShipUpgrade5, "/img/unit/capitalship.png"],
 
   [EntityType.TridentMarineUpgrade1, "img/unit/trident_marine.png"],
   [EntityType.TridentMarineUpgrade2, "img/unit/trident_marine.png"],
@@ -393,7 +383,7 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.Electricity, "/img/icons/powericon.png"],
   [EntityType.Housing, "/img/icons/utilitiesicon.png"],
   [EntityType.FleetMoves, "/img/icons/moveicon.png"],
-  [EntityType.VesselCapacity, "/img/unit/miningvessel.png"],
+  [EntityType.CapitalShipCapacity, "/img/unit/capitalship.png"],
   [EntityType.Defense, "/img/icons/defenseicon.png"],
   [EntityType.DefenseMultiplier, "/img/icons/defenseicon.png"],
   [EntityType.Unraidable, "/img/icons/unraidableicon.png"],
@@ -405,7 +395,7 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.StingerDrone, "/img/unit/stingerdrone.png"],
   [EntityType.AnvilDrone, "/img/unit/anvildrone.png"],
   [EntityType.AegisDrone, "/img/unit/aegisdrone.png"],
-  [EntityType.MiningVessel, "/img/unit/miningvessel.png"],
+  [EntityType.CapitalShip, "/img/unit/capitalship.png"],
   [EntityType.MinutemanMarine, "img/unit/minutemen_marine.png"],
   [EntityType.TridentMarine, "img/unit/trident_marine.png"],
   [EntityType.LightningCraft, "img/unit/lightningcraft.png"],
@@ -460,7 +450,7 @@ export const UnitStorages = new Set([
   EntityType.StingerDrone,
   EntityType.AnvilDrone,
   EntityType.AegisDrone,
-  EntityType.MiningVessel,
+  EntityType.CapitalShip,
   EntityType.MinutemanMarine,
   EntityType.TridentMarine,
   EntityType.LightningCraft,
@@ -483,7 +473,7 @@ export const ResourceEnumLookup: Record<Entity, EResource> = {
 
   [EntityType.Electricity]: EResource.U_Electricity,
   [EntityType.Housing]: EResource.U_Housing,
-  [EntityType.VesselCapacity]: EResource.U_Vessel,
+  [EntityType.CapitalShipCapacity]: EResource.U_CapitalShipCapacity,
   [EntityType.FleetMoves]: EResource.U_MaxMoves,
   [EntityType.Defense]: EResource.U_Defense,
   [EntityType.Unraidable]: EResource.U_Unraidable,
@@ -513,6 +503,7 @@ export const BuildingEnumLookup: Record<Entity, EBuilding> = {
   [EntityType.ShieldGenerator]: EBuilding.ShieldGenerator,
   [EntityType.Vault]: EBuilding.Vault,
   [EntityType.Market]: EBuilding.Market,
+  [EntityType.Shipyard]: EBuilding.Shipyard,
 };
 
 export const BuildingEntityLookup = reverseRecord(BuildingEnumLookup);
@@ -525,6 +516,7 @@ export const UnitEnumLookup: Record<Entity, EUnit> = {
   [EntityType.MinutemanMarine]: EUnit.MinutemanMarine,
   [EntityType.TridentMarine]: EUnit.TridentMarine,
   [EntityType.LightningCraft]: EUnit.LightningCraft,
+  [EntityType.CapitalShip]: EUnit.CapitalShip,
 };
 
 export const UnitEntityLookup = reverseRecord(UnitEnumLookup);

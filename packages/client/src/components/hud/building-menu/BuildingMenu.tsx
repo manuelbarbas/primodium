@@ -16,7 +16,6 @@ import { BuildingInfo } from "./screens/BuildingInfo";
 import { Demolish } from "./screens/Demolish";
 import { MainBase } from "./screens/Mainbase";
 import { Market } from "./screens/Market";
-import { MiningVessels } from "./screens/MiningVessels";
 import { Move } from "./screens/Move";
 import { UnitFactory } from "./screens/UnitFactory";
 
@@ -48,6 +47,8 @@ export const BuildingMenu: React.FC = () => {
       case EntityType.DroneFactory:
         return <UnitFactory building={selectedBuilding} />;
       case EntityType.Workshop:
+        return <UnitFactory building={selectedBuilding} />;
+      case EntityType.Shipyard:
         return <UnitFactory building={selectedBuilding} />;
       case EntityType.Market:
         return <Market building={selectedBuilding} />;
@@ -117,7 +118,6 @@ export const BuildingMenu: React.FC = () => {
       <BuildingInfo building={selectedBuilding} />
       <BuildQueue building={selectedBuilding} />
       <BuildUnit building={selectedBuilding} />
-      <MiningVessels building={selectedBuilding} />
     </Navigator>
   );
 };

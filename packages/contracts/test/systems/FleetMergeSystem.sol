@@ -43,19 +43,13 @@ contract FleetMergeSystemTest is PrimodiumTest {
     increaseResource(aliceHomeSpaceRock, EResource.U_MaxMoves, 1);
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
-
+    vm.warp(block.timestamp + 1);
     vm.startPrank(alice);
     bytes32 secondFleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
-    for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = 1;
-    }
-
-    for (uint256 i = 0; i < resourceCounts.length; i++) {
-      if (P_Transportables.getItemValue(i) == uint8(EResource.Iron)) resourceCounts[i] = 1;
-    }
-
+    uint256 aliceScore = Score.get(aliceEntity);
+    uint256 aliceHomeScore = Score.get(aliceHomeSpaceRock);
     vm.startPrank(alice);
     world.sendFleet(fleetId, bobHomeSpaceRock);
     world.sendFleet(secondFleetId, bobHomeSpaceRock);
@@ -65,6 +59,10 @@ contract FleetMergeSystemTest is PrimodiumTest {
     fleets[1] = secondFleetId;
     world.mergeFleets(fleets);
     vm.stopPrank();
+
+    assertEq(Score.get(aliceEntity), aliceScore, "score should stay the same");
+    assertEq(Score.get(aliceHomeSpaceRock), aliceHomeScore, "home score should stay the same");
+    assertEq(Score.get(aliceEntity), aliceHomeScore, "score should stay the same as home score");
 
     assertEq(UnitCount.get(fleetId, unitPrototype), 4, "fleet unit count doesn't match");
     assertEq(UnitCount.get(secondFleetId, unitPrototype), 0, "fleet 2 unit count doesn't match");

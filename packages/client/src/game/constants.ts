@@ -403,6 +403,7 @@ export const EntitytoBuildingSpriteKey = {
   [EntityType.ShieldGenerator]: [SpriteKeys.ShieldGenerator1, SpriteKeys.ShieldGenerator2, SpriteKeys.ShieldGenerator3],
   [EntityType.Vault]: [SpriteKeys.Vault1, SpriteKeys.Vault2, SpriteKeys.Vault3],
   [EntityType.Market]: [SpriteKeys.Market1],
+  [EntityType.Shipyard]: [SpriteKeys.AlloyFactory1],
 
   //STARMAP
   [EntityType.Asteroid]: [
@@ -468,6 +469,7 @@ export const EntityIDtoAnimationKey = {
 
   [EntityType.Vault]: [AnimationKeys.Vault1, AnimationKeys.Vault2, AnimationKeys.Vault3],
   [EntityType.Market]: [AnimationKeys.Market1],
+  [EntityType.Shipyard]: [AnimationKeys.AlloyFactory1],
 };
 
 export enum KeybindActions {
