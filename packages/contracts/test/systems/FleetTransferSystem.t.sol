@@ -84,6 +84,61 @@ contract FleetTransferSystemTest is PrimodiumTest {
     );
   }
 
+  function createCapitalShipFleet(address player) private returns (bytes32 fleetId) {
+    bytes32 playerEntity = addressToEntity(player);
+
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+
+    uint256 numberOfUnits = 10;
+
+    bytes32 capitalShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
+
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == CapitalShipPrototypeId) unitCounts[i] = 1;
+    }
+
+    bytes32 homeRock = Home.get(playerEntity);
+    //provide resource and unit requirements to create fleet
+    setupCreateFleet(player, homeRock, unitCounts, resourceCounts);
+
+    vm.prank(player);
+    fleetId = world.createFleet(homeRock, unitCounts, resourceCounts);
+  }
+
+  function testTransferCapitalShipBetweenPlayers() public {
+    bytes32 aliceFleet = createCapitalShipFleet(alice);
+    bytes32 bobFleet = createCapitalShipFleet(bob);
+
+    vm.prank(creator);
+    P_GameConfig.setWorldSpeed(100);
+    vm.prank(alice);
+    world.sendFleet(aliceFleet, bobHomeSpaceRock);
+    console.log("aliceFleet arrival time", FleetMovement.getArrivalTime(aliceFleet));
+    vm.warp(block.timestamp + 10000000);
+
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == CapitalShipPrototypeId) unitCounts[i] = 1;
+    }
+
+    vm.startPrank(alice);
+    vm.expectRevert("[Fleet] Cannot transfer capital ships to other players");
+    world.transferUnitsFromFleetToFleet(aliceFleet, bobFleet, unitCounts);
+
+    vm.expectRevert("[Fleet] Cannot transfer capital ships to other players");
+    world.transferUnitsFromFleetToSpaceRock(aliceFleet, bobHomeSpaceRock, unitCounts);
+
+    vm.expectRevert("[Fleet] Cannot transfer capital ships to other players");
+    world.transferUnitsAndResourcesFromFleetToSpaceRock(aliceFleet, bobHomeSpaceRock, unitCounts, resourceCounts);
+
+    vm.expectRevert("[Fleet] Cannot transfer capital ships to other players");
+    world.transferUnitsAndResourcesFromFleetToFleet(aliceFleet, bobFleet, unitCounts, resourceCounts);
+  }
+
   function testFailTransferResourcesAndUnitsFleetToFleetNotInSameOrbit() public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);

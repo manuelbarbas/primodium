@@ -1,6 +1,7 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FaExchangeAlt, FaTimes } from "react-icons/fa";
@@ -8,6 +9,7 @@ import { Button } from "src/components/core/Button";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
+import { usePlayerOwner } from "src/hooks/usePlayerOwner";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { transferFleet } from "src/network/setup/contractCalls/fleetTransfer";
@@ -22,6 +24,7 @@ import { TargetHeader } from "../spacerock-menu/TargetHeader";
 import { FleetEntityHeader } from "./fleets/FleetHeader";
 
 const TransferSide = (props: {
+  sameOwner?: boolean;
   entity: Entity;
   unitCounts: Map<Entity, bigint>;
   resourceCounts: Map<Entity, bigint>;
@@ -62,13 +65,19 @@ const TransferSide = (props: {
         <div className="flex-1 flex flex-col bg-neutral p-4 grid grid-cols-4 grid-rows-2 gap-2">
           {[...props.unitCounts.entries()].map(([unit, count]) =>
             UnitStorages.has(unit) ? (
-              <ResourceIcon
-                key={`to-unit-${unit}`}
-                resource={unit as Entity}
-                amount={count.toString()}
-                onClear={props.clearUnit && (() => props.clearUnit && props.clearUnit(unit))}
-                setDragging={(e) => props.setDragging && props.setDragging(e, unit, count)}
-              />
+              <div className="relative" key={`to-unit-${unit}`}>
+                {!props.sameOwner && unit === EntityType.CapitalShip && (
+                  <div className="absolute w-full h-full z-10 uppercase font-bold text-slate-400 margin-0 grid place-items-center text-center bg-black/60 pulse text-xs">
+                    CANNOT TRANSFER CAPITAL SHIPS TO OTHERS
+                  </div>
+                )}
+                <ResourceIcon
+                  resource={unit as Entity}
+                  amount={count.toString()}
+                  onClear={props.clearUnit && (() => props.clearUnit && props.clearUnit(unit))}
+                  setDragging={(e) => props.setDragging && props.setDragging(e, unit, count)}
+                />
+              </div>
             ) : null
           )}
         </div>
@@ -154,6 +163,10 @@ const Transfer = ({ from: initialFrom, to: initialTo }: { from?: Entity | undefi
   const [hoveringArea, setHoveringArea] = useState<"from" | "to" | null>(null);
   const [keyDown, setKeyDown] = useState<"shift" | "ctrl" | null>();
   const selectedRock = components.ActiveRock.use()?.value;
+
+  const fromOwner = usePlayerOwner(from ?? singletonEntity);
+  const toOwner = usePlayerOwner(to ?? singletonEntity);
+  const sameOwner = fromOwner === toOwner;
 
   // Resources
   const transportables = components.P_Transportables.use()?.value ?? [];
@@ -321,6 +334,7 @@ const Transfer = ({ from: initialFrom, to: initialTo }: { from?: Entity | undefi
         {/*Left Side */}
         {from ? (
           <TransferSide
+            sameOwner={sameOwner}
             entity={from}
             unitCounts={fromUnitCounts}
             resourceCounts={fromResourceCounts}

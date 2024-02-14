@@ -3,6 +3,7 @@ pragma solidity >=0.8.21;
 
 import { EResource } from "src/Types.sol";
 import { P_Transportables, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { CapitalShipPrototypeId } from "codegen/Prototypes.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -14,7 +15,7 @@ import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 
 import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
-import { EResource, EFleetStance } from "src/Types.sol";
+import { EResource, EUnit, EFleetStance } from "src/Types.sol";
 
 library LibFleetTransfer {
   function transferUnitsFromSpaceRockToFleet(
@@ -23,11 +24,13 @@ library LibFleetTransfer {
     uint256[] calldata unitCounts
   ) internal {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    bool isOwner = OwnedBy.get(fleetId) == spaceRock;
+    bool sameOwner = OwnedBy.get(fleetId) == spaceRock;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
-      LibUnit.decreaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !isOwner);
-      LibFleet.increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !isOwner);
+      if (!sameOwner && unitPrototypes[i] == CapitalShipPrototypeId)
+        revert("[Fleet] Cannot transfer capital ships to other players");
+      LibUnit.decreaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !sameOwner);
+      LibFleet.increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
   }
 
@@ -50,17 +53,21 @@ library LibFleetTransfer {
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
   ) internal {
-    bool isOwner = OwnedBy.get(fleetId) == spaceRock;
+    bool sameOwner = OwnedBy.get(fleetId) == spaceRock;
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
-      LibFleet.increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !isOwner);
+      if (unitCounts[i] == 0) continue;
+      if (!sameOwner && unitPrototypes[i] == CapitalShipPrototypeId)
+        revert("[Fleet] Cannot transfer capital ships to other players");
+      LibFleet.increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
     transferResourcesFromSpaceRockToFleet(spaceRock, fleetId, resourceCounts);
 
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
-      LibUnit.decreaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !isOwner);
+      if (unitCounts[i] == 0) continue;
+      LibUnit.decreaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
   }
 
@@ -70,10 +77,13 @@ library LibFleetTransfer {
     uint256[] calldata unitCounts
   ) internal {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    bool isOwner = OwnedBy.get(fleetId) == spaceRock;
+    bool sameOwner = OwnedBy.get(fleetId) == spaceRock;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
-      LibFleet.decreaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !isOwner);
-      LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !isOwner);
+      if (unitCounts[i] == 0) continue;
+      if (!sameOwner && unitPrototypes[i] == CapitalShipPrototypeId)
+        revert("[Fleet] Cannot transfer capital ships to other players");
+      LibFleet.decreaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
+      LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
     uint256 cargo = LibCombatAttributes.getCargoCapacity(fleetId);
@@ -103,15 +113,19 @@ library LibFleetTransfer {
   ) internal {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
-    bool isOwner = OwnedBy.get(fleetId) == spaceRock;
+    bool sameOwner = OwnedBy.get(fleetId) == spaceRock;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
-      LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !isOwner);
+      if (unitCounts[i] == 0) continue;
+      if (!sameOwner && unitPrototypes[i] == CapitalShipPrototypeId)
+        revert("[Fleet] Cannot transfer capital ships to other players");
+      LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
     transferResourcesFromFleetToSpaceRock(fleetId, spaceRock, resourceCounts);
 
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
-      LibFleet.decreaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !isOwner);
+      if (unitCounts[i] == 0) continue;
+      LibFleet.decreaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
     uint256 cargo = LibCombatAttributes.getCargoCapacity(fleetId);
@@ -124,6 +138,8 @@ library LibFleetTransfer {
     bool sameOwner = OwnedBy.get(fleetId) == OwnedBy.get(fromFleetId);
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
+      if (!sameOwner && unitPrototypes[i] == CapitalShipPrototypeId)
+        revert("[Fleet] Cannot transfer capital ships to other players");
       LibFleet.increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
       LibFleet.decreaseFleetUnit(fromFleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
@@ -154,13 +170,18 @@ library LibFleetTransfer {
   ) internal {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     bool sameOwner = OwnedBy.get(fleetId) == OwnedBy.get(fromFleetId);
+
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
+      if (unitCounts[i] == 0) continue;
+      if (!sameOwner && unitPrototypes[i] == CapitalShipPrototypeId)
+        revert("[Fleet] Cannot transfer capital ships to other players");
       LibFleet.increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
     transferResourcesFromFleetToFleet(fromFleetId, fleetId, resourceCounts);
 
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
+      if (unitCounts[i] == 0) continue;
       LibFleet.decreaseFleetUnit(fromFleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
