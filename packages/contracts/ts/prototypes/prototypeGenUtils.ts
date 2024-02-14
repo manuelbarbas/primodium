@@ -64,6 +64,25 @@ export const getResourceValue = (resourceValue: { [x: string]: number }) => {
   return { resource: MUDEnums.EResource.indexOf(resource), amount: BigInt(amount * SCALE) };
 };
 
+export const getPUnitData = (data: {
+  hp: number;
+  decryption: number;
+  attack: number;
+  defense: number;
+  cargo: number;
+  speed: number;
+  trainingTime: number;
+}) => {
+  return {
+    hp: BigInt(data.hp * SCALE),
+    decryption: BigInt(data.decryption * SCALE),
+    attack: BigInt(data.attack * SCALE),
+    defense: BigInt(data.defense * SCALE),
+    cargo: BigInt(data.cargo * SCALE),
+    speed: BigInt(data.speed),
+    trainingTime: BigInt(data.speed),
+  };
+};
 /**
  *
  * @param resourceValues Record of resources and their scaled amounts

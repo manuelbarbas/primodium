@@ -2,6 +2,7 @@ import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
+import { EResource } from "contracts/config/enums";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { components } from "src/network/components";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
@@ -52,12 +53,15 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
     speedUpTrainingtime: {
       params: [],
       function: async () => {
-        // const entity = encodeEntity(components.P_Unit.metadata.keySchema, {
-        //   level: 0n,
-        //   entity: EntityType.CapitalShip as Hex,
-        // });
+        const selectedRock = mud.components.SelectedRock.get()?.value;
+        if (!selectedRock) throw new Error("No asteroid selected");
+        const entity = encodeEntity(components.ProductionRate.metadata.keySchema, {
+          entity: selectedRock as Hex,
+          resource: EResource.R_HP,
+        });
         // setComponentValue(mud, components.P_Unit, entity, {trainingTime: 10n})
-        setComponentValue(mud, components.P_GracePeriod, singletonEntity, { spaceRock: 0n });
+        // setComponentValue(mud, components.P_GracePeriod, singletonEntity, { spaceRock: 0n });
+        setComponentValue(mud, components.ProductionRate, entity, { value: 1n });
       },
     },
     setMaxAllianceCount: {
