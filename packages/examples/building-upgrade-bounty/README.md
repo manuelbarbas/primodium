@@ -59,7 +59,11 @@ Using the client as Alice, construct 3 Iron Mines on the top right plots.
 
 ### World Extension
 
-Open a new terminal, and navigate to `primodium/packages/examples/building-upgrade-bounty`. Execute the following:
+Rename `primodium/packages/examples/building-upgrade-bounty/packages/contracts/.env.example` to `primodium/packages/examples/building-upgrade-bounty/packages/contracts/.env`.
+
+Open a new terminal, and navigate to `primodium/packages/examples/building-upgrade-bounty`.
+
+Execute the following:
 
 ```bash
 pnpm i
