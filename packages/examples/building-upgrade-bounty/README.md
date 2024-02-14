@@ -75,7 +75,7 @@ forge script script/UpgradeBountyExtension.s.sol --rpc-url http://localhost:8545
 Once complete, execute the following:
 
 ```bash
-forge script script/BountyNamespaceAccess.s.sol --rpc-url http://localhost:8545 --broadcast
+forge script script/UpgrBounSystemAccess.s.sol --rpc-url http://localhost:8545 --broadcast
 ```
 
 Look at the client, notice that a specific Iron Mine has been upgraded to Iron Mine II!
@@ -85,7 +85,6 @@ Look at the client, notice that a specific Iron Mine has been upgraded to Iron M
 TODO's
 
 - [ ] document NatSpec
-- [ ] Rename `BountyNamespaceAccess.s.sol`
 - [ ] Refactor and modularize scripts
 - [ ] fix coord type in System
 - [ ] set up initial script for testing

@@ -16,7 +16,7 @@ import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 import { IWorld } from "../src/codegen/world/IWorld.sol";
 import { PositionData } from "../src/codegen/index.sol";
 
-contract BountyNamespaceAccess is Script {
+contract UpgrBounSystemAccess is Script {
   function run() external {
     address deployerAddress = address(uint160(vm.envUint("ADDRESS_ALICE")));
     console.log("Alice address: %x", deployerAddress);
@@ -67,19 +67,19 @@ contract BountyNamespaceAccess is Script {
     vm.stopBroadcast();
     console.log("Alice set another bounty for %d wei.", bountyValue);
 
-    // Bob upgrades Alice's building. Note it needs the requisite resources to succeed.
-    vm.startBroadcast(delegateePrivateKey);
-    bytes memory newBuildingEntity = world.upgradeBounty_UpgrBounSystem_upgradeForBounty(deployerAddress, bountyCoord);
-    vm.stopBroadcast();
-
     /*
     // quick test: does anyone have access to the system?
     uint256 hostilePrivateKey = vm.envUint("PRIVATE_KEY_MALLORY");
     console.log("Mallory private key: %x", hostilePrivateKey);
     
-    vm.startBroadcast(delegateePrivateKey);
-    IWorld(worldAddress).upgradeBounty_UpgrBounSystem_incrementMessage("Mallory wuz here :P  !!alert: successful unauthorized access");
+    vm.startBroadcast(hostilePrivateKey);
+    bytes memory newBuildingEntity = world.upgradeBounty_UpgrBounSystem_upgradeForBounty(deployerAddress, bountyCoord);
     vm.stopBroadcast();
     */
+
+    // Bob upgrades Alice's building. Note Alice needs to have the requisite upgrade resources for it to succeed.
+    vm.startBroadcast(delegateePrivateKey);
+    bytes memory newBuildingEntity = world.upgradeBounty_UpgrBounSystem_upgradeForBounty(deployerAddress, bountyCoord);
+    vm.stopBroadcast();
   }
 }
