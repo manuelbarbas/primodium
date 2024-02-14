@@ -12,3 +12,4 @@ This example will implement a bounty for an allowlist of addresses to upgrade th
 - [ ] document for external readers
 - [ ] clean up and minimize necessary info from Primodium world
 - [ ] fix \_remappings.txt
+- [ ] Implement `AgreementMembersSystem.sol` for more readability of access permissions

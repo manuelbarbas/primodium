@@ -13,6 +13,7 @@ import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 
 // import { LibEncode } from "prim-codegen/Libraries.sol";
 
+// Taken from prim-contracts/src/Keys.sol
 bytes32 constant BuildingTileKey = bytes32("building:tile");
 
 interface WorldWithUpgradeBuilding {

@@ -3,19 +3,10 @@ import { mudConfig } from "@latticexyz/world/register";
 export default mudConfig({
   namespace: "upgradeBounty",
   systems: {
-    AgreementMembersSystem: {
-      // Don't think this one is necessary
-      openAccess: true,
-      name: "AgreementMembersSystem",
-    },
     UpgrBounSystem: {
       openAccess: true,
       name: "UpgrBounSystem",
       // deposits and withdrawals track the depositor and amount
-    },
-    MessageSystem: {
-      name: "MessageSystem",
-      openAccess: true,
     },
   },
   tables: {
