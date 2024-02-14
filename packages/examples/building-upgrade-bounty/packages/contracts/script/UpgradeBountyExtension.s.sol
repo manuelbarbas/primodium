@@ -13,7 +13,7 @@ import { WorldResourceIdLib, ROOT_NAMESPACE } from "@latticexyz/world/src/WorldR
 import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 
 // For registering the table
-import { Messages, MessagesTableId } from "../src/codegen/index.sol";
+import { UpgradeBounty } from "../src/codegen/index.sol";
 import { IStore } from "@latticexyz/store/src/IStore.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 
@@ -44,7 +44,7 @@ contract UpgradeBountyExtension is Script {
 
     world.registerNamespace(namespaceResource); // registers namespace to world address
     StoreSwitch.setStoreAddress(worldAddress); // sets the store address to the world address
-    Messages.register(); // registers the Messages table to the world address
+    UpgradeBounty.register(); // registers the UpgradeBounty table to the world address
 
     UpgrBounSystem upgrBounSystem = new UpgrBounSystem(); // creates/deploys a new UpgrBounSystem contract, store its address
     console.log("UpgrBounSystem address: ", address(upgrBounSystem));
@@ -58,7 +58,7 @@ contract UpgradeBountyExtension is Script {
     world.registerFunctionSelector(systemResource, "withdrawBounty((int32,int32,bytes32))");
     world.registerFunctionSelector(systemResource, "upgradeForBounty(address,(int32,int32,bytes32))");
     console.log(
-      "Alice successfully registered the upgradeBounty namespace, Messages table, and UpgrBounSystem contract to the Admin's world address."
+      "Alice successfully registered the upgradeBounty namespace, UpgradeBounty table, and UpgrBounSystem contract to the Admin's world address."
     );
 
     // !! note UpgradeBuildingS is due to 16 byte restriction. verify this works!
