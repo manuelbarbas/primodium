@@ -375,24 +375,10 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.Kimberlite, "/img/resource/kimberlite_resource.png"],
   [EntityType.Platinum, "/img/resource/platinum_resource.png"],
 
-  [EntityType.IronPlate, "/img/crafted/ironplate.png"],
-  [EntityType.BasicPowerSource, "/img/crafted/basicbattery.png"],
-  [EntityType.AdvancedPowerSource, "/img/crafted/photovoltaiccell.png"],
-  [EntityType.IridiumCrystal, "/img/crafted/iridiumcrystal.png"],
-  [EntityType.IridiumDrillbit, "/img/crafted/iridiumdrillbit.png"],
-  [EntityType.LaserPowerSource, "/img/crafted/laserbattery.png"],
-  [EntityType.KimberliteCrystalCatalyst, "/img/crafted/kimberlitecatalyst.png"],
-  [EntityType.RefinedOsmium, "/img/crafted/refinedosmium.png"],
-  [EntityType.TungstenRods, "/img/crafted/tungstenrod.png"],
-  [EntityType.KineticMissile, "/img/crafted/kineticmissile.png"],
-  [EntityType.PenetratingWarhead, "/img/crafted/penetratingwarhead.png"],
-  [EntityType.PenetratingMissile, "/img/crafted/penetratingmissile.png"],
-  [EntityType.ThermobaricWarhead, "/img/crafted/thermobaricwarhead.png"],
-  [EntityType.ThermobaricMissile, "/img/crafted/thermobaricmissile.png"],
+  [EntityType.IronPlate, "/img/resource/ironplate.png"],
 
   [EntityType.Alloy, "/img/resource/alloy_resource.png"],
   [EntityType.PVCell, "/img/resource/photovoltaiccell_resource.png"],
-  [EntityType.RocketFuel, "/img/crafted/refinedosmium.png"],
 
   [EntityType.Electricity, "/img/icons/powericon.png"],
   [EntityType.Housing, "/img/icons/utilitiesicon.png"],
@@ -403,9 +389,6 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.Unraidable, "/img/icons/unraidableicon.png"],
   [EntityType.AdvancedUnraidable, "/img/icons/advancedunraidableicon.png"],
   [EntityType.Encryption, "/img/icons/advancedunraidableicon.png"],
-
-  // debug
-  [EntityType.Bullet, "/img/crafted/bullet.png"],
 
   //units
   [EntityType.HammerDrone, "/img/unit/hammerdrone.png"],

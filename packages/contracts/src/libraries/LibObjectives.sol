@@ -136,11 +136,7 @@ library LibObjectives {
     }
   }
 
-  function checkHasRequiredUnits(
-    bytes32 playerEntity,
-    bytes32 spaceRockEntity,
-    bytes32 objective
-  ) internal view {
+  function checkHasRequiredUnits(bytes32 playerEntity, bytes32 spaceRockEntity, bytes32 objective) internal view {
     P_RequiredUnitsData memory requiredUnits = P_RequiredUnits.get(objective);
     for (uint256 i = 0; i < requiredUnits.units.length; i++) {
       require(

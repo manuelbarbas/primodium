@@ -13,11 +13,10 @@ import { claimResources, claimUnits, receiveRewards } from "libraries/SubsystemC
 import { LibObjectives } from "libraries/LibObjectives.sol";
 
 contract ClaimObjectiveSystem is PrimodiumSystem {
-  function claimObjective(bytes32 spaceRockEntity, EObjectives objective)
-    public
-    _claimResources(spaceRockEntity)
-    _claimUnits(spaceRockEntity)
-  {
+  function claimObjective(
+    bytes32 spaceRockEntity,
+    EObjectives objective
+  ) public _claimResources(spaceRockEntity) _claimUnits(spaceRockEntity) {
     bytes32 playerEntity = _player();
     bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(objective));
 

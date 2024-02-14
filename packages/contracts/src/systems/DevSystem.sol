@@ -49,12 +49,7 @@ contract DevSystem is System {
   /**
    * Write a field in the table at the given tableId.
    */
-  function devSetField(
-    ResourceId tableId,
-    bytes32[] calldata keyTuple,
-    uint8 fieldIndex,
-    bytes calldata data
-  ) public {
+  function devSetField(ResourceId tableId, bytes32[] calldata keyTuple, uint8 fieldIndex, bytes calldata data) public {
     // Set the field
     StoreCore.setField(tableId, keyTuple, fieldIndex, data);
   }

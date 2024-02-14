@@ -16,11 +16,10 @@ import { BuildingKey } from "src/Keys.sol";
 import { EBuilding } from "src/Types.sol";
 
 contract BuildSystem is PrimodiumSystem {
-  function build(EBuilding buildingType, PositionData memory coord)
-    public
-    _claimResources(coord.parent)
-    returns (bytes32 buildingEntity)
-  {
+  function build(
+    EBuilding buildingType,
+    PositionData memory coord
+  ) public _claimResources(coord.parent) returns (bytes32 buildingEntity) {
     require(buildingType > EBuilding.NULL && buildingType < EBuilding.LENGTH, "[BuildSystem] Invalid building type");
 
     bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));

@@ -52,11 +52,7 @@ library LibProduction {
   /// @param spaceRockEntity Entity ID of the spaceRock owning the building
   /// @param resource the resource the production is increased for
   /// @param amount the amount the production is increased by
-  function increaseResourceProduction(
-    bytes32 spaceRockEntity,
-    EResource resource,
-    uint256 amount
-  ) internal {
+  function increaseResourceProduction(bytes32 spaceRockEntity, EResource resource, uint256 amount) internal {
     uint8 resourceIndex = uint8(resource);
     if (P_IsUtility.get(resourceIndex)) {
       LibStorage.increaseMaxUtility(spaceRockEntity, resourceIndex, amount);
@@ -87,11 +83,7 @@ library LibProduction {
   /// @param spaceRockEntity Entity ID of the spaceRock owning the building
   /// @param resource the resource the production is reduced for
   /// @param amount the amount the production is reduced by
-  function decreaseResourceProduction(
-    bytes32 spaceRockEntity,
-    EResource resource,
-    uint256 amount
-  ) internal {
+  function decreaseResourceProduction(bytes32 spaceRockEntity, EResource resource, uint256 amount) internal {
     uint8 resourceIndex = uint8(resource);
     if (P_IsUtility.get(resourceIndex)) {
       uint256 availableUtility = ResourceCount.get(spaceRockEntity, resourceIndex);

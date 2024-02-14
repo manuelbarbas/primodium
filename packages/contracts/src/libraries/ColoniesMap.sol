@@ -11,11 +11,7 @@ library ColoniesMap {
    * @param asteroidId The unique asteroidId for the asteroid.
    * @return true if the asteroid exists, false otherwise.
    */
-  function has(
-    bytes32 entity,
-    bytes32 key,
-    bytes32 asteroidId
-  ) internal view returns (bool) {
+  function has(bytes32 entity, bytes32 key, bytes32 asteroidId) internal view returns (bool) {
     return MapStoredColonies.get(entity, key, asteroidId).stored;
   }
 
@@ -26,11 +22,7 @@ library ColoniesMap {
    * @param key defines the type of association the asteroid has with the entity.
    * @param asteroidId the unique asteroidId for the asteroid.
    */
-  function add(
-    bytes32 entity,
-    bytes32 key,
-    bytes32 asteroidId
-  ) internal {
+  function add(bytes32 entity, bytes32 key, bytes32 asteroidId) internal {
     require(!has(entity, key, asteroidId), "[ColoniesMap] asteroid is alread associated with entity");
     MapColonies.push(entity, key, asteroidId);
     MapStoredColonies.set(entity, key, asteroidId, true, MapColonies.length(entity, key) - 1);
@@ -52,11 +44,7 @@ library ColoniesMap {
    * @param key defines the type of association the asteroid has with the entity.
    * @param asteroidId The unique asteroidId for the asteroid to remove.
    */
-  function remove(
-    bytes32 entity,
-    bytes32 key,
-    bytes32 asteroidId
-  ) internal {
+  function remove(bytes32 entity, bytes32 key, bytes32 asteroidId) internal {
     if (MapColonies.length(entity, key) == 1) {
       clear(entity, key);
       return;

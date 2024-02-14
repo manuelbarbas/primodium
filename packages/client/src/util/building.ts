@@ -1,6 +1,6 @@
 import { Primodium } from "@game/api";
 // import { EntitytoSpriteKey } from "@game/constants";
-import { EntitytoSpriteKey } from "@game/constants";
+import { EntitytoBuildingSpriteKey } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { EResource, MUDEnums } from "contracts/config/enums";
@@ -138,11 +138,11 @@ export const getBuildingImage = (primodium: Primodium, building: Entity) => {
   const level = comps.Level.get(building)?.value ?? 1n;
   const { getSpriteBase64 } = primodium.api().sprite;
 
-  if (EntitytoSpriteKey[buildingType]) {
+  if (EntitytoBuildingSpriteKey[buildingType]) {
     const imageIndex = parseInt(level ? level.toString() : "1") - 1;
 
     return getSpriteBase64(
-      EntitytoSpriteKey[buildingType][clampedIndex(imageIndex, EntitytoSpriteKey[buildingType].length)]
+      EntitytoBuildingSpriteKey[buildingType][clampedIndex(imageIndex, EntitytoBuildingSpriteKey[buildingType].length)]
     );
   }
 
@@ -153,11 +153,11 @@ export const getBuildingImageFromType = (primodium: Primodium, buildingType: Ent
   const level = comps.Level.get(buildingType)?.value ?? 1n;
   const { getSpriteBase64 } = primodium.api().sprite;
 
-  if (EntitytoSpriteKey[buildingType]) {
+  if (EntitytoBuildingSpriteKey[buildingType]) {
     const imageIndex = parseInt(level ? level.toString() : "1") - 1;
 
     return getSpriteBase64(
-      EntitytoSpriteKey[buildingType][clampedIndex(imageIndex, EntitytoSpriteKey[buildingType].length)]
+      EntitytoBuildingSpriteKey[buildingType][clampedIndex(imageIndex, EntitytoBuildingSpriteKey[buildingType].length)]
     );
   }
 

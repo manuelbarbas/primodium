@@ -8,11 +8,7 @@ library UtilityMap {
     return MapItemStoredUtilities.get(player, utility).stored;
   }
 
-  function set(
-    bytes32 player,
-    uint8 utility,
-    uint256 item
-  ) internal {
+  function set(bytes32 player, uint8 utility, uint256 item) internal {
     if (has(player, utility)) {
       MapItemUtilities.set(player, utility, item);
     } else {

@@ -47,11 +47,11 @@ export const ResourceLabel = ({ name, resource }: { name: string; resource: Enti
         className={`${tooltipClass}`}
       />
       {production !== 0n && (
-        <p className="opacity-50 text-xs transition-all">
+        <p className={`opacity-50 text-xs ${production < 0 ? "animate-pulse text-error" : ""}`}>
           {production > 0 ? "+" : ""}
           {productionMin}
           /MIN
-          <b className="text-accent">
+          <b className={`text-accent`}>
             [
             {formatNumber(resourceStorage / RESOURCE_SCALE, {
               short: true,
