@@ -5,7 +5,7 @@ import { IconLabel } from "src/components/core/IconLabel";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
-import { getAsteroidImage, getSpaceRockName } from "src/util/asteroid";
+import { getAsteroidImage, getAsteroidName } from "src/util/asteroid";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { getRockDefense } from "src/util/defense";
 import { formatNumber } from "src/util/number";
@@ -26,7 +26,7 @@ export const TargetHeader = ({
   const owner = components.OwnedBy.use(selectedSpacerock)?.value;
   if (!selectedSpacerock) return null;
   const img = getAsteroidImage(primodium, selectedSpacerock) ?? "";
-  const name = getSpaceRockName(selectedSpacerock);
+  const name = getAsteroidName(selectedSpacerock);
 
   return (
     <div className="flex flex-col gap-1 w-full">

@@ -27,7 +27,7 @@ import { upgradeRange } from "src/network/setup/contractCalls/upgradeRange";
 import { upgradeUnit } from "src/network/setup/contractCalls/upgradeUnit";
 import { MUD } from "src/network/types";
 import { getAllianceName, getAllianceNameFromPlayer } from "../alliance";
-import { getAsteroidImage, getRockRelationship, getSpaceRockInfo, getSpaceRockName } from "../asteroid";
+import { getAsteroidImage, getRockRelationship, getAsteroidInfo, getAsteroidName } from "../asteroid";
 import {
   calcDims,
   getBuildingDimensions,
@@ -140,8 +140,8 @@ export default function createConsoleApi(mud: MUD, primodium: Primodium) {
     },
     spaceRock: {
       getSpaceRockImage: (rock: Entity) => getAsteroidImage(primodium, rock),
-      getSpaceRockName,
-      getSpaceRockInfo: (rock: Entity) => getSpaceRockInfo(primodium, rock),
+      getSpaceRockName: getAsteroidName,
+      getSpaceRockInfo: (rock: Entity) => getAsteroidInfo(primodium, rock),
       getRockRelationship,
     },
     units: {

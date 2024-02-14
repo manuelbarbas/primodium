@@ -31,7 +31,7 @@ export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
   return getSpriteBase64(spriteKey, Assets.SpriteAtlas);
 }
 
-export function getSpaceRockName(spaceRock: Entity) {
+export function getAsteroidName(spaceRock: Entity) {
   const mainBaseEntity = comps.Home.get(spaceRock)?.value as Entity;
   const mainBaseLevel = comps.Level.get(mainBaseEntity)?.value;
   const isPirate = !!comps.PirateAsteroid.get(spaceRock);
@@ -41,9 +41,9 @@ export function getSpaceRockName(spaceRock: Entity) {
   const asteroidSize = asteroidResource
     ? {
         1: "Micro",
-        2: "Small",
-        3: "Medium",
-        4: "Large",
+        3: "Small",
+        5: "Medium",
+        8: "Large",
       }[Number(asteroidData?.maxLevel ?? 1)]
     : "";
 
@@ -52,7 +52,7 @@ export function getSpaceRockName(spaceRock: Entity) {
   } ${isPirate ? "Pirate" : "Asteroid"}`;
 }
 
-export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
+export function getAsteroidInfo(primodium: Primodium, spaceRock: Entity) {
   const imageUri = getAsteroidImage(primodium, spaceRock);
   const ownedBy = comps.OwnedBy.get(spaceRock)?.value as Entity | undefined;
   const mainBaseEntity = comps.Home.get(spaceRock)?.value as Entity;
@@ -95,7 +95,7 @@ export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
     mainBaseLevel,
     hangar,
     position,
-    name: getSpaceRockName(spaceRock),
+    name: getAsteroidName(spaceRock),
     entity: spaceRock,
     isInGracePeriod,
     gracePeriodValue,

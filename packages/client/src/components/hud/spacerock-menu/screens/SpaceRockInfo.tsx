@@ -2,7 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { getSpaceRockInfo } from "src/util/asteroid";
+import { getAsteroidInfo } from "src/util/asteroid";
 
 const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
@@ -14,7 +14,7 @@ const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ lab
 };
 
 export const SpacerockInfo: React.FC<{
-  data: ReturnType<typeof getSpaceRockInfo>;
+  data: ReturnType<typeof getAsteroidInfo>;
 }> = ({ data: { ownedBy, position, mainBaseLevel } }) => {
   return (
     <Navigator.Screen title="SpaceRockInfo" className="w-full">

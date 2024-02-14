@@ -499,8 +499,7 @@ export const KeyNames: { [key: string]: string } = {
 
 export const MaxLevelToTilemap: Record<number, Tilemaps> = {
   1: Tilemaps.AsteroidSmall,
-  2: Tilemaps.AsteroidSmall,
   3: Tilemaps.AsteroidPlayer,
-  4: Tilemaps.AsteroidPlayer,
+  5: Tilemaps.AsteroidPlayer,
   8: Tilemaps.AsteroidPlayer,
 };
