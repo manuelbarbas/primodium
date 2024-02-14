@@ -24,23 +24,20 @@ import { S_SpendResourcesSystem } from "systems/subsystems/S_SpendResourcesSyste
 
 /* --------------------------------- BATTLE --------------------------------- */
 
-function battleApplyDamage(bytes32 battleId, bytes32 damageDealerPlayerEntity, bytes32 targetEntity, uint256 damage) {
+function battleApplyDamage(bytes32 battleId, bytes32 attackingPlayer, bytes32 targetEntity, uint256 damage) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
     getSystemResourceId("S_BattleApplyDamageSystem"),
-    abi.encodeCall(
-      S_BattleApplyDamageSystem.applyDamageToWithAllies,
-      (battleId, damageDealerPlayerEntity, targetEntity, damage)
-    ),
+    abi.encodeCall(S_BattleApplyDamageSystem.applyDamage, (battleId, attackingPlayer, targetEntity, damage)),
     0
   );
 }
 
-function battleRaidResolve(bytes32 battleId, bytes32 raider, bytes32 target) {
+function battleRaidResolve(bytes32 battleId, bytes32 attacker, bytes32 defender) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
     getSystemResourceId("S_BattleRaidResolveSystem"),
-    abi.encodeCall(S_BattleRaidResolveSystem.battleRaidResolve, (battleId, raider, target)),
+    abi.encodeCall(S_BattleRaidResolveSystem.battleRaidResolve, (battleId, attacker, defender)),
     0
   );
 }

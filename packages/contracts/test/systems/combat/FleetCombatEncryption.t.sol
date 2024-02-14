@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
 import "test/PrimodiumTest.t.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
-import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
+import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { FleetIncomingKey } from "src/Keys.sol";
 
@@ -89,7 +89,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
       "space rock hp should have been reduced by unit attack"
     );
 
-    assertEq(LibFleetAttributes.getOccupiedCargo(fleetId), 0, "fleet should not have raided");
+    assertEq(LibCombatAttributes.getCargo(fleetId), 0, "fleet should not have raided");
 
     assertEq(
       ResourceCount.get(bobHomeSpaceRock, uint8(EResource.Iron)),
@@ -200,7 +200,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
           "encryption should have reached zero"
         );
       }
-      assertEq(LibFleetAttributes.getOccupiedCargo(fleetIds[i]), 0, "fleet should not have raided");
+      assertEq(LibCombatAttributes.getCargo(fleetIds[i]), 0, "fleet should not have raided");
       console.log("fleet attack done %s", i);
     }
 

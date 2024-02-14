@@ -10,7 +10,6 @@ import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
-import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 
@@ -22,7 +21,7 @@ library LibFleetMove {
     bytes32 origin = FleetMovement.getDestination(fleetId);
     require(!isSpaceRockBlocked(origin), "[Fleet] Space rock is blocked");
 
-    uint256 speed = LibFleetAttributes.getSpeedWithFollowers(fleetId);
+    uint256 speed = getSpeedWithFollowers(fleetId);
     require(speed > 0, "[Fleet] Fleet has no speed");
 
     uint256 arrivalTime = getArrivalTime(origin, Position.get(destination), speed);
@@ -100,5 +99,27 @@ library LibFleetMove {
   function isSpaceRockBlocked(bytes32 spaceRock) private returns (bool) {
     bytes32 fleetBlockKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Block));
     return FleetsMap.size(spaceRock, fleetBlockKey) > 0;
+  }
+
+  function getSpeed(bytes32 fleetId) internal view returns (uint256 speed) {
+    bytes32 ownerSpaceRock = OwnedBy.get(fleetId);
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    for (uint8 i = 0; i < unitPrototypes.length; i++) {
+      uint256 unitCount = UnitCount.get(fleetId, unitPrototypes[i]);
+      if (unitCount == 0) continue;
+      uint256 unitLevel = UnitLevel.get(ownerSpaceRock, unitPrototypes[i]);
+      uint256 unitSpeed = P_Unit.getSpeed(unitPrototypes[i], unitLevel);
+      if (speed == 0) speed = unitSpeed;
+      else if (speed > unitSpeed) speed = unitSpeed;
+    }
+  }
+
+  function getSpeedWithFollowers(bytes32 fleetId) internal view returns (uint256 speed) {
+    speed = getSpeed(fleetId);
+    bytes32[] memory followerFleetIds = LibFleetStance.getFollowerFleets(fleetId);
+    for (uint8 i = 0; i < followerFleetIds.length; i++) {
+      uint256 followerSpeed = getSpeed(followerFleetIds[i]);
+      if (followerSpeed < speed) speed = followerSpeed;
+    }
   }
 }

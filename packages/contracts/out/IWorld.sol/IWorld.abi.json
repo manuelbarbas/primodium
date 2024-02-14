@@ -42,7 +42,7 @@
   },
   {
     "type": "function",
-    "name": "applyDamageToWithAllies",
+    "name": "applyDamage",
     "inputs": [
       {
         "name": "battleId",
@@ -50,12 +50,12 @@
         "internalType": "bytes32"
       },
       {
-        "name": "damageDealerPlayerEntity",
+        "name": "attackingPlayer",
         "type": "bytes32",
         "internalType": "bytes32"
       },
       {
-        "name": "entity",
+        "name": "defender",
         "type": "bytes32",
         "internalType": "bytes32"
       },

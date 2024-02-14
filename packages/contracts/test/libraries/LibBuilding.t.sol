@@ -10,12 +10,7 @@ contract LibBuildingTest is PrimodiumTest {
     vm.startPrank(creator);
   }
 
-  function testGetPlayerBounds(
-    int16 maxX,
-    int16 maxY,
-    int16 currX,
-    int16 currY
-  ) public {
+  function testGetPlayerBounds(int16 maxX, int16 maxY, int16 currX, int16 currY) public {
     // Bound fuzzy parameters to int16 to eliminate overflow errors when testing
     vm.assume(currX > 0);
     vm.assume(currY > 0);

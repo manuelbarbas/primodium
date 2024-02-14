@@ -9,7 +9,7 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
-import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
+import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
@@ -54,7 +54,7 @@ library LibFleet {
       increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], false);
     }
 
-    uint256 freeCargoSpace = LibFleetAttributes.getFreeCargoSpace(fleetId);
+    uint256 freeCargoSpace = LibCombatAttributes.getCargoSpace(fleetId);
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       uint8 resource = transportables[i];
@@ -87,9 +87,33 @@ library LibFleet {
     UnitCount.set(fleetId, unitPrototype, fleetUnitCount - unitCount);
   }
 
+  function getResourceCounts(bytes32 fleetId) internal view returns (uint256[] memory resourceCounts) {
+    uint8[] memory transportables = P_Transportables.get();
+    resourceCounts = new uint256[](transportables.length);
+    for (uint256 i = 0; i < transportables.length; i++) {
+      resourceCounts[i] = ResourceCount.get(fleetId, transportables[i]);
+    }
+    return resourceCounts;
+  }
+
+  function getResourceCountsWithAllies(
+    bytes32 fleetId
+  ) internal view returns (uint256[] memory resourceCounts, uint256 totalResources) {
+    bytes32[] memory followerFleetIds = LibFleetStance.getFollowerFleets(fleetId);
+    uint8[] memory transportables = P_Transportables.get();
+    resourceCounts = new uint256[](transportables.length);
+    for (uint256 i = 0; i < transportables.length; i++) {
+      resourceCounts[i] = ResourceCount.get(fleetId, transportables[i]);
+      for (uint8 j = 0; j < followerFleetIds.length; j++) {
+        resourceCounts[i] += ResourceCount.get(followerFleetIds[j], transportables[i]);
+      }
+      totalResources += resourceCounts[i];
+    }
+  }
+
   function increaseFleetResource(bytes32 fleetId, uint8 resource, uint256 amount) internal {
     if (amount == 0) return;
-    uint256 freeCargoSpace = LibFleetAttributes.getFreeCargoSpace(fleetId);
+    uint256 freeCargoSpace = LibCombatAttributes.getCargoSpace(fleetId);
     require(freeCargoSpace >= amount, "[Fleet] Not enough storage to add resource");
     ResourceCount.set(fleetId, resource, ResourceCount.get(fleetId, resource) + amount);
   }

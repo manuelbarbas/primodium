@@ -3,10 +3,9 @@ pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
-import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
+import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
-import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { FleetIncomingKey } from "src/Keys.sol";
 
@@ -31,7 +30,6 @@ contract FleetCombatSystemTest is PrimodiumTest {
   }
 
   function testAttackPirateAsteroid() public {
-    console.log("start");
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
@@ -56,15 +54,12 @@ contract FleetCombatSystemTest is PrimodiumTest {
     vm.startPrank(alice);
     bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
-    console.log("created fleet 1");
 
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
     bytes32 secondFlleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
-
-    console.log("created fleet 2");
 
     P_SpawnPirateAsteroidData memory spawnPirateAsteroid;
 
@@ -87,7 +82,6 @@ contract FleetCombatSystemTest is PrimodiumTest {
     P_SpawnPirateAsteroid.set(objectivePrototype, spawnPirateAsteroid);
 
     bytes32 pirateAsteroid = world.spawnPirateAsteroid(aliceEntity, objectivePrototype);
-    console.log("spawned pirate asteroid");
     vm.stopPrank();
 
     assertEq(PirateAsteroid.getIsPirateAsteroid(pirateAsteroid), true, "pirate asteroid should have been created");
@@ -107,34 +101,30 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     world.sendFleet(fleetId, bobHomeSpaceRock);
     vm.warp(FleetMovement.getArrivalTime(fleetId));
-    console.log("sent fleet to bob");
 
     world.sendFleet(fleetId, pirateAsteroid);
     vm.warp(FleetMovement.getArrivalTime(fleetId));
-    console.log("sent fleet from bob to pirate asteroid");
 
     world.sendFleet(secondFlleetId, pirateAsteroid);
     uint256 halfWayAmount = (FleetMovement.getArrivalTime(secondFlleetId) - FleetMovement.getSendTime(secondFlleetId)) /
       2;
     vm.warp(block.timestamp + halfWayAmount);
     assertEq(block.timestamp, FleetMovement.getSendTime(secondFlleetId) + halfWayAmount, "time passed should match");
-    console.log("sent second fleet from alice to pirate asteroid: $s", halfWayAmount);
 
     vm.stopPrank();
 
     vm.startPrank(alice);
     world.attack(fleetId, pirateAsteroid);
     vm.stopPrank();
-    console.log("attack pirate asteroid");
 
     assertEq(
-      LibFleetAttributes.getOccupiedCargo(fleetId),
-      LibFleetAttributes.getCargo(fleetId),
+      LibCombatAttributes.getCargo(fleetId),
+      LibCombatAttributes.getCargoCapacity(fleetId),
       "fleet should have raided max cargo"
     );
 
     assertEq(
-      LibFleetAttributes.getCargo(fleetId) + ResourceCount.get(pirateAsteroid, uint8(EResource.Iron)),
+      LibCombatAttributes.getCargoCapacity(fleetId) + ResourceCount.get(pirateAsteroid, uint8(EResource.Iron)),
       spawnPirateAsteroid.resourceAmounts[0],
       "sum of un raided and raided should be initial amount"
     );
@@ -174,12 +164,9 @@ contract FleetCombatSystemTest is PrimodiumTest {
       DefeatedPirate.get(aliceEntity, objectivePrototype),
       "pirate asteroid should be marked as defeated for alice"
     );
-
-    console.log("end");
   }
 
   function testFailAttackPirateAsteroidAfterDefeated() public {
-    console.log("start");
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);

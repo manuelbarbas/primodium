@@ -9,7 +9,7 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
-import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
+import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 
@@ -76,8 +76,8 @@ library LibFleetTransfer {
       LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !isOwner);
     }
 
-    uint256 cargo = LibFleetAttributes.getCargo(fleetId);
-    uint256 occupiedCargo = LibFleetAttributes.getOccupiedCargo(fleetId);
+    uint256 cargo = LibCombatAttributes.getCargoCapacity(fleetId);
+    uint256 occupiedCargo = LibCombatAttributes.getCargo(fleetId);
     require(cargo >= occupiedCargo, "[Fleet] Not enough cargo space to transfer units");
   }
 
@@ -114,8 +114,8 @@ library LibFleetTransfer {
       LibFleet.decreaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !isOwner);
     }
 
-    uint256 cargo = LibFleetAttributes.getCargo(fleetId);
-    uint256 occupiedCargo = LibFleetAttributes.getOccupiedCargo(fleetId);
+    uint256 cargo = LibCombatAttributes.getCargoCapacity(fleetId);
+    uint256 occupiedCargo = LibCombatAttributes.getCargo(fleetId);
     require(cargo >= occupiedCargo, "[Fleet] Not enough cargo space to transfer units");
   }
 
@@ -128,8 +128,8 @@ library LibFleetTransfer {
       LibFleet.decreaseFleetUnit(fromFleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
-    uint256 cargo = LibFleetAttributes.getCargo(fromFleetId);
-    uint256 occupiedCargo = LibFleetAttributes.getOccupiedCargo(fromFleetId);
+    uint256 cargo = LibCombatAttributes.getCargoCapacity(fromFleetId);
+    uint256 occupiedCargo = LibCombatAttributes.getCargo(fromFleetId);
     require(cargo >= occupiedCargo, "[Fleet] Not enough cargo space to transfer units");
   }
 
@@ -164,8 +164,8 @@ library LibFleetTransfer {
       LibFleet.decreaseFleetUnit(fromFleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
-    uint256 cargo = LibFleetAttributes.getCargo(fromFleetId);
-    uint256 occupiedCargo = LibFleetAttributes.getOccupiedCargo(fromFleetId);
+    uint256 cargo = LibCombatAttributes.getCargoCapacity(fromFleetId);
+    uint256 occupiedCargo = LibCombatAttributes.getCargo(fromFleetId);
     require(cargo >= occupiedCargo, "[Fleet] Not enough cargo space to transfer units");
   }
 }
