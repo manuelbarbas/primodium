@@ -37,12 +37,13 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
       <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
       <div className="flex flex-col gap-1 z-10">
         <div className="flex gap-1 items-center">
+          <IconLabel imageUri="/img/icons/outgoingicon.png" className={`pixel-images w-3 h-3 bg-base-100`} />
           <p className="text-sm font-bold uppercase">{fleetStats.title}</p>
         </div>
         <div className="flex gap-1">
-          <p className="text-xs opacity-70 bg-primary px-1 w-fit flex items-center uppercase">{fleetStateText}</p>
+          <p className="text-xs bg-primary px-1 w-fit flex items-center uppercase">{fleetStateText}</p>
           {inGracePeriod && (
-            <div className="flex bg-primary opacity-70 font-bold border border-secondary/50 gap-2 text-xs p-1 items-center">
+            <div className="flex bg-primary font-bold border border-secondary/50 gap-2 text-xs p-1 items-center">
               <IconLabel imageUri="/img/icons/graceicon.png" className={`pixel-images w-3 h-3`} />
               {formatTimeShort(duration)}
             </div>

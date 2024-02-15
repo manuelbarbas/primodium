@@ -1,41 +1,49 @@
 import { Entity } from "@latticexyz/recs";
 import { Badge } from "src/components/core/Badge";
+import { IconLabel } from "src/components/core/IconLabel";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { components } from "src/network/components";
 import { EntityType } from "src/util/constants";
 import { entityToRockName } from "src/util/name";
-import { formatResourceCount, formatTime } from "src/util/number";
+import { formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
 import { getMoveLength } from "src/util/send";
 import { getCanSend, getFleetUnitCounts } from "src/util/unit";
 import { Card } from "../../core/Card";
-import { GracePeriod } from "../GracePeriod";
 import { HealthBar } from "../HealthBar";
 
 export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const name = entityToRockName(entity);
-  const { inGracePeriod } = useInGracePeriod(entity);
+  const { inGracePeriod, duration } = useInGracePeriod(entity);
   const { resourceCount: encryption } = useFullResourceCount(EntityType.Encryption, entity);
   const isPirate = components.PirateAsteroid.has(entity);
   const ownedBy = components.OwnedBy.use(entity)?.value;
 
   return (
-    <Card className="ml-5 uppercase font-bold text-xs relative text-center flex flex-col justify-center gap-1 items-center">
+    <Card className="ml-5 w-56 relative">
       <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50 " />
-      <AsteroidEta entity={entity} />
-      <div className="z-10">
-        <p className="inline">{name}</p>{" "}
+      <div className="flex flex-col gap-1 z-10">
+        <div className="flex gap-1 items-center">
+          <IconLabel imageUri="/img/icons/asteroidicon.png" className={`pixel-images w-3 h-3 bg-base-100`} />
+          <p className="text-sm font-bold uppercase">{name}</p>
+        </div>
+
+        <div className="flex gap-1">
+          <AsteroidEta entity={entity} />
+          {inGracePeriod && (
+            <div className="flex bg-primary font-bold border border-secondary/50 gap-2 text-xs p-1 items-center">
+              <IconLabel imageUri="/img/icons/graceicon.png" className={`pixel-images w-3 h-3`} />
+              {formatTimeShort(duration)}
+            </div>
+          )}
+        </div>
+
+        {!inGracePeriod && ownedBy && !isPirate && (
+          <Badge className="text-xs text-accent bg-slate-900 p-1">
+            <HealthBar health={Number(formatResourceCount(EntityType.Encryption, encryption, { notLocale: true }))} />
+          </Badge>
+        )}
       </div>
-      {inGracePeriod && (
-        <Badge className="text-xs text-accent bg-slate-900 p-2 w-24">
-          <GracePeriod entity={entity} />
-        </Badge>
-      )}
-      {!inGracePeriod && ownedBy && !isPirate && (
-        <Badge className="text-xs text-accent bg-slate-900 p-1 w-14">
-          <HealthBar health={Number(formatResourceCount(EntityType.Encryption, encryption, { notLocale: true }))} />
-        </Badge>
-      )}
     </Card>
   );
 };
@@ -58,5 +66,9 @@ const AsteroidEta = ({ entity }: { entity: Entity }) => {
   const isTarget = moveLength > 0 && originFleet && getCanSend(originFleet, entity);
   if (!isTarget) return <></>;
 
-  return <div className="opacity-70 bg-primary px-1 w-fit">ETA {formatTime(moveLength)}</div>;
+  return (
+    <div className="flex font-bold items-center justify-center uppercase text-xs pulse bg-primary px-1 w-fit">
+      ETA {formatTime(moveLength)}
+    </div>
+  );
 };
