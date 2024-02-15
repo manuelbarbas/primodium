@@ -49,29 +49,23 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
             </div>
           )}
         </div>
-        <div className="text-xs grid grid-cols-3 gap-1 divide-x divide-primary/50">
+        <div className="text-xs grid grid-cols-3 gap-1 divide-x divide-primary/50 pt-1 border-t border-t-primary/50">
           <div className="flex flex-col gap-1 p-1">
             <div className="flex gap-1">
-              <p className="text-secondary">
-                {formatResourceCount(EntityType.Iron, fleetStats.attack, { short: true })}
-              </p>
-              ATK
+              <p className="text-secondary">ATK</p>
+              {formatResourceCount(EntityType.Iron, fleetStats.attack, { short: true })}
             </div>
             <div className="flex gap-1">
-              <p className="text-secondary">
-                {formatResourceCount(EntityType.Iron, fleetStats.defense, { short: true })}
-              </p>
-              DEF
+              <p className="text-secondary">DEF</p>
+              {formatResourceCount(EntityType.Iron, fleetStats.defense, { short: true })}
             </div>
             <div className="flex gap-1">
-              <p className="text-secondary">
-                {formatResourceCount(EntityType.Iron, fleetStats.cargo, { short: true })}
-              </p>
-              CRG
+              <p className="text-secondary">CRG</p>
+              {formatResourceCount(EntityType.Iron, fleetStats.cargo, { short: true })}
             </div>
             <div className="flex gap-1">
-              <p className="text-secondary">{formatResourceCount(EntityType.Iron, fleetStats.hp, { short: true })}</p>
-              HP
+              <p className="text-secondary">HP</p>
+              {formatResourceCount(EntityType.Iron, fleetStats.hp, { short: true })}
             </div>
           </div>
           <div className="flex flex-col gap-1 p-1">
