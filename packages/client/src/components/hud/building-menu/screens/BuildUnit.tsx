@@ -85,11 +85,7 @@ export const BuildUnit: React.FC<{
                 {Object.entries(getUnitStats(selectedUnit, selectedRock)).map(([name, value]) => (
                   <div key={name} className="flex flex-col items-center">
                     <p className="text-xs opacity-50">{name}</p>
-                    <p>
-                      {["CRG", "DEC"].includes(name)
-                        ? formatResourceCount(EntityType.Iron, value)
-                        : formatNumber(value)}
-                    </p>
+                    <p>{["SPD"].includes(name) ? formatNumber(value) : formatResourceCount(EntityType.Iron, value)}</p>
                   </div>
                 ))}
               </div>

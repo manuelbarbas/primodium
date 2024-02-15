@@ -305,42 +305,42 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[1]),
         },
-        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 1, R_HP: 0.001 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 0.001, R_HP: 0.001 }),
       },
       2: {
         P_RequiredResources: getResourceValues({ Copper: 1500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[2]),
         },
-        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 1, R_HP: 0.001 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 0.001, R_HP: 0.001 }),
       },
       3: {
         P_RequiredResources: getResourceValues({ Copper: 10000, PVCell: 1500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[3]),
         },
-        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 1, R_HP: 0.001 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 0.001, R_HP: 0.001 }),
       },
       4: {
         P_RequiredResources: getResourceValues({ Copper: 25000, PVCell: 5000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[4]),
         },
-        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 1, R_HP: 0.001 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 0.001, R_HP: 0.001 }),
       },
       5: {
         P_RequiredResources: getResourceValues({ Copper: 75000, PVCell: 500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[5]),
         },
-        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 1, R_HP: 0.001 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 0.001, R_HP: 0.001 }),
       },
       6: {
         P_RequiredResources: getResourceValues({ Copper: 125000, Titanium: 1500, Platinum: 1500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[6]),
         },
-        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 1, R_HP: 0.001 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 0.001, R_HP: 0.001 }),
       },
       7: {
         P_RequiredResources: getResourceValues({
@@ -352,7 +352,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[7]),
         },
-        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 1, R_HP: 0.001 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 0.001, R_HP: 0.001 }),
       },
       8: {
         P_RequiredResources: getResourceValues({
@@ -364,7 +364,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[8]),
         },
-        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 1, R_HP: 0.001 }),
+        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 0.001, R_HP: 0.001 }),
       },
     },
   },
