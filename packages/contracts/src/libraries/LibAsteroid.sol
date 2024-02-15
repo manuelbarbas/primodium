@@ -70,7 +70,7 @@ library LibAsteroid {
   }
 
   function getAsteroidData(bytes32 asteroidEntity, bool spawnsSecondary) internal view returns (AsteroidData memory) {
-    uint256 distributionVal = (LibEncode.getByteUInt(uint256(asteroidEntity), 3, 12) % 100);
+    uint256 distributionVal = (LibEncode.getByteUInt(uint256(asteroidEntity), 7, 12) % 100);
 
     uint256 maxLevel;
     //micro
