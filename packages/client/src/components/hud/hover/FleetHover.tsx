@@ -12,7 +12,7 @@ import { entityToFleetName, entityToRockName } from "src/util/name";
 import { formatNumber, formatResourceCount, formatTime } from "src/util/number";
 import { getFleetStats } from "src/util/unit";
 
-export const FleetInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
+export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const fleetStats = getFleetStats(entity);
   const units = useUnitCounts(entity);
   const resources = useFullResourceCounts(entity);
