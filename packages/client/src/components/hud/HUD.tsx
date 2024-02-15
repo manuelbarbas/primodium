@@ -20,7 +20,6 @@ import { FleetTarget } from "./markers/starmap/FleetTarget";
 import { HomeMarker } from "./markers/starmap/HomeMarker";
 import HackerConsole from "./modals/HackerConsole";
 import { OwnedAsteroids } from "./panes/OwnedAsteroids";
-import { OwnedFleets } from "./panes/OwnedFleets";
 import { Blueprints } from "./panes/blueprints/Blueprints";
 import { Hangar as HangarComponent } from "./panes/hangar/Hangar";
 import { Resources } from "./panes/resources/Resources";
@@ -74,7 +73,6 @@ export const GameHUD = () => {
               <Profile />
               <MenuButtons />
             </div>
-            <OwnedFleets />
             <HangarComponent />
           </div>
         </HUD.TopLeft>
