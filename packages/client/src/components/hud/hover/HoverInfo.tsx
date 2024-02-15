@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { components } from "src/network/components";
 import { getBuildingName } from "src/util/building";
 import { Card } from "../../core/Card";
+import { AsteroidHover } from "./AsteroidHover";
 import { FleetHover } from "./FleetHover";
-import { RockHover } from "./RockHover";
 
 export const HoverInfo = () => {
   const [hoverEntity, setHoverEntity] = useState<Entity | null>(null);
@@ -23,7 +23,7 @@ export const HoverInfo = () => {
   const rawHoverEntity = components.HoverEntity.use()?.value;
 
   useEffect(() => {
-    const showDelay = 300;
+    const showDelay = 0;
     let timeout: NodeJS.Timeout | null = null;
     if (!rawHoverEntity) {
       setHoverEntity(null);
@@ -45,7 +45,7 @@ export const HoverInfo = () => {
 
   let content = <></>;
   if (components.BuildingType.has(hoverEntity)) content = <BuildingInfo entity={hoverEntity} />;
-  else if (components.Asteroid.has(hoverEntity)) content = <RockHover entity={hoverEntity} />;
+  else if (components.Asteroid.has(hoverEntity)) content = <AsteroidHover entity={hoverEntity} />;
   else if (components.IsFleet.has(hoverEntity)) content = <FleetHover entity={hoverEntity} />;
 
   return (

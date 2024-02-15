@@ -1,19 +1,16 @@
 import { DepthLayers, Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { useMemo, useRef } from "react";
-import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Marker } from "src/components/core/Marker";
 import { Modal } from "src/components/core/Modal";
 import { useMud } from "src/hooks";
-import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useSpaceRock } from "src/hooks/useSpaceRock";
 import { components } from "src/network/components";
 import { clearFleetStance } from "src/network/setup/contractCalls/fleetStance";
 import { getCanAttackSomeone, getFleetPixelPosition, getFleetStats } from "src/util/unit";
-import { GracePeriod } from "../../GracePeriod";
 import { Fleets } from "../../panes/fleets/Fleets";
 
 // this component assumes the fleet is owned by the player
@@ -22,7 +19,6 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
   const selectingAttackDestination = !!components.Attack.use()?.originFleet;
   const selectingDestination = !!components.Send.use()?.originFleet || selectingAttackDestination;
   const stats = getFleetStats(fleet);
-  const { inGracePeriod } = useInGracePeriod(fleet);
   const spaceRockData = useSpaceRock(position);
   const mud = useMud();
   const primodium = usePrimodium();
@@ -92,13 +88,6 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
             <IconLabel imageUri="/img/icons/returnicon.png" text={selectingDestination ? "CANCEL" : "CLOSE"} />
           </Button>
         </div>
-        {inGracePeriod && (
-          <div className="absolute top-0 left-1/2 transform -translate-y-full -translate-x-1/2">
-            <Badge className="text-xs text-accent bg-slate-900 p-2 w-24">
-              <GracePeriod entity={fleet} />
-            </Badge>
-          </div>
-        )}
         <div className="absolute top-0 left-0 -translate-x-full">
           <Modal>
             <Modal.Button

@@ -8,8 +8,8 @@ import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { EntityType, ResourceImage } from "src/util/constants";
-import { entityToFleetName, entityToRockName } from "src/util/name";
-import { formatNumber, formatResourceCount, formatTime } from "src/util/number";
+import { entityToFleetName } from "src/util/name";
+import { formatNumber, formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
 import { getFleetStats } from "src/util/unit";
 
 export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
@@ -19,7 +19,7 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const movement = components.FleetMovement.use(entity);
   const time = components.Time.use()?.value ?? 0n;
   const stance = components.FleetStance.use(entity);
-  const { inGracePeriod } = useInGracePeriod(entity);
+  const { inGracePeriod, duration } = useInGracePeriod(entity);
 
   const fleetStateText = useMemo(() => {
     const arrivalTime = movement?.arrivalTime ?? 0n;
@@ -31,22 +31,20 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
     if (stance?.stance === EFleetStance.Defend) return "Defending";
     return "Orbiting";
   }, [movement?.arrivalTime, time, stance]);
-  const owner = components.OwnedBy.use(entity)?.value as Entity | undefined;
 
   return (
-    <Card className="ml-5 uppercase font-bold text-xs relative w-56">
+    <Card className="ml-5 relative w-56 font-bold">
       <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
       <div className="flex flex-col gap-1 z-10">
-        <div className="text-sm">
-          {fleetStats.title}
-          {inGracePeriod && <IconLabel imageUri="/img/icons/graceicon.png" className="text-xs ml-2" />}
+        <div className="flex gap-1 items-center">
+          <p className="text-sm font-bold uppercase">{fleetStats.title}</p>
         </div>
         <div className="flex gap-1">
-          <p className="text-xs opacity-70 bg-primary px-1 w-fit">{fleetStateText}</p>
-          {owner && (
-            <div className="text-xs opacity-70 bg-primary px-1 w-fit uppercase flex gap-1 items-center">
-              <img src="/img/icons/utilitiesicon.png" alt="fleet base" className={`pixel-images  h-[.75rem]`} />
-              {entityToRockName(owner)}
+          <p className="text-xs opacity-70 bg-primary px-1 w-fit flex items-center uppercase">{fleetStateText}</p>
+          {inGracePeriod && (
+            <div className="flex bg-primary opacity-70 font-bold border border-secondary/50 gap-2 text-xs p-1 items-center">
+              <IconLabel imageUri="/img/icons/graceicon.png" className={`pixel-images w-3 h-3`} />
+              {formatTimeShort(duration)}
             </div>
           )}
         </div>
