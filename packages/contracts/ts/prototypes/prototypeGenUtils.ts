@@ -52,7 +52,7 @@ export const upgradesByLevel = (name: string, upgrades: Record<number, Record<st
     const upgradesObject = Object.entries(upgrades).reduce((prev, [resource, max]) => {
       prev[`${name}${resource}L${level}Upgrade`] = {
         keys: [{ [name32]: "bytes32" }, { [MUDEnums.EResource.indexOf(resource)]: "uint8" }, { [level]: "uint32" }],
-        tables: { P_ByLevelMaxResourceUpgrades: { value: BigInt(max) * BigInt(SCALE) } },
+        tables: { P_ByLevelMaxResourceUpgrades: { value: BigInt(max * SCALE) } },
       };
       return prev;
     }, {} as Record<string, { keys: { [x: string]: StaticAbiType }[]; tables: { P_ByLevelMaxResourceUpgrades: { value: bigint } } }>);

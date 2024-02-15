@@ -20,8 +20,8 @@ export const HealthBar: React.FC<Props> = ({
   className,
 }) => {
   const getBarColor = (): string => {
-    if (health > 66) return "bg-success";
-    if (health > 33) return "bg-warning";
+    if (health / maxHealth > 0.66) return "bg-success";
+    if (health / maxHealth > 0.33) return "bg-warning";
     return "bg-error";
   };
 

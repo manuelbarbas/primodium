@@ -30,7 +30,7 @@ const CreateFleet: React.FC = () => {
   const [keyDown, setKeyDown] = useState<"shift" | "ctrl" | null>();
   const selectedRock = components.SelectedRock.use()?.value ?? singletonEntity;
   const fleetStats = useMemo(() => {
-    const data = { attack: 0, defense: 0, speed: 0, hp: 0, cargo: 0, decryption: 0n };
+    const data = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
 
     fleetUnitCounts.forEach((count, unit) => {
       const unitData = getUnitStats(unit as Entity, selectedRock);

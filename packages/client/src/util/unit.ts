@@ -45,13 +45,13 @@ export function getUnitStats(rawUnitEntity: Entity, spaceRockEntity: Entity) {
   const unitLevelKeys = { entity: unitEntity, level: unitLevel };
 
   const { hp, decryption, attack, defense, speed, cargo } = comps.P_Unit.getWithKeys(unitLevelKeys, {
-    attack: 0,
-    defense: 0,
-    speed: 0,
-    cargo: 0,
-    trainingTime: 0,
-    hp: 0,
-    decryption: 0,
+    attack: 0n,
+    defense: 0n,
+    speed: 0n,
+    cargo: 0n,
+    trainingTime: 0n,
+    hp: 0n,
+    decryption: 0n,
   });
   return {
     ATK: attack,
@@ -66,7 +66,7 @@ export function getUnitStats(rawUnitEntity: Entity, spaceRockEntity: Entity) {
 export const getFleetStats = (fleet: Entity) => {
   const spaceRock = components.OwnedBy.get(fleet)?.value as Entity;
   if (!spaceRock) throw new Error("Fleet must be owned by a space rock");
-  const ret = { attack: 0, defense: 0, speed: 0, hp: 0, cargo: 0, decryption: 0n };
+  const ret = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
 
   [...UnitStorages].forEach((unit) => {
     const unitEntity = unit as Entity;
@@ -89,7 +89,7 @@ export const getFleetStats = (fleet: Entity) => {
 
 export const getFleetStatsFromUnits = (units: Map<Entity, bigint>) => {
   const selectedRock = components.ActiveRock.get()?.value as Entity;
-  const data = { attack: 0, defense: 0, speed: 0, hp: 0, cargo: 0, decryption: 0n };
+  const data = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
 
   units.forEach((count, unit) => {
     const unitData = getUnitStats(unit as Entity, selectedRock);

@@ -53,10 +53,16 @@ export const FleetInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
         <div className="text-xs grid grid-cols-3 gap-1 divide-x divide-primary/50">
           <div className="flex flex-col gap-1 p-1">
             <div className="flex gap-1">
-              <p className="text-secondary">{formatNumber(fleetStats.attack, { short: true })}</p> ATK
+              <p className="text-secondary">
+                {formatResourceCount(EntityType.Iron, fleetStats.attack, { short: true })}
+              </p>
+              ATK
             </div>
             <div className="flex gap-1">
-              <p className="text-secondary">{formatNumber(fleetStats.defense, { short: true })}</p> DEF
+              <p className="text-secondary">
+                {formatResourceCount(EntityType.Iron, fleetStats.defense, { short: true })}
+              </p>
+              DEF
             </div>
             <div className="flex gap-1">
               <p className="text-secondary">
@@ -65,7 +71,8 @@ export const FleetInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
               CRG
             </div>
             <div className="flex gap-1">
-              <p className="text-secondary">{formatNumber(fleetStats.hp, { short: true })}</p> HP
+              <p className="text-secondary">{formatResourceCount(EntityType.Iron, fleetStats.hp, { short: true })}</p>
+              HP
             </div>
           </div>
           <div className="flex flex-col gap-1 p-1">
