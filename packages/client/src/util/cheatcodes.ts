@@ -49,14 +49,9 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
         });
       },
     },
-    speedUpTrainingtime: {
+    stopGracePeriod: {
       params: [],
       function: async () => {
-        // const entity = encodeEntity(components.P_Unit.metadata.keySchema, {
-        //   level: 0n,
-        //   entity: EntityType.CapitalShip as Hex,
-        // });
-        // setComponentValue(mud, components.P_Unit, entity, {trainingTime: 10n})
         setComponentValue(mud, components.P_GracePeriod, singletonEntity, { spaceRock: 0n });
       },
     },

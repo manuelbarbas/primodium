@@ -6,8 +6,8 @@ import { EResource } from "contracts/config/enums";
 import { useMemo, useRef } from "react";
 import { Badge } from "src/components/core/Badge";
 import { Marker } from "src/components/core/Marker";
-import { Tooltip } from "src/components/core/Tooltip";
 import { useMud } from "src/hooks";
+import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { usePrimodium } from "src/hooks/usePrimodium";
@@ -40,7 +40,11 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   const position = components.Position.use(selectedAsteroid);
   const imageUri = getAsteroidImage(primodium, selectedAsteroid);
   const { inGracePeriod } = useInGracePeriod((selectedAsteroid as Entity) ?? singletonEntity);
-  const { resourceCount: encryption } = useFullResourceCount(EntityType.Encryption, selectedAsteroid);
+  const { resourceCount: encryption, resourceStorage: maxEncryption } = useFullResourceCount(
+    EntityType.Encryption,
+    selectedAsteroid
+  );
+  const { strength, maxStrength } = useAsteroidStrength(selectedAsteroid);
 
   const { zoom } = useCamera();
   const isPirate = components.PirateAsteroid.has(selectedAsteroid);
@@ -132,7 +136,20 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             </Modal>
           </div>
         )}
-
+        <div className="absolute top-0 left-0 -translate-x-full">
+          <Modal>
+            <Modal.Button
+              onClick={() => components.ActiveRock.set({ value: selectedAsteroid })}
+              disabled={selectingDestination || !ownedByPlayer}
+              className="btn-ghost btn-xs text-xs text-accent bg-neutral border border-r-0 pl-2 border-secondary/50 w-28 transition-[width] duration-200"
+            >
+              <IconLabel imageUri="/img/icons/settingsicon.png" text={"Transfer"} />
+            </Modal.Button>
+            <Modal.Content className="w-3/4 h-4/5">
+              <Fleets initialState="transfer" from={selectedAsteroid} />
+            </Modal.Content>
+          </Modal>
+        </div>
         {inGracePeriod && (
           <div className="absolute top-0 left-1/2 transform -translate-y-full -translate-x-1/2">
             <Badge className="text-xs text-accent bg-slate-900 p-2 w-24">
@@ -141,15 +158,26 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
           </div>
         )}
         {!inGracePeriod && ownedBy && !isPirate && (
-          <Tooltip text="Encryption" direction="top" className="text-xs">
-            <div className="absolute top-0 left-1/2 transform -translate-y-full -translate-x-1/2">
-              <Badge className="text-xs text-accent bg-slate-900 p-1 w-14">
-                <HealthBar
-                  health={Number(formatResourceCount(EntityType.Encryption, encryption, { notLocale: true }))}
-                />
-              </Badge>
-            </div>
-          </Tooltip>
+          <div className="absolute top-0 left-1/2 transform -translate-y-full -translate-x-1/2">
+            <Badge className="text-xs text-accent bg-slate-900 p-1 w-20 h-fit">
+              <HealthBar
+                imgUrl="/img/icons/advancedunraidableicon.png"
+                health={Number(formatResourceCount(EntityType.Encryption, encryption, { notLocale: true }))}
+                maxHealth={Number(formatResourceCount(EntityType.Encryption, maxEncryption, { notLocale: true }))}
+                tooltipContent="Encryption"
+                tooltipDirection="left"
+              />
+            </Badge>
+            <Badge className="text-xs text-accent bg-slate-900 p-1 w-20 h-fit">
+              <HealthBar
+                imgUrl="/img/icons/defenseicon.png"
+                health={Number(formatResourceCount(EntityType.HP, strength, { notLocale: true, showZero: true }))}
+                maxHealth={Number(formatResourceCount(EntityType.HP, maxStrength, { notLocale: true, showZero: true }))}
+                tooltipContent="Strength"
+                tooltipDirection="left"
+              />
+            </Badge>
+          </div>
         )}
         <div className="absolute bottom-0 left-0 -translate-x-full">
           <Button

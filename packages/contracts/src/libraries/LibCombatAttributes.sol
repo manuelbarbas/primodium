@@ -59,24 +59,25 @@ library LibCombatAttributes {
     }
   }
 
-  function getDefense(bytes32 entity) internal view returns (uint256 defense) {
+  function getDefense(bytes32 entity) internal view returns (uint256) {
     bool isFleet = IsFleet.get(entity);
     bytes32 asteroid = isFleet ? OwnedBy.get(entity) : entity;
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    uint256 unitDefense = 0;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       uint256 unitCount = UnitCount.get(entity, unitPrototypes[i]);
       if (unitCount == 0) continue;
       uint256 unitLevel = UnitLevel.get(asteroid, unitPrototypes[i]);
-      defense += P_Unit.getDefense(unitPrototypes[i], unitLevel) * unitCount;
+      unitDefense += P_Unit.getDefense(unitPrototypes[i], unitLevel) * unitCount;
     }
-    if (isFleet) return defense;
+    if (isFleet) return unitDefense;
     uint256 maxHp = MaxResourceCount.get(asteroid, uint8(EResource.R_HP));
-    if (maxHp > 0) {
-      uint256 hp = ResourceCount.get(asteroid, uint8(EResource.R_HP));
-      uint256 defenseResource = ResourceCount.get(asteroid, uint8(EResource.U_Defense));
-      defense += (defenseResource * hp) / maxHp;
-    }
-    defense = (defense * (100 + ResourceCount.get(asteroid, uint8(EResource.M_DefenseMultiplier)))) / 100;
+    uint256 hp = ResourceCount.get(asteroid, uint8(EResource.R_HP));
+    uint256 defenseResource = ResourceCount.get(asteroid, uint8(EResource.U_Defense));
+    uint256 defense = ((defenseResource + unitDefense) *
+      (100 + ResourceCount.get(asteroid, uint8(EResource.M_DefenseMultiplier)))) / 100;
+    if (maxHp == 0) return defense;
+    return (defense * hp) / maxHp;
   }
 
   function getDefenseWithAllies(bytes32 entity) internal view returns (uint256 defense) {

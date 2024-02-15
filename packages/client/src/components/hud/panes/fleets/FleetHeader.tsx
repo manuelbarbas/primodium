@@ -19,11 +19,11 @@ export const FleetHeader = (props: {
       <Badge className="w-full uppercase font-bold text-sm items-center flex flex-col h-fit">{props.title}</Badge>
       <div className="grid grid-cols-6 gap-1">
         <Badge className="flex gap-1 w-full uppercase font-bold text-xs items-center">
-          <p className="text-secondary">{formatNumber(props.attack, { short: true })}</p>
+          <p className="text-secondary">{formatResourceCount(EntityType.Iron, props.attack, { short: true })}</p>
           <p className="scale-95 opacity-70"> ATK</p>
         </Badge>
         <Badge className="flex gap-1 w-full uppercase font-bold text-xs items-center">
-          <p className="text-secondary">{formatNumber(props.defense, { short: true })}</p>
+          <p className="text-secondary">{formatResourceCount(EntityType.Iron, props.defense, { short: true })}</p>
           <p className="scale-95 opacity-70"> DEF</p>
         </Badge>
         <Badge className="flex gap-1 w-full uppercase font-bold text-xs items-center">
@@ -39,7 +39,7 @@ export const FleetHeader = (props: {
           <p className="scale-95 opacity-70"> SPD</p>
         </Badge>
         <Badge className="flex gap-1 w-full uppercase font-bold text-xs items-center">
-          <p className="text-secondary">{formatNumber(props.hp, { short: true })}</p>
+          <p className="text-secondary">{formatResourceCount(EntityType.Iron, props.hp, { short: true })}</p>
           <p className="scale-95 opacity-70"> HP</p>
         </Badge>
       </div>

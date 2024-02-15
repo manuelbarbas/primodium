@@ -144,11 +144,11 @@ export const BattleDetails: React.FC<{
                   !!playerDetails.encryptionAtEnd &&
                   playerDetails.encryptionAtStart !== playerDetails.encryptionAtEnd && (
                     <div className="bg-error font-bold uppercase text-center">
-                      LOST{" "}
+                      LOST
                       {formatResourceCount(
                         EntityType.Encryption,
                         playerDetails.encryptionAtStart - playerDetails.encryptionAtEnd
-                      )}{" "}
+                      )}
                       ENCRYPTION
                     </div>
                   )}
@@ -217,11 +217,11 @@ export const BattleDetails: React.FC<{
                   !!enemyDetails.encryptionAtEnd &&
                   enemyDetails.encryptionAtStart !== enemyDetails.encryptionAtEnd && (
                     <div className="bg-error font-bold uppercase text-center">
-                      LOST{" "}
+                      LOST
                       {formatResourceCount(
                         EntityType.Encryption,
                         enemyDetails.encryptionAtStart - enemyDetails.encryptionAtEnd
-                      )}{" "}
+                      )}
                       ENCRYPTION
                     </div>
                   )}
