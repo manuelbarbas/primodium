@@ -6,6 +6,7 @@ import { console } from "forge-std/console.sol";
 import { IBaseWorld } from "@latticexyz/world-modules/src/interfaces/IBaseWorld.sol"; // get definitions common to all World contracts
 
 import { WorldRegistrationSystem } from "@latticexyz/world/src/modules/core/implementations/WorldRegistrationSystem.sol"; // registering namespaces and systems
+import { System } from "@latticexyz/world/src/System.sol";
 
 // Create resource identifiers (for the namespace and system)
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
@@ -25,6 +26,24 @@ import { SystemboundDelegationControl } from "@latticexyz/world-modules/src/modu
 import { SYSTEMBOUND_DELEGATION } from "@latticexyz/world-modules/src/modules/std-delegations/StandardDelegationsModule.sol";
 
 contract UpgradeBountyExtension is Script {
+  function systemboundDelegateToSystem(
+    // uint256 deployerPrivateKey,
+    WorldRegistrationSystem world,
+    ResourceId delegatingFromSystemId,
+    System systemReceivingDelegation,
+    uint256 maxCallFromCount
+  ) internal {
+    // Alice delegates to the UpgrBounSystem contract
+    world.registerDelegation(
+      address(systemReceivingDelegation),
+      SYSTEMBOUND_DELEGATION,
+      abi.encodeCall(
+        SystemboundDelegationControl.initDelegation,
+        (address(systemReceivingDelegation), delegatingFromSystemId, maxCallFromCount)
+      )
+    );
+  }
+
   function run() external {
     uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY_ALICE");
     console.log("Alice private key: %x", deployerPrivateKey);
@@ -49,6 +68,7 @@ contract UpgradeBountyExtension is Script {
     UpgrBounSystem upgrBounSystem = new UpgrBounSystem(); // creates/deploys a new UpgrBounSystem contract, store its address
     console.log("UpgrBounSystem address: ", address(upgrBounSystem));
 
+    // Does registerSystem return a ResourceId?
     world.registerSystem(systemResource, upgrBounSystem, false); // registers the UpgrBounSystem contract address to the UpgrBounSystem namespace and resourceID in the world address, allows anyone to access the System
 
     // Register UpgrBounSystem.incrementMessage(string) as a function selector to make it accessible through the World.
@@ -68,15 +88,18 @@ contract UpgradeBountyExtension is Script {
       name: "UpgradeBuildingS"
     });
     console.log("worldresourceIdLib.encode completed. UpgradeBuildingSystem system ID: ");
-    // Alice delegates to the UpgrBounSystem contract
-    world.registerDelegation(
-      address(upgrBounSystem),
-      SYSTEMBOUND_DELEGATION,
-      abi.encodeCall(
-        SystemboundDelegationControl.initDelegation,
-        (address(upgrBounSystem), upgradeBuildingSystemId, 100)
-      )
-    );
+
+    // // Alice delegates to the UpgrBounSystem contract
+    // world.registerDelegation(
+    //   address(upgrBounSystem),
+    //   SYSTEMBOUND_DELEGATION,
+    //   abi.encodeCall(
+    //     SystemboundDelegationControl.initDelegation,
+    //     (address(upgrBounSystem), upgradeBuildingSystemId, 100)
+    //   )
+    // );
+    uint256 maxCallFromCount = 100;
+    systemboundDelegateToSystem(world, upgradeBuildingSystemId, upgrBounSystem, maxCallFromCount);
     console.log("Alice successfully registered her systembound delegation to the UpgrBounSystem contract address.");
 
     // DEBUG
