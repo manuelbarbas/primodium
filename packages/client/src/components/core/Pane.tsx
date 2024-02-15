@@ -147,7 +147,11 @@ export const Content: FC<{
         </div>
       </div>
 
-      <div className={`bg-base-200 min-w-72 border border-t-success border-secondary ${minimized ? "opacity-0" : ""}`}>
+      <div
+        className={`bg-base-200 min-w-72 border border-t-success border-secondary ${
+          minimized ? (locked ? "h-0 overflow-hidden opacity-0" : "opacity-0") : ""
+        }`}
+      >
         {children}
       </div>
     </div>
