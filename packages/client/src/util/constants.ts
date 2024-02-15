@@ -446,8 +446,6 @@ export const UtilityStorages = new Set([
   EntityType.AdvancedUnraidable,
 ]);
 
-export const ReplenishableStorages = new Set([EntityType.Encryption, EntityType.HP]);
-
 export const UnitStorages = new Set([
   EntityType.HammerDrone,
   EntityType.StingerDrone,
