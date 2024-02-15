@@ -9,44 +9,50 @@ import { world } from "../world";
 export function setupBattleNotifications(mud: MUD) {
   const systemWorld = namespaceWorld(world, "systems");
   const { Battle, FleetMovement, BlockNumber, Position } = components;
-  defineComponentSystem(systemWorld, Battle.RawBattle, (update) => {
-    const now = components.Time.get()?.value ?? 0n;
+  defineComponentSystem(
+    systemWorld,
+    Battle.RawBattle,
+    (update) => {
+      const now = components.Time.get()?.value ?? 0n;
+      if (now === 0n) return;
 
-    const battle = components.Battle.get(update.entity);
+      const battle = components.Battle.get(update.entity);
 
-    if (!battle) return;
+      if (!battle) return;
 
-    if (battle.timestamp + 30n < now) return;
+      if (battle.timestamp + 30n < now) return;
 
-    const playerEntity = mud.playerAccount.entity;
-    const attackerRock = components.OwnedBy.get(battle.attacker)?.value as Entity | undefined;
-    const attackerRockOwner = components.OwnedBy.get(attackerRock)?.value;
-    const defenderIsFleet = components.IsFleet.get(battle.defender)?.value;
-    const defenderRock = defenderIsFleet
-      ? (components.OwnedBy.get(battle.defender)?.value as Entity | undefined)
-      : battle.defender;
-    const defenderRockOwner = components.OwnedBy.get(defenderRock)?.value;
+      const playerEntity = mud.playerAccount.entity;
+      const attackerRock = components.OwnedBy.get(battle.attacker)?.value as Entity | undefined;
+      const attackerRockOwner = components.OwnedBy.get(attackerRock)?.value;
+      const defenderIsFleet = components.IsFleet.get(battle.defender)?.value;
+      const defenderRock = defenderIsFleet
+        ? (components.OwnedBy.get(battle.defender)?.value as Entity | undefined)
+        : battle.defender;
+      const defenderRockOwner = components.OwnedBy.get(defenderRock)?.value;
 
-    const winner = battle.winner;
-    if (defenderRock && attackerRockOwner === playerEntity) {
-      const defenderName = defenderIsFleet ? entityToFleetName(battle.defender) : entityToRockName(defenderRock);
-      battle.attacker === winner
-        ? toast.success(`Victory! You attacked ${defenderName} and won! View details in the battle report.`)
-        : toast.error(`Defeat! You attacked ${defenderName} and lost! View details in the battle report.`);
-    } else if (attackerRock && defenderRockOwner === playerEntity) {
-      battle.defender === winner
-        ? toast.success(
-            `Victory! You defended against ${entityToFleetName(
-              battle.attacker
-            )} and won! View details in the battle report.`
-          )
-        : toast.error(
-            `Defeat! You defended against ${entityToFleetName(
-              battle.attacker
-            )} and lost! View details in the battle report .`
-          );
-    }
-  });
+      const winner = battle.winner;
+      if (defenderRock && attackerRockOwner === playerEntity) {
+        const defenderName = defenderIsFleet ? entityToFleetName(battle.defender) : entityToRockName(defenderRock);
+        battle.attacker === winner
+          ? toast.success(`Victory! You attacked ${defenderName} and won! View details in the battle report.`)
+          : toast.error(`Defeat! You attacked ${defenderName} and lost! View details in the battle report.`);
+      } else if (attackerRock && defenderRockOwner === playerEntity) {
+        battle.defender === winner
+          ? toast.success(
+              `Victory! You defended against ${entityToFleetName(
+                battle.attacker
+              )} and won! View details in the battle report.`
+            )
+          : toast.error(
+              `Defeat! You defended against ${entityToFleetName(
+                battle.attacker
+              )} and lost! View details in the battle report .`
+            );
+      }
+    },
+    { runOnInit: false }
+  );
 
   const fleetTransitQueue = new Map<Entity, bigint>();
   defineComponentSystem(systemWorld, FleetMovement, (update) => {
@@ -57,7 +63,7 @@ export function setupBattleNotifications(mud: MUD) {
     const entity = update.entity;
 
     const arrival = update.value[0];
-    if (!arrival) return;
+    if (!arrival || now == 0n) return;
 
     if (!ownerRockOwner || ownerRockOwner !== player) return;
 
@@ -77,7 +83,7 @@ export function setupBattleNotifications(mud: MUD) {
     fleetTransitQueue.forEach((arrivalTime, entityId) => {
       const arrival = FleetMovement.get(entityId);
 
-      if (!arrival) return;
+      if (!arrival || now == 0n) return;
 
       const destination = Position.get(arrival.destination as Entity);
       if (now > arrivalTime) {
