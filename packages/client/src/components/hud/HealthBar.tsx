@@ -1,5 +1,4 @@
 import { formatNumber } from "src/util/number";
-import { Tooltip } from "../core/Tooltip";
 
 type Props = {
   imgUrl?: string;
@@ -7,18 +6,8 @@ type Props = {
   hideValue?: boolean;
   maxHealth?: number;
   className?: string;
-  tooltipContent?: string;
-  tooltipDirection?: "left" | "right" | "top" | "bottom";
 };
-export const HealthBar: React.FC<Props> = ({
-  tooltipContent,
-  tooltipDirection,
-  imgUrl,
-  health,
-  maxHealth = 100,
-  hideValue,
-  className,
-}) => {
+export const HealthBar: React.FC<Props> = ({ imgUrl, health, maxHealth = 100, hideValue, className }) => {
   const getBarColor = (): string => {
     if (health / maxHealth > 0.66) return "bg-success";
     if (health / maxHealth > 0.33) return "bg-warning";
@@ -26,22 +15,20 @@ export const HealthBar: React.FC<Props> = ({
   };
 
   return (
-    <Tooltip text={tooltipContent} direction={tooltipDirection} className="text-xs">
-      <div className={`flex gap-1 items-center justify-center pointer-events-auto w-full ${className}`}>
-        {!hideValue && (
-          <p className="flex text-xs justify-between font-bold text-accent w-24 items-center">
-            {imgUrl && <img src={imgUrl} className="w-3 h-3 mr-1" alt="health" />}
-            {formatNumber(health, { short: true })}
-          </p>
-        )}
+    <div className={`flex gap-1 text-xs items-center justify-center pointer-events-auto w-full ${className}`}>
+      {!hideValue && (
+        <>
+          {imgUrl && <img src={imgUrl} className="w-4 h-4" alt="health" />}
+          {formatNumber(health, { short: true, showZero: true })}
+        </>
+      )}
 
-        <div className="w-full bg-slate-700 h-2">
-          <div
-            className={`h-2 ${getBarColor()} animate transition-width duration-300 opacity-80`}
-            style={{ width: `${Math.min(100, (100 * health) / maxHealth)}%` }}
-          ></div>
-        </div>
+      <div className="w-full bg-slate-700 h-2">
+        <div
+          className={`h-2 ${getBarColor()} animate transition-width duration-300 opacity-80`}
+          style={{ width: `${maxHealth == 0 ? 0 : Math.min(100, (100 * health) / maxHealth)}%` }}
+        />
       </div>
-    </Tooltip>
+    </div>
   );
 };

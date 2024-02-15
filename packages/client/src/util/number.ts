@@ -89,7 +89,7 @@ export function formatTime(rawSeconds: number | bigint): string {
 export function formatTimeShort(rawSeconds: number | bigint): string {
   const seconds = Number(rawSeconds);
   const hours = Math.floor(seconds / 3600);
-  if (hours > 0) return `${hours}h`;
+  if (hours > 0) return `${hours}hr`;
   const minutes = Math.floor((seconds % 3600) / 60);
   if (minutes > 0) return `${minutes}m`;
   const secs = Math.floor(seconds % 60);

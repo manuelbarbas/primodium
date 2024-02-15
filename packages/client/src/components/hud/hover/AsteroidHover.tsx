@@ -28,41 +28,39 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
     <Card className="ml-5 w-56 relative">
       <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50 " />
       <div className="flex flex-col gap-1 z-10">
-        <div className="flex gap-1 items-center">
-          <IconLabel imageUri="/img/icons/asteroidicon.png" className={`pixel-images w-3 h-3 bg-base-100`} />
-          <p className="text-sm font-bold uppercase">{name}</p>
+        <div className="grid grid-cols-2 gap-1">
+          <div className="flex gap-1 items-center">
+            <IconLabel imageUri="/img/icons/asteroidicon.png" className={`pixel-images w-3 h-3 bg-base-100`} />
+            <p className="text-sm font-bold uppercase">{name}</p>
+          </div>
+          <AsteroidEta entity={entity} />
         </div>
 
-        <div className="flex gap-1">
-          <AsteroidEta entity={entity} />
-          {inGracePeriod && (
-            <div className="flex bg-primary font-bold border border-secondary/50 gap-2 text-xs p-1 items-center">
+        {inGracePeriod && (
+          <div className="flex gap-1">
+            <div className="flex bg-primary font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
               <IconLabel imageUri="/img/icons/graceicon.png" className={`pixel-images w-3 h-3`} />
               {formatTimeShort(duration)}
             </div>
-          )}
-        </div>
+          </div>
+        )}
         {!inGracePeriod && ownedBy && !isPirate && (
-          <>
-            <Badge className="text-xs text-accent bg-slate-900 p-1 w-20 h-fit">
+          <div className="grid grid-cols-2 gap-1">
+            <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
               <HealthBar
                 imgUrl="/img/icons/advancedunraidableicon.png"
                 health={Number(formatResourceCount(EntityType.Encryption, encryption, { notLocale: true }))}
                 maxHealth={Number(formatResourceCount(EntityType.Encryption, maxEncryption, { notLocale: true }))}
-                tooltipContent="Encryption"
-                tooltipDirection="left"
               />
             </Badge>
-            <Badge className="text-xs text-accent bg-slate-900 p-1 w-20 h-fit">
+            <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
               <HealthBar
                 imgUrl="/img/icons/defenseicon.png"
                 health={Number(formatResourceCount(EntityType.HP, strength, { notLocale: true, showZero: true }))}
                 maxHealth={Number(formatResourceCount(EntityType.HP, maxStrength, { notLocale: true, showZero: true }))}
-                tooltipContent="Strength"
-                tooltipDirection="left"
               />
             </Badge>
-          </>
+          </div>
         )}
       </div>
     </Card>
@@ -88,7 +86,7 @@ const AsteroidEta = ({ entity }: { entity: Entity }) => {
   if (!isTarget) return <></>;
 
   return (
-    <div className="flex font-bold items-center justify-center uppercase text-xs pulse bg-primary px-1 w-fit">
+    <div className="flex font-bold items-center w-full justify-center uppercase text-xs pulse bg-base-100 border border-primary px-1 w-fit">
       ETA {formatTime(moveLength)}
     </div>
   );
