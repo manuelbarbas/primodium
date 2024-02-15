@@ -117,12 +117,13 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     //todo the same build has some prototype config issues realted to storage increase when fixed the following lines which initialize
     //buildBuilding(bob, EBuilding.SAM, getPosition1(bob));
-    uint256 defense = 1000;
-    uint256 hpProduction = 1;
-    uint256 hp = 1000;
+    uint256 defense = 1000 * 1e18;
+    uint256 hpProductionIncrease = 1 * 1e18;
+    uint256 hp = 1000 * 1e18;
     increaseProduction(bobHomeAsteroid, EResource.U_Defense, defense);
     increaseResource(bobHomeAsteroid, EResource.R_HP, hp);
-    increaseProduction(bobHomeAsteroid, EResource.R_HP, hpProduction);
+    increaseProduction(bobHomeAsteroid, EResource.R_HP, hpProductionIncrease);
+    uint256 hpProduction = ProductionRate.get(bobHomeAsteroid, uint8(EResource.R_HP));
 
     //for testing raiding
     increaseResource(bobHomeAsteroid, EResource.Iron, 10);

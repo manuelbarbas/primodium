@@ -1,6 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { Badge } from "src/components/core/Badge";
 import { IconLabel } from "src/components/core/IconLabel";
+import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { components } from "src/network/components";
@@ -15,9 +16,13 @@ import { HealthBar } from "../HealthBar";
 export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const name = entityToRockName(entity);
   const { inGracePeriod, duration } = useInGracePeriod(entity);
-  const { resourceCount: encryption } = useFullResourceCount(EntityType.Encryption, entity);
+  const { resourceCount: encryption, resourceStorage: maxEncryption } = useFullResourceCount(
+    EntityType.Encryption,
+    entity
+  );
   const isPirate = components.PirateAsteroid.has(entity);
   const ownedBy = components.OwnedBy.use(entity)?.value;
+  const { strength, maxStrength } = useAsteroidStrength(entity);
 
   return (
     <Card className="ml-5 w-56 relative">
@@ -37,11 +42,27 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
             </div>
           )}
         </div>
-
         {!inGracePeriod && ownedBy && !isPirate && (
-          <Badge className="text-xs text-accent bg-slate-900 p-1">
-            <HealthBar health={Number(formatResourceCount(EntityType.Encryption, encryption, { notLocale: true }))} />
-          </Badge>
+          <>
+            <Badge className="text-xs text-accent bg-slate-900 p-1 w-20 h-fit">
+              <HealthBar
+                imgUrl="/img/icons/advancedunraidableicon.png"
+                health={Number(formatResourceCount(EntityType.Encryption, encryption, { notLocale: true }))}
+                maxHealth={Number(formatResourceCount(EntityType.Encryption, maxEncryption, { notLocale: true }))}
+                tooltipContent="Encryption"
+                tooltipDirection="left"
+              />
+            </Badge>
+            <Badge className="text-xs text-accent bg-slate-900 p-1 w-20 h-fit">
+              <HealthBar
+                imgUrl="/img/icons/defenseicon.png"
+                health={Number(formatResourceCount(EntityType.HP, strength, { notLocale: true, showZero: true }))}
+                maxHealth={Number(formatResourceCount(EntityType.HP, maxStrength, { notLocale: true, showZero: true }))}
+                tooltipContent="Strength"
+                tooltipDirection="left"
+              />
+            </Badge>
+          </>
         )}
       </div>
     </Card>

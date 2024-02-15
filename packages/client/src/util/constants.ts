@@ -186,6 +186,7 @@ export const EntityType = {
   DefenseMultiplier: toHex32("M_DefenseMultiplier") as Entity,
 
   Encryption: toHex32("R_Encryption") as Entity,
+  HP: toHex32("R_HP") as Entity,
 
   Bullet: toHex32("Bullet") as Entity,
   IronPlate: toHex32("IronPlate") as Entity,
@@ -389,6 +390,7 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.Unraidable, "/img/icons/unraidableicon.png"],
   [EntityType.AdvancedUnraidable, "/img/icons/advancedunraidableicon.png"],
   [EntityType.Encryption, "/img/icons/advancedunraidableicon.png"],
+  [EntityType.HP, "/img/icons/advancedunraidableicon.png"],
 
   //units
   [EntityType.HammerDrone, "/img/unit/hammerdrone.png"],
@@ -442,7 +444,6 @@ export const UtilityStorages = new Set([
   EntityType.Defense,
   EntityType.Unraidable,
   EntityType.AdvancedUnraidable,
-  EntityType.Encryption,
 ]);
 
 export const UnitStorages = new Set([
@@ -480,6 +481,7 @@ export const ResourceEnumLookup: Record<Entity, EResource> = {
   [EntityType.AdvancedUnraidable]: EResource.U_AdvancedUnraidable,
   [EntityType.DefenseMultiplier]: EResource.M_DefenseMultiplier,
   [EntityType.Encryption]: EResource.R_Encryption,
+  [EntityType.HP]: EResource.R_HP,
 };
 
 export const ResourceEntityLookup = reverseRecord(ResourceEnumLookup);

@@ -1,5 +1,4 @@
 import { Entity } from "@latticexyz/recs";
-import { useEffect, useState } from "react";
 import { components } from "src/network/components";
 import { getBuildingName } from "src/util/building";
 import { Card } from "../../core/Card";
@@ -7,8 +6,6 @@ import { AsteroidHover } from "./AsteroidHover";
 import { FleetHover } from "./FleetHover";
 
 export const HoverInfo = () => {
-  const [hoverEntity, setHoverEntity] = useState<Entity | null>(null);
-
   const BuildingInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
     const buildingName = getBuildingName(entity);
 
@@ -20,26 +17,7 @@ export const HoverInfo = () => {
     );
   };
 
-  const rawHoverEntity = components.HoverEntity.use()?.value;
-
-  useEffect(() => {
-    const showDelay = 0;
-    let timeout: NodeJS.Timeout | null = null;
-    if (!rawHoverEntity) {
-      setHoverEntity(null);
-      timeout && clearTimeout(timeout);
-    }
-
-    if (rawHoverEntity) {
-      timeout = setTimeout(() => {
-        setHoverEntity(rawHoverEntity);
-      }, showDelay);
-    }
-
-    return () => {
-      timeout && clearTimeout(timeout);
-    };
-  }, [rawHoverEntity]);
+  const hoverEntity = components.HoverEntity.use()?.value;
 
   if (!hoverEntity) return <></>;
 

@@ -121,6 +121,20 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             </Modal>
           </div>
         )}
+        <div className="absolute top-0 left-0 -translate-x-full">
+          <Modal>
+            <Modal.Button
+              onClick={() => components.ActiveRock.set({ value: selectedAsteroid })}
+              disabled={selectingDestination || !ownedByPlayer}
+              className="btn-ghost btn-xs text-xs text-accent bg-neutral border border-r-0 pl-2 border-secondary/50 w-28 transition-[width] duration-200"
+            >
+              <IconLabel imageUri="/img/icons/settingsicon.png" text={"Transfer"} />
+            </Modal.Button>
+            <Modal.Content className="w-3/4 h-4/5">
+              <Fleets initialState="transfer" from={selectedAsteroid} />
+            </Modal.Content>
+          </Modal>
+        </div>
 
         <div className="absolute bottom-0 left-0 -translate-x-full">
           <Button
