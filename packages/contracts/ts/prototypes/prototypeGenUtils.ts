@@ -89,12 +89,15 @@ export const getPUnitData = (data: {
  * @param noScale If true, the amounts will not be scaled
  * @returns An object containing the resources and their amounts
  */
-export const getResourceValues = (resourceValues: Record<string, number>, noScale?: boolean) => {
+
+const unscaledResources = new Set([EResource.U_Housing, EResource.U_MaxMoves, EResource.U_CapitalShipCapacity]);
+export const getResourceValues = (resourceValues: Record<string, number>) => {
   // unzip the array
   const [resources, amounts] = Object.entries(resourceValues).reduce(
     (acc, [resource, amount]) => {
-      acc[0].push(MUDEnums.EResource.indexOf(resource));
-      acc[1].push(BigInt(amount * (noScale ? 1 : SCALE)));
+      const resourceIndex = MUDEnums.EResource.indexOf(resource);
+      acc[0].push(resourceIndex);
+      acc[1].push(BigInt(amount * (unscaledResources.has(resourceIndex) ? 1 : SCALE)));
       return acc;
     },
     [[], []] as [number[], bigint[]]
