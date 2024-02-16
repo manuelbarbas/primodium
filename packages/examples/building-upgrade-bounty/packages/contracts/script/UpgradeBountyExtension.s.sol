@@ -27,7 +27,6 @@ import { SYSTEMBOUND_DELEGATION } from "@latticexyz/world-modules/src/modules/st
 
 contract UpgradeBountyExtension is Script {
   function systemboundDelegateToSystem(
-    // uint256 deployerPrivateKey,
     WorldRegistrationSystem world,
     ResourceId delegatingFromSystemId,
     System systemReceivingDelegation,
