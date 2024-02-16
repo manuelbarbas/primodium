@@ -90,8 +90,6 @@ TODO's
 
 - [ ] document NatSpec
 - [ ] Refactor and modularize scripts
-- [ ] fix coord type in System
-- [ ] set up initial script for testing
 - [ ] document for external readers
-- [ ] clean up and minimize necessary info from Primodium world
 - [ ] Implement `AgreementMembersSystem.sol` for more readability of access permissions
+- [ ] fix coord type in System (future Primodium version)

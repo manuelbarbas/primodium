@@ -69,7 +69,7 @@ contract UpgradeBountyExtension is Script {
     console.log("UpgrBounSystem address: ", address(upgrBounSystem));
 
     // Does registerSystem return a ResourceId?
-    world.registerSystem(systemResource, upgrBounSystem, false); // registers the UpgrBounSystem contract address to the UpgrBounSystem namespace and resourceID in the world address, allows anyone to access the System
+    world.registerSystem(systemResource, upgrBounSystem, false); // registers the UpgrBounSystem contract address to the UpgrBounSystem namespace and resourceID in the world address
 
     // Register UpgrBounSystem.incrementMessage(string) as a function selector to make it accessible through the World.
     // When called through the world (MUD version 2.0.0-next.16^), it will be through <namespace>__<function>, e.g. "upgradeBounty__incrementMessage(string)"
@@ -81,37 +81,17 @@ contract UpgradeBountyExtension is Script {
       "Alice successfully registered the upgradeBounty namespace, UpgradeBounty table, and UpgrBounSystem contract to the Admin's world address."
     );
 
-    // !! note UpgradeBuildingS is due to 16 byte restriction. verify this works!
+    // !! note UpgradeBuildingS is due to 16 byte restriction on function names
     ResourceId upgradeBuildingSystemId = WorldResourceIdLib.encode({
       typeId: RESOURCE_SYSTEM,
       namespace: ROOT_NAMESPACE,
       name: "UpgradeBuildingS"
     });
-    console.log("worldresourceIdLib.encode completed. UpgradeBuildingSystem system ID: ");
 
-    // // Alice delegates to the UpgrBounSystem contract
-    // world.registerDelegation(
-    //   address(upgrBounSystem),
-    //   SYSTEMBOUND_DELEGATION,
-    //   abi.encodeCall(
-    //     SystemboundDelegationControl.initDelegation,
-    //     (address(upgrBounSystem), upgradeBuildingSystemId, 100)
-    //   )
-    // );
+    // Alice delegates to the UpgrBounSystem contract
     uint256 maxCallFromCount = 100;
     systemboundDelegateToSystem(world, upgradeBuildingSystemId, upgrBounSystem, maxCallFromCount);
     console.log("Alice successfully registered her systembound delegation to the UpgrBounSystem contract address.");
-
-    // DEBUG
-    // Alice delegates to Bob
-    world.registerDelegation(
-      address(vm.envAddress("ADDRESS_BOB")),
-      SYSTEMBOUND_DELEGATION,
-      abi.encodeCall(
-        SystemboundDelegationControl.initDelegation,
-        (address(upgrBounSystem), upgradeBuildingSystemId, 100)
-      )
-    );
 
     vm.stopBroadcast();
   }
