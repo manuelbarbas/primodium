@@ -67,12 +67,18 @@ export const transferFleet = async (
       : toIsSpaceRock
       ? "transferUnitsAndResourcesFromFleetToSpaceRock"
       : "transferUnitsAndResourcesFromFleetToFleet";
-    await execute({
-      mud,
-      functionName,
-      systemId: getSystemId("FleetTransferSystem"),
-      args: [from as Hex, to as Hex, unitCounts, resourceCounts],
-      delegate: true,
-    });
+    await execute(
+      {
+        mud,
+        functionName,
+        systemId: getSystemId("FleetTransferSystem"),
+        args: [from as Hex, to as Hex, unitCounts, resourceCounts],
+        delegate: true,
+      },
+      {
+        id: "TRANSFER" as Entity,
+        type: TransactionQueueType.TransferFleet,
+      }
+    );
   }
 };

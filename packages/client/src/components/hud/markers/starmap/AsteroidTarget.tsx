@@ -5,6 +5,7 @@ import { EResource } from "contracts/config/enums";
 import { useMemo, useRef } from "react";
 import { Marker } from "src/components/core/Marker";
 import { useMud } from "src/hooks";
+import { useOrbitingFleets } from "src/hooks/useOrbitingFleets";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
@@ -39,6 +40,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
     0n <
       (components.ResourceCount.getWithKeys({ entity: selectedAsteroid as Hex, resource: EResource.U_MaxMoves })
         ?.value ?? 0n);
+  const canTransfer = useOrbitingFleets(selectedAsteroid).length > 0 && ownedByPlayer;
   const noUnits = [...useUnitCounts(selectedAsteroid).entries()].every(([, count]) => count === 0n);
 
   const selectingDestination = !!components.Attack.use()?.originFleet;
@@ -96,36 +98,32 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             {ownedByPlayer && <IconLabel imageUri="/img/icons/minersicon.png" className={``} text="BUILD" />}
           </Button>
         </div>
-        {!hideAttack && (
+        {!selectingDestination && (
           <div className="absolute bottom-0 right-0 translate-x-full w-36">
             <Button
+              disabled={hideAttack}
               onClick={() => components.Attack.setOrigin(selectedAsteroid)}
               className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
             >
-              Attack
+              <IconLabel imageUri="/img/icons/weaponryicon.png" text="Attack" />
             </Button>
           </div>
         )}
-        {ownedByPlayer && hideAttack && (
+        {selectingDestination && (
           <div className="absolute bottom-0 right-0 translate-x-full w-36">
-            <Modal title="Add Fleet">
-              <Modal.Button
-                disabled={!canAddFleets}
-                className="btn-ghost btn-xs text-xs text-accent bg-slate-900 border border-l-0 border-secondary/50"
-              >
-                <IconLabel imageUri="/img/icons/addicon.png" text="ADD FLEET" />
-              </Modal.Button>
-              <Modal.Content className="w-4/5 h-4/5">
-                <Fleets initialState="createFleet" />
-              </Modal.Content>
-            </Modal>
+            <Button
+              onClick={() => components.Attack.reset()}
+              className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
+            >
+              <IconLabel imageUri="/img/icons/returnicon.png" text="CANCEL" />
+            </Button>
           </div>
         )}
         <div className="absolute top-0 left-0 -translate-x-full">
           <Modal>
             <Modal.Button
               onClick={() => components.ActiveRock.set({ value: selectedAsteroid })}
-              disabled={selectingDestination || !ownedByPlayer}
+              disabled={selectingDestination || !canTransfer}
               className="btn-ghost btn-xs text-xs text-accent bg-neutral border border-r-0 pl-2 border-secondary/50 w-28 transition-[width] duration-200"
             >
               <IconLabel imageUri="/img/icons/settingsicon.png" text={"Transfer"} />
@@ -135,18 +133,18 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             </Modal.Content>
           </Modal>
         </div>
-
-        <div className="absolute bottom-0 left-0 -translate-x-full">
-          <Button
-            className="btn-ghost btn-xs text-xs text-accent bg-neutral border border-r-0 pl-2 border-secondary/50 w-28 transition-[width] duration-200"
-            onClick={() => {
-              components.SelectedRock.clear();
-              components.Send.reset();
-              components.Attack.reset();
-            }}
-          >
-            <IconLabel imageUri="/img/icons/returnicon.png" text="CLOSE" />
-          </Button>
+        <div className="absolute bottom-0 left-0 -translate-x-full w-28">
+          <Modal title="Add Fleet">
+            <Modal.Button
+              disabled={!canAddFleets}
+              className="btn-ghost btn-xs w-full text-xs text-accent bg-slate-900 border border-r-0 border-secondary/50"
+            >
+              <IconLabel imageUri="/img/icons/addicon.png" text="ADD FLEET" />
+            </Modal.Button>
+            <Modal.Content className="w-4/5 h-4/5">
+              <Fleets initialState="transfer" from={selectedAsteroid} to={"newFleet"} />
+            </Modal.Content>
+          </Modal>
         </div>
         <img
           src={imageUri}

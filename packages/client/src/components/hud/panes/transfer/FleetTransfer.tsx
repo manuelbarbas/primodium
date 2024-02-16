@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
-import Transfer from "../Transfer";
-import { useFleetNav } from "./Fleets";
+import { useFleetNav } from "../fleets/Fleets";
+import { Transfer } from "./Transfer";
 
 // const SelectTransferEntity
 const FleetTransfer = ({ from, to }: { from: Entity; to: Entity }) => {

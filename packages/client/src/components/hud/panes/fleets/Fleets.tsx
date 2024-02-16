@@ -3,9 +3,8 @@ import { Button } from "src/components/core/Button";
 
 const fleetsPanes = {
   fleets: lazy(() => import("./FleetsPane")),
-  createFleet: lazy(() => import("../../modals/fleets/CreateFleet")),
   manageFleet: lazy(() => import("./ManageFleet")),
-  transfer: lazy(() => import("./FleetTransfer")),
+  transfer: lazy(() => import("../transfer/FleetTransfer")),
 };
 
 type NavButtonProps<J extends View = View> = ComponentProps<typeof Button> & {

@@ -134,24 +134,22 @@ Modal.Content = function ModalContent({ children, className }) {
       className="top-0 w-screen h-screen absolute z-50 bg-neutral/75 backdrop-blur-sm font-mono flex items-center justify-center"
       onClick={handleClickOutside}
     >
-      <div className={`relative max-w-screen max-h-screen ${className} p-5 pt-12`}>
-        <div className="space-y-2 w-full h-full" ref={modalRef}>
-          <Card className="relative w-full h-full">
-            <div className="absolute top-0 -translate-y-full w-full flex justify-between items-center p-2">
-              <p className="font-bold uppercase pr-2 text-accent">{title}</p>
-              <Button
-                onClick={() => {
-                  audio.play(AudioKeys.Sequence2, "ui");
-                  setIsOpen(false);
-                }}
-                className="btn-sm ghost"
-              >
-                <FaTimes />
-              </Button>
-            </div>
-            {children}
-          </Card>
-        </div>
+      <div className={`max-w-screen max-h-screen space-y-2 ${className} p-5 pt-12`} ref={modalRef}>
+        <Card className="relative w-full h-full block">
+          <div className="absolute top-0 -translate-y-full w-full flex justify-between items-center p-2">
+            <p className="font-bold uppercase pr-2 text-accent">{title}</p>
+            <Button
+              onClick={() => {
+                audio.play(AudioKeys.Sequence2, "ui");
+                setIsOpen(false);
+              }}
+              className="btn-sm ghost"
+            >
+              <FaTimes />
+            </Button>
+          </div>
+          {children}
+        </Card>
       </div>
     </div>,
     document.body

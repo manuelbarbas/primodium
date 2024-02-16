@@ -2,7 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { execute } from "src/network/actions";
 import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
-import { getSystemId, hashEntities } from "src/util/encode";
+import { getSystemId } from "src/util/encode";
 import { toTransportableResourceArray, toUnitCountArray } from "src/util/send";
 import { Hex } from "viem";
 
@@ -21,7 +21,7 @@ export const createFleet = async (
       delegate: true,
     },
     {
-      id: hashEntities(TransactionQueueType.CreateFleet, spaceRock),
+      id: "TRANSFER" as Entity,
       type: TransactionQueueType.CreateFleet,
     }
   );

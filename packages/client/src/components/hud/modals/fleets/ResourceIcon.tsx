@@ -7,6 +7,7 @@ import { ResourceImage } from "src/util/constants";
 export const ResourceIcon = ({
   resource,
   amount,
+  className,
   setDragging = () => null,
   onClear,
   disableClear,
@@ -14,6 +15,7 @@ export const ResourceIcon = ({
 }: {
   resource: Entity;
   amount: string;
+  className?: string;
   setDragging?: (e: React.MouseEvent, entity: Entity) => void;
   onClear?: (entity: Entity) => void;
   disableClear?: boolean;
@@ -23,7 +25,7 @@ export const ResourceIcon = ({
     onMouseDown={(e) => setDragging(e, resource)}
     className={`relative flex ${
       size == "md" ? "flex-col" : "gap-6"
-    } gap-1 items-center justify-center bg-neutral border border-primary w-full h-full p-2`}
+    } gap-1 items-center justify-center cursor-pointer bg-neutral border border-primary w-full h-full p-2 ${className}`}
   >
     <img
       src={ResourceImage.get(resource) ?? ""}
