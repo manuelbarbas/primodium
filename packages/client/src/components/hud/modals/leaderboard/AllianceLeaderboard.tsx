@@ -48,8 +48,9 @@ import { hydrateAllianceData } from "src/network/sync/indexer";
 import { getAllianceName } from "src/util/alliance";
 import { entityToColor } from "src/util/color";
 import { entityToAddress } from "src/util/common";
-import { TransactionQueueType } from "src/util/constants";
+import { EntityType, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
+import { formatResourceCount } from "src/util/number";
 import { isProfane } from "src/util/profanity";
 import { Hex, isAddress, padHex } from "viem";
 
@@ -588,7 +589,7 @@ const LeaderboardItem = ({
           </p>
         </div>
         <div className="flex items-center gap-1">
-          <p className="font-bold bg-cyan-700 px-2 ">{score.toLocaleString()}</p>
+          <p className="font-bold bg-cyan-700 px-2 ">{formatResourceCount(EntityType.Iron, BigInt(score))}</p>
           {!playerAlliance && (
             <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.JoinAlliance, entity)}>
               <Button
