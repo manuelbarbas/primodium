@@ -11,14 +11,7 @@ import { getAsteroidImage, getSpaceRockName } from "src/util/asteroid";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount } from "src/util/number";
-export const TargetHeader = ({
-  entity,
-  hideStats,
-}: {
-  entity?: Entity;
-  hideStats?: boolean;
-  showHousing?: boolean;
-}) => {
+export const TargetHeader = ({ entity, hideStats }: { entity?: Entity; hideStats?: boolean }) => {
   const selectedSpacerock = entity ?? components.SelectedRock.use()?.value;
   const primodium = usePrimodium();
   const { strength } = useAsteroidStrength(selectedSpacerock ?? singletonEntity);

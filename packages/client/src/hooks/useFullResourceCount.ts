@@ -8,7 +8,12 @@ export function useFullResourceCount(resource: Entity, spaceRockEntity?: Entity)
   const time = components.Time.use(undefined)?.value ?? 0n;
 
   return useMemo(() => {
-    if (spaceRockEntity === singletonEntity) return new Map();
+    if (spaceRockEntity === singletonEntity)
+      return {
+        resourceCount: 0n,
+        resourceStorage: 0n,
+        production: 0n,
+      };
     return getFullResourceCount(resource, spaceRockEntity);
   }, [time, resource, spaceRockEntity]);
 }

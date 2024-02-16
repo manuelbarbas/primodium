@@ -17,8 +17,8 @@ import { formatResourceCount, parseResourceCount } from "src/util/number";
 import { Hex } from "viem";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { useFleetNav } from "../fleets/Fleets";
-import { Select } from "./Select";
 import { TransferFrom } from "./TransferFrom";
+import { TransferSelect } from "./TransferSelect";
 import { TransferTo } from "./TransferTo";
 
 type To = Entity | "newFleet";
@@ -39,6 +39,10 @@ export const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined
   const [dragLocation, setDragLocation] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [hoveringArea, setHoveringArea] = useState<"from" | "to" | null>(null);
 
+  useEffect(() => {
+    if (to === "newFleet" && !from) setTo(undefined);
+  }, [from, to]);
+
   // Resources
   const transportables = components.P_Transportables.use()?.value ?? [];
 
@@ -46,10 +50,10 @@ export const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined
   const fromResourceCounts = transportables.reduce((acc, transportable) => {
     const entity = ResourceEntityLookup[transportable as EResource];
     const resourceCount = fromInitialResourceCounts.get(entity)?.resourceCount ?? 0n;
+    if (resourceCount == 0n) return acc;
     const delta = resourceDelta.get(entity) ?? 0n;
     const draggingCount = dragging?.entity === entity ? dragging.count : 0n;
     const total = resourceCount - delta - draggingCount;
-    if (total <= 0n) return acc;
     acc.set(entity, total);
     return acc;
   }, new Map<Entity, bigint>());
@@ -73,10 +77,11 @@ export const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined
   const fromUnitCounts = useMemo(() => {
     return [...UnitStorages].reduce((acc, unit) => {
       const count = fromInitialUnitCounts.get(unit) ?? 0n;
+      if (count == 0n) return acc;
       const delta = unitDelta.get(unit) ?? 0n;
       const draggingCount = dragging?.entity === unit ? dragging.count : 0n;
       const total = count - delta - draggingCount;
-      if (total > 0n) acc.set(unit, total);
+      acc.set(unit, total);
       return acc;
     }, new Map<Entity, bigint>());
   }, [dragging, fromInitialUnitCounts, unitDelta]);
@@ -162,12 +167,14 @@ export const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined
   }, [handleKeyDown, stopDragging]);
 
   const { disabled, submitMessage } = useMemo(() => {
+    if (!from || !to) return { disabled: true, submitMessage: "Select" };
     if (maxFleets === 0n) return { disabled: true, submitMessage: "No Fleets Left" };
-    if (unitDelta.size + resourceDelta.size === 0) return { disabled: true, submitMessage: "Create Fleet" };
+    if (unitDelta.size + resourceDelta.size === 0)
+      return { disabled: true, submitMessage: to == "newFleet" ? "Create Fleet" : "Transfer" };
     // if ([...resourceDelta.entries()].reduce((acc, curr) => curr[1] + acc, 0n) > fleetStats.cargo)
     // return { disabled: true, submitMessage: "Not Enough Cargo" };
-    return { disabled: false, submitMessage: "Create Fleet" };
-  }, [resourceDelta, unitDelta, maxFleets]);
+    return { disabled: false, submitMessage: to == "newFleet" ? "Create Fleet" : "Transfer" };
+  }, [from, to, maxFleets, unitDelta.size, resourceDelta.size]);
 
   return (
     <TransactionQueueMask queueItemId={"TRANSFER" as Entity} className="w-full h-full flex flex-col gap-2 p-2">
@@ -184,7 +191,7 @@ export const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined
             remove={() => setFrom(undefined)}
           />
         ) : (
-          <Select rockEntity={selectedRock} activeEntity={to} setEntity={setFrom} />
+          <TransferSelect rockEntity={selectedRock} activeEntity={to} setEntity={setFrom} />
         )}
 
         <div className="grid grid-rows-2 h-full">
@@ -222,7 +229,7 @@ export const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined
             remove={() => setTo(undefined)}
           />
         ) : (
-          <Select rockEntity={selectedRock} activeEntity={from} setEntity={setTo} />
+          <TransferSelect rockEntity={selectedRock} activeEntity={from} setEntity={setTo} showNewFleet />
         )}
       </div>
       <div className="flex gap-4 w-full justify-center items-center">

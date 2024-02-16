@@ -25,7 +25,7 @@ export const LabeledValue: React.FC<{
   );
 };
 
-const Asteroid: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
+export const OwnedAsteroid: React.FC<{ asteroid: Entity; onClick?: () => void }> = ({ asteroid, onClick }) => {
   const {
     components,
     playerAccount: { entity: playerEntity },
@@ -39,7 +39,7 @@ const Asteroid: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
 
   return (
     <Button
-      className={`row-span-1 flex flex-col p-2 items-center text-xs bg-base-100 flex-nowrap border-secondary ${
+      className={`row-span-1 flex flex-col p-2 items-center text-xs bg-base-100 flex-nowrap border-secondary h-full ${
         selected ? "drop-shadow-hard ring-2 ring-warning" : ""
       }`}
       onClick={async () => {
@@ -64,6 +64,7 @@ const Asteroid: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
         });
 
         zoomTo(2);
+        onClick && onClick();
       }}
     >
       <div className="flex flex-col items-center gap-1">
@@ -105,7 +106,7 @@ export const _OwnedAsteroids: React.FC = () => {
       )}
       <div className="grid grid-cols-2 gap-1">
         {asteroids.map((entity) => {
-          return <Asteroid key={entity} asteroid={entity} />;
+          return <OwnedAsteroid key={entity} asteroid={entity} />;
         })}
       </div>
     </div>

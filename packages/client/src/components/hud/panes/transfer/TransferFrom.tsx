@@ -40,11 +40,7 @@ export const TransferFrom = (props: {
   }, [handleKeyDown, handleKeyUp]);
 
   const isFleet = components.IsFleet.get(props.entity)?.value;
-  const Header = isFleet ? (
-    <FleetEntityHeader entity={props.entity} />
-  ) : (
-    <TargetHeader entity={props.entity} showHousing />
-  );
+  const Header = isFleet ? <FleetEntityHeader entity={props.entity} /> : <TargetHeader entity={props.entity} />;
   return (
     <div className={`w-full h-full bg-base-100 p-2 pb-8 flex flex-col gap-2 border border-secondary/50 relative`}>
       <div className="relative h-12 text-sm w-full flex justify-center font-bold gap-1">
@@ -118,36 +114,33 @@ export const TransferFrom = (props: {
         )}
       </div>
 
-      {!props.dragging && (
-        <p className="absolute bottom-2 opacity-50 text-xs italic flex items-center gap-1">
-          <FaInfoCircle /> Press{" "}
-          <span className={`inline kbd kbd-xs not-italic ${keyDown == "shift" ? "bg-white text-black" : ""}`}>
-            Shift
-          </span>{" "}
-          to transfer all,
-          <span className={`inline kbd kbd-xs not-italic ${keyDown == "ctrl" ? "bg-white text-black" : ""}`}>
-            Ctrl
-          </span>{" "}
-          to transfer half
-        </p>
-      )}
-      {props.dragging && (
-        <div className="absolute bottom-2 opacity-50 text-xs italic flex items-center gap-1">
-          <FaInfoCircle />
-          <p>
+      <p className="absolute bottom-2 opacity-50 text-xs italic flex items-center gap-1">
+        {!props.dragging && (
+          <>
+            <FaInfoCircle /> Hold
+            <span className={`inline kbd kbd-xs not-italic ${keyDown == "shift" ? "bg-white text-black" : ""}`}>
+              Shift
+            </span>
+            to transfer all,
+            <span className={`inline kbd kbd-xs not-italic ${keyDown == "ctrl" ? "bg-white text-black" : ""}`}>
+              Ctrl
+            </span>
+            to transfer half
+          </>
+        )}
+        {props.dragging && (
+          <>
+            <FaInfoCircle />
             Press
-            <span className={`inline kbd kbd-xs not-italic ${keyDown === "e" ? "bg-white text-black" : ""}`}>e</span>/
-            <span className={`inline kbd kbd-xs not-italic ${keyDown === "q" ? "bg-white text-black" : ""}`}>q</span>
-            to change by 1.
-          </p>
-          <p>
-            Use
-            <span className={`inline kbd kbd-xs not-italic ${keyDown === "E" ? "bg-white text-black" : ""}`}>E</span>/
-            <span className={`inline kbd kbd-xs not-italic ${keyDown === "Q" ? "bg-white text-black" : ""}`}>Q</span> to
+            <span className={`inline kbd kbd-xs not-italic ${keyDown === "q" ? "bg-white text-black" : ""}`}>q</span>/
+            <span className={`inline kbd kbd-xs not-italic ${keyDown === "e" ? "bg-white text-black" : ""}`}>e</span>
+            to change by 1. Press
+            <span className={`inline kbd kbd-xs not-italic ${keyDown === "Q" ? "bg-white text-black" : ""}`}>Q</span>/
+            <span className={`inline kbd kbd-xs not-italic ${keyDown === "E" ? "bg-white text-black" : ""}`}>E</span> to
             change by 10.
-          </p>
-        </div>
-      )}
+          </>
+        )}
+      </p>
     </div>
   );
 };

@@ -8,6 +8,7 @@ import { SecondaryCard } from "src/components/core/Card";
 import { Pane } from "src/components/core/Pane";
 import { useMud } from "src/hooks";
 import { useFleetStats } from "src/hooks/useFleetMoves";
+import { usePlayerOwner } from "src/hooks/usePlayerOwner";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { EntityType } from "src/util/constants";
@@ -27,7 +28,7 @@ export const LabeledValue: React.FC<{
   );
 };
 
-const Fleet: React.FC<{ fleet: Entity }> = ({ fleet }) => {
+export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ fleet, onClick }) => {
   const primodium = usePrimodium();
   const getScene = primodium.api(Scenes.Starmap).scene.getScene;
   const description = entityToFleetName(fleet);
@@ -36,6 +37,9 @@ const Fleet: React.FC<{ fleet: Entity }> = ({ fleet }) => {
   const movement = components.FleetMovement.use(fleet);
   const time = components.Time.use()?.value ?? 0n;
   const stance = components.FleetStance.use(fleet);
+
+  const owner = usePlayerOwner(fleet);
+  const playerEntity = useMud().playerAccount.entity;
 
   const fleetStateText = useMemo(() => {
     const arrivalTime = movement?.arrivalTime ?? 0n;
@@ -51,7 +55,7 @@ const Fleet: React.FC<{ fleet: Entity }> = ({ fleet }) => {
 
   return (
     <Button
-      className={`row-span-1 w-44 flex flex-col p-2 gap-1 items-center text-xs bg-base-100 flex-nowrap border-secondary ${
+      className={`row-span-1 flex flex-col p-2 gap-1 items-center text-xs bg-base-100 flex-nowrap border-secondary ${
         selected ? "drop-shadow-hard ring-2 ring-warning" : ""
       }`}
       onClick={async () => {
@@ -79,12 +83,14 @@ const Fleet: React.FC<{ fleet: Entity }> = ({ fleet }) => {
         });
 
         zoomTo(2);
+        onClick && onClick();
       }}
     >
+      {owner !== playerEntity && <div className="absolute top-0 right-0 px-1 bg-error text-[.6rem]">enemy</div>}
       <img src="img/icons/outgoingicon.png" className=" w-12 h-12 p-2 bg-neutral border border-secondary" />
       <div className="flex flex-col h-fit text-xs">
         <div className="flex gap-1 items-center justify-center"></div>
-        <p className="font-bold -mt-3 bg-secondary px-1 ">{description}</p>
+        <p className={`"font-bold -mt-3 ${playerEntity !== owner ? "bg-error" : "bg-secondary"} px-1`}>{description}</p>
       </div>
       <hr className="w-full border border-secondary/25" />
       <p className="flex flex-col justify-center font-thin">
@@ -92,7 +98,7 @@ const Fleet: React.FC<{ fleet: Entity }> = ({ fleet }) => {
         {!!movement && <p className="text-accent">{entityToRockName(movement.destination as Entity)}</p>}
       </p>
       <hr className="w-full border border-secondary/25" />
-      <div className="grid grid-cols-2 gap-x-5 p-1">
+      <div className="grid grid-cols-3 gap-x-5 p-1">
         <div className="grid grid-cols-2 gap-1">
           <p className="">{formatResourceCount(EntityType.Iron, fleetStats.attack, { short: true })}</p>
           <p className="text-accent">ATK</p>
@@ -144,7 +150,7 @@ const _OwnedFleets: React.FC = () => {
       )}
       <div className="grid grid-cols-2 gap-1">
         {fleets.map((entity) => {
-          return <Fleet key={entity} fleet={entity} />;
+          return <OwnedFleet key={entity} fleet={entity} />;
         })}
       </div>
     </div>

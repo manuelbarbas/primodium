@@ -134,7 +134,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
           </Modal>
         </div>
         <div className="absolute bottom-0 left-0 -translate-x-full w-28">
-          <Modal title="Transfer">
+          <Modal title="Create Fleet">
             <Modal.Button
               disabled={!canAddFleets}
               className="btn-ghost btn-xs w-full text-xs text-accent bg-slate-900 border border-r-0 border-secondary/50"

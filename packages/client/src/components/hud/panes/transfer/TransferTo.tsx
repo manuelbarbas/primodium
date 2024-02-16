@@ -26,9 +26,10 @@ export const TransferTo = (props: {
 }) => {
   const isFleet = props.entity !== "newFleet" && components.IsFleet.has(props.entity);
   const selectedRock = components.SelectedRock.use()?.value;
+  const noUnitsOrResources = props.unitCounts.size === 0 && props.resourceCounts.size === 0;
   const Header = useMemo(() => {
     if (props.entity !== "newFleet") {
-      return isFleet ? <FleetEntityHeader entity={props.entity} /> : <TargetHeader entity={props.entity} showHousing />;
+      return isFleet ? <FleetEntityHeader entity={props.entity} /> : <TargetHeader entity={props.entity} />;
     }
     if (!selectedRock) throw new Error("No selected rock");
     const data = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
@@ -53,7 +54,7 @@ export const TransferTo = (props: {
       onMouseOver={props.onMouseOver}
       onMouseLeave={props.onMouseLeave}
     >
-      <div className="relative h-12 text-sm w-full flex font-bold gap-1">
+      <div className="relative h-12 text-sm w-full flex justify-center font-bold gap-1">
         {Header}
         {props.remove && (
           <Button className="absolute -top-1 -right-1 btn-error p-1 btn-xs" onClick={props.remove}>
@@ -73,7 +74,7 @@ export const TransferTo = (props: {
             const [unit, count] = [...props.unitCounts.entries()][index];
             return (
               <ResourceIcon
-                key={`from-unit-${unit}`}
+                key={`to-unit-${unit}`}
                 className="bg-neutral/50"
                 resource={unit as Entity}
                 amount={count.toString()}
@@ -104,7 +105,11 @@ export const TransferTo = (props: {
           })}
       </div>
       {props.clearAll && (
-        <Button className="btn-primary btn-xs absolute bottom-1 right-2" onClick={props.clearAll}>
+        <Button
+          disabled={noUnitsOrResources}
+          className="btn-primary btn-xs absolute bottom-1 right-2"
+          onClick={props.clearAll}
+        >
           Clear all
         </Button>
       )}
