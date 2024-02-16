@@ -70,19 +70,45 @@ pnpm i
 pnpm build
 ```
 
-Navigate to `primodium/packages/examples/building-upgrade-bounty/packages/contracts`. Execute the following:
+Navigate to `primodium/packages/examples/building-upgrade-bounty/packages/contracts`.
+
+Next we're going to deploy and register Alice's `upgradeBounty` namespace, systems, functions, and tables to the Admin's world, as well as delegate Alice's `UpgradeBuildingSystem` control to the `UpgrBounSystem` address.
+
+Execute the following:
 
 ```bash
 forge script script/UpgradeBountyExtension.s.sol --rpc-url http://localhost:8545 --broadcast
 ```
 
-Once complete, execute the following:
+Next, we're going to have Alice use her namespace admin rights to give Bob system access so he can call `UpgrBounSystem` functions.
+
+Execute the following:
 
 ```bash
 forge script script/UpgrBounSystemAccess.s.sol --rpc-url http://localhost:8545 --broadcast
 ```
 
+Finally, we're going to do the following actions within the same script.
+
+1. Alice deposits a bounty for a building at a specific coordinate.
+2. Alice withdraws that bounty (to test it is possible).
+3. Alice deposits a new bounty for the same building and coordinate.
+4. Bob uses the special delegation that `UpgrBounSystem` has from Alice to upgrade Alice's building on her behalf. He also claims the bounty in the same atomic action.
+
+Execute the following:
+
+```bash
+forge script script/UpgradeBountyActions.s.sol --rpc-url http://localhost:8545 --broadcast
+```
+
 Look at the client, notice that a specific Iron Mine has been upgraded to Iron Mine II!
+Additionally, use the `primodium/packages/examples/building-upgrade-bounty/packages/contracts` terminal to check Alice and Bob's ETH balances:
+
+```bash
+source .env
+cast balance $ADDRESS_ALICE
+cast balance $ADDRESS_BOB
+```
 
 ## TODO
 
