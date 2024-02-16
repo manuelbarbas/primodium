@@ -14,7 +14,6 @@ const unscaledResources = new Set([
   ...Object.keys(UnitEnumLookup),
   EntityType.FleetMoves,
   EntityType.VesselCapacity,
-  EntityType.Defense,
   EntityType.Housing,
 ]);
 

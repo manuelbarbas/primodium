@@ -1,28 +1,19 @@
 import { DepthLayers, Scenes } from "@game/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
 import { useMemo, useRef } from "react";
-import { Badge } from "src/components/core/Badge";
 import { Marker } from "src/components/core/Marker";
-import { Tooltip } from "src/components/core/Tooltip";
 import { useMud } from "src/hooks";
-import { useFullResourceCount } from "src/hooks/useFullResourceCount";
-import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { getAsteroidImage } from "src/util/asteroid";
-import { EntityType } from "src/util/constants";
-import { formatResourceCount } from "src/util/number";
 import { getCanAttackSomeone } from "src/util/unit";
 import { Hex } from "viem";
 import { Button } from "../../../core/Button";
 import { IconLabel } from "../../../core/IconLabel";
 import { Modal } from "../../../core/Modal";
-import { GracePeriod } from "../../GracePeriod";
-import { HealthBar } from "../../HealthBar";
 import { Fleets } from "../../panes/fleets/Fleets";
 
 export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ selectedAsteroid }) => {
@@ -39,8 +30,6 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   const mapOpen = components.MapOpen.use()?.value ?? false;
   const position = components.Position.use(selectedAsteroid);
   const imageUri = getAsteroidImage(primodium, selectedAsteroid);
-  const { inGracePeriod } = useInGracePeriod((selectedAsteroid as Entity) ?? singletonEntity);
-  const { resourceCount: encryption } = useFullResourceCount(EntityType.Encryption, selectedAsteroid);
 
   const { zoom } = useCamera();
   const isPirate = components.PirateAsteroid.has(selectedAsteroid);
@@ -132,25 +121,21 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             </Modal>
           </div>
         )}
+        <div className="absolute top-0 left-0 -translate-x-full">
+          <Modal>
+            <Modal.Button
+              onClick={() => components.ActiveRock.set({ value: selectedAsteroid })}
+              disabled={selectingDestination || !ownedByPlayer}
+              className="btn-ghost btn-xs text-xs text-accent bg-neutral border border-r-0 pl-2 border-secondary/50 w-28 transition-[width] duration-200"
+            >
+              <IconLabel imageUri="/img/icons/settingsicon.png" text={"Transfer"} />
+            </Modal.Button>
+            <Modal.Content className="w-3/4 h-4/5">
+              <Fleets initialState="transfer" from={selectedAsteroid} />
+            </Modal.Content>
+          </Modal>
+        </div>
 
-        {inGracePeriod && (
-          <div className="absolute top-0 left-1/2 transform -translate-y-full -translate-x-1/2">
-            <Badge className="text-xs text-accent bg-slate-900 p-2 w-24">
-              <GracePeriod entity={selectedAsteroid as Entity} />
-            </Badge>
-          </div>
-        )}
-        {!inGracePeriod && ownedBy && !isPirate && (
-          <Tooltip text="Encryption" direction="top" className="text-xs">
-            <div className="absolute top-0 left-1/2 transform -translate-y-full -translate-x-1/2">
-              <Badge className="text-xs text-accent bg-slate-900 p-1 w-14">
-                <HealthBar
-                  health={Number(formatResourceCount(EntityType.Encryption, encryption, { notLocale: true }))}
-                />
-              </Badge>
-            </div>
-          </Tooltip>
-        )}
         <div className="absolute bottom-0 left-0 -translate-x-full">
           <Button
             className="btn-ghost btn-xs text-xs text-accent bg-neutral border border-r-0 pl-2 border-secondary/50 w-28 transition-[width] duration-200"
