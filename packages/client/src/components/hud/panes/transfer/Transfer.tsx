@@ -172,16 +172,12 @@ export const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined
   return (
     <TransactionQueueMask queueItemId={"TRANSFER" as Entity} className="w-full h-full flex flex-col gap-2 p-2">
       {dragging && <Dragging {...dragging} location={dragLocation} />}
-      {/*Create Fleet Header*/}
-      <div className="flex items-center justify-between gap-2 w-full uppercase font-bold text-xs text-left">
-        <p className="opacity-50">Create Fleet</p>
-      </div>
-
       <div className="grid grid-cols-[1fr_5px_1fr]  w-full h-full gap-4">
         {/*Left Side */}
         {from ? (
           <TransferFrom
             entity={from}
+            dragging={!!dragging}
             unitCounts={fromUnitCounts}
             resourceCounts={fromResourceCounts}
             setDragging={initDragging}

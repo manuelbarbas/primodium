@@ -56,8 +56,8 @@ export const TransferTo = (props: {
       <div className="relative h-12 text-sm w-full flex font-bold gap-1">
         {Header}
         {props.remove && (
-          <Button className="absolute top-0 right-0 btn-error p-1 btn-xs" onClick={props.remove}>
-            <FaTimes className="w-4 h-4" />
+          <Button className="absolute -top-1 -right-1 btn-error p-1 btn-xs" onClick={props.remove}>
+            <FaTimes />
           </Button>
         )}
       </div>

@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import React, { useCallback, useEffect, useState } from "react";
-import { FaTimes } from "react-icons/fa";
+import { FaInfoCircle, FaTimes } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { components } from "src/network/components";
 import { formatResourceCount, parseResourceCount } from "src/util/number";
@@ -9,6 +9,7 @@ import { TargetHeader } from "../../spacerock-menu/TargetHeader";
 import { FleetEntityHeader } from "../fleets/FleetHeader";
 
 export const TransferFrom = (props: {
+  dragging?: boolean;
   sameOwner?: boolean;
   entity: Entity;
   unitCounts: Map<Entity, bigint>;
@@ -16,20 +17,18 @@ export const TransferFrom = (props: {
   setDragging?: (e: React.MouseEvent, entity: Entity, count: bigint) => void;
   remove?: () => void;
 }) => {
-  const [keyDown, setKeyDown] = useState<"shift" | "ctrl" | null>();
+  const [keyDown, setKeyDown] = useState<string | null>();
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "Shift") {
       setKeyDown("shift");
     } else if (e.key === "Meta" || e.key === "Control") {
       setKeyDown("ctrl");
+    } else {
+      setKeyDown(e.key);
     }
   }, []);
-  const handleKeyUp = useCallback((e: KeyboardEvent) => {
-    if (e.key === "Shift" || e.key === "Control" || e.key === "Meta") {
-      setKeyDown(null);
-    }
-  }, []);
+  const handleKeyUp = useCallback(() => setKeyDown(null), []);
 
   useEffect(() => {
     window.addEventListener("keyup", handleKeyUp);
@@ -51,8 +50,8 @@ export const TransferFrom = (props: {
       <div className="relative h-12 text-sm w-full flex justify-center font-bold gap-1">
         {Header}
         {props.remove && (
-          <Button className="absolute top-0 right-0 btn-error p-1 btn-xs" onClick={props.remove}>
-            <FaTimes className="w-4 h-4" />
+          <Button className="absolute -top-1 -right-1 btn-error p-1 btn-xs" onClick={props.remove}>
+            <FaTimes />
           </Button>
         )}
       </div>
@@ -118,6 +117,37 @@ export const TransferFrom = (props: {
           </div>
         )}
       </div>
+
+      {!props.dragging && (
+        <p className="absolute bottom-2 opacity-50 text-xs italic flex items-center gap-1">
+          <FaInfoCircle /> Press{" "}
+          <span className={`inline kbd kbd-xs not-italic ${keyDown == "shift" ? "bg-white text-black" : ""}`}>
+            Shift
+          </span>{" "}
+          to transfer all,
+          <span className={`inline kbd kbd-xs not-italic ${keyDown == "ctrl" ? "bg-white text-black" : ""}`}>
+            Ctrl
+          </span>{" "}
+          to transfer half
+        </p>
+      )}
+      {props.dragging && (
+        <div className="absolute bottom-2 opacity-50 text-xs italic flex items-center gap-1">
+          <FaInfoCircle />
+          <p>
+            Press
+            <span className={`inline kbd kbd-xs not-italic ${keyDown === "e" ? "bg-white text-black" : ""}`}>e</span>/
+            <span className={`inline kbd kbd-xs not-italic ${keyDown === "q" ? "bg-white text-black" : ""}`}>q</span>
+            to change by 1.
+          </p>
+          <p>
+            Use
+            <span className={`inline kbd kbd-xs not-italic ${keyDown === "E" ? "bg-white text-black" : ""}`}>E</span>/
+            <span className={`inline kbd kbd-xs not-italic ${keyDown === "Q" ? "bg-white text-black" : ""}`}>Q</span> to
+            change by 10.
+          </p>
+        </div>
+      )}
     </div>
   );
 };
