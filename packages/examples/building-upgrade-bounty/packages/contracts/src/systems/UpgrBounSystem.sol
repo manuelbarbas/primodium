@@ -24,7 +24,7 @@ interface WorldWithUpgradeBuilding {
   /**
    * @dev Upgrades the building at the specified coordinate.
    * @param coord The coordinate of the building to upgrade.
-   * @return The new building entity.
+   * @return buildingEntity The new building entity.
    */
   function upgradeBuilding(PositionData memory coord) external returns (bytes32 buildingEntity);
 
@@ -67,7 +67,7 @@ contract UpgrBounSystem is System {
   /**
    * @dev Deposits an upgrade bounty for the building at the specified coordinate.
    * @param coord The coordinate of the building.
-   * @return The value of the bounty deposited.
+   * @return bountyValue The value of the bounty deposited.
    */
   function depositBounty(PositionData memory coord) public payable returns (uint256 bountyValue) {
     // artefact of how Primodium handles buildings and coordinates, will be fixed in future update
@@ -90,7 +90,7 @@ contract UpgrBounSystem is System {
   /**
    * @dev Withdraws the upgrade bounty for the building at the specified coordinate.
    * @param coord The coordinate of the building.
-   * @return The value of the withdrawn bounty.
+   * @return bountyValue The value of the withdrawn bounty.
    * !! If Alice gives Bob system access, Bob could try to call this function but only can claim his own deposted bounty
    * !!? If Alice delegates her system access to Bob and Bob uses callFrom() on this function, who does Alice's bounty go to?
    */
@@ -119,7 +119,7 @@ contract UpgrBounSystem is System {
    * @dev Upgrades the building at the specified coordinate using the bounty published by the given address.
    * @param bountyPublisher The address of the bounty publisher.
    * @param coord The coordinate of the building to upgrade.
-   * @return The new building entity.
+   * @return newBuildingEntity The new building entity.
    */
   function upgradeForBounty(
     address bountyPublisher,

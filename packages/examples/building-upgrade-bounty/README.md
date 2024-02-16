@@ -110,8 +110,11 @@ cast balance $ADDRESS_ALICE
 cast balance $ADDRESS_BOB
 ```
 
+## Additional Comments
+
+Given that Primodium's contracts are currently closed source, 3rd party developers cannot use Foundry Test cheatcodes to arbitrarily modify the state of the base Primodium world. This means that the 3rd party developers can currently only test by forking the state of a live Primodium world and running scripts against it. This is a very rough DevEx that should be considered challenging for most developers until the Primodium contract source code is live.
+
 ## Future Improvements
 
-- [ ] document NatSpec
 - [ ] Implement `AgreementMembersSystem.sol` for more readability of access permissions
 - [ ] fix coord type in System (future Primodium version)
