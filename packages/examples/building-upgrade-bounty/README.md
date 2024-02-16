@@ -110,12 +110,8 @@ cast balance $ADDRESS_ALICE
 cast balance $ADDRESS_BOB
 ```
 
-## TODO
-
-TODO's
+## Future Improvements
 
 - [ ] document NatSpec
-- [ ] Refactor and modularize scripts
-- [ ] document for external readers
 - [ ] Implement `AgreementMembersSystem.sol` for more readability of access permissions
 - [ ] fix coord type in System (future Primodium version)

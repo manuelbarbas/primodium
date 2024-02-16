@@ -1,4 +1,9 @@
 // SPDX-License-Identifier: MIT
+
+/**
+ * @title UpgrBounSystem
+ * @dev A contract that handles upgrade bounties for buildings in a world system.
+ */
 pragma solidity >=0.8.21;
 
 import { System } from "@latticexyz/world/src/System.sol";
@@ -16,8 +21,20 @@ import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 bytes32 constant BuildingTileKey = bytes32("building:tile");
 
 interface WorldWithUpgradeBuilding {
+  /**
+   * @dev Upgrades the building at the specified coordinate.
+   * @param coord The coordinate of the building to upgrade.
+   * @return The new building entity.
+   */
   function upgradeBuilding(PositionData memory coord) external returns (bytes32 buildingEntity);
 
+  /**
+   * @dev Calls a function from the world system on behalf of a delegator.
+   * @param delegator The address of the delegator.
+   * @param systemId The ID of the system to call.
+   * @param callData The data to pass to the system.
+   * @return The result of the system call.
+   */
   function callFrom(
     address delegator,
     ResourceId systemId,
@@ -25,10 +42,13 @@ interface WorldWithUpgradeBuilding {
   ) external payable returns (bytes memory);
 }
 
-// !! Note: Building owner must delegate to this contract to upgrade their building
-// !! verify usage of msg.sender vs _msgSender()
-// !! technically users can deposit upgrade bounties at any coordinate, regardless of building existence
-// !! technically Alice can issue an upgrade bounty at Bob's building, and Bob can claim it
+/**
+ * @dev A contract that handles upgrade bounties for buildings in a world system.
+ * !! Note: Building owner must delegate to this contract to upgrade their building
+ * !! verify usage of msg.sender vs _msgSender()
+ * !! technically users can deposit upgrade bounties at any coordinate, regardless of building existence
+ * !! technically Alice can issue an upgrade bounty at Bob's building, and Bob can claim it
+ */
 contract UpgrBounSystem is System {
   /* ----------------------------- Picked from Library --------------------------------- */
   // circumvented LibEncode library, will fix DevEx in future update (only necessary for coord)
@@ -43,6 +63,12 @@ contract UpgrBounSystem is System {
   }
 
   /* ------------------------------ Actual Contract ----------------------------------- */
+
+  /**
+   * @dev Deposits an upgrade bounty for the building at the specified coordinate.
+   * @param coord The coordinate of the building.
+   * @return The value of the bounty deposited.
+   */
   function depositBounty(PositionData memory coord) public payable returns (uint256 bountyValue) {
     // artefact of how Primodium handles buildings and coordinates, will be fixed in future update
     bytes32 buildingEntity = getBuildingFromCoord(coord);
@@ -61,8 +87,13 @@ contract UpgrBounSystem is System {
     UpgradeBounty.set(_msgSender(), buildingEntity, bountyValue);
   }
 
-  // !! If Alice gives Bob system access, Bob could try to call this function but only can claim his own deposted bounty
-  // !!? If Alice delegates her system access to Bob and Bob uses callFrom() on this function, who does Alice's bounty go to?
+  /**
+   * @dev Withdraws the upgrade bounty for the building at the specified coordinate.
+   * @param coord The coordinate of the building.
+   * @return The value of the withdrawn bounty.
+   * !! If Alice gives Bob system access, Bob could try to call this function but only can claim his own deposted bounty
+   * !!? If Alice delegates her system access to Bob and Bob uses callFrom() on this function, who does Alice's bounty go to?
+   */
   function withdrawBounty(PositionData memory coord) public returns (uint256 bountyValue) {
     bytes32 buildingEntity = getBuildingFromCoord(coord);
 
@@ -84,6 +115,12 @@ contract UpgrBounSystem is System {
     UpgradeBounty.set(_msgSender(), buildingEntity, 0);
   }
 
+  /**
+   * @dev Upgrades the building at the specified coordinate using the bounty published by the given address.
+   * @param bountyPublisher The address of the bounty publisher.
+   * @param coord The coordinate of the building to upgrade.
+   * @return The new building entity.
+   */
   function upgradeForBounty(
     address bountyPublisher,
     PositionData memory coord
@@ -101,7 +138,6 @@ contract UpgrBounSystem is System {
       bountyPublisher,
       upgradeBuildingSystemId,
       abi.encodeWithSignature("upgradeBuilding((int32,int32,bytes32))", (coord))
-      //"upgradeBuilding(coord)"
     );
 
     // Prep params for the transferBalanceToAddress function
