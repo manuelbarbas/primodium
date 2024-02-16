@@ -2,6 +2,7 @@ import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { Button } from "src/components/core/Button";
+import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { Hex } from "viem";
 import { OwnedAsteroid } from "../OwnedAsteroids";
@@ -12,18 +13,26 @@ export const TransferSelect = ({
   activeEntity,
   setEntity,
   showNewFleet,
+  hideNotOwned,
 }: {
   rockEntity: Entity;
   activeEntity?: Entity | "newFleet";
   setEntity: (entity: Entity | "newFleet") => void;
   showNewFleet?: boolean;
+  hideNotOwned?: boolean;
 }) => {
-  showNewFleet;
   const query = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination: rockEntity })];
   const time = components.Time.use()?.value ?? 0n;
-  const fleetsOnRock = [...useEntityQuery(query)].filter(
-    (entity) => entity !== activeEntity && (components.FleetMovement.get(entity)?.arrivalTime ?? 0n < time)
-  );
+  const playerEntity = useMud().playerAccount.entity;
+  const fleetsOnRock = [...useEntityQuery(query)].filter((entity) => {
+    if (entity == activeEntity) return false;
+    if (components.FleetMovement.get(entity)?.arrivalTime ?? 0n > time) return false;
+    if (!hideNotOwned) return true;
+
+    const fleetOwnerRock = components.OwnedBy.get(entity)?.value as Entity | undefined;
+    const fleetOwnerPlayer = components.OwnedBy.get(fleetOwnerRock)?.value;
+    return fleetOwnerPlayer == playerEntity;
+  });
 
   const fleetsAvailable =
     components.ResourceCount.getWithKeys({ entity: rockEntity as Hex, resource: EResource.U_MaxMoves })?.value ?? 0n;

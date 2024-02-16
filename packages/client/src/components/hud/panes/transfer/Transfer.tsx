@@ -196,6 +196,7 @@ export const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined
             rockEntity={selectedRock}
             activeEntity={to}
             setEntity={(entity) => entity !== "newFleet" && setFrom(entity)}
+            hideNotOwned
           />
         )}
 
