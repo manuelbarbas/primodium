@@ -24,7 +24,6 @@ export const TransferSelect = ({
   const fleetsOnRock = [...useEntityQuery(query)].filter(
     (entity) => entity !== activeEntity && (components.FleetMovement.get(entity)?.arrivalTime ?? 0n < time)
   );
-  console.log("fleets on rock:", fleetsOnRock);
 
   const fleetsAvailable =
     components.ResourceCount.getWithKeys({ entity: rockEntity as Hex, resource: EResource.U_MaxMoves })?.value ?? 0n;

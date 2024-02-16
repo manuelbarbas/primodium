@@ -19,6 +19,7 @@ import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { useFleetNav } from "../fleets/Fleets";
 import { TransferFrom } from "./TransferFrom";
 import { TransferSelect } from "./TransferSelect";
+import { TransferSwap } from "./TransferSwap";
 import { TransferTo } from "./TransferTo";
 
 type To = Entity | "newFleet";
@@ -179,7 +180,7 @@ export const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined
   return (
     <TransactionQueueMask queueItemId={"TRANSFER" as Entity} className="w-full h-full flex flex-col gap-2 p-2">
       {dragging && <Dragging {...dragging} location={dragLocation} />}
-      <div className="grid grid-cols-[1fr_5px_1fr]  w-full h-full gap-4">
+      <div className="grid grid-cols-[1fr_3rem_1fr]  w-full h-full">
         {/*Left Side */}
         {from ? (
           <TransferFrom
@@ -191,15 +192,30 @@ export const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined
             remove={() => setFrom(undefined)}
           />
         ) : (
-          <TransferSelect rockEntity={selectedRock} activeEntity={to} setEntity={setFrom} />
+          <TransferSelect
+            rockEntity={selectedRock}
+            activeEntity={to}
+            setEntity={(entity) => entity !== "newFleet" && setFrom(entity)}
+          />
         )}
 
-        <div className="grid grid-rows-2 h-full">
+        {/*Middle*/}
+        <div className="grid grid-rows-3 h-full w-full place-items-center">
           <div className="grid place-items-center">
-            <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[15px] border-b-secondary rotate-90 -translate-x-1/3"></div>
+            <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[15px] border-b-secondary rotate-90"></div>
           </div>
+          <TransferSwap
+            from={from}
+            to={to}
+            onClick={(newFrom, newTo) => {
+              setUnitDelta(new Map());
+              setResourceDelta(new Map());
+              setFrom(newFrom);
+              setTo(newTo);
+            }}
+          />
           <div className="grid place-items-center">
-            <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[15px] border-b-secondary rotate-90 -translate-x-1/3"></div>
+            <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[15px] border-b-secondary rotate-90"></div>
           </div>
         </div>
 
