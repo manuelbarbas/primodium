@@ -60,7 +60,7 @@ export const TransferFrom = (props: {
           .fill(0)
           .map((_, index) => {
             if (index >= props.unitCounts.size)
-              return <div className="w-full h-full bg-black opacity-50" key={`unit-from-${index}`} />;
+              return <div className="w-full h-full bg-white/10 opacity-50" key={`unit-from-${index}`} />;
             const [unit, count] = [...props.unitCounts.entries()][index];
             const delta = props.deltas?.get(unit);
             return (
@@ -78,8 +78,8 @@ export const TransferFrom = (props: {
             );
           })}
         {props.unitCounts.size == 0 && (
-          <div className="flex-1 absolute w-full h-full p-4 grid place-items-center bg-black/30">
-            <p className="uppercase font-bold text-error/70">No units</p>
+          <div className="flex-1 absolute w-full h-full p-4 grid place-items-center bg-black/50">
+            <p className="uppercase font-bold text-error">No units</p>
           </div>
         )}
       </div>
@@ -91,10 +91,9 @@ export const TransferFrom = (props: {
           .fill(0)
           .map((_, index) => {
             if (index >= props.resourceCounts.size)
-              return <div key={`resource-blank-${index}`} className=" w-full h-full bg-black opacity-50 " />;
+              return <div key={`resource-blank-${index}`} className=" w-full h-full bg-white/10 opacity-50 " />;
             const [entity, count] = [...props.resourceCounts.entries()][index];
             const delta = props.deltas?.get(entity);
-            console.log("dleta:", delta);
             return (
               <ResourceIcon
                 key={`to-resource-${entity}`}
@@ -114,8 +113,8 @@ export const TransferFrom = (props: {
             );
           })}
         {props.resourceCounts.size == 0 && (
-          <div className="flex-1 absolute w-full h-full p-4 grid place-items-center bg-black/30">
-            <p className="uppercase font-bold text-error/70">No resources</p>
+          <div className="flex-1 absolute w-full h-full p-4 grid place-items-center bg-black/50">
+            <p className="uppercase font-bold text-error">No resources</p>
           </div>
         )}
       </div>

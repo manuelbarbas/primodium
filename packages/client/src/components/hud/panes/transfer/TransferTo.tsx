@@ -71,7 +71,7 @@ export const TransferTo = (props: {
           .fill(0)
           .map((_, index) => {
             if (index >= props.unitCounts.size)
-              return <div className="w-full h-full bg-black opacity-50" key={`unit-from-${index}`} />;
+              return <div className="w-full h-full bg-white/10 opacity-50" key={`unit-from-${index}`} />;
             const [unit, count] = [...props.unitCounts.entries()][index];
             const delta = props.deltas?.get(unit);
             return (
@@ -94,7 +94,7 @@ export const TransferTo = (props: {
           .fill(0)
           .map((_, index) => {
             if (index >= props.resourceCounts.size)
-              return <div key={`resource-blank-${index}`} className=" w-full h-full bg-black opacity-50 " />;
+              return <div key={`resource-blank-${index}`} className=" w-full h-full bg-white/10 opacity-50 " />;
             const [entity, count] = [...props.resourceCounts.entries()][index];
             const delta = props.deltas?.get(entity);
             return (

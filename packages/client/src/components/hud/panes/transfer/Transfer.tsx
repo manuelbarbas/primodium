@@ -14,9 +14,9 @@ import { createFleet } from "src/network/setup/contractCalls/createFleet";
 import { transferFleet } from "src/network/setup/contractCalls/fleetTransfer";
 import { ResourceEntityLookup, UnitStorages } from "src/util/constants";
 import { formatResourceCount, parseResourceCount } from "src/util/number";
-import { Hex } from "viem";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { useFleetNav } from "../fleets/Fleets";
+import { TransferConfirmAsteroid, TransferConfirmFleet } from "./TransferConfirm";
 import { TransferFrom } from "./TransferFrom";
 import { TransferSelect } from "./TransferSelect";
 import { TransferSwap } from "./TransferSwap";
@@ -59,6 +59,8 @@ export const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined
   }, new Map<Entity, bigint>());
 
   const toEntity = to === "newFleet" ? singletonEntity : to;
+  const toIsFleet = to === "newFleet" || components.IsFleet.has(toEntity);
+
   const toInitialResourceCounts = useFullResourceCounts(toEntity);
   const toResourceCounts = transportables.reduce((acc, transportable) => {
     const entity = ResourceEntityLookup[transportable as EResource];
@@ -97,9 +99,6 @@ export const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined
 
   const units = components.Hangar.use(from);
   const allResources = useFullResourceCounts();
-
-  const maxFleets =
-    components.ResourceCount.getWithKeys({ entity: selectedRock as Hex, resource: EResource.U_MaxMoves })?.value ?? 0n;
 
   const initDragging = (e: React.MouseEvent, entity: Entity, count: bigint) => {
     document.body.style.userSelect = "none";
@@ -165,16 +164,6 @@ export const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [handleKeyDown, stopDragging]);
-
-  const { disabled, submitMessage } = useMemo(() => {
-    if (!from || !to) return { disabled: true, submitMessage: "Select" };
-    if (maxFleets === 0n) return { disabled: true, submitMessage: "No Fleets Left" };
-    if (deltas.size + deltas.size === 0)
-      return { disabled: true, submitMessage: to == "newFleet" ? "Create Fleet" : "Transfer" };
-    // if ([...deltas.entries()].reduce((acc, curr) => curr[1] + acc, 0n) > fleetStats.cargo)
-    // return { disabled: true, submitMessage: "Not Enough Cargo" };
-    return { disabled: false, submitMessage: to == "newFleet" ? "Create Fleet" : "Transfer" };
-  }, [from, to, maxFleets, deltas.size]);
 
   return (
     <TransactionQueueMask queueItemId={"TRANSFER" as Entity} className="w-full h-full flex flex-col gap-2 p-2">
@@ -251,9 +240,28 @@ export const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined
       </div>
       <div className="flex gap-4 w-full justify-center items-center">
         <Nav.BackButton className="absolute left-0 bottom-0">Back</Nav.BackButton>
-        <Button className="btn-primary w-48" disabled={disabled} onClick={handleSubmit}>
-          {submitMessage}
-        </Button>
+        {(!from || !to) && (
+          <Button className="btn-primary w-48" disabled onClick={handleSubmit}>
+            {"Select"}
+          </Button>
+        )}
+        {!!from &&
+          !!to &&
+          (toIsFleet ? (
+            <TransferConfirmFleet
+              entity={to}
+              toUnits={toUnitCounts}
+              toResources={toResourceCounts}
+              handleSubmit={handleSubmit}
+            />
+          ) : (
+            <TransferConfirmAsteroid
+              entity={to}
+              toUnits={toUnitCounts}
+              toResources={toResourceCounts}
+              handleSubmit={handleSubmit}
+            />
+          ))}
       </div>
     </TransactionQueueMask>
   );
