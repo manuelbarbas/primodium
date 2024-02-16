@@ -90,21 +90,19 @@ export const MapButton: React.FC<{ isSpectating: boolean }> = ({ isSpectating })
   }, []);
 
   return (
-    <div className="pl-2 flex flex-col items-center gap-1 drop-shadow-hard group">
-      <Button
-        className={`rounded-t-none border border-t-0 border-accent btn-sm text-3xl px-10 py-6 ${
-          !mapOpen ? "star-background-sm" : "topographic-background-md"
-        } group-hover:!border-success`}
-        clickSound={AudioKeys.Sequence}
-        onClick={!mapOpen ? openMap : closeMap}
-      >
-        {!mapOpen && !isSpectating && <IconLabel imageUri="/img/icons/starmapicon.png" />}
-        {!mapOpen && isSpectating && <IconLabel imageUri="/img/icons/returnicon.png" />}
-        {mapOpen && <IconLabel imageUri="/img/icons/minersicon.png" />}
-      </Button>
-      <p className="font-semibold bg-white/10 group-hover:bg-secondary/20 px-2 uppercase">
-        {!mapOpen ? (isSpectating ? "stop spectating" : "star map") : "Return to asteroid"}
+    <Button
+      className={`flex border border-accent font-pixel btn-md gap-5 drop-shadow-hard w-72 ${
+        !mapOpen ? "star-background-sm" : "topographic-background-md"
+      } group-hover:!border-success`}
+      clickSound={AudioKeys.Sequence}
+      onClick={!mapOpen ? openMap : closeMap}
+    >
+      {!mapOpen && !isSpectating && <IconLabel imageUri="/img/icons/starmapicon.png" className="text-xl" />}
+      {!mapOpen && isSpectating && <IconLabel imageUri="/img/icons/returnicon.png" className="text-xl" />}
+      {mapOpen && <IconLabel imageUri="/img/icons/minersicon.png" className="text-xl" />}
+      <p className="uppercase">
+        {!mapOpen ? (isSpectating ? "stop spectating" : "open star map") : "Return to asteroid"}
       </p>
-    </div>
+    </Button>
   );
 };

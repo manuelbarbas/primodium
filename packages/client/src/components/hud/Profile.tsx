@@ -15,7 +15,7 @@ export const Profile = () => {
   const delegate = sessionAccount?.entity;
 
   return (
-    <Card className="border-t-0 !p-0 items-center">
+    <Card className="!p-0 items-center">
       <div className="flex gap-2 items-center justify-center p-2 text-success">
         <FaUser />
         <AccountDisplay player={playerEntity} />

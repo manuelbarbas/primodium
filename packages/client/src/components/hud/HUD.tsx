@@ -6,11 +6,11 @@ import { components } from "src/network/components";
 import { HUD } from "../core/HUD";
 import { Modal } from "../core/Modal";
 import { BrandingLabel } from "../shared/BrandingLabel";
-import { CurrentObjective } from "./CurrentObjective";
+// import { CurrentObjective } from "./CurrentObjective";
 import { MapButton } from "./MapButton";
-import { MenuButtons } from "./MenuButtons";
+// import { MenuButtons } from "./MenuButtons";
 import { Profile } from "./Profile";
-import { SpectatingDetails } from "./SpectatingDetails";
+// import { SpectatingDetails } from "./SpectatingDetails";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { HoverInfo } from "./hover/HoverInfo";
 import { HoverTarget } from "./markers/HoverTarget";
@@ -19,11 +19,12 @@ import { BuildMarker } from "./markers/starmap/BuildMarker";
 import { FleetTarget } from "./markers/starmap/FleetTarget";
 import { HomeMarker } from "./markers/starmap/HomeMarker";
 import HackerConsole from "./modals/HackerConsole";
-import { OwnedAsteroids } from "./panes/OwnedAsteroids";
-import { Blueprints } from "./panes/blueprints/Blueprints";
-import { Hangar as HangarComponent } from "./panes/hangar/Hangar";
-import { Resources } from "./panes/resources/Resources";
-import { Chat } from "./panes/chat/Chat";
+// import { OwnedAsteroids } from "./panes/OwnedAsteroids";
+// import { Blueprints } from "./panes/blueprints/Blueprints";
+// import { Hangar as HangarComponent } from "./panes/hangar/Hangar";
+// import { Resources } from "./panes/resources/Resources";
+// import { Chat } from "./panes/chat/Chat";
+import { Jarvis } from "./Jarvis";
 
 export const GameHUD = () => {
   const {
@@ -42,7 +43,7 @@ export const GameHUD = () => {
 
   return (
     <div className={`screen-container font-mono`}>
-      <HUD scale={uiScale}>
+      <HUD scale={uiScale} pad>
         {/* Make map look inset */}
         {mapOpen && (
           <>
@@ -69,27 +70,29 @@ export const GameHUD = () => {
           <HoverInfo />
         </HUD.CursorFollower>
         <HUD.TopLeft>
+          <Profile />
           <div className="ml-2 space-y-2">
             <div className="flex">
-              <Profile />
-              <MenuButtons />
+              {/* <Chat /> */}
+
+              {/* <MenuButtons /> */}
             </div>
-            <HangarComponent />
+            {/* <HangarComponent /> */}
           </div>
         </HUD.TopLeft>
 
-        <HUD.TopMiddle>
-          <MapButton isSpectating={isSpectating} />
-        </HUD.TopMiddle>
+        {/* <HUD.TopMiddle>
+          
+        </HUD.TopMiddle> */}
 
         {!isSpectating && (
           <HUD.TopRight>
-            <div className="mr-2 space-y-2">
-              <CurrentObjective />
-              <OwnedAsteroids />
-              <Resources />
-              <Blueprints />
-            </div>
+            <MapButton isSpectating={isSpectating} />
+            {/* <CurrentObjective /> */}
+            {/* <OwnedAsteroids /> */}
+            {/* <Resources /> */}
+            {/* <Blueprints /> */}
+            {/* <Chat /> */}
           </HUD.TopRight>
         )}
 
@@ -102,10 +105,11 @@ export const GameHUD = () => {
           </HUD.TopRight>
         )}
 
-        <HUD.BottomLeft>{isSpectating && !mapOpen && <SpectatingDetails />}</HUD.BottomLeft>
-        <HUD.BottomRight>
-          <Chat />
-        </HUD.BottomRight>
+        {/* <HUD.BottomLeft>{isSpectating && !mapOpen && <SpectatingDetails />}</HUD.BottomLeft> */}
+
+        <HUD.BottomLeft>
+          <Jarvis />
+        </HUD.BottomLeft>
 
         <HUD.BottomMiddle>
           <BuildingMenu />
