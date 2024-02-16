@@ -63,6 +63,21 @@
         "url": "/assets/tilesets/resource.png"
       },
       {
+        "type": "image",
+        "key": "bounds-nonbuildable",
+        "url": "/assets/tilesets/bounds-nonbuildable.png"
+      },
+      {
+        "type": "image",
+        "key": "bounds-outerborder",
+        "url": "/assets/tilesets/bounds-outerborder.png"
+      },
+      {
+        "type": "image",
+        "key": "bounds-innerborder",
+        "url": "/assets/tilesets/bounds-innerborder.png"
+      },
+      {
         "type": "bitmapFont",
         "key": "teletactile",
         "textureURL": "/assets/fonts/bitmap/teletactile/teletactile.png",

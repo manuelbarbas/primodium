@@ -29,7 +29,7 @@ export function renderResources(scene: Scene) {
     const tileset = map.addTilesetImage(Tilesets.Resource);
     if (!tileset) return;
 
-    map?.createBlankLayer("resources", tileset, 0, -dims.yBounds * scene.tilemap.tileHeight);
+    map?.createBlankLayer(Tilesets.Resource, tileset, 0, -dims.yBounds * scene.tilemap.tileHeight);
 
     const tiles = components.P_Terrain.getAll();
 

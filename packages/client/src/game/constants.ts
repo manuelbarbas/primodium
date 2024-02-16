@@ -25,6 +25,9 @@ export enum Assets {
 
 export enum Tilesets {
   Resource = "resource",
+  BoundsOuterBorder = "bounds-outerborder",
+  BoundsInnerBorder = "bounds-innerborder",
+  BoundsNonBuildable = "bounds-nonbuildable",
 }
 
 export enum Tilemaps {
@@ -215,8 +218,12 @@ export enum SpriteKeys {
   Construction4x4 = "sprites/construction/4x4.png",
   Construction2x3 = "sprites/construction/2x3.png",
 
-  // GRACE PERIOD
+  // ICONS
   GracePeriod = "sprites/icons/grace.png",
+
+  //DECORATIONS
+  Warning = "sprites/decorations/warning.png",
+  Drone = "sprites/decorations/Drone1.png",
 }
 
 export enum AnimationKeys {
@@ -282,6 +289,9 @@ export enum AnimationKeys {
   Vault3 = "vault/level3",
 
   Market1 = "marketplace/level1",
+
+  //DECORATIONS
+  Drone = "decorations/drone",
 }
 
 export enum AudioKeys {

@@ -6,9 +6,9 @@ import { getRockRelationship } from "src/util/asteroid";
 
 const maxLevelToSize: Record<number, string> = {
   1: "Small",
-  2: "Small",
-  3: "Medium",
-  4: "Large",
+  3: "Small",
+  5: "Medium",
+  8: "Large",
 };
 
 export const getRockSprite = (mapId: number, level: bigint) => {
