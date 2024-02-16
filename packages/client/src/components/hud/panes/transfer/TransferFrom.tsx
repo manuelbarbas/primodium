@@ -14,6 +14,7 @@ export const TransferFrom = (props: {
   entity: Entity;
   unitCounts: Map<Entity, bigint>;
   resourceCounts: Map<Entity, bigint>;
+  deltas?: Map<Entity, bigint>;
   setDragging?: (e: React.MouseEvent, entity: Entity, count: bigint) => void;
   remove?: () => void;
 }) => {
@@ -61,12 +62,14 @@ export const TransferFrom = (props: {
             if (index >= props.unitCounts.size)
               return <div className="w-full h-full bg-black opacity-50" key={`unit-from-${index}`} />;
             const [unit, count] = [...props.unitCounts.entries()][index];
+            const delta = props.deltas?.get(unit);
             return (
               <ResourceIcon
                 key={`from-unit-${unit}`}
                 className="bg-neutral/50"
                 resource={unit as Entity}
                 amount={count.toString()}
+                delta={delta ? 0n - delta : undefined}
                 setDragging={(e) =>
                   props.setDragging &&
                   props.setDragging(e, unit, keyDown == "shift" ? count : keyDown == "ctrl" ? count / 2n : 1n)
@@ -90,11 +93,14 @@ export const TransferFrom = (props: {
             if (index >= props.resourceCounts.size)
               return <div key={`resource-blank-${index}`} className=" w-full h-full bg-black opacity-50 " />;
             const [entity, count] = [...props.resourceCounts.entries()][index];
+            const delta = props.deltas?.get(entity);
+            console.log("dleta:", delta);
             return (
               <ResourceIcon
                 key={`to-resource-${entity}`}
                 className="bg-neutral/50"
                 resource={entity as Entity}
+                delta={delta ? 0n - delta : undefined}
                 amount={formatResourceCount(entity as Entity, count, { fractionDigits: 0 })}
                 setDragging={(e) =>
                   props.setDragging &&

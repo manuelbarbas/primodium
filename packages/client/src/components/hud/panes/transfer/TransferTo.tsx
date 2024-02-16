@@ -15,6 +15,7 @@ export const TransferTo = (props: {
   entity: Entity | "newFleet";
   unitCounts: Map<Entity, bigint>;
   resourceCounts: Map<Entity, bigint>;
+  deltas?: Map<Entity, bigint>;
   setDragging?: (e: React.MouseEvent, entity: Entity, count: bigint) => void;
   onMouseOver?: (e: React.MouseEvent) => void;
   onMouseLeave?: (e: React.MouseEvent) => void;
@@ -72,12 +73,14 @@ export const TransferTo = (props: {
             if (index >= props.unitCounts.size)
               return <div className="w-full h-full bg-black opacity-50" key={`unit-from-${index}`} />;
             const [unit, count] = [...props.unitCounts.entries()][index];
+            const delta = props.deltas?.get(unit);
             return (
               <ResourceIcon
                 key={`to-unit-${unit}`}
                 className="bg-neutral/50"
                 resource={unit as Entity}
                 amount={count.toString()}
+                delta={delta}
                 onClear={props.clearUnit && (() => props.clearUnit && props.clearUnit(unit))}
               />
             );
@@ -93,11 +96,13 @@ export const TransferTo = (props: {
             if (index >= props.resourceCounts.size)
               return <div key={`resource-blank-${index}`} className=" w-full h-full bg-black opacity-50 " />;
             const [entity, count] = [...props.resourceCounts.entries()][index];
+            const delta = props.deltas?.get(entity);
             return (
               <ResourceIcon
                 key={`to-resource-${entity}`}
                 className="bg-neutral/50"
                 resource={entity as Entity}
+                delta={delta}
                 amount={formatResourceCount(entity as Entity, count, { fractionDigits: 0 })}
                 onClear={props.clearResource && (() => props.clearResource && props.clearResource(entity))}
               />
