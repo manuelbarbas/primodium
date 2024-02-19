@@ -70,6 +70,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   //     clearFleetStance(mud, fleetEntity);
   //   setFleetStance(mud, fleetEntity, EFleetStance.Follow, target);
   // };
+
   return (
     <div className="w-full h-full flex flex-col gap-2 p-2">
       {/*Header*/}
@@ -101,8 +102,8 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             <NavButton
               className="btn-primary btn-xs w-fit self-end"
               goto="transfer"
-              from={movement?.destination as Entity}
-              to={fleetEntity}
+              from={fleetEntity}
+              to={undefined}
               onClick={() =>
                 movement?.destination && components.ActiveRock.set({ value: movement.destination as Entity })
               }
@@ -132,8 +133,8 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             <NavButton
               className="btn-primary btn-xs w-fit self-end"
               goto="transfer"
-              from={movement?.destination as Entity}
-              to={fleetEntity}
+              from={fleetEntity}
+              to={undefined}
               onClick={() =>
                 movement?.destination && components.ActiveRock.set({ value: movement.destination as Entity })
               }

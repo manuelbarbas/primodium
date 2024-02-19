@@ -13,16 +13,16 @@ export const TransferSwap: React.FC<{
   const toEntity = to === "newFleet" || to === undefined ? singletonEntity : to;
   const toOwner = usePlayerOwner(toEntity);
   const playerEntity = useMud().playerAccount.entity;
-  const disabled = (!from && !to) || to === "newFleet" || toOwner !== playerEntity;
+  const disabled = (!from && !to) || to === "newFleet" || (toOwner && toOwner !== playerEntity);
   return (
     <Button
-      className="btn-primary btn-sm"
+      className="btn-primary btn-sm z-[10]"
       disabled={disabled}
       onClick={() => {
         if (disabled) return;
         onClick(to, from);
       }}
-      tooltip="Swap to and from"
+      tooltip="Swap to/from"
       tooltipDirection="top"
     >
       <FaExchangeAlt />

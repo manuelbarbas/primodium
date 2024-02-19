@@ -29,8 +29,6 @@ export const LabeledValue: React.FC<{
 };
 
 export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ fleet, onClick }) => {
-  const primodium = usePrimodium();
-  const getScene = primodium.api(Scenes.Starmap).scene.getScene;
   const description = entityToFleetName(fleet);
   const selected = components.SelectedFleet.use()?.value === fleet;
   const fleetStats = useFleetStats(fleet);
@@ -59,30 +57,6 @@ export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ 
         selected ? "drop-shadow-hard ring-2 ring-warning" : ""
       }`}
       onClick={async () => {
-        const scene = getScene(Scenes.Starmap);
-        if (!scene) return;
-        const mapOpen = components.MapOpen.get(undefined, {
-          value: false,
-        }).value;
-
-        if (!mapOpen) {
-          const { transitionToScene } = primodium.api().scene;
-
-          await transitionToScene(Scenes.Asteroid, Scenes.Starmap);
-          components.MapOpen.set({ value: true });
-        }
-
-        const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
-
-        components.SelectedFleet.set({ value: fleet });
-        const position = getFleetTilePosition(scene, fleet);
-
-        pan({
-          x: position.x,
-          y: position.y,
-        });
-
-        zoomTo(2);
         onClick && onClick();
       }}
     >
@@ -100,19 +74,19 @@ export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ 
       <hr className="w-full border border-secondary/25" />
       <div className="grid grid-cols-3 gap-x-5 p-1">
         <div className="grid grid-cols-2 gap-1">
-          <p className="">{formatResourceCount(EntityType.Iron, fleetStats.attack, { short: true })}</p>
+          {formatResourceCount(EntityType.Iron, fleetStats.attack, { short: true })}
           <p className="text-accent">ATK</p>
         </div>
         <div className="grid grid-cols-2 gap-1">
-          <p className="">{formatResourceCount(EntityType.Iron, fleetStats.defense, { short: true })}</p>
+          {formatResourceCount(EntityType.Iron, fleetStats.defense, { short: true })}
           <p className="text-accent">DEF</p>
         </div>
         <div className="grid grid-cols-2 gap-1">
-          <p className="">{formatResourceCount(EntityType.Iron, fleetStats.cargo, { short: true })}</p>
+          {formatResourceCount(EntityType.Iron, fleetStats.cargo, { short: true })}
           <p className="text-accent">CRG</p>
         </div>
         <div className="grid grid-cols-2 gap-1">
-          <p className="">{formatResourceCount(EntityType.Iron, fleetStats.hp, { short: true })}</p>
+          {formatResourceCount(EntityType.Iron, fleetStats.hp, { short: true })}
           <p className="text-accent">HP</p>
         </div>
         <div className="grid grid-cols-2 gap-1">
@@ -132,6 +106,8 @@ const _OwnedFleets: React.FC = () => {
   const {
     playerAccount: { entity: playerEntity },
   } = useMud();
+  const primodium = usePrimodium();
+  const getScene = primodium.api(Scenes.Starmap).scene.getScene;
 
   const query = [Has(components.IsFleet)];
   const fleets = useEntityQuery(query).filter((entity) => {
@@ -150,7 +126,38 @@ const _OwnedFleets: React.FC = () => {
       )}
       <div className="grid grid-cols-2 gap-1">
         {fleets.map((entity) => {
-          return <OwnedFleet key={entity} fleet={entity} />;
+          return (
+            <OwnedFleet
+              key={entity}
+              fleet={entity}
+              onClick={async () => {
+                const scene = getScene(Scenes.Starmap);
+                if (!scene) return;
+                const mapOpen = components.MapOpen.get(undefined, {
+                  value: false,
+                }).value;
+
+                if (!mapOpen) {
+                  const { transitionToScene } = primodium.api().scene;
+
+                  await transitionToScene(Scenes.Asteroid, Scenes.Starmap);
+                  components.MapOpen.set({ value: true });
+                }
+
+                const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
+
+                components.SelectedFleet.set({ value: entity });
+                const position = getFleetTilePosition(scene, entity);
+
+                pan({
+                  x: position.x,
+                  y: position.y,
+                });
+
+                zoomTo(2);
+              }}
+            />
+          );
         })}
       </div>
     </div>

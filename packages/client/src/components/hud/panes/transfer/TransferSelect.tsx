@@ -9,24 +9,25 @@ import { OwnedAsteroid } from "../OwnedAsteroids";
 import { OwnedFleet } from "../OwnedFleets";
 
 export const TransferSelect = ({
-  rockEntity,
   activeEntity,
   setEntity,
   showNewFleet,
   hideNotOwned,
 }: {
-  rockEntity: Entity;
   activeEntity?: Entity | "newFleet";
   setEntity: (entity: Entity | "newFleet") => void;
   showNewFleet?: boolean;
   hideNotOwned?: boolean;
 }) => {
+  const rockEntity = components.ActiveRock.use()?.value;
+  if (!rockEntity) throw new Error("No active rock");
   const query = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination: rockEntity })];
   const time = components.Time.use()?.value ?? 0n;
   const playerEntity = useMud().playerAccount.entity;
   const fleetsOnRock = [...useEntityQuery(query)].filter((entity) => {
     if (entity == activeEntity) return false;
-    if (components.FleetMovement.get(entity)?.arrivalTime ?? 0n > time) return false;
+    const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
+    if (arrivalTime > time) return false;
     if (!hideNotOwned) return true;
 
     const fleetOwnerRock = components.OwnedBy.get(entity)?.value as Entity | undefined;
