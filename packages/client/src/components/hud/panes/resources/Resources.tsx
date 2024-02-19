@@ -1,14 +1,14 @@
 import { Scenes } from "@game/constants";
 import { Widget } from "src/components/core/Widget";
 import { AllResourceLabels } from "./AllResourceLabels";
-import { useMud } from "src/hooks";
+// import { useMud } from "src/hooks";
 import { getRandomRange } from "src/util/common";
 
 export const Resources = () => {
-  const { components } = useMud();
-  const mapOpen = components.MapOpen.use()?.value;
+  // const { components } = useMud();
+  // const mapOpen = components.MapOpen.use()?.value;
 
-  if (mapOpen) return null;
+  // if (mapOpen) return null;
 
   return (
     <Widget

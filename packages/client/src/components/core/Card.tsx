@@ -4,7 +4,7 @@ export const Card: React.FC<{
 }> = ({ children, className }) => {
   return (
     <div
-      className={`${className} card bg-neutral border border-secondary p-2 pointer-events-auto filter backdrop-blur-sm bg-opacity-50 border-dotted`}
+      className={`${className} card bg-neutral border border-secondary p-2 pointer-events-auto bg-opacity-75 border-dotted`}
     >
       {children}
     </div>

@@ -23,6 +23,7 @@ import { Companion } from "./companion/Companion";
 import { WidgetProvider } from "src/hooks/providers/WidgetProvider";
 import { Resources } from "./panes/resources/Resources";
 import { Hangar } from "./panes/hangar/Hangar";
+import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 
 export const GameHUD = () => {
   const {
@@ -43,10 +44,6 @@ export const GameHUD = () => {
     <div className={`screen-container`}>
       <WidgetProvider>
         <HUD scale={uiScale} pad>
-          {/* register widgets */}
-          <Resources />
-          <Hangar />
-
           {/* Make map look inset */}
           {mapOpen && (
             <>
@@ -64,10 +61,14 @@ export const GameHUD = () => {
           {/* MARKERS */}
           <BuildMarker />
           <HomeMarker />
-
           <AsteroidTarget />
           <FleetTarget />
           <HoverTarget />
+
+          {/* Widgets */}
+          <Resources />
+          <Hangar />
+          <OwnedAsteroids />
 
           <HUD.CursorFollower>
             <HoverInfo />

@@ -7,6 +7,7 @@ import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useWidget } from "../../hooks/providers/WidgetProvider";
+import { Card } from "./Card";
 
 type WidgetProps = {
   title: string;
@@ -147,14 +148,14 @@ export const Content: React.FC<WidgetContentProps> = memo(
           transformOrigin: transformOrigin,
         }}
         className={`relative min-w-44 w-fit transition-opacity duration-600 pointer-events-auto select-none ${
-          !pinned ? "drop-shadow-hard" : ""
+          !pinned ? "ring-1 ring-secondary" : ""
         }`}
         onPointerEnter={onPointerEnter}
         onPointerLeave={onPointerLeave}
       >
         <div
           className={`flex p-1 border-secondary text-xs items-center gap-3 justify-between w-full cursor-move ${
-            locked ? "bg-error" : pinned ? "bg-neutral/75" : "bg-secondary"
+            locked ? "bg-error" : pinned ? "bg-neutral/75" : "bg-secondary/25"
           }`}
           onDoubleClick={onDoubleClick}
           onMouseDown={onMouseDown}
@@ -176,13 +177,13 @@ export const Content: React.FC<WidgetContentProps> = memo(
           </div>
         </div>
 
-        <div
-          className={`bg-base-200 min-w-72 border border-t-success border-secondary ${
+        <Card
+          className={`min-w-72 border border-t-success border-secondary filter ${
             minimized ? (locked ? "h-0 overflow-hidden opacity-0" : "opacity-0") : ""
           }`}
         >
           {children}
-        </div>
+        </Card>
       </div>
     );
   }
@@ -237,10 +238,10 @@ export const Widget: React.FC<WidgetProps> = memo(
 
         const { container: _container, obj } = _camera.createDOMContainer(id, _coord, raw);
         obj.pointerEvents = "none";
+        obj.transformOnly = true;
         obj.setAlpha(pinned ? minOpacity : 1);
         setContainer(obj);
         setContainerRef(_container);
-
         return obj;
       },
       [container, id, minOpacity, pinned]

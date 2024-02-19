@@ -9,7 +9,7 @@ import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getSpaceRockInfo, getSpaceRockName } from "src/util/asteroid";
-import { getBlockTypeName } from "src/util/common";
+import { getBlockTypeName, getRandomRange } from "src/util/common";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { entityToRockName } from "src/util/name";
 
@@ -113,20 +113,23 @@ export const _OwnedAsteroids: React.FC = () => {
 };
 
 export const OwnedAsteroids = () => {
-  const { components } = useMud();
-  const mapOpen = components.MapOpen.use()?.value;
+  // const { components } = useMud();
+  // const mapOpen = components.MapOpen.use()?.value;
 
-  if (!mapOpen) return null;
+  // if (!mapOpen) return null;
 
   return (
     <Widget
       id="owned_asteroids"
       title="Owned Asteroids"
-      defaultLocked
+      icon="/img/icons/asteroidicon.png"
+      defaultCoord={{
+        x: window.innerWidth / 2 + getRandomRange(-50, 50),
+        y: window.innerHeight / 2 + getRandomRange(-50, 50),
+      }}
       draggable
       persist
       scene={Scenes.Asteroid}
-      defaultCoord={{ x: 0, y: 0 }}
     >
       <_OwnedAsteroids />
     </Widget>

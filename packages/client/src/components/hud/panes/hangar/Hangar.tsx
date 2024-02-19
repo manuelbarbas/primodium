@@ -1,15 +1,15 @@
 import { Scenes } from "@game/constants";
 import { memo } from "react";
 import { Widget } from "src/components/core/Widget";
-import { useMud } from "src/hooks";
+// import { useMud } from "src/hooks";
 import { HangarContent } from "./HangarContent";
 import { getRandomRange } from "src/util/common";
 
 export const Hangar = memo(() => {
-  const { components } = useMud();
-  const mapOpen = components.MapOpen.use()?.value;
+  // const { components } = useMud();
+  // const mapOpen = components.MapOpen.use()?.value;
 
-  if (mapOpen) return null;
+  // if (mapOpen) return null;
 
   return (
     <div className="w-72">
