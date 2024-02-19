@@ -3,9 +3,7 @@ export const Card: React.FC<{
   className?: string;
 }> = ({ children, className }) => {
   return (
-    <div
-      className={`${className} card bg-neutral border border-secondary p-2 pointer-events-auto bg-opacity-75 border-dotted`}
-    >
+    <div className={`card bg-neutral border border-secondary p-2 bg-opacity-80 border-dotted ${className}`}>
       {children}
     </div>
   );
@@ -16,6 +14,6 @@ export const SecondaryCard: React.FC<{
   className?: string;
 }> = ({ children, className }) => {
   return (
-    <div className={`card bg-secondary/10 border border-secondary/25 p-2 bg-opacity-30 ${className}`}>{children}</div>
+    <div className={`card bg-secondary/10 border border-secondary/25 p-2 bg-opacity-40 ${className}`}>{children}</div>
   );
 };

@@ -14,6 +14,7 @@ const gameConfig: GameConfig = {
   },
   antialias: false,
   antialiasGL: false,
+  roundPixels: true,
   desynchronized: true,
   autoMobilePipeline: true,
   premultipliedAlpha: true,

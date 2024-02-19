@@ -1,20 +1,28 @@
 import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Entity } from "@latticexyz/recs";
 
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
+import { useMud } from "src/hooks";
+import { SecondaryCard } from "../core/Card";
 
-export const MapButton: React.FC<{ isSpectating: boolean }> = ({ isSpectating }) => {
+export const MapButton = () => {
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   const mapOpen = components.MapOpen.use(undefined, {
     value: false,
   }).value;
-
+  const activeRock = components.ActiveRock.use()?.value;
+  const ownedBy = components.OwnedBy.use(activeRock)?.value;
   const primodium = usePrimodium();
   const { transitionToScene } = primodium.api().scene;
+
+  const isSpectating = useMemo(() => ownedBy !== playerEntity, [ownedBy, playerEntity]);
 
   const closeMap = async () => {
     if (!components.MapOpen.get()?.value) return;
@@ -90,19 +98,21 @@ export const MapButton: React.FC<{ isSpectating: boolean }> = ({ isSpectating })
   }, []);
 
   return (
-    <Button
-      className={`flex btn-md  gap-5 w-72 border border-secondary border-dotted filter drop-shadow-hard ${
-        !mapOpen ? "btn-error star-background-sm" : "btn-info"
-      }`}
-      clickSound={AudioKeys.Sequence}
-      onClick={!mapOpen ? openMap : closeMap}
-    >
-      {!mapOpen && !isSpectating && <IconLabel imageUri="/img/icons/starmapicon.png" className="text-xl" />}
-      {!mapOpen && isSpectating && <IconLabel imageUri="/img/icons/returnicon.png" className="text-xl" />}
-      {mapOpen && <IconLabel imageUri="/img/icons/minersicon.png" className="text-xl" />}
-      <p className="uppercase">
-        {!mapOpen ? (isSpectating ? "stop spectating >" : "open star map >") : "Return to building >"}
-      </p>
-    </Button>
+    <SecondaryCard>
+      <Button
+        className={`flex btn-sm !p-3 !px-10 gap-5 border border-secondary border-dotted filter drop-shadow-hard ${
+          !mapOpen ? "btn-error star-background-sm" : "btn-black"
+        }`}
+        clickSound={AudioKeys.Sequence}
+        onClick={!mapOpen ? openMap : closeMap}
+      >
+        {!mapOpen && !isSpectating && <IconLabel imageUri="/img/icons/starmapicon.png" className="text-xl" />}
+        {!mapOpen && isSpectating && <IconLabel imageUri="/img/icons/returnicon.png" className="text-xl" />}
+        {mapOpen && <IconLabel imageUri="/img/icons/minersicon.png" className="text-xl" />}
+        <p className="uppercase">
+          {!mapOpen ? (isSpectating ? "stop spectating >" : "open star map >") : "Return to building >"}
+        </p>
+      </Button>
+    </SecondaryCard>
   );
 };

@@ -24,9 +24,9 @@ export const Score: React.FC<{ player: Entity }> = ({ player }) => {
   if (!data) return null;
 
   return (
-    <SecondaryCard className="flex-row w-full gap-1 border-x-0 border-b-0 border-t-1">
+    <SecondaryCard className="flex-row w-full gap-1 border-x-0 border-b-0 border-t-1 text-sm">
       <p className="flex items-center px-1 bg-error border border-rose-400 font-bold">#{rank}</p>
-      <div className="flex grow items-center gap-1 px-2 py-1 bg-neutral justify-end font-bold border border-secondary/50">
+      <div className="flex grow items-center gap-1 px-2 py-1 bg-neutral justify-end font-bold font-mono border border-secondary/50">
         <span>
           {formatResourceCount(singletonEntity, BigInt(score), {
             short: true,

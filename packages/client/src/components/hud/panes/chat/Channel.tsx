@@ -154,7 +154,7 @@ export const Channel: React.FC<{ className?: string; channel: string }> = ({ cla
       >
         JUMP TO NEWEST
       </button>
-      <SecondaryCard className={`"flex flex-col h-56 w-120 items-center ${loading ? "justify-center" : "justify-end"}`}>
+      <SecondaryCard className={`"flex flex-col h-44 w-108 items-center ${loading ? "justify-center" : "justify-end"}`}>
         {!loading && (
           <div
             ref={chatRef}
@@ -163,7 +163,7 @@ export const Channel: React.FC<{ className?: string; channel: string }> = ({ cla
           >
             {Array.from(chat).map(([uuid, message], index) => {
               return (
-                <div key={uuid} className={`flex ${index % 2 === 0 ? "bg-neutral/50" : ""} px-3 py-1 items-end`}>
+                <div key={uuid} className={`flex ${index % 2 === 0 ? "bg-neutral/75" : ""} py-1 items-end`}>
                   <div
                     className={`${message.user === "unknown" ? "opacity-50" : ""} flex ${
                       message.pending ? " opacity-25 animate-pulse" : ""
@@ -191,7 +191,7 @@ export const Channel: React.FC<{ className?: string; channel: string }> = ({ cla
         )}
       </SecondaryCard>
 
-      <form className="flex items-center space-x-2 relative pr-2" onSubmit={handleSubmit}>
+      <form className="flex items-center space-x-2 relative pr-2 text-xs" onSubmit={handleSubmit}>
         <div className="absolute left-0 w-full h-full topographic-background opacity-30 z-0" />
         <TextInput
           placeholder="Type a message..."

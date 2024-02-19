@@ -2,11 +2,11 @@ import { Scenes } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
 import { ReactNode, useCallback, useEffect, useMemo, useState, memo } from "react";
 import ReactDOM from "react-dom";
-import { FaMinus, FaPlus, FaTimes } from "react-icons/fa";
+import { FaLock, FaLockOpen, FaMinus, FaPlus, FaTimes } from "react-icons/fa";
 import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { usePrimodium } from "src/hooks/usePrimodium";
-import { useWidget } from "../../hooks/providers/WidgetProvider";
+import { useWidgets } from "../../hooks/providers/WidgetProvider";
 import { Card } from "./Card";
 
 type WidgetProps = {
@@ -19,6 +19,7 @@ type WidgetProps = {
   minOpacity?: number;
   persist?: boolean;
   pinnable?: boolean;
+  lockable?: boolean;
   defaultPinned?: boolean;
   defaultLocked?: boolean;
   defaultVisible?: boolean;
@@ -86,6 +87,8 @@ export const Content: React.FC<WidgetContentProps> = memo(
     children,
     origin,
     locked,
+    onLock,
+    onUnlock,
   }) => {
     const [uiScale] = usePersistentStore((state) => [state.uiScale]);
 
@@ -148,19 +151,19 @@ export const Content: React.FC<WidgetContentProps> = memo(
           transformOrigin: transformOrigin,
         }}
         className={`relative min-w-44 w-fit transition-opacity duration-600 pointer-events-auto select-none ${
-          !pinned ? "ring-1 ring-secondary" : ""
-        }`}
+          !pinned && !minimized ? "ring-1 ring-secondary" : ""
+        } ${locked ? "drop-shadow-hard" : ""}`}
         onPointerEnter={onPointerEnter}
         onPointerLeave={onPointerLeave}
       >
         <div
-          className={`flex p-1 border-secondary text-xs items-center gap-3 justify-between w-full cursor-move ${
-            locked ? "bg-error" : pinned ? "bg-neutral/75" : "bg-secondary/25"
+          className={`flex p-1 text-xs items-center gap-3 justify-between w-full cursor-move ${
+            locked ? "bg-info/50" : pinned ? "bg-neutral/75" : "bg-secondary/50"
           }`}
           onDoubleClick={onDoubleClick}
-          onMouseDown={onMouseDown}
+          onPointerDown={onMouseDown}
         >
-          {title}
+          <p className="bg-gray-900 px-2">{title}</p>
           <div className="flex items-center gap-1">
             {
               <>
@@ -168,9 +171,9 @@ export const Content: React.FC<WidgetContentProps> = memo(
                 {pinned && onUnpin && <RiUnpinFill className="cursor-crosshair" onClick={onUnpin} />}
               </>
             }
-            {/* disabled for now */}
-            {/* {locked && onUnlock && <FaLock className="cursor-pointer" onClick={onUnlock} />} */}
-            {/* {!locked && onLock && <FaLockOpen className="cursor-pointer" onClick={onLock} />} */}
+
+            {locked && onUnlock && <FaLock className="cursor-pointer" onClick={onUnlock} />}
+            {!locked && onLock && <FaLockOpen className="cursor-pointer" onClick={onLock} />}
             {!minimized && onMinimize && <FaMinus className="cursor-nesw-resize" onClick={onMinimize} />}
             {minimized && onMaximize && <FaPlus className="cursor-nesw-resize" onClick={onMaximize} />}
             {onClose && <FaTimes className="cursor-pointer" onClick={onClose} />}
@@ -178,8 +181,8 @@ export const Content: React.FC<WidgetContentProps> = memo(
         </div>
 
         <Card
-          className={`min-w-72 border border-t-success border-secondary filter ${
-            minimized ? (locked ? "h-0 overflow-hidden opacity-0" : "opacity-0") : ""
+          className={`relative !p-0 min-w-72 border border-t-success border-secondary filter ${
+            minimized ? "!border-0 h-0 overflow-hidden opacity-0" : ""
           }`}
         >
           {children}
@@ -202,6 +205,7 @@ export const Widget: React.FC<WidgetProps> = memo(
     origin = "top-left",
     persist = false,
     pinnable = false,
+    lockable = false,
     defaultPinned = false,
     defaultLocked = false,
     defaultVisible = false,
@@ -221,7 +225,7 @@ export const Widget: React.FC<WidgetProps> = memo(
     const [locked, setLocked] = useState(paneInfo[id]?.locked ?? defaultLocked);
     const [coord, setCoord] = useState<Coord>(paneInfo[id]?.coord ?? defaultCoord);
     const [visible, setVisible] = useState(defaultVisible);
-    const { setWidget, removeWidget } = useWidget();
+    const { setWidget, removeWidget } = useWidgets();
 
     const [camera, uiCamera] = useMemo(() => {
       const { camera } = primodium.api(scene);
@@ -238,7 +242,6 @@ export const Widget: React.FC<WidgetProps> = memo(
 
         const { container: _container, obj } = _camera.createDOMContainer(id, _coord, raw);
         obj.pointerEvents = "none";
-        obj.transformOnly = true;
         obj.setAlpha(pinned ? minOpacity : 1);
         setContainer(obj);
         setContainerRef(_container);
@@ -493,8 +496,8 @@ export const Widget: React.FC<WidgetProps> = memo(
           origin={"top-left"}
           onClose={handleClose}
           locked={locked}
-          onLock={handleLock}
-          onUnlock={handleUnlock}
+          onUnlock={lockable ? handleUnlock : undefined}
+          onLock={lockable ? handleLock : undefined}
           onMinimize={toggleMinimize}
           onMaximize={toggleMinimize}
         >
@@ -512,13 +515,13 @@ export const Widget: React.FC<WidgetProps> = memo(
         onPin={pinnable && scene !== Scenes.UI ? handlePin : undefined}
         onUnpin={pinnable && scene !== Scenes.UI ? handleUnpin : undefined}
         pinned={pinned}
-        // onLock={handleReset}
         onMouseDown={handleMouseDown}
         onDoubleClick={handleReset}
         onMinimize={toggleMinimize}
         onMaximize={toggleMinimize}
         onClose={handleClose}
-        onLock={handleLock}
+        onLock={lockable ? handleLock : undefined}
+        onUnlock={lockable ? handleUnlock : undefined}
         origin={origin}
       >
         {children}

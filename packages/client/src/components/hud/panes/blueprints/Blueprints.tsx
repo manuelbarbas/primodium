@@ -13,11 +13,12 @@ export const Blueprints = memo(() => {
   return (
     <Widget
       id="blueprints"
-      title="BLUEPRINTS"
+      title="blueprints"
+      icon="/img/icons/blueprinticon.png"
       defaultCoord={{ x: 69, y: 420 }}
       defaultLocked
-      defaultPinned
-      origin="center"
+      lockable
+      origin="center-left"
       scene={Scenes.Asteroid}
       minOpacity={0.6}
       draggable

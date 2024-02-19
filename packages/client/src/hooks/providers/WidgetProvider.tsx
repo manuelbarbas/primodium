@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode, useCallback } from "react";
+import React, { createContext, useContext, useState, ReactNode, useCallback, useMemo } from "react";
 
 interface Widget {
   visible: boolean;
@@ -14,6 +14,7 @@ interface WidgetContextType {
   widgets: Widget[];
   setWidget: (widget: Widget) => void;
   removeWidget: (widgetName: string) => void;
+  useWidget: (name: string) => Widget | undefined;
 }
 
 const WidgetContext = createContext<WidgetContextType | undefined>(undefined);
@@ -37,10 +38,20 @@ export const WidgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     setWidgets((prevWidgets) => prevWidgets.filter((w) => w.name !== widgetName));
   }, []);
 
-  return <WidgetContext.Provider value={{ widgets, setWidget, removeWidget }}>{children}</WidgetContext.Provider>;
+  //listen for changes on a specific widget
+  const useWidget = (name: string) => {
+    const { widgets } = useWidgets();
+    const widget = useMemo(() => widgets.find((w) => w.name === name), [widgets, name]);
+
+    return widget;
+  };
+
+  return (
+    <WidgetContext.Provider value={{ widgets, setWidget, removeWidget, useWidget }}>{children}</WidgetContext.Provider>
+  );
 };
 
-export const useWidget = (): WidgetContextType => {
+export const useWidgets = (): WidgetContextType => {
   const context = useContext(WidgetContext);
   if (context === undefined) {
     throw new Error("useWidgetContext must be used within a WidgetProvider");

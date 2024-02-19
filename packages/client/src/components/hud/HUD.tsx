@@ -7,8 +7,6 @@ import { HUD } from "../core/HUD";
 import { Modal } from "../core/Modal";
 import { BrandingLabel } from "../shared/BrandingLabel";
 // import { CurrentObjective } from "./CurrentObjective";
-import { MapButton } from "./MapButton";
-import { MenuButtons } from "./MenuButtons";
 import { Profile } from "./Profile";
 // import { SpectatingDetails } from "./SpectatingDetails";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
@@ -24,6 +22,8 @@ import { WidgetProvider } from "src/hooks/providers/WidgetProvider";
 import { Resources } from "./panes/resources/Resources";
 import { Hangar } from "./panes/hangar/Hangar";
 import { OwnedAsteroids } from "./panes/OwnedAsteroids";
+import { Chat } from "./panes/chat/Chat";
+import { Blueprints } from "./panes/blueprints/Blueprints";
 
 export const GameHUD = () => {
   const {
@@ -66,23 +66,24 @@ export const GameHUD = () => {
           <HoverTarget />
 
           {/* Widgets */}
+          <HUD.TopLeft>
+            <Profile />
+          </HUD.TopLeft>
+          <HUD.Left>
+            <Blueprints />
+          </HUD.Left>
+
           <Resources />
           <Hangar />
           <OwnedAsteroids />
 
+          <HUD.BottomRight>
+            <Chat />
+          </HUD.BottomRight>
+
           <HUD.CursorFollower>
             <HoverInfo />
           </HUD.CursorFollower>
-          <HUD.TopLeft>
-            <div className="flex items-center">
-              <Profile />
-              <MenuButtons />
-            </div>
-          </HUD.TopLeft>
-
-          <HUD.TopRight>
-            <MapButton isSpectating={isSpectating} />
-          </HUD.TopRight>
 
           {isSpectating && (
             <HUD.BottomRight>
