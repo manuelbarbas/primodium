@@ -40,6 +40,7 @@ export const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined
   const [hoveringArea, setHoveringArea] = useState<"from" | "to" | null>(null);
 
   useEffect(() => {
+    setDeltas(new Map());
     if (to === "newFleet" && !from) setTo(undefined);
   }, [from, to]);
 
@@ -150,8 +151,8 @@ export const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined
   const mud = useMud();
   const handleSubmit = () => {
     if (!from || !to) return;
-    if (to === "newFleet") createFleet(mud, from, deltas, deltas);
-    else transferFleet(mud, from, to, { resources: deltas, units: deltas });
+    if (to === "newFleet") createFleet(mud, from, deltas);
+    else transferFleet(mud, from, to, deltas);
     setDeltas(new Map());
     setDeltas(new Map());
   };
@@ -192,7 +193,7 @@ export const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined
         {/*Middle*/}
         <div className="grid grid-rows-3 h-full w-full place-items-center">
           <div className="grid place-items-center">
-            <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[15px] border-b-secondary rotate-90"></div>
+            <div className="w-0 h-0 border-l-[10px] border-l-transparent animate-pulse border-r-[10px] border-r-transparent border-b-[15px] border-b-secondary rotate-90"></div>
           </div>
           <TransferSwap
             from={from}
@@ -205,7 +206,7 @@ export const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined
             }}
           />
           <div className="grid place-items-center">
-            <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[15px] border-b-secondary rotate-90"></div>
+            <div className="w-0 h-0 border-l-[10px] border-l-transparent animate-pulse border-r-[10px] border-r-transparent border-b-[15px] border-b-secondary rotate-90"></div>
           </div>
         </div>
 

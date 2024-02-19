@@ -16,12 +16,14 @@ export const TransferSwap: React.FC<{
   const disabled = (!from && !to) || to === "newFleet" || toOwner !== playerEntity;
   return (
     <Button
-      className="btn-primary btn-xs"
+      className="btn-primary btn-sm"
       disabled={disabled}
       onClick={() => {
         if (disabled) return;
         onClick(to, from);
       }}
+      tooltip="Swap to and from"
+      tooltipDirection="top"
     >
       <FaExchangeAlt />
     </Button>

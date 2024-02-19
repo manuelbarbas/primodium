@@ -1,16 +1,17 @@
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { EResource } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { Hex } from "viem";
 import { distanceBI } from "./common";
-import { NUM_UNITS, ResourceEnumLookup, SPEED_SCALE, UNIT_SPEED_SCALE, UnitEnumLookup } from "./constants";
+import { ResourceEntityLookup, SPEED_SCALE, UNIT_SPEED_SCALE } from "./constants";
 
 export function toUnitCountArray(map: Map<Entity, bigint>): bigint[] {
-  const arr = Array.from({ length: NUM_UNITS }, () => 0n);
-  map.forEach((value, key) => {
-    const index = UnitEnumLookup[key as Entity];
-    if (index === undefined) throw new Error("Invalid unit entity");
-    arr[index - 1] = value;
+  const prototypes = components.P_UnitPrototypes.get()?.value ?? [];
+  const arr = Array.from({ length: prototypes.length }, () => 0n);
+  prototypes.forEach((entity, index) => {
+    const count = map.get(entity as Entity);
+    if (count && count > 0n) arr[index] = count;
   });
   return arr;
 }
@@ -18,10 +19,11 @@ export function toUnitCountArray(map: Map<Entity, bigint>): bigint[] {
 export function toTransportableResourceArray(map: Map<Entity, bigint>): bigint[] {
   const transportables = components.P_Transportables.get()?.value ?? [];
   const arr = Array.from({ length: transportables.length }, () => 0n);
-  map.forEach((value, key) => {
-    const index = transportables.indexOf(ResourceEnumLookup[key as Entity]);
-    if (index === undefined) throw new Error("Invalid resource entity");
-    arr[index] = value;
+  transportables.forEach((enumValue, index) => {
+    const entity = ResourceEntityLookup[enumValue as EResource];
+    const count = map.get(entity as Entity);
+    if (!count || count === 0n) return;
+    arr[index] = count;
   });
   return arr;
 }

@@ -43,7 +43,7 @@ export const ResourceIcon = ({
         className="btn-ghost btn-xs absolute bottom-0 right-0"
         disabled={disableClear}
         onClick={() => onClear(resource)}
-        tooltip={"Reset"}
+        tooltip={"Clear"}
         tooltipDirection="bottom"
       >
         <FaSync className="text-error scale-x-[-1]" />

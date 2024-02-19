@@ -7,17 +7,12 @@ import { getSystemId, hashEntities } from "src/util/encode";
 import { toTransportableResourceArray, toUnitCountArray } from "src/util/send";
 import { Hex } from "viem";
 
-export const transferFleet = async (
-  mud: MUD,
-  from: Entity,
-  to: Entity,
-  content: { units?: Map<Entity, bigint>; resources?: Map<Entity, bigint> }
-) => {
+export const transferFleet = async (mud: MUD, from: Entity, to: Entity, deltas: Map<Entity, bigint>) => {
   const fromIsSpaceRock = components.Asteroid.has(from);
   const toIsSpaceRock = components.Asteroid.has(to);
 
-  const unitCounts = content.units ? toUnitCountArray(content.units) : [];
-  const resourceCounts = content.resources ? toTransportableResourceArray(content.resources) : [];
+  const unitCounts = toUnitCountArray(deltas);
+  const resourceCounts = toTransportableResourceArray(deltas);
 
   const totalUnits = unitCounts.reduce((acc, cur) => acc + cur, 0n);
   const totalResources = resourceCounts.reduce((acc, cur) => acc + cur, 0n);
