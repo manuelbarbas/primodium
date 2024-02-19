@@ -1,3 +1,4 @@
+import React from "react";
 import { chunk } from "lodash";
 import { useEffect, useState } from "react";
 import { FaExclamationTriangle } from "react-icons/fa";
@@ -12,7 +13,7 @@ const connectorIcons: Record<string, string> = {
   ["Coinbase Wallet"]: "/img/icons/web3/coinbase.svg",
 };
 
-export const Connect: React.FC = () => {
+export const Connect: React.FC = React.memo(() => {
   const { connector, isConnected } = useAccount();
   const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
   const { noExternalAccount, setNoExternalAccount } = usePersistentStore();
@@ -104,4 +105,4 @@ export const Connect: React.FC = () => {
       </div>
     </Landing>
   );
-};
+});
