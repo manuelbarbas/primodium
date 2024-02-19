@@ -85,7 +85,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
       depth={DepthLayers.Path}
     >
       <div
-        className="w-14 h-14 border-2 border-error flex items-center justify-center font-mono"
+        className="w-14 h-14 border-2 border-error flex items-center justify-center"
         style={{
           background: `rgba(0,0,0, ${Math.max(0, (defaultZoom - zoom) / (defaultZoom - minZoom))}`,
         }}

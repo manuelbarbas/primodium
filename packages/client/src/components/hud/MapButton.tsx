@@ -91,9 +91,9 @@ export const MapButton: React.FC<{ isSpectating: boolean }> = ({ isSpectating })
 
   return (
     <Button
-      className={`flex border border-accent font-pixel btn-md gap-5 drop-shadow-hard w-72 ${
-        !mapOpen ? "star-background-sm" : "topographic-background-md"
-      } group-hover:!border-success`}
+      className={`flex btn-md  gap-5 w-72 border border-secondary border-dotted filter drop-shadow-hard ${
+        !mapOpen ? "btn-error star-background-sm" : "btn-info"
+      }`}
       clickSound={AudioKeys.Sequence}
       onClick={!mapOpen ? openMap : closeMap}
     >
@@ -101,7 +101,7 @@ export const MapButton: React.FC<{ isSpectating: boolean }> = ({ isSpectating })
       {!mapOpen && isSpectating && <IconLabel imageUri="/img/icons/returnicon.png" className="text-xl" />}
       {mapOpen && <IconLabel imageUri="/img/icons/minersicon.png" className="text-xl" />}
       <p className="uppercase">
-        {!mapOpen ? (isSpectating ? "stop spectating" : "open star map") : "Return to asteroid"}
+        {!mapOpen ? (isSpectating ? "stop spectating >" : "open star map >") : "Return to building >"}
       </p>
     </Button>
   );

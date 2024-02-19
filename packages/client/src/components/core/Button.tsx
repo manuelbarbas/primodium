@@ -84,8 +84,8 @@ export const Button: React.FC<{
           onPointerEnter?.();
         }}
         onPointerLeave={onPointerLeave}
-        className={`btn join-item inline pointer-events-auto font-bold outline-none h-fit ${className} ${
-          disabled ? "opacity-80" : ""
+        className={`btn join-item inline pointer-events-auto font-bold outline-none h-fit  ${className} bg-opacity-50 ${
+          disabled ? "opacity-30" : ""
         } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
       >
         {loading && <Loader />}
@@ -97,7 +97,7 @@ export const Button: React.FC<{
 
 export const IconButton: React.FC<{
   imageUri: string;
-  text: string;
+  text?: string;
   hideText?: boolean;
   className?: string;
   onClick?: () => void;
@@ -110,7 +110,7 @@ export const IconButton: React.FC<{
   clickSound?: AudioKeys;
 }> = ({
   imageUri,
-  text,
+  text = "",
   hideText = false,
   className,
   onClick,
@@ -141,8 +141,8 @@ export const IconButton: React.FC<{
             detune: getRandomRange(-200, 200),
           });
       }}
-      className={`btn join-item inline gap-1 pointer-events-auto font-bold outline-none ${className} ${
-        disabled ? "opacity-80" : ""
+      className={`btn join-item inline gap-1 pointer-events-auto font-bold outline-none bg-opacity-50 ${className} ${
+        disabled ? "opacity-30" : ""
       } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
     >
       {loading && <Loader />}

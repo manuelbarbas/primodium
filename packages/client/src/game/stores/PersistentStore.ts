@@ -41,6 +41,7 @@ type PersistentState = {
   consoleHistory: { input: string; output: string }[];
   noExternalAccount: boolean;
   panes: Panes;
+  fontStyle: string;
 };
 
 type PersistentActions = {
@@ -50,6 +51,7 @@ type PersistentActions = {
   setKeybind: (keybindAction: KeybindActions, keys: Set<Key>) => void;
   setNewPlayer: (val: boolean) => void;
   setVolume: (volume: number, channel: Channel) => void;
+  setFontStyle: (style: string) => void;
   toggleAllowHackerModal: () => void;
   setUiScale: (scale: number) => void;
   setConsoleHistory: (history: { input: string; output: string }[]) => void;
@@ -61,6 +63,7 @@ type PersistentActions = {
 };
 
 const defaults: PersistentState = {
+  fontStyle: "font-pixel",
   newPlayer: true,
   allowHackerModal: false,
   uiScale: 1,
@@ -135,6 +138,9 @@ export const usePersistentStore = create<PersistentState & PersistentActions>()(
         if (!set) return;
 
         set.delete(key);
+      },
+      setFontStyle: (style) => {
+        set({ fontStyle: style });
       },
       setKeybind: (keybindAction, keys) => set({ keybinds: { [keybindAction]: keys } }),
       setVolume: (volume, channel) => {

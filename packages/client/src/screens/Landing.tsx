@@ -14,7 +14,7 @@ export const Landing: React.FC<{ children: React.ReactNode }> = ({ children }) =
         key="play"
         initial={{ scale: 0.5, opacity: 0, y: 50 }}
         animate={{ scale: 1, opacity: 1, y: 0, transition: { delay: 0.25, duration: 0.5 } }}
-        className="flex items-center justify-center h-screen text-white font-mono"
+        className="flex items-center justify-center h-screen text-white"
       >
         <div className="relative text-center border border-secondary/25 px-24 py-16 bg-neutral/50 flex flex-col items-center gap-2 mb-4">
           <div className="absolute top-0 w-full h-full topographic-background2 opacity-25" />
@@ -99,7 +99,7 @@ export const Landing: React.FC<{ children: React.ReactNode }> = ({ children }) =
           <div className="w-full h-full absolute top-0 overflow-hidden"></div>
         </div>
       </motion.div>
-      <div className="fixed bottom-10 w-screen left-0 text-center flex flex-row justify-center items-center gap-2 font-mono uppercase font-bold">
+      <div className="fixed bottom-10 w-screen left-0 text-center flex flex-row justify-center items-center gap-2 uppercase font-bold">
         <FaRegCopyright size={12} /> 2024 Primodium
       </div>
     </AnimatePresence>

@@ -8,7 +8,7 @@ import { Modal } from "../core/Modal";
 import { BrandingLabel } from "../shared/BrandingLabel";
 // import { CurrentObjective } from "./CurrentObjective";
 import { MapButton } from "./MapButton";
-// import { MenuButtons } from "./MenuButtons";
+import { MenuButtons } from "./MenuButtons";
 import { Profile } from "./Profile";
 // import { SpectatingDetails } from "./SpectatingDetails";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
@@ -24,7 +24,7 @@ import HackerConsole from "./modals/HackerConsole";
 // import { Hangar as HangarComponent } from "./panes/hangar/Hangar";
 // import { Resources } from "./panes/resources/Resources";
 // import { Chat } from "./panes/chat/Chat";
-import { Jarvis } from "./Jarvis";
+import { Companion } from "./Companion";
 
 export const GameHUD = () => {
   const {
@@ -42,7 +42,7 @@ export const GameHUD = () => {
   }).value;
 
   return (
-    <div className={`screen-container font-mono`}>
+    <div className={`screen-container`}>
       <HUD scale={uiScale} pad>
         {/* Make map look inset */}
         {mapOpen && (
@@ -70,14 +70,9 @@ export const GameHUD = () => {
           <HoverInfo />
         </HUD.CursorFollower>
         <HUD.TopLeft>
-          <Profile />
-          <div className="ml-2 space-y-2">
-            <div className="flex">
-              {/* <Chat /> */}
-
-              {/* <MenuButtons /> */}
-            </div>
-            {/* <HangarComponent /> */}
+          <div className="flex items-center">
+            <Profile />
+            <MenuButtons />
           </div>
         </HUD.TopLeft>
 
@@ -85,30 +80,23 @@ export const GameHUD = () => {
           
         </HUD.TopMiddle> */}
 
-        {!isSpectating && (
-          <HUD.TopRight>
-            <MapButton isSpectating={isSpectating} />
-            {/* <CurrentObjective /> */}
-            {/* <OwnedAsteroids /> */}
-            {/* <Resources /> */}
-            {/* <Blueprints /> */}
-            {/* <Chat /> */}
-          </HUD.TopRight>
-        )}
+        <HUD.TopRight>
+          <MapButton isSpectating={isSpectating} />
+        </HUD.TopRight>
 
         {isSpectating && (
-          <HUD.TopRight>
+          <HUD.BottomRight>
             <p className="text-accent text-2xl font-bold p-5 flex gap-2 items-center">
               <FaCircle size={12} className="animate-pulse text-error" />
               LIVE
             </p>
-          </HUD.TopRight>
+          </HUD.BottomRight>
         )}
 
         {/* <HUD.BottomLeft>{isSpectating && !mapOpen && <SpectatingDetails />}</HUD.BottomLeft> */}
 
         <HUD.BottomLeft>
-          <Jarvis />
+          <Companion />
         </HUD.BottomLeft>
 
         <HUD.BottomMiddle>

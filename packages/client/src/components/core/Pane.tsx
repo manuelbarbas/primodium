@@ -118,7 +118,7 @@ export const Content: FC<{
         transform: `translate(${translateX}, ${translateY}) scale(${!locked ? uiScale : 1})`,
         transformOrigin: transformOrigin,
       }}
-      className={`relative min-w-44 w-fit transition-opacity duration-600 pointer-events-auto font-pixel select-none ${
+      className={`relative min-w-44 w-fit transition-opacity duration-600 pointer-events-auto select-none ${
         !pinned ? "drop-shadow-hard" : ""
       }`}
       onPointerEnter={onPointerEnter}

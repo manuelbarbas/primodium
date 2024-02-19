@@ -43,7 +43,7 @@ export default function AppLoadingState() {
       {!error && (
         <div className="relative">
           {!loading && !enoughEth && (
-            <div className="flex flex-col items-center justify-center h-screen text-white font-mono gap-4">
+            <div className="flex flex-col items-center justify-center h-screen text-white gap-4">
               <p className="text-lg text-white">
                 <span className="font-mono">Dripping Eth to Primodium account</span>
                 <span>&hellip;</span>
@@ -55,9 +55,9 @@ export default function AppLoadingState() {
             <div className="flex items-center justify-center h-screen">
               <div className="flex flex-col items-center gap-4">
                 <p className="text-lg text-white">
-                  <span className="font-mono">{message}</span>
+                  <span className="">{message}</span>
                   {progress > 0 ? (
-                    <span className="font-mono">&nbsp;({Math.floor(progress * 100)}%)</span>
+                    <span className="">&nbsp;({Math.floor(progress * 100)}%)</span>
                   ) : (
                     <span>&hellip;</span>
                   )}
@@ -81,23 +81,25 @@ export default function AppLoadingState() {
             </BrowserRouter>
           )}
           {DEV && (
-            <Browser
-              layers={{ react: { world, components: mud.components } }}
-              setContractComponentValue={(
-                component: ContractComponent<Schema>,
-                entity: Entity,
-                newValue: ComponentValue<Schema>
-              ) => setComponentValue(mud, component, entity, newValue)}
-              world={world}
-              cheatcodes={setupCheatcodes(mud)}
-            />
+            <div className="font-mono text-xs">
+              <Browser
+                layers={{ react: { world, components: mud.components } }}
+                setContractComponentValue={(
+                  component: ContractComponent<Schema>,
+                  entity: Entity,
+                  newValue: ComponentValue<Schema>
+                ) => setComponentValue(mud, component, entity, newValue)}
+                world={world}
+                cheatcodes={setupCheatcodes(mud)}
+              />
+            </div>
           )}
         </div>
       )}
       {error && (
-        <div className="flex flex-col items-center justify-center h-screen text-white font-mono gap-4">
+        <div className="flex flex-col items-center justify-center h-screen text-white gap-4">
           <p className="text-lg text-white">
-            <span className="font-mono">{message}</span>
+            <span className="">{message}</span>
           </p>
         </div>
       )}
