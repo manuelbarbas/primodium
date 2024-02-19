@@ -72,7 +72,7 @@ export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ 
         {!!movement && <p className="text-accent">{entityToRockName(movement.destination as Entity)}</p>}
       </p>
       <hr className="w-full border border-secondary/25" />
-      <div className="grid grid-cols-3 gap-x-5 p-1">
+      <div className="grid grid-cols-2 gap-x-3 p-1">
         <div className="grid grid-cols-2 gap-1">
           {formatResourceCount(EntityType.Iron, fleetStats.attack, { short: true })}
           <p className="text-accent">ATK</p>
@@ -118,7 +118,7 @@ const _OwnedFleets: React.FC = () => {
   });
 
   return (
-    <div className="p-2 max-h-96 overflow-y-auto scrollbar">
+    <div className="p-2 max-h-96 overflow-y-auto scrollbar w-fit">
       {fleets.length === 0 && (
         <SecondaryCard className="w-full h-full flex text-xs items-center justify-center font-bold">
           <p className="opacity-50 uppercase">you control no fleets</p>

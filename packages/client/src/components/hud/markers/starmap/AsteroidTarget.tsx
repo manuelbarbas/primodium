@@ -73,7 +73,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
       coord={coord}
       id={`asteroid-target`}
       offScreenIconUri="/img/icons/attackicon.png"
-      depth={DepthLayers.Path}
+      depth={DepthLayers.Path - 5}
     >
       <div
         className="w-14 h-14 border-2 border-error flex items-center justify-center font-mono"

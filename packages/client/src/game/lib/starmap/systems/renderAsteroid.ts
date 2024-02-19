@@ -184,7 +184,6 @@ export const renderAsteroid = (scene: Scene) => {
         const wasSelected = update.value[1]?.value === entity;
         const graceTime = components.GracePeriod.get(entity)?.value ?? 0n;
         const time = components.Time.get()?.value ?? 0n;
-        console.log("isSelected", isSelected, "wasSelected", wasSelected, "graceTime", graceTime, "time", time);
 
         if (isSelected) {
           gameObject.alpha = 0;

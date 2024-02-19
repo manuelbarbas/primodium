@@ -1,6 +1,6 @@
 import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import { Coord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Entity, Has, defineComponentSystem, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
+import { Entity, Has, defineComponentSystem, defineSystem, namespaceWorld } from "@latticexyz/recs";
 import { EFleetStance } from "contracts/config/enums";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
@@ -299,11 +299,15 @@ export const renderFleetsInOrbit = (scene: Scene) => {
     if (update.value[1]) renderEntityOrbitingFleets(update.value[1].destination as Entity, scene);
   });
 
-  defineEnterSystem(systemsWorld, [Has(components.SelectedFleet)], () => {
-    components.SelectedRock.remove();
+  defineSystem(systemsWorld, [Has(components.SelectedFleet)], ({ value }) => {
+    if (value[0]) components.SelectedRock.remove();
+    components.Attack.reset();
+    components.Send.reset();
   });
 
-  defineEnterSystem(systemsWorld, [Has(components.SelectedRock)], () => {
-    components.SelectedFleet.remove();
+  defineSystem(systemsWorld, [Has(components.SelectedRock)], ({ value }) => {
+    if (value[0]) components.SelectedFleet.remove();
+    components.Attack.reset();
+    components.Send.reset();
   });
 };
