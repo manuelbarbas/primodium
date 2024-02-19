@@ -24,8 +24,8 @@ export const WidgetButton: React.FC<{
         if (!visible) onOpen();
         else onClose();
       }}
-      className={`border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-xl ${
-        visible ? "border-warning" : ""
+      className={`border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-lg  drop-shadow-hard ${
+        visible ? "border-warning bg-warning/25" : "bg-secondary/25"
       }`}
     />
   );
