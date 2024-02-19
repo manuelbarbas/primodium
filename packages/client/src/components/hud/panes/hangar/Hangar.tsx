@@ -1,8 +1,9 @@
 import { Scenes } from "@game/constants";
 import { memo } from "react";
-import { Pane } from "src/components/core/Pane";
+import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
 import { HangarContent } from "./HangarContent";
+import { getRandomRange } from "src/util/common";
 
 export const Hangar = memo(() => {
   const { components } = useMud();
@@ -12,12 +13,14 @@ export const Hangar = memo(() => {
 
   return (
     <div className="w-72">
-      <Pane
+      <Widget
         id="hangar"
         title="HANGAR"
-        defaultCoord={{ x: 69, y: 420 }}
-        defaultLocked
-        defaultPinned
+        icon="/img/icons/attackicon.png"
+        defaultCoord={{
+          x: window.innerWidth / 2 + getRandomRange(-50, 50),
+          y: window.innerHeight / 2 + getRandomRange(-50, 50),
+        }}
         origin="center"
         scene={Scenes.Asteroid}
         minOpacity={0.6}
@@ -26,7 +29,7 @@ export const Hangar = memo(() => {
         persist
       >
         <HangarContent />
-      </Pane>
+      </Widget>
     </div>
   );
 });

@@ -1,6 +1,6 @@
 import { Scenes } from "@game/constants";
 import { memo } from "react";
-import { Pane } from "src/components/core/Pane";
+import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
 import { AllBlueprints } from "./AllBlueprints";
 
@@ -11,7 +11,7 @@ export const Blueprints = memo(() => {
   if (mapOpen) return null;
 
   return (
-    <Pane
+    <Widget
       id="blueprints"
       title="BLUEPRINTS"
       defaultCoord={{ x: 69, y: 420 }}
@@ -25,6 +25,6 @@ export const Blueprints = memo(() => {
       persist
     >
       <AllBlueprints />
-    </Pane>
+    </Widget>
   );
 });

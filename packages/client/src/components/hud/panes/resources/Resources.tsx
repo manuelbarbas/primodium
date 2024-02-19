@@ -1,27 +1,31 @@
 import { Scenes } from "@game/constants";
-import { Pane } from "src/components/core/Pane";
+import { Widget } from "src/components/core/Widget";
 import { AllResourceLabels } from "./AllResourceLabels";
-import { memo } from "react";
 import { useMud } from "src/hooks";
+import { getRandomRange } from "src/util/common";
 
-export const Resources = memo(() => {
+export const Resources = () => {
   const { components } = useMud();
   const mapOpen = components.MapOpen.use()?.value;
 
   if (mapOpen) return null;
 
   return (
-    <Pane
+    <Widget
       id="resources"
-      title="ASTEROID RESOURCES"
-      defaultCoord={{ x: 26, y: 11 }}
+      title="RESOURCES"
+      icon="/img/icons/minersicon.png"
+      defaultCoord={{
+        x: window.innerWidth / 2 + getRandomRange(-50, 50),
+        y: window.innerHeight / 2 + getRandomRange(-50, 50),
+      }}
       scene={Scenes.Asteroid}
-      defaultLocked
       minOpacity={0.5}
       draggable
+      pinnable
       persist
     >
       <AllResourceLabels />
-    </Pane>
+    </Widget>
   );
-});
+};

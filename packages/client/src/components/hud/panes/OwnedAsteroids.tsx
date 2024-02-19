@@ -3,7 +3,7 @@ import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
-import { Pane } from "src/components/core/Pane";
+import { Widget } from "src/components/core/Widget";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
@@ -119,7 +119,7 @@ export const OwnedAsteroids = () => {
   if (!mapOpen) return null;
 
   return (
-    <Pane
+    <Widget
       id="owned_asteroids"
       title="Owned Asteroids"
       defaultLocked
@@ -129,6 +129,6 @@ export const OwnedAsteroids = () => {
       defaultCoord={{ x: 0, y: 0 }}
     >
       <_OwnedAsteroids />
-    </Pane>
+    </Widget>
   );
 };

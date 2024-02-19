@@ -19,12 +19,10 @@ import { BuildMarker } from "./markers/starmap/BuildMarker";
 import { FleetTarget } from "./markers/starmap/FleetTarget";
 import { HomeMarker } from "./markers/starmap/HomeMarker";
 import HackerConsole from "./modals/HackerConsole";
-// import { OwnedAsteroids } from "./panes/OwnedAsteroids";
-// import { Blueprints } from "./panes/blueprints/Blueprints";
-// import { Hangar as HangarComponent } from "./panes/hangar/Hangar";
-// import { Resources } from "./panes/resources/Resources";
-// import { Chat } from "./panes/chat/Chat";
-import { Companion } from "./Companion";
+import { Companion } from "./companion/Companion";
+import { WidgetProvider } from "src/hooks/providers/WidgetProvider";
+import { Resources } from "./panes/resources/Resources";
+import { Hangar } from "./panes/hangar/Hangar";
 
 export const GameHUD = () => {
   const {
@@ -43,72 +41,74 @@ export const GameHUD = () => {
 
   return (
     <div className={`screen-container`}>
-      <HUD scale={uiScale} pad>
-        {/* Make map look inset */}
-        {mapOpen && (
-          <>
-            <div className="absolute inset-0 border-8 blur-lg border-secondary/25" />
-            <div className="absolute inset-0 scale-[98%] border-8 blur-lg border-info/25" />
-          </>
-        )}
+      <WidgetProvider>
+        <HUD scale={uiScale} pad>
+          {/* register widgets */}
+          <Resources />
+          <Hangar />
 
-        <Modal title="hacker console" keybind={allowHackerModal ? KeybindActions.Console : undefined} keybindClose>
-          <Modal.Content className="w-4/5 h-[40rem]">
-            <HackerConsole />
-          </Modal.Content>
-        </Modal>
+          {/* Make map look inset */}
+          {mapOpen && (
+            <>
+              <div className="absolute inset-0 border-8 blur-lg border-secondary/25" />
+              <div className="absolute inset-0 scale-[98%] border-8 blur-lg border-info/25" />
+            </>
+          )}
 
-        {/* MARKERS */}
-        <BuildMarker />
-        <HomeMarker />
+          <Modal title="hacker console" keybind={allowHackerModal ? KeybindActions.Console : undefined} keybindClose>
+            <Modal.Content className="w-4/5 h-[40rem]">
+              <HackerConsole />
+            </Modal.Content>
+          </Modal>
 
-        <AsteroidTarget />
-        <FleetTarget />
-        <HoverTarget />
+          {/* MARKERS */}
+          <BuildMarker />
+          <HomeMarker />
 
-        <HUD.CursorFollower>
-          <HoverInfo />
-        </HUD.CursorFollower>
-        <HUD.TopLeft>
-          <div className="flex items-center">
-            <Profile />
-            <MenuButtons />
-          </div>
-        </HUD.TopLeft>
+          <AsteroidTarget />
+          <FleetTarget />
+          <HoverTarget />
 
-        {/* <HUD.TopMiddle>
-          
-        </HUD.TopMiddle> */}
+          <HUD.CursorFollower>
+            <HoverInfo />
+          </HUD.CursorFollower>
+          <HUD.TopLeft>
+            <div className="flex items-center">
+              <Profile />
+              <MenuButtons />
+            </div>
+          </HUD.TopLeft>
 
-        <HUD.TopRight>
-          <MapButton isSpectating={isSpectating} />
-        </HUD.TopRight>
+          <HUD.TopRight>
+            <MapButton isSpectating={isSpectating} />
+          </HUD.TopRight>
 
-        {isSpectating && (
+          {isSpectating && (
+            <HUD.BottomRight>
+              <p className="text-accent text-2xl font-bold p-5 flex gap-2 items-center">
+                <FaCircle size={12} className="animate-pulse text-error" />
+                LIVE
+              </p>
+            </HUD.BottomRight>
+          )}
+
+          {/* <HUD.BottomLeft>{isSpectating && !mapOpen && <SpectatingDetails />}</HUD.BottomLeft> */}
+
+          <HUD.BottomLeft>
+            <Companion />
+          </HUD.BottomLeft>
+
+          <HUD.BottomMiddle>
+            <BuildingMenu />
+          </HUD.BottomMiddle>
+        </HUD>
+
+        <HUD>
           <HUD.BottomRight>
-            <p className="text-accent text-2xl font-bold p-5 flex gap-2 items-center">
-              <FaCircle size={12} className="animate-pulse text-error" />
-              LIVE
-            </p>
+            <BrandingLabel />
           </HUD.BottomRight>
-        )}
-
-        {/* <HUD.BottomLeft>{isSpectating && !mapOpen && <SpectatingDetails />}</HUD.BottomLeft> */}
-
-        <HUD.BottomLeft>
-          <Companion />
-        </HUD.BottomLeft>
-
-        <HUD.BottomMiddle>
-          <BuildingMenu />
-        </HUD.BottomMiddle>
-      </HUD>
-
-      <HUD>
-        <HUD.BottomRight>
-          <BrandingLabel />
-        </HUD.BottomRight>
-      </HUD>
+        </HUD>
+      </WidgetProvider>
     </div>
   );
 };

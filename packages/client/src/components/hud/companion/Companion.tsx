@@ -1,48 +1,57 @@
-import { KeybindActions, Scenes } from "@game/constants";
-import { Button, IconButton } from "../core/Button";
-import { Card, SecondaryCard } from "../core/Card";
+import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
+import { Button, IconButton } from "../../core/Button";
+import { Card, SecondaryCard } from "../../core/Card";
 import { usePrimodium } from "src/hooks/usePrimodium";
-import { UpgradeUnit } from "./building-menu/screens/UpgradeUnit";
-import { Modal } from "../core/Modal";
+import { UpgradeUnit } from "../building-menu/screens/UpgradeUnit";
+import { Modal } from "../../core/Modal";
 import { useEffect, useRef, useState } from "react";
+import { useWidget } from "../../../hooks/providers/WidgetProvider";
 
-export const Widgets = () => {
+export const WidgetButton: React.FC<{
+  imageUri: string;
+  tooltipText: string;
+  visible: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+}> = ({ imageUri, tooltipText, visible, onClose, onOpen }) => {
   return (
-    <div className="flex flex-col items-center w-full space-y-2">
+    <IconButton
+      imageUri={imageUri}
+      tooltipText={tooltipText}
+      tooltipDirection="bottom"
+      clickSound={AudioKeys.DataPoint}
+      onClick={() => {
+        if (!visible) onOpen();
+        else onClose();
+      }}
+      className={`border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-xl ${
+        visible ? "border-warning" : ""
+      }`}
+    />
+  );
+};
+
+export const WidgetControls = () => {
+  const { widgets } = useWidget();
+
+  return (
+    <div className="flex flex-col items-center w-full space-y-2 z-10">
       <p className="text-sm text-warning text-center bg-neutral/50 w-full font-bold">{`WIDGETS`}</p>
       <div className="flex">
         <div className="border border-r-0 border-secondary w-2 self-stretch m-2" />
         <div className="grid grid-cols-5 gap-2">
-          <IconButton
-            imageUri="img/icons/minersicon.png"
-            tooltipText="Resources"
-            tooltipDirection="bottom"
-            className=" border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-xl"
-          />
-          <IconButton
-            imageUri="img/icons/debugicon.png"
-            tooltipText="Hangar"
-            tooltipDirection="bottom"
-            className=" border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-xl"
-          />
-          <IconButton
-            imageUri="img/icons/objectiveicon.png"
-            tooltipText="Objectives"
-            tooltipDirection="bottom"
-            className=" border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-xl"
-          />
-          <IconButton
-            imageUri="img/icons/outgoingicon.png"
-            tooltipText="owned fleets"
-            tooltipDirection="bottom"
-            className=" border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-xl"
-          />
-          <IconButton
-            imageUri="img/icons/asteroidicon.png"
-            tooltipText="owned asteroids"
-            tooltipDirection="bottom"
-            className=" border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-xl"
-          />
+          {widgets.map((widget) => {
+            return (
+              <WidgetButton
+                key={widget.name}
+                imageUri={widget.image}
+                tooltipText={widget.name}
+                visible={widget.visible}
+                onOpen={widget.open}
+                onClose={widget.close}
+              />
+            );
+          })}
         </div>
         <div className="border border-l-0 border-secondary w-2 self-stretch m-2" />
       </div>
@@ -77,9 +86,9 @@ export const Actions = () => {
 
 export const PrimeOS = () => {
   return (
-    <Card className="relative p-2 border border-accent/25 -ml-8 drop-shadow-hard">
+    <Card className="p-2 border border-accent/25 -ml-8 drop-shadow-hard">
       <SecondaryCard className="flex flex-col items-center gap-3 border-2 border-accent/50 !p-0 drop-shadow-hard">
-        <Widgets />
+        <WidgetControls />
         <Actions />
       </SecondaryCard>
       <p className="absolute -bottom-4 right-0">

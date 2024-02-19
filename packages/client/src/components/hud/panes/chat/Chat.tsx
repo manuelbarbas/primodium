@@ -3,7 +3,7 @@ import { Tabs } from "src/components/core/Tabs";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { Channel } from "./Channel";
-import { Pane } from "src/components/core/Pane";
+import { Widget } from "src/components/core/Widget";
 import { Scenes } from "@game/constants";
 
 export const Chat = () => {
@@ -13,7 +13,7 @@ export const Chat = () => {
   const playerAlliance = components.PlayerAlliance.use(playerEntity)?.alliance;
 
   return (
-    <Pane id="chat" title="chat" defaultLocked persist draggable defaultCoord={{ x: 0, y: 0 }} scene={Scenes.UI}>
+    <Widget id="chat" title="chat" defaultLocked persist draggable defaultCoord={{ x: 0, y: 0 }} scene={Scenes.UI}>
       <Tabs defaultIndex={0}>
         <Join className="w-full border border-secondary/25 border-b-0">
           <Tabs.Button showActive index={0} className="w-1/2 btn-xs">
@@ -33,6 +33,6 @@ export const Chat = () => {
           </Tabs.Pane>
         )}
       </Tabs>
-    </Pane>
+    </Widget>
   );
 };
