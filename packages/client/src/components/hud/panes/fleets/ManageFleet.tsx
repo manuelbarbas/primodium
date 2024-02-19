@@ -132,18 +132,18 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
                 </div>
               )}
             </div>
-            <NavButton
-              className="btn-primary w-fit btn-sm"
-              goto="transfer"
-              from={fleetEntity}
-              to={undefined}
-              onClick={() =>
-                movement?.destination && components.ActiveRock.set({ value: movement.destination as Entity })
-              }
-            >
-              Transfer Units and Resources
-            </NavButton>
           </div>
+          <NavButton
+            className="btn-primary w-fit btn-sm"
+            goto="transfer"
+            from={fleetEntity}
+            to={undefined}
+            onClick={() =>
+              movement?.destination && components.ActiveRock.set({ value: movement.destination as Entity })
+            }
+          >
+            Transfer Units and Resources
+          </NavButton>
         </div>
         {/* Right Side */}
         <div className="flex flex-col grow col-span-1 overflow-hidden gap-2">

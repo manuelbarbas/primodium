@@ -3,6 +3,7 @@ import { EResource } from "contracts/config/enums";
 import { useMemo } from "react";
 import { Button } from "src/components/core/Button";
 import { components } from "src/network/components";
+import { getBlockTypeName } from "src/util/common";
 import { ResourceEntityLookup, UtilityStorages } from "src/util/constants";
 import { getFullResourceCount } from "src/util/resource";
 import { getFleetStatsFromUnits } from "src/util/unit";
@@ -15,7 +16,36 @@ interface TransferConfirmProps {
   toResources: Map<Entity, bigint>;
 }
 
-const TransferConfirm = ({
+export const TransferConfirm = (props: {
+  from: Entity;
+  to: Entity | "newFleet";
+  toUnits: Map<Entity, bigint>;
+  toResources: Map<Entity, bigint>;
+  fromUnits: Map<Entity, bigint>;
+  fromResources: Map<Entity, bigint>;
+  handleSubmit: () => void;
+}) => {
+  const fromIsFleet = components.IsFleet.use(props.from)?.value;
+  const toIsFleet = props.to == "newFleet" || components.IsFleet.get(props.to)?.value;
+
+  const { disabled, submitMessage } = useMemo(() => {
+    if (!fromIsFleet) return { disabled: false, submitMessage: "Transfer" };
+    const cargo = getFleetStatsFromUnits(props.fromUnits).cargo;
+    if (cargo < [...props.fromResources.entries()].reduce((acc, [, count]) => acc + count, 0n))
+      return { disabled: true, submitMessage: "From cargo capacity exceeded" };
+    return { disabled: false, submitMessage: "Transfer" };
+  }, [fromIsFleet, props.fromUnits, props.fromResources]);
+
+  if (disabled)
+    return <TransferConfirmButton disabled={disabled} message={submitMessage} onClick={props.handleSubmit} />;
+  return toIsFleet ? (
+    <TransferConfirmFleet entity={props.to} {...props} />
+  ) : (
+    <TransferConfirmAsteroid entity={props.to} {...props} />
+  );
+};
+
+const TransferConfirmButton = ({
   disabled,
   message,
   onClick,
@@ -29,22 +59,22 @@ const TransferConfirm = ({
   </Button>
 );
 
-export const TransferConfirmFleet = ({ toUnits, toResources, handleSubmit, entity }: TransferConfirmProps) => {
+const TransferConfirmFleet = ({ toUnits, toResources, handleSubmit, entity }: TransferConfirmProps) => {
   const { disabled, submitMessage } = useMemo(() => {
     const newFleet = entity === "newFleet";
     if (toUnits.size === 0) return { disabled: true, submitMessage: "Add Units" };
 
     const cargo = getFleetStatsFromUnits(toUnits).cargo;
     if (cargo < [...toResources.entries()].reduce((acc, [, count]) => acc + count, 0n))
-      return { disabled: true, submitMessage: "Cargo capacity exceeded" };
+      return { disabled: true, submitMessage: "To cargo capacity exceeded" };
 
     return { disabled: false, submitMessage: newFleet ? "Create Fleet" : "Transfer" };
   }, [toUnits, entity, toResources]);
 
-  return <TransferConfirm disabled={disabled} message={submitMessage} onClick={handleSubmit} />;
+  return <TransferConfirmButton disabled={disabled} message={submitMessage} onClick={handleSubmit} />;
 };
 
-export const TransferConfirmAsteroid = ({ entity, toUnits, toResources, handleSubmit }: TransferConfirmProps) => {
+const TransferConfirmAsteroid = ({ entity, toUnits, toResources, handleSubmit }: TransferConfirmProps) => {
   const { disabled, submitMessage } = useMemo(() => {
     if (entity == "newFleet") return { disabled: true, submitMessage: "Create Fleet" };
     if (toUnits.size === 0) return { disabled: true, submitMessage: "Transfer" };
@@ -63,20 +93,23 @@ export const TransferConfirmAsteroid = ({ entity, toUnits, toResources, handleSu
       return acc;
     }, {} as Record<Entity, bigint>);
 
-    const enoughUtilities = Object.entries(utilitiesUsed).every(([resource, amount]) => {
+    const enoughUtilities = Object.entries(utilitiesUsed).find(([resource, count]) => {
       const { resourceStorage } = getFullResourceCount(resource as Entity, entity);
-      if (amount > resourceStorage) return false;
+      return count > resourceStorage;
     });
-    if (!enoughUtilities) return { disabled: true, submitMessage: "Not enough storage" };
+
+    if (enoughUtilities)
+      return { disabled: true, submitMessage: `Not enough ${getBlockTypeName(enoughUtilities[0] as Entity)} storage` };
 
     // make sure we have enough storage for resources
-    const enoughResources = [...toResources.entries()].every(([resource, count]) => {
+    const enoughResources = [...toResources.entries()].find(([resource, count]) => {
       const { resourceStorage } = getFullResourceCount(resource as Entity, entity);
-      if (count > resourceStorage) return false;
+      return count > resourceStorage;
     });
-    if (!enoughResources) return { disabled: true, submitMessage: "Not enough resource storage" };
+    if (enoughResources)
+      return { disabled: true, submitMessage: `Not enough ${getBlockTypeName(enoughResources[0] as Entity)} storage` };
     return { disabled: false, submitMessage: "Transfer" };
   }, [toUnits, toResources, entity]);
 
-  return <TransferConfirm disabled={disabled} message={submitMessage} onClick={handleSubmit} />;
+  return <TransferConfirmButton disabled={disabled} message={submitMessage} onClick={handleSubmit} />;
 };

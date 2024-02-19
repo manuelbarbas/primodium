@@ -16,7 +16,7 @@ import { ResourceEntityLookup, UnitStorages } from "src/util/constants";
 import { formatResourceCount, parseResourceCount } from "src/util/number";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { useFleetNav } from "../fleets/Fleets";
-import { TransferConfirmAsteroid, TransferConfirmFleet } from "./TransferConfirm";
+import { TransferConfirm } from "./TransferConfirm";
 import { TransferFrom } from "./TransferFrom";
 import { TransferSelect } from "./TransferSelect";
 import { TransferSwap } from "./TransferSwap";
@@ -60,7 +60,6 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
   }, new Map<Entity, bigint>());
 
   const toEntity = to === "newFleet" ? singletonEntity : to;
-  const toIsFleet = to === "newFleet" || components.IsFleet.has(toEntity);
 
   const toInitialResourceCounts = useFullResourceCounts(toEntity);
   const toResourceCounts = transportables.reduce((acc, transportable) => {
@@ -183,7 +182,6 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
           />
         ) : (
           <TransferSelect
-            rockEntity={selectedRock}
             activeEntity={to}
             setEntity={(entity) => entity !== "newFleet" && setFrom(entity)}
             hideNotOwned
@@ -236,33 +234,27 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
             remove={() => setTo(undefined)}
           />
         ) : (
-          <TransferSelect rockEntity={selectedRock} activeEntity={from} setEntity={setTo} showNewFleet />
+          <TransferSelect activeEntity={from} setEntity={setTo} showNewFleet />
         )}
       </div>
       <div className="flex gap-4 w-full justify-center items-center">
         <Nav.BackButton className="absolute left-0 bottom-0">Back</Nav.BackButton>
-        {(!from || !to) && (
-          <Button className="btn-primary w-48" disabled onClick={handleSubmit}>
-            {"Select"}
+        {(!from || !to || deltas.size == 0) && (
+          <Button className="btn-primary w-48" disabled>
+            Select
           </Button>
         )}
-        {!!from &&
-          !!to &&
-          (toIsFleet ? (
-            <TransferConfirmFleet
-              entity={to}
-              toUnits={toUnitCounts}
-              toResources={toResourceCounts}
-              handleSubmit={handleSubmit}
-            />
-          ) : (
-            <TransferConfirmAsteroid
-              entity={to}
-              toUnits={toUnitCounts}
-              toResources={toResourceCounts}
-              handleSubmit={handleSubmit}
-            />
-          ))}
+        {!!from && !!to && deltas.size !== 0 && (
+          <TransferConfirm
+            from={from}
+            to={to}
+            fromUnits={fromUnitCounts}
+            fromResources={fromResourceCounts}
+            toUnits={toUnitCounts}
+            toResources={toResourceCounts}
+            handleSubmit={handleSubmit}
+          />
+        )}
       </div>
     </TransactionQueueMask>
   );
