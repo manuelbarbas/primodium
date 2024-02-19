@@ -6,7 +6,7 @@ import { components } from "src/network/components";
 import { HUD } from "../core/HUD";
 import { Modal } from "../core/Modal";
 import { BrandingLabel } from "../shared/BrandingLabel";
-// import { CurrentObjective } from "./CurrentObjective";
+import { CurrentObjective } from "./CurrentObjective";
 import { Profile } from "./Profile";
 // import { SpectatingDetails } from "./SpectatingDetails";
 import { BuildingMenu } from "./building-menu/BuildingMenu";
@@ -69,6 +69,9 @@ export const GameHUD = () => {
           <HUD.TopLeft>
             <Profile />
           </HUD.TopLeft>
+          <HUD.TopRight>
+            <CurrentObjective />
+          </HUD.TopRight>
           <HUD.Left>
             <Blueprints />
           </HUD.Left>
