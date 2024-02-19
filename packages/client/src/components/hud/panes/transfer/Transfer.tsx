@@ -102,9 +102,6 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
     }, new Map<Entity, bigint>());
   }, [deltas, toInitialUnitCounts]);
 
-  const units = components.Hangar.use(from);
-  const allResources = useFullResourceCounts();
-
   const initDragging = (e: React.MouseEvent, entity: Entity, count: bigint) => {
     document.body.style.userSelect = "none";
     setDragging({ entity, count });
@@ -135,21 +132,19 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
       if (!dragging) return;
       if (e.key === "e" || e.key === "E") {
         const delta = parseResourceCount(dragging.entity, e.key === "E" ? "10" : "1");
-        const maxCount = UnitStorages.has(dragging.entity)
-          ? units
-            ? units.counts[units.units.indexOf(dragging.entity)]
-            : 0n
-          : allResources.get(dragging.entity)?.resourceCount ?? 0n;
+        const initial = UnitStorages.has(dragging.entity)
+          ? fromInitialUnitCounts.get(dragging.entity) ?? 0n
+          : fromInitialResourceCounts.get(dragging.entity)?.resourceCount ?? 0n;
         setDragging({
           ...dragging,
-          count: bigIntMin(maxCount, dragging.count + delta),
+          count: bigIntMin(initial, dragging.count + delta),
         });
       } else if (e.key === "q" || e.key == "Q") {
         const delta = parseResourceCount(dragging.entity, e.key === "Q" ? "10" : "1");
         setDragging({ ...dragging, count: bigIntMax(0n, dragging.count - delta) });
       }
     },
-    [allResources, dragging, units]
+    [dragging, fromInitialResourceCounts, fromInitialUnitCounts]
   );
 
   const mud = useMud();
