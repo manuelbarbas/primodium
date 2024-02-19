@@ -27,7 +27,8 @@ export const TransferTo = (props: {
 }) => {
   const isFleet = props.entity !== "newFleet" && components.IsFleet.has(props.entity);
   const selectedRock = components.SelectedRock.use()?.value;
-  const noUnitsOrResources = props.unitCounts.size === 0 && props.resourceCounts.size === 0;
+  const noUnitsOrResources =
+    !props.deltas || props.deltas.size === 0 || (props.unitCounts.size === 0 && props.resourceCounts.size === 0);
   const Header = useMemo(() => {
     if (props.entity !== "newFleet") {
       return isFleet ? <FleetEntityHeader entity={props.entity} /> : <TargetHeader entity={props.entity} />;
@@ -73,7 +74,8 @@ export const TransferTo = (props: {
             if (index >= props.unitCounts.size)
               return <div className="w-full h-full bg-white/10 opacity-50" key={`unit-from-${index}`} />;
             const [unit, count] = [...props.unitCounts.entries()][index];
-            const delta = props.deltas?.get(unit);
+            const delta = props.deltas?.get(unit) ?? 0n;
+            const canClear = !!props.clearUnit && delta !== 0n;
             return (
               <ResourceIcon
                 key={`to-unit-${unit}`}
@@ -81,7 +83,7 @@ export const TransferTo = (props: {
                 resource={unit as Entity}
                 amount={count.toString()}
                 delta={delta}
-                onClear={props.clearUnit && (() => props.clearUnit && props.clearUnit(unit))}
+                onClear={canClear ? () => props.clearUnit && props.clearUnit(unit) : undefined}
               />
             );
           })}
@@ -96,7 +98,8 @@ export const TransferTo = (props: {
             if (index >= props.resourceCounts.size)
               return <div key={`resource-blank-${index}`} className=" w-full h-full bg-white/10 opacity-50 " />;
             const [entity, count] = [...props.resourceCounts.entries()][index];
-            const delta = props.deltas?.get(entity);
+            const delta = props.deltas?.get(entity) ?? 0n;
+            const canClear = !!props.clearResource && delta !== 0n;
             return (
               <ResourceIcon
                 key={`to-resource-${entity}`}
@@ -104,7 +107,7 @@ export const TransferTo = (props: {
                 resource={entity as Entity}
                 delta={delta}
                 amount={formatResourceCount(entity as Entity, count, { fractionDigits: 0 })}
-                onClear={props.clearResource && (() => props.clearResource && props.clearResource(entity))}
+                onClear={canClear ? () => props.clearResource && props.clearResource(entity) : undefined}
               />
             );
           })}

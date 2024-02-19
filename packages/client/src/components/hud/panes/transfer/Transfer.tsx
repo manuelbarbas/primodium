@@ -23,7 +23,7 @@ import { TransferSwap } from "./TransferSwap";
 import { TransferTo } from "./TransferTo";
 
 type To = Entity | "newFleet";
-export const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = ({
+const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = ({
   from: initialFrom,
   to: initialTo,
 }) => {
@@ -284,3 +284,5 @@ const Dragging = ({
     document.body
   );
 };
+
+export default Transfer;

@@ -13,7 +13,7 @@ import { components } from "src/network/components";
 import { disbandFleet } from "src/network/setup/contractCalls/fleetDisband";
 import { landFleet } from "src/network/setup/contractCalls/fleetLand";
 import { clearFleetStance, setFleetStance } from "src/network/setup/contractCalls/fleetStance";
-import { formatResourceCount } from "src/util/number";
+import { formatNumber, formatResourceCount } from "src/util/number";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { FleetEntityHeader } from "./FleetHeader";
 import { useFleetNav } from "./Fleets";
@@ -84,54 +84,56 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
           <div className="bg-base-100 p-4">
             <FleetEntityHeader entity={fleetEntity} />
           </div>
-          <div className="flex-1 flex flex-col bg-base-100 p-4 gap-2">
-            <p className="uppercase text-xs opacity-50 font-bold">UNITS</p>
-            {units.size > 0 ? (
-              <div className="grid grid-cols-4 grid-rows-2 gap-2">
-                {[...units.entries()].map(([unit, count]) => {
-                  if (count <= 0n) return null;
-                  return (
-                    <ResourceIcon key={`unit-${unit}`} resource={unit as Entity} amount={count.toString()} size="sm" />
-                  );
-                })}
-              </div>
-            ) : (
-              <p className="w-full h-full grid place-items-center text-xs uppercase font-bold">No Units</p>
-            )}
+          <div className="grid grid-rows-2 h-full gap-2">
+            <div className="relative flex flex-col h-full bg-base-100 p-4 gap-2">
+              <p className="uppercase text-xs opacity-50 font-bold">UNITS</p>
+              <div className="flex-1 flex flex-col bg-base-100 grid grid-cols-4 grid-rows-2 gap-2">
+                {Array(8)
+                  .fill(0)
+                  .map((_, index) => {
+                    if (index >= units.size) {
+                      return <div className="w-full h-full bg-white/10 opacity-50" key={`unit-from-${index}`} />;
+                    }
+                    const [unit, count] = [...units.entries()][index];
 
-            <NavButton
-              className="btn-primary btn-xs w-fit self-end"
-              goto="transfer"
-              from={fleetEntity}
-              to={undefined}
-              onClick={() =>
-                movement?.destination && components.ActiveRock.set({ value: movement.destination as Entity })
-              }
-            >
-              Transfer Units
-            </NavButton>
-          </div>
-          <div className="flex-1 flex flex-col bg-base-100 p-4 gap-2">
-            <p className="uppercase text-xs opacity-50 font-bold">RESOURCES</p>
-            {resources.size > 0 ? (
-              <div className="flex-1 flex flex-col bg-base-100 p-4 grid grid-cols-4 grid-rows-2 gap-2">
-                {[...resources.entries()].map(([resource, data]) => {
-                  if (data.resourceCount <= 0n) return null;
-                  return (
-                    <ResourceIcon
-                      key={`resource-${resource}`}
-                      resource={resource as Entity}
-                      amount={formatResourceCount(resource as Entity, data.resourceCount)}
-                      size="sm"
-                    />
-                  );
-                })}
+                    return <ResourceIcon key={`unit-${unit}`} resource={unit as Entity} amount={formatNumber(count)} />;
+                  })}
               </div>
-            ) : (
-              <p className="w-full h-full grid place-items-center text-xs uppercase font-bold">No Resources</p>
-            )}
+
+              {units.size == 0 && (
+                <div className="flex-1 absolute w-full h-full p-4 grid place-items-center bg-black/50">
+                  <p className="uppercase font-bold text-error">No units</p>
+                </div>
+              )}
+            </div>
+            <div className="relative flex flex-col bg-base-100 p-4 gap-2">
+              <p className="uppercase text-xs opacity-50 font-bold">RESOURCES</p>
+              <div className="flex-1 flex flex-col bg-base-100 grid grid-cols-4 grid-rows-2 gap-2">
+                {Array(8)
+                  .fill(0)
+                  .map((_, index) => {
+                    if (index >= resources.size) {
+                      return <div className="w-full h-full bg-white/10 opacity-50" key={`unit-from-${index}`} />;
+                    }
+                    const [resource, data] = [...resources.entries()][index];
+
+                    return (
+                      <ResourceIcon
+                        key={`resource-${resource}`}
+                        resource={resource as Entity}
+                        amount={formatResourceCount(resource, data.resourceCount)}
+                      />
+                    );
+                  })}
+              </div>
+              {resources.size == 0 && (
+                <div className="flex-1 absolute w-full h-full p-4 grid place-items-center bg-black/50">
+                  <p className="uppercase font-bold text-error">No resources</p>
+                </div>
+              )}
+            </div>
             <NavButton
-              className="btn-primary btn-xs w-fit self-end"
+              className="btn-primary w-fit btn-sm"
               goto="transfer"
               from={fleetEntity}
               to={undefined}
@@ -139,7 +141,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
                 movement?.destination && components.ActiveRock.set({ value: movement.destination as Entity })
               }
             >
-              Transfer Resources
+              Transfer Units and Resources
             </NavButton>
           </div>
         </div>
@@ -170,36 +172,6 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             <Button className="btn btn-primary btn-sm" onClick={handleBlock} disabled={cannotDoAnything}>
               {activeStance?.stance == EFleetStance.Block ? "STOP BLOCKING" : "BLOCK"}
             </Button>
-            {/* <div className="flex items-center gap-1 uppercase font-bold">
-              FOLLOW
-              {activeStance?.stance == EFleetStance.Follow && (
-                <p className="opacity-50 text-xs font-bold uppercase">(active)</p>
-              )}
-            </div> */}
-            {/* <p className="italic opacity-50 text-xs">Automatically move whenever another fleet moves</p> */}
-            {/* <div className="flex flex-col overflow-y-auto scrollbar h-full">
-              {followableFleets.length > 0 ? (
-                followableFleets.map((target, i) => (
-                  <div
-                    className="w-full p-2 bg-neutral flex justify-between items-center"
-                    key={`follow-${target}-${i}`}
-                    onMouseEnter={() => components.HoverEntity.set({ value: target as Entity })}
-                    onMouseLeave={() => components.HoverEntity.remove()}
-                  >
-                    <p className="text-sm font-bold">{entityToRockName(target)}</p>
-                    <Button
-                      className="btn btn-primary btn-sm"
-                      onClick={() => handleFollow(target)}
-                      disabled={totalUnits <= 0n}
-                    >
-                      {activeStance?.target === target ? "UN" : ""}FOLLOW
-                    </Button>
-                  </div>
-                ))
-              ) : (
-                <div className="text-error font-bold uppercase text-xs">No fleets to follow</div>
-              )}
-            </div> */}
           </TransactionQueueMask>
           <div className="flex flex-col gap-2">
             <Modal.CloseButton
