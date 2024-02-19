@@ -8,7 +8,7 @@ import { components } from "src/network/components";
 import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
 import { useMud } from "src/hooks";
-import { SecondaryCard } from "../core/Card";
+import { EntityType, ResourceImage } from "src/util/constants";
 
 export const MapButton = () => {
   const {
@@ -98,21 +98,43 @@ export const MapButton = () => {
   }, []);
 
   return (
-    <SecondaryCard>
-      <Button
-        className={`flex btn-sm !p-3 !px-10 gap-5 border border-secondary border-dotted filter drop-shadow-hard ${
-          !mapOpen ? "btn-error star-background-sm" : "btn-black"
-        }`}
-        clickSound={AudioKeys.Sequence}
-        onClick={!mapOpen ? openMap : closeMap}
-      >
-        {!mapOpen && !isSpectating && <IconLabel imageUri="/img/icons/starmapicon.png" className="text-xl" />}
-        {!mapOpen && isSpectating && <IconLabel imageUri="/img/icons/returnicon.png" className="text-xl" />}
-        {mapOpen && <IconLabel imageUri="/img/icons/minersicon.png" className="text-xl" />}
-        <p className="uppercase">
-          {!mapOpen ? (isSpectating ? "stop spectating >" : "open star map >") : "Return to building >"}
-        </p>
-      </Button>
-    </SecondaryCard>
+    <Button
+      className={`flex grow w-80 btn-sm !p-3 !px-10 gap-5 filter group hover:scale-110 hover:z-50 star-background-sm hover:border-secondary hover:drop-shadow-hard`}
+      clickSound={AudioKeys.Sequence}
+      onClick={!mapOpen ? openMap : closeMap}
+    >
+      {!mapOpen && !isSpectating && <IconLabel imageUri="/img/icons/starmapicon.png" className="text-xl" />}
+      {!mapOpen && isSpectating && <IconLabel imageUri="/img/icons/returnicon.png" className="text-xl" />}
+      {mapOpen && <IconLabel imageUri="/img/icons/minersicon.png" className="text-xl" />}
+      <p className="uppercase">
+        {!mapOpen ? (isSpectating ? "stop spectating" : "open star map") : "Return to building"}
+      </p>
+
+      {/* button decor */}
+      {!mapOpen && (
+        <div>
+          <img
+            src={ResourceImage.get(EntityType.CapitalShip)}
+            className="pixel-images absolute origin-right -top-10 right-12 opacity-0 scale-x-[0] -translate-x-1/2 group-hover:translate-x-0 group-hover:scale-x-[-100%] group-hover:opacity-100 transition-all duration-300"
+          />
+          <img
+            src={ResourceImage.get(EntityType.StingerDrone)}
+            className="pixel-images absolute origin-right -bottom-4 right-12 opacity-0 scale-x-[0] scale-y-[0] -translate-x-1/2 group-hover:translate-x-0 group-hover:scale-x-[-50%] group-hover:scale-y-[50%] group-hover:opacity-100 transition-all duration-300"
+          />
+        </div>
+      )}
+      {mapOpen && (
+        <div>
+          <img
+            src={ResourceImage.get(EntityType.Iron)}
+            className="pixel-images absolute origin-right -top-5 -right-5 opacity-0 -translate-x-1/2 group-hover:translate-x-0 group-hover:scale-[150%] group-hover:opacity-100 transition-all duration-300"
+          />
+          <img
+            src={ResourceImage.get(EntityType.Copper)}
+            className="pixel-images absolute origin-right -bottom-1 right-8 opacity-0 scale-x-[0] scale-y-[0] -translate-x-1/2 group-hover:translate-x-0 group-hover:scale-y-[100%] group-hover:scale-x-[-100%] group-hover:opacity-100 transition-all duration-300"
+          />
+        </div>
+      )}
+    </Button>
   );
 };

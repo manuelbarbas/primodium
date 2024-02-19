@@ -19,6 +19,7 @@ type Panes = Record<
       pinned: boolean;
       coord: Coord;
       locked: boolean;
+      visible: boolean;
     }
   | undefined
 >;
@@ -55,7 +56,7 @@ type PersistentActions = {
   toggleAllowHackerModal: () => void;
   setUiScale: (scale: number) => void;
   setConsoleHistory: (history: { input: string; output: string }[]) => void;
-  setPane: (id: string, coord: Coord, pinned: boolean, locked: boolean) => void;
+  setPane: (id: string, coord: Coord, pinned: boolean, locked: boolean, visible: boolean) => void;
   removePane: (id: string) => void;
   resetPanes: () => void;
   setNoExternalAccount: (value: boolean) => void; // Add this action
@@ -156,7 +157,7 @@ export const usePersistentStore = create<PersistentState & PersistentActions>()(
       setConsoleHistory: (history) => {
         set({ consoleHistory: history });
       },
-      setPane: (id, coord, pinned, locked) => {
+      setPane: (id, coord, pinned, locked, visible) => {
         set({
           panes: {
             ...get().panes,
@@ -164,6 +165,7 @@ export const usePersistentStore = create<PersistentState & PersistentActions>()(
               coord,
               pinned,
               locked,
+              visible,
             },
           },
         });

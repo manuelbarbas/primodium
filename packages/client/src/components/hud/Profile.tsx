@@ -39,7 +39,7 @@ export const Profile = () => {
         <span className="text-white/50 text-xs">id:</span>
         <AccountDisplay player={playerEntity} />
         <Modal title="account">
-          <Modal.Button className="btn-sm btn-secondary !p-1 flex gap-2 text-accent w-fit">
+          <Modal.Button className="btn-sm btn-neutral border-secondary !p-1 flex gap-2 text-accent text-xs w-fit">
             <Tooltip text={`${delegate ? "" : "not"} delegating`} direction="right">
               <div>
                 {delegate ? (

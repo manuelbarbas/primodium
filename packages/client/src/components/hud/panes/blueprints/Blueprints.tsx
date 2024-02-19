@@ -18,6 +18,7 @@ export const Blueprints = memo(() => {
       defaultCoord={{ x: 69, y: 420 }}
       defaultLocked
       lockable
+      defaultVisible
       origin="center-left"
       scene={Scenes.Asteroid}
       minOpacity={0.6}

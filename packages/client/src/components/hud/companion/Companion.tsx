@@ -8,6 +8,7 @@ import { useWidgets } from "../../../hooks/providers/WidgetProvider";
 import { Settings } from "../modals/settings/Settings";
 import { MenuButtons } from "../MenuButtons";
 import { MapButton } from "../MapButton";
+import { useAnimate } from "framer-motion";
 
 export const WidgetButton: React.FC<{
   imageUri: string;
@@ -29,7 +30,7 @@ export const WidgetButton: React.FC<{
         if (!visible) onOpen();
         else onClose();
       }}
-      className={`border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-lg  drop-shadow-hard ${
+      className={`border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-lg  drop-shadow-hard hover:z-20 ${
         visible ? "border-warning bg-warning/25" : "bg-secondary/25"
       } ${className}`}
     />
@@ -44,21 +45,19 @@ export const WidgetControls = () => {
       <p className="text-sm text-warning text-center bg-neutral/50 w-full font-bold">{`WIDGETS`}</p>
       <div className="flex">
         <div className="border border-r-0 border-secondary w-2 self-stretch m-2" />
-        <div className="grid grid-cols-5 gap-2">
-          {widgets
-            .filter((widget) => widget.name !== "blueprints")
-            .map((widget) => {
-              return (
-                <WidgetButton
-                  key={widget.name}
-                  imageUri={widget.image}
-                  tooltipText={widget.name}
-                  visible={widget.visible}
-                  onOpen={widget.open}
-                  onClose={widget.close}
-                />
-              );
-            })}
+        <div className="grid grid-cols-6 gap-2">
+          {widgets.map((widget) => {
+            return (
+              <WidgetButton
+                key={widget.name}
+                imageUri={widget.image}
+                tooltipText={widget.name}
+                visible={widget.visible}
+                onOpen={widget.open}
+                onClose={widget.close}
+              />
+            );
+          })}
         </div>
         <div className="border border-l-0 border-secondary w-2 self-stretch m-2" />
       </div>
@@ -66,33 +65,15 @@ export const WidgetControls = () => {
   );
 };
 
-const BlueprintsButton = () => {
-  const { useWidget } = useWidgets();
-  const widget = useWidget("blueprints");
-
-  if (!widget) return null;
-
-  return (
-    <WidgetButton
-      className={`grow !rounded-none ${!widget.visible ? "!bg-info/75" : ""}`}
-      text={widget.name}
-      imageUri={widget.image}
-      tooltipText={widget.name}
-      visible={widget.visible}
-      onOpen={widget.open}
-      onClose={widget.close}
-    />
-  );
-};
-
 export const Actions = () => {
   return (
     <div className="w-full">
-      <div className="w-full flex items-center">
-        <BlueprintsButton />
+      <div className="w-full flex items-center border-t border-secondary/25">
+        {/* <BlueprintsButton /> */}
+        <MapButton />
         <Modal title="settings">
           <Modal.IconButton
-            className="btn-md btn-base-100 bg-opacity-50"
+            className="btn-md btn-secondary bg-opacity-0 border border-secondary/25 border-r-0 border-y-0"
             imageUri="/img/icons/settingsicon.png"
             tooltipDirection="right"
             tooltipText="settings"
@@ -109,10 +90,8 @@ export const Actions = () => {
 export const PrimeOS = () => {
   return (
     <>
-      <Card className="p-2 border border-accent/25 -ml-8 drop-shadow-hard z-10">
-        <div className="absolute top-0 -translate-y-full pb-2 right-0">
-          <MapButton />
-        </div>
+      <Card className="p-2 border border-accent/25 -ml-8 drop-shadow-hard  z-10">
+        <div className="absolute top-0 -translate-y-full pb-2 right-0"></div>
         <SecondaryCard className="flex flex-col items-center gap-3 border-2 border-accent/50 !p-0 drop-shadow-hard">
           <WidgetControls />
           <Actions />
@@ -122,7 +101,7 @@ export const PrimeOS = () => {
           <span className="opacity-50">{"///"}</span>PRIME<span className="text-accent">OS</span>
         </p>
       </Card>
-      <div className="pl-2">
+      <div className="pl-2 z-0">
         <MenuButtons />
       </div>
     </>
@@ -137,6 +116,7 @@ export const Companion = () => {
   } = useRef(primodium.api(Scenes.UI)).current;
   const keybinds = useKeybinds();
   const [minimized, setMinimized] = useState(false);
+  const [scope, animate] = useAnimate();
 
   useEffect(() => {
     const listener = addListener(KeybindActions.SpacerockMenu, () => {
@@ -148,11 +128,17 @@ export const Companion = () => {
     };
   }, [addListener]);
 
+  useEffect(() => {
+    if (minimized) {
+      animate(scope.current, { translateY: "50%" }, { duration: 0.2 });
+    } else animate(scope.current, { translateY: "0%" }, { duration: 0.2 });
+  }, [minimized, scope, animate]);
+
   return (
     <div className="w-full">
-      <div className={`relative flex items-center ${minimized ? "translate-y-1/2" : ""}`}>
+      <div ref={scope} className={`relative flex items-center`}>
         {!minimized && <div className="absolute bg-black inset-0 blur-3xl opacity-50" />}
-        {/* <SecondaryCard className="uppercase drop-shadow-hard absolute w-fit min-w-64 origin-bottom-left -top-4 text-accent">
+        {/* <SecondaryCard className="uppercase drop-shadow-hard absolute w-fit min-w-64 origin-bottom-left -top-4 text-accent z-50">
           this is a tip from prime
         </SecondaryCard> */}
 
@@ -175,7 +161,7 @@ export const Companion = () => {
         {!minimized && <PrimeOS />}
 
         {minimized && (
-          <p className="mb-5">
+          <p className="mb-5 drop-shadow-hard">
             PRESS{" "}
             <span className="kbd kbd-xs">
               {[keybinds[KeybindActions.SpacerockMenu]?.entries().next().value[0]] ?? "?"}
