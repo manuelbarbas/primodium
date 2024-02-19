@@ -8,6 +8,7 @@ import { Button } from "src/components/core/Button";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
+import { usePlayerOwner } from "src/hooks/usePlayerOwner";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { createFleet } from "src/network/setup/contractCalls/createFleet";
@@ -60,6 +61,10 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
   }, new Map<Entity, bigint>());
 
   const toEntity = to === "newFleet" ? singletonEntity : to;
+
+  const fromOwner = usePlayerOwner(from ?? singletonEntity);
+  const toOwner = usePlayerOwner(toEntity ?? singletonEntity);
+  const sameOwner = fromOwner === toOwner;
 
   const toInitialResourceCounts = useFullResourceCounts(toEntity);
   const toResourceCounts = transportables.reduce((acc, transportable) => {
@@ -172,6 +177,7 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
         {/*Left Side */}
         {from ? (
           <TransferFrom
+            sameOwner={sameOwner}
             entity={from}
             dragging={!!dragging}
             unitCounts={fromUnitCounts}

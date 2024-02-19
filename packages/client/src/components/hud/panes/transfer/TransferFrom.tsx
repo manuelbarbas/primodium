@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { FaInfoCircle, FaTimes } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { components } from "src/network/components";
+import { EntityType } from "src/util/constants";
 import { formatResourceCount, parseResourceCount } from "src/util/number";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { TargetHeader } from "../../spacerock-menu/TargetHeader";
@@ -66,6 +67,7 @@ export const TransferFrom = (props: {
             return (
               <ResourceIcon
                 key={`from-unit-${unit}`}
+                disabled={unit === EntityType.CapitalShip && !props.sameOwner}
                 className="bg-neutral/50"
                 resource={unit as Entity}
                 amount={count.toString()}

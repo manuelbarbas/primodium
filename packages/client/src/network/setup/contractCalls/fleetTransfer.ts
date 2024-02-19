@@ -3,7 +3,7 @@ import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
-import { getSystemId, hashEntities } from "src/util/encode";
+import { getSystemId } from "src/util/encode";
 import { toTransportableResourceArray, toUnitCountArray } from "src/util/send";
 import { Hex } from "viem";
 
@@ -20,7 +20,7 @@ export const transferFleet = async (mud: MUD, from: Entity, to: Entity, deltas: 
   if (totalUnits == 0n && totalResources == 0n) return;
 
   const metadata = {
-    id: hashEntities(TransactionQueueType.TransferFleet, from, to),
+    id: "TRANSFER" as Entity,
     type: TransactionQueueType.TransferFleet,
   } as const;
 
@@ -70,10 +70,7 @@ export const transferFleet = async (mud: MUD, from: Entity, to: Entity, deltas: 
         args: [from as Hex, to as Hex, unitCounts, resourceCounts],
         delegate: true,
       },
-      {
-        id: "TRANSFER" as Entity,
-        type: TransactionQueueType.TransferFleet,
-      }
+      metadata
     );
   }
 };

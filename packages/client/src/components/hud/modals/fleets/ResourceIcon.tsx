@@ -14,6 +14,7 @@ export const ResourceIcon = ({
   onClear,
   disableClear,
   size = "md",
+  disabled,
 }: {
   resource: Entity;
   amount: string;
@@ -23,12 +24,15 @@ export const ResourceIcon = ({
   onClear?: (entity: Entity) => void;
   disableClear?: boolean;
   size?: "sm" | "md";
+  disabled?: boolean;
 }) => (
   <div
-    onMouseDown={(e) => setDragging(e, resource)}
+    onMouseDown={(e) => !disabled && setDragging(e, resource)}
     className={`relative flex ${
       size == "md" ? "flex-col" : "gap-6"
-    } gap-1 items-center justify-center cursor-pointer bg-neutral border border-primary w-full h-full p-2 ${className}`}
+    } gap-1 items-center justify-center cursor-pointer bg-neutral border border-primary w-full h-full p-2 ${
+      disabled ? "opacity-50 cursor-not-allowed" : ""
+    } ${className}`}
   >
     <img
       src={ResourceImage.get(resource) ?? ""}
