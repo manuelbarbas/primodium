@@ -9,8 +9,10 @@ import { Score } from "./Score";
 import { Widget } from "../core/Widget";
 import { getRandomRange } from "src/util/common";
 import { Scenes } from "@game/constants";
+import { components } from "src/network/components";
+import { SpectatingDetails } from "./SpectatingDetails";
 
-export const Profile = () => {
+const ProfileContent = () => {
   const {
     playerAccount: { entity: playerEntity },
     sessionAccount,
@@ -18,23 +20,7 @@ export const Profile = () => {
   const delegate = sessionAccount?.entity;
 
   return (
-    // <Card className="!p-0 w-fit items-center drop-shadow-hard">
-    <Widget
-      id="account"
-      title="account"
-      icon="/img/icons/debugicon.png"
-      defaultCoord={{
-        x: window.innerWidth / 2 + getRandomRange(-50, 50),
-        y: window.innerHeight / 2 + getRandomRange(-50, 50),
-      }}
-      scene={Scenes.UI}
-      minOpacity={0.5}
-      defaultLocked
-      defaultVisible
-      lockable
-      draggable
-      persist
-    >
+    <>
       <div className="flex gap-2 w-full items-center justify-center p-1.5 text-success text-md">
         <span className="text-white/50 text-xs">id:</span>
         <AccountDisplay player={playerEntity} />
@@ -58,6 +44,31 @@ export const Profile = () => {
       </div>
 
       <Score player={playerEntity} />
+    </>
+  );
+};
+export const Profile = () => {
+  const isSpectating = components.ActiveRock.use()?.value !== components.BuildRock.use()?.value;
+
+  return (
+    <Widget
+      id="account"
+      title="account"
+      icon="/img/icons/debugicon.png"
+      defaultCoord={{
+        x: window.innerWidth / 2 + getRandomRange(-50, 50),
+        y: window.innerHeight / 2 + getRandomRange(-50, 50),
+      }}
+      scene={Scenes.UI}
+      minOpacity={0.5}
+      defaultLocked
+      defaultVisible
+      lockable
+      draggable
+      persist
+    >
+      {isSpectating && <SpectatingDetails />}
+      {!isSpectating && <ProfileContent />}
     </Widget>
   );
 };
