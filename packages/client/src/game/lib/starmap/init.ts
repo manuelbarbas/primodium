@@ -15,13 +15,10 @@ export const initStarmapScene = async (game: Game) => {
   });
   setupKeybinds(scene);
 
-  scene.input.phaserInput.on("pointerdown", (_: unknown, objectsClicked: unknown[]) => {
-    if (objectsClicked.length === 0) {
-      components.SelectedRock.remove();
-      components.SelectedFleet.remove();
-    }
+  const clickSub = scene.input.click$.subscribe(() => {
+    components.SelectedRock.remove();
+    components.SelectedFleet.remove();
   });
-  const clickSub = scene.input.click$.subscribe(() => {});
 
   world.registerDisposer(() => {
     clickSub.unsubscribe();

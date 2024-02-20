@@ -72,7 +72,7 @@ export const createFxApi = (scene: Scene) => {
       const currOffset = i * offset + delay;
       setTimeout(() => {
         const missile = scene.phaserScene.add.circle(originPixelCoord.x, originPixelCoord.y, 2, 0xff0000);
-        missile.setDepth(DepthLayers.Rock - 1);
+        missile.setDepth(DepthLayers.Rock);
         const randomizedDestination = {
           x: destinationPixelCoord.x + Phaser.Math.Between(-spray, spray),
           y: destinationPixelCoord.y + Phaser.Math.Between(-spray, spray),

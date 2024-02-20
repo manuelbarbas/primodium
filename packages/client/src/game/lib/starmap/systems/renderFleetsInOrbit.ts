@@ -305,9 +305,6 @@ export const renderFleetsInOrbit = (scene: Scene) => {
   defineSystem(systemsWorld, [Has(components.SelectedFleet)], ({ value }) => {
     if (value[0]) {
       components.SelectedRock.remove();
-    } else {
-      components.Attack.reset();
-      components.Send.reset();
     }
   });
 
