@@ -8,27 +8,6 @@ This example will implement a bounty for an allowlist of addresses to upgrade th
 
 Internal testing, given that v0.10.0 is not live yet.
 
-### Setup
-
-For faster, easier testing, open `primodium/packages/contracts/config/prototypeConfig.ts`, search "Mines", and edit the IronMine levels such as this:
-
-```ts
-  IronMine: {
-    tables: {
-      P_Blueprint: { value: getBlueprint(1, 1) },
-      P_MaxLevel: { value: 7n },
-      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Iron") },
-    },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 1n }, P_Production: getResourceValues({ Iron: 1 }) }, // Make this number high, as shown, for faster production
-      2: {
-        P_RequiredBaseLevel: { value: 1n },
-        P_RequiredResources: getResourceValues({ Iron: 10 }), // Make this number low, as shown, for easy achievement
-        P_Production: getResourceValues({ Iron: 11 }),
-      },
-      ...
-```
-
 ### Launch Base Primodium World
 
 Open up a terminal in the root Primodium directory and run:
@@ -56,6 +35,8 @@ pnpm dev:client
 Open the client at `localhost:3000/game`. Use Alice's key to connect to the game: `0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d`
 
 Using the client as Alice, construct 3 Iron Mines on the top right plots.
+
+For faster, easier testing, use the `setWorldSpeed` cheatcode in the dev client to hasten the rate of production for all mines.
 
 ### World Extension
 
