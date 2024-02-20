@@ -1,4 +1,4 @@
-import { Scenes } from "@game/constants";
+import { DepthLayers, Scenes } from "@game/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
@@ -31,5 +31,13 @@ export const HomeMarker = () => {
     return { x: pixelCoord.x, y: -pixelCoord.y };
   }, [position, primodium]);
 
-  return <IconMarker id="home-icon" scene={Scenes.Starmap} coord={coord} iconUri="/img/icons/utilitiesicon.png" />;
+  return (
+    <IconMarker
+      id="home-icon"
+      depth={DepthLayers.Path}
+      scene={Scenes.Starmap}
+      coord={coord}
+      iconUri="/img/icons/utilitiesicon.png"
+    />
+  );
 };

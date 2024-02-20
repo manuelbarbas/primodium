@@ -25,13 +25,13 @@ export const LabeledValue: React.FC<{
   );
 };
 
-const Asteroid: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
+export const OwnedAsteroid: React.FC<{ asteroid: Entity; onClick?: () => void }> = ({ asteroid, onClick }) => {
   const {
     components,
     playerAccount: { entity: playerEntity },
   } = useMud();
   const primodium = usePrimodium();
-  const { position, imageUri, encryption } = getSpaceRockInfo(primodium, asteroid);
+  const { imageUri, encryption } = getSpaceRockInfo(primodium, asteroid);
   const description = getSpaceRockName(asteroid);
   const home = components.Home.use(playerEntity)?.value === asteroid;
   const active = components.ActiveRock.use()?.value === asteroid;
@@ -39,31 +39,11 @@ const Asteroid: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
 
   return (
     <Button
-      className={`row-span-1 flex flex-col p-2 items-center text-xs bg-base-100 flex-nowrap border-secondary ${
+      className={`row-span-1 flex flex-col p-2 items-center text-xs bg-base-100 flex-nowrap border-secondary h-full ${
         selected ? "drop-shadow-hard ring-2 ring-warning" : ""
       }`}
       onClick={async () => {
-        const mapOpen = components.MapOpen.get(undefined, {
-          value: false,
-        }).value;
-
-        if (!mapOpen) {
-          const { transitionToScene } = primodium.api().scene;
-
-          await transitionToScene(Scenes.Asteroid, Scenes.Starmap);
-          components.MapOpen.set({ value: true });
-        }
-
-        const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
-
-        components.SelectedRock.set({ value: asteroid });
-
-        pan({
-          x: position.x,
-          y: position.y,
-        });
-
-        zoomTo(2);
+        onClick && onClick();
       }}
     >
       <div className="flex flex-col items-center gap-1">
@@ -93,6 +73,7 @@ export const _OwnedAsteroids: React.FC = () => {
     playerAccount: { entity: playerEntity },
   } = useMud();
 
+  const primodium = usePrimodium();
   const query = [HasValue(components.OwnedBy, { value: playerEntity }), Has(components.Asteroid)];
   const asteroids = useEntityQuery(query);
 
@@ -105,7 +86,36 @@ export const _OwnedAsteroids: React.FC = () => {
       )}
       <div className="grid grid-cols-2 gap-1">
         {asteroids.map((entity) => {
-          return <Asteroid key={entity} asteroid={entity} />;
+          return (
+            <OwnedAsteroid
+              key={entity}
+              asteroid={entity}
+              onClick={async () => {
+                const { position } = getSpaceRockInfo(primodium, entity);
+                const mapOpen = components.MapOpen.get(undefined, {
+                  value: false,
+                }).value;
+
+                if (!mapOpen) {
+                  const { transitionToScene } = primodium.api().scene;
+
+                  await transitionToScene(Scenes.Asteroid, Scenes.Starmap);
+                  components.MapOpen.set({ value: true });
+                }
+
+                const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
+
+                components.SelectedRock.set({ value: entity });
+
+                pan({
+                  x: position.x,
+                  y: position.y,
+                });
+
+                zoomTo(2);
+              }}
+            />
+          );
         })}
       </div>
     </div>
