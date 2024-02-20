@@ -43,6 +43,7 @@ export const renderPirateAsteroid = (scene: Scene) => {
     }).value;
 
     const playerEntity = components.Account.get()?.value;
+    console.log(playerEntity, ownedBy);
     if (!playerEntity || hashKeyEntity(PIRATE_KEY, playerEntity) !== ownedBy) return;
 
     const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entity);
@@ -199,6 +200,7 @@ export const renderPirateAsteroid = (scene: Scene) => {
   ];
 
   defineEnterSystem(systemsWorld, query, ({ entity }) => {
+    console.log("hello");
     const coord = components.Position.get(entity);
 
     if (!coord) return;
@@ -207,6 +209,7 @@ export const renderPirateAsteroid = (scene: Scene) => {
   });
 
   defineUpdateSystem(systemsWorld, query, ({ entity }) => {
+    console.log("hello 2");
     const coord = components.Position.get(entity);
 
     if (!coord) return;

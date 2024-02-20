@@ -1,12 +1,12 @@
+import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Coord, uuid } from "@latticexyz/utils";
 import { Scene } from "engine/types";
+import { components } from "src/network/components";
 import { getDistance, getRandomRange } from "src/util/common";
 import { ObjectPosition, OnComponentSystem, SetValue, Tween } from "../lib/common/object-components/common";
-import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
-import { ObjectText } from "../lib/common/object-components/text";
-import { components } from "src/network/components";
 import { Texture } from "../lib/common/object-components/sprite";
+import { ObjectText } from "../lib/common/object-components/text";
 
 export const createFxApi = (scene: Scene) => {
   function outline(
@@ -53,8 +53,9 @@ export const createFxApi = (scene: Scene) => {
   function fireMissile(
     origin: Coord,
     destination: Coord,
-    options?: { speed?: number; numMissiles?: number; offsetMs?: number; spray?: number }
+    options?: { speed?: number; delay?: number; numMissiles?: number; offsetMs?: number; spray?: number }
   ) {
+    const delay = options?.delay ?? 0;
     const speed = options?.speed ?? 20;
     const numMissiles = options?.numMissiles ?? 10;
     const offset = options?.offsetMs ?? 150;
@@ -65,12 +66,13 @@ export const createFxApi = (scene: Scene) => {
 
     const distance = getDistance(origin, destination);
     const duration = (distance * 10000) / speed;
-    const animationTime = duration + numMissiles * offset;
+    const animationTime = duration + numMissiles * offset + delay;
 
     for (let i = 0; i < numMissiles; i++) {
-      const currOffset = i * offset;
+      const currOffset = i * offset + delay;
       setTimeout(() => {
         const missile = scene.phaserScene.add.circle(originPixelCoord.x, originPixelCoord.y, 2, 0xff0000);
+        missile.setDepth(DepthLayers.Rock - 1);
         const randomizedDestination = {
           x: destinationPixelCoord.x + Phaser.Math.Between(-spray, spray),
           y: destinationPixelCoord.y + Phaser.Math.Between(-spray, spray),

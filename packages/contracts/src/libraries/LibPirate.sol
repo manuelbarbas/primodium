@@ -43,12 +43,7 @@ library LibPirate {
 
     PirateAsteroid.set(
       asteroidEntity,
-      PirateAsteroidData({
-        isPirateAsteroid: true,
-        isDefeated: false,
-        prototype: prototype,
-        playerEntity: playerEntity
-      })
+      PirateAsteroidData({ isPirateAsteroid: true, isDefeated: false, playerEntity: playerEntity })
     );
     Position.set(asteroidEntity, coord);
     Asteroid.setIsAsteroid(asteroidEntity, true);

@@ -14,8 +14,16 @@ export const renderEffects = (scene: Scene) => {
   const fx = createFxApi(scene);
   const camera = createCameraApi(scene);
 
-  const attackAnimation = async (attacker: Entity, defender: Entity) => {
+  const attackAnimation = async (attacker: Entity, defender: Entity, attackerWinner?: boolean) => {
+    components.FleetMovement.pauseUpdates(attacker);
+    const isPirate = components.PirateAsteroid.has(defender);
+    if (isPirate) {
+      components.PirateAsteroid.pauseUpdates(defender);
+      components.Position.pauseUpdates(defender);
+    }
+
     const isFleet = components.IsFleet.get(defender)?.value;
+    if (isFleet) components.FleetMovement.pauseUpdates(defender);
     const attackerPosition = getFleetTilePosition(scene, attacker);
     const position = isFleet ? getFleetTilePosition(scene, defender) : components.Position.get(defender);
     const playerEntity = components.Account.get()?.value;
@@ -23,16 +31,26 @@ export const renderEffects = (scene: Scene) => {
     if (!position || !playerEntity) return;
     components.BattleRender.set({ value: attackerRock });
     const { emitExplosion, fireMissile } = fx;
-    const duration = fireMissile(attackerPosition, position, { offsetMs: 50, numMissiles: 5 });
+    fireMissile(attackerPosition, position, { offsetMs: 50, numMissiles: 5 });
+    const duration = fireMissile(position, attackerPosition, { delay: 500, offsetMs: 50, numMissiles: 5 });
 
     setTimeout(() => {
-      emitExplosion(position, isFleet ? "sm" : "md");
+      emitExplosion(attackerWinner ? position : attackerPosition, "sm");
       if (defender === playerEntity || attacker === playerEntity) {
         const { shake } = camera;
         shake();
       }
+      components.FleetMovement.unpauseUpdates(attacker);
+      components.FleetMovement.unpauseUpdates(defender);
+      if (isPirate) {
+        components.PirateAsteroid.unpauseUpdates(defender);
+        components.Position.unpauseUpdates(defender);
+      }
+    }, duration * 0.9);
+
+    setTimeout(() => {
       components.BattleRender.clear();
-    }, duration * 0.8);
+    }, duration * 1.2);
   };
 
   defineComponentSystem(gameWorld, BattleResult, (update) => {
@@ -47,6 +65,6 @@ export const renderEffects = (scene: Scene) => {
     const destination = components.Position.get(battle.rock as Entity);
     if (!destination) return;
 
-    attackAnimation(battle.attacker, battle.defender);
+    attackAnimation(battle.attacker, battle.defender, battle.attacker === battle.winner);
   });
 };

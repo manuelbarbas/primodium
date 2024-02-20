@@ -9,6 +9,7 @@ import {
   HasValue,
   Metadata,
   NotValue,
+  OverridableComponent,
   Schema,
   Type,
   World,
@@ -16,6 +17,7 @@ import {
   defineQuery,
   getComponentValue,
   hasComponent,
+  overridableComponent,
   removeComponent,
   runQuery,
   setComponent,
@@ -36,7 +38,7 @@ export type ValueSansMetadata<S extends Schema> = Omit<
   "__staticData" | "__encodedLengths" | "__dynamicData"
 >;
 
-export type ExtendedComponent<S extends Schema, M extends Metadata, T = unknown> = Component<S, M, T> & {
+export type ExtendedComponent<S extends Schema, M extends Metadata, T = unknown> = OverridableComponent<S, M, T> & {
   get(): ComponentValue<S> | undefined;
   get(entity: Entity | undefined): ComponentValue<S> | undefined;
   get(entity?: Entity | undefined, defaultValue?: ValueSansMetadata<S>): ComponentValue<S>;
@@ -55,6 +57,9 @@ export type ExtendedComponent<S extends Schema, M extends Metadata, T = unknown>
 
   use(entity?: Entity | undefined): ComponentValue<S> | undefined;
   use(entity: Entity | undefined, defaultValue?: ValueSansMetadata<S>): ComponentValue<S>;
+
+  pauseUpdates: (entity: Entity, pauseValue?: ComponentValue<S, T>) => void;
+  unpauseUpdates: (entity: Entity) => void;
 };
 
 export type ContractMetadata<TKeySchema extends KeySchema> = {
@@ -125,6 +130,8 @@ export function extendContractComponent<S extends Schema, TKeySchema extends Key
 export function extendComponent<S extends Schema, M extends Metadata, T = unknown>(
   component: Component<S, M, T>
 ): ExtendedComponent<S, M, T> {
+  const overridedComponent = overridableComponent(component);
+
   function set(value: ComponentValue<S, T>, entity?: Entity) {
     entity = entity ?? singletonEntity;
     if (entity == undefined) throw new Error(`[set ${entity} for ${component.id}] no entity registered`);
@@ -223,8 +230,22 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
     return value ?? defaultValue;
   }
 
+  function pauseUpdates(entity?: Entity, pauseValue?: ComponentValue<S, T>) {
+    console.log("pausing updates", component.id, entity);
+    const finalEntity = entity ?? singletonEntity;
+    const priorValue = get(finalEntity);
+    const value = pauseValue ?? (priorValue as ComponentValue<S, T>);
+    if (!value) throw new Error(`[pauseUpdates ${component.id}] no value to pause`);
+    overridedComponent.addOverride(finalEntity, { entity: finalEntity, value });
+  }
+
+  function unpauseUpdates(entity: Entity) {
+    console.log("unpausing updates", component.id, entity);
+    overridedComponent.removeOverride(entity);
+  }
+
   const context = {
-    ...component,
+    ...overridedComponent,
     get,
     set,
     getAll,
@@ -238,6 +259,9 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
     update,
     has,
     use: useValue,
+
+    pauseUpdates,
+    unpauseUpdates,
   };
   return context;
 }

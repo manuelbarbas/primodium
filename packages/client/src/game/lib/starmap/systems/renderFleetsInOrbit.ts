@@ -300,13 +300,17 @@ export const renderFleetsInOrbit = (scene: Scene) => {
   });
 
   defineSystem(systemsWorld, [Has(components.SelectedFleet)], ({ value }) => {
-    if (value[0]) components.SelectedRock.remove();
+    if (!value[0]) return;
+    components.SelectedRock.remove();
     components.Attack.reset();
     components.Send.reset();
   });
 
   defineSystem(systemsWorld, [Has(components.SelectedRock)], ({ value }) => {
-    if (value[0]) components.SelectedFleet.remove();
+    if (!value[0]) return;
+    components.SelectedFleet.remove();
+    if (components.Attack.get()?.originFleet) return;
+    if (components.Send.get()?.originFleet) return;
     components.Attack.reset();
     components.Send.reset();
   });
