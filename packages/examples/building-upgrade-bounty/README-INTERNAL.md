@@ -13,6 +13,7 @@ Internal testing, given that v0.10.0 is not live yet.
 Open up a terminal in the root Primodium directory and run:
 
 ```bash
+echo "PRI_CHAIN_ID=\"dev\"" >> ./.env && echo "PRI_DEV=\"true\"" >> ./.env
 pnpm i
 pnpm build
 pnpm dev:node
