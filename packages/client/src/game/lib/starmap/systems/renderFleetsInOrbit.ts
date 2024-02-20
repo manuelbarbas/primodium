@@ -306,7 +306,6 @@ export const renderFleetsInOrbit = (scene: Scene) => {
     if (value[0]) {
       components.SelectedRock.remove();
     } else {
-      console.log("resetting attack and send");
       components.Attack.reset();
       components.Send.reset();
     }
