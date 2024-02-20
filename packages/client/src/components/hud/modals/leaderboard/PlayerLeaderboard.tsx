@@ -10,8 +10,9 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { invite } from "src/network/setup/contractCalls/alliance";
-import { TransactionQueueType } from "src/util/constants";
+import { EntityType, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
+import { formatResourceCount } from "src/util/number";
 
 export const PlayerLeaderboard = () => {
   const { playerAccount } = useMud();
@@ -66,7 +67,7 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
           {player === playerEntity && <p className="text-accent">(You)</p>}
         </div>
         <div className="flex items-center gap-1">
-          <p className="font-bold bg-cyan-700 px-2 ">{score.toLocaleString()}</p>
+          <p className="font-bold bg-cyan-700 px-2 ">{formatResourceCount(EntityType.Iron, BigInt(score))}</p>
           {role <= EAllianceRole.CanInvite && player !== playerEntity && playerAlliance !== alliance && (
             <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Invite, player)}>
               <Button

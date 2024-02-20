@@ -1,10 +1,10 @@
-import { components } from "src/network/components";
 import { Entity } from "@latticexyz/recs";
-import { SecondaryCard } from "../core/Card";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { TargetHeader } from "./spacerock-menu/TargetHeader";
 import { FaEye } from "react-icons/fa";
+import { components } from "src/network/components";
+import { SecondaryCard } from "../core/Card";
 import { Score } from "./Score";
+import { TargetHeader } from "./spacerock-menu/TargetHeader";
 
 export const SpectatingDetails = () => {
   const activeRock = components.ActiveRock.use()?.value;
@@ -20,7 +20,7 @@ export const SpectatingDetails = () => {
           </p>
 
           <SecondaryCard className="flex-row w-full gap-1 border-none">
-            <TargetHeader entity={activeRock} showHousing />
+            <TargetHeader entity={activeRock} />
           </SecondaryCard>
         </div>
 

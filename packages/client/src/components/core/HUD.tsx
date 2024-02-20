@@ -6,6 +6,11 @@ interface HUDProps {
   pad?: boolean;
 }
 
+interface HUDElementProps {
+  children?: ReactNode;
+  className?: string;
+}
+
 interface MousePosition {
   x: number;
   y: number;
@@ -21,7 +26,7 @@ const useScale = () => {
   return scale;
 };
 
-const CursorFollower: FC<HUDProps> = ({ children }) => {
+const CursorFollower: FC<HUDElementProps> = ({ children, className }) => {
   const scale = useScale();
   const [mousePosition, setMousePosition] = useState<MousePosition>({ x: 0, y: 0 });
 
@@ -45,52 +50,62 @@ const CursorFollower: FC<HUDProps> = ({ children }) => {
         transform: `scale(${scale})`,
         zIndex: 1001,
       }}
+      className={className}
     >
       {children}
     </div>
   );
 };
 
-const TopRight: FC<HUDProps> = memo(({ children }) => {
-  const scale = useScale();
-  return (
-    <div style={{ transform: `scale(${scale})`, transformOrigin: "top right" }} className="absolute top-0 right-0">
-      {children}
-    </div>
-  );
-});
-
-const TopLeft: FC<HUDProps> = memo(({ children }) => {
-  const scale = useScale();
-  return (
-    <div style={{ transform: `scale(${scale})`, transformOrigin: "top left" }} className="absolute top-0 left-0">
-      {children}
-    </div>
-  );
-});
-
-const BottomRight: FC<HUDProps> = memo(({ children }) => {
+const TopRight: FC<HUDElementProps> = memo(({ children, className }) => {
   const scale = useScale();
   return (
     <div
-      style={{ transform: `scale(${scale})`, transformOrigin: "bottom right" }}
-      className="absolute bottom-0 right-0"
+      style={{ transform: `scale(${scale})`, transformOrigin: "top right" }}
+      className={`absolute top-0 right-0 ${className}`}
     >
       {children}
     </div>
   );
 });
 
-const BottomLeft: FC<HUDProps> = memo(({ children }) => {
+const TopLeft: FC<HUDElementProps> = memo(({ children, className }) => {
   const scale = useScale();
   return (
-    <div style={{ transform: `scale(${scale})`, transformOrigin: "bottom left" }} className="absolute bottom-0 left-0">
+    <div
+      style={{ transform: `scale(${scale})`, transformOrigin: "top left" }}
+      className={`absolute top-0 left-0 ${className}`}
+    >
       {children}
     </div>
   );
 });
 
-const TopMiddle: FC<HUDProps> = memo(({ children }) => {
+const BottomRight: FC<HUDElementProps> = memo(({ children, className }) => {
+  const scale = useScale();
+  return (
+    <div
+      style={{ transform: `scale(${scale})`, transformOrigin: "bottom right" }}
+      className={`absolute bottom-0 right-0 ${className}`}
+    >
+      {children}
+    </div>
+  );
+});
+
+const BottomLeft: FC<HUDElementProps> = memo(({ children, className }) => {
+  const scale = useScale();
+  return (
+    <div
+      style={{ transform: `scale(${scale})`, transformOrigin: "bottom left" }}
+      className={`absolute bottom-0 left-0 ${className}`}
+    >
+      {children}
+    </div>
+  );
+});
+
+const TopMiddle: FC<HUDElementProps> = memo(({ children, className }) => {
   const scale = useScale();
   return (
     <div
@@ -98,14 +113,14 @@ const TopMiddle: FC<HUDProps> = memo(({ children }) => {
         transform: `translateX(-50%) scale(${scale})`,
         transformOrigin: "top center",
       }}
-      className="absolute top-0 left-1/2"
+      className={`absolute top-0 left-1/2 ${className}`}
     >
       {children}
     </div>
   );
 });
 
-const BottomMiddle: FC<HUDProps> = memo(({ children }) => {
+const BottomMiddle: FC<HUDElementProps> = memo(({ children, className }) => {
   const scale = useScale();
   return (
     <div
@@ -113,14 +128,14 @@ const BottomMiddle: FC<HUDProps> = memo(({ children }) => {
         transform: `translateX(-50%) scale(${scale})`,
         transformOrigin: "bottom center",
       }}
-      className="absolute bottom-0 left-1/2"
+      className={`absolute bottom-0 left-1/2 ${className}`}
     >
       {children}
     </div>
   );
 });
 
-const Left: FC<HUDProps> = memo(({ children }) => {
+const Left: FC<HUDElementProps> = memo(({ children, className }) => {
   const scale = useScale();
   return (
     <div
@@ -128,14 +143,14 @@ const Left: FC<HUDProps> = memo(({ children }) => {
         transform: `translateY(50%) scale(${scale})`,
         transformOrigin: "left center",
       }}
-      className="absolute left-0 bottom-1/2"
+      className={`absolute left-0 bottom-1/2 ${className}`}
     >
       {children}
     </div>
   );
 });
 
-const Right: FC<HUDProps> = memo(({ children }) => {
+const Right: FC<HUDElementProps> = memo(({ children, className }) => {
   const scale = useScale();
   return (
     <div
@@ -143,7 +158,7 @@ const Right: FC<HUDProps> = memo(({ children }) => {
         transform: `translateY(50%) scale(${scale})`,
         transformOrigin: "right center",
       }}
-      className="absolute right-0 bottom-1/2"
+      className={`absolute right-0 bottom-1/2 ${className}`}
     >
       {children}
     </div>

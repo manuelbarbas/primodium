@@ -1,5 +1,5 @@
 import { Assets, DepthLayers, RENDER_INTERVAL, SpriteKeys } from "@game/constants";
-import { Entity, Has, Not, defineComponentSystem, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
+import { Entity, Has, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import { EFleetStance } from "contracts/config/enums";
@@ -131,6 +131,19 @@ export const renderAsteroid = (scene: Scene) => {
       OnComponentSystem(components.PlayerAlliance, (_, { entity: _entity }) => {
         const playerEntity = components.Account.get()?.value;
         if (!playerEntity || (ownedBy !== _entity && playerEntity !== _entity)) return;
+        const outlineSprite =
+          asteroidData.mapId === 1
+            ? getOutlineSprite(playerEntity, _entity)
+            : getSecondaryOutlineSprite(playerEntity, _entity, asteroidData.maxLevel);
+
+        asteroidOutline.setComponent(Texture(Assets.SpriteAtlas, outlineSprite));
+      }),
+      OnComponentSystem(components.OwnedBy, (_, { entity: _entity }) => {
+        if (entity !== _entity) return;
+        const outlineSprite =
+          asteroidData.mapId === 1
+            ? getOutlineSprite(playerEntity, _entity)
+            : getSecondaryOutlineSprite(playerEntity, _entity, asteroidData.maxLevel);
 
         asteroidOutline.setComponent(Texture(Assets.SpriteAtlas, outlineSprite));
       }),
@@ -174,8 +187,7 @@ export const renderAsteroid = (scene: Scene) => {
 
         if (isSelected) {
           gameObject.alpha = 0;
-        } else if (wasSelected && graceTime !== 0n && graceTime < time) {
-          console.log("time", time, "graceTime: ", graceTime);
+        } else if (wasSelected && graceTime !== 0n && graceTime >= time) {
           gameObject.alpha = 0.8;
         }
       }),
@@ -269,11 +281,6 @@ export const renderAsteroid = (scene: Scene) => {
   };
 
   const query = [Has(components.Asteroid), Has(components.Position), Not(components.PirateAsteroid)];
-
-  defineComponentSystem(systemsWorld, components.ActiveRock, ({ value: [val] }) => {
-    if (!val) return;
-    components.SelectedRock.set(val);
-  });
 
   defineEnterSystem(systemsWorld, query, ({ entity }) => {
     asteroidQueue.push(entity);

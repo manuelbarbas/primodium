@@ -17,11 +17,12 @@ import { HomeMarker } from "./markers/starmap/HomeMarker";
 import HackerConsole from "./modals/HackerConsole";
 import { Companion } from "./companion/Companion";
 import { WidgetProvider } from "src/hooks/providers/WidgetProvider";
+import { OwnedAsteroids } from "./panes/OwnedAsteroids";
+import { OwnedFleets } from "./panes/OwnedFleets";
+import { Blueprints } from "./panes/blueprints/Blueprints";
 import { Resources } from "./panes/resources/Resources";
 import { Hangar } from "./panes/hangar/Hangar";
-import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 import { Chat } from "./panes/chat/Chat";
-import { Blueprints } from "./panes/blueprints/Blueprints";
 
 export const GameHUD = () => {
   const uiScale = usePersistentStore((state) => state.uiScale);
@@ -60,16 +61,18 @@ export const GameHUD = () => {
           <HUD.TopLeft>
             <Profile />
           </HUD.TopLeft>
-          <HUD.TopRight>
-            <CurrentObjective />
-          </HUD.TopRight>
           <HUD.Left>
             <Blueprints />
           </HUD.Left>
 
           <Resources />
           <Hangar />
-          <OwnedAsteroids />
+
+          <HUD.TopRight className="flex flex-col items-end gap-2">
+            <CurrentObjective />
+            <OwnedAsteroids />
+            <OwnedFleets />
+          </HUD.TopRight>
 
           <HUD.BottomRight>
             <Chat />

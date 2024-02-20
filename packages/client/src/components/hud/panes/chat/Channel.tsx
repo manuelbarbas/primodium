@@ -202,8 +202,7 @@ export const Channel: React.FC<{ className?: string; channel: string }> = ({ cla
           className="w-full placeholder:opacity-50 input-sm bg-neutral border-accent active:ring-0 z-10"
         />
         <Button className="btn-sm btn-secondary flex-grow" disabled={isCooldown}>
-          {" "}
-          SEND{" "}
+          SEND
         </Button>
       </form>
     </div>

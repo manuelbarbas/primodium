@@ -7,6 +7,6 @@ export function useUnitCounts(entity?: Entity) {
   const time = components.Time.use(undefined)?.value ?? 0n;
 
   return useMemo(() => {
-    return entity ? getUnitCounts(entity) : new Map();
+    return entity ? getUnitCounts(entity) : (new Map() as Map<Entity, bigint>);
   }, [time, entity]);
 }

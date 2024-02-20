@@ -1,13 +1,13 @@
 import { DepthLayers, Scenes } from "@game/constants";
+import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { Coord } from "@latticexyz/utils";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
+import { FaChevronRight } from "react-icons/fa";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { calculateAngleBetweenPoints } from "src/util/common";
 import { Button } from "./Button";
 import { IconLabel } from "./IconLabel";
-import { FaChevronRight } from "react-icons/fa";
-import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
 
 const BoundedMarker: React.FC<{ scene: Scenes; coord: Coord; iconUri: string; degrees: number }> = ({
   coord,
@@ -148,9 +148,10 @@ export const IconMarker: React.FC<{
   scene: Scenes;
   coord: Coord;
   iconUri: string;
-}> = ({ id, scene, coord, iconUri }) => {
+  depth?: number;
+}> = ({ id, scene, coord, iconUri, depth }) => {
   return (
-    <Marker id={id} scene={scene} coord={coord} offScreenIconUri={iconUri}>
+    <Marker id={id} scene={scene} depth={depth} coord={coord} offScreenIconUri={iconUri}>
       <IconLabel imageUri={iconUri} className={`text-xl drop-shadow-hard`} />
     </Marker>
   );
