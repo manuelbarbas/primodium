@@ -44,9 +44,9 @@ interface WorldWithUpgradeBuilding {
 
 /**
  * @dev A contract that handles upgrade bounties for buildings in a world system.
- * @note Building owner must delegate to this contract to upgrade their building
- * @note Technically users can deposit upgrade bounties at any coordinate, regardless of building existence
- * @note Technically Alice can issue an upgrade bounty at Bob's building, and Bob can claim it
+ * @notice Building owner must delegate to this contract to upgrade their building
+ * @notice Technically users can deposit upgrade bounties at any coordinate, regardless of building existence
+ * @notice Technically Alice can issue an upgrade bounty at Bob's building, and Bob can claim it
  */
 contract UpgrBounSystem is System {
   /* ----------------------------- Picked from Library --------------------------------- */
@@ -90,8 +90,8 @@ contract UpgrBounSystem is System {
    * @dev Withdraws the upgrade bounty for the building at the specified coordinate.
    * @param coord The coordinate of the building.
    * @return bountyValue The value of the withdrawn bounty.
-   * @note If Alice gives Bob system access, Bob could try to call this function but only can claim his own deposted bounty
-   * @note If Alice delegates her system access to Bob and Bob uses callFrom() on this function, who does Alice's bounty go to?
+   * @notice If Alice gives Bob system access, Bob could try to call this function but only can claim his own deposted bounty
+   * @notice If Alice delegates her system access to Bob and Bob uses callFrom() on this function, who does Alice's bounty go to?
    */
   function withdrawBounty(PositionData memory coord) public returns (uint256 bountyValue) {
     bytes32 buildingEntity = getBuildingFromCoord(coord);
