@@ -4,10 +4,12 @@ interface Widget {
   visible: boolean;
   open: () => void;
   close: () => void;
+  reset: () => void;
   pinned: boolean;
   minimized: boolean;
   name: string;
   image: string;
+  active: boolean;
 }
 
 interface WidgetContextType {

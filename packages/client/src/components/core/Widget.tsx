@@ -25,6 +25,7 @@ type WidgetProps = {
   defaultLocked?: boolean;
   defaultVisible?: boolean;
   icon: string;
+  active?: boolean;
   origin?:
     | "top-left"
     | "top-right"
@@ -145,13 +146,9 @@ export const Content: React.FC<WidgetContentProps> = memo(
     }, [origin]);
 
     return (
-      <motion.div
+      <div
         id={id + "_content"}
         key={id + "_content"}
-        transition={{ duration: 0.1 }}
-        initial={{ opacity: 0, scale: 0.2, translateX: -50, translateY: -50 }}
-        animate={{ opacity: 1, scale: 1, translateX: 0, translateY: 0 }}
-        exit={{ opacity: 0, scale: 0, translateX: -50, translateY: -50 }}
         style={{
           transform: `translate(${translateX}, ${translateY}) scale(${!locked ? uiScale : 1})`,
           transformOrigin: transformOrigin,
@@ -169,7 +166,7 @@ export const Content: React.FC<WidgetContentProps> = memo(
           onDoubleClick={onDoubleClick}
           onPointerDown={onMouseDown}
         >
-          <p className="bg-gray-900 px-2">{title}</p>
+          <p className="bg-gray-900 px-2 uppercase font-bold">{title}</p>
           <div className="flex items-center gap-1">
             {
               <>
@@ -193,7 +190,7 @@ export const Content: React.FC<WidgetContentProps> = memo(
         >
           {children}
         </Card>
-      </motion.div>
+      </div>
     );
   }
 );
@@ -215,6 +212,7 @@ export const Widget: React.FC<WidgetProps> = memo(
     defaultPinned = false,
     defaultLocked = false,
     defaultVisible = false,
+    active = true,
   }) => {
     const primodium = usePrimodium();
     const [paneInfo, setPane, removePane] = usePersistentStore((state) => [
@@ -261,16 +259,28 @@ export const Widget: React.FC<WidgetProps> = memo(
       setPinned(defaultPinned);
       setLocked(defaultLocked);
       setCoord(defaultCoord);
+      setVisible(defaultVisible);
       setMinimized(false);
       setDragging(false);
       setDragOffset({ x: 0, y: 0 });
-      setPane(id, defaultCoord, defaultPinned, defaultLocked, true);
+      setPane(id, defaultCoord, defaultPinned, defaultLocked, defaultVisible);
 
       // set
       const newContainer = createContainer(defaultPinned ? camera : uiCamera, defaultCoord, true);
       newContainer.setDepth(defaultPinned ? pinnedDepth : unpinnedDepth);
       newContainer.setAlpha(defaultPinned ? minOpacity : 1);
-    }, [defaultPinned, defaultCoord, setPane, id, createContainer, camera, uiCamera, minOpacity, defaultLocked]);
+    }, [
+      defaultPinned,
+      defaultCoord,
+      setPane,
+      id,
+      createContainer,
+      camera,
+      uiCamera,
+      minOpacity,
+      defaultLocked,
+      defaultVisible,
+    ]);
 
     // calculate drag offset, set depth and set dragging flag
     const handleMouseDown = useCallback(
@@ -358,6 +368,7 @@ export const Widget: React.FC<WidgetProps> = memo(
           translatedY = contentBounds.height / 2; // Center vertically
           break;
         case "center-left":
+          translatedY = contentBounds.height / 2; // Center vertically
           break;
         case "center-top":
           translatedX = contentBounds.width / 2; // Center horizontally
@@ -488,57 +499,95 @@ export const Widget: React.FC<WidgetProps> = memo(
     }, [pinned, container, camera, defaultCoord, id, removePane, createContainer, uiCamera, minOpacity, handleReset]);
 
     useEffect(() => {
-      setWidget({ name: title, visible, close: handleClose, open: handleOpen, pinned, minimized, image: icon });
-    }, [icon, title, visible, handleClose, handleOpen, pinned, minimized, setWidget, removeWidget]);
+      setWidget({
+        name: title,
+        visible,
+        close: handleClose,
+        open: handleOpen,
+        pinned,
+        minimized,
+        image: icon,
+        reset: handleReset,
+        active,
+      });
+    }, [
+      icon,
+      title,
+      visible,
+      handleClose,
+      handleOpen,
+      pinned,
+      minimized,
+      setWidget,
+      removeWidget,
+      handleReset,
+      active,
+    ]);
 
     // if (!containerRef || !container || !visible) return null;
 
     if (locked)
       return (
         <AnimatePresence>
-          {containerRef && container && visible && (
-            <Content
-              id={id}
-              title={title}
-              minimized={minimized}
-              pinned={false}
-              origin={"top-left"}
-              onClose={handleClose}
-              locked={locked}
-              onUnlock={lockable ? handleUnlock : undefined}
-              onLock={lockable ? handleLock : undefined}
-              onMinimize={toggleMinimize}
-              onMaximize={toggleMinimize}
+          {containerRef && container && visible && active && (
+            <motion.div
+              key={id}
+              transition={{ duration: 0.1 }}
+              initial={{ opacity: 0, scale: 0.2, translateX: -50, translateY: -50 }}
+              animate={{ opacity: 1, scale: 1, translateX: 0, translateY: 0 }}
+              exit={{ opacity: 0, scale: 0, translateX: -50, translateY: -50 }}
             >
-              {children}
-            </Content>
+              <Content
+                id={id}
+                title={title}
+                minimized={minimized}
+                pinned={false}
+                origin={"top-left"}
+                onClose={handleClose}
+                locked={locked}
+                onUnlock={lockable ? handleUnlock : undefined}
+                onLock={lockable ? handleLock : undefined}
+                onMinimize={toggleMinimize}
+                onMaximize={toggleMinimize}
+              >
+                {children}
+              </Content>
+            </motion.div>
           )}
         </AnimatePresence>
       );
 
     return ReactDOM.createPortal(
       <AnimatePresence>
-        {containerRef && container && visible && (
-          <Content
-            id={id}
-            title={title}
-            onPointerEnter={handlePointerEnter}
-            onPointerLeave={handlePointerLeave}
-            minimized={minimized}
-            onPin={pinnable && scene !== Scenes.UI ? handlePin : undefined}
-            onUnpin={pinnable && scene !== Scenes.UI ? handleUnpin : undefined}
-            pinned={pinned}
-            onMouseDown={handleMouseDown}
-            onDoubleClick={handleReset}
-            onMinimize={toggleMinimize}
-            onMaximize={toggleMinimize}
-            onClose={handleClose}
-            onLock={lockable ? handleLock : undefined}
-            onUnlock={lockable ? handleUnlock : undefined}
-            origin={origin}
+        {containerRef && container && visible && active && (
+          <motion.div
+            key={id}
+            transition={{ duration: 0.1 }}
+            initial={{ opacity: 0, scale: 0.2, translateX: -50, translateY: -50 }}
+            animate={{ opacity: 1, scale: 1, translateX: 0, translateY: 0 }}
+            exit={{ opacity: 0, scale: 0, translateX: -50, translateY: -50 }}
           >
-            {children}
-          </Content>
+            <Content
+              id={id}
+              title={title}
+              onPointerEnter={handlePointerEnter}
+              onPointerLeave={handlePointerLeave}
+              minimized={minimized}
+              onPin={pinnable && scene !== Scenes.UI ? handlePin : undefined}
+              onUnpin={pinnable && scene !== Scenes.UI ? handleUnpin : undefined}
+              pinned={pinned}
+              onMouseDown={handleMouseDown}
+              onDoubleClick={handleReset}
+              onMinimize={toggleMinimize}
+              onMaximize={toggleMinimize}
+              onClose={handleClose}
+              onLock={lockable ? handleLock : undefined}
+              onUnlock={lockable ? handleUnlock : undefined}
+              origin={origin}
+            >
+              {children}
+            </Content>
+          </motion.div>
         )}
       </AnimatePresence>,
       containerRef ?? document.body

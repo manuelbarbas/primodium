@@ -8,8 +8,6 @@ export const Blueprints = memo(() => {
   const { components } = useMud();
   const mapOpen = components.MapOpen.use()?.value;
 
-  if (mapOpen) return null;
-
   return (
     <Widget
       id="blueprints"
@@ -21,6 +19,7 @@ export const Blueprints = memo(() => {
       defaultVisible
       origin="center-left"
       scene={Scenes.Asteroid}
+      active={!mapOpen}
       minOpacity={0.6}
       draggable
       pinnable

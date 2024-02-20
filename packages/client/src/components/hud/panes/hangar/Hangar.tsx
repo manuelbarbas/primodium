@@ -1,13 +1,13 @@
 import { Scenes } from "@game/constants";
 import { memo } from "react";
 import { Widget } from "src/components/core/Widget";
-// import { useMud } from "src/hooks";
+import { useMud } from "src/hooks";
 import { HangarContent } from "./HangarContent";
 import { getRandomRange } from "src/util/common";
 
 export const Hangar = memo(() => {
-  // const { components } = useMud();
-  // const mapOpen = components.MapOpen.use()?.value;
+  const { components } = useMud();
+  const mapOpen = components.MapOpen.use()?.value;
 
   // if (mapOpen) return null;
 
@@ -23,6 +23,7 @@ export const Hangar = memo(() => {
         }}
         origin="center"
         scene={Scenes.Asteroid}
+        active={!mapOpen}
         minOpacity={0.6}
         draggable
         pinnable

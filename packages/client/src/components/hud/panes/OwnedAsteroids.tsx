@@ -113,10 +113,8 @@ export const _OwnedAsteroids: React.FC = () => {
 };
 
 export const OwnedAsteroids = () => {
-  // const { components } = useMud();
-  // const mapOpen = components.MapOpen.use()?.value;
-
-  // if (!mapOpen) return null;
+  const { components } = useMud();
+  const mapOpen = components.MapOpen.use()?.value;
 
   return (
     <Widget
@@ -130,6 +128,7 @@ export const OwnedAsteroids = () => {
       draggable
       persist
       scene={Scenes.Asteroid}
+      active={mapOpen}
     >
       <_OwnedAsteroids />
     </Widget>

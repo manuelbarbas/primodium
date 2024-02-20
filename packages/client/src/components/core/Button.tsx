@@ -101,6 +101,7 @@ export const IconButton: React.FC<{
   hideText?: boolean;
   className?: string;
   onClick?: () => void;
+  onDoubleClick?: () => void;
   disabled?: boolean;
   selected?: boolean;
   loading?: boolean;
@@ -121,6 +122,7 @@ export const IconButton: React.FC<{
   tooltipText,
   mute = false,
   clickSound = AudioKeys.Confirm2,
+  onDoubleClick,
 }) => {
   const primodium = usePrimodium();
   const { audio } = primodium.api();
@@ -135,6 +137,7 @@ export const IconButton: React.FC<{
           onClick && onClick();
         }}
         disabled={disabled}
+        onDoubleClick={onDoubleClick}
         onPointerEnter={() => {
           !mute &&
             audio.play(AudioKeys.DataPoint2, "ui", {
@@ -143,7 +146,7 @@ export const IconButton: React.FC<{
             });
         }}
         className={`btn join-item inline gap-1 pointer-events-auto font-bold outline-none bg-opacity-50 ${className} ${
-          disabled ? "opacity-30" : ""
+          disabled ? "opacity-50 !pointer-events-auto" : ""
         } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
       >
         {loading && <Loader />}
