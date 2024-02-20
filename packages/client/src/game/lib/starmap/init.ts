@@ -16,7 +16,6 @@ export const initStarmapScene = async (game: Game) => {
   setupKeybinds(scene);
 
   scene.input.phaserInput.on("pointerdown", (_: unknown, objectsClicked: unknown[]) => {
-    console.log(objectsClicked);
     if (objectsClicked.length === 0) {
       components.SelectedRock.remove();
       components.SelectedFleet.remove();
