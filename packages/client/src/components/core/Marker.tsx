@@ -113,13 +113,11 @@ export const Marker: React.FC<{
           // Set the marker position
           marker.setPosition(markerX, markerY);
           setDegrees(degree);
-
           return;
         }
       }
 
       marker.setScale(1 / camera.phaserCamera.zoom);
-      marker.setAlpha(camera.phaserCamera.scene.scene.isActive() ? 1 : 0);
     };
 
     cameraCallback(camera.phaserCamera.worldView);
@@ -136,7 +134,7 @@ export const Marker: React.FC<{
 
   return ReactDOM.createPortal(
     <div className={"-translate-x-1/2 -translate-y-1/2"}>
-      {!visible && offScreenIconUri && (
+      {!visible && offScreenIconUri && camera.phaserCamera.scene.scene.isActive() && (
         <BoundedMarker scene={scene} coord={coord} iconUri={offScreenIconUri} degrees={degrees} />
       )}
       {(visible || !offScreenIconUri) && children}
