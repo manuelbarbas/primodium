@@ -15,11 +15,10 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdLib, ROOT_NAMESPACE } from "@latticexyz/world/src/WorldResourceId.sol";
 import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 import { WorldWithUpgradeBuilding } from "../interfaces/interfaces.sol";
+import { LibHelpers } from "../libraries/LibHelpers.sol";
+import { BuildingTileKey } from "../libraries/Keys.sol";
 
-// import { LibEncode } from "prim-codegen/Libraries.sol";
-
-// Taken from prim-contracts/src/Keys.sol
-bytes32 constant BuildingTileKey = bytes32("building:tile");
+using LibHelpers for PositionData;
 
 /**
  * @dev A contract that handles upgrade bounties for buildings in a world system.
@@ -28,20 +27,6 @@ bytes32 constant BuildingTileKey = bytes32("building:tile");
  * @notice Technically Alice can issue an upgrade bounty at Bob's building, and Bob can claim it
  */
 contract UpgrBounSystem is System {
-  /* ----------------------------- Picked from Library --------------------------------- */
-  // circumvented LibEncode library, will fix DevEx in future update (only necessary for coord)
-  function getHash(bytes32 key, PositionData memory position) internal pure returns (bytes32) {
-    return keccak256(abi.encode(key, position.x, position.y, position.parent));
-  }
-
-  // circumvented LibBuilding library, will fix DevEx in future update by refactoring buildings/coord
-  function getBuildingFromCoord(PositionData memory coord) internal view returns (bytes32) {
-    bytes32 buildingTile = getHash(BuildingTileKey, coord);
-    return OwnedBy.get(buildingTile);
-  }
-
-  /* ------------------------------ Actual Contract ----------------------------------- */
-
   /**
    * @dev Deposits an upgrade bounty for the building at the specified coordinate.
    * @param coord The coordinate of the building.
@@ -49,7 +34,7 @@ contract UpgrBounSystem is System {
    */
   function depositBounty(PositionData memory coord) public payable returns (uint256 bountyValue) {
     // artefact of how Primodium handles buildings and coordinates, will be fixed in future update
-    bytes32 buildingEntity = getBuildingFromCoord(coord);
+    bytes32 buildingEntity = coord.getBuildingFromCoord();
 
     // Check that the sender doesn't already have a live bounty on that buildingEntity
     require(
@@ -73,7 +58,7 @@ contract UpgrBounSystem is System {
    * @notice If Alice delegates her system access to Bob and Bob uses callFrom() on this function, who does Alice's bounty go to?
    */
   function withdrawBounty(PositionData memory coord) public returns (uint256 bountyValue) {
-    bytes32 buildingEntity = getBuildingFromCoord(coord);
+    bytes32 buildingEntity = coord.getBuildingFromCoord();
 
     // Check that there is a bounty on that buildingEntity
     require(
@@ -103,7 +88,7 @@ contract UpgrBounSystem is System {
     address bountyPublisher,
     PositionData memory coord
   ) public returns (bytes memory newBuildingEntity) {
-    bytes32 oldBuildingEntity = getBuildingFromCoord(coord);
+    bytes32 oldBuildingEntity = coord.getBuildingFromCoord();
     // Check that there is a bounty on that coord
     require(
       UpgradeBounty.get(bountyPublisher, oldBuildingEntity) > 0,
