@@ -193,14 +193,13 @@ export const renderPirateAsteroid = (scene: Scene) => {
   ];
 
   defineSystem(systemsWorld, query, ({ entity, value }) => {
-    console.log("pirate asteroid updated", Date.now());
     if (!value[0]) return;
     const coord = components.Position.get(entity);
     if (!coord) return;
     const defeated = components.PirateAsteroid.get(entity)?.isDefeated ?? false;
-    console.log("defeated:", defeated);
     if (defeated) {
-      scene.objectPool.removeGroup("asteroid_" + entity);
+      const key = "asteroid_" + entity;
+      if (scene.objectPool.getGroup(key)) scene.objectPool.removeGroup("asteroid_" + entity);
       return;
     }
 

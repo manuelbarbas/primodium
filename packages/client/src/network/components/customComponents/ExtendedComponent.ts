@@ -136,7 +136,6 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
 
   // Add a new override to some entity
   function pauseUpdates(entity: Entity, value?: ComponentValue<S, T>, skipUpdateStream = false) {
-    console.log("pausing", component.id, Date.now());
     paused.set(entity, true);
     if (value) setComponent(component, entity, value, { skipUpdateStream });
   }
@@ -144,11 +143,12 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
   // Remove an override from an entity
   function resumeUpdates(entity: Entity, skipUpdateStream = false) {
     if (!paused.get(entity)) return;
-    console.log("resuming", component.id, Date.now());
     paused.set(entity, false);
 
     const update = pendingUpdate.get(entity);
     if (!update) return;
+
+    if (update.value[1]) setComponent(component, entity, update.value[1], { skipUpdateStream: true });
     if (update.value[0]) setComponent(component, entity, update.value[0], { skipUpdateStream });
     else removeComponent(component, entity);
 
@@ -167,7 +167,6 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
     .pipe(
       filter((e) => !!paused.get(e.entity)),
       map((update) => {
-        console.log("setting pending update");
         pendingUpdate.set(update.entity, update);
       })
     )
@@ -177,7 +176,7 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
     entity = entity ?? singletonEntity;
     if (entity == undefined) throw new Error(`[set ${entity} for ${component.id}] no entity registered`);
     if (paused.get(entity)) {
-      const prevValue = get(entity);
+      const prevValue = pendingUpdate.get(entity)?.value[0] ?? getComponentValue(component, entity);
       pendingUpdate.set(entity, { entity, value: [value, prevValue], component });
     } else {
       setComponent(component, entity, value);

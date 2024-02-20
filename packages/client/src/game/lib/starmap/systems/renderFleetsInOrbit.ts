@@ -25,6 +25,7 @@ import { Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
 
 const orbitRadius = 64;
+
 function calculatePosition(
   angleInDegrees: number,
   origin: { x: number; y: number },
@@ -289,6 +290,7 @@ export const renderFleetsInOrbit = (scene: Scene) => {
 
   defineComponentSystem(systemsWorld, components.FleetMovement, (update) => {
     const newMovement = update.value[0];
+    const oldMovement = update.value[1];
     if (newMovement) {
       const time = components.Time.get()?.value ?? 0n;
       const arrivalTime = newMovement.arrivalTime ?? 0n;
@@ -296,7 +298,7 @@ export const renderFleetsInOrbit = (scene: Scene) => {
         renderEntityOrbitingFleets(newMovement.destination as Entity, scene);
       }
     }
-    if (update.value[1]) renderEntityOrbitingFleets(update.value[1].destination as Entity, scene);
+    if (oldMovement) renderEntityOrbitingFleets(oldMovement.destination as Entity, scene);
   });
 
   defineSystem(systemsWorld, [Has(components.SelectedFleet)], ({ value }) => {

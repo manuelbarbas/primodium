@@ -3,6 +3,7 @@ import { Scene } from "engine/types";
 import { toast } from "react-toastify";
 import { createCameraApi } from "src/game/api/camera";
 import { createFxApi } from "src/game/api/fx";
+import { getPlayerOwner } from "src/hooks/usePlayerOwner";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { entityToFleetName, entityToRockName } from "src/util/name";
@@ -39,7 +40,9 @@ export const renderBattle = (scene: Scene) => {
 
     setTimeout(() => {
       emitExplosion(attackerWinner ? position : attackerPosition, "sm");
-      if (defender === playerEntity || attacker === playerEntity) {
+      const defenderPlayer = getPlayerOwner(defender);
+      const attackerPlayer = getPlayerOwner(attacker);
+      if (defenderPlayer === playerEntity || attackerPlayer === playerEntity) {
         const { shake } = camera;
         shake();
         battleNotification({ entity });
@@ -49,7 +52,6 @@ export const renderBattle = (scene: Scene) => {
     setTimeout(() => {
       components.BattleRender.clear();
 
-      console.log("attacking complete, resuming components", Date.now());
       components.FleetMovement.resumeUpdates(attacker);
       if (isFleet) components.FleetMovement.resumeUpdates(defender);
       if (isPirate) components.PirateAsteroid.resumeUpdates(defender);
