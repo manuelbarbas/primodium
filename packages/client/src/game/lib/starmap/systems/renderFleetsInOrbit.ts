@@ -120,7 +120,8 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
     const fleetPosition = calculatePosition(offset, destinationPixelCoord);
 
     const sharedComponents = [ObjectPosition(fleetPosition, DepthLayers.Marker)];
-    const fleetOrbitObject = fleetOrbit.add("Graphics", fleet + "_fleetOrbit");
+    const fleetOrbitId = `fleetOrbit-${rockEntity}-${fleet}`;
+    const fleetOrbitObject = fleetOrbit.add("Graphics", fleetOrbitId);
     const fleetHomeLineObject = fleetOrbit.add("Graphics");
 
     fleetOrbitObject.setComponents([
@@ -302,10 +303,13 @@ export const renderFleetsInOrbit = (scene: Scene) => {
   });
 
   defineSystem(systemsWorld, [Has(components.SelectedFleet)], ({ value }) => {
-    if (!value[0]) return;
-    components.SelectedRock.remove();
-    components.Attack.reset();
-    components.Send.reset();
+    if (value[0]) {
+      components.SelectedRock.remove();
+    } else {
+      console.log("resetting attack and send");
+      components.Attack.reset();
+      components.Send.reset();
+    }
   });
 
   defineSystem(systemsWorld, [Has(components.SelectedRock)], ({ value }) => {

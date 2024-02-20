@@ -2,10 +2,10 @@
 import { starmapSceneConfig } from "../../config/starmapScene";
 
 import { Game } from "engine/types";
+import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { setupKeybinds } from "../asteroid/setup/setupKeybinds";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
-import { components } from "src/network/components";
 
 export const initStarmapScene = async (game: Game) => {
   const scene = await game.sceneManager.addScene(starmapSceneConfig, false);
@@ -15,10 +15,14 @@ export const initStarmapScene = async (game: Game) => {
   });
   setupKeybinds(scene);
 
-  const clickSub = scene.input.click$.subscribe(() => {
-    components.SelectedRock.remove();
-    components.SelectedFleet.remove();
+  scene.input.phaserInput.on("pointerdown", (_: unknown, objectsClicked: unknown[]) => {
+    console.log(objectsClicked);
+    if (objectsClicked.length === 0) {
+      components.SelectedRock.remove();
+      components.SelectedFleet.remove();
+    }
   });
+  const clickSub = scene.input.click$.subscribe(() => {});
 
   world.registerDisposer(() => {
     clickSub.unsubscribe();

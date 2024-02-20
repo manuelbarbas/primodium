@@ -27,7 +27,7 @@ export function setupMoveNotifications() {
     const seconds = (arrival.arrivalTime - now) % 60n;
     const output = minutes > 0 ? `${minutes} minute(s)` : `${seconds} seconds`;
 
-    toast.info(`Your fleet is en route and will arrive in ${output}.`);
+    if (arrival.arrivalTime > now) toast.info(`Your fleet is en route and will arrive in ${output}.`);
     fleetTransitQueue.set(entity, arrival.arrivalTime);
   });
 

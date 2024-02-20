@@ -132,7 +132,9 @@ export const getFleetTilePosition = (scene: Scene, fleet: Entity) => {
 export const getFleetPixelPosition = (scene: Scene, fleet: Entity) => {
   const spaceRock = components.FleetMovement.get(fleet)?.destination as Entity;
   const rockGroup = scene.objectPool.getGroup(spaceRock + "_spacerockOrbits");
-  const position = rockGroup.get(fleet + "_fleetOrbit", "Graphics").position;
+
+  const fleetOrbitId = `fleetOrbit-${spaceRock}-${fleet}`;
+  const position = rockGroup.get(fleetOrbitId, "Graphics").position;
   return { x: position.x, y: position.y };
 };
 
