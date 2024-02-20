@@ -50,11 +50,7 @@ export const createFxApi = (scene: Scene) => {
       .start();
   }
 
-  function fireMissile(
-    origin: Coord,
-    destination: Coord,
-    options?: { duration?: number; spray?: number; shake?: boolean; loser?: boolean }
-  ) {
+  function fireMissile(origin: Coord, destination: Coord, options?: { duration?: number; spray?: number }) {
     const spray = options?.spray ?? 5;
     const { tileWidth, tileHeight } = scene.tilemap;
     const originPixelCoord = tileCoordToPixelCoord({ x: origin.x, y: -origin.y }, tileWidth, tileHeight);
