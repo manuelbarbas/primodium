@@ -36,7 +36,7 @@ export const WidgetButton: React.FC<{
       }}
       disabled={disable || !active}
       onDoubleClick={onDoubleClick}
-      className={`border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-lg  drop-shadow-hard hover:z-20 ${
+      className={`border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-lg text-lg hover:z-20 drop-shadow-hard ${
         visible ? "border-warning bg-warning/25" : "bg-secondary/25"
       } ${!active ? "!bg-error/50 !border-error" : ""} ${className}`}
     />
