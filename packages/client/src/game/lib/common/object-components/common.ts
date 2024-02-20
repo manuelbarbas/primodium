@@ -106,7 +106,7 @@ export const OnClickUp = <T extends keyof GameObjectTypes>(
         if (e.downElement.nodeName !== "CANVAS") return;
         const prevDownTime = downTime;
         downTime = Date.now();
-        if (downTime - prevDownTime < 130) callback(gameObject as GameObjectInstances[T], e);
+        if (downTime - prevDownTime < 250) callback(gameObject as GameObjectInstances[T], e);
       });
     },
   };

@@ -3,7 +3,7 @@ import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Coord, uuid } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 import { components } from "src/network/components";
-import { getDistance, getRandomRange } from "src/util/common";
+import { getRandomRange } from "src/util/common";
 import { ObjectPosition, OnComponentSystem, SetValue, Tween } from "../lib/common/object-components/common";
 import { Texture } from "../lib/common/object-components/sprite";
 import { ObjectText } from "../lib/common/object-components/text";
@@ -53,43 +53,45 @@ export const createFxApi = (scene: Scene) => {
   function fireMissile(
     origin: Coord,
     destination: Coord,
-    options?: { speed?: number; delay?: number; numMissiles?: number; offsetMs?: number; spray?: number }
+    options?: { duration?: number; spray?: number; shake?: boolean; loser?: boolean }
   ) {
-    const delay = options?.delay ?? 0;
-    const speed = options?.speed ?? 20;
-    const numMissiles = options?.numMissiles ?? 10;
-    const offset = options?.offsetMs ?? 150;
     const spray = options?.spray ?? 5;
     const { tileWidth, tileHeight } = scene.tilemap;
     const originPixelCoord = tileCoordToPixelCoord({ x: origin.x, y: -origin.y }, tileWidth, tileHeight);
     const destinationPixelCoord = tileCoordToPixelCoord({ x: destination.x, y: -destination.y }, tileWidth, tileHeight);
 
-    const distance = getDistance(origin, destination);
-    const duration = (distance * 10000) / speed;
-    const animationTime = duration + numMissiles * offset + delay;
+    const duration = options?.duration ?? 200;
 
-    for (let i = 0; i < numMissiles; i++) {
-      const currOffset = i * offset + delay;
-      setTimeout(() => {
-        const missile = scene.phaserScene.add.circle(originPixelCoord.x, originPixelCoord.y, 2, 0xff0000);
-        missile.setDepth(DepthLayers.Rock);
-        const randomizedDestination = {
-          x: destinationPixelCoord.x + Phaser.Math.Between(-spray, spray),
-          y: destinationPixelCoord.y + Phaser.Math.Between(-spray, spray),
-        };
+    const missile = scene.phaserScene.add.circle(originPixelCoord.x, originPixelCoord.y, 2, 0xff0000);
 
-        scene.phaserScene.tweens.add({
-          targets: missile,
-          props: randomizedDestination,
-          ease: Phaser.Math.Easing.Quintic.In,
-          duration,
-        });
-        setTimeout(() => {
-          missile.destroy(true);
-        }, duration);
-      }, currOffset);
-    }
-    return animationTime;
+    scene.phaserScene.add
+      .timeline([
+        {
+          at: 0,
+          run: () => {
+            missile.setDepth(DepthLayers.Rock);
+            const randomizedDestination = {
+              x: destinationPixelCoord.x + Phaser.Math.Between(-spray, spray),
+              y: destinationPixelCoord.y + Phaser.Math.Between(-spray, spray),
+            };
+
+            scene.phaserScene.tweens.add({
+              targets: missile,
+              props: randomizedDestination,
+              ease: Phaser.Math.Easing.Quintic.In,
+              duration,
+            });
+            setTimeout(() => {
+              missile.destroy(true);
+            }, duration);
+          },
+        },
+        {
+          at: duration,
+          run: () => missile.destroy(true),
+        },
+      ])
+      .play();
   }
 
   function emitFloatingText(

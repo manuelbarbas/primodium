@@ -6,6 +6,7 @@ import { createFxApi } from "src/game/api/fx";
 import { getPlayerOwner } from "src/hooks/usePlayerOwner";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
+import { getDistance } from "src/util/common";
 import { entityToFleetName, entityToRockName } from "src/util/name";
 import { getFleetTilePosition } from "src/util/unit";
 
@@ -18,7 +19,6 @@ export const renderBattle = (scene: Scene) => {
   const camera = createCameraApi(scene);
 
   const attackAnimation = async (entity: Entity, attacker: Entity, defender: Entity, attackerWinner?: boolean) => {
-    console.log("attacking", Date.now());
     components.FleetMovement.pauseUpdates(attacker);
 
     const isPirate = components.PirateAsteroid.has(defender);
@@ -35,10 +35,24 @@ export const renderBattle = (scene: Scene) => {
     if (!position || !playerEntity) return;
     components.BattleRender.set({ value: attackerRock });
     const { emitExplosion, fireMissile } = fx;
-    fireMissile(attackerPosition, position, { offsetMs: 50, numMissiles: 5 });
-    const duration = fireMissile(position, attackerPosition, { delay: 500, offsetMs: 50, numMissiles: 5 });
+    const offsetMs = 50;
+    const numMissiles = 5;
+    const distance = getDistance(attackerPosition, position);
+    const missileDuration = (distance * 10000) / 40;
 
-    setTimeout(() => {
+    const offenseMissiles = new Array(numMissiles).fill(0).map((_, i) => {
+      const delay = i * offsetMs;
+      return { at: delay, run: () => fireMissile(attackerPosition, position, { duration: missileDuration }) };
+    });
+    const defenseDelay = 300;
+    const defenseMissiles = new Array(numMissiles).fill(0).map((_, i) => {
+      const delay = i * offsetMs + defenseDelay;
+      return { at: delay, run: () => fireMissile(position, attackerPosition, { duration: missileDuration }) };
+    });
+
+    const animationRuntime = defenseDelay + missileDuration + offsetMs * 5;
+
+    const runExplosion = () => {
       emitExplosion(attackerWinner ? position : attackerPosition, "sm");
       const defenderPlayer = getPlayerOwner(defender);
       const attackerPlayer = getPlayerOwner(attacker);
@@ -47,15 +61,17 @@ export const renderBattle = (scene: Scene) => {
         shake();
         battleNotification({ entity });
       }
-    }, duration * 0.9);
+    };
+    const clearRender = () => components.BattleRender.clear();
 
-    setTimeout(() => {
-      components.BattleRender.clear();
-
-      components.FleetMovement.resumeUpdates(attacker);
-      if (isFleet) components.FleetMovement.resumeUpdates(defender);
-      if (isPirate) components.PirateAsteroid.resumeUpdates(defender);
-    }, duration * 1.2);
+    scene.phaserScene.add
+      .timeline([
+        ...offenseMissiles,
+        ...defenseMissiles,
+        { at: animationRuntime * 0.8, run: runExplosion },
+        { at: animationRuntime * 1.2, run: clearRender },
+      ])
+      .play();
   };
 
   function battleNotification(update: { entity: Entity }) {
