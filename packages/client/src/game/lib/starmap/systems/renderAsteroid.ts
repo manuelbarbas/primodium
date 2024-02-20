@@ -149,9 +149,9 @@ export const renderAsteroid = (scene: Scene) => {
       }),
       Texture(Assets.SpriteAtlas, outlineSprite),
       OnClickUp(scene, () => {
+        console.log("clicked on", entity);
         const attackOrigin = components.Attack.get()?.originFleet;
         const sendOrigin = components.Send.get()?.originFleet;
-        console.log("clicking", attackOrigin, sendOrigin);
         if (attackOrigin) {
           if (getCanAttack(attackOrigin, entity)) components.Attack.setDestination(entity);
           else toast.error("Cannot attack this asteroid.");
