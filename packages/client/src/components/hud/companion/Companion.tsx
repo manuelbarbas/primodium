@@ -131,9 +131,9 @@ export const Actions = () => {
 export const PrimeOS = () => {
   return (
     <>
-      <Card className="p-2 border border-accent/25 -ml-8 mb-2 drop-shadow-hard z-10">
+      <Card className="p-2 border border-accent/25 -ml-8 mb-2 z-10">
         <div className="absolute top-0 -translate-y-full pb-2 right-0"></div>
-        <SecondaryCard className="flex flex-col items-center gap-3 border-2 border-accent/50 !p-0 drop-shadow-hard">
+        <SecondaryCard className="flex flex-col items-center gap-3 border-2 border-accent/50 !p-0">
           <WidgetControls />
           <Actions />
         </SecondaryCard>
@@ -186,7 +186,7 @@ export const Companion = () => {
         <div className={`relative z-20`}>
           <img
             src="/img/jarvis.png"
-            className="drop-shadow-hard pixel-images h-44 m-4 pointer-events-auto"
+            className="pixel-images h-44 m-4 pointer-events-auto"
             onClick={() => setMinimized((prev) => !prev)}
           />
           <div className="absolute w-fit bottom-2 right-1/2 translate-x-1/2">
