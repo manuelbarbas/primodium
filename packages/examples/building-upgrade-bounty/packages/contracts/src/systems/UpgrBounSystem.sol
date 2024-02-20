@@ -17,8 +17,7 @@ import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 import { WorldWithUpgradeBuilding } from "../interfaces/interfaces.sol";
 import { LibHelpers } from "../libraries/LibHelpers.sol";
 import { BuildingTileKey } from "../libraries/Keys.sol";
-
-using LibHelpers for PositionData;
+import { LibHelpers } from "../libraries/LibHelpers.sol";
 
 /**
  * @dev A contract that handles upgrade bounties for buildings in a world system.
@@ -34,11 +33,12 @@ contract UpgrBounSystem is System {
    */
   function depositBounty(PositionData memory coord) public payable returns (uint256 bountyValue) {
     // artefact of how Primodium handles buildings and coordinates, will be fixed in future update
-    bytes32 buildingEntity = coord.getBuildingFromCoord();
+    bytes32 buildingEntity = LibHelpers.getBuildingFromCoord(coord);
+    bytes32 playerEntity = LibHelpers.addressToEntity(_msgSender());
 
     // Check that the sender doesn't already have a live bounty on that buildingEntity
     require(
-      UpgradeBounty.get(_msgSender(), buildingEntity) == 0,
+      UpgradeBounty.get(playerEntity, buildingEntity) == 0,
       "You already have an upgrade building bounty on that coord"
     );
 
@@ -46,8 +46,8 @@ contract UpgrBounSystem is System {
     require(_msgValue() > 0, "Bounty value must be greater than 0");
     bountyValue = _msgValue();
 
-    // record the depositor address, buildingEntity, and value in the UpgradeBounty table
-    UpgradeBounty.set(_msgSender(), buildingEntity, bountyValue);
+    // record the depositor entity, buildingEntity, and value in the UpgradeBounty table
+    UpgradeBounty.set(playerEntity, buildingEntity, bountyValue);
   }
 
   /**
@@ -58,53 +58,56 @@ contract UpgrBounSystem is System {
    * @notice If Alice delegates her system access to Bob and Bob uses callFrom() on this function, who does Alice's bounty go to?
    */
   function withdrawBounty(PositionData memory coord) public returns (uint256 bountyValue) {
-    bytes32 buildingEntity = coord.getBuildingFromCoord();
+    bytes32 buildingEntity = LibHelpers.getBuildingFromCoord(coord);
+    bytes32 playerEntity = LibHelpers.addressToEntity(_msgSender());
 
     // Check that there is a bounty on that buildingEntity
     require(
-      UpgradeBounty.get(_msgSender(), buildingEntity) > 0,
+      UpgradeBounty.get(playerEntity, buildingEntity) > 0,
       "You do not have a live upgrade building bounty at that coord"
     );
 
     // Prep params for the transferBalanceToAddress function
     IWorld world = IWorld(_world());
     ResourceId namespaceResource = WorldResourceIdLib.encodeNamespace(bytes14("upgradeBounty"));
-    bountyValue = UpgradeBounty.get(_msgSender(), buildingEntity);
+    bountyValue = UpgradeBounty.get(playerEntity, buildingEntity);
 
     // Transfer the bounty value to the caller
     world.transferBalanceToAddress(namespaceResource, _msgSender(), bountyValue);
 
     // Remove the claimed bounty from the UpgradeBounty table
-    UpgradeBounty.set(_msgSender(), buildingEntity, 0);
+    UpgradeBounty.set(playerEntity, buildingEntity, 0);
   }
 
   /**
    * @dev Upgrades the building at the specified coordinate using the bounty published by the given address.
-   * @param bountyPublisher The address of the bounty publisher.
+   * @param bountyPublisherAddress The address of the bounty publisher.
    * @param coord The coordinate of the building to upgrade.
    * @return newBuildingEntity The new building entity.
    */
   function upgradeForBounty(
-    address bountyPublisher,
+    address bountyPublisherAddress,
     PositionData memory coord
   ) public returns (bytes memory newBuildingEntity) {
-    bytes32 oldBuildingEntity = coord.getBuildingFromCoord();
+    bytes32 oldBuildingEntity = LibHelpers.getBuildingFromCoord(coord);
+    bytes32 bountyPublisherEntity = LibHelpers.addressToEntity(bountyPublisherAddress);
+
     // Check that there is a bounty on that coord
     require(
-      UpgradeBounty.get(bountyPublisher, oldBuildingEntity) > 0,
+      UpgradeBounty.get(bountyPublisherEntity, oldBuildingEntity) > 0,
       "That address does not have a live upgrade building bounty at that coord"
     );
 
     // Call the upgradeBuilding function from the World contract
     ResourceId upgradeBuildingSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, ROOT_NAMESPACE, "UpgradeBuildingS");
     newBuildingEntity = WorldWithUpgradeBuilding(_world()).callFrom(
-      bountyPublisher,
+      bountyPublisherAddress,
       upgradeBuildingSystemId,
       abi.encodeWithSignature("upgradeBuilding((int32,int32,bytes32))", (coord))
     );
 
     // Prep params for the transferBalanceToAddress function
-    uint256 bountyValue = UpgradeBounty.get(bountyPublisher, oldBuildingEntity);
+    uint256 bountyValue = UpgradeBounty.get(bountyPublisherEntity, oldBuildingEntity);
     IWorld world = IWorld(_world());
     ResourceId namespaceResource = WorldResourceIdLib.encodeNamespace(bytes14("upgradeBounty"));
 
@@ -112,7 +115,7 @@ contract UpgrBounSystem is System {
     world.transferBalanceToAddress(namespaceResource, _msgSender(), bountyValue);
 
     // Remove the bounty from the UpgradeBounty table
-    UpgradeBounty.set(bountyPublisher, oldBuildingEntity, 0);
+    UpgradeBounty.set(bountyPublisherEntity, oldBuildingEntity, 0);
 
     return newBuildingEntity;
   }

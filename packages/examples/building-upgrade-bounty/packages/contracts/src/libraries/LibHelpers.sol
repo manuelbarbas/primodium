@@ -17,5 +17,13 @@ library LibHelpers {
     return OwnedBy.get(buildingTile);
   }
 
+  function addressToEntity(address a) internal pure returns (bytes32) {
+    return bytes32(uint256(uint160((a))));
+  }
+
+  function entityToAddress(bytes32 a) internal pure returns (address) {
+    return address(uint160(uint256((a))));
+  }
+
   // If you believe that more libraries or functions need to be released, please contact the Primodium team.
 }

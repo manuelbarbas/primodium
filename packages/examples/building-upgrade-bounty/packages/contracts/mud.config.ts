@@ -12,7 +12,7 @@ export default mudConfig({
   tables: {
     UpgradeBounty: {
       keySchema: {
-        depositor: "address",
+        depositorEntity: "bytes32",
         buildingEntity: "bytes32",
       },
       valueSchema: "uint256",
