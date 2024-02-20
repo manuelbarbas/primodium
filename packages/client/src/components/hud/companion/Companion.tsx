@@ -38,7 +38,7 @@ export const WidgetButton: React.FC<{
       onDoubleClick={onDoubleClick}
       className={`border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-lg  drop-shadow-hard hover:z-20 ${
         visible ? "border-warning bg-warning/25" : "bg-secondary/25"
-      } ${!active ? "!bg-error !border-error" : ""} ${className}`}
+      } ${!active ? "!bg-error/50 !border-error" : ""} ${className}`}
     />
   );
 };

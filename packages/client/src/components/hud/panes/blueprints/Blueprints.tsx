@@ -7,6 +7,7 @@ import { AllBlueprints } from "./AllBlueprints";
 export const Blueprints = memo(() => {
   const { components } = useMud();
   const mapOpen = components.MapOpen.use()?.value;
+  const isBuilding = components.ActiveRock.use()?.value === components.BuildRock.use()?.value;
 
   return (
     <Widget
@@ -19,7 +20,7 @@ export const Blueprints = memo(() => {
       defaultVisible
       origin="center-left"
       scene={Scenes.Asteroid}
-      active={!mapOpen}
+      active={!mapOpen && isBuilding}
       minOpacity={0.6}
       draggable
       pinnable

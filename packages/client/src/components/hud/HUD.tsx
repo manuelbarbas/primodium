@@ -1,7 +1,5 @@
 import { KeybindActions } from "@game/constants";
-import { FaCircle } from "react-icons/fa";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
-import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { HUD } from "../core/HUD";
 import { Modal } from "../core/Modal";
@@ -26,13 +24,6 @@ import { Chat } from "./panes/chat/Chat";
 import { Blueprints } from "./panes/blueprints/Blueprints";
 
 export const GameHUD = () => {
-  const {
-    playerAccount: { entity: playerEntity },
-  } = useMud();
-
-  const activeRock = components.ActiveRock.use()?.value;
-  const ownedBy = components.OwnedBy.use(activeRock)?.value;
-  const isSpectating = ownedBy !== playerEntity;
   const uiScale = usePersistentStore((state) => state.uiScale);
 
   const allowHackerModal = usePersistentStore((state) => state.allowHackerModal);
@@ -87,15 +78,6 @@ export const GameHUD = () => {
           <HUD.CursorFollower>
             <HoverInfo />
           </HUD.CursorFollower>
-
-          {isSpectating && (
-            <HUD.BottomRight>
-              <p className="text-accent text-2xl font-bold p-5 flex gap-2 items-center">
-                <FaCircle size={12} className="animate-pulse text-error" />
-                LIVE
-              </p>
-            </HUD.BottomRight>
-          )}
 
           {/* <HUD.BottomLeft>{isSpectating && !mapOpen && <SpectatingDetails />}</HUD.BottomLeft> */}
 

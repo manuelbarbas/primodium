@@ -41,6 +41,7 @@ type WidgetProps = {
 type WidgetContentProps = {
   id: string;
   title?: string;
+  icon?: string;
   onDoubleClick?: () => void;
   onMouseDown?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   onPointerEnter?: () => void;
@@ -75,6 +76,7 @@ export const Content: React.FC<WidgetContentProps> = memo(
   ({
     id,
     title,
+    icon,
     onDoubleClick,
     onMouseDown,
     onPointerEnter,
@@ -166,7 +168,11 @@ export const Content: React.FC<WidgetContentProps> = memo(
           onDoubleClick={onDoubleClick}
           onPointerDown={onMouseDown}
         >
-          <p className="bg-gray-900 px-2 uppercase font-bold">{title}</p>
+          <div className="flex gap-1 bg-gray-900 px-2 items-center">
+            {icon && <img src={icon} className="pixel-images w-4 h-4" />}
+            <p className=" uppercase font-bold">{title}</p>
+          </div>
+
           <div className="flex items-center gap-1">
             {
               <>
@@ -540,6 +546,7 @@ export const Widget: React.FC<WidgetProps> = memo(
               <Content
                 id={id}
                 title={title}
+                icon={icon}
                 minimized={minimized}
                 pinned={false}
                 origin={"top-left"}
@@ -570,6 +577,7 @@ export const Widget: React.FC<WidgetProps> = memo(
             <Content
               id={id}
               title={title}
+              icon={icon}
               onPointerEnter={handlePointerEnter}
               onPointerLeave={handlePointerLeave}
               minimized={minimized}
