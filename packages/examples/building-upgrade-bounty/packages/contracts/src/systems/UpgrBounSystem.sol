@@ -14,33 +14,12 @@ import { IWorld } from "../codegen/world/IWorld.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdLib, ROOT_NAMESPACE } from "@latticexyz/world/src/WorldResourceId.sol";
 import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
+import { WorldWithUpgradeBuilding } from "../interfaces/interfaces.sol";
 
 // import { LibEncode } from "prim-codegen/Libraries.sol";
 
 // Taken from prim-contracts/src/Keys.sol
 bytes32 constant BuildingTileKey = bytes32("building:tile");
-
-interface WorldWithUpgradeBuilding {
-  /**
-   * @dev Upgrades the building at the specified coordinate.
-   * @param coord The coordinate of the building to upgrade.
-   * @return buildingEntity The new building entity.
-   */
-  function upgradeBuilding(PositionData memory coord) external returns (bytes32 buildingEntity);
-
-  /**
-   * @dev Calls a function from the world system on behalf of a delegator.
-   * @param delegator The address of the delegator.
-   * @param systemId The ID of the system to call.
-   * @param callData The data to pass to the system.
-   * @return The result of the system call.
-   */
-  function callFrom(
-    address delegator,
-    ResourceId systemId,
-    bytes memory callData
-  ) external payable returns (bytes memory);
-}
 
 /**
  * @dev A contract that handles upgrade bounties for buildings in a world system.
