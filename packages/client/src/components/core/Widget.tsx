@@ -161,7 +161,7 @@ export const Content: React.FC<WidgetContentProps> = memo(
       >
         <div
           className={`flex p-1 text-xs items-center gap-3 justify-between w-full cursor-move ${
-            locked ? "bg-info/50" : pinned ? "bg-neutral/75" : "bg-secondary/50"
+            locked ? "bg-info/50 cursor-default" : pinned ? "bg-neutral/75" : "bg-secondary/50"
           }`}
           onPointerDown={onMouseDown}
           onDoubleClick={onDoubleClick}

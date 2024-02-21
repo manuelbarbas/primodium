@@ -4,6 +4,7 @@ import { Join } from "../core/Join";
 import { Modal } from "../core/Modal";
 import { UpgradeUnit } from "./building-menu/screens/UpgradeUnit";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
+import { Settings } from "./modals/settings/Settings";
 import { BattleReports } from "./panes/battle-reports/BattleReports";
 
 const buttonClass = "rounded-t-none btn-sm pt-1 border border-dotted border-secondary/50";
@@ -34,6 +35,17 @@ export const MenuButtons = () => {
           </Modal.Button>
           <Modal.Content className="w-132 h-120">
             <UpgradeUnit />
+          </Modal.Content>
+        </Modal>
+        <Modal title="settings">
+          <Modal.IconButton
+            className={buttonClass}
+            imageUri="/img/icons/settingsicon.png"
+            tooltipDirection="right"
+            tooltipText="settings"
+          />
+          <Modal.Content className="w-132 h-120">
+            <Settings />
           </Modal.Content>
         </Modal>
       </Join>

@@ -2,10 +2,8 @@ import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
 import { Button, IconButton } from "../../core/Button";
 import { Card, SecondaryCard } from "../../core/Card";
 import { usePrimodium } from "src/hooks/usePrimodium";
-import { Modal } from "../../core/Modal";
 import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { useWidgets } from "../../../hooks/providers/WidgetProvider";
-import { Settings } from "../modals/settings/Settings";
 import { MenuButtons } from "../MenuButtons";
 import { MapButton } from "../MapButton";
 import { useAnimate } from "framer-motion";
@@ -46,40 +44,10 @@ export const WidgetButton: React.FC<{
 export const WidgetControls = () => {
   const { widgets } = useWidgets();
 
-  const closeAll = useCallback(() => {
-    widgets.forEach((widget) => widget.close());
-  }, [widgets]);
-
-  const resetAll = useCallback(() => {
-    widgets.forEach((widget) => widget.reset());
-  }, [widgets]);
-
-  const numOpen = useMemo(() => widgets.filter((widget) => widget.visible).length, [widgets]);
-
   return (
     <div className="flex flex-col items-center w-full space-y-2 z-10">
-      <div className="flex justify-between items-center text-center bg-neutral/50 w-full p-1">
+      <div className="flex justify-center items-center text-center bg-neutral/50 w-full p-1">
         <p className="text-sm text-warning font-bold">{`WIDGETS`}</p>
-
-        {numOpen <= 0 && (
-          <Button
-            onClick={resetAll}
-            className="btn-xs btn-neutral bg-opacity-25 border-secondary/50 border"
-            tooltip="reset all"
-          >
-            <FaUndo />
-          </Button>
-        )}
-
-        {numOpen > 0 && (
-          <Button
-            onClick={closeAll}
-            className="btn-xs btn-neutral bg-opacity-25 border-secondary/50 border"
-            tooltip="hide all"
-          >
-            <FaEyeSlash className="text-error" />
-          </Button>
-        )}
       </div>
 
       <div className="flex">
@@ -116,21 +84,43 @@ export const WidgetControls = () => {
 };
 
 export const Actions = () => {
+  const { widgets } = useWidgets();
+
+  const closeAll = useCallback(() => {
+    widgets.forEach((widget) => widget.close());
+  }, [widgets]);
+
+  const resetAll = useCallback(() => {
+    widgets.forEach((widget) => widget.reset());
+  }, [widgets]);
+
+  const numOpen = useMemo(() => widgets.filter((widget) => widget.visible).length, [widgets]);
+
   return (
     <div className="w-full">
       <div className="w-full flex items-center border-t border-secondary/25">
         <MapButton />
-        <Modal title="settings">
-          <Modal.IconButton
-            className="btn-md btn-secondary bg-opacity-0 border border-secondary/25 border-r-0 border-y-0"
-            imageUri="/img/icons/settingsicon.png"
-            tooltipDirection="right"
-            tooltipText="settings"
-          />
-          <Modal.Content className="w-132 h-120">
-            <Settings />
-          </Modal.Content>
-        </Modal>
+        <div title="settings">
+          {numOpen <= 0 && (
+            <Button
+              onClick={resetAll}
+              className="btn-md btn-neutral bg-opacity-25 border-secondary/50 border text-lg"
+              tooltip="reset all"
+            >
+              <FaUndo />
+            </Button>
+          )}
+
+          {numOpen > 0 && (
+            <Button
+              onClick={closeAll}
+              className="btn-md btn-neutral bg-opacity-25 border-secondary/50 border text-lg"
+              tooltip="hide all"
+            >
+              <FaEyeSlash className="text-error" />
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -184,7 +174,7 @@ export const Companion = () => {
   }, [minimized, scope, animate]);
 
   return (
-    <div className="w-full">
+    <div className="w-full pointer-events-auto">
       <div ref={scope} className={`relative flex items-center`}>
         {!minimized && <div className="absolute bg-black inset-0 blur-3xl opacity-50" />}
         {/* <SecondaryCard className="uppercase drop-shadow-hard absolute w-fit min-w-64 origin-bottom-left -top-4 text-accent z-50">
