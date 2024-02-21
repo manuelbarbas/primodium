@@ -218,7 +218,7 @@ export const Companion = () => {
             <span className="kbd kbd-xs">
               {[keybinds[KeybindActions.SpacerockMenu]?.entries().next().value[0]] ?? "?"}
             </span>{" "}
-            TO CALL <span className="text-accent">AURELIA</span>
+            TO CALL <span className="text-accent">AURA</span>
           </p>
         )}
       </div>
