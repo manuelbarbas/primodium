@@ -45,9 +45,7 @@ export const BuildingMenu: React.FC = () => {
       case EntityType.MainBase:
         return <MainBase building={selectedBuilding} />;
       case EntityType.DroneFactory:
-        return <UnitFactory building={selectedBuilding} />;
       case EntityType.Workshop:
-        return <UnitFactory building={selectedBuilding} />;
       case EntityType.Shipyard:
         return <UnitFactory building={selectedBuilding} />;
       case EntityType.Market:
@@ -59,7 +57,7 @@ export const BuildingMenu: React.FC = () => {
   const TopBar = () => {
     if (buildingType == EntityType.MainBase) return null;
     return (
-      <div className="absolute -top-2 right-0 -translate-y-full flex flex-row-reverse gap-1 p-1 border bg-neutral border border-1 border-secondary border-b-base-100">
+      <div className="absolute -top-2 right-0 -translate-y-full flex flex-row-reverse gap-1 p-1 bg-neutral border border-1 border-secondary border-b-base-100">
         <Button
           tooltip="Close"
           tooltipDirection="top"

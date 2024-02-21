@@ -360,7 +360,8 @@ export const renderBuilding = (scene: Scene) => {
     });
 
     defineExitSystem(spectateWorld, positionQuery, ({ entity }) => {
-      const renderId = `${entity} _entitySprite`;
+      const renderId = `${entity}_entitySprite`;
+
       scene.objectPool.removeGroup(renderId);
     });
   });

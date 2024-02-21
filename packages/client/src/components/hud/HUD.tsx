@@ -7,7 +7,6 @@ import { BrandingLabel } from "../shared/BrandingLabel";
 import { CurrentObjective } from "./CurrentObjective";
 import { Profile } from "./Profile";
 // import { SpectatingDetails } from "./SpectatingDetails";
-import { BuildingMenu } from "./building-menu/BuildingMenu";
 import { HoverInfo } from "./hover/HoverInfo";
 import { HoverTarget } from "./markers/HoverTarget";
 import { AsteroidTarget } from "./markers/starmap/AsteroidTarget";
@@ -26,6 +25,7 @@ import { Chat } from "./panes/chat/Chat";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
+import { BuildingTarget } from "./markers/starmap/BuildingTarget";
 export const GameHUD = () => {
   const uiScale = usePersistentStore((state) => state.uiScale);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
@@ -72,6 +72,7 @@ export const GameHUD = () => {
           <AsteroidTarget />
           <FleetTarget />
           <HoverTarget />
+          <BuildingTarget />
 
           {/* Widgets */}
           <HUD.TopLeft>
@@ -103,10 +104,6 @@ export const GameHUD = () => {
           <HUD.BottomLeft>
             <Companion />
           </HUD.BottomLeft>
-
-          <HUD.BottomMiddle>
-            <BuildingMenu />
-          </HUD.BottomMiddle>
         </HUD>
 
         <HUD>
