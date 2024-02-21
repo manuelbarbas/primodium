@@ -5,7 +5,7 @@ import { EFleetStance } from "contracts/config/enums";
 import { useMemo } from "react";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
-import { Pane } from "src/components/core/Pane";
+import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
 import { useFleetStats } from "src/hooks/useFleetMoves";
 import { usePlayerOwner } from "src/hooks/usePlayerOwner";
@@ -168,19 +168,21 @@ export const OwnedFleets = () => {
   const { components } = useMud();
   const mapOpen = components.MapOpen.use()?.value;
 
-  if (!mapOpen) return null;
-
   return (
-    <Pane
+    <Widget
       id="owned_fleets"
       title="Owned Fleets"
+      icon="img/icons/outgoingicon.png"
       defaultLocked
+      defaultVisible
+      lockable
       draggable
       persist
       scene={Scenes.Starmap}
+      active={mapOpen}
       defaultCoord={{ x: 0, y: 0 }}
     >
       <_OwnedFleets />
-    </Pane>
+    </Widget>
   );
 };

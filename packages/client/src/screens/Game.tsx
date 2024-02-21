@@ -41,9 +41,9 @@ export const Game = () => {
   return (
     <div>
       {!primodium && (
-        <div className="flex flex-col items-center justify-center h-screen text-white font-mono gap-4">
+        <div className="flex flex-col items-center justify-center h-screen text-white gap-4">
           <p className="text-lg text-white">
-            <span className="font-mono">Loading game</span>
+            <span className="">Loading game</span>
             <span>&hellip;</span>
           </p>
           <Progress value={100} max={100} className="animate-pulse w-56" />
@@ -51,13 +51,14 @@ export const Game = () => {
       )}
 
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
-      <div id="game-container relative ">
-        <div id="phaser-container" className="absolute cursor-pointer screen-container" />
-        {!!primodium && (
-          <PrimodiumProvider {...primodium}>
-            <GameHUD />
-          </PrimodiumProvider>
-        )}
+      <div id="game-container relative">
+        <div id="phaser-container" className="cursor-pointer screen-container">
+          {!!primodium && (
+            <PrimodiumProvider {...primodium}>
+              <GameHUD />
+            </PrimodiumProvider>
+          )}
+        </div>
       </div>
     </div>
   );

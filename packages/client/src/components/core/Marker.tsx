@@ -67,7 +67,7 @@ export const Marker: React.FC<{
       obj.setOrigin(0.5, 0.5);
       obj.setScale(1 / _camera.phaserCamera.zoom);
       obj.setAlpha(camera.phaserCamera.scene.scene.isActive() ? 1 : 0);
-      obj.setDepth(depth);
+      obj.setDepth(depth - 100000);
 
       setMarker(obj);
       setContainer(container);
@@ -113,13 +113,11 @@ export const Marker: React.FC<{
           // Set the marker position
           marker.setPosition(markerX, markerY);
           setDegrees(degree);
-
           return;
         }
       }
 
       marker.setScale(1 / camera.phaserCamera.zoom);
-      marker.setAlpha(camera.phaserCamera.scene.scene.isActive() ? 1 : 0);
     };
 
     cameraCallback(camera.phaserCamera.worldView);
@@ -136,7 +134,7 @@ export const Marker: React.FC<{
 
   return ReactDOM.createPortal(
     <div className={"-translate-x-1/2 -translate-y-1/2"}>
-      {!visible && offScreenIconUri && (
+      {!visible && offScreenIconUri && camera.phaserCamera.scene.scene.isActive() && (
         <BoundedMarker scene={scene} coord={coord} iconUri={offScreenIconUri} degrees={degrees} />
       )}
       {(visible || !offScreenIconUri) && children}

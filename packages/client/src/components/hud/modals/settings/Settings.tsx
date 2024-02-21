@@ -4,6 +4,7 @@ import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
 import { AudioSettings } from "./AudioSettings";
 import { GeneralSettings } from "./GeneralSettings";
+import { AccountSettings } from "./AccountSettings";
 
 const params = new URLSearchParams(window.location.search);
 
@@ -26,11 +27,14 @@ export const Settings = () => {
           >
             Game Guide
           </Button>
-          <Navigator.NavButton to="general" className="btn-md btn-seconday border-secondary w-24">
+          <Navigator.NavButton to="general" className="btn-sm btn-seconday border-secondary w-28">
             General
           </Navigator.NavButton>
-          <Navigator.NavButton to="audio" className="btn-md btn-seconday border-secondary w-24">
+          <Navigator.NavButton to="audio" className="btn-sm btn-seconday border-secondary w-28">
             Audio
+          </Navigator.NavButton>
+          <Navigator.NavButton to="account" className="btn-sm btn-seconday border-secondary w-28">
+            Account
           </Navigator.NavButton>
         </div>
 
@@ -56,6 +60,7 @@ export const Settings = () => {
 
       <AudioSettings />
       <GeneralSettings />
+      <AccountSettings />
     </Navigator>
   );
 };

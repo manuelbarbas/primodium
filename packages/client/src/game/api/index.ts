@@ -60,7 +60,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
 
     for (const [, instance] of instances.entries()) {
       //dispose phaser
-      instance.phaserGame.destroy(true);
+      instance.dispose();
     }
 
     //dispose game logic

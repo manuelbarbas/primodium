@@ -2,7 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { FaEye } from "react-icons/fa";
 import { components } from "src/network/components";
-import { Card, SecondaryCard } from "../core/Card";
+import { SecondaryCard } from "../core/Card";
 import { Score } from "./Score";
 import { TargetHeader } from "./spacerock-menu/TargetHeader";
 
@@ -11,8 +11,8 @@ export const SpectatingDetails = () => {
   const ownedBy = (components.OwnedBy.use(activeRock)?.value ?? singletonEntity) as Entity;
 
   return (
-    <div className="ml-2 flex flex-col gap-2">
-      <Card className="items-center justify-center min-w-fit !p-0 border-b-0">
+    <div className="flex flex-col gap-2">
+      <SecondaryCard className="items-center justify-center min-w-fit !p-0 border-b-0">
         <div className="flex flex-col items-center">
           <p className="font-bold opacity-50 uppercase text-xs p-2 flex items-center gap-2">
             <FaEye />
@@ -25,7 +25,7 @@ export const SpectatingDetails = () => {
         </div>
 
         <Score player={ownedBy} />
-      </Card>
+      </SecondaryCard>
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { Range } from "src/components/core/Range";
@@ -10,6 +11,7 @@ export const GeneralSettings = () => {
     state.allowHackerModal,
     state.toggleAllowHackerModal,
   ]);
+  const [fontStyle, setFontStyle] = usePersistentStore((state) => [state.fontStyle, state.setFontStyle]);
 
   return (
     <Navigator.Screen title="general" className="flex-grow">
@@ -32,6 +34,23 @@ export const GeneralSettings = () => {
               PRESS <p className="kbd">~</p> TO OPEN HACKER PANE
             </div>
             <Toggle onToggle={toggleAllowHackerModal} defaultChecked={allowHackerModal} />
+          </div>
+          <div>
+            <p className="text-xs opacity-50 font-bold pb-1 uppercase">font style</p>
+            <div>
+              <Button
+                className={`btn-sm ${fontStyle === "font-mono" ? "border border-accent" : ""}`}
+                onClick={() => setFontStyle("font-mono")}
+              >
+                MONO
+              </Button>
+              <Button
+                className={`btn-sm ${fontStyle === "font-pixel" ? "border border-accent" : ""}`}
+                onClick={() => setFontStyle("font-pixel")}
+              >
+                PIXEL
+              </Button>
+            </div>
           </div>
         </SecondaryCard>
       </div>

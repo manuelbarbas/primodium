@@ -131,7 +131,7 @@ Modal.Content = function ModalContent({ children, className }) {
 
   return ReactDOM.createPortal(
     <div
-      className="top-0 w-screen h-screen absolute z-50 bg-neutral/75 backdrop-blur-sm font-mono flex items-center justify-center"
+      className="top-0 w-screen h-screen absolute z-50 bg-neutral/25 backdrop-blur-md flex items-center justify-center"
       onClick={handleClickOutside}
     >
       <div className={`max-w-screen max-h-screen space-y-2 ${className} p-5 pt-12`} ref={modalRef}>
@@ -152,6 +152,6 @@ Modal.Content = function ModalContent({ children, className }) {
         </Card>
       </div>
     </div>,
-    document.body
+    document.getElementById("modal-root")!
   );
 };

@@ -3,13 +3,13 @@ import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
-import { Pane } from "src/components/core/Pane";
+import { Widget } from "src/components/core/Widget";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getSpaceRockInfo, getSpaceRockName } from "src/util/asteroid";
-import { getBlockTypeName } from "src/util/common";
+import { getBlockTypeName, getRandomRange } from "src/util/common";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { entityToRockName } from "src/util/name";
 
@@ -126,19 +126,24 @@ export const OwnedAsteroids = () => {
   const { components } = useMud();
   const mapOpen = components.MapOpen.use()?.value;
 
-  if (!mapOpen) return null;
-
   return (
-    <Pane
+    <Widget
       id="owned_asteroids"
       title="Owned Asteroids"
+      icon="/img/icons/asteroidicon.png"
+      defaultCoord={{
+        x: window.innerWidth / 2 + getRandomRange(-50, 50),
+        y: window.innerHeight / 2 + getRandomRange(-50, 50),
+      }}
       defaultLocked
-      draggable
+      defaultVisible
       persist
+      lockable
+      draggable
       scene={Scenes.Asteroid}
-      defaultCoord={{ x: 0, y: 0 }}
+      active={mapOpen}
     >
       <_OwnedAsteroids />
-    </Pane>
+    </Widget>
   );
 };

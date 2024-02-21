@@ -27,7 +27,7 @@ const HackerConsole: React.FC = () => {
   Object.entries(api).forEach(([key, value]) => ((window as any)[key] = value));
 
   return (
-    <div className="flex-grow overflow-hidden">
+    <div className="flex-grow overflow-hidden font-mono">
       <div className="grid grid-cols-7 gap-4 p-2 h-full w-full overflow-hidden">
         <div className="h-full w-full overflow-hidden flex flex-col col-span-4">
           <p className="text-xs uppercase opacity-50 font-bold pb-2">command line</p>

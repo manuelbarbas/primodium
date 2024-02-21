@@ -96,9 +96,6 @@
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
   }
-  /* .react-flow__connection-path {
-    @apply bg-white z-[1000] viewport-container text-white
-  } */
 
   .map-container {
     background-color: rgb(100 116 139);
@@ -116,34 +113,6 @@
     background-size: 2000px;
   }
 
-  .topographic-background-sm {
-    background-image: url("/img/backgrounds/topographic_bg.png");
-    bacground-opacity: 0.25;
-    background-size: cover;
-    background-size: 200px;
-  }
-
-  .topographic-background-md {
-    background-image: url("/img/backgrounds/topographic_bg.png");
-    bacground-opacity: 0.25;
-    background-size: cover;
-    background-size: 300px;
-  }
-
-  .topographic-background {
-    background-image: url("/img/backgrounds/topographic_bg.png");
-    bacground-opacity: 0.25;
-    background-size: cover;
-    background-size: 500px;
-  }
-
-  .topographic-background2 {
-    background-image: url("/img/backgrounds/topographic_bg.png");
-    bacground-opacity: 0.25;
-    background-size: cover;
-    background-size: 1000px;
-  }
-
   .container {
     position: relative;
   }
@@ -153,6 +122,7 @@
     @apply focus:outline-none;
   }
 }
+
 @keyframes slideDown {
   from {
     transform: translateY(-20%);

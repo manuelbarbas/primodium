@@ -24,10 +24,9 @@ export const PlayerLeaderboard = () => {
 
   return (
     <div className="flex flex-col justify-between w-full h-full text-xs pointer-events-auto">
-      {/* CAUSED BY INCOMPATIBLE REACT VERSIONS */}
       <AutoSizer>
         {({ height, width }: { height: number; width: number }) => (
-          <List height={height - 75} width={width} itemCount={data.players.length} itemSize={47} className="scrollbar">
+          <List height={height - 50} width={width} itemCount={data.players.length} itemSize={47} className="scrollbar">
             {({ index, style }) => {
               const player = data.players[index];
               const score = data.scores[index];
@@ -42,10 +41,7 @@ export const PlayerLeaderboard = () => {
       </AutoSizer>
       <div className="w-full">
         <hr className="w-full border-t border-cyan-800 my-2" />
-
-        <SecondaryCard className="w-full overflow-y-auto border border-slate-700 p-2 bg-slate-800">
-          <LeaderboardItem player={playerAccount.entity} index={playerIndex} score={playerScore ?? 0} />
-        </SecondaryCard>
+        <LeaderboardItem player={playerAccount.entity} index={playerIndex} score={playerScore ?? 0} />
       </div>
     </div>
   );
