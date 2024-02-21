@@ -19,9 +19,9 @@ contract UpgradeRangeSystem is PrimodiumSystem {
       LibBuilding.hasRequiredBaseLevel(spaceRockEntity, ExpansionKey, targetLevel),
       "[UpgradeRangeSystem] MainBase level requirement not met"
     );
-    require(OwnedBy.get(spaceRockEntity) == playerEntity, "[UpgradeRangeSystem] Asteroid now owned by player");
+    require(OwnedBy.get(spaceRockEntity) == playerEntity, "[UpgradeRangeSystem] Asteroid not owned by player");
 
-    spendUpgradeResources(playerEntity, ExpansionKey, targetLevel);
+    spendUpgradeResources(spaceRockEntity, ExpansionKey, targetLevel);
 
     Level.set(spaceRockEntity, targetLevel);
   }

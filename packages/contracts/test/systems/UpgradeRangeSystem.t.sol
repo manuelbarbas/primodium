@@ -54,7 +54,10 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
     bytes32 mainBase = Home.get(Home.get(creatorEntity));
 
     Level.set(mainBase, level + 1);
-    P_RequiredUpgradeResources.deleteRecord(ExpansionKey, level + 1);
+    P_RequiredUpgradeResourcesData memory data = P_RequiredUpgradeResources.get(ExpansionKey, level + 1);
+    for (uint256 i = 0; i < data.resources.length; i++) {
+      increaseResource(creatorEntity, EResource(data.resources[i]), data.amounts[i]);
+    }
     world.upgradeRange(Home.get(creatorEntity));
     assertEq(Level.get(Home.get(creatorEntity)), level + 1);
   }
