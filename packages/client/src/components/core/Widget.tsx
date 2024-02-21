@@ -2,7 +2,7 @@ import { Scenes } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
 import { ReactNode, useCallback, useEffect, useMemo, useState, memo } from "react";
 import ReactDOM from "react-dom";
-import { FaLock, FaLockOpen, FaMinus, FaPlus, FaTimes } from "react-icons/fa";
+import { FaLock, FaLockOpen, FaMinus } from "react-icons/fa";
 import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { usePrimodium } from "src/hooks/usePrimodium";
@@ -69,7 +69,7 @@ type WidgetContentProps = {
   locked?: boolean;
 };
 
-let pinnedDepth = 0;
+let pinnedDepth = -10000;
 let unpinnedDepth = 10000;
 
 export const Content: React.FC<WidgetContentProps> = memo(
@@ -82,8 +82,6 @@ export const Content: React.FC<WidgetContentProps> = memo(
     onPointerEnter,
     onPointerLeave,
     onClose,
-    onMinimize,
-    onMaximize,
     onPin,
     onUnpin,
     pinned,
@@ -165,8 +163,8 @@ export const Content: React.FC<WidgetContentProps> = memo(
           className={`flex p-1 text-xs items-center gap-3 justify-between w-full cursor-move ${
             locked ? "bg-info/50" : pinned ? "bg-neutral/75" : "bg-secondary/50"
           }`}
-          onDoubleClick={onDoubleClick}
           onPointerDown={onMouseDown}
+          onDoubleClick={onDoubleClick}
         >
           <div className="flex gap-1 bg-gray-900 px-2 items-center">
             {icon && <img src={icon} className="pixel-images w-4 h-4" />}
@@ -183,9 +181,9 @@ export const Content: React.FC<WidgetContentProps> = memo(
 
             {locked && onUnlock && <FaLock className="cursor-pointer" onClick={onUnlock} />}
             {!locked && onLock && <FaLockOpen className="cursor-pointer" onClick={onLock} />}
-            {!minimized && onMinimize && <FaMinus className="cursor-nesw-resize" onClick={onMinimize} />}
-            {minimized && onMaximize && <FaPlus className="cursor-nesw-resize" onClick={onMaximize} />}
-            {onClose && <FaTimes className="cursor-pointer" onClick={onClose} />}
+            {/* {!minimized && onMinimize && <FaMinus className="cursor-nesw-resize" onClick={onMinimize} />}
+            {minimized && onMaximize && <FaPlus className="cursor-nesw-resize" onClick={onMaximize} />} */}
+            {onClose && <FaMinus className="cursor-pointer" onClick={onClose} />}
           </div>
         </div>
 

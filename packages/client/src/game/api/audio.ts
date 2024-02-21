@@ -14,6 +14,16 @@ export const createAudioApi = (scene: Scene) => {
     });
   }
 
+  function get(key: AudioKeys, channel: Channel) {
+    const playingSounds = scene.audio[channel].getAllPlaying();
+
+    for (const sound of playingSounds) {
+      if (sound.currentMarker.name === key) {
+        return sound;
+      }
+    }
+  }
+
   function setVolume(volume: number, channel: Channel | "master" = "master") {
     const { setVolume, volume: _volume } = usePersistentStore.getState();
 
@@ -34,6 +44,7 @@ export const createAudioApi = (scene: Scene) => {
 
   return {
     play,
+    get,
     setVolume,
     setPauseOnBlur,
   };

@@ -1,4 +1,4 @@
-import { KeybindActions } from "@game/constants";
+import { KeybindActions, Scenes } from "@game/constants";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { components } from "src/network/components";
 import { HUD } from "../core/HUD";
@@ -23,16 +23,32 @@ import { Blueprints } from "./panes/blueprints/Blueprints";
 import { Resources } from "./panes/resources/Resources";
 import { Hangar } from "./panes/hangar/Hangar";
 import { Chat } from "./panes/chat/Chat";
-
+import { usePrimodium } from "src/hooks/usePrimodium";
+import { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
 export const GameHUD = () => {
   const uiScale = usePersistentStore((state) => state.uiScale);
-
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
+  const primodium = usePrimodium();
+  const {
+    camera: { createDOMContainer },
+  } = primodium.api(Scenes.UI);
   const allowHackerModal = usePersistentStore((state) => state.allowHackerModal);
   const mapOpen = components.MapOpen.use(undefined, {
     value: false,
   }).value;
 
-  return (
+  useEffect(() => {
+    const { container, obj } = createDOMContainer("hud", { x: 0, y: 0 });
+    obj.pointerEvents = "none";
+    obj.transformOnly = true;
+    setContainer(container);
+  }, []);
+
+  if (!container) return null;
+
+  //align element with phaser elements
+  return ReactDOM.createPortal(
     <div className={`screen-container`}>
       <WidgetProvider>
         <HUD scale={uiScale} pad>
@@ -99,6 +115,7 @@ export const GameHUD = () => {
           </HUD.BottomRight>
         </HUD>
       </WidgetProvider>
-    </div>
+    </div>,
+    container
   );
 };

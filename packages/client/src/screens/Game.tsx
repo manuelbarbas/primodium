@@ -51,13 +51,14 @@ export const Game = () => {
       )}
 
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
-      <div id="game-container relative ">
-        <div id="phaser-container" className="absolute cursor-pointer screen-container" />
-        {!!primodium && (
-          <PrimodiumProvider {...primodium}>
-            <GameHUD />
-          </PrimodiumProvider>
-        )}
+      <div id="game-container relative">
+        <div id="phaser-container" className="cursor-pointer screen-container">
+          {!!primodium && (
+            <PrimodiumProvider {...primodium}>
+              <GameHUD />
+            </PrimodiumProvider>
+          )}
+        </div>
       </div>
     </div>
   );

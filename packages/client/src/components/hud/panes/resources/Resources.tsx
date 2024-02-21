@@ -12,7 +12,7 @@ export const Resources = () => {
     <Widget
       id="resources"
       title="RESOURCES"
-      icon="/img/icons/minersicon.png"
+      icon="/img/resource/iron_resource.png"
       defaultCoord={{
         x: window.innerWidth / 2 + getRandomRange(-50, 50),
         y: window.innerHeight / 2 + getRandomRange(-50, 50),

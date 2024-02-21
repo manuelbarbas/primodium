@@ -115,11 +115,11 @@ export const MapButton = () => {
         <div>
           <img
             src={ResourceImage.get(EntityType.CapitalShip)}
-            className="pixel-images absolute origin-right -top-10 right-12 opacity-0 scale-x-[0] -translate-x-1/2 group-hover:translate-x-0 group-hover:scale-x-[-100%] group-hover:opacity-100 transition-all duration-300"
+            className="pixel-images absolute origin-right -top-10 right-12 opacity-0 scale-x-[-100%] -translate-x-1/2 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500 ease-out pointer-events-none"
           />
           <img
             src={ResourceImage.get(EntityType.StingerDrone)}
-            className="pixel-images absolute origin-right -bottom-4 right-12 opacity-0 scale-x-[0] scale-y-[0] -translate-x-1/2 group-hover:translate-x-0 group-hover:scale-x-[-50%] group-hover:scale-y-[50%] group-hover:opacity-100 transition-all duration-300"
+            className="pixel-images absolute origin-right -bottom-4 right-12 opacity-0 scale-x-[-50%] scale-y-[50%] -translate-x-1/2 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none"
           />
         </div>
       )}
@@ -127,11 +127,11 @@ export const MapButton = () => {
         <div>
           <img
             src={ResourceImage.get(EntityType.Iron)}
-            className="pixel-images absolute origin-right -top-5 -right-5 opacity-0 -translate-x-1/2 group-hover:translate-x-0 group-hover:scale-[150%] group-hover:opacity-100 transition-all duration-300"
+            className="pixel-images absolute origin-right -top-5 -right-5 opacity-0 -translate-x-1/2 group-hover:translate-x-0 group-hover:scale-[150%] group-hover:opacity-100 transition-all duration-500 pointer-events-none"
           />
           <img
             src={ResourceImage.get(EntityType.Copper)}
-            className="pixel-images absolute origin-right -bottom-1 right-8 opacity-0 scale-x-[0] scale-y-[0] -translate-x-1/2 group-hover:translate-x-0 group-hover:scale-y-[100%] group-hover:scale-x-[-100%] group-hover:opacity-100 transition-all duration-300"
+            className="pixel-images absolute origin-right -bottom-1 right-8 opacity-0 scale-x-[0] scale-y-[0] -translate-x-1/2 group-hover:translate-x-0 group-hover:scale-y-[100%] group-hover:scale-x-[-100%] group-hover:opacity-100 transition-all duration-300 pointer-events-none"
           />
         </div>
       )}

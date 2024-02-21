@@ -3,7 +3,7 @@ export const Card: React.FC<{
   className?: string;
 }> = ({ children, className }) => {
   return (
-    <div className={`card bg-neutral border border-secondary p-2 bg-opacity-80 border-dotted ${className}`}>
+    <div className={`card bg-neutral border border-secondary p-2 bg-opacity-75 border-dotted ${className}`}>
       {children}
     </div>
   );
