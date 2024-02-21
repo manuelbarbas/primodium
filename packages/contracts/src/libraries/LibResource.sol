@@ -102,6 +102,7 @@ library LibResource {
   /// @param spaceRockEntity ID of the spaceRock to claim
   function claimAllResources(bytes32 spaceRockEntity) internal {
     uint256 lastClaimed = LastClaimedAt.get(spaceRockEntity);
+
     if (lastClaimed == block.timestamp) return;
 
     if (lastClaimed == 0) {
@@ -160,9 +161,8 @@ library LibResource {
       } else {
         //if the decrease is more than the sum of increase and current amount than the sum is tha maximum that can be consumed
         // we use this amount to see how much time the resource can be consumed
-        consumptionTimeLengths[resource] = (resourceCount + increase) / consumptionRate;
-        //we use the time length to reduce current resource amount by the difference of the decrease and the increase
-        decrease = consumptionRate * consumptionTimeLengths[resource];
+        decrease = resourceCount + increase;
+        consumptionTimeLengths[resource] = decrease / consumptionRate;
         //consumption is from current space rock and will be in the future
         LibStorage.decreaseStoredResource(spaceRockEntity, resource, decrease - increase);
       }
