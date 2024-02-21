@@ -14,7 +14,7 @@ import { IWorld } from "../codegen/world/IWorld.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdLib, ROOT_NAMESPACE } from "@latticexyz/world/src/WorldResourceId.sol";
 import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
-import { WorldWithUpgradeBuilding } from "../interfaces/interfaces.sol";
+import { IWorldWithUpgradeBuilding } from "../interfaces/IWorldWithUpgradeBuilding.sol";
 import { LibHelpers } from "../libraries/LibHelpers.sol";
 import { BuildingTileKey } from "../libraries/Keys.sol";
 import { LibHelpers } from "../libraries/LibHelpers.sol";
@@ -100,7 +100,7 @@ contract UpgrBounSystem is System {
 
     // Call the upgradeBuilding function from the World contract
     ResourceId upgradeBuildingSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, ROOT_NAMESPACE, "UpgradeBuildingS");
-    newBuildingEntity = WorldWithUpgradeBuilding(_world()).callFrom(
+    newBuildingEntity = IWorldWithUpgradeBuilding(_world()).callFrom(
       bountyPublisherAddress,
       upgradeBuildingSystemId,
       abi.encodeWithSignature("upgradeBuilding((int32,int32,bytes32))", (coord))
