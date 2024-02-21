@@ -49,48 +49,55 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
             </div>
           )}
         </div>
-        <div className="text-xs grid grid-cols-3 gap-1 divide-x divide-primary/50 pt-1 border-t border-t-primary/50">
-          <div className="flex flex-col gap-1 p-1">
-            <div className="flex gap-1">
-              <p className="text-secondary">ATK</p>
-              {formatResourceCount(EntityType.Iron, fleetStats.attack, { short: true })}
-            </div>
-            <div className="flex gap-1">
-              <p className="text-secondary">DEF</p>
-              {formatResourceCount(EntityType.Iron, fleetStats.defense, { short: true })}
-            </div>
-            <div className="flex gap-1">
-              <p className="text-secondary">CRG</p>
-              {formatResourceCount(EntityType.Iron, fleetStats.cargo, { short: true })}
-            </div>
-            <div className="flex gap-1">
-              <p className="text-secondary">HP</p>
-              {formatResourceCount(EntityType.Iron, fleetStats.hp, { short: true })}
-            </div>
-          </div>
-          <div className="flex flex-col gap-1 p-1">
-            {[...units.entries()].map(([unit, count]) => (
-              <div key={`unit-${unit}`} className="flex gap-1">
-                <img
-                  src={ResourceImage.get(unit as Entity) ?? ""}
-                  className={`pixel-images w-4 scale-200 font-bold text-lg pointer-events-none`}
-                />
-                {formatNumber(count, { short: true })}
+        {units.size === 0 && (
+          <div className="grid place-items-center text-xs gap-1 p-1 text-error animate-pulse">Empty</div>
+        )}
+        {units.size !== 0 && (
+          <div className="text-xs grid grid-cols-3 gap-1 divide-x divide-primary/50 pt-1 border-t border-t-primary/50">
+            <div className="flex flex-col gap-1 p-1">
+              <div className="flex gap-1">
+                <p className="text-secondary">ATK</p>
+                {formatResourceCount(EntityType.Iron, fleetStats.attack, { short: true })}
               </div>
-            ))}
-          </div>
-          <div className="flex flex-col gap-1 p-1">
-            {[...resources.entries()].map(([resource, count]) => (
-              <div key={`resource-${resource}`} className="flex gap-1">
-                <img
-                  src={ResourceImage.get(resource as Entity) ?? ""}
-                  className={`pixel-images w-4 scale-200 font-bold text-lg pointer-events-none`}
-                />
-                {formatResourceCount(resource as Entity, count.resourceCount, { short: true })}
+              <div className="flex gap-1">
+                <p className="text-secondary">DEF</p>
+                {formatResourceCount(EntityType.Iron, fleetStats.defense, { short: true })}
               </div>
-            ))}
+              <div className="flex gap-1">
+                <p className="text-secondary">CRG</p>
+                {formatResourceCount(EntityType.Iron, fleetStats.cargo, { short: true })}
+              </div>
+              <div className="flex gap-1">
+                <p className="text-secondary">HP</p>
+                {formatResourceCount(EntityType.Iron, fleetStats.hp, { short: true })}
+              </div>
+            </div>
+            <>
+              <div className="flex flex-col gap-1 p-1">
+                {[...units.entries()].map(([unit, count]) => (
+                  <div key={`unit-${unit}`} className="flex gap-1">
+                    <img
+                      src={ResourceImage.get(unit as Entity) ?? ""}
+                      className={`pixel-images w-4 scale-200 font-bold text-lg pointer-events-none`}
+                    />
+                    {formatNumber(count, { short: true })}
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-col gap-1 p-1">
+                {[...resources.entries()].map(([resource, count]) => (
+                  <div key={`resource-${resource}`} className="flex gap-1">
+                    <img
+                      src={ResourceImage.get(resource as Entity) ?? ""}
+                      className={`pixel-images w-4 scale-200 font-bold text-lg pointer-events-none`}
+                    />
+                    {formatResourceCount(resource as Entity, count.resourceCount, { short: true })}
+                  </div>
+                ))}
+              </div>
+            </>
           </div>
-        </div>
+        )}
       </div>
     </Card>
   );
