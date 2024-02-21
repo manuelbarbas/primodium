@@ -41,9 +41,9 @@ For faster, easier testing, use the `setWorldSpeed` cheatcode in the dev client 
 
 ### World Extension
 
-Rename `primodium/packages/examples/building-upgrade-bounty/packages/contracts/.env.example` to `primodium/packages/examples/building-upgrade-bounty/packages/contracts/.env`.
+Rename `primodium/examples/building-upgrade-bounty/packages/contracts/.env.example` to `primodium/examples/building-upgrade-bounty/packages/contracts/.env`.
 
-Open a new terminal, and navigate to `primodium/packages/examples/building-upgrade-bounty`.
+Open a new terminal, and navigate to `primodium/examples/building-upgrade-bounty`.
 
 Execute the following:
 
@@ -52,13 +52,13 @@ pnpm i
 pnpm build
 ```
 
-Navigate to `primodium/packages/examples/building-upgrade-bounty/packages/contracts`.
+Navigate to `primodium/examples/building-upgrade-bounty/packages/contracts`.
 
 Next we're going to deploy and register Alice's `upgradeBounty` namespace, systems, functions, and tables to the Admin's world, as well as delegate Alice's `UpgradeBuildingSystem` control to the `UpgrBounSystem` address.
 
 Execute the following:
 
-```bash
+```bash copy
 forge script script/UpgradeBountyExtension.s.sol --rpc-url http://localhost:8545 --broadcast
 ```
 
@@ -66,7 +66,7 @@ Next, we're going to have Alice use her namespace admin rights to give Bob syste
 
 Execute the following:
 
-```bash
+```bash copy
 forge script script/UpgrBounSystemAccess.s.sol --rpc-url http://localhost:8545 --broadcast
 ```
 
@@ -79,12 +79,12 @@ Finally, we're going to do the following actions within the same script.
 
 Execute the following:
 
-```bash
+```bash copy
 forge script script/UpgradeBountyActions.s.sol --rpc-url http://localhost:8545 --broadcast
 ```
 
 Look at the client, notice that a specific Iron Mine has been upgraded to Iron Mine II!
-Additionally, use the `primodium/packages/examples/building-upgrade-bounty/packages/contracts` terminal to check Alice and Bob's ETH balances:
+Additionally, use the `primodium/examples/building-upgrade-bounty/packages/contracts` terminal to check Alice and Bob's ETH balances:
 
 ```bash
 source .env
