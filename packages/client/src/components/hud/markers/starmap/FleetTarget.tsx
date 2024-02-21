@@ -29,7 +29,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
   const coord = useMemo(() => {
     const scene = getScene(Scenes.Starmap);
 
-    if (!scene) return { x: 0, y: 0 };
+    if (!scene) throw new Error("Scene not found");
 
     return getFleetPixelPosition(scene, fleet);
   }, [fleet, getScene]);

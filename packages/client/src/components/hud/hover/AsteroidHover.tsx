@@ -63,15 +63,17 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
             </div>
           )}
         </div>
-        {!inGracePeriod && ownedBy && !isPirate && (
+        {!inGracePeriod && ownedBy && (
           <div className="grid grid-cols-2 gap-1">
-            <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
-              <HealthBar
-                imgUrl="/img/icons/advancedunraidableicon.png"
-                health={Number(formatResourceCount(EntityType.Encryption, encryption, { notLocale: true }))}
-                maxHealth={Number(formatResourceCount(EntityType.Encryption, maxEncryption, { notLocale: true }))}
-              />
-            </Badge>
+            {!isPirate && (
+              <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
+                <HealthBar
+                  imgUrl="/img/icons/advancedunraidableicon.png"
+                  health={Number(formatResourceCount(EntityType.Encryption, encryption, { notLocale: true }))}
+                  maxHealth={Number(formatResourceCount(EntityType.Encryption, maxEncryption, { notLocale: true }))}
+                />
+              </Badge>
+            )}
             <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
               <HealthBar
                 imgUrl="/img/icons/defenseicon.png"

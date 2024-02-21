@@ -27,8 +27,8 @@ export const setupKeybinds = (scene: Scene) => {
     if (components.SelectedBuilding.get()) components.SelectedBuilding.remove();
 
     if (components.Send.get() || components.Attack.get()) {
-      components.Send.remove();
-      components.Attack.remove();
+      components.Send.reset();
+      components.Attack.reset();
     } else if (components.SelectedFleet.get()) components.SelectedFleet.remove();
 
     if (components.SelectedRock.get()) components.SelectedRock.remove();

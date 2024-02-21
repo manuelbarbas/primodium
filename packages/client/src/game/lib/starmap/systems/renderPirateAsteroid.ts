@@ -1,12 +1,5 @@
 import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
-import {
-  Entity,
-  Has,
-  defineComponentSystem,
-  defineEnterSystem,
-  defineUpdateSystem,
-  namespaceWorld,
-} from "@latticexyz/recs";
+import { Entity, Has, defineSystem, namespaceWorld } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
@@ -124,6 +117,7 @@ export const renderPirateAsteroid = (scene: Scene) => {
         }
       }),
       OnClickUp(scene, () => {
+        console.log("clicked on", entity);
         const attackOrigin = components.Attack.get()?.originFleet;
         const sendOrigin = components.Send.get()?.originFleet;
         if (attackOrigin) {
@@ -198,40 +192,17 @@ export const renderPirateAsteroid = (scene: Scene) => {
     Has(components.OwnedBy),
   ];
 
-  defineEnterSystem(systemsWorld, query, ({ entity }) => {
+  defineSystem(systemsWorld, query, ({ entity, value }) => {
+    if (!value[0]) return;
     const coord = components.Position.get(entity);
-
     if (!coord) return;
+    const defeated = components.PirateAsteroid.get(entity)?.isDefeated ?? false;
+    if (defeated) {
+      const key = "asteroid_" + entity;
+      if (scene.objectPool.getGroup(key)) scene.objectPool.removeGroup("asteroid_" + entity);
+      return;
+    }
 
     render(entity, coord);
-  });
-
-  defineUpdateSystem(systemsWorld, query, ({ entity }) => {
-    const coord = components.Position.get(entity);
-
-    if (!coord) return;
-
-    render(entity, coord);
-  });
-
-  //remove or add if pirate asteroid is defeated
-  defineComponentSystem(systemsWorld, components.PirateAsteroid, ({ entity }) => {
-    const coord = components.Position.get(entity);
-
-    if (!coord) return;
-
-    render(entity, coord);
-  });
-
-  defineComponentSystem(systemsWorld, components.DefeatedPirate, ({ entity }) => {
-    const { entity: playerEntity, pirate } = decodeEntity(components.DefeatedPirate.metadata.keySchema, entity);
-    const player = components.Account.get()?.value;
-    if (playerEntity != player) return;
-
-    const values = components.PirateAsteroid.getAllWith({ prototype: pirate, playerEntity });
-    if (values.length === 0) return;
-
-    scene.objectPool.removeGroup("asteroid_" + values[0]);
-    components.Send.clear();
   });
 };

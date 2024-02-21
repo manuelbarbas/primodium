@@ -1,12 +1,12 @@
+import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Coord, uuid } from "@latticexyz/utils";
 import { Scene } from "engine/types";
-import { getDistance, getRandomRange } from "src/util/common";
-import { ObjectPosition, OnComponentSystem, SetValue, Tween } from "../lib/common/object-components/common";
-import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
-import { ObjectText } from "../lib/common/object-components/text";
 import { components } from "src/network/components";
+import { getRandomRange } from "src/util/common";
+import { ObjectPosition, OnComponentSystem, SetValue, Tween } from "../lib/common/object-components/common";
 import { Texture } from "../lib/common/object-components/sprite";
+import { ObjectText } from "../lib/common/object-components/text";
 
 export const createFxApi = (scene: Scene) => {
   function outline(
@@ -50,44 +50,44 @@ export const createFxApi = (scene: Scene) => {
       .start();
   }
 
-  function fireMissile(
-    origin: Coord,
-    destination: Coord,
-    options?: { speed?: number; numMissiles?: number; offsetMs?: number; spray?: number }
-  ) {
-    const speed = options?.speed ?? 20;
-    const numMissiles = options?.numMissiles ?? 10;
-    const offset = options?.offsetMs ?? 150;
+  function fireMissile(origin: Coord, destination: Coord, options?: { duration?: number; spray?: number }) {
     const spray = options?.spray ?? 5;
     const { tileWidth, tileHeight } = scene.tilemap;
     const originPixelCoord = tileCoordToPixelCoord({ x: origin.x, y: -origin.y }, tileWidth, tileHeight);
     const destinationPixelCoord = tileCoordToPixelCoord({ x: destination.x, y: -destination.y }, tileWidth, tileHeight);
 
-    const distance = getDistance(origin, destination);
-    const duration = (distance * 10000) / speed;
-    const animationTime = duration + numMissiles * offset;
+    const duration = options?.duration ?? 200;
 
-    for (let i = 0; i < numMissiles; i++) {
-      const currOffset = i * offset;
-      setTimeout(() => {
-        const missile = scene.phaserScene.add.circle(originPixelCoord.x, originPixelCoord.y, 2, 0xff0000);
-        const randomizedDestination = {
-          x: destinationPixelCoord.x + Phaser.Math.Between(-spray, spray),
-          y: destinationPixelCoord.y + Phaser.Math.Between(-spray, spray),
-        };
+    const missile = scene.phaserScene.add.circle(originPixelCoord.x, originPixelCoord.y, 2, 0xff0000);
 
-        scene.phaserScene.tweens.add({
-          targets: missile,
-          props: randomizedDestination,
-          ease: Phaser.Math.Easing.Quintic.In,
-          duration,
-        });
-        setTimeout(() => {
-          missile.destroy(true);
-        }, duration);
-      }, currOffset);
-    }
-    return animationTime;
+    scene.phaserScene.add
+      .timeline([
+        {
+          at: 0,
+          run: () => {
+            missile.setDepth(DepthLayers.Rock);
+            const randomizedDestination = {
+              x: destinationPixelCoord.x + Phaser.Math.Between(-spray, spray),
+              y: destinationPixelCoord.y + Phaser.Math.Between(-spray, spray),
+            };
+
+            scene.phaserScene.tweens.add({
+              targets: missile,
+              props: randomizedDestination,
+              ease: Phaser.Math.Easing.Quintic.In,
+              duration,
+            });
+            setTimeout(() => {
+              missile.destroy(true);
+            }, duration);
+          },
+        },
+        {
+          at: duration,
+          run: () => missile.destroy(true),
+        },
+      ])
+      .play();
   }
 
   function emitFloatingText(
