@@ -16,7 +16,7 @@ export const claimObjective = async (mud: MUD, rockEntity: Entity, rawObjective:
     {
       mud,
       functionName: "claimObjective",
-      systemId: getSystemId("ObjectiveSystem"),
+      systemId: getSystemId("ClaimObjectiveSystem"),
       args: [rockEntity as Hex, objective],
       delegate: true,
     },
