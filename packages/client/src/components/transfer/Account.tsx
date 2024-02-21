@@ -44,6 +44,7 @@ export function Account() {
               className="btn btn-secondary btn-xs"
               onClick={() => {
                 closeToast && closeToast();
+                localStorage.removeItem("primodiumPlayerAccount");
                 removeNoExternalAccount();
               }}
             >
