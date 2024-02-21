@@ -51,16 +51,6 @@ contract UpgradeBountyActions is Script {
     vm.stopBroadcast();
     console.log("Alice set another bounty for %d wei.", bountyValue);
 
-    /*
-    // quick test: does anyone have access to the system?
-    uint256 hostilePrivateKey = vm.envUint("PRIVATE_KEY_MALLORY");
-    console.log("Mallory private key: %x", hostilePrivateKey);
-    
-    vm.startBroadcast(hostilePrivateKey);
-    bytes memory newBuildingEntity = world.upgradeBounty_UpgrBounSystem_upgradeForBounty(deployerAddress, bountyCoord);
-    vm.stopBroadcast();
-    */
-
     // Bob upgrades Alice's building. Note Alice needs to have the requisite upgrade resources for it to succeed.
     vm.startBroadcast(delegateePrivateKey);
     bytes memory newBuildingEntity = world.upgradeBounty_UpgrBounSystem_upgradeForBounty(deployerAddress, bountyCoord);
