@@ -17,6 +17,7 @@ import { Market } from "./screens/Market";
 import { Move } from "./screens/Move";
 import { UnitFactory } from "./screens/UnitFactory";
 import { Entity } from "@latticexyz/recs";
+import { SecondaryCard } from "src/components/core/Card";
 
 export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedBuilding }) => {
   const buildingType = useMemo(() => {
@@ -99,17 +100,19 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
     );
   };
   return (
-    <Navigator initialScreen={selectedBuilding} className="w-80 border-none p-0 relative overflow-visible">
-      <TopBar />
+    <SecondaryCard>
+      <Navigator initialScreen={selectedBuilding} className="w-80 border-none p-0 relative overflow-visible">
+        <TopBar />
 
-      {/* Initial Screen */}
-      <RenderScreen />
-      {/* Sub Screens */}
-      <Demolish building={selectedBuilding} />
-      <Move building={selectedBuilding} />
-      <BuildingInfo building={selectedBuilding} />
-      <BuildQueue building={selectedBuilding} />
-      <BuildUnit building={selectedBuilding} />
-    </Navigator>
+        {/* Initial Screen */}
+        <RenderScreen />
+        {/* Sub Screens */}
+        <Demolish building={selectedBuilding} />
+        <Move building={selectedBuilding} />
+        <BuildingInfo building={selectedBuilding} />
+        <BuildQueue building={selectedBuilding} />
+        <BuildUnit building={selectedBuilding} />
+      </Navigator>
+    </SecondaryCard>
   );
 };

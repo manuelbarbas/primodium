@@ -24,7 +24,7 @@ import { Chat } from "./panes/chat/Chat";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { BuildingInfoPopup } from "./markers/asteroid/BuildingInfoPopup";
+import { BuildingMenuPopup } from "./markers/asteroid/BuildingMenuPopup";
 import { BlueprintInfoMarker } from "./markers/asteroid/BlueprintInfoMarker";
 export const GameHUD = () => {
   const uiScale = usePersistentStore((state) => state.uiScale);
@@ -72,7 +72,7 @@ export const GameHUD = () => {
           <AsteroidTarget />
           <FleetTarget />
           <HoverTarget />
-          <BuildingInfoPopup />
+          <BuildingMenuPopup />
           <BlueprintInfoMarker />
 
           {/* Widgets */}

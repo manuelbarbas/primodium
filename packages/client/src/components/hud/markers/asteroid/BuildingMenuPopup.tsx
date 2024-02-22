@@ -3,7 +3,6 @@ import { addCoords, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMemo } from "react";
-import { SecondaryCard } from "src/components/core/Card";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getBuildingDimensions, getBuildingImageFromType, getBuildingName } from "src/util/building";
@@ -11,7 +10,7 @@ import { getBlockTypeName } from "src/util/common";
 import { BuildingMenu } from "../../building-menu/BuildingMenu";
 import { Widget } from "src/components/core/Widget";
 
-export const BuildingInfoPopup = () => {
+export const BuildingMenuPopup = () => {
   const primodium = usePrimodium();
   const building = components.SelectedBuilding.use()?.value;
   const position = components.Position.use(building as Entity);
@@ -49,9 +48,7 @@ export const BuildingInfoPopup = () => {
       active={!!building && !!buildingName}
       icon={getBuildingImageFromType(primodium, buildingType as Entity) ?? "img/icons/minersicon.png"}
     >
-      <SecondaryCard>
-        <BuildingMenu selectedBuilding={building ?? singletonEntity} />
-      </SecondaryCard>
+      <BuildingMenu selectedBuilding={building ?? singletonEntity} />
     </Widget>
   );
 };
