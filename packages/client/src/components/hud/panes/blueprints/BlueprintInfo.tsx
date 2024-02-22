@@ -1,7 +1,6 @@
-import { AudioKeys, KeybindActions } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import React, { useMemo } from "react";
+import React, { memo, useMemo } from "react";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
@@ -11,18 +10,17 @@ import { ResourceImage, ResourceType } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
 import { Badge } from "../../../core/Badge";
-import { Button } from "../../../core/Button";
 import { SecondaryCard } from "../../../core/Card";
 import { IconLabel } from "../../../core/IconLabel";
 
 export const RecipeDisplay: React.FC<{
   building: Entity;
-}> = ({ building }) => {
+}> = memo(({ building }) => {
   const recipe = getRecipe(building, 1n);
   const spaceRock = components.Position.use(building)?.parent as Entity | undefined;
 
   return (
-    <SecondaryCard className="items-center gap-1 w-full border-error/50 bg-transparent p-1">
+    <SecondaryCard className="items-center gap-1 w-full !border-error/50 bg-transparent p-1">
       <p className="font-bold absolute opacity-75 left-0 top-1/2 -translate-y-1/2 text-error text-sm ml-1">-</p>
       <div className="flex flex-wrap justify-center items-center gap-1 w-56">
         {recipe.length == 0 ? (
@@ -54,11 +52,11 @@ export const RecipeDisplay: React.FC<{
       </div>
     </SecondaryCard>
   );
-};
+});
 
 export const BlueprintInfo: React.FC<{
   building: Entity;
-}> = ({ building }) => {
+}> = memo(({ building }) => {
   const spaceRock = components.Position.use(building)?.parent as Entity | undefined;
   const rawProduction = components.P_Production.useWithKeys({ prototype: building as Hex, level: 1n });
   const production = useMemo(() => transformProductionData(rawProduction), [rawProduction]);
@@ -76,7 +74,7 @@ export const BlueprintInfo: React.FC<{
 
   return (
     <div className="items-center p-0 w-full z-100">
-      <div className="flex flex-col items-center w-full mt-1 h-full text-xs relative gap-1 p-1 border border-secondary/25">
+      <div className="flex flex-col items-center w-full h-full text-xs relative gap-1 ">
         <div className="absolute top-0 w-full h-full topographic-background opacity-25" />
         {!hasEnough && <p className="text-error animate-pulse text-xs text-center">NOT ENOUGH RESOURCES</p>}
         <RecipeDisplay building={building} />
@@ -138,20 +136,7 @@ export const BlueprintInfo: React.FC<{
             </div>
           )}
         </SecondaryCard>
-        {
-          <Button
-            className="btn-xs w-full btn-warning"
-            clickSound={AudioKeys.Bleep4}
-            keybind={KeybindActions.Esc}
-            onClick={() => {
-              components.SelectedBuilding.remove();
-              components.SelectedAction.remove();
-            }}
-          >
-            CLEAR
-          </Button>
-        }
       </div>
     </div>
   );
-};
+});

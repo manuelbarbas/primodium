@@ -33,7 +33,7 @@ export const WidgetButton: React.FC<{
         else onClose();
       }}
       disabled={disable || !active}
-      className={`border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-lg text-lg hover:z-20 drop-shadow-hard ${
+      className={`border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-lg text-lg hover:z-20 hover:drop-shadow-hard transition-all ${
         visible ? "border-warning bg-warning/25" : "bg-secondary/25"
       } ${!active ? "!bg-error/50 !border-error" : ""} ${className}`}
     />

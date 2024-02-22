@@ -6,7 +6,6 @@ import { Modal } from "../core/Modal";
 import { BrandingLabel } from "../shared/BrandingLabel";
 import { CurrentObjective } from "./CurrentObjective";
 import { Profile } from "./Profile";
-// import { SpectatingDetails } from "./SpectatingDetails";
 import { HoverInfo } from "./hover/HoverInfo";
 import { HoverTarget } from "./markers/HoverTarget";
 import { AsteroidTarget } from "./markers/starmap/AsteroidTarget";
@@ -25,7 +24,8 @@ import { Chat } from "./panes/chat/Chat";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { BuildingTarget } from "./markers/starmap/BuildingTarget";
+import { BuildingInfoPopup } from "./markers/asteroid/BuildingInfoPopup";
+import { BlueprintInfoMarker } from "./markers/asteroid/BlueprintInfoMarker";
 export const GameHUD = () => {
   const uiScale = usePersistentStore((state) => state.uiScale);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
@@ -72,21 +72,20 @@ export const GameHUD = () => {
           <AsteroidTarget />
           <FleetTarget />
           <HoverTarget />
-          <BuildingTarget />
+          <BuildingInfoPopup />
+          <BlueprintInfoMarker />
 
           {/* Widgets */}
-          <HUD.TopLeft>
+          <HUD.TopLeft className="flex flex-col gap-2">
             <Profile />
-          </HUD.TopLeft>
-          <HUD.Left>
             <Blueprints />
-          </HUD.Left>
-
-          <Resources />
-          <Hangar />
+          </HUD.TopLeft>
+          <HUD.Left></HUD.Left>
 
           <HUD.TopRight className="flex flex-col items-end gap-2">
             <CurrentObjective />
+            <Resources />
+            <Hangar />
             <OwnedAsteroids />
             <OwnedFleets />
           </HUD.TopRight>

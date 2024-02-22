@@ -6,16 +6,17 @@ import { useMemo } from "react";
 import { SecondaryCard } from "src/components/core/Card";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
-import { getBuildingDimensions, getBuildingImageFromType } from "src/util/building";
+import { getBuildingDimensions, getBuildingImageFromType, getBuildingName } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
 import { BuildingMenu } from "../../building-menu/BuildingMenu";
 import { Widget } from "src/components/core/Widget";
 
-export const BuildingTarget = () => {
+export const BuildingInfoPopup = () => {
   const primodium = usePrimodium();
   const building = components.SelectedBuilding.use()?.value;
   const position = components.Position.use(building as Entity);
   const buildingType = components.BuildingType.use(building as Entity)?.value;
+  const buildingName = getBuildingName(building as Entity);
   const dimensions = useMemo(() => getBuildingDimensions(building ?? singletonEntity), [building]);
 
   const coord = useMemo(() => {
@@ -43,13 +44,13 @@ export const BuildingTarget = () => {
       draggable
       defaultVisible
       origin="top-left"
-      minOpacity={0.8}
+      minOpacity={1}
       popUp
-      active={!!building}
+      active={!!building && !!buildingName}
       icon={getBuildingImageFromType(primodium, buildingType as Entity) ?? "img/icons/minersicon.png"}
     >
       <SecondaryCard>
-        <BuildingMenu />
+        <BuildingMenu selectedBuilding={building ?? singletonEntity} />
       </SecondaryCard>
     </Widget>
   );

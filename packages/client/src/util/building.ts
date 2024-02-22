@@ -5,13 +5,20 @@ import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { EResource, MUDEnums } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
-import { Account } from "src/network/components/clientComponents";
 import { Hex } from "viem";
 import { clampedIndex, getBlockTypeName, toRomanNumeral } from "./common";
-import { ResourceEntityLookup, ResourceStorages, ResourceType, SPEED_SCALE, UtilityStorages } from "./constants";
+import {
+  MultiplierStorages,
+  ResourceEntityLookup,
+  ResourceStorages,
+  ResourceType,
+  SPEED_SCALE,
+  UtilityStorages,
+} from "./constants";
 import { outOfBounds } from "./outOfBounds";
 import { getRecipe } from "./recipe";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
+import { getScale } from "./resource";
 
 type Dimensions = { width: number; height: number };
 export const blueprintCache = new Map<Entity, Dimensions>();
@@ -107,7 +114,6 @@ export const validateBuildingPlacement = (
 ) => {
   //get building dimesions
   const buildingDimensions = getBuildingDimensions(buildingPrototype);
-  const player = Account.get()?.value;
   const requiredTile = comps.P_RequiredTile.get(buildingPrototype)?.value;
 
   //iterate over dimensions and check if there is a building there
@@ -116,7 +122,7 @@ export const validateBuildingPlacement = (
       const buildingCoord = { x: coord.x + x, y: coord.y - y };
       const buildingAtCoord = getBuildingAtCoord(buildingCoord, asteroid);
       if (buildingAtCoord && buildingAtCoord !== building) return false;
-      if (outOfBounds(buildingCoord, player)) return false;
+      if (outOfBounds(buildingCoord, asteroid)) return false;
       if (requiredTile && requiredTile !== getResourceKey(buildingCoord)) return false;
     }
   }
@@ -207,24 +213,35 @@ export function transformProductionData(
 ): { resource: Entity; amount: bigint; type: ResourceType }[] {
   if (!production) return [];
 
-  return production.resources.map((curr, i) => {
-    const type = ResourceStorages.has(ResourceEntityLookup[curr as EResource])
-      ? ResourceType.ResourceRate
-      : UtilityStorages.has(ResourceEntityLookup[curr as EResource])
-      ? ResourceType.Utility
-      : ResourceType.Multiplier;
+  return production.resources
+    .map((curr, i) => {
+      const resourceEntity = ResourceEntityLookup[curr as EResource];
+      const type = ResourceStorages.has(resourceEntity)
+        ? ResourceType.ResourceRate
+        : UtilityStorages.has(resourceEntity)
+        ? ResourceType.Utility
+        : MultiplierStorages.has(resourceEntity)
+        ? ResourceType.Multiplier
+        : null;
 
-    let amount = production.amounts[i];
-    if (type === ResourceType.ResourceRate) {
-      const worldSpeed = comps.P_GameConfig.get()?.worldSpeed ?? 100n;
-      amount = (amount * worldSpeed) / SPEED_SCALE;
-    }
-    return {
-      resource: ResourceEntityLookup[curr as EResource],
-      amount,
-      type,
-    };
-  });
+      if (type === null) return null;
+
+      let amount = production.amounts[i];
+      if (type === ResourceType.ResourceRate) {
+        const worldSpeed = comps.P_GameConfig.get()?.worldSpeed ?? 100n;
+        amount = (amount * worldSpeed) / SPEED_SCALE;
+      }
+
+      if (type === ResourceType.Multiplier) {
+        amount = amount / BigInt(getScale(resourceEntity));
+      }
+      return {
+        resource: ResourceEntityLookup[curr as EResource],
+        amount,
+        type,
+      };
+    })
+    .filter((item) => item !== null) as { resource: Entity; amount: bigint; type: ResourceType }[];
 }
 
 export const getBuildingInfo = (building: Entity) => {
