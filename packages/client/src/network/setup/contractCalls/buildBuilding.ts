@@ -23,7 +23,7 @@ export const buildBuilding = async (mud: MUD, building: EBuilding, coord: Coord)
       functionName: "build",
       systemId: getSystemId("BuildSystem"),
       args: [building, position],
-      delegate: true,
+      withSession: true,
       options: { gas: 7000000n },
     },
     {

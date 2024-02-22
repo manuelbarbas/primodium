@@ -8,7 +8,7 @@ import { useDisconnect } from "wagmi";
 import { useShallow } from "zustand/react/shallow";
 import { Button } from "../core/Button";
 import { AccountDisplay } from "../shared/AccountDisplay";
-import { Delegate } from "./Delegate";
+import { Authorize } from "./Authorize";
 
 export function Account() {
   const mud = useMud();
@@ -103,7 +103,7 @@ export function Account() {
         </Button>
       </div>
       <div className="p-2 h-full w-full flex flex-col gap-6">
-        <Delegate />
+        <Authorize />
       </div>
     </div>
   );

@@ -1,11 +1,12 @@
 import { minEth } from "@game/constants";
-import { createBurnerAccount, transportObserver } from "@latticexyz/common";
+
+import { createBurnerAccount as createMudBurnerAccount, transportObserver } from "@latticexyz/common";
 import { createClient as createFaucetClient } from "@latticexyz/faucet";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
+import { createBurnerAccount } from "src/network/setup/createBurnerAccount";
+import { createExternalAccount } from "src/network/setup/createExternalAccount";
 import { setup } from "src/network/setup/setup";
-import { setupBurnerAccount } from "src/network/setup/setupBurnerAccount";
-import { setupExternalAccount } from "src/network/setup/setupExternalAccount";
 import { hydratePlayerData } from "src/network/sync/indexer";
 import { BurnerAccount, ExternalAccount, SetupResult } from "src/network/types";
 import { Hex, createWalletClient, fallback, formatEther, http } from "viem";
@@ -29,7 +30,7 @@ const useSetupResult = () => {
           chain: networkConfig.chain,
           transport: transportObserver(fallback([http()])),
           pollingInterval: 1000,
-          account: createBurnerAccount(externalPKey as Hex),
+          account: createMudBurnerAccount(externalPKey as Hex),
         })
       : undefined;
     return { faucet, externalWalletClient };
@@ -68,7 +69,7 @@ const useSetupResult = () => {
 
   const updateSessionAccount = useCallback(
     (pKey: Hex) => {
-      setupBurnerAccount(pKey).then((account) => {
+      createBurnerAccount(pKey).then((account) => {
         setSessionAccount(account);
 
         if (account.address === playerAccount?.address) return;
@@ -96,7 +97,7 @@ const useSetupResult = () => {
     const useBurner = options.burner;
     const address = options.address;
     if (!useBurner && !address) throw new Error("Must provide address or burner option");
-    (useBurner ? setupBurnerAccount(options.privateKey, false) : setupExternalAccount(address!)).then((account) => {
+    (useBurner ? createBurnerAccount(options.privateKey, false) : createExternalAccount(address!)).then((account) => {
       if (useBurner) localStorage.setItem("primodiumPlayerAccount", account.privateKey ?? "");
       setPlayerAccount(account);
 

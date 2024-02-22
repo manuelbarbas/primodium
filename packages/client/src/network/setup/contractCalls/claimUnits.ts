@@ -12,7 +12,7 @@ export const claimUnits = async (mud: MUD, rock: Entity) => {
       functionName: "claimUnits",
       systemId: getSystemId("ClaimUnitsSystem"),
       args: [rock as Hex],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.ClaimObjective, rock),

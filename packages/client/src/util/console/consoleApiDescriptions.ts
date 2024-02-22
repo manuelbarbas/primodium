@@ -30,12 +30,12 @@ const consoleApiDescriptions: Record<string, string> = {
   hasWithKeys: "Check if an entity has a component with the given keys.",
 
   // Access control
-  grantAccess: "Grants access to a delegate account.",
-  revokeAccess: "Revokes previously granted delegated account.",
-  revokeAllAccess: "Revokes all access from all delegates.",
+  grantAccess: "Grants access to an authorized account.",
+  revokeAccess: "Revokes previously granted authorized account.",
+  revokeAllAccess: "Revokes all access from all authorized accounts.",
 
   // Delegation
-  switchDelegate: "Switches the delegation for this session.",
+  switchAuthorized: "Switches the authorization for this session.",
 
   // Alliance management
   createAlliance: "Creates a new alliance.",
@@ -68,6 +68,7 @@ const consoleApiDescriptions: Record<string, string> = {
   upgradeBuilding: "Upgrades a building.",
   upgradeRange: "Upgrades the range of a building or unit.",
   upgradeUnit: "Upgrades a unit.",
+
   getAllianceName: "Gets the name of an alliance.",
   getAllianceNameFromPlayer: "Gets alliance name associated with a player.",
 

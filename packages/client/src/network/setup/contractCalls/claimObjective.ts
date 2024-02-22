@@ -18,7 +18,7 @@ export const claimObjective = async (mud: MUD, rockEntity: Entity, rawObjective:
       functionName: "claimObjective",
       systemId: getSystemId("ObjectiveSystem"),
       args: [rockEntity as Hex, objective],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.ClaimObjective, rawObjective),

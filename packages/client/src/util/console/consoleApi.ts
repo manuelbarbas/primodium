@@ -2,7 +2,7 @@ import { Primodium } from "@game/api";
 import { Entity } from "@latticexyz/recs";
 import _ from "lodash";
 import { components } from "src/network/components";
-import { grantAccess, revokeAccess, revokeAllAccess, switchDelegate } from "src/network/setup/contractCalls/access";
+import { grantAccess, revokeAccess, revokeAllAccess, switchAuthorized } from "src/network/setup/contractCalls/access";
 import {
   acceptJoinRequest,
   createAlliance,
@@ -163,7 +163,7 @@ export default function createConsoleApi(mud: MUD, primodium: Primodium) {
     grantAccess: _.curry(grantAccess)(mud),
     revokeAccess: _.curry(revokeAccess)(mud),
     revokeAllAccess: () => revokeAllAccess(mud),
-    switchDelegate: _.curry(switchDelegate)(mud),
+    switchAuthorized: _.curry(switchAuthorized)(mud),
 
     createAlliance: _.curry(createAlliance)(mud),
     leaveAlliance: () => leaveAlliance(mud),

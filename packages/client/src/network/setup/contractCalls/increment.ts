@@ -4,14 +4,14 @@ import { components } from "src/network/components";
 import { MUD } from "src/network/types";
 import { getSystemId } from "src/util/encode";
 
-export const increment = async (mud: MUD, delegate?: boolean) => {
+export const increment = async (mud: MUD, withSession?: boolean) => {
   components.CurrentTransaction.set({ value: true });
   await execute(
     {
       mud,
       functionName: "increment",
       systemId: getSystemId("IncrementSystem"),
-      delegate,
+      withSession,
     },
     {
       id: singletonEntity,

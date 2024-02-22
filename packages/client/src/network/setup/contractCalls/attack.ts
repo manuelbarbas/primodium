@@ -12,7 +12,7 @@ export const attack = async (mud: MUD, entity: Entity, target: Entity) => {
       functionName: "attack",
       systemId: getSystemId("FleetCombatSystem"),
       args: [entity as Hex, target as Hex],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.Attack, entity, target),

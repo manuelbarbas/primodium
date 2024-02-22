@@ -18,7 +18,7 @@ export const upgradeUnit = async (mud: MUD, spaceRock: Entity, unit: EUnit) => {
       functionName: "upgradeUnit",
       systemId: getSystemId("UpgradeUnitSystem"),
       args: [spaceRock as Hex, unit],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.Upgrade, UnitEntityLookup[unit]),
