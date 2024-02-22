@@ -33,6 +33,7 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
     EntityType.Encryption,
     entity
   );
+
   const isPirate = components.PirateAsteroid.has(entity);
   const ownedBy = components.OwnedBy.use(entity)?.value as Entity | undefined;
   const { address } = useAccount(ownedBy ?? singletonEntity);
@@ -53,7 +54,7 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
         <div className="flex gap-1">
           <div className="flex bg-primary uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
             <FaUser />
-            {ownedBy ? limitAddress(address, 16) : "UNOWNED"}
+            {ownedBy ? limitAddress(address, 16) : "SCURVY DROIDS"}
           </div>
 
           {inGracePeriod && (
@@ -63,7 +64,7 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
             </div>
           )}
         </div>
-        {!inGracePeriod && ownedBy && (
+        {!inGracePeriod && (
           <div className="grid grid-cols-2 gap-1">
             {!isPirate && (
               <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
