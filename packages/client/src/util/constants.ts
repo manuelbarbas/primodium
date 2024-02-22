@@ -209,6 +209,7 @@ export const EntityType = {
   AnvilDrone: toHex32("AnvilDrone") as Entity,
   AegisDrone: toHex32("AegisDrone") as Entity,
   CapitalShip: toHex32("CapitalShip") as Entity,
+  Droid: toHex32("Droid") as Entity,
 
   MinutemanMarine: toHex32("MinutemanMarine") as Entity,
   TridentMarine: toHex32("TridentMarine") as Entity,
@@ -300,6 +301,7 @@ export const BackgroundImage = new Map<Entity, string[]>([
   [EntityType.AnvilDrone, ["/img/unit/anvildrone.png"]],
   [EntityType.AegisDrone, ["/img/unit/aegisdrone.png"]],
   [EntityType.CapitalShip, ["/img/unit/capitalship.png"]],
+  [EntityType.Droid, ["/img/unit/miningvessel.png"]],
   [EntityType.LightningCraft, ["/img/unit/lightningcraft.png"]],
   [EntityType.MinutemanMarine, ["/img/unit/minutemen_marine.png"]],
   [EntityType.TridentMarine, ["/img/unit/trident_marine.png"]],
@@ -398,6 +400,7 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.AnvilDrone, "/img/unit/anvildrone.png"],
   [EntityType.AegisDrone, "/img/unit/aegisdrone.png"],
   [EntityType.CapitalShip, "/img/unit/capitalship.png"],
+  [EntityType.Droid, "/img/unit/miningvessel.png"],
   [EntityType.MinutemanMarine, "img/unit/minutemen_marine.png"],
   [EntityType.TridentMarine, "img/unit/trident_marine.png"],
   [EntityType.LightningCraft, "img/unit/lightningcraft.png"],
@@ -452,6 +455,7 @@ export const UnitStorages = new Set([
   EntityType.AnvilDrone,
   EntityType.AegisDrone,
   EntityType.CapitalShip,
+  EntityType.Droid,
   EntityType.MinutemanMarine,
   EntityType.TridentMarine,
   EntityType.LightningCraft,
@@ -519,6 +523,7 @@ export const UnitEnumLookup: Record<Entity, EUnit> = {
   [EntityType.TridentMarine]: EUnit.TridentMarine,
   [EntityType.LightningCraft]: EUnit.LightningCraft,
   [EntityType.CapitalShip]: EUnit.CapitalShip,
+  [EntityType.Droid]: EUnit.Droid,
 };
 
 export const UnitEntityLookup = reverseRecord(UnitEnumLookup);

@@ -77,6 +77,7 @@ export enum EUnit {
   TridentMarine,
   LightningCraft,
   CapitalShip,
+  Droid,
 }
 
 export enum ESendType {
