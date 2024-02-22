@@ -13,7 +13,7 @@ export const setFleetStance = async (mud: MUD, fleet: Entity, stance: EFleetStan
       functionName: "setFleetStance",
       systemId: getSystemId("FleetStanceSystem"),
       args: [fleet as Hex, stance, target as Hex],
-      delegate: true,
+      withSession: true,
     },
     {
       id: "FleetStance" as Entity,
@@ -29,7 +29,7 @@ export const clearFleetStance = async (mud: MUD, fleet: Entity) => {
       functionName: "clearFleetStance",
       systemId: getSystemId("FleetStanceSystem"),
       args: [fleet as Hex],
-      delegate: true,
+      withSession: true,
     },
     {
       id: "FleetStance" as Entity,

@@ -18,7 +18,7 @@ export const train = async (mud: MUD, buildingEntity: Entity, unit: EUnit, count
       functionName: "trainUnits",
       systemId: getSystemId("TrainUnitsSystem"),
       args: [buildingEntity as Hex, unit, count],
-      delegate: true,
+      withSession: true,
     },
     {
       id: "TRAIN" as Entity,

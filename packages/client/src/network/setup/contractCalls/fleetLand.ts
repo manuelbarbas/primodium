@@ -12,7 +12,7 @@ export const landFleet = async (mud: MUD, fleet: Entity, rock: Entity) => {
       functionName: "landFleet",
       systemId: getSystemId("FleetLandSystem"),
       args: [fleet as Hex, rock as Hex],
-      delegate: true,
+      withSession: true,
     },
     {
       id: "landFleet" as Entity,

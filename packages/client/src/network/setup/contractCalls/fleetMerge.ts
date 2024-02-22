@@ -12,7 +12,7 @@ export const mergeFleets = async (mud: MUD, fleets: Entity[]) => {
       functionName: "mergeFleets",
       systemId: getSystemId("FleetMergeSystem"),
       args: [fleets as Hex[]],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.MergeFleets, ...fleets),

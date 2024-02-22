@@ -1,9 +1,9 @@
 import { createComponents } from "../components";
+import { createNetwork } from "./createNetwork";
 import { setupInitialSync } from "./setupInitialSync";
-import { setupNetwork } from "./setupNetwork";
 
 export async function setup() {
-  const network = await setupNetwork();
+  const network = await createNetwork();
   const components = createComponents(network);
   const setupResult = {
     network,

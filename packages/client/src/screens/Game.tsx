@@ -5,7 +5,7 @@ import { Primodium, initPrimodium } from "@game/api";
 import { Progress } from "src/components/core/Progress";
 import { GameHUD } from "src/components/hud/HUD";
 import { PrimodiumProvider } from "src/hooks/providers/PrimodiumProvider";
-import { setupDelegate } from "src/network/systems/setupDelegate";
+import { setupSessionAccount } from "src/network/systems/setupSessionAccount";
 
 const params = new URLSearchParams(window.location.search);
 
@@ -15,7 +15,7 @@ export const Game = () => {
 
   /* Since this system modifies mud.sessionAccount, it can't have mud as a dependency */
   useEffect(() => {
-    setupDelegate(mud.playerAccount.entity, mud.removeSessionAccount, mud.updateSessionAccount);
+    setupSessionAccount(mud.playerAccount.entity, mud.removeSessionAccount, mud.updateSessionAccount);
   }, [mud.playerAccount.entity, mud.removeSessionAccount, mud.updateSessionAccount]);
 
   useEffect(() => {
