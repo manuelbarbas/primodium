@@ -2,7 +2,7 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect, useState } from "react";
 import { FaClipboard, FaExclamationCircle, FaEye, FaEyeSlash, FaInfoCircle, FaTimes, FaUnlink } from "react-icons/fa";
 import { useMud } from "src/hooks";
-import { grantAccess, revokeAccess, switchDelegate } from "src/network/setup/contractCalls/access";
+import { grantAccess, revokeAccess, switchAuthorized } from "src/network/setup/contractCalls/access";
 import { copyToClipboard } from "src/util/clipboard";
 import { STORAGE_PREFIX } from "src/util/constants";
 import { Address, Hex } from "viem";
@@ -12,9 +12,9 @@ import { Card, SecondaryCard } from "../core/Card";
 import { TransactionQueueMask } from "../shared/TransactionQueueMask";
 
 const sessionWalletTooltip =
-  "Bypass annoying confirmation popups by linking a delegate account. This allows you to securely perform certain actions without external confirmation.";
+  "Bypass annoying confirmation popups by authorizing a session account. This allows you to securely perform certain actions without external confirmation.";
 
-export function Delegate() {
+export function Authorize() {
   const mud = useMud();
   const { sessionAccount } = mud;
   const [showDetails, setShowDetails] = useState(false);
@@ -25,13 +25,8 @@ export function Delegate() {
   }, [sessionAccount]);
 
   // Function to handle private key validation and connection
-  const delegate = sessionAccount?.entity;
-  const delegateAddress = sessionAccount?.address;
-
-  const savePrivateKey = async (privateKey: string) => {
-    const account = privateKeyToAccount(privateKey as Hex);
-    localStorage.setItem(STORAGE_PREFIX + account.address, privateKey);
-  };
+  const sessionEntity = sessionAccount?.entity;
+  const sessionAddress = sessionAccount?.address;
 
   const submitPrivateKey = async (privateKey: string) => {
     // Validate the private key format here
@@ -40,15 +35,17 @@ export function Delegate() {
     if (!isValid) return;
     const account = privateKeyToAccount(privateKey as Hex);
 
-    if (delegateAddress && delegateAddress === account.address) return;
-    if (delegate) await switchDelegate(mud, account.address);
+    if (sessionAddress && sessionAddress === account.address) return;
+    if (sessionEntity) await switchAuthorized(mud, account.address);
     else await grantAccess(mud, account.address);
   };
 
   const handleRandomPress = () => {
-    const randomPKey = generatePrivateKey();
-    savePrivateKey(randomPKey);
-    return randomPKey;
+    const privateKey = generatePrivateKey();
+    const account = privateKeyToAccount(privateKey as Hex);
+    localStorage.setItem(STORAGE_PREFIX + account.address, privateKey);
+
+    return privateKey;
   };
 
   const removeSessionKey = async (publicKey: Address) => {
@@ -64,7 +61,7 @@ export function Delegate() {
   return (
     <Card className="bg-base-100 gap-1">
       <div className="text-xs font-bold uppercase flex gap-2 items-center">
-        <p className="opacity-50">Delegate</p>
+        <p className="opacity-50">Authorize</p>
       </div>
 
       {showHelp && (
@@ -78,18 +75,20 @@ export function Delegate() {
       )}
 
       <TransactionQueueMask queueItemId={singletonEntity}>
-        {delegateAddress ? (
+        {sessionAddress ? (
           <div className="w-full flex flex-col">
             <div className="w-full flex items-center justify-center p-4">
-              <p className="uppercase font-bold text-success w-full flex justify-center text-sm">DELEGATING</p>
+              <p className="uppercase font-bold text-success w-full flex justify-center text-sm">
+                AUTHORIZING SESSION ACCOUNT
+              </p>
               <div className="absolute right-2 flex gap-1">
                 <Button
                   onClick={async () => {
                     setShowDetails(false);
-                    revokeAccess(mud, delegateAddress);
-                    removeSessionKey(delegateAddress);
+                    revokeAccess(mud, sessionAddress);
+                    removeSessionKey(sessionAddress);
                   }}
-                  tooltip="stop delegating"
+                  tooltip="stop authorizing"
                   tooltipDirection="top"
                   className="btn-sm btn-primary"
                 >
@@ -109,13 +108,13 @@ export function Delegate() {
               <SecondaryCard className="flex flex-col gap-2 p-3 w-full animate-slide-down bg-base-800">
                 <div className="text-sm flex justify-between items-center">
                   <div>
-                    <span className="font-bold">Delegate Address: </span>
-                    <p>{delegateAddress}</p>
+                    <span className="font-bold">Session Address: </span>
+                    <p>{sessionAddress}</p>
                   </div>
                   <div className="flex gap-1">
                     <Button
                       tooltip="Copy address"
-                      onClick={() => copyToClipboard(delegateAddress, "address")}
+                      onClick={() => copyToClipboard(sessionAddress, "address")}
                       tooltipDirection="top"
                       className="btn-sm btn-primary"
                     >
@@ -142,7 +141,7 @@ export function Delegate() {
               submitPrivateKey(key);
             }}
           >
-            CLICK TO DELEGATE ACTIONS
+            CLICK TO AUTHORIZE SESSION ACCOUNT
           </Button>
         )}
       </TransactionQueueMask>

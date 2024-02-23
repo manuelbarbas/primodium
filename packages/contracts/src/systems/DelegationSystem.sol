@@ -10,23 +10,26 @@ import { WorldRegistrationSystem } from "@latticexyz/world/src/modules/core/impl
 import { CORE_SYSTEM_ID } from "@latticexyz/world/src/modules/core/constants.sol";
 
 contract DelegationSystem is PrimodiumSystem {
-  function unregisterDelegation(address delegatee) public {
+  function unregisterDelegation(address authorizedAddress) public {
     bytes32 playerEntity = _player();
-    UserDelegationControl.deleteRecord({ delegator: _msgSender(), delegatee: delegatee });
+    UserDelegationControl.deleteRecord({ delegator: _msgSender(), delegatee: authorizedAddress });
   }
 
   function switchDelegation(
-    address oldDelegatee,
-    address newDelegatee,
+    address oldAuthorizedAddress,
+    address newAuthorizedAddress,
     ResourceId delegationControlId,
     bytes memory initCallData
   ) public {
     bytes32 playerEntity = _player();
-    unregisterDelegation(oldDelegatee);
+    unregisterDelegation(oldAuthorizedAddress);
     SystemCall.callWithHooksOrRevert(
       _msgSender(),
       CORE_SYSTEM_ID,
-      abi.encodeCall(WorldRegistrationSystem.registerDelegation, (newDelegatee, delegationControlId, initCallData)),
+      abi.encodeCall(
+        WorldRegistrationSystem.registerDelegation,
+        (newAuthorizedAddress, delegationControlId, initCallData)
+      ),
       0
     );
   }

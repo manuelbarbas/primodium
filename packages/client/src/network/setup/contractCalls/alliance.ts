@@ -21,7 +21,7 @@ export const createAlliance = async (mud: MUD, name: string, inviteOnly: boolean
         toHex32(name.substring(0, 6).toUpperCase()),
         inviteOnly ? EAllianceInviteMode.Closed : EAllianceInviteMode.Open,
       ],
-      delegate: true,
+      withSession: true,
     },
     {
       id: world.registerEntity(),
@@ -42,7 +42,7 @@ export const leaveAlliance = async (mud: MUD) => {
       mud,
       functionName: "leave",
       systemId: getSystemId("AllianceSystem"),
-      delegate: true,
+      withSession: true,
     },
     {
       id: world.registerEntity(),
@@ -63,7 +63,7 @@ export const joinAlliance = async (mud: MUD, alliance: Entity) => {
       functionName: "join",
       systemId: getSystemId("AllianceSystem"),
       args: [alliance as Hex],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.JoinAlliance, alliance),
@@ -84,7 +84,7 @@ export const declineInvite = async (mud: MUD, inviter: Entity) => {
       functionName: "declineInvite",
       systemId: getSystemId("AllianceSystem"),
       args: [inviter as Hex],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.DeclineInvite, inviter),
@@ -106,7 +106,7 @@ export const requestToJoin = async (mud: MUD, alliance: Entity) => {
       functionName: "requestToJoin",
       systemId: getSystemId("AllianceSystem"),
       args: [alliance as Hex],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.JoinAlliance, alliance),
@@ -130,7 +130,7 @@ export const kickPlayer = async (mud: MUD, player: Entity) => {
       functionName: "kick",
       systemId: getSystemId("AllianceSystem"),
       args: [player as Hex],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.KickPlayer, player),
@@ -154,7 +154,7 @@ export const grantRole = async (mud: MUD, player: Entity, role: EAllianceRole) =
       functionName: "grantRole",
       systemId: getSystemId("AllianceSystem"),
       args: [player as Hex, role],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(role < currentRole ? TransactionQueueType.Promote : TransactionQueueType.Demote, player),
@@ -177,7 +177,7 @@ export const acceptJoinRequest = async (mud: MUD, target: Entity) => {
       functionName: "acceptRequestToJoin",
       systemId: getSystemId("AllianceSystem"),
       args: [target as Hex],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.AcceptRequest, target),
@@ -199,7 +199,7 @@ export const rejectJoinRequest = async (mud: MUD, target: Entity) => {
       functionName: "rejectRequestToJoin",
       systemId: getSystemId("AllianceSystem"),
       args: [target as Hex],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.RejectRequest, target),
@@ -221,7 +221,7 @@ export const invite = async (mud: MUD, target: Entity) => {
       functionName: "invite",
       systemId: getSystemId("AllianceSystem"),
       args: [target as Hex],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.Invite, target),

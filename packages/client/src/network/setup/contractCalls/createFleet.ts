@@ -13,7 +13,7 @@ export const createFleet = async (mud: MUD, spaceRock: Entity, deltas: Map<Entit
       functionName: "createFleet",
       systemId: getSystemId("FleetCreateSystem"),
       args: [spaceRock as Hex, toUnitCountArray(deltas), toTransportableResourceArray(deltas)],
-      delegate: true,
+      withSession: true,
     },
     {
       id: "TRANSFER" as Entity,

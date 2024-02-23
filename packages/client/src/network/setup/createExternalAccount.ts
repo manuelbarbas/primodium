@@ -7,7 +7,7 @@ import { Hex, createPublicClient, createWalletClient, custom } from "viem";
 import { toAccount } from "viem/accounts";
 import { getNetworkConfig } from "../config/getNetworkConfig";
 
-export async function setupExternalAccount(externalAddress: Hex) {
+export async function createExternalAccount(externalAddress: Hex) {
   const networkConfig = getNetworkConfig();
 
   const clientOptions = {

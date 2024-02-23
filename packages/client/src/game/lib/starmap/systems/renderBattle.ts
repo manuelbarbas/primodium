@@ -19,15 +19,10 @@ export const renderBattle = (scene: Scene) => {
   const camera = createCameraApi(scene);
 
   const attackAnimation = async (entity: Entity, attacker: Entity, defender: Entity, attackerWinner?: boolean) => {
-    components.FleetMovement.pauseUpdates(attacker);
+    const attackerPosition = getFleetTilePosition(scene, attacker);
 
     const isPirate = components.PirateAsteroid.has(defender);
-    if (isPirate) components.PirateAsteroid.pauseUpdates(defender);
-
     const isFleet = components.IsFleet.get(defender)?.value;
-    if (isFleet) components.FleetMovement.pauseUpdates(defender);
-
-    const attackerPosition = getFleetTilePosition(scene, attacker);
     const position = isFleet ? getFleetTilePosition(scene, defender) : components.Position.get(defender);
 
     const playerEntity = components.Account.get()?.value;
@@ -63,6 +58,9 @@ export const renderBattle = (scene: Scene) => {
       }
     };
     const clearRender = () => components.BattleRender.clear();
+    components.FleetMovement.pauseUpdates(attacker);
+    if (isPirate) components.PirateAsteroid.pauseUpdates(defender);
+    if (isFleet) components.FleetMovement.pauseUpdates(defender);
 
     scene.phaserScene.add
       .timeline([
@@ -70,6 +68,14 @@ export const renderBattle = (scene: Scene) => {
         ...defenseMissiles,
         { at: animationRuntime * 0.8, run: runExplosion },
         { at: animationRuntime * 1.2, run: clearRender },
+        {
+          at: animationRuntime * 1.2,
+          run: () => {
+            components.FleetMovement.resumeUpdates(attacker);
+            if (isPirate) components.PirateAsteroid.resumeUpdates(defender);
+            if (isFleet) components.FleetMovement.resumeUpdates(defender);
+          },
+        },
       ])
       .play();
   };

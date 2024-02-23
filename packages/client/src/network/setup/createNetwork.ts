@@ -6,7 +6,7 @@ import { createClock } from "../createClock";
 import { world } from "../world";
 import { setupRecs } from "./setupRecs";
 
-export async function setupNetwork() {
+export async function createNetwork() {
   const networkConfig = getNetworkConfig();
   const clientOptions = {
     chain: networkConfig.chain,

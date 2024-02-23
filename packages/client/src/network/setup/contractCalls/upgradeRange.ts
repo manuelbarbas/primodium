@@ -17,7 +17,7 @@ export const upgradeRange = async (mud: MUD, asteroid: Entity) => {
       functionName: "upgradeRange",
       systemId: getSystemId("UpgradeRangeSystem"),
       args: [asteroid as Hex],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.Upgrade, mud.playerAccount.entity),

@@ -145,8 +145,10 @@ const _OwnedFleets: React.FC = () => {
                 }
 
                 const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
+                const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
+                const time = components.Time.get()?.value ?? 0n;
 
-                components.SelectedFleet.set({ value: entity });
+                if (arrivalTime < time) components.SelectedFleet.set({ value: entity });
                 const position = getFleetTilePosition(scene, entity);
 
                 pan({

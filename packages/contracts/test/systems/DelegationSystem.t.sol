@@ -13,13 +13,13 @@ contract DelegationSystemTest is PrimodiumTest {
     world.spawn();
   }
 
-  function testSetUnlimitedDelegate() public {
+  function testSetUnlimitedAuthorizedAccount() public {
     assertEq(ResourceId.unwrap(UserDelegationControl.get(creator, alice)), bytes32(""));
     world.registerDelegation(alice, UNLIMITED_DELEGATION, new bytes(0));
     assertEq(ResourceId.unwrap(UserDelegationControl.get(creator, alice)), ResourceId.unwrap(UNLIMITED_DELEGATION));
   }
 
-  function testRemoveUnlimitedDelegate() public {
+  function testRemoveUnlimitedAuthorizedAccount() public {
     assertEq(ResourceId.unwrap(UserDelegationControl.get(creator, alice)), bytes32(""));
     world.registerDelegation(alice, UNLIMITED_DELEGATION, new bytes(0));
     assertEq(ResourceId.unwrap(UserDelegationControl.get(creator, alice)), ResourceId.unwrap(UNLIMITED_DELEGATION));
@@ -27,7 +27,7 @@ contract DelegationSystemTest is PrimodiumTest {
     assertEq(ResourceId.unwrap(UserDelegationControl.get(creator, alice)), bytes32(""));
   }
 
-  function testSwitchUnlimitedDelegate() public {
+  function testSwitchUnlimitedAuthorizedAccount() public {
     assertEq(ResourceId.unwrap(UserDelegationControl.get(creator, alice)), bytes32(""));
     world.registerDelegation(alice, UNLIMITED_DELEGATION, new bytes(0));
     assertEq(ResourceId.unwrap(UserDelegationControl.get(creator, alice)), ResourceId.unwrap(UNLIMITED_DELEGATION));

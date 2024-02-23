@@ -11,10 +11,10 @@ export const grantAccess = async (mud: MUD, address: Address) => {
   await execute(
     {
       mud,
-      systemId: getSystemId("DelegationSystem"),
+      systemId: getSystemId("core"),
       functionName: "registerDelegation",
       args: [address, UNLIMITED_DELEGATION, "0x0"],
-      delegate: false,
+      withSession: false,
     },
     {
       id: singletonEntity,
@@ -34,7 +34,7 @@ export const revokeAccess = async (mud: MUD, address: Address) => {
 };
 
 export const revokeAllAccess = async (mud: MUD) => {
-  const allDelegates = [...runQuery([Has(components.UserDelegationControl)])].reduce((prev, entity) => {
+  const allAuthorized = [...runQuery([Has(components.UserDelegationControl)])].reduce((prev, entity) => {
     const key = decodeEntity(components.UserDelegationControl.metadata.keySchema, entity) as {
       delegator: Address;
       delegatee: Address;
@@ -43,10 +43,10 @@ export const revokeAllAccess = async (mud: MUD) => {
     return [...prev, key.delegatee];
   }, [] as Address[]);
 
-  const systemCalls = allDelegates.map((delegatee) => ({
+  const systemCalls = allAuthorized.map((authorized) => ({
     systemId: getSystemId("DelegationSystem"),
     functionName: "unregisterDelegation",
-    args: [delegatee],
+    args: [authorized],
   })) as {
     systemId: Hex;
     functionName: "unregisterDelegation";
@@ -62,16 +62,16 @@ export const revokeAllAccess = async (mud: MUD) => {
   );
 };
 
-export const switchDelegate = async (mud: MUD, newDelegate: Address) => {
-  const currentDelegate = mud.sessionAccount?.address;
-  if (!currentDelegate) return;
+export const switchAuthorized = async (mud: MUD, newAuthorized: Address) => {
+  const currentAuthorized = mud.sessionAccount?.address;
+  if (!currentAuthorized) return;
 
   await execute(
     {
       mud,
       systemId: getSystemId("DelegationSystem"),
-      functionName: "unregisterDelegation",
-      args: [newDelegate],
+      functionName: "switchDelegation",
+      args: [currentAuthorized, newAuthorized, UNLIMITED_DELEGATION, "0x0"],
     },
     {
       id: singletonEntity,

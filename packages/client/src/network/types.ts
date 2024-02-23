@@ -3,17 +3,17 @@ import { Component, Schema } from "@latticexyz/recs";
 import useSetupResult from "src/hooks/useSetupResult";
 import { createComponents } from "./components";
 import { getNetworkConfig } from "./config/getNetworkConfig";
+import { createBurnerAccount } from "./setup/createBurnerAccount";
+import { createExternalAccount } from "./setup/createExternalAccount";
+import { createNetwork } from "./setup/createNetwork";
 import { setup } from "./setup/setup";
-import { setupBurnerAccount } from "./setup/setupBurnerAccount";
-import { setupExternalAccount } from "./setup/setupExternalAccount";
-import { setupNetwork } from "./setup/setupNetwork";
 
 export type NetworkConfig = ReturnType<typeof getNetworkConfig>;
-export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>;
+export type CreateNetworkResult = Awaited<ReturnType<typeof createNetwork>>;
 export type SetupResult = Awaited<ReturnType<typeof setup>>;
 
-export type BurnerAccount = Awaited<ReturnType<typeof setupBurnerAccount>>;
-export type ExternalAccount = Awaited<ReturnType<typeof setupExternalAccount>>;
+export type BurnerAccount = Awaited<ReturnType<typeof createBurnerAccount>>;
+export type ExternalAccount = Awaited<ReturnType<typeof createExternalAccount>>;
 export type AnyAccount = BurnerAccount | ExternalAccount;
 
 export type PartialMUD = ReturnType<typeof useSetupResult>;

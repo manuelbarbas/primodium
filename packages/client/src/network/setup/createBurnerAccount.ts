@@ -1,4 +1,9 @@
-import { ContractWrite, createBurnerAccount, getContract, transportObserver } from "@latticexyz/common";
+import {
+  ContractWrite,
+  createBurnerAccount as createMudBurnerAccount,
+  getContract,
+  transportObserver,
+} from "@latticexyz/common";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { Subject } from "rxjs";
 import { normalizeAddress } from "src/util/common";
@@ -8,10 +13,10 @@ import { Hex, createPublicClient, createWalletClient, fallback, http } from "vie
 import { generatePrivateKey } from "viem/accounts";
 import { getNetworkConfig } from "../config/getNetworkConfig";
 
-export async function setupBurnerAccount(privateKey?: Hex, saveToStorage = true) {
+export async function createBurnerAccount(privateKey?: Hex, saveToStorage = true) {
   const key = privateKey ?? generatePrivateKey();
   const networkConfig = getNetworkConfig();
-  const burnerAccount = createBurnerAccount(key);
+  const burnerAccount = createMudBurnerAccount(key);
   if (saveToStorage) localStorage.setItem(STORAGE_PREFIX + burnerAccount.address, key);
   const clientOptions = {
     chain: networkConfig.chain,

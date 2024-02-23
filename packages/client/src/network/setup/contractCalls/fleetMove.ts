@@ -13,7 +13,7 @@ export const sendFleet = async (mud: MUD, fleet: Entity, spaceRock: Entity) => {
       functionName: "sendFleet",
       systemId: getSystemId("FleetMoveSystem"),
       args: [fleet as Hex, spaceRock as Hex],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.SendFleet),
@@ -29,7 +29,7 @@ export const sendFleetPosition = async (mud: MUD, fleet: Entity, position: Coord
       functionName: "sendFleet",
       systemId: getSystemId("FleetMoveSystem"),
       args: [fleet as Hex, { ...position, parent: fleet as Hex }],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.SendFleet),
@@ -45,7 +45,7 @@ export const recallFleet = async (mud: MUD, fleet: Entity) => {
       functionName: "recallFleet",
       systemId: getSystemId("FleetMoveSystem"),
       args: [fleet as Hex],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.SendFleet),
