@@ -6,7 +6,7 @@ import { components } from "src/network/components";
 import { EntityType } from "src/util/constants";
 import { formatResourceCount, parseResourceCount } from "src/util/number";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
-import { TargetHeader } from "../../spacerock-menu/TargetHeader";
+import { TargetHeader } from "../../TargetHeader";
 import { FleetEntityHeader } from "../fleets/FleetHeader";
 
 export const TransferFrom = (props: {

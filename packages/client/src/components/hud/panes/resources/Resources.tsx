@@ -3,6 +3,7 @@ import { Widget } from "src/components/core/Widget";
 import { AllResourceLabels } from "./AllResourceLabels";
 import { useMud } from "src/hooks";
 import { getRandomRange } from "src/util/common";
+import { AllUtilityLabels } from "./AllUtilityLabels";
 
 export const Resources = () => {
   const { components } = useMud();
@@ -25,6 +26,7 @@ export const Resources = () => {
       persist
     >
       <AllResourceLabels />
+      <AllUtilityLabels />
     </Widget>
   );
 };
