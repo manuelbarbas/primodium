@@ -16,6 +16,7 @@ const csvSrcs = csvFiles.map((file) => ({ id: file.charAt(0), filePath: path.joi
 const srcDirectory = await getSrcDirectory();
 
 const generateTerrain = () => {
+  console.log("Generating terrain", csvSrcs);
   terraingen(csvSrcs, path.join(srcDirectory, config.codegenDirectory));
 };
 
