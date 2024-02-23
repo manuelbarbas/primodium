@@ -20,7 +20,7 @@ export const WidgetButton: React.FC<{
   onDoubleClick?: () => void;
   disable?: boolean;
   active: boolean;
-}> = ({ imageUri, tooltipText, visible, onClose, onOpen, className, text, onDoubleClick, disable = false, active }) => {
+}> = ({ imageUri, tooltipText, visible, onClose, onOpen, className, text, disable = false, active }) => {
   return (
     <IconButton
       imageUri={imageUri}
@@ -33,8 +33,7 @@ export const WidgetButton: React.FC<{
         else onClose();
       }}
       disabled={disable || !active}
-      onDoubleClick={onDoubleClick}
-      className={`border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-lg text-lg hover:z-20 drop-shadow-hard ${
+      className={`border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-lg text-lg hover:z-20 hover:drop-shadow-hard transition-all ${
         visible ? "border-warning bg-warning/25" : "bg-secondary/25"
       } ${!active ? "!bg-error/50 !border-error" : ""} ${className}`}
     />
@@ -129,7 +128,7 @@ export const Actions = () => {
 export const PrimeOS = () => {
   return (
     <>
-      <Card className="p-2 border border-accent/25 -ml-12 mb-2 z-10">
+      <Card className="p-2 border border-accent/25 -ml-12 mb-2 z-10 pointer-events-auto">
         <div className="absolute top-0 -translate-y-full pb-2 right-0"></div>
         <SecondaryCard className="flex flex-col items-center gap-3 border-2 border-accent/50 !p-0">
           <WidgetControls />
@@ -174,14 +173,14 @@ export const Companion = () => {
   }, [minimized, scope, animate]);
 
   return (
-    <div className="w-full pointer-events-auto">
+    <div className="w-full">
       <div ref={scope} className={`relative flex items-center`}>
         {!minimized && <div className="absolute bg-black inset-0 blur-3xl opacity-50" />}
         {/* <SecondaryCard className="uppercase drop-shadow-hard absolute w-fit min-w-64 origin-bottom-left -top-4 text-accent z-50">
           this is a tip from prime
         </SecondaryCard> */}
 
-        <div className={`relative z-20`}>
+        <div className={`relative z-20 pointer-events-none`}>
           <img
             src="/img/jarvis.png"
             className={`pixel-images h-52 m-4 ${!minimized ? "pointer-events-none" : "pointer-events-auto"}`}

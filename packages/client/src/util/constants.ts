@@ -437,6 +437,8 @@ export const ResourceStorages = new Set([
   EntityType.Iridium,
   EntityType.Platinum,
   EntityType.Kimberlite,
+  EntityType.Encryption,
+  EntityType.HP,
 ]);
 
 export const UtilityStorages = new Set([

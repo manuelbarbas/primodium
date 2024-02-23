@@ -17,10 +17,13 @@ export const Resources = () => {
         x: window.innerWidth / 2 + getRandomRange(-50, 50),
         y: window.innerHeight / 2 + getRandomRange(-50, 50),
       }}
+      defaultVisible
+      defaultLocked
       scene={Scenes.Asteroid}
       active={!mapOpen}
       minOpacity={0.5}
       draggable
+      lockable
       pinnable
       persist
     >
