@@ -84,8 +84,8 @@ export const Button: React.FC<{
           onPointerEnter?.();
         }}
         onPointerLeave={onPointerLeave}
-        className={`btn join-item inline font-bold outline-none h-fit pointer-events-auto ${className} ${
-          disabled ? "opacity-80" : ""
+        className={`btn join-item inline pointer-events-auto font-bold outline-none h-fit bg-opacity-50 ${className}  ${
+          disabled ? "opacity-30" : ""
         } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
       >
         {loading && <Loader />}
@@ -97,10 +97,11 @@ export const Button: React.FC<{
 
 export const IconButton: React.FC<{
   imageUri: string;
-  text: string;
+  text?: string;
   hideText?: boolean;
   className?: string;
   onClick?: () => void;
+  onDoubleClick?: () => void;
   disabled?: boolean;
   selected?: boolean;
   loading?: boolean;
@@ -110,7 +111,7 @@ export const IconButton: React.FC<{
   clickSound?: AudioKeys;
 }> = ({
   imageUri,
-  text,
+  text = "",
   hideText = false,
   className,
   onClick,
@@ -121,40 +122,36 @@ export const IconButton: React.FC<{
   tooltipText,
   mute = false,
   clickSound = AudioKeys.Confirm2,
+  onDoubleClick,
 }) => {
   const primodium = usePrimodium();
   const { audio } = primodium.api();
   return (
-    <button
-      onClick={() => {
-        !mute &&
-          audio.play(clickSound, "ui", {
-            detune: getRandomRange(-100, 100),
-          });
-        onClick && onClick();
-      }}
-      disabled={disabled}
-      onPointerEnter={() => {
-        !mute &&
-          audio.play(AudioKeys.DataPoint2, "ui", {
-            volume: 0.1,
-            detune: getRandomRange(-200, 200),
-          });
-      }}
-      className={`btn join-item inline gap-1 pointer-events-auto font-bold outline-none ${className} ${
-        disabled ? "opacity-80" : ""
-      } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
-    >
-      {loading && <Loader />}
-      {!loading && (
-        <IconLabel
-          imageUri={imageUri}
-          text={text}
-          hideText={hideText}
-          tooltipDirection={tooltipDirection}
-          tooltipText={tooltipText}
-        />
-      )}
-    </button>
+    <Tooltip text={tooltipText} direction={tooltipDirection}>
+      <button
+        onClick={() => {
+          !mute &&
+            audio.play(clickSound, "ui", {
+              detune: getRandomRange(-100, 100),
+            });
+          onClick && onClick();
+        }}
+        disabled={disabled}
+        onDoubleClick={onDoubleClick}
+        onPointerEnter={() => {
+          !mute &&
+            audio.play(AudioKeys.DataPoint2, "ui", {
+              volume: 0.1,
+              detune: getRandomRange(-200, 200),
+            });
+        }}
+        className={`btn join-item inline gap-1 pointer-events-auto font-bold outline-none bg-opacity-50 ${className} ${
+          disabled ? "opacity-50 !pointer-events-auto" : ""
+        } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
+      >
+        {loading && <Loader />}
+        {!loading && <IconLabel imageUri={imageUri} text={text} hideText={hideText} />}
+      </button>
+    </Tooltip>
   );
 };

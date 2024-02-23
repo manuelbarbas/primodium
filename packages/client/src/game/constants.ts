@@ -218,12 +218,23 @@ export enum SpriteKeys {
   Construction4x4 = "sprites/construction/4x4.png",
   Construction2x3 = "sprites/construction/2x3.png",
 
-  // ICONS
+  // Resource Icons
   GracePeriod = "sprites/icons/grace.png",
+  Iron = "sprites/icons/resources/iron_resource.png",
+  Copper = "sprites/icons/resources/copper_resource.png",
+  Lithium = "sprites/icons/resources/lithium_resource.png",
+  IronPlate = "sprites/icons/resources/ironplate.png",
+  PVCell = "sprites/icons/resources/photovoltaiccell_resource.png",
+  Alloy = "sprites/icons/resources/alloy_resource.png",
 
-  //DECORATIONS
-  Warning = "sprites/decorations/warning.png",
-  Drone = "sprites/decorations/Drone1.png",
+  // Unit Icons
+  StingerDrone = "sprites/icons/units/stingerdrone.png",
+  AegisDrone = "sprites/icons/units/aegisdrone.png",
+  AnvilDrone = "sprites/icons/units/anvildrone.png",
+  HammerDrone = "sprites/icons/units/hammerdrone.png",
+  TridentMarine = "sprites/icons/units/trident_marine.png",
+  MinutemanMarine = "sprites/icons/units/minutemen_marine.png",
+  LightningCraft = "sprites/icons/units/lightningcraft.png",
 }
 
 export enum AnimationKeys {
@@ -336,7 +347,26 @@ export const ResourceToTilesetKey: { [key: number]: ResourceTilekeys } = {
   [EResource.Lithium]: ResourceTilekeys.Lithium,
 };
 
-export const EntitytoSpriteKey = {
+export const EntityToResourceSpriteKey = {
+  [EntityType.Iron]: SpriteKeys.Iron,
+  [EntityType.Copper]: SpriteKeys.Copper,
+  [EntityType.Lithium]: SpriteKeys.Lithium,
+  [EntityType.IronPlate]: SpriteKeys.IronPlate,
+  [EntityType.PVCell]: SpriteKeys.PVCell,
+  [EntityType.Alloy]: SpriteKeys.Alloy,
+};
+
+export const EntityToUnitSpriteKey = {
+  [EntityType.AegisDrone]: SpriteKeys.AegisDrone,
+  [EntityType.AnvilDrone]: SpriteKeys.AnvilDrone,
+  [EntityType.HammerDrone]: SpriteKeys.HammerDrone,
+  [EntityType.StingerDrone]: SpriteKeys.StingerDrone,
+  [EntityType.TridentMarine]: SpriteKeys.TridentMarine,
+  [EntityType.LightningCraft]: SpriteKeys.LightningCraft,
+  [EntityType.MinutemanMarine]: SpriteKeys.MinutemanMarine,
+};
+
+export const EntitytoBuildingSpriteKey = {
   [EntityType.MainBase]: [
     SpriteKeys.Mainbase1,
     SpriteKeys.Mainbase2,
@@ -383,6 +413,7 @@ export const EntitytoSpriteKey = {
   [EntityType.ShieldGenerator]: [SpriteKeys.ShieldGenerator1, SpriteKeys.ShieldGenerator2, SpriteKeys.ShieldGenerator3],
   [EntityType.Vault]: [SpriteKeys.Vault1, SpriteKeys.Vault2, SpriteKeys.Vault3],
   [EntityType.Market]: [SpriteKeys.Market1],
+  [EntityType.Shipyard]: [SpriteKeys.AlloyFactory1],
 
   //STARMAP
   [EntityType.Asteroid]: [
@@ -448,6 +479,7 @@ export const EntityIDtoAnimationKey = {
 
   [EntityType.Vault]: [AnimationKeys.Vault1, AnimationKeys.Vault2, AnimationKeys.Vault3],
   [EntityType.Market]: [AnimationKeys.Market1],
+  [EntityType.Shipyard]: [AnimationKeys.AlloyFactory1],
 };
 
 export enum KeybindActions {

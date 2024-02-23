@@ -50,7 +50,7 @@ export enum EResource {
   // Utilities
   U_Electricity,
   U_Housing,
-  U_Vessel,
+  U_CapitalShipCapacity,
   U_MaxMoves,
   U_Defense,
   U_Unraidable,
@@ -76,7 +76,8 @@ export enum EUnit {
   MinutemanMarine,
   TridentMarine,
   LightningCraft,
-  ColonyShip,
+  CapitalShip,
+  Droid,
 }
 
 export enum ESendType {
@@ -127,7 +128,6 @@ export enum EObjectives {
   BuildVault,
   BuildShieldGenerator,
 
-  CommissionMiningVessel,
   TrainMinutemanMarine1,
   TrainMinutemanMarine2,
   TrainMinutemanMarine3,

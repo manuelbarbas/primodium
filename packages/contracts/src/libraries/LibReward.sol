@@ -13,31 +13,19 @@ import { LibUnit } from "libraries/LibUnit.sol";
 import { EResource } from "src/Types.sol";
 
 library LibReward {
-  function receiveRewards(
-    bytes32 playerEntity,
-    bytes32 spaceRockEntity,
-    bytes32 prototype
-  ) internal {
+  function receiveRewards(bytes32 playerEntity, bytes32 spaceRockEntity, bytes32 prototype) internal {
     receiveUnitRewards(playerEntity, spaceRockEntity, prototype);
     receiveResourceRewards(playerEntity, spaceRockEntity, prototype);
   }
 
-  function receiveUnitRewards(
-    bytes32 playerEntity,
-    bytes32 spaceRockEntity,
-    bytes32 prototype
-  ) internal {
+  function receiveUnitRewards(bytes32 playerEntity, bytes32 spaceRockEntity, bytes32 prototype) internal {
     P_UnitRewardData memory rewardData = P_UnitReward.get(prototype);
     for (uint256 i = 0; i < rewardData.units.length; i++) {
       LibUnit.increaseUnitCount(spaceRockEntity, rewardData.units[i], rewardData.amounts[i], true);
     }
   }
 
-  function receiveResourceRewards(
-    bytes32 playerEntity,
-    bytes32 spaceRockEntity,
-    bytes32 prototype
-  ) internal {
+  function receiveResourceRewards(bytes32 playerEntity, bytes32 spaceRockEntity, bytes32 prototype) internal {
     P_ResourceRewardData memory rewardData = P_ResourceReward.get(prototype);
     for (uint256 i = 0; i < rewardData.resources.length; i++) {
       if (P_IsUtility.get(rewardData.resources[i])) {

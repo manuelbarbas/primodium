@@ -10,16 +10,14 @@ export const getScale = (resource: Entity) => {
   return 10 ** getResourceDecimals(resource);
 };
 
-export const getResourceDecimals = (resource: Entity) => {
-  if (
-    UnitEnumLookup[resource] !== undefined ||
-    resource === EntityType.FleetMoves ||
-    resource === EntityType.VesselCapacity ||
-    resource === EntityType.Defense
-  )
-    return 0;
-  return DECIMALS;
-};
+const unscaledResources = new Set([
+  ...Object.keys(UnitEnumLookup),
+  EntityType.FleetMoves,
+  EntityType.VesselCapacity,
+  EntityType.Housing,
+]);
+
+export const getResourceDecimals = (resource: Entity) => (unscaledResources.has(resource) ? 0 : DECIMALS);
 
 export type ResourceCountData = {
   resourceCount: bigint;

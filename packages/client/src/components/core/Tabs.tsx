@@ -1,6 +1,5 @@
 import { ReactNode, memo, createContext, useContext, useState, FC, useEffect, useRef } from "react";
 import { Button as _Button, IconButton as _IconButton } from "./Button";
-import { Card } from "./Card";
 
 interface TabProps {
   children?: ReactNode;
@@ -36,7 +35,7 @@ const Pane: FC<{
     return null;
   }
 
-  return fragment ? <>{children}</> : <Card className={`overflow-y-auto scrollbar ${className} `}>{children}</Card>;
+  return fragment ? <>{children}</> : <div className={`overflow-y-auto scrollbar ${className} `}>{children}</div>;
 });
 
 const Button: FC<React.ComponentProps<typeof _Button> & { index: number; togglable?: boolean; showActive?: boolean }> =

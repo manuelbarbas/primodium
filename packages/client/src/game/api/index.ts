@@ -9,11 +9,11 @@ import { runSystems as runStarmapSystems } from "src/game/lib/starmap/systems";
 import { components } from "src/network/components";
 import { setupAllianceLeaderboard } from "src/network/systems/setupAllianceLeaderboard";
 import { setupBattleComponents } from "src/network/systems/setupBattleComponents";
-import { setupBattleNotifications } from "src/network/systems/setupBattleNotifications";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
 import { setupDoubleCounter } from "src/network/systems/setupDoubleCounter";
 import { setupHangar } from "src/network/systems/setupHangar";
 import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
+import { setupMoveNotifications } from "src/network/systems/setupMoveNotifications";
 import { setupInvitations } from "src/network/systems/setupPlayerInvites";
 import { setupSync } from "src/network/systems/setupSync";
 import { setupTime } from "src/network/systems/setupTime";
@@ -60,7 +60,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
 
     for (const [, instance] of instances.entries()) {
       //dispose phaser
-      instance.phaserGame.destroy(true);
+      instance.dispose();
     }
 
     //dispose game logic
@@ -86,10 +86,9 @@ export async function initPrimodium(mud: MUD, version = "v1") {
 
     // reset stuff
 
-    components.MapOpen.set({ value: false });
     setupAllianceLeaderboard(mud);
     setupBattleComponents();
-    setupBattleNotifications(mud);
+    setupMoveNotifications();
     setupBlockNumber(mud.network.latestBlockNumber$);
     setupDoubleCounter(mud);
     setupHangar(mud);

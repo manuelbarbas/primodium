@@ -16,11 +16,7 @@ library LibEncode {
     return keccak256(abi.encode(entity1, entity2));
   }
 
-  function getHash(
-    bytes32 entity1,
-    bytes32 entity2,
-    bytes32 entity3
-  ) internal pure returns (bytes32) {
+  function getHash(bytes32 entity1, bytes32 entity2, bytes32 entity3) internal pure returns (bytes32) {
     return keccak256(abi.encode(entity1, entity2, entity3));
   }
 
@@ -47,11 +43,7 @@ library LibEncode {
    * @param   shift  starting position of mask
    * @return  _byteUInt masked bit string
    */
-  function getByteUInt(
-    uint256 _b,
-    uint256 length,
-    uint256 shift
-  ) internal pure returns (uint256 _byteUInt) {
+  function getByteUInt(uint256 _b, uint256 length, uint256 shift) internal pure returns (uint256 _byteUInt) {
     uint256 mask = ((1 << length) - 1) << shift;
     _byteUInt = (_b & mask) >> shift;
   }

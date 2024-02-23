@@ -1,13 +1,13 @@
 import { DepthLayers, Scenes } from "@game/constants";
+import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { Coord } from "@latticexyz/utils";
-import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactDOM from "react-dom";
+import { FaChevronRight } from "react-icons/fa";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { calculateAngleBetweenPoints } from "src/util/common";
 import { Button } from "./Button";
 import { IconLabel } from "./IconLabel";
-import { FaChevronRight } from "react-icons/fa";
-import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
 
 const BoundedMarker: React.FC<{ scene: Scenes; coord: Coord; iconUri: string; degrees: number }> = ({
   coord,
@@ -51,7 +51,17 @@ export const Marker: React.FC<{
   children: ReactNode;
   offScreenIconUri?: string;
   depth?: number;
-}> = ({ id, scene, coord, children, offScreenIconUri, depth = DepthLayers.Marker }) => {
+  origin?:
+    | "top-left"
+    | "top-right"
+    | "bottom-left"
+    | "bottom-right"
+    | "center"
+    | "center-left"
+    | "center-right"
+    | "center-top"
+    | "center-bottom";
+}> = ({ id, scene, coord, children, offScreenIconUri, depth = DepthLayers.Marker, origin = "center" }) => {
   const primodium = usePrimodium();
   const [marker, setMarker] = useState<Phaser.GameObjects.DOMElement>();
   const [container, setContainer] = useState<HTMLDivElement>();
@@ -59,6 +69,30 @@ export const Marker: React.FC<{
   const [degrees, setDegrees] = useState(0);
   const camera = useRef(primodium.api(scene).camera).current;
   const uiCamera = useRef(primodium.api(Scenes.UI).camera).current;
+  const translateClass = useMemo(() => {
+    switch (origin) {
+      case "top-left":
+        return "";
+      case "top-right":
+        return "-translate-x-full";
+      case "bottom-left":
+        return "-translate-y-full";
+      case "bottom-right":
+        return "-translate-x-full -translate-y-full";
+      case "center":
+        return "-translate-x-1/2 -translate-y-1/2";
+      case "center-left":
+        return "-translate-y-1/2";
+      case "center-right":
+        return "-translate-x-full -translate-y-1/2";
+      case "center-top":
+        return "-translate-x-1/2";
+      case "center-bottom":
+        return "-translate-x-1/2 -translate-y-full";
+      default:
+        return "";
+    }
+  }, [origin]);
 
   const createContainer = useCallback(
     (_camera: typeof camera, id: string, coord: Coord) => {
@@ -67,7 +101,7 @@ export const Marker: React.FC<{
       obj.setOrigin(0.5, 0.5);
       obj.setScale(1 / _camera.phaserCamera.zoom);
       obj.setAlpha(camera.phaserCamera.scene.scene.isActive() ? 1 : 0);
-      obj.setDepth(depth);
+      obj.setDepth(depth - 100000);
 
       setMarker(obj);
       setContainer(container);
@@ -113,13 +147,11 @@ export const Marker: React.FC<{
           // Set the marker position
           marker.setPosition(markerX, markerY);
           setDegrees(degree);
-
           return;
         }
       }
 
       marker.setScale(1 / camera.phaserCamera.zoom);
-      marker.setAlpha(camera.phaserCamera.scene.scene.isActive() ? 1 : 0);
     };
 
     cameraCallback(camera.phaserCamera.worldView);
@@ -135,8 +167,8 @@ export const Marker: React.FC<{
   if (!marker || !container) return;
 
   return ReactDOM.createPortal(
-    <div className={"-translate-x-1/2 -translate-y-1/2"}>
-      {!visible && offScreenIconUri && (
+    <div className={translateClass}>
+      {!visible && offScreenIconUri && camera.phaserCamera.scene.scene.isActive() && (
         <BoundedMarker scene={scene} coord={coord} iconUri={offScreenIconUri} degrees={degrees} />
       )}
       {(visible || !offScreenIconUri) && children}
@@ -150,9 +182,10 @@ export const IconMarker: React.FC<{
   scene: Scenes;
   coord: Coord;
   iconUri: string;
-}> = ({ id, scene, coord, iconUri }) => {
+  depth?: number;
+}> = ({ id, scene, coord, iconUri, depth }) => {
   return (
-    <Marker id={id} scene={scene} coord={coord} offScreenIconUri={iconUri}>
+    <Marker id={id} scene={scene} depth={depth} coord={coord} offScreenIconUri={iconUri}>
       <IconLabel imageUri={iconUri} className={`text-xl drop-shadow-hard`} />
     </Marker>
   );

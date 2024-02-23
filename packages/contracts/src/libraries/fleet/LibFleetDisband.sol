@@ -11,7 +11,7 @@ import { LibStorage } from "libraries/LibStorage.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
-import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
+import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 
 import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
@@ -53,9 +53,9 @@ library LibFleetDisband {
       require(fleetUnitCount >= unitCounts[i], "[Fleet] Not enough units to disband from fleet");
       LibFleet.decreaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], true);
     }
-    uint256 cargo = LibFleetAttributes.getCargo(fleetId);
-    uint256 occupiedCargo = LibFleetAttributes.getOccupiedCargo(fleetId);
-    require(cargo >= occupiedCargo, "[Fleet] Not enough cargo to disband units from fleet");
+    uint256 cargoCapacity = LibCombatAttributes.getCargoCapacity(fleetId);
+    uint256 cargo = LibCombatAttributes.getCargo(fleetId);
+    require(cargoCapacity >= cargo, "[Fleet] Not enough cargo to disband units from fleet");
   }
 
   function disbandResources(bytes32 fleetId, uint256[] calldata resourceCounts) internal {

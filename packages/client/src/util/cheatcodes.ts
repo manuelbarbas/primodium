@@ -2,15 +2,24 @@ import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
+import encodeBytes32 from "contracts/config/util/encodeBytes32";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
+import { components } from "src/network/components";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { setComponentValue } from "src/network/setup/contractCalls/dev";
 import { MUD } from "src/network/types";
-import { encodeEntity } from "src/util/encode";
+import { encodeEntity, hashEntities, hashKeyEntity } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
 import { getBlockTypeName } from "./common";
-import { EntityType, RESOURCE_SCALE, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
+import {
+  EntityType,
+  PIRATE_KEY,
+  RESOURCE_SCALE,
+  ResourceEnumLookup,
+  ResourceStorages,
+  UtilityStorages,
+} from "./constants";
 
 const resources: Record<string, Entity> = {
   iron: EntityType.Iron,
@@ -35,7 +44,8 @@ const units: Record<string, Entity> = {
   aegis: EntityType.AegisDrone,
   anvil: EntityType.AnvilDrone,
   hammer: EntityType.HammerDrone,
-  mining: EntityType.MiningVessel,
+  capitalShip: EntityType.CapitalShip,
+  droid: EntityType.Droid,
 };
 
 export const setupCheatcodes = (mud: MUD): Cheatcodes => {
@@ -46,6 +56,12 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
         await setComponentValue(mud, mud.components.P_GameConfig, singletonEntity, {
           worldSpeed: BigInt(value),
         });
+      },
+    },
+    stopGracePeriod: {
+      params: [],
+      function: async () => {
+        setComponentValue(mud, components.P_GracePeriod, singletonEntity, { spaceRock: 0n });
       },
     },
     setMaxAllianceCount: {
@@ -242,6 +258,44 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
 
           await worldContract.write.spawn();
         }
+      },
+    },
+
+    createPirateAsteroid: {
+      params: [],
+      function: async () => {
+        const playerEntity = mud.playerAccount.entity;
+        const asteroid = components.ActiveRock.get()?.value;
+        const ownerEntity = hashKeyEntity(PIRATE_KEY, playerEntity);
+        const asteroidEntity = hashEntities(ownerEntity);
+        const homePromise = setComponentValue(mud, components.Home, ownerEntity, { value: asteroidEntity as Hex });
+        const position = components.Position.get(asteroid);
+        const coord = { x: (position?.x ?? 0) + 10, y: (position?.y ?? 0) + 10, parent: encodeBytes32("0") };
+
+        await setComponentValue(mud, components.PirateAsteroid, asteroidEntity, {
+          isDefeated: false,
+          isPirateAsteroid: true,
+          prototype: encodeBytes32("0"),
+          playerEntity: playerEntity,
+        });
+
+        const positionPromise = setComponentValue(mud, components.Position, asteroidEntity, coord);
+        const asteroidPromise = setComponentValue(mud, components.Asteroid, asteroidEntity, { isAsteroid: true });
+
+        const reversePosEntity = encodeEntity(mud.components.ReversePosition.metadata.keySchema, {
+          x: coord.x,
+          y: coord.y,
+        });
+        const reversePositionPromise = setComponentValue(mud, components.ReversePosition, reversePosEntity, {
+          entity: asteroidEntity as Hex,
+        });
+        const ownedByPromise = setComponentValue(mud, components.OwnedBy, asteroidEntity, { value: ownerEntity });
+
+        await Promise.all([homePromise, positionPromise, reversePositionPromise, asteroidPromise, ownedByPromise]);
+
+        await setComponentValue(mud, components.PirateAsteroid, asteroidEntity, {
+          isDefeated: false,
+        });
       },
     },
   };

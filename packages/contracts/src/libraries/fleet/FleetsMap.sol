@@ -11,11 +11,7 @@ library FleetsMap {
    * @param fleetId The unique fleetId for the fleet.
    * @return true if the fleet exists, false otherwise.
    */
-  function has(
-    bytes32 entity,
-    bytes32 key,
-    bytes32 fleetId
-  ) internal view returns (bool) {
+  function has(bytes32 entity, bytes32 key, bytes32 fleetId) internal view returns (bool) {
     return MapStoredFleets.get(entity, key, fleetId).stored;
   }
 
@@ -26,12 +22,8 @@ library FleetsMap {
    * @param key defines the type of association the fleet has with the entity.
    * @param fleetId the unique fleetId for the fleet.
    */
-  function add(
-    bytes32 entity,
-    bytes32 key,
-    bytes32 fleetId
-  ) internal {
-    require(!has(entity, key, fleetId), "[FleetsMap] Fleet is alread associated with entity");
+  function add(bytes32 entity, bytes32 key, bytes32 fleetId) internal {
+    if (has(entity, key, fleetId)) return;
     MapFleets.push(entity, key, fleetId);
     MapStoredFleets.set(entity, key, fleetId, true, MapFleets.length(entity, key) - 1);
   }
@@ -52,11 +44,8 @@ library FleetsMap {
    * @param key defines the type of association the fleet has with the entity.
    * @param fleetId The unique fleetId for the fleet to remove.
    */
-  function remove(
-    bytes32 entity,
-    bytes32 key,
-    bytes32 fleetId
-  ) internal {
+  function remove(bytes32 entity, bytes32 key, bytes32 fleetId) internal {
+    // if (!has(entity, key, fleetId)) return;
     if (MapFleets.length(entity, key) == 1) {
       clear(entity, key);
       return;

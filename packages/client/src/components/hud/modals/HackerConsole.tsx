@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Scenes } from "@game/constants";
-import React, { KeyboardEvent, useRef, useState } from "react";
+import React, { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { Button } from "src/components/core/Button";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks";
@@ -27,14 +27,14 @@ const HackerConsole: React.FC = () => {
   Object.entries(api).forEach(([key, value]) => ((window as any)[key] = value));
 
   return (
-    <div className="flex-grow overflow-hidden">
-      <div className="grid grid-cols-7 gap-4 p-2 h-full w-full overflow-hidden">
-        <div className="h-full w-full overflow-hidden flex flex-col col-span-4">
-          <p className="text-xs uppercase opacity-50 font-bold pb-2">command line</p>
-          <Console />
-        </div>
-        <div className="overflow-y-scroll scrollbar col-span-3">
-          <p className="text-xs uppercase opacity-50 font-bold pb-2">primodium api</p>
+    <div className="flex gap-4 p-2 h-full w-full overflow-hidden">
+      <div className="flex-1 h-full w-full overflow-hidden flex flex-col col-span-4">
+        <p className="text-xs uppercase opacity-50 font-bold pb-2">command line</p>
+        <Console />
+      </div>
+      <div className="flex-1 overflow-hidden col-span-3">
+        <p className="text-xs uppercase opacity-50 font-bold pb-2">primodium api</p>
+        <div className="overflow-y-scroll scrollbar h-full">
           <Dropdown data={api} />
         </div>
       </div>
@@ -47,6 +47,9 @@ const Console = () => {
     state.consoleHistory,
     state.setConsoleHistory,
   ]);
+  useEffect(() => {
+    setCommandHistory([]);
+  }, []);
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
 
   const [input, setInput] = useState<string>("");
@@ -59,6 +62,7 @@ const Console = () => {
     try {
       const result = eval(input);
       const out = stringify(result);
+      if (!out) return;
       setCommandHistory([...commandHistory, { input, output: out }]); // Add input to history
     } catch (error) {
       if (error instanceof Error) {
@@ -134,13 +138,12 @@ const Console = () => {
       <div className="mt-4 overflow-y-scroll overflow-x-hidden scrollbar h-full text-sm w-full">
         {commandHistory.map((line, index) => (
           <div key={`output-${index}`} className="mr-1 w-full">
-            <div key={index} className={`whitespace-normal`}>
+            <div className={`whitespace-normal`}>
               {`>`} {line.input}
             </div>
             <div
-              key={index}
               style={{ wordWrap: "break-word" }}
-              className={`whitespace-pre-wrap text-wrap ${line.output.startsWith("Error") ? "bg-error/70" : ""}`}
+              className={`whitespace-pre-wrap text-wrap ${line.output?.startsWith("Error") ? "bg-error/70" : ""}`}
             >
               {line.output}
             </div>

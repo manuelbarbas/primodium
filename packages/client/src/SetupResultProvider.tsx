@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, memo } from "react";
 
 import "react-toastify/dist/ReactToastify.min.css";
 import { Hex } from "viem";
@@ -14,7 +14,7 @@ import { Maintenance } from "./screens/Maintenance";
 
 const MAINTENANCE = import.meta.env.PRI_MAINTENANCE === "true";
 
-export default function SetupResultProvider() {
+function SetupResultProvider() {
   const setupResult = useSetupResult();
   const [loading, setLoading] = useState(true);
   const { network, updatePlayerAccount, playerAccount, components } = setupResult;
@@ -76,3 +76,4 @@ export default function SetupResultProvider() {
     </MudProvider>
   );
 }
+export default memo(SetupResultProvider);

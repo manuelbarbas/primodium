@@ -188,8 +188,13 @@
     },
     "background": {
       "start": 81,
-      "end": 498.3061224489796,
+      "end": 265.8480045351474,
       "loop": true
+    },
+    "background2": {
+      "start": 267,
+      "end": 470.4959863945578,
+      "loop": false
     }
   }
 }

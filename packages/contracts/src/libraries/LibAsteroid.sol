@@ -4,9 +4,10 @@ pragma solidity ^0.8.21;
 import { entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { buildMainBase } from "src/libraries/SubsystemCalls.sol";
 import { AsteroidOwnedByKey } from "src/Keys.sol";
+import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 // tables
-import { Spawned, ReversePosition, Level, OwnedBy, Asteroid, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, PositionData, P_GameConfigData, P_GameConfig } from "codegen/index.sol";
+import { Spawned, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, PositionData, P_GameConfigData, P_GameConfig } from "codegen/index.sol";
 
 // libraries
 import { ColoniesMap } from "src/libraries/ColoniesMap.sol";
@@ -26,6 +27,9 @@ library LibAsteroid {
 
     uint256 asteroidCount = AsteroidCount.get() + 1;
     PositionData memory coord = getUniqueAsteroidPosition(asteroidCount);
+
+    uint256 gracePeriodLength = (P_GracePeriod.getSpaceRock() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
+    GracePeriod.set(asteroidEntity, block.timestamp + gracePeriodLength);
 
     Level.set(asteroidEntity, 1);
     Position.set(asteroidEntity, coord);

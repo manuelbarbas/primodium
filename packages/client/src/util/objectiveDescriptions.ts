@@ -190,11 +190,6 @@ export const ObjectiveDescriptions = new Map<EObjectives, string>([
   [EObjectives.UpgradeMainBase, "Upgrade your main base by clicking on the upgrade button in your main base."],
 
   [
-    EObjectives.CommissionMiningVessel,
-    "Commission one mining vessel at your main base by first adding a slot and then building one mining vessel.",
-  ],
-
-  [
     EObjectives.BuildStarmapper,
     "Construct a starmapper station. A starmapper station increases the number of fleets you can send at a time.",
   ],

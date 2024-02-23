@@ -7,11 +7,13 @@ import SetupResultProvider from "./SetupResultProvider";
 import { ampli } from "./ampli";
 import { Maintenance } from "./screens/Maintenance";
 import { wagmiConfig } from "./util/web3/wagmi";
+import { usePersistentStore } from "./game/stores/PersistentStore";
 
 const DEV = import.meta.env.PRI_DEV === "true";
 const MAINTENANCE = import.meta.env.PRI_MAINTENANCE === "true";
 
 export default function App() {
+  const fontStyle = usePersistentStore((state) => state.fontStyle);
   // Amplitude Analytics
   useEffect(() => {
     if (DEV) {
@@ -24,23 +26,26 @@ export default function App() {
   if (MAINTENANCE) return <Maintenance />;
 
   return (
-    <WagmiConfig config={wagmiConfig}>
-      <ToastContainer
-        toastClassName={`font-mono text-xs border bg-neutral border-secondary rounded-box`}
-        progressClassName={"bg-accent"}
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
-      <Connect />
-      <SetupResultProvider />
-    </WagmiConfig>
+    <div className={fontStyle}>
+      <WagmiConfig config={wagmiConfig}>
+        <ToastContainer
+          toastClassName={`text-xs border bg-neutral border-secondary rounded-box ${fontStyle}`}
+          progressClassName={"bg-accent"}
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
+        <Connect />
+        <SetupResultProvider />
+      </WagmiConfig>
+      <div id="modal-root" />
+    </div>
   );
 }

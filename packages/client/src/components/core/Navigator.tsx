@@ -1,6 +1,6 @@
 import { FC, ReactNode, createContext, useCallback, useContext, useLayoutEffect, useState } from "react";
 import { Button } from "./Button";
-import { Card, SecondaryCard } from "./Card";
+import { SecondaryCard } from "./Card";
 
 interface NavigationContextValue {
   navigateTo: (screenTitle: string, replace?: boolean) => void;
@@ -52,7 +52,7 @@ export const Navigator: FC<{
 
   return (
     <NavigationContext.Provider value={{ navigateTo, goBack, history }}>
-      <Card className={className}>{children}</Card>
+      <div className={className}>{children}</div>
     </NavigationContext.Provider>
   );
 };

@@ -1,28 +1,35 @@
 import { Scenes } from "@game/constants";
-import { Pane } from "src/components/core/Pane";
+import { Widget } from "src/components/core/Widget";
 import { AllResourceLabels } from "./AllResourceLabels";
-import { memo } from "react";
 import { useMud } from "src/hooks";
+import { getRandomRange } from "src/util/common";
+import { AllUtilityLabels } from "./AllUtilityLabels";
 
-export const Resources = memo(() => {
+export const Resources = () => {
   const { components } = useMud();
   const mapOpen = components.MapOpen.use()?.value;
 
-  if (mapOpen) return null;
-
   return (
-    <Pane
+    <Widget
       id="resources"
-      title="ASTEROID RESOURCES"
-      defaultCoord={{ x: 26, y: 11 }}
-      scene={Scenes.Asteroid}
+      title="RESOURCES"
+      icon="/img/resource/iron_resource.png"
+      defaultCoord={{
+        x: window.innerWidth / 2 + getRandomRange(-50, 50),
+        y: window.innerHeight / 2 + getRandomRange(-50, 50),
+      }}
+      defaultVisible
       defaultLocked
-      pinnable
+      scene={Scenes.Asteroid}
+      active={!mapOpen}
       minOpacity={0.5}
       draggable
+      lockable
+      pinnable
       persist
     >
       <AllResourceLabels />
-    </Pane>
+      <AllUtilityLabels />
+    </Widget>
   );
-});
+};

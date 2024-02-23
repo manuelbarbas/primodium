@@ -1,6 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
@@ -21,32 +22,30 @@ export const BuildQueue: React.FC<{ building: Entity }> = ({ building }) => {
           unit={active.unit}
           count={active.count}
           timeRemaining={active.timeRemaining}
-          // timeRemainingToNextUnit={active.timeRemainingToNextUnit}
           key={`queue-${0}`}
         />
       )}
-      {/* <p className="text-xs p-1 font-bold text-slate-400">QUEUE</p> */}
       <SecondaryCard className="h-44 overflow-y-auto scrollbar w-full">
-        {(!queue || queue.length === 0) && (
-          //TODO - use transaction queue
-          <p className="text-sm font-bold text-slate-400 h-full flex items-center justify-center">
-            {/* {transactionLoading ? "QUEUING TRAINING ORDER..." : "NO TRAINING ORDERS QUEUED"} */}
-          </p>
-        )}
-        {queue && queue.length !== 0 && (
-          <div className="w-full space-y-1">
-            {queue.map(({ unit, progress, count, timeRemaining }, i) => (
-              <ProgressBar
-                index={i + 1}
-                progress={progress}
-                unit={unit}
-                count={count}
-                timeRemaining={timeRemaining}
-                key={`queue-${i + 1}`}
-              />
-            ))}
-          </div>
-        )}
+        <TransactionQueueMask
+          queueItemId={"TRAIN" as Entity}
+          className="text-sm font-bold text-slate-400 h-full flex items-center justify-center"
+        >
+          {(!queue || queue.length === 0) && "NO TRAINING ORDERS QUEUED"}
+          {queue && queue.length !== 0 && (
+            <div className="w-full space-y-1">
+              {queue.map(({ unit, progress, count, timeRemaining }, i) => (
+                <ProgressBar
+                  index={i + 1}
+                  progress={progress}
+                  unit={unit}
+                  count={count}
+                  timeRemaining={timeRemaining}
+                  key={`queue-${i + 1}`}
+                />
+              ))}
+            </div>
+          )}
+        </TransactionQueueMask>
       </SecondaryCard>
       <div className="mt-2 flex gap-2">
         <Navigator.NavButton to="BuildUnit" className="btn-sm btn-secondary">

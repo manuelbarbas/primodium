@@ -3,7 +3,7 @@ import { Scene } from "engine/types";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { world } from "src/network/world";
 import { getAsteroidBounds, getAsteroidMaxBounds } from "src/util/outOfBounds";
-import { AnimationKeys, Assets, DepthLayers, SpriteKeys, Tilesets } from "@game/constants";
+import { Tilesets } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
 
 export const renderBounds = (scene: Scene) => {
@@ -174,64 +174,64 @@ export const renderBounds = (scene: Scene) => {
 
     nonBuildableLayer.postFX.addVignette(0.5, 0.5, 3, 1);
 
-    const object = scene.phaserScene.add
-      .sprite(maxBounds.minX * tileWidth, (maxBounds.maxY - 1.5) * -tileHeight, Assets.SpriteAtlas, SpriteKeys.Warning)
-      .setScale(1.5)
-      .setAlpha(1);
+    // const object = scene.phaserScene.add
+    //   .sprite(maxBounds.minX * tileWidth, (maxBounds.maxY - 1.5) * -tileHeight, Assets.SpriteAtlas, SpriteKeys.Warning)
+    //   .setScale(1.5)
+    //   .setAlpha(1);
 
-    scene.phaserScene.tweens.add({
-      targets: object,
-      x: { from: (maxBounds.minX - 3) * tileWidth, to: (maxBounds.maxX + 3) * tileHeight },
-      duration: 10000,
-      ease: (v: number) => Phaser.Math.Easing.Stepped(v, 60),
-      repeat: -1,
-    });
+    // scene.phaserScene.tweens.add({
+    //   targets: object,
+    //   x: { from: (maxBounds.minX - 3) * tileWidth, to: (maxBounds.maxX + 3) * tileHeight },
+    //   duration: 10000,
+    //   ease: (v: number) => Phaser.Math.Easing.Stepped(v, 60),
+    //   repeat: -1,
+    // });
 
-    object.setMask(new Phaser.Display.Masks.BitmapMask(scene.phaserScene, nonBuildableLayer));
+    // object.setMask(new Phaser.Display.Masks.BitmapMask(scene.phaserScene, nonBuildableLayer));
 
     //drones
-    scene.phaserScene.add
-      .sprite(
-        (maxBounds.minX - 0.1) * tileWidth,
-        (maxBounds.maxY - 0.8) * -tileHeight,
-        Assets.SpriteAtlas,
-        SpriteKeys.Drone
-      )
-      .play(AnimationKeys.Drone)
-      .setDepth(DepthLayers.Building);
+    // scene.phaserScene.add
+    //   .sprite(
+    //     (maxBounds.minX - 0.1) * tileWidth,
+    //     (maxBounds.maxY - 0.8) * -tileHeight,
+    //     Assets.SpriteAtlas,
+    //     SpriteKeys.Alloy
+    //   )
+    //   .play(AnimationKeys.Drone)
+    //   .setDepth(DepthLayers.Building);
 
-    scene.phaserScene.add
-      .sprite(
-        (maxBounds.minX - 0.2) * tileWidth,
-        (maxBounds.minY - 1.4) * -tileHeight,
-        Assets.SpriteAtlas,
-        SpriteKeys.Drone
-      )
-      .play(AnimationKeys.Drone)
-      .setScale(2, -2)
-      .setDepth(DepthLayers.Building);
+    // scene.phaserScene.add
+    //   .sprite(
+    //     (maxBounds.minX - 0.2) * tileWidth,
+    //     (maxBounds.minY - 1.4) * -tileHeight,
+    //     Assets.SpriteAtlas,
+    //     SpriteKeys.Drone
+    //   )
+    //   .play(AnimationKeys.Drone)
+    //   .setScale(2, -2)
+    //   .setDepth(DepthLayers.Building);
 
-    scene.phaserScene.add
-      .sprite(
-        (maxBounds.maxX + 0.1) * tileWidth,
-        (maxBounds.maxY - 0.8) * -tileHeight,
-        Assets.SpriteAtlas,
-        SpriteKeys.Drone
-      )
-      .play(AnimationKeys.Drone)
-      .setScale(-1, 1)
-      .setDepth(DepthLayers.Building);
+    // scene.phaserScene.add
+    //   .sprite(
+    //     (maxBounds.maxX + 0.1) * tileWidth,
+    //     (maxBounds.maxY - 0.8) * -tileHeight,
+    //     Assets.SpriteAtlas,
+    //     SpriteKeys.Drone
+    //   )
+    //   .play(AnimationKeys.Drone)
+    //   .setScale(-1, 1)
+    //   .setDepth(DepthLayers.Building);
 
-    scene.phaserScene.add
-      .sprite(
-        (maxBounds.maxX + 0.1) * tileWidth,
-        (maxBounds.minY - 1.2) * -tileHeight,
-        Assets.SpriteAtlas,
-        SpriteKeys.Drone
-      )
-      .play(AnimationKeys.Drone)
-      .setScale(-1, -1)
-      .setDepth(DepthLayers.Building);
+    // scene.phaserScene.add
+    //   .sprite(
+    //     (maxBounds.maxX + 0.1) * tileWidth,
+    //     (maxBounds.minY - 1.2) * -tileHeight,
+    //     Assets.SpriteAtlas,
+    //     SpriteKeys.Drone
+    //   )
+    //   .play(AnimationKeys.Drone)
+    //   .setScale(-1, -1)
+    //   .setDepth(DepthLayers.Building);
 
     // bordersLayer.renderDebug(scene.phaserScene.add.graphics().setAlpha(0.5));
   });

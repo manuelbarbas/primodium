@@ -1,10 +1,13 @@
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { useMud } from "src/hooks";
+import { STORAGE_PREFIX } from "src/util/constants";
+import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
+
 import { useLocation, useNavigate } from "react-router-dom";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
-import { useMud } from "src/hooks/useMud";
 import { components } from "src/network/components";
-import { spawn } from "src/network/setup/contractCalls/spawn";
+import { spawnAndAuthorizeSessionAccount } from "src/network/setup/contractCalls/spawn";
 import { useNetwork, useSwitchNetwork } from "wagmi";
 import { useShallow } from "zustand/react/shallow";
 import { Landing } from "./Landing";
@@ -21,7 +24,11 @@ export const Enter: React.FC = () => {
   const handlePlay = async () => {
     const hasSpawned = !!components.Home.get(playerEntity)?.value;
     if (!hasSpawned) {
-      await spawn(mud);
+      const privateKey = generatePrivateKey();
+      const account = privateKeyToAccount(privateKey);
+      localStorage.setItem(STORAGE_PREFIX + account.address, privateKey);
+
+      await spawnAndAuthorizeSessionAccount(mud, account.address);
     }
 
     navigate("/game" + location.search);

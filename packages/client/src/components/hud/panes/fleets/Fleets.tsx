@@ -3,9 +3,8 @@ import { Button } from "src/components/core/Button";
 
 const fleetsPanes = {
   fleets: lazy(() => import("./FleetsPane")),
-  createFleet: lazy(() => import("../../modals/fleets/CreateFleet")),
   manageFleet: lazy(() => import("./ManageFleet")),
-  transfer: lazy(() => import("./FleetTransfer")),
+  transfer: lazy(() => import("../transfer/Transfer")),
 };
 
 type NavButtonProps<J extends View = View> = ComponentProps<typeof Button> & {
@@ -47,10 +46,10 @@ export const Fleets = ({ initialState = "fleets", ...initialProps }: { initialSt
     }),
     [history]
   );
-  const navigateTo = (view: View, props = {}) => {
+  const navigateTo = useCallback((view: View, props = {}) => {
     const newViewState = { view, props };
     setHistory((prevHistory) => [...prevHistory, newViewState]);
-  };
+  }, []);
 
   const goBack = useCallback(() => {
     setHistory((prev) => {
@@ -59,48 +58,45 @@ export const Fleets = ({ initialState = "fleets", ...initialProps }: { initialSt
     });
   }, []);
 
-  function NavButton({
-    goto,
-    className,
-    children,
-    disabled,
-    onClick,
-    tooltip,
-    tooltipDirection = "top",
-    ...props
-  }: NavButtonProps) {
-    return (
-      <Button
-        tooltip={tooltip}
-        tooltipDirection={tooltipDirection}
-        className={className}
-        onClick={() => {
-          if (onClick) onClick();
-          navigateTo(goto, props);
-        }}
-        disabled={disabled || goto === history[history.length - 1].view}
-      >
-        {children}
-      </Button>
-    );
-  }
+  const NavButton = useCallback(
+    ({ goto, className, children, disabled, onClick, tooltip, tooltipDirection = "top", ...props }: NavButtonProps) => {
+      return (
+        <Button
+          tooltip={tooltip}
+          tooltipDirection={tooltipDirection}
+          className={className}
+          onClick={() => {
+            if (onClick) onClick();
+            navigateTo(goto, props);
+          }}
+          disabled={disabled || goto === history[history.length - 1].view}
+        >
+          {children}
+        </Button>
+      );
+    },
+    [history, navigateTo]
+  );
 
-  function BackButton({ children, onClick, className, disabled = false }: ComponentProps<typeof Button>) {
-    if (history.length <= 1) return <></>;
+  const BackButton = useCallback(
+    ({ children, onClick, className, disabled = false }: ComponentProps<typeof Button>) => {
+      if (history.length <= 1) return <></>;
 
-    return (
-      <Button
-        disabled={history.length <= 1 || disabled}
-        onClick={() => {
-          if (onClick) onClick();
-          goBack();
-        }}
-        className={`${className} btn-sm border-secondary`}
-      >
-        {children || "Back"}
-      </Button>
-    );
-  }
+      return (
+        <Button
+          disabled={history.length <= 1 || disabled}
+          onClick={() => {
+            if (onClick) onClick();
+            goBack();
+          }}
+          className={`${className} btn-sm border-secondary`}
+        >
+          {children || "Back"}
+        </Button>
+      );
+    },
+    [goBack, history.length]
+  );
 
   return (
     <FleetNavContext.Provider value={{ navigateTo, NavButton, BackButton, goBack }}>

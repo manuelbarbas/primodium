@@ -131,6 +131,19 @@ export const renderAsteroid = (scene: Scene) => {
       OnComponentSystem(components.PlayerAlliance, (_, { entity: _entity }) => {
         const playerEntity = components.Account.get()?.value;
         if (!playerEntity || (ownedBy !== _entity && playerEntity !== _entity)) return;
+        const outlineSprite =
+          asteroidData.mapId === 1
+            ? getOutlineSprite(playerEntity, _entity)
+            : getSecondaryOutlineSprite(playerEntity, _entity, asteroidData.maxLevel);
+
+        asteroidOutline.setComponent(Texture(Assets.SpriteAtlas, outlineSprite));
+      }),
+      OnComponentSystem(components.OwnedBy, (_, { entity: _entity }) => {
+        if (entity !== _entity) return;
+        const outlineSprite =
+          asteroidData.mapId === 1
+            ? getOutlineSprite(playerEntity, _entity)
+            : getSecondaryOutlineSprite(playerEntity, _entity, asteroidData.maxLevel);
 
         asteroidOutline.setComponent(Texture(Assets.SpriteAtlas, outlineSprite));
       }),
@@ -169,9 +182,12 @@ export const renderAsteroid = (scene: Scene) => {
       OnComponentSystem(components.SelectedRock, (gameObject, update) => {
         const isSelected = update.value[0]?.value === entity;
         const wasSelected = update.value[1]?.value === entity;
+        const graceTime = components.GracePeriod.get(entity)?.value ?? 0n;
+        const time = components.Time.get()?.value ?? 0n;
+
         if (isSelected) {
           gameObject.alpha = 0;
-        } else if (wasSelected) {
+        } else if (wasSelected && graceTime !== 0n && graceTime >= time) {
           gameObject.alpha = 0.8;
         }
       }),
@@ -180,7 +196,7 @@ export const renderAsteroid = (scene: Scene) => {
         const graceTime = components.GracePeriod.get(entity)?.value ?? 0n;
         const time = components.Time.get()?.value ?? 0n;
 
-        if (isSelected || time >= graceTime) {
+        if (isSelected || time >= graceTime || graceTime == 0n) {
           gameObject.alpha = 0;
         } else {
           gameObject.alpha = 0.8;

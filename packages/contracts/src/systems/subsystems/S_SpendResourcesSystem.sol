@@ -11,11 +11,7 @@ contract S_SpendResourcesSystem is System {
     LibResource.spendBuildingRequiredResources(buildingEntity, level);
   }
 
-  function spendUpgradeResources(
-    bytes32 spaceRockEntity,
-    bytes32 upgradePrototype,
-    uint256 level
-  ) public {
+  function spendUpgradeResources(bytes32 spaceRockEntity, bytes32 upgradePrototype, uint256 level) public {
     LibResource.spendUpgradeResources(spaceRockEntity, upgradePrototype, level);
   }
 

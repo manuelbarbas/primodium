@@ -1,10 +1,10 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
-import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { Scene } from "engine/types";
 import { components, components as comps } from "src/network/components";
 import { Hex } from "viem";
 import { PIRATE_KEY, SPEED_SCALE, UnitStorages } from "./constants";
+import { getInGracePeriod } from "./defense";
 import { hashKeyEntity } from "./encode";
 import { entityToFleetName } from "./name";
 
@@ -125,13 +125,27 @@ export const getFleetTilePosition = (scene: Scene, fleet: Entity) => {
   const { tileHeight, tileWidth } = scene.tilemap;
   const pixelPosition = getFleetPixelPosition(scene, fleet);
 
-  return pixelCoordToTileCoord({ x: pixelPosition.x, y: -pixelPosition.y }, tileWidth, tileHeight);
+  // using the helper function rounds to the nearest tile which doesnt work here
+  return { x: pixelPosition.x / tileWidth, y: -pixelPosition.y / tileHeight };
 };
 
 export const getFleetPixelPosition = (scene: Scene, fleet: Entity) => {
-  const spaceRock = components.FleetMovement.get(fleet)?.destination as Entity;
+  const movement = components.FleetMovement.get(fleet);
+  if (!movement) throw new Error("Fleet has no movement component");
+  const time = components.Time.get()?.value ?? 0n;
+
+  if (movement.arrivalTime > time) {
+    const fleetTransitId = fleet + "_fleet";
+    const fleetGroup = scene.objectPool.getGroup(fleetTransitId);
+    const fleetIcon = fleetGroup.get(`${fleet}-fleetIcon`, "Graphics");
+    return { x: fleetIcon.position.x, y: fleetIcon.position.y };
+  }
+
+  const spaceRock = movement.destination as Entity;
   const rockGroup = scene.objectPool.getGroup(spaceRock + "_spacerockOrbits");
-  const position = rockGroup.get(fleet + "_fleetOrbit", "Graphics").position;
+
+  const fleetOrbitId = `fleetOrbit-${spaceRock}-${fleet}`;
+  const position = rockGroup.get(fleetOrbitId, "Graphics").position;
   return { x: position.x, y: position.y };
 };
 
@@ -182,20 +196,12 @@ export function getCanAttackSomeone(entity: Entity) {
   const isFleet = components.IsFleet.get(entity);
   const spaceRock = (isFleet ? components.FleetMovement.get(entity)?.destination : entity) as Entity | undefined;
   if (!spaceRock) return false;
-  const player = components.Account.get()?.value;
-  if (components.OwnedBy.get(spaceRock)?.value !== player) return true;
-
-  const allFleets = getOrbitingFleets(spaceRock);
-  return !!allFleets.find((fleet) => {
-    if (fleet === entity) return false;
-    const owner = components.OwnedBy.get(fleet)?.value as Entity;
-    if (!owner) return false;
-    const ownerOwner = components.OwnedBy.get(entity)?.value;
-    return ownerOwner !== player;
-  });
+  return [spaceRock, ...getOrbitingFleets(spaceRock)].some((target) => getCanAttack(entity, target));
 }
 
 export function getCanAttack(originEntity: Entity, targetEntity: Entity) {
+  if (originEntity === targetEntity) return false;
+  if (getInGracePeriod(targetEntity).inGracePeriod) return false;
   const isOriginFleet = components.IsFleet.get(originEntity);
   const isTargetFleet = components.IsFleet.get(targetEntity);
   if (!isOriginFleet && !isTargetFleet) return false;

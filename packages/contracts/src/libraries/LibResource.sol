@@ -6,7 +6,7 @@ import { LibStorage } from "libraries/LibStorage.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { UtilityMap } from "libraries/UtilityMap.sol";
 
-import { P_ColonyShipConfig, P_Transportables, P_IsRecoverable, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { P_CapitalShipConfig, P_Transportables, P_IsRecoverable, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
 import { AsteroidOwnedByKey, UnitKey } from "src/Keys.sol";
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
@@ -45,16 +45,12 @@ library LibResource {
   /// @param prototype Unit Prototype
   /// @param count Quantity of units to be trained
   function spendUnitRequiredResources(bytes32 spaceRockEntity, bytes32 prototype, uint256 count) internal {
-    if (prototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip))) {
+    if (prototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip))) {
       require(count == 1, "[SpendResources] Colony ships can only be trained one at a time");
-      uint8 colonyShipResource = P_ColonyShipConfig.getResourceType();
-      uint256 cost = P_ColonyShipConfig.getResourceAmount() *
-        LibUnit.getNextColonyShipResourceCostMultiplier(spaceRockEntity);
-      require(
-        ResourceCount.get(spaceRockEntity, colonyShipResource) >= cost,
-        "[SpendResources] Not enough resources to train colony ship"
-      );
-      LibStorage.decreaseStoredResource(spaceRockEntity, colonyShipResource, cost);
+      uint256 cost = P_CapitalShipConfig.getInitialCost() *
+        LibUnit.getCapitalShipCostMultiplier(OwnedBy.get(spaceRockEntity));
+
+      spendResource(spaceRockEntity, prototype, P_CapitalShipConfig.getResource(), cost);
     }
 
     uint256 level = UnitLevel.get(spaceRockEntity, prototype);
@@ -67,12 +63,12 @@ library LibResource {
   /// @notice Spends resources required to upgrade a unit
   /// @notice claims all resources beforehand
   /// @param spaceRockEntity ID of the spaceRock upgrading
-  /// @param unitPrototype Prototype ID of the unit to upgrade
+  /// @param prototype Prototype ID of the prototype to upgrade
   /// @param level Target level for the building
-  function spendUpgradeResources(bytes32 spaceRockEntity, bytes32 unitPrototype, uint256 level) internal {
-    P_RequiredUpgradeResourcesData memory requiredResources = P_RequiredUpgradeResources.get(unitPrototype, level);
+  function spendUpgradeResources(bytes32 spaceRockEntity, bytes32 prototype, uint256 level) internal {
+    P_RequiredUpgradeResourcesData memory requiredResources = P_RequiredUpgradeResources.get(prototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
-      spendResource(spaceRockEntity, unitPrototype, requiredResources.resources[i], requiredResources.amounts[i]);
+      spendResource(spaceRockEntity, prototype, requiredResources.resources[i], requiredResources.amounts[i]);
     }
   }
 
@@ -106,6 +102,7 @@ library LibResource {
   /// @param spaceRockEntity ID of the spaceRock to claim
   function claimAllResources(bytes32 spaceRockEntity) internal {
     uint256 lastClaimed = LastClaimedAt.get(spaceRockEntity);
+
     if (lastClaimed == block.timestamp) return;
 
     if (lastClaimed == 0) {
@@ -164,9 +161,8 @@ library LibResource {
       } else {
         //if the decrease is more than the sum of increase and current amount than the sum is tha maximum that can be consumed
         // we use this amount to see how much time the resource can be consumed
-        consumptionTimeLengths[resource] = (resourceCount + increase) / consumptionRate;
-        //we use the time length to reduce current resource amount by the difference of the decrease and the increase
-        decrease = consumptionRate * consumptionTimeLengths[resource];
+        decrease = resourceCount + increase;
+        consumptionTimeLengths[resource] = decrease / consumptionRate;
         //consumption is from current space rock and will be in the future
         LibStorage.decreaseStoredResource(spaceRockEntity, resource, decrease - increase);
       }
@@ -262,23 +258,5 @@ library LibResource {
       else resourceCounts[i] -= vaulted;
       totalResources += resourceCounts[i];
     }
-  }
-
-  function updateScore(bytes32 player, bytes32 spaceRock, uint8 resource, uint256 value) internal {
-    uint256 count = ResourceCount.get(spaceRock, resource);
-    uint256 currentScore = Score.get(player);
-    uint256 scoreChangeAmount = P_ScoreMultiplier.get(resource);
-
-    if (value < count) {
-      scoreChangeAmount *= (count - value);
-      if (scoreChangeAmount > currentScore) {
-        scoreChangeAmount = currentScore;
-      }
-      currentScore -= scoreChangeAmount;
-    } else {
-      scoreChangeAmount *= (value - count);
-      currentScore += scoreChangeAmount;
-    }
-    Score.set(player, currentScore);
   }
 }

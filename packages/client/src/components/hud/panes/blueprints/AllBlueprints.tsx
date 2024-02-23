@@ -10,9 +10,7 @@ import { Action, EntityType } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
 import { Button } from "../../../core/Button";
-import { Card } from "../../../core/Card";
 import { BuildingImageFromType } from "../../../shared/BuildingImage";
-import { BlueprintInfo } from "./BlueprintInfo";
 
 const BlueprintButton: React.FC<{
   buildingType: Entity;
@@ -24,7 +22,7 @@ const BlueprintButton: React.FC<{
     hooks: { useKeybinds },
   } = usePrimodium().api();
   const keybinds = useKeybinds();
-  const selectedRockEntity = components.SelectedRock.use()?.value;
+  const selectedRockEntity = components.ActiveRock.use()?.value;
   const rockMainBase = components.Home.use(selectedRockEntity)?.value;
   const selectedBuilding = components.SelectedBuilding.use()?.value;
   const mainbaseLevel = components.Level.use(rockMainBase as Entity)?.value ?? 1n;
@@ -40,6 +38,8 @@ const BlueprintButton: React.FC<{
       tooltip={getBlockTypeName(buildingType)}
       keybind={keybindActive ? keybind : undefined}
       tooltipDirection={tooltipDirection ?? "right"}
+      onPointerEnter={() => components.HoverEntity.set({ value: buildingType })}
+      onPointerLeave={() => components.HoverEntity.remove()}
       clickSound={AudioKeys.Bleep7}
       onClick={() => {
         if (selectedBuilding === buildingType) {
@@ -78,7 +78,6 @@ const BlueprintButton: React.FC<{
 };
 
 export const AllBlueprints = () => {
-  const selectedBuilding = components.SelectedBuilding.use()?.value;
   const [index, setIndex] = useState(0);
 
   return (
@@ -207,6 +206,12 @@ export const AllBlueprints = () => {
               keybind={KeybindActions.Hotbar5}
               keybindActive={index === 2}
             />
+            <BlueprintButton
+              tooltipDirection="top"
+              buildingType={EntityType.Shipyard}
+              keybind={KeybindActions.Hotbar6}
+              keybindActive={index === 2}
+            />
           </div>
         </div>
       </div>
@@ -237,11 +242,6 @@ export const AllBlueprints = () => {
           </p>
         </Button>
       </div>
-      {selectedBuilding && (
-        <Card className="absolute card bottom-0 left-0 translate-y-full w-full -translate-x-[1px] border-r-0 py-1">
-          <BlueprintInfo building={selectedBuilding} />
-        </Card>
-      )}
     </>
   );
 };

@@ -15,7 +15,7 @@ export const disbandFleet = async (mud: MUD, fleet: Entity) => {
       functionName: "disbandFleet",
       systemId: getSystemId("FleetDisbandSystem"),
       args: [fleet as Hex],
-      delegate: true,
+      withSession: true,
     },
     {
       id: disbandId,
@@ -24,16 +24,9 @@ export const disbandFleet = async (mud: MUD, fleet: Entity) => {
   );
 };
 
-export const disbandFleetUnitsResources = async (
-  mud: MUD,
-  fleet: Entity,
-  content: {
-    units?: Record<Entity, bigint>;
-    resources?: Record<Entity, bigint>;
-  }
-) => {
-  const unitCounts = toUnitCountArray(content.units ?? {});
-  const resourceCounts = toTransportableResourceArray(content.resources ?? {});
+export const disbandFleetUnitsResources = async (mud: MUD, fleet: Entity, content: Map<Entity, bigint>) => {
+  const unitCounts = toUnitCountArray(content);
+  const resourceCounts = toTransportableResourceArray(content);
   const totalUnits = unitCounts.reduce((acc, cur) => acc + cur, 0n);
   const totalResources = resourceCounts.reduce((acc, cur) => acc + cur, 0n);
 
@@ -46,7 +39,7 @@ export const disbandFleetUnitsResources = async (
         functionName: "disbandResources",
         systemId: getSystemId("FleetDisbandSystem"),
         args: [fleet as Hex, resourceCounts],
-        delegate: true,
+        withSession: true,
       },
       {
         id: disbandId,
@@ -61,7 +54,7 @@ export const disbandFleetUnitsResources = async (
         functionName: "disbandUnits",
         systemId: getSystemId("FleetDisbandSystem"),
         args: [fleet as Hex, unitCounts],
-        delegate: true,
+        withSession: true,
       },
       {
         id: hashEntities(TransactionQueueType.DisbandFleet, fleet),
@@ -75,7 +68,7 @@ export const disbandFleetUnitsResources = async (
         functionName: "disbandUnitsAndResourcesFromFleet",
         systemId: getSystemId("FleetDisbandSystem"),
         args: [fleet as Hex, unitCounts, resourceCounts],
-        delegate: true,
+        withSession: true,
       },
       {
         id: hashEntities(TransactionQueueType.DisbandFleet, fleet),

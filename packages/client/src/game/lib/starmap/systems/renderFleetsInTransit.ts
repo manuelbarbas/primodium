@@ -153,9 +153,7 @@ export const renderFleetsInTransit = (scene: Scene) => {
         const startX = originPixelCoord.x + (destinationPixelCoord.x - originPixelCoord.x) * progress;
         const startY = originPixelCoord.y + (destinationPixelCoord.y - originPixelCoord.y) * progress;
 
-        gameObject.x = startX;
-        gameObject.y = startY;
-        fleetIcon.position = { x: startX, y: startY };
+        fleetIcon.setComponent(ObjectPosition({ x: startX, y: startY }));
       }),
     ]);
   };

@@ -2,16 +2,17 @@
 pragma solidity >=0.8.21;
 
 import { EResource } from "src/Types.sol";
-import { IsFleet, P_Transportables, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { IsFleet, GracePeriod, P_GracePeriod, P_Transportables, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
-import { LibFleetAttributes } from "libraries/fleet/LibFleetAttributes.sol";
+import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
+import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 import { EResource, EFleetStance } from "src/Types.sol";
 
@@ -27,8 +28,12 @@ library LibFleet {
     LibStorage.decreaseStoredResource(spaceRock, uint8(EResource.U_MaxMoves), 1);
     //require(ResourceCount.get(spaceRock, EResource.U_Cargo) > 0, "[Fleet] Space rock has no cargo capacity"))
     fleetId = LibEncode.getTimedHash(playerEntity, FleetKey);
+    uint256 gracePeriodLength = (P_GracePeriod.getFleet() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
+    GracePeriod.set(fleetId, block.timestamp + gracePeriodLength);
+
     OwnedBy.set(fleetId, spaceRock);
     IsFleet.set(fleetId, true);
+
     FleetMovement.set(
       fleetId,
       FleetMovementData({
@@ -49,7 +54,7 @@ library LibFleet {
       increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], false);
     }
 
-    uint256 freeCargoSpace = LibFleetAttributes.getFreeCargoSpace(fleetId);
+    uint256 freeCargoSpace = LibCombatAttributes.getCargoSpace(fleetId);
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       uint8 resource = transportables[i];
@@ -82,9 +87,33 @@ library LibFleet {
     UnitCount.set(fleetId, unitPrototype, fleetUnitCount - unitCount);
   }
 
+  function getResourceCounts(bytes32 fleetId) internal view returns (uint256[] memory resourceCounts) {
+    uint8[] memory transportables = P_Transportables.get();
+    resourceCounts = new uint256[](transportables.length);
+    for (uint256 i = 0; i < transportables.length; i++) {
+      resourceCounts[i] = ResourceCount.get(fleetId, transportables[i]);
+    }
+    return resourceCounts;
+  }
+
+  function getResourceCountsWithAllies(
+    bytes32 fleetId
+  ) internal view returns (uint256[] memory resourceCounts, uint256 totalResources) {
+    bytes32[] memory followerFleetIds = LibFleetStance.getFollowerFleets(fleetId);
+    uint8[] memory transportables = P_Transportables.get();
+    resourceCounts = new uint256[](transportables.length);
+    for (uint256 i = 0; i < transportables.length; i++) {
+      resourceCounts[i] = ResourceCount.get(fleetId, transportables[i]);
+      for (uint8 j = 0; j < followerFleetIds.length; j++) {
+        resourceCounts[i] += ResourceCount.get(followerFleetIds[j], transportables[i]);
+      }
+      totalResources += resourceCounts[i];
+    }
+  }
+
   function increaseFleetResource(bytes32 fleetId, uint8 resource, uint256 amount) internal {
     if (amount == 0) return;
-    uint256 freeCargoSpace = LibFleetAttributes.getFreeCargoSpace(fleetId);
+    uint256 freeCargoSpace = LibCombatAttributes.getCargoSpace(fleetId);
     require(freeCargoSpace >= amount, "[Fleet] Not enough storage to add resource");
     ResourceCount.set(fleetId, resource, ResourceCount.get(fleetId, resource) + amount);
   }
@@ -103,10 +132,10 @@ library LibFleet {
 
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
-      uint256 fleetResourceCount = ResourceCount.get(fleetId, i);
+      uint256 fleetResourceCount = ResourceCount.get(fleetId, transportables[i]);
       if (fleetResourceCount == 0) continue;
-      LibStorage.increaseStoredResource(spaceRock, i, fleetResourceCount);
-      decreaseFleetResource(fleetId, i, fleetResourceCount);
+      LibStorage.increaseStoredResource(spaceRock, transportables[i], fleetResourceCount);
+      decreaseFleetResource(fleetId, transportables[i], fleetResourceCount);
     }
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
@@ -141,14 +170,14 @@ library LibFleet {
     for (uint8 i = 0; i < transportables.length; i++) {
       uint256 totalResourceCount = 0;
       for (uint256 j = 1; j < fleets.length; j++) {
-        uint256 resourceCount = ResourceCount.get(fleets[j], i);
+        uint256 resourceCount = ResourceCount.get(fleets[j], transportables[i]);
         if (resourceCount == 0) continue;
-        decreaseFleetResource(fleets[j], i, resourceCount);
+        decreaseFleetResource(fleets[j], transportables[i], resourceCount);
 
         totalResourceCount += resourceCount;
       }
       if (totalResourceCount == 0) continue;
-      increaseFleetResource(fleets[0], i, totalResourceCount);
+      increaseFleetResource(fleets[0], transportables[i], totalResourceCount);
     }
 
     for (uint256 i = 1; i < fleets.length; i++) {
