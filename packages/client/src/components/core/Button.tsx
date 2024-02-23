@@ -84,9 +84,9 @@ export const Button: React.FC<{
           onPointerEnter?.();
         }}
         onPointerLeave={onPointerLeave}
-        className={`btn join-item inline pointer-events-auto font-bold outline-none h-fit bg-opacity-50 ${className}  ${
-          disabled ? "opacity-30" : ""
-        } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
+        className={`btn join-item inline pointer-events-auto disabled:text-opacity-50 font-bold outline-none h-fit bg-opacity-50 ${className} ${
+          selected ? "border-accent z-10 bg-base-100 " : ""
+        } `}
       >
         {loading && <Loader />}
         {!loading && children}
