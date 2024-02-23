@@ -1,8 +1,6 @@
-// import { SceneConfig } from "../../types";
 import { SceneConfig } from "engine/types";
-import { Scenes } from "../constants";
+import { DepthLayers, Scenes, Tilemaps } from "../constants";
 import { animationConfig } from "./animation";
-import asteroidMap from "../../maps/asteroid_0.7.json";
 
 export const asteroidSceneConfig: SceneConfig = {
   key: Scenes.Asteroid,
@@ -16,7 +14,29 @@ export const asteroidSceneConfig: SceneConfig = {
   animations: animationConfig,
   cullingChunkSize: 64,
   tilemap: {
-    tileWidth: asteroidMap.tilewidth,
-    tileHeight: asteroidMap.tileheight,
+    tileWidth: 32,
+    tileHeight: 32,
+    config: {
+      [Tilemaps.AsteroidLarge]: {
+        ["Fog"]: {
+          depth: DepthLayers.Marker,
+        },
+      },
+      [Tilemaps.AsteroidMedium]: {
+        ["Fog"]: {
+          depth: DepthLayers.Marker,
+        },
+      },
+      [Tilemaps.AsteroidSmall]: {
+        ["Fog"]: {
+          depth: DepthLayers.Marker,
+        },
+      },
+      [Tilemaps.AsteroidMicro]: {
+        ["Fog"]: {
+          depth: DepthLayers.Marker,
+        },
+      },
+    },
   },
 };

@@ -23,12 +23,11 @@ export const renderBounds = (scene: Scene) => {
 
   //handle tilesets
   const outerBorderTileset = map.addTilesetImage(Tilesets.BoundsOuterBorder, undefined, tileWidth, tileHeight, 1, 2);
-  const innerBorderTileset = map.addTilesetImage(Tilesets.BoundsInnerBorder, undefined, tileWidth, tileHeight, 1, 2, 9);
+  const innerBorderTileset = map.addTilesetImage(Tilesets.BoundsInnerBorder, undefined, tileWidth, tileHeight, 1, 2);
   const nonBuildableTileset = map.addTilesetImage(Tilesets.BoundsNonBuildable, undefined, tileWidth, tileHeight, 1, 2);
 
-  defineComponentSystem(systemsWorld, components.ActiveRock, ({ value }) => {
+  const drawBounds = (activeRock: Entity) => {
     map.removeAllLayers();
-    const activeRock = value[0]?.value as Entity;
     scene.objectPool.removeGroup("bounds");
     const maxBounds = getAsteroidMaxBounds(activeRock);
     const currentBounds = getAsteroidBounds(activeRock);
@@ -54,17 +53,11 @@ export const renderBounds = (scene: Scene) => {
     const height = maxBoundsEnd.y - maxBoundsStart.y;
 
     //handle layers
-    const bordersLayer = map?.createBlankLayer(
-      "borders",
-      [outerBorderTileset, innerBorderTileset],
-      layerX,
-      layerY,
-      width,
-      height
-    );
+    const outerBordersLayer = map?.createBlankLayer("borders", outerBorderTileset, layerX, layerY, width, height);
+    const innerBorderLayer = map?.createBlankLayer("innerBorders", innerBorderTileset, layerX, layerY, width, height);
     const nonBuildableLayer = map?.createBlankLayer("nonBuildable", nonBuildableTileset, layerX, layerY, width, height);
-    bordersLayer?.setDepth(10);
-    if (!bordersLayer || !nonBuildableLayer) return;
+    outerBordersLayer?.setDepth(10);
+    if (!outerBordersLayer || !nonBuildableLayer || !innerBorderLayer) return;
 
     for (let x = maxBoundsStart.x; x < maxBoundsEnd.x; x++) {
       for (let y = maxBoundsStart.x; y < maxBoundsEnd.y; y++) {
@@ -104,7 +97,7 @@ export const renderBounds = (scene: Scene) => {
               break;
           }
 
-          bordersLayer.putTileAt(tileId, x, y);
+          outerBordersLayer.putTileAt(tileId, x, y);
         }
 
         // //dont render non buildable tiles inside the current bounds
@@ -116,28 +109,28 @@ export const renderBounds = (scene: Scene) => {
         ) {
           switch (true) {
             case x === currentBoundsStart.x - 1 && y === currentBoundsStart.y - 1:
-              bordersLayer.putTileAt(0, x, y);
+              innerBorderLayer.putTileAt(0, x, y);
               break;
             case x === currentBoundsEnd.x && y === currentBoundsStart.y - 1:
-              bordersLayer.putTileAt(0, x, y);
+              innerBorderLayer.putTileAt(0, x, y);
               break;
             case x === currentBoundsStart.x - 1 && y === currentBoundsEnd.y:
-              bordersLayer.putTileAt(0, x, y);
+              innerBorderLayer.putTileAt(0, x, y);
               break;
             case x === currentBoundsEnd.x && y === currentBoundsEnd.y:
-              bordersLayer.putTileAt(0, x, y);
+              innerBorderLayer.putTileAt(0, x, y);
               break;
             case x === currentBoundsStart.x - 1:
-              bordersLayer.putTileAt(10, x, y);
+              innerBorderLayer.putTileAt(1, x, y);
               break;
             case x === currentBoundsEnd.x:
-              bordersLayer.putTileAt(11, x, y);
+              innerBorderLayer.putTileAt(2, x, y);
               break;
             case y === currentBoundsStart.y - 1:
-              bordersLayer.putTileAt(12, x, y);
+              innerBorderLayer.putTileAt(3, x, y);
               break;
             case y === currentBoundsEnd.y:
-              bordersLayer.putTileAt(13, x, y);
+              innerBorderLayer.putTileAt(4, x, y);
               break;
 
             default:
@@ -152,7 +145,7 @@ export const renderBounds = (scene: Scene) => {
 
     nonBuildableLayer.setAlpha(0.8);
 
-    const glowEffect = bordersLayer.postFX.addGlow(0x008b8b, 4, 0, false, 0.05, 30);
+    const glowEffect = outerBordersLayer.postFX.addGlow(0x008b8b, 4, 0, false, 0.05, 30);
 
     scene.phaserScene.tweens.add({
       targets: nonBuildableLayer,
@@ -174,6 +167,7 @@ export const renderBounds = (scene: Scene) => {
 
     nonBuildableLayer.postFX.addVignette(0.5, 0.5, 3, 1);
 
+    //TODO: map decorations
     // const object = scene.phaserScene.add
     //   .sprite(maxBounds.minX * tileWidth, (maxBounds.maxY - 1.5) * -tileHeight, Assets.SpriteAtlas, SpriteKeys.Warning)
     //   .setScale(1.5)
@@ -234,5 +228,22 @@ export const renderBounds = (scene: Scene) => {
     //   .setDepth(DepthLayers.Building);
 
     // bordersLayer.renderDebug(scene.phaserScene.add.graphics().setAlpha(0.5));
+  };
+
+  defineComponentSystem(systemsWorld, components.ActiveRock, ({ value }) => {
+    const activeRock = value[0]?.value as Entity;
+    drawBounds(activeRock);
+    defineComponentSystem(
+      systemsWorld,
+      components.Level,
+      ({ entity }) => {
+        if (value[0] && value[0].value !== entity) return;
+
+        drawBounds(activeRock);
+      },
+      { runOnInit: false }
+    );
   });
+
+  systemsWorld.registerDisposer(() => map.destroy());
 };

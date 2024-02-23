@@ -16,7 +16,7 @@ type PhaserAudio =
 export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, autoStart = true) => {
   const {
     camera: { minZoom, maxZoom, pinchSpeed, wheelSpeed, defaultZoom },
-    tilemap: { defaultKey, tileWidth, tileHeight },
+    tilemap: { defaultKey, tileWidth, tileHeight, config: tilemapConfig },
     cullingChunkSize,
     animations,
   } = config;
@@ -39,7 +39,7 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
     defaultZoom,
   });
 
-  const tilemap = createTilemap(scene, tileWidth, tileHeight, defaultKey);
+  const tilemap = createTilemap(scene, tileWidth, tileHeight, defaultKey, tilemapConfig);
 
   //create sprite animations
   if (animations) {

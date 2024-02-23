@@ -16,13 +16,7 @@ export const renderTilemap = (scene: Scene) => {
 
     if (!asteroidData) return;
 
-    console.log(asteroidData);
-
     //render tilemap
     scene.tilemap.render(MaxLevelToTilemap[Number(asteroidData.maxLevel)]);
-  });
-
-  defineComponentSystem(systemsWorld, components.SelectedRock, ({ value }) => {
-    console.log(components.Asteroid.get(value[0]?.value as Entity));
   });
 };

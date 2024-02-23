@@ -31,7 +31,7 @@ export enum Tilesets {
 }
 
 export enum Tilemaps {
-  AsteroidPlayer = "asteroid-player",
+  AsteroidMicro = "asteroid-micro",
   AsteroidSmall = "asteroid-small",
   AsteroidMedium = "asteroid-medium",
   AsteroidLarge = "asteroid-large",
@@ -540,8 +540,8 @@ export const KeyNames: { [key: string]: string } = {
 };
 
 export const MaxLevelToTilemap: Record<number, Tilemaps> = {
-  1: Tilemaps.AsteroidSmall,
-  3: Tilemaps.AsteroidPlayer,
-  5: Tilemaps.AsteroidPlayer,
-  8: Tilemaps.AsteroidPlayer,
+  1: Tilemaps.AsteroidMicro,
+  3: Tilemaps.AsteroidSmall,
+  5: Tilemaps.AsteroidLarge,
+  8: Tilemaps.AsteroidLarge,
 };
