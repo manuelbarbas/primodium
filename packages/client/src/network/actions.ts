@@ -142,7 +142,7 @@ export async function executeBatch<T extends keyof MetadataTypes, functionName e
       (system) => `${system.functionName} `
     )} with address ${account.address.slice(0, 6)} ${authorizing ? "(using session account)" : ""}`
   );
-  console.log("[Tx] Executing batch system with address: ", account.address.slice(0, 6));
+
   const queuedTx = async () => {
     if (authorizing && mud.sessionAccount) {
       const params = encodeSystemCallsFrom(IWorldAbi, mud.playerAccount.address, systemCalls).map(

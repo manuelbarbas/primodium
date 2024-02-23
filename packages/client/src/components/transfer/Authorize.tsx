@@ -28,11 +28,6 @@ export function Authorize() {
   const sessionEntity = sessionAccount?.entity;
   const sessionAddress = sessionAccount?.address;
 
-  const savePrivateKey = async (privateKey: string) => {
-    const account = privateKeyToAccount(privateKey as Hex);
-    localStorage.setItem(STORAGE_PREFIX + account.address, privateKey);
-  };
-
   const submitPrivateKey = async (privateKey: string) => {
     // Validate the private key format here
     // This is a basic example, adjust the validation according to your requirements
@@ -46,9 +41,11 @@ export function Authorize() {
   };
 
   const handleRandomPress = () => {
-    const randomPKey = generatePrivateKey();
-    savePrivateKey(randomPKey);
-    return randomPKey;
+    const privateKey = generatePrivateKey();
+    const account = privateKeyToAccount(privateKey as Hex);
+    localStorage.setItem(STORAGE_PREFIX + account.address, privateKey);
+
+    return privateKey;
   };
 
   const removeSessionKey = async (publicKey: Address) => {

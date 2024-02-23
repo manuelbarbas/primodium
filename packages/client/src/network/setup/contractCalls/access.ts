@@ -11,7 +11,7 @@ export const grantAccess = async (mud: MUD, address: Address) => {
   await execute(
     {
       mud,
-      systemId: getSystemId("DelegationSystem"),
+      systemId: getSystemId("core"),
       functionName: "registerDelegation",
       args: [address, UNLIMITED_DELEGATION, "0x0"],
       withSession: false,
