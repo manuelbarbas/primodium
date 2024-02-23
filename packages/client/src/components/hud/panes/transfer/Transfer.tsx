@@ -127,18 +127,6 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
     window.removeEventListener("mousemove", (e) => setDragLocation({ x: e.clientX, y: e.clientY }));
   }, [dragging, deltas, hoveringArea]);
 
-  const handleKeyUp = useCallback(
-    (e: KeyboardEvent) => {
-      console.log("key up", e.key);
-      if (!dragging) return;
-      if (["Shift", "Alt"].includes(e.key)) {
-        console.log("hello");
-        setDragging({ ...dragging, count: parseResourceCount(dragging.entity, "1") });
-      }
-    },
-    [dragging]
-  );
-
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (!dragging) return;
@@ -182,13 +170,11 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
   useEffect(() => {
     window.addEventListener("mouseup", stopDragging);
     window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
     return () => {
       window.removeEventListener("mouseup", stopDragging);
       window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [handleKeyDown, handleKeyUp, stopDragging]);
+  }, [handleKeyDown, stopDragging]);
 
   return (
     <TransactionQueueMask queueItemId={"TRANSFER" as Entity} className="w-full h-full flex flex-col gap-2 p-2">

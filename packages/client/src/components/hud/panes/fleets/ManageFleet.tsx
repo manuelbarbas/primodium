@@ -77,12 +77,6 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
                     return <ResourceIcon key={`unit-${unit}`} resource={unit as Entity} amount={formatNumber(count)} />;
                   })}
               </div>
-
-              {units.size == 0 && (
-                <div className="flex-1 absolute w-full h-full p-4 grid place-items-center bg-black/50">
-                  <p className="uppercase font-bold text-error">No units</p>
-                </div>
-              )}
             </div>
             <div className="relative flex flex-col bg-base-100 p-2 gap-2">
               <p className="uppercase text-xs opacity-50 font-bold">RESOURCES</p>
@@ -104,15 +98,10 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
                     );
                   })}
               </div>
-              {resources.size == 0 && (
-                <div className="flex-1 absolute w-full h-full top-0 left-0 grid place-items-center bg-black/50">
-                  <p className="uppercase font-bold text-error animate-pulse">No resources</p>
-                </div>
-              )}
             </div>
           </div>
           <NavButton
-            className="btn-primary w-fit btn-sm"
+            className="btn-primary w-fit btn-sm "
             goto="transfer"
             from={fleetEntity}
             to={undefined}
