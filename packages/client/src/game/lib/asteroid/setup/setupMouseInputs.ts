@@ -44,6 +44,7 @@ export const setupMouseInputs = (scene: Scene) => {
   });
 
   const pointerMoveSub = scene.input.pointermove$.pipe().subscribe((event) => {
+    const selectedRock = components.ActiveRock.get()?.value;
     const { x, y } = pixelCoordToTileCoord(
       { x: event.worldX, y: event.worldY },
       scene.tilemap.tileWidth,
@@ -56,8 +57,7 @@ export const setupMouseInputs = (scene: Scene) => {
     const currentHoverTile = components.HoverTile.get();
     if (coordEq(currentHoverTile, mouseCoord)) return;
 
-    const playerEntity = components.Account.get()?.value;
-    if (playerEntity && outOfBounds(mouseCoord, playerEntity)) {
+    if (selectedRock && outOfBounds(mouseCoord, selectedRock)) {
       components.HoverTile.remove();
       return;
     }
