@@ -352,7 +352,7 @@ export const renderBuilding = (scene: Scene) => {
 
     defineEnterSystem(spectateWorld, positionQuery, render);
     //dust particle animation on new building
-    defineEnterSystem(spectateWorld, positionQuery, throwDust, { runOnInit: false });
+    defineEnterSystem(spectateWorld, positionQuery, throwDust);
 
     defineUpdateSystem(spectateWorld, positionQuery, (update) => {
       render(update);

@@ -289,12 +289,13 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
 export const renderFleetsInOrbit = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
-  defineComponentSystem(systemsWorld, components.FleetMovement, (update) => {
+  defineComponentSystem(systemsWorld, components.FleetMovement, async (update) => {
     const newMovement = update.value[0];
     const oldMovement = update.value[1];
     if (newMovement) {
       const time = components.Time.get()?.value ?? 0n;
       const arrivalTime = newMovement.arrivalTime ?? 0n;
+      console.log(components.Position.get(newMovement.destination as Entity));
       if (arrivalTime < time) {
         renderEntityOrbitingFleets(newMovement.destination as Entity, scene);
       }

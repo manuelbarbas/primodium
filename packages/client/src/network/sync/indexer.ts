@@ -28,6 +28,8 @@ export const hydrateInitialGameState = (
     .filter((key) => key.startsWith("P_"))
     .map((tableName) => ({ tableId: tables[tableName].tableId }));
 
+  //TODO: possibly seperate out the base table fetches from the asteroid query (maybe).
+  // Ergonomically a single initial fetch is nice but fetching base tables to then join on records may be less performant than pipelining two queries
   const sync = Sync.withQueryDecodedIndexerRecsSync({
     indexerUrl: networkConfig.indexerUrl,
     tables: tables,
@@ -47,21 +49,30 @@ export const hydrateInitialGameState = (
           where: {
             column: "parent",
             operation: "eq",
-            value: pad(`0x`, { size: 32 }),
+            value: pad(`0x0`, { size: 32 }),
           },
           include: [
             {
-              tableId: tables.OwnedBy.tableId!,
+              tableId: tables.OwnedBy.tableId,
             },
             {
-              tableId: tables.Asteroid.tableId!,
+              tableId: tables.Asteroid.tableId,
             },
             {
-              tableId: tables.ReversePosition.tableId!,
+              tableId: tables.ReversePosition.tableId,
             },
             {
-              tableId: tables.Home.tableId!,
+              tableId: tables.Home.tableId,
             },
+          ],
+        },
+        //get fleets
+        {
+          tableId: tables.FleetMovement.tableId,
+          include: [
+            { tableId: tables.FleetStance.tableId },
+            { tableId: tables.IsFleet.tableId },
+            { tableId: tables.OwnedBy.tableId, on: "entity" },
           ],
         },
       ],
