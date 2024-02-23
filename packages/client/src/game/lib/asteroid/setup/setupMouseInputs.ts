@@ -59,6 +59,7 @@ export const setupMouseInputs = (scene: Scene) => {
     const playerEntity = components.Account.get()?.value;
     if (playerEntity && outOfBounds(mouseCoord, playerEntity)) {
       components.HoverTile.remove();
+      components.SelectedAction.remove();
       return;
     }
 
