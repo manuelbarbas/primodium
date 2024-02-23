@@ -38,7 +38,7 @@ const asteroidResources: Map<
   }
 > = new Map();
 
-export function getFullResourceCount(resource: Entity, entity?: Entity) {
+export function getFullResourceCount(resource: Entity, entity: Entity) {
   return (
     getFullResourceCounts(entity).get(resource) ?? {
       resourceCount: 0n,
@@ -149,9 +149,6 @@ export function getAsteroidResourceCount(asteroid: Entity) {
   return result;
 }
 
-export function getFullResourceCounts(rawEntity?: Entity): Map<Entity, ResourceCountData> {
-  const player = comps.Account.get()?.value as Entity;
-  const entity = rawEntity ?? (comps.Home.get(player)?.value as Entity);
-  if (!entity) throw new Error("No entity");
+export function getFullResourceCounts(entity: Entity): Map<Entity, ResourceCountData> {
   return components.IsFleet.get(entity) ? getFleetResourceCount(entity) : getAsteroidResourceCount(entity);
 }

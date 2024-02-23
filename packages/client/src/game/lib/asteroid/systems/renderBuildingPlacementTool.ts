@@ -57,7 +57,9 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
 
     const buildingDimensions = getBuildingDimensions(selectedBuilding);
 
-    const hasEnough = hasEnoughResources(getRecipe(selectedBuilding, 1n));
+    const asteroid = components.ActiveRock.get()?.value as Entity;
+    if (!asteroid) throw new Error("No active rock active");
+    const hasEnough = hasEnoughResources(getRecipe(selectedBuilding, 1n), asteroid);
     const selectedRock = components.ActiveRock.get()?.value as Entity;
     const validPlacement = validateBuildingPlacement(tileCoord, selectedBuilding, selectedRock ?? singletonEntity);
 

@@ -91,9 +91,11 @@ export const BuildUnit: React.FC<{
               </div>
 
               {selectedUnit && selectedUnit !== EntityType.CapitalShip && (
-                <TrainNonCapitalShip building={building} unit={selectedUnit} />
+                <TrainNonCapitalShip building={building} unit={selectedUnit} asteroid={selectedRock} />
               )}
-              {selectedUnit === EntityType.CapitalShip && <TrainCapitalShip building={building} />}
+              {selectedUnit === EntityType.CapitalShip && (
+                <TrainCapitalShip building={building} asteroid={selectedRock} />
+              )}
             </>
           )}
         </div>
@@ -102,7 +104,7 @@ export const BuildUnit: React.FC<{
   );
 };
 
-const TrainNonCapitalShip = ({ building, unit }: { building: Entity; unit: Entity }) => {
+const TrainNonCapitalShip = ({ building, unit, asteroid }: { building: Entity; unit: Entity; asteroid: Entity }) => {
   const [count, setCount] = useState(1);
   const mud = useMud();
   const { playerAccount } = mud;
@@ -130,6 +132,7 @@ const TrainNonCapitalShip = ({ building, unit }: { building: Entity; unit: Entit
                 amount={resource.amount * BigInt(count)}
                 fontSize="sm"
                 validate
+                spaceRock={asteroid}
               />
             </Badge>
           ))}
@@ -158,7 +161,7 @@ const TrainNonCapitalShip = ({ building, unit }: { building: Entity; unit: Entit
   );
 };
 
-const TrainCapitalShip = ({ building }: { building: Entity }) => {
+const TrainCapitalShip = ({ building, asteroid }: { building: Entity; asteroid: Entity }) => {
   const mud = useMud();
   const { playerAccount } = mud;
   const capitalShipResourceData = components.P_CapitalShipConfig.get();
@@ -187,6 +190,7 @@ const TrainCapitalShip = ({ building }: { building: Entity }) => {
           amount={cost}
           fontSize="sm"
           validate
+          spaceRock={asteroid}
         />
       </Badge>
       <hr className="border-t border-cyan-600 w-full" />
