@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetTransfer } from "libraries/fleet/LibFleetTransfer.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
-import { resetFleetIfNoUnitsLeft } from "src/libraries/SubsystemCalls.sol";
+
 contract FleetTransferSystem is FleetBaseSystem {
   function transferUnitsFromSpaceRockToFleet(
     bytes32 spaceRock,
@@ -64,7 +64,6 @@ contract FleetTransferSystem is FleetBaseSystem {
     _unitCountIsValid(unitCounts)
   {
     LibFleetTransfer.transferUnitsFromFleetToSpaceRock(fromFleetId, spaceRock, unitCounts);
-    resetFleetIfNoUnitsLeft(fromFleetId);
   }
 
   function transferResourcesFromFleetToSpaceRock(
@@ -98,7 +97,6 @@ contract FleetTransferSystem is FleetBaseSystem {
     _resourceCountIsValid(resourceCounts)
   {
     LibFleetTransfer.transferUnitsAndResourcesFromFleetToSpaceRock(fromFleetId, spaceRock, unitCounts, resourceCounts);
-    resetFleetIfNoUnitsLeft(fromFleetId);
   }
 
   function transferUnitsFromFleetToFleet(
@@ -112,7 +110,6 @@ contract FleetTransferSystem is FleetBaseSystem {
     _unitCountIsValid(unitCounts)
   {
     LibFleetTransfer.transferUnitsFromFleetToFleet(fromFleetId, fleetId, unitCounts);
-    resetFleetIfNoUnitsLeft(fromFleetId);
   }
 
   function transferResourcesFromFleetToFleet(
@@ -141,6 +138,5 @@ contract FleetTransferSystem is FleetBaseSystem {
     _resourceCountIsValid(resourceCounts)
   {
     LibFleetTransfer.transferUnitsAndResourcesFromFleetToFleet(fromFleetId, fleetId, unitCounts, resourceCounts);
-    resetFleetIfNoUnitsLeft(fromFleetId);
   }
 }
