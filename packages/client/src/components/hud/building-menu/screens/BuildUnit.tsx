@@ -103,7 +103,7 @@ export const BuildUnit: React.FC<{
 };
 
 const TrainNonCapitalShip = ({ building, unit }: { building: Entity; unit: Entity }) => {
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(0);
   const mud = useMud();
   const { playerAccount } = mud;
   const unitLevel = useMemo(() => {
