@@ -29,10 +29,6 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   const resources = useFullResourceCounts(fleetEntity);
 
   const totalUnits = useMemo(() => [...units.values()].reduce((acc, cur) => acc + cur, 0n), [units]);
-  const totalResources = useMemo(
-    () => [...resources.values()].reduce((acc, cur) => acc + cur.resourceCount, 0n),
-    [resources]
-  );
   const time = components.Time.use()?.value ?? 0n;
   const movement = components.FleetMovement.use(fleetEntity);
 
@@ -197,11 +193,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               </Button>
             </TransactionQueueMask>
             <TransactionQueueMask queueItemId={"disband" as Entity}>
-              <Button
-                className="btn btn-error btn-sm w-full"
-                disabled={totalUnits + totalResources <= 0n}
-                onClick={() => disbandFleet(mud, fleetEntity)}
-              >
+              <Button className="btn btn-error btn-sm w-full" onClick={() => disbandFleet(mud, fleetEntity)}>
                 DISBAND
               </Button>
             </TransactionQueueMask>
