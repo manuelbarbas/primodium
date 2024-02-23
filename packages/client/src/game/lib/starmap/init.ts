@@ -15,9 +15,12 @@ export const initStarmapScene = async (game: Game) => {
   });
   setupKeybinds(scene);
 
-  const clickSub = scene.input.click$.subscribe(() => {
+  const clickSub = scene.input.click$.subscribe(([, objects]) => {
+    if (objects.length !== 0) return;
     components.SelectedRock.remove();
     components.SelectedFleet.remove();
+    components.Send.reset();
+    components.Attack.reset();
   });
 
   world.registerDisposer(() => {
