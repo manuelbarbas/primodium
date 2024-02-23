@@ -9,8 +9,9 @@ import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getRockRelationship } from "src/util/asteroid";
 import { RockRelationship } from "src/util/constants";
+import { decodeEntity } from "src/util/encode";
 import { entityToFleetName } from "src/util/name";
-import { getCanAttack, getOrbitingFleets } from "src/util/unit";
+import { getCanAttack, getOrbitingFleets, getUnitCounts } from "src/util/unit";
 import {
   ObjectPosition,
   OnClickUp,
@@ -230,8 +231,6 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
 
         if (time >= graceTime) {
           gameObject.alpha = 0;
-        } else {
-          gameObject.alpha = 1;
         }
       }),
       Texture(Assets.SpriteAtlas, SpriteKeys.GracePeriod),
@@ -240,6 +239,16 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
         input: null,
       }),
     ]);
+
+    const setNoFleetsAlpha = () => {
+      const noUnits = getUnitCounts(fleet).size === 0;
+      const objects = [fleetOrbitObject, fleetLabel, gracePeriod];
+      if (noUnits) {
+        objects.forEach((object) => object.setComponent(SetValue({ alpha: 0.3 })));
+      } else {
+        objects.forEach((object) => object.setComponent(SetValue({ alpha: 1 })));
+      }
+    };
     fleetLabel.setComponents([
       ...sharedComponents,
       SetValue({
@@ -282,7 +291,14 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
           gracePeriod.setComponent(ObjectPosition({ x, y }, DepthLayers.Marker + 1));
         },
       }),
+      OnComponentSystem(components.UnitCount, (_, { entity }) => {
+        const { entity: fleetEntity } = decodeEntity(components.UnitCount.metadata.keySchema, entity);
+        if (fleetEntity !== fleet) return;
+        setNoFleetsAlpha();
+      }),
     ]);
+
+    setNoFleetsAlpha();
   });
 };
 
