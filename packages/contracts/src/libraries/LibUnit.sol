@@ -128,6 +128,7 @@ library LibUnit {
       uint8 resource = resources.resources[i];
       if (!P_IsUtility.get(resource)) continue;
       uint256 requiredAmount = resources.amounts[i] * count;
+      if (requiredAmount == 0) continue;
       uint256 currentAmount = ResourceCount.get(spaceRockEntity, resource);
 
       if (add) {

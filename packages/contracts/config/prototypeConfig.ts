@@ -1580,6 +1580,24 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       },
     },
   },
+  Droid: {
+    tables: {
+      P_MaxLevel: { value: 0n },
+    },
+    levels: {
+      0: {
+        P_Unit: getPUnitData({
+          hp: 100,
+          decryption: 0,
+          attack: 0,
+          defense: 100,
+          cargo: 0,
+          speed: 1,
+          trainingTime: 100000,
+        }),
+      },
+    },
+  },
   MinutemanMarine: {
     tables: {
       P_MaxLevel: { value: 5n },
