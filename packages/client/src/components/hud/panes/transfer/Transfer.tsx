@@ -127,21 +127,44 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
     window.removeEventListener("mousemove", (e) => setDragLocation({ x: e.clientX, y: e.clientY }));
   }, [dragging, deltas, hoveringArea]);
 
+  const handleKeyUp = useCallback(
+    (e: KeyboardEvent) => {
+      console.log("key up", e.key);
+      if (!dragging) return;
+      if (["Shift", "Alt"].includes(e.key)) {
+        console.log("hello");
+        setDragging({ ...dragging, count: parseResourceCount(dragging.entity, "1") });
+      }
+    },
+    [dragging]
+  );
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (!dragging) return;
-      if (e.key === "e" || e.key === "E") {
-        const delta = parseResourceCount(dragging.entity, e.key === "E" ? "10" : "1");
-        const initial = UnitStorages.has(dragging.entity)
-          ? fromInitialUnitCounts.get(dragging.entity) ?? 0n
-          : fromInitialResourceCounts.get(dragging.entity)?.resourceCount ?? 0n;
+      const initial = UnitStorages.has(dragging.entity)
+        ? fromInitialUnitCounts.get(dragging.entity) ?? 0n
+        : fromInitialResourceCounts.get(dragging.entity)?.resourceCount ?? 0n;
+
+      if (["e", "E", "Dead"].includes(e.key)) {
+        const delta = parseResourceCount(dragging.entity, "1");
         setDragging({
           ...dragging,
           count: bigIntMin(initial, dragging.count + delta),
         });
-      } else if (e.key === "q" || e.key == "Q") {
-        const delta = parseResourceCount(dragging.entity, e.key === "Q" ? "10" : "1");
+      } else if (["q", "œ", "Q"].includes(e.key)) {
+        const delta = parseResourceCount(dragging.entity, "1");
         setDragging({ ...dragging, count: bigIntMax(0n, dragging.count - delta) });
+      } else if (["d", "D", "∂"].includes(e.key)) {
+        const delta = parseResourceCount(dragging.entity, "10");
+        setDragging({ ...dragging, count: bigIntMin(initial, dragging.count + delta) });
+      } else if (["a", "A", "å"].includes(e.key)) {
+        const delta = parseResourceCount(dragging.entity, "10");
+        setDragging({ ...dragging, count: bigIntMax(0n, dragging.count - delta) });
+      } else if (e.key === "Shift") {
+        setDragging({ ...dragging, count: initial });
+      } else if (e.key === "Alt") {
+        setDragging({ ...dragging, count: initial / 2n });
       }
     },
     [dragging, fromInitialResourceCounts, fromInitialUnitCounts]
@@ -159,11 +182,13 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
   useEffect(() => {
     window.addEventListener("mouseup", stopDragging);
     window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
     return () => {
       window.removeEventListener("mouseup", stopDragging);
       window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [handleKeyDown, stopDragging]);
+  }, [handleKeyDown, handleKeyUp, stopDragging]);
 
   return (
     <TransactionQueueMask queueItemId={"TRANSFER" as Entity} className="w-full h-full flex flex-col gap-2 p-2">
