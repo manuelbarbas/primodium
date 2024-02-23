@@ -4,7 +4,7 @@ import { FaEye } from "react-icons/fa";
 import { components } from "src/network/components";
 import { SecondaryCard } from "../core/Card";
 import { Score } from "./Score";
-import { TargetHeader } from "./spacerock-menu/TargetHeader";
+import { TargetHeader } from "./TargetHeader";
 
 export const SpectatingDetails = () => {
   const activeRock = components.ActiveRock.use()?.value;

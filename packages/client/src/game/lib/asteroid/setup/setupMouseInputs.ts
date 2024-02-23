@@ -9,9 +9,9 @@ import { world } from "src/network/world";
 import { outOfBounds } from "src/util/outOfBounds";
 
 export const setupMouseInputs = (scene: Scene) => {
-  const clickSub = scene.input.click$.subscribe((event) => {
+  const clickSub = scene.input.click$.subscribe(([pointer]) => {
     const { x, y } = pixelCoordToTileCoord(
-      { x: event.worldX, y: event.worldY },
+      { x: pointer.worldX, y: pointer.worldY },
       scene.tilemap.tileWidth,
       scene.tilemap.tileHeight
     );

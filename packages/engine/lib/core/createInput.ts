@@ -77,8 +77,12 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     ]), // Map events to whether the left button is down and the current timestamp
     bufferCount(2, 1), // Store the last two timestamps
     filter(([prev, now]) => prev[0] && !now[0] && now[1] - prev[1] < 150), // Only care if button was pressed before and is not anymore and it happened within 500ms
-    map(() => inputPlugin.manager?.activePointer), // Return the current pointer
-    filter((pointer) => pointer?.downElement?.nodeName === "CANVAS")
+    map((): [Phaser.Input.Pointer, Phaser.GameObjects.GameObject[]] => {
+      const pointer = inputPlugin.manager.activePointer;
+      const hitTestResults = inputPlugin.hitTestPointer(pointer);
+      return [pointer, hitTestResults];
+    }), // Return the current pointer
+    filter(([pointer]) => pointer?.downElement?.nodeName === "CANVAS")
   );
 
   // Double click stream
