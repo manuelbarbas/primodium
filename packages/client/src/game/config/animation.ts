@@ -461,4 +461,14 @@ export const animationConfig: Animation<Assets>[] = [
     prefix: "sprites/marketplace/level1/Marketplace_LVL1_",
     suffix: ".png",
   },
+  {
+    key: "decorations/drone",
+    assetKey: "sprite-atlas",
+    frameRate: 5,
+    startFrame: 1,
+    endFrame: 12,
+    repeat: -1,
+    prefix: "sprites/decorations/drone/Drone",
+    suffix: ".png",
+  },
 ];

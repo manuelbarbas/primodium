@@ -19,18 +19,6 @@ export const createGame = async (config: GameConfig) => {
     key: "ROOT",
     preload: async (scene: Phaser.Scene) => {
       scene.load.pack(config.key, config.assetPackUrl, config.key);
-
-      //add support for audio atlas
-      const files = (await (await fetch(config.assetPackUrl)).json())[config.key].files;
-      const audioAtlases = Object.values(files).filter((x: any) => x.type === "audioAtlas") as {
-        key: string;
-        jsonURL: string;
-        audioURL: string;
-      }[];
-
-      if (audioAtlases.length) {
-        for (const audioAtlas of audioAtlases) scene.load.audioSprite(audioAtlas.key, audioAtlas.jsonURL);
-      }
     },
   });
 

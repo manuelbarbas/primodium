@@ -40,14 +40,9 @@ export interface SceneConfig {
   animations?: Animation<any>[];
   cullingChunkSize: number;
   tilemap: {
-    tileAnimations?: TileAnimation[];
-    chunkSize: number;
     tileWidth: number;
     tileHeight: number;
-    tilesets?: TilesetConfig;
-    layerConfig?: Parameters<typeof createAnimatedTilemap>[0]["layerConfig"];
-    backgroundTile?: [number, ...number[]];
-    animationInterval?: number;
+    defaultKey?: string;
   };
 }
 

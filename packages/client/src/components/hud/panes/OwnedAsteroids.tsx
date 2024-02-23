@@ -8,7 +8,7 @@ import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
-import { getSpaceRockInfo, getSpaceRockName } from "src/util/asteroid";
+import { getAsteroidInfo, getAsteroidName } from "src/util/asteroid";
 import { getBlockTypeName, getRandomRange } from "src/util/common";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { entityToRockName } from "src/util/name";
@@ -31,8 +31,8 @@ export const OwnedAsteroid: React.FC<{ asteroid: Entity; onClick?: () => void }>
     playerAccount: { entity: playerEntity },
   } = useMud();
   const primodium = usePrimodium();
-  const { imageUri, encryption } = getSpaceRockInfo(primodium, asteroid);
-  const description = getSpaceRockName(asteroid);
+  const { imageUri, encryption } = getAsteroidInfo(primodium, asteroid);
+  const description = getAsteroidName(asteroid);
   const home = components.Home.use(playerEntity)?.value === asteroid;
   const active = components.ActiveRock.use()?.value === asteroid;
   const selected = components.SelectedRock.use()?.value === asteroid;
@@ -91,7 +91,7 @@ export const _OwnedAsteroids: React.FC = () => {
               key={entity}
               asteroid={entity}
               onClick={async () => {
-                const { position } = getSpaceRockInfo(primodium, entity);
+                const { position } = getAsteroidInfo(primodium, entity);
                 const mapOpen = components.MapOpen.get(undefined, {
                   value: false,
                 }).value;

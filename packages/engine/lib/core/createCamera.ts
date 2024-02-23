@@ -1,5 +1,5 @@
 import { Gesture } from "@use-gesture/vanilla";
-import { BehaviorSubject, share, Subject, tap } from "rxjs";
+import { BehaviorSubject, share, Subject } from "rxjs";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Coord, GestureState, ObjectPool } from "@latticexyz/phaserx/src/types";
 import { CameraConfig } from "../../types";
