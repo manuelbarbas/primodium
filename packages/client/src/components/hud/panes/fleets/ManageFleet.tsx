@@ -36,18 +36,6 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   const time = components.Time.use()?.value ?? 0n;
   const movement = components.FleetMovement.use(fleetEntity);
 
-  // const destination = components.FleetMovement.getWithKeys({ entity: fleetEntity as Hex })?.destination;
-  // const fleetsOnAsteroidQuery = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination })];
-  // const fleetsOnAsteroid = useEntityQuery(fleetsOnAsteroidQuery);
-  // const time = components.Time.use()?.value ?? 0n;
-  // const followableFleets = fleetsOnAsteroid.filter((entity) => {
-  //   if (entity == fleetEntity) return false;
-  //   const movement = components.FleetMovement.get(entity);
-  //   if ((movement?.arrivalTime ?? 0n) > time) return false;
-  //   const stance = components.FleetStance.get(entity);
-  //   return stance?.stance != 0;
-  // });
-
   const activeStance = components.FleetStance.use(fleetEntity);
   const cannotDoAnything = totalUnits <= 0n || !movement || movement.arrivalTime > time;
 
@@ -65,12 +53,6 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
     else setFleetStance(mud, fleetEntity, EFleetStance.Block, position);
   };
 
-  // const handleFollow = (target: Entity) => {
-  //   if (activeStance?.stance == EFleetStance.Follow && activeStance?.target == target)
-  //     clearFleetStance(mud, fleetEntity);
-  //   setFleetStance(mud, fleetEntity, EFleetStance.Follow, target);
-  // };
-
   return (
     <div className="w-full h-full flex flex-col gap-2 p-2">
       {/*Header*/}
@@ -85,7 +67,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             <FleetEntityHeader entity={fleetEntity} />
           </div>
           <div className="grid grid-rows-2 h-full gap-2">
-            <div className="relative flex flex-col h-full bg-base-100 p-4 gap-2">
+            <div className="relative flex flex-col h-full bg-base-100 p-2 gap-2">
               <p className="uppercase text-xs opacity-50 font-bold">UNITS</p>
               <div className="flex-1 flex flex-col bg-base-100 grid grid-cols-4 grid-rows-2 gap-2">
                 {Array(8)
@@ -106,7 +88,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
                 </div>
               )}
             </div>
-            <div className="relative flex flex-col bg-base-100 p-4 gap-2">
+            <div className="relative flex flex-col bg-base-100 p-2 gap-2">
               <p className="uppercase text-xs opacity-50 font-bold">RESOURCES</p>
               <div className="flex-1 flex flex-col bg-base-100 grid grid-cols-4 grid-rows-2 gap-2">
                 {Array(8)
@@ -127,8 +109,8 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
                   })}
               </div>
               {resources.size == 0 && (
-                <div className="flex-1 absolute w-full h-full p-4 grid place-items-center bg-black/50">
-                  <p className="uppercase font-bold text-error">No resources</p>
+                <div className="flex-1 absolute w-full h-full top-0 left-0 grid place-items-center bg-black/50">
+                  <p className="uppercase font-bold text-error animate-pulse">No resources</p>
                 </div>
               )}
             </div>
