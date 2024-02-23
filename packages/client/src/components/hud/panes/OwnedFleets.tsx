@@ -181,7 +181,7 @@ export const OwnedFleets = () => {
       draggable
       persist
       scene={Scenes.Starmap}
-      active={mapOpen}
+      active={!!mapOpen}
       defaultCoord={{ x: 0, y: 0 }}
     >
       <_OwnedFleets />

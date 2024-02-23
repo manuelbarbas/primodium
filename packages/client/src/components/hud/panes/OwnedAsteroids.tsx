@@ -140,7 +140,7 @@ export const OwnedAsteroids = () => {
       lockable
       draggable
       scene={Scenes.Asteroid}
-      active={mapOpen}
+      active={!!mapOpen}
     >
       <_OwnedAsteroids />
     </Widget>
