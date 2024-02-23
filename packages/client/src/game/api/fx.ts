@@ -65,7 +65,7 @@ export const createFxApi = (scene: Scene) => {
         {
           at: 0,
           run: () => {
-            missile.setDepth(DepthLayers.Rock);
+            missile.setDepth(DepthLayers.Rock - 1);
             const randomizedDestination = {
               x: destinationPixelCoord.x + Phaser.Math.Between(-spray, spray),
               y: destinationPixelCoord.y + Phaser.Math.Between(-spray, spray),
