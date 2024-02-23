@@ -123,7 +123,8 @@ export const validateBuildingPlacement = (
       const buildingAtCoord = getBuildingAtCoord(buildingCoord, asteroid);
       if (buildingAtCoord && buildingAtCoord !== building) return false;
       if (outOfBounds(buildingCoord, asteroid)) return false;
-      if (requiredTile && requiredTile !== getResourceKey(buildingCoord)) return false;
+      const mapId = comps.Asteroid.get(asteroid)?.mapId ?? 1;
+      if (requiredTile && requiredTile !== getResourceKey(buildingCoord, mapId)) return false;
     }
   }
 

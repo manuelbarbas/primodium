@@ -10,7 +10,6 @@ import {
   defineUpdateSystem,
   namespaceWorld,
 } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
 import { components } from "src/network/components";
@@ -60,8 +59,7 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
     const asteroid = components.ActiveRock.get()?.value as Entity;
     if (!asteroid) throw new Error("No active rock active");
     const hasEnough = hasEnoughResources(getRecipe(selectedBuilding, 1n), asteroid);
-    const selectedRock = components.ActiveRock.get()?.value as Entity;
-    const validPlacement = validateBuildingPlacement(tileCoord, selectedBuilding, selectedRock ?? singletonEntity);
+    const validPlacement = validateBuildingPlacement(tileCoord, selectedBuilding, asteroid);
 
     buildingTool.setComponents([
       ObjectPosition(
