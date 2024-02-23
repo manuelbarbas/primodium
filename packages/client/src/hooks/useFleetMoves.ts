@@ -11,7 +11,7 @@ export const useFleetMoves = () => {
   const home = components.Home.get(playerEntity)?.value;
   if (!home) throw new Error("No home found");
 
-  const maxMoves = useFullResourceCount(EntityType.FleetMoves, home as Entity).resourceCount;
+  const maxMoves = useFullResourceCount(EntityType.FleetCount, home as Entity).resourceCount;
   return maxMoves;
 };
 
