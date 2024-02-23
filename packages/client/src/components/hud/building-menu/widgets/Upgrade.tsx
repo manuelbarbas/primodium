@@ -16,17 +16,17 @@ import { hashEntities } from "src/util/encode";
 export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
   const mud = useMud();
 
-  const selectedRock = components.ActiveRock.get()?.value;
-  const mainBaseEntity = components.Home.use(selectedRock)?.value as Entity;
+  const spaceRock = components.Position.use(building)?.parent as Entity | undefined;
+  if (!spaceRock) throw new Error("[Upgrade] Building has no parent");
+  const mainBaseEntity = components.Home.use(spaceRock)?.value as Entity;
   const mainBaseLevel = components.Level.use(mainBaseEntity, {
     value: 1n,
   }).value;
 
   const buildingInfo = useBuildingInfo(building);
-  const hasEnough = useHasEnoughResources(buildingInfo?.upgrade?.recipe ?? []);
-  const spaceRock = components.Position.use(building)?.parent as Entity | undefined;
+  const hasEnough = useHasEnoughResources(buildingInfo?.upgrade?.recipe ?? [], spaceRock);
 
-  if (!buildingInfo) return null;
+  if (!buildingInfo || !spaceRock) return null;
   const { position, level, maxLevel, upgrade } = buildingInfo;
   const canUpgrade = hasEnough && upgrade && level < maxLevel && mainBaseLevel >= upgrade.mainBaseLvlReq;
   const atMaxLevel = level >= maxLevel;

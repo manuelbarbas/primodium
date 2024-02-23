@@ -22,7 +22,8 @@ const BlueprintButton: React.FC<{
     hooks: { useKeybinds },
   } = usePrimodium().api();
   const keybinds = useKeybinds();
-  const selectedRockEntity = components.ActiveRock.use()?.value;
+  const selectedRockEntity = components.ActiveRock.use()?.value as Entity | undefined;
+  if (!selectedRockEntity) throw new Error("No active rock entity found");
   const rockMainBase = components.Home.use(selectedRockEntity)?.value;
   const selectedBuilding = components.SelectedBuilding.use()?.value;
   const mainbaseLevel = components.Level.use(rockMainBase as Entity)?.value ?? 1n;
@@ -30,7 +31,7 @@ const BlueprintButton: React.FC<{
     components.P_RequiredBaseLevel.getWithKeys({ prototype: buildingType as Hex, level: 1n })?.value ?? 1n;
   const hasMainbaseLevel = mainbaseLevel >= levelRequirement;
 
-  const hasEnough = useHasEnoughResources(getRecipe(buildingType, 1n));
+  const hasEnough = useHasEnoughResources(getRecipe(buildingType, 1n), selectedRockEntity);
 
   return (
     <Button

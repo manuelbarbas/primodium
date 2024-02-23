@@ -99,14 +99,11 @@ const ClaimObjectiveButton: React.FC<{
 
 const Objective: React.FC<{
   objective: Entity;
+  asteroid: Entity;
   highlight?: boolean;
-}> = ({ objective, highlight = false }) => {
+}> = ({ objective, asteroid, highlight = false }) => {
   const time = Time.use()?.value;
 
-  const {
-    playerAccount: { entity: playerEntity },
-  } = useMud();
-  const spaceRock = comps.Home.use(playerEntity)?.value as Entity | undefined;
   const objectiveName = useMemo(() => {
     if (!objective) return;
     return getBlockTypeName(objective);
@@ -121,12 +118,10 @@ const Objective: React.FC<{
   }, [objective]);
 
   const requirements = useMemo(() => {
-    if (!objective || !playerEntity) return;
-    const reqs = getAllRequirements(objective, playerEntity);
+    if (!objective) return;
+    const reqs = getAllRequirements(objective, asteroid);
     return reqs;
-  }, [objective, time, playerEntity]);
-
-  if (!spaceRock || playerEntity === singletonEntity) return <></>;
+  }, [objective, time, asteroid]);
 
   return (
     <SecondaryCard className={`text-xs w-full flex flex-col justify-between ${highlight ? "ring ring-warning" : ""}`}>
@@ -190,7 +185,7 @@ const Objective: React.FC<{
               {rewardRecipe.map((resource) => {
                 let canClaim = true;
                 if (resource.type === ResourceType.Resource) {
-                  const { resourceCount, resourceStorage: maxStorage } = getFullResourceCount(resource.id, spaceRock);
+                  const { resourceCount, resourceStorage: maxStorage } = getFullResourceCount(resource.id, asteroid);
                   canClaim = resourceCount + resource.amount <= maxStorage;
                 }
                 return (
@@ -221,6 +216,7 @@ const Objective: React.FC<{
 
 const UnclaimedObjective: React.FC<{ highlight?: Entity }> = ({ highlight }) => {
   const player = Account.use()?.value ?? singletonEntity;
+  const asteroid = comps.ActiveRock.use()?.value;
   const time = Time.use()?.value;
   const objectives = Object.values(ObjectiveEntityLookup);
 
@@ -235,7 +231,7 @@ const UnclaimedObjective: React.FC<{ highlight?: Entity }> = ({ highlight }) => 
     });
   }, [time]);
 
-  if (player === singletonEntity) return <></>;
+  if (!asteroid || player === singletonEntity) return <></>;
 
   return (
     <div className="grid grid-cols-2 gap-2 w-full h-full">
@@ -245,7 +241,7 @@ const UnclaimedObjective: React.FC<{ highlight?: Entity }> = ({ highlight }) => 
         </SecondaryCard>
       ) : (
         filteredObjectives.map((objective, i) => {
-          return <Objective key={i} objective={objective} highlight={objective === highlight} />;
+          return <Objective key={i} objective={objective} highlight={objective === highlight} asteroid={asteroid} />;
         })
       )}
     </div>
@@ -254,6 +250,7 @@ const UnclaimedObjective: React.FC<{ highlight?: Entity }> = ({ highlight }) => 
 
 const ClaimedObjective: React.FC = () => {
   const player = Account.use()?.value ?? singletonEntity;
+  const asteroid = comps.ActiveRock.use()?.value;
 
   const filteredObjectives = Object.values(ObjectiveEntityLookup).filter((objective) => {
     const claimed =
@@ -262,6 +259,7 @@ const ClaimedObjective: React.FC = () => {
     return claimed;
   });
 
+  if (!asteroid || player === singletonEntity) return <></>;
   return (
     <div className="grid grid-cols-2 gap-2 w-full h-full">
       {filteredObjectives.length === 0 ? (
@@ -270,7 +268,7 @@ const ClaimedObjective: React.FC = () => {
         </SecondaryCard>
       ) : (
         filteredObjectives.map((objective, i) => {
-          return <Objective key={i} objective={objective} />;
+          return <Objective key={i} objective={objective} asteroid={asteroid} />;
         })
       )}
     </div>
