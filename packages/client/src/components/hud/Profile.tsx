@@ -1,15 +1,15 @@
 import { FaHandshake, FaHandshakeSlash } from "react-icons/fa";
 import { useMud } from "src/hooks";
 // import { Card } from "../core/Card";
+import { Scenes } from "@game/constants";
+import { components } from "src/network/components";
+import { getRandomRange } from "src/util/common";
 import { Modal } from "../core/Modal";
 import { Tooltip } from "../core/Tooltip";
+import { Widget } from "../core/Widget";
 import { AccountDisplay } from "../shared/AccountDisplay";
 import { Account } from "../transfer/Account";
 import { Score } from "./Score";
-import { Widget } from "../core/Widget";
-import { getRandomRange } from "src/util/common";
-import { Scenes } from "@game/constants";
-import { components } from "src/network/components";
 import { SpectatingDetails } from "./SpectatingDetails";
 
 const ProfileContent = () => {
@@ -17,7 +17,7 @@ const ProfileContent = () => {
     playerAccount: { entity: playerEntity },
     sessionAccount,
   } = useMud();
-  const delegate = sessionAccount?.entity;
+  const sessionEntity = sessionAccount?.entity;
 
   return (
     <>
@@ -26,9 +26,9 @@ const ProfileContent = () => {
         <AccountDisplay player={playerEntity} />
         <Modal title="account">
           <Modal.Button className="btn-sm btn-neutral border-secondary !p-1 flex gap-2 text-accent text-xs w-fit">
-            <Tooltip text={`${delegate ? "" : "not"} delegating`} direction="right">
+            <Tooltip text={`${sessionEntity ? "" : "not"} authorizing`} direction="right">
               <div>
-                {delegate ? (
+                {sessionEntity ? (
                   <FaHandshake className="text-success w-4 h-4" />
                 ) : (
                   <FaHandshakeSlash className="text-error w-4 h-4" />

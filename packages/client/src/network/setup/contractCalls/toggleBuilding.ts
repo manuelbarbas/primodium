@@ -22,7 +22,7 @@ export async function toggleBuilding(mud: MUD, building: Entity) {
       functionName: "toggleBuilding",
       systemId: getSystemId("ToggleBuildingSystem"),
       args: [{ ...position, parent: position.parent as Hex }],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.Toggle, building),

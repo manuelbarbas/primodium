@@ -36,7 +36,7 @@ export const transferFleet = async (mud: MUD, from: Entity, to: Entity, deltas: 
         functionName,
         systemId: getSystemId("FleetTransferSystem"),
         args: [from as Hex, to as Hex, unitCounts],
-        delegate: true,
+        withSession: true,
       },
       metadata
     );
@@ -52,7 +52,7 @@ export const transferFleet = async (mud: MUD, from: Entity, to: Entity, deltas: 
         functionName,
         systemId: getSystemId("FleetTransferSystem"),
         args: [from as Hex, to as Hex, resourceCounts],
-        delegate: true,
+        withSession: true,
       },
       metadata
     );
@@ -68,7 +68,7 @@ export const transferFleet = async (mud: MUD, from: Entity, to: Entity, deltas: 
         functionName,
         systemId: getSystemId("FleetTransferSystem"),
         args: [from as Hex, to as Hex, unitCounts, resourceCounts],
-        delegate: true,
+        withSession: true,
       },
       metadata
     );

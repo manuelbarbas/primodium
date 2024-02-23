@@ -6,14 +6,14 @@ import { Address, Hex } from "viem";
 import { components } from "../components";
 import { world } from "../world";
 
-export const setupDelegate = (
+export const setupSessionAccount = (
   playerEntity: Entity,
   removeSessionAccount: () => void,
   updateSessionAccount: (privateKey: Hex) => void
 ) => {
-  world.dispose("delegate");
-  const delegateWorld = namespaceWorld(world, "delegate");
-  const potentialDelegates = Array.from(runQuery([Has(components.UserDelegationControl)])).reduce((prev, entity) => {
+  world.dispose("session");
+  const authorizedWorld = namespaceWorld(world, "session");
+  const potentialAuthorizeds = Array.from(runQuery([Has(components.UserDelegationControl)])).reduce((prev, entity) => {
     const key = decodeEntity(components.UserDelegationControl.metadata.keySchema, entity) as {
       delegator: Address;
       delegatee: Address;
@@ -22,26 +22,26 @@ export const setupDelegate = (
     return [...prev, key.delegatee];
   }, [] as Address[]);
 
-  potentialDelegates.find((delegate) => {
-    return setDelegate(delegate);
+  potentialAuthorizeds.find((authorized) => {
+    return setAuthorized(authorized);
   });
 
-  function setDelegate(delegate: string) {
-    const privateKey = getPrivateKey(entityToAddress(delegate));
+  function setAuthorized(authorized: string) {
+    const privateKey = getPrivateKey(entityToAddress(authorized));
     if (!privateKey) return false;
     updateSessionAccount(privateKey);
     return true;
   }
 
   defineComponentSystem(
-    delegateWorld,
+    authorizedWorld,
     components.UserDelegationControl,
     ({ entity, value }) => {
       const key = decodeEntity(components.UserDelegationControl.metadata.keySchema, entity);
       if (key.delegator !== entityToAddress(playerEntity)) return;
-      const newDelegate = key.delegatee;
+      const newAuthorized = key.delegatee;
       if (!value[0]) return removeSessionAccount();
-      setDelegate(newDelegate as string);
+      setAuthorized(newAuthorized as string);
     },
     { runOnInit: false }
   );

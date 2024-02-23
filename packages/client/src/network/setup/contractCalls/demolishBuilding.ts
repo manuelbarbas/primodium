@@ -21,7 +21,7 @@ export async function demolishBuilding(mud: MUD, building: Entity) {
       functionName: "destroy",
       systemId: getSystemId("DestroySystem"),
       args: [{ ...position, parent: position.parent as Hex }],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.Demolish, building),

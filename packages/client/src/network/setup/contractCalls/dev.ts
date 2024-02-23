@@ -18,7 +18,7 @@ export async function removeComponent<S extends Schema>(mud: MUD, component: Con
       functionName: "devDeleteRecord",
       systemId: getSystemId("DevSystem"),
       args: [tableId, key],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(tableId, entity),
@@ -47,7 +47,7 @@ export async function setComponentValue<S extends Schema>(
         functionName: "devSetField",
         systemId: getSystemId("DevSystem"),
         args: [tableId, key, schemaIndex, data],
-        delegate: true,
+        withSession: true,
       },
       {
         id: hashEntities(tableId, entity),

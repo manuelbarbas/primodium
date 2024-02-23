@@ -63,12 +63,12 @@ library LibResource {
   /// @notice Spends resources required to upgrade a unit
   /// @notice claims all resources beforehand
   /// @param spaceRockEntity ID of the spaceRock upgrading
-  /// @param unitPrototype Prototype ID of the unit to upgrade
+  /// @param prototype Prototype ID of the prototype to upgrade
   /// @param level Target level for the building
-  function spendUpgradeResources(bytes32 spaceRockEntity, bytes32 unitPrototype, uint256 level) internal {
-    P_RequiredUpgradeResourcesData memory requiredResources = P_RequiredUpgradeResources.get(unitPrototype, level);
+  function spendUpgradeResources(bytes32 spaceRockEntity, bytes32 prototype, uint256 level) internal {
+    P_RequiredUpgradeResourcesData memory requiredResources = P_RequiredUpgradeResources.get(prototype, level);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
-      spendResource(spaceRockEntity, unitPrototype, requiredResources.resources[i], requiredResources.amounts[i]);
+      spendResource(spaceRockEntity, prototype, requiredResources.resources[i], requiredResources.amounts[i]);
     }
   }
 

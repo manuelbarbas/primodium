@@ -71,22 +71,24 @@ type ExecuteCallOptions<FunctionName extends string = string> = Omit<
   "abi"
 > & {
   mud: MUD;
-  delegate?: boolean;
+  withSession?: boolean;
   options?: { gas?: bigint };
 };
 
 export async function execute<T extends keyof MetadataTypes, FunctionName extends string = string>(
-  { mud, systemId, functionName, args, delegate, options: callOptions }: ExecuteCallOptions<FunctionName>,
+  { mud, systemId, functionName, args, withSession, options: callOptions }: ExecuteCallOptions<FunctionName>,
   txQueueOptions?: { id: Entity; type?: T; metadata?: MetadataTypes[T] },
   onComplete?: (receipt: TransactionReceipt | undefined) => void
 ) {
-  const account = delegate ? mud.sessionAccount ?? mud.playerAccount : mud.playerAccount;
-  const delegating = account == mud.sessionAccount;
+  const account = withSession ? mud.sessionAccount ?? mud.playerAccount : mud.playerAccount;
+  const authorizing = account == mud.sessionAccount;
   console.log(
-    `[Tx] Executing ${functionName} with address ${account.address.slice(0, 6)} ${delegate ? "(delegated)" : ""}`
+    `[Tx] Executing ${functionName} with address ${account.address.slice(0, 6)} ${
+      withSession ? "(with session acct)" : ""
+    }`
   );
   const queuedTx = async () => {
-    if (delegating && mud.sessionAccount) {
+    if (authorizing && mud.sessionAccount) {
       const params = encodeSystemCallFrom({
         abi: IWorldAbi,
         from: mud.playerAccount.address,
@@ -123,26 +125,26 @@ export async function executeBatch<T extends keyof MetadataTypes, functionName e
   {
     mud,
     systemCalls,
-    delegate,
+    withSession,
   }: {
     systemCalls: readonly Omit<SystemCallFrom<typeof IWorldAbi, functionName>, "abi" | "from">[];
     mud: MUD;
-    delegate?: boolean;
+    withSession?: boolean;
   },
   options?: { id: Entity; type?: T; metadata?: MetadataTypes[T] },
   onComplete?: (receipt: TransactionReceipt | undefined) => void
 ) {
-  const account = delegate ? mud.sessionAccount ?? mud.playerAccount : mud.playerAccount;
-  const delegating = account == mud.sessionAccount;
+  const account = withSession ? mud.sessionAccount ?? mud.playerAccount : mud.playerAccount;
+  const authorizing = account !== mud.playerAccount;
 
   console.log(
     `[Tx] Executing batch: ${systemCalls.map(
       (system) => `${system.functionName} `
-    )} with address ${account.address.slice(0, 6)} ${delegate ? "(delegated)" : ""}`
+    )} with address ${account.address.slice(0, 6)} ${authorizing ? "(using session account)" : ""}`
   );
-  console.log("[Tx] Executing batch system with address: ", account.address.slice(0, 6));
+
   const queuedTx = async () => {
-    if (delegating && mud.sessionAccount) {
+    if (authorizing && mud.sessionAccount) {
       const params = encodeSystemCallsFrom(IWorldAbi, mud.playerAccount.address, systemCalls).map(
         ([systemId, callData]) => ({ from: mud.playerAccount.address, systemId, callData })
       );

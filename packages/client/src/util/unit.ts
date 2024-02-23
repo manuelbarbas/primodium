@@ -130,7 +130,18 @@ export const getFleetTilePosition = (scene: Scene, fleet: Entity) => {
 };
 
 export const getFleetPixelPosition = (scene: Scene, fleet: Entity) => {
-  const spaceRock = components.FleetMovement.get(fleet)?.destination as Entity;
+  const movement = components.FleetMovement.get(fleet);
+  if (!movement) throw new Error("Fleet has no movement component");
+  const time = components.Time.get()?.value ?? 0n;
+
+  if (movement.arrivalTime > time) {
+    const fleetTransitId = fleet + "_fleet";
+    const fleetGroup = scene.objectPool.getGroup(fleetTransitId);
+    const fleetIcon = fleetGroup.get(`${fleet}-fleetIcon`, "Graphics");
+    return { x: fleetIcon.position.x, y: fleetIcon.position.y };
+  }
+
+  const spaceRock = movement.destination as Entity;
   const rockGroup = scene.objectPool.getGroup(spaceRock + "_spacerockOrbits");
 
   const fleetOrbitId = `fleetOrbit-${spaceRock}-${fleet}`;

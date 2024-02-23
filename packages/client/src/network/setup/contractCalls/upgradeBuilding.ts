@@ -22,7 +22,7 @@ export const upgradeBuilding = async (mud: MUD, coord: Coord) => {
       functionName: "upgradeBuilding",
       systemId: getSystemId("UpgradeBuildingSystem"),
       args: [position],
-      delegate: true,
+      withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.Upgrade, coord.x, coord.y),
