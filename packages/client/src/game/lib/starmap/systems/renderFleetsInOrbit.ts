@@ -242,7 +242,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
 
     const setNoFleetsAlpha = () => {
       const noUnits = getUnitCounts(fleet).size === 0;
-      const objects = [fleetOrbitObject, fleetLabel, fleetHomeLineObject, gracePeriod];
+      const objects = [fleetOrbitObject, fleetLabel, gracePeriod];
       if (noUnits) {
         objects.forEach((object) => object.setComponent(SetValue({ alpha: 0.3 })));
       } else {
