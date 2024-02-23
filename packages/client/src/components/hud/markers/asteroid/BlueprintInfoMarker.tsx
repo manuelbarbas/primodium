@@ -2,7 +2,6 @@ import { Scenes } from "@game/constants";
 import { addCoords, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMemo } from "react";
-import { Card } from "src/components/core/Card";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getBuildingDimensions } from "src/util/building";
@@ -35,9 +34,7 @@ export const BlueprintInfoMarker = () => {
 
   return (
     <Marker id="blueprint-info-target" scene={Scenes.Asteroid} coord={coord} origin="center-bottom">
-      <Card>
-        <BlueprintInfo building={building} />
-      </Card>
+      <BlueprintInfo building={building} />
     </Marker>
   );
 };

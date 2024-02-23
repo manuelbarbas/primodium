@@ -38,6 +38,8 @@ const BlueprintButton: React.FC<{
       tooltip={getBlockTypeName(buildingType)}
       keybind={keybindActive ? keybind : undefined}
       tooltipDirection={tooltipDirection ?? "right"}
+      onPointerEnter={() => components.HoverEntity.set({ value: buildingType })}
+      onPointerLeave={() => components.HoverEntity.remove()}
       clickSound={AudioKeys.Bleep7}
       onClick={() => {
         if (selectedBuilding === buildingType) {
