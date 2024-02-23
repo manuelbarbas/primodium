@@ -224,20 +224,20 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   Expansion: {
     levels: {
-      1: { Dimensions: { width: 11, height: 9 }, P_RequiredBaseLevel: { value: 1n } },
+      1: { Dimensions: { width: 9, height: 7 }, P_RequiredBaseLevel: { value: 1n } },
       2: {
         P_RequiredUpgradeResources: getResourceValues({ Iron: 2000 }),
-        Dimensions: { width: 13, height: 11 },
+        Dimensions: { width: 11, height: 9 },
         P_RequiredBaseLevel: { value: 2n },
       },
       3: {
         P_RequiredUpgradeResources: getResourceValues({ Lithium: 1500 }),
-        Dimensions: { width: 17, height: 13 },
+        Dimensions: { width: 15, height: 11 },
         P_RequiredBaseLevel: { value: 2n },
       },
       4: {
         P_RequiredUpgradeResources: getResourceValues({ Lithium: 15000 }),
-        Dimensions: { width: 21, height: 15 },
+        Dimensions: { width: 19, height: 15 },
         P_RequiredBaseLevel: { value: 3n },
       },
       5: {

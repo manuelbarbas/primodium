@@ -1,7 +1,7 @@
-import { components } from "src/network/components";
-import { Scene } from "engine/types";
 import { MaxLevelToTilemap } from "@game/constants";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
+import { Scene } from "engine/types";
+import { components } from "src/network/components";
 import { world } from "src/network/world";
 
 export const renderTilemap = (scene: Scene) => {
@@ -16,13 +16,7 @@ export const renderTilemap = (scene: Scene) => {
 
     if (!asteroidData) return;
 
-    console.log(asteroidData);
-
     //render tilemap
     scene.tilemap.render(MaxLevelToTilemap[Number(asteroidData.maxLevel)]);
-  });
-
-  defineComponentSystem(systemsWorld, components.SelectedRock, ({ value }) => {
-    console.log(components.Asteroid.get(value[0]?.value as Entity));
   });
 };

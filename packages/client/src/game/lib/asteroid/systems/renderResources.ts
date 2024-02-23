@@ -1,4 +1,4 @@
-import { Tilesets } from "@game/constants";
+import { ResourceToTilesetKey, Tilesets } from "@game/constants";
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { decodeEntity } from "@latticexyz/store-sync/recs";
 import { Scene } from "engine/types";
@@ -42,7 +42,8 @@ export function renderResources(scene: Scene) {
 
       if (mapId !== asteroidData.mapId) return;
 
-      if (!outOfMaxBounds({ x, y }, activeRock)) map?.putTileAt(0, x, dims.yBounds - y);
+      console.log("tile id:", tileId, ResourceToTilesetKey[tileId]);
+      if (!outOfMaxBounds({ x, y }, activeRock)) map?.putTileAt(ResourceToTilesetKey[tileId], x, dims.yBounds - y);
     });
   });
 }
