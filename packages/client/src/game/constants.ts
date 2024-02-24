@@ -375,6 +375,11 @@ export const EntitytoBuildingSpriteKey = {
 
   [EntityType.LithiumMine]: [SpriteKeys.LithiumMine1],
 
+  [EntityType.KimberliteMine]: [SpriteKeys.IronMine1, SpriteKeys.IronMine2, SpriteKeys.IronMine3],
+  [EntityType.IridiumMine]: [SpriteKeys.IronMine1, SpriteKeys.IronMine2, SpriteKeys.IronMine3],
+  [EntityType.TitaniumMine]: [SpriteKeys.IronMine1, SpriteKeys.IronMine2, SpriteKeys.IronMine3],
+  [EntityType.PlatinumMine]: [SpriteKeys.IronMine1, SpriteKeys.IronMine2, SpriteKeys.IronMine3],
+
   [EntityType.StorageUnit]: [SpriteKeys.StorageUnit1, SpriteKeys.StorageUnit2, SpriteKeys.StorageUnit3],
 
   [EntityType.IronPlateFactory]: [SpriteKeys.IronPlateFactory1, SpriteKeys.IronPlateFactory2],
@@ -436,6 +441,12 @@ export const EntityIDtoAnimationKey = {
   [EntityType.IronMine]: [AnimationKeys.IronMine1, AnimationKeys.IronMine2, AnimationKeys.IronMine3],
   [EntityType.CopperMine]: [AnimationKeys.CopperMine1, AnimationKeys.CopperMine2, AnimationKeys.CopperMine3],
   [EntityType.LithiumMine]: [AnimationKeys.LithiumMine1],
+
+  [EntityType.KimberliteMine]: [AnimationKeys.IronMine1, AnimationKeys.IronMine2, AnimationKeys.IronMine3],
+  [EntityType.IridiumMine]: [AnimationKeys.IronMine1, AnimationKeys.IronMine2, AnimationKeys.IronMine3],
+  [EntityType.PlatinumMine]: [AnimationKeys.IronMine1, AnimationKeys.IronMine2, AnimationKeys.IronMine3],
+  [EntityType.TitaniumMine]: [AnimationKeys.IronMine1, AnimationKeys.IronMine2, AnimationKeys.IronMine3],
+
   [EntityType.StorageUnit]: [undefined, undefined, AnimationKeys.StorageUnit3],
 
   [EntityType.IronPlateFactory]: [AnimationKeys.IronPlateFactory1, AnimationKeys.IronPlateFactory2],
