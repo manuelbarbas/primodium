@@ -9,7 +9,7 @@ export const UnitFactory: React.FC<{ building: Entity }> = ({ building }) => {
     <Navigator.Screen title={building} className="w-full gap-1">
       <BuildingInfo />
       <Upgrade building={building} />
-      <div className="grid grid-cols-2 w-full gap-1">
+      <div className="w-full gap-1">
         <BuildUnit />
       </div>
     </Navigator.Screen>
