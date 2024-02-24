@@ -142,13 +142,15 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
         });
       } else if (["q", "œ", "Q"].includes(e.key)) {
         const delta = parseResourceCount(dragging.entity, "1");
-        setDragging({ ...dragging, count: bigIntMax(0n, dragging.count - delta) });
+        const min = delta;
+        setDragging({ ...dragging, count: bigIntMax(min, dragging.count - delta) });
       } else if (["d", "D", "∂"].includes(e.key)) {
         const delta = parseResourceCount(dragging.entity, "10");
         setDragging({ ...dragging, count: bigIntMin(initial + dragging.count, dragging.count + delta) });
       } else if (["a", "A", "å"].includes(e.key)) {
         const delta = parseResourceCount(dragging.entity, "10");
-        setDragging({ ...dragging, count: bigIntMin(0n, dragging.count - delta) });
+        const min = parseResourceCount(dragging.entity, "1");
+        setDragging({ ...dragging, count: bigIntMax(min, dragging.count - delta) });
       } else if (e.key === "Shift") {
         setDragging({ ...dragging, count: initial });
       } else if (e.key === "Alt") {

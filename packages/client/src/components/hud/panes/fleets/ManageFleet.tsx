@@ -182,8 +182,13 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               </Button>
             </TransactionQueueMask>
             <TransactionQueueMask queueItemId={"disband" as Entity}>
-              <Button className="btn btn-error btn-sm w-full" onClick={() => disbandFleet(mud, fleetEntity)}>
-                DISBAND
+              <Button
+                className="btn btn-error btn-sm w-full"
+                onClick={() => disbandFleet(mud, fleetEntity)}
+                tooltipDirection="bottom"
+                tooltip="remove all units and resources and return home"
+              >
+                {totalUnits <= 0n ? "RECALL" : "CLEAR AND RECALL"}
               </Button>
             </TransactionQueueMask>
           </div>

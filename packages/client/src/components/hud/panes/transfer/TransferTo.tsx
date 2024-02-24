@@ -4,6 +4,7 @@ import React, { useMemo } from "react";
 import { FaTimes } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { components } from "src/network/components";
+import { entityToFleetName } from "src/util/name";
 import { formatResourceCount } from "src/util/number";
 import { getUnitStats } from "src/util/unit";
 import { TargetHeader } from "../../TargetHeader";
@@ -45,7 +46,9 @@ export const TransferTo = (props: {
       data.speed = bigIntMin(data.speed == 0n ? BigInt(10e100) : data.speed, unitData.SPD);
     });
 
-    return <FleetHeader title="New Fleet" {...data} />;
+    return (
+      <FleetHeader title={props.entity === "newFleet" ? "New Fleet" : entityToFleetName(props.entity)} {...data} />
+    );
   }, [isFleet, props.entity, props.unitCounts, selectedRock]);
 
   return (
