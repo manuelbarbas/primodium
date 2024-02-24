@@ -1,11 +1,11 @@
 import { Entity } from "@latticexyz/recs";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
-import { useBuildingName } from "src/hooks/useBuildingName";
 import { components } from "src/network/components";
+import { getBuildingName } from "src/util/building";
 
 export const Move: React.FC<{ building: Entity }> = ({ building }) => {
-  const name = useBuildingName(building);
+  const name = getBuildingName(building);
   return (
     <Navigator.Screen title="Move">
       <SecondaryCard className="space-y-3 items-center text-center w-full">

@@ -60,7 +60,7 @@ const ClaimObjectiveButton: React.FC<{
     comps.CompletedObjective.useWithKeys({ objective: objectiveEntity as Hex, entity: player as Hex })?.value ?? false;
 
   const canClaim = useMemo(() => {
-    return getCanClaimObjective(objectiveEntity, player);
+    return getCanClaimObjective(objectiveEntity, selectedRock);
   }, [
     levelRequirement,
     objectiveClaimedRequirement,
