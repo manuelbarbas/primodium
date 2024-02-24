@@ -61,7 +61,7 @@ export const BuildUnit: React.FC<{
                 >
                   <img
                     src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}
-                    className={`border w-[72px] p-2 group-hover:opacity-50 rounded-xl ${
+                    className={`border w-[72px] p-2 group-hover:opacity-50 bg-neutral ${
                       selectedUnit == unit ? "border-2 border-accent" : "border-secondary/75"
                     }`}
                   />

@@ -18,6 +18,7 @@ import { Move } from "./screens/Move";
 import { UnitFactory } from "./screens/UnitFactory";
 import { Entity } from "@latticexyz/recs";
 import { SecondaryCard } from "src/components/core/Card";
+import { useMud } from "src/hooks";
 
 export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedBuilding }) => {
   const buildingType = useMemo(() => {
@@ -47,6 +48,8 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
     }
   };
   const TopBar = () => {
+    const mud = useMud();
+
     return (
       <div className="absolute -top-2 right-0 -translate-y-full flex flex-row-reverse gap-1 p-1 bg-neutral border border-1 border-secondary border-b-base-100">
         <Button
