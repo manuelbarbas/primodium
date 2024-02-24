@@ -131,31 +131,31 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
     (e: KeyboardEvent) => {
       if (!dragging) return;
       const initial = UnitStorages.has(dragging.entity)
-        ? fromInitialUnitCounts.get(dragging.entity) ?? 0n
-        : fromInitialResourceCounts.get(dragging.entity)?.resourceCount ?? 0n;
+        ? fromUnitCounts.get(dragging.entity) ?? 0n
+        : fromResourceCounts.get(dragging.entity) ?? 0n;
 
       if (["e", "E", "Dead"].includes(e.key)) {
         const delta = parseResourceCount(dragging.entity, "1");
         setDragging({
           ...dragging,
-          count: bigIntMin(initial, dragging.count + delta),
+          count: bigIntMin(initial + dragging.count, dragging.count + delta),
         });
       } else if (["q", "œ", "Q"].includes(e.key)) {
         const delta = parseResourceCount(dragging.entity, "1");
         setDragging({ ...dragging, count: bigIntMax(0n, dragging.count - delta) });
       } else if (["d", "D", "∂"].includes(e.key)) {
         const delta = parseResourceCount(dragging.entity, "10");
-        setDragging({ ...dragging, count: bigIntMin(initial, dragging.count + delta) });
+        setDragging({ ...dragging, count: bigIntMin(initial + dragging.count, dragging.count + delta) });
       } else if (["a", "A", "å"].includes(e.key)) {
         const delta = parseResourceCount(dragging.entity, "10");
-        setDragging({ ...dragging, count: bigIntMax(0n, dragging.count - delta) });
+        setDragging({ ...dragging, count: bigIntMin(0n, dragging.count - delta) });
       } else if (e.key === "Shift") {
         setDragging({ ...dragging, count: initial });
       } else if (e.key === "Alt") {
         setDragging({ ...dragging, count: initial / 2n });
       }
     },
-    [dragging, fromInitialResourceCounts, fromInitialUnitCounts]
+    [dragging, fromResourceCounts, fromUnitCounts]
   );
 
   const mud = useMud();

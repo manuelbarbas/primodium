@@ -128,7 +128,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             >
               <IconLabel imageUri="/img/icons/trade.png" text={"Transfer"} />
             </Modal.Button>
-            <Modal.Content className="w-3/4 h-4/5">
+            <Modal.Content className="w-3/4 h-[750px]">
               <Fleets initialState="transfer" from={selectedAsteroid} />
             </Modal.Content>
           </Modal>
@@ -141,7 +141,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             >
               <IconLabel imageUri="/img/icons/addicon.png" text="ADD FLEET" />
             </Modal.Button>
-            <Modal.Content className="w-4/5 h-4/5">
+            <Modal.Content className="w-3/4 h-[750px]">
               <Fleets initialState="transfer" from={selectedAsteroid} to={"newFleet"} />
             </Modal.Content>
           </Modal>

@@ -32,7 +32,7 @@ export const TransferConfirm = (props: {
     if (!fromIsFleet) return { disabled: false, submitMessage: "Transfer" };
     const cargo = getFleetStatsFromUnits(props.fromUnits).cargo;
     if (cargo < [...props.fromResources.entries()].reduce((acc, [, count]) => acc + count, 0n))
-      return { disabled: true, submitMessage: "From cargo capacity exceeded" };
+      return { disabled: true, submitMessage: "Sender cargo capacity exceeded" };
     return { disabled: false, submitMessage: "Transfer" };
   }, [fromIsFleet, props.fromUnits, props.fromResources]);
 
@@ -66,7 +66,7 @@ const TransferConfirmFleet = ({ toUnits, toResources, handleSubmit, entity }: Tr
 
     const cargo = getFleetStatsFromUnits(toUnits).cargo;
     if (cargo < [...toResources.entries()].reduce((acc, [, count]) => acc + count, 0n))
-      return { disabled: true, submitMessage: "To cargo capacity exceeded" };
+      return { disabled: true, submitMessage: "Recipient cargo exceeded" };
 
     return { disabled: false, submitMessage: newFleet ? "Create Fleet" : "Transfer" };
   }, [toUnits, entity, toResources]);
