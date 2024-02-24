@@ -3,7 +3,6 @@ import { Navigator } from "src/components/core/Navigator";
 import { components } from "src/network/components";
 import { ExpandRange } from "../widgets/ExpandRange";
 import { BuildingInfo } from "../widgets/BuildingInfo";
-import { SpecialTech } from "../widgets/SpecialTech";
 import { Upgrade } from "../widgets/Upgrade";
 
 export const MainBase: React.FC<{ building: Entity }> = ({ building }) => {
@@ -13,9 +12,6 @@ export const MainBase: React.FC<{ building: Entity }> = ({ building }) => {
       <BuildingInfo />
       <Upgrade building={building} />
       {asteroid && <ExpandRange asteroid={asteroid as Entity} />}
-      <div className="grid grid-cols-2 w-full gap-1">
-        <SpecialTech />
-      </div>
     </Navigator.Screen>
   );
 };
