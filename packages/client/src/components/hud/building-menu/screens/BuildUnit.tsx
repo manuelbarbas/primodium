@@ -28,8 +28,8 @@ export const BuildUnit: React.FC<{
   const [selectedUnit, setSelectedUnit] = useState<Entity>();
 
   const { P_UnitProdTypes, BuildingType, Level } = components;
-  const selectedRock = components.ActiveRock.use()?.value;
-  if (!selectedRock) throw new Error("[BuildUnit] No active rock selected");
+  const activeRock = components.ActiveRock.use()?.value;
+  if (!activeRock) throw new Error("[BuildUnit] No active rock selected");
 
   const buildingType = (BuildingType.get(building)?.value as Entity) ?? EntityType.NULL;
   const buildingLevel = Level.use(building)?.value ?? 1n;
@@ -82,7 +82,7 @@ export const BuildUnit: React.FC<{
               <p className="uppercase font-bold">{getBlockTypeName(selectedUnit)}</p>
 
               <div className="grid grid-cols-6 gap-2 border-y border-cyan-400/30">
-                {Object.entries(getUnitStats(selectedUnit, selectedRock)).map(([name, value]) => (
+                {Object.entries(getUnitStats(selectedUnit, activeRock)).map(([name, value]) => (
                   <div key={name} className="flex flex-col items-center">
                     <p className="text-xs opacity-50">{name}</p>
                     <p>{["SPD"].includes(name) ? formatNumber(value) : formatResourceCount(EntityType.Iron, value)}</p>
@@ -91,10 +91,10 @@ export const BuildUnit: React.FC<{
               </div>
 
               {selectedUnit && selectedUnit !== EntityType.CapitalShip && (
-                <TrainNonCapitalShip building={building} unit={selectedUnit} asteroid={selectedRock} />
+                <TrainNonCapitalShip building={building} unit={selectedUnit} asteroid={activeRock} />
               )}
               {selectedUnit === EntityType.CapitalShip && (
-                <TrainCapitalShip building={building} asteroid={selectedRock} />
+                <TrainCapitalShip building={building} asteroid={activeRock} />
               )}
             </>
           )}
@@ -104,7 +104,7 @@ export const BuildUnit: React.FC<{
   );
 };
 
-const TrainNonCapitalShip = ({ building, unit }: { building: Entity; unit: Entity }) => {
+const TrainNonCapitalShip = ({ building, unit, asteroid }: { building: Entity; unit: Entity; asteroid: Entity }) => {
   const [count, setCount] = useState(0);
   const mud = useMud();
   const { playerAccount } = mud;
