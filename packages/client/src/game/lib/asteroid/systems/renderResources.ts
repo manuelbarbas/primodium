@@ -42,7 +42,6 @@ export function renderResources(scene: Scene) {
 
       if (mapId !== asteroidData.mapId) return;
 
-      console.log("tile id:", tileId, ResourceToTilesetKey[tileId]);
       if (!outOfMaxBounds({ x, y }, activeRock)) map?.putTileAt(ResourceToTilesetKey[tileId], x, dims.yBounds - y);
     });
   });
