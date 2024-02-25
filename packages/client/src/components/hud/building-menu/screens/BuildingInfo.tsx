@@ -4,10 +4,8 @@ import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useBuildingInfo } from "src/hooks/useBuildingInfo";
-import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
-import { Hex } from "viem";
 
 const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
@@ -19,7 +17,6 @@ const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ lab
 };
 
 export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
-  const spaceRock = components.Position.useWithKeys({ entity: building as Hex })?.parent as Entity | undefined;
   const buildingInfo = useBuildingInfo(building);
   if (!buildingInfo) return null;
   const {
@@ -64,7 +61,6 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     name={getBlockTypeName(resource)}
                     image={ResourceImage.get(resource) ?? ""}
                     resource={resource}
-                    spaceRock={spaceRock}
                     amount={amount}
                     resourceType={type}
                     fractionDigits={3}
@@ -83,7 +79,6 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     name={getBlockTypeName(resource)}
                     image={ResourceImage.get(resource) ?? ""}
                     resource={resource}
-                    spaceRock={spaceRock}
                     amount={amount}
                     resourceType={type}
                     fractionDigits={3}
@@ -106,7 +101,6 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     name={getBlockTypeName(resource)}
                     image={ResourceImage.get(resource) ?? ""}
                     resource={resource}
-                    spaceRock={spaceRock}
                     amount={amount}
                     resourceType={type}
                     fractionDigits={3}
@@ -126,7 +120,6 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     name={getBlockTypeName(resource)}
                     image={ResourceImage.get(resource) ?? ""}
                     resource={resource}
-                    spaceRock={spaceRock}
                     amount={amount}
                     resourceType={type}
                   />
@@ -159,7 +152,6 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                   <ResourceIconTooltip
                     fractionDigits={3}
                     name={getBlockTypeName(storage.resource)}
-                    spaceRock={spaceRock}
                     image={ResourceImage.get(storage.resource) ?? ""}
                     resource={storage.resource}
                     amount={storage.amount}
@@ -181,7 +173,6 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     <ResourceIconTooltip
                       fractionDigits={3}
                       name={getBlockTypeName(storage.resource)}
-                      spaceRock={spaceRock}
                       image={ResourceImage.get(storage.resource) ?? ""}
                       resource={storage.resource}
                       amount={storage.amount}

@@ -60,7 +60,6 @@ export const OwnedAsteroid: React.FC<{ asteroid: Entity; onClick?: () => void }>
       <ResourceIconTooltip
         resource={EntityType.Encryption}
         amount={encryption}
-        spaceRock={asteroid}
         image={ResourceImage.get(EntityType.Encryption) ?? ""}
         name={getBlockTypeName(EntityType.Encryption)}
       />
@@ -141,7 +140,7 @@ export const OwnedAsteroids = () => {
       lockable
       draggable
       scene={Scenes.Asteroid}
-      active={mapOpen}
+      active={!!mapOpen}
     >
       <_OwnedAsteroids />
     </Widget>

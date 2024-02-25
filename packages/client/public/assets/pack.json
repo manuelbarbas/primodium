@@ -85,13 +85,23 @@
       },
       {
         "type": "tilemapTiledJSON",
-        "key": "asteroid-small",
-        "url": "/assets/maps/asteroid-small.json"
+        "key": "asteroid-micro",
+        "url": "/assets/maps/asteroid-micro.tmj"
       },
       {
         "type": "tilemapTiledJSON",
-        "key": "asteroid-player",
-        "url": "/assets/maps/asteroid-player.json"
+        "key": "asteroid-small",
+        "url": "/assets/maps/asteroid-small.tmj"
+      },
+      {
+        "type": "tilemapTiledJSON",
+        "key": "asteroid-medium",
+        "url": "/assets/maps/asteroid-medium.tmj"
+      },
+      {
+        "type": "tilemapTiledJSON",
+        "key": "asteroid-large",
+        "url": "/assets/maps/asteroid-large.tmj"
       },
       {
         "type": "audioSprite",

@@ -13,7 +13,7 @@ export const Hangar = memo(() => {
     <div className="w-72">
       <Widget
         id="hangar"
-        title="HANGAR"
+        title="UNITS"
         icon="/img/icons/attackicon.png"
         defaultCoord={{
           x: window.innerWidth / 2 + getRandomRange(-50, 50),

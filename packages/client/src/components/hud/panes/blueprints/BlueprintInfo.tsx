@@ -15,9 +15,9 @@ import { IconLabel } from "../../../core/IconLabel";
 
 export const RecipeDisplay: React.FC<{
   building: Entity;
-}> = memo(({ building }) => {
+  asteroid: Entity;
+}> = memo(({ building, asteroid }) => {
   const recipe = getRecipe(building, 1n);
-  const spaceRock = components.Position.use(building)?.parent as Entity | undefined;
 
   return (
     <SecondaryCard className="items-center gap-1 w-full !border-error/50 bg-transparent p-1">
@@ -33,7 +33,7 @@ export const RecipeDisplay: React.FC<{
               <Badge key={`recipe-chunk-${i}`} className="border border-secondary/75">
                 <ResourceIconTooltip
                   key={resource.id + resource.type}
-                  spaceRock={spaceRock}
+                  spaceRock={asteroid}
                   image={resourceImage}
                   resource={resource.id}
                   resourceType={resource.type}
@@ -57,7 +57,8 @@ export const RecipeDisplay: React.FC<{
 export const BlueprintInfo: React.FC<{
   building: Entity;
 }> = memo(({ building }) => {
-  const spaceRock = components.Position.use(building)?.parent as Entity | undefined;
+  const spaceRock = components.ActiveRock.use()?.value;
+  if (!spaceRock) throw new Error("No space rock found");
   const rawProduction = components.P_Production.useWithKeys({ prototype: building as Hex, level: 1n });
   const production = useMemo(() => transformProductionData(rawProduction), [rawProduction]);
 
@@ -67,7 +68,7 @@ export const BlueprintInfo: React.FC<{
     [building]
   );
 
-  const hasEnough = useHasEnoughResources(getRecipe(building ?? singletonEntity, 1n));
+  const hasEnough = useHasEnoughResources(getRecipe(building ?? singletonEntity, 1n), spaceRock);
 
   if (!building) return <div className="items-center p-0 w-full z-100 h-24">Select a building</div>;
   if (!getBlockTypeName(building)) return <></>;
@@ -78,7 +79,7 @@ export const BlueprintInfo: React.FC<{
         <div className="flex flex-col items-center w-full h-full text-xs relative gap-1 ">
           <div className="absolute top-0 w-full h-full topographic-background opacity-25" />
           {!hasEnough && <p className="text-error animate-pulse text-xs text-center">NOT ENOUGH RESOURCES</p>}
-          <RecipeDisplay building={building} />
+          <RecipeDisplay building={building} asteroid={spaceRock} />
 
           <SecondaryCard className="flex flex-col items-center gap-1 w-full relative bg-transparent border-success/50 p-1">
             <p className="font-bold absolute opacity-75 left-0 top-1/2 -translate-y-1/2 text-success text-sm ml-1">+</p>
@@ -87,7 +88,6 @@ export const BlueprintInfo: React.FC<{
                 <ResourceIconTooltip
                   name={getBlockTypeName(resource)}
                   image={ResourceImage.get(resource) ?? ""}
-                  spaceRock={spaceRock}
                   resource={resource}
                   amount={amount}
                   resourceType={type}

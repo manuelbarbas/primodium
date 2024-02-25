@@ -1,6 +1,13 @@
 import type Phaser from "phaser";
+import { TilemapConfig } from "../../types";
 
-export const createTilemap = (scene: Phaser.Scene, tileWidth: number, tileHeight: number, defaultKey?: string) => {
+export const createTilemap = (
+  scene: Phaser.Scene,
+  tileWidth: number,
+  tileHeight: number,
+  defaultKey?: string,
+  config?: TilemapConfig
+) => {
   const renderTilemap = (key: string) => {
     currentMap?.destroy();
     const mapData = scene.cache.tilemap.get(key).data as Phaser.Tilemaps.MapData;
@@ -11,9 +18,14 @@ export const createTilemap = (scene: Phaser.Scene, tileWidth: number, tileHeight
       map.addTilesetImage(tileset.name, tileset.name)
     ) as Phaser.Tilemaps.Tileset[];
 
-    (mapData.layers as Phaser.Tilemaps.LayerData[]).forEach((layer) =>
-      map.createLayer(layer.name, tilesets, -19 * 32, -50 * 32)
-    );
+    (mapData.layers as Phaser.Tilemaps.LayerData[]).forEach((layer) => {
+      const _layer = map.createLayer(layer.name, tilesets, -19 * tileWidth, -50 * tileWidth);
+
+      const depth = config?.[key]?.[layer.name]?.depth;
+      if (depth && _layer) {
+        _layer.setDepth(depth);
+      }
+    });
 
     currentMap = map;
     return map;
@@ -22,6 +34,7 @@ export const createTilemap = (scene: Phaser.Scene, tileWidth: number, tileHeight
   let currentMap: Phaser.Tilemaps.Tilemap | null = defaultKey ? renderTilemap(defaultKey) : null;
 
   const dispose = () => {
+    // currentMap?.removeAllLayers();
     currentMap?.destroy();
   };
 

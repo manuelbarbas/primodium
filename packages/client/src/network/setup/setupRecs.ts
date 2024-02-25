@@ -1,14 +1,26 @@
-import { ResolvedStoreConfig, StoreConfig, Table, resolveConfig } from "@latticexyz/store";
 import { createBlockStream } from "@latticexyz/block-logs-stream";
-import { RecsStorageAdapter, recsStorage } from "@latticexyz/store-sync/recs";
+import { isDefined } from "@latticexyz/common/utils";
 import { World as RecsWorld } from "@latticexyz/recs";
-import { Observable, concatMap, filter, firstValueFrom, identity, map, scan, share, shareReplay } from "rxjs";
-import { Hex, PublicClient, TransactionReceiptNotFoundError } from "viem";
-import { Read } from "@primodiumxyz/sync-stack";
+import { ResolvedStoreConfig, StoreConfig, Table, resolveConfig } from "@latticexyz/store";
 import { StorageAdapterBlock } from "@latticexyz/store-sync";
+import { RecsStorageAdapter, recsStorage } from "@latticexyz/store-sync/recs";
 import storeConfig from "@latticexyz/store/mud.config";
 import worldConfig from "@latticexyz/world/mud.config";
-import { isDefined } from "@latticexyz/common/utils";
+import { Read } from "@primodiumxyz/sync-stack";
+import {
+  Observable,
+  concatMap,
+  filter,
+  firstValueFrom,
+  identity,
+  map,
+  scan,
+  share,
+  shareReplay,
+  throwError,
+  timeout,
+} from "rxjs";
+import { Hex, PublicClient, TransactionReceiptNotFoundError } from "viem";
 
 export const setupRecs = <config extends StoreConfig, extraTables extends Record<string, Table>>(args: {
   mudConfig: config;
@@ -75,6 +87,7 @@ export const setupRecs = <config extends StoreConfig, extraTables extends Record
     // We could potentially speed this up a tiny bit by racing to see if 1) tx exists in processed block or 2) fetch tx receipt for latest block processed
     const hasTransaction$ = recentBlocks$.pipe(
       concatMap(async (blocks) => {
+        console.log("blocks", blocks);
         const txs = blocks.flatMap((block) => block.logs.map((op) => op.transactionHash).filter(isDefined));
         if (txs.includes(tx)) return true;
 
@@ -87,13 +100,19 @@ export const setupRecs = <config extends StoreConfig, extraTables extends Record
           if (error instanceof TransactionReceiptNotFoundError) {
             return false;
           }
+          console.log(error);
+          return false;
           throw error;
         }
       })
-      // tap((result) => debug("has tx?", tx, result))
     );
 
-    await firstValueFrom(hasTransaction$.pipe(filter(identity)));
+    await firstValueFrom(
+      hasTransaction$.pipe(
+        filter(identity),
+        timeout({ each: 5000, with: () => throwError(() => new Error("Transaction failed.")) })
+      )
+    );
   }
 
   //include internal mud tables for recs sync
