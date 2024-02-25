@@ -15,6 +15,5 @@ export const starmapSceneConfig: SceneConfig = {
   tilemap: {
     tileWidth: 24,
     tileHeight: 24,
-    chunkSize: 128,
   },
 };

@@ -41,10 +41,20 @@ function isSecondaryAsteroid(entity: Entity, chanceInv: number) {
 }
 
 function getAsteroidData(asteroidEntity: Entity) {
-  // uint256 maxLevel = (LibEncode.getByteUInt(uint256(asteroidEntity), 3, 12) % 4) + 1;
-  //uint8 mapId = uint8((LibEncode.getByteUInt(uint256(asteroidEntity), 3, 20) % 4) + 2);
+  const distributionVal = getByteUInt(asteroidEntity, 7, 12) % 100;
+  let maxLevel = 8;
+  // //micro
+  if (distributionVal <= 50) {
+    maxLevel = 1;
+    //small
+  } else if (distributionVal <= 75) {
+    maxLevel = 3;
+    //medium
+  } else if (distributionVal <= 90) {
+    maxLevel = 5;
+    //large
+  }
 
-  const maxLevel = (getByteUInt(asteroidEntity, 3, 12) % 4) + 1;
   const mapId = (getByteUInt(asteroidEntity, 3, 20) % 4) + 2;
   return { isAsteroid: true, maxLevel: BigInt(maxLevel), mapId: mapId, spawnsSecondary: false };
 }

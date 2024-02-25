@@ -1,6 +1,7 @@
 import { Scenes } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
-import { ReactNode, useCallback, useEffect, useMemo, useState, memo } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ReactNode, memo, useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaLock, FaLockOpen, FaMinus } from "react-icons/fa";
 import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
@@ -8,7 +9,6 @@ import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useWidgets } from "../../hooks/providers/WidgetProvider";
 import { Card } from "./Card";
-import { AnimatePresence, motion } from "framer-motion";
 
 type WidgetProps = {
   title: string;
@@ -26,6 +26,7 @@ type WidgetProps = {
   defaultVisible?: boolean;
   icon: string;
   active?: boolean;
+  popUp?: boolean;
   origin?:
     | "top-left"
     | "top-right"
@@ -53,6 +54,7 @@ type WidgetContentProps = {
   onUnpin?: () => void;
   onLock?: () => void;
   onUnlock?: () => void;
+  popUp: boolean;
   pinned: boolean;
   minimized: boolean;
   children?: ReactNode;
@@ -91,6 +93,7 @@ export const Content: React.FC<WidgetContentProps> = memo(
     locked,
     onLock,
     onUnlock,
+    popUp,
   }) => {
     const [uiScale] = usePersistentStore((state) => [state.uiScale]);
 
@@ -167,24 +170,26 @@ export const Content: React.FC<WidgetContentProps> = memo(
           onDoubleClick={onDoubleClick}
         >
           <div className="flex gap-1 bg-gray-900 px-2 items-center">
-            {icon && <img src={icon} className="pixel-images w-4 h-4" />}
+            {icon && <img src={icon} className="pixel-images h-5" />}
             <p className=" uppercase font-bold">{title}</p>
           </div>
 
-          <div className="flex items-center gap-1">
-            {
-              <>
-                {!pinned && onPin && <RiPushpinFill className="cursor-crosshair" onClick={onPin} />}
-                {pinned && onUnpin && <RiUnpinFill className="cursor-crosshair" onClick={onUnpin} />}
-              </>
-            }
+          {!popUp && (
+            <div className="flex items-center gap-1">
+              {
+                <>
+                  {!pinned && onPin && <RiPushpinFill className="cursor-crosshair" onClick={onPin} />}
+                  {pinned && onUnpin && <RiUnpinFill className="cursor-crosshair" onClick={onUnpin} />}
+                </>
+              }
 
-            {locked && onUnlock && <FaLock className="cursor-pointer" onClick={onUnlock} />}
-            {!locked && onLock && <FaLockOpen className="cursor-pointer" onClick={onLock} />}
-            {/* {!minimized && onMinimize && <FaMinus className="cursor-nesw-resize" onClick={onMinimize} />}
+              {locked && onUnlock && <FaLock className="cursor-pointer" onClick={onUnlock} />}
+              {!locked && onLock && <FaLockOpen className="cursor-pointer" onClick={onLock} />}
+              {/* {!minimized && onMinimize && <FaMinus className="cursor-nesw-resize" onClick={onMinimize} />}
             {minimized && onMaximize && <FaPlus className="cursor-nesw-resize" onClick={onMaximize} />} */}
-            {onClose && <FaMinus className="cursor-pointer" onClick={onClose} />}
-          </div>
+              {onClose && <FaMinus className="cursor-pointer" onClick={onClose} />}
+            </div>
+          )}
         </div>
 
         <Card
@@ -216,6 +221,7 @@ export const Widget: React.FC<WidgetProps> = memo(
     defaultPinned = false,
     defaultLocked = false,
     defaultVisible = false,
+    popUp = false,
     active = true,
   }) => {
     const primodium = usePrimodium();
@@ -231,9 +237,17 @@ export const Widget: React.FC<WidgetProps> = memo(
     const [dragOffset, setDragOffset] = useState<Coord>({ x: 0, y: 0 });
     const [pinned, setPinned] = useState(paneInfo[id]?.pinned ?? (scene === Scenes.UI ? false : defaultPinned));
     const [locked, setLocked] = useState(paneInfo[id]?.locked ?? defaultLocked);
-    const [coord, setCoord] = useState<Coord>(paneInfo[id]?.coord ?? defaultCoord);
+    // const [coord, setCoord] = useState<Coord>(paneInfo[id]?.coord ?? defaultCoord);
     const [visible, setVisible] = useState(paneInfo[id]?.visible ?? defaultVisible);
     const { setWidget, removeWidget } = useWidgets();
+
+    const coord = useMemo(() => {
+      if (paneInfo[id]?.coord) {
+        return paneInfo[id]?.coord ?? { x: 0, y: 0 };
+      }
+      return defaultCoord;
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id, defaultCoord]);
 
     const [camera, uiCamera] = useMemo(() => {
       const { camera } = primodium.api(scene);
@@ -251,23 +265,23 @@ export const Widget: React.FC<WidgetProps> = memo(
         const { container: _container, obj } = _camera.createDOMContainer(id, _coord, raw);
         obj.pointerEvents = "none";
         obj.setAlpha(pinned ? minOpacity : 1);
+        obj.setDepth(pinned || defaultPinned ? pinnedDepth : unpinnedDepth);
         setContainer(obj);
         setContainerRef(_container);
         return obj;
       },
-      [container, id, minOpacity, pinned]
+      [container, id, minOpacity, pinned, defaultPinned]
     );
 
     // reset on double click to default
     const handleReset = useCallback(() => {
       setPinned(defaultPinned);
       setLocked(defaultLocked);
-      setCoord(defaultCoord);
       setVisible(defaultVisible);
       setMinimized(false);
       setDragging(false);
       setDragOffset({ x: 0, y: 0 });
-      setPane(id, defaultCoord, defaultPinned, defaultLocked, defaultVisible);
+      if (persist) setPane(id, defaultCoord, defaultPinned, defaultLocked, defaultVisible);
 
       // set
       const newContainer = createContainer(defaultPinned ? camera : uiCamera, defaultCoord, true);
@@ -284,6 +298,7 @@ export const Widget: React.FC<WidgetProps> = memo(
       minOpacity,
       defaultLocked,
       defaultVisible,
+      persist,
     ]);
 
     // calculate drag offset, set depth and set dragging flag
@@ -315,7 +330,7 @@ export const Widget: React.FC<WidgetProps> = memo(
       setPinned(true);
       const worldCoord = camera.screenCoordToWorldCoord({ x: container.x, y: container.y });
       const newContainer = createContainer(camera, worldCoord, true);
-      newContainer.setDepth(pinnedDepth);
+      // newContainer.setDepth(pinnedDepth);
       newContainer.setAlpha(1);
       if (persist) {
         setPane(id, worldCoord, true, false, true);
@@ -341,7 +356,7 @@ export const Widget: React.FC<WidgetProps> = memo(
 
     const handleLock = useCallback(() => {
       setLocked(true);
-      persist && setPane(id, coord, pinned, true, true);
+      if (persist) setPane(id, coord, pinned, true, true);
     }, [setLocked, persist, setPane, id, coord, pinned]);
 
     const handleUnlock = useCallback(() => {
@@ -395,7 +410,7 @@ export const Widget: React.FC<WidgetProps> = memo(
 
       setLocked(false);
       setPinned(false);
-      persist && setPane(id, screenCoord, false, false, true);
+      if (persist) setPane(id, screenCoord, false, false, true);
     }, [setLocked, id, setPane, persist, createContainer, uiCamera, origin]);
 
     const handlePointerEnter = useCallback(() => {
@@ -416,13 +431,13 @@ export const Widget: React.FC<WidgetProps> = memo(
 
     const handleClose = useCallback(() => {
       setVisible(false);
-      setPane(id, coord, pinned, locked, false);
-    }, [setVisible, setPane, id, coord, pinned, locked]);
+      if (persist) setPane(id, coord, pinned, locked, false);
+    }, [setVisible, setPane, id, coord, pinned, locked, persist]);
 
     const handleOpen = useCallback(() => {
       setVisible(true);
-      setPane(id, coord, pinned, locked, true);
-    }, [setVisible, setPane, id, coord, pinned, locked]);
+      if (persist) setPane(id, coord, pinned, locked, true);
+    }, [setVisible, setPane, id, coord, pinned, locked, persist]);
 
     //initialize phaser container
     useEffect(() => {
@@ -503,17 +518,18 @@ export const Widget: React.FC<WidgetProps> = memo(
     }, [pinned, container, camera, defaultCoord, id, removePane, createContainer, uiCamera, minOpacity, handleReset]);
 
     useEffect(() => {
-      setWidget({
-        name: title,
-        visible,
-        close: handleClose,
-        open: handleOpen,
-        pinned,
-        minimized,
-        image: icon,
-        reset: handleReset,
-        active,
-      });
+      if (!popUp)
+        setWidget({
+          name: title,
+          visible,
+          close: handleClose,
+          open: handleOpen,
+          pinned,
+          minimized,
+          image: icon,
+          reset: handleReset,
+          active,
+        });
     }, [
       icon,
       title,
@@ -526,6 +542,7 @@ export const Widget: React.FC<WidgetProps> = memo(
       removeWidget,
       handleReset,
       active,
+      popUp,
     ]);
 
     // if (!containerRef || !container || !visible) return null;
@@ -554,6 +571,7 @@ export const Widget: React.FC<WidgetProps> = memo(
                 onLock={lockable ? handleLock : undefined}
                 onMinimize={toggleMinimize}
                 onMaximize={toggleMinimize}
+                popUp={popUp}
               >
                 {children}
               </Content>
@@ -590,6 +608,7 @@ export const Widget: React.FC<WidgetProps> = memo(
               onLock={lockable ? handleLock : undefined}
               onUnlock={lockable ? handleUnlock : undefined}
               origin={origin}
+              popUp={popUp}
             >
               {children}
             </Content>

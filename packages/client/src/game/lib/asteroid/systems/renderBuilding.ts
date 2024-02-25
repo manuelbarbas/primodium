@@ -31,7 +31,7 @@ import { createFxApi } from "src/game/api/fx";
 import { components } from "src/network/components";
 import { getBuildingDimensions, getBuildingTopLeft } from "src/util/building";
 import { getRandomRange } from "src/util/common";
-import { Action, ResourceEntityLookup, ResourceStorages, SPEED_SCALE } from "src/util/constants";
+import { Action, EntityType, ResourceEntityLookup, ResourceStorages, SPEED_SCALE } from "src/util/constants";
 import {
   ObjectPosition,
   OnComponentSystem,
@@ -169,6 +169,9 @@ export const renderBuilding = (scene: Scene) => {
           (_, { value }) => {
             const hoverEntity = components.HoverEntity.get()?.value;
             const selectedBuilding = components.SelectedBuilding.get()?.value;
+            const selectedBuildingType = components.BuildingType.get(entity)?.value;
+
+            if (selectedBuildingType === EntityType.MainBase) return;
 
             if (hoverEntity !== entity && selectedBuilding !== entity) return;
 
@@ -360,7 +363,8 @@ export const renderBuilding = (scene: Scene) => {
     });
 
     defineExitSystem(spectateWorld, positionQuery, ({ entity }) => {
-      const renderId = `${entity} _entitySprite`;
+      const renderId = `${entity}_entitySprite`;
+
       scene.objectPool.removeGroup(renderId);
     });
   });

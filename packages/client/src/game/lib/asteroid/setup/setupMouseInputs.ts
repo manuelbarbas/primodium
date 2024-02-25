@@ -9,19 +9,20 @@ import { world } from "src/network/world";
 import { outOfBounds } from "src/util/outOfBounds";
 
 export const setupMouseInputs = (scene: Scene) => {
-  const clickSub = scene.input.click$.subscribe((event) => {
+  const clickSub = scene.input.click$.subscribe(([pointer]) => {
     const { x, y } = pixelCoordToTileCoord(
-      { x: event.worldX, y: event.worldY },
+      { x: pointer.worldX, y: pointer.worldY },
       scene.tilemap.tileWidth,
       scene.tilemap.tileHeight
     );
 
     const gameCoord = { x, y: -y };
 
-    const playerEntity = components.Account.get()?.value;
-    if (playerEntity && outOfBounds(gameCoord, playerEntity)) {
+    const selectedRock = components.ActiveRock.get()?.value;
+    if (!selectedRock || outOfBounds(gameCoord, selectedRock)) {
       components.SelectedBuilding.remove();
       components.SelectedTile.remove();
+      components.SelectedAction.remove();
       return;
     }
 
@@ -29,9 +30,6 @@ export const setupMouseInputs = (scene: Scene) => {
 
     if (selectedAction !== undefined) return;
 
-    // update selected building
-    //TODO - fix converting to entity
-    const selectedRock = components.ActiveRock.get()?.value;
     const building = getBuildingAtCoord(gameCoord, (selectedRock as Entity) ?? singletonEntity) as Entity;
 
     if (!building) {
@@ -56,8 +54,8 @@ export const setupMouseInputs = (scene: Scene) => {
     const currentHoverTile = components.HoverTile.get();
     if (coordEq(currentHoverTile, mouseCoord)) return;
 
-    const playerEntity = components.Account.get()?.value;
-    if (playerEntity && outOfBounds(mouseCoord, playerEntity)) {
+    const selectedRock = components.ActiveRock.get()?.value;
+    if (!selectedRock || outOfBounds(mouseCoord, selectedRock)) {
       components.HoverTile.remove();
       return;
     }

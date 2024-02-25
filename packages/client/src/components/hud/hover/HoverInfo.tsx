@@ -4,6 +4,7 @@ import { getBuildingName } from "src/util/building";
 import { Card } from "../../core/Card";
 import { AsteroidHover } from "./AsteroidHover";
 import { FleetHover } from "./FleetHover";
+import { BlueprintInfo } from "../panes/blueprints/BlueprintInfo";
 
 export const HoverInfo = () => {
   const BuildingInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
@@ -25,6 +26,7 @@ export const HoverInfo = () => {
   if (components.BuildingType.has(hoverEntity)) content = <BuildingInfo entity={hoverEntity} />;
   else if (components.Asteroid.has(hoverEntity)) content = <AsteroidHover entity={hoverEntity} />;
   else if (components.IsFleet.has(hoverEntity)) content = <FleetHover entity={hoverEntity} />;
+  else if (components.P_Blueprint.has(hoverEntity)) content = <BlueprintInfo building={hoverEntity} />;
 
   return (
     <div className="relative" style={{ zIndex: 1001 }}>

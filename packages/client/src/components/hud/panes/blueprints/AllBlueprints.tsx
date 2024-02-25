@@ -10,9 +10,7 @@ import { Action, EntityType } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
 import { Button } from "../../../core/Button";
-import { Card } from "../../../core/Card";
 import { BuildingImageFromType } from "../../../shared/BuildingImage";
-import { BlueprintInfo } from "./BlueprintInfo";
 
 const BlueprintButton: React.FC<{
   buildingType: Entity;
@@ -24,7 +22,8 @@ const BlueprintButton: React.FC<{
     hooks: { useKeybinds },
   } = usePrimodium().api();
   const keybinds = useKeybinds();
-  const selectedRockEntity = components.ActiveRock.use()?.value;
+  const selectedRockEntity = components.ActiveRock.use()?.value as Entity | undefined;
+  if (!selectedRockEntity) throw new Error("No active rock entity found");
   const rockMainBase = components.Home.use(selectedRockEntity)?.value;
   const selectedBuilding = components.SelectedBuilding.use()?.value;
   const mainbaseLevel = components.Level.use(rockMainBase as Entity)?.value ?? 1n;
@@ -32,7 +31,7 @@ const BlueprintButton: React.FC<{
     components.P_RequiredBaseLevel.getWithKeys({ prototype: buildingType as Hex, level: 1n })?.value ?? 1n;
   const hasMainbaseLevel = mainbaseLevel >= levelRequirement;
 
-  const hasEnough = useHasEnoughResources(getRecipe(buildingType, 1n));
+  const hasEnough = useHasEnoughResources(getRecipe(buildingType, 1n), selectedRockEntity);
 
   return (
     <Button
@@ -40,6 +39,8 @@ const BlueprintButton: React.FC<{
       tooltip={getBlockTypeName(buildingType)}
       keybind={keybindActive ? keybind : undefined}
       tooltipDirection={tooltipDirection ?? "right"}
+      onPointerEnter={() => components.HoverEntity.set({ value: buildingType })}
+      onPointerLeave={() => components.HoverEntity.remove()}
       clickSound={AudioKeys.Bleep7}
       onClick={() => {
         if (selectedBuilding === buildingType) {
@@ -50,7 +51,7 @@ const BlueprintButton: React.FC<{
         components.SelectedBuilding.set({ value: buildingType });
         components.SelectedAction.set({ value: Action.PlaceBuilding });
       }}
-      className={`relative btn-ghost min-h-9 ! p-0 ${
+      className={`relative btn-ghost min-h-9 p-0 ${
         hasMainbaseLevel
           ? hasEnough
             ? "hover:bg-accent border-accent/50"
@@ -78,7 +79,6 @@ const BlueprintButton: React.FC<{
 };
 
 export const AllBlueprints = () => {
-  const selectedBuilding = components.SelectedBuilding.use()?.value;
   const [index, setIndex] = useState(0);
 
   return (
@@ -243,11 +243,6 @@ export const AllBlueprints = () => {
           </p>
         </Button>
       </div>
-      {selectedBuilding && (
-        <Card className="absolute card bottom-0 left-0 translate-y-full w-full -translate-x-[1px] border-r-0 py-1">
-          <BlueprintInfo building={selectedBuilding} />
-        </Card>
-      )}
     </>
   );
 };

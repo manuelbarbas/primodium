@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { components } from "src/network/components";
 import { getFullResourceCount, getFullResourceCounts } from "src/util/resource";
 
-export function useFullResourceCount(resource: Entity, spaceRockEntity?: Entity) {
+export function useFullResourceCount(resource: Entity, spaceRockEntity: Entity) {
   const time = components.Time.use(undefined)?.value ?? 0n;
 
   return useMemo(() => {
@@ -18,7 +18,7 @@ export function useFullResourceCount(resource: Entity, spaceRockEntity?: Entity)
   }, [time, resource, spaceRockEntity]);
 }
 
-export function useFullResourceCounts(spaceRockEntity?: Entity) {
+export function useFullResourceCounts(spaceRockEntity: Entity) {
   const time = components.Time.use(undefined)?.value ?? 0n;
 
   return useMemo(() => {

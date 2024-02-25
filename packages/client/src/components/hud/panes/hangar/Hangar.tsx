@@ -9,18 +9,18 @@ export const Hangar = memo(() => {
   const { components } = useMud();
   const mapOpen = components.MapOpen.use()?.value;
 
-  // if (mapOpen) return null;
-
   return (
     <div className="w-72">
       <Widget
         id="hangar"
-        title="HANGAR"
+        title="UNITS"
         icon="/img/icons/attackicon.png"
         defaultCoord={{
           x: window.innerWidth / 2 + getRandomRange(-50, 50),
           y: window.innerHeight / 2 + getRandomRange(-50, 50),
         }}
+        defaultLocked
+        defaultVisible
         origin="center"
         scene={Scenes.Asteroid}
         active={!mapOpen}
@@ -28,6 +28,7 @@ export const Hangar = memo(() => {
         draggable
         pinnable
         persist
+        lockable
       >
         <HangarContent />
       </Widget>

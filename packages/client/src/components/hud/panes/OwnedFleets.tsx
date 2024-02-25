@@ -7,7 +7,7 @@ import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
-import { useFleetStats } from "src/hooks/useFleetMoves";
+import { useFleetStats } from "src/hooks/useFleetCount";
 import { usePlayerOwner } from "src/hooks/usePlayerOwner";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
@@ -145,8 +145,10 @@ const _OwnedFleets: React.FC = () => {
                 }
 
                 const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
+                const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
+                const time = components.Time.get()?.value ?? 0n;
 
-                components.SelectedFleet.set({ value: entity });
+                if (arrivalTime < time) components.SelectedFleet.set({ value: entity });
                 const position = getFleetTilePosition(scene, entity);
 
                 pan({
@@ -179,7 +181,7 @@ export const OwnedFleets = () => {
       draggable
       persist
       scene={Scenes.Starmap}
-      active={mapOpen}
+      active={!!mapOpen}
       defaultCoord={{ x: 0, y: 0 }}
     >
       <_OwnedFleets />

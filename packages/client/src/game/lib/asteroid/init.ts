@@ -7,7 +7,6 @@ import { asteroidSceneConfig } from "../../config/asteroidScene";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
 import { setupKeybinds } from "./setup/setupKeybinds";
 import { setupMouseInputs } from "./setup/setupMouseInputs";
-import { setupTileManager } from "./setup/setupTileManager";
 import { uiSceneConfig } from "src/game/config/uiScene";
 import { defineComponentSystem } from "@latticexyz/recs";
 import { components } from "src/network/components";
@@ -16,10 +15,6 @@ export const initAsteroidScene = async (game: Game) => {
   const scene2 = await game.sceneManager.addScene(uiSceneConfig, true);
   const scene = await game.sceneManager.addScene(asteroidSceneConfig, true);
   const audio = createAudioApi(scene);
-
-  const tileManager = await setupTileManager(scene.tilemap);
-  tileManager?.renderInitialChunks();
-  tileManager?.startChunkRenderer();
 
   scene2.phaserScene.scene.bringToTop(Scenes.UI);
   scene2.phaserScene.input.enabled = false;

@@ -1,8 +1,9 @@
 import { Scenes } from "@game/constants";
 import { Widget } from "src/components/core/Widget";
-import { AllResourceLabels } from "./AllResourceLabels";
 import { useMud } from "src/hooks";
 import { getRandomRange } from "src/util/common";
+import { AllResourceLabels } from "./AllResourceLabels";
+import { AllUtilityLabels } from "./AllUtilityLabels";
 
 export const Resources = () => {
   const { components } = useMud();
@@ -12,19 +13,23 @@ export const Resources = () => {
     <Widget
       id="resources"
       title="RESOURCES"
-      icon="/img/resource/iron_resource.png"
+      icon="/img/resource/iridium_resource.png"
       defaultCoord={{
         x: window.innerWidth / 2 + getRandomRange(-50, 50),
         y: window.innerHeight / 2 + getRandomRange(-50, 50),
       }}
+      defaultVisible
+      defaultLocked
       scene={Scenes.Asteroid}
       active={!mapOpen}
       minOpacity={0.5}
       draggable
+      lockable
       pinnable
       persist
     >
       <AllResourceLabels />
+      <AllUtilityLabels />
     </Widget>
   );
 };

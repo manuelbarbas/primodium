@@ -6,8 +6,11 @@ import { Modal } from "../core/Modal";
 import { BrandingLabel } from "../shared/BrandingLabel";
 import { CurrentObjective } from "./CurrentObjective";
 import { Profile } from "./Profile";
-// import { SpectatingDetails } from "./SpectatingDetails";
-import { BuildingMenu } from "./building-menu/BuildingMenu";
+import { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
+import { WidgetProvider } from "src/hooks/providers/WidgetProvider";
+import { usePrimodium } from "src/hooks/usePrimodium";
+import { Companion } from "./companion/Companion";
 import { HoverInfo } from "./hover/HoverInfo";
 import { HoverTarget } from "./markers/HoverTarget";
 import { AsteroidTarget } from "./markers/starmap/AsteroidTarget";
@@ -15,17 +18,14 @@ import { BuildMarker } from "./markers/starmap/BuildMarker";
 import { FleetTarget } from "./markers/starmap/FleetTarget";
 import { HomeMarker } from "./markers/starmap/HomeMarker";
 import HackerConsole from "./modals/HackerConsole";
-import { Companion } from "./companion/Companion";
-import { WidgetProvider } from "src/hooks/providers/WidgetProvider";
 import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 import { OwnedFleets } from "./panes/OwnedFleets";
 import { Blueprints } from "./panes/blueprints/Blueprints";
-import { Resources } from "./panes/resources/Resources";
-import { Hangar } from "./panes/hangar/Hangar";
 import { Chat } from "./panes/chat/Chat";
-import { usePrimodium } from "src/hooks/usePrimodium";
-import { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
+import { BuildingMenuPopup } from "./markers/asteroid/BuildingMenuPopup";
+import { BlueprintInfoMarker } from "./markers/asteroid/BlueprintInfoMarker";
+import { Hangar } from "./panes/hangar/Hangar";
+import { Resources } from "./panes/resources/Resources";
 export const GameHUD = () => {
   const uiScale = usePersistentStore((state) => state.uiScale);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
@@ -72,20 +72,20 @@ export const GameHUD = () => {
           <AsteroidTarget />
           <FleetTarget />
           <HoverTarget />
+          <BuildingMenuPopup />
+          <BlueprintInfoMarker />
 
           {/* Widgets */}
-          <HUD.TopLeft>
+          <HUD.TopLeft className="flex flex-col gap-2">
             <Profile />
-          </HUD.TopLeft>
-          <HUD.Left>
             <Blueprints />
-          </HUD.Left>
-
-          <Resources />
-          <Hangar />
+          </HUD.TopLeft>
+          <HUD.Left></HUD.Left>
 
           <HUD.TopRight className="flex flex-col items-end gap-2">
             <CurrentObjective />
+            <Resources />
+            <Hangar />
             <OwnedAsteroids />
             <OwnedFleets />
           </HUD.TopRight>
@@ -103,10 +103,6 @@ export const GameHUD = () => {
           <HUD.BottomLeft>
             <Companion />
           </HUD.BottomLeft>
-
-          <HUD.BottomMiddle>
-            <BuildingMenu />
-          </HUD.BottomMiddle>
         </HUD>
 
         <HUD>

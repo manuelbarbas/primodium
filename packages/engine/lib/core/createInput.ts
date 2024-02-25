@@ -38,7 +38,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
   const keyboard$ = new Subject<Phaser.Input.Keyboard.Key>();
 
   const pointermove$ = fromEvent(inputPlugin.scene.scale.canvas, "mousemove").pipe(
-    filter(() => enabled.current),
+    filter(() => enabled.current && inputPlugin.scene.scene.isActive()),
     map(() => {
       return inputPlugin.manager?.activePointer;
     })
@@ -50,7 +50,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     pointer: Phaser.Input.Pointer;
     event: MouseEvent;
   }> = fromEvent(inputPlugin.scene.scale.canvas, "pointerdown").pipe(
-    filter(() => enabled.current),
+    filter(() => enabled.current && inputPlugin.scene.scene.isActive()),
     map((event) => ({
       pointer: inputPlugin.manager?.activePointer,
       event: event as MouseEvent,
@@ -61,7 +61,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     pointer: Phaser.Input.Pointer;
     event: MouseEvent;
   }> = fromEvent(inputPlugin.scene.scale.canvas, "pointerup").pipe(
-    filter(() => enabled.current),
+    filter(() => enabled.current && inputPlugin.scene.scene.isActive()),
     map((event) => ({
       pointer: inputPlugin.manager?.activePointer,
       event: event as MouseEvent,
@@ -70,20 +70,24 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
 
   // Click stream
   const click$ = merge(pointerdown$, pointerup$).pipe(
-    filter(() => enabled.current),
+    filter(() => enabled.current && inputPlugin.scene.scene.isActive()),
     map<{ pointer: Phaser.Input.Pointer; event: MouseEvent }, [boolean, number]>(({ event }) => [
       event.type === "pointerdown",
       Date.now(),
     ]), // Map events to whether the left button is down and the current timestamp
     bufferCount(2, 1), // Store the last two timestamps
     filter(([prev, now]) => prev[0] && !now[0] && now[1] - prev[1] < 150), // Only care if button was pressed before and is not anymore and it happened within 500ms
-    map(() => inputPlugin.manager?.activePointer), // Return the current pointer
-    filter((pointer) => pointer?.downElement?.nodeName === "CANVAS")
+    map((): [Phaser.Input.Pointer, Phaser.GameObjects.GameObject[]] => {
+      const pointer = inputPlugin.manager.activePointer;
+      const hitTestResults = inputPlugin.hitTestPointer(pointer);
+      return [pointer, hitTestResults];
+    }), // Return the current pointer
+    filter(([pointer]) => pointer?.downElement?.nodeName === "CANVAS")
   );
 
   // Double click stream
   const doubleClick$ = pointerdown$.pipe(
-    filter(() => enabled.current),
+    filter(() => enabled.current && inputPlugin.scene.scene.isActive()),
     map(() => ({
       time: Date.now(),
     })),
@@ -99,7 +103,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
 
   // Right click stream
   const rightClick$ = merge(pointerdown$, pointerup$).pipe(
-    filter(({ pointer }) => enabled.current && pointer.rightButtonDown()),
+    filter(({ pointer }) => enabled.current && pointer.rightButtonDown() && inputPlugin.scene.scene.isActive()),
     map(() => inputPlugin.manager?.activePointer), // Return the current pointer
     filter((pointer) => pointer?.downElement?.nodeName === "CANVAS")
   );
@@ -112,14 +116,16 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
   for (const key of Object.keys(Phaser.Input.Keyboard.KeyCodes)) addKey(key);
 
   // Subscriptions
-  const keySub = keyboard$.pipe(filter(() => enabled.current)).subscribe((key) => {
-    const keyName = codeToKey.get(key.keyCode);
-    if (!keyName) return;
-    runInAction(() => {
-      if (key.isDown) pressedKeys.add(keyName);
-      if (key.isUp) pressedKeys.delete(keyName);
+  const keySub = keyboard$
+    .pipe(filter(() => enabled.current && inputPlugin.scene.scene.isActive()))
+    .subscribe((key) => {
+      const keyName = codeToKey.get(key.keyCode);
+      if (!keyName) return;
+      runInAction(() => {
+        if (key.isDown) pressedKeys.add(keyName);
+        if (key.isUp) pressedKeys.delete(keyName);
+      });
     });
-  });
   disposers.add(() => keySub?.unsubscribe());
 
   const pointerSub = merge(pointerdown$, pointerup$).subscribe(({ pointer }) => {

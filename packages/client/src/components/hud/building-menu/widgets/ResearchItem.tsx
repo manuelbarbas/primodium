@@ -17,15 +17,17 @@ import { getUpgradeInfo } from "src/util/upgrade";
 export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
   const mud = useMud();
   const { playerAccount } = mud;
-  const homeAsteroid = components.Home.use(playerAccount.entity)?.value as Entity;
-  const mainBaseEntity = components.Home.use(homeAsteroid)?.value as Entity;
+
+  const asteroid = components.ActiveRock.use()?.value as Entity | undefined;
+  if (!asteroid) throw new Error("No active rock entity found");
+  const mainBaseEntity = components.Home.use(asteroid)?.value as Entity;
   const mainBaseLevel = components.Level.use(mainBaseEntity, {
     value: 1n,
   }).value;
 
   const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(type, playerAccount.entity);
 
-  const hasEnough = useHasEnoughResources(recipe);
+  const hasEnough = useHasEnoughResources(recipe, asteroid);
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && !isResearched;
 
   let error = "";
@@ -82,7 +84,7 @@ export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
         <Button
           className="btn-sm btn-secondary"
           disabled={!canUpgrade}
-          onClick={() => upgradeUnit(mud, homeAsteroid, UnitEnumLookup[type])}
+          onClick={() => upgradeUnit(mud, asteroid, UnitEnumLookup[type])}
         >
           Upgrade
         </Button>

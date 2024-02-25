@@ -17,11 +17,11 @@ import { IconLabel } from "../core/IconLabel";
 
 export const RecipeDisplay: React.FC<{
   building: Entity;
-}> = ({ building }) => {
+  asteroid: Entity;
+}> = ({ building, asteroid }) => {
   const recipe = getRecipe(building, 1n);
 
   if (recipe.length === 0) return <></>;
-  const spaceRock = components.Position.useWithKeys({ entity: building as Hex })?.parent as Entity | undefined;
 
   return (
     <div className="flex flex-col items-center gap-1">
@@ -34,7 +34,7 @@ export const RecipeDisplay: React.FC<{
               return (
                 <ResourceIconTooltip
                   key={resource.id + resource.type}
-                  spaceRock={spaceRock}
+                  spaceRock={asteroid}
                   image={resourceImage}
                   resource={resource.id}
                   resourceType={resource.type}
@@ -61,12 +61,13 @@ export const PrototypeInfo: React.FC<{
   const { getSpriteBase64 } = usePrimodium().api().sprite;
   const rawProduction = components.P_Production.useWithKeys({ prototype: building as Hex, level: 1n });
   const production = useMemo(() => transformProductionData(rawProduction), [rawProduction]);
-  const spaceRock = components.Position.useWithKeys({ entity: building as Hex })?.parent as Entity | undefined;
+  const spaceRock = components.ActiveRock.use()?.value;
+  if (!spaceRock) throw new Error("No asteroid found");
 
   const unitProduction = components.P_UnitProdTypes.useWithKeys({ prototype: building as Hex, level: 1n });
   const storageUpgrades = useMemo(() => getBuildingLevelStorageUpgrades(building, 1n), [building]);
 
-  const hasEnough = useHasEnoughResources(getRecipe(building, 1n));
+  const hasEnough = useHasEnoughResources(getRecipe(building, 1n), spaceRock);
 
   if (!getBlockTypeName(building)) return <></>;
 
@@ -96,7 +97,6 @@ export const PrototypeInfo: React.FC<{
                   name={getBlockTypeName(resource)}
                   image={ResourceImage.get(resource) ?? ""}
                   resource={resource}
-                  spaceRock={spaceRock}
                   amount={amount}
                   resourceType={type}
                   short
@@ -133,7 +133,6 @@ export const PrototypeInfo: React.FC<{
                           name={getBlockTypeName(resource)}
                           image={ResourceImage.get(resource) ?? ""}
                           resource={resource}
-                          spaceRock={spaceRock}
                           amount={amount}
                           resourceType={ResourceType.Resource}
                           short
@@ -155,7 +154,7 @@ export const PrototypeInfo: React.FC<{
             <div className="flex gap-1 w-full">
               {
                 <div className="flex flex-col gap-1 w-18 text-xs w-full">
-                  <RecipeDisplay building={building} />
+                  <RecipeDisplay building={building} asteroid={spaceRock} />
                 </div>
               }
             </div>
