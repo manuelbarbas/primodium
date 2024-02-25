@@ -17,8 +17,8 @@ import {
 } from "./constants";
 import { outOfBounds } from "./outOfBounds";
 import { getRecipe } from "./recipe";
-import { getBuildingAtCoord, getResourceKey } from "./tile";
 import { getScale } from "./resource";
+import { getBuildingAtCoord, getResourceKey } from "./tile";
 
 type Dimensions = { width: number; height: number };
 export const blueprintCache = new Map<Entity, Dimensions>();
@@ -123,7 +123,8 @@ export const validateBuildingPlacement = (
       const buildingAtCoord = getBuildingAtCoord(buildingCoord, asteroid);
       if (buildingAtCoord && buildingAtCoord !== building) return false;
       if (outOfBounds(buildingCoord, asteroid)) return false;
-      if (requiredTile && requiredTile !== getResourceKey(buildingCoord)) return false;
+      const mapId = comps.Asteroid.get(asteroid)?.mapId ?? 1;
+      if (requiredTile && requiredTile !== getResourceKey(buildingCoord, mapId)) return false;
     }
   }
 
@@ -246,7 +247,7 @@ export function transformProductionData(
 
 export const getBuildingInfo = (building: Entity) => {
   const buildingType = comps.BuildingType.get(building)?.value as Hex | undefined;
-  if (!buildingType) return undefined;
+  if (!buildingType) throw new Error("No building type found");
   const buildingTypeEntity = buildingType as Entity;
 
   const level = comps.Level.get(building)?.value ?? 1n;
@@ -261,7 +262,7 @@ export const getBuildingInfo = (building: Entity) => {
   const unitProduction = comps.P_UnitProdTypes.getWithKeys(buildingLevelKeys)?.value;
   const storages = getBuildingStorages(buildingTypeEntity, level);
   const unitProductionMultiplier = comps.P_UnitProdMultiplier.getWithKeys(buildingLevelKeys)?.value;
-  const position = comps.Position.get(building) ?? { x: 0, y: 0 };
+  const position = comps.Position.get(building) ?? { x: 0, y: 0, parent: undefined };
 
   const nextLevel = level + 1n;
   const maxLevel = comps.P_MaxLevel.getWithKeys({ prototype: buildingType })?.value ?? 1n;

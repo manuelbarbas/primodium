@@ -22,6 +22,7 @@ export const setupMouseInputs = (scene: Scene) => {
     if (!selectedRock || outOfBounds(gameCoord, selectedRock)) {
       components.SelectedBuilding.remove();
       components.SelectedTile.remove();
+      components.SelectedAction.remove();
       return;
     }
 

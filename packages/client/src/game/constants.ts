@@ -6,8 +6,6 @@ import { EntityType } from "../util/constants";
 export const ASSET_PACK = "/assets/pack.json";
 
 export const minEth = parseEther("0.0049");
-export const TILE_HEIGHT = 16;
-export const TILE_WIDTH = 16;
 export const RENDER_INTERVAL = 30;
 export const ANIMATION_INTERVAL = 200;
 export const KEY = "MAIN";
@@ -26,15 +24,23 @@ export enum Assets {
 }
 
 export enum Tilesets {
-  Terrain = "Terrain",
-  Resource = "Resource",
-  Fog = "Fog",
+  Resource = "resource",
+  BoundsOuterBorder = "bounds-outerborder",
+  BoundsInnerBorder = "bounds-innerborder",
+  BoundsNonBuildable = "bounds-nonbuildable",
+}
+
+export enum Tilemaps {
+  AsteroidMicro = "asteroid-micro",
+  AsteroidSmall = "asteroid-small",
+  AsteroidMedium = "asteroid-medium",
+  AsteroidLarge = "asteroid-large",
 }
 
 export enum DepthLayers {
-  Rock = 0,
-  Terrain = 1,
-  Tile = 2,
+  Rock = 100,
+  Resources = 200,
+  Tile = 300,
   Building = 400,
   Path = 500,
   Marker = 600,
@@ -294,6 +300,9 @@ export enum AnimationKeys {
   Vault3 = "vault/level3",
 
   Market1 = "marketplace/level1",
+
+  //DECORATIONS
+  Drone = "decorations/drone",
 }
 
 export enum AudioKeys {
@@ -528,4 +537,11 @@ export const KeyNames: { [key: string]: string } = {
   ["EIGHT"]: "8",
   ["NINE"]: "9",
   ["ZERO"]: "0",
+};
+
+export const MaxLevelToTilemap: Record<number, Tilemaps> = {
+  1: Tilemaps.AsteroidMicro,
+  3: Tilemaps.AsteroidSmall,
+  5: Tilemaps.AsteroidMedium,
+  8: Tilemaps.AsteroidLarge,
 };

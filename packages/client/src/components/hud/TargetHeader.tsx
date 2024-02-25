@@ -7,7 +7,7 @@ import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
-import { getAsteroidImage, getSpaceRockName } from "src/util/asteroid";
+import { getAsteroidImage, getAsteroidName } from "src/util/asteroid";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount } from "src/util/number";
@@ -20,7 +20,7 @@ export const TargetHeader = ({ entity, hideStats }: { entity?: Entity; hideStats
   if (!selectedSpacerock) return null;
   const img = getAsteroidImage(primodium, selectedSpacerock) ?? "";
   const name = entityToRockName(selectedSpacerock);
-  const description = getSpaceRockName(selectedSpacerock);
+  const description = getAsteroidName(selectedSpacerock);
 
   return (
     <div className="flex flex-col gap-1 bg-base-100">

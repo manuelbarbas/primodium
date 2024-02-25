@@ -5,10 +5,10 @@
     },
     "textures": [
         {
-            "image": "atlas.png?timestamp=1708500015698",
+            "image": "atlas.png?timestamp=1708716883303",
             "format": "RGBA8888",
             "size": {
-                "w": 2077,
+                "w": 2093,
                 "h": 2066
             },
             "scale": 1,
@@ -8477,6 +8477,27 @@
                     }
                 },
                 {
+                    "filename": "sprites/decorations/warning.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 73,
+                        "h": 5
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 73,
+                        "h": 5
+                    },
+                    "frame": {
+                        "x": 855,
+                        "y": 1182,
+                        "w": 73,
+                        "h": 5
+                    }
+                },
+                {
                     "filename": "sprites/construction/2x2.png",
                     "rotated": false,
                     "trimmed": false,
@@ -10472,6 +10493,258 @@
                     }
                 },
                 {
+                    "filename": "sprites/decorations/drone/Drone1.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 48,
+                        "h": 42
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 48,
+                        "h": 42
+                    },
+                    "frame": {
+                        "x": 1728,
+                        "y": 1716,
+                        "w": 48,
+                        "h": 42
+                    }
+                },
+                {
+                    "filename": "sprites/decorations/drone/Drone10.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 48,
+                        "h": 42
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 48,
+                        "h": 42
+                    },
+                    "frame": {
+                        "x": 1568,
+                        "y": 2013,
+                        "w": 48,
+                        "h": 42
+                    }
+                },
+                {
+                    "filename": "sprites/decorations/drone/Drone11.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 48,
+                        "h": 42
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 48,
+                        "h": 42
+                    },
+                    "frame": {
+                        "x": 1616,
+                        "y": 2013,
+                        "w": 48,
+                        "h": 42
+                    }
+                },
+                {
+                    "filename": "sprites/decorations/drone/Drone12.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 48,
+                        "h": 42
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 48,
+                        "h": 42
+                    },
+                    "frame": {
+                        "x": 1664,
+                        "y": 2013,
+                        "w": 48,
+                        "h": 42
+                    }
+                },
+                {
+                    "filename": "sprites/decorations/drone/Drone2.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 48,
+                        "h": 42
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 48,
+                        "h": 42
+                    },
+                    "frame": {
+                        "x": 1712,
+                        "y": 2013,
+                        "w": 48,
+                        "h": 42
+                    }
+                },
+                {
+                    "filename": "sprites/decorations/drone/Drone3.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 48,
+                        "h": 42
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 48,
+                        "h": 42
+                    },
+                    "frame": {
+                        "x": 1760,
+                        "y": 2013,
+                        "w": 48,
+                        "h": 42
+                    }
+                },
+                {
+                    "filename": "sprites/decorations/drone/Drone4.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 48,
+                        "h": 42
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 48,
+                        "h": 42
+                    },
+                    "frame": {
+                        "x": 1808,
+                        "y": 2013,
+                        "w": 48,
+                        "h": 42
+                    }
+                },
+                {
+                    "filename": "sprites/decorations/drone/Drone5.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 48,
+                        "h": 42
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 48,
+                        "h": 42
+                    },
+                    "frame": {
+                        "x": 1856,
+                        "y": 2013,
+                        "w": 48,
+                        "h": 42
+                    }
+                },
+                {
+                    "filename": "sprites/decorations/drone/Drone6.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 48,
+                        "h": 42
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 48,
+                        "h": 42
+                    },
+                    "frame": {
+                        "x": 1904,
+                        "y": 2013,
+                        "w": 48,
+                        "h": 42
+                    }
+                },
+                {
+                    "filename": "sprites/decorations/drone/Drone7.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 48,
+                        "h": 42
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 48,
+                        "h": 42
+                    },
+                    "frame": {
+                        "x": 1952,
+                        "y": 2013,
+                        "w": 48,
+                        "h": 42
+                    }
+                },
+                {
+                    "filename": "sprites/decorations/drone/Drone8.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 48,
+                        "h": 42
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 48,
+                        "h": 42
+                    },
+                    "frame": {
+                        "x": 2045,
+                        "y": 0,
+                        "w": 48,
+                        "h": 42
+                    }
+                },
+                {
+                    "filename": "sprites/decorations/drone/Drone9.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 48,
+                        "h": 42
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 48,
+                        "h": 42
+                    },
+                    "frame": {
+                        "x": 2045,
+                        "y": 42,
+                        "w": 48,
+                        "h": 42
+                    }
+                },
+                {
                     "filename": "sprites/construction/1x1.png",
                     "rotated": false,
                     "trimmed": false,
@@ -10486,8 +10759,8 @@
                         "h": 38
                     },
                     "frame": {
-                        "x": 1728,
-                        "y": 1716,
+                        "x": 1141,
+                        "y": 1145,
                         "w": 32,
                         "h": 38
                     }
@@ -10570,8 +10843,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1141,
-                        "y": 1145,
+                        "x": 2045,
+                        "y": 84,
                         "w": 32,
                         "h": 32
                     }
@@ -10591,8 +10864,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1568,
-                        "y": 2013,
+                        "x": 2045,
+                        "y": 116,
                         "w": 32,
                         "h": 32
                     }
@@ -10612,8 +10885,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1600,
-                        "y": 2013,
+                        "x": 2045,
+                        "y": 148,
                         "w": 32,
                         "h": 32
                     }
@@ -10633,8 +10906,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1632,
-                        "y": 2013,
+                        "x": 2045,
+                        "y": 180,
                         "w": 32,
                         "h": 32
                     }
@@ -10654,8 +10927,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1664,
-                        "y": 2013,
+                        "x": 2045,
+                        "y": 212,
                         "w": 32,
                         "h": 32
                     }
@@ -10675,8 +10948,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1696,
-                        "y": 2013,
+                        "x": 2045,
+                        "y": 244,
                         "w": 32,
                         "h": 32
                     }
@@ -10696,8 +10969,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1728,
-                        "y": 2013,
+                        "x": 2045,
+                        "y": 276,
                         "w": 32,
                         "h": 32
                     }
@@ -10717,8 +10990,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1760,
-                        "y": 2013,
+                        "x": 2045,
+                        "y": 308,
                         "w": 32,
                         "h": 32
                     }
@@ -10738,8 +11011,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1792,
-                        "y": 2013,
+                        "x": 2045,
+                        "y": 340,
                         "w": 32,
                         "h": 32
                     }
@@ -10759,8 +11032,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1824,
-                        "y": 2013,
+                        "x": 2045,
+                        "y": 372,
                         "w": 32,
                         "h": 32
                     }
@@ -10780,8 +11053,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1856,
-                        "y": 2013,
+                        "x": 2045,
+                        "y": 404,
                         "w": 32,
                         "h": 32
                     }
@@ -10801,8 +11074,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1888,
-                        "y": 2013,
+                        "x": 2044,
+                        "y": 436,
                         "w": 32,
                         "h": 32
                     }
@@ -10822,8 +11095,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1920,
-                        "y": 2013,
+                        "x": 2044,
+                        "y": 468,
                         "w": 32,
                         "h": 32
                     }
@@ -10843,8 +11116,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1952,
-                        "y": 2013,
+                        "x": 2044,
+                        "y": 500,
                         "w": 32,
                         "h": 32
                     }
@@ -10864,8 +11137,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1984,
-                        "y": 1997,
+                        "x": 2044,
+                        "y": 532,
                         "w": 32,
                         "h": 32
                     }
@@ -10885,8 +11158,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1984,
-                        "y": 2029,
+                        "x": 2044,
+                        "y": 564,
                         "w": 32,
                         "h": 32
                     }
@@ -10906,8 +11179,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 2045,
-                        "y": 0,
+                        "x": 2044,
+                        "y": 596,
                         "w": 32,
                         "h": 32
                     }
@@ -10927,8 +11200,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 2045,
-                        "y": 32,
+                        "x": 2044,
+                        "y": 628,
                         "w": 32,
                         "h": 32
                     }
@@ -10948,8 +11221,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 2045,
-                        "y": 64,
+                        "x": 2044,
+                        "y": 660,
                         "w": 32,
                         "h": 32
                     }
@@ -10969,8 +11242,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 2045,
-                        "y": 96,
+                        "x": 2044,
+                        "y": 692,
                         "w": 32,
                         "h": 32
                     }
@@ -10990,8 +11263,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 2045,
-                        "y": 128,
+                        "x": 2044,
+                        "y": 724,
                         "w": 32,
                         "h": 32
                     }
@@ -11011,8 +11284,8 @@
                         "h": 16
                     },
                     "frame": {
-                        "x": 1812,
-                        "y": 1698,
+                        "x": 1984,
+                        "y": 1997,
                         "w": 16,
                         "h": 16
                     }
@@ -11368,8 +11641,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1888,
-                        "y": 2013,
+                        "x": 2044,
+                        "y": 436,
                         "w": 32,
                         "h": 32
                     }
@@ -11389,8 +11662,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1984,
-                        "y": 2029,
+                        "x": 2044,
+                        "y": 564,
                         "w": 32,
                         "h": 32
                     }

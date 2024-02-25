@@ -8,14 +8,13 @@ import { RESOURCE_SCALE, ResourceImage, SPEED_SCALE } from "src/util/constants";
 import { formatNumber } from "src/util/number";
 
 export const ResourceLabel = ({ name, resource }: { name: string; resource: Entity }) => {
-  const selectedRock = components.SelectedRock.use()?.value;
+  const activeRock = components.ActiveRock.use()?.value;
+  if (!activeRock) throw new Error("[ResourceLabel] No active rock");
 
   const resourceIcon = ResourceImage.get(resource);
   const worldSpeed = components.P_GameConfig.use()?.worldSpeed ?? SPEED_SCALE;
-  const { resourceCount, production, resourceStorage } = useFullResourceCount(resource, selectedRock);
+  const { resourceCount, production, resourceStorage } = useFullResourceCount(resource, activeRock);
 
-  // if (EntityType.Iridium == resource)
-  // console.log(`resourceCount: ${resourceCount} production: ${production} resourceStorage: ${resourceStorage}`);
   const tooltipClass = useMemo(() => {
     if (resourceStorage <= BigInt(0)) return;
 
@@ -37,11 +36,9 @@ export const ResourceLabel = ({ name, resource }: { name: string; resource: Enti
     <Badge className={`gap-1 group pointer-events-auto ${resourceStorage === 0n ? "badge-error opacity-25" : ""}`}>
       <ResourceIconTooltip
         name={name}
-        spaceRock={selectedRock}
         amount={resourceCount}
         resource={resource}
         image={resourceIcon ?? ""}
-        validate={false}
         fontSize={"sm"}
         direction="top"
         className={`${tooltipClass}`}
