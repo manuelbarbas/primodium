@@ -59,6 +59,12 @@ export const hydrateInitialGameState = (
               tableId: tables.ReversePosition.tableId,
             },
             {
+              tableId: tables.PirateAsteroid.tableId,
+            },
+            {
+              tableId: tables.Level.tableId,
+            },
+            {
               tableId: tables.Home.tableId,
             },
           ],
