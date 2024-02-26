@@ -5,15 +5,19 @@ import { entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { buildMainBase } from "src/libraries/SubsystemCalls.sol";
 import { AsteroidOwnedByKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
+import { DroidPrototypeId } from "codegen/Prototypes.sol";
 
 // tables
-import { Spawned, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, PositionData, P_GameConfigData, P_GameConfig } from "codegen/index.sol";
+import { Spawned, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, PositionData, P_GameConfigData, P_GameConfig } from "codegen/index.sol";
 
 // libraries
 import { ColoniesMap } from "src/libraries/ColoniesMap.sol";
+import { EResource } from "src/Types.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
+import { LibResource } from "libraries/LibResource.sol";
 import { EBuilding } from "src/Types.sol";
 
 library LibAsteroid {
@@ -33,7 +37,7 @@ library LibAsteroid {
 
     Level.set(asteroidEntity, 1);
     Position.set(asteroidEntity, coord);
-    Asteroid.set(asteroidEntity, AsteroidData({ isAsteroid: true, maxLevel: 8, mapId: 1, spawnsSecondary: true }));
+    Asteroid.set(asteroidEntity, AsteroidData({ isAsteroid: true, maxLevel: 5, mapId: 1, spawnsSecondary: true }));
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
     OwnedBy.set(asteroidEntity, ownerEntity);
     AsteroidCount.set(asteroidCount);
@@ -74,11 +78,35 @@ library LibAsteroid {
   }
 
   function getAsteroidData(bytes32 asteroidEntity, bool spawnsSecondary) internal view returns (AsteroidData memory) {
-    // number between 1 and 4
-    uint256 maxLevel = (LibEncode.getByteUInt(uint256(asteroidEntity), 3, 12) % 4) + 1;
+    uint256 distributionVal = (LibEncode.getByteUInt(uint256(asteroidEntity), 7, 12) % 100);
+
+    uint256 maxLevel;
+    //micro
+    if (distributionVal <= 50) {
+      maxLevel = 1;
+      //small
+    } else if (distributionVal <= 75) {
+      maxLevel = 3;
+      //medium
+    } else if (distributionVal <= 90) {
+      maxLevel = 5;
+      //large
+    } else {
+      maxLevel = 8;
+    }
+
     // number between 2 and 5
     uint8 mapId = uint8((LibEncode.getByteUInt(uint256(asteroidEntity), 3, 20) % 4) + 2);
     return AsteroidData({ isAsteroid: true, maxLevel: maxLevel, mapId: mapId, spawnsSecondary: spawnsSecondary });
+  }
+
+  function getSecondaryAsteroidUnitsAndEncryption(
+    bytes32 asteroidEntity,
+    uint256 level
+  ) internal view returns (uint256, uint256) {
+    uint256 droidCount = 4 ** level + 100;
+    uint256 encryption = (level * 100 + 100) * 1e18;
+    return (droidCount, encryption);
   }
 
   function isAsteroid(bytes32 entity, uint256 chanceInv) internal pure returns (bool) {
@@ -95,6 +123,10 @@ library LibAsteroid {
     Position.set(asteroidEntity, position);
     ReversePosition.set(position.x, position.y, asteroidEntity);
     Level.set(asteroidEntity, 1);
+
+    (uint256 droidCount, uint256 encryption) = getSecondaryAsteroidUnitsAndEncryption(asteroidEntity, data.maxLevel);
+    UnitCount.set(asteroidEntity, DroidPrototypeId, droidCount);
+    LibStorage.increaseMaxStorage(asteroidEntity, uint8(EResource.R_Encryption), encryption);
   }
 
   function initializeSpaceRockOwnership(bytes32 spaceRock, bytes32 owner) internal {

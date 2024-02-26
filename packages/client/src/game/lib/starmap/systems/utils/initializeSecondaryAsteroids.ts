@@ -1,9 +1,12 @@
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { EResource } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
+import { EntityType, RESOURCE_SCALE } from "src/util/constants";
 import { getSecondaryAsteroidEntity, toHex32 } from "src/util/encode";
 import { getPositionByVector } from "src/util/vector";
+import { Hex } from "viem";
 
 const emptyData = {
   __staticData: "",
@@ -31,6 +34,21 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
     const asteroidData = getAsteroidData(asteroidEntity);
     components.Asteroid.set({ ...emptyData, ...asteroidData }, asteroidEntity);
     components.Position.set({ ...emptyData, ...asteroidPosition, parent: toHex32("0") }, asteroidEntity);
+
+    const defenseData = getSecondaryAsteroidUnitsAndEncryption(asteroidEntity, asteroidData.maxLevel);
+    components.UnitCount.setWithKeys(
+      { ...emptyData, value: defenseData.droidCount },
+      { entity: asteroidEntity as Hex, unit: EntityType.Droid as Hex }
+    );
+
+    components.ResourceCount.setWithKeys(
+      { ...emptyData, value: defenseData.encryption },
+      { entity: asteroidEntity as Hex, resource: EResource.R_Encryption }
+    );
+    components.MaxResourceCount.setWithKeys(
+      { ...emptyData, value: defenseData.encryption },
+      { entity: asteroidEntity as Hex, resource: EResource.R_Encryption }
+    );
   }
 }
 
@@ -39,11 +57,27 @@ function isSecondaryAsteroid(entity: Entity, chanceInv: number) {
   return motherlodeType % chanceInv === 1;
 }
 
-function getAsteroidData(asteroidEntity: Entity) {
-  // uint256 maxLevel = (LibEncode.getByteUInt(uint256(asteroidEntity), 3, 12) % 4) + 1;
-  //uint8 mapId = uint8((LibEncode.getByteUInt(uint256(asteroidEntity), 3, 20) % 4) + 2);
+function getSecondaryAsteroidUnitsAndEncryption(asteroidEntity: Entity, level: bigint) {
+  const droidCount = 4n ** level + 100n;
+  const encryption = (level * 100n + 100n) * RESOURCE_SCALE;
+  return { droidCount, encryption };
+}
 
-  const maxLevel = (getByteUInt(asteroidEntity, 3, 12) % 4) + 1;
+function getAsteroidData(asteroidEntity: Entity) {
+  const distributionVal = getByteUInt(asteroidEntity, 7, 12) % 100;
+  let maxLevel = 8;
+  // //micro
+  if (distributionVal <= 50) {
+    maxLevel = 1;
+    //small
+  } else if (distributionVal <= 75) {
+    maxLevel = 3;
+    //medium
+  } else if (distributionVal <= 90) {
+    maxLevel = 5;
+    //large
+  }
+
   const mapId = (getByteUInt(asteroidEntity, 3, 20) % 4) + 2;
   return { isAsteroid: true, maxLevel: BigInt(maxLevel), mapId: mapId, spawnsSecondary: false };
 }

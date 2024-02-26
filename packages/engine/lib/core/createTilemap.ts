@@ -1,74 +1,44 @@
-import { createChunks } from "@latticexyz/phaserx";
-import type { createCamera } from "@latticexyz/phaserx";
-import { SceneConfig, TileAnimation } from "../../types";
-import { createAnimatedTilemap } from "./tilemap/createAnimatedTilemap";
+import type Phaser from "phaser";
+import { TilemapConfig } from "../../types";
 
 export const createTilemap = (
   scene: Phaser.Scene,
-  camera: ReturnType<typeof createCamera>,
   tileWidth: number,
   tileHeight: number,
-  chunkSize: number,
-  tilesets: SceneConfig["tilemap"]["tilesets"],
-  layerConfig: SceneConfig["tilemap"]["layerConfig"],
-  animations: TileAnimation[] = [],
-  animationInterval = 100,
-  backgroundTile: [number, ...number[]] = [0]
+  defaultKey?: string,
+  config?: TilemapConfig
 ) => {
-  //create empty tilemap to create tilesets
-  const emptyMap = new Phaser.Tilemaps.Tilemap(scene, new Phaser.Tilemaps.MapData());
+  const renderTilemap = (key: string) => {
+    currentMap?.destroy();
+    const mapData = scene.cache.tilemap.get(key).data as Phaser.Tilemaps.MapData;
 
-  const generatedTilesets: Record<string, Phaser.Tilemaps.Tileset> = {};
+    const map = scene.add.tilemap(key);
 
-  if (tilesets) {
-    for (const [key, value] of Object.entries(tilesets)) {
-      try {
-        generatedTilesets[key] = emptyMap.addTilesetImage(
-          key,
-          value.key,
-          value.tileWidth,
-          value.tileHeight,
-          value.extrusion ?? 0,
-          value.extrusion ? value.extrusion * 2 : 0,
-          value.gid ?? 0
-        )!;
-      } catch (e) {
-        throw new Error("Failed to load tileset: " + key + "/" + value);
+    const tilesets = mapData.tilesets.map((tileset) =>
+      map.addTilesetImage(tileset.name, tileset.name)
+    ) as Phaser.Tilemaps.Tileset[];
+
+    (mapData.layers as Phaser.Tilemaps.LayerData[]).forEach((layer) => {
+      const _layer = map.createLayer(layer.name, tilesets, -19 * tileWidth, -50 * tileWidth);
+
+      const depth = config?.[key]?.[layer.name]?.depth;
+      if (depth && _layer) {
+        _layer.setDepth(depth);
       }
-    }
-  }
+    });
 
-  //set up chunk
-  const chunks = createChunks(camera.worldView$, chunkSize * tileWidth);
-
-  const tilemap = layerConfig
-    ? createAnimatedTilemap({
-        scene,
-        chunks,
-        tileWidth,
-        tileHeight,
-        backgroundTile,
-        tilesets: generatedTilesets,
-        layerConfig,
-        animationInterval,
-      })
-    : null;
-
-  //register tilemap animations
-  if (tilemap) {
-    for (const anim of animations) {
-      tilemap.registerAnimation(anim.key, anim.frames);
-    }
-  }
-
-  return {
-    chunkSize,
-    tileHeight,
-    tileWidth,
-    map: tilemap,
-    chunks,
-    dispose: () => {
-      if (tilemap) tilemap.dispose();
-    },
+    currentMap = map;
+    return map;
   };
+
+  let currentMap: Phaser.Tilemaps.Tilemap | null = defaultKey ? renderTilemap(defaultKey) : null;
+
+  const dispose = () => {
+    // currentMap?.removeAllLayers();
+    currentMap?.destroy();
+  };
+
+  const getMap = () => currentMap;
+
+  return { render: renderTilemap, getMap, tileHeight, tileWidth, dispose };
 };

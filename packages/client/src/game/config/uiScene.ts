@@ -15,6 +15,5 @@ export const uiSceneConfig: SceneConfig = {
   tilemap: {
     tileWidth: 1,
     tileHeight: 1,
-    chunkSize: 128,
   },
 };

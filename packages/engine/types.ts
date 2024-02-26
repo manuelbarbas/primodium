@@ -4,7 +4,7 @@ import { createObjectPool } from "./lib/core/createObjectPool";
 import { Animation } from "@latticexyz/phaserx/src/types";
 import { createGame } from "./lib/core/createGame";
 import { createScene } from "./lib/core/createScene";
-import { createAnimatedTilemap } from "./lib/core/tilemap/createAnimatedTilemap";
+import { Tilemaps } from "@game/constants";
 
 export type Game = Awaited<ReturnType<typeof createGame>>;
 export type Scene = Awaited<ReturnType<typeof createScene>>;
@@ -24,15 +24,8 @@ export type GameConfig = Phaser.Types.Core.GameConfig & {
   assetPackUrl: string;
 };
 
-export type TilesetConfig = {
-  [x: string]: {
-    key: string;
-    tileWidth: number;
-    tileHeight: number;
-    extrusion?: number;
-    gid?: number;
-  };
-};
+export type LayerConfig = Record<string, { depth: number }>;
+export type TilemapConfig = Record<string, LayerConfig>;
 
 export interface SceneConfig {
   key: string;
@@ -40,14 +33,10 @@ export interface SceneConfig {
   animations?: Animation<any>[];
   cullingChunkSize: number;
   tilemap: {
-    tileAnimations?: TileAnimation[];
-    chunkSize: number;
     tileWidth: number;
     tileHeight: number;
-    tilesets?: TilesetConfig;
-    layerConfig?: Parameters<typeof createAnimatedTilemap>[0]["layerConfig"];
-    backgroundTile?: [number, ...number[]];
-    animationInterval?: number;
+    defaultKey?: string;
+    config?: TilemapConfig;
   };
 }
 

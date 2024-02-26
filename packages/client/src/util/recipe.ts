@@ -37,7 +37,7 @@ export function getRecipe(rawEntityType: Entity, level: bigint, upgrade = false)
   return [...resources, ...resourceRate];
 }
 
-export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, spaceRock?: Entity, count = 1n) {
+export function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, spaceRock: Entity, count = 1n) {
   const resourceAmounts = recipe.map((resource) => {
     return getFullResourceCount(resource.id, spaceRock);
   });

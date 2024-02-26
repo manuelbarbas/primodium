@@ -37,8 +37,8 @@ contract LibAsteroidTest is PrimodiumTest {
     assertFalse(asteroidData.spawnsSecondary);
     assertLe(asteroidData.mapId, 5, "map id too high");
     assertGe(asteroidData.mapId, 2, "map id too low");
-    assertGe(asteroidData.maxLevel, 1, "max level too high");
-    assertLe(asteroidData.maxLevel, 4, "max level too low");
+    assertGe(asteroidData.maxLevel, 1, "max level too low");
+    assertLe(asteroidData.maxLevel, 8, "max level too low");
   }
 
   function findSecondaryAsteroid() public returns (PositionData memory) {
@@ -87,6 +87,24 @@ contract LibAsteroidTest is PrimodiumTest {
     assertEq(expectedAsteroidData.mapId, actualAsteroidData.mapId, "mapId");
     assertEq(Position.get(asteroidEntity), position);
     assertEq(ReversePosition.get(position.x, position.y), asteroidEntity, "reversePosition");
+  }
+
+  function testSecondaryAsteroidDefense() public {
+    vm.startPrank(creator);
+    PositionData memory position = findSecondaryAsteroid();
+
+    bytes32 asteroidEntity = LibAsteroid.createSecondaryAsteroid(position);
+    AsteroidData memory asteroidData = Asteroid.get(asteroidEntity);
+    (uint256 expectedDroidCount, uint256 expectedEncryption) = LibAsteroid.getSecondaryAsteroidUnitsAndEncryption(
+      asteroidEntity,
+      asteroidData.maxLevel
+    );
+    uint256 actualDroidCount = UnitCount.get(asteroidEntity, DroidPrototypeId);
+    assertEq(expectedDroidCount, actualDroidCount, "droidCount");
+    uint256 actualEncryption = ResourceCount.get(asteroidEntity, uint8(EResource.R_Encryption));
+    uint256 maxEncryption = MaxResourceCount.get(asteroidEntity, uint8(EResource.R_Encryption));
+    assertEq(expectedEncryption, actualEncryption, "encryption");
+    assertEq(expectedEncryption, maxEncryption, "maxEncryption");
   }
 
   function testFailNoAsteroidNoSource() public {
