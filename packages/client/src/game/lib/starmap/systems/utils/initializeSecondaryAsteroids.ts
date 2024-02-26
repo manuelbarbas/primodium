@@ -36,7 +36,6 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
     components.Position.set({ ...emptyData, ...asteroidPosition, parent: toHex32("0") }, asteroidEntity);
 
     const defenseData = getSecondaryAsteroidUnitsAndEncryption(asteroidEntity, asteroidData.maxLevel);
-    console.log("defenseData", defenseData);
     components.UnitCount.setWithKeys(
       { ...emptyData, value: defenseData.droidCount },
       { entity: asteroidEntity as Hex, unit: EntityType.Droid as Hex }

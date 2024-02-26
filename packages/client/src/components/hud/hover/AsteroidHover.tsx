@@ -54,7 +54,7 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
         <div className="flex gap-1">
           <div className="flex bg-primary uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
             <FaUser />
-            {ownedBy ? limitAddress(address, 16) : "SCURVY DROIDS"}
+            {ownedBy ? limitAddress(address, 16) : "DROID INFESTED"}
           </div>
 
           {inGracePeriod && (
