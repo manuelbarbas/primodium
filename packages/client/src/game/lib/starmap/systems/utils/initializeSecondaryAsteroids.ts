@@ -1,9 +1,12 @@
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { EResource } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
+import { EntityType, RESOURCE_SCALE } from "src/util/constants";
 import { getSecondaryAsteroidEntity, toHex32 } from "src/util/encode";
 import { getPositionByVector } from "src/util/vector";
+import { Hex } from "viem";
 
 const emptyData = {
   __staticData: "",
@@ -31,12 +34,33 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
     const asteroidData = getAsteroidData(asteroidEntity);
     components.Asteroid.set({ ...emptyData, ...asteroidData }, asteroidEntity);
     components.Position.set({ ...emptyData, ...asteroidPosition, parent: toHex32("0") }, asteroidEntity);
+
+    const defenseData = getSecondaryAsteroidUnitsAndEncryption(asteroidEntity, asteroidData.maxLevel);
+    components.UnitCount.setWithKeys(
+      { ...emptyData, value: defenseData.droidCount },
+      { entity: asteroidEntity as Hex, unit: EntityType.Droid as Hex }
+    );
+
+    components.ResourceCount.setWithKeys(
+      { ...emptyData, value: defenseData.encryption },
+      { entity: asteroidEntity as Hex, resource: EResource.R_Encryption }
+    );
+    components.MaxResourceCount.setWithKeys(
+      { ...emptyData, value: defenseData.encryption },
+      { entity: asteroidEntity as Hex, resource: EResource.R_Encryption }
+    );
   }
 }
 
 function isSecondaryAsteroid(entity: Entity, chanceInv: number) {
   const motherlodeType = getByteUInt(entity, 6, 128);
   return motherlodeType % chanceInv === 1;
+}
+
+function getSecondaryAsteroidUnitsAndEncryption(asteroidEntity: Entity, level: bigint) {
+  const droidCount = 4n ** level + 100n;
+  const encryption = (level * 100n + 100n) * RESOURCE_SCALE;
+  return { droidCount, encryption };
 }
 
 function getAsteroidData(asteroidEntity: Entity) {

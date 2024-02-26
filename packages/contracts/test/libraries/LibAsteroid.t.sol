@@ -89,6 +89,24 @@ contract LibAsteroidTest is PrimodiumTest {
     assertEq(ReversePosition.get(position.x, position.y), asteroidEntity, "reversePosition");
   }
 
+  function testSecondaryAsteroidDefense() public {
+    vm.startPrank(creator);
+    PositionData memory position = findSecondaryAsteroid();
+
+    bytes32 asteroidEntity = LibAsteroid.createSecondaryAsteroid(position);
+    AsteroidData memory asteroidData = Asteroid.get(asteroidEntity);
+    (uint256 expectedDroidCount, uint256 expectedEncryption) = LibAsteroid.getSecondaryAsteroidUnitsAndEncryption(
+      asteroidEntity,
+      asteroidData.maxLevel
+    );
+    uint256 actualDroidCount = UnitCount.get(asteroidEntity, DroidPrototypeId);
+    assertEq(expectedDroidCount, actualDroidCount, "droidCount");
+    uint256 actualEncryption = ResourceCount.get(asteroidEntity, uint8(EResource.R_Encryption));
+    uint256 maxEncryption = MaxResourceCount.get(asteroidEntity, uint8(EResource.R_Encryption));
+    assertEq(expectedEncryption, actualEncryption, "encryption");
+    assertEq(expectedEncryption, maxEncryption, "maxEncryption");
+  }
+
   function testFailNoAsteroidNoSource() public {
     LibAsteroid.createSecondaryAsteroid(PositionData(0, 0, 0));
   }

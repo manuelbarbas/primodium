@@ -4,10 +4,7 @@ import { Hex } from "viem";
 import { components } from "../components";
 import { world } from "../world";
 // import { SetupResult } from "../types";
-import { MUD } from "../types";
 export function createHangar(spaceRock: Entity) {
-  const player = components.OwnedBy.get(spaceRock)?.value;
-  if (!player) return;
   const units: Map<Entity, bigint> = new Map();
 
   // get all units and find their counts on the space rock
@@ -73,39 +70,24 @@ function getTrainedUnclaimedUnits(spaceRock: Entity) {
   });
   return units;
 }
-export function setupHangar(mud: MUD) {
+export function setupHangar() {
   const systemWorld = namespaceWorld(world, "systems");
-  const playerEntity = mud.playerAccount.entity;
-
-  const { Send, OwnedBy, Asteroid } = components;
-
-  defineComponentSystem(systemWorld, Send, () => {
-    const origin = Send.get()?.origin;
-    const destination = Send.get()?.destination;
-    if (origin) createHangar(origin);
-    if (destination) createHangar(destination);
-  });
 
   defineComponentSystem(systemWorld, components.SelectedRock, ({ value: [value] }) => {
     if (!value?.value) return;
     createHangar(value.value);
   });
 
-  defineComponentSystem(systemWorld, components.BlockNumber, () => {
+  defineComponentSystem(systemWorld, components.HoverEntity, ({ value: [value] }) => {
+    const entity = value?.value;
+    if (!entity) return;
+    if (components.Asteroid.has(entity)) createHangar(entity);
+  });
+
+  defineComponentSystem(systemWorld, components.Time, () => {
     const selectedRock = components.ActiveRock.get()?.value as Entity;
-    const origin = Send.get()?.origin;
-    const destination = Send.get()?.destination;
     if (selectedRock) createHangar(selectedRock);
-    if (origin) createHangar(origin);
-    if (destination) createHangar(destination);
-
-    // maintain hangars for all player motherlodes to track mining production
-    const query = [Has(Asteroid), HasValue(OwnedBy, { value: playerEntity })];
-
-    const playerAsteroids = runQuery(query);
-    playerAsteroids.forEach((asteroid) => {
-      if ([origin, destination, selectedRock].includes(asteroid)) return;
-      createHangar(asteroid);
-    });
+    const hoverEntity = components.HoverEntity.get()?.value as Entity;
+    if (components.Asteroid.has(hoverEntity)) createHangar(hoverEntity);
   });
 }

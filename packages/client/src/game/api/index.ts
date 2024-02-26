@@ -91,7 +91,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     setupMoveNotifications();
     setupBlockNumber(mud.network.latestBlockNumber$);
     setupDoubleCounter(mud);
-    setupHangar(mud);
+    setupHangar();
     setupLeaderboard(mud);
     setupInvitations(mud);
     setupTime(mud);
