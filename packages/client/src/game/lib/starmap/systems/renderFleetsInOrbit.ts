@@ -304,6 +304,9 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
 
 export const renderFleetsInOrbit = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
+  defineSystem(systemsWorld, [Has(components.Position)], ({ entity }) => {
+    if (entity === "0xf5b73baa526029636254787724ed9b515abf73c4fd9b6ff72c1a825fd0c88c8c") console.log("here");
+  });
 
   defineComponentSystem(systemsWorld, components.FleetMovement, async (update) => {
     const newMovement = update.value[0];
@@ -311,7 +314,7 @@ export const renderFleetsInOrbit = (scene: Scene) => {
     if (newMovement) {
       const time = components.Time.get()?.value ?? 0n;
       const arrivalTime = newMovement.arrivalTime ?? 0n;
-      console.log(components.Position.get(newMovement.destination as Entity));
+      console.log(newMovement.destination, components.Position.get(newMovement.destination as Entity));
       if (arrivalTime < time) {
         renderEntityOrbitingFleets(newMovement.destination as Entity, scene);
       }

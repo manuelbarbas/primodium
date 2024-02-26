@@ -16,5 +16,5 @@ export const focusMainbase = (scene: Scene) => {
     pan(mainBaseCoord, 0);
   };
 
-  defineComponentSystem(systemsWorld, components.ActiveRock, handleMove);
+  defineComponentSystem(systemsWorld, components.Position, handleMove);
 };

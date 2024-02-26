@@ -5,7 +5,7 @@ import { Hex, pad } from "viem";
 import { hydrateFromRPC } from "./rpc";
 import { Entity } from "@latticexyz/recs";
 import { hashEntities } from "src/util/encode";
-import { Keys, SyncSourceType, SyncStep } from "src/util/constants";
+import { EntityType, Keys, SyncSourceType, SyncStep } from "src/util/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 export const hydrateInitialGameState = (
@@ -38,25 +38,22 @@ export const hydrateInitialGameState = (
       address: networkConfig.worldAddress as Hex,
       queries: [
         ...configTableQueries,
-        { tableId: tables.Dimensions.tableId! },
-        { tableId: tables.GracePeriod.tableId! },
-        { tableId: tables.Score.tableId! },
-        { tableId: tables.Alliance.tableId! },
-        { tableId: tables.Reserves.tableId! },
+        { tableId: tables.Dimensions.tableId },
+        { tableId: tables.GracePeriod.tableId },
+        { tableId: tables.Score.tableId },
+        { tableId: tables.Alliance.tableId },
+        { tableId: tables.Reserves.tableId },
+        //get main base starting coord
+        { tableId: tables.Position.tableId, where: { column: "entity", operation: "eq", value: EntityType.MainBase } },
         //get asteroids
         {
-          tableId: tables.Position.tableId!,
-          where: {
-            column: "parent",
-            operation: "eq",
-            value: pad(`0x0`, { size: 32 }),
-          },
+          tableId: tables.Asteroid.tableId!,
           include: [
             {
               tableId: tables.OwnedBy.tableId,
             },
             {
-              tableId: tables.Asteroid.tableId,
+              tableId: tables.Position.tableId,
             },
             {
               tableId: tables.ReversePosition.tableId,
@@ -91,9 +88,9 @@ export const hydrateInitialGameState = (
     // hydrate remaining blocks from RPC
     if (progress === 1) {
       const latestBlockNumber = await network.publicClient.getBlockNumber();
-      hydrateFromRPC(setupResult, fromBlock, latestBlockNumber, onComplete, () =>
-        console.warn("Failed to hydrate remaining blocks. Client may be out of sync!")
-      );
+      hydrateFromRPC(setupResult, fromBlock, latestBlockNumber, onComplete, () => {
+        console.warn("Failed to hydrate remaining blocks. Client may be out of sync!");
+      });
     }
   }, onError);
 
