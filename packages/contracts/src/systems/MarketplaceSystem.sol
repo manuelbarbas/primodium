@@ -5,7 +5,7 @@ pragma solidity >=0.8.21;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { EResource } from "src/Types.sol";
-import { BuildingType, OwnedBy, Reserves, ReservesData, P_MarketplaceConfig } from "codegen/index.sol";
+import { BuildingType, OwnedBy, Reserves, ReservesData, P_MarketplaceConfig, Swap } from "codegen/index.sol";
 import { LibMarketplace } from "libraries/LibMarketplace.sol";
 
 import { MarketPrototypeId } from "codegen/Prototypes.sol";
@@ -59,6 +59,7 @@ contract MarketplaceSystem is PrimodiumSystem {
     bytes32 spaceRockEntity = OwnedBy.get(marketEntity);
     require(OwnedBy.get(spaceRockEntity) == _player(), "[Marketplace] Not owned by player");
 
-    LibMarketplace.swap(spaceRockEntity, path, amountIn, amountOutMin);
+    uint256 amountOut = LibMarketplace.swap(spaceRockEntity, path, amountIn, amountOutMin);
+    Swap.set(_player(), uint8(path[0]), uint8(path[path.length - 1]), amountIn, amountOut);
   }
 }

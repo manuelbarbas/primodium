@@ -15,6 +15,7 @@ import { setupHangar } from "src/network/systems/setupHangar";
 import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
 import { setupMoveNotifications } from "src/network/systems/setupMoveNotifications";
 import { setupInvitations } from "src/network/systems/setupPlayerInvites";
+import { setupSwapNotifications } from "src/network/systems/setupSwapNotifications";
 import { setupSync } from "src/network/systems/setupSync";
 import { setupTime } from "src/network/systems/setupTime";
 import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
@@ -86,6 +87,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
 
     // reset stuff
 
+    setupSwapNotifications(mud);
     setupAllianceLeaderboard(mud);
     setupBattleComponents();
     setupMoveNotifications();

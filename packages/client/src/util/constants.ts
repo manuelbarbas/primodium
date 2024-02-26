@@ -152,6 +152,11 @@ export const EntityType = {
   IronMine: toHex32("IronMine") as Entity,
   CopperMine: toHex32("CopperMine") as Entity,
   LithiumMine: toHex32("LithiumMine") as Entity,
+  KimberliteMine: toHex32("KimberliteMine") as Entity,
+  TitaniumMine: toHex32("TitaniumMine") as Entity,
+  PlatinumMine: toHex32("PlatinumMine") as Entity,
+  IridiumMine: toHex32("IridiumMine") as Entity,
+
   StorageUnit: toHex32("StorageUnit") as Entity,
   Garage: toHex32("Garage") as Entity,
   Workshop: toHex32("Workshop") as Entity,

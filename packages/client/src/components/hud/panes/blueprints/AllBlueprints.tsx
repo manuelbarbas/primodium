@@ -1,6 +1,6 @@
 import { AudioKeys, KeyNames, KeybindActions } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FaCaretLeft, FaCaretRight, FaLock } from "react-icons/fa";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
@@ -84,6 +84,44 @@ export const AllBlueprints = () => {
   const [index, setIndex] = useState(0);
 
   const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
+  const selectedRockEntity = components.ActiveRock.use()?.value;
+  const mapId = components.Asteroid.use(selectedRockEntity)?.mapId;
+  const basicBuildings = useMemo(() => {
+    let mines: Entity[] = [];
+    if (mapId === 1) mines = [EntityType.IronMine, EntityType.CopperMine, EntityType.LithiumMine];
+    else if (mapId === 2) mines = [EntityType.KimberliteMine];
+    else if (mapId === 3) mines = [EntityType.IridiumMine];
+    else if (mapId === 4) mines = [EntityType.PlatinumMine];
+    else if (mapId === 5) mines = [EntityType.TitaniumMine];
+    return [...mines, EntityType.Garage, EntityType.Workshop];
+  }, [mapId]);
+
+  const advancedBuildings = [
+    EntityType.SolarPanel,
+    EntityType.StorageUnit,
+    EntityType.DroneFactory,
+    EntityType.IronPlateFactory,
+    EntityType.PVCellFactory,
+    EntityType.Vault,
+  ];
+  const eliteBuildings = [
+    EntityType.SAMLauncher,
+    EntityType.Hangar,
+    EntityType.AlloyFactory,
+    EntityType.StarmapperStation,
+    EntityType.ShieldGenerator,
+    EntityType.Market,
+    EntityType.Shipyard,
+  ];
+  const keybinds = [
+    KeybindActions.Hotbar0,
+    KeybindActions.Hotbar1,
+    KeybindActions.Hotbar2,
+    KeybindActions.Hotbar3,
+    KeybindActions.Hotbar4,
+    KeybindActions.Hotbar5,
+    KeybindActions.Hotbar6,
+  ];
   return (
     <>
       <div className="p-2 flex flex-col gap-1 items-start">
@@ -92,36 +130,15 @@ export const AllBlueprints = () => {
             <p className="text-xs opacity-75 font-bold text-success">BASIC</p>
           </div>
           <div className="grid grid-cols-4 gap-1 w-full">
-            <BlueprintButton
-              tooltipDirection="top"
-              buildingType={EntityType.IronMine}
-              keybind={KeybindActions.Hotbar0}
-              keybindActive={index === 0}
-            />
-            <BlueprintButton
-              tooltipDirection="top"
-              buildingType={EntityType.CopperMine}
-              keybind={KeybindActions.Hotbar1}
-              keybindActive={index === 0}
-            />
-            <BlueprintButton
-              tooltipDirection="top"
-              buildingType={EntityType.LithiumMine}
-              keybind={KeybindActions.Hotbar2}
-              keybindActive={index === 0}
-            />
-            <BlueprintButton
-              tooltipDirection="top"
-              buildingType={EntityType.Garage}
-              keybind={KeybindActions.Hotbar3}
-              keybindActive={index === 0}
-            />
-            <BlueprintButton
-              tooltipDirection="top"
-              buildingType={EntityType.Workshop}
-              keybind={KeybindActions.Hotbar4}
-              keybindActive={index === 0}
-            />
+            {basicBuildings.map((buildingType, i) => (
+              <BlueprintButton
+                key={i}
+                tooltipDirection="top"
+                buildingType={buildingType}
+                keybind={keybinds[i]}
+                keybindActive={index === 0}
+              />
+            ))}
           </div>
         </div>
 
@@ -130,42 +147,15 @@ export const AllBlueprints = () => {
             <p className="text-xs opacity-75 font-bold text-info">ADVANCED</p>
           </div>
           <div className="grid grid-cols-4 gap-2 w-full">
-            <BlueprintButton
-              tooltipDirection="top"
-              buildingType={EntityType.StorageUnit}
-              keybind={KeybindActions.Hotbar0}
-              keybindActive={index === 1}
-            />
-            <BlueprintButton
-              tooltipDirection="top"
-              buildingType={EntityType.SolarPanel}
-              keybind={KeybindActions.Hotbar1}
-              keybindActive={index === 1}
-            />
-            <BlueprintButton
-              tooltipDirection="top"
-              buildingType={EntityType.DroneFactory}
-              keybind={KeybindActions.Hotbar2}
-              keybindActive={index === 1}
-            />
-            <BlueprintButton
-              tooltipDirection="top"
-              buildingType={EntityType.IronPlateFactory}
-              keybind={KeybindActions.Hotbar3}
-              keybindActive={index === 1}
-            />
-            <BlueprintButton
-              tooltipDirection="top"
-              buildingType={EntityType.PVCellFactory}
-              keybind={KeybindActions.Hotbar4}
-              keybindActive={index === 1}
-            />
-            <BlueprintButton
-              tooltipDirection="top"
-              buildingType={EntityType.Vault}
-              keybind={KeybindActions.Hotbar5}
-              keybindActive={index === 1}
-            />
+            {advancedBuildings.map((buildingType, i) => (
+              <BlueprintButton
+                key={i}
+                tooltipDirection="top"
+                buildingType={buildingType}
+                keybind={keybinds[i]}
+                keybindActive={index === 1}
+              />
+            ))}
           </div>
         </div>
 
@@ -174,48 +164,15 @@ export const AllBlueprints = () => {
             <p className="text-xs opacity-75 font-bold text-warning">ELITE</p>
           </div>
           <div className="grid grid-cols-4 gap-2 w-full">
-            <BlueprintButton
-              tooltipDirection="top"
-              buildingType={EntityType.SAMLauncher}
-              keybind={KeybindActions.Hotbar0}
-              keybindActive={index === 2}
-            />
-            <BlueprintButton
-              tooltipDirection="top"
-              buildingType={EntityType.Hangar}
-              keybind={KeybindActions.Hotbar1}
-              keybindActive={index === 2}
-            />
-            <BlueprintButton
-              tooltipDirection="top"
-              buildingType={EntityType.AlloyFactory}
-              keybind={KeybindActions.Hotbar2}
-              keybindActive={index === 2}
-            />
-            <BlueprintButton
-              tooltipDirection="top"
-              buildingType={EntityType.StarmapperStation}
-              keybind={KeybindActions.Hotbar3}
-              keybindActive={index === 2}
-            />
-            <BlueprintButton
-              tooltipDirection="top"
-              buildingType={EntityType.ShieldGenerator}
-              keybind={KeybindActions.Hotbar4}
-              keybindActive={index === 2}
-            />
-            <BlueprintButton
-              tooltipDirection="top"
-              buildingType={EntityType.Market}
-              keybind={KeybindActions.Hotbar5}
-              keybindActive={index === 2}
-            />
-            <BlueprintButton
-              tooltipDirection="top"
-              buildingType={EntityType.Shipyard}
-              keybind={KeybindActions.Hotbar6}
-              keybindActive={index === 2}
-            />
+            {eliteBuildings.map((buildingType, i) => (
+              <BlueprintButton
+                key={i}
+                tooltipDirection="top"
+                buildingType={buildingType}
+                keybind={keybinds[i]}
+                keybindActive={index === 2}
+              />
+            ))}
           </div>
         </div>
       </div>
