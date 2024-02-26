@@ -55,7 +55,6 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
 
   // update price after swap occurs
   useEffect(() => {
-    console.log("updating price");
     changeInAmount(fromResource, toResource, inAmountRendered);
   }, [changeInAmount, swapUpdate]);
 
