@@ -89,7 +89,7 @@ export const AllBlueprints = () => {
     else if (mapId === 2) mines = [EntityType.KimberliteMine];
     else if (mapId === 3) mines = [EntityType.IridiumMine];
     else if (mapId === 4) mines = [EntityType.PlatinumMine];
-    else if (mapId === 5) mines = [EntityType.KimberliteMine];
+    else if (mapId === 5) mines = [EntityType.TitaniumMine];
     return [...mines, EntityType.Garage, EntityType.Workshop];
   }, [mapId]);
 
