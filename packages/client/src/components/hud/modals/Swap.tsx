@@ -1,7 +1,7 @@
 // SwapPane.tsx
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FaExchangeAlt } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
@@ -16,6 +16,7 @@ import { getInAmount, getOutAmount } from "src/util/swap";
 
 export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
   const mud = useMud();
+
   const [fromResource, setFromResource] = useState<Entity>(EntityType.Iron);
   const [toResource, setToResource] = useState<Entity>(EntityType.Copper);
   const [inAmountRendered, setInAmountRendered] = useState<string>("");
@@ -49,6 +50,13 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
     },
     [getPath]
   );
+
+  const swapUpdate = components.Swap.use(mud.playerAccount.entity);
+
+  // update price after swap occurs
+  useEffect(() => {
+    changeInAmount(fromResource, toResource, inAmountRendered);
+  }, [changeInAmount, swapUpdate]);
 
   const changeOutAmount = useCallback(
     (outAmountRendered: string) => {
