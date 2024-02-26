@@ -2,6 +2,8 @@ import { Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { EFleetStance } from "contracts/config/enums";
 import { FC, useMemo } from "react";
+import { FaExclamationTriangle } from "react-icons/fa";
+import { toast } from "react-toastify";
 import { Button } from "src/components/core/Button";
 import { Modal } from "src/components/core/Modal";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
@@ -47,6 +49,49 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
     if (!position) return;
     if (activeStance?.stance == EFleetStance.Block) clearFleetStance(mud, fleetEntity);
     else setFleetStance(mud, fleetEntity, EFleetStance.Block, position);
+  };
+  const handleDisband = () => {
+    if (totalUnits > 0n) {
+      toast(
+        ({ closeToast }) => (
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col text-center justify-center items-center gap-2 w-full">
+              <FaExclamationTriangle size={24} className="text-warning" />
+              Clearing this fleet will delete all units and resources forever. Are you sure?
+            </div>
+
+            <div className="flex justify-center w-full gap-2">
+              <button
+                className="btn btn-secondary btn-xs"
+                onClick={() => {
+                  closeToast && closeToast();
+                  disbandFleet(mud, fleetEntity);
+                }}
+              >
+                Confirm
+              </button>
+              <button
+                onClick={() => {
+                  closeToast && closeToast();
+                }}
+                className="btn btn-primary btn-xs"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ),
+        {
+          // className: "border-error",
+          position: "top-center",
+          autoClose: false,
+          closeOnClick: false,
+          draggable: false,
+          closeButton: false,
+          hideProgressBar: true,
+        }
+      );
+    } else disbandFleet(mud, fleetEntity);
   };
 
   return (
@@ -184,7 +229,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             <TransactionQueueMask queueItemId={"disband" as Entity}>
               <Button
                 className="btn btn-error btn-sm w-full"
-                onClick={() => disbandFleet(mud, fleetEntity)}
+                onClick={handleDisband}
                 tooltipDirection="bottom"
                 tooltip="remove all units and resources and return home"
               >

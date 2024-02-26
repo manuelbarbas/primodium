@@ -81,24 +81,25 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
           background: `rgba(0,0,0, ${Math.max(0, (defaultZoom - zoom) / (defaultZoom - minZoom))}`,
         }}
       >
-        <div className="absolute top-0 right-0 translate-x-full w-24">
-          <Button
-            className="btn-ghost btn-xs text-xs text-accent bg-slate-900 border border-l-0 border-secondary/50"
-            disabled={isPirate}
-            onClick={async () => {
-              components.Send.reset();
-              components.ActiveRock.set({ value: selectedAsteroid });
-              if (ownedByPlayer) {
-                components.BuildRock.set({ value: selectedAsteroid });
-              }
-              await closeMap();
-            }}
-          >
-            {!ownedByPlayer && <IconLabel imageUri="/img/icons/spectateicon.png" className={``} text="VIEW" />}
-            {ownedByPlayer && <IconLabel imageUri="/img/icons/minersicon.png" className={``} text="BUILD" />}
-          </Button>
-        </div>
-        {!selectingDestination && (
+        {!isPirate && (
+          <div className="absolute top-0 right-0 translate-x-full w-24">
+            <Button
+              className="btn-ghost btn-xs text-xs text-accent bg-slate-900 border border-l-0 border-secondary/50"
+              onClick={async () => {
+                components.Send.reset();
+                components.ActiveRock.set({ value: selectedAsteroid });
+                if (ownedByPlayer) {
+                  components.BuildRock.set({ value: selectedAsteroid });
+                }
+                await closeMap();
+              }}
+            >
+              {!ownedByPlayer && <IconLabel imageUri="/img/icons/spectateicon.png" className={``} text="VIEW" />}
+              {ownedByPlayer && <IconLabel imageUri="/img/icons/minersicon.png" className={``} text="BUILD" />}
+            </Button>
+          </div>
+        )}
+        {ownedByPlayer && !selectingDestination && (
           <div className="absolute bottom-0 right-0 translate-x-full w-36">
             <Button
               disabled={hideAttack}
@@ -109,7 +110,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             </Button>
           </div>
         )}
-        {selectingDestination && (
+        {ownedByPlayer && selectingDestination && (
           <div className="absolute bottom-0 right-0 translate-x-full w-36">
             <Button
               onClick={() => components.Attack.reset()}
@@ -119,33 +120,37 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             </Button>
           </div>
         )}
-        <div className="absolute top-0 left-0 -translate-x-full">
-          <Modal>
-            <Modal.Button
-              onClick={() => components.ActiveRock.set({ value: selectedAsteroid })}
-              disabled={selectingDestination || !canTransfer}
-              className="btn-ghost btn-xs text-xs text-accent bg-neutral border border-r-0 pl-2 border-secondary/50 w-28 transition-[width] duration-200"
-            >
-              <IconLabel imageUri="/img/icons/trade.png" text={"Transfer"} />
-            </Modal.Button>
-            <Modal.Content className="w-3/4 h-[750px]">
-              <Fleets initialState="transfer" from={selectedAsteroid} />
-            </Modal.Content>
-          </Modal>
-        </div>
-        <div className="absolute bottom-0 left-0 -translate-x-full w-28">
-          <Modal title="Create Fleet">
-            <Modal.Button
-              disabled={!canAddFleets}
-              className="btn-ghost btn-xs w-full text-xs text-accent bg-slate-900 border border-r-0 border-secondary/50"
-            >
-              <IconLabel imageUri="/img/icons/addicon.png" text="ADD FLEET" />
-            </Modal.Button>
-            <Modal.Content className="w-3/4 h-[750px]">
-              <Fleets initialState="transfer" from={selectedAsteroid} to={"newFleet"} />
-            </Modal.Content>
-          </Modal>
-        </div>
+        {ownedByPlayer && (
+          <div className="absolute top-0 left-0 -translate-x-full">
+            <Modal>
+              <Modal.Button
+                onClick={() => components.ActiveRock.set({ value: selectedAsteroid })}
+                disabled={selectingDestination || !canTransfer}
+                className="btn-ghost btn-xs text-xs text-accent bg-neutral border border-r-0 pl-2 border-secondary/50 w-28 transition-[width] duration-200"
+              >
+                <IconLabel imageUri="/img/icons/trade.png" text={"Transfer"} />
+              </Modal.Button>
+              <Modal.Content className="w-3/4 h-[800px]">
+                <Fleets initialState="transfer" from={selectedAsteroid} />
+              </Modal.Content>
+            </Modal>
+          </div>
+        )}
+        {ownedByPlayer && (
+          <div className="absolute bottom-0 left-0 -translate-x-full w-28">
+            <Modal title="Create Fleet">
+              <Modal.Button
+                disabled={!canAddFleets}
+                className="btn-ghost btn-xs w-full text-xs text-accent bg-slate-900 border border-r-0 border-secondary/50"
+              >
+                <IconLabel imageUri="/img/icons/addicon.png" text="ADD FLEET" />
+              </Modal.Button>
+              <Modal.Content className="w-3/4 h-[800px]">
+                <Fleets initialState="transfer" from={selectedAsteroid} to={"newFleet"} />
+              </Modal.Content>
+            </Modal>
+          </div>
+        )}
         <img
           src={imageUri}
           className="scale-75"

@@ -94,7 +94,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
             >
               <IconLabel imageUri="/img/icons/settingsicon.png" text={"MANAGE"} />
             </Modal.Button>
-            <Modal.Content className="w-3/4 h-[750px]">
+            <Modal.Content className="w-3/4 h-[800px]">
               <Fleets initialState="manageFleet" fleetEntity={fleet} />
             </Modal.Content>
           </Modal>
