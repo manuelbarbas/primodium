@@ -8,7 +8,12 @@ import { RESERVE_CURRENCY } from "src/constants.sol";
 import { EResource } from "src/Types.sol";
 
 library LibMarketplace {
-  function swap(bytes32 to, EResource[] memory path, uint256 amountIn, uint256 amountOutMin) internal {
+  function swap(
+    bytes32 to,
+    EResource[] memory path,
+    uint256 amountIn,
+    uint256 amountOutMin
+  ) internal returns (uint256 amountReceived) {
     require(amountIn > 0, "[Marketplace] Invalid amount");
     require(path.length > 1, "[Marketplace] Invalid path");
 
@@ -16,7 +21,7 @@ library LibMarketplace {
 
     // amount received represents the amount of the previous resource in the path
     // the final amount received is the amount the user is transferred
-    uint256 amountReceived = amountIn;
+    amountReceived = amountIn;
     for (uint256 i = 0; i < path.length - 1; i++) {
       amountReceived = _swap(uint8(path[i]), uint8(path[i + 1]), amountReceived);
     }
