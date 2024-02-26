@@ -7,7 +7,7 @@ import { KeybindActions } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
 import { Key } from "engine/types";
 
-const VERSION = 4;
+const VERSION = 5;
 
 type Keybinds = Partial<{
   [key in KeybindActions]: Set<Key>;
@@ -43,6 +43,7 @@ type PersistentState = {
   noExternalAccount: boolean;
   panes: Panes;
   fontStyle: string;
+  hideHotkeys: boolean;
 };
 
 type PersistentActions = {
@@ -61,6 +62,7 @@ type PersistentActions = {
   resetPanes: () => void;
   setNoExternalAccount: (value: boolean) => void; // Add this action
   removeNoExternalAccount: () => void; // Add this action
+  setHideHotkeys: (val: boolean) => void;
 };
 
 const defaults: PersistentState = {
@@ -77,6 +79,7 @@ const defaults: PersistentState = {
     sfx: 0.5,
     ui: 0.25,
   },
+  hideHotkeys: false,
   keybinds: {
     [KeybindActions.RightClick]: new Set(["POINTER_RIGHT"]),
     [KeybindActions.LeftClick]: new Set(["POINTER_LEFT"]),
@@ -84,14 +87,11 @@ const defaults: PersistentState = {
     [KeybindActions.Down]: new Set(["S", "DOWN"]),
     [KeybindActions.Left]: new Set(["A", "LEFT"]),
     [KeybindActions.Right]: new Set(["D", "RIGHT"]),
-    [KeybindActions.Chat]: new Set(["T"]),
-    [KeybindActions.Blueprint]: new Set(["B"]),
     [KeybindActions.Base]: new Set(["SPACE"]),
     [KeybindActions.SpacerockMenu]: new Set(["TAB"]),
     [KeybindActions.ZoomIn]: new Set(["X", "PLUS"]),
     [KeybindActions.ZoomOut]: new Set(["Z", "MINUS"]),
     [KeybindActions.Modifier]: new Set(["SHIFT"]),
-    [KeybindActions.ToggleUI]: new Set(["H"]),
     [KeybindActions.Hotbar0]: new Set(["ONE"]),
     [KeybindActions.Hotbar1]: new Set(["TWO"]),
     [KeybindActions.Hotbar2]: new Set(["THREE"]),
@@ -105,10 +105,17 @@ const defaults: PersistentState = {
     [KeybindActions.NextHotbar]: new Set(["E"]),
     [KeybindActions.PrevHotbar]: new Set(["Q"]),
     [KeybindActions.Esc]: new Set(["ESC"]),
-    [KeybindActions.Inventory]: new Set(["I", "TAB"]),
-    [KeybindActions.Research]: new Set(["R"]),
     [KeybindActions.Map]: new Set(["M"]),
     [KeybindActions.Console]: new Set(["BACKTICK"]),
+    [KeybindActions.Account]: new Set(["R"]),
+    [KeybindActions.Blueprints]: new Set(["T"]),
+    [KeybindActions.Objectives]: new Set(["Y"]),
+    [KeybindActions.Resources]: new Set(["U"]),
+    [KeybindActions.Units]: new Set(["I"]),
+    [KeybindActions.Asteroids]: new Set(["O"]),
+    [KeybindActions.Fleets]: new Set(["P"]),
+    [KeybindActions.Chat]: new Set(["OPEN_BRACKET"]),
+    [KeybindActions.HideAll]: new Set(["H"]),
   },
 };
 
@@ -180,6 +187,7 @@ export const usePersistentStore = create<PersistentState & PersistentActions>()(
       },
       setNoExternalAccount: (value: boolean) => set({ noExternalAccount: value }),
       removeNoExternalAccount: () => set({ noExternalAccount: false }),
+      setHideHotkeys: (val: boolean) => set({ hideHotkeys: val }),
     }),
     {
       name: "persistent-storage",

@@ -6,7 +6,12 @@ import { Toggle } from "src/components/core/Toggle";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 
 export const GeneralSettings = () => {
-  const [uiScale, setUiScale] = usePersistentStore((state) => [state.uiScale, state.setUiScale]);
+  const [uiScale, setUiScale, hideHotkeys, setHideHotkeys] = usePersistentStore((state) => [
+    state.uiScale,
+    state.setUiScale,
+    state.hideHotkeys,
+    state.setHideHotkeys,
+  ]);
   const [allowHackerModal, toggleAllowHackerModal] = usePersistentStore((state) => [
     state.allowHackerModal,
     state.toggleAllowHackerModal,
@@ -35,6 +40,11 @@ export const GeneralSettings = () => {
             </div>
             <Toggle onToggle={toggleAllowHackerModal} defaultChecked={allowHackerModal} />
           </div>
+          <div className="">
+            <div className="text-xs opacity-50 font-bold pb-1">HIDE HOTKEYS</div>
+            <Toggle onToggle={() => setHideHotkeys(!hideHotkeys)} defaultChecked={hideHotkeys} />
+          </div>
+
           <div>
             <p className="text-xs opacity-50 font-bold pb-1 uppercase">font style</p>
             <div>

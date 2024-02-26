@@ -1,13 +1,14 @@
 import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
+import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect, useMemo } from "react";
-import { Entity } from "@latticexyz/recs";
 
-import { usePrimodium } from "src/hooks/usePrimodium";
-import { components } from "src/network/components";
 import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
+import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks";
+import { usePrimodium } from "src/hooks/usePrimodium";
+import { components } from "src/network/components";
 import { EntityType, ResourceImage } from "src/util/constants";
 
 export const MapButton = () => {
@@ -17,6 +18,7 @@ export const MapButton = () => {
   const mapOpen = components.MapOpen.use(undefined, {
     value: false,
   }).value;
+
   const activeRock = components.ActiveRock.use()?.value;
   const ownedBy = components.OwnedBy.use(activeRock)?.value;
   const primodium = usePrimodium();
@@ -86,6 +88,7 @@ export const MapButton = () => {
       components.ActiveRock.set({ value: (components.BuildRock.get()?.value ?? singletonEntity) as Entity });
   };
 
+  const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
   useEffect(() => {
     const starmapListener = primodium.api(Scenes.Starmap).input.addListener(KeybindActions.Map, closeMap);
 
@@ -99,7 +102,7 @@ export const MapButton = () => {
 
   return (
     <Button
-      className={`flex grow w-80 btn-sm !p-3 !px-10 gap-5 filter group hover:scale-110 hover:z-50 star-background-sm hover:border-secondary hover:drop-shadow-hard`}
+      className={`relative flex grow w-80 btn-sm !p-3 !px-10 gap-5 filter group hover:scale-110 hover:z-50 star-background-sm hover:border-secondary hover:drop-shadow-hard`}
       clickSound={AudioKeys.Sequence}
       onClick={!mapOpen ? openMap : closeMap}
     >
@@ -109,10 +112,12 @@ export const MapButton = () => {
       <p className="uppercase">
         {!mapOpen ? (isSpectating ? "stop spectating" : "open star map") : "Return to building"}
       </p>
-
+      {!hideHotkeys && (
+        <p className="absolute top-1 z-10 right-4 translate-x-full -translate-y-1/2 flex text-xs kbd kbd-xs">M</p>
+      )}
       {/* button decor */}
       {!mapOpen && (
-        <div>
+        <div className="z-40">
           <img
             src={ResourceImage.get(EntityType.CapitalShip)}
             className="pixel-images absolute origin-right -top-10 right-12 opacity-0 scale-x-[-100%] -translate-x-1/2 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500 ease-out pointer-events-none"
@@ -124,7 +129,7 @@ export const MapButton = () => {
         </div>
       )}
       {mapOpen && (
-        <div>
+        <div className="z-40">
           <img
             src={ResourceImage.get(EntityType.Iron)}
             className="pixel-images absolute origin-right -top-5 -right-5 opacity-0 -translate-x-1/2 group-hover:translate-x-0 group-hover:scale-[150%] group-hover:opacity-100 transition-all duration-500 pointer-events-none"

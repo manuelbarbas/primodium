@@ -5,6 +5,7 @@ import { Primodium, initPrimodium } from "@game/api";
 import { Progress } from "src/components/core/Progress";
 import { GameHUD } from "src/components/hud/HUD";
 import { PrimodiumProvider } from "src/hooks/providers/PrimodiumProvider";
+import { WidgetProvider } from "src/hooks/providers/WidgetProvider";
 import { setupSessionAccount } from "src/network/systems/setupSessionAccount";
 
 const params = new URLSearchParams(window.location.search);
@@ -55,7 +56,9 @@ export const Game = () => {
         <div id="phaser-container" className="cursor-pointer screen-container">
           {!!primodium && (
             <PrimodiumProvider {...primodium}>
-              <GameHUD />
+              <WidgetProvider>
+                <GameHUD />
+              </WidgetProvider>
             </PrimodiumProvider>
           )}
         </div>

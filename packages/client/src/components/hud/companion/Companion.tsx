@@ -1,13 +1,14 @@
-import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
+import { AudioKeys, KeyNames, KeybindActions, Scenes } from "@game/constants";
+import { useAnimate } from "framer-motion";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FaEyeSlash, FaUndo } from "react-icons/fa";
+import { usePersistentStore } from "src/game/stores/PersistentStore";
+import { usePrimodium } from "src/hooks/usePrimodium";
+import { useWidgets } from "../../../hooks/providers/WidgetProvider";
 import { Button, IconButton } from "../../core/Button";
 import { Card, SecondaryCard } from "../../core/Card";
-import { usePrimodium } from "src/hooks/usePrimodium";
-import { useCallback, useEffect, useRef, useState, useMemo } from "react";
-import { useWidgets } from "../../../hooks/providers/WidgetProvider";
-import { MenuButtons } from "../MenuButtons";
 import { MapButton } from "../MapButton";
-import { useAnimate } from "framer-motion";
-import { FaUndo, FaEyeSlash } from "react-icons/fa";
+import { MenuButtons } from "../MenuButtons";
 
 export const WidgetButton: React.FC<{
   imageUri: string;
@@ -19,24 +20,41 @@ export const WidgetButton: React.FC<{
   onClose: () => void;
   onDoubleClick?: () => void;
   disable?: boolean;
+  hotkey?: KeybindActions;
   active: boolean;
-}> = ({ imageUri, tooltipText, visible, onClose, onOpen, className, text, disable = false, active }) => {
+}> = ({ hotkey, imageUri, tooltipText, visible, onClose, onOpen, className, text, disable = false, active }) => {
+  const primodium = usePrimodium();
+  const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
+  const {
+    hooks: { useKeybinds },
+  } = useRef(primodium.api(Scenes.UI)).current;
+  const keybinds = useKeybinds();
+
+  const keybindId = hotkey ? keybinds[hotkey]?.entries().next().value[0] : "";
+
   return (
-    <IconButton
-      imageUri={imageUri}
-      tooltipText={tooltipText}
-      tooltipDirection="bottom"
-      text={text}
-      clickSound={!visible ? AudioKeys.DataPoint : AudioKeys.Sequence3}
-      onClick={() => {
-        if (!visible) onOpen();
-        else onClose();
-      }}
-      disabled={disable || !active}
-      className={`border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-lg text-lg hover:z-20 hover:drop-shadow-hard transition-all ${
-        visible ? "border-warning bg-warning/25" : "bg-secondary/25"
-      } ${!active ? "!bg-error/50 !border-error" : ""} ${className}`}
-    />
+    <div className="relative">
+      {!hideHotkeys && hotkey && (
+        <p className="absolute top-1 z-30 right-4 translate-x-full -translate-y-1/2 flex text-xs kbd kbd-xs">
+          {KeyNames[keybindId] ?? keybindId ?? "?"}
+        </p>
+      )}
+      <IconButton
+        imageUri={imageUri}
+        tooltipText={tooltipText}
+        tooltipDirection="top"
+        text={text}
+        clickSound={!visible ? AudioKeys.DataPoint : AudioKeys.Sequence3}
+        onClick={() => {
+          if (!visible) onOpen();
+          else onClose();
+        }}
+        disabled={disable || !active}
+        className={`border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-lg text-lg hover:z-20 hover:drop-shadow-hard transition-all ${
+          visible ? "border-warning bg-warning/25" : "bg-secondary/25"
+        } ${!active ? "!bg-error/50 !border-error" : ""} ${className}`}
+      />
+    </div>
   );
 };
 
@@ -59,6 +77,7 @@ export const WidgetControls = () => {
                 imageUri={widget.image}
                 tooltipText={widget.name}
                 visible={widget.visible}
+                hotkey={widget.hotkey}
                 onOpen={widget.open}
                 onClose={widget.close}
                 onDoubleClick={widget.reset}
@@ -93,33 +112,32 @@ export const Actions = () => {
     widgets.forEach((widget) => widget.reset());
   }, [widgets]);
 
-  const numOpen = useMemo(() => widgets.filter((widget) => widget.visible).length, [widgets]);
+  const numOpen = useMemo(() => widgets.filter((widget) => widget.visible && widget.active).length, [widgets]);
+
+  const primodium = usePrimodium();
+  const {
+    hooks: { useKeybinds },
+  } = useRef(primodium.api(Scenes.UI)).current;
+
+  const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
+  const keybinds = useKeybinds();
 
   return (
     <div className="w-full">
       <div className="w-full flex items-center border-t border-secondary/25">
         <MapButton />
-        <div title="settings">
-          {numOpen <= 0 && (
-            <Button
-              onClick={resetAll}
-              className="btn-md btn-neutral bg-opacity-25 border-secondary/50 border text-lg"
-              tooltip="reset all"
-            >
-              <FaUndo />
-            </Button>
+        <Button
+          onClick={numOpen == 0 ? resetAll : closeAll}
+          className="relative btn-md btn-neutral bg-opacity-25 border-l-secondary/25 border text-lg"
+          tooltip={numOpen == 0 ? "reset all" : "close all"}
+        >
+          {!hideHotkeys && (
+            <p className="absolute top-1 z-10 right-4 translate-x-full -translate-y-1/2 flex text-xs kbd kbd-xs">
+              {keybinds[KeybindActions.HideAll]?.entries().next().value[0] ?? "?"}
+            </p>
           )}
-
-          {numOpen > 0 && (
-            <Button
-              onClick={closeAll}
-              className="btn-md btn-neutral bg-opacity-25 border-secondary/50 border text-lg"
-              tooltip="hide all"
-            >
-              <FaEyeSlash className="text-error" />
-            </Button>
-          )}
-        </div>
+          {numOpen == 0 ? <FaUndo /> : <FaEyeSlash className="text-error" />}
+        </Button>
       </div>
     </div>
   );
@@ -172,14 +190,11 @@ export const Companion = () => {
     } else animate(scope.current, { translateY: "0%" }, { duration: 0.2 });
   }, [minimized, scope, animate]);
 
+  const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
   return (
     <div className="w-full">
       <div ref={scope} className={`relative flex items-center`}>
         {!minimized && <div className="absolute bg-black inset-0 blur-3xl opacity-50" />}
-        {/* <SecondaryCard className="uppercase drop-shadow-hard absolute w-fit min-w-64 origin-bottom-left -top-4 text-accent z-50">
-          this is a tip from prime
-        </SecondaryCard> */}
-
         <div className={`relative z-20 pointer-events-none`}>
           <img
             src="/img/jarvis.png"
@@ -192,9 +207,11 @@ export const Companion = () => {
               onClick={() => setMinimized(true)}
             >
               {"<"} HIDE
-              <p className="absolute top-0 right-2 translate-x-full -translate-y-1/2 flex text-xs kbd kbd-xs">
-                {[keybinds[KeybindActions.SpacerockMenu]?.entries().next().value[0]] ?? "?"}
-              </p>
+              {!hideHotkeys && (
+                <p className="absolute top-0 right-2 translate-x-full z-30 -translate-y-1/2 flex text-xs kbd kbd-xs">
+                  {[keybinds[KeybindActions.SpacerockMenu]?.entries().next().value[0]] ?? "?"}
+                </p>
+              )}
             </Button>
           </div>
         </div>

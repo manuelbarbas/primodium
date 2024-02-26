@@ -1,4 +1,4 @@
-import { Scenes } from "@game/constants";
+import { KeybindActions, Scenes } from "@game/constants";
 import { memo } from "react";
 import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
@@ -21,6 +21,7 @@ export const Blueprints = memo(() => {
       origin="center-left"
       scene={Scenes.Asteroid}
       active={!mapOpen && isBuilding}
+      hotkey={KeybindActions.Blueprints}
       minOpacity={0.6}
       draggable
       pinnable
