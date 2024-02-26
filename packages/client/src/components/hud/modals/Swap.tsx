@@ -20,6 +20,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
   const [toResource, setToResource] = useState<Entity>(EntityType.Copper);
   const [inAmountRendered, setInAmountRendered] = useState<string>("");
   const [outAmountRendered, setOutAmountRendered] = useState<string>("");
+  const [lastEdited, setLastEdited] = useState<"in" | "out">("in");
 
   const selectedRock = components.ActiveRock.use()?.value;
   if (!selectedRock) throw new Error("[Swap] No active rock");
@@ -44,6 +45,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
       if (out == 0n) return "";
       const outString = formatResourceCount(resourceOut, out, { fractionDigits: 9, notLocale: true });
       setOutAmountRendered(outString);
+      setLastEdited("in");
     },
     [getPath]
   );
@@ -63,15 +65,20 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
       if (inAmount == 0n) return "";
       const inString = formatResourceCount(fromResource, inAmount, { fractionDigits: 9, notLocale: true });
       setInAmountRendered(inString);
+      setLastEdited("out");
     },
     [fromResource, toResource, getPath]
   );
 
   const switchResources = useCallback(() => {
+    lastEdited === "in"
+      ? changeOutAmount(inAmountRendered)
+      : changeInAmount(toResource, fromResource, outAmountRendered);
+
     setFromResource(toResource);
     setToResource(fromResource);
-    changeInAmount(toResource, fromResource, outAmountRendered);
-  }, [fromResource, toResource, outAmountRendered, changeInAmount]);
+    setLastEdited(lastEdited === "in" ? "out" : "in");
+  }, [lastEdited, changeInAmount, toResource, fromResource, outAmountRendered, changeOutAmount, inAmountRendered]);
 
   const { resourceCount: fromResourceCount } = useFullResourceCount(fromResource, selectedRock);
   const { resourceCount: toResourceCount, resourceStorage: toResourceStorage } = useFullResourceCount(
