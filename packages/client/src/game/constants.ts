@@ -115,6 +115,22 @@ export enum SpriteKeys {
 
   LithiumMine1 = "sprites/miners/lithiummine/Miner_Lithium_LVL1_1.png",
 
+  IridiumMine1 = "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_1.png",
+  IridiumMine2 = "sprites/miners/iridiummine/level2/Miner_Iridium_LVL2_1.png",
+  IridiumMine3 = "sprites/miners/iridiummine/level3/Miner_Iridium_LVL3_1.png",
+
+  TitaniumMine1 = "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_1.png",
+  TitaniumMine2 = "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_1.png",
+  TitaniumMine3 = "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_1.png",
+
+  PlatinumMine1 = "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_1.png",
+  PlatinumMine2 = "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_1.png",
+  PlatinumMine3 = "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_1.png",
+
+  KimberliteMine1 = "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_1.png",
+  KimberliteMine2 = "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_1.png",
+  KimberliteMine3 = "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_1.png",
+
   StorageUnit1 = "sprites/storage-facility/level1/Storage_Facility_LVL1.png",
   StorageUnit2 = "sprites/storage-facility/level2/Storage_Facility_LVL2.png",
   StorageUnit3 = "sprites/storage-facility/level3/Storage_Facility_LVL3_1.png",
@@ -257,6 +273,22 @@ export enum AnimationKeys {
 
   LithiumMine1 = "lithiummine/level1",
 
+  IridiumMine1 = "iridiummine/level1",
+  IridiumMine2 = "iridiummine/level2",
+  IridiumMine3 = "iridiummine/level3",
+
+  TitaniumMine1 = "titaniummine/level1",
+  TitaniumMine2 = "titaniummine/level2",
+  TitaniumMine3 = "titaniummine/level3",
+
+  PlatinumMine1 = "platinummine/level1",
+  PlatinumMine2 = "platinummine/level2",
+  PlatinumMine3 = "platinummine/level3",
+
+  KimberliteMine1 = "kimberlitemine/level1",
+  KimberliteMine2 = "kimbleritemine/level2",
+  KimberliteMine3 = "kimbleritemine/level3",
+
   StorageUnit3 = "storageunit/level3",
 
   IronPlateFactory1 = "ironplatefactory/level1",
@@ -384,6 +416,11 @@ export const EntitytoBuildingSpriteKey = {
 
   [EntityType.LithiumMine]: [SpriteKeys.LithiumMine1],
 
+  [EntityType.KimberliteMine]: [SpriteKeys.KimberliteMine1, SpriteKeys.KimberliteMine2, SpriteKeys.KimberliteMine3],
+  [EntityType.IridiumMine]: [SpriteKeys.IridiumMine1, SpriteKeys.IridiumMine2, SpriteKeys.IridiumMine3],
+  [EntityType.TitaniumMine]: [SpriteKeys.TitaniumMine1, SpriteKeys.TitaniumMine2, SpriteKeys.TitaniumMine3],
+  [EntityType.PlatinumMine]: [SpriteKeys.PlatinumMine1, SpriteKeys.PlatinumMine2, SpriteKeys.PlatinumMine3],
+
   [EntityType.StorageUnit]: [SpriteKeys.StorageUnit1, SpriteKeys.StorageUnit2, SpriteKeys.StorageUnit3],
 
   [EntityType.IronPlateFactory]: [SpriteKeys.IronPlateFactory1, SpriteKeys.IronPlateFactory2],
@@ -445,6 +482,16 @@ export const EntityIDtoAnimationKey = {
   [EntityType.IronMine]: [AnimationKeys.IronMine1, AnimationKeys.IronMine2, AnimationKeys.IronMine3],
   [EntityType.CopperMine]: [AnimationKeys.CopperMine1, AnimationKeys.CopperMine2, AnimationKeys.CopperMine3],
   [EntityType.LithiumMine]: [AnimationKeys.LithiumMine1],
+
+  [EntityType.KimberliteMine]: [
+    AnimationKeys.KimberliteMine1,
+    AnimationKeys.KimberliteMine2,
+    AnimationKeys.KimberliteMine3,
+  ],
+  [EntityType.IridiumMine]: [AnimationKeys.IridiumMine1, AnimationKeys.IridiumMine2, AnimationKeys.IridiumMine3],
+  [EntityType.PlatinumMine]: [AnimationKeys.PlatinumMine1, AnimationKeys.PlatinumMine2, AnimationKeys.PlatinumMine3],
+  [EntityType.TitaniumMine]: [AnimationKeys.TitaniumMine1, AnimationKeys.TitaniumMine2, AnimationKeys.TitaniumMine3],
+
   [EntityType.StorageUnit]: [undefined, undefined, AnimationKeys.StorageUnit3],
 
   [EntityType.IronPlateFactory]: [AnimationKeys.IronPlateFactory1, AnimationKeys.IronPlateFactory2],
