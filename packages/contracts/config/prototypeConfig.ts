@@ -1,7 +1,6 @@
 import { Hex } from "viem";
 import { config } from "../mud.config";
 import {
-  SCALE,
   encodeArray,
   getPUnitData,
   getPirateObjectiveResourceValues,
@@ -15,6 +14,7 @@ import {
   upgradesToList,
 } from "../ts/prototypes/prototypeGenUtils";
 import { PrototypesConfig } from "../ts/prototypes/types";
+import { SCALE } from "./constants";
 import { EResource, ESize, MUDEnums } from "./enums";
 import { getBlueprint } from "./util/blueprints";
 import encodeBytes32, { encodeAddress } from "./util/encodeBytes32";
@@ -266,16 +266,16 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   /* ------------------------------- Marketplace ------------------------------ */
 
-  IronSupply: marketplaceSupplyTable(EResource.Iron, 1e7),
-  CopperSupply: marketplaceSupplyTable(EResource.Copper, 1e7),
-  LithiumSupply: marketplaceSupplyTable(EResource.Lithium, 1e7),
+  IronSupply: marketplaceSupplyTable(EResource.Iron, 1e4),
+  CopperSupply: marketplaceSupplyTable(EResource.Copper, 1e4),
+  LithiumSupply: marketplaceSupplyTable(EResource.Lithium, 1e4),
   TitaniumSupply: marketplaceSupplyTable(EResource.Titanium, 1),
   PlatinumSupply: marketplaceSupplyTable(EResource.Platinum, 1),
   IridiumSupply: marketplaceSupplyTable(EResource.Iridium, 1),
-  IronPlateSupply: marketplaceSupplyTable(EResource.IronPlate, 1e4),
-  AlloySupply: marketplaceSupplyTable(EResource.Alloy, 1e4),
-  PVCellSupply: marketplaceSupplyTable(EResource.PVCell, 1e4),
-  RocketFuelSupply: marketplaceSupplyTable(EResource.RocketFuel, 1e4),
+  IronPlateSupply: marketplaceSupplyTable(EResource.IronPlate, 1e2),
+  AlloySupply: marketplaceSupplyTable(EResource.Alloy, 1e2),
+  PVCellSupply: marketplaceSupplyTable(EResource.PVCell, 1e2),
+  RocketFuelSupply: marketplaceSupplyTable(EResource.RocketFuel, 1e2),
 
   MarketplaceConfig: {
     keys: [],
@@ -507,7 +507,102 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       },
     },
   },
-
+  KimberliteMine: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(1, 1) },
+      P_MaxLevel: { value: 3n },
+      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Kimberlite") },
+    },
+    levels: {
+      1: {
+        P_RequiredResources: getResourceValues({ Iron: 5000, Copper: 5000 }),
+        P_RequiredBaseLevel: { value: 2n },
+        P_Production: getResourceValues({ Kimberlite: 0.01 }),
+      },
+      2: {
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ Iron: 25000, Lithium: 10000 }),
+        P_Production: getResourceValues({ Kimberlite: 0.05 }),
+      },
+      3: {
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ Iron: 100000, Lithium: 20000 }),
+        P_Production: getResourceValues({ Kimberlite: 0.1 }),
+      },
+    },
+  },
+  IridiumMine: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(1, 1) },
+      P_MaxLevel: { value: 3n },
+      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Iridium") },
+    },
+    levels: {
+      1: {
+        P_RequiredResources: getResourceValues({ Iron: 5000, Copper: 5000 }),
+        P_RequiredBaseLevel: { value: 2n },
+        P_Production: getResourceValues({ Iridium: 0.01 }),
+      },
+      2: {
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ Iron: 25000, Lithium: 10000 }),
+        P_Production: getResourceValues({ Iridium: 0.05 }),
+      },
+      3: {
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ Iron: 100000, Lithium: 20000 }),
+        P_Production: getResourceValues({ Iridium: 0.1 }),
+      },
+    },
+  },
+  PlatinumMine: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(1, 1) },
+      P_MaxLevel: { value: 3n },
+      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Platinum") },
+    },
+    levels: {
+      1: {
+        P_RequiredResources: getResourceValues({ Iron: 5000, Copper: 5000 }),
+        P_RequiredBaseLevel: { value: 2n },
+        P_Production: getResourceValues({ Platinum: 0.01 }),
+      },
+      2: {
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ Iron: 25000, Lithium: 10000 }),
+        P_Production: getResourceValues({ Platinum: 0.05 }),
+      },
+      3: {
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ Iron: 100000, Lithium: 20000 }),
+        P_Production: getResourceValues({ Platinum: 0.1 }),
+      },
+    },
+  },
+  TitaniumMine: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(1, 1) },
+      P_MaxLevel: { value: 3n },
+      P_RequiredTile: { value: MUDEnums.EResource.indexOf("Titanium") },
+    },
+    levels: {
+      1: {
+        P_RequiredResources: getResourceValues({ Iron: 5000, Copper: 5000 }),
+        P_RequiredBaseLevel: { value: 2n },
+        P_Production: getResourceValues({ Titanium: 0.01 }),
+      },
+      2: {
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ Iron: 25000, Lithium: 10000 }),
+        P_Production: getResourceValues({ Titanium: 0.05 }),
+      },
+      3: {
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ Iron: 100000, Lithium: 20000 }),
+        P_Production: getResourceValues({ Titanium: 0.1 }),
+      },
+    },
+  },
   // Factories
   IronPlateFactory: {
     tables: {

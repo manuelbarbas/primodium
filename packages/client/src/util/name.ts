@@ -68,7 +68,7 @@ const nouns = [
 
 const entityPlayerName = new Map<Entity, string>();
 export const entityToPlayerName = (entity: Entity | undefined) => {
-  if (!entity || entity == singletonEntity) return "Unowned";
+  if (!entity || entity == singletonEntity) return "Nobody";
   if (!isPlayer(entity)) return "Pirate";
   if (entityPlayerName.has(entity)) return entityPlayerName.get(entity) as string;
 
