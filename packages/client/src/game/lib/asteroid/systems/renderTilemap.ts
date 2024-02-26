@@ -1,7 +1,7 @@
-import { components } from "src/network/components";
-import { Scene } from "engine/types";
 import { MaxLevelToTilemap } from "@game/constants";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
+import { Scene } from "engine/types";
+import { components } from "src/network/components";
 import { world } from "src/network/world";
 
 export const renderTilemap = (scene: Scene) => {

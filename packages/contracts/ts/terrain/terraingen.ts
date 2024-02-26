@@ -17,10 +17,14 @@ export async function terraingen(csvSrcs: terrainFile[], outputBaseDirectory: st
 }
 
 const numberBase: Record<string, string> = {
-  60: "Iron",
-  62: "Lithium",
-  64: "Water",
-  58: "Copper",
+  1: "Copper",
+  2: "Iron",
+  3: "Lithium",
+  4: "Sulfur",
+  5: "Titanium",
+  6: "Kimberlite",
+  7: "Iridium",
+  8: "Platinum",
 };
 
 function csvToJsonCoords(csvUrls: terrainFile[]) {
@@ -35,7 +39,7 @@ function csvToJsonCoords(csvUrls: terrainFile[]) {
         .split(",")
         .filter((x) => !!x);
       for (let j = 0; j < currentLine.length; j++) {
-        if (currentLine[j] == "0") continue;
+        if (currentLine[j] == "-1") continue;
         const value = numberBase[currentLine[j]];
         if (!value) throw new Error(`Invalid value ${currentLine[j]} at line ${i}, column ${j}`);
         result.push({

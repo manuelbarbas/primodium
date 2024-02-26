@@ -21,7 +21,8 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
   const [inAmountRendered, setInAmountRendered] = useState<string>("");
   const [outAmountRendered, setOutAmountRendered] = useState<string>("");
 
-  const selectedRock = components.SelectedRock.use()?.value ?? singletonEntity;
+  const selectedRock = components.ActiveRock.use()?.value;
+  if (!selectedRock) throw new Error("[Swap] No active rock");
   const getPath = useCallback((resourceIn: Entity, resourceOut: Entity) => {
     if (resourceIn == RESERVE_RESOURCE || resourceOut == RESERVE_RESOURCE) return [resourceIn, resourceOut];
     return [resourceIn, RESERVE_RESOURCE, resourceOut];
@@ -104,7 +105,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
   }, [fromResource, inAmountRendered, getPath, toResource, mud, marketEntity]);
 
   return (
-    <div className="w-[30rem] grid grid-rows-11 gap-2 m-3 items-center">
+    <div className="w-[30rem] h-fit flex flex-col gap-2 m-3 items-center">
       <ResourceSelector
         placeholder="from"
         amount={inAmountRendered}
@@ -132,7 +133,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
         showSpaceRemaining
       />
       <TransactionQueueMask queueItemId={singletonEntity}>
-        <Button className="btn-primary btn-lg w-full mt-2" disabled={disabled} onClick={handleSubmit}>
+        <Button className="btn-primary btn-lg w-full" disabled={disabled} onClick={handleSubmit}>
           {swapButtonMsg}
         </Button>
       </TransactionQueueMask>
@@ -151,7 +152,7 @@ interface ResourceSelectorProps {
 }
 
 const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
-  const selectedAsteroid = components.SelectedRock.use()?.value ?? singletonEntity;
+  const selectedAsteroid = components.ActiveRock.use()?.value ?? singletonEntity;
   const { resourceCount, resourceStorage } = useFullResourceCount(props.resource, selectedAsteroid);
   return (
     <div

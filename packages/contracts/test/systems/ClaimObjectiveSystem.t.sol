@@ -131,7 +131,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     mainBasePosition.parent = rock;
     world.build(EBuilding.MainBase, mainBasePosition);
     console.log("reached here 2");
-    world.build(EBuilding.CopperMine, getTilePosition(rock, EResource.Iron));
+    world.build(EBuilding.CopperMine, getIronPosition(creator));
     resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
     resourceRewardData.resources[0] = uint8(EResource.Copper);
     resourceRewardData.amounts[0] = 100;
