@@ -1,4 +1,4 @@
-import { Scenes } from "@game/constants";
+import { KeybindActions, Scenes } from "@game/constants";
 import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
 import { getRandomRange } from "src/util/common";
@@ -21,6 +21,7 @@ export const Resources = () => {
       defaultVisible
       defaultLocked
       scene={Scenes.Asteroid}
+      hotkey={KeybindActions.Resources}
       active={!mapOpen}
       minOpacity={0.5}
       draggable

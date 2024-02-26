@@ -1,13 +1,13 @@
 import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
+import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect, useMemo } from "react";
-import { Entity } from "@latticexyz/recs";
 
-import { usePrimodium } from "src/hooks/usePrimodium";
-import { components } from "src/network/components";
 import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
 import { useMud } from "src/hooks";
+import { usePrimodium } from "src/hooks/usePrimodium";
+import { components } from "src/network/components";
 import { EntityType, ResourceImage } from "src/util/constants";
 
 export const MapButton = () => {
@@ -17,6 +17,7 @@ export const MapButton = () => {
   const mapOpen = components.MapOpen.use(undefined, {
     value: false,
   }).value;
+
   const activeRock = components.ActiveRock.use()?.value;
   const ownedBy = components.OwnedBy.use(activeRock)?.value;
   const primodium = usePrimodium();
@@ -99,7 +100,7 @@ export const MapButton = () => {
 
   return (
     <Button
-      className={`flex grow w-80 btn-sm !p-3 !px-10 gap-5 filter group hover:scale-110 hover:z-50 star-background-sm hover:border-secondary hover:drop-shadow-hard`}
+      className={`relative flex grow w-80 btn-sm !p-3 !px-10 gap-5 filter group hover:scale-110 hover:z-50 star-background-sm hover:border-secondary hover:drop-shadow-hard`}
       clickSound={AudioKeys.Sequence}
       onClick={!mapOpen ? openMap : closeMap}
     >
@@ -109,7 +110,7 @@ export const MapButton = () => {
       <p className="uppercase">
         {!mapOpen ? (isSpectating ? "stop spectating" : "open star map") : "Return to building"}
       </p>
-
+      <p className="absolute top-1 z-10 right-4 translate-x-full -translate-y-1/2 flex text-xs kbd kbd-xs">M</p>
       {/* button decor */}
       {!mapOpen && (
         <div>

@@ -1,4 +1,4 @@
-import { Scenes } from "@game/constants";
+import { KeybindActions, Scenes } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { ReactNode, memo, useCallback, useEffect, useMemo, useState } from "react";
@@ -19,6 +19,7 @@ type WidgetProps = {
   draggable?: boolean;
   minOpacity?: number;
   persist?: boolean;
+  hotkey?: KeybindActions;
   pinnable?: boolean;
   lockable?: boolean;
   defaultPinned?: boolean;
@@ -218,6 +219,7 @@ export const Widget: React.FC<WidgetProps> = memo(
     persist = false,
     pinnable = false,
     lockable = false,
+    hotkey,
     defaultPinned = false,
     defaultLocked = false,
     defaultVisible = false,
@@ -239,7 +241,7 @@ export const Widget: React.FC<WidgetProps> = memo(
     const [locked, setLocked] = useState(paneInfo[id]?.locked ?? defaultLocked);
     // const [coord, setCoord] = useState<Coord>(paneInfo[id]?.coord ?? defaultCoord);
     const [visible, setVisible] = useState(paneInfo[id]?.visible ?? defaultVisible);
-    const { setWidget, removeWidget } = useWidgets();
+    const { setWidget, updateWidget } = useWidgets();
 
     const coord = useMemo(() => {
       if (paneInfo[id]?.coord) {
@@ -430,14 +432,16 @@ export const Widget: React.FC<WidgetProps> = memo(
     }, [pinned, dragging, container, minOpacity]);
 
     const handleClose = useCallback(() => {
+      if (!active) return;
       setVisible(false);
       if (persist) setPane(id, coord, pinned, locked, false);
-    }, [setVisible, setPane, id, coord, pinned, locked, persist]);
+    }, [active, persist, setPane, id, coord, pinned, locked]);
 
     const handleOpen = useCallback(() => {
+      if (!active) return;
       setVisible(true);
       if (persist) setPane(id, coord, pinned, locked, true);
-    }, [setVisible, setPane, id, coord, pinned, locked, persist]);
+    }, [active, persist, setPane, id, coord, pinned, locked]);
 
     //initialize phaser container
     useEffect(() => {
@@ -518,32 +522,31 @@ export const Widget: React.FC<WidgetProps> = memo(
     }, [pinned, container, camera, defaultCoord, id, removePane, createContainer, uiCamera, minOpacity, handleReset]);
 
     useEffect(() => {
+      updateWidget(title, {
+        visible,
+        minimized,
+        pinned,
+        open: handleOpen,
+        close: handleClose,
+        active,
+      });
+    }, [visible, handleOpen, handleClose, minimized, pinned, active, updateWidget, title]);
+
+    useEffect(() => {
       if (!popUp)
         setWidget({
           name: title,
           visible,
           close: handleClose,
           open: handleOpen,
+          hotkey,
           pinned,
           minimized,
           image: icon,
           reset: handleReset,
           active,
         });
-    }, [
-      icon,
-      title,
-      visible,
-      handleClose,
-      handleOpen,
-      pinned,
-      minimized,
-      setWidget,
-      removeWidget,
-      handleReset,
-      active,
-      popUp,
-    ]);
+    }, []);
 
     // if (!containerRef || !container || !visible) return null;
 

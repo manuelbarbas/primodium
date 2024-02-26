@@ -1,4 +1,4 @@
-import { Scenes } from "@game/constants";
+import { KeybindActions, Scenes } from "@game/constants";
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has } from "@latticexyz/recs";
 import { EFleetStance } from "contracts/config/enums";
@@ -180,6 +180,7 @@ export const OwnedFleets = () => {
       lockable
       draggable
       persist
+      hotkey={KeybindActions.Fleets}
       scene={Scenes.Starmap}
       active={!!mapOpen}
       defaultCoord={{ x: 0, y: 0 }}
