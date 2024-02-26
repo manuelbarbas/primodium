@@ -1,46 +1,48 @@
-import { FogTilekeys, ResourceToTilesetKey, Tilesets } from "@game/constants";
+import { Tilesets } from "@game/constants";
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
+import { decodeEntity } from "@latticexyz/store-sync/recs";
 import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { getAsteroidMaxBounds } from "src/util/outOfBounds";
-import { getResourceKey } from "src/util/tile";
+import { outOfMaxBounds } from "src/util/outOfBounds";
 
 export function renderResources(scene: Scene) {
-  const objSuffix = "_resources";
   const systemsWorld = namespaceWorld(world, "systems");
+  const dims = components.P_Asteroid.get();
+  if (!dims) return;
 
-  defineComponentSystem(systemsWorld, components.SelectedRock, ({ value: [newVal, oldVal] }) => {
-    if (!newVal?.value) return;
-    //remove old indicators
-    scene.objectPool.removeGroup(oldVal?.value + objSuffix);
+  const map = scene.phaserScene.add.tilemap(
+    undefined,
+    scene.tilemap.tileWidth,
+    scene.tilemap.tileHeight,
+    dims.xBounds,
+    dims.yBounds
+  );
 
-    //dispose old system
-    world.dispose("resources_world");
+  defineComponentSystem(systemsWorld, components.ActiveRock, ({ value: [newVal] }) => {
+    const activeRock = newVal?.value;
+    const asteroidData = components.Asteroid.get(activeRock);
 
-    if (oldVal) {
-      const oldAsteroidBounds = getAsteroidMaxBounds(oldVal.value);
+    if (!asteroidData || !activeRock) return;
+    map.removeAllLayers();
 
-      // remove old resources
-      for (let x = oldAsteroidBounds.minX; x <= oldAsteroidBounds.maxX; x++) {
-        for (let y = oldAsteroidBounds.minY; y <= oldAsteroidBounds.maxY; y++) {
-          scene.tilemap.map?.putTileAt({ x, y: -y }, FogTilekeys.Empty, Tilesets.Resource);
-        }
-      }
+    const tileset = map.addTilesetImage(Tilesets.Resource);
+    if (!tileset) return;
 
-      // add new resources
-      const mapId = components.Asteroid.get(newVal.value)?.mapId ?? 0;
-      const bounds = getAsteroidMaxBounds(newVal.value);
+    map?.createBlankLayer(Tilesets.Resource, tileset, 0, -dims.yBounds * scene.tilemap.tileHeight);
 
-      for (let x = bounds.minX + 1; x <= bounds.maxX - 1; x++) {
-        for (let y = bounds.minY + 1; y <= bounds.maxY - 1; y++) {
-          const resource = getResourceKey({ x, y }, mapId);
+    const tiles = components.P_Terrain.getAll();
 
-          if (!resource) continue;
-          const resourceId = ResourceToTilesetKey[resource] ?? 0;
-          scene.tilemap.map?.putTileAt({ x, y: -y }, resourceId, Tilesets.Resource);
-        }
-      }
-    }
+    tiles.forEach((tile) => {
+      const tileId = components.P_Terrain.get(tile)?.value;
+
+      if (!tileId) return;
+
+      const { mapId, x, y } = decodeEntity(components.P_Terrain.metadata.keySchema, tile);
+
+      if (mapId !== asteroidData.mapId) return;
+
+      if (!outOfMaxBounds({ x, y }, activeRock)) map?.putTileAt(0, x, dims.yBounds - y);
+    });
   });
 }

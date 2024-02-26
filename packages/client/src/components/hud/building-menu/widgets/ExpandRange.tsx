@@ -22,7 +22,7 @@ export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
     value: 1n,
   }).value;
   const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(EntityType.Expansion, asteroid);
-  const hasEnough = useHasEnoughResources(recipe);
+  const hasEnough = useHasEnoughResources(recipe, asteroid);
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && !isResearched;
   const atMaxLevel = level >= maxLevel;
 
@@ -55,6 +55,7 @@ export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
                         resourceType={resource.type}
                         direction="top"
                         validate
+                        spaceRock={asteroid}
                       />
                     </Badge>
                   );

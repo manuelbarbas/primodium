@@ -8,8 +8,7 @@ import { getRockSprite } from "src/game/lib/starmap/systems/utils/getSprites";
 import { components, components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
 import { getBlockTypeName } from "./common";
-import { EntityType, MapIdToAsteroidType, PIRATE_KEY, ResourceStorages, RockRelationship } from "./constants";
-import { hashKeyEntity } from "./encode";
+import { EntityType, MapIdToAsteroidType, ResourceStorages, RockRelationship } from "./constants";
 import { getFullResourceCount } from "./resource";
 import { getOrbitingFleets } from "./unit";
 
@@ -32,7 +31,7 @@ export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
   return getSpriteBase64(spriteKey, Assets.SpriteAtlas);
 }
 
-export function getSpaceRockName(spaceRock: Entity) {
+export function getAsteroidName(spaceRock: Entity) {
   const mainBaseEntity = comps.Home.get(spaceRock)?.value as Entity;
   const mainBaseLevel = comps.Level.get(mainBaseEntity)?.value;
   const isPirate = !!comps.PirateAsteroid.get(spaceRock);
@@ -42,9 +41,9 @@ export function getSpaceRockName(spaceRock: Entity) {
   const asteroidSize = asteroidResource
     ? {
         1: "Micro",
-        2: "Small",
-        3: "Medium",
-        4: "Large",
+        3: "Small",
+        5: "Medium",
+        8: "Large",
       }[Number(asteroidData?.maxLevel ?? 1)]
     : "";
 
@@ -53,7 +52,7 @@ export function getSpaceRockName(spaceRock: Entity) {
   } ${isPirate ? "Pirate" : "Asteroid"}`;
 }
 
-export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
+export function getAsteroidInfo(primodium: Primodium, spaceRock: Entity) {
   const imageUri = getAsteroidImage(primodium, spaceRock);
   const ownedBy = comps.OwnedBy.get(spaceRock)?.value as Entity | undefined;
   const mainBaseEntity = comps.Home.get(spaceRock)?.value as Entity;
@@ -85,11 +84,6 @@ export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
   const now = comps.Time.get()?.value ?? 0n;
   const isInGracePeriod = gracePeriodValue > 0n && gracePeriodValue > now;
 
-  let name = "";
-  const player = comps.Account.get()?.value;
-  const hash = player ? hashKeyEntity(PIRATE_KEY, player) : undefined;
-  name = `${hash === ownedBy ? "Pirate" : "Player"} Asteroid`;
-
   const isBlocked = !!getOrbitingFleets(spaceRock).find(
     (fleet) => components.FleetStance.get(fleet)?.stance == EFleetStance.Block
   );
@@ -101,7 +95,7 @@ export function getSpaceRockInfo(primodium: Primodium, spaceRock: Entity) {
     mainBaseLevel,
     hangar,
     position,
-    name,
+    name: getAsteroidName(spaceRock),
     entity: spaceRock,
     isInGracePeriod,
     gracePeriodValue,

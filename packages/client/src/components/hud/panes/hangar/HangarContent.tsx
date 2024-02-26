@@ -10,7 +10,7 @@ export const HangarContent = () => {
   return (
     <div className="flex flex-col p-2 text-sm">
       {(!hangar || !hangar.units || hangar.units.length === 0) && (
-        <p className="text-xs opacity-50 text-center">Hangar is empty</p>
+        <p className="text-xs opacity-50 text-center"> NO UNITS</p>
       )}
       {hangar?.units?.map((unit, i) => (
         <div key={`unit-${i}`} className="flex gap-2 items-center">

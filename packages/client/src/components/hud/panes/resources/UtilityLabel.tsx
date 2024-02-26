@@ -7,13 +7,13 @@ import { ResourceImage } from "src/util/constants";
 export const UtilityLabel = ({
   name,
   resourceId,
-  spaceRock,
+  asteroid,
 }: {
   name: string;
   resourceId: Entity;
-  spaceRock?: Entity;
+  asteroid: Entity;
 }) => {
-  const { resourceCount } = useFullResourceCount(resourceId);
+  const { resourceCount } = useFullResourceCount(resourceId, asteroid);
 
   const resourceIcon = ResourceImage.get(resourceId);
 
@@ -21,11 +21,9 @@ export const UtilityLabel = ({
     <Badge className="gap-1">
       <ResourceIconTooltip
         name={name}
-        spaceRock={spaceRock}
         amount={resourceCount}
         resource={resourceId}
         image={resourceIcon ?? ""}
-        validate={false}
         fontSize={"sm"}
       />
     </Badge>

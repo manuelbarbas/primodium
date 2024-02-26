@@ -1,6 +1,7 @@
 import { Scenes } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
-import { ReactNode, useCallback, useEffect, useMemo, useState, memo } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ReactNode, memo, useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaLock, FaLockOpen, FaMinus } from "react-icons/fa";
 import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
@@ -8,7 +9,6 @@ import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useWidgets } from "../../hooks/providers/WidgetProvider";
 import { Card } from "./Card";
-import { AnimatePresence, motion } from "framer-motion";
 
 type WidgetProps = {
   title: string;

@@ -17,10 +17,15 @@ export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
   const mud = useMud();
 
   const name = useBuildingName(building);
+  const {
+    production,
+    position: { parent },
+  } = useBuildingInfo(building);
 
-  const blockingResource = useBuildingInfo(building)?.production.find((production) => {
+  if (!parent) throw new Error("[Demolish] Building has no parent");
+  const blockingResource = production.find((production) => {
     if (production.type !== ResourceType.Utility) return false;
-    const { resourceCount } = getFullResourceCount(production.resource);
+    const { resourceCount } = getFullResourceCount(production.resource, parent as Entity);
     return resourceCount < production.amount;
   });
 

@@ -7,7 +7,7 @@ import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
-import { useFleetStats } from "src/hooks/useFleetMoves";
+import { useFleetStats } from "src/hooks/useFleetCount";
 import { usePlayerOwner } from "src/hooks/usePlayerOwner";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
@@ -181,7 +181,7 @@ export const OwnedFleets = () => {
       draggable
       persist
       scene={Scenes.Starmap}
-      active={mapOpen}
+      active={!!mapOpen}
       defaultCoord={{ x: 0, y: 0 }}
     >
       <_OwnedFleets />

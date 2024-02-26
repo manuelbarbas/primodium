@@ -48,7 +48,7 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
   // Resources
   const transportables = components.P_Transportables.use()?.value ?? [];
 
-  const fromInitialResourceCounts = useFullResourceCounts(from);
+  const fromInitialResourceCounts = useFullResourceCounts(from ?? singletonEntity);
   const fromResourceCounts = transportables.reduce((acc, transportable) => {
     const entity = ResourceEntityLookup[transportable as EResource];
     const resourceCount = fromInitialResourceCounts.get(entity)?.resourceCount ?? 0n;
@@ -60,7 +60,7 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
     return acc;
   }, new Map<Entity, bigint>());
 
-  const toEntity = to === "newFleet" ? singletonEntity : to;
+  const toEntity = to === "newFleet" || to === undefined ? singletonEntity : to;
 
   const fromOwner = usePlayerOwner(from ?? singletonEntity);
   const toOwner = usePlayerOwner(toEntity ?? singletonEntity);
