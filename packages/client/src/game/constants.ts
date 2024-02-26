@@ -57,9 +57,14 @@ export enum TerrainTilekeys {
 }
 
 export enum ResourceTilekeys {
+  Copper = 1,
   Iron,
-  Copper,
   Lithium,
+  Sulfur,
+  Titanium,
+  Kimberlite,
+  Iridium,
+  Platinum,
 }
 
 const FogTilekeysGID =
@@ -377,6 +382,10 @@ export const ResourceToTilesetKey: { [key: number]: ResourceTilekeys } = {
   [EResource.Iron]: ResourceTilekeys.Iron,
   [EResource.Copper]: ResourceTilekeys.Copper,
   [EResource.Lithium]: ResourceTilekeys.Lithium,
+  [EResource.Kimberlite]: ResourceTilekeys.Kimberlite,
+  [EResource.Iridium]: ResourceTilekeys.Iridium,
+  [EResource.Platinum]: ResourceTilekeys.Platinum,
+  [EResource.Titanium]: ResourceTilekeys.Titanium,
 };
 
 export const EntityToResourceSpriteKey = {

@@ -60,7 +60,7 @@
       {
         "type": "image",
         "key": "resource",
-        "url": "/assets/tilesets/resource.png"
+        "url": "/assets/tilesets/ores.png"
       },
       {
         "type": "image",
@@ -102,7 +102,7 @@
         "type": "tilemapTiledJSON",
         "key": "asteroid-large",
         "url": "/assets/maps/asteroid-large.tmj"
-      }, 
+      },
       {
         "type": "audioSprite",
         "key": "audio-atlas",

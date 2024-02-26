@@ -240,6 +240,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         Dimensions: { width: 21, height: 15 },
         P_RequiredBaseLevel: { value: 3n },
       },
+
       5: {
         P_RequiredUpgradeResources: getResourceValues({ Lithium: 5000, Kimberlite: 1500 }),
         Dimensions: { width: 25, height: 17 },
