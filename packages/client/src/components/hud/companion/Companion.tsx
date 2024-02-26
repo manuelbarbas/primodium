@@ -2,6 +2,7 @@ import { AudioKeys, KeyNames, KeybindActions, Scenes } from "@game/constants";
 import { useAnimate } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FaEyeSlash, FaUndo } from "react-icons/fa";
+import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useWidgets } from "../../../hooks/providers/WidgetProvider";
 import { Button, IconButton } from "../../core/Button";
@@ -23,6 +24,7 @@ export const WidgetButton: React.FC<{
   active: boolean;
 }> = ({ hotkey, imageUri, tooltipText, visible, onClose, onOpen, className, text, disable = false, active }) => {
   const primodium = usePrimodium();
+  const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
   const {
     hooks: { useKeybinds },
   } = useRef(primodium.api(Scenes.UI)).current;
@@ -32,15 +34,15 @@ export const WidgetButton: React.FC<{
 
   return (
     <div className="relative">
-      {hotkey && (
-        <p className="absolute top-1 z-10 right-4 translate-x-full -translate-y-1/2 flex text-xs kbd kbd-xs">
+      {!hideHotkeys && hotkey && (
+        <p className="absolute top-1 z-30 right-4 translate-x-full -translate-y-1/2 flex text-xs kbd kbd-xs">
           {KeyNames[keybindId] ?? keybindId ?? "?"}
         </p>
       )}
       <IconButton
         imageUri={imageUri}
         tooltipText={tooltipText}
-        tooltipDirection="bottom"
+        tooltipDirection="top"
         text={text}
         clickSound={!visible ? AudioKeys.DataPoint : AudioKeys.Sequence3}
         onClick={() => {
@@ -117,39 +119,25 @@ export const Actions = () => {
     hooks: { useKeybinds },
   } = useRef(primodium.api(Scenes.UI)).current;
 
+  const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
   const keybinds = useKeybinds();
 
   return (
     <div className="w-full">
       <div className="w-full flex items-center border-t border-secondary/25">
         <MapButton />
-        <div title="settings">
-          {numOpen <= 0 && (
-            <Button
-              onClick={resetAll}
-              className="relative btn-md btn-neutral bg-opacity-25 border-secondary/50 border text-lg"
-              tooltip="reset all"
-            >
-              <p className="absolute top-1 z-10 right-4 translate-x-full -translate-y-1/2 flex text-xs kbd kbd-xs">
-                {keybinds[KeybindActions.HideAll]?.entries().next().value[0] ?? "?"}
-              </p>
-              <FaUndo />
-            </Button>
+        <Button
+          onClick={numOpen == 0 ? resetAll : closeAll}
+          className="relative btn-md btn-neutral bg-opacity-25 border-l-secondary/25 border text-lg"
+          tooltip={numOpen == 0 ? "reset all" : "close all"}
+        >
+          {!hideHotkeys && (
+            <p className="absolute top-1 z-10 right-4 translate-x-full -translate-y-1/2 flex text-xs kbd kbd-xs">
+              {keybinds[KeybindActions.HideAll]?.entries().next().value[0] ?? "?"}
+            </p>
           )}
-
-          {numOpen > 0 && (
-            <Button
-              onClick={closeAll}
-              className="relative btn-md btn-neutral bg-opacity-25 border-secondary/50 border text-lg"
-              tooltip="hide all"
-            >
-              <p className="absolute top-1 z-10 right-4 translate-x-full -translate-y-1/2 flex text-xs kbd kbd-xs">
-                {keybinds[KeybindActions.HideAll]?.entries().next().value[0] ?? "?"}
-              </p>
-              <FaEyeSlash className="text-error" />
-            </Button>
-          )}
-        </div>
+          {numOpen == 0 ? <FaUndo /> : <FaEyeSlash className="text-error" />}
+        </Button>
       </div>
     </div>
   );
@@ -202,14 +190,11 @@ export const Companion = () => {
     } else animate(scope.current, { translateY: "0%" }, { duration: 0.2 });
   }, [minimized, scope, animate]);
 
+  const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
   return (
     <div className="w-full">
       <div ref={scope} className={`relative flex items-center`}>
         {!minimized && <div className="absolute bg-black inset-0 blur-3xl opacity-50" />}
-        {/* <SecondaryCard className="uppercase drop-shadow-hard absolute w-fit min-w-64 origin-bottom-left -top-4 text-accent z-50">
-          this is a tip from prime
-        </SecondaryCard> */}
-
         <div className={`relative z-20 pointer-events-none`}>
           <img
             src="/img/jarvis.png"
@@ -222,9 +207,11 @@ export const Companion = () => {
               onClick={() => setMinimized(true)}
             >
               {"<"} HIDE
-              <p className="absolute top-0 right-2 translate-x-full -translate-y-1/2 flex text-xs kbd kbd-xs">
-                {[keybinds[KeybindActions.SpacerockMenu]?.entries().next().value[0]] ?? "?"}
-              </p>
+              {!hideHotkeys && (
+                <p className="absolute top-0 right-2 translate-x-full z-30 -translate-y-1/2 flex text-xs kbd kbd-xs">
+                  {[keybinds[KeybindActions.SpacerockMenu]?.entries().next().value[0]] ?? "?"}
+                </p>
+              )}
             </Button>
           </div>
         </div>

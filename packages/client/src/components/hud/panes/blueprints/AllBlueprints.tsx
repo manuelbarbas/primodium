@@ -2,6 +2,7 @@ import { AudioKeys, KeyNames, KeybindActions } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { useState } from "react";
 import { FaCaretLeft, FaCaretRight, FaLock } from "react-icons/fa";
+import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
@@ -21,6 +22,7 @@ const BlueprintButton: React.FC<{
   const {
     hooks: { useKeybinds },
   } = usePrimodium().api();
+  const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
   const keybinds = useKeybinds();
   const selectedRockEntity = components.ActiveRock.use()?.value as Entity | undefined;
   if (!selectedRockEntity) throw new Error("No active rock entity found");
@@ -69,7 +71,7 @@ const BlueprintButton: React.FC<{
           </p>
         </div>
       )}
-      {keybindActive && (
+      {!hideHotkeys && keybindActive && (
         <p className="absolute bottom-1 left-0 flex text-xs kbd kbd-xs">
           {KeyNames[keybinds[keybind ?? KeybindActions.NULL]?.entries().next().value[0]] ?? "?"}
         </p>
@@ -81,6 +83,7 @@ const BlueprintButton: React.FC<{
 export const AllBlueprints = () => {
   const [index, setIndex] = useState(0);
 
+  const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
   return (
     <>
       <div className="p-2 flex flex-col gap-1 items-start">
@@ -217,32 +220,34 @@ export const AllBlueprints = () => {
         </div>
       </div>
 
-      <div className="w-full flex justify-center gap-1 py-2">
-        <Button
-          className="btn-xs btn-ghost"
-          keybind={KeybindActions.PrevHotbar}
-          onClick={() => {
-            setIndex((index) => (index + 2) % 3);
-          }}
-          clickSound={AudioKeys.Click}
-        >
-          <p className="kbd kbd-xs">
-            Q<FaCaretLeft />
-          </p>
-        </Button>
-        <Button
-          className="btn-xs btn-ghost"
-          keybind={KeybindActions.NextHotbar}
-          onClick={() => {
-            setIndex((index) => (index + 1) % 3);
-          }}
-          clickSound={AudioKeys.Click}
-        >
-          <p className="kbd kbd-xs">
-            <FaCaretRight />E
-          </p>
-        </Button>
-      </div>
+      {!hideHotkeys && (
+        <div className="w-full flex justify-center gap-1 py-2">
+          <Button
+            className="btn-xs btn-ghost"
+            keybind={KeybindActions.PrevHotbar}
+            onClick={() => {
+              setIndex((index) => (index + 2) % 3);
+            }}
+            clickSound={AudioKeys.Click}
+          >
+            <p className="kbd kbd-xs">
+              Q<FaCaretLeft />
+            </p>
+          </Button>
+          <Button
+            className="btn-xs btn-ghost"
+            keybind={KeybindActions.NextHotbar}
+            onClick={() => {
+              setIndex((index) => (index + 1) % 3);
+            }}
+            clickSound={AudioKeys.Click}
+          >
+            <p className="kbd kbd-xs">
+              <FaCaretRight />E
+            </p>
+          </Button>
+        </div>
+      )}
     </>
   );
 };

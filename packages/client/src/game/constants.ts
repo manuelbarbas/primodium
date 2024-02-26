@@ -544,6 +544,7 @@ export const KeyNames: { [key: string]: string } = {
   ["ZERO"]: "0",
   ["OPEN_BRACKET"]: "[",
   ["CLOSE_BRACKET"]: "]",
+  ["SEMICOLON"]: ";",
 };
 
 export const MaxLevelToTilemap: Record<number, Tilemaps> = {

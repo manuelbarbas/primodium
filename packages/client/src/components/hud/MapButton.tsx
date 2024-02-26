@@ -5,6 +5,7 @@ import { useEffect, useMemo } from "react";
 
 import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
+import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
@@ -87,6 +88,7 @@ export const MapButton = () => {
       components.ActiveRock.set({ value: (components.BuildRock.get()?.value ?? singletonEntity) as Entity });
   };
 
+  const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
   useEffect(() => {
     const starmapListener = primodium.api(Scenes.Starmap).input.addListener(KeybindActions.Map, closeMap);
 
@@ -110,10 +112,12 @@ export const MapButton = () => {
       <p className="uppercase">
         {!mapOpen ? (isSpectating ? "stop spectating" : "open star map") : "Return to building"}
       </p>
-      <p className="absolute top-1 z-10 right-4 translate-x-full -translate-y-1/2 flex text-xs kbd kbd-xs">M</p>
+      {!hideHotkeys && (
+        <p className="absolute top-1 z-10 right-4 translate-x-full -translate-y-1/2 flex text-xs kbd kbd-xs">M</p>
+      )}
       {/* button decor */}
       {!mapOpen && (
-        <div>
+        <div className="z-40">
           <img
             src={ResourceImage.get(EntityType.CapitalShip)}
             className="pixel-images absolute origin-right -top-10 right-12 opacity-0 scale-x-[-100%] -translate-x-1/2 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500 ease-out pointer-events-none"
@@ -125,7 +129,7 @@ export const MapButton = () => {
         </div>
       )}
       {mapOpen && (
-        <div>
+        <div className="z-40">
           <img
             src={ResourceImage.get(EntityType.Iron)}
             className="pixel-images absolute origin-right -top-5 -right-5 opacity-0 -translate-x-1/2 group-hover:translate-x-0 group-hover:scale-[150%] group-hover:opacity-100 transition-all duration-500 pointer-events-none"

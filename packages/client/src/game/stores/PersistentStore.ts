@@ -43,6 +43,7 @@ type PersistentState = {
   noExternalAccount: boolean;
   panes: Panes;
   fontStyle: string;
+  hideHotkeys: boolean;
 };
 
 type PersistentActions = {
@@ -61,6 +62,7 @@ type PersistentActions = {
   resetPanes: () => void;
   setNoExternalAccount: (value: boolean) => void; // Add this action
   removeNoExternalAccount: () => void; // Add this action
+  setHideHotkeys: (val: boolean) => void;
 };
 
 const defaults: PersistentState = {
@@ -77,6 +79,7 @@ const defaults: PersistentState = {
     sfx: 0.5,
     ui: 0.25,
   },
+  hideHotkeys: false,
   keybinds: {
     [KeybindActions.RightClick]: new Set(["POINTER_RIGHT"]),
     [KeybindActions.LeftClick]: new Set(["POINTER_LEFT"]),
@@ -184,6 +187,7 @@ export const usePersistentStore = create<PersistentState & PersistentActions>()(
       },
       setNoExternalAccount: (value: boolean) => set({ noExternalAccount: value }),
       removeNoExternalAccount: () => set({ noExternalAccount: false }),
+      setHideHotkeys: (val: boolean) => set({ hideHotkeys: val }),
     }),
     {
       name: "persistent-storage",

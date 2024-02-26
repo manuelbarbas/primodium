@@ -528,9 +528,10 @@ export const Widget: React.FC<WidgetProps> = memo(
         pinned,
         open: handleOpen,
         close: handleClose,
+        reset: handleReset,
         active,
       });
-    }, [visible, handleOpen, handleClose, minimized, pinned, active, updateWidget, title]);
+    }, [visible, minimized, pinned, active, updateWidget, title]);
 
     useEffect(() => {
       if (!popUp)
