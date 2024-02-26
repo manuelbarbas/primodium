@@ -814,6 +814,16 @@ export const config = mudConfig({
       },
     },
 
+    Swap: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: {
+        resourceIn: "uint8",
+        resourceOut: "uint8",
+        amountIn: "uint256",
+        amountOut: "uint256",
+      },
+      offchainOnly: true,
+    },
     /* ------------------------------- Colony ------------------------------ */
 
     MapColonies: {

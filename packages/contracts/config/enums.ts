@@ -6,6 +6,11 @@ export enum EBuilding {
   IronMine,
   CopperMine,
 
+  KimberliteMine,
+  IridiumMine,
+  TitaniumMine,
+  PlatinumMine,
+
   // Factories
   IronPlateFactory,
   AlloyFactory,
