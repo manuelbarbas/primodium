@@ -1,31 +1,22 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { EResource } from "src/Types.sol";
-
 import { P_CapitalShipConfig, CooldownEnds, DefeatedPirate, PirateAsteroid, DestroyedUnit, DamageDealt, BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, MaxResourceCount, BattleResult, BattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
-import { getSystemResourceId } from "src/utils.sol";
-import { BuildSystem } from "systems/BuildSystem.sol";
-import { MainBasePrototypeId, CapitalShipPrototypeId } from "codegen/Prototypes.sol";
-import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
+import { CapitalShipPrototypeId } from "codegen/Prototypes.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
-import { LibFleetDisband } from "libraries/fleet/LibFleetDisband.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
-import { LibResource } from "libraries/LibResource.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
-import { AsteroidOwnedByKey, FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
-import { ColoniesMap } from "libraries/ColoniesMap.sol";
-import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
-import { EResource, EFleetStance, EBuilding } from "src/Types.sol";
-import { entityToAddress } from "src/utils.sol";
+import { FleetIncomingKey } from "src/Keys.sol";
+import { EResource } from "src/Types.sol";
+import { ABDKMath64x64 as Math } from "abdk/ABDKMath64x64.sol";
 
 library LibFleetCombat {
   function attack(
@@ -33,14 +24,6 @@ library LibFleetCombat {
     bytes32 targetEntity
   ) internal returns (bytes32 battleId, BattleResultData memory battleResult) {
     bool aggressorIsFleet = IsFleet.get(entity);
-
-    // update grace period of rock and fleet on rock
-    if (aggressorIsFleet) {
-      bytes32 ownerEntity = OwnedBy.get(entity);
-      if (GracePeriod.get(OwnedBy.get(entity)) > 0) GracePeriod.deleteRecord(ownerEntity);
-      uint256 cooldownEnds = block.timestamp + 60 * 60 * 24;
-      CooldownEnds.set(entity, cooldownEnds);
-    }
 
     if (GracePeriod.get(entity) > 0) GracePeriod.deleteRecord(entity);
 
@@ -51,12 +34,24 @@ library LibFleetCombat {
       ? LibCombatAttributes.getAttacksWithAllies(entity)
       : LibCombatAttributes.getDefensesWithAllies(entity);
 
+    // update grace period of rock and fleet on rock
+    if (aggressorIsFleet) {
+      bytes32 ownerEntity = OwnedBy.get(entity);
+      if (GracePeriod.get(ownerEntity) > 0) GracePeriod.deleteRecord(ownerEntity);
+
+      // todo: should all allies have cooldown too?
+      uint256 cooldownEnds = getCooldownTime(totalAggressorDamage);
+      CooldownEnds.set(entity, block.timestamp + cooldownEnds);
+    }
+
     BattleDamageDealtResult.set(battleId, entity, aggressorDamage);
 
     bytes32[] memory aggressorAllies = LibFleetStance.getAllies(entity);
+
     for (uint256 i = 0; i < aggressorAllies.length; i++) {
       BattleDamageDealtResult.set(battleId, aggressorAllies[i], aggressorDamages[i]);
     }
+
     (uint256 targetDamage, uint256[] memory targetDamages, uint256 totalTargetDamage) = aggressorIsFleet
       ? LibCombatAttributes.getDefensesWithAllies(targetEntity)
       : LibCombatAttributes.getAttacksWithAllies(targetEntity);
@@ -270,6 +265,13 @@ library LibFleetCombat {
       LibFleet.decreaseFleetResource(fleetId, i, resourcePortion);
       cargoLossLeft -= resourcePortion;
     }
+  }
+
+  function getCooldownTime(uint256 attackVal) internal pure returns (uint256) {
+    attackVal = attackVal / 1e18;
+    if (attackVal <= 20000) return (attackVal * 24) / 10000;
+    int128 divided = Math.add(Math.divu(attackVal, 7500), Math.fromUInt(1));
+    return Math.mulu(Math.log_2(divided), 27);
   }
 
   function resolvePirateAsteroid(bytes32 playerEntity, bytes32 pirateAsteroid) internal {
