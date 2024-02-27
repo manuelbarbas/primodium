@@ -266,6 +266,10 @@ export const hydrateAsteroidData = (selectedRock: Entity | undefined, mud: MUD) 
           key0: selectedRock,
         },
         {
+          tableId: tables.UnitLevel.tableId,
+          key0: selectedRock,
+        },
+        {
           tableId: tables.Level.tableId,
           key0: components.Home.get(selectedRock)?.value ?? singletonEntity,
         },
@@ -591,6 +595,135 @@ export const hydrateFleetData = (fleetEntity: Entity | undefined, mud: MUD) => {
           message: `Failed to Hydrate Alliance data`,
         },
         fleetEntity
+      );
+    }
+  );
+
+  world.registerDisposer(() => {
+    syncData.unsubscribe();
+  });
+};
+
+export const hydrateBattleReports = (playerEntity: Entity | undefined, mud: MUD) => {
+  const { network, components } = mud;
+  const { tables, world } = network;
+  const networkConfig = getNetworkConfig();
+
+  if (!playerEntity) return;
+
+  const syncId = hashEntities(Keys.BATTLE, playerEntity);
+
+  // if we're already syncing from RPC, don't hydrate from indexer
+  if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
+
+  if (components.SyncStatus.get(syncId)) {
+    console.log("Skipping sync for battle reports (exists):", playerEntity);
+    return;
+  }
+
+  const syncData = Sync.withQueryDecodedIndexerRecsSync({
+    indexerUrl: networkConfig.indexerUrl!,
+    tables: tables,
+    world,
+    query: {
+      address: networkConfig.worldAddress as Hex,
+      queries: [
+        {
+          tableId: tables.BattleResult.tableId,
+          where: {
+            column: "player",
+            operation: "eq",
+            value: playerEntity as Hex,
+          },
+          include: [
+            {
+              tableId: tables.BattleDamageDealtResult.tableId,
+              on: "battle_id",
+            },
+            {
+              tableId: tables.BattleDamageTakenResult.tableId,
+              on: "battle_id",
+            },
+            {
+              tableId: tables.BattleEncryptionResult.tableId,
+              on: "battle_id",
+            },
+            {
+              tableId: tables.BattleRaidResult.tableId,
+              on: "battle_id",
+            },
+            {
+              tableId: tables.BattleUnitResult.tableId,
+              on: "battle_id",
+            },
+          ],
+        },
+        {
+          tableId: tables.BattleResult.tableId,
+          where: {
+            column: "target_player",
+            operation: "eq",
+            value: playerEntity as Hex,
+          },
+          include: [
+            {
+              tableId: tables.BattleDamageDealtResult.tableId,
+              on: "battle_id",
+            },
+            {
+              tableId: tables.BattleDamageTakenResult.tableId,
+              on: "battle_id",
+            },
+            {
+              tableId: tables.BattleEncryptionResult.tableId,
+              on: "battle_id",
+            },
+            {
+              tableId: tables.BattleRaidResult.tableId,
+              on: "battle_id",
+            },
+            {
+              tableId: tables.BattleUnitResult.tableId,
+              on: "battle_id",
+            },
+          ],
+        },
+      ],
+    },
+  });
+
+  syncData.start(
+    (_, __, progress) => {
+      components.SyncStatus.set(
+        {
+          step: SyncStep.Syncing,
+          progress,
+          message: `Hydrating Battle Data`,
+        },
+        syncId
+      );
+
+      if (progress === 1) {
+        components.SyncStatus.set(
+          {
+            step: SyncStep.Complete,
+            progress,
+            message: `DONE`,
+          },
+          syncId
+        );
+      }
+    },
+    //on error
+    (e) => {
+      console.error(e);
+      components.SyncStatus.set(
+        {
+          step: SyncStep.Error,
+          progress: 0,
+          message: `Failed to Hydrate Battle data`,
+        },
+        syncId
       );
     }
   );

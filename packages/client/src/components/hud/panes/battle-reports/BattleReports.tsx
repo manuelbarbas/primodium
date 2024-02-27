@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { useMud } from "src/hooks";
@@ -7,6 +7,12 @@ import { usePlayerOwner } from "src/hooks/usePlayerOwner";
 import { components } from "src/network/components";
 import { entityToFleetName, entityToRockName } from "src/util/name";
 import { BattleDetails } from "./BattleDetails";
+import { hydrateBattleReports } from "src/network/sync/indexer";
+import { useSyncStatus } from "src/hooks/useSyncStatus";
+import { hashEntities } from "src/util/encode";
+import { Keys } from "src/util/constants";
+import { Loader } from "src/components/core/Loader";
+import { FaTimes } from "react-icons/fa";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -20,18 +26,62 @@ export const LabeledValue: React.FC<{
   );
 };
 
+export const LoadingScreen = () => {
+  return (
+    <Navigator.Screen
+      title="loading"
+      className="lex flex-col !items-start justify-between w-full h-full text-sm pointer-events-auto"
+    >
+      <SecondaryCard className="w-full flex-grow items-center justify-center font-bold opacity-50">
+        <Loader />
+        LOADING BATTLE REPORTS
+      </SecondaryCard>
+    </Navigator.Screen>
+  );
+};
+
+export const ErrorScreen = () => {
+  return (
+    <Navigator.Screen
+      title="error"
+      className="lex flex-col !items-start justify-between w-full h-full text-sm pointer-events-auto"
+    >
+      <SecondaryCard className="w-full flex-grow items-center justify-center font-bold opacity-50 text-error">
+        <FaTimes />
+        ERROR SYNCING BATTLE REPORTS
+      </SecondaryCard>
+    </Navigator.Screen>
+  );
+};
+
 export const BattleReports = () => {
+  const mud = useMud();
   const {
     playerAccount: { entity: playerEntity },
-  } = useMud();
+  } = mud;
   const [selectedBattle, setSelectedBattle] = useState<Entity>();
+  const { loading, error } = useSyncStatus(hashEntities(Keys.BATTLE, playerEntity));
 
   const battles = components.Battle.useAllPlayerBattles(playerEntity).sort((a, b) =>
     Number(components.Battle.get(b)?.timestamp! - components.Battle.get(a)?.timestamp!)
   );
 
+  useEffect(() => {
+    hydrateBattleReports(playerEntity, mud);
+  }, [playerEntity, mud]);
+
+  const initialScreen = useMemo(() => {
+    if (error) return "error";
+
+    if (loading) return "loading";
+
+    return "BattleReports";
+  }, [loading, error]);
+
   return (
-    <Navigator initialScreen={"BattleReports"} className="border-none p-0! h-full">
+    <Navigator initialScreen={initialScreen} className="border-none p-0! h-full">
+      <LoadingScreen />
+      <ErrorScreen />
       <Navigator.Screen title={"BattleReports"} className="full h-full">
         <div className="text-xs gap-2 w-full h-full overflow-x-hidden flex flex-col items-center">
           {battles.length === 0 && (

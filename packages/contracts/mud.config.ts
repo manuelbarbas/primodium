@@ -502,7 +502,9 @@ export const config = mudConfig({
         targetEntity: "bytes32", //can be fleet or space rock
         targetDamage: "uint256", //can be fleet or space rock
         winner: "bytes32",
-        rock: "bytes32", // place where battle took place
+        player: "bytes32", // player who initiated the battle
+        rock: "bytes32", // rock that was attacked
+        targetPlayer: "bytes32", // player who was attacked
         timestamp: "uint256", // timestamp of battle
         aggressorAllies: "bytes32[]", //only fleets
         targetAllies: "bytes32[]", //only fleets
