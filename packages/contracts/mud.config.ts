@@ -212,16 +212,18 @@ export const config = mudConfig({
     },
 
     /* -------------------------------- Resources ------------------------------- */
-    P_IsAdvancedResource: {
+    P_IsResource: {
       keySchema: { id: "uint8" }, // EResource
-      valueSchema: "bool",
+      valueSchema: {
+        isResource: "bool",
+        isAdvanced: "bool",
+      },
     },
 
     P_IsUtility: {
       keySchema: { id: "uint8" }, // EResource
       valueSchema: "bool",
     },
-
     //when the storage for this resources is provided it is full
     P_IsRecoverable: {
       keySchema: { id: "uint8" }, // EResource

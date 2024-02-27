@@ -442,8 +442,6 @@ export const ResourceStorages = new Set([
   EntityType.Iridium,
   EntityType.Platinum,
   EntityType.Kimberlite,
-  EntityType.Encryption,
-  EntityType.HP,
 ]);
 
 export const UtilityStorages = new Set([
@@ -480,7 +478,6 @@ export const ResourceEnumLookup: Record<Entity, EResource> = {
   [EntityType.Kimberlite]: EResource.Kimberlite,
   [EntityType.Alloy]: EResource.Alloy,
   [EntityType.PVCell]: EResource.PVCell,
-  [EntityType.RocketFuel]: EResource.RocketFuel,
   [EntityType.IronPlate]: EResource.IronPlate,
 
   [EntityType.Electricity]: EResource.U_Electricity,

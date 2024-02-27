@@ -50,7 +50,6 @@ export enum EResource {
   IronPlate,
   Alloy,
   PVCell,
-  RocketFuel,
 
   // Utilities
   U_Electricity,

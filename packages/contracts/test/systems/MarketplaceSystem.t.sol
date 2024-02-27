@@ -152,6 +152,33 @@ contract MarketplaceSystemTest is PrimodiumTest {
     world.swap(market, path, 0, 0);
   }
 
+  function testSwapFailInvalidResource() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
+    vm.startPrank(creator);
+
+    ReservesData memory reserves = Reserves.get(Iron, RESERVE_CURRENCY);
+    uint256 amountIn = 1e18;
+    uint256 expectedAmountOut = LibMarketplace.getAmountOut(amountIn, reserves.amountB, reserves.amountA);
+
+    MaxResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    ResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    MaxResourceCount.set(asteroid, Iron, 2 ** 256 - 1);
+
+    path.push(RESERVE_CURRENCY_RESOURCE);
+    path.push(EResource.U_Electricity);
+    path.push(RESERVE_CURRENCY_RESOURCE);
+
+    vm.expectRevert("[Marketplace] Invalid resource");
+    world.swap(market, path, amountIn, expectedAmountOut);
+
+    path = new EResource[](2);
+    path.push(EResource.U_Electricity);
+    path.push(RESERVE_CURRENCY_RESOURCE);
+
+    vm.expectRevert("[Marketplace] Invalid resource");
+    world.swap(market, path, amountIn, expectedAmountOut);
+  }
+
   function testSwapFailInvalidPath() public {
     (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
     vm.startPrank(creator);
