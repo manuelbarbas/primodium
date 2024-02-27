@@ -24,13 +24,14 @@ contract UpgradeBountyExtensionTest is Test {
   uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY_ALICE");
   address deployerAddress = vm.envAddress("ADDRESS_ALICE");
   address worldAddress = vm.envAddress("WORLD_ADDRESS");
-  address delegateeAddress = address(uint160(vm.envUint("ADDRESS_BOB")));
+  address delegateeAddress = vm.envAddress("ADDRESS_BOB");
 
   function setUp() public virtual {}
 
   function testUpgradeBountyExtension() public {
     uint256 forkId = vm.createSelectFork(vm.envString("PRIMODIUM_RPC_URL"), vm.envUint("BLOCK_NUMBER"));
     console.log("ForkLivePrimodium is running.");
+
     vm.startPrank(deployerAddress);
     // Prep encoding the Ids before executing anything
     WorldRegistrationSystem primodiumWorld = WorldRegistrationSystem(worldAddress);
@@ -40,8 +41,6 @@ contract UpgradeBountyExtensionTest is Test {
     // Visual debug check
     console.log("Namespace ID: %x", uint256(ResourceId.unwrap(namespaceResource)));
     console.log("System ID:    %x", uint256(ResourceId.unwrap(systemResource)));
-
-    //vm.startPrank(deployerPrivateKey);
 
     primodiumWorld.registerNamespace(namespaceResource); // registers namespace to world address
     StoreSwitch.setStoreAddress(worldAddress); // sets the store address to the world address
