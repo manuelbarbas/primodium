@@ -32,8 +32,7 @@ export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
 }
 
 export function getAsteroidName(spaceRock: Entity) {
-  const mainBaseEntity = comps.Home.get(spaceRock)?.value as Entity;
-  const mainBaseLevel = comps.Level.get(mainBaseEntity)?.value;
+  const expansionLevel = comps.Level.get(spaceRock)?.value;
   const isPirate = !!comps.PirateAsteroid.get(spaceRock);
   const asteroidData = comps.Asteroid.get(spaceRock);
 
@@ -47,7 +46,7 @@ export function getAsteroidName(spaceRock: Entity) {
       }[Number(asteroidData?.maxLevel ?? 1)]
     : "";
 
-  return ` ${mainBaseLevel ? `LVL. ${mainBaseLevel} ` : asteroidSize} ${
+  return ` ${expansionLevel ? `LVL. ${expansionLevel} ` : asteroidSize} ${
     asteroidResource ? getBlockTypeName(asteroidResource) : ""
   } ${isPirate ? "Pirate" : "Asteroid"}`;
 }

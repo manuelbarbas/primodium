@@ -465,12 +465,8 @@ export const EntitytoBuildingSpriteKey = {
   [EntityType.Asteroid]: [
     SpriteKeys.Asteroid1,
     SpriteKeys.Asteroid2,
-    SpriteKeys.Asteroid2,
-    SpriteKeys.Asteroid3,
     SpriteKeys.Asteroid3,
     SpriteKeys.Asteroid4,
-    SpriteKeys.Asteroid4,
-    SpriteKeys.Asteroid5,
     SpriteKeys.Asteroid5,
   ],
 };
