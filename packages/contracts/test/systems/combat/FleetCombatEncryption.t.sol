@@ -29,21 +29,18 @@ contract FleetCombatSystemTest is PrimodiumTest {
   }
 
   function testFleetAttackSpaceRockEncryption() public {
-    console.log("start");
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
     uint256 numberOfUnits = 10;
 
     //create fleet with 1 minuteman marine
-    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    bytes32 minuteman = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
     bytes32 capitalShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
-    uint256 decryption = P_Unit.getDecryption(
-      capitalShipPrototype,
-      UnitLevel.get(aliceHomeSpaceRock, capitalShipPrototype)
-    );
+    uint256 decryption = P_CapitalShipConfig.getDecryption();
+
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = numberOfUnits;
+      if (unitPrototypes[i] == minuteman) unitCounts[i] = numberOfUnits;
       if (unitPrototypes[i] == capitalShipPrototype) unitCounts[i] = 2;
     }
 
@@ -65,8 +62,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     GracePeriod.set(bobHomeSpaceRock, block.timestamp);
     vm.stopPrank();
 
-    uint256 defense = (numberOfUnits *
-      P_Unit.getAttack(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype))) / 2;
+    uint256 defense = (numberOfUnits * P_Unit.getAttack(minuteman, UnitLevel.get(aliceHomeSpaceRock, minuteman))) / 2;
     uint256 hpProduction = 1;
     uint256 hp = defense;
     uint256 encryption = ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption));
@@ -74,8 +70,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     increaseResource(bobHomeSpaceRock, EResource.R_HP, hp);
     increaseProduction(bobHomeSpaceRock, EResource.R_HP, hpProduction);
 
-    uint256 ironAmount = numberOfUnits *
-      P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
+    uint256 ironAmount = numberOfUnits * P_Unit.getCargo(minuteman, UnitLevel.get(aliceHomeSpaceRock, minuteman));
     increaseResource(bobHomeSpaceRock, EResource.Iron, ironAmount);
 
     vm.warp(FleetMovement.getArrivalTime(fleetId));
@@ -97,7 +92,6 @@ contract FleetCombatSystemTest is PrimodiumTest {
       "space rock should not have been raided"
     );
 
-    console.log("curr encryption: %s", ResourceCount.get(fleetId, uint8(EResource.R_Encryption)));
     assertEq(
       ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)),
       encryption - decryption,
@@ -111,8 +105,6 @@ contract FleetCombatSystemTest is PrimodiumTest {
       encryption - decryption + ProductionRate.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)) * 5,
       "encryption should recovered by production"
     );
-
-    console.log("end");
   }
 
   function testFleetAttackSpaceRockEncryptionTakeOver() public {
@@ -123,15 +115,13 @@ contract FleetCombatSystemTest is PrimodiumTest {
     uint256 numberOfUnits = 10;
 
     //create fleet with 1 minuteman marine
-    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    bytes32 minuteman = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
     bytes32 capitalShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
-    uint256 decryption = P_Unit.getDecryption(
-      capitalShipPrototype,
-      UnitLevel.get(aliceHomeSpaceRock, capitalShipPrototype)
-    );
+    uint256 decryption = P_CapitalShipConfig.getDecryption();
+
     console.log("decryption: %s", decryption);
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = numberOfUnits;
+      if (unitPrototypes[i] == minuteman) unitCounts[i] = numberOfUnits;
       if (unitPrototypes[i] == capitalShipPrototype) unitCounts[i] = 1;
     }
     uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
@@ -162,8 +152,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     vm.stopPrank();
     //bob stuff:
 
-    uint256 ironAmount = numberOfUnits *
-      P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
+    uint256 ironAmount = numberOfUnits * P_Unit.getCargo(minuteman, UnitLevel.get(aliceHomeSpaceRock, minuteman));
     increaseResource(bobHomeSpaceRock, EResource.Iron, ironAmount);
 
     vm.startPrank(creator);
@@ -217,7 +206,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     assertEq(OwnedBy.get(bobHomeSpaceRock), aliceEntity, "space rock should have been taken over");
 
-    assertEq(UnitCount.get(bobFleet, unitPrototype), 0, "fleet should have been disbanded and marine units");
+    assertEq(UnitCount.get(bobFleet, minuteman), 0, "fleet should have been disbanded and marine units");
     assertEq(
       UnitCount.get(bobFleet, capitalShipPrototype),
       0,
@@ -249,14 +238,12 @@ contract FleetCombatSystemTest is PrimodiumTest {
     uint256 numberOfUnits = 10;
 
     //create fleet with 1 minuteman marine
-    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    bytes32 minuteman = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
     bytes32 capitalShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
-    uint256 decryption = P_Unit.getDecryption(
-      capitalShipPrototype,
-      UnitLevel.get(aliceHomeSpaceRock, capitalShipPrototype)
-    );
+    uint256 decryption = P_CapitalShipConfig.getDecryption();
+
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = numberOfUnits;
+      if (unitPrototypes[i] == minuteman) unitCounts[i] = numberOfUnits;
       if (unitPrototypes[i] == capitalShipPrototype) unitCounts[i] = 2;
     }
 
@@ -280,8 +267,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     GracePeriod.set(bobHomeSpaceRock, block.timestamp);
     vm.stopPrank();
 
-    uint256 defense = (numberOfUnits *
-      P_Unit.getAttack(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype))) / 2;
+    uint256 defense = (numberOfUnits * P_Unit.getAttack(minuteman, UnitLevel.get(aliceHomeSpaceRock, minuteman))) / 2;
     uint256 hpProduction = 1;
     uint256 hp = defense;
     uint256 encryption = ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption));
@@ -289,8 +275,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     increaseResource(bobHomeSpaceRock, EResource.R_HP, hp);
     increaseProduction(bobHomeSpaceRock, EResource.R_HP, hpProduction);
 
-    uint256 ironAmount = numberOfUnits *
-      P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeSpaceRock, unitPrototype));
+    uint256 ironAmount = numberOfUnits * P_Unit.getCargo(minuteman, UnitLevel.get(aliceHomeSpaceRock, minuteman));
     increaseResource(bobHomeSpaceRock, EResource.Iron, ironAmount);
 
     vm.warp(FleetMovement.getArrivalTime(fleetId));

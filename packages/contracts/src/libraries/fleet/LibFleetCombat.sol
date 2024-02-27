@@ -3,11 +3,11 @@ pragma solidity >=0.8.21;
 
 import { EResource } from "src/Types.sol";
 
-import { DefeatedPirate, PirateAsteroid, DestroyedUnit, DamageDealt, BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, MaxResourceCount, BattleResult, BattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { P_CapitalShipConfig, CooldownEnds, DefeatedPirate, PirateAsteroid, DestroyedUnit, DamageDealt, BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, MaxResourceCount, BattleResult, BattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { getSystemResourceId } from "src/utils.sol";
 import { BuildSystem } from "systems/BuildSystem.sol";
-import { MainBasePrototypeId } from "codegen/Prototypes.sol";
+import { MainBasePrototypeId, CapitalShipPrototypeId } from "codegen/Prototypes.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -38,7 +38,10 @@ library LibFleetCombat {
     if (aggressorIsFleet) {
       bytes32 ownerEntity = OwnedBy.get(entity);
       if (GracePeriod.get(OwnedBy.get(entity)) > 0) GracePeriod.deleteRecord(ownerEntity);
+      uint256 cooldownEnds = block.timestamp + 60 * 60 * 24;
+      CooldownEnds.set(entity, cooldownEnds);
     }
+
     if (GracePeriod.get(entity) > 0) GracePeriod.deleteRecord(entity);
 
     bytes32 spaceRock = aggressorIsFleet ? FleetMovement.getDestination(entity) : entity;
@@ -83,13 +86,11 @@ library LibFleetCombat {
   function resolveBattleEncryption(
     bytes32 battleId,
     bytes32 targetSpaceRock,
-    bytes32 aggressorEntity,
-    bytes32 unitWithDecryptionPrototype,
-    uint256 decryption
+    bytes32 aggressorEntity
   ) internal returns (uint256 encryptionAtEnd) {
     uint256 encryptionAtStart = ResourceCount.get(targetSpaceRock, uint8(EResource.R_Encryption));
+    uint256 decryption = P_CapitalShipConfig.getDecryption();
     encryptionAtEnd = encryptionAtStart;
-    if (decryption == 0) return encryptionAtEnd;
     if (encryptionAtStart != 0) {
       if (decryption > encryptionAtStart) {
         decryption = encryptionAtStart;
@@ -100,7 +101,7 @@ library LibFleetCombat {
       }
     }
     if (encryptionAtEnd == 0) {
-      LibFleet.decreaseFleetUnit(aggressorEntity, unitWithDecryptionPrototype, 1, true);
+      LibFleet.decreaseFleetUnit(aggressorEntity, CapitalShipPrototypeId, 1, true);
     }
     BattleEncryptionResult.set(battleId, targetSpaceRock, encryptionAtStart, encryptionAtEnd);
   }

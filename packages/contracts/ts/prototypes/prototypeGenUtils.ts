@@ -62,7 +62,6 @@ export const getResourceValue = (resourceValue: { [x: string]: number }) => {
 
 export const getPUnitData = (data: {
   hp: number;
-  decryption: number;
   attack: number;
   defense: number;
   cargo: number;
@@ -71,7 +70,6 @@ export const getPUnitData = (data: {
 }) => {
   return {
     hp: BigInt(data.hp * SCALE),
-    decryption: BigInt(data.decryption * SCALE),
     attack: BigInt(data.attack * SCALE),
     defense: BigInt(data.defense * SCALE),
     cargo: BigInt(data.cargo * SCALE),
