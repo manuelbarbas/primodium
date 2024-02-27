@@ -14,6 +14,7 @@ export const useSyncStatus = (syncId?: Entity) => {
   const syncProgress = components.SyncStatus.use(syncEntity)?.progress;
   const syncMessage = components.SyncStatus.use(syncEntity)?.message;
 
+  //TODO: sync with time updates
   useEffect(() => {
     if (syncStatus === undefined) return;
     if (syncStatus === SyncStep.Complete) {

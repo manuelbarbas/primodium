@@ -73,6 +73,7 @@ export const hydrateInitialGameState = (
         {
           tableId: tables.FleetMovement.tableId,
           include: [
+            { tableId: tables.IsFleetEmpty.tableId },
             { tableId: tables.FleetStance.tableId },
             { tableId: tables.IsFleet.tableId },
             { tableId: tables.OwnedBy.tableId, on: "entity" },
@@ -212,7 +213,7 @@ export const hydratePlayerData = (playerEntity: Entity, playerAddress: Hex, setu
   });
 };
 
-export const hydrateSelectedAsteroid = (selectedRock: Entity | undefined, mud: MUD) => {
+export const hydrateAsteroidData = (selectedRock: Entity | undefined, mud: MUD) => {
   const { network, components } = mud;
   const { tables, world } = network;
   const networkConfig = getNetworkConfig();
@@ -505,6 +506,91 @@ export const hydrateAllianceData = (allianceEntity: Entity | undefined, mud: MUD
           message: `Failed to Hydrate Alliance data`,
         },
         allianceEntity
+      );
+    }
+  );
+
+  world.registerDisposer(() => {
+    syncData.unsubscribe();
+  });
+};
+
+export const hydrateFleetData = (fleetEntity: Entity | undefined, mud: MUD) => {
+  const { network, components } = mud;
+  const { tables, world } = network;
+  const networkConfig = getNetworkConfig();
+
+  // if we're already syncing from RPC, don't hydrate from indexer
+  if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
+
+  if (components.SyncStatus.get(fleetEntity)) {
+    console.log("Skipping sync for fleet (exists):", fleetEntity);
+    return;
+  }
+
+  const syncData = Sync.withFilterIndexerRecsSync({
+    indexerUrl: networkConfig.indexerUrl!,
+    tables: tables,
+    world,
+    filter: {
+      address: networkConfig.worldAddress as Hex,
+      filters: [
+        {
+          tableId: tables.ResourceCount.tableId,
+          key0: fleetEntity,
+        },
+        {
+          tableId: tables.MaxResourceCount.tableId,
+          key0: fleetEntity,
+        },
+        {
+          tableId: tables.LastClaimedAt.tableId,
+          key0: fleetEntity,
+        },
+        {
+          tableId: tables.ProductionRate.tableId,
+          key0: fleetEntity,
+        },
+        {
+          tableId: tables.UnitCount.tableId,
+          key0: fleetEntity,
+        },
+      ],
+    },
+  });
+
+  syncData.start(
+    (_, __, progress) => {
+      components.SyncStatus.set(
+        {
+          step: SyncStep.Syncing,
+          progress,
+          message: `Hydrating Fleet Data`,
+        },
+        fleetEntity
+      );
+
+      if (progress === 1) {
+        components.SyncStatus.set(
+          {
+            step: SyncStep.Complete,
+            progress,
+            message: `DONE`,
+          },
+          fleetEntity
+        );
+      }
+    },
+    //on error
+    (e) => {
+      console.error(e);
+      components.SyncStatus.set(
+        {
+          step: SyncStep.Error,
+          progress: 0,
+          message: `Failed to Hydrate Alliance data`,
+        },
+        fleetEntity
       );
     }
   );

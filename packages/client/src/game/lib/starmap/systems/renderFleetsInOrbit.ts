@@ -11,7 +11,7 @@ import { getRockRelationship } from "src/util/asteroid";
 import { RockRelationship } from "src/util/constants";
 import { decodeEntity } from "src/util/encode";
 import { entityToFleetName } from "src/util/name";
-import { getCanAttack, getOrbitingFleets, getUnitCounts } from "src/util/unit";
+import { getCanAttack, getOrbitingFleets } from "src/util/unit";
 import {
   ObjectPosition,
   OnClickUp,
@@ -241,7 +241,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
     ]);
 
     const setNoFleetsAlpha = () => {
-      const noUnits = getUnitCounts(fleet).size === 0;
+      const noUnits = !!components.IsFleetEmpty.get(fleet)?.value;
       const objects = [fleetOrbitObject, fleetLabel, gracePeriod];
       if (noUnits) {
         objects.forEach((object) => object.setComponent(SetValue({ alpha: 0.3 })));

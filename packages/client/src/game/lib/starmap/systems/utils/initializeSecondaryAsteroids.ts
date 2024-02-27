@@ -32,7 +32,6 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
     if (!isSecondaryAsteroid(asteroidEntity, Number(config.asteroidChanceInv))) continue;
 
     const asteroidData = getAsteroidData(asteroidEntity);
-    console.log("Setting data for secondary asteroid", asteroidEntity);
     components.Asteroid.set({ ...emptyData, ...asteroidData }, asteroidEntity);
     components.Position.set({ ...emptyData, ...asteroidPosition, parent: toHex32("0") }, asteroidEntity);
 

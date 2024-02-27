@@ -2,8 +2,9 @@ import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { world } from "src/network/world";
 import { components } from "../components";
 import { MUD } from "../types";
-import { hydrateActiveAsteroid, hydrateSelectedAsteroid } from "../sync/indexer";
+import { hydrateActiveAsteroid, hydrateFleetData, hydrateAsteroidData } from "../sync/indexer";
 import { SyncSourceType } from "src/util/constants";
+import { debounce } from "lodash";
 
 export const setupSync = (mud: MUD) => {
   const systemWorld = namespaceWorld(world, "systems");
@@ -16,7 +17,7 @@ export const setupSync = (mud: MUD) => {
 
     if (!spaceRock || value[0]?.value === value[1]?.value) return;
 
-    hydrateSelectedAsteroid(spaceRock, mud);
+    hydrateAsteroidData(spaceRock, mud);
   });
 
   defineComponentSystem(systemWorld, components.ActiveRock, ({ value }) => {
@@ -26,4 +27,27 @@ export const setupSync = (mud: MUD) => {
 
     hydrateActiveAsteroid(spaceRock, mud);
   });
+
+  defineComponentSystem(
+    systemWorld,
+    components.HoverEntity,
+    debounce(({ value }) => {
+      const hoverEntity = value[0]?.value;
+
+      if (!hoverEntity || value[0]?.value === value[1]?.value) return;
+
+      switch (true) {
+        case components.Asteroid.has(hoverEntity):
+          //hydrate asteroid info
+          hydrateAsteroidData(hoverEntity, mud);
+          break;
+        case components.FleetMovement.has(hoverEntity):
+          //hydrate fleet info
+          hydrateFleetData(hoverEntity, mud);
+          break;
+        default:
+          break;
+      }
+    }, 500)
+  );
 };

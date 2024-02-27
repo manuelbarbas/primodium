@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { EResource } from "src/Types.sol";
-import { IsFleet, GracePeriod, P_GracePeriod, P_Transportables, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { IsFleet, IsFleetEmpty, GracePeriod, P_GracePeriod, P_Transportables, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -33,6 +33,7 @@ library LibFleet {
 
     OwnedBy.set(fleetId, spaceRock);
     IsFleet.set(fleetId, true);
+    IsFleetEmpty.set(fleetId, false);
 
     FleetMovement.set(
       fleetId,
@@ -190,12 +191,27 @@ library LibFleet {
     }
   }
 
-  function resetFleetIfNoUnitsLeft(bytes32 fleetId) internal {
+  function isFleetEmpty(bytes32 fleetId) internal view returns (bool) {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (UnitCount.get(fleetId, unitPrototypes[i]) > 0) return;
+      if (UnitCount.get(fleetId, unitPrototypes[i]) > 0) return false;
     }
+
+    return true;
+  }
+
+  function resetFleetIfNoUnitsLeft(bytes32 fleetId) internal {
+    if (!isFleetEmpty(fleetId)) return;
+
     resetFleetOrbit(fleetId);
+  }
+
+  function checkAndSetFleetEmpty(bytes32 fleetId) internal {
+    if (isFleetEmpty(fleetId)) {
+      IsFleetEmpty.set(fleetId, true);
+    } else {
+      IsFleetEmpty.set(fleetId, false);
+    }
   }
 
   function resetFleetOrbit(bytes32 fleetId) internal {
@@ -203,6 +219,7 @@ library LibFleet {
     LibFleetStance.clearFleetStance(fleetId);
     //clears any following fleets
     LibFleetStance.clearFollowingFleets(fleetId);
+    IsFleetEmpty.set(fleetId, true);
 
     bytes32 spaceRock = FleetMovement.getDestination(fleetId);
     bytes32 spaceRockOwner = OwnedBy.get(fleetId);

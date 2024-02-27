@@ -487,6 +487,12 @@ export const config = mudConfig({
       valueSchema: "bool",
     },
 
+    IsFleetEmpty: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "bool",
+      offchainOnly: true,
+    },
+
     /* ------------------------------ Battle Result ----------------------------- */
     BattleResult: {
       keySchema: { battleId: "bytes32" },
