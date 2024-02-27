@@ -308,42 +308,42 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[1]),
         },
-        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 0.001, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.001, R_HP: 0.001 }),
       },
       2: {
         P_RequiredResources: getResourceValues({ Copper: 1500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[2]),
         },
-        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 0.001, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.001, R_HP: 0.001 }),
       },
       3: {
         P_RequiredResources: getResourceValues({ Copper: 10000, PVCell: 1500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[3]),
         },
-        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 0.001, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.001, R_HP: 0.001 }),
       },
       4: {
         P_RequiredResources: getResourceValues({ Copper: 25000, PVCell: 5000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[4]),
         },
-        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 0.001, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.001, R_HP: 0.001 }),
       },
       5: {
         P_RequiredResources: getResourceValues({ Copper: 75000, PVCell: 500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[5]),
         },
-        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 0.001, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.001, R_HP: 0.001 }),
       },
       6: {
         P_RequiredResources: getResourceValues({ Copper: 125000, Titanium: 1500, Platinum: 1500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[6]),
         },
-        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 0.001, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.001, R_HP: 0.001 }),
       },
       7: {
         P_RequiredResources: getResourceValues({
@@ -355,7 +355,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[7]),
         },
-        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 0.001, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.001, R_HP: 0.001 }),
       },
       8: {
         P_RequiredResources: getResourceValues({
@@ -367,7 +367,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[8]),
         },
-        P_Production: getResourceValues({ U_MaxMoves: 1, R_Encryption: 0.001, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.001, R_HP: 0.001 }),
       },
     },
   },
@@ -1029,17 +1029,17 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ IronPlate: 500 }),
-        P_Production: getResourceValues({ U_MaxMoves: 1 }),
+        P_Production: getResourceValues({ U_MaxFleets: 1 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ IronPlate: 10000 }),
-        P_Production: getResourceValues({ U_MaxMoves: 2 }),
+        P_Production: getResourceValues({ U_MaxFleets: 2 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ IronPlate: 25000 }),
-        P_Production: getResourceValues({ U_MaxMoves: 3 }),
+        P_Production: getResourceValues({ U_MaxFleets: 3 }),
       },
     },
   },
@@ -1173,7 +1173,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       [MUDEnums.EResource.indexOf("U_Electricity")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Housing")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_CapitalShipCapacity")]: { P_IsUtility: { value: true } },
-      [MUDEnums.EResource.indexOf("U_MaxMoves")]: { P_IsUtility: { value: true } },
+      [MUDEnums.EResource.indexOf("U_MaxFleets")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Defense")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("M_DefenseMultiplier")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Unraidable")]: { P_IsUtility: { value: true } },

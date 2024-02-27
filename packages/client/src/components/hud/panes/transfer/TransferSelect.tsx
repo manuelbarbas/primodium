@@ -36,7 +36,7 @@ export const TransferSelect = ({
   });
 
   const fleetsAvailable =
-    components.ResourceCount.getWithKeys({ entity: rockEntity as Hex, resource: EResource.U_MaxMoves })?.value ?? 0n;
+    components.ResourceCount.getWithKeys({ entity: rockEntity as Hex, resource: EResource.U_MaxFleets })?.value ?? 0n;
 
   return (
     <div className="w-full h-full bg-base-100 p-2 overflow-hidden pb-8 flex flex-col gap-2 border border-secondary/50">
