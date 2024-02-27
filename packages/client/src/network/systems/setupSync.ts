@@ -48,6 +48,6 @@ export const setupSync = (mud: MUD) => {
         default:
           break;
       }
-    }, 500)
+    }, 250)
   );
 };
