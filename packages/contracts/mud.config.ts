@@ -113,6 +113,8 @@ export const config = mudConfig({
       valueSchema: {
         resource: "uint8",
         initialCost: "uint256",
+        decryption: "uint256",
+        cooldownExtension: "uint256",
       },
     },
 
@@ -413,7 +415,6 @@ export const config = mudConfig({
         cargo: "uint256",
         trainingTime: "uint256",
         hp: "uint256",
-        decryption: "uint256",
       },
     },
 
@@ -742,6 +743,11 @@ export const config = mudConfig({
     },
 
     GracePeriod: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "uint256",
+    },
+
+    CooldownEnd: {
       keySchema: { entity: "bytes32" },
       valueSchema: "uint256",
     },

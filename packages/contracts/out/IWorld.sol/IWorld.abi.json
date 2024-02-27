@@ -1954,16 +1954,6 @@
         "name": "aggressorEntity",
         "type": "bytes32",
         "internalType": "bytes32"
-      },
-      {
-        "name": "aggressorDecryptionUnitPrototype",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "aggressorDecryption",
-        "type": "uint256",
-        "internalType": "uint256"
       }
     ],
     "outputs": [],

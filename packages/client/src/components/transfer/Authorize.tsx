@@ -67,7 +67,7 @@ export function Authorize() {
       {showHelp && (
         <SecondaryCard className="flex flex-row gap-1 relative p-4">
           <FaInfoCircle className="w-6" />
-          <div className="text-xs italic opacity-75 space-y-2">{sessionWalletTooltip}</div>
+          <div className="text-xs opacity-75 space-y-2 normal-case">{sessionWalletTooltip}</div>
           <Button className="btn-ghost btn-xs absolute top-0 right-0" onClick={hideHelp}>
             <FaTimes />
           </Button>

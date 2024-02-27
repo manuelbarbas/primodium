@@ -1,31 +1,22 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { EResource } from "src/Types.sol";
+import { P_CapitalShipConfig, CooldownEnd, DefeatedPirate, PirateAsteroid, DestroyedUnit, DamageDealt, BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, MaxResourceCount, BattleResult, BattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
-import { DefeatedPirate, PirateAsteroid, DestroyedUnit, DamageDealt, BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, MaxResourceCount, BattleResult, BattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
-
-import { getSystemResourceId } from "src/utils.sol";
-import { BuildSystem } from "systems/BuildSystem.sol";
-import { MainBasePrototypeId } from "codegen/Prototypes.sol";
-import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
+import { CapitalShipPrototypeId } from "codegen/Prototypes.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
-import { LibFleetDisband } from "libraries/fleet/LibFleetDisband.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
-import { LibResource } from "libraries/LibResource.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
-import { AsteroidOwnedByKey, FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
-import { ColoniesMap } from "libraries/ColoniesMap.sol";
-import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
-import { EResource, EFleetStance, EBuilding } from "src/Types.sol";
-import { entityToAddress } from "src/utils.sol";
+import { FleetIncomingKey } from "src/Keys.sol";
+import { EResource } from "src/Types.sol";
+import { ABDKMath64x64 as Math } from "abdk/ABDKMath64x64.sol";
 
 library LibFleetCombat {
   function attack(
@@ -34,11 +25,6 @@ library LibFleetCombat {
   ) internal returns (bytes32 battleId, BattleResultData memory battleResult) {
     bool aggressorIsFleet = IsFleet.get(entity);
 
-    // update grace period of rock and fleet on rock
-    if (aggressorIsFleet) {
-      bytes32 ownerEntity = OwnedBy.get(entity);
-      if (GracePeriod.get(OwnedBy.get(entity)) > 0) GracePeriod.deleteRecord(ownerEntity);
-    }
     if (GracePeriod.get(entity) > 0) GracePeriod.deleteRecord(entity);
 
     bytes32 spaceRock = aggressorIsFleet ? FleetMovement.getDestination(entity) : entity;
@@ -48,12 +34,25 @@ library LibFleetCombat {
       ? LibCombatAttributes.getAttacksWithAllies(entity)
       : LibCombatAttributes.getDefensesWithAllies(entity);
 
+    // update grace period of rock and fleet on rock
+    if (aggressorIsFleet) {
+      bytes32 ownerEntity = OwnedBy.get(entity);
+      if (GracePeriod.get(ownerEntity) > 0) GracePeriod.deleteRecord(ownerEntity);
+
+      // todo: should all allies have cooldown too?
+      bool decrypt = UnitCount.get(entity, CapitalShipPrototypeId) > 0;
+      uint256 cooldownEnd = getCooldownTime(totalAggressorDamage, decrypt);
+      CooldownEnd.set(entity, block.timestamp + cooldownEnd);
+    }
+
     BattleDamageDealtResult.set(battleId, entity, aggressorDamage);
 
     bytes32[] memory aggressorAllies = LibFleetStance.getAllies(entity);
+
     for (uint256 i = 0; i < aggressorAllies.length; i++) {
       BattleDamageDealtResult.set(battleId, aggressorAllies[i], aggressorDamages[i]);
     }
+
     (uint256 targetDamage, uint256[] memory targetDamages, uint256 totalTargetDamage) = aggressorIsFleet
       ? LibCombatAttributes.getDefensesWithAllies(targetEntity)
       : LibCombatAttributes.getAttacksWithAllies(targetEntity);
@@ -83,13 +82,11 @@ library LibFleetCombat {
   function resolveBattleEncryption(
     bytes32 battleId,
     bytes32 targetSpaceRock,
-    bytes32 aggressorEntity,
-    bytes32 unitWithDecryptionPrototype,
-    uint256 decryption
+    bytes32 aggressorEntity
   ) internal returns (uint256 encryptionAtEnd) {
     uint256 encryptionAtStart = ResourceCount.get(targetSpaceRock, uint8(EResource.R_Encryption));
+    uint256 decryption = P_CapitalShipConfig.getDecryption();
     encryptionAtEnd = encryptionAtStart;
-    if (decryption == 0) return encryptionAtEnd;
     if (encryptionAtStart != 0) {
       if (decryption > encryptionAtStart) {
         decryption = encryptionAtStart;
@@ -100,7 +97,7 @@ library LibFleetCombat {
       }
     }
     if (encryptionAtEnd == 0) {
-      LibFleet.decreaseFleetUnit(aggressorEntity, unitWithDecryptionPrototype, 1, true);
+      LibFleet.decreaseFleetUnit(aggressorEntity, CapitalShipPrototypeId, 1, true);
     }
     BattleEncryptionResult.set(battleId, targetSpaceRock, encryptionAtStart, encryptionAtEnd);
   }
@@ -269,6 +266,18 @@ library LibFleetCombat {
       LibFleet.decreaseFleetResource(fleetId, i, resourcePortion);
       cargoLossLeft -= resourcePortion;
     }
+  }
+
+  // in minutes
+  function getCooldownTime(uint256 attackVal, bool withDecryption) internal view returns (uint256 time) {
+    time = withDecryption ? P_CapitalShipConfig.getCooldownExtension() : 0;
+    attackVal = attackVal / 1e18;
+    if (attackVal <= 20000) time += (attackVal * 24) / 10000;
+    else {
+      int128 divided = Math.add(Math.divu(attackVal, 7500), Math.fromUInt(1));
+      time += Math.mulu(Math.log_2(divided), 27);
+    }
+    time *= 60;
   }
 
   function resolvePirateAsteroid(bytes32 playerEntity, bytes32 pirateAsteroid) internal {

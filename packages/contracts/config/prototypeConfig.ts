@@ -193,6 +193,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_CapitalShipConfig: {
         resource: EResource.Iron,
         initialCost: 10n * BigInt(SCALE),
+        decryption: 10n * BigInt(SCALE),
+        cooldownExtension: 60n * 60n * 1n, // one hour
       },
 
       P_UnitPrototypes: {
@@ -1218,7 +1220,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 1 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 10,
           defense: 10,
           cargo: 10,
@@ -1238,7 +1239,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ Alloy: 20, U_Housing: 2 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 120,
           defense: 300,
           cargo: 30,
@@ -1253,7 +1253,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 130,
           defense: 340,
           cargo: 50,
@@ -1267,7 +1266,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ Alloy: 20, U_Housing: 2 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 140,
           defense: 360,
           cargo: 70,
@@ -1281,7 +1279,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ Alloy: 20, U_Housing: 2 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 150,
           defense: 380,
           cargo: 100,
@@ -1295,7 +1292,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ Alloy: 20, U_Housing: 2 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 160,
           defense: 400,
           cargo: 120,
@@ -1309,7 +1305,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ Alloy: 20, U_Housing: 2 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 170,
           defense: 420,
           cargo: 150,
@@ -1328,7 +1323,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 3, Alloy: 80, PVCell: 100 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 150,
           defense: 500,
           cargo: 100,
@@ -1342,7 +1336,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 3, Alloy: 80, PVCell: 100 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 160,
           defense: 550,
           cargo: 120,
@@ -1356,7 +1349,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 3, Alloy: 80, PVCell: 100 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 170,
           defense: 600,
           cargo: 140,
@@ -1370,7 +1362,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 3, Alloy: 80, PVCell: 100 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 180,
           defense: 750,
           cargo: 160,
@@ -1384,7 +1375,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 3, Alloy: 80, PVCell: 100 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 190,
           defense: 800,
           cargo: 180,
@@ -1398,7 +1388,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 3, Alloy: 80, PVCell: 100 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 200,
           defense: 850,
           cargo: 200,
@@ -1417,7 +1406,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 2, IronPlate: 200, PVCell: 50 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 300,
           defense: 50,
           cargo: 100,
@@ -1431,7 +1419,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 2, IronPlate: 200, PVCell: 50 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 320,
           defense: 60,
           cargo: 120,
@@ -1445,7 +1432,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 2, IronPlate: 200, PVCell: 50 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 350,
           defense: 70,
           cargo: 140,
@@ -1459,7 +1445,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 2, IronPlate: 200, PVCell: 50 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 400,
           defense: 80,
           cargo: 160,
@@ -1473,7 +1458,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 2, IronPlate: 200, PVCell: 50 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 450,
           defense: 90,
           cargo: 200,
@@ -1487,7 +1471,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 2, IronPlate: 200, PVCell: 50 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 500,
           defense: 100,
           cargo: 250,
@@ -1506,7 +1489,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ IronPlate: 1500, U_Housing: 3 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 600,
           defense: 250,
           cargo: 300,
@@ -1520,7 +1502,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ IronPlate: 1500, U_Housing: 3 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 900,
           defense: 300,
           cargo: 400,
@@ -1534,7 +1515,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ IronPlate: 1500, U_Housing: 3 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 1200,
           defense: 350,
           cargo: 500,
@@ -1548,7 +1528,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ IronPlate: 1500, U_Housing: 3 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 1500,
           defense: 400,
           cargo: 600,
@@ -1562,7 +1541,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ IronPlate: 1500, U_Housing: 3 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 1800,
           defense: 450,
           cargo: 700,
@@ -1576,7 +1554,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ IronPlate: 1500, U_Housing: 3 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 2500,
           defense: 500,
           cargo: 800,
@@ -1596,7 +1573,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredBaseLevel: { value: 3n },
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 10,
           attack: 20,
           defense: 5000,
           cargo: 1000,
@@ -1610,7 +1586,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_CapitalShipCapacity: 1 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 12,
           attack: 50,
           defense: 5500,
           cargo: 1000,
@@ -1624,7 +1599,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_CapitalShipCapacity: 1 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 15,
           attack: 100,
           defense: 6000,
           cargo: 1000,
@@ -1638,7 +1612,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_CapitalShipCapacity: 1 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 17,
           attack: 250,
           defense: 6500,
           cargo: 1000,
@@ -1652,7 +1625,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_CapitalShipCapacity: 1 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 20,
           attack: 500,
           defense: 7000,
           cargo: 1000,
@@ -1666,7 +1638,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_CapitalShipCapacity: 1 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 22,
           attack: 1000,
           defense: 7500,
           cargo: 1000,
@@ -1684,7 +1655,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       0: {
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 0,
           defense: 100,
           cargo: 0,
@@ -1703,7 +1673,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 1, Iron: 100 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 40,
           defense: 20,
           cargo: 20,
@@ -1717,7 +1686,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 1, Iron: 100 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 60,
           defense: 30,
           cargo: 30,
@@ -1731,7 +1699,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 1, Iron: 100 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 80,
           defense: 40,
           cargo: 40,
@@ -1745,7 +1712,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 1, Iron: 100 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 100,
           defense: 50,
           cargo: 50,
@@ -1759,7 +1725,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 1, Iron: 100 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 120,
           defense: 60,
           cargo: 60,
@@ -1773,7 +1738,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 1, Iron: 100 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 150,
           defense: 70,
           cargo: 70,
@@ -1792,7 +1756,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 1, IronPlate: 50 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 80,
           defense: 100,
           cargo: 30,
@@ -1806,7 +1769,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 1, IronPlate: 50 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 100,
           defense: 105,
           cargo: 40,
@@ -1820,7 +1782,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 1, IronPlate: 50 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 120,
           defense: 110,
           cargo: 50,
@@ -1834,7 +1795,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredBaseLevel: { value: 6n },
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 140,
           defense: 115,
           cargo: 60,
@@ -1848,7 +1808,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 1, IronPlate: 50 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 160,
           defense: 120,
           cargo: 70,
@@ -1862,7 +1821,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 1, IronPlate: 50 }),
         P_Unit: getPUnitData({
           hp: 100,
-          decryption: 0,
           attack: 200,
           defense: 125,
           cargo: 80,
