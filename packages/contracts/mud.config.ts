@@ -747,7 +747,7 @@ export const config = mudConfig({
       valueSchema: "uint256",
     },
 
-    CooldownEnds: {
+    CooldownEnd: {
       keySchema: { entity: "bytes32" },
       valueSchema: "uint256",
     },

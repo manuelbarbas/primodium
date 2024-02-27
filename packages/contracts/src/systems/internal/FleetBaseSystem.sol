@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { EFleetStance } from "src/Types.sol";
-import { FleetStance, OwnedBy, FleetMovement, P_UnitPrototypes, P_Transportables, PirateAsteroid } from "src/codegen/index.sol";
+import { CooldownEnd, FleetStance, OwnedBy, FleetMovement, P_UnitPrototypes, P_Transportables, PirateAsteroid } from "src/codegen/index.sol";
 
 contract FleetBaseSystem is PrimodiumSystem {
   modifier _onlyFleetOwner(bytes32 fleetId) {
@@ -14,6 +14,11 @@ contract FleetBaseSystem is PrimodiumSystem {
 
   modifier _onlyWhenFleetIsInOrbit(bytes32 fleetId) {
     require(FleetMovement.getArrivalTime(fleetId) <= block.timestamp, "[Fleet] Fleet is not in orbit");
+    _;
+  }
+
+  modifier _onlyWhenNotInCooldown(bytes32 fleetId) {
+    require(block.timestamp >= CooldownEnd.get(fleetId), "[Fleet] Fleet is in cooldown");
     _;
   }
 

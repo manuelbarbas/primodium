@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { P_CapitalShipConfig, CooldownEnds, DefeatedPirate, PirateAsteroid, DestroyedUnit, DamageDealt, BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, MaxResourceCount, BattleResult, BattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { P_CapitalShipConfig, CooldownEnd, DefeatedPirate, PirateAsteroid, DestroyedUnit, DamageDealt, BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, MaxResourceCount, BattleResult, BattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { CapitalShipPrototypeId } from "codegen/Prototypes.sol";
 import { LibMath } from "libraries/LibMath.sol";
@@ -41,8 +41,8 @@ library LibFleetCombat {
 
       // todo: should all allies have cooldown too?
       bool decrypt = UnitCount.get(entity, CapitalShipPrototypeId) > 0;
-      uint256 cooldownEnds = getCooldownTime(totalAggressorDamage, decrypt);
-      CooldownEnds.set(entity, block.timestamp + cooldownEnds);
+      uint256 cooldownEnd = getCooldownTime(totalAggressorDamage, decrypt);
+      CooldownEnd.set(entity, block.timestamp + cooldownEnd);
     }
 
     BattleDamageDealtResult.set(battleId, entity, aggressorDamage);

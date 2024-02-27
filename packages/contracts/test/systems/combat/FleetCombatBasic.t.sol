@@ -378,8 +378,47 @@ contract FleetCombatSystemTest is PrimodiumTest {
     world.attack(aliceFleetEntity, bobHomeAsteroid);
 
     uint256 cooldown = LibFleetCombat.getCooldownTime(aliceAttack, false);
-    assertEq(CooldownEnds.get(aliceFleetEntity), block.timestamp + cooldown);
-    assertGt(CooldownEnds.get(aliceFleetEntity), block.timestamp);
+    assertEq(CooldownEnd.get(aliceFleetEntity), block.timestamp + cooldown);
+    assertGt(CooldownEnd.get(aliceFleetEntity), block.timestamp);
+  }
+
+  function testFleetAttackFailedInCooldown() public {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    //create fleet with 1 minuteman marine
+    bytes32 minutemanEntity = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == minutemanEntity) unitCounts[i] = 100;
+    }
+
+    //create fleet with 1 iron
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+
+    // create and send alice fleet
+    setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
+    vm.startPrank(alice);
+    bytes32 aliceFleetEntity = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.sendFleet(aliceFleetEntity, bobHomeAsteroid);
+
+    switchPrank(creator);
+    GracePeriod.set(bobHomeAsteroid, block.timestamp);
+
+    // create bob fleet
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == minutemanEntity) unitCounts[i] = 1;
+    }
+    setupCreateFleet(bob, bobHomeAsteroid, unitCounts, resourceCounts);
+    switchPrank(bob);
+    bytes32 bobFleetEntity = world.createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
+
+    vm.warp(FleetMovement.getArrivalTime(aliceFleetEntity));
+
+    switchPrank(creator);
+    CooldownEnd.set(aliceFleetEntity, block.timestamp + 1);
+    switchPrank(alice);
+
+    vm.expectRevert("[Fleet] Fleet is in cooldown");
+    world.attack(aliceFleetEntity, bobHomeAsteroid);
   }
 
   function testCooldownTimes() public {

@@ -81,7 +81,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     vm.stopPrank();
 
     assertEq(
-      CooldownEnds.get(fleetId),
+      CooldownEnd.get(fleetId),
       block.timestamp + LibFleetCombat.getCooldownTime(attack, true),
       "encryption incorrect"
     );

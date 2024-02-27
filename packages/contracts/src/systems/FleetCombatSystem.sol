@@ -36,8 +36,9 @@ contract FleetCombatSystem is FleetBaseSystem {
     bytes32 targetFleet
   )
     private
-    _onlyWhenNotInGracePeriod(targetFleet)
     _onlyFleetOwner(fleetId)
+    _onlyWhenNotInCooldown(fleetId)
+    _onlyWhenNotInGracePeriod(targetFleet)
     _onlyWhenNotInStance(fleetId)
     _onlyWhenFleetsAreIsInSameOrbit(fleetId, targetFleet)
   {
@@ -52,6 +53,7 @@ contract FleetCombatSystem is FleetBaseSystem {
   )
     private
     _onlyFleetOwner(fleetId)
+    _onlyWhenNotInCooldown(fleetId)
     _onlyWhenNotInStance(fleetId)
     _onlyWhenNotInGracePeriod(targetSpaceRock)
     _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, targetSpaceRock)
