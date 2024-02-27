@@ -40,7 +40,8 @@ library LibFleetCombat {
       if (GracePeriod.get(ownerEntity) > 0) GracePeriod.deleteRecord(ownerEntity);
 
       // todo: should all allies have cooldown too?
-      uint256 cooldownEnds = getCooldownTime(totalAggressorDamage);
+      bool decrypt = UnitCount.get(entity, CapitalShipPrototypeId) > 0;
+      uint256 cooldownEnds = getCooldownTime(totalAggressorDamage, decrypt);
       CooldownEnds.set(entity, block.timestamp + cooldownEnds);
     }
 
@@ -267,11 +268,16 @@ library LibFleetCombat {
     }
   }
 
-  function getCooldownTime(uint256 attackVal) internal pure returns (uint256) {
+  // in minutes
+  function getCooldownTime(uint256 attackVal, bool withDecryption) internal view returns (uint256 time) {
+    time = withDecryption ? P_CapitalShipConfig.getCooldownExtension() : 0;
     attackVal = attackVal / 1e18;
-    if (attackVal <= 20000) return (attackVal * 24) / 10000;
-    int128 divided = Math.add(Math.divu(attackVal, 7500), Math.fromUInt(1));
-    return Math.mulu(Math.log_2(divided), 27);
+    if (attackVal <= 20000) time += (attackVal * 24) / 10000;
+    else {
+      int128 divided = Math.add(Math.divu(attackVal, 7500), Math.fromUInt(1));
+      time += Math.mulu(Math.log_2(divided), 27);
+    }
+    time *= 60;
   }
 
   function resolvePirateAsteroid(bytes32 playerEntity, bytes32 pirateAsteroid) internal {

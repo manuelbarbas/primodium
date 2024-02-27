@@ -4,6 +4,7 @@ pragma solidity >=0.8.21;
 import { console } from "forge-std/console.sol";
 import "test/PrimodiumTest.t.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
+import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { FleetIncomingKey } from "src/Keys.sol";
@@ -32,7 +33,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
-    uint256 numberOfUnits = 10;
+    uint256 numberOfUnits = 50;
 
     //create fleet with 1 minuteman marine
     bytes32 minuteman = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
@@ -66,6 +67,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     uint256 hpProduction = 1;
     uint256 hp = defense;
     uint256 encryption = ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption));
+    uint256 attack = LibCombatAttributes.getAttack(fleetId);
     increaseResource(bobHomeSpaceRock, EResource.U_Defense, defense);
     increaseResource(bobHomeSpaceRock, EResource.R_HP, hp);
     increaseProduction(bobHomeSpaceRock, EResource.R_HP, hpProduction);
@@ -78,6 +80,11 @@ contract FleetCombatSystemTest is PrimodiumTest {
     world.attack(fleetId, bobHomeSpaceRock);
     vm.stopPrank();
 
+    assertEq(
+      CooldownEnds.get(fleetId),
+      block.timestamp + LibFleetCombat.getCooldownTime(attack, true),
+      "encryption incorrect"
+    );
     assertEq(
       ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_HP)),
       0,

@@ -377,32 +377,39 @@ contract FleetCombatSystemTest is PrimodiumTest {
     switchPrank(alice);
     world.attack(aliceFleetEntity, bobHomeAsteroid);
 
-    uint256 cooldown = LibFleetCombat.getCooldownTime(aliceAttack);
+    uint256 cooldown = LibFleetCombat.getCooldownTime(aliceAttack, false);
     assertEq(CooldownEnds.get(aliceFleetEntity), block.timestamp + cooldown);
     assertGt(CooldownEnds.get(aliceFleetEntity), block.timestamp);
   }
 
   function testCooldownTimes() public {
     uint256 testValue = 1 * 1e18;
-    assertEq(LibFleetCombat.getCooldownTime(testValue), 0);
+    assertEq(LibFleetCombat.getCooldownTime(testValue, false), 0);
 
     testValue = 1000 * 1e18;
-    assertEq(LibFleetCombat.getCooldownTime(testValue), 2);
+    assertEq(LibFleetCombat.getCooldownTime(testValue, false), 2 * 60);
 
     testValue = 10000 * 1e18;
-    assertEq(LibFleetCombat.getCooldownTime(testValue), 24);
+    assertEq(LibFleetCombat.getCooldownTime(testValue, false), 24 * 60);
 
     testValue = 20000 * 1e18;
-    assertEq(LibFleetCombat.getCooldownTime(testValue), 48);
+    assertEq(LibFleetCombat.getCooldownTime(testValue, false), 48 * 60);
 
     testValue = 100000 * 1e18;
-    assertApproxEqAbs(LibFleetCombat.getCooldownTime(testValue), 103, 3);
+    assertApproxEqAbs(LibFleetCombat.getCooldownTime(testValue, false), 103 * 60, 3);
 
     testValue = 150000 * 1e18;
-    assertApproxEqAbs(LibFleetCombat.getCooldownTime(testValue), 118, 3);
+    assertApproxEqAbs(LibFleetCombat.getCooldownTime(testValue, false), 118 * 60, 3);
 
     testValue = 250000 * 1e18;
-    assertApproxEqAbs(LibFleetCombat.getCooldownTime(testValue), 137, 3);
+    assertApproxEqAbs(LibFleetCombat.getCooldownTime(testValue, false), 137 * 60, 3);
+
+    uint256 extension = P_CapitalShipConfig.getCooldownExtension();
+
+    assertEq(
+      LibFleetCombat.getCooldownTime(testValue, false) + (extension * 60),
+      LibFleetCombat.getCooldownTime(testValue, true)
+    );
   }
 
   // todo: these tests
