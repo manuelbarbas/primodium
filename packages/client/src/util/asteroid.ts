@@ -15,8 +15,7 @@ import { getOrbitingFleets } from "./unit";
 export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
   const { getSpriteBase64 } = primodium.api().sprite;
   const asteroidData = comps.Asteroid.get(asteroid);
-  const mainBaseEntity = comps.Home.get(asteroid)?.value as Entity;
-  const mainBaseLevel = comps.Level.get(mainBaseEntity, {
+  const expansionLevel = comps.Level.get(asteroid, {
     value: 1n,
   }).value;
 
@@ -26,7 +25,10 @@ export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
   }
 
   if (components.PirateAsteroid.has(asteroid)) return getSpriteBase64(getRockSprite(1, 1n), Assets.SpriteAtlas);
-  const spriteKey = getRockSprite(asteroidData.mapId, asteroidData.mapId === 1 ? mainBaseLevel : asteroidData.maxLevel);
+  const spriteKey = getRockSprite(
+    asteroidData.mapId,
+    asteroidData.mapId === 1 ? expansionLevel : asteroidData.maxLevel
+  );
 
   return getSpriteBase64(spriteKey, Assets.SpriteAtlas);
 }
