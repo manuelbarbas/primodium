@@ -1,5 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { execute } from "src/network/actions";
+import { components } from "src/network/components";
 import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
@@ -20,7 +21,8 @@ export const disbandFleet = async (mud: MUD, fleet: Entity) => {
     {
       id: disbandId,
       type: TransactionQueueType.DisbandFleet,
-    }
+    },
+    () => components.SelectedFleet.remove()
   );
 };
 

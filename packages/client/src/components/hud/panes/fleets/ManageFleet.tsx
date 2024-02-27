@@ -2,6 +2,8 @@ import { Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { EFleetStance } from "contracts/config/enums";
 import { FC, useMemo } from "react";
+import { FaExclamationTriangle } from "react-icons/fa";
+import { toast } from "react-toastify";
 import { Button } from "src/components/core/Button";
 import { Modal } from "src/components/core/Modal";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
@@ -29,24 +31,8 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   const resources = useFullResourceCounts(fleetEntity);
 
   const totalUnits = useMemo(() => [...units.values()].reduce((acc, cur) => acc + cur, 0n), [units]);
-  const totalResources = useMemo(
-    () => [...resources.values()].reduce((acc, cur) => acc + cur.resourceCount, 0n),
-    [resources]
-  );
   const time = components.Time.use()?.value ?? 0n;
   const movement = components.FleetMovement.use(fleetEntity);
-
-  // const destination = components.FleetMovement.getWithKeys({ entity: fleetEntity as Hex })?.destination;
-  // const fleetsOnAsteroidQuery = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination })];
-  // const fleetsOnAsteroid = useEntityQuery(fleetsOnAsteroidQuery);
-  // const time = components.Time.use()?.value ?? 0n;
-  // const followableFleets = fleetsOnAsteroid.filter((entity) => {
-  //   if (entity == fleetEntity) return false;
-  //   const movement = components.FleetMovement.get(entity);
-  //   if ((movement?.arrivalTime ?? 0n) > time) return false;
-  //   const stance = components.FleetStance.get(entity);
-  //   return stance?.stance != 0;
-  // });
 
   const activeStance = components.FleetStance.use(fleetEntity);
   const cannotDoAnything = totalUnits <= 0n || !movement || movement.arrivalTime > time;
@@ -64,12 +50,49 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
     if (activeStance?.stance == EFleetStance.Block) clearFleetStance(mud, fleetEntity);
     else setFleetStance(mud, fleetEntity, EFleetStance.Block, position);
   };
+  const handleDisband = () => {
+    if (totalUnits > 0n) {
+      toast(
+        ({ closeToast }) => (
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col text-center justify-center items-center gap-2 w-full">
+              <FaExclamationTriangle size={24} className="text-warning" />
+              Clearing this fleet will delete all units and resources forever. Are you sure?
+            </div>
 
-  // const handleFollow = (target: Entity) => {
-  //   if (activeStance?.stance == EFleetStance.Follow && activeStance?.target == target)
-  //     clearFleetStance(mud, fleetEntity);
-  //   setFleetStance(mud, fleetEntity, EFleetStance.Follow, target);
-  // };
+            <div className="flex justify-center w-full gap-2">
+              <button
+                className="btn btn-secondary btn-xs"
+                onClick={() => {
+                  closeToast && closeToast();
+                  disbandFleet(mud, fleetEntity);
+                }}
+              >
+                Confirm
+              </button>
+              <button
+                onClick={() => {
+                  closeToast && closeToast();
+                }}
+                className="btn btn-primary btn-xs"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ),
+        {
+          // className: "border-error",
+          position: "top-center",
+          autoClose: false,
+          closeOnClick: false,
+          draggable: false,
+          closeButton: false,
+          hideProgressBar: true,
+        }
+      );
+    } else disbandFleet(mud, fleetEntity);
+  };
 
   return (
     <div className="w-full h-full flex flex-col gap-2 p-2">
@@ -85,7 +108,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             <FleetEntityHeader entity={fleetEntity} />
           </div>
           <div className="grid grid-rows-2 h-full gap-2">
-            <div className="relative flex flex-col h-full bg-base-100 p-4 gap-2">
+            <div className="relative flex flex-col h-full bg-base-100 p-2 gap-2">
               <p className="uppercase text-xs opacity-50 font-bold">UNITS</p>
               <div className="flex-1 flex flex-col bg-base-100 grid grid-cols-4 grid-rows-2 gap-2">
                 {Array(8)
@@ -99,14 +122,8 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
                     return <ResourceIcon key={`unit-${unit}`} resource={unit as Entity} amount={formatNumber(count)} />;
                   })}
               </div>
-
-              {units.size == 0 && (
-                <div className="flex-1 absolute w-full h-full p-4 grid place-items-center bg-black/50">
-                  <p className="uppercase font-bold text-error">No units</p>
-                </div>
-              )}
             </div>
-            <div className="relative flex flex-col bg-base-100 p-4 gap-2">
+            <div className="relative flex flex-col bg-base-100 p-2 gap-2">
               <p className="uppercase text-xs opacity-50 font-bold">RESOURCES</p>
               <div className="flex-1 flex flex-col bg-base-100 grid grid-cols-4 grid-rows-2 gap-2">
                 {Array(8)
@@ -126,15 +143,10 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
                     );
                   })}
               </div>
-              {resources.size == 0 && (
-                <div className="flex-1 absolute w-full h-full p-4 grid place-items-center bg-black/50">
-                  <p className="uppercase font-bold text-error">No resources</p>
-                </div>
-              )}
             </div>
           </div>
           <NavButton
-            className="btn-primary w-fit btn-sm"
+            className="btn-primary w-fit btn-sm "
             goto="transfer"
             from={fleetEntity}
             to={undefined}
@@ -217,10 +229,11 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             <TransactionQueueMask queueItemId={"disband" as Entity}>
               <Button
                 className="btn btn-error btn-sm w-full"
-                disabled={totalUnits + totalResources <= 0n}
-                onClick={() => disbandFleet(mud, fleetEntity)}
+                onClick={handleDisband}
+                tooltipDirection="bottom"
+                tooltip="remove all units and resources and return home"
               >
-                DISBAND
+                {totalUnits <= 0n ? "RECALL" : "CLEAR AND RECALL"}
               </Button>
             </TransactionQueueMask>
           </div>
