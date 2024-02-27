@@ -26,9 +26,18 @@ contract UpgradeBountyExtensionTest is Test {
   address worldAddress = vm.envAddress("WORLD_ADDRESS");
   address delegateeAddress = vm.envAddress("ADDRESS_BOB");
 
-  function setUp() public virtual {}
+  // Establish the bounty coordinates.
+  PositionData bountyCoord =
+    PositionData({
+      x: int32(vm.envInt("BOUNTY_X_COORD")),
+      y: int32(vm.envInt("BOUNTY_Y_COORD")),
+      parent: vm.envBytes32("BOUNTY_PARENT_ROCK")
+    });
+  uint256 bountyAmount = vm.envUint("BOUNTY_AMOUNT");
 
-  function testUpgradeBountyExtension() public {
+  function setUp() public {
+    // setUp is called before each test. This setUp also registers the namespace and system to the world address.
+
     uint256 forkId = vm.createSelectFork(vm.envString("PRIMODIUM_RPC_URL"), vm.envUint("BLOCK_NUMBER"));
     console.log("ForkLivePrimodium is running.");
 
@@ -60,20 +69,23 @@ contract UpgradeBountyExtensionTest is Test {
     );
 
     vm.stopPrank();
+  }
+
+  function testSystemAccessRestriction() public {
     vm.startPrank(delegateeAddress);
     IWorld iworld = IWorld(worldAddress);
-
-    // Establish the bounty coordinates.
-    PositionData memory bountyCoord = PositionData({
-      x: int32(vm.envInt("BOUNTY_X_COORD")),
-      y: int32(vm.envInt("BOUNTY_Y_COORD")),
-      parent: vm.envBytes32("BOUNTY_PARENT_ROCK")
-    });
-    uint256 bountyAmount = vm.envUint("BOUNTY_AMOUNT");
-
-    // Bob tries to upgrade Alice's building before she has given Bob system access.
+    // Bob tries to use the UpgrBounSystem before she has given Bob system access.
     vm.expectRevert();
     bytes memory newBuildingEntity = iworld.upgradeBounty_UpgrBounSystem_upgradeForBounty(deployerAddress, bountyCoord);
     vm.stopPrank();
   }
+
+  function testDepositBounty() public {
+    vm.startPrank(deployerAddress);
+    vm.deal(deployerAddress, 1 ether);
+    IWorld iworld = IWorld(worldAddress);
+    uint256 bountyValue = iworld.upgradeBounty_UpgrBounSystem_depositBounty{ value: bountyAmount }(bountyCoord);
+    vm.stopPrank();
+  }
+  // More tests to come later
 }
