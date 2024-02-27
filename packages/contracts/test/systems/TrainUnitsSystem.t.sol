@@ -105,8 +105,9 @@ contract TrainUnitsSystemTest is PrimodiumTest {
   }
 
   function testTrainCapitalShip() public {
-    uint256 amount = P_CapitalShipConfig.getInitialCost();
-    assertEq(LibUnit.getCapitalShipCostMultiplier(aliceEntity), 1);
+    uint256 multiplier = LibUnit.getCapitalShipCostMultiplier(aliceEntity);
+    assertEq(multiplier, 2);
+    uint256 amount = P_CapitalShipConfig.getInitialCost() * multiplier;
     assertEq(
       amount,
       P_CapitalShipConfig.getInitialCost() * LibUnit.getCapitalShipCostMultiplier(aliceEntity),
@@ -125,15 +126,18 @@ contract TrainUnitsSystemTest is PrimodiumTest {
   }
 
   function testTrainCapitalShipsCostIncrease() public {
+    uint256 initialShips = LibUnit.getCapitalShipsPlusAsteroids(aliceEntity);
+    uint256 initialMultiplier = LibUnit.getCapitalShipCostMultiplier(aliceEntity);
+    assertEq(initialShips, 1, "initial ship and asteroid count");
     bytes32[] memory ownedAsteroids = ColoniesMap.getAsteroidIds(aliceEntity, AsteroidOwnedByKey);
 
-    uint256 amount = P_CapitalShipConfig.getInitialCost();
+    uint256 amount = P_CapitalShipConfig.getInitialCost() * initialMultiplier;
     uint8 resource = P_CapitalShipConfig.getResource();
     increaseResource(aliceRock, EResource(resource), amount);
     increaseResource(aliceRock, EResource.U_CapitalShipCapacity, 1);
     trainUnits(alice, Home.get(aliceRock), P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip)), 1, true);
-    assertEq(LibUnit.getCapitalShips(aliceEntity), 1, "colony ship count");
-    assertEq(LibUnit.getCapitalShipCostMultiplier(aliceEntity), 2, "colony ship cost multiplier");
+    assertEq(LibUnit.getCapitalShipsPlusAsteroids(aliceEntity), initialShips + 1, "colony ship count");
+    assertEq(LibUnit.getCapitalShipCostMultiplier(aliceEntity), initialMultiplier * 2, "colony ship cost multiplier");
 
     assertEq(
       amount * 2,
@@ -144,8 +148,8 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     increaseResource(aliceRock, EResource(resource), amount * 2);
     increaseResource(aliceRock, EResource.U_CapitalShipCapacity, 1);
     trainUnits(alice, Home.get(aliceRock), P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip)), 1, true);
-    assertEq(LibUnit.getCapitalShips(aliceEntity), 2, "colony ship count");
-    assertEq(LibUnit.getCapitalShipCostMultiplier(aliceEntity), 4, "colony ship 2 cost");
+    assertEq(LibUnit.getCapitalShipsPlusAsteroids(aliceEntity), initialShips + 2, "colony ship 2 count");
+    assertEq(LibUnit.getCapitalShipCostMultiplier(aliceEntity), initialMultiplier * 2 * 2, "colony ship 2 cost");
 
     assertEq(
       amount * 4,
