@@ -15,11 +15,13 @@ export const TransferSelect = ({
   setEntity,
   showNewFleet,
   hideNotOwned,
+  isFrom,
 }: {
   activeEntity?: Entity | "newFleet";
   setEntity: (entity: Entity | "newFleet") => void;
   showNewFleet?: boolean;
   hideNotOwned?: boolean;
+  isFrom: boolean;
 }) => {
   const rockEntity = components.ActiveRock.use()?.value;
   if (!rockEntity) throw new Error("No active rock");
@@ -64,7 +66,7 @@ export const TransferSelect = ({
           {fleetsOnRock.map((fleet) => (
             <OwnedFleet key={`select-fleet-${fleet}`} fleet={fleet} onClick={() => setEntity(fleet)} />
           ))}
-          {inCooldown && (
+          {inCooldown && isFrom && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-neutral/75 pointer-events-auto text-error">
               <p>In Cooldown</p>
               <p>{formatTime(duration)}</p>
