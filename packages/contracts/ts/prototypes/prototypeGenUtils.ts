@@ -62,7 +62,6 @@ export const getResourceValue = (resourceValue: { [x: string]: number }) => {
 
 export const getPUnitData = (data: {
   hp: number;
-  decryption: number;
   attack: number;
   defense: number;
   cargo: number;
@@ -71,7 +70,6 @@ export const getPUnitData = (data: {
 }) => {
   return {
     hp: BigInt(data.hp * SCALE),
-    decryption: BigInt(data.decryption * SCALE),
     attack: BigInt(data.attack * SCALE),
     defense: BigInt(data.defense * SCALE),
     cargo: BigInt(data.cargo * SCALE),
@@ -86,7 +84,7 @@ export const getPUnitData = (data: {
  * @returns An object containing the resources and their amounts
  */
 
-const unscaledResources = new Set([EResource.U_Housing, EResource.U_MaxMoves, EResource.U_CapitalShipCapacity]);
+const unscaledResources = new Set([EResource.U_Housing, EResource.U_MaxFleets, EResource.U_CapitalShipCapacity]);
 export const getResourceValues = (resourceValues: Record<string, number>) => {
   // unzip the array
   const [resources, amounts] = Object.entries(resourceValues).reduce(

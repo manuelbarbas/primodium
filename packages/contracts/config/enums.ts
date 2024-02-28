@@ -50,13 +50,12 @@ export enum EResource {
   IronPlate,
   Alloy,
   PVCell,
-  RocketFuel,
 
   // Utilities
   U_Electricity,
   U_Housing,
   U_CapitalShipCapacity,
-  U_MaxMoves,
+  U_MaxFleets,
   U_Defense,
   U_Unraidable,
   U_AdvancedUnraidable,

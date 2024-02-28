@@ -3,7 +3,7 @@ pragma solidity >=0.8.21;
 
 import { LibResource } from "src/libraries/LibResource.sol";
 import { LibStorage } from "src/libraries/LibStorage.sol";
-import { ResourceCount, Reserves, ReservesData, P_MarketplaceConfig } from "codegen/index.sol";
+import { ResourceCount, P_IsResource, Reserves, ReservesData, P_MarketplaceConfig } from "codegen/index.sol";
 import { RESERVE_CURRENCY } from "src/constants.sol";
 import { EResource } from "src/Types.sol";
 
@@ -16,6 +16,7 @@ library LibMarketplace {
   ) internal returns (uint256 amountReceived) {
     require(amountIn > 0, "[Marketplace] Invalid amount");
     require(path.length > 1, "[Marketplace] Invalid path");
+    require(P_IsResource.getIsResource(uint8(path[0])), "[Marketplace] Invalid resource");
 
     LibStorage.checkedDecreaseStoredResource(to, uint8(path[0]), amountIn);
 
@@ -32,6 +33,7 @@ library LibMarketplace {
 
   function _swap(uint8 resourceIn, uint8 resourceOut, uint256 amountIn) internal returns (uint256 amountOut) {
     require(resourceIn != resourceOut, "[Marketplace] Cannot swap for same resource");
+    require(P_IsResource.getIsResource(resourceOut), "[Marketplace] Invalid resource");
     // resourceA is always the smaller index to ensure we don't have two curves for the same pair
     (uint8 resourceA, uint8 resourceB) = resourceIn < resourceOut
       ? (resourceIn, resourceOut)

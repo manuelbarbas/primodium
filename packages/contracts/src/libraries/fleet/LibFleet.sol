@@ -24,8 +24,8 @@ library LibFleet {
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
   ) internal returns (bytes32 fleetId) {
-    require(ResourceCount.get(spaceRock, uint8(EResource.U_MaxMoves)) > 0, "[Fleet] Space rock has no max moves");
-    LibStorage.decreaseStoredResource(spaceRock, uint8(EResource.U_MaxMoves), 1);
+    require(ResourceCount.get(spaceRock, uint8(EResource.U_MaxFleets)) > 0, "[Fleet] Space rock has no max moves");
+    LibStorage.decreaseStoredResource(spaceRock, uint8(EResource.U_MaxFleets), 1);
     //require(ResourceCount.get(spaceRock, EResource.U_Cargo) > 0, "[Fleet] Space rock has no cargo capacity"))
     fleetId = LibEncode.getTimedHash(playerEntity, FleetKey);
     uint256 gracePeriodLength = (P_GracePeriod.getFleet() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();

@@ -182,7 +182,7 @@ export const EntityType = {
   Electricity: toHex32("U_Electricity") as Entity,
   Housing: toHex32("U_Housing") as Entity,
   VesselCapacity: toHex32("U_Vessel") as Entity,
-  FleetCount: toHex32("U_MaxMoves") as Entity,
+  FleetCount: toHex32("U_MaxFleets") as Entity,
   Unraidable: toHex32("U_Unraidable") as Entity,
   AdvancedUnraidable: toHex32("U_AdvancedUnraidable") as Entity,
   CapitalShipCapacity: toHex32("U_CapitalShip") as Entity,
@@ -442,8 +442,6 @@ export const ResourceStorages = new Set([
   EntityType.Iridium,
   EntityType.Platinum,
   EntityType.Kimberlite,
-  EntityType.Encryption,
-  EntityType.HP,
 ]);
 
 export const UtilityStorages = new Set([
@@ -480,13 +478,12 @@ export const ResourceEnumLookup: Record<Entity, EResource> = {
   [EntityType.Kimberlite]: EResource.Kimberlite,
   [EntityType.Alloy]: EResource.Alloy,
   [EntityType.PVCell]: EResource.PVCell,
-  [EntityType.RocketFuel]: EResource.RocketFuel,
   [EntityType.IronPlate]: EResource.IronPlate,
 
   [EntityType.Electricity]: EResource.U_Electricity,
   [EntityType.Housing]: EResource.U_Housing,
   [EntityType.CapitalShipCapacity]: EResource.U_CapitalShipCapacity,
-  [EntityType.FleetCount]: EResource.U_MaxMoves,
+  [EntityType.FleetCount]: EResource.U_MaxFleets,
   [EntityType.Defense]: EResource.U_Defense,
   [EntityType.Unraidable]: EResource.U_Unraidable,
   [EntityType.AdvancedUnraidable]: EResource.U_AdvancedUnraidable,

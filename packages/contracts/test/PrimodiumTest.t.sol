@@ -40,7 +40,7 @@ contract PrimodiumTest is MudTest {
   uint8 Iron = uint8(EResource.Iron);
   uint8 Copper = uint8(EResource.Copper);
   uint8 Platinum = uint8(EResource.Platinum);
-  uint8 U_MaxMoves = uint8(EResource.U_MaxMoves);
+  uint8 U_MaxFleets = uint8(EResource.U_MaxFleets);
   uint8 Kimberlite = uint8(EResource.Kimberlite);
   uint8 Lithium = uint8(EResource.Lithium);
   uint8 Titanium = uint8(EResource.Titanium);
@@ -425,8 +425,8 @@ contract PrimodiumTest is MudTest {
     uint256[] memory unitCounts,
     uint256[] memory resourceCounts
   ) public {
-    if (ResourceCount.get(spaceRock, uint8(EResource.U_MaxMoves)) == 0) {
-      increaseProduction(spaceRock, EResource.U_MaxMoves, 1);
+    if (ResourceCount.get(spaceRock, uint8(EResource.U_MaxFleets)) == 0) {
+      increaseProduction(spaceRock, EResource.U_MaxFleets, 1);
     }
     setupCreateFleetNoMaxMovesGranted(player, spaceRock, unitCounts, resourceCounts);
   }

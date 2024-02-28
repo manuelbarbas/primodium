@@ -113,6 +113,8 @@ export const config = mudConfig({
       valueSchema: {
         resource: "uint8",
         initialCost: "uint256",
+        decryption: "uint256",
+        cooldownExtension: "uint256",
       },
     },
 
@@ -210,16 +212,18 @@ export const config = mudConfig({
     },
 
     /* -------------------------------- Resources ------------------------------- */
-    P_IsAdvancedResource: {
+    P_IsResource: {
       keySchema: { id: "uint8" }, // EResource
-      valueSchema: "bool",
+      valueSchema: {
+        isResource: "bool",
+        isAdvanced: "bool",
+      },
     },
 
     P_IsUtility: {
       keySchema: { id: "uint8" }, // EResource
       valueSchema: "bool",
     },
-
     //when the storage for this resources is provided it is full
     P_IsRecoverable: {
       keySchema: { id: "uint8" }, // EResource
@@ -413,7 +417,6 @@ export const config = mudConfig({
         cargo: "uint256",
         trainingTime: "uint256",
         hp: "uint256",
-        decryption: "uint256",
       },
     },
 
@@ -742,6 +745,11 @@ export const config = mudConfig({
     },
 
     GracePeriod: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "uint256",
+    },
+
+    CooldownEnd: {
       keySchema: { entity: "bytes32" },
       valueSchema: "uint256",
     },

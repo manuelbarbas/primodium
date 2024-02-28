@@ -87,6 +87,11 @@ contract LibAsteroidTest is PrimodiumTest {
     assertEq(expectedAsteroidData.mapId, actualAsteroidData.mapId, "mapId");
     assertEq(Position.get(asteroidEntity), position);
     assertEq(ReversePosition.get(position.x, position.y), asteroidEntity, "reversePosition");
+    assertEq(
+      MaxResourceCount.get(asteroidEntity, uint8(EResource.U_MaxFleets)),
+      0,
+      "Asteroid should have 0 max fleets"
+    );
   }
 
   function testSecondaryAsteroidDefense() public {

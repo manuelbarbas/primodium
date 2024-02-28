@@ -14,7 +14,7 @@ export const FriendlyFleets: React.FC = () => {
 
   const friendlyFleets = useOrbitingFleets(selectedRock);
   const maxFleets =
-    components.ResourceCount.getWithKeys({ entity: selectedRock as Hex, resource: EResource.U_MaxMoves })?.value ?? 0n;
+    components.ResourceCount.getWithKeys({ entity: selectedRock as Hex, resource: EResource.U_MaxFleets })?.value ?? 0n;
 
   return (
     <div className="flex flex-col gap-2 p-2">
