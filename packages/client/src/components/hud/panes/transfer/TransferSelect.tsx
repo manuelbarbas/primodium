@@ -7,6 +7,8 @@ import { components } from "src/network/components";
 import { Hex } from "viem";
 import { OwnedAsteroid } from "../OwnedAsteroids";
 import { OwnedFleet } from "../OwnedFleets";
+import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
+import { formatTime } from "src/util/number";
 
 export const TransferSelect = ({
   activeEntity,
@@ -24,6 +26,7 @@ export const TransferSelect = ({
   const query = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination: rockEntity })];
   const time = components.Time.use()?.value ?? 0n;
   const playerEntity = useMud().playerAccount.entity;
+  const { inCooldown, duration } = useInCooldownEnd(activeEntity as Entity);
   const fleetsOnRock = [...useEntityQuery(query)].filter((entity) => {
     if (entity == activeEntity) return false;
     const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
@@ -39,27 +42,35 @@ export const TransferSelect = ({
     components.ResourceCount.getWithKeys({ entity: rockEntity as Hex, resource: EResource.U_MaxFleets })?.value ?? 0n;
 
   return (
-    <div className="w-full h-full bg-base-100 p-2 overflow-hidden pb-8 flex flex-col gap-2 border border-secondary/50">
+    <div className="w-full h-full bg-base-100 p-2 overflow-hidden flex flex-col gap-2 border border-secondary/50">
       <div className="w-full h-12 grid place-items-center text-sm uppercase font-bold">Select A Fleet or Asteroid</div>
-      <div className="overflow-y-auto grid grid-cols-2 gap-4 p-1 w-full scrollbar">
-        {activeEntity !== rockEntity && <OwnedAsteroid asteroid={rockEntity} onClick={() => setEntity(rockEntity)} />}
-        {showNewFleet &&
-          Array(Number(fleetsAvailable))
-            .fill(0)
-            .map((_, index) => (
-              <Button
-                disabled={activeEntity !== rockEntity}
-                key={`newFleet-${index}`}
-                className="row-span-1 flex flex-col p-2 min-h-36 items-center text-xs bg-base-100 h-full flex-nowrap border-secondary"
-                onClick={() => setEntity("newFleet")}
-              >
-                <img src="/img/icons/addicon.png" className="w-8" />
-                New Fleet
-              </Button>
-            ))}
-        {fleetsOnRock.map((fleet) => (
-          <OwnedFleet key={`select-fleet-${fleet}`} fleet={fleet} onClick={() => setEntity(fleet)} />
-        ))}
+      <div className="relative w-full h-full overflow-y-auto overflow-x-hidden scrollbar">
+        <div className="grid grid-cols-2 gap-2 w-full">
+          {activeEntity !== rockEntity && <OwnedAsteroid asteroid={rockEntity} onClick={() => setEntity(rockEntity)} />}
+          {showNewFleet &&
+            Array(Number(fleetsAvailable))
+              .fill(0)
+              .map((_, index) => (
+                <Button
+                  disabled={activeEntity !== rockEntity}
+                  key={`newFleet-${index}`}
+                  className="row-span-1 flex flex-col p-2 min-h-36 items-center text-xs bg-base-100 h-full flex-nowrap border-secondary"
+                  onClick={() => setEntity("newFleet")}
+                >
+                  <img src="/img/icons/addicon.png" className="w-8" />
+                  New Fleet
+                </Button>
+              ))}
+          {fleetsOnRock.map((fleet) => (
+            <OwnedFleet key={`select-fleet-${fleet}`} fleet={fleet} onClick={() => setEntity(fleet)} />
+          ))}
+          {inCooldown && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-neutral/75 pointer-events-auto text-error">
+              <p>In Cooldown</p>
+              <p>{formatTime(duration)}</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

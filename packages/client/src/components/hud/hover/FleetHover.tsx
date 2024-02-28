@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { FaFire } from "react-icons/fa";
 import { Card } from "src/components/core/Card";
 import { IconLabel } from "src/components/core/IconLabel";
-import { useCooldownEnd } from "src/hooks/useCooldownEnd";
+import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
 import { Loader } from "src/components/core/Loader";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
@@ -25,7 +25,7 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const time = components.Time.use()?.value ?? 0n;
   const stance = components.FleetStance.use(entity);
   const { inGracePeriod, duration } = useInGracePeriod(entity);
-  const { inCooldown, duration: coolDownDuration } = useCooldownEnd(entity);
+  const { inCooldown, duration: coolDownDuration } = useInCooldownEnd(entity);
 
   const fleetStateText = useMemo(() => {
     const arrivalTime = movement?.arrivalTime ?? 0n;

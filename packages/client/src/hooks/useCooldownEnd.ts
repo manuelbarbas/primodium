@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { components } from "src/network/components";
 dayjs.extend(duration);
 
-export const useCooldownEnd = (entity: Entity) => {
+export const useInCooldownEnd = (entity: Entity) => {
   const time = components.Time.use()?.value ?? 0n;
   const endTime = components.CooldownEnd.use(entity)?.value ?? 0n;
 

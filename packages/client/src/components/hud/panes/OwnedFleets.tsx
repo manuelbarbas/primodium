@@ -3,17 +3,20 @@ import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has } from "@latticexyz/recs";
 import { EFleetStance } from "contracts/config/enums";
 import { useMemo } from "react";
+import { FaFire } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
+import { Tooltip } from "src/components/core/Tooltip";
 import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
+import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
 import { useFleetStats } from "src/hooks/useFleetCount";
 import { usePlayerOwner } from "src/hooks/usePlayerOwner";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { EntityType } from "src/util/constants";
 import { entityToFleetName, entityToRockName } from "src/util/name";
-import { formatNumber, formatResourceCount, formatTime } from "src/util/number";
+import { formatNumber, formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
 import { getFleetTilePosition } from "src/util/unit";
 
 export const LabeledValue: React.FC<{
@@ -35,7 +38,7 @@ export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ 
   const movement = components.FleetMovement.use(fleet);
   const time = components.Time.use()?.value ?? 0n;
   const stance = components.FleetStance.use(fleet);
-
+  const { duration, inCooldown } = useInCooldownEnd(fleet);
   const owner = usePlayerOwner(fleet);
   const playerEntity = useMud().playerAccount.entity;
 
@@ -71,6 +74,14 @@ export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ 
         {fleetStateText}
         {!!movement && <span className="text-accent">{entityToRockName(movement.destination as Entity)}</span>}
       </p>
+      {inCooldown && (
+        <Tooltip text="cooldown" direction="left">
+          <div className="absolute right-0 top-0 flex bg-error font-bold border border-error/50 gap-1 text-xs p-1 h-4 items-center">
+            <FaFire />
+            {formatTimeShort(duration)}
+          </div>
+        </Tooltip>
+      )}
       <hr className="w-full border border-secondary/25" />
       <div className="grid grid-cols-2 gap-x-3 p-1">
         <div className="grid grid-cols-2 gap-1">
