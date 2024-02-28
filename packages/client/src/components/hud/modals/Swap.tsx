@@ -169,6 +169,7 @@ interface ResourceSelectorProps {
 const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
   const selectedAsteroid = components.ActiveRock.use()?.value ?? singletonEntity;
   const { resourceCount, resourceStorage } = useFullResourceCount(props.resource, selectedAsteroid);
+
   return (
     <div
       className={`w-full h-20 bg-base-100 relative border border-secondary flex px-2 items-center ${props.className}`}
