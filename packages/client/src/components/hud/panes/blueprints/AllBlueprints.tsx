@@ -67,7 +67,7 @@ const BlueprintButton: React.FC<{
     >
       <BuildingImageFromType buildingType={buildingType} />
       {!hasMainbaseLevel && (
-        <div className="absolute top-0 w-full h-full text-error gap-1 font-bold flex items-center justify-center text-[.6rem] bg-neutral/50">
+        <div className="absolute top-0 w-full h-full text-error gap-1 font-bold flex items-center justify-center text-[.7rem] bg-neutral/50">
           <span className="h-3 flex items-center justify-center gap-1 bg-black">
             <FaLock />
             <p>LVL. {levelRequirement.toString()}</p>
