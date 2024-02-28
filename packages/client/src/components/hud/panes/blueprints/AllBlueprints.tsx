@@ -4,12 +4,12 @@ import { useMemo, useState } from "react";
 import { FaCaretLeft, FaCaretRight, FaLock } from "react-icons/fa";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { Action, EntityType } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
-import { useShallow } from "zustand/react/shallow";
 import { Button } from "../../../core/Button";
 import { BuildingImageFromType } from "../../../shared/BuildingImage";
 
@@ -22,7 +22,7 @@ const BlueprintButton: React.FC<{
   const {
     hooks: { useKeybinds },
   } = usePrimodium().api();
-  const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
+  const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
   const keybinds = useKeybinds();
   const selectedRockEntity = components.ActiveRock.use()?.value as Entity | undefined;
   if (!selectedRockEntity) throw new Error("No active rock entity found");
@@ -83,7 +83,7 @@ const BlueprintButton: React.FC<{
 export const AllBlueprints = () => {
   const [index, setIndex] = useState(0);
 
-  const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
+  const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
   const selectedRockEntity = components.ActiveRock.use()?.value;
   const mapId = components.Asteroid.use(selectedRockEntity)?.mapId;
   const basicBuildings = useMemo(() => {

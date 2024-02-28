@@ -21,7 +21,6 @@ contract MarketplaceSystemTest is PrimodiumTest {
     bytes32 playerEntity = addressToEntity(player);
     vm.startPrank(player);
     PositionData memory position = getTilePosition(homeAsteroid, EBuilding.Market);
-    console.log("Position: %s, %s", uint32(position.x), uint32(position.y));
     bytes32 marketEntity = world.build(EBuilding.Market, getTilePosition(homeAsteroid, EBuilding.Market));
     vm.stopPrank();
     return (homeAsteroid, marketEntity);
