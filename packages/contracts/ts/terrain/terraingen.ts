@@ -40,7 +40,7 @@ function csvToJsonCoords(tmxUrls: terrainFile[]) {
       if (err) throw err;
 
       const csv = result.map.layer[0].data[0]._ as string;
-      const lines = csv.split("\n");
+      const lines = csv.split("\n").filter((x) => !!x);
       for (let i = 0; i < lines.length; i++) {
         const currentLine = lines[i]
           .replace(/\s+/g, "")
