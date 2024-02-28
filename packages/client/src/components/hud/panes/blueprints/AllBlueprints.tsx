@@ -1,10 +1,9 @@
-import { AudioKeys, KeyNames, KeybindActions } from "@game/constants";
+import { AudioKeys, KeybindActions } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { useMemo, useState } from "react";
 import { FaCaretLeft, FaCaretRight, FaLock } from "react-icons/fa";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
-import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getBlockTypeName } from "src/util/common";
 import { Action, EntityType } from "src/util/constants";
@@ -19,11 +18,11 @@ const BlueprintButton: React.FC<{
   keybind?: KeybindActions;
   keybindActive?: boolean;
 }> = ({ buildingType, tooltipDirection, keybind, keybindActive = false }) => {
-  const {
-    hooks: { useKeybinds },
-  } = usePrimodium().api();
-  const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
-  const keybinds = useKeybinds();
+  // const {
+  //   hooks: { useKeybinds },
+  // } = useRef(usePrimodium().api()).current;
+  // const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
+  // const keybinds = useKeybinds();
   const selectedRockEntity = components.ActiveRock.use()?.value as Entity | undefined;
   if (!selectedRockEntity) throw new Error("No active rock entity found");
   const rockMainBase = components.Home.use(selectedRockEntity)?.value;
@@ -71,11 +70,11 @@ const BlueprintButton: React.FC<{
           </p>
         </div>
       )}
-      {!hideHotkeys && keybindActive && (
+      {/* {!hideHotkeys && keybindActive && (
         <p className="absolute bottom-1 left-0 flex text-xs kbd kbd-xs">
           {KeyNames[keybinds[keybind ?? KeybindActions.NULL]?.entries().next().value[0]] ?? "?"}
         </p>
-      )}
+      )} */}
     </Button>
   );
 };

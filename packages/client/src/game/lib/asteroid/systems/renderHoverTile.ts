@@ -18,6 +18,7 @@ export const renderHoverTile = (scene: Scene) => {
     const tileCoord = components.HoverTile.get();
 
     if (!tileCoord) return;
+    console.log("tile:", tileCoord);
 
     const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
 

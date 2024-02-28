@@ -18,8 +18,12 @@ contract MarketplaceSystemTest is PrimodiumTest {
     P_RequiredBaseLevel.deleteRecord(MarketPrototypeId, 1);
     P_RequiredResources.deleteRecord(MarketPrototypeId, 1);
     vm.stopPrank();
-    vm.prank(player);
-    bytes32 marketEntity = world.build(EBuilding.Market, getPosition1(player));
+    bytes32 playerEntity = addressToEntity(player);
+    vm.startPrank(player);
+    PositionData memory position = getTilePosition(homeAsteroid, EBuilding.Market);
+    console.log("Position: %s, %s", uint32(position.x), uint32(position.y));
+    bytes32 marketEntity = world.build(EBuilding.Market, getTilePosition(homeAsteroid, EBuilding.Market));
+    vm.stopPrank();
     return (homeAsteroid, marketEntity);
   }
 

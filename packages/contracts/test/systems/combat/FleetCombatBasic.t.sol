@@ -116,7 +116,6 @@ contract FleetCombatSystemTest is PrimodiumTest {
     GracePeriod.set(bobHomeAsteroid, block.timestamp);
 
     //todo the same build has some prototype config issues realted to storage increase when fixed the following lines which initialize
-    //buildBuilding(bob, EBuilding.SAM, getPosition1(bob));
     uint256 defense = 1000 * 1e18;
     uint256 hpProductionIncrease = 1 * 1e18;
     uint256 hp = 1000 * 1e18;

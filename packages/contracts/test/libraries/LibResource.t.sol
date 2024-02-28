@@ -244,16 +244,16 @@ contract LibResourceTest is PrimodiumTest {
     bytes32 spaceRockEntity = Home.get(playerEntity);
     uint256 startingResourceCount = 100;
     increaseResource(spaceRockEntity, EResource.Iron, startingResourceCount);
-    buildBuilding(creator, EBuilding.IronMine, getIronPosition(creator));
-    buildBuilding(creator, EBuilding.IronPlateFactory, getPosition1(creator));
-    buildBuilding(creator, EBuilding.IronPlateFactory, getPosition2(creator));
-    buildBuilding(creator, EBuilding.IronPlateFactory, getPosition3(creator));
+    buildBuilding(creator, EBuilding.IronMine);
+    buildBuilding(creator, EBuilding.IronPlateFactory);
+    buildBuilding(creator, EBuilding.IronPlateFactory);
+    buildBuilding(creator, EBuilding.IronPlateFactory);
     uint256 resourceConsumption = ConsumptionRate.get(spaceRockEntity, Iron);
     uint256 resourceProduction = ProductionRate.get(spaceRockEntity, Iron);
 
     uint256 timeUntilEmpty = startingResourceCount / resourceConsumption;
     vm.warp(block.timestamp + 1000000);
 
-    buildBuilding(creator, EBuilding.IronMine, getIronPosition2(creator));
+    buildBuilding(creator, EBuilding.IronMine);
   }
 }

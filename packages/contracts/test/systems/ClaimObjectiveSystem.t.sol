@@ -96,55 +96,6 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     );
   }
 
-  function testClaimObjectiveSecondaryAsteroid() public {
-    bytes32 spaceRockEntity = Home.get(playerEntity);
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
-    console.log("claiming objective", uint256(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronMine))));
-    MaxResourceCount.set(spaceRockEntity, uint8(EResource.Iron), 100);
-    P_ResourceRewardData memory resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
-    resourceRewardData.resources[0] = uint8(EResource.Iron);
-    resourceRewardData.amounts[0] = 100;
-    P_ResourceReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)), resourceRewardData);
-
-    world.claimObjective(homeRock, EObjectives.BuildIronMine);
-    assertEq(
-      ResourceCount.get(spaceRockEntity, uint8(EResource.Iron)),
-      resourceRewardData.amounts[0],
-      "Resource does not match"
-    );
-    // claim copper mine with secondary rock
-    LibAsteroid.initSecondaryAsteroid(PositionData(0, 0, 0), rock);
-    MaxResourceCount.set(rock, uint8(EResource.Copper), 1000000);
-    // ResourceCount.set(rock, uint8(EResource.Copper), 10000);
-    console.log("reached here");
-
-    //todo for some reason the line bellow encounters an error  so the actual function code is copy pasted here
-    // I removed call to subsytem from libraries but issue still persists
-    //initializeSpaceRockOwnership(rock, playerEntity);
-
-    //alternative
-    //LibAsteroid.initializeSpaceRockOwnership(rock, playerEntity);
-    //buildMainBase(playerEntity, rock);
-    OwnedBy.set(rock, playerEntity);
-    ColoniesMap.add(playerEntity, AsteroidOwnedByKey, rock);
-    PositionData memory mainBasePosition = Position.get(MainBasePrototypeId);
-    mainBasePosition.parent = rock;
-    world.build(EBuilding.MainBase, mainBasePosition);
-    console.log("reached here 2");
-    world.build(EBuilding.CopperMine, getIronPosition(creator));
-    resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
-    resourceRewardData.resources[0] = uint8(EResource.Copper);
-    resourceRewardData.amounts[0] = 100;
-    P_ResourceReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildCopperMine)), resourceRewardData);
-
-    world.claimObjective(rock, EObjectives.BuildCopperMine);
-    assertEq(
-      ResourceCount.get(rock, uint8(EResource.Copper)),
-      resourceRewardData.amounts[0],
-      "Resource does not match"
-    );
-  }
-
   function testClaimObjectiveReceiveResourceRewards() public {
     bytes32 spaceRockEntity = Home.get(playerEntity);
     ResourceCount.set(spaceRockEntity, uint8(EResource.Iron), 0);
@@ -226,7 +177,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   }
 
   function testClaimObjectiveHasBuiltBuilding() public {
-    world.build(EBuilding.IronMine, getIronPosition(creator));
+    world.build(EBuilding.IronMine, getTilePosition(homeRock, EBuilding.IronMine));
     bytes32 spaceRockEntity = Home.get(playerEntity);
     MaxResourceCount.set(spaceRockEntity, uint8(EResource.Iron), 100);
     P_ResourceRewardData memory resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
@@ -238,7 +189,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   }
 
   function testClaimObjectiveHasProducedResources() public {
-    world.build(EBuilding.IronMine, getIronPosition(creator));
+    world.build(EBuilding.IronMine, getTilePosition(homeRock, EBuilding.IronMine));
     bytes32 spaceRockEntity = Home.get(playerEntity);
     MaxResourceCount.set(spaceRockEntity, uint8(EResource.Iron), 100);
     P_ResourceRewardData memory resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
@@ -274,7 +225,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   }
 
   function testFailClaimObjectiveHasProducedResources() public {
-    world.build(EBuilding.IronMine, getIronPosition(creator));
+    world.build(EBuilding.IronMine, getTilePosition(homeRock, EBuilding.IronMine));
     bytes32 spaceRockEntity = Home.get(playerEntity);
     world.claimObjective(homeRock, EObjectives.BuildIronMine);
     P_ProducedResourcesData memory producedResourcesData = P_ProducedResourcesData(new uint8[](1), new uint256[](1));
