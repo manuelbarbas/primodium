@@ -5,16 +5,18 @@ import "test/PrimodiumTest.t.sol";
 
 contract UpgradeBuildingSystemTest is PrimodiumTest {
   bytes32 playerEntity;
+  bytes32 rock;
 
   function setUp() public override {
     super.setUp();
     spawn(creator);
     playerEntity = addressToEntity(creator);
+    rock = Home.get(playerEntity);
     vm.startPrank(creator);
   }
 
   function testUpgradeMaxedBuildingFail() public {
-    PositionData memory coord = getIronPosition(creator);
+    PositionData memory coord = getTilePosition(rock, EBuilding.IronMine);
     bytes32 ironMine = world.build(EBuilding.IronMine, coord);
     uint256 ironMineMaxLevel = P_MaxLevel.get(IronMinePrototypeId);
 
@@ -29,7 +31,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     removeRequiredResources(EBuilding.IronMine);
     removeRequiredMainBase(EBuilding.IronMine);
     uint256 ironMineMaxLevel = P_MaxLevel.get(IronMinePrototypeId);
-    PositionData memory coord = getIronPosition(creator);
+    PositionData memory coord = getTilePosition(rock, EBuilding.IronMine);
     world.build(EBuilding.IronMine, coord);
     for (uint256 i = 1; i < ironMineMaxLevel; i++) {
       assertEq(Level.get(LibBuilding.getBuildingFromCoord(coord)), i, "building should be level i");
@@ -57,8 +59,9 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     P_RequiredResources.set(IronMinePrototypeId, 2, requiredResourcesData);
 
     switchPrank(creator);
-    world.build(EBuilding.IronMine, getIronPosition(creator));
-    world.upgradeBuilding(getIronPosition(creator));
+    PositionData memory coord = getTilePosition(rock, EBuilding.IronMine);
+    world.build(EBuilding.IronMine, coord);
+    world.upgradeBuilding(coord);
     assertEq(ResourceCount.get(spaceRockEntity, Iron), initial - l1 - l2);
   }
 
@@ -80,9 +83,10 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     P_RequiredResources.set(IronMinePrototypeId, 2, requiredResourcesData);
 
     switchPrank(creator);
-    world.build(EBuilding.IronMine, getIronPosition(creator));
-    world.toggleBuilding(getIronPosition(creator));
-    world.upgradeBuilding(getIronPosition(creator));
+    PositionData memory coord = getTilePosition(rock, EBuilding.IronMine);
+    world.build(EBuilding.IronMine, coord);
+    world.toggleBuilding(coord);
+    world.upgradeBuilding(coord);
     assertEq(ResourceCount.get(spaceRockEntity, Iron), initial - l1 - l2);
   }
 
@@ -104,8 +108,9 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     P_RequiredDependency.set(IronMinePrototypeId, 2, requiredDependenciesData);
 
     switchPrank(creator);
-    world.build(EBuilding.IronMine, getIronPosition(creator));
-    world.upgradeBuilding(getIronPosition(creator));
+    PositionData memory coord = getTilePosition(rock, EBuilding.IronMine);
+    world.build(EBuilding.IronMine, coord);
+    world.upgradeBuilding(coord);
 
     assertEq(ProductionRate.get(spaceRockEntity, Copper), originalProduction);
     assertEq(ConsumptionRate.get(spaceRockEntity, Copper), l2);
@@ -129,10 +134,11 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     P_RequiredDependency.set(IronMinePrototypeId, 2, requiredDependenciesData);
 
     switchPrank(creator);
-    world.build(EBuilding.IronMine, getIronPosition(creator));
-    world.toggleBuilding(getIronPosition(creator));
+    PositionData memory coord = getTilePosition(rock, EBuilding.IronMine);
+    world.build(EBuilding.IronMine, coord);
+    world.toggleBuilding(coord);
 
-    world.upgradeBuilding(getIronPosition(creator));
+    world.upgradeBuilding(coord);
 
     assertEq(ProductionRate.get(spaceRockEntity, Copper), originalProduction);
     assertEq(ConsumptionRate.get(spaceRockEntity, Copper), 0);
@@ -155,8 +161,9 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
     switchPrank(creator);
 
-    world.build(EBuilding.IronMine, getIronPosition(creator));
-    world.upgradeBuilding(getIronPosition(creator));
+    PositionData memory coord = getTilePosition(rock, EBuilding.IronMine);
+    world.build(EBuilding.IronMine, coord);
+    world.upgradeBuilding(coord);
     assertEq(ProductionRate.get(spaceRockEntity, Iron), increase2);
   }
 
@@ -177,10 +184,11 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
     switchPrank(creator);
 
-    world.build(EBuilding.IronMine, getIronPosition(creator));
-    world.toggleBuilding(getIronPosition(creator));
+    PositionData memory coord = getTilePosition(rock, EBuilding.IronMine);
+    world.build(EBuilding.IronMine, coord);
+    world.toggleBuilding(coord);
 
-    world.upgradeBuilding(getIronPosition(creator));
+    world.upgradeBuilding(coord);
     assertEq(ProductionRate.get(spaceRockEntity, Iron), 0);
   }
 
@@ -195,8 +203,10 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     P_ByLevelMaxResourceUpgrades.set(IronMinePrototypeId, Iron, 2, 100);
     MaxResourceCount.set(spaceRockEntity, Iron, 0);
     switchPrank(creator);
-    world.build(EBuilding.IronMine, getIronPosition(creator));
-    world.upgradeBuilding(getIronPosition(creator));
+    PositionData memory coord = getTilePosition(rock, EBuilding.IronMine);
+    world.build(EBuilding.IronMine, coord);
+    world.upgradeBuilding(coord);
+
     assertEq(MaxResourceCount.get(spaceRockEntity, Iron), 100);
   }
 
@@ -211,10 +221,11 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     P_ByLevelMaxResourceUpgrades.set(IronMinePrototypeId, Iron, 2, 100);
     MaxResourceCount.set(spaceRockEntity, Iron, 0);
     switchPrank(creator);
-    world.build(EBuilding.IronMine, getIronPosition(creator));
-    world.toggleBuilding(getIronPosition(creator));
+    PositionData memory coord = getTilePosition(rock, EBuilding.IronMine);
+    world.build(EBuilding.IronMine, coord);
+    world.toggleBuilding(coord);
 
-    world.upgradeBuilding(getIronPosition(creator));
+    world.upgradeBuilding(coord);
     assertEq(MaxResourceCount.get(spaceRockEntity, Iron), 0);
   }
 }

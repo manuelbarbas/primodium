@@ -97,80 +97,47 @@ contract PrimodiumTest is MudTest {
     console.log("parent", uint256(coord.parent));
   }
 
-  function getHomeAsteroidPosition(address player) public view returns (PositionData memory) {
-    bytes32 asteroid = Home.get(addressToEntity(player));
-    return Position.get(asteroid);
-  }
-
-  function getMainBasePosition(address player) internal view returns (PositionData memory) {
-    PositionData memory position = Position.get(MainBasePrototypeId);
-    return getPosition(PositionData2D(position.x, position.y), player);
-  }
-
-  function getPosition1(address player) internal pure returns (PositionData memory) {
-    PositionData2D memory coord1 = PositionData2D(15, 12);
-    return getPosition(coord1, player);
-  }
-
-  function getPosition2(address player) internal pure returns (PositionData memory) {
-    PositionData2D memory coord2 = PositionData2D(23, 17);
-    return getPosition(coord2, player);
-  }
-
-  function getPosition3(address player) internal pure returns (PositionData memory) {
-    PositionData2D memory coord3 = PositionData2D(13, 8);
-    return getPosition(coord3, player);
-  }
-
-  function getIronPosition(address player) internal pure returns (PositionData memory) {
-    PositionData2D memory coord = PositionData2D(20, 8);
-    return getPosition(coord, player);
-  }
-
-  function getIronPosition2(address player) internal pure returns (PositionData memory) {
-    PositionData2D memory coord = PositionData2D(21, 8);
-    return getPosition(coord, player);
-  }
-
-  function getCopperPosition(address player) internal pure returns (PositionData memory) {
-    PositionData2D memory coord = PositionData2D(20, 15);
-    return getPosition(coord, player);
-  }
-
-  function getNonIronPosition(address player) internal pure returns (PositionData memory) {
-    PositionData2D memory coord = PositionData2D(8, 15);
-    return getPosition(coord, player);
-  }
-
-  function getTilePosition(bytes32 asteroidEntity, EResource resource) internal view returns (PositionData memory) {
-    uint8 mapId = Asteroid.getMapId(asteroidEntity);
-    console.log("map id:, ", mapId);
+  function canPlaceBuildingTiles(
+    bytes32 asteroidEntity,
+    bytes32 buildingPrototype,
+    PositionData memory position
+  ) internal view returns (bool) {
+    int32[] memory blueprint = P_Blueprint.get(buildingPrototype);
     Bounds memory bounds = LibBuilding.getSpaceRockBounds(asteroidEntity);
-    console.log("x bounds: %s, %s", uint32(bounds.minX), uint32(bounds.maxX));
-    console.log("y bounds: %s, %s", uint32(bounds.minY), uint32(bounds.maxY));
+    bytes32[] memory tiles = new bytes32[](blueprint.length / 2);
+    for (uint256 i = 0; i < blueprint.length; i += 2) {
+      PositionData memory relativeCoord = PositionData(blueprint[i], blueprint[i + 1], 0);
+      PositionData memory absoluteCoord = PositionData(
+        position.x + relativeCoord.x,
+        position.y + relativeCoord.y,
+        position.parent
+      );
+      bytes32 tileEntity = LibEncode.getHash(BuildingTileKey, absoluteCoord);
+      if (OwnedBy.get(tileEntity) != 0) return false;
+      if (
+        bounds.minX > absoluteCoord.x ||
+        bounds.minY > absoluteCoord.y ||
+        bounds.maxX < absoluteCoord.x ||
+        bounds.maxY < absoluteCoord.y
+      ) return false;
+    }
+    return true;
+  }
+
+  function getTilePosition(bytes32 asteroidEntity, EBuilding buildingType) internal view returns (PositionData memory) {
+    bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
+    uint8 mapId = Asteroid.getMapId(asteroidEntity);
+    Bounds memory bounds = LibBuilding.getSpaceRockBounds(asteroidEntity);
     for (int32 i = bounds.minX; i < bounds.maxX; i++) {
       for (int32 j = bounds.minY; j < bounds.maxY; j++) {
-        uint8 foundResource = P_Terrain.get(mapId, i, j);
-        if (foundResource == uint8(resource)) {
-          return PositionData(i, j, asteroidEntity);
-        }
+        PositionData memory coord = PositionData(i, j, asteroidEntity);
+        if (Spawned.get(LibBuilding.getBuildingFromCoord(coord))) continue;
+        if (!LibBuilding.canBuildOnTile(buildingPrototype, coord)) continue;
+        if (!canPlaceBuildingTiles(asteroidEntity, buildingPrototype, coord)) continue;
+        return coord;
       }
     }
-    revert("Resource not found");
-  }
-
-  function getPosition(int32 x, int32 y, address player) internal pure returns (PositionData memory coord) {
-    return getPosition(PositionData2D(x, y), player);
-  }
-
-  function getPosition(
-    PositionData2D memory coord2D,
-    address player
-  ) internal pure returns (PositionData memory coord) {
-    bytes32 playerEntity = addressToEntity(player);
-    bytes32 asteroid = LibEncode.getHash(playerEntity);
-
-    coord = PositionData(coord2D.x, coord2D.y, asteroid);
+    revert("Valid tile position not found");
   }
 
   function spawn(address player) internal returns (bytes32) {
@@ -326,8 +293,9 @@ contract PrimodiumTest is MudTest {
     vm.stopPrank();
   }
 
-  function buildBuilding(address player, EBuilding building, PositionData memory position) internal {
+  function buildBuilding(address player, EBuilding building) internal {
     P_RequiredResourcesData memory requiredResources = getBuildCost(building);
+    PositionData memory position = getTilePosition(Home.get(addressToEntity(player)), building);
     provideResources(position.parent, requiredResources);
     uint256 requiredMainBaseLevel = P_RequiredBaseLevel.get(P_EnumToPrototype.get(BuildingKey, uint8(building)), 1);
     upgradeMainBase(player, requiredMainBaseLevel);

@@ -61,9 +61,7 @@ contract SpawnSystemTest is PrimodiumTest {
   }
 
   function testBuildBeforeSpawnFail() public {
-    PositionData memory nonIronPositionData = getNonIronPosition(creator);
-
     vm.expectRevert(bytes("[BuildSystem] Player has not spawned"));
-    world.build(EBuilding.IronMine, nonIronPositionData);
+    world.build(EBuilding.IronMine, PositionData(0, 0, 0));
   }
 }

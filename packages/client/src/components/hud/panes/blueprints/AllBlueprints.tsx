@@ -1,7 +1,6 @@
 import { AudioKeys, KeyNames, KeybindActions } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { useMemo, useState } from "react";
-import { useShallow } from "zustand/react/shallow";
 import { FaCaretLeft, FaCaretRight, FaLock } from "react-icons/fa";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
@@ -23,7 +22,7 @@ const BlueprintButton: React.FC<{
   const {
     hooks: { useKeybinds },
   } = usePrimodium().api();
-  const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
+  const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
   const keybinds = useKeybinds();
   const selectedRockEntity = components.ActiveRock.use()?.value as Entity | undefined;
   if (!selectedRockEntity) throw new Error("No active rock entity found");
@@ -84,7 +83,7 @@ const BlueprintButton: React.FC<{
 export const AllBlueprints = () => {
   const [index, setIndex] = useState(0);
 
-  const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
+  const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
   const selectedRockEntity = components.ActiveRock.use()?.value;
   const mapId = components.Asteroid.use(selectedRockEntity)?.mapId;
   const basicBuildings = useMemo(() => {

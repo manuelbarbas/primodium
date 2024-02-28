@@ -43,7 +43,7 @@ contract LibAsteroidTest is PrimodiumTest {
 
   function findSecondaryAsteroid() public returns (PositionData memory) {
     P_GameConfigData memory config = P_GameConfig.get();
-    PositionData memory sourcePosition = getHomeAsteroidPosition(creator);
+    PositionData memory sourcePosition = Position.get(Home.get(player));
     logPosition(sourcePosition);
     bytes32 asteroidSeed;
     PositionData memory targetPosition;
