@@ -19,6 +19,7 @@ contract SpawnSystemTest is PrimodiumTest {
     assertEq(Home.get(playerEntity), asteroidEntity, "Player should have spawned on their own asteroid");
 
     assertEq(Level.get(asteroidEntity), 1, "Player should have level 1");
+    assertEq(MaxResourceCount.get(asteroidEntity, uint8(EResource.U_MaxFleets)), 1, "Asteroid should have 1 max fleet");
   }
 
   function testSpawnTwice() public {

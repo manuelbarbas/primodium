@@ -38,8 +38,9 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   const canAddFleets =
     ownedByPlayer &&
     0n <
-      (components.ResourceCount.getWithKeys({ entity: selectedAsteroid as Hex, resource: EResource.U_MaxMoves })
+      (components.ResourceCount.getWithKeys({ entity: selectedAsteroid as Hex, resource: EResource.U_MaxFleets })
         ?.value ?? 0n);
+
   const canTransfer = useOrbitingFleets(selectedAsteroid).length > 0 && ownedByPlayer;
   const noUnits = [...useUnitCounts(selectedAsteroid).entries()].every(([, count]) => count === 0n);
 

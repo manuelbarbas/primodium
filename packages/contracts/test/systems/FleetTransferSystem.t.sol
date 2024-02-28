@@ -40,7 +40,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
-    increaseResource(aliceHomeSpaceRock, EResource.U_MaxMoves, 1);
+    increaseResource(aliceHomeSpaceRock, EResource.U_MaxFleets, 1);
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
@@ -161,7 +161,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
-    increaseResource(aliceHomeSpaceRock, EResource.U_MaxMoves, 1);
+    increaseResource(aliceHomeSpaceRock, EResource.U_MaxFleets, 1);
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
@@ -205,7 +205,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
-    increaseResource(aliceHomeSpaceRock, EResource.U_MaxMoves, 1);
+    increaseResource(aliceHomeSpaceRock, EResource.U_MaxFleets, 1);
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
@@ -271,7 +271,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
-    increaseResource(aliceHomeSpaceRock, EResource.U_MaxMoves, 1);
+    increaseResource(aliceHomeSpaceRock, EResource.U_MaxFleets, 1);
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
@@ -315,7 +315,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
-    increaseResource(aliceHomeSpaceRock, EResource.U_MaxMoves, 1);
+    increaseResource(aliceHomeSpaceRock, EResource.U_MaxFleets, 1);
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
@@ -468,7 +468,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
-    increaseResource(aliceHomeSpaceRock, EResource.U_MaxMoves, 1);
+    increaseResource(aliceHomeSpaceRock, EResource.U_MaxFleets, 1);
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
