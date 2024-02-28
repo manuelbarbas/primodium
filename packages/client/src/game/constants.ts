@@ -240,6 +240,7 @@ export enum SpriteKeys {
   Construction3x3 = "sprites/construction/3x3.png",
   Construction4x4 = "sprites/construction/4x4.png",
   Construction2x3 = "sprites/construction/2x3.png",
+  Construction4x6 = "sprites/construction/4x6.png",
 
   // Resource Icons
   GracePeriod = "sprites/icons/grace.png",
