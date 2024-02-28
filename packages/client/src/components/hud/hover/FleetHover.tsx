@@ -1,8 +1,10 @@
 import { Entity } from "@latticexyz/recs";
 import { EFleetStance } from "contracts/config/enums";
 import { useMemo } from "react";
+import { FaFire } from "react-icons/fa";
 import { Card } from "src/components/core/Card";
 import { IconLabel } from "src/components/core/IconLabel";
+import { useCooldownEnd } from "src/hooks/useCooldownEnd";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { useUnitCounts } from "src/hooks/useUnitCount";
@@ -20,6 +22,7 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const time = components.Time.use()?.value ?? 0n;
   const stance = components.FleetStance.use(entity);
   const { inGracePeriod, duration } = useInGracePeriod(entity);
+  const { inCooldown, duration: coolDownDuration } = useCooldownEnd(entity);
 
   const fleetStateText = useMemo(() => {
     const arrivalTime = movement?.arrivalTime ?? 0n;
@@ -46,6 +49,12 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
             <div className="flex bg-primary font-bold border border-secondary/50 gap-2 text-xs p-1 h-4 items-center">
               <IconLabel imageUri="/img/icons/graceicon.png" className={`pixel-images w-3 h-3`} />
               {formatTimeShort(duration)}
+            </div>
+          )}
+          {inCooldown && (
+            <div className="flex bg-error font-bold border border-error/50 gap-1 text-xs p-1 h-4 items-center">
+              <FaFire />
+              {formatTimeShort(coolDownDuration)}
             </div>
           )}
         </div>

@@ -44,14 +44,13 @@ export function getUnitStats(rawUnitEntity: Entity, spaceRockEntity: Entity) {
   )?.value;
   const unitLevelKeys = { entity: unitEntity, level: unitLevel };
 
-  const { hp, decryption, attack, defense, speed, cargo } = comps.P_Unit.getWithKeys(unitLevelKeys, {
+  const { hp, attack, defense, speed, cargo } = comps.P_Unit.getWithKeys(unitLevelKeys, {
     attack: 0n,
     defense: 0n,
     speed: 0n,
     cargo: 0n,
     trainingTime: 0n,
     hp: 0n,
-    decryption: 0n,
   });
   return {
     ATK: attack,
@@ -59,7 +58,6 @@ export function getUnitStats(rawUnitEntity: Entity, spaceRockEntity: Entity) {
     SPD: speed,
     CRG: cargo,
     HP: hp,
-    DEC: decryption,
   };
 }
 
