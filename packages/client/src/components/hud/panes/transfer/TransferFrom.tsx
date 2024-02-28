@@ -1,13 +1,16 @@
 import { Entity } from "@latticexyz/recs";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FaInfoCircle, FaTimes } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { components } from "src/network/components";
 import { EntityType } from "src/util/constants";
-import { formatResourceCount, parseResourceCount } from "src/util/number";
+import { formatResourceCount, formatTime, parseResourceCount } from "src/util/number";
 import { TargetHeader } from "../../TargetHeader";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { FleetEntityHeader } from "../fleets/FleetHeader";
+import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
+import { useMud } from "src/hooks";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 export const TransferFrom = (props: {
   dragging?: boolean;
@@ -19,8 +22,11 @@ export const TransferFrom = (props: {
   setDragging?: (e: React.MouseEvent, entity: Entity, count: bigint) => void;
   remove?: () => void;
 }) => {
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
   const [keyDown, setKeyDown] = useState("");
-
+  const { inCooldown, duration } = useInCooldownEnd(props.entity as Entity);
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "Shift") {
       setKeyDown("shift");
@@ -31,6 +37,20 @@ export const TransferFrom = (props: {
     }
   }, []);
   const handleKeyUp = useCallback(() => setKeyDown(""), []);
+
+  const isOwnedByPlayer = useMemo(() => {
+    const isFleet = !!components.IsFleet.get(props.entity)?.value;
+
+    let owner;
+    if (isFleet) {
+      const spacerock = (components.OwnedBy.get(props.entity)?.value ?? singletonEntity) as Entity;
+      owner = components.OwnedBy.get(spacerock)?.value;
+    } else {
+      owner = components.OwnedBy.get(props.entity)?.value;
+    }
+
+    return owner === playerEntity;
+  }, [props.entity, playerEntity]);
 
   useEffect(() => {
     window.addEventListener("keyup", handleKeyUp);
@@ -172,6 +192,17 @@ export const TransferFrom = (props: {
           </>
         )}
       </p>
+      {!isOwnedByPlayer && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-neutral/75 pointer-events-auto text-error uppercase">
+          <p>NOT OWNED BY YOU</p>
+        </div>
+      )}
+      {inCooldown && isOwnedByPlayer && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-neutral/75 pointer-events-auto text-error uppercase">
+          <p className="font-bold">On Cooldown</p>
+          <p>{formatTime(duration)}</p>
+        </div>
+      )}
     </div>
   );
 };

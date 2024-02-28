@@ -197,7 +197,6 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
         ) : (
           <TransferSelect
             activeEntity={to}
-            isFrom={false}
             setEntity={(entity) => entity !== "newFleet" && setFrom(entity)}
             hideNotOwned
           />
@@ -249,7 +248,7 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
             remove={() => setTo(undefined)}
           />
         ) : (
-          <TransferSelect activeEntity={from} isFrom={true} setEntity={setTo} showNewFleet />
+          <TransferSelect activeEntity={from} setEntity={setTo} showNewFleet />
         )}
       </div>
       <div className="flex gap-4 w-full justify-center items-center">

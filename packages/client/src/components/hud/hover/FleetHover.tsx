@@ -40,9 +40,9 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
 
   if (loading || !exists)
     return (
-      <Card className="relative flex items-center justify-center w-56 h-24 px-auto font-bold">
+      <Card className="relative flex items-center justify-center w-56 h-24 px-auto uppercase font-bold">
         <Loader />
-        Loading Data...
+        Loading Data
       </Card>
     );
 

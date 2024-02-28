@@ -7,28 +7,23 @@ import { components } from "src/network/components";
 import { Hex } from "viem";
 import { OwnedAsteroid } from "../OwnedAsteroids";
 import { OwnedFleet } from "../OwnedFleets";
-import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
-import { formatTime } from "src/util/number";
 
 export const TransferSelect = ({
   activeEntity,
   setEntity,
   showNewFleet,
   hideNotOwned,
-  isFrom,
 }: {
   activeEntity?: Entity | "newFleet";
   setEntity: (entity: Entity | "newFleet") => void;
   showNewFleet?: boolean;
   hideNotOwned?: boolean;
-  isFrom: boolean;
 }) => {
   const rockEntity = components.ActiveRock.use()?.value;
   if (!rockEntity) throw new Error("No active rock");
   const query = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination: rockEntity })];
   const time = components.Time.use()?.value ?? 0n;
   const playerEntity = useMud().playerAccount.entity;
-  const { inCooldown, duration } = useInCooldownEnd(activeEntity as Entity);
   const fleetsOnRock = [...useEntityQuery(query)].filter((entity) => {
     if (entity == activeEntity) return false;
     const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
@@ -66,12 +61,6 @@ export const TransferSelect = ({
           {fleetsOnRock.map((fleet) => (
             <OwnedFleet key={`select-fleet-${fleet}`} fleet={fleet} onClick={() => setEntity(fleet)} />
           ))}
-          {inCooldown && isFrom && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-neutral/75 pointer-events-auto text-error">
-              <p>In Cooldown</p>
-              <p>{formatTime(duration)}</p>
-            </div>
-          )}
         </div>
       </div>
     </div>
