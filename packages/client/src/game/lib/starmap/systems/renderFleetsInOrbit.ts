@@ -9,9 +9,8 @@ import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getRockRelationship } from "src/util/asteroid";
 import { RockRelationship } from "src/util/constants";
-import { decodeEntity } from "src/util/encode";
 import { entityToFleetName } from "src/util/name";
-import { getCanAttack, getOrbitingFleets, getUnitCounts } from "src/util/unit";
+import { getCanAttack, getOrbitingFleets } from "src/util/unit";
 import {
   ObjectPosition,
   OnClickUp,
@@ -241,9 +240,9 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
     ]);
 
     const setNoFleetsAlpha = () => {
-      const noUnits = getUnitCounts(fleet).size === 0;
+      const isEmpty = !!components.IsFleetEmpty.get(fleet)?.value;
       const objects = [fleetOrbitObject, fleetLabel, gracePeriod];
-      if (noUnits) {
+      if (isEmpty) {
         objects.forEach((object) => object.setComponent(SetValue({ alpha: 0.3 })));
       } else {
         objects.forEach((object) => object.setComponent(SetValue({ alpha: 1 })));
@@ -291,9 +290,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
           gracePeriod.setComponent(ObjectPosition({ x, y }, DepthLayers.Marker + 1));
         },
       }),
-      OnComponentSystem(components.UnitCount, (_, { entity }) => {
-        const { entity: fleetEntity } = decodeEntity(components.UnitCount.metadata.keySchema, entity);
-        if (fleetEntity !== fleet) return;
+      OnComponentSystem(components.IsFleetEmpty, () => {
         setNoFleetsAlpha();
       }),
     ]);
@@ -305,7 +302,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
 export const renderFleetsInOrbit = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
-  defineComponentSystem(systemsWorld, components.FleetMovement, (update) => {
+  defineComponentSystem(systemsWorld, components.FleetMovement, async (update) => {
     const newMovement = update.value[0];
     const oldMovement = update.value[1];
     if (newMovement) {

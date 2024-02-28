@@ -1,7 +1,7 @@
 import { KeybindActions, Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo } from "react";
 import ReactDOM from "react-dom";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks";
@@ -29,13 +29,13 @@ import { Blueprints } from "./panes/blueprints/Blueprints";
 import { Chat } from "./panes/chat/Chat";
 import { Hangar } from "./panes/hangar/Hangar";
 import { Resources } from "./panes/resources/Resources";
-export const GameHUD = () => {
+import { AsteroidLoading } from "./AsteroidLoading";
+export const GameHUD = memo(() => {
   const {
     playerAccount: { entity: playerEntity },
   } = useMud();
 
   const uiScale = usePersistentStore((state) => state.uiScale);
-  const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const primodium = usePrimodium();
   const {
     camera: { createDOMContainer },
@@ -148,78 +148,84 @@ export const GameHUD = () => {
     };
   }, [closeMap, openMap, primodium]);
 
-  useEffect(() => {
+  const PhaserHUD = useMemo(() => {
     const { container, obj } = createDOMContainer("hud", { x: 0, y: 0 });
     obj.pointerEvents = "none";
     obj.transformOnly = true;
-    setContainer(container);
-  }, []);
 
-  if (!container) return null;
+    const portal = () => {
+      if (!container) return <></>;
+
+      return ReactDOM.createPortal(
+        <div className={`screen-container`}>
+          <HUD scale={uiScale} pad>
+            {/* Make map look inset */}
+            {mapOpen && (
+              <>
+                <div className="absolute inset-0 border-8 blur-lg border-secondary/25" />
+                <div className="absolute inset-0 scale-[98%] border-8 blur-lg border-info/25" />
+              </>
+            )}
+
+            <Modal title="hacker console" keybind={allowHackerModal ? KeybindActions.Console : undefined} keybindClose>
+              <Modal.Content className="w-4/5 h-[40rem]">
+                <HackerConsole />
+              </Modal.Content>
+            </Modal>
+
+            {/* MARKERS */}
+            <BuildMarker />
+            <HomeMarker />
+            <AsteroidTarget />
+            <FleetTarget />
+            <HoverTarget />
+            <BuildingMenuPopup />
+            <BlueprintInfoMarker />
+
+            {/* Widgets */}
+            <HUD.TopLeft className="flex flex-col gap-2">
+              <Profile />
+              <Blueprints />
+            </HUD.TopLeft>
+
+            <HUD.TopRight className="flex flex-col items-end gap-2">
+              <CurrentObjective />
+              <Resources />
+              <Hangar />
+              <OwnedAsteroids />
+              <OwnedFleets />
+            </HUD.TopRight>
+
+            <HUD.BottomRight>
+              <Chat />
+            </HUD.BottomRight>
+
+            <HUD.BottomLeft>
+              <Companion />
+            </HUD.BottomLeft>
+          </HUD>
+        </div>,
+        container
+      );
+    };
+
+    return portal;
+  }, [uiScale, mapOpen, allowHackerModal]);
 
   //align element with phaser elements
-  return ReactDOM.createPortal(
+  //align element with phaser elements
+  return (
     <div className={`screen-container`}>
-      <HUD scale={uiScale} pad>
-        {/* Make map look inset */}
-        {mapOpen && (
-          <>
-            <div className="absolute inset-0 border-8 blur-lg border-secondary/25" />
-            <div className="absolute inset-0 scale-[98%] border-8 blur-lg border-info/25" />
-          </>
-        )}
-
-        <Modal title="hacker console" keybind={allowHackerModal ? KeybindActions.Console : undefined} keybindClose>
-          <Modal.Content className="w-4/5 h-[40rem]">
-            <HackerConsole />
-          </Modal.Content>
-        </Modal>
-
-        {/* MARKERS */}
-        <BuildMarker />
-        <HomeMarker />
-        <AsteroidTarget />
-        <FleetTarget />
-        <HoverTarget />
-        <BuildingMenuPopup />
-        <BlueprintInfoMarker />
-
-        {/* Widgets */}
-        <HUD.TopLeft className="flex flex-col gap-2">
-          <Profile />
-          <Blueprints />
-        </HUD.TopLeft>
-        <HUD.Left></HUD.Left>
-
-        <HUD.TopRight className="flex flex-col items-end gap-2">
-          <CurrentObjective />
-          <Resources />
-          <Hangar />
-          <OwnedAsteroids />
-          <OwnedFleets />
-        </HUD.TopRight>
-
-        <HUD.BottomRight>
-          <Chat />
-        </HUD.BottomRight>
-
+      <PhaserHUD />
+      <HUD>
         <HUD.CursorFollower>
           <HoverInfo />
         </HUD.CursorFollower>
-
-        {/* <HUD.BottomLeft>{isSpectating && !mapOpen && <SpectatingDetails />}</HUD.BottomLeft> */}
-
-        <HUD.BottomLeft>
-          <Companion />
-        </HUD.BottomLeft>
-      </HUD>
-
-      <HUD>
         <HUD.BottomRight>
           <BrandingLabel />
         </HUD.BottomRight>
       </HUD>
-    </div>,
-    container
+      <AsteroidLoading />
+    </div>
   );
-};
+});

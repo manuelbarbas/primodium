@@ -8,13 +8,16 @@ import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
 import { useFullResourceCount, useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { components } from "src/network/components";
-import { EntityType, ResourceImage } from "src/util/constants";
+import { EntityType, Keys, ResourceImage } from "src/util/constants";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
 import { getMoveLength } from "src/util/send";
 import { getCanSend, getFleetUnitCounts } from "src/util/unit";
 import { Card } from "../../core/Card";
 import { HealthBar } from "../HealthBar";
+import { useSyncStatus } from "src/hooks/useSyncStatus";
+import { hashEntities } from "src/util/encode";
+import { Loader } from "src/components/core/Loader";
 
 const limitAddress = (address: string, max = 10) => {
   if (address.length < max) return <span>{address}</span>;
@@ -27,17 +30,27 @@ const limitAddress = (address: string, max = 10) => {
 };
 
 export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
+  const { loading, exists } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
   const name = entityToRockName(entity);
-  const { inGracePeriod, duration } = useInGracePeriod(entity);
+  const { inGracePeriod, duration } = useInGracePeriod(entity, loading || !exists);
   const { resourceCount: encryption, resourceStorage: maxEncryption } = useFullResourceCount(
     EntityType.Encryption,
-    entity
+    entity,
+    loading || !exists
   );
 
   const isPirate = components.PirateAsteroid.has(entity);
   const ownedBy = components.OwnedBy.use(entity)?.value as Entity | undefined;
   const { address } = useAccount(ownedBy ?? singletonEntity);
-  const { strength, maxStrength } = useAsteroidStrength(entity);
+  const { strength, maxStrength } = useAsteroidStrength(entity, loading || !exists);
+
+  if (loading || !exists)
+    return (
+      <Card className="relative flex items-center justify-center w-56 h-24 px-auto font-bold">
+        <Loader />
+        Loading Data...
+      </Card>
+    );
 
   return (
     <Card className="ml-5 w-56 relative">

@@ -22,7 +22,7 @@ contract UpgradeUnitSystem is PrimodiumSystem {
     require(unit != EUnit.NULL && unit != EUnit.LENGTH, "[UpgradeUnitSystem] Invalid unit");
 
     require(
-      LibBuilding.hasRequiredBaseLevel(playerEntity, unitPrototype, targetLevel),
+      LibBuilding.hasRequiredBaseLevel(spaceRockEntity, unitPrototype, targetLevel),
       "[UpgradeUnitSystem] MainBase level requirement not met"
     );
 
