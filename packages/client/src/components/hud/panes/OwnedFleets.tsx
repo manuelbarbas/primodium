@@ -69,7 +69,7 @@ export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ 
       <hr className="w-full border border-secondary/25" />
       <p className="flex flex-col justify-center font-thin">
         {fleetStateText}
-        {!!movement && <p className="text-accent">{entityToRockName(movement.destination as Entity)}</p>}
+        {!!movement && <span className="text-accent">{entityToRockName(movement.destination as Entity)}</span>}
       </p>
       <hr className="w-full border border-secondary/25" />
       <div className="grid grid-cols-2 gap-x-3 p-1">
