@@ -7,7 +7,7 @@ import { LibUnit } from "libraries/LibUnit.sol";
 import { UtilityMap } from "libraries/UtilityMap.sol";
 import { CapitalShipPrototypeId } from "codegen/Prototypes.sol";
 
-import { P_CapitalShipConfig, P_Transportables, P_IsRecoverable, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsAdvancedResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { P_CapitalShipConfig, P_Transportables, P_IsRecoverable, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_RequiredResources, Score, P_ScoreMultiplier, P_IsUtility, P_RequiredResources, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, P_EnumToPrototype, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
 import { AsteroidOwnedByKey, UnitKey } from "src/Keys.sol";
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
@@ -225,7 +225,7 @@ library LibResource {
       if (resourceCount == 0) continue;
       uint256 vaulted = ResourceCount.get(
         spaceRockEntity,
-        P_IsAdvancedResource.get(transportables[i])
+        P_IsResource.getIsAdvanced(transportables[i])
           ? uint8(EResource.U_AdvancedUnraidable)
           : uint8(EResource.U_Unraidable)
       );
@@ -251,7 +251,7 @@ library LibResource {
       if (resourceCounts[i] == 0) continue;
       uint256 vaulted = ResourceCount.get(
         spaceRockEntity,
-        P_IsAdvancedResource.get(transportables[i])
+        P_IsResource.getIsAdvanced(transportables[i])
           ? uint8(EResource.U_AdvancedUnraidable)
           : uint8(EResource.U_Unraidable)
       );

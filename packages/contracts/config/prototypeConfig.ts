@@ -277,7 +277,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   IronPlateSupply: marketplaceSupplyTable(EResource.IronPlate, 1e2),
   AlloySupply: marketplaceSupplyTable(EResource.Alloy, 1e2),
   PVCellSupply: marketplaceSupplyTable(EResource.PVCell, 1e2),
-  RocketFuelSupply: marketplaceSupplyTable(EResource.RocketFuel, 1e2),
 
   MarketplaceConfig: {
     keys: [],
@@ -1192,10 +1191,21 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   IsAdvancedResource: {
     keys: [],
     levels: {
-      [MUDEnums.EResource.indexOf("Titanium")]: { P_IsAdvancedResource: { value: true } },
-      [MUDEnums.EResource.indexOf("Platinum")]: { P_IsAdvancedResource: { value: true } },
-      [MUDEnums.EResource.indexOf("Iridium")]: { P_IsAdvancedResource: { value: true } },
-      [MUDEnums.EResource.indexOf("Kimberlite")]: { P_IsAdvancedResource: { value: true } },
+      [MUDEnums.EResource.indexOf("Iron")]: { P_IsResource: { isResource: true, isAdvanced: false } },
+      [MUDEnums.EResource.indexOf("Copper")]: { P_IsResource: { isResource: true, isAdvanced: false } },
+      [MUDEnums.EResource.indexOf("Lithium")]: { P_IsResource: { isResource: true, isAdvanced: false } },
+      [MUDEnums.EResource.indexOf("Titanium")]: { P_IsResource: { isResource: true, isAdvanced: false } },
+      [MUDEnums.EResource.indexOf("Iridium")]: { P_IsResource: { isResource: true, isAdvanced: false } },
+      [MUDEnums.EResource.indexOf("Kimberlite")]: { P_IsResource: { isResource: true, isAdvanced: false } },
+      [MUDEnums.EResource.indexOf("Platinum")]: { P_IsResource: { isResource: true, isAdvanced: false } },
+      [MUDEnums.EResource.indexOf("IronPlate")]: { P_IsResource: { isResource: true, isAdvanced: false } },
+      [MUDEnums.EResource.indexOf("Alloy")]: { P_IsResource: { isResource: true, isAdvanced: false } },
+      [MUDEnums.EResource.indexOf("PVCell")]: { P_IsResource: { isResource: true, isAdvanced: false } },
+
+      [MUDEnums.EResource.indexOf("Titanium")]: { P_IsResource: { isResource: true, isAdvanced: true } },
+      [MUDEnums.EResource.indexOf("Platinum")]: { P_IsResource: { isResource: true, isAdvanced: true } },
+      [MUDEnums.EResource.indexOf("Iridium")]: { P_IsResource: { isResource: true, isAdvanced: true } },
+      [MUDEnums.EResource.indexOf("Kimberlite")]: { P_IsResource: { isResource: true, isAdvanced: true } },
     },
   },
 
@@ -1892,12 +1902,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_ScoreMultiplier: { value: 50n },
       P_ConsumesResource: { value: EResource.Copper },
-    },
-  },
-  RocketFuel: {
-    keys: [{ [EResource.RocketFuel]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 200n },
     },
   },
 
