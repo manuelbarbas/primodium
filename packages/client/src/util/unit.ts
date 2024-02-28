@@ -3,7 +3,7 @@ import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { components, components as comps } from "src/network/components";
 import { Hex } from "viem";
-import { PIRATE_KEY, SPEED_SCALE, UnitStorages } from "./constants";
+import { EntityType, PIRATE_KEY, SPEED_SCALE, UnitStorages } from "./constants";
 import { getInGracePeriod } from "./defense";
 import { hashKeyEntity } from "./encode";
 import { entityToFleetName } from "./name";
@@ -44,22 +44,23 @@ export function getUnitStats(rawUnitEntity: Entity, spaceRockEntity: Entity) {
   )?.value;
   const unitLevelKeys = { entity: unitEntity, level: unitLevel };
 
-  const { hp, decryption, attack, defense, speed, cargo } = comps.P_Unit.getWithKeys(unitLevelKeys, {
+  const { hp, attack, defense, speed, cargo } = comps.P_Unit.getWithKeys(unitLevelKeys, {
     attack: 0n,
     defense: 0n,
     speed: 0n,
     cargo: 0n,
     trainingTime: 0n,
     hp: 0n,
-    decryption: 0n,
   });
+
+  const decryption = comps.P_CapitalShipConfig.get()?.decryption ?? 0n;
   return {
     ATK: attack,
     DEF: defense,
     SPD: speed,
     CRG: cargo,
     HP: hp,
-    DEC: decryption,
+    DEC: rawUnitEntity == EntityType.CapitalShip ? decryption : 0n,
   };
 }
 
@@ -70,6 +71,7 @@ export const getFleetStats = (fleet: Entity) => {
 
   [...UnitStorages].forEach((unit) => {
     const unitEntity = unit as Entity;
+
     const count = components.UnitCount.getWithKeys(
       { entity: fleet as Hex, unit: unitEntity as Hex },
       { value: 0n }
@@ -81,8 +83,8 @@ export const getFleetStats = (fleet: Entity) => {
     ret.defense += unitData.DEF * count;
     ret.hp += unitData.HP * count;
     ret.cargo += unitData.CRG * count;
-    ret.decryption = bigIntMax(ret.decryption, unitData.DEC);
     ret.speed = bigIntMin(ret.speed == 0n ? BigInt(10e100) : ret.speed, unitData.SPD);
+    ret.decryption = unitEntity === EntityType.CapitalShip ? unitData.DEC : ret.decryption;
   });
   return { ...ret, title: entityToFleetName(fleet) };
 };
