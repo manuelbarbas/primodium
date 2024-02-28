@@ -191,8 +191,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         tax: 10n, // out of 1000
       },
       P_CapitalShipConfig: {
-        resource: EResource.Iron,
-        initialCost: 10n * BigInt(SCALE),
+        resource: EResource.Alloy,
+        initialCost: 10000n * BigInt(SCALE),
         decryption: 10n * BigInt(SCALE),
         cooldownExtension: 60n * 60n * 1n, // one hour
       },
