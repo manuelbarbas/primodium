@@ -143,7 +143,7 @@ export const Actions = () => {
   );
 };
 
-export const PrimeOS = () => {
+export const WidgetsPane = () => {
   return (
     <>
       <Card className="p-2 border border-accent/25 -ml-12 mb-2 z-10 pointer-events-auto">
@@ -153,7 +153,7 @@ export const PrimeOS = () => {
           <Actions />
         </SecondaryCard>
 
-        <p className="absolute -bottom-4 -right-3 bg-neutral/50 px-2">
+        <p className="absolute -bottom-4 -right-3 bg-neutral/75 px-2">
           <span className="opacity-50">{"///"}</span>
           <span className="text-accent">PRIMODIUM</span>
         </p>
@@ -217,7 +217,7 @@ export const Companion = () => {
           </div>
         </div>
 
-        {!minimized && <PrimeOS />}
+        {!minimized && <WidgetsPane />}
 
         {minimized && (
           <p className="mb-5 drop-shadow-hard">
