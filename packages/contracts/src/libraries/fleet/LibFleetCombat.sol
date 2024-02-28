@@ -43,7 +43,7 @@ library LibFleetCombat {
       CooldownEnd.set(entity, block.timestamp + cooldownEnd);
     }
 
-    uint256 totalTargetDamage = handleDamage(targetEntity, battleId, aggressorIsFleet);
+    uint256 totalTargetDamage = handleDamage(targetEntity, battleId, !aggressorIsFleet);
 
     battleResult = BattleResultData({
       aggressorEntity: entity,
