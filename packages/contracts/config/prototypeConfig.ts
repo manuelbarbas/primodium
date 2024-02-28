@@ -282,7 +282,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     keys: [],
     tables: {
       P_MarketplaceConfig: {
-        feeThousandths: 3n,
+        feeThousandths: 5n,
         lock: false,
       },
     },
