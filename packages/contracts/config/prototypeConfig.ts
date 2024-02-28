@@ -991,8 +991,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
     levels: {
       1: {
-        // P_RequiredResources: getResourceValues({ IronPlate: 2500, Alloy: 2500, PVCell: 2500 }),
-        P_RequiredResources: getResourceValues({ Iron: 1 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 2500, Alloy: 2500, PVCell: 2500 }),
+        // P_RequiredResources: getResourceValues({ Iron: 1 }),
         P_RequiredBaseLevel: { value: 3n },
         P_UnitProdMultiplier: { value: 100n },
         P_Production: getResourceValues({ U_CapitalShipCapacity: 1_000_000_000_000 }),
