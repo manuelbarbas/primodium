@@ -87,7 +87,6 @@ export const setupRecs = <config extends StoreConfig, extraTables extends Record
     // We could potentially speed this up a tiny bit by racing to see if 1) tx exists in processed block or 2) fetch tx receipt for latest block processed
     const hasTransaction$ = recentBlocks$.pipe(
       concatMap(async (blocks) => {
-        console.log("blocks", blocks);
         const txs = blocks.flatMap((block) => block.logs.map((op) => op.transactionHash).filter(isDefined));
         if (txs.includes(tx)) return true;
 
@@ -102,7 +101,6 @@ export const setupRecs = <config extends StoreConfig, extraTables extends Record
           }
           console.log(error);
           return false;
-          throw error;
         }
       })
     );

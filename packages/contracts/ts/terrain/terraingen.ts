@@ -1,6 +1,9 @@
 import { formatAndWriteSolidity } from "@latticexyz/common/codegen";
 import fs from "fs";
 import path from "path";
+import * as xml2js from "xml2js";
+
+const parser = new xml2js.Parser();
 
 type terrainFile = { id: string; filePath: string };
 type JsonCoords = {
@@ -17,41 +20,47 @@ export async function terraingen(csvSrcs: terrainFile[], outputBaseDirectory: st
 }
 
 const numberBase: Record<string, string> = {
-  1: "Copper",
-  2: "Iron",
-  3: "Lithium",
-  4: "Sulfur",
-  5: "Titanium",
-  6: "Kimberlite",
-  7: "Iridium",
-  8: "Platinum",
+  1: "Iron",
+  2: "Copper",
+  3: "Iron",
+  4: "Lithium",
+  5: "Sulfur",
+  6: "Titanium",
+  7: "Kimberlite",
+  8: "Iridium",
+  9: "Platinum",
 };
 
-function csvToJsonCoords(csvUrls: terrainFile[]) {
-  const result: Array<JsonCoords> = [];
+function csvToJsonCoords(tmxUrls: terrainFile[]) {
+  const res: Array<JsonCoords> = [];
 
-  csvUrls.forEach((csvUrl) => {
-    const csv = fs.readFileSync(csvUrl.filePath, "utf-8");
-    const lines = csv.split("\n");
-    for (let i = 0; i < lines.length; i++) {
-      const currentLine = lines[i]
-        .replace(/\s+/g, "")
-        .split(",")
-        .filter((x) => !!x);
-      for (let j = 0; j < currentLine.length; j++) {
-        if (currentLine[j] == "-1") continue;
-        const value = numberBase[currentLine[j]];
-        if (!value) throw new Error(`Invalid value ${currentLine[j]} at line ${i}, column ${j}`);
-        result.push({
-          coord: { x: j, y: i },
-          index: Number(csvUrl.id),
-          value: value,
-        });
+  tmxUrls.forEach((tmxUrl) => {
+    const tmx = fs.readFileSync(tmxUrl.filePath, "utf-8");
+    parser.parseString(tmx, (err, result) => {
+      if (err) throw err;
+
+      const csv = result.map.layer[0].data[0]._ as string;
+      const lines = csv.split("\n").filter((x) => !!x);
+      for (let i = 0; i < lines.length; i++) {
+        const currentLine = lines[i]
+          .replace(/\s+/g, "")
+          .split(",")
+          .filter((x) => !!x);
+        for (let j = 0; j < currentLine.length; j++) {
+          if (currentLine[j] == "0") continue;
+          const value = numberBase[currentLine[j]];
+          if (!value) throw new Error(`Invalid value ${currentLine[j]} at line ${i}, column ${j}`);
+          res.push({
+            coord: { x: j, y: i },
+            index: Number(tmxUrl.id),
+            value: value,
+          });
+        }
       }
-    }
+    });
   });
 
-  return result;
+  return res;
 }
 
 function generateContent(jsonContent: JsonCoords[]) {

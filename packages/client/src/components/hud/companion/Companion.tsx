@@ -197,7 +197,7 @@ export const Companion = () => {
         {!minimized && <div className="absolute bg-black inset-0 blur-3xl opacity-50" />}
         <div className={`relative z-20 pointer-events-none`}>
           <img
-            src="/img/jarvis.png"
+            src="/img/companion/idle.gif"
             className={`pixel-images h-52 m-4 ${!minimized ? "pointer-events-none" : "pointer-events-auto"}`}
             onClick={() => minimized && setMinimized(false)}
           />

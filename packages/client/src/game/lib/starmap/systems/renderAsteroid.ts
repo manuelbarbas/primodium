@@ -42,10 +42,7 @@ export const renderAsteroid = (scene: Scene) => {
 
     const ownedBy = components.OwnedBy.get(entity)?.value as Entity | undefined;
 
-    const homeAsteroid = ownedBy ? components.Home.get(ownedBy)?.value : undefined;
-    const mainBase = components.Home.get(homeAsteroid as Entity)?.value;
-
-    const mainBaseLevel = mainBase ? components.Level.get(mainBase as Entity)?.value ?? 1n : 1n;
+    const expansionLevel = components.Level.get(entity)?.value ?? 1n;
 
     const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entity);
 
@@ -97,7 +94,7 @@ export const renderAsteroid = (scene: Scene) => {
 
     const asteroidObject = asteroidObjectGroup.add("Sprite");
 
-    const sprite = getRockSprite(asteroidData.mapId, asteroidData.mapId === 1 ? mainBaseLevel : asteroidData.maxLevel);
+    const sprite = getRockSprite(asteroidData.mapId, asteroidData.mapId === 1 ? expansionLevel : asteroidData.maxLevel);
     asteroidObject.setComponents([
       ...sharedComponents,
       rotationTween,

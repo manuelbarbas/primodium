@@ -3,7 +3,7 @@ import { MUDChain, latticeTestnet, mudFoundry } from "@latticexyz/common/chains"
 export const dev = {
   ...mudFoundry,
   //COMMENT OUT INDEXER URL TO USE ONLY RPC
-  indexerUrl: "http://localhost:3002",
+  indexerUrl: "http://localhost:3001",
 };
 
 export const caldera = {
@@ -45,7 +45,7 @@ export const calderaSepolia = {
     },
   },
   faucetUrl: "https://caldera-sepolia-faucet.primodium.ai/trpc",
-  indexerUrl: "https://caldera-mud2-indexer.primodium.ai/trpc",
+  indexerUrl: "https://caldera-sepolia-indexer.primodium.ai",
   blockExplorers: {
     default: {
       name: "Blockscout",
