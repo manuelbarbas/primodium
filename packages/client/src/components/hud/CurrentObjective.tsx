@@ -1,3 +1,4 @@
+import { KeybindActions, Scenes } from "@game/constants";
 import { EObjectives } from "contracts/config/enums";
 import { useEffect, useState } from "react";
 import { FaGift, FaMapPin } from "react-icons/fa";
@@ -11,9 +12,8 @@ import { Badge } from "../core/Badge";
 import { Card } from "../core/Card";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
-import { Objectives } from "./modals/Objectives";
-import { Scenes } from "@game/constants";
 import { Widget } from "../core/Widget";
+import { Objectives } from "./modals/Objectives";
 
 const tutorialObjectives = [
   EObjectives.BuildIronMine,
@@ -73,6 +73,7 @@ export const CurrentObjective = () => {
       id="objectives"
       title="objectives"
       icon="/img/icons/objectiveicon.png"
+      hotkey={KeybindActions.Objectives}
       defaultCoord={{ x: 69, y: 420 }}
       defaultLocked
       lockable

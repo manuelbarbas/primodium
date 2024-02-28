@@ -58,6 +58,7 @@ contract FleetTransferSystem is FleetBaseSystem {
   )
     public
     _onlyFleetOwner(fromFleetId)
+    _onlyWhenNotInCooldown(fromFleetId)
     _onlyWhenFleetIsInOrbitOfSpaceRock(fromFleetId, spaceRock)
     _onlyWhenNotPirateAsteroid(spaceRock)
     _claimUnits(spaceRock)
@@ -73,6 +74,7 @@ contract FleetTransferSystem is FleetBaseSystem {
   )
     public
     _onlyFleetOwner(fleetId)
+    _onlyWhenNotInCooldown(fleetId)
     _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock)
     _onlyWhenNotPirateAsteroid(spaceRock)
     _claimResources(spaceRock)
@@ -90,6 +92,7 @@ contract FleetTransferSystem is FleetBaseSystem {
     public
     _onlyFleetOwner(fromFleetId)
     _onlyWhenFleetIsInOrbitOfSpaceRock(fromFleetId, spaceRock)
+    _onlyWhenNotInCooldown(fromFleetId)
     _onlyWhenNotPirateAsteroid(spaceRock)
     _claimResources(spaceRock)
     _claimUnits(spaceRock)
@@ -106,6 +109,7 @@ contract FleetTransferSystem is FleetBaseSystem {
   )
     public
     _onlyFleetOwner(fromFleetId)
+    _onlyWhenNotInCooldown(fromFleetId)
     _onlyWhenFleetsAreIsInSameOrbit(fromFleetId, fleetId)
     _unitCountIsValid(unitCounts)
   {
@@ -119,6 +123,7 @@ contract FleetTransferSystem is FleetBaseSystem {
   )
     public
     _onlyFleetOwner(fromFleetId)
+    _onlyWhenNotInCooldown(fromFleetId)
     _onlyWhenFleetsAreIsInSameOrbit(fromFleetId, fleetId)
     _resourceCountIsValid(resourceCounts)
   {
@@ -133,6 +138,7 @@ contract FleetTransferSystem is FleetBaseSystem {
   )
     public
     _onlyFleetOwner(fromFleetId)
+    _onlyWhenNotInCooldown(fromFleetId)
     _onlyWhenFleetsAreIsInSameOrbit(fromFleetId, fleetId)
     _unitCountIsValid(unitCounts)
     _resourceCountIsValid(resourceCounts)

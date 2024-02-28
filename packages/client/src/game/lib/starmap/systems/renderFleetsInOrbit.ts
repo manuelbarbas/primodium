@@ -159,6 +159,8 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
       OnComponentSystem(components.SelectedFleet, (_, { value: [newVal, oldVal] }) => {
         const id = `homeLine-${fleet}`;
         if (newVal?.value == fleet) {
+          const ownerPosition = components.Position.get(owner);
+          if (!ownerPosition) return;
           fleetHomeLineObject.setComponent(
             Line(tileCoordToPixelCoord({ x: ownerPosition.x, y: -ownerPosition.y }, tileWidth, tileHeight), {
               id,
@@ -186,8 +188,6 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
         });
       }),
     ]);
-
-    const ownerPosition = components.Position.get(owner) ?? { x: 0, y: 0 };
 
     const fleetLabel = fleetOrbit.add("BitmapText");
     let subscription: Subscription | null = null;

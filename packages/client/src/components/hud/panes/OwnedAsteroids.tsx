@@ -1,4 +1,4 @@
-import { Scenes } from "@game/constants";
+import { KeybindActions, Scenes } from "@game/constants";
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { Button } from "src/components/core/Button";
@@ -135,6 +135,7 @@ export const OwnedAsteroids = () => {
         y: window.innerHeight / 2 + getRandomRange(-50, 50),
       }}
       defaultLocked
+      hotkey={KeybindActions.Asteroids}
       defaultVisible
       persist
       lockable

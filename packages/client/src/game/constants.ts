@@ -541,8 +541,6 @@ export enum KeybindActions {
   Right,
   Center,
   SpacerockMenu,
-  Chat,
-  Blueprint,
   Base,
   Hotbar1,
   Hotbar2,
@@ -554,27 +552,34 @@ export enum KeybindActions {
   Hotbar8,
   Hotbar9,
   Hotbar0,
+  NextHotbar,
+  PrevHotbar,
+
   Marker1,
   Marker2,
   Marker3,
   Marker4,
+
   ZoomIn,
   ZoomOut,
   RightClick,
   LeftClick,
-  Research,
-  Inventory,
-  Mute,
-  MainMenu,
+
+  Account,
+  Blueprints,
+  Objectives,
+  Resources,
+  Units,
+  Asteroids,
+  Fleets,
+  Chat,
+  HideAll,
+
   Esc,
-  Debug,
-  DeleteBuilding,
   Modifier,
-  ToggleUI,
-  NextHotbar,
-  PrevHotbar,
   Map,
   Console,
+
   NULL,
 }
 
@@ -589,6 +594,9 @@ export const KeyNames: { [key: string]: string } = {
   ["EIGHT"]: "8",
   ["NINE"]: "9",
   ["ZERO"]: "0",
+  ["OPEN_BRACKET"]: "[",
+  ["CLOSE_BRACKET"]: "]",
+  ["SEMICOLON"]: ";",
 };
 
 export const MaxLevelToTilemap: Record<number, Tilemaps> = {

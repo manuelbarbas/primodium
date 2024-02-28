@@ -1,10 +1,10 @@
+import { KeybindActions, Scenes } from "@game/constants";
 import { Join } from "src/components/core/Join";
 import { Tabs } from "src/components/core/Tabs";
+import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { Channel } from "./Channel";
-import { Widget } from "src/components/core/Widget";
-import { Scenes } from "@game/constants";
 
 export const Chat = () => {
   const {
@@ -21,6 +21,7 @@ export const Chat = () => {
       lockable
       defaultVisible
       persist
+      hotkey={KeybindActions.Chat}
       draggable
       defaultCoord={{ x: 0, y: 0 }}
       scene={Scenes.UI}

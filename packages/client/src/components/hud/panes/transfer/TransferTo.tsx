@@ -4,11 +4,12 @@ import React, { useMemo } from "react";
 import { FaTimes } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { components } from "src/network/components";
+import { entityToFleetName } from "src/util/name";
 import { formatResourceCount } from "src/util/number";
 import { getUnitStats } from "src/util/unit";
-import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { TargetHeader } from "../../TargetHeader";
-import { FleetEntityHeader, FleetHeader } from "../fleets/FleetHeader";
+import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
+import { FleetHeader } from "../fleets/FleetHeader";
 
 export const TransferTo = (props: {
   sameOwner?: boolean;
@@ -26,12 +27,12 @@ export const TransferTo = (props: {
   hovering?: boolean;
 }) => {
   const isFleet = props.entity !== "newFleet" && components.IsFleet.has(props.entity);
-  const selectedRock = components.SelectedRock.use()?.value;
+  const selectedRock = components.ActiveRock.use()?.value;
   const noUnitsOrResources =
     !props.deltas || props.deltas.size === 0 || (props.unitCounts.size === 0 && props.resourceCounts.size === 0);
   const Header = useMemo(() => {
-    if (props.entity !== "newFleet") {
-      return isFleet ? <FleetEntityHeader entity={props.entity} /> : <TargetHeader entity={props.entity} />;
+    if (!isFleet && props.entity !== "newFleet") {
+      return <TargetHeader entity={props.entity} />;
     }
     if (!selectedRock) throw new Error("No selected rock");
     const data = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
@@ -45,7 +46,9 @@ export const TransferTo = (props: {
       data.speed = bigIntMin(data.speed == 0n ? BigInt(10e100) : data.speed, unitData.SPD);
     });
 
-    return <FleetHeader title="New Fleet" {...data} />;
+    return (
+      <FleetHeader title={props.entity === "newFleet" ? "New Fleet" : entityToFleetName(props.entity)} {...data} />
+    );
   }, [isFleet, props.entity, props.unitCounts, selectedRock]);
 
   return (

@@ -1,7 +1,7 @@
 // SwapPane.tsx
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FaExchangeAlt } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
@@ -16,10 +16,12 @@ import { getInAmount, getOutAmount } from "src/util/swap";
 
 export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
   const mud = useMud();
+
   const [fromResource, setFromResource] = useState<Entity>(EntityType.Iron);
   const [toResource, setToResource] = useState<Entity>(EntityType.Copper);
   const [inAmountRendered, setInAmountRendered] = useState<string>("");
   const [outAmountRendered, setOutAmountRendered] = useState<string>("");
+  const [lastEdited, setLastEdited] = useState<"in" | "out">("in");
 
   const selectedRock = components.ActiveRock.use()?.value;
   if (!selectedRock) throw new Error("[Swap] No active rock");
@@ -44,9 +46,17 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
       if (out == 0n) return "";
       const outString = formatResourceCount(resourceOut, out, { fractionDigits: 9, notLocale: true });
       setOutAmountRendered(outString);
+      setLastEdited("in");
     },
     [getPath]
   );
+
+  const swapUpdate = components.Swap.use(mud.playerAccount.entity);
+
+  // update price after swap occurs
+  useEffect(() => {
+    changeInAmount(fromResource, toResource, inAmountRendered);
+  }, [changeInAmount, swapUpdate]);
 
   const changeOutAmount = useCallback(
     (outAmountRendered: string) => {
@@ -63,15 +73,20 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
       if (inAmount == 0n) return "";
       const inString = formatResourceCount(fromResource, inAmount, { fractionDigits: 9, notLocale: true });
       setInAmountRendered(inString);
+      setLastEdited("out");
     },
     [fromResource, toResource, getPath]
   );
 
   const switchResources = useCallback(() => {
+    lastEdited === "in"
+      ? changeOutAmount(inAmountRendered)
+      : changeInAmount(toResource, fromResource, outAmountRendered);
+
     setFromResource(toResource);
     setToResource(fromResource);
-    changeInAmount(toResource, fromResource, outAmountRendered);
-  }, [fromResource, toResource, outAmountRendered, changeInAmount]);
+    setLastEdited(lastEdited === "in" ? "out" : "in");
+  }, [lastEdited, changeInAmount, toResource, fromResource, outAmountRendered, changeOutAmount, inAmountRendered]);
 
   const { resourceCount: fromResourceCount } = useFullResourceCount(fromResource, selectedRock);
   const { resourceCount: toResourceCount, resourceStorage: toResourceStorage } = useFullResourceCount(

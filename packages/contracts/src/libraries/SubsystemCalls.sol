@@ -42,19 +42,13 @@ function battleRaidResolve(bytes32 battleId, bytes32 attacker, bytes32 defender)
   );
 }
 
-function fleetResolveBattleEncryption(
-  bytes32 battleId,
-  bytes32 targetSpaceRock,
-  bytes32 aggressorEntity,
-  bytes32 unitWithDecryptionPrototype,
-  uint256 decryption
-) {
+function fleetResolveBattleEncryption(bytes32 battleId, bytes32 targetSpaceRock, bytes32 aggressorEntity) {
   SystemCall.callWithHooksOrRevert(
     DUMMY_ADDRESS,
     getSystemResourceId("S_BattleEncryptionResolveSystem"),
     abi.encodeCall(
       S_BattleEncryptionResolveSystem.resolveBattleEncryption,
-      (battleId, targetSpaceRock, aggressorEntity, unitWithDecryptionPrototype, decryption)
+      (battleId, targetSpaceRock, aggressorEntity)
     ),
     0
   );

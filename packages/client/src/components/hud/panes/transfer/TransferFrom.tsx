@@ -5,8 +5,8 @@ import { Button } from "src/components/core/Button";
 import { components } from "src/network/components";
 import { EntityType } from "src/util/constants";
 import { formatResourceCount, parseResourceCount } from "src/util/number";
-import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { TargetHeader } from "../../TargetHeader";
+import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { FleetEntityHeader } from "../fleets/FleetHeader";
 
 export const TransferFrom = (props: {
@@ -19,18 +19,18 @@ export const TransferFrom = (props: {
   setDragging?: (e: React.MouseEvent, entity: Entity, count: bigint) => void;
   remove?: () => void;
 }) => {
-  const [keyDown, setKeyDown] = useState<string | null>();
+  const [keyDown, setKeyDown] = useState("");
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "Shift") {
       setKeyDown("shift");
-    } else if (e.key === "Meta" || e.key === "Control") {
-      setKeyDown("ctrl");
+    } else if (e.key === "Alt") {
+      setKeyDown("alt");
     } else {
       setKeyDown(e.key);
     }
   }, []);
-  const handleKeyUp = useCallback(() => setKeyDown(null), []);
+  const handleKeyUp = useCallback(() => setKeyDown(""), []);
 
   useEffect(() => {
     window.addEventListener("keyup", handleKeyUp);
@@ -74,7 +74,7 @@ export const TransferFrom = (props: {
                 delta={delta ? 0n - delta : undefined}
                 setDragging={(e) =>
                   props.setDragging &&
-                  props.setDragging(e, unit, keyDown == "shift" ? count : keyDown == "ctrl" ? count / 2n : 1n)
+                  props.setDragging(e, unit, keyDown == "shift" ? count : keyDown == "alt" ? count / 2n : 1n)
                 }
               />
             );
@@ -108,7 +108,7 @@ export const TransferFrom = (props: {
                   props.setDragging(
                     e,
                     entity,
-                    keyDown == "shift" ? count : keyDown == "ctrl" ? count / 2n : parseResourceCount(entity, "1")
+                    keyDown == "shift" ? count : keyDown == "alt" ? count / 2n : parseResourceCount(entity, "1")
                   )
                 }
               />
@@ -129,9 +129,7 @@ export const TransferFrom = (props: {
               Shift
             </span>
             to transfer all,
-            <span className={`inline kbd kbd-xs not-italic ${keyDown == "ctrl" ? "bg-white text-black" : ""}`}>
-              Ctrl
-            </span>
+            <span className={`inline kbd kbd-xs not-italic ${keyDown == "alt" ? "bg-white text-black" : ""}`}>Alt</span>
             to transfer half
           </>
         )}
@@ -139,12 +137,38 @@ export const TransferFrom = (props: {
           <>
             <FaInfoCircle />
             Press
-            <span className={`inline kbd kbd-xs not-italic ${keyDown === "q" ? "bg-white text-black" : ""}`}>q</span>/
-            <span className={`inline kbd kbd-xs not-italic ${keyDown === "e" ? "bg-white text-black" : ""}`}>e</span>
+            <span
+              className={`inline kbd kbd-xs not-italic ${
+                ["q", "œ", "Q"].includes(keyDown) ? "bg-white text-black" : ""
+              }`}
+            >
+              q
+            </span>
+            /
+            <span
+              className={`inline kbd kbd-xs not-italic ${
+                ["e", "E", "Dead"].includes(keyDown) ? "bg-white text-black" : ""
+              }`}
+            >
+              e
+            </span>
             to change by 1. Press
-            <span className={`inline kbd kbd-xs not-italic ${keyDown === "Q" ? "bg-white text-black" : ""}`}>Q</span>/
-            <span className={`inline kbd kbd-xs not-italic ${keyDown === "E" ? "bg-white text-black" : ""}`}>E</span> to
-            change by 10.
+            <span
+              className={`inline kbd kbd-xs not-italic ${
+                ["a", "A", "å"].includes(keyDown) ? "bg-white text-black" : ""
+              }`}
+            >
+              a
+            </span>
+            /
+            <span
+              className={`inline kbd kbd-xs not-italic ${
+                ["d", "D", "∂"].includes(keyDown) ? "bg-white text-black" : ""
+              }`}
+            >
+              d
+            </span>{" "}
+            to change by 10.
           </>
         )}
       </p>

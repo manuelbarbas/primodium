@@ -194,24 +194,6 @@ library LibCombatAttributes {
       totalCargoSpace += cargoSpaces[i];
     }
   }
-  /* ---------------------------------- Fleet --------------------------------- */
-  function getDecryption(
-    bytes32 fleetEntity
-  ) internal view returns (bytes32 unitWithDecryptionPrototype, uint256 decryption) {
-    bytes32 ownerSpaceRock = OwnedBy.get(fleetEntity);
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    for (uint8 i = 0; i < unitPrototypes.length; i++) {
-      uint256 unitCount = UnitCount.get(fleetEntity, unitPrototypes[i]);
-      if (unitCount == 0) continue;
-      uint256 unitLevel = UnitLevel.get(ownerSpaceRock, unitPrototypes[i]);
-      uint256 unitDecryption = P_Unit.getDecryption(unitPrototypes[i], unitLevel);
-      if (unitDecryption == 0) continue;
-      else if (decryption == 0 || unitDecryption > decryption) {
-        decryption = unitDecryption;
-        unitWithDecryptionPrototype = unitPrototypes[i];
-      }
-    }
-  }
 
   /* -------------------------------- Asteroid -------------------------------- */
 

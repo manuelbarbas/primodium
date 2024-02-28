@@ -339,6 +339,118 @@ contract FleetCombatSystemTest is PrimodiumTest {
     assertEq(bobRemainingUnits, 0, "bob units should have been reduced");
   }
 
+  function testFleetAttackCooldown() public {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    //create fleet with 1 minuteman marine
+    bytes32 minutemanEntity = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == minutemanEntity) unitCounts[i] = 100;
+    }
+
+    //create fleet with 1 iron
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+
+    // create and send alice fleet
+    setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
+    vm.startPrank(alice);
+    bytes32 aliceFleetEntity = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.sendFleet(aliceFleetEntity, bobHomeAsteroid);
+
+    switchPrank(creator);
+    GracePeriod.set(bobHomeAsteroid, block.timestamp);
+
+    // create bob fleet
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == minutemanEntity) unitCounts[i] = 1;
+    }
+    setupCreateFleet(bob, bobHomeAsteroid, unitCounts, resourceCounts);
+    switchPrank(bob);
+    bytes32 bobFleetEntity = world.createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
+
+    vm.warp(FleetMovement.getArrivalTime(aliceFleetEntity));
+
+    uint256 aliceAttack = LibCombatAttributes.getAttack(aliceFleetEntity);
+    (uint256 aggressorDamage, uint256[] memory aggressorDamages, uint256 totalAggressorDamage) = LibCombatAttributes
+      .getAttacksWithAllies(aliceFleetEntity);
+
+    switchPrank(alice);
+    world.attack(aliceFleetEntity, bobHomeAsteroid);
+
+    uint256 cooldown = LibFleetCombat.getCooldownTime(aliceAttack, false);
+    assertEq(CooldownEnd.get(aliceFleetEntity), block.timestamp + cooldown);
+    assertGt(CooldownEnd.get(aliceFleetEntity), block.timestamp);
+  }
+
+  function testFleetAttackFailedInCooldown() public {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    //create fleet with 1 minuteman marine
+    bytes32 minutemanEntity = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == minutemanEntity) unitCounts[i] = 100;
+    }
+
+    //create fleet with 1 iron
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+
+    // create and send alice fleet
+    setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
+    vm.startPrank(alice);
+    bytes32 aliceFleetEntity = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.sendFleet(aliceFleetEntity, bobHomeAsteroid);
+
+    switchPrank(creator);
+    GracePeriod.set(bobHomeAsteroid, block.timestamp);
+
+    // create bob fleet
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == minutemanEntity) unitCounts[i] = 1;
+    }
+    setupCreateFleet(bob, bobHomeAsteroid, unitCounts, resourceCounts);
+    switchPrank(bob);
+    bytes32 bobFleetEntity = world.createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
+
+    vm.warp(FleetMovement.getArrivalTime(aliceFleetEntity));
+
+    switchPrank(creator);
+    CooldownEnd.set(aliceFleetEntity, block.timestamp + 1);
+    switchPrank(alice);
+
+    vm.expectRevert("[Fleet] Fleet is in cooldown");
+    world.attack(aliceFleetEntity, bobHomeAsteroid);
+  }
+
+  function testCooldownTimes() public {
+    uint256 testValue = 1 * 1e18;
+    assertEq(LibFleetCombat.getCooldownTime(testValue, false), 0);
+
+    testValue = 1000 * 1e18;
+    assertEq(LibFleetCombat.getCooldownTime(testValue, false), 2 * 60);
+
+    testValue = 10000 * 1e18;
+    assertEq(LibFleetCombat.getCooldownTime(testValue, false), 24 * 60);
+
+    testValue = 20000 * 1e18;
+    assertEq(LibFleetCombat.getCooldownTime(testValue, false), 48 * 60);
+
+    testValue = 100000 * 1e18;
+    assertApproxEqAbs(LibFleetCombat.getCooldownTime(testValue, false), 103 * 60, 3);
+
+    testValue = 150000 * 1e18;
+    assertApproxEqAbs(LibFleetCombat.getCooldownTime(testValue, false), 118 * 60, 3);
+
+    testValue = 250000 * 1e18;
+    assertApproxEqAbs(LibFleetCombat.getCooldownTime(testValue, false), 137 * 60, 3);
+
+    uint256 extension = P_CapitalShipConfig.getCooldownExtension();
+
+    assertEq(
+      LibFleetCombat.getCooldownTime(testValue, false) + (extension * 60),
+      LibFleetCombat.getCooldownTime(testValue, true)
+    );
+  }
+
   // todo: these tests
   // function testFleetAttackFleetDefenderWins() public {
 

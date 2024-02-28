@@ -61,7 +61,7 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
           )}
         </div>
         {units.size === 0 && (
-          <div className="grid place-items-center text-xs gap-1 p-1 text-error animate-pulse">Empty</div>
+          <div className="grid place-items-center text-xs gap-1 p-1 text-error uppercase animate-pulse">Empty</div>
         )}
         {units.size !== 0 && (
           <div className="text-xs grid grid-cols-3 gap-1 divide-x divide-primary/50 pt-1 border-t border-t-primary/50">

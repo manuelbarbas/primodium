@@ -22,7 +22,11 @@ export function setupMoveNotifications() {
     if (!ownerRockOwner || ownerRockOwner !== player) return;
 
     //it has arrived
-    if (arrival.sendTime + 30n < now) return;
+    if (arrival.sendTime + 30n < now || arrival.arrivalTime - 5n) {
+      components.SelectedFleet.clear();
+      components.SelectedRock.clear();
+      return;
+    }
     const minutes = (arrival.arrivalTime - now) / 60n;
     const seconds = (arrival.arrivalTime - now) % 60n;
     const output = minutes > 0 ? `${minutes} minute(s)` : `${seconds} seconds`;

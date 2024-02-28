@@ -113,6 +113,8 @@ export const config = mudConfig({
       valueSchema: {
         resource: "uint8",
         initialCost: "uint256",
+        decryption: "uint256",
+        cooldownExtension: "uint256",
       },
     },
 
@@ -413,7 +415,6 @@ export const config = mudConfig({
         cargo: "uint256",
         trainingTime: "uint256",
         hp: "uint256",
-        decryption: "uint256",
       },
     },
 
@@ -502,9 +503,7 @@ export const config = mudConfig({
         targetEntity: "bytes32", //can be fleet or space rock
         targetDamage: "uint256", //can be fleet or space rock
         winner: "bytes32",
-        player: "bytes32", // player who initiated the battle
-        rock: "bytes32", // rock that was attacked
-        targetPlayer: "bytes32", // player who was attacked
+        rock: "bytes32", // place where battle took place
         timestamp: "uint256", // timestamp of battle
         aggressorAllies: "bytes32[]", //only fleets
         targetAllies: "bytes32[]", //only fleets
@@ -750,6 +749,11 @@ export const config = mudConfig({
     },
 
     GracePeriod: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "uint256",
+    },
+
+    CooldownEnd: {
       keySchema: { entity: "bytes32" },
       valueSchema: "uint256",
     },

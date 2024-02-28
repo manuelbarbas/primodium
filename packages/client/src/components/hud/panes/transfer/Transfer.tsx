@@ -130,21 +130,34 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (!dragging) return;
-      if (e.key === "e" || e.key === "E") {
-        const delta = parseResourceCount(dragging.entity, e.key === "E" ? "10" : "1");
-        const initial = UnitStorages.has(dragging.entity)
-          ? fromInitialUnitCounts.get(dragging.entity) ?? 0n
-          : fromInitialResourceCounts.get(dragging.entity)?.resourceCount ?? 0n;
+      const initial = UnitStorages.has(dragging.entity)
+        ? fromUnitCounts.get(dragging.entity) ?? 0n
+        : fromResourceCounts.get(dragging.entity) ?? 0n;
+
+      if (["e", "E", "Dead"].includes(e.key)) {
+        const delta = parseResourceCount(dragging.entity, "1");
         setDragging({
           ...dragging,
-          count: bigIntMin(initial, dragging.count + delta),
+          count: bigIntMin(initial + dragging.count, dragging.count + delta),
         });
-      } else if (e.key === "q" || e.key == "Q") {
-        const delta = parseResourceCount(dragging.entity, e.key === "Q" ? "10" : "1");
-        setDragging({ ...dragging, count: bigIntMax(0n, dragging.count - delta) });
+      } else if (["q", "œ", "Q"].includes(e.key)) {
+        const delta = parseResourceCount(dragging.entity, "1");
+        const min = delta;
+        setDragging({ ...dragging, count: bigIntMax(min, dragging.count - delta) });
+      } else if (["d", "D", "∂"].includes(e.key)) {
+        const delta = parseResourceCount(dragging.entity, "10");
+        setDragging({ ...dragging, count: bigIntMin(initial + dragging.count, dragging.count + delta) });
+      } else if (["a", "A", "å"].includes(e.key)) {
+        const delta = parseResourceCount(dragging.entity, "10");
+        const min = parseResourceCount(dragging.entity, "1");
+        setDragging({ ...dragging, count: bigIntMax(min, dragging.count - delta) });
+      } else if (e.key === "Shift") {
+        setDragging({ ...dragging, count: initial });
+      } else if (e.key === "Alt") {
+        setDragging({ ...dragging, count: initial / 2n });
       }
     },
-    [dragging, fromInitialResourceCounts, fromInitialUnitCounts]
+    [dragging, fromResourceCounts, fromUnitCounts]
   );
 
   const mud = useMud();
