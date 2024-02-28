@@ -572,6 +572,16 @@ export const animationConfig: Animation<Assets>[] = [
     suffix: ".png",
   },
   {
+    key: "shipyard/level1",
+    assetKey: "sprite-atlas",
+    frameRate: 5,
+    startFrame: 1,
+    endFrame: 17,
+    repeat: -1,
+    prefix: "sprites/shipyard/level1/Shipyard_LVL1_",
+    suffix: ".png",
+  },
+  {
     key: "decorations/drone",
     assetKey: "sprite-atlas",
     frameRate: 5,
