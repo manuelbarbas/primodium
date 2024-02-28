@@ -1,4 +1,4 @@
-import { AudioKeys, KeybindActions } from "@game/constants";
+import { AudioKeys, KeyNames, KeybindActions } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { useMemo, useState } from "react";
 import { FaCaretLeft, FaCaretRight, FaLock } from "react-icons/fa";
@@ -9,6 +9,7 @@ import { getBlockTypeName } from "src/util/common";
 import { Action, EntityType } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
+import { useShallow } from "zustand/react/shallow";
 import { Button } from "../../../core/Button";
 import { BuildingImageFromType } from "../../../shared/BuildingImage";
 
@@ -18,11 +19,11 @@ const BlueprintButton: React.FC<{
   keybind?: KeybindActions;
   keybindActive?: boolean;
 }> = ({ buildingType, tooltipDirection, keybind, keybindActive = false }) => {
-  // const {
-  //   hooks: { useKeybinds },
-  // } = useRef(usePrimodium().api()).current;
-  // const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
-  // const keybinds = useKeybinds();
+  const {
+    hooks: { useKeybinds },
+  } = usePrimodium().api();
+  const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
+  const keybinds = useKeybinds();
   const selectedRockEntity = components.ActiveRock.use()?.value as Entity | undefined;
   if (!selectedRockEntity) throw new Error("No active rock entity found");
   const rockMainBase = components.Home.use(selectedRockEntity)?.value;
@@ -70,11 +71,11 @@ const BlueprintButton: React.FC<{
           </p>
         </div>
       )}
-      {/* {!hideHotkeys && keybindActive && (
+      {!hideHotkeys && keybindActive && (
         <p className="absolute bottom-1 left-0 flex text-xs kbd kbd-xs">
           {KeyNames[keybinds[keybind ?? KeybindActions.NULL]?.entries().next().value[0]] ?? "?"}
         </p>
-      )} */}
+      )}
     </Button>
   );
 };
@@ -82,7 +83,7 @@ const BlueprintButton: React.FC<{
 export const AllBlueprints = () => {
   const [index, setIndex] = useState(0);
 
-  const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
+  const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
   const selectedRockEntity = components.ActiveRock.use()?.value;
   const mapId = components.Asteroid.use(selectedRockEntity)?.mapId;
   const basicBuildings = useMemo(() => {

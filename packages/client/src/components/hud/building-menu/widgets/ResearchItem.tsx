@@ -16,7 +16,6 @@ import { getUpgradeInfo } from "src/util/upgrade";
 
 export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
   const mud = useMud();
-  const { playerAccount } = mud;
 
   const asteroid = components.ActiveRock.use()?.value as Entity | undefined;
   if (!asteroid) throw new Error("No active rock entity found");
@@ -25,7 +24,7 @@ export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
     value: 1n,
   }).value;
 
-  const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(type, playerAccount.entity);
+  const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(type, asteroid);
 
   const hasEnough = useHasEnoughResources(recipe, asteroid);
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && !isResearched;

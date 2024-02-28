@@ -20,12 +20,6 @@ export const setupInitialSync = async (setupResult: SetupResult) => {
       toBlock,
       //on complete
       () => {
-        components.SyncStatus.set({
-          step: SyncStep.Complete,
-          progress: 1,
-          message: `DONE`,
-        });
-
         components.SyncSource.set({ value: SyncSourceType.RPC });
 
         //finally sync live

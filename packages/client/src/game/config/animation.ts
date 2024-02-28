@@ -148,7 +148,7 @@ export const animationConfig: Animation<Assets>[] = [
     startFrame: 1,
     endFrame: 9,
     repeat: -1,
-    prefix: "sprites/miners/lithiummine/level1/Miner_Lithium_LVL1_",
+    prefix: "sprites/miners/lithiummine/Miner_Lithium_LVL1_",
     suffix: ".png",
   },
   {

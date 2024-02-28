@@ -6,13 +6,10 @@ import { EntityType } from "./constants";
 import { getRecipe } from "./recipe";
 
 export function getUpgradeInfo(research: Entity, asteroid: Entity) {
-  const playerEntity = components.OwnedBy.get(asteroid as Entity)?.value;
   const level =
     research === EntityType.Expansion
       ? components.Level.get(asteroid as Entity)?.value ?? 1n
-      : playerEntity
-      ? components.UnitLevel.getWithKeys({ entity: playerEntity as Hex, unit: research as Hex })?.value ?? 0n
-      : 0n;
+      : components.UnitLevel.getWithKeys({ entity: asteroid as Hex, unit: research as Hex })?.value ?? 0n;
   let nextLevel = level + 1n;
 
   const maxLevel =

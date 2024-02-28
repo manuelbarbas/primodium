@@ -32,6 +32,8 @@ library LibFleetTransfer {
       LibUnit.decreaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !sameOwner);
       LibFleet.increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
+
+    LibFleet.checkAndSetFleetEmpty(fleetId);
   }
 
   function transferResourcesFromSpaceRockToFleet(
@@ -69,6 +71,8 @@ library LibFleetTransfer {
       if (unitCounts[i] == 0) continue;
       LibUnit.decreaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
+
+    LibFleet.checkAndSetFleetEmpty(fleetId);
   }
 
   function transferUnitsFromFleetToSpaceRock(
@@ -89,6 +93,8 @@ library LibFleetTransfer {
     uint256 cargo = LibCombatAttributes.getCargoCapacity(fleetId);
     uint256 occupiedCargo = LibCombatAttributes.getCargo(fleetId);
     require(cargo >= occupiedCargo, "[Fleet] Not enough cargo space to transfer units");
+
+    LibFleet.checkAndSetFleetEmpty(fleetId);
   }
 
   function transferResourcesFromFleetToSpaceRock(
@@ -131,6 +137,8 @@ library LibFleetTransfer {
     uint256 cargo = LibCombatAttributes.getCargoCapacity(fleetId);
     uint256 occupiedCargo = LibCombatAttributes.getCargo(fleetId);
     require(cargo >= occupiedCargo, "[Fleet] Not enough cargo space to transfer units");
+
+    LibFleet.checkAndSetFleetEmpty(fleetId);
   }
 
   function transferUnitsFromFleetToFleet(bytes32 fromFleetId, bytes32 fleetId, uint256[] calldata unitCounts) internal {
@@ -147,6 +155,10 @@ library LibFleetTransfer {
     uint256 cargo = LibCombatAttributes.getCargoCapacity(fromFleetId);
     uint256 occupiedCargo = LibCombatAttributes.getCargo(fromFleetId);
     require(cargo >= occupiedCargo, "[Fleet] Not enough cargo space to transfer units");
+
+    //set to fleet to not empty
+    LibFleet.checkAndSetFleetEmpty(fromFleetId);
+    LibFleet.checkAndSetFleetEmpty(fleetId);
   }
 
   function transferResourcesFromFleetToFleet(
@@ -188,5 +200,8 @@ library LibFleetTransfer {
     uint256 cargo = LibCombatAttributes.getCargoCapacity(fromFleetId);
     uint256 occupiedCargo = LibCombatAttributes.getCargo(fromFleetId);
     require(cargo >= occupiedCargo, "[Fleet] Not enough cargo space to transfer units");
+
+    LibFleet.checkAndSetFleetEmpty(fleetId);
+    LibFleet.checkAndSetFleetEmpty(fromFleetId);
   }
 }

@@ -15,8 +15,7 @@ import { getOrbitingFleets } from "./unit";
 export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
   const { getSpriteBase64 } = primodium.api().sprite;
   const asteroidData = comps.Asteroid.get(asteroid);
-  const mainBaseEntity = comps.Home.get(asteroid)?.value as Entity;
-  const mainBaseLevel = comps.Level.get(mainBaseEntity, {
+  const expansionLevel = comps.Level.get(asteroid, {
     value: 1n,
   }).value;
 
@@ -26,14 +25,16 @@ export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
   }
 
   if (components.PirateAsteroid.has(asteroid)) return getSpriteBase64(getRockSprite(1, 1n), Assets.SpriteAtlas);
-  const spriteKey = getRockSprite(asteroidData.mapId, asteroidData.mapId === 1 ? mainBaseLevel : asteroidData.maxLevel);
+  const spriteKey = getRockSprite(
+    asteroidData.mapId,
+    asteroidData.mapId === 1 ? expansionLevel : asteroidData.maxLevel
+  );
 
   return getSpriteBase64(spriteKey, Assets.SpriteAtlas);
 }
 
 export function getAsteroidName(spaceRock: Entity) {
-  const mainBaseEntity = comps.Home.get(spaceRock)?.value as Entity;
-  const mainBaseLevel = comps.Level.get(mainBaseEntity)?.value;
+  const expansionLevel = comps.Level.get(spaceRock)?.value;
   const isPirate = !!comps.PirateAsteroid.get(spaceRock);
   const asteroidData = comps.Asteroid.get(spaceRock);
 
@@ -47,7 +48,7 @@ export function getAsteroidName(spaceRock: Entity) {
       }[Number(asteroidData?.maxLevel ?? 1)]
     : "";
 
-  return ` ${mainBaseLevel ? `LVL. ${mainBaseLevel} ` : asteroidSize} ${
+  return ` ${expansionLevel ? `LVL. ${expansionLevel} ` : asteroidSize} ${
     asteroidResource ? getBlockTypeName(asteroidResource) : ""
   } ${isPirate ? "Pirate" : "Asteroid"}`;
 }

@@ -30,9 +30,7 @@ library LibFleetCombat {
     bytes32 spaceRock = aggressorIsFleet ? FleetMovement.getDestination(entity) : entity;
 
     battleId = LibEncode.getTimedHash(spaceRock);
-    (uint256 aggressorDamage, uint256[] memory aggressorDamages, uint256 totalAggressorDamage) = aggressorIsFleet
-      ? LibCombatAttributes.getAttacksWithAllies(entity)
-      : LibCombatAttributes.getDefensesWithAllies(entity);
+    uint256 totalAggressorDamage = handleDamage(entity, battleId, aggressorIsFleet);
 
     // update grace period of rock and fleet on rock
     if (aggressorIsFleet) {
@@ -45,38 +43,39 @@ library LibFleetCombat {
       CooldownEnd.set(entity, block.timestamp + cooldownEnd);
     }
 
-    BattleDamageDealtResult.set(battleId, entity, aggressorDamage);
-
-    bytes32[] memory aggressorAllies = LibFleetStance.getAllies(entity);
-
-    for (uint256 i = 0; i < aggressorAllies.length; i++) {
-      BattleDamageDealtResult.set(battleId, aggressorAllies[i], aggressorDamages[i]);
-    }
-
-    (uint256 targetDamage, uint256[] memory targetDamages, uint256 totalTargetDamage) = aggressorIsFleet
-      ? LibCombatAttributes.getDefensesWithAllies(targetEntity)
-      : LibCombatAttributes.getAttacksWithAllies(targetEntity);
-
-    BattleDamageDealtResult.set(battleId, targetEntity, targetDamage);
-
-    bytes32[] memory targetAllies = LibFleetStance.getAllies(targetEntity);
-    for (uint256 i = 0; i < targetAllies.length; i++) {
-      BattleDamageDealtResult.set(battleId, targetAllies[i], targetDamages[i]);
-    }
+    uint256 totalTargetDamage = handleDamage(targetEntity, battleId, !aggressorIsFleet);
 
     battleResult = BattleResultData({
       aggressorEntity: entity,
       aggressorDamage: totalAggressorDamage,
       targetEntity: targetEntity,
       targetDamage: totalTargetDamage,
-      aggressorAllies: aggressorAllies,
-      targetAllies: targetAllies,
+      aggressorAllies: LibFleetStance.getAllies(entity),
+      targetAllies: LibFleetStance.getAllies(targetEntity),
       winner: totalAggressorDamage > totalTargetDamage ? entity : targetEntity,
+      player: OwnedBy.get(aggressorIsFleet ? OwnedBy.get(entity) : entity),
+      targetPlayer: OwnedBy.get(IsFleet.get(targetEntity) ? OwnedBy.get(targetEntity) : targetEntity),
       rock: spaceRock,
       timestamp: block.timestamp
     });
 
     BattleResult.set(battleId, battleResult);
+  }
+
+  function handleDamage(bytes32 entity, bytes32 battleId, bool isAggressor) internal returns (uint256 totalDamage) {
+    uint256 damage;
+    uint256[] memory damages;
+
+    (damage, damages, totalDamage) = isAggressor
+      ? LibCombatAttributes.getAttacksWithAllies(entity)
+      : LibCombatAttributes.getDefensesWithAllies(entity);
+
+    BattleDamageDealtResult.set(battleId, entity, damage);
+
+    bytes32[] memory allies = LibFleetStance.getAllies(entity);
+    for (uint256 i = 0; i < allies.length; i++) {
+      BattleDamageDealtResult.set(battleId, allies[i], damages[i]);
+    }
   }
 
   function resolveBattleEncryption(

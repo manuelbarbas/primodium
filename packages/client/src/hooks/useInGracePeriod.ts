@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { components } from "src/network/components";
 dayjs.extend(duration);
 
-export const useInGracePeriod = (entity: Entity) => {
+export const useInGracePeriod = (entity: Entity, force = false) => {
   const time = components.Time.use()?.value ?? 0n;
   const endTime = components.GracePeriod.use(entity)?.value ?? 0n;
 
@@ -14,5 +14,5 @@ export const useInGracePeriod = (entity: Entity) => {
     if (!inGracePeriod || !entity) return { inGracePeriod: false, duration: 0 };
 
     return { inGracePeriod, duration: endTime - time };
-  }, [time, endTime, entity]);
+  }, [time, endTime, entity, force]);
 };

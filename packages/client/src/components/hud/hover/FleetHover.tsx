@@ -3,8 +3,10 @@ import { EFleetStance } from "contracts/config/enums";
 import { useMemo } from "react";
 import { Card } from "src/components/core/Card";
 import { IconLabel } from "src/components/core/IconLabel";
+import { Loader } from "src/components/core/Loader";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
+import { useSyncStatus } from "src/hooks/useSyncStatus";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { EntityType, ResourceImage } from "src/util/constants";
@@ -13,9 +15,10 @@ import { formatNumber, formatResourceCount, formatTime, formatTimeShort } from "
 import { getFleetStats } from "src/util/unit";
 
 export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
+  const { loading, exists } = useSyncStatus(entity);
   const fleetStats = getFleetStats(entity);
-  const units = useUnitCounts(entity);
-  const resources = useFullResourceCounts(entity);
+  const units = useUnitCounts(entity, loading || !exists);
+  const resources = useFullResourceCounts(entity, loading || !exists);
   const movement = components.FleetMovement.use(entity);
   const time = components.Time.use()?.value ?? 0n;
   const stance = components.FleetStance.use(entity);
@@ -31,6 +34,14 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
     if (stance?.stance === EFleetStance.Defend) return "Defending";
     return "Orbiting";
   }, [movement?.arrivalTime, time, stance]);
+
+  if (loading || !exists)
+    return (
+      <Card className="relative flex items-center justify-center w-56 h-24 px-auto font-bold">
+        <Loader />
+        Loading Data...
+      </Card>
+    );
 
   return (
     <Card className="ml-5 relative w-56 font-bold">
