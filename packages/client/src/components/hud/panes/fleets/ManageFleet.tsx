@@ -8,6 +8,7 @@ import { Button } from "src/components/core/Button";
 import { Modal } from "src/components/core/Modal";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
+import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useUnitCounts } from "src/hooks/useUnitCount";
@@ -27,6 +28,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
 
   const { BackButton, NavButton } = useFleetNav();
 
+  const inCooldown = useInCooldownEnd(fleetEntity);
   const units = useUnitCounts(fleetEntity);
   const resources = useFullResourceCounts(fleetEntity);
 
@@ -221,9 +223,9 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               <Button
                 className="btn btn-primary btn-sm w-full"
                 onClick={() => movement?.destination && landFleet(mud, fleetEntity, movement.destination as Entity)}
-                disabled={totalUnits <= 0n}
+                disabled={totalUnits <= 0n || inCooldown.inCooldown}
               >
-                LAND
+                LAND {inCooldown ? `(${formatNumber(inCooldown.duration)})` : ""}
               </Button>
             </TransactionQueueMask>
             <TransactionQueueMask queueItemId={"disband" as Entity}>
