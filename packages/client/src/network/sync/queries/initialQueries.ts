@@ -62,6 +62,7 @@ export const getInitalQuery = ({
             { tableId: tables.FleetStance.tableId },
             { tableId: tables.IsFleet.tableId },
             { tableId: tables.OwnedBy.tableId, on: "entity" },
+            { tableId: tables.CooldownEnd.tableId },
           ],
         },
       ],
