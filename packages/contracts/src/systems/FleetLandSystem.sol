@@ -11,6 +11,7 @@ contract FleetLandSystem is FleetBaseSystem {
   )
     public
     _onlyFleetOwner(fleetId)
+    _onlyWhenNotInCooldown(fleetId)
     _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock)
     _onlyWhenNotPirateAsteroid(spaceRock)
     _claimResources(spaceRock)
