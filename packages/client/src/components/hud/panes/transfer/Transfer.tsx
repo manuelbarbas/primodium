@@ -252,7 +252,7 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
         )}
       </div>
       <div className="flex gap-4 w-full justify-center items-center">
-        <Nav.BackButton className="absolute left-0 bottom-0">Back</Nav.BackButton>
+        <Nav.BackButton className="absolute left-2 bottom-2">Back</Nav.BackButton>
         {(!from || !to || deltas.size == 0) && (
           <Button className="btn-primary w-48" disabled>
             Select

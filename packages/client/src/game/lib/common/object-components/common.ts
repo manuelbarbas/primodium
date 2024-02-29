@@ -156,11 +156,12 @@ export const TweenCounter = <T extends keyof GameObjectTypes>(
 
 export const Tween = <T extends keyof GameObjectTypes>(
   scene: Scene,
-  config: Partial<Phaser.Types.Tweens.TweenBuilderConfig>
+  config: Partial<Phaser.Types.Tweens.TweenBuilderConfig>,
+  id = uuid()
 ): GameObjectComponent<T> => {
   let tween: Phaser.Tweens.Tween;
   return {
-    id: uuid(),
+    id,
     once: (gameObject) => {
       tween = scene.phaserScene.add.tween({
         targets: gameObject,
