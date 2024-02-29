@@ -182,6 +182,8 @@ export enum SpriteKeys {
   Vault2 = "sprites/vault/level2/Vault_LVL2_1.png",
   Vault3 = "sprites/vault/level3/Vault_LVL3_1.png",
 
+  Shipyard1 = "sprites/shipyard/level1/Shipyard_LVL1_1.png",
+
   //ASTEROIDS
   Asteroid1 = "sprites/spacerocks/asteroids/asteroid1.png",
   Asteroid2 = "sprites/spacerocks/asteroids/asteroid2.png",
@@ -238,6 +240,7 @@ export enum SpriteKeys {
   Construction3x3 = "sprites/construction/3x3.png",
   Construction4x4 = "sprites/construction/4x4.png",
   Construction2x3 = "sprites/construction/2x3.png",
+  Construction4x6 = "sprites/construction/4x6.png",
 
   // Resource Icons
   GracePeriod = "sprites/icons/grace.png",
@@ -337,6 +340,8 @@ export enum AnimationKeys {
   Vault3 = "vault/level3",
 
   Market1 = "marketplace/level1",
+
+  Shipyard1 = "shipyard/level1",
 
   //DECORATIONS
   Drone = "decorations/drone",
@@ -459,7 +464,7 @@ export const EntitytoBuildingSpriteKey = {
   [EntityType.ShieldGenerator]: [SpriteKeys.ShieldGenerator1, SpriteKeys.ShieldGenerator2, SpriteKeys.ShieldGenerator3],
   [EntityType.Vault]: [SpriteKeys.Vault1, SpriteKeys.Vault2, SpriteKeys.Vault3],
   [EntityType.Market]: [SpriteKeys.Market1],
-  [EntityType.Shipyard]: [SpriteKeys.AlloyFactory1],
+  [EntityType.Shipyard]: [SpriteKeys.Shipyard1],
 
   //STARMAP
   [EntityType.Asteroid]: [
@@ -531,7 +536,7 @@ export const EntityIDtoAnimationKey = {
 
   [EntityType.Vault]: [AnimationKeys.Vault1, AnimationKeys.Vault2, AnimationKeys.Vault3],
   [EntityType.Market]: [AnimationKeys.Market1],
-  [EntityType.Shipyard]: [AnimationKeys.AlloyFactory1],
+  [EntityType.Shipyard]: [AnimationKeys.Shipyard1],
 };
 
 export enum KeybindActions {
