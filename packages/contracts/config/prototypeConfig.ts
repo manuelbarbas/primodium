@@ -20,7 +20,7 @@ import { getBlueprint } from "./util/blueprints";
 import encodeBytes32, { encodeAddress } from "./util/encodeBytes32";
 
 const mainBaseMaxResourceUpgrades = {
-  1: { Iron: 5000, Copper: 5000, IronPlate: 2500, R_Encryption: 50, R_HP: 100 },
+  1: { Iron: 5000, Copper: 5000, IronPlate: 2500, R_Encryption: 100, R_HP: 100 },
   2: {
     Iron: 10000,
     Copper: 10000,
@@ -28,7 +28,7 @@ const mainBaseMaxResourceUpgrades = {
     Lithium: 10000,
     PVCell: 5000,
     Alloy: 5000,
-    R_Encryption: 100,
+    R_Encryption: 105,
     R_HP: 150,
   },
   3: {
@@ -42,7 +42,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 500,
     Iridium: 500,
     Kimberlite: 500,
-    R_Encryption: 125,
+    R_Encryption: 110,
     R_HP: 200,
   },
   4: {
@@ -56,7 +56,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 1000,
     Iridium: 1000,
     Kimberlite: 1000,
-    R_Encryption: 150,
+    R_Encryption: 115,
     R_HP: 250,
   },
   5: {
@@ -70,7 +70,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 3000,
     Iridium: 3000,
     Kimberlite: 3000,
-    R_Encryption: 175,
+    R_Encryption: 120,
     R_HP: 300,
   },
   6: {
@@ -84,7 +84,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 6000,
     Iridium: 6000,
     Kimberlite: 6000,
-    R_Encryption: 200,
+    R_Encryption: 125,
     R_HP: 400,
   },
   7: {
@@ -98,7 +98,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 7500,
     Iridium: 7500,
     Kimberlite: 7500,
-    R_Encryption: 225,
+    R_Encryption: 130,
     R_HP: 500,
   },
   8: {
@@ -112,7 +112,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 10000,
     Iridium: 10000,
     Kimberlite: 10000,
-    R_Encryption: 250,
+    R_Encryption: 135,
     R_HP: 600,
   },
 };
