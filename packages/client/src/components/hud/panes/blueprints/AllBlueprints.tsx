@@ -1,7 +1,6 @@
 import { AudioKeys, KeyNames, KeybindActions } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { useMemo, useState } from "react";
-import { useShallow } from "zustand/react/shallow";
 import { FaCaretLeft, FaCaretRight, FaLock } from "react-icons/fa";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
@@ -13,13 +12,15 @@ import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
 import { Button } from "../../../core/Button";
 import { BuildingImageFromType } from "../../../shared/BuildingImage";
+import { useShallow } from "zustand/react/shallow";
 
 const BlueprintButton: React.FC<{
   buildingType: Entity;
   tooltipDirection?: "left" | "right" | "top" | "bottom";
   keybind?: KeybindActions;
   keybindActive?: boolean;
-}> = ({ buildingType, tooltipDirection, keybind, keybindActive = false }) => {
+  className?: string;
+}> = ({ buildingType, tooltipDirection, keybind, keybindActive = false, className }) => {
   const {
     hooks: { useKeybinds },
   } = usePrimodium().api();
@@ -54,22 +55,23 @@ const BlueprintButton: React.FC<{
         components.SelectedBuilding.set({ value: buildingType });
         components.SelectedAction.set({ value: Action.PlaceBuilding });
       }}
-      className={`relative btn-ghost min-h-9 p-0 ${
+      className={`min-h-[3.6rem] bg-base-200 ${
         hasMainbaseLevel
           ? hasEnough
-            ? "hover:bg-accent border-accent/50"
+            ? "hover:bg-accent border-accent/25"
             : "hover:bg-warning border-warning/75"
-          : "hover:bg-error border-error/75"
+          : "hover:bg-error border-error/25"
       } disabled:opacity-50 border border-secondary hover:z-10 ${
         selectedBuilding === buildingType ? " ring-2 ring-white/75" : ""
-      }`}
+      } relative btn-ghost min-h-11 max-h-12 p-0 text-[2.5rem] !bg-info/25 ${className}`}
     >
       <BuildingImageFromType buildingType={buildingType} />
       {!hasMainbaseLevel && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-error flex text-[.6rem] bg">
-          <p className="bg-neutral flex gap-1">
-            <FaLock /> LVL. {levelRequirement.toString()}
-          </p>
+        <div className="absolute top-0 w-full h-full text-error gap-1 font-bold flex items-center justify-center text-[.7rem] bg-neutral/50">
+          <span className="h-3 flex items-center justify-center gap-1 bg-black">
+            <FaLock />
+            <p>LVL. {levelRequirement.toString()}</p>
+          </span>
         </div>
       )}
       {!hideHotkeys && keybindActive && (
@@ -84,7 +86,7 @@ const BlueprintButton: React.FC<{
 export const AllBlueprints = () => {
   const [index, setIndex] = useState(0);
 
-  const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
+  const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
   const selectedRockEntity = components.ActiveRock.use()?.value;
   const mapId = components.Asteroid.use(selectedRockEntity)?.mapId;
   const basicBuildings = useMemo(() => {
@@ -126,11 +128,11 @@ export const AllBlueprints = () => {
   return (
     <>
       <div className="p-2 flex flex-col gap-1 items-start">
-        <div className={`p-1 flex flex-col gap-6 items-center w-full ${index === 0 ? " bg-success/10" : ""}`}>
+        <div className={` flex flex-col gap-1 items-center w-full ${index === 0 ? " bg-success/10" : ""}`}>
           <div className="flex border-b border-secondary justify-between w-full">
             <p className="text-xs opacity-75 font-bold text-success">BASIC</p>
           </div>
-          <div className="grid grid-cols-4 gap-1 w-full">
+          <div className="grid grid-cols-4 gap-1 w-full p-1">
             {basicBuildings.map((buildingType, i) => (
               <BlueprintButton
                 key={i}
@@ -143,11 +145,11 @@ export const AllBlueprints = () => {
           </div>
         </div>
 
-        <div className={`flex flex-col gap-6 w-full items-center p-1 ${index === 1 ? " bg-success/10" : ""}`}>
+        <div className={`flex flex-col w-full gap-1 items-center p-1 ${index === 1 ? " bg-success/10" : ""}`}>
           <div className="flex border-b border-secondary justify-between w-full">
             <p className="text-xs opacity-75 font-bold text-info">ADVANCED</p>
           </div>
-          <div className="grid grid-cols-4 gap-2 w-full">
+          <div className="grid grid-cols-4 gap-1 w-full p-1">
             {advancedBuildings.map((buildingType, i) => (
               <BlueprintButton
                 key={i}
@@ -160,14 +162,15 @@ export const AllBlueprints = () => {
           </div>
         </div>
 
-        <div className={`flex flex-col gap-6 w-full items-center p-1 ${index === 2 ? " bg-success/10" : ""}`}>
+        <div className={`flex flex-col w-full gap-1 items-center p-1 ${index === 2 ? " bg-success/10" : ""}`}>
           <div className="flex border-b border-secondary justify-between w-full">
             <p className="text-xs opacity-75 font-bold text-warning">ELITE</p>
           </div>
-          <div className="grid grid-cols-4 gap-2 w-full">
+          <div className="grid grid-cols-4 gap-1 w-full p-1">
             {eliteBuildings.map((buildingType, i) => (
               <BlueprintButton
                 key={i}
+                className={`${buildingType === EntityType.Shipyard ? "col-span-2 !text-[4rem]" : ""}`}
                 tooltipDirection="top"
                 buildingType={buildingType}
                 keybind={keybinds[i]}

@@ -143,7 +143,7 @@ export const Actions = () => {
   );
 };
 
-export const PrimeOS = () => {
+export const WidgetsPane = () => {
   return (
     <>
       <Card className="p-2 border border-accent/25 -ml-12 mb-2 z-10 pointer-events-auto">
@@ -153,8 +153,9 @@ export const PrimeOS = () => {
           <Actions />
         </SecondaryCard>
 
-        <p className="absolute -bottom-4 right-0">
-          <span className="opacity-50">{"///"}</span>AURA<span className="text-accent">OS</span>
+        <p className="absolute -bottom-4 -right-3 bg-neutral/75 px-2">
+          <span className="opacity-50">{"///"}</span>
+          <span className="text-accent">PRIMODIUM</span>
         </p>
       </Card>
       <div className="pl-2 z-0">
@@ -198,7 +199,7 @@ export const Companion = () => {
         <div className={`relative z-20 pointer-events-none`}>
           <img
             src="/img/companion/idle.gif"
-            className={`pixel-images h-52 m-4 ${!minimized ? "pointer-events-none" : "pointer-events-auto"}`}
+            className={`pixel-images h-48 mr-4 ${!minimized ? "pointer-events-none" : "pointer-events-auto"}`}
             onClick={() => minimized && setMinimized(false)}
           />
           <div className="absolute w-fit bottom-2 right-1/2 translate-x-1/2">
@@ -216,7 +217,7 @@ export const Companion = () => {
           </div>
         </div>
 
-        {!minimized && <PrimeOS />}
+        {!minimized && <WidgetsPane />}
 
         {minimized && (
           <p className="mb-5 drop-shadow-hard">

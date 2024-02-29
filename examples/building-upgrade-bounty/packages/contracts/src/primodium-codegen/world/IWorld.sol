@@ -94,4 +94,6 @@ interface IWorld is
   IUpgradeBuildingSystem,
   IUpgradeRangeSystem,
   IUpgradeUnitSystem
-{}
+{
+
+}

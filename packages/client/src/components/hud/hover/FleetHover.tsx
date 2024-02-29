@@ -75,6 +75,13 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
         {units.size !== 0 && (
           <div className="text-xs grid grid-cols-3 gap-1 divide-x divide-primary/50 pt-1 border-t border-t-primary/50">
             <div className="flex flex-col gap-1 p-1">
+              {fleetStats.decryption > 0n && (
+                <div className="flex gap-1">
+                  <p className="text-secondary">DEC</p>
+                  {formatResourceCount(EntityType.Iron, fleetStats.decryption, { short: true })}
+                </div>
+              )}
+
               <div className="flex gap-1">
                 <p className="text-secondary">ATK</p>
                 {formatResourceCount(EntityType.Iron, fleetStats.attack, { short: true })}
