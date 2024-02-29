@@ -33,10 +33,10 @@ export const Modal: React.FC<ModalProps> & {
 } = ({ children, title, keybind, keybindClose }) => {
   const [isOpen, setIsOpen] = useState(false);
   const primodium = usePrimodium();
-  const { enableInput, disableInput } = primodium.api().input;
-  const { audio } = primodium.api();
-
-  const api = primodium.api(Scenes.UI);
+  const {
+    audio,
+    input: { disableInput, enableInput, addListener },
+  } = useRef(primodium.api(Scenes.UI)).current;
 
   useEffect(() => {
     const handleEscPress = () => {
@@ -56,8 +56,8 @@ export const Modal: React.FC<ModalProps> & {
       enableInput();
     }
 
-    const escListener = api.input.addListener(KeybindActions.Esc, handleEscPress);
-    const openListener = keybind ? api.input.addListener(keybind, handleOpenPress) : null;
+    const escListener = addListener(KeybindActions.Esc, handleEscPress);
+    const openListener = keybind ? addListener(keybind, handleOpenPress) : null;
 
     return () => {
       escListener.dispose();
@@ -65,7 +65,7 @@ export const Modal: React.FC<ModalProps> & {
 
       enableInput();
     };
-  }, [isOpen, disableInput, enableInput, audio, api.input, keybind, keybindClose]);
+  }, [isOpen, disableInput, enableInput, audio, keybind, keybindClose, addListener]);
 
   return <ModalContext.Provider value={{ isOpen, setIsOpen, title }}>{children}</ModalContext.Provider>;
 };

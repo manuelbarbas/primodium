@@ -38,11 +38,10 @@ export const Button: React.FC<{
   keybind,
 }) => {
   const primodium = usePrimodium();
-  const api = primodium.api(Scenes.Asteroid);
-  const api2 = primodium.api(Scenes.Starmap);
+  const api = primodium.api(Scenes.UI);
 
   useEffect(() => {
-    if (!keybind || !api || !api2 || disabled) return;
+    if (!keybind || !api || disabled) return;
 
     const callback = () => {
       onClick && onClick();
@@ -53,13 +52,11 @@ export const Button: React.FC<{
     };
 
     const listener = api.input.addListener(keybind, callback);
-    const listener2 = api2.input.addListener(keybind, callback);
 
     return () => {
       listener.dispose();
-      listener2.dispose();
     };
-  }, [keybind, api, api2, clickSound, mute, disabled, onClick]);
+  }, [keybind, api, clickSound, mute, disabled, onClick]);
 
   return (
     <Tooltip text={tooltip} direction={tooltipDirection}>
