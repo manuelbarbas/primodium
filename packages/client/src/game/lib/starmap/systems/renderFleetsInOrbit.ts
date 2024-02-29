@@ -129,7 +129,6 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
     const fleetOrbitId = `fleetOrbit-${rockEntity}-${fleet}`;
     const fleetOrbitObject = fleetOrbit.add("Graphics", fleetOrbitId);
     const fleetHomeLineObject = fleetOrbit.add("Graphics");
-
     fleetOrbitObject.setComponents([
       ...sharedComponents,
       getFleetShape(fleet, { x: fleetPosition.x, y: fleetPosition.y }),
@@ -180,32 +179,38 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
         }
       }),
       //handle cooldown start
-      OnComponentSystem(components.CooldownEnd, (gameObject, { entity, value }) => {
-        if (entity !== fleet || !value[0]?.value) return;
+      OnComponentSystem(
+        components.CooldownEnd,
+        (gameObject, { entity, value }) => {
+          if (entity !== fleet || !value[0]?.value) return;
 
-        const cooldownEnd = components.CooldownEnd.get(fleet)?.value ?? 0n;
-        const time = components.Time.get()?.value ?? 0n;
-        const inCooldown = time < cooldownEnd;
+          const cooldownEnd = components.CooldownEnd.get(fleet)?.value ?? 0n;
+          const time = components.Time.get()?.value ?? 0n;
+          const inCooldown = time < cooldownEnd;
 
-        const id = `fleetShape-${fleet}`;
-        if (inCooldown && fleetOrbitObject.hasComponent(id)) {
-          fleetOrbitObject.removeComponent(id);
-          const shape = getFleetShape(fleet, { x: gameObject.x, y: gameObject.y }, true);
-          fleetOrbitObject.setComponents([
-            shape,
-            Tween(
-              scene,
-              {
-                duration: 1000,
-                alpha: 0.25,
-                yoyo: true,
-                repeat: -1,
-              },
-              `fleetCooldown-${fleet}`
-            ),
-          ]);
+          const id = `fleetShape-${fleet}`;
+          if (inCooldown && fleetOrbitObject.hasComponent(id)) {
+            fleetOrbitObject.removeComponent(id);
+            const shape = getFleetShape(fleet, { x: gameObject.x, y: gameObject.y }, true);
+            fleetOrbitObject.setComponents([
+              shape,
+              Tween(
+                scene,
+                {
+                  duration: 1000,
+                  alpha: 0.25,
+                  yoyo: true,
+                  repeat: -1,
+                },
+                `fleetCooldown-${fleet}`
+              ),
+            ]);
+          }
+        },
+        {
+          initialEntity: fleet,
         }
-      }),
+      ),
       //handle cooldown end
       OnComponentSystem(components.Time, (gameObject) => {
         const cooldownEnd = components.CooldownEnd.get(fleet)?.value ?? 0n;
