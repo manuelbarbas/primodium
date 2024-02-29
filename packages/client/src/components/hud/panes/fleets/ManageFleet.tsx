@@ -8,6 +8,7 @@ import { Button } from "src/components/core/Button";
 import { Modal } from "src/components/core/Modal";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
+import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useUnitCounts } from "src/hooks/useUnitCount";
@@ -15,7 +16,7 @@ import { components } from "src/network/components";
 import { disbandFleet } from "src/network/setup/contractCalls/fleetDisband";
 import { landFleet } from "src/network/setup/contractCalls/fleetLand";
 import { clearFleetStance, setFleetStance } from "src/network/setup/contractCalls/fleetStance";
-import { formatNumber, formatResourceCount } from "src/util/number";
+import { formatNumber, formatResourceCount, formatTime } from "src/util/number";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { FleetEntityHeader } from "./FleetHeader";
 import { useFleetNav } from "./Fleets";
@@ -27,6 +28,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
 
   const { BackButton, NavButton } = useFleetNav();
 
+  const inCooldown = useInCooldownEnd(fleetEntity);
   const units = useUnitCounts(fleetEntity);
   const resources = useFullResourceCounts(fleetEntity);
 
@@ -201,7 +203,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
 
             <Modal.CloseButton
               className="btn btn-primary btn-sm"
-              disabled={cannotDoAnything}
+              disabled={cannotDoAnything || inCooldown.inCooldown}
               onClick={async () => {
                 if (!scene) return;
                 components.Send.reset();
@@ -215,15 +217,15 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
                 api.camera.pan(fleetDestinationPosition);
               }}
             >
-              ATTACK
+              ATTACK {inCooldown ? `(${formatTime(inCooldown.duration)})` : ""}
             </Modal.CloseButton>
             <TransactionQueueMask queueItemId={"landFleet" as Entity}>
               <Button
                 className="btn btn-primary btn-sm w-full"
                 onClick={() => movement?.destination && landFleet(mud, fleetEntity, movement.destination as Entity)}
-                disabled={totalUnits <= 0n}
+                disabled={totalUnits <= 0n || inCooldown.inCooldown}
               >
-                LAND
+                LAND {inCooldown ? `(${formatTime(inCooldown.duration)})` : ""}
               </Button>
             </TransactionQueueMask>
             <TransactionQueueMask queueItemId={"disband" as Entity}>
