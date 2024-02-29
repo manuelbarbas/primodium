@@ -158,7 +158,8 @@ library LibUnit {
 
       ret += ships;
     }
-    return ret + ownedAsteroids.length;
+    // subtract one so the first asteroid doesn't count
+    return ret + ownedAsteroids.length - 1;
   }
 
   /**
