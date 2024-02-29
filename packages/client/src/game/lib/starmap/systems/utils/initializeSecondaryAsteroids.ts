@@ -59,7 +59,7 @@ function isSecondaryAsteroid(entity: Entity, chanceInv: number) {
 
 function getSecondaryAsteroidUnitsAndEncryption(asteroidEntity: Entity, level: bigint) {
   const droidCount = 4n ** level + 100n;
-  const encryption = (level * 100n + 100n) * RESOURCE_SCALE;
+  const encryption = (level * 10n + 10n) * RESOURCE_SCALE;
   return { droidCount, encryption };
 }
 
