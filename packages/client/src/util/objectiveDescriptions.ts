@@ -203,35 +203,4 @@ export const ObjectiveDescriptions = new Map<EObjectives, string>([
     EObjectives.BuildShieldGenerator,
     "Build a shield generator. Shield generators multiply your asteroid's defense numbers.",
   ],
-  [
-    EObjectives.RaidRawResources1,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [
-    EObjectives.RaidRawResources2,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [
-    EObjectives.RaidRawResources3,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-
-  [
-    EObjectives.RaidFactoryResources1,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [
-    EObjectives.RaidFactoryResources2,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-  [
-    EObjectives.RaidFactoryResources3,
-    "Attack player asteroids and pirate bases and reap the raided rewards. Your total raid is the sum of your units cargo capacity.",
-  ],
-
-  [EObjectives.DestroyEnemyUnits1, "Attack and defend against enemy units and destroy your enemies' armies."],
-  [EObjectives.DestroyEnemyUnits2, "Attack and defend against enemy units and destroy your enemies' armies."],
-  [EObjectives.DestroyEnemyUnits3, "Attack and defend against enemy units and destroy your enemies' armies."],
-  [EObjectives.DestroyEnemyUnits4, "Attack and defend against enemy units and destroy your enemies' armies."],
-  [EObjectives.DestroyEnemyUnits5, "Attack and defend against enemy units and destroy your enemies' armies."],
 ]);

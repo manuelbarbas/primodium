@@ -15,6 +15,7 @@ const unscaledResources = new Set([
   EntityType.FleetCount,
   EntityType.VesselCapacity,
   EntityType.Housing,
+  EntityType.DefenseMultiplier,
 ]);
 
 export const getResourceDecimals = (resource: Entity) => (unscaledResources.has(resource) ? 0 : DECIMALS);

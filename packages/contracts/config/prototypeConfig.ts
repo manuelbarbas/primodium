@@ -20,7 +20,7 @@ import { getBlueprint } from "./util/blueprints";
 import encodeBytes32, { encodeAddress } from "./util/encodeBytes32";
 
 const mainBaseMaxResourceUpgrades = {
-  1: { Iron: 5000, Copper: 5000, IronPlate: 2500, R_Encryption: 50, R_HP: 100 },
+  1: { Iron: 5000, Copper: 5000, IronPlate: 2500, R_Encryption: 100, R_HP: 100 },
   2: {
     Iron: 10000,
     Copper: 10000,
@@ -28,7 +28,7 @@ const mainBaseMaxResourceUpgrades = {
     Lithium: 10000,
     PVCell: 5000,
     Alloy: 5000,
-    R_Encryption: 100,
+    R_Encryption: 105,
     R_HP: 150,
   },
   3: {
@@ -42,7 +42,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 500,
     Iridium: 500,
     Kimberlite: 500,
-    R_Encryption: 125,
+    R_Encryption: 110,
     R_HP: 200,
   },
   4: {
@@ -56,7 +56,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 1000,
     Iridium: 1000,
     Kimberlite: 1000,
-    R_Encryption: 150,
+    R_Encryption: 115,
     R_HP: 250,
   },
   5: {
@@ -70,7 +70,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 3000,
     Iridium: 3000,
     Kimberlite: 3000,
-    R_Encryption: 175,
+    R_Encryption: 120,
     R_HP: 300,
   },
   6: {
@@ -84,7 +84,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 6000,
     Iridium: 6000,
     Kimberlite: 6000,
-    R_Encryption: 200,
+    R_Encryption: 125,
     R_HP: 400,
   },
   7: {
@@ -98,7 +98,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 7500,
     Iridium: 7500,
     Kimberlite: 7500,
-    R_Encryption: 225,
+    R_Encryption: 130,
     R_HP: 500,
   },
   8: {
@@ -112,7 +112,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 10000,
     Iridium: 10000,
     Kimberlite: 10000,
-    R_Encryption: 250,
+    R_Encryption: 135,
     R_HP: 600,
   },
 };
@@ -191,10 +191,10 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         tax: 10n, // out of 1000
       },
       P_CapitalShipConfig: {
-        resource: EResource.Iron,
-        initialCost: 10n * BigInt(SCALE),
+        resource: EResource.Alloy,
+        initialCost: 10000n * BigInt(SCALE),
         decryption: 10n * BigInt(SCALE),
-        cooldownExtension: 60n * 60n * 1n, // one hour
+        cooldownExtension: 60n * 1n, // one hour
       },
 
       P_UnitPrototypes: {
@@ -282,7 +282,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     keys: [],
     tables: {
       P_MarketplaceConfig: {
-        feeThousandths: 3n,
+        feeThousandths: 100n,
         lock: false,
       },
     },
@@ -307,42 +307,42 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[1]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.001, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
       2: {
         P_RequiredResources: getResourceValues({ Copper: 1500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[2]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.001, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
       3: {
         P_RequiredResources: getResourceValues({ Copper: 10000, PVCell: 1500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[3]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.001, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
       4: {
         P_RequiredResources: getResourceValues({ Copper: 25000, PVCell: 5000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[4]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.001, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
       5: {
         P_RequiredResources: getResourceValues({ Copper: 75000, PVCell: 500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[5]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.001, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
       6: {
         P_RequiredResources: getResourceValues({ Copper: 125000, Titanium: 1500, Platinum: 1500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[6]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.001, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
       7: {
         P_RequiredResources: getResourceValues({
@@ -354,7 +354,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[7]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.001, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
       8: {
         P_RequiredResources: getResourceValues({
@@ -366,7 +366,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[8]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.001, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
     },
   },
@@ -990,8 +990,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
     levels: {
       1: {
-        // P_RequiredResources: getResourceValues({ IronPlate: 2500, Alloy: 2500, PVCell: 2500 }),
-        P_RequiredResources: getResourceValues({ Iron: 1 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 2500, Alloy: 2500, PVCell: 2500 }),
+        // P_RequiredResources: getResourceValues({ Iron: 1 }),
         P_RequiredBaseLevel: { value: 3n },
         P_UnitProdMultiplier: { value: 100n },
         P_Production: getResourceValues({ U_CapitalShipCapacity: 1_000_000_000_000 }),
@@ -1574,7 +1574,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   },
   CapitalShip: {
     tables: {
-      P_MaxLevel: { value: 5n },
+      P_MaxLevel: { value: 0n },
     },
     levels: {
       0: {
@@ -1583,12 +1583,13 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_Unit: getPUnitData({
           hp: 100,
           attack: 20,
-          defense: 5000,
-          cargo: 1000,
+          defense: 50,
+          cargo: 2000,
           speed: 100,
           trainingTime: 100000,
         }),
       },
+      /* Stage in future release
       1: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 500 }),
         P_RequiredBaseLevel: { value: 3n },
@@ -1596,8 +1597,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_Unit: getPUnitData({
           hp: 100,
           attack: 50,
-          defense: 5500,
-          cargo: 1000,
+          defense: 55,
+          cargo: 2000,
           speed: 200,
           trainingTime: 100000,
         }),
@@ -1609,8 +1610,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_Unit: getPUnitData({
           hp: 100,
           attack: 100,
-          defense: 6000,
-          cargo: 1000,
+          defense: 60,
+          cargo: 2000,
           speed: 300,
           trainingTime: 100000,
         }),
@@ -1622,8 +1623,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_Unit: getPUnitData({
           hp: 100,
           attack: 250,
-          defense: 6500,
-          cargo: 1000,
+          defense: 65,
+          cargo: 2000,
           speed: 400,
           trainingTime: 100000,
         }),
@@ -1635,7 +1636,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_Unit: getPUnitData({
           hp: 100,
           attack: 500,
-          defense: 7000,
+          defense: 70,
           cargo: 1000,
           speed: 500,
           trainingTime: 100000,
@@ -1648,12 +1649,13 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_Unit: getPUnitData({
           hp: 100,
           attack: 1000,
-          defense: 7500,
+          defense: 75,
           cargo: 1000,
           speed: 600,
           trainingTime: 100000,
         }),
       },
+      */
     },
   },
   Droid: {
@@ -1663,7 +1665,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: {
       0: {
         P_Unit: getPUnitData({
-          hp: 100,
+          hp: 50,
           attack: 0,
           defense: 100,
           cargo: 0,
@@ -2205,7 +2207,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_ResourceReward: getResourceValues({ Titanium: 500, Platinum: 500 }),
     },
   },
-
   DefeatPirateBase15: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["DefeatPirateBase14"]) },
@@ -2519,174 +2520,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_RequiredObjectives: { objectives: encodeArray(["TrainStingerDrone2"]) },
       P_ProducedUnits: getUnitValues({ StingerDrone: 100 }),
       P_ResourceReward: getResourceValues({ Iron: 75000, Copper: 75000, Lithium: 75000 }),
-    },
-  },
-
-  MineTitanium1: {
-    tables: {
-      P_ProducedResources: getResourceValues({ Titanium: 1000 }),
-      P_UnitReward: getUnitValues({ AnvilDrone: 30 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 4n } } },
-  },
-  MineTitanium2: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["MineTitanium1"]) },
-      P_ProducedResources: getResourceValues({ Titanium: 3000 }),
-      P_UnitReward: getUnitValues({ AnvilDrone: 100 }),
-    },
-  },
-  MineTitanium3: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["MineTitanium2"]) },
-      P_ProducedResources: getResourceValues({ Titanium: 10000 }),
-      P_UnitReward: getUnitValues({ AnvilDrone: 250 }),
-    },
-  },
-
-  MinePlatinum1: {
-    tables: {
-      P_ProducedResources: getResourceValues({ Platinum: 1000 }),
-      P_UnitReward: getUnitValues({ HammerDrone: 30 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 4n } } },
-  },
-  MinePlatinum2: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["MinePlatinum1"]) },
-      P_ProducedResources: getResourceValues({ Platinum: 3000 }),
-      P_UnitReward: getUnitValues({ HammerDrone: 100 }),
-    },
-  },
-  MinePlatinum3: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["MinePlatinum2"]) },
-      P_ProducedResources: getResourceValues({ Platinum: 10000 }),
-      P_UnitReward: getUnitValues({ HammerDrone: 100 }),
-    },
-  },
-
-  MineIridium1: {
-    tables: {
-      P_ProducedResources: getResourceValues({ Iridium: 1000 }),
-      P_UnitReward: getUnitValues({ AegisDrone: 30 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 4n } } },
-  },
-  MineIridium2: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["MineIridium1"]) },
-      P_ProducedResources: getResourceValues({ Iridium: 3000 }),
-      P_UnitReward: getUnitValues({ AegisDrone: 100 }),
-    },
-  },
-  MineIridium3: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["MineIridium2"]) },
-      P_ProducedResources: getResourceValues({ Iridium: 10000 }),
-      P_UnitReward: getUnitValues({ AegisDrone: 250 }),
-    },
-  },
-
-  MineKimberlite1: {
-    tables: {
-      P_ProducedResources: getResourceValues({ Kimberlite: 1000 }),
-      P_UnitReward: getUnitValues({ AnvilDrone: 15, HammerDrone: 15, AegisDrone: 15 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 4n } } },
-  },
-  MineKimberlite2: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["MineKimberlite1"]) },
-      P_ProducedResources: getResourceValues({ Kimberlite: 3000 }),
-      P_UnitReward: getUnitValues({ AnvilDrone: 50, HammerDrone: 50, AegisDrone: 50 }),
-    },
-  },
-  MineKimberlite3: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["MineKimberlite2"]) },
-      P_ProducedResources: getResourceValues({ Kimberlite: 10000 }),
-      P_UnitReward: getUnitValues({ AnvilDrone: 100, HammerDrone: 100, AegisDrone: 100 }),
-    },
-  },
-
-  RaidRawResources1: {
-    tables: {
-      P_RaidedResources: getResourceValues({ Iron: 2000, Copper: 2000, Lithium: 2000 }),
-      P_UnitReward: getUnitValues({ HammerDrone: 30 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
-  },
-  RaidRawResources2: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["RaidRawResources1"]) },
-      P_RaidedResources: getResourceValues({ Iron: 5000, Copper: 5000, Lithium: 5000 }),
-      P_UnitReward: getUnitValues({ HammerDrone: 100 }),
-    },
-  },
-  RaidRawResources3: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["RaidRawResources2"]) },
-      P_RaidedResources: getResourceValues({ Iron: 25000, Copper: 25000, Lithium: 25000 }),
-      P_UnitReward: getUnitValues({ HammerDrone: 300 }),
-    },
-  },
-
-  RaidFactoryResources1: {
-    tables: {
-      P_RaidedResources: getResourceValues({ IronPlate: 2000, PVCell: 2000, Alloy: 2000 }),
-      P_UnitReward: getUnitValues({ AegisDrone: 30 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
-  },
-  RaidFactoryResources2: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["RaidFactoryResources1"]) },
-      P_RaidedResources: getResourceValues({ IronPlate: 5000, PVCell: 5000, Alloy: 5000 }),
-      P_UnitReward: getUnitValues({ AegisDrone: 100 }),
-    },
-  },
-  RaidFactoryResources3: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["RaidFactoryResources2"]) },
-      P_RaidedResources: getResourceValues({ IronPlate: 25000, PVCell: 25000, Alloy: 25000 }),
-      P_UnitReward: getUnitValues({ AegisDrone: 300 }),
-    },
-  },
-
-  DestroyEnemyUnits1: {
-    tables: {
-      P_DestroyedUnits: getUnitValues({ MinutemanMarine: 500 }),
-      P_ResourceReward: getResourceValues({ Copper: 3000, Iron: 3000 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
-  },
-  DestroyEnemyUnits2: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["DestroyEnemyUnits1"]) },
-      P_DestroyedUnits: getUnitValues({ TridentMarine: 500 }),
-      P_ResourceReward: getResourceValues({ Copper: 10000, Lithium: 10000 }),
-    },
-  },
-  DestroyEnemyUnits3: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["DestroyEnemyUnits2"]) },
-      P_DestroyedUnits: getUnitValues({ AnvilDrone: 300 }),
-      P_ResourceReward: getResourceValues({ Copper: 30000, IronPlate: 30000 }),
-    },
-  },
-  DestroyEnemyUnits4: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["DestroyEnemyUnits3"]) },
-      P_DestroyedUnits: getUnitValues({ AegisDrone: 300 }),
-      P_ResourceReward: getResourceValues({ Copper: 300000, PVCell: 300000 }),
-    },
-  },
-  DestroyEnemyUnits5: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["DestroyEnemyUnits4"]) },
-      P_DestroyedUnits: getUnitValues({ StingerDrone: 300 }),
-      P_ResourceReward: getResourceValues({ Copper: 500000, Titanium: 3000, Platinum: 3000 }),
     },
   },
 

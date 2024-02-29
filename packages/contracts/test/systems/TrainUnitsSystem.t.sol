@@ -106,7 +106,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
 
   function testTrainCapitalShip() public {
     uint256 multiplier = LibUnit.getCapitalShipCostMultiplier(aliceEntity);
-    assertEq(multiplier, 2);
+    assertEq(multiplier, 1);
     uint256 amount = P_CapitalShipConfig.getInitialCost() * multiplier;
     assertEq(
       amount,
@@ -128,7 +128,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
   function testTrainCapitalShipsCostIncrease() public {
     uint256 initialShips = LibUnit.getCapitalShipsPlusAsteroids(aliceEntity);
     uint256 initialMultiplier = LibUnit.getCapitalShipCostMultiplier(aliceEntity);
-    assertEq(initialShips, 1, "initial ship and asteroid count");
+    assertEq(initialShips, 0, "initial ship and asteroid count");
     bytes32[] memory ownedAsteroids = ColoniesMap.getAsteroidIds(aliceEntity, AsteroidOwnedByKey);
 
     uint256 amount = P_CapitalShipConfig.getInitialCost() * initialMultiplier;

@@ -107,7 +107,7 @@ library LibAsteroid {
     uint256 level
   ) internal view returns (uint256, uint256) {
     uint256 droidCount = 4 ** level + 100;
-    uint256 encryption = (level * 100 + 100) * 1e18;
+    uint256 encryption = (level * 10 + 10) * 1e18;
     return (droidCount, encryption);
   }
 
