@@ -1574,7 +1574,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   },
   CapitalShip: {
     tables: {
-      P_MaxLevel: { value: 5n },
+      P_MaxLevel: { value: 0n },
     },
     levels: {
       0: {
@@ -1589,6 +1589,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 100000,
         }),
       },
+      /* Stage in future release
       1: {
         P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 500 }),
         P_RequiredBaseLevel: { value: 3n },
@@ -1654,6 +1655,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 100000,
         }),
       },
+      */
     },
   },
   Droid: {
