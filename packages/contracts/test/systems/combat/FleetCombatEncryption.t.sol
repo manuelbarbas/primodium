@@ -55,6 +55,10 @@ contract FleetCombatSystemTest is PrimodiumTest {
     bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
+    upgradeMainBase(bob);
+    upgradeMainBase(bob);
+    upgradeMainBase(bob);
+
     vm.startPrank(alice);
     world.sendFleet(fleetId, bobHomeSpaceRock);
     vm.stopPrank();
@@ -67,6 +71,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     uint256 hpProduction = 1;
     uint256 hp = defense;
     uint256 encryption = ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption));
+    assertGt(encryption, decryption, "bob should have enough encryption to defend");
     uint256 attack = LibCombatAttributes.getAttack(fleetId);
     increaseResource(bobHomeSpaceRock, EResource.U_Defense, defense);
     increaseResource(bobHomeSpaceRock, EResource.R_HP, hp);
@@ -274,10 +279,15 @@ contract FleetCombatSystemTest is PrimodiumTest {
     GracePeriod.set(bobHomeSpaceRock, block.timestamp);
     vm.stopPrank();
 
+    upgradeMainBase(bob);
+    upgradeMainBase(bob);
+    upgradeMainBase(bob);
+
     uint256 defense = (numberOfUnits * P_Unit.getAttack(minuteman, UnitLevel.get(aliceHomeSpaceRock, minuteman))) / 2;
     uint256 hpProduction = 1;
     uint256 hp = defense;
     uint256 encryption = ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption));
+    assertGt(encryption, decryption, "bob should have enough encryption to defend");
     increaseResource(bobHomeSpaceRock, EResource.U_Defense, defense);
     increaseResource(bobHomeSpaceRock, EResource.R_HP, hp);
     increaseProduction(bobHomeSpaceRock, EResource.R_HP, hpProduction);
@@ -304,7 +314,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
       "space rock should not have been raided"
     );
 
-    console.log("curr encryption: %s", ResourceCount.get(fleetId, uint8(EResource.R_Encryption)));
+    console.log("encryption: %s decryption: %s", ResourceCount.get(fleetId, uint8(EResource.R_Encryption)), decryption);
     assertEq(
       ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)),
       encryption - decryption,
