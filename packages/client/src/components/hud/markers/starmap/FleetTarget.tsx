@@ -13,6 +13,7 @@ import { components } from "src/network/components";
 import { clearFleetStance } from "src/network/setup/contractCalls/fleetStance";
 import { getCanAttackSomeone, getFleetPixelPosition, getFleetStats } from "src/util/unit";
 import { Fleets } from "../../panes/fleets/Fleets";
+import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
 
 // this component assumes the fleet is owned by the player
 export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fleet, position }) => {
@@ -22,6 +23,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
   const noUnits = useUnitCounts(fleet).size === 0;
   const stats = getFleetStats(fleet);
   const spaceRockData = useSpaceRock(position);
+  const { inCooldown } = useInCooldownEnd(fleet);
   const mud = useMud();
   const primodium = usePrimodium();
   const {
@@ -37,8 +39,8 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
   }, [fleet, getScene]);
 
   const disableAttack = useMemo(
-    () => noUnits || selectingMoveDestination || stats.attack === 0n || !getCanAttackSomeone(fleet),
-    [noUnits, selectingMoveDestination, stats.attack, fleet]
+    () => noUnits || selectingMoveDestination || stats.attack === 0n || !getCanAttackSomeone(fleet) || inCooldown,
+    [noUnits, selectingMoveDestination, stats.attack, fleet, inCooldown]
   );
 
   const stance = components.FleetStance.use(fleet)?.stance;

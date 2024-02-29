@@ -44,3 +44,11 @@ export const getInGracePeriod = (entity: Entity) => {
   if (!inGracePeriod) return { inGracePeriod: false, duration: 0 };
   return { inGracePeriod, duration: endTime - time };
 };
+
+export const getInCooldownEnd = (entity: Entity) => {
+  const time = components.Time.get()?.value ?? 0n;
+  const endTime = components.CooldownEnd.get(entity)?.value ?? 0n;
+  const inCooldown = time < endTime;
+  if (!inCooldown) return { inCooldown: false, duration: 0 };
+  return { inCooldown, duration: endTime - time };
+};

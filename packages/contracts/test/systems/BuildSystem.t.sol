@@ -99,7 +99,7 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testBuildMainBaseLevelNotMetFail() public {
-    EBuilding building = EBuilding.Shipyard;
+    EBuilding building = EBuilding.AlloyFactory;
     P_RequiredResourcesData memory requiredResources = getBuildCost(building);
     provideResources(Home.get(playerEntity), requiredResources);
 

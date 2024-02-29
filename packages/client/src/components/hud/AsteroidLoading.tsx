@@ -21,7 +21,7 @@ export const AsteroidLoading = () => {
             opacity: 1,
           }}
           exit={{ opacity: 0, transition: { delay: 1.5, duration: 0.5 } }}
-          className="absolute inset-0 pointer-events-auto bg-neutral/50 backdrop-blur-3xl flex flex-col items-center justify-center text-xl"
+          className="absolute inset-0 pointer-events-auto bg-neutral/50 backdrop-blur-3xl flex flex-col items-center justify-center text-xl uppercase font-bold"
         >
           <Loader />
           Loading Asteroid
