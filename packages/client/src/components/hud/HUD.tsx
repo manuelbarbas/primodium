@@ -1,7 +1,7 @@
 import { KeybindActions, Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { memo, useEffect, useMemo } from "react";
+import { FC, memo, useEffect, useMemo, useRef } from "react";
 import ReactDOM from "react-dom";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks";
@@ -30,19 +30,18 @@ import { Chat } from "./panes/chat/Chat";
 import { Hangar } from "./panes/hangar/Hangar";
 import { Resources } from "./panes/resources/Resources";
 import { AsteroidLoading } from "./AsteroidLoading";
+import { useShallow } from "zustand/react/shallow";
 export const GameHUD = memo(() => {
   const {
     playerAccount: { entity: playerEntity },
   } = useMud();
-
-  const uiScale = usePersistentStore((state) => state.uiScale);
   const primodium = usePrimodium();
   const {
     camera: { createDOMContainer },
     input: { addListener },
     scene: { transitionToScene },
-  } = primodium.api(Scenes.UI);
-  const allowHackerModal = usePersistentStore((state) => state.allowHackerModal);
+  } = useRef(primodium.api(Scenes.UI)).current;
+
   const mapOpen = components.MapOpen.use(undefined, {
     value: false,
   }).value;
@@ -153,7 +152,9 @@ export const GameHUD = memo(() => {
     obj.pointerEvents = "none";
     obj.transformOnly = true;
 
-    const portal = () => {
+    const Portal: FC = memo(() => {
+      const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
+      const allowHackerModal = usePersistentStore(useShallow((state) => state.allowHackerModal));
       if (!container) return <></>;
 
       return ReactDOM.createPortal(
@@ -207,10 +208,10 @@ export const GameHUD = memo(() => {
         </div>,
         container
       );
-    };
+    });
 
-    return portal;
-  }, [uiScale, mapOpen, allowHackerModal]);
+    return Portal;
+  }, [createDOMContainer, mapOpen]);
 
   //align element with phaser elements
   //align element with phaser elements
