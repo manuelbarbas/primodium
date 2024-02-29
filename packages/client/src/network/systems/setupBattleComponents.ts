@@ -15,6 +15,8 @@ export const setupBattleComponents = () => {
       attackerDamage: battleData.aggressorDamage,
       defender: battleData.targetEntity as Entity,
       defenderDamage: battleData.targetDamage,
+      attackingPlayer: battleData.player as Entity,
+      defendingPlayer: battleData.targetPlayer as Entity,
       winner: battleData.winner as Entity,
       rock: battleData.rock as Entity,
       timestamp: battleData.timestamp,

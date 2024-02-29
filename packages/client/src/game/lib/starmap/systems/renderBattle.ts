@@ -132,6 +132,9 @@ export const renderBattle = (scene: Scene) => {
     const destination = components.Position.get(battle.rock as Entity);
     if (!destination) return;
 
+    if (components.PirateAsteroid.has(battle.rock) && battle.attackingPlayer !== components.Account.get()?.value)
+      return;
+
     attackAnimation(update.entity, battle.attacker, battle.defender, battle.attacker === battle.winner);
   });
 };
