@@ -84,7 +84,12 @@ export const getPUnitData = (data: {
  * @returns An object containing the resources and their amounts
  */
 
-const unscaledResources = new Set([EResource.U_Housing, EResource.U_MaxFleets, EResource.U_CapitalShipCapacity]);
+const unscaledResources = new Set([
+  EResource.U_Housing,
+  EResource.U_MaxFleets,
+  EResource.U_CapitalShipCapacity,
+  EResource.M_DefenseMultiplier,
+]);
 export const getResourceValues = (resourceValues: Record<string, number>) => {
   // unzip the array
   const [resources, amounts] = Object.entries(resourceValues).reduce(
