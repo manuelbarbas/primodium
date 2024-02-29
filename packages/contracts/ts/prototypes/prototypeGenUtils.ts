@@ -28,7 +28,7 @@ export const marketplaceSupplyTable = (resource: EResource, ratio: number, reser
   const keys = resource < RESERVE_RESOURCE ? [resource, RESERVE_RESOURCE] : [RESERVE_RESOURCE, resource];
 
   // calculate the reserve amounts based on the ratio
-  const inputResourceAmount = BigInt(reserve * ratio);
+  const inputResourceAmount = BigInt(Math.round(reserve * ratio));
   const reserveResourceAmount = BigInt(reserve);
 
   const [reserveA, reserveB] =
@@ -48,7 +48,7 @@ export const upgradesByLevel = (name: string, upgrades: Record<number, Record<st
     const upgradesObject = Object.entries(upgrades).reduce((prev, [resource, max]) => {
       prev[`${name}${resource}L${level}Upgrade`] = {
         keys: [{ [name32]: "bytes32" }, { [MUDEnums.EResource.indexOf(resource)]: "uint8" }, { [level]: "uint32" }],
-        tables: { P_ByLevelMaxResourceUpgrades: { value: BigInt(max * SCALE) } },
+        tables: { P_ByLevelMaxResourceUpgrades: { value: BigInt(Math.round(max * SCALE)) } },
       };
       return prev;
     }, {} as Record<string, { keys: { [x: string]: StaticAbiType }[]; tables: { P_ByLevelMaxResourceUpgrades: { value: bigint } } }>);
@@ -57,7 +57,7 @@ export const upgradesByLevel = (name: string, upgrades: Record<number, Record<st
 
 export const getResourceValue = (resourceValue: { [x: string]: number }) => {
   const [resource, amount] = Object.entries(resourceValue)[0];
-  return { resource: MUDEnums.EResource.indexOf(resource), amount: BigInt(amount * SCALE) };
+  return { resource: MUDEnums.EResource.indexOf(resource), amount: BigInt(Math.round(amount * SCALE)) };
 };
 
 export const getPUnitData = (data: {
@@ -91,7 +91,7 @@ export const getResourceValues = (resourceValues: Record<string, number>) => {
     (acc, [resource, amount]) => {
       const resourceIndex = MUDEnums.EResource.indexOf(resource);
       acc[0].push(resourceIndex);
-      acc[1].push(BigInt(amount * (unscaledResources.has(resourceIndex) ? 1 : SCALE)));
+      acc[1].push(BigInt(Math.round(amount * (unscaledResources.has(resourceIndex) ? 1 : SCALE))));
       return acc;
     },
     [[], []] as [number[], bigint[]]
