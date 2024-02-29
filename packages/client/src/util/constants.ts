@@ -397,8 +397,8 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.DefenseMultiplier, "/img/icons/defenseicon.png"],
   [EntityType.Unraidable, "/img/icons/unraidableicon.png"],
   [EntityType.AdvancedUnraidable, "/img/icons/advancedunraidableicon.png"],
-  [EntityType.Encryption, "/img/icons/advancedunraidableicon.png"],
-  [EntityType.HP, "/img/icons/advancedunraidableicon.png"],
+  [EntityType.Encryption, "/img/icons/encryptionicon.png"],
+  [EntityType.HP, "/img/icons/reinforcementicon.png"],
 
   //units
   [EntityType.HammerDrone, "/img/unit/hammerdrone.png"],

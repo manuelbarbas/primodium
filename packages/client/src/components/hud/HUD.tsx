@@ -190,11 +190,13 @@ export const GameHUD = memo(() => {
             </HUD.TopLeft>
 
             <HUD.TopRight className="flex flex-col items-end gap-2">
-              <CurrentObjective />
-              <Resources />
-              <Hangar />
-              <OwnedAsteroids />
-              <OwnedFleets />
+              <div>
+                <CurrentObjective />
+                <Resources />
+                <Hangar />
+                <OwnedAsteroids />
+                <OwnedFleets />
+              </div>
             </HUD.TopRight>
 
             <HUD.BottomRight>
