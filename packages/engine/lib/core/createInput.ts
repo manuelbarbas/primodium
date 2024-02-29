@@ -40,6 +40,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
   const pointermove$ = fromEvent(inputPlugin.scene.scale.canvas, "mousemove").pipe(
     filter(() => enabled.current && inputPlugin.scene.scene.isActive()),
     map(() => {
+      inputPlugin.manager.activePointer.updateWorldPoint(inputPlugin.scene.cameras.main);
       return inputPlugin.manager?.activePointer;
     })
     // filter(({ pointer }) => pointer?.downElement?.nodeName === "CANVAS"),

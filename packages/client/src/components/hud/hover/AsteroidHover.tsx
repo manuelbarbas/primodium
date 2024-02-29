@@ -82,7 +82,7 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
             {!isPirate && (
               <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
                 <HealthBar
-                  imgUrl="/img/icons/advancedunraidableicon.png"
+                  imgUrl={ResourceImage.get(EntityType.Encryption) ?? ""}
                   health={Number(formatResourceCount(EntityType.Encryption, encryption, { notLocale: true }))}
                   maxHealth={Number(formatResourceCount(EntityType.Encryption, maxEncryption, { notLocale: true }))}
                 />
@@ -90,7 +90,7 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
             )}
             <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
               <HealthBar
-                imgUrl="/img/icons/defenseicon.png"
+                imgUrl={ResourceImage.get(EntityType.HP) ?? ""}
                 health={Number(formatResourceCount(EntityType.HP, strength, { notLocale: true, showZero: true }))}
                 maxHealth={Number(formatResourceCount(EntityType.HP, maxStrength, { notLocale: true, showZero: true }))}
               />

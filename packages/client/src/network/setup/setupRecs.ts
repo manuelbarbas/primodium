@@ -108,7 +108,7 @@ export const setupRecs = <config extends StoreConfig, extraTables extends Record
     await firstValueFrom(
       hasTransaction$.pipe(
         filter(identity),
-        timeout({ each: 5000, with: () => throwError(() => new Error("Transaction failed.")) })
+        timeout({ each: 10_000, with: () => throwError(() => new Error("Transaction failed.")) })
       )
     );
   }

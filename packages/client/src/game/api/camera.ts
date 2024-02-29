@@ -45,6 +45,7 @@ export const createCameraApi = (targetScene: Scene) => {
     const { camera } = targetScene;
 
     camera.phaserCamera.zoomTo(zoom, duration, ease, false, () => {
+      targetScene.input.phaserInput.activePointer.updateWorldPoint(camera.phaserCamera);
       updateWorldView();
     });
   }

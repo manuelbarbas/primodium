@@ -129,7 +129,7 @@ const _OwnedFleets: React.FC = () => {
   });
 
   return (
-    <div className="p-2 max-h-96 overflow-y-auto scrollbar w-fit">
+    <div className="p-2 max-h-96 overflow-y-auto scrollbar w-96">
       {fleets.length === 0 && (
         <SecondaryCard className="w-full h-full flex text-xs items-center justify-center font-bold">
           <p className="opacity-50 uppercase">you control no fleets</p>

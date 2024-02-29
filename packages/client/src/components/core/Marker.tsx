@@ -164,11 +164,11 @@ export const Marker: React.FC<{
     };
   }, [coord, visible, container, marker, camera, offScreenIconUri]);
 
-  if (!marker || !container) return;
+  if (!marker || !container || !camera.phaserCamera.scene.scene.isActive()) return;
 
   return ReactDOM.createPortal(
     <div className={translateClass}>
-      {!visible && offScreenIconUri && camera.phaserCamera.scene.scene.isActive() && (
+      {!visible && offScreenIconUri && (
         <BoundedMarker scene={scene} coord={coord} iconUri={offScreenIconUri} degrees={degrees} />
       )}
       {(visible || !offScreenIconUri) && children}
