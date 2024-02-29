@@ -1665,7 +1665,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: {
       0: {
         P_Unit: getPUnitData({
-          hp: 100,
+          hp: 50,
           attack: 0,
           defense: 100,
           cargo: 0,
