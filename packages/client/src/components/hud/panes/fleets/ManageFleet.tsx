@@ -16,7 +16,7 @@ import { components } from "src/network/components";
 import { disbandFleet } from "src/network/setup/contractCalls/fleetDisband";
 import { landFleet } from "src/network/setup/contractCalls/fleetLand";
 import { clearFleetStance, setFleetStance } from "src/network/setup/contractCalls/fleetStance";
-import { formatNumber, formatResourceCount } from "src/util/number";
+import { formatNumber, formatResourceCount, formatTime } from "src/util/number";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { FleetEntityHeader } from "./FleetHeader";
 import { useFleetNav } from "./Fleets";
@@ -203,7 +203,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
 
             <Modal.CloseButton
               className="btn btn-primary btn-sm"
-              disabled={cannotDoAnything}
+              disabled={cannotDoAnything || inCooldown.inCooldown}
               onClick={async () => {
                 if (!scene) return;
                 components.Send.reset();
@@ -217,7 +217,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
                 api.camera.pan(fleetDestinationPosition);
               }}
             >
-              ATTACK
+              ATTACK {inCooldown ? `(${formatTime(inCooldown.duration)})` : ""}
             </Modal.CloseButton>
             <TransactionQueueMask queueItemId={"landFleet" as Entity}>
               <Button
@@ -225,7 +225,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
                 onClick={() => movement?.destination && landFleet(mud, fleetEntity, movement.destination as Entity)}
                 disabled={totalUnits <= 0n || inCooldown.inCooldown}
               >
-                LAND {inCooldown ? `(${formatNumber(inCooldown.duration)})` : ""}
+                LAND {inCooldown ? `(${formatTime(inCooldown.duration)})` : ""}
               </Button>
             </TransactionQueueMask>
             <TransactionQueueMask queueItemId={"disband" as Entity}>
