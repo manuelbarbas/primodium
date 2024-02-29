@@ -48,7 +48,13 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
   if (!mapOpen || !position) return <></>;
 
   return (
-    <Marker id={"fleet-target"} scene={Scenes.Starmap} coord={coord} depth={DepthLayers.Path + 1}>
+    <Marker
+      id={"fleet-target"}
+      scene={Scenes.Starmap}
+      coord={coord}
+      depth={DepthLayers.Path + 1}
+      offScreenIconUri="/img/icons/outgoingicon.png"
+    >
       <div className="w-14 h-14 border-2 border-error flex items-center justify-center bg-transparent">
         <div className="absolute top-0 right-0 translate-x-full w-36">
           <Button
