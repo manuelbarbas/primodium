@@ -151,19 +151,6 @@ export enum EObjectives {
   TrainStingerDrone2,
   TrainStingerDrone3,
 
-  RaidRawResources1,
-  RaidRawResources2,
-  RaidRawResources3,
-  RaidFactoryResources1,
-  RaidFactoryResources2,
-  RaidFactoryResources3,
-
-  DestroyEnemyUnits1,
-  DestroyEnemyUnits2,
-  DestroyEnemyUnits3,
-  DestroyEnemyUnits4,
-  DestroyEnemyUnits5,
-
   ExpandBase1,
   ExpandBase2,
   ExpandBase3,
