@@ -204,8 +204,7 @@ export function getBuildingLevelStorageUpgrades(buildingType: Entity, level: big
   return storageUpgrade.map((resource) => ({
     resource: ResourceEntityLookup[resource],
     amount:
-      comps.P_ByLevelMaxResourceUpgrades.getWithKeys({ prototype: buildingType as Hex, level: 1n, resource })?.value ??
-      0n,
+      comps.P_ByLevelMaxResourceUpgrades.getWithKeys({ prototype: buildingType as Hex, level, resource })?.value ?? 0n,
   }));
 }
 
