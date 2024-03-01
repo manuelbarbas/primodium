@@ -24,8 +24,9 @@ export const TextInput: React.FC<{
   requirePattern,
 }) => {
   const primodium = usePrimodium();
-  const input = primodium.api(Scenes.Asteroid).input;
-  const input2 = primodium.api(Scenes.Starmap).input;
+  const input = primodium.api(Scenes.UI).input;
+  const input2 = primodium.api(Scenes.Asteroid).input;
+  const input3 = primodium.api(Scenes.Starmap).input;
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -35,10 +36,18 @@ export const TextInput: React.FC<{
       inputRef.current.blur();
     };
 
-    window.addEventListener("keydown", handleEscPress);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!inputRef.current || inputRef.current.contains(event.target as Node)) return;
+
+      inputRef.current.blur();
+    };
+
+    document.addEventListener("keydown", handleEscPress);
+    document.addEventListener("click", handleClickOutside);
 
     return () => {
-      window.removeEventListener("keydown", handleEscPress);
+      document.removeEventListener("keydown", handleEscPress);
+      document.removeEventListener("click", handleClickOutside);
     };
   }, []);
 
@@ -57,11 +66,13 @@ export const TextInput: React.FC<{
           console.log("focus");
           input.disableInput();
           input2.disableInput();
+          input3.disableInput();
         }}
         onBlur={() => {
           console.log("blur");
           input.enableInput();
           input2.enableInput();
+          input3.enableInput();
         }}
         required={!!requirePattern}
         pattern={requirePattern}
