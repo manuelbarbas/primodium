@@ -26,6 +26,7 @@ export const TextInput: React.FC<{
   const primodium = usePrimodium();
   const input = primodium.api(Scenes.UI).input;
   const input2 = primodium.api(Scenes.Asteroid).input;
+  const input3 = primodium.api(Scenes.Starmap).input;
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -65,11 +66,13 @@ export const TextInput: React.FC<{
           console.log("focus");
           input.disableInput();
           input2.disableInput();
+          input3.disableInput();
         }}
         onBlur={() => {
           console.log("blur");
           input.enableInput();
           input2.enableInput();
+          input3.enableInput();
         }}
         required={!!requirePattern}
         pattern={requirePattern}
