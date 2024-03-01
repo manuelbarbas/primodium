@@ -5,8 +5,8 @@ import { Key, Scene } from "engine/types";
 import { usePersistentStore } from "../stores/PersistentStore";
 
 export function createInputApi(targetScene: Scene) {
+  const keybinds = usePersistentStore.getState().keybinds;
   function isDown(keybindAction: KeybindActions) {
-    const keybinds = usePersistentStore.getState().keybinds;
     const { input } = targetScene;
 
     if (!keybinds[keybindAction]) return false;

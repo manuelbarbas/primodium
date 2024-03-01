@@ -24,8 +24,8 @@ export const TextInput: React.FC<{
   requirePattern,
 }) => {
   const primodium = usePrimodium();
-  const input = primodium.api(Scenes.Asteroid).input;
-  const input2 = primodium.api(Scenes.Starmap).input;
+  const input = primodium.api(Scenes.UI).input;
+  const input2 = primodium.api(Scenes.Asteroid).input;
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -35,10 +35,18 @@ export const TextInput: React.FC<{
       inputRef.current.blur();
     };
 
-    window.addEventListener("keydown", handleEscPress);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!inputRef.current || inputRef.current.contains(event.target as Node)) return;
+
+      inputRef.current.blur();
+    };
+
+    document.addEventListener("keydown", handleEscPress);
+    document.addEventListener("click", handleClickOutside);
 
     return () => {
-      window.removeEventListener("keydown", handleEscPress);
+      document.removeEventListener("keydown", handleEscPress);
+      document.removeEventListener("click", handleClickOutside);
     };
   }, []);
 
