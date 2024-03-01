@@ -17,10 +17,10 @@ import { formatNumber, formatResourceCount, formatTime, formatTimeShort } from "
 import { getFleetStats } from "src/util/unit";
 
 export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
-  const { loading, exists } = useSyncStatus(entity);
+  const { loading } = useSyncStatus(entity);
   const fleetStats = getFleetStats(entity);
-  const units = useUnitCounts(entity, loading || !exists);
-  const resources = useFullResourceCounts(entity, loading || !exists);
+  const units = useUnitCounts(entity, loading);
+  const resources = useFullResourceCounts(entity, loading);
   const movement = components.FleetMovement.use(entity);
   const time = components.Time.use()?.value ?? 0n;
   const stance = components.FleetStance.use(entity);
@@ -38,7 +38,7 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
     return "Orbiting";
   }, [movement?.arrivalTime, time, stance]);
 
-  if (loading || !exists)
+  if (loading)
     return (
       <Card className="relative flex items-center justify-center w-56 h-24 px-auto uppercase font-bold">
         <Loader />

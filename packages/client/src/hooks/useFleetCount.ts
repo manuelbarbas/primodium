@@ -15,7 +15,7 @@ export const useFleetCount = ({ asteroid }: { asteroid: Entity }) => {
   return maxMoves;
 };
 
-export const useFleetStats = (entity: Entity) => {
+export const useFleetStats = (entity: Entity, force?: boolean) => {
   const time = components.Time.use()?.value ?? 0n;
-  return useMemo(() => getFleetStats(entity), [entity, time]);
+  return useMemo(() => getFleetStats(entity), [entity, time, force]);
 };

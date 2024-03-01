@@ -9,11 +9,11 @@ import { Loader } from "../core/Loader";
 export const AsteroidLoading = () => {
   const activeRock = components.ActiveRock.use()?.value ?? singletonEntity;
   const syncId = hashEntities(Keys.ACTIVE, activeRock);
-  const { loading, exists } = useSyncStatus(syncId);
+  const { loading } = useSyncStatus(syncId);
 
   return (
     <AnimatePresence>
-      {(loading || !exists) && (
+      {loading && (
         <motion.div
           key={syncId}
           id={syncId}

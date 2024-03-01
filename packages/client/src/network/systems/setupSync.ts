@@ -28,6 +28,14 @@ export const setupSync = (mud: MUD) => {
     hydrateActiveAsteroid(spaceRock, mud);
   });
 
+  defineComponentSystem(systemWorld, components.SelectedFleet, ({ value }) => {
+    const fleet = value[0]?.value;
+
+    if (!fleet || value[0]?.value === value[1]?.value) return;
+
+    hydrateFleetData(fleet, mud);
+  });
+
   defineComponentSystem(
     systemWorld,
     components.HoverEntity,

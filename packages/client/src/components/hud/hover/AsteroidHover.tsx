@@ -30,23 +30,23 @@ const limitAddress = (address: string, max = 10) => {
 };
 
 export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
-  const { loading, exists } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
+  const { loading } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
   const name = entityToRockName(entity);
-  const { inGracePeriod, duration } = useInGracePeriod(entity, loading || !exists);
+  const { inGracePeriod, duration } = useInGracePeriod(entity, loading);
   const { resourceCount: encryption, resourceStorage: maxEncryption } = useFullResourceCount(
     EntityType.Encryption,
     entity,
-    loading || !exists
+    loading
   );
 
   const isPirate = components.PirateAsteroid.has(entity);
   const ownedBy = components.OwnedBy.use(entity)?.value as Entity | undefined;
   const { address } = useAccount(ownedBy ?? singletonEntity);
-  const { strength, maxStrength } = useAsteroidStrength(entity, loading || !exists);
+  const { strength, maxStrength } = useAsteroidStrength(entity, loading);
 
-  if (loading || !exists)
+  if (loading)
     return (
-      <Card className="relative flex items-center justify-center w-56 h-24 px-auto font-bold uppercase font-bold">
+      <Card className="relative flex items-center justify-center w-56 h-24 px-auto uppercase font-bold">
         <Loader />
         Loading Data
       </Card>
