@@ -41,18 +41,13 @@ function calculatePosition(
   return { x: x + origin.x, y: y + origin.y };
 }
 
-function getFleetShape(fleetEntity: Entity, position: Coord, cooldown = false) {
+function getFleetShape(fleetEntity: Entity, position: Coord) {
   const playerEntity = components.Account.get()?.value;
   if (!playerEntity) throw new Error("Player entity not found");
   const owner = components.OwnedBy.get(fleetEntity)?.value as Entity | undefined;
   const relationship = owner ? getRockRelationship(playerEntity, owner as Entity) : RockRelationship.Neutral;
-  const color = cooldown
-    ? 0xffa500
-    : relationship === RockRelationship.Ally
-    ? 0x00ff00
-    : relationship === RockRelationship.Enemy
-    ? 0xff0000
-    : 0x00ffff;
+  const color =
+    relationship === RockRelationship.Ally ? 0x00ff00 : relationship === RockRelationship.Enemy ? 0xff0000 : 0x00ffff;
 
   const stance = components.FleetStance.get(fleetEntity)?.stance;
 
@@ -129,9 +124,27 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
     const fleetOrbitId = `fleetOrbit-${rockEntity}-${fleet}`;
     const fleetOrbitObject = fleetOrbit.add("Graphics", fleetOrbitId);
     const fleetHomeLineObject = fleetOrbit.add("Graphics");
+
+    const cooldownEnd = components.CooldownEnd.get(fleet)?.value ?? 0n;
+    const time = components.Time.get()?.value ?? 0n;
+    const inCooldown = time < cooldownEnd;
+    let showingCooldown = inCooldown;
+
     fleetOrbitObject.setComponents([
       ...sharedComponents,
       getFleetShape(fleet, { x: fleetPosition.x, y: fleetPosition.y }),
+      inCooldown
+        ? Tween(
+            scene,
+            {
+              duration: 1000,
+              alpha: 0.25,
+              yoyo: true,
+              repeat: -1,
+            },
+            `fleetCooldown-${fleet}`
+          )
+        : undefined,
       OnOnce((gameObject) => {
         const hoverSize = 16;
         gameObject.setInteractive(
@@ -180,31 +193,28 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
       }),
       //handle cooldown start
       OnComponentSystem(
-        components.CooldownEnd,
-        (gameObject, { entity, value }) => {
-          if (entity !== fleet || !value[0]?.value) return;
-
+        components.Time,
+        (_, { value: [newVal] }) => {
           const cooldownEnd = components.CooldownEnd.get(fleet)?.value ?? 0n;
-          const time = components.Time.get()?.value ?? 0n;
+          const time = newVal?.value ?? 0n;
           const inCooldown = time < cooldownEnd;
 
-          const id = `fleetShape-${fleet}`;
-          if (inCooldown && fleetOrbitObject.hasComponent(id)) {
-            fleetOrbitObject.removeComponent(id);
-            const shape = getFleetShape(fleet, { x: gameObject.x, y: gameObject.y }, true);
-            fleetOrbitObject.setComponents([
-              shape,
-              Tween(
-                scene,
-                {
-                  duration: 1000,
-                  alpha: 0.25,
-                  yoyo: true,
-                  repeat: -1,
-                },
-                `fleetCooldown-${fleet}`
-              ),
-            ]);
+          if ((inCooldown && !showingCooldown) || (!inCooldown && showingCooldown)) {
+            showingCooldown = !showingCooldown;
+            if (!inCooldown) fleetOrbitObject.removeComponent(`fleetCooldown-${fleet}`);
+            if (inCooldown)
+              fleetOrbitObject.setComponent(
+                Tween(
+                  scene,
+                  {
+                    duration: 1000,
+                    alpha: 0.25,
+                    yoyo: true,
+                    repeat: -1,
+                  },
+                  `fleetCooldown-${fleet}`
+                )
+              );
           }
         },
         {

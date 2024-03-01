@@ -6,6 +6,7 @@ import { IconLabel } from "src/components/core/IconLabel";
 import { Marker } from "src/components/core/Marker";
 import { Modal } from "src/components/core/Modal";
 import { useMud } from "src/hooks";
+import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useSpaceRock } from "src/hooks/useSpaceRock";
 import { useUnitCounts } from "src/hooks/useUnitCount";
@@ -13,7 +14,6 @@ import { components } from "src/network/components";
 import { clearFleetStance } from "src/network/setup/contractCalls/fleetStance";
 import { getCanAttackSomeone, getFleetPixelPosition, getFleetStats } from "src/util/unit";
 import { Fleets } from "../../panes/fleets/Fleets";
-import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
 
 // this component assumes the fleet is owned by the player
 export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fleet, position }) => {
@@ -81,7 +81,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
         {!stance && (
           <div className="absolute bottom-0 right-0 translate-x-full w-36">
             <Button
-              disabled={selectingAttackDestination || noUnits}
+              disabled={selectingAttackDestination || noUnits || spaceRockData.isBlocked}
               onClick={() => (selectingMoveDestination ? components.Send.reset() : components.Send.setOrigin(fleet))}
               className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
             >
