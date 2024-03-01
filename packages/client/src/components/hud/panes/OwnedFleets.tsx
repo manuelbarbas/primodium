@@ -6,6 +6,7 @@ import { useMemo } from "react";
 import { FaFire } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
+import { Loader } from "src/components/core/Loader";
 import { Tooltip } from "src/components/core/Tooltip";
 import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
@@ -13,6 +14,7 @@ import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
 import { useFleetStats } from "src/hooks/useFleetCount";
 import { usePlayerOwner } from "src/hooks/usePlayerOwner";
 import { usePrimodium } from "src/hooks/usePrimodium";
+import { useSyncStatus } from "src/hooks/useSyncStatus";
 import { components } from "src/network/components";
 import { EntityType } from "src/util/constants";
 import { entityToFleetName, entityToRockName } from "src/util/name";
@@ -34,7 +36,8 @@ export const LabeledValue: React.FC<{
 export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ fleet, onClick }) => {
   const description = entityToFleetName(fleet);
   const selected = components.SelectedFleet.use()?.value === fleet;
-  const fleetStats = useFleetStats(fleet);
+  const { loading, exists } = useSyncStatus(fleet);
+  const fleetStats = useFleetStats(fleet, loading);
   const movement = components.FleetMovement.use(fleet);
   const time = components.Time.use()?.value ?? 0n;
   const stance = components.FleetStance.use(fleet);
@@ -83,32 +86,45 @@ export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ 
         </Tooltip>
       )}
       <hr className="w-full border border-secondary/25" />
-      <div className="grid grid-cols-2 gap-x-3 p-1">
-        <div className="grid grid-cols-2 gap-1">
-          {formatResourceCount(EntityType.Iron, fleetStats.attack, { short: true })}
-          <p className="text-accent">ATK</p>
+      {!loading && (
+        <div className="grid grid-cols-2 gap-x-3 p-1">
+          <div className="grid grid-cols-2 gap-1">
+            {formatResourceCount(EntityType.Iron, fleetStats.attack, { short: true })}
+            <p className="text-accent">ATK</p>
+          </div>
+          <div className="grid grid-cols-2 gap-1">
+            {formatResourceCount(EntityType.Iron, fleetStats.defense, { short: true })}
+            <p className="text-accent">DEF</p>
+          </div>
+          <div className="grid grid-cols-2 gap-1">
+            {formatResourceCount(EntityType.Iron, fleetStats.cargo, { short: true })}
+            <p className="text-accent">CRG</p>
+          </div>
+          <div className="grid grid-cols-2 gap-1">
+            {formatResourceCount(EntityType.Iron, fleetStats.hp, { short: true })}
+            <p className="text-accent">HP</p>
+          </div>
+          <div className="grid grid-cols-2 gap-1">
+            <p className="">{formatNumber(fleetStats.speed, { short: true })}</p>
+            <p className="text-accent">SPD</p>
+          </div>
+          <div className="grid grid-cols-2 gap-1">
+            {formatResourceCount(EntityType.Iron, fleetStats.decryption, { short: true })}
+            <p className="text-accent">DEC</p>
+          </div>
         </div>
-        <div className="grid grid-cols-2 gap-1">
-          {formatResourceCount(EntityType.Iron, fleetStats.defense, { short: true })}
-          <p className="text-accent">DEF</p>
+      )}
+      {!exists && (
+        <div className="flex items-center text-xs gap-1 p-1 text-warning uppercase animate-pulse">
+          SELECT TO LOAD FLEET DATA
         </div>
-        <div className="grid grid-cols-2 gap-1">
-          {formatResourceCount(EntityType.Iron, fleetStats.cargo, { short: true })}
-          <p className="text-accent">CRG</p>
+      )}
+      {loading && exists && (
+        <div className="flex items-center text-xs gap-1 p-1 uppercase animate-pulse">
+          <Loader />
+          LOADING FLEET DATA
         </div>
-        <div className="grid grid-cols-2 gap-1">
-          {formatResourceCount(EntityType.Iron, fleetStats.hp, { short: true })}
-          <p className="text-accent">HP</p>
-        </div>
-        <div className="grid grid-cols-2 gap-1">
-          <p className="">{formatNumber(fleetStats.speed, { short: true })}</p>
-          <p className="text-accent">SPD</p>
-        </div>
-        <div className="grid grid-cols-2 gap-1">
-          {formatResourceCount(EntityType.Iron, fleetStats.decryption, { short: true })}
-          <p className="text-accent">DEC</p>
-        </div>
-      </div>
+      )}
     </Button>
   );
 };

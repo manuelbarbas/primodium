@@ -86,7 +86,6 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     }
 
     // reset stuff
-
     setupSwapNotifications(mud);
     setupAllianceLeaderboard(mud);
     setupBattleComponents();
