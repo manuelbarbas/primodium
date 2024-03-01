@@ -1,12 +1,15 @@
 import { minEth } from "@game/constants";
+import { transportObserver } from "@latticexyz/common";
 import { ComponentValue, Entity, Schema } from "@latticexyz/recs";
 import { Browser, ContractComponent } from "@primodiumxyz/mud-game-tools";
 import { useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { createPublicClient, fallback, http } from "viem";
 import { Progress } from "./components/core/Progress";
 import { useMud } from "./hooks";
 import { useInit } from "./hooks/useInit";
 import { useSyncStatus } from "./hooks/useSyncStatus";
+import { getNetworkConfig } from "./network/config/getNetworkConfig";
 import { setComponentValue } from "./network/setup/contractCalls/dev";
 import { world } from "./network/world";
 import { Enter } from "./screens/Enter";
@@ -24,9 +27,17 @@ export default function AppLoadingState() {
   const [balance, setBalance] = useState<bigint>();
 
   useEffect(() => {
+    const networkConfig = getNetworkConfig();
+    const clientOptions = {
+      chain: networkConfig.chain,
+      transport: transportObserver(fallback([http()])),
+    };
+
+    const publicClient = createPublicClient(clientOptions);
+
     const updateBalance = setInterval(async () => {
       if (DEV_CHAIN || (balance ?? 0n) > minEth) return;
-      const bal = await mud.playerAccount.publicClient.getBalance({ address: mud.playerAccount.address });
+      const bal = await publicClient.getBalance({ address: mud.playerAccount.address });
       setBalance(bal);
     }, 1000);
     return () => clearInterval(updateBalance);
