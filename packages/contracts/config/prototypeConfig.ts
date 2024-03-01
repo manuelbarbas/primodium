@@ -1081,6 +1081,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       },
     },
   },
+  ...upgradesByLevel("SAM", samSiteMaxResourceUpgrades),
 
   ShieldGenerator: {
     tables: {
