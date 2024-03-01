@@ -4,7 +4,7 @@ import { EResource } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { EntityType, RESOURCE_SCALE } from "src/util/constants";
-import { getSecondaryAsteroidEntity, toHex32 } from "src/util/encode";
+import { getSecondaryAsteroidEntity, hashEntities, toHex32 } from "src/util/encode";
 import { getPositionByVector } from "src/util/vector";
 import { Hex } from "viem";
 
@@ -16,6 +16,7 @@ const emptyData = {
 
 export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord) {
   const config = components.P_GameConfig.get();
+  const mainBaseCoord = components.Position.get(EntityType.MainBase);
   if (!config) throw new Error("GameConfig not found");
   for (let i = 0; i < config.maxAsteroidsPerPlayer; i++) {
     const asteroidPosition = getPositionByVector(
@@ -48,6 +49,26 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
     components.MaxResourceCount.setWithKeys(
       { ...emptyData, value: defenseData.encryption },
       { entity: asteroidEntity as Hex, resource: EResource.R_Encryption }
+    );
+
+    //add droid base
+    const droidBaseEntity = hashEntities(asteroidEntity, EntityType.DroidBase);
+    components.Position.set(
+      { ...emptyData, x: mainBaseCoord?.x ?? 19, y: mainBaseCoord?.y ?? 13, parent: asteroidEntity },
+      droidBaseEntity
+    );
+    components.BuildingType.set(
+      { ...emptyData, value: EntityType.DroidBase },
+      hashEntities(asteroidEntity, EntityType.DroidBase)
+    );
+    components.Level.set({ ...emptyData, value: 1n }, droidBaseEntity);
+    components.IsActive.set({ ...emptyData, value: true }, droidBaseEntity);
+
+    if (components.P_Blueprint.has(EntityType.DroidBase)) return;
+
+    components.P_Blueprint.set(
+      { ...emptyData, value: components.P_Blueprint.get(EntityType.MainBase)?.value ?? [] },
+      EntityType.DroidBase
     );
   }
 }

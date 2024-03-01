@@ -143,6 +143,7 @@ export const EntityType = {
   Platinum: toHex32("Platinum") as Entity,
 
   MainBase: toHex32("MainBase") as Entity,
+  DroidBase: toHex32("DroidBase") as Entity,
   DebugNode: toHex32("DebugNode") as Entity,
   Miner: toHex32("Miner") as Entity,
   LithiumMiner: toHex32("LithiumMiner") as Entity,
@@ -406,7 +407,7 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.AnvilDrone, "/img/unit/anvildrone.png"],
   [EntityType.AegisDrone, "/img/unit/aegisdrone.png"],
   [EntityType.CapitalShip, "/img/unit/capitalship.png"],
-  [EntityType.Droid, "/img/unit/miningvessel.png"],
+  [EntityType.Droid, "/img/unit/droid.png"],
   [EntityType.MinutemanMarine, "img/unit/minutemen_marine.png"],
   [EntityType.TridentMarine, "img/unit/trident_marine.png"],
   [EntityType.LightningCraft, "img/unit/lightningcraft.png"],
