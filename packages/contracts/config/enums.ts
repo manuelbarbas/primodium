@@ -1,8 +1,3 @@
-export enum ERock {
-  Asteroid = 1,
-  Motherlode,
-}
-
 export enum EBuilding {
   MainBase = 1,
 
@@ -10,7 +5,11 @@ export enum EBuilding {
   LithiumMine,
   IronMine,
   CopperMine,
-  SulfurMine,
+
+  KimberliteMine,
+  IridiumMine,
+  TitaniumMine,
+  PlatinumMine,
 
   // Factories
   IronPlateFactory,
@@ -33,19 +32,15 @@ export enum EBuilding {
   ShieldGenerator,
   Vault,
   Market,
+
+  Shipyard,
 }
 
 export enum EResource {
-  //Raw
-  R_Titanium = 1,
-  R_Platinum,
-  R_Iridium,
-  R_Kimberlite,
-
-  Iron,
+  Iron = 1,
   Copper,
   Lithium,
-  Sulfur,
+
   Titanium,
   Iridium,
   Kimberlite,
@@ -55,17 +50,17 @@ export enum EResource {
   IronPlate,
   Alloy,
   PVCell,
-  RocketFuel,
 
   // Utilities
   U_Electricity,
   U_Housing,
-  U_Vessel,
-  U_Orders,
-  U_MaxMoves,
+  U_CapitalShipCapacity,
+  U_MaxFleets,
   U_Defense,
   U_Unraidable,
   U_AdvancedUnraidable,
+  R_HP,
+  R_Encryption,
 
   // Multipliers
   M_DefenseMultiplier,
@@ -78,20 +73,22 @@ export enum ESize {
 }
 
 export enum EUnit {
-  MiningVessel = 1,
-  AegisDrone,
-  HammerDrone,
-  StingerDrone,
+  AegisDrone = 1,
   AnvilDrone,
+  StingerDrone,
+  HammerDrone,
   MinutemanMarine,
   TridentMarine,
   LightningCraft,
+  CapitalShip,
+  Droid,
 }
 
 export enum ESendType {
   Reinforce = 1,
   Invade,
   Raid,
+  Recall,
 }
 
 export enum EOrderType {
@@ -135,7 +132,6 @@ export enum EObjectives {
   BuildVault,
   BuildShieldGenerator,
 
-  CommissionMiningVessel,
   TrainMinutemanMarine1,
   TrainMinutemanMarine2,
   TrainMinutemanMarine3,
@@ -155,41 +151,17 @@ export enum EObjectives {
   TrainStingerDrone2,
   TrainStingerDrone3,
 
-  MineTitanium1,
-  MineTitanium2,
-  MineTitanium3,
-  MinePlatinum1,
-  MinePlatinum2,
-  MinePlatinum3,
-  MineIridium1,
-  MineIridium2,
-  MineIridium3,
-  MineKimberlite1,
-  MineKimberlite2,
-  MineKimberlite3,
-
-  RaidRawResources1,
-  RaidRawResources2,
-  RaidRawResources3,
-  RaidFactoryResources1,
-  RaidFactoryResources2,
-  RaidFactoryResources3,
-  RaidMotherlodeResources1,
-  RaidMotherlodeResources2,
-  RaidMotherlodeResources3,
-
-  DestroyEnemyUnits1,
-  DestroyEnemyUnits2,
-  DestroyEnemyUnits3,
-  DestroyEnemyUnits4,
-  DestroyEnemyUnits5,
-
   ExpandBase1,
   ExpandBase2,
   ExpandBase3,
   ExpandBase4,
   ExpandBase5,
   ExpandBase6,
+}
+
+export enum EFleetKey {
+  OwnedBy = 1,
+  Incoming = 2,
 }
 
 export enum EAllianceInviteMode {
@@ -205,8 +177,13 @@ export enum EAllianceRole {
   Member, // simple member with no special access
 }
 
+export enum EFleetStance {
+  Follow = 1,
+  Defend,
+  Block,
+}
+
 export const MUDEnums = {
-  ERock: enumToArray(ERock),
   EBuilding: enumToArray(EBuilding),
   EResource: enumToArray(EResource),
   ESize: enumToArray(ESize),
@@ -216,6 +193,8 @@ export const MUDEnums = {
   EAllianceInviteMode: enumToArray(EAllianceInviteMode),
   EAllianceRole: enumToArray(EAllianceRole),
   EOrderType: enumToArray(EOrderType),
+  EFleetKey: enumToArray(EFleetKey),
+  EFleetStance: enumToArray(EFleetStance),
 };
 
 function enumToArray(enumObj: object): string[] {

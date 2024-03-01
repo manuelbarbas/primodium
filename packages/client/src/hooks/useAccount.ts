@@ -1,31 +1,24 @@
+import { Entity } from "@latticexyz/recs";
 import { useEffect, useMemo, useState } from "react";
-import { useMud } from "./useMud";
-import { LinkedAddressResult, getLinkedAddress } from "src/util/web2/getLinkedAddress";
 import { components } from "src/network/components";
 import { getAllianceName } from "src/util/alliance";
-import { Entity } from "@latticexyz/recs";
-import { entityToAddress, isPlayer as _isPlayer } from "src/util/common";
+import { isPlayer as _isPlayer, entityToAddress, shortenAddress } from "src/util/common";
 import { entityToPlayerName } from "src/util/name";
+import { LinkedAddressResult, getEnsName } from "src/util/web3/getEnsName";
 
-export function useAccount(player?: Entity) {
-  const { network } = useMud();
-  const playerEntity = player ?? network.playerEntity;
+export function useAccount(playerEntity: Entity, address?: boolean) {
   const [linkedAddress, setLinkedAddress] = useState<LinkedAddressResult>();
   const [loading, setLoading] = useState(true);
-  const wETHBalance = components.WETHBalance.use(playerEntity)?.value ?? 0n;
   const alliance = components.PlayerAlliance.use(playerEntity)?.alliance;
   const allianceName = getAllianceName((alliance ?? "") as Entity);
   const isPlayer = _isPlayer(playerEntity);
 
-  const address = useMemo(() => {
+  const name = useMemo(() => {
     if (!linkedAddress) return entityToPlayerName(playerEntity);
-    return (
-      linkedAddress.ensName ??
-      (linkedAddress.address
-        ? entityToAddress(linkedAddress.address ?? playerEntity, true)
-        : entityToPlayerName(playerEntity))
-    );
-  }, [linkedAddress, playerEntity]);
+    return linkedAddress.ensName ?? address
+      ? shortenAddress(entityToAddress(playerEntity))
+      : entityToPlayerName(playerEntity);
+  }, [linkedAddress, playerEntity, address]);
 
   useEffect(() => {
     if (!isPlayer) {
@@ -33,7 +26,7 @@ export function useAccount(player?: Entity) {
       return;
     }
     const getAddressObj = async () => {
-      const addressObj = await getLinkedAddress(entityToAddress(playerEntity));
+      const addressObj = await getEnsName(playerEntity);
       setLinkedAddress(addressObj);
       setLoading(false);
     };
@@ -42,9 +35,8 @@ export function useAccount(player?: Entity) {
 
   return {
     linkedAddress,
-    wETHBalance,
     allianceName,
-    address,
+    address: name,
     loading,
     isPlayer,
   };

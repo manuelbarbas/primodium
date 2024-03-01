@@ -15,14 +15,3 @@ export const getGame = () => {
 export const createGame = async (config: GameConfig) => {
   return await _createGame(config);
 };
-
-const api = {
-  initializeContext,
-  createGame,
-  getGame,
-};
-
-//expose api to window for debugging
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-if (import.meta.env.VITE_DEV === "true") window.engine = api;

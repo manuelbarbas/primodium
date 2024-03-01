@@ -8,19 +8,24 @@ import { useMud } from "src/hooks";
 import { useBuildingInfo } from "src/hooks/useBuildingInfo";
 import { useBuildingName } from "src/hooks/useBuildingName";
 import { components } from "src/network/components";
+import { demolishBuilding } from "src/network/setup/contractCalls/demolishBuilding";
 import { getBlockTypeName } from "src/util/common";
 import { ResourceImage, ResourceType } from "src/util/constants";
 import { getFullResourceCount } from "src/util/resource";
-import { demolishBuilding } from "src/util/web3/contractCalls/demolishBuilding";
 
 export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
-  const network = useMud().network;
+  const mud = useMud();
 
   const name = useBuildingName(building);
+  const {
+    production,
+    position: { parent },
+  } = useBuildingInfo(building);
 
-  const blockingResource = useBuildingInfo(building)?.production.find((production) => {
+  if (!parent) throw new Error("[Demolish] Building has no parent");
+  const blockingResource = production.find((production) => {
     if (production.type !== ResourceType.Utility) return false;
-    const { resourceCount } = getFullResourceCount(production.resource);
+    const { resourceCount } = getFullResourceCount(production.resource, parent as Entity);
     return resourceCount < production.amount;
   });
 
@@ -57,7 +62,7 @@ export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
             disabled={!!blockingResource}
             className="btn-error btn-sm"
             onClick={() => {
-              demolishBuilding(building, network);
+              demolishBuilding(mud, building);
               components.SelectedBuilding.remove();
             }}
           >

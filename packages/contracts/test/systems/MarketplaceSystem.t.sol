@@ -1,335 +1,376 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { console } from "forge-std/console.sol";
+import "test/PrimodiumTest.t.sol";
 
-import { P_RequiredResourcesData, P_RequiredResources, P_EnumToPrototype, P_IsUtility, UnitCount, OwnedBy, ProductionRate, LastClaimedAt, Home, PrimodiumTest, entityToAddress, MarketplaceOrder, P_GameConfig, P_GameConfig2, addressToEntity, EResource, ResourceCount, MaxResourceCount, LibProduction } from "test/PrimodiumTest.t.sol";
-import { EBuilding } from "src/Types.sol";
-import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
-import { NamespaceOwner } from "@latticexyz/world/src/codegen/tables/NamespaceOwner.sol";
-import { ROOT_NAMESPACE, ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
-import { LibResource } from "src/libraries/LibResource.sol";
-import { LibStorage } from "src/libraries/LibStorage.sol";
-import { LibUnit } from "src/libraries/LibUnit.sol";
-import { EOrderType, EUnit } from "src/Types.sol";
-import { UnitKey } from "src/Keys.sol";
-
-// NOTE: core functionality is tested in LibReinforceTest.t.sol
 contract MarketplaceSystemTest is PrimodiumTest {
-  bytes32 player;
-  bytes32 playerHome = "home";
-  bytes32 buyer;
-  bytes32 buyerHome = "buyerHome";
-
-  EUnit unit = EUnit(1);
-  bytes32 unitPrototype = "unitPrototype";
-
-  IERC20Mintable wETH;
-
   function setUp() public override {
     super.setUp();
-    buyer = addressToEntity(alice);
-    wETH = IERC20Mintable(P_GameConfig2.getWETHAddress());
-    player = addressToEntity(creator);
+  }
+
+  EResource[] path;
+
+  /* --------------------------------- Helpers -------------------------------- */
+
+  function buildMarketplace(address player) public returns (bytes32, bytes32) {
+    bytes32 homeAsteroid = spawn(player);
     vm.startPrank(creator);
-    buyer = addressToEntity(alice);
-    Home.setAsteroid(player, playerHome);
-    Home.setAsteroid(buyer, buyerHome);
-    OwnedBy.set(playerHome, player);
-    LibProduction.increaseResourceProduction(playerHome, EResource.U_Orders, 1);
-
-    P_EnumToPrototype.set(UnitKey, uint8(unit), unitPrototype);
+    P_RequiredBaseLevel.deleteRecord(MarketPrototypeId, 1);
+    P_RequiredResources.deleteRecord(MarketPrototypeId, 1);
+    vm.stopPrank();
+    bytes32 playerEntity = addressToEntity(player);
+    vm.startPrank(player);
+    PositionData memory position = getTilePosition(homeAsteroid, EBuilding.Market);
+    bytes32 marketEntity = world.build(EBuilding.Market, getTilePosition(homeAsteroid, EBuilding.Market));
+    vm.stopPrank();
+    return (homeAsteroid, marketEntity);
   }
 
-  function testAddOrder() public returns (bytes32) {
-    ResourceCount.set(Home.getAsteroid(player), uint8(EResource.Iron), 100);
-    bytes32 orderId = world.addOrder(EOrderType.Resource, uint8(EResource.Iron), 100, 100);
-    assertEq(MarketplaceOrder.getSeller(orderId), player);
-    assertEq(MarketplaceOrder.getResource(orderId), uint8(EResource.Iron));
-    assertEq(MarketplaceOrder.getCount(orderId), 100);
-    assertEq(MarketplaceOrder.getPrice(orderId), 100);
-    assertEq(ResourceCount.get(Home.getAsteroid(player), uint8(EResource.U_Orders)), 0);
-    return orderId;
-  }
+  function testSwapSanityCheck() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
+    vm.startPrank(creator);
 
-  function testAddUnitOrderTakeOrder() public {
-    wETH.transfer(alice, 10000);
-    P_IsUtility.set(uint8(Iron), true);
-    uint8[] memory p_requiredresources_resources_level_0 = new uint8[](1);
-    p_requiredresources_resources_level_0[0] = uint8(Iron);
-    uint256[] memory p_requiredresources_amounts_level_0 = new uint256[](1);
-    p_requiredresources_amounts_level_0[0] = 1;
+    path.push(EResource.Iron);
+    path.push(RESERVE_CURRENCY_RESOURCE);
+    path.push(EResource.Iron);
 
-    P_RequiredResources.set(
-      unitPrototype,
-      0,
-      P_RequiredResourcesData(p_requiredresources_resources_level_0, p_requiredresources_amounts_level_0)
+    uint256 amountIn = 10e18;
+    uint256 reserveOut = LibMarketplace.getAmountOut(
+      amountIn,
+      Reserves.getAmountA(Iron, RESERVE_CURRENCY),
+      Reserves.getAmountB(Iron, RESERVE_CURRENCY)
     );
-    LibProduction.increaseResourceProduction(buyerHome, EResource.Iron, 100);
-    LibProduction.increaseResourceProduction(playerHome, EResource.Iron, 100);
+    uint256 expectedAmountOut = LibMarketplace.getAmountOut(
+      reserveOut,
+      Reserves.getAmountB(Iron, RESERVE_CURRENCY),
+      Reserves.getAmountA(Iron, RESERVE_CURRENCY)
+    );
 
-    LibResource.spendUnitRequiredResources(playerHome, unitPrototype, 100);
-    LibUnit.increaseUnitCount(player, playerHome, unitPrototype, 100);
-    bytes32 orderId = world.addOrder(EOrderType.Unit, uint8(unit), 100, 100);
-    assertEq(MarketplaceOrder.getSeller(orderId), player, "seller wrong");
-    assertEq(MarketplaceOrder.getResource(orderId), uint8(unit), "resource wrong");
-    assertEq(MarketplaceOrder.getCount(orderId), 100, "count wrong");
-    assertEq(MarketplaceOrder.getPrice(orderId), 100, "price wrong");
-    assertEq(ResourceCount.get(Home.getAsteroid(player), uint8(EResource.U_Orders)), 0, "order count wrong");
+    console.log("Reserve out: %s", reserveOut);
+    console.log("Expected amount out: %s", expectedAmountOut);
 
-    uint256 prevSellerBalance = wETH.balanceOf(creator);
-    uint256 prevBuyerBalance = wETH.balanceOf(alice);
+    MaxResourceCount.set(asteroid, Iron, MAX_INT);
+    ResourceCount.set(asteroid, Iron, amountIn);
 
-    switchPrank(alice);
-    world.takeOrder(orderId, 100);
-    uint256 postSellerBalance = wETH.balanceOf(creator);
-    uint256 postBuyerBalance = wETH.balanceOf(alice);
+    MaxResourceCount.set(asteroid, RESERVE_CURRENCY, MAX_INT);
 
-    assertEq(MarketplaceOrder.getCount(orderId), 0, "count wrong");
-    assertEq(MarketplaceOrder.getPrice(orderId), 0, "price wrong");
-    assertEq(MarketplaceOrder.getResource(orderId), 0, "resource wrong");
-    assertEq(MarketplaceOrder.getSeller(orderId), 0, "seller wrong");
+    world.swap(market, path, amountIn, 0);
 
-    assertEq(ResourceCount.get(Home.getAsteroid(player), uint8(EResource.U_Orders)), 1, "seller order count wrong");
-    assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 0, "seller unit count wrong");
-    assertEq(UnitCount.get(buyer, Home.getAsteroid(buyer), unitPrototype), 100, "buyer unit count wrong");
+    console.log(ResourceCount.get(asteroid, Iron) / 1e18);
+  }
+
+  /* ---------------------------------- Swap ---------------------------------- */
+  function testSwapFailNotMarket() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
+    vm.startPrank(creator);
+    vm.expectRevert("[Marketplace] Building is not a marketplace");
+
+    path.push(EResource.Iron);
+    path.push(EResource.Copper);
+    world.swap(asteroid, path, 1, 1);
+  }
+
+  function testSwapMarketNotOwned() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(alice);
+    vm.startPrank(creator);
+    vm.expectRevert("[Marketplace] Not owned by player");
+    path.push(EResource.Iron);
+    path.push(EResource.Copper);
+
+    world.swap(market, path, 1, 1);
+  }
+
+  function testSwapReserveCurrencyOut() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
+    vm.startPrank(creator);
+
+    ReservesData memory reserves = Reserves.get(Iron, RESERVE_CURRENCY);
+    uint256 amountIn = 1000;
+    uint256 expectedAmountOut = LibMarketplace.getAmountOut(amountIn, reserves.amountA, reserves.amountB);
+
+    MaxResourceCount.set(asteroid, Iron, amountIn);
+    ResourceCount.set(asteroid, Iron, amountIn);
+    MaxResourceCount.set(asteroid, RESERVE_CURRENCY, 2 ** 256 - 1);
+
+    uint256 prevIron = ResourceCount.get(asteroid, Iron);
+    path.push(EResource.Iron);
+    path.push(RESERVE_CURRENCY_RESOURCE);
+    world.swap(market, path, amountIn, expectedAmountOut);
+
+    // iron should go up
+    assertEq(Reserves.getAmountA(Iron, RESERVE_CURRENCY), reserves.amountA + amountIn, "new reserve A");
+    // reserve currency should go down
+    assertEq(Reserves.getAmountB(Iron, RESERVE_CURRENCY), reserves.amountB - expectedAmountOut, "new reserve B");
+
+    // iron should go down
+    assertEq(ResourceCount.get(asteroid, Iron), prevIron - amountIn, "new iron count");
+    // reserve currency should go up
+    assertEq(ResourceCount.get(asteroid, RESERVE_CURRENCY), expectedAmountOut, "new reserve resource count");
+  }
+
+  function testSwapReserveCurrencyIn() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
+    vm.startPrank(creator);
+
+    ReservesData memory reserves = Reserves.get(Iron, RESERVE_CURRENCY);
+    uint256 amountIn = 1e18;
+    uint256 expectedAmountOut = LibMarketplace.getAmountOut(amountIn, reserves.amountB, reserves.amountA);
+
+    MaxResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    ResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    MaxResourceCount.set(asteroid, Iron, 2 ** 256 - 1);
+
+    uint256 prevIron = ResourceCount.get(asteroid, Iron);
+    uint256 prevReserveCurrency = ResourceCount.get(asteroid, RESERVE_CURRENCY);
+
+    path.push(RESERVE_CURRENCY_RESOURCE);
+    path.push(EResource.Iron);
+
+    world.swap(market, path, amountIn, expectedAmountOut);
+
+    // iron should go up
+    assertEq(Reserves.getAmountA(Iron, RESERVE_CURRENCY), reserves.amountA - expectedAmountOut, "new reserve A");
+    // reserve currency should go down
+    assertEq(Reserves.getAmountB(Iron, RESERVE_CURRENCY), reserves.amountB + amountIn, "new reserve B");
+
+    // iron should go down
+    assertEq(ResourceCount.get(asteroid, Iron), prevIron + expectedAmountOut, "new iron count");
+    // reserve currency should go up
     assertEq(
-      ResourceCount.get(Home.getAsteroid(player), uint8(EResource.Iron)),
-      100,
-      "seller utility after take order wrong"
+      ResourceCount.get(asteroid, RESERVE_CURRENCY),
+      prevReserveCurrency - amountIn,
+      "new reserve resource count"
     );
-    assertEq(
-      ResourceCount.get(Home.getAsteroid(buyer), uint8(EResource.Iron)),
-      0,
-      "buyer utility after take order wrong"
+  }
+
+  function testSwapFailInvalidAmount() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
+    vm.startPrank(creator);
+
+    ReservesData memory reserves = Reserves.get(Iron, RESERVE_CURRENCY);
+    path.push(RESERVE_CURRENCY_RESOURCE);
+    path.push(EResource.Iron);
+
+    vm.expectRevert("[Marketplace] Invalid amount");
+    world.swap(market, path, 0, 0);
+  }
+
+  function testSwapFailInvalidResource() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
+    vm.startPrank(creator);
+
+    ReservesData memory reserves = Reserves.get(Iron, RESERVE_CURRENCY);
+    uint256 amountIn = 1e18;
+    uint256 expectedAmountOut = LibMarketplace.getAmountOut(amountIn, reserves.amountB, reserves.amountA);
+
+    MaxResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    ResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    MaxResourceCount.set(asteroid, Iron, 2 ** 256 - 1);
+
+    path.push(RESERVE_CURRENCY_RESOURCE);
+    path.push(EResource.U_Electricity);
+    path.push(RESERVE_CURRENCY_RESOURCE);
+
+    vm.expectRevert("[Marketplace] Invalid resource");
+    world.swap(market, path, amountIn, expectedAmountOut);
+
+    path = new EResource[](2);
+    path.push(EResource.U_Electricity);
+    path.push(RESERVE_CURRENCY_RESOURCE);
+
+    vm.expectRevert("[Marketplace] Invalid resource");
+    world.swap(market, path, amountIn, expectedAmountOut);
+  }
+
+  function testSwapFailInvalidPath() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
+    vm.startPrank(creator);
+
+    ReservesData memory reserves = Reserves.get(Iron, RESERVE_CURRENCY);
+
+    vm.expectRevert("[Marketplace] Invalid amount");
+    world.swap(market, path, 0, 0);
+
+    path.push(EResource.Iron);
+    vm.expectRevert("[Marketplace] Invalid amount");
+    world.swap(market, path, 0, 0);
+  }
+
+  function testSwapFailSameResource() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
+    vm.startPrank(creator);
+    ReservesData memory reserves = Reserves.get(Iron, RESERVE_CURRENCY);
+    uint256 amountIn = 1e18;
+    uint256 expectedAmountOut = LibMarketplace.getAmountOut(amountIn, reserves.amountB, reserves.amountA);
+
+    MaxResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    ResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    MaxResourceCount.set(asteroid, Iron, 2 ** 256 - 1);
+
+    MaxResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    ResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    MaxResourceCount.set(asteroid, Iron, 2 ** 256 - 1);
+
+    path.push(RESERVE_CURRENCY_RESOURCE);
+    path.push(EResource.Iron);
+    path.push(EResource.Iron);
+
+    vm.expectRevert("[Marketplace] Cannot swap for same resource");
+    world.swap(market, path, 1, 0);
+  }
+
+  function testSwapFailMinAmountOutTooSmall() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
+    vm.startPrank(creator);
+
+    ReservesData memory reserves = Reserves.get(Iron, RESERVE_CURRENCY);
+    uint256 amountIn = 1e18;
+    uint256 expectedAmountOut = LibMarketplace.getAmountOut(amountIn, reserves.amountB, reserves.amountA);
+
+    MaxResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    ResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    MaxResourceCount.set(asteroid, Iron, 2 ** 256 - 1);
+
+    MaxResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    ResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    MaxResourceCount.set(asteroid, Iron, 2 ** 256 - 1);
+
+    path.push(RESERVE_CURRENCY_RESOURCE);
+    path.push(EResource.Iron);
+
+    vm.expectRevert("[Marketplace] Insufficient output amount");
+    world.swap(market, path, amountIn, expectedAmountOut + 1);
+  }
+
+  function testSwapFailInsufficientLiquidity() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
+    vm.startPrank(creator);
+
+    ReservesData memory reserves = Reserves.get(Iron, RESERVE_CURRENCY);
+    uint256 inLiquidity = reserves.amountA;
+    uint256 amountIn = inLiquidity + 1;
+
+    MaxResourceCount.set(asteroid, Iron, inLiquidity + 1000);
+    ResourceCount.set(asteroid, Iron, inLiquidity + 1);
+    MaxResourceCount.set(asteroid, RESERVE_CURRENCY, 10000);
+
+    path.push(EResource.Iron);
+    path.push(RESERVE_CURRENCY_RESOURCE);
+
+    vm.expectRevert("[Marketplace] Insufficient liquidity");
+    world.swap(market, path, amountIn, 0);
+  }
+
+  function testSwapAcrossCurves() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
+    vm.startPrank(creator);
+
+    path.push(EResource.Iron);
+    path.push(RESERVE_CURRENCY_RESOURCE);
+    path.push(EResource.Copper);
+
+    uint256 amountIn = 1e6;
+    uint256 reserveOut = LibMarketplace.getAmountOut(
+      amountIn,
+      Reserves.getAmountA(Iron, RESERVE_CURRENCY),
+      Reserves.getAmountB(Iron, RESERVE_CURRENCY)
     );
+    uint256 expectedAmountOut = LibMarketplace.getAmountOut(
+      reserveOut,
+      Reserves.getAmountB(Copper, RESERVE_CURRENCY),
+      Reserves.getAmountA(Copper, RESERVE_CURRENCY)
+    );
+    console.log("Reserve out: %s", reserveOut);
+    console.log("Expected amount out: %s", expectedAmountOut);
 
-    uint256 cost = 100 * 100;
-    uint256 tax = (P_GameConfig.getTax() * cost) / 1000;
-    cost = cost - tax;
+    MaxResourceCount.set(asteroid, Iron, amountIn);
+    ResourceCount.set(asteroid, Iron, amountIn);
+    MaxResourceCount.set(asteroid, Copper, MAX_INT);
+    MaxResourceCount.set(asteroid, RESERVE_CURRENCY, MAX_INT);
 
-    assertEq(wETH.balanceOf(creator), prevSellerBalance + cost, "seller balance wrong");
-    assertEq(wETH.balanceOf(alice), prevBuyerBalance - cost - tax, "buyer balance wrong");
+    world.swap(market, path, amountIn, 0);
+
+    assertEq(ResourceCount.get(asteroid, Iron), 0, "iron");
+    assertEq(ResourceCount.get(asteroid, RESERVE_CURRENCY), 0, "reserve");
+    assertEq(ResourceCount.get(asteroid, Copper), expectedAmountOut, "copper");
   }
 
-  function testAddOrderClaimResources() public returns (bytes32) {
-    LibStorage.setMaxStorage(playerHome, uint8(EResource.Iron), 100);
+  /* ---------------------------------- Admin --------------------------------- */
 
-    ProductionRate.set(playerHome, uint8(EResource.Iron), 100);
-    LastClaimedAt.set(playerHome, block.timestamp);
-    vm.warp(block.timestamp + 1);
-    assertEq(MaxResourceCount.get(playerHome, uint8(EResource.Iron)), 100, "before add order max iron not 100");
-    LibResource.claimAllPlayerResources(player);
-    assertEq(ResourceCount.get(playerHome, uint8(EResource.Iron)), 100, "before add order iron not 100");
-    switchPrank(creator);
-    bytes32 orderId = world.addOrder(EOrderType.Resource, uint8(EResource.Iron), 100, 100);
-    assertEq(ResourceCount.get(Home.getAsteroid(player), uint8(EResource.Iron)), 100, "after add order iron not 100");
-    assertEq(MarketplaceOrder.getSeller(orderId), player);
-    assertEq(MarketplaceOrder.getResource(orderId), uint8(EResource.Iron));
-    assertEq(MarketplaceOrder.getCount(orderId), 100);
-    assertEq(MarketplaceOrder.getPrice(orderId), 100);
-    assertEq(ResourceCount.get(Home.getAsteroid(player), uint8(EResource.U_Orders)), 0);
-    return orderId;
+  function testLock() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
+    vm.startPrank(creator);
+
+    world.toggleMarketplaceLock();
+    vm.expectRevert("[Marketplace] Marketplace is locked");
+
+    world.swap(market, path, 0, 0);
   }
 
-  function testUpdateOrderCount() public {
-    bytes32 orderId = testAddOrder();
-    world.updateOrderCount(orderId, 49);
-    assertEq(MarketplaceOrder.getCount(orderId), 49);
+  function testUnlock() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
+
+    vm.startPrank(creator);
+    world.toggleMarketplaceLock();
+    world.toggleMarketplaceLock();
+    ReservesData memory reserves = Reserves.get(Iron, RESERVE_CURRENCY);
+    uint256 amountIn = 1e18;
+    uint256 expectedAmountOut = LibMarketplace.getAmountOut(amountIn, reserves.amountB, reserves.amountA);
+
+    MaxResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    ResourceCount.set(asteroid, RESERVE_CURRENCY, amountIn);
+    MaxResourceCount.set(asteroid, Iron, 2 ** 256 - 1);
+
+    uint256 prevIron = ResourceCount.get(asteroid, Iron);
+    uint256 prevReserveCurrency = ResourceCount.get(asteroid, RESERVE_CURRENCY);
+
+    path.push(RESERVE_CURRENCY_RESOURCE);
+    path.push(EResource.Iron);
+
+    world.swap(market, path, amountIn, expectedAmountOut);
   }
 
-  function testUpdateOrderResource() public {
-    bytes32 orderId = testAddOrder();
-    world.updateOrderResource(orderId, EResource.Copper);
-    assertEq(MarketplaceOrder.getResource(orderId), uint8(EResource.Copper));
+  function testLockFailNotAdmin() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
+    vm.startPrank(alice);
+    vm.expectRevert("[Primodium] Only admin");
+    world.toggleMarketplaceLock();
   }
 
-  function testUpdateOrderPrice() public {
-    bytes32 orderId = testAddOrder();
-    world.updateOrderPrice(orderId, 50);
-    assertEq(MarketplaceOrder.getPrice(orderId), 50);
+  function testAddLiquidity() public {
+    vm.startPrank(creator);
+    world.addLiquidity(EResource.Iron, EResource.Copper, 1000, 1000);
+    assertEq(Reserves.getAmountA(Iron, Copper), 1000);
+    assertEq(Reserves.getAmountB(Iron, Copper), 1000);
   }
 
-  function testUpdateOrder() public returns (bytes32 orderId) {
-    orderId = testAddOrder();
-    world.updateOrder(orderId, EResource.Iron, 49, 51);
-    assertEq(MarketplaceOrder.getResource(orderId), uint8(EResource.Iron));
-    assertEq(MarketplaceOrder.getCount(orderId), 49);
-    assertEq(MarketplaceOrder.getPrice(orderId), 51);
+  function testIsolatedPairReserves() public {
+    (bytes32 asteroid, bytes32 market) = buildMarketplace(creator);
+    vm.startPrank(creator);
+
+    world.addLiquidity(EResource.Iron, EResource.Copper, 1000, 1000);
+    world.addLiquidity(EResource.Copper, EResource.Lithium, 1000, 1000);
+    assertEq(Reserves.getAmountA(Iron, Copper), 1000);
+    assertEq(Reserves.getAmountB(Iron, Copper), 1000);
   }
 
-  function testOnlySeller() public {
-    bytes32 orderId = testAddOrder();
-    assertEq(MarketplaceOrder.getSeller(orderId), player);
-    switchPrank(alice);
-    vm.expectRevert("[MarketplaceSystem] You don't control this order");
-    world.updateOrder(orderId, EResource.Copper, 49, 51);
+  function testAddLiquidityFailNotAdmin() public {
+    vm.startPrank(alice);
+    vm.expectRevert("[Primodium] Only admin");
+    world.addLiquidity(EResource.Iron, EResource.Copper, 1000, 1000);
   }
 
-  function testAddMaxOrderReached() public {
-    bytes32 orderId = testAddOrder();
-    ResourceCount.set(Home.getAsteroid(player), uint8(EResource.Iron), 100);
-    vm.expectRevert("[MarketplaceSystem] Max orders reached");
-    world.addOrder(EOrderType.Resource, uint8(EResource.Iron), 1, 49);
+  function testRemoveLiquidity() public {
+    vm.startPrank(creator);
+    world.addLiquidity(EResource.Iron, EResource.Copper, 1000, 1000);
+    world.removeLiquidity(EResource.Iron, EResource.Copper, 1000, 1000);
+    assertEq(Reserves.getAmountA(Iron, Copper), 0);
+    assertEq(Reserves.getAmountB(Iron, Copper), 0);
   }
 
-  function testCancelOrder() public {
-    bytes32 orderId = testAddOrder();
-    world.cancelOrder(orderId);
-    assertEq(MarketplaceOrder.getCount(orderId), 0);
-    assertEq(MarketplaceOrder.getPrice(orderId), 0);
-    assertEq(MarketplaceOrder.getResource(orderId), 0);
-    assertEq(MarketplaceOrder.getSeller(orderId), 0);
-    assertEq(ResourceCount.get(Home.getAsteroid(player), uint8(EResource.U_Orders)), 1);
-  }
-
-  function testTakeOrder() public {
-    bytes32 orderId = testAddOrder();
-    wETH.transfer(alice, 10000);
-
-    MaxResourceCount.set(Home.getAsteroid(buyer), uint8(EResource.Iron), 100);
-
-    MaxResourceCount.set(Home.getAsteroid(player), uint8(EResource.Iron), 100);
-    ResourceCount.set(Home.getAsteroid(player), uint8(EResource.Iron), 100);
-
-    uint256 prevSellerBalance = wETH.balanceOf(creator);
-    uint256 prevBuyerBalance = wETH.balanceOf(alice);
-
-    switchPrank(alice);
-    world.takeOrder(orderId, 100);
-    uint256 postSellerBalance = wETH.balanceOf(creator);
-    uint256 postBuyerBalance = wETH.balanceOf(alice);
-
-    assertEq(MarketplaceOrder.getCount(orderId), 0, "count wrong");
-    assertEq(MarketplaceOrder.getPrice(orderId), 0, "price wrong");
-    assertEq(MarketplaceOrder.getResource(orderId), 0, "resource wrong");
-    assertEq(MarketplaceOrder.getSeller(orderId), 0, "seller wrong");
-
-    assertEq(ResourceCount.get(Home.getAsteroid(player), uint8(EResource.U_Orders)), 1, "seller order count wrong");
-    assertEq(ResourceCount.get(Home.getAsteroid(player), uint8(EResource.Iron)), 0, "seller resource count wrong");
-    assertEq(ResourceCount.get(Home.getAsteroid(buyer), uint8(EResource.Iron)), 100, "buyer resource count wrong");
-
-    uint256 cost = 100 * 100;
-    uint256 tax = (P_GameConfig.getTax() * cost) / 1000;
-    cost = cost - tax;
-
-    assertEq(wETH.balanceOf(creator), prevSellerBalance + cost, "seller balance wrong");
-    assertEq(wETH.balanceOf(alice), prevBuyerBalance - cost - tax, "buyer balance wrong");
-  }
-
-  function testTakeOrderClaim() public {
-    bytes32 orderId = testAddOrder();
-    wETH.transfer(alice, 10000);
-
-    MaxResourceCount.set(Home.getAsteroid(buyer), uint8(EResource.Iron), 100);
-
-    MaxResourceCount.set(Home.getAsteroid(player), uint8(EResource.Iron), 100);
-    ProductionRate.set(Home.getAsteroid(player), uint8(EResource.Iron), 100);
-    LastClaimedAt.set(Home.getAsteroid(player), block.timestamp - 1);
-    uint256 prevSellerBalance = wETH.balanceOf(creator);
-    uint256 prevBuyerBalance = wETH.balanceOf(alice);
-
-    switchPrank(alice);
-    world.takeOrder(orderId, 100);
-    uint256 postSellerBalance = wETH.balanceOf(creator);
-    uint256 postBuyerBalance = wETH.balanceOf(alice);
-
-    assertEq(MarketplaceOrder.getCount(orderId), 0, "count wrong");
-    assertEq(MarketplaceOrder.getPrice(orderId), 0, "price wrong");
-    assertEq(MarketplaceOrder.getResource(orderId), 0, "resource wrong");
-    assertEq(MarketplaceOrder.getSeller(orderId), 0, "seller wrong");
-
-    assertEq(ResourceCount.get(Home.getAsteroid(player), uint8(EResource.U_Orders)), 1, "seller order count wrong");
-    assertEq(ResourceCount.get(Home.getAsteroid(player), uint8(EResource.Iron)), 0, "seller resource count wrong");
-    assertEq(ResourceCount.get(Home.getAsteroid(buyer), uint8(EResource.Iron)), 100, "buyer resource count wrong");
-
-    uint256 cost = 100 * 100;
-    uint256 tax = (P_GameConfig.getTax() * cost) / 1000;
-    cost = cost - tax;
-
-    assertEq(wETH.balanceOf(creator), prevSellerBalance + cost, "seller balance wrong");
-    assertEq(wETH.balanceOf(alice), prevBuyerBalance - cost - tax, "buyer balance wrong");
-  }
-
-  function testTakePartialOrder() public {
-    bytes32 orderId = testAddOrder();
-    wETH.transfer(alice, 10000);
-
-    MaxResourceCount.set(Home.getAsteroid(buyer), uint8(EResource.Iron), 100);
-
-    MaxResourceCount.set(Home.getAsteroid(player), uint8(EResource.Iron), 100);
-    ResourceCount.set(Home.getAsteroid(player), uint8(EResource.Iron), 100);
-
-    uint256 prevSellerBalance = wETH.balanceOf(creator);
-    uint256 prevBuyerBalance = wETH.balanceOf(alice);
-
-    switchPrank(alice);
-    world.takeOrder(orderId, 50);
-    uint256 postSellerBalance = wETH.balanceOf(creator);
-    uint256 postBuyerBalance = wETH.balanceOf(alice);
-
-    assertEq(MarketplaceOrder.getCount(orderId), 50, "count wrong");
-    assertEq(MarketplaceOrder.getPrice(orderId), 100, "price wrong");
-    assertEq(MarketplaceOrder.getResource(orderId), uint8(EResource.Iron), "resource wrong");
-    assertEq(MarketplaceOrder.getSeller(orderId), player, "seller wrong");
-
-    assertEq(ResourceCount.get(Home.getAsteroid(player), uint8(EResource.U_Orders)), 0, "seller order count wrong");
-    assertEq(ResourceCount.get(Home.getAsteroid(player), uint8(EResource.Iron)), 50, "seller resource count wrong");
-    assertEq(ResourceCount.get(Home.getAsteroid(buyer), uint8(EResource.Iron)), 50, "buyer resource count wrong");
-
-    uint256 cost = 100 * 50;
-    uint256 tax = (P_GameConfig.getTax() * cost) / 1000;
-    cost = cost - tax;
-
-    assertEq(wETH.balanceOf(creator), prevSellerBalance + cost, "seller balance wrong");
-    assertEq(wETH.balanceOf(alice), prevBuyerBalance - cost - tax, "buyer balance wrong");
-  }
-
-  function testTakeOwnOrder() public {
-    bytes32 orderId = testAddOrder();
-    ResourceCount.set(Home.getAsteroid(buyer), uint8(EResource.Iron), 0);
-    MaxResourceCount.set(Home.getAsteroid(buyer), uint8(EResource.Iron), 100);
-    vm.expectRevert("[MarketplaceSystem] Cannot take your own order");
-    world.takeOrder(orderId, 100 * 100);
-  }
-
-  function testTakeOrderBulk() public {
-    bytes32 orderId = testAddOrder();
-    wETH.transfer(alice, 10000);
-
-    MaxResourceCount.set(Home.getAsteroid(buyer), uint8(EResource.Iron), 100);
-
-    MaxResourceCount.set(Home.getAsteroid(player), uint8(EResource.Iron), 100);
-    ResourceCount.set(Home.getAsteroid(player), uint8(EResource.Iron), 100);
-
-    uint256 prevSellerBalance = wETH.balanceOf(creator);
-    uint256 prevBuyerBalance = wETH.balanceOf(alice);
-
-    switchPrank(alice);
-    bytes32[] memory orders = new bytes32[](2);
-    uint256[] memory counts = new uint256[](2);
-    orders[0] = orderId;
-    orders[1] = orderId;
-    counts[0] = 50;
-    counts[1] = 50;
-    world.takeOrderBulk(orders, counts);
-    uint256 postSellerBalance = wETH.balanceOf(creator);
-    uint256 postBuyerBalance = wETH.balanceOf(alice);
-
-    assertEq(MarketplaceOrder.getCount(orderId), 0, "count wrong");
-    assertEq(MarketplaceOrder.getPrice(orderId), 0, "price wrong");
-    assertEq(MarketplaceOrder.getResource(orderId), 0, "resource wrong");
-    assertEq(MarketplaceOrder.getSeller(orderId), 0, "seller wrong");
-
-    assertEq(ResourceCount.get(Home.getAsteroid(player), uint8(EResource.U_Orders)), 1, "seller order count wrong");
-    assertEq(ResourceCount.get(Home.getAsteroid(player), uint8(EResource.Iron)), 0, "seller resource count wrong");
-    assertEq(ResourceCount.get(Home.getAsteroid(buyer), uint8(EResource.Iron)), 100, "buyer resource count wrong");
-
-    uint256 cost = 100 * 100;
-    uint256 tax = (P_GameConfig.getTax() * cost) / 1000;
-    cost = cost - tax;
-
-    assertEq(wETH.balanceOf(creator), prevSellerBalance + cost, "seller balance wrong");
-    assertEq(wETH.balanceOf(alice), prevBuyerBalance - cost - tax, "buyer balance wrong");
+  function testRemoveLiquidityFailNotAdmin() public {
+    vm.startPrank(alice);
+    vm.expectRevert("[Primodium] Only admin");
+    world.removeLiquidity(EResource.Iron, EResource.Copper, 1000, 1000);
   }
 }

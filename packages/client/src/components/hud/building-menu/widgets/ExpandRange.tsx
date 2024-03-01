@@ -7,23 +7,22 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
+import { upgradeRange } from "src/network/setup/contractCalls/upgradeRange";
 import { getBlockTypeName } from "src/util/common";
 import { EntityType, ResourceImage, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { getUpgradeInfo } from "src/util/upgrade";
-import { upgradeRange } from "src/util/web3/contractCalls/upgradeRange";
 
-export const ExpandRange: React.FC = () => {
-  const { network } = useMud();
-  const playerEntity = network.playerEntity;
-  const mainBaseEntity = components.Home.use(playerEntity)?.mainBase as Entity;
+export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
+  asteroid;
+  const mud = useMud();
+  const { playerAccount } = mud;
+  const mainBaseEntity = components.Home.use(asteroid)?.value as Entity;
   const mainBaseLevel = components.Level.use(mainBaseEntity, {
     value: 1n,
   }).value;
-  const homeAsteroid = components.Home.use(playerEntity)?.asteroid as Entity;
-  const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(EntityType.Expansion, playerEntity);
-
-  const hasEnough = useHasEnoughResources(recipe);
+  const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(EntityType.Expansion, asteroid);
+  const hasEnough = useHasEnoughResources(recipe, asteroid);
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && !isResearched;
   const atMaxLevel = level >= maxLevel;
 
@@ -56,6 +55,7 @@ export const ExpandRange: React.FC = () => {
                         resourceType={resource.type}
                         direction="top"
                         validate
+                        spaceRock={asteroid}
                       />
                     </Badge>
                   );
@@ -63,14 +63,11 @@ export const ExpandRange: React.FC = () => {
             </div>
           </div>
         </div>
-        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, playerEntity)}>
+        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, playerAccount.entity)}>
           <Button
             className="w-fit btn-secondary btn-sm"
             disabled={!canUpgrade}
-            // loading={transactionLoading}
-            onClick={() => {
-              upgradeRange(homeAsteroid, network);
-            }}
+            onClick={() => upgradeRange(mud, asteroid)}
           >
             Expand
           </Button>

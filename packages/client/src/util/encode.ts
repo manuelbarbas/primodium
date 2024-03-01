@@ -1,3 +1,4 @@
+import { resourceToHex } from "@latticexyz/common";
 import { KeySchema, SchemaToPrimitives } from "@latticexyz/protocol-parser";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
@@ -13,6 +14,12 @@ import {
   toHex,
 } from "viem";
 
+export const getSystemId = (name: string, namespace = "") => resourceToHex({ type: "system", namespace, name });
+
+export const addressToEntity = (address: Hex) => {
+  return encodeAbiParameters([{ type: "address" }], [address]) as Entity;
+};
+
 export const toHex32 = (input: string | number | bigint | boolean) => toHex(input, { size: 32 });
 
 export function encodeNumberEntity(key: number, entity: string): Entity {
@@ -22,14 +29,6 @@ export function encodeNumberEntity(key: number, entity: string): Entity {
 export function encodeKeyEntity(key: string, entity: string): Entity {
   return encodeEntity({ key: "bytes32", entity: "bytes32" }, { key: toHex32(key), entity: toHex32(entity) });
 }
-
-export const getMotherlodeEntity = (sourceEntity: Entity, position: Coord) =>
-  keccak256(
-    encodeEntity(
-      { sourceEntity: "bytes32", motherlode: "bytes32", x: "int32", y: "int32" },
-      { sourceEntity: sourceEntity as Hex, motherlode: toHex32("motherlode"), x: position.x, y: position.y }
-    ) as Hex
-  ) as Entity;
 
 export function hashEntities(...args: (Entity | string | number)[]) {
   const values = args.reduce((prev, arg) => `${prev}${arg}`, "") as Hex;
@@ -93,3 +92,11 @@ export function entityToHexKeyTuple(entity: Entity): readonly Hex[] {
   }
   return new Array(length / 32).fill(0).map((_, index) => sliceHex(entity, index * 32, (index + 1) * 32));
 }
+
+export const getSecondaryAsteroidEntity = (sourceEntity: Entity, position: Coord) =>
+  keccak256(
+    encodeEntity(
+      { sourceEntity: "bytes32", asteroid: "bytes32", x: "int32", y: "int32" },
+      { sourceEntity: sourceEntity as Hex, asteroid: toHex32("asteroid"), x: position.x, y: position.y }
+    ) as Hex
+  ) as Entity;

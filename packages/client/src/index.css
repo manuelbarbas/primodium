@@ -1,5 +1,7 @@
 @import "@fontsource/space-mono";
 @import "@fontsource/space-mono/700.css";
+@import "@fontsource/silkscreen/400.css";
+/* @import "@fontsource/silkscreen/700.css"; */
 
 @tailwind base;
 @tailwind components;
@@ -94,39 +96,21 @@
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
   }
-  /* .react-flow__connection-path {
-    @apply bg-white z-[1000] viewport-container text-white
-  } */
 
   .map-container {
     background-color: rgb(100 116 139);
+  }
+
+  .star-background-sm {
+    background-image: url("/img/backgrounds/star.png");
+    background-repeat: repeat;
+    background-size: 200px;
   }
 
   .star-background {
     background-image: url("/img/backgrounds/star.png");
     background-repeat: repeat;
     background-size: 2000px;
-  }
-
-  .topographic-background-sm {
-    background-image: url("/img/backgrounds/topographic_bg.png");
-    bacground-opacity: 0.25;
-    background-size: cover;
-    background-size: 200px;
-  }
-
-  .topographic-background {
-    background-image: url("/img/backgrounds/topographic_bg.png");
-    bacground-opacity: 0.25;
-    background-size: cover;
-    background-size: 500px;
-  }
-
-  .topographic-background2 {
-    background-image: url("/img/backgrounds/topographic_bg.png");
-    bacground-opacity: 0.25;
-    background-size: cover;
-    background-size: 1000px;
   }
 
   .container {
@@ -137,4 +121,19 @@
   #walktour-tooltip-container[tabindex] {
     @apply focus:outline-none;
   }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-down {
+  animation: slideDown 0.3s ease-out forwards;
 }

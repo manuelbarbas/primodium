@@ -1,31 +1,20 @@
-import { Has, defineEnterSystem, defineUpdateSystem, namespaceWorld, Entity } from "@latticexyz/recs";
+import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 
-import { world } from "src/network/world";
 import { createCameraApi } from "src/game/api/camera";
 import { components } from "src/network/components";
-import { SetupResult } from "src/network/types";
+import { world } from "src/network/world";
+import { EntityType } from "src/util/constants";
 
-export const focusMainbase = (scene: Scene, { network: { playerEntity } }: SetupResult) => {
+export const focusMainbase = (scene: Scene) => {
   const { pan } = createCameraApi(scene);
-  const gameWorld = namespaceWorld(world, "game");
+  const systemsWorld = namespaceWorld(world, "systems");
 
-  const query = [Has(components.Home)];
+  const handleMove = () => {
+    const mainBaseCoord = components.Position.get(EntityType.MainBase) ?? { x: 0, y: 0 };
 
-  const handleMove = ({ entity }: { entity: Entity }) => {
-    if (entity !== playerEntity) return;
-
-    //TODO - fix converting to entity
-    const mainBase = components.Home.get(playerEntity)?.mainBase as Entity | undefined;
-
-    if (!mainBase) return;
-
-    const mainBaseCoord = components.Position.get(mainBase);
-    if (!mainBaseCoord) return;
     pan(mainBaseCoord, 0);
   };
 
-  defineEnterSystem(gameWorld, query, handleMove);
-
-  defineUpdateSystem(gameWorld, query, handleMove);
+  defineComponentSystem(systemsWorld, components.ActiveRock, handleMove);
 };

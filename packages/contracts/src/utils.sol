@@ -4,6 +4,7 @@ pragma solidity >=0.8.21;
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 import { ResourceId } from "@latticexyz/world/src/SystemCall.sol";
+import { OwnedBy } from "codegen/index.sol";
 
 function getSystemResourceId(string memory rawName) pure returns (ResourceId) {
   return WorldResourceIdLib.encode(RESOURCE_SYSTEM, "", bytes16(bytes32(bytes(rawName))));
@@ -23,4 +24,10 @@ function bytes32ToString(bytes32 data) pure returns (string memory) {
     bytesString[i] = data[i];
   }
   return string(bytesString);
+}
+
+/// @dev get the player or delegator entity
+/// @return the player or delegator entity
+function _player(address msgSender) view returns (bytes32) {
+  return addressToEntity(msgSender);
 }

@@ -1,25 +1,19 @@
 import { Scene } from "engine/types";
 import { clone, throttle } from "lodash";
 import { useEffect, useState } from "react";
-import { GameReady } from "src/network/components/clientComponents";
-import { useSettingsStore } from "../stores/SettingsStore";
+import { usePersistentStore } from "../stores/PersistentStore";
 
 export function createHooksApi(targetScene: Scene) {
   function useKeybinds() {
-    return useSettingsStore((state) => state.keybinds);
+    return usePersistentStore((state) => state.keybinds);
   }
 
   function useCamera() {
     const [worldView, setWorldView] = useState<Phaser.Geom.Rectangle>();
-    const [zoom, setZoom] = useState(0);
-    const gameStatus = GameReady.use();
+    const [zoom, setZoom] = useState(targetScene.camera.phaserCamera.zoom);
     const { camera } = targetScene;
 
     useEffect(() => {
-      if (!gameStatus) {
-        return;
-      }
-
       const worldViewListener = camera?.worldView$.subscribe(
         throttle((worldView: Phaser.Geom.Rectangle) => {
           setWorldView(clone(worldView));
@@ -32,7 +26,7 @@ export function createHooksApi(targetScene: Scene) {
         worldViewListener?.unsubscribe();
         zoomListener?.unsubscribe();
       };
-    }, [gameStatus, camera]);
+    }, [camera]);
 
     return {
       zoom,

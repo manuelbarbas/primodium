@@ -1,22 +1,25 @@
 import { Scene } from "engine/types";
-import { SetupResult } from "src/network/types";
 // import { focusAsteroid } from "./focusAsteroid";
-import { renderArrivalsInOrbit } from "./renderArrivalsInOrbit";
-import { renderArrivalsInTransit } from "./renderArrivalsInTransit";
+import { MUD } from "src/network/types";
 import { renderAsteroid } from "./renderAsteroid";
-import { renderEffects } from "./renderEffects";
-import { renderMotherlode } from "./renderMotherlode";
+import { renderAttackLine } from "./renderAttackLine";
+import { renderBattle } from "./renderBattle";
+import { renderFleetsInOrbit } from "./renderFleetsInOrbit";
+import { renderFleetsInTransit } from "./renderFleetsInTransit";
+import { renderMoveLine } from "./renderMoveLine";
 import { renderPirateAsteroid } from "./renderPirateAsteroid";
 
-export const runSystems = (scene: Scene, mud: SetupResult) => {
+export const runSystems = (scene: Scene, mud: MUD) => {
   // focusAsteroid(scene, mud);
 
-  renderAsteroid(scene, mud);
-  renderMotherlode(scene, mud);
-  renderPirateAsteroid(scene, mud.network.playerEntity);
+  renderAsteroid(scene);
+  renderPirateAsteroid(scene);
 
-  renderArrivalsInTransit(scene, mud);
-  renderArrivalsInOrbit(scene, mud);
+  renderMoveLine(scene, mud);
+  renderAttackLine(scene, mud);
 
-  renderEffects(scene, mud);
+  renderFleetsInTransit(scene);
+  renderFleetsInOrbit(scene);
+
+  renderBattle(scene);
 };

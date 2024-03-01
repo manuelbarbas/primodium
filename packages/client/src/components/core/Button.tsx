@@ -1,16 +1,18 @@
-import { primodium } from "@game/api";
 import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
+import { useEffect } from "react";
+import { usePrimodium } from "src/hooks/usePrimodium";
+import { getRandomRange } from "src/util/common";
 import { IconLabel } from "./IconLabel";
 import { Loader } from "./Loader";
 import { Tooltip } from "./Tooltip";
-import { useEffect } from "react";
-import { getRandomRange } from "src/util/common";
 
 export const Button: React.FC<{
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
   onClick?: (e?: React.MouseEvent | undefined) => void;
+  onPointerEnter?: (e?: React.PointerEvent) => void;
+  onPointerLeave?: (e?: React.PointerEvent) => void;
   disabled?: boolean;
   selected?: boolean;
   loading?: boolean;
@@ -24,6 +26,8 @@ export const Button: React.FC<{
   className,
   style,
   onClick,
+  onPointerEnter,
+  onPointerLeave,
   disabled,
   selected = false,
   loading = false,
@@ -33,11 +37,11 @@ export const Button: React.FC<{
   clickSound = AudioKeys.Confirm2,
   keybind,
 }) => {
-  const api = primodium.apiOrUndefined(Scenes.Asteroid);
-  const api2 = primodium.apiOrUndefined(Scenes.Starmap);
+  const primodium = usePrimodium();
+  const api = primodium.api(Scenes.UI);
 
   useEffect(() => {
-    if (!keybind || !api || !api2 || disabled) return;
+    if (!keybind || !api || disabled) return;
 
     const callback = () => {
       onClick && onClick();
@@ -48,13 +52,11 @@ export const Button: React.FC<{
     };
 
     const listener = api.input.addListener(keybind, callback);
-    const listener2 = api2.input.addListener(keybind, callback);
 
     return () => {
       listener.dispose();
-      listener2.dispose();
     };
-  }, [keybind, api, api2, clickSound, mute, disabled, onClick]);
+  }, [keybind, api, clickSound, mute, disabled, onClick]);
 
   return (
     <Tooltip text={tooltip} direction={tooltipDirection}>
@@ -65,7 +67,8 @@ export const Button: React.FC<{
             api?.audio.play(clickSound, "ui", {
               detune: getRandomRange(-100, 100),
             });
-          onClick && onClick(e);
+
+          onClick?.(e);
         }}
         disabled={disabled}
         onPointerEnter={() => {
@@ -74,10 +77,13 @@ export const Button: React.FC<{
               volume: 0.1,
               detune: getRandomRange(-200, 200),
             });
+
+          onPointerEnter?.();
         }}
-        className={`btn join-item inline pointer-events-auto font-bold outline-none h-fit ${className} ${
-          disabled ? "opacity-80" : ""
-        } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
+        onPointerLeave={onPointerLeave}
+        className={`btn join-item inline pointer-events-auto font-bold outline-none h-fit bg-opacity-50 ${className} ${
+          selected ? "border-accent z-10 bg-base-100" : ""
+        }`}
       >
         {loading && <Loader />}
         {!loading && children}
@@ -88,10 +94,11 @@ export const Button: React.FC<{
 
 export const IconButton: React.FC<{
   imageUri: string;
-  text: string;
+  text?: string;
   hideText?: boolean;
   className?: string;
   onClick?: () => void;
+  onDoubleClick?: () => void;
   disabled?: boolean;
   selected?: boolean;
   loading?: boolean;
@@ -101,7 +108,7 @@ export const IconButton: React.FC<{
   clickSound?: AudioKeys;
 }> = ({
   imageUri,
-  text,
+  text = "",
   hideText = false,
   className,
   onClick,
@@ -112,39 +119,36 @@ export const IconButton: React.FC<{
   tooltipText,
   mute = false,
   clickSound = AudioKeys.Confirm2,
+  onDoubleClick,
 }) => {
+  const primodium = usePrimodium();
   const { audio } = primodium.api();
   return (
-    <button
-      onClick={() => {
-        !mute &&
-          audio.play(clickSound, "ui", {
-            detune: getRandomRange(-100, 100),
-          });
-        onClick && onClick();
-      }}
-      disabled={disabled}
-      onPointerEnter={() => {
-        !mute &&
-          audio.play(AudioKeys.DataPoint2, "ui", {
-            volume: 0.1,
-            detune: getRandomRange(-200, 200),
-          });
-      }}
-      className={`btn join-item inline gap-1 pointer-events-auto font-bold outline-none ${className} ${
-        disabled ? "opacity-80" : ""
-      } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
-    >
-      {loading && <Loader />}
-      {!loading && (
-        <IconLabel
-          imageUri={imageUri}
-          text={text}
-          hideText={hideText}
-          tooltipDirection={tooltipDirection}
-          tooltipText={tooltipText}
-        />
-      )}
-    </button>
+    <Tooltip text={tooltipText} direction={tooltipDirection}>
+      <button
+        onClick={() => {
+          !mute &&
+            audio.play(clickSound, "ui", {
+              detune: getRandomRange(-100, 100),
+            });
+          onClick && onClick();
+        }}
+        disabled={disabled}
+        onDoubleClick={onDoubleClick}
+        onPointerEnter={() => {
+          !mute &&
+            audio.play(AudioKeys.DataPoint2, "ui", {
+              volume: 0.1,
+              detune: getRandomRange(-200, 200),
+            });
+        }}
+        className={`btn join-item inline gap-1 pointer-events-auto font-bold outline-none bg-opacity-50 ${className} ${
+          disabled ? "opacity-50 !pointer-events-auto" : ""
+        } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
+      >
+        {loading && <Loader />}
+        {!loading && <IconLabel imageUri={imageUri} text={text} hideText={hideText} />}
+      </button>
+    </Tooltip>
   );
 };

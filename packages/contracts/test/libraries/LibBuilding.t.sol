@@ -10,12 +10,7 @@ contract LibBuildingTest is PrimodiumTest {
     vm.startPrank(creator);
   }
 
-  function testGetPlayerBounds(
-    int16 maxX,
-    int16 maxY,
-    int16 currX,
-    int16 currY
-  ) public {
+  function testGetPlayerBounds(int16 maxX, int16 maxY, int16 currX, int16 currY) public {
     // Bound fuzzy parameters to int16 to eliminate overflow errors when testing
     vm.assume(currX > 0);
     vm.assume(currY > 0);
@@ -25,11 +20,11 @@ contract LibBuildingTest is PrimodiumTest {
     P_Asteroid.set(maxX, maxY);
 
     bytes32 playerEntity = addressToEntity(creator);
-    uint256 playerLevel = Level.get(Home.getAsteroid(playerEntity));
+    uint256 playerLevel = Level.get(Home.get(playerEntity));
 
     Dimensions.set(ExpansionKey, playerLevel, currX, currY);
 
-    Bounds memory bounds = LibBuilding.getSpaceRockBounds(Home.getAsteroid(playerEntity));
+    Bounds memory bounds = LibBuilding.getSpaceRockBounds(Home.get(playerEntity));
 
     assertEq(bounds.minX, (int32(maxX) - int32(currX)) / 2);
     assertEq(bounds.maxX, (int32(maxX) + int32(currX)) / 2 - 1);

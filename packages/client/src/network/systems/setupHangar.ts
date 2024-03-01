@@ -1,21 +1,16 @@
-import { Entity, Has, HasValue, defineComponentSystem, runQuery } from "@latticexyz/recs";
-import { getUnitTrainingTime } from "src/util/trainUnits";
+import { Entity, Has, HasValue, defineComponentSystem, namespaceWorld, runQuery } from "@latticexyz/recs";
+import { getUnitTrainingTime } from "src/util/unit";
 import { Hex } from "viem";
 import { components } from "../components";
 import { world } from "../world";
 // import { SetupResult } from "../types";
-import { ERock } from "contracts/config/enums";
-import { SetupResult } from "../types";
 export function createHangar(spaceRock: Entity) {
-  const player = components.OwnedBy.get(spaceRock)?.value;
-  if (!player) return;
   const units: Map<Entity, bigint> = new Map();
 
   // get all units and find their counts on the space rock
   components.P_UnitPrototypes.get()?.value.forEach((entity) => {
     const unitCount = components.UnitCount.getWithKeys({
-      player: player as Hex,
-      rock: spaceRock as Hex,
+      entity: spaceRock as Hex,
       unit: entity as Hex,
     })?.value;
 
@@ -23,14 +18,11 @@ export function createHangar(spaceRock: Entity) {
     const prev = units.get(entity as Entity) || 0n;
     units.set(entity as Entity, prev + unitCount);
   });
-  const type = components.RockType.get(spaceRock)?.value;
 
-  if (type == ERock.Asteroid) {
-    const trainedUnclaimedUnits = getTrainedUnclaimedUnits(spaceRock);
-    Array.from(trainedUnclaimedUnits).map(([unit, count]) => {
-      units.set(unit as Entity, (units.get(unit as Entity) ?? 0n) + count);
-    });
-  }
+  const trainedUnclaimedUnits = getTrainedUnclaimedUnits(spaceRock);
+  Array.from(trainedUnclaimedUnits).map(([unit, count]) => {
+    units.set(unit as Entity, (units.get(unit as Entity) ?? 0n) + count);
+  });
 
   const value = { units: [...units.keys()], counts: [...units.values()] };
   components.Hangar.set(value, spaceRock);
@@ -78,41 +70,24 @@ function getTrainedUnclaimedUnits(spaceRock: Entity) {
   });
   return units;
 }
-export function setupHangar(mud: SetupResult) {
-  const playerEntity = mud.network.playerEntity;
+export function setupHangar() {
+  const systemWorld = namespaceWorld(world, "systems");
 
-  const { Send, RockType, OwnedBy } = components;
-
-  defineComponentSystem(world, Send, () => {
-    const origin = Send.get()?.origin;
-    const destination = Send.get()?.destination;
-    if (origin) createHangar(origin);
-    if (destination) createHangar(destination);
-  });
-
-  defineComponentSystem(world, components.SelectedRock, ({ value: [value] }) => {
+  defineComponentSystem(systemWorld, components.SelectedRock, ({ value: [value] }) => {
     if (!value?.value) return;
     createHangar(value.value);
   });
 
-  defineComponentSystem(world, components.BlockNumber, () => {
-    const home = components.Home.get(playerEntity)?.asteroid;
-    if (home) createHangar(home as Entity);
-    const origin = Send.get()?.origin;
-    const destination = Send.get()?.destination;
-    if (origin && origin != home) createHangar(origin);
-    if (destination && destination != home) createHangar(destination);
+  defineComponentSystem(systemWorld, components.HoverEntity, ({ value: [value] }) => {
+    const entity = value?.value;
+    if (!entity) return;
+    if (components.Asteroid.has(entity)) createHangar(entity);
+  });
 
-    // maintain hangars for all player motherlodes to track mining production
-    const query = [
-      Has(RockType),
-      HasValue(OwnedBy, { value: playerEntity }),
-      HasValue(RockType, { value: ERock.Motherlode }),
-    ];
-
-    const motherlodes = runQuery(query);
-    motherlodes.forEach((motherlode) => {
-      createHangar(motherlode);
-    });
+  defineComponentSystem(systemWorld, components.Time, () => {
+    const selectedRock = components.ActiveRock.get()?.value as Entity;
+    if (selectedRock) createHangar(selectedRock);
+    const hoverEntity = components.HoverEntity.get()?.value as Entity;
+    if (components.Asteroid.has(hoverEntity)) createHangar(hoverEntity);
   });
 }

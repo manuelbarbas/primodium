@@ -1,6 +1,7 @@
 import {
   Component,
   ComponentUpdate,
+  Entity,
   Metadata,
   QueryFragment,
   Schema,
@@ -9,6 +10,7 @@ import {
   defineExitSystem,
   defineRxSystem,
   defineUpdateSystem,
+  getComponentValue,
   namespaceWorld,
 } from "@latticexyz/recs";
 import { Coord, uuid } from "@latticexyz/utils";
@@ -27,8 +29,6 @@ type SystemCallback<T extends keyof GameObjectTypes, S extends Schema = Schema> 
 ) => void;
 
 type ComponentSystemMap = Map<Component<Schema, Metadata>, Map<string, (update: ComponentUpdate<Schema>) => void>>;
-
-type ComponentUpdateMap = Map<Component<Schema, Metadata>, ComponentUpdate<Schema>>;
 
 type QuerySystemMap = Map<QueryFragment[], Map<string, (update: ComponentUpdate<Schema>) => void>>;
 
@@ -90,6 +90,28 @@ export const OnClick = <T extends keyof GameObjectTypes>(
   };
 };
 
+export const OnClickUp = <T extends keyof GameObjectTypes>(
+  scene: Scene,
+  callback: (gameObject?: GameObjectInstances[T], e?: Phaser.Input.Pointer) => void,
+  pixelPerfect = false
+): GameObjectComponent<T> => {
+  return {
+    id: uuid(),
+    once: (gameObject) => {
+      if (pixelPerfect) gameObject.setInteractive(scene.input.phaserInput.makePixelPerfect());
+      else gameObject.setInteractive();
+      let downTime = Date.now();
+      gameObject.on("pointerdown", () => (downTime = Date.now()));
+      gameObject.on("pointerup", (e: Phaser.Input.Pointer) => {
+        if (e.downElement.nodeName !== "CANVAS") return;
+        const prevDownTime = downTime;
+        downTime = Date.now();
+        if (downTime - prevDownTime < 250) callback(gameObject as GameObjectInstances[T], e);
+      });
+    },
+  };
+};
+
 export const OnHover = <T extends keyof GameObjectTypes>(
   callback: (gameObject?: GameObjectInstances[T]) => void,
   leaveCallback?: (gameObject?: GameObjectInstances[T]) => void,
@@ -113,13 +135,33 @@ export const OnHover = <T extends keyof GameObjectTypes>(
   };
 };
 
-export const Tween = <T extends keyof GameObjectTypes>(
+export const TweenCounter = <T extends keyof GameObjectTypes>(
   scene: Scene,
-  config: Partial<Phaser.Types.Tweens.TweenBuilderConfig>
+  config: Partial<Phaser.Types.Tweens.NumberTweenBuilderConfig>
 ): GameObjectComponent<T> => {
   let tween: Phaser.Tweens.Tween;
   return {
     id: uuid(),
+    once: () => {
+      tween = scene.phaserScene.tweens.addCounter({
+        ...config,
+      });
+    },
+    exit: () => {
+      tween.stop();
+      tween.destroy();
+    },
+  };
+};
+
+export const Tween = <T extends keyof GameObjectTypes>(
+  scene: Scene,
+  config: Partial<Phaser.Types.Tweens.TweenBuilderConfig>,
+  id = uuid()
+): GameObjectComponent<T> => {
+  let tween: Phaser.Tweens.Tween;
+  return {
+    id,
     once: (gameObject) => {
       tween = scene.phaserScene.add.tween({
         targets: gameObject,
@@ -134,11 +176,11 @@ export const Tween = <T extends keyof GameObjectTypes>(
 };
 
 const componentMap: ComponentSystemMap = new Map();
-const componentUpdateMap: ComponentUpdateMap = new Map();
+const sentInitialUpdate = new Map<Entity, boolean>();
 export const OnComponentSystem = <T extends keyof GameObjectTypes, S extends Schema>(
   component: Component<S, Metadata>,
   callback: SystemCallback<T, S>,
-  options?: { runOnInit?: boolean }
+  options?: { initialEntity?: Entity }
 ): GameObjectComponent<T> => {
   const id = uuid();
 
@@ -148,32 +190,41 @@ export const OnComponentSystem = <T extends keyof GameObjectTypes, S extends Sch
       if (!componentMap.has(component)) {
         componentMap.set(component, new Map());
 
-        defineComponentSystem(
-          gameWorld,
-          component,
-          (update) => {
-            componentUpdateMap.set(component, update);
-            const fnMap = componentMap.get(component);
+        defineComponentSystem(gameWorld, component, (update) => {
+          const fnMap = componentMap.get(component);
 
-            if (!fnMap) return;
+          if (!fnMap) return;
 
-            //prevent infinite loops if functions themselves modify fn list
-            const staticFnList = Array.from(fnMap.values());
+          //prevent infinite loops if functions themselves modify fn list
+          const staticFnList = Array.from(fnMap.values());
 
-            //run all functions for component
-            for (const fn of staticFnList) {
-              fn(update);
-            }
-          },
-          options
-        );
+          //run all functions for component
+          for (const fn of staticFnList) {
+            fn(update);
+          }
+        });
       }
 
       //subscribe to component updates
       componentMap.get(component)?.set(id, (update) => callback(gameObject, update as ComponentUpdate<S>, id));
       //send initial update if it missed it
-      if (componentUpdateMap.has(component))
-        callback(gameObject, componentUpdateMap.get(component)! as ComponentUpdate<S>, id);
+
+      if (options?.initialEntity && !sentInitialUpdate.get(options.initialEntity)) {
+        const entity = options.initialEntity;
+        const value = getComponentValue(component, entity);
+
+        callback(
+          gameObject,
+          {
+            entity,
+            value: [value, undefined],
+            component,
+          } as ComponentUpdate<S>,
+          id
+        );
+
+        sentInitialUpdate.set(entity, true);
+      }
     },
     exit: () => {
       //unsub from component updates

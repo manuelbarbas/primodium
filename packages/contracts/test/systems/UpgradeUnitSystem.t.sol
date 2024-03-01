@@ -23,7 +23,7 @@ contract UpgradeUnitSystemTest is PrimodiumTest {
     super.setUp();
     vm.startPrank(creator);
     player = addressToEntity(creator);
-    Home.setAsteroid(player, homeAsteroid);
+    Home.set(player, homeAsteroid);
     OwnedBy.set(homeAsteroid, player);
     P_EnumToPrototype.set(UnitKey, uint8(unit), unitPrototype);
     P_MaxLevel.set(unitPrototype, 2);
@@ -31,7 +31,7 @@ contract UpgradeUnitSystemTest is PrimodiumTest {
 
   function testUpgradeUnit1() public {
     world.upgradeUnit(homeAsteroid, unit);
-    assertEq(UnitLevel.get(player, unitPrototype), 1);
+    assertEq(UnitLevel.get(homeAsteroid, unitPrototype), 1);
   }
 
   function testUpgradeUnitMainBaseLevelRequirementNotMet() public {

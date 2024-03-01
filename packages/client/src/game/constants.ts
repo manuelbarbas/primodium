@@ -6,8 +6,6 @@ import { EntityType } from "../util/constants";
 export const ASSET_PACK = "/assets/pack.json";
 
 export const minEth = parseEther("0.0049");
-export const TILE_HEIGHT = 16;
-export const TILE_WIDTH = 16;
 export const RENDER_INTERVAL = 30;
 export const ANIMATION_INTERVAL = 200;
 export const KEY = "MAIN";
@@ -16,6 +14,7 @@ export enum Scenes {
   Root = "ROOT",
   Asteroid = "MAIN",
   Starmap = "STARMAP",
+  UI = "UI",
 }
 
 export enum Assets {
@@ -25,15 +24,23 @@ export enum Assets {
 }
 
 export enum Tilesets {
-  Terrain = "Terrain",
-  Resource = "Resource",
-  Fog = "Fog",
+  Resource = "resource",
+  BoundsOuterBorder = "bounds-outerborder",
+  BoundsInnerBorder = "bounds-innerborder",
+  BoundsNonBuildable = "bounds-nonbuildable",
+}
+
+export enum Tilemaps {
+  AsteroidMicro = "asteroid-micro",
+  AsteroidSmall = "asteroid-small",
+  AsteroidMedium = "asteroid-medium",
+  AsteroidLarge = "asteroid-large",
 }
 
 export enum DepthLayers {
-  Rock = 0,
-  Terrain = 1,
-  Tile = 2,
+  Rock = 100,
+  Resources = 200,
+  Tile = 300,
   Building = 400,
   Path = 500,
   Marker = 600,
@@ -50,10 +57,14 @@ export enum TerrainTilekeys {
 }
 
 export enum ResourceTilekeys {
+  Copper = 1,
   Iron,
-  Copper,
   Lithium,
   Sulfur,
+  Titanium,
+  Kimberlite,
+  Iridium,
+  Platinum,
 }
 
 const FogTilekeysGID =
@@ -109,7 +120,21 @@ export enum SpriteKeys {
 
   LithiumMine1 = "sprites/miners/lithiummine/Miner_Lithium_LVL1_1.png",
 
-  SulfurMine1 = "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_1.png",
+  IridiumMine1 = "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_1.png",
+  IridiumMine2 = "sprites/miners/iridiummine/level2/Miner_Iridium_LVL2_1.png",
+  IridiumMine3 = "sprites/miners/iridiummine/level3/Miner_Iridium_LVL3_1.png",
+
+  TitaniumMine1 = "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_1.png",
+  TitaniumMine2 = "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_1.png",
+  TitaniumMine3 = "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_1.png",
+
+  PlatinumMine1 = "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_1.png",
+  PlatinumMine2 = "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_1.png",
+  PlatinumMine3 = "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_1.png",
+
+  KimberliteMine1 = "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_1.png",
+  KimberliteMine2 = "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_1.png",
+  KimberliteMine3 = "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_1.png",
 
   StorageUnit1 = "sprites/storage-facility/level1/Storage_Facility_LVL1.png",
   StorageUnit2 = "sprites/storage-facility/level2/Storage_Facility_LVL2.png",
@@ -156,6 +181,8 @@ export enum SpriteKeys {
   Vault1 = "sprites/vault/level1/Vault_LVL1_1.png",
   Vault2 = "sprites/vault/level2/Vault_LVL2_1.png",
   Vault3 = "sprites/vault/level3/Vault_LVL3_1.png",
+
+  Shipyard1 = "sprites/shipyard/level1/Shipyard_LVL1_1.png",
 
   //ASTEROIDS
   Asteroid1 = "sprites/spacerocks/asteroids/asteroid1.png",
@@ -213,9 +240,25 @@ export enum SpriteKeys {
   Construction3x3 = "sprites/construction/3x3.png",
   Construction4x4 = "sprites/construction/4x4.png",
   Construction2x3 = "sprites/construction/2x3.png",
+  Construction4x6 = "sprites/construction/4x6.png",
 
-  // GRACE PERIOD
+  // Resource Icons
   GracePeriod = "sprites/icons/grace.png",
+  Iron = "sprites/icons/resources/iron_resource.png",
+  Copper = "sprites/icons/resources/copper_resource.png",
+  Lithium = "sprites/icons/resources/lithium_resource.png",
+  IronPlate = "sprites/icons/resources/ironplate.png",
+  PVCell = "sprites/icons/resources/photovoltaiccell_resource.png",
+  Alloy = "sprites/icons/resources/alloy_resource.png",
+
+  // Unit Icons
+  StingerDrone = "sprites/icons/units/stingerdrone.png",
+  AegisDrone = "sprites/icons/units/aegisdrone.png",
+  AnvilDrone = "sprites/icons/units/anvildrone.png",
+  HammerDrone = "sprites/icons/units/hammerdrone.png",
+  TridentMarine = "sprites/icons/units/trident_marine.png",
+  MinutemanMarine = "sprites/icons/units/minutemen_marine.png",
+  LightningCraft = "sprites/icons/units/lightningcraft.png",
 }
 
 export enum AnimationKeys {
@@ -238,7 +281,21 @@ export enum AnimationKeys {
 
   LithiumMine1 = "lithiummine/level1",
 
-  SulfurMine1 = "sulfurmine/level1",
+  IridiumMine1 = "iridiummine/level1",
+  IridiumMine2 = "iridiummine/level2",
+  IridiumMine3 = "iridiummine/level3",
+
+  TitaniumMine1 = "titaniummine/level1",
+  TitaniumMine2 = "titaniummine/level2",
+  TitaniumMine3 = "titaniummine/level3",
+
+  PlatinumMine1 = "platinummine/level1",
+  PlatinumMine2 = "platinummine/level2",
+  PlatinumMine3 = "platinummine/level3",
+
+  KimberliteMine1 = "kimberlitemine/level1",
+  KimberliteMine2 = "kimbleritemine/level2",
+  KimberliteMine3 = "kimbleritemine/level3",
 
   StorageUnit3 = "storageunit/level3",
 
@@ -283,10 +340,16 @@ export enum AnimationKeys {
   Vault3 = "vault/level3",
 
   Market1 = "marketplace/level1",
+
+  Shipyard1 = "shipyard/level1",
+
+  //DECORATIONS
+  Drone = "decorations/drone",
 }
 
 export enum AudioKeys {
   Background = "background",
+  Background2 = "background2",
   Bleep = "Bleep_01",
   Bleep2 = "Bleep_02",
   Bleep3 = "Bleep_03",
@@ -324,10 +387,32 @@ export const ResourceToTilesetKey: { [key: number]: ResourceTilekeys } = {
   [EResource.Iron]: ResourceTilekeys.Iron,
   [EResource.Copper]: ResourceTilekeys.Copper,
   [EResource.Lithium]: ResourceTilekeys.Lithium,
-  [EResource.Sulfur]: ResourceTilekeys.Sulfur,
+  [EResource.Kimberlite]: ResourceTilekeys.Kimberlite,
+  [EResource.Iridium]: ResourceTilekeys.Iridium,
+  [EResource.Platinum]: ResourceTilekeys.Platinum,
+  [EResource.Titanium]: ResourceTilekeys.Titanium,
 };
 
-export const EntitytoSpriteKey = {
+export const EntityToResourceSpriteKey = {
+  [EntityType.Iron]: SpriteKeys.Iron,
+  [EntityType.Copper]: SpriteKeys.Copper,
+  [EntityType.Lithium]: SpriteKeys.Lithium,
+  [EntityType.IronPlate]: SpriteKeys.IronPlate,
+  [EntityType.PVCell]: SpriteKeys.PVCell,
+  [EntityType.Alloy]: SpriteKeys.Alloy,
+};
+
+export const EntityToUnitSpriteKey = {
+  [EntityType.AegisDrone]: SpriteKeys.AegisDrone,
+  [EntityType.AnvilDrone]: SpriteKeys.AnvilDrone,
+  [EntityType.HammerDrone]: SpriteKeys.HammerDrone,
+  [EntityType.StingerDrone]: SpriteKeys.StingerDrone,
+  [EntityType.TridentMarine]: SpriteKeys.TridentMarine,
+  [EntityType.LightningCraft]: SpriteKeys.LightningCraft,
+  [EntityType.MinutemanMarine]: SpriteKeys.MinutemanMarine,
+};
+
+export const EntitytoBuildingSpriteKey = {
   [EntityType.MainBase]: [
     SpriteKeys.Mainbase1,
     SpriteKeys.Mainbase2,
@@ -343,9 +428,12 @@ export const EntitytoSpriteKey = {
 
   [EntityType.CopperMine]: [SpriteKeys.CopperMine1, SpriteKeys.CopperMine2, SpriteKeys.CopperMine3],
 
-  [EntityType.SulfurMine]: [SpriteKeys.SulfurMine1],
-
   [EntityType.LithiumMine]: [SpriteKeys.LithiumMine1],
+
+  [EntityType.KimberliteMine]: [SpriteKeys.KimberliteMine1, SpriteKeys.KimberliteMine2, SpriteKeys.KimberliteMine3],
+  [EntityType.IridiumMine]: [SpriteKeys.IridiumMine1, SpriteKeys.IridiumMine2, SpriteKeys.IridiumMine3],
+  [EntityType.TitaniumMine]: [SpriteKeys.TitaniumMine1, SpriteKeys.TitaniumMine2, SpriteKeys.TitaniumMine3],
+  [EntityType.PlatinumMine]: [SpriteKeys.PlatinumMine1, SpriteKeys.PlatinumMine2, SpriteKeys.PlatinumMine3],
 
   [EntityType.StorageUnit]: [SpriteKeys.StorageUnit1, SpriteKeys.StorageUnit2, SpriteKeys.StorageUnit3],
 
@@ -376,17 +464,14 @@ export const EntitytoSpriteKey = {
   [EntityType.ShieldGenerator]: [SpriteKeys.ShieldGenerator1, SpriteKeys.ShieldGenerator2, SpriteKeys.ShieldGenerator3],
   [EntityType.Vault]: [SpriteKeys.Vault1, SpriteKeys.Vault2, SpriteKeys.Vault3],
   [EntityType.Market]: [SpriteKeys.Market1],
+  [EntityType.Shipyard]: [SpriteKeys.Shipyard1],
 
   //STARMAP
   [EntityType.Asteroid]: [
     SpriteKeys.Asteroid1,
     SpriteKeys.Asteroid2,
-    SpriteKeys.Asteroid2,
-    SpriteKeys.Asteroid3,
     SpriteKeys.Asteroid3,
     SpriteKeys.Asteroid4,
-    SpriteKeys.Asteroid4,
-    SpriteKeys.Asteroid5,
     SpriteKeys.Asteroid5,
   ],
 };
@@ -407,7 +492,16 @@ export const EntityIDtoAnimationKey = {
   [EntityType.IronMine]: [AnimationKeys.IronMine1, AnimationKeys.IronMine2, AnimationKeys.IronMine3],
   [EntityType.CopperMine]: [AnimationKeys.CopperMine1, AnimationKeys.CopperMine2, AnimationKeys.CopperMine3],
   [EntityType.LithiumMine]: [AnimationKeys.LithiumMine1],
-  [EntityType.SulfurMine]: [AnimationKeys.SulfurMine1],
+
+  [EntityType.KimberliteMine]: [
+    AnimationKeys.KimberliteMine1,
+    AnimationKeys.KimberliteMine2,
+    AnimationKeys.KimberliteMine3,
+  ],
+  [EntityType.IridiumMine]: [AnimationKeys.IridiumMine1, AnimationKeys.IridiumMine2, AnimationKeys.IridiumMine3],
+  [EntityType.PlatinumMine]: [AnimationKeys.PlatinumMine1, AnimationKeys.PlatinumMine2, AnimationKeys.PlatinumMine3],
+  [EntityType.TitaniumMine]: [AnimationKeys.TitaniumMine1, AnimationKeys.TitaniumMine2, AnimationKeys.TitaniumMine3],
+
   [EntityType.StorageUnit]: [undefined, undefined, AnimationKeys.StorageUnit3],
 
   [EntityType.IronPlateFactory]: [AnimationKeys.IronPlateFactory1, AnimationKeys.IronPlateFactory2],
@@ -442,6 +536,7 @@ export const EntityIDtoAnimationKey = {
 
   [EntityType.Vault]: [AnimationKeys.Vault1, AnimationKeys.Vault2, AnimationKeys.Vault3],
   [EntityType.Market]: [AnimationKeys.Market1],
+  [EntityType.Shipyard]: [AnimationKeys.Shipyard1],
 };
 
 export enum KeybindActions {
@@ -451,8 +546,6 @@ export enum KeybindActions {
   Right,
   Center,
   SpacerockMenu,
-  Chat,
-  Blueprint,
   Base,
   Hotbar1,
   Hotbar2,
@@ -464,26 +557,34 @@ export enum KeybindActions {
   Hotbar8,
   Hotbar9,
   Hotbar0,
+  NextHotbar,
+  PrevHotbar,
+
   Marker1,
   Marker2,
   Marker3,
   Marker4,
+
   ZoomIn,
   ZoomOut,
   RightClick,
   LeftClick,
-  Research,
-  Inventory,
-  Mute,
-  MainMenu,
+
+  Account,
+  Blueprints,
+  Objectives,
+  Resources,
+  Units,
+  Asteroids,
+  Fleets,
+  Chat,
+  HideAll,
+
   Esc,
-  Debug,
-  DeleteBuilding,
   Modifier,
-  ToggleUI,
-  NextHotbar,
-  PrevHotbar,
   Map,
+  Console,
+
   NULL,
 }
 
@@ -498,4 +599,14 @@ export const KeyNames: { [key: string]: string } = {
   ["EIGHT"]: "8",
   ["NINE"]: "9",
   ["ZERO"]: "0",
+  ["OPEN_BRACKET"]: "[",
+  ["CLOSE_BRACKET"]: "]",
+  ["SEMICOLON"]: ";",
+};
+
+export const MaxLevelToTilemap: Record<number, Tilemaps> = {
+  1: Tilemaps.AsteroidMicro,
+  3: Tilemaps.AsteroidSmall,
+  5: Tilemaps.AsteroidMedium,
+  8: Tilemaps.AsteroidLarge,
 };

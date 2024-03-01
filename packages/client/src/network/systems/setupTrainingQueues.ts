@@ -1,14 +1,13 @@
-import { Entity, Has, HasValue, defineComponentSystem, runQuery } from "@latticexyz/recs";
-import { getUnitTrainingTime } from "src/util/trainUnits";
+import { Entity, Has, HasValue, defineComponentSystem, namespaceWorld, runQuery } from "@latticexyz/recs";
+import { getUnitTrainingTime } from "src/util/unit";
 import { Hex } from "viem";
 import { components } from "../components";
 import { BlockNumber } from "../components/clientComponents";
-import { SetupResult } from "../types";
 import { world } from "../world";
 
-export function setupTrainingQueues(mud: SetupResult) {
-  const playerEntity = mud.network.playerEntity;
-  const { BuildingType, LastClaimedAt, ClaimOffset, OwnedBy, QueueUnits, QueueItemUnits, TrainingQueue, Home, Send } =
+export function setupTrainingQueues() {
+  const systemWorld = namespaceWorld(world, "systems");
+  const { BuildingType, LastClaimedAt, ClaimOffset, OwnedBy, QueueUnits, QueueItemUnits, TrainingQueue, Send } =
     components;
 
   function updateTrainingQueue(building: Entity) {
@@ -70,14 +69,14 @@ export function setupTrainingQueues(mud: SetupResult) {
 
   // update local queues each second
   // todo: create a component that tracks active asteroids (to be updated each second)
-  defineComponentSystem(world, BlockNumber, (update) => {
-    const home = Home.get(playerEntity)?.asteroid;
+  defineComponentSystem(systemWorld, BlockNumber, (update) => {
+    const selectedRock = components.ActiveRock.get()?.value;
     const origin = Send.get()?.origin;
     const destination = Send.get()?.destination;
     const parents: string[] = [];
-    if (home) parents.push(home);
-    if (origin && home !== origin) parents.push(origin);
-    if (destination && home !== destination) parents.push(destination);
+    if (selectedRock) parents.push(selectedRock);
+    if (origin && selectedRock !== origin) parents.push(origin);
+    if (destination && selectedRock !== destination) parents.push(destination);
 
     const queries = parents.map((parent) => [
       HasValue(OwnedBy, {

@@ -6,6 +6,9 @@ import "test/PrimodiumTest.t.sol";
 contract TrainUnitsSystemTest is PrimodiumTest {
   bytes32 rock = bytes32("rock");
   bytes32 player;
+  bytes32 aliceEntity;
+  bytes32 aliceRock;
+  bytes32 shipyard;
 
   EUnit unit = EUnit(1);
   bytes32 unitPrototype = "unitPrototype";
@@ -17,16 +20,21 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     super.setUp();
     vm.startPrank(creator);
     player = addressToEntity(creator);
+    aliceEntity = addressToEntity(alice);
     BuildingType.set(building, buildingPrototype);
     IsActive.set(building, true);
     P_EnumToPrototype.set(UnitKey, uint8(unit), unitPrototype);
     P_GameConfigData memory config = P_GameConfig.get();
     config.unitProductionRate = 100;
     P_GameConfig.set(config);
-    RockType.set(rock, uint8(ERock.Asteroid));
-    Home.setAsteroid(player, rock);
+    Asteroid.setIsAsteroid(rock, true);
+    Home.set(player, rock);
     OwnedBy.set(building, rock);
     Spawned.set(player, true);
+
+    switchPrank(alice);
+    aliceRock = world.spawn();
+    switchPrank(creator);
   }
 
   // copied from LibUnit.t.sol
@@ -81,19 +89,73 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     unitPrototypes[0] = unitPrototype;
     P_UnitProdTypes.set(buildingPrototype, 1, unitPrototypes);
 
-    RockType.set(rock, uint8(ERock.Asteroid));
+    Asteroid.setIsAsteroid(rock, true);
 
     setupClaimUnits();
-    Home.setAsteroid(player, rock);
+    Home.set(player, rock);
     OwnedBy.set(rock, player);
     MaxResourceCount.set(rock, Iron, 1000);
     ProductionRate.set(rock, Iron, 10);
     LastClaimedAt.set(rock, block.timestamp - 10);
 
     world.trainUnits(building, unit, 1);
-    LibUnit.claimUnits(Home.getAsteroid(player));
-    assertEq(ResourceCount.get(rock, Iron), 100, "resource count does not match");
-    assertEq(UnitCount.get(player, Home.getAsteroid(player), unitPrototype), 100, "unit count does not match");
+    LibUnit.claimUnits(rock);
+    assertEq(ResourceCount.get(rock, Iron), 100, "resource count");
+    assertEq(UnitCount.get(rock, unitPrototype), 100, "unit count");
+  }
+
+  function testTrainCapitalShip() public {
+    uint256 multiplier = LibUnit.getCapitalShipCostMultiplier(aliceEntity);
+    assertEq(multiplier, 1);
+    uint256 amount = P_CapitalShipConfig.getInitialCost() * multiplier;
+    assertEq(
+      amount,
+      P_CapitalShipConfig.getInitialCost() * LibUnit.getCapitalShipCostMultiplier(aliceEntity),
+      "next colony ship cost"
+    );
+    uint8 resource = P_CapitalShipConfig.getResource();
+    trainUnits(alice, EUnit.CapitalShip, 1, true);
+    assertEq(ResourceCount.get(aliceRock, uint8(resource)), 0, "special resource should have been spent");
+  }
+
+  function testFailTrainCapitalShipNoSpecialResource() public {
+    vm.stopPrank();
+    increaseResource(aliceRock, EResource.U_CapitalShipCapacity, 1);
+    //this func doesn't provide resources
+    trainUnits(alice, Home.get(aliceRock), P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip)), 1, true);
+  }
+
+  function testTrainCapitalShipsCostIncrease() public {
+    uint256 initialShips = LibUnit.getCapitalShipsPlusAsteroids(aliceEntity);
+    uint256 initialMultiplier = LibUnit.getCapitalShipCostMultiplier(aliceEntity);
+    assertEq(initialShips, 0, "initial ship and asteroid count");
+    bytes32[] memory ownedAsteroids = ColoniesMap.getAsteroidIds(aliceEntity, AsteroidOwnedByKey);
+
+    uint256 amount = P_CapitalShipConfig.getInitialCost() * initialMultiplier;
+    uint8 resource = P_CapitalShipConfig.getResource();
+    increaseResource(aliceRock, EResource(resource), amount);
+    increaseResource(aliceRock, EResource.U_CapitalShipCapacity, 1);
+    trainUnits(alice, Home.get(aliceRock), P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip)), 1, true);
+    assertEq(LibUnit.getCapitalShipsPlusAsteroids(aliceEntity), initialShips + 1, "colony ship count");
+    assertEq(LibUnit.getCapitalShipCostMultiplier(aliceEntity), initialMultiplier * 2, "colony ship cost multiplier");
+
+    assertEq(
+      amount * 2,
+      P_CapitalShipConfig.getInitialCost() * LibUnit.getCapitalShipCostMultiplier(aliceEntity),
+      "colony ship 1 cost"
+    );
+
+    increaseResource(aliceRock, EResource(resource), amount * 2);
+    increaseResource(aliceRock, EResource.U_CapitalShipCapacity, 1);
+    trainUnits(alice, Home.get(aliceRock), P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip)), 1, true);
+    assertEq(LibUnit.getCapitalShipsPlusAsteroids(aliceEntity), initialShips + 2, "colony ship 2 count");
+    assertEq(LibUnit.getCapitalShipCostMultiplier(aliceEntity), initialMultiplier * 2 * 2, "colony ship 2 cost");
+
+    assertEq(
+      amount * 4,
+      P_CapitalShipConfig.getInitialCost() * LibUnit.getCapitalShipCostMultiplier(aliceEntity),
+      "next colony ship 2 cost"
+    );
   }
 
   function testInvalidBuilding() public {

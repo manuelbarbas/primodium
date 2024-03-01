@@ -16,9 +16,22 @@ import { Scene } from "engine/types";
 import { world } from "src/network/world";
 import { safeIndex } from "src/util/array";
 
-import { Assets, AudioKeys, DepthLayers, EntityIDtoAnimationKey, EntitytoSpriteKey, SpriteKeys } from "@game/constants";
+import {
+  Assets,
+  AudioKeys,
+  DepthLayers,
+  EntityIDtoAnimationKey,
+  EntityToResourceSpriteKey,
+  EntityToUnitSpriteKey,
+  EntitytoBuildingSpriteKey,
+  SpriteKeys,
+} from "@game/constants";
+import { createAudioApi } from "src/game/api/audio";
+import { createFxApi } from "src/game/api/fx";
 import { components } from "src/network/components";
 import { getBuildingDimensions, getBuildingTopLeft } from "src/util/building";
+import { getRandomRange } from "src/util/common";
+import { Action, EntityType, ResourceEntityLookup, ResourceStorages, SPEED_SCALE } from "src/util/constants";
 import {
   ObjectPosition,
   OnComponentSystem,
@@ -27,21 +40,26 @@ import {
   SetValue,
 } from "../../common/object-components/common";
 import { Animation, Outline, Texture } from "../../common/object-components/sprite";
-import { createAudioApi } from "src/game/api/audio";
-import { getRandomRange } from "src/util/common";
-import { Action } from "src/util/constants";
+import { Hex } from "viem";
+import { formatResourceCount } from "src/util/number";
+import { EResource } from "contracts/config/enums";
+import { getFullResourceCount } from "src/util/resource";
 
 const MAX_SIZE = 2 ** 15 - 1;
 export const renderBuilding = (scene: Scene) => {
   const { tileHeight, tileWidth } = scene.tilemap;
-  const gameWorld = namespaceWorld(world, "game");
-  const _gameWorld = namespaceWorld(world, "game_specate");
+  const systemsWorld = namespaceWorld(world, "systems");
+  const spectateWorld = namespaceWorld(world, "game_spectate");
   const audio = createAudioApi(scene);
+  const fx = createFxApi(scene);
+  const worldSpeed = components.P_GameConfig.get()?.worldSpeed ?? SPEED_SCALE;
 
-  defineComponentSystem(gameWorld, components.ActiveRock, ({ value }) => {
+  defineComponentSystem(systemsWorld, components.ActiveRock, ({ value }) => {
     if (!value[0] || value[0]?.value === value[1]?.value) return;
 
-    world.dispose("game_specate");
+    const activeRock = value[0]?.value as Entity;
+
+    world.dispose("game_spectate");
 
     const positionQuery = [
       HasValue(components.Position, {
@@ -49,6 +67,7 @@ export const renderBuilding = (scene: Scene) => {
       }),
       Has(components.BuildingType),
       Has(components.IsActive),
+      Has(components.Level),
     ];
 
     const oldPositionQuery = [
@@ -57,6 +76,7 @@ export const renderBuilding = (scene: Scene) => {
       }),
       Has(components.BuildingType),
       Has(components.IsActive),
+      Has(components.Level),
     ];
 
     for (const entity of runQuery(oldPositionQuery)) {
@@ -99,6 +119,7 @@ export const renderBuilding = (scene: Scene) => {
         SetValue({
           originY: 1,
         }),
+
         OnUpdateSystem([...positionQuery, Has(components.Level)], () => {
           const isActive = components.IsActive.get(entity)?.value;
           const updatedAssetPair = getAssetKeyPair(entity, buildingType);
@@ -110,7 +131,7 @@ export const renderBuilding = (scene: Scene) => {
         }),
         SetValue({ tint: active ? 0xffffff : 0x777777 }),
         assetPair.animation ? Animation(assetPair.animation, !active) : undefined,
-        OnComponentSystem(components.IsActive, (object, { entity: _entity }) => {
+        OnComponentSystem(components.IsActive, (_, { entity: _entity }) => {
           if (entity !== _entity) return;
           const updatedAssetPair = getAssetKeyPair(entity, buildingType);
           const isActive = components.IsActive.get(entity)?.value;
@@ -142,6 +163,125 @@ export const renderBuilding = (scene: Scene) => {
             components.HoverEntity.remove();
           },
           true
+        ),
+        OnComponentSystem(
+          components.Time,
+          (_, { value }) => {
+            const hoverEntity = components.HoverEntity.get()?.value;
+            const selectedBuilding = components.SelectedBuilding.get()?.value;
+            const selectedBuildingType = components.BuildingType.get(entity)?.value;
+
+            if (selectedBuildingType === EntityType.MainBase) return;
+
+            if (hoverEntity !== entity && selectedBuilding !== entity) return;
+
+            const frequency = 1n;
+            if ((value[0]?.value ?? 0n) % frequency !== 0n) return;
+
+            if (components.BuildRock.get()?.value !== activeRock || !components.IsActive.get(entity)?.value) return;
+
+            const textCoord = {
+              x: tilePosition.x + buildingDimensions.width / 2,
+              y: tilePosition.y,
+            };
+
+            const producedResource = components.P_Production.getWithKeys({
+              level: components.Level.get(entity)?.value ?? 1n,
+              prototype: buildingType as Hex,
+            });
+
+            producedResource?.resources.forEach((resource, i) => {
+              const resourceEntity = ResourceEntityLookup[resource as EResource];
+              const amount = producedResource.amounts[i];
+
+              if (!ResourceStorages.has(resourceEntity)) return;
+
+              const { production, resourceStorage, resourceCount } = getFullResourceCount(resourceEntity, activeRock);
+
+              const productionScaled = (amount * worldSpeed) / SPEED_SCALE;
+              let text = "";
+              let color = 0xffffff;
+              if (resourceCount >= resourceStorage) {
+                text = "full";
+                color = 0x00ffff;
+              } else if (production <= 0) return;
+              else {
+                text = formatResourceCount(resourceEntity, productionScaled * frequency, {
+                  short: true,
+                  fractionDigits: 2,
+                });
+              }
+
+              fx.emitFloatingText(text, textCoord, {
+                icon: EntityToResourceSpriteKey[resourceEntity],
+                color,
+              });
+            });
+
+            const consumedResource = components.P_RequiredDependency.getWithKeys({
+              level: components.Level.get(entity)?.value ?? 1n,
+              prototype: buildingType as Hex,
+            });
+
+            if (!consumedResource) return;
+
+            //render consumed resources
+            const consumedResourceEntity = ResourceEntityLookup[consumedResource.resource as EResource];
+            const consumedResourceAmount = consumedResource.amount;
+
+            const { resourceCount, production: consumption } = getFullResourceCount(consumedResourceEntity, activeRock);
+
+            if (Math.abs(Number(consumption)) > resourceCount) {
+              fx.emitFloatingText("empty", textCoord, {
+                icon: EntityToResourceSpriteKey[consumedResourceEntity],
+                color: 0xff6e63,
+                delay: 500,
+              });
+
+              return;
+            }
+
+            const consumptionScaled = (consumedResourceAmount * worldSpeed) / SPEED_SCALE;
+
+            const text = formatResourceCount(consumedResourceEntity, consumptionScaled * frequency, {
+              short: true,
+              fractionDigits: 2,
+            });
+
+            fx.emitFloatingText(text, textCoord, {
+              icon: EntityToResourceSpriteKey[consumedResourceEntity],
+              color: 0xff6e63,
+              delay: 500,
+            });
+          },
+          { runOnInit: false }
+        ),
+        OnComponentSystem(
+          components.TrainingQueue,
+          (_, { entity: trainingBuildingEntity, value }) => {
+            if (entity !== trainingBuildingEntity || !value[0]) return;
+
+            const queue = value[0];
+
+            if (queue.units.length === 0 || queue.timeRemaining[0] !== 1n) return;
+
+            //its the last tick for the queue, so show floating text of unit produced
+
+            //
+            const unit = queue.units[0];
+            const textCoord = {
+              x: tilePosition.x + buildingDimensions.width / 2 - 0.5,
+              y: tilePosition.y + buildingDimensions.height / 2,
+            };
+
+            fx.emitFloatingText("+", textCoord, {
+              icon: EntityToUnitSpriteKey[unit],
+              color: 0x00ffff,
+              delay: 1000,
+              prefixText: true,
+            });
+          },
+          { runOnInit: false }
         ),
         ...sharedComponents,
       ]);
@@ -213,24 +353,25 @@ export const renderBuilding = (scene: Scene) => {
       );
     };
 
-    defineEnterSystem(_gameWorld, positionQuery, render);
+    defineEnterSystem(spectateWorld, positionQuery, render);
     //dust particle animation on new building
-    defineEnterSystem(_gameWorld, positionQuery, throwDust, { runOnInit: false });
+    defineEnterSystem(spectateWorld, positionQuery, throwDust);
 
-    defineUpdateSystem(_gameWorld, positionQuery, (update) => {
+    defineUpdateSystem(spectateWorld, positionQuery, (update) => {
       render(update);
       throwDust(update);
     });
 
-    defineExitSystem(_gameWorld, positionQuery, ({ entity }) => {
+    defineExitSystem(spectateWorld, positionQuery, ({ entity }) => {
       const renderId = `${entity}_entitySprite`;
+
       scene.objectPool.removeGroup(renderId);
     });
   });
 };
 
 function getAssetKeyPair(entityId: Entity, buildingType: Entity) {
-  const sprites = EntitytoSpriteKey[buildingType];
+  const sprites = EntitytoBuildingSpriteKey[buildingType];
   const animations = EntityIDtoAnimationKey[buildingType];
 
   const level = components.Level.get(entityId)?.value ? parseInt(components.Level.get(entityId)!.value.toString()) : 1;

@@ -1,34 +1,33 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, Motherlode, ProductionRate, P_UnitProdTypes, P_MiningRate, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, RockType, P_EnumToPrototype } from "codegen/index.sol";
+import { Position, P_UnitPrototypes, IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, ProductionRate, P_UnitProdTypes, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, P_EnumToPrototype } from "codegen/index.sol";
 
-import { ERock, EUnit } from "src/Types.sol";
+import { EUnit, EResource } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
+import { LibProduction } from "libraries/LibProduction.sol";
+import { ColoniesMap } from "libraries/ColoniesMap.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
-import { UnitKey } from "src/Keys.sol";
+import { UnitKey, AsteroidOwnedByKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibUnit {
   function getUnitCountOnHomeAsteroid(bytes32 playerEntity, bytes32 unitType) internal view returns (uint256) {
-    return UnitCount.get(playerEntity, Home.getAsteroid(playerEntity), unitType);
+    return UnitCount.get(Home.get(playerEntity), unitType);
   }
 
   /**
    * @dev Checks the requirements for training (producing) a specific unit in a building.
    * @param buildingEntity The identifier of the building where the unit is being trained.
-   * @param unit The type of unit to be trained.
+   * @param unitPrototype The type of unit to be trained.
    * @notice Checks if the unit exists and if the building can produce the specified unit.
    */
-  function checkTrainUnitsRequirements(bytes32 buildingEntity, EUnit unit) internal view {
+  function checkTrainUnitsRequirements(bytes32 buildingEntity, bytes32 unitPrototype) internal view {
     require(IsActive.get(buildingEntity), "[TrainUnitsSystem] Can not train units using an in active building");
 
-    // Ensure the unit is valid (within the defined range of unit types).
-    require(unit > EUnit.NULL && unit < EUnit.LENGTH, "[TrainUnitsSystem] Unit does not exist");
-
     // Determine the prototype of the unit based on its unit key.
-    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
     bytes32 buildingType = BuildingType.get(buildingEntity);
 
     uint256 level = Level.get(buildingEntity);
@@ -41,11 +40,7 @@ library LibUnit {
   /// @param level Level of the building
   /// @param unitPrototype Unit prototype to check
   /// @return True if unit can be produced, false otherwise
-  function canProduceUnit(
-    bytes32 buildingEntity,
-    uint256 level,
-    bytes32 unitPrototype
-  ) internal view returns (bool) {
+  function canProduceUnit(bytes32 buildingEntity, uint256 level, bytes32 unitPrototype) internal view returns (bool) {
     if (P_UnitProdTypes.length(buildingEntity, level) == 0) return false;
     bytes32[] memory unitTypes = P_UnitProdTypes.get(buildingEntity, level);
     for (uint256 i = 0; i < unitTypes.length; i++) {
@@ -75,7 +70,7 @@ library LibUnit {
     bool stillClaiming = !UnitProductionQueue.isEmpty(building);
     while (stillClaiming) {
       UnitProductionQueueData memory item = UnitProductionQueue.peek(building);
-      uint256 trainingTime = getUnitBuildTime(playerEntity, building, item.unitId);
+      uint256 trainingTime = getUnitBuildTime(building, item.unitId);
       uint256 trainedUnits = item.quantity;
       if (trainingTime > 0) trainedUnits = LibMath.min(item.quantity, ((block.timestamp - startTime) / (trainingTime)));
 
@@ -95,24 +90,20 @@ library LibUnit {
         stillClaiming = false;
       }
       ProducedUnit.set(playerEntity, item.unitId, ProducedUnit.get(playerEntity, item.unitId) + trainedUnits);
-      increaseUnitCount(playerEntity, Home.getAsteroid(playerEntity), item.unitId, trainedUnits);
+
+      increaseUnitCount(Home.get(playerEntity), item.unitId, trainedUnits, false);
     }
   }
 
   /// @notice Get the build time for a unit
-  /// @param playerEntity Entity ID of the player
   /// @param building Entity ID of the building
   /// @param unitPrototype Unit prototype to check
   /// @return Time in seconds
-  function getUnitBuildTime(
-    bytes32 playerEntity,
-    bytes32 building,
-    bytes32 unitPrototype
-  ) internal view returns (uint256) {
+  function getUnitBuildTime(bytes32 building, bytes32 unitPrototype) internal view returns (uint256) {
     uint256 buildingLevel = Level.get(building);
     bytes32 buildingType = BuildingType.get(building);
     uint256 multiplier = P_UnitProdMultiplier.get(buildingType, buildingLevel);
-    uint256 unitLevel = UnitLevel.get(playerEntity, unitPrototype);
+    uint256 unitLevel = UnitLevel.get(Position.getParent(building), unitPrototype);
     uint256 rawTrainingTime = P_Unit.getTrainingTime(unitPrototype, unitLevel);
     require(multiplier > 0, "Building has no unit production multiplier");
     P_GameConfigData memory config = P_GameConfig.get();
@@ -127,21 +118,17 @@ library LibUnit {
    * @param count The number of units being added or removed.
    * @param add A boolean indicating whether units are being added (true) or removed (false).
    */
-  function updateStoredUtilities(
-    bytes32 spaceRockEntity,
-    bytes32 unitType,
-    uint256 count,
-    bool add
-  ) internal {
+  function updateStoredUtilities(bytes32 spaceRockEntity, bytes32 unitType, uint256 count, bool add) internal {
     if (count == 0) return;
     bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
-    uint256 unitLevel = UnitLevel.get(playerEntity, unitType);
+    uint256 unitLevel = UnitLevel.get(spaceRockEntity, unitType);
 
     P_RequiredResourcesData memory resources = P_RequiredResources.get(unitType, unitLevel);
     for (uint8 i = 0; i < resources.resources.length; i++) {
       uint8 resource = resources.resources[i];
       if (!P_IsUtility.get(resource)) continue;
       uint256 requiredAmount = resources.amounts[i] * count;
+      if (requiredAmount == 0) continue;
       uint256 currentAmount = ResourceCount.get(spaceRockEntity, resource);
 
       if (add) {
@@ -157,62 +144,48 @@ library LibUnit {
     }
   }
 
+  function getCapitalShipCostMultiplier(bytes32 playerEntity) internal view returns (uint256) {
+    uint256 multiplier = getCapitalShipsPlusAsteroids(playerEntity);
+    return 2 ** multiplier;
+  }
+
+  function getCapitalShipsPlusAsteroids(bytes32 playerEntity) internal view returns (uint256) {
+    bytes32[] memory ownedAsteroids = ColoniesMap.getAsteroidIds(playerEntity, AsteroidOwnedByKey);
+    uint256 ret = 0;
+    for (uint256 i = 0; i < ownedAsteroids.length; i++) {
+      uint256 ships = MaxResourceCount.get(ownedAsteroids[i], uint8(EResource.U_CapitalShipCapacity)) -
+        ResourceCount.get(ownedAsteroids[i], uint8(EResource.U_CapitalShipCapacity));
+
+      ret += ships;
+    }
+    // subtract one so the first asteroid doesn't count
+    return ret + ownedAsteroids.length - 1;
+  }
+
   /**
    * @dev Increases the count of a specific unit type for a player's rock entity.
-   * @param playerEntity The identifier of the player.
    * @param rockEntity The identifier of the player's rock entity.
    * @param unitType The type of unit to increase.
    * @param unitCount The number of units to increase.
    */
-  function increaseUnitCount(
-    bytes32 playerEntity,
-    bytes32 rockEntity,
-    bytes32 unitType,
-    uint256 unitCount
-  ) internal {
+  function increaseUnitCount(bytes32 rockEntity, bytes32 unitType, uint256 unitCount, bool updatesUtility) internal {
     if (unitCount == 0) return;
-    uint256 prevUnitCount = UnitCount.get(playerEntity, rockEntity, unitType);
-    UnitCount.set(playerEntity, rockEntity, unitType, prevUnitCount + unitCount);
-
-    // update production rate
-    if (RockType.get(rockEntity) != uint8(ERock.Motherlode)) return;
-    uint256 level = UnitLevel.get(playerEntity, unitType);
-    uint256 productionRate = P_MiningRate.get(unitType, level);
-    if (productionRate == 0) return;
-    uint8 resource = (Motherlode.getMotherlodeType(rockEntity));
-    uint256 prevProductionRate = ProductionRate.get(rockEntity, resource);
-    ProductionRate.set(rockEntity, resource, prevProductionRate + (productionRate * unitCount));
-    ConsumptionRate.set(rockEntity, P_RawResource.get(resource), prevProductionRate + (productionRate * unitCount));
+    uint256 prevUnitCount = UnitCount.get(rockEntity, unitType);
+    UnitCount.set(rockEntity, unitType, prevUnitCount + unitCount);
+    if (updatesUtility) updateStoredUtilities(rockEntity, unitType, unitCount, true);
   }
 
   /**
    * @dev Decreases the count of a specific unit type for a player's rock entity.
-   * @param playerEntity The identifier of the player.
    * @param rockEntity The identifier of the player's rock entity.
    * @param unitType The type of unit to decrease.
    * @param unitCount The number of units to decrease.
    */
-  function decreaseUnitCount(
-    bytes32 playerEntity,
-    bytes32 rockEntity,
-    bytes32 unitType,
-    uint256 unitCount
-  ) internal {
+  function decreaseUnitCount(bytes32 rockEntity, bytes32 unitType, uint256 unitCount, bool updatesUtility) internal {
     if (unitCount == 0) return;
-
-    uint256 currUnitCount = UnitCount.get(playerEntity, rockEntity, unitType);
-    if (unitCount > currUnitCount) unitCount = currUnitCount;
-    UnitCount.set(playerEntity, rockEntity, unitType, currUnitCount - unitCount);
-
-    // update production rate
-    if (RockType.get(rockEntity) != uint8(ERock.Motherlode)) return;
-    uint256 level = UnitLevel.get(playerEntity, unitType);
-    uint256 productionRate = P_MiningRate.get(unitType, level);
-    if (productionRate == 0) return;
-    uint8 resource = (Motherlode.getMotherlodeType(rockEntity));
-    uint256 prevProductionRate = ProductionRate.get(rockEntity, resource);
-    require(prevProductionRate >= productionRate * unitCount, "[LibUnit] Production rate cannot be negative");
-    ProductionRate.set(rockEntity, resource, prevProductionRate - (productionRate * unitCount));
-    ConsumptionRate.set(rockEntity, P_RawResource.get(resource), prevProductionRate - (productionRate * unitCount));
+    uint256 currUnitCount = UnitCount.get(rockEntity, unitType);
+    require(currUnitCount >= unitCount, "[LibUnit] Not enough units to decrease");
+    UnitCount.set(rockEntity, unitType, currUnitCount - unitCount);
+    if (updatesUtility) updateStoredUtilities(rockEntity, unitType, unitCount, false);
   }
 }

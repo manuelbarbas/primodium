@@ -1,4 +1,4 @@
-# Primodium v0.9.0 with Contract Hotfixes
+# Primodium v0.10.0
 
 ## Installation
 
@@ -39,7 +39,10 @@ Or you can run each process individually:
 pnpm dev:node
 pnpm dev:contracts
 pnpm dev:client
+pnpm dev:indexer
 ```
+
+> NOTE: If you are running the indexer locally, docker network and volumes properly clear only on rerun of `pnpm dev:indexer`. If you would like to manually free these resources run `pnpm clean:indexer`.
 
 # Testing and Deployment
 
@@ -64,6 +67,28 @@ The client is automatically deployed on Vercel from the main branch. The live in
 
 To clean types/ and abis/ in the git diff, run `pnpm clean` in the top level directory.
 
+## Vercel Environment Variables
+
+The chat functionality in the client is built on [Vercel Serverless functions](https://vercel.com/docs/functions/serverless-functions) and therefore requires Vercel environment variables to test. If you encounter any errors with the above steps while running the client, you may use the Vercel CLI to run the clien instead as follows:
+
+1. In the top level directory, run `vercel pull` and setup the Vercel project with the following settings. Ask Emerson if you don't have access to Vercel.
+   - Org: `primodium`
+   - Project: `primodium-testnet2`
+2. Check that the `.vercel` exists in the top level directory.
+3. Run `pnpm dev:vercel` to start the client.
+
+## Account Authorization
+
+Authorizing an account to act on behalf of another account requires ETH in the player's main account. To test this feature locally with the Anvil development chain, do the following:
+
+1. Transfer ~0.1 ETH to the authorized account from the development chain faucet.
+   - For simplicity, you can add the Anvil private key to your Metamask wallet and transfer the wallet balance there on the local RPC network. See the Metamask docs for more information.
+2. Add the Anvil private key to the `PRI_DEV_PKEY` environment variable in the root directory.
+   - Note that this is necessary for testing faucet drip for the external wallet in development because there is no faucet deployed locally for the local anvil chain.
+3. Set `noExternalWallet` to false in `client/src/network/config/getNetworkConfig.ts`
+
+See [here](https://github.com/primodiumxyz/primodium/pull/873) for more information on account authorization.
+
 # Config
 
 ## There are four sources of configuration for the game:
@@ -77,7 +102,6 @@ To clean types/ and abis/ in the git diff, run `pnpm clean` in the top level dir
   62: "Lithium"
   64: "Water"
   58: "Copper"
-  66: "Sulfur"
 ```
 
 4. `prototypesConfig.ts`: Houses preset entity configurations. A prototype object has the following fields:

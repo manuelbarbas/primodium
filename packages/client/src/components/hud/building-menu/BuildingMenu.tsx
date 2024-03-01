@@ -1,57 +1,32 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
+import { FaArrowsAlt, FaPowerOff, FaTrash } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { components } from "src/network/components";
+import { toggleBuilding } from "src/network/setup/contractCalls/toggleBuilding";
 import { Action, EntityType, TransactionQueueType } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
 import { Basic } from "./screens/Basic";
-import { BuildingInfo } from "./screens/BuildingInfo";
-import { Demolish } from "./screens/Demolish";
-// import { UnitFactory } from "./screens/UnitFactory";
 import { BuildQueue } from "./screens/BuildQueue";
 import { BuildUnit } from "./screens/BuildUnit";
+import { BuildingInfo } from "./screens/BuildingInfo";
+import { Demolish } from "./screens/Demolish";
 import { MainBase } from "./screens/Mainbase";
-// import { UpgradeUnit } from "./screens/UpgradeUnit";
-import { FaArrowsAlt, FaPowerOff, FaTrash } from "react-icons/fa";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { useMud } from "src/hooks";
-import { useBuildingName } from "src/hooks/useBuildingName";
-import { components } from "src/network/components";
-import { hashEntities } from "src/util/encode";
-import { toggleBuilding } from "src/util/web3/contractCalls/toggleBuilding";
-import { MiningVessels } from "./screens/MiningVessels";
+import { Market } from "./screens/Market";
 import { Move } from "./screens/Move";
 import { UnitFactory } from "./screens/UnitFactory";
-import { UpgradeUnit } from "./screens/UpgradeUnit";
-import { Market } from "./screens/Market";
+import { Entity } from "@latticexyz/recs";
+import { SecondaryCard } from "src/components/core/Card";
+import { useMud } from "src/hooks";
 
-export const BuildingMenu: React.FC = () => {
-  const network = useMud().network;
-  const selectedBuilding = components.SelectedBuilding.use()?.value;
-
+export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedBuilding }) => {
   const buildingType = useMemo(() => {
-    if (!selectedBuilding) return;
-
     return components.BuildingType.get(selectedBuilding)?.value;
   }, [selectedBuilding]);
 
-  const buildingName = useBuildingName(selectedBuilding);
   const active = components.IsActive.use(selectedBuilding)?.value;
   const canToggle = !components.TrainingQueue.use(selectedBuilding)?.units.length;
-
-  useEffect(() => {
-    const removeSelectedBuildingOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        components.SelectedBuilding.remove();
-      }
-    };
-
-    document.addEventListener("keydown", removeSelectedBuildingOnEscape);
-
-    return () => {
-      document.removeEventListener("keydown", removeSelectedBuildingOnEscape);
-    };
-  }, []);
-
-  if (!buildingName || !selectedBuilding) return null;
 
   const handleClose = () => {
     components.SelectedBuilding.remove();
@@ -63,8 +38,8 @@ export const BuildingMenu: React.FC = () => {
       case EntityType.MainBase:
         return <MainBase building={selectedBuilding} />;
       case EntityType.DroneFactory:
-        return <UnitFactory building={selectedBuilding} />;
       case EntityType.Workshop:
+      case EntityType.Shipyard:
         return <UnitFactory building={selectedBuilding} />;
       case EntityType.Market:
         return <Market building={selectedBuilding} />;
@@ -73,9 +48,10 @@ export const BuildingMenu: React.FC = () => {
     }
   };
   const TopBar = () => {
-    if (buildingType == EntityType.MainBase) return null;
+    const mud = useMud();
+
     return (
-      <div className="absolute -top-2 right-0 -translate-y-full flex flex-row-reverse gap-1 p-1 border bg-neutral border border-1 border-secondary border-b-base-100">
+      <div className="absolute -top-2 right-0 -translate-y-full flex flex-row-reverse gap-1 p-1 bg-neutral border border-1 border-secondary border-b-base-100">
         <Button
           tooltip="Close"
           tooltipDirection="top"
@@ -85,59 +61,61 @@ export const BuildingMenu: React.FC = () => {
           x
         </Button>
 
-        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Move, selectedBuilding)}>
-          <Navigator.NavButton
-            tooltip="Move"
-            tooltipDirection="top"
-            className=" btn-square btn-xs font-bold border border-secondary inline-flex"
-            to="Move"
-            onClick={() => components.SelectedAction.set({ value: Action.MoveBuilding })}
-          >
-            <FaArrowsAlt size={12} />
-          </Navigator.NavButton>
-        </TransactionQueueMask>
-
-        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Demolish, selectedBuilding)}>
-          <Navigator.NavButton
-            tooltip="Demolish"
-            tooltipDirection="top"
-            className="btn-square btn-xs font-bold border border-error inline-flex"
-            to="Demolish"
-          >
-            <FaTrash size={12} />
-          </Navigator.NavButton>
-        </TransactionQueueMask>
-
-        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Toggle, selectedBuilding)}>
-          <Button
-            tooltip={active ? "Deactivate" : "Activate"}
-            disabled={!canToggle}
-            tooltipDirection="top"
-            className={`btn-square btn-xs font-bold border ${active ? "border-error" : "border-success"} inline-flex`}
-            onClick={() => {
-              toggleBuilding(selectedBuilding, network);
-            }}
-          >
-            <FaPowerOff size={12} />
-          </Button>
-        </TransactionQueueMask>
+        {buildingType !== EntityType.MainBase && (
+          <>
+            <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Move, selectedBuilding)}>
+              <Navigator.NavButton
+                tooltip="Move"
+                tooltipDirection="top"
+                className=" btn-square btn-xs font-bold border border-secondary inline-flex"
+                to="Move"
+                onClick={() => components.SelectedAction.set({ value: Action.MoveBuilding })}
+              >
+                <FaArrowsAlt size={12} />
+              </Navigator.NavButton>
+            </TransactionQueueMask>
+            <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Demolish, selectedBuilding)}>
+              <Navigator.NavButton
+                tooltip="Demolish"
+                tooltipDirection="top"
+                className="btn-square btn-xs font-bold border border-error inline-flex"
+                to="Demolish"
+              >
+                <FaTrash size={12} />
+              </Navigator.NavButton>
+            </TransactionQueueMask>
+            <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Toggle, selectedBuilding)}>
+              <Button
+                tooltip={active ? "Deactivate" : "Activate"}
+                disabled={!canToggle}
+                tooltipDirection="top"
+                className={`btn-square btn-xs font-bold border ${
+                  active ? "border-error" : "border-success"
+                } inline-flex`}
+                onClick={() => toggleBuilding(mud, selectedBuilding)}
+              >
+                <FaPowerOff size={12} />
+              </Button>
+            </TransactionQueueMask>
+          </>
+        )}
       </div>
     );
   };
   return (
-    <Navigator initialScreen={selectedBuilding} className="w-96 border-none p-0 relative overflow-visible">
-      <TopBar />
+    <SecondaryCard>
+      <Navigator initialScreen={selectedBuilding} className="w-80 border-none p-0 relative overflow-visible">
+        <TopBar />
 
-      {/* Sub Screens */}
-      {/* Initial Screen */}
-      <RenderScreen />
-      <Demolish building={selectedBuilding} />
-      <Move building={selectedBuilding} />
-      <BuildingInfo building={selectedBuilding} />
-      <BuildQueue building={selectedBuilding} />
-      <BuildUnit building={selectedBuilding} />
-      <UpgradeUnit building={selectedBuilding} />
-      <MiningVessels building={selectedBuilding} />
-    </Navigator>
+        {/* Initial Screen */}
+        <RenderScreen />
+        {/* Sub Screens */}
+        <Demolish building={selectedBuilding} />
+        <Move building={selectedBuilding} />
+        <BuildingInfo building={selectedBuilding} />
+        <BuildQueue building={selectedBuilding} />
+        <BuildUnit building={selectedBuilding} />
+      </Navigator>
+    </SecondaryCard>
   );
 };

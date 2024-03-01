@@ -3,3 +3,4 @@ build
 coverage
 node_modules
 packages/contracts/types/ethers-contracts
+packages/contracts/config/ores.tsx

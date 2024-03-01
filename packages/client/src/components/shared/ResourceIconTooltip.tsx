@@ -1,11 +1,11 @@
 import { Entity } from "@latticexyz/recs";
 import { useHasEnoughOfResource } from "src/hooks/useHasEnoughOfResource";
-import { formatNumber } from "src/util/common";
 import { ResourceType } from "src/util/constants";
+import { formatNumber } from "src/util/number";
 import { getScale } from "src/util/resource";
 import { IconLabel } from "../core/IconLabel";
 
-type ResourceIconProps = {
+type ResourceIconProps<V extends boolean | undefined> = {
   image: string;
   resource: Entity;
   resourceType?: ResourceType;
@@ -15,11 +15,10 @@ type ResourceIconProps = {
   fontSize?: string;
   direction?: "top" | "bottom" | "right" | "left";
   className?: string;
-  spaceRock?: Entity;
-  validate?: boolean;
+  validate?: V;
   short?: boolean;
   fractionDigits?: number;
-};
+} & (V extends true ? { spaceRock: Entity } : { spaceRock?: never });
 
 const suffixes = {
   [ResourceType.Utility]: "",
@@ -28,7 +27,7 @@ const suffixes = {
   [ResourceType.Multiplier]: "x",
 };
 
-const ResourceIconTooltipContent = ({
+const ResourceIconTooltipContent = <V extends boolean>({
   resourceType,
   amount,
   image,
@@ -40,7 +39,7 @@ const ResourceIconTooltipContent = ({
   short = false,
   fractionDigits = 0,
   resource,
-}: ResourceIconProps & { hasEnough: boolean }) => {
+}: ResourceIconProps<V> & { hasEnough: boolean }) => {
   let value = Number(amount);
   if (resourceType == ResourceType.Multiplier) value = (value + 100) / 100;
   else {
@@ -64,15 +63,16 @@ const ResourceIconTooltipContent = ({
   );
 };
 
-const ResourceIconTooltipValidate = (props: ResourceIconProps) => {
+const ResourceIconTooltipValidate = (props: ResourceIconProps<true>) => {
   const hasEnough = useHasEnoughOfResource(props.resource, props.amount, props.spaceRock, props.resourceType);
   return <ResourceIconTooltipContent {...props} hasEnough={hasEnough} />;
 };
 
-export const ResourceIconTooltip = (props: ResourceIconProps) => {
-  if (props.validate) {
-    return <ResourceIconTooltipValidate {...props} />;
+export const ResourceIconTooltip = <V extends boolean | undefined>(props: ResourceIconProps<V>) => {
+  if (props.validate === true) {
+    const trueProps = props as ResourceIconProps<true>;
+    return <ResourceIconTooltipValidate {...trueProps} />;
   } else {
-    return <ResourceIconTooltipContent {...props} hasEnough={true} />;
+    return <ResourceIconTooltipContent {...props} hasEnough />;
   }
 };

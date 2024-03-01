@@ -18,6 +18,11 @@ export function getPositionByVector(distance: number, direction: number, origin:
   };
 }
 
+export function getAngleBetweenPoints(p1: Coord, p2: Coord) {
+  const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+  return (angle * 180) / Math.PI;
+}
+
 const TENe18 = BigInt("1000000000000000000");
 const TENe13 = BigInt("10000000000000");
 const ZERO = BigInt(0);
@@ -74,7 +79,7 @@ export function solSin(angle: bigint): bigint {
   return (sine * TENe18) / BigInt(2147483647);
 }
 
-function solCos(_angle: bigint) {
+export function solCos(_angle: bigint) {
   return solSin(_angle + PI_OVER_TWO);
 }
 const sin_table = [

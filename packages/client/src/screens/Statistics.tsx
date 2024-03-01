@@ -1,5 +1,5 @@
+import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { components } from "src/network/components";
-import { LinkedAddressDisplay } from "src/components/hud/LinkedAddressDisplay";
 import { entityToAddress, isPlayer } from "src/util/common";
 
 export const Statistics = () => {
@@ -16,7 +16,8 @@ export const Statistics = () => {
           return (
             <p key={index}>
               {`${score},${entityToAddress(player)},`}
-              <LinkedAddressDisplay entity={player} fullAddress={true} />
+
+              <AccountDisplay player={player} />
             </p>
           );
         } else {

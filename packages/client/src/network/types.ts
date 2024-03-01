@@ -1,13 +1,26 @@
 import { KeySchema } from "@latticexyz/protocol-parser";
 import { Component, Schema } from "@latticexyz/recs";
+import useSetupResult from "src/hooks/useSetupResult";
 import { createComponents } from "./components";
 import { getNetworkConfig } from "./config/getNetworkConfig";
-import { setup } from "./setup";
-import { setupNetwork } from "./setupNetwork";
+import { createBurnerAccount } from "./setup/createBurnerAccount";
+import { createExternalAccount } from "./setup/createExternalAccount";
+import { createNetwork } from "./setup/createNetwork";
+import { setup } from "./setup/setup";
 
 export type NetworkConfig = ReturnType<typeof getNetworkConfig>;
+export type CreateNetworkResult = Awaited<ReturnType<typeof createNetwork>>;
+export type SetupResult = Awaited<ReturnType<typeof setup>>;
 
-export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>;
+export type BurnerAccount = Awaited<ReturnType<typeof createBurnerAccount>>;
+export type ExternalAccount = Awaited<ReturnType<typeof createExternalAccount>>;
+export type AnyAccount = BurnerAccount | ExternalAccount;
+
+export type PartialMUD = ReturnType<typeof useSetupResult>;
+export type MUD = PartialMUD &
+  SetupResult & {
+    playerAccount: AnyAccount;
+  };
 
 export type Components = ReturnType<typeof createComponents>;
 
@@ -20,5 +33,3 @@ export type ContractComponent<S extends Schema = Schema, TKeySchema extends KeyS
     valueSchema: Record<string, string>;
   }
 >;
-
-export type SetupResult = Awaited<ReturnType<typeof setup>>;

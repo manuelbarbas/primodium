@@ -5,10 +5,11 @@ import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 import { ResourceAccess, NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 import { ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
-import { WORLD_SPEED_SCALE, NUM_UNITS, UNIT_SPEED_SCALE } from "src/constants.sol";
+import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 
 import "src/utils.sol";
+import { RESERVE_CURRENCY, RESERVE_CURRENCY_RESOURCE } from "src/constants.sol";
 import "codegen/world/IWorld.sol";
 import "codegen/index.sol";
 import "src/Types.sol";
@@ -29,6 +30,7 @@ function toString(bytes32 entity) pure returns (string memory) {
 contract PrimodiumTest is MudTest {
   IWorld public world;
   uint256 userNonce = 0;
+  uint256 MAX_INT = 2 ** 256 - 1;
 
   address creator;
   address payable alice;
@@ -38,11 +40,10 @@ contract PrimodiumTest is MudTest {
   uint8 Iron = uint8(EResource.Iron);
   uint8 Copper = uint8(EResource.Copper);
   uint8 Platinum = uint8(EResource.Platinum);
-  uint8 U_MaxMoves = uint8(EResource.U_MaxMoves);
+  uint8 U_MaxFleets = uint8(EResource.U_MaxFleets);
   uint8 Kimberlite = uint8(EResource.Kimberlite);
   uint8 Lithium = uint8(EResource.Lithium);
   uint8 Titanium = uint8(EResource.Titanium);
-  uint8 R_Titanium = uint8(EResource.R_Titanium);
 
   function setUp() public virtual override {
     super.setUp();
@@ -50,10 +51,6 @@ contract PrimodiumTest is MudTest {
     creator = world.creator();
 
     uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
-    address admin = vm.addr(deployerPrivateKey);
-    IERC20Mintable wETH = IERC20Mintable(P_GameConfig2.getWETHAddress());
-    vm.prank(admin);
-    wETH.mint(creator, 100 ether);
 
     vm.startPrank(creator);
     ResourceAccess.set(ROOT_NAMESPACE_ID, creator, true);
@@ -88,32 +85,8 @@ contract PrimodiumTest is MudTest {
     assertEq(coordA.parent, coordB.parent, "[assertEq]: parent doesn't match");
   }
 
-  function assertEq(ERock a, ERock b) internal {
-    assertEq(uint256(a), uint256(b));
-  }
-
   function assertEq(EResource a, EResource b) internal {
     assertEq(uint256(a), uint256(b));
-  }
-
-  function assertEq(Arrival memory a, Arrival memory b) internal {
-    assertEq(uint8(a.sendType), uint8(b.sendType), "[assertEq]: sendType doesn't match");
-    assertEq(a.arrivalTime, b.arrivalTime, "[assertEq]: arrivalTime doesn't match");
-    assertEq(toString(a.from), toString(b.from), "[assertEq]: from doesn't match");
-    assertEq(toString(a.to), toString(b.to), "[assertEq]: to doesn't match");
-    assertEq(toString(a.origin), toString(b.origin), "[assertEq]: origin doesn't match");
-    assertEq(toString(a.destination), toString(b.destination), "[assertEq]: destination doesn't match");
-    for (uint256 i = 0; i < a.unitCounts.length; i++) {
-      assertEq(a.unitCounts[i], b.unitCounts[i], "[assertEq]: unitCounts doesn't match");
-    }
-  }
-
-  function assertEq(
-    ERock a,
-    ERock b,
-    string memory context
-  ) internal {
-    assertEq(uint256(a), uint256(b), context);
   }
 
   function logPosition(PositionData memory coord) internal view {
@@ -124,75 +97,55 @@ contract PrimodiumTest is MudTest {
     console.log("parent", uint256(coord.parent));
   }
 
-  function getHomeAsteroidPosition(address player) public view returns (PositionData memory) {
-    bytes32 asteroid = Home.get(addressToEntity(player)).asteroid;
-    return Position.get(asteroid);
+  function canPlaceBuildingTiles(
+    bytes32 asteroidEntity,
+    bytes32 buildingPrototype,
+    PositionData memory position
+  ) internal view returns (bool) {
+    int32[] memory blueprint = P_Blueprint.get(buildingPrototype);
+    Bounds memory bounds = LibBuilding.getSpaceRockBounds(asteroidEntity);
+    bytes32[] memory tiles = new bytes32[](blueprint.length / 2);
+    for (uint256 i = 0; i < blueprint.length; i += 2) {
+      PositionData memory relativeCoord = PositionData(blueprint[i], blueprint[i + 1], 0);
+      PositionData memory absoluteCoord = PositionData(
+        position.x + relativeCoord.x,
+        position.y + relativeCoord.y,
+        position.parent
+      );
+      bytes32 tileEntity = LibEncode.getHash(BuildingTileKey, absoluteCoord);
+      if (OwnedBy.get(tileEntity) != 0) return false;
+      if (
+        bounds.minX > absoluteCoord.x ||
+        bounds.minY > absoluteCoord.y ||
+        bounds.maxX < absoluteCoord.x ||
+        bounds.maxY < absoluteCoord.y
+      ) return false;
+    }
+    return true;
   }
 
-  function getMainBasePosition(address player) internal view returns (PositionData memory) {
-    PositionData memory position = Position.get(MainBasePrototypeId);
-    return getPosition(PositionData2D(position.x, position.y), player);
-  }
-
-  function getPosition1(address player) internal view returns (PositionData memory) {
-    PositionData2D memory coord1 = PositionData2D(15, 12);
-    return getPosition(coord1, player);
-  }
-
-  function getPosition2(address player) internal view returns (PositionData memory) {
-    PositionData2D memory coord2 = PositionData2D(23, 17);
-    return getPosition(coord2, player);
-  }
-
-  function getPosition3(address player) internal view returns (PositionData memory) {
-    PositionData2D memory coord3 = PositionData2D(13, 8);
-    return getPosition(coord3, player);
-  }
-
-  function getIronPosition(address player) internal view returns (PositionData memory) {
-    PositionData2D memory coord = PositionData2D(20, 8);
-    return getPosition(coord, player);
-  }
-
-  function getIronPosition2(address player) internal view returns (PositionData memory) {
-    PositionData2D memory coord = PositionData2D(21, 8);
-    return getPosition(coord, player);
-  }
-
-  function getCopperPosition(address player) internal view returns (PositionData memory) {
-    PositionData2D memory coord = PositionData2D(20, 15);
-    return getPosition(coord, player);
-  }
-
-  function getNonIronPosition(address player) internal view returns (PositionData memory) {
-    PositionData2D memory coord = PositionData2D(8, 15);
-    return getPosition(coord, player);
-  }
-
-  function getPosition(
-    int32 x,
-    int32 y,
-    address player
-  ) internal view returns (PositionData memory coord) {
-    return getPosition(PositionData2D(x, y), player);
-  }
-
-  function getPosition(PositionData2D memory coord2D, address player)
-    internal
-    view
-    returns (PositionData memory coord)
-  {
-    bytes32 playerEntity = addressToEntity(player);
-    bytes32 asteroid = LibEncode.getHash(playerEntity);
-
-    coord = PositionData(coord2D.x, coord2D.y, asteroid);
+  function getTilePosition(bytes32 asteroidEntity, EBuilding buildingType) internal view returns (PositionData memory) {
+    bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
+    uint8 mapId = Asteroid.getMapId(asteroidEntity);
+    Bounds memory bounds = LibBuilding.getSpaceRockBounds(asteroidEntity);
+    for (int32 i = bounds.minX; i < bounds.maxX; i++) {
+      for (int32 j = bounds.minY; j < bounds.maxY; j++) {
+        PositionData memory coord = PositionData(i, j, asteroidEntity);
+        if (Spawned.get(LibBuilding.getBuildingFromCoord(coord))) continue;
+        if (!LibBuilding.canBuildOnTile(buildingPrototype, coord)) continue;
+        if (!canPlaceBuildingTiles(asteroidEntity, buildingPrototype, coord)) continue;
+        return coord;
+      }
+    }
+    revert("Valid tile position not found");
   }
 
   function spawn(address player) internal returns (bytes32) {
     vm.prank(player);
     world.spawn();
     bytes32 playerEntity = addressToEntity(player);
-    return Home.getAsteroid(playerEntity);
+    bytes32 homeRock = Home.get(playerEntity);
+    return homeRock;
   }
 
   function get2x2Blueprint() internal pure returns (int32[] memory blueprint) {
@@ -236,10 +189,229 @@ contract PrimodiumTest is MudTest {
     removeRequiredTile(building);
   }
 
-  function getUnitArray(uint256 unit1Count, uint256 unit2Count) internal returns (uint256[] memory) {
-    uint256[] memory unitArray = new uint256[](NUM_UNITS);
+  function getUnitArray(uint256 unit1Count, uint256 unit2Count) internal view returns (uint256[] memory unitArray) {
+    unitArray = new uint256[](8);
+    //unitArray = new uint256[](P_UnitPrototypes.length());
     unitArray[0] = unit1Count;
     unitArray[1] = unit2Count;
     return unitArray;
+  }
+
+  function trainUnits(address player, EUnit unitType, uint256 count, bool fastForward) internal {
+    trainUnits(player, P_EnumToPrototype.get(UnitKey, uint8(unitType)), count, fastForward);
+  }
+
+  function trainUnits(address player, bytes32 unitPrototype, uint256 count, bool fastForward) internal {
+    bytes32 playerEntity = addressToEntity(player);
+    bytes32 spaceRock = Home.get(playerEntity);
+    bytes32 mainBase = Home.get(spaceRock);
+    P_RequiredResourcesData memory requiredResources = getTrainCost(
+      unitPrototype,
+      UnitLevel.get(spaceRock, unitPrototype),
+      count
+    );
+
+    provideResources(spaceRock, requiredResources);
+
+    if (unitPrototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip))) {
+      uint8 capitalShipResource = P_CapitalShipConfig.getResource();
+      uint256 countLeft = count;
+      while (countLeft > 0) {
+        uint256 cost = P_CapitalShipConfig.getInitialCost() *
+          LibUnit.getCapitalShipCostMultiplier(OwnedBy.get(spaceRock));
+        increaseResource(spaceRock, EResource(capitalShipResource), cost);
+        trainUnits(player, mainBase, unitPrototype, 1, fastForward);
+        countLeft--;
+      }
+    } else {
+      trainUnits(player, mainBase, unitPrototype, count, fastForward);
+    }
+  }
+
+  function trainUnits(
+    address player,
+    bytes32 buildingEntity,
+    bytes32 unitPrototype,
+    uint256 count,
+    bool fastForward
+  ) internal {
+    vm.startPrank(creator);
+
+    bytes32 buildingType = BuildingType.get(buildingEntity);
+    uint256 level = Level.get(buildingEntity);
+
+    bytes32[] memory prodTypes = P_UnitProdTypes.get(buildingType, level);
+    uint256 unitProdMultiplier = P_UnitProdMultiplier.get(buildingType, level);
+    bytes32[] memory newProdTypes = new bytes32[](1);
+    newProdTypes[0] = unitPrototype;
+
+    P_UnitProdTypes.set(buildingType, level, newProdTypes);
+    P_UnitProdMultiplier.set(buildingType, level, 100);
+    if (!UnitFactorySet.has(Position.getParent(buildingEntity), buildingEntity))
+      UnitFactorySet.add(Position.getParent(buildingEntity), buildingEntity);
+
+    vm.stopPrank();
+
+    vm.startPrank(player);
+    world.trainUnits(buildingEntity, unitPrototype, count);
+    if (fastForward) vm.warp(block.timestamp + (LibUnit.getUnitBuildTime(buildingEntity, unitPrototype) * count));
+    vm.stopPrank();
+
+    vm.startPrank(creator);
+    P_UnitProdTypes.set(buildingType, level, prodTypes);
+    vm.stopPrank();
+  }
+
+  function upgradeMainBase(address player) internal returns (uint256) {
+    bytes32 playerEntity = addressToEntity(player);
+    bytes32 spaceRock = Home.get(playerEntity);
+    bytes32 mainBase = Home.get(spaceRock);
+    P_RequiredResourcesData memory requiredResources = getUpgradeCost(mainBase);
+    provideResources(spaceRock, requiredResources);
+    upgradeBuilding(player, mainBase);
+  }
+
+  function upgradeMainBase(address player, uint256 level) internal returns (uint256) {
+    bytes32 playerEntity = addressToEntity(player);
+    bytes32 spaceRock = Home.get(playerEntity);
+    bytes32 mainBase = Home.get(spaceRock);
+    while (Level.get(mainBase) < level) {
+      upgradeBuilding(player, mainBase);
+    }
+  }
+
+  function upgradeBuilding(address player, bytes32 buildingEntity) internal {
+    P_RequiredResourcesData memory requiredResources = getUpgradeCost(buildingEntity);
+    provideResources(Position.get(buildingEntity).parent, requiredResources);
+    uint256 requiredMainBaseLevel = P_RequiredBaseLevel.get(
+      BuildingType.get(buildingEntity),
+      Level.get(buildingEntity) + 1
+    );
+    upgradeMainBase(player, requiredMainBaseLevel);
+    vm.startPrank(player);
+    world.upgradeBuilding(Position.get(buildingEntity));
+    vm.stopPrank();
+  }
+
+  function buildBuilding(address player, EBuilding building) internal {
+    P_RequiredResourcesData memory requiredResources = getBuildCost(building);
+    PositionData memory position = getTilePosition(Home.get(addressToEntity(player)), building);
+    provideResources(position.parent, requiredResources);
+    uint256 requiredMainBaseLevel = P_RequiredBaseLevel.get(P_EnumToPrototype.get(BuildingKey, uint8(building)), 1);
+    upgradeMainBase(player, requiredMainBaseLevel);
+    vm.startPrank(player);
+    world.build(building, position);
+    vm.stopPrank();
+  }
+
+  function provideMaxStorage(bytes32 spaceRock, P_RequiredResourcesData memory requiredResources) internal {
+    vm.startPrank(creator);
+    for (uint256 i = 0; i < requiredResources.resources.length; i++) {
+      if (P_IsUtility.get(requiredResources.resources[i])) continue;
+      if (MaxResourceCount.get(spaceRock, requiredResources.resources[i]) < requiredResources.amounts[i])
+        LibStorage.increaseMaxStorage(
+          spaceRock,
+          requiredResources.resources[i],
+          requiredResources.amounts[i] - MaxResourceCount.get(spaceRock, requiredResources.resources[i])
+        );
+    }
+    vm.stopPrank();
+  }
+
+  function provideResources(bytes32 spaceRock, P_RequiredResourcesData memory requiredResources) internal {
+    for (uint256 i = 0; i < requiredResources.resources.length; i++) {
+      increaseResource(spaceRock, EResource(requiredResources.resources[i]), requiredResources.amounts[i]);
+    }
+  }
+
+  function claimResources(bytes32 spaceRock) internal {
+    vm.startPrank(creator);
+    world.claimResources(spaceRock);
+    vm.stopPrank();
+  }
+
+  function increaseProduction(bytes32 spaceRock, EResource resource, uint256 amount) internal {
+    vm.startPrank(creator);
+    LibProduction.increaseResourceProduction(spaceRock, resource, amount);
+    vm.stopPrank();
+  }
+
+  function increaseResource(bytes32 spaceRock, EResource resourceType, uint256 count) internal {
+    vm.startPrank(creator);
+    if (P_IsUtility.get(uint8(resourceType))) {
+      LibProduction.increaseResourceProduction(spaceRock, resourceType, count);
+    } else {
+      if (MaxResourceCount.get(spaceRock, uint8(resourceType)) < count)
+        LibStorage.increaseMaxStorage(
+          spaceRock,
+          uint8(resourceType),
+          count - MaxResourceCount.get(spaceRock, uint8(resourceType))
+        );
+      LibStorage.increaseStoredResource(spaceRock, uint8(resourceType), count);
+    }
+    vm.stopPrank();
+  }
+
+  function getTrainCost(
+    EUnit unitType,
+    uint256 level,
+    uint256 count
+  ) internal view returns (P_RequiredResourcesData memory requiredResources) {
+    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unitType));
+    requiredResources = getTrainCost(unitPrototype, level, count);
+  }
+
+  function getTrainCost(
+    bytes32 unitPrototype,
+    uint256 level,
+    uint256 count
+  ) internal view returns (P_RequiredResourcesData memory requiredResources) {
+    requiredResources = P_RequiredResources.get(unitPrototype, level);
+    for (uint256 i = 0; i < requiredResources.resources.length; i++) {
+      requiredResources.amounts[i] *= count;
+    }
+  }
+
+  function getBuildCost(
+    EBuilding buildingType
+  ) internal view returns (P_RequiredResourcesData memory requiredResources) {
+    bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
+    requiredResources = P_RequiredResources.get(buildingPrototype, 1);
+  }
+
+  function getUpgradeCost(
+    bytes32 buildingEntity
+  ) internal view returns (P_RequiredResourcesData memory requiredResources) {
+    uint256 level = Level.get(buildingEntity);
+    bytes32 buildingPrototype = BuildingType.get(buildingEntity);
+    requiredResources = P_RequiredResources.get(buildingPrototype, level + 1);
+  }
+
+  function setupCreateFleet(
+    address player,
+    bytes32 spaceRock,
+    uint256[] memory unitCounts,
+    uint256[] memory resourceCounts
+  ) public {
+    if (ResourceCount.get(spaceRock, uint8(EResource.U_MaxFleets)) == 0) {
+      increaseProduction(spaceRock, EResource.U_MaxFleets, 1);
+    }
+    setupCreateFleetNoMaxMovesGranted(player, spaceRock, unitCounts, resourceCounts);
+  }
+
+  function setupCreateFleetNoMaxMovesGranted(
+    address player,
+    bytes32 spaceRock,
+    uint256[] memory unitCounts,
+    uint256[] memory resourceCounts
+  ) public {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      trainUnits(player, unitPrototypes[i], unitCounts[i], true);
+    }
+    uint8[] memory transportables = P_Transportables.get();
+    for (uint256 i = 0; i < transportables.length; i++) {
+      increaseResource(spaceRock, EResource(transportables[i]), resourceCounts[i]);
+    }
   }
 }

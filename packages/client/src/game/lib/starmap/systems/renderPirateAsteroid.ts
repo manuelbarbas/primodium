@@ -1,51 +1,43 @@
 import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
-import {
-  Entity,
-  Has,
-  HasValue,
-  defineComponentSystem,
-  defineEnterSystem,
-  defineUpdateSystem,
-  namespaceWorld,
-} from "@latticexyz/recs";
+import { Entity, Has, defineSystem, namespaceWorld } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
-import { ERock } from "contracts/config/enums";
 import { Scene } from "engine/types";
+import { toast } from "react-toastify";
+import { throttleTime } from "rxjs";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
+import { getRandomRange } from "src/util/common";
 import { PIRATE_KEY } from "src/util/constants";
+import { decodeEntity, hashKeyEntity } from "src/util/encode";
+import { getCanAttack, getCanSend } from "src/util/unit";
 import {
   ObjectPosition,
-  OnClick,
+  OnClickUp,
   OnComponentSystem,
-  SetValue,
-  Tween,
-  OnRxjsSystem,
   OnHover,
   OnOnce,
+  OnRxjsSystem,
+  SetValue,
+  Tween,
 } from "../../common/object-components/common";
-import { decodeEntity, hashKeyEntity } from "src/util/encode";
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
-import { getRandomRange } from "src/util/common";
-import { throttleTime } from "rxjs";
 
-export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
+export const renderPirateAsteroid = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
-  const gameWorld = namespaceWorld(world, "game");
+  const systemsWorld = namespaceWorld(world, "systems");
 
   const render = (entity: Entity, coord: Coord) => {
     scene.objectPool.removeGroup("asteroid_" + entity);
-    const asteroidType = components.RockType.get(entity)?.value;
 
     const ownedBy = components.OwnedBy.get(entity, {
       value: singletonEntity,
     }).value;
 
-    if (hashKeyEntity(PIRATE_KEY, player) !== ownedBy) return;
+    const playerEntity = components.Account.get()?.value;
+    if (!playerEntity || hashKeyEntity(PIRATE_KEY, playerEntity) !== ownedBy) return;
 
-    if (asteroidType !== ERock.Asteroid) return;
     const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entity);
 
     const spriteScale = 0.7;
@@ -94,20 +86,19 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
       repeat: -1, // Repeat indefinitely
     });
 
-    asteroidObjectGroup.add("Sprite").setComponents([
+    const asteroidBody = asteroidObjectGroup.add("Sprite");
+    asteroidBody.setComponents([
       ...sharedComponents,
       rotationTween,
       Texture(Assets.SpriteAtlas, SpriteKeys.PirateAsteroid1),
-      OnClick(scene, () => {
-        components.Send.setDestination(entity);
-        components.SelectedRock.set({ value: entity });
-      }),
+
       SetValue({
         depth: DepthLayers.Rock,
       }),
     ]);
 
-    const outlineSprite = SpriteKeys[`Asteroid${ownedBy === player ? "Player" : "Enemy"}` as keyof typeof SpriteKeys];
+    const outlineSprite =
+      SpriteKeys[`Asteroid${ownedBy === playerEntity ? "Player" : "Enemy"}` as keyof typeof SpriteKeys];
 
     const asteroidOutline = asteroidObjectGroup.add("Sprite");
 
@@ -125,18 +116,25 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
           asteroidOutline.removeComponent(Outline().id);
         }
       }),
-      Texture(Assets.SpriteAtlas, outlineSprite),
-      OnClick(scene, () => {
-        components.SelectedRock.set({ value: entity });
+      OnClickUp(scene, () => {
+        console.log("clicked on", entity);
+        const attackOrigin = components.Attack.get()?.originFleet;
+        const sendOrigin = components.Send.get()?.originFleet;
+        if (attackOrigin) {
+          if (getCanAttack(attackOrigin, entity)) components.Attack.setDestination(entity);
+          else toast.error("Cannot attack this asteroid.");
+        } else if (sendOrigin) {
+          if (getCanSend(sendOrigin, entity)) components.Send.setDestination(entity);
+          else toast.error("Cannot send to this asteroid.");
+        } else {
+          components.SelectedRock.set({ value: entity });
+        }
       }),
       OnHover(
-        () => {
-          components.HoverEntity.set({ value: entity });
-        },
-        () => {
-          components.HoverEntity.remove();
-        }
+        () => components.HoverEntity.set({ value: entity }),
+        () => components.HoverEntity.remove()
       ),
+      Texture(Assets.SpriteAtlas, outlineSprite),
       SetValue({
         depth: DepthLayers.Rock + 1,
       }),
@@ -159,6 +157,18 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
       OnOnce((gameObject) => {
         gameObject.setFontSize(Math.max(8, Math.min(24, 16 / scene.camera.phaserCamera.zoom)));
       }),
+      OnComponentSystem(components.DefeatedPirate, (gameObject, { entity }) => {
+        const { pirate } = decodeEntity(components.DefeatedPirate.metadata.keySchema, entity);
+        if (pirate !== entity) return;
+        asteroidLabel.setComponent(
+          ObjectText("DEFEATED PIRATE", {
+            id: "addressLabel",
+            color: 0xff0000,
+            fontSize: Math.max(8, Math.min(24, 16 / scene.camera.phaserCamera.zoom)),
+          })
+        );
+        asteroidBody.setComponent(SetValue({ alpha: 0.5 }));
+      }),
       OnRxjsSystem(
         // @ts-ignore
         scene.camera.zoom$.pipe(throttleTime(10)),
@@ -176,48 +186,23 @@ export const renderPirateAsteroid = (scene: Scene, player: Entity) => {
   };
 
   const query = [
-    Has(components.RockType),
-    HasValue(components.RockType, {
-      value: ERock.Asteroid,
-    }),
+    Has(components.Asteroid),
     Has(components.Position),
     Has(components.PirateAsteroid),
     Has(components.OwnedBy),
   ];
 
-  defineEnterSystem(gameWorld, query, ({ entity }) => {
+  defineSystem(systemsWorld, query, ({ entity, value }) => {
+    if (!value[0]) return;
     const coord = components.Position.get(entity);
-
     if (!coord) return;
+    const defeated = components.PirateAsteroid.get(entity)?.isDefeated ?? false;
+    if (defeated) {
+      const key = "asteroid_" + entity;
+      if (scene.objectPool.getGroup(key)) scene.objectPool.removeGroup("asteroid_" + entity);
+      return;
+    }
 
     render(entity, coord);
-  });
-
-  defineUpdateSystem(gameWorld, query, ({ entity }) => {
-    const coord = components.Position.get(entity);
-
-    if (!coord) return;
-
-    render(entity, coord);
-  });
-
-  //remove or add if pirate asteroid is defeated
-  defineComponentSystem(world, components.PirateAsteroid, ({ entity }) => {
-    const coord = components.Position.get(entity);
-
-    if (!coord) return;
-
-    render(entity, coord);
-  });
-
-  defineComponentSystem(world, components.DefeatedPirate, ({ entity }) => {
-    const { entity: playerEntity, pirate } = decodeEntity(components.DefeatedPirate.metadata.keySchema, entity);
-    if (playerEntity != player) return;
-
-    const values = components.PirateAsteroid.getAllWith({ prototype: pirate, playerEntity });
-    if (values.length === 0) return;
-
-    scene.objectPool.removeGroup("asteroid_" + values[0]);
-    components.Send.setDestination(undefined);
   });
 };

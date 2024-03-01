@@ -1,16 +1,23 @@
-import { primodium } from "@game/api";
+import { Primodium } from "@game/api";
 // import { EntitytoSpriteKey } from "@game/constants";
-import { EntitytoSpriteKey } from "@game/constants";
+import { EntitytoBuildingSpriteKey } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { EResource, MUDEnums } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
-import { Account } from "src/network/components/clientComponents";
 import { Hex } from "viem";
 import { clampedIndex, getBlockTypeName, toRomanNumeral } from "./common";
-import { ResourceEntityLookup, ResourceStorages, ResourceType, SPEED_SCALE, UtilityStorages } from "./constants";
+import {
+  MultiplierStorages,
+  ResourceEntityLookup,
+  ResourceStorages,
+  ResourceType,
+  SPEED_SCALE,
+  UtilityStorages,
+} from "./constants";
 import { outOfBounds } from "./outOfBounds";
 import { getRecipe } from "./recipe";
+import { getScale } from "./resource";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
 
 type Dimensions = { width: number; height: number };
@@ -107,7 +114,6 @@ export const validateBuildingPlacement = (
 ) => {
   //get building dimesions
   const buildingDimensions = getBuildingDimensions(buildingPrototype);
-  const player = Account.get()?.value;
   const requiredTile = comps.P_RequiredTile.get(buildingPrototype)?.value;
 
   //iterate over dimensions and check if there is a building there
@@ -116,8 +122,9 @@ export const validateBuildingPlacement = (
       const buildingCoord = { x: coord.x + x, y: coord.y - y };
       const buildingAtCoord = getBuildingAtCoord(buildingCoord, asteroid);
       if (buildingAtCoord && buildingAtCoord !== building) return false;
-      if (outOfBounds(buildingCoord, player)) return false;
-      if (requiredTile && requiredTile !== getResourceKey(buildingCoord)) return false;
+      if (outOfBounds(buildingCoord, asteroid)) return false;
+      const mapId = comps.Asteroid.get(asteroid)?.mapId ?? 1;
+      if (requiredTile && requiredTile !== getResourceKey(buildingCoord, mapId)) return false;
     }
   }
 
@@ -133,31 +140,31 @@ export const getBuildingName = (building: Entity) => {
   return `${getBlockTypeName(buildingType)} ${toRomanNumeral(Number(level))}`;
 };
 
-export const getBuildingImage = (building: Entity) => {
+export const getBuildingImage = (primodium: Primodium, building: Entity) => {
   const buildingType = comps.BuildingType.get(building)?.value as Entity;
   const level = comps.Level.get(building)?.value ?? 1n;
   const { getSpriteBase64 } = primodium.api().sprite;
 
-  if (EntitytoSpriteKey[buildingType]) {
+  if (EntitytoBuildingSpriteKey[buildingType]) {
     const imageIndex = parseInt(level ? level.toString() : "1") - 1;
 
     return getSpriteBase64(
-      EntitytoSpriteKey[buildingType][clampedIndex(imageIndex, EntitytoSpriteKey[buildingType].length)]
+      EntitytoBuildingSpriteKey[buildingType][clampedIndex(imageIndex, EntitytoBuildingSpriteKey[buildingType].length)]
     );
   }
 
   return "";
 };
 
-export const getBuildingImageFromType = (buildingType: Entity) => {
+export const getBuildingImageFromType = (primodium: Primodium, buildingType: Entity) => {
   const level = comps.Level.get(buildingType)?.value ?? 1n;
   const { getSpriteBase64 } = primodium.api().sprite;
 
-  if (EntitytoSpriteKey[buildingType]) {
+  if (EntitytoBuildingSpriteKey[buildingType]) {
     const imageIndex = parseInt(level ? level.toString() : "1") - 1;
 
     return getSpriteBase64(
-      EntitytoSpriteKey[buildingType][clampedIndex(imageIndex, EntitytoSpriteKey[buildingType].length)]
+      EntitytoBuildingSpriteKey[buildingType][clampedIndex(imageIndex, EntitytoBuildingSpriteKey[buildingType].length)]
     );
   }
 
@@ -207,29 +214,40 @@ export function transformProductionData(
 ): { resource: Entity; amount: bigint; type: ResourceType }[] {
   if (!production) return [];
 
-  return production.resources.map((curr, i) => {
-    const type = ResourceStorages.has(ResourceEntityLookup[curr as EResource])
-      ? ResourceType.ResourceRate
-      : UtilityStorages.has(ResourceEntityLookup[curr as EResource])
-      ? ResourceType.Utility
-      : ResourceType.Multiplier;
+  return production.resources
+    .map((curr, i) => {
+      const resourceEntity = ResourceEntityLookup[curr as EResource];
+      const type = ResourceStorages.has(resourceEntity)
+        ? ResourceType.ResourceRate
+        : UtilityStorages.has(resourceEntity)
+        ? ResourceType.Utility
+        : MultiplierStorages.has(resourceEntity)
+        ? ResourceType.Multiplier
+        : null;
 
-    let amount = production.amounts[i];
-    if (type === ResourceType.ResourceRate) {
-      const worldSpeed = comps.P_GameConfig.get()?.worldSpeed ?? 100n;
-      amount = (amount * worldSpeed) / SPEED_SCALE;
-    }
-    return {
-      resource: ResourceEntityLookup[curr as EResource],
-      amount,
-      type,
-    };
-  });
+      if (type === null) return null;
+
+      let amount = production.amounts[i];
+      if (type === ResourceType.ResourceRate) {
+        const worldSpeed = comps.P_GameConfig.get()?.worldSpeed ?? 100n;
+        amount = (amount * worldSpeed) / SPEED_SCALE;
+      }
+
+      if (type === ResourceType.Multiplier) {
+        amount = amount / BigInt(getScale(resourceEntity));
+      }
+      return {
+        resource: ResourceEntityLookup[curr as EResource],
+        amount,
+        type,
+      };
+    })
+    .filter((item) => item !== null) as { resource: Entity; amount: bigint; type: ResourceType }[];
 }
 
 export const getBuildingInfo = (building: Entity) => {
   const buildingType = comps.BuildingType.get(building)?.value as Hex | undefined;
-  if (!buildingType) return undefined;
+  if (!buildingType) throw new Error("No building type found");
   const buildingTypeEntity = buildingType as Entity;
 
   const level = comps.Level.get(building)?.value ?? 1n;
@@ -244,7 +262,7 @@ export const getBuildingInfo = (building: Entity) => {
   const unitProduction = comps.P_UnitProdTypes.getWithKeys(buildingLevelKeys)?.value;
   const storages = getBuildingStorages(buildingTypeEntity, level);
   const unitProductionMultiplier = comps.P_UnitProdMultiplier.getWithKeys(buildingLevelKeys)?.value;
-  const position = comps.Position.get(building) ?? { x: 0, y: 0 };
+  const position = comps.Position.get(building) ?? { x: 0, y: 0, parent: undefined };
 
   const nextLevel = level + 1n;
   const maxLevel = comps.P_MaxLevel.getWithKeys({ prototype: buildingType })?.value ?? 1n;

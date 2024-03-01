@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { expect, test } from "vitest";
-import { getMotherlodeEntity, hashKeyEntity, toHex32 } from "../util/encode";
+import { hashKeyEntity, toHex32 } from "../util/encode";
 
 // Outputs of LibEncode.sol's hashKeyEntity function
 const hashKeyEntityOutputs = {
@@ -33,39 +33,4 @@ test("hashKeyEntityOutputs", () => {
   hashKeyEntityOutputs.entities.forEach((example) => {
     expect(hashKeyEntity(toHex32(hashKeyEntityOutputs.key), example.entity)).eq(example.output);
   });
-});
-
-const motherlodeHashes = [
-  {
-    coord: { x: 0, y: 0 },
-    i: 0,
-    motherlodeEntity: "0x31770bdcdd8f48847479fa8ca640ecbe14466cede049528f865644c388bc0c3b",
-  },
-  {
-    coord: { x: 7, y: 3 },
-    i: 1,
-    motherlodeEntity: "0x20699780b0d5ba058f9782c9a3b3c87328057c8cb3a38a5ecc7b977910107928",
-  },
-  {
-    coord: { x: 4, y: 6 },
-    i: 2,
-    motherlodeEntity: "0x3c80a0f6580607445ba6728fac1b7b9eabe5c274a9aac7487fb4a072f5a976a7",
-  },
-  {
-    coord: { x: 1, y: 9 },
-    i: 3,
-    motherlodeEntity: "0x3080552ec4d2adddeb2b880dfce67d93fec01178a0b7a14d0a9633e4c010800a",
-  },
-  {
-    coord: { x: 8, y: 2 },
-    i: 4,
-    motherlodeEntity: "0xe8b2f565dd510cf0775141614f9f8fbc0dcdb90ac8e563914cac2b0541d156ae",
-  },
-];
-
-test("motherlodeHashes", () => {
-  for (const example of motherlodeHashes) {
-    const motherlodeEntity = getMotherlodeEntity(toHex32(example.i) as Entity, example.coord);
-    expect(example.motherlodeEntity).eq(motherlodeEntity);
-  }
 });

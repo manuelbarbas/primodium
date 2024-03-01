@@ -1,30 +1,20 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { getBuildingImage, getBuildingImageFromType } from "src/util/building";
-
-export const BuildingImage: React.FC<{ building: Entity }> = ({ building }) => {
-  const imageUri = useMemo(() => getBuildingImage(building), [building]);
-
-  return (
-    <div
-      className={`relative flex flex-col text-sm items-center cursor-pointer min-w-[4rem] h-12 border rounded border-cyan-400`}
-    >
-      <img src={imageUri} className={`absolute bottom-0 w-14 pixel-images rounded-md`} />
-    </div>
-  );
-};
+import { usePrimodium } from "src/hooks/usePrimodium";
+import { getBuildingImageFromType } from "src/util/building";
 
 export const BuildingImageFromType: React.FC<{ buildingType: Entity; blurred?: boolean }> = ({
   buildingType,
   blurred,
 }) => {
-  const imageUri = useMemo(() => getBuildingImageFromType(buildingType), [buildingType]);
+  const primodium = usePrimodium();
+  const imageUri = useMemo(() => getBuildingImageFromType(primodium, buildingType), [primodium, buildingType]);
 
   return (
-    <div className={`relative flex flex-col text-sm items-center cursor-pointer min-w-[4rem] h-12`}>
+    <div className={`relative flex flex-col items-center cursor-pointer h-11`}>
       <img
         src={imageUri}
-        className={`absolute pointer-events-none bottom-0 w-14 pixel-images rounded-md ${
+        className={`absolute bottom-0 pointer-events-none w-[1em] pixel-images rounded-md ${
           blurred ? "darken-[3px]" : ""
         }`}
       />

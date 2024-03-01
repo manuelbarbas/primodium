@@ -21,7 +21,7 @@ export function getRockDefense(rockEntity: Entity) {
   });
 
   let multiplier = MULTIPLIER_SCALE;
-  if (components.Home.get(player as Entity)?.asteroid === rockEntity) {
+  if (components.Home.get(player as Entity)?.value === rockEntity) {
     const rawMultiplier = components.ResourceCount.getWithKeys({
       entity: rockEntity as Hex,
       resource: EResource.M_DefenseMultiplier,
@@ -36,3 +36,19 @@ export function getRockDefense(rockEntity: Entity) {
 
   return { points: defensePoints, multiplier };
 }
+
+export const getInGracePeriod = (entity: Entity) => {
+  const time = components.Time.get()?.value ?? 0n;
+  const endTime = components.GracePeriod.get(entity)?.value ?? 0n;
+  const inGracePeriod = time < endTime;
+  if (!inGracePeriod) return { inGracePeriod: false, duration: 0 };
+  return { inGracePeriod, duration: endTime - time };
+};
+
+export const getInCooldownEnd = (entity: Entity) => {
+  const time = components.Time.get()?.value ?? 0n;
+  const endTime = components.CooldownEnd.get(entity)?.value ?? 0n;
+  const inCooldown = time < endTime;
+  if (!inCooldown) return { inCooldown: false, duration: 0 };
+  return { inCooldown, duration: endTime - time };
+};

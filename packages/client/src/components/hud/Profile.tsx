@@ -1,94 +1,75 @@
-import { useMemo } from "react";
-import { useLocation } from "react-router-dom";
+import { FaHandshake, FaHandshakeSlash } from "react-icons/fa";
 import { useMud } from "src/hooks";
-import { Button } from "../core/Button";
-import { useAccount } from "src/hooks/useAccount";
-import { AccountDisplay } from "../shared/AccountDisplay";
-import { FaLink } from "react-icons/fa";
+// import { Card } from "../core/Card";
+import { KeybindActions, Scenes } from "@game/constants";
 import { components } from "src/network/components";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { Entity } from "@latticexyz/recs";
-import { IconLabel } from "../core/IconLabel";
-import { getSpaceRockImage } from "src/util/spacerock";
-import { useFleetMoves } from "src/hooks/useFleetMoves";
-import { EntityType, ResourceImage } from "src/util/constants";
-import { getBuildingImage } from "src/util/building";
-import { convertObjToParams, convertParamsToObj } from "src/util/params";
-import { CurrencyDisplay } from "../shared/CurrencyDisplay";
-import { useSettingsStore } from "src/game/stores/SettingsStore";
+import { getRandomRange } from "src/util/common";
+import { Modal } from "../core/Modal";
+import { Tooltip } from "../core/Tooltip";
+import { Widget } from "../core/Widget";
+import { AccountDisplay } from "../shared/AccountDisplay";
+import { Account } from "../transfer/Account";
+import { Score } from "./Score";
+import { SpectatingDetails } from "./SpectatingDetails";
 
-export const Profile = () => {
-  const { network } = useMud();
-  const playerEntity = network.playerEntity;
-  const { linkedAddress, loading, wETHBalance } = useAccount(playerEntity);
-  const mainBase = components.Home.use(playerEntity)?.mainBase;
-  const asteroid = components.Home.use(playerEntity)?.asteroid;
-  const mainbaseLevel = components.Level.use((mainBase ?? singletonEntity) as Entity)?.value ?? 1n;
-  const fleetMoves = useFleetMoves();
-  const mapOpen = components.MapOpen.use()?.value ?? false;
-  const buildingImage = getBuildingImage((mainBase ?? singletonEntity) as Entity);
-  const unitDisplay = useSettingsStore((state) => state.unitDisplay);
-
-  const { search } = useLocation();
-  const params = useMemo(() => convertParamsToObj(search), [search]);
+const ProfileContent = () => {
+  const {
+    playerAccount: { entity: playerEntity },
+    sessionAccount,
+  } = useMud();
+  const sessionEntity = sessionAccount?.entity;
 
   return (
-    <div className="flex flex-row">
-      <Button className="flex flex-col justify-end border-t-0 border-secondary rounded-t-none ml-2 w-24 h-[6.3rem] p-0">
-        <IconLabel
-          imageUri={mapOpen ? getSpaceRockImage((asteroid ?? singletonEntity) as Entity) : buildingImage}
-          className="text-2xl scale-125 pt-3 pb-2"
-        />
-        <div className="bg-base-100 w-full rounded-box rounded-t-none p-1 border-t border-secondary">
-          {!mapOpen && (
-            <>
-              <span className="text-accent">LVL.</span>
-              {mainbaseLevel.toString()}
-            </>
-          )}
-          {mapOpen && (
-            <div className="flex justify-center items-center gap-1 w-full items-center">
-              <IconLabel
-                imageUri={ResourceImage.get(EntityType.FleetMoves) ?? ""}
-                text={fleetMoves.toString()}
-                tooltipText="Fleet Moves"
-              />
-              <span className="text-accent">LEFT</span>
-            </div>
-          )}
-        </div>
-      </Button>
-      <div>
-        <div className="flex flex-col p-1 bg-opacity-50 bg-neutral backdrop-blur-md rounded-box rounded-l-none rounded-t-none text-sm border border-secondary border-l-0">
-          <div className="flex gap-2 items-center justify-center">
-            <AccountDisplay player={playerEntity} />
-          </div>
-          <hr className="border-secondary/50" />
-          <div className="flex gap-1 text-right w-full justify-end items-center px-2 border-secondary/50 pt-1">
-            <CurrencyDisplay wei={wETHBalance} className="font-bold text-sm" />
-            <p className="font-bold text-success">{unitDisplay === "ether" ? "wETH" : "wGWEI"}</p>
-          </div>
-        </div>
-        {!loading && (
-          <Button
-            className="btn-xs btn-secondary btn-ghost flex gap-1 m-auto text-accent mt-1"
-            onClick={() => {
-              window.open(`/account${convertObjToParams({ ...params, tab: "link" })}`);
-            }}
-          >
-            {!linkedAddress?.address && (
-              <>
-                <FaLink /> LINK ADDRESS
-              </>
-            )}
-            {linkedAddress?.address && (
-              <>
-                <FaLink /> MANAGE ACCOUNT
-              </>
-            )}
-          </Button>
-        )}
+    <>
+      <div className="flex gap-2 w-full items-center justify-center p-1.5 text-success text-md">
+        <span className="text-white/50 text-xs">id:</span>
+        <AccountDisplay player={playerEntity} />
+        <Modal title="account">
+          <Modal.Button className="btn-sm btn-neutral border-secondary !p-1 flex gap-2 text-accent text-xs w-fit">
+            <Tooltip text={`${sessionEntity ? "" : "not"} authorizing`} direction="right">
+              <div>
+                {sessionEntity ? (
+                  <FaHandshake className="text-success w-4 h-4" />
+                ) : (
+                  <FaHandshakeSlash className="text-error w-4 h-4" />
+                )}
+              </div>
+            </Tooltip>
+            <p>MANAGE</p>
+          </Modal.Button>
+          <Modal.Content className="w-[40rem] h-fit">
+            <Account />
+          </Modal.Content>
+        </Modal>
       </div>
-    </div>
+
+      <Score player={playerEntity} />
+    </>
+  );
+};
+export const Profile = () => {
+  const isSpectating = components.ActiveRock.use()?.value !== components.BuildRock.use()?.value;
+
+  return (
+    <Widget
+      id="account"
+      title="account"
+      icon="/img/icons/debugicon.png"
+      defaultCoord={{
+        x: window.innerWidth / 2 + getRandomRange(-50, 50),
+        y: window.innerHeight / 2 + getRandomRange(-50, 50),
+      }}
+      hotkey={KeybindActions.Account}
+      scene={Scenes.UI}
+      minOpacity={0.5}
+      defaultLocked
+      defaultVisible
+      lockable
+      draggable
+      persist
+    >
+      {isSpectating && <SpectatingDetails />}
+      {!isSpectating && <ProfileContent />}
+    </Widget>
   );
 };

@@ -1,15 +1,12 @@
 import { KeySchema, SchemaToPrimitives } from "@latticexyz/protocol-parser";
+import { Component, ComponentUpdate, ComponentValue, Entity, Metadata, Schema, setComponent } from "@latticexyz/recs";
+import { Subject, filter, map } from "rxjs";
+
 import { useEntityQuery } from "@latticexyz/react";
 import {
-  Component,
-  ComponentUpdate,
-  ComponentValue,
-  Entity,
   Has,
   HasValue,
-  Metadata,
   NotValue,
-  Schema,
   Type,
   World,
   defineComponent,
@@ -18,7 +15,6 @@ import {
   hasComponent,
   removeComponent,
   runQuery,
-  setComponent,
   updateComponent,
 } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
@@ -55,6 +51,9 @@ export type ExtendedComponent<S extends Schema, M extends Metadata, T = unknown>
 
   use(entity?: Entity | undefined): ComponentValue<S> | undefined;
   use(entity: Entity | undefined, defaultValue?: ValueSansMetadata<S>): ComponentValue<S>;
+
+  pauseUpdates: (entity: Entity, value?: ComponentValue<S, T>, skipUpdateStream?: boolean) => void;
+  resumeUpdates: (entity: Entity, skipUpdateStream?: boolean) => void;
 };
 
 export type ContractMetadata<TKeySchema extends KeySchema> = {
@@ -125,15 +124,68 @@ export function extendContractComponent<S extends Schema, TKeySchema extends Key
 export function extendComponent<S extends Schema, M extends Metadata, T = unknown>(
   component: Component<S, M, T>
 ): ExtendedComponent<S, M, T> {
+  const paused: Map<Entity, boolean> = new Map();
+  const pendingUpdate: Map<Entity, ComponentUpdate<S, T>> = new Map();
+
+  // Update event stream that takes into account overridden entity values
+  const update$ = new Subject<{
+    entity: Entity;
+    value: [ComponentValue<S, T> | undefined, ComponentValue<S, T> | undefined];
+    component: Component<S, Metadata, T>;
+  }>();
+
+  // Add a new override to some entity
+  function pauseUpdates(entity: Entity, value?: ComponentValue<S, T>, skipUpdateStream = false) {
+    paused.set(entity, true);
+    if (value) setComponent(component, entity, value, { skipUpdateStream });
+  }
+
+  // Remove an override from an entity
+  function resumeUpdates(entity: Entity, skipUpdateStream = false) {
+    if (!paused.get(entity)) return;
+    paused.set(entity, false);
+
+    const update = pendingUpdate.get(entity);
+    if (!update) return;
+
+    if (update.value[1]) setComponent(component, entity, update.value[1], { skipUpdateStream: true });
+    if (update.value[0]) setComponent(component, entity, update.value[0], { skipUpdateStream });
+    else removeComponent(component, entity);
+
+    pendingUpdate.delete(entity);
+  }
+
+  // Channel through update events from the original component if there are no overrides
+  component.update$
+    .pipe(
+      filter((e) => !paused.get(e.entity)),
+      map((update) => ({ ...update, component }))
+    )
+    .subscribe(update$);
+
+  component.update$
+    .pipe(
+      filter((e) => !!paused.get(e.entity)),
+      map((update) => {
+        pendingUpdate.set(update.entity, update);
+      })
+    )
+    .subscribe();
+
   function set(value: ComponentValue<S, T>, entity?: Entity) {
     entity = entity ?? singletonEntity;
     if (entity == undefined) throw new Error(`[set ${entity} for ${component.id}] no entity registered`);
-    setComponent(component, entity, value);
+    if (paused.get(entity)) {
+      const prevValue = pendingUpdate.get(entity)?.value[0] ?? getComponentValue(component, entity);
+      pendingUpdate.set(entity, { entity, value: [value, prevValue], component });
+    } else {
+      setComponent(component, entity, value);
+    }
   }
 
-  function get(): ComponentValue<S> | undefined;
-  function get(entity: Entity | undefined): ComponentValue<S> | undefined;
-  function get(entity?: Entity | undefined, defaultValue?: ValueSansMetadata<S>): ComponentValue<S>;
+  function get(): ComponentValue<S, T> | undefined;
+  function get(entity: Entity | undefined): ComponentValue<S, T> | undefined;
+  function get(entity?: Entity | undefined, defaultValue?: ValueSansMetadata<S>): ComponentValue<S, T>;
   function get(entity?: Entity, defaultValue?: ValueSansMetadata<S>) {
     entity = entity ?? singletonEntity;
     if (entity == undefined) return defaultValue;
@@ -205,6 +257,7 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
     entity = entity ?? singletonEntity;
     const comp = component as Component<S>;
     const [value, setValue] = useState(entity != null ? getComponentValue(comp, entity) : undefined);
+
     useEffect(() => {
       // component or entity changed, update state to latest value
       setValue(entity != null ? getComponentValue(component, entity) : undefined);
@@ -224,6 +277,7 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
 
   const context = {
     ...component,
+    update$,
     get,
     set,
     getAll,
@@ -237,6 +291,8 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
     update,
     has,
     use: useValue,
+    pauseUpdates,
+    resumeUpdates,
   };
   return context;
 }

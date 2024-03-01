@@ -2,14 +2,24 @@ import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
+import encodeBytes32 from "contracts/config/util/encodeBytes32";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
+import { components } from "src/network/components";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
-import { SetupResult } from "src/network/types";
-import { encodeEntity } from "src/util/encode";
+import { setComponentValue } from "src/network/setup/contractCalls/dev";
+import { MUD } from "src/network/types";
+import { encodeEntity, hashEntities, hashKeyEntity } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
-import { getBlockTypeName, normalizeAddress } from "./common";
-import { EntityType, ResourceEnumLookup, ResourceStorages, UtilityStorages } from "./constants";
+import { getBlockTypeName } from "./common";
+import {
+  EntityType,
+  PIRATE_KEY,
+  RESOURCE_SCALE,
+  ResourceEnumLookup,
+  ResourceStorages,
+  UtilityStorages,
+} from "./constants";
 
 const resources: Record<string, Entity> = {
   iron: EntityType.Iron,
@@ -17,7 +27,6 @@ const resources: Record<string, Entity> = {
   lithium: EntityType.Lithium,
   titanium: EntityType.Titanium,
   iridium: EntityType.Iridium,
-  sulfur: EntityType.Sulfur,
   kimberlite: EntityType.Kimberlite,
   ironplate: EntityType.IronPlate,
   platinum: EntityType.Platinum,
@@ -27,8 +36,7 @@ const resources: Record<string, Entity> = {
   vessel: EntityType.VesselCapacity,
   electricity: EntityType.Electricity,
   defense: EntityType.Defense,
-  orders: EntityType.MaxOrders,
-  moves: EntityType.FleetMoves,
+  moves: EntityType.FleetCount,
 };
 
 const units: Record<string, Entity> = {
@@ -36,23 +44,30 @@ const units: Record<string, Entity> = {
   aegis: EntityType.AegisDrone,
   anvil: EntityType.AnvilDrone,
   hammer: EntityType.HammerDrone,
-  mining: EntityType.MiningVessel,
+  capitalShip: EntityType.CapitalShip,
+  droid: EntityType.Droid,
 };
 
-export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
+export const setupCheatcodes = (mud: MUD): Cheatcodes => {
   return {
     setWorldSpeed: {
       params: [{ name: "value", type: "number" }],
       function: async (value: number) => {
-        await mud.contractCalls.setComponentValue(mud.components.P_GameConfig, singletonEntity, {
+        await setComponentValue(mud, mud.components.P_GameConfig, singletonEntity, {
           worldSpeed: BigInt(value),
         });
+      },
+    },
+    stopGracePeriod: {
+      params: [],
+      function: async () => {
+        setComponentValue(mud, components.P_GracePeriod, singletonEntity, { spaceRock: 0n });
       },
     },
     setMaxAllianceCount: {
       params: [{ name: "value", type: "number" }],
       function: async (value: number) => {
-        await mud.contractCalls.setComponentValue(mud.components.P_AllianceConfig, singletonEntity, {
+        await setComponentValue(mud, mud.components.P_AllianceConfig, singletonEntity, {
           maxAllianceMembers: BigInt(value),
         });
       },
@@ -60,10 +75,11 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
     maxMainBaseLevel: {
       params: [],
       function: async () => {
-        const mainBase = mud.components.Home.get(mud.network.playerEntity)?.mainBase as Entity | undefined;
+        const selectedRock = mud.components.ActiveRock.get()?.value;
+        const mainBase = mud.components.Home.get(selectedRock)?.value as Entity | undefined;
         if (!mainBase) throw new Error("No main base found");
         const maxLevel = mud.components.P_MaxLevel.get(mainBase)?.value ?? 8n;
-        await mud.contractCalls.setComponentValue(mud.components.Level, mainBase, {
+        await setComponentValue(mud, mud.components.Level, mainBase, {
           value: maxLevel,
         });
       },
@@ -71,22 +87,23 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
     getResource: {
       params: [{ name: "resource", type: "string" }],
       function: async (resource: string) => {
-        const player = mud.network.playerEntity;
+        const player = mud.playerAccount.entity;
         if (!player) throw new Error("No player found");
-        const home = mud.components.Home.get(player)?.asteroid as Entity | undefined;
+        const selectedRock = mud.components.ActiveRock.get()?.value;
 
         const resourceEntity = resources[resource.toLowerCase()];
 
-        if (!resourceEntity || !home) throw new Error("Resource not found");
+        if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
 
-        const value = 10000000n;
-        console.log("setting resource", getBlockTypeName(resourceEntity), home, value);
+        const value = 100000n * RESOURCE_SCALE;
+        console.log("setting resource", getBlockTypeName(resourceEntity), selectedRock, value);
 
-        await mud.contractCalls.setComponentValue(
+        await setComponentValue(
+          mud,
           mud.components.ResourceCount,
           encodeEntity(
             { entity: "bytes32", resource: "uint8" },
-            { entity: home as Hex, resource: ResourceEnumLookup[resourceEntity] }
+            { entity: selectedRock as Hex, resource: ResourceEnumLookup[resourceEntity] }
           ),
           {
             value,
@@ -97,19 +114,20 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
     getMaxResource: {
       params: [{ name: "resource", type: "string" }],
       function: async (resource: string) => {
-        const player = mud.network.playerEntity;
+        const player = mud.playerAccount.entity;
         if (!player) throw new Error("No player found");
 
-        const home = mud.components.Home.get(player)?.asteroid as Entity | undefined;
+        const selectedRock = mud.components.ActiveRock.get()?.value;
         const resourceEntity = resources[resource.toLowerCase()];
 
-        if (!resourceEntity || !home) throw new Error("Resource not found");
+        if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
 
-        await mud.contractCalls.setComponentValue(
+        await setComponentValue(
+          mud,
           mud.components.MaxResourceCount,
           encodeEntity(
             { entity: "bytes32", resource: "uint8" },
-            { entity: home as Hex, resource: ResourceEnumLookup[resourceEntity] }
+            { entity: selectedRock as Hex, resource: ResourceEnumLookup[resourceEntity] }
           ),
           {
             value: 2000000n,
@@ -123,23 +141,23 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
         { name: "count", type: "number" },
       ],
       function: async (unit: string, count: number) => {
-        const player = mud.network.playerEntity;
+        const player = mud.playerAccount.entity;
         if (!player) throw new Error("No player found");
 
         const unitEntity = units[unit.toLowerCase()];
 
         if (!unitEntity) throw new Error("Unit not found");
 
-        const rock = mud.components.Home.get(player)?.asteroid as Entity | undefined;
+        const rock = mud.components.ActiveRock.get()?.value;
 
         if (!rock) throw new Error("No asteroid found");
 
-        await mud.contractCalls.setComponentValue(
+        await setComponentValue(
+          mud,
           mud.components.UnitCount,
           encodeEntity(mud.components.UnitCount.metadata.keySchema, {
-            player: player as Hex,
             unit: unitEntity as Hex,
-            rock: rock as Hex,
+            entity: rock as Hex,
           }),
           {
             value: BigInt(count),
@@ -150,10 +168,11 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
     getTesterPack: {
       params: [],
       function: async () => {
-        const player = mud.network.playerEntity;
+        const player = mud.playerAccount.entity;
         if (!player) throw new Error("No player found");
         for (const resource of [...ResourceStorages]) {
-          await mud.contractCalls.setComponentValue(
+          await setComponentValue(
+            mud,
             mud.components.MaxResourceCount,
             encodeEntity(
               { entity: "bytes32", resource: "uint8" },
@@ -165,7 +184,8 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
           );
         }
         for (const resource of [...ResourceStorages]) {
-          await mud.contractCalls.setComponentValue(
+          await setComponentValue(
+            mud,
             mud.components.ResourceCount,
             encodeEntity(
               { entity: "bytes32", resource: "uint8" },
@@ -180,7 +200,8 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
           if (resource == EntityType.VesselCapacity) return;
           if (!player) throw new Error("No player found");
 
-          await mud.contractCalls.setComponentValue(
+          await setComponentValue(
+            mud,
             mud.components.MaxResourceCount,
             encodeEntity(
               { entity: "bytes32", resource: "uint8" },
@@ -195,7 +216,8 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
           if (resource == EntityType.VesselCapacity) return;
           if (!player) throw new Error("No player found");
 
-          await mud.contractCalls.setComponentValue(
+          await setComponentValue(
+            mud,
             mud.components.ResourceCount,
             encodeEntity(
               { entity: "bytes32", resource: "uint8" },
@@ -206,20 +228,6 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
             }
           );
         });
-      },
-    },
-    dripWETH: {
-      params: [],
-      function: async () => {
-        const player = mud.network.address;
-        if (!player) throw new Error("No player found");
-        await mud.contractCalls.setComponentValue(
-          mud.components.WETHBalance,
-          encodeEntity({ entity: "address" }, { entity: normalizeAddress(player) as Hex }),
-          {
-            value: BigInt(2) * BigInt(1e18),
-          }
-        );
       },
     },
     spawnPlayers: {
@@ -250,6 +258,44 @@ export const setupCheatcodes = (mud: SetupResult): Cheatcodes => {
 
           await worldContract.write.spawn();
         }
+      },
+    },
+
+    createPirateAsteroid: {
+      params: [],
+      function: async () => {
+        const playerEntity = mud.playerAccount.entity;
+        const asteroid = components.ActiveRock.get()?.value;
+        const ownerEntity = hashKeyEntity(PIRATE_KEY, playerEntity);
+        const asteroidEntity = hashEntities(ownerEntity);
+        const homePromise = setComponentValue(mud, components.Home, ownerEntity, { value: asteroidEntity as Hex });
+        const position = components.Position.get(asteroid);
+        const coord = { x: (position?.x ?? 0) + 10, y: (position?.y ?? 0) + 10, parent: encodeBytes32("0") };
+
+        await setComponentValue(mud, components.PirateAsteroid, asteroidEntity, {
+          isDefeated: false,
+          isPirateAsteroid: true,
+          prototype: encodeBytes32("0"),
+          playerEntity: playerEntity,
+        });
+
+        const positionPromise = setComponentValue(mud, components.Position, asteroidEntity, coord);
+        const asteroidPromise = setComponentValue(mud, components.Asteroid, asteroidEntity, { isAsteroid: true });
+
+        const reversePosEntity = encodeEntity(mud.components.ReversePosition.metadata.keySchema, {
+          x: coord.x,
+          y: coord.y,
+        });
+        const reversePositionPromise = setComponentValue(mud, components.ReversePosition, reversePosEntity, {
+          entity: asteroidEntity as Hex,
+        });
+        const ownedByPromise = setComponentValue(mud, components.OwnedBy, asteroidEntity, { value: ownerEntity });
+
+        await Promise.all([homePromise, positionPromise, reversePositionPromise, asteroidPromise, ownedByPromise]);
+
+        await setComponentValue(mud, components.PirateAsteroid, asteroidEntity, {
+          isDefeated: false,
+        });
       },
     },
   };

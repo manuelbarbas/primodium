@@ -16,16 +16,7 @@ type PhaserAudio =
 export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, autoStart = true) => {
   const {
     camera: { minZoom, maxZoom, pinchSpeed, wheelSpeed, defaultZoom },
-    tilemap: {
-      chunkSize,
-      tileWidth,
-      tileHeight,
-      layerConfig,
-      tilesets,
-      tileAnimations,
-      animationInterval,
-      backgroundTile,
-    },
+    tilemap: { defaultKey, tileWidth, tileHeight, config: tilemapConfig },
     cullingChunkSize,
     animations,
   } = config;
@@ -48,20 +39,7 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
     defaultZoom,
   });
 
-  const tilemap = createTilemap(
-    scene,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    camera,
-    tileWidth,
-    tileHeight,
-    chunkSize,
-    tilesets,
-    layerConfig,
-    tileAnimations,
-    animationInterval,
-    backgroundTile
-  );
+  const tilemap = createTilemap(scene, tileWidth, tileHeight, defaultKey, tilemapConfig);
 
   //create sprite animations
   if (animations) {
@@ -101,7 +79,7 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
 
   const input = createInput(scene.input);
 
-  camera.centerOn(0, 0);
+  // camera.centerOn(0, 0);
   camera.setZoom(defaultZoom);
 
   /* -------------------------- Create Audio Channels ------------------------- */

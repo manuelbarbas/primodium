@@ -1,17 +1,29 @@
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { EResource } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { Hex } from "viem";
 import { distanceBI } from "./common";
-import { SPEED_SCALE, UNIT_SPEED_SCALE, UnitEnumLookup } from "./constants";
-import { UnitCountTuple } from "./web3/types";
+import { ResourceEntityLookup, SPEED_SCALE, UNIT_SPEED_SCALE } from "./constants";
 
-export function toUnitCountArray(map: Record<Entity, bigint>): UnitCountTuple {
-  const arr: UnitCountTuple = [0n, 0n, 0n, 0n, 0n, 0n, 0n, 0n];
-  Object.entries(map).forEach(([key, value]) => {
-    const index = UnitEnumLookup[key as Entity];
-    if (index === undefined) throw new Error("Invalid unit entity");
-    arr[index - 1] = value;
+export function toUnitCountArray(map: Map<Entity, bigint>): bigint[] {
+  const prototypes = components.P_UnitPrototypes.get()?.value ?? [];
+  const arr = Array.from({ length: prototypes.length }, () => 0n);
+  prototypes.forEach((entity, index) => {
+    const count = map.get(entity as Entity);
+    if (count && count > 0n) arr[index] = count;
+  });
+  return arr;
+}
+
+export function toTransportableResourceArray(map: Map<Entity, bigint>): bigint[] {
+  const transportables = components.P_Transportables.get()?.value ?? [];
+  const arr = Array.from({ length: transportables.length }, () => 0n);
+  transportables.forEach((enumValue, index) => {
+    const entity = ResourceEntityLookup[enumValue as EResource];
+    const count = map.get(entity as Entity);
+    if (!count || count === 0n) return;
+    arr[index] = count;
   });
   return arr;
 }

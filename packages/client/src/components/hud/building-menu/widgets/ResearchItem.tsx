@@ -8,24 +8,25 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
+import { upgradeUnit } from "src/network/setup/contractCalls/upgradeUnit";
 import { getBlockTypeName } from "src/util/common";
 import { BackgroundImage, ResourceImage, TransactionQueueType, UnitEnumLookup } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { getUpgradeInfo } from "src/util/upgrade";
-import { upgradeUnit } from "src/util/web3/contractCalls/upgradeUnit";
 
 export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
-  const { network } = useMud();
-  const playerEntity = network.playerEntity;
-  const mainBaseEntity = components.Home.use(playerEntity)?.mainBase as Entity;
-  const homeAsteroid = components.Home.use(playerEntity)?.asteroid as Entity;
+  const mud = useMud();
+
+  const asteroid = components.ActiveRock.use()?.value as Entity | undefined;
+  if (!asteroid) throw new Error("No active rock entity found");
+  const mainBaseEntity = components.Home.use(asteroid)?.value as Entity;
   const mainBaseLevel = components.Level.use(mainBaseEntity, {
     value: 1n,
   }).value;
 
-  const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(type, playerEntity);
+  const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(type, asteroid);
 
-  const hasEnough = useHasEnoughResources(recipe);
+  const hasEnough = useHasEnoughResources(recipe, asteroid);
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && !isResearched;
 
   let error = "";
@@ -82,9 +83,7 @@ export const ResearchItem: React.FC<{ type: Entity }> = memo(({ type }) => {
         <Button
           className="btn-sm btn-secondary"
           disabled={!canUpgrade}
-          onClick={() => {
-            upgradeUnit(homeAsteroid, UnitEnumLookup[type], network);
-          }}
+          onClick={() => upgradeUnit(mud, asteroid, UnitEnumLookup[type])}
         >
           Upgrade
         </Button>

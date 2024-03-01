@@ -25,7 +25,7 @@ contract LibReduceProductionRateTest is PrimodiumTest {
     // Set up mock data
     uint256 originalProduction = 100;
     uint256 productionReduction = 10;
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     ProductionRate.set(spaceRockEntity, Iron, originalProduction);
     ConsumptionRate.set(spaceRockEntity, Iron, productionReduction);
     P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(
@@ -44,7 +44,7 @@ contract LibReduceProductionRateTest is PrimodiumTest {
     // Set up mock data
     uint256 originalProduction = 100;
     uint256 productionReduction = 10;
-    bytes32 spaceRockEntity = Home.getAsteroid(playerEntity);
+    bytes32 spaceRockEntity = Home.get(playerEntity);
     ProductionRate.set(spaceRockEntity, Iron, originalProduction);
     ConsumptionRate.set(spaceRockEntity, Iron, prevReduction);
     P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(

@@ -18,7 +18,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
   }
 
   function testMove() public {
-    bytes32 mainBaseEntity = Home.get(playerEntity).mainBase;
+    bytes32 mainBaseEntity = Home.get(Home.get(playerEntity));
     PositionData memory mainBasePosition = Position.get(mainBaseEntity);
     PositionData memory newPosition = PositionData(
       mainBasePosition.x + 3,
@@ -60,27 +60,25 @@ contract MoveBuildingSystemTest is PrimodiumTest {
   }
 
   function testFailMoveOutOfBounds() public {
-    bytes32 mainBaseEntity = Home.get(playerEntity).mainBase;
+    bytes32 mainBaseEntity = Home.get(Home.get(playerEntity));
     PositionData memory mainBasePosition = Position.get(mainBaseEntity);
     PositionData memory newPosition = PositionData(
       mainBasePosition.x + 15,
       mainBasePosition.y + 15,
       mainBasePosition.parent
     );
-    bytes32[] memory oldChildren = Children.get(mainBaseEntity);
 
     world.moveBuilding(mainBasePosition, newPosition);
   }
 
   function testMoveSomeSameTiles() public {
-    bytes32 mainBaseEntity = Home.get(playerEntity).mainBase;
+    bytes32 mainBaseEntity = Home.get(Home.get(playerEntity));
     PositionData memory mainBasePosition = Position.get(mainBaseEntity);
     PositionData memory newPosition = PositionData(
       mainBasePosition.x + 1,
       mainBasePosition.y + 1,
       mainBasePosition.parent
     );
-    bytes32[] memory oldChildren = Children.get(mainBaseEntity);
 
     world.moveBuilding(mainBasePosition, newPosition);
     mainBasePosition = Position.get(mainBaseEntity);
@@ -107,14 +105,13 @@ contract MoveBuildingSystemTest is PrimodiumTest {
 
   function testMoveBuildTiles() public {
     console.log("testMoveBuildTiles");
-    bytes32 mainBaseEntity = Home.get(playerEntity).mainBase;
+    bytes32 mainBaseEntity = Home.get(Home.get(playerEntity));
     PositionData memory mainBasePosition = Position.get(mainBaseEntity);
     PositionData memory newPosition = PositionData(
       mainBasePosition.x - 1,
       mainBasePosition.y - 1,
       mainBasePosition.parent
     );
-    bytes32[] memory oldChildren = Children.get(mainBaseEntity);
 
     world.moveBuilding(mainBasePosition, newPosition);
     console.log("moved success");
@@ -164,7 +161,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
     P_RequiredTile.deleteRecord(IronMinePrototypeId);
 
     console.log("testMoveBuildTiles");
-    bytes32 mainBaseEntity = Home.get(playerEntity).mainBase;
+    bytes32 mainBaseEntity = Home.get(Home.get(playerEntity));
     PositionData memory mainBasePosition = Position.get(mainBaseEntity);
 
     PositionData memory overlappedPosition = PositionData(
@@ -179,8 +176,6 @@ contract MoveBuildingSystemTest is PrimodiumTest {
       mainBasePosition.y - 1,
       mainBasePosition.parent
     );
-
-    bytes32[] memory oldChildren = Children.get(mainBaseEntity);
 
     world.moveBuilding(mainBasePosition, newPosition);
     console.log("moved success");
