@@ -3,12 +3,6 @@ pragma solidity >=0.8.21;
 import { buildMainBase } from "src/libraries/SubsystemCalls.sol";
 import { EObjectives } from "src/Types.sol";
 import { ObjectiveKey } from "src/Keys.sol";
-import { P_RequiredObjectives } from "codegen/tables/P_RequiredObjectives.sol";
-import { P_EnumToPrototype } from "codegen/tables/P_EnumToPrototype.sol";
-import { CompletedObjective } from "codegen/tables/CompletedObjective.sol";
-import { OwnedBy } from "codegen/tables/OwnedBy.sol";
-import { BuildingType } from "codegen/tables/BuildingType.sol";
-import { P_HasBuiltBuildings } from "codegen/tables/P_HasBuiltBuildings.sol";
 import { initializeSpaceRockOwnership } from "src/libraries/SubsystemCalls.sol";
 import "test/PrimodiumTest.t.sol";
 

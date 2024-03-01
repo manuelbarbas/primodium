@@ -41,6 +41,13 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
+  function testUpgradeBuildingFailRequiredMainBase() public {
+    PositionData memory coord = getTilePosition(rock, EBuilding.IronMine);
+    bytes32 building = world.build(EBuilding.IronMine, coord);
+    upgradeBuilding(creator, building);
+    upgradeBuilding(creator, building);
+  }
+
   function testUpgradeBuildingWithRequiredResources() public {
     uint256 initial = 100;
     uint256 l1 = 50;

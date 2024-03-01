@@ -72,12 +72,13 @@ library LibBuilding {
    * @param buildingEntity The building to be placed.
    */
   function checkUpgradeRequirements(bytes32 playerEntity, bytes32 buildingEntity) internal view {
+    bytes32 asteroidEntity = Position.getParent(buildingEntity);
     require(buildingEntity != 0, "[UpgradeBuildingSystem] no building at this coordinate");
 
     uint256 targetLevel = Level.get(buildingEntity) + 1;
     require(targetLevel > 1, "[UpgradeBuildingSystem] Cannot upgrade a non-building");
     require(
-      OwnedBy.get(Position.getParent(buildingEntity)) == playerEntity,
+      OwnedBy.get(asteroidEntity) == playerEntity,
       "[UpgradeBuildingSystem] Cannot upgrade a building that is not owned by you"
     );
 
@@ -86,7 +87,7 @@ library LibBuilding {
     require((targetLevel <= maxLevel), "[UpgradeBuildingSystem] Building has reached max level");
 
     require(
-      LibBuilding.hasRequiredBaseLevel(playerEntity, buildingPrototype, targetLevel),
+      LibBuilding.hasRequiredBaseLevel(asteroidEntity, buildingPrototype, targetLevel),
       "[UpgradeBuildingSystem] MainBase level requirement not met"
     );
   }
