@@ -582,6 +582,16 @@ export const animationConfig: Animation<Assets>[] = [
     suffix: ".png",
   },
   {
+    key: "droidbase/level1",
+    assetKey: "sprite-atlas",
+    frameRate: 5,
+    startFrame: 1,
+    endFrame: 8,
+    repeat: -1,
+    prefix: "sprites/droidbase/Droid_Base",
+    suffix: ".png",
+  },
+  {
     key: "decorations/drone",
     assetKey: "sprite-atlas",
     frameRate: 5,

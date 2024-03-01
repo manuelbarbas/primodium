@@ -183,6 +183,7 @@ export enum SpriteKeys {
   Vault3 = "sprites/vault/level3/Vault_LVL3_1.png",
 
   Shipyard1 = "sprites/shipyard/level1/Shipyard_LVL1_1.png",
+  DroidBase = "sprites/droidbase/Droid_Base1.png",
 
   //ASTEROIDS
   Asteroid1 = "sprites/spacerocks/asteroids/asteroid1.png",
@@ -343,6 +344,8 @@ export enum AnimationKeys {
 
   Shipyard1 = "shipyard/level1",
 
+  DroidBase = "droidbase/level1",
+
   //DECORATIONS
   Drone = "decorations/drone",
 }
@@ -465,6 +468,7 @@ export const EntitytoBuildingSpriteKey = {
   [EntityType.Vault]: [SpriteKeys.Vault1, SpriteKeys.Vault2, SpriteKeys.Vault3],
   [EntityType.Market]: [SpriteKeys.Market1],
   [EntityType.Shipyard]: [SpriteKeys.Shipyard1],
+  [EntityType.DroidBase]: [SpriteKeys.DroidBase],
 
   //STARMAP
   [EntityType.Asteroid]: [
@@ -537,6 +541,7 @@ export const EntityIDtoAnimationKey = {
   [EntityType.Vault]: [AnimationKeys.Vault1, AnimationKeys.Vault2, AnimationKeys.Vault3],
   [EntityType.Market]: [AnimationKeys.Market1],
   [EntityType.Shipyard]: [AnimationKeys.Shipyard1],
+  [EntityType.DroidBase]: [AnimationKeys.DroidBase],
 };
 
 export enum KeybindActions {

@@ -164,125 +164,117 @@ export const renderBuilding = (scene: Scene) => {
           },
           true
         ),
-        OnComponentSystem(
-          components.Time,
-          (_, { value }) => {
-            const hoverEntity = components.HoverEntity.get()?.value;
-            const selectedBuilding = components.SelectedBuilding.get()?.value;
-            const selectedBuildingType = components.BuildingType.get(entity)?.value;
+        OnComponentSystem(components.Time, (_, { value }) => {
+          const hoverEntity = components.HoverEntity.get()?.value;
+          const selectedBuilding = components.SelectedBuilding.get()?.value;
+          const selectedBuildingType = components.BuildingType.get(entity)?.value;
 
-            if (selectedBuildingType === EntityType.MainBase) return;
+          if (selectedBuildingType === EntityType.MainBase) return;
 
-            if (hoverEntity !== entity && selectedBuilding !== entity) return;
+          if (hoverEntity !== entity && selectedBuilding !== entity) return;
 
-            const frequency = 1n;
-            if ((value[0]?.value ?? 0n) % frequency !== 0n) return;
+          const frequency = 1n;
+          if ((value[0]?.value ?? 0n) % frequency !== 0n) return;
 
-            if (components.BuildRock.get()?.value !== activeRock || !components.IsActive.get(entity)?.value) return;
+          if (components.BuildRock.get()?.value !== activeRock || !components.IsActive.get(entity)?.value) return;
 
-            const textCoord = {
-              x: tilePosition.x + buildingDimensions.width / 2,
-              y: tilePosition.y,
-            };
+          const textCoord = {
+            x: tilePosition.x + buildingDimensions.width / 2,
+            y: tilePosition.y,
+          };
 
-            const producedResource = components.P_Production.getWithKeys({
-              level: components.Level.get(entity)?.value ?? 1n,
-              prototype: buildingType as Hex,
-            });
+          const producedResource = components.P_Production.getWithKeys({
+            level: components.Level.get(entity)?.value ?? 1n,
+            prototype: buildingType as Hex,
+          });
 
-            producedResource?.resources.forEach((resource, i) => {
-              const resourceEntity = ResourceEntityLookup[resource as EResource];
-              const amount = producedResource.amounts[i];
+          producedResource?.resources.forEach((resource, i) => {
+            const resourceEntity = ResourceEntityLookup[resource as EResource];
+            const amount = producedResource.amounts[i];
 
-              if (!ResourceStorages.has(resourceEntity)) return;
+            if (!ResourceStorages.has(resourceEntity)) return;
 
-              const { production, resourceStorage, resourceCount } = getFullResourceCount(resourceEntity, activeRock);
+            const { production, resourceStorage, resourceCount } = getFullResourceCount(resourceEntity, activeRock);
 
-              const productionScaled = (amount * worldSpeed) / SPEED_SCALE;
-              let text = "";
-              let color = 0xffffff;
-              if (resourceCount >= resourceStorage) {
-                text = "full";
-                color = 0x00ffff;
-              } else if (production <= 0) return;
-              else {
-                text = formatResourceCount(resourceEntity, productionScaled * frequency, {
-                  short: true,
-                  fractionDigits: 2,
-                });
-              }
-
-              fx.emitFloatingText(text, textCoord, {
-                icon: EntityToResourceSpriteKey[resourceEntity],
-                color,
+            const productionScaled = (amount * worldSpeed) / SPEED_SCALE;
+            let text = "";
+            let color = 0xffffff;
+            if (resourceCount >= resourceStorage) {
+              text = "full";
+              color = 0x00ffff;
+            } else if (production <= 0) return;
+            else {
+              text = formatResourceCount(resourceEntity, productionScaled * frequency, {
+                short: true,
+                fractionDigits: 2,
               });
-            });
-
-            const consumedResource = components.P_RequiredDependency.getWithKeys({
-              level: components.Level.get(entity)?.value ?? 1n,
-              prototype: buildingType as Hex,
-            });
-
-            if (!consumedResource) return;
-
-            //render consumed resources
-            const consumedResourceEntity = ResourceEntityLookup[consumedResource.resource as EResource];
-            const consumedResourceAmount = consumedResource.amount;
-
-            const { resourceCount, production: consumption } = getFullResourceCount(consumedResourceEntity, activeRock);
-
-            if (Math.abs(Number(consumption)) > resourceCount) {
-              fx.emitFloatingText("empty", textCoord, {
-                icon: EntityToResourceSpriteKey[consumedResourceEntity],
-                color: 0xff6e63,
-                delay: 500,
-              });
-
-              return;
             }
 
-            const consumptionScaled = (consumedResourceAmount * worldSpeed) / SPEED_SCALE;
-
-            const text = formatResourceCount(consumedResourceEntity, consumptionScaled * frequency, {
-              short: true,
-              fractionDigits: 2,
-            });
-
             fx.emitFloatingText(text, textCoord, {
+              icon: EntityToResourceSpriteKey[resourceEntity],
+              color,
+            });
+          });
+
+          const consumedResource = components.P_RequiredDependency.getWithKeys({
+            level: components.Level.get(entity)?.value ?? 1n,
+            prototype: buildingType as Hex,
+          });
+
+          if (!consumedResource) return;
+
+          //render consumed resources
+          const consumedResourceEntity = ResourceEntityLookup[consumedResource.resource as EResource];
+          const consumedResourceAmount = consumedResource.amount;
+
+          const { resourceCount, production: consumption } = getFullResourceCount(consumedResourceEntity, activeRock);
+
+          if (Math.abs(Number(consumption)) > resourceCount) {
+            fx.emitFloatingText("empty", textCoord, {
               icon: EntityToResourceSpriteKey[consumedResourceEntity],
               color: 0xff6e63,
               delay: 500,
             });
-          },
-          { runOnInit: false }
-        ),
-        OnComponentSystem(
-          components.TrainingQueue,
-          (_, { entity: trainingBuildingEntity, value }) => {
-            if (entity !== trainingBuildingEntity || !value[0]) return;
 
-            const queue = value[0];
+            return;
+          }
 
-            if (queue.units.length === 0 || queue.timeRemaining[0] !== 1n) return;
+          const consumptionScaled = (consumedResourceAmount * worldSpeed) / SPEED_SCALE;
 
-            //its the last tick for the queue, so show floating text of unit produced
+          const text = formatResourceCount(consumedResourceEntity, consumptionScaled * frequency, {
+            short: true,
+            fractionDigits: 2,
+          });
 
-            //
-            const unit = queue.units[0];
-            const textCoord = {
-              x: tilePosition.x + buildingDimensions.width / 2 - 0.5,
-              y: tilePosition.y + buildingDimensions.height / 2,
-            };
+          fx.emitFloatingText(text, textCoord, {
+            icon: EntityToResourceSpriteKey[consumedResourceEntity],
+            color: 0xff6e63,
+            delay: 500,
+          });
+        }),
+        OnComponentSystem(components.TrainingQueue, (_, { entity: trainingBuildingEntity, value }) => {
+          if (entity !== trainingBuildingEntity || !value[0]) return;
 
-            fx.emitFloatingText("+", textCoord, {
-              icon: EntityToUnitSpriteKey[unit],
-              color: 0x00ffff,
-              delay: 1000,
-              prefixText: true,
-            });
-          },
-          { runOnInit: false }
-        ),
+          const queue = value[0];
+
+          if (queue.units.length === 0 || queue.timeRemaining[0] !== 1n) return;
+
+          //its the last tick for the queue, so show floating text of unit produced
+
+          //
+          const unit = queue.units[0];
+          const textCoord = {
+            x: tilePosition.x + buildingDimensions.width / 2 - 0.5,
+            y: tilePosition.y + buildingDimensions.height / 2,
+          };
+
+          fx.emitFloatingText("+", textCoord, {
+            icon: EntityToUnitSpriteKey[unit],
+            color: 0x00ffff,
+            delay: 1000,
+            prefixText: true,
+          });
+        }),
         ...sharedComponents,
       ]);
 
