@@ -19,8 +19,7 @@ import { Statistics } from "./screens/Statistics";
 import { setupCheatcodes } from "./util/cheatcodes";
 
 export const DEV = import.meta.env.PRI_DEV === "true";
-// export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
-export const DEV_CHAIN = false;
+export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
 
 export default function AppLoadingState() {
   const mud = useMud();
