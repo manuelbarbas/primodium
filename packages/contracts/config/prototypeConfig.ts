@@ -991,7 +991,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: {
       1: {
         P_RequiredResources: getResourceValues({ IronPlate: 2500, Alloy: 2500, PVCell: 2500 }),
-        // P_RequiredResources: getResourceValues({ Iron: 1 }),
         P_RequiredBaseLevel: { value: 3n },
         P_UnitProdMultiplier: { value: 100n },
         P_Production: getResourceValues({ U_CapitalShipCapacity: 1_000_000_000_000 }),
@@ -1052,7 +1051,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Alloy: 2000, U_Electricity: 100 }),
-        P_Production: getResourceValues({ U_Defense: 100, R_HP: 0.1 }),
+        P_Production: getResourceValues({ U_Defense: 1500, R_HP: 0.1 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(samSiteMaxResourceUpgrades[1]),
         },
@@ -1064,7 +1063,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           U_Electricity: 200,
         }),
 
-        P_Production: getResourceValues({ U_Defense: 250, R_HP: 0.25 }),
+        P_Production: getResourceValues({ U_Defense: 2500, R_HP: 0.25 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(samSiteMaxResourceUpgrades[2]),
         },
@@ -1076,7 +1075,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           U_Electricity: 300,
         }),
 
-        P_Production: getResourceValues({ U_Defense: 750, R_HP: 0.75 }),
+        P_Production: getResourceValues({ U_Defense: 5000, R_HP: 0.75 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(samSiteMaxResourceUpgrades[3]),
         },
@@ -1589,73 +1588,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           trainingTime: 100000,
         }),
       },
-      /* Stage in future release
-      1: {
-        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 500 }),
-        P_RequiredBaseLevel: { value: 3n },
-        P_RequiredResources: getResourceValues({ U_CapitalShipCapacity: 1 }),
-        P_Unit: getPUnitData({
-          hp: 100,
-          attack: 50,
-          defense: 55,
-          cargo: 2000,
-          speed: 200,
-          trainingTime: 100000,
-        }),
-      },
-      2: {
-        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 1500 }),
-        P_RequiredBaseLevel: { value: 4n },
-        P_RequiredResources: getResourceValues({ U_CapitalShipCapacity: 1 }),
-        P_Unit: getPUnitData({
-          hp: 100,
-          attack: 100,
-          defense: 60,
-          cargo: 2000,
-          speed: 300,
-          trainingTime: 100000,
-        }),
-      },
-      3: {
-        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 5000 }),
-        P_RequiredBaseLevel: { value: 6n },
-        P_RequiredResources: getResourceValues({ U_CapitalShipCapacity: 1 }),
-        P_Unit: getPUnitData({
-          hp: 100,
-          attack: 250,
-          defense: 65,
-          cargo: 2000,
-          speed: 400,
-          trainingTime: 100000,
-        }),
-      },
-      4: {
-        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 10000 }),
-        P_RequiredBaseLevel: { value: 7n },
-        P_RequiredResources: getResourceValues({ U_CapitalShipCapacity: 1 }),
-        P_Unit: getPUnitData({
-          hp: 100,
-          attack: 500,
-          defense: 70,
-          cargo: 1000,
-          speed: 500,
-          trainingTime: 100000,
-        }),
-      },
-      5: {
-        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 15000 }),
-        P_RequiredBaseLevel: { value: 8n },
-        P_RequiredResources: getResourceValues({ U_CapitalShipCapacity: 1 }),
-        P_Unit: getPUnitData({
-          hp: 100,
-          attack: 1000,
-          defense: 75,
-          cargo: 1000,
-          speed: 600,
-          trainingTime: 100000,
-        }),
-      },
-      */
     },
   },
   Droid: {
