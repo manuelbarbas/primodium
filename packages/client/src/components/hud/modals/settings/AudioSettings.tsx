@@ -1,12 +1,24 @@
+import { Scenes } from "@game/constants";
+import { useCallback } from "react";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { Range } from "src/components/core/Range";
+import { Channel } from "src/game/api/audio";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { usePrimodium } from "src/hooks/usePrimodium";
 
 export const AudioSettings = () => {
   const { master, sfx, ui, music } = usePersistentStore((state) => state.volume);
-  const { setVolume } = usePrimodium().api().audio;
+  const primodium = usePrimodium();
+
+  const setVolume = useCallback(
+    (amount: number, channel: Channel | "master") => {
+      primodium.api().audio.setVolume(amount, channel);
+      primodium.api(Scenes.UI).audio.setVolume(amount, channel);
+      primodium.api(Scenes.Starmap).audio.setVolume(amount, channel);
+    },
+    [primodium]
+  );
 
   return (
     <Navigator.Screen title="audio">

@@ -6,12 +6,20 @@ export type Channel = "music" | "sfx" | "ui";
 
 export const createAudioApi = (scene: Scene) => {
   function play(key: AudioKeys, channel: Channel, config?: Phaser.Types.Sound.SoundConfig) {
-    const volume = usePersistentStore.getState().volume;
+    // const volume = usePersistentStore.getState().volume;
 
-    setVolume(volume[channel], channel);
+    // setVolume(volume[channel], channel);
     scene.audio[channel].playAudioSprite(Assets.AudioAtlas, key, {
       ...config,
     });
+  }
+
+  function initializeAudioVolume() {
+    const { volume } = usePersistentStore.getState();
+
+    scene.audio.music.setVolume(volume.master * volume.music);
+    scene.audio.sfx.setVolume(volume.master * volume.sfx);
+    scene.audio.ui.setVolume(volume.master * volume.ui);
   }
 
   function get(key: AudioKeys, channel: Channel) {
@@ -47,5 +55,6 @@ export const createAudioApi = (scene: Scene) => {
     get,
     setVolume,
     setPauseOnBlur,
+    initializeAudioVolume,
   };
 };
