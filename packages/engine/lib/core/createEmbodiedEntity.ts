@@ -19,6 +19,10 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
   let activeGameObject: GameObject<Type> | undefined;
   const cameraFilter = { current: currentCameraFilter };
 
+  function getGameObject() {
+    return activeGameObject;
+  }
+
   function modifiesPosition<Type extends keyof GameObjectTypes>(
     func: GameObjectFunction<Type>
   ): Partial<PixelCoord> | undefined {
@@ -219,6 +223,7 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     setComponents,
     hasComponent,
     removeComponent,
+    getGameObject,
     reset: (stop?: boolean) => {
       if (activeGameObject) {
         reset(activeGameObject, stop);

@@ -161,19 +161,15 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
           components.HoverEntity.remove();
         }
       ),
-      OnComponentSystem(
-        components.FleetStance,
-        (gameObject, { entity, value: [newVal, oldVal] }) => {
-          if (entity !== fleet || oldVal?.stance === newVal?.stance) return;
-          const id = `fleetShape-${fleet}`;
-          if (fleetOrbitObject.hasComponent(id)) {
-            fleetOrbitObject.removeComponent(id);
-            const shape = getFleetShape(fleet, { x: gameObject.x, y: gameObject.y });
-            fleetOrbitObject.setComponent(shape);
-          }
-        },
-        { runOnInit: false }
-      ),
+      OnComponentSystem(components.FleetStance, (gameObject, { entity, value: [newVal, oldVal] }) => {
+        if (entity !== fleet || oldVal?.stance === newVal?.stance) return;
+        const id = `fleetShape-${fleet}`;
+        if (fleetOrbitObject.hasComponent(id)) {
+          fleetOrbitObject.removeComponent(id);
+          const shape = getFleetShape(fleet, { x: gameObject.x, y: gameObject.y });
+          fleetOrbitObject.setComponent(shape);
+        }
+      }),
       OnComponentSystem(components.SelectedFleet, (_, { value: [newVal, oldVal] }) => {
         const id = `homeLine-${fleet}`;
         if (newVal?.value == fleet) {
@@ -352,10 +348,13 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
           const angleRads = Phaser.Math.DegToRad(current + offset);
           const x = destinationPixelCoord.x + orbitRadius * Math.cos(angleRads);
           const y = destinationPixelCoord.y + orbitRadius * Math.sin(angleRads);
-          fleetOrbitObject.setComponent(ObjectPosition({ x, y }, DepthLayers.Marker));
-          fleetLabel.setComponent(ObjectPosition({ x, y }, DepthLayers.Marker + 2));
-          fleetHomeLineObject.setComponent(ObjectPosition({ x, y }, DepthLayers.Marker - 1));
-          gracePeriod.setComponent(ObjectPosition({ x, y }, DepthLayers.Marker + 1));
+          fleetOrbitObject.getGameObject()?.setPosition(x, y).setDepth(DepthLayers.Marker);
+          fleetLabel
+            .getGameObject()
+            ?.setPosition(x, y)
+            .setDepth(DepthLayers.Marker + 2);
+          fleetHomeLineObject.getGameObject()?.setDepth(DepthLayers.Marker - 1);
+          gracePeriod.getGameObject()?.setDepth(DepthLayers.Marker + 1);
         },
       }),
       OnComponentSystem(components.IsFleetEmpty, () => {

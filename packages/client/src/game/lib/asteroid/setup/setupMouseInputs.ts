@@ -10,6 +10,10 @@ import { outOfBounds } from "src/util/outOfBounds";
 
 export const setupMouseInputs = (scene: Scene) => {
   const clickSub = scene.input.click$.subscribe(([pointer]) => {
+    const selectedRock = components.ActiveRock.get()?.value;
+
+    if (components.Account.get()?.value !== components.OwnedBy.get(selectedRock)?.value) return;
+
     const { x, y } = pixelCoordToTileCoord(
       { x: pointer.worldX, y: pointer.worldY },
       scene.tilemap.tileWidth,
@@ -18,7 +22,6 @@ export const setupMouseInputs = (scene: Scene) => {
 
     const gameCoord = { x, y: -y };
 
-    const selectedRock = components.ActiveRock.get()?.value;
     if (!selectedRock || outOfBounds(gameCoord, selectedRock)) {
       components.SelectedBuilding.remove();
       components.SelectedTile.remove();
