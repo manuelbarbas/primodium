@@ -72,6 +72,7 @@ export type GameObjectFunction<Type extends keyof GameObjectTypes> = (
 ) => Promise<void> | void;
 
 export type EmbodiedEntity<Type extends keyof GameObjectTypes> = {
+  getGameObject: () => GameObject<Type> | undefined;
   setComponent: (component: GameObjectComponent<Type>) => void;
   setComponents: (components: (GameObjectComponent<Type> | undefined)[]) => void;
   hasComponent: (id: string) => boolean;
