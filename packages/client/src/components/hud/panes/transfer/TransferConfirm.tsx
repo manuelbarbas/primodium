@@ -41,7 +41,7 @@ export const TransferConfirm = (props: {
   return toIsFleet ? (
     <TransferConfirmFleet entity={props.to} {...props} />
   ) : (
-    <TransferConfirmAsteroid entity={props.to} {...props} />
+    <TransferConfirmAsteroid entity={props.to as Entity} {...props} />
   );
 };
 
@@ -74,11 +74,13 @@ const TransferConfirmFleet = ({ toUnits, toResources, handleSubmit, entity }: Tr
   return <TransferConfirmButton disabled={disabled} message={submitMessage} onClick={handleSubmit} />;
 };
 
-const TransferConfirmAsteroid = ({ entity, toUnits, toResources, handleSubmit }: TransferConfirmProps) => {
+const TransferConfirmAsteroid = ({
+  entity,
+  toUnits,
+  toResources,
+  handleSubmit,
+}: TransferConfirmProps & { entity: Entity }) => {
   const { disabled, submitMessage } = useMemo(() => {
-    if (entity == "newFleet") return { disabled: true, submitMessage: "Create Fleet" };
-    if (toUnits.size === 0) return { disabled: true, submitMessage: "Transfer" };
-
     // make sure we have enough storage for housing
     const utilitiesUsed = [...toUnits.entries()].reduce((acc, [unit, count]) => {
       const level = components.UnitLevel.getWithKeys({ unit: unit as Hex, entity: entity as Hex })?.value ?? 0n;
