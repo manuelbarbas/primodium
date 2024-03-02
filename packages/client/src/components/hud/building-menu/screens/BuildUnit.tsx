@@ -179,7 +179,7 @@ const TrainCapitalShip = ({ building, asteroid }: { building: Entity; asteroid: 
   const ships = useEntityQuery(playerAsteroidsQuery).reduce((acc, entity) => {
     const data = getFullResourceCount(EntityType.CapitalShipCapacity, entity);
     return acc + data.resourceStorage - data.resourceCount;
-  }, 0n);
+  }, BigInt(playerAsteroidsQuery.length - 1));
 
   const cost = capitalShipResourceData.initialCost * 2n ** ships;
 
