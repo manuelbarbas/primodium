@@ -1,16 +1,16 @@
 import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FaInfoCircle, FaTimes } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
+import { useMud } from "src/hooks";
+import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
 import { components } from "src/network/components";
 import { EntityType } from "src/util/constants";
 import { formatResourceCount, formatTime, parseResourceCount } from "src/util/number";
 import { TargetHeader } from "../../TargetHeader";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { FleetEntityHeader } from "../fleets/FleetHeader";
-import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
-import { useMud } from "src/hooks";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 export const TransferFrom = (props: {
   dragging?: boolean;
@@ -172,7 +172,7 @@ export const TransferFrom = (props: {
             >
               e
             </span>
-            to change by 1. Press
+            to change by 10. Press
             <span
               className={`inline kbd kbd-xs not-italic ${
                 ["a", "A", "å"].includes(keyDown) ? "bg-white text-black" : ""
@@ -188,7 +188,7 @@ export const TransferFrom = (props: {
             >
               d
             </span>{" "}
-            to change by 10.
+            to change by 100.
           </>
         )}
       </p>
