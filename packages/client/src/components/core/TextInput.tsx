@@ -63,13 +63,11 @@ export const TextInput: React.FC<{
         onChange={onChange}
         maxLength={maxLength}
         onFocus={() => {
-          console.log("focus");
           input.disableInput();
           input2.disableInput();
           input3.disableInput();
         }}
         onBlur={() => {
-          console.log("blur");
           input.enableInput();
           input2.enableInput();
           input3.enableInput();
