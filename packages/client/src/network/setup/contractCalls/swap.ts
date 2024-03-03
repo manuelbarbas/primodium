@@ -10,13 +10,13 @@ import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const swap = async (mud: MUD, marketEntity: Entity, path: Entity[], amountIn: bigint) => {
   const enumPath = path.map((p) => ResourceEnumLookup[p]);
-  console.log("enumPath", enumPath);
   await execute(
     {
       mud,
       systemId: getSystemId("MarketplaceSystem"),
       functionName: "swap",
       args: [marketEntity as Hex, enumPath, amountIn, 0n],
+      withSession: true,
     },
     { id: singletonEntity },
     (receipt) => {
