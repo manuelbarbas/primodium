@@ -2,6 +2,7 @@ import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
+import { EResource } from "contracts/config/enums";
 import encodeBytes32 from "contracts/config/util/encodeBytes32";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { components } from "src/network/components";
@@ -16,6 +17,7 @@ import {
   EntityType,
   PIRATE_KEY,
   RESOURCE_SCALE,
+  ResourceEntityLookup,
   ResourceEnumLookup,
   ResourceStorages,
   UtilityStorages,
@@ -49,6 +51,62 @@ const units: Record<string, Entity> = {
 };
 
 export const setupCheatcodes = (mud: MUD): Cheatcodes => {
+  const provideResource = async (spaceRock: Entity, resource: Entity, value: bigint) => {
+    const resourceIndex = ResourceEnumLookup[resource];
+    const systemCalls: Promise<unknown>[] = [];
+    const entity = encodeEntity(components.ProductionRate.metadata.keySchema, {
+      entity: spaceRock as Hex,
+      resource: resourceIndex,
+    });
+    if (components.P_IsUtility.get(resource)) {
+      systemCalls.push(
+        setComponentValue(mud, mud.components.ProductionRate, entity, {
+          value,
+        })
+      );
+    } else {
+      if (components.MaxResourceCount.get(entity)?.value ?? 0n < value)
+        systemCalls.push(
+          setComponentValue(mud, mud.components.MaxResourceCount, entity, {
+            value,
+          })
+        );
+
+      systemCalls.push(
+        setComponentValue(mud, mud.components.ResourceCount, entity, {
+          value,
+        })
+      );
+    }
+    await Promise.all(systemCalls);
+  };
+
+  const provideUnit = async (spaceRock: Entity, unit: Entity, value: bigint) => {
+    const rockUnitEntity = encodeEntity(components.UnitCount.metadata.keySchema, {
+      unit: unit as Hex,
+      entity: spaceRock as Hex,
+    });
+    const level = components.UnitLevel.get(rockUnitEntity)?.value ?? 1n;
+
+    const unitRequiredResources = getTrainCost(unit, level, value);
+
+    [...unitRequiredResources.entries()].map(([resource, count]) => provideResource(spaceRock, resource, count));
+    await setComponentValue(mud, mud.components.UnitCount, rockUnitEntity, {
+      value,
+    });
+  };
+
+  function getTrainCost(unitPrototype: Entity, level: bigint, count: bigint) {
+    const requiredResources = components.P_RequiredResources.getWithKeys({ prototype: unitPrototype as Hex, level });
+    const ret: Map<Entity, bigint> = new Map();
+    if (!requiredResources) return ret;
+    for (let i = 0; i < requiredResources.resources.length; i++) {
+      const resource = ResourceEntityLookup[requiredResources.resources[i] as EResource];
+      ret.set(resource, requiredResources.amounts[i] * count);
+    }
+    return ret;
+  }
+
   return {
     setWorldSpeed: {
       params: [{ name: "value", type: "number" }],
@@ -72,6 +130,17 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
         });
       },
     },
+    maxExpansion: {
+      params: [],
+      function: async () => {
+        const selectedRock = mud.components.ActiveRock.get()?.value;
+        if (!selectedRock) throw new Error("No asteroid found");
+        const maxLevel = mud.components.Asteroid.get(selectedRock)?.maxLevel ?? 8n;
+        await setComponentValue(mud, mud.components.Level, selectedRock, {
+          value: maxLevel,
+        });
+      },
+    },
     maxMainBaseLevel: {
       params: [],
       function: async () => {
@@ -85,7 +154,10 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
       },
     },
     getResource: {
-      params: [{ name: "resource", type: "string" }],
+      params: [
+        { name: "resource", type: "string" },
+        { name: "value", type: "number" },
+      ],
       function: async (resource: string) => {
         const player = mud.playerAccount.entity;
         if (!player) throw new Error("No player found");
@@ -97,72 +169,23 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
 
         const value = 100000n * RESOURCE_SCALE;
         console.log("setting resource", getBlockTypeName(resourceEntity), selectedRock, value);
-
-        await setComponentValue(
-          mud,
-          mud.components.ResourceCount,
-          encodeEntity(
-            { entity: "bytes32", resource: "uint8" },
-            { entity: selectedRock as Hex, resource: ResourceEnumLookup[resourceEntity] }
-          ),
-          {
-            value,
-          }
-        );
+        provideResource(selectedRock, resourceEntity, value);
       },
     },
-    getMaxResource: {
-      params: [{ name: "resource", type: "string" }],
-      function: async (resource: string) => {
-        const player = mud.playerAccount.entity;
-        if (!player) throw new Error("No player found");
 
-        const selectedRock = mud.components.ActiveRock.get()?.value;
-        const resourceEntity = resources[resource.toLowerCase()];
-
-        if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
-
-        await setComponentValue(
-          mud,
-          mud.components.MaxResourceCount,
-          encodeEntity(
-            { entity: "bytes32", resource: "uint8" },
-            { entity: selectedRock as Hex, resource: ResourceEnumLookup[resourceEntity] }
-          ),
-          {
-            value: 2000000n,
-          }
-        );
-      },
-    },
-    getUnits: {
+    getUnit: {
       params: [
         { name: "unit", type: "string" },
         { name: "count", type: "number" },
       ],
       function: async (unit: string, count: number) => {
-        const player = mud.playerAccount.entity;
-        if (!player) throw new Error("No player found");
-
-        const unitEntity = units[unit.toLowerCase()];
+        const unitEntity = units[unit.toLowerCase().replace(/\s+/g, "")];
 
         if (!unitEntity) throw new Error("Unit not found");
 
         const rock = mud.components.ActiveRock.get()?.value;
-
         if (!rock) throw new Error("No asteroid found");
-
-        await setComponentValue(
-          mud,
-          mud.components.UnitCount,
-          encodeEntity(mud.components.UnitCount.metadata.keySchema, {
-            unit: unitEntity as Hex,
-            entity: rock as Hex,
-          }),
-          {
-            value: BigInt(count),
-          }
-        );
+        provideUnit(rock, unitEntity, BigInt(count));
       },
     },
     getTesterPack: {
