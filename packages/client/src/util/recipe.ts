@@ -87,8 +87,7 @@ export function getRecipeDifference(
   return difference;
 }
 
-export function getMaxCountOfRecipe(recipe: ReturnType<typeof getRecipe>, spaceRock?: Entity) {
-  spaceRock = spaceRock ?? (comps.Home.getWithKeys({ entity: comps.Account.get()?.value as Hex })?.value as Entity);
+export function getMaxCountOfRecipe(recipe: ReturnType<typeof getRecipe>, spaceRock: Entity) {
   const resourceAmounts = recipe.map((resource) => {
     return getFullResourceCount(resource.id, spaceRock);
   });

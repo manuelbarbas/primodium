@@ -23,8 +23,6 @@ import { ResourceIconTooltip } from "../../../shared/ResourceIconTooltip";
 export const BuildUnit: React.FC<{
   building: Entity;
 }> = ({ building }) => {
-  const mud = useMud();
-  const { playerAccount } = mud;
   const [selectedUnit, setSelectedUnit] = useState<Entity>();
 
   const { P_UnitProdTypes, BuildingType, Level } = components;
@@ -45,7 +43,7 @@ export const BuildUnit: React.FC<{
     setSelectedUnit(trainableUnits[0]);
   }, [trainableUnits]);
 
-  if (trainableUnits.length === 0 || !playerAccount.entity) return null;
+  if (trainableUnits.length === 0) return null;
 
   return (
     <Navigator.Screen title="BuildUnit" className="relative flex flex-col w-full">
@@ -111,16 +109,15 @@ export const BuildUnit: React.FC<{
 const TrainNonCapitalShip = ({ building, unit, asteroid }: { building: Entity; unit: Entity; asteroid: Entity }) => {
   const [count, setCount] = useState(0);
   const mud = useMud();
-  const { playerAccount } = mud;
   const unitLevel = useMemo(() => {
-    return components.UnitLevel.getWithKeys({ entity: playerAccount.entity as Hex, unit: unit as Hex })?.value ?? 1n;
-  }, [unit, playerAccount.entity]);
+    return components.UnitLevel.getWithKeys({ entity: asteroid as Hex, unit: unit as Hex })?.value ?? 1n;
+  }, [unit, asteroid]);
 
   const requiredResources = useMemo(() => {
     return getRecipe(unit, unitLevel);
   }, [unit, unitLevel]);
 
-  const maximum = useMaxCountOfRecipe(requiredResources);
+  const maximum = useMaxCountOfRecipe(requiredResources, asteroid);
   return (
     <>
       <p className="text-sm leading-none opacity-75">COST</p>
