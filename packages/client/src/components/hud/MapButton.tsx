@@ -1,7 +1,5 @@
 import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useCallback } from "react";
 
 import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
@@ -22,71 +20,16 @@ export const MapButton = () => {
   const activeRock = components.ActiveRock.use()?.value;
   const ownedBy = components.OwnedBy.use(activeRock)?.value;
   const primodium = usePrimodium();
-  const { transitionToScene } = primodium.api().scene;
 
   const isSpectating = useMemo(() => ownedBy !== playerEntity, [ownedBy, playerEntity]);
 
-  const closeMap = async () => {
-    if (!components.MapOpen.get()?.value) return;
-    await transitionToScene(
-      Scenes.Starmap,
-      Scenes.Asteroid,
-      0,
-      (_, targetScene) => {
-        targetScene.camera.phaserCamera.fadeOut(0, 0, 0, 0);
-      },
-      (_, targetScene) => {
-        targetScene.phaserScene.add.tween({
-          targets: targetScene.camera.phaserCamera,
-          zoom: { from: 0.5, to: 1 },
-          duration: 500,
-          ease: "Cubic.easeInOut",
-          onUpdate: () => {
-            targetScene.camera.zoom$.next(targetScene.camera.phaserCamera.zoom);
-            targetScene.camera.worldView$.next(targetScene.camera.phaserCamera.worldView);
-          },
-        });
-        targetScene.camera.phaserCamera.fadeIn(500, 0, 0, 0);
-      }
-    );
-    components.MapOpen.set({ value: false });
-    components.SelectedRock.set({ value: components.ActiveRock.get()?.value ?? singletonEntity });
-  };
+  const closeMap = useCallback(async () => {
+    primodium.api(Scenes.Starmap).util.closeMap();
+  }, [primodium]);
 
-  const openMap = async () => {
-    if (components.MapOpen.get()?.value) return;
-    const activeRock = components.ActiveRock.get()?.value;
-    const position = components.Position.get(activeRock) ?? { x: 0, y: 0 };
-    const { pan } = primodium.api(Scenes.Starmap).camera;
-
-    pan(position, 0);
-
-    await transitionToScene(
-      Scenes.Asteroid,
-      Scenes.Starmap,
-      0,
-      (_, targetScene) => {
-        targetScene.camera.phaserCamera.fadeOut(0, 0, 0, 0);
-      },
-      (_, targetScene) => {
-        targetScene.phaserScene.add.tween({
-          targets: targetScene.camera.phaserCamera,
-          zoom: { from: 2, to: 1 },
-          duration: 500,
-          ease: "Cubic.easeInOut",
-          onUpdate: () => {
-            targetScene.camera.zoom$.next(targetScene.camera.phaserCamera.zoom);
-            targetScene.camera.worldView$.next(targetScene.camera.phaserCamera.worldView);
-          },
-        });
-        targetScene.camera.phaserCamera.fadeIn(500, 0, 0, 0);
-      }
-    );
-    components.MapOpen.set({ value: true });
-    components.SelectedBuilding.remove();
-    if (isSpectating)
-      components.ActiveRock.set({ value: (components.BuildRock.get()?.value ?? singletonEntity) as Entity });
-  };
+  const openMap = useCallback(async () => {
+    primodium.api(Scenes.Starmap).util.openMap();
+  }, [primodium]);
 
   const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
   useEffect(() => {
