@@ -21,6 +21,7 @@ import {
   OnHover,
   OnOnce,
   OnRxjsSystem,
+  PropogateClickUp,
   SetValue,
 } from "../../common/object-components/common";
 import { Circle, Line, Triangle } from "../../common/object-components/graphics";
@@ -118,6 +119,7 @@ export const renderFleetsInTransit = (scene: Scene) => {
     fleetIcon.setComponents([
       ...sharedComponents,
       ObjectPosition(originPixelCoord, DepthLayers.Marker),
+
       Triangle(15, 20, {
         color,
         id: "fleet",
@@ -125,6 +127,7 @@ export const renderFleetsInTransit = (scene: Scene) => {
         alpha: 0.75,
         direction: direction - 90,
       }),
+      PropogateClickUp(scene),
       OnHover(
         () => components.HoverEntity.set({ value: entity }),
         () => components.HoverEntity.remove()
@@ -155,6 +158,9 @@ export const renderFleetsInTransit = (scene: Scene) => {
 
         fleetIcon.setComponent(ObjectPosition({ x: startX, y: startY }));
       }),
+      // SetValue({
+      //   input: null,
+      // }),
     ]);
   };
 
