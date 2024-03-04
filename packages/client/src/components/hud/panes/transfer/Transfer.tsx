@@ -145,10 +145,10 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
         const min = delta;
         setDragging({ ...dragging, count: bigIntMax(min, dragging.count - delta) });
       } else if (["d", "D", "∂"].includes(e.key)) {
-        const delta = parseResourceCount(dragging.entity, "10");
+        const delta = parseResourceCount(dragging.entity, "100");
         setDragging({ ...dragging, count: bigIntMin(initial + dragging.count, dragging.count + delta) });
       } else if (["a", "A", "å"].includes(e.key)) {
-        const delta = parseResourceCount(dragging.entity, "10");
+        const delta = parseResourceCount(dragging.entity, "100");
         const min = parseResourceCount(dragging.entity, "1");
         setDragging({ ...dragging, count: bigIntMax(min, dragging.count - delta) });
       } else if (e.key === "Shift") {
