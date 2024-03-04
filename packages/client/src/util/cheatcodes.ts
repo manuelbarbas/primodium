@@ -108,7 +108,36 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
         );
       },
     },
-    getResource: {
+    giveFleetResource: {
+      params: [
+        { name: "resource", type: "string" },
+        { name: "count", type: "number" },
+      ],
+      function: async (resource: string, count: number) => {
+        const player = mud.playerAccount.entity;
+        if (!player) throw new Error("No player found");
+        const selectedFleet = mud.components.SelectedFleet.get()?.value;
+
+        const resourceEntity = resources[resource.toLowerCase()];
+
+        if (!resourceEntity || !selectedFleet) throw new Error("Resource not found");
+
+        const value = BigInt(count * Number(RESOURCE_SCALE));
+
+        await setComponentValue(
+          mud,
+          mud.components.ResourceCount,
+          encodeEntity(
+            { entity: "bytes32", resource: "uint8" },
+            { entity: selectedFleet as Hex, resource: ResourceEnumLookup[resourceEntity] }
+          ),
+          {
+            value,
+          }
+        );
+      },
+    },
+    giveAsteroidResource: {
       params: [
         { name: "resource", type: "string" },
         { name: "count", type: "number" },

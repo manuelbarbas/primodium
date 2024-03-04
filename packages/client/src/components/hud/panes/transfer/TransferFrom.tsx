@@ -1,16 +1,16 @@
 import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FaInfoCircle, FaTimes } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
+import { useMud } from "src/hooks";
+import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
 import { components } from "src/network/components";
 import { EntityType } from "src/util/constants";
 import { formatResourceCount, formatTime, parseResourceCount } from "src/util/number";
 import { TargetHeader } from "../../TargetHeader";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { FleetEntityHeader } from "../fleets/FleetHeader";
-import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
-import { useMud } from "src/hooks";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 export const TransferFrom = (props: {
   dragging?: boolean;
@@ -107,9 +107,9 @@ export const TransferFrom = (props: {
       </div>
 
       {/*Resources*/}
-      <div className="relative flex-1 flex flex-col bg-neutral p-2 grid grid-cols-4 grid-rows-2 gap-2">
+      <div className="relative flex-1 flex flex-col bg-neutral p-2 grid grid-cols-5 grid-rows-2 gap-2">
         <div className="absolute left-0 w-full h-full topographic-background opacity-30 z-0" />
-        {Array(8)
+        {Array(10)
           .fill(0)
           .map((_, index) => {
             if (index >= props.resourceCounts.size)
@@ -188,7 +188,7 @@ export const TransferFrom = (props: {
             >
               d
             </span>{" "}
-            to change by 10.
+            to change by 100.
           </>
         )}
       </p>

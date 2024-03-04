@@ -16,10 +16,6 @@ contract FleetCombatSystem is FleetBaseSystem {
   }
 
   function attack(bytes32 entity, bytes32 targetEntity) public {
-    bytes32 redirectedTarget = FleetStance.getTarget(targetEntity);
-    if (redirectedTarget != bytes32(0)) {
-      targetEntity = redirectedTarget;
-    }
     if (IsFleet.get(entity)) {
       if (IsFleet.get(targetEntity)) {
         fleetAttackFleet(entity, targetEntity);
