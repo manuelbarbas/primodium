@@ -135,13 +135,13 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
         : fromResourceCounts.get(dragging.entity) ?? 0n;
 
       if (["e", "E", "Dead"].includes(e.key)) {
-        const delta = parseResourceCount(dragging.entity, "10");
+        const delta = parseResourceCount(dragging.entity, "1");
         setDragging({
           ...dragging,
           count: bigIntMin(initial + dragging.count, dragging.count + delta),
         });
       } else if (["q", "œ", "Q"].includes(e.key)) {
-        const delta = parseResourceCount(dragging.entity, "10");
+        const delta = parseResourceCount(dragging.entity, "1");
         const min = delta;
         setDragging({ ...dragging, count: bigIntMax(min, dragging.count - delta) });
       } else if (["d", "D", "∂"].includes(e.key)) {

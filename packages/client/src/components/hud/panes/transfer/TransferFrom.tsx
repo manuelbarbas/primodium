@@ -172,7 +172,7 @@ export const TransferFrom = (props: {
             >
               e
             </span>
-            to change by 10. Press
+            to change by 1. Press
             <span
               className={`inline kbd kbd-xs not-italic ${
                 ["a", "A", "å"].includes(keyDown) ? "bg-white text-black" : ""
