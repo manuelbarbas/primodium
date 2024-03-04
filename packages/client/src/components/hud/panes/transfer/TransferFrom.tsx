@@ -107,9 +107,9 @@ export const TransferFrom = (props: {
       </div>
 
       {/*Resources*/}
-      <div className="relative flex-1 flex flex-col bg-neutral p-2 grid grid-cols-4 grid-rows-2 gap-2">
+      <div className="relative flex-1 flex flex-col bg-neutral p-2 grid grid-cols-5 grid-rows-2 gap-2">
         <div className="absolute left-0 w-full h-full topographic-background opacity-30 z-0" />
-        {Array(8)
+        {Array(10)
           .fill(0)
           .map((_, index) => {
             if (index >= props.resourceCounts.size)
