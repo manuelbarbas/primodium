@@ -5,9 +5,11 @@ import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import { EBuilding, EResource } from "contracts/config/enums";
 import encodeBytes32 from "contracts/config/util/encodeBytes32";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
+import { toast } from "react-toastify";
 import { components } from "src/network/components";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { buildBuilding } from "src/network/setup/contractCalls/buildBuilding";
+import { createFleet } from "src/network/setup/contractCalls/createFleet";
 import { setComponentValue } from "src/network/setup/contractCalls/dev";
 import { MUD } from "src/network/types";
 import { encodeEntity, hashEntities, hashKeyEntity, toHex32 } from "src/util/encode";
@@ -176,6 +178,16 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
         );
       },
     },
+    createFleet: {
+      params: [],
+      function: async () => {
+        const asteroid = mud.components.ActiveRock.get()?.value;
+        if (!asteroid) throw new Error("No asteroid found");
+        provideResource(asteroid, EntityType.FleetCount, 1n);
+        provideUnit(asteroid, EntityType.MinutemanMarine, 10n);
+        createFleet(mud, asteroid, new Map([[EntityType.MinutemanMarine, 10n]]));
+      },
+    },
     giveFleetResource: {
       params: [
         { name: "resource", type: "string" },
@@ -239,7 +251,10 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
         const selectedRock = mud.components.ActiveRock.get()?.value;
         if (!selectedRock) throw new Error("No asteroid found");
         const staticData = components.Asteroid.get(selectedRock)?.__staticData;
-        if (staticData === "") throw new Error("Asteroid not initialized");
+        if (staticData === "") {
+          toast.error("Asteroid not initialized");
+          throw new Error("Asteroid not initialized");
+        }
         const player = mud.playerAccount.entity;
         await setComponentValue(mud, components.OwnedBy, selectedRock, { value: player });
         const position = components.Position.get(toHex32("MainBase") as Entity);
@@ -324,7 +339,10 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
         }
         UtilityStorages.forEach(async (resource) => {
           if (resource == EntityType.VesselCapacity) return;
-          if (!player) throw new Error("No player found");
+          if (!player) {
+            toast.error("No player found");
+            throw new Error("No player found");
+          }
 
           await setComponentValue(
             mud,
