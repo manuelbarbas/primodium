@@ -127,8 +127,8 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             </div>
             <div className="relative flex flex-col bg-base-100 p-2 gap-2">
               <p className="uppercase text-xs opacity-50 font-bold">RESOURCES</p>
-              <div className="flex-1 flex flex-col bg-base-100 grid grid-cols-4 grid-rows-2 gap-2">
-                {Array(8)
+              <div className="flex-1 flex flex-col bg-base-100 grid grid-cols-5 grid-rows-2 gap-2">
+                {Array(10)
                   .fill(0)
                   .map((_, index) => {
                     if (index >= resources.size) {
@@ -147,17 +147,6 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               </div>
             </div>
           </div>
-          <NavButton
-            className="btn-primary w-fit btn-sm "
-            goto="transfer"
-            from={fleetEntity}
-            to={undefined}
-            onClick={() =>
-              movement?.destination && components.ActiveRock.set({ value: movement.destination as Entity })
-            }
-          >
-            Transfer Units and Resources
-          </NavButton>
         </div>
         {/* Right Side */}
         <div className="flex flex-col grow col-span-1 overflow-hidden gap-2">
@@ -188,6 +177,17 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             </Button>
           </TransactionQueueMask>
           <div className="flex flex-col gap-2">
+            <NavButton
+              className="btn-primary btn-sm "
+              goto="transfer"
+              from={fleetEntity}
+              to={undefined}
+              onClick={() =>
+                movement?.destination && components.ActiveRock.set({ value: movement.destination as Entity })
+              }
+            >
+              Transfer
+            </NavButton>
             <Modal.CloseButton
               className="btn btn-primary btn-sm"
               disabled={cannotDoAnything}
