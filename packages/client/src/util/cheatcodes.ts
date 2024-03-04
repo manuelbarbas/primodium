@@ -2,17 +2,17 @@ import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
-import { EResource } from "contracts/config/enums";
+import { EBuilding, EResource } from "contracts/config/enums";
 import encodeBytes32 from "contracts/config/util/encodeBytes32";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { components } from "src/network/components";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
+import { buildBuilding } from "src/network/setup/contractCalls/buildBuilding";
 import { setComponentValue } from "src/network/setup/contractCalls/dev";
 import { MUD } from "src/network/types";
-import { encodeEntity, hashEntities, hashKeyEntity } from "src/util/encode";
+import { encodeEntity, hashEntities, hashKeyEntity, toHex32 } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
-import { getBlockTypeName } from "./common";
 import {
   EntityType,
   PIRATE_KEY,
@@ -153,12 +153,64 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
         });
       },
     },
-    getResource: {
+    setTerrain: {
       params: [
         { name: "resource", type: "string" },
-        { name: "value", type: "number" },
+        { name: "x", type: "number" },
+        { name: "y", type: "number" },
       ],
-      function: async (resource: string) => {
+      function: async (resource: string, x: number, y: number) => {
+        const selectedRock = mud.components.ActiveRock.get()?.value;
+        const resourceEntity = resources[resource.toLowerCase()];
+        const mapId = components.Asteroid.get(selectedRock)?.mapId ?? 1;
+
+        if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
+
+        await setComponentValue(
+          mud,
+          mud.components.P_Terrain,
+          encodeEntity(components.P_Terrain.metadata.keySchema, { mapId, x, y }),
+          {
+            value: ResourceEnumLookup[resourceEntity],
+          }
+        );
+      },
+    },
+    giveFleetResource: {
+      params: [
+        { name: "resource", type: "string" },
+        { name: "count", type: "number" },
+      ],
+      function: async (resource: string, count: number) => {
+        const player = mud.playerAccount.entity;
+        if (!player) throw new Error("No player found");
+        const selectedFleet = mud.components.SelectedFleet.get()?.value;
+
+        const resourceEntity = resources[resource.toLowerCase()];
+
+        if (!resourceEntity || !selectedFleet) throw new Error("Resource not found");
+
+        const value = BigInt(count * Number(RESOURCE_SCALE));
+
+        await setComponentValue(
+          mud,
+          mud.components.ResourceCount,
+          encodeEntity(
+            { entity: "bytes32", resource: "uint8" },
+            { entity: selectedFleet as Hex, resource: ResourceEnumLookup[resourceEntity] }
+          ),
+          {
+            value,
+          }
+        );
+      },
+    },
+    giveAsteroidResource: {
+      params: [
+        { name: "resource", type: "string" },
+        { name: "count", type: "number" },
+      ],
+      function: async (resource: string, count: number) => {
         const player = mud.playerAccount.entity;
         if (!player) throw new Error("No player found");
         const selectedRock = mud.components.ActiveRock.get()?.value;
@@ -167,13 +219,64 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
 
         if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
 
-        const value = 100000n * RESOURCE_SCALE;
-        console.log("setting resource", getBlockTypeName(resourceEntity), selectedRock, value);
-        provideResource(selectedRock, resourceEntity, value);
+        const value = BigInt(count * Number(RESOURCE_SCALE));
+        await setComponentValue(
+          mud,
+          mud.components.ResourceCount,
+          encodeEntity(
+            { entity: "bytes32", resource: "uint8" },
+            { entity: selectedRock as Hex, resource: ResourceEnumLookup[resourceEntity] }
+          ),
+          {
+            value,
+          }
+        );
       },
     },
+    conquerAsteroid: {
+      params: [],
+      function: async () => {
+        const selectedRock = mud.components.ActiveRock.get()?.value;
+        if (!selectedRock) throw new Error("No asteroid found");
+        const staticData = components.Asteroid.get(selectedRock)?.__staticData;
+        if (staticData === "") throw new Error("Asteroid not initialized");
+        const player = mud.playerAccount.entity;
+        await setComponentValue(mud, components.OwnedBy, selectedRock, { value: player });
+        const position = components.Position.get(toHex32("MainBase") as Entity);
+        if (!position) throw new Error("No main base found");
+        await buildBuilding(mud, EBuilding.MainBase, position);
+      },
+    },
+    getMaxResource: {
+      params: [
+        { name: "resource", type: "string" },
+        { name: "count", type: "number" },
+      ],
+      function: async (resource: string, count: number) => {
+        const player = mud.playerAccount.entity;
+        if (!player) throw new Error("No player found");
 
-    getUnit: {
+        const selectedRock = mud.components.ActiveRock.get()?.value;
+        const resourceEntity = resources[resource.toLowerCase()];
+
+        if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
+
+        const value = BigInt(count * Number(RESOURCE_SCALE));
+
+        await setComponentValue(
+          mud,
+          mud.components.MaxResourceCount,
+          encodeEntity(
+            { entity: "bytes32", resource: "uint8" },
+            { entity: selectedRock as Hex, resource: ResourceEnumLookup[resourceEntity] }
+          ),
+          {
+            value,
+          }
+        );
+      },
+    },
+    getUnits: {
       params: [
         { name: "unit", type: "string" },
         { name: "count", type: "number" },

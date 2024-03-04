@@ -159,6 +159,7 @@ library LibCombatAttributes {
       cargoCapacity += P_Unit.getCargo(unitPrototypes[i], unitLevel) * unitCount;
     }
   }
+
   function getCargoCapacityWithAllies(bytes32 entity) internal view returns (uint256 cargoCapacity) {
     cargoCapacity = getCargoCapacity(entity);
     bytes32[] memory allies = LibFleetStance.getAllies(entity);
@@ -170,7 +171,7 @@ library LibCombatAttributes {
   function getCargoSpace(bytes32 entity) internal view returns (uint256) {
     uint256 cargoCapacity = getCargoCapacity(entity);
     uint256 cargo = getCargo(entity);
-    return cargoCapacity - cargo;
+    return cargoCapacity > cargo ? cargoCapacity - cargo : 0;
   }
 
   function getCargoSpaceWithAllies(bytes32 entity) internal view returns (uint256 cargoSpace) {

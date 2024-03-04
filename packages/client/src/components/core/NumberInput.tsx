@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { adjustDecimals } from "src/util/number";
 import { Button } from "./Button";
+import { usePrimodium } from "src/hooks/usePrimodium";
+import { Scenes } from "@game/constants";
 
 export const NumberInput: React.FC<{
   startingValue?: number;
@@ -11,6 +13,10 @@ export const NumberInput: React.FC<{
   onChange: (val: number) => void;
 }> = ({ startingValue, min = 0, max = Infinity, onChange, toFixed = 0, reset }) => {
   const [count, setCount] = useState<string>((startingValue || min).toString());
+  const primodium = usePrimodium();
+  const input = primodium.api(Scenes.UI).input;
+  const input2 = primodium.api(Scenes.Asteroid).input;
+  const input3 = primodium.api(Scenes.Starmap).input;
 
   const minString = min.toString();
   const maxString = max.toString();
@@ -68,6 +74,16 @@ export const NumberInput: React.FC<{
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           e.preventDefault();
           handleUpdate(e.target.value);
+        }}
+        onFocus={() => {
+          input.disableInput();
+          input2.disableInput();
+          input3.disableInput();
+        }}
+        onBlur={() => {
+          input.enableInput();
+          input2.enableInput();
+          input3.enableInput();
         }}
         min={0}
         max={max}
