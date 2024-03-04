@@ -295,8 +295,8 @@ export enum AnimationKeys {
   PlatinumMine3 = "platinummine/level3",
 
   KimberliteMine1 = "kimberlitemine/level1",
-  KimberliteMine2 = "kimbleritemine/level2",
-  KimberliteMine3 = "kimbleritemine/level3",
+  KimberliteMine2 = "kimberlitemine/level2",
+  KimberliteMine3 = "kimberlitemine/level3",
 
   StorageUnit3 = "storageunit/level3",
 
