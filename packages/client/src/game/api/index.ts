@@ -1,5 +1,5 @@
 import { Scenes } from "@game/constants";
-import { namespaceWorld } from "@latticexyz/recs";
+import { Entity, namespaceWorld } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import engine from "engine";
@@ -30,6 +30,7 @@ import { createHooksApi } from "./hooks";
 import { createInputApi } from "./input";
 import { createSceneApi } from "./scene";
 import { createSpriteApi } from "./sprite";
+import { setupBuildRock } from "src/network/systems/setupBuildRock";
 
 export type Primodium = Awaited<ReturnType<typeof initPrimodium>>;
 export type PrimodiumApi = ReturnType<Primodium["api"]>;
@@ -85,7 +86,8 @@ export async function initPrimodium(mud: MUD, version = "v1") {
       throw new Error("No primodium scene found");
     }
 
-    // reset stuff
+    //holds the last rock the player can build on
+    setupBuildRock();
     setupSwapNotifications(mud);
     setupAllianceLeaderboard(mud);
     setupBattleComponents();
@@ -142,12 +144,15 @@ export async function initPrimodium(mud: MUD, version = "v1") {
       );
       components.MapOpen.set({ value: false });
       components.SelectedRock.set({ value: components.ActiveRock.get()?.value ?? singletonEntity });
+      components.HoverEntity.remove();
     };
 
     const openMap = async (position?: Coord) => {
       if (components.MapOpen.get()?.value) return;
-      const activeRock = components.SelectedRock.get()?.value;
+      const activeRock = components.ActiveRock.get()?.value;
       const pos = position ?? components.Position.get(activeRock) ?? { x: 0, y: 0 };
+      const ownedBy = components.OwnedBy.get(activeRock)?.value;
+      const isSpectating = ownedBy !== components.Account.get()?.value;
 
       cameraApi.pan(pos, 0);
 
@@ -174,7 +179,11 @@ export async function initPrimodium(mud: MUD, version = "v1") {
       );
       components.MapOpen.set({ value: true });
       components.SelectedBuilding.remove();
+      components.HoverEntity.remove();
+      if (isSpectating)
+        components.ActiveRock.set({ value: (components.BuildRock.get()?.value ?? singletonEntity) as Entity });
     };
+
     return {
       camera: cameraApi,
       game: createGameApi(_instance),

@@ -26,7 +26,7 @@ export const PlayerLeaderboard = () => {
     <div className="flex flex-col justify-between w-full h-full text-xs pointer-events-auto">
       <AutoSizer>
         {({ height, width }: { height: number; width: number }) => (
-          <List height={height - 50} width={width} itemCount={data.players.length} itemSize={47} className="scrollbar">
+          <List height={height - 65} width={width} itemCount={data.players.length} itemSize={60} className="scrollbar">
             {({ index, style }) => {
               const player = data.players[index];
               const score = data.scores[index];
@@ -56,7 +56,7 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
 
   return (
     <SecondaryCard
-      className={`grid grid-cols-7 w-full border border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center h-10 ${
+      className={`grid grid-cols-7 w-full border border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center h-14 ${
         player === playerEntity ? "border-success" : ""
       }`}
     >

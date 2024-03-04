@@ -126,7 +126,13 @@ export const ScoreScreen = () => {
       {data && (
         <AutoSizer>
           {({ height, width }: { height: number; width: number }) => (
-            <List height={height} width={width} itemCount={data.alliances.length} itemSize={47} className="scrollbar">
+            <List
+              height={height - 50}
+              width={width}
+              itemCount={data.alliances.length}
+              itemSize={47}
+              className="scrollbar"
+            >
               {({ index, style }) => {
                 const alliance = data.alliances[index];
                 const score = data.scores[index];

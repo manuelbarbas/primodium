@@ -27,7 +27,9 @@ export const getInitalQuery = ({
         { tableId: tables.GracePeriod.tableId },
         { tableId: tables.Score.tableId },
         { tableId: tables.Alliance.tableId },
+        { tableId: tables.PlayerAlliance.tableId },
         { tableId: tables.Reserves.tableId },
+        { tableId: tables.Home.tableId },
         //get main base starting coord
         { tableId: tables.Position.tableId, where: { column: "entity", operation: "eq", value: EntityType.MainBase } },
         //get asteroids
@@ -48,9 +50,6 @@ export const getInitalQuery = ({
             },
             {
               tableId: tables.Level.tableId,
-            },
-            {
-              tableId: tables.Home.tableId,
             },
           ],
         },

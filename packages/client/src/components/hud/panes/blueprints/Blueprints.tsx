@@ -14,16 +14,17 @@ export const Blueprints = memo(() => {
       id="blueprints"
       title="blueprints"
       icon="/img/icons/blueprinticon.png"
-      defaultCoord={{ x: 69, y: 420 }}
+      defaultCoord={{ x: 20, y: 20 }}
       defaultLocked
-      lockable
+      defaultPinned
       defaultVisible
       origin="center-left"
       scene={Scenes.Asteroid}
       active={!mapOpen && isBuilding}
       hotkey={KeybindActions.Blueprints}
       minOpacity={0.6}
-      draggable
+      // lockable
+      // draggable
       pinnable
       persist
     >
