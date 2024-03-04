@@ -159,8 +159,8 @@ importers:
         specifier: 2.0.0-main-9ef3f9a7
         version: 2.0.0-main-9ef3f9a7(typescript@5.3.3)
       '@primodiumxyz/mud-game-tools':
-        specifier: ^1.0.11
-        version: 1.0.11(@types/react@18.2.48)(csstype@3.1.3)(typescript@5.3.3)(zod@3.22.4)
+        specifier: ^1.0.12
+        version: 1.0.12(@types/react@18.2.48)(csstype@3.1.3)(typescript@5.3.3)(zod@3.22.4)
       '@primodiumxyz/sync-stack':
         specifier: ^0.5.0
         version: 0.5.0(typescript@5.3.3)
@@ -2890,8 +2890,8 @@ packages:
     dev: true
     optional: true
 
-  /@primodiumxyz/mud-game-tools@1.0.11(@types/react@18.2.48)(csstype@3.1.3)(typescript@5.3.3)(zod@3.22.4):
-    resolution: {integrity: sha512-gXYe+rF92buGhg4JB+lJCAYsMyTi/Jfthv3ZUpb9fwsx/YKPXCRXl2PRPLwKDBryBfLGfeO1TWYji54V0KBDiA==}
+  /@primodiumxyz/mud-game-tools@1.0.12(@types/react@18.2.48)(csstype@3.1.3)(typescript@5.3.3)(zod@3.22.4):
+    resolution: {integrity: sha512-ljMTb4K4jNKcTSeqCInH11E805JIb5NriN5u/b3nAZVAGuyzul4IBkZ9BPa9pl/7sKhq6azoVEyfCLYAkD82kQ==}
     dependencies:
       '@latticexyz/protocol-parser': 2.0.0-main-9ef3f9a7(typescript@5.3.3)(zod@3.22.4)
       '@latticexyz/react': 2.0.0-main-9ef3f9a7(typescript@5.3.3)(zod@3.22.4)
