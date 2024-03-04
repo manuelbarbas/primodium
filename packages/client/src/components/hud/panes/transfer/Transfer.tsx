@@ -134,7 +134,7 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
       const outcome = dragging.count + resourceCount;
       const amountMoved = resourceStorage < outcome ? resourceStorage - resourceCount : dragging.count;
       const newMap = new Map(deltas);
-      newMap.set(dragging.entity, (deltas.get(dragging.entity) ?? 0n) + amountMoved);
+      newMap.set(dragging.entity, bigIntMax(0n, (deltas.get(dragging.entity) ?? 0n) + amountMoved));
       setDeltas(newMap);
     }
     setHoveringArea(null);
