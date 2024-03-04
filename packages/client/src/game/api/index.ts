@@ -30,6 +30,7 @@ import { createHooksApi } from "./hooks";
 import { createInputApi } from "./input";
 import { createSceneApi } from "./scene";
 import { createSpriteApi } from "./sprite";
+import { setupBuildRock } from "src/network/systems/setupBuildRock";
 
 export type Primodium = Awaited<ReturnType<typeof initPrimodium>>;
 export type PrimodiumApi = ReturnType<Primodium["api"]>;
@@ -85,7 +86,8 @@ export async function initPrimodium(mud: MUD, version = "v1") {
       throw new Error("No primodium scene found");
     }
 
-    // reset stuff
+    //holds the last rock the player can build on
+    setupBuildRock();
     setupSwapNotifications(mud);
     setupAllianceLeaderboard(mud);
     setupBattleComponents();

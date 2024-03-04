@@ -40,7 +40,9 @@ export const AccountDisplay: React.FC<{
 
         primodium.api(Scenes.Starmap).camera.pan({ x: playerHomeAsteroidPosition.x, y: playerHomeAsteroidPosition.y });
       }}
-      className={`btn-xs btn-ghost flex m-0.5 uppercase font-bold gap-1 ${className} ${loading ? "animate-pulse" : ""}`}
+      className={`btn-xs btn-ghost p-0 uppercase inline-flex font-bold gap-1 ${className} ${
+        loading ? "animate-pulse" : ""
+      }`}
     >
       {allianceName && (
         <span className="font-bold text-accent" style={{ color: noColor ? "auto" : entityToColor(player) }}>
