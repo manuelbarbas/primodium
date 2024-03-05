@@ -62,8 +62,8 @@ export const renderBuilding = (scene: Scene) => {
     world.dispose("game_spectate");
 
     const positionQuery = [
-      HasValue(components.OwnedBy, {
-        value: value[0]?.value,
+      HasValue(components.Position, {
+        parent: value[0]?.value,
       }),
       Has(components.BuildingType),
       Has(components.IsActive),
@@ -71,8 +71,8 @@ export const renderBuilding = (scene: Scene) => {
     ];
 
     const oldPositionQuery = [
-      HasValue(components.OwnedBy, {
-        value: value[1]?.value,
+      HasValue(components.Position, {
+        parent: value[1]?.value,
       }),
       Has(components.BuildingType),
       Has(components.IsActive),
@@ -85,7 +85,6 @@ export const renderBuilding = (scene: Scene) => {
     }
 
     const render = ({ entity }: { entity: Entity }) => {
-      // const entityId = world.entities[entity];
       const renderId = `${entity}_entitySprite`;
 
       const buildingType = components.BuildingType.get(entity)?.value as Entity | undefined;
@@ -260,8 +259,6 @@ export const renderBuilding = (scene: Scene) => {
           if (queue.units.length === 0 || queue.timeRemaining[0] !== 1n) return;
 
           //its the last tick for the queue, so show floating text of unit produced
-
-          //
           const unit = queue.units[0];
           const textCoord = {
             x: tilePosition.x + buildingDimensions.width / 2 - 0.5,
