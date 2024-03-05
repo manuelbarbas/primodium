@@ -57,12 +57,10 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
       { ...emptyData, x: mainBaseCoord?.x ?? 19, y: mainBaseCoord?.y ?? 13, parent: asteroidEntity },
       droidBaseEntity
     );
-    components.BuildingType.set(
-      { ...emptyData, value: EntityType.DroidBase },
-      hashEntities(asteroidEntity, EntityType.DroidBase)
-    );
+    components.BuildingType.set({ ...emptyData, value: EntityType.DroidBase }, droidBaseEntity);
     components.Level.set({ ...emptyData, value: 1n }, droidBaseEntity);
     components.IsActive.set({ ...emptyData, value: true }, droidBaseEntity);
+    components.OwnedBy.set({ ...emptyData, value: asteroidEntity }, droidBaseEntity);
 
     if (components.P_Blueprint.has(EntityType.DroidBase)) return;
 
