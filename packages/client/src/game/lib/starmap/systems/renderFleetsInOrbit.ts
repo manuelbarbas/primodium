@@ -320,7 +320,6 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
         depth: DepthLayers.Marker + 2,
       }),
       ObjectText(name, {
-        id: "fleetLabel",
         fontSize: 6,
         color: 0xffffff,
         stroke: 0x000000,

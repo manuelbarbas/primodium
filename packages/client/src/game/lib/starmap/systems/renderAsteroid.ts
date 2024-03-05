@@ -28,6 +28,7 @@ import { Outline, Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
 import { getOutlineSprite, getRockSprite, getSecondaryOutlineSprite } from "./utils/getSprites";
 import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 
 const asteroidQueue: Entity[] = [];
 export const renderAsteroid = (scene: Scene) => {
@@ -47,10 +48,11 @@ export const renderAsteroid = (scene: Scene) => {
     const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entity);
 
     const spriteScale = 0.34 + 0.05 * Number(asteroidData.maxLevel);
+    const pixelCoord = tileCoordToPixelCoord(coord, tileWidth, tileHeight);
     const sharedComponents = [
       ObjectPosition({
-        x: coord.x * tileWidth,
-        y: -coord.y * tileHeight,
+        x: pixelCoord.x,
+        y: -pixelCoord.y,
       }),
       SetValue({
         originX: 0.5,
@@ -66,7 +68,7 @@ export const renderAsteroid = (scene: Scene) => {
         repeat: -1, // Repeat indefinitely
       }),
       Tween(scene, {
-        scrollFactorX: { from: 1 - getRandomRange(0, 0.0025), to: 1 + getRandomRange(0, 0.0025) },
+        x: { from: pixelCoord.x - getRandomRange(0, 5), to: pixelCoord.x + getRandomRange(0, 5) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
         duration: 5000, // Duration of one wobble
@@ -74,7 +76,7 @@ export const renderAsteroid = (scene: Scene) => {
         repeat: -1, // Repeat indefinitely
       }),
       Tween(scene, {
-        scrollFactorY: { from: 1 - getRandomRange(0, 0.0025), to: 1 + getRandomRange(0, 0.0025) },
+        y: { from: -pixelCoord.y - getRandomRange(0, 5), to: -pixelCoord.y + getRandomRange(0, 5) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
         duration: 5000, // Duration of one wobble
@@ -216,14 +218,13 @@ export const renderAsteroid = (scene: Scene) => {
         depth: DepthLayers.Marker,
       }),
       ObjectText(entityToPlayerName(ownedBy), {
-        id: "addressLabel",
         fontSize: Math.max(8, Math.min(44, 16 / scene.camera.phaserCamera.zoom)),
         color: parseInt(entityToColor(ownedBy).slice(1), 16),
       }),
       OnOnce(async (gameObject) => {
         const ensNameData = await getEnsName(ownedBy);
         const name =
-          ensNameData.ensName ?? asteroidData.mapId === 1 ? entityToPlayerName(ownedBy) : entityToRockName(entity);
+          ensNameData.ensName ?? (asteroidData.mapId === 1 ? entityToPlayerName(ownedBy) : entityToRockName(entity));
 
         gameObject.setText(name);
         gameObject.setFontSize(Math.max(8, Math.min(44, 16 / scene.camera.phaserCamera.zoom)));
