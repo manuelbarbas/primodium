@@ -118,10 +118,10 @@ export const UnitUpgrade: React.FC<{ unit: Entity }> = memo(({ unit }) => {
             <div key={name} className="flex flex-col items-center">
               <p className="text-xs opacity-50">{name}</p>
 
-              <p>{["SPD"].includes(name) ? formatNumber(value) : formatResourceCount(EntityType.Iron, value)}</p>
+              <p>{name === "SPD" ? formatNumber(value) : formatResourceCount(EntityType.Iron, value)}</p>
               <p className="text-xs text-success">
                 {increase > 0n ? "+" : ""}
-                {["SPD"].includes(name) ? formatNumber(increase) : formatResourceCount(EntityType.Iron, increase)}
+                {name === "SPD" ? formatNumber(increase) : formatResourceCount(EntityType.Iron, increase)}
               </p>
             </div>
           );
