@@ -44,7 +44,6 @@ import { Hex } from "viem";
 import { formatResourceCount } from "src/util/number";
 import { EResource } from "contracts/config/enums";
 import { getFullResourceCount } from "src/util/resource";
-import { hashEntities } from "src/util/encode";
 
 const MAX_SIZE = 2 ** 15 - 1;
 export const renderBuilding = (scene: Scene) => {
@@ -92,15 +91,6 @@ export const renderBuilding = (scene: Scene) => {
       const buildingType = components.BuildingType.get(entity)?.value as Entity | undefined;
 
       if (!buildingType) return;
-
-      //remove droid base if mainbase exists
-      if (buildingType === EntityType.MainBase) {
-        const droidBaseEntity = hashEntities(activeRock, EntityType.DroidBase);
-        components.Position.remove(droidBaseEntity);
-        components.BuildingType.remove(droidBaseEntity);
-        components.Level.remove(droidBaseEntity);
-        components.IsActive.remove(droidBaseEntity);
-      }
 
       const origin = components.Position.get(entity);
       if (!origin) return;
