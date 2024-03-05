@@ -1,11 +1,10 @@
-import { Assets, DepthLayers, RENDER_INTERVAL, SpriteKeys } from "@game/constants";
+import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import { Entity, Has, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import { EFleetStance } from "contracts/config/enums";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
-import { interval } from "rxjs";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { entityToColor } from "src/util/color";
@@ -30,7 +29,6 @@ import { getOutlineSprite, getRockSprite, getSecondaryOutlineSprite } from "./ut
 import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 
-const asteroidQueue: Entity[] = [];
 export const renderAsteroid = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const systemsWorld = namespaceWorld(world, "systems");
@@ -280,25 +278,16 @@ export const renderAsteroid = (scene: Scene) => {
 
   const query = [Has(components.Asteroid), Has(components.Position), Not(components.PirateAsteroid)];
 
-  defineEnterSystem(systemsWorld, query, ({ entity }) => {
-    asteroidQueue.push(entity);
-  });
-
-  const interval$ = interval(RENDER_INTERVAL);
-
-  const asteroidRenderer = interval$.subscribe(() => {
-    if (asteroidQueue.length === 0) return;
-
-    const entity = asteroidQueue.shift() as Entity;
-
+  defineEnterSystem(systemsWorld, query, async ({ entity }) => {
     const coord = components.Position.get(entity);
     const asteroidData = components.Asteroid.get(entity);
 
     if (!coord) return;
 
+    //TODO: not sure why this is needed but rendering of unitialized asteroids wont work otherwise
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
     render(entity, coord);
     if (asteroidData?.spawnsSecondary) initializeSecondaryAsteroids(entity, coord);
   });
-
-  systemsWorld.registerDisposer(() => asteroidRenderer.unsubscribe());
 };

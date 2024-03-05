@@ -18,6 +18,7 @@ import { HealthBar } from "../HealthBar";
 import { useSyncStatus } from "src/hooks/useSyncStatus";
 import { hashEntities } from "src/util/encode";
 import { Loader } from "src/components/core/Loader";
+import { getAsteroidDescription } from "src/util/asteroid";
 
 const limitAddress = (address: string, max = 10) => {
   if (address.length < max) return <span>{address}</span>;
@@ -32,6 +33,7 @@ const limitAddress = (address: string, max = 10) => {
 export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const { loading } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
   const name = entityToRockName(entity);
+  const desc = getAsteroidDescription(entity);
   const { inGracePeriod, duration } = useInGracePeriod(entity, loading);
   const { resourceCount: encryption, resourceStorage: maxEncryption } = useFullResourceCount(
     EntityType.Encryption,
@@ -53,7 +55,7 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
     );
 
   return (
-    <Card className="ml-5 w-56 relative">
+    <Card className="ml-5 w-60 relative">
       <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50 " />
       <div className="flex flex-col gap-1 z-10">
         <div className="grid grid-cols-2 gap-1">
@@ -71,11 +73,19 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
           </div>
 
           {inGracePeriod && (
-            <div className="flex bg-primary font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
+            <div className="flex bg-primary font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4 absolute top-0 right-0 m-1">
               <IconLabel imageUri="/img/icons/graceicon.png" className={`pixel-images w-3 h-3`} />
               {formatTimeShort(duration)}
             </div>
           )}
+        </div>
+        <div className="flex gap-1">
+          <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
+            {desc.size}
+          </div>
+          <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
+            {desc.type}
+          </div>
         </div>
         {!inGracePeriod && (
           <div className="grid grid-cols-2 gap-1">
