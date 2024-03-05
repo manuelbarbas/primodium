@@ -43,34 +43,33 @@ export const parseResourceCount = (resource: Entity, amount: string) => {
 
   return parseUnits(amount, units);
 };
-
+const shorten = (n: number, digits: number): string => {
+  const units = ["", "K", "M", "B", "T"];
+  let unitIndex = 0;
+  while (n >= 1000 && unitIndex < units.length - 1) {
+    n /= 1000;
+    unitIndex++;
+  }
+  return getDecimals(n, digits) + units[unitIndex];
+};
 export function formatNumber(num: number | bigint, options?: FormatOptions): string {
   const digits = options?.fractionDigits === undefined ? 0 : options.fractionDigits;
   if (num === 0 || num === 0n) return options?.showZero ? "0" : "--";
 
-  const shorten = (n: number): string => {
-    const units = ["", "K", "M", "B", "T"];
-    let unitIndex = 0;
-    while (n >= 1000 && unitIndex < units.length - 1) {
-      n /= 1000;
-      unitIndex++;
-    }
-    return getDecimals(n, digits) + units[unitIndex];
-  };
-
   if (typeof num === "number") {
-    if (options?.short) return shorten(num);
+    if (options?.short) return shorten(num, digits);
 
-    const fixedNum = num.toFixed(digits);
+    const fixedNum = digits == 0 ? String(Math.floor(num)) : num.toFixed(digits);
 
     if (num < 1) {
       // Return the fixedNum directly for very small numbers to avoid exponential notation
       return fixedNum.replace(/(\.\d*?[1-9])0+$|\.0*$/, "$1");
-    } else {
-      return options?.notLocale ? parseFloat(fixedNum).toString() : parseFloat(fixedNum).toLocaleString();
     }
-  } else if (typeof num === "bigint") {
-    if (options?.short) return shorten(Number(num));
+    return options?.notLocale ? parseFloat(fixedNum).toString() : parseFloat(fixedNum).toLocaleString();
+  }
+
+  if (typeof num === "bigint") {
+    if (options?.short) return shorten(Number(num), digits);
     return options?.notLocale ? num.toString() : num.toLocaleString();
   }
   return "";

@@ -15,6 +15,8 @@ import { createFleet } from "src/network/setup/contractCalls/createFleet";
 import { transferFleet } from "src/network/setup/contractCalls/fleetTransfer";
 import { ResourceEntityLookup, UnitStorages } from "src/util/constants";
 import { formatResourceCount, parseResourceCount } from "src/util/number";
+import { getFullResourceCount } from "src/util/resource";
+import { getFleetStatsFromUnits } from "src/util/unit";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { useFleetNav } from "../fleets/Fleets";
 import { TransferConfirm } from "./TransferConfirm";
@@ -117,15 +119,27 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
         const newMap = new Map(deltas);
         newMap.set(dragging.entity, (deltas.get(dragging.entity) ?? 0n) + dragging.count);
         setDeltas(newMap);
-      } else {
-        const newMap = new Map(deltas);
-        newMap.set(dragging.entity, (deltas.get(dragging.entity) ?? 0n) + dragging.count);
-        setDeltas(newMap);
+        return;
       }
+      const toIsFleet = to === "newFleet" || !!components.IsFleet.get(to)?.value;
+
+      const resourceCount = toIsFleet
+        ? [...toResourceCounts.entries()].reduce((acc, [, count]) => acc + count, 0n)
+        : toResourceCounts.get(dragging.entity) ?? 0n;
+
+      const resourceStorage = toIsFleet
+        ? getFleetStatsFromUnits(toUnitCounts).cargo
+        : getFullResourceCount(dragging.entity, to as Entity).resourceStorage;
+
+      const outcome = dragging.count + resourceCount;
+      const amountMoved = resourceStorage < outcome ? resourceStorage - resourceCount : dragging.count;
+      const newMap = new Map(deltas);
+      newMap.set(dragging.entity, bigIntMax(0n, (deltas.get(dragging.entity) ?? 0n) + amountMoved));
+      setDeltas(newMap);
     }
     setHoveringArea(null);
     window.removeEventListener("mousemove", (e) => setDragLocation({ x: e.clientX, y: e.clientY }));
-  }, [dragging, deltas, hoveringArea]);
+  }, [hoveringArea, dragging, to, toUnitCounts, toResourceCounts, deltas]);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
