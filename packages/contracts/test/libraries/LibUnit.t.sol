@@ -2,6 +2,7 @@
 pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
+import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
 
 contract LibUnitTest is PrimodiumTest {
   bytes32 player;
@@ -21,8 +22,8 @@ contract LibUnitTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
     vm.startPrank(creator);
-    player = addressToEntity(worldAddress);
-    Spawned.set(player, true);
+    player = addressToEntity(creator);
+    world.spawn();
 
     BuildingType.set(building, buildingPrototype);
     OwnedBy.set(Home.get(player), player);
@@ -65,9 +66,49 @@ contract LibUnitTest is PrimodiumTest {
     UnitProductionQueue.enqueue(building, item);
     UnitProductionQueue.enqueue(building2, item);
 
+    bytes32[] memory buildings = UnitFactorySet.getAll(Home.get(player));
+    console.log("buildings", buildings.length);
+    for (uint256 i = 0; i < buildings.length; i++) {
+      bytes32 building = buildings[i];
+      bytes32 asteroid = OwnedBy.get(building);
+      console.log("building owner: %x", uint256(asteroid));
+      console.log("is asteroid:", Asteroid.getIsAsteroid(asteroid));
+    }
     vm.warp(block.timestamp + 100);
     LibUnit.claimUnits(Home.get(player));
     assertEq(UnitCount.get(Home.get(player), unitPrototype), 200);
+  }
+
+  function testClaimUnitsConqueredAsteroid() public {
+    PositionData memory position = Position.get(Home.get(player));
+
+    bytes32 secondaryAsteroid = LibAsteroid.createSecondaryAsteroid(findSecondaryAsteroid(player, Home.get(player)));
+    conquerAsteroid(creator, Home.get(player), secondaryAsteroid);
+    vm.startPrank(creator);
+    console.log("here:");
+    OwnedBy.set(building, secondaryAsteroid);
+    Level.set(building, 1);
+    LastClaimedAt.set(building, block.timestamp);
+    P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
+
+    UnitFactorySet.add(secondaryAsteroid, building);
+
+    P_Unit.setTrainingTime(unitPrototype, 0, 1);
+    QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
+    UnitProductionQueue.enqueue(building, item);
+    UnitProductionQueue.enqueue(building2, item);
+
+    bytes32[] memory buildings = UnitFactorySet.getAll(secondaryAsteroid);
+    console.log("buildings", buildings.length);
+    for (uint256 i = 0; i < buildings.length; i++) {
+      bytes32 building = buildings[i];
+      bytes32 asteroid = OwnedBy.get(building);
+      console.log("building owner: %x", uint256(asteroid));
+      console.log("is asteroid:", Asteroid.getIsAsteroid(asteroid));
+    }
+    vm.warp(block.timestamp + 100);
+    LibUnit.claimUnits(secondaryAsteroid);
+    assertEq(UnitCount.get(secondaryAsteroid, unitPrototype), 100);
   }
 
   function testClaimBuildingUnitsSingleAll() public {
