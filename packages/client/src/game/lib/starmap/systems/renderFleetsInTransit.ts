@@ -158,9 +158,6 @@ export const renderFleetsInTransit = (scene: Scene) => {
 
         fleetIcon.setComponent(ObjectPosition({ x: startX, y: startY }));
       }),
-      // SetValue({
-      //   input: null,
-      // }),
     ]);
   };
 

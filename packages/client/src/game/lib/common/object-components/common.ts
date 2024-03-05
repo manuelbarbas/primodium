@@ -129,6 +129,8 @@ export const PropogateClickUp = <T extends keyof GameObjectTypes>(scene: Scene):
         if (downTime - prevDownTime > 250) return;
         const hitTest = scene.input.phaserInput.hitTestPointer(e);
         if (!hitTest.length) return;
+
+        //mimic click up event and pass to object below
         hitTest[1].emit("pointerdown", e);
         hitTest[1].emit("pointerup", e);
       });
