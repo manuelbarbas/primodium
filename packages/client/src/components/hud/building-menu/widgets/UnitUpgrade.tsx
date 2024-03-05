@@ -118,7 +118,9 @@ export const UnitUpgrade: React.FC<{ unit: Entity }> = memo(({ unit }) => {
             <div key={name} className="flex flex-col items-center">
               <p className="text-xs opacity-50">{name}</p>
 
-              <p>{name === "SPD" ? formatNumber(value) : formatResourceCount(EntityType.Iron, value)}</p>
+              <p className="text-sm">
+                {name === "SPD" ? formatNumber(value) : formatResourceCount(EntityType.Iron, value)}
+              </p>
               <p className="text-xs text-success">
                 {increase > 0n ? "+" : ""}
                 {name === "SPD" ? formatNumber(increase) : formatResourceCount(EntityType.Iron, increase)}

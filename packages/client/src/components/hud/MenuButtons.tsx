@@ -33,7 +33,7 @@ export const MenuButtons = () => {
           <Modal.Button className={buttonClass}>
             <IconLabel imageUri="/img/icons/addicon.png" tooltipText="upgrade units" tooltipDirection="right" />
           </Modal.Button>
-          <Modal.Content className="w-3/4">
+          <Modal.Content className="w-[58rem]">
             <UnitUpgrades />
           </Modal.Content>
         </Modal>
