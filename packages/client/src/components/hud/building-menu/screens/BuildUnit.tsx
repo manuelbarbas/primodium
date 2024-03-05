@@ -79,7 +79,7 @@ export const BuildUnit: React.FC<{
             <>
               <p className="uppercase font-bold">{getBlockTypeName(selectedUnit)}</p>
 
-              <div className="grid grid-cols-5 gap-2 border-y border-cyan-400/30 mx-auto">
+              <div className="grid grid-cols-6 gap-2 border-y border-cyan-400/30 mx-auto">
                 {Object.entries(getUnitStats(selectedUnit, activeRock)).map(([name, value]) => {
                   return (
                     <div key={name} className="flex flex-col items-center">

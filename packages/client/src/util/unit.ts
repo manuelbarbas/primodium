@@ -35,23 +35,18 @@ export function getUnitCounts(entity: Entity): Map<Entity, bigint> {
   return components.IsFleet.get(entity) ? getFleetUnitCounts(entity) : getSpaceRockUnitCounts(entity);
 }
 
-export function getUnitStats(rawUnitEntity: Entity, spaceRockEntity: Entity) {
-  const unitEntity = rawUnitEntity as Hex;
-
-  const unitLevel = comps.UnitLevel.getWithKeys(
-    { entity: spaceRockEntity as Hex, unit: unitEntity },
-    { value: 0n }
-  )?.value;
-  const unitLevelKeys = { entity: unitEntity, level: unitLevel };
-
-  const { hp, attack, defense, speed, cargo } = comps.P_Unit.getWithKeys(unitLevelKeys, {
-    attack: 0n,
-    defense: 0n,
-    speed: 0n,
-    cargo: 0n,
-    trainingTime: 0n,
-    hp: 0n,
-  });
+export function getUnitStatsLevel(entity: Entity, level: bigint) {
+  const { hp, attack, defense, speed, cargo } = comps.P_Unit.getWithKeys(
+    { entity: entity as Hex, level },
+    {
+      attack: 0n,
+      defense: 0n,
+      speed: 0n,
+      cargo: 0n,
+      trainingTime: 0n,
+      hp: 0n,
+    }
+  );
 
   const decryption = comps.P_CapitalShipConfig.get()?.decryption ?? 0n;
   return {
@@ -60,8 +55,16 @@ export function getUnitStats(rawUnitEntity: Entity, spaceRockEntity: Entity) {
     SPD: speed,
     CRG: cargo,
     HP: hp,
-    DEC: rawUnitEntity == EntityType.CapitalShip ? decryption : 0n,
+    DEC: entity == EntityType.CapitalShip ? decryption : 0n,
   };
+}
+
+export function getUnitStats(unitEntity: Entity, spaceRockEntity: Entity) {
+  const unitLevel = comps.UnitLevel.getWithKeys(
+    { entity: spaceRockEntity as Hex, unit: unitEntity as Hex },
+    { value: 0n }
+  )?.value;
+  return getUnitStatsLevel(unitEntity, unitLevel);
 }
 
 export const getFleetStats = (fleet: Entity) => {
