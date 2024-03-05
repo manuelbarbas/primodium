@@ -150,8 +150,8 @@ export const getFleetPixelPosition = (scene: Scene, fleet: Entity) => {
   const rockGroup = scene.objectPool.getGroup(spaceRock + "_spacerockOrbits");
 
   const fleetOrbitId = `fleetOrbit-${spaceRock}-${fleet}`;
-  const position = rockGroup.get(fleetOrbitId, "Graphics").position;
-  return { x: position.x, y: position.y };
+  const gameObject = rockGroup.get(fleetOrbitId, "Graphics")?.getGameObject();
+  return { x: gameObject?.x ?? 0, y: gameObject?.y ?? 0 };
 };
 
 const orbitRadius = 64;
