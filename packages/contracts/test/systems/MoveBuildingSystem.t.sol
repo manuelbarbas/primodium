@@ -27,7 +27,9 @@ contract MoveBuildingSystemTest is PrimodiumTest {
     );
     bytes32[] memory oldChildren = Children.get(mainBaseEntity);
 
+    uint256 gas = gasleft();
     world.moveBuilding(mainBasePosition, newPosition);
+    console.log("after", gas - gasleft());
     assertEq(
       mainBaseEntity,
       LibBuilding.getBuildingFromCoord(newPosition),
@@ -113,8 +115,9 @@ contract MoveBuildingSystemTest is PrimodiumTest {
       mainBasePosition.parent
     );
 
+    uint256 gas = gasleft();
     world.moveBuilding(mainBasePosition, newPosition);
-    console.log("moved success");
+    console.log("after", gas - gasleft());
     uint256 timestamp = block.timestamp;
     vm.warp(block.timestamp + 1);
     assertTrue(timestamp != block.timestamp, "timestamp should have updated");
