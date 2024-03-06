@@ -404,7 +404,20 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
         }
       },
     },
-
+    setFleetCooldown: {
+      params: [{ name: "value", type: "number" }],
+      function: async (value: bigint) => {
+        const timestamp = (components.Time.get()?.value ?? 0n) + BigInt(value);
+        await setComponentValue(
+          mud,
+          mud.components.CooldownEnd,
+          components.SelectedFleet.get()?.value ?? singletonEntity,
+          {
+            value: BigInt(timestamp),
+          }
+        );
+      },
+    },
     createPirateAsteroid: {
       params: [],
       function: async () => {
