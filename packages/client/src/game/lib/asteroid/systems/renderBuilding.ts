@@ -99,6 +99,7 @@ export const renderBuilding = (scene: Scene) => {
         components.BuildingType.remove(droidBaseEntity);
         components.Level.remove(droidBaseEntity);
         components.IsActive.remove(droidBaseEntity);
+        components.OwnedBy.remove(droidBaseEntity);
       }
 
       const origin = components.Position.get(entity);
