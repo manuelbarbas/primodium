@@ -442,5 +442,11 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
         });
       },
     },
+    setActiveAsteroid: {
+      params: [{ name: "entity", type: "string" }],
+      function: (entity: Entity) => {
+        components.ActiveRock.set({ value: entity });
+      },
+    },
   };
 };

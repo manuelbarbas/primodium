@@ -14,9 +14,29 @@ const emptyData = {
   __dynamicData: "",
 };
 
+const spawnDroidBase = (asteroidEntity: Entity) => {
+  const mainBaseCoord = components.Position.get(EntityType.MainBase) ?? { x: 19, y: 13 };
+  const droidBaseEntity = hashEntities(asteroidEntity, EntityType.DroidBase);
+  components.Position.set(
+    { ...emptyData, x: mainBaseCoord.x, y: mainBaseCoord.y, parent: asteroidEntity },
+    droidBaseEntity
+  );
+  components.BuildingType.set({ ...emptyData, value: EntityType.DroidBase }, droidBaseEntity);
+  components.Level.set({ ...emptyData, value: 1n }, droidBaseEntity);
+  components.IsActive.set({ ...emptyData, value: true }, droidBaseEntity);
+  components.OwnedBy.set({ ...emptyData, value: asteroidEntity }, droidBaseEntity);
+
+  if (components.P_Blueprint.has(EntityType.DroidBase)) return;
+
+  components.P_Blueprint.set(
+    { ...emptyData, value: components.P_Blueprint.get(EntityType.MainBase)?.value ?? [] },
+    EntityType.DroidBase
+  );
+};
+
 export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord) {
   const config = components.P_GameConfig.get();
-  const mainBaseCoord = components.Position.get(EntityType.MainBase);
+
   if (!config) throw new Error("GameConfig not found");
   for (let i = 0; i < config.maxAsteroidsPerPlayer; i++) {
     const asteroidPosition = getPositionByVector(
@@ -24,9 +44,12 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
       Math.floor((i * 360) / Number(config.maxAsteroidsPerPlayer)),
       source
     );
+    const asteroidEntity = getSecondaryAsteroidEntity(sourceEntity, asteroidPosition);
+
+    if (!components.OwnedBy.get(asteroidEntity)) spawnDroidBase(asteroidEntity);
 
     if (components.ReversePosition.getWithKeys(asteroidPosition)) continue;
-    const asteroidEntity = getSecondaryAsteroidEntity(sourceEntity, asteroidPosition);
+
     world.registerEntity({ id: asteroidEntity });
     components.ReversePosition.setWithKeys({ entity: asteroidEntity as string, ...emptyData }, asteroidPosition);
 
@@ -49,26 +72,6 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
     components.MaxResourceCount.setWithKeys(
       { ...emptyData, value: defenseData.encryption },
       { entity: asteroidEntity as Hex, resource: EResource.R_Encryption }
-    );
-
-    //add droid base
-    const droidBaseEntity = hashEntities(asteroidEntity, EntityType.DroidBase);
-    components.Position.set(
-      { ...emptyData, x: mainBaseCoord?.x ?? 19, y: mainBaseCoord?.y ?? 13, parent: asteroidEntity },
-      droidBaseEntity
-    );
-    components.BuildingType.set(
-      { ...emptyData, value: EntityType.DroidBase },
-      hashEntities(asteroidEntity, EntityType.DroidBase)
-    );
-    components.Level.set({ ...emptyData, value: 1n }, droidBaseEntity);
-    components.IsActive.set({ ...emptyData, value: true }, droidBaseEntity);
-
-    if (components.P_Blueprint.has(EntityType.DroidBase)) return;
-
-    components.P_Blueprint.set(
-      { ...emptyData, value: components.P_Blueprint.get(EntityType.MainBase)?.value ?? [] },
-      EntityType.DroidBase
     );
   }
 }

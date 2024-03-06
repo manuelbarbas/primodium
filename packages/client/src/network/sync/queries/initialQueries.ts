@@ -44,6 +44,7 @@ export const getInitalQuery = ({
             },
             {
               tableId: tables.ReversePosition.tableId,
+              on: "entity",
             },
             {
               tableId: tables.PirateAsteroid.tableId,

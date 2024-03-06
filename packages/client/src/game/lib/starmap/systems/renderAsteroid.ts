@@ -45,7 +45,6 @@ export const renderAsteroid = (scene: Scene) => {
     const expansionLevel = components.Level.get(entity)?.value ?? 1n;
 
     const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entity);
-
     const spriteScale = 0.34 + 0.05 * Number(asteroidData.maxLevel);
     const sharedComponents = [
       ObjectPosition({
