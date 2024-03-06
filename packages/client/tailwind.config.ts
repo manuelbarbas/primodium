@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+import daisyui from "daisyui";
 import colors from "tailwindcss/colors";
 import defaultTheme from "tailwindcss/defaultTheme";
-import daisyui from "daisyui";
 
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
@@ -30,7 +30,7 @@ export default {
           accent: colors.cyan[400],
           neutral: colors.slate[900],
           "base-100": colors.slate[800],
-          info: colors.indigo[600],
+          info: colors.indigo[400],
           success: colors.emerald[400],
           warning: colors.yellow[600],
           error: colors.rose[700],

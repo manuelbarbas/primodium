@@ -5,7 +5,7 @@ import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
 import { RESOURCE_SCALE, ResourceImage, SPEED_SCALE } from "src/util/constants";
-import { formatNumber } from "src/util/number";
+import { formatNumber, formatResourceCount } from "src/util/number";
 
 export const ResourceLabel = ({ name, resource }: { name: string; resource: Entity }) => {
   const activeRock = components.ActiveRock.use()?.value;
@@ -43,19 +43,22 @@ export const ResourceLabel = ({ name, resource }: { name: string; resource: Enti
         direction="top"
         className={`${tooltipClass}`}
       />
+      <b className={`text-accent text-xs opacity-50`}>
+        /
+        {formatResourceCount(resource, resourceStorage, {
+          short: true,
+          fractionDigits: 1,
+        })}
+      </b>
       {production !== 0n && (
-        <p className={`opacity-50 text-xs ${production < 0 ? "animate-pulse text-error" : ""}`}>
+        <p
+          className={`opacity-50 text-xs ${
+            production > 0 ? "text-success" : production < 0 ? "animate-pulse text-error" : ""
+          }`}
+        >
           {production > 0 ? "+" : ""}
           {productionMin}
           /MIN
-          <b className={`text-accent`}>
-            [
-            {formatNumber(resourceStorage / RESOURCE_SCALE, {
-              short: true,
-              fractionDigits: 1,
-            })}
-            ]
-          </b>
         </p>
       )}
     </Badge>
