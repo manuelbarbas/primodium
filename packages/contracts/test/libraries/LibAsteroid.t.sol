@@ -41,39 +41,9 @@ contract LibAsteroidTest is PrimodiumTest {
     assertLe(asteroidData.maxLevel, 8, "max level too low");
   }
 
-  function findSecondaryAsteroid() public returns (PositionData memory) {
-    P_GameConfigData memory config = P_GameConfig.get();
-    PositionData memory sourcePosition = Position.get(Home.get(player));
-    logPosition(sourcePosition);
-    bytes32 asteroidSeed;
-    PositionData memory targetPosition;
-    uint256 i = 0;
-    bool found = false;
-    while (i < 6 && !found) {
-      PositionData memory targetPositionRelative = LibAsteroid.getPosition(
-        i,
-        config.asteroidDistance,
-        config.maxAsteroidsPerPlayer
-      );
-      logPosition(sourcePosition);
-      targetPosition = PositionData(
-        sourcePosition.x + targetPositionRelative.x,
-        sourcePosition.y + targetPositionRelative.y,
-        0
-      );
-      logPosition(targetPosition);
-
-      asteroidSeed = keccak256(abi.encode(asteroid, bytes32("asteroid"), targetPosition.x, targetPosition.y));
-      found = LibAsteroid.isAsteroid(asteroidSeed, config.asteroidChanceInv);
-      i++;
-    }
-    require(found, "uh oh, no asteroid found");
-    return (targetPosition);
-  }
-
   function testCreateSecondaryAsteroid() public {
     vm.startPrank(creator);
-    PositionData memory position = findSecondaryAsteroid();
+    PositionData memory position = findSecondaryAsteroid(player, asteroid);
 
     bytes32 actualAsteroidEntity = LibAsteroid.createSecondaryAsteroid(position);
     bytes32 asteroidEntity = keccak256(abi.encode(asteroid, bytes32("asteroid"), position.x, position.y));
@@ -96,7 +66,7 @@ contract LibAsteroidTest is PrimodiumTest {
 
   function testSecondaryAsteroidDefense() public {
     vm.startPrank(creator);
-    PositionData memory position = findSecondaryAsteroid();
+    PositionData memory position = findSecondaryAsteroid(player, asteroid);
 
     bytes32 asteroidEntity = LibAsteroid.createSecondaryAsteroid(position);
     AsteroidData memory asteroidData = Asteroid.get(asteroidEntity);

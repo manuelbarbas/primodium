@@ -53,6 +53,23 @@ export function getAsteroidName(spaceRock: Entity) {
   } ${isPirate ? "Pirate" : "Asteroid"}`;
 }
 
+export function getAsteroidDescription(asteroid: Entity) {
+  const asteroidData = comps.Asteroid.get(asteroid);
+
+  const asteroidResource = MapIdToAsteroidType[asteroidData?.mapId ?? 0];
+  const asteroidSize = {
+    1: "Micro",
+    3: "Small",
+    5: "Medium",
+    8: "Large",
+  }[Number(asteroidData?.maxLevel ?? 1)];
+
+  return {
+    type: asteroidResource ? getBlockTypeName(asteroidResource) : "Basic",
+    size: asteroidSize,
+  };
+}
+
 export function getAsteroidInfo(primodium: Primodium, spaceRock: Entity) {
   const imageUri = getAsteroidImage(primodium, spaceRock);
   const ownedBy = comps.OwnedBy.get(spaceRock)?.value as Entity | undefined;

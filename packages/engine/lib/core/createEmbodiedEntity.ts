@@ -2,7 +2,7 @@ import { removeAllTweens } from "@latticexyz/phaserx";
 import { PixelCoord } from "@latticexyz/phaserx/src/types";
 import { observable, runInAction } from "mobx";
 
-import { isRectangle, isSprite, isGraphics } from "../util/guards";
+import { isRectangle, isSprite, isGraphics, isBitmapText } from "../util/guards";
 import { EmbodiedEntity, GameObject, GameObjectComponent, GameObjectFunction, GameObjectTypes } from "../../types";
 
 export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
@@ -160,6 +160,11 @@ export function createEmbodiedEntity<Type extends keyof GameObjectTypes>(
     if (isGraphics(gameObject, type)) {
       gameObject.clear();
     }
+
+    if (isBitmapText(gameObject, type)) {
+      gameObject.setText("");
+    }
+
     if (isSprite(gameObject, type)) {
       gameObject.clearTint();
       gameObject.setTexture("");
