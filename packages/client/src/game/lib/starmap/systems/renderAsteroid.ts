@@ -1,11 +1,10 @@
-import { Assets, DepthLayers, RENDER_INTERVAL, SpriteKeys } from "@game/constants";
+import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
 import { Entity, Has, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import { EFleetStance } from "contracts/config/enums";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
-import { interval } from "rxjs";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { entityToColor } from "src/util/color";
@@ -28,8 +27,8 @@ import { Outline, Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
 import { getOutlineSprite, getRockSprite, getSecondaryOutlineSprite } from "./utils/getSprites";
 import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 
-const asteroidQueue: Entity[] = [];
 export const renderAsteroid = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const systemsWorld = namespaceWorld(world, "systems");
@@ -46,10 +45,11 @@ export const renderAsteroid = (scene: Scene) => {
 
     const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entity);
     const spriteScale = 0.34 + 0.05 * Number(asteroidData.maxLevel);
+    const pixelCoord = tileCoordToPixelCoord(coord, tileWidth, tileHeight);
     const sharedComponents = [
       ObjectPosition({
-        x: coord.x * tileWidth,
-        y: -coord.y * tileHeight,
+        x: pixelCoord.x,
+        y: -pixelCoord.y,
       }),
       SetValue({
         originX: 0.5,
@@ -65,7 +65,7 @@ export const renderAsteroid = (scene: Scene) => {
         repeat: -1, // Repeat indefinitely
       }),
       Tween(scene, {
-        scrollFactorX: { from: 1 - getRandomRange(0, 0.0025), to: 1 + getRandomRange(0, 0.0025) },
+        x: { from: pixelCoord.x - getRandomRange(0, 5), to: pixelCoord.x + getRandomRange(0, 5) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
         duration: 5000, // Duration of one wobble
@@ -73,7 +73,7 @@ export const renderAsteroid = (scene: Scene) => {
         repeat: -1, // Repeat indefinitely
       }),
       Tween(scene, {
-        scrollFactorY: { from: 1 - getRandomRange(0, 0.0025), to: 1 + getRandomRange(0, 0.0025) },
+        y: { from: -pixelCoord.y - getRandomRange(0, 5), to: -pixelCoord.y + getRandomRange(0, 5) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
         duration: 5000, // Duration of one wobble
@@ -215,14 +215,13 @@ export const renderAsteroid = (scene: Scene) => {
         depth: DepthLayers.Marker,
       }),
       ObjectText(entityToPlayerName(ownedBy), {
-        id: "addressLabel",
         fontSize: Math.max(8, Math.min(44, 16 / scene.camera.phaserCamera.zoom)),
         color: parseInt(entityToColor(ownedBy).slice(1), 16),
       }),
       OnOnce(async (gameObject) => {
         const ensNameData = await getEnsName(ownedBy);
         const name =
-          ensNameData.ensName ?? asteroidData.mapId === 1 ? entityToPlayerName(ownedBy) : entityToRockName(entity);
+          ensNameData.ensName ?? (asteroidData.mapId === 1 ? entityToPlayerName(ownedBy) : entityToRockName(entity));
 
         gameObject.setText(name);
         gameObject.setFontSize(Math.max(8, Math.min(44, 16 / scene.camera.phaserCamera.zoom)));
@@ -278,25 +277,16 @@ export const renderAsteroid = (scene: Scene) => {
 
   const query = [Has(components.Asteroid), Has(components.Position), Not(components.PirateAsteroid)];
 
-  defineEnterSystem(systemsWorld, query, ({ entity }) => {
-    asteroidQueue.push(entity);
-  });
-
-  const interval$ = interval(RENDER_INTERVAL);
-
-  const asteroidRenderer = interval$.subscribe(() => {
-    if (asteroidQueue.length === 0) return;
-
-    const entity = asteroidQueue.shift() as Entity;
-
+  defineEnterSystem(systemsWorld, query, async ({ entity }) => {
     const coord = components.Position.get(entity);
     const asteroidData = components.Asteroid.get(entity);
 
     if (!coord) return;
 
+    //TODO: not sure why this is needed but rendering of unitialized asteroids wont work otherwise
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
     render(entity, coord);
     if (asteroidData?.spawnsSecondary) initializeSecondaryAsteroids(entity, coord);
   });
-
-  systemsWorld.registerDisposer(() => asteroidRenderer.unsubscribe());
 };

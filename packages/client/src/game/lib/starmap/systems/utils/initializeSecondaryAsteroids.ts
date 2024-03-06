@@ -52,7 +52,6 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
 
     world.registerEntity({ id: asteroidEntity });
     components.ReversePosition.setWithKeys({ entity: asteroidEntity as string, ...emptyData }, asteroidPosition);
-
     if (!isSecondaryAsteroid(asteroidEntity, Number(config.asteroidChanceInv))) continue;
 
     const asteroidData = getAsteroidData(asteroidEntity);

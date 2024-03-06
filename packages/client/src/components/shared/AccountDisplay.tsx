@@ -9,13 +9,15 @@ import { getRockRelationship } from "src/util/asteroid";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { Scenes } from "@game/constants";
 import { Modal } from "../core/Modal";
+import { useMemo } from "react";
 
 export const AccountDisplay: React.FC<{
   player: Entity | undefined;
   className?: string;
   noColor?: boolean;
   showAddress?: boolean;
-}> = ({ player, className, noColor, showAddress }) => {
+  raw?: boolean;
+}> = ({ player, className, noColor, showAddress, raw = false }) => {
   const primodium = usePrimodium();
   const { playerAccount } = useMud();
   const playerEntity = player ?? singletonEntity;
@@ -24,6 +26,23 @@ export const AccountDisplay: React.FC<{
   const playerHomeAsteroid = components.Home.use(playerEntity)?.value;
   const { allianceName, loading, address, linkedAddress } = useAccount(playerEntity, showAddress);
   const playerColor = RockRelationshipColors[getRockRelationship(playerEntity, myHomeAsteroid as Entity)];
+
+  const Content = useMemo(() => {
+    return () => (
+      <div className="w-full flex">
+        {allianceName && (
+          <div className="font-bold text-accent" style={{ color: noColor ? "auto" : entityToColor(player) }}>
+            [{allianceName.toUpperCase()}]
+          </div>
+        )}
+        <p className={`grow truncate ${noColor ? "text-white" : `text-${playerColor}`}`}>
+          {linkedAddress?.ensName ?? address}
+        </p>
+      </div>
+    );
+  }, [allianceName, noColor, player, playerColor, linkedAddress?.ensName, address]);
+
+  if (raw) return <Content />;
 
   return (
     <Modal.CloseButton
@@ -44,12 +63,7 @@ export const AccountDisplay: React.FC<{
         loading ? "animate-pulse" : ""
       }`}
     >
-      {allianceName && (
-        <span className="font-bold text-accent" style={{ color: noColor ? "auto" : entityToColor(player) }}>
-          [{allianceName.toUpperCase()}]
-        </span>
-      )}
-      <p className={`text-${noColor ? "white" : playerColor}`}>{linkedAddress?.ensName ?? address}</p>
+      <Content />
     </Modal.CloseButton>
   );
 };

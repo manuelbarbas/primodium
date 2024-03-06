@@ -23,6 +23,7 @@ import {
 } from "../../common/object-components/common";
 import { Outline, Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 
 export const renderPirateAsteroid = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
@@ -41,15 +42,16 @@ export const renderPirateAsteroid = (scene: Scene) => {
     const asteroidObjectGroup = scene.objectPool.getGroup("asteroid_" + entity);
 
     const spriteScale = 0.7;
-
+    const pixelCoord = tileCoordToPixelCoord(coord, tileWidth, tileHeight);
     const sharedComponents = [
       ObjectPosition({
-        x: coord.x * tileWidth,
-        y: -coord.y * tileHeight,
+        x: pixelCoord.x,
+        y: -pixelCoord.y,
       }),
       SetValue({
         originX: 0.5,
         originY: 0.5,
+        scale: spriteScale,
       }),
       Tween(scene, {
         scale: { from: spriteScale - getRandomRange(0, 0.05), to: spriteScale + getRandomRange(0, 0.05) },
@@ -60,15 +62,15 @@ export const renderPirateAsteroid = (scene: Scene) => {
         repeat: -1, // Repeat indefinitely
       }),
       Tween(scene, {
-        scrollFactorX: { from: 1 - getRandomRange(0, 0.0025), to: 1 + getRandomRange(0, 0.0025) },
+        x: { from: pixelCoord.x - getRandomRange(0, 5), to: pixelCoord.x + getRandomRange(0, 5) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
-        duration: 3000, // Duration of one wobble
+        duration: 5000, // Duration of one wobble
         yoyo: true, // Go back to original scale
         repeat: -1, // Repeat indefinitely
       }),
       Tween(scene, {
-        scrollFactorY: { from: 1 - getRandomRange(0, 0.0025), to: 1 + getRandomRange(0, 0.0025) },
+        y: { from: -pixelCoord.y - getRandomRange(0, 5), to: -pixelCoord.y + getRandomRange(0, 5) },
         ease: "Sine.easeInOut",
         hold: getRandomRange(0, 1000),
         duration: 5000, // Duration of one wobble
