@@ -49,7 +49,7 @@ export const OwnedAsteroid: React.FC<{ asteroid: Entity; onClick?: () => void }>
   return (
     <Button
       className={`row-span-1 flex flex-col p-2 items-center text-xs bg-base-100 flex-nowrap border-secondary h-full ${
-        selected ? "drop-shadow-hard ring-2 ring-warning" : ""
+        selected ? "ring-2 ring-warning" : ""
       }`}
       onClick={async () => {
         onClick && onClick();

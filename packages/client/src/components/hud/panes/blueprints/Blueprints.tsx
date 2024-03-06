@@ -23,8 +23,8 @@ export const Blueprints = memo(() => {
       active={!mapOpen && isBuilding}
       hotkey={KeybindActions.Blueprints}
       minOpacity={0.6}
-      // lockable
-      // draggable
+      lockable
+      draggable
       pinnable
       persist
     >
