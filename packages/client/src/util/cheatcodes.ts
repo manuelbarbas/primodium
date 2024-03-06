@@ -10,7 +10,7 @@ import { components } from "src/network/components";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { buildBuilding } from "src/network/setup/contractCalls/buildBuilding";
 import { createFleet } from "src/network/setup/contractCalls/createFleet";
-import { setComponentValue } from "src/network/setup/contractCalls/dev";
+import { removeComponent, setComponentValue } from "src/network/setup/contractCalls/dev";
 import { MUD } from "src/network/types";
 import { encodeEntity, hashEntities, hashKeyEntity, toHex32 } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
@@ -404,7 +404,26 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
         }
       },
     },
-
+    setFleetCooldown: {
+      params: [{ name: "value", type: "number" }],
+      function: async (value: number) => {
+        const timestamp = (components.Time.get()?.value ?? 0n) + BigInt(value);
+        await setComponentValue(
+          mud,
+          mud.components.CooldownEnd,
+          components.SelectedFleet.get()?.value ?? singletonEntity,
+          {
+            value: BigInt(timestamp),
+          }
+        );
+      },
+    },
+    removeCooldown: {
+      params: [],
+      function: async () => {
+        await removeComponent(mud, components.CooldownEnd, components.SelectedFleet.get()?.value ?? singletonEntity);
+      },
+    },
     createPirateAsteroid: {
       params: [],
       function: async () => {
