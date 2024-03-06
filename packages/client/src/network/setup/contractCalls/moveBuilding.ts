@@ -30,7 +30,7 @@ export const moveBuilding = async (mud: MUD, building: Entity, coord: Coord) => 
       systemId: getSystemId("MoveBuildingSystem"),
       args: [{ ...prevPosition, parent: prevPosition.parent as Hex }, position],
       withSession: true,
-      options: { gas: 2_000_000n },
+      options: { gas: 3_000_000n },
     },
     {
       id: hashEntities(TransactionQueueType.Move, building),
