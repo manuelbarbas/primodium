@@ -30,12 +30,15 @@ export const TransferConfirm = (props: {
 
   const { disabled, submitMessage } = useMemo(() => {
     if (!fromIsFleet) return { disabled: false, submitMessage: "Transfer" };
-    const owner = (props.to !== "newFleet" ? components.OwnedBy.get(props.to)?.value : undefined) as Entity | undefined;
+    const owner = (props.from !== "newFleet" ? components.OwnedBy.get(props.from)?.value : undefined) as
+      | Entity
+      | undefined;
     const cargo = getFleetStatsFromUnits(props.fromUnits, owner).cargo;
+    console.log("cargo", owner, cargo);
     if (cargo < [...props.fromResources.entries()].reduce((acc, [, count]) => acc + count, 0n))
       return { disabled: true, submitMessage: "Sender cargo capacity exceeded" };
     return { disabled: false, submitMessage: "Transfer" };
-  }, [fromIsFleet, props.to, props.fromUnits, props.fromResources]);
+  }, [fromIsFleet, props.from, props.fromUnits, props.fromResources]);
 
   if (disabled)
     return <TransferConfirmButton disabled={disabled} message={submitMessage} onClick={props.handleSubmit} />;
