@@ -7,7 +7,7 @@ import { components } from "src/network/components";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { formatResourceCount } from "src/util/number";
 
-export const DefenseLabel = ({ player }: { player?: Entity }) => {
+export const StrengthLabel = ({ player }: { player?: Entity }) => {
   const name = "Strength";
   const resourceId = EntityType.HP;
   player = player ?? components.Account.use()?.value ?? singletonEntity;

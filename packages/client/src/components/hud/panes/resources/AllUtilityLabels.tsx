@@ -1,7 +1,7 @@
 import { SecondaryCard } from "src/components/core/Card";
 import { components } from "src/network/components";
 import { EntityType } from "src/util/constants";
-import { DefenseLabel } from "./DefenseLabel";
+import { StrengthLabel } from "./StrengthLabel";
 import { UtilityLabel } from "./UtilityLabel";
 
 export const AllUtilityLabels = () => {
@@ -21,7 +21,8 @@ export const AllUtilityLabels = () => {
           resourceId={EntityType.AdvancedUnraidable}
           asteroid={activeRock}
         />
-        <DefenseLabel />
+        <StrengthLabel />
+        <UtilityLabel name={"Encryption"} resourceId={EntityType.Encryption} asteroid={activeRock} showCount />
       </div>
     </SecondaryCard>
   );

@@ -9,10 +9,12 @@ export const UtilityLabel = ({
   name,
   resourceId,
   asteroid,
+  showCount,
 }: {
   name: string;
   resourceId: Entity;
   asteroid: Entity;
+  showCount?: boolean;
 }) => {
   const { resourceCount, resourceStorage } = useFullResourceCount(resourceId, asteroid);
 
@@ -25,7 +27,7 @@ export const UtilityLabel = ({
         tooltipText={name}
         tooltipDirection="top"
         imageUri={resourceIcon ?? ""}
-        text={formatResourceCount(resourceId, used)}
+        text={formatResourceCount(resourceId, showCount ? resourceCount : used)}
         className="mr-1"
       />
       <b className={`text-accent text-xs opacity-50`}>/{formatResourceCount(resourceId, resourceStorage)}</b>
