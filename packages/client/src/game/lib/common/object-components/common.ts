@@ -115,29 +115,6 @@ export const OnClickUp = <T extends keyof GameObjectTypes>(
   };
 };
 
-export const PropogateClickUp = <T extends keyof GameObjectTypes>(scene: Scene): GameObjectComponent<T> => {
-  return {
-    id: uuid(),
-    once: (gameObject) => {
-      let downTime = Date.now();
-      gameObject.on("pointerdown", () => (downTime = Date.now()));
-      gameObject.on("pointerup", (e: Phaser.Input.Pointer) => {
-        if (e.downElement.nodeName !== "CANVAS") return;
-        const prevDownTime = downTime;
-        downTime = Date.now();
-
-        if (downTime - prevDownTime > 250) return;
-        const hitTest = scene.input.phaserInput.hitTestPointer(e);
-        if (!hitTest.length) return;
-
-        //mimic click up event and pass to object below
-        hitTest[1].emit("pointerdown", e);
-        hitTest[1].emit("pointerup", e);
-      });
-    },
-  };
-};
-
 export const OnHover = <T extends keyof GameObjectTypes>(
   callback: (gameObject?: GameObjectInstances[T]) => void,
   leaveCallback?: (gameObject?: GameObjectInstances[T]) => void,

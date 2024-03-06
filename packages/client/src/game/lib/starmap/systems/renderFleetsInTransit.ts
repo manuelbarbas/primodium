@@ -21,7 +21,6 @@ import {
   OnHover,
   OnOnce,
   OnRxjsSystem,
-  PropogateClickUp,
   SetValue,
 } from "../../common/object-components/common";
 import { Circle, Line, Triangle } from "../../common/object-components/graphics";
@@ -127,7 +126,6 @@ export const renderFleetsInTransit = (scene: Scene) => {
         alpha: 0.75,
         direction: direction - 90,
       }),
-      PropogateClickUp(scene),
       OnHover(
         () => components.HoverEntity.set({ value: entity }),
         () => components.HoverEntity.remove()
