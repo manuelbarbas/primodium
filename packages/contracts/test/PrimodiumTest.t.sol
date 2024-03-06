@@ -8,6 +8,7 @@ import { ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
 import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 
+import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
 import "src/utils.sol";
 import { RESERVE_CURRENCY, RESERVE_CURRENCY_RESOURCE } from "src/constants.sol";
 import "codegen/world/IWorld.sol";
@@ -413,5 +414,67 @@ contract PrimodiumTest is MudTest {
     for (uint256 i = 0; i < transportables.length; i++) {
       increaseResource(spaceRock, EResource(transportables[i]), resourceCounts[i]);
     }
+  }
+
+  function findSecondaryAsteroid(bytes32 player, bytes32 asteroid) public returns (PositionData memory) {
+    P_GameConfigData memory config = P_GameConfig.get();
+    PositionData memory sourcePosition = Position.get(asteroid);
+    logPosition(sourcePosition);
+    bytes32 asteroidSeed;
+    PositionData memory targetPosition;
+    uint256 i = 0;
+    bool found = false;
+    while (i < 6 && !found) {
+      PositionData memory targetPositionRelative = LibAsteroid.getPosition(
+        i,
+        config.asteroidDistance,
+        config.maxAsteroidsPerPlayer
+      );
+      logPosition(sourcePosition);
+      targetPosition = PositionData(
+        sourcePosition.x + targetPositionRelative.x,
+        sourcePosition.y + targetPositionRelative.y,
+        0
+      );
+      logPosition(targetPosition);
+
+      asteroidSeed = keccak256(abi.encode(asteroid, bytes32("asteroid"), targetPosition.x, targetPosition.y));
+      found = LibAsteroid.isAsteroid(asteroidSeed, config.asteroidChanceInv);
+      i++;
+    }
+    require(found, "uh oh, no asteroid found");
+    return (targetPosition);
+  }
+  function conquerAsteroid(address player, bytes32 sourceAsteroid, bytes32 targetAsteroid) internal returns (bytes32) {
+    bytes32 playerEntity = addressToEntity(player);
+    uint256 asteroidDefense = LibCombatAttributes.getDefense(targetAsteroid);
+    bytes32 minutemanEntity = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    bytes32 capitalShip = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
+    uint256 minutemanAttack = P_Unit.getAttack(minutemanEntity, 1);
+
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == minutemanEntity) unitCounts[i] = (10 * asteroidDefense) / minutemanAttack + 1;
+      else if (unitPrototypes[i] == capitalShip) unitCounts[i] = 1;
+      else unitCounts[i] = 0;
+    }
+    setupCreateFleet(player, sourceAsteroid, unitCounts, resourceCounts);
+    vm.startPrank(player);
+    console.log("creating");
+    bytes32 fleetEntity = world.createFleet(sourceAsteroid, unitCounts, resourceCounts);
+    console.log("sending");
+    world.sendFleet(fleetEntity, targetAsteroid);
+    vm.warp(FleetMovement.getArrivalTime(fleetEntity));
+
+    while (OwnedBy.get(targetAsteroid) != playerEntity) {
+      console.log("attacking");
+      uint256 cooldown = LibFleetCombat.getCooldownTime(LibCombatAttributes.getAttack(fleetEntity), true);
+      world.attack(fleetEntity, targetAsteroid);
+      vm.warp(block.timestamp + cooldown);
+    }
+    vm.stopPrank();
+    return fleetEntity;
   }
 }

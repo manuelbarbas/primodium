@@ -5,7 +5,7 @@ import { useFullResourceCount } from "./useFullResourceCount";
 export function useHasEnoughOfResource(
   resource: Entity,
   amount: bigint,
-  spaceRock?: Entity,
+  spaceRock: Entity,
   resourceType = ResourceType.Resource
 ) {
   const { resourceCount, production } = useFullResourceCount(resource, spaceRock);

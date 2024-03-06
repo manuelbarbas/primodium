@@ -2,7 +2,7 @@ import { SecondaryCard } from "../core/Card";
 import { IconLabel } from "../core/IconLabel";
 import { Join } from "../core/Join";
 import { Modal } from "../core/Modal";
-import { UpgradeUnit } from "./building-menu/screens/UpgradeUnit";
+import { UnitUpgrades } from "./building-menu/screens/UnitUpgrades";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 import { Settings } from "./modals/settings/Settings";
 import { BattleReports } from "./panes/battle-reports/BattleReports";
@@ -33,8 +33,8 @@ export const MenuButtons = () => {
           <Modal.Button className={buttonClass}>
             <IconLabel imageUri="/img/icons/addicon.png" tooltipText="upgrade units" tooltipDirection="right" />
           </Modal.Button>
-          <Modal.Content className="w-5/12 h-120">
-            <UpgradeUnit />
+          <Modal.Content className="w-[58rem]">
+            <UnitUpgrades />
           </Modal.Content>
         </Modal>
         <Modal title="settings">
