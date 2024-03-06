@@ -128,6 +128,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
     const cooldownEnd = components.CooldownEnd.get(fleet)?.value ?? 0n;
     const inCooldown = time < cooldownEnd;
     let showingCooldown = inCooldown;
+    const cooldownId = `fleetCooldown-${fleet}`;
 
     fleetOrbitObject.setComponents([
       ...sharedComponents,
@@ -141,7 +142,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
               yoyo: true,
               repeat: -1,
             },
-            `fleetCooldown-${fleet}`
+            cooldownId
           )
         : undefined,
       OnOnce((gameObject) => {
@@ -194,11 +195,14 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
 
           const time = newVal?.value ?? 0n;
           const inCooldown = time < cooldownEnd;
-          const cooldownId = `fleetCooldown-${fleet}`;
 
           if ((inCooldown && !showingCooldown) || (!inCooldown && showingCooldown)) {
             showingCooldown = !showingCooldown;
-            if (!inCooldown && fleetOrbitObject.hasComponent(cooldownId)) fleetOrbitObject.removeComponent(cooldownId);
+            if (!inCooldown && fleetOrbitObject.hasComponent(cooldownId)) {
+              fleetOrbitObject.removeComponent(cooldownId);
+
+              fleetOrbitObject.setComponent(SetValue({ alpha: 1 }));
+            }
             if (inCooldown)
               fleetOrbitObject.setComponent(
                 Tween(
