@@ -19,6 +19,7 @@ export const RecipeDisplay: React.FC<{
 }> = memo(({ building, asteroid }) => {
   const recipe = getRecipe(building, 1n);
 
+  // cost of the building
   return (
     <SecondaryCard className="items-center gap-1 w-full !border-error/50 bg-transparent p-1">
       <p className="font-bold absolute opacity-75 left-0 top-1/2 -translate-y-1/2 text-error text-sm ml-1">-</p>
@@ -78,10 +79,14 @@ export const BlueprintInfo: React.FC<{
       <div className="items-center p-0 w-full z-100">
         <div className="flex flex-col items-center w-full h-full text-xs relative gap-1 ">
           <div className="absolute top-0 w-full h-full topographic-background opacity-25" />
-          {!hasEnough && <p className="text-error animate-pulse text-xs text-center">NOT ENOUGH RESOURCES</p>}
-          <RecipeDisplay building={building} asteroid={spaceRock} />
 
-          <SecondaryCard className="flex flex-col items-center gap-1 w-full relative bg-transparent border-success/50 p-1">
+        
+          
+          {/* Version 0.10: The cost of the building */}
+          {/* <RecipeDisplay building={building} asteroid={spaceRock} /> */}
+
+          {/* Version 0.10: The effect/production of building */}
+          {/* <SecondaryCard className="flex flex-col items-center gap-1 w-full relative bg-transparent border-success/50 p-1">
             <p className="font-bold absolute opacity-75 left-0 top-1/2 -translate-y-1/2 text-success text-sm ml-1">+</p>
             {production.map(({ resource, amount, type }) => (
               <Badge key={`prototypeproduction-${resource}`} className="text-xs gap-2 border border-secondary/75">
@@ -136,7 +141,56 @@ export const BlueprintInfo: React.FC<{
                 </div>
               </div>
             )}
+          </SecondaryCard> */}
+
+          {/* New: blueprint building tooltip */}
+          <SecondaryCard className="flex flex-col gap-4 p-1">
+              {/* Building Title */}
+              <div className="text-sm font-bold"> Shield Generator</div>
+
+              {/* Function Box */}
+              <div className="flex flex-col">
+                <span className="mb-2">Effect</span>
+                <div className="flex items-center gap-2 w-56">
+                  <img src="UI_defense.png" alt="Defense Icon" className="w-4 h-4 m-1" />
+                  <span className="text-xs text-success/50"> Increase shield strength by 5% </span>
+                </div>
+              </div>
+              
+               {/* Cost Box */}
+              <div className="flex flex-col">
+                <span className="mb-2">Cost</span>
+                <div className="flex flex-wrap items-center w-56 gap-2">
+                  
+                  <div className="flex items-center gap-1 px-1 bg-gray-800 rounded">
+                    <img src="Alloy_Resource.png" alt="Resource Icon" className="w-4 h-4" />
+                    <span className="text-xs text-error">5000</span>
+                  </div>
+                  <div className="flex items-center gap-1 px-1 bg-gray-800 rounded">
+                    <img src="Alloy_Resource.png" alt="Resource Icon" className="w-4 h-4" />
+                    <span className="text-xs text-error">5000</span>
+                  </div>
+                  <div className="flex items-center gap-1 px-1 bg-gray-800 rounded">
+                    <img src="Alloy_Resource.png" alt="Resource Icon" className="w-4 h-4" />
+                    <span className="text-xs text-error">100</span>
+                  </div>
+                  
+                </div>
+
+                {/* if not enough resources */}
+                {!hasEnough && <p className="text-error animate-pulse duration-2000 text-xs text-center mt-2">NOT ENOUGH RESOURCES</p>}
+              </div>
+
+              {/* Size Tile */}
+              <div className="mt-auto self-end">
+                <span className="text-xs text-gray-400">4x4 tiles</span>
+              </div>
+
+
+             
           </SecondaryCard>
+
+          
         </div>
       </div>
     </Card>

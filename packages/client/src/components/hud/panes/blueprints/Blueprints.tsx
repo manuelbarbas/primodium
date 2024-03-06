@@ -3,6 +3,7 @@ import { memo } from "react";
 import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
 import { AllBlueprints } from "./AllBlueprints";
+import { TestComponent } from "./TestComponent";
 
 export const Blueprints = memo(() => {
   const { components } = useMud();
@@ -23,12 +24,14 @@ export const Blueprints = memo(() => {
       active={!mapOpen && isBuilding}
       hotkey={KeybindActions.Blueprints}
       minOpacity={0.6}
-      // lockable
-      // draggable
+      lockable
+      draggable
       pinnable
       persist
     >
-      <AllBlueprints />
+      {/* <AllBlueprints /> */}
+      <TestComponent />
     </Widget>
+
   );
 });
