@@ -41,7 +41,7 @@ export const TransferTo = (props: {
       data.attack += unitData.ATK * count;
       data.defense += unitData.DEF * count;
       data.hp += unitData.HP * count;
-      data.cargo += unitData.CRG * count;
+      data.cargo += unitData.CGO * count;
       data.decryption = bigIntMax(data.decryption, unitData.DEC);
       data.speed = bigIntMin(data.speed == 0n ? BigInt(10e100) : data.speed, unitData.SPD);
     });

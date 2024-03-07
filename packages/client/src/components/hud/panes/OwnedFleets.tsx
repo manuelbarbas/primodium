@@ -94,15 +94,15 @@ export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ 
           </div>
           <div className="grid grid-cols-2 gap-1">
             {formatResourceCount(EntityType.Iron, fleetStats.defense, { short: true })}
-            <p className="text-accent">DEF</p>
-          </div>
-          <div className="grid grid-cols-2 gap-1">
-            {formatResourceCount(EntityType.Iron, fleetStats.cargo, { short: true })}
-            <p className="text-accent">CRG</p>
+            <p className="text-accent">CTR</p>
           </div>
           <div className="grid grid-cols-2 gap-1">
             {formatResourceCount(EntityType.Iron, fleetStats.hp, { short: true })}
             <p className="text-accent">HP</p>
+          </div>
+          <div className="grid grid-cols-2 gap-1">
+            {formatResourceCount(EntityType.Iron, fleetStats.cargo, { short: true })}
+            <p className="text-accent">CGO</p>
           </div>
           <div className="grid grid-cols-2 gap-1">
             <p className="">{formatNumber(fleetStats.speed, { short: true })}</p>
