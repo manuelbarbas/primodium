@@ -27,17 +27,17 @@ export const TransferTo = (props: {
   hovering?: boolean;
 }) => {
   const isFleet = props.entity !== "newFleet" && components.IsFleet.has(props.entity);
-  const selectedRock = components.ActiveRock.use()?.value;
   const noUnitsOrResources =
     !props.deltas || props.deltas.size === 0 || (props.unitCounts.size === 0 && props.resourceCounts.size === 0);
   const Header = useMemo(() => {
     if (!isFleet && props.entity !== "newFleet") {
       return <TargetHeader entity={props.entity} />;
     }
-    if (!selectedRock) throw new Error("No selected rock");
     const data = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
+    const ownerRock = props.entity !== "newFleet" ? components.OwnedBy.get(props.entity)?.value : undefined;
     props.unitCounts.forEach((count, unit) => {
-      const unitData = getUnitStats(unit as Entity, selectedRock);
+      if (count === 0n) return;
+      const unitData = getUnitStats(unit as Entity, ownerRock as Entity);
       data.attack += unitData.ATK * count;
       data.defense += unitData.DEF * count;
       data.hp += unitData.HP * count;
@@ -49,7 +49,7 @@ export const TransferTo = (props: {
     return (
       <FleetHeader title={props.entity === "newFleet" ? "New Fleet" : entityToFleetName(props.entity)} {...data} />
     );
-  }, [isFleet, props.entity, props.unitCounts, selectedRock]);
+  }, [isFleet, props.entity, props.unitCounts]);
 
   return (
     <div

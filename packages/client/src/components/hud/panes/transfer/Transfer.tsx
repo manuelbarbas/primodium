@@ -127,8 +127,11 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
         ? [...toResourceCounts.entries()].reduce((acc, [, count]) => acc + count, 0n)
         : toResourceCounts.get(dragging.entity) ?? 0n;
 
+      const fleetOwner = (toIsFleet && to !== "newFleet" ? components.OwnedBy.get(to)?.value : undefined) as
+        | Entity
+        | undefined;
       const resourceStorage = toIsFleet
-        ? getFleetStatsFromUnits(toUnitCounts).cargo
+        ? getFleetStatsFromUnits(toUnitCounts, fleetOwner).cargo
         : getFullResourceCount(dragging.entity, to as Entity).resourceStorage;
 
       const outcome = dragging.count + resourceCount;
