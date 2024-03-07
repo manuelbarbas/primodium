@@ -8,7 +8,7 @@ import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getBuildingLevelStorageUpgrades, transformProductionData } from "src/util/building";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { ResourceImage, ResourceType } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
@@ -30,7 +30,7 @@ export const RecipeDisplay: React.FC<{
           <div key={`recipe-chunk-${i}`} className="flex flex-row gap-1">
             {chunk.map((resource) => {
               const resourceImage = ResourceImage.get(resource.id)!;
-              const resourceName = getBlockTypeName(resource.id);
+              const resourceName = getEntityTypeName(resource.id);
               return (
                 <ResourceIconTooltip
                   key={resource.id + resource.type}
@@ -69,7 +69,7 @@ export const PrototypeInfo: React.FC<{
 
   const hasEnough = useHasEnoughResources(getRecipe(building, 1n), spaceRock);
 
-  if (!getBlockTypeName(building)) return <></>;
+  if (!getEntityTypeName(building)) return <></>;
 
   return (
     <div className="flex flex-col items-center gap-3">
@@ -94,7 +94,7 @@ export const PrototypeInfo: React.FC<{
                 className="text-xs gap-2 bg-green-800/60 py-3 border border-green-600 rounded-md w-fit"
               >
                 <ResourceIconTooltip
-                  name={getBlockTypeName(resource)}
+                  name={getEntityTypeName(resource)}
                   image={ResourceImage.get(resource) ?? ""}
                   resource={resource}
                   amount={amount}
@@ -112,7 +112,7 @@ export const PrototypeInfo: React.FC<{
                     imageUri={ResourceImage.get(unit as Entity) ?? ""}
                     key={`unitProduction-${unit}`}
                     tooltipDirection={"bottom"}
-                    tooltipText={getBlockTypeName(unit as Entity)}
+                    tooltipText={getEntityTypeName(unit as Entity)}
                     text={""}
                     hideText
                   />
@@ -130,7 +130,7 @@ export const PrototypeInfo: React.FC<{
                         className="text-xs gap-2 bg-green-800/60 py-3 border border-green-600 rounded-md w-full"
                       >
                         <ResourceIconTooltip
-                          name={getBlockTypeName(resource)}
+                          name={getEntityTypeName(resource)}
                           image={ResourceImage.get(resource) ?? ""}
                           resource={resource}
                           amount={amount}
@@ -149,7 +149,7 @@ export const PrototypeInfo: React.FC<{
 
           <div className="flex flex-col items-center gap-2">
             <p className="flex justify-center align-center border border-cyan-700 bg-slate-700 rounded-md p-1 text-sm font-bold w-full text-center">
-              {getBlockTypeName(building)}
+              {getEntityTypeName(building)}
             </p>
             <div className="flex gap-1 w-full">
               {

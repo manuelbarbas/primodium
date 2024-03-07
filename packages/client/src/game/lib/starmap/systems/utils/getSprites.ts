@@ -1,6 +1,6 @@
 import { EntitytoBuildingSpriteKey, SpriteKeys } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
-import { clampedIndex, getBlockTypeName } from "src/util/common";
+import { clampedIndex, getEntityTypeName } from "src/util/common";
 import { EntityType, MapIdToAsteroidType, RockRelationship } from "src/util/constants";
 import { getRockRelationship } from "src/util/asteroid";
 
@@ -23,7 +23,7 @@ export const getPrimaryRockSprite = (level: bigint) => {
 
 export const getSecondaryRockSprite = (mapId: number, maxLevel: bigint) => {
   return SpriteKeys[
-    `Motherlode${getBlockTypeName(MapIdToAsteroidType[mapId])}${
+    `Motherlode${getEntityTypeName(MapIdToAsteroidType[mapId])}${
       maxLevelToSize[Number(maxLevel)]
     }` as keyof typeof SpriteKeys
   ];

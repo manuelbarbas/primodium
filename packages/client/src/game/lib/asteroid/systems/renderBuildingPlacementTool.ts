@@ -17,7 +17,7 @@ import { buildBuilding } from "src/network/setup/contractCalls/buildBuilding";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { Action, BuildingEnumLookup } from "src/util/constants";
 import { getRecipe, hasEnoughResources } from "src/util/recipe";
 import { ObjectPosition, OnClick, SetValue } from "../../common/object-components/common";
@@ -90,7 +90,7 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
           }
 
           if (!hasEnough || !validPlacement) {
-            if (!hasEnough) toast.error("Not enough resources to build " + getBlockTypeName(selectedBuilding));
+            if (!hasEnough) toast.error("Not enough resources to build " + getEntityTypeName(selectedBuilding));
             if (!validPlacement) toast.error("Cannot place building here");
             scene.camera.phaserCamera.shake(200, 0.001);
             return;

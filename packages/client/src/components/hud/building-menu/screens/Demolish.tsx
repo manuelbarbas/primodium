@@ -9,7 +9,7 @@ import { useBuildingInfo } from "src/hooks/useBuildingInfo";
 import { useBuildingName } from "src/hooks/useBuildingName";
 import { components } from "src/network/components";
 import { demolishBuilding } from "src/network/setup/contractCalls/demolishBuilding";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { ResourceImage, ResourceType } from "src/util/constants";
 import { getFullResourceCount } from "src/util/resource";
 
@@ -44,7 +44,7 @@ export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
             hideText
             imageUri={ResourceImage.get(blockingResource.resource) ?? ""}
             tooltipDirection={"left"}
-            tooltipText={getBlockTypeName(blockingResource.resource)}
+            tooltipText={getEntityTypeName(blockingResource.resource)}
             className="mx-2 w-5"
           />
           will drop below zero.

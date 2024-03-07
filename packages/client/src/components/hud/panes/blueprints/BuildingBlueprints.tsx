@@ -6,7 +6,7 @@ import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { Action, EntityType } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
@@ -41,7 +41,7 @@ const BlueprintButton: React.FC<{
   return (
     <Button
       disabled={mainbaseLevel < levelRequirement}
-      tooltip={getBlockTypeName(buildingType)}
+      tooltip={getEntityTypeName(buildingType)}
       keybind={keybindActive ? keybind : undefined}
       tooltipDirection={tooltipDirection ?? "right"}
       onPointerEnter={() => components.HoverEntity.set({ value: buildingType })}
@@ -56,15 +56,16 @@ const BlueprintButton: React.FC<{
         components.SelectedBuilding.set({ value: buildingType });
         components.SelectedAction.set({ value: Action.PlaceBuilding });
       }}
-      className={`min-h-[3.6rem] bg-base-200 ${hasMainbaseLevel
-        ? hasEnough
-          ? "hover:bg-accent border-accent/25"
-          : "hover:bg-warning border-warning/75"
-        : "hover:bg-error border-error/25"
-        } disabled:opacity-50 border border-secondary hover:z-10 ${selectedBuilding === buildingType ? " ring-2 ring-white/75" : ""
-        } relative btn-ghost min-h-11 max-h-12 p-0 text-[2.5rem] !bg-info/25 ${className}`}
+      className={`min-h-[3.6rem] bg-base-200 ${
+        hasMainbaseLevel
+          ? hasEnough
+            ? "hover:bg-accent border-accent/25"
+            : "hover:bg-warning border-warning/75"
+          : "hover:bg-error border-error/25"
+      } disabled:opacity-50 border border-secondary hover:z-10 ${
+        selectedBuilding === buildingType ? " ring-2 ring-white/75" : ""
+      } relative btn-ghost min-h-11 max-h-12 p-0 text-[2.5rem] !bg-info/25 ${className}`}
     >
-
       <BuildingImageFromType buildingType={buildingType} />
       {!hasMainbaseLevel && (
         <div className="absolute top-0 w-full h-full gap-1 flex items-center justify-center text-[.5rem] bg-neutral/50">
@@ -83,10 +84,9 @@ const BlueprintButton: React.FC<{
   );
 };
 
-
 //Buildings
 type BuildingBlueprintsProps = {
-  buildingTypeToShow: number; 
+  buildingTypeToShow: number;
 };
 
 export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ buildingTypeToShow }) => {
@@ -103,20 +103,16 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ building
     else if (mapId === 3) mines = [EntityType.IridiumMine];
     else if (mapId === 4) mines = [EntityType.PlatinumMine];
     else if (mapId === 5) mines = [EntityType.TitaniumMine];
-    return [...mines,
-    EntityType.IronPlateFactory,
-    EntityType.PVCellFactory,
-    EntityType.AlloyFactory,
-    EntityType.SolarPanel
+    return [
+      ...mines,
+      EntityType.IronPlateFactory,
+      EntityType.PVCellFactory,
+      EntityType.AlloyFactory,
+      EntityType.SolarPanel,
     ];
   }, [mapId]);
 
-  const storageBuildings = [
-    EntityType.Garage,
-    EntityType.StorageUnit,
-    EntityType.Hangar,
-    EntityType.Vault,
-  ];
+  const storageBuildings = [EntityType.Garage, EntityType.StorageUnit, EntityType.Hangar, EntityType.Vault];
 
   const militaryBuildings = [
     EntityType.Workshop,
@@ -126,10 +122,7 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ building
     EntityType.Shipyard,
   ];
 
-  const infrastructureBuildings = [
-    EntityType.StarmapperStation,
-    EntityType.Market,
-  ];
+  const infrastructureBuildings = [EntityType.StarmapperStation, EntityType.Market];
 
   const keybinds = [
     KeybindActions.Hotbar0,
@@ -166,13 +159,8 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ building
         <div className={` flex flex-col gap-1 items-center w-full `}>
           <div className="grid grid-cols-4 gap-1 w-full p-1">
             {buildingsToShow.map((buildingType, i) => (
-              <BlueprintButton
-                key={i}
-                tooltipDirection="top"
-                buildingType={buildingType}
-              />
+              <BlueprintButton key={i} tooltipDirection="top" buildingType={buildingType} />
             ))}
-
           </div>
         </div>
       </div>

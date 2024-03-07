@@ -5,7 +5,7 @@ import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { MUD } from "src/network/types";
 import { getBuildingTopLeft } from "src/util/building";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { BuildingEntityLookup, TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { Hex } from "viem";
@@ -37,7 +37,7 @@ export const buildBuilding = async (mud: MUD, building: EBuilding, coord: Coord)
     (receipt) => {
       ampli.systemBuild({
         asteroidCoord: activeAsteroid,
-        buildingType: getBlockTypeName(BuildingEntityLookup[building]),
+        buildingType: getEntityTypeName(BuildingEntityLookup[building]),
         coord: [coord.x, coord.y],
         currLevel: 0,
         ...parseReceipt(receipt),

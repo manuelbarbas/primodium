@@ -11,7 +11,7 @@ import { useMud } from "src/hooks";
 import { useMaxCountOfRecipe } from "src/hooks/useMaxCountOfRecipe";
 import { components } from "src/network/components";
 import { train } from "src/network/setup/contractCalls/train";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { BackgroundImage, EntityType, ResourceEntityLookup, ResourceImage, UnitEnumLookup } from "src/util/constants";
 import { formatNumber, formatResourceCount } from "src/util/number";
 import { getRecipe } from "src/util/recipe";
@@ -64,7 +64,7 @@ export const BuildUnit: React.FC<{
                     }`}
                   />
                   <p className="opacity-0 absolute -bottom-4 text-xs bg-error rounded-box px-1 group-hover:opacity-100 whitespace-nowrap transition-opacity">
-                    {getBlockTypeName(unit)}
+                    {getEntityTypeName(unit)}
                   </p>
                 </button>
               );
@@ -77,7 +77,7 @@ export const BuildUnit: React.FC<{
             </p>
           ) : (
             <>
-              <p className="uppercase font-bold">{getBlockTypeName(selectedUnit)}</p>
+              <p className="uppercase font-bold">{getEntityTypeName(selectedUnit)}</p>
 
               <div className="grid grid-cols-6 gap-2 border-y border-cyan-400/30 mx-auto">
                 {Object.entries(getUnitStats(selectedUnit, activeRock)).map(([name, value]) => {
@@ -129,7 +129,7 @@ const TrainNonCapitalShip = ({ building, unit, asteroid }: { building: Entity; u
               <ResourceIconTooltip
                 image={ResourceImage.get(resource.id) ?? ""}
                 resource={resource.id}
-                name={getBlockTypeName(resource.id)}
+                name={getEntityTypeName(resource.id)}
                 amount={resource.amount * BigInt(count)}
                 fontSize="sm"
                 validate
@@ -189,7 +189,7 @@ const TrainCapitalShip = ({ building, asteroid }: { building: Entity; asteroid: 
         <ResourceIconTooltip
           image={ResourceImage.get(resource) ?? ""}
           resource={resource}
-          name={getBlockTypeName(resource)}
+          name={getEntityTypeName(resource)}
           amount={cost}
           fontSize="sm"
           validate

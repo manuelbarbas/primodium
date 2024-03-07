@@ -4,7 +4,7 @@ import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { MUD } from "src/network/types";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { bigintToNumber } from "src/util/number";
@@ -36,7 +36,7 @@ export const upgradeBuilding = async (mud: MUD, coord: Coord) => {
 
       ampli.systemUpgrade({
         asteroidCoord: asteroid!,
-        buildingType: getBlockTypeName(buildingType),
+        buildingType: getEntityTypeName(buildingType),
         coord: [coord.x, coord.y],
         currLevel: bigintToNumber(currLevel),
         ...parseReceipt(receipt),

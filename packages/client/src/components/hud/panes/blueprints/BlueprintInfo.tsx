@@ -4,8 +4,13 @@ import React, { memo, useMemo } from "react";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
-import { getBuildingLevelStorageUpgrades, transformProductionData, getBuildingName, getBuildingDimensions } from "src/util/building";
-import { getBlockTypeName } from "src/util/common";
+import {
+  getBuildingLevelStorageUpgrades,
+  transformProductionData,
+  getBuildingName,
+  getBuildingDimensions,
+} from "src/util/building";
+import { getEntityTypeName } from "src/util/common";
 import { ResourceImage, ResourceType } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
@@ -28,7 +33,7 @@ export const RecipeDisplay: React.FC<{
         ) : (
           recipe.map((resource, i) => {
             const resourceImage = ResourceImage.get(resource.id)!;
-            const resourceName = getBlockTypeName(resource.id);
+            const resourceName = getEntityTypeName(resource.id);
             return (
               <Badge key={`recipe-chunk-${i}`}>
                 <ResourceIconTooltip
@@ -68,21 +73,20 @@ export const BlueprintInfo: React.FC<{
     [building]
   );
 
-  const buildingName = useMemo(() => getBuildingName(building), [building]);
+  const buildingName = useMemo(() => getEntityTypeName(building), [building]);
+  // console.log(buildingName);
   const dimensions = useMemo(() => getBuildingDimensions(building), [building]);
 
   const hasEnough = useHasEnoughResources(getRecipe(building ?? singletonEntity, 1n), spaceRock);
 
   if (!building) return <div className="items-center p-0 w-full z-100 h-24">Select a building</div>;
-  if (!getBlockTypeName(building)) return <></>;
+  if (!getEntityTypeName(building)) return <></>;
 
   return (
     <Card>
       <div className="items-center p-0 w-full z-100">
         <div className="flex flex-col items-center w-full h-full text-xs relative gap-1 ">
           <div className="absolute top-0 w-full h-full" />
-
-
 
           {/* Version 0.10: The cost of the building */}
           {/* <RecipeDisplay building={building} asteroid={spaceRock} /> */}
@@ -146,10 +150,7 @@ export const BlueprintInfo: React.FC<{
 
           <SecondaryCard className="flex flex-col gap-4 p-1">
             {/* Building Name */}
-            <div className="text-sm font-bold">
-              Shield
-              {buildingName}
-            </div>
+            <div className="text-sm font-bold">{buildingName}</div>
 
             {/* Function/Effect */}
             <div className="flex flex-col">
@@ -159,7 +160,6 @@ export const BlueprintInfo: React.FC<{
                 <span className="text-xs text-success/50"> Increase shield strength by 5% </span>
               </div>
             </div>
-
 
             {/* Cost */}
             <div className="flex flex-col">
@@ -177,7 +177,9 @@ export const BlueprintInfo: React.FC<{
                 </div> */}
 
               {/* if not enough resources */}
-              {!hasEnough && <p className="text-error animate-pulse duration-2000 text-xs text-center mt-2">NOT ENOUGH RESOURCES</p>}
+              {!hasEnough && (
+                <p className="text-error animate-pulse duration-2000 text-xs text-center mt-2">NOT ENOUGH RESOURCES</p>
+              )}
             </div>
 
             {/* Size Tile */}
@@ -186,12 +188,7 @@ export const BlueprintInfo: React.FC<{
                 {dimensions.width}x{dimensions.height} tiles
               </span>
             </div>
-
-
-
           </SecondaryCard>
-
-
         </div>
       </div>
     </Card>

@@ -1,6 +1,6 @@
 import { IconLabel } from "src/components/core/IconLabel";
 import { components } from "src/network/components";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { ResourceImage } from "src/util/constants";
 import { formatResourceCount } from "src/util/number";
 
@@ -16,7 +16,7 @@ export const HangarContent = () => {
         <div key={`unit-${i}`} className="flex gap-2 items-center">
           <IconLabel imageUri={ResourceImage.get(unit) ?? ""} className="text-xs" />
           <p>{formatResourceCount(unit, hangar.counts[i])}</p>
-          <p className="opacity-50 text-xs">{getBlockTypeName(unit)}</p>
+          <p className="opacity-50 text-xs">{getEntityTypeName(unit)}</p>
         </div>
       ))}
     </div>

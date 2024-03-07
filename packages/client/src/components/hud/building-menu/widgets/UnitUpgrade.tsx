@@ -10,7 +10,7 @@ import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { upgradeUnit } from "src/network/setup/contractCalls/upgradeUnit";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import {
   BackgroundImage,
   EntityType,
@@ -41,7 +41,7 @@ export const RecipeDisplay: React.FC<{
         ) : (
           recipe.map((resource, i) => {
             const resourceImage = ResourceImage.get(resource.id)!;
-            const resourceName = getBlockTypeName(resource.id);
+            const resourceName = getEntityTypeName(resource.id);
             return (
               <Badge key={`recipe-chunk-${i}`} className="border border-secondary/75">
                 <ResourceIconTooltip
@@ -109,7 +109,7 @@ export const UnitUpgrade: React.FC<{ unit: Entity }> = memo(({ unit }) => {
       <IconLabel
         className="text-lg font-bold gap-4 mt-2"
         imageUri={BackgroundImage.get(unit)?.at(0) ?? ""}
-        text={getBlockTypeName(unit)}
+        text={getEntityTypeName(unit)}
       />
       <div className="grid grid-cols-6 gap-2 border-y border-cyan-400/30 mx-auto">
         {Object.entries(getUnitStatsLevel(unit, level)).map(([name, value]) => {

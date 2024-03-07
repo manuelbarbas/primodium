@@ -7,7 +7,7 @@ import { EFleetStance } from "contracts/config/enums";
 import { getRockSprite } from "src/game/lib/starmap/systems/utils/getSprites";
 import { components, components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
-import { getBlockTypeName } from "./common";
+import { getEntityTypeName } from "./common";
 import { EntityType, MapIdToAsteroidType, ResourceStorages, RockRelationship } from "./constants";
 import { getFullResourceCount } from "./resource";
 import { getOrbitingFleets } from "./unit";
@@ -49,7 +49,7 @@ export function getAsteroidName(spaceRock: Entity) {
     : "";
 
   return ` ${expansionLevel ? `LVL. ${expansionLevel} ` : asteroidSize} ${
-    asteroidResource ? getBlockTypeName(asteroidResource) : ""
+    asteroidResource ? getEntityTypeName(asteroidResource) : ""
   } ${isPirate ? "Pirate" : "Asteroid"}`;
 }
 
@@ -65,7 +65,7 @@ export function getAsteroidDescription(asteroid: Entity) {
   }[Number(asteroidData?.maxLevel ?? 1)];
 
   return {
-    type: asteroidResource ? getBlockTypeName(asteroidResource) : "Basic",
+    type: asteroidResource ? getEntityTypeName(asteroidResource) : "Basic",
     size: asteroidSize,
   };
 }

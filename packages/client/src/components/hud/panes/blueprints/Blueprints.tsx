@@ -32,6 +32,5 @@ export const Blueprints = memo(() => {
       {/* <AllBlueprints /> */}
       <TestComponent />
     </Widget>
-
   );
 });

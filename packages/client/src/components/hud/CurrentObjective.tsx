@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { FaGift, FaMapPin } from "react-icons/fa";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { clampedIndex, getBlockTypeName } from "src/util/common";
+import { clampedIndex, getEntityTypeName } from "src/util/common";
 import { ObjectiveEntityLookup } from "src/util/constants";
 import { ObjectiveDescriptions } from "src/util/objectiveDescriptions";
 import { Hex } from "viem";
@@ -89,7 +89,7 @@ export const CurrentObjective = () => {
           <div className="flex flex-col p-1 bg-opacity-50">
             <div className="flex gap-1 items-center p-1">
               <FaMapPin className="text-accent" />
-              <p className="font-bold">{getBlockTypeName(objectiveEntity)}</p>
+              <p className="font-bold">{getEntityTypeName(objectiveEntity)}</p>
             </div>
             <hr className="border-secondary/50" />
             <div className="flex gap-1 text-right justify-end px-2 border-secondary/50 p-1 w-72">

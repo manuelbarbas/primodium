@@ -9,7 +9,7 @@ import { useBuildingInfo } from "src/hooks/useBuildingInfo";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { upgradeBuilding } from "src/network/setup/contractCalls/upgradeBuilding";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { ResourceImage, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 
@@ -54,7 +54,7 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
                   return (
                     <Badge key={resource.id + resource.type} className="text-xs gap-2">
                       <ResourceIconTooltip
-                        name={getBlockTypeName(resource.id)}
+                        name={getEntityTypeName(resource.id)}
                         image={ResourceImage.get(resource.id) ?? ""}
                         resource={resource.id}
                         amount={resource.amount}

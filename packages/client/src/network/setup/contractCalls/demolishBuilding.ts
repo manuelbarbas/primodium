@@ -3,7 +3,7 @@ import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { MUD } from "src/network/types";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { bigintToNumber } from "src/util/number";
@@ -32,7 +32,7 @@ export async function demolishBuilding(mud: MUD, building: Entity) {
 
       ampli.systemDestroy({
         asteroidCoord: position.parent,
-        buildingType: getBlockTypeName(buildingType),
+        buildingType: getEntityTypeName(buildingType),
         coord: [position.x, position.y],
         currLevel: bigintToNumber(currLevel),
         ...parseReceipt(receipt),
