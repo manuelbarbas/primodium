@@ -118,6 +118,7 @@ export const renderFleetsInTransit = (scene: Scene) => {
     fleetIcon.setComponents([
       ...sharedComponents,
       ObjectPosition(originPixelCoord, DepthLayers.Marker),
+
       Triangle(15, 20, {
         color,
         id: "fleet",

@@ -82,6 +82,7 @@ export const OnClick = <T extends keyof GameObjectTypes>(
     once: (gameObject) => {
       if (pixelPerfect) gameObject.setInteractive(scene.input.phaserInput.makePixelPerfect());
       else gameObject.setInteractive();
+
       gameObject.on("pointerdown", (e: Phaser.Input.Pointer) => {
         if (e.downElement.nodeName !== "CANVAS") return;
         callback(gameObject as GameObjectInstances[T], e);
@@ -106,7 +107,9 @@ export const OnClickUp = <T extends keyof GameObjectTypes>(
         if (e.downElement.nodeName !== "CANVAS") return;
         const prevDownTime = downTime;
         downTime = Date.now();
-        if (downTime - prevDownTime < 250) callback(gameObject as GameObjectInstances[T], e);
+        if (downTime - prevDownTime < 250) {
+          callback(gameObject as GameObjectInstances[T], e);
+        }
       });
     },
   };
@@ -122,6 +125,7 @@ export const OnHover = <T extends keyof GameObjectTypes>(
     once: (gameObject) => {
       if (pixelPerfect) gameObject.setInteractive(gameObject.scene.input.makePixelPerfect());
       else gameObject.setInteractive();
+
       gameObject.on("pointerover", () => {
         callback(gameObject as GameObjectInstances[T]);
       });

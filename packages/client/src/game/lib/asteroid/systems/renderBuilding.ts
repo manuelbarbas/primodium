@@ -44,6 +44,7 @@ import { Hex } from "viem";
 import { formatResourceCount } from "src/util/number";
 import { EResource } from "contracts/config/enums";
 import { getFullResourceCount } from "src/util/resource";
+import { hashEntities } from "src/util/encode";
 
 const MAX_SIZE = 2 ** 15 - 1;
 export const renderBuilding = (scene: Scene) => {
@@ -85,12 +86,21 @@ export const renderBuilding = (scene: Scene) => {
     }
 
     const render = ({ entity }: { entity: Entity }) => {
-      // const entityId = world.entities[entity];
       const renderId = `${entity}_entitySprite`;
 
       const buildingType = components.BuildingType.get(entity)?.value as Entity | undefined;
 
       if (!buildingType) return;
+
+      //remove droid base if mainbase exists
+      if (buildingType === EntityType.MainBase) {
+        const droidBaseEntity = hashEntities(activeRock, EntityType.DroidBase);
+        components.Position.remove(droidBaseEntity);
+        components.BuildingType.remove(droidBaseEntity);
+        components.Level.remove(droidBaseEntity);
+        components.IsActive.remove(droidBaseEntity);
+        components.OwnedBy.remove(droidBaseEntity);
+      }
 
       const origin = components.Position.get(entity);
       if (!origin) return;
@@ -260,8 +270,6 @@ export const renderBuilding = (scene: Scene) => {
           if (queue.units.length === 0 || queue.timeRemaining[0] !== 1n) return;
 
           //its the last tick for the queue, so show floating text of unit produced
-
-          //
           const unit = queue.units[0];
           const textCoord = {
             x: tilePosition.x + buildingDimensions.width / 2 - 0.5,

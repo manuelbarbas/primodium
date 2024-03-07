@@ -3,7 +3,7 @@ import { Coord } from "@latticexyz/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { ReactNode, memo, useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
-import { FaLock, FaLockOpen, FaMinus } from "react-icons/fa";
+import { FaMinus, FaRegWindowMaximize, FaRegWindowRestore } from "react-icons/fa";
 import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { usePrimodium } from "src/hooks/usePrimodium";
@@ -159,7 +159,7 @@ export const Content: React.FC<WidgetContentProps> = memo(
         }}
         className={`relative min-w-44 w-fit transition-opacity duration-600 pointer-events-auto select-none ${
           !pinned && !minimized ? "ring-1 ring-secondary" : ""
-        } ${locked ? "drop-shadow-hard" : ""}`}
+        } ${locked ? "" : ""}`}
         onPointerEnter={onPointerEnter}
         onPointerLeave={onPointerLeave}
       >
@@ -184,8 +184,8 @@ export const Content: React.FC<WidgetContentProps> = memo(
                 </>
               }
 
-              {locked && onUnlock && <FaLock className="cursor-pointer" onClick={onUnlock} />}
-              {!locked && onLock && <FaLockOpen className="cursor-pointer" onClick={onLock} />}
+              {locked && onUnlock && <FaRegWindowRestore className="cursor-pointer" onClick={onUnlock} />}
+              {!locked && onLock && <FaRegWindowMaximize className="cursor-pointer" onClick={onLock} />}
               {/* {!minimized && onMinimize && <FaMinus className="cursor-nesw-resize" onClick={onMinimize} />}
             {minimized && onMaximize && <FaPlus className="cursor-nesw-resize" onClick={onMaximize} />} */}
               {onClose && <FaMinus className="cursor-pointer" onClick={onClose} />}

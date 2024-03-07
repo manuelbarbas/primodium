@@ -6,7 +6,7 @@ import { EntityType } from "../util/constants";
 export const ASSET_PACK = "/assets/pack.json";
 
 export const minEth = parseEther("0.0049");
-export const RENDER_INTERVAL = 30;
+export const RENDER_INTERVAL = 10;
 export const ANIMATION_INTERVAL = 200;
 export const KEY = "MAIN";
 

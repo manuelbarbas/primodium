@@ -19,9 +19,11 @@ export const SpectatingDetails = () => {
             spectating
           </p>
 
-          <SecondaryCard className="flex-row w-full gap-1 border-none">
-            <TargetHeader entity={activeRock} />
-          </SecondaryCard>
+          {activeRock && (
+            <SecondaryCard className="flex-row w-full gap-1 border-none">
+              <TargetHeader entity={activeRock} />
+            </SecondaryCard>
+          )}
         </div>
 
         <Score player={ownedBy} />

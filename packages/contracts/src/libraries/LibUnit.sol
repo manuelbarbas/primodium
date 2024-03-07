@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import { Position, P_UnitPrototypes, IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, ProductionRate, P_UnitProdTypes, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, P_EnumToPrototype } from "codegen/index.sol";
+import { Position, P_UnitPrototypes, Asteroid, IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, ProductionRate, P_UnitProdTypes, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, P_EnumToPrototype } from "codegen/index.sol";
 
 import { EUnit, EResource } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
@@ -14,10 +14,6 @@ import { UnitKey, AsteroidOwnedByKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibUnit {
-  function getUnitCountOnHomeAsteroid(bytes32 playerEntity, bytes32 unitType) internal view returns (uint256) {
-    return UnitCount.get(Home.get(playerEntity), unitType);
-  }
-
   /**
    * @dev Checks the requirements for training (producing) a specific unit in a building.
    * @param buildingEntity The identifier of the building where the unit is being trained.
@@ -65,8 +61,9 @@ library LibUnit {
   function claimBuildingUnits(bytes32 building) internal {
     uint256 startTime = LastClaimedAt.get(building) - ClaimOffset.get(building);
     LastClaimedAt.set(building, block.timestamp);
-    bytes32 playerEntity = OwnedBy.get(OwnedBy.get(building));
-    require(Spawned.get(playerEntity), "[ClaimBuildingUnits]: Owner does not exist");
+    bytes32 asteroid = OwnedBy.get(building);
+    require(Asteroid.getIsAsteroid(asteroid), "[ClaimBuildingUnits]: Asteroid does not exist");
+    bytes32 player = OwnedBy.get(asteroid);
     bool stillClaiming = !UnitProductionQueue.isEmpty(building);
     while (stillClaiming) {
       UnitProductionQueueData memory item = UnitProductionQueue.peek(building);
@@ -89,9 +86,9 @@ library LibUnit {
         ClaimOffset.set(building, (block.timestamp - startTime) % trainingTime);
         stillClaiming = false;
       }
-      ProducedUnit.set(playerEntity, item.unitId, ProducedUnit.get(playerEntity, item.unitId) + trainedUnits);
+      ProducedUnit.set(player, item.unitId, ProducedUnit.get(player, item.unitId) + trainedUnits);
 
-      increaseUnitCount(Home.get(playerEntity), item.unitId, trainedUnits, false);
+      increaseUnitCount(asteroid, item.unitId, trainedUnits, false);
     }
   }
 

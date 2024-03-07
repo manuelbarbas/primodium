@@ -11,8 +11,7 @@ import { getAsteroidImage, getAsteroidName } from "src/util/asteroid";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount } from "src/util/number";
-export const TargetHeader = ({ entity, hideStats }: { entity?: Entity; hideStats?: boolean }) => {
-  const selectedSpacerock = entity ?? components.SelectedRock.use()?.value;
+export const TargetHeader = ({ entity: selectedSpacerock, hideStats }: { entity: Entity; hideStats?: boolean }) => {
   const primodium = usePrimodium();
   const { strength } = useAsteroidStrength(selectedSpacerock ?? singletonEntity);
   const { resourceCount: encryption } = useFullResourceCount(EntityType.Encryption, selectedSpacerock);
@@ -32,18 +31,16 @@ export const TargetHeader = ({ entity, hideStats }: { entity?: Entity; hideStats
           <div className="flex gap-1 uppercase font-bold text-xs bg-primary items-center p-1">{description}</div>
           <div className="flex gap-2 items-center font-bold bg-primary text-xs p-1">
             <IconLabel
-              imageUri={ResourceImage.get(EntityType.Defense) ?? ""}
+              imageUri={ResourceImage.get(EntityType.HP) ?? ""}
               text={formatResourceCount(EntityType.Iron, strength, { short: true, fractionDigits: 2 })}
               tooltipText="Defense"
               tooltipDirection="bottom"
-              className="h-3"
             />
             <IconLabel
-              imageUri={ResourceImage.get(EntityType.AdvancedUnraidable) ?? ""}
+              imageUri={ResourceImage.get(EntityType.Encryption) ?? ""}
               text={formatResourceCount(EntityType.Encryption, encryption, { short: true, fractionDigits: 2 })}
               tooltipText="Encryption"
               tooltipDirection="bottom"
-              className="h-3"
             />
           </div>
           <div className="flex gap-1 uppercase font-bold text-xs bg-primary items-center p-1">

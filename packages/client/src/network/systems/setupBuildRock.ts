@@ -17,7 +17,6 @@ export const setupBuildRock = () => {
     if (playerEntity === ownedBy) components.BuildRock.set({ value: spaceRock });
 
     defineComponentSystem(activeRockWorld, components.OwnedBy, ({ entity, value }) => {
-      console.log(spaceRock);
       if (entity !== spaceRock) return;
       const newOwner = value[0]?.value;
 

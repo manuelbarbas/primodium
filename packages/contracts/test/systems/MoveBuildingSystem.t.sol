@@ -17,6 +17,23 @@ contract MoveBuildingSystemTest is PrimodiumTest {
     vm.startPrank(creator);
   }
 
+  function testMoveShipyard() public {
+    EBuilding building = EBuilding.Shipyard;
+    Dimensions.set(ExpansionKey, 1, 35, 27);
+    P_RequiredResourcesData memory requiredResources = getBuildCost(building);
+    provideResources(Home.get(playerEntity), requiredResources);
+    vm.startPrank(creator);
+    removeRequirements(building);
+    P_RequiredBaseLevel.set(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Shipyard)), 1, 0);
+
+    PositionData memory originalPosition = getTilePosition(Home.get(playerEntity), building);
+    world.build(building, originalPosition);
+    PositionData memory newPosition = getTilePosition(Home.get(playerEntity), building);
+    uint256 gas = gasleft();
+    world.moveBuilding(originalPosition, newPosition);
+    console.log("after", gas - gasleft());
+  }
+
   function testMove() public {
     bytes32 mainBaseEntity = Home.get(Home.get(playerEntity));
     PositionData memory mainBasePosition = Position.get(mainBaseEntity);
@@ -27,7 +44,9 @@ contract MoveBuildingSystemTest is PrimodiumTest {
     );
     bytes32[] memory oldChildren = Children.get(mainBaseEntity);
 
+    uint256 gas = gasleft();
     world.moveBuilding(mainBasePosition, newPosition);
+    console.log("after", gas - gasleft());
     assertEq(
       mainBaseEntity,
       LibBuilding.getBuildingFromCoord(newPosition),
@@ -113,8 +132,9 @@ contract MoveBuildingSystemTest is PrimodiumTest {
       mainBasePosition.parent
     );
 
+    uint256 gas = gasleft();
     world.moveBuilding(mainBasePosition, newPosition);
-    console.log("moved success");
+    console.log("after", gas - gasleft());
     uint256 timestamp = block.timestamp;
     vm.warp(block.timestamp + 1);
     assertTrue(timestamp != block.timestamp, "timestamp should have updated");

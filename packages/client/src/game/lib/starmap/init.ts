@@ -18,7 +18,16 @@ export const initStarmapScene = async (game: Game) => {
   });
   setupKeybinds(scene);
 
-  const clickSub = scene.input.click$.subscribe(([, objects]) => {
+  const clickSub = scene.input.click$.subscribe(([pointer, objects]) => {
+    //if we have more than one object, we want to emit the pointerdown and pointerup events on all of them except the first one
+    if (objects.length > 1) {
+      objects.slice(1).forEach((obj) => {
+        obj.emit("pointerdown", pointer);
+        obj.emit("pointerup", pointer);
+      });
+      return;
+    }
+
     if (objects.length !== 0) return;
     components.SelectedRock.remove();
     components.SelectedFleet.remove();

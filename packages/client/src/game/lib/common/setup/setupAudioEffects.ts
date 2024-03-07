@@ -23,13 +23,9 @@ export const setupAudioEffects = (scene: Scene) => {
     gameWorld,
     components.SelectedRock,
     ({ value }) => {
-      if (!value[0]) return;
+      if (!value[0] || value[0]?.value === value[1]?.value) return;
 
       if (value[0].value === components.SelectedRock.get()?.value && !components.MapOpen.get()?.value) {
-        // audio.play(AudioKeys.Complete, "ui", {
-        //   volume: 0.5,
-        //   detune: getRandomRange(-50, 50),
-        // });
         return;
       }
 

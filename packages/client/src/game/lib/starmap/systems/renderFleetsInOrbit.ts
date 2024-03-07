@@ -115,8 +115,8 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
     const relationship = owner ? getRockRelationship(playerEntity, owner as Entity) : RockRelationship.Neutral;
     const name = entityToFleetName(fleet, true);
 
-    const now = components.Time.get()?.value ?? 0n;
-    const addedOffset = (Number(now) / revolutionDuration) % 360;
+    const time = components.Time.get()?.value ?? 0n;
+    const addedOffset = (Number(time) / revolutionDuration) % 360;
     const offset = addedOffset + ((i + 1) / allFleets.length) * 360;
     const fleetPosition = calculatePosition(offset, destinationPixelCoord);
 
@@ -126,9 +126,9 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
     const fleetHomeLineObject = fleetOrbit.add("Graphics");
 
     const cooldownEnd = components.CooldownEnd.get(fleet)?.value ?? 0n;
-    const time = components.Time.get()?.value ?? 0n;
     const inCooldown = time < cooldownEnd;
     let showingCooldown = inCooldown;
+    const cooldownId = `fleetCooldown-${fleet}`;
 
     fleetOrbitObject.setComponents([
       ...sharedComponents,
@@ -142,7 +142,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
               yoyo: true,
               repeat: -1,
             },
-            `fleetCooldown-${fleet}`
+            cooldownId
           )
         : undefined,
       OnOnce((gameObject) => {
@@ -192,13 +192,17 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
         components.Time,
         (_, { value: [newVal] }) => {
           const cooldownEnd = components.CooldownEnd.get(fleet)?.value ?? 0n;
+
           const time = newVal?.value ?? 0n;
           const inCooldown = time < cooldownEnd;
-          const cooldownId = `fleetCooldown-${fleet}`;
 
           if ((inCooldown && !showingCooldown) || (!inCooldown && showingCooldown)) {
             showingCooldown = !showingCooldown;
-            if (!inCooldown && fleetOrbitObject.hasComponent(cooldownId)) fleetOrbitObject.removeComponent(cooldownId);
+            if (!inCooldown && fleetOrbitObject.hasComponent(cooldownId)) {
+              fleetOrbitObject.removeComponent(cooldownId);
+
+              fleetOrbitObject.setComponent(SetValue({ alpha: 1 }));
+            }
             if (inCooldown)
               fleetOrbitObject.setComponent(
                 Tween(
@@ -218,26 +222,6 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
           initialEntity: fleet,
         }
       ),
-      //handle cooldown end
-      OnComponentSystem(components.Time, (gameObject) => {
-        const cooldownEnd = components.CooldownEnd.get(fleet)?.value ?? 0n;
-        const time = components.Time.get()?.value ?? 0n;
-        const outOfCooldown = time >= cooldownEnd;
-
-        const id = `fleetShape-${fleet}`;
-        if (outOfCooldown && fleetOrbitObject.hasComponent(id)) {
-          if (fleetOrbitObject.hasComponent(id)) {
-            fleetOrbitObject.removeComponent(id);
-            const shape = getFleetShape(fleet, { x: gameObject.x, y: gameObject.y });
-            fleetOrbitObject.setComponent(shape);
-          }
-
-          const tweenId = `fleetCooldown-${fleet}`;
-          if (fleetOrbitObject.hasComponent(tweenId)) {
-            fleetOrbitObject.removeComponent(tweenId);
-          }
-        }
-      }),
       OnClickUp(scene, (gameObject) => {
         const attackOrigin = components.Attack.get()?.originFleet;
         if (attackOrigin) {
@@ -271,7 +255,7 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
           !tween.isDestroyed() &&
           (fleetRock !== rockEntity || (selectedAsteroid !== rockEntity && battlePosition !== rockEntity))
         ) {
-          tween.play();
+          tween.resume();
         }
       });
 
@@ -320,7 +304,6 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
         depth: DepthLayers.Marker + 2,
       }),
       ObjectText(name, {
-        id: "fleetLabel",
         fontSize: 6,
         color: 0xffffff,
         stroke: 0x000000,
@@ -331,9 +314,9 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
         duration: revolutionDuration * 1000, // Duration of one complete revolution in milliseconds
         repeat: -1, // -1 makes the tween loop infinitely
         onPause: (tween) => {
-          subscribeToUpdates(tween);
+          subscription = subscribeToUpdates(tween);
         },
-        onStart: () => {
+        onResume: () => {
           unsubscribeFromUpdates();
         },
         onUpdate: (...[tween, , , current]) => {
@@ -353,8 +336,14 @@ export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => 
             .getGameObject()
             ?.setPosition(x, y)
             .setDepth(DepthLayers.Marker + 2);
-          fleetHomeLineObject.getGameObject()?.setDepth(DepthLayers.Marker - 1);
-          gracePeriod.getGameObject()?.setDepth(DepthLayers.Marker + 1);
+          fleetHomeLineObject
+            .getGameObject()
+            ?.setPosition(x, y)
+            .setDepth(DepthLayers.Marker - 1);
+          gracePeriod
+            .getGameObject()
+            ?.setPosition(x, y)
+            .setDepth(DepthLayers.Marker + 1);
         },
       }),
       OnComponentSystem(components.IsFleetEmpty, () => {

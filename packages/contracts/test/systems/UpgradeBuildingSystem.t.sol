@@ -195,8 +195,22 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     world.build(EBuilding.IronMine, coord);
     world.toggleBuilding(coord);
 
+    uint256 gas = gasleft();
     world.upgradeBuilding(coord);
+    console.log("used ", gas - gasleft());
     assertEq(ProductionRate.get(spaceRockEntity, Iron), 0);
+  }
+  function testUpgradeMainBase() public {
+    bytes32 spaceRockEntity = Home.get(playerEntity);
+    bytes32 mainBase = Home.get(spaceRockEntity);
+
+    P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(MainBasePrototypeId, 2);
+    provideResources(spaceRockEntity, requiredResources);
+
+    vm.startPrank(creator);
+    uint256 gas = gasleft();
+    world.upgradeBuilding(Position.get(mainBase));
+    console.log("after", gas - gasleft());
   }
 
   function testUpgradeBuildingWithMaxStorageIncrease() public {
@@ -212,7 +226,9 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     switchPrank(creator);
     PositionData memory coord = getTilePosition(rock, EBuilding.IronMine);
     world.build(EBuilding.IronMine, coord);
+    uint256 gas = gasleft();
     world.upgradeBuilding(coord);
+    console.log("after", gas - gasleft());
 
     assertEq(MaxResourceCount.get(spaceRockEntity, Iron), 100);
   }

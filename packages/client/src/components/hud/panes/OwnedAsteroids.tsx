@@ -49,7 +49,7 @@ export const OwnedAsteroid: React.FC<{ asteroid: Entity; onClick?: () => void }>
   return (
     <Button
       className={`row-span-1 flex flex-col p-2 items-center text-xs bg-base-100 flex-nowrap border-secondary h-full ${
-        selected ? "drop-shadow-hard ring-2 ring-warning" : ""
+        selected ? "ring-2 ring-warning" : ""
       }`}
       onClick={async () => {
         onClick && onClick();
@@ -66,6 +66,7 @@ export const OwnedAsteroid: React.FC<{ asteroid: Entity; onClick?: () => void }>
       <hr className="w-full border border-secondary/25" />
       {home && <div className="absolute top-0 left-0 px-1 bg-info text-[.6rem]">home</div>}
       {active && <div className="absolute top-0 right-0 px-1 bg-neutral text-[.6rem]">active</div>}
+
       <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
         <HealthBar
           tooltipText="Encryption"
