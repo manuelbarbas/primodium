@@ -1,61 +1,43 @@
-import { useEffect, useState } from "react";
+import { Scenes } from "@game/constants";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { adjustDecimals } from "src/util/number";
 import { Button } from "./Button";
-import { usePrimodium } from "src/hooks/usePrimodium";
-import { Scenes } from "@game/constants";
 
 export const NumberInput: React.FC<{
-  startingValue?: number;
   min?: number;
   max?: number;
   toFixed?: number;
-  reset?: boolean;
-  onChange: (val: number) => void;
-}> = ({ startingValue, min = 0, max = Infinity, onChange, toFixed = 0, reset }) => {
-  const [count, setCount] = useState<string>((startingValue || min).toString());
+  onChange: (val: string) => void;
+  count: string;
+}> = ({ count, min = 0, max = Infinity, onChange, toFixed = 0 }) => {
   const primodium = usePrimodium();
   const input = primodium.api(Scenes.UI).input;
   const input2 = primodium.api(Scenes.Asteroid).input;
   const input3 = primodium.api(Scenes.Starmap).input;
-
-  const minString = min.toString();
-  const maxString = max.toString();
-
-  // this is breaking the rules of react
-  useEffect(() => {
-    if (reset) {
-      setCount(String((startingValue || min).toFixed(toFixed)));
-    }
-  }, [reset, startingValue, min, toFixed]);
 
   const handleUpdate = (newCount: string) => {
     newCount = adjustDecimals(newCount, toFixed);
     // const allZeroes = newCount.split("").every((digit) => digit == "0");
 
     if (isNaN(Number(newCount))) {
-      setCount("");
-      onChange(min);
+      onChange(min.toString());
       return;
     }
 
-    let countNum = Number(newCount);
-
+    const countNum = Number(newCount);
     if (countNum > max) {
-      countNum = max;
-      newCount = maxString;
+      newCount = max.toString();
     } else if (countNum < min) {
-      countNum = min;
-      newCount = minString;
+      newCount = min.toString();
     }
 
-    setCount(newCount);
-    onChange(countNum);
+    onChange(newCount);
   };
 
   return (
     <div className={`flex my-2 relative`}>
       <Button
-        className={`${Number(count) >= max ? "opacity-50" : ""} btn-xs btn-ghost`}
+        className="btn-xs btn-ghost"
         disabled={Number(count) <= min}
         onClick={(e) => {
           e?.preventDefault();
@@ -89,7 +71,7 @@ export const NumberInput: React.FC<{
         max={max}
       />
       <Button
-        className={`${Number(count) >= max ? "opacity-50" : ""} btn-xs btn-ghost`}
+        className="btn-xs btn-ghost"
         disabled={Number(count) >= max}
         onClick={(e) => {
           e?.preventDefault();
