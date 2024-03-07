@@ -27,23 +27,23 @@ export const FleetHeader = (props: {
         </div>
         <div className="flex gap-1 p-1 bg-primary uppercase font-bold text-xs items-center">
           <p>{formatResourceCount(EntityType.Iron, props.defense, { short: true })}</p>
-          <p className="scale-95 opacity-70"> DEF</p>
+          <p className="scale-95 opacity-70"> CTR</p>
         </div>
         <div className="flex gap-1 p-1 bg-primary uppercase font-bold text-xs items-center">
-          <p>{formatResourceCount(EntityType.Iron, props.decryption, { short: true })}</p>
-          <p className="scale-95 opacity-70"> DEC</p>
+          <p>{formatResourceCount(EntityType.Iron, props.hp, { short: true })}</p>
+          <p className="scale-95 opacity-70"> HP</p>
         </div>
         <div className="flex gap-1 p-1 bg-primary uppercase font-bold text-xs items-center">
           <p>{formatResourceCount(EntityType.Iron, props.cargo, { short: true })}</p>
-          <p className="scale-95 opacity-70"> CRG</p>
+          <p className="scale-95 opacity-70"> CGO</p>
         </div>
         <div className="flex gap-1 p-1 bg-primary uppercase font-bold text-xs items-center">
           <p>{formatNumber(props.speed, { short: true })}</p>
           <p className="scale-95 opacity-70"> SPD</p>
         </div>
         <div className="flex gap-1 p-1 bg-primary uppercase font-bold text-xs items-center">
-          <p>{formatResourceCount(EntityType.Iron, props.hp, { short: true })}</p>
-          <p className="scale-95 opacity-70"> HP</p>
+          <p>{formatResourceCount(EntityType.Iron, props.decryption, { short: true })}</p>
+          <p className="scale-95 opacity-70"> DEC</p>
         </div>
       </div>
     </div>
