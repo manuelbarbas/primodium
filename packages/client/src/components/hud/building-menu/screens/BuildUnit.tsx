@@ -19,6 +19,8 @@ import { getFullResourceCount } from "src/util/resource";
 import { getUnitStats } from "src/util/unit";
 import { Hex } from "viem";
 import { ResourceIconTooltip } from "../../../shared/ResourceIconTooltip";
+import { Unit } from "../../panes/hangar/HangarContent";
+import { RecipeDisplay } from "../widgets/UnitUpgrade";
 
 export const BuildUnit: React.FC<{
   building: Entity;
@@ -77,7 +79,7 @@ export const BuildUnit: React.FC<{
             </p>
           ) : (
             <>
-              <p className="uppercase font-bold">{getBlockTypeName(selectedUnit)}</p>
+              <Unit unit={selectedUnit} asteroid={activeRock} />
 
               <div className="grid grid-cols-6 gap-2 border-y border-cyan-400/30 mx-auto">
                 {Object.entries(getUnitStats(selectedUnit, activeRock)).map(([name, value]) => {
@@ -107,47 +109,31 @@ export const BuildUnit: React.FC<{
 };
 
 const TrainNonCapitalShip = ({ building, unit, asteroid }: { building: Entity; unit: Entity; asteroid: Entity }) => {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState("");
+
+  useEffect(() => {
+    setCount("");
+  }, [unit]);
+
   const mud = useMud();
   const unitLevel = useMemo(() => {
     return components.UnitLevel.getWithKeys({ entity: asteroid as Hex, unit: unit as Hex })?.value ?? 1n;
   }, [unit, asteroid]);
 
-  const requiredResources = useMemo(() => {
+  const recipe = useMemo(() => {
     return getRecipe(unit, unitLevel);
   }, [unit, unitLevel]);
 
-  const maximum = useMaxCountOfRecipe(requiredResources, asteroid);
+  const maximum = useMaxCountOfRecipe(recipe, asteroid);
   return (
     <>
-      <p className="text-sm leading-none opacity-75">COST</p>
+      <RecipeDisplay asteroid={asteroid} recipe={recipe} count={Number(count) > 0 ? BigInt(count) : 1n} />
 
-      {requiredResources && (
-        <div className="flex justify-center items-center gap-1">
-          {requiredResources.map((resource, i) => (
-            <Badge key={`resource-${i}`}>
-              <ResourceIconTooltip
-                image={ResourceImage.get(resource.id) ?? ""}
-                resource={resource.id}
-                name={getBlockTypeName(resource.id)}
-                amount={resource.amount * BigInt(count)}
-                fontSize="sm"
-                validate
-                spaceRock={asteroid}
-              />
-            </Badge>
-          ))}
-        </div>
-      )}
-
-      <hr className="border-t border-cyan-600 w-full" />
-
-      <NumberInput max={maximum} onChange={(val) => setCount(val)} />
-
+      <NumberInput max={maximum} count={count} onChange={(val) => setCount(val)} />
       <div className="flex gap-2 pt-5">
         <Navigator.BackButton
           className="btn-sm btn-secondary"
-          disabled={maximum < count || count < 1}
+          disabled={maximum < Number(count) || count == ""}
           onClick={() => {
             if (!unit) return;
 
