@@ -1124,28 +1124,28 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Alloy: 1000 }),
-        P_Production: getResourceValues({ U_Unraidable: 750 }),
+        P_Production: getResourceValues({ U_Unraidable: 7500 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ Alloy: 7500, U_Electricity: 100 }),
-        P_Production: getResourceValues({ U_Unraidable: 2000, U_AdvancedUnraidable: 500 }),
+        P_Production: getResourceValues({ U_Unraidable: 20000, U_AdvancedUnraidable: 5000 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({
           Alloy: 20000,
-          U_Electricity: 15000,
+          U_Electricity: 200,
         }),
-        P_Production: getResourceValues({ U_Unraidable: 5000, U_AdvancedUnraidable: 1000 }),
+        P_Production: getResourceValues({ U_Unraidable: 40000, U_AdvancedUnraidable: 10000 }),
       },
       4: {
         P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({
           Alloy: 100000,
-          U_Electricity: 200,
+          U_Electricity: 300,
         }),
-        P_Production: getResourceValues({ U_Unraidable: 10000, U_AdvancedUnraidable: 2500 }),
+        P_Production: getResourceValues({ U_Unraidable: 80000, U_AdvancedUnraidable: 20000 }),
       },
     },
   },
@@ -1156,8 +1156,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 3n },
-        P_RequiredResources: getResourceValues({ Iron: 1000 }),
+        P_RequiredBaseLevel: { value: 4n },
+        P_RequiredResources: getResourceValues({ Lithium: 1000 }),
       },
     },
   },
