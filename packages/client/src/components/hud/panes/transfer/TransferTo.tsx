@@ -14,6 +14,7 @@ import { FleetHeader } from "../fleets/FleetHeader";
 export const TransferTo = (props: {
   sameOwner?: boolean;
   entity: Entity | "newFleet";
+  from: Entity | undefined;
   unitCounts: Map<Entity, bigint>;
   resourceCounts: Map<Entity, bigint>;
   deltas?: Map<Entity, bigint>;
@@ -34,9 +35,11 @@ export const TransferTo = (props: {
       return <TargetHeader entity={props.entity} />;
     }
     const data = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
-    const ownerRock = props.entity !== "newFleet" ? components.OwnedBy.get(props.entity)?.value : undefined;
+    const ownerRock = props.entity !== "newFleet" ? components.OwnedBy.get(props.entity)?.value : props.from;
+
+    if (!ownerRock) return <></>;
+
     props.unitCounts.forEach((count, unit) => {
-      if (count === 0n) return;
       const unitData = getUnitStats(unit as Entity, ownerRock as Entity);
       data.attack += unitData.ATK * count;
       data.defense += unitData.DEF * count;
@@ -49,7 +52,7 @@ export const TransferTo = (props: {
     return (
       <FleetHeader title={props.entity === "newFleet" ? "New Fleet" : entityToFleetName(props.entity)} {...data} />
     );
-  }, [isFleet, props.entity, props.unitCounts]);
+  }, [isFleet, props.entity, props.unitCounts, props.from]);
 
   return (
     <div

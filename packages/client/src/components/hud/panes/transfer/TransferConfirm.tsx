@@ -34,7 +34,6 @@ export const TransferConfirm = (props: {
       | Entity
       | undefined;
     const cargo = getFleetStatsFromUnits(props.fromUnits, owner).cargo;
-    console.log("cargo", owner, cargo);
     if (cargo < [...props.fromResources.entries()].reduce((acc, [, count]) => acc + count, 0n))
       return { disabled: true, submitMessage: "Sender cargo capacity exceeded" };
     return { disabled: false, submitMessage: "Transfer" };

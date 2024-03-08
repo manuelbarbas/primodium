@@ -244,6 +244,7 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
           <TransferTo
             unitCounts={toUnitCounts}
             entity={to}
+            from={from}
             hovering={hoveringArea === "to"}
             deltas={deltas}
             resourceCounts={toResourceCounts}
