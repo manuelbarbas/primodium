@@ -192,8 +192,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_CapitalShipConfig: {
         resource: EResource.Alloy,
         initialCost: 10000n * BigInt(SCALE),
-        decryption: 10n * BigInt(SCALE),
-        cooldownExtension: 60n * 1n, // one hour
+        decryption: 30n * BigInt(SCALE),
+        cooldownExtension: 180n * 1n, // three hours
       },
 
       P_UnitPrototypes: {
