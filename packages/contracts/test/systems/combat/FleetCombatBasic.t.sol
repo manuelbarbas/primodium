@@ -6,6 +6,7 @@ import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
 import { LibFleetRaid } from "libraries/fleet/LibFleetRaid.sol";
+import { LibMath } from "libraries/LibMath.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { FleetIncomingKey } from "src/Keys.sol";
@@ -58,9 +59,8 @@ contract FleetCombatSystemTest is PrimodiumTest {
     world.sendFleet(fleetId, bobHomeAsteroid);
 
     switchPrank(creator);
-    GracePeriod.set(bobHomeAsteroid, block.timestamp);
 
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetId), GracePeriod.get(bobHomeAsteroid)));
 
     uint256 unitCargo = P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeAsteroid, unitPrototype));
     assertGt(unitCargo, 0, "unit cargo should more than 0");
@@ -130,7 +130,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     assertEq(ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_HP)), hp, "space rock hp should have match SAM");
     assertEq(hp, defense, "space rock hp and defense should be the same when full hp");
 
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetId), GracePeriod.get(bobHomeAsteroid)));
 
     vm.prank(alice);
     world.attack(fleetId, bobHomeAsteroid);
@@ -225,7 +225,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     increaseResource(bobHomeAsteroid, EResource.Iron, ironAmount);
     increaseResource(bobHomeAsteroid, EResource.Copper, copperAmount);
 
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetId), GracePeriod.get(bobHomeAsteroid)));
     vm.prank(alice);
     world.attack(fleetId, bobHomeAsteroid);
 
@@ -285,7 +285,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
   }
 
   // alice (attacker) has 2 minuteman marines, bob (defender) has 1 minuteman marine
-  function testFleetAttackFleetAttackerWins() public {
+  function testtrainingTimeFleetAttackFleetAttackerWins() public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
     //create fleet with 1 minuteman marine
@@ -314,7 +314,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     switchPrank(bob);
     bytes32 bobFleetEntity = world.createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
 
-    vm.warp(FleetMovement.getArrivalTime(aliceFleetEntity));
+    vm.warp(LibMath.max(FleetMovement.getArrivalTime(aliceFleetEntity), GracePeriod.get(bobFleetEntity)));
 
     uint256 aliceAttack = LibCombatAttributes.getAttack(aliceFleetEntity);
     uint256 bobDefense = LibCombatAttributes.getDefense(bobFleetEntity);
@@ -367,7 +367,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     switchPrank(bob);
     bytes32 bobFleetEntity = world.createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
 
-    vm.warp(FleetMovement.getArrivalTime(aliceFleetEntity));
+    vm.warp(LibMath.max(FleetMovement.getArrivalTime(aliceFleetEntity), GracePeriod.get(bobFleetEntity)));
 
     uint256 aliceAttack = LibCombatAttributes.getAttack(aliceFleetEntity);
     (uint256 aggressorDamage, uint256[] memory aggressorDamages, uint256 totalAggressorDamage) = LibCombatAttributes
@@ -410,7 +410,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     switchPrank(bob);
     bytes32 bobFleetEntity = world.createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
 
-    vm.warp(FleetMovement.getArrivalTime(aliceFleetEntity));
+    vm.warp(LibMath.max(FleetMovement.getArrivalTime(aliceFleetEntity), GracePeriod.get(bobFleetEntity)));
 
     switchPrank(creator);
     CooldownEnd.set(aliceFleetEntity, block.timestamp + 1);
@@ -478,7 +478,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     switchPrank(bob);
     bytes32 bobFleetEntity = world.createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
 
-    vm.warp(FleetMovement.getArrivalTime(aliceFleetEntity));
+    vm.warp(LibMath.max(FleetMovement.getArrivalTime(aliceFleetEntity), GracePeriod.get(bobFleetEntity)));
 
     uint256 aliceAttack = LibCombatAttributes.getAttack(aliceFleetEntity);
     uint256 bobDefense = LibCombatAttributes.getDefense(bobFleetEntity);
@@ -545,7 +545,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     assertEq(ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_HP)), hp, "space rock hp should have match SAM");
     assertEq(hp, defense, "space rock hp and defense should be the same when full hp");
 
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetId), GracePeriod.get(fleetId)));
 
     vm.startPrank(bob);
 
@@ -641,7 +641,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     increaseResource(bobHomeAsteroid, EResource.Iron, ironAmount);
     increaseResource(bobHomeAsteroid, EResource.Copper, copperAmount);
 
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetId), GracePeriod.get(fleetId)));
     vm.prank(bob);
     world.attack(bobHomeAsteroid, fleetId);
 
@@ -724,7 +724,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     switchPrank(bob);
     bytes32 bobFleetEntity = world.createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
 
-    vm.warp(FleetMovement.getArrivalTime(aliceFleetEntity));
+    vm.warp(LibMath.max(FleetMovement.getArrivalTime(aliceFleetEntity), GracePeriod.get(bobFleetEntity)));
 
     uint256 aliceAttack = LibCombatAttributes.getAttack(aliceFleetEntity);
     uint256 bobDefense = LibCombatAttributes.getDefense(bobFleetEntity);
@@ -823,7 +823,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     switchPrank(creator);
     GracePeriod.set(bobHomeAsteroid, block.timestamp);
 
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetId), GracePeriod.get(bobHomeAsteroid)));
 
     uint256 unitCargo = P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeAsteroid, unitPrototype));
     assertTrue(unitCargo > 0, "unit cargo should more than 0");
@@ -856,7 +856,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     bytes32 fleetId = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     world.sendFleet(fleetId, bobHomeAsteroid);
 
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    vm.warp(GracePeriod.get(bobHomeAsteroid) - 1);
 
     uint256 unitCargo = P_Unit.getCargo(unitPrototype, UnitLevel.get(aliceHomeAsteroid, unitPrototype));
     assertGt(unitCargo, 0, "unit cargo should more than 0");
@@ -887,9 +887,8 @@ contract FleetCombatSystemTest is PrimodiumTest {
     world.sendFleet(fleetId, bobHomeAsteroid);
 
     switchPrank(creator);
-    GracePeriod.set(bobHomeAsteroid, block.timestamp);
 
-    vm.warp(FleetMovement.getArrivalTime(fleetId) + 1);
+    vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetId), GracePeriod.get(bobHomeAsteroid)));
 
     switchPrank(alice);
     world.setFleetStance(fleetId, uint8(EFleetStance.Defend), bobHomeAsteroid);
@@ -919,12 +918,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     vm.startPrank(alice);
     bytes32 fleetId = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    world.sendFleet(fleetId, bobHomeAsteroid);
-
-    switchPrank(creator);
-    GracePeriod.set(bobHomeAsteroid, block.timestamp);
-
-    vm.warp(FleetMovement.getArrivalTime(fleetId) - 1);
+    vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetId), GracePeriod.get(bobHomeAsteroid)));
 
     switchPrank(alice);
     vm.expectRevert("[Fleet] Fleet is not in orbit");
