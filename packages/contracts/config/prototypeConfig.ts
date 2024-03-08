@@ -164,9 +164,9 @@ const storageUnitMaxResourceUpgrades = {
 };
 
 const samSiteMaxResourceUpgrades = {
-  1: { R_HP: 1000 },
-  2: { R_HP: 2500 },
-  3: { R_HP: 7500 },
+  1: { R_HP: 10000 },
+  2: { R_HP: 25000 },
+  3: { R_HP: 50000 },
 };
 
 const maxRange = { xBounds: 37, yBounds: 25 };
@@ -1050,7 +1050,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       1: {
         P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Alloy: 2000, U_Electricity: 100 }),
-        P_Production: getResourceValues({ U_Defense: 1500, R_HP: 0.1 }),
+        P_Production: getResourceValues({ U_Defense: 3000, R_HP: 0.1 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(samSiteMaxResourceUpgrades[1]),
         },
@@ -1062,7 +1062,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           U_Electricity: 200,
         }),
 
-        P_Production: getResourceValues({ U_Defense: 2500, R_HP: 0.25 }),
+        P_Production: getResourceValues({ U_Defense: 6000, R_HP: 0.25 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(samSiteMaxResourceUpgrades[2]),
         },
@@ -1070,11 +1070,11 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       3: {
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({
-          Alloy: 50000,
+          Alloy: 40000,
           U_Electricity: 300,
         }),
 
-        P_Production: getResourceValues({ U_Defense: 5000, R_HP: 0.75 }),
+        P_Production: getResourceValues({ U_Defense: 10000, R_HP: 0.75 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(samSiteMaxResourceUpgrades[3]),
         },
@@ -1091,14 +1091,13 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     levels: {
       1: {
         P_RequiredBaseLevel: { value: 3n },
-        P_RequiredResources: getResourceValues({ PVCell: 5000, Alloy: 5000, U_Electricity: 100 }),
+        P_RequiredResources: getResourceValues({ PVCell: 10000, U_Electricity: 100 }),
         P_Production: getResourceValues({ M_DefenseMultiplier: 5 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({
-          PVCell: 15000,
-          Alloy: 15000,
+          PVCell: 30000,
           U_Electricity: 100,
         }),
 
@@ -1108,7 +1107,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({
           PVCell: 50000,
-          Alloy: 50000,
+          Kimberlite: 5000,
           U_Electricity: 100,
         }),
         P_Production: getResourceValues({ M_DefenseMultiplier: 15 }),
