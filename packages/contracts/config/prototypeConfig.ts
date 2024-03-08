@@ -19,7 +19,7 @@ import { getBlueprint } from "./util/blueprints";
 import encodeBytes32, { encodeAddress } from "./util/encodeBytes32";
 
 const mainBaseMaxResourceUpgrades = {
-  1: { Iron: 5000, Copper: 5000, IronPlate: 2500, R_Encryption: 100, R_HP: 100 },
+  1: { Iron: 5000, Copper: 5000, IronPlate: 2500, R_Encryption: 1000, R_HP: 100 },
   2: {
     Iron: 10000,
     Copper: 10000,
@@ -27,7 +27,7 @@ const mainBaseMaxResourceUpgrades = {
     Lithium: 10000,
     PVCell: 5000,
     Alloy: 5000,
-    R_Encryption: 105,
+    R_Encryption: 1050,
     R_HP: 150,
   },
   3: {
@@ -41,7 +41,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 500,
     Iridium: 500,
     Kimberlite: 500,
-    R_Encryption: 110,
+    R_Encryption: 1100,
     R_HP: 200,
   },
   4: {
@@ -55,7 +55,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 1000,
     Iridium: 1000,
     Kimberlite: 1000,
-    R_Encryption: 115,
+    R_Encryption: 1150,
     R_HP: 250,
   },
   5: {
@@ -69,7 +69,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 3000,
     Iridium: 3000,
     Kimberlite: 3000,
-    R_Encryption: 120,
+    R_Encryption: 1200,
     R_HP: 300,
   },
   6: {
@@ -83,7 +83,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 6000,
     Iridium: 6000,
     Kimberlite: 6000,
-    R_Encryption: 125,
+    R_Encryption: 1250,
     R_HP: 400,
   },
   7: {
@@ -97,7 +97,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 7500,
     Iridium: 7500,
     Kimberlite: 7500,
-    R_Encryption: 130,
+    R_Encryption: 1300,
     R_HP: 500,
   },
   8: {
@@ -111,7 +111,7 @@ const mainBaseMaxResourceUpgrades = {
     Platinum: 10000,
     Iridium: 10000,
     Kimberlite: 10000,
-    R_Encryption: 135,
+    R_Encryption: 1350,
     R_HP: 600,
   },
 };
@@ -306,42 +306,42 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[1]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0056, R_HP: 0.001 }),
       },
       2: {
         P_RequiredResources: getResourceValues({ Copper: 1500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[2]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0056, R_HP: 0.001 }),
       },
       3: {
         P_RequiredResources: getResourceValues({ Copper: 10000, PVCell: 1500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[3]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0056, R_HP: 0.001 }),
       },
       4: {
         P_RequiredResources: getResourceValues({ Copper: 25000, PVCell: 5000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[4]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0056, R_HP: 0.001 }),
       },
       5: {
         P_RequiredResources: getResourceValues({ Copper: 75000, PVCell: 500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[5]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0056, R_HP: 0.001 }),
       },
       6: {
         P_RequiredResources: getResourceValues({ Copper: 125000, Titanium: 1500, Platinum: 1500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[6]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0056, R_HP: 0.001 }),
       },
       7: {
         P_RequiredResources: getResourceValues({
@@ -353,7 +353,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[7]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0056, R_HP: 0.001 }),
       },
       8: {
         P_RequiredResources: getResourceValues({
@@ -365,7 +365,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseMaxResourceUpgrades[8]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0056, R_HP: 0.001 }),
       },
     },
   },
@@ -780,7 +780,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({
           Iron: 100000,
-          U_Electricity: 500,
+          U_Electricity: 50,
         }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(storageUnitMaxResourceUpgrades[3]),
@@ -853,22 +853,22 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       2: {
         P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Lithium: 1500 }),
-        P_Production: getResourceValues({ U_Housing: 60, R_Encryption: 0.00003 }),
+        P_Production: getResourceValues({ U_Housing: 60, R_Encryption: 0.0003 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ Lithium: 5000 }),
-        P_Production: getResourceValues({ U_Housing: 80, R_Encryption: 0.00006 }),
+        P_Production: getResourceValues({ U_Housing: 80, R_Encryption: 0.0006 }),
       },
       4: {
         P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Lithium: 15000 }),
-        P_Production: getResourceValues({ U_Housing: 100, R_Encryption: 0.00009 }),
+        P_Production: getResourceValues({ U_Housing: 100, R_Encryption: 0.0009 }),
       },
       5: {
         P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ Lithium: 50000 }),
-        P_Production: getResourceValues({ U_Housing: 120, R_Encryption: 0.00012 }),
+        P_Production: getResourceValues({ U_Housing: 120, R_Encryption: 0.0012 }),
       },
     },
   },
