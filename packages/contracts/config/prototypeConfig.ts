@@ -853,22 +853,22 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       2: {
         P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Lithium: 1500 }),
-        P_Production: getResourceValues({ U_Housing: 60 }),
+        P_Production: getResourceValues({ U_Housing: 60, R_Encryption: 0.00003 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ Lithium: 5000 }),
-        P_Production: getResourceValues({ U_Housing: 80 }),
+        P_Production: getResourceValues({ U_Housing: 80, R_Encryption: 0.00006 }),
       },
       4: {
         P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Lithium: 15000 }),
-        P_Production: getResourceValues({ U_Housing: 100 }),
+        P_Production: getResourceValues({ U_Housing: 100, R_Encryption: 0.00009 }),
       },
       5: {
         P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ Lithium: 50000 }),
-        P_Production: getResourceValues({ U_Housing: 120 }),
+        P_Production: getResourceValues({ U_Housing: 120, R_Encryption: 0.00012 }),
       },
     },
   },
