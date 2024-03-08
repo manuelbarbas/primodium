@@ -1,4 +1,4 @@
-# Primodium v0.10.0
+# Primodium v0.11.0
 
 ## Installation
 
