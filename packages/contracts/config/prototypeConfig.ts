@@ -1221,18 +1221,83 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   LightningCraft: {
     tables: {
-      P_MaxLevel: { value: 1n },
+      P_MaxLevel: { value: 5n },
     },
     levels: {
       0: {
-        P_RequiredResources: getResourceValues({ U_Housing: 1 }),
+        P_RequiredResources: getResourceValues({ Kimberlite: 100, PVCell: 500, U_Housing: 1 }),
         P_Unit: getPUnitData({
-          hp: 100,
+          hp: 10,
           attack: 10,
           defense: 10,
           cargo: 10,
-          speed: 500,
-          trainingTime: 500,
+          speed: 600,
+          trainingTime: 600,
+        }),
+      },
+      1: {
+        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 500 }),
+        P_RequiredBaseLevel: { value: 4n },
+        P_RequiredResources: getResourceValues({ Kimberlite: 100, PVCell: 500, U_Housing: 1 }),
+        P_Unit: getPUnitData({
+          hp: 10,
+          attack: 10,
+          defense: 10,
+          cargo: 10,
+          speed: 720,
+          trainingTime: 600,
+        }),
+      },
+      2: {
+        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 1500 }),
+        P_RequiredBaseLevel: { value: 5n },
+        P_RequiredResources: getResourceValues({ Kimberlite: 100, PVCell: 500, U_Housing: 1 }),
+        P_Unit: getPUnitData({
+          hp: 10,
+          attack: 10,
+          defense: 10,
+          cargo: 10,
+          speed: 840,
+          trainingTime: 600,
+        }),
+      },
+      3: {
+        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 5000 }),
+        P_RequiredBaseLevel: { value: 6n },
+        P_RequiredResources: getResourceValues({ Kimberlite: 100, PVCell: 500, U_Housing: 1 }),
+        P_Unit: getPUnitData({
+          hp: 10,
+          attack: 10,
+          defense: 10,
+          cargo: 10,
+          speed: 960,
+          trainingTime: 600,
+        }),
+      },
+      4: {
+        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 10000 }),
+        P_RequiredBaseLevel: { value: 7n },
+        P_RequiredResources: getResourceValues({ Kimberlite: 100, PVCell: 500, U_Housing: 1 }),
+        P_Unit: getPUnitData({
+          hp: 10,
+          attack: 10,
+          defense: 10,
+          cargo: 10,
+          speed: 1080,
+          trainingTime: 600,
+        }),
+      },
+      5: {
+        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 25000 }),
+        P_RequiredBaseLevel: { value: 8n },
+        P_RequiredResources: getResourceValues({ Kimberlite: 100, PVCell: 500, U_Housing: 1 }),
+        P_Unit: getPUnitData({
+          hp: 10,
+          attack: 10,
+          defense: 10,
+          cargo: 10,
+          speed: 1200,
+          trainingTime: 600,
         }),
       },
     },
