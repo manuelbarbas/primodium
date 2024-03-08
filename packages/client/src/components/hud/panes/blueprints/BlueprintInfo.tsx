@@ -88,65 +88,6 @@ export const BlueprintInfo: React.FC<{
         <div className="flex flex-col items-center w-full h-full text-xs relative gap-1 ">
           <div className="absolute top-0 w-full h-full" />
 
-          {/* Version 0.10: The cost of the building */}
-          {/* <RecipeDisplay building={building} asteroid={spaceRock} /> */}
-
-          {/* Version 0.10: The effect/production of building */}
-          {/* <SecondaryCard className="flex flex-col items-center gap-1 w-full relative bg-transparent bordernone p-1">
-            {production.map(({ resource, amount, type }) => (
-              <Badge key={`prototypeproduction-${resource}`} className="text-xs gap-2">
-                <ResourceIconTooltip
-                  name={getBlockTypeName(resource)}
-                  image={ResourceImage.get(resource) ?? ""}
-                  resource={resource}
-                  amount={amount}
-                  resourceType={type}
-                  short
-                  fontSize="xs"
-                  direction="top"
-                  fractionDigits={3}
-                />
-              </Badge>
-            ))}
-            {!!unitProduction && (
-              <div className="gap-1 flex flex-wrap">
-                {unitProduction?.value.map((unit) => (
-                  <Badge key={`unitProduction-${unit}`} className="text-xs gap-2">
-                    <IconLabel
-                      className={`text-xs font-bold justify-center`}
-                      imageUri={ResourceImage.get(unit as Entity) ?? ""}
-                      tooltipDirection={"top"}
-                      tooltipText={getBlockTypeName(unit as Entity)}
-                      text={""}
-                      hideText
-                    />
-                  </Badge>
-                ))}
-              </div>
-            )}
-            {!!storageUpgrades?.length && (
-              <div className="flex flex-col items-center">
-                <p className="text-left font-bold opacity-50 mt-1">STORAGE</p>
-                <div className="flex flex-wrap gap-1 w-56 justify-center">
-                  {storageUpgrades.map(({ resource, amount }) => (
-                    <Badge key={`storage-${resource}`} className="text-xs py-3">
-                      <ResourceIconTooltip
-                        name={getBlockTypeName(resource)}
-                        image={ResourceImage.get(resource) ?? ""}
-                        resource={resource}
-                        amount={amount}
-                        resourceType={ResourceType.Resource}
-                        short
-                        fontSize="xs"
-                        direction="top"
-                        fractionDigits={3}
-                      />
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
-          </SecondaryCard> */}
 
           <SecondaryCard className="flex flex-col gap-4 p-1">
             {/* Building Name */}
@@ -155,10 +96,66 @@ export const BlueprintInfo: React.FC<{
             {/* Function/Effect */}
             <div className="flex flex-col">
               <span className="mb-2">Effect</span>
-              <div className="flex items-center gap-2 w-56">
-                <img src="UI_defense.png" alt="Defense Icon" className="w-4 h-4 m-1" />
-                <span className="text-xs text-success/50"> Increase shield strength by 5% </span>
-              </div>
+
+              <SecondaryCard className="flex flex-col gap-1 w-56 relative bg-transparent border-none">
+                {production.map(({ resource, amount, type }) => (
+                  <Badge key={`prototypeproduction-${resource}`} className="text-xs gap-2 bg-transparent text-success/50">
+                    <ResourceIconTooltip
+                      name={getEntityTypeName(resource)}
+                      image={ResourceImage.get(resource) ?? ""}
+                      resource={resource}
+                      amount={amount}
+                      resourceType={type}
+                      short
+                      fontSize="xs"
+                      direction="top"
+                      fractionDigits={3}
+                    />
+                  </Badge>
+                ))}
+                {!!unitProduction && (
+                  <div className="gap-1 flex flex-wrap">
+                    <img src="UI_defense.png" alt="Defense Icon" className="w-4 h-4 m-1" />
+                    <span className="text-xs text-success/50"> Unlock training of </span>
+                    
+                    {unitProduction?.value.map((unit) => (
+                      <Badge key={`unitProduction-${unit}`} className="text-xs gap-2 bg-transparent">
+                        <IconLabel
+                          className={`text-xs font-bold justify-center`}
+                          imageUri={ResourceImage.get(unit as Entity) ?? ""}
+                          tooltipDirection={"top"}
+                          tooltipText={getEntityTypeName(unit as Entity)}
+                          text={""}
+                          hideText
+                        />
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+                {!!storageUpgrades?.length && (
+                  <div className="flex flex-col">
+                    <p className="text-left font-bold opacity-50">Increase storage</p>
+                    <div className="flex flex-wrap gap-1 w-56 justify-center">
+                      {storageUpgrades.map(({ resource, amount }) => (
+                        <Badge key={`storage-${resource}`} className="text-xs bg-transparent text-success/50">
+                          <ResourceIconTooltip
+                            name={getEntityTypeName(resource)}
+                            image={ResourceImage.get(resource) ?? ""}
+                            resource={resource}
+                            amount={amount}
+                            resourceType={ResourceType.Resource}
+                            short
+                            fontSize="xs"
+                            direction="top"
+                            fractionDigits={3}
+                          />
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </SecondaryCard>
+
             </div>
 
             {/* Cost */}
@@ -166,20 +163,11 @@ export const BlueprintInfo: React.FC<{
               <span>Cost</span>
               <RecipeDisplay building={building} asteroid={spaceRock} />
 
-              {/* Cost Placeholder
-                <div className="flex flex-wrap items-center w-56 gap-2">
-              
-                  <div className="flex items-center gap-1 px-1 bg-gray-800 rounded">
-                    <img src="Alloy_Resource.png" alt="Resource Icon" className="w-4 h-4" />
-                    <span className="text-xs text-error">5000</span>
-                  </div>
-                  
-                </div> */}
-
               {/* if not enough resources */}
               {!hasEnough && (
                 <p className="text-error animate-pulse duration-2000 text-xs text-center mt-2">NOT ENOUGH RESOURCES</p>
               )}
+
             </div>
 
             {/* Size Tile */}
@@ -188,6 +176,7 @@ export const BlueprintInfo: React.FC<{
                 {dimensions.width}x{dimensions.height} tiles
               </span>
             </div>
+
           </SecondaryCard>
         </div>
       </div>

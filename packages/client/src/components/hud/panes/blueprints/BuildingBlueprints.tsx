@@ -112,7 +112,12 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ building
     ];
   }, [mapId]);
 
-  const storageBuildings = [EntityType.Garage, EntityType.StorageUnit, EntityType.Hangar, EntityType.Vault];
+  const storageBuildings = [
+    EntityType.Garage, 
+    EntityType.StorageUnit, 
+    EntityType.Hangar, 
+    EntityType.Vault
+  ];
 
   const militaryBuildings = [
     EntityType.Workshop,
@@ -122,7 +127,10 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ building
     EntityType.Shipyard,
   ];
 
-  const infrastructureBuildings = [EntityType.StarmapperStation, EntityType.Market];
+  const infrastructureBuildings = [
+    EntityType.StarmapperStation, 
+    EntityType.Market
+  ];
 
   const keybinds = [
     KeybindActions.Hotbar0,
@@ -157,7 +165,7 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ building
     <>
       <div className="flex flex-col gap-1 items-start">
         <div className={` flex flex-col gap-1 items-center w-full `}>
-          <div className="grid grid-cols-4 gap-1 w-full p-1">
+          <div className="grid grid-cols-3 gap-1 w-60 p-1">
             {buildingsToShow.map((buildingType, i) => (
               <BlueprintButton key={i} tooltipDirection="top" buildingType={buildingType} />
             ))}
