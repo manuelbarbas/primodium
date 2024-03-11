@@ -1315,7 +1315,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 300,
           cargo: 60,
           speed: 100,
-          trainingTime: 1200,
+          trainingTime: 600,
         }),
       },
       1: {
@@ -1328,7 +1328,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 330,
           cargo: 60,
           speed: 110,
-          trainingTime: 1200,
+          trainingTime: 600,
         }),
       },
       2: {
@@ -1341,7 +1341,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 360,
           cargo: 60,
           speed: 120,
-          trainingTime: 1200,
+          trainingTime: 600,
         }),
       },
       3: {
@@ -1354,7 +1354,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 390,
           cargo: 60,
           speed: 130,
-          trainingTime: 1200,
+          trainingTime: 600,
         }),
       },
       4: {
@@ -1367,7 +1367,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 420,
           cargo: 60,
           speed: 140,
-          trainingTime: 1200,
+          trainingTime: 600,
         }),
       },
       5: {
@@ -1380,7 +1380,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 450,
           cargo: 60,
           speed: 150,
-          trainingTime: 1200,
+          trainingTime: 600,
         }),
       },
     },
@@ -1398,7 +1398,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 800,
           cargo: 30,
           speed: 30,
-          trainingTime: 5000,
+          trainingTime: 1800,
         }),
       },
       1: {
@@ -1411,7 +1411,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 960,
           cargo: 30,
           speed: 30,
-          trainingTime: 5000,
+          trainingTime: 1800,
         }),
       },
       2: {
@@ -1424,7 +1424,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 1120,
           cargo: 30,
           speed: 30,
-          trainingTime: 5000,
+          trainingTime: 1800,
         }),
       },
       3: {
@@ -1437,7 +1437,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 1280,
           cargo: 30,
           speed: 30,
-          trainingTime: 5000,
+          trainingTime: 1800,
         }),
       },
       4: {
@@ -1450,7 +1450,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 1440,
           cargo: 30,
           speed: 30,
-          trainingTime: 5000,
+          trainingTime: 1800,
         }),
       },
       5: {
@@ -1463,7 +1463,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 1600,
           cargo: 30,
           speed: 30,
-          trainingTime: 5000,
+          trainingTime: 1800,
         }),
       },
     },
@@ -1481,7 +1481,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 50,
           cargo: 80,
           speed: 100,
-          trainingTime: 1200,
+          trainingTime: 600,
         }),
       },
       1: {
@@ -1494,7 +1494,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 50,
           cargo: 80,
           speed: 110,
-          trainingTime: 1200,
+          trainingTime: 600,
         }),
       },
       2: {
@@ -1507,7 +1507,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 50,
           cargo: 80,
           speed: 120,
-          trainingTime: 1200,
+          trainingTime: 600,
         }),
       },
       3: {
@@ -1520,7 +1520,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 50,
           cargo: 80,
           speed: 130,
-          trainingTime: 1200,
+          trainingTime: 600,
         }),
       },
       4: {
@@ -1533,7 +1533,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 50,
           cargo: 80,
           speed: 140,
-          trainingTime: 1200,
+          trainingTime: 600,
         }),
       },
       5: {
@@ -1546,7 +1546,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 50,
           cargo: 80,
           speed: 150,
-          trainingTime: 1200,
+          trainingTime: 600,
         }),
       },
     },
@@ -1564,7 +1564,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 150,
           cargo: 30,
           speed: 50,
-          trainingTime: 5000,
+          trainingTime: 1800,
         }),
       },
       1: {
@@ -1577,7 +1577,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 150,
           cargo: 30,
           speed: 50,
-          trainingTime: 5000,
+          trainingTime: 1800,
         }),
       },
       2: {
@@ -1590,7 +1590,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 150,
           cargo: 30,
           speed: 50,
-          trainingTime: 5000,
+          trainingTime: 1800,
         }),
       },
       3: {
@@ -1603,7 +1603,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 150,
           cargo: 30,
           speed: 50,
-          trainingTime: 5000,
+          trainingTime: 1800,
         }),
       },
       4: {
@@ -1616,7 +1616,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 150,
           cargo: 30,
           speed: 50,
-          trainingTime: 5000,
+          trainingTime: 1800,
         }),
       },
       5: {
@@ -1629,7 +1629,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
           defense: 150,
           cargo: 30,
           speed: 50,
-          trainingTime: 5000,
+          trainingTime: 1800,
         }),
       },
     },
@@ -1679,11 +1679,11 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 1, Lithium: 100 }),
         P_Unit: getPUnitData({
           hp: 40,
-          attack: 40,
+          attack: 35,
           defense: 40,
           cargo: 40,
           speed: 250,
-          trainingTime: 100,
+          trainingTime: 120,
         }),
       },
       1: {
@@ -1692,11 +1692,11 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 1, Lithium: 100 }),
         P_Unit: getPUnitData({
           hp: 40,
-          attack: 40,
+          attack: 35,
           defense: 40,
           cargo: 44,
           speed: 275,
-          trainingTime: 90,
+          trainingTime: 110,
         }),
       },
       2: {
@@ -1705,11 +1705,11 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 1, Lithium: 100 }),
         P_Unit: getPUnitData({
           hp: 40,
-          attack: 40,
+          attack: 35,
           defense: 40,
           cargo: 48,
           speed: 300,
-          trainingTime: 80,
+          trainingTime: 100,
         }),
       },
       3: {
@@ -1718,11 +1718,11 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 1, Lithium: 100 }),
         P_Unit: getPUnitData({
           hp: 40,
-          attack: 40,
+          attack: 35,
           defense: 40,
           cargo: 52,
           speed: 325,
-          trainingTime: 70,
+          trainingTime: 90,
         }),
       },
       4: {
@@ -1731,11 +1731,11 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 1, Lithium: 100 }),
         P_Unit: getPUnitData({
           hp: 40,
-          attack: 40,
+          attack: 35,
           defense: 40,
           cargo: 56,
           speed: 350,
-          trainingTime: 60,
+          trainingTime: 80,
         }),
       },
       5: {
@@ -1744,11 +1744,11 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_RequiredResources: getResourceValues({ U_Housing: 1, Lithium: 100 }),
         P_Unit: getPUnitData({
           hp: 40,
-          attack: 40,
+          attack: 35,
           defense: 40,
           cargo: 60,
           speed: 375,
-          trainingTime: 50,
+          trainingTime: 70,
         }),
       },
     },
@@ -1763,10 +1763,10 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_Unit: getPUnitData({
           hp: 80,
           attack: 80,
-          defense: 105,
+          defense: 80,
           cargo: 80,
           speed: 150,
-          trainingTime: 300,
+          trainingTime: 200,
         }),
       },
       1: {
@@ -1776,10 +1776,10 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_Unit: getPUnitData({
           hp: 88,
           attack: 88,
-          defense: 105,
+          defense: 80,
           cargo: 88,
           speed: 150,
-          trainingTime: 300,
+          trainingTime: 200,
         }),
       },
       2: {
@@ -1789,10 +1789,10 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_Unit: getPUnitData({
           hp: 96,
           attack: 96,
-          defense: 105,
+          defense: 80,
           cargo: 96,
           speed: 150,
-          trainingTime: 300,
+          trainingTime: 200,
         }),
       },
       3: {
@@ -1802,10 +1802,10 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_Unit: getPUnitData({
           hp: 104,
           attack: 104,
-          defense: 105,
+          defense: 80,
           cargo: 104,
           speed: 150,
-          trainingTime: 300,
+          trainingTime: 200,
         }),
       },
       4: {
@@ -1815,10 +1815,10 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_Unit: getPUnitData({
           hp: 112,
           attack: 112,
-          defense: 105,
+          defense: 80,
           cargo: 112,
           speed: 150,
-          trainingTime: 300,
+          trainingTime: 200,
         }),
       },
       5: {
@@ -1828,10 +1828,10 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         P_Unit: getPUnitData({
           hp: 120,
           attack: 120,
-          defense: 105,
+          defense: 80,
           cargo: 120,
           speed: 150,
-          trainingTime: 300,
+          trainingTime: 200,
         }),
       },
     },
