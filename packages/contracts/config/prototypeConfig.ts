@@ -1004,7 +1004,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       3: {
         P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ IronPlate: 17500, Alloy: 17500, PVCell: 17500 }),
-        P_UnitProdMultiplier: { value: 250n },
+        P_UnitProdMultiplier: { value: 200n },
         P_UnitProdTypes: { value: encodeArray(["CapitalShip"]) },
       },
       4: {
@@ -1220,7 +1220,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   LightningCraft: {
     tables: {
-      P_MaxLevel: { value: 5n },
+      P_MaxLevel: { value: 0n },
     },
     levels: {
       0: {
