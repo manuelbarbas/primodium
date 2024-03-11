@@ -28,6 +28,7 @@ export const Blueprints = memo(() => {
       draggable
       pinnable
       persist
+      noborder
     >
       {/* <AllBlueprints /> */}
       <TestComponent />

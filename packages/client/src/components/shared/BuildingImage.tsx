@@ -21,3 +21,22 @@ export const BuildingImageFromType: React.FC<{ buildingType: Entity; blurred?: b
     </div>
   );
 };
+
+export const BlueprintBuildingImageFromType: React.FC<{ buildingType: Entity; blurred?: boolean }> = ({
+  buildingType,
+  blurred,
+}) => {
+  const primodium = usePrimodium();
+  const imageUri = useMemo(() => getBuildingImageFromType(primodium, buildingType), [primodium, buildingType]);
+
+  return (
+    <div className={`flex flex-col place-items-center cursor-pointer w-[110%]`}>
+      <img
+        src={imageUri}
+        className={`pointer-events-none pixel-images rounded-md -mt-4 -ml-1 ${
+          blurred ? "darken-[3px]" : ""
+        }`}
+      />
+    </div>
+  );
+};

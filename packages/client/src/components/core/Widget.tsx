@@ -8,7 +8,7 @@ import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useWidgets } from "../../hooks/providers/WidgetProvider";
-import { Card } from "./Card";
+import { Card, NoBorderCard } from "./Card";
 
 type WidgetProps = {
   title: string;
@@ -29,15 +29,16 @@ type WidgetProps = {
   active?: boolean;
   popUp?: boolean;
   origin?:
-    | "top-left"
-    | "top-right"
-    | "bottom-left"
-    | "bottom-right"
-    | "center"
-    | "center-left"
-    | "center-right"
-    | "center-top"
-    | "center-bottom";
+  | "top-left"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-right"
+  | "center"
+  | "center-left"
+  | "center-right"
+  | "center-top"
+  | "center-bottom";
+  noborder?: boolean;
 };
 
 type WidgetContentProps = {
@@ -60,16 +61,17 @@ type WidgetContentProps = {
   minimized: boolean;
   children?: ReactNode;
   origin:
-    | "top-left"
-    | "top-right"
-    | "bottom-left"
-    | "bottom-right"
-    | "center"
-    | "center-left"
-    | "center-right"
-    | "center-top"
-    | "center-bottom";
+  | "top-left"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-right"
+  | "center"
+  | "center-left"
+  | "center-right"
+  | "center-top"
+  | "center-bottom";
   locked?: boolean;
+  noborder?: boolean;
 };
 
 let pinnedDepth = -10000;
@@ -95,6 +97,7 @@ export const Content: React.FC<WidgetContentProps> = memo(
     onLock,
     onUnlock,
     popUp,
+    noborder,
   }) => {
     const [uiScale] = usePersistentStore((state) => [state.uiScale]);
 
@@ -157,20 +160,19 @@ export const Content: React.FC<WidgetContentProps> = memo(
           transform: `translate(${translateX}, ${translateY}) scale(${!locked ? uiScale : 1})`,
           transformOrigin: transformOrigin,
         }}
-        className={`relative min-w-44 w-fit transition-opacity duration-600 pointer-events-auto select-none ${
-          !pinned && !minimized ? "ring-1 ring-secondary" : ""
-        } ${locked ? "" : ""}`}
+        className={`relative min-w-44 w-fit transition-opacity duration-600 pointer-events-auto select-none ${noborder ? "ring-0" : "ring-1"} ${!pinned && !minimized ? " ring-secondary" : "" 
+          } ${locked ? "" : ""}`}
         onPointerEnter={onPointerEnter}
         onPointerLeave={onPointerLeave}
       >
         <div
-          className={`flex p-1 text-xs items-center gap-3 justify-between w-full cursor-move ${
-            locked ? "bg-info/50 cursor-default" : pinned ? "bg-neutral/75" : "bg-secondary/50"
-          }`}
+          className={`flex p-1 text-xs items-center gap-3 justify-between w-full cursor-move ${locked ? "bg-info/50 cursor-default" : pinned ? "bg-neutral/75" : "bg-secondary/20"
+            }`}
           onPointerDown={onMouseDown}
           onDoubleClick={onDoubleClick}
         >
-          <div className="flex gap-1 bg-gray-900 px-2 items-center">
+          {/* Title */}
+          <div className="flex gap-1 px-2 items-center">
             {icon && <img src={icon} className="pixel-images h-5" />}
             <p className=" uppercase font-bold">{title}</p>
           </div>
@@ -193,13 +195,25 @@ export const Content: React.FC<WidgetContentProps> = memo(
           )}
         </div>
 
-        <Card
-          className={`relative !p-0 min-w-72 border border-t-success border-secondary !pointer-events-none filter ${
-            minimized ? "!border-0 h-0 overflow-hidden opacity-0" : ""
-          }`}
-        >
-          {children}
-        </Card>
+        {
+          noborder ? (
+          <NoBorderCard
+            className={`relative !p-0 min-w-72 !pointer-events-none filter ${minimized ? "!border-0 h-0 overflow-hidden opacity-0" : ""
+              }`}
+          >
+            {children}
+          </NoBorderCard>
+          ) : (
+          <Card
+            className={`relative !p-0 min-w-72 border border-t-success border-secondary !pointer-events-none filter ${minimized ? "!border-0 h-0 overflow-hidden opacity-0" : ""
+              }`}
+          >
+            {children}
+          </Card>
+          )
+        }
+
+
       </div>
     );
   }
@@ -225,6 +239,7 @@ export const Widget: React.FC<WidgetProps> = memo(
     defaultVisible = false,
     popUp = false,
     active = true,
+    noborder = false,
   }) => {
     const primodium = usePrimodium();
     const [paneInfo, setPane, removePane] = usePersistentStore((state) => [
@@ -613,6 +628,7 @@ export const Widget: React.FC<WidgetProps> = memo(
               onUnlock={lockable ? handleUnlock : undefined}
               origin={origin}
               popUp={popUp}
+              noborder={noborder}
             >
               {children}
             </Content>

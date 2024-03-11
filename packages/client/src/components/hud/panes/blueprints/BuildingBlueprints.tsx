@@ -11,7 +11,8 @@ import { Action, EntityType } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
 import { Button } from "../../../core/Button";
-import { BuildingImageFromType } from "../../../shared/BuildingImage";
+import { BlueprintBuildingImageFromType } from "../../../shared/BuildingImage";
+import { getBuildingDimensions } from "src/util/building";
 import { useShallow } from "zustand/react/shallow";
 
 const BlueprintButton: React.FC<{
@@ -20,7 +21,7 @@ const BlueprintButton: React.FC<{
   keybind?: KeybindActions;
   keybindActive?: boolean;
   className?: string;
-}> = ({ buildingType, tooltipDirection, keybind, keybindActive = false, className }) => {
+}> = ({ buildingType, tooltipDirection, keybind, keybindActive = false, className, style }) => {
   const {
     hooks: { useKeybinds },
   } = usePrimodium().api();
@@ -56,19 +57,18 @@ const BlueprintButton: React.FC<{
         components.SelectedBuilding.set({ value: buildingType });
         components.SelectedAction.set({ value: Action.PlaceBuilding });
       }}
-      className={`min-h-[3.6rem] bg-base-200 ${
-        hasMainbaseLevel
-          ? hasEnough
-            ? "hover:bg-accent border-accent/25"
-            : "hover:bg-warning border-warning/75"
-          : "hover:bg-error border-error/25"
-      } disabled:opacity-50 border border-secondary hover:z-10 ${
-        selectedBuilding === buildingType ? " ring-2 ring-white/75" : ""
-      } relative btn-ghost min-h-11 max-h-12 p-0 text-[2.5rem] !bg-info/25 ${className}`}
+      style={style}
+    // className={`min-h-[3.6rem] bg-base-200 ${hasMainbaseLevel
+    //     ? hasEnough
+    //       ? "hover:bg-accent border-accent/25"
+    //       : "hover:bg-warning border-warning/75"
+    //     : "hover:bg-error border-error/25"
+    //   } disabled:opacity-50 border border-secondary hover:z-10 ${selectedBuilding === buildingType ? " ring-2 ring-white/75" : ""
+    //   } relative btn-ghost p-0 text-[2.5rem] !bg-info/10 ${className}`}
     >
-      <BuildingImageFromType buildingType={buildingType} />
+      <BlueprintBuildingImageFromType buildingType={buildingType} />
       {!hasMainbaseLevel && (
-        <div className="absolute top-0 w-full h-full gap-1 flex items-center justify-center text-[.5rem] bg-neutral/50">
+        <div className="absolute top-0 w-full h-full -mt-1 -ml-4 gap-1 flex items-center justify-center text-[.5rem] bg-neutral/50">
           <span className="h-3 flex items-center justify-center gap-1 text-white bg-gray-800/50 z-30">
             <FaLock />
             <p>Level {levelRequirement.toString()}</p>
@@ -109,18 +109,21 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ building
       EntityType.PVCellFactory,
       EntityType.AlloyFactory,
       EntityType.SolarPanel,
+      EntityType.NULL,
     ];
   }, [mapId]);
 
   const storageBuildings = [
-    EntityType.Garage, 
-    EntityType.StorageUnit, 
-    EntityType.Hangar, 
-    EntityType.Vault
+    EntityType.Garage,
+    EntityType.StorageUnit,
+    EntityType.Hangar,
+    EntityType.Vault,
+    EntityType.NULL,
   ];
 
   const militaryBuildings = [
     EntityType.Workshop,
+    EntityType.NULL,
     EntityType.SAMLauncher,
     EntityType.DroneFactory,
     EntityType.ShieldGenerator,
@@ -128,7 +131,7 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ building
   ];
 
   const infrastructureBuildings = [
-    EntityType.StarmapperStation, 
+    EntityType.StarmapperStation,
     EntityType.Market
   ];
 
@@ -161,17 +164,48 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ building
       buildingsToShow = [];
   }
 
+  const buildingsWithDimensions = useMemo(() => buildingsToShow.map(building => {
+    const dimensions = getBuildingDimensions(building);
+    return {
+      type: building,
+      dimensions,
+    };
+  }), [buildingsToShow]);
+
+
   return (
     <>
-      <div className="flex flex-col gap-1 items-start">
-        <div className={` flex flex-col gap-1 items-center w-full `}>
-          <div className="grid grid-cols-3 gap-1 w-60 p-1">
-            {buildingsToShow.map((buildingType, i) => (
-              <BlueprintButton key={i} tooltipDirection="top" buildingType={buildingType} />
-            ))}
-          </div>
-        </div>
+
+      <div
+        className="flex flex-wrap p-3 w-60 h-96 overflow-y-auto"
+        style={{
+          scrollbarWidth: 'none', /* For Firefox */
+          msOverflowStyle: 'none', /* For Internet Explorer and Edge */
+        }}
+      >
+        {/* For Webkit (Chrome, Safari, etc.) */}
+        <style>
+          {`.hide-scrollbar::-webkit-scrollbar {display: none;}`}
+        </style>
+
+        {buildingsWithDimensions.map(({ type, dimensions }, i) => {
+          // for dummies
+          const updatedDimensions = type === EntityType.NULL ? { width: 2, height: -2 } : dimensions;
+
+          return (
+            <BlueprintButton
+              key={i}
+              // tooltipDirection="top" 
+              buildingType={type}
+              style={{
+                width: `${65 + 20 * (updatedDimensions.width - 1)}px`,
+                height: `${65 + 20 * (updatedDimensions.height - 1)}px`
+              }}
+            />
+          );
+        })}
       </div>
+
     </>
   );
 };

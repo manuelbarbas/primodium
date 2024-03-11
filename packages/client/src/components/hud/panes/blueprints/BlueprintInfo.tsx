@@ -74,7 +74,7 @@ export const BlueprintInfo: React.FC<{
   );
 
   const buildingName = useMemo(() => getEntityTypeName(building), [building]);
-  // console.log(buildingName);
+
   const dimensions = useMemo(() => getBuildingDimensions(building), [building]);
 
   const hasEnough = useHasEnoughResources(getRecipe(building ?? singletonEntity, 1n), spaceRock);
@@ -97,7 +97,7 @@ export const BlueprintInfo: React.FC<{
             <div className="flex flex-col">
               <span className="mb-2">Effect</span>
 
-              <SecondaryCard className="flex flex-col gap-1 w-56 relative bg-transparent border-none">
+              <SecondaryCard className="flex flex-col gap-1 w-56 relative bg-transparent border-none -mt-1">
                 {production.map(({ resource, amount, type }) => (
                   <Badge key={`prototypeproduction-${resource}`} className="text-xs gap-2 bg-transparent text-success/50">
                     <ResourceIconTooltip
@@ -135,7 +135,7 @@ export const BlueprintInfo: React.FC<{
                 {!!storageUpgrades?.length && (
                   <div className="flex flex-col">
                     <p className="text-left font-bold opacity-50">Increase storage</p>
-                    <div className="flex flex-wrap gap-1 w-56 justify-center">
+                    <div className="flex flex-wrap gap-1 w-56">
                       {storageUpgrades.map(({ resource, amount }) => (
                         <Badge key={`storage-${resource}`} className="text-xs bg-transparent text-success/50">
                           <ResourceIconTooltip

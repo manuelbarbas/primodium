@@ -17,3 +17,12 @@ export const SecondaryCard: React.FC<{
     <div className={`card bg-secondary border border-secondary/25 p-2 bg-opacity-10 ${className}`}>{children}</div>
   );
 };
+
+export const NoBorderCard: React.FC<{
+  children: React.ReactNode | React.ReactNode[];
+  className?: string;
+}> = ({ children, className }) => {
+  return (
+    <div className={`card p-2 ${className}`}>{children}</div>
+  );
+};
