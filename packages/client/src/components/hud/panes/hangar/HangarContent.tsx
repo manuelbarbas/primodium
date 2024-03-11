@@ -1,12 +1,15 @@
+import { Entity } from "@latticexyz/recs";
 import { IconLabel } from "src/components/core/IconLabel";
 import { components } from "src/network/components";
 import { getEntityTypeName } from "src/util/common";
 import { ResourceImage } from "src/util/constants";
 import { formatResourceCount } from "src/util/number";
+import { Hex } from "viem";
 
 export const HangarContent = () => {
   const activeRock = components.ActiveRock.use()?.value;
   const hangar = components.Hangar.use(activeRock);
+  if (!activeRock) return null;
   return (
     <div className="flex flex-col p-2 text-sm">
       {(!hangar || !hangar.units || hangar.units.length === 0) && (
@@ -20,5 +23,14 @@ export const HangarContent = () => {
         </div>
       ))}
     </div>
+  );
+};
+
+export const Unit = ({ unit, asteroid, className = "" }: { unit: Entity; asteroid: Entity; className?: string }) => {
+  const level = components.UnitLevel.getWithKeys({ entity: asteroid as Hex, unit: unit as Hex })?.value ?? 0n;
+  return (
+    <p className={className}>
+      {getBlockTypeName(unit)} {toRomanNumeral(Number(level + 1n))}
+    </p>
   );
 };

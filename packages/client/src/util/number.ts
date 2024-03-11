@@ -12,6 +12,8 @@ export function bigintToNumber(value: bigint | number) {
 }
 
 export function adjustDecimals(num: string, toFixed: number): string {
+  const allZeroes = num.split("").every((digit) => digit == "0");
+  if (allZeroes) return "";
   const parts = num.split(".");
   if (parts.length > 2) throw new Error("Invalid number");
   if (parts.length === 2 && parts[1].length > toFixed) {

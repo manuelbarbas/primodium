@@ -31,11 +31,12 @@ export const RecipeDisplay: React.FC<{
     type: ResourceType;
     amount: bigint;
   }[];
-}> = memo(({ recipe, asteroid }) => {
+  count?: bigint;
+}> = memo(({ recipe, asteroid, count = 1n }) => {
   return (
     <SecondaryCard className="items-center gap-1 w-full !border-error/50 bg-transparent p-1">
       <p className="font-bold absolute opacity-75 left-0 top-1/2 -translate-y-1/2 text-error text-sm ml-1">-</p>
-      <div className="flex flex-wrap justify-center items-center gap-1 w-44">
+      <div className="flex flex-wrap justify-center items-center gap-1">
         {recipe.length == 0 ? (
           <Badge className="font-bold">FREE</Badge>
         ) : (
@@ -51,7 +52,7 @@ export const RecipeDisplay: React.FC<{
                   resource={resource.id}
                   resourceType={resource.type}
                   name={resourceName}
-                  amount={resource.amount}
+                  amount={resource.amount * count}
                   validate
                   fontSize={"xs"}
                   short
@@ -94,14 +95,11 @@ export const UnitUpgrade: React.FC<{ unit: Entity }> = memo(({ unit }) => {
   return (
     <SecondaryCard className="flex flex-col gap-2 p-3 justify-between items-center">
       <div className="flex gap-1 absolute top-2 left-1/2 -translate-x-1/2">
-        {Array(Number(maxLevel))
+        {Array(Number(maxLevel + 1n))
           .fill(0)
           .map((_, index) => {
             return (
-              <div
-                key={index}
-                className={`w-2 h-2 rounded-full ${level - 1n >= index ? "bg-green-600" : "bg-slate-500"}`}
-              />
+              <div key={index} className={`w-2 h-2 rounded-full ${level >= index ? "bg-green-600" : "bg-slate-500"}`} />
             );
           })}
       </div>

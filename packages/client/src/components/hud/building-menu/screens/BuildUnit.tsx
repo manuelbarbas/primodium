@@ -19,6 +19,8 @@ import { getFullResourceCount } from "src/util/resource";
 import { getUnitStats } from "src/util/unit";
 import { Hex } from "viem";
 import { ResourceIconTooltip } from "../../../shared/ResourceIconTooltip";
+import { Unit } from "../../panes/hangar/HangarContent";
+import { RecipeDisplay } from "../widgets/UnitUpgrade";
 
 export const BuildUnit: React.FC<{
   building: Entity;
@@ -107,17 +109,22 @@ export const BuildUnit: React.FC<{
 };
 
 const TrainNonCapitalShip = ({ building, unit, asteroid }: { building: Entity; unit: Entity; asteroid: Entity }) => {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState("");
+
+  useEffect(() => {
+    setCount("");
+  }, [unit]);
+
   const mud = useMud();
   const unitLevel = useMemo(() => {
     return components.UnitLevel.getWithKeys({ entity: asteroid as Hex, unit: unit as Hex })?.value ?? 1n;
   }, [unit, asteroid]);
 
-  const requiredResources = useMemo(() => {
+  const recipe = useMemo(() => {
     return getRecipe(unit, unitLevel);
   }, [unit, unitLevel]);
 
-  const maximum = useMaxCountOfRecipe(requiredResources, asteroid);
+  const maximum = useMaxCountOfRecipe(recipe, asteroid);
   return (
     <>
       <p className="text-sm leading-none opacity-75">COST</p>
@@ -144,10 +151,11 @@ const TrainNonCapitalShip = ({ building, unit, asteroid }: { building: Entity; u
 
       <NumberInput max={maximum} onChange={(val) => setCount(val)} />
 
+      <NumberInput max={maximum} count={count} onChange={(val) => setCount(val)} />
       <div className="flex gap-2 pt-5">
         <Navigator.BackButton
           className="btn-sm btn-secondary"
-          disabled={maximum < count || count < 1}
+          disabled={maximum < Number(count) || count == ""}
           onClick={() => {
             if (!unit) return;
 

@@ -53,7 +53,7 @@ export function getUnitStatsLevel(entity: Entity, level: bigint) {
     ATK: attack,
     DEF: defense,
     SPD: speed,
-    CRG: cargo,
+    CGO: cargo,
     HP: hp,
     DEC: entity == EntityType.CapitalShip ? decryption : 0n,
   };
@@ -85,23 +85,23 @@ export const getFleetStats = (fleet: Entity) => {
     ret.attack += unitData.ATK * count;
     ret.defense += unitData.DEF * count;
     ret.hp += unitData.HP * count;
-    ret.cargo += unitData.CRG * count;
+    ret.cargo += unitData.CGO * count;
     ret.speed = bigIntMin(ret.speed == 0n ? BigInt(10e100) : ret.speed, unitData.SPD);
     ret.decryption = unitEntity === EntityType.CapitalShip ? unitData.DEC : ret.decryption;
   });
   return { ...ret, title: entityToFleetName(fleet) };
 };
 
-export const getFleetStatsFromUnits = (units: Map<Entity, bigint>) => {
+export const getFleetStatsFromUnits = (units: Map<Entity, bigint>, fleetOwner?: Entity | undefined) => {
   const selectedRock = components.ActiveRock.get()?.value as Entity;
   const data = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
 
   units.forEach((count, unit) => {
-    const unitData = getUnitStats(unit as Entity, selectedRock);
+    const unitData = getUnitStats(unit as Entity, fleetOwner ?? selectedRock);
     data.attack += unitData.ATK * count;
     data.defense += unitData.DEF * count;
     data.hp += unitData.HP * count;
-    data.cargo += unitData.CRG * count;
+    data.cargo += unitData.CGO * count;
     data.decryption = bigIntMax(data.decryption, unitData.DEC);
     data.speed = bigIntMin(data.speed == 0n ? BigInt(10e100) : data.speed, unitData.SPD);
   });

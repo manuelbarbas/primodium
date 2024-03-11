@@ -1,3 +1,4 @@
+import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -7,10 +8,12 @@ import { useMud } from "src/hooks";
 import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
 import { components } from "src/network/components";
 import { EntityType } from "src/util/constants";
+import { entityToFleetName } from "src/util/name";
 import { formatResourceCount, formatTime, parseResourceCount } from "src/util/number";
+import { getUnitStats } from "src/util/unit";
 import { TargetHeader } from "../../TargetHeader";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
-import { FleetEntityHeader } from "../fleets/FleetHeader";
+import { FleetHeader } from "../fleets/FleetHeader";
 
 export const TransferFrom = (props: {
   dragging?: boolean;
@@ -62,7 +65,26 @@ export const TransferFrom = (props: {
   }, [handleKeyDown, handleKeyUp]);
 
   const isFleet = components.IsFleet.get(props.entity)?.value;
-  const Header = isFleet ? <FleetEntityHeader entity={props.entity} /> : <TargetHeader entity={props.entity} />;
+  const Header = useMemo(() => {
+    if (!isFleet && props.entity !== "newFleet") {
+      return <TargetHeader entity={props.entity} />;
+    }
+    const data = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
+    const ownerRock = props.entity !== "newFleet" ? components.OwnedBy.get(props.entity)?.value : undefined;
+    props.unitCounts.forEach((count, unit) => {
+      if (count === 0n) return;
+      const unitData = getUnitStats(unit as Entity, ownerRock as Entity);
+      data.attack += unitData.ATK * count;
+      data.defense += unitData.DEF * count;
+      data.hp += unitData.HP * count;
+      data.cargo += unitData.CGO * count;
+      data.decryption = bigIntMax(data.decryption, unitData.DEC);
+      data.speed = bigIntMin(data.speed == 0n ? BigInt(10e100) : data.speed, unitData.SPD);
+    });
+
+    return <FleetHeader title={entityToFleetName(props.entity)} {...data} />;
+  }, [isFleet, props.entity, props.unitCounts]);
+
   return (
     <div className={`w-full h-full bg-base-100 p-2 pb-8 flex flex-col gap-2 border border-secondary/50 relative`}>
       <div className="relative h-12 text-sm w-full flex justify-center font-bold gap-1">
