@@ -29,15 +29,15 @@ type WidgetProps = {
   active?: boolean;
   popUp?: boolean;
   origin?:
-  | "top-left"
-  | "top-right"
-  | "bottom-left"
-  | "bottom-right"
-  | "center"
-  | "center-left"
-  | "center-right"
-  | "center-top"
-  | "center-bottom";
+    | "top-left"
+    | "top-right"
+    | "bottom-left"
+    | "bottom-right"
+    | "center"
+    | "center-left"
+    | "center-right"
+    | "center-top"
+    | "center-bottom";
   noborder?: boolean;
 };
 
@@ -61,17 +61,17 @@ type WidgetContentProps = {
   minimized: boolean;
   children?: ReactNode;
   origin:
-  | "top-left"
-  | "top-right"
-  | "bottom-left"
-  | "bottom-right"
-  | "center"
-  | "center-left"
-  | "center-right"
-  | "center-top"
-  | "center-bottom";
+    | "top-left"
+    | "top-right"
+    | "bottom-left"
+    | "bottom-right"
+    | "center"
+    | "center-left"
+    | "center-right"
+    | "center-top"
+    | "center-bottom";
   locked?: boolean;
-  noborder?: boolean;
+  noBorder?: boolean;
 };
 
 let pinnedDepth = -10000;
@@ -97,7 +97,7 @@ export const Content: React.FC<WidgetContentProps> = memo(
     onLock,
     onUnlock,
     popUp,
-    noborder,
+    noBorder: noborder,
   }) => {
     const [uiScale] = usePersistentStore((state) => [state.uiScale]);
 
@@ -160,14 +160,16 @@ export const Content: React.FC<WidgetContentProps> = memo(
           transform: `translate(${translateX}, ${translateY}) scale(${!locked ? uiScale : 1})`,
           transformOrigin: transformOrigin,
         }}
-        className={`relative min-w-44 w-fit transition-opacity duration-600 pointer-events-auto select-none ${noborder ? "ring-0" : "ring-1"} ${!pinned && !minimized ? " ring-secondary" : "" 
-          } ${locked ? "" : ""}`}
+        className={`relative min-w-44 w-fit transition-opacity duration-600 pointer-events-auto select-none ${
+          noborder ? "ring-0" : "ring-1"
+        } ${!pinned && !minimized ? " ring-secondary" : ""} ${locked ? "" : ""}`}
         onPointerEnter={onPointerEnter}
         onPointerLeave={onPointerLeave}
       >
         <div
-          className={`flex p-1 text-xs items-center gap-3 justify-between w-full cursor-move ${locked ? "bg-info/50 cursor-default" : pinned ? "bg-neutral/75" : "bg-secondary/20"
-            }`}
+          className={`flex p-1 text-xs items-center gap-3 justify-between w-full cursor-move ${
+            locked ? "bg-info/50 cursor-default" : pinned ? "bg-neutral/75" : "bg-secondary/20"
+          }`}
           onPointerDown={onMouseDown}
           onDoubleClick={onDoubleClick}
         >
@@ -195,25 +197,23 @@ export const Content: React.FC<WidgetContentProps> = memo(
           )}
         </div>
 
-        {
-          noborder ? (
+        {noborder ? (
           <NoBorderCard
-            className={`relative !p-0 min-w-72 !pointer-events-none filter ${minimized ? "!border-0 h-0 overflow-hidden opacity-0" : ""
-              }`}
+            className={`relative !p-0 min-w-72 !pointer-events-none filter !bg-opacity-0 ${
+              minimized ? "!border-0 h-0 overflow-hidden opacity-0" : ""
+            }`}
           >
             {children}
           </NoBorderCard>
-          ) : (
+        ) : (
           <Card
-            className={`relative !p-0 min-w-72 border border-t-success border-secondary !pointer-events-none filter ${minimized ? "!border-0 h-0 overflow-hidden opacity-0" : ""
-              }`}
+            className={`relative !p-0 min-w-72 border border-t-success border-secondary !pointer-events-none filter ${
+              minimized ? "!border-0 h-0 overflow-hidden opacity-0" : ""
+            }`}
           >
             {children}
           </Card>
-          )
-        }
-
-
+        )}
       </div>
     );
   }
@@ -591,6 +591,7 @@ export const Widget: React.FC<WidgetProps> = memo(
                 onMinimize={toggleMinimize}
                 onMaximize={toggleMinimize}
                 popUp={popUp}
+                noBorder={noborder}
               >
                 {children}
               </Content>
@@ -628,7 +629,7 @@ export const Widget: React.FC<WidgetProps> = memo(
               onUnlock={lockable ? handleUnlock : undefined}
               origin={origin}
               popUp={popUp}
-              noborder={noborder}
+              noBorder={noborder}
             >
               {children}
             </Content>
