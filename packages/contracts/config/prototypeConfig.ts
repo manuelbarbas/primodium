@@ -944,7 +944,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       6: {
         P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ IronPlate: 1000000, U_Electricity: 500 }),
-        P_UnitProdMultiplier: { value: 300n },
+        P_UnitProdMultiplier: { value: 250n },
         P_UnitProdTypes: { value: encodeArray(["AnvilDrone", "HammerDrone", "AegisDrone", "StingerDrone"]) },
       },
     },
@@ -970,13 +970,13 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       3: {
         P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ IronPlate: 25000, U_Electricity: 100 }),
-        P_UnitProdMultiplier: { value: 200n },
+        P_UnitProdMultiplier: { value: 150n },
         P_UnitProdTypes: { value: encodeArray(["TridentMarine", "MinutemanMarine", "LightningCraft"]) },
       },
       4: {
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ IronPlate: 100000, U_Electricity: 150 }),
-        P_UnitProdMultiplier: { value: 300n },
+        P_UnitProdMultiplier: { value: 200n },
         P_UnitProdTypes: { value: encodeArray(["TridentMarine", "MinutemanMarine", "LightningCraft"]) },
       },
     },
