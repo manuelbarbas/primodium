@@ -9,6 +9,7 @@ export const UnitUpgrades: React.FC = () => {
         <FaInfoCircle size={16} /> All fleets owned by this asteroid will have their units upgraded.
       </p>
       <div className="grid grid-cols-3 w-full gap-1">
+        <UnitUpgrade unit={EntityType.LightningCraft} />
         <UnitUpgrade unit={EntityType.AnvilDrone} />
         <UnitUpgrade unit={EntityType.HammerDrone} />
         <UnitUpgrade unit={EntityType.StingerDrone} />

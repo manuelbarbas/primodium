@@ -194,7 +194,7 @@ export const Content: React.FC<WidgetContentProps> = memo(
         </div>
 
         <Card
-          className={`relative !p-0 min-w-72 border border-t-success border-secondary !pointer-events-none filter ${
+          className={`relative !p-0 min-w-72 border border-t-success border-secondary filter ${
             minimized ? "!border-0 h-0 overflow-hidden opacity-0" : ""
           }`}
         >
