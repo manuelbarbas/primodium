@@ -1,3 +1,5 @@
+import { Primodium } from "@game/api";
+import { Scenes } from "@game/constants";
 import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
@@ -9,7 +11,7 @@ import { toast } from "react-toastify";
 import { components } from "src/network/components";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { buildBuilding } from "src/network/setup/contractCalls/buildBuilding";
-import { createFleet } from "src/network/setup/contractCalls/createFleet";
+import { createFleet as callCreateFleet } from "src/network/setup/contractCalls/createFleet";
 import { removeComponent, setComponentValue } from "src/network/setup/contractCalls/dev";
 import { MUD } from "src/network/types";
 import { encodeEntity, hashEntities, hashKeyEntity, toHex32 } from "src/util/encode";
@@ -24,6 +26,7 @@ import {
   ResourceStorages,
   UtilityStorages,
 } from "./constants";
+import { entityToRockName } from "./name";
 
 const resources: Record<string, Entity> = {
   iron: EntityType.Iron,
@@ -52,7 +55,7 @@ const units: Record<string, Entity> = {
   droid: EntityType.Droid,
 };
 
-export const setupCheatcodes = (mud: MUD): Cheatcodes => {
+export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
   const provideResource = async (spaceRock: Entity, resource: Entity, value: bigint) => {
     const resourceIndex = ResourceEnumLookup[resource];
     const systemCalls: Promise<unknown>[] = [];
@@ -67,16 +70,18 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
         })
       );
     } else {
-      if (components.MaxResourceCount.get(entity)?.value ?? 0n < value)
+      const currentResourceCount = components.ResourceCount.get(entity)?.value ?? 0n;
+      const newResourceCount = currentResourceCount + value;
+      if (components.MaxResourceCount.get(entity)?.value ?? 0n < newResourceCount) {
         systemCalls.push(
           setComponentValue(mud, mud.components.MaxResourceCount, entity, {
-            value,
+            value: newResourceCount,
           })
         );
-
+      }
       systemCalls.push(
         setComponentValue(mud, mud.components.ResourceCount, entity, {
-          value,
+          value: newResourceCount,
         })
       );
     }
@@ -109,6 +114,14 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
     return ret;
   }
 
+  async function createFleet(unit: Entity, count: number) {
+    const asteroid = mud.components.ActiveRock.get()?.value;
+    if (!asteroid) throw new Error("No asteroid found");
+    await provideResource(asteroid, EntityType.FleetCount, 1n);
+    await provideUnit(asteroid, unit, BigInt(count));
+    await callCreateFleet(mud, asteroid, new Map([[unit, BigInt(count)]]));
+  }
+
   return [
     {
       title: "Tester Packs",
@@ -117,7 +130,9 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
           params: [],
           function: async () => {
             const player = mud.playerAccount.entity;
-            if (!player) throw new Error("No player found");
+            if (!player) {
+              throw new Error("No player found");
+            }
             for (const resource of [...ResourceStorages]) {
               await setComponentValue(
                 mud,
@@ -147,7 +162,6 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
             UtilityStorages.forEach(async (resource) => {
               if (resource == EntityType.VesselCapacity) return;
               if (!player) {
-                toast.error("No player found");
                 throw new Error("No player found");
               }
 
@@ -179,6 +193,8 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
                 }
               );
             });
+
+            toast.success("Beginner Tester Pack succeeded");
           },
         },
       },
@@ -189,6 +205,7 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
         setWorldSpeed: {
           params: [{ name: "value", type: "number" }],
           function: async (value: number) => {
+            toast.info("running cheatcode: Set World Speed");
             await setComponentValue(mud, mud.components.P_GameConfig, singletonEntity, {
               worldSpeed: BigInt(value),
             });
@@ -197,12 +214,14 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
         stopGracePeriod: {
           params: [],
           function: async () => {
+            toast.info("running cheatcode: Stop Grace Period");
             setComponentValue(mud, components.P_GracePeriod, singletonEntity, { spaceRock: 0n });
           },
         },
         spawnPlayers: {
           params: [{ name: "count", type: "number" }],
           function: async (count: number) => {
+            toast.info("running cheatcode: Spawn Players");
             const networkConfig = getNetworkConfig();
             const clientOptions = {
               chain: networkConfig.chain,
@@ -235,27 +254,18 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
     {
       title: "Asteroid Mgmnt",
       content: {
-        maxExpansion: {
-          params: [],
-          function: async () => {
-            const selectedRock = mud.components.ActiveRock.get()?.value;
-            if (!selectedRock) throw new Error("No asteroid found");
-            const maxLevel = mud.components.Asteroid.get(selectedRock)?.maxLevel ?? 8n;
-            await setComponentValue(mud, mud.components.Level, selectedRock, {
-              value: maxLevel,
-            });
-          },
-        },
-        maxMainBaseLevel: {
-          params: [],
-          function: async () => {
+        setMainBaseLevel: {
+          params: [
+            { name: "level", type: "dropdown", dropdownOptions: ["1", "2", "3", "4", "5", "6", "7", "8"].reverse() },
+          ],
+          function: async (level: string) => {
             const selectedRock = mud.components.ActiveRock.get()?.value;
             const mainBase = mud.components.Home.get(selectedRock)?.value as Entity | undefined;
             if (!mainBase) throw new Error("No main base found");
-            const maxLevel = mud.components.P_MaxLevel.get(mainBase)?.value ?? 8n;
             await setComponentValue(mud, mud.components.Level, mainBase, {
-              value: maxLevel,
+              value: BigInt(level),
             });
+            toast.success("Main Base Level set to " + level);
           },
         },
         setTerrain: {
@@ -279,6 +289,7 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
                 value: ResourceEnumLookup[resourceEntity],
               }
             );
+            toast.success(`Terrain set to ${resource} at [${x}, ${y}]. Reload to see change.`);
           },
         },
         giveAsteroidResource: {
@@ -294,21 +305,11 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
             const resourceEntity = resources[resource.toLowerCase()];
 
             if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
-
-            const value = BigInt(count * Number(RESOURCE_SCALE));
-            await setComponentValue(
-              mud,
-              mud.components.ResourceCount,
-              encodeEntity(
-                { entity: "bytes32", resource: "uint8" },
-                { entity: selectedRock as Hex, resource: ResourceEnumLookup[resourceEntity] }
-              ),
-              {
-                value,
-              }
-            );
+            provideResource(selectedRock, resourceEntity, BigInt(count * Number(RESOURCE_SCALE)));
+            toast.success(`${count} ${resource} given to asteroid`);
           },
         },
+
         giveAsteroidUnits: {
           params: [
             { name: "unit", type: "dropdown", dropdownOptions: Object.keys(units) },
@@ -322,26 +323,33 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
             const rock = mud.components.ActiveRock.get()?.value;
             if (!rock) throw new Error("No asteroid found");
             provideUnit(rock, unitEntity, BigInt(count));
+            toast.success(`${count} ${unit} given to asteroid`);
           },
         },
         conquerAsteroid: {
           params: [],
           function: async () => {
-            const selectedRock = mud.components.ActiveRock.get()?.value;
-            if (!selectedRock) throw new Error("No asteroid found");
+            const selectedRock = mud.components.SelectedRock.get()?.value;
+            if (!selectedRock) {
+              toast.error(`No rock selected`);
+              throw new Error("No asteroid found");
+            }
+            toast.info(`Conquering ${entityToRockName(selectedRock)}`);
             const staticData = components.Asteroid.get(selectedRock)?.__staticData;
             if (staticData === "") {
-              toast.error("Asteroid not initialized");
+              await createFleet(EntityType.LightningCraft, 1);
+              toast.error("Asteroid not initialized. Send fleet to initialize it");
               throw new Error("Asteroid not initialized");
             }
             const player = mud.playerAccount.entity;
             await setComponentValue(mud, components.OwnedBy, selectedRock, { value: player });
             const position = components.Position.get(toHex32("MainBase") as Entity);
             if (!position) throw new Error("No main base found");
-            await buildBuilding(mud, EBuilding.MainBase, position);
+            await buildBuilding(mud, EBuilding.MainBase, { ...position, parent: selectedRock as Hex });
+            toast.success(`Asteroid ${entityToRockName(selectedRock)} conquered`);
           },
         },
-        setAsteroidMaxResource: {
+        setResourceStorage: {
           params: [
             { name: "resource", type: "dropdown", dropdownOptions: Object.keys(resources) },
             { name: "count", type: "number" },
@@ -368,6 +376,7 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
                 value,
               }
             );
+            toast.success(`${count} ${resource} storage given to ${entityToRockName(selectedRock)}`);
           },
         },
         createPirateAsteroid: {
@@ -405,35 +414,22 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
             await setComponentValue(mud, components.PirateAsteroid, asteroidEntity, {
               isDefeated: false,
             });
+            toast.success("Pirate asteroid created");
+            primodium.api(Scenes.Starmap).camera.pan(coord);
           },
         },
       },
     },
-    {
-      title: "Alliance",
-      content: {
-        setMaxAllianceCount: {
-          params: [{ name: "value", type: "number" }],
-          function: async (value: number) => {
-            await setComponentValue(mud, mud.components.P_AllianceConfig, singletonEntity, {
-              maxAllianceMembers: BigInt(value),
-            });
-          },
-        },
-      },
-    },
+
     {
       title: "Fleet",
       content: {
         createFleet: {
-          params: [],
-          function: async () => {
-            const asteroid = mud.components.ActiveRock.get()?.value;
-            if (!asteroid) throw new Error("No asteroid found");
-            provideResource(asteroid, EntityType.FleetCount, 1n);
-            provideUnit(asteroid, EntityType.MinutemanMarine, 10n);
-            createFleet(mud, asteroid, new Map([[EntityType.MinutemanMarine, 10n]]));
-          },
+          params: [
+            { name: "unit", type: "dropdown", dropdownOptions: Object.keys(units) },
+            { name: "count", type: "number" },
+          ],
+          function: createFleet,
         },
         giveFleetResource: {
           params: [
@@ -486,6 +482,19 @@ export const setupCheatcodes = (mud: MUD): Cheatcodes => {
               components.CooldownEnd,
               components.SelectedFleet.get()?.value ?? singletonEntity
             );
+          },
+        },
+      },
+    },
+    {
+      title: "Alliance",
+      content: {
+        setMaxAllianceCount: {
+          params: [{ name: "value", type: "number" }],
+          function: async (value: number) => {
+            await setComponentValue(mud, mud.components.P_AllianceConfig, singletonEntity, {
+              maxAllianceMembers: BigInt(value),
+            });
           },
         },
       },

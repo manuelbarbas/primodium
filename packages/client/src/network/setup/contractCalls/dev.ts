@@ -41,17 +41,12 @@ export async function setComponentValue<S extends Schema>(
     const type = component.metadata.valueSchema[name] as StaticAbiType;
     const data = encodeField(type, value);
     const schemaIndex = schema.indexOf(name);
-    await execute(
-      {
-        mud,
-        functionName: "devSetField",
-        systemId: getSystemId("DevSystem"),
-        args: [tableId, key, schemaIndex, data],
-        withSession: true,
-      },
-      {
-        id: hashEntities(tableId, entity),
-      }
-    );
+    await execute({
+      mud,
+      functionName: "devSetField",
+      systemId: getSystemId("DevSystem"),
+      args: [tableId, key, schemaIndex, data],
+      withSession: true,
+    });
   });
 }

@@ -11,11 +11,11 @@ import { getSystemId, hashEntities } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const buildBuilding = async (mud: MUD, building: EBuilding, coord: Coord) => {
+export const buildBuilding = async (mud: MUD, building: EBuilding, coord: Coord & { parent?: Hex }) => {
   const activeAsteroid = components.ActiveRock.get()?.value;
   if (!activeAsteroid) return;
 
-  const position = { ...coord, parent: activeAsteroid as Hex };
+  const position = { ...coord, parent: coord.parent ?? (activeAsteroid as Hex) };
 
   await execute(
     {

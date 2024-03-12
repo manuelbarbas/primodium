@@ -45,7 +45,7 @@ export const Cheatcodes = () => {
         pinnable
         persist
       >
-        <CheatcodesList cheatcodes={setupCheatcodes(mud)} className="h-[700px] w-[500px] font-mono" />
+        <CheatcodesList cheatcodes={setupCheatcodes(mud, primodium)} className="h-[700px] w-[500px] font-mono" />
       </Widget>
     </div>
   );
