@@ -75,7 +75,7 @@ export const TransferFrom = (props: {
       if (count === 0n) return;
       const unitData = getUnitStats(unit as Entity, ownerRock as Entity);
       data.attack += unitData.ATK * count;
-      data.defense += unitData.DEF * count;
+      data.defense += unitData.CTR * count;
       data.hp += unitData.HP * count;
       data.cargo += unitData.CGO * count;
       data.decryption = bigIntMax(data.decryption, unitData.DEC);
