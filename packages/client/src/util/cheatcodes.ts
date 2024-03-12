@@ -27,7 +27,40 @@ import {
   UtilityStorages,
 } from "./constants";
 import { entityToRockName } from "./name";
+import { formatResourceCount } from "./number";
+import { getBlockTypeName } from "./common";
 
+const buildings: Record<string, Entity> = {
+  mainbase: EntityType.MainBase,
+  droidbase: EntityType.DroidBase,
+
+  // Basic Buildings
+  ironMine: EntityType.IronMine,
+  copperMine: EntityType.CopperMine,
+  lithiumMine: EntityType.LithiumMine,
+  kimberliteMine: EntityType.KimberliteMine,
+  titaniumMine: EntityType.TitaniumMine,
+  platinumMine: EntityType.PlatinumMine,
+  iridiumMine: EntityType.IridiumMine,
+
+  storageUnit: EntityType.StorageUnit,
+  garage: EntityType.Garage,
+  workshop: EntityType.Workshop,
+
+  //Advanced Buildings
+  ironPlateFactory: EntityType.IronPlateFactory,
+  pvellFactory: EntityType.PVCellFactory,
+  alloyFactory: EntityType.AlloyFactory,
+  solarPanel: EntityType.SolarPanel,
+  hangar: EntityType.Hangar,
+  droneFactory: EntityType.DroneFactory,
+  starmapperStation: EntityType.StarmapperStation,
+  samLauncher: EntityType.SAMLauncher,
+  shieldGenerator: EntityType.ShieldGenerator,
+  vault: EntityType.Vault,
+  market: EntityType.Market,
+  shipyard: EntityType.Shipyard,
+};
 const resources: Record<string, Entity> = {
   iron: EntityType.Iron,
   copper: EntityType.Copper,
@@ -86,6 +119,9 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
       );
     }
     await Promise.all(systemCalls);
+    toast.success(
+      `${formatResourceCount(resource, value)} ${getBlockTypeName(resource)} given to ${entityToRockName(spaceRock)}`
+    );
   };
 
   const provideUnit = async (spaceRock: Entity, unit: Entity, value: bigint) => {
@@ -101,6 +137,29 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
     await setComponentValue(mud, mud.components.UnitCount, rockUnitEntity, {
       value,
     });
+  };
+
+  const provideBuildingRequiredResources = async (spaceRock: Entity, building: Entity, level: bigint) => {
+    const requiredBaseLevel =
+      components.P_RequiredBaseLevel.getWithKeys({ prototype: building as Hex, level })?.value ?? 0n;
+    const mainBase = mud.components.Home.get(spaceRock)?.value as Entity | undefined;
+    if (requiredBaseLevel > (components.Level.get(mainBase)?.value ?? 0n)) {
+      await setComponentValue(
+        mud,
+        mud.components.Level,
+        encodeEntity(components.Level.metadata.keySchema, { entity: mainBase as Hex }),
+        {
+          value: requiredBaseLevel,
+        }
+      );
+      toast.success(`Main Base Level set to ${requiredBaseLevel}`);
+    }
+    const requiredResources = components.P_RequiredResources.getWithKeys({ prototype: building as Hex, level });
+    if (!requiredResources) return;
+    for (let i = 0; i < requiredResources.resources.length; i++) {
+      const resource = ResourceEntityLookup[requiredResources.resources[i] as EResource];
+      await provideResource(spaceRock, resource, requiredResources.amounts[i]);
+    }
   };
 
   function getTrainCost(unitPrototype: Entity, level: bigint, count: bigint) {
@@ -252,8 +311,20 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
       },
     },
     {
-      title: "Asteroid Mgmnt",
+      title: "Asteroid",
       content: {
+        setExpansionLevel: {
+          params: [
+            { name: "level", type: "dropdown", dropdownOptions: ["1", "2", "3", "4", "5", "6", "7", "8"].reverse() },
+          ],
+          function: async (level: string) => {
+            const selectedRock = mud.components.ActiveRock.get()?.value;
+            await setComponentValue(mud, mud.components.Level, selectedRock, {
+              value: BigInt(level),
+            });
+            toast.success("Asteroid Level set to " + level);
+          },
+        },
         setMainBaseLevel: {
           params: [
             { name: "level", type: "dropdown", dropdownOptions: ["1", "2", "3", "4", "5", "6", "7", "8"].reverse() },
@@ -276,7 +347,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
           ],
           function: async (resource: string, x: number, y: number) => {
             const selectedRock = mud.components.ActiveRock.get()?.value;
-            const resourceEntity = resources[resource.toLowerCase()];
+            const resourceEntity = resources[resource];
             const mapId = components.Asteroid.get(selectedRock)?.mapId ?? 1;
 
             if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
@@ -292,6 +363,20 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             toast.success(`Terrain set to ${resource} at [${x}, ${y}]. Reload to see change.`);
           },
         },
+        giveBuildingRequirements: {
+          params: [
+            { name: "building", type: "dropdown", dropdownOptions: Object.keys(buildings) },
+            { name: "level", type: "number" },
+          ],
+          function: async (building: string, level: number) => {
+            const selectedRock = mud.components.ActiveRock.get()?.value;
+            const buildingEntity = buildings[building];
+            if (!buildingEntity || !selectedRock) throw new Error("Building not found");
+
+            await provideBuildingRequiredResources(selectedRock, buildingEntity, BigInt(level));
+            toast.success(`Building requirements given to ${entityToRockName(selectedRock)}`);
+          },
+        },
         giveAsteroidResource: {
           params: [
             { name: "resource", type: "dropdown", dropdownOptions: Object.keys(resources) },
@@ -302,7 +387,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             if (!player) throw new Error("No player found");
             const selectedRock = mud.components.ActiveRock.get()?.value;
 
-            const resourceEntity = resources[resource.toLowerCase()];
+            const resourceEntity = resources[resource];
 
             if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
             provideResource(selectedRock, resourceEntity, BigInt(count * Number(RESOURCE_SCALE)));
@@ -316,7 +401,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             { name: "count", type: "number" },
           ],
           function: async (unit: string, count: number) => {
-            const unitEntity = units[unit.toLowerCase().replace(/\s+/g, "")];
+            const unitEntity = units[unit];
 
             if (!unitEntity) throw new Error("Unit not found");
 
@@ -359,7 +444,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             if (!player) throw new Error("No player found");
 
             const selectedRock = mud.components.ActiveRock.get()?.value;
-            const resourceEntity = resources[resource.toLowerCase()];
+            const resourceEntity = resources[resource];
 
             if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
 
@@ -441,7 +526,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             if (!player) throw new Error("No player found");
             const selectedFleet = mud.components.SelectedFleet.get()?.value;
 
-            const resourceEntity = resources[resource.toLowerCase()];
+            const resourceEntity = resources[resource];
 
             if (!resourceEntity || !selectedFleet) throw new Error("Resource not found");
 
