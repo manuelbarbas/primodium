@@ -16,7 +16,6 @@ import { Enter } from "./screens/Enter";
 import { Game } from "./screens/Game";
 import { Increment } from "./screens/Increment";
 import { Statistics } from "./screens/Statistics";
-import { setupCheatcodes } from "./util/cheatcodes";
 
 export const DEV = import.meta.env.PRI_DEV === "true";
 export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
@@ -101,7 +100,6 @@ export default function AppLoadingState() {
                   newValue: ComponentValue<Schema>
                 ) => setComponentValue(mud, component, entity, newValue)}
                 world={world}
-                cheatcodes={setupCheatcodes(mud)}
               />
             </div>
           )}
