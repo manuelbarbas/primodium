@@ -17,6 +17,7 @@ import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { FleetIncomingKey } from "src/Keys.sol";
 import { EResource } from "src/Types.sol";
 import { ABDKMath64x64 as Math } from "abdk/ABDKMath64x64.sol";
+import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibFleetCombat {
   function attack(
@@ -277,6 +278,7 @@ library LibFleetCombat {
       time += Math.mulu(Math.log_2(divided), 27);
     }
     time *= 60;
+    return (time * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
   }
 
   function resolvePirateAsteroid(bytes32 playerEntity, bytes32 pirateAsteroid) internal {

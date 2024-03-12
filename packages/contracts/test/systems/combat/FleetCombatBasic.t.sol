@@ -377,6 +377,10 @@ contract FleetCombatSystemTest is PrimodiumTest {
     world.attack(aliceFleetEntity, bobHomeAsteroid);
 
     uint256 cooldown = LibFleetCombat.getCooldownTime(aliceAttack, false);
+    switchPrank(creator);
+    P_GameConfig.setWorldSpeed(P_GameConfig.getWorldSpeed() / 10);
+    uint256 slowCooldown = LibFleetCombat.getCooldownTime(aliceAttack, false);
+    assertEq(cooldown * 10, slowCooldown);
     assertEq(CooldownEnd.get(aliceFleetEntity), block.timestamp + cooldown);
     assertGt(CooldownEnd.get(aliceFleetEntity), block.timestamp);
   }
