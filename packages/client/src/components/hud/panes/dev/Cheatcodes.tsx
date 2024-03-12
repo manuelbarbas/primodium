@@ -18,6 +18,7 @@ export const Cheatcodes = () => {
 
   return (
     <div
+      className="font-mono"
       onMouseEnter={() => {
         input.disableInput();
         input2.disableInput();
@@ -44,7 +45,7 @@ export const Cheatcodes = () => {
         pinnable
         persist
       >
-        <CheatcodesList cheatcodes={setupCheatcodes(mud)} className="h-[700px]" />
+        <CheatcodesList cheatcodes={setupCheatcodes(mud)} className="h-[700px] w-[500px] font-mono" />
       </Widget>
     </div>
   );
