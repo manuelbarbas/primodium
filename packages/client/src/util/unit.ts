@@ -51,7 +51,7 @@ export function getUnitStatsLevel(entity: Entity, level: bigint) {
   const decryption = comps.P_CapitalShipConfig.get()?.decryption ?? 0n;
   return {
     ATK: attack,
-    DEF: defense,
+    CTR: defense,
     SPD: speed,
     CGO: cargo,
     HP: hp,
@@ -83,7 +83,7 @@ export const getFleetStats = (fleet: Entity) => {
 
     const unitData = getUnitStats(unitEntity as Entity, spaceRock);
     ret.attack += unitData.ATK * count;
-    ret.defense += unitData.DEF * count;
+    ret.defense += unitData.CTR * count;
     ret.hp += unitData.HP * count;
     ret.cargo += unitData.CGO * count;
     ret.speed = bigIntMin(ret.speed == 0n ? BigInt(10e100) : ret.speed, unitData.SPD);
@@ -99,7 +99,7 @@ export const getFleetStatsFromUnits = (units: Map<Entity, bigint>, fleetOwner?: 
   units.forEach((count, unit) => {
     const unitData = getUnitStats(unit as Entity, fleetOwner ?? selectedRock);
     data.attack += unitData.ATK * count;
-    data.defense += unitData.DEF * count;
+    data.defense += unitData.CTR * count;
     data.hp += unitData.HP * count;
     data.cargo += unitData.CGO * count;
     data.decryption = bigIntMax(data.decryption, unitData.DEC);

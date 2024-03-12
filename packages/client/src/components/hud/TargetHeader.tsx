@@ -33,7 +33,7 @@ export const TargetHeader = ({ entity: selectedSpacerock, hideStats }: { entity:
             <IconLabel
               imageUri={ResourceImage.get(EntityType.HP) ?? ""}
               text={formatResourceCount(EntityType.Iron, strength, { short: true, fractionDigits: 2 })}
-              tooltipText="Defense"
+              tooltipText="Strength"
               tooltipDirection="bottom"
             />
             <IconLabel

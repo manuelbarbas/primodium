@@ -32,6 +32,7 @@ import { Chat } from "./panes/chat/Chat";
 import { Cheatcodes } from "./panes/dev/Cheatcodes";
 import { Hangar } from "./panes/hangar/Hangar";
 import { Resources } from "./panes/resources/Resources";
+
 export const GameHUD = memo(() => {
   const {
     playerAccount: { entity: playerEntity },
