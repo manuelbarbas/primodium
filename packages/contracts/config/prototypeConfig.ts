@@ -166,7 +166,7 @@ const storageUnitMaxResourceUpgrades = {
 const samSiteMaxResourceUpgrades = {
   1: { R_HP: 1000 },
   2: { R_HP: 2500 },
-  3: { R_HP: 5000 },
+  3: { R_HP: 7500 },
 };
 
 const maxRange = { xBounds: 37, yBounds: 25 };
