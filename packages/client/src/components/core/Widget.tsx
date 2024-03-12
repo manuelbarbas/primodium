@@ -194,7 +194,7 @@ export const Content: React.FC<WidgetContentProps> = memo(
         </div>
 
         <Card
-          className={`relative !p-0 min-w-72 border border-t-success border-secondary !pointer-events-none filter ${
+          className={`relative !p-0 min-w-72 border border-t-success border-secondary filter ${
             minimized ? "!border-0 h-0 overflow-hidden opacity-0" : ""
           }`}
         >
@@ -265,7 +265,7 @@ export const Widget: React.FC<WidgetProps> = memo(
         }
 
         const { container: _container, obj } = _camera.createDOMContainer(id, _coord, raw);
-        obj.pointerEvents = "none";
+        // obj.pointerEvents = "none";
         obj.setAlpha(pinned ? minOpacity : 1);
         obj.setDepth(pinned || defaultPinned ? pinnedDepth : unpinnedDepth);
         setContainer(obj);

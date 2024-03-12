@@ -12,7 +12,9 @@ export const IconLabel: React.FC<{
     <span className={`${className} inline-flex items-center`}>
       {tooltipText && (
         <Tooltip text={tooltipText} direction={tooltipDirection}>
-          <img src={imageUri} alt={text} className={`pixel-images w-[1em] scale-150`} />
+          <span>
+            <img src={imageUri} alt={text} className={`pixel-images w-[1em] scale-150 `} />
+          </span>
         </Tooltip>
       )}
 
