@@ -3,6 +3,7 @@ import { EBuilding } from "contracts/config/enums";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
+import { TxQueueOptions } from "src/network/components/customComponents/TransactionQueueComponent";
 import { MUD } from "src/network/types";
 import { getBuildingTopLeft } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
@@ -11,7 +12,12 @@ import { getSystemId, hashEntities } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const buildBuilding = async (mud: MUD, building: EBuilding, coord: Coord & { parent?: Hex }) => {
+export const buildBuilding = async (
+  mud: MUD,
+  building: EBuilding,
+  coord: Coord & { parent?: Hex },
+  options?: Partial<TxQueueOptions<TransactionQueueType.Upgrade>>
+) => {
   const activeAsteroid = components.ActiveRock.get()?.value;
   if (!activeAsteroid) return;
 
@@ -33,6 +39,7 @@ export const buildBuilding = async (mud: MUD, building: EBuilding, coord: Coord 
         coord: getBuildingTopLeft(coord, BuildingEntityLookup[building]),
         buildingType: BuildingEntityLookup[building],
       },
+      ...options,
     },
     (receipt) => {
       ampli.systemBuild({

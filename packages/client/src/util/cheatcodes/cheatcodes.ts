@@ -2,6 +2,7 @@ import { Primodium } from "@game/api";
 import { Scenes } from "@game/constants";
 import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
+import { Coord } from "@latticexyz/utils";
 import { Cheatcode, Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import { EBuilding, EResource } from "contracts/config/enums";
 import encodeBytes32 from "contracts/config/util/encodeBytes32";
@@ -12,13 +13,14 @@ import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { buildBuilding } from "src/network/setup/contractCalls/buildBuilding";
 import { createFleet as callCreateFleet } from "src/network/setup/contractCalls/createFleet";
 import { setComponentValue } from "src/network/setup/contractCalls/dev";
-import { upgradeBuilding } from "src/network/setup/contractCalls/upgradeBuilding";
+import { upgradeBuilding as upgradeBuildingCall } from "src/network/setup/contractCalls/upgradeBuilding";
 import { MUD } from "src/network/types";
 import { encodeEntity, hashEntities, hashKeyEntity, toHex32 } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
 import { getBlockTypeName } from "../common";
 import {
+  BuildingEnumLookup,
   EntityType,
   PIRATE_KEY,
   RESOURCE_SCALE,
@@ -27,8 +29,10 @@ import {
   UtilityStorages,
 } from "../constants";
 import { entityToRockName } from "../name";
-import { formatResourceCount } from "../number";
+import { formatResourceCount, parseResourceCount } from "../number";
+import { getAsteroidBounds, outOfBounds } from "../outOfBounds";
 import { getFullResourceCount } from "../resource";
+import { getBuildingAtCoord } from "../tile";
 import { TesterPack, testerPacks } from "./testerPacks";
 
 export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
@@ -99,7 +103,8 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
     });
     const currentResourceCount = components.ResourceCount.get(entity)?.value ?? 0n;
     const newResourceCount = currentResourceCount + value;
-    if (components.MaxResourceCount.get(entity)?.value ?? 0n < newResourceCount) {
+    const maxResourceCount = components.MaxResourceCount.get(entity)?.value ?? 0n;
+    if (maxResourceCount < newResourceCount) {
       systemCalls.push(
         setComponentValue(
           mud,
@@ -195,16 +200,195 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
     return ret;
   }
 
-  async function createFleet(unit: Entity, count: number) {
+  async function createFleet(
+    units: { unit: Entity; count: number }[],
+    resources: { resource: Entity; count: number }[]
+  ) {
     const asteroid = mud.components.ActiveRock.get()?.value;
     if (!asteroid) throw new Error("No asteroid found");
     await provideResource(asteroid, EntityType.FleetCount, 1n);
-    await provideUnit(asteroid, unit, BigInt(count));
-    await callCreateFleet(mud, asteroid, new Map([[unit, BigInt(count)]]));
+    const unitPromises: Promise<void>[] = [];
+    units.map(async ({ unit, count }) => {
+      unitPromises.push(provideUnit(asteroid, unit, BigInt(count)));
+    });
+    resources.map(async ({ resource, count }) => {
+      unitPromises.push(provideResource(asteroid, resource, parseResourceCount(resource, count.toString())));
+    });
+    await Promise.all(unitPromises);
+    await callCreateFleet(
+      mud,
+      asteroid,
+      new Map([
+        ...(units.map(({ unit, count }) => [unit, BigInt(count)]) as [Entity, bigint][]),
+        ...resources.map(
+          ({ resource, count }) => [resource, parseResourceCount(resource, count.toString())] as [Entity, bigint]
+        ),
+      ])
+    );
+  }
+
+  async function upgradeBuilding(building: Entity, level: number | "max" = "max") {
+    const position = components.Position.get(building);
+    if (!position) {
+      toast.error("No building position ");
+      throw new Error("No building position");
+    }
+
+    const prototype = components.BuildingType.get(building)?.value ?? EntityType.IronMine;
+    let currLevel = components.Level.get(building)?.value ?? 1n;
+    let newLevel: bigint;
+    if (!level) newLevel = components.Level.get(building)?.value ?? 1n + 1n;
+    else if (level === "max") newLevel = components.P_MaxLevel.get(prototype as Entity)?.value ?? 1n;
+    else newLevel = BigInt(level);
+
+    if (newLevel < currLevel) {
+      toast.error("Cannot downgrade building");
+      throw new Error("Cannot downgrade building");
+    }
+    while (currLevel < newLevel) {
+      await provideBuildingRequiredResources(position.parent as Entity, prototype as Entity, currLevel + 1n);
+      await upgradeBuildingCall(mud, position, { force: true });
+      currLevel++;
+    }
+  }
+
+  async function waitUntilTxQueueEmpty() {
+    let txQueueSize = components.TransactionQueue.getSize();
+    while (txQueueSize > 0) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      txQueueSize = components.TransactionQueue.getSize();
+    }
+  }
+  function setupTesterPackCheatcodes(
+    testerPacks: Record<string, TesterPack>,
+    mud: MUD,
+    primodium: Primodium
+  ): Record<string, Cheatcode> {
+    mud;
+    primodium;
+    return Object.fromEntries(
+      Object.entries(testerPacks).map(([name, pack]) => {
+        return [
+          name,
+          {
+            params: [],
+            function: async () => {
+              toast.info(`running cheatcode: ${name}`);
+              const activeAsteroid = mud.components.ActiveRock.get()?.value;
+              if (!activeAsteroid) throw new Error("No active asteroid found");
+
+              if (pack.mainBaseLevel) {
+                const mainBase = mud.components.Home.get(activeAsteroid)?.value;
+                //upgrade main base
+                if (mainBase) {
+                  await upgradeBuilding(mainBase as Entity, pack.mainBaseLevel);
+                }
+                await waitUntilTxQueueEmpty();
+              }
+              // upgrade expansion
+              if (pack.expansion) {
+                await setComponentValue(
+                  mud,
+                  mud.components.Level,
+                  { entity: activeAsteroid as Hex },
+                  {
+                    value: BigInt(pack.expansion),
+                  }
+                );
+
+                await waitUntilTxQueueEmpty();
+              }
+              // build buildings
+              if (pack.buildings) {
+                const usedCoords: Coord[] = [];
+                for (const building of pack.buildings) {
+                  await provideBuildingRequiredResources(activeAsteroid, building, 1n);
+                  const position = findTilePosition(activeAsteroid, building, usedCoords);
+                  usedCoords.push(position);
+                  await buildBuilding(mud, BuildingEnumLookup[building], position, {
+                    force: true,
+                  });
+                }
+
+                await waitUntilTxQueueEmpty();
+              }
+              // create fleets
+              if (pack.fleets) {
+                for (const fleet of pack.fleets) {
+                  await createFleet(
+                    [...fleet.units.entries()].map(([unit, count]) => ({ unit, count })),
+                    [...fleet.resources.entries()].map(([resource, count]) => ({ resource, count }))
+                  );
+                }
+
+                await waitUntilTxQueueEmpty();
+              }
+              if (pack.resources) {
+                // provide resources
+                for (const [resource, count] of pack.resources.entries()) {
+                  await provideResource(activeAsteroid, resource, parseResourceCount(resource, count.toString()));
+                }
+
+                waitUntilTxQueueEmpty();
+              }
+              // provide units
+              if (pack.units) {
+                for (const [unit, count] of pack.units.entries()) {
+                  await provideUnit(activeAsteroid, unit, BigInt(count));
+                }
+              }
+            },
+          },
+        ];
+      })
+    );
+  }
+  function canPlaceBuildingTiles(
+    asteroidEntity: Entity,
+    buildingPrototype: Entity,
+    position: Coord,
+    usedCoords?: Coord[]
+  ) {
+    const blueprint = components.P_Blueprint.get(buildingPrototype)?.value ?? [];
+    const absoluteCoords = [];
+    for (let i = 0; i < blueprint.length; i += 2) {
+      const relativeCoord = { x: blueprint[i], y: blueprint[i + 1] };
+      const absoluteCoord = {
+        x: position.x + relativeCoord.x,
+        y: position.y + relativeCoord.y,
+      };
+      absoluteCoords.push(absoluteCoord);
+      if (usedCoords?.some((usedCoord) => absoluteCoord.x === usedCoord.x && absoluteCoord.y === usedCoord.y))
+        return false;
+      if (getBuildingAtCoord(absoluteCoord, asteroidEntity as Entity) || outOfBounds(absoluteCoord, asteroidEntity))
+        return false;
+    }
+
+    usedCoords?.push(...absoluteCoords);
+    return true;
+  }
+
+  function findTilePosition(asteroidEntity: Entity, building: Entity, usedCoords?: Coord[]) {
+    const mapId = components.Asteroid.get(asteroidEntity)?.mapId ?? 1;
+    const bounds = getAsteroidBounds(asteroidEntity);
+    for (let i = bounds.minX; i < bounds.maxX; i++) {
+      for (let j = bounds.minY; j < bounds.maxY; j++) {
+        const coord = { x: i, y: j, asteroidEntity };
+        if (usedCoords?.some((usedCoord) => coord.x === usedCoord.x && coord.y === usedCoord.y)) continue;
+
+        if (getBuildingAtCoord(coord, asteroidEntity as Entity)) continue;
+
+        const resource = components.P_RequiredTile.get(building)?.value;
+        if (!!resource && resource !== components.P_Terrain.getWithKeys({ mapId, x: coord.x, y: coord.y })?.value)
+          continue;
+        if (!canPlaceBuildingTiles(asteroidEntity, building, coord, usedCoords)) continue;
+        return coord;
+      }
+    }
+    throw new Error("Valid tile position not found");
   }
 
   const packs = setupTesterPackCheatcodes(testerPacks, mud, primodium);
-  console.log(packs);
   return [
     {
       title: "Tester Packs",
@@ -270,6 +454,21 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
     {
       title: "Asteroid",
       content: {
+        buildBuilding: {
+          params: [{ name: "building", type: "dropdown", dropdownOptions: Object.keys(buildings) }],
+          function: async (building: string) => {
+            const selectedRock = mud.components.ActiveRock.get()?.value;
+            const buildingEntity = buildings[building];
+            if (!buildingEntity || !selectedRock) throw new Error("Building not found");
+
+            await provideBuildingRequiredResources(selectedRock, buildingEntity, 1n);
+            await buildBuilding(
+              mud,
+              BuildingEnumLookup[buildingEntity],
+              findTilePosition(selectedRock, buildingEntity)
+            );
+          },
+        },
         upgradeBuilding: {
           params: [
             {
@@ -281,29 +480,11 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
           function: async (level?: string) => {
             const selectedBuilding = mud.components.SelectedBuilding.get()?.value;
 
-            const position = components.Position.get(selectedBuilding);
-            if (!position || !selectedBuilding) {
+            if (!selectedBuilding) {
               toast.error("No building selected");
               throw new Error("No building selected");
             }
-
-            const prototype = components.BuildingType.get(selectedBuilding)?.value ?? EntityType.IronMine;
-            let currLevel = components.Level.get(selectedBuilding)?.value ?? 1n;
-            let newLevel: bigint;
-            if (!level) newLevel = components.Level.get(selectedBuilding)?.value ?? 1n + 1n;
-            else if (level === "max") newLevel = components.P_MaxLevel.get(prototype as Entity)?.value ?? 1n;
-            else newLevel = BigInt(level);
-
-            if (newLevel < currLevel) {
-              toast.error("Cannot downgrade building");
-              throw new Error("Cannot downgrade building");
-            }
-            while (currLevel < newLevel) {
-              await provideBuildingRequiredResources(position.parent as Entity, prototype as Entity, currLevel + 1n);
-              await upgradeBuilding(mud, position, { force: true });
-              currLevel++;
-            }
-            toast.success("Building Level set to " + newLevel);
+            await upgradeBuilding(selectedBuilding, level == "max" ? "max" : Number(level));
           },
         },
         setExpansion: {
@@ -325,16 +506,6 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
           },
         },
 
-        setupBuildBuilding: {
-          params: [{ name: "building", type: "dropdown", dropdownOptions: Object.keys(buildings) }],
-          function: async (building: string) => {
-            const selectedRock = mud.components.ActiveRock.get()?.value;
-            const buildingEntity = buildings[building];
-            if (!buildingEntity || !selectedRock) throw new Error("Building not found");
-
-            await provideBuildingRequiredResources(selectedRock, buildingEntity, 1n);
-          },
-        },
         addUnit: {
           params: [
             { name: "unit", type: "dropdown", dropdownOptions: Object.keys(units) },
@@ -406,7 +577,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             toast.info(`Conquering ${entityToRockName(selectedRock)}`);
             const staticData = components.Asteroid.get(selectedRock)?.__staticData;
             if (staticData === "") {
-              await createFleet(EntityType.LightningCraft, 1);
+              await createFleet([{ unit: EntityType.LightningCraft, count: 1 }], []);
               toast.error("Asteroid not initialized. Send fleet to initialize it");
               throw new Error("Asteroid not initialized");
             }
@@ -595,27 +766,4 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
       },
     },
   ];
-};
-
-const setupTesterPackCheatcodes = (
-  testerPacks: Record<string, TesterPack>,
-  mud: MUD,
-  primodium: Primodium
-): Record<string, Cheatcode> => {
-  mud;
-  primodium;
-  return Object.fromEntries(
-    Object.entries(testerPacks).map(([name, pack]) => {
-      return [
-        name,
-        {
-          params: [],
-          function: async () => {
-            toast.info(`running cheatcode: ${name}`);
-            console.log(pack);
-          },
-        },
-      ];
-    })
-  );
 };
