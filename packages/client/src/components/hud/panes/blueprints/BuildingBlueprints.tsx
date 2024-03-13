@@ -109,7 +109,7 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ building
       EntityType.PVCellFactory,
       EntityType.AlloyFactory,
       EntityType.SolarPanel,
-      EntityType.NULL,
+      EntityType.NULL, EntityType.NULL, EntityType.NULL
     ];
   }, [mapId]);
 
@@ -130,7 +130,11 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ building
     EntityType.Shipyard,
   ];
 
-  const infrastructureBuildings = [EntityType.StarmapperStation, EntityType.Market];
+  const infrastructureBuildings = [
+    EntityType.StarmapperStation, 
+    EntityType.Market,
+    EntityType.NULL,EntityType.NULL,EntityType.NULL
+  ];
 
   const keybinds = [
     KeybindActions.Hotbar0,
@@ -173,10 +177,12 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ building
     [buildingsToShow]
   );
 
+  const isSpecialCategory = buildingTypeToShow === 2 || buildingTypeToShow === 3;
+
   return (
     <>
       <div
-        className="flex flex-wrap p-3 w-60 h-96 overflow-y-auto"
+        className={`flex flex-wrap p-3 ${isSpecialCategory ? 'w-40' : 'max-w-60'} h-[28.5rem] gap-y-1.5 overflow-y-auto`}
         style={{
           scrollbarWidth: "none" /* For Firefox */,
           msOverflowStyle: "none" /* For Internet Explorer and Edge */,
@@ -187,18 +193,15 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ building
 
         {buildingsWithDimensions.map(({ type, dimensions }, i) => {
           // for dummies
-          const updatedDimensions = type === EntityType.NULL ? { width: 2, height: -2 } : dimensions;
-
-          if (type === EntityType.NULL) return <div key={i} className="w-24 h-24" />;
+          if (type === EntityType.NULL) return <div key={i} className="w-24 h-16" />;
 
           return (
             <BlueprintButton
               key={i}
-              // tooltipDirection="top"
               buildingType={type}
               style={{
-                width: `${65 + 20 * (updatedDimensions.width - 1)}px`,
-                height: `${65 + 20 * (updatedDimensions.height - 1)}px`,
+                width: `${65 + 20 * (dimensions.width - 1)}px`,
+                height: `${65 + 20 * (dimensions.height - 1)}px`,
               }}
             />
           );
