@@ -294,15 +294,16 @@ contract PrimodiumTest is MudTest {
     vm.stopPrank();
   }
 
-  function buildBuilding(address player, EBuilding building) internal {
+  function buildBuilding(address player, EBuilding building) internal returns (bytes32) {
     P_RequiredResourcesData memory requiredResources = getBuildCost(building);
     PositionData memory position = getTilePosition(Home.get(addressToEntity(player)), building);
     provideResources(position.parent, requiredResources);
     uint256 requiredMainBaseLevel = P_RequiredBaseLevel.get(P_EnumToPrototype.get(BuildingKey, uint8(building)), 1);
     upgradeMainBase(player, requiredMainBaseLevel);
     vm.startPrank(player);
-    world.build(building, position);
+    bytes32 building = world.build(building, position);
     vm.stopPrank();
+    return building;
   }
 
   function provideMaxStorage(bytes32 spaceRock, P_RequiredResourcesData memory requiredResources) internal {
