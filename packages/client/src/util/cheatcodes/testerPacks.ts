@@ -17,14 +17,14 @@ export type TesterPack = {
 
 export const testerPacks: Record<string, TesterPack> = {
   starterPack: {
-    expansion: 2,
+    mainBaseLevel: 2,
+    expansion: 4,
     buildings: [
       EntityType.Garage,
       EntityType.IronMine,
       EntityType.IronMine,
       EntityType.CopperMine,
       EntityType.CopperMine,
-      EntityType.PVCellFactory,
       EntityType.AlloyFactory,
       EntityType.Market,
       EntityType.Shipyard,
@@ -32,6 +32,8 @@ export const testerPacks: Record<string, TesterPack> = {
       EntityType.DroneFactory,
       EntityType.Garage,
       EntityType.SolarPanel,
+      EntityType.Hangar,
+      EntityType.PVCellFactory,
     ],
     fleets: [
       {
@@ -39,7 +41,15 @@ export const testerPacks: Record<string, TesterPack> = {
         resources: new Map([[EntityType.Iron, 100]]),
       },
     ],
-    resources: new Map([[EntityType.Iron, 100]]),
-    units: new Map([[EntityType.AnvilDrone, 69]]),
+    resources: new Map([
+      [EntityType.Kimberlite, 10000],
+      [EntityType.Platinum, 10000],
+      [EntityType.Iridium, 10000],
+      [EntityType.Titanium, 10000],
+    ]),
+    units: new Map([
+      [EntityType.AnvilDrone, 69],
+      [EntityType.MinutemanMarine, 69000],
+    ]),
   },
 };

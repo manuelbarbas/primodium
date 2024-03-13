@@ -223,7 +223,8 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
         ...resources.map(
           ({ resource, count }) => [resource, parseResourceCount(resource, count.toString())] as [Entity, bigint]
         ),
-      ])
+      ]),
+      { force: true }
     );
   }
 
@@ -273,10 +274,26 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
           {
             params: [],
             function: async () => {
+              const start = Date.now();
               toast.info(`running cheatcode: ${name}`);
               const activeAsteroid = mud.components.ActiveRock.get()?.value;
               if (!activeAsteroid) throw new Error("No active asteroid found");
+              if (pack.resources) {
+                // provide resources
+                for (const [resource, count] of pack.resources.entries()) {
+                  await provideResource(activeAsteroid, resource, parseResourceCount(resource, count.toString()));
+                  await waitUntilTxQueueEmpty();
+                }
 
+                toast.success(`${name}:Resources provided`);
+              }
+              // provide units
+              if (pack.units) {
+                for (const [unit, count] of pack.units.entries()) {
+                  await provideUnit(activeAsteroid, unit, BigInt(count));
+                  await waitUntilTxQueueEmpty();
+                }
+              }
               if (pack.mainBaseLevel) {
                 const mainBase = mud.components.Home.get(activeAsteroid)?.value;
                 //upgrade main base
@@ -284,6 +301,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
                   await upgradeBuilding(mainBase as Entity, pack.mainBaseLevel);
                 }
                 await waitUntilTxQueueEmpty();
+                toast.success(`${name}: Main Base Level set to ${pack.mainBaseLevel}`);
               }
               // upgrade expansion
               if (pack.expansion) {
@@ -295,8 +313,8 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
                     value: BigInt(pack.expansion),
                   }
                 );
-
                 await waitUntilTxQueueEmpty();
+                toast.success(`${name}:Expansion set to ${pack.expansion}`);
               }
               // build buildings
               if (pack.buildings) {
@@ -308,9 +326,11 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
                   await buildBuilding(mud, BuildingEnumLookup[building], position, {
                     force: true,
                   });
+                  await waitUntilTxQueueEmpty();
                 }
 
                 await waitUntilTxQueueEmpty();
+                toast.success(`${name}:Buildings created`);
               }
               // create fleets
               if (pack.fleets) {
@@ -319,24 +339,14 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
                     [...fleet.units.entries()].map(([unit, count]) => ({ unit, count })),
                     [...fleet.resources.entries()].map(([resource, count]) => ({ resource, count }))
                   );
+                  await waitUntilTxQueueEmpty();
                 }
 
-                await waitUntilTxQueueEmpty();
+                toast.success(`${name}:Fleets created`);
               }
-              if (pack.resources) {
-                // provide resources
-                for (const [resource, count] of pack.resources.entries()) {
-                  await provideResource(activeAsteroid, resource, parseResourceCount(resource, count.toString()));
-                }
 
-                waitUntilTxQueueEmpty();
-              }
-              // provide units
-              if (pack.units) {
-                for (const [unit, count] of pack.units.entries()) {
-                  await provideUnit(activeAsteroid, unit, BigInt(count));
-                }
-              }
+              const end = Date.now();
+              toast.success(`Cheatcode ${name} ran in ${end - start}ms`);
             },
           },
         ];
