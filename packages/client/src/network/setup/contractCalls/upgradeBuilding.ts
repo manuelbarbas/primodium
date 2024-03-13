@@ -3,6 +3,7 @@ import { Coord } from "@latticexyz/utils";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/actions";
 import { components } from "src/network/components";
+import { TxQueueOptions } from "src/network/components/customComponents/TransactionQueueComponent";
 import { MUD } from "src/network/types";
 import { getBlockTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
@@ -11,7 +12,11 @@ import { bigintToNumber } from "src/util/number";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const upgradeBuilding = async (mud: MUD, coord: Coord) => {
+export const upgradeBuilding = async (
+  mud: MUD,
+  coord: Coord,
+  options?: Partial<TxQueueOptions<TransactionQueueType.Upgrade>>
+) => {
   const asteroid = components.ActiveRock.get()?.value;
   if (!asteroid) return;
 
@@ -28,6 +33,7 @@ export const upgradeBuilding = async (mud: MUD, coord: Coord) => {
     {
       id: hashEntities(TransactionQueueType.Upgrade, coord.x, coord.y),
       type: TransactionQueueType.Upgrade,
+      ...options,
     },
     (receipt) => {
       const building = components.SelectedBuilding.get()?.value;

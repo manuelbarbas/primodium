@@ -3,7 +3,7 @@ import { CheatcodesList } from "@primodiumxyz/mud-game-tools";
 import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
-import { setupCheatcodes } from "src/util/cheatcodes";
+import { setupCheatcodes } from "src/util/cheatcodes/cheatcodes";
 import { getRandomRange } from "src/util/common";
 
 export const Cheatcodes = () => {
@@ -45,7 +45,7 @@ export const Cheatcodes = () => {
         pinnable
         persist
       >
-        <CheatcodesList cheatcodes={setupCheatcodes(mud, primodium)} className="h-[700px] w-[500px] font-mono" />
+        <CheatcodesList cheatcodes={setupCheatcodes(mud, primodium)} className="!h-[700px] !w-[500px] font-mono" />
       </Widget>
     </div>
   );
