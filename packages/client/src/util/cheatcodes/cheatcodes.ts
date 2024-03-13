@@ -2,7 +2,7 @@ import { Primodium } from "@game/api";
 import { Scenes } from "@game/constants";
 import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
-import { Cheatcodes } from "@primodiumxyz/mud-game-tools";
+import { Cheatcode, Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import { EBuilding, EResource } from "contracts/config/enums";
 import encodeBytes32 from "contracts/config/util/encodeBytes32";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
@@ -29,6 +29,7 @@ import {
 import { entityToRockName } from "../name";
 import { formatResourceCount } from "../number";
 import { getFullResourceCount } from "../resource";
+import { TesterPack, testerPacks } from "./testerPacks";
 
 export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
   const buildings: Record<string, Entity> = {
@@ -202,15 +203,12 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
     await callCreateFleet(mud, asteroid, new Map([[unit, BigInt(count)]]));
   }
 
+  const packs = setupTesterPackCheatcodes(testerPacks, mud, primodium);
+  console.log(packs);
   return [
     {
       title: "Tester Packs",
-      content: {
-        beginnerTesterPack: {
-          params: [],
-          function: async () => {},
-        },
-      },
+      content: packs,
     },
     {
       title: "Game Config",
@@ -597,4 +595,27 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
       },
     },
   ];
+};
+
+const setupTesterPackCheatcodes = (
+  testerPacks: Record<string, TesterPack>,
+  mud: MUD,
+  primodium: Primodium
+): Record<string, Cheatcode> => {
+  mud;
+  primodium;
+  return Object.fromEntries(
+    Object.entries(testerPacks).map(([name, pack]) => {
+      return [
+        name,
+        {
+          params: [],
+          function: async () => {
+            toast.info(`running cheatcode: ${name}`);
+            console.log(pack);
+          },
+        },
+      ];
+    })
+  );
 };
