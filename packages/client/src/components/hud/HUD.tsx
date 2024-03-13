@@ -31,6 +31,7 @@ import { Hangar } from "./panes/hangar/Hangar";
 import { Resources } from "./panes/resources/Resources";
 import { AsteroidLoading } from "./AsteroidLoading";
 import { useShallow } from "zustand/react/shallow";
+
 export const GameHUD = memo(() => {
   const {
     playerAccount: { entity: playerEntity },
