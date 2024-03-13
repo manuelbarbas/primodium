@@ -139,7 +139,7 @@ export async function executeBatch<T extends keyof MetadataTypes, functionName e
 
   const queuedTx = async () => {
     if (authorizing && mud.sessionAccount) {
-      const params = encodeSystemCallsFrom(IWorldAbi, mud.playerAccount.address, systemCalls).map(
+      const params = encodeSystemCallsFrom(IWorldAbi, mud.sessionAccount.entity as Hex, systemCalls).map(
         ([systemId, callData]) => ({ from: mud.playerAccount.address, systemId, callData })
       );
       const tx = await mud.sessionAccount.worldContract.write.batchCallFrom([params]);
