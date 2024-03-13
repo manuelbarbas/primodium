@@ -2,6 +2,8 @@
 pragma solidity >=0.8.21;
 
 import "test/PrimodiumTest.t.sol";
+import { UnitProductionQueue } from "src/libraries/UnitProductionQueue.sol";
+import { LibUnit } from "src/libraries/LibUnit.sol";
 
 contract ToggleBuildingSystemTest is PrimodiumTest {
   bytes32 rock = bytes32("rock");
@@ -213,23 +215,20 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
 
   function testToggleBuildingTrainingUnitsComplete() public {
     bytes32 asteroid = Home.get(player);
-    Level.set(asteroid, 2);
-    P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Garage)), 1);
-    world.build(EBuilding.Garage, getTilePosition(asteroid, EBuilding.Garage));
-    console.log("garage built");
-    P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Workshop)), 1);
+    buildBuilding(creator, EBuilding.Garage);
     PositionData memory workshopPosition = getTilePosition(asteroid, EBuilding.Workshop);
-    bytes32 workshop = world.build(EBuilding.Workshop, workshopPosition);
+    bytes32 workshop = buildBuilding(creator, EBuilding.Workshop);
 
-    console.log("workshop built");
-    P_RequiredResources.deleteRecord(P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine)), 0);
+    bytes32 minutemanEntity = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
 
-    vm.warp(block.timestamp + 10);
-    world.trainUnits(workshop, EUnit.MinutemanMarine, 10);
+    P_RequiredResourcesData memory resources = P_RequiredResources.get(minutemanEntity, 1);
+    provideResources(asteroid, resources);
+
+    vm.startPrank(creator);
+    world.trainUnits(workshop, EUnit.MinutemanMarine, 1);
+    vm.warp(block.timestamp + LibUnit.getUnitBuildTime(workshop, minutemanEntity));
     console.log("units trained");
-    vm.warp(
-      block.timestamp + P_Unit.getTrainingTime(P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine)), 1) * 10
-    );
+    assertFalse(UnitProductionQueue.isEmpty(workshop));
     world.toggleBuilding(workshopPosition);
     console.log("building toggled");
   }

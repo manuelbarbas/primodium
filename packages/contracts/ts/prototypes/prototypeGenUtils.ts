@@ -79,7 +79,7 @@ export const getPUnitData = (data: {
     defense: BigInt(data.defense * SCALE),
     cargo: BigInt(data.cargo * SCALE),
     speed: BigInt(data.speed),
-    trainingTime: BigInt(data.speed),
+    trainingTime: BigInt(data.trainingTime),
   };
 };
 /**
