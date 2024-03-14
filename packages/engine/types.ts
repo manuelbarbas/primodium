@@ -85,3 +85,8 @@ export type EmbodiedEntity<Type extends keyof GameObjectTypes> = {
   setCameraFilter: (filter: number) => void;
   type: Type;
 };
+
+export type Coord = {
+  x: number;
+  y: number;
+};
