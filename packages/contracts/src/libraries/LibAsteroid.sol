@@ -15,6 +15,7 @@ import { ExpansionKey } from "src/Keys.sol";
 import { ColoniesMap } from "src/libraries/ColoniesMap.sol";
 import { EResource } from "src/Types.sol";
 import { LibMath } from "libraries/LibMath.sol";
+import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
@@ -156,14 +157,16 @@ library LibAsteroid {
     return LibMath.getPositionByVector(distance, (i * 360) / max);
   }
 
-  function allTilesAvailable(bytes32 rock, int32[] memory xs, int32[] memory ys) internal view returns (bool) {
-    require(xs.length == ys.length, "Arrays must be of equal length");
+  //write natspec documentation
+
+  function allTilesAvailable(bytes32 rock, int32[] memory coords) internal view returns (bool) {
+    require(coords.length % 2 == 0, "Invalid coords length");
     uint256[] memory bitmap = UsedTiles.get(rock);
     if (bitmap.length == 0) return true;
 
     int32 rowLength = Dimensions.getWidth(ExpansionKey, P_MaxLevel.get(ExpansionKey));
-    for (uint256 i = 0; i < xs.length; i++) {
-      uint256 index = uint256(uint32(xs[i] * rowLength + ys[i]));
+    for (uint256 i = 0; i < coords.length; i += 2) {
+      uint256 index = uint256(uint32(coords[i] * rowLength + coords[i + 1]));
       uint256 wordIndex = index / 256;
       if (wordIndex >= bitmap.length) return false; // out of bounds (not available)
       uint256 bitIndex = index % 256;
@@ -174,13 +177,13 @@ library LibAsteroid {
     return true;
   }
 
-  function setTiles(bytes32 rock, int32[] memory xs, int32[] memory ys) internal {
-    require(xs.length == ys.length, "Arrays must be of equal length");
+  function setTiles(bytes32 rock, int32[] memory coords) internal {
+    require(coords.length % 2 == 0, "Invalid coords length");
     uint256[] memory bitmap = UsedTiles.get(rock);
 
     int32 rowLength = Dimensions.getWidth(ExpansionKey, P_MaxLevel.get(ExpansionKey));
-    for (uint256 i = 0; i < xs.length; i++) {
-      uint256 index = uint256(uint32(xs[i] * rowLength + ys[i]));
+    for (uint256 i = 0; i < coords.length; i += 2) {
+      uint256 index = uint256(uint32(coords[i] * rowLength + coords[i + 1]));
       uint256 wordIndex = index / 256;
       require(wordIndex < bitmap.length, "Tile out of bounds");
       uint256 bitIndex = index % 256;
@@ -191,13 +194,13 @@ library LibAsteroid {
     UsedTiles.set(rock, bitmap);
   }
 
-  function removeTiles(bytes32 rock, int32[] memory xs, int32[] memory ys) internal {
-    require(xs.length == ys.length, "Arrays must be of equal length");
+  function removeTiles(bytes32 rock, int32[] memory coords) internal {
+    require(coords.length % 2 == 0, "Invalid coords length");
     uint256[] memory bitmap = UsedTiles.get(rock);
 
     int32 rowLength = Dimensions.getWidth(ExpansionKey, P_MaxLevel.get(ExpansionKey));
-    for (uint256 i = 0; i < xs.length; i++) {
-      uint256 index = uint256(uint32(xs[i] * rowLength + ys[i]));
+    for (uint256 i = 0; i < coords.length; i += 2) {
+      uint256 index = uint256(uint32(coords[i] * rowLength + coords[i + 1]));
       uint256 wordIndex = index / 256;
       require(wordIndex < bitmap.length, "Tile out of bounds");
       uint256 bitIndex = index % 256;

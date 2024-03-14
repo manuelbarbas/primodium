@@ -3,9 +3,10 @@ pragma solidity >=0.8.21;
 
 import { entityToAddress } from "src/utils.sol";
 // tables
-import { IsActive, HasBuiltBuilding, Asteroid, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint } from "codegen/index.sol";
+import { TilePositions, IsActive, HasBuiltBuilding, Asteroid, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint } from "codegen/index.sol";
 
 // libraries
+import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 
@@ -136,21 +137,30 @@ library LibBuilding {
     Bounds memory bounds = getSpaceRockBounds(position.parent);
 
     bytes32[] memory tiles = new bytes32[](blueprint.length / 2);
+    int32[] memory tileCoords = new int32[](blueprint.length);
     for (uint256 i = 0; i < blueprint.length; i += 2) {
-      PositionData memory relativeCoord = PositionData(blueprint[i], blueprint[i + 1], 0);
-      PositionData memory absoluteCoord = PositionData(
-        position.x + relativeCoord.x,
-        position.y + relativeCoord.y,
-        position.parent
-      );
+      int32 x = blueprint[i] + position.x;
+      int32 y = blueprint[i + 1] + position.y;
+      tileCoords[i] = x;
+      tileCoords[i + 1] = y;
+      PositionData memory absoluteCoord = PositionData(x, y, position.parent);
       tiles[i / 2] = placeBuildingTile(buildingEntity, bounds, absoluteCoord);
     }
+
+    require(LibAsteroid.allTilesAvailable(position.parent, tileCoords), "[BuildSystem] tile unavailable");
+    LibAsteroid.setTiles(position.parent, tileCoords);
+    TilePositions.set(buildingEntity, tileCoords);
     Children.set(buildingEntity, tiles);
   }
 
   function removeBuildingTiles(PositionData memory coord) internal {
     bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
 
+    // new
+    LibAsteroid.removeTiles(coord.parent, TilePositions.get(buildingEntity));
+    TilePositions.deleteRecord(buildingEntity);
+
+    // old
     bytes32[] memory children = Children.get(buildingEntity);
     for (uint256 i = 0; i < children.length; i++) {
       require(OwnedBy.get(children[i]) != 0, "[Destroy] Cannot destroy unowned coordinate");

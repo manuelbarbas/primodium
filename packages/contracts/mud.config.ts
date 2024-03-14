@@ -379,6 +379,11 @@ export const config = mudConfig({
       valueSchema: "bytes32[]",
     },
 
+    TilePositions: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "int32[]",
+    },
+
     ProductionRate: {
       keySchema: { entity: "bytes32", resource: "uint8" },
       valueSchema: "uint256",

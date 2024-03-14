@@ -43,89 +43,82 @@ contract LibBuildingTest is PrimodiumTest {
   function testAllTilesAvailable() public {
     DimensionsData memory dimensions = Dimensions.get(ExpansionKey, P_MaxLevel.get(ExpansionKey));
     Bounds memory bounds = LibBuilding.getSpaceRockBounds(Home.get(player));
-    uint256 len = uint256(uint32((bounds.maxX - bounds.minX) * (bounds.maxY - bounds.minY)));
-    int32[] memory xs = new int32[](len);
-    int32[] memory ys = new int32[](len);
+    uint256 len = 4;
+    int32[] memory coordsToCheck = new int32[](len * 2);
 
     uint256 loopIndex = 0;
-    for (int32 i = bounds.minX; i < bounds.maxX; i++) {
-      for (int32 j = bounds.minY; j < bounds.maxY; j++) {
-        uint32 index = uint32(i * dimensions.width + j);
-        xs[loopIndex] = i;
-        ys[loopIndex] = j;
-        loopIndex++;
+    for (int32 i = bounds.minX; i < bounds.minX + 2; i++) {
+      for (int32 j = bounds.minY; j < bounds.minY + 2; j++) {
+        coordsToCheck[loopIndex] = i;
+        coordsToCheck[loopIndex + 1] = j;
+        loopIndex += 2;
       }
     }
-    assertTrue(LibAsteroid.allTilesAvailable(Home.get(addressToEntity(creator)), xs, ys));
+    assertTrue(LibAsteroid.allTilesAvailable(Home.get(addressToEntity(creator)), coordsToCheck));
   }
 
   function testSetTile() public {
-    int32[] memory setXs = new int32[](1);
-    int32[] memory setYs = new int32[](1);
-    setXs[0] = 15;
-    setYs[0] = 15;
-    //
-    LibAsteroid.setTiles(Home.get(addressToEntity(creator)), setXs, setYs);
-
+    int32[] memory coords = new int32[](2);
     Bounds memory bounds = LibBuilding.getSpaceRockBounds(Home.get(player));
-    uint256 len = uint256(uint32((bounds.maxX - bounds.minX) * (bounds.maxY - bounds.minY)));
-    int32[] memory xs = new int32[](len);
-    int32[] memory ys = new int32[](len);
+    coords[0] = bounds.minX;
+    coords[1] = bounds.minY;
+    //
+    LibAsteroid.setTiles(Home.get(addressToEntity(creator)), coords);
+
+    uint256 len = 4;
+    int32[] memory coordsToCheck = new int32[](len * 2);
 
     uint256 loopIndex = 0;
-    for (int32 i = bounds.minX; i < bounds.maxX; i++) {
-      for (int32 j = bounds.minY; j < bounds.maxY; j++) {
-        uint32 index = uint32(i * 10 + j);
-        xs[loopIndex] = i;
-        ys[loopIndex] = j;
-        loopIndex++;
+    for (int32 i = bounds.minX; i < bounds.minX + 2; i++) {
+      for (int32 j = bounds.minY; j < bounds.minY + 2; j++) {
+        coordsToCheck[loopIndex] = i;
+        coordsToCheck[loopIndex + 1] = j;
+        loopIndex += 2;
       }
     }
-    assertFalse(LibAsteroid.allTilesAvailable(Home.get(addressToEntity(creator)), xs, ys));
+    assertFalse(LibAsteroid.allTilesAvailable(Home.get(addressToEntity(creator)), coordsToCheck));
 
-    xs = new int32[](len - 1);
-    ys = new int32[](len - 1);
+    coordsToCheck = new int32[](len * 2 - 2);
     loopIndex = 0;
-    for (int32 i = bounds.minX; i < bounds.maxX; i++) {
-      for (int32 j = bounds.minY; j < bounds.maxY; j++) {
-        if (i == 15 && j == 15) {
+    for (int32 i = bounds.minX; i < bounds.minX + 2; i++) {
+      for (int32 j = bounds.minY; j < bounds.minY + 2; j++) {
+        if (i == bounds.minX && j == bounds.minY) {
           continue;
         }
-        xs[loopIndex] = i;
-        ys[loopIndex] = j;
-        loopIndex++;
+        coordsToCheck[loopIndex] = i;
+        coordsToCheck[loopIndex + 1] = j;
+        loopIndex += 2;
       }
     }
 
-    assertTrue(LibAsteroid.allTilesAvailable(Home.get(addressToEntity(creator)), xs, ys));
+    assertTrue(LibAsteroid.allTilesAvailable(Home.get(addressToEntity(creator)), coordsToCheck));
   }
 
   function testRemoveTiles() public {
+    Bounds memory bounds = LibBuilding.getSpaceRockBounds(Home.get(player));
     // Set a tile at (15, 15) as in testSetTile
-    int32[] memory setXs = new int32[](1);
-    int32[] memory setYs = new int32[](1);
-    setXs[0] = 15;
-    setYs[0] = 15;
-    LibAsteroid.setTiles(Home.get(addressToEntity(creator)), setXs, setYs);
+    int32[] memory coords = new int32[](2);
+    coords[0] = bounds.minX;
+    coords[1] = bounds.minY;
+
+    LibAsteroid.setTiles(Home.get(addressToEntity(creator)), coords);
 
     // Remove the tile at (15, 15)
-    LibAsteroid.removeTiles(Home.get(addressToEntity(creator)), setXs, setYs);
+    LibAsteroid.removeTiles(Home.get(addressToEntity(creator)), coords);
 
     // Verify that the tile at (15, 15) is available again
-    Bounds memory bounds = LibBuilding.getSpaceRockBounds(Home.get(player));
-    uint256 len = uint256(uint32((bounds.maxX - bounds.minX) * (bounds.maxY - bounds.minY)));
-    int32[] memory xs = new int32[](len);
-    int32[] memory ys = new int32[](len);
+    uint256 len = 4;
+    int32[] memory coordsToCheck = new int32[](len * 2);
 
     uint256 loopIndex = 0;
-    for (int32 i = bounds.minX; i < bounds.maxX; i++) {
-      for (int32 j = bounds.minY; j < bounds.maxY; j++) {
-        xs[loopIndex] = i;
-        ys[loopIndex] = j;
-        loopIndex++;
+    for (int32 i = bounds.minX; i < bounds.minX + 2; i++) {
+      for (int32 j = bounds.minY; j < bounds.minY + 2; j++) {
+        coordsToCheck[loopIndex] = i;
+        coordsToCheck[loopIndex + 1] = j;
+        loopIndex += 2;
       }
     }
 
-    assertTrue(LibAsteroid.allTilesAvailable(Home.get(addressToEntity(creator)), xs, ys));
+    assertTrue(LibAsteroid.allTilesAvailable(Home.get(addressToEntity(creator)), coordsToCheck));
   }
 }
