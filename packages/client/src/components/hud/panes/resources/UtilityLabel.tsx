@@ -34,3 +34,34 @@ export const UtilityLabel = ({
     </Badge>
   );
 };
+
+
+export const StorageUtilityLabel = ({
+  name,
+  resourceId,
+  asteroid,
+  showCount,
+}: {
+  name: string;
+  resourceId: Entity;
+  asteroid: Entity;
+  showCount?: boolean;
+}) => {
+  const { resourceCount, resourceStorage } = useFullResourceCount(resourceId, asteroid);
+
+  const used = resourceStorage - resourceCount;
+  const resourceIcon = ResourceImage.get(resourceId);
+
+  return (
+    <Badge className="w-full flex justify-start text-xs">
+      <IconLabel
+        tooltipText={name}
+        tooltipDirection="top"
+        imageUri={resourceIcon ?? ""}
+        text={formatResourceCount(resourceId, showCount ? resourceCount : used)}
+        className=""
+      />
+      <b className={`text-accent text-[.7rem] opacity-50`}></b>
+    </Badge>
+  );
+};
