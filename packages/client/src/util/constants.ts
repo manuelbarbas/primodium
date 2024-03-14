@@ -144,11 +144,6 @@ export const EntityType = {
 
   MainBase: toHex32("MainBase") as Entity,
   DroidBase: toHex32("DroidBase") as Entity,
-  DebugNode: toHex32("DebugNode") as Entity,
-  Miner: toHex32("Miner") as Entity,
-  LithiumMiner: toHex32("LithiumMiner") as Entity,
-  BulletFactory: toHex32("BulletFactory") as Entity,
-  Silo: toHex32("Silo") as Entity,
 
   // Basic Buildings
   IronMine: toHex32("IronMine") as Entity,
