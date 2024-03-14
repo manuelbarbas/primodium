@@ -1,11 +1,15 @@
-import { MaxLevelToTilemap } from "@game/constants";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
+import { AsteroidMap } from "../objects/AsteroidMap";
+import { getAsteroidBounds, getAsteroidMaxBounds } from "src/util/outOfBounds";
+import { decodeEntity } from "@latticexyz/store-sync/recs";
 
 export const renderTilemap = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
+
+  let asteroidMap: AsteroidMap;
 
   defineComponentSystem(systemsWorld, components.ActiveRock, ({ value }) => {
     const activeRock = value[0]?.value as Entity;
@@ -16,7 +20,32 @@ export const renderTilemap = (scene: Scene) => {
 
     if (!asteroidData) return;
 
-    //render tilemap
-    scene.tiled.render(MaxLevelToTilemap[Number(asteroidData.maxLevel)]);
+    const maxBounds = getAsteroidMaxBounds(activeRock);
+    const currentBounds = getAsteroidBounds(activeRock);
+
+    if (asteroidMap) asteroidMap.dispose();
+
+    const terrain = components.P_Terrain.getAll();
+
+    const tiles = terrain.reduce((acc, tile) => {
+      const tileId = components.P_Terrain.get(tile)?.value;
+
+      if (!tileId) return acc;
+
+      const { mapId, x, y } = decodeEntity(components.P_Terrain.metadata.keySchema, tile);
+      if (mapId !== asteroidData.mapId) return acc;
+
+      acc.push({ x, y, id: tileId });
+      return acc;
+    }, [] as { x: number; y: number; id: number }[]);
+
+    const asteroidDimensions = components.P_Asteroid.get();
+
+    if (!asteroidDimensions) return;
+
+    asteroidMap = new AsteroidMap(scene, asteroidDimensions)
+      .drawMap(asteroidData.maxLevel)
+      .drawBounds(currentBounds, maxBounds)
+      .drawResources(tiles);
   });
 };

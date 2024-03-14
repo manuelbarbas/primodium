@@ -1,4 +1,4 @@
-import { MaxLevelToTilemap, ResourceToTilesetKey, Tilesets } from "@game/constants";
+import { DepthLayers, MaxLevelToTilemap, ResourceToTilesetKey, Tilesets } from "@game/constants";
 import { Coord, Scene } from "engine/types";
 
 type Dimensions = {
@@ -26,22 +26,21 @@ function getRelativeCoord(coord: Coord, maxBounds: Bounds) {
   };
 }
 
+function isOutOfBounds(coord: Coord, bounds: Bounds) {
+  return coord.x >= bounds.maxX || coord.x < bounds.minX || coord.y >= bounds.maxY || coord.y < bounds.minY;
+}
+
 export class AsteroidMap {
   private scene: Scene;
-  private asteroidTiledMap: Phaser.Tilemaps.Tilemap | undefined;
-  private resourcesMap: Phaser.Tilemaps.Tilemap | undefined;
-  private boundsMap: Phaser.Tilemaps.Tilemap | undefined;
-  private outerBorderTileset: Phaser.Tilemaps.Tileset | null = null;
-  private innerBorderTileset: Phaser.Tilemaps.Tileset | null = null;
-  private nonBuildableTileset: Phaser.Tilemaps.Tileset | null = null;
-
-  private currentBounds: Bounds | undefined;
-  private maxBounds: Bounds | undefined;
+  private asteroidTiledMap?: Phaser.Tilemaps.Tilemap;
+  private resourcesMap?: Phaser.Tilemaps.Tilemap;
+  private boundsMap?: Phaser.Tilemaps.Tilemap;
+  private currentBounds?: Bounds;
+  private maxBounds?: Bounds;
   private asteroidDimensions: Dimensions;
 
-  constructor(scene: Scene, maxLevel: bigint, asteroidDimensions: Dimensions) {
+  constructor(scene: Scene, asteroidDimensions: Dimensions) {
     this.scene = scene;
-    this.drawMap(maxLevel);
     this.asteroidDimensions = asteroidDimensions;
   }
 
@@ -54,10 +53,8 @@ export class AsteroidMap {
   }
 
   drawMap(maxLevel: bigint) {
+    this.asteroidTiledMap?.destroy();
     this.asteroidTiledMap = this.scene.tiled.render(MaxLevelToTilemap[Number(maxLevel)]);
-    this.resourcesMap = undefined;
-    this.currentBounds = undefined;
-    this.maxBounds = undefined;
     return this;
   }
 
@@ -67,6 +64,7 @@ export class AsteroidMap {
     const tileWidth = this.scene.tiled.tileWidth;
     const tileHeight = this.scene.tiled.tileHeight;
 
+    //SETUP TILEMAP
     if (!this.boundsMap) {
       this.boundsMap = this.scene.phaserScene.add.tilemap(
         undefined,
@@ -75,39 +73,41 @@ export class AsteroidMap {
         this.asteroidDimensions.xBounds,
         this.asteroidDimensions.yBounds
       );
-
-      //handle tilesets
-      this.outerBorderTileset = this.boundsMap.addTilesetImage(
-        Tilesets.BoundsOuterBorder,
-        undefined,
-        tileWidth,
-        tileHeight,
-        1,
-        2
-      );
-
-      this.innerBorderTileset = this.boundsMap.addTilesetImage(
-        Tilesets.BoundsInnerBorder,
-        undefined,
-        tileWidth,
-        tileHeight,
-        1,
-        2
-      );
-      this.nonBuildableTileset = this.boundsMap.addTilesetImage(
-        Tilesets.BoundsNonBuildable,
-        undefined,
-        tileWidth,
-        tileHeight,
-        1,
-        2
-      );
     }
 
-    if (!this.outerBorderTileset || !this.nonBuildableTileset || !this.innerBorderTileset) return;
+    //SETUP TILESETS
+    const outerBorderTileset = this.boundsMap.addTilesetImage(
+      Tilesets.BoundsOuterBorder,
+      undefined,
+      tileWidth,
+      tileHeight,
+      1,
+      2
+    );
+
+    const innerBorderTileset = this.boundsMap.addTilesetImage(
+      Tilesets.BoundsInnerBorder,
+      undefined,
+      tileWidth,
+      tileHeight,
+      1,
+      2
+    );
+
+    const nonBuildableTileset = this.boundsMap.addTilesetImage(
+      Tilesets.BoundsNonBuildable,
+      undefined,
+      tileWidth,
+      tileHeight,
+      1,
+      2
+    );
+
+    if (!outerBorderTileset || !nonBuildableTileset || !innerBorderTileset) return this;
 
     this.boundsMap.removeAllLayers();
 
+    //SETUP LAYERS
     const maxBoundsStart = getRelativeCoord({ x: this.maxBounds.minX, y: this.maxBounds.minY }, this.maxBounds);
     const maxBoundsEnd = getRelativeCoord({ x: this.maxBounds.maxX, y: this.maxBounds.maxY }, this.maxBounds);
     const currentBoundsStart = getRelativeCoord(
@@ -123,38 +123,21 @@ export class AsteroidMap {
     const width = maxBoundsEnd.x - maxBoundsStart.x;
     const height = maxBoundsEnd.y - maxBoundsStart.y;
 
-    //handle layers
-    const outerBordersLayer = this.boundsMap.createBlankLayer(
-      "borders",
-      this.outerBorderTileset,
-      layerX,
-      layerY,
-      width,
-      height
-    );
+    const innerBorderLayer = this.boundsMap
+      .createBlankLayer("innerBorders", innerBorderTileset, layerX, layerY, width, height)
+      ?.setDepth(DepthLayers.Bounds);
 
-    const innerBorderLayer = this.boundsMap.createBlankLayer(
-      "innerBorders",
-      this.innerBorderTileset,
-      layerX,
-      layerY,
-      width,
-      height
-    );
+    const nonBuildableLayer = this.boundsMap
+      .createBlankLayer("nonBuildable", nonBuildableTileset, layerX, layerY, width, height)
+      ?.setDepth(DepthLayers.Bounds);
 
-    const nonBuildableLayer = this.boundsMap.createBlankLayer(
-      "nonBuildable",
-      this.nonBuildableTileset,
-      layerX,
-      layerY,
-      width,
-      height
-    );
+    const outerBordersLayer = this.boundsMap
+      .createBlankLayer("borders", outerBorderTileset, layerX, layerY, width, height)
+      ?.setDepth(DepthLayers.Bounds);
 
-    if (!outerBordersLayer || !nonBuildableLayer || !innerBorderLayer) return;
+    if (!outerBordersLayer || !nonBuildableLayer || !innerBorderLayer) return this;
 
-    outerBordersLayer.setDepth(10);
-
+    //DRAW LAYERS
     for (let x = maxBoundsStart.x; x < maxBoundsEnd.x; x++) {
       for (let y = maxBoundsStart.x; y < maxBoundsEnd.y; y++) {
         //outer border
@@ -237,11 +220,10 @@ export class AsteroidMap {
         nonBuildableLayer.putTileAt(2, x, y);
       }
     }
-
     nonBuildableLayer.setAlpha(0.8);
 
+    //EFFECTS
     const glowEffect = outerBordersLayer.postFX.addGlow(0x008b8b, 4, 0, false, 0.05, 30);
-
     this.scene.phaserScene.tweens.add({
       targets: nonBuildableLayer,
       alpha: { from: 0.8, to: 0.5 },
@@ -266,10 +248,12 @@ export class AsteroidMap {
   }
 
   drawResources(tiles: ResourceTile[]) {
-    if (!this.currentBounds || !this.maxBounds)
-      throw new Error("Buildable Bounds not set for asteroid map. Set bounds before setting resources.");
+    if (!this.maxBounds) {
+      console.error("Max bounds not set. drawBounds must be called before drawResources.");
+      return this;
+    }
 
-    if (!this.resourcesMap)
+    if (!this.resourcesMap) {
       this.resourcesMap = this.scene.phaserScene.add.tilemap(
         undefined,
         this.scene.tiled.tileWidth,
@@ -277,11 +261,20 @@ export class AsteroidMap {
         this.asteroidDimensions.xBounds,
         this.asteroidDimensions.yBounds
       );
+    }
+
+    const tileset = this.resourcesMap.addTilesetImage(Tilesets.Resource);
+    if (!tileset) return this;
+
+    this.resourcesMap.removeAllLayers();
+    this.resourcesMap
+      ?.createBlankLayer(Tilesets.Resource, tileset, 0, -this.asteroidDimensions.yBounds * this.scene.tiled.tileHeight)
+      ?.setDepth(DepthLayers.Resources);
 
     tiles.forEach((tile) => {
       const { id, x, y } = tile;
 
-      //TODO: Out of bounds check
+      if (isOutOfBounds({ x, y }, this.maxBounds!)) return this;
       this.resourcesMap?.putTileAt(ResourceToTilesetKey[id], x, this.asteroidDimensions.yBounds - y);
     });
 
@@ -289,6 +282,9 @@ export class AsteroidMap {
   }
 
   dispose() {
-    this.scene.tiled.dispose();
+    this.asteroidTiledMap?.destroy();
+    this.asteroidTiledMap?.destroy();
+    this.resourcesMap?.destroy();
+    this.boundsMap?.destroy();
   }
 }
