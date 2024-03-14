@@ -235,6 +235,11 @@ export const config = mudConfig({
       valueSchema: "uint8[]", // EResource
     },
 
+    // contains a bitmap
+    UsedTiles: {
+      keySchema: { entity: "bytes32" },
+      valueSchema: "uint256[]",
+    },
     // tracks the max resource a player can store
     MaxResourceCount: {
       keySchema: { entity: "bytes32", resource: "uint8" }, // EResource

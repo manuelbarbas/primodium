@@ -8,9 +8,10 @@ import { WORLD_SPEED_SCALE } from "src/constants.sol";
 import { DroidPrototypeId } from "codegen/Prototypes.sol";
 
 // tables
-import { Spawned, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, PositionData, P_GameConfigData, P_GameConfig } from "codegen/index.sol";
+import { UsedTiles, Spawned, Dimensions, DimensionsData, P_MaxLevel, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, PositionData, P_GameConfigData, P_GameConfig } from "codegen/index.sol";
 
 // libraries
+import { ExpansionKey } from "src/Keys.sol";
 import { ColoniesMap } from "src/libraries/ColoniesMap.sol";
 import { EResource } from "src/Types.sol";
 import { LibMath } from "libraries/LibMath.sol";
@@ -41,8 +42,17 @@ library LibAsteroid {
     Asteroid.set(asteroidEntity, AsteroidData({ isAsteroid: true, maxLevel: 5, mapId: 1, spawnsSecondary: true }));
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
     OwnedBy.set(asteroidEntity, ownerEntity);
+
+    DimensionsData memory dimensions = Dimensions.get(ExpansionKey, P_MaxLevel.get(ExpansionKey));
+    UsedTiles.set(asteroidEntity, new uint256[](getUsedTilesLength()));
+
     LibProduction.increaseResourceProduction(asteroidEntity, EResource.U_MaxFleets, 1);
     AsteroidCount.set(asteroidCount);
+  }
+
+  function getUsedTilesLength() private view returns (uint256) {
+    DimensionsData memory dimensions = Dimensions.get(ExpansionKey, P_MaxLevel.get(ExpansionKey));
+    return ((uint256(uint32(dimensions.width * dimensions.height))) / 256) + 1;
   }
 
   /// @notice Generates unique asteroid coord
@@ -125,6 +135,7 @@ library LibAsteroid {
     Position.set(asteroidEntity, position);
     ReversePosition.set(position.x, position.y, asteroidEntity);
     Level.set(asteroidEntity, 1);
+    UsedTiles.set(asteroidEntity, new uint256[](getUsedTilesLength()));
 
     (uint256 droidCount, uint256 encryption) = getSecondaryAsteroidUnitsAndEncryption(asteroidEntity, data.maxLevel);
     UnitCount.set(asteroidEntity, DroidPrototypeId, droidCount);
@@ -143,5 +154,57 @@ library LibAsteroid {
   /// @return position
   function getPosition(uint256 i, uint256 distance, uint256 max) internal pure returns (PositionData memory) {
     return LibMath.getPositionByVector(distance, (i * 360) / max);
+  }
+
+  function allTilesAvailable(bytes32 rock, int32[] memory xs, int32[] memory ys) internal view returns (bool) {
+    require(xs.length == ys.length, "Arrays must be of equal length");
+    uint256[] memory bitmap = UsedTiles.get(rock);
+    if (bitmap.length == 0) return true;
+
+    int32 rowLength = Dimensions.getWidth(ExpansionKey, P_MaxLevel.get(ExpansionKey));
+    for (uint256 i = 0; i < xs.length; i++) {
+      uint256 index = uint256(uint32(xs[i] * rowLength + ys[i]));
+      uint256 wordIndex = index / 256;
+      if (wordIndex >= bitmap.length) return false; // out of bounds (not available)
+      uint256 bitIndex = index % 256;
+
+      if ((bitmap[wordIndex] >> bitIndex) & 1 == 1) return false;
+    }
+
+    return true;
+  }
+
+  function setTiles(bytes32 rock, int32[] memory xs, int32[] memory ys) internal {
+    require(xs.length == ys.length, "Arrays must be of equal length");
+    uint256[] memory bitmap = UsedTiles.get(rock);
+
+    int32 rowLength = Dimensions.getWidth(ExpansionKey, P_MaxLevel.get(ExpansionKey));
+    for (uint256 i = 0; i < xs.length; i++) {
+      uint256 index = uint256(uint32(xs[i] * rowLength + ys[i]));
+      uint256 wordIndex = index / 256;
+      require(wordIndex < bitmap.length, "Tile out of bounds");
+      uint256 bitIndex = index % 256;
+
+      bitmap[wordIndex] |= (1 << bitIndex);
+    }
+
+    UsedTiles.set(rock, bitmap);
+  }
+
+  function removeTiles(bytes32 rock, int32[] memory xs, int32[] memory ys) internal {
+    require(xs.length == ys.length, "Arrays must be of equal length");
+    uint256[] memory bitmap = UsedTiles.get(rock);
+
+    int32 rowLength = Dimensions.getWidth(ExpansionKey, P_MaxLevel.get(ExpansionKey));
+    for (uint256 i = 0; i < xs.length; i++) {
+      uint256 index = uint256(uint32(xs[i] * rowLength + ys[i]));
+      uint256 wordIndex = index / 256;
+      require(wordIndex < bitmap.length, "Tile out of bounds");
+      uint256 bitIndex = index % 256;
+
+      bitmap[wordIndex] &= ~(1 << bitIndex);
+    }
+
+    UsedTiles.set(rock, bitmap);
   }
 }
