@@ -29,7 +29,7 @@ export const createFxApi = (scene: Scene) => {
   }
 
   function emitExplosion(coord: Coord, size: "sm" | "md" = "md") {
-    const { tileWidth, tileHeight } = scene.tilemap;
+    const { tileWidth, tileHeight } = scene.tiled;
     const pixelCoord = tileCoordToPixelCoord({ x: coord.x, y: -coord.y }, tileWidth, tileHeight);
     const speed = size == "md" ? 100 : 50;
 
@@ -52,7 +52,7 @@ export const createFxApi = (scene: Scene) => {
 
   function fireMissile(origin: Coord, destination: Coord, options?: { duration?: number; spray?: number }) {
     const spray = options?.spray ?? 5;
-    const { tileWidth, tileHeight } = scene.tilemap;
+    const { tileWidth, tileHeight } = scene.tiled;
     const originPixelCoord = tileCoordToPixelCoord({ x: origin.x, y: -origin.y }, tileWidth, tileHeight);
     const destinationPixelCoord = tileCoordToPixelCoord({ x: destination.x, y: -destination.y }, tileWidth, tileHeight);
 
@@ -104,7 +104,7 @@ export const createFxApi = (scene: Scene) => {
 
     if (!scene.phaserScene.scene.isActive() || scene.phaserScene.scene.isPaused() || document.hidden) return;
 
-    const { tileWidth, tileHeight } = scene.tilemap;
+    const { tileWidth, tileHeight } = scene.tiled;
     const pixelCoord = tileCoordToPixelCoord({ x: coord.x, y: -coord.y }, tileWidth, tileHeight);
     const id = uuid();
     const group = scene.objectPool.getGroup(id);

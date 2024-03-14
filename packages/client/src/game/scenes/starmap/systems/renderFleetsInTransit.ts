@@ -27,7 +27,7 @@ import { Circle, Line, Triangle } from "../../common/object-components/graphics"
 import { renderEntityOrbitingFleets } from "./renderFleetsInOrbit";
 
 export const renderFleetsInTransit = (scene: Scene) => {
-  const { tileWidth, tileHeight } = scene.tilemap;
+  const { tileWidth, tileHeight } = scene.tiled;
   const systemsWorld = namespaceWorld(world, "systems");
   const objIndexSuffix = "_fleet";
 

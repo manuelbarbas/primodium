@@ -14,7 +14,7 @@ import { Line } from "../../common/object-components/graphics";
 
 export const renderAttackLine = (scene: Scene, mud: MUD) => {
   const systemsWorld = namespaceWorld(world, "systems");
-  const { tileWidth, tileHeight } = scene.tilemap;
+  const { tileWidth, tileHeight } = scene.tiled;
   const id = "attackLine";
   const { pan, zoomTo } = createCameraApi(scene);
 

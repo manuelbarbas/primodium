@@ -8,15 +8,15 @@ import { Coord } from "@latticexyz/utils";
 
 export const renderBounds = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
-  const { tileWidth, tileHeight } = scene.tilemap;
+  const { tileWidth, tileHeight } = scene.tiled;
 
   const dims = components.P_Asteroid.get();
   if (!dims) return;
 
   const map = scene.phaserScene.add.tilemap(
     undefined,
-    scene.tilemap.tileWidth,
-    scene.tilemap.tileHeight,
+    scene.tiled.tileWidth,
+    scene.tiled.tileHeight,
     dims.xBounds,
     dims.yBounds
   );
@@ -47,8 +47,8 @@ export const renderBounds = (scene: Scene) => {
     const maxBoundsEnd = getRelativeCoord({ x: maxBounds.maxX, y: maxBounds.maxY });
     const currentBoundsStart = getRelativeCoord({ x: currentBounds.minX, y: currentBounds.minY });
     const currentBoundsEnd = getRelativeCoord({ x: currentBounds.maxX, y: currentBounds.maxY });
-    const layerX = maxBounds.minX * scene.tilemap.tileWidth;
-    const layerY = (-maxBounds.maxY + 1) * scene.tilemap.tileHeight;
+    const layerX = maxBounds.minX * scene.tiled.tileWidth;
+    const layerY = (-maxBounds.maxY + 1) * scene.tiled.tileHeight;
     const width = maxBoundsEnd.x - maxBoundsStart.x;
     const height = maxBoundsEnd.y - maxBoundsStart.y;
 

@@ -85,7 +85,7 @@ function getFleetShape(fleetEntity: Entity, position: Coord) {
 
 export const renderEntityOrbitingFleets = (rockEntity: Entity, scene: Scene) => {
   const objIndexSuffix = "_spacerockOrbits";
-  const { tileWidth, tileHeight } = scene.tilemap;
+  const { tileWidth, tileHeight } = scene.tiled;
   const playerEntity = components.Account.get()?.value;
   if (!playerEntity) return;
   const allFleets = getOrbitingFleets(rockEntity);

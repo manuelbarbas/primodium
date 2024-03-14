@@ -19,7 +19,7 @@ import { Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
 
 export const renderQueuedBuildings = (scene: Scene) => {
-  const { tileWidth, tileHeight } = scene.tilemap;
+  const { tileWidth, tileHeight } = scene.tiled;
   const systemsWorld = namespaceWorld(world, "systems");
   const objIndexSuffix = "_buildingQueued";
 

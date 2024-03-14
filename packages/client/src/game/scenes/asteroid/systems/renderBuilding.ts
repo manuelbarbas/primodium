@@ -48,7 +48,7 @@ import { hashEntities } from "src/util/encode";
 
 const MAX_SIZE = 2 ** 15 - 1;
 export const renderBuilding = (scene: Scene) => {
-  const { tileHeight, tileWidth } = scene.tilemap;
+  const { tileHeight, tileWidth } = scene.tiled;
   const systemsWorld = namespaceWorld(world, "systems");
   const spectateWorld = namespaceWorld(world, "game_spectate");
   const audio = createAudioApi(scene);

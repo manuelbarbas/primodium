@@ -9,7 +9,7 @@ import { Square } from "../../common/object-components/graphics";
 const objGraphicsIndex = (entity: Entity) => `${entity}_hoverTile_graphics`;
 
 export const renderHoverTile = (scene: Scene) => {
-  const { tileWidth, tileHeight } = scene.tilemap;
+  const { tileWidth, tileHeight } = scene.tiled;
   const systemsWorld = namespaceWorld(world, "systems");
 
   const query = [Has(components.HoverTile)];

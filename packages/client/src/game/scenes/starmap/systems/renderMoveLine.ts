@@ -17,7 +17,7 @@ export const renderMoveLine = (scene: Scene, mud: MUD) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const id = "moveLine";
   const { zoomTo } = createCameraApi(scene);
-  const { tileWidth, tileHeight } = scene.tilemap;
+  const { tileWidth, tileHeight } = scene.tiled;
 
   function render(originEntity: Entity) {
     scene.objectPool.removeGroup(id);

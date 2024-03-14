@@ -30,7 +30,7 @@ import { ObjectPosition, OnClick, SetValue } from "../../common/object-component
 import { Animation, Outline, Texture } from "../../common/object-components/sprite";
 
 export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
-  const { tileWidth, tileHeight } = scene.tilemap;
+  const { tileWidth, tileHeight } = scene.tiled;
   const systemsWorld = namespaceWorld(world, "systems");
   const objIndexSuffix = "_buildingPlacement";
 

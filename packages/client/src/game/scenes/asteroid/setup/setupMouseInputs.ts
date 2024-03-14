@@ -16,8 +16,8 @@ export const setupMouseInputs = (scene: Scene) => {
 
     const { x, y } = pixelCoordToTileCoord(
       { x: pointer.worldX, y: pointer.worldY },
-      scene.tilemap.tileWidth,
-      scene.tilemap.tileHeight
+      scene.tiled.tileWidth,
+      scene.tiled.tileHeight
     );
 
     const gameCoord = { x, y: -y };
@@ -47,8 +47,8 @@ export const setupMouseInputs = (scene: Scene) => {
   const pointerMoveSub = scene.input.pointermove$.pipe().subscribe((event) => {
     const { x, y } = pixelCoordToTileCoord(
       { x: event.worldX, y: event.worldY },
-      scene.tilemap.tileWidth,
-      scene.tilemap.tileHeight
+      scene.tiled.tileWidth,
+      scene.tiled.tileHeight
     );
 
     const mouseCoord = { x, y: -y } as Coord;

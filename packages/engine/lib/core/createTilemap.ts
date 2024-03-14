@@ -34,7 +34,6 @@ export const createTilemap = (
   let currentMap: Phaser.Tilemaps.Tilemap | null = defaultKey ? renderTilemap(defaultKey) : null;
 
   const dispose = () => {
-    // currentMap?.removeAllLayers();
     currentMap?.destroy();
   };
 

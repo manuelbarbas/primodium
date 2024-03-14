@@ -13,8 +13,8 @@ export function renderResources(scene: Scene) {
 
   const map = scene.phaserScene.add.tilemap(
     undefined,
-    scene.tilemap.tileWidth,
-    scene.tilemap.tileHeight,
+    scene.tiled.tileWidth,
+    scene.tiled.tileHeight,
     dims.xBounds,
     dims.yBounds
   );
@@ -29,7 +29,7 @@ export function renderResources(scene: Scene) {
     const tileset = map.addTilesetImage(Tilesets.Resource);
     if (!tileset) return;
 
-    map?.createBlankLayer(Tilesets.Resource, tileset, 0, -dims.yBounds * scene.tilemap.tileHeight);
+    map?.createBlankLayer(Tilesets.Resource, tileset, 0, -dims.yBounds * scene.tiled.tileHeight);
 
     const tiles = components.P_Terrain.getAll();
 

@@ -1,6 +1,7 @@
 import { Assets, EntityTypeToAnimationKey, EntityTypetoBuildingSpriteKey, SpriteKeys } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
+import { Scene } from "engine/types";
 import { safeIndex } from "src/util/array";
 
 function getAnimationAsset(level: bigint, buildingType: Entity) {
@@ -28,10 +29,10 @@ function getAssetKeyPair(level: bigint, buildingType: Entity) {
 export class Building extends Phaser.GameObjects.Sprite {
   private buildingType: Entity;
   private coord: Coord;
-  constructor(scene: Phaser.Scene, buildingType: Entity, coord: Coord) {
+  constructor(scene: Scene, buildingType: Entity, coord: Coord) {
     console.log("Building", buildingType, coord);
     const assetPair = getAssetKeyPair(1n, buildingType);
-    super(scene, coord.x, coord.y, Assets.SpriteAtlas, assetPair.sprite);
+    super(scene.phaserScene, coord.x, coord.y, Assets.SpriteAtlas, assetPair.sprite);
     assetPair.animation && this.play(assetPair.animation);
 
     this.buildingType = buildingType;
@@ -41,6 +42,8 @@ export class Building extends Phaser.GameObjects.Sprite {
   spawn() {
     //TODO: placement animation
     this.scene.add.existing(this);
+
+    return this;
   }
 
   despawn() {
@@ -48,18 +51,24 @@ export class Building extends Phaser.GameObjects.Sprite {
     this.destroy();
   }
 
-  setLevel(level: number) {
-    const assetPair = getAssetKeyPair(BigInt(level), this.buildingType);
+  setLevel(level: bigint) {
+    const assetPair = getAssetKeyPair(level, this.buildingType);
     this.setTexture(Assets.SpriteAtlas, assetPair.sprite);
     //TODO: level up animation
     assetPair.animation && this.play(assetPair.animation);
+
+    return this;
   }
 
   setOutline = (color: number, thickness: number, knockout = false) => {
     this.postFX.addGlow(color, thickness, undefined, knockout);
+
+    return this;
   };
 
   clearOutline = () => {
     this.postFX.clear();
+
+    return this;
   };
 }

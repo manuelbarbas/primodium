@@ -26,7 +26,7 @@ import { ObjectText } from "../../common/object-components/text";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 
 export const renderPirateAsteroid = (scene: Scene) => {
-  const { tileWidth, tileHeight } = scene.tilemap;
+  const { tileWidth, tileHeight } = scene.tiled;
   const systemsWorld = namespaceWorld(world, "systems");
 
   const render = (entity: Entity, coord: Coord) => {

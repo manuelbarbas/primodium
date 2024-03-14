@@ -143,8 +143,8 @@ export const setupBasicCameraMovement = (
 
     const { x, y } = pixelCoordToTileCoord(
       { x: event.worldX, y: event.worldY },
-      scene.tilemap.tileWidth,
-      scene.tilemap.tileHeight
+      scene.tiled.tileWidth,
+      scene.tiled.tileHeight
     );
 
     const gameCoord = { x, y: -y } as Coord;

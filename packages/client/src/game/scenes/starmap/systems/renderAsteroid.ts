@@ -30,7 +30,7 @@ import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroi
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 
 export const renderAsteroid = (scene: Scene) => {
-  const { tileWidth, tileHeight } = scene.tilemap;
+  const { tileWidth, tileHeight } = scene.tiled;
   const systemsWorld = namespaceWorld(world, "systems");
 
   const render = (entity: Entity, coord: Coord) => {

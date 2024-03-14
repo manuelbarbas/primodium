@@ -15,7 +15,7 @@ import { ObjectPosition } from "../../common/object-components/common";
 import { Square } from "../../common/object-components/graphics";
 
 export const renderSelectedTile = (scene: Scene) => {
-  const { tileWidth, tileHeight } = scene.tilemap;
+  const { tileWidth, tileHeight } = scene.tiled;
   const gameWorld = namespaceWorld(world, "game");
 
   const query = [Has(SelectedTile)];

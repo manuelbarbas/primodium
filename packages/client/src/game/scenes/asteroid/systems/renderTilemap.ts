@@ -17,6 +17,6 @@ export const renderTilemap = (scene: Scene) => {
     if (!asteroidData) return;
 
     //render tilemap
-    scene.tilemap.render(MaxLevelToTilemap[Number(asteroidData.maxLevel)]);
+    scene.tiled.render(MaxLevelToTilemap[Number(asteroidData.maxLevel)]);
   });
 };
