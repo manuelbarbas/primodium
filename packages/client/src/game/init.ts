@@ -1,10 +1,10 @@
 import engine from "engine";
 import gameConfig from "./config/game";
 import { Scenes } from "./constants";
-import { initAsteroidScene } from "./lib/asteroid/init";
-import { setupAudioEffects } from "./lib/common/setup/setupAudioEffects";
-import { initStarmapScene } from "./lib/starmap/init";
-import { initUIScene } from "./lib/ui/init";
+import { initAsteroidScene } from "./scenes/asteroid/init";
+import { setupAudioEffects } from "./scenes/common/setup/setupAudioEffects";
+import { initStarmapScene } from "./scenes/starmap/init";
+import { initUIScene } from "./scenes/ui/init";
 
 async function init() {
   const game = await engine.createGame(gameConfig);

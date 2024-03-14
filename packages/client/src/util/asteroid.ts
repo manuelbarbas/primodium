@@ -4,7 +4,7 @@ import { Entity } from "@latticexyz/recs";
 import { Assets } from "@game/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EFleetStance } from "contracts/config/enums";
-import { getRockSprite } from "src/game/lib/starmap/systems/utils/getSprites";
+import { getRockSprite } from "src/game/scenes/starmap/systems/utils/getSprites";
 import { components, components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
 import { getBlockTypeName } from "./common";

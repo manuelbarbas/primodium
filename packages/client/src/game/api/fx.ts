@@ -4,9 +4,9 @@ import { Coord, uuid } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { getRandomRange } from "src/util/common";
-import { ObjectPosition, OnComponentSystem, SetValue, Tween } from "../lib/common/object-components/common";
-import { Texture } from "../lib/common/object-components/sprite";
-import { ObjectText } from "../lib/common/object-components/text";
+import { ObjectPosition, OnComponentSystem, SetValue, Tween } from "../scenes/common/object-components/common";
+import { Texture } from "../scenes/common/object-components/sprite";
+import { ObjectText } from "../scenes/common/object-components/text";
 
 export const createFxApi = (scene: Scene) => {
   function outline(
