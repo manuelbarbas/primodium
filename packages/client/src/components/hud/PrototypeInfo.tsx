@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import React, { useMemo } from "react";
 
-import { EntitytoBuildingSpriteKey } from "@game/constants";
+import { EntityTypetoBuildingSpriteKey } from "@game/constants";
 import _ from "lodash";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
@@ -81,8 +81,8 @@ export const PrototypeInfo: React.FC<{
             >
               <img
                 src={
-                  EntitytoBuildingSpriteKey[building] !== undefined
-                    ? getSpriteBase64(EntitytoBuildingSpriteKey[building][0])
+                  EntityTypetoBuildingSpriteKey[building] !== undefined
+                    ? getSpriteBase64(EntityTypetoBuildingSpriteKey[building][0])
                     : undefined
                 }
                 className={`absolute bottom-0 w-14 pixel-images rounded-md`}

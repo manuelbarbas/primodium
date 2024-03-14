@@ -20,10 +20,10 @@ import {
   Assets,
   AudioKeys,
   DepthLayers,
-  EntityIDtoAnimationKey,
+  EntityTypeToAnimationKey,
   EntityToResourceSpriteKey,
   EntityToUnitSpriteKey,
-  EntitytoBuildingSpriteKey,
+  EntityTypetoBuildingSpriteKey,
   SpriteKeys,
 } from "@game/constants";
 import { createAudioApi } from "src/game/api/audio";
@@ -371,8 +371,8 @@ export const renderBuilding = (scene: Scene) => {
 };
 
 function getAssetKeyPair(entityId: Entity, buildingType: Entity) {
-  const sprites = EntitytoBuildingSpriteKey[buildingType];
-  const animations = EntityIDtoAnimationKey[buildingType];
+  const sprites = EntityTypetoBuildingSpriteKey[buildingType];
+  const animations = EntityTypeToAnimationKey[buildingType];
 
   const level = components.Level.get(entityId)?.value ? parseInt(components.Level.get(entityId)!.value.toString()) : 1;
 

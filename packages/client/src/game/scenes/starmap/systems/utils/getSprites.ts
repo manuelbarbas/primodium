@@ -1,4 +1,4 @@
-import { EntitytoBuildingSpriteKey, SpriteKeys } from "@game/constants";
+import { EntityTypetoBuildingSpriteKey, SpriteKeys } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { clampedIndex, getBlockTypeName } from "src/util/common";
 import { EntityType, MapIdToAsteroidType, RockRelationship } from "src/util/constants";
@@ -16,8 +16,8 @@ export const getRockSprite = (mapId: number, level: bigint) => {
 };
 
 export const getPrimaryRockSprite = (level: bigint) => {
-  return EntitytoBuildingSpriteKey[EntityType.Asteroid][
-    clampedIndex(Number(level) - 1, EntitytoBuildingSpriteKey[EntityType.Asteroid].length)
+  return EntityTypetoBuildingSpriteKey[EntityType.Asteroid][
+    clampedIndex(Number(level) - 1, EntityTypetoBuildingSpriteKey[EntityType.Asteroid].length)
   ];
 };
 

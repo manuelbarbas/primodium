@@ -1,4 +1,10 @@
-import { Assets, DepthLayers, EntityIDtoAnimationKey, EntitytoBuildingSpriteKey, SpriteKeys } from "@game/constants";
+import {
+  Assets,
+  DepthLayers,
+  EntityTypeToAnimationKey,
+  EntityTypetoBuildingSpriteKey,
+  SpriteKeys,
+} from "@game/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   ComponentUpdate,
@@ -43,9 +49,9 @@ export const renderBuildingMoveTool = (scene: Scene, mud: MUD) => {
 
     const buildingTool = scene.objectPool.get(objIndex, "Sprite");
 
-    const sprite = EntitytoBuildingSpriteKey[buildingPrototype][0];
-    const animation = EntityIDtoAnimationKey[buildingPrototype]
-      ? EntityIDtoAnimationKey[buildingPrototype][0]
+    const sprite = EntityTypetoBuildingSpriteKey[buildingPrototype][0];
+    const animation = EntityTypeToAnimationKey[buildingPrototype]
+      ? EntityTypeToAnimationKey[buildingPrototype][0]
       : undefined;
 
     const buildingDimensions = getBuildingDimensions(buildingPrototype);
