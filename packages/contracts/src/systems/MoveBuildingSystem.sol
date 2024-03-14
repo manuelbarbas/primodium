@@ -11,10 +11,10 @@ import { OwnedBy, BuildingType, Position, PositionData } from "codegen/index.sol
 import { LibBuilding } from "codegen/Libraries.sol";
 
 contract MoveBuildingSystem is PrimodiumSystem {
-  function moveBuilding(PositionData memory fromCoord, PositionData memory toCoord) public {
+  function moveBuilding(bytes32 buildingEntity, PositionData memory toCoord) public {
+    PositionData memory fromCoord = Position.get(buildingEntity);
     toCoord.parent = fromCoord.parent;
     bytes32 playerEntity = _player();
-    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(fromCoord);
     require(
       OwnedBy.get(fromCoord.parent) == playerEntity,
       "[MoveBuildingSystem] the rock which the building is on is not owned by the player"

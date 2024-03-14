@@ -510,35 +510,12 @@
     "name": "destroy",
     "inputs": [
       {
-        "name": "coord",
-        "type": "tuple",
-        "internalType": "struct PositionData",
-        "components": [
-          {
-            "name": "x",
-            "type": "int32",
-            "internalType": "int32"
-          },
-          {
-            "name": "y",
-            "type": "int32",
-            "internalType": "int32"
-          },
-          {
-            "name": "parent",
-            "type": "bytes32",
-            "internalType": "bytes32"
-          }
-        ]
-      }
-    ],
-    "outputs": [
-      {
         "name": "buildingEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       }
     ],
+    "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
@@ -1511,26 +1488,9 @@
     "name": "moveBuilding",
     "inputs": [
       {
-        "name": "fromCoord",
-        "type": "tuple",
-        "internalType": "struct PositionData",
-        "components": [
-          {
-            "name": "x",
-            "type": "int32",
-            "internalType": "int32"
-          },
-          {
-            "name": "y",
-            "type": "int32",
-            "internalType": "int32"
-          },
-          {
-            "name": "parent",
-            "type": "bytes32",
-            "internalType": "bytes32"
-          }
-        ]
+        "name": "buildingEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
       },
       {
         "name": "toCoord",
@@ -2457,26 +2417,9 @@
     "name": "toggleBuilding",
     "inputs": [
       {
-        "name": "coord",
-        "type": "tuple",
-        "internalType": "struct PositionData",
-        "components": [
-          {
-            "name": "x",
-            "type": "int32",
-            "internalType": "int32"
-          },
-          {
-            "name": "y",
-            "type": "int32",
-            "internalType": "int32"
-          },
-          {
-            "name": "parent",
-            "type": "bytes32",
-            "internalType": "bytes32"
-          }
-        ]
+        "name": "buildingEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
       }
     ],
     "outputs": [
@@ -2938,35 +2881,12 @@
     "name": "upgradeBuilding",
     "inputs": [
       {
-        "name": "coord",
-        "type": "tuple",
-        "internalType": "struct PositionData",
-        "components": [
-          {
-            "name": "x",
-            "type": "int32",
-            "internalType": "int32"
-          },
-          {
-            "name": "y",
-            "type": "int32",
-            "internalType": "int32"
-          },
-          {
-            "name": "parent",
-            "type": "bytes32",
-            "internalType": "bytes32"
-          }
-        ]
-      }
-    ],
-    "outputs": [
-      {
         "name": "buildingEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       }
     ],
+    "outputs": [],
     "stateMutability": "nonpayable"
   },
   {

@@ -26,11 +26,11 @@ contract DestroySystemTest is PrimodiumTest {
 
   function destroy(bytes32 buildingEntity, PositionData memory _coord) public {
     bytes32[] memory children = Children.get(buildingEntity);
-    world.destroy(_coord);
+    world.destroy(buildingEntity);
 
     for (uint256 i = 0; i < children.length; i++) {
-      assertTrue(OwnedBy.get(children[i]) == 0);
-      assertTrue(BuildingType.get(children[i]) == 0);
+      assertTrue(OwnedBy.get(children[i]) == 0, "child s has ownedby");
+      assertTrue(BuildingType.get(children[i]) == 0, "child %s has tile");
     }
 
     assertTrue(OwnedBy.get(buildingEntity) == 0, "has ownedby");
@@ -65,12 +65,12 @@ contract DestroySystemTest is PrimodiumTest {
     switchPrank(creator);
 
     PositionData memory ironPosition = getTilePosition(rock, EBuilding.IronMine);
-    world.build(EBuilding.IronMine, ironPosition);
+    bytes32 ironMine = world.build(EBuilding.IronMine, ironPosition);
     uint256 productionIncrease = P_Production.getAmounts(IronMinePrototypeId, 1)[0];
     assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), originalProduction + productionIncrease);
     assertEq(ConsumptionRate.get(spaceRockEntity, uint8(EResource.Iron)), productionReduction);
 
-    world.destroy(ironPosition);
+    world.destroy(ironMine);
     assertEq(ConsumptionRate.get(spaceRockEntity, uint8(EResource.Iron)), 0);
     assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), originalProduction);
   }
@@ -90,13 +90,13 @@ contract DestroySystemTest is PrimodiumTest {
     switchPrank(creator);
 
     PositionData memory ironPosition = getTilePosition(rock, EBuilding.IronMine);
-    world.build(EBuilding.IronMine, ironPosition);
+    bytes32 ironMine = world.build(EBuilding.IronMine, ironPosition);
     uint256 productionIncrease = P_Production.getAmounts(IronMinePrototypeId, 1)[0];
     assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), originalProduction + productionIncrease);
     assertEq(ConsumptionRate.get(spaceRockEntity, uint8(EResource.Iron)), productionReduction);
-    world.toggleBuilding(ironPosition);
+    world.toggleBuilding(ironMine);
 
-    world.destroy(ironPosition);
+    world.destroy(ironMine);
     assertEq(ConsumptionRate.get(spaceRockEntity, uint8(EResource.Iron)), 0);
     assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), originalProduction);
   }
@@ -112,10 +112,10 @@ contract DestroySystemTest is PrimodiumTest {
     switchPrank(creator);
 
     PositionData memory ironPosition = getTilePosition(rock, EBuilding.IronMine);
-    world.build(EBuilding.IronMine, ironPosition);
+    bytes32 ironMine = world.build(EBuilding.IronMine, ironPosition);
     assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), increase);
 
-    world.destroy(ironPosition);
+    world.destroy(ironMine);
     assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), 0);
   }
 
@@ -130,10 +130,10 @@ contract DestroySystemTest is PrimodiumTest {
     switchPrank(creator);
 
     PositionData memory ironPosition = getTilePosition(rock, EBuilding.IronMine);
-    world.build(EBuilding.IronMine, ironPosition);
+    bytes32 ironMine = world.build(EBuilding.IronMine, ironPosition);
     assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), increase);
-    world.toggleBuilding(ironPosition);
-    world.destroy(ironPosition);
+    world.toggleBuilding(ironMine);
+    world.destroy(ironMine);
     assertEq(ProductionRate.get(spaceRockEntity, uint8(EResource.Iron)), 0);
   }
 
@@ -148,10 +148,10 @@ contract DestroySystemTest is PrimodiumTest {
     switchPrank(creator);
     MaxResourceCount.set(spaceRockEntity, uint8(EResource.Iron), 0);
     PositionData memory ironPosition = getTilePosition(rock, EBuilding.IronMine);
-    world.build(EBuilding.IronMine, ironPosition);
+    bytes32 ironMine = world.build(EBuilding.IronMine, ironPosition);
     assertEq(MaxResourceCount.get(spaceRockEntity, uint8(EResource.Iron)), 50);
 
-    world.destroy(ironPosition);
+    world.destroy(ironMine);
     assertEq(MaxResourceCount.get(spaceRockEntity, uint8(EResource.Iron)), 0);
   }
 
@@ -166,11 +166,11 @@ contract DestroySystemTest is PrimodiumTest {
     switchPrank(creator);
     MaxResourceCount.set(spaceRockEntity, uint8(EResource.Iron), 0);
     PositionData memory ironPosition = getTilePosition(rock, EBuilding.IronMine);
-    world.build(EBuilding.IronMine, ironPosition);
+    bytes32 ironMine = world.build(EBuilding.IronMine, ironPosition);
     assertEq(MaxResourceCount.get(spaceRockEntity, uint8(EResource.Iron)), 50);
-    world.toggleBuilding(ironPosition);
+    world.toggleBuilding(ironMine);
     assertEq(MaxResourceCount.get(spaceRockEntity, uint8(EResource.Iron)), 0);
-    world.destroy(ironPosition);
+    world.destroy(ironMine);
     assertEq(MaxResourceCount.get(spaceRockEntity, uint8(EResource.Iron)), 0);
   }
 }

@@ -27,10 +27,10 @@ contract MoveBuildingSystemTest is PrimodiumTest {
     P_RequiredBaseLevel.set(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Shipyard)), 1, 0);
 
     PositionData memory originalPosition = getTilePosition(Home.get(playerEntity), building);
-    world.build(building, originalPosition);
+    bytes32 ironMine = world.build(building, originalPosition);
     PositionData memory newPosition = getTilePosition(Home.get(playerEntity), building);
     uint256 gas = gasleft();
-    world.moveBuilding(originalPosition, newPosition);
+    world.moveBuilding(ironMine, newPosition);
     console.log("after", gas - gasleft());
   }
 
@@ -45,7 +45,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
     bytes32[] memory oldChildren = Children.get(mainBaseEntity);
 
     uint256 gas = gasleft();
-    world.moveBuilding(mainBasePosition, newPosition);
+    world.moveBuilding(mainBaseEntity, newPosition);
     console.log("after", gas - gasleft());
     assertEq(
       mainBaseEntity,
@@ -87,7 +87,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
       mainBasePosition.parent
     );
 
-    world.moveBuilding(mainBasePosition, newPosition);
+    world.moveBuilding(mainBaseEntity, newPosition);
   }
 
   function testMoveSomeSameTiles() public {
@@ -99,7 +99,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
       mainBasePosition.parent
     );
 
-    world.moveBuilding(mainBasePosition, newPosition);
+    world.moveBuilding(mainBaseEntity, newPosition);
     mainBasePosition = Position.get(mainBaseEntity);
     assertEq(mainBasePosition.x, newPosition.x, "building position should have updated");
     assertEq(mainBasePosition.y, newPosition.y, "building position should have updated");
@@ -133,7 +133,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
     );
 
     uint256 gas = gasleft();
-    world.moveBuilding(mainBasePosition, newPosition);
+    world.moveBuilding(mainBaseEntity, newPosition);
     console.log("after", gas - gasleft());
     uint256 timestamp = block.timestamp;
     vm.warp(block.timestamp + 1);
@@ -197,7 +197,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
       mainBasePosition.parent
     );
 
-    world.moveBuilding(mainBasePosition, newPosition);
+    world.moveBuilding(mainBaseEntity, newPosition);
     console.log("moved success");
     uint256 timestamp = block.timestamp;
     vm.warp(block.timestamp + 1);

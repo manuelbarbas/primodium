@@ -290,7 +290,7 @@ contract PrimodiumTest is MudTest {
     );
     upgradeMainBase(player, requiredMainBaseLevel);
     vm.startPrank(player);
-    world.upgradeBuilding(Position.get(buildingEntity));
+    world.upgradeBuilding(buildingEntity);
     vm.stopPrank();
   }
 
@@ -301,9 +301,9 @@ contract PrimodiumTest is MudTest {
     uint256 requiredMainBaseLevel = P_RequiredBaseLevel.get(P_EnumToPrototype.get(BuildingKey, uint8(building)), 1);
     upgradeMainBase(player, requiredMainBaseLevel);
     vm.startPrank(player);
-    bytes32 building = world.build(building, position);
+    bytes32 b = world.build(building, position);
     vm.stopPrank();
-    return building;
+    return b;
   }
 
   function provideMaxStorage(bytes32 spaceRock, P_RequiredResourcesData memory requiredResources) internal {
