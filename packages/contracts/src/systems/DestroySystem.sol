@@ -21,7 +21,7 @@ contract DestroySystem is PrimodiumSystem {
 
     uint256 level = Level.get(buildingEntity);
 
-    LibBuilding.removeBuildingTiles(Position.get(buildingEntity));
+    LibBuilding.removeBuildingTiles(buildingEntity);
 
     Level.deleteRecord(buildingEntity);
     BuildingType.deleteRecord(buildingEntity);

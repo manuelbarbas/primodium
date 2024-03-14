@@ -36,20 +36,17 @@ contract BuildSystemTest is PrimodiumTest {
 
     PositionData memory buildingPosition = Position.get(buildingEntity);
     logPosition(buildingPosition);
-    bytes32[] memory children = Children.get(buildingEntity);
-    assertEq(blueprint.length, children.length * 2);
+    int32[] memory tilePositions = TilePositions.get(buildingEntity);
+    assertEq(blueprint.length, tilePositions.length);
 
-    for (uint256 i = 0; i < children.length; i++) {
-      PositionData memory tilePosition = Position.get(children[i]);
-      assertEq(
-        tilePosition,
-        PositionData(
-          blueprint[i * 2] + buildingPosition.x,
-          blueprint[i * 2 + 1] + buildingPosition.y,
-          buildingPosition.parent
-        )
-      );
-      assertEq(buildingEntity, OwnedBy.get(children[i]));
+    for (uint256 i = 0; i < tilePositions.length; i += 2) {
+      assertEq(tilePositions[i], blueprint[i] + buildingPosition.x);
+      assertEq(tilePositions[i + 1], blueprint[i + 1] + buildingPosition.y);
+
+      int32[] memory currPosition = new int32[](2);
+      currPosition[0] = tilePositions[i];
+      currPosition[1] = tilePositions[i + 1];
+      assertFalse(LibAsteroid.allTilesAvailable(Home.get(playerEntity), currPosition));
     }
   }
 
@@ -81,7 +78,7 @@ contract BuildSystemTest is PrimodiumTest {
     removeRequirements(EBuilding.IronMine);
     world.build(EBuilding.IronMine, ironPositionData);
 
-    vm.expectRevert(bytes("[BuildSystem] Building already exists"));
+    vm.expectRevert(bytes("[BuildSystem] Tile unavailable"));
     world.build(EBuilding.IronMine, ironPositionData);
   }
 

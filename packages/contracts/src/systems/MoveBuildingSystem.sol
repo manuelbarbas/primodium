@@ -13,11 +13,11 @@ import { LibAsteroid } from "codegen/Libraries.sol";
 
 contract MoveBuildingSystem is PrimodiumSystem {
   function moveBuilding(bytes32 buildingEntity, PositionData memory toCoord) public {
-    PositionData memory fromCoord = Position.get(buildingEntity);
-    toCoord.parent = fromCoord.parent;
+    bytes32 buildingAsteroid = Position.getParent(buildingEntity);
+    toCoord.parent = buildingAsteroid;
     bytes32 playerEntity = _player();
     require(
-      OwnedBy.get(fromCoord.parent) == playerEntity,
+      OwnedBy.get(buildingAsteroid) == playerEntity,
       "[MoveBuildingSystem] the rock which the building is on is not owned by the player"
     );
     bytes32 buildingType = BuildingType.get(buildingEntity);
@@ -25,7 +25,7 @@ contract MoveBuildingSystem is PrimodiumSystem {
       LibBuilding.canBuildOnTile(buildingType, toCoord),
       "[MoveBuildingSystem] the building cannot be placed on this resource"
     );
-    LibBuilding.removeBuildingTiles(fromCoord);
+    LibBuilding.removeBuildingTiles(buildingEntity);
     Position.set(buildingEntity, toCoord);
     LibBuilding.placeBuildingTiles(buildingEntity, buildingType, toCoord);
   }

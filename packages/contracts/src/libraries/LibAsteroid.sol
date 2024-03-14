@@ -44,7 +44,6 @@ library LibAsteroid {
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
     OwnedBy.set(asteroidEntity, ownerEntity);
 
-    DimensionsData memory dimensions = Dimensions.get(ExpansionKey, P_MaxLevel.get(ExpansionKey));
     UsedTiles.set(asteroidEntity, new uint256[](getUsedTilesLength()));
 
     LibProduction.increaseResourceProduction(asteroidEntity, EResource.U_MaxFleets, 1);

@@ -25,12 +25,15 @@ contract DestroySystemTest is PrimodiumTest {
   }
 
   function destroy(bytes32 buildingEntity, PositionData memory _coord) public {
-    bytes32[] memory children = Children.get(buildingEntity);
+    int32[] memory tilePositions = TilePositions.get(buildingEntity);
     world.destroy(buildingEntity);
 
-    for (uint256 i = 0; i < children.length; i++) {
-      assertTrue(OwnedBy.get(children[i]) == 0, "child s has ownedby");
-      assertTrue(BuildingType.get(children[i]) == 0, "child %s has tile");
+    assertEq(TilePositions.get(buildingEntity).length, 0);
+    for (uint256 i = 0; i < tilePositions.length; i += 2) {
+      int32[] memory currPosition = new int32[](2);
+      currPosition[0] = tilePositions[i];
+      currPosition[1] = tilePositions[i + 1];
+      assertTrue(LibAsteroid.allTilesAvailable(Home.get(playerEntity), currPosition));
     }
 
     assertTrue(OwnedBy.get(buildingEntity) == 0, "has ownedby");

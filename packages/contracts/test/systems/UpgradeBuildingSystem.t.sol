@@ -34,7 +34,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     PositionData memory coord = getTilePosition(rock, EBuilding.IronMine);
     bytes32 ironMine = world.build(EBuilding.IronMine, coord);
     for (uint256 i = 1; i < ironMineMaxLevel; i++) {
-      assertEq(Level.get(LibBuilding.getBuildingFromCoord(coord)), i, "building should be level i");
+      assertEq(Level.get(ironMine), i, "building should be level i");
       world.upgradeBuilding(ironMine);
     }
 

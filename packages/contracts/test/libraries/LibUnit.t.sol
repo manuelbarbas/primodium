@@ -69,8 +69,8 @@ contract LibUnitTest is PrimodiumTest {
     bytes32[] memory buildings = UnitFactorySet.getAll(Home.get(player));
     console.log("buildings", buildings.length);
     for (uint256 i = 0; i < buildings.length; i++) {
-      bytes32 building = buildings[i];
-      bytes32 asteroid = OwnedBy.get(building);
+      bytes32 bldng = buildings[i];
+      bytes32 asteroid = OwnedBy.get(bldng);
       console.log("building owner: %x", uint256(asteroid));
       console.log("is asteroid:", Asteroid.getIsAsteroid(asteroid));
     }
@@ -101,8 +101,8 @@ contract LibUnitTest is PrimodiumTest {
     bytes32[] memory buildings = UnitFactorySet.getAll(secondaryAsteroid);
     console.log("buildings", buildings.length);
     for (uint256 i = 0; i < buildings.length; i++) {
-      bytes32 building = buildings[i];
-      bytes32 asteroid = OwnedBy.get(building);
+      bytes32 bldng = buildings[i];
+      bytes32 asteroid = OwnedBy.get(bldng);
       console.log("building owner: %x", uint256(asteroid));
       console.log("is asteroid:", Asteroid.getIsAsteroid(asteroid));
     }

@@ -21,7 +21,6 @@ contract DelegationSystem is PrimodiumSystem {
     ResourceId delegationControlId,
     bytes memory initCallData
   ) public {
-    bytes32 playerEntity = _player();
     unregisterDelegation(oldAuthorizedAddress);
     SystemCall.callWithHooksOrRevert(
       _msgSender(),
