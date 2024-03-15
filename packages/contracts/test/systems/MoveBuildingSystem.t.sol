@@ -17,7 +17,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
     vm.startPrank(creator);
   }
 
-  function testMoveShipyard() public {
+  function testShipyardMove() public {
     EBuilding building = EBuilding.Shipyard;
     Dimensions.set(ExpansionKey, 1, 35, 27);
     P_RequiredResourcesData memory requiredResources = getBuildCost(building);

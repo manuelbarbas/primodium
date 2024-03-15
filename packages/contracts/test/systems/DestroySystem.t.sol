@@ -24,6 +24,22 @@ contract DestroySystemTest is PrimodiumTest {
     return world.build(EBuilding.IronMine, position);
   }
 
+  function testShipyardDestroy() public {
+    EBuilding building = EBuilding.Shipyard;
+    Dimensions.set(ExpansionKey, 1, 35, 27);
+    P_RequiredResourcesData memory requiredResources = getBuildCost(building);
+    provideResources(Home.get(playerEntity), requiredResources);
+    vm.startPrank(creator);
+    P_RequiredBaseLevel.set(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Shipyard)), 1, 0);
+
+    PositionData memory originalPosition = getTilePosition(Home.get(playerEntity), building);
+    bytes32 buildingEntity = world.build(building, originalPosition);
+
+    uint256 gas = gasleft();
+    world.destroy(buildingEntity);
+    console.log("after", gas - gasleft());
+  }
+
   function destroy(bytes32 buildingEntity, PositionData memory _coord) public {
     int32[] memory tilePositions = TilePositions.get(buildingEntity);
     world.destroy(buildingEntity);

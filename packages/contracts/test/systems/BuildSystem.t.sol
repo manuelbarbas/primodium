@@ -19,6 +19,20 @@ contract BuildSystemTest is PrimodiumTest {
 
   // todo: sort these tests. the first test should be a vanilla build system call
 
+  function testShipyardBuild() public {
+    EBuilding building = EBuilding.Shipyard;
+    Dimensions.set(ExpansionKey, 1, 35, 27);
+    P_RequiredResourcesData memory requiredResources = getBuildCost(building);
+    provideResources(Home.get(playerEntity), requiredResources);
+    vm.startPrank(creator);
+    P_RequiredBaseLevel.set(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Shipyard)), 1, 0);
+
+    PositionData memory originalPosition = getTilePosition(Home.get(playerEntity), building);
+    uint256 gas = gasleft();
+    world.build(building, originalPosition);
+    console.log("after", gas - gasleft());
+  }
+
   function testBuildLargeBuilding() public {
     ResourceAccess.set(ROOT_NAMESPACE_ID, creator, true);
 
