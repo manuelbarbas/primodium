@@ -28,7 +28,7 @@ export const moveBuilding = async (mud: MUD, building: Entity, coord: Coord) => 
       mud,
       functionName: "moveBuilding",
       systemId: getSystemId("MoveBuildingSystem"),
-      args: [{ ...prevPosition, parent: prevPosition.parent as Hex }, position],
+      args: [building as Hex, position],
       withSession: true,
       options: { gas: 3_000_000n },
     },
