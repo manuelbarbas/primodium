@@ -56,5 +56,8 @@ export const getBuildingAtCoord = (coord: Coord, asteroid: Entity) => {
 };
 
 export const reverseBuildingPositionToEntity = (coord: Coord, asteroid: Entity) => {
-  return encodeEntity({ x: "int32", y: "int32", asteroid: "bytes32" }, { ...coord, asteroid: asteroid as Hex });
+  return encodeEntity(
+    { x: "int32", y: "int32", asteroid: "bytes32" },
+    { x: coord.x, y: coord.y, asteroid: asteroid as Hex }
+  );
 };
