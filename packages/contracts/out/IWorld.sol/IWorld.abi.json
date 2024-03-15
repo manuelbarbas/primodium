@@ -5,8 +5,8 @@
     "inputs": [
       {
         "name": "accepted",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "outputs": [],
@@ -480,8 +480,8 @@
     "inputs": [
       {
         "name": "inviter",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "outputs": [],
@@ -1319,8 +1319,8 @@
     "inputs": [
       {
         "name": "target",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "role",
@@ -1367,7 +1367,7 @@
     "name": "initialize",
     "inputs": [
       {
-        "name": "coreModule",
+        "name": "initModule",
         "type": "address",
         "internalType": "contract IModule"
       }
@@ -1403,7 +1403,7 @@
         "internalType": "contract IModule"
       },
       {
-        "name": "args",
+        "name": "encodedArgs",
         "type": "bytes",
         "internalType": "bytes"
       }
@@ -1421,7 +1421,7 @@
         "internalType": "contract IModule"
       },
       {
-        "name": "args",
+        "name": "encodedArgs",
         "type": "bytes",
         "internalType": "bytes"
       }
@@ -1435,8 +1435,8 @@
     "inputs": [
       {
         "name": "target",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "outputs": [],
@@ -1461,8 +1461,8 @@
     "inputs": [
       {
         "name": "target",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "outputs": [],
@@ -1797,7 +1797,7 @@
       {
         "name": "system",
         "type": "address",
-        "internalType": "contract WorldContextConsumer"
+        "internalType": "contract System"
       },
       {
         "name": "publicAccess",
@@ -1875,8 +1875,8 @@
     "inputs": [
       {
         "name": "rejectee",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "outputs": [],
@@ -1905,6 +1905,19 @@
         "name": "liquidityB",
         "type": "uint256",
         "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "renounceOwnership",
+    "inputs": [
+      {
+        "name": "namespaceId",
+        "type": "bytes32",
+        "internalType": "ResourceId"
       }
     ],
     "outputs": [],
@@ -2001,8 +2014,8 @@
     "inputs": [
       {
         "name": "target",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "outputs": [],
@@ -2419,34 +2432,6 @@
         "name": "amountOutMin",
         "type": "uint256",
         "internalType": "uint256"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "switchDelegation",
-    "inputs": [
-      {
-        "name": "oldAuthorizedAddress",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "newAuthorizedAddress",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "delegationControlId",
-        "type": "bytes32",
-        "internalType": "ResourceId"
-      },
-      {
-        "name": "initCallData",
-        "type": "bytes",
-        "internalType": "bytes"
       }
     ],
     "outputs": [],
@@ -2889,9 +2874,22 @@
     "name": "unregisterDelegation",
     "inputs": [
       {
-        "name": "authorizedAddress",
+        "name": "delegatee",
         "type": "address",
         "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "unregisterNamespaceDelegation",
+    "inputs": [
+      {
+        "name": "namespaceId",
+        "type": "bytes32",
+        "internalType": "ResourceId"
       }
     ],
     "outputs": [],
@@ -3205,15 +3203,15 @@
   },
   {
     "type": "error",
-    "name": "Store_InvalidDynamicDataLength",
+    "name": "Store_InvalidBounds",
     "inputs": [
       {
-        "name": "expected",
+        "name": "start",
         "type": "uint256",
         "internalType": "uint256"
       },
       {
-        "name": "received",
+        "name": "end",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -3295,7 +3293,55 @@
   },
   {
     "type": "error",
+    "name": "Store_InvalidStaticDataLength",
+    "inputs": [
+      {
+        "name": "expected",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "received",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "Store_InvalidValueSchemaDynamicLength",
+    "inputs": [
+      {
+        "name": "expected",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "received",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
     "name": "Store_InvalidValueSchemaLength",
+    "inputs": [
+      {
+        "name": "expected",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "received",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "Store_InvalidValueSchemaStaticLength",
     "inputs": [
       {
         "name": "expected",
@@ -3440,6 +3486,17 @@
         "name": "interfaceId",
         "type": "bytes4",
         "internalType": "bytes4"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "World_InvalidNamespace",
+    "inputs": [
+      {
+        "name": "namespace",
+        "type": "bytes14",
+        "internalType": "bytes14"
       }
     ]
   },

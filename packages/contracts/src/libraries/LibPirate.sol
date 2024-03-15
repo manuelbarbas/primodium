@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.21;
+pragma solidity ^0.8.24;
 
 // tables
 import { P_RequiredResources, P_RequiredResourcesData, Home, P_IsUtility, P_UnitPrototypes, Asteroid, MaxResourceCount, ResourceCount, UnitCount, PirateAsteroidData, P_SpawnPirateAsteroid, P_SpawnPirateAsteroidData, PirateAsteroid, Spawned, ReversePosition, OwnedBy, Position, PositionData } from "codegen/index.sol";
