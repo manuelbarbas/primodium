@@ -27,8 +27,9 @@ export const TestComponent = () => {
   ];
 
   return (
-    <div className="bg-transparent border-none">
-      <div className="flex flex-row-reverse justify-end gap-0">
+    <div className="flex gap-0">
+
+      <div>
 
         {/* Pane */}
         <div className={`flex ${arePanesExpanded ? 'flex-row' : 'flex-col'}`}>
@@ -41,12 +42,11 @@ export const TestComponent = () => {
                 {/* Show title when expanded */}
                 {arePanesExpanded && (
                   <span
-                    className={`text-sm mt-2 px-1 ${
-                      label === 'Production' ? 'text-yellow-500' :
+                    className={`text-sm mt-2 px-1 ${label === 'Production' ? 'text-yellow-500' :
                       label === 'Military' ? 'text-lime-600' :
-                      label === 'Storage' ? 'text-violet-400' :
-                      label === 'Infrastructure' ? 'text-sky-500' : ''
-                    }`}
+                        label === 'Storage' ? 'text-violet-400' :
+                          label === 'Infrastructure' ? 'text-sky-500' : ''
+                      }`}
                     style={{ writingMode: 'vertical-lr' }}
                   >
                     {label}
@@ -57,37 +57,38 @@ export const TestComponent = () => {
           ))}
         </div>
 
-        {/* Menu Buttons (hidden when expanded) */}
-        {!arePanesExpanded && <div className="flex flex-col items-end">
-          {labels.map((label, index) => (
-            <Button key={index} onClick={() => showDiv(index)}
-              className={`text-s flex items-center bg-neutral/100 border border-secondary py-2 px-4 ${index === 0 ? "rounded-tl-lg" : ""}`}
-              style={{ writingMode: 'vertical-lr' }}>
-               <img src={imagePaths[index]} alt={label} className="w-4 h-4" />
-              {/* Show title when active */}
-              {visibleDiv === index && (
-                  <span
-                    className={` ${
-                      label === 'Production' ? 'text-yellow-500' :
-                      label === 'Military' ? 'text-lime-600' :
-                      label === 'Storage' ? 'text-violet-400' :
-                      label === 'Infrastructure' ? 'text-sky-500' : ''
-                    }`}
-                  >
-                    {label}
-                  </span>
-                )}
-            </Button>
-          ))}
-        </div>}
+        {/* Toggle Expand/Collapse button ${arePanesExpanded ? 'mr-0' : 'mr-11'} */}
+        <div className={`flex justify-end`}>
+          <Button onClick={togglePanes} className="text-[.7rem] px-1 min-h-4 bg-transparent border-none">
+            {arePanesExpanded ? "- Collapse" : "+ Expand"}
+          </Button>
+        </div>
       </div>
 
-      {/* Toggle Expand/Collapse button */}
-      <div className={`flex justify-end`}>
-        <Button onClick={togglePanes} className="text-[.7rem] px-1 min-h-4 bg-transparent border-none">
-          {arePanesExpanded ? "- Collapse" : "+ Expand"}
-        </Button>
-      </div>
+
+      {/* Menu Buttons (hidden when expanded) */}
+      {!arePanesExpanded && <div className="flex flex-col items-end">
+        {labels.map((label, index) => (
+          <Button key={index} onClick={() => showDiv(index)}
+            className={`text-s flex items-center bg-neutral/100 border border-secondary py-2 px-4 ${index === 0 ? "rounded-tr-lg" : ""}`}
+            style={{ writingMode: 'vertical-lr' }}>
+            <img src={imagePaths[index]} alt={label} className="w-4 h-4" />
+            {/* Show title when active */}
+            {visibleDiv === index && (
+              <span
+                className={` ${label === 'Production' ? 'text-yellow-500' :
+                  label === 'Military' ? 'text-lime-600' :
+                    label === 'Storage' ? 'text-violet-400' :
+                      label === 'Infrastructure' ? 'text-sky-500' : ''
+                  }`}
+              >
+                {label}
+              </span>
+            )}
+          </Button>
+        ))}
+      </div>}
     </div>
+
   );
 };

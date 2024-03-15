@@ -68,7 +68,7 @@ const BlueprintButton: React.FC<{
     >
       <BlueprintBuildingImageFromType buildingType={buildingType} />
       {!hasMainbaseLevel && (
-        <div className="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 gap-1 flex items-center justify-center text-[.5rem] bg-neutral/50">
+        <div className="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 gap-1 flex items-center justify-center text-[.5rem] bg-neutral/50 w-full">
           <span className="h-3 flex items-center justify-center gap-1 text-white bg-gray-800/50 z-30">
             <FaLock />
             <p>Level {levelRequirement.toString()}</p>
@@ -118,7 +118,7 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ building
     EntityType.StorageUnit,
     EntityType.Hangar,
     EntityType.Vault,
-    EntityType.NULL,
+    EntityType.NULL, EntityType.NULL
   ];
 
   const militaryBuildings = [
@@ -132,8 +132,9 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ building
 
   const infrastructureBuildings = [
     EntityType.StarmapperStation, 
+    EntityType.NULL,
     EntityType.Market,
-    EntityType.NULL,EntityType.NULL,EntityType.NULL
+    EntityType.NULL, EntityType.NULL, EntityType.NULL
   ];
 
   const keybinds = [
@@ -177,12 +178,13 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ building
     [buildingsToShow]
   );
 
-  const isSpecialCategory = buildingTypeToShow === 2 || buildingTypeToShow === 3;
+  // const isSpecialCategory = buildingTypeToShow === 2 || buildingTypeToShow === 3;
+  // ${isSpecialCategory ? 'w-40' : 'max-w-60'}
 
   return (
     <>
       <div
-        className={`flex flex-wrap p-3 ${isSpecialCategory ? 'w-40' : 'max-w-60'} h-[28.5rem] gap-y-1.5 overflow-y-auto`}
+        className={`flex flex-wrap p-3 w-60 h-[28.5rem] gap-y-1.5 overflow-y-auto`}
         style={{
           scrollbarWidth: "none" /* For Firefox */,
           msOverflowStyle: "none" /* For Internet Explorer and Edge */,

@@ -10,10 +10,10 @@ export const AllResourceLabels = () => {
     <div className="flex flex-col items-end p-4 bg-neutral border border-secondary">
 
       {/* Common Resources */}
-      <div className="flex flex-col gap-2 w-full">
+      <div className="flex flex-col w-full">
 
         {/* Title & Unraidable Storage */}
-        <div className="flex justify-between w-full">
+        <div className="flex justify-between w-full align-bottom">
           <p className="text-xs opacity-75 font-bold">Common</p>
           <div>
             <StorageUtilityLabel name={"Unraidable Resources"} resourceId={EntityType.Unraidable} asteroid={activeRock} />
@@ -31,10 +31,10 @@ export const AllResourceLabels = () => {
       </div>
 
       {/* Rare Resources */}
-      <div className="flex flex-col gap-2 pt-2 w-full">
+      <div className="flex flex-col pt-2 w-full">
 
         {/* Title & Unraidable Storage */}
-        <div className="flex justify-between w-full">
+        <div className="flex justify-between w-full align-bottom">
           <p className="text-xs opacity-75 font-bold">Rare</p>
           <div>
             <StorageUtilityLabel name={"Unraidable Motherlode Resources"} resourceId={EntityType.AdvancedUnraidable} asteroid={activeRock}/>

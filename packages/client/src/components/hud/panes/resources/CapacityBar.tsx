@@ -1,28 +1,42 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 
-type CapacityBarProps = {
-  current: number;
-  max: number;
+type SegmentedCapacityBarProps = {
+    current: number;
+    max: number | null;
+    segments: number;
+    name: string;
 };
 
-export const CapacityBar: FC<CapacityBarProps> = ({ current, max }) => {
-  const [percentage, setPercentage] = useState<number>(0);
+export const CapacityBar: FC<SegmentedCapacityBarProps> = ({ current, max, segments, name }) => {
 
-  useEffect(() => {
-    // Ensure the percentage does not exceed 100
-    setPercentage(Math.min(100, (current / max) * 100));
-  }, [current, max]);
+    // Calculate the number of filled segments
+    const filledSegments = max !== null && max > 0 ? Math.round((current / max) * segments) : 0;
 
-  return (
-    <div className="relative w-full bg-gray-200 rounded overflow-hidden h-6 text-xs flex items-center">
-      <div
-        style={{ width: `${percentage}%` }}
-        className={`transition-all ease-out duration-500 h-6 ${percentage < 100 ? 'bg-green-500' : 'bg-red-500'}`}
-      ></div>
-      <div className="absolute inset-0 flex justify-center items-center">
-        <span className="text-white text-sm font-bold">{current}/{max} P</span>
-      </div>
-    </div>
-  );
+    const segmentColor = (index: number) => {
+        if (current === max && index === segments - 1) return 'bg-error';
+        if (name === 'Electricity') {
+            if (index < 3) return 'bg-amber-200/80';
+            if (index < 6) return 'bg-amber-300/90';
+            return 'bg-yellow-500';
+        } else {
+            // Default color scheme
+            if (index < 3) return 'bg-emerald-400';
+            if (index < 6) return 'bg-emerald-600';
+            return 'bg-emerald-900';
+        }
+    };
+
+    return (
+        <div className="relative w-full bg-transparent overflow-hidden h-6 flex p-0.5 gap-0.5">
+            {[...Array(segments)].map((_, index) => (
+                <div
+                    key={index}
+                    className={`flex-1 h-full transition-all duration-500 ${index < filledSegments ? segmentColor(index) : 'bg-gray-400/20'
+                        }`}
+                />
+            ))}
+        </div>
+    );
 };
+
 
