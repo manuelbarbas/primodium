@@ -43,12 +43,22 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   function testClaimMainBaseLevelObjective() public {
     P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
     P_RequiredBaseLevel.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)), 1, 2);
-    Level.set(Home.get(Home.get(playerEntity)), 2);
-    MaxResourceCount.set(playerEntity, uint8(EResource.Iron), 100);
+    Level.set(Home.get(homeRock), 2);
+
     P_ResourceRewardData memory resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
     resourceRewardData.resources[0] = uint8(EResource.Iron);
     resourceRewardData.amounts[0] = 100;
+
     P_ResourceReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)), resourceRewardData);
+
+    bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine));
+    P_ResourceRewardData memory rewardData = P_ResourceReward.get(objectivePrototype);
+    console.logBytes32(homeRock);
+    for (uint256 i = 0; i < rewardData.resources.length; i++) {
+      console.log("reward amount:", rewardData.amounts[i]);
+      console.log("resource count:", ResourceCount.get(homeRock, rewardData.resources[i]));
+      console.log("max resource count:", MaxResourceCount.get(homeRock, rewardData.resources[i]));
+    }
 
     world.Primodium__claimObjective(homeRock, EObjectives.BuildIronMine);
   }

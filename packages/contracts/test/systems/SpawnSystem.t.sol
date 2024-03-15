@@ -2,6 +2,7 @@
 pragma solidity >=0.8.24;
 
 import "test/PrimodiumTest.t.sol";
+import { Systems } from "@latticexyz/world/src/codegen/tables/Systems.sol";
 
 contract SpawnSystemTest is PrimodiumTest {
   function setUp() public override {
@@ -10,6 +11,11 @@ contract SpawnSystemTest is PrimodiumTest {
 
   function testSpawnu() public {
     bytes32 playerEntity = addressToEntity(creator);
+    (address systemAddress, bool publicAccess) = Systems.get(
+      getSystemResourceId(bytes16("BuildSystem"), bytes14("Primodium"))
+    );
+    console.log("systemAddress", systemAddress);
+
     bytes32 asteroidEntity = spawn(creator);
     vm.startPrank(creator);
 

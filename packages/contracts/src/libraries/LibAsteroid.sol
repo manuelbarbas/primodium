@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import { entityToAddress, getSystemResourceId } from "src/utils.sol";
 import { AsteroidOwnedByKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 import { MainBasePrototypeId, DroidPrototypeId } from "codegen/Prototypes.sol";
@@ -131,9 +130,6 @@ library LibAsteroid {
   function initializeSpaceRockOwnership(bytes32 spaceRock, bytes32 owner) internal {
     OwnedBy.set(spaceRock, owner);
     ColoniesMap.add(owner, AsteroidOwnedByKey, spaceRock);
-    PositionData memory position = Position.get(MainBasePrototypeId);
-    position.parent = spaceRock;
-    LibBuilding.build(owner, MainBasePrototypeId, position);
   }
 
   /// @dev Calculates position based on distance and max index
