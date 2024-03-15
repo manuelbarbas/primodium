@@ -132,7 +132,6 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ building
 
   const infrastructureBuildings = [
     EntityType.StarmapperStation, 
-    EntityType.NULL,
     EntityType.Market,
     EntityType.NULL, EntityType.NULL, EntityType.NULL
   ];
