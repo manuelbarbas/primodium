@@ -40,6 +40,7 @@ export const moveBuilding = async (mud: MUD, building: Entity, coord: Coord) => 
         coord: getBuildingTopLeft(coord, buildingType),
       },
     },
+    // TODO: we don't need to use coord here any longer
     (receipt) => {
       const buildingType = components.BuildingType.get(building)?.value as Entity;
       const currLevel = components.Level.get(building)?.value || 0;

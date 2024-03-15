@@ -156,8 +156,13 @@ library LibAsteroid {
     return LibMath.getPositionByVector(distance, (i * 360) / max);
   }
 
-  //write natspec documentation
-
+  /**
+   * @dev Checks if all specified tiles are available.
+   * @param rock Identifier for a set of tiles.
+   * @param coords Array of coordinates, structured as [x1, y1, x2, y2, ...]. Must be even length.
+   * @return bool True if all specified tiles are available, false otherwise.
+   * Requires coords length to be even. Returns true if no tiles are used for the given rock. Validates each tile's availability based on its position in a bitmap.
+   */
   function allTilesAvailable(bytes32 rock, int32[] memory coords) internal view returns (bool) {
     require(coords.length % 2 == 0, "Invalid coords length");
     uint256[] memory bitmap = UsedTiles.get(rock);
@@ -176,6 +181,12 @@ library LibAsteroid {
     return true;
   }
 
+  /**
+   * @dev Marks specified tiles as used.
+   * @param rock Identifier for a set of tiles.
+   * @param coords Array of coordinates, structured as [x1, y1, x2, y2, ...]. Must be even length.
+   * Sets tiles as used in the bitmap for the given rock. Requires coords length to be even and tiles to be within bounds.
+   */
   function setTiles(bytes32 rock, int32[] memory coords) internal {
     require(coords.length % 2 == 0, "Invalid coords length");
     uint256[] memory bitmap = UsedTiles.get(rock);
@@ -193,6 +204,12 @@ library LibAsteroid {
     UsedTiles.set(rock, bitmap);
   }
 
+  /**
+   * @dev Frees up specified tiles, marking them as unused.
+   * @param rock Identifier for a set of tiles.
+   * @param coords Array of coordinates, structured as [x1, y1, x2, y2, ...]. Must be even length.
+   * Clears tiles in the bitmap for the given rock. Requires coords length to be even and tiles to be within bounds.
+   */
   function removeTiles(bytes32 rock, int32[] memory coords) internal {
     require(coords.length % 2 == 0, "Invalid coords length");
     uint256[] memory bitmap = UsedTiles.get(rock);
