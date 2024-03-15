@@ -10,8 +10,7 @@ contract SpawnSystemTest is PrimodiumTest {
 
   function testSpawnu() public {
     bytes32 playerEntity = addressToEntity(creator);
-    bytes32 asteroidEntity = LibEncode.getHash(playerEntity);
-    spawn(creator);
+    bytes32 asteroidEntity = spawn(creator);
     vm.startPrank(creator);
 
     bool spawned = Spawned.get(playerEntity);
@@ -23,9 +22,9 @@ contract SpawnSystemTest is PrimodiumTest {
   }
 
   function testSpawnTwice() public {
-    world.spawn();
+    world.Primodium__spawn();
     vm.expectRevert(bytes("[SpawnSystem] Already spawned"));
-    world.spawn();
+    world.Primodium__spawn();
   }
 
   function testUniqueAsteroidPosition() public {
@@ -62,6 +61,6 @@ contract SpawnSystemTest is PrimodiumTest {
 
   function testBuildBeforeSpawnFail() public {
     vm.expectRevert(bytes("[BuildSystem] Player has not spawned"));
-    world.build(EBuilding.IronMine, PositionData(0, 0, 0));
+    world.Primodium__build(EBuilding.IronMine, PositionData(0, 0, 0));
   }
 }

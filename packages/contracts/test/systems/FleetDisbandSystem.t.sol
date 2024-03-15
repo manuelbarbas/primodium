@@ -36,17 +36,17 @@ contract FleetDisbandSystemTest is PrimodiumTest {
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.sendFleet(fleetId, bobHomeSpaceRock);
+    world.Primodium__sendFleet(fleetId, bobHomeSpaceRock);
     vm.stopPrank();
 
     vm.warp(block.timestamp + 1);
 
     vm.startPrank(alice);
-    world.disbandFleet(fleetId);
+    world.Primodium__disbandFleet(fleetId);
     vm.stopPrank();
     assertEq(UnitCount.get(fleetId, unitPrototype), 0, "fleet unit count doesn't match");
     assertEq(UnitCount.get(aliceHomeSpaceRock, unitPrototype), 0, "space rock unit count doesn't match");
@@ -95,17 +95,17 @@ contract FleetDisbandSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.sendFleet(fleetId, bobHomeSpaceRock);
+    world.Primodium__sendFleet(fleetId, bobHomeSpaceRock);
     vm.stopPrank();
 
     vm.warp(block.timestamp + 1);
 
     vm.startPrank(alice);
-    world.disbandResources(fleetId, resourceCounts);
+    world.Primodium__disbandResources(fleetId, resourceCounts);
     vm.stopPrank();
 
     assertEq(UnitCount.get(fleetId, unitPrototype), 1, "fleet unit count doesn't match");
@@ -138,7 +138,7 @@ contract FleetDisbandSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
@@ -146,7 +146,7 @@ contract FleetDisbandSystemTest is PrimodiumTest {
     }
 
     vm.startPrank(alice);
-    world.disbandUnits(fleetId, unitCounts);
+    world.Primodium__disbandUnits(fleetId, unitCounts);
     vm.stopPrank();
   }
 
@@ -169,17 +169,17 @@ contract FleetDisbandSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.sendFleet(fleetId, bobHomeSpaceRock);
+    world.Primodium__sendFleet(fleetId, bobHomeSpaceRock);
     vm.stopPrank();
 
     vm.warp(block.timestamp + 1);
 
     vm.startPrank(alice);
-    world.disbandUnits(fleetId, unitCounts);
+    world.Primodium__disbandUnits(fleetId, unitCounts);
     vm.stopPrank();
   }
 
@@ -199,17 +199,17 @@ contract FleetDisbandSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.sendFleet(fleetId, bobHomeSpaceRock);
+    world.Primodium__sendFleet(fleetId, bobHomeSpaceRock);
     vm.stopPrank();
 
     vm.warp(FleetMovement.getArrivalTime(fleetId));
 
     vm.startPrank(alice);
-    world.disbandUnits(fleetId, unitCounts);
+    world.Primodium__disbandUnits(fleetId, unitCounts);
     vm.stopPrank();
 
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(

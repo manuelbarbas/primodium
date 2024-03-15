@@ -11,69 +11,70 @@ if (typeof process != undefined && typeof process != "undefined") {
   });
 }
 
-const DUMMY_ADDRESS = "0x1234567890AbcdEF1234567890aBcdef12345678";
 /* -------------------------------------------------------------------------- */
 /*                                   Config                                   */
 /* -------------------------------------------------------------------------- */
 export type Config = typeof config;
 export const config = mudConfig({
   excludeSystems: [...dev],
+  worldContractName: "Primodium",
+  namespace: "Primodium",
   systems: {
     S_SpawnPirateAsteroidSystem: {
       openAccess: false,
-      accessList: [DUMMY_ADDRESS],
+      accessList: [],
     },
     S_ProductionRateSystem: {
       openAccess: false,
-      accessList: [DUMMY_ADDRESS],
+      accessList: [],
     },
     S_SpendResourcesSystem: {
       openAccess: false,
-      accessList: [DUMMY_ADDRESS],
+      accessList: [],
     },
     S_RewardsSystem: {
       openAccess: false,
-      accessList: [DUMMY_ADDRESS],
+      accessList: [],
     },
 
     S_BattleApplyDamageSystem: {
       openAccess: false,
-      accessList: [DUMMY_ADDRESS],
+      accessList: [],
       name: "S_BattleApplyDamageSystem",
     },
     S_BattleRaidResolveSystem: {
       openAccess: false,
-      accessList: [DUMMY_ADDRESS],
+      accessList: [],
       name: "S_BattleRaidResolveSystem",
     },
     S_BattleEncryptionResolveSystem: {
       openAccess: false,
-      accessList: [DUMMY_ADDRESS],
+      accessList: [],
       name: "S_BattleEncryptionResolveSystem",
     },
     S_FleetResetIfNoUnitsLeftSystem: {
       openAccess: false,
-      accessList: [DUMMY_ADDRESS],
+      accessList: [],
       name: "S_FleetResetIfNoUnitsLeftSystem",
     },
     S_InitializeSpaceRockOwnershipSystem: {
       openAccess: false,
-      accessList: [DUMMY_ADDRESS],
+      accessList: [],
       name: "S_InitializeSpaceRockOwnershipSystem",
     },
     S_TransferSpaceRockOwnershipSystem: {
       openAccess: false,
-      accessList: [DUMMY_ADDRESS],
+      accessList: [],
       name: "S_TransferSpaceRockOwnershipSystem",
     },
     S_FleetResolvePirateAsteroidSystem: {
       openAccess: false,
-      accessList: [DUMMY_ADDRESS],
+      accessList: [],
       name: "S_FleetResolvePirateAsteroidSystem",
     },
     S_CreateSecondaryAsteroidSystem: {
       openAccess: false,
-      accessList: [DUMMY_ADDRESS],
+      accessList: [],
       name: "S_CreateSecondaryAsteroidSystem",
     },
   },

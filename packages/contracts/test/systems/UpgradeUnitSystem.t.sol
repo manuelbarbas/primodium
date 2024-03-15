@@ -30,20 +30,20 @@ contract UpgradeUnitSystemTest is PrimodiumTest {
   }
 
   function testUpgradeUnit1() public {
-    world.upgradeUnit(homeAsteroid, unit);
+    world.Primodium__upgradeUnit(homeAsteroid, unit);
     assertEq(UnitLevel.get(homeAsteroid, unitPrototype), 1);
   }
 
   function testUpgradeUnitMainBaseLevelRequirementNotMet() public {
     P_RequiredBaseLevel.set(unitPrototype, 1, 3);
     vm.expectRevert(bytes("[UpgradeUnitSystem] MainBase level requirement not met"));
-    world.upgradeUnit(homeAsteroid, unit);
+    world.Primodium__upgradeUnit(homeAsteroid, unit);
   }
 
   function testUpgradeUnitMaxLevelReached() public {
     P_MaxLevel.set(unitPrototype, 0);
     vm.expectRevert(bytes("[UpgradeUnitSystem] Max level reached"));
-    world.upgradeUnit(homeAsteroid, unit);
+    world.Primodium__upgradeUnit(homeAsteroid, unit);
   }
 
   function testUpgradeUnitHasRequiredResources() public {
@@ -55,7 +55,7 @@ contract UpgradeUnitSystemTest is PrimodiumTest {
     MaxResourceCount.set(homeAsteroid, Iron, 100);
     ResourceCount.set(homeAsteroid, Iron, 100);
     UnitLevel.set(player, unitPrototype, 0);
-    world.upgradeUnit(homeAsteroid, unit);
+    world.Primodium__upgradeUnit(homeAsteroid, unit);
     assertEq(ResourceCount.get(homeAsteroid, Iron), 0);
   }
 
@@ -67,11 +67,11 @@ contract UpgradeUnitSystemTest is PrimodiumTest {
     P_RequiredUpgradeResources.set(unitPrototype, 1, requiredResources, requiredAmounts);
 
     vm.expectRevert(bytes("[SpendResources] Not enough resources to spend"));
-    world.upgradeUnit(homeAsteroid, unit);
+    world.Primodium__upgradeUnit(homeAsteroid, unit);
   }
 
   function invalidUnit() public {
     vm.expectRevert();
-    world.upgradeUnit(homeAsteroid, EUnit(uint8(100)));
+    world.Primodium__upgradeUnit(homeAsteroid, EUnit(uint8(100)));
   }
 }

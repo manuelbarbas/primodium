@@ -27,10 +27,10 @@ contract MoveBuildingSystemTest is PrimodiumTest {
     P_RequiredBaseLevel.set(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Shipyard)), 1, 0);
 
     PositionData memory originalPosition = getTilePosition(Home.get(playerEntity), building);
-    world.build(building, originalPosition);
+    world.Primodium__build(building, originalPosition);
     PositionData memory newPosition = getTilePosition(Home.get(playerEntity), building);
     uint256 gas = gasleft();
-    world.moveBuilding(originalPosition, newPosition);
+    world.Primodium__moveBuilding(originalPosition, newPosition);
     console.log("after", gas - gasleft());
   }
 
@@ -45,7 +45,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
     bytes32[] memory oldChildren = Children.get(mainBaseEntity);
 
     uint256 gas = gasleft();
-    world.moveBuilding(mainBasePosition, newPosition);
+    world.Primodium__moveBuilding(mainBasePosition, newPosition);
     console.log("after", gas - gasleft());
     assertEq(
       mainBaseEntity,
@@ -87,7 +87,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
       mainBasePosition.parent
     );
 
-    world.moveBuilding(mainBasePosition, newPosition);
+    world.Primodium__moveBuilding(mainBasePosition, newPosition);
   }
 
   function testMoveSomeSameTiles() public {
@@ -99,7 +99,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
       mainBasePosition.parent
     );
 
-    world.moveBuilding(mainBasePosition, newPosition);
+    world.Primodium__moveBuilding(mainBasePosition, newPosition);
     mainBasePosition = Position.get(mainBaseEntity);
     assertEq(mainBasePosition.x, newPosition.x, "building position should have updated");
     assertEq(mainBasePosition.y, newPosition.y, "building position should have updated");
@@ -133,7 +133,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
     );
 
     uint256 gas = gasleft();
-    world.moveBuilding(mainBasePosition, newPosition);
+    world.Primodium__moveBuilding(mainBasePosition, newPosition);
     console.log("after", gas - gasleft());
     uint256 timestamp = block.timestamp;
     vm.warp(block.timestamp + 1);
@@ -159,7 +159,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
     assertEq(0, LibBuilding.getBuildingFromCoord(mainBasePosition), "there should be no building at the old position");
 
     P_RequiredTile.deleteRecord(IronMinePrototypeId);
-    world.build(EBuilding.IronMine, mainBasePosition);
+    world.Primodium__build(EBuilding.IronMine, mainBasePosition);
 
     assertTrue(
       LibBuilding.getBuildingFromCoord(mainBasePosition) != LibBuilding.getBuildingFromCoord(newPosition),
@@ -189,7 +189,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
       mainBasePosition.y - 3,
       mainBasePosition.parent
     );
-    world.build(EBuilding.IronMine, overlappedPosition);
+    world.Primodium__build(EBuilding.IronMine, overlappedPosition);
 
     PositionData memory newPosition = PositionData(
       mainBasePosition.x - 1,
@@ -197,7 +197,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
       mainBasePosition.parent
     );
 
-    world.moveBuilding(mainBasePosition, newPosition);
+    world.Primodium__moveBuilding(mainBasePosition, newPosition);
     console.log("moved success");
     uint256 timestamp = block.timestamp;
     vm.warp(block.timestamp + 1);
@@ -222,7 +222,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
     );
     assertEq(0, LibBuilding.getBuildingFromCoord(mainBasePosition), "there should be no building at the old position");
 
-    world.build(EBuilding.IronMine, mainBasePosition);
+    world.Primodium__build(EBuilding.IronMine, mainBasePosition);
 
     assertTrue(
       LibBuilding.getBuildingFromCoord(mainBasePosition) != LibBuilding.getBuildingFromCoord(newPosition),

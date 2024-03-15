@@ -2,10 +2,9 @@
 pragma solidity ^0.8.24;
 
 import { entityToAddress, getSystemResourceId } from "src/utils.sol";
-import { buildMainBase } from "src/libraries/SubsystemCalls.sol";
 import { AsteroidOwnedByKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
-import { DroidPrototypeId } from "codegen/Prototypes.sol";
+import { MainBasePrototypeId, DroidPrototypeId } from "codegen/Prototypes.sol";
 
 // tables
 import { Spawned, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, PositionData, P_GameConfigData, P_GameConfig } from "codegen/index.sol";
@@ -24,15 +23,14 @@ import { EBuilding } from "src/Types.sol";
 library LibAsteroid {
   /// @notice Creates new asteroid for player in world
   /// @notice Checks if asteroid already exists, sets position and other properties
-  /// @param ownerEntity Owner's entity ID
   /// @return asteroidEntity Created asteroid's entity ID
   function createPrimaryAsteroid(bytes32 ownerEntity) internal returns (bytes32 asteroidEntity) {
     asteroidEntity = LibEncode.getHash(ownerEntity);
-    require(!Asteroid.getIsAsteroid(asteroidEntity), "[LibAsteroid] asteroid already exists");
-
     uint256 asteroidCount = AsteroidCount.get() + 1;
     PositionData memory coord = getUniqueAsteroidPosition(asteroidCount);
 
+    asteroidEntity = LibEncode.getTimedHash(bytes32("asteroid"), coord);
+    require(!Asteroid.getIsAsteroid(asteroidEntity), "[LibAsteroid] asteroid already exists");
     uint256 gracePeriodLength = (P_GracePeriod.getSpaceRock() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
     GracePeriod.set(asteroidEntity, block.timestamp + gracePeriodLength);
 
@@ -40,7 +38,6 @@ library LibAsteroid {
     Position.set(asteroidEntity, coord);
     Asteroid.set(asteroidEntity, AsteroidData({ isAsteroid: true, maxLevel: 5, mapId: 1, spawnsSecondary: true }));
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
-    OwnedBy.set(asteroidEntity, ownerEntity);
     LibProduction.increaseResourceProduction(asteroidEntity, EResource.U_MaxFleets, 1);
     AsteroidCount.set(asteroidCount);
   }
@@ -134,6 +131,9 @@ library LibAsteroid {
   function initializeSpaceRockOwnership(bytes32 spaceRock, bytes32 owner) internal {
     OwnedBy.set(spaceRock, owner);
     ColoniesMap.add(owner, AsteroidOwnedByKey, spaceRock);
+    PositionData memory position = Position.get(MainBasePrototypeId);
+    position.parent = spaceRock;
+    LibBuilding.build(owner, MainBasePrototypeId, position);
   }
 
   /// @dev Calculates position based on distance and max index

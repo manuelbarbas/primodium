@@ -23,7 +23,7 @@ contract LibUnitTest is PrimodiumTest {
     super.setUp();
     vm.startPrank(creator);
     player = addressToEntity(creator);
-    world.spawn();
+    world.Primodium__spawn();
 
     BuildingType.set(building, buildingPrototype);
     OwnedBy.set(Home.get(player), player);

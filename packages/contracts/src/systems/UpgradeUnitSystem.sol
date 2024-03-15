@@ -7,8 +7,7 @@ import { OwnedBy, P_EnumToPrototype, P_MaxLevel, UnitLevel } from "codegen/index
 import { LibBuilding, LibResource, LibProduction } from "codegen/Libraries.sol";
 import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
-
-import { spendUpgradeResources } from "libraries/SubsystemCalls.sol";
+import { IWorld } from "codegen/world/IWorld.sol";
 
 contract UpgradeUnitSystem is PrimodiumSystem {
   /// @notice Upgrades the specified unit for the sender
@@ -28,7 +27,7 @@ contract UpgradeUnitSystem is PrimodiumSystem {
 
     require(targetLevel <= P_MaxLevel.get(unitPrototype), "[UpgradeUnitSystem] Max level reached");
 
-    spendUpgradeResources(spaceRockEntity, unitPrototype, targetLevel);
+    IWorld(_world()).Primodium__spendUpgradeResources(spaceRockEntity, unitPrototype, targetLevel);
 
     UnitLevel.set(spaceRockEntity, unitPrototype, targetLevel);
   }

@@ -19,7 +19,7 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
     removeRequirements(EBuilding.IronMine);
 
     vm.expectRevert(bytes("[BuildSystem] Building out of bounds"));
-    world.build(EBuilding.IronMine, PositionData(bounds.maxX + 1, bounds.maxY, asteroid));
+    world.Primodium__build(EBuilding.IronMine, PositionData(bounds.maxX + 1, bounds.maxY, asteroid));
   }
 
   function testFailUpgradeRangeWrongBaseLevel() public {
@@ -29,7 +29,7 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
     assertTrue(P_RequiredBaseLevel.get(ExpansionKey, 5) != 0, "should have expansion level 5");
     P_RequiredUpgradeResources.deleteRecord(ExpansionKey, 5);
     //vm.expectRevert(bytes("[UpgradeRangeSystem] MainBase level requirement not met"));
-    world.upgradeRange(Home.get(creatorEntity));
+    world.Primodium__upgradeRange(Home.get(creatorEntity));
   }
 
   function testFailUpgradeRangeMaxLevel() public {
@@ -43,7 +43,7 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
     assertEq(Level.get(Home.get(creatorEntity)), maxLevel);
     P_RequiredUpgradeResources.deleteRecord(ExpansionKey, maxLevel);
     //vm.expectRevert(bytes("[UpgradeRangeSystem] Max level reached"));
-    world.upgradeRange(Home.get(creatorEntity));
+    world.Primodium__upgradeRange(Home.get(creatorEntity));
   }
 
   function testUpgradeRange() public {
@@ -57,7 +57,7 @@ contract UpgradeRangeSystemTest is PrimodiumTest {
     Level.set(mainBase, level + 1);
     P_RequiredUpgradeResources.deleteRecord(ExpansionKey, level + 1);
 
-    world.upgradeRange(asteroid);
+    world.Primodium__upgradeRange(asteroid);
     assertEq(Level.get(asteroid), level + 1);
   }
 }

@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
+import { IWorld } from "codegen/world/IWorld.sol";
 import { PirateAsteroid, UnitCount, ResourceCount, FleetStance, IsFleet, BattleResult, BattleResultData, FleetMovement, GracePeriod, OwnedBy } from "codegen/index.sol";
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { EFleetStance, EResource } from "src/Types.sol";
 import { CapitalShipPrototypeId } from "codegen/Prototypes.sol";
-import { battleRaidResolve, battleApplyDamage, fleetResolveBattleEncryption, transferSpaceRockOwnership, initializeSpaceRockOwnership, fleetResolvePirateAsteroid } from "libraries/SubsystemCalls.sol";
 
 contract FleetCombatSystem is FleetBaseSystem {
   modifier _onlyWhenNotInGracePeriod(bytes32 entity) {
@@ -91,26 +91,32 @@ contract FleetCombatSystem is FleetBaseSystem {
     bool isRaid = isAggressorWinner && (isTargetFleet || !decrypt || isPirateAsteroid);
     bool isDecryption = !isRaid && isAggressorWinner && !isTargetFleet && decrypt && !isPirateAsteroid;
 
+    IWorld world = IWorld(_world());
     if (battleResult.targetDamage > 0)
-      battleApplyDamage(battleId, defendingPlayerEntity, battleResult.aggressorEntity, battleResult.targetDamage);
+      world.Primodium__applyDamage(
+        battleId,
+        defendingPlayerEntity,
+        battleResult.aggressorEntity,
+        battleResult.targetDamage
+      );
 
     if (isRaid) {
-      battleRaidResolve(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
+      world.Primodium__battleRaidResolve(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
     }
     if (isDecryption) {
       //in decryption we resolve encryption first so the fleet decryption unit isn't lost before decrypting
       LibFleetCombat.resolveBattleEncryption(battleId, battleResult.targetEntity, battleResult.aggressorEntity);
       if (ResourceCount.get(battleResult.targetEntity, uint8(EResource.R_Encryption)) == 0) {
         if (OwnedBy.get(battleResult.targetEntity) != bytes32(0)) {
-          transferSpaceRockOwnership(battleResult.targetEntity, _player());
+          world.Primodium__transferSpaceRockOwnership(battleResult.targetEntity, _player());
         } else {
-          initializeSpaceRockOwnership(battleResult.targetEntity, _player());
+          world.Primodium__initializeSpaceRockOwnership(battleResult.targetEntity, _player());
         }
       }
     }
-    battleApplyDamage(battleId, _player(), battleResult.targetEntity, battleResult.aggressorDamage);
+    world.Primodium__applyDamage(battleId, _player(), battleResult.targetEntity, battleResult.aggressorDamage);
     if (isPirateAsteroid && isAggressorWinner) {
-      fleetResolvePirateAsteroid(_player(), battleResult.targetEntity);
+      world.Primodium__resolvePirateAsteroid(_player(), battleResult.targetEntity);
     }
   }
 }

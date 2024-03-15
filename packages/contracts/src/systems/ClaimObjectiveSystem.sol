@@ -8,8 +8,7 @@ import { ObjectiveKey } from "src/Keys.sol";
 import { S_SpawnPirateAsteroidSystem } from "systems/subsystems/S_SpawnPirateAsteroidSystem.sol";
 import { getSystemResourceId } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
-import { DUMMY_ADDRESS } from "src/constants.sol";
-import { claimResources, claimUnits, receiveRewards } from "libraries/SubsystemCalls.sol";
+import { IWorld } from "codegen/world/IWorld.sol";
 import { LibObjectives } from "libraries/LibObjectives.sol";
 
 contract ClaimObjectiveSystem is PrimodiumSystem {
@@ -21,18 +20,15 @@ contract ClaimObjectiveSystem is PrimodiumSystem {
     bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(objective));
 
     LibObjectives.checkObjectiveRequirements(playerEntity, spaceRockEntity, objective);
-    receiveRewards(playerEntity, spaceRockEntity, objectivePrototype);
+
+    IWorld world = IWorld(_world());
+    world.Primodium__receiveRewards(playerEntity, spaceRockEntity, objectivePrototype);
 
     CompletedObjective.set(playerEntity, objectivePrototype, true);
     P_SpawnPirateAsteroidData memory spawnPirateAsteroid = P_SpawnPirateAsteroid.get(objectivePrototype);
 
     if (spawnPirateAsteroid.x != 0 || spawnPirateAsteroid.y != 0) {
-      SystemCall.callWithHooksOrRevert(
-        DUMMY_ADDRESS,
-        getSystemResourceId("S_SpawnPirateAsteroidSystem"),
-        abi.encodeCall(S_SpawnPirateAsteroidSystem.spawnPirateAsteroid, (playerEntity, objectivePrototype)),
-        0
-      );
+      world.Primodium__spawnPirateAsteroid(playerEntity, objectivePrototype);
     }
   }
 }
