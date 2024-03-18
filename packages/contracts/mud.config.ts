@@ -35,7 +35,10 @@ const getConfig = async () => {
         openAccess: false,
         accessList: [],
       },
-
+      S_StorageSystem: {
+        openAccess: false,
+        accessList: [],
+      },
       S_BattleApplyDamageSystem: {
         openAccess: false,
         accessList: [],

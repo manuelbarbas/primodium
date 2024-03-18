@@ -11,7 +11,7 @@ export const grantAccess = async (mud: MUD, address: Address) => {
   await execute(
     {
       mud,
-      systemId: getSystemId("Registration", ""),
+      systemId: getSystemId("Registration", "CORE"),
       functionName: "registerDelegation",
       args: [address, UNLIMITED_DELEGATION, "0x0"],
       withSession: false,
@@ -25,7 +25,7 @@ export const grantAccess = async (mud: MUD, address: Address) => {
 
 export const revokeAccess = async (mud: MUD, address: Address) => {
   await execute(
-    { mud, systemId: getSystemId("Registration"), functionName: "unregisterDelegation", args: [address] },
+    { mud, systemId: getSystemId("Registration", "CORE"), functionName: "unregisterDelegation", args: [address] },
     {
       id: singletonEntity,
       type: TransactionQueueType.Access,
@@ -44,7 +44,7 @@ export const revokeAllAccess = async (mud: MUD) => {
   }, [] as Address[]);
 
   const systemCalls = allAuthorized.map((authorized) => ({
-    systemId: getSystemId("Registration"),
+    systemId: getSystemId("Registration", "CORE"),
     functionName: "unregisterDelegation",
     args: [authorized],
   })) as {

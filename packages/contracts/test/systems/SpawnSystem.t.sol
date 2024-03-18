@@ -64,6 +64,7 @@ contract SpawnSystemTest is PrimodiumTest {
     assertTrue(Spawned.get(addressToEntity(alice)), "Alice should have spawned");
     console.log(WorldResourceIdInstance.toString(UserDelegationControl.get(alice, bob)));
   }
+
   function testSpawnTwice() public {
     world.Primodium__spawn();
     vm.expectRevert(bytes("[SpawnSystem] Already spawned"));

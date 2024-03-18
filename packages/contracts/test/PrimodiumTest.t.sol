@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import "forge-std/Test.sol";
+import { WorldResourceIdLib, ResourceId } from "@latticexyz/world/src/WorldResourceId.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 import { ResourceAccess, NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";

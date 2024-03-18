@@ -96,7 +96,7 @@ export async function execute<T extends keyof MetadataTypes, FunctionName extend
         systemId,
         functionName,
         args,
-      });
+      } as SystemCallFrom<typeof IWorldAbi, typeof functionName>);
       tx = mud.sessionAccount.worldContract.write.callFrom(params, callOptions);
     } else {
       const params = encodeSystemCall({
@@ -104,7 +104,7 @@ export async function execute<T extends keyof MetadataTypes, FunctionName extend
         systemId,
         functionName,
         args,
-      });
+      } as SystemCall<typeof IWorldAbi, typeof functionName>);
       tx = mud.playerAccount.worldContract.write.call(params, callOptions);
     }
     const receipt = await _execute(mud, tx);

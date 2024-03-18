@@ -32,20 +32,16 @@ export const spawnAndAuthorizeSessionAccount = async (mud: MUD, sessionAccount: 
   } as const;
 
   const authorize = {
-    systemId: getSystemId("Registration", ""),
+    systemId: getSystemId("Registration", "CORE"),
     functionName: "registerDelegation" as const,
     args: [sessionAccount, UNLIMITED_DELEGATION, "0x0"] as [Hex, Hex, Hex],
     withSession: false,
   };
 
-  console.log("spawn:", spawn);
-  // console.log("authorize:", authorize);
-
   await executeBatch(
     {
       mud,
       systemCalls: [spawn, authorize],
-      withSession: false,
     },
     { id: singletonEntity },
     (receipt) => {

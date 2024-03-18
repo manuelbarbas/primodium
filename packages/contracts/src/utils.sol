@@ -1,11 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
-import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
-import { ResourceId } from "@latticexyz/world/src/SystemCall.sol";
-import { OwnedBy } from "codegen/index.sol";
-
 function addressToEntity(address a) pure returns (bytes32) {
   return bytes32(uint256(uint160((a))));
 }
