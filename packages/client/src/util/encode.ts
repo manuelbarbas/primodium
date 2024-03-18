@@ -15,7 +15,7 @@ import {
 } from "viem";
 
 export const getSystemId = (name: string, namespace = "Primodium") =>
-  resourceToHex({ type: "system", namespace, name: name.toLowerCase() == "core" ? "" : name });
+  resourceToHex({ type: "system", name, namespace: namespace.toLowerCase() == "core" ? "" : namespace });
 
 export const addressToEntity = (address: Hex) => {
   return encodeAbiParameters([{ type: "address" }], [address]) as Entity;
