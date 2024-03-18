@@ -9,10 +9,8 @@ import { clearUtilityUsage, clearMaxStorageIncrease, clearProductionRate } from 
 
 contract DestroySystem is PrimodiumSystem {
   /// @notice Destroys a building entity
-  /// @param coord Coordinate of the building to be destroyed
-  /// @return buildingEntity Entity identifier of the destroyed building
-  function destroy(PositionData memory coord) public _claimResources(coord.parent) returns (bytes32 buildingEntity) {
-    buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+  /// @param buildingEntity entity of the building to be destroyed
+  function destroy(bytes32 buildingEntity) public _claimResources(Position.getParent(buildingEntity)) {
     LibBuilding.checkDestroyRequirements(_player(), buildingEntity);
 
     clearUtilityUsage(buildingEntity);
@@ -23,17 +21,15 @@ contract DestroySystem is PrimodiumSystem {
 
     uint256 level = Level.get(buildingEntity);
 
+    LibBuilding.removeBuildingTiles(buildingEntity);
+
     Level.deleteRecord(buildingEntity);
     BuildingType.deleteRecord(buildingEntity);
     OwnedBy.deleteRecord(buildingEntity);
     Position.deleteRecord(buildingEntity);
     IsActive.deleteRecord(buildingEntity);
     if (P_UnitProdTypes.length(buildingType, level) != 0) {
-      UnitFactorySet.remove(coord.parent, buildingEntity);
+      UnitFactorySet.remove(OwnedBy.get(buildingEntity), buildingEntity);
     }
-
-    LibBuilding.removeBuildingTiles(coord);
-
-    return buildingEntity;
   }
 }

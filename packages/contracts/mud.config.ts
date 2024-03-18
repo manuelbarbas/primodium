@@ -234,6 +234,12 @@ const getConfig = async () => {
         valueSchema: "uint8[]", // EResource
       },
 
+      // contains a bitmap
+      UsedTiles: {
+        keySchema: { entity: "bytes32" },
+        valueSchema: "uint256[]",
+      },
+
       // tracks the max resource a player can store
       MaxResourceCount: {
         keySchema: { entity: "bytes32", resource: "uint8" }, // EResource
@@ -368,6 +374,10 @@ const getConfig = async () => {
         valueSchema: "bytes32",
       },
 
+      TilePositions: {
+        keySchema: { entity: "bytes32" },
+        valueSchema: "int32[]",
+      },
       Children: {
         keySchema: { entity: "bytes32" },
         valueSchema: "bytes32[]",

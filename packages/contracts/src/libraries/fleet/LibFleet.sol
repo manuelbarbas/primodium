@@ -55,10 +55,8 @@ library LibFleet {
       increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], false);
     }
 
-    uint256 freeCargoSpace = LibCombatAttributes.getCargoSpace(fleetId);
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
-      uint8 resource = transportables[i];
       if (resourceCounts[i] == 0) continue;
       uint256 rockResourceCount = ResourceCount.get(spaceRock, transportables[i]);
       require(rockResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
@@ -153,8 +151,6 @@ library LibFleet {
 
   function mergeFleets(bytes32 playerEntity, bytes32[] calldata fleets) internal {
     require(fleets.length > 1, "[Fleet] Can only merge more than one fleet");
-    bytes32 spaceRock = FleetMovement.getDestination(fleets[0]);
-    bytes32 spaceRockOwner = OwnedBy.get(fleets[0]);
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
