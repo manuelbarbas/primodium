@@ -10,7 +10,7 @@ import { getSystemResourceId } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 import { DUMMY_ADDRESS } from "src/constants.sol";
 import { claimResources, claimUnits, receiveRewards } from "libraries/SubsystemCalls.sol";
-import { LibObjectives } from "libraries/LibObjectives.sol";
+// import { LibObjectives } from "libraries/LibObjectives.sol";
 
 contract ClaimObjectiveSystem is PrimodiumSystem {
   function claimObjective(
@@ -20,7 +20,8 @@ contract ClaimObjectiveSystem is PrimodiumSystem {
     bytes32 playerEntity = _player();
     bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(objective));
 
-    LibObjectives.checkObjectiveRequirements(playerEntity, spaceRockEntity, objective);
+    // Defer to optional clientside check. Allow onchain to claim rewards without checking requirements
+    // LibObjectives.checkObjectiveRequirements(playerEntity, spaceRockEntity, objective);
     receiveRewards(playerEntity, spaceRockEntity, objectivePrototype);
 
     CompletedObjective.set(playerEntity, objectivePrototype, true);
