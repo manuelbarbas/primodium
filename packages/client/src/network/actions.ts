@@ -1,16 +1,16 @@
-import {
-  SystemCall,
-  SystemCallFrom,
-  encodeSystemCallFrom,
-  encodeSystemCalls,
-  encodeSystemCallsFrom,
-} from "@latticexyz/world";
+import { SystemCall, SystemCallFrom } from "@latticexyz/world";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { toast } from "react-toastify";
 import { CallExecutionError, ContractFunctionExecutionError, Hex, TransactionReceipt } from "viem";
 import { PublicClient } from "viem/_types/clients/createPublicClient";
 import { components } from "./components";
 import { MetadataTypes, TxQueueOptions } from "./components/customComponents/TransactionQueueComponent";
+import {
+  encodeSystemCall,
+  encodeSystemCallFrom,
+  encodeSystemCalls,
+  encodeSystemCallsFrom,
+} from "./setup/encodeSystemCall";
 import { MUD } from "./types";
 
 export async function _execute({ network: { waitForTransaction, publicClient } }: MUD, txPromise: Promise<Hex>) {
@@ -86,7 +86,9 @@ export async function execute<T extends keyof MetadataTypes, FunctionName extend
       withSession ? "(with session acct)" : ""
     }`
   );
-  const queuedTx = async () => {
+
+  const run = async () => {
+    let tx: Promise<Hex>;
     if (authorizing && mud.sessionAccount) {
       const params = encodeSystemCallFrom({
         abi: IWorldAbi,
@@ -95,23 +97,23 @@ export async function execute<T extends keyof MetadataTypes, FunctionName extend
         functionName,
         args,
       });
-      const tx = await mud.sessionAccount.worldContract.write.callFrom(params, callOptions);
-      return tx;
+      tx = mud.sessionAccount.worldContract.write.callFrom(params, callOptions);
+    } else {
+      const params = encodeSystemCall({
+        abi: IWorldAbi as typeof IWorldAbi,
+        systemId,
+        functionName,
+        args,
+      });
+      tx = mud.playerAccount.worldContract.write.call(params, callOptions);
     }
-    const tx = await mud.playerAccount.worldContract.write[functionName](args, callOptions);
-    return tx;
+    const receipt = await _execute(mud, tx);
+    onComplete?.(receipt);
   };
 
-  if (txQueueOptions)
-    components.TransactionQueue.enqueue(async () => {
-      const txPromise = queuedTx();
-      const receipt = await _execute(mud, txPromise);
-      onComplete?.(receipt);
-    }, txQueueOptions);
+  if (txQueueOptions) components.TransactionQueue.enqueue(run, txQueueOptions);
   else {
-    const txPromise = queuedTx();
-    const receipt = await _execute(mud, txPromise);
-    onComplete?.(receipt);
+    run();
   }
 }
 

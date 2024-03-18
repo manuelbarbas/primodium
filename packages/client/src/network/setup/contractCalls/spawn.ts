@@ -44,7 +44,7 @@ export const spawnAndAuthorizeSessionAccount = async (mud: MUD, sessionAccount: 
   await executeBatch(
     {
       mud,
-      systemCalls: [authorize, spawn],
+      systemCalls: [spawn, authorize],
       withSession: false,
     },
     { id: singletonEntity },
