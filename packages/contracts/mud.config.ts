@@ -35,7 +35,10 @@ export const config = mudConfig({
       openAccess: false,
       accessList: [DUMMY_ADDRESS],
     },
-
+    S_StorageSystem: {
+      openAccess: false,
+      accessList: [DUMMY_ADDRESS],
+    },
     S_BattleApplyDamageSystem: {
       openAccess: false,
       accessList: [DUMMY_ADDRESS],
