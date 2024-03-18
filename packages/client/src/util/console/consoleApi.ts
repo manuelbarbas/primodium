@@ -2,7 +2,7 @@ import { Primodium } from "@game/api";
 import { Entity } from "@latticexyz/recs";
 import _ from "lodash";
 import { components } from "src/network/components";
-import { grantAccess, revokeAccess, revokeAllAccess, switchAuthorized } from "src/network/setup/contractCalls/access";
+import { grantAccess, revokeAccess, revokeAllAccess } from "src/network/setup/contractCalls/access";
 import {
   acceptJoinRequest,
   createAlliance,
@@ -27,7 +27,7 @@ import { upgradeRange } from "src/network/setup/contractCalls/upgradeRange";
 import { upgradeUnit } from "src/network/setup/contractCalls/upgradeUnit";
 import { MUD } from "src/network/types";
 import { getAllianceName, getAllianceNameFromPlayer } from "../alliance";
-import { getAsteroidImage, getRockRelationship, getAsteroidInfo, getAsteroidName } from "../asteroid";
+import { getAsteroidImage, getAsteroidInfo, getAsteroidName, getRockRelationship } from "../asteroid";
 import {
   calcDims,
   getBuildingDimensions,
@@ -163,7 +163,6 @@ export default function createConsoleApi(mud: MUD, primodium: Primodium) {
     grantAccess: _.curry(grantAccess)(mud),
     revokeAccess: _.curry(revokeAccess)(mud),
     revokeAllAccess: () => revokeAllAccess(mud),
-    switchAuthorized: _.curry(switchAuthorized)(mud),
 
     createAlliance: _.curry(createAlliance)(mud),
     leaveAlliance: () => leaveAlliance(mud),

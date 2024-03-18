@@ -4,8 +4,8 @@
   "license": "MIT",
   "main": "index.ts",
   "dependencies": {
-    "@latticexyz/phaserx": "2.0.0-main-9ef3f9a7",
-    "@latticexyz/utils": "2.0.0-main-9ef3f9a7",
+    "@latticexyz/phaserx": "2.0.0-next.17",
+    "@latticexyz/utils": "2.0.0-next.17",
     "@use-gesture/vanilla": "^10.3.0",
     "mobx": "^6.12.0",
     "phaser": "^3.70.0",

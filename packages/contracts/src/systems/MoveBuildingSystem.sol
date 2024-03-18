@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 // external
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
@@ -9,14 +9,15 @@ import { OwnedBy, BuildingType, Position, PositionData } from "codegen/index.sol
 
 // libraries
 import { LibBuilding } from "codegen/Libraries.sol";
+import { LibAsteroid } from "codegen/Libraries.sol";
 
 contract MoveBuildingSystem is PrimodiumSystem {
-  function moveBuilding(PositionData memory fromCoord, PositionData memory toCoord) public {
-    toCoord.parent = fromCoord.parent;
+  function moveBuilding(bytes32 buildingEntity, PositionData memory toCoord) public {
+    bytes32 buildingAsteroid = Position.getParent(buildingEntity);
+    toCoord.parent = buildingAsteroid;
     bytes32 playerEntity = _player();
-    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(fromCoord);
     require(
-      OwnedBy.get(fromCoord.parent) == playerEntity,
+      OwnedBy.get(buildingAsteroid) == playerEntity,
       "[MoveBuildingSystem] the rock which the building is on is not owned by the player"
     );
     bytes32 buildingType = BuildingType.get(buildingEntity);
@@ -24,7 +25,7 @@ contract MoveBuildingSystem is PrimodiumSystem {
       LibBuilding.canBuildOnTile(buildingType, toCoord),
       "[MoveBuildingSystem] the building cannot be placed on this resource"
     );
-    LibBuilding.removeBuildingTiles(fromCoord);
+    LibBuilding.removeBuildingTiles(buildingEntity);
     Position.set(buildingEntity, toCoord);
     LibBuilding.placeBuildingTiles(buildingEntity, buildingType, toCoord);
   }

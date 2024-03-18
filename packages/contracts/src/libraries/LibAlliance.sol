@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 // tables
 import { P_AllianceConfig, Score, AllianceJoinRequest, PlayerAlliance, Alliance, AllianceData, AllianceInvitation } from "codegen/index.sol";
