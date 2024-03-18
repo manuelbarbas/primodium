@@ -5,6 +5,7 @@ import { getEntityTypeName } from "src/util/common";
 import { ResourceImage } from "src/util/constants";
 import { formatResourceCount } from "src/util/number";
 import { Hex } from "viem";
+import { toRomanNumeral } from "src/util/common";
 
 export const HangarContent = () => {
   const activeRock = components.ActiveRock.use()?.value;
@@ -30,7 +31,7 @@ export const Unit = ({ unit, asteroid, className = "" }: { unit: Entity; asteroi
   const level = components.UnitLevel.getWithKeys({ entity: asteroid as Hex, unit: unit as Hex })?.value ?? 0n;
   return (
     <p className={className}>
-      {getBlockTypeName(unit)} {toRomanNumeral(Number(level + 1n))}
+      {getEntityTypeName(unit)} {toRomanNumeral(Number(level + 1n))}
     </p>
   );
 };

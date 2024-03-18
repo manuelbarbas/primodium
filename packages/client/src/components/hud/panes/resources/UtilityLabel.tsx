@@ -103,7 +103,7 @@ export const BarLayoutUtilityLabel = ({
 
         <div className="w-full flex flex-col">
           {renderCapacityBar && (
-            <CapacityBar current={used >= 0 ? used : 0} max={maxStorage} segments={8} name={name} />
+            <CapacityBar current={used >= 0 ? used : 0} max={maxStorage} segments={10} name={name} />
           )}
           <div className="flex flex-row">
             <span className="text-xs">{formatResourceCount(resourceId, showCount ? resourceCount : used)}</span>

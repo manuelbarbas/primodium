@@ -7,7 +7,7 @@ export const AllResourceLabels = () => {
   const activeRock = components.ActiveRock.use()?.value;
   if (!activeRock) return null;
   return (
-    <div className="flex flex-col items-end p-4 bg-neutral border border-secondary">
+    <div className="flex flex-col items-end p-4 bg-neutral border border-secondary w-72">
 
       {/* Common Resources */}
       <div className="flex flex-col w-full">

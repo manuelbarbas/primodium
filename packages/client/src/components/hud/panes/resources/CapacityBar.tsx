@@ -15,13 +15,13 @@ export const CapacityBar: FC<SegmentedCapacityBarProps> = ({ current, max, segme
     const segmentColor = (index: number) => {
         if (current === max && index === segments - 1) return 'bg-error';
         if (name === 'Electricity') {
-            if (index < 3) return 'bg-amber-200/80';
-            if (index < 6) return 'bg-amber-300/90';
+            if (index < 4) return 'bg-amber-200/80';
+            if (index < 7) return 'bg-amber-300/90';
             return 'bg-yellow-500';
         } else {
             // Default color scheme
-            if (index < 3) return 'bg-emerald-400';
-            if (index < 6) return 'bg-emerald-600';
+            if (index < 4) return 'bg-emerald-400';
+            if (index < 7) return 'bg-emerald-600';
             return 'bg-emerald-900';
         }
     };

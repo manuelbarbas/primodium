@@ -11,7 +11,7 @@ import { Action, EntityType } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
 import { Button } from "../../../core/Button";
-import { BlueprintBuildingImageFromType } from "../../../shared/BuildingImage";
+import { BuildingImageFromType } from "../../../shared/BuildingImage";
 import { getBuildingDimensions } from "src/util/building";
 import { useShallow } from "zustand/react/shallow";
 
@@ -42,7 +42,6 @@ const BlueprintButton: React.FC<{
   return (
     <Button
       disabled={mainbaseLevel < levelRequirement}
-      // tooltip={getEntityTypeName(buildingType)}
       keybind={keybindActive ? keybind : undefined}
       tooltipDirection={tooltipDirection ?? "right"}
       onPointerEnter={() => components.HoverEntity.set({ value: buildingType })}
@@ -58,15 +57,8 @@ const BlueprintButton: React.FC<{
         components.SelectedAction.set({ value: Action.PlaceBuilding });
       }}
       style={style}
-      // className={`min-h-[3.6rem] bg-base-200 ${hasMainbaseLevel
-      //     ? hasEnough
-      //       ? "hover:bg-accent border-accent/25"
-      //       : "hover:bg-warning border-warning/75"
-      //     : "hover:bg-error border-error/25"
-      //   } disabled:opacity-50 border border-secondary hover:z-10 ${selectedBuilding === buildingType ? " ring-2 ring-white/75" : ""
-      //   } relative btn-ghost p-0 text-[2.5rem] !bg-info/10 ${className}`}
     >
-      <BlueprintBuildingImageFromType buildingType={buildingType} />
+      <BuildingImageFromType buildingType={buildingType} isBlueprint={true}/>
       {!hasMainbaseLevel && (
         <div className="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 gap-1 flex items-center justify-center text-[.5rem] bg-neutral/50 w-full">
           <span className="h-3 flex items-center justify-center gap-1 text-white bg-gray-800/50 z-30">
@@ -176,9 +168,6 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ building
       }),
     [buildingsToShow]
   );
-
-  // const isSpecialCategory = buildingTypeToShow === 2 || buildingTypeToShow === 3;
-  // ${isSpecialCategory ? 'w-40' : 'max-w-60'}
 
   return (
     <>

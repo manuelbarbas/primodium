@@ -2,8 +2,8 @@ import { KeybindActions, Scenes } from "@game/constants";
 import { memo } from "react";
 import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
-import { AllBlueprints } from "./AllBlueprints";
-import { TestComponent } from "./TestComponent";
+
+import { BlueprintPane } from "./BlueprintPane";
 
 export const Blueprints = memo(() => {
   const { components } = useMud();
@@ -28,10 +28,9 @@ export const Blueprints = memo(() => {
       draggable
       pinnable
       persist
-      noborder
+      noBorder
     >
-      {/* <AllBlueprints /> */}
-      <TestComponent />
+      <BlueprintPane />
     </Widget>
   );
 });

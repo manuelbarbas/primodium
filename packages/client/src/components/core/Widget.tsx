@@ -38,7 +38,7 @@ type WidgetProps = {
     | "center-right"
     | "center-top"
     | "center-bottom";
-  noborder?: boolean;
+  noBorder?: boolean;
 };
 
 type WidgetContentProps = {
@@ -97,7 +97,7 @@ export const Content: React.FC<WidgetContentProps> = memo(
     onLock,
     onUnlock,
     popUp,
-    noBorder: noborder,
+    noBorder: noBorder,
   }) => {
     const [uiScale] = usePersistentStore((state) => [state.uiScale]);
 
@@ -161,13 +161,13 @@ export const Content: React.FC<WidgetContentProps> = memo(
           transformOrigin: transformOrigin,
         }}
         className={`relative min-w-44 w-fit transition-opacity duration-600 pointer-events-auto select-none ${
-          noborder ? "ring-0" : "ring-1"
+          noBorder ? "ring-0" : "ring-1"
         } ${!pinned && !minimized ? " ring-secondary" : ""} ${locked ? "" : ""}`}
         onPointerEnter={onPointerEnter}
         onPointerLeave={onPointerLeave}
       >
         <div
-          className={`flex p-1 text-xs items-center gap-3 justify-between w-full cursor-move ${
+          className={`flex p-1 text-xs items-center gap-3 justify-between w-full cursor-move ring-1 ring-secondary ${
             locked ? "bg-info/50 cursor-default" : pinned ? "bg-neutral/75" : "bg-secondary/20"
           }`}
           onPointerDown={onMouseDown}
@@ -197,7 +197,7 @@ export const Content: React.FC<WidgetContentProps> = memo(
           )}
         </div>
 
-        {noborder ? (
+        {noBorder ? (
           <NoBorderCard
             className={`relative !p-0 min-w-72 !pointer-events-none filter !bg-opacity-0 ${
               minimized ? "!border-0 h-0 overflow-hidden opacity-0" : ""
@@ -239,7 +239,7 @@ export const Widget: React.FC<WidgetProps> = memo(
     defaultVisible = false,
     popUp = false,
     active = true,
-    noborder = false,
+    noBorder = false,
   }) => {
     const primodium = usePrimodium();
     const [paneInfo, setPane, removePane] = usePersistentStore((state) => [
@@ -591,7 +591,7 @@ export const Widget: React.FC<WidgetProps> = memo(
                 onMinimize={toggleMinimize}
                 onMaximize={toggleMinimize}
                 popUp={popUp}
-                noBorder={noborder}
+                noBorder={noBorder}
               >
                 {children}
               </Content>
@@ -629,7 +629,7 @@ export const Widget: React.FC<WidgetProps> = memo(
               onUnlock={lockable ? handleUnlock : undefined}
               origin={origin}
               popUp={popUp}
-              noBorder={noborder}
+              noBorder={noBorder}
             >
               {children}
             </Content>
