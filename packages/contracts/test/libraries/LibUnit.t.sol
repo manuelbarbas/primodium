@@ -80,6 +80,7 @@ contract LibUnitTest is PrimodiumTest {
   }
 
   function testClaimUnitsConqueredAsteroid() public {
+    P_GameConfig.setAsteroidChanceInv(1);
     PositionData memory position = Position.get(Home.get(player));
 
     bytes32 secondaryAsteroid = LibAsteroid.createSecondaryAsteroid(findSecondaryAsteroid(player, Home.get(player)));

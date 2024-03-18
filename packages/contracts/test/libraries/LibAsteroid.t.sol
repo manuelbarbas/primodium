@@ -22,11 +22,13 @@ contract LibAsteroidTest is PrimodiumTest {
   }
 
   function testIsAsteroid() public {
-    uint256 chanceInv = P_GameConfig.get().asteroidChanceInv;
+    vm.startPrank(creator);
+    uint256 chanceInv = 4;
+    P_GameConfig.setAsteroidChanceInv(4);
     bytes32 entity = 0 << 128;
-    assertFalse(LibAsteroid.isAsteroid(entity, chanceInv));
-    entity = bytes32(uint256(1 << 128));
     assertTrue(LibAsteroid.isAsteroid(entity, chanceInv));
+    entity = bytes32(uint256(1 << 128));
+    assertFalse(LibAsteroid.isAsteroid(entity, chanceInv));
     entity = bytes32(uint256(2 << 128));
     assertFalse(LibAsteroid.isAsteroid(entity, chanceInv));
   }

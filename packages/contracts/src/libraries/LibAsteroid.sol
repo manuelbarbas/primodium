@@ -109,7 +109,7 @@ library LibAsteroid {
 
   function isAsteroid(bytes32 entity, uint256 chanceInv) internal pure returns (bool) {
     uint256 motherlodeKey = LibEncode.getByteUInt(uint256(entity), 6, 128);
-    return motherlodeKey % chanceInv == 1;
+    return motherlodeKey % chanceInv == 0;
   }
 
   /// @dev Initialize a motherlode
