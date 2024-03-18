@@ -117,30 +117,13 @@ export enum EObjectives {
   BuildShieldGenerator,
 
   TrainMinutemanMarine1,
-  TrainMinutemanMarine2,
-  TrainMinutemanMarine3,
   TrainTridentMarine1,
-  TrainTridentMarine2,
-  TrainTridentMarine3,
   TrainAnvilDrone1,
-  TrainAnvilDrone2,
-  TrainAnvilDrone3,
   TrainHammerDrone1,
-  TrainHammerDrone2,
-  TrainHammerDrone3,
   TrainAegisDrone1,
-  TrainAegisDrone2,
-  TrainAegisDrone3,
   TrainStingerDrone1,
-  TrainStingerDrone2,
-  TrainStingerDrone3,
 
   ExpandBase1,
-  ExpandBase2,
-  ExpandBase3,
-  ExpandBase4,
-  ExpandBase5,
-  ExpandBase6,
 }
 
 export enum EFleetKey {

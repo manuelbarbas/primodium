@@ -2083,22 +2083,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_ResourceReward: getResourceValues({ IronPlate: 500 }),
     },
   },
-  TrainMinutemanMarine2: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["TrainMinutemanMarine1"]) },
-      P_ProducedUnits: getUnitValues({ MinutemanMarine: 100 }),
-      P_ResourceReward: getResourceValues({ IronPlate: 1000 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
-  },
-  TrainMinutemanMarine3: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["TrainMinutemanMarine2"]) },
-      P_ProducedUnits: getUnitValues({ MinutemanMarine: 200 }),
-      P_ResourceReward: getResourceValues({ IronPlate: 3000 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
-  },
 
   TrainTridentMarine1: {
     tables: {
@@ -2106,22 +2090,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_ProducedUnits: getUnitValues({ TridentMarine: 50 }),
       P_ResourceReward: getResourceValues({ Lithium: 1000 }),
     },
-  },
-  TrainTridentMarine2: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["TrainTridentMarine1"]) },
-      P_ProducedUnits: getUnitValues({ TridentMarine: 100 }),
-      P_ResourceReward: getResourceValues({ Lithium: 5000 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
-  },
-  TrainTridentMarine3: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["TrainTridentMarine2"]) },
-      P_ProducedUnits: getUnitValues({ TridentMarine: 200 }),
-      P_ResourceReward: getResourceValues({ Lithium: 10000 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
 
   TrainAnvilDrone1: {
@@ -2132,20 +2100,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
-  TrainAnvilDrone2: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["TrainAnvilDrone1"]) },
-      P_ProducedUnits: getUnitValues({ AnvilDrone: 50 }),
-      P_ResourceReward: getResourceValues({ PVCell: 2000 }),
-    },
-  },
-  TrainAnvilDrone3: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["TrainAnvilDrone2"]) },
-      P_ProducedUnits: getUnitValues({ AnvilDrone: 100 }),
-      P_ResourceReward: getResourceValues({ PVCell: 5000 }),
-    },
-  },
 
   TrainHammerDrone1: {
     tables: {
@@ -2154,20 +2108,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_ResourceReward: getResourceValues({ PVCell: 500 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
-  },
-  TrainHammerDrone2: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["TrainHammerDrone1"]) },
-      P_ProducedUnits: getUnitValues({ HammerDrone: 50 }),
-      P_ResourceReward: getResourceValues({ PVCell: 5000 }),
-    },
-  },
-  TrainHammerDrone3: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["TrainHammerDrone2"]) },
-      P_ProducedUnits: getUnitValues({ HammerDrone: 100 }),
-      P_ResourceReward: getResourceValues({ PVCell: 10000 }),
-    },
   },
 
   TrainAegisDrone1: {
@@ -2178,20 +2118,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
   },
-  TrainAegisDrone2: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["TrainAegisDrone1"]) },
-      P_ProducedUnits: getUnitValues({ AegisDrone: 50 }),
-      P_ResourceReward: getResourceValues({ Alloy: 5000 }),
-    },
-  },
-  TrainAegisDrone3: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["TrainAegisDrone2"]) },
-      P_ProducedUnits: getUnitValues({ AegisDrone: 100 }),
-      P_ResourceReward: getResourceValues({ Alloy: 10000 }),
-    },
-  },
 
   TrainStingerDrone1: {
     tables: {
@@ -2201,62 +2127,12 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
   },
-  TrainStingerDrone2: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["TrainStingerDrone1"]) },
-      P_ProducedUnits: getUnitValues({ StingerDrone: 50 }),
-      P_ResourceReward: getResourceValues({ Iron: 15000, Copper: 15000, Lithium: 15000 }),
-    },
-  },
-  TrainStingerDrone3: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["TrainStingerDrone2"]) },
-      P_ProducedUnits: getUnitValues({ StingerDrone: 100 }),
-      P_ResourceReward: getResourceValues({ Iron: 75000, Copper: 75000, Lithium: 75000 }),
-    },
-  },
 
-  // todo: expand base logic
   ExpandBase1: {
     tables: {
       P_RequiredExpansion: { value: 2n },
       P_ResourceReward: getResourceValues({ Iron: 2000 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
-  },
-  ExpandBase2: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["ExpandBase1"]) },
-      P_RequiredExpansion: { value: 3n },
-      P_ResourceReward: getResourceValues({ Iron: 5000, Copper: 5000 }),
-    },
-  },
-  ExpandBase3: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["ExpandBase2"]) },
-      P_RequiredExpansion: { value: 4n },
-      P_ResourceReward: getResourceValues({ Iron: 10000, Copper: 10000 }),
-    },
-  },
-  ExpandBase4: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["ExpandBase3"]) },
-      P_RequiredExpansion: { value: 5n },
-      P_ResourceReward: getResourceValues({ Iron: 20000, Copper: 20000 }),
-    },
-  },
-  ExpandBase5: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["ExpandBase4"]) },
-      P_RequiredExpansion: { value: 6n },
-      P_ResourceReward: getResourceValues({ Iron: 40000, Copper: 40000 }),
-    },
-  },
-  ExpandBase6: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["ExpandBase5"]) },
-      P_RequiredExpansion: { value: 7n },
-      P_ResourceReward: getResourceValues({ Iron: 100000, Copper: 100000 }),
-    },
   },
 };
