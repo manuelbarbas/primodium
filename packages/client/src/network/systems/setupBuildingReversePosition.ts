@@ -1,6 +1,6 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { convertToCoords } from "src/util/building";
-import { reverseBuildingPositionToEntity } from "src/util/tile";
+import { getBuildingPositionEntity } from "src/util/tile";
 import { components } from "../components";
 import { world } from "../world";
 
@@ -18,7 +18,7 @@ export const setupBuildingReversePosition = () => {
     if (oldVal?.value) {
       const coords = convertToCoords(oldVal.value);
       coords.forEach((coord) => {
-        const positionEntity = reverseBuildingPositionToEntity(coord, asteroid);
+        const positionEntity = getBuildingPositionEntity(coord, asteroid);
         components.ReverseBuildingPosition.remove(positionEntity);
       });
     }
@@ -26,9 +26,8 @@ export const setupBuildingReversePosition = () => {
     // add new reverse position
     if (newVal?.value) {
       const coords = convertToCoords(newVal.value);
-      console.log(entity, coords);
       coords.forEach((coord) => {
-        const positionEntity = reverseBuildingPositionToEntity(coord, asteroid);
+        const positionEntity = getBuildingPositionEntity(coord, asteroid);
         components.ReverseBuildingPosition.set({ value: entity }, positionEntity);
       });
     }
