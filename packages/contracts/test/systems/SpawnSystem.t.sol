@@ -11,11 +11,6 @@ contract SpawnSystemTest is PrimodiumTest {
 
   function testSpawnu() public {
     bytes32 playerEntity = addressToEntity(creator);
-    (address systemAddress, bool publicAccess) = Systems.get(
-      getSystemResourceId(bytes16("BuildSystem"), bytes14("Primodium"))
-    );
-    console.log("systemAddress", systemAddress);
-
     bytes32 asteroidEntity = spawn(creator);
     vm.startPrank(creator);
 

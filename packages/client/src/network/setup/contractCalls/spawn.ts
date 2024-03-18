@@ -7,12 +7,12 @@ import { getSystemId } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const spawn = async (mud: MUD) => {
+export const spawnu = async (mud: MUD) => {
   await execute(
     {
       mud,
       systemId: getSystemId("SpawnSystem"),
-      functionName: "spawn",
+      functionName: "Primodium__spawn",
     },
     { id: singletonEntity },
     (receipt) => {
@@ -27,20 +27,26 @@ export const spawnAndAuthorizeSessionAccount = async (mud: MUD, sessionAccount: 
   const spawn = {
     mud,
     systemId: getSystemId("SpawnSystem"),
-    functionName: "spawn",
+    functionName: "Primodium__spawn",
+    args: [],
+    withSession: false,
   } as const;
 
   const authorize = {
-    systemId: getSystemId("Registration"),
+    systemId: getSystemId("Registration", ""),
     functionName: "registerDelegation" as const,
     args: [sessionAccount, UNLIMITED_DELEGATION, "0x0"] as [Hex, Hex, Hex],
     withSession: false,
   };
 
+  console.log("spawn:", spawn);
+  // console.log("authorize:", authorize);
+
   await executeBatch(
     {
       mud,
-      systemCalls: [spawn, authorize],
+      systemCalls: [authorize, spawn],
+      withSession: false,
     },
     { id: singletonEntity },
     (receipt) => {

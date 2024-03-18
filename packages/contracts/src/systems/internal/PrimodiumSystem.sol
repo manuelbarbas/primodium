@@ -7,7 +7,6 @@ import { _player as player } from "src/utils.sol";
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
-import { getSystemResourceId } from "src/utils.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 
 import { S_ClaimSystem } from "systems/subsystems/S_ClaimSystem.sol";

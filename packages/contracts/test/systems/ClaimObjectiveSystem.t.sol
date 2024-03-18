@@ -51,15 +51,6 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
     P_ResourceReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)), resourceRewardData);
 
-    bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine));
-    P_ResourceRewardData memory rewardData = P_ResourceReward.get(objectivePrototype);
-    console.logBytes32(homeRock);
-    for (uint256 i = 0; i < rewardData.resources.length; i++) {
-      console.log("reward amount:", rewardData.amounts[i]);
-      console.log("resource count:", ResourceCount.get(homeRock, rewardData.resources[i]));
-      console.log("max resource count:", MaxResourceCount.get(homeRock, rewardData.resources[i]));
-    }
-
     world.Primodium__claimObjective(homeRock, EObjectives.BuildIronMine);
   }
 

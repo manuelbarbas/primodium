@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { getSystemResourceId } from "src/utils.sol";
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { BuildSystem } from "systems/BuildSystem.sol";
 import { IWorld } from "codegen/world/IWorld.sol";

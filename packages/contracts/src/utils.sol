@@ -6,10 +6,6 @@ import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 import { ResourceId } from "@latticexyz/world/src/SystemCall.sol";
 import { OwnedBy } from "codegen/index.sol";
 
-function getSystemResourceId(string memory rawName) pure returns (ResourceId) {
-  return WorldResourceIdLib.encode(RESOURCE_SYSTEM, "", bytes16(bytes32(bytes(rawName))));
-}
-
 function addressToEntity(address a) pure returns (bytes32) {
   return bytes32(uint256(uint160((a))));
 }
