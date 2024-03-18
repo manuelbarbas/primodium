@@ -1,9 +1,9 @@
 import { Coord } from "@latticexyz/utils";
 import { EBuilding } from "contracts/config/enums";
 import { ampli } from "src/ampli";
-import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { TxQueueOptions } from "src/network/components/customComponents/TransactionQueueComponent";
+import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { getBuildingTopLeft } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";

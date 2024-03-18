@@ -1,6 +1,6 @@
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { ampli } from "src/ampli";
-import { execute, executeBatch } from "src/network/actions";
+import { execute, executeBatch } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { UNLIMITED_DELEGATION } from "src/util/constants";
 import { getSystemId } from "src/util/encode";

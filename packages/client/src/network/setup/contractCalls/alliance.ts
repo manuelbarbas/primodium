@@ -1,8 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
 import { ampli } from "src/ampli";
-import { execute } from "src/network/actions";
 import { components } from "src/network/components";
+import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import { getAllianceName, getAllianceNameFromPlayer } from "src/util/alliance";

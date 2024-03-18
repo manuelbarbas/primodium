@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
-import { execute } from "src/network/actions";
 import { components } from "src/network/components";
+import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId } from "src/util/encode";

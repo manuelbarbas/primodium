@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { EFleetStance } from "contracts/config/enums";
-import { execute } from "src/network/actions";
+import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId } from "src/util/encode";

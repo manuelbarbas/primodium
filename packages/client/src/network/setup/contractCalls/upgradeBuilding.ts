@@ -1,9 +1,9 @@
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { ampli } from "src/ampli";
-import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { TxQueueOptions } from "src/network/components/customComponents/TransactionQueueComponent";
+import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { getBlockTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
