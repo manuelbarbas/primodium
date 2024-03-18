@@ -18,7 +18,7 @@ export async function demolishBuilding(mud: MUD, building: Entity) {
   await execute(
     {
       mud,
-      functionName: "destroy",
+      functionName: "Primodium__destroy",
       systemId: getSystemId("DestroySystem"),
       args: [{ ...position, parent: position.parent as Hex }],
       withSession: true,

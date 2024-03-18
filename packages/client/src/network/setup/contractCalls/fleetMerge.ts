@@ -9,7 +9,7 @@ export const mergeFleets = async (mud: MUD, fleets: Entity[]) => {
   await execute(
     {
       mud,
-      functionName: "mergeFleets",
+      functionName: "Primodium__mergeFleets",
       systemId: getSystemId("FleetMergeSystem"),
       args: [fleets as Hex[]],
       withSession: true,

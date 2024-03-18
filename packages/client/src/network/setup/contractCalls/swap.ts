@@ -14,7 +14,7 @@ export const swap = async (mud: MUD, marketEntity: Entity, path: Entity[], amoun
     {
       mud,
       systemId: getSystemId("MarketplaceSystem"),
-      functionName: "swap",
+      functionName: "Primodium__swap",
       args: [marketEntity as Hex, enumPath, amountIn, 0n],
       withSession: true,
     },

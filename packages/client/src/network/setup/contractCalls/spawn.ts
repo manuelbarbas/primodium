@@ -28,7 +28,6 @@ export const spawnAndAuthorizeSessionAccount = async (mud: MUD, sessionAccount: 
     mud,
     systemId: getSystemId("SpawnSystem"),
     functionName: "Primodium__spawn",
-    args: [],
     withSession: false,
   } as const;
 

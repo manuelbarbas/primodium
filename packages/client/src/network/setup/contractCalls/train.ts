@@ -15,7 +15,7 @@ export const train = async (mud: MUD, buildingEntity: Entity, unit: EUnit, count
   await execute(
     {
       mud,
-      functionName: "trainUnits",
+      functionName: "Primodium__trainUnits",
       systemId: getSystemId("TrainUnitsSystem"),
       args: [buildingEntity as Hex, unit, count],
       withSession: true,

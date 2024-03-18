@@ -9,7 +9,7 @@ export const claimUnits = async (mud: MUD, rock: Entity) => {
   await execute(
     {
       mud,
-      functionName: "claimUnits",
+      functionName: "Primodium__claimUnits",
       systemId: getSystemId("ClaimUnitsSystem"),
       args: [rock as Hex],
       withSession: true,

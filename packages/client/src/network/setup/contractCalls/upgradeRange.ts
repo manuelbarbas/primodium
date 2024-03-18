@@ -14,7 +14,7 @@ export const upgradeRange = async (mud: MUD, asteroid: Entity) => {
   await execute(
     {
       mud,
-      functionName: "upgradeRange",
+      functionName: "Primodium__upgradeRange",
       systemId: getSystemId("UpgradeRangeSystem"),
       args: [asteroid as Hex],
       withSession: true,

@@ -16,7 +16,7 @@ export const createFleet = async (
   await execute(
     {
       mud,
-      functionName: "createFleet",
+      functionName: "Primodium__createFleet",
       systemId: getSystemId("FleetCreateSystem"),
       args: [spaceRock as Hex, toUnitCountArray(deltas), toTransportableResourceArray(deltas)],
       withSession: true,

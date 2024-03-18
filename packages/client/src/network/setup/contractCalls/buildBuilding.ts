@@ -26,7 +26,7 @@ export const buildBuilding = async (
   await execute(
     {
       mud,
-      functionName: "build",
+      functionName: "Primodium__build",
       systemId: getSystemId("BuildSystem"),
       args: [building, position],
       withSession: true,

@@ -9,7 +9,7 @@ export const landFleet = async (mud: MUD, fleet: Entity, rock: Entity) => {
   await execute(
     {
       mud,
-      functionName: "landFleet",
+      functionName: "Primodium__landFleet",
       systemId: getSystemId("FleetLandSystem"),
       args: [fleet as Hex, rock as Hex],
       withSession: true,

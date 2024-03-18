@@ -24,7 +24,7 @@ export const upgradeBuilding = async (
   await execute(
     {
       mud,
-      functionName: "upgradeBuilding",
+      functionName: "Primodium__upgradeBuilding",
       systemId: getSystemId("UpgradeBuildingSystem"),
       args: [position],
       withSession: true,

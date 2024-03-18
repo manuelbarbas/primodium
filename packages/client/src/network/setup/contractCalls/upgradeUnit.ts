@@ -15,7 +15,7 @@ export const upgradeUnit = async (mud: MUD, spaceRock: Entity, unit: EUnit) => {
   await execute(
     {
       mud,
-      functionName: "upgradeUnit",
+      functionName: "Primodium__upgradeUnit",
       systemId: getSystemId("UpgradeUnitSystem"),
       args: [spaceRock as Hex, unit],
       withSession: true,

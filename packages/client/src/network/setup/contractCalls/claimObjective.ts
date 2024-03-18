@@ -15,7 +15,7 @@ export const claimObjective = async (mud: MUD, rockEntity: Entity, rawObjective:
   await execute(
     {
       mud,
-      functionName: "claimObjective",
+      functionName: "Primodium__claimObjective",
       systemId: getSystemId("ClaimObjectiveSystem"),
       args: [rockEntity as Hex, objective],
       withSession: true,

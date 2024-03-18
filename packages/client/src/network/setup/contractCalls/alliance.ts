@@ -15,7 +15,7 @@ export const createAlliance = async (mud: MUD, name: string, inviteOnly: boolean
   await execute(
     {
       mud,
-      functionName: "create",
+      functionName: "Primodium__create",
       systemId: getSystemId("AllianceSystem"),
       args: [
         toHex32(name.substring(0, 6).toUpperCase()),
@@ -40,7 +40,7 @@ export const leaveAlliance = async (mud: MUD) => {
   execute(
     {
       mud,
-      functionName: "leave",
+      functionName: "Primodium__leave",
       systemId: getSystemId("AllianceSystem"),
       withSession: true,
     },
@@ -60,7 +60,7 @@ export const joinAlliance = async (mud: MUD, alliance: Entity) => {
   execute(
     {
       mud,
-      functionName: "join",
+      functionName: "Primodium__join",
       systemId: getSystemId("AllianceSystem"),
       args: [alliance as Hex],
       withSession: true,
@@ -81,7 +81,7 @@ export const declineInvite = async (mud: MUD, inviter: Entity) => {
   execute(
     {
       mud,
-      functionName: "declineInvite",
+      functionName: "Primodium__declineInvite",
       systemId: getSystemId("AllianceSystem"),
       args: [inviter as Hex],
       withSession: true,
@@ -103,7 +103,7 @@ export const requestToJoin = async (mud: MUD, alliance: Entity) => {
   execute(
     {
       mud,
-      functionName: "requestToJoin",
+      functionName: "Primodium__requestToJoin",
       systemId: getSystemId("AllianceSystem"),
       args: [alliance as Hex],
       withSession: true,
@@ -127,7 +127,7 @@ export const kickPlayer = async (mud: MUD, player: Entity) => {
   execute(
     {
       mud,
-      functionName: "kick",
+      functionName: "Primodium__kick",
       systemId: getSystemId("AllianceSystem"),
       args: [player as Hex],
       withSession: true,
@@ -151,7 +151,7 @@ export const grantRole = async (mud: MUD, player: Entity, role: EAllianceRole) =
   execute(
     {
       mud,
-      functionName: "grantRole",
+      functionName: "Primodium__grantRole",
       systemId: getSystemId("AllianceSystem"),
       args: [player as Hex, role],
       withSession: true,
@@ -174,7 +174,7 @@ export const acceptJoinRequest = async (mud: MUD, target: Entity) => {
   execute(
     {
       mud,
-      functionName: "acceptRequestToJoin",
+      functionName: "Primodium__acceptRequestToJoin",
       systemId: getSystemId("AllianceSystem"),
       args: [target as Hex],
       withSession: true,
@@ -196,7 +196,7 @@ export const rejectJoinRequest = async (mud: MUD, target: Entity) => {
   execute(
     {
       mud,
-      functionName: "rejectRequestToJoin",
+      functionName: "Primodium__rejectRequestToJoin",
       systemId: getSystemId("AllianceSystem"),
       args: [target as Hex],
       withSession: true,
@@ -218,7 +218,7 @@ export const invite = async (mud: MUD, target: Entity) => {
   execute(
     {
       mud,
-      functionName: "invite",
+      functionName: "Primodium__invite",
       systemId: getSystemId("AllianceSystem"),
       args: [target as Hex],
       withSession: true,

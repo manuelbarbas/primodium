@@ -26,7 +26,7 @@ export const moveBuilding = async (mud: MUD, building: Entity, coord: Coord) => 
   await execute(
     {
       mud,
-      functionName: "moveBuilding",
+      functionName: "Primodium__moveBuilding",
       systemId: getSystemId("MoveBuildingSystem"),
       args: [{ ...prevPosition, parent: prevPosition.parent as Hex }, position],
       withSession: true,
