@@ -117,7 +117,6 @@ library LibUnit {
    */
   function updateStoredUtilities(bytes32 spaceRockEntity, bytes32 unitType, uint256 count, bool add) internal {
     if (count == 0) return;
-    bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
     uint256 unitLevel = UnitLevel.get(spaceRockEntity, unitType);
 
     P_RequiredResourcesData memory resources = P_RequiredResources.get(unitType, unitLevel);

@@ -3,9 +3,10 @@ pragma solidity >=0.8.24;
 
 import { entityToAddress } from "src/utils.sol";
 // tables
-import { IsActive, HasBuiltBuilding, Asteroid, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint } from "codegen/index.sol";
+import { TilePositions, IsActive, HasBuiltBuilding, Asteroid, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, OwnedBy, P_Blueprint } from "codegen/index.sol";
 
 // libraries
+import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 
@@ -58,7 +59,6 @@ library LibBuilding {
       );
     }
     require(OwnedBy.get(coord.parent) == playerEntity, "[BuildSystem] You can only build on an asteroid you control");
-    require(!Spawned.get(getBuildingFromCoord(coord)), "[BuildSystem] Building already exists");
     require(
       LibBuilding.hasRequiredBaseLevel(coord.parent, buildingPrototype, 1),
       "[BuildSystem] MainBase level requirement not met"
@@ -135,48 +135,26 @@ library LibBuilding {
     int32[] memory blueprint = P_Blueprint.get(buildingPrototype);
     Bounds memory bounds = getSpaceRockBounds(position.parent);
 
-    bytes32[] memory tiles = new bytes32[](blueprint.length / 2);
+    int32[] memory tileCoords = new int32[](blueprint.length);
     for (uint256 i = 0; i < blueprint.length; i += 2) {
-      PositionData memory relativeCoord = PositionData(blueprint[i], blueprint[i + 1], 0);
-      PositionData memory absoluteCoord = PositionData(
-        position.x + relativeCoord.x,
-        position.y + relativeCoord.y,
-        position.parent
+      int32 x = blueprint[i] + position.x;
+      int32 y = blueprint[i + 1] + position.y;
+      require(
+        bounds.minX <= x && bounds.minY <= y && bounds.maxX >= x && bounds.maxY >= y,
+        "[BuildSystem] Building out of bounds"
       );
-      tiles[i / 2] = placeBuildingTile(buildingEntity, bounds, absoluteCoord);
+      tileCoords[i] = x;
+      tileCoords[i + 1] = y;
     }
-    Children.set(buildingEntity, tiles);
+
+    require(LibAsteroid.allTilesAvailable(position.parent, tileCoords), "[BuildSystem] Tile unavailable");
+    LibAsteroid.setTiles(position.parent, tileCoords);
+    TilePositions.set(buildingEntity, tileCoords);
   }
 
-  function removeBuildingTiles(PositionData memory coord) internal {
-    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
-
-    bytes32[] memory children = Children.get(buildingEntity);
-    for (uint256 i = 0; i < children.length; i++) {
-      require(OwnedBy.get(children[i]) != 0, "[Destroy] Cannot destroy unowned coordinate");
-      OwnedBy.deleteRecord(children[i]);
-    }
-    Children.deleteRecord(buildingEntity);
-  }
-
-  /// @notice Places a single building tile at a coordinate
-  /// @param buildingEntity The entity ID of the building
-  /// @param bounds The boundary limits for placing the tile
-  /// @param coord The coordinate where the tile should be placed
-  /// @return tileEntity The entity ID of the newly placed tile
-  function placeBuildingTile(
-    bytes32 buildingEntity,
-    Bounds memory bounds,
-    PositionData memory coord
-  ) private returns (bytes32 tileEntity) {
-    tileEntity = LibEncode.getHash(BuildingTileKey, coord);
-    require(OwnedBy.get(tileEntity) == 0, "[BuildSystem] Cannot build tile on a non-empty coordinate");
-    require(
-      bounds.minX <= coord.x && bounds.minY <= coord.y && bounds.maxX >= coord.x && bounds.maxY >= coord.y,
-      "[BuildSystem] Building out of bounds"
-    );
-    OwnedBy.set(tileEntity, buildingEntity);
-    Position.set(tileEntity, coord);
+  function removeBuildingTiles(bytes32 buildingEntity) internal {
+    LibAsteroid.removeTiles(Position.getParent(buildingEntity), TilePositions.get(buildingEntity));
+    TilePositions.deleteRecord(buildingEntity);
   }
 
   /// @notice Gets the boundary limits for a spaceRock
@@ -194,14 +172,6 @@ library LibBuilding {
         minX: (asteroidDims.xBounds - range.width) / 2,
         minY: (asteroidDims.yBounds - range.height) / 2
       });
-  }
-
-  /// @notice Gets the building entity ID from a coordinate
-  /// @param coord The coordinate to look up
-  /// @return The building entity ID
-  function getBuildingFromCoord(PositionData memory coord) internal view returns (bytes32) {
-    bytes32 buildingTile = LibEncode.getHash(BuildingTileKey, coord);
-    return OwnedBy.get(buildingTile);
   }
 
   /// @notice Gets the base level for a player

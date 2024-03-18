@@ -1,6 +1,6 @@
-import { Hex } from "viem";
 import { Entity } from "@latticexyz/recs";
 import type { Sync } from "@primodiumxyz/sync-stack";
+import { Hex } from "viem";
 
 export const getAsteroidQuery = ({
   tables,
@@ -84,6 +84,9 @@ export const getActiveAsteroidQuery = ({
           include: [
             {
               tableId: tables.OwnedBy.tableId!,
+            },
+            {
+              tableId: tables.TilePositions.tableId!,
             },
             {
               tableId: tables.BuildingType.tableId!,

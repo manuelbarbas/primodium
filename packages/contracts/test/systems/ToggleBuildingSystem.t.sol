@@ -56,12 +56,12 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
       "iron production doesn't match"
     );
 
-    world.Primodium__toggleBuilding(ironMinePosition);
+    world.Primodium__toggleBuilding(ironMineEntity);
 
     assertTrue(!IsActive.get(ironMineEntity), "built iron mine should be in active");
     assertEq(ProductionRate.get(Home.get(player), uint8(EResource.Iron)), 0, "iron production should be 0");
 
-    world.Primodium__toggleBuilding(ironMinePosition);
+    world.Primodium__toggleBuilding(ironMineEntity);
     assertTrue(IsActive.get(ironMineEntity), "built iron mine should be active");
     assertEq(
       ProductionRate.get(Home.get(player), uint8(EResource.Iron)),
@@ -82,7 +82,7 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
       "iron plate production doesn't match"
     );
 
-    world.Primodium__toggleBuilding(ironPlateFactoryPosition);
+    world.Primodium__toggleBuilding(ironPlateFactory);
 
     assertEq(ConsumptionRate.get(Home.get(player), uint8(EResource.Iron)), 0, "iron consumption doesn't match");
     assertEq(
@@ -91,7 +91,7 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
       "iron plate production doesn't match"
     );
 
-    world.Primodium__toggleBuilding(ironPlateFactoryPosition);
+    world.Primodium__toggleBuilding(ironPlateFactory);
 
     assertEq(
       ConsumptionRate.get(Home.get(player), uint8(EResource.Iron)),
@@ -107,14 +107,14 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
 
   function testToggleClaimResources() public {
     vm.warp(block.timestamp);
-    world.Primodium__toggleBuilding(ironPlateFactoryPosition);
+    world.Primodium__toggleBuilding(ironPlateFactory);
     bytes32 home = Home.get(player);
     assertEq(ProductionRate.get(home, uint8(EResource.Iron)), ironProduction, "iron production doesn't match");
     assertEq(ConsumptionRate.get(home, uint8(EResource.Iron)), 0, "iron consumption should be 0");
     assertEq(ProductionRate.get(home, uint8(EResource.IronPlate)), 0, "iron plate production should be 0");
 
     vm.warp(block.timestamp + 10);
-    world.Primodium__toggleBuilding(ironMinePosition);
+    world.Primodium__toggleBuilding(ironMineEntity);
     assertTrue(!IsActive.get(ironMineEntity), "iron mine should be in active");
     assertEq(
       ResourceCount.get(home, uint8(EResource.Iron)),
@@ -123,7 +123,7 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
     );
 
     vm.warp(block.timestamp + 10);
-    world.Primodium__toggleBuilding(ironMinePosition);
+    world.Primodium__toggleBuilding(ironMineEntity);
     assertTrue(IsActive.get(ironMineEntity), "iron mine should be active");
     assertEq(
       ResourceCount.get(home, uint8(EResource.Iron)),
@@ -142,7 +142,7 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
 
   function testToggleClaimConsumeResources() public {
     vm.warp(block.timestamp);
-    world.Primodium__toggleBuilding(ironMinePosition);
+    world.Primodium__toggleBuilding(ironMineEntity);
 
     assertEq(ProductionRate.get(Home.get(player), uint8(EResource.Iron)), 0, "iron production should be 0");
     assertEq(
@@ -159,7 +159,7 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
 
     vm.warp(block.timestamp + 10);
 
-    world.Primodium__toggleBuilding(ironPlateFactoryPosition);
+    world.Primodium__toggleBuilding(ironPlateFactory);
     assertEq(
       ResourceCount.get(Home.get(player), uint8(EResource.Iron)),
       ironConsumption * 10,
@@ -172,7 +172,7 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
     );
 
     vm.warp(block.timestamp + 10);
-    world.Primodium__toggleBuilding(ironPlateFactoryPosition);
+    world.Primodium__toggleBuilding(ironPlateFactory);
     assertEq(
       ResourceCount.get(Home.get(player), uint8(EResource.Iron)),
       ironConsumption * 10,
@@ -192,7 +192,7 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Workshop)), 1);
     PositionData memory workshopPosition = getTilePosition(player, EBuilding.Workshop);
     bytes32 workshop = world.Primodium__build(EBuilding.Workshop, workshopPosition);
-    world.Primodium__toggleBuilding(workshopPosition);
+    world.Primodium__toggleBuilding(workshop);
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine)), 1);
 
     world.Primodium__trainUnits(workshop, EUnit.MinutemanMarine, 10);
@@ -210,7 +210,7 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine)), 0);
     world.Primodium__trainUnits(workshop, EUnit.MinutemanMarine, 10);
     vm.expectRevert(bytes("[ToggleBuilding] Can not toggle building while it is training units"));
-    world.Primodium__toggleBuilding(workshopPosition);
+    world.Primodium__toggleBuilding(workshop);
   }
 
   function testToggleBuildingTrainingUnitsComplete() public {
@@ -229,18 +229,18 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
     vm.warp(block.timestamp + LibUnit.getUnitBuildTime(workshop, minutemanEntity));
     console.log("units trained");
     assertFalse(UnitProductionQueue.isEmpty(workshop));
-    world.Primodium__toggleBuilding(workshopPosition);
+    world.Primodium__toggleBuilding(workshop);
     console.log("building toggled");
   }
 
   function testCannotToggleOtherPlayerBuilding() public {
     vm.startPrank(alice);
     vm.expectRevert(bytes("[ToggleBuilding] Only owner can toggle building"));
-    world.Primodium__toggleBuilding(ironMinePosition);
+    world.Primodium__toggleBuilding(ironMineEntity);
   }
 
   function testFailToggleMainBase() public {
     switchPrank(creator);
-    world.Primodium__toggleBuilding(Position.get(Home.get(player)));
+    world.Primodium__toggleBuilding(Home.get(Home.get(player)));
   }
 }
