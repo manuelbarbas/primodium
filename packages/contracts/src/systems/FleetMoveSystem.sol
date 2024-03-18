@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";

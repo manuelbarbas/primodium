@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 // external
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
