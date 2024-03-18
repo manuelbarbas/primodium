@@ -23,7 +23,7 @@ contract ToggleBuildingSystem is PrimodiumSystem {
     // Check there isn't another tile there
     bytes32 playerEntity = _player();
     require(
-      OwnedBy.get(OwnedBy.get(buildingEntity)) == playerEntity,
+      OwnedBy.get(Position.getParent(buildingEntity)) == playerEntity,
       "[ToggleBuilding] Only owner can toggle building"
     );
 

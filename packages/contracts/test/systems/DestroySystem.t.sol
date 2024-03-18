@@ -192,4 +192,6 @@ contract DestroySystemTest is PrimodiumTest {
     world.destroy(ironMine);
     assertEq(MaxResourceCount.get(spaceRockEntity, uint8(EResource.Iron)), 0);
   }
+
+  /* TODO: Add test that includes buildings with utility dependencies */
 }

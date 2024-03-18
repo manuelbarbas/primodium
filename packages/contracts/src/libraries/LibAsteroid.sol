@@ -158,19 +158,19 @@ library LibAsteroid {
 
   /**
    * @dev Checks if all specified tiles are available.
-   * @param rock Identifier for a set of tiles.
+   * @param asteroidEntity Identifier for a set of tiles.
    * @param coords Array of coordinates, structured as [x1, y1, x2, y2, ...]. Must be even length.
    * @return bool True if all specified tiles are available, false otherwise.
-   * Requires coords length to be even. Returns true if no tiles are used for the given rock. Validates each tile's availability based on its position in a bitmap.
+   * Requires coords length to be even. Returns true if no tiles are used for the given asteroid. Validates each tile's availability based on its position in a bitmap.
    */
-  function allTilesAvailable(bytes32 rock, int32[] memory coords) internal view returns (bool) {
+  function allTilesAvailable(bytes32 asteroidEntity, int32[] memory coords) internal view returns (bool) {
     require(coords.length % 2 == 0, "Invalid coords length");
-    uint256[] memory bitmap = UsedTiles.get(rock);
+    uint256[] memory bitmap = UsedTiles.get(asteroidEntity);
     if (bitmap.length == 0) return true;
 
-    int32 rowLength = Dimensions.getWidth(ExpansionKey, P_MaxLevel.get(ExpansionKey));
+    int32 width = Dimensions.getWidth(ExpansionKey, P_MaxLevel.get(ExpansionKey));
     for (uint256 i = 0; i < coords.length; i += 2) {
-      uint256 index = uint256(uint32(coords[i] * rowLength + coords[i + 1]));
+      uint256 index = uint256(uint32(coords[i] * width + coords[i + 1]));
       uint256 wordIndex = index / 256;
       if (wordIndex >= bitmap.length) return false; // out of bounds (not available)
       uint256 bitIndex = index % 256;
@@ -191,9 +191,9 @@ library LibAsteroid {
     require(coords.length % 2 == 0, "Invalid coords length");
     uint256[] memory bitmap = UsedTiles.get(rock);
 
-    int32 rowLength = Dimensions.getWidth(ExpansionKey, P_MaxLevel.get(ExpansionKey));
+    int32 width = Dimensions.getWidth(ExpansionKey, P_MaxLevel.get(ExpansionKey));
     for (uint256 i = 0; i < coords.length; i += 2) {
-      uint256 index = uint256(uint32(coords[i] * rowLength + coords[i + 1]));
+      uint256 index = uint256(uint32(coords[i] * width + coords[i + 1]));
       uint256 wordIndex = index / 256;
       require(wordIndex < bitmap.length, "Tile out of bounds");
       uint256 bitIndex = index % 256;
@@ -214,9 +214,9 @@ library LibAsteroid {
     require(coords.length % 2 == 0, "Invalid coords length");
     uint256[] memory bitmap = UsedTiles.get(rock);
 
-    int32 rowLength = Dimensions.getWidth(ExpansionKey, P_MaxLevel.get(ExpansionKey));
+    int32 width = Dimensions.getWidth(ExpansionKey, P_MaxLevel.get(ExpansionKey));
     for (uint256 i = 0; i < coords.length; i += 2) {
-      uint256 index = uint256(uint32(coords[i] * rowLength + coords[i + 1]));
+      uint256 index = uint256(uint32(coords[i] * width + coords[i + 1]));
       uint256 wordIndex = index / 256;
       require(wordIndex < bitmap.length, "Tile out of bounds");
       uint256 bitIndex = index % 256;
