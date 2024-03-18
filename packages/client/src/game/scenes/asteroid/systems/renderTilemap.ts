@@ -2,8 +2,8 @@ import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs"
 import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { AsteroidMap } from "../objects/AsteroidMap";
-import { getAsteroidBounds, getAsteroidMaxBounds } from "src/util/outOfBounds";
+import { AsteroidMap } from "../objects/AsteroidMap/AsteroidMap";
+import { getAsteroidBounds as getAsteroidCurrentBounds, getAsteroidMaxBounds } from "src/util/outOfBounds";
 import { decodeEntity } from "@latticexyz/store-sync/recs";
 
 export const renderTilemap = (scene: Scene) => {
@@ -21,7 +21,7 @@ export const renderTilemap = (scene: Scene) => {
     if (!asteroidData) return;
 
     const maxBounds = getAsteroidMaxBounds(activeRock);
-    const currentBounds = getAsteroidBounds(activeRock);
+    const currentBounds = getAsteroidCurrentBounds(activeRock);
 
     if (asteroidMap) asteroidMap.dispose();
 
