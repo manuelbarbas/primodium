@@ -33,7 +33,7 @@ contract DestroySystemTest is PrimodiumTest {
     P_RequiredBaseLevel.set(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Shipyard)), 1, 0);
 
     PositionData memory originalPosition = getTilePosition(Home.get(playerEntity), building);
-    bytes32 buildingEntity = world.build(building, originalPosition);
+    bytes32 buildingEntity = world.Primodium__build(building, originalPosition);
 
     uint256 gas = gasleft();
     world.Primodium__destroy(buildingEntity);
@@ -42,7 +42,7 @@ contract DestroySystemTest is PrimodiumTest {
 
   function destroy(bytes32 buildingEntity, PositionData memory _coord) public {
     int32[] memory tilePositions = TilePositions.get(buildingEntity);
-    world.destroy(buildingEntity);
+    world.Primodium__destroy(buildingEntity);
 
     assertEq(TilePositions.get(buildingEntity).length, 0);
     for (uint256 i = 0; i < tilePositions.length; i += 2) {

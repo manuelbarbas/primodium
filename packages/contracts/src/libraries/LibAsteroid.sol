@@ -39,7 +39,6 @@ library LibAsteroid {
     Position.set(asteroidEntity, coord);
     Asteroid.set(asteroidEntity, AsteroidData({ isAsteroid: true, maxLevel: 5, mapId: 1, spawnsSecondary: true }));
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
-    OwnedBy.set(asteroidEntity, ownerEntity);
 
     UsedTiles.set(asteroidEntity, new uint256[](getUsedTilesLength()));
 

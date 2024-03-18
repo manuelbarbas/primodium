@@ -16,6 +16,8 @@ const getConfig = async () => {
   }
   return mudConfig({
     excludeSystems: exclude,
+    worldContractName: "Primodium",
+    namespace: "Primodium",
     systems: {
       S_SpawnPirateAsteroidSystem: {
         openAccess: false,

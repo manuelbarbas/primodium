@@ -30,7 +30,7 @@ contract BuildSystemTest is PrimodiumTest {
 
     PositionData memory originalPosition = getTilePosition(Home.get(playerEntity), building);
     uint256 gas = gasleft();
-    world.build(building, originalPosition);
+    world.Primodium__build(building, originalPosition);
     console.log("after", gas - gasleft());
   }
 
