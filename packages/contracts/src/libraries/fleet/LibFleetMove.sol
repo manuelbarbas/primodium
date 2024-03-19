@@ -16,7 +16,17 @@ import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src
 import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { EResource, EFleetStance } from "src/Types.sol";
 
+/**
+ * @title LibFleetMove
+ * @dev Library for managing fleet movements, including sending, recalling, and calculating arrival times.
+ */
 library LibFleetMove {
+  /**
+   * @notice Sends a fleet to a destination.
+   * @dev Moves a fleet to a new location, also moving any following fleets to the same destination.
+   * @param fleetEntity The identifier of the fleet to send.
+   * @param destination The destination's identifier.
+   */
   function sendFleet(bytes32 fleetEntity, bytes32 destination) internal {
     bytes32 origin = FleetMovement.getDestination(fleetEntity);
     require(!isAsteroidBlocked(origin), "[Fleet] asteroid is blocked");
@@ -51,6 +61,11 @@ library LibFleetMove {
     );
   }
 
+  /**
+   * @notice Recalls a fleet to its origin.
+   * @dev Sends the fleet back to its original location before it reached its current destination.
+   * @param fleetEntity The identifier of the fleet to recall.
+   */
   function recallFleet(bytes32 fleetEntity) internal {
     FleetMovementData memory fleetMovement = FleetMovement.get(fleetEntity);
     require(fleetMovement.origin != fleetMovement.destination, "[Fleet] Fleet is already at origin");
@@ -76,11 +91,13 @@ library LibFleetMove {
     }
   }
 
-  /// @notice Computes the block number an arrival will occur.
-  /// @param origin origin asteroid.
-  /// @param destination Destination position.
-  /// @param speed speed of movement.
-  /// @return Block number of arrival.
+  /**
+   * @notice Calculates the arrival time of a fleet based on its speed and distance to the destination.
+   * @param origin The origin's identifier.
+   * @param destination The destination position data.
+   * @param speed The fleet's speed.
+   * @return The block timestamp when the fleet will arrive.
+   */
   function getArrivalTime(
     bytes32 origin,
     PositionData memory destination,
@@ -96,11 +113,22 @@ library LibFleetMove {
         UNIT_SPEED_SCALE) / (config.worldSpeed * speed));
   }
 
+  /**
+   * @dev Checks if an asteroid is blocked by a fleet with a 'Block' stance.
+   * @param asteroidEntity The identifier of the asteroid to check.
+   * @return True if the asteroid is blocked, false otherwise.
+   */
   function isAsteroidBlocked(bytes32 asteroidEntity) private returns (bool) {
     bytes32 fleetBlockKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Block));
     return FleetSet.size(asteroidEntity, fleetBlockKey) > 0;
   }
 
+  /**
+   * @notice Determines the speed of a fleet.
+   * @dev Calculates the fleet's speed based on the slowest unit in the fleet.
+   * @param fleetEntity The identifier of the fleet.
+   * @return The speed of the fleet.
+   */
   function getSpeed(bytes32 fleetEntity) internal view returns (uint256 speed) {
     bytes32 ownerAsteroidEntity = OwnedBy.get(fleetEntity);
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
@@ -114,6 +142,12 @@ library LibFleetMove {
     }
   }
 
+  /**
+   * @notice Determines the effective speed of a fleet, taking into account any followers.
+   * @dev Calculates the slowest speed among the fleet and its followers.
+   * @param fleetEntity The identifier of the fleet.
+   * @return The effective speed of the fleet considering its followers.
+   */
   function getSpeedWithFollowers(bytes32 fleetEntity) internal view returns (uint256 speed) {
     speed = getSpeed(fleetEntity);
     bytes32[] memory followerFleetEntities = LibFleetStance.getFollowerFleets(fleetEntity);

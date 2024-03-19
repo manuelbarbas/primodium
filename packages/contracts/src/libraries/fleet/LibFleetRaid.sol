@@ -19,8 +19,17 @@ import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src
 
 import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { EResource, EFleetStance } from "src/Types.sol";
-
+/**
+ * @title LibFleetRaid
+ * @dev Library for handling fleet raiding logic, including resource allocation and battle resolution.
+ */
 library LibFleetRaid {
+  /**
+   * @notice Gets the raidable resource counts for an entity and its allies.
+   * @dev Determines the total raidable resources for a fleet or a defender with allies.
+   * @param entity The identifier of the entity (fleet or defender) being raided.
+   * @return An array of raidable resource counts and the total raidable resources.
+   */
   function getRaidableResourceCountsWithAllies(bytes32 entity) internal view returns (uint256[] memory, uint256) {
     return
       IsFleet.get(entity)
@@ -28,6 +37,13 @@ library LibFleetRaid {
         : LibCombatAttributes.getStoredResourceCountsWithDefenders(entity);
   }
 
+  /**
+   * @notice Resolves a battle raid, distributing raided resources among attackers.
+   * @dev Calculates the resources raided from a defender and distributes them to the attacking fleet and its allies.
+   * @param battleEntity The identifier of the ongoing battle.
+   * @param attacker The identifier of the attacking fleet.
+   * @param defender The identifier of the defending entity.
+   */
   function battleRaidResolve(bytes32 battleEntity, bytes32 attacker, bytes32 defender) internal {
     //maximum amount of resources the fleet can raid
     (uint256 freeCargoSpace, uint256[] memory freeCargoSpaces, uint256 totalFreeCargoSpace) = LibCombatAttributes
@@ -53,6 +69,14 @@ library LibFleetRaid {
     }
   }
 
+  /**
+   * @notice Calculates the total resources raided from a defender and its allies.
+   * @dev Determines the amount of each resource type that can be raided, considering the total free cargo space.
+   * @param battleEntity The identifier of the ongoing battle.
+   * @param defenderEntity The identifier of the defending entity.
+   * @param totalFreeCargoSpace The total free cargo space available in the attacker's fleet.
+   * @return An array of total raided resource counts and the total resources raided.
+   */
   function calculateRaidFromWithAllies(
     bytes32 battleEntity,
     bytes32 defenderEntity,
@@ -93,6 +117,17 @@ library LibFleetRaid {
     }
   }
 
+  /**
+   * @dev Auxiliary function to calculate resources raided from a single entity.
+   * @param battleEntity The identifier of the ongoing battle.
+   * @param defenderEntity The identifier of the defending entity.
+   * @param total The array of total raidable resources.
+   * @param totalRaidableResources The sum of all raidable resources.
+   * @param totalFreeCargoSpace The total free cargo space available in the attacker's fleet.
+   * @param totalRaidedResourceCounts An array to track the resources raided.
+   * @param totalRaidedResources The total resources raided so far.
+   * @return An updated array of raided resource counts and the new total of raided resources.
+   */
   function calculateRaidFrom(
     bytes32 battleEntity,
     bytes32 defenderEntity,
@@ -134,6 +169,14 @@ library LibFleetRaid {
     return (totalRaidedResourceCounts, totalRaidedResources);
   }
 
+  /**
+   * @dev Allocates raided resources to the attacker or its allies based on their cargo space.
+   * @param battleEntity The identifier of the ongoing battle.
+   * @param defenderEntity The identifier of the defender or attacking ally receiving resources.
+   * @param totalFreeCargoSpace The total free cargo space available across all allied fleets.
+   * @param freeCargoSpace The free cargo space available in this specific fleet.
+   * @param totalRaidedResourceCounts The total resources raided from the defender and its allies.
+   */
   function receiveRaidedResources(
     bytes32 battleEntity,
     bytes32 defenderEntity,

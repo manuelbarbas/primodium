@@ -19,7 +19,18 @@ import { EResource } from "src/Types.sol";
 import { ABDKMath64x64 as Math } from "abdk/ABDKMath64x64.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
+/**
+ * @title LibCombat
+ * @dev Library for handling combat mechanics in a game, including attacks, damage calculations, and battle results.
+ */
 library LibCombat {
+  /**
+   * @notice Initiates an attack from one entity to another, calculating the battle results.
+   * @param entity The attacking entity.
+   * @param targetEntity The target entity being attacked.
+   * @return battleEntity The unique identifier for this battle instance.
+   * @return battleResult The outcome of the battle, including damages and winner.
+   */
   function attack(
     bytes32 entity,
     bytes32 targetEntity
@@ -63,6 +74,13 @@ library LibCombat {
     BattleResult.set(battleEntity, battleResult);
   }
 
+  /**
+   * @notice Handles the damage calculations for an entity involved in a battle.
+   * @param entity The entity (aggressor or defender) for which to calculate damage.
+   * @param battleEntity The unique identifier for the battle instance.
+   * @param isAggressor Boolean indicating whether the entity is the aggressor.
+   * @return totalDamage The total damage dealt by the entity.
+   */
   function handleDamage(bytes32 entity, bytes32 battleEntity, bool isAggressor) internal returns (uint256 totalDamage) {
     uint256 damage;
     uint256[] memory damages;
@@ -79,6 +97,13 @@ library LibCombat {
     }
   }
 
+  /**
+   * @notice Resolves the encryption aspect of a battle, particularly relevant when a capital ship is involved.
+   * @param battleEntity The unique identifier for the battle instance.
+   * @param targetAsteroidEntity The asteroid entity involved in the battle, if any.
+   * @param aggressorEntity The aggressor entity in the battle.
+   * @return encryptionAtEnd The encryption level of the asteroid after the battle.
+   */
   function resolveBattleEncryption(
     bytes32 battleEntity,
     bytes32 targetAsteroidEntity,
@@ -102,6 +127,14 @@ library LibCombat {
     BattleEncryptionResult.set(battleEntity, targetAsteroidEntity, encryptionAtStart, encryptionAtEnd);
   }
 
+  /**
+   * @notice Applies damage to an entity, calculating the resultant damage dealt.
+   * @param battleEntity The unique identifier for the battle instance.
+   * @param attackingPlayer The player entity initiating the attack.
+   * @param defender The defending entity receiving damage.
+   * @param damage The amount of damage being applied.
+   * @return damageDealt The actual damage dealt after calculations.
+   */
   function applyDamage(
     bytes32 battleEntity,
     bytes32 attackingPlayer,
@@ -173,6 +206,16 @@ library LibCombat {
     return damageDealt;
   }
 
+  /**
+   * @notice Specifically applies damage to an asteroid entity.
+   * @param battleEntity The unique identifier for the battle instance.
+   * @param asteroidEntity The asteroid entity receiving damage.
+   * @param totalHp The total hit points (HP) of the asteroid and its defenses.
+   * @param damage The amount of damage being applied.
+   * @param totalUnitCasualties The total casualties among all unit types as a result of the damage.
+   * @return damageDealt The actual damage dealt to the asteroid.
+   * @return totalUnitCasualties Updated array of total unit casualties.
+   */
   function applyDamageToAsteroid(
     bytes32 battleEntity,
     bytes32 asteroidEntity,
@@ -201,6 +244,16 @@ library LibCombat {
     return (damageDealt, totalUnitCasualties);
   }
 
+  /**
+   * @notice Applies damage to units, calculating the casualties and remaining forces.
+   * @param battleEntity The unique identifier for the battle instance.
+   * @param targetEntity The entity whose units are receiving damage.
+   * @param totalHp The total hit points (HP) of the units.
+   * @param damage The amount of damage being applied.
+   * @param totalUnitCasualties Array tracking the total casualties per unit type.
+   * @return damageDealt The total damage dealt to the units.
+   * @return totalUnitCasualties Updated array of total unit casualties.
+   */
   function applyDamageToUnits(
     bytes32 battleEntity,
     bytes32 targetEntity,
@@ -242,7 +295,12 @@ library LibCombat {
 
     return (damageDealt, totalUnitCasualties);
   }
-
+  /**
+   * @notice Applies casualty to a specific unit type of an entity.
+   * @param targetEntity The entity whose unit is taking casualties.
+   * @param unitPrototype The specific unit type taking casualties.
+   * @param unitCount The number of units of the specified type to apply casualties to.
+   */
   function applyUnitCasualty(bytes32 targetEntity, bytes32 unitPrototype, uint256 unitCount) internal {
     if (unitCount == 0) return;
     if (IsFleet.get(targetEntity)) {
@@ -251,6 +309,10 @@ library LibCombat {
       LibUnit.decreaseUnitCount(targetEntity, unitPrototype, unitCount, true);
     }
   }
+  /**
+   * @notice Handles the loss of cargo for a fleet entity after taking damage.
+   * @param fleetEntity The fleet entity that may lose cargo as a result of damage.
+   */
 
   function applyLostCargo(bytes32 fleetEntity) internal {
     uint256 cargo = LibCombatAttributes.getCargoCapacity(fleetEntity);
@@ -274,7 +336,12 @@ library LibCombat {
     }
   }
 
-  // in minutes
+  /**
+   * @notice Calculates the cooldown time for an entity after an attack based on the attack value and whether decryption was involved.
+   * @param attackVal The value of the attack which influences the cooldown duration.
+   * @param withDecryption Boolean indicating whether decryption was a factor in the attack.
+   * @return time The cooldown time in minutes, adjusted for game speed.
+   */
   function getCooldownTime(uint256 attackVal, bool withDecryption) internal view returns (uint256 time) {
     time = withDecryption ? P_CapitalShipConfig.getCooldownExtension() : 0;
     attackVal = attackVal / 1e18;
@@ -286,7 +353,11 @@ library LibCombat {
     time *= 60;
     return (time * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
   }
-
+  /**
+   * @notice Resolves the outcome of a battle involving a pirate asteroid, including handling defeated pirates and incoming fleets.
+   * @param playerEntity The player entity involved in the battle.
+   * @param pirateAsteroidEntity The pirate asteroid entity involved in the battle.
+   */
   function resolvePirateAsteroid(bytes32 playerEntity, bytes32 pirateAsteroidEntity) internal {
     PirateAsteroid.setIsDefeated(pirateAsteroidEntity, true);
     DefeatedPirate.set(playerEntity, PirateAsteroid.getPrototype(pirateAsteroidEntity), true);

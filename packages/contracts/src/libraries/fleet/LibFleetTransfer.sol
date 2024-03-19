@@ -17,7 +17,17 @@ import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src
 import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { EResource, EUnit, EFleetStance } from "src/Types.sol";
 
+/**
+ * @title LibFleetTransfer
+ * @dev Library for transferring units and resources between fleets and asteroids, including validations for ownership and capacity.
+ */
 library LibFleetTransfer {
+  /**
+   * @notice Transfers units from an asteroid to a fleet, considering ownership and unit type restrictions.
+   * @param asteroidEntity The identifier of the asteroid from which units are transferred.
+   * @param fleetEntity The identifier of the fleet to which units are transferred.
+   * @param unitCounts The amounts of each unit type to be transferred.
+   */
   function transferUnitsFromAsteroidToFleet(
     bytes32 asteroidEntity,
     bytes32 fleetEntity,
@@ -36,6 +46,12 @@ library LibFleetTransfer {
     LibFleet.checkAndSetFleetEmpty(fleetEntity);
   }
 
+  /**
+   * @notice Transfers resources from an asteroid to a fleet.
+   * @param asteroidEntity The identifier of the asteroid from which resources are transferred.
+   * @param fleetEntity The identifier of the fleet to which resources are transferred.
+   * @param resourceCounts The amounts of each resource type to be transferred.
+   */
   function transferResourcesFromAsteroidToFleet(
     bytes32 asteroidEntity,
     bytes32 fleetEntity,
@@ -49,6 +65,13 @@ library LibFleetTransfer {
     }
   }
 
+  /**
+   * @notice Transfers both units and resources from an asteroid to a fleet, applying checks for ownership and unit type restrictions.
+   * @param asteroidEntity The identifier of the asteroid from which units and resources are transferred.
+   * @param fleetEntity The identifier of the fleet to which units and resources are transferred.
+   * @param unitCounts The amounts of each unit type to be transferred.
+   * @param resourceCounts The amounts of each resource type to be transferred.
+   */
   function transferUnitsAndResourcesFromAsteroidToFleet(
     bytes32 asteroidEntity,
     bytes32 fleetEntity,
@@ -75,6 +98,12 @@ library LibFleetTransfer {
     LibFleet.checkAndSetFleetEmpty(fleetEntity);
   }
 
+  /**
+   * @notice Transfers units from one fleet to an asteroid, considering ownership and unit type restrictions, and ensuring cargo capacity is not exceeded.
+   * @param fleetEntity The identifier of the source fleet from which units are transferred.
+   * @param asteroidEntity The identifier of the asteroid to which units are transferred.
+   * @param unitCounts The amounts of each unit type to be transferred.
+   */
   function transferUnitsFromFleetToAsteroid(
     bytes32 fleetEntity,
     bytes32 asteroidEntity,
@@ -97,6 +126,12 @@ library LibFleetTransfer {
     LibFleet.checkAndSetFleetEmpty(fleetEntity);
   }
 
+  /**
+   * @notice Transfers resources from a fleet to an asteroid.
+   * @param fleetEntity The identifier of the source fleet from which resources are transferred.
+   * @param asteroidEntity The identifier of the asteroid to which resources are transferred.
+   * @param resourceCounts The amounts of each resource type to be transferred.
+   */
   function transferResourcesFromFleetToAsteroid(
     bytes32 fleetEntity,
     bytes32 asteroidEntity,
@@ -110,7 +145,13 @@ library LibFleetTransfer {
     }
   }
 
-  //this is required so unit cargo space can be updated correctly without loss of resources
+  /**
+   * @notice Transfers both units and resources from a fleet to an asteroid, ensuring cargo capacity is not exceeded and considering ownership and unit type restrictions.
+   * @param fleetEntity The identifier of the source fleet from which units and resources are transferred.
+   * @param asteroidEntity The identifier of the asteroid to which units and resources are transferred.
+   * @param unitCounts The amounts of each unit type to be transferred.
+   * @param resourceCounts The amounts of each resource type to be transferred.
+   */
   function transferUnitsAndResourcesFromFleetToAsteroid(
     bytes32 fleetEntity,
     bytes32 asteroidEntity,
@@ -141,6 +182,12 @@ library LibFleetTransfer {
     LibFleet.checkAndSetFleetEmpty(fleetEntity);
   }
 
+  /**
+   * @notice Transfers units between two fleets, considering ownership and unit type restrictions, and ensuring cargo capacity is not exceeded.
+   * @param fromFleetEntity The identifier of the source fleet from which units are transferred.
+   * @param toFleetEntity The identifier of the destination fleet to which units are transferred.
+   * @param unitCounts The amounts of each unit type to be transferred.
+   */
   function transferUnitsFromFleetToFleet(
     bytes32 fromFleetEntity,
     bytes32 fleetEntity,
@@ -165,6 +212,12 @@ library LibFleetTransfer {
     LibFleet.checkAndSetFleetEmpty(fleetEntity);
   }
 
+  /**
+   * @notice Transfers resources between two fleets.
+   * @param fromFleetEntity The identifier of the source fleet from which resources are transferred.
+   * @param toFleetEntity The identifier of the destination fleet to which resources are transferred.
+   * @param resourceCounts The amounts of each resource type to be transferred.
+   */
   function transferResourcesFromFleetToFleet(
     bytes32 fromFleetEntity,
     bytes32 fleetEntity,
@@ -178,6 +231,13 @@ library LibFleetTransfer {
     }
   }
 
+  /**
+   * @notice Transfers both units and resources between two fleets, applying checks for ownership and unit type restrictions, and ensuring cargo capacity is not exceeded.
+   * @param fromFleetEntity The identifier of the source fleet from which units and resources are transferred.
+   * @param toFleetEntity The identifier of the destination fleet to which units and resources are transferred.
+   * @param unitCounts The amounts of each unit type to be transferred.
+   * @param resourceCounts The amounts of each resource type to be transferred.
+   */
   function transferUnitsAndResourcesFromFleetToFleet(
     bytes32 fromFleetEntity,
     bytes32 fleetEntity,

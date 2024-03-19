@@ -7,7 +7,20 @@ import { ResourceCount, P_IsResource, Reserves, ReservesData, P_MarketplaceConfi
 import { RESERVE_CURRENCY } from "src/constants.sol";
 import { EResource } from "src/Types.sol";
 
+/**
+ * @title LibMarketplace
+ * @dev Library to handle resource swaps in a marketplace setting within the game.
+ */
 library LibMarketplace {
+  /**
+   * @notice Swaps resources in the marketplace following a specified path.
+   * @param to The address to which the swapped resources are credited.
+   * @param path An array representing the swap path through different resources.
+   * @param amountIn The amount of the initial resource to swap.
+   * @param amountOutMin The minimum amount of the final resource to receive from the swap.
+   * @return amountReceived The final amount of resource received after the swap.
+   * @dev This function iteratively swaps resources along the path, updating reserves accordingly.
+   */
   function swap(
     bytes32 to,
     EResource[] memory path,
@@ -31,6 +44,14 @@ library LibMarketplace {
     LibStorage.increaseStoredResource(to, uint8(path[path.length - 1]), amountReceived);
   }
 
+  /**
+   * @notice Internal function to handle the swap of one resource for another.
+   * @param resourceIn The resource being swapped in.
+   * @param resourceOut The resource being swapped out for.
+   * @param amountIn The amount of the input resource.
+   * @return amountOut The amount of the output resource obtained from the swap.
+   * @dev Updates reserves based on the swap and ensures liquidity is maintained.
+   */
   function _swap(uint8 resourceIn, uint8 resourceOut, uint256 amountIn) internal returns (uint256 amountOut) {
     require(resourceIn != resourceOut, "[Marketplace] Cannot swap for same resource");
     require(P_IsResource.getIsResource(resourceOut), "[Marketplace] Invalid resource");
@@ -55,7 +76,14 @@ library LibMarketplace {
     Reserves.set(resourceA, resourceB, newReserveA, newReserveB);
   }
 
-  // Helper function to calculate output amount
+  /**
+   * @notice Calculates the output amount of a resource swap given input amount and reserves.
+   * @param amountIn The amount of the input resource.
+   * @param reserveIn The reserve amount of the input resource.
+   * @param reserveOut The reserve amount of the output resource.
+   * @return amountOut The calculated output amount for the swap.
+   * @dev Takes the marketplace fee into account for the calculation.
+   */
   function getAmountOut(
     uint256 amountIn,
     uint256 reserveIn,

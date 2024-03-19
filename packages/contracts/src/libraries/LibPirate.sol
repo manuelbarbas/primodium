@@ -13,11 +13,18 @@ import { LibUnit } from "libraries/LibUnit.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 
+/**
+ * @title LibPirate
+ * @dev Library to handle pirate asteroid operations in a game, including creation and resource allocation.
+ */
 library LibPirate {
-  /// @notice spawns new pirate asteroid for player in world
-  /// @param prototype the prototype which has spawned the asteroid
-  /// @param playerEntity the player the pirate asteroid is spawned for
-  /// @return asteroidEntity the entity ID of the spawned asteroid
+  /**
+   * @notice Spawns a new pirate asteroid for a player in the game world.
+   * @param playerEntity The identifier of the player for whom the pirate asteroid is spawned.
+   * @param prototype The identifier of the prototype based on which the pirate asteroid is spawned.
+   * @return asteroidEntity The unique identifier of the newly spawned pirate asteroid.
+   * @dev This function handles the creation and setup of a pirate asteroid, including positioning, resource allocation, and unit assignment.
+   */
   function createPirateAsteroid(bytes32 playerEntity, bytes32 prototype) internal returns (bytes32 asteroidEntity) {
     P_SpawnPirateAsteroidData memory spawnPirateAsteroid = P_SpawnPirateAsteroid.get(prototype);
     bytes32 ownerEntity = LibEncode.getHash(PirateKey, playerEntity);
@@ -75,6 +82,13 @@ library LibPirate {
     }
   }
 
+  /**
+   * @notice Increases a specific type of resource on an asteroid.
+   * @param asteroidEntity The identifier of the asteroid on which the resource is to be increased.
+   * @param resourceType The type of the resource to increase.
+   * @param count The amount by which to increase the resource.
+   * @dev This function handles the logic to increase either utility or storage resources on an asteroid.
+   */
   function increaseResource(bytes32 asteroidEntity, uint8 resourceType, uint256 count) internal {
     if (P_IsUtility.get(resourceType)) {
       if (ResourceCount.get(asteroidEntity, resourceType) < count)
