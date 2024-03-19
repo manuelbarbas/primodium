@@ -1,8 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
-import { LibCombat } from "libraries/LibCombat.sol";
+import { console, PrimodiumTest, toString } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EResource } from "src/types.sol";
+
+import { P_IsUtility, ClaimOffset, Position, PositionData, UnitCount, MaxResourceCount, Value_UnitProductionQueueData, P_UnitProdTypes, BuildingType, P_GameConfigData, P_GameConfig, Asteroid, Home, OwnedBy, Level, LastClaimedAt, P_Unit, P_UnitProdMultiplier, ResourceCount, ResourceCount, P_RequiredResources, P_RequiredResourcesData } from "codegen/index.sol";
+
+import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
+import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
+import { LibUnit } from "libraries/LibUnit.sol";
+import { LibProduction } from "libraries/LibProduction.sol";
+import { LibAsteroid } from "libraries/LibAsteroid.sol";
 
 contract LibUnitTest is PrimodiumTest {
   bytes32 playerEntity;
@@ -66,13 +76,7 @@ contract LibUnitTest is PrimodiumTest {
     UnitProductionQueue.enqueue(building2Entity, item);
 
     bytes32[] memory buildings = UnitFactorySet.getAll(Home.get(playerEntity));
-    console.log("buildings", buildings.length);
-    for (uint256 i = 0; i < buildings.length; i++) {
-      bytes32 buildingEntity = buildings[i];
-      bytes32 asteroidEntity = OwnedBy.get(buildingEntity);
-      console.log("building owner: %x", uint256(asteroidEntity));
-      console.log("is asteroid:", Asteroid.getIsAsteroid(asteroidEntity));
-    }
+
     vm.warp(block.timestamp + 100);
     LibUnit.claimUnits(Home.get(playerEntity));
     assertEq(UnitCount.get(Home.get(playerEntity), unitPrototype), 200);

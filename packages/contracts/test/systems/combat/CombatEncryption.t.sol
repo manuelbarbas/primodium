@@ -1,13 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { console } from "forge-std/console.sol";
-import "test/PrimodiumTest.t.sol";
-import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
-import { LibCombat } from "libraries/LibCombat.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EResource, EUnit } from "src/types.sol";
+import { UnitKey } from "src/Keys.sol";
+
+import { OwnedBy, UnitCount, Score, ProductionRate, P_CapitalShipConfig, CooldownEnd, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, UnitLevel } from "codegen/index.sol";
+
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
-import { FleetSet } from "libraries/fleet/FleetSet.sol";
-import { FleetIncomingKey } from "src/Keys.sol";
+import { LibCombat } from "libraries/LibCombat.sol";
+import { LibMath } from "libraries/LibMath.sol";
 
 contract CombatEncryptionTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;

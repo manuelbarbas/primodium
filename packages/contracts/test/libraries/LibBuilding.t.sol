@@ -1,7 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { ExpansionKey } from "src/Keys.sol";
+
+import { P_MaxLevel, Dimensions, Level, Home, P_Asteroid, DimensionsData } from "codegen/index.sol";
+
+import { Bounds } from "src/Types.sol";
+import { LibAsteroid } from "libraries/LibAsteroid.sol";
+import { LibBuilding } from "libraries/LibBuilding.sol";
 
 contract LibBuildingTest is PrimodiumTest {
   bytes32 playerEntity;

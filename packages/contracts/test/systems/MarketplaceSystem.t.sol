@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
-
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { addressToEntity } from "src/utils.sol";
 
@@ -10,8 +8,10 @@ import { MarketPrototypeId } from "codegen/Prototypes.sol";
 import { EResource, EBuilding } from "src/types.sol";
 import { UnitKey } from "src/Keys.sol";
 
-import { Position, PositionData, P_RequiredBaseLevel, P_RequiredResources, P_EnumToPrototype, PositionData, MaxResourceCount, ResourceCount, Reserves } from "codegen/index.sol";
-import { RESERVE_CURRENCY_RESOURCE } from "src/constants.sol";
+import { ReservesData, Position, PositionData, P_RequiredBaseLevel, P_RequiredResources, P_EnumToPrototype, PositionData, MaxResourceCount, ResourceCount, Reserves } from "codegen/index.sol";
+import { RESERVE_CURRENCY_RESOURCE, RESERVE_CURRENCY } from "src/constants.sol";
+
+import { LibMarketplace } from "libraries/LibMarketplace.sol";
 
 contract MarketplaceSystemTest is PrimodiumTest {
   function setUp() public override {

@@ -1,7 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EResource } from "src/types.sol";
+
+import { Asteroid, AsteroidData, Position, PositionData, Position, PositionData, ReversePosition, MaxResourceCount, UnitCount, ResourceCount, UnitCount, ResourceCount, P_GameConfig, P_GameConfigData } from "codegen/index.sol";
+import { DroidPrototypeId } from "codegen/Prototypes.sol";
+
+import { LibAsteroid } from "libraries/LibAsteroid.sol";
 
 contract LibAsteroidTest is PrimodiumTest {
   bytes32 playerEntity;

@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+
+import { UtilityMap } from "libraries/UtilityMap.sol";
+import { EResource } from "src/Types.sol";
 
 contract UtilityMapTest is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";

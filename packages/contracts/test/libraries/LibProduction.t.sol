@@ -1,7 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+
+import { EResource } from "src/types.sol";
+
+import { P_IsUtility, MaxResourceCount, ResourceCount, ProductionRate, Level, P_Production, P_ProductionData, Home, BuildingType } from "codegen/index.sol";
+
+import { LibProduction } from "libraries/LibProduction.sol";
 
 contract LibProductionTest is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";

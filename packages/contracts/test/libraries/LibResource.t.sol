@@ -1,7 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EResource, EBuilding } from "src/types.sol";
+
+import { IsActive, ConsumptionRate, Home, Level, BuildingType, OwnedBy, MaxResourceCount, ProductionRate, LastClaimedAt, P_ConsumesResource, ResourceCount, P_Transportables, ResourceCount, P_RequiredResources, P_RequiredResourcesData, P_IsUtility } from "codegen/index.sol";
+
+import { LibResource } from "libraries/LibResource.sol";
+import { UtilityMap } from "libraries/UtilityMap.sol";
 
 contract LibResourceTest is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";

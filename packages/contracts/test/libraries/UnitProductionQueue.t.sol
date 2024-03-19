@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+
+import { Value_UnitProductionQueue, Value_UnitProductionQueueData, Meta_UnitProductionQueue, Meta_UnitProductionQueueData } from "codegen/index.sol";
+import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
 
 contract UnitProductionQueueTest is PrimodiumTest {
   bytes32 queueId = "queueId";

@@ -1,18 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { console } from "forge-std/console.sol";
-import "test/PrimodiumTest.t.sol";
-import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
-import { LibCombat } from "libraries/LibCombat.sol";
-import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
-import { FleetSet } from "libraries/fleet/FleetSet.sol";
-import { FleetIncomingKey } from "src/Keys.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
 
-/* 
-  Tests to write
-  - Fight fleet vs asteroid and defenders 
-*/
+import { EResource, EUnit, EFleetStance } from "src/types.sol";
+import { UnitKey } from "src/Keys.sol";
+
+import { IsFleet, GracePeriod, P_Unit, MaxResourceCount, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, UnitLevel } from "codegen/index.sol";
+
+import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
+
 contract CombatDefenderTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;
   bytes32 aliceEntity;
