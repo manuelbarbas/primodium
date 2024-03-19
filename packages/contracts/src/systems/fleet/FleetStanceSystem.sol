@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
+import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { FleetStance, FleetMovement } from "src/codegen/index.sol";
 import { EFleetStance } from "src/codegen/common.sol";
 
-contract FleetStanceSystem is FleetBaseSystem {
+contract FleetStanceSystem is PrimodiumSystem {
   function clearFleetStance(bytes32 fleetId) public _onlyFleetOwner(fleetId) _onlyWhenFleetIsInOrbit(fleetId) {
     LibFleetStance.clearFleetStance(fleetId);
   }

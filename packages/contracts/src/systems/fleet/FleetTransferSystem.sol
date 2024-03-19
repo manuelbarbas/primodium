@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
+import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibFleetTransfer } from "libraries/fleet/LibFleetTransfer.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 
-contract FleetTransferSystem is FleetBaseSystem {
+contract FleetTransferSystem is PrimodiumSystem {
   function transferUnitsFromAsteroidToFleet(
     bytes32 asteroidEntity,
     bytes32 fleetId,

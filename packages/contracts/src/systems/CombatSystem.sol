@@ -3,13 +3,13 @@ pragma solidity >=0.8.24;
 
 import { IWorld } from "codegen/world/IWorld.sol";
 import { PirateAsteroid, UnitCount, ResourceCount, FleetStance, IsFleet, BattleResult, BattleResultData, FleetMovement, GracePeriod, OwnedBy } from "codegen/index.sol";
-import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
-import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
+import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
+import { LibCombat } from "libraries/LibCombat.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { EFleetStance, EResource } from "src/Types.sol";
 import { CapitalShipPrototypeId } from "codegen/Prototypes.sol";
 
-contract FleetCombatSystem is FleetBaseSystem {
+contract CombatSystem is PrimodiumSystem {
   modifier _onlyWhenNotInGracePeriod(bytes32 entity) {
     require(block.timestamp >= GracePeriod.get(entity), "[Fleet] Target is in grace period");
     _;
@@ -38,7 +38,7 @@ contract FleetCombatSystem is FleetBaseSystem {
     _onlyWhenNotInStance(fleetId)
     _onlyWhenFleetsAreIsInSameOrbit(fleetId, targetFleet)
   {
-    (bytes32 battleId, BattleResultData memory batteResult) = LibFleetCombat.attack(fleetId, targetFleet);
+    (bytes32 battleId, BattleResultData memory batteResult) = LibCombat.attack(fleetId, targetFleet);
 
     afterBattle(battleId, batteResult);
   }
@@ -57,7 +57,7 @@ contract FleetCombatSystem is FleetBaseSystem {
     _claimResources(targetAsteroid)
     _claimUnits(targetAsteroid)
   {
-    (bytes32 battleId, BattleResultData memory batteResult) = LibFleetCombat.attack(fleetId, targetAsteroid);
+    (bytes32 battleId, BattleResultData memory batteResult) = LibCombat.attack(fleetId, targetAsteroid);
     afterBattle(battleId, batteResult);
   }
 
@@ -72,7 +72,7 @@ contract FleetCombatSystem is FleetBaseSystem {
     _claimResources(asteroidEntity)
     _claimUnits(asteroidEntity)
   {
-    (bytes32 battleId, BattleResultData memory battleResult) = LibFleetCombat.attack(asteroidEntity, targetFleet);
+    (bytes32 battleId, BattleResultData memory battleResult) = LibCombat.attack(asteroidEntity, targetFleet);
     afterBattle(battleId, battleResult);
   }
 
@@ -105,7 +105,7 @@ contract FleetCombatSystem is FleetBaseSystem {
     }
     if (isDecryption) {
       //in decryption we resolve encryption first so the fleet decryption unit isn't lost before decrypting
-      LibFleetCombat.resolveBattleEncryption(battleId, battleResult.targetEntity, battleResult.aggressorEntity);
+      LibCombat.resolveBattleEncryption(battleId, battleResult.targetEntity, battleResult.aggressorEntity);
       if (ResourceCount.get(battleResult.targetEntity, uint8(EResource.R_Encryption)) == 0) {
         if (OwnedBy.get(battleResult.targetEntity) != bytes32(0)) {
           world.Primodium__transferAsteroid(battleResult.targetEntity, _player());

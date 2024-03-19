@@ -4,12 +4,12 @@ pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import "test/PrimodiumTest.t.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
-import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
+import { LibCombat } from "libraries/LibCombat.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { FleetIncomingKey } from "src/Keys.sol";
 
-contract FleetCombatSystemTest is PrimodiumTest {
+contract CombatEncryptionTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;
   bytes32 aliceEntity;
 
@@ -87,7 +87,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     assertEq(
       CooldownEnd.get(fleetId),
-      block.timestamp + LibFleetCombat.getCooldownTime(attack, true),
+      block.timestamp + LibCombat.getCooldownTime(attack, true),
       "encryption incorrect"
     );
     assertEq(

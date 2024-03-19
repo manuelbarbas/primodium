@@ -4,7 +4,7 @@ pragma solidity >=0.8.24;
 import { console } from "forge-std/console.sol";
 import "test/PrimodiumTest.t.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
-import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
+import { LibCombat } from "libraries/LibCombat.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { FleetIncomingKey } from "src/Keys.sol";

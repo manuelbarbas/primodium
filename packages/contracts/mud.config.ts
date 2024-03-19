@@ -501,12 +501,10 @@ const getConfig = async () => {
         keySchema: { battleId: "bytes32" },
         valueSchema: {
           aggressorEntity: "bytes32", //can be fleet or asteroid
-          aggressorDamage: "uint256", //can be fleet or asteroid
           targetEntity: "bytes32", //can be fleet or asteroid
-          targetDamage: "uint256", //can be fleet or asteroid
-          winner: "bytes32",
+          winnerEntity: "bytes32",
           asteroidEntity: "bytes32", // place where battle took place
-          player: "bytes32", // player who initiated the battle
+          playerE: "bytes32", // player who initiated the battle
           targetPlayer: "bytes32", // player who was attacked
           timestamp: "uint256", // timestamp of battle
           aggressorAllies: "bytes32[]", //only fleets

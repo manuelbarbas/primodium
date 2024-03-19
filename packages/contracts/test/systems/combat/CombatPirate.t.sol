@@ -9,7 +9,7 @@ import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
 import { FleetIncomingKey } from "src/Keys.sol";
 
-contract FleetCombatSystemTest is PrimodiumTest {
+contract CombatPirateTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;
   bytes32 aliceEntity;
 

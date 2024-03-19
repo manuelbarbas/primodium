@@ -19,7 +19,7 @@ import { EResource } from "src/Types.sol";
 import { ABDKMath64x64 as Math } from "abdk/ABDKMath64x64.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
-library LibFleetCombat {
+library LibCombat {
   function attack(
     bytes32 entity,
     bytes32 targetEntity

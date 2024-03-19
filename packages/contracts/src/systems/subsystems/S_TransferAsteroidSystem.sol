@@ -4,7 +4,7 @@ pragma solidity >=0.8.24;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { OwnedBy } from "src/codegen/index.sol";
-import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
+import { LibCombat } from "libraries/LibCombat.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { LibFleetDisband } from "libraries/fleet/LibFleetDisband.sol";
 import { FleetsMap } from "libraries/fleet/FleetsMap.sol";

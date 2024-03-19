@@ -4,7 +4,7 @@ pragma solidity >=0.8.24;
 import "test/PrimodiumTest.t.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
-import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
+import { LibCombat } from "libraries/LibCombat.sol";
 import { LibFleetRaid } from "libraries/fleet/LibFleetRaid.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
@@ -17,7 +17,7 @@ import { FleetIncomingKey } from "src/Keys.sol";
   - fleet vs fleet
   - 
 */
-contract FleetCombatSystemTest is PrimodiumTest {
+contract CombatSystemTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;
   bytes32 aliceEntity;
 
@@ -376,10 +376,10 @@ contract FleetCombatSystemTest is PrimodiumTest {
     switchPrank(alice);
     world.Primodium__attack(aliceFleetEntity, bobHomeAsteroid);
 
-    uint256 cooldown = LibFleetCombat.getCooldownTime(aliceAttack, false);
+    uint256 cooldown = LibCombat.getCooldownTime(aliceAttack, false);
     switchPrank(creator);
     P_GameConfig.setWorldSpeed(P_GameConfig.getWorldSpeed() / 10);
-    uint256 slowCooldown = LibFleetCombat.getCooldownTime(aliceAttack, false);
+    uint256 slowCooldown = LibCombat.getCooldownTime(aliceAttack, false);
     assertEq(cooldown * 10, slowCooldown);
     assertEq(CooldownEnd.get(aliceFleetEntity), block.timestamp + cooldown);
     assertGt(CooldownEnd.get(aliceFleetEntity), block.timestamp);
@@ -426,31 +426,31 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
   function testCooldownTimes() public {
     uint256 testValue = 1 * 1e18;
-    assertEq(LibFleetCombat.getCooldownTime(testValue, false), 0);
+    assertEq(LibCombat.getCooldownTime(testValue, false), 0);
 
     testValue = 1000 * 1e18;
-    assertEq(LibFleetCombat.getCooldownTime(testValue, false), 2 * 60);
+    assertEq(LibCombat.getCooldownTime(testValue, false), 2 * 60);
 
     testValue = 10000 * 1e18;
-    assertEq(LibFleetCombat.getCooldownTime(testValue, false), 24 * 60);
+    assertEq(LibCombat.getCooldownTime(testValue, false), 24 * 60);
 
     testValue = 20000 * 1e18;
-    assertEq(LibFleetCombat.getCooldownTime(testValue, false), 48 * 60);
+    assertEq(LibCombat.getCooldownTime(testValue, false), 48 * 60);
 
     testValue = 100000 * 1e18;
-    assertApproxEqAbs(LibFleetCombat.getCooldownTime(testValue, false), 103 * 60, 3);
+    assertApproxEqAbs(LibCombat.getCooldownTime(testValue, false), 103 * 60, 3);
 
     testValue = 150000 * 1e18;
-    assertApproxEqAbs(LibFleetCombat.getCooldownTime(testValue, false), 118 * 60, 3);
+    assertApproxEqAbs(LibCombat.getCooldownTime(testValue, false), 118 * 60, 3);
 
     testValue = 250000 * 1e18;
-    assertApproxEqAbs(LibFleetCombat.getCooldownTime(testValue, false), 137 * 60, 3);
+    assertApproxEqAbs(LibCombat.getCooldownTime(testValue, false), 137 * 60, 3);
 
     uint256 extension = P_CapitalShipConfig.getCooldownExtension();
 
     assertEq(
-      LibFleetCombat.getCooldownTime(testValue, false) + (extension * 60),
-      LibFleetCombat.getCooldownTime(testValue, true)
+      LibCombat.getCooldownTime(testValue, false) + (extension * 60),
+      LibCombat.getCooldownTime(testValue, true)
     );
   }
   function testFleetAttackBlockingFleetAttackerWins() public {

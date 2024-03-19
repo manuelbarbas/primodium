@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
+import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibFleetDisband } from "libraries/fleet/LibFleetDisband.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 
-contract FleetDisbandSystem is FleetBaseSystem {
+contract FleetDisbandSystem is PrimodiumSystem {
   function disbandFleet(bytes32 fleetId) public _onlyFleetOwner(fleetId) {
     LibFleetDisband.disbandFleet(fleetId);
     IWorld world = IWorld(_world());

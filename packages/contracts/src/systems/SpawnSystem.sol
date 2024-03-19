@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { BuildSystem } from "systems/BuildSystem.sol";
+import { BuildSystem } from "systems/building/BuildSystem.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 import { OwnedBy, P_GameConfig, GracePeriod, Spawned, P_GracePeriod, Spawned, Position, PositionData, Level, Home } from "codegen/index.sol";

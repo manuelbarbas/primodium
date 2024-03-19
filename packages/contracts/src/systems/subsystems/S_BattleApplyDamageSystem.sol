@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
+import { LibCombat } from "libraries/LibCombat.sol";
 
 contract S_BattleApplyDamageSystem is PrimodiumSystem {
   function applyDamage(
@@ -11,6 +11,6 @@ contract S_BattleApplyDamageSystem is PrimodiumSystem {
     bytes32 defender,
     uint256 damage
   ) public returns (uint256) {
-    return LibFleetCombat.applyDamage(battleId, attackingPlayer, defender, damage);
+    return LibCombat.applyDamage(battleId, attackingPlayer, defender, damage);
   }
 }

@@ -9,7 +9,7 @@ import { ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
 import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 
-import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
+import { LibCombat } from "libraries/LibCombat.sol";
 import "src/utils.sol";
 import { RESERVE_CURRENCY, RESERVE_CURRENCY_RESOURCE } from "src/constants.sol";
 import "codegen/world/IWorld.sol";
@@ -456,7 +456,7 @@ contract PrimodiumTest is MudTest {
 
     while (OwnedBy.get(targetAsteroid) != playerEntity) {
       console.log("attacking");
-      uint256 cooldown = LibFleetCombat.getCooldownTime(LibCombatAttributes.getAttack(fleetEntity), true);
+      uint256 cooldown = LibCombat.getCooldownTime(LibCombatAttributes.getAttack(fleetEntity), true);
       world.Primodium__attack(fleetEntity, targetAsteroid);
       vm.warp(block.timestamp + cooldown);
     }

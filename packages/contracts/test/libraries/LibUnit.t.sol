@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 
 import "test/PrimodiumTest.t.sol";
-import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
+import { LibCombat } from "libraries/LibCombat.sol";
 
 contract LibUnitTest is PrimodiumTest {
   bytes32 playerEntity;

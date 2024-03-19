@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
+import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { FleetMovement, OwnedBy } from "codegen/index.sol";
 
-contract FleetMergeSystem is FleetBaseSystem {
+contract FleetMergeSystem is PrimodiumSystem {
   modifier _checkRequirements(bytes32[] calldata fleets) {
     require(fleets.length > 1, "[Fleet] Must merge at least 2 fleets");
     bytes32 asteroidOwner = OwnedBy.get(fleets[0]);

@@ -13,7 +13,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
   EUnit unit = EUnit(1);
   bytes32 unitPrototype = "unitPrototype";
 
-  bytes32 building = "building";
+  bytes32 buildingEntity = "buildingEntity";
   bytes32 buildingPrototype = "buildingPrototype";
 
   function setUp() public override {
@@ -21,15 +21,15 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     vm.startPrank(creator);
     playerEntity = addressToEntity(creator);
     aliceEntity = addressToEntity(alice);
-    BuildingType.set(building, buildingPrototype);
-    IsActive.set(building, true);
+    BuildingType.set(buildingEntity, buildingPrototype);
+    IsActive.set(buildingEntity, true);
     P_EnumToPrototype.set(UnitKey, uint8(unit), unitPrototype);
     P_GameConfigData memory config = P_GameConfig.get();
     config.unitProductionRate = 100;
     P_GameConfig.set(config);
     Asteroid.setIsAsteroid(asteroidEntity, true);
     Home.set(playerEntity, asteroidEntity);
-    OwnedBy.set(building, asteroidEntity);
+    OwnedBy.set(buildingEntity, asteroidEntity);
     Spawned.set(playerEntity, true);
 
     switchPrank(alice);
@@ -39,19 +39,19 @@ contract TrainUnitsSystemTest is PrimodiumTest {
 
   // copied from LibUnit.t.sol
   function setupClaimUnits() public {
-    Level.set(building, 1);
-    LastClaimedAt.set(building, block.timestamp - 100);
+    Level.set(buildingEntity, 1);
+    LastClaimedAt.set(buildingEntity, block.timestamp - 100);
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
 
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
-    UnitProductionQueue.enqueue(building, item);
-    UnitFactorySet.add(asteroidEntity, building);
+    UnitProductionQueue.enqueue(buildingEntity, item);
+    UnitFactorySet.add(asteroidEntity, buildingEntity);
   }
 
   function testCannotProduceUnit() public {
     vm.expectRevert(bytes("[TrainUnitsSystem] Building cannot produce unit"));
-    world.Primodium__trainUnits(building, unit, 1);
+    world.Primodium__trainUnits(buildingEntity, unit, 1);
   }
 
   function testTrainUnits() public {
@@ -59,8 +59,8 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     unitPrototypes[0] = unitPrototype;
     P_UnitProdTypes.set(buildingPrototype, 0, unitPrototypes);
 
-    world.Primodium__trainUnits(building, unit, 1);
-    QueueItemUnitsData memory data = UnitProductionQueue.peek(building);
+    world.Primodium__trainUnits(buildingEntity, unit, 1);
+    QueueItemUnitsData memory data = UnitProductionQueue.peek(buildingEntity);
     assertEq(toString(data.unitId), toString(unitPrototype));
     assertEq(data.quantity, 1);
   }
@@ -81,7 +81,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     P_UnitProdTypes.set(buildingPrototype, 0, unitPrototypes);
 
     vm.expectRevert(bytes("[SpendResources] Not enough resources to spend"));
-    world.Primodium__trainUnits(building, unit, 1);
+    world.Primodium__trainUnits(buildingEntity, unit, 1);
   }
 
   function testTrainUnitsUpdateAsteroid() public {
@@ -98,7 +98,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     ProductionRate.set(asteroidEntity, Iron, 10);
     LastClaimedAt.set(asteroidEntity, block.timestamp - 10);
 
-    world.Primodium__trainUnits(building, unit, 1);
+    world.Primodium__trainUnits(buildingEntity, unit, 1);
     LibUnit.claimUnits(asteroidEntity);
     assertEq(ResourceCount.get(asteroidEntity, Iron), 100, "resource count");
     assertEq(UnitCount.get(asteroidEntity, unitPrototype), 100, "unit count");
@@ -159,12 +159,12 @@ contract TrainUnitsSystemTest is PrimodiumTest {
   }
 
   function testInvalidBuilding() public {
-    vm.expectRevert(bytes("[TrainUnitsSystem] Can not train units using an in active building"));
+    vm.expectRevert(bytes("[TrainUnitsSystem] Can not train units using an in active buildingEntity"));
     world.Primodium__trainUnits(bytes32(0), unit, 1);
   }
 
   function testInvalidUnit() public {
     vm.expectRevert();
-    world.Primodium__trainUnits(building, EUnit(uint8(100)), 1);
+    world.Primodium__trainUnits(buildingEntity, EUnit(uint8(100)), 1);
   }
 }
