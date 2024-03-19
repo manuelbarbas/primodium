@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { P_ConsumesResource, ConsumptionRate, OwnedBy, ResourceCount, BuildingType, Level, P_Production, P_ProductionData, P_IsUtility, ProductionRate } from "codegen/index.sol";
+import { OwnedBy, ResourceCount, BuildingType, Level, P_Production, P_ProductionData, P_IsUtility, ProductionRate } from "codegen/index.sol";
 import { EResource } from "src/Types.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 

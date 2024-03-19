@@ -1,24 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { EResource } from "src/Types.sol";
 
-import { RaidedResource, BattleRaidResult, BattleRaidResultData, P_Transportables, IsFleet, MaxResourceCount, BattleResult, BattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { RaidedResource, BattleRaidResult, BattleRaidResultData, P_Transportables, IsFleet, ResourceCount, OwnedBy } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
-import { LibEncode } from "libraries/LibEncode.sol";
-import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
-import { FleetSet } from "libraries/fleet/FleetSet.sol";
-import { LibFleetDisband } from "libraries/fleet/LibFleetDisband.sol";
-import { LibResource } from "libraries/LibResource.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
-import { FleetSet } from "libraries/fleet/FleetSet.sol";
-import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 
-import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
-import { EResource, EFleetStance } from "src/Types.sol";
 /**
  * @title LibFleetRaid
  * @dev Library for handling fleet raiding logic, including resource allocation and battle resolution.

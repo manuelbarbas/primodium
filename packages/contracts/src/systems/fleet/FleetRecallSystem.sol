@@ -4,8 +4,7 @@ pragma solidity >=0.8.24;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
 import { FleetMovement } from "codegen/index.sol";
-import { LibAsteroid } from "libraries/LibAsteroid.sol";
-import { PirateAsteroid, Asteroid, PositionData, ReversePosition } from "codegen/index.sol";
+import { PirateAsteroid } from "codegen/index.sol";
 
 /**
  * @title FleetRecallSystem

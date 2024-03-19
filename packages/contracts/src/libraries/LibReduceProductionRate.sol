@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { ConsumptionRate, OwnedBy, P_RequiredDependency, P_RequiredDependencyData, P_Production, ProductionRate, Level, BuildingType } from "codegen/index.sol";
+import { ConsumptionRate, OwnedBy, P_RequiredDependency, P_RequiredDependencyData, Level, BuildingType } from "codegen/index.sol";
 
 library LibReduceProductionRate {
   /// @notice Restores production rate when a building is destroyed

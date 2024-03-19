@@ -4,8 +4,6 @@ pragma solidity >=0.8.24;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { OwnedBy, P_EnumToPrototype, P_MaxLevel, UnitLevel } from "codegen/index.sol";
-import { LibResource } from "libraries/LibResource.sol";
-import { LibProduction } from "libraries/LibProduction.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";

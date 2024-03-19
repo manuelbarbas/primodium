@@ -2,16 +2,9 @@
 pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { BuildSystem } from "systems/building/BuildSystem.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
-import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
-import { OwnedBy, P_GameConfig, GracePeriod, Spawned, P_GracePeriod, Spawned, Position, PositionData, Level, Home } from "codegen/index.sol";
-import { AsteroidSet } from "libraries/AsteroidSet.sol";
+import { Spawned, Home } from "codegen/index.sol";
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
-import { LibEncode } from "libraries/LibEncode.sol";
-import { EBuilding } from "src/Types.sol";
-import { BuildingKey, AsteroidOwnedByKey } from "src/Keys.sol";
-import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 
 /// @title Spawn System for Primodium Game
 /// @notice Handles player spawning in the game world

@@ -2,8 +2,6 @@
 pragma solidity >=0.8.24;
 
 import { System } from "@latticexyz/world/src/System.sol";
-
-import { BattleResultData } from "codegen/index.sol";
 import { LibPirate } from "libraries/LibPirate.sol";
 
 contract S_SpawnPirateAsteroidSystem is System {

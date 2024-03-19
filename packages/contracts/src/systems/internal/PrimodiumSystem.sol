@@ -6,10 +6,7 @@ import { System } from "@latticexyz/world/src/System.sol";
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
-import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 
-import { S_ClaimSystem } from "systems/subsystems/S_ClaimSystem.sol";
-import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { EFleetStance } from "src/Types.sol";
 import { GracePeriod, CooldownEnd, FleetStance, OwnedBy, FleetMovement, P_UnitPrototypes, P_Transportables, PirateAsteroid } from "src/codegen/index.sol";
 

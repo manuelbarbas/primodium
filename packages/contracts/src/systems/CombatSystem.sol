@@ -2,11 +2,10 @@
 pragma solidity >=0.8.24;
 
 import { IWorld } from "codegen/world/IWorld.sol";
-import { PirateAsteroid, UnitCount, ResourceCount, FleetStance, IsFleet, BattleResult, BattleResultData, FleetMovement, GracePeriod, OwnedBy } from "codegen/index.sol";
+import { PirateAsteroid, UnitCount, ResourceCount, IsFleet, BattleResult, BattleResultData, GracePeriod, OwnedBy } from "codegen/index.sol";
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
-import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
-import { EFleetStance, EResource } from "src/Types.sol";
+import { EResource } from "src/Types.sol";
 import { CapitalShipPrototypeId } from "codegen/Prototypes.sol";
 
 /**

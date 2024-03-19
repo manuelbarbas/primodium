@@ -5,8 +5,6 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { EObjectives } from "src/Types.sol";
 import { CompletedObjective, P_EnumToPrototype, P_SpawnPirateAsteroidData, P_SpawnPirateAsteroid } from "codegen/index.sol";
 import { ObjectiveKey } from "src/Keys.sol";
-import { S_SpawnPirateAsteroidSystem } from "systems/subsystems/S_SpawnPirateAsteroidSystem.sol";
-import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { LibObjectives } from "libraries/LibObjectives.sol";
 

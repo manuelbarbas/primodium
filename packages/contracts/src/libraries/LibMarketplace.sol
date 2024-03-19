@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { LibResource } from "src/libraries/LibResource.sol";
 import { LibStorage } from "src/libraries/LibStorage.sol";
-import { ResourceCount, P_IsResource, Reserves, ReservesData, P_MarketplaceConfig } from "codegen/index.sol";
-import { RESERVE_CURRENCY } from "src/constants.sol";
+import { P_IsResource, Reserves, ReservesData, P_MarketplaceConfig } from "codegen/index.sol";
 import { EResource } from "src/Types.sol";
 
 /**

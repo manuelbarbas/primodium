@@ -3,23 +3,19 @@ pragma solidity ^0.8.24;
 
 import { AsteroidOwnedByKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
-import { MainBasePrototypeId, DroidPrototypeId } from "codegen/Prototypes.sol";
+import { DroidPrototypeId } from "codegen/Prototypes.sol";
 
 // tables
-import { UsedTiles, Spawned, Dimensions, DimensionsData, P_MaxLevel, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, PositionData, P_GameConfigData, P_GameConfig } from "codegen/index.sol";
+import { UsedTiles, Dimensions, DimensionsData, P_MaxLevel, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, P_GameConfigData, P_GameConfig } from "codegen/index.sol";
 
 // libraries
 import { ExpansionKey } from "src/Keys.sol";
 import { AsteroidSet } from "src/libraries/AsteroidSet.sol";
 import { EResource } from "src/Types.sol";
 import { LibMath } from "libraries/LibMath.sol";
-import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
-import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
-import { LibResource } from "libraries/LibResource.sol";
-import { EBuilding } from "src/Types.sol";
 
 library LibAsteroid {
   /// @notice Creates new asteroid for player in world

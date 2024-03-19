@@ -9,7 +9,6 @@ import { OwnedBy, BuildingType, Position, PositionData } from "codegen/index.sol
 
 // libraries
 import { LibBuilding } from "libraries/LibBuilding.sol";
-import { LibAsteroid } from "libraries/LibAsteroid.sol";
 
 contract MoveBuildingSystem is PrimodiumSystem {
   function moveBuilding(bytes32 buildingEntity, PositionData memory toCoord) public {

@@ -1,16 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { Position, P_UnitPrototypes, Asteroid, IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, ProductionRate, P_UnitProdTypes, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, P_EnumToPrototype } from "codegen/index.sol";
+import { Position, Asteroid, IsActive, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, P_UnitProdTypes, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt } from "codegen/index.sol";
 
-import { EUnit, EResource } from "src/Types.sol";
+import { EResource } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
-import { LibStorage } from "libraries/LibStorage.sol";
-import { LibProduction } from "libraries/LibProduction.sol";
 import { AsteroidSet } from "libraries/AsteroidSet.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
-import { UnitKey, AsteroidOwnedByKey } from "src/Keys.sol";
+import { AsteroidOwnedByKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibUnit {

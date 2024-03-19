@@ -2,16 +2,12 @@
 pragma solidity >=0.8.24;
 
 import { EResource } from "src/Types.sol";
-import { FleetMovement, ResourceCount, MaxResourceCount, IsFleet, P_Transportables, UnitCount, P_Unit, P_UnitData, UnitLevel, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { ResourceCount, MaxResourceCount, IsFleet, P_Transportables, UnitCount, P_Unit, UnitLevel, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { LibResource } from "libraries/LibResource.sol";
-import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
-import { FleetSet } from "libraries/fleet/FleetSet.sol";
-import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 
-import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
-import { EResource, EFleetStance } from "src/Types.sol";
+import { EResource } from "src/Types.sol";
 
 /**
  * @title LibCombatAttributes

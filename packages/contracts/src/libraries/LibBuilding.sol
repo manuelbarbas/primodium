@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { entityToAddress } from "src/utils.sol";
 // tables
-import { TilePositions, IsActive, HasBuiltBuilding, Asteroid, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, OwnedBy, P_Blueprint } from "codegen/index.sol";
+import { TilePositions, IsActive, HasBuiltBuilding, Asteroid, P_UnitProdTypes, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, OwnedBy, P_Blueprint } from "codegen/index.sol";
 
 // libraries
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
@@ -11,8 +10,8 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 
 // types
-import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
-import { Bounds, EBuilding, EResource } from "src/Types.sol";
+import { BuildingKey, ExpansionKey } from "src/Keys.sol";
+import { Bounds, EResource } from "src/Types.sol";
 
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 

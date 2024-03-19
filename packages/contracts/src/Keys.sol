@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { ExpansionPrototypeId, BuildingPrototypeId, IsUtilityPrototypeId, UnitPrototypeId, ObjectivesPrototypeId, FleetStancePrototypeId } from "codegen/Prototypes.sol";
+import { ExpansionPrototypeId, BuildingPrototypeId, UnitPrototypeId, ObjectivesPrototypeId, FleetStancePrototypeId } from "codegen/Prototypes.sol";
 
 bytes32 constant BuildingTileKey = bytes32("building:tile");
 bytes32 constant PirateKey = bytes32("pirate");
