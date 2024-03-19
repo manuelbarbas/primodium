@@ -87,7 +87,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.stopPrank();
 
     vm.startPrank(bob);
-    ironPositionData.parent = Home.get(addressToEntity(bob));
+    ironPositionData.parentEntity = Home.get(addressToEntity(bob));
     world.Primodium__build(EBuilding.IronMine, ironPositionData);
   }
 
@@ -109,7 +109,7 @@ contract BuildSystemTest is PrimodiumTest {
 
   function testBuildTwiceMainBaseFail() public {
     PositionData memory coord = getTilePosition(Home.get(playerEntity), EBuilding.MainBase);
-    vm.expectRevert(bytes("[BuildSystem] Cannot build more than one main base per space rock"));
+    vm.expectRevert(bytes("[BuildSystem] Cannot build more than one main base per asteroid"));
     world.Primodium__build(EBuilding.MainBase, coord);
   }
 
@@ -140,8 +140,8 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testBuildWithResourceReqs() public {
-    bytes32 spaceRockEntity = Home.get(playerEntity);
-    world.Primodium__build(EBuilding.IronMine, getTilePosition(spaceRockEntity, EBuilding.IronMine));
+    bytes32 asteroidEntity = Home.get(playerEntity);
+    world.Primodium__build(EBuilding.IronMine, getTilePosition(asteroidEntity, EBuilding.IronMine));
     bytes32 ironMinePrototype = P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronMine));
     assertGe(
       P_RequiredResources.lengthResources(ironMinePrototype, 2),
@@ -151,24 +151,24 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testBuildWithRequiredResources() public {
-    bytes32 spaceRockEntity = Home.get(playerEntity);
-    ResourceCount.set(spaceRockEntity, Iron, 100);
+    bytes32 asteroidEntity = Home.get(playerEntity);
+    ResourceCount.set(asteroidEntity, Iron, 100);
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(Iron);
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(IronMinePrototypeId, 1, requiredResourcesData);
 
-    world.Primodium__build(EBuilding.IronMine, getTilePosition(spaceRockEntity, EBuilding.IronMine));
+    world.Primodium__build(EBuilding.IronMine, getTilePosition(asteroidEntity, EBuilding.IronMine));
 
-    assertEq(ResourceCount.get(spaceRockEntity, Iron), 50);
+    assertEq(ResourceCount.get(asteroidEntity, Iron), 50);
   }
 
   function testBuildWithProductionDependencies() public {
     uint256 originalProduction = 100;
     uint256 productionReduction = 10;
-    bytes32 spaceRockEntity = Home.get(playerEntity);
-    ProductionRate.set(spaceRockEntity, Iron, originalProduction);
-    ConsumptionRate.set(spaceRockEntity, Iron, 0);
+    bytes32 asteroidEntity = Home.get(playerEntity);
+    ProductionRate.set(asteroidEntity, Iron, originalProduction);
+    ConsumptionRate.set(asteroidEntity, Iron, 0);
     P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(
       uint8(Iron),
       productionReduction
@@ -176,22 +176,22 @@ contract BuildSystemTest is PrimodiumTest {
 
     P_RequiredDependency.set(IronMinePrototypeId, 1, requiredDependenciesData);
 
-    world.Primodium__build(EBuilding.IronMine, getTilePosition(spaceRockEntity, EBuilding.IronMine));
+    world.Primodium__build(EBuilding.IronMine, getTilePosition(asteroidEntity, EBuilding.IronMine));
     uint256 productionIncrease = P_Production.getAmounts(IronMinePrototypeId, 1)[0];
-    assertEq(ProductionRate.get(spaceRockEntity, Iron), originalProduction + productionIncrease);
-    assertEq(ConsumptionRate.get(spaceRockEntity, Iron), productionReduction);
+    assertEq(ProductionRate.get(asteroidEntity, Iron), originalProduction + productionIncrease);
+    assertEq(ConsumptionRate.get(asteroidEntity, Iron), productionReduction);
   }
 
   function testBuildWithResourceProductionIncrease() public {
-    bytes32 spaceRockEntity = Home.get(playerEntity);
+    bytes32 asteroidEntity = Home.get(playerEntity);
     uint256 increase = 69;
     P_ProductionData memory data1 = P_ProductionData(new uint8[](1), new uint256[](1));
     data1.resources[0] = uint8(EResource.Iron);
     data1.amounts[0] = increase;
     P_Production.set(IronMinePrototypeId, 1, data1);
 
-    world.Primodium__build(EBuilding.IronMine, getTilePosition(spaceRockEntity, EBuilding.IronMine));
-    assertEq(ProductionRate.get(spaceRockEntity, Iron), increase);
+    world.Primodium__build(EBuilding.IronMine, getTilePosition(asteroidEntity, EBuilding.IronMine));
+    assertEq(ProductionRate.get(asteroidEntity, Iron), increase);
   }
 
   function testBuildWithMaxStorageIncrease() public {
@@ -199,9 +199,9 @@ contract BuildSystemTest is PrimodiumTest {
     data[0] = uint8(Iron);
     P_ListMaxResourceUpgrades.set(IronMinePrototypeId, 1, data);
     P_ByLevelMaxResourceUpgrades.set(IronMinePrototypeId, Iron, 1, 50);
-    bytes32 spaceRockEntity = Home.get(playerEntity);
-    MaxResourceCount.set(spaceRockEntity, Iron, 0);
-    world.Primodium__build(EBuilding.IronMine, getTilePosition(spaceRockEntity, EBuilding.IronMine));
-    assertEq(MaxResourceCount.get(spaceRockEntity, Iron), 50);
+    bytes32 asteroidEntity = Home.get(playerEntity);
+    MaxResourceCount.set(asteroidEntity, Iron, 0);
+    world.Primodium__build(EBuilding.IronMine, getTilePosition(asteroidEntity, EBuilding.IronMine));
+    assertEq(MaxResourceCount.get(asteroidEntity, Iron), 50);
   }
 }

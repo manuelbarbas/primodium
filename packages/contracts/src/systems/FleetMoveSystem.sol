@@ -9,16 +9,16 @@ import { IWorld } from "codegen/world/IWorld.sol";
 import { OwnedBy, PirateAsteroid, Asteroid, PositionData, ReversePosition } from "codegen/index.sol";
 
 contract FleetMoveSystem is FleetBaseSystem {
-  modifier _onlyOtherSpaceRock(bytes32 fleetId, bytes32 spaceRock) {
+  modifier _onlyOtherAsteroid(bytes32 fleetId, bytes32 asteroidEntity) {
     require(
-      FleetMovement.getDestination(fleetId) != spaceRock,
-      "[Fleet] Can not send fleet to the space rock which the fleet is already in orbit of"
+      FleetMovement.getDestination(fleetId) != asteroidEntity,
+      "[Fleet] Can not send fleet to the asteroid which the fleet is already in orbit of"
     );
     _;
   }
 
-  modifier _onlyWhenPersonalPirate(bytes32 spaceRock) {
-    bytes32 pirateAsteroidPersonalPlayer = PirateAsteroid.getPlayerEntity(spaceRock);
+  modifier _onlyWhenPersonalPirate(bytes32 asteroidEntity) {
+    bytes32 pirateAsteroidPersonalPlayer = PirateAsteroid.getPlayerEntity(asteroidEntity);
     require(
       pirateAsteroidPersonalPlayer == bytes32(0) || pirateAsteroidPersonalPlayer == _player(),
       "[Fleet] Can only send fleet to your own pirate asteroid"
@@ -26,41 +26,42 @@ contract FleetMoveSystem is FleetBaseSystem {
     _;
   }
 
-  modifier _onlyIfAsteroidExists(bytes32 spaceRock) {
-    require(Asteroid.getIsAsteroid(spaceRock), "[Fleet] Space rock does not exist");
+  modifier _onlyIfAsteroidExists(bytes32 asteroidEntity) {
+    require(Asteroid.getIsAsteroid(asteroidEntity), "[Fleet] asteroid does not exist");
     _;
   }
 
-  modifier _canNotSendFleetFromPirateAsteroidToSpaceRockOtherThanOrigin(bytes32 fleetId, bytes32 spaceRock) {
+  modifier _canNotSendFleetFromPirateAsteroidToAsteroidOtherThanOrigin(bytes32 fleetId, bytes32 asteroidEntity) {
     require(
-      !PirateAsteroid.getIsPirateAsteroid(FleetMovement.getDestination(fleetId)) || OwnedBy.get(fleetId) == spaceRock,
-      "[Fleet] Can not send fleet from pirate asteroid to space rock other than origin"
+      !PirateAsteroid.getIsPirateAsteroid(FleetMovement.getDestination(fleetId)) ||
+        OwnedBy.get(fleetId) == asteroidEntity,
+      "[Fleet] Can not send fleet from pirate asteroid to asteroid other than origin"
     );
     _;
   }
 
   function sendFleet(bytes32 fleetId, PositionData memory position) public {
-    bytes32 spaceRock = ReversePosition.get(position.x, position.y);
-    if (spaceRock == bytes32(0)) {
-      spaceRock = IWorld(_world()).Primodium__createSecondaryAsteroid(position);
+    bytes32 asteroidEntity = ReversePosition.get(position.x, position.y);
+    if (asteroidEntity == bytes32(0)) {
+      asteroidEntity = IWorld(_world()).Primodium__createSecondaryAsteroid(position);
     }
-    sendFleet(fleetId, spaceRock);
+    sendFleet(fleetId, asteroidEntity);
   }
 
   function sendFleet(
     bytes32 fleetId,
-    bytes32 spaceRock
+    bytes32 asteroidEntity
   )
     public
-    _onlyIfAsteroidExists(spaceRock)
+    _onlyIfAsteroidExists(asteroidEntity)
     _onlyFleetOwner(fleetId)
     _onlyWhenFleetIsInOrbit(fleetId)
     _onlyWhenNotInStance(fleetId)
-    _onlyOtherSpaceRock(fleetId, spaceRock)
-    _onlyWhenNotPirateAsteroidOrHasNotBeenDefeated(spaceRock)
-    _onlyWhenPersonalPirate(spaceRock)
-    _canNotSendFleetFromPirateAsteroidToSpaceRockOtherThanOrigin(fleetId, spaceRock)
+    _onlyOtherAsteroid(fleetId, asteroidEntity)
+    _onlyWhenNotPirateAsteroidOrHasNotBeenDefeated(asteroidEntity)
+    _onlyWhenPersonalPirate(asteroidEntity)
+    _canNotSendFleetFromPirateAsteroidToAsteroidOtherThanOrigin(fleetId, asteroidEntity)
   {
-    LibFleetMove.sendFleet(fleetId, spaceRock);
+    LibFleetMove.sendFleet(fleetId, asteroidEntity);
   }
 }

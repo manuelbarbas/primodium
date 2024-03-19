@@ -56,10 +56,10 @@ contract MarketplaceSystem is PrimodiumSystem {
   ) public onlyUnlocked _claimResources(OwnedBy.get(marketEntity)) {
     require(BuildingType.get(marketEntity) == MarketPrototypeId, "[Marketplace] Building is not a marketplace");
 
-    bytes32 spaceRockEntity = OwnedBy.get(marketEntity);
-    require(OwnedBy.get(spaceRockEntity) == _player(), "[Marketplace] Not owned by player");
+    bytes32 asteroidEntity = OwnedBy.get(marketEntity);
+    require(OwnedBy.get(asteroidEntity) == _player(), "[Marketplace] Not owned by player");
 
-    uint256 amountOut = LibMarketplace.swap(spaceRockEntity, path, amountIn, amountOutMin);
+    uint256 amountOut = LibMarketplace.swap(asteroidEntity, path, amountIn, amountOutMin);
     Swap.set(_player(), uint8(path[0]), uint8(path[path.length - 1]), amountIn, amountOut);
   }
 }

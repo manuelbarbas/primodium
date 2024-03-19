@@ -18,44 +18,44 @@ import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { EResource, EUnit, EFleetStance } from "src/Types.sol";
 
 library LibFleetTransfer {
-  function transferUnitsFromSpaceRockToFleet(
-    bytes32 spaceRock,
+  function transferUnitsFromAsteroidToFleet(
+    bytes32 asteroidEntity,
     bytes32 fleetId,
     uint256[] calldata unitCounts
   ) internal {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    bool sameOwner = OwnedBy.get(fleetId) == spaceRock;
+    bool sameOwner = OwnedBy.get(fleetId) == asteroidEntity;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
       if (!sameOwner && unitPrototypes[i] == CapitalShipPrototypeId)
         revert("[Fleet] Cannot transfer capital ships to other players");
-      LibUnit.decreaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !sameOwner);
+      LibUnit.decreaseUnitCount(asteroidEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
       LibFleet.increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
     LibFleet.checkAndSetFleetEmpty(fleetId);
   }
 
-  function transferResourcesFromSpaceRockToFleet(
-    bytes32 spaceRock,
+  function transferResourcesFromAsteroidToFleet(
+    bytes32 asteroidEntity,
     bytes32 fleetId,
     uint256[] calldata resourceCounts
   ) internal {
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       if (resourceCounts[i] == 0) continue;
-      LibStorage.decreaseStoredResource(spaceRock, transportables[i], resourceCounts[i]);
+      LibStorage.decreaseStoredResource(asteroidEntity, transportables[i], resourceCounts[i]);
       LibFleet.increaseFleetResource(fleetId, transportables[i], resourceCounts[i]);
     }
   }
 
-  function transferUnitsAndResourcesFromSpaceRockToFleet(
-    bytes32 spaceRock,
+  function transferUnitsAndResourcesFromAsteroidToFleet(
+    bytes32 asteroidEntity,
     bytes32 fleetId,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
   ) internal {
-    bool sameOwner = OwnedBy.get(fleetId) == spaceRock;
+    bool sameOwner = OwnedBy.get(fleetId) == asteroidEntity;
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
@@ -65,29 +65,29 @@ library LibFleetTransfer {
       LibFleet.increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
-    transferResourcesFromSpaceRockToFleet(spaceRock, fleetId, resourceCounts);
+    transferResourcesFromAsteroidToFleet(asteroidEntity, fleetId, resourceCounts);
 
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
-      LibUnit.decreaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !sameOwner);
+      LibUnit.decreaseUnitCount(asteroidEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
     LibFleet.checkAndSetFleetEmpty(fleetId);
   }
 
-  function transferUnitsFromFleetToSpaceRock(
+  function transferUnitsFromFleetToAsteroid(
     bytes32 fleetId,
-    bytes32 spaceRock,
+    bytes32 asteroidEntity,
     uint256[] calldata unitCounts
   ) internal {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    bool sameOwner = OwnedBy.get(fleetId) == spaceRock;
+    bool sameOwner = OwnedBy.get(fleetId) == asteroidEntity;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
       if (!sameOwner && unitPrototypes[i] == CapitalShipPrototypeId)
         revert("[Fleet] Cannot transfer capital ships to other players");
       LibFleet.decreaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], !sameOwner);
-      LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !sameOwner);
+      LibUnit.increaseUnitCount(asteroidEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
     uint256 cargo = LibCombatAttributes.getCargoCapacity(fleetId);
@@ -97,37 +97,37 @@ library LibFleetTransfer {
     LibFleet.checkAndSetFleetEmpty(fleetId);
   }
 
-  function transferResourcesFromFleetToSpaceRock(
+  function transferResourcesFromFleetToAsteroid(
     bytes32 fleetId,
-    bytes32 spaceRock,
+    bytes32 asteroidEntity,
     uint256[] calldata resourceCounts
   ) internal {
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       if (resourceCounts[i] == 0) continue;
-      LibStorage.increaseStoredResource(spaceRock, transportables[i], resourceCounts[i]);
+      LibStorage.increaseStoredResource(asteroidEntity, transportables[i], resourceCounts[i]);
       LibFleet.decreaseFleetResource(fleetId, transportables[i], resourceCounts[i]);
     }
   }
 
   //this is required so unit cargo space can be updated correctly without loss of resources
-  function transferUnitsAndResourcesFromFleetToSpaceRock(
+  function transferUnitsAndResourcesFromFleetToAsteroid(
     bytes32 fleetId,
-    bytes32 spaceRock,
+    bytes32 asteroidEntity,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
   ) internal {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
-    bool sameOwner = OwnedBy.get(fleetId) == spaceRock;
+    bool sameOwner = OwnedBy.get(fleetId) == asteroidEntity;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
       if (!sameOwner && unitPrototypes[i] == CapitalShipPrototypeId)
         revert("[Fleet] Cannot transfer capital ships to other players");
-      LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], !sameOwner);
+      LibUnit.increaseUnitCount(asteroidEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
-    transferResourcesFromFleetToSpaceRock(fleetId, spaceRock, resourceCounts);
+    transferResourcesFromFleetToAsteroid(fleetId, asteroidEntity, resourceCounts);
 
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;

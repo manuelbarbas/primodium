@@ -20,10 +20,10 @@ contract FleetCombatSystem is FleetBaseSystem {
       if (IsFleet.get(targetEntity)) {
         fleetAttackFleet(entity, targetEntity);
       } else {
-        fleetAttackSpaceRock(entity, targetEntity);
+        fleetAttackAsteroid(entity, targetEntity);
       }
     } else {
-      spaceRockAttackFleet(entity, targetEntity);
+      asteroidAttackFleet(entity, targetEntity);
     }
   }
 
@@ -43,36 +43,36 @@ contract FleetCombatSystem is FleetBaseSystem {
     afterBattle(battleId, batteResult);
   }
 
-  function fleetAttackSpaceRock(
+  function fleetAttackAsteroid(
     bytes32 fleetId,
-    bytes32 targetSpaceRock
+    bytes32 targetAsteroid
   )
     private
     _onlyFleetOwner(fleetId)
     _onlyWhenNotInCooldown(fleetId)
     _onlyWhenNotInStance(fleetId)
-    _onlyWhenNotInGracePeriod(targetSpaceRock)
-    _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, targetSpaceRock)
-    _onlyWhenNotPirateAsteroidOrHasNotBeenDefeated(targetSpaceRock)
-    _claimResources(targetSpaceRock)
-    _claimUnits(targetSpaceRock)
+    _onlyWhenNotInGracePeriod(targetAsteroid)
+    _onlyWhenFleetIsInOrbitOfAsteroid(fleetId, targetAsteroid)
+    _onlyWhenNotPirateAsteroidOrHasNotBeenDefeated(targetAsteroid)
+    _claimResources(targetAsteroid)
+    _claimUnits(targetAsteroid)
   {
-    (bytes32 battleId, BattleResultData memory batteResult) = LibFleetCombat.attack(fleetId, targetSpaceRock);
+    (bytes32 battleId, BattleResultData memory batteResult) = LibFleetCombat.attack(fleetId, targetAsteroid);
     afterBattle(battleId, batteResult);
   }
 
-  function spaceRockAttackFleet(
-    bytes32 spaceRock,
+  function asteroidAttackFleet(
+    bytes32 asteroidEntity,
     bytes32 targetFleet
   )
     private
     _onlyWhenNotInGracePeriod(targetFleet)
-    _onlySpaceRockOwner(spaceRock)
-    _onlyWhenFleetIsInOrbitOfSpaceRock(targetFleet, spaceRock)
-    _claimResources(spaceRock)
-    _claimUnits(spaceRock)
+    _onlyAsteroidOwner(asteroidEntity)
+    _onlyWhenFleetIsInOrbitOfAsteroid(targetFleet, asteroidEntity)
+    _claimResources(asteroidEntity)
+    _claimUnits(asteroidEntity)
   {
-    (bytes32 battleId, BattleResultData memory battleResult) = LibFleetCombat.attack(spaceRock, targetFleet);
+    (bytes32 battleId, BattleResultData memory battleResult) = LibFleetCombat.attack(asteroidEntity, targetFleet);
     afterBattle(battleId, battleResult);
   }
 

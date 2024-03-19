@@ -5,14 +5,14 @@ import { MapColonies, MapStoredColonies } from "codegen/index.sol";
 
 library ColoniesMap {
   /**
-   * @dev Checks if a asteroid is stored for a specific entity, and asteroidId.
+   * @dev Checks if a asteroid is stored for a specific entity, and asteroidEntity.
    * @param entity The entity's identifier.
    * @param key defines the type of association the asteroid has with the entity.
-   * @param asteroidId The unique asteroidId for the asteroid.
+   * @param asteroidEntity The unique asteroidEntity for the asteroid.
    * @return true if the asteroid exists, false otherwise.
    */
-  function has(bytes32 entity, bytes32 key, bytes32 asteroidId) internal view returns (bool) {
-    return MapStoredColonies.get(entity, key, asteroidId).stored;
+  function has(bytes32 entity, bytes32 key, bytes32 asteroidEntity) internal view returns (bool) {
+    return MapStoredColonies.get(entity, key, asteroidEntity).stored;
   }
 
   /**
@@ -20,21 +20,21 @@ library ColoniesMap {
    * If the asteroid already exists, it updates the existing one.
    * @param entity The entity's identifier.
    * @param key defines the type of association the asteroid has with the entity.
-   * @param asteroidId the unique asteroidId for the asteroid.
+   * @param asteroidEntity the unique asteroidEntity for the asteroid.
    */
-  function add(bytes32 entity, bytes32 key, bytes32 asteroidId) internal {
-    require(!has(entity, key, asteroidId), "[ColoniesMap] asteroid is alread associated with entity");
-    MapColonies.push(entity, key, asteroidId);
-    MapStoredColonies.set(entity, key, asteroidId, true, MapColonies.length(entity, key) - 1);
+  function add(bytes32 entity, bytes32 key, bytes32 asteroidEntity) internal {
+    require(!has(entity, key, asteroidEntity), "[ColoniesMap] asteroid is alread associated with entity");
+    MapColonies.push(entity, key, asteroidEntity);
+    MapStoredColonies.set(entity, key, asteroidEntity, true, MapColonies.length(entity, key) - 1);
   }
 
   /**
-   * @dev Retrieves all asteroidIds associated with an entity.
+   * @dev Retrieves all asteroids associated with an entity.
    * @param entity The entity's identifier.
    * @param key defines the type of association the asteroid has with the entity.
-   * @return asteroidIds array of asteroidIds for the Colonies.
+   * @return asteroidEntities array of asteroidEntities for the Colonies.
    */
-  function getAsteroidIds(bytes32 entity, bytes32 key) internal view returns (bytes32[] memory asteroidIds) {
+  function getAsteroidEntities(bytes32 entity, bytes32 key) internal view returns (bytes32[] memory asteroidEntities) {
     return MapColonies.get(entity, key);
   }
 
@@ -42,14 +42,14 @@ library ColoniesMap {
    * @dev Removes an asteroid for a specific entity
    * @param entity The entity's identifier.
    * @param key defines the type of association the asteroid has with the entity.
-   * @param asteroidId The unique asteroidId for the asteroid to remove.
+   * @param asteroidEntity The unique asteroidEntity for the asteroid to remove.
    */
-  function remove(bytes32 entity, bytes32 key, bytes32 asteroidId) internal {
+  function remove(bytes32 entity, bytes32 key, bytes32 asteroidEntity) internal {
     if (MapColonies.length(entity, key) == 1) {
       clear(entity, key);
       return;
     }
-    uint256 index = MapStoredColonies.getIndex(entity, key, asteroidId);
+    uint256 index = MapStoredColonies.getIndex(entity, key, asteroidEntity);
     bytes32 replacement = MapColonies.getItem(entity, key, MapColonies.length(entity, key) - 1);
 
     // update replacement data
@@ -58,7 +58,7 @@ library ColoniesMap {
 
     // remove associated asteroid
     MapColonies.pop(entity, key);
-    MapStoredColonies.deleteRecord(entity, key, asteroidId);
+    MapStoredColonies.deleteRecord(entity, key, asteroidEntity);
   }
 
   /**
@@ -78,8 +78,8 @@ library ColoniesMap {
    */
   function clear(bytes32 entity, bytes32 key) internal {
     for (uint256 i = 0; i < MapColonies.length(entity, key); i++) {
-      bytes32 asteroidId = MapColonies.getItem(entity, key, i);
-      MapStoredColonies.deleteRecord(entity, key, asteroidId);
+      bytes32 asteroidEntity = MapColonies.getItem(entity, key, i);
+      MapStoredColonies.deleteRecord(entity, key, asteroidEntity);
     }
     MapColonies.deleteRecord(entity, key);
   }

@@ -19,7 +19,7 @@ import { EResource, EFleetStance } from "src/Types.sol";
 library LibFleetMove {
   function sendFleet(bytes32 fleetId, bytes32 destination) internal {
     bytes32 origin = FleetMovement.getDestination(fleetId);
-    require(!isSpaceRockBlocked(origin), "[Fleet] Space rock is blocked");
+    require(!isAsteroidBlocked(origin), "[Fleet] asteroid is blocked");
 
     uint256 speed = getSpeedWithFollowers(fleetId);
     require(speed > 0, "[Fleet] Fleet has no speed");
@@ -77,7 +77,7 @@ library LibFleetMove {
   }
 
   /// @notice Computes the block number an arrival will occur.
-  /// @param origin origin space rock.
+  /// @param origin origin asteroid.
   /// @param destination Destination position.
   /// @param speed speed of movement.
   /// @return Block number of arrival.
@@ -96,18 +96,18 @@ library LibFleetMove {
         UNIT_SPEED_SCALE) / (config.worldSpeed * speed));
   }
 
-  function isSpaceRockBlocked(bytes32 spaceRock) private returns (bool) {
+  function isAsteroidBlocked(bytes32 asteroidEntity) private returns (bool) {
     bytes32 fleetBlockKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Block));
-    return FleetsMap.size(spaceRock, fleetBlockKey) > 0;
+    return FleetsMap.size(asteroidEntity, fleetBlockKey) > 0;
   }
 
   function getSpeed(bytes32 fleetId) internal view returns (uint256 speed) {
-    bytes32 ownerSpaceRock = OwnedBy.get(fleetId);
+    bytes32 ownerAsteroidEntity = OwnedBy.get(fleetId);
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       uint256 unitCount = UnitCount.get(fleetId, unitPrototypes[i]);
       if (unitCount == 0) continue;
-      uint256 unitLevel = UnitLevel.get(ownerSpaceRock, unitPrototypes[i]);
+      uint256 unitLevel = UnitLevel.get(ownerAsteroidEntity, unitPrototypes[i]);
       uint256 unitSpeed = P_Unit.getSpeed(unitPrototypes[i], unitLevel);
       if (speed == 0) speed = unitSpeed;
       else if (speed > unitSpeed) speed = unitSpeed;

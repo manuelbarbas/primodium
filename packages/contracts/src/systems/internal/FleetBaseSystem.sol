@@ -22,10 +22,10 @@ contract FleetBaseSystem is PrimodiumSystem {
     _;
   }
 
-  modifier _onlyWhenFleetIsInOrbitOfSpaceRock(bytes32 fleetId, bytes32 spaceRock) {
+  modifier _onlyWhenFleetIsInOrbitOfAsteroid(bytes32 fleetId, bytes32 asteroidEntity) {
     require(
       (FleetMovement.getArrivalTime(fleetId) <= block.timestamp) &&
-        (FleetMovement.getDestination(fleetId) == spaceRock),
+        (FleetMovement.getDestination(fleetId) == asteroidEntity),
       "[Fleet] Fleet is not in orbit"
     );
     _;
@@ -41,8 +41,8 @@ contract FleetBaseSystem is PrimodiumSystem {
     _;
   }
 
-  modifier _onlySpaceRockOwner(bytes32 spaceRock) {
-    require(OwnedBy.get(spaceRock) == _player(), "[Fleet] Not asteroid owner");
+  modifier _onlyAsteroidOwner(bytes32 asteroidEntity) {
+    require(OwnedBy.get(asteroidEntity) == _player(), "[Fleet] Not asteroid owner");
     _;
   }
 
@@ -55,15 +55,16 @@ contract FleetBaseSystem is PrimodiumSystem {
     require(resourceCounts.length == P_Transportables.length(), "[Fleet] Incorrect resource array length");
     _;
   }
-  modifier _onlyWhenNotPirateAsteroid(bytes32 spaceRock) {
-    require(!PirateAsteroid.getIsPirateAsteroid(spaceRock), "[Fleet] Target cannot be pirate asteroid");
+  modifier _onlyWhenNotPirateAsteroid(bytes32 asteroidEntity) {
+    require(!PirateAsteroid.getIsPirateAsteroid(asteroidEntity), "[Fleet] Target cannot be pirate asteroid");
     _;
   }
 
-  modifier _onlyWhenNotPirateAsteroidOrHasNotBeenDefeated(bytes32 spaceRock) {
-    require(!PirateAsteroid.getIsDefeated(spaceRock), "[Fleet] Target pirate asteroid has been defeated");
+  modifier _onlyWhenNotPirateAsteroidOrHasNotBeenDefeated(bytes32 asteroidEntity) {
+    require(!PirateAsteroid.getIsDefeated(asteroidEntity), "[Fleet] Target pirate asteroid has been defeated");
     require(
-      !PirateAsteroid.getIsPirateAsteroid(spaceRock) || PirateAsteroid.getPlayerEntity(spaceRock) == _player(),
+      !PirateAsteroid.getIsPirateAsteroid(asteroidEntity) ||
+        PirateAsteroid.getPlayerEntity(asteroidEntity) == _player(),
       "[Fleet] Can only attack personal pirate asteroid"
     );
     _;

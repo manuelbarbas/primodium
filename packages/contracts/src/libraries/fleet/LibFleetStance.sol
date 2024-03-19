@@ -48,13 +48,13 @@ library LibFleetStance {
     FleetsMap.clear(fleetId, fleetFollowKey);
   }
 
-  function clearDefendingFleets(bytes32 spaceRock) internal {
+  function clearDefendingFleets(bytes32 asteroidEntity) internal {
     bytes32 fleetDefendKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Defend));
-    bytes32[] memory defendingFleets = FleetsMap.getFleetIds(spaceRock, fleetDefendKey);
+    bytes32[] memory defendingFleets = FleetsMap.getFleetIds(asteroidEntity, fleetDefendKey);
     for (uint256 i = 0; i < defendingFleets.length; i++) {
       FleetStance.set(defendingFleets[i], uint8(EFleetStance.NULL), bytes32(0));
     }
-    FleetsMap.clear(spaceRock, fleetDefendKey);
+    FleetsMap.clear(asteroidEntity, fleetDefendKey);
   }
 
   function getFollowerFleets(bytes32 fleetId) internal view returns (bytes32[] memory) {
@@ -62,9 +62,9 @@ library LibFleetStance {
     return FleetsMap.getFleetIds(fleetId, fleetFollowKey);
   }
 
-  function getDefendingFleets(bytes32 spaceRock) internal view returns (bytes32[] memory) {
+  function getDefendingFleets(bytes32 asteroidEntity) internal view returns (bytes32[] memory) {
     bytes32 fleetDefendKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Defend));
-    return FleetsMap.getFleetIds(spaceRock, fleetDefendKey);
+    return FleetsMap.getFleetIds(asteroidEntity, fleetDefendKey);
   }
 
   function getAllies(bytes32 entity) internal view returns (bytes32[] memory) {

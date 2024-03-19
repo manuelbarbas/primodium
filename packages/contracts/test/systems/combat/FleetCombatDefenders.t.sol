@@ -11,7 +11,7 @@ import { FleetIncomingKey } from "src/Keys.sol";
 
 /* 
   Tests to write
-  - Fight fleet vs spacerock and defenders 
+  - Fight fleet vs asteroid and defenders 
 */
 contract CombatDefenderTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;
@@ -32,7 +32,7 @@ contract CombatDefenderTest is PrimodiumTest {
     eveEntity = addressToEntity(eve);
     eveHomeAsteroid = spawn(eve);
   }
-  //test fleet attack space rock and win raid
+  //test fleet attack asteroid and win raid
   function testFleetAttackAsteroidWithDefender() public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
@@ -74,15 +74,15 @@ contract CombatDefenderTest is PrimodiumTest {
     assertTrue(unitCargo > 0, "unit cargo should more than 0");
     increaseResource(bobHomeAsteroid, EResource.Iron, unitCargo);
     assertGt(GracePeriod.get(fleetId), 0, "fleet should be in grace period");
-    assertGt(GracePeriod.get(aliceHomeAsteroid), 0, "home rock should be in grace period");
+    assertGt(GracePeriod.get(aliceHomeAsteroid), 0, "home asteroid should be in grace period");
 
     switchPrank(alice);
     world.Primodium__attack(fleetId, bobHomeAsteroid);
     vm.stopPrank();
 
     assertEq(GracePeriod.get(fleetId), 0, "fleet should not be in grace period");
-    assertEq(GracePeriod.get(aliceHomeAsteroid), 0, "home rock should not be in grace period");
-    assertEq(ResourceCount.get(bobHomeAsteroid, uint8(EResource.Iron)), 0, "space rock iron count should be 0");
+    assertEq(GracePeriod.get(aliceHomeAsteroid), 0, "home asteroid should not be in grace period");
+    assertEq(ResourceCount.get(bobHomeAsteroid, uint8(EResource.Iron)), 0, "asteroid iron count should be 0");
     assertEq(ResourceCount.get(fleetId, uint8(EResource.Iron)), unitCargo, "fleet should have raided iron");
     assertEq(
       ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_Encryption)),
@@ -93,6 +93,6 @@ contract CombatDefenderTest is PrimodiumTest {
     uint256 unitAttack = P_Unit.getAttack(minutemanEntity, UnitLevel.get(aliceHomeAsteroid, minutemanEntity));
     assertTrue(unitAttack > 0, "unit attack should more than 0");
 
-    assertEq(ResourceCount.get(bobHomeAsteroid, uint8(EResource.Iron)), 0, "space rock iron count should be 0");
+    assertEq(ResourceCount.get(bobHomeAsteroid, uint8(EResource.Iron)), 0, "asteroid iron count should be 0");
   }
 }

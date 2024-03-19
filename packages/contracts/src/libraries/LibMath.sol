@@ -61,7 +61,7 @@ library LibMath {
     int256 newY = Trig.sin(angleRads) * int256(_distance);
     int32 x = int32((newX / 1e18));
     int32 y = int32((newY / 1e18));
-    return PositionData({ x: flip ? -x : x, y: flip ? -y : y, parent: 0 });
+    return PositionData({ x: flip ? -x : x, y: flip ? -y : y, parentEntity: 0 });
   }
 
   /// @notice Calculates distance for asteroid based on asteroid count

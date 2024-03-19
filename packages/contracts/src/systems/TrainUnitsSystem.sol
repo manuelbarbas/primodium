@@ -48,11 +48,11 @@ contract TrainUnitsSystem is PrimodiumSystem {
   function _trainUnits(bytes32 buildingEntity, bytes32 unitPrototype, uint256 count) internal {
     if (count == 0) return;
 
-    bytes32 spaceRockEntity = OwnedBy.get(buildingEntity);
+    bytes32 asteroidEntity = OwnedBy.get(buildingEntity);
     IWorld world = IWorld(_world());
-    world.Primodium__claimResources(spaceRockEntity);
-    world.Primodium__claimUnits(spaceRockEntity);
-    LibResource.spendUnitRequiredResources(spaceRockEntity, unitPrototype, count);
+    world.Primodium__claimResources(asteroidEntity);
+    world.Primodium__claimUnits(asteroidEntity);
+    LibResource.spendUnitRequiredResources(asteroidEntity, unitPrototype, count);
     LibUnit.checkTrainUnitsRequirements(buildingEntity, unitPrototype);
 
     QueueItemUnitsData memory queueItem = QueueItemUnitsData({ unitId: unitPrototype, quantity: count });

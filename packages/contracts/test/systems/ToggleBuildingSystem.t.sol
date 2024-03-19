@@ -6,7 +6,7 @@ import { UnitProductionQueue } from "src/libraries/UnitProductionQueue.sol";
 import { LibUnit } from "src/libraries/LibUnit.sol";
 
 contract ToggleBuildingSystemTest is PrimodiumTest {
-  bytes32 rock = bytes32("rock");
+  bytes32 asteroidEntity = bytes32("asteroidEntity");
   bytes32 player;
 
   EUnit unit = EUnit(1);
@@ -199,12 +199,12 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
   }
 
   function testToggleBuildingTrainingUnits() public {
-    bytes32 asteroid = Home.get(player);
-    Level.set(asteroid, 2);
+    bytes32 asteroidEntity = Home.get(player);
+    Level.set(asteroidEntity, 2);
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Garage)), 1);
-    world.Primodium__build(EBuilding.Garage, getTilePosition(asteroid, EBuilding.Garage));
+    world.Primodium__build(EBuilding.Garage, getTilePosition(asteroidEntity, EBuilding.Garage));
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Workshop)), 1);
-    PositionData memory workshopPosition = getTilePosition(asteroid, EBuilding.Workshop);
+    PositionData memory workshopPosition = getTilePosition(asteroidEntity, EBuilding.Workshop);
     bytes32 workshop = world.Primodium__build(EBuilding.Workshop, workshopPosition);
 
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine)), 0);
@@ -214,15 +214,15 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
   }
 
   function testToggleBuildingTrainingUnitsComplete() public {
-    bytes32 asteroid = Home.get(player);
+    bytes32 asteroidEntity = Home.get(player);
     buildBuilding(creator, EBuilding.Garage);
-    PositionData memory workshopPosition = getTilePosition(asteroid, EBuilding.Workshop);
+    PositionData memory workshopPosition = getTilePosition(asteroidEntity, EBuilding.Workshop);
     bytes32 workshop = buildBuilding(creator, EBuilding.Workshop);
 
     bytes32 minutemanEntity = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
 
     P_RequiredResourcesData memory resources = P_RequiredResources.get(minutemanEntity, 1);
-    provideResources(asteroid, resources);
+    provideResources(asteroidEntity, resources);
 
     vm.startPrank(creator);
     world.Primodium__trainUnits(workshop, EUnit.MinutemanMarine, 1);

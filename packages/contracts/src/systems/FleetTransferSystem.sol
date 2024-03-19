@@ -6,100 +6,105 @@ import { LibFleetTransfer } from "libraries/fleet/LibFleetTransfer.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 
 contract FleetTransferSystem is FleetBaseSystem {
-  function transferUnitsFromSpaceRockToFleet(
-    bytes32 spaceRock,
+  function transferUnitsFromAsteroidToFleet(
+    bytes32 asteroidEntity,
     bytes32 fleetId,
     uint256[] calldata unitCounts
   )
     public
-    _onlySpaceRockOwner(spaceRock)
-    _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock)
-    _claimUnits(spaceRock)
+    _onlyAsteroidOwner(asteroidEntity)
+    _onlyWhenFleetIsInOrbitOfAsteroid(fleetId, asteroidEntity)
+    _claimUnits(asteroidEntity)
     _unitCountIsValid(unitCounts)
   {
-    LibFleetTransfer.transferUnitsFromSpaceRockToFleet(spaceRock, fleetId, unitCounts);
+    LibFleetTransfer.transferUnitsFromAsteroidToFleet(asteroidEntity, fleetId, unitCounts);
   }
 
-  function transferResourcesFromSpaceRockToFleet(
-    bytes32 spaceRock,
+  function transferResourcesFromAsteroidToFleet(
+    bytes32 asteroidEntity,
     bytes32 fleetId,
     uint256[] calldata resourceCounts
   )
     public
-    _onlySpaceRockOwner(spaceRock)
-    _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock)
-    _claimResources(spaceRock)
+    _onlyAsteroidOwner(asteroidEntity)
+    _onlyWhenFleetIsInOrbitOfAsteroid(fleetId, asteroidEntity)
+    _claimResources(asteroidEntity)
     _resourceCountIsValid(resourceCounts)
   {
-    LibFleetTransfer.transferResourcesFromSpaceRockToFleet(spaceRock, fleetId, resourceCounts);
+    LibFleetTransfer.transferResourcesFromAsteroidToFleet(asteroidEntity, fleetId, resourceCounts);
   }
 
-  function transferUnitsAndResourcesFromSpaceRockToFleet(
-    bytes32 spaceRock,
+  function transferUnitsAndResourcesFromAsteroidToFleet(
+    bytes32 asteroidEntity,
     bytes32 fleetId,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
   )
     public
-    _onlySpaceRockOwner(spaceRock)
-    _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock)
-    _claimResources(spaceRock)
-    _claimUnits(spaceRock)
+    _onlyAsteroidOwner(asteroidEntity)
+    _onlyWhenFleetIsInOrbitOfAsteroid(fleetId, asteroidEntity)
+    _claimResources(asteroidEntity)
+    _claimUnits(asteroidEntity)
     _unitCountIsValid(unitCounts)
     _resourceCountIsValid(resourceCounts)
   {
-    LibFleetTransfer.transferUnitsAndResourcesFromSpaceRockToFleet(spaceRock, fleetId, unitCounts, resourceCounts);
+    LibFleetTransfer.transferUnitsAndResourcesFromAsteroidToFleet(asteroidEntity, fleetId, unitCounts, resourceCounts);
   }
 
-  function transferUnitsFromFleetToSpaceRock(
+  function transferUnitsFromFleetToAsteroid(
     bytes32 fromFleetId,
-    bytes32 spaceRock,
+    bytes32 asteroidEntity,
     uint256[] calldata unitCounts
   )
     public
     _onlyFleetOwner(fromFleetId)
     _onlyWhenNotInCooldown(fromFleetId)
-    _onlyWhenFleetIsInOrbitOfSpaceRock(fromFleetId, spaceRock)
-    _onlyWhenNotPirateAsteroid(spaceRock)
-    _claimUnits(spaceRock)
+    _onlyWhenFleetIsInOrbitOfAsteroid(fromFleetId, asteroidEntity)
+    _onlyWhenNotPirateAsteroid(asteroidEntity)
+    _claimUnits(asteroidEntity)
     _unitCountIsValid(unitCounts)
   {
-    LibFleetTransfer.transferUnitsFromFleetToSpaceRock(fromFleetId, spaceRock, unitCounts);
+    LibFleetTransfer.transferUnitsFromFleetToAsteroid(fromFleetId, asteroidEntity, unitCounts);
   }
 
-  function transferResourcesFromFleetToSpaceRock(
+  function transferResourcesFromFleetToAsteroid(
     bytes32 fleetId,
-    bytes32 spaceRock,
+    bytes32 asteroidEntity,
     uint256[] calldata resourceCounts
   )
     public
     _onlyFleetOwner(fleetId)
     _onlyWhenNotInCooldown(fleetId)
-    _onlyWhenFleetIsInOrbitOfSpaceRock(fleetId, spaceRock)
-    _onlyWhenNotPirateAsteroid(spaceRock)
-    _claimResources(spaceRock)
+    _onlyWhenFleetIsInOrbitOfAsteroid(fleetId, asteroidEntity)
+    _onlyWhenNotPirateAsteroid(asteroidEntity)
+    _claimResources(asteroidEntity)
     _resourceCountIsValid(resourceCounts)
   {
-    LibFleetTransfer.transferResourcesFromFleetToSpaceRock(fleetId, spaceRock, resourceCounts);
+    LibFleetTransfer.transferResourcesFromFleetToAsteroid(fleetId, asteroidEntity, resourceCounts);
   }
 
-  function transferUnitsAndResourcesFromFleetToSpaceRock(
+  function transferUnitsAndResourcesFromFleetToAsteroid(
     bytes32 fromFleetId,
-    bytes32 spaceRock,
+    bytes32 asteroidEntity,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
   )
     public
     _onlyFleetOwner(fromFleetId)
-    _onlyWhenFleetIsInOrbitOfSpaceRock(fromFleetId, spaceRock)
+    _onlyWhenFleetIsInOrbitOfAsteroid(fromFleetId, asteroidEntity)
     _onlyWhenNotInCooldown(fromFleetId)
-    _onlyWhenNotPirateAsteroid(spaceRock)
-    _claimResources(spaceRock)
-    _claimUnits(spaceRock)
+    _onlyWhenNotPirateAsteroid(asteroidEntity)
+    _claimResources(asteroidEntity)
+    _claimUnits(asteroidEntity)
     _unitCountIsValid(unitCounts)
     _resourceCountIsValid(resourceCounts)
   {
-    LibFleetTransfer.transferUnitsAndResourcesFromFleetToSpaceRock(fromFleetId, spaceRock, unitCounts, resourceCounts);
+    LibFleetTransfer.transferUnitsAndResourcesFromFleetToAsteroid(
+      fromFleetId,
+      asteroidEntity,
+      unitCounts,
+      resourceCounts
+    );
   }
 
   function transferUnitsFromFleetToFleet(

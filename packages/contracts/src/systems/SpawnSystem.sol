@@ -24,10 +24,10 @@ contract SpawnSystem is PrimodiumSystem {
 
     require(!Spawned.get(playerEntity), "[SpawnSystem] Already spawned");
 
-    bytes32 asteroid = LibAsteroid.createPrimaryAsteroid(playerEntity);
+    bytes32 asteroidEntity = LibAsteroid.createPrimaryAsteroid(playerEntity);
     Spawned.set(playerEntity, true);
-    IWorld(_world()).Primodium__initAsteroidOwner(asteroid, playerEntity);
-    Home.set(playerEntity, asteroid);
-    return asteroid;
+    IWorld(_world()).Primodium__initAsteroidOwner(asteroidEntity, playerEntity);
+    Home.set(playerEntity, asteroidEntity);
+    return asteroidEntity;
   }
 }

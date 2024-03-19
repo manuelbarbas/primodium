@@ -12,16 +12,16 @@ import { LibObjectives } from "libraries/LibObjectives.sol";
 
 contract ClaimObjectiveSystem is PrimodiumSystem {
   function claimObjective(
-    bytes32 spaceRockEntity,
+    bytes32 asteroidEntity,
     EObjectives objective
-  ) public _claimResources(spaceRockEntity) _claimUnits(spaceRockEntity) {
+  ) public _claimResources(asteroidEntity) _claimUnits(asteroidEntity) {
     bytes32 playerEntity = _player();
     bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(objective));
 
-    LibObjectives.checkObjectiveRequirements(playerEntity, spaceRockEntity, objective);
+    LibObjectives.checkObjectiveRequirements(playerEntity, asteroidEntity, objective);
 
     IWorld world = IWorld(_world());
-    world.Primodium__receiveRewards(playerEntity, spaceRockEntity, objectivePrototype);
+    world.Primodium__receiveRewards(playerEntity, asteroidEntity, objectivePrototype);
 
     CompletedObjective.set(playerEntity, objectivePrototype, true);
     P_SpawnPirateAsteroidData memory spawnPirateAsteroid = P_SpawnPirateAsteroid.get(objectivePrototype);

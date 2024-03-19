@@ -21,7 +21,7 @@ contract FleetStanceSystem is FleetBaseSystem {
       "[Fleet] Can not target a fleet that is taking a stance"
     );
     if (stance == uint8(EFleetStance.Defend) || stance == uint8(EFleetStance.Block)) {
-      require(FleetMovement.getDestination(fleetId) == target, "[Fleet] Fleet must be in orbit of target space rock");
+      require(FleetMovement.getDestination(fleetId) == target, "[Fleet] Fleet must be in orbit of target asteroid");
     }
     LibFleetStance.setFleetStance(fleetId, stance, target);
   }

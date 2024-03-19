@@ -6,18 +6,18 @@ import { LibFleet } from "libraries/fleet/LibFleet.sol";
 
 contract FleetCreateSystem is FleetBaseSystem {
   function createFleet(
-    bytes32 spaceRock,
+    bytes32 asteroidEntity,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
   )
     public
-    _claimResources(spaceRock)
-    _claimUnits(spaceRock)
-    _onlySpaceRockOwner(spaceRock)
+    _claimResources(asteroidEntity)
+    _claimUnits(asteroidEntity)
+    _onlyAsteroidOwner(asteroidEntity)
     _unitCountIsValid(unitCounts)
     _resourceCountIsValid(resourceCounts)
     returns (bytes32 fleetId)
   {
-    fleetId = LibFleet.createFleet(_player(), spaceRock, unitCounts, resourceCounts);
+    fleetId = LibFleet.createFleet(_player(), asteroidEntity, unitCounts, resourceCounts);
   }
 }

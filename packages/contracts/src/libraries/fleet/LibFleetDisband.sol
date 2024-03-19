@@ -27,7 +27,7 @@ library LibFleetDisband {
       LibFleet.decreaseFleetResource(fleetId, transportables[i], fleetResourceCount);
     }
 
-    //remove units and return utility to space rock
+    //remove units and return utility to asteroid
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       uint256 unitCount = UnitCount.get(fleetId, unitPrototypes[i]);

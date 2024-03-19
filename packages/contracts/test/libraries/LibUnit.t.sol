@@ -17,7 +17,7 @@ contract LibUnitTest is PrimodiumTest {
   bytes32 buildingPrototype = "buildingPrototype";
 
   bytes32 building2 = "building2";
-  bytes32 rock = "rock";
+  bytes32 asteroidEntity = "asteroidEntity";
 
   function setUp() public override {
     super.setUp();
@@ -70,9 +70,9 @@ contract LibUnitTest is PrimodiumTest {
     console.log("buildings", buildings.length);
     for (uint256 i = 0; i < buildings.length; i++) {
       bytes32 buildingEntity = buildings[i];
-      bytes32 asteroid = OwnedBy.get(buildingEntity);
-      console.log("building owner: %x", uint256(asteroid));
-      console.log("is asteroid:", Asteroid.getIsAsteroid(asteroid));
+      bytes32 asteroidEntity = OwnedBy.get(buildingEntity);
+      console.log("building owner: %x", uint256(asteroidEntity));
+      console.log("is asteroid:", Asteroid.getIsAsteroid(asteroidEntity));
     }
     vm.warp(block.timestamp + 100);
     LibUnit.claimUnits(Home.get(player));
@@ -103,9 +103,9 @@ contract LibUnitTest is PrimodiumTest {
     console.log("buildings", buildings.length);
     for (uint256 i = 0; i < buildings.length; i++) {
       bytes32 buildingEntity = buildings[i];
-      bytes32 asteroid = OwnedBy.get(buildingEntity);
-      console.log("building owner: %x", uint256(asteroid));
-      console.log("is asteroid:", Asteroid.getIsAsteroid(asteroid));
+      bytes32 asteroidEntity = OwnedBy.get(buildingEntity);
+      console.log("building owner: %x", uint256(asteroidEntity));
+      console.log("is asteroid:", Asteroid.getIsAsteroid(asteroidEntity));
     }
     vm.warp(block.timestamp + 100);
     LibUnit.claimUnits(secondaryAsteroid);
@@ -367,11 +367,11 @@ contract LibUnitTest is PrimodiumTest {
   }
 
   function testDecreaseUnitCount() public {
-    UnitCount.set(rock, unit, 100);
-    LibUnit.decreaseUnitCount(rock, unit, 50, false);
-    assertEq(UnitCount.get(rock, unit), 50);
+    UnitCount.set(asteroidEntity, unit, 100);
+    LibUnit.decreaseUnitCount(asteroidEntity, unit, 50, false);
+    assertEq(UnitCount.get(asteroidEntity, unit), 50);
 
-    LibUnit.decreaseUnitCount(rock, unit, 50, false);
-    assertEq(UnitCount.get(rock, unit), 0);
+    LibUnit.decreaseUnitCount(asteroidEntity, unit, 50, false);
+    assertEq(UnitCount.get(asteroidEntity, unit), 0);
   }
 }

@@ -18,13 +18,13 @@ contract PrimodiumSystem is System {
     _;
   }
 
-  modifier _claimResources(bytes32 spaceRockEntity) {
-    IWorld(_world()).Primodium__claimResources(spaceRockEntity);
+  modifier _claimResources(bytes32 asteroidEntity) {
+    IWorld(_world()).Primodium__claimResources(asteroidEntity);
     _;
   }
 
-  modifier _claimUnits(bytes32 spaceRockEntity) {
-    IWorld(_world()).Primodium__claimUnits(spaceRockEntity);
+  modifier _claimUnits(bytes32 asteroidEntity) {
+    IWorld(_world()).Primodium__claimUnits(asteroidEntity);
     _;
   }
 

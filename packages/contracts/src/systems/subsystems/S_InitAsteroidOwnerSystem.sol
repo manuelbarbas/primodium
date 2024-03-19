@@ -12,7 +12,7 @@ contract S_InitAsteroidOwnerSystem is PrimodiumSystem {
   function initAsteroidOwner(bytes32 asteroidEntity, bytes32 playerEntity) public _claimResources(asteroidEntity) {
     LibAsteroid.initAsteroidOwner(asteroidEntity, playerEntity);
     PositionData memory position = Position.get(MainBasePrototypeId);
-    position.parent = asteroidEntity;
+    position.parentEntity = asteroidEntity;
 
     bytes32 buildingEntity = LibBuilding.build(playerEntity, MainBasePrototypeId, position);
     IWorld world = IWorld(_world());

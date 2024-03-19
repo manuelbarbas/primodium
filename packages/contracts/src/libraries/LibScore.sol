@@ -12,39 +12,39 @@ import { AsteroidOwnedByKey, UnitKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibScore {
-  function updateScore(bytes32 spaceRock, uint8 resource, uint256 value) internal {
-    uint256 count = ResourceCount.get(spaceRock, resource);
-    uint256 currentSpaceRockScore = Score.get(spaceRock);
+  function updateScore(bytes32 asteroidEntity, uint8 resource, uint256 value) internal {
+    uint256 count = ResourceCount.get(asteroidEntity, resource);
+    uint256 currentAsteroidScore = Score.get(asteroidEntity);
     uint256 scoreChangeAmount = P_ScoreMultiplier.get(resource);
 
     if (scoreChangeAmount == 0) return;
 
     if (value < count) {
       scoreChangeAmount *= (count - value);
-      currentSpaceRockScore -= scoreChangeAmount;
+      currentAsteroidScore -= scoreChangeAmount;
     } else {
       scoreChangeAmount *= (value - count);
-      currentSpaceRockScore += scoreChangeAmount;
+      currentAsteroidScore += scoreChangeAmount;
     }
-    Score.set(spaceRock, currentSpaceRockScore);
+    Score.set(asteroidEntity, currentAsteroidScore);
   }
 
-  function updatePlayerScore(bytes32 playerEntity, bytes32 spaceRockEntity, uint256 score) internal {
+  function updatePlayerScore(bytes32 playerEntity, bytes32 asteroidEntity, uint256 score) internal {
     uint256 currentScore = Score.get(playerEntity);
-    uint256 spaceRockScore = Score.get(spaceRockEntity);
+    uint256 asteroidScore = Score.get(asteroidEntity);
 
-    if (score < spaceRockScore) {
-      currentScore -= spaceRockScore - score;
+    if (score < asteroidScore) {
+      currentScore -= asteroidScore - score;
     } else {
-      currentScore += score - spaceRockScore;
+      currentScore += score - asteroidScore;
     }
     Score.set(playerEntity, currentScore);
   }
 
-  function updateScoreOnSpaceRock(bytes32 playerEntity, bytes32 spaceRock, bool isAquisition) internal {
-    uint256 currentSpaceRockScore = Score.get(spaceRock);
+  function updateScoreOnAsteroid(bytes32 playerEntity, bytes32 asteroidEntity, bool isAquisition) internal {
+    uint256 currentAsteroidScore = Score.get(asteroidEntity);
     uint256 currenPlayerScore = Score.get(playerEntity);
-    if (isAquisition) Score.set(playerEntity, currenPlayerScore + currentSpaceRockScore);
-    else Score.set(playerEntity, currenPlayerScore - currentSpaceRockScore);
+    if (isAquisition) Score.set(playerEntity, currenPlayerScore + currentAsteroidScore);
+    else Score.set(playerEntity, currenPlayerScore - currentAsteroidScore);
   }
 }

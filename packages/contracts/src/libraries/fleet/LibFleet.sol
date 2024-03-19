@@ -20,18 +20,17 @@ library LibFleet {
   /// @notice creates a fleet.
   function createFleet(
     bytes32 playerEntity,
-    bytes32 spaceRock,
+    bytes32 asteroidEntity,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
   ) internal returns (bytes32 fleetId) {
-    require(ResourceCount.get(spaceRock, uint8(EResource.U_MaxFleets)) > 0, "[Fleet] Space rock has no max moves");
-    LibStorage.decreaseStoredResource(spaceRock, uint8(EResource.U_MaxFleets), 1);
-    //require(ResourceCount.get(spaceRock, EResource.U_Cargo) > 0, "[Fleet] Space rock has no cargo capacity"))
+    require(ResourceCount.get(asteroidEntity, uint8(EResource.U_MaxFleets)) > 0, "[Fleet] asteroid has no max moves");
+    LibStorage.decreaseStoredResource(asteroidEntity, uint8(EResource.U_MaxFleets), 1);
     fleetId = LibEncode.getTimedHash(playerEntity, FleetKey);
     uint256 gracePeriodLength = (P_GracePeriod.getFleet() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
     GracePeriod.set(fleetId, block.timestamp + gracePeriodLength);
 
-    OwnedBy.set(fleetId, spaceRock);
+    OwnedBy.set(fleetId, asteroidEntity);
     IsFleet.set(fleetId, true);
     IsFleetEmpty.set(fleetId, false);
 
@@ -40,8 +39,8 @@ library LibFleet {
       FleetMovementData({
         arrivalTime: block.timestamp,
         sendTime: block.timestamp,
-        origin: spaceRock,
-        destination: spaceRock
+        origin: asteroidEntity,
+        destination: asteroidEntity
       })
     );
 
@@ -49,23 +48,23 @@ library LibFleet {
 
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
-      uint256 rockUnitCount = UnitCount.get(spaceRock, unitPrototypes[i]);
-      require(rockUnitCount >= unitCounts[i], "[Fleet] Not enough units to add to fleet");
-      LibUnit.decreaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], false);
+      uint256 asteroidUnitCount = UnitCount.get(asteroidEntity, unitPrototypes[i]);
+      require(asteroidUnitCount >= unitCounts[i], "[Fleet] Not enough units to add to fleet");
+      LibUnit.decreaseUnitCount(asteroidEntity, unitPrototypes[i], unitCounts[i], false);
       increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], false);
     }
 
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       if (resourceCounts[i] == 0) continue;
-      uint256 rockResourceCount = ResourceCount.get(spaceRock, transportables[i]);
-      require(rockResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
-      LibStorage.decreaseStoredResource(spaceRock, transportables[i], resourceCounts[i]);
+      uint256 asteroidResourceCount = ResourceCount.get(asteroidEntity, transportables[i]);
+      require(asteroidResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
+      LibStorage.decreaseStoredResource(asteroidEntity, transportables[i], resourceCounts[i]);
       increaseFleetResource(fleetId, transportables[i], resourceCounts[i]);
     }
 
-    FleetsMap.add(spaceRock, FleetOwnedByKey, fleetId);
-    FleetsMap.add(spaceRock, FleetIncomingKey, fleetId);
+    FleetsMap.add(asteroidEntity, FleetOwnedByKey, fleetId);
+    FleetsMap.add(asteroidEntity, FleetIncomingKey, fleetId);
   }
 
   function increaseFleetUnit(bytes32 fleetId, bytes32 unitPrototype, uint256 unitCount, bool updatesUtility) internal {
@@ -124,16 +123,16 @@ library LibFleet {
     ResourceCount.set(fleetId, resource, currResourceCount - amount);
   }
 
-  function landFleet(bytes32 playerEntity, bytes32 fleetId, bytes32 spaceRock) internal {
-    bytes32 spaceRockOwner = OwnedBy.get(fleetId);
+  function landFleet(bytes32 playerEntity, bytes32 fleetId, bytes32 asteroidEntity) internal {
+    bytes32 asteroidOwnerEntity = OwnedBy.get(fleetId);
 
-    bool isOwner = spaceRockOwner == spaceRock;
+    bool isOwner = asteroidOwnerEntity == asteroidEntity;
 
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       uint256 fleetResourceCount = ResourceCount.get(fleetId, transportables[i]);
       if (fleetResourceCount == 0) continue;
-      LibStorage.increaseStoredResource(spaceRock, transportables[i], fleetResourceCount);
+      LibStorage.increaseStoredResource(asteroidEntity, transportables[i], fleetResourceCount);
       decreaseFleetResource(fleetId, transportables[i], fleetResourceCount);
     }
 
@@ -142,7 +141,7 @@ library LibFleet {
       uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototypes[i]);
       if (fleetUnitCount == 0) continue;
       decreaseFleetUnit(fleetId, unitPrototypes[i], fleetUnitCount, !isOwner);
-      LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], fleetUnitCount, !isOwner);
+      LibUnit.increaseUnitCount(asteroidEntity, unitPrototypes[i], fleetUnitCount, !isOwner);
     }
     if (!isOwner) {
       resetFleetOrbit(fleetId);
@@ -217,14 +216,14 @@ library LibFleet {
     LibFleetStance.clearFollowingFleets(fleetId);
     IsFleetEmpty.set(fleetId, true);
 
-    bytes32 spaceRock = FleetMovement.getDestination(fleetId);
-    bytes32 spaceRockOwner = OwnedBy.get(fleetId);
+    bytes32 asteroidEntity = FleetMovement.getDestination(fleetId);
+    bytes32 asteroidOwnerEntity = OwnedBy.get(fleetId);
 
-    if (spaceRockOwner != spaceRock) {
-      //remove fleet from incoming of current space rock
-      FleetsMap.remove(spaceRock, FleetIncomingKey, fleetId);
-      //set fleet to orbit of owner space rock
-      FleetsMap.add(spaceRockOwner, FleetIncomingKey, fleetId);
+    if (asteroidOwnerEntity != asteroidEntity) {
+      //remove fleet from incoming of current asteroid
+      FleetsMap.remove(asteroidEntity, FleetIncomingKey, fleetId);
+      //set fleet to orbit of owner asteroid
+      FleetsMap.add(asteroidOwnerEntity, FleetIncomingKey, fleetId);
     }
 
     FleetMovement.set(
@@ -232,8 +231,8 @@ library LibFleet {
       FleetMovementData({
         arrivalTime: block.timestamp,
         sendTime: block.timestamp,
-        origin: spaceRockOwner,
-        destination: spaceRockOwner
+        origin: asteroidOwnerEntity,
+        destination: asteroidOwnerEntity
       })
     );
   }

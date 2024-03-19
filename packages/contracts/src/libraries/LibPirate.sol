@@ -38,7 +38,7 @@ library LibPirate {
     PositionData memory coord = PositionData({
       x: playerHomeAsteroidCoord.x + spawnPirateAsteroid.x,
       y: playerHomeAsteroidCoord.y + spawnPirateAsteroid.y,
-      parent: 0
+      parentEntity: 0
     });
 
     PirateAsteroid.set(
@@ -75,22 +75,22 @@ library LibPirate {
     }
   }
 
-  function increaseResource(bytes32 spaceRock, uint8 resourceType, uint256 count) internal {
+  function increaseResource(bytes32 asteroidEntity, uint8 resourceType, uint256 count) internal {
     if (P_IsUtility.get(resourceType)) {
-      if (ResourceCount.get(spaceRock, resourceType) < count)
+      if (ResourceCount.get(asteroidEntity, resourceType) < count)
         LibProduction.increaseResourceProduction(
-          spaceRock,
+          asteroidEntity,
           EResource(resourceType),
-          count - ResourceCount.get(spaceRock, resourceType)
+          count - ResourceCount.get(asteroidEntity, resourceType)
         );
     } else {
-      if (MaxResourceCount.get(spaceRock, resourceType) < count + ResourceCount.get(spaceRock, resourceType))
+      if (MaxResourceCount.get(asteroidEntity, resourceType) < count + ResourceCount.get(asteroidEntity, resourceType))
         LibStorage.increaseMaxStorage(
-          spaceRock,
+          asteroidEntity,
           resourceType,
-          count + ResourceCount.get(spaceRock, resourceType) - MaxResourceCount.get(spaceRock, resourceType)
+          count + ResourceCount.get(asteroidEntity, resourceType) - MaxResourceCount.get(asteroidEntity, resourceType)
         );
-      LibStorage.increaseStoredResource(spaceRock, resourceType, count);
+      LibStorage.increaseStoredResource(asteroidEntity, resourceType, count);
     }
   }
 }

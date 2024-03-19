@@ -8,7 +8,7 @@ import { IWorld } from "codegen/world/IWorld.sol";
 
 contract UpgradeBuildingSystem is PrimodiumSystem {
   /// @notice Upgrades the building at the specified coordinate
-  function upgradeBuilding(bytes32 buildingEntity) public _claimResources(Position.getParent(buildingEntity)) {
+  function upgradeBuilding(bytes32 buildingEntity) public _claimResources(Position.getParentEntity(buildingEntity)) {
     LibBuilding.checkUpgradeRequirements(_player(), buildingEntity);
 
     uint256 targetLevel = Level.get(buildingEntity) + 1;

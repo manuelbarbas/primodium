@@ -118,7 +118,7 @@ const getConfig = async () => {
         valueSchema: {
           x: "int32",
           y: "int32",
-          parent: "bytes32",
+          parentEntity: "bytes32",
         },
       },
 
@@ -158,7 +158,7 @@ const getConfig = async () => {
         valueSchema: "bytes32",
       },
 
-      /* ---------------------------------- Rocks --------------------------------- */
+      /* -------------------------------- Asteroids ------------------------------- */
       AsteroidCount: {
         keySchema: {},
         valueSchema: "uint256",
@@ -199,11 +199,6 @@ const getConfig = async () => {
       Specialty: {
         keySchema: { entity: "bytes32" },
         valueSchema: "uint8", // EResource
-      },
-
-      IsSpaceRock: {
-        keySchema: { entity: "bytes32" },
-        valueSchema: "bool",
       },
 
       /* -------------------------------- Resources ------------------------------- */
@@ -505,12 +500,12 @@ const getConfig = async () => {
       BattleResult: {
         keySchema: { battleId: "bytes32" },
         valueSchema: {
-          aggressorEntity: "bytes32", //can be fleet or space rock
-          aggressorDamage: "uint256", //can be fleet or space rock
-          targetEntity: "bytes32", //can be fleet or space rock
-          targetDamage: "uint256", //can be fleet or space rock
+          aggressorEntity: "bytes32", //can be fleet or asteroid
+          aggressorDamage: "uint256", //can be fleet or asteroid
+          targetEntity: "bytes32", //can be fleet or asteroid
+          targetDamage: "uint256", //can be fleet or asteroid
           winner: "bytes32",
-          rock: "bytes32", // place where battle took place
+          asteroidEntity: "bytes32", // place where battle took place
           player: "bytes32", // player who initiated the battle
           targetPlayer: "bytes32", // player who was attacked
           timestamp: "uint256", // timestamp of battle
@@ -752,7 +747,7 @@ const getConfig = async () => {
       P_GracePeriod: {
         keySchema: {},
         valueSchema: {
-          spaceRock: "uint256",
+          asteroid: "uint256",
           fleet: "uint256",
         },
       },
@@ -853,7 +848,7 @@ const getConfig = async () => {
       },
 
       MapStoredColonies: {
-        keySchema: { entity: "bytes32", key: "bytes32", asteroidId: "bytes32" },
+        keySchema: { entity: "bytes32", key: "bytes32", asteroidEntity: "bytes32" },
         valueSchema: {
           stored: "bool",
           index: "uint256",

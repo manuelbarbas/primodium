@@ -79,28 +79,25 @@ contract SpawnSystemTest is PrimodiumTest {
       bytes32 playerEntity = addressToEntity(newAddress);
       PositionData memory position = LibAsteroid.getUniqueAsteroidPosition(i);
       spawn(newAddress);
-      bytes32 asteroid = Home.get(playerEntity);
-      PositionData memory retrievedPosition = Position.get(asteroid);
+      bytes32 asteroidEntity = Home.get(playerEntity);
+      PositionData memory retrievedPosition = Position.get(asteroidEntity);
       assertEq(position, retrievedPosition);
     }
   }
 
   function testBuildMainBase() public {
-    bytes32 asteroid = spawn(creator);
+    bytes32 asteroidEntity = spawn(creator);
     vm.startPrank(creator);
-    // P_AsteroidData memory maxRange = P_Asteroid.get();
-    // PositionData memory calculatedPosition = PositionData(maxRange.xBounds / 2, maxRange.yBounds / 2, asteroid);
-    // logPosition(calculatedPosition);
 
     PositionData memory coord = Position.get(MainBasePrototypeId);
-    coord.parent = asteroid;
-    bytes32 buildingEntity = Home.get(asteroid);
+    coord.parentEntity = asteroidEntity;
+    bytes32 buildingEntity = Home.get(asteroidEntity);
     PositionData memory position = Position.get(buildingEntity);
     assertEq(position.x, coord.x, "x values differ");
     assertEq(position.y, coord.y, "y values differ");
 
     assertTrue(OwnedBy.get(buildingEntity) != 0);
-    assertEq(OwnedBy.get(buildingEntity), asteroid);
+    assertEq(OwnedBy.get(buildingEntity), asteroidEntity);
   }
 
   function testBuildBeforeSpawnFail() public {

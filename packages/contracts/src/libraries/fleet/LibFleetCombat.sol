@@ -28,12 +28,12 @@ library LibFleetCombat {
 
     if (GracePeriod.get(entity) > 0) GracePeriod.deleteRecord(entity);
 
-    bytes32 spaceRock = aggressorIsFleet ? FleetMovement.getDestination(entity) : entity;
+    bytes32 asteroidEntity = aggressorIsFleet ? FleetMovement.getDestination(entity) : entity;
 
-    battleId = LibEncode.getTimedHash(spaceRock);
+    battleId = LibEncode.getTimedHash(asteroidEntity);
     uint256 totalAggressorDamage = handleDamage(entity, battleId, aggressorIsFleet);
 
-    // update grace period of rock and fleet on rock
+    // update grace period of asteroid and fleet on asteroid
     if (aggressorIsFleet) {
       bytes32 ownerEntity = OwnedBy.get(entity);
       if (GracePeriod.get(ownerEntity) > 0) GracePeriod.deleteRecord(ownerEntity);
@@ -56,7 +56,7 @@ library LibFleetCombat {
       winner: totalAggressorDamage > totalTargetDamage ? entity : targetEntity,
       player: OwnedBy.get(aggressorIsFleet ? OwnedBy.get(entity) : entity),
       targetPlayer: OwnedBy.get(IsFleet.get(targetEntity) ? OwnedBy.get(targetEntity) : targetEntity),
-      rock: spaceRock,
+      asteroidEntity: asteroidEntity,
       timestamp: block.timestamp
     });
 
@@ -81,10 +81,10 @@ library LibFleetCombat {
 
   function resolveBattleEncryption(
     bytes32 battleId,
-    bytes32 targetSpaceRock,
+    bytes32 targetAsteroidEntity,
     bytes32 aggressorEntity
   ) internal returns (uint256 encryptionAtEnd) {
-    uint256 encryptionAtStart = ResourceCount.get(targetSpaceRock, uint8(EResource.R_Encryption));
+    uint256 encryptionAtStart = ResourceCount.get(targetAsteroidEntity, uint8(EResource.R_Encryption));
     uint256 decryption = P_CapitalShipConfig.getDecryption();
     encryptionAtEnd = encryptionAtStart;
     if (encryptionAtStart != 0) {
@@ -92,14 +92,14 @@ library LibFleetCombat {
         decryption = encryptionAtStart;
       }
       if (decryption != 0) {
-        LibStorage.decreaseStoredResource(targetSpaceRock, uint8(EResource.R_Encryption), decryption);
-        encryptionAtEnd = ResourceCount.get(targetSpaceRock, uint8(EResource.R_Encryption));
+        LibStorage.decreaseStoredResource(targetAsteroidEntity, uint8(EResource.R_Encryption), decryption);
+        encryptionAtEnd = ResourceCount.get(targetAsteroidEntity, uint8(EResource.R_Encryption));
       }
     }
     if (encryptionAtEnd == 0) {
       LibFleet.decreaseFleetUnit(aggressorEntity, CapitalShipPrototypeId, 1, true);
     }
-    BattleEncryptionResult.set(battleId, targetSpaceRock, encryptionAtStart, encryptionAtEnd);
+    BattleEncryptionResult.set(battleId, targetAsteroidEntity, encryptionAtStart, encryptionAtEnd);
   }
 
   function applyDamage(
@@ -125,7 +125,7 @@ library LibFleetCombat {
     if (IsFleet.get(defender)) {
       (damageDealt, totalUnitCasualties) = applyDamageToUnits(battleId, defender, totalHp, damage, totalUnitCasualties);
     } else {
-      (damageDealt, totalUnitCasualties) = applyDamageToSpaceRock(
+      (damageDealt, totalUnitCasualties) = applyDamageToAsteroid(
         battleId,
         defender,
         totalHp,
@@ -167,26 +167,26 @@ library LibFleetCombat {
     return damageDealt;
   }
 
-  function applyDamageToSpaceRock(
+  function applyDamageToAsteroid(
     bytes32 battleId,
-    bytes32 spaceRock,
+    bytes32 asteroidEntity,
     uint256 totalHp,
     uint256 damage,
     uint256[] memory totalUnitCasualties
   ) internal returns (uint256 damageDealt, uint256[] memory) {
     if (damage == 0 || totalHp == 0) return (0, totalUnitCasualties);
-    uint256 currHp = ResourceCount.get(spaceRock, uint8(EResource.R_HP));
+    uint256 currHp = ResourceCount.get(asteroidEntity, uint8(EResource.R_HP));
     damageDealt = 0;
 
     uint256 damagePortion = (currHp * damage) / totalHp;
-    LibStorage.decreaseStoredResource(spaceRock, uint8(EResource.R_HP), damagePortion);
+    LibStorage.decreaseStoredResource(asteroidEntity, uint8(EResource.R_HP), damagePortion);
     damageDealt += damagePortion;
 
     if (damageDealt >= damage) return (damageDealt, totalUnitCasualties);
     uint256 damageToUnits = 0;
     (damageToUnits, totalUnitCasualties) = applyDamageToUnits(
       battleId,
-      spaceRock,
+      asteroidEntity,
       totalHp - currHp,
       damage - damageDealt,
       totalUnitCasualties
@@ -213,8 +213,8 @@ library LibFleetCombat {
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       unitResult.unitsAtStart[i] = UnitCount.get(targetEntity, unitPrototypes[i]);
       if (unitResult.unitsAtStart[i] == 0) continue;
-      bytes32 spaceRock = IsFleet.get(targetEntity) ? OwnedBy.get(targetEntity) : targetEntity;
-      unitResult.unitLevels[i] = UnitLevel.get(spaceRock, unitPrototypes[i]);
+      bytes32 asteroidEntity = IsFleet.get(targetEntity) ? OwnedBy.get(targetEntity) : targetEntity;
+      unitResult.unitLevels[i] = UnitLevel.get(asteroidEntity, unitPrototypes[i]);
       uint256 unitHp = P_Unit.getHp(unitPrototypes[i], unitResult.unitLevels[i]);
       uint256 damagePortion = LibMath.divideRound((unitResult.unitsAtStart[i] * unitHp * damage), totalHp);
       unitResult.casualties[i] = LibMath.divideRound(damagePortion, unitHp);
@@ -281,10 +281,10 @@ library LibFleetCombat {
     return (time * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
   }
 
-  function resolvePirateAsteroid(bytes32 playerEntity, bytes32 pirateAsteroid) internal {
-    PirateAsteroid.setIsDefeated(pirateAsteroid, true);
-    DefeatedPirate.set(playerEntity, PirateAsteroid.getPrototype(pirateAsteroid), true);
-    bytes32[] memory incomingFleets = FleetsMap.getFleetIds(pirateAsteroid, FleetIncomingKey);
+  function resolvePirateAsteroid(bytes32 playerEntity, bytes32 pirateAsteroidEntity) internal {
+    PirateAsteroid.setIsDefeated(pirateAsteroidEntity, true);
+    DefeatedPirate.set(playerEntity, PirateAsteroid.getPrototype(pirateAsteroidEntity), true);
+    bytes32[] memory incomingFleets = FleetsMap.getFleetIds(pirateAsteroidEntity, FleetIncomingKey);
     for (uint256 i = 0; i < incomingFleets.length; i++) {
       if (FleetMovement.getArrivalTime(incomingFleets[i]) <= block.timestamp) {
         LibFleetMove.sendFleet(incomingFleets[i], OwnedBy.get(incomingFleets[i]));
