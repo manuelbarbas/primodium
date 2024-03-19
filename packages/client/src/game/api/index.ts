@@ -10,6 +10,8 @@ import { components } from "src/network/components";
 import { setupAllianceLeaderboard } from "src/network/systems/setupAllianceLeaderboard";
 import { setupBattleComponents } from "src/network/systems/setupBattleComponents";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
+import { setupBuildRock } from "src/network/systems/setupBuildRock";
+import { setupBuildingReversePosition } from "src/network/systems/setupBuildingReversePosition";
 import { setupDoubleCounter } from "src/network/systems/setupDoubleCounter";
 import { setupHangar } from "src/network/systems/setupHangar";
 import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
@@ -30,7 +32,6 @@ import { createHooksApi } from "./hooks";
 import { createInputApi } from "./input";
 import { createSceneApi } from "./scene";
 import { createSpriteApi } from "./sprite";
-import { setupBuildRock } from "src/network/systems/setupBuildRock";
 
 export type Primodium = Awaited<ReturnType<typeof initPrimodium>>;
 export type PrimodiumApi = ReturnType<Primodium["api"]>;
@@ -191,6 +192,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     setupInvitations(mud);
     setupTime(mud);
     setupTrainingQueues();
+    setupBuildingReversePosition();
     setupSync(mud);
 
     runAsteroidSystems(asteroidScene, mud);

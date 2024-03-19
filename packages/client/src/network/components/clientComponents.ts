@@ -55,6 +55,11 @@ export const SelectedAction = createExtendedNumberComponent(world, {
 export const MapOpen = createExtendedBoolComponent(world, { id: "MapOpen" });
 
 /* -------------------------------------------------------------------------- */
+/*                                  Buildings                                 */
+/* -------------------------------------------------------------------------- */
+
+export const ReverseBuildingPosition = createExtendedEntityComponent(world, { id: "ReverseBuildingPosition" });
+/* -------------------------------------------------------------------------- */
 /*                                    Units                                   */
 /* -------------------------------------------------------------------------- */
 
@@ -197,6 +202,9 @@ export default {
   ActiveRock,
   BuildRock,
   MapOpen,
+
+  /* -------------------------------- Buildings ------------------------------- */
+  ReverseBuildingPosition,
 
   /* ---------------------------------- Units --------------------------------- */
   TrainingQueue,

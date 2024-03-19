@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // This contract handles resource counting and scoring.
 
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 import { StoreHook } from "@latticexyz/store/src/StoreHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";

@@ -33,7 +33,7 @@ export const ResourceLabel = ({ name, resource }: { name: string; resource: Enti
     production == 1n ? "0.6" : formatNumber((production * 60n * worldSpeed) / (SPEED_SCALE * RESOURCE_SCALE));
 
   return (
-    <Badge className={`gap-1 group pointer-events-auto ${resourceStorage === 0n ? "badge-error opacity-25" : ""}`}>
+    <Badge className={`gap-1 group ${resourceStorage === 0n ? "badge-error opacity-25" : ""}`}>
       <ResourceIconTooltip
         name={name}
         amount={resourceCount}

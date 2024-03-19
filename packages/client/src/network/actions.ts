@@ -1,4 +1,3 @@
-import { Entity } from "@latticexyz/recs";
 import {
   SystemCall,
   SystemCallFrom,
@@ -11,7 +10,7 @@ import { toast } from "react-toastify";
 import { CallExecutionError, ContractFunctionExecutionError, Hex, TransactionReceipt } from "viem";
 import { PublicClient } from "viem/_types/clients/createPublicClient";
 import { components } from "./components";
-import { MetadataTypes } from "./components/customComponents/TransactionQueueComponent";
+import { MetadataTypes, TxQueueOptions } from "./components/customComponents/TransactionQueueComponent";
 import { MUD } from "./types";
 
 export async function _execute({ network: { waitForTransaction, publicClient } }: MUD, txPromise: Promise<Hex>) {
@@ -77,12 +76,12 @@ type ExecuteCallOptions<FunctionName extends string = string> = Omit<
 
 export async function execute<T extends keyof MetadataTypes, FunctionName extends string = string>(
   { mud, systemId, functionName, args, withSession, options: callOptions }: ExecuteCallOptions<FunctionName>,
-  txQueueOptions?: { id: Entity; type?: T; metadata?: MetadataTypes[T] },
+  txQueueOptions?: TxQueueOptions<T>,
   onComplete?: (receipt: TransactionReceipt | undefined) => void
 ) {
   const account = withSession ? mud.sessionAccount ?? mud.playerAccount : mud.playerAccount;
   const authorizing = account == mud.sessionAccount;
-  console.log(
+  console.info(
     `[Tx] Executing ${functionName} with address ${account.address.slice(0, 6)} ${
       withSession ? "(with session acct)" : ""
     }`
@@ -104,16 +103,11 @@ export async function execute<T extends keyof MetadataTypes, FunctionName extend
   };
 
   if (txQueueOptions)
-    components.TransactionQueue.enqueue(
-      async () => {
-        const txPromise = queuedTx();
-        const receipt = await _execute(mud, txPromise);
-        onComplete?.(receipt);
-      },
-      txQueueOptions.id,
-      txQueueOptions.type,
-      txQueueOptions.metadata
-    );
+    components.TransactionQueue.enqueue(async () => {
+      const txPromise = queuedTx();
+      const receipt = await _execute(mud, txPromise);
+      onComplete?.(receipt);
+    }, txQueueOptions);
   else {
     const txPromise = queuedTx();
     const receipt = await _execute(mud, txPromise);
@@ -131,21 +125,21 @@ export async function executeBatch<T extends keyof MetadataTypes, functionName e
     mud: MUD;
     withSession?: boolean;
   },
-  options?: { id: Entity; type?: T; metadata?: MetadataTypes[T] },
+  txQueueOptions?: TxQueueOptions<T>,
   onComplete?: (receipt: TransactionReceipt | undefined) => void
 ) {
   const account = withSession ? mud.sessionAccount ?? mud.playerAccount : mud.playerAccount;
   const authorizing = account !== mud.playerAccount;
 
   console.log(
-    `[Tx] Executing batch: ${systemCalls.map(
-      (system) => `${system.functionName} `
+    `[Tx] Executing batch:${systemCalls.map(
+      (system) => ` ${system.functionName}`
     )} with address ${account.address.slice(0, 6)} ${authorizing ? "(using session account)" : ""}`
   );
 
   const queuedTx = async () => {
     if (authorizing && mud.sessionAccount) {
-      const params = encodeSystemCallsFrom(IWorldAbi, mud.playerAccount.address, systemCalls).map(
+      const params = encodeSystemCallsFrom(IWorldAbi, mud.sessionAccount.entity as Hex, systemCalls).map(
         ([systemId, callData]) => ({ from: mud.playerAccount.address, systemId, callData })
       );
       const tx = await mud.sessionAccount.worldContract.write.batchCallFrom([params]);
@@ -156,17 +150,12 @@ export async function executeBatch<T extends keyof MetadataTypes, functionName e
     return tx;
   };
 
-  if (options)
-    components.TransactionQueue.enqueue(
-      async () => {
-        const txPromise = queuedTx();
-        const receipt = await _execute(mud, txPromise);
-        onComplete?.(receipt);
-      },
-      options.id,
-      options.type,
-      options.metadata
-    );
+  if (txQueueOptions)
+    components.TransactionQueue.enqueue(async () => {
+      const txPromise = queuedTx();
+      const receipt = await _execute(mud, txPromise);
+      onComplete?.(receipt);
+    }, txQueueOptions);
   else {
     const txPromise = queuedTx();
     const receipt = await _execute(mud, txPromise);

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 import { Schema } from "@latticexyz/store/src/Schema.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";

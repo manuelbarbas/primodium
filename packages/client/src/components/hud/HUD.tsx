@@ -8,9 +8,11 @@ import { useMud } from "src/hooks";
 import { useWidgets } from "src/hooks/providers/WidgetProvider";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
+import { useShallow } from "zustand/react/shallow";
 import { HUD } from "../core/HUD";
 import { Modal } from "../core/Modal";
 import { BrandingLabel } from "../shared/BrandingLabel";
+import { AsteroidLoading } from "./AsteroidLoading";
 import { CurrentObjective } from "./CurrentObjective";
 import { Profile } from "./Profile";
 import { Companion } from "./companion/Companion";
@@ -27,10 +29,10 @@ import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 import { OwnedFleets } from "./panes/OwnedFleets";
 import { Blueprints } from "./panes/blueprints/Blueprints";
 import { Chat } from "./panes/chat/Chat";
+import { Cheatcodes } from "./panes/dev/Cheatcodes";
 import { Hangar } from "./panes/hangar/Hangar";
 import { Resources } from "./panes/resources/Resources";
-import { AsteroidLoading } from "./AsteroidLoading";
-import { useShallow } from "zustand/react/shallow";
+
 export const GameHUD = memo(() => {
   const {
     playerAccount: { entity: playerEntity },
@@ -189,6 +191,9 @@ export const GameHUD = memo(() => {
               <Blueprints />
             </HUD.TopLeft>
 
+            <HUD.TopMiddle className="flex flex-col items-center gap-2">
+              <Cheatcodes />
+            </HUD.TopMiddle>
             <HUD.TopRight className="flex flex-col items-end gap-2">
               <CurrentObjective />
               <Resources />

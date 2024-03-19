@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 import { console } from "forge-std/console.sol";
 import "test/PrimodiumTest.t.sol";
@@ -39,7 +39,7 @@ contract CombatDefenderTest is PrimodiumTest {
     //create fleet with 1 minuteman marine
     bytes32 minutemanEntity = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (unitPrototypes[i] == minutemanEntity) unitCounts[i] = 1;
+      if (unitPrototypes[i] == minutemanEntity) unitCounts[i] = 100;
     }
 
     //create fleet with 1 iron

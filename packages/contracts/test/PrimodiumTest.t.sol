@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 import "forge-std/Test.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
@@ -50,8 +50,6 @@ contract PrimodiumTest is MudTest {
     super.setUp();
     world = IWorld(worldAddress);
     creator = world.creator();
-
-    uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
 
     vm.startPrank(creator);
     ResourceAccess.set(ROOT_NAMESPACE_ID, creator, true);
@@ -104,25 +102,16 @@ contract PrimodiumTest is MudTest {
     PositionData memory position
   ) internal view returns (bool) {
     int32[] memory blueprint = P_Blueprint.get(buildingPrototype);
+    int32[] memory tileCoords = new int32[](blueprint.length);
     Bounds memory bounds = LibBuilding.getSpaceRockBounds(asteroidEntity);
-    bytes32[] memory tiles = new bytes32[](blueprint.length / 2);
     for (uint256 i = 0; i < blueprint.length; i += 2) {
-      PositionData memory relativeCoord = PositionData(blueprint[i], blueprint[i + 1], 0);
-      PositionData memory absoluteCoord = PositionData(
-        position.x + relativeCoord.x,
-        position.y + relativeCoord.y,
-        position.parent
-      );
-      bytes32 tileEntity = LibEncode.getHash(BuildingTileKey, absoluteCoord);
-      if (OwnedBy.get(tileEntity) != 0) return false;
-      if (
-        bounds.minX > absoluteCoord.x ||
-        bounds.minY > absoluteCoord.y ||
-        bounds.maxX < absoluteCoord.x ||
-        bounds.maxY < absoluteCoord.y
-      ) return false;
+      int32 x = blueprint[i] + position.x;
+      int32 y = blueprint[i + 1] + position.y;
+      if (bounds.minX > x || bounds.minY > y || bounds.maxX < x || bounds.maxY < y) return false;
+      tileCoords[i] = blueprint[i] + position.x;
+      tileCoords[i + 1] = blueprint[i + 1] + position.y;
     }
-    return true;
+    return LibAsteroid.allTilesAvailable(asteroidEntity, tileCoords);
   }
 
   function getTilePosition(bytes32 asteroidEntity, EBuilding buildingType) internal view returns (PositionData memory) {
@@ -132,7 +121,6 @@ contract PrimodiumTest is MudTest {
     for (int32 i = bounds.minX; i < bounds.maxX; i++) {
       for (int32 j = bounds.minY; j < bounds.maxY; j++) {
         PositionData memory coord = PositionData(i, j, asteroidEntity);
-        if (Spawned.get(LibBuilding.getBuildingFromCoord(coord))) continue;
         if (!LibBuilding.canBuildOnTile(buildingPrototype, coord)) continue;
         if (!canPlaceBuildingTiles(asteroidEntity, buildingPrototype, coord)) continue;
         return coord;
@@ -263,7 +251,7 @@ contract PrimodiumTest is MudTest {
     vm.stopPrank();
   }
 
-  function upgradeMainBase(address player) internal returns (uint256) {
+  function upgradeMainBase(address player) internal {
     bytes32 playerEntity = addressToEntity(player);
     bytes32 spaceRock = Home.get(playerEntity);
     bytes32 mainBase = Home.get(spaceRock);
@@ -272,7 +260,7 @@ contract PrimodiumTest is MudTest {
     upgradeBuilding(player, mainBase);
   }
 
-  function upgradeMainBase(address player, uint256 level) internal returns (uint256) {
+  function upgradeMainBase(address player, uint256 level) internal {
     bytes32 playerEntity = addressToEntity(player);
     bytes32 spaceRock = Home.get(playerEntity);
     bytes32 mainBase = Home.get(spaceRock);
@@ -290,19 +278,20 @@ contract PrimodiumTest is MudTest {
     );
     upgradeMainBase(player, requiredMainBaseLevel);
     vm.startPrank(player);
-    world.upgradeBuilding(Position.get(buildingEntity));
+    world.upgradeBuilding(buildingEntity);
     vm.stopPrank();
   }
 
-  function buildBuilding(address player, EBuilding building) internal {
+  function buildBuilding(address player, EBuilding building) internal returns (bytes32) {
     P_RequiredResourcesData memory requiredResources = getBuildCost(building);
     PositionData memory position = getTilePosition(Home.get(addressToEntity(player)), building);
     provideResources(position.parent, requiredResources);
     uint256 requiredMainBaseLevel = P_RequiredBaseLevel.get(P_EnumToPrototype.get(BuildingKey, uint8(building)), 1);
     upgradeMainBase(player, requiredMainBaseLevel);
     vm.startPrank(player);
-    world.build(building, position);
+    bytes32 buildingEntity = world.build(building, position);
     vm.stopPrank();
+    return buildingEntity;
   }
 
   function provideMaxStorage(bytes32 spaceRock, P_RequiredResourcesData memory requiredResources) internal {

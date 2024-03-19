@@ -2,7 +2,7 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect, useState } from "react";
 import { FaClipboard, FaExclamationCircle, FaEye, FaEyeSlash, FaInfoCircle, FaTimes, FaUnlink } from "react-icons/fa";
 import { useMud } from "src/hooks";
-import { grantAccess, revokeAccess, switchAuthorized } from "src/network/setup/contractCalls/access";
+import { grantAccess, revokeAccess } from "src/network/setup/contractCalls/access";
 import { copyToClipboard } from "src/util/clipboard";
 import { STORAGE_PREFIX } from "src/util/constants";
 import { Address, Hex } from "viem";
@@ -25,7 +25,6 @@ export function Authorize() {
   }, [sessionAccount]);
 
   // Function to handle private key validation and connection
-  const sessionEntity = sessionAccount?.entity;
   const sessionAddress = sessionAccount?.address;
 
   const submitPrivateKey = async (privateKey: string) => {
@@ -36,7 +35,6 @@ export function Authorize() {
     const account = privateKeyToAccount(privateKey as Hex);
 
     if (sessionAddress && sessionAddress === account.address) return;
-    if (sessionEntity) await switchAuthorized(mud, account.address);
     else await grantAccess(mud, account.address);
   };
 

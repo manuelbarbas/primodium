@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 import { EResource } from "src/Types.sol";
 
 import { RaidedResource, BattleRaidResult, BattleRaidResultData, P_Transportables, IsFleet, MaxResourceCount, BattleResult, BattleResultData, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
@@ -34,7 +34,7 @@ library LibFleetRaid {
       .getCargoSpacesWithAllies(attacker);
     if (totalFreeCargoSpace == 0) return;
     // will caculate how much of each resource was successfuly raided from defender and increase those to be used for increasing resources of the attackers
-    (uint256[] memory totalRaidedResourceCounts, uint256 totalRaidedResources) = calculateRaidFromWithAllies(
+    (uint256[] memory totalRaidedResourceCounts, uint256 total) = calculateRaidFromWithAllies(
       battleId,
       defender,
       totalFreeCargoSpace
@@ -90,7 +90,7 @@ library LibFleetRaid {
   function calculateRaidFrom(
     bytes32 battleId,
     bytes32 defenderEntity,
-    uint256[] memory totalRaidableResourceCounts,
+    uint256[] memory total,
     uint256 totalRaidableResources,
     uint256 totalFreeCargoSpace,
     uint256[] memory totalRaidedResourceCounts,

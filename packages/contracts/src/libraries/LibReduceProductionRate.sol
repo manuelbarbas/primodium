@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 import { ConsumptionRate, OwnedBy, P_RequiredDependency, P_RequiredDependencyData, P_Production, ProductionRate, Level, BuildingType } from "codegen/index.sol";
 
