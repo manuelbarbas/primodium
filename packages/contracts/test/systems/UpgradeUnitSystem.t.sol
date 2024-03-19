@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 /* Test when playerEntity and unit are valid and upgradeUnit is successful.
 Test when playerEntity is valid but doesn't meet MainBase level requirement.

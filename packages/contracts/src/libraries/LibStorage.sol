@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 import { P_IsRecoverable, OwnedBy, P_ListMaxResourceUpgrades, P_ByLevelMaxResourceUpgrades, MaxResourceCount, Level, ResourceCount, BuildingType } from "codegen/index.sol";
 
@@ -16,7 +16,6 @@ library LibStorage {
     uint8[] memory storageResources = P_ListMaxResourceUpgrades.get(buildingType, level);
     for (uint256 i = 0; i < storageResources.length; i++) {
       uint8 resource = (storageResources[i]);
-      uint256 maxResource = MaxResourceCount.get(spaceRockEntity, resource);
       uint256 maxResourceIncrease = P_ByLevelMaxResourceUpgrades.get(buildingType, resource, level);
       if (level > 1) {
         maxResourceIncrease -= P_ByLevelMaxResourceUpgrades.get(buildingType, resource, level - 1);

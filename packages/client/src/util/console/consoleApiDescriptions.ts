@@ -34,9 +34,6 @@ const consoleApiDescriptions: Record<string, string> = {
   revokeAccess: "Revokes previously granted authorized account.",
   revokeAllAccess: "Revokes all access from all authorized accounts.",
 
-  // Delegation
-  switchAuthorized: "Switches the authorization for this session.",
-
   // Alliance management
   createAlliance: "Creates a new alliance.",
   leaveAlliance: "Leaves the current alliance.",

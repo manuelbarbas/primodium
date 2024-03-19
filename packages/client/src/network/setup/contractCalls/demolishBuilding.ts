@@ -20,12 +20,13 @@ export async function demolishBuilding(mud: MUD, building: Entity) {
       mud,
       functionName: "destroy",
       systemId: getSystemId("DestroySystem"),
-      args: [{ ...position, parent: position.parent as Hex }],
+      args: [building as Hex],
       withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.Demolish, building),
     },
+    // TODO: we don't need to use coord here any longer
     (receipt) => {
       const buildingType = components.BuildingType.get(building)?.value as Entity;
       const currLevel = components.Level.get(building)?.value || 0;

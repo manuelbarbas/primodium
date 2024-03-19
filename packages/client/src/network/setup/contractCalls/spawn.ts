@@ -31,13 +31,12 @@ export const spawnAndAuthorizeSessionAccount = async (mud: MUD, sessionAccount: 
   } as const;
 
   const authorize = {
-    systemId: getSystemId("core"),
+    systemId: getSystemId("Registration"),
     functionName: "registerDelegation" as const,
     args: [sessionAccount, UNLIMITED_DELEGATION, "0x0"] as [Hex, Hex, Hex],
     withSession: false,
   };
 
-  // await execute({ mud, ...authorize });
   await executeBatch(
     {
       mud,

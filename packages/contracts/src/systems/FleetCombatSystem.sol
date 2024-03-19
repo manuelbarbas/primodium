@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 import { PirateAsteroid, UnitCount, ResourceCount, FleetStance, IsFleet, BattleResult, BattleResultData, FleetMovement, GracePeriod, OwnedBy } from "codegen/index.sol";
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
