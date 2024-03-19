@@ -1,13 +1,5 @@
+import { DepthLayers } from "@game/constants";
 import {
-  Assets,
-  DepthLayers,
-  EntityTypeToAnimationKey,
-  EntityTypetoBuildingSpriteKey,
-  SpriteKeys,
-} from "@game/constants";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import {
-  ComponentUpdate,
   Entity,
   Has,
   HasValue,
@@ -23,18 +15,16 @@ import { components } from "src/network/components";
 import { moveBuilding } from "src/network/setup/contractCalls/moveBuilding";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
-import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
+import { getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
 import { Action } from "src/util/constants";
-import { ObjectPosition, OnClick, SetValue } from "../../common/object-components/common";
-import { Animation, Outline, Texture } from "../../common/object-components/sprite";
+import { Building } from "../objects/Building";
 
 export const renderBuildingMoveTool = (scene: Scene, mud: MUD) => {
-  const { tileWidth, tileHeight } = scene.tiled;
   const systemsWorld = namespaceWorld(world, "systems");
-  const objIndexSuffix = "_buildingMove";
 
-  const render = (update: ComponentUpdate) => {
-    const objIndex = update.entity + objIndexSuffix;
+  let placementBuilding: Building | undefined;
+
+  const render = () => {
     const selectedBuilding = components.SelectedBuilding.get()?.value;
     if (!selectedBuilding) return;
     const buildingPrototype = components.BuildingType.get(selectedBuilding)?.value as Entity | undefined;
@@ -43,70 +33,41 @@ export const renderBuildingMoveTool = (scene: Scene, mud: MUD) => {
 
     if (!tileCoord || !buildingPrototype) return;
 
-    const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
-
-    scene.objectPool.remove(objIndex);
-
-    const buildingTool = scene.objectPool.get(objIndex, "Sprite");
-
-    const sprite = EntityTypetoBuildingSpriteKey[buildingPrototype][0];
-    const animation = EntityTypeToAnimationKey[buildingPrototype]
-      ? EntityTypeToAnimationKey[buildingPrototype][0]
-      : undefined;
-
-    const buildingDimensions = getBuildingDimensions(buildingPrototype);
-
-    const selectedRock = components.ActiveRock.get()?.value as Entity;
+    const activeRock = components.ActiveRock.get()?.value as Entity;
     const validPlacement = validateBuildingPlacement(
       tileCoord,
       buildingPrototype,
-      selectedRock ?? singletonEntity,
+      activeRock ?? singletonEntity,
       selectedBuilding
     );
 
-    buildingTool.setComponents([
-      ObjectPosition(
-        {
-          x: pixelCoord.x,
-          y: -pixelCoord.y + buildingDimensions.height * tileHeight,
-        },
-        !validPlacement ? DepthLayers.Building : DepthLayers.Building - tileCoord.y + buildingDimensions.height
-      ),
-      SetValue({
-        alpha: 0.9,
-        originY: 1,
-        tint: 0xffffff,
-      }),
-      Texture(Assets.SpriteAtlas, sprite ?? SpriteKeys.IronMine1),
-      animation ? Animation(animation) : undefined,
-      Outline({
-        thickness: 3,
-        color: validPlacement ? undefined : 0xff0000,
-      }),
-      OnClick(
-        scene,
-        (_, pointer) => {
-          //remove tooltip on right click
-          if (pointer?.rightButtonDown()) {
-            components.SelectedAction.remove();
-            return;
-          }
+    if (!placementBuilding) {
+      placementBuilding = new Building(scene, buildingPrototype, tileCoord).spawn();
 
-          if (!validPlacement) {
-            toast.error("Cannot place building here");
-            scene.camera.phaserCamera.shake(200, 0.001);
-            return;
-          }
-
-          const buildingOrigin = getBuildingOrigin(tileCoord, buildingPrototype);
-          if (!buildingOrigin) return;
-
-          moveBuilding(mud, selectedBuilding, buildingOrigin);
+      placementBuilding.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+        if (pointer?.rightButtonDown()) {
           components.SelectedAction.remove();
-        },
-        true
-      ),
-    ]);
+          return;
+        }
+
+        if (!validPlacement) {
+          toast.error("Cannot place building here");
+          scene.camera.phaserCamera.shake(200, 0.001);
+          return;
+        }
+
+        const buildingOrigin = getBuildingOrigin(tileCoord, buildingPrototype);
+        if (!buildingOrigin) return;
+
+        moveBuilding(mud, selectedBuilding, buildingOrigin);
+        components.SelectedAction.remove();
+      });
+    }
+
+    placementBuilding.setCoordPosition(tileCoord).setAlpha(0.9);
+
+    if (validPlacement) placementBuilding.setTint(0xffffff).setDepth(DepthLayers.Building - tileCoord.y);
+    else placementBuilding.setTint(0xff0000).setOutline(0xff0000, 3).setDepth(DepthLayers.Building);
   };
 
   const query = [
@@ -119,9 +80,8 @@ export const renderBuildingMoveTool = (scene: Scene, mud: MUD) => {
   defineEnterSystem(systemsWorld, query, render);
   defineUpdateSystem(systemsWorld, query, render);
 
-  defineExitSystem(systemsWorld, query, (update) => {
-    const objIndex = update.entity + objIndexSuffix;
-
-    scene.objectPool.remove(objIndex);
+  defineExitSystem(systemsWorld, query, () => {
+    placementBuilding?.dispose();
+    placementBuilding = undefined;
   });
 };

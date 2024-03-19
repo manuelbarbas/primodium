@@ -1,11 +1,4 @@
-import {
-  Assets,
-  DepthLayers,
-  EntityTypeToAnimationKey,
-  EntityTypetoBuildingSpriteKey,
-  SpriteKeys,
-} from "@game/constants";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { DepthLayers } from "@game/constants";
 import {
   ComponentUpdate,
   Entity,
@@ -26,11 +19,9 @@ import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } f
 import { getBlockTypeName } from "src/util/common";
 import { Action, BuildingEnumLookup } from "src/util/constants";
 import { getRecipe, hasEnoughResources } from "src/util/recipe";
-import { ObjectPosition, OnClick, SetValue } from "../../common/object-components/common";
-import { Animation, Outline, Texture } from "../../common/object-components/sprite";
+import { Building } from "../objects/Building";
 
 export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
-  const { tileWidth, tileHeight } = scene.tiled;
   const systemsWorld = namespaceWorld(world, "systems");
   const objIndexSuffix = "_buildingPlacement";
 
@@ -41,77 +32,74 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
     }),
   ];
 
+  let placementBuilding: Building | undefined;
   const render = (update: ComponentUpdate) => {
     const objIndex = update.entity + objIndexSuffix;
-    const selectedBuilding = components.SelectedBuilding.get()?.value;
+    const buildingPrototype = components.SelectedBuilding.get()?.value;
 
     const tileCoord = components.HoverTile.get();
 
-    if (!tileCoord || !selectedBuilding) return;
-
-    const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
+    if (!tileCoord || !buildingPrototype) return;
 
     scene.objectPool.remove(objIndex);
 
-    const buildingTool = scene.objectPool.get(objIndex, "Sprite");
-
-    const sprite = EntityTypetoBuildingSpriteKey[selectedBuilding][0];
-    const animation = EntityTypeToAnimationKey[selectedBuilding]
-      ? EntityTypeToAnimationKey[selectedBuilding][0]
-      : undefined;
-
-    const buildingDimensions = getBuildingDimensions(selectedBuilding);
+    const buildingDimensions = getBuildingDimensions(buildingPrototype);
 
     const asteroid = components.ActiveRock.get()?.value as Entity;
     if (!asteroid) throw new Error("No active rock active");
-    const hasEnough = hasEnoughResources(getRecipe(selectedBuilding, 1n), asteroid);
-    const validPlacement = validateBuildingPlacement(tileCoord, selectedBuilding, asteroid);
+    const hasEnough = hasEnoughResources(getRecipe(buildingPrototype, 1n), asteroid);
+    const validPlacement = validateBuildingPlacement(tileCoord, buildingPrototype, asteroid);
 
-    buildingTool.setComponents([
-      ObjectPosition(
-        {
-          x: pixelCoord.x,
-          y: -pixelCoord.y + buildingDimensions.height * tileHeight,
-        },
-        !validPlacement ? DepthLayers.Building : DepthLayers.Building - tileCoord.y + buildingDimensions.height
-      ),
-      SetValue({
-        alpha: 0.9,
-        originY: 1,
-        tint: hasEnough ? 0xffffff : 0xff0000,
-      }),
-      Texture(Assets.SpriteAtlas, sprite ?? SpriteKeys.IronMine1),
-      animation ? Animation(animation) : undefined,
-      Outline({
-        thickness: 3,
-        color: hasEnough && validPlacement ? undefined : 0xff0000,
-      }),
-      OnClick(
-        scene,
-        (_, pointer) => {
-          //remove tooltip on right click
-          if (pointer?.rightButtonDown()) {
-            components.SelectedAction.remove();
-            return;
-          }
+    if (!placementBuilding) {
+      placementBuilding = new Building(scene, buildingPrototype, tileCoord).spawn();
 
-          if (!hasEnough || !validPlacement) {
-            if (!hasEnough) toast.error("Not enough resources to build " + getBlockTypeName(selectedBuilding));
-            if (!validPlacement) toast.error("Cannot place building here");
-            scene.camera.phaserCamera.shake(200, 0.001);
-            return;
-          }
-
-          const buildingOrigin = getBuildingOrigin(tileCoord, selectedBuilding);
-          if (!buildingOrigin) return;
-
-          buildBuilding(mud, BuildingEnumLookup[selectedBuilding], buildingOrigin);
+      placementBuilding.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+        if (pointer?.rightButtonDown()) {
           components.SelectedAction.remove();
-          components.SelectedBuilding.remove();
-        },
-        true
-      ),
-    ]);
+          return;
+        }
+
+        const asteroid = components.ActiveRock.get()?.value as Entity;
+        const buildingPrototype = components.SelectedBuilding.get()?.value;
+        const tileCoord = components.HoverTile.get();
+
+        if (!asteroid || !buildingPrototype || !tileCoord) return;
+
+        const hasEnough = hasEnoughResources(getRecipe(buildingPrototype, 1n), asteroid);
+        const validPlacement = validateBuildingPlacement(tileCoord, buildingPrototype, asteroid);
+
+        if (!hasEnough || !validPlacement) {
+          if (!hasEnough) toast.error("Not enough resources to build " + getBlockTypeName(buildingPrototype));
+          if (!validPlacement) toast.error("Cannot place building here");
+          scene.camera.phaserCamera.shake(200, 0.001);
+          return;
+        }
+
+        const buildingOrigin = getBuildingOrigin(tileCoord, buildingPrototype);
+        if (!buildingOrigin) return;
+
+        buildBuilding(mud, BuildingEnumLookup[buildingPrototype], buildingOrigin);
+        components.SelectedAction.remove();
+        components.SelectedBuilding.remove();
+      });
+    }
+
+    placementBuilding
+      .setBuildingType(buildingPrototype)
+      .setCoordPosition({ x: tileCoord.x, y: tileCoord.y - buildingDimensions.height + 1 })
+      .setAlpha(0.9)
+      .clearOutline()
+      .setOrigin(0, 1);
+
+    placementBuilding.setDepth(
+      validPlacement ? DepthLayers.Building - tileCoord.y + buildingDimensions.height : DepthLayers.Building
+    );
+
+    if (hasEnough && validPlacement) {
+      placementBuilding.setTint(0xffffff).setOutline(0xffff00, 3);
+    } else {
+      placementBuilding.setTint(0xff0000).setOutline(0xff0000, 3);
+    }
   };
 
   defineEnterSystem(systemsWorld, query, (update) => {
@@ -122,11 +110,8 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
 
   defineUpdateSystem(systemsWorld, query, render);
 
-  defineExitSystem(systemsWorld, query, (update) => {
-    const objIndex = update.entity + objIndexSuffix;
-
-    scene.objectPool.remove(objIndex);
-
-    console.info("[EXIT SYSTEM](renderBuildingPlacement) Building placement tool has been removed");
+  defineExitSystem(systemsWorld, query, () => {
+    placementBuilding?.dispose();
+    placementBuilding = undefined;
   });
 };

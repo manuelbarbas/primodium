@@ -17,7 +17,7 @@ import { EntityType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { Building } from "../objects/Building";
 import { components } from "src/network/components";
-import { getBuildingBottomLeft, getBuildingDimensions } from "src/util/building";
+import { getBuildingBottomLeft } from "src/util/building";
 
 export const renderBuilding = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -79,9 +79,7 @@ export const renderBuilding = (scene: Scene) => {
       if (!origin) return;
       const tilePosition = getBuildingBottomLeft(origin, buildingType);
 
-      const buildingDimensions = getBuildingDimensions(buildingType);
-
-      const building = new Building(scene, buildingType, buildingDimensions, tilePosition)
+      const building = new Building(scene, buildingType, tilePosition)
         .spawn()
         .setLevel(components.Level.get(entity)?.value ?? 1n);
 
