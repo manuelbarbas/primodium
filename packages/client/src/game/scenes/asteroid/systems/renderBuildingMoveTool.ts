@@ -17,8 +17,39 @@ import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import { getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
 import { Action } from "src/util/constants";
-import { Building } from "../objects/Building";
+import { Building } from "../../../objects/Building";
 
+export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scene) => {
+  if (pointer?.rightButtonDown()) {
+    components.SelectedAction.remove();
+    return;
+  }
+
+  const selectedBuilding = components.SelectedBuilding.get()?.value;
+  if (!selectedBuilding) return;
+
+  const tileCoord = components.HoverTile.get();
+  const activeRock = components.ActiveRock.get()?.value as Entity;
+  const buildingPrototype = components.BuildingType.get(selectedBuilding)?.value as Entity | undefined;
+
+  if (!tileCoord || !buildingPrototype || !activeRock) return;
+
+  const validPlacement = validateBuildingPlacement(tileCoord, buildingPrototype, activeRock, selectedBuilding);
+
+  if (!validPlacement) {
+    toast.error("Cannot place building here");
+    scene.camera.phaserCamera.shake(200, 0.001);
+    return;
+  }
+
+  const buildingOrigin = getBuildingOrigin(tileCoord, buildingPrototype);
+  if (!buildingOrigin) return;
+
+  moveBuilding(mud, selectedBuilding, buildingOrigin);
+  components.SelectedAction.remove();
+};
+
+//TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
 export const renderBuildingMoveTool = (scene: Scene, mud: MUD) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
@@ -45,22 +76,7 @@ export const renderBuildingMoveTool = (scene: Scene, mud: MUD) => {
       placementBuilding = new Building(scene, buildingPrototype, tileCoord).spawn();
 
       placementBuilding.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
-        if (pointer?.rightButtonDown()) {
-          components.SelectedAction.remove();
-          return;
-        }
-
-        if (!validPlacement) {
-          toast.error("Cannot place building here");
-          scene.camera.phaserCamera.shake(200, 0.001);
-          return;
-        }
-
-        const buildingOrigin = getBuildingOrigin(tileCoord, buildingPrototype);
-        if (!buildingOrigin) return;
-
-        moveBuilding(mud, selectedBuilding, buildingOrigin);
-        components.SelectedAction.remove();
+        handleClick(pointer, mud, scene);
       });
     }
 

@@ -2,11 +2,12 @@ import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs"
 import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { AsteroidMap } from "../objects/AsteroidMap/AsteroidMap";
+import { AsteroidMap } from "../../../objects/AsteroidMap/AsteroidMap";
 import { getAsteroidBounds as getAsteroidCurrentBounds, getAsteroidMaxBounds } from "src/util/outOfBounds";
 import { decodeEntity } from "@latticexyz/store-sync/recs";
 
-export const renderTilemap = (scene: Scene) => {
+//TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
+export const renderAsteroidMap = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   let asteroidMap: AsteroidMap;

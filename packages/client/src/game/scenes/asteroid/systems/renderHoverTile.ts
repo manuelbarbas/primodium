@@ -1,49 +1,37 @@
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Entity, Has, defineEnterSystem, defineExitSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
+import { Has, defineEnterSystem, defineExitSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { ObjectPosition } from "../../common/object-components/common";
-import { Square } from "../../common/object-components/graphics";
-
-const objGraphicsIndex = (entity: Entity) => `${entity}_hoverTile_graphics`;
+import { Tile } from "../../../objects/Tile";
+import { DepthLayers } from "@game/constants";
 
 export const renderHoverTile = (scene: Scene) => {
-  const { tileWidth, tileHeight } = scene.tiled;
   const systemsWorld = namespaceWorld(world, "systems");
 
   const query = [Has(components.HoverTile)];
 
-  const render = ({ entity }: { entity: Entity }) => {
+  let hoverTile: Tile | undefined;
+  const render = () => {
     const tileCoord = components.HoverTile.get();
 
     if (!tileCoord) return;
 
-    const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
+    if (!hoverTile) {
+      hoverTile = new Tile(scene, tileCoord, 0xffffff, 0.2).setDepth(DepthLayers.Tile).spawn();
+      return;
+    }
 
-    scene.objectPool.remove(objGraphicsIndex(entity));
-
-    const hoverRenderObject = scene.objectPool.get(objGraphicsIndex(entity), "Graphics");
-
-    hoverRenderObject.setComponents([
-      ObjectPosition({
-        x: Math.floor(pixelCoord.x / tileWidth) * tileWidth,
-        y: -Math.floor(pixelCoord.y / tileWidth) * tileHeight,
-      }),
-      Square(tileWidth, tileHeight, {
-        borderThickness: 0,
-        alpha: 0.2,
-      }),
-    ]);
+    hoverTile.setCoordPosition(tileCoord);
   };
 
-  defineEnterSystem(systemsWorld, query, (update) => {
-    render(update);
+  defineEnterSystem(systemsWorld, query, () => {
+    render();
   });
 
   defineUpdateSystem(systemsWorld, query, render);
 
-  defineExitSystem(systemsWorld, query, (update) => {
-    scene.objectPool.remove(objGraphicsIndex(update.entity));
+  defineExitSystem(systemsWorld, query, () => {
+    hoverTile?.dispose();
+    hoverTile = undefined;
   });
 };

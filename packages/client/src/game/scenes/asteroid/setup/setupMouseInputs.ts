@@ -10,9 +10,9 @@ import { outOfBounds } from "src/util/outOfBounds";
 
 export const setupMouseInputs = (scene: Scene) => {
   const clickSub = scene.input.click$.subscribe(([pointer]) => {
-    const selectedRock = components.ActiveRock.get()?.value;
+    const activeRock = components.ActiveRock.get()?.value;
 
-    if (components.Account.get()?.value !== components.OwnedBy.get(selectedRock)?.value) return;
+    if (components.Account.get()?.value !== components.OwnedBy.get(activeRock)?.value) return;
 
     const { x, y } = pixelCoordToTileCoord(
       { x: pointer.worldX, y: pointer.worldY },
@@ -22,7 +22,7 @@ export const setupMouseInputs = (scene: Scene) => {
 
     const gameCoord = { x, y: -y };
 
-    if (!selectedRock || outOfBounds(gameCoord, selectedRock)) {
+    if (!activeRock || outOfBounds(gameCoord, activeRock)) {
       components.SelectedBuilding.remove();
       components.SelectedTile.remove();
       components.SelectedAction.remove();
@@ -33,7 +33,7 @@ export const setupMouseInputs = (scene: Scene) => {
 
     if (selectedAction !== undefined) return;
 
-    const building = getBuildingAtCoord(gameCoord, (selectedRock as Entity) ?? singletonEntity) as Entity;
+    const building = getBuildingAtCoord(gameCoord, (activeRock as Entity) ?? singletonEntity) as Entity;
 
     if (!building) {
       components.SelectedBuilding.remove();

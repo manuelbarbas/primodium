@@ -15,10 +15,11 @@ import { world } from "src/network/world";
 
 import { EntityType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
-import { Building } from "../objects/Building";
+import { Building } from "../../../objects/Building";
 import { components } from "src/network/components";
 import { getBuildingBottomLeft } from "src/util/building";
 
+//TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
 export const renderBuilding = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const spectateWorld = namespaceWorld(world, "game_spectate");
@@ -81,7 +82,20 @@ export const renderBuilding = (scene: Scene) => {
 
       const building = new Building(scene, buildingType, tilePosition)
         .spawn()
-        .setLevel(components.Level.get(entity)?.value ?? 1n);
+        .setLevel(components.Level.get(entity)?.value ?? 1n)
+        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => {
+          components.SelectedBuilding.set({
+            value: entity,
+          });
+        })
+        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
+          components.HoverEntity.set({
+            value: entity,
+          });
+        })
+        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => {
+          components.HoverEntity.remove();
+        });
 
       buildings.set(entity, building);
     };
@@ -92,9 +106,11 @@ export const renderBuilding = (scene: Scene) => {
     });
 
     defineExitSystem(spectateWorld, positionQuery, ({ entity }) => {
-      const renderId = `${entity}_entitySprite`;
-
-      scene.objectPool.removeGroup(renderId);
+      const building = buildings.get(entity);
+      if (building) {
+        building.dispose();
+        buildings.delete(entity);
+      }
     });
   });
 };

@@ -1,6 +1,5 @@
 import { DepthLayers } from "@game/constants";
 import {
-  ComponentUpdate,
   Entity,
   Has,
   HasValue,
@@ -19,11 +18,40 @@ import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } f
 import { getBlockTypeName } from "src/util/common";
 import { Action, BuildingEnumLookup } from "src/util/constants";
 import { getRecipe, hasEnoughResources } from "src/util/recipe";
-import { Building } from "../objects/Building";
+import { Building } from "../../../objects/Building";
+
+export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scene) => {
+  if (pointer?.rightButtonDown()) {
+    components.SelectedAction.remove();
+    return;
+  }
+
+  const asteroid = components.ActiveRock.get()?.value as Entity;
+  const buildingPrototype = components.SelectedBuilding.get()?.value;
+  const tileCoord = components.HoverTile.get();
+
+  if (!asteroid || !buildingPrototype || !tileCoord) return;
+
+  const hasEnough = hasEnoughResources(getRecipe(buildingPrototype, 1n), asteroid);
+  const validPlacement = validateBuildingPlacement(tileCoord, buildingPrototype, asteroid);
+
+  if (!hasEnough || !validPlacement) {
+    if (!hasEnough) toast.error("Not enough resources to build " + getBlockTypeName(buildingPrototype));
+    if (!validPlacement) toast.error("Cannot place building here");
+    scene.camera.phaserCamera.shake(200, 0.001);
+    return;
+  }
+
+  const buildingOrigin = getBuildingOrigin(tileCoord, buildingPrototype);
+  if (!buildingOrigin) return;
+
+  buildBuilding(mud, BuildingEnumLookup[buildingPrototype], buildingOrigin);
+  components.SelectedAction.remove();
+  components.SelectedBuilding.remove();
+};
 
 export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
   const systemsWorld = namespaceWorld(world, "systems");
-  const objIndexSuffix = "_buildingPlacement";
 
   const query = [
     Has(components.HoverTile),
@@ -33,15 +61,12 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
   ];
 
   let placementBuilding: Building | undefined;
-  const render = (update: ComponentUpdate) => {
-    const objIndex = update.entity + objIndexSuffix;
+  const render = () => {
     const buildingPrototype = components.SelectedBuilding.get()?.value;
 
     const tileCoord = components.HoverTile.get();
 
     if (!tileCoord || !buildingPrototype) return;
-
-    scene.objectPool.remove(objIndex);
 
     const buildingDimensions = getBuildingDimensions(buildingPrototype);
 
@@ -54,33 +79,7 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
       placementBuilding = new Building(scene, buildingPrototype, tileCoord).spawn();
 
       placementBuilding.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
-        if (pointer?.rightButtonDown()) {
-          components.SelectedAction.remove();
-          return;
-        }
-
-        const asteroid = components.ActiveRock.get()?.value as Entity;
-        const buildingPrototype = components.SelectedBuilding.get()?.value;
-        const tileCoord = components.HoverTile.get();
-
-        if (!asteroid || !buildingPrototype || !tileCoord) return;
-
-        const hasEnough = hasEnoughResources(getRecipe(buildingPrototype, 1n), asteroid);
-        const validPlacement = validateBuildingPlacement(tileCoord, buildingPrototype, asteroid);
-
-        if (!hasEnough || !validPlacement) {
-          if (!hasEnough) toast.error("Not enough resources to build " + getBlockTypeName(buildingPrototype));
-          if (!validPlacement) toast.error("Cannot place building here");
-          scene.camera.phaserCamera.shake(200, 0.001);
-          return;
-        }
-
-        const buildingOrigin = getBuildingOrigin(tileCoord, buildingPrototype);
-        if (!buildingOrigin) return;
-
-        buildBuilding(mud, BuildingEnumLookup[buildingPrototype], buildingOrigin);
-        components.SelectedAction.remove();
-        components.SelectedBuilding.remove();
+        handleClick(pointer, mud, scene);
       });
     }
 
@@ -102,8 +101,8 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
     }
   };
 
-  defineEnterSystem(systemsWorld, query, (update) => {
-    render(update);
+  defineEnterSystem(systemsWorld, query, () => {
+    render();
 
     console.info("[ENTER SYSTEM](renderBuildingPlacement) Building placement tool has been added");
   });

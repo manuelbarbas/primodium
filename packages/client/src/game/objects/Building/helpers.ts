@@ -23,6 +23,12 @@ export function getAssetKeyPair(level: bigint, buildingType: Entity) {
     animation: animationKey,
   };
 }
+
+export function getConstructionSprite(buildingDimensions: BuildingDimensions) {
+  return SpriteKeys[
+    `Construction${buildingDimensions.height}x${buildingDimensions.width}` as keyof typeof SpriteKeys
+  ] as SpriteKeys | undefined;
+}
 export type BuildingDimensions = {
   width: number;
   height: number;

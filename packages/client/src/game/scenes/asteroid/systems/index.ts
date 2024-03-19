@@ -4,13 +4,13 @@ import { focusMainbase } from "./focusMainbase";
 import { renderBuilding } from "./renderBuilding";
 import { renderBuildingMoveTool } from "./renderBuildingMoveTool";
 import { renderBuildingPlacementTool } from "./renderBuildingPlacementTool";
-import { renderTilemap } from "./renderTilemap";
+import { renderAsteroidMap } from "./renderAsteroidMap";
 import { renderHoverTile } from "./renderHoverTile";
 import { renderQueuedBuildings } from "./renderQueuedBuildings";
 
 export const runSystems = (scene: Scene, mud: MUD) => {
   //Render world entity's sprites
-  renderTilemap(scene);
+  renderAsteroidMap(scene);
   renderBuilding(scene);
 
   // Render map utility elements, placement indicators, etc
