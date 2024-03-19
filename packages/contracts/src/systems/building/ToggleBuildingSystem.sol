@@ -4,7 +4,8 @@ pragma solidity >=0.8.24;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { Position, PositionData, Level } from "codegen/index.sol";
 import { IsActive, Home, OwnedBy, BuildingType } from "src/codegen/index.sol";
-import { LibBuilding, UnitProductionQueue } from "codegen/Libraries.sol";
+import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
+import { LibBuilding } from "libraries/LibBuilding.sol";
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 

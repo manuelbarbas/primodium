@@ -4,7 +4,10 @@ pragma solidity >=0.8.24;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { IsActive, P_UnitProdTypes, Position, PositionData, BuildingType, OwnedBy, Level, BuildingType } from "codegen/index.sol";
-import { LibBuilding, UnitFactorySet } from "codegen/Libraries.sol";
+import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
+import { LibBuilding } from "libraries/LibBuilding.sol";
+
+import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 
 contract DestroySystem is PrimodiumSystem {

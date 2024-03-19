@@ -331,7 +331,7 @@ const getConfig = async () => {
         valueSchema: "uint256",
       },
 
-      SetItemUnitFactories: {
+      Meta_UnitFactorySet: {
         keySchema: { entity: "bytes32", building: "bytes32" },
         valueSchema: {
           stored: "bool",
@@ -339,7 +339,7 @@ const getConfig = async () => {
         },
       },
 
-      SetUnitFactories: {
+      Keys_UnitFactorySet: {
         keySchema: { entity: "bytes32" },
         valueSchema: "bytes32[]",
       },
@@ -419,7 +419,7 @@ const getConfig = async () => {
         },
       },
 
-      QueueUnits: {
+      Meta_UnitProductionQueue: {
         keySchema: { entity: "bytes32" },
         valueSchema: {
           front: "uint256",
@@ -428,13 +428,14 @@ const getConfig = async () => {
         },
       },
 
-      QueueItemUnits: {
+      Value_UnitProductionQueue: {
         keySchema: { entity: "bytes32", index: "uint256" },
         valueSchema: {
           unitId: "bytes32",
           quantity: "uint256",
         },
       },
+
       UnitLevel: {
         keySchema: { entity: "bytes32", unit: "bytes32" },
         valueSchema: "uint256",

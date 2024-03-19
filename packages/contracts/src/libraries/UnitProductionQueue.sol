@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { QueueUnits, QueueUnitsData, QueueItemUnits, QueueItemUnitsData as UnitProductionQueueData } from "codegen/index.sol";
+import { Meta_UnitProductionQueue, Meta_UnitProductionQueueData, Value_UnitProductionQueue, Value_UnitProductionQueueData as UnitProductionQueueData } from "codegen/index.sol";
 
 library UnitProductionQueue {
   /// @notice Enqueue unit for production
@@ -9,23 +9,23 @@ library UnitProductionQueue {
   /// @param queueItem Unit to be produced
   /// todo: make custom queue type
   function enqueue(bytes32 queueId, UnitProductionQueueData memory queueItem) internal {
-    QueueUnitsData memory queueData = QueueUnits.get(queueId);
-    QueueItemUnits.set(queueId, queueData.back, queueItem);
-    QueueUnits.setBack(queueId, queueData.back + 1);
-    QueueUnits.pushQueue(queueId, queueItem.unitId);
+    Meta_UnitProductionQueueData memory queueData = Meta_UnitProductionQueue.get(queueId);
+    Value_UnitProductionQueue.set(queueId, queueData.back, queueItem);
+    Meta_UnitProductionQueue.setBack(queueId, queueData.back + 1);
+    Meta_UnitProductionQueue.pushQueue(queueId, queueItem.unitId);
   }
 
   /// @notice Dequeue unit from production queue
   /// @param queueId Queue identifier
   /// @return Unit dequeued
   function dequeue(bytes32 queueId) internal returns (UnitProductionQueueData memory) {
-    QueueUnitsData memory queueData = QueueUnits.get(queueId);
+    Meta_UnitProductionQueueData memory queueData = Meta_UnitProductionQueue.get(queueId);
     require(queueData.front < queueData.back, "Queue is empty");
-    UnitProductionQueueData memory item = QueueItemUnits.get(queueId, queueData.front);
+    UnitProductionQueueData memory item = Value_UnitProductionQueue.get(queueId, queueData.front);
     if (queueData.front + 1 == queueData.back) reset(queueId);
     else {
-      QueueUnits.setFront(queueId, queueData.front + 1);
-      QueueItemUnits.deleteRecord(queueId, queueData.front);
+      Meta_UnitProductionQueue.setFront(queueId, queueData.front + 1);
+      Value_UnitProductionQueue.deleteRecord(queueId, queueData.front);
     }
     return item;
   }
@@ -34,25 +34,25 @@ library UnitProductionQueue {
   /// @param queueId Queue identifier
   /// @return First unit in queue
   function peek(bytes32 queueId) internal view returns (UnitProductionQueueData memory) {
-    QueueUnitsData memory queueData = QueueUnits.get(queueId);
+    Meta_UnitProductionQueueData memory queueData = Meta_UnitProductionQueue.get(queueId);
     require(queueData.front < queueData.back, "Queue is empty");
-    return QueueItemUnits.get(queueId, queueData.front);
+    return Value_UnitProductionQueue.get(queueId, queueData.front);
   }
 
   /// @notice Update the first unit in the production queue
   /// @param queueId Queue identifier
   /// @param queueItem Updated unit data
   function updateFront(bytes32 queueId, UnitProductionQueueData memory queueItem) internal {
-    QueueUnitsData memory queueData = QueueUnits.get(queueId);
+    Meta_UnitProductionQueueData memory queueData = Meta_UnitProductionQueue.get(queueId);
     require(queueData.front < queueData.back, "Queue is empty");
-    QueueItemUnits.set(queueId, queueData.front, queueItem);
+    Value_UnitProductionQueue.set(queueId, queueData.front, queueItem);
   }
 
   /// @notice Get the size of the production queue
   /// @param queueId Queue identifier
   /// @return Size of queue
   function size(bytes32 queueId) internal view returns (uint256) {
-    QueueUnitsData memory queueData = QueueUnits.get(queueId);
+    Meta_UnitProductionQueueData memory queueData = Meta_UnitProductionQueue.get(queueId);
     if (queueData.front >= queueData.back) return 0;
     return queueData.back - queueData.front;
   }
@@ -67,10 +67,10 @@ library UnitProductionQueue {
   /// @dev Reset the queue
   /// @param queueId Queue identifier
   function reset(bytes32 queueId) private {
-    QueueUnitsData memory queueData = QueueUnits.get(queueId);
+    Meta_UnitProductionQueueData memory queueData = Meta_UnitProductionQueue.get(queueId);
     for (uint256 i = queueData.front; i < queueData.back; i++) {
-      QueueItemUnits.deleteRecord(queueId, i);
+      Value_UnitProductionQueue.deleteRecord(queueId, i);
     }
-    QueueUnits.deleteRecord(queueId);
+    Meta_UnitProductionQueue.deleteRecord(queueId);
   }
 }

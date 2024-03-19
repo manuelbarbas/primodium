@@ -61,7 +61,7 @@ contract LibUnitTest is PrimodiumTest {
     UnitFactorySet.add(Home.get(playerEntity), building2Entity);
 
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
-    QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
+    Value_UnitProductionQueueData memory item = Value_UnitProductionQueueData(unitPrototype, 100);
     UnitProductionQueue.enqueue(buildingEntity, item);
     UnitProductionQueue.enqueue(building2Entity, item);
 
@@ -96,7 +96,7 @@ contract LibUnitTest is PrimodiumTest {
     UnitFactorySet.add(secondaryAsteroid, buildingEntity);
 
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
-    QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
+    Value_UnitProductionQueueData memory item = Value_UnitProductionQueueData(unitPrototype, 100);
     UnitProductionQueue.enqueue(buildingEntity, item);
     UnitProductionQueue.enqueue(building2Entity, item);
 
@@ -118,7 +118,7 @@ contract LibUnitTest is PrimodiumTest {
     LastClaimedAt.set(buildingEntity, block.timestamp);
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
-    QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
+    Value_UnitProductionQueueData memory item = Value_UnitProductionQueueData(unitPrototype, 100);
     UnitProductionQueue.enqueue(buildingEntity, item);
     vm.warp(block.timestamp + 100);
     LibUnit.claimBuildingUnits(buildingEntity);
@@ -131,7 +131,7 @@ contract LibUnitTest is PrimodiumTest {
     LastClaimedAt.set(buildingEntity, block.timestamp);
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
-    QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
+    Value_UnitProductionQueueData memory item = Value_UnitProductionQueueData(unitPrototype, 100);
     UnitProductionQueue.enqueue(buildingEntity, item);
     vm.warp(block.timestamp + 25);
     LibUnit.claimBuildingUnits(buildingEntity);
@@ -146,11 +146,11 @@ contract LibUnitTest is PrimodiumTest {
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
 
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
-    QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
+    Value_UnitProductionQueueData memory item = Value_UnitProductionQueueData(unitPrototype, 100);
     UnitProductionQueue.enqueue(buildingEntity, item);
 
     P_Unit.setTrainingTime(unitPrototype2, 0, 1);
-    QueueItemUnitsData memory item2 = QueueItemUnitsData(unitPrototype2, 100);
+    Value_UnitProductionQueueData memory item2 = Value_UnitProductionQueueData(unitPrototype2, 100);
     UnitProductionQueue.enqueue(buildingEntity, item2);
 
     vm.warp(block.timestamp + 1000);
@@ -166,11 +166,11 @@ contract LibUnitTest is PrimodiumTest {
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
 
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
-    QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
+    Value_UnitProductionQueueData memory item = Value_UnitProductionQueueData(unitPrototype, 100);
     UnitProductionQueue.enqueue(buildingEntity, item);
 
     P_Unit.setTrainingTime(unitPrototype2, 0, 1);
-    QueueItemUnitsData memory item2 = QueueItemUnitsData(unitPrototype2, 100);
+    Value_UnitProductionQueueData memory item2 = Value_UnitProductionQueueData(unitPrototype2, 100);
     UnitProductionQueue.enqueue(buildingEntity, item2);
 
     vm.warp(block.timestamp + 25);
@@ -200,7 +200,7 @@ contract LibUnitTest is PrimodiumTest {
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
 
     P_Unit.setTrainingTime(unitPrototype, 0, 100);
-    QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
+    Value_UnitProductionQueueData memory item = Value_UnitProductionQueueData(unitPrototype, 100);
     UnitProductionQueue.enqueue(buildingEntity, item);
 
     vm.warp(block.timestamp + 25);
@@ -230,7 +230,7 @@ contract LibUnitTest is PrimodiumTest {
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
 
     P_Unit.setTrainingTime(unitPrototype, 0, 10);
-    QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 10);
+    Value_UnitProductionQueueData memory item = Value_UnitProductionQueueData(unitPrototype, 10);
     UnitProductionQueue.enqueue(buildingEntity, item);
 
     vm.warp(block.timestamp + 25);
@@ -255,7 +255,7 @@ contract LibUnitTest is PrimodiumTest {
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
 
     P_Unit.setTrainingTime(unitPrototype, 0, 10);
-    QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 10);
+    Value_UnitProductionQueueData memory item = Value_UnitProductionQueueData(unitPrototype, 10);
     UnitProductionQueue.enqueue(buildingEntity, item);
     UnitProductionQueue.enqueue(buildingEntity, item);
 
@@ -300,7 +300,7 @@ contract LibUnitTest is PrimodiumTest {
   function testincreaseUnitCount() public {
     UnitCount.set(Home.get(playerEntity), unitEntity, 50);
     P_GameConfig.setUnitProductionRate(100);
-    QueueItemUnitsData memory item = QueueItemUnitsData(unitEntity, 100);
+    Value_UnitProductionQueueData memory item = Value_UnitProductionQueueData(unitEntity, 100);
     UnitProductionQueue.enqueue(buildingEntity, item);
     LibUnit.increaseUnitCount(Home.get(playerEntity), unitEntity, 100, false);
     assertEq(UnitCount.get(Home.get(playerEntity), unitEntity), 150);

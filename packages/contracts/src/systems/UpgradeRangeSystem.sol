@@ -5,7 +5,8 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { OwnedBy, Level, Asteroid } from "codegen/index.sol";
 import { ExpansionKey } from "src/Keys.sol";
-import { LibEncode, LibBuilding } from "codegen/Libraries.sol";
+import { LibEncode } from "libraries/LibEncode.sol";
+import { LibBuilding } from "libraries/LibBuilding.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 
 /**

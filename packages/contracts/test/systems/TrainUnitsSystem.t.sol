@@ -44,7 +44,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
 
-    QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
+    Value_UnitProductionQueueData memory item = Value_UnitProductionQueueData(unitPrototype, 100);
     UnitProductionQueue.enqueue(buildingEntity, item);
     UnitFactorySet.add(asteroidEntity, buildingEntity);
   }
@@ -60,7 +60,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     P_UnitProdTypes.set(buildingPrototype, 0, unitPrototypes);
 
     world.Primodium__trainUnits(buildingEntity, unit, 1);
-    QueueItemUnitsData memory data = UnitProductionQueue.peek(buildingEntity);
+    Value_UnitProductionQueueData memory data = UnitProductionQueue.peek(buildingEntity);
     assertEq(toString(data.unitId), toString(unitPrototype));
     assertEq(data.quantity, 1);
   }

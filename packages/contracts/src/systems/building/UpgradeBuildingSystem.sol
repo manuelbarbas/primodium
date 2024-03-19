@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { Position, PositionData, Level } from "codegen/index.sol";
-import { LibBuilding } from "codegen/Libraries.sol";
+import { LibBuilding } from "libraries/LibBuilding.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 
 contract UpgradeBuildingSystem is PrimodiumSystem {
