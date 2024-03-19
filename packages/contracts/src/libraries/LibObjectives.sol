@@ -25,16 +25,18 @@ library LibObjectives {
     bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(objectiveType));
 
     checkHasNotCompletedObjective(playerEntity, objectivePrototype);
-    checkHasCompletedRequiredObjectives(playerEntity, objectivePrototype);
-    checkObjectiveMainBaseLevelRequirement(playerEntity, spaceRockEntity, objectivePrototype);
-    checkObjectiveExpansionRequirement(playerEntity, spaceRockEntity, objectivePrototype);
-    checkHasBuiltRequiredBuildings(playerEntity, objectivePrototype);
-    checkProducedResources(playerEntity, objectivePrototype);
-    checkRaidedResources(playerEntity, objectivePrototype);
-    checkDestroyedUnits(playerEntity, objectivePrototype);
-    checkProducedUnits(playerEntity, objectivePrototype);
-    checkHasRequiredUnits(playerEntity, spaceRockEntity, objectivePrototype);
-    checkDefeatedPirateAsteroidRequirement(playerEntity, objectivePrototype);
+
+    // Defer to optional clientside check. Allow onchain to claim rewards without checking requirements. Preserving for now.
+    // checkHasCompletedRequiredObjectives(playerEntity, objectivePrototype);
+    // checkObjectiveMainBaseLevelRequirement(playerEntity, spaceRockEntity, objectivePrototype);
+    // checkObjectiveExpansionRequirement(playerEntity, spaceRockEntity, objectivePrototype);
+    // checkHasBuiltRequiredBuildings(playerEntity, objectivePrototype);
+    // checkProducedResources(playerEntity, objectivePrototype);
+    // checkRaidedResources(playerEntity, objectivePrototype);
+    // checkDestroyedUnits(playerEntity, objectivePrototype);
+    // checkProducedUnits(playerEntity, objectivePrototype);
+    // checkHasRequiredUnits(playerEntity, spaceRockEntity, objectivePrototype);
+    // checkDefeatedPirateAsteroidRequirement(playerEntity, objectivePrototype);
   }
 
   function checkIsValidObjective(EObjectives objectiveType) internal pure {
