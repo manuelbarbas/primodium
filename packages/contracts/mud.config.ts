@@ -787,14 +787,14 @@ const getConfig = async () => {
         },
       },
 
-      SetAllianceMembers: {
+      Keys_AllianceMemberSet: {
         keySchema: { entity: "bytes32" },
         valueSchema: {
           memberKeys: "bytes32[]",
         },
       },
 
-      SetIndexForAllianceMembers: {
+      Meta_AllianceMemberSet: {
         keySchema: { entity: "bytes32", memberKey: "bytes32" },
         valueSchema: {
           stored: "bool",

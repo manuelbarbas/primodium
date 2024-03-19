@@ -6,7 +6,7 @@ import { P_AllianceConfig, Score, AllianceJoinRequest, PlayerAlliance, Alliance,
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
-import { AllianceMembersSet } from "libraries/AllianceMembersSet.sol";
+import { AllianceMemberSet } from "libraries/AllianceMemberSet.sol";
 
 // types
 import { AllianceKey } from "src/Keys.sol";
@@ -38,7 +38,7 @@ library LibAlliance {
    * @param allianceEntity The entity ID of the alliance.
    */
   function allianceMaxJoinLimit(bytes32 allianceEntity) internal view {
-    require(AllianceMembersSet.length(allianceEntity) < P_AllianceConfig.get(), "[Alliance] Alliance is full");
+    require(AllianceMemberSet.length(allianceEntity) < P_AllianceConfig.get(), "[Alliance] Alliance is full");
   }
 
   /**
@@ -140,7 +140,7 @@ library LibAlliance {
     AllianceInvitation.deleteRecord(playerEntity, allianceEntity);
     uint256 playerScore = Score.get(playerEntity);
     Alliance.setScore(allianceEntity, Alliance.getScore(allianceEntity) + playerScore);
-    AllianceMembersSet.add(allianceEntity, playerEntity);
+    AllianceMemberSet.add(allianceEntity, playerEntity);
   }
 
   /**
@@ -162,7 +162,7 @@ library LibAlliance {
     uint256 playerScore = Score.get(playerEntity);
     Alliance.setScore(allianceEntity, Alliance.getScore(allianceEntity) + playerScore);
     Score.set(allianceEntity, Score.get(allianceEntity) + playerScore);
-    AllianceMembersSet.add(allianceEntity, playerEntity);
+    AllianceMemberSet.add(allianceEntity, playerEntity);
   }
 
   /**
@@ -172,14 +172,14 @@ library LibAlliance {
   function leave(bytes32 playerEntity) internal {
     bytes32 allianceEntity = PlayerAlliance.getAlliance(playerEntity);
     if (allianceEntity == 0) return;
-    AllianceMembersSet.remove(allianceEntity, playerEntity);
+    AllianceMemberSet.remove(allianceEntity, playerEntity);
     if (PlayerAlliance.getRole(playerEntity) == uint8(EAllianceRole.Owner)) {
-      if (AllianceMembersSet.length(allianceEntity) == 0) {
+      if (AllianceMemberSet.length(allianceEntity) == 0) {
         Alliance.deleteRecord(allianceEntity);
         PlayerAlliance.deleteRecord(playerEntity);
         return;
       }
-      bytes32[] memory memberEntities = AllianceMembersSet.getMembers(allianceEntity);
+      bytes32[] memory memberEntities = AllianceMemberSet.getMembers(allianceEntity);
       bytes32 currEntity = memberEntities[0];
       for (uint256 i = 0; i < memberEntities.length; i++) {
         if (PlayerAlliance.getRole(memberEntities[i]) < PlayerAlliance.getRole(currEntity)) {
@@ -226,7 +226,7 @@ library LibAlliance {
     PlayerAlliance.deleteRecord(targetEntity);
     uint256 playerScore = Score.get(targetEntity);
     Alliance.setScore(allianceEntity, Alliance.getScore(allianceEntity) - playerScore);
-    AllianceMembersSet.remove(allianceEntity, targetEntity);
+    AllianceMemberSet.remove(allianceEntity, targetEntity);
   }
 
   /**
@@ -281,6 +281,6 @@ library LibAlliance {
     Alliance.setScore(allianceEntity, Alliance.getScore(allianceEntity) + playerScore);
 
     AllianceJoinRequest.deleteRecord(acceptedEntity, allianceEntity);
-    AllianceMembersSet.add(allianceEntity, acceptedEntity);
+    AllianceMemberSet.add(allianceEntity, acceptedEntity);
   }
 }
