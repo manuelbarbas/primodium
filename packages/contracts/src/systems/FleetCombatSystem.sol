@@ -108,9 +108,9 @@ contract FleetCombatSystem is FleetBaseSystem {
       LibFleetCombat.resolveBattleEncryption(battleId, battleResult.targetEntity, battleResult.aggressorEntity);
       if (ResourceCount.get(battleResult.targetEntity, uint8(EResource.R_Encryption)) == 0) {
         if (OwnedBy.get(battleResult.targetEntity) != bytes32(0)) {
-          world.Primodium__transferSpaceRockOwnership(battleResult.targetEntity, _player());
+          world.Primodium__transferAsteroid(battleResult.targetEntity, _player());
         } else {
-          world.Primodium__initializeSpaceRockOwnership(battleResult.targetEntity, _player());
+          world.Primodium__initAsteroidOwner(battleResult.targetEntity, _player());
         }
       }
     }

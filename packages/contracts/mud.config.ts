@@ -42,42 +42,34 @@ const getConfig = async () => {
       S_BattleApplyDamageSystem: {
         openAccess: false,
         accessList: [],
-        name: "S_BattleApplyDamageSystem",
       },
       S_BattleRaidResolveSystem: {
         openAccess: false,
         accessList: [],
-        name: "S_BattleRaidResolveSystem",
       },
       S_BattleEncryptionResolveSystem: {
         openAccess: false,
         accessList: [],
-        name: "S_BattleEncryptionResolveSystem",
       },
       S_FleetResetIfNoUnitsLeftSystem: {
         openAccess: false,
         accessList: [],
-        name: "S_FleetResetIfNoUnitsLeftSystem",
       },
-      S_InitializeSpaceRockOwnershipSystem: {
+      S_InitAsteroidOwnerSystem: {
         openAccess: false,
         accessList: [],
-        name: "S_InitializeSpaceRockOwnershipSystem",
       },
-      S_TransferSpaceRockOwnershipSystem: {
+      S_TransferAsteroidSystem: {
         openAccess: false,
         accessList: [],
-        name: "S_TransferSpaceRockOwnershipSystem",
       },
       S_FleetResolvePirateAsteroidSystem: {
         openAccess: false,
         accessList: [],
-        name: "S_FleetResolvePirateAsteroidSystem",
       },
       S_CreateSecondaryAsteroidSystem: {
         openAccess: false,
         accessList: [],
-        name: "S_CreateSecondaryAsteroidSystem",
       },
     },
 

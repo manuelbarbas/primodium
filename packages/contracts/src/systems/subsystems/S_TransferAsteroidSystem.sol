@@ -12,23 +12,23 @@ import { ColoniesMap } from "libraries/ColoniesMap.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { FleetOwnedByKey, AsteroidOwnedByKey } from "src/Keys.sol";
 
-contract S_TransferSpaceRockOwnershipSystem is PrimodiumSystem {
-  function transferSpaceRockOwnership(bytes32 spaceRock, bytes32 newOwner) public {
-    bytes32 lastOwner = OwnedBy.get(spaceRock);
-    if (lastOwner != bytes32(0)) {
+contract S_TransferAsteroidSystem is PrimodiumSystem {
+  function transferAsteroid(bytes32 asteroidEntity, bytes32 ownerEntity) public {
+    bytes32 lastOwnerEntity = OwnedBy.get(asteroidEntity);
+    if (lastOwnerEntity != bytes32(0)) {
       //clear defending fleets
-      LibFleetStance.clearDefendingFleets(spaceRock);
+      LibFleetStance.clearDefendingFleets(asteroidEntity);
       //disband all fleets
-      disbandAllFleets(spaceRock);
+      disbandAllFleets(asteroidEntity);
 
-      ColoniesMap.remove(lastOwner, AsteroidOwnedByKey, spaceRock);
+      ColoniesMap.remove(lastOwnerEntity, AsteroidOwnedByKey, asteroidEntity);
     }
-    OwnedBy.set(spaceRock, newOwner);
-    ColoniesMap.add(newOwner, AsteroidOwnedByKey, spaceRock);
+    OwnedBy.set(asteroidEntity, ownerEntity);
+    ColoniesMap.add(ownerEntity, AsteroidOwnedByKey, asteroidEntity);
   }
 
-  function disbandAllFleets(bytes32 spaceRock) internal {
-    bytes32[] memory ownedFleets = FleetsMap.getFleetIds(spaceRock, FleetOwnedByKey);
+  function disbandAllFleets(bytes32 asteroidEntity) internal {
+    bytes32[] memory ownedFleets = FleetsMap.getFleetIds(asteroidEntity, FleetOwnedByKey);
     for (uint256 i = 0; i < ownedFleets.length; i++) {
       LibFleetDisband.disbandFleet(ownedFleets[i]);
 

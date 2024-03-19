@@ -26,7 +26,7 @@ contract SpawnSystem is PrimodiumSystem {
 
     bytes32 asteroid = LibAsteroid.createPrimaryAsteroid(playerEntity);
     Spawned.set(playerEntity, true);
-    IWorld(_world()).Primodium__initializeSpaceRockOwnership(asteroid, playerEntity);
+    IWorld(_world()).Primodium__initAsteroidOwner(asteroid, playerEntity);
     Home.set(playerEntity, asteroid);
     return asteroid;
   }

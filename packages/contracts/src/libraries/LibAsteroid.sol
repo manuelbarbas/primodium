@@ -138,7 +138,7 @@ library LibAsteroid {
     LibStorage.increaseMaxStorage(asteroidEntity, uint8(EResource.R_Encryption), encryption);
   }
 
-  function initializeSpaceRockOwnership(bytes32 spaceRock, bytes32 owner) internal {
+  function initAsteroidOwner(bytes32 spaceRock, bytes32 owner) internal {
     OwnedBy.set(spaceRock, owner);
     ColoniesMap.add(owner, AsteroidOwnedByKey, spaceRock);
   }
