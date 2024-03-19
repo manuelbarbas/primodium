@@ -1,7 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EBuilding } from "src/types.sol";
+import { BuildingKey, ExpansionKey } from "src/Keys.sol";
+import { MainBasePrototypeId, IronMinePrototypeId } from "codegen/Prototypes.sol";
+
+import { Dimensions, P_RequiredTile, Spawned, P_RequiredResourcesData, P_RequiredBaseLevel, P_EnumToPrototype, Position, PositionData, TilePositions, P_Blueprint, Home } from "codegen/index.sol";
+
+import { LibAsteroid } from "libraries/LibAsteroid.sol";
+import { LibEncode } from "libraries/LibEncode.sol";
+
 import { WorldResourceIdInstance, WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { AccessControl } from "@latticexyz/world/src/AccessControl.sol";
 

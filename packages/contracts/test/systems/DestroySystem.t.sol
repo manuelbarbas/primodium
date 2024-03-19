@@ -1,7 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EBuilding, EResource } from "src/types.sol";
+import { BuildingKey, ExpansionKey } from "src/Keys.sol";
+import { IronMinePrototypeId } from "codegen/Prototypes.sol";
+
+import { Dimensions, P_RequiredResourcesData, OwnedBy, BuildingType, P_ByLevelMaxResourceUpgrades, P_RequiredBaseLevel, P_EnumToPrototype, PositionData, TilePositions, Level, Home, ProductionRate, ConsumptionRate, P_RequiredDependencyData, P_Production, P_ProductionData, P_RequiredDependency, P_ListMaxResourceUpgrades, MaxResourceCount } from "codegen/index.sol";
+
+import { LibAsteroid } from "libraries/LibAsteroid.sol";
 
 contract DestroySystemTest is PrimodiumTest {
   bytes32 public playerEntity;

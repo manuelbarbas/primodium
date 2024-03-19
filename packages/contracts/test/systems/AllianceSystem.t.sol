@@ -1,7 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { PrimodiumTest, console } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { Alliance, PlayerAlliance, AllianceInvitation, AllianceJoinRequest, P_AllianceConfig } from "codegen/index.sol";
+import { EAllianceInviteMode, EAllianceRole } from "src/Types.sol";
+
+import { AllianceMemberSet } from "libraries/AllianceMemberSet.sol";
+
 import { WorldResourceIdInstance, WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { AccessControl } from "@latticexyz/world/src/AccessControl.sol";
 

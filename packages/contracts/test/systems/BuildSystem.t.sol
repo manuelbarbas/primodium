@@ -1,8 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
-import { WorldResourceIdInstance, WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EBuilding, EResource } from "src/types.sol";
+import { BuildingKey, ExpansionKey } from "src/Keys.sol";
+import { IronMinePrototypeId } from "codegen/Prototypes.sol";
+
+import { Dimensions, P_RequiredResourcesData, P_ByLevelMaxResourceUpgrades, P_RequiredBaseLevel, P_EnumToPrototype, Position, PositionData, TilePositions, Level, P_Blueprint, Home, P_RequiredResources, ResourceCount, ProductionRate, ConsumptionRate, P_RequiredDependencyData, P_Production, P_ProductionData, P_RequiredDependency, P_ListMaxResourceUpgrades, MaxResourceCount } from "codegen/index.sol";
+
+import { LibAsteroid } from "libraries/LibAsteroid.sol";
+
+import { WorldResourceIdInstance, WorldResourceIdLib, ResourceId } from "@latticexyz/world/src/WorldResourceId.sol";
+import { NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 import { AccessControl } from "@latticexyz/world/src/AccessControl.sol";
 
 contract BuildSystemTest is PrimodiumTest {

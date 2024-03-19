@@ -1,12 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
-import { Systems } from "@latticexyz/world/src/codegen/tables/Systems.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EResource, EBuilding } from "src/types.sol";
+
+import { Spawned, Home, Level, UsedTiles, MaxResourceCount, Position, PositionData, OwnedBy } from "codegen/index.sol";
+
+import { MainBasePrototypeId } from "codegen/Prototypes.sol";
+
+import { LibAsteroid } from "libraries/LibAsteroid.sol";
+
 import { UNLIMITED_DELEGATION } from "@latticexyz/world/src/constants.sol";
 import { ResourceId, WorldResourceIdLib, WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
 import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
-import { SystemCallData, SystemCallFromData } from "@latticexyz/world/src/modules/init/types.sol";
+import { SystemCallData } from "@latticexyz/world/src/modules/init/types.sol";
 import { WorldRegistrationSystem } from "@latticexyz/world/src/modules/init/implementations/WorldRegistrationSystem.sol";
 import { SpawnSystem } from "systems/SpawnSystem.sol";
 import { ROOT_NAMESPACE } from "@latticexyz/world/src/constants.sol";

@@ -1,8 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import { EObjectives } from "src/Types.sol";
-import { ObjectiveKey } from "src/Keys.sol";
-import "test/PrimodiumTest.t.sol";
+
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EBuilding, EResource, EObjectives } from "src/types.sol";
+import { BuildingKey, ObjectiveKey, PirateKey } from "src/Keys.sol";
+
+import { P_HasBuiltBuildings, P_SpawnPirateAsteroidData, P_DestroyedUnits, CompletedObjective, P_ProducedResources, P_RequiredUnits, ProducedUnit, P_SpawnPirateAsteroid, ReversePosition, LastClaimedAt, P_IsUtility, P_UnitPrototypes, P_ResourceRewardData, P_ResourceReward, P_RequiredObjectives, UnitCount, P_RaidedResources, PirateAsteroid, P_ProducedUnitsData, P_ProducedUnits, P_RequiredUnitsData, P_DestroyedUnitsData, P_RaidedResourcesData, P_UnitReward, P_ProducedResourcesData, P_UnitRewardData, P_RequiredResourcesData, P_RequiredBaseLevel, P_EnumToPrototype, Position, PositionData, Level, Home, P_RequiredResources, ResourceCount, P_Production, MaxResourceCount } from "codegen/index.sol";
+
+import { LibAsteroid } from "libraries/LibAsteroid.sol";
+import { LibResource } from "libraries/LibResource.sol";
+import { LibEncode } from "libraries/LibEncode.sol";
+import { LibProduction } from "libraries/LibProduction.sol";
 
 contract ClaimObjectiveSystemTest is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";

@@ -1,7 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EBuilding } from "src/types.sol";
+
+import { UnitKey, ExpansionKey } from "src/Keys.sol";
+
+import { Home, Position, PositionData, Level, P_RequiredBaseLevel, P_RequiredUpgradeResources, Asteroid } from "codegen/index.sol";
+
+import { Bounds } from "src/Types.sol";
+
+import { LibBuilding } from "libraries/LibBuilding.sol";
 
 contract UpgradeRangeSystemTest is PrimodiumTest {
   function setUp() public override {

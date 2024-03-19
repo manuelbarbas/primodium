@@ -1,7 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EBuilding, EResource } from "src/types.sol";
+import { MainBasePrototypeId, IronMinePrototypeId } from "codegen/Prototypes.sol";
+
+import { P_ListMaxResourceUpgrades, MaxResourceCount, P_ByLevelMaxResourceUpgrades, P_RequiredResourcesData, P_RequiredResources, ResourceCount, ProductionRate, P_RequiredDependency, P_RequiredDependencyData, Level, ConsumptionRate, P_Production, P_ProductionData, PositionData, Home, P_MaxLevel } from "codegen/index.sol";
 
 contract UpgradeBuildingSystemTest is PrimodiumTest {
   bytes32 playerEntity;

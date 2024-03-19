@@ -1,7 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import "test/PrimodiumTest.t.sol";
+
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EResource, EUnit } from "src/types.sol";
+import { UnitKey } from "src/Keys.sol";
+
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
+import { LibMath } from "libraries/LibMath.sol";
+
+import { P_EnumToPrototype, P_Transportables, P_UnitPrototypes, FleetMovement, UnitLevel, P_GameConfig, P_Unit, Position, P_SpawnPirateAsteroid, P_SpawnPirateAsteroidData } from "codegen/index.sol";
+
+import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 
 contract FleetMoveSystemTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;

@@ -1,6 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import "test/PrimodiumTest.t.sol";
+
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EResource, EUnit } from "src/types.sol";
+import { UnitKey } from "src/Keys.sol";
+
+import { P_EnumToPrototype, ResourceCount, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes, FleetMovement, Score, P_RequiredResources, P_RequiredResourcesData, UnitLevel, P_IsUtility } from "codegen/index.sol";
 
 contract FleetMergeSystemTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;

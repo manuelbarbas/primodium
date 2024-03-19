@@ -6,8 +6,6 @@ pragma solidity >=0.8.24;
 import { StoreHook } from "@latticexyz/store/src/StoreHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { Score, Alliance, PlayerAlliance } from "codegen/index.sol";
-import { ResourceIdInstance } from "@latticexyz/store/src/ResourceId.sol";
-import { LibResource } from "libraries/LibResource.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 
 /// @title OnScore_Alliance_Score - Updates alliance scores based on player scores.

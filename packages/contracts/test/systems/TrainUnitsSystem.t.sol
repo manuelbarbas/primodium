@@ -1,7 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest, toString } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EResource, EUnit } from "src/types.sol";
+import { UnitKey, AsteroidOwnedByKey } from "src/Keys.sol";
+
+import { P_CapitalShipConfig, UnitCount, MaxResourceCount, ProductionRate, Value_UnitProductionQueueData, P_UnitProdTypes, BuildingType, IsActive, P_EnumToPrototype, P_GameConfigData, P_GameConfig, Asteroid, Home, OwnedBy, Spawned, Level, LastClaimedAt, P_Unit, P_UnitProdMultiplier, P_EnumToPrototype, ResourceCount, ResourceCount, P_UnitPrototypes, P_RequiredResources, P_RequiredResourcesData } from "codegen/index.sol";
+
+import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
+import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
+import { AsteroidSet } from "libraries/AsteroidSet.sol";
+import { LibUnit } from "libraries/LibUnit.sol";
 
 contract TrainUnitsSystemTest is PrimodiumTest {
   bytes32 asteroidEntity = bytes32("asteroidEntity");

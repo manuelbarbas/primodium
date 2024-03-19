@@ -11,7 +11,13 @@ Test when playerEntity is an empty bytes32.
 Test maximum allowed P_MaxLevel.get(unitPrototype).
 */
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EUnit } from "src/types.sol";
+import { UnitKey } from "src/Keys.sol";
+
+import { P_RequiredBaseLevel, P_EnumToPrototype, Home, OwnedBy, P_EnumToPrototype, ResourceCount, P_MaxLevel, P_RequiredUpgradeResources, MaxResourceCount, UnitLevel } from "codegen/index.sol";
 
 contract UpgradeUnitSystemTest is PrimodiumTest {
   bytes32 unitPrototype = "unit";
