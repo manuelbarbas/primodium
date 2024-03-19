@@ -10,7 +10,7 @@ import { UsedTiles, Spawned, Dimensions, DimensionsData, P_MaxLevel, GracePeriod
 
 // libraries
 import { ExpansionKey } from "src/Keys.sol";
-import { ColoniesMap } from "src/libraries/ColoniesMap.sol";
+import { AsteroidSet } from "src/libraries/AsteroidSet.sol";
 import { EResource } from "src/Types.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
@@ -140,7 +140,7 @@ library LibAsteroid {
 
   function initAsteroidOwner(bytes32 asteroidEntity, bytes32 ownerEntity) internal {
     OwnedBy.set(asteroidEntity, ownerEntity);
-    ColoniesMap.add(ownerEntity, AsteroidOwnedByKey, asteroidEntity);
+    AsteroidSet.add(ownerEntity, AsteroidOwnedByKey, asteroidEntity);
   }
 
   /// @dev Calculates position based on distance and max index

@@ -30,18 +30,18 @@ contract FleetLandSystemTest is PrimodiumTest {
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    world.Primodium__landFleet(fleetId, aliceHomeAsteroid);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__landFleet(fleetEntity, aliceHomeAsteroid);
     vm.stopPrank();
-    assertEq(UnitCount.get(fleetId, unitPrototype), 0, "fleet unit count doesn't match");
+    assertEq(UnitCount.get(fleetEntity, unitPrototype), 0, "fleet unit count doesn't match");
     assertEq(UnitCount.get(aliceHomeAsteroid, unitPrototype), 1, "asteroid unit count doesn't match");
-    assertEq(ResourceCount.get(fleetId, uint8(EResource.Iron)), 0, "fleet resource count doesn't match");
+    assertEq(ResourceCount.get(fleetEntity, uint8(EResource.Iron)), 0, "fleet resource count doesn't match");
     assertEq(ResourceCount.get(aliceHomeAsteroid, uint8(EResource.Iron)), 1, "asteroid resource count doesn't match");
-    assertEq(OwnedBy.get(fleetId), aliceHomeAsteroid, "fleet owned by doesn't match");
-    assertEq(FleetMovement.getOrigin(fleetId), aliceHomeAsteroid, "fleet origin doesn't match");
-    assertEq(FleetMovement.getDestination(fleetId), aliceHomeAsteroid, "fleet destination doesn't match");
-    assertEq(FleetMovement.getArrivalTime(fleetId), block.timestamp, "fleet arrival time doesn't match");
-    assertEq(FleetStance.getStance(fleetId), uint8(EFleetStance.NULL), "fleet stance doesn't match");
+    assertEq(OwnedBy.get(fleetEntity), aliceHomeAsteroid, "fleet owned by doesn't match");
+    assertEq(FleetMovement.getOrigin(fleetEntity), aliceHomeAsteroid, "fleet origin doesn't match");
+    assertEq(FleetMovement.getDestination(fleetEntity), aliceHomeAsteroid, "fleet destination doesn't match");
+    assertEq(FleetMovement.getArrivalTime(fleetEntity), block.timestamp, "fleet arrival time doesn't match");
+    assertEq(FleetStance.getStance(fleetEntity), uint8(EFleetStance.NULL), "fleet stance doesn't match");
   }
 
   function testLandFleetFailInCooldown() public {
@@ -62,14 +62,14 @@ contract FleetLandSystemTest is PrimodiumTest {
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.prank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.prank(creator);
-    CooldownEnd.set(fleetId, block.timestamp + 1);
+    CooldownEnd.set(fleetEntity, block.timestamp + 1);
 
     vm.startPrank(alice);
     vm.expectRevert("[Fleet] Fleet is in cooldown");
-    world.Primodium__landFleet(fleetId, aliceHomeAsteroid);
+    world.Primodium__landFleet(fleetEntity, aliceHomeAsteroid);
     vm.stopPrank();
   }
 }

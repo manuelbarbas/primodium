@@ -9,12 +9,17 @@ import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { EFleetStance, EResource } from "src/Types.sol";
 import { CapitalShipPrototypeId } from "codegen/Prototypes.sol";
 
+/**
+ * @title CombatSystem
+ * @dev Handles combat interactions within the Primodium game, extending PrimodiumSystem functionalities.
+ */
 contract CombatSystem is PrimodiumSystem {
-  modifier _onlyWhenNotInGracePeriod(bytes32 entity) {
-    require(block.timestamp >= GracePeriod.get(entity), "[Fleet] Target is in grace period");
-    _;
-  }
-
+  /**
+   * @notice Initiates an attack from an entity (fleet or asteroid) on another entity (fleet or asteroid).
+   * @dev Determines the type of attack based on the attacker and target entities and delegates to the appropriate internal function.
+   * @param entity The unique identifier of the attacking entity.
+   * @param targetEntity The unique identifier of the target entity.
+   */
   function attack(bytes32 entity, bytes32 targetEntity) public {
     if (IsFleet.get(entity)) {
       if (IsFleet.get(targetEntity)) {
@@ -27,38 +32,48 @@ contract CombatSystem is PrimodiumSystem {
     }
   }
 
+  /**
+   * @dev Handles a fleet attacking another fleet.
+   * @param fleetEntity The unique identifier of the attacking fleet.
+   * @param targetFleet The unique identifier of the target fleet.
+   */
   function fleetAttackFleet(
-    bytes32 fleetId,
+    bytes32 fleetEntity,
     bytes32 targetFleet
   )
     private
-    _onlyFleetOwner(fleetId)
-    _onlyWhenNotInCooldown(fleetId)
+    _onlyFleetOwner(fleetEntity)
+    _onlyWhenNotInCooldown(fleetEntity)
     _onlyWhenNotInGracePeriod(targetFleet)
-    _onlyWhenNotInStance(fleetId)
-    _onlyWhenFleetsAreIsInSameOrbit(fleetId, targetFleet)
+    _onlyWhenNotInStance(fleetEntity)
+    _onlyWhenFleetsAreIsInSameOrbit(fleetEntity, targetFleet)
   {
-    (bytes32 battleId, BattleResultData memory batteResult) = LibCombat.attack(fleetId, targetFleet);
+    (bytes32 battleEntity, BattleResultData memory batteResult) = LibCombat.attack(fleetEntity, targetFleet);
 
-    afterBattle(battleId, batteResult);
+    afterBattle(battleEntity, batteResult);
   }
 
+  /**
+   * @dev Handles a fleet attacking an asteroid.
+   * @param fleetEntity The unique identifier of the attacking fleet.
+   * @param targetAsteroid The unique identifier of the target asteroid.
+   */
   function fleetAttackAsteroid(
-    bytes32 fleetId,
+    bytes32 fleetEntity,
     bytes32 targetAsteroid
   )
     private
-    _onlyFleetOwner(fleetId)
-    _onlyWhenNotInCooldown(fleetId)
-    _onlyWhenNotInStance(fleetId)
+    _onlyFleetOwner(fleetEntity)
+    _onlyWhenNotInCooldown(fleetEntity)
+    _onlyWhenNotInStance(fleetEntity)
     _onlyWhenNotInGracePeriod(targetAsteroid)
-    _onlyWhenFleetIsInOrbitOfAsteroid(fleetId, targetAsteroid)
-    _onlyWhenNotPirateAsteroidOrHasNotBeenDefeated(targetAsteroid)
+    _onlyWhenFleetIsInOrbitOfAsteroid(fleetEntity, targetAsteroid)
+    _onlyNotPirateOrNotDefeated(targetAsteroid)
     _claimResources(targetAsteroid)
     _claimUnits(targetAsteroid)
   {
-    (bytes32 battleId, BattleResultData memory batteResult) = LibCombat.attack(fleetId, targetAsteroid);
-    afterBattle(battleId, batteResult);
+    (bytes32 battleEntity, BattleResultData memory batteResult) = LibCombat.attack(fleetEntity, targetAsteroid);
+    afterBattle(battleEntity, batteResult);
   }
 
   function asteroidAttackFleet(
@@ -72,12 +87,12 @@ contract CombatSystem is PrimodiumSystem {
     _claimResources(asteroidEntity)
     _claimUnits(asteroidEntity)
   {
-    (bytes32 battleId, BattleResultData memory battleResult) = LibCombat.attack(asteroidEntity, targetFleet);
-    afterBattle(battleId, battleResult);
+    (bytes32 battleEntity, BattleResultData memory battleResult) = LibCombat.attack(asteroidEntity, targetFleet);
+    afterBattle(battleEntity, battleResult);
   }
 
-  function afterBattle(bytes32 battleId, BattleResultData memory battleResult) internal {
-    bool isAggressorWinner = battleResult.winner == battleResult.aggressorEntity;
+  function afterBattle(bytes32 battleEntity, BattleResultData memory battleResult) internal {
+    bool isAggressorWinner = battleResult.winnerEntity == battleResult.aggressorEntity;
 
     bool isAggressorFleet = IsFleet.get(battleResult.aggressorEntity);
 
@@ -94,18 +109,18 @@ contract CombatSystem is PrimodiumSystem {
     IWorld world = IWorld(_world());
     if (battleResult.targetDamage > 0)
       world.Primodium__applyDamage(
-        battleId,
+        battleEntity,
         defendingPlayerEntity,
         battleResult.aggressorEntity,
         battleResult.targetDamage
       );
 
     if (isRaid) {
-      world.Primodium__battleRaidResolve(battleId, battleResult.aggressorEntity, battleResult.targetEntity);
+      world.Primodium__battleRaidResolve(battleEntity, battleResult.aggressorEntity, battleResult.targetEntity);
     }
     if (isDecryption) {
       //in decryption we resolve encryption first so the fleet decryption unit isn't lost before decrypting
-      LibCombat.resolveBattleEncryption(battleId, battleResult.targetEntity, battleResult.aggressorEntity);
+      LibCombat.resolveBattleEncryption(battleEntity, battleResult.targetEntity, battleResult.aggressorEntity);
       if (ResourceCount.get(battleResult.targetEntity, uint8(EResource.R_Encryption)) == 0) {
         if (OwnedBy.get(battleResult.targetEntity) != bytes32(0)) {
           world.Primodium__transferAsteroid(battleResult.targetEntity, _player());
@@ -114,7 +129,7 @@ contract CombatSystem is PrimodiumSystem {
         }
       }
     }
-    world.Primodium__applyDamage(battleId, _player(), battleResult.targetEntity, battleResult.aggressorDamage);
+    world.Primodium__applyDamage(battleEntity, _player(), battleResult.targetEntity, battleResult.aggressorDamage);
     if (isPirateAsteroid && isAggressorWinner) {
       world.Primodium__resolvePirateAsteroid(_player(), battleResult.targetEntity);
     }

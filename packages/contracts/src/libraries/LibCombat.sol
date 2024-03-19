@@ -9,11 +9,11 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
-import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
+import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
-import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
+import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { FleetIncomingKey } from "src/Keys.sol";
 import { EResource } from "src/Types.sol";
 import { ABDKMath64x64 as Math } from "abdk/ABDKMath64x64.sol";
@@ -23,15 +23,15 @@ library LibCombat {
   function attack(
     bytes32 entity,
     bytes32 targetEntity
-  ) internal returns (bytes32 battleId, BattleResultData memory battleResult) {
+  ) internal returns (bytes32 battleEntity, BattleResultData memory battleResult) {
     bool aggressorIsFleet = IsFleet.get(entity);
 
     if (GracePeriod.get(entity) > 0) GracePeriod.deleteRecord(entity);
 
     bytes32 asteroidEntity = aggressorIsFleet ? FleetMovement.getDestination(entity) : entity;
 
-    battleId = LibEncode.getTimedHash(asteroidEntity);
-    uint256 totalAggressorDamage = handleDamage(entity, battleId, aggressorIsFleet);
+    battleEntity = LibEncode.getTimedHash(asteroidEntity);
+    uint256 totalAggressorDamage = handleDamage(entity, battleEntity, aggressorIsFleet);
 
     // update grace period of asteroid and fleet on asteroid
     if (aggressorIsFleet) {
@@ -44,26 +44,26 @@ library LibCombat {
       CooldownEnd.set(entity, block.timestamp + cooldownEnd);
     }
 
-    uint256 totalTargetDamage = handleDamage(targetEntity, battleId, !aggressorIsFleet);
+    uint256 totalTargetDamage = handleDamage(targetEntity, battleEntity, !aggressorIsFleet);
 
     battleResult = BattleResultData({
       aggressorEntity: entity,
-      aggressorDamage: totalAggressorDamage,
       targetEntity: targetEntity,
-      targetDamage: totalTargetDamage,
       aggressorAllies: LibFleetStance.getAllies(entity),
+      targetDamage: totalTargetDamage,
+      aggressorDamage: totalAggressorDamage,
       targetAllies: LibFleetStance.getAllies(targetEntity),
-      winner: totalAggressorDamage > totalTargetDamage ? entity : targetEntity,
-      player: OwnedBy.get(aggressorIsFleet ? OwnedBy.get(entity) : entity),
-      targetPlayer: OwnedBy.get(IsFleet.get(targetEntity) ? OwnedBy.get(targetEntity) : targetEntity),
+      winnerEntity: totalAggressorDamage > totalTargetDamage ? entity : targetEntity,
+      playerEntity: OwnedBy.get(aggressorIsFleet ? OwnedBy.get(entity) : entity),
+      targetPlayerEntity: OwnedBy.get(IsFleet.get(targetEntity) ? OwnedBy.get(targetEntity) : targetEntity),
       asteroidEntity: asteroidEntity,
       timestamp: block.timestamp
     });
 
-    BattleResult.set(battleId, battleResult);
+    BattleResult.set(battleEntity, battleResult);
   }
 
-  function handleDamage(bytes32 entity, bytes32 battleId, bool isAggressor) internal returns (uint256 totalDamage) {
+  function handleDamage(bytes32 entity, bytes32 battleEntity, bool isAggressor) internal returns (uint256 totalDamage) {
     uint256 damage;
     uint256[] memory damages;
 
@@ -71,16 +71,16 @@ library LibCombat {
       ? LibCombatAttributes.getAttacksWithAllies(entity)
       : LibCombatAttributes.getDefensesWithAllies(entity);
 
-    BattleDamageDealtResult.set(battleId, entity, damage);
+    BattleDamageDealtResult.set(battleEntity, entity, damage);
 
     bytes32[] memory allies = LibFleetStance.getAllies(entity);
     for (uint256 i = 0; i < allies.length; i++) {
-      BattleDamageDealtResult.set(battleId, allies[i], damages[i]);
+      BattleDamageDealtResult.set(battleEntity, allies[i], damages[i]);
     }
   }
 
   function resolveBattleEncryption(
-    bytes32 battleId,
+    bytes32 battleEntity,
     bytes32 targetAsteroidEntity,
     bytes32 aggressorEntity
   ) internal returns (uint256 encryptionAtEnd) {
@@ -99,11 +99,11 @@ library LibCombat {
     if (encryptionAtEnd == 0) {
       LibFleet.decreaseFleetUnit(aggressorEntity, CapitalShipPrototypeId, 1, true);
     }
-    BattleEncryptionResult.set(battleId, targetAsteroidEntity, encryptionAtStart, encryptionAtEnd);
+    BattleEncryptionResult.set(battleEntity, targetAsteroidEntity, encryptionAtStart, encryptionAtEnd);
   }
 
   function applyDamage(
-    bytes32 battleId,
+    bytes32 battleEntity,
     bytes32 attackingPlayer,
     bytes32 defender,
     uint256 damage
@@ -123,10 +123,16 @@ library LibCombat {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory totalUnitCasualties = new uint256[](unitPrototypes.length);
     if (IsFleet.get(defender)) {
-      (damageDealt, totalUnitCasualties) = applyDamageToUnits(battleId, defender, totalHp, damage, totalUnitCasualties);
+      (damageDealt, totalUnitCasualties) = applyDamageToUnits(
+        battleEntity,
+        defender,
+        totalHp,
+        damage,
+        totalUnitCasualties
+      );
     } else {
       (damageDealt, totalUnitCasualties) = applyDamageToAsteroid(
-        battleId,
+        battleEntity,
         defender,
         totalHp,
         damage,
@@ -134,20 +140,20 @@ library LibCombat {
       );
     }
 
-    BattleDamageTakenResult.set(battleId, defender, hp, damageDealt);
+    BattleDamageTakenResult.set(battleEntity, defender, hp, damageDealt);
 
     if (damageDealt < damage) {
       bytes32[] memory allies = LibFleetStance.getAllies(defender);
       for (uint256 i = 0; i < allies.length; i++) {
         uint256 damageDealtToAlly = 0;
         (damageDealtToAlly, totalUnitCasualties) = applyDamageToUnits(
-          battleId,
+          battleEntity,
           allies[i],
           totalHp,
           damage,
           totalUnitCasualties
         );
-        BattleDamageTakenResult.set(battleId, allies[i], hps[i], damageDealtToAlly);
+        BattleDamageTakenResult.set(battleEntity, allies[i], hps[i], damageDealtToAlly);
         damageDealt += damageDealtToAlly;
         if (damageDealt >= damage) {
           break;
@@ -168,7 +174,7 @@ library LibCombat {
   }
 
   function applyDamageToAsteroid(
-    bytes32 battleId,
+    bytes32 battleEntity,
     bytes32 asteroidEntity,
     uint256 totalHp,
     uint256 damage,
@@ -185,7 +191,7 @@ library LibCombat {
     if (damageDealt >= damage) return (damageDealt, totalUnitCasualties);
     uint256 damageToUnits = 0;
     (damageToUnits, totalUnitCasualties) = applyDamageToUnits(
-      battleId,
+      battleEntity,
       asteroidEntity,
       totalHp - currHp,
       damage - damageDealt,
@@ -196,7 +202,7 @@ library LibCombat {
   }
 
   function applyDamageToUnits(
-    bytes32 battleId,
+    bytes32 battleEntity,
     bytes32 targetEntity,
     uint256 totalHp,
     uint256 damage,
@@ -227,7 +233,7 @@ library LibCombat {
       if (damageDealt >= damage) break;
     }
 
-    BattleUnitResult.set(battleId, targetEntity, unitResult);
+    BattleUnitResult.set(battleEntity, targetEntity, unitResult);
 
     if (IsFleet.get(targetEntity)) {
       applyLostCargo(targetEntity);
@@ -246,9 +252,9 @@ library LibCombat {
     }
   }
 
-  function applyLostCargo(bytes32 fleetId) internal {
-    uint256 cargo = LibCombatAttributes.getCargoCapacity(fleetId);
-    uint256 occupiedCargo = LibCombatAttributes.getCargo(fleetId);
+  function applyLostCargo(bytes32 fleetEntity) internal {
+    uint256 cargo = LibCombatAttributes.getCargoCapacity(fleetEntity);
+    uint256 occupiedCargo = LibCombatAttributes.getCargo(fleetEntity);
     if (cargo >= occupiedCargo) return;
 
     uint256 cargoLost = occupiedCargo - cargo;
@@ -256,14 +262,14 @@ library LibCombat {
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       if (cargoLossLeft == 0) break;
-      uint256 resourceCount = ResourceCount.get(fleetId, i);
+      uint256 resourceCount = ResourceCount.get(fleetEntity, i);
       if (resourceCount == 0) continue;
 
       uint256 resourcePortion = LibMath.divideCeil(resourceCount * cargoLost, occupiedCargo);
       if (resourcePortion > cargoLossLeft) {
         resourcePortion = cargoLossLeft;
       }
-      LibFleet.decreaseFleetResource(fleetId, i, resourcePortion);
+      LibFleet.decreaseFleetResource(fleetEntity, i, resourcePortion);
       cargoLossLeft -= resourcePortion;
     }
   }
@@ -284,7 +290,7 @@ library LibCombat {
   function resolvePirateAsteroid(bytes32 playerEntity, bytes32 pirateAsteroidEntity) internal {
     PirateAsteroid.setIsDefeated(pirateAsteroidEntity, true);
     DefeatedPirate.set(playerEntity, PirateAsteroid.getPrototype(pirateAsteroidEntity), true);
-    bytes32[] memory incomingFleets = FleetsMap.getFleetIds(pirateAsteroidEntity, FleetIncomingKey);
+    bytes32[] memory incomingFleets = FleetSet.getFleetEntities(pirateAsteroidEntity, FleetIncomingKey);
     for (uint256 i = 0; i < incomingFleets.length; i++) {
       if (FleetMovement.getArrivalTime(incomingFleets[i]) <= block.timestamp) {
         LibFleetMove.sendFleet(incomingFleets[i], OwnedBy.get(incomingFleets[i]));

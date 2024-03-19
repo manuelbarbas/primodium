@@ -37,7 +37,7 @@ contract FleetMergeSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     increaseResource(aliceHomeAsteroid, EResource.U_MaxFleets, 1);
@@ -45,18 +45,18 @@ contract FleetMergeSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.warp(block.timestamp + 1);
     vm.startPrank(alice);
-    bytes32 secondFleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 secondFleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     uint256 aliceScore = Score.get(aliceEntity);
     uint256 aliceHomeScore = Score.get(aliceHomeAsteroid);
     vm.startPrank(alice);
-    world.Primodium__sendFleet(fleetId, bobHomeAsteroid);
-    world.Primodium__sendFleet(secondFleetId, bobHomeAsteroid);
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
+    world.Primodium__sendFleet(secondFleetEntity, bobHomeAsteroid);
+    vm.warp(FleetMovement.getArrivalTime(fleetEntity));
     bytes32[] memory fleets = new bytes32[](2);
-    fleets[0] = fleetId;
-    fleets[1] = secondFleetId;
+    fleets[0] = fleetEntity;
+    fleets[1] = secondFleetEntity;
     world.Primodium__mergeFleets(fleets);
     vm.stopPrank();
 
@@ -64,10 +64,10 @@ contract FleetMergeSystemTest is PrimodiumTest {
     assertEq(Score.get(aliceHomeAsteroid), aliceHomeScore, "home score should stay the same");
     assertEq(Score.get(aliceEntity), aliceHomeScore, "score should stay the same as home score");
 
-    assertEq(UnitCount.get(fleetId, unitPrototype), 4, "fleet unit count doesn't match");
-    assertEq(UnitCount.get(secondFleetId, unitPrototype), 0, "fleet 2 unit count doesn't match");
-    assertEq(ResourceCount.get(fleetId, uint8(EResource.Iron)), 4, "fleet resource count doesn't match");
-    assertEq(ResourceCount.get(secondFleetId, uint8(EResource.Iron)), 0, "fleet resource count doesn't match");
+    assertEq(UnitCount.get(fleetEntity, unitPrototype), 4, "fleet unit count doesn't match");
+    assertEq(UnitCount.get(secondFleetEntity, unitPrototype), 0, "fleet 2 unit count doesn't match");
+    assertEq(ResourceCount.get(fleetEntity, uint8(EResource.Iron)), 4, "fleet resource count doesn't match");
+    assertEq(ResourceCount.get(secondFleetEntity, uint8(EResource.Iron)), 0, "fleet resource count doesn't match");
 
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(
       unitPrototype,
@@ -83,14 +83,14 @@ contract FleetMergeSystemTest is PrimodiumTest {
     }
     assertEq(ResourceCount.get(aliceHomeAsteroid, uint8(EResource.Iron)), 0, "asteroid resource count doesn't match");
 
-    assertEq(FleetMovement.getDestination(fleetId), bobHomeAsteroid, "fleet destination doesn't match");
+    assertEq(FleetMovement.getDestination(fleetEntity), bobHomeAsteroid, "fleet destination doesn't match");
     assertEq(
-      FleetMovement.getDestination(secondFleetId),
+      FleetMovement.getDestination(secondFleetEntity),
       aliceHomeAsteroid,
       "fleet 2 destination doesn't match, should have reset to home asteroid"
     );
-    assertEq(FleetMovement.getOrigin(fleetId), aliceHomeAsteroid, "fleet origin doesn't match");
-    assertEq(FleetMovement.getOrigin(secondFleetId), aliceHomeAsteroid, "fleet 2 origin doesn't match");
-    assertEq(FleetMovement.getArrivalTime(secondFleetId), block.timestamp, "fleet 2 arrival time doesn't match");
+    assertEq(FleetMovement.getOrigin(fleetEntity), aliceHomeAsteroid, "fleet origin doesn't match");
+    assertEq(FleetMovement.getOrigin(secondFleetEntity), aliceHomeAsteroid, "fleet 2 origin doesn't match");
+    assertEq(FleetMovement.getArrivalTime(secondFleetEntity), block.timestamp, "fleet 2 arrival time doesn't match");
   }
 }

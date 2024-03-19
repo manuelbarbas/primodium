@@ -5,8 +5,18 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { FleetMovement, OwnedBy } from "codegen/index.sol";
 
+/**
+ * @title FleetMergeSystem
+ * @dev Manages the merging of multiple fleets into a single fleet within the Primodium game, extending PrimodiumSystem functionalities.
+ */
 contract FleetMergeSystem is PrimodiumSystem {
-  modifier _checkRequirements(bytes32[] calldata fleets) {
+  /**
+   * @dev Ensures that all fleets in the array can be merged by the caller.
+   * Checks include verifying at least two fleets are provided, all fleets are owned by the same player,
+   * and all fleets are in orbit of the same asteroid.
+   * @param fleets An array of unique identifiers for the fleets to be merged.
+   */
+  modifier canMergeFleets(bytes32[] calldata fleets) {
     require(fleets.length > 1, "[Fleet] Must merge at least 2 fleets");
     bytes32 asteroidOwner = OwnedBy.get(fleets[0]);
     require(OwnedBy.get(asteroidOwner) == _player(), "[Fleet] Only fleet owner can call this function");
@@ -23,7 +33,13 @@ contract FleetMergeSystem is PrimodiumSystem {
     _;
   }
 
-  function mergeFleets(bytes32[] calldata fleets) public _checkRequirements(fleets) {
+  /**
+   * @notice Merges multiple fleets into a single fleet.
+   * @dev Calls the `canMergeFleets` modifier to validate the fleets before merging.
+   * The fleets must be in orbit of the same asteroid and owned by the same player.
+   * @param fleets An array of unique identifiers for the fleets to be merged.
+   */
+  function mergeFleets(bytes32[] calldata fleets) public canMergeFleets(fleets) {
     LibFleet.mergeFleets(_player(), fleets);
   }
 }

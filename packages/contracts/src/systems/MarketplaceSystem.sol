@@ -11,16 +11,31 @@ import { LibMarketplace } from "libraries/LibMarketplace.sol";
 import { MarketPrototypeId } from "codegen/Prototypes.sol";
 
 contract MarketplaceSystem is PrimodiumSystem {
+  /**
+   * @dev Ensures the marketplace is not locked before proceeding with the function call.
+   */
   modifier onlyUnlocked() {
     require(!P_MarketplaceConfig.getLock(), "[Marketplace] Marketplace is locked");
     _;
   }
 
+  /**
+   * @notice Toggles the lock state of the marketplace.
+   * @dev Can only be called by the admin. Flips the current lock state of the marketplace.
+   */
   function toggleMarketplaceLock() public onlyAdmin {
     bool wasLocked = P_MarketplaceConfig.getLock();
     P_MarketplaceConfig.setLock(!wasLocked);
   }
 
+  /**
+   * @notice Adds liquidity to a resource pair in the marketplace.
+   * @dev Can only be called by the admin. Adds specified amounts of two different resources to the marketplace liquidity pool.
+   * @param resourceA First resource in the liquidity pair.
+   * @param resourceB Second resource in the liquidity pair.
+   * @param liquidityA Amount of the first resource to add.
+   * @param liquidityB Amount of the second resource to add.
+   */
   function addLiquidity(
     EResource resourceA,
     EResource resourceB,
@@ -34,6 +49,14 @@ contract MarketplaceSystem is PrimodiumSystem {
     Reserves.set(uint8(resourceA), uint8(resourceB), reserves.amountA + liquidityA, reserves.amountB + liquidityB);
   }
 
+  /**
+   * @notice Removes liquidity from a resource pair in the marketplace.
+   * @dev Can only be called by the admin. Removes specified amounts of two different resources from the marketplace liquidity pool.
+   * @param resourceA First resource in the liquidity pair.
+   * @param resourceB Second resource in the liquidity pair.
+   * @param liquidityA Amount of the first resource to remove.
+   * @param liquidityB Amount of the second resource to remove.
+   */
   function removeLiquidity(
     EResource resourceA,
     EResource resourceB,
@@ -48,6 +71,14 @@ contract MarketplaceSystem is PrimodiumSystem {
     Reserves.set(uint8(resourceA), uint8(resourceB), reserves.amountA - liquidityA, reserves.amountB - liquidityB);
   }
 
+  /**
+   * @notice Performs a swap operation in the marketplace.
+   * @dev Swaps a specified amount of one resource for another, according to the provided path, while ensuring the marketplace is unlocked and the user has sufficient resources.
+   * @param marketEntity The unique identifier for the marketplace entity.
+   * @param path An array defining the swap path between resources.
+   * @param amountIn The amount of the initial resource to swap.
+   * @param amountOutMin The minimum amount of the final resource expected to receive.
+   */
   function swap(
     bytes32 marketEntity,
     EResource[] memory path,

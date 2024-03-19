@@ -8,7 +8,7 @@ import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
-import { ColoniesMap } from "libraries/ColoniesMap.sol";
+import { AsteroidSet } from "libraries/AsteroidSet.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
 import { UnitKey, AsteroidOwnedByKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
@@ -146,7 +146,7 @@ library LibUnit {
   }
 
   function getCapitalShipsPlusAsteroids(bytes32 playerEntity) internal view returns (uint256) {
-    bytes32[] memory ownedAsteroids = ColoniesMap.getAsteroidEntities(playerEntity, AsteroidOwnedByKey);
+    bytes32[] memory ownedAsteroids = AsteroidSet.getAsteroidEntities(playerEntity, AsteroidOwnedByKey);
     uint256 ret = 0;
     for (uint256 i = 0; i < ownedAsteroids.length; i++) {
       uint256 ships = MaxResourceCount.get(ownedAsteroids[i], uint8(EResource.U_CapitalShipCapacity)) -

@@ -129,7 +129,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     uint256 initialShips = LibUnit.getCapitalShipsPlusAsteroids(aliceEntity);
     uint256 initialMultiplier = LibUnit.getCapitalShipCostMultiplier(aliceEntity);
     assertEq(initialShips, 0, "initial ship and asteroid count");
-    bytes32[] memory ownedAsteroids = ColoniesMap.getAsteroidEntities(aliceEntity, AsteroidOwnedByKey);
+    bytes32[] memory ownedAsteroids = AsteroidSet.getAsteroidEntities(aliceEntity, AsteroidOwnedByKey);
 
     uint256 amount = P_CapitalShipConfig.getInitialCost() * initialMultiplier;
     uint8 resource = P_CapitalShipConfig.getResource();
@@ -159,7 +159,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
   }
 
   function testInvalidBuilding() public {
-    vm.expectRevert(bytes("[TrainUnitsSystem] Can not train units using an in active buildingEntity"));
+    vm.expectRevert(bytes("[TrainUnitsSystem] Can not train units using an in active building"));
     world.Primodium__trainUnits(bytes32(0), unit, 1);
   }
 

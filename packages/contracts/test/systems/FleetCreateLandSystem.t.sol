@@ -30,18 +30,18 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
-    assertEq(UnitCount.get(fleetId, unitPrototype), 1, "fleet unit count doesn't match");
+    assertEq(UnitCount.get(fleetEntity, unitPrototype), 1, "fleet unit count doesn't match");
     assertEq(UnitCount.get(aliceHomeAsteroid, unitPrototype), 0, "asteroid unit count doesn't match");
-    assertEq(ResourceCount.get(fleetId, uint8(EResource.Iron)), 1, "fleet resource count doesn't match");
+    assertEq(ResourceCount.get(fleetEntity, uint8(EResource.Iron)), 1, "fleet resource count doesn't match");
     assertEq(ResourceCount.get(aliceHomeAsteroid, uint8(EResource.Iron)), 0, "asteroid resource count doesn't match");
-    assertEq(IsFleet.get(fleetId), true, "fleet is not a fleet");
-    assertEq(OwnedBy.get(fleetId), aliceHomeAsteroid, "fleet owned by doesn't match");
-    assertEq(FleetMovement.getDestination(fleetId), aliceHomeAsteroid, "fleet destination doesn't match");
-    assertEq(FleetMovement.getArrivalTime(fleetId), block.timestamp, "fleet arrival time doesn't match");
-    assertEq(FleetStance.getStance(fleetId), uint8(EFleetStance.NULL), "fleet stance doesn't match");
-    assertEq(FleetMovement.getOrigin(fleetId), aliceHomeAsteroid, "fleet origin doesn't match");
+    assertEq(IsFleet.get(fleetEntity), true, "fleet is not a fleet");
+    assertEq(OwnedBy.get(fleetEntity), aliceHomeAsteroid, "fleet owned by doesn't match");
+    assertEq(FleetMovement.getDestination(fleetEntity), aliceHomeAsteroid, "fleet destination doesn't match");
+    assertEq(FleetMovement.getArrivalTime(fleetEntity), block.timestamp, "fleet arrival time doesn't match");
+    assertEq(FleetStance.getStance(fleetEntity), uint8(EFleetStance.NULL), "fleet stance doesn't match");
+    assertEq(FleetMovement.getOrigin(fleetEntity), aliceHomeAsteroid, "fleet origin doesn't match");
   }
 
   function testCreateFleetScore() public {
@@ -64,7 +64,7 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     uint256 aliceScore = Score.get(aliceEntity);
     assertEq(aliceScore, P_ScoreMultiplier.get(uint8(EResource.Iron)), "score should be one iron");
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     assertEq(Score.get(aliceEntity), 0, "score should be 0");
   }
   function testLandFleet() public {
@@ -85,18 +85,18 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    world.Primodium__landFleet(fleetId, aliceHomeAsteroid);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__landFleet(fleetEntity, aliceHomeAsteroid);
     vm.stopPrank();
-    assertEq(UnitCount.get(fleetId, unitPrototype), 0, "fleet unit count doesn't match");
+    assertEq(UnitCount.get(fleetEntity, unitPrototype), 0, "fleet unit count doesn't match");
     assertEq(UnitCount.get(aliceHomeAsteroid, unitPrototype), 1, "asteroid unit count doesn't match");
-    assertEq(ResourceCount.get(fleetId, uint8(EResource.Iron)), 0, "fleet resource count doesn't match");
+    assertEq(ResourceCount.get(fleetEntity, uint8(EResource.Iron)), 0, "fleet resource count doesn't match");
     assertEq(ResourceCount.get(aliceHomeAsteroid, uint8(EResource.Iron)), 1, "asteroid resource count doesn't match");
-    assertEq(OwnedBy.get(fleetId), aliceHomeAsteroid, "fleet owned by doesn't match");
-    assertEq(FleetMovement.getOrigin(fleetId), aliceHomeAsteroid, "fleet origin doesn't match");
-    assertEq(FleetMovement.getDestination(fleetId), aliceHomeAsteroid, "fleet destination doesn't match");
-    assertEq(FleetMovement.getArrivalTime(fleetId), block.timestamp, "fleet arrival time doesn't match");
-    assertEq(FleetStance.getStance(fleetId), uint8(EFleetStance.NULL), "fleet stance doesn't match");
+    assertEq(OwnedBy.get(fleetEntity), aliceHomeAsteroid, "fleet owned by doesn't match");
+    assertEq(FleetMovement.getOrigin(fleetEntity), aliceHomeAsteroid, "fleet origin doesn't match");
+    assertEq(FleetMovement.getDestination(fleetEntity), aliceHomeAsteroid, "fleet destination doesn't match");
+    assertEq(FleetMovement.getArrivalTime(fleetEntity), block.timestamp, "fleet arrival time doesn't match");
+    assertEq(FleetStance.getStance(fleetEntity), uint8(EFleetStance.NULL), "fleet stance doesn't match");
   }
 
   function testFailCreateFleetNotEnoughUnits() public {
@@ -118,7 +118,7 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     }
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
   }
 
@@ -143,7 +143,7 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     }
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
   }
 
@@ -161,7 +161,7 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
 
     //try to create fleet by other player
     vm.startPrank(bob);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
   }
 
@@ -184,13 +184,13 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     setupCreateFleetNoMaxMovesGranted(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     setupCreateFleetNoMaxMovesGranted(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 secondFleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 secondFleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
   }
 
@@ -214,7 +214,7 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
   }
 }

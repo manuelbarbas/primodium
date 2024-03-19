@@ -6,7 +6,7 @@ import "test/PrimodiumTest.t.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
-import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
+import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { FleetIncomingKey } from "src/Keys.sol";
 
 /* 
@@ -49,8 +49,8 @@ contract CombatDefenderTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    world.Primodium__sendFleet(fleetId, bobHomeAsteroid);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
 
     switchPrank(creator);
     GracePeriod.set(bobHomeAsteroid, block.timestamp);
@@ -68,22 +68,22 @@ contract CombatDefenderTest is PrimodiumTest {
     assertEq(LibFleetStance.getAllies(bobHomeAsteroid).length, 1, "bob should have 1 ally fleet");
     assertEq(LibFleetStance.getDefendingFleets(bobHomeAsteroid).length, 1, "bob should have 1 defending fleet");
 
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    vm.warp(FleetMovement.getArrivalTime(fleetEntity));
 
     uint256 unitCargo = P_Unit.getCargo(minutemanEntity, UnitLevel.get(aliceHomeAsteroid, minutemanEntity));
     assertTrue(unitCargo > 0, "unit cargo should more than 0");
     increaseResource(bobHomeAsteroid, EResource.Iron, unitCargo);
-    assertGt(GracePeriod.get(fleetId), 0, "fleet should be in grace period");
+    assertGt(GracePeriod.get(fleetEntity), 0, "fleet should be in grace period");
     assertGt(GracePeriod.get(aliceHomeAsteroid), 0, "home asteroid should be in grace period");
 
     switchPrank(alice);
-    world.Primodium__attack(fleetId, bobHomeAsteroid);
+    world.Primodium__attack(fleetEntity, bobHomeAsteroid);
     vm.stopPrank();
 
-    assertEq(GracePeriod.get(fleetId), 0, "fleet should not be in grace period");
+    assertEq(GracePeriod.get(fleetEntity), 0, "fleet should not be in grace period");
     assertEq(GracePeriod.get(aliceHomeAsteroid), 0, "home asteroid should not be in grace period");
     assertEq(ResourceCount.get(bobHomeAsteroid, uint8(EResource.Iron)), 0, "asteroid iron count should be 0");
-    assertEq(ResourceCount.get(fleetId, uint8(EResource.Iron)), unitCargo, "fleet should have raided iron");
+    assertEq(ResourceCount.get(fleetEntity, uint8(EResource.Iron)), unitCargo, "fleet should have raided iron");
     assertEq(
       ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_Encryption)),
       MaxResourceCount.get(bobHomeAsteroid, uint8(EResource.R_Encryption)),

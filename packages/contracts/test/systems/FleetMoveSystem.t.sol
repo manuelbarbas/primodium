@@ -37,7 +37,7 @@ contract FleetMoveSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     uint256 speed = P_Unit.getSpeed(unitPrototype, UnitLevel.get(aliceHomeAsteroid, unitPrototype));
@@ -51,12 +51,12 @@ contract FleetMoveSystemTest is PrimodiumTest {
 
     require(arrivalTime == correctArrivalTime, "arrival time doesn't match");
     vm.startPrank(alice);
-    world.Primodium__sendFleet(fleetId, bobHomeAsteroid);
+    world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
     vm.stopPrank();
-    assertEq(FleetMovement.getDestination(fleetId), bobHomeAsteroid, "fleet destination doesn't match");
-    assertEq(FleetMovement.getOrigin(fleetId), aliceHomeAsteroid, "fleet origin doesn't match");
-    assertEq(FleetMovement.getArrivalTime(fleetId), correctArrivalTime, "fleet arrival time doesn't match");
-    assertEq(FleetMovement.getSendTime(fleetId), block.timestamp, "fleet send time doesn't match");
+    assertEq(FleetMovement.getDestination(fleetEntity), bobHomeAsteroid, "fleet destination doesn't match");
+    assertEq(FleetMovement.getOrigin(fleetEntity), aliceHomeAsteroid, "fleet origin doesn't match");
+    assertEq(FleetMovement.getArrivalTime(fleetEntity), correctArrivalTime, "fleet arrival time doesn't match");
+    assertEq(FleetMovement.getSendTime(fleetEntity), block.timestamp, "fleet send time doesn't match");
   }
 
   function testFailSendFleetToOrigin() public {
@@ -78,11 +78,11 @@ contract FleetMoveSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__sendFleet(fleetId, aliceHomeAsteroid);
+    world.Primodium__sendFleet(fleetEntity, aliceHomeAsteroid);
     vm.stopPrank();
   }
 
@@ -105,7 +105,7 @@ contract FleetMoveSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     uint256 speed = P_Unit.getSpeed(unitPrototype, UnitLevel.get(aliceHomeAsteroid, unitPrototype));
@@ -118,25 +118,25 @@ contract FleetMoveSystemTest is PrimodiumTest {
     arrivalTime = LibFleetMove.getArrivalTime(aliceHomeAsteroid, Position.get(bobHomeAsteroid), speed);
 
     vm.startPrank(alice);
-    world.Primodium__sendFleet(fleetId, bobHomeAsteroid);
+    world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
     vm.stopPrank();
 
     uint256 someTimeAmount = ((arrivalTime - block.timestamp) / 2);
     vm.warp(block.timestamp + someTimeAmount);
 
     vm.startPrank(alice);
-    world.Primodium__recallFleet(fleetId);
+    world.Primodium__recallFleet(fleetEntity);
     vm.stopPrank();
 
-    assertEq(FleetMovement.getDestination(fleetId), aliceHomeAsteroid, "fleet destination doesn't match");
-    assertEq(FleetMovement.getOrigin(fleetId), bobHomeAsteroid, "fleet origin doesn't match");
+    assertEq(FleetMovement.getDestination(fleetEntity), aliceHomeAsteroid, "fleet destination doesn't match");
+    assertEq(FleetMovement.getOrigin(fleetEntity), bobHomeAsteroid, "fleet origin doesn't match");
     assertEq(
-      FleetMovement.getArrivalTime(fleetId),
+      FleetMovement.getArrivalTime(fleetEntity),
       block.timestamp + someTimeAmount,
       "fleet arrival time doesn't match"
     );
     assertEq(
-      FleetMovement.getSendTime(fleetId),
+      FleetMovement.getSendTime(fleetEntity),
       block.timestamp + someTimeAmount - (arrivalTime - sendTime),
       "fleet send time doesn't match"
     );
@@ -166,7 +166,7 @@ contract FleetMoveSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     P_SpawnPirateAsteroidData memory spawnPirateAsteroid;
@@ -193,12 +193,12 @@ contract FleetMoveSystemTest is PrimodiumTest {
 
     vm.startPrank(alice);
 
-    world.Primodium__sendFleet(fleetId, pirateAsteroid);
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    world.Primodium__sendFleet(fleetEntity, pirateAsteroid);
+    vm.warp(FleetMovement.getArrivalTime(fleetEntity));
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__sendFleet(fleetId, aliceHomeAsteroid);
+    world.Primodium__sendFleet(fleetEntity, aliceHomeAsteroid);
     vm.stopPrank();
   }
 
@@ -226,7 +226,7 @@ contract FleetMoveSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     P_SpawnPirateAsteroidData memory spawnPirateAsteroid;
@@ -253,13 +253,13 @@ contract FleetMoveSystemTest is PrimodiumTest {
 
     vm.startPrank(alice);
 
-    world.Primodium__sendFleet(fleetId, pirateAsteroid);
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    world.Primodium__sendFleet(fleetEntity, pirateAsteroid);
+    vm.warp(FleetMovement.getArrivalTime(fleetEntity));
 
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__sendFleet(fleetId, bobHomeAsteroid);
+    world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
     vm.stopPrank();
   }
 
@@ -287,7 +287,7 @@ contract FleetMoveSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     P_SpawnPirateAsteroidData memory spawnPirateAsteroid;
@@ -314,13 +314,13 @@ contract FleetMoveSystemTest is PrimodiumTest {
 
     vm.startPrank(alice);
 
-    world.Primodium__sendFleet(fleetId, pirateAsteroid);
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    world.Primodium__sendFleet(fleetEntity, pirateAsteroid);
+    vm.warp(FleetMovement.getArrivalTime(fleetEntity));
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__sendFleet(fleetId, aliceHomeAsteroid);
-    world.Primodium__recallFleet(fleetId);
+    world.Primodium__sendFleet(fleetEntity, aliceHomeAsteroid);
+    world.Primodium__recallFleet(fleetEntity);
     vm.stopPrank();
   }
 }

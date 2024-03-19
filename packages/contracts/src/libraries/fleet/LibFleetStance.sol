@@ -8,63 +8,63 @@ import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
-import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
+import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 
 import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleetStance {
-  function setFleetStance(bytes32 fleetId, uint8 stance, bytes32 target) internal {
-    clearFleetStance(fleetId);
-    clearFollowingFleets(fleetId);
-    FleetStance.set(fleetId, stance, target);
+  function setFleetStance(bytes32 fleetEntity, uint8 stance, bytes32 target) internal {
+    clearFleetStance(fleetEntity);
+    clearFollowingFleets(fleetEntity);
+    FleetStance.set(fleetEntity, stance, target);
     if (target != bytes32(0)) {
-      FleetsMap.add(target, P_EnumToPrototype.get(FleetStanceKey, stance), fleetId);
+      FleetSet.add(target, P_EnumToPrototype.get(FleetStanceKey, stance), fleetEntity);
     }
   }
 
-  function clearFleetStance(bytes32 fleetId) internal {
-    FleetStanceData memory fleetStance = FleetStance.get(fleetId);
+  function clearFleetStance(bytes32 fleetEntity) internal {
+    FleetStanceData memory fleetStance = FleetStance.get(fleetEntity);
 
     if (fleetStance.stance == uint8(EFleetStance.NULL)) return;
-    FleetsMap.remove(fleetStance.target, P_EnumToPrototype.get(FleetStanceKey, fleetStance.stance), fleetId);
-    FleetStance.deleteRecord(fleetId);
+    FleetSet.remove(fleetStance.target, P_EnumToPrototype.get(FleetStanceKey, fleetStance.stance), fleetEntity);
+    FleetStance.deleteRecord(fleetEntity);
   }
 
-  function removeFollower(bytes32 fleetId, bytes32 followerFleetId) internal {
+  function removeFollower(bytes32 fleetEntity, bytes32 followerFleetEntity) internal {
     bytes32 fleetFollowKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
-    require(FleetsMap.has(fleetId, fleetFollowKey, followerFleetId), "[Fleet] Target fleet is not following");
-    FleetStance.deleteRecord(followerFleetId);
-    FleetsMap.remove(fleetId, fleetFollowKey, followerFleetId);
+    require(FleetSet.has(fleetEntity, fleetFollowKey, followerFleetEntity), "[Fleet] Target fleet is not following");
+    FleetStance.deleteRecord(followerFleetEntity);
+    FleetSet.remove(fleetEntity, fleetFollowKey, followerFleetEntity);
   }
 
-  function clearFollowingFleets(bytes32 fleetId) internal {
+  function clearFollowingFleets(bytes32 fleetEntity) internal {
     bytes32 fleetFollowKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
-    bytes32[] memory followingFleets = FleetsMap.getFleetIds(fleetId, fleetFollowKey);
+    bytes32[] memory followingFleets = FleetSet.getFleetEntities(fleetEntity, fleetFollowKey);
     for (uint256 i = 0; i < followingFleets.length; i++) {
       FleetStance.deleteRecord(followingFleets[i]);
     }
-    FleetsMap.clear(fleetId, fleetFollowKey);
+    FleetSet.clear(fleetEntity, fleetFollowKey);
   }
 
   function clearDefendingFleets(bytes32 asteroidEntity) internal {
     bytes32 fleetDefendKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Defend));
-    bytes32[] memory defendingFleets = FleetsMap.getFleetIds(asteroidEntity, fleetDefendKey);
+    bytes32[] memory defendingFleets = FleetSet.getFleetEntities(asteroidEntity, fleetDefendKey);
     for (uint256 i = 0; i < defendingFleets.length; i++) {
       FleetStance.set(defendingFleets[i], uint8(EFleetStance.NULL), bytes32(0));
     }
-    FleetsMap.clear(asteroidEntity, fleetDefendKey);
+    FleetSet.clear(asteroidEntity, fleetDefendKey);
   }
 
-  function getFollowerFleets(bytes32 fleetId) internal view returns (bytes32[] memory) {
+  function getFollowerFleets(bytes32 fleetEntity) internal view returns (bytes32[] memory) {
     bytes32 fleetFollowKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
-    return FleetsMap.getFleetIds(fleetId, fleetFollowKey);
+    return FleetSet.getFleetEntities(fleetEntity, fleetFollowKey);
   }
 
   function getDefendingFleets(bytes32 asteroidEntity) internal view returns (bytes32[] memory) {
     bytes32 fleetDefendKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Defend));
-    return FleetsMap.getFleetIds(asteroidEntity, fleetDefendKey);
+    return FleetSet.getFleetEntities(asteroidEntity, fleetDefendKey);
   }
 
   function getAllies(bytes32 entity) internal view returns (bytes32[] memory) {

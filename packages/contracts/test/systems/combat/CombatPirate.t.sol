@@ -6,7 +6,7 @@ import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
-import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
+import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { FleetIncomingKey } from "src/Keys.sol";
 
 contract CombatPirateTest is PrimodiumTest {
@@ -52,7 +52,7 @@ contract CombatPirateTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
@@ -99,11 +99,11 @@ contract CombatPirateTest is PrimodiumTest {
 
     vm.startPrank(alice);
 
-    world.Primodium__sendFleet(fleetId, bobHomeAsteroid);
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
+    vm.warp(FleetMovement.getArrivalTime(fleetEntity));
 
-    world.Primodium__sendFleet(fleetId, pirateAsteroid);
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    world.Primodium__sendFleet(fleetEntity, pirateAsteroid);
+    vm.warp(FleetMovement.getArrivalTime(fleetEntity));
 
     world.Primodium__sendFleet(secondFlleetId, pirateAsteroid);
     uint256 halfWayAmount = (FleetMovement.getArrivalTime(secondFlleetId) - FleetMovement.getSendTime(secondFlleetId)) /
@@ -114,17 +114,17 @@ contract CombatPirateTest is PrimodiumTest {
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__attack(fleetId, pirateAsteroid);
+    world.Primodium__attack(fleetEntity, pirateAsteroid);
     vm.stopPrank();
 
     assertEq(
-      LibCombatAttributes.getCargo(fleetId),
-      LibCombatAttributes.getCargoCapacity(fleetId),
+      LibCombatAttributes.getCargo(fleetEntity),
+      LibCombatAttributes.getCargoCapacity(fleetEntity),
       "fleet should have raided max cargo"
     );
 
     assertEq(
-      LibCombatAttributes.getCargoCapacity(fleetId) + ResourceCount.get(pirateAsteroid, uint8(EResource.Iron)),
+      LibCombatAttributes.getCargoCapacity(fleetEntity) + ResourceCount.get(pirateAsteroid, uint8(EResource.Iron)),
       spawnPirateAsteroid.resourceAmounts[0],
       "sum of un raided and raided should be initial amount"
     );
@@ -146,16 +146,16 @@ contract CombatPirateTest is PrimodiumTest {
       "fleet should take same amount to get back that has moved up to that point"
     );
 
-    assertEq(FleetMovement.getDestination(fleetId), aliceHomeAsteroid, "fleet should be moving back to home asteroid");
-    assertEq(FleetMovement.getOrigin(fleetId), pirateAsteroid, "fleet should be moving back from pirate asteroid");
-    assertTrue(FleetMovement.getArrivalTime(fleetId) > block.timestamp, "fleet should take time to go back");
+    assertEq(
+      FleetMovement.getDestination(fleetEntity),
+      aliceHomeAsteroid,
+      "fleet should be moving back to home asteroid"
+    );
+    assertEq(FleetMovement.getOrigin(fleetEntity), pirateAsteroid, "fleet should be moving back from pirate asteroid");
+    assertTrue(FleetMovement.getArrivalTime(fleetEntity) > block.timestamp, "fleet should take time to go back");
 
     assertEq(PirateAsteroid.getIsDefeated(pirateAsteroid), true, "pirate asteroid should have been defeated");
-    assertEq(
-      FleetsMap.size(pirateAsteroid, FleetIncomingKey),
-      0,
-      "pirate asteroid should not have any incoming fleets"
-    );
+    assertEq(FleetSet.size(pirateAsteroid, FleetIncomingKey), 0, "pirate asteroid should not have any incoming fleets");
     assertTrue(
       DefeatedPirate.get(aliceEntity, objectivePrototype),
       "pirate asteroid should be marked as defeated for alice"
@@ -185,7 +185,7 @@ contract CombatPirateTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     P_SpawnPirateAsteroidData memory spawnPirateAsteroid;
@@ -212,19 +212,19 @@ contract CombatPirateTest is PrimodiumTest {
 
     vm.startPrank(alice);
 
-    world.Primodium__sendFleet(fleetId, pirateAsteroid);
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    world.Primodium__sendFleet(fleetEntity, pirateAsteroid);
+    vm.warp(FleetMovement.getArrivalTime(fleetEntity));
 
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__attack(fleetId, pirateAsteroid);
+    world.Primodium__attack(fleetEntity, pirateAsteroid);
     vm.stopPrank();
 
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    vm.warp(FleetMovement.getArrivalTime(fleetEntity));
 
     vm.startPrank(alice);
-    world.Primodium__sendFleet(fleetId, pirateAsteroid);
+    world.Primodium__sendFleet(fleetEntity, pirateAsteroid);
     vm.stopPrank();
   }
 }

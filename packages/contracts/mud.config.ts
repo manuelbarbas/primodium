@@ -247,20 +247,19 @@ const getConfig = async () => {
         valueSchema: "uint256",
       },
 
-      // Used in the building utilities set
-      MapItemUtilities: {
+      // Used in the mbuilding utilities Map data structure
+      Value_UtilityMap: {
         keySchema: { entity: "bytes32", utility: "uint8" }, // EResource
         valueSchema: "uint256",
       },
-      MapItemStoredUtilities: {
+      Meta_UtilityMap: {
         keySchema: { entity: "bytes32", utility: "uint8" }, // EResource
         valueSchema: {
           stored: "bool",
           index: "uint256",
         },
       },
-
-      MapUtilities: {
+      Keys_UtilityMap: {
         keySchema: { entity: "bytes32" },
         valueSchema: "uint8[]",
       },
@@ -472,19 +471,6 @@ const getConfig = async () => {
         },
       },
 
-      MapFleets: {
-        keySchema: { entity: "bytes32", key: "bytes32" },
-        valueSchema: { itemKeys: "bytes32[]" },
-      },
-
-      MapStoredFleets: {
-        keySchema: { entity: "bytes32", key: "bytes32", fleetId: "bytes32" },
-        valueSchema: {
-          stored: "bool",
-          index: "uint256",
-        },
-      },
-
       IsFleet: {
         keySchema: { entity: "bytes32" },
         valueSchema: "bool",
@@ -496,16 +482,32 @@ const getConfig = async () => {
         offchainOnly: true,
       },
 
+      // used in the Fleet Set
+      Keys_FleetSet: {
+        keySchema: { entity: "bytes32", key: "bytes32" },
+        valueSchema: { itemKeys: "bytes32[]" },
+      },
+
+      Meta_FleetSet: {
+        keySchema: { entity: "bytes32", key: "bytes32", fleetEntity: "bytes32" },
+        valueSchema: {
+          stored: "bool",
+          index: "uint256",
+        },
+      },
+
       /* ------------------------------ Battle Result ----------------------------- */
       BattleResult: {
         keySchema: { battleId: "bytes32" },
         valueSchema: {
-          aggressorEntity: "bytes32", //can be fleet or asteroid
-          targetEntity: "bytes32", //can be fleet or asteroid
+          aggressorEntity: "bytes32", //can be fleet or space rock
+          aggressorDamage: "uint256", //can be fleet or space rock
+          targetEntity: "bytes32", //can be fleet or space rock
+          targetDamage: "uint256", //can be fleet or space rock
           winnerEntity: "bytes32",
           asteroidEntity: "bytes32", // place where battle took place
-          playerE: "bytes32", // player who initiated the battle
-          targetPlayer: "bytes32", // player who was attacked
+          playerEntity: "bytes32", // player who initiated the battle
+          targetPlayerEntity: "bytes32", // player who was attacked
           timestamp: "uint256", // timestamp of battle
           aggressorAllies: "bytes32[]", //only fleets
           targetAllies: "bytes32[]", //only fleets
@@ -838,14 +840,15 @@ const getConfig = async () => {
         },
         offchainOnly: true,
       },
-      /* ------------------------------- Colony ------------------------------ */
 
-      MapColonies: {
+      /* ---------------------------- Player Asteroids ---------------------------- */
+
+      Keys_AsteroidSet: {
         keySchema: { entity: "bytes32", key: "bytes32" },
         valueSchema: { itemKeys: "bytes32[]" },
       },
 
-      MapStoredColonies: {
+      Meta_AsteroidSet: {
         keySchema: { entity: "bytes32", key: "bytes32", asteroidEntity: "bytes32" },
         valueSchema: {
           stored: "bool",

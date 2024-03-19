@@ -7,7 +7,7 @@ import { LibCombat } from "libraries/LibCombat.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 
 contract S_FleetResetIfNoUnitsLeftSystem is PrimodiumSystem {
-  function resetFleetIfNoUnitsLeft(bytes32 fleetId) public {
-    LibFleet.resetFleetIfNoUnitsLeft(fleetId);
+  function resetFleetIfNoUnitsLeft(bytes32 fleetEntity) public {
+    LibFleet.resetFleetIfNoUnitsLeft(fleetEntity);
   }
 }

@@ -5,9 +5,9 @@ import { EResource } from "src/Types.sol";
 import { FleetMovement, ResourceCount, MaxResourceCount, IsFleet, P_Transportables, UnitCount, P_Unit, P_UnitData, UnitLevel, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { LibResource } from "libraries/LibResource.sol";
-import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
+import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
-import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
+import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 
 import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
@@ -212,9 +212,9 @@ library LibCombatAttributes {
     (uint256[] memory resourceCounts, uint256 totalResources) = LibResource.getStoredResourceCountsVaulted(
       asteroidEntity
     );
-    bytes32[] memory defenderFleetIds = LibFleetStance.getDefendingFleets(asteroidEntity);
-    for (uint256 i = 0; i < defenderFleetIds.length; i++) {
-      uint256[] memory defenderResourceCounts = LibFleet.getResourceCounts(defenderFleetIds[i]);
+    bytes32[] memory defenderFleetEntities = LibFleetStance.getDefendingFleets(asteroidEntity);
+    for (uint256 i = 0; i < defenderFleetEntities.length; i++) {
+      uint256[] memory defenderResourceCounts = LibFleet.getResourceCounts(defenderFleetEntities[i]);
       for (uint256 j = 0; j < defenderResourceCounts.length; j++) {
         resourceCounts[j] += defenderResourceCounts[j];
         totalResources += defenderResourceCounts[j];

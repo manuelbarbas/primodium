@@ -6,7 +6,7 @@ import { BuildSystem } from "systems/building/BuildSystem.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { SystemCall } from "@latticexyz/world/src/SystemCall.sol";
 import { OwnedBy, P_GameConfig, GracePeriod, Spawned, P_GracePeriod, Spawned, Position, PositionData, Level, Home } from "codegen/index.sol";
-import { ColoniesMap } from "src/libraries/ColoniesMap.sol";
+import { AsteroidSet } from "src/libraries/AsteroidSet.sol";
 import { LibAsteroid, LibEncode } from "codegen/Libraries.sol";
 import { EBuilding } from "src/Types.sol";
 import { BuildingKey, AsteroidOwnedByKey } from "src/Keys.sol";

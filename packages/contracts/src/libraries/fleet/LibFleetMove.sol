@@ -10,53 +10,53 @@ import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
-import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
+import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 
 import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { EResource, EFleetStance } from "src/Types.sol";
 
 library LibFleetMove {
-  function sendFleet(bytes32 fleetId, bytes32 destination) internal {
-    bytes32 origin = FleetMovement.getDestination(fleetId);
+  function sendFleet(bytes32 fleetEntity, bytes32 destination) internal {
+    bytes32 origin = FleetMovement.getDestination(fleetEntity);
     require(!isAsteroidBlocked(origin), "[Fleet] asteroid is blocked");
 
-    uint256 speed = getSpeedWithFollowers(fleetId);
+    uint256 speed = getSpeedWithFollowers(fleetEntity);
     require(speed > 0, "[Fleet] Fleet has no speed");
 
     uint256 arrivalTime = getArrivalTime(origin, Position.get(destination), speed);
-    _sendFleet(fleetId, destination, arrivalTime);
-    bytes32[] memory followingFleets = LibFleetStance.getFollowerFleets(fleetId);
+    _sendFleet(fleetEntity, destination, arrivalTime);
+    bytes32[] memory followingFleets = LibFleetStance.getFollowerFleets(fleetEntity);
     for (uint256 i = 0; i < followingFleets.length; i++) {
       _sendFleet(followingFleets[i], destination, arrivalTime);
     }
   }
 
-  function _sendFleet(bytes32 fleetId, bytes32 destination, uint256 arrivalTime) private {
-    _sendFleet(fleetId, destination, block.timestamp, arrivalTime);
+  function _sendFleet(bytes32 fleetEntity, bytes32 destination, uint256 arrivalTime) private {
+    _sendFleet(fleetEntity, destination, block.timestamp, arrivalTime);
   }
 
-  function _sendFleet(bytes32 fleetId, bytes32 destination, uint256 sendTime, uint256 arrivalTime) private {
-    FleetsMap.remove(FleetMovement.getDestination(fleetId), FleetIncomingKey, fleetId);
-    FleetsMap.add(destination, FleetIncomingKey, fleetId);
+  function _sendFleet(bytes32 fleetEntity, bytes32 destination, uint256 sendTime, uint256 arrivalTime) private {
+    FleetSet.remove(FleetMovement.getDestination(fleetEntity), FleetIncomingKey, fleetEntity);
+    FleetSet.add(destination, FleetIncomingKey, fleetEntity);
 
     FleetMovement.set(
-      fleetId,
+      fleetEntity,
       FleetMovementData({
         arrivalTime: arrivalTime,
         sendTime: sendTime,
-        origin: FleetMovement.getDestination(fleetId),
+        origin: FleetMovement.getDestination(fleetEntity),
         destination: destination
       })
     );
   }
 
-  function recallFleet(bytes32 fleetId) internal {
-    FleetMovementData memory fleetMovement = FleetMovement.get(fleetId);
+  function recallFleet(bytes32 fleetEntity) internal {
+    FleetMovementData memory fleetMovement = FleetMovement.get(fleetEntity);
     require(fleetMovement.origin != fleetMovement.destination, "[Fleet] Fleet is already at origin");
     if (block.timestamp >= fleetMovement.arrivalTime) {
       //if fleet has already reached its destination, send it back
-      sendFleet(fleetId, fleetMovement.origin);
+      sendFleet(fleetEntity, fleetMovement.origin);
       return;
     }
     bytes32 destination = fleetMovement.origin;
@@ -66,10 +66,10 @@ library LibFleetMove {
 
     uint256 arrivalTime = block.timestamp + timePassedSinceSend;
     uint256 sendTime = block.timestamp - travelTime;
-    _sendFleet(fleetId, destination, sendTime, arrivalTime);
+    _sendFleet(fleetEntity, destination, sendTime, arrivalTime);
 
     bytes32 followingFleetsKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Follow));
-    bytes32[] memory followingFleets = FleetsMap.getFleetIds(fleetId, followingFleetsKey);
+    bytes32[] memory followingFleets = FleetSet.getFleetEntities(fleetEntity, followingFleetsKey);
 
     for (uint256 i = 0; i < followingFleets.length; i++) {
       _sendFleet(followingFleets[i], destination, sendTime, arrivalTime);
@@ -98,14 +98,14 @@ library LibFleetMove {
 
   function isAsteroidBlocked(bytes32 asteroidEntity) private returns (bool) {
     bytes32 fleetBlockKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Block));
-    return FleetsMap.size(asteroidEntity, fleetBlockKey) > 0;
+    return FleetSet.size(asteroidEntity, fleetBlockKey) > 0;
   }
 
-  function getSpeed(bytes32 fleetId) internal view returns (uint256 speed) {
-    bytes32 ownerAsteroidEntity = OwnedBy.get(fleetId);
+  function getSpeed(bytes32 fleetEntity) internal view returns (uint256 speed) {
+    bytes32 ownerAsteroidEntity = OwnedBy.get(fleetEntity);
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
-      uint256 unitCount = UnitCount.get(fleetId, unitPrototypes[i]);
+      uint256 unitCount = UnitCount.get(fleetEntity, unitPrototypes[i]);
       if (unitCount == 0) continue;
       uint256 unitLevel = UnitLevel.get(ownerAsteroidEntity, unitPrototypes[i]);
       uint256 unitSpeed = P_Unit.getSpeed(unitPrototypes[i], unitLevel);
@@ -114,11 +114,11 @@ library LibFleetMove {
     }
   }
 
-  function getSpeedWithFollowers(bytes32 fleetId) internal view returns (uint256 speed) {
-    speed = getSpeed(fleetId);
-    bytes32[] memory followerFleetIds = LibFleetStance.getFollowerFleets(fleetId);
-    for (uint8 i = 0; i < followerFleetIds.length; i++) {
-      uint256 followerSpeed = getSpeed(followerFleetIds[i]);
+  function getSpeedWithFollowers(bytes32 fleetEntity) internal view returns (uint256 speed) {
+    speed = getSpeed(fleetEntity);
+    bytes32[] memory followerFleetEntities = LibFleetStance.getFollowerFleets(fleetEntity);
+    for (uint8 i = 0; i < followerFleetEntities.length; i++) {
+      uint256 followerSpeed = getSpeed(followerFleetEntities[i]);
       if (followerSpeed < speed) speed = followerSpeed;
     }
   }

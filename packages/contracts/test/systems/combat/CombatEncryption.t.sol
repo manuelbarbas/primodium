@@ -6,7 +6,7 @@ import "test/PrimodiumTest.t.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
-import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
+import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { FleetIncomingKey } from "src/Keys.sol";
 
 contract CombatEncryptionTest is PrimodiumTest {
@@ -52,7 +52,7 @@ contract CombatEncryptionTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     upgradeMainBase(bob);
@@ -60,7 +60,7 @@ contract CombatEncryptionTest is PrimodiumTest {
     upgradeMainBase(bob);
 
     vm.startPrank(alice);
-    world.Primodium__sendFleet(fleetId, bobHomeAsteroid);
+    world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
     vm.stopPrank();
 
     vm.startPrank(creator);
@@ -72,7 +72,7 @@ contract CombatEncryptionTest is PrimodiumTest {
     uint256 hp = defense;
     uint256 encryption = ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_Encryption));
     assertGt(encryption, decryption, "bob should have enough encryption to defend");
-    uint256 attack = LibCombatAttributes.getAttack(fleetId);
+    uint256 attack = LibCombatAttributes.getAttack(fleetEntity);
     increaseResource(bobHomeAsteroid, EResource.U_Defense, defense);
     increaseResource(bobHomeAsteroid, EResource.R_HP, hp);
     increaseProduction(bobHomeAsteroid, EResource.R_HP, hpProduction);
@@ -80,13 +80,13 @@ contract CombatEncryptionTest is PrimodiumTest {
     uint256 ironAmount = numberOfUnits * P_Unit.getCargo(minuteman, UnitLevel.get(aliceHomeAsteroid, minuteman));
     increaseResource(bobHomeAsteroid, EResource.Iron, ironAmount);
 
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    vm.warp(FleetMovement.getArrivalTime(fleetEntity));
     vm.startPrank(alice);
-    world.Primodium__attack(fleetId, bobHomeAsteroid);
+    world.Primodium__attack(fleetEntity, bobHomeAsteroid);
     vm.stopPrank();
 
     assertEq(
-      CooldownEnd.get(fleetId),
+      CooldownEnd.get(fleetEntity),
       block.timestamp + LibCombat.getCooldownTime(attack, true),
       "encryption incorrect"
     );
@@ -96,7 +96,7 @@ contract CombatEncryptionTest is PrimodiumTest {
       "asteroid hp should have been reduced by unit attack"
     );
 
-    assertEq(LibCombatAttributes.getCargo(fleetId), 0, "fleet should not have raided");
+    assertEq(LibCombatAttributes.getCargo(fleetEntity), 0, "fleet should not have raided");
 
     assertEq(
       ResourceCount.get(bobHomeAsteroid, uint8(EResource.Iron)),
@@ -142,7 +142,7 @@ contract CombatEncryptionTest is PrimodiumTest {
     console.log("encryption: %s", encryption);
     uint256 fleetCountToWin = LibMath.divideCeil(encryption, decryption);
 
-    bytes32[] memory fleetIds = new bytes32[](fleetCountToWin);
+    bytes32[] memory fleetEntities = new bytes32[](fleetCountToWin);
     require(fleetCountToWin > 0, "should have at least 1 fleet to win");
 
     for (uint256 i = 0; i < fleetCountToWin; i++) {
@@ -150,7 +150,7 @@ contract CombatEncryptionTest is PrimodiumTest {
       setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
       vm.startPrank(alice);
-      fleetIds[i] = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+      fleetEntities[i] = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
       vm.stopPrank();
       console.log("create fleet done %s", i);
     }
@@ -158,7 +158,7 @@ contract CombatEncryptionTest is PrimodiumTest {
     vm.startPrank(alice);
     for (uint256 i = 0; i < fleetCountToWin; i++) {
       console.log("send fleet %s", i);
-      world.Primodium__sendFleet(fleetIds[i], bobHomeAsteroid);
+      world.Primodium__sendFleet(fleetEntities[i], bobHomeAsteroid);
       console.log("send fleet done %s", i);
     }
     vm.stopPrank();
@@ -181,7 +181,7 @@ contract CombatEncryptionTest is PrimodiumTest {
     vm.stopPrank();
     console.log("creaete bob fleet done");
 
-    vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetIds[0]), block.timestamp));
+    vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetEntities[0]), block.timestamp));
 
     uint256 bobHomeScore = Score.get(bobHomeAsteroid);
     uint256 bobPlayerScore = Score.get(bobEntity);
@@ -192,7 +192,7 @@ contract CombatEncryptionTest is PrimodiumTest {
       console.log("fleet attack %s", i);
       uint256 encryptionBeforeAttack = ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_Encryption));
 
-      world.Primodium__attack(fleetIds[i], bobHomeAsteroid);
+      world.Primodium__attack(fleetEntities[i], bobHomeAsteroid);
       if (encryptionBeforeAttack > decryption) {
         assertEq(
           ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_Encryption)),
@@ -206,7 +206,7 @@ contract CombatEncryptionTest is PrimodiumTest {
           "encryption should have reached zero"
         );
       }
-      assertEq(LibCombatAttributes.getCargo(fleetIds[i]), 0, "fleet should not have raided");
+      assertEq(LibCombatAttributes.getCargo(fleetEntities[i]), 0, "fleet should not have raided");
       console.log("fleet attack done %s", i);
     }
 
@@ -267,12 +267,12 @@ contract CombatEncryptionTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    console.log("number of capital ships:", UnitCount.get(fleetId, capitalShipPrototype));
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    console.log("number of capital ships:", UnitCount.get(fleetEntity, capitalShipPrototype));
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__sendFleet(fleetId, bobHomeAsteroid);
+    world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
     vm.stopPrank();
 
     vm.startPrank(creator);
@@ -295,9 +295,9 @@ contract CombatEncryptionTest is PrimodiumTest {
     uint256 ironAmount = numberOfUnits * P_Unit.getCargo(minuteman, UnitLevel.get(aliceHomeAsteroid, minuteman));
     increaseResource(bobHomeAsteroid, EResource.Iron, ironAmount);
 
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    vm.warp(FleetMovement.getArrivalTime(fleetEntity));
     vm.startPrank(alice);
-    world.Primodium__attack(fleetId, bobHomeAsteroid);
+    world.Primodium__attack(fleetEntity, bobHomeAsteroid);
     vm.stopPrank();
 
     assertEq(
@@ -306,7 +306,7 @@ contract CombatEncryptionTest is PrimodiumTest {
       "asteroid hp should have been reduced by unit attack"
     );
 
-    assertEq(LibCombatAttributes.getCargo(fleetId), 0, "fleet should not have raided");
+    assertEq(LibCombatAttributes.getCargo(fleetEntity), 0, "fleet should not have raided");
 
     assertEq(
       ResourceCount.get(bobHomeAsteroid, uint8(EResource.Iron)),
@@ -314,7 +314,11 @@ contract CombatEncryptionTest is PrimodiumTest {
       "asteroid should not have been raided"
     );
 
-    console.log("encryption: %s decryption: %s", ResourceCount.get(fleetId, uint8(EResource.R_Encryption)), decryption);
+    console.log(
+      "encryption: %s decryption: %s",
+      ResourceCount.get(fleetEntity, uint8(EResource.R_Encryption)),
+      decryption
+    );
     assertEq(
       ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_Encryption)),
       encryption - decryption,

@@ -9,12 +9,12 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
-import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
+import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { LibFleetDisband } from "libraries/fleet/LibFleetDisband.sol";
 import { LibResource } from "libraries/LibResource.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
-import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
+import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
 
 import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
@@ -28,27 +28,33 @@ library LibFleetRaid {
         : LibCombatAttributes.getStoredResourceCountsWithDefenders(entity);
   }
 
-  function battleRaidResolve(bytes32 battleId, bytes32 attacker, bytes32 defender) internal {
+  function battleRaidResolve(bytes32 battleEntity, bytes32 attacker, bytes32 defender) internal {
     //maximum amount of resources the fleet can raid
     (uint256 freeCargoSpace, uint256[] memory freeCargoSpaces, uint256 totalFreeCargoSpace) = LibCombatAttributes
       .getCargoSpacesWithAllies(attacker);
     if (totalFreeCargoSpace == 0) return;
     // will caculate how much of each resource was successfuly raided from defender and increase those to be used for increasing resources of the attackers
     (uint256[] memory totalRaidedResourceCounts, uint256 total) = calculateRaidFromWithAllies(
-      battleId,
+      battleEntity,
       defender,
       totalFreeCargoSpace
     );
 
-    receiveRaidedResources(battleId, attacker, totalFreeCargoSpace, freeCargoSpace, totalRaidedResourceCounts);
+    receiveRaidedResources(battleEntity, attacker, totalFreeCargoSpace, freeCargoSpace, totalRaidedResourceCounts);
     bytes32[] memory allies = LibFleetStance.getAllies(attacker);
     for (uint256 i = 0; i < allies.length; i++) {
-      receiveRaidedResources(battleId, allies[i], totalFreeCargoSpace, freeCargoSpaces[i], totalRaidedResourceCounts);
+      receiveRaidedResources(
+        battleEntity,
+        allies[i],
+        totalFreeCargoSpace,
+        freeCargoSpaces[i],
+        totalRaidedResourceCounts
+      );
     }
   }
 
   function calculateRaidFromWithAllies(
-    bytes32 battleId,
+    bytes32 battleEntity,
     bytes32 defenderEntity,
     uint256 totalFreeCargoSpace
   ) internal returns (uint256[] memory totalRaidedResourceCounts, uint256 totalRaidedResources) {
@@ -64,7 +70,7 @@ library LibFleetRaid {
 
     if (totalFreeCargoSpace == 0) return (totalRaidedResourceCounts, totalRaidedResources);
     (totalRaidedResourceCounts, totalRaidedResources) = calculateRaidFrom(
-      battleId,
+      battleEntity,
       defenderEntity,
       totalRaidableResourceCounts,
       totalRaidableResources,
@@ -76,7 +82,7 @@ library LibFleetRaid {
     bytes32[] memory allies = LibFleetStance.getAllies(defenderEntity);
     for (uint256 i = 0; i < allies.length; i++) {
       (totalRaidedResourceCounts, totalRaidedResources) = calculateRaidFrom(
-        battleId,
+        battleEntity,
         allies[i],
         totalRaidableResourceCounts,
         totalRaidableResources,
@@ -88,7 +94,7 @@ library LibFleetRaid {
   }
 
   function calculateRaidFrom(
-    bytes32 battleId,
+    bytes32 battleEntity,
     bytes32 defenderEntity,
     uint256[] memory total,
     uint256 totalRaidableResources,
@@ -124,12 +130,12 @@ library LibFleetRaid {
       totalRaidedResources += resourcePortion;
       if (totalRaidedResources == totalFreeCargoSpace) break;
     }
-    BattleRaidResult.set(battleId, defenderEntity, raidResult);
+    BattleRaidResult.set(battleEntity, defenderEntity, raidResult);
     return (totalRaidedResourceCounts, totalRaidedResources);
   }
 
   function receiveRaidedResources(
-    bytes32 battleId,
+    bytes32 battleEntity,
     bytes32 defenderEntity,
     uint256 totalFreeCargoSpace,
     uint256 freeCargoSpace,
@@ -166,6 +172,6 @@ library LibFleetRaid {
       receivedResources += resourcePortion;
       raidResult.resourcesAtEnd[i] = ResourceCount.get(defenderEntity, transportables[i]);
     }
-    BattleRaidResult.set(battleId, defenderEntity, raidResult);
+    BattleRaidResult.set(battleEntity, defenderEntity, raidResult);
   }
 }
