@@ -23,13 +23,14 @@ export class BuildingConstruction extends Phaser.GameObjects.Container {
 
     this.text = this.scene.add
       .bitmapText(
-        pixelCoord.x + (scene.tiled.tileWidth * buildingDimensions.width) / 2,
-        -pixelCoord.y + (scene.tiled.tileHeight * buildingDimensions.height) / 2,
+        (scene.tiled.tileWidth * buildingDimensions.width) / 2,
+        -(scene.tiled.tileHeight * buildingDimensions.height) / 2,
         "teletactile",
         queueText ?? undefined,
         14
       )
       .setTintFill(0x34d399)
+      .setDepth(DepthLayers.Marker)
       .setOrigin(0.5);
 
     this.add([this.sprite, this.text]);

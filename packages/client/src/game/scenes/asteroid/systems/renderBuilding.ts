@@ -92,13 +92,35 @@ export const renderBuilding = (scene: Scene) => {
           components.HoverEntity.set({
             value: entity,
           });
+
+          if (components.SelectedBuilding.get()?.value === entity) return;
+
+          building.setOutline(0x808080, 3);
         })
         .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => {
           components.HoverEntity.remove();
+
+          if (components.SelectedBuilding.get()?.value === entity) return;
+
+          building.clearOutline();
         });
 
       buildings.set(entity, building);
     };
+
+    //handle selectedBuilding changes
+    defineComponentSystem(spectateWorld, components.SelectedBuilding, ({ value }) => {
+      if (value[0]?.value === value[1]?.value) return;
+
+      const newBuilding = buildings.get(value[0]?.value as Entity);
+      if (newBuilding) {
+        newBuilding.clearOutline();
+        newBuilding.setOutline(0x00ffff, 3);
+      }
+
+      const oldBuilding = buildings.get(value[1]?.value as Entity);
+      if (oldBuilding) oldBuilding.clearOutline();
+    });
 
     defineEnterSystem(spectateWorld, positionQuery, render);
     defineUpdateSystem(spectateWorld, positionQuery, (update) => {

@@ -54,7 +54,7 @@ export const renderQueuedBuildings = (scene: Scene) => {
     console.info("[ENTER SYSTEM](transaction queued)");
   });
 
-  defineExitSystem(systemsWorld, query, ({ entity }) => {
+  defineExitSystem(systemsWorld, [Has(components.TransactionQueue)], ({ entity }) => {
     const construction = buildingConstructions.get(entity);
     if (construction) {
       construction.dispose();

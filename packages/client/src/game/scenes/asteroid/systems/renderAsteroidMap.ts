@@ -49,4 +49,17 @@ export const renderAsteroidMap = (scene: Scene) => {
       .drawBounds(currentBounds, maxBounds)
       .drawResources(tiles);
   });
+
+  defineComponentSystem(systemsWorld, components.Level, ({ entity }) => {
+    const activeRock = components.ActiveRock.get()?.value;
+    if (!activeRock || activeRock !== entity) return;
+
+    const maxBounds = getAsteroidMaxBounds(activeRock);
+    const currentBounds = getAsteroidCurrentBounds(activeRock);
+    asteroidMap.drawBounds(currentBounds, maxBounds);
+  });
+
+  systemsWorld.registerDisposer(() => {
+    asteroidMap?.dispose();
+  });
 };
