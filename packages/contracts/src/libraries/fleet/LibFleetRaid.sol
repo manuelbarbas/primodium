@@ -75,7 +75,7 @@ library LibFleetRaid {
    * @param battleEntity The identifier of the ongoing battle.
    * @param defenderEntity The identifier of the defending entity.
    * @param totalFreeCargoSpace The total free cargo space available in the attacker's fleet.
-   * @return An array of total raided resource counts and the total resources raided.
+   * @return totalRaidedResourceCounts , totalRaidedResources An array of total raided resource counts and the total resources raided.
    */
   function calculateRaidFromWithAllies(
     bytes32 battleEntity,

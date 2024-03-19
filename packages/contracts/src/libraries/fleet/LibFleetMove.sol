@@ -127,7 +127,7 @@ library LibFleetMove {
    * @notice Determines the speed of a fleet.
    * @dev Calculates the fleet's speed based on the slowest unit in the fleet.
    * @param fleetEntity The identifier of the fleet.
-   * @return The speed of the fleet.
+   * @return speed The speed of the fleet.
    */
   function getSpeed(bytes32 fleetEntity) internal view returns (uint256 speed) {
     bytes32 ownerAsteroidEntity = OwnedBy.get(fleetEntity);
@@ -146,7 +146,7 @@ library LibFleetMove {
    * @notice Determines the effective speed of a fleet, taking into account any followers.
    * @dev Calculates the slowest speed among the fleet and its followers.
    * @param fleetEntity The identifier of the fleet.
-   * @return The effective speed of the fleet considering its followers.
+   * @return speed The effective speed of the fleet considering its followers.
    */
   function getSpeedWithFollowers(bytes32 fleetEntity) internal view returns (uint256 speed) {
     speed = getSpeed(fleetEntity);

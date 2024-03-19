@@ -57,7 +57,7 @@ library UtilityMap {
   /**
    * @notice Returns the values associated with each utility the player has.
    * @param playerEntity The identifier of the player.
-   * @return An array of utility values.
+   * @return items An array of utility values.
    */
   function values(bytes32 playerEntity) internal view returns (uint256[] memory items) {
     uint8[] memory _utilities = keys(playerEntity);

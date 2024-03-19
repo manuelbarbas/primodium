@@ -190,16 +190,16 @@ library LibFleetTransfer {
    */
   function transferUnitsFromFleetToFleet(
     bytes32 fromFleetEntity,
-    bytes32 fleetEntity,
+    bytes32 toFleetEntity,
     uint256[] calldata unitCounts
   ) internal {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    bool sameOwner = OwnedBy.get(fleetEntity) == OwnedBy.get(fromFleetEntity);
+    bool sameOwner = OwnedBy.get(toFleetEntity) == OwnedBy.get(fromFleetEntity);
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
       if (!sameOwner && unitPrototypes[i] == CapitalShipPrototypeId)
         revert("[Fleet] Cannot transfer capital ships to other players");
-      LibFleet.increaseFleetUnit(fleetEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
+      LibFleet.increaseFleetUnit(toFleetEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
       LibFleet.decreaseFleetUnit(fromFleetEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
@@ -209,7 +209,7 @@ library LibFleetTransfer {
 
     //set to fleet to not empty
     LibFleet.checkAndSetFleetEmpty(fromFleetEntity);
-    LibFleet.checkAndSetFleetEmpty(fleetEntity);
+    LibFleet.checkAndSetFleetEmpty(toFleetEntity);
   }
 
   /**
@@ -220,13 +220,13 @@ library LibFleetTransfer {
    */
   function transferResourcesFromFleetToFleet(
     bytes32 fromFleetEntity,
-    bytes32 fleetEntity,
+    bytes32 toFleetEntity,
     uint256[] calldata resourceCounts
   ) internal {
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       if (resourceCounts[i] == 0) continue;
-      LibFleet.increaseFleetResource(fleetEntity, transportables[i], resourceCounts[i]);
+      LibFleet.increaseFleetResource(toFleetEntity, transportables[i], resourceCounts[i]);
       LibFleet.decreaseFleetResource(fromFleetEntity, transportables[i], resourceCounts[i]);
     }
   }
@@ -240,21 +240,21 @@ library LibFleetTransfer {
    */
   function transferUnitsAndResourcesFromFleetToFleet(
     bytes32 fromFleetEntity,
-    bytes32 fleetEntity,
+    bytes32 toFleetEntity,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
   ) internal {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    bool sameOwner = OwnedBy.get(fleetEntity) == OwnedBy.get(fromFleetEntity);
+    bool sameOwner = OwnedBy.get(toFleetEntity) == OwnedBy.get(fromFleetEntity);
 
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
       if (!sameOwner && unitPrototypes[i] == CapitalShipPrototypeId)
         revert("[Fleet] Cannot transfer capital ships to other players");
-      LibFleet.increaseFleetUnit(fleetEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
+      LibFleet.increaseFleetUnit(toFleetEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
-    transferResourcesFromFleetToFleet(fromFleetEntity, fleetEntity, resourceCounts);
+    transferResourcesFromFleetToFleet(fromFleetEntity, toFleetEntity, resourceCounts);
 
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
@@ -265,7 +265,7 @@ library LibFleetTransfer {
     uint256 occupiedCargo = LibCombatAttributes.getCargo(fromFleetEntity);
     require(cargo >= occupiedCargo, "[Fleet] Not enough cargo space to transfer units");
 
-    LibFleet.checkAndSetFleetEmpty(fleetEntity);
+    LibFleet.checkAndSetFleetEmpty(toFleetEntity);
     LibFleet.checkAndSetFleetEmpty(fromFleetEntity);
   }
 }

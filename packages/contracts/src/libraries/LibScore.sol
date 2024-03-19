@@ -65,10 +65,10 @@ library LibScore {
    * @param isAcquisition Indicates whether the asteroid is being acquired (true) or lost (false).
    * @dev Adds the asteroid's score to the player's score upon acquisition or subtracts it upon loss.
    */
-  function updateScoreOnAsteroid(bytes32 playerEntity, bytes32 asteroidEntity, bool isAquisition) internal {
+  function updateScoreOnAsteroid(bytes32 playerEntity, bytes32 asteroidEntity, bool isAcquisition) internal {
     uint256 currentAsteroidScore = Score.get(asteroidEntity);
     uint256 currenPlayerScore = Score.get(playerEntity);
-    if (isAquisition) Score.set(playerEntity, currenPlayerScore + currentAsteroidScore);
+    if (isAcquisition) Score.set(playerEntity, currenPlayerScore + currentAsteroidScore);
     else Score.set(playerEntity, currenPlayerScore - currentAsteroidScore);
   }
 }
