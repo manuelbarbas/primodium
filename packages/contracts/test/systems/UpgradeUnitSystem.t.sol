@@ -16,15 +16,15 @@ import "test/PrimodiumTest.t.sol";
 contract UpgradeUnitSystemTest is PrimodiumTest {
   bytes32 unitPrototype = "unit";
   EUnit unit = EUnit(1);
-  bytes32 player;
+  bytes32 playerEntity;
   bytes32 homeAsteroid = "homeAsteroid";
 
   function setUp() public override {
     super.setUp();
     vm.startPrank(creator);
-    player = addressToEntity(creator);
-    Home.set(player, homeAsteroid);
-    OwnedBy.set(homeAsteroid, player);
+    playerEntity = addressToEntity(creator);
+    Home.set(playerEntity, homeAsteroid);
+    OwnedBy.set(homeAsteroid, playerEntity);
     P_EnumToPrototype.set(UnitKey, uint8(unit), unitPrototype);
     P_MaxLevel.set(unitPrototype, 2);
   }
@@ -54,7 +54,7 @@ contract UpgradeUnitSystemTest is PrimodiumTest {
     P_RequiredUpgradeResources.set(unitPrototype, 1, requiredResources, requiredAmounts);
     MaxResourceCount.set(homeAsteroid, Iron, 100);
     ResourceCount.set(homeAsteroid, Iron, 100);
-    UnitLevel.set(player, unitPrototype, 0);
+    UnitLevel.set(playerEntity, unitPrototype, 0);
     world.Primodium__upgradeUnit(homeAsteroid, unit);
     assertEq(ResourceCount.get(homeAsteroid, Iron), 0);
   }

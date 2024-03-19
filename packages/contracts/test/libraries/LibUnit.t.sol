@@ -5,31 +5,30 @@ import "test/PrimodiumTest.t.sol";
 import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
 
 contract LibUnitTest is PrimodiumTest {
-  bytes32 player;
+  bytes32 playerEntity;
 
-  bytes32 unit = "unit";
+  bytes32 unitEntity = "unit";
   bytes32 unitPrototype = "unitPrototype";
 
-  bytes32 unit2 = "unit2";
   bytes32 unitPrototype2 = "unitPrototype2";
 
-  bytes32 building = "building";
+  bytes32 buildingEntity = "building";
   bytes32 buildingPrototype = "buildingPrototype";
 
-  bytes32 building2 = "building2";
+  bytes32 building2Entity = "building2";
   bytes32 asteroidEntity = "asteroidEntity";
 
   function setUp() public override {
     super.setUp();
     vm.startPrank(creator);
-    player = addressToEntity(creator);
+    playerEntity = addressToEntity(creator);
     world.Primodium__spawn();
 
-    BuildingType.set(building, buildingPrototype);
-    OwnedBy.set(Home.get(player), player);
-    OwnedBy.set(building, Home.get(player));
-    OwnedBy.set(building2, Home.get(player));
-    BuildingType.set(building2, buildingPrototype);
+    BuildingType.set(buildingEntity, buildingPrototype);
+    OwnedBy.set(Home.get(playerEntity), playerEntity);
+    OwnedBy.set(buildingEntity, Home.get(playerEntity));
+    OwnedBy.set(building2Entity, Home.get(playerEntity));
+    BuildingType.set(building2Entity, buildingPrototype);
     P_GameConfigData memory config = P_GameConfig.get();
     config.unitProductionRate = 100;
     P_GameConfig.set(config);
@@ -47,26 +46,26 @@ contract LibUnitTest is PrimodiumTest {
   }
 
   function testCanProduceUnitInvalidUnit() public {
-    assertFalse(LibUnit.canProduceUnit(building, 0, bytes32(0)));
+    assertFalse(LibUnit.canProduceUnit(buildingEntity, 0, bytes32(0)));
   }
 
   function testClaimUnits() public {
-    Level.set(building, 1);
-    LastClaimedAt.set(building, block.timestamp);
+    Level.set(buildingEntity, 1);
+    LastClaimedAt.set(buildingEntity, block.timestamp);
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
 
-    Level.set(building2, 1);
-    LastClaimedAt.set(building2, block.timestamp);
+    Level.set(building2Entity, 1);
+    LastClaimedAt.set(building2Entity, block.timestamp);
 
-    UnitFactorySet.add(Home.get(player), building);
-    UnitFactorySet.add(Home.get(player), building2);
+    UnitFactorySet.add(Home.get(playerEntity), buildingEntity);
+    UnitFactorySet.add(Home.get(playerEntity), building2Entity);
 
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
-    UnitProductionQueue.enqueue(building, item);
-    UnitProductionQueue.enqueue(building2, item);
+    UnitProductionQueue.enqueue(buildingEntity, item);
+    UnitProductionQueue.enqueue(building2Entity, item);
 
-    bytes32[] memory buildings = UnitFactorySet.getAll(Home.get(player));
+    bytes32[] memory buildings = UnitFactorySet.getAll(Home.get(playerEntity));
     console.log("buildings", buildings.length);
     for (uint256 i = 0; i < buildings.length; i++) {
       bytes32 buildingEntity = buildings[i];
@@ -75,29 +74,31 @@ contract LibUnitTest is PrimodiumTest {
       console.log("is asteroid:", Asteroid.getIsAsteroid(asteroidEntity));
     }
     vm.warp(block.timestamp + 100);
-    LibUnit.claimUnits(Home.get(player));
-    assertEq(UnitCount.get(Home.get(player), unitPrototype), 200);
+    LibUnit.claimUnits(Home.get(playerEntity));
+    assertEq(UnitCount.get(Home.get(playerEntity), unitPrototype), 200);
   }
 
   function testClaimUnitsConqueredAsteroid() public {
     P_GameConfig.setAsteroidChanceInv(1);
-    PositionData memory position = Position.get(Home.get(player));
+    PositionData memory position = Position.get(Home.get(playerEntity));
 
-    bytes32 secondaryAsteroid = LibAsteroid.createSecondaryAsteroid(findSecondaryAsteroid(player, Home.get(player)));
-    conquerAsteroid(creator, Home.get(player), secondaryAsteroid);
+    bytes32 secondaryAsteroid = LibAsteroid.createSecondaryAsteroid(
+      findSecondaryAsteroid(playerEntity, Home.get(playerEntity))
+    );
+    conquerAsteroid(creator, Home.get(playerEntity), secondaryAsteroid);
     vm.startPrank(creator);
     console.log("here:");
-    OwnedBy.set(building, secondaryAsteroid);
-    Level.set(building, 1);
-    LastClaimedAt.set(building, block.timestamp);
+    OwnedBy.set(buildingEntity, secondaryAsteroid);
+    Level.set(buildingEntity, 1);
+    LastClaimedAt.set(buildingEntity, block.timestamp);
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
 
-    UnitFactorySet.add(secondaryAsteroid, building);
+    UnitFactorySet.add(secondaryAsteroid, buildingEntity);
 
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
-    UnitProductionQueue.enqueue(building, item);
-    UnitProductionQueue.enqueue(building2, item);
+    UnitProductionQueue.enqueue(buildingEntity, item);
+    UnitProductionQueue.enqueue(building2Entity, item);
 
     bytes32[] memory buildings = UnitFactorySet.getAll(secondaryAsteroid);
     console.log("buildings", buildings.length);
@@ -113,265 +114,265 @@ contract LibUnitTest is PrimodiumTest {
   }
 
   function testClaimBuildingUnitsSingleAll() public {
-    Level.set(building, 1);
-    LastClaimedAt.set(building, block.timestamp);
+    Level.set(buildingEntity, 1);
+    LastClaimedAt.set(buildingEntity, block.timestamp);
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
-    UnitProductionQueue.enqueue(building, item);
+    UnitProductionQueue.enqueue(buildingEntity, item);
     vm.warp(block.timestamp + 100);
-    LibUnit.claimBuildingUnits(building);
-    assertEq(UnitCount.get(Home.get(player), unitPrototype), 100);
-    assertTrue(UnitProductionQueue.isEmpty(building));
+    LibUnit.claimBuildingUnits(buildingEntity);
+    assertEq(UnitCount.get(Home.get(playerEntity), unitPrototype), 100);
+    assertTrue(UnitProductionQueue.isEmpty(buildingEntity));
   }
 
   function testClaimBuildingUnitsSinglePart() public {
-    Level.set(building, 1);
-    LastClaimedAt.set(building, block.timestamp);
+    Level.set(buildingEntity, 1);
+    LastClaimedAt.set(buildingEntity, block.timestamp);
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
-    UnitProductionQueue.enqueue(building, item);
+    UnitProductionQueue.enqueue(buildingEntity, item);
     vm.warp(block.timestamp + 25);
-    LibUnit.claimBuildingUnits(building);
-    assertEq(UnitCount.get(Home.get(player), unitPrototype), 25);
-    assertEq(UnitProductionQueue.peek(building).quantity, 75);
-    assertFalse(UnitProductionQueue.isEmpty(building));
+    LibUnit.claimBuildingUnits(buildingEntity);
+    assertEq(UnitCount.get(Home.get(playerEntity), unitPrototype), 25);
+    assertEq(UnitProductionQueue.peek(buildingEntity).quantity, 75);
+    assertFalse(UnitProductionQueue.isEmpty(buildingEntity));
   }
 
   function testClaimBuildingUnitsDouble() public {
-    Level.set(building, 1);
-    LastClaimedAt.set(building, block.timestamp);
+    Level.set(buildingEntity, 1);
+    LastClaimedAt.set(buildingEntity, block.timestamp);
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
 
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
-    UnitProductionQueue.enqueue(building, item);
+    UnitProductionQueue.enqueue(buildingEntity, item);
 
     P_Unit.setTrainingTime(unitPrototype2, 0, 1);
     QueueItemUnitsData memory item2 = QueueItemUnitsData(unitPrototype2, 100);
-    UnitProductionQueue.enqueue(building, item2);
+    UnitProductionQueue.enqueue(buildingEntity, item2);
 
     vm.warp(block.timestamp + 1000);
-    LibUnit.claimBuildingUnits(building);
-    assertEq(UnitCount.get(Home.get(player), unitPrototype), 100, "unit count does not match");
-    assertEq(UnitCount.get(Home.get(player), unitPrototype2), 100, "unit 2 count does not match");
-    assertTrue(UnitProductionQueue.isEmpty(building), "queue should be empty");
+    LibUnit.claimBuildingUnits(buildingEntity);
+    assertEq(UnitCount.get(Home.get(playerEntity), unitPrototype), 100, "unit count does not match");
+    assertEq(UnitCount.get(Home.get(playerEntity), unitPrototype2), 100, "unit 2 count does not match");
+    assertTrue(UnitProductionQueue.isEmpty(buildingEntity), "queue should be empty");
   }
 
   function testClaimBuildingUnitsDoublePart() public {
-    Level.set(building, 1);
-    LastClaimedAt.set(building, block.timestamp);
+    Level.set(buildingEntity, 1);
+    LastClaimedAt.set(buildingEntity, block.timestamp);
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
 
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
-    UnitProductionQueue.enqueue(building, item);
+    UnitProductionQueue.enqueue(buildingEntity, item);
 
     P_Unit.setTrainingTime(unitPrototype2, 0, 1);
     QueueItemUnitsData memory item2 = QueueItemUnitsData(unitPrototype2, 100);
-    UnitProductionQueue.enqueue(building, item2);
+    UnitProductionQueue.enqueue(buildingEntity, item2);
 
     vm.warp(block.timestamp + 25);
-    LibUnit.claimBuildingUnits(building);
-    assertEq(UnitCount.get(Home.get(player), unitPrototype), 25);
-    assertEq(UnitProductionQueue.peek(building).quantity, 75);
-    assertFalse(UnitProductionQueue.isEmpty(building));
+    LibUnit.claimBuildingUnits(buildingEntity);
+    assertEq(UnitCount.get(Home.get(playerEntity), unitPrototype), 25);
+    assertEq(UnitProductionQueue.peek(buildingEntity).quantity, 75);
+    assertFalse(UnitProductionQueue.isEmpty(buildingEntity));
 
     vm.warp(block.timestamp + 76);
-    LibUnit.claimBuildingUnits(building);
-    assertEq(UnitCount.get(Home.get(player), unitPrototype), 100);
-    assertEq(UnitCount.get(Home.get(player), unitPrototype2), 1);
-    assertEq(toString(UnitProductionQueue.peek(building).unitId), toString(unitPrototype2));
-    assertEq(UnitProductionQueue.peek(building).quantity, 99);
-    assertFalse(UnitProductionQueue.isEmpty(building));
+    LibUnit.claimBuildingUnits(buildingEntity);
+    assertEq(UnitCount.get(Home.get(playerEntity), unitPrototype), 100);
+    assertEq(UnitCount.get(Home.get(playerEntity), unitPrototype2), 1);
+    assertEq(toString(UnitProductionQueue.peek(buildingEntity).unitId), toString(unitPrototype2));
+    assertEq(UnitProductionQueue.peek(buildingEntity).quantity, 99);
+    assertFalse(UnitProductionQueue.isEmpty(buildingEntity));
 
     vm.warp(block.timestamp + 100);
-    LibUnit.claimBuildingUnits(building);
-    assertEq(UnitCount.get(Home.get(player), unitPrototype), 100);
-    assertEq(UnitCount.get(Home.get(player), unitPrototype2), 100);
-    assertTrue(UnitProductionQueue.isEmpty(building));
+    LibUnit.claimBuildingUnits(buildingEntity);
+    assertEq(UnitCount.get(Home.get(playerEntity), unitPrototype), 100);
+    assertEq(UnitCount.get(Home.get(playerEntity), unitPrototype2), 100);
+    assertTrue(UnitProductionQueue.isEmpty(buildingEntity));
   }
 
   function testClaimUnitsOffset() public {
-    Level.set(building, 1);
-    LastClaimedAt.set(building, block.timestamp);
+    Level.set(buildingEntity, 1);
+    LastClaimedAt.set(buildingEntity, block.timestamp);
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
 
     P_Unit.setTrainingTime(unitPrototype, 0, 100);
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
-    UnitProductionQueue.enqueue(building, item);
+    UnitProductionQueue.enqueue(buildingEntity, item);
 
     vm.warp(block.timestamp + 25);
-    LibUnit.claimBuildingUnits(building);
-    assertEq(ClaimOffset.get(building), 25, "offset 1 should be 25");
-    assertEq(UnitProductionQueue.peek(building).quantity, 100, "queue should have 100 units");
+    LibUnit.claimBuildingUnits(buildingEntity);
+    assertEq(ClaimOffset.get(buildingEntity), 25, "offset 1 should be 25");
+    assertEq(UnitProductionQueue.peek(buildingEntity).quantity, 100, "queue should have 100 units");
 
     vm.warp(block.timestamp + 50);
-    LibUnit.claimBuildingUnits(building);
-    assertEq(ClaimOffset.get(building), 75, "offset 2 should be 75");
-    assertEq(UnitProductionQueue.peek(building).quantity, 100, "queue should have 100 units");
+    LibUnit.claimBuildingUnits(buildingEntity);
+    assertEq(ClaimOffset.get(buildingEntity), 75, "offset 2 should be 75");
+    assertEq(UnitProductionQueue.peek(buildingEntity).quantity, 100, "queue should have 100 units");
 
     vm.warp(block.timestamp + 50);
-    LibUnit.claimBuildingUnits(building);
-    assertEq(ClaimOffset.get(building), 25, "offset 3 should be 25");
-    assertEq(UnitProductionQueue.peek(building).quantity, 99, "queue should have 99 units");
+    LibUnit.claimBuildingUnits(buildingEntity);
+    assertEq(ClaimOffset.get(buildingEntity), 25, "offset 3 should be 25");
+    assertEq(UnitProductionQueue.peek(buildingEntity).quantity, 99, "queue should have 99 units");
 
     vm.warp(block.timestamp + 174);
-    LibUnit.claimBuildingUnits(building);
-    assertEq(ClaimOffset.get(building), 99, "offset 3 should be 25");
-    assertEq(UnitProductionQueue.peek(building).quantity, 98, "queue should have 98 units");
+    LibUnit.claimBuildingUnits(buildingEntity);
+    assertEq(ClaimOffset.get(buildingEntity), 99, "offset 3 should be 25");
+    assertEq(UnitProductionQueue.peek(buildingEntity).quantity, 98, "queue should have 98 units");
   }
 
   function testClaimUnitsClearOffset() public {
-    Level.set(building, 1);
-    LastClaimedAt.set(building, block.timestamp);
+    Level.set(buildingEntity, 1);
+    LastClaimedAt.set(buildingEntity, block.timestamp);
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
 
     P_Unit.setTrainingTime(unitPrototype, 0, 10);
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 10);
-    UnitProductionQueue.enqueue(building, item);
+    UnitProductionQueue.enqueue(buildingEntity, item);
 
     vm.warp(block.timestamp + 25);
-    LibUnit.claimBuildingUnits(building);
-    assertEq(ClaimOffset.get(building), 5, "offset 1 should be 5");
-    assertEq(UnitProductionQueue.peek(building).quantity, 8, "queue should have 8 units");
+    LibUnit.claimBuildingUnits(buildingEntity);
+    assertEq(ClaimOffset.get(buildingEntity), 5, "offset 1 should be 5");
+    assertEq(UnitProductionQueue.peek(buildingEntity).quantity, 8, "queue should have 8 units");
 
     vm.warp(block.timestamp + 50);
-    LibUnit.claimBuildingUnits(building);
-    assertEq(ClaimOffset.get(building), 5, "offset 2 should be 5");
-    assertEq(UnitProductionQueue.peek(building).quantity, 3, "queue should have 3 units");
+    LibUnit.claimBuildingUnits(buildingEntity);
+    assertEq(ClaimOffset.get(buildingEntity), 5, "offset 2 should be 5");
+    assertEq(UnitProductionQueue.peek(buildingEntity).quantity, 3, "queue should have 3 units");
 
     vm.warp(block.timestamp + 135);
-    LibUnit.claimBuildingUnits(building);
-    assertEq(ClaimOffset.get(building), 0, "offset 3 should be 0");
-    assertEq(UnitCount.get(Home.get(player), unitPrototype), 10);
+    LibUnit.claimBuildingUnits(buildingEntity);
+    assertEq(ClaimOffset.get(buildingEntity), 0, "offset 3 should be 0");
+    assertEq(UnitCount.get(Home.get(playerEntity), unitPrototype), 10);
   }
 
   function testClaimMultipleUnitsClearOffset() public {
-    Level.set(building, 1);
-    LastClaimedAt.set(building, block.timestamp);
+    Level.set(buildingEntity, 1);
+    LastClaimedAt.set(buildingEntity, block.timestamp);
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
 
     P_Unit.setTrainingTime(unitPrototype, 0, 10);
     QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 10);
-    UnitProductionQueue.enqueue(building, item);
-    UnitProductionQueue.enqueue(building, item);
+    UnitProductionQueue.enqueue(buildingEntity, item);
+    UnitProductionQueue.enqueue(buildingEntity, item);
 
     vm.warp(block.timestamp + 125);
-    LibUnit.claimBuildingUnits(building);
-    assertEq(ClaimOffset.get(building), 5, "offset 1 should be 5");
-    assertEq(UnitProductionQueue.peek(building).quantity, 8, "queue should have 8 units");
-    assertEq(UnitCount.get(Home.get(player), unitPrototype), 12);
+    LibUnit.claimBuildingUnits(buildingEntity);
+    assertEq(ClaimOffset.get(buildingEntity), 5, "offset 1 should be 5");
+    assertEq(UnitProductionQueue.peek(buildingEntity).quantity, 8, "queue should have 8 units");
+    assertEq(UnitCount.get(Home.get(playerEntity), unitPrototype), 12);
 
     vm.warp(block.timestamp + 135);
-    LibUnit.claimBuildingUnits(building);
-    assertEq(ClaimOffset.get(building), 0, "offset 2 should be 0");
-    assertEq(UnitCount.get(Home.get(player), unitPrototype), 20);
+    LibUnit.claimBuildingUnits(buildingEntity);
+    assertEq(ClaimOffset.get(buildingEntity), 0, "offset 2 should be 0");
+    assertEq(UnitCount.get(Home.get(playerEntity), unitPrototype), 20);
 
-    UnitProductionQueue.enqueue(building, item);
-    UnitProductionQueue.enqueue(building, item);
+    UnitProductionQueue.enqueue(buildingEntity, item);
+    UnitProductionQueue.enqueue(buildingEntity, item);
 
     vm.warp(block.timestamp + 203);
-    LibUnit.claimBuildingUnits(building);
-    assertEq(ClaimOffset.get(building), 0, "offset 2 should be 0");
-    assertEq(UnitCount.get(Home.get(player), unitPrototype), 40);
-    assertTrue(UnitProductionQueue.isEmpty(building));
+    LibUnit.claimBuildingUnits(buildingEntity);
+    assertEq(ClaimOffset.get(buildingEntity), 0, "offset 2 should be 0");
+    assertEq(UnitCount.get(Home.get(playerEntity), unitPrototype), 40);
+    assertTrue(UnitProductionQueue.isEmpty(buildingEntity));
   }
 
   function testGetUnitBuildTime() public {
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
     P_Unit.setTrainingTime(unitPrototype, 0, 100);
-    Level.set(building, 1);
-    assertEq(LibUnit.getUnitBuildTime(building, unitPrototype), 100);
+    Level.set(buildingEntity, 1);
+    assertEq(LibUnit.getUnitBuildTime(buildingEntity, unitPrototype), 100);
 
     P_UnitProdMultiplier.set(buildingPrototype, 1, 50);
     P_Unit.setTrainingTime(unitPrototype, 0, 100);
-    Level.set(building, 1);
-    assertEq(LibUnit.getUnitBuildTime(building, unitPrototype), 200);
+    Level.set(buildingEntity, 1);
+    assertEq(LibUnit.getUnitBuildTime(buildingEntity, unitPrototype), 200);
 
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
     P_Unit.setTrainingTime(unitPrototype, 0, 200);
-    Level.set(building, 1);
-    assertEq(LibUnit.getUnitBuildTime(building, unitPrototype), 200);
+    Level.set(buildingEntity, 1);
+    assertEq(LibUnit.getUnitBuildTime(buildingEntity, unitPrototype), 200);
   }
 
   function testincreaseUnitCount() public {
-    UnitCount.set(Home.get(player), unit, 50);
+    UnitCount.set(Home.get(playerEntity), unitEntity, 50);
     P_GameConfig.setUnitProductionRate(100);
-    QueueItemUnitsData memory item = QueueItemUnitsData(unit, 100);
-    UnitProductionQueue.enqueue(building, item);
-    LibUnit.increaseUnitCount(Home.get(player), unit, 100, false);
-    assertEq(UnitCount.get(Home.get(player), unit), 150);
+    QueueItemUnitsData memory item = QueueItemUnitsData(unitEntity, 100);
+    UnitProductionQueue.enqueue(buildingEntity, item);
+    LibUnit.increaseUnitCount(Home.get(playerEntity), unitEntity, 100, false);
+    assertEq(UnitCount.get(Home.get(playerEntity), unitEntity), 150);
   }
 
   function testUpdateStoredUtilitiesAdd() public {
     P_IsUtility.set(Iron, true);
-    LibProduction.increaseResourceProduction(player, EResource(Iron), 100);
+    LibProduction.increaseResourceProduction(playerEntity, EResource(Iron), 100);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(Iron);
     requiredResourcesData.amounts[0] = 50;
-    P_RequiredResources.set(unit, 0, requiredResourcesData);
+    P_RequiredResources.set(unitEntity, 0, requiredResourcesData);
 
-    LibUnit.updateStoredUtilities(player, unit, 2, true);
-    assertEq(ResourceCount.get(player, Iron), 0);
+    LibUnit.updateStoredUtilities(playerEntity, unitEntity, 2, true);
+    assertEq(ResourceCount.get(playerEntity, Iron), 0);
   }
 
   function testUpdateStoredUtilitiesNotUtility() public {
-    LibProduction.increaseResourceProduction(player, EResource(Iron), 100);
+    LibProduction.increaseResourceProduction(playerEntity, EResource(Iron), 100);
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(Iron);
     requiredResourcesData.amounts[0] = 50;
-    P_RequiredResources.set(unit, 0, requiredResourcesData);
+    P_RequiredResources.set(unitEntity, 0, requiredResourcesData);
 
-    LibUnit.updateStoredUtilities(player, unit, 2, true);
-    assertEq(ResourceCount.get(player, Iron), 0);
+    LibUnit.updateStoredUtilities(playerEntity, unitEntity, 2, true);
+    assertEq(ResourceCount.get(playerEntity, Iron), 0);
   }
 
   function testFailUpdateStoredUtilitiesNoSpace() public {
     P_IsUtility.set(Iron, true);
-    MaxResourceCount.set(player, Iron, 100);
+    MaxResourceCount.set(playerEntity, Iron, 100);
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(Iron);
     requiredResourcesData.amounts[0] = 50;
-    P_RequiredResources.set(unit, 0, requiredResourcesData);
+    P_RequiredResources.set(unitEntity, 0, requiredResourcesData);
 
-    LibUnit.updateStoredUtilities(player, unit, 3, true);
+    LibUnit.updateStoredUtilities(playerEntity, unitEntity, 3, true);
   }
 
   function testUpdateStoredUtilitiesSubtract() public {
     P_IsUtility.set(Iron, true);
 
-    LibProduction.increaseResourceProduction(player, EResource(Iron), 100);
+    LibProduction.increaseResourceProduction(playerEntity, EResource(Iron), 100);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(Iron);
     requiredResourcesData.amounts[0] = 33;
-    P_RequiredResources.set(unit, 0, requiredResourcesData);
-    LibUnit.updateStoredUtilities(player, unit, 3, true);
-    LibUnit.updateStoredUtilities(player, unit, 2, false);
-    assertEq(ResourceCount.get(player, Iron), 67);
+    P_RequiredResources.set(unitEntity, 0, requiredResourcesData);
+    LibUnit.updateStoredUtilities(playerEntity, unitEntity, 3, true);
+    LibUnit.updateStoredUtilities(playerEntity, unitEntity, 2, false);
+    assertEq(ResourceCount.get(playerEntity, Iron), 67);
   }
 
   function testFailUpdateStoredUtilitiesSubtractOverflow() public {
     P_IsUtility.set(Iron, true);
-    LibProduction.increaseResourceProduction(player, EResource(Iron), 100);
+    LibProduction.increaseResourceProduction(playerEntity, EResource(Iron), 100);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
     requiredResourcesData.resources[0] = uint8(Iron);
     requiredResourcesData.amounts[0] = 33;
-    P_RequiredResources.set(unit, 0, requiredResourcesData);
+    P_RequiredResources.set(unitEntity, 0, requiredResourcesData);
 
-    LibUnit.updateStoredUtilities(player, unit, 10, false);
+    LibUnit.updateStoredUtilities(playerEntity, unitEntity, 10, false);
   }
 
   function testDecreaseUnitCount() public {
-    UnitCount.set(asteroidEntity, unit, 100);
-    LibUnit.decreaseUnitCount(asteroidEntity, unit, 50, false);
-    assertEq(UnitCount.get(asteroidEntity, unit), 50);
+    UnitCount.set(asteroidEntity, unitEntity, 100);
+    LibUnit.decreaseUnitCount(asteroidEntity, unitEntity, 50, false);
+    assertEq(UnitCount.get(asteroidEntity, unitEntity), 50);
 
-    LibUnit.decreaseUnitCount(asteroidEntity, unit, 50, false);
-    assertEq(UnitCount.get(asteroidEntity, unit), 0);
+    LibUnit.decreaseUnitCount(asteroidEntity, unitEntity, 50, false);
+    assertEq(UnitCount.get(asteroidEntity, unitEntity), 0);
   }
 }

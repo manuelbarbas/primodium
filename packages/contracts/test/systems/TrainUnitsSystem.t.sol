@@ -5,7 +5,7 @@ import "test/PrimodiumTest.t.sol";
 
 contract TrainUnitsSystemTest is PrimodiumTest {
   bytes32 asteroidEntity = bytes32("asteroidEntity");
-  bytes32 player;
+  bytes32 playerEntity;
   bytes32 aliceEntity;
   bytes32 aliceAsteroidEntity;
   bytes32 shipyard;
@@ -19,7 +19,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
     vm.startPrank(creator);
-    player = addressToEntity(creator);
+    playerEntity = addressToEntity(creator);
     aliceEntity = addressToEntity(alice);
     BuildingType.set(building, buildingPrototype);
     IsActive.set(building, true);
@@ -28,9 +28,9 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     config.unitProductionRate = 100;
     P_GameConfig.set(config);
     Asteroid.setIsAsteroid(asteroidEntity, true);
-    Home.set(player, asteroidEntity);
+    Home.set(playerEntity, asteroidEntity);
     OwnedBy.set(building, asteroidEntity);
-    Spawned.set(player, true);
+    Spawned.set(playerEntity, true);
 
     switchPrank(alice);
     aliceAsteroidEntity = world.Primodium__spawn();
@@ -92,8 +92,8 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     Asteroid.setIsAsteroid(asteroidEntity, true);
 
     setupClaimUnits();
-    Home.set(player, asteroidEntity);
-    OwnedBy.set(asteroidEntity, player);
+    Home.set(playerEntity, asteroidEntity);
+    OwnedBy.set(asteroidEntity, playerEntity);
     MaxResourceCount.set(asteroidEntity, Iron, 1000);
     ProductionRate.set(asteroidEntity, Iron, 10);
     LastClaimedAt.set(asteroidEntity, block.timestamp - 10);

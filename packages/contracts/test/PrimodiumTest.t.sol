@@ -402,7 +402,7 @@ contract PrimodiumTest is MudTest {
     }
   }
 
-  function findSecondaryAsteroid(bytes32 player, bytes32 asteroidEntity) public returns (PositionData memory) {
+  function findSecondaryAsteroid(bytes32 playerEntity, bytes32 asteroidEntity) public returns (PositionData memory) {
     P_GameConfigData memory config = P_GameConfig.get();
     PositionData memory sourcePosition = Position.get(asteroidEntity);
     logPosition(sourcePosition);

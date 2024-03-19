@@ -2,7 +2,6 @@
 pragma solidity >=0.8.24;
 
 import { System } from "@latticexyz/world/src/System.sol";
-import { _player as player } from "src/utils.sol";
 
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
@@ -37,6 +36,6 @@ contract PrimodiumSystem is System {
   }
 
   function _player() internal view returns (bytes32) {
-    return player(_msgSender());
+    return addressToEntity(_msgSender());
   }
 }

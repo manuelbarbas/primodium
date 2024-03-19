@@ -63,7 +63,7 @@ library LibUnit {
     LastClaimedAt.set(building, block.timestamp);
     bytes32 asteroidEntity = OwnedBy.get(building);
     require(Asteroid.getIsAsteroid(asteroidEntity), "[ClaimBuildingUnits]: Asteroid does not exist");
-    bytes32 player = OwnedBy.get(asteroidEntity);
+    bytes32 playerEntity = OwnedBy.get(asteroidEntity);
     bool stillClaiming = !UnitProductionQueue.isEmpty(building);
     while (stillClaiming) {
       UnitProductionQueueData memory item = UnitProductionQueue.peek(building);
@@ -86,7 +86,7 @@ library LibUnit {
         ClaimOffset.set(building, (block.timestamp - startTime) % trainingTime);
         stillClaiming = false;
       }
-      ProducedUnit.set(player, item.unitId, ProducedUnit.get(player, item.unitId) + trainedUnits);
+      ProducedUnit.set(playerEntity, item.unitId, ProducedUnit.get(playerEntity, item.unitId) + trainedUnits);
 
       increaseUnitCount(asteroidEntity, item.unitId, trainedUnits, false);
     }

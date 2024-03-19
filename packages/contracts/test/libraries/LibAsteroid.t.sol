@@ -4,7 +4,7 @@ pragma solidity >=0.8.24;
 import "../PrimodiumTest.t.sol";
 
 contract LibAsteroidTest is PrimodiumTest {
-  bytes32 player;
+  bytes32 playerEntity;
   bytes32 asteroidEntity;
 
   function setUp() public override {
@@ -16,7 +16,7 @@ contract LibAsteroidTest is PrimodiumTest {
     gameConfig.asteroidChanceInv = 2;
     asteroidEntity = spawn(creator);
     vm.startPrank(creator);
-    player = addressToEntity(creator);
+    playerEntity = addressToEntity(creator);
     P_GameConfig.set(gameConfig);
     vm.stopPrank();
   }
@@ -45,7 +45,7 @@ contract LibAsteroidTest is PrimodiumTest {
 
   function testCreateSecondaryAsteroid() public {
     vm.startPrank(creator);
-    PositionData memory position = findSecondaryAsteroid(player, asteroidEntity);
+    PositionData memory position = findSecondaryAsteroid(playerEntity, asteroidEntity);
 
     bytes32 actualAsteroidEntity = LibAsteroid.createSecondaryAsteroid(position);
     bytes32 expectedAsteroidEntity = keccak256(abi.encode(asteroidEntity, bytes32("asteroid"), position.x, position.y));
@@ -68,7 +68,7 @@ contract LibAsteroidTest is PrimodiumTest {
 
   function testSecondaryAsteroidDefense() public {
     vm.startPrank(creator);
-    PositionData memory position = findSecondaryAsteroid(player, asteroidEntity);
+    PositionData memory position = findSecondaryAsteroid(playerEntity, asteroidEntity);
 
     asteroidEntity = LibAsteroid.createSecondaryAsteroid(position);
     AsteroidData memory asteroidData = Asteroid.get(asteroidEntity);
