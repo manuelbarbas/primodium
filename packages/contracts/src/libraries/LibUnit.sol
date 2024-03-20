@@ -65,7 +65,7 @@ library LibUnit {
     bool stillClaiming = !UnitProductionQueue.isEmpty(building);
     while (stillClaiming) {
       UnitProductionQueueData memory item = UnitProductionQueue.peek(building);
-      uint256 trainingTime = getUnitBuildTime(building, item.unitId);
+      uint256 trainingTime = getUnitBuildTime(building, item.unitEntity);
       uint256 trainedUnits = item.quantity;
       if (trainingTime > 0) trainedUnits = LibMath.min(item.quantity, ((block.timestamp - startTime) / (trainingTime)));
 
@@ -84,9 +84,9 @@ library LibUnit {
         ClaimOffset.set(building, (block.timestamp - startTime) % trainingTime);
         stillClaiming = false;
       }
-      ProducedUnit.set(playerEntity, item.unitId, ProducedUnit.get(playerEntity, item.unitId) + trainedUnits);
+      ProducedUnit.set(playerEntity, item.unitEntity, ProducedUnit.get(playerEntity, item.unitEntity) + trainedUnits);
 
-      increaseUnitCount(asteroidEntity, item.unitId, trainedUnits, false);
+      increaseUnitCount(asteroidEntity, item.unitEntity, trainedUnits, false);
     }
   }
 

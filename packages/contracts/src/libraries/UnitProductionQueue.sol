@@ -12,7 +12,7 @@ library UnitProductionQueue {
     Meta_UnitProductionQueueData memory queueData = Meta_UnitProductionQueue.get(queueId);
     Value_UnitProductionQueue.set(queueId, queueData.back, queueItem);
     Meta_UnitProductionQueue.setBack(queueId, queueData.back + 1);
-    Meta_UnitProductionQueue.pushQueue(queueId, queueItem.unitId);
+    Meta_UnitProductionQueue.pushQueue(queueId, queueItem.unitEntity);
   }
 
   /// @notice Dequeue unit from production queue

@@ -36,7 +36,7 @@ contract UnitProductionQueueTest is PrimodiumTest {
     item = Value_UnitProductionQueueData("unit2", 3);
     UnitProductionQueue.enqueue(queueId, item);
     Value_UnitProductionQueueData memory dequeuedItem = UnitProductionQueue.dequeue(queueId);
-    assertEq(uint256(dequeuedItem.unitId), uint256(unit1));
+    assertEq(uint256(dequeuedItem.unitEntity), uint256(unit1));
     assertEq(UnitProductionQueue.size(queueId), 1);
     assertFalse(UnitProductionQueue.isEmpty(queueId));
   }
@@ -48,7 +48,7 @@ contract UnitProductionQueueTest is PrimodiumTest {
     UnitProductionQueue.enqueue(queueId, item);
 
     Value_UnitProductionQueueData memory peekedItem = UnitProductionQueue.peek(queueId);
-    assertEq(peekedItem.unitId, "unit1");
+    assertEq(peekedItem.unitEntity, "unit1");
     assertEq(UnitProductionQueue.size(queueId), 2);
   }
 

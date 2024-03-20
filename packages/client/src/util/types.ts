@@ -4,7 +4,7 @@ import { Coord } from "@latticexyz/utils";
 import { Step } from "walktour";
 import { Action } from "./constants";
 
-export type ContractCoord = Coord & { parent: Entity };
+export type ContractCoord = Coord & { parentEntity: Entity };
 
 export type BlockTypeActionComponent = {
   action: () => void;

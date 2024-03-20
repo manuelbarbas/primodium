@@ -430,7 +430,7 @@ const getConfig = async () => {
       Value_UnitProductionQueue: {
         keySchema: { entity: "bytes32", index: "uint256" },
         valueSchema: {
-          unitId: "bytes32",
+          unitEntity: "bytes32",
           quantity: "uint256",
         },
       },
@@ -498,7 +498,7 @@ const getConfig = async () => {
 
       /* ------------------------------ Battle Result ----------------------------- */
       BattleResult: {
-        keySchema: { battleId: "bytes32" },
+        keySchema: { battleEntity: "bytes32" },
         valueSchema: {
           aggressorEntity: "bytes32", //can be fleet or space rock
           aggressorDamage: "uint256", //can be fleet or space rock
@@ -516,7 +516,7 @@ const getConfig = async () => {
       },
 
       BattleDamageDealtResult: {
-        keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
+        keySchema: { battleEntity: "bytes32", participantEntity: "bytes32" },
         valueSchema: {
           damageDealt: "uint256",
         },
@@ -524,7 +524,7 @@ const getConfig = async () => {
       },
 
       BattleDamageTakenResult: {
-        keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
+        keySchema: { battleEntity: "bytes32", participantEntity: "bytes32" },
         valueSchema: {
           hpAtStart: "uint256",
           damageTaken: "uint256",
@@ -533,7 +533,7 @@ const getConfig = async () => {
       },
 
       BattleUnitResult: {
-        keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
+        keySchema: { battleEntity: "bytes32", participantEntity: "bytes32" },
         valueSchema: {
           unitLevels: "uint256[]",
           unitsAtStart: "uint256[]",
@@ -543,7 +543,7 @@ const getConfig = async () => {
       },
 
       BattleRaidResult: {
-        keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
+        keySchema: { battleEntity: "bytes32", participantEntity: "bytes32" },
         valueSchema: {
           resourcesAtStart: "uint256[]",
           resourcesAtEnd: "uint256[]",
@@ -552,7 +552,7 @@ const getConfig = async () => {
       },
 
       BattleEncryptionResult: {
-        keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
+        keySchema: { battleEntity: "bytes32", participantEntity: "bytes32" },
         valueSchema: {
           encryptionAtStart: "uint256",
           encryptionAtEnd: "uint256",

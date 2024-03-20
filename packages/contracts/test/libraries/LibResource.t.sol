@@ -256,7 +256,6 @@ contract LibResourceTest is PrimodiumTest {
     buildBuilding(creator, EBuilding.IronPlateFactory);
     buildBuilding(creator, EBuilding.IronPlateFactory);
     buildBuilding(creator, EBuilding.IronPlateFactory);
-    uint256 resourceConsumption = ConsumptionRate.get(asteroidEntity, Iron);
 
     vm.warp(block.timestamp + 1000000);
 

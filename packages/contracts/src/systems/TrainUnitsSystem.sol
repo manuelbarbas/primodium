@@ -56,7 +56,7 @@ contract TrainUnitsSystem is PrimodiumSystem {
     LibUnit.checkTrainUnitsRequirements(buildingEntity, unitPrototype);
 
     Value_UnitProductionQueueData memory queueItem = Value_UnitProductionQueueData({
-      unitId: unitPrototype,
+      unitEntity: unitPrototype,
       quantity: count
     });
     UnitProductionQueue.enqueue(buildingEntity, queueItem);

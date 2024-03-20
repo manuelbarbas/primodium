@@ -72,7 +72,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
 
     world.Primodium__trainUnits(buildingEntity, unit, 1);
     Value_UnitProductionQueueData memory data = UnitProductionQueue.peek(buildingEntity);
-    assertEq(toString(data.unitId), toString(unitPrototype));
+    assertEq(toString(data.unitEntity), toString(unitPrototype));
     assertEq(data.quantity, 1);
   }
 

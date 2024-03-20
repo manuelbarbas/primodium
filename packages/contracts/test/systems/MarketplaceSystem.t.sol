@@ -155,10 +155,9 @@ contract MarketplaceSystemTest is PrimodiumTest {
   }
 
   function testSwapFailInvalidAmount() public {
-    (bytes32 asteroidEntity, bytes32 market) = buildMarketplace(creator);
+    (, bytes32 market) = buildMarketplace(creator);
     vm.startPrank(creator);
 
-    ReservesData memory reserves = Reserves.get(Iron, RESERVE_CURRENCY);
     path.push(RESERVE_CURRENCY_RESOURCE);
     path.push(EResource.Iron);
 
@@ -194,10 +193,8 @@ contract MarketplaceSystemTest is PrimodiumTest {
   }
 
   function testSwapFailInvalidPath() public {
-    (bytes32 asteroidEntity, bytes32 market) = buildMarketplace(creator);
+    (, bytes32 market) = buildMarketplace(creator);
     vm.startPrank(creator);
-
-    ReservesData memory reserves = Reserves.get(Iron, RESERVE_CURRENCY);
 
     vm.expectRevert("[Marketplace] Invalid amount");
     world.Primodium__swap(market, path, 0, 0);
@@ -210,9 +207,7 @@ contract MarketplaceSystemTest is PrimodiumTest {
   function testSwapFailSameResource() public {
     (bytes32 asteroidEntity, bytes32 market) = buildMarketplace(creator);
     vm.startPrank(creator);
-    ReservesData memory reserves = Reserves.get(Iron, RESERVE_CURRENCY);
     uint256 amountIn = 1e18;
-    uint256 expectedAmountOut = LibMarketplace.getAmountOut(amountIn, reserves.amountB, reserves.amountA);
 
     MaxResourceCount.set(asteroidEntity, RESERVE_CURRENCY, amountIn);
     ResourceCount.set(asteroidEntity, RESERVE_CURRENCY, amountIn);
@@ -309,7 +304,7 @@ contract MarketplaceSystemTest is PrimodiumTest {
   /* ---------------------------------- Admin --------------------------------- */
 
   function testLock() public {
-    (bytes32 asteroidEntity, bytes32 market) = buildMarketplace(creator);
+    (, bytes32 market) = buildMarketplace(creator);
     vm.startPrank(creator);
 
     world.Primodium__toggleMarketplaceLock();
@@ -332,9 +327,6 @@ contract MarketplaceSystemTest is PrimodiumTest {
     ResourceCount.set(asteroidEntity, RESERVE_CURRENCY, amountIn);
     MaxResourceCount.set(asteroidEntity, Iron, 2 ** 256 - 1);
 
-    uint256 prevIron = ResourceCount.get(asteroidEntity, Iron);
-    uint256 prevReserveCurrency = ResourceCount.get(asteroidEntity, RESERVE_CURRENCY);
-
     path.push(RESERVE_CURRENCY_RESOURCE);
     path.push(EResource.Iron);
 
@@ -342,7 +334,6 @@ contract MarketplaceSystemTest is PrimodiumTest {
   }
 
   function testLockFailNotAdmin() public {
-    (bytes32 asteroidEntity, bytes32 market) = buildMarketplace(creator);
     vm.startPrank(alice);
     vm.expectRevert("[Primodium] Only admin");
     world.Primodium__toggleMarketplaceLock();
@@ -356,7 +347,6 @@ contract MarketplaceSystemTest is PrimodiumTest {
   }
 
   function testIsolatedPairReserves() public {
-    (bytes32 asteroidEntity, bytes32 market) = buildMarketplace(creator);
     vm.startPrank(creator);
 
     world.Primodium__addLiquidity(EResource.Iron, EResource.Copper, 1000, 1000);

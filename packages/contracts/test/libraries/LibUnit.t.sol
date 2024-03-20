@@ -75,8 +75,6 @@ contract LibUnitTest is PrimodiumTest {
     UnitProductionQueue.enqueue(buildingEntity, item);
     UnitProductionQueue.enqueue(building2Entity, item);
 
-    bytes32[] memory buildings = UnitFactorySet.getAll(Home.get(playerEntity));
-
     vm.warp(block.timestamp + 100);
     LibUnit.claimUnits(Home.get(playerEntity));
     assertEq(UnitCount.get(Home.get(playerEntity), unitPrototype), 200);
@@ -176,7 +174,7 @@ contract LibUnitTest is PrimodiumTest {
     LibUnit.claimBuildingUnits(buildingEntity);
     assertEq(UnitCount.get(Home.get(playerEntity), unitPrototype), 100);
     assertEq(UnitCount.get(Home.get(playerEntity), unitPrototype2), 1);
-    assertEq(toString(UnitProductionQueue.peek(buildingEntity).unitId), toString(unitPrototype2));
+    assertEq(toString(UnitProductionQueue.peek(buildingEntity).unitEntity), toString(unitPrototype2));
     assertEq(UnitProductionQueue.peek(buildingEntity).quantity, 99);
     assertFalse(UnitProductionQueue.isEmpty(buildingEntity));
 

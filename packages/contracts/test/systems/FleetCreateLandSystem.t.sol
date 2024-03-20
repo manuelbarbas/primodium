@@ -123,10 +123,6 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
         increaseResource(aliceHomeAsteroid, EResource.Iron, 1);
       }
     }
-
-    vm.startPrank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    vm.stopPrank();
   }
 
   function testFailCreateFleetNotEnoughResources() public {
