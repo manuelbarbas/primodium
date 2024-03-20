@@ -1,7 +1,7 @@
 import { mudConfig } from "@latticexyz/world/register";
 
 export default mudConfig({
-  namespace: "ReadDemo",
+  namespace: "PluginExamples",
   systems: {
     ReadDemoSystem: {
       name: "ReadDemoSystem",

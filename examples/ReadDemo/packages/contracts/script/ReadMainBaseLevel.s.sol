@@ -16,7 +16,7 @@ contract ReadMainBaseLevel is Script {
 
     vm.startBroadcast(playerAddress);
     IWorld iworld = IWorld(worldAddress);
-    uint32 baseLevel = iworld.ReadDemo_ReadDemoSystem_readMainBaseLevel();
+    uint32 baseLevel = iworld.PluginExamples_ReadDemoSystem_readMainBaseLevel();
     vm.stopBroadcast();
     console.log("baseLevel: ", baseLevel);
   }
