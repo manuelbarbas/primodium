@@ -12,7 +12,7 @@ import { usePlayerOwner } from "src/hooks/usePlayerOwner";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { createFleet } from "src/network/setup/contractCalls/createFleet";
-import { transferFleet } from "src/network/setup/contractCalls/fleetTransfer";
+import { transfer } from "src/network/setup/contractCalls/fleetTransfer";
 import { ResourceEntityLookup, UnitStorages } from "src/util/constants";
 import { formatResourceCount, parseResourceCount } from "src/util/number";
 import { getFullResourceCount } from "src/util/resource";
@@ -181,7 +181,7 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
   const handleSubmit = () => {
     if (!from || !to) return;
     if (to === "newFleet") createFleet(mud, from, deltas);
-    else transferFleet(mud, from, to, deltas);
+    else transfer(mud, from, to, deltas);
     setDeltas(new Map());
     setDeltas(new Map());
   };

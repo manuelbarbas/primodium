@@ -2,14 +2,14 @@
 pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { LibFleetTransfer } from "libraries/fleet/LibFleetTransfer.sol";
+import { LibTransfer } from "libraries/fleet/LibTransfer.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 
 /**
- * @title FleetTransferSystem
+ * @title TransferSystem
  * @dev Manages the transfer of units and resources between asteroids and fleets within the Primodium game, extending PrimodiumSystem functionalities.
  */
-contract FleetTransferSystem is PrimodiumSystem {
+contract TransferSystem is PrimodiumSystem {
   /* ---------------------------- Asteroid to Fleet --------------------------- */
 
   /**
@@ -30,7 +30,7 @@ contract FleetTransferSystem is PrimodiumSystem {
     _claimUnits(asteroidEntity)
     _unitCountIsValid(unitCounts)
   {
-    LibFleetTransfer.transferUnitsFromAsteroidToFleet(asteroidEntity, fleetEntity, unitCounts);
+    LibTransfer.transferUnitsFromAsteroidToFleet(asteroidEntity, fleetEntity, unitCounts);
   }
   /**
    * @notice Transfers resources from an asteroid to a fleet.
@@ -50,7 +50,7 @@ contract FleetTransferSystem is PrimodiumSystem {
     _claimResources(asteroidEntity)
     _resourceCountIsValid(resourceCounts)
   {
-    LibFleetTransfer.transferResourcesFromAsteroidToFleet(asteroidEntity, fleetEntity, resourceCounts);
+    LibTransfer.transferResourcesFromAsteroidToFleet(asteroidEntity, fleetEntity, resourceCounts);
   }
 
   /**
@@ -75,12 +75,7 @@ contract FleetTransferSystem is PrimodiumSystem {
     _unitCountIsValid(unitCounts)
     _resourceCountIsValid(resourceCounts)
   {
-    LibFleetTransfer.transferUnitsAndResourcesFromAsteroidToFleet(
-      asteroidEntity,
-      fleetEntity,
-      unitCounts,
-      resourceCounts
-    );
+    LibTransfer.transferUnitsAndResourcesFromAsteroidToFleet(asteroidEntity, fleetEntity, unitCounts, resourceCounts);
   }
 
   /* ---------------------------- Fleet to Asteroid --------------------------- */
@@ -105,7 +100,7 @@ contract FleetTransferSystem is PrimodiumSystem {
     _claimUnits(asteroidEntity)
     _unitCountIsValid(unitCounts)
   {
-    LibFleetTransfer.transferUnitsFromFleetToAsteroid(fromFleetEntity, asteroidEntity, unitCounts);
+    LibTransfer.transferUnitsFromFleetToAsteroid(fromFleetEntity, asteroidEntity, unitCounts);
   }
 
   /**
@@ -128,7 +123,7 @@ contract FleetTransferSystem is PrimodiumSystem {
     _claimResources(asteroidEntity)
     _resourceCountIsValid(resourceCounts)
   {
-    LibFleetTransfer.transferResourcesFromFleetToAsteroid(fleetEntity, asteroidEntity, resourceCounts);
+    LibTransfer.transferResourcesFromFleetToAsteroid(fleetEntity, asteroidEntity, resourceCounts);
   }
 
   /**
@@ -155,7 +150,7 @@ contract FleetTransferSystem is PrimodiumSystem {
     _unitCountIsValid(unitCounts)
     _resourceCountIsValid(resourceCounts)
   {
-    LibFleetTransfer.transferUnitsAndResourcesFromFleetToAsteroid(
+    LibTransfer.transferUnitsAndResourcesFromFleetToAsteroid(
       fromFleetEntity,
       asteroidEntity,
       unitCounts,
@@ -169,70 +164,65 @@ contract FleetTransferSystem is PrimodiumSystem {
    * @notice Transfers units from one fleet to another fleet in the same orbit.
    * @dev Can only be called by the owner of the fromFleet, when not in cooldown, and when both fleets are in the same orbit. Validates unit counts before transferring.
    * @param fromFleetEntity The unique identifier for the fleet from which units are being transferred.
-   * @param fleetEntity The unique identifier for the fleet to which units are being transferred.
+   * @param toFleetEntity The unique identifier for the fleet to which units are being transferred.
    * @param unitCounts An array of counts for each unit type to be transferred.
    */
   function transferUnitsFromFleetToFleet(
     bytes32 fromFleetEntity,
-    bytes32 fleetEntity,
+    bytes32 toFleetEntity,
     uint256[] calldata unitCounts
   )
     public
     _onlyFleetOwner(fromFleetEntity)
     _onlyWhenNotInCooldown(fromFleetEntity)
-    _onlyWhenFleetsAreIsInSameOrbit(fromFleetEntity, fleetEntity)
+    _onlyWhenFleetsAreIsInSameOrbit(fromFleetEntity, toFleetEntity)
     _unitCountIsValid(unitCounts)
   {
-    LibFleetTransfer.transferUnitsFromFleetToFleet(fromFleetEntity, fleetEntity, unitCounts);
+    LibTransfer.transferUnitsFromFleetToFleet(fromFleetEntity, toFleetEntity, unitCounts);
   }
 
   /**
    * @notice Transfers resources from one fleet to another fleet in the same orbit.
    * @dev Can only be called by the owner of the fromFleet, when not in cooldown, and when both fleets are in the same orbit. Validates resource counts before transferring.
    * @param fromFleetEntity The unique identifier for the fleet from which resources are being transferred.
-   * @param fleetEntity The unique identifier for the fleet to which resources are being transferred.
+   * @param toFleetEntity The unique identifier for the fleet to which resources are being transferred.
    * @param resourceCounts An array of counts for each resource type to be transferred.
    */
   function transferResourcesFromFleetToFleet(
     bytes32 fromFleetEntity,
-    bytes32 fleetEntity,
+    bytes32 toFleetEntity,
     uint256[] calldata resourceCounts
   )
     public
     _onlyFleetOwner(fromFleetEntity)
     _onlyWhenNotInCooldown(fromFleetEntity)
-    _onlyWhenFleetsAreIsInSameOrbit(fromFleetEntity, fleetEntity)
+    _onlyWhenFleetsAreIsInSameOrbit(fromFleetEntity, toFleetEntity)
     _resourceCountIsValid(resourceCounts)
   {
-    LibFleetTransfer.transferResourcesFromFleetToFleet(fromFleetEntity, fleetEntity, resourceCounts);
+    LibTransfer.transferResourcesFromFleetToFleet(fromFleetEntity, toFleetEntity, resourceCounts);
   }
 
   /**
    * @notice Transfers both units and resources from one fleet to another fleet in the same orbit.
    * @dev Combines the functionality of transferring units and resources between fleets into a single function call for efficiency.
    * @param fromFleetEntity The unique identifier for the fleet from which units and resources are being transferred.
-   * @param fleetEntity The unique identifier for the fleet to which units and resources are being transferred.
+   * @param toFleetEntity The unique identifier for the fleet to which units and resources are being transferred.
    * @param unitCounts An array of counts for each unit type to be transferred.
    * @param resourceCounts An array of counts for each resource type to be transferred.
    */
   function transferUnitsAndResourcesFromFleetToFleet(
     bytes32 fromFleetEntity,
-    bytes32 fleetEntity,
+    bytes32 toFleetEntity,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
   )
     public
     _onlyFleetOwner(fromFleetEntity)
     _onlyWhenNotInCooldown(fromFleetEntity)
-    _onlyWhenFleetsAreIsInSameOrbit(fromFleetEntity, fleetEntity)
+    _onlyWhenFleetsAreIsInSameOrbit(fromFleetEntity, toFleetEntity)
     _unitCountIsValid(unitCounts)
     _resourceCountIsValid(resourceCounts)
   {
-    LibFleetTransfer.transferUnitsAndResourcesFromFleetToFleet(
-      fromFleetEntity,
-      fleetEntity,
-      unitCounts,
-      resourceCounts
-    );
+    LibTransfer.transferUnitsAndResourcesFromFleetToFleet(fromFleetEntity, toFleetEntity, unitCounts, resourceCounts);
   }
 }

@@ -10,10 +10,10 @@ import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 
 /**
- * @title LibFleetTransfer
+ * @title LibTransfer
  * @dev Library for transferring units and resources between fleets and asteroids, including validations for ownership and capacity.
  */
-library LibFleetTransfer {
+library LibTransfer {
   /**
    * @notice Transfers units from an asteroid to a fleet, considering ownership and unit type restrictions.
    * @param asteroidEntity The identifier of the asteroid from which units are transferred.

@@ -10,7 +10,7 @@ import { UnitKey } from "src/Keys.sol";
 
 import { P_GameConfig, CooldownEnd, Home, P_EnumToPrototype, ResourceCount, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes, FleetMovement, P_RequiredResources, P_RequiredResourcesData, UnitLevel, P_IsUtility } from "codegen/index.sol";
 
-contract FleetTransferSystemTest is PrimodiumTest {
+contract TransferSystemTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;
   bytes32 aliceEntity;
 
