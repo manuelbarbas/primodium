@@ -30,7 +30,8 @@ contract UpgradeRangeSystem is PrimodiumSystem {
     );
     require(OwnedBy.get(asteroidEntity) == playerEntity, "[UpgradeRangeSystem] Asteroid not owned by player");
 
-    IWorld(_world()).Primodium__spendUpgradeResources(asteroidEntity, ExpansionKey, targetLevel);
+    IWorld world = IWorld(_world());
+    world.Primodium__spendUpgradeResources(asteroidEntity, ExpansionKey, targetLevel);
 
     Level.set(asteroidEntity, targetLevel);
   }

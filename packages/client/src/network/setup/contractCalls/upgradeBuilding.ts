@@ -1,5 +1,4 @@
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
 import { ampli } from "src/ampli";
 import { components } from "src/network/components";
 import { TxQueueOptions } from "src/network/components/customComponents/TransactionQueueComponent";
@@ -14,24 +13,23 @@ import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const upgradeBuilding = async (
   mud: MUD,
-  coord: Coord,
+  building: Entity,
   options?: Partial<TxQueueOptions<TransactionQueueType.Upgrade>>
 ) => {
-  const asteroid = components.ActiveRock.get()?.value;
-  if (!asteroid) return;
+  const position = components.Position.get(building);
+  if (!position) return;
 
-  const position = { ...coord, parent: asteroid as Hex };
   await execute(
     {
       mud,
       functionName: "Primodium__upgradeBuilding",
       systemId: getSystemId("UpgradeBuildingSystem"),
-      args: [position],
+      args: [building as Hex],
       withSession: true,
       options: { gas: 2_500_000n },
     },
     {
-      id: hashEntities(TransactionQueueType.Upgrade, coord.x, coord.y),
+      id: hashEntities(TransactionQueueType.Upgrade, building),
       type: TransactionQueueType.Upgrade,
       ...options,
     },
@@ -41,9 +39,9 @@ export const upgradeBuilding = async (
       const currLevel = components.Level.get(building)?.value || 0n;
 
       ampli.systemUpgrade({
-        asteroidCoord: asteroid!,
+        asteroidCoord: position.parent!,
         buildingType: getBlockTypeName(buildingType),
-        coord: [coord.x, coord.y],
+        coord: [position.x, position.y],
         currLevel: bigintToNumber(currLevel),
         ...parseReceipt(receipt),
       });

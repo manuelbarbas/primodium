@@ -248,7 +248,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
     }
     while (currLevel < newLevel) {
       await provideBuildingRequiredResources(position.parent as Entity, prototype as Entity, currLevel + 1n);
-      await upgradeBuildingCall(mud, position, { force: true });
+      await upgradeBuildingCall(mud, building, { force: true });
       currLevel++;
     }
   }
