@@ -1930,7 +1930,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
   UpgradeMainBase: {
     tables: {
-      P_ResourceReward: getResourceValues({ Iron: 3000 }),
+      P_ResourceReward: getResourceValues({ Iron: 100 }),
     },
     levels: {
       1: { P_RequiredBaseLevel: { value: 2n } },
@@ -1948,7 +1948,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         unitAmounts: [20n],
         ...getPirateObjectiveResourceValues({ Iron: 300, Copper: 300, IronPlate: 250 }),
       },
-      P_UnitReward: getUnitValues({ LightningCraft: 20 }),
+      P_UnitReward: getUnitValues({ MinutemanMarine: 1 }),
     },
   },
 
@@ -1962,14 +1962,14 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   BuildCopperMine: {
     tables: {
       P_HasBuiltBuildings: { value: encodeArray(["CopperMine"]) },
-      P_ResourceReward: getResourceValues({ Copper: 100, Iron: 100 }),
+      P_ResourceReward: getResourceValues({ Copper: 100 }),
     },
   },
 
   BuildLithiumMine: {
     tables: {
       P_HasBuiltBuildings: { value: encodeArray(["LithiumMine"]) },
-      P_ResourceReward: getResourceValues({ Lithium: 500 }),
+      P_ResourceReward: getResourceValues({ Lithium: 100 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
@@ -1978,7 +1978,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildIronMine"]) },
       P_HasBuiltBuildings: { value: encodeArray(["IronPlateFactory"]) },
-      P_ResourceReward: getResourceValues({ IronPlate: 100 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
     },
   },
 
@@ -1986,7 +1986,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildCopperMine"]) },
       P_HasBuiltBuildings: { value: encodeArray(["AlloyFactory"]) },
-      P_ResourceReward: getResourceValues({ Alloy: 200 }),
+      P_ResourceReward: getResourceValues({ Alloy: 10 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
@@ -2002,7 +2002,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         unitAmounts: [],
         ...getPirateObjectiveResourceValues({ Iron: 200, Copper: 200 }),
       },
-      P_UnitReward: getUnitValues({ LightningCraft: 35 }),
+      P_UnitReward: getUnitValues({ MinutemanMarine: 1 }),
     },
   },
 
@@ -2010,7 +2010,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildGarage"]) },
       P_HasBuiltBuildings: { value: encodeArray(["Workshop"]) },
-      P_ResourceReward: getResourceValues({ IronPlate: 500 }),
+      P_ResourceReward: getResourceValues({ TridentMarine: 1 }),
     },
   },
 
@@ -2018,7 +2018,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildLithiumMine"]) },
       P_HasBuiltBuildings: { value: encodeArray(["PVCellFactory"]) },
-      P_ResourceReward: getResourceValues({ PVCell: 200 }),
+      P_ResourceReward: getResourceValues({ PVCell: 10 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
@@ -2026,7 +2026,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildPVCellFactory"]) },
       P_HasBuiltBuildings: { value: encodeArray(["SolarPanel"]) },
-      P_ResourceReward: getResourceValues({ Iron: 1000, Copper: 1000 }),
+      P_ResourceReward: getResourceValues({ Lithium: 100 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
@@ -2035,7 +2035,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildSolarPanel"]) },
       P_HasBuiltBuildings: { value: encodeArray(["DroneFactory"]) },
-      P_UnitReward: getUnitValues({ HammerDrone: 30 }),
+      P_UnitReward: getUnitValues({ HammerDrone: 1 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
@@ -2043,7 +2043,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildSolarPanel"]) },
       P_HasBuiltBuildings: { value: encodeArray(["Hangar"]) },
-      P_UnitReward: getUnitValues({ TridentMarine: 100 }),
+      P_UnitReward: getUnitValues({ AnvilDrone: 1 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
   },
@@ -2051,28 +2051,28 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   BuildStarmapper: {
     tables: {
       P_HasBuiltBuildings: { value: encodeArray(["Starmapper"]) },
-      P_UnitReward: getUnitValues({ HammerDrone: 10, AnvilDrone: 10 }),
+      P_UnitReward: getUnitValues({ StingerDrone: 1 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
   },
   BuildSAMLauncher: {
     tables: {
       P_HasBuiltBuildings: { value: encodeArray(["SAM"]) },
-      P_UnitReward: getUnitValues({ AnvilDrone: 50 }),
+      P_ResourceReward: getResourceValues({ Copper: 100 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
   BuildVault: {
     tables: {
       P_HasBuiltBuildings: { value: encodeArray(["Vault"]) },
-      P_UnitReward: getUnitValues({ AnvilDrone: 50 }),
+      P_UnitReward: getUnitValues({ LightningCraft: 1 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
   BuildShieldGenerator: {
     tables: {
       P_HasBuiltBuildings: { value: encodeArray(["ShieldGenerator"]) },
-      P_UnitReward: getUnitValues({ AegisDrone: 150 }),
+      P_UnitReward: getUnitValues({ AegisDrone: 1 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
   },
@@ -2081,7 +2081,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
       P_ProducedUnits: getUnitValues({ MinutemanMarine: 50 }),
-      P_ResourceReward: getResourceValues({ IronPlate: 500 }),
+      P_ResourceReward: getResourceValues({ Iron: 100 }),
     },
   },
 
@@ -2089,7 +2089,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
       P_ProducedUnits: getUnitValues({ TridentMarine: 50 }),
-      P_ResourceReward: getResourceValues({ Lithium: 1000 }),
+      P_ResourceReward: getResourceValues({ Copper: 100 }),
     },
   },
 
@@ -2097,7 +2097,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildDroneFactory"]) },
       P_ProducedUnits: getUnitValues({ AnvilDrone: 20 }),
-      P_ResourceReward: getResourceValues({ PVCell: 500 }),
+      P_ResourceReward: getResourceValues({ PVCell: 10 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
@@ -2106,7 +2106,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildDroneFactory"]) },
       P_ProducedUnits: getUnitValues({ HammerDrone: 20 }),
-      P_ResourceReward: getResourceValues({ PVCell: 500 }),
+      P_ResourceReward: getResourceValues({ PVCell: 10 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
@@ -2115,7 +2115,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildDroneFactory"]) },
       P_ProducedUnits: getUnitValues({ AegisDrone: 20 }),
-      P_ResourceReward: getResourceValues({ Alloy: 500 }),
+      P_ResourceReward: getResourceValues({ Alloy: 10 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
   },
@@ -2124,7 +2124,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildDroneFactory"]) },
       P_ProducedUnits: getUnitValues({ StingerDrone: 20 }),
-      P_ResourceReward: getResourceValues({ Iron: 5000, Copper: 5000, Lithium: 5000 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
   },
@@ -2132,7 +2132,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   ExpandBase1: {
     tables: {
       P_RequiredExpansion: { value: 2n },
-      P_ResourceReward: getResourceValues({ Iron: 2000 }),
+      P_ResourceReward: getResourceValues({ Copper: 100 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
