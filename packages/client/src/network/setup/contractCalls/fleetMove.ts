@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { execute } from "src/network/actions";
+import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
@@ -10,7 +10,7 @@ export const sendFleet = async (mud: MUD, fleet: Entity, spaceRock: Entity) => {
   await execute(
     {
       mud,
-      functionName: "sendFleet",
+      functionName: "Primodium__sendFleet",
       systemId: getSystemId("FleetMoveSystem"),
       args: [fleet as Hex, spaceRock as Hex],
       withSession: true,
@@ -26,7 +26,7 @@ export const sendFleetPosition = async (mud: MUD, fleet: Entity, position: Coord
   await execute(
     {
       mud,
-      functionName: "sendFleet",
+      functionName: "Primodium__sendFleet",
       systemId: getSystemId("FleetMoveSystem"),
       args: [fleet as Hex, { ...position, parent: fleet as Hex }],
       withSession: true,
@@ -42,7 +42,7 @@ export const recallFleet = async (mud: MUD, fleet: Entity) => {
   await execute(
     {
       mud,
-      functionName: "recallFleet",
+      functionName: "Primodium__recallFleet",
       systemId: getSystemId("FleetMoveSystem"),
       args: [fleet as Hex],
       withSession: true,

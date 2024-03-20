@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
-import { execute } from "src/network/actions";
 import { components } from "src/network/components";
+import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
@@ -26,10 +26,10 @@ export const transferFleet = async (mud: MUD, from: Entity, to: Entity, deltas: 
 
   if (totalResources == 0n) {
     const functionName = fromIsSpaceRock
-      ? "transferUnitsFromSpaceRockToFleet"
+      ? "Primodium__transferUnitsFromSpaceRockToFleet"
       : toIsSpaceRock
-      ? "transferUnitsFromFleetToSpaceRock"
-      : "transferUnitsFromFleetToFleet";
+      ? "Primodium__transferUnitsFromFleetToSpaceRock"
+      : "Primodium__transferUnitsFromFleetToFleet";
     await execute(
       {
         mud,
@@ -42,10 +42,10 @@ export const transferFleet = async (mud: MUD, from: Entity, to: Entity, deltas: 
     );
   } else if (totalUnits == 0n) {
     const functionName = fromIsSpaceRock
-      ? "transferResourcesFromSpaceRockToFleet"
+      ? "Primodium__transferResourcesFromSpaceRockToFleet"
       : toIsSpaceRock
-      ? "transferResourcesFromFleetToSpaceRock"
-      : "transferResourcesFromFleetToFleet";
+      ? "Primodium__transferResourcesFromFleetToSpaceRock"
+      : "Primodium__transferResourcesFromFleetToFleet";
     await execute(
       {
         mud,
@@ -58,10 +58,10 @@ export const transferFleet = async (mud: MUD, from: Entity, to: Entity, deltas: 
     );
   } else {
     const functionName = fromIsSpaceRock
-      ? "transferUnitsAndResourcesFromSpaceRockToFleet"
+      ? "Primodium__transferUnitsAndResourcesFromSpaceRockToFleet"
       : toIsSpaceRock
-      ? "transferUnitsAndResourcesFromFleetToSpaceRock"
-      : "transferUnitsAndResourcesFromFleetToFleet";
+      ? "Primodium__transferUnitsAndResourcesFromFleetToSpaceRock"
+      : "Primodium__transferUnitsAndResourcesFromFleetToFleet";
     await execute(
       {
         mud,

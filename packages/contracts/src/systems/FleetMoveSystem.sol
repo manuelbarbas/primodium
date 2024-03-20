@@ -5,7 +5,7 @@ import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
 import { FleetMovement } from "codegen/index.sol";
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
-import { createSecondaryAsteroid } from "libraries/SubsystemCalls.sol";
+import { IWorld } from "codegen/world/IWorld.sol";
 import { OwnedBy, PirateAsteroid, Asteroid, PositionData, ReversePosition } from "codegen/index.sol";
 
 contract FleetMoveSystem is FleetBaseSystem {
@@ -42,7 +42,7 @@ contract FleetMoveSystem is FleetBaseSystem {
   function sendFleet(bytes32 fleetId, PositionData memory position) public {
     bytes32 spaceRock = ReversePosition.get(position.x, position.y);
     if (spaceRock == bytes32(0)) {
-      spaceRock = createSecondaryAsteroid(position);
+      spaceRock = IWorld(_world()).Primodium__createSecondaryAsteroid(position);
     }
     sendFleet(fleetId, spaceRock);
   }

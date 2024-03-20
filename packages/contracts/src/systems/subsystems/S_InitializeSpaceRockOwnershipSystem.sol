@@ -4,13 +4,20 @@ pragma solidity >=0.8.24;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 import { Position, PositionData } from "codegen/index.sol";
-import { buildMainBase } from "libraries/SubsystemCalls.sol";
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
-import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
+import { LibBuilding } from "libraries/LibBuilding.sol";
+import { IWorld } from "codegen/world/IWorld.sol";
 
 contract S_InitializeSpaceRockOwnershipSystem is PrimodiumSystem {
-  function initializeSpaceRockOwnership(bytes32 spaceRock, bytes32 owner) public {
-    LibAsteroid.initializeSpaceRockOwnership(spaceRock, owner);
-    buildMainBase(owner, spaceRock);
+  function initializeSpaceRockOwnership(bytes32 spaceRock, bytes32 playerEntity) public _claimResources(spaceRock) {
+    LibAsteroid.initializeSpaceRockOwnership(spaceRock, playerEntity);
+    PositionData memory position = Position.get(MainBasePrototypeId);
+    position.parent = spaceRock;
+
+    bytes32 buildingEntity = LibBuilding.build(playerEntity, MainBasePrototypeId, position);
+    IWorld world = IWorld(_world());
+    world.Primodium__increaseMaxStorage(buildingEntity, 1);
+    world.Primodium__upgradeProductionRate(buildingEntity, 1);
+    world.Primodium__spendBuildingRequiredResources(buildingEntity, 1);
   }
 }

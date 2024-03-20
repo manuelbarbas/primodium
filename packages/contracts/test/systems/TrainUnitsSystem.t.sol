@@ -33,7 +33,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     Spawned.set(player, true);
 
     switchPrank(alice);
-    aliceRock = world.spawn();
+    aliceRock = world.Primodium__spawn();
     switchPrank(creator);
   }
 
@@ -51,7 +51,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
 
   function testCannotProduceUnit() public {
     vm.expectRevert(bytes("[TrainUnitsSystem] Building cannot produce unit"));
-    world.trainUnits(building, unit, 1);
+    world.Primodium__trainUnits(building, unit, 1);
   }
 
   function testTrainUnits() public {
@@ -59,7 +59,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     unitPrototypes[0] = unitPrototype;
     P_UnitProdTypes.set(buildingPrototype, 0, unitPrototypes);
 
-    world.trainUnits(building, unit, 1);
+    world.Primodium__trainUnits(building, unit, 1);
     QueueItemUnitsData memory data = UnitProductionQueue.peek(building);
     assertEq(toString(data.unitId), toString(unitPrototype));
     assertEq(data.quantity, 1);
@@ -81,7 +81,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     P_UnitProdTypes.set(buildingPrototype, 0, unitPrototypes);
 
     vm.expectRevert(bytes("[SpendResources] Not enough resources to spend"));
-    world.trainUnits(building, unit, 1);
+    world.Primodium__trainUnits(building, unit, 1);
   }
 
   function testTrainUnitsUpdateAsteroid() public {
@@ -98,7 +98,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     ProductionRate.set(rock, Iron, 10);
     LastClaimedAt.set(rock, block.timestamp - 10);
 
-    world.trainUnits(building, unit, 1);
+    world.Primodium__trainUnits(building, unit, 1);
     LibUnit.claimUnits(rock);
     assertEq(ResourceCount.get(rock, Iron), 100, "resource count");
     assertEq(UnitCount.get(rock, unitPrototype), 100, "unit count");
@@ -160,11 +160,11 @@ contract TrainUnitsSystemTest is PrimodiumTest {
 
   function testInvalidBuilding() public {
     vm.expectRevert(bytes("[TrainUnitsSystem] Can not train units using an in active building"));
-    world.trainUnits(bytes32(0), unit, 1);
+    world.Primodium__trainUnits(bytes32(0), unit, 1);
   }
 
   function testInvalidUnit() public {
     vm.expectRevert();
-    world.trainUnits(building, EUnit(uint8(100)), 1);
+    world.Primodium__trainUnits(building, EUnit(uint8(100)), 1);
   }
 }

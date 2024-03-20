@@ -52,7 +52,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
     upgradeMainBase(bob);
@@ -60,7 +60,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     upgradeMainBase(bob);
 
     vm.startPrank(alice);
-    world.sendFleet(fleetId, bobHomeSpaceRock);
+    world.Primodium__sendFleet(fleetId, bobHomeSpaceRock);
     vm.stopPrank();
 
     vm.startPrank(creator);
@@ -82,7 +82,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     vm.warp(FleetMovement.getArrivalTime(fleetId));
     vm.startPrank(alice);
-    world.attack(fleetId, bobHomeSpaceRock);
+    world.Primodium__attack(fleetId, bobHomeSpaceRock);
     vm.stopPrank();
 
     assertEq(
@@ -150,7 +150,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
       setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
       vm.startPrank(alice);
-      fleetIds[i] = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+      fleetIds[i] = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
       vm.stopPrank();
       console.log("create fleet done %s", i);
     }
@@ -158,7 +158,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     vm.startPrank(alice);
     for (uint256 i = 0; i < fleetCountToWin; i++) {
       console.log("send fleet %s", i);
-      world.sendFleet(fleetIds[i], bobHomeSpaceRock);
+      world.Primodium__sendFleet(fleetIds[i], bobHomeSpaceRock);
       console.log("send fleet done %s", i);
     }
     vm.stopPrank();
@@ -175,9 +175,9 @@ contract FleetCombatSystemTest is PrimodiumTest {
     setupCreateFleet(bob, bobHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(bob);
-    bytes32 bobFleet = world.createFleet(bobHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 bobFleet = world.Primodium__createFleet(bobHomeSpaceRock, unitCounts, resourceCounts);
 
-    world.sendFleet(bobFleet, aliceHomeSpaceRock);
+    world.Primodium__sendFleet(bobFleet, aliceHomeSpaceRock);
     vm.stopPrank();
     console.log("creaete bob fleet done");
 
@@ -192,7 +192,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
       console.log("fleet attack %s", i);
       uint256 encryptionBeforeAttack = ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption));
 
-      world.attack(fleetIds[i], bobHomeSpaceRock);
+      world.Primodium__attack(fleetIds[i], bobHomeSpaceRock);
       if (encryptionBeforeAttack > decryption) {
         assertEq(
           ResourceCount.get(bobHomeSpaceRock, uint8(EResource.R_Encryption)),
@@ -267,12 +267,12 @@ contract FleetCombatSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     console.log("number of capital ships:", UnitCount.get(fleetId, capitalShipPrototype));
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.sendFleet(fleetId, bobHomeSpaceRock);
+    world.Primodium__sendFleet(fleetId, bobHomeSpaceRock);
     vm.stopPrank();
 
     vm.startPrank(creator);
@@ -297,7 +297,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     vm.warp(FleetMovement.getArrivalTime(fleetId));
     vm.startPrank(alice);
-    world.attack(fleetId, bobHomeSpaceRock);
+    world.Primodium__attack(fleetId, bobHomeSpaceRock);
     vm.stopPrank();
 
     assertEq(

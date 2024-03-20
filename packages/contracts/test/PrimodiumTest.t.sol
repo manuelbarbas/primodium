@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 import "forge-std/Test.sol";
+import { WorldResourceIdLib, ResourceId } from "@latticexyz/world/src/WorldResourceId.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 import { ResourceAccess, NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
-import { ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
 import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 
@@ -49,12 +49,8 @@ contract PrimodiumTest is MudTest {
   function setUp() public virtual override {
     super.setUp();
     world = IWorld(worldAddress);
-    creator = world.creator();
-
-    vm.startPrank(creator);
-    ResourceAccess.set(ROOT_NAMESPACE_ID, creator, true);
-    NamespaceOwner.set(ROOT_NAMESPACE_ID, creator);
-    vm.stopPrank();
+    address namespaceOwner = NamespaceOwner.get(WorldResourceIdLib.encodeNamespace(bytes14("Primodium")));
+    creator = namespaceOwner;
 
     alice = getUser();
     bob = getUser();
@@ -131,7 +127,7 @@ contract PrimodiumTest is MudTest {
 
   function spawn(address player) internal returns (bytes32) {
     vm.prank(player);
-    world.spawn();
+    world.Primodium__spawn();
     bytes32 playerEntity = addressToEntity(player);
     bytes32 homeRock = Home.get(playerEntity);
     return homeRock;
@@ -242,7 +238,7 @@ contract PrimodiumTest is MudTest {
     vm.stopPrank();
 
     vm.startPrank(player);
-    world.trainUnits(buildingEntity, unitPrototype, count);
+    world.Primodium__trainUnits(buildingEntity, unitPrototype, count);
     if (fastForward) vm.warp(block.timestamp + (LibUnit.getUnitBuildTime(buildingEntity, unitPrototype) * count));
     vm.stopPrank();
 
@@ -278,7 +274,7 @@ contract PrimodiumTest is MudTest {
     );
     upgradeMainBase(player, requiredMainBaseLevel);
     vm.startPrank(player);
-    world.upgradeBuilding(buildingEntity);
+    world.Primodium__upgradeBuilding(buildingEntity);
     vm.stopPrank();
   }
 
@@ -289,7 +285,7 @@ contract PrimodiumTest is MudTest {
     uint256 requiredMainBaseLevel = P_RequiredBaseLevel.get(P_EnumToPrototype.get(BuildingKey, uint8(building)), 1);
     upgradeMainBase(player, requiredMainBaseLevel);
     vm.startPrank(player);
-    bytes32 buildingEntity = world.build(building, position);
+    bytes32 buildingEntity = world.Primodium__build(building, position);
     vm.stopPrank();
     return buildingEntity;
   }
@@ -316,7 +312,7 @@ contract PrimodiumTest is MudTest {
 
   function claimResources(bytes32 spaceRock) internal {
     vm.startPrank(creator);
-    world.claimResources(spaceRock);
+    world.Primodium__claimResources(spaceRock);
     vm.stopPrank();
   }
 
@@ -452,15 +448,15 @@ contract PrimodiumTest is MudTest {
     setupCreateFleet(player, sourceAsteroid, unitCounts, resourceCounts);
     vm.startPrank(player);
     console.log("creating");
-    bytes32 fleetEntity = world.createFleet(sourceAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(sourceAsteroid, unitCounts, resourceCounts);
     console.log("sending");
-    world.sendFleet(fleetEntity, targetAsteroid);
+    world.Primodium__sendFleet(fleetEntity, targetAsteroid);
     vm.warp(FleetMovement.getArrivalTime(fleetEntity));
 
     while (OwnedBy.get(targetAsteroid) != playerEntity) {
       console.log("attacking");
       uint256 cooldown = LibFleetCombat.getCooldownTime(LibCombatAttributes.getAttack(fleetEntity), true);
-      world.attack(fleetEntity, targetAsteroid);
+      world.Primodium__attack(fleetEntity, targetAsteroid);
       vm.warp(block.timestamp + cooldown);
     }
     vm.stopPrank();

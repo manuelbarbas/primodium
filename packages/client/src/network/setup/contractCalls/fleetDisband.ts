@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
-import { execute } from "src/network/actions";
 import { components } from "src/network/components";
+import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
@@ -13,7 +13,7 @@ export const disbandFleet = async (mud: MUD, fleet: Entity) => {
   await execute(
     {
       mud,
-      functionName: "disbandFleet",
+      functionName: "Primodium__disbandFleet",
       systemId: getSystemId("FleetDisbandSystem"),
       args: [fleet as Hex],
       withSession: true,
@@ -38,7 +38,7 @@ export const disbandFleetUnitsResources = async (mud: MUD, fleet: Entity, conten
     return await execute(
       {
         mud,
-        functionName: "disbandResources",
+        functionName: "Primodium__disbandResources",
         systemId: getSystemId("FleetDisbandSystem"),
         args: [fleet as Hex, resourceCounts],
         withSession: true,
@@ -53,7 +53,7 @@ export const disbandFleetUnitsResources = async (mud: MUD, fleet: Entity, conten
     return await execute(
       {
         mud,
-        functionName: "disbandUnits",
+        functionName: "Primodium__disbandUnits",
         systemId: getSystemId("FleetDisbandSystem"),
         args: [fleet as Hex, unitCounts],
         withSession: true,
@@ -67,7 +67,7 @@ export const disbandFleetUnitsResources = async (mud: MUD, fleet: Entity, conten
     await execute(
       {
         mud,
-        functionName: "disbandUnitsAndResourcesFromFleet",
+        functionName: "Primodium__disbandUnitsAndResourcesFromFleet",
         systemId: getSystemId("FleetDisbandSystem"),
         args: [fleet as Hex, unitCounts, resourceCounts],
         withSession: true,

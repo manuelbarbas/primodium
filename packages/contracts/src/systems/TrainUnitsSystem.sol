@@ -7,7 +7,7 @@ import { UnitProductionQueue } from "codegen/Libraries.sol";
 
 import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
-import { claimResources, claimUnits } from "libraries/SubsystemCalls.sol";
+import { IWorld } from "codegen/world/IWorld.sol";
 import { LibResource } from "codegen/Libraries.sol";
 import { LibUnit } from "codegen/Libraries.sol";
 
@@ -49,9 +49,9 @@ contract TrainUnitsSystem is PrimodiumSystem {
     if (count == 0) return;
 
     bytes32 spaceRockEntity = OwnedBy.get(buildingEntity);
-
-    claimResources(spaceRockEntity);
-    claimUnits(spaceRockEntity);
+    IWorld world = IWorld(_world());
+    world.Primodium__claimResources(spaceRockEntity);
+    world.Primodium__claimUnits(spaceRockEntity);
     LibResource.spendUnitRequiredResources(spaceRockEntity, unitPrototype, count);
     LibUnit.checkTrainUnitsRequirements(buildingEntity, unitPrototype);
 

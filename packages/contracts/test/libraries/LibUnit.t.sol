@@ -23,7 +23,7 @@ contract LibUnitTest is PrimodiumTest {
     super.setUp();
     vm.startPrank(creator);
     player = addressToEntity(creator);
-    world.spawn();
+    world.Primodium__spawn();
 
     BuildingType.set(building, buildingPrototype);
     OwnedBy.set(Home.get(player), player);
@@ -80,6 +80,7 @@ contract LibUnitTest is PrimodiumTest {
   }
 
   function testClaimUnitsConqueredAsteroid() public {
+    P_GameConfig.setAsteroidChanceInv(1);
     PositionData memory position = Position.get(Home.get(player));
 
     bytes32 secondaryAsteroid = LibAsteroid.createSecondaryAsteroid(findSecondaryAsteroid(player, Home.get(player)));
@@ -101,8 +102,8 @@ contract LibUnitTest is PrimodiumTest {
     bytes32[] memory buildings = UnitFactorySet.getAll(secondaryAsteroid);
     console.log("buildings", buildings.length);
     for (uint256 i = 0; i < buildings.length; i++) {
-      bytes32 building = buildings[i];
-      bytes32 asteroid = OwnedBy.get(building);
+      bytes32 buildingEntity = buildings[i];
+      bytes32 asteroid = OwnedBy.get(buildingEntity);
       console.log("building owner: %x", uint256(asteroid));
       console.log("is asteroid:", Asteroid.getIsAsteroid(asteroid));
     }

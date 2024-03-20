@@ -2,6 +2,16 @@
 pragma solidity >=0.8.24;
 
 import "test/PrimodiumTest.t.sol";
+import { Systems } from "@latticexyz/world/src/codegen/tables/Systems.sol";
+import { UNLIMITED_DELEGATION } from "@latticexyz/world/src/constants.sol";
+import { ResourceId, WorldResourceIdLib, WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
+import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
+import { SystemCallData, SystemCallFromData } from "@latticexyz/world/src/modules/init/types.sol";
+import { WorldRegistrationSystem } from "@latticexyz/world/src/modules/init/implementations/WorldRegistrationSystem.sol";
+import { SpawnSystem } from "systems/SpawnSystem.sol";
+import { ROOT_NAMESPACE } from "@latticexyz/world/src/constants.sol";
+import { UserDelegationControl } from "@latticexyz/world/src/codegen/tables/UserDelegationControl.sol";
+import { ISpawnSystem } from "codegen/world/ISpawnSystem.sol";
 
 contract SpawnSystemTest is PrimodiumTest {
   function setUp() public override {
@@ -10,8 +20,7 @@ contract SpawnSystemTest is PrimodiumTest {
 
   function testSpawnu() public {
     bytes32 playerEntity = addressToEntity(creator);
-    bytes32 asteroidEntity = LibEncode.getHash(playerEntity);
-    spawn(creator);
+    bytes32 asteroidEntity = spawn(creator);
     vm.startPrank(creator);
 
     bool spawned = Spawned.get(playerEntity);
@@ -23,10 +32,43 @@ contract SpawnSystemTest is PrimodiumTest {
     assertEq(MaxResourceCount.get(asteroidEntity, uint8(EResource.U_MaxFleets)), 1, "Asteroid should have 1 max fleet");
   }
 
+  function testSpawnAndAuthorizeBatch() public {
+    vm.startPrank(alice);
+    SystemCallData[] memory systemCalls = new SystemCallData[](2);
+
+    ResourceId systemId = WorldResourceIdLib.encode({
+      typeId: RESOURCE_SYSTEM,
+      namespace: ROOT_NAMESPACE,
+      name: bytes14("Registration")
+    });
+
+    systemCalls[0] = SystemCallData(
+      systemId,
+      abi.encodeCall(WorldRegistrationSystem.registerDelegation, (bob, UNLIMITED_DELEGATION, new bytes(0)))
+    );
+
+    systemId = WorldResourceIdLib.encode({
+      typeId: RESOURCE_SYSTEM,
+      namespace: bytes14("Primodium"),
+      name: bytes16("SpawnSystem")
+    });
+    console.logBytes8(ISpawnSystem.Primodium__spawn.selector);
+    console.logBytes8(SpawnSystem.spawn.selector);
+    systemCalls[1] = SystemCallData(systemId, abi.encodeCall(ISpawnSystem.Primodium__spawn, ()));
+
+    vm.expectRevert();
+    world.batchCall(systemCalls);
+
+    systemCalls[1] = SystemCallData(systemId, abi.encodeCall(SpawnSystem.spawn, ()));
+    world.batchCall(systemCalls);
+    assertTrue(Spawned.get(addressToEntity(alice)), "Alice should have spawned");
+    console.log(WorldResourceIdInstance.toString(UserDelegationControl.get(alice, bob)));
+  }
+
   function testSpawnTwice() public {
-    world.spawn();
+    world.Primodium__spawn();
     vm.expectRevert(bytes("[SpawnSystem] Already spawned"));
-    world.spawn();
+    world.Primodium__spawn();
   }
 
   function testUniqueAsteroidPosition() public {
@@ -63,6 +105,6 @@ contract SpawnSystemTest is PrimodiumTest {
 
   function testBuildBeforeSpawnFail() public {
     vm.expectRevert(bytes("[BuildSystem] Player has not spawned"));
-    world.build(EBuilding.IronMine, PositionData(0, 0, 0));
+    world.Primodium__build(EBuilding.IronMine, PositionData(0, 0, 0));
   }
 }

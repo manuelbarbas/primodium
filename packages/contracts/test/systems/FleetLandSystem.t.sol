@@ -30,8 +30,8 @@ contract FleetLandSystemTest is PrimodiumTest {
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
-    world.landFleet(fleetId, aliceHomeSpaceRock);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    world.Primodium__landFleet(fleetId, aliceHomeSpaceRock);
     vm.stopPrank();
     assertEq(UnitCount.get(fleetId, unitPrototype), 0, "fleet unit count doesn't match");
     assertEq(UnitCount.get(aliceHomeSpaceRock, unitPrototype), 1, "space rock unit count doesn't match");
@@ -66,14 +66,14 @@ contract FleetLandSystemTest is PrimodiumTest {
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.prank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.prank(creator);
     CooldownEnd.set(fleetId, block.timestamp + 1);
 
     vm.startPrank(alice);
     vm.expectRevert("[Fleet] Fleet is in cooldown");
-    world.landFleet(fleetId, aliceHomeSpaceRock);
+    world.Primodium__landFleet(fleetId, aliceHomeSpaceRock);
     vm.stopPrank();
   }
 }

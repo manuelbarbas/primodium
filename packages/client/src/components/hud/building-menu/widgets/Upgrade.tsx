@@ -27,7 +27,7 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
   const hasEnough = useHasEnoughResources(buildingInfo?.upgrade?.recipe ?? [], spaceRock);
 
   if (!buildingInfo || !spaceRock) return null;
-  const { position, level, maxLevel, upgrade } = buildingInfo;
+  const { level, maxLevel, upgrade } = buildingInfo;
   const canUpgrade = hasEnough && upgrade && level < maxLevel && mainBaseLevel >= upgrade.mainBaseLvlReq;
   const atMaxLevel = level >= maxLevel;
 
@@ -72,11 +72,11 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
             </div>
           </div>
         </div>
-        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, position.x, position.y)}>
+        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, building)}>
           <Button
             className="w-fit btn-secondary btn-sm"
             disabled={!canUpgrade}
-            onClick={() => upgradeBuilding(mud, position)}
+            onClick={() => upgradeBuilding(mud, building)}
           >
             Upgrade
           </Button>

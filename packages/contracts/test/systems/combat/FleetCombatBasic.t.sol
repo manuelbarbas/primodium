@@ -55,8 +55,8 @@ contract FleetCombatSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    world.sendFleet(fleetId, bobHomeAsteroid);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__sendFleet(fleetId, bobHomeAsteroid);
 
     switchPrank(creator);
 
@@ -71,7 +71,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     assertEq(LibFleetStance.getAllies(fleetId).length, 0, "alice ally fleet");
     assertEq(LibFleetStance.getAllies(bobHomeAsteroid).length, 0, "bob ally fleet");
     switchPrank(alice);
-    world.attack(fleetId, bobHomeAsteroid);
+    world.Primodium__attack(fleetId, bobHomeAsteroid);
 
     assertEq(GracePeriod.get(fleetId), 0, "fleet should not be in grace period");
     assertEq(GracePeriod.get(aliceHomeAsteroid), 0, "home rock should not be in grace period");
@@ -107,10 +107,10 @@ contract FleetCombatSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.prank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.prank(alice);
-    world.sendFleet(fleetId, bobHomeAsteroid);
+    world.Primodium__sendFleet(fleetId, bobHomeAsteroid);
 
     vm.prank(creator);
     GracePeriod.set(bobHomeAsteroid, block.timestamp);
@@ -133,7 +133,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetId), GracePeriod.get(bobHomeAsteroid)));
 
     vm.prank(alice);
-    world.attack(fleetId, bobHomeAsteroid);
+    world.Primodium__attack(fleetId, bobHomeAsteroid);
 
     assertEq(
       ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_Encryption)),
@@ -198,9 +198,9 @@ contract FleetCombatSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.prank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.prank(alice);
-    world.sendFleet(fleetId, bobHomeAsteroid);
+    world.Primodium__sendFleet(fleetId, bobHomeAsteroid);
 
     vm.prank(creator);
     GracePeriod.set(bobHomeAsteroid, block.timestamp);
@@ -227,7 +227,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetId), GracePeriod.get(bobHomeAsteroid)));
     vm.prank(alice);
-    world.attack(fleetId, bobHomeAsteroid);
+    world.Primodium__attack(fleetId, bobHomeAsteroid);
 
     assertEq(
       ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_HP)),
@@ -300,8 +300,8 @@ contract FleetCombatSystemTest is PrimodiumTest {
     // create and send alice fleet
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.startPrank(alice);
-    bytes32 aliceFleetEntity = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    world.sendFleet(aliceFleetEntity, bobHomeAsteroid);
+    bytes32 aliceFleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__sendFleet(aliceFleetEntity, bobHomeAsteroid);
 
     switchPrank(creator);
     GracePeriod.set(bobHomeAsteroid, block.timestamp);
@@ -312,7 +312,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     }
     setupCreateFleet(bob, bobHomeAsteroid, unitCounts, resourceCounts);
     switchPrank(bob);
-    bytes32 bobFleetEntity = world.createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 bobFleetEntity = world.Primodium__createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
 
     vm.warp(LibMath.max(FleetMovement.getArrivalTime(aliceFleetEntity), GracePeriod.get(bobFleetEntity)));
 
@@ -327,7 +327,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     assertGt(GracePeriod.get(bobFleetEntity), 0, "bob fleet should be in grace period");
 
     switchPrank(alice);
-    world.attack(aliceFleetEntity, bobFleetEntity);
+    world.Primodium__attack(aliceFleetEntity, bobFleetEntity);
 
     assertEq(GracePeriod.get(aliceFleetEntity), 0, "alice fleet should not be in grace period");
     assertEq(GracePeriod.get(aliceHomeAsteroid), 0, "alice home rock should not be in grace period");
@@ -353,8 +353,8 @@ contract FleetCombatSystemTest is PrimodiumTest {
     // create and send alice fleet
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.startPrank(alice);
-    bytes32 aliceFleetEntity = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    world.sendFleet(aliceFleetEntity, bobHomeAsteroid);
+    bytes32 aliceFleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__sendFleet(aliceFleetEntity, bobHomeAsteroid);
 
     switchPrank(creator);
     GracePeriod.set(bobHomeAsteroid, block.timestamp);
@@ -365,7 +365,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     }
     setupCreateFleet(bob, bobHomeAsteroid, unitCounts, resourceCounts);
     switchPrank(bob);
-    bytes32 bobFleetEntity = world.createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 bobFleetEntity = world.Primodium__createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
 
     vm.warp(LibMath.max(FleetMovement.getArrivalTime(aliceFleetEntity), GracePeriod.get(bobFleetEntity)));
 
@@ -374,7 +374,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
       .getAttacksWithAllies(aliceFleetEntity);
 
     switchPrank(alice);
-    world.attack(aliceFleetEntity, bobHomeAsteroid);
+    world.Primodium__attack(aliceFleetEntity, bobHomeAsteroid);
 
     uint256 cooldown = LibFleetCombat.getCooldownTime(aliceAttack, false);
     switchPrank(creator);
@@ -400,8 +400,8 @@ contract FleetCombatSystemTest is PrimodiumTest {
     // create and send alice fleet
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.startPrank(alice);
-    bytes32 aliceFleetEntity = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    world.sendFleet(aliceFleetEntity, bobHomeAsteroid);
+    bytes32 aliceFleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__sendFleet(aliceFleetEntity, bobHomeAsteroid);
 
     switchPrank(creator);
     GracePeriod.set(bobHomeAsteroid, block.timestamp);
@@ -412,7 +412,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     }
     setupCreateFleet(bob, bobHomeAsteroid, unitCounts, resourceCounts);
     switchPrank(bob);
-    bytes32 bobFleetEntity = world.createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 bobFleetEntity = world.Primodium__createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
 
     vm.warp(LibMath.max(FleetMovement.getArrivalTime(aliceFleetEntity), GracePeriod.get(bobFleetEntity)));
 
@@ -421,7 +421,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     switchPrank(alice);
 
     vm.expectRevert("[Fleet] Fleet is in cooldown");
-    world.attack(aliceFleetEntity, bobHomeAsteroid);
+    world.Primodium__attack(aliceFleetEntity, bobHomeAsteroid);
   }
 
   function testCooldownTimes() public {
@@ -468,8 +468,8 @@ contract FleetCombatSystemTest is PrimodiumTest {
     // create and send alice fleet
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.startPrank(alice);
-    bytes32 aliceFleetEntity = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    world.sendFleet(aliceFleetEntity, bobHomeAsteroid);
+    bytes32 aliceFleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__sendFleet(aliceFleetEntity, bobHomeAsteroid);
 
     switchPrank(creator);
     GracePeriod.set(bobHomeAsteroid, block.timestamp);
@@ -480,7 +480,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     }
     setupCreateFleet(bob, bobHomeAsteroid, unitCounts, resourceCounts);
     switchPrank(bob);
-    bytes32 bobFleetEntity = world.createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 bobFleetEntity = world.Primodium__createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
 
     vm.warp(LibMath.max(FleetMovement.getArrivalTime(aliceFleetEntity), GracePeriod.get(bobFleetEntity)));
 
@@ -494,9 +494,9 @@ contract FleetCombatSystemTest is PrimodiumTest {
     assertGt(GracePeriod.get(bobHomeAsteroid), 0, "bob home rock should be in grace period");
     assertGt(GracePeriod.get(bobFleetEntity), 0, "bob fleet should be in grace period");
 
-    world.setFleetStance(bobFleetEntity, uint8(EFleetStance.Block), bobHomeAsteroid);
+    world.Primodium__setFleetStance(bobFleetEntity, uint8(EFleetStance.Block), bobHomeAsteroid);
     switchPrank(alice);
-    world.attack(aliceFleetEntity, bobFleetEntity);
+    world.Primodium__attack(aliceFleetEntity, bobFleetEntity);
 
     assertEq(GracePeriod.get(aliceFleetEntity), 0, "alice fleet should not be in grace period");
     assertEq(GracePeriod.get(aliceHomeAsteroid), 0, "alice home rock should not be in grace period");
@@ -526,10 +526,10 @@ contract FleetCombatSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.prank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.prank(alice);
-    world.sendFleet(fleetId, bobHomeAsteroid);
+    world.Primodium__sendFleet(fleetId, bobHomeAsteroid);
 
     vm.prank(creator);
     GracePeriod.set(bobHomeAsteroid, block.timestamp);
@@ -553,7 +553,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     vm.startPrank(bob);
 
-    world.attack(bobHomeAsteroid, fleetId);
+    world.Primodium__attack(bobHomeAsteroid, fleetId);
 
     assertEq(
       ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_Encryption)),
@@ -618,9 +618,9 @@ contract FleetCombatSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.prank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.prank(alice);
-    world.sendFleet(fleetId, bobHomeAsteroid);
+    world.Primodium__sendFleet(fleetId, bobHomeAsteroid);
 
     vm.prank(creator);
     GracePeriod.set(bobHomeAsteroid, block.timestamp);
@@ -647,7 +647,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetId), GracePeriod.get(fleetId)));
     vm.prank(bob);
-    world.attack(bobHomeAsteroid, fleetId);
+    world.Primodium__attack(bobHomeAsteroid, fleetId);
 
     assertEq(
       ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_HP)),
@@ -714,8 +714,8 @@ contract FleetCombatSystemTest is PrimodiumTest {
     // create and send alice fleet
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.startPrank(alice);
-    bytes32 aliceFleetEntity = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    world.sendFleet(aliceFleetEntity, bobHomeAsteroid);
+    bytes32 aliceFleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__sendFleet(aliceFleetEntity, bobHomeAsteroid);
 
     switchPrank(creator);
     GracePeriod.set(bobHomeAsteroid, block.timestamp);
@@ -726,7 +726,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     }
     setupCreateFleet(bob, bobHomeAsteroid, unitCounts, resourceCounts);
     switchPrank(bob);
-    bytes32 bobFleetEntity = world.createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 bobFleetEntity = world.Primodium__createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
 
     vm.warp(LibMath.max(FleetMovement.getArrivalTime(aliceFleetEntity), GracePeriod.get(bobFleetEntity)));
 
@@ -736,7 +736,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     uint256 aliceHp = LibCombatAttributes.getHp(aliceFleetEntity);
 
     switchPrank(alice);
-    world.attack(aliceFleetEntity, bobFleetEntity);
+    world.Primodium__attack(aliceFleetEntity, bobFleetEntity);
 
     FleetMovementData memory fleetMovement = FleetMovement.get(bobFleetEntity);
 
@@ -762,8 +762,8 @@ contract FleetCombatSystemTest is PrimodiumTest {
     // create and send alice fleet
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.startPrank(alice);
-    bytes32 aliceFleetEntity = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    world.sendFleet(aliceFleetEntity, bobHomeAsteroid);
+    bytes32 aliceFleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__sendFleet(aliceFleetEntity, bobHomeAsteroid);
 
     // create bob fleet
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
@@ -771,7 +771,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
     }
     setupCreateFleet(bob, bobHomeAsteroid, unitCounts, resourceCounts);
     switchPrank(bob);
-    bytes32 bobFleetEntity = world.createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 bobFleetEntity = world.Primodium__createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
 
     switchPrank(creator);
 
@@ -789,7 +789,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
       FleetMovement.getArrivalTime(aliceFleetEntity),
       FleetMovement.getArrivalTime(bobFleetEntity)
     );
-    world.attack(aliceFleetEntity, bobFleetEntity);
+    world.Primodium__attack(aliceFleetEntity, bobFleetEntity);
 
     FleetMovementData memory fleetMovement = FleetMovement.get(aliceFleetEntity);
 
@@ -821,8 +821,8 @@ contract FleetCombatSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    world.sendFleet(fleetId, bobHomeAsteroid);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__sendFleet(fleetId, bobHomeAsteroid);
 
     switchPrank(creator);
     GracePeriod.set(bobHomeAsteroid, block.timestamp);
@@ -837,7 +837,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     switchPrank(bob);
     vm.expectRevert("[Fleet] Not fleet owner");
-    world.attack(fleetId, bobHomeAsteroid);
+    world.Primodium__attack(fleetId, bobHomeAsteroid);
     vm.stopPrank();
   }
 
@@ -857,8 +857,8 @@ contract FleetCombatSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    world.sendFleet(fleetId, bobHomeAsteroid);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__sendFleet(fleetId, bobHomeAsteroid);
 
     vm.warp(GracePeriod.get(bobHomeAsteroid) - 1);
 
@@ -868,7 +868,7 @@ contract FleetCombatSystemTest is PrimodiumTest {
 
     vm.expectRevert("[Fleet] Target is in grace period");
     switchPrank(alice);
-    world.attack(fleetId, bobHomeAsteroid);
+    world.Primodium__attack(fleetId, bobHomeAsteroid);
   }
 
   function testFleetAttackInStance() public {
@@ -887,22 +887,22 @@ contract FleetCombatSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    world.sendFleet(fleetId, bobHomeAsteroid);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__sendFleet(fleetId, bobHomeAsteroid);
 
     switchPrank(creator);
 
     vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetId), GracePeriod.get(bobHomeAsteroid)));
 
     switchPrank(alice);
-    world.setFleetStance(fleetId, uint8(EFleetStance.Defend), bobHomeAsteroid);
+    world.Primodium__setFleetStance(fleetId, uint8(EFleetStance.Defend), bobHomeAsteroid);
     vm.expectRevert("[Fleet] Fleet cannot be in stance");
-    world.attack(fleetId, bobHomeAsteroid);
+    world.Primodium__attack(fleetId, bobHomeAsteroid);
 
-    world.setFleetStance(fleetId, uint8(EFleetStance.Block), bobHomeAsteroid);
+    world.Primodium__setFleetStance(fleetId, uint8(EFleetStance.Block), bobHomeAsteroid);
 
     vm.expectRevert("[Fleet] Fleet cannot be in stance");
-    world.attack(fleetId, bobHomeAsteroid);
+    world.Primodium__attack(fleetId, bobHomeAsteroid);
   }
 
   function testAttackNotInOrbit() public {
@@ -921,11 +921,11 @@ contract FleetCombatSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetId), GracePeriod.get(bobHomeAsteroid)));
 
     switchPrank(alice);
     vm.expectRevert("[Fleet] Fleet is not in orbit");
-    world.attack(fleetId, bobHomeAsteroid);
+    world.Primodium__attack(fleetId, bobHomeAsteroid);
   }
 }

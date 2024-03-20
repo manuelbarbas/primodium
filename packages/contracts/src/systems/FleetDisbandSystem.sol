@@ -3,12 +3,13 @@ pragma solidity >=0.8.24;
 
 import { FleetBaseSystem } from "systems/internal/FleetBaseSystem.sol";
 import { LibFleetDisband } from "libraries/fleet/LibFleetDisband.sol";
-import { resetFleetIfNoUnitsLeft } from "src/libraries/SubsystemCalls.sol";
+import { IWorld } from "codegen/world/IWorld.sol";
 
 contract FleetDisbandSystem is FleetBaseSystem {
   function disbandFleet(bytes32 fleetId) public _onlyFleetOwner(fleetId) {
     LibFleetDisband.disbandFleet(fleetId);
-    resetFleetIfNoUnitsLeft(fleetId);
+    IWorld world = IWorld(_world());
+    world.Primodium__resetFleetIfNoUnitsLeft(fleetId);
   }
 
   function disbandUnitsAndResourcesFromFleet(
@@ -23,7 +24,8 @@ contract FleetDisbandSystem is FleetBaseSystem {
     _resourceCountIsValid(resourceCounts)
   {
     LibFleetDisband.disbandUnitsAndResourcesFromFleet(fleetId, unitCounts, resourceCounts);
-    resetFleetIfNoUnitsLeft(fleetId);
+    IWorld world = IWorld(_world());
+    world.Primodium__resetFleetIfNoUnitsLeft(fleetId);
   }
 
   function disbandUnits(
@@ -31,7 +33,8 @@ contract FleetDisbandSystem is FleetBaseSystem {
     uint256[] calldata unitCounts
   ) public _onlyWhenFleetIsInOrbit(fleetId) _onlyFleetOwner(fleetId) _unitCountIsValid(unitCounts) {
     LibFleetDisband.disbandUnits(fleetId, unitCounts);
-    resetFleetIfNoUnitsLeft(fleetId);
+    IWorld world = IWorld(_world());
+    world.Primodium__resetFleetIfNoUnitsLeft(fleetId);
   }
 
   function disbandResources(

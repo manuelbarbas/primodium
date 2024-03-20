@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { ampli } from "src/ampli";
-import { execute } from "src/network/actions";
 import { components } from "src/network/components";
+import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
@@ -14,7 +14,7 @@ export const upgradeRange = async (mud: MUD, asteroid: Entity) => {
   await execute(
     {
       mud,
-      functionName: "upgradeRange",
+      functionName: "Primodium__upgradeRange",
       systemId: getSystemId("UpgradeRangeSystem"),
       args: [asteroid as Hex],
       withSession: true,

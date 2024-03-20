@@ -23,7 +23,7 @@ contract CounterTest is PrimodiumTest {
     assertEq(counter, 1);
 
     // Expect the counter to be 2 after calling increment.
-    world.increment();
+    world.Primodium__increment();
     counter = Counter.get();
     assertEq(counter, 2);
   }

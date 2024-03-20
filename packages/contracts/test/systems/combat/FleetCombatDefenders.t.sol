@@ -49,8 +49,8 @@ contract CombatDefenderTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    world.sendFleet(fleetId, bobHomeAsteroid);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__sendFleet(fleetId, bobHomeAsteroid);
 
     switchPrank(creator);
     GracePeriod.set(bobHomeAsteroid, block.timestamp);
@@ -61,8 +61,8 @@ contract CombatDefenderTest is PrimodiumTest {
     }
     setupCreateFleet(bob, bobHomeAsteroid, unitCounts, resourceCounts);
     switchPrank(bob);
-    bytes32 bobFleetEntity = world.createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
-    world.setFleetStance(bobFleetEntity, uint8(EFleetStance.Defend), bobHomeAsteroid);
+    bytes32 bobFleetEntity = world.Primodium__createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__setFleetStance(bobFleetEntity, uint8(EFleetStance.Defend), bobHomeAsteroid);
 
     console.log("is fleet:", IsFleet.get(bobHomeAsteroid));
     assertEq(LibFleetStance.getAllies(bobHomeAsteroid).length, 1, "bob should have 1 ally fleet");
@@ -77,7 +77,7 @@ contract CombatDefenderTest is PrimodiumTest {
     assertGt(GracePeriod.get(aliceHomeAsteroid), 0, "home rock should be in grace period");
 
     switchPrank(alice);
-    world.attack(fleetId, bobHomeAsteroid);
+    world.Primodium__attack(fleetId, bobHomeAsteroid);
     vm.stopPrank();
 
     assertEq(GracePeriod.get(fleetId), 0, "fleet should not be in grace period");

@@ -37,7 +37,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
     increaseResource(aliceHomeSpaceRock, EResource.U_MaxFleets, 1);
@@ -45,7 +45,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 secondFleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 secondFleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
@@ -57,7 +57,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     }
 
     vm.startPrank(alice);
-    world.transferUnitsAndResourcesFromFleetToFleet(fleetId, secondFleetId, unitCounts, resourceCounts);
+    world.Primodium__transferUnitsAndResourcesFromFleetToFleet(fleetId, secondFleetId, unitCounts, resourceCounts);
     vm.stopPrank();
 
     assertEq(UnitCount.get(fleetId, unitPrototype), 1, "fleet unit count doesn't match");
@@ -104,7 +104,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     setupCreateFleet(player, homeRock, unitCounts, resourceCounts);
 
     vm.prank(player);
-    fleetId = world.createFleet(homeRock, unitCounts, resourceCounts);
+    fleetId = world.Primodium__createFleet(homeRock, unitCounts, resourceCounts);
   }
 
   function testTransferCapitalShipBetweenPlayers() public {
@@ -114,7 +114,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     vm.prank(creator);
     P_GameConfig.setWorldSpeed(100);
     vm.prank(alice);
-    world.sendFleet(aliceFleet, bobHomeSpaceRock);
+    world.Primodium__sendFleet(aliceFleet, bobHomeSpaceRock);
     console.log("aliceFleet arrival time", FleetMovement.getArrivalTime(aliceFleet));
     vm.warp(block.timestamp + 10000000);
 
@@ -127,16 +127,21 @@ contract FleetTransferSystemTest is PrimodiumTest {
 
     vm.startPrank(alice);
     vm.expectRevert("[Fleet] Cannot transfer capital ships to other players");
-    world.transferUnitsFromFleetToFleet(aliceFleet, bobFleet, unitCounts);
+    world.Primodium__transferUnitsFromFleetToFleet(aliceFleet, bobFleet, unitCounts);
 
     vm.expectRevert("[Fleet] Cannot transfer capital ships to other players");
-    world.transferUnitsFromFleetToSpaceRock(aliceFleet, bobHomeSpaceRock, unitCounts);
+    world.Primodium__transferUnitsFromFleetToSpaceRock(aliceFleet, bobHomeSpaceRock, unitCounts);
 
     vm.expectRevert("[Fleet] Cannot transfer capital ships to other players");
-    world.transferUnitsAndResourcesFromFleetToSpaceRock(aliceFleet, bobHomeSpaceRock, unitCounts, resourceCounts);
+    world.Primodium__transferUnitsAndResourcesFromFleetToSpaceRock(
+      aliceFleet,
+      bobHomeSpaceRock,
+      unitCounts,
+      resourceCounts
+    );
 
     vm.expectRevert("[Fleet] Cannot transfer capital ships to other players");
-    world.transferUnitsAndResourcesFromFleetToFleet(aliceFleet, bobFleet, unitCounts, resourceCounts);
+    world.Primodium__transferUnitsAndResourcesFromFleetToFleet(aliceFleet, bobFleet, unitCounts, resourceCounts);
   }
 
   function testFailTransferResourcesAndUnitsFleetToFleetNotInSameOrbit() public {
@@ -158,7 +163,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
     increaseResource(aliceHomeSpaceRock, EResource.U_MaxFleets, 1);
@@ -166,8 +171,8 @@ contract FleetTransferSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 secondFleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
-    world.sendFleet(secondFleetId, bobHomeSpaceRock);
+    bytes32 secondFleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    world.Primodium__sendFleet(secondFleetId, bobHomeSpaceRock);
     vm.stopPrank();
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
@@ -179,7 +184,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     }
 
     vm.startPrank(alice);
-    world.transferUnitsAndResourcesFromFleetToFleet(fleetId, secondFleetId, unitCounts, resourceCounts);
+    world.Primodium__transferUnitsAndResourcesFromFleetToFleet(fleetId, secondFleetId, unitCounts, resourceCounts);
     vm.stopPrank();
   }
 
@@ -202,7 +207,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
     increaseResource(aliceHomeSpaceRock, EResource.U_MaxFleets, 1);
@@ -210,7 +215,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 secondFleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 secondFleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
@@ -222,7 +227,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     }
 
     vm.startPrank(alice);
-    world.transferResourcesFromFleetToFleet(fleetId, secondFleetId, resourceCounts);
+    world.Primodium__transferResourcesFromFleetToFleet(fleetId, secondFleetId, resourceCounts);
     vm.stopPrank();
 
     assertEq(UnitCount.get(fleetId, unitPrototype), 2, "fleet unit count doesn't match");
@@ -268,7 +273,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
     increaseResource(aliceHomeSpaceRock, EResource.U_MaxFleets, 1);
@@ -276,8 +281,8 @@ contract FleetTransferSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 secondFleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
-    world.sendFleet(secondFleetId, bobHomeSpaceRock);
+    bytes32 secondFleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    world.Primodium__sendFleet(secondFleetId, bobHomeSpaceRock);
     vm.stopPrank();
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
@@ -289,7 +294,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     }
 
     vm.startPrank(alice);
-    world.transferResourcesFromFleetToFleet(fleetId, secondFleetId, resourceCounts);
+    world.Primodium__transferResourcesFromFleetToFleet(fleetId, secondFleetId, resourceCounts);
     vm.stopPrank();
   }
 
@@ -312,7 +317,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
     increaseResource(aliceHomeSpaceRock, EResource.U_MaxFleets, 1);
@@ -320,8 +325,8 @@ contract FleetTransferSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 secondFleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
-    world.sendFleet(secondFleetId, bobHomeSpaceRock);
+    bytes32 secondFleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    world.Primodium__sendFleet(secondFleetId, bobHomeSpaceRock);
     vm.stopPrank();
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
@@ -333,7 +338,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     }
 
     vm.startPrank(alice);
-    world.transferUnitsFromFleetToFleet(fleetId, secondFleetId, unitCounts);
+    world.Primodium__transferUnitsFromFleetToFleet(fleetId, secondFleetId, unitCounts);
     vm.stopPrank();
   }
 
@@ -356,7 +361,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
@@ -368,7 +373,12 @@ contract FleetTransferSystemTest is PrimodiumTest {
     }
 
     vm.startPrank(alice);
-    world.transferUnitsAndResourcesFromFleetToSpaceRock(fleetId, aliceHomeSpaceRock, unitCounts, resourceCounts);
+    world.Primodium__transferUnitsAndResourcesFromFleetToSpaceRock(
+      fleetId,
+      aliceHomeSpaceRock,
+      unitCounts,
+      resourceCounts
+    );
     vm.stopPrank();
 
     assertEq(UnitCount.get(fleetId, unitPrototype), 1, "fleet unit count doesn't match");
@@ -409,7 +419,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
@@ -424,7 +434,12 @@ contract FleetTransferSystemTest is PrimodiumTest {
     increaseResource(aliceHomeSpaceRock, EResource.Iron, 1);
 
     vm.startPrank(alice);
-    world.transferUnitsAndResourcesFromSpaceRockToFleet(aliceHomeSpaceRock, fleetId, unitCounts, resourceCounts);
+    world.Primodium__transferUnitsAndResourcesFromSpaceRockToFleet(
+      aliceHomeSpaceRock,
+      fleetId,
+      unitCounts,
+      resourceCounts
+    );
     vm.stopPrank();
 
     assertEq(UnitCount.get(fleetId, unitPrototype), 3, "fleet unit count doesn't match");
@@ -465,7 +480,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 fleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
     increaseResource(aliceHomeSpaceRock, EResource.U_MaxFleets, 1);
@@ -473,7 +488,7 @@ contract FleetTransferSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 secondFleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 secondFleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
     vm.stopPrank();
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
@@ -489,21 +504,26 @@ contract FleetTransferSystemTest is PrimodiumTest {
     vm.startPrank(alice);
 
     vm.expectRevert("[Fleet] Fleet is in cooldown");
-    world.transferResourcesFromFleetToFleet(fleetId, secondFleetId, resourceCounts);
+    world.Primodium__transferResourcesFromFleetToFleet(fleetId, secondFleetId, resourceCounts);
 
     vm.expectRevert("[Fleet] Fleet is in cooldown");
-    world.transferUnitsFromFleetToFleet(fleetId, secondFleetId, unitCounts);
+    world.Primodium__transferUnitsFromFleetToFleet(fleetId, secondFleetId, unitCounts);
 
     vm.expectRevert("[Fleet] Fleet is in cooldown");
-    world.transferUnitsAndResourcesFromFleetToFleet(fleetId, secondFleetId, unitCounts, resourceCounts);
+    world.Primodium__transferUnitsAndResourcesFromFleetToFleet(fleetId, secondFleetId, unitCounts, resourceCounts);
 
     vm.expectRevert("[Fleet] Fleet is in cooldown");
-    world.transferUnitsFromFleetToSpaceRock(fleetId, aliceHomeSpaceRock, unitCounts);
+    world.Primodium__transferUnitsFromFleetToSpaceRock(fleetId, aliceHomeSpaceRock, unitCounts);
 
     vm.expectRevert("[Fleet] Fleet is in cooldown");
-    world.transferUnitsAndResourcesFromFleetToSpaceRock(fleetId, aliceHomeSpaceRock, unitCounts, resourceCounts);
+    world.Primodium__transferUnitsAndResourcesFromFleetToSpaceRock(
+      fleetId,
+      aliceHomeSpaceRock,
+      unitCounts,
+      resourceCounts
+    );
 
     vm.expectRevert("[Fleet] Fleet is in cooldown");
-    world.transferResourcesFromFleetToSpaceRock(fleetId, aliceHomeSpaceRock, resourceCounts);
+    world.Primodium__transferResourcesFromFleetToSpaceRock(fleetId, aliceHomeSpaceRock, resourceCounts);
   }
 }

@@ -6,7 +6,7 @@ import { Position, PositionData, Level } from "codegen/index.sol";
 import { IsActive, Home, OwnedBy, BuildingType } from "src/codegen/index.sol";
 import { LibBuilding, UnitProductionQueue } from "codegen/Libraries.sol";
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
-import { toggleMaxStorage, toggleProductionRate, toggleBuildingUtility } from "libraries/SubsystemCalls.sol";
+import { IWorld } from "codegen/world/IWorld.sol";
 
 contract ToggleBuildingSystem is PrimodiumSystem {
   /// @notice Toggles the building at the specified coordinate
@@ -37,8 +37,9 @@ contract ToggleBuildingSystem is PrimodiumSystem {
     isActive = !IsActive.get(buildingEntity);
     IsActive.set(buildingEntity, isActive);
 
-    toggleMaxStorage(buildingEntity);
-    toggleProductionRate(buildingEntity);
-    toggleBuildingUtility(buildingEntity);
+    IWorld world = IWorld(_world());
+    world.Primodium__toggleMaxStorage(buildingEntity);
+    world.Primodium__toggleProductionRate(buildingEntity);
+    world.Primodium__toggleBuildingUtility(buildingEntity);
   }
 }

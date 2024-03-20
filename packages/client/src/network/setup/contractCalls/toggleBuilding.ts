@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { ampli } from "src/ampli";
-import { execute } from "src/network/actions";
 import { components } from "src/network/components";
+import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { getBlockTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
@@ -19,7 +19,7 @@ export async function toggleBuilding(mud: MUD, building: Entity) {
   await execute(
     {
       mud,
-      functionName: "toggleBuilding",
+      functionName: "Primodium__toggleBuilding",
       systemId: getSystemId("ToggleBuildingSystem"),
       args: [building as Hex],
       withSession: true,

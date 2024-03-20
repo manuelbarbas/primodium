@@ -5,7 +5,7 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { IsActive, P_UnitProdTypes, Position, PositionData, BuildingType, OwnedBy, Level, BuildingType } from "codegen/index.sol";
 import { LibBuilding, UnitFactorySet } from "codegen/Libraries.sol";
-import { clearUtilityUsage, clearMaxStorageIncrease, clearProductionRate } from "libraries/SubsystemCalls.sol";
+import { IWorld } from "codegen/world/IWorld.sol";
 
 contract DestroySystem is PrimodiumSystem {
   /// @notice Destroys a building entity
@@ -13,9 +13,10 @@ contract DestroySystem is PrimodiumSystem {
   function destroy(bytes32 buildingEntity) public _claimResources(Position.getParent(buildingEntity)) {
     LibBuilding.checkDestroyRequirements(_player(), buildingEntity);
 
-    clearUtilityUsage(buildingEntity);
-    clearMaxStorageIncrease(buildingEntity);
-    clearProductionRate(buildingEntity);
+    IWorld world = IWorld(_world());
+    world.Primodium__clearUtilityUsage(buildingEntity);
+    world.Primodium__clearMaxStorageIncrease(buildingEntity);
+    world.Primodium__clearProductionRate(buildingEntity);
 
     bytes32 buildingType = BuildingType.get(buildingEntity);
 

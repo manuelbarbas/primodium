@@ -1,11 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import { entityToAddress, getSystemResourceId } from "src/utils.sol";
-import { buildMainBase } from "src/libraries/SubsystemCalls.sol";
 import { AsteroidOwnedByKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
-import { DroidPrototypeId } from "codegen/Prototypes.sol";
+import { MainBasePrototypeId, DroidPrototypeId } from "codegen/Prototypes.sol";
 
 // tables
 import { UsedTiles, Spawned, Dimensions, DimensionsData, P_MaxLevel, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, PositionData, P_GameConfigData, P_GameConfig } from "codegen/index.sol";
@@ -26,15 +24,14 @@ import { EBuilding } from "src/Types.sol";
 library LibAsteroid {
   /// @notice Creates new asteroid for player in world
   /// @notice Checks if asteroid already exists, sets position and other properties
-  /// @param ownerEntity Owner's entity ID
   /// @return asteroidEntity Created asteroid's entity ID
   function createPrimaryAsteroid(bytes32 ownerEntity) internal returns (bytes32 asteroidEntity) {
     asteroidEntity = LibEncode.getHash(ownerEntity);
-    require(!Asteroid.getIsAsteroid(asteroidEntity), "[LibAsteroid] asteroid already exists");
-
     uint256 asteroidCount = AsteroidCount.get() + 1;
     PositionData memory coord = getUniqueAsteroidPosition(asteroidCount);
 
+    asteroidEntity = LibEncode.getTimedHash(bytes32("asteroid"), coord);
+    require(!Asteroid.getIsAsteroid(asteroidEntity), "[LibAsteroid] asteroid already exists");
     uint256 gracePeriodLength = (P_GracePeriod.getSpaceRock() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
     GracePeriod.set(asteroidEntity, block.timestamp + gracePeriodLength);
 
@@ -42,7 +39,6 @@ library LibAsteroid {
     Position.set(asteroidEntity, coord);
     Asteroid.set(asteroidEntity, AsteroidData({ isAsteroid: true, maxLevel: 5, mapId: 1, spawnsSecondary: true }));
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
-    OwnedBy.set(asteroidEntity, ownerEntity);
 
     UsedTiles.set(asteroidEntity, new uint256[](getUsedTilesLength()));
 
@@ -123,7 +119,7 @@ library LibAsteroid {
 
   function isAsteroid(bytes32 entity, uint256 chanceInv) internal pure returns (bool) {
     uint256 motherlodeKey = LibEncode.getByteUInt(uint256(entity), 6, 128);
-    return motherlodeKey % chanceInv == 1;
+    return motherlodeKey % chanceInv == 0;
   }
 
   /// @dev Initialize a motherlode
