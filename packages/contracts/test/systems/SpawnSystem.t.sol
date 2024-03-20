@@ -15,7 +15,7 @@ import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { UNLIMITED_DELEGATION } from "@latticexyz/world/src/constants.sol";
 import { ResourceId, WorldResourceIdLib, WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
 import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
-import { SystemCallData } from "@latticexyz/world/src/modules/init/Types.sol";
+import { SystemCallData } from "@latticexyz/world/src/modules/init/types.sol";
 import { WorldRegistrationSystem } from "@latticexyz/world/src/modules/init/implementations/WorldRegistrationSystem.sol";
 import { SpawnSystem } from "systems/SpawnSystem.sol";
 import { ROOT_NAMESPACE } from "@latticexyz/world/src/constants.sol";
