@@ -77,7 +77,7 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
 
 function isSecondaryAsteroid(entity: Entity, chanceInv: number) {
   const motherlodeType = getByteUInt(entity, 6, 128);
-  return motherlodeType % chanceInv === 1;
+  return motherlodeType % chanceInv === 0;
 }
 
 function getSecondaryAsteroidUnitsAndEncryption(asteroidEntity: Entity, level: bigint) {

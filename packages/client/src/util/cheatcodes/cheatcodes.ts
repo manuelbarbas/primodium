@@ -708,7 +708,9 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             { name: "unit", type: "dropdown", dropdownOptions: Object.keys(units) },
             { name: "count", type: "number" },
           ],
-          function: createFleet,
+          function: (unit: string, count: number) => {
+            createFleet([{ unit: units[unit], count }], []);
+          },
         },
         giveFleetResource: {
           params: [
