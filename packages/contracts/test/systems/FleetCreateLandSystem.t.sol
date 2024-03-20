@@ -123,6 +123,9 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
         increaseResource(aliceHomeAsteroid, EResource.Iron, 1);
       }
     }
+    vm.startPrank(alice);
+    world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    vm.stopPrank();
   }
 
   function testFailCreateFleetNotEnoughResources() public {
@@ -140,7 +143,7 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     //create fleet with 1 iron
     uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
     for (uint256 i = 0; i < resourceCounts.length; i++) {
-      if (P_Transportables.getItemValue(i) == uint8(EResource.Iron)) {
+      if (P_Transportables.getItemValue(i) == uint8(EResource.Kimberlite)) {
         resourceCounts[i] = 1;
       }
     }
