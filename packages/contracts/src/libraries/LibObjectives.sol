@@ -26,7 +26,7 @@ library LibObjectives {
 
     checkHasNotCompletedObjective(playerEntity, objectivePrototype);
 
-    // Defer to optional clientside check. Allow onchain to claim rewards without checking requirements. Preserving for now.
+    // Defer to optional clientside check. Allow onchain to claim rewards without checking requirements. Preserving for now, may be useful for victory points.
     // checkHasCompletedRequiredObjectives(playerEntity, objectivePrototype);
     // checkObjectiveMainBaseLevelRequirement(playerEntity, spaceRockEntity, objectivePrototype);
     // checkObjectiveExpansionRequirement(playerEntity, spaceRockEntity, objectivePrototype);
