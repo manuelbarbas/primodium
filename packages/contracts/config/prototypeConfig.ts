@@ -2010,7 +2010,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildGarage"]) },
       P_HasBuiltBuildings: { value: encodeArray(["Workshop"]) },
-      P_ResourceReward: getResourceValues({ TridentMarine: 1 }),
+      P_UnitReward: getUnitValues({ TridentMarine: 1 }),
     },
   },
 
@@ -2055,6 +2055,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
   },
+
   BuildSAMLauncher: {
     tables: {
       P_HasBuiltBuildings: { value: encodeArray(["SAM"]) },
@@ -2062,6 +2063,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
+
   BuildVault: {
     tables: {
       P_HasBuiltBuildings: { value: encodeArray(["Vault"]) },
@@ -2069,12 +2071,29 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
+
+  BuildShipyard: {
+    tables: {
+      P_HasBuiltBuildings: { value: encodeArray(["Shipyard"]) },
+      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
+  },
+
   BuildShieldGenerator: {
     tables: {
       P_HasBuiltBuildings: { value: encodeArray(["ShieldGenerator"]) },
       P_UnitReward: getUnitValues({ AegisDrone: 1 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
+  },
+
+  BuildMarket: {
+    tables: {
+      P_HasBuiltBuildings: { value: encodeArray(["Market"]) },
+      P_ResourceReward: getResourceValues({ Kimberlite: 1 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 4n } } },
   },
 
   TrainMinutemanMarine1: {
@@ -2090,6 +2109,14 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
       P_ProducedUnits: getUnitValues({ TridentMarine: 50 }),
       P_ResourceReward: getResourceValues({ Copper: 100 }),
+    },
+  },
+
+  TrainLightningShip1: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
+      P_ProducedUnits: getUnitValues({ LightningShip: 10 }),
+      P_ResourceReward: getResourceValues({ Lithium: 100 }),
     },
   },
 
@@ -2125,6 +2152,15 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       P_RequiredObjectives: { objectives: encodeArray(["BuildDroneFactory"]) },
       P_ProducedUnits: getUnitValues({ StingerDrone: 20 }),
       P_ResourceReward: getResourceValues({ IronPlate: 10 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
+  },
+
+  BuildCapitalShip1: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
+      P_ProducedUnits: getUnitValues({ CapitalShip: 1 }),
+      P_ResourceReward: getResourceValues({ Kimberlite: 1 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
   },

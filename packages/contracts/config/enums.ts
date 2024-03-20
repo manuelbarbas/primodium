@@ -115,13 +115,17 @@ export enum EObjectives {
   BuildSAMLauncher,
   BuildVault,
   BuildShieldGenerator,
+  BuildShipyard,
+  BuildMarket,
 
   TrainMinutemanMarine1,
   TrainTridentMarine1,
+  TrainLightningShip1,
   TrainAnvilDrone1,
   TrainHammerDrone1,
   TrainAegisDrone1,
   TrainStingerDrone1,
+  BuildCapitalShip1,
 
   ExpandBase1,
 }
