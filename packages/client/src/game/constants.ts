@@ -40,6 +40,7 @@ export enum Tilemaps {
 export enum DepthLayers {
   Rock = 100,
   Resources = 200,
+  Bounds = 250,
   Tile = 300,
   Building = 400,
   Path = 500,
@@ -415,7 +416,7 @@ export const EntityToUnitSpriteKey = {
   [EntityType.MinutemanMarine]: SpriteKeys.MinutemanMarine,
 };
 
-export const EntitytoBuildingSpriteKey = {
+export const EntityTypetoBuildingSpriteKey = {
   [EntityType.MainBase]: [
     SpriteKeys.Mainbase1,
     SpriteKeys.Mainbase2,
@@ -481,7 +482,7 @@ export const EntitytoBuildingSpriteKey = {
 };
 
 // Array index corresponds to lvl
-export const EntityIDtoAnimationKey = {
+export const EntityTypeToAnimationKey = {
   [EntityType.MainBase]: [
     AnimationKeys.Mainbase1,
     AnimationKeys.Mainbase2,

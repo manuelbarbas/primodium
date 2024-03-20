@@ -1,6 +1,6 @@
 import { Primodium } from "@game/api";
 // import { EntitytoSpriteKey } from "@game/constants";
-import { EntitytoBuildingSpriteKey } from "@game/constants";
+import { EntityTypetoBuildingSpriteKey } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { EResource, MUDEnums } from "contracts/config/enums";
@@ -83,6 +83,15 @@ export function getBuildingTopLeft(origin: Coord, buildingType: Entity) {
   return { x: origin.x + relativeTopLeft.x, y: origin.y + relativeTopLeft.y };
 }
 
+export function getBuildingBottomLeft(origin: Coord, buildingType: Entity) {
+  const rawBlueprint = comps.P_Blueprint.get(buildingType)?.value;
+  if (!rawBlueprint) throw new Error("No blueprint found");
+
+  const relativeBottomLeft = getBottomLeftCoord(convertToCoords(rawBlueprint));
+
+  return { x: origin.x + relativeBottomLeft.x, y: origin.y + relativeBottomLeft.y };
+}
+
 export function getTopLeftCoord(coordinates: Coord[]): Coord {
   if (coordinates.length === 0) throw new Error("Cannot get top left coordinate of empty array");
   if (coordinates.length === 1) return coordinates[0];
@@ -96,6 +105,21 @@ export function getTopLeftCoord(coordinates: Coord[]): Coord {
   }
 
   return { x: minX, y: maxY };
+}
+
+export function getBottomLeftCoord(coordinates: Coord[]): Coord {
+  if (coordinates.length === 0) throw new Error("Cannot get bottom left coordinate of empty array");
+  if (coordinates.length === 1) return coordinates[0];
+
+  let minX = coordinates[0].x;
+  let minY = coordinates[0].y;
+
+  for (let i = 1; i < coordinates.length; i++) {
+    minX = Math.min(minX, coordinates[i].x);
+    minY = Math.min(minY, coordinates[i].y);
+  }
+
+  return { x: minX, y: minY };
 }
 
 export function getBuildingDimensions(building: Entity) {
@@ -145,11 +169,13 @@ export const getBuildingImage = (primodium: Primodium, building: Entity) => {
   const level = comps.Level.get(building)?.value ?? 1n;
   const { getSpriteBase64 } = primodium.api().sprite;
 
-  if (EntitytoBuildingSpriteKey[buildingType]) {
+  if (EntityTypetoBuildingSpriteKey[buildingType]) {
     const imageIndex = parseInt(level ? level.toString() : "1") - 1;
 
     return getSpriteBase64(
-      EntitytoBuildingSpriteKey[buildingType][clampedIndex(imageIndex, EntitytoBuildingSpriteKey[buildingType].length)]
+      EntityTypetoBuildingSpriteKey[buildingType][
+        clampedIndex(imageIndex, EntityTypetoBuildingSpriteKey[buildingType].length)
+      ]
     );
   }
 
@@ -160,11 +186,13 @@ export const getBuildingImageFromType = (primodium: Primodium, buildingType: Ent
   const level = comps.Level.get(buildingType)?.value ?? 1n;
   const { getSpriteBase64 } = primodium.api().sprite;
 
-  if (EntitytoBuildingSpriteKey[buildingType]) {
+  if (EntityTypetoBuildingSpriteKey[buildingType]) {
     const imageIndex = parseInt(level ? level.toString() : "1") - 1;
 
     return getSpriteBase64(
-      EntitytoBuildingSpriteKey[buildingType][clampedIndex(imageIndex, EntitytoBuildingSpriteKey[buildingType].length)]
+      EntityTypetoBuildingSpriteKey[buildingType][
+        clampedIndex(imageIndex, EntityTypetoBuildingSpriteKey[buildingType].length)
+      ]
     );
   }
 

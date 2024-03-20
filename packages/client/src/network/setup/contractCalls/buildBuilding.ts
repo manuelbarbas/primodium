@@ -5,7 +5,7 @@ import { execute } from "src/network/actions";
 import { components } from "src/network/components";
 import { TxQueueOptions } from "src/network/components/customComponents/TransactionQueueComponent";
 import { MUD } from "src/network/types";
-import { getBuildingTopLeft } from "src/util/building";
+import { getBuildingBottomLeft } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
 import { BuildingEntityLookup, TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
@@ -36,7 +36,7 @@ export const buildBuilding = async (
       id: hashEntities(TransactionQueueType.Build, coord.x, coord.y),
       type: TransactionQueueType.Build,
       metadata: {
-        coord: getBuildingTopLeft(coord, BuildingEntityLookup[building]),
+        coord: getBuildingBottomLeft(coord, BuildingEntityLookup[building]),
         buildingType: BuildingEntityLookup[building],
       },
       ...options,

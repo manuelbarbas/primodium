@@ -39,7 +39,7 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
     defaultZoom,
   });
 
-  const tilemap = createTilemap(scene, tileWidth, tileHeight, defaultKey, tilemapConfig);
+  const tiled = createTilemap(scene, tileWidth, tileHeight, defaultKey, tilemapConfig);
 
   //create sprite animations
   if (animations) {
@@ -95,7 +95,7 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
 
   return {
     phaserScene: scene,
-    tilemap,
+    tiled,
     scriptManager,
     camera,
     culling,
@@ -109,7 +109,7 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
     },
     dispose: () => {
       input.dispose();
-      tilemap.dispose();
+      tiled.dispose();
       camera.dispose();
       culling.dispose();
       music.destroy();

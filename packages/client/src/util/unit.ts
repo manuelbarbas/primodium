@@ -127,7 +127,7 @@ export const getOrbitingFleets = (entity: Entity) => {
 };
 
 export const getFleetTilePosition = (scene: Scene, fleet: Entity) => {
-  const { tileHeight, tileWidth } = scene.tilemap;
+  const { tileHeight, tileWidth } = scene.tiled;
   const pixelPosition = getFleetPixelPosition(scene, fleet);
 
   // using the helper function rounds to the nearest tile which doesnt work here
