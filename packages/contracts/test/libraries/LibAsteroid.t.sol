@@ -4,7 +4,7 @@ pragma solidity >=0.8.24;
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { addressToEntity } from "src/utils.sol";
 
-import { EResource } from "src/types.sol";
+import { EResource } from "src/Types.sol";
 
 import { Asteroid, AsteroidData, Position, PositionData, Position, PositionData, ReversePosition, MaxResourceCount, UnitCount, ResourceCount, UnitCount, ResourceCount, P_GameConfig, P_GameConfigData } from "codegen/index.sol";
 import { DroidPrototypeId } from "codegen/Prototypes.sol";

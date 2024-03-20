@@ -4,7 +4,7 @@ pragma solidity >=0.8.24;
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { addressToEntity } from "src/utils.sol";
 
-import { EBuilding, EResource } from "src/types.sol";
+import { EBuilding, EResource } from "src/Types.sol";
 import { BuildingKey, ExpansionKey } from "src/Keys.sol";
 import { IronMinePrototypeId } from "codegen/Prototypes.sol";
 

@@ -4,7 +4,7 @@ pragma solidity >=0.8.24;
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { addressToEntity } from "src/utils.sol";
 
-import { EResource, EBuilding } from "src/types.sol";
+import { EResource, EBuilding } from "src/Types.sol";
 
 import { IsActive, ConsumptionRate, Home, Level, BuildingType, OwnedBy, MaxResourceCount, ProductionRate, LastClaimedAt, P_ConsumesResource, ResourceCount, P_Transportables, ResourceCount, P_RequiredResources, P_RequiredResourcesData, P_IsUtility } from "codegen/index.sol";
 

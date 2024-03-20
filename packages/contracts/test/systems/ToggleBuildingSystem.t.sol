@@ -4,7 +4,7 @@ pragma solidity >=0.8.24;
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { addressToEntity } from "src/utils.sol";
 
-import { EBuilding, EUnit, EResource } from "src/types.sol";
+import { EBuilding, EUnit, EResource } from "src/Types.sol";
 import { BuildingKey, UnitKey } from "src/Keys.sol";
 
 import { P_Production, P_RequiredDependency, P_RequiredDependencyData, P_RequiredResourcesData, ResourceCount, ProductionRate, IsActive, ConsumptionRate, P_EnumToPrototype, PositionData, Home, Level, P_RequiredResources } from "codegen/index.sol";

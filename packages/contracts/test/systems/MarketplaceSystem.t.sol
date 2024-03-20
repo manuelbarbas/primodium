@@ -5,7 +5,7 @@ import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { addressToEntity } from "src/utils.sol";
 
 import { MarketPrototypeId } from "codegen/Prototypes.sol";
-import { EResource, EBuilding } from "src/types.sol";
+import { EResource, EBuilding } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
 import { ReservesData, Position, PositionData, P_RequiredBaseLevel, P_RequiredResources, P_EnumToPrototype, PositionData, MaxResourceCount, ResourceCount, Reserves } from "codegen/index.sol";

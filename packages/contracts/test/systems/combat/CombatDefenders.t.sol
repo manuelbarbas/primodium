@@ -4,7 +4,7 @@ pragma solidity >=0.8.24;
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { addressToEntity } from "src/utils.sol";
 
-import { EResource, EUnit, EFleetStance } from "src/types.sol";
+import { EResource, EUnit, EFleetStance } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
 import { IsFleet, GracePeriod, P_Unit, MaxResourceCount, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, UnitLevel } from "codegen/index.sol";

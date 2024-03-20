@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 
-import { EResource } from "src/types.sol";
+import { EResource } from "src/Types.sol";
 
 import { P_IsUtility, MaxResourceCount, ResourceCount, ProductionRate, Level, P_Production, P_ProductionData, Home, BuildingType } from "codegen/index.sol";
 

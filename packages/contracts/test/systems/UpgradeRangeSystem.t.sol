@@ -4,7 +4,7 @@ pragma solidity >=0.8.24;
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { addressToEntity } from "src/utils.sol";
 
-import { EBuilding } from "src/types.sol";
+import { EBuilding } from "src/Types.sol";
 
 import { UnitKey, ExpansionKey } from "src/Keys.sol";
 

@@ -4,7 +4,7 @@ pragma solidity >=0.8.24;
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { addressToEntity } from "src/utils.sol";
 
-import { EBuilding, EResource } from "src/types.sol";
+import { EBuilding, EResource } from "src/Types.sol";
 import { MainBasePrototypeId, IronMinePrototypeId } from "codegen/Prototypes.sol";
 
 import { P_ListMaxResourceUpgrades, MaxResourceCount, P_ByLevelMaxResourceUpgrades, P_RequiredResourcesData, P_RequiredResources, ResourceCount, ProductionRate, P_RequiredDependency, P_RequiredDependencyData, Level, ConsumptionRate, P_Production, P_ProductionData, PositionData, Home, P_MaxLevel } from "codegen/index.sol";
