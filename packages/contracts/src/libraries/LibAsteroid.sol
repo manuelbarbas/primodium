@@ -81,7 +81,7 @@ library LibAsteroid {
     revert("no asteroid found");
   }
 
-  function getAsteroidData(bytes32 asteroidEntity, bool spawnsSecondary) internal view returns (AsteroidData memory) {
+  function getAsteroidData(bytes32 asteroidEntity, bool spawnsSecondary) internal pure returns (AsteroidData memory) {
     uint256 distributionVal = (LibEncode.getByteUInt(uint256(asteroidEntity), 7, 12) % 100);
 
     uint256 maxLevel;
@@ -104,10 +104,7 @@ library LibAsteroid {
     return AsteroidData({ isAsteroid: true, maxLevel: maxLevel, mapId: mapId, spawnsSecondary: spawnsSecondary });
   }
 
-  function getSecondaryAsteroidUnitsAndEncryption(
-    bytes32 asteroidEntity,
-    uint256 level
-  ) internal view returns (uint256, uint256) {
+  function getSecondaryAsteroidUnitsAndEncryption(uint256 level) internal pure returns (uint256, uint256) {
     uint256 droidCount = 4 ** level + 100;
     uint256 encryption = (level * 10 + 10) * 1e18;
     return (droidCount, encryption);
@@ -129,7 +126,7 @@ library LibAsteroid {
     Level.set(asteroidEntity, 1);
     UsedTiles.set(asteroidEntity, new uint256[](getUsedTilesLength()));
 
-    (uint256 droidCount, uint256 encryption) = getSecondaryAsteroidUnitsAndEncryption(asteroidEntity, data.maxLevel);
+    (uint256 droidCount, uint256 encryption) = getSecondaryAsteroidUnitsAndEncryption(data.maxLevel);
     UnitCount.set(asteroidEntity, DroidPrototypeId, droidCount);
     LibStorage.increaseMaxStorage(asteroidEntity, uint8(EResource.R_Encryption), encryption);
   }

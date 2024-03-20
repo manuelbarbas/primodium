@@ -100,10 +100,6 @@ contract FleetTransferSystemTest is PrimodiumTest {
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
     uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
 
-    uint256 numberOfUnits = 10;
-
-    bytes32 capitalShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
-
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == CapitalShipPrototypeId) unitCounts[i] = 1;
     }

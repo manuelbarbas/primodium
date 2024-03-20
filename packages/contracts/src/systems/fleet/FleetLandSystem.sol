@@ -27,6 +27,6 @@ contract FleetLandSystem is PrimodiumSystem {
     _claimResources(asteroidEntity)
     _claimUnits(asteroidEntity)
   {
-    LibFleet.landFleet(_player(), fleetEntity, asteroidEntity);
+    LibFleet.landFleet(fleetEntity, asteroidEntity);
   }
 }

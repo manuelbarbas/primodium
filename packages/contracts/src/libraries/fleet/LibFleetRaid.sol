@@ -20,11 +20,11 @@ library LibFleetRaid {
    * @param entity The identifier of the entity (fleet or defender) being raided.
    * @return An array of raidable resource counts and the total raidable resources.
    */
-  function getRaidableResourceCountsWithAllies(bytes32 entity) internal view returns (uint256[] memory, uint256) {
+  function getRaidableResourceCountsWithAllies(bytes32 entity) internal view returns (uint256) {
     return
       IsFleet.get(entity)
         ? LibFleet.getResourceCountsWithAllies(entity)
-        : LibCombatAttributes.getStoredResourceCountsWithDefenders(entity);
+        : LibCombatAttributes.getStoredResourceCountWithDefenders(entity);
   }
 
   /**
@@ -40,7 +40,7 @@ library LibFleetRaid {
       .getCargoSpacesWithAllies(attacker);
     if (totalFreeCargoSpace == 0) return;
     // will caculate how much of each resource was successfuly raided from defender and increase those to be used for increasing resources of the attackers
-    (uint256[] memory totalRaidedResourceCounts, uint256 total) = calculateRaidFromWithAllies(
+    (uint256[] memory totalRaidedResourceCounts, ) = calculateRaidFromWithAllies(
       battleEntity,
       defender,
       totalFreeCargoSpace
@@ -72,10 +72,7 @@ library LibFleetRaid {
     bytes32 defenderEntity,
     uint256 totalFreeCargoSpace
   ) internal returns (uint256[] memory totalRaidedResourceCounts, uint256 totalRaidedResources) {
-    (
-      uint256[] memory totalRaidableResourceCounts,
-      uint256 totalRaidableResources
-    ) = getRaidableResourceCountsWithAllies(defenderEntity);
+    uint256 totalRaidableResources = getRaidableResourceCountsWithAllies(defenderEntity);
 
     totalRaidedResourceCounts = new uint256[](P_Transportables.length());
 
@@ -86,7 +83,6 @@ library LibFleetRaid {
     (totalRaidedResourceCounts, totalRaidedResources) = calculateRaidFrom(
       battleEntity,
       defenderEntity,
-      totalRaidableResourceCounts,
       totalRaidableResources,
       totalFreeCargoSpace,
       totalRaidedResourceCounts,
@@ -98,7 +94,6 @@ library LibFleetRaid {
       (totalRaidedResourceCounts, totalRaidedResources) = calculateRaidFrom(
         battleEntity,
         allies[i],
-        totalRaidableResourceCounts,
         totalRaidableResources,
         totalFreeCargoSpace,
         totalRaidedResourceCounts,
@@ -111,7 +106,6 @@ library LibFleetRaid {
    * @dev Auxiliary function to calculate resources raided from a single entity.
    * @param battleEntity The identifier of the ongoing battle.
    * @param defenderEntity The identifier of the defending entity.
-   * @param total The array of total raidable resources.
    * @param totalRaidableResources The sum of all raidable resources.
    * @param totalFreeCargoSpace The total free cargo space available in the attacker's fleet.
    * @param totalRaidedResourceCounts An array to track the resources raided.
@@ -121,7 +115,6 @@ library LibFleetRaid {
   function calculateRaidFrom(
     bytes32 battleEntity,
     bytes32 defenderEntity,
-    uint256[] memory total,
     uint256 totalRaidableResources,
     uint256 totalFreeCargoSpace,
     uint256[] memory totalRaidedResourceCounts,

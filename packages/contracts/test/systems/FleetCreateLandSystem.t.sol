@@ -71,7 +71,7 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     uint256 aliceScore = Score.get(aliceEntity);
     assertEq(aliceScore, P_ScoreMultiplier.get(uint8(EResource.Iron)), "score should be one iron");
     vm.startPrank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     assertEq(Score.get(aliceEntity), 0, "score should be 0");
   }
   function testLandFleet() public {
@@ -150,7 +150,7 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     }
 
     vm.startPrank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
   }
 
@@ -168,7 +168,7 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
 
     //try to create fleet by other player
     vm.startPrank(bob);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
   }
 
@@ -191,13 +191,13 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     setupCreateFleetNoMaxMovesGranted(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     setupCreateFleetNoMaxMovesGranted(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 secondFleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
   }
 
@@ -221,7 +221,7 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
   }
 }

@@ -49,7 +49,7 @@ contract DestroySystemTest is PrimodiumTest {
     console.log("after", gas - gasleft());
   }
 
-  function destroy(bytes32 buildingEntity, PositionData memory _coord) public {
+  function destroy(bytes32 buildingEntity) public {
     int32[] memory tilePositions = TilePositions.get(buildingEntity);
     world.Primodium__destroy(buildingEntity);
 
@@ -68,21 +68,19 @@ contract DestroySystemTest is PrimodiumTest {
 
   function testDestroyWithBuildingOrigin() public {
     bytes32 buildingEntity = buildIronMine();
-    destroy(buildingEntity, position);
+    destroy(buildingEntity);
   }
 
   function testDestroyWithTile() public {
     bytes32 buildingEntity = buildIronMine();
-    bytes32 asteroidEntity = Home.get(playerEntity);
     position.parentEntity = asteroidEntity;
-    destroy(buildingEntity, position);
+    destroy(buildingEntity);
   }
 
   function testDestroyWithProductionDependencies() public {
     switchPrank(address(creator));
     uint256 originalProduction = 100;
     uint256 productionReduction = 10;
-    bytes32 asteroidEntity = Home.get(playerEntity);
     ProductionRate.set(asteroidEntity, uint8(EResource.Iron), originalProduction);
     P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(
       uint8(Iron),
@@ -107,7 +105,6 @@ contract DestroySystemTest is PrimodiumTest {
     switchPrank(address(creator));
     uint256 originalProduction = 100;
     uint256 productionReduction = 10;
-    bytes32 asteroidEntity = Home.get(playerEntity);
     ProductionRate.set(asteroidEntity, uint8(EResource.Iron), originalProduction);
     P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(
       uint8(Iron),
@@ -131,7 +128,6 @@ contract DestroySystemTest is PrimodiumTest {
 
   function testDestroyWithResourceProductionIncrease() public {
     switchPrank(address(creator));
-    bytes32 asteroidEntity = Home.get(playerEntity);
     uint256 increase = 69;
     P_ProductionData memory data = P_ProductionData(new uint8[](1), new uint256[](1));
     data.resources[0] = uint8(EResource.Iron);
@@ -149,7 +145,6 @@ contract DestroySystemTest is PrimodiumTest {
 
   function testDestroyInActiveWithResourceProductionIncrease() public {
     switchPrank(address(creator));
-    bytes32 asteroidEntity = Home.get(playerEntity);
     uint256 increase = 69;
     P_ProductionData memory data = P_ProductionData(new uint8[](1), new uint256[](1));
     data.resources[0] = uint8(EResource.Iron);
@@ -167,7 +162,6 @@ contract DestroySystemTest is PrimodiumTest {
 
   function testDestroyWithMaxStorageIncrease() public {
     switchPrank(creator);
-    bytes32 asteroidEntity = Home.get(playerEntity);
     uint8[] memory data = new uint8[](1);
     data[0] = uint8(EResource.Iron);
     P_ListMaxResourceUpgrades.set(IronMinePrototypeId, 1, data);
@@ -185,7 +179,6 @@ contract DestroySystemTest is PrimodiumTest {
 
   function testDestroyInActiveWithMaxStorageIncrease() public {
     switchPrank(creator);
-    bytes32 asteroidEntity = Home.get(playerEntity);
     uint8[] memory data = new uint8[](1);
     data[0] = uint8(EResource.Iron);
     P_ListMaxResourceUpgrades.set(IronMinePrototypeId, 1, data);

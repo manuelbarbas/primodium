@@ -40,6 +40,6 @@ contract FleetMergeSystem is PrimodiumSystem {
    * @param fleets An array of unique identifiers for the fleets to be merged.
    */
   function mergeFleets(bytes32[] calldata fleets) public canMergeFleets(fleets) {
-    LibFleet.mergeFleets(_player(), fleets);
+    LibFleet.mergeFleets(fleets);
   }
 }

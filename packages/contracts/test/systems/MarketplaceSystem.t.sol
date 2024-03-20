@@ -27,10 +27,8 @@ contract MarketplaceSystemTest is PrimodiumTest {
     vm.startPrank(creator);
     P_RequiredBaseLevel.deleteRecord(MarketPrototypeId, 1);
     P_RequiredResources.deleteRecord(MarketPrototypeId, 1);
-    vm.stopPrank();
-    bytes32 playerEntity = addressToEntity(player);
-    vm.startPrank(player);
-    PositionData memory position = getTilePosition(homeAsteroidEntity, EBuilding.Market);
+    switchPrank(player);
+
     bytes32 marketEntity = world.Primodium__build(
       EBuilding.Market,
       getTilePosition(homeAsteroidEntity, EBuilding.Market)
@@ -74,7 +72,7 @@ contract MarketplaceSystemTest is PrimodiumTest {
 
   /* ---------------------------------- Swap ---------------------------------- */
   function testSwapFailNotMarket() public {
-    (bytes32 asteroidEntity, bytes32 market) = buildMarketplace(creator);
+    (bytes32 asteroidEntity, ) = buildMarketplace(creator);
     vm.startPrank(creator);
     vm.expectRevert("[Marketplace] Building is not a marketplace");
 
@@ -84,7 +82,7 @@ contract MarketplaceSystemTest is PrimodiumTest {
   }
 
   function testSwapMarketNotOwned() public {
-    (bytes32 asteroidEntity, bytes32 market) = buildMarketplace(alice);
+    (, bytes32 market) = buildMarketplace(alice);
     vm.startPrank(creator);
     vm.expectRevert("[Marketplace] Not owned by player");
     path.push(EResource.Iron);

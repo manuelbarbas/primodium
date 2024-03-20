@@ -58,7 +58,6 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     uint256 initial = 100;
     uint256 l1 = 50;
     uint256 l2 = 33;
-    bytes32 asteroidEntity = Home.get(playerEntity);
     ResourceCount.set(asteroidEntity, Iron, initial);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
@@ -82,7 +81,6 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     uint256 initial = 100;
     uint256 l1 = 50;
     uint256 l2 = 33;
-    bytes32 asteroidEntity = Home.get(playerEntity);
     ResourceCount.set(asteroidEntity, Iron, initial);
 
     P_RequiredResourcesData memory requiredResourcesData = P_RequiredResourcesData(new uint8[](1), new uint256[](1));
@@ -104,7 +102,6 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
   }
 
   function testUpgradeBuildingWithProductionDependencies() public {
-    bytes32 asteroidEntity = Home.get(playerEntity);
     ResourceCount.set(asteroidEntity, Iron, 1000);
 
     removeRequiredResources(EBuilding.IronMine);
@@ -130,7 +127,6 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
   }
 
   function testUpgradeInactiveBuildingWithProductionDependencies() public {
-    bytes32 asteroidEntity = Home.get(playerEntity);
     ResourceCount.set(asteroidEntity, Iron, 1000);
 
     removeRequiredResources(EBuilding.IronMine);
@@ -159,7 +155,6 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
   function testUpgradeBuildingWithResourceProductionIncrease() public {
     removeRequiredResources(EBuilding.IronMine);
-    bytes32 asteroidEntity = Home.get(playerEntity);
     uint256 increase = 69;
     uint256 increase2 = 71;
     P_ProductionData memory data1 = P_ProductionData(new uint8[](1), new uint256[](1));
@@ -182,7 +177,6 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
   function testUpgradeInActiveBuildingWithResourceProductionIncrease() public {
     removeRequiredResources(EBuilding.IronMine);
-    bytes32 asteroidEntity = Home.get(playerEntity);
     uint256 increase = 69;
     uint256 increase2 = 71;
     P_ProductionData memory data1 = P_ProductionData(new uint8[](1), new uint256[](1));
@@ -207,7 +201,6 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     assertEq(ProductionRate.get(asteroidEntity, Iron), 0);
   }
   function testUpgradeMainBase() public {
-    bytes32 asteroidEntity = Home.get(playerEntity);
     bytes32 mainBase = Home.get(asteroidEntity);
 
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(MainBasePrototypeId, 2);
@@ -221,7 +214,6 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
   function testUpgradeBuildingWithMaxStorageIncrease() public {
     removeRequiredResources(EBuilding.IronMine);
-    bytes32 asteroidEntity = Home.get(playerEntity);
     uint8[] memory data = new uint8[](1);
     data[0] = uint8(Iron);
     P_ListMaxResourceUpgrades.set(IronMinePrototypeId, 1, data);
@@ -241,7 +233,6 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
   function testUpgradeInActiveBuildingWithMaxStorageIncrease() public {
     removeRequiredResources(EBuilding.IronMine);
-    bytes32 asteroidEntity = Home.get(playerEntity);
     uint8[] memory data = new uint8[](1);
     data[0] = uint8(Iron);
     P_ListMaxResourceUpgrades.set(IronMinePrototypeId, 1, data);

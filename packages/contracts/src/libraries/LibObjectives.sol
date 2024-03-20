@@ -24,14 +24,14 @@ library LibObjectives {
 
     checkHasNotCompletedObjective(playerEntity, objectivePrototype);
     checkHasCompletedRequiredObjectives(playerEntity, objectivePrototype);
-    checkObjectiveMainBaseLevelRequirement(playerEntity, asteroidEntity, objectivePrototype);
-    checkObjectiveExpansionRequirement(playerEntity, asteroidEntity, objectivePrototype);
+    checkObjectiveMainBaseLevelRequirement(asteroidEntity, objectivePrototype);
+    checkObjectiveExpansionRequirement(asteroidEntity, objectivePrototype);
     checkHasBuiltRequiredBuildings(playerEntity, objectivePrototype);
     checkProducedResources(playerEntity, objectivePrototype);
     checkRaidedResources(playerEntity, objectivePrototype);
     checkDestroyedUnits(playerEntity, objectivePrototype);
     checkProducedUnits(playerEntity, objectivePrototype);
-    checkHasRequiredUnits(playerEntity, asteroidEntity, objectivePrototype);
+    checkHasRequiredUnits(asteroidEntity, objectivePrototype);
     checkDefeatedPirateAsteroidRequirement(playerEntity, objectivePrototype);
   }
 
@@ -59,11 +59,7 @@ library LibObjectives {
     }
   }
 
-  function checkObjectiveMainBaseLevelRequirement(
-    bytes32 playerEntity,
-    bytes32 asteroidEntity,
-    bytes32 objective
-  ) internal view {
+  function checkObjectiveMainBaseLevelRequirement(bytes32 asteroidEntity, bytes32 objective) internal view {
     uint256 requiredMainBaseLevel = P_RequiredBaseLevel.get(objective, 1);
     if (requiredMainBaseLevel > 1) {
       require(
@@ -73,11 +69,7 @@ library LibObjectives {
     }
   }
 
-  function checkObjectiveExpansionRequirement(
-    bytes32 playerEntity,
-    bytes32 asteroidEntity,
-    bytes32 objective
-  ) internal view {
+  function checkObjectiveExpansionRequirement(bytes32 asteroidEntity, bytes32 objective) internal view {
     uint256 requiredExpansionLevel = P_RequiredExpansion.get(objective);
     if (requiredExpansionLevel == 0) return;
     uint256 playerExpansion = Level.get(asteroidEntity);
@@ -134,7 +126,7 @@ library LibObjectives {
     }
   }
 
-  function checkHasRequiredUnits(bytes32 playerEntity, bytes32 asteroidEntity, bytes32 objective) internal view {
+  function checkHasRequiredUnits(bytes32 asteroidEntity, bytes32 objective) internal view {
     P_RequiredUnitsData memory requiredUnits = P_RequiredUnits.get(objective);
     for (uint256 i = 0; i < requiredUnits.units.length; i++) {
       require(

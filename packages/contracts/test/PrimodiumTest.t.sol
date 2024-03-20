@@ -114,7 +114,6 @@ contract PrimodiumTest is MudTest {
 
   function getTilePosition(bytes32 asteroidEntity, EBuilding buildingType) internal view returns (PositionData memory) {
     bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
-    uint8 mapId = Asteroid.getMapId(asteroidEntity);
     Bounds memory bounds = LibBuilding.getAsteroidBounds(asteroidEntity);
     for (int32 i = bounds.minX; i < bounds.maxX; i++) {
       for (int32 j = bounds.minY; j < bounds.maxY; j++) {
@@ -176,7 +175,7 @@ contract PrimodiumTest is MudTest {
     removeRequiredTile(building);
   }
 
-  function getUnitArray(uint256 unit1Count, uint256 unit2Count) internal view returns (uint256[] memory unitArray) {
+  function getUnitArray(uint256 unit1Count, uint256 unit2Count) internal pure returns (uint256[] memory unitArray) {
     unitArray = new uint256[](8);
     //unitArray = new uint256[](P_UnitPrototypes.length());
     unitArray[0] = unit1Count;
@@ -228,7 +227,6 @@ contract PrimodiumTest is MudTest {
     uint256 level = Level.get(buildingEntity);
 
     bytes32[] memory prodTypes = P_UnitProdTypes.get(buildingType, level);
-    uint256 unitProdMultiplier = P_UnitProdMultiplier.get(buildingType, level);
     bytes32[] memory newProdTypes = new bytes32[](1);
     newProdTypes[0] = unitPrototype;
 
@@ -403,7 +401,7 @@ contract PrimodiumTest is MudTest {
     }
   }
 
-  function findSecondaryAsteroid(bytes32 playerEntity, bytes32 asteroidEntity) public returns (PositionData memory) {
+  function findSecondaryAsteroid(bytes32 asteroidEntity) public view returns (PositionData memory) {
     P_GameConfigData memory config = P_GameConfig.get();
     PositionData memory sourcePosition = Position.get(asteroidEntity);
     logPosition(sourcePosition);

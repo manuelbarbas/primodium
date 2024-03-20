@@ -133,21 +133,16 @@ library LibFleet {
   /**
    * @notice Retrieves the resource counts for a fleet, including contributions from allied fleets.
    * @param fleetEntity The identifier of the fleet.
-   * @return resourceCounts An array of resource counts for each transportable resource.
    * @return totalResources The total number of resources across all transportable types.
    */
-  function getResourceCountsWithAllies(
-    bytes32 fleetEntity
-  ) internal view returns (uint256[] memory resourceCounts, uint256 totalResources) {
+  function getResourceCountsWithAllies(bytes32 fleetEntity) internal view returns (uint256 totalResources) {
     bytes32[] memory followerFleetEntities = LibFleetStance.getFollowerFleets(fleetEntity);
     uint8[] memory transportables = P_Transportables.get();
-    resourceCounts = new uint256[](transportables.length);
     for (uint256 i = 0; i < transportables.length; i++) {
-      resourceCounts[i] = ResourceCount.get(fleetEntity, transportables[i]);
+      totalResources += ResourceCount.get(fleetEntity, transportables[i]);
       for (uint8 j = 0; j < followerFleetEntities.length; j++) {
-        resourceCounts[i] += ResourceCount.get(followerFleetEntities[j], transportables[i]);
+        totalResources += ResourceCount.get(followerFleetEntities[j], transportables[i]);
       }
-      totalResources += resourceCounts[i];
     }
   }
 
@@ -181,12 +176,11 @@ library LibFleet {
 
   /**
    * @notice Lands a fleet on an asteroid, transferring its units and resources to the asteroid.
-   * @param playerEntity The identifier of the player.
    * @param fleetEntity The identifier of the fleet landing on the asteroid.
    * @param asteroidEntity The identifier of the asteroid where the fleet is landing.
    * @dev Transfers all units and resources from the fleet to the asteroid. Resets the fleet's orbit if it lands on a foreign asteroid.
    */
-  function landFleet(bytes32 playerEntity, bytes32 fleetEntity, bytes32 asteroidEntity) internal {
+  function landFleet(bytes32 fleetEntity, bytes32 asteroidEntity) internal {
     bytes32 asteroidOwnerEntity = OwnedBy.get(fleetEntity);
 
     bool isOwner = asteroidOwnerEntity == asteroidEntity;
@@ -213,11 +207,10 @@ library LibFleet {
 
   /**
    * @notice Merges multiple fleets into the first fleet in the array.
-   * @param playerEntity The identifier of the player owning the fleets.
    * @param fleets An array of fleet identifiers, with the first fleet being the target for merging.
    * @dev Transfers all units and resources from the other fleets in the array to the first fleet.
    */
-  function mergeFleets(bytes32 playerEntity, bytes32[] calldata fleets) internal {
+  function mergeFleets(bytes32[] calldata fleets) internal {
     require(fleets.length > 1, "[Fleet] Can only merge more than one fleet");
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();

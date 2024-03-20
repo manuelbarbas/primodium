@@ -50,7 +50,6 @@ contract LibBuildingTest is PrimodiumTest {
   /* ------------------------------ Bitmap Tests ------------------------------ */
 
   function testAllTilesAvailable() public {
-    DimensionsData memory dimensions = Dimensions.get(ExpansionKey, P_MaxLevel.get(ExpansionKey));
     Bounds memory bounds = LibBuilding.getAsteroidBounds(Home.get(playerEntity));
     uint256 len = 4;
     int32[] memory coordsToCheck = new int32[](len * 2);

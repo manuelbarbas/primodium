@@ -27,7 +27,7 @@ contract ClaimObjectiveSystem is PrimodiumSystem {
     LibObjectives.checkObjectiveRequirements(playerEntity, asteroidEntity, objective);
 
     IWorld world = IWorld(_world());
-    world.Primodium__receiveRewards(playerEntity, asteroidEntity, objectivePrototype);
+    world.Primodium__receiveRewards(asteroidEntity, objectivePrototype);
 
     CompletedObjective.set(playerEntity, objectivePrototype, true);
     P_SpawnPirateAsteroidData memory spawnPirateAsteroid = P_SpawnPirateAsteroid.get(objectivePrototype);

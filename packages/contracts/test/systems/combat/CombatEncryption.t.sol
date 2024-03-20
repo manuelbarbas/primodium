@@ -188,7 +188,6 @@ contract CombatEncryptionTest is PrimodiumTest {
     vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetEntities[0]), block.timestamp));
 
     uint256 bobHomeScore = Score.get(bobHomeAsteroid);
-    uint256 bobPlayerScore = Score.get(bobEntity);
     uint256 aliceScore = Score.get(aliceEntity);
 
     vm.startPrank(alice);

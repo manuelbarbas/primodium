@@ -140,7 +140,6 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     uint256 initialShips = LibUnit.getCapitalShipsPlusAsteroids(aliceEntity);
     uint256 initialMultiplier = LibUnit.getCapitalShipCostMultiplier(aliceEntity);
     assertEq(initialShips, 0, "initial ship and asteroid count");
-    bytes32[] memory ownedAsteroids = AsteroidSet.getAsteroidEntities(aliceEntity, AsteroidOwnedByKey);
 
     uint256 amount = P_CapitalShipConfig.getInitialCost() * initialMultiplier;
     uint8 resource = P_CapitalShipConfig.getResource();

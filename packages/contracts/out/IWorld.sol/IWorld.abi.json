@@ -931,11 +931,6 @@
     "name": "Primodium__receiveRewards",
     "inputs": [
       {
-        "name": "playerEntity",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
         "name": "asteroidEntity",
         "type": "bytes32",
         "internalType": "bytes32"

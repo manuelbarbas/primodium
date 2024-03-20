@@ -14,7 +14,7 @@ import { LibUnit } from "src/libraries/LibUnit.sol";
 import { LibResource } from "src/libraries/LibResource.sol";
 
 contract ToggleBuildingSystemTest is PrimodiumTest {
-  bytes32 asteroidEntity = bytes32("asteroidEntity");
+  bytes32 asteroidEntity;
   bytes32 playerEntity;
 
   EUnit unit = EUnit(1);
@@ -36,6 +36,7 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
     vm.startPrank(creator);
     playerEntity = addressToEntity(creator);
     world.Primodium__spawn();
+    asteroidEntity = Home.get(playerEntity);
     ironMinePosition = getTilePosition(Home.get(playerEntity), EBuilding.IronMine);
     ironMineEntity = world.Primodium__build(EBuilding.IronMine, ironMinePosition);
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronPlateFactory)), 1);
@@ -207,7 +208,6 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
   }
 
   function testToggleBuildingTrainingUnits() public {
-    bytes32 asteroidEntity = Home.get(playerEntity);
     Level.set(asteroidEntity, 2);
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Garage)), 1);
     world.Primodium__build(EBuilding.Garage, getTilePosition(asteroidEntity, EBuilding.Garage));
@@ -222,9 +222,7 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
   }
 
   function testToggleBuildingTrainingUnitsComplete() public {
-    bytes32 asteroidEntity = Home.get(playerEntity);
     buildBuilding(creator, EBuilding.Garage);
-    PositionData memory workshopPosition = getTilePosition(asteroidEntity, EBuilding.Workshop);
     bytes32 workshop = buildBuilding(creator, EBuilding.Workshop);
 
     bytes32 minutemanEntity = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));

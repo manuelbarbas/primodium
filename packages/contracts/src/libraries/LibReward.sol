@@ -18,23 +18,21 @@ import { EResource } from "src/Types.sol";
 library LibReward {
   /**
    * @notice Distributes both unit and resource rewards to an asteroid based on a given prototype.
-   * @param playerEntity The identifier of the player who owns the asteroid.
    * @param asteroidEntity The identifier of the asteroid receiving the rewards.
    * @param prototype The identifier of the prototype that determines the rewards.
    * @dev Calls `receiveUnitRewards` and `receiveResourceRewards` to handle the distribution of different types of rewards.
    */
-  function receiveRewards(bytes32 playerEntity, bytes32 asteroidEntity, bytes32 prototype) internal {
-    receiveUnitRewards(playerEntity, asteroidEntity, prototype);
-    receiveResourceRewards(playerEntity, asteroidEntity, prototype);
+  function receiveRewards(bytes32 asteroidEntity, bytes32 prototype) internal {
+    receiveUnitRewards(asteroidEntity, prototype);
+    receiveResourceRewards(asteroidEntity, prototype);
   }
   /**
    * @notice Distributes unit rewards to an asteroid based on a given prototype.
-   * @param playerEntity The identifier of the player who owns the asteroid.
    * @param asteroidEntity The identifier of the asteroid receiving the unit rewards.
    * @param prototype The identifier of the prototype that determines the unit rewards.
    * @dev Iterates through the units defined in the reward data and increases their count on the asteroid.
    */
-  function receiveUnitRewards(bytes32 playerEntity, bytes32 asteroidEntity, bytes32 prototype) internal {
+  function receiveUnitRewards(bytes32 asteroidEntity, bytes32 prototype) internal {
     P_UnitRewardData memory rewardData = P_UnitReward.get(prototype);
     for (uint256 i = 0; i < rewardData.units.length; i++) {
       LibUnit.increaseUnitCount(asteroidEntity, rewardData.units[i], rewardData.amounts[i], true);
@@ -43,12 +41,11 @@ library LibReward {
 
   /**
    * @notice Distributes resource rewards to an asteroid based on a given prototype.
-   * @param playerEntity The identifier of the player who owns the asteroid.
    * @param asteroidEntity The identifier of the asteroid receiving the resource rewards.
    * @param prototype The identifier of the prototype that determines the resource rewards.
    * @dev Increases resource count or production based on whether the resource is utility or not, ensuring it does not exceed the max resource count.
    */
-  function receiveResourceRewards(bytes32 playerEntity, bytes32 asteroidEntity, bytes32 prototype) internal {
+  function receiveResourceRewards(bytes32 asteroidEntity, bytes32 prototype) internal {
     P_ResourceRewardData memory rewardData = P_ResourceReward.get(prototype);
     for (uint256 i = 0; i < rewardData.resources.length; i++) {
       if (P_IsUtility.get(rewardData.resources[i])) {

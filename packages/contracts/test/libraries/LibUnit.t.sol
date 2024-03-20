@@ -84,11 +84,8 @@ contract LibUnitTest is PrimodiumTest {
 
   function testClaimUnitsConqueredAsteroid() public {
     P_GameConfig.setAsteroidChanceInv(1);
-    PositionData memory position = Position.get(Home.get(playerEntity));
 
-    bytes32 secondaryAsteroid = LibAsteroid.createSecondaryAsteroid(
-      findSecondaryAsteroid(playerEntity, Home.get(playerEntity))
-    );
+    bytes32 secondaryAsteroid = LibAsteroid.createSecondaryAsteroid(findSecondaryAsteroid(Home.get(playerEntity)));
     conquerAsteroid(creator, Home.get(playerEntity), secondaryAsteroid);
     vm.startPrank(creator);
     console.log("here:");
@@ -104,14 +101,6 @@ contract LibUnitTest is PrimodiumTest {
     UnitProductionQueue.enqueue(buildingEntity, item);
     UnitProductionQueue.enqueue(building2Entity, item);
 
-    bytes32[] memory buildings = UnitFactorySet.getAll(secondaryAsteroid);
-    console.log("buildings", buildings.length);
-    for (uint256 i = 0; i < buildings.length; i++) {
-      bytes32 buildingEntity = buildings[i];
-      bytes32 asteroidEntity = OwnedBy.get(buildingEntity);
-      console.log("building owner: %x", uint256(asteroidEntity));
-      console.log("is asteroid:", Asteroid.getIsAsteroid(asteroidEntity));
-    }
     vm.warp(block.timestamp + 100);
     LibUnit.claimUnits(secondaryAsteroid);
     assertEq(UnitCount.get(secondaryAsteroid, unitPrototype), 100);

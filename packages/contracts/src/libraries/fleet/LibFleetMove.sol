@@ -113,7 +113,7 @@ library LibFleetMove {
    * @param asteroidEntity The identifier of the asteroid to check.
    * @return True if the asteroid is blocked, false otherwise.
    */
-  function isAsteroidBlocked(bytes32 asteroidEntity) private returns (bool) {
+  function isAsteroidBlocked(bytes32 asteroidEntity) private view returns (bool) {
     bytes32 fleetBlockKey = P_EnumToPrototype.get(FleetStanceKey, uint8(EFleetStance.Block));
     return FleetSet.size(asteroidEntity, fleetBlockKey) > 0;
   }
