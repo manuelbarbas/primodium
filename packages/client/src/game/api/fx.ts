@@ -1,4 +1,4 @@
-import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
+import { Assets, DepthLayers, SpriteKeys } from "src/game/lib/mappings";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Coord, uuid } from "@latticexyz/utils";
 import { Scene } from "engine/types";

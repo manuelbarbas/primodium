@@ -1,4 +1,4 @@
-import { AudioKeys, KeyNames, KeybindActions, Scenes } from "@game/constants";
+import { AudioKeys, KeyNames, KeybindActions, Scenes } from "src/game/lib/mappings";
 import { useAnimate } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FaEyeSlash, FaUndo } from "react-icons/fa";

@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import React, { useMemo } from "react";
 
-import { EntityTypetoBuildingSpriteKey } from "@game/constants";
+import { EntityTypetoBuildingSpriteKey } from "src/game/lib/mappings";
 import _ from "lodash";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";

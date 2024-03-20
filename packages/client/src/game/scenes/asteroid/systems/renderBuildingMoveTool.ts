@@ -1,4 +1,4 @@
-import { DepthLayers } from "@game/constants";
+import { DepthLayers } from "src/game/lib/mappings";
 import {
   Entity,
   Has,
@@ -17,7 +17,7 @@ import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import { getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
 import { Action } from "src/util/constants";
-import { Building } from "../../../objects/Building";
+import { Building } from "../../../lib/objects/Building";
 
 export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scene) => {
   if (pointer?.rightButtonDown()) {

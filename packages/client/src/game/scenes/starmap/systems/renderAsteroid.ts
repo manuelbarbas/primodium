@@ -1,4 +1,4 @@
-import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
+import { Assets, DepthLayers, SpriteKeys } from "src/game/lib/mappings";
 import { Entity, Has, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";

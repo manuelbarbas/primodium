@@ -1,4 +1,4 @@
-import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
+import { AudioKeys, KeybindActions, Scenes } from "src/game/lib/mappings";
 import React, { ReactNode, createContext, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaTimes } from "react-icons/fa";

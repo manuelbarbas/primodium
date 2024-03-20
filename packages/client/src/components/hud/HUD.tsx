@@ -1,4 +1,4 @@
-import { KeybindActions, Scenes } from "@game/constants";
+import { KeybindActions, Scenes } from "src/game/lib/mappings";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { FC, memo, useEffect, useMemo, useRef } from "react";

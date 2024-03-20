@@ -1,6 +1,7 @@
-import { EntityTypeToAnimationKey, EntityTypetoBuildingSpriteKey, SpriteKeys } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
+import { EntityTypeToAnimationKey, EntityTypetoBuildingSpriteKey } from "src/game/lib/mappings";
 import { safeIndex } from "src/util/array";
+import { SpriteKeys } from "../../constants/assets/sprites";
 
 export function getAnimationAsset(level: bigint, buildingType: Entity) {
   const animations = EntityTypeToAnimationKey[buildingType];

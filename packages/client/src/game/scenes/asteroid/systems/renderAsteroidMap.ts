@@ -2,7 +2,7 @@ import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs"
 import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { AsteroidMap } from "../../../objects/AsteroidMap/AsteroidMap";
+import { AsteroidMap } from "../../../lib/objects/AsteroidMap/AsteroidMap";
 import { getAsteroidBounds as getAsteroidCurrentBounds, getAsteroidMaxBounds } from "src/util/outOfBounds";
 import { decodeEntity } from "@latticexyz/store-sync/recs";
 

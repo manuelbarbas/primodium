@@ -1,4 +1,4 @@
-import { Scenes } from "@game/constants";
+import { Scenes } from "src/game/lib/mappings";
 import { CheatcodesList } from "@primodiumxyz/mud-game-tools";
 import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";

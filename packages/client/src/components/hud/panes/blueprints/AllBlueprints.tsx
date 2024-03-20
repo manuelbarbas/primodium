@@ -1,4 +1,4 @@
-import { AudioKeys, KeyNames, KeybindActions } from "@game/constants";
+import { AudioKeys, KeyNames, KeybindActions } from "src/game/lib/mappings";
 import { Entity } from "@latticexyz/recs";
 import { useMemo, useState } from "react";
 import { FaCaretLeft, FaCaretRight, FaLock } from "react-icons/fa";

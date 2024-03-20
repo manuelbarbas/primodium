@@ -1,4 +1,4 @@
-import { Scenes } from "@game/constants";
+import { Scenes } from "src/game/lib/mappings";
 import { useEffect, useRef } from "react";
 import { usePrimodium } from "src/hooks/usePrimodium";
 

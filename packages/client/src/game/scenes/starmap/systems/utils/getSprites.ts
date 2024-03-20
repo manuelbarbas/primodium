@@ -1,4 +1,4 @@
-import { EntityTypetoBuildingSpriteKey, SpriteKeys } from "@game/constants";
+import { EntityTypetoBuildingSpriteKey, SpriteKeys } from "src/game/lib/mappings";
 import { Entity } from "@latticexyz/recs";
 import { clampedIndex, getBlockTypeName } from "src/util/common";
 import { EntityType, MapIdToAsteroidType, RockRelationship } from "src/util/constants";

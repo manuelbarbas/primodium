@@ -1,6 +1,5 @@
-// import { SceneConfig } from "../../types";
-import { Scenes } from "@game/constants";
 import { SceneConfig } from "engine/types";
+import { Scenes } from "../constants/common";
 
 export const uiSceneConfig: SceneConfig = {
   key: Scenes.UI,

@@ -1,9 +1,9 @@
-import { Scenes } from "@game/constants";
+import { Scenes } from "src/game/lib/mappings";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { Marker } from "src/components/core/Marker";
-import { starmapSceneConfig } from "src/game/config/starmapScene";
+import { starmapSceneConfig } from "src/game/lib/config/starmapScene";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getCanAttack, getCanSend, getFleetTilePosition } from "src/util/unit";

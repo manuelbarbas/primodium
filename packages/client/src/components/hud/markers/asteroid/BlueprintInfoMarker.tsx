@@ -1,4 +1,4 @@
-import { Scenes } from "@game/constants";
+import { Scenes } from "src/game/lib/mappings";
 import { addCoords, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMemo } from "react";

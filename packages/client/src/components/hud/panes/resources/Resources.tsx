@@ -1,4 +1,4 @@
-import { KeybindActions, Scenes } from "@game/constants";
+import { KeybindActions, Scenes } from "src/game/lib/mappings";
 import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
 import { getRandomRange } from "src/util/common";

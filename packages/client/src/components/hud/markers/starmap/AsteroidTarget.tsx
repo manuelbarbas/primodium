@@ -1,4 +1,4 @@
-import { DepthLayers, Scenes } from "@game/constants";
+import { DepthLayers, Scenes } from "src/game/lib/mappings";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";

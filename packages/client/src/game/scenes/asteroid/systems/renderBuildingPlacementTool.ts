@@ -1,4 +1,4 @@
-import { DepthLayers } from "@game/constants";
+import { DepthLayers } from "src/game/lib/mappings";
 import {
   Entity,
   Has,
@@ -18,7 +18,7 @@ import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } f
 import { getBlockTypeName } from "src/util/common";
 import { Action, BuildingEnumLookup } from "src/util/constants";
 import { getRecipe, hasEnoughResources } from "src/util/recipe";
-import { Building } from "../../../objects/Building";
+import { Building } from "../../../lib/objects/Building";
 
 export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scene) => {
   if (pointer?.rightButtonDown()) {

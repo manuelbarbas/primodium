@@ -1,11 +1,13 @@
-import { Assets, DepthLayers } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 import { getAssetKeyPair } from "./helpers";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { Assets } from "../../constants/assets";
+import { DepthLayers } from "../../constants/common";
+import { ISpawnable } from "../interfaces";
 
-export class Building extends Phaser.GameObjects.Sprite {
+export class Building extends Phaser.GameObjects.Sprite implements ISpawnable {
   private buildingType: Entity;
   private coord: Coord;
   private _scene: Scene;

@@ -1,7 +1,7 @@
 import { FaHandshake, FaHandshakeSlash } from "react-icons/fa";
 import { useMud } from "src/hooks";
 // import { Card } from "../core/Card";
-import { KeybindActions, Scenes } from "@game/constants";
+import { KeybindActions, Scenes } from "src/game/lib/mappings";
 import { components } from "src/network/components";
 import { getRandomRange } from "src/util/common";
 import { Modal } from "../core/Modal";

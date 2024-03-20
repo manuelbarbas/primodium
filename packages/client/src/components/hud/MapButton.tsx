@@ -1,4 +1,4 @@
-import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
+import { AudioKeys, KeybindActions, Scenes } from "src/game/lib/mappings";
 import { useEffect, useMemo, useCallback } from "react";
 
 import { Button } from "src/components/core/Button";

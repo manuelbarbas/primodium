@@ -1,4 +1,4 @@
-import { minEth } from "@game/constants";
+import { minEth } from "src/game/lib/mappings";
 
 import { createBurnerAccount as createMudBurnerAccount, transportObserver } from "@latticexyz/common";
 import { createClient as createFaucetClient } from "@latticexyz/faucet";

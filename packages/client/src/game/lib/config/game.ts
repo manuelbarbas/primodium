@@ -1,5 +1,5 @@
-import { ASSET_PACK, KEY } from "@game/constants";
 import { GameConfig } from "engine/types";
+import { ASSET_PACK, KEY } from "../constants/common";
 
 const gameConfig: GameConfig = {
   key: KEY,

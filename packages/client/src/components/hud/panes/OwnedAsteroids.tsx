@@ -1,4 +1,4 @@
-import { KeybindActions, Scenes } from "@game/constants";
+import { KeybindActions, Scenes } from "src/game/lib/mappings";
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { Button } from "src/components/core/Button";

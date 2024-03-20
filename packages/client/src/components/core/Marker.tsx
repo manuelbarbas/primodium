@@ -1,4 +1,4 @@
-import { DepthLayers, Scenes } from "@game/constants";
+import { DepthLayers, Scenes } from "src/game/lib/mappings";
 import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { Coord } from "@latticexyz/utils";
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";

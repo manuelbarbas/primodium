@@ -15,7 +15,7 @@ import { world } from "src/network/world";
 
 import { EntityType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
-import { Building } from "../../../objects/Building";
+import { Building } from "../../../lib/objects/Building";
 import { components } from "src/network/components";
 import { getBuildingBottomLeft } from "src/util/building";
 

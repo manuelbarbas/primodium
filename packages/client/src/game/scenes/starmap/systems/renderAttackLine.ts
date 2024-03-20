@@ -1,9 +1,9 @@
-import { DepthLayers } from "@game/constants";
+import { DepthLayers } from "src/game/lib/mappings";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { createCameraApi } from "src/game/api/camera";
-import { starmapSceneConfig } from "src/game/config/starmapScene";
+import { starmapSceneConfig } from "src/game/lib/config/starmapScene";
 import { components } from "src/network/components";
 import { attack as callAttack } from "src/network/setup/contractCalls/attack";
 import { MUD } from "src/network/types";

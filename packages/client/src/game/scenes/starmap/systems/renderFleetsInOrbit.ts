@@ -1,4 +1,4 @@
-import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
+import { Assets, DepthLayers, SpriteKeys } from "src/game/lib/mappings";
 import { Coord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, Has, defineComponentSystem, defineSystem, namespaceWorld } from "@latticexyz/recs";
 import { EFleetStance } from "contracts/config/enums";

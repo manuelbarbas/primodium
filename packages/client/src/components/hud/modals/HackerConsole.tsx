@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Scenes } from "@game/constants";
+import { Scenes } from "src/game/lib/mappings";
 import React, { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { Button } from "src/components/core/Button";
 import { usePersistentStore } from "src/game/stores/PersistentStore";

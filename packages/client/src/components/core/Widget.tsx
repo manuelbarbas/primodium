@@ -1,4 +1,4 @@
-import { KeybindActions, Scenes } from "@game/constants";
+import { KeybindActions, Scenes } from "src/game/lib/mappings";
 import { Coord } from "@latticexyz/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { ReactNode, memo, useCallback, useEffect, useMemo, useState } from "react";

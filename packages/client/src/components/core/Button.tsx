@@ -1,4 +1,4 @@
-import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
+import { AudioKeys, KeybindActions, Scenes } from "src/game/lib/mappings";
 import { useEffect } from "react";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { getRandomRange } from "src/util/common";

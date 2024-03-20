@@ -1,6 +1,6 @@
 import engine from "engine";
-import gameConfig from "./config/game";
-import { Scenes } from "./constants";
+import gameConfig from "./lib/config/game";
+import { Scenes } from "./lib/mappings";
 import { initAsteroidScene } from "./scenes/asteroid/init";
 import { setupAudioEffects } from "./scenes/common/setup/setupAudioEffects";
 import { initStarmapScene } from "./scenes/starmap/init";

@@ -1,4 +1,4 @@
-import { KeybindActions, Scenes } from "@game/constants";
+import { KeybindActions, Scenes } from "src/game/lib/mappings";
 import { Join } from "src/components/core/Join";
 import { Tabs } from "src/components/core/Tabs";
 import { Widget } from "src/components/core/Widget";

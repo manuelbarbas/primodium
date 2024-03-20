@@ -1,4 +1,4 @@
-import { Assets, AudioKeys } from "@game/constants";
+import { Assets, AudioKeys } from "src/game/lib/mappings";
 import { Scene } from "engine/types";
 import { usePersistentStore } from "../stores/PersistentStore";
 

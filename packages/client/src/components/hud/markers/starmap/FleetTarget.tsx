@@ -1,4 +1,4 @@
-import { DepthLayers, Scenes } from "@game/constants";
+import { DepthLayers, Scenes } from "src/game/lib/mappings";
 import { Entity } from "@latticexyz/recs";
 import { useMemo, useRef } from "react";
 import { Button } from "src/components/core/Button";

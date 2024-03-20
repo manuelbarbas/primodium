@@ -1,4 +1,4 @@
-import { KeybindActions, Scenes } from "@game/constants";
+import { KeybindActions, Scenes } from "src/game/lib/mappings";
 import { EObjectives } from "contracts/config/enums";
 import { useEffect, useState } from "react";
 import { FaGift, FaMapPin } from "react-icons/fa";

@@ -1,4 +1,4 @@
-import { MaxLevelToTilemap } from "@game/constants";
+import { MaxLevelToTilemap } from "src/game/lib/mappings";
 import { Scene } from "engine/types";
 import { Bounds, Dimensions, ResourceTile } from "./helpers";
 import { AsteroidBounds } from "./AsteroidBounds";
@@ -29,6 +29,7 @@ export class AsteroidMap {
   }
 
   drawBounds(currentBounds: Bounds, maxBounds: Bounds) {
+    this.currentBounds = currentBounds;
     this.maxBounds = maxBounds;
     this.bounds.draw(currentBounds, maxBounds);
     return this;

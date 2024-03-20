@@ -1,4 +1,4 @@
-import { KeybindActions } from "@game/constants";
+import { KeybindActions } from "src/game/lib/mappings";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Action } from "./constants";

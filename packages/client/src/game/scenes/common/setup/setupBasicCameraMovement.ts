@@ -1,4 +1,4 @@
-import { KeybindActions } from "@game/constants";
+import { KeybindActions } from "src/game/lib/mappings";
 import { createCameraApi } from "src/game/api/camera";
 import { Scene } from "engine/types";
 import { createInputApi } from "src/game/api/input";

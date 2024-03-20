@@ -7,7 +7,7 @@ import { entityToColor } from "src/util/color";
 import { RockRelationshipColors } from "src/util/constants";
 import { getRockRelationship } from "src/util/asteroid";
 import { usePrimodium } from "src/hooks/usePrimodium";
-import { Scenes } from "@game/constants";
+import { Scenes } from "src/game/lib/mappings";
 import { Modal } from "../core/Modal";
 import { useMemo } from "react";
 

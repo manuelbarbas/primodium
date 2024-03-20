@@ -1,10 +1,10 @@
-import { DepthLayers } from "@game/constants";
+import { DepthLayers } from "src/game/lib/mappings";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
 import { createCameraApi } from "src/game/api/camera";
-import { starmapSceneConfig } from "src/game/config/starmapScene";
+import { starmapSceneConfig } from "src/game/lib/config/starmapScene";
 import { components } from "src/network/components";
 import { sendFleetPosition } from "src/network/setup/contractCalls/fleetMove";
 import { MUD } from "src/network/types";

@@ -8,7 +8,7 @@ import {
   namespaceWorld,
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { BuildingConstruction } from "src/game/objects/Building";
+import { BuildingConstruction } from "src/game/lib/objects/Building";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getBuildingDimensions } from "src/util/building";

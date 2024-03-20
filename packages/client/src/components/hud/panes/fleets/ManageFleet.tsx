@@ -1,4 +1,4 @@
-import { Scenes } from "@game/constants";
+import { Scenes } from "src/game/lib/mappings";
 import { Entity } from "@latticexyz/recs";
 import { EFleetStance } from "contracts/config/enums";
 import { FC, useMemo } from "react";

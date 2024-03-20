@@ -1,6 +1,6 @@
 import { throttle } from "lodash";
 
-import { KeybindActions } from "@game/constants";
+import { KeybindActions } from "src/game/lib/mappings";
 import { Key, Scene } from "engine/types";
 import { usePersistentStore } from "../stores/PersistentStore";
 

@@ -1,5 +1,5 @@
 import { Primodium } from "@game/api";
-import { Scenes } from "@game/constants";
+import { Scenes } from "src/game/lib/mappings";
 import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";

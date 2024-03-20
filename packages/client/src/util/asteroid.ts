@@ -1,7 +1,7 @@
 import { Primodium } from "@game/api";
 import { Entity } from "@latticexyz/recs";
 
-import { Assets } from "@game/constants";
+import { Assets } from "src/game/lib/mappings";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EFleetStance } from "contracts/config/enums";
 import { getRockSprite } from "src/game/scenes/starmap/systems/utils/getSprites";

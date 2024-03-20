@@ -1,4 +1,4 @@
-import { Scenes } from "@game/constants";
+import { Scenes } from "src/game/lib/mappings";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { adjustDecimals } from "src/util/number";
 import { Button } from "./Button";

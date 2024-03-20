@@ -1,6 +1,7 @@
 import { SceneConfig } from "engine/types";
-import { DepthLayers, Scenes, Tilemaps } from "../constants";
 import { animationConfig } from "./animation";
+import { DepthLayers, Scenes } from "../constants/common";
+import { Tilemaps } from "../constants/assets/tiles";
 
 export const asteroidSceneConfig: SceneConfig = {
   key: Scenes.Asteroid,

@@ -1,4 +1,4 @@
-import { DepthLayers } from "@game/constants";
+import { DepthLayers } from "src/game/lib/mappings";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   ComponentUpdate,

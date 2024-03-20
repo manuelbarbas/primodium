@@ -1,4 +1,4 @@
-import { Scenes } from "@game/constants";
+import { Scenes } from "src/game/lib/mappings";
 import { createGame } from "engine/api";
 import { Scene } from "engine/types";
 

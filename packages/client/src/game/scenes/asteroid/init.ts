@@ -2,7 +2,7 @@
 import { Game } from "engine/types";
 import { createAudioApi } from "src/game/api/audio";
 import { world } from "src/network/world";
-import { asteroidSceneConfig } from "../../config/asteroidScene";
+import { asteroidSceneConfig } from "../../lib/config/asteroidScene";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
 import { setupKeybinds } from "./setup/setupKeybinds";
 import { setupMouseInputs } from "./setup/setupMouseInputs";
