@@ -8,6 +8,7 @@ import { getBlockTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { bigintToNumber } from "src/util/number";
+import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const upgradeBuilding = async (
@@ -23,7 +24,7 @@ export const upgradeBuilding = async (
       mud,
       functionName: "Primodium__upgradeBuilding",
       systemId: getSystemId("UpgradeBuildingSystem"),
-      args: [building],
+      args: [building as Hex],
       withSession: true,
       options: { gas: 2_500_000n },
     },

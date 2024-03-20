@@ -5,7 +5,6 @@ import { WorldResourceIdLib, ResourceId } from "@latticexyz/world/src/WorldResou
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 import { ResourceAccess, NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
-import { ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
 import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
 
