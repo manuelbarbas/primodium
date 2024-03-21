@@ -247,7 +247,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
       throw new Error("Cannot downgrade building");
     }
     while (currLevel < newLevel) {
-      await provideBuildingRequiredResources(position.parent as Entity, prototype as Entity, currLevel + 1n);
+      await provideBuildingRequiredResources(position.parentEntity as Entity, prototype as Entity, currLevel + 1n);
       await upgradeBuildingCall(mud, building, { force: true });
       currLevel++;
     }
@@ -425,7 +425,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
           params: [],
           function: async () => {
             toast.info("running cheatcode: Stop Grace Period");
-            setComponentValue(mud, components.P_GracePeriod, {}, { spaceRock: 0n });
+            setComponentValue(mud, components.P_GracePeriod, {}, { asteroid: 0n });
           },
         },
         spawnPlayers: {
@@ -455,7 +455,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
                 walletClient: burnerWalletClient,
               });
 
-              await worldContract.write.spawn();
+              await worldContract.write.Primodium__spawn();
             }
           },
         },
@@ -595,7 +595,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             await setComponentValue(mud, components.OwnedBy, { entity: selectedRock as Hex }, { value: player });
             const position = components.Position.get(toHex32("MainBase") as Entity);
             if (!position) throw new Error("No main base found");
-            await buildBuilding(mud, EBuilding.MainBase, { ...position, parent: selectedRock as Hex });
+            await buildBuilding(mud, EBuilding.MainBase, { ...position, parentEntity: selectedRock as Hex });
             toast.success(`Asteroid ${entityToRockName(selectedRock)} conquered`);
           },
         },
@@ -614,7 +614,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
               { value: asteroidEntity as Hex }
             );
             const position = components.Position.get(asteroid);
-            const coord = { x: (position?.x ?? 0) + 10, y: (position?.y ?? 0) + 10, parent: encodeBytes32("0") };
+            const coord = { x: (position?.x ?? 0) + 10, y: (position?.y ?? 0) + 10, parentEntity: encodeBytes32("0") };
 
             await setComponentValue(
               mud,
@@ -708,7 +708,9 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             { name: "unit", type: "dropdown", dropdownOptions: Object.keys(units) },
             { name: "count", type: "number" },
           ],
-          function: createFleet,
+          function: (unit: string, count: number) => {
+            createFleet([{ unit: units[unit], count }], []);
+          },
         },
         giveFleetResource: {
           params: [

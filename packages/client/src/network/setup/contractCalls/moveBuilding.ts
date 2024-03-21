@@ -18,7 +18,7 @@ export const moveBuilding = async (mud: MUD, building: Entity, coord: Coord) => 
   if (!activeAsteroid) return;
 
   const prevPosition = components.Position.get(building);
-  const position = { ...coord, parent: activeAsteroid as Hex };
+  const position = { ...coord, parentEntity: activeAsteroid as Hex };
   const buildingType = components.BuildingType.get(building)?.value as Entity;
 
   if (!prevPosition || !buildingType) return;

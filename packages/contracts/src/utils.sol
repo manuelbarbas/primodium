@@ -16,9 +16,3 @@ function bytes32ToString(bytes32 data) pure returns (string memory) {
   }
   return string(bytesString);
 }
-
-/// @dev get the player or delegator entity
-/// @return the player or delegator entity
-function _player(address msgSender) view returns (bytes32) {
-  return addressToEntity(msgSender);
-}

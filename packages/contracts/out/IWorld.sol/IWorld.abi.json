@@ -45,7 +45,7 @@
     "name": "Primodium__applyDamage",
     "inputs": [
       {
-        "name": "battleId",
+        "name": "battleEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
@@ -97,7 +97,7 @@
     "name": "Primodium__battleRaidResolve",
     "inputs": [
       {
-        "name": "battleId",
+        "name": "battleEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
@@ -140,7 +140,7 @@
             "internalType": "int32"
           },
           {
-            "name": "parent",
+            "name": "parentEntity",
             "type": "bytes32",
             "internalType": "bytes32"
           }
@@ -161,7 +161,7 @@
     "name": "Primodium__claimObjective",
     "inputs": [
       {
-        "name": "spaceRockEntity",
+        "name": "asteroidEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
@@ -179,7 +179,7 @@
     "name": "Primodium__claimResources",
     "inputs": [
       {
-        "name": "spaceRockEntity",
+        "name": "asteroidEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       }
@@ -192,7 +192,7 @@
     "name": "Primodium__claimUnits",
     "inputs": [
       {
-        "name": "spaceRockEntity",
+        "name": "asteroidEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       }
@@ -205,7 +205,7 @@
     "name": "Primodium__clearFleetStance",
     "inputs": [
       {
-        "name": "fleetId",
+        "name": "fleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       }
@@ -281,7 +281,7 @@
     "name": "Primodium__createFleet",
     "inputs": [
       {
-        "name": "spaceRock",
+        "name": "asteroidEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
@@ -298,7 +298,7 @@
     ],
     "outputs": [
       {
-        "name": "fleetId",
+        "name": "fleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       }
@@ -325,7 +325,7 @@
             "internalType": "int32"
           },
           {
-            "name": "parent",
+            "name": "parentEntity",
             "type": "bytes32",
             "internalType": "bytes32"
           }
@@ -667,7 +667,7 @@
     "name": "Primodium__disbandFleet",
     "inputs": [
       {
-        "name": "fleetId",
+        "name": "fleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       }
@@ -680,7 +680,7 @@
     "name": "Primodium__disbandResources",
     "inputs": [
       {
-        "name": "fleetId",
+        "name": "fleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
@@ -698,7 +698,7 @@
     "name": "Primodium__disbandUnits",
     "inputs": [
       {
-        "name": "fleetId",
+        "name": "fleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
@@ -716,7 +716,7 @@
     "name": "Primodium__disbandUnitsAndResourcesFromFleet",
     "inputs": [
       {
-        "name": "fleetId",
+        "name": "fleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
@@ -785,10 +785,10 @@
   },
   {
     "type": "function",
-    "name": "Primodium__initializeSpaceRockOwnership",
+    "name": "Primodium__initAsteroidOwner",
     "inputs": [
       {
-        "name": "spaceRock",
+        "name": "asteroidEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
@@ -845,12 +845,12 @@
     "name": "Primodium__landFleet",
     "inputs": [
       {
-        "name": "fleetId",
+        "name": "fleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
       {
-        "name": "spaceRock",
+        "name": "asteroidEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       }
@@ -903,7 +903,7 @@
             "internalType": "int32"
           },
           {
-            "name": "parent",
+            "name": "parentEntity",
             "type": "bytes32",
             "internalType": "bytes32"
           }
@@ -918,7 +918,7 @@
     "name": "Primodium__recallFleet",
     "inputs": [
       {
-        "name": "fleetId",
+        "name": "fleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       }
@@ -931,12 +931,7 @@
     "name": "Primodium__receiveRewards",
     "inputs": [
       {
-        "name": "playerEntity",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "spaceRockEntity",
+        "name": "asteroidEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
@@ -1008,7 +1003,7 @@
     "name": "Primodium__resetFleetIfNoUnitsLeft",
     "inputs": [
       {
-        "name": "fleetId",
+        "name": "fleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       }
@@ -1021,12 +1016,12 @@
     "name": "Primodium__resolveBattleEncryption",
     "inputs": [
       {
-        "name": "battleId",
+        "name": "battleEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
       {
-        "name": "targetSpaceRock",
+        "name": "targetAsteroid",
         "type": "bytes32",
         "internalType": "bytes32"
       },
@@ -1075,7 +1070,7 @@
     "name": "Primodium__sendFleet",
     "inputs": [
       {
-        "name": "fleetId",
+        "name": "fleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
@@ -1095,7 +1090,7 @@
             "internalType": "int32"
           },
           {
-            "name": "parent",
+            "name": "parentEntity",
             "type": "bytes32",
             "internalType": "bytes32"
           }
@@ -1110,12 +1105,12 @@
     "name": "Primodium__sendFleet",
     "inputs": [
       {
-        "name": "fleetId",
+        "name": "fleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
       {
-        "name": "spaceRock",
+        "name": "asteroidEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       }
@@ -1128,7 +1123,7 @@
     "name": "Primodium__setFleetStance",
     "inputs": [
       {
-        "name": "fleetId",
+        "name": "fleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
@@ -1206,7 +1201,7 @@
     "name": "Primodium__spendUpgradeResources",
     "inputs": [
       {
-        "name": "spaceRockEntity",
+        "name": "asteroidEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
@@ -1365,38 +1360,79 @@
   },
   {
     "type": "function",
+    "name": "Primodium__transferAsteroid",
+    "inputs": [
+      {
+        "name": "asteroidEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "ownerEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Primodium__transferResourcesFromAsteroidToFleet",
+    "inputs": [
+      {
+        "name": "asteroidEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "fleetEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "resourceCounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Primodium__transferResourcesFromFleetToAsteroid",
+    "inputs": [
+      {
+        "name": "fleetEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "asteroidEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "resourceCounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "Primodium__transferResourcesFromFleetToFleet",
     "inputs": [
       {
-        "name": "fromFleetId",
+        "name": "fromFleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
       {
-        "name": "fleetId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "resourceCounts",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__transferResourcesFromFleetToSpaceRock",
-    "inputs": [
-      {
-        "name": "fleetId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "spaceRock",
+        "name": "toFleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
@@ -1411,17 +1447,22 @@
   },
   {
     "type": "function",
-    "name": "Primodium__transferResourcesFromSpaceRockToFleet",
+    "name": "Primodium__transferUnitsAndResourcesFromAsteroidToFleet",
     "inputs": [
       {
-        "name": "spaceRock",
+        "name": "asteroidEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
       {
-        "name": "fleetId",
+        "name": "fleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
+      },
+      {
+        "name": "unitCounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
       },
       {
         "name": "resourceCounts",
@@ -1434,17 +1475,27 @@
   },
   {
     "type": "function",
-    "name": "Primodium__transferSpaceRockOwnership",
+    "name": "Primodium__transferUnitsAndResourcesFromFleetToAsteroid",
     "inputs": [
       {
-        "name": "spaceRock",
+        "name": "fromFleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
       {
-        "name": "newOwner",
+        "name": "asteroidEntity",
         "type": "bytes32",
         "internalType": "bytes32"
+      },
+      {
+        "name": "unitCounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "resourceCounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
       }
     ],
     "outputs": [],
@@ -1455,40 +1506,12 @@
     "name": "Primodium__transferUnitsAndResourcesFromFleetToFleet",
     "inputs": [
       {
-        "name": "fromFleetId",
+        "name": "fromFleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
       {
-        "name": "fleetId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "unitCounts",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      },
-      {
-        "name": "resourceCounts",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__transferUnitsAndResourcesFromFleetToSpaceRock",
-    "inputs": [
-      {
-        "name": "fromFleetId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "spaceRock",
+        "name": "toFleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
@@ -1508,15 +1531,15 @@
   },
   {
     "type": "function",
-    "name": "Primodium__transferUnitsAndResourcesFromSpaceRockToFleet",
+    "name": "Primodium__transferUnitsFromAsteroidToFleet",
     "inputs": [
       {
-        "name": "spaceRock",
+        "name": "asteroidEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
       {
-        "name": "fleetId",
+        "name": "fleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
@@ -1524,9 +1547,27 @@
         "name": "unitCounts",
         "type": "uint256[]",
         "internalType": "uint256[]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Primodium__transferUnitsFromFleetToAsteroid",
+    "inputs": [
+      {
+        "name": "fromFleetEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
       },
       {
-        "name": "resourceCounts",
+        "name": "asteroidEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "unitCounts",
         "type": "uint256[]",
         "internalType": "uint256[]"
       }
@@ -1539,58 +1580,12 @@
     "name": "Primodium__transferUnitsFromFleetToFleet",
     "inputs": [
       {
-        "name": "fromFleetId",
+        "name": "fromFleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
       {
-        "name": "fleetId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "unitCounts",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__transferUnitsFromFleetToSpaceRock",
-    "inputs": [
-      {
-        "name": "fromFleetId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "spaceRock",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "unitCounts",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__transferUnitsFromSpaceRockToFleet",
-    "inputs": [
-      {
-        "name": "spaceRock",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "fleetId",
+        "name": "toFleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
@@ -1639,7 +1634,7 @@
     "name": "Primodium__upgradeRange",
     "inputs": [
       {
-        "name": "spaceRockEntity",
+        "name": "asteroidEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       }
@@ -1652,7 +1647,7 @@
     "name": "Primodium__upgradeUnit",
     "inputs": [
       {
-        "name": "spaceRockEntity",
+        "name": "asteroidEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },

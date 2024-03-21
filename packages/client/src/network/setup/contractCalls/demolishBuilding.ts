@@ -32,7 +32,7 @@ export async function demolishBuilding(mud: MUD, building: Entity) {
       const currLevel = components.Level.get(building)?.value || 0;
 
       ampli.systemDestroy({
-        asteroidCoord: position.parent,
+        asteroidCoord: position.parentEntity,
         buildingType: getBlockTypeName(buildingType),
         coord: [position.x, position.y],
         currLevel: bigintToNumber(currLevel),

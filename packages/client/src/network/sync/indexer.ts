@@ -1,18 +1,18 @@
-import { Sync } from "@primodiumxyz/sync-stack";
-import { MUD, SetupResult } from "../types";
-import { getNetworkConfig } from "../config/getNetworkConfig";
-import { Hex } from "viem";
-import { hydrateFromRPC } from "./rpc";
 import { Entity } from "@latticexyz/recs";
-import { hashEntities } from "src/util/encode";
+import { Sync } from "@primodiumxyz/sync-stack";
 import { Keys, SyncSourceType, SyncStep } from "src/util/constants";
-import { getPlayerQuery } from "./queries/playerQueries";
+import { hashEntities } from "src/util/encode";
 import { createSyncHandlers } from "src/util/sync";
-import { getActiveAsteroidQuery, getAsteroidQuery } from "./queries/asteroidQueries";
+import { Hex } from "viem";
+import { getNetworkConfig } from "../config/getNetworkConfig";
+import { MUD, SetupResult } from "../types";
 import { getAllianceQuery } from "./queries/allianceQueries";
-import { getFleetQuery } from "./queries/fleetQueries";
+import { getActiveAsteroidQuery, getAsteroidQuery } from "./queries/asteroidQueries";
 import { getBattleReportQuery } from "./queries/battleReportQueries";
+import { getFleetQuery } from "./queries/fleetQueries";
 import { getInitalQuery } from "./queries/initialQueries";
+import { getPlayerQuery } from "./queries/playerQueries";
+import { hydrateFromRPC } from "./rpc";
 
 export const hydrateInitialGameState = (
   setupResult: SetupResult,

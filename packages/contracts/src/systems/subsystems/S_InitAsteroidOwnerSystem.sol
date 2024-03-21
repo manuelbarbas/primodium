@@ -8,11 +8,13 @@ import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 
-contract S_InitializeSpaceRockOwnershipSystem is PrimodiumSystem {
-  function initializeSpaceRockOwnership(bytes32 spaceRock, bytes32 playerEntity) public _claimResources(spaceRock) {
-    LibAsteroid.initializeSpaceRockOwnership(spaceRock, playerEntity);
+contract S_InitAsteroidOwnerSystem is PrimodiumSystem {
+  function initAsteroidOwner(bytes32 asteroidEntity, bytes32 playerEntity) public _claimResources(asteroidEntity) {
+    LibAsteroid.initAsteroidOwner(asteroidEntity, playerEntity);
+
+    // Create main base, mirroring the BuildSystem logic
     PositionData memory position = Position.get(MainBasePrototypeId);
-    position.parent = spaceRock;
+    position.parentEntity = asteroidEntity;
 
     bytes32 buildingEntity = LibBuilding.build(playerEntity, MainBasePrototypeId, position);
     IWorld world = IWorld(_world());

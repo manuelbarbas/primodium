@@ -39,7 +39,7 @@ export const upgradeBuilding = async (
       const currLevel = components.Level.get(building)?.value || 0n;
 
       ampli.systemUpgrade({
-        asteroidCoord: position.parent!,
+        asteroidCoord: position.parentEntity!,
         buildingType: getBlockTypeName(buildingType),
         coord: [position.x, position.y],
         currLevel: bigintToNumber(currLevel),

@@ -2,14 +2,14 @@
 pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { P_UnitPrototypes, P_EnumToPrototype, QueueItemUnitsData, OwnedBy } from "codegen/index.sol";
-import { UnitProductionQueue } from "codegen/Libraries.sol";
+import { P_UnitPrototypes, P_EnumToPrototype, Value_UnitProductionQueueData, OwnedBy } from "codegen/index.sol";
+import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
 
 import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
-import { LibResource } from "codegen/Libraries.sol";
-import { LibUnit } from "codegen/Libraries.sol";
+import { LibResource } from "libraries/LibResource.sol";
+import { LibUnit } from "libraries/LibResource.sol";
 
 contract TrainUnitsSystem is PrimodiumSystem {
   /// @notice Trains units based on specified unit type and count
@@ -48,14 +48,17 @@ contract TrainUnitsSystem is PrimodiumSystem {
   function _trainUnits(bytes32 buildingEntity, bytes32 unitPrototype, uint256 count) internal {
     if (count == 0) return;
 
-    bytes32 spaceRockEntity = OwnedBy.get(buildingEntity);
+    bytes32 asteroidEntity = OwnedBy.get(buildingEntity);
     IWorld world = IWorld(_world());
-    world.Primodium__claimResources(spaceRockEntity);
-    world.Primodium__claimUnits(spaceRockEntity);
-    LibResource.spendUnitRequiredResources(spaceRockEntity, unitPrototype, count);
+    world.Primodium__claimResources(asteroidEntity);
+    world.Primodium__claimUnits(asteroidEntity);
+    LibResource.spendUnitRequiredResources(asteroidEntity, unitPrototype, count);
     LibUnit.checkTrainUnitsRequirements(buildingEntity, unitPrototype);
 
-    QueueItemUnitsData memory queueItem = QueueItemUnitsData({ unitId: unitPrototype, quantity: count });
+    Value_UnitProductionQueueData memory queueItem = Value_UnitProductionQueueData({
+      unitEntity: unitPrototype,
+      quantity: count
+    });
     UnitProductionQueue.enqueue(buildingEntity, queueItem);
   }
 }

@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+
+import { UtilityMap } from "libraries/UtilityMap.sol";
+import { EResource } from "src/Types.sol";
 
 contract UtilityMapTest is PrimodiumTest {
-  bytes32 player1 = "player1";
+  bytes32 playerEntity = "playerEntity";
   uint8 resource1 = uint8(EResource.U_Electricity);
   uint8 resource2 = uint8(EResource.U_Housing);
 
@@ -14,39 +17,39 @@ contract UtilityMapTest is PrimodiumTest {
   }
 
   function testHas() public {
-    UtilityMap.set(player1, resource1, 50);
-    assertTrue(UtilityMap.has(player1, resource1));
-    assertFalse(UtilityMap.has(player1, resource2));
+    UtilityMap.set(playerEntity, resource1, 50);
+    assertTrue(UtilityMap.has(playerEntity, resource1));
+    assertFalse(UtilityMap.has(playerEntity, resource2));
   }
 
   function testGet() public {
-    UtilityMap.set(player1, resource1, 50);
-    assertEq(UtilityMap.get(player1, resource1), 50);
+    UtilityMap.set(playerEntity, resource1, 50);
+    assertEq(UtilityMap.get(playerEntity, resource1), 50);
   }
 
   function testGetAll() public {
-    UtilityMap.set(player1, resource1, 50);
-    UtilityMap.set(player1, resource2, 20);
-    uint8[] memory allResources = UtilityMap.keys(player1);
+    UtilityMap.set(playerEntity, resource1, 50);
+    UtilityMap.set(playerEntity, resource2, 20);
+    uint8[] memory allResources = UtilityMap.keys(playerEntity);
     assertEq(allResources.length, 2);
   }
 
   function testSet() public {
-    UtilityMap.set(player1, resource1, 50);
-    assertEq(UtilityMap.get(player1, resource1), 50);
+    UtilityMap.set(playerEntity, resource1, 50);
+    assertEq(UtilityMap.get(playerEntity, resource1), 50);
   }
 
   function testRemove() public {
-    UtilityMap.set(player1, resource1, 50);
-    UtilityMap.remove(player1, resource1);
-    assertFalse(UtilityMap.has(player1, resource1));
+    UtilityMap.set(playerEntity, resource1, 50);
+    UtilityMap.remove(playerEntity, resource1);
+    assertFalse(UtilityMap.has(playerEntity, resource1));
   }
 
   function testClear() public {
-    UtilityMap.set(player1, resource1, 50);
-    UtilityMap.set(player1, resource2, 20);
-    UtilityMap.clear(player1);
-    uint8[] memory allResources = UtilityMap.keys(player1);
+    UtilityMap.set(playerEntity, resource1, 50);
+    UtilityMap.set(playerEntity, resource2, 20);
+    UtilityMap.clear(playerEntity);
+    uint8[] memory allResources = UtilityMap.keys(playerEntity);
     assertEq(allResources.length, 0);
   }
 }

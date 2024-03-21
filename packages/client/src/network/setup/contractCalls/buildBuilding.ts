@@ -15,13 +15,13 @@ import { parseReceipt } from "../../../util/analytics/parseReceipt";
 export const buildBuilding = async (
   mud: MUD,
   building: EBuilding,
-  coord: Coord & { parent?: Hex },
+  coord: Coord & { parentEntity?: Hex },
   options?: Partial<TxQueueOptions<TransactionQueueType.Upgrade>>
 ) => {
   const activeAsteroid = components.ActiveRock.get()?.value;
   if (!activeAsteroid) return;
 
-  const position = { ...coord, parent: coord.parent ?? (activeAsteroid as Hex) };
+  const position = { ...coord, parentEntity: coord.parentEntity ?? (activeAsteroid as Hex) };
 
   await execute(
     {

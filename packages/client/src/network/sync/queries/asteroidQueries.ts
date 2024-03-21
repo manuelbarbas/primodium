@@ -75,46 +75,46 @@ export const getActiveAsteroidQuery = ({
       queries: [
         //get buildings
         {
-          tableId: tables.Position.tableId!,
+          tableId: tables.Position.tableId,
           where: {
-            column: "parent",
+            column: "parent_entity",
             operation: "eq",
             value: asteroid as Hex,
           },
           include: [
             {
-              tableId: tables.OwnedBy.tableId!,
+              tableId: tables.OwnedBy.tableId,
             },
             {
-              tableId: tables.TilePositions.tableId!,
+              tableId: tables.TilePositions.tableId,
             },
             {
-              tableId: tables.BuildingType.tableId!,
+              tableId: tables.BuildingType.tableId,
             },
             {
-              tableId: tables.IsActive.tableId!,
+              tableId: tables.IsActive.tableId,
             },
             {
-              tableId: tables.Level.tableId!,
+              tableId: tables.Level.tableId,
             },
             {
-              tableId: tables.LastClaimedAt.tableId!,
+              tableId: tables.LastClaimedAt.tableId,
             },
             {
-              tableId: tables.ClaimOffset.tableId!,
+              tableId: tables.ClaimOffset.tableId,
             },
             {
-              tableId: tables.QueueUnits.tableId!,
+              tableId: tables.Meta_UnitProductionQueue.tableId,
             },
             {
-              tableId: tables.QueueItemUnits.tableId!,
+              tableId: tables.Value_UnitProductionQueue.tableId,
               on: "entity",
             },
           ],
         },
         //get expansion level
         {
-          tableId: tables.Level.tableId!,
+          tableId: tables.Level.tableId,
           where: {
             column: "entity",
             operation: "eq",

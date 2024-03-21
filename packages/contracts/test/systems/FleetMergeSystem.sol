@@ -1,21 +1,28 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import "test/PrimodiumTest.t.sol";
+
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EResource, EUnit } from "src/Types.sol";
+import { UnitKey } from "src/Keys.sol";
+
+import { P_EnumToPrototype, ResourceCount, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes, FleetMovement, Score, P_RequiredResources, P_RequiredResourcesData, UnitLevel, P_IsUtility } from "codegen/index.sol";
 
 contract FleetMergeSystemTest is PrimodiumTest {
-  bytes32 aliceHomeSpaceRock;
+  bytes32 aliceHomeAsteroid;
   bytes32 aliceEntity;
 
-  bytes32 bobHomeSpaceRock;
+  bytes32 bobHomeAsteroid;
   bytes32 bobEntity;
 
   function setUp() public override {
     super.setUp();
     aliceEntity = addressToEntity(alice);
-    aliceHomeSpaceRock = spawn(alice);
+    aliceHomeAsteroid = spawn(alice);
 
     bobEntity = addressToEntity(bob);
-    bobHomeSpaceRock = spawn(bob);
+    bobHomeAsteroid = spawn(bob);
   }
 
   function testMergeFleets() public {
@@ -34,67 +41,63 @@ contract FleetMergeSystemTest is PrimodiumTest {
     }
 
     //provide resource and unit requirements to create fleet
-    setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
+    setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
-    increaseResource(aliceHomeSpaceRock, EResource.U_MaxFleets, 1);
+    increaseResource(aliceHomeAsteroid, EResource.U_MaxFleets, 1);
     //provide resource and unit requirements to create fleet
-    setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
+    setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.warp(block.timestamp + 1);
     vm.startPrank(alice);
-    bytes32 secondFleetId = world.Primodium__createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 secondFleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     uint256 aliceScore = Score.get(aliceEntity);
-    uint256 aliceHomeScore = Score.get(aliceHomeSpaceRock);
+    uint256 aliceHomeScore = Score.get(aliceHomeAsteroid);
     vm.startPrank(alice);
-    world.Primodium__sendFleet(fleetId, bobHomeSpaceRock);
-    world.Primodium__sendFleet(secondFleetId, bobHomeSpaceRock);
-    vm.warp(FleetMovement.getArrivalTime(fleetId));
+    world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
+    world.Primodium__sendFleet(secondFleetEntity, bobHomeAsteroid);
+    vm.warp(FleetMovement.getArrivalTime(fleetEntity));
     bytes32[] memory fleets = new bytes32[](2);
-    fleets[0] = fleetId;
-    fleets[1] = secondFleetId;
+    fleets[0] = fleetEntity;
+    fleets[1] = secondFleetEntity;
     world.Primodium__mergeFleets(fleets);
     vm.stopPrank();
 
     assertEq(Score.get(aliceEntity), aliceScore, "score should stay the same");
-    assertEq(Score.get(aliceHomeSpaceRock), aliceHomeScore, "home score should stay the same");
+    assertEq(Score.get(aliceHomeAsteroid), aliceHomeScore, "home score should stay the same");
     assertEq(Score.get(aliceEntity), aliceHomeScore, "score should stay the same as home score");
 
-    assertEq(UnitCount.get(fleetId, unitPrototype), 4, "fleet unit count doesn't match");
-    assertEq(UnitCount.get(secondFleetId, unitPrototype), 0, "fleet 2 unit count doesn't match");
-    assertEq(ResourceCount.get(fleetId, uint8(EResource.Iron)), 4, "fleet resource count doesn't match");
-    assertEq(ResourceCount.get(secondFleetId, uint8(EResource.Iron)), 0, "fleet resource count doesn't match");
+    assertEq(UnitCount.get(fleetEntity, unitPrototype), 4, "fleet unit count doesn't match");
+    assertEq(UnitCount.get(secondFleetEntity, unitPrototype), 0, "fleet 2 unit count doesn't match");
+    assertEq(ResourceCount.get(fleetEntity, uint8(EResource.Iron)), 4, "fleet resource count doesn't match");
+    assertEq(ResourceCount.get(secondFleetEntity, uint8(EResource.Iron)), 0, "fleet resource count doesn't match");
 
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(
       unitPrototype,
-      UnitLevel.get(aliceHomeSpaceRock, unitPrototype)
+      UnitLevel.get(aliceHomeAsteroid, unitPrototype)
     );
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       if (P_IsUtility.get(requiredResources.resources[i]))
         assertEq(
-          ResourceCount.get(aliceHomeSpaceRock, requiredResources.resources[i]),
+          ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]),
           0,
           "no utility should be refunded when transfer is between same owner fleets"
         );
     }
-    assertEq(
-      ResourceCount.get(aliceHomeSpaceRock, uint8(EResource.Iron)),
-      0,
-      "space rock resource count doesn't match"
-    );
+    assertEq(ResourceCount.get(aliceHomeAsteroid, uint8(EResource.Iron)), 0, "asteroid resource count doesn't match");
 
-    assertEq(FleetMovement.getDestination(fleetId), bobHomeSpaceRock, "fleet destination doesn't match");
+    assertEq(FleetMovement.getDestination(fleetEntity), bobHomeAsteroid, "fleet destination doesn't match");
     assertEq(
-      FleetMovement.getDestination(secondFleetId),
-      aliceHomeSpaceRock,
-      "fleet 2 destination doesn't match, should have reset to home space rock"
+      FleetMovement.getDestination(secondFleetEntity),
+      aliceHomeAsteroid,
+      "fleet 2 destination doesn't match, should have reset to home asteroid"
     );
-    assertEq(FleetMovement.getOrigin(fleetId), aliceHomeSpaceRock, "fleet origin doesn't match");
-    assertEq(FleetMovement.getOrigin(secondFleetId), aliceHomeSpaceRock, "fleet 2 origin doesn't match");
-    assertEq(FleetMovement.getArrivalTime(secondFleetId), block.timestamp, "fleet 2 arrival time doesn't match");
+    assertEq(FleetMovement.getOrigin(fleetEntity), aliceHomeAsteroid, "fleet origin doesn't match");
+    assertEq(FleetMovement.getOrigin(secondFleetEntity), aliceHomeAsteroid, "fleet 2 origin doesn't match");
+    assertEq(FleetMovement.getArrivalTime(secondFleetEntity), block.timestamp, "fleet 2 arrival time doesn't match");
   }
 }

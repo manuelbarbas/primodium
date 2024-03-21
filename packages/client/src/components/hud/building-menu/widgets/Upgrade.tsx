@@ -16,8 +16,8 @@ import { hashEntities } from "src/util/encode";
 export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
   const mud = useMud();
 
-  const spaceRock = components.Position.use(building)?.parent as Entity | undefined;
-  if (!spaceRock) throw new Error("[Upgrade] Building has no parent");
+  const spaceRock = components.Position.use(building)?.parentEntity as Entity | undefined;
+  if (!spaceRock) throw new Error("[Upgrade] Building has no parentEntity");
   const mainBaseEntity = components.Home.use(spaceRock)?.value as Entity;
   const mainBaseLevel = components.Level.use(mainBaseEntity, {
     value: 1n,

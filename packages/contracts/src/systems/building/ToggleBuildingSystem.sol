@@ -2,9 +2,8 @@
 pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { Position, PositionData, Level } from "codegen/index.sol";
-import { IsActive, Home, OwnedBy, BuildingType } from "src/codegen/index.sol";
-import { LibBuilding, UnitProductionQueue } from "codegen/Libraries.sol";
+import { Position, IsActive, OwnedBy, BuildingType } from "src/codegen/index.sol";
+import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 
@@ -16,14 +15,14 @@ contract ToggleBuildingSystem is PrimodiumSystem {
     bytes32 buildingEntity
   )
     public
-    _claimResources(Position.getParent(buildingEntity))
-    _claimUnits(Position.getParent(buildingEntity))
+    _claimResources(Position.getParentEntity(buildingEntity))
+    _claimUnits(Position.getParentEntity(buildingEntity))
     returns (bool isActive)
   {
     // Check there isn't another tile there
     bytes32 playerEntity = _player();
     require(
-      OwnedBy.get(Position.getParent(buildingEntity)) == playerEntity,
+      OwnedBy.get(Position.getParentEntity(buildingEntity)) == playerEntity,
       "[ToggleBuilding] Only owner can toggle building"
     );
 

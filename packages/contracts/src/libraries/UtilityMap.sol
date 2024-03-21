@@ -1,67 +1,116 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { MapUtilities, MapItemUtilities, MapItemStoredUtilities } from "codegen/index.sol";
+import { Keys_UtilityMap, Value_UtilityMap, Meta_UtilityMap } from "codegen/index.sol";
 
+/**
+ * @title UtilityMap
+ * @dev Library to manage a mapping of utilities (identified by uint8 keys) to values for each player entity in a game.
+ */
 library UtilityMap {
-  function has(bytes32 player, uint8 utility) internal view returns (bool) {
-    return MapItemStoredUtilities.get(player, utility).stored;
+  /**
+   * @notice Checks if a player has a specific utility.
+   * @param playerEntity The identifier of the player.
+   * @param utility The utility to check for.
+   * @return True if the utility exists for the player, false otherwise.
+   */
+  function has(bytes32 playerEntity, uint8 utility) internal view returns (bool) {
+    return Meta_UtilityMap.get(playerEntity, utility).stored;
   }
 
-  function set(bytes32 player, uint8 utility, uint256 item) internal {
-    if (has(player, utility)) {
-      MapItemUtilities.set(player, utility, item);
+  /**
+   * @notice Sets a utility item for a player.
+   * @param playerEntity The identifier of the player.
+   * @param utility The utility to set.
+   * @param item The item value to associate with the utility.
+   * @dev Adds the utility if it doesn't exist, otherwise updates the existing utility's value.
+   */
+  function set(bytes32 playerEntity, uint8 utility, uint256 item) internal {
+    if (has(playerEntity, utility)) {
+      Value_UtilityMap.set(playerEntity, utility, item);
     } else {
-      MapUtilities.push(player, utility);
-      MapItemUtilities.set(player, utility, item);
-      MapItemStoredUtilities.set(player, utility, true, MapUtilities.length(player) - 1);
+      Keys_UtilityMap.push(playerEntity, utility);
+      Value_UtilityMap.set(playerEntity, utility, item);
+      Meta_UtilityMap.set(playerEntity, utility, true, Keys_UtilityMap.length(playerEntity) - 1);
     }
   }
 
-  function get(bytes32 player, uint8 utility) internal view returns (uint256) {
-    return MapItemUtilities.get(player, utility);
+  /**
+   * @notice Retrieves the value of a specific utility for a player.
+   * @param playerEntity The identifier of the player.
+   * @param utility The utility to retrieve the value for.
+   * @return The value associated with the utility.
+   */
+  function get(bytes32 playerEntity, uint8 utility) internal view returns (uint256) {
+    return Value_UtilityMap.get(playerEntity, utility);
   }
 
-  function keys(bytes32 player) internal view returns (uint8[] memory) {
-    return MapUtilities.get(player);
+  /**
+   * @notice Returns a list of utilities that the player has.
+   * @param playerEntity The identifier of the player.
+   * @return An array of utility identifiers.
+   */
+  function keys(bytes32 playerEntity) internal view returns (uint8[] memory) {
+    return Keys_UtilityMap.get(playerEntity);
   }
 
-  function values(bytes32 player) internal view returns (uint256[] memory items) {
-    uint8[] memory _utilities = keys(player);
+  /**
+   * @notice Returns the values associated with each utility the player has.
+   * @param playerEntity The identifier of the player.
+   * @return items An array of utility values.
+   */
+  function values(bytes32 playerEntity) internal view returns (uint256[] memory items) {
+    uint8[] memory _utilities = keys(playerEntity);
     items = new uint256[](_utilities.length);
     for (uint256 i = 0; i < _utilities.length; i++) {
-      items[i] = MapItemUtilities.get(player, _utilities[i]);
+      items[i] = Value_UtilityMap.get(playerEntity, _utilities[i]);
     }
   }
 
-  function remove(bytes32 player, uint8 utility) internal {
-    uint256 index = MapItemStoredUtilities.getIndex(player, utility);
-    if (MapUtilities.length(player) == 1) {
-      clear(player);
+  /**
+   * @notice Removes a utility from a player.
+   * @param playerEntity The identifier of the player.
+   * @param utility The utility to remove.
+   * @dev Maintains the integrity of the utility keys array by replacing the removed utility with the last in the array.
+   */
+  function remove(bytes32 playerEntity, uint8 utility) internal {
+    uint256 index = Meta_UtilityMap.getIndex(playerEntity, utility);
+    if (Keys_UtilityMap.length(playerEntity) == 1) {
+      clear(playerEntity);
       return;
     }
 
     // update replacement data
-    uint8 replacement = MapUtilities.getItem(player, MapUtilities.length(player) - 1);
-    MapUtilities.update(player, index, replacement);
-    MapItemStoredUtilities.set(player, replacement, true, index);
+    uint8 replacement = Keys_UtilityMap.getItem(playerEntity, Keys_UtilityMap.length(playerEntity) - 1);
+    Keys_UtilityMap.update(playerEntity, index, replacement);
+    Meta_UtilityMap.set(playerEntity, replacement, true, index);
 
     // remove utility
-    MapUtilities.pop(player);
-    MapItemUtilities.deleteRecord(player, utility);
-    MapItemStoredUtilities.deleteRecord(player, utility);
+    Keys_UtilityMap.pop(playerEntity);
+    Value_UtilityMap.deleteRecord(playerEntity, utility);
+    Meta_UtilityMap.deleteRecord(playerEntity, utility);
   }
 
-  function size(bytes32 player) internal view returns (uint256) {
-    return MapUtilities.length(player);
+  /**
+   * @notice Returns the number of utilities a player has.
+   * @param playerEntity The identifier of the player.
+   * @return The number of utilities.
+   */
+  function size(bytes32 playerEntity) internal view returns (uint256) {
+    return Keys_UtilityMap.length(playerEntity);
   }
 
-  function clear(bytes32 player) internal {
-    for (uint256 i = 0; i < MapUtilities.length(player); i++) {
-      uint8 utility = MapUtilities.getItem(player, MapUtilities.length(player) - 1);
-      MapItemUtilities.deleteRecord(player, utility);
-      MapItemStoredUtilities.deleteRecord(player, utility);
+  /**
+   * @notice Clears all utilities associated with a player.
+   * @param playerEntity The identifier of the player.
+   * @dev Iterates through all utilities and deletes them.
+   */
+  function clear(bytes32 playerEntity) internal {
+    for (uint256 i = 0; i < Keys_UtilityMap.length(playerEntity); i++) {
+      uint8 utility = Keys_UtilityMap.getItem(playerEntity, Keys_UtilityMap.length(playerEntity) - 1);
+      Value_UtilityMap.deleteRecord(playerEntity, utility);
+      Meta_UtilityMap.deleteRecord(playerEntity, utility);
     }
-    MapUtilities.deleteRecord(player);
+    Keys_UtilityMap.deleteRecord(playerEntity);
   }
 }

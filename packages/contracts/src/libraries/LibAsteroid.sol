@@ -3,23 +3,19 @@ pragma solidity ^0.8.24;
 
 import { AsteroidOwnedByKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
-import { MainBasePrototypeId, DroidPrototypeId } from "codegen/Prototypes.sol";
+import { DroidPrototypeId } from "codegen/Prototypes.sol";
 
 // tables
-import { UsedTiles, Spawned, Dimensions, DimensionsData, P_MaxLevel, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, PositionData, P_GameConfigData, P_GameConfig } from "codegen/index.sol";
+import { UsedTiles, Dimensions, DimensionsData, P_MaxLevel, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, P_GameConfigData, P_GameConfig } from "codegen/index.sol";
 
 // libraries
 import { ExpansionKey } from "src/Keys.sol";
-import { ColoniesMap } from "src/libraries/ColoniesMap.sol";
+import { AsteroidSet } from "src/libraries/AsteroidSet.sol";
 import { EResource } from "src/Types.sol";
 import { LibMath } from "libraries/LibMath.sol";
-import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
-import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
-import { LibResource } from "libraries/LibResource.sol";
-import { EBuilding } from "src/Types.sol";
 
 library LibAsteroid {
   /// @notice Creates new asteroid for player in world
@@ -32,7 +28,7 @@ library LibAsteroid {
 
     asteroidEntity = LibEncode.getTimedHash(bytes32("asteroid"), coord);
     require(!Asteroid.getIsAsteroid(asteroidEntity), "[LibAsteroid] asteroid already exists");
-    uint256 gracePeriodLength = (P_GracePeriod.getSpaceRock() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
+    uint256 gracePeriodLength = (P_GracePeriod.getAsteroid() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
     GracePeriod.set(asteroidEntity, block.timestamp + gracePeriodLength);
 
     Level.set(asteroidEntity, 1);
@@ -73,10 +69,10 @@ library LibAsteroid {
       PositionData memory sourcePosition = getPosition(i, config.asteroidDistance, config.maxAsteroidsPerPlayer);
       sourcePosition.x += position.x;
       sourcePosition.y += position.y;
-      bytes32 sourceAsteroid = ReversePosition.get(sourcePosition.x, sourcePosition.y);
-      if (sourceAsteroid == 0) continue;
-      if (!Asteroid.getSpawnsSecondary(sourceAsteroid)) continue;
-      bytes32 asteroidSeed = keccak256(abi.encode(sourceAsteroid, bytes32("asteroid"), position.x, position.y));
+      bytes32 sourceAsteroidEntity = ReversePosition.get(sourcePosition.x, sourcePosition.y);
+      if (sourceAsteroidEntity == 0) continue;
+      if (!Asteroid.getSpawnsSecondary(sourceAsteroidEntity)) continue;
+      bytes32 asteroidSeed = keccak256(abi.encode(sourceAsteroidEntity, bytes32("asteroid"), position.x, position.y));
       if (!isAsteroid(asteroidSeed, config.asteroidChanceInv)) continue;
       initSecondaryAsteroid(position, asteroidSeed);
 
@@ -85,7 +81,7 @@ library LibAsteroid {
     revert("no asteroid found");
   }
 
-  function getAsteroidData(bytes32 asteroidEntity, bool spawnsSecondary) internal view returns (AsteroidData memory) {
+  function getAsteroidData(bytes32 asteroidEntity, bool spawnsSecondary) internal pure returns (AsteroidData memory) {
     uint256 distributionVal = (LibEncode.getByteUInt(uint256(asteroidEntity), 7, 12) % 100);
 
     uint256 maxLevel;
@@ -108,10 +104,7 @@ library LibAsteroid {
     return AsteroidData({ isAsteroid: true, maxLevel: maxLevel, mapId: mapId, spawnsSecondary: spawnsSecondary });
   }
 
-  function getSecondaryAsteroidUnitsAndEncryption(
-    bytes32 asteroidEntity,
-    uint256 level
-  ) internal view returns (uint256, uint256) {
+  function getSecondaryAsteroidUnitsAndEncryption(uint256 level) internal pure returns (uint256, uint256) {
     uint256 droidCount = 4 ** level + 100;
     uint256 encryption = (level * 10 + 10) * 1e18;
     return (droidCount, encryption);
@@ -133,14 +126,14 @@ library LibAsteroid {
     Level.set(asteroidEntity, 1);
     UsedTiles.set(asteroidEntity, new uint256[](getUsedTilesLength()));
 
-    (uint256 droidCount, uint256 encryption) = getSecondaryAsteroidUnitsAndEncryption(asteroidEntity, data.maxLevel);
+    (uint256 droidCount, uint256 encryption) = getSecondaryAsteroidUnitsAndEncryption(data.maxLevel);
     UnitCount.set(asteroidEntity, DroidPrototypeId, droidCount);
     LibStorage.increaseMaxStorage(asteroidEntity, uint8(EResource.R_Encryption), encryption);
   }
 
-  function initializeSpaceRockOwnership(bytes32 spaceRock, bytes32 owner) internal {
-    OwnedBy.set(spaceRock, owner);
-    ColoniesMap.add(owner, AsteroidOwnedByKey, spaceRock);
+  function initAsteroidOwner(bytes32 asteroidEntity, bytes32 ownerEntity) internal {
+    OwnedBy.set(asteroidEntity, ownerEntity);
+    AsteroidSet.add(ownerEntity, AsteroidOwnedByKey, asteroidEntity);
   }
 
   /// @dev Calculates position based on distance and max index
@@ -179,13 +172,13 @@ library LibAsteroid {
 
   /**
    * @dev Marks specified tiles as used.
-   * @param rock Identifier for a set of tiles.
+   * @param asteroidEntity Identifier for a set of tiles.
    * @param coords Array of coordinates, structured as [x1, y1, x2, y2, ...]. Must be even length.
-   * Sets tiles as used in the bitmap for the given rock. Requires coords length to be even and tiles to be within bounds.
+   * Sets tiles as used in the bitmap for the given asteroid. Requires coords length to be even and tiles to be within bounds.
    */
-  function setTiles(bytes32 rock, int32[] memory coords) internal {
+  function setTiles(bytes32 asteroidEntity, int32[] memory coords) internal {
     require(coords.length % 2 == 0, "Invalid coords length");
-    uint256[] memory bitmap = UsedTiles.get(rock);
+    uint256[] memory bitmap = UsedTiles.get(asteroidEntity);
 
     int32 width = Dimensions.getWidth(ExpansionKey, P_MaxLevel.get(ExpansionKey));
     for (uint256 i = 0; i < coords.length; i += 2) {
@@ -197,18 +190,18 @@ library LibAsteroid {
       bitmap[wordIndex] |= (1 << bitIndex);
     }
 
-    UsedTiles.set(rock, bitmap);
+    UsedTiles.set(asteroidEntity, bitmap);
   }
 
   /**
    * @dev Frees up specified tiles, marking them as unused.
-   * @param rock Identifier for a set of tiles.
+   * @param asteroidEntity Identifier for a set of tiles.
    * @param coords Array of coordinates, structured as [x1, y1, x2, y2, ...]. Must be even length.
-   * Clears tiles in the bitmap for the given rock. Requires coords length to be even and tiles to be within bounds.
+   * Clears tiles in the bitmap for the given asteroid. Requires coords length to be even and tiles to be within bounds.
    */
-  function removeTiles(bytes32 rock, int32[] memory coords) internal {
+  function removeTiles(bytes32 asteroidEntity, int32[] memory coords) internal {
     require(coords.length % 2 == 0, "Invalid coords length");
-    uint256[] memory bitmap = UsedTiles.get(rock);
+    uint256[] memory bitmap = UsedTiles.get(asteroidEntity);
 
     int32 width = Dimensions.getWidth(ExpansionKey, P_MaxLevel.get(ExpansionKey));
     for (uint256 i = 0; i < coords.length; i += 2) {
@@ -220,6 +213,6 @@ library LibAsteroid {
       bitmap[wordIndex] &= ~(1 << bitIndex);
     }
 
-    UsedTiles.set(rock, bitmap);
+    UsedTiles.set(asteroidEntity, bitmap);
   }
 }

@@ -177,7 +177,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     keys: [],
     tables: {
       P_AllianceConfig: { maxAllianceMembers: 20n },
-      P_GracePeriod: { spaceRock: 60n * 60n * 12n, fleet: 60n * 30n },
+      P_GracePeriod: { asteroid: 60n * 60n * 12n, fleet: 60n * 30n },
       P_Asteroid: maxRange,
       P_GameConfig: {
         admin: encodeAddress("0"),
@@ -297,7 +297,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
       Position: {
         x: Math.floor(maxRange.xBounds / 2) + 1,
         y: Math.floor(maxRange.yBounds / 2) + 1,
-        parent: encodeBytes32(0),
+        parentEntity: encodeBytes32(0),
       },
       P_Blueprint: { value: getBlueprint(3, 3) },
       P_MaxLevel: { value: 8n },

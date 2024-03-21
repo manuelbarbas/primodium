@@ -28,7 +28,7 @@ export const sendFleetPosition = async (mud: MUD, fleet: Entity, position: Coord
       mud,
       functionName: "Primodium__sendFleet",
       systemId: getSystemId("FleetMoveSystem"),
-      args: [fleet as Hex, { ...position, parent: fleet as Hex }],
+      args: [fleet as Hex, { ...position, parentEntity: fleet as Hex }],
       withSession: true,
     },
     {

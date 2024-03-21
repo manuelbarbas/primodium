@@ -32,7 +32,7 @@ export async function toggleBuilding(mud: MUD, building: Entity) {
       const currLevel = components.Level.get(building)?.value || 0;
 
       ampli.systemToggleBuilding({
-        asteroidCoord: position.parent,
+        asteroidCoord: position.parentEntity,
         buildingType: getBlockTypeName(buildingType),
         buildingActiveFrom: active.value,
         coord: [position.x, position.y],
