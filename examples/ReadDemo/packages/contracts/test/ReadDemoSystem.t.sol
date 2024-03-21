@@ -4,59 +4,97 @@ pragma solidity >=0.8.21;
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import { console2 } from "forge-std/Test.sol";
 
-import { WorldRegistrationSystem } from "@latticexyz/world/src/modules/core/implementations/WorldRegistrationSystem.sol"; // registering namespaces and systems
+import { WorldRegistrationSystem } from "@latticexyz/world/src/modules/core/implementations/WorldRegistrationSystem.sol"; // use with Mud version 2.0.0-main-9ef3f9a7
+// import { WorldRegistrationSystem } from "@latticexyz/world/src/modules/init/implementations/WorldRegistrationSystem.sol"; // use with Mud version 2.0.0-next.17
 import { System } from "@latticexyz/world/src/System.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdLib, ROOT_NAMESPACE } from "@latticexyz/world/src/WorldResourceId.sol";
 import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
-
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
-import { ReadDemoSystem } from "../src/systems/ReadDemoSystem.sol";
 
+import { ReadDemoSystem } from "../src/systems/ReadDemoSystem.sol";
 import { IWorld } from "../src/codegen/world/IWorld.sol";
 
 contract ReadDemoTest is MudTest {
   // address public worldAddress; // inherited from MudTest
-  address deployerAddress = vm.envAddress("ADDRESS_ALICE");
+
+  // the environment variables are pulled from your .env
+  address extensionDeployerAddress = vm.envAddress("ADDRESS_ALICE");
   address playerAddress = vm.envAddress("ADDRESS_PLAYER");
 
+  // defining these up top for use below.
+  // namespaces are truncated to 14 bytes, and systems to 16 bytes.
+  // namespaces must be unique, so if you get an Already Exists revert, try changing the namespace.
+  // systems are also unique within a namespace, but redeploying a system will overwrite the previous version.
   bytes14 namespace = bytes14("PluginExamples");
   bytes16 system = bytes16("ReadDemoSystem");
 
   // override MudTest setUp
+  // the setUp function is run before each test function that follows
   function setUp() public override {
+    // configure the target world
     worldAddress = vm.envAddress("WORLD_ADDRESS");
     StoreSwitch.setStoreAddress(worldAddress);
 
+    // this test forks the live world state, and runs it on a local anvil instance
+    // changes made in this test will not affect the live world state
     uint256 forkId = vm.createSelectFork(vm.envString("PRIMODIUM_RPC_URL"), vm.envUint("BLOCK_NUMBER"));
-    console2.log("ForkLivePrimodium is running.");
+    console2.log("\nForkLivePrimodium is running.");
 
-    vm.startPrank(deployerAddress);
-
+    // cache an instance of the WorldRegistrationSystem for the world
     WorldRegistrationSystem world = WorldRegistrationSystem(worldAddress);
+
+    // derive the namespaceResource and systemResource from the namespace and system
+    // specifics can be found at https://mud.dev/guides/extending-a-world
+    // in the Deploy to the Blockchain Explanation spoiler
     ResourceId namespaceResource = WorldResourceIdLib.encodeNamespace(bytes14(namespace));
     ResourceId systemResource = WorldResourceIdLib.encode(RESOURCE_SYSTEM, namespace, system);
 
     console2.log("Namespace ID: %x", uint256(ResourceId.unwrap(namespaceResource)));
     console2.log("System ID:    %x", uint256(ResourceId.unwrap(systemResource)));
 
+    // interacting with the chain requires us to pretend to be someone
+    // here, we are pretending to be the extension deployer
+    vm.startPrank(extensionDeployerAddress);
+
+    // register the namespace
     world.registerNamespace(namespaceResource);
 
     ReadDemoSystem readDemoSystem = new ReadDemoSystem();
     console2.log("ReadDemoSystem address: ", address(readDemoSystem));
 
+    // register the system
     world.registerSystem(systemResource, readDemoSystem, true);
+
+    // register all functions in the system
+    // if you have multiple functions, you will need ro register each one
     world.registerFunctionSelector(systemResource, "readMainBaseLevel()");
     console2.log(
       "Alice successfully registered the PluginExamples namespace, ReadDemoSystem contract, readMainBaseLevel function selector, to the Admin's world address."
     );
+
+    // stop interacting with the chain
     vm.stopPrank();
   }
 
   function testReadMainBaseLevel() public {
+    // pretend to be the player now.
+    // you can update this address to be any address you want in the .env
     vm.startPrank(playerAddress);
-    uint32 baseLevel = IWorld(worldAddress).PluginExamples_ReadDemoSystem_readMainBaseLevel();
+    console2.log("\nChecking Main Base Level for player address: ", playerAddress);
+
+    // call a system function
+
+    // Mud version 2.0.0-main-9ef3f9a7 uses format namespace_system_function
+    uint32 baseLevel = IWorld(worldAddress).PluginExamples_ReadDemoSystem_readMainBaseLevel(); // use with Mud version 2.0.0-main-9ef3f9a7
+
+    // Mud version 2.0.0-next.17 removes system from the function name
+    // uint32 baseLevel = IWorld(worldAddress).PluginExamples__readMainBaseLevel(); // use with Mud version 2.0.0-next.17
+
+    // stop pretending to be the player
     vm.stopPrank();
+
+    // report the result
     console2.log("baseLevel: ", baseLevel);
   }
 }
