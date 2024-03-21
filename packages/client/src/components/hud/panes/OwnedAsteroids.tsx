@@ -1,4 +1,3 @@
-import { KeybindActions, Scenes } from "src/game/lib/mappings";
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { Button } from "src/components/core/Button";
@@ -16,6 +15,7 @@ import { HealthBar } from "../HealthBar";
 import { formatResourceCount } from "src/util/number";
 import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
 import { Badge } from "src/components/core/Badge";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -118,11 +118,11 @@ export const _OwnedAsteroids: React.FC = () => {
                 if (!mapOpen) {
                   const { transitionToScene } = primodium.api().scene;
 
-                  await transitionToScene(Scenes.Asteroid, Scenes.Starmap);
+                  await transitionToScene("ASTEROID", "STARMAP");
                   components.MapOpen.set({ value: true });
                 }
 
-                const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
+                const { pan, zoomTo } = primodium.api("STARMAP").camera;
 
                 components.SelectedRock.set({ value: entity });
 
@@ -160,7 +160,7 @@ export const OwnedAsteroids = () => {
       persist
       lockable
       draggable
-      scene={Scenes.Asteroid}
+      scene={"ASTEROID"}
       active={!!mapOpen}
     >
       <_OwnedAsteroids />

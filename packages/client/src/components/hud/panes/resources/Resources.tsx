@@ -1,9 +1,9 @@
-import { KeybindActions, Scenes } from "src/game/lib/mappings";
 import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
 import { getRandomRange } from "src/util/common";
 import { AllResourceLabels } from "./AllResourceLabels";
 import { AllUtilityLabels } from "./AllUtilityLabels";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 export const Resources = () => {
   const { components } = useMud();
@@ -20,7 +20,7 @@ export const Resources = () => {
       }}
       defaultVisible
       defaultLocked
-      scene={Scenes.Asteroid}
+      scene={"ASTEROID"}
       hotkey={KeybindActions.Resources}
       active={!mapOpen}
       minOpacity={0.5}

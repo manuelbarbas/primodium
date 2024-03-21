@@ -1,4 +1,3 @@
-import { DepthLayers, Scenes } from "src/game/lib/mappings";
 import { Entity } from "@latticexyz/recs";
 import { useMemo, useRef } from "react";
 import { Button } from "src/components/core/Button";
@@ -14,6 +13,7 @@ import { components } from "src/network/components";
 import { clearFleetStance } from "src/network/setup/contractCalls/fleetStance";
 import { getCanAttackSomeone, getFleetPixelPosition, getFleetStats } from "src/util/unit";
 import { Fleets } from "../../panes/fleets/Fleets";
+import { DepthLayers } from "src/game/lib/constants/common";
 
 // this component assumes the fleet is owned by the player
 export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fleet, position }) => {
@@ -28,10 +28,10 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
   const primodium = usePrimodium();
   const {
     scene: { getScene },
-  } = useRef(primodium.api(Scenes.Starmap)).current;
+  } = useRef(primodium.api("STARMAP")).current;
 
   const coord = useMemo(() => {
-    const scene = getScene(Scenes.Starmap);
+    const scene = getScene("STARMAP");
 
     if (!scene) throw new Error("Scene not found");
 
@@ -50,7 +50,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
   return (
     <Marker
       id={"fleet-target"}
-      scene={Scenes.Starmap}
+      scene={"STARMAP"}
       coord={coord}
       depth={DepthLayers.Path + 1}
       offScreenIconUri="/img/icons/outgoingicon.png"

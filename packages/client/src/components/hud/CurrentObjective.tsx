@@ -1,4 +1,3 @@
-import { KeybindActions, Scenes } from "src/game/lib/mappings";
 import { EObjectives } from "contracts/config/enums";
 import { useEffect, useState } from "react";
 import { FaGift, FaMapPin } from "react-icons/fa";
@@ -14,6 +13,7 @@ import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
 import { Widget } from "../core/Widget";
 import { Objectives } from "./modals/Objectives";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 const tutorialObjectives = [
   EObjectives.BuildIronMine,
@@ -79,7 +79,7 @@ export const CurrentObjective = () => {
       lockable
       defaultVisible
       origin="center-left"
-      scene={Scenes.UI}
+      scene={"UI"}
       minOpacity={0.6}
       draggable
       persist

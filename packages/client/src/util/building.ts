@@ -1,6 +1,6 @@
 import { Primodium } from "@game/api";
 // import { EntitytoSpriteKey } from "@game/constants";
-import { EntityTypetoBuildingSpriteKey } from "src/game/lib/mappings";
+// import { EntityTypetoBuildingSpriteKey } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { EResource, MUDEnums } from "contracts/config/enums";
@@ -19,6 +19,7 @@ import { outOfBounds } from "./outOfBounds";
 import { getRecipe } from "./recipe";
 import { getScale } from "./resource";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
+import { EntityTypetoBuildingSpriteKey } from "src/game/lib/mappings";
 
 type Dimensions = { width: number; height: number };
 export const blueprintCache = new Map<Entity, Dimensions>();

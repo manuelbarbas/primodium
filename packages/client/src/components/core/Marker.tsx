@@ -1,4 +1,3 @@
-import { DepthLayers, Scenes } from "src/game/lib/mappings";
 import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { Coord } from "@latticexyz/utils";
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -8,8 +7,9 @@ import { usePrimodium } from "src/hooks/usePrimodium";
 import { calculateAngleBetweenPoints } from "src/util/common";
 import { Button } from "./Button";
 import { IconLabel } from "./IconLabel";
+import { DepthLayers, SceneKeys } from "src/game/lib/constants/common";
 
-const BoundedMarker: React.FC<{ scene: Scenes; coord: Coord; iconUri: string; degrees: number }> = ({
+const BoundedMarker: React.FC<{ scene: SceneKeys; coord: Coord; iconUri: string; degrees: number }> = ({
   coord,
   scene,
   iconUri,
@@ -46,7 +46,7 @@ const BoundedMarker: React.FC<{ scene: Scenes; coord: Coord; iconUri: string; de
 
 export const Marker: React.FC<{
   id: string;
-  scene: Scenes;
+  scene: SceneKeys;
   coord: Coord;
   children: ReactNode;
   offScreenIconUri?: string;
@@ -68,7 +68,7 @@ export const Marker: React.FC<{
   const [visible, setVisible] = useState(true);
   const [degrees, setDegrees] = useState(0);
   const camera = useRef(primodium.api(scene).camera).current;
-  const uiCamera = useRef(primodium.api(Scenes.UI).camera).current;
+  const uiCamera = useRef(primodium.api("UI").camera).current;
   const translateClass = useMemo(() => {
     switch (origin) {
       case "top-left":
@@ -179,7 +179,7 @@ export const Marker: React.FC<{
 
 export const IconMarker: React.FC<{
   id: string;
-  scene: Scenes;
+  scene: SceneKeys;
   coord: Coord;
   iconUri: string;
   depth?: number;

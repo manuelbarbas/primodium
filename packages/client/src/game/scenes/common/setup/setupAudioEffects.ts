@@ -1,7 +1,7 @@
-import { AudioKeys } from "src/game/lib/mappings";
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { createAudioApi } from "src/game/api/audio";
+import { AudioKeys } from "src/game/lib/constants/assets/audio";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getRandomRange } from "src/util/common";

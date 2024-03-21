@@ -1,4 +1,3 @@
-import { KeybindActions, Scenes } from "src/game/lib/mappings";
 import { Coord } from "@latticexyz/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { ReactNode, memo, useCallback, useEffect, useMemo, useState } from "react";
@@ -9,10 +8,12 @@ import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useWidgets } from "../../hooks/providers/WidgetProvider";
 import { Card } from "./Card";
+import { SceneKeys } from "src/game/lib/constants/common";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 type WidgetProps = {
   title: string;
-  scene: Scenes;
+  scene: SceneKeys;
   id: string;
   defaultCoord: Coord;
   children: ReactNode;
@@ -237,7 +238,7 @@ export const Widget: React.FC<WidgetProps> = memo(
     const [minimized, setMinimized] = useState(false);
     const [dragging, setDragging] = useState(false);
     const [dragOffset, setDragOffset] = useState<Coord>({ x: 0, y: 0 });
-    const [pinned, setPinned] = useState(paneInfo[id]?.pinned ?? (scene === Scenes.UI ? false : defaultPinned));
+    const [pinned, setPinned] = useState(paneInfo[id]?.pinned ?? (scene === "UI" ? false : defaultPinned));
     const [locked, setLocked] = useState(paneInfo[id]?.locked ?? defaultLocked);
     // const [coord, setCoord] = useState<Coord>(paneInfo[id]?.coord ?? defaultCoord);
     const [visible, setVisible] = useState(paneInfo[id]?.visible ?? defaultVisible);
@@ -253,7 +254,7 @@ export const Widget: React.FC<WidgetProps> = memo(
 
     const [camera, uiCamera] = useMemo(() => {
       const { camera } = primodium.api(scene);
-      const { camera: uiCamera } = primodium.api(Scenes.UI);
+      const { camera: uiCamera } = primodium.api("UI");
 
       return [camera, uiCamera];
     }, [primodium, scene]);
@@ -601,8 +602,8 @@ export const Widget: React.FC<WidgetProps> = memo(
               onPointerEnter={handlePointerEnter}
               onPointerLeave={handlePointerLeave}
               minimized={minimized}
-              onPin={pinnable && scene !== Scenes.UI ? handlePin : undefined}
-              onUnpin={pinnable && scene !== Scenes.UI ? handleUnpin : undefined}
+              onPin={pinnable && scene !== "UI" ? handlePin : undefined}
+              onUnpin={pinnable && scene !== "UI" ? handleUnpin : undefined}
               pinned={pinned}
               onMouseDown={handleMouseDown}
               onDoubleClick={handleReset}

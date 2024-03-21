@@ -1,4 +1,3 @@
-import { AudioKeys, KeyNames, KeybindActions, Scenes } from "src/game/lib/mappings";
 import { useAnimate } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FaEyeSlash, FaUndo } from "react-icons/fa";
@@ -9,6 +8,8 @@ import { Button, IconButton } from "../../core/Button";
 import { Card, SecondaryCard } from "../../core/Card";
 import { MapButton } from "../MapButton";
 import { MenuButtons } from "../MenuButtons";
+import { KeyNames, KeybindActions } from "src/game/lib/constants/keybinds";
+import { AudioKeys } from "src/game/lib/constants/assets/audio";
 
 export const WidgetButton: React.FC<{
   imageUri: string;
@@ -27,7 +28,7 @@ export const WidgetButton: React.FC<{
   const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
   const {
     hooks: { useKeybinds },
-  } = useRef(primodium.api(Scenes.UI)).current;
+  } = useRef(primodium.api("UI")).current;
   const keybinds = useKeybinds();
 
   const keybindId = hotkey ? keybinds[hotkey]?.entries().next().value[0] : "";
@@ -117,7 +118,7 @@ export const Actions = () => {
   const primodium = usePrimodium();
   const {
     hooks: { useKeybinds },
-  } = useRef(primodium.api(Scenes.UI)).current;
+  } = useRef(primodium.api("UI")).current;
 
   const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
   const keybinds = useKeybinds();
@@ -170,7 +171,7 @@ export const Companion = () => {
   const {
     hooks: { useKeybinds },
     input: { addListener },
-  } = useRef(primodium.api(Scenes.UI)).current;
+  } = useRef(primodium.api("UI")).current;
   const keybinds = useKeybinds();
   const [minimized, setMinimized] = useState(false);
   const [scope, animate] = useAnimate();

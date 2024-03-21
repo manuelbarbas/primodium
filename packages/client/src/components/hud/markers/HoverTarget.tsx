@@ -1,4 +1,3 @@
-import { Scenes } from "src/game/lib/mappings";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
@@ -22,7 +21,7 @@ export const HoverSendTarget: React.FC<{ hoverEntity: Entity; sendUnit: Entity }
   if (isFleet) return null;
 
   return (
-    <Marker coord={coord} id="hoverSend" scene={Scenes.Starmap}>
+    <Marker coord={coord} id="hoverSend" scene={"STARMAP"}>
       <img src={canSend ? "/img/icons/crosshairsicon.png" : "/img/icons/notallowedicon.png"} />
     </Marker>
   );
@@ -33,8 +32,8 @@ export const HoverAttackTarget: React.FC<{ hoverEntity: Entity; attackOrigin: En
   attackOrigin,
 }) => {
   const isFleet = components.IsFleet.use(hoverEntity) !== undefined;
-  const primodium = usePrimodium().api(Scenes.Starmap);
-  const scene = primodium.scene.getScene(Scenes.Starmap);
+  const primodium = usePrimodium().api("STARMAP");
+  const scene = primodium.scene.getScene("STARMAP");
   const position = useMemo(
     () =>
       !scene
@@ -56,7 +55,7 @@ export const HoverAttackTarget: React.FC<{ hoverEntity: Entity; attackOrigin: En
   const canAttack = getCanAttack(attackOrigin, hoverEntity);
 
   return (
-    <Marker coord={coord} id={"hoverAttack"} scene={Scenes.Starmap}>
+    <Marker coord={coord} id={"hoverAttack"} scene={"STARMAP"}>
       <img src={canAttack ? "/img/icons/crosshairsicon.png" : "/img/icons/notallowedicon.png"} />
     </Marker>
   );

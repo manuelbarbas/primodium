@@ -1,5 +1,6 @@
-import { Assets, SpriteKeys } from "src/game/lib/mappings";
 import { Scene } from "engine/types";
+import { SpriteKeys } from "../lib/constants/assets/sprites";
+import { Assets } from "../lib/constants/assets";
 
 const cache = new Map<SpriteKeys, string>();
 

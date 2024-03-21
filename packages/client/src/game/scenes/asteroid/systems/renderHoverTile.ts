@@ -3,7 +3,7 @@ import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { Tile } from "../../../lib/objects/Tile";
-import { DepthLayers } from "src/game/lib/mappings";
+import { DepthLayers } from "src/game/lib/constants/common";
 
 export const renderHoverTile = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");

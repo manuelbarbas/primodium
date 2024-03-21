@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Scenes } from "src/game/lib/mappings";
 import React, { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { Button } from "src/components/core/Button";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
@@ -54,8 +53,8 @@ const Console = () => {
 
   const [input, setInput] = useState<string>("");
   const primodium = usePrimodium();
-  const asteroidInput = primodium.api(Scenes.Asteroid).input;
-  const starmapInput = primodium.api(Scenes.Starmap).input;
+  const asteroidInput = primodium.api("ASTEROID").input;
+  const starmapInput = primodium.api("STARMAP").input;
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const handleConsoleCommand = () => {

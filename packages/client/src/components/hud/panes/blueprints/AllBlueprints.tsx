@@ -1,4 +1,3 @@
-import { AudioKeys, KeyNames, KeybindActions } from "src/game/lib/mappings";
 import { Entity } from "@latticexyz/recs";
 import { useMemo, useState } from "react";
 import { FaCaretLeft, FaCaretRight, FaLock } from "react-icons/fa";
@@ -13,6 +12,8 @@ import { Hex } from "viem";
 import { Button } from "../../../core/Button";
 import { BuildingImageFromType } from "../../../shared/BuildingImage";
 import { useShallow } from "zustand/react/shallow";
+import { KeyNames, KeybindActions } from "src/game/lib/constants/keybinds";
+import { AudioKeys } from "src/game/lib/constants/assets/audio";
 
 const BlueprintButton: React.FC<{
   buildingType: Entity;

@@ -1,5 +1,3 @@
-import { minEth } from "src/game/lib/mappings";
-
 import { createBurnerAccount as createMudBurnerAccount, transportObserver } from "@latticexyz/common";
 import { createClient as createFaucetClient } from "@latticexyz/faucet";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -9,6 +7,7 @@ import { createExternalAccount } from "src/network/setup/createExternalAccount";
 import { setup } from "src/network/setup/setup";
 import { hydratePlayerData } from "src/network/sync/indexer";
 import { BurnerAccount, ExternalAccount, SetupResult } from "src/network/types";
+import { minEth } from "src/util/constants";
 import { Hex, createWalletClient, fallback, formatEther, http } from "viem";
 
 const useSetupResult = () => {

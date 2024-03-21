@@ -1,6 +1,7 @@
 import { Scene } from "engine/types";
 import { Bounds, Dimensions, getRelativeCoord } from "./helpers";
-import { DepthLayers, Tilesets } from "src/game/lib/mappings";
+import { Tilesets } from "../../constants/assets/tiles";
+import { DepthLayers } from "../../constants/common";
 
 export class AsteroidBounds {
   private scene: Scene;

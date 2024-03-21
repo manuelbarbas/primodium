@@ -5,6 +5,8 @@ import { world } from "src/network/world";
 import { AsteroidMap } from "../../../lib/objects/AsteroidMap/AsteroidMap";
 import { getAsteroidBounds as getAsteroidCurrentBounds, getAsteroidMaxBounds } from "src/util/outOfBounds";
 import { decodeEntity } from "@latticexyz/store-sync/recs";
+import { ResourceEntityLookup } from "src/util/constants";
+import { EResource } from "contracts/config/enums";
 
 //TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
 export const renderAsteroidMap = (scene: Scene) => {
@@ -36,9 +38,11 @@ export const renderAsteroidMap = (scene: Scene) => {
       const { mapId, x, y } = decodeEntity(components.P_Terrain.metadata.keySchema, tile);
       if (mapId !== asteroidData.mapId) return acc;
 
-      acc.push({ x, y, id: tileId });
+      const resourceId = ResourceEntityLookup[tileId as EResource];
+
+      acc.push({ x, y, resourceType: resourceId });
       return acc;
-    }, [] as { x: number; y: number; id: number }[]);
+    }, [] as { x: number; y: number; resourceType: Entity }[]);
 
     const asteroidDimensions = components.P_Asteroid.get();
 

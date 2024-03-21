@@ -1,4 +1,3 @@
-import { Assets, DepthLayers, SpriteKeys } from "src/game/lib/mappings";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Coord, uuid } from "@latticexyz/utils";
 import { Scene } from "engine/types";
@@ -7,6 +6,9 @@ import { getRandomRange } from "src/util/common";
 import { ObjectPosition, OnComponentSystem, SetValue, Tween } from "../scenes/common/object-components/common";
 import { Texture } from "../scenes/common/object-components/sprite";
 import { ObjectText } from "../scenes/common/object-components/text";
+import { Assets } from "../lib/constants/assets";
+import { SpriteKeys } from "../lib/constants/assets/sprites";
+import { DepthLayers } from "../lib/constants/common";
 
 export const createFxApi = (scene: Scene) => {
   function outline(
@@ -135,15 +137,11 @@ export const createFxApi = (scene: Scene) => {
 
     const sharedComponents = [
       ObjectPosition({ x: _coord.x, y: _coord.y }, DepthLayers.Path),
-      OnComponentSystem(
-        components.MapOpen,
-        (_, { value }) => {
-          if (value[1]?.value) return;
+      OnComponentSystem(components.MapOpen, (_, { value }) => {
+        if (value[1]?.value) return;
 
-          scene.objectPool.removeGroup(id);
-        },
-        { runOnInit: false }
-      ),
+        scene.objectPool.removeGroup(id);
+      }),
       Tween(scene, tweenConfig),
     ];
 

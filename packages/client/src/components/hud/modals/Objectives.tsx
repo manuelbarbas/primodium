@@ -4,7 +4,6 @@ import { Account, Time } from "src/network/components/clientComponents";
 
 import { useMemo } from "react";
 
-import { AudioKeys } from "src/game/lib/mappings";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { FaCheck, FaGift, FaMedal, FaSpinner } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
@@ -40,6 +39,7 @@ import {
 import { getFullResourceCount } from "src/util/resource";
 import { getRewards } from "src/util/reward";
 import { Hex } from "viem";
+import { AudioKeys } from "src/game/lib/constants/assets/audio";
 
 const ClaimObjectiveButton: React.FC<{
   objectiveEntity: Entity;

@@ -1,8 +1,9 @@
-import { AudioKeys, KeybindActions, Scenes } from "src/game/lib/mappings";
 import { useEffect, useMemo, useCallback } from "react";
 
 import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
+import { AudioKeys } from "src/game/lib/constants/assets/audio";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks";
 import { usePrimodium } from "src/hooks/usePrimodium";
@@ -24,18 +25,18 @@ export const MapButton = () => {
   const isSpectating = useMemo(() => ownedBy !== playerEntity, [ownedBy, playerEntity]);
 
   const closeMap = useCallback(async () => {
-    primodium.api(Scenes.Starmap).util.closeMap();
+    primodium.api("STARMAP").util.closeMap();
   }, [primodium]);
 
   const openMap = useCallback(async () => {
-    primodium.api(Scenes.Starmap).util.openMap();
+    primodium.api("STARMAP").util.openMap();
   }, [primodium]);
 
   const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
   useEffect(() => {
-    const starmapListener = primodium.api(Scenes.Starmap).input.addListener(KeybindActions.Map, closeMap);
+    const starmapListener = primodium.api("STARMAP").input.addListener(KeybindActions.Map, closeMap);
 
-    const asteroidListener = primodium.api(Scenes.Asteroid).input.addListener(KeybindActions.Map, openMap);
+    const asteroidListener = primodium.api("ASTEROID").input.addListener(KeybindActions.Map, openMap);
 
     return () => {
       starmapListener.dispose();

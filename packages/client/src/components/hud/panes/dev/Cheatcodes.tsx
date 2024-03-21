@@ -1,4 +1,3 @@
-import { Scenes } from "src/game/lib/mappings";
 import { CheatcodesList } from "@primodiumxyz/mud-game-tools";
 import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
@@ -10,9 +9,9 @@ export const Cheatcodes = () => {
   const DEV = import.meta.env.PRI_DEV === "true";
   const mud = useMud();
   const primodium = usePrimodium();
-  const input = primodium.api(Scenes.UI).input;
-  const input2 = primodium.api(Scenes.Asteroid).input;
-  const input3 = primodium.api(Scenes.Starmap).input;
+  const input = primodium.api("UI").input;
+  const input2 = primodium.api("ASTEROID").input;
+  const input3 = primodium.api("STARMAP").input;
 
   if (!DEV) return null;
 
@@ -38,7 +37,7 @@ export const Cheatcodes = () => {
           x: window.innerWidth / 2 + getRandomRange(-50, 50),
           y: window.innerHeight / 2 + getRandomRange(-50, 50),
         }}
-        scene={Scenes.UI}
+        scene={"UI"}
         minOpacity={0.5}
         draggable
         lockable

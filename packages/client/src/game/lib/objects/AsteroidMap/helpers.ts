@@ -1,3 +1,4 @@
+import { Entity } from "@latticexyz/recs";
 import { Coord } from "engine/types";
 
 export type Dimensions = {
@@ -13,7 +14,7 @@ export type Bounds = {
 };
 
 export type ResourceTile = {
-  id: number;
+  resourceType: Entity;
   x: number;
   y: number;
 };

@@ -1,5 +1,5 @@
-import { Scenes } from "src/game/lib/mappings";
 import { Entity, namespaceWorld } from "@latticexyz/recs";
+import { Scenes, SceneKeys } from "../lib/constants/common";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import engine from "engine";
@@ -37,7 +37,7 @@ export type Primodium = Awaited<ReturnType<typeof initPrimodium>>;
 export type PrimodiumApi = ReturnType<Primodium["api"]>;
 
 //pull out api so we can use in non react contexts
-export function api(sceneKey = "MAIN", instance: string | Game = "MAIN") {
+export function api(sceneKey: SceneKeys = "ASTEROID", instance: string | Game = "MAIN") {
   const _instance = typeof instance === "string" ? engine.getGame().get(instance) : instance;
 
   if (_instance === undefined) {
@@ -54,8 +54,8 @@ export function api(sceneKey = "MAIN", instance: string | Game = "MAIN") {
   const closeMap = async () => {
     if (!components.MapOpen.get()?.value) return;
     await sceneApi.transitionToScene(
-      Scenes.Starmap,
-      Scenes.Asteroid,
+      "STARMAP",
+      "ASTEROID",
       0,
       (_, targetScene) => {
         targetScene.camera.phaserCamera.fadeOut(0, 0, 0, 0);

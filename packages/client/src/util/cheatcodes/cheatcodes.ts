@@ -1,5 +1,4 @@
 import { Primodium } from "@game/api";
-import { Scenes } from "src/game/lib/mappings";
 import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
@@ -670,7 +669,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
               }
             );
             toast.success("Pirate asteroid created");
-            primodium.api(Scenes.Starmap).camera.pan(coord);
+            primodium.api("STARMAP").camera.pan(coord);
           },
         },
         setTerrain: {

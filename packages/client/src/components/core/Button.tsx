@@ -1,10 +1,11 @@
-import { AudioKeys, KeybindActions, Scenes } from "src/game/lib/mappings";
 import { useEffect } from "react";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { getRandomRange } from "src/util/common";
 import { IconLabel } from "./IconLabel";
 import { Loader } from "./Loader";
 import { Tooltip } from "./Tooltip";
+import { AudioKeys } from "src/game/lib/constants/assets/audio";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 export const Button: React.FC<{
   children: React.ReactNode;
@@ -38,7 +39,7 @@ export const Button: React.FC<{
   keybind,
 }) => {
   const primodium = usePrimodium();
-  const api = primodium.api(Scenes.UI);
+  const api = primodium.api("UI");
 
   useEffect(() => {
     if (!keybind || !api || disabled) return;

@@ -1,10 +1,11 @@
-import { AudioKeys, KeybindActions, Scenes } from "src/game/lib/mappings";
 import React, { ReactNode, createContext, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaTimes } from "react-icons/fa";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { Button, IconButton } from "./Button";
 import { Card } from "./Card";
+import { AudioKeys } from "src/game/lib/constants/assets/audio";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 interface ModalContextType {
   isOpen: boolean;
@@ -36,7 +37,7 @@ export const Modal: React.FC<ModalProps> & {
   const {
     audio,
     input: { disableInput, enableInput, addListener },
-  } = useRef(primodium.api(Scenes.UI)).current;
+  } = useRef(primodium.api("UI")).current;
 
   useEffect(() => {
     const handleEscPress = () => {

@@ -1,8 +1,15 @@
 export const ASSET_PACK = "/assets/pack.json";
 export const KEY = "MAIN";
 
-export const _Scenes = ["ROOT", "MAIN", "STARMAP", "UI"] as const;
-export type SceneKeys = (typeof _Scenes)[number];
+export const Scenes = {
+  Root: "ROOT",
+  Main: "MAIN",
+  Asteroid: "ASTEROID",
+  Starmap: "STARMAP",
+  UI: "UI",
+} as const;
+
+export type SceneKeys = (typeof Scenes)[keyof typeof Scenes];
 
 export const DepthLayers = {
   Rock: 100,

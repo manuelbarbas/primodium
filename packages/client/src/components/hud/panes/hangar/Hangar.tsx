@@ -1,9 +1,9 @@
-import { KeybindActions, Scenes } from "src/game/lib/mappings";
 import { memo } from "react";
 import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
 import { getRandomRange } from "src/util/common";
 import { HangarContent } from "./HangarContent";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 export const Hangar = memo(() => {
   const { components } = useMud();
@@ -22,7 +22,7 @@ export const Hangar = memo(() => {
         defaultLocked
         defaultVisible
         origin="center"
-        scene={Scenes.Asteroid}
+        scene={"ASTEROID"}
         active={!mapOpen}
         hotkey={KeybindActions.Units}
         minOpacity={0.6}

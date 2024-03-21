@@ -1,4 +1,3 @@
-import { KeybindActions, Scenes } from "src/game/lib/mappings";
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has } from "@latticexyz/recs";
 import { EFleetStance } from "contracts/config/enums";
@@ -9,6 +8,7 @@ import { SecondaryCard } from "src/components/core/Card";
 import { Loader } from "src/components/core/Loader";
 import { Tooltip } from "src/components/core/Tooltip";
 import { Widget } from "src/components/core/Widget";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 import { useMud } from "src/hooks";
 import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
 import { useFleetStats } from "src/hooks/useFleetCount";
@@ -134,7 +134,7 @@ const _OwnedFleets: React.FC = () => {
     playerAccount: { entity: playerEntity },
   } = useMud();
   const primodium = usePrimodium();
-  const getScene = primodium.api(Scenes.Starmap).scene.getScene;
+  const getScene = primodium.api("STARMAP").scene.getScene;
 
   const query = [Has(components.IsFleet)];
   const fleets = useEntityQuery(query).filter((entity) => {
@@ -158,7 +158,7 @@ const _OwnedFleets: React.FC = () => {
               key={entity}
               fleet={entity}
               onClick={async () => {
-                const scene = getScene(Scenes.Starmap);
+                const scene = getScene("STARMAP");
                 if (!scene) return;
                 const mapOpen = components.MapOpen.get(undefined, {
                   value: false,
@@ -167,11 +167,11 @@ const _OwnedFleets: React.FC = () => {
                 if (!mapOpen) {
                   const { transitionToScene } = primodium.api().scene;
 
-                  await transitionToScene(Scenes.Asteroid, Scenes.Starmap);
+                  await transitionToScene("ASTEROID", "STARMAP");
                   components.MapOpen.set({ value: true });
                 }
 
-                const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
+                const { pan, zoomTo } = primodium.api("STARMAP").camera;
                 const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
                 const time = components.Time.get()?.value ?? 0n;
 
@@ -208,7 +208,7 @@ export const OwnedFleets = () => {
       draggable
       persist
       hotkey={KeybindActions.Fleets}
-      scene={Scenes.Starmap}
+      scene={"STARMAP"}
       active={!!mapOpen}
       defaultCoord={{ x: 0, y: 0 }}
     >

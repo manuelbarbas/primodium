@@ -1,9 +1,9 @@
-import { KeybindActions } from "src/game/lib/mappings";
 import { createCameraApi } from "src/game/api/camera";
 import { Scene } from "engine/types";
 import { createInputApi } from "src/game/api/input";
 import { world } from "src/network/world";
 import { Coord, pixelCoordToTileCoord } from "@latticexyz/phaserx";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 const SPEED = 750;
 const ZOOM_SPEED = 5;

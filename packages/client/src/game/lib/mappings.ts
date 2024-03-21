@@ -5,7 +5,7 @@ import { EntityType } from "src/util/constants";
 import { Entity } from "@latticexyz/recs";
 import { AsteroidRelationship, AsteroidSize } from "./constants/common";
 
-export const EntityTypeToTilesetKey: { [key: number]: ResourceTilekeys } = {
+export const EntityTypeToTilesetKey: Record<Entity, ResourceTilekeys> = {
   [EntityType.Iron]: ResourceTilekeys.Iron,
   [EntityType.Copper]: ResourceTilekeys.Copper,
   [EntityType.Lithium]: ResourceTilekeys.Lithium,

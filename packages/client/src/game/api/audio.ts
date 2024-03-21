@@ -1,14 +1,12 @@
-import { Assets, AudioKeys } from "src/game/lib/mappings";
 import { Scene } from "engine/types";
 import { usePersistentStore } from "../stores/PersistentStore";
+import { AudioKeys } from "../lib/constants/assets/audio";
+import { Assets } from "../lib/constants/assets";
 
 export type Channel = "music" | "sfx" | "ui";
 
 export const createAudioApi = (scene: Scene) => {
   function play(key: AudioKeys, channel: Channel, config?: Phaser.Types.Sound.SoundConfig) {
-    // const volume = usePersistentStore.getState().volume;
-
-    // setVolume(volume[channel], channel);
     scene.audio[channel].playAudioSprite(Assets.AudioAtlas, key, {
       ...config,
     });
