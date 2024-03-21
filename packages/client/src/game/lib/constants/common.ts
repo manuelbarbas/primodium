@@ -16,5 +16,6 @@ export const DepthLayers = {
 
 export const asteroidRelationsips = ["Neutral", "Ally", "Enemy", "Self"] as const;
 export type AsteroidRelationship = (typeof asteroidRelationsips)[number];
-export const asteroidSizes = ["Small", "Medium", "Large"] as const;
+
+export const asteroidSizes = ["Micro", "Small", "Medium", "Large"] as const;
 export type AsteroidSize = (typeof asteroidSizes)[number];
