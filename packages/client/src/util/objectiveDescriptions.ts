@@ -93,10 +93,6 @@ export const ObjectiveDescriptions = new Map<EObjectives, string>([
     "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
   ],
   [
-    EObjectives.DefeatPirateBase1,
-    "Select the starmap on the top of your screen, then choose the red tinted pirate asteroid and send units to attack and raid.",
-  ],
-  [
     EObjectives.BuildStarmapper,
     "Construct a starmapper station. A starmapper station increases the number of fleets you can send at a time.",
   ],

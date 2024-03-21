@@ -3,7 +3,6 @@ import { config } from "../mud.config";
 import {
   encodeArray,
   getPUnitData,
-  getPirateObjectiveResourceValues,
   getResourceValue,
   getResourceValues,
   getUnitValues,
@@ -1937,21 +1936,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
   },
 
-  DefeatPirateBase1: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildGarage"]) },
-      P_DefeatedPirates: { value: encodeArray(["BuildGarage"]) },
-      P_SpawnPirateAsteroid: {
-        x: -10,
-        y: 22,
-        units: encodeArray(["LightningCraft"]),
-        unitAmounts: [20n],
-        ...getPirateObjectiveResourceValues({ Iron: 300, Copper: 300, IronPlate: 250 }),
-      },
-      P_UnitReward: getUnitValues({ MinutemanMarine: 1 }),
-    },
-  },
-
   BuildIronMine: {
     tables: {
       P_HasBuiltBuildings: { value: encodeArray(["IronMine"]) },
@@ -1995,13 +1979,6 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildIronMine"]) },
       P_HasBuiltBuildings: { value: encodeArray(["Garage"]) },
-      P_SpawnPirateAsteroid: {
-        x: -10,
-        y: -12,
-        units: encodeArray([]),
-        unitAmounts: [],
-        ...getPirateObjectiveResourceValues({ Iron: 200, Copper: 200 }),
-      },
       P_UnitReward: getUnitValues({ MinutemanMarine: 1 }),
     },
   },
