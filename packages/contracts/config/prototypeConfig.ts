@@ -2085,7 +2085,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   TrainMinutemanMarine1: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
-      P_ProducedUnits: getUnitValues({ MinutemanMarine: 50 }),
+      P_ProducedUnits: getUnitValues({ MinutemanMarine: 25 }),
       P_ResourceReward: getResourceValues({ Iron: 100 }),
     },
   },
@@ -2093,7 +2093,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   TrainTridentMarine1: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
-      P_ProducedUnits: getUnitValues({ TridentMarine: 50 }),
+      P_ProducedUnits: getUnitValues({ TridentMarine: 25 }),
       P_ResourceReward: getResourceValues({ Copper: 100 }),
     },
   },
@@ -2109,7 +2109,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   TrainAnvilDrone1: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildDroneFactory"]) },
-      P_ProducedUnits: getUnitValues({ AnvilDrone: 20 }),
+      P_ProducedUnits: getUnitValues({ AnvilDrone: 10 }),
       P_ResourceReward: getResourceValues({ PVCell: 10 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
@@ -2118,7 +2118,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   TrainHammerDrone1: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildDroneFactory"]) },
-      P_ProducedUnits: getUnitValues({ HammerDrone: 20 }),
+      P_ProducedUnits: getUnitValues({ HammerDrone: 10 }),
       P_ResourceReward: getResourceValues({ PVCell: 10 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
@@ -2127,7 +2127,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   TrainAegisDrone1: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildDroneFactory"]) },
-      P_ProducedUnits: getUnitValues({ AegisDrone: 20 }),
+      P_ProducedUnits: getUnitValues({ AegisDrone: 10 }),
       P_ResourceReward: getResourceValues({ Alloy: 10 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
@@ -2136,7 +2136,7 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
   TrainStingerDrone1: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildDroneFactory"]) },
-      P_ProducedUnits: getUnitValues({ StingerDrone: 20 }),
+      P_ProducedUnits: getUnitValues({ StingerDrone: 10 }),
       P_ResourceReward: getResourceValues({ IronPlate: 10 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
