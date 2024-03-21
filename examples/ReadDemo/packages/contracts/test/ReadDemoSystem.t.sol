@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import { console2 } from "forge-std/Test.sol";
 
-import { WorldRegistrationSystem } from "@latticexyz/world/src/modules/core/implementations/WorldRegistrationSystem.sol"; // use with Mud version 2.0.0-main-9ef3f9a7
-// import { WorldRegistrationSystem } from "@latticexyz/world/src/modules/init/implementations/WorldRegistrationSystem.sol"; // use with Mud version 2.0.0-next.17
+import { WorldRegistrationSystem } from "@latticexyz/world/src/modules/init/implementations/WorldRegistrationSystem.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdLib, ROOT_NAMESPACE } from "@latticexyz/world/src/WorldResourceId.sol";
@@ -87,11 +86,8 @@ contract ReadDemoTest is MudTest {
 
     // call a system function
 
-    // Mud version 2.0.0-main-9ef3f9a7 uses format namespace_system_function
-    uint32 baseLevel = IWorld(worldAddress).PluginExamples_ReadDemoSystem_readMainBaseLevel(); // use with Mud version 2.0.0-main-9ef3f9a7
-
-    // Mud version 2.0.0-next.17 removes system from the function name
-    // uint32 baseLevel = IWorld(worldAddress).PluginExamples__readMainBaseLevel(); // use with Mud version 2.0.0-next.17
+    // function format is namespace__function
+    uint32 baseLevel = IWorld(worldAddress).PluginExamples__readMainBaseLevel();
 
     // stop pretending to be the player
     vm.stopPrank();
@@ -105,7 +101,7 @@ contract ReadDemoTest is MudTest {
   function test_ReadMainBaseLevel_ActivePlayer() public {
     vm.startPrank(playerAddressActive);
     console2.log("\nChecking Main Base Level for player address: ", playerAddressActive);
-    uint32 baseLevel = IWorld(worldAddress).PluginExamples_ReadDemoSystem_readMainBaseLevel();
+    uint32 baseLevel = IWorld(worldAddress).PluginExamples__readMainBaseLevel();
     vm.stopPrank();
     console2.log("baseLevel: ", baseLevel);
     assertEq(baseLevel, 2, "The base level should be 2 for this Active player.");

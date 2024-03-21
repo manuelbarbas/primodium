@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 import { Script } from "forge-std/Script.sol";
 import { console2 } from "forge-std/Test.sol";
@@ -19,11 +19,9 @@ contract ReadMainBaseLevel is Script {
     // you can cache the IWorld, or cast it inline as seen in the test script
     IWorld iworld = IWorld(worldAddress);
 
-    // Mud version 2.0.0-main-9ef3f9a7 uses format namespace_system_function
-    uint32 baseLevel = iworld.PluginExamples_ReadDemoSystem_readMainBaseLevel(); // use with Mud version 2.0.0-main-9ef3f9a7
+    // function format is namespace__function
+    uint32 baseLevel = iworld.PluginExamples__readMainBaseLevel();
 
-    // Mud version 2.0.0-next.17 removes system from the final function name
-    // uint32 baseLevel = iworld.PluginExamples__readMainBaseLevel(); // use with Mud version 2.0.0-next.17
     vm.stopBroadcast();
     console2.log("baseLevel: ", baseLevel);
   }
