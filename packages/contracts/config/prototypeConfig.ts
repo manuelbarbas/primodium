@@ -2022,6 +2022,15 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
+
+  BuildStorageUnit: {
+    tables: {
+      P_HasBuiltBuildings: { value: encodeArray(["StorageUnit"]) },
+      P_ResourceReward: getResourceValues({ Iron: 100 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
+  },
+
   BuildSolarPanel: {
     tables: {
       P_RequiredObjectives: { objectives: encodeArray(["BuildPVCellFactory"]) },

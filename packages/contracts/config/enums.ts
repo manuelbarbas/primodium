@@ -106,6 +106,7 @@ export enum EObjectives {
 
   BuildLithiumMine,
   BuildIronPlateFactory,
+  BuildStorageUnit,
   BuildHangar,
   BuildPVCellFactory,
   BuildSolarPanel,
