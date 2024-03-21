@@ -1,4 +1,4 @@
-import { KeySchema } from "@latticexyz/protocol-parser";
+import { KeySchema } from "@latticexyz/protocol-parser/internal";
 import { Component, Schema } from "@latticexyz/recs";
 import useSetupResult from "src/hooks/useSetupResult";
 import { createComponents } from "./components";

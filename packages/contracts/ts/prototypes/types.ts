@@ -1,24 +1,32 @@
-import { StaticAbiType } from "@latticexyz/schema-type";
-import { ConfigFieldTypeToPrimitiveType, StoreConfig } from "@latticexyz/store";
+import { StaticAbiType } from "@latticexyz/schema-type/internal";
+import { SchemaInput, StoreInput } from "@latticexyz/store/config/v2";
+import { ConfigFieldTypeToPrimitiveType as FieldToPrimitive } from "@latticexyz/store/internal";
+import { WorldInput } from "@latticexyz/world/ts/config/v2/input";
 
-type Tables<C extends StoreConfig, T = undefined> = {
-  [Table in keyof C["tables"]]?: {
-    [Field in keyof C["tables"][Table]["valueSchema"]]: T extends undefined
-      ? ConfigFieldTypeToPrimitiveType<C["tables"][Table]["valueSchema"][Field]>
-      : C["tables"][Table]["keySchema"] extends T
-      ? ConfigFieldTypeToPrimitiveType<C["tables"][Table]["valueSchema"][Field]>
-      : never;
-  };
+type OmitSchemaKeys<Schema, Keys extends readonly string[]> = Omit<Schema, Keys[number]>;
+
+type ExtractSchema<Table> = Extract<Table, { schema: SchemaInput; key: readonly string[] }>;
+
+type TableStructureWithOmittedKeys<Table, T> = {
+  [Field in keyof OmitSchemaKeys<ExtractSchema<Table>["schema"], ExtractSchema<Table>["key"]>]?: T extends undefined
+    ? FieldToPrimitive<ExtractSchema<Table>["schema"][Field]>
+    : ExtractSchema<Table>["schema"][Field] extends T
+    ? FieldToPrimitive<ExtractSchema<Table>["schema"][Field]>
+    : never;
 };
 
-export type PrototypeConfig<C extends StoreConfig> = {
+type Tables<W extends WorldInput, T = undefined> = {
+  [TableName in keyof W["tables"]]?: TableStructureWithOmittedKeys<W["tables"][TableName], T>;
+};
+
+export type PrototypeConfig<W extends WorldInput> = {
   keys?: { [x: string]: StaticAbiType }[];
-  tables?: Tables<C>;
-  levels?: Record<number, Tables<C, { level: "uint256" | "ESize" } | { id: unknown }>>;
+  tables?: Tables<W>;
+  levels?: Record<number, Tables<W>>;
 };
 
-export type PrototypesConfig<C extends StoreConfig> = Record<string, PrototypeConfig<C>>;
+export type PrototypesConfig<C extends StoreInput> = Record<string, PrototypeConfig<C>>;
 
-export type StoreConfigWithPrototypes = StoreConfig & {
-  prototypeConfig: PrototypesConfig<StoreConfig>;
+export type ConfigWithPrototypes<W extends WorldInput = WorldInput> = W & {
+  prototypeConfig: PrototypesConfig<W>;
 };

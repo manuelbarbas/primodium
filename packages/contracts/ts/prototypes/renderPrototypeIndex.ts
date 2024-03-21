@@ -1,8 +1,8 @@
 import { renderedSolidityHeader } from "@latticexyz/common/codegen";
-import { StoreConfig } from "@latticexyz/store";
+import { StoreInput } from "@latticexyz/store/config/v2";
 import { PrototypesConfig } from "./types";
 
-export function renderPrototypeIndex(prototypes: PrototypesConfig<StoreConfig>) {
+export function renderPrototypeIndex(prototypes: PrototypesConfig<StoreInput>) {
   return `
   ${renderedSolidityHeader}
   

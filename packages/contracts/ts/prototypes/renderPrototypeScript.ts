@@ -1,7 +1,7 @@
-import { StoreConfig } from "@latticexyz/store";
+import { StoreInput } from "@latticexyz/store";
 import { PrototypesConfig } from "./types";
 
-export function renderPrototypeScript(prototypeConfig: PrototypesConfig<StoreConfig>) {
+export function renderPrototypeScript(prototypeConfig: PrototypesConfig<StoreInput>) {
   return `
   import { IStore } from "@latticexyz/store/src/IStore.sol";
 

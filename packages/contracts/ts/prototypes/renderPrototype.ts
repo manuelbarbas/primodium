@@ -1,11 +1,15 @@
 import { renderList, renderedSolidityHeader } from "@latticexyz/common/codegen";
-import { StaticAbiType } from "@latticexyz/schema-type";
-import { StoreConfig } from "@latticexyz/store";
+import { StaticAbiType } from "@latticexyz/schema-type/internal";
+import { WorldInput } from "@latticexyz/world/ts/config/v2/input";
 import { renderPrototypeScript } from "./renderPrototypeScript";
-import { StoreConfigWithPrototypes } from "./types";
+import { ConfigWithPrototypes } from "./types";
 
-const formatValue = (config: StoreConfig, fieldType: string, value: number | string) => {
-  if (fieldType in config.enums) {
+const formatValue = <W extends WorldInput>(
+  config: ConfigWithPrototypes<W>,
+  fieldType: string,
+  value: number | string
+) => {
+  if (config.enums && fieldType in config.enums) {
     return `${fieldType}(uint8(${value}))`;
   } else if (typeof value === "string" && value.includes("0x")) {
     return `${value}`;
@@ -15,7 +19,7 @@ const formatValue = (config: StoreConfig, fieldType: string, value: number | str
   return `${value}`;
 };
 
-export function renderPrototypes(config: StoreConfigWithPrototypes) {
+export function renderPrototypes(config: ConfigWithPrototypes<WorldInput>) {
   const names = Object.keys(config.prototypeConfig);
   const outputs = names.map((name) => renderPrototype(config, name)).join("\n");
   const script = renderPrototypeScript(config.prototypeConfig);
@@ -26,9 +30,9 @@ export function renderPrototypes(config: StoreConfigWithPrototypes) {
   import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
   import { IStore } from "@latticexyz/store/src/IStore.sol";
   import { createPrototype } from "../../libraries/prototypes/createPrototype.sol";
-  import { PackedCounter } from "@latticexyz/store/src/PackedCounter.sol";
+  import { EncodedLengths } from "@latticexyz/store/src/EncodedLengths.sol";
   ${
-    Object.keys(config.enums).length > 0
+    !!config.enums && Object.keys(config.enums).length > 0
       ? `import { ${Object.keys(config.enums)
           .map((e) => e)
           .join(",")} } from "../common.sol";`
@@ -40,21 +44,22 @@ export function renderPrototypes(config: StoreConfigWithPrototypes) {
   `;
 }
 
-export const renderSetLevelRecord = (
-  config: StoreConfig,
+export const renderSetLevelRecord = <W extends WorldInput>(
+  config: ConfigWithPrototypes<W>,
   tableName: string,
   value: { [k: string]: number },
   level: string,
   i: number
 ) => {
-  const { valueSchema } = config.tables[tableName];
+  if (!config.tables) return;
+  const { schema } = config.tables[tableName];
 
   // Iterate through the keys in the original valueSchema to preserve ordering
-  const formattedValues = Object.keys(valueSchema).map((fieldName) => {
+  const formattedValues = Object.keys(schema).map((fieldName) => {
     const fieldValue = value[fieldName];
 
     const variableName = `${tableName.toLowerCase()}_${fieldName}_level_${level}`;
-    const fieldType = valueSchema[fieldName];
+    const fieldType = schema[fieldName];
     const isArray = Array.isArray(fieldValue);
 
     if (isArray) {
@@ -81,7 +86,7 @@ export const renderSetLevelRecord = (
     .join(",")});`;
 };
 
-export function renderLevelPrototype(config: StoreConfigWithPrototypes, name: string) {
+export function renderLevelPrototype<W extends WorldInput>(config: ConfigWithPrototypes<W>, name: string) {
   const prototype = config.prototypeConfig[name];
 
   const keys: { [x: string]: StaticAbiType }[] =
@@ -114,11 +119,11 @@ export function renderLevelPrototype(config: StoreConfigWithPrototypes, name: st
       bytes32[] memory levelKeys = ${name}LevelKeys(${level});
       ResourceId[] memory tableIds = new ResourceId[](${Object.keys(value).length});
       bytes[] memory staticData =  new bytes[](${Object.keys(value).length});
-      PackedCounter[] memory encodedLengths = new PackedCounter[](${Object.keys(value).length});
+      EncodedLengths[] memory encodedLengths = new EncodedLengths[](${Object.keys(value).length});
       bytes[] memory dynamicData = new bytes[](${Object.keys(value).length});
 
       ${Object.keys(value)
-        .map((key, i) => `tableIds[${i}] = ${key}TableId;`)
+        .map((key, i) => `tableIds[${i}] = ${key}._tableId;`)
         .join("")}
 
       ${Object.entries(value)
@@ -147,15 +152,21 @@ export function renderLevelPrototype(config: StoreConfigWithPrototypes, name: st
 `,
   };
 }
-export const renderSetRecord = (config: StoreConfig, tableName: string, value: { [k: string]: number }, i: number) => {
-  const { valueSchema } = config.tables[tableName];
+export const renderSetRecord = <W extends WorldInput>(
+  config: ConfigWithPrototypes<W>,
+  tableName: string,
+  value: { [k: string]: number },
+  i: number
+) => {
+  if (!config.tables) return;
+  const { schema } = config.tables[tableName];
 
   // Iterate through the keys in the original valueSchema to preserve ordering
-  const formattedValues = Object.keys(valueSchema).map((fieldName) => {
+  const formattedValues = Object.keys(schema).map((fieldName) => {
     const fieldValue = value[fieldName];
 
     const variableName = `${tableName.toLowerCase()}_${fieldName}`;
-    const fieldType = valueSchema[fieldName];
+    const fieldType = schema[fieldName];
     const isArray = Array.isArray(fieldValue);
 
     if (isArray) {
@@ -182,11 +193,12 @@ export const renderSetRecord = (config: StoreConfig, tableName: string, value: {
     .join(",")});`;
 };
 
-export function renderPrototype(config: StoreConfigWithPrototypes, name: string) {
+export function renderPrototype<W extends WorldInput>(config: ConfigWithPrototypes<W>, name: string) {
   const prototype = config.prototypeConfig[name];
   const keys = prototype.keys !== undefined ? prototype.keys : [{ [`${name}PrototypeId`]: "bytes32" }];
 
-  const values = prototype.tables ?? {};
+  const values = prototype.tables;
+  if (!values) return undefined;
 
   const keyTupleDefinition = `
 
@@ -204,11 +216,6 @@ export function renderPrototype(config: StoreConfigWithPrototypes, name: string)
     )
     .join("")}`;
 
-  const levelTables = Object.values(prototype.levels ?? {})
-    .map((v) => {
-      return Object.keys(v);
-    })
-    .flat();
   const levelPrototype = renderLevelPrototype(config, name);
 
   const length = Object.keys(values).length;
@@ -226,11 +233,11 @@ export function renderPrototype(config: StoreConfigWithPrototypes, name: string)
     bytes32[] memory keys = ${name}Keys();
     ResourceId[] memory tableIds = new ResourceId[](${length});
     bytes[] memory staticData =  new bytes[](${length});
-      PackedCounter[] memory encodedLengths = new PackedCounter[](${length});
+      EncodedLengths[] memory encodedLengths = new EncodedLengths[](${length});
       bytes[] memory dynamicData = new bytes[](${length});
 
     ${Object.keys(values)
-      .map((key, i) => `tableIds[${i}] = ${key}TableId;`)
+      .map((key, i) => `tableIds[${i}] = ${key}._tableId;`)
       .join("")}
 
     ${Object.entries(values)
