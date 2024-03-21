@@ -5,15 +5,13 @@ import { Script } from "forge-std/Script.sol";
 import { console2 } from "forge-std/Test.sol";
 
 import { WorldRegistrationSystem } from "@latticexyz/world/src/modules/core/implementations/WorldRegistrationSystem.sol"; // use with Mud version 2.0.0-main-9ef3f9a7
-// import { WorldRegistrationSystem } from "@latticexyz/world/src/modules/init/implementations/WorldRegistrationSystem.sol"; // use with Mud version 2.0.0-next.17
 import { System } from "@latticexyz/world/src/System.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-import { WorldResourceIdLib, ROOT_NAMESPACE } from "@latticexyz/world/src/WorldResourceId.sol";
+import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 
 import { ReadDemoSystem } from "../src/systems/ReadDemoSystem.sol";
-import { IWorld } from "../src/codegen/world/IWorld.sol";
 
 contract RegisterReadDemoSystem is Script {
   // the environment variables are pulled from your .env

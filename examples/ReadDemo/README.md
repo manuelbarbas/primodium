@@ -33,7 +33,7 @@ Since we are interacting with an existing World (Primodium), we will need to kno
 
 ## Setting up mudConfig
 
-The code can be found in `packages/contracts/mud.config.ts`.
+The code can be found in `packages/contracts/mud.config.ts`
 
 Every plugin will need a mudConfig, which is stored in `mud.config.ts`. Plugins must exist in a `namespace`. Multiple `Systems` can exist in a namespace.
 
@@ -41,7 +41,7 @@ Since this demo only deploys a system for reading data, we will not need any new
 
 ## Create the System
 
-The commented code can be found in `packages/contracts/src/systems/ReadDemoSystem.sol`.
+The commented code can be found in `packages/contracts/src/systems/ReadDemoSystem.sol`
 
 `System` contracts are created in `packages/contracts/src/systems`. They are fairly standard smart contracts that only need to import the critical functionality from MUD or the `World` you are interacting with.
 
@@ -53,7 +53,7 @@ The code should compile with `pnpm build`.
 
 ## Testing the World Extension
 
-The commented code can be found in `packages/contracts/test/ReadDemoSystem.t.sol`.
+The commented code can be found in `packages/contracts/test/ReadDemoSystem.t.sol`
 
 Before we deploy this system, we should run some tests. We'll be using `forge test` in this example, to test against a live deployment. `pnpm mud test` is another option, which spins up an anvil instance, deploys the world, and then runs runs `forge test` for you. However, there are some complexities to this for testing world extensions, so we will keep it simple for now.
 
@@ -73,7 +73,7 @@ MUD worlds only allow a single instance of a namespace, so if someone has alread
 
 ## Deploying the World Extension
 
-The commented code can be found in `packages/contracts/scripts/RegisterReadDemoSystem.s.sol`.
+The commented code can be found in `packages/contracts/scripts/RegisterReadDemoSystem.s.sol`
 
 Deploying your extension looks much like testing your extension, but occurs in a script. Most of the code is identical to the test, which is kind of the point. Test throughly before deploying; deployments are permanent.
 
@@ -92,7 +92,7 @@ forge script script/RegisterReadDemoSystem.s.sol --fork-url https://primodium-se
 
 ## Testing the Deployment
 
-The commented code can be found in `packages/contracts/scripts/ReadMainBaseLevel.s.sol`.
+The commented code can be found in `packages/contracts/scripts/ReadMainBaseLevel.s.sol`
 
 Now that the code is live, we can use a script that largely replicates the function we wrote in the test.
 
