@@ -1,8 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { ampli } from "src/ampli";
-import { execute } from "src/network/actions";
 import { components } from "src/network/components";
+import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { getBuildingTopLeft } from "src/util/building";
 import { getBlockTypeName } from "src/util/common";
@@ -18,7 +18,7 @@ export const moveBuilding = async (mud: MUD, building: Entity, coord: Coord) => 
   if (!activeAsteroid) return;
 
   const prevPosition = components.Position.get(building);
-  const position = { ...coord, parent: activeAsteroid as Hex };
+  const position = { ...coord, parentEntity: activeAsteroid as Hex };
   const buildingType = components.BuildingType.get(building)?.value as Entity;
 
   if (!prevPosition || !buildingType) return;
@@ -26,7 +26,7 @@ export const moveBuilding = async (mud: MUD, building: Entity, coord: Coord) => 
   await execute(
     {
       mud,
-      functionName: "moveBuilding",
+      functionName: "Primodium__moveBuilding",
       systemId: getSystemId("MoveBuildingSystem"),
       args: [building as Hex, position],
       withSession: true,

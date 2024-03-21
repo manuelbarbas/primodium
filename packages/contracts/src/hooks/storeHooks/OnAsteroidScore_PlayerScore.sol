@@ -6,7 +6,7 @@ pragma solidity >=0.8.24;
 import { StoreHook } from "@latticexyz/store/src/StoreHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { LibScore } from "libraries/LibScore.sol";
-import { OwnedBy, Home, IsFleet, Asteroid } from "codegen/index.sol";
+import { OwnedBy, Asteroid } from "codegen/index.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 
 /// @title OnAsteroidScore_PlayerScore - Handles updating score when resource count is updated.

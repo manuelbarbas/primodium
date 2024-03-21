@@ -1,14 +1,24 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { ExpansionKey } from "src/Keys.sol";
+
+import { P_MaxLevel, Dimensions, Level, Home, P_Asteroid, DimensionsData } from "codegen/index.sol";
+
+import { Bounds } from "src/Types.sol";
+import { LibAsteroid } from "libraries/LibAsteroid.sol";
+import { LibBuilding } from "libraries/LibBuilding.sol";
 
 contract LibBuildingTest is PrimodiumTest {
-  bytes32 player;
+  bytes32 playerEntity;
+
   function setUp() public override {
     super.setUp();
     spawn(creator);
-    player = addressToEntity(creator);
+    playerEntity = addressToEntity(creator);
     vm.startPrank(creator);
   }
 
@@ -21,12 +31,11 @@ contract LibBuildingTest is PrimodiumTest {
 
     P_Asteroid.set(maxX, maxY);
 
-    bytes32 playerEntity = addressToEntity(creator);
     uint256 playerLevel = Level.get(Home.get(playerEntity));
 
     Dimensions.set(ExpansionKey, playerLevel, currX, currY);
 
-    Bounds memory bounds = LibBuilding.getSpaceRockBounds(Home.get(playerEntity));
+    Bounds memory bounds = LibBuilding.getAsteroidBounds(Home.get(playerEntity));
 
     assertEq(bounds.minX, (int32(maxX) - int32(currX)) / 2);
     assertEq(bounds.maxX, (int32(maxX) + int32(currX)) / 2 - 1);
@@ -41,8 +50,7 @@ contract LibBuildingTest is PrimodiumTest {
   /* ------------------------------ Bitmap Tests ------------------------------ */
 
   function testAllTilesAvailable() public {
-    DimensionsData memory dimensions = Dimensions.get(ExpansionKey, P_MaxLevel.get(ExpansionKey));
-    Bounds memory bounds = LibBuilding.getSpaceRockBounds(Home.get(player));
+    Bounds memory bounds = LibBuilding.getAsteroidBounds(Home.get(playerEntity));
     uint256 len = 4;
     int32[] memory coordsToCheck = new int32[](len * 2);
 
@@ -59,7 +67,7 @@ contract LibBuildingTest is PrimodiumTest {
 
   function testSetTile() public {
     int32[] memory coords = new int32[](2);
-    Bounds memory bounds = LibBuilding.getSpaceRockBounds(Home.get(player));
+    Bounds memory bounds = LibBuilding.getAsteroidBounds(Home.get(playerEntity));
     coords[0] = bounds.minX;
     coords[1] = bounds.minY;
     //
@@ -95,7 +103,7 @@ contract LibBuildingTest is PrimodiumTest {
   }
 
   function testRemoveTiles() public {
-    Bounds memory bounds = LibBuilding.getSpaceRockBounds(Home.get(player));
+    Bounds memory bounds = LibBuilding.getAsteroidBounds(Home.get(playerEntity));
     // Set a tile at (15, 15) as in testSetTile
     int32[] memory coords = new int32[](2);
     coords[0] = bounds.minX;

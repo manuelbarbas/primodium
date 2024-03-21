@@ -18,7 +18,7 @@ const spawnDroidBase = (asteroidEntity: Entity) => {
   const mainBaseCoord = components.Position.get(EntityType.MainBase) ?? { x: 19, y: 13 };
   const droidBaseEntity = hashEntities(asteroidEntity, EntityType.DroidBase);
   components.Position.set(
-    { ...emptyData, x: mainBaseCoord.x, y: mainBaseCoord.y, parent: asteroidEntity },
+    { ...emptyData, x: mainBaseCoord.x, y: mainBaseCoord.y, parentEntity: asteroidEntity },
     droidBaseEntity
   );
   components.BuildingType.set({ ...emptyData, value: EntityType.DroidBase }, droidBaseEntity);
@@ -56,7 +56,7 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
 
     const asteroidData = getAsteroidData(asteroidEntity);
     components.Asteroid.set({ ...emptyData, ...asteroidData }, asteroidEntity);
-    components.Position.set({ ...emptyData, ...asteroidPosition, parent: toHex32("0") }, asteroidEntity);
+    components.Position.set({ ...emptyData, ...asteroidPosition, parentEntity: toHex32("0") }, asteroidEntity);
 
     const defenseData = getSecondaryAsteroidUnitsAndEncryption(asteroidEntity, asteroidData.maxLevel);
     components.UnitCount.setWithKeys(
@@ -77,7 +77,7 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
 
 function isSecondaryAsteroid(entity: Entity, chanceInv: number) {
   const motherlodeType = getByteUInt(entity, 6, 128);
-  return motherlodeType % chanceInv === 1;
+  return motherlodeType % chanceInv === 0;
 }
 
 function getSecondaryAsteroidUnitsAndEncryption(asteroidEntity: Entity, level: bigint) {

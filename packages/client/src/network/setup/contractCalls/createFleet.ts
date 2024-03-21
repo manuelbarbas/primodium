@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
-import { execute } from "src/network/actions";
 import { TxQueueOptions } from "src/network/components/customComponents/TransactionQueueComponent";
+import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
@@ -16,7 +16,7 @@ export const createFleet = async (
   await execute(
     {
       mud,
-      functionName: "createFleet",
+      functionName: "Primodium__createFleet",
       systemId: getSystemId("FleetCreateSystem"),
       args: [spaceRock as Hex, toUnitCountArray(deltas), toTransportableResourceArray(deltas)],
       withSession: true,

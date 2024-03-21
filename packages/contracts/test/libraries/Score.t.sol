@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { Home, ResourceCount, MaxResourceCount, P_ScoreMultiplier, Score } from "codegen/index.sol";
 
 contract ScoreTest is PrimodiumTest {
   bytes32 playerEntity;
@@ -14,13 +17,13 @@ contract ScoreTest is PrimodiumTest {
   }
 
   function testScoreHook() public {
-    bytes32 homeRock = Home.get(playerEntity);
-    MaxResourceCount.set(homeRock, uint8(Iron), 1000);
-    ResourceCount.set(homeRock, uint8(Iron), 0);
+    bytes32 homeAsteroidEntity = Home.get(playerEntity);
+    MaxResourceCount.set(homeAsteroidEntity, uint8(Iron), 1000);
+    ResourceCount.set(homeAsteroidEntity, uint8(Iron), 0);
 
     assertEq(Score.get(playerEntity), 0, "score should be 0");
-    ResourceCount.set(homeRock, uint8(Iron), 100);
-    assertEq(Score.get(homeRock), P_ScoreMultiplier.get(uint8(Iron)) * 100, "rock score does not match");
+    ResourceCount.set(homeAsteroidEntity, uint8(Iron), 100);
+    assertEq(Score.get(homeAsteroidEntity), P_ScoreMultiplier.get(uint8(Iron)) * 100, "asteroid score does not match");
     assertEq(Score.get(playerEntity), P_ScoreMultiplier.get(uint8(Iron)) * 100, "player score does not match");
   }
 }
