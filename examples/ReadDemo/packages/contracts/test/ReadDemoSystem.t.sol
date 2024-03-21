@@ -21,6 +21,8 @@ contract ReadDemoTest is MudTest {
   // the environment variables are pulled from your .env
   address extensionDeployerAddress = vm.envAddress("ADDRESS_ALICE");
   address playerAddress = vm.envAddress("ADDRESS_PLAYER");
+  address playerAddressInactive = vm.envAddress("ADDRESS_PLAYER_INACTIVE");
+  address playerAddressActive = vm.envAddress("ADDRESS_PLAYER_ACTIVE");
 
   // defining these up top for use below.
   // namespaces are truncated to 14 bytes, and systems to 16 bytes.
@@ -38,7 +40,7 @@ contract ReadDemoTest is MudTest {
 
     // this test forks the live world state, and runs it on a local anvil instance
     // changes made in this test will not affect the live world state
-    uint256 forkId = vm.createSelectFork(vm.envString("PRIMODIUM_RPC_URL"), vm.envUint("BLOCK_NUMBER"));
+    vm.createSelectFork(vm.envString("PRIMODIUM_RPC_URL"), vm.envUint("BLOCK_NUMBER"));
     console2.log("\nForkLivePrimodium is running.");
 
     // cache an instance of the WorldRegistrationSystem for the world
@@ -77,11 +79,11 @@ contract ReadDemoTest is MudTest {
     vm.stopPrank();
   }
 
-  function testReadMainBaseLevel() public {
+  function test_ReadMainBaseLevel_InactivePlayer() public {
     // pretend to be the player now.
     // you can update this address to be any address you want in the .env
-    vm.startPrank(playerAddress);
-    console2.log("\nChecking Main Base Level for player address: ", playerAddress);
+    vm.startPrank(playerAddressInactive);
+    console2.log("\nChecking Main Base Level for player address: ", playerAddressInactive);
 
     // call a system function
 
@@ -96,5 +98,16 @@ contract ReadDemoTest is MudTest {
 
     // report the result
     console2.log("baseLevel: ", baseLevel);
+
+    assertEq(baseLevel, 0, "The base level should be 0 for an Inactive player.");
+  }
+
+  function test_ReadMainBaseLevel_ActivePlayer() public {
+    vm.startPrank(playerAddressActive);
+    console2.log("\nChecking Main Base Level for player address: ", playerAddressActive);
+    uint32 baseLevel = IWorld(worldAddress).PluginExamples_ReadDemoSystem_readMainBaseLevel();
+    vm.stopPrank();
+    console2.log("baseLevel: ", baseLevel);
+    assertEq(baseLevel, 2, "The base level should be 2 for this Active player.");
   }
 }
