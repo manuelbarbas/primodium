@@ -1,11 +1,10 @@
 import { formatAndWriteSolidity } from "@latticexyz/common/codegen";
-import { StoreInput } from "@latticexyz/store/config/v2";
 import path from "path";
 import { renderPrototypes } from "./renderPrototype";
 import { renderPrototypeIndex } from "./renderPrototypeIndex";
-import { ConfigWithPrototypes, PrototypesConfig } from "./types";
+import { ConfigWithPrototypes, PrototypesConfig, TablesInput } from "./types";
 
-const generateIndex = async (prototypes: PrototypesConfig<StoreInput>, outputBaseDirectory: string) => {
+const generateIndex = async (prototypes: PrototypesConfig<TablesInput>, outputBaseDirectory: string) => {
   const output = renderPrototypeIndex(prototypes);
   const fullOutputPath = path.join(outputBaseDirectory, `Prototypes.sol`);
 

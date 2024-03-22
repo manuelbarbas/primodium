@@ -33,7 +33,7 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
     if (inTransit) return `ETA ${formatTime(arrivalTime - time)}`;
     if (stance && stance?.stance === EFleetStance.Follow)
       return `Following ${entityToFleetName(stance.target as Entity)}`;
-    if (stance?.stance === EFleetStance.get("Block")) return "Blocking";
+    if (stance?.stance === EFleetStance.Block) return "Blocking";
     if (stance?.stance === EFleetStance.Defend) return "Defending";
     return "Orbiting";
   }, [movement?.arrivalTime, time, stance]);

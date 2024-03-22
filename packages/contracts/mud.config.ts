@@ -32,7 +32,7 @@ export const worldInput = {
   },
 
   // using as any here for now because of a type issue and also because the enums are not being recognized in our codebase rn
-  enums: MUDEnums as any,
+  enums: MUDEnums as unknown as { [key: string]: ["NULL"] },
   codegen: {},
   tables: {
     /* ----------------------------------- Dev ---------------------------------- */
@@ -793,7 +793,6 @@ const getConfig = async () => {
     if (process.env.PRI_DEV !== "true") exclude = ["DevSystem"];
   }
 
-  // @ts-expect-error this is a valid input, currently being fixed by the mud team
   const world = defineWorld({ ...worldInput, excludeSystems: exclude });
 
   fs.writeFileSync(path.join(".", "world.json"), JSON.stringify(world, null, 2));
