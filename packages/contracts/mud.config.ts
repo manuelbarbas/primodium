@@ -1,10 +1,10 @@
 import { defineWorld } from "@latticexyz/world";
 
-import { WorldInput } from "@latticexyz/world/ts/config/v2/input";
 import fs from "fs";
 import path from "path";
 import { MUDEnums } from "./config/enums";
 import { prototypeConfig } from "./config/prototypeConfig";
+import { ConfigWithPrototypes } from "./ts/prototypes/types";
 
 // Exclude dev systems if not in dev PRI_DEV
 
@@ -12,7 +12,7 @@ import { prototypeConfig } from "./config/prototypeConfig";
 /*                                   Config                                   */
 /* -------------------------------------------------------------------------- */
 
-export const worldInput: WorldInput = {
+export const worldInput = {
   namespace: "Primodium",
   systems: {
     // these systems are closed access by default
@@ -803,7 +803,7 @@ const getConfig = async () => {
 const config = await getConfig();
 export default config;
 
-export const configInputs = {
+export const configInputs: ConfigWithPrototypes<typeof worldInput, (typeof worldInput)["tables"]> = {
   worldInput,
   prototypeConfig,
 };

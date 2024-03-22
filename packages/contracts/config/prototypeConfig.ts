@@ -171,12 +171,12 @@ const samSiteMaxResourceUpgrades = {
 
 const maxRange = { xBounds: 37, yBounds: 25 };
 
-export const prototypeConfig: PrototypesConfig<typeof worldInput> = {
+export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = {
   /* ---------------------------------- World --------------------------------- */
   World: {
     keys: [],
     tables: {
-      P_AllianceConfig: { maxAllianceMembers: 20n },
+      P_AllianceConfig: { maxAllianceMembers: 2 },
       P_GracePeriod: { asteroid: 60n * 60n * 12n, fleet: 60n * 30n },
       P_Asteroid: maxRange,
       P_GameConfig: {

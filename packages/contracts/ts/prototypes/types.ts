@@ -1,5 +1,5 @@
 import { StaticAbiType } from "@latticexyz/schema-type/internal";
-import { SchemaInput, StoreInput } from "@latticexyz/store/config/v2";
+import { SchemaInput, TablesInput } from "@latticexyz/store/config/v2";
 import { ConfigFieldTypeToPrimitiveType as FieldToPrimitive } from "@latticexyz/store/internal";
 import { WorldInput } from "@latticexyz/world/ts/config/v2/input";
 
@@ -15,18 +15,19 @@ type TableStructureWithOmittedKeys<Table, T> = {
     : never;
 };
 
-type Tables<W extends WorldInput, T = undefined> = {
-  [TableName in keyof W["tables"]]?: TableStructureWithOmittedKeys<W["tables"][TableName], T>;
+type Tables<W extends TablesInput, T = undefined> = {
+  [TableName in keyof W["tables"]]: TableStructureWithOmittedKeys<W["tables"][TableName], T>;
 };
 
-export type PrototypeConfig<W extends WorldInput> = {
+export type PrototypeConfig<W extends TablesInput> = {
   keys?: { [x: string]: StaticAbiType }[];
   tables?: Tables<W>;
   levels?: Record<number, Tables<W>>;
 };
 
-export type PrototypesConfig<C extends StoreInput> = Record<string, PrototypeConfig<C>>;
+export type PrototypesConfig<W extends TablesInput> = Record<string, PrototypeConfig<W>>;
 
-export type ConfigWithPrototypes<W extends WorldInput = WorldInput> = W & {
-  prototypeConfig: PrototypesConfig<W>;
+export type ConfigWithPrototypes<W extends WorldInput, Tables extends TablesInput = TablesInput> = {
+  worldInput: W;
+  prototypeConfig: PrototypesConfig<Tables>;
 };
