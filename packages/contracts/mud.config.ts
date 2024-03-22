@@ -1,7 +1,5 @@
 import { defineWorld } from "@latticexyz/world";
 
-import fs from "fs";
-import path from "path";
 import { MUDEnums } from "./config/enums";
 import { prototypeConfig } from "./config/prototypeConfig";
 import { ConfigWithPrototypes } from "./ts/prototypes/types";
@@ -795,7 +793,6 @@ const getConfig = async () => {
 
   const world = defineWorld({ ...worldInput, excludeSystems: exclude });
 
-  fs.writeFileSync(path.join(".", "world.json"), JSON.stringify(world, null, 2));
   return world;
 };
 
