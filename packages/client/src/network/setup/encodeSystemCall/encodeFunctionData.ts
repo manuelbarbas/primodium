@@ -1,17 +1,18 @@
 import { formatAbiItem, type Abi } from "abitype";
+import { components } from "src/network/components";
 
 import {
   ContractFunctionName,
   EncodeFunctionDataParameters,
   EncodeFunctionDataReturnType,
+  Hex,
   concatHex,
   encodeAbiParameters,
   getAbiItem,
   toFunctionSelector,
 } from "viem";
-
 export function encodeFunctionData<
-  abi extends Abi | readonly unknown[],
+  abi extends Abi | readonly unknown[] = Abi | readonly unknown[],
   functionName extends ContractFunctionName<abi> | undefined = undefined
 >(parameters: EncodeFunctionDataParameters<abi, functionName>): EncodeFunctionDataReturnType {
   const { abi, args, functionName } = parameters as EncodeFunctionDataParameters;
@@ -30,7 +31,10 @@ export function encodeFunctionData<
   if (abiItem.type !== "function") throw new Error('Expected abiItem to be of type "function"');
 
   const definition = formatAbiItem(abiItem);
-  const signature = toFunctionSelector(definition);
+  const rawSignature = toFunctionSelector(definition);
+  const signature = components.FunctionSelectors.getWithKeys({ worldFunctionSelector: rawSignature })
+    ?.systemFunctionSelector as Hex;
+  if (!signature) throw new Error("System Function Selector Not Found");
   const data = "inputs" in abiItem && abiItem.inputs ? encodeAbiParameters(abiItem.inputs, args ?? []) : undefined;
   return concatHex([signature, data ?? "0x"]);
 }

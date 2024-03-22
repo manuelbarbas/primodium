@@ -1,5 +1,6 @@
 import { Buffer } from "buffer";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
+import { createClient } from "viem";
 import { createConfig, http } from "wagmi";
 import { coinbaseWallet, injected, walletConnect } from "wagmi/connectors";
 
@@ -15,7 +16,10 @@ const chain = getNetworkConfig().chain;
 
 export const wagmiConfig = createConfig({
   chains: [chain],
-  transports: { [chain.id]: http() },
+
+  client({ chain }) {
+    return createClient({ chain, transport: http() });
+  },
   connectors: [
     injected({ target: "metaMask" }),
     walletConnect({ projectId }),
