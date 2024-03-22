@@ -1,7 +1,7 @@
-import { KeySchema, SchemaToPrimitives } from "@latticexyz/protocol-parser";
 import { Component, ComponentUpdate, ComponentValue, Entity, Metadata, Schema, setComponent } from "@latticexyz/recs";
 import { Subject, filter, map } from "rxjs";
 
+import { KeySchema, SchemaToPrimitives } from "@latticexyz/protocol-parser/internal";
 import { useEntityQuery } from "@latticexyz/react";
 import {
   Has,
@@ -90,6 +90,7 @@ export function extendContractComponent<S extends Schema, TKeySchema extends Key
   function getWithKeys(keys?: SchemaToPrimitives<TKeySchema>): ComponentValue<S> | undefined;
   function getWithKeys(keys?: SchemaToPrimitives<TKeySchema>, defaultValue?: ValueSansMetadata<S>): ComponentValue<S>;
   function getWithKeys(keys?: SchemaToPrimitives<TKeySchema>, defaultValue?: ValueSansMetadata<S>) {
+    console.log("keys:", keys);
     const entity = keys ? encodeEntity(component, keys) : singletonEntity;
     return extendedComponent.get(entity, defaultValue);
   }

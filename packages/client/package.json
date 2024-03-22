@@ -44,6 +44,7 @@
     "@visx/scale": "^3.5.0",
     "@visx/shape": "^3.5.0",
     "@visx/voronoi": "^3.3.0",
+    "abitype": "^1.0.2",
     "buffer": "^6.0.3",
     "comlink": "^4.4.1",
     "contracts": "workspace:*",

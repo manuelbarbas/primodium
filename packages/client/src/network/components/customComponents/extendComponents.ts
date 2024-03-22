@@ -8,9 +8,11 @@ import {
 } from "./ExtendedComponent";
 
 export function extendComponents<C extends Components>(components: C): ExtendedComponents<C> {
-  return Object.fromEntries(
+  const cs = Object.fromEntries(
     Object.entries(components).map(([key, value]) => [key, extendComponent(value)])
   ) as ExtendedComponents<C>;
+  console.log(cs);
+  return cs;
 }
 
 export function extendContractComponents<C extends Components>(components: C): ExtendedContractComponents<C> {
@@ -21,14 +23,14 @@ export function extendContractComponents<C extends Components>(components: C): E
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Components = { [key: string]: Component<any, any, any> };
 
-type TransformComponent<T> = T extends Component<infer S, infer M, infer T> ? ExtendedComponent<S, M, T> : never;
+type TransformComponent<T> = T extends Component<infer S, infer M, infer U> ? ExtendedComponent<S, M, U> : never;
 
 export type ExtendedComponents<C extends Components> = {
   [K in keyof C]: TransformComponent<C[K]>;
 };
 
-type TransformContractComponent<T> = T extends ContractComponent<infer S, infer T>
-  ? ExtendedContractComponent<S, T>
+type TransformContractComponent<T> = T extends ContractComponent<infer S, infer U>
+  ? ExtendedContractComponent<S, U>
   : never;
 
 export type ExtendedContractComponents<C extends Components> = {
