@@ -196,8 +196,6 @@ export const MUDEnums = {
   EFleetStance: enumToArray(EFleetStance),
 };
 
-function enumToArray<T extends object>(enumObj: T): T[keyof T][] {
-  return Object.keys(enumObj)
-    .filter((key) => isNaN(Number(key)))
-    .map((k) => enumObj[k as keyof T]);
+function enumToArray(enumObj: object): string[] {
+  return ["NULL", ...Object.keys(enumObj).filter((key) => isNaN(Number(key))), "LENGTH"];
 }

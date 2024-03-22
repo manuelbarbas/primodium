@@ -31,7 +31,6 @@ export function renderPrototypes(config: ConfigWithPrototypes<WorldInput>) {
   ${renderPrototypeScript(config.prototypeConfig)}
   ${outputs}
   `;
-  console.log(output);
   return output;
 }
 
@@ -77,7 +76,6 @@ export function renderPrototype<W extends WorldInput>(config: ConfigWithPrototyp
   const tables = prototype.tables;
   const length = tables ? Object.keys(tables).length : 0;
 
-  console.log("rendering ", levelPrototype?.levelFunctionCalls);
   const ret = `
   bytes32 constant ${name}PrototypeId = "${name}";
 

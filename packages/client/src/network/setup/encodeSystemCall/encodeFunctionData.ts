@@ -11,6 +11,7 @@ import {
   getAbiItem,
   toFunctionSelector,
 } from "viem";
+
 export function encodeFunctionData<
   abi extends Abi | readonly unknown[] = Abi | readonly unknown[],
   functionName extends ContractFunctionName<abi> | undefined = undefined
