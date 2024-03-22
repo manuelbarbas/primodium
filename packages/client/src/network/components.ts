@@ -8,7 +8,6 @@ type Components = ReturnType<typeof createComponents>;
 
 export function createComponents({ components: rawContractComponents }: CreateNetworkResult) {
   const contractComponents = extendContractComponents(rawContractComponents);
-  console.log(contractComponents);
 
   const comps = {
     ...contractComponents,

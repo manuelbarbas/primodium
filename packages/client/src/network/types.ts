@@ -28,7 +28,6 @@ export type ContractComponent<S extends Schema = Schema, TKeySchema extends KeyS
   S,
   {
     componentName: string;
-    tableName: `${string}:${string}`;
     keySchema: TKeySchema;
     valueSchema: Record<string, string>;
   }
