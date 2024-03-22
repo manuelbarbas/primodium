@@ -40,6 +40,8 @@ library LibAsteroid {
 
     LibProduction.increaseResourceProduction(asteroidEntity, EResource.U_MaxFleets, 1);
     AsteroidCount.set(asteroidCount);
+
+    createBasicSecondaryAsteroid(coord);
   }
 
   function getUsedTilesLength() private view returns (uint256) {
@@ -65,7 +67,7 @@ library LibAsteroid {
   /// @return asteroidSeed Hash of the newly created asteroid
   function createSecondaryAsteroid(PositionData memory position) internal returns (bytes32) {
     P_GameConfigData memory config = P_GameConfig.get();
-    for (uint256 i = 0; i < config.maxAsteroidsPerPlayer; i++) {
+    for (uint256 i = 1; i < config.maxAsteroidsPerPlayer; i++) {
       PositionData memory sourcePosition = getPosition(i, config.asteroidDistance, config.maxAsteroidsPerPlayer);
       sourcePosition.x += position.x;
       sourcePosition.y += position.y;
@@ -74,14 +76,50 @@ library LibAsteroid {
       if (!Asteroid.getSpawnsSecondary(sourceAsteroidEntity)) continue;
       bytes32 asteroidSeed = keccak256(abi.encode(sourceAsteroidEntity, bytes32("asteroid"), position.x, position.y));
       if (!isAsteroid(asteroidSeed, config.asteroidChanceInv)) continue;
-      initSecondaryAsteroid(position, asteroidSeed);
+      initSecondaryAsteroid(position, asteroidSeed, false);
 
       return asteroidSeed;
     }
     revert("no asteroid found");
   }
 
-  function getAsteroidData(bytes32 asteroidEntity, bool spawnsSecondary) internal pure returns (AsteroidData memory) {
+  /// @notice Create a new basic asteroid at slot 0's position, must be called at player spawn
+  /// @param primaryPosition Position of the primary asteroid
+  /// @return asteroidSeed Hash of the newly created asteroid
+  function createBasicSecondaryAsteroid(PositionData memory primaryPosition) internal returns (bytes32) {
+    P_GameConfigData memory config = P_GameConfig.get();
+
+    PositionData memory positionOffset = getPosition(0, config.asteroidDistance, config.maxAsteroidsPerPlayer);
+    PositionData memory position = PositionData({
+      x: primaryPosition.x + positionOffset.x,
+      y: primaryPosition.y + positionOffset.y,
+      parentEntity: 0
+    });
+
+    for (uint256 i = 0; i < config.maxAsteroidsPerPlayer; i++) {
+      PositionData memory sourcePosition = getPosition(i, config.asteroidDistance, config.maxAsteroidsPerPlayer);
+      sourcePosition.x += position.x;
+      sourcePosition.y += position.y;
+      bytes32 sourceAsteroidEntity = ReversePosition.get(sourcePosition.x, sourcePosition.y);
+      if (sourceAsteroidEntity == 0) continue;
+      if (!Asteroid.getSpawnsSecondary(sourceAsteroidEntity)) continue;
+      bytes32 asteroidSeed = keccak256(abi.encode(sourceAsteroidEntity, bytes32("asteroid"), position.x, position.y));
+      // if (!isAsteroid(asteroidSeed, config.asteroidChanceInv)) continue;
+      initSecondaryAsteroid(position, asteroidSeed, true);
+
+      return asteroidSeed;
+    }
+    // revert("no asteroid found");
+  }
+
+  function getAsteroidData(
+    bytes32 asteroidEntity,
+    bool spawnsSecondary,
+    bool basicAsteroid
+  ) internal pure returns (AsteroidData memory) {
+    if (basicAsteroid) {
+      return AsteroidData({ isAsteroid: true, maxLevel: 3, mapId: 1, spawnsSecondary: spawnsSecondary });
+    }
     uint256 distributionVal = (LibEncode.getByteUInt(uint256(asteroidEntity), 7, 12) % 100);
 
     uint256 maxLevel;
@@ -118,8 +156,8 @@ library LibAsteroid {
   /// @dev Initialize a motherlode
   /// @param position Position to place the motherlode
   /// @param asteroidEntity Hash of the asteroid to be initialized
-  function initSecondaryAsteroid(PositionData memory position, bytes32 asteroidEntity) internal {
-    AsteroidData memory data = getAsteroidData(asteroidEntity, false);
+  function initSecondaryAsteroid(PositionData memory position, bytes32 asteroidEntity, bool basicAsteroid) internal {
+    AsteroidData memory data = getAsteroidData(asteroidEntity, false, basicAsteroid);
     Asteroid.set(asteroidEntity, data);
     Position.set(asteroidEntity, position);
     ReversePosition.set(position.x, position.y, asteroidEntity);
