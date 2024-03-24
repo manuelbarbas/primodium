@@ -188,6 +188,13 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
         worldSpeed: 100n,
         tax: 10n, // out of 1000
       },
+
+      P_BasicAsteroidConfig: {
+        basicSecondarySlot: 0n,
+        maxLevel: 3n,
+        mapId: 1,
+      },
+
       P_CapitalShipConfig: {
         resource: EResource.Alloy,
         initialCost: 10000n * BigInt(SCALE),

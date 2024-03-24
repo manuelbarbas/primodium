@@ -6,7 +6,7 @@ import { WORLD_SPEED_SCALE } from "src/constants.sol";
 import { DroidPrototypeId } from "codegen/Prototypes.sol";
 
 // tables
-import { UsedTiles, Dimensions, DimensionsData, P_MaxLevel, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, P_GameConfigData, P_GameConfig } from "codegen/index.sol";
+import { UsedTiles, Dimensions, DimensionsData, P_MaxLevel, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, P_GameConfigData, P_GameConfig, P_BasicAsteroidConfig, P_BasicAsteroidConfigData } from "codegen/index.sol";
 
 // libraries
 import { ExpansionKey } from "src/Keys.sol";
@@ -41,7 +41,7 @@ library LibAsteroid {
     LibProduction.increaseResourceProduction(asteroidEntity, EResource.U_MaxFleets, 1);
     AsteroidCount.set(asteroidCount);
 
-    createBasicSecondaryAsteroid(coord);
+    createBasicSecondaryAsteroid(coord, P_BasicAsteroidConfig.getBasicSecondarySlot());
   }
 
   function getUsedTilesLength() private view returns (uint256) {
@@ -67,7 +67,8 @@ library LibAsteroid {
   /// @return asteroidSeed Hash of the newly created asteroid
   function createSecondaryAsteroid(PositionData memory position) internal returns (bytes32) {
     P_GameConfigData memory config = P_GameConfig.get();
-    for (uint256 i = 1; i < config.maxAsteroidsPerPlayer; i++) {
+    for (uint256 i = 0; i < config.maxAsteroidsPerPlayer; i++) {
+      if (i == P_BasicAsteroidConfig.getBasicSecondarySlot()) continue;
       PositionData memory sourcePosition = getPosition(i, config.asteroidDistance, config.maxAsteroidsPerPlayer);
       sourcePosition.x += position.x;
       sourcePosition.y += position.y;
@@ -75,7 +76,7 @@ library LibAsteroid {
       if (sourceAsteroidEntity == 0) continue;
       if (!Asteroid.getSpawnsSecondary(sourceAsteroidEntity)) continue;
       bytes32 asteroidSeed = keccak256(abi.encode(sourceAsteroidEntity, bytes32("asteroid"), position.x, position.y));
-      if (!isAsteroid(asteroidSeed, config.asteroidChanceInv)) continue;
+      if (!isAsteroid(asteroidSeed, config.asteroidChanceInv, i)) continue;
       initSecondaryAsteroid(position, asteroidSeed, false);
 
       return asteroidSeed;
@@ -83,13 +84,18 @@ library LibAsteroid {
     revert("no asteroid found");
   }
 
-  /// @notice Create a new basic asteroid at slot 0's position, must be called at player spawn
+  /// @notice Create a new basic asteroid at slotIndex's position, must only be called at player spawn
   /// @param primaryPosition Position of the primary asteroid
+  /// @param slotIndex Index of the basic asteroid slot
   /// @return asteroidSeed Hash of the newly created asteroid
-  function createBasicSecondaryAsteroid(PositionData memory primaryPosition) internal returns (bytes32) {
+  function createBasicSecondaryAsteroid(
+    PositionData memory primaryPosition,
+    uint256 slotIndex
+  ) internal returns (bytes32) {
     P_GameConfigData memory config = P_GameConfig.get();
+    require(slotIndex < config.maxAsteroidsPerPlayer, "invalid slot index");
 
-    PositionData memory positionOffset = getPosition(0, config.asteroidDistance, config.maxAsteroidsPerPlayer);
+    PositionData memory positionOffset = getPosition(slotIndex, config.asteroidDistance, config.maxAsteroidsPerPlayer);
     PositionData memory position = PositionData({
       x: primaryPosition.x + positionOffset.x,
       y: primaryPosition.y + positionOffset.y,
@@ -103,22 +109,30 @@ library LibAsteroid {
       bytes32 sourceAsteroidEntity = ReversePosition.get(sourcePosition.x, sourcePosition.y);
       if (sourceAsteroidEntity == 0) continue;
       if (!Asteroid.getSpawnsSecondary(sourceAsteroidEntity)) continue;
+      if (ReversePosition.get(position.x, position.y) != 0) continue;
       bytes32 asteroidSeed = keccak256(abi.encode(sourceAsteroidEntity, bytes32("asteroid"), position.x, position.y));
       // if (!isAsteroid(asteroidSeed, config.asteroidChanceInv)) continue;
       initSecondaryAsteroid(position, asteroidSeed, true);
 
       return asteroidSeed;
     }
-    // revert("no asteroid found");
+    revert("no asteroid found");
   }
 
   function getAsteroidData(
     bytes32 asteroidEntity,
     bool spawnsSecondary,
     bool basicAsteroid
-  ) internal pure returns (AsteroidData memory) {
+  ) internal view returns (AsteroidData memory) {
     if (basicAsteroid) {
-      return AsteroidData({ isAsteroid: true, maxLevel: 3, mapId: 1, spawnsSecondary: spawnsSecondary });
+      P_BasicAsteroidConfigData memory basicConfig = P_BasicAsteroidConfig.get();
+      return
+        AsteroidData({
+          isAsteroid: true,
+          maxLevel: basicConfig.maxLevel,
+          mapId: basicConfig.mapId,
+          spawnsSecondary: spawnsSecondary
+        });
     }
     uint256 distributionVal = (LibEncode.getByteUInt(uint256(asteroidEntity), 7, 12) % 100);
 
@@ -148,7 +162,8 @@ library LibAsteroid {
     return (droidCount, encryption);
   }
 
-  function isAsteroid(bytes32 entity, uint256 chanceInv) internal pure returns (bool) {
+  function isAsteroid(bytes32 entity, uint256 chanceInv, uint256 asteroidSlot) internal view returns (bool) {
+    if (asteroidSlot == P_BasicAsteroidConfig.getBasicSecondarySlot()) return true;
     uint256 motherlodeKey = LibEncode.getByteUInt(uint256(entity), 6, 128);
     return motherlodeKey % chanceInv == 0;
   }

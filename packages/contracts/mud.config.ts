@@ -181,6 +181,15 @@ const getConfig = async () => {
         },
       },
 
+      P_BasicAsteroidConfig: {
+        keySchema: {},
+        valueSchema: {
+          basicSecondarySlot: "uint256",
+          maxLevel: "uint256",
+          mapId: "uint8",
+        },
+      },
+
       // note: dimensions will always be positive, but are int32s so they work with coords
       Dimensions: {
         keySchema: { key: "bytes32", level: "uint256" },
