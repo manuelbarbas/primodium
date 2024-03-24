@@ -191,8 +191,8 @@ export const prototypeConfig: PrototypesConfig<typeof config> = {
 
       P_BasicAsteroidConfig: {
         basicSecondarySlot: 0n,
-        maxLevel: 3n,
-        mapId: 1,
+        maxLevel: 1n,
+        mapId: 6,
       },
 
       P_CapitalShipConfig: {
