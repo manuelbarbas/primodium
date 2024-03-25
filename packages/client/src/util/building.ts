@@ -290,7 +290,7 @@ export const getBuildingInfo = (building: Entity) => {
   const unitProduction = comps.P_UnitProdTypes.getWithKeys(buildingLevelKeys)?.value;
   const storages = getBuildingStorages(buildingTypeEntity, level);
   const unitProductionMultiplier = comps.P_UnitProdMultiplier.getWithKeys(buildingLevelKeys)?.value;
-  const position = comps.Position.get(building) ?? { x: 0, y: 0, parent: undefined };
+  const position = comps.Position.get(building) ?? { x: 0, y: 0, parentEntity: undefined };
 
   const nextLevel = level + 1n;
   const maxLevel = comps.P_MaxLevel.getWithKeys({ prototype: buildingType })?.value ?? 1n;

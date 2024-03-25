@@ -1,11 +1,10 @@
-import { KeySchema, SchemaToPrimitives, encodeField, encodeKey } from "@latticexyz/protocol-parser";
+import { encodeField, encodeKey, KeySchema, SchemaToPrimitives } from "@latticexyz/protocol-parser/internal";
 import { ComponentValue, Entity, Schema } from "@latticexyz/recs";
-import { StaticAbiType } from "@latticexyz/schema-type";
 import { entityToHexKeyTuple } from "@latticexyz/store-sync/recs";
 import { uuid } from "@latticexyz/utils";
 import { ContractComponent } from "@primodiumxyz/mud-game-tools";
-import { execute } from "src/network/actions";
 import { ExtendedContractComponent } from "src/network/components/customComponents/ExtendedComponent";
+import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { Hex } from "viem";
@@ -17,7 +16,7 @@ export async function removeComponent<S extends Schema>(mud: MUD, component: Con
   await execute(
     {
       mud,
-      functionName: "devDeleteRecord",
+      functionName: "Primodium__devDeleteRecord",
       systemId: getSystemId("DevSystem"),
       args: [tableId, key],
       withSession: true,
@@ -45,7 +44,7 @@ export async function setComponentValue<S extends Schema, K extends KeySchema>(
     await execute(
       {
         mud,
-        functionName: "devSetField",
+        functionName: "Primodium__devSetField",
         systemId: getSystemId("DevSystem"),
         args: [tableId, key, schemaIndex, data],
         withSession: true,

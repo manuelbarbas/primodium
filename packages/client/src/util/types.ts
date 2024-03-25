@@ -3,7 +3,7 @@ import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Action } from "./constants";
 
-export type ContractCoord = Coord & { parent: Entity };
+export type ContractCoord = Coord & { parentEntity: Entity };
 
 export type BlockTypeActionComponent = {
   action: () => void;

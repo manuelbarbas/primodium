@@ -1,15 +1,22 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-import "test/PrimodiumTest.t.sol";
+
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EResource, EUnit, EFleetStance } from "src/Types.sol";
+import { UnitKey } from "src/Keys.sol";
+
+import { P_EnumToPrototype, ResourceCount, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes, FleetMovement, FleetStance, OwnedBy, CooldownEnd } from "codegen/index.sol";
 
 contract FleetLandSystemTest is PrimodiumTest {
-  bytes32 aliceHomeSpaceRock;
+  bytes32 aliceHomeAsteroid;
   bytes32 aliceEntity;
 
   function setUp() public override {
     super.setUp();
     aliceEntity = addressToEntity(alice);
-    aliceHomeSpaceRock = spawn(alice);
+    aliceHomeAsteroid = spawn(alice);
   }
 
   function testLandFleet() public {
@@ -28,24 +35,20 @@ contract FleetLandSystemTest is PrimodiumTest {
     }
 
     //provide resource and unit requirements to create fleet
-    setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
+    setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.startPrank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
-    world.landFleet(fleetId, aliceHomeSpaceRock);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Primodium__landFleet(fleetEntity, aliceHomeAsteroid);
     vm.stopPrank();
-    assertEq(UnitCount.get(fleetId, unitPrototype), 0, "fleet unit count doesn't match");
-    assertEq(UnitCount.get(aliceHomeSpaceRock, unitPrototype), 1, "space rock unit count doesn't match");
-    assertEq(ResourceCount.get(fleetId, uint8(EResource.Iron)), 0, "fleet resource count doesn't match");
-    assertEq(
-      ResourceCount.get(aliceHomeSpaceRock, uint8(EResource.Iron)),
-      1,
-      "space rock resource count doesn't match"
-    );
-    assertEq(OwnedBy.get(fleetId), aliceHomeSpaceRock, "fleet owned by doesn't match");
-    assertEq(FleetMovement.getOrigin(fleetId), aliceHomeSpaceRock, "fleet origin doesn't match");
-    assertEq(FleetMovement.getDestination(fleetId), aliceHomeSpaceRock, "fleet destination doesn't match");
-    assertEq(FleetMovement.getArrivalTime(fleetId), block.timestamp, "fleet arrival time doesn't match");
-    assertEq(FleetStance.getStance(fleetId), uint8(EFleetStance.NULL), "fleet stance doesn't match");
+    assertEq(UnitCount.get(fleetEntity, unitPrototype), 0, "fleet unit count doesn't match");
+    assertEq(UnitCount.get(aliceHomeAsteroid, unitPrototype), 1, "asteroid unit count doesn't match");
+    assertEq(ResourceCount.get(fleetEntity, uint8(EResource.Iron)), 0, "fleet resource count doesn't match");
+    assertEq(ResourceCount.get(aliceHomeAsteroid, uint8(EResource.Iron)), 1, "asteroid resource count doesn't match");
+    assertEq(OwnedBy.get(fleetEntity), aliceHomeAsteroid, "fleet owned by doesn't match");
+    assertEq(FleetMovement.getOrigin(fleetEntity), aliceHomeAsteroid, "fleet origin doesn't match");
+    assertEq(FleetMovement.getDestination(fleetEntity), aliceHomeAsteroid, "fleet destination doesn't match");
+    assertEq(FleetMovement.getArrivalTime(fleetEntity), block.timestamp, "fleet arrival time doesn't match");
+    assertEq(FleetStance.getStance(fleetEntity), uint8(EFleetStance.NULL), "fleet stance doesn't match");
   }
 
   function testLandFleetFailInCooldown() public {
@@ -64,16 +67,16 @@ contract FleetLandSystemTest is PrimodiumTest {
     }
 
     //provide resource and unit requirements to create fleet
-    setupCreateFleet(alice, aliceHomeSpaceRock, unitCounts, resourceCounts);
+    setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.prank(alice);
-    bytes32 fleetId = world.createFleet(aliceHomeSpaceRock, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.prank(creator);
-    CooldownEnd.set(fleetId, block.timestamp + 1);
+    CooldownEnd.set(fleetEntity, block.timestamp + 1);
 
     vm.startPrank(alice);
     vm.expectRevert("[Fleet] Fleet is in cooldown");
-    world.landFleet(fleetId, aliceHomeSpaceRock);
+    world.Primodium__landFleet(fleetEntity, aliceHomeAsteroid);
     vm.stopPrank();
   }
 }

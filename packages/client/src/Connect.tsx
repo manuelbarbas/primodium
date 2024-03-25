@@ -1,6 +1,5 @@
-import React from "react";
 import { chunk } from "lodash";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useAccount, useConnect } from "wagmi";
@@ -15,7 +14,7 @@ const connectorIcons: Record<string, string> = {
 
 export const Connect: React.FC = React.memo(() => {
   const { connector, isConnected } = useAccount();
-  const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
+  const { connect, connectors, error, isPending } = useConnect();
   const { noExternalAccount, setNoExternalAccount } = usePersistentStore();
   const [showingToast, setShowingToast] = useState(false);
 
@@ -82,7 +81,7 @@ export const Connect: React.FC = React.memo(() => {
         </button>
 
         {chunk(
-          connectors.filter((x) => x.ready && x.id !== connector?.id),
+          connectors.filter((x) => x.id !== connector?.id),
           2
         ).map((chunk, i) => (
           <div key={`chunk-${i}`} className="flex flex-row gap-2">
@@ -90,13 +89,12 @@ export const Connect: React.FC = React.memo(() => {
               <button
                 className="flex-1 items-center justify-center btn btn-secondary star-background join-item inline pointer-events-auto font-bold outline-none h-fit z-10"
                 key={`${x.id}-${x.name}`}
-                onClick={() => !isLoading && connect({ connector: x })}
-                disabled={isLoading && x.id !== pendingConnector?.id}
+                onClick={() => !isPending && connect({ connector: x })}
+                disabled={isPending}
               >
                 <div className="flex w-full items-center justify-center gap-2">
                   {connectorIcons[x.name] && <img src={connectorIcons[x.name]} className="w-6 h-6" />}
                   {x.name}
-                  {isLoading && x.id === pendingConnector?.id && <p className="text-xs">(connecting)</p>}
                 </div>
               </button>
             ))}

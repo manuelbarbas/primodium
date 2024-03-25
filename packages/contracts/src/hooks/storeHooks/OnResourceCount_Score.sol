@@ -23,12 +23,12 @@ contract OnResourceCount_Score is StoreHook {
     uint48 start,
     bytes memory data
   ) public override {
-    bytes32 spaceRockEntity = keyTuple[0];
-    if (!Asteroid.getIsAsteroid(spaceRockEntity)) return;
+    bytes32 asteroidEntity = keyTuple[0];
+    if (!Asteroid.getIsAsteroid(asteroidEntity)) return;
 
     uint8 resource = uint8(uint256(keyTuple[1]));
     bytes memory amountRaw = SliceInstance.toBytes(SliceLib.getSubslice(data, start));
     uint256 amount = abi.decode(amountRaw, (uint256));
-    LibScore.updateScore(spaceRockEntity, resource, amount);
+    LibScore.updateScore(asteroidEntity, resource, amount);
   }
 }

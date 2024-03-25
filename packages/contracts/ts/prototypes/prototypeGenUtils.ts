@@ -1,4 +1,4 @@
-import { StaticAbiType } from "@latticexyz/schema-type";
+import { StaticAbiType } from "@latticexyz/schema-type/internal";
 import { Hex } from "viem";
 import { BASE_RESERVE, RESERVE_RESOURCE, SCALE } from "../../config/constants";
 import { EResource, MUDEnums } from "../../config/enums";
