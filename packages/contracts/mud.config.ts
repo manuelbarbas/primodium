@@ -24,7 +24,6 @@ export const worldInput = {
     S_FleetResetIfNoUnitsLeftSystem: {},
     S_InitAsteroidOwnerSystem: {},
     S_TransferAsteroidSystem: {},
-    S_FleetResolvePirateAsteroidSystem: {},
     S_CreateSecondaryAsteroidSystem: {},
   },
 
