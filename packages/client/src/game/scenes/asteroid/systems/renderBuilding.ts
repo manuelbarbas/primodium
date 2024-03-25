@@ -35,7 +35,7 @@ export const renderBuilding = (scene: Scene) => {
 
     const positionQuery = [
       HasValue(components.Position, {
-        parent: value[0]?.value,
+        parentEntity: value[0]?.value,
       }),
       Has(components.BuildingType),
       Has(components.IsActive),
@@ -44,7 +44,7 @@ export const renderBuilding = (scene: Scene) => {
 
     const oldPositionQuery = [
       HasValue(components.Position, {
-        parent: value[1]?.value,
+        parentEntity: value[1]?.value,
       }),
       Has(components.BuildingType),
       Has(components.IsActive),
