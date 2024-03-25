@@ -1,5 +1,4 @@
 import { formatAndWriteSolidity } from "@latticexyz/common/codegen";
-import fs from "fs";
 import path from "path";
 import { renderPrototypes } from "./renderPrototype";
 import { renderPrototypeIndex } from "./renderPrototypeIndex";
@@ -14,7 +13,6 @@ const generateIndex = async (prototypes: PrototypesConfig<TablesInput>, outputBa
 
 const generatePrototypes = async (config: ConfigWithPrototypes, outputBaseDirectory: string) => {
   const output = renderPrototypes(config);
-  fs.writeFileSync(path.join(".", `Prototypes.sol`), output);
   const name = "All";
   const fullOutputPath = path.join(outputBaseDirectory, `prototypes/${name}Prototype.sol`);
   await formatAndWriteSolidity(output, fullOutputPath, `Generated prototype ${name}`);
