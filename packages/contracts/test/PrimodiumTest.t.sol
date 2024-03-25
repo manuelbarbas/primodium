@@ -410,7 +410,6 @@ contract PrimodiumTest is MudTest {
     uint256 i = 0;
     bool found = false;
     while (i < 6 && !found) {
-      console.log("i = ", i);
       if (i == P_BasicAsteroidConfig.getBasicSecondarySlot()) {
         i++;
         continue;
