@@ -6,7 +6,7 @@ import { addressToEntity } from "src/utils.sol";
 
 import { EResource, EBuilding } from "src/Types.sol";
 
-import { Spawned, Home, Level, UsedTiles, MaxResourceCount, Position, PositionData, OwnedBy } from "codegen/index.sol";
+import { Spawned, Home, Level, UsedTiles, MaxResourceCount, Position, PositionData, OwnedBy, P_GameConfig } from "codegen/index.sol";
 
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 
@@ -27,6 +27,19 @@ contract SpawnSystemTest is PrimodiumTest {
     super.setUp();
   }
 
+  function testSpawnStuff() public returns (bytes32) {
+    uint256 speed = P_GameConfig.getWorldSpeed();
+    console.log("speed", speed);
+    // bytes32 playerEntity = addressToEntity(creator);
+    // vm.startPrank(creator);
+    // assertTrue(!Spawned.get(playerEntity), "[SpawnSystem] Already spawned");
+
+    // bytes32 asteroidEntity = LibAsteroid.createPrimaryAsteroid(playerEntity);
+    // Spawned.set(playerEntity, true);
+    // IWorld(_world()).Primodium__initAsteroidOwner(asteroidEntity, playerEntity);
+    // Home.set(playerEntity, asteroidEntity);
+    // return asteroidEntity;
+  }
   function testSpawnu() public {
     bytes32 playerEntity = addressToEntity(creator);
     bytes32 asteroidEntity = spawn(creator);

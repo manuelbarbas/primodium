@@ -1,15 +1,11 @@
-import {
-  ContractWrite,
-  createBurnerAccount as createMudBurnerAccount,
-  getContract,
-  transportObserver,
-} from "@latticexyz/common";
+import { ContractWrite, createBurnerAccount as createMudBurnerAccount, transportObserver } from "@latticexyz/common";
+import { transactionQueue, writeObserver } from "@latticexyz/common/actions";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { Subject } from "rxjs";
 import { normalizeAddress } from "src/util/common";
 import { STORAGE_PREFIX } from "src/util/constants";
 import { addressToEntity } from "src/util/encode";
-import { Hex, createPublicClient, createWalletClient, fallback, http } from "viem";
+import { Hex, createPublicClient, createWalletClient, fallback, getContract, http } from "viem";
 import { generatePrivateKey } from "viem/accounts";
 import { getNetworkConfig } from "../config/getNetworkConfig";
 
@@ -32,12 +28,15 @@ export async function createBurnerAccount(privateKey?: Hex, saveToStorage = true
   });
 
   const write$ = new Subject<ContractWrite>();
+  sessionWalletClient.extend(transactionQueue()).extend(writeObserver({ onWrite: (write) => write$.next(write) }));
+
   const sessionWorldContract = getContract({
     address: networkConfig.worldAddress as Hex,
     abi: IWorldAbi,
-    publicClient,
-    walletClient: sessionWalletClient,
-    onWrite: (write) => write$.next(write),
+    client: {
+      public: publicClient,
+      wallet: sessionWalletClient,
+    },
   });
   return {
     worldContract: sessionWorldContract,

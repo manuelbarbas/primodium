@@ -1,7 +1,13 @@
-import { SystemCall, SystemCallFrom } from "@latticexyz/world";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { toast } from "react-toastify";
-import { CallExecutionError, ContractFunctionExecutionError, Hex, TransactionReceipt } from "viem";
+import {
+  Abi,
+  CallExecutionError,
+  ContractFunctionExecutionError,
+  ContractFunctionName,
+  Hex,
+  TransactionReceipt,
+} from "viem";
 import { PublicClient } from "viem/_types/clients/createPublicClient";
 import { components } from "./components";
 import { MetadataTypes, TxQueueOptions } from "./components/customComponents/TransactionQueueComponent";
@@ -10,6 +16,8 @@ import {
   encodeSystemCallFrom,
   encodeSystemCalls,
   encodeSystemCallsFrom,
+  SystemCall,
+  SystemCallFrom,
 } from "./setup/encodeSystemCall";
 import { MUD } from "./types";
 
@@ -65,8 +73,8 @@ export async function _execute({ network: { waitForTransaction, publicClient } }
 // Alerts the user if the transaction failed
 // Providers renamed to client: https://viem.sh/docs/ethers-migration.html
 
-type ExecuteCallOptions<FunctionName extends string = string> = Omit<
-  SystemCall<typeof IWorldAbi, FunctionName>,
+type ExecuteCallOptions<abi extends Abi, functionName extends ContractFunctionName<abi>> = Omit<
+  SystemCall<abi, functionName>,
   "abi"
 > & {
   mud: MUD;
@@ -74,8 +82,12 @@ type ExecuteCallOptions<FunctionName extends string = string> = Omit<
   options?: { gas?: bigint };
 };
 
-export async function execute<T extends keyof MetadataTypes, FunctionName extends string = string>(
-  { mud, systemId, functionName, args, withSession, options: callOptions }: ExecuteCallOptions<FunctionName>,
+export async function execute<
+  T extends keyof MetadataTypes,
+  abi extends Abi,
+  functionName extends ContractFunctionName<abi>
+>(
+  { mud, systemId, functionName, args, withSession, options: callOptions }: ExecuteCallOptions<abi, functionName>,
   txQueueOptions?: TxQueueOptions<T>,
   onComplete?: (receipt: TransactionReceipt | undefined) => void
 ) {
@@ -83,12 +95,13 @@ export async function execute<T extends keyof MetadataTypes, FunctionName extend
   const authorizing = account == mud.sessionAccount;
   console.info(
     `[Tx] Executing ${functionName} with address ${account.address.slice(0, 6)} ${
-      withSession ? "(with session acct)" : ""
+      authorizing ? "(with session acct)" : ""
     }`
   );
 
   const run = async () => {
     let tx: Promise<Hex>;
+    console.log(systemId, functionName, args);
     if (authorizing && mud.sessionAccount) {
       const params = encodeSystemCallFrom({
         abi: IWorldAbi,
@@ -96,7 +109,7 @@ export async function execute<T extends keyof MetadataTypes, FunctionName extend
         systemId,
         functionName,
         args,
-      } as SystemCallFrom<typeof IWorldAbi, typeof functionName>);
+      });
       tx = mud.sessionAccount.worldContract.write.callFrom(params, callOptions);
     } else {
       const params = encodeSystemCall({
@@ -104,7 +117,8 @@ export async function execute<T extends keyof MetadataTypes, FunctionName extend
         systemId,
         functionName,
         args,
-      } as SystemCall<typeof IWorldAbi, typeof functionName>);
+      });
+      console.log("params:", params);
       tx = mud.playerAccount.worldContract.write.call(params, callOptions);
     }
     const receipt = await _execute(mud, tx);
@@ -117,13 +131,17 @@ export async function execute<T extends keyof MetadataTypes, FunctionName extend
   }
 }
 
-export async function executeBatch<T extends keyof MetadataTypes, functionName extends string = string>(
+export async function executeBatch<
+  T extends keyof MetadataTypes,
+  abi extends Abi,
+  functionName extends ContractFunctionName<abi>
+>(
   {
     mud,
     systemCalls,
     withSession,
   }: {
-    systemCalls: readonly Omit<SystemCallFrom<typeof IWorldAbi, functionName>, "abi" | "from">[];
+    systemCalls: readonly Omit<SystemCallFrom<abi, functionName>, "abi" | "from">[];
     mud: MUD;
     withSession?: boolean;
   },
