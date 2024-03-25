@@ -173,24 +173,32 @@ export const LevelToPrimaryAsteroidSpriteKey: Record<number, SpriteKeys> = {
   10: SpriteKeys.Asteroid5,
 };
 
-export const EntityTypeSizeToSecondaryAsteroidSpriteKey = new Map<[Entity, AsteroidSize], SpriteKeys>([
-  [[EntityType.Kimberlite, "Micro"], SpriteKeys.MotherlodeKimberliteSmall],
-  [[EntityType.Kimberlite, "Small"], SpriteKeys.MotherlodeKimberliteSmall],
-  [[EntityType.Kimberlite, "Medium"], SpriteKeys.MotherlodeKimberliteMedium],
-  [[EntityType.Kimberlite, "Large"], SpriteKeys.MotherlodeKimberliteLarge],
-  [[EntityType.Iridium, "Micro"], SpriteKeys.MotherlodeIridiumSmall],
-  [[EntityType.Iridium, "Small"], SpriteKeys.MotherlodeIridiumSmall],
-  [[EntityType.Iridium, "Medium"], SpriteKeys.MotherlodeIridiumMedium],
-  [[EntityType.Iridium, "Large"], SpriteKeys.MotherlodeIridiumLarge],
-  [[EntityType.Platinum, "Micro"], SpriteKeys.MotherlodePlatinumSmall],
-  [[EntityType.Platinum, "Small"], SpriteKeys.MotherlodePlatinumSmall],
-  [[EntityType.Platinum, "Medium"], SpriteKeys.MotherlodePlatinumMedium],
-  [[EntityType.Platinum, "Large"], SpriteKeys.MotherlodePlatinumLarge],
-  [[EntityType.Titanium, "Micro"], SpriteKeys.MotherlodeTitaniumSmall],
-  [[EntityType.Titanium, "Small"], SpriteKeys.MotherlodeTitaniumSmall],
-  [[EntityType.Titanium, "Medium"], SpriteKeys.MotherlodeTitaniumMedium],
-  [[EntityType.Titanium, "Large"], SpriteKeys.MotherlodeTitaniumLarge],
-]);
+export const EntityTypeSizeToSecondaryAsteroidSpriteKey: Record<Entity, Record<AsteroidSize, SpriteKeys>> = {
+  [EntityType.Kimberlite]: {
+    Micro: SpriteKeys.MotherlodeKimberliteSmall,
+    Small: SpriteKeys.MotherlodeKimberliteSmall,
+    Medium: SpriteKeys.MotherlodeKimberliteMedium,
+    Large: SpriteKeys.MotherlodeKimberliteLarge,
+  },
+  [EntityType.Iridium]: {
+    Micro: SpriteKeys.MotherlodeIridiumSmall,
+    Small: SpriteKeys.MotherlodeIridiumSmall,
+    Medium: SpriteKeys.MotherlodeIridiumMedium,
+    Large: SpriteKeys.MotherlodeIridiumLarge,
+  },
+  [EntityType.Platinum]: {
+    Micro: SpriteKeys.MotherlodePlatinumSmall,
+    Small: SpriteKeys.MotherlodePlatinumSmall,
+    Medium: SpriteKeys.MotherlodePlatinumMedium,
+    Large: SpriteKeys.MotherlodePlatinumLarge,
+  },
+  [EntityType.Titanium]: {
+    Micro: SpriteKeys.MotherlodeTitaniumSmall,
+    Small: SpriteKeys.MotherlodeTitaniumSmall,
+    Medium: SpriteKeys.MotherlodeTitaniumMedium,
+    Large: SpriteKeys.MotherlodeTitaniumLarge,
+  },
+};
 
 export const MaxLevelToAsteroidSpriteSize: Record<number, AsteroidSize> = {
   1: "Micro",
@@ -201,29 +209,37 @@ export const MaxLevelToAsteroidSpriteSize: Record<number, AsteroidSize> = {
   6: "Medium",
   7: "Medium",
   8: "Large",
-};
+} as const;
 
-export const RelationshipSizeToSecondaryAsteroidOutlineSpriteKey = new Map<
-  [AsteroidRelationship, AsteroidSize],
-  SpriteKeys
->([
-  [["Ally", "Micro"], SpriteKeys.MotherlodeAllianceSmall],
-  [["Enemy", "Micro"], SpriteKeys.MotherlodeEnemySmall],
-  [["Neutral", "Micro"], SpriteKeys.MotherlodeNeutralSmall],
-  [["Self", "Micro"], SpriteKeys.MotherlodePlayerSmall],
-  [["Ally", "Small"], SpriteKeys.MotherlodeAllianceMedium],
-  [["Enemy", "Small"], SpriteKeys.MotherlodeEnemyMedium],
-  [["Neutral", "Small"], SpriteKeys.MotherlodeNeutralMedium],
-  [["Self", "Small"], SpriteKeys.MotherlodePlayerSmall],
-  [["Ally", "Medium"], SpriteKeys.MotherlodeAllianceLarge],
-  [["Enemy", "Medium"], SpriteKeys.MotherlodeEnemyLarge],
-  [["Neutral", "Medium"], SpriteKeys.MotherlodeNeutralLarge],
-  [["Self", "Medium"], SpriteKeys.MotherlodePlatinumMedium],
-  [["Ally", "Large"], SpriteKeys.MotherlodeAllianceLarge],
-  [["Enemy", "Large"], SpriteKeys.MotherlodeEnemyLarge],
-  [["Neutral", "Large"], SpriteKeys.MotherlodeNeutralLarge],
-  [["Self", "Large"], SpriteKeys.MotherlodePlayerLarge],
-]);
+export const RelationshipSizeToSecondaryAsteroidOutlineSpriteKey: Record<
+  AsteroidRelationship,
+  Record<AsteroidSize, SpriteKeys>
+> = {
+  Ally: {
+    Micro: SpriteKeys.MotherlodeAllianceSmall,
+    Small: SpriteKeys.MotherlodeAllianceSmall,
+    Medium: SpriteKeys.MotherlodeAllianceMedium,
+    Large: SpriteKeys.MotherlodeAllianceLarge,
+  },
+  Enemy: {
+    Micro: SpriteKeys.MotherlodeEnemySmall,
+    Small: SpriteKeys.MotherlodeEnemySmall,
+    Medium: SpriteKeys.MotherlodeEnemyMedium,
+    Large: SpriteKeys.MotherlodeEnemyLarge,
+  },
+  Neutral: {
+    Micro: SpriteKeys.MotherlodeNeutralSmall,
+    Small: SpriteKeys.MotherlodeNeutralSmall,
+    Medium: SpriteKeys.MotherlodeNeutralMedium,
+    Large: SpriteKeys.MotherlodeNeutralLarge,
+  },
+  Self: {
+    Micro: SpriteKeys.MotherlodePlayerSmall,
+    Small: SpriteKeys.MotherlodePlayerSmall,
+    Medium: SpriteKeys.MotherlodePlatinumMedium,
+    Large: SpriteKeys.MotherlodePlayerLarge,
+  },
+};
 
 export const RelationshipToPrimaryAsteroidOutlineSpriteKey: Record<AsteroidRelationship, SpriteKeys> = {
   ["Ally"]: SpriteKeys.AsteroidAlliance,

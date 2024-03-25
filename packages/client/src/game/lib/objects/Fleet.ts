@@ -1,13 +1,14 @@
 import { Coord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Scene } from "engine/types";
-import { ISpawnable } from "./interfaces";
+import { IPrimodiumGameObject } from "./interfaces";
 import { Assets } from "../constants/assets";
 import { SpriteKeys } from "../constants/assets/sprites";
 import { DepthLayers } from "../constants/common";
 
-export class Fleet extends Phaser.GameObjects.Sprite implements ISpawnable {
+export class Fleet extends Phaser.GameObjects.Sprite implements IPrimodiumGameObject {
   private _scene: Scene;
   private coord: Coord;
+  private spawned = false;
   constructor(scene: Scene, coord: Coord) {
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
     super(
@@ -26,7 +27,16 @@ export class Fleet extends Phaser.GameObjects.Sprite implements ISpawnable {
 
   spawn() {
     this.scene.add.existing(this);
+    this.spawned = true;
     return this;
+  }
+
+  isSpawned(): boolean {
+    return this.spawned;
+  }
+
+  getCoord() {
+    return this.coord;
   }
 
   dispose() {

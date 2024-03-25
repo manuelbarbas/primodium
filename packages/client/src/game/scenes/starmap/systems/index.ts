@@ -1,7 +1,7 @@
 import { Scene } from "engine/types";
-import { focusAsteroid } from "./focusAsteroid";
+// import { focusAsteroid } from "./focusAsteroid";
 // import { MUD } from "src/network/types";
-// import { renderAsteroid } from "./renderAsteroid";
+import { renderAsteroid } from "./renderAsteroid";
 // import { renderAttackLine } from "./renderAttackLine";
 // import { renderBattle } from "./renderBattle";
 // import { renderFleetsInOrbit } from "./renderFleetsInOrbit";
@@ -10,8 +10,8 @@ import { focusAsteroid } from "./focusAsteroid";
 // import { renderPirateAsteroid } from "./renderPirateAsteroid";
 
 export const runSystems = (scene: Scene) => {
-  focusAsteroid(scene);
-  // renderAsteroid(scene);
+  // focusAsteroid(scene);
+  renderAsteroid(scene);
   // renderPirateAsteroid(scene);
   // renderMoveLine(scene, mud);
   // renderAttackLine(scene, mud);

@@ -16,7 +16,7 @@ import { SpriteKeys } from "src/game/lib/constants/assets/sprites";
 //TODO: proper implementation
 export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
   const { getSpriteBase64 } = primodium.api().sprite;
-  console.log("getAsteroidImage", asteroid);
+  // console.log("getAsteroidImage", asteroid);
   // const asteroidData = comps.Asteroid.get(asteroid);
   // const expansionLevel = comps.Level.get(asteroid, {
   //   value: 1n,

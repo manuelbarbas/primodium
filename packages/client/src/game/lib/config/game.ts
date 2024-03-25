@@ -5,7 +5,6 @@ const gameConfig: GameConfig = {
   key: KEY,
   type: Phaser.WEBGL,
   parent: "phaser-container",
-  backgroundColor: "64748b",
   width: window.innerWidth,
   height: window.innerHeight,
   scale: {
@@ -15,9 +14,6 @@ const gameConfig: GameConfig = {
   antialias: false,
   antialiasGL: false,
   roundPixels: true,
-  desynchronized: true,
-  autoMobilePipeline: true,
-  premultipliedAlpha: true,
   transparent: true,
   pixelArt: true,
   assetPackUrl: ASSET_PACK,

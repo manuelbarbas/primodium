@@ -15,7 +15,7 @@ export const getPrimarySprite = (level: bigint) => {
 
 export const getSecondarySprite = (resourceType: Entity, maxLevel: bigint) => {
   const size = MaxLevelToAsteroidSpriteSize[Number(maxLevel)];
-  return EntityTypeSizeToSecondaryAsteroidSpriteKey.get([resourceType, size]) ?? SpriteKeys.MotherlodeKimberliteSmall;
+  return EntityTypeSizeToSecondaryAsteroidSpriteKey[resourceType][size] ?? SpriteKeys.MotherlodeKimberliteSmall;
 };
 
 export const getPrimaryOutlineSprite = (rockRelationship: AsteroidRelationship) => {
@@ -23,10 +23,6 @@ export const getPrimaryOutlineSprite = (rockRelationship: AsteroidRelationship) 
 };
 
 export const getSecondaryOutlineSprite = (relationship: AsteroidRelationship, maxLevel: bigint) => {
-  return (
-    RelationshipSizeToSecondaryAsteroidOutlineSpriteKey.get([
-      relationship,
-      MaxLevelToAsteroidSpriteSize[Number(maxLevel)],
-    ]) ?? SpriteKeys.MotherlodeNeutralSmall
-  );
+  const size = MaxLevelToAsteroidSpriteSize[Number(maxLevel)];
+  return RelationshipSizeToSecondaryAsteroidOutlineSpriteKey[relationship][size] ?? SpriteKeys.MotherlodeNeutralSmall;
 };

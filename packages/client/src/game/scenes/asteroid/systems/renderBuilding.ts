@@ -83,7 +83,8 @@ export const renderBuilding = (scene: Scene) => {
       const building = new Building(scene, buildingType, tilePosition)
         .spawn()
         .setLevel(components.Level.get(entity)?.value ?? 1n)
-        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => {
+        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
+          if (pointer.getDuration() > 250) return;
           components.SelectedBuilding.set({
             value: entity,
           });

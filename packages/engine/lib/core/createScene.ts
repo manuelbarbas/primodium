@@ -109,7 +109,6 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
     },
     dispose: () => {
       input.dispose();
-      tiled.dispose();
       camera.dispose();
       culling.dispose();
       music.destroy();

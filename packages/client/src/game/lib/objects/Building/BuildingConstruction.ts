@@ -1,14 +1,14 @@
-import { Coord } from "@latticexyz/utils";
-import { Scene } from "engine/types";
+import { Coord, Scene } from "engine/types";
 import { BuildingDimensions, getConstructionSprite } from "./helpers";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { ISpawnable } from "../interfaces";
+import { IPrimodiumGameObject } from "../interfaces";
 import { DepthLayers } from "../../constants/common";
 import { Assets } from "../../constants/assets";
 
-export class BuildingConstruction extends Phaser.GameObjects.Container implements ISpawnable {
+export class BuildingConstruction extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
   private coord: Coord;
   private _scene: Scene;
+  private spawned = false;
   private sprite: Phaser.GameObjects.Sprite;
   private text: Phaser.GameObjects.BitmapText;
 
@@ -43,14 +43,22 @@ export class BuildingConstruction extends Phaser.GameObjects.Container implement
 
   setQueueText(text: string) {
     this.text.setText(text);
-
     return this;
   }
 
   spawn() {
     //TODO: placement animation
     this.scene.add.existing(this);
+    this.spawned = true;
     return this;
+  }
+
+  getCoord(): Coord {
+    return this.coord;
+  }
+
+  isSpawned() {
+    return this.spawned;
   }
 
   dispose() {

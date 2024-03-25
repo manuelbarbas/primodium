@@ -5,13 +5,14 @@ import { getAssetKeyPair } from "./helpers";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Assets } from "../../constants/assets";
 import { DepthLayers } from "../../constants/common";
-import { ISpawnable } from "../interfaces";
+import { IPrimodiumGameObject } from "../interfaces";
 
-export class Building extends Phaser.GameObjects.Sprite implements ISpawnable {
+export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGameObject {
   private buildingType: Entity;
   private coord: Coord;
   private _scene: Scene;
   private level = 1n;
+  private spawned = false;
   constructor(scene: Scene, buildingType: Entity, coord: Coord) {
     const assetPair = getAssetKeyPair(1n, buildingType);
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
@@ -35,7 +36,16 @@ export class Building extends Phaser.GameObjects.Sprite implements ISpawnable {
   spawn() {
     //TODO: placement animation
     this.scene.add.existing(this);
+    this.spawned = true;
     return this;
+  }
+
+  isSpawned() {
+    return this.spawned;
+  }
+
+  getCoord() {
+    return this.coord;
   }
 
   setCoordPosition(coord: Coord) {
