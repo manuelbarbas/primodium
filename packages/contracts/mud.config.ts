@@ -18,10 +18,6 @@ const getConfig = async () => {
     excludeSystems: exclude,
     namespace: "Primodium",
     systems: {
-      S_SpawnPirateAsteroidSystem: {
-        openAccess: false,
-        accessList: [],
-      },
       S_ProductionRateSystem: {
         openAccess: false,
         accessList: [],
@@ -59,10 +55,6 @@ const getConfig = async () => {
         accessList: [],
       },
       S_TransferAsteroidSystem: {
-        openAccess: false,
-        accessList: [],
-      },
-      S_FleetResolvePirateAsteroidSystem: {
         openAccess: false,
         accessList: [],
       },
@@ -604,29 +596,6 @@ const getConfig = async () => {
         keySchema: { entity: "bytes32" },
         valueSchema: "uint256",
       },
-      /* ------------------------------ Pirate Asteroids ----------------------------- */
-
-      P_SpawnPirateAsteroid: {
-        keySchema: { prototype: "bytes32" },
-        valueSchema: {
-          x: "int32",
-          y: "int32",
-          resources: "uint8[]",
-          resourceAmounts: "uint256[]",
-          units: "bytes32[]",
-          unitAmounts: "uint256[]",
-        },
-      },
-
-      PirateAsteroid: {
-        keySchema: { entity: "bytes32" },
-        valueSchema: {
-          isPirateAsteroid: "bool",
-          isDefeated: "bool",
-          playerEntity: "bytes32",
-          prototype: "bytes32",
-        },
-      },
 
       /* ------------------------------ Objectives ----------------------------- */
 
@@ -711,16 +680,6 @@ const getConfig = async () => {
       RaidedResource: {
         keySchema: { entity: "bytes32", resource: "uint8" },
         valueSchema: "uint256",
-      },
-
-      P_DefeatedPirates: {
-        keySchema: { prototype: "bytes32" },
-        valueSchema: "bytes32[]",
-      },
-
-      DefeatedPirate: {
-        keySchema: { entity: "bytes32", pirate: "bytes32" },
-        valueSchema: "bool",
       },
 
       P_RequiredUnits: {

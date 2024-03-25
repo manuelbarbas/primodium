@@ -29,7 +29,6 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
     loading
   );
 
-  const isPirate = components.PirateAsteroid.has(entity);
   const ownedBy = components.OwnedBy.use(entity)?.value as Entity | undefined;
   const { strength, maxStrength } = useAsteroidStrength(entity, loading);
 
@@ -75,7 +74,7 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
         {!inGracePeriod && (
           <>
             <div className="grid grid-cols-2 gap-1">
-              {!isPirate && (
+              {
                 <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
                   <HealthBar
                     imgUrl={ResourceImage.get(EntityType.Encryption) ?? ""}
@@ -83,7 +82,7 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
                     maxHealth={Number(formatResourceCount(EntityType.Encryption, maxEncryption, { notLocale: true }))}
                   />
                 </Badge>
-              )}
+              }
               <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
                 <HealthBar
                   imgUrl={ResourceImage.get(EntityType.HP) ?? ""}

@@ -33,7 +33,6 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   const imageUri = getAsteroidImage(primodium, selectedAsteroid);
 
   const { zoom } = useCamera();
-  const isPirate = components.PirateAsteroid.has(selectedAsteroid);
   const ownedByPlayer = ownedBy === playerEntity;
   const canAddFleets =
     ownedByPlayer &&
@@ -82,7 +81,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
           background: `rgba(0,0,0, ${Math.max(0, (defaultZoom - zoom) / (defaultZoom - minZoom))}`,
         }}
       >
-        {!isPirate && (
+        {
           <div className="absolute top-0 right-0 translate-x-full w-24">
             <Button
               className="btn-ghost btn-xs text-xs text-accent bg-slate-900 border border-l-0 border-secondary/50"
@@ -96,7 +95,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
               {ownedByPlayer && <IconLabel imageUri="/img/icons/minersicon.png" className={``} text="BUILD" />}
             </Button>
           </div>
-        )}
+        }
         {ownedByPlayer && !selectingDestination && (
           <div className="absolute bottom-0 right-0 translate-x-full w-36">
             <Button

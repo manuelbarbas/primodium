@@ -5,9 +5,9 @@ import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { addressToEntity } from "src/utils.sol";
 
 import { EBuilding, EResource, EObjectives } from "src/Types.sol";
-import { BuildingKey, ObjectiveKey, PirateKey } from "src/Keys.sol";
+import { BuildingKey, ObjectiveKey } from "src/Keys.sol";
 
-import { P_HasBuiltBuildings, P_SpawnPirateAsteroidData, P_DestroyedUnits, CompletedObjective, P_ProducedResources, P_RequiredUnits, ProducedUnit, P_SpawnPirateAsteroid, ReversePosition, LastClaimedAt, P_IsUtility, P_UnitPrototypes, P_ResourceRewardData, P_ResourceReward, P_RequiredObjectives, UnitCount, P_RaidedResources, PirateAsteroid, P_ProducedUnitsData, P_ProducedUnits, P_RequiredUnitsData, P_DestroyedUnitsData, P_RaidedResourcesData, P_UnitReward, P_ProducedResourcesData, P_UnitRewardData, P_RequiredResourcesData, P_RequiredBaseLevel, P_EnumToPrototype, Position, PositionData, Level, Home, P_RequiredResources, ResourceCount, P_Production, MaxResourceCount } from "codegen/index.sol";
+import { P_HasBuiltBuildings, P_DestroyedUnits, CompletedObjective, P_ProducedResources, P_RequiredUnits, ProducedUnit, ReversePosition, LastClaimedAt, P_IsUtility, P_UnitPrototypes, P_ResourceRewardData, P_ResourceReward, P_RequiredObjectives, UnitCount, P_RaidedResources, P_ProducedUnitsData, P_ProducedUnits, P_RequiredUnitsData, P_DestroyedUnitsData, P_RaidedResourcesData, P_UnitReward, P_ProducedResourcesData, P_UnitRewardData, P_RequiredResourcesData, P_RequiredBaseLevel, P_EnumToPrototype, Position, PositionData, Level, Home, P_RequiredResources, ResourceCount, P_Production, MaxResourceCount } from "codegen/index.sol";
 
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibResource } from "libraries/LibResource.sol";
