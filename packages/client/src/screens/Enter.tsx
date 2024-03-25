@@ -8,7 +8,7 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { components } from "src/network/components";
 import { spawnAndAuthorizeSessionAccount } from "src/network/setup/contractCalls/spawn";
-import { useNetwork, useSwitchNetwork } from "wagmi";
+import { useConfig, useSwitchChain } from "wagmi";
 import { useShallow } from "zustand/react/shallow";
 import { Landing } from "./Landing";
 
@@ -34,22 +34,22 @@ export const Enter: React.FC = () => {
     navigate("/game" + location.search);
   };
 
-  const chain = useNetwork().chain;
+  const chain = useConfig().state.chainId;
   const expectedChain = mud.playerAccount.walletClient.chain;
-  const wrongChain = !noExternalAccount && chain?.id !== expectedChain?.id;
-  const { isLoading, pendingChainId, switchNetwork } = useSwitchNetwork();
+  const wrongChain = !noExternalAccount && chain !== expectedChain?.id;
+  const { isPending, switchChain } = useSwitchChain();
 
   return (
     <Landing>
       <TransactionQueueMask queueItemId={singletonEntity} className="w-4/5 z-10">
         {wrongChain ? (
           <button
-            disabled={!switchNetwork || expectedChain.id === chain?.id}
-            onClick={() => switchNetwork?.(expectedChain.id)}
+            disabled={expectedChain.id === chain}
+            onClick={() => switchChain({ chainId: expectedChain.id })}
             className="btn join-item inline pointer-events-auto font-bold outline-none h-fit btn-secondary w-full star-background hover:scale-125 relative"
           >
             switch to {expectedChain.name}
-            {isLoading && pendingChainId === expectedChain.id && " (switching)"}
+            {isPending && " (switching)"}
           </button>
         ) : (
           <button

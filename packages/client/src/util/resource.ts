@@ -71,7 +71,7 @@ export function getAsteroidResourceCount(asteroid: Entity) {
   const timeSinceClaimed =
     ((time - playerLastClaimed) * (comps.P_GameConfig?.get()?.worldSpeed ?? SPEED_SCALE)) / SPEED_SCALE;
 
-  MUDEnums.EResource.forEach((_: string, index: number) => {
+  MUDEnums.EResource.forEach((_: EResource, index: number) => {
     const entity = ResourceEntityLookup[index as EResource];
     if (entity == undefined) return;
     const resource = index as EResource;

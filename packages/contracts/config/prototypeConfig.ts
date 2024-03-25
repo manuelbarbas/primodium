@@ -1,5 +1,5 @@
 import { Hex } from "viem";
-import { config } from "../mud.config";
+import { worldInput } from "../mud.config";
 import {
   encodeArray,
   getPUnitData,
@@ -171,7 +171,7 @@ const samSiteMaxResourceUpgrades = {
 
 const maxRange = { xBounds: 37, yBounds: 25 };
 
-export const prototypeConfig: PrototypesConfig<typeof config> = {
+export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = {
   /* ---------------------------------- World --------------------------------- */
   World: {
     keys: [],

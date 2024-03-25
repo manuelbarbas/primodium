@@ -1,6 +1,5 @@
-import { KeySchema, SchemaToPrimitives, encodeField, encodeKey } from "@latticexyz/protocol-parser";
+import { encodeField, encodeKey, KeySchema, SchemaToPrimitives } from "@latticexyz/protocol-parser/internal";
 import { ComponentValue, Entity, Schema } from "@latticexyz/recs";
-import { StaticAbiType } from "@latticexyz/schema-type";
 import { entityToHexKeyTuple } from "@latticexyz/store-sync/recs";
 import { uuid } from "@latticexyz/utils";
 import { ContractComponent } from "@primodiumxyz/mud-game-tools";
