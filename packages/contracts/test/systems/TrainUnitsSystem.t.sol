@@ -1,57 +1,68 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest, toString } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EResource, EUnit } from "src/Types.sol";
+import { UnitKey, AsteroidOwnedByKey } from "src/Keys.sol";
+
+import { P_CapitalShipConfig, UnitCount, MaxResourceCount, ProductionRate, Value_UnitProductionQueueData, P_UnitProdTypes, BuildingType, IsActive, P_EnumToPrototype, P_GameConfigData, P_GameConfig, Asteroid, Home, OwnedBy, Spawned, Level, LastClaimedAt, P_Unit, P_UnitProdMultiplier, P_EnumToPrototype, ResourceCount, ResourceCount, P_UnitPrototypes, P_RequiredResources, P_RequiredResourcesData } from "codegen/index.sol";
+
+import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
+import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
+import { AsteroidSet } from "libraries/AsteroidSet.sol";
+import { LibUnit } from "libraries/LibUnit.sol";
 
 contract TrainUnitsSystemTest is PrimodiumTest {
-  bytes32 rock = bytes32("rock");
-  bytes32 player;
+  bytes32 asteroidEntity = bytes32("asteroidEntity");
+  bytes32 playerEntity;
   bytes32 aliceEntity;
-  bytes32 aliceRock;
+  bytes32 aliceAsteroidEntity;
   bytes32 shipyard;
 
   EUnit unit = EUnit(1);
   bytes32 unitPrototype = "unitPrototype";
 
-  bytes32 building = "building";
+  bytes32 buildingEntity = "buildingEntity";
   bytes32 buildingPrototype = "buildingPrototype";
 
   function setUp() public override {
     super.setUp();
     vm.startPrank(creator);
-    player = addressToEntity(creator);
+    playerEntity = addressToEntity(creator);
     aliceEntity = addressToEntity(alice);
-    BuildingType.set(building, buildingPrototype);
-    IsActive.set(building, true);
+    BuildingType.set(buildingEntity, buildingPrototype);
+    IsActive.set(buildingEntity, true);
     P_EnumToPrototype.set(UnitKey, uint8(unit), unitPrototype);
     P_GameConfigData memory config = P_GameConfig.get();
     config.unitProductionRate = 100;
     P_GameConfig.set(config);
-    Asteroid.setIsAsteroid(rock, true);
-    Home.set(player, rock);
-    OwnedBy.set(building, rock);
-    Spawned.set(player, true);
+    Asteroid.setIsAsteroid(asteroidEntity, true);
+    Home.set(playerEntity, asteroidEntity);
+    OwnedBy.set(buildingEntity, asteroidEntity);
+    Spawned.set(playerEntity, true);
 
     switchPrank(alice);
-    aliceRock = world.spawn();
+    aliceAsteroidEntity = world.Primodium__spawn();
     switchPrank(creator);
   }
 
   // copied from LibUnit.t.sol
   function setupClaimUnits() public {
-    Level.set(building, 1);
-    LastClaimedAt.set(building, block.timestamp - 100);
+    Level.set(buildingEntity, 1);
+    LastClaimedAt.set(buildingEntity, block.timestamp - 100);
     P_UnitProdMultiplier.set(buildingPrototype, 1, 100);
     P_Unit.setTrainingTime(unitPrototype, 0, 1);
 
-    QueueItemUnitsData memory item = QueueItemUnitsData(unitPrototype, 100);
-    UnitProductionQueue.enqueue(building, item);
-    UnitFactorySet.add(rock, building);
+    Value_UnitProductionQueueData memory item = Value_UnitProductionQueueData(unitPrototype, 100);
+    UnitProductionQueue.enqueue(buildingEntity, item);
+    UnitFactorySet.add(asteroidEntity, buildingEntity);
   }
 
   function testCannotProduceUnit() public {
     vm.expectRevert(bytes("[TrainUnitsSystem] Building cannot produce unit"));
-    world.trainUnits(building, unit, 1);
+    world.Primodium__trainUnits(buildingEntity, unit, 1);
   }
 
   function testTrainUnits() public {
@@ -59,9 +70,9 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     unitPrototypes[0] = unitPrototype;
     P_UnitProdTypes.set(buildingPrototype, 0, unitPrototypes);
 
-    world.trainUnits(building, unit, 1);
-    QueueItemUnitsData memory data = UnitProductionQueue.peek(building);
-    assertEq(toString(data.unitId), toString(unitPrototype));
+    world.Primodium__trainUnits(buildingEntity, unit, 1);
+    Value_UnitProductionQueueData memory data = UnitProductionQueue.peek(buildingEntity);
+    assertEq(toString(data.unitEntity), toString(unitPrototype));
     assertEq(data.quantity, 1);
   }
 
@@ -81,7 +92,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     P_UnitProdTypes.set(buildingPrototype, 0, unitPrototypes);
 
     vm.expectRevert(bytes("[SpendResources] Not enough resources to spend"));
-    world.trainUnits(building, unit, 1);
+    world.Primodium__trainUnits(buildingEntity, unit, 1);
   }
 
   function testTrainUnitsUpdateAsteroid() public {
@@ -89,19 +100,19 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     unitPrototypes[0] = unitPrototype;
     P_UnitProdTypes.set(buildingPrototype, 1, unitPrototypes);
 
-    Asteroid.setIsAsteroid(rock, true);
+    Asteroid.setIsAsteroid(asteroidEntity, true);
 
     setupClaimUnits();
-    Home.set(player, rock);
-    OwnedBy.set(rock, player);
-    MaxResourceCount.set(rock, Iron, 1000);
-    ProductionRate.set(rock, Iron, 10);
-    LastClaimedAt.set(rock, block.timestamp - 10);
+    Home.set(playerEntity, asteroidEntity);
+    OwnedBy.set(asteroidEntity, playerEntity);
+    MaxResourceCount.set(asteroidEntity, Iron, 1000);
+    ProductionRate.set(asteroidEntity, Iron, 10);
+    LastClaimedAt.set(asteroidEntity, block.timestamp - 10);
 
-    world.trainUnits(building, unit, 1);
-    LibUnit.claimUnits(rock);
-    assertEq(ResourceCount.get(rock, Iron), 100, "resource count");
-    assertEq(UnitCount.get(rock, unitPrototype), 100, "unit count");
+    world.Primodium__trainUnits(buildingEntity, unit, 1);
+    LibUnit.claimUnits(asteroidEntity);
+    assertEq(ResourceCount.get(asteroidEntity, Iron), 100, "resource count");
+    assertEq(UnitCount.get(asteroidEntity, unitPrototype), 100, "unit count");
   }
 
   function testTrainCapitalShip() public {
@@ -115,27 +126,26 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     );
     uint8 resource = P_CapitalShipConfig.getResource();
     trainUnits(alice, EUnit.CapitalShip, 1, true);
-    assertEq(ResourceCount.get(aliceRock, uint8(resource)), 0, "special resource should have been spent");
+    assertEq(ResourceCount.get(aliceAsteroidEntity, uint8(resource)), 0, "special resource should have been spent");
   }
 
   function testFailTrainCapitalShipNoSpecialResource() public {
     vm.stopPrank();
-    increaseResource(aliceRock, EResource.U_CapitalShipCapacity, 1);
+    increaseResource(aliceAsteroidEntity, EResource.U_CapitalShipCapacity, 1);
     //this func doesn't provide resources
-    trainUnits(alice, Home.get(aliceRock), P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip)), 1, true);
+    trainUnits(alice, Home.get(aliceAsteroidEntity), P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip)), 1, true);
   }
 
   function testTrainCapitalShipsCostIncrease() public {
     uint256 initialShips = LibUnit.getCapitalShipsPlusAsteroids(aliceEntity);
     uint256 initialMultiplier = LibUnit.getCapitalShipCostMultiplier(aliceEntity);
     assertEq(initialShips, 0, "initial ship and asteroid count");
-    bytes32[] memory ownedAsteroids = ColoniesMap.getAsteroidIds(aliceEntity, AsteroidOwnedByKey);
 
     uint256 amount = P_CapitalShipConfig.getInitialCost() * initialMultiplier;
     uint8 resource = P_CapitalShipConfig.getResource();
-    increaseResource(aliceRock, EResource(resource), amount);
-    increaseResource(aliceRock, EResource.U_CapitalShipCapacity, 1);
-    trainUnits(alice, Home.get(aliceRock), P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip)), 1, true);
+    increaseResource(aliceAsteroidEntity, EResource(resource), amount);
+    increaseResource(aliceAsteroidEntity, EResource.U_CapitalShipCapacity, 1);
+    trainUnits(alice, Home.get(aliceAsteroidEntity), P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip)), 1, true);
     assertEq(LibUnit.getCapitalShipsPlusAsteroids(aliceEntity), initialShips + 1, "colony ship count");
     assertEq(LibUnit.getCapitalShipCostMultiplier(aliceEntity), initialMultiplier * 2, "colony ship cost multiplier");
 
@@ -145,9 +155,9 @@ contract TrainUnitsSystemTest is PrimodiumTest {
       "colony ship 1 cost"
     );
 
-    increaseResource(aliceRock, EResource(resource), amount * 2);
-    increaseResource(aliceRock, EResource.U_CapitalShipCapacity, 1);
-    trainUnits(alice, Home.get(aliceRock), P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip)), 1, true);
+    increaseResource(aliceAsteroidEntity, EResource(resource), amount * 2);
+    increaseResource(aliceAsteroidEntity, EResource.U_CapitalShipCapacity, 1);
+    trainUnits(alice, Home.get(aliceAsteroidEntity), P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip)), 1, true);
     assertEq(LibUnit.getCapitalShipsPlusAsteroids(aliceEntity), initialShips + 2, "colony ship 2 count");
     assertEq(LibUnit.getCapitalShipCostMultiplier(aliceEntity), initialMultiplier * 2 * 2, "colony ship 2 cost");
 
@@ -160,11 +170,11 @@ contract TrainUnitsSystemTest is PrimodiumTest {
 
   function testInvalidBuilding() public {
     vm.expectRevert(bytes("[TrainUnitsSystem] Can not train units using an in active building"));
-    world.trainUnits(bytes32(0), unit, 1);
+    world.Primodium__trainUnits(bytes32(0), unit, 1);
   }
 
   function testInvalidUnit() public {
     vm.expectRevert();
-    world.trainUnits(building, EUnit(uint8(100)), 1);
+    world.Primodium__trainUnits(buildingEntity, EUnit(uint8(100)), 1);
   }
 }

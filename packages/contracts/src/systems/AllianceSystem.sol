@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 
 // external
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { LibAlliance } from "codegen/Libraries.sol";
+import { LibAlliance } from "libraries/LibAlliance.sol";
 import { EAllianceInviteMode, EAllianceRole } from "src/Types.sol";
 import { addressToEntity } from "src/utils.sol";
 

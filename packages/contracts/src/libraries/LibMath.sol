@@ -61,7 +61,7 @@ library LibMath {
     int256 newY = Trig.sin(angleRads) * int256(_distance);
     int32 x = int32((newX / 1e18));
     int32 y = int32((newY / 1e18));
-    return PositionData({ x: flip ? -x : x, y: flip ? -y : y, parent: 0 });
+    return PositionData({ x: flip ? -x : x, y: flip ? -y : y, parentEntity: 0 });
   }
 
   /// @notice Calculates distance for asteroid based on asteroid count
@@ -86,7 +86,13 @@ library LibMath {
     uint256 generalDirection = asteroidCount % 4;
     return generalDirection * 90 + countMod3 * 30 + countMod27;
   }
-
+  /**
+   * @notice Calculates the Euclidean distance between two positions in a 2D space.
+   * @param a The first position, represented as `PositionData` which includes x and y coordinates.
+   * @param b The second position, similarly represented.
+   * @return The Euclidean distance as an unsigned 32-bit integer.
+   * @dev Uses fixed-point arithmetic to handle square root calculation. Assumes that the squared distance does not overflow an `int128`.
+   */
   function distance(PositionData memory a, PositionData memory b) internal pure returns (uint32) {
     int128 distanceSquared = (a.x - b.x) ** 2 + (a.y - b.y) ** 2;
     return uint32(Math.toUInt(Math.sqrt(Math.fromInt(distanceSquared))));

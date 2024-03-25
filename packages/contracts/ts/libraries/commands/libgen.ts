@@ -1,10 +1,8 @@
 import { formatAndWriteSolidity } from "@latticexyz/common/codegen";
 import { getSrcDirectory } from "@latticexyz/common/foundry";
-import { loadConfig } from "@latticexyz/config/node";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { StoreConfigWithPrototypes } from "../../prototypes/types";
 
 const __dirname = fileURLToPath(import.meta.url);
 const librariesFolder = path.resolve(__dirname, "../../../../src/libraries");
@@ -12,9 +10,8 @@ const librariesFolder = path.resolve(__dirname, "../../../../src/libraries");
 const prefixes = ["Lib"];
 const suffixes = ["Set", "Queue", "Map"];
 async function libgen() {
-  const config = (await loadConfig()) as StoreConfigWithPrototypes;
   const srcDirectory = await getSrcDirectory();
-  const fullDir = path.join(srcDirectory, config.codegenDirectory);
+  const fullDir = path.join(srcDirectory, "codegen");
 
   const outputFileName = "Libraries.sol";
 

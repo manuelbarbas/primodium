@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { UserDelegationControl } from "@latticexyz/world/src/codegen/index.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { UNLIMITED_DELEGATION } from "@latticexyz/world/src/constants.sol";
@@ -10,7 +10,7 @@ contract DelegationSystemTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
     vm.startPrank(creator);
-    world.spawn();
+    world.Primodium__spawn();
   }
 
   function testSetUnlimitedAuthorizedAccount() public {

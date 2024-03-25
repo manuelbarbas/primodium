@@ -26,12 +26,17 @@ import {
   EntitytoBuildingSpriteKey,
   SpriteKeys,
 } from "@game/constants";
+import { EResource } from "contracts/config/enums";
 import { createAudioApi } from "src/game/api/audio";
 import { createFxApi } from "src/game/api/fx";
 import { components } from "src/network/components";
 import { getBuildingDimensions, getBuildingTopLeft } from "src/util/building";
 import { getRandomRange } from "src/util/common";
 import { Action, EntityType, ResourceEntityLookup, ResourceStorages, SPEED_SCALE } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
+import { formatResourceCount } from "src/util/number";
+import { getFullResourceCount } from "src/util/resource";
+import { Hex } from "viem";
 import {
   ObjectPosition,
   OnComponentSystem,
@@ -40,11 +45,6 @@ import {
   SetValue,
 } from "../../common/object-components/common";
 import { Animation, Outline, Texture } from "../../common/object-components/sprite";
-import { Hex } from "viem";
-import { formatResourceCount } from "src/util/number";
-import { EResource } from "contracts/config/enums";
-import { getFullResourceCount } from "src/util/resource";
-import { hashEntities } from "src/util/encode";
 
 const MAX_SIZE = 2 ** 15 - 1;
 export const renderBuilding = (scene: Scene) => {
@@ -64,7 +64,7 @@ export const renderBuilding = (scene: Scene) => {
 
     const positionQuery = [
       HasValue(components.Position, {
-        parent: value[0]?.value,
+        parentEntity: value[0]?.value,
       }),
       Has(components.BuildingType),
       Has(components.IsActive),
@@ -73,7 +73,7 @@ export const renderBuilding = (scene: Scene) => {
 
     const oldPositionQuery = [
       HasValue(components.Position, {
-        parent: value[1]?.value,
+        parentEntity: value[1]?.value,
       }),
       Has(components.BuildingType),
       Has(components.IsActive),

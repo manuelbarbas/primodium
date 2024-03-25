@@ -23,6 +23,8 @@ export const getInitalQuery = ({
       address: worldAddress as Hex,
       queries: [
         ...configTableQueries,
+        { tableId: tables.FunctionSelectors.tableId },
+        { tableId: tables.FunctionSignatures.tableId },
         { tableId: tables.Dimensions.tableId },
         { tableId: tables.GracePeriod.tableId },
         { tableId: tables.Score.tableId },

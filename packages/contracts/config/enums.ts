@@ -15,7 +15,6 @@ export enum EBuilding {
   IronPlateFactory,
   AlloyFactory,
   PVCellFactory,
-  RocketFuelFactory,
 
   // Utilities
   SolarPanel,

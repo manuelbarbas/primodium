@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { execute } from "src/network/actions";
+import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
@@ -9,8 +9,8 @@ export const attack = async (mud: MUD, entity: Entity, target: Entity) => {
   await execute(
     {
       mud,
-      functionName: "attack",
-      systemId: getSystemId("FleetCombatSystem"),
+      functionName: "Primodium__attack",
+      systemId: getSystemId("CombatSystem"),
       args: [entity as Hex, target as Hex],
       withSession: true,
     },

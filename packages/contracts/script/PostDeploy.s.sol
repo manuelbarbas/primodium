@@ -18,9 +18,10 @@ contract PostDeploy is Script {
     uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
 
     IWorld world = IWorld(worldAddress);
+    console.log("world address:", worldAddress);
     vm.startBroadcast(deployerPrivateKey);
     StoreSwitch.setStoreAddress(worldAddress);
-    world.increment();
+    world.Primodium__increment();
 
     world.installRootModule(new StandardDelegationsModule(), new bytes(0));
 

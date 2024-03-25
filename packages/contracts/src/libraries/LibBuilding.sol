@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { entityToAddress } from "src/utils.sol";
 // tables
-import { TilePositions, IsActive, HasBuiltBuilding, Asteroid, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, OwnedBy, P_Blueprint } from "codegen/index.sol";
+import { TilePositions, IsActive, HasBuiltBuilding, Asteroid, P_UnitProdTypes, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, OwnedBy, P_Blueprint } from "codegen/index.sol";
 
 // libraries
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
@@ -11,8 +10,8 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 
 // types
-import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
-import { Bounds, EBuilding, EResource } from "src/Types.sol";
+import { BuildingKey, ExpansionKey } from "src/Keys.sol";
+import { Bounds, EResource } from "src/Types.sol";
 
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 
@@ -35,7 +34,7 @@ library LibBuilding {
 
     require(buildingPrototype != MainBasePrototypeId, "[Destroy] Cannot destroy main base");
     require(
-      OwnedBy.get(Position.getParent(buildingEntity)) == playerEntity,
+      OwnedBy.get(Position.getParentEntity(buildingEntity)) == playerEntity,
       "[Destroy] Only owner can destroy building"
     );
   }
@@ -54,13 +53,16 @@ library LibBuilding {
     require(Spawned.get(playerEntity), "[BuildSystem] Player has not spawned");
     if (buildingPrototype == MainBasePrototypeId) {
       require(
-        Home.get(coord.parent) == bytes32(0),
-        "[BuildSystem] Cannot build more than one main base per space rock"
+        Home.get(coord.parentEntity) == bytes32(0),
+        "[BuildSystem] Cannot build more than one main base per asteroid"
       );
     }
-    require(OwnedBy.get(coord.parent) == playerEntity, "[BuildSystem] You can only build on an asteroid you control");
     require(
-      LibBuilding.hasRequiredBaseLevel(coord.parent, buildingPrototype, 1),
+      OwnedBy.get(coord.parentEntity) == playerEntity,
+      "[BuildSystem] You can only build on an asteroid you control"
+    );
+    require(
+      LibBuilding.hasRequiredBaseLevel(coord.parentEntity, buildingPrototype, 1),
       "[BuildSystem] MainBase level requirement not met"
     );
     require(LibBuilding.canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
@@ -72,7 +74,7 @@ library LibBuilding {
    * @param buildingEntity The building to be placed.
    */
   function checkUpgradeRequirements(bytes32 playerEntity, bytes32 buildingEntity) internal view {
-    bytes32 asteroidEntity = Position.getParent(buildingEntity);
+    bytes32 asteroidEntity = Position.getParentEntity(buildingEntity);
     require(buildingEntity != 0, "[UpgradeBuildingSystem] no building at this coordinate");
 
     uint256 targetLevel = Level.get(buildingEntity) + 1;
@@ -110,15 +112,15 @@ library LibBuilding {
     Position.set(buildingEntity, coord);
     Level.set(buildingEntity, 1);
     LastClaimedAt.set(buildingEntity, block.timestamp);
-    OwnedBy.set(buildingEntity, coord.parent);
+    OwnedBy.set(buildingEntity, coord.parentEntity);
     HasBuiltBuilding.set(playerEntity, buildingPrototype, true);
-    HasBuiltBuilding.set(coord.parent, buildingPrototype, true);
+    HasBuiltBuilding.set(coord.parentEntity, buildingPrototype, true);
     IsActive.set(buildingEntity, true);
     if (buildingPrototype == MainBasePrototypeId) {
-      Home.set(coord.parent, buildingEntity);
+      Home.set(coord.parentEntity, buildingEntity);
     }
     if (P_UnitProdTypes.length(buildingPrototype, 1) != 0) {
-      UnitFactorySet.add(coord.parent, buildingEntity);
+      UnitFactorySet.add(coord.parentEntity, buildingEntity);
     }
     placeBuildingTiles(buildingEntity, buildingPrototype, coord);
   }
@@ -133,7 +135,7 @@ library LibBuilding {
     PositionData memory position
   ) internal {
     int32[] memory blueprint = P_Blueprint.get(buildingPrototype);
-    Bounds memory bounds = getSpaceRockBounds(position.parent);
+    Bounds memory bounds = getAsteroidBounds(position.parentEntity);
 
     int32[] memory tileCoords = new int32[](blueprint.length);
     for (uint256 i = 0; i < blueprint.length; i += 2) {
@@ -147,23 +149,23 @@ library LibBuilding {
       tileCoords[i + 1] = y;
     }
 
-    require(LibAsteroid.allTilesAvailable(position.parent, tileCoords), "[BuildSystem] Tile unavailable");
-    LibAsteroid.setTiles(position.parent, tileCoords);
+    require(LibAsteroid.allTilesAvailable(position.parentEntity, tileCoords), "[BuildSystem] Tile unavailable");
+    LibAsteroid.setTiles(position.parentEntity, tileCoords);
     TilePositions.set(buildingEntity, tileCoords);
   }
 
   function removeBuildingTiles(bytes32 buildingEntity) internal {
-    LibAsteroid.removeTiles(Position.getParent(buildingEntity), TilePositions.get(buildingEntity));
+    LibAsteroid.removeTiles(Position.getParentEntity(buildingEntity), TilePositions.get(buildingEntity));
     TilePositions.deleteRecord(buildingEntity);
   }
 
-  /// @notice Gets the boundary limits for a spaceRock
-  /// @param spaceRockEntity The entity ID of the spaceRock
+  /// @notice Gets the boundary limits for a asteroid
+  /// @param asteroidEntity The entity ID of the asteroid
   /// @return bounds The boundary limits
-  function getSpaceRockBounds(bytes32 spaceRockEntity) internal view returns (Bounds memory bounds) {
-    uint256 spaceRockLevel = Level.get(spaceRockEntity);
+  function getAsteroidBounds(bytes32 asteroidEntity) internal view returns (Bounds memory bounds) {
+    uint256 asteroidLevel = Level.get(asteroidEntity);
     P_AsteroidData memory asteroidDims = P_Asteroid.get();
-    DimensionsData memory range = Dimensions.get(ExpansionKey, spaceRockLevel);
+    DimensionsData memory range = Dimensions.get(ExpansionKey, asteroidLevel);
 
     return
       Bounds({
@@ -198,7 +200,7 @@ library LibBuilding {
   /// @return True if the building's required terrain matches the terrain of the given coord
   function canBuildOnTile(bytes32 prototype, PositionData memory coord) internal view returns (bool) {
     EResource resource = EResource(P_RequiredTile.get(prototype));
-    uint8 mapId = Asteroid.getMapId(coord.parent);
+    uint8 mapId = Asteroid.getMapId(coord.parentEntity);
     return resource == EResource.NULL || uint8(resource) == P_Terrain.get(mapId, coord.x, coord.y);
   }
 }

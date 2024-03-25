@@ -3,11 +3,9 @@ pragma solidity >=0.8.24;
 
 import { System } from "@latticexyz/world/src/System.sol";
 import { FieldLayout } from "@latticexyz/store/src/FieldLayout.sol";
-import { IWorld } from "codegen/world/IWorld.sol";
-import { Schema } from "@latticexyz/store/src/Schema.sol";
-import { PackedCounter } from "@latticexyz/store/src/PackedCounter.sol";
+import { EncodedLengths } from "@latticexyz/store/src/EncodedLengths.sol";
 import { ResourceId } from "@latticexyz/world/src/WorldResourceId.sol";
-import { StoreCore } from "@latticexyz/store/src/StoreCore.sol";
+import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 
 contract DevSystem is System {
   /**
@@ -17,11 +15,11 @@ contract DevSystem is System {
     ResourceId tableId,
     bytes32[] calldata keyTuple,
     bytes calldata staticData,
-    PackedCounter encodedLengths,
+    EncodedLengths encodedLengths,
     bytes calldata dynamicData
   ) public {
     // Set the record
-    StoreCore.setRecord(tableId, keyTuple, staticData, encodedLengths, dynamicData);
+    StoreSwitch.setRecord(tableId, keyTuple, staticData, encodedLengths, dynamicData);
   }
 
   function devSpliceStaticData(
@@ -31,7 +29,7 @@ contract DevSystem is System {
     bytes calldata data
   ) public {
     // Splice the static data
-    StoreCore.spliceStaticData(tableId, keyTuple, start, data);
+    StoreSwitch.spliceStaticData(tableId, keyTuple, start, data);
   }
 
   function devSpliceDynamicData(
@@ -43,7 +41,7 @@ contract DevSystem is System {
     bytes calldata data
   ) public {
     // Splice the dynamic data
-    StoreCore.spliceDynamicData(tableId, keyTuple, dynamicFieldIndex, startWithinField, deleteCount, data);
+    StoreSwitch.spliceDynamicData(tableId, keyTuple, dynamicFieldIndex, startWithinField, deleteCount, data);
   }
 
   /**
@@ -51,7 +49,7 @@ contract DevSystem is System {
    */
   function devSetField(ResourceId tableId, bytes32[] calldata keyTuple, uint8 fieldIndex, bytes calldata data) public {
     // Set the field
-    StoreCore.setField(tableId, keyTuple, fieldIndex, data);
+    StoreSwitch.setField(tableId, keyTuple, fieldIndex, data);
   }
 
   /**
@@ -65,7 +63,7 @@ contract DevSystem is System {
     FieldLayout fieldLayout
   ) public {
     // Set the field
-    StoreCore.setField(tableId, keyTuple, fieldIndex, data, fieldLayout);
+    StoreSwitch.setField(tableId, keyTuple, fieldIndex, data, fieldLayout);
   }
 
   /**
@@ -79,7 +77,7 @@ contract DevSystem is System {
     FieldLayout fieldLayout
   ) public {
     // Set the field
-    StoreCore.setStaticField(tableId, keyTuple, fieldIndex, data, fieldLayout);
+    StoreSwitch.setStaticField(tableId, keyTuple, fieldIndex, data, fieldLayout);
   }
 
   /**
@@ -92,7 +90,7 @@ contract DevSystem is System {
     bytes calldata data
   ) public {
     // Set the field
-    StoreCore.setDynamicField(tableId, keyTuple, dynamicFieldIndex, data);
+    StoreSwitch.setDynamicField(tableId, keyTuple, dynamicFieldIndex, data);
   }
 
   /**
@@ -105,7 +103,7 @@ contract DevSystem is System {
     bytes calldata dataToPush
   ) public {
     // Push to the field
-    StoreCore.pushToDynamicField(tableId, keyTuple, dynamicFieldIndex, dataToPush);
+    StoreSwitch.pushToDynamicField(tableId, keyTuple, dynamicFieldIndex, dataToPush);
   }
 
   /**
@@ -118,7 +116,7 @@ contract DevSystem is System {
     uint256 byteLengthToPop
   ) public {
     // Push to the field
-    StoreCore.popFromDynamicField(tableId, keyTuple, dynamicFieldIndex, byteLengthToPop);
+    StoreSwitch.popFromDynamicField(tableId, keyTuple, dynamicFieldIndex, byteLengthToPop);
   }
 
   /**
@@ -126,6 +124,6 @@ contract DevSystem is System {
    */
   function devDeleteRecord(ResourceId tableId, bytes32[] calldata keyTuple) public {
     // Delete the record
-    StoreCore.deleteRecord(tableId, keyTuple);
+    StoreSwitch.deleteRecord(tableId, keyTuple);
   }
 }
