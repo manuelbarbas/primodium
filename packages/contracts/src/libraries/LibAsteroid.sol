@@ -101,22 +101,13 @@ library LibAsteroid {
       y: primaryPosition.y + positionOffset.y,
       parentEntity: 0
     });
+    require(ReversePosition.get(position.x, position.y) == 0, "asteroid already exists at secondary position");
 
-    for (uint256 i = 0; i < config.maxAsteroidsPerPlayer; i++) {
-      PositionData memory sourcePosition = getPosition(i, config.asteroidDistance, config.maxAsteroidsPerPlayer);
-      sourcePosition.x += position.x;
-      sourcePosition.y += position.y;
-      bytes32 sourceAsteroidEntity = ReversePosition.get(sourcePosition.x, sourcePosition.y);
-      if (sourceAsteroidEntity == 0) continue;
-      if (!Asteroid.getSpawnsSecondary(sourceAsteroidEntity)) continue;
-      if (ReversePosition.get(position.x, position.y) != 0) continue;
-      bytes32 asteroidSeed = keccak256(abi.encode(sourceAsteroidEntity, bytes32("asteroid"), position.x, position.y));
-      // if (!isAsteroid(asteroidSeed, config.asteroidChanceInv)) continue;
-      initSecondaryAsteroid(position, asteroidSeed, true);
+    bytes32 primaryAsteroidEntity = ReversePosition.get(primaryPosition.x, primaryPosition.y);
+    bytes32 asteroidSeed = keccak256(abi.encode(primaryAsteroidEntity, bytes32("asteroid"), position.x, position.y));
+    initSecondaryAsteroid(position, asteroidSeed, true);
 
-      return asteroidSeed;
-    }
-    revert("no asteroid found");
+    return asteroidSeed;
   }
 
   function getAsteroidData(
