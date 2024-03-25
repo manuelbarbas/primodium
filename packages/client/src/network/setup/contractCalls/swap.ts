@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { ampli } from "src/ampli";
-import { execute } from "src/network/actions";
+import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { ResourceEnumLookup } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
@@ -14,7 +14,7 @@ export const swap = async (mud: MUD, marketEntity: Entity, path: Entity[], amoun
     {
       mud,
       systemId: getSystemId("MarketplaceSystem"),
-      functionName: "swap",
+      functionName: "Primodium__swap",
       args: [marketEntity as Hex, enumPath, amountIn, 0n],
       withSession: true,
     },

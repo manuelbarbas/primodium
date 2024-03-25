@@ -13,11 +13,18 @@ import { LibUnit } from "libraries/LibUnit.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 
+/**
+ * @title LibPirate
+ * @dev Library to handle pirate asteroid operations in a game, including creation and resource allocation.
+ */
 library LibPirate {
-  /// @notice spawns new pirate asteroid for player in world
-  /// @param prototype the prototype which has spawned the asteroid
-  /// @param playerEntity the player the pirate asteroid is spawned for
-  /// @return asteroidEntity the entity ID of the spawned asteroid
+  /**
+   * @notice Spawns a new pirate asteroid for a player in the game world.
+   * @param playerEntity The identifier of the player for whom the pirate asteroid is spawned.
+   * @param prototype The identifier of the prototype based on which the pirate asteroid is spawned.
+   * @return asteroidEntity The unique identifier of the newly spawned pirate asteroid.
+   * @dev This function handles the creation and setup of a pirate asteroid, including positioning, resource allocation, and unit assignment.
+   */
   function createPirateAsteroid(bytes32 playerEntity, bytes32 prototype) internal returns (bytes32 asteroidEntity) {
     P_SpawnPirateAsteroidData memory spawnPirateAsteroid = P_SpawnPirateAsteroid.get(prototype);
     bytes32 ownerEntity = LibEncode.getHash(PirateKey, playerEntity);
@@ -38,7 +45,7 @@ library LibPirate {
     PositionData memory coord = PositionData({
       x: playerHomeAsteroidCoord.x + spawnPirateAsteroid.x,
       y: playerHomeAsteroidCoord.y + spawnPirateAsteroid.y,
-      parent: 0
+      parentEntity: 0
     });
 
     PirateAsteroid.set(
@@ -75,22 +82,29 @@ library LibPirate {
     }
   }
 
-  function increaseResource(bytes32 spaceRock, uint8 resourceType, uint256 count) internal {
+  /**
+   * @notice Increases a specific type of resource on an asteroid.
+   * @param asteroidEntity The identifier of the asteroid on which the resource is to be increased.
+   * @param resourceType The type of the resource to increase.
+   * @param count The amount by which to increase the resource.
+   * @dev This function handles the logic to increase either utility or storage resources on an asteroid.
+   */
+  function increaseResource(bytes32 asteroidEntity, uint8 resourceType, uint256 count) internal {
     if (P_IsUtility.get(resourceType)) {
-      if (ResourceCount.get(spaceRock, resourceType) < count)
+      if (ResourceCount.get(asteroidEntity, resourceType) < count)
         LibProduction.increaseResourceProduction(
-          spaceRock,
+          asteroidEntity,
           EResource(resourceType),
-          count - ResourceCount.get(spaceRock, resourceType)
+          count - ResourceCount.get(asteroidEntity, resourceType)
         );
     } else {
-      if (MaxResourceCount.get(spaceRock, resourceType) < count + ResourceCount.get(spaceRock, resourceType))
+      if (MaxResourceCount.get(asteroidEntity, resourceType) < count + ResourceCount.get(asteroidEntity, resourceType))
         LibStorage.increaseMaxStorage(
-          spaceRock,
+          asteroidEntity,
           resourceType,
-          count + ResourceCount.get(spaceRock, resourceType) - MaxResourceCount.get(spaceRock, resourceType)
+          count + ResourceCount.get(asteroidEntity, resourceType) - MaxResourceCount.get(asteroidEntity, resourceType)
         );
-      LibStorage.increaseStoredResource(spaceRock, resourceType, count);
+      LibStorage.increaseStoredResource(asteroidEntity, resourceType, count);
     }
   }
 }

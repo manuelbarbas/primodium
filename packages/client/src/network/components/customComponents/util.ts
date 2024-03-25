@@ -1,4 +1,4 @@
-import { KeySchema, SchemaToPrimitives, ValueSchema } from "@latticexyz/protocol-parser";
+import { KeySchema, SchemaToPrimitives, ValueSchema } from "@latticexyz/protocol-parser/internal";
 import { Schema } from "@latticexyz/recs";
 import { hexKeyTupleToEntity } from "@latticexyz/store-sync/recs";
 import { SchemaAbiTypeToRecsType } from "@latticexyz/store-sync/src/recs/schemaAbiTypeToRecsType";

@@ -34,7 +34,7 @@ function getTrainedUnclaimedUnits(spaceRock: Entity) {
   const query = [
     Has(components.TrainingQueue),
     HasValue(components.Position, {
-      parent: spaceRock,
+      parentEntity: spaceRock,
     }),
   ];
   const buildings = runQuery(query);
@@ -47,13 +47,13 @@ function getTrainedUnclaimedUnits(spaceRock: Entity) {
       components.LastClaimedAt.get(building, { value: 0n }).value -
       components.ClaimOffset.get(building, { value: 0n }).value;
 
-    const queueUnits = components.QueueUnits.getWithKeys({ entity: building as Hex });
+    const queueUnits = components.Meta_UnitProductionQueue.getWithKeys({ entity: building as Hex });
     if (!queueUnits || !owner || !startTime) return components.Hangar.remove(building);
     for (let i = queueUnits.front; i <= queueUnits.back; i++) {
-      const update = components.QueueItemUnits.getWithKeys({ entity: building as Hex, index: i });
+      const update = components.Value_UnitProductionQueue.getWithKeys({ entity: building as Hex, index: i });
       if (!update) continue;
 
-      const trainingTime = getUnitTrainingTime(owner as Entity, building, update.unitId as Entity);
+      const trainingTime = getUnitTrainingTime(owner as Entity, building, update.unitEntity as Entity);
       let trainedUnits = update.quantity;
       const now = components.Time.get()?.value ?? 0n;
       if (trainingTime > 0) trainedUnits = (now - startTime) / trainingTime;
@@ -63,7 +63,7 @@ function getTrainedUnclaimedUnits(spaceRock: Entity) {
       if (trainedUnits > update.quantity) {
         trainedUnits = update.quantity;
       }
-      units.set(update.unitId as Entity, trainedUnits);
+      units.set(update.unitEntity as Entity, trainedUnits);
 
       startTime += trainingTime * trainedUnits;
     }

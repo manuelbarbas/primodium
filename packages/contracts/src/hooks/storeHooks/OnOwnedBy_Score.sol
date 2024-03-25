@@ -23,20 +23,20 @@ contract OnOwnedBy_Score is StoreHook {
     uint48 start,
     bytes memory data
   ) public override {
-    bytes32 spaceRockEntity = keyTuple[0];
+    bytes32 asteroidEntity = keyTuple[0];
 
-    if (!Asteroid.getIsAsteroid(spaceRockEntity)) return;
+    if (!Asteroid.getIsAsteroid(asteroidEntity)) return;
 
-    bytes32 formerOwner = OwnedBy.get(spaceRockEntity);
+    bytes32 formerOwner = OwnedBy.get(asteroidEntity);
     //score only updated for player owned asteroids
     bytes memory newOwnerRaw = SliceInstance.toBytes(SliceLib.getSubslice(data, start));
     bytes32 newOwner = abi.decode(newOwnerRaw, (bytes32));
     if (formerOwner == newOwner) return;
     if (formerOwner != bytes32(0)) {
-      LibScore.updateScoreOnSpaceRock(formerOwner, spaceRockEntity, false);
+      LibScore.updateScoreOnAsteroid(formerOwner, asteroidEntity, false);
     }
     if (newOwner != bytes32(0)) {
-      LibScore.updateScoreOnSpaceRock(newOwner, spaceRockEntity, true);
+      LibScore.updateScoreOnAsteroid(newOwner, asteroidEntity, true);
     }
   }
 }

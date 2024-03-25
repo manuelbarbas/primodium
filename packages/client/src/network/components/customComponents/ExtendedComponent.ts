@@ -1,7 +1,7 @@
-import { KeySchema, SchemaToPrimitives } from "@latticexyz/protocol-parser";
 import { Component, ComponentUpdate, ComponentValue, Entity, Metadata, Schema, setComponent } from "@latticexyz/recs";
 import { Subject, filter, map } from "rxjs";
 
+import { KeySchema, SchemaToPrimitives } from "@latticexyz/protocol-parser/internal";
 import { useEntityQuery } from "@latticexyz/react";
 import {
   Has,
@@ -17,10 +17,9 @@ import {
   runQuery,
   updateComponent,
 } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { encodeEntity, singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect, useState } from "react";
 import { decodeEntity } from "src/util/encode";
-import { encodeEntity } from "./util";
 
 export interface Options<M extends Metadata> {
   id: string;
@@ -90,22 +89,22 @@ export function extendContractComponent<S extends Schema, TKeySchema extends Key
   function getWithKeys(keys?: SchemaToPrimitives<TKeySchema>): ComponentValue<S> | undefined;
   function getWithKeys(keys?: SchemaToPrimitives<TKeySchema>, defaultValue?: ValueSansMetadata<S>): ComponentValue<S>;
   function getWithKeys(keys?: SchemaToPrimitives<TKeySchema>, defaultValue?: ValueSansMetadata<S>) {
-    const entity = keys ? encodeEntity(component, keys) : singletonEntity;
+    const entity = keys ? encodeEntity(component.metadata.keySchema, keys) : singletonEntity;
     return extendedComponent.get(entity, defaultValue);
   }
 
   function hasWithKeys(keys?: SchemaToPrimitives<TKeySchema>) {
-    const entity = keys ? encodeEntity(component, keys) : singletonEntity;
+    const entity = keys ? encodeEntity(component.metadata.keySchema, keys) : singletonEntity;
     return extendedComponent.has(entity);
   }
 
   function useWithKeys(key?: SchemaToPrimitives<TKeySchema>, defaultValue?: ValueSansMetadata<S>) {
-    const entity = key ? encodeEntity(component, key) : singletonEntity;
+    const entity = key ? encodeEntity(component.metadata.keySchema, key) : singletonEntity;
     return extendedComponent.use(entity, defaultValue);
   }
 
   function setWithKeys(value: ComponentValue<S, T>, key: SchemaToPrimitives<TKeySchema>) {
-    const entity = key ? encodeEntity(component, key) : singletonEntity;
+    const entity = key ? encodeEntity(component.metadata.keySchema, key) : singletonEntity;
     return extendedComponent.set(value, entity);
   }
 

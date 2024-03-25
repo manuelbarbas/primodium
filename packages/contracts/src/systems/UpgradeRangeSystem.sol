@@ -5,24 +5,34 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 import { OwnedBy, Level, Asteroid } from "codegen/index.sol";
 import { ExpansionKey } from "src/Keys.sol";
-import { LibEncode, LibBuilding } from "codegen/Libraries.sol";
-import { spendUpgradeResources } from "libraries/SubsystemCalls.sol";
+import { LibBuilding } from "libraries/LibBuilding.sol";
+import { IWorld } from "codegen/world/IWorld.sol";
 
+/**
+ * @title UpgradeRangeSystem
+ * @dev Manages the upgrading of range attributes for asteroids within the Primodium game, extending PrimodiumSystem functionalities.
+ */
 contract UpgradeRangeSystem is PrimodiumSystem {
-  function upgradeRange(bytes32 spaceRockEntity) public _claimResources(spaceRockEntity) {
+  /**
+   * @notice Upgrades the range attribute of a specified asteroid.
+   * @dev Claims necessary resources before performing the upgrade. Verifies ownership, level requirements, and max level constraints.
+   * @param asteroidEntity The unique identifier for the asteroid being upgraded.
+   */
+  function upgradeRange(bytes32 asteroidEntity) public _claimResources(asteroidEntity) {
     bytes32 playerEntity = _player();
 
-    uint256 targetLevel = Level.get(spaceRockEntity) + 1;
+    uint256 targetLevel = Level.get(asteroidEntity) + 1;
 
-    require(Asteroid.getMaxLevel(spaceRockEntity) >= targetLevel, "[UpgradeRangeSystem] Max level reached");
+    require(Asteroid.getMaxLevel(asteroidEntity) >= targetLevel, "[UpgradeRangeSystem] Max level reached");
     require(
-      LibBuilding.hasRequiredBaseLevel(spaceRockEntity, ExpansionKey, targetLevel),
+      LibBuilding.hasRequiredBaseLevel(asteroidEntity, ExpansionKey, targetLevel),
       "[UpgradeRangeSystem] MainBase level requirement not met"
     );
-    require(OwnedBy.get(spaceRockEntity) == playerEntity, "[UpgradeRangeSystem] Asteroid not owned by player");
+    require(OwnedBy.get(asteroidEntity) == playerEntity, "[UpgradeRangeSystem] Asteroid not owned by player");
 
-    spendUpgradeResources(spaceRockEntity, ExpansionKey, targetLevel);
+    IWorld world = IWorld(_world());
+    world.Primodium__spendUpgradeResources(asteroidEntity, ExpansionKey, targetLevel);
 
-    Level.set(spaceRockEntity, targetLevel);
+    Level.set(asteroidEntity, targetLevel);
   }
 }

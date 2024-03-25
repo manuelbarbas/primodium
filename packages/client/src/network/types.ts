@@ -1,4 +1,4 @@
-import { KeySchema } from "@latticexyz/protocol-parser";
+import { KeySchema } from "@latticexyz/protocol-parser/internal";
 import { Component, Schema } from "@latticexyz/recs";
 import useSetupResult from "src/hooks/useSetupResult";
 import { createComponents } from "./components";
@@ -28,7 +28,6 @@ export type ContractComponent<S extends Schema = Schema, TKeySchema extends KeyS
   S,
   {
     componentName: string;
-    tableName: `${string}:${string}`;
     keySchema: TKeySchema;
     valueSchema: Record<string, string>;
   }

@@ -1,15 +1,15 @@
 import { Entity } from "@latticexyz/recs";
-import { execute } from "src/network/actions";
 import { components } from "src/network/components";
+import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
 import { toTransportableResourceArray, toUnitCountArray } from "src/util/send";
 import { Hex } from "viem";
 
-export const transferFleet = async (mud: MUD, from: Entity, to: Entity, deltas: Map<Entity, bigint>) => {
-  const fromIsSpaceRock = components.Asteroid.has(from);
-  const toIsSpaceRock = components.Asteroid.has(to);
+export const transfer = async (mud: MUD, from: Entity, to: Entity, deltas: Map<Entity, bigint>) => {
+  const fromIsAsteroid = components.Asteroid.has(from);
+  const toIsAsteroid = components.Asteroid.has(to);
 
   const unitCounts = toUnitCountArray(deltas);
   const resourceCounts = toTransportableResourceArray(deltas);
@@ -25,48 +25,48 @@ export const transferFleet = async (mud: MUD, from: Entity, to: Entity, deltas: 
   } as const;
 
   if (totalResources == 0n) {
-    const functionName = fromIsSpaceRock
-      ? "transferUnitsFromSpaceRockToFleet"
-      : toIsSpaceRock
-      ? "transferUnitsFromFleetToSpaceRock"
-      : "transferUnitsFromFleetToFleet";
+    const functionName = fromIsAsteroid
+      ? "Primodium__transferUnitsFromAsteroidToFleet"
+      : toIsAsteroid
+      ? "Primodium__transferUnitsFromFleetToAsteroid"
+      : "Primodium__transferUnitsFromFleetToFleet";
     await execute(
       {
         mud,
         functionName,
-        systemId: getSystemId("FleetTransferSystem"),
+        systemId: getSystemId("TransferSystem"),
         args: [from as Hex, to as Hex, unitCounts],
         withSession: true,
       },
       metadata
     );
   } else if (totalUnits == 0n) {
-    const functionName = fromIsSpaceRock
-      ? "transferResourcesFromSpaceRockToFleet"
-      : toIsSpaceRock
-      ? "transferResourcesFromFleetToSpaceRock"
-      : "transferResourcesFromFleetToFleet";
+    const functionName = fromIsAsteroid
+      ? "Primodium__transferResourcesFromAsteroidToFleet"
+      : toIsAsteroid
+      ? "Primodium__transferResourcesFromFleetToAsteroid"
+      : "Primodium__transferResourcesFromFleetToFleet";
     await execute(
       {
         mud,
         functionName,
-        systemId: getSystemId("FleetTransferSystem"),
+        systemId: getSystemId("TransferSystem"),
         args: [from as Hex, to as Hex, resourceCounts],
         withSession: true,
       },
       metadata
     );
   } else {
-    const functionName = fromIsSpaceRock
-      ? "transferUnitsAndResourcesFromSpaceRockToFleet"
-      : toIsSpaceRock
-      ? "transferUnitsAndResourcesFromFleetToSpaceRock"
-      : "transferUnitsAndResourcesFromFleetToFleet";
+    const functionName = fromIsAsteroid
+      ? "Primodium__transferUnitsAndResourcesFromAsteroidToFleet"
+      : toIsAsteroid
+      ? "Primodium__transferUnitsAndResourcesFromFleetToAsteroid"
+      : "Primodium__transferUnitsAndResourcesFromFleetToFleet";
     await execute(
       {
         mud,
         functionName,
-        systemId: getSystemId("FleetTransferSystem"),
+        systemId: getSystemId("TransferSystem"),
         args: [from as Hex, to as Hex, unitCounts, resourceCounts],
         withSession: true,
       },

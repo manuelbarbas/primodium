@@ -80,7 +80,7 @@ export function getAsteroidInfo(primodium: Primodium, spaceRock: Entity) {
   const position = comps.Position.get(spaceRock, {
     x: 0,
     y: 0,
-    parent: "0" as Entity,
+    parentEntity: "0" as Entity,
   });
 
   const resources = [...ResourceStorages].reduce((acc, resource) => {

@@ -1,6 +1,6 @@
-import { mudConfig } from "@latticexyz/world/register";
+import { defineWorld } from "@latticexyz/world";
 
-export default mudConfig({
+export default defineWorld({
   namespace: "upgradeBounty",
   systems: {
     UpgrBounSystem: {
@@ -11,29 +11,25 @@ export default mudConfig({
   },
   tables: {
     UpgradeBounty: {
-      keySchema: {
+      key: ["depositorEntity", "buildingEntity"],
+      schema: {
         depositorEntity: "bytes32",
         buildingEntity: "bytes32",
+
+        value: "uint256",
       },
-      valueSchema: "uint256",
     },
 
     /* --------------------------------- Common --------------------------------- */
 
     Position: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        x: "int32",
-        y: "int32",
-        parent: "bytes32",
-      },
+      key: ["entity"],
+      schema: { entity: "bytes32", x: "int32", y: "int32", parent: "bytes32" },
     },
 
     OwnedBy: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        value: "bytes32",
-      },
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "bytes32" },
     },
   },
 });

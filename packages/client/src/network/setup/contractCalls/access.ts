@@ -1,7 +1,7 @@
 import { Has, runQuery } from "@latticexyz/recs";
 import { decodeEntity, singletonEntity } from "@latticexyz/store-sync/recs";
-import { execute, executeBatch } from "src/network/actions";
 import { components } from "src/network/components";
+import { execute, executeBatch } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { TransactionQueueType, UNLIMITED_DELEGATION } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
@@ -11,7 +11,7 @@ export const grantAccess = async (mud: MUD, address: Address) => {
   await execute(
     {
       mud,
-      systemId: getSystemId("AccessManagement"),
+      systemId: getSystemId("Registration", "CORE"),
       functionName: "registerDelegation",
       args: [address, UNLIMITED_DELEGATION, "0x0"],
       withSession: false,
@@ -25,7 +25,7 @@ export const grantAccess = async (mud: MUD, address: Address) => {
 
 export const revokeAccess = async (mud: MUD, address: Address) => {
   await execute(
-    { mud, systemId: getSystemId("Registration"), functionName: "unregisterDelegation", args: [address] },
+    { mud, systemId: getSystemId("Registration", "CORE"), functionName: "unregisterDelegation", args: [address] },
     {
       id: singletonEntity,
       type: TransactionQueueType.Access,
@@ -44,7 +44,7 @@ export const revokeAllAccess = async (mud: MUD) => {
   }, [] as Address[]);
 
   const systemCalls = allAuthorized.map((authorized) => ({
-    systemId: getSystemId("Registration"),
+    systemId: getSystemId("Registration", "CORE"),
     functionName: "unregisterDelegation",
     args: [authorized],
   })) as {
