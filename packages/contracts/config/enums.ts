@@ -127,6 +127,26 @@ export enum EObjectives {
   BuildCapitalShip1,
 
   ExpandBase1,
+
+  CreateFleet,
+  TransferResourcesToAsteroid,
+  TransferResourcesToFleet,
+  RecallFleet,
+  LandFleet,
+  MoveFleet,
+  BattleAsteroid,
+  BattleFleet,
+  SuccessfulRaid,
+  OpenBattleReport,
+  UpgradeUnitType,
+  BuildColonyShip,
+  DecryptAttack,
+  CaptureAsteroid,
+
+  MarketSwap,
+  MarketLiquidity,
+
+  JoinAlliance,
 }
 
 export enum EFleetKey {
