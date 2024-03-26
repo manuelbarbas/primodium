@@ -2165,4 +2165,122 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
+
+  CreateFleet: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
+      P_ResourceReward: getResourceValues({ Iron: 10 }),
+    },
+  },
+
+  TransferResourcesToAsteroid: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["CreateFleet"]) },
+      P_ResourceReward: getResourceValues({ Copper: 10 }),
+    },
+  },
+
+  TransferResourcesToFleet: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["CreateFleet"]) },
+      P_ResourceReward: getResourceValues({ Lithium: 10 }),
+    },
+  },
+
+  RecallFleet: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["CreateFleet"]) },
+      P_ResourceReward: getResourceValues({ Iron: 10 }),
+    },
+  },
+
+  LandFleet: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["CreateFleet"]) },
+      P_ResourceReward: getResourceValues({ Copper: 10 }),
+    },
+  },
+
+  MoveFleet: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["CreateFleet"]) },
+      P_ResourceReward: getResourceValues({ Lithium: 10 }),
+    },
+  },
+
+  BattleAsteroid: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["CreateFleet"]) },
+      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
+    },
+  },
+
+  BattleFleet: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["CreateFleet"]) },
+      P_ResourceReward: getResourceValues({ Alloy: 10 }),
+    },
+  },
+
+  SuccessfulRaid: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["CreateFleet"]) },
+      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+    },
+  },
+
+  OpenBattleReport: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["CreateFleet"]) },
+      P_ResourceReward: getResourceValues({ Iron: 10 }),
+    },
+  },
+
+  UpgradeUnitType: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
+      P_ResourceReward: getResourceValues({ Kimberlite: 1 }),
+    },
+  },
+
+  BuildColonyShip: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildShipyard"]) },
+      P_ResourceReward: getResourceValues({ Alloy: 10 }),
+    },
+  },
+
+  DecryptAttack: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildColonyShip"]) },
+      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
+    },
+  },
+
+  CaptureAsteroid: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildColonyShip"]) },
+      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+    },
+  },
+
+  MarketSwap: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildMarket"]) },
+      P_ResourceReward: getResourceValues({ Kimberlite: 1 }),
+    },
+  },
+
+  MarketLiquidity: {
+    tables: {
+      P_RequiredObjectives: { objectives: encodeArray(["BuildMarket"]) },
+      P_ResourceReward: getResourceValues({ Kimberlite: 1 }),
+    },
+  },
+
+  JoinAlliance: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 100 }),
+    },
+  },
 };
