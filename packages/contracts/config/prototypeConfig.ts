@@ -1837,7 +1837,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
     },
   },
-  /* ------------------------------- Multipliers ------------------------------ */
+  /* ------------------------------- Multipliers! ------------------------------ */
   Iron: {
     keys: [{ [EResource.Iron]: "uint8" }],
     tables: {
