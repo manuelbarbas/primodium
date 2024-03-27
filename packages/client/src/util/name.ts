@@ -1,6 +1,5 @@
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { isPlayer } from "./common";
 import { hashEntities } from "./encode";
 
 const adjectives = [
@@ -69,7 +68,6 @@ const nouns = [
 const entityPlayerName = new Map<Entity, string>();
 export const entityToPlayerName = (entity: Entity | undefined) => {
   if (!entity || entity == singletonEntity) return "Nobody";
-  if (!isPlayer(entity)) return "Pirate";
   if (entityPlayerName.has(entity)) return entityPlayerName.get(entity) as string;
 
   const hash = hashEntities(entity);
