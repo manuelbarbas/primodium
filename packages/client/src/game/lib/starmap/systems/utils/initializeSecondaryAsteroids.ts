@@ -38,7 +38,6 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
   const config = components.P_GameConfig.get();
   const wormholeAsteroidConfig = components.P_WormholeAsteroidConfig.get();
 
-  let wormholeAsteroid: boolean = false;
   if (!config) throw new Error("GameConfig not found");
   if (!wormholeAsteroidConfig) throw new Error("WormholeAsteroidConfig not found");
   for (let i = 0; i < config.maxAsteroidsPerPlayer; i++) {
@@ -49,11 +48,7 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
     );
     const asteroidEntity = getSecondaryAsteroidEntity(sourceEntity, asteroidPosition);
 
-    if (i == Number(wormholeAsteroidConfig.wormholeAsteroidSlot)) {
-      wormholeAsteroid = true;
-    } else {
-      wormholeAsteroid = false;
-    }
+    const wormholeAsteroid = i == Number(wormholeAsteroidConfig.wormholeAsteroidSlot);
 
     if (!components.OwnedBy.get(asteroidEntity)) spawnDroidBase(asteroidEntity);
 
