@@ -75,6 +75,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   },
 
   P_WormholeConfig: {
+    keys: [],
     tables: {
       P_WormholeConfig: {
         startTime: BigInt(Math.round(Date.now() / 1000)),

@@ -33,8 +33,7 @@ library LibBuilding {
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
 
     require(
-      buildingPrototype != MainBasePrototypeId &&
-        buildingPrototype |= WormholeBasePrototypeId,
+      buildingPrototype != MainBasePrototypeId && buildingPrototype != WormholeBasePrototypeId,
       "[Destroy] Cannot destroy main base"
     );
     require(

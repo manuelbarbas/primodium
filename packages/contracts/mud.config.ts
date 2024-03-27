@@ -1,16 +1,12 @@
 import { defineWorld } from "@latticexyz/world";
 
-import { MUDEnums } from "./config/enums";
-import { prototypeConfig } from "./config/prototypeConfig";
-import { ConfigWithPrototypes } from "./ts/prototypes/types";
-
 // Exclude dev systems if not in dev PRI_DEV
 
 /* -------------------------------------------------------------------------- */
 /*                                   Config                                   */
 /* -------------------------------------------------------------------------- */
 
-export const worldInput = {
+export const world = defineWorld({
   namespace: "Primodium",
   systems: {
     // these systems are closed access by default
@@ -30,8 +26,7 @@ export const worldInput = {
   },
 
   // using as any here for now because of a type issue and also because the enums are not being recognized in our codebase rn
-  enums: MUDEnums as unknown as { [key: string]: ["NULL"] },
-  codegen: {},
+  // enums: MUDEnums as unknown as { [key: string]: ["NULL"] },
   tables: {
     /* ----------------------------------- Dev ---------------------------------- */
     Counter: {
@@ -761,19 +756,19 @@ export const worldInput = {
 
     /* -------------------------------- Wormhole -------------------------------- */
 
-    P_WormholeConfig: {
-      key: [],
-      schema: {
-        startTime: "uint256",
-        turnDuration: "uint256",
-        cooldown: "uint256",
-      },
-    },
+    // P_WormholeConfig: {
+    //   key: [],
+    //   schema: {
+    //     startTime: "uint256",
+    //     turnDuration: "uint256",
+    //     cooldown: "uint256",
+    //   },
+    // },
 
-    Wormhole: {
-      key: [],
-      schema: { resource: "uint8", turn: "uint256", nextResourceHash: "uint256" },
-    },
+    // Wormhole: {
+    //   key: [],
+    //   schema: { resource: "uint8", turn: "uint256", nextResourceHash: "bytes32" },
+    // },
 
     /* ---------------------------- Player Asteroids ---------------------------- */
 
@@ -787,25 +782,25 @@ export const worldInput = {
       schema: { entity: "bytes32", key: "bytes32", asteroidEntity: "bytes32", stored: "bool", index: "uint256" },
     },
   },
-} as const;
+});
 
-const getConfig = async () => {
-  let exclude: string[] = [];
-  if (typeof process != undefined && typeof process != "undefined") {
-    const dotenv = await import("dotenv");
-    dotenv.config({ path: "../../.env" });
-    if (process.env.PRI_DEV !== "true") exclude = ["DevSystem"];
-  }
+// const getConfig = async () => {
+//   let exclude: string[] = [];
+//   if (typeof process != undefined && typeof process != "undefined") {
+//     const dotenv = await import("dotenv");
+//     dotenv.config({ path: "../../.env" });
+//     if (process.env.PRI_DEV !== "true") exclude = ["DevSystem"];
+//   }
 
-  const world = defineWorld({ ...worldInput, excludeSystems: exclude });
+//   const world = defineWorld({ ...worldInput, excludeSystems: exclude });
 
-  return world;
-};
+//   return world;
+// };
 
-const config = await getConfig();
-export default config;
+// const config = await getConfig();
+export default world;
 
-export const configInputs: ConfigWithPrototypes<typeof worldInput, (typeof worldInput)["tables"]> = {
-  worldInput,
-  prototypeConfig,
-};
+// export const configInputs: ConfigWithPrototypes<typeof worldInput, (typeof worldInput)["tables"]> = {
+//   worldInput,
+//   prototypeConfig,
+// };
