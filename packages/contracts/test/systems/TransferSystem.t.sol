@@ -4,7 +4,7 @@ pragma solidity >=0.8.24;
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { addressToEntity } from "src/utils.sol";
 
-import { CapitalShipPrototypeId } from "codegen/Prototypes.sol";
+import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 import { EResource, EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
@@ -93,7 +93,7 @@ contract TransferSystemTest is PrimodiumTest {
     assertEq(ResourceCount.get(aliceHomeAsteroid, uint8(EResource.Iron)), 0, "asteroid resource count doesn't match");
   }
 
-  function createCapitalShipFleet(address player) private returns (bytes32 fleetEntity) {
+  function createColonyShipFleet(address player) private returns (bytes32 fleetEntity) {
     bytes32 playerEntity = addressToEntity(player);
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
@@ -101,7 +101,7 @@ contract TransferSystemTest is PrimodiumTest {
     uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (unitPrototypes[i] == CapitalShipPrototypeId) unitCounts[i] = 1;
+      if (unitPrototypes[i] == ColonyShipPrototypeId) unitCounts[i] = 1;
     }
 
     bytes32 homeAsteroidEntity = Home.get(playerEntity);
@@ -112,9 +112,9 @@ contract TransferSystemTest is PrimodiumTest {
     fleetEntity = world.Primodium__createFleet(homeAsteroidEntity, unitCounts, resourceCounts);
   }
 
-  function testTransferCapitalShipBetweenPlayers() public {
-    bytes32 aliceFleet = createCapitalShipFleet(alice);
-    bytes32 bobFleet = createCapitalShipFleet(bob);
+  function testTransferColonyShipBetweenPlayers() public {
+    bytes32 aliceFleet = createColonyShipFleet(alice);
+    bytes32 bobFleet = createColonyShipFleet(bob);
 
     vm.prank(creator);
     P_GameConfig.setWorldSpeed(100);
@@ -127,17 +127,17 @@ contract TransferSystemTest is PrimodiumTest {
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
     uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (unitPrototypes[i] == CapitalShipPrototypeId) unitCounts[i] = 1;
+      if (unitPrototypes[i] == ColonyShipPrototypeId) unitCounts[i] = 1;
     }
 
     vm.startPrank(alice);
-    vm.expectRevert("[Fleet] Cannot transfer capital ships to other players");
+    vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
     world.Primodium__transferUnitsFromFleetToFleet(aliceFleet, bobFleet, unitCounts);
 
-    vm.expectRevert("[Fleet] Cannot transfer capital ships to other players");
+    vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
     world.Primodium__transferUnitsFromFleetToAsteroid(aliceFleet, bobHomeAsteroid, unitCounts);
 
-    vm.expectRevert("[Fleet] Cannot transfer capital ships to other players");
+    vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
     world.Primodium__transferUnitsAndResourcesFromFleetToAsteroid(
       aliceFleet,
       bobHomeAsteroid,
@@ -145,7 +145,7 @@ contract TransferSystemTest is PrimodiumTest {
       resourceCounts
     );
 
-    vm.expectRevert("[Fleet] Cannot transfer capital ships to other players");
+    vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
     world.Primodium__transferUnitsAndResourcesFromFleetToFleet(aliceFleet, bobFleet, unitCounts, resourceCounts);
   }
 
