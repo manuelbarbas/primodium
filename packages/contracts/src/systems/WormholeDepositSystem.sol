@@ -2,10 +2,11 @@
 pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { OwnedBy, Position, P_Transportables, P_WormholeConfig, P_WormholeConfigData, Wormhole, WormholeData, CooldownEnd, P_ScoreMultiplier } from "codegen/index.sol";
+import { BuildingType, OwnedBy, Position, P_Transportables, P_WormholeConfig, P_WormholeConfigData, Wormhole, WormholeData, CooldownEnd, P_ScoreMultiplier } from "codegen/index.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibScore } from "libraries/LibScore.sol";
 import { EScoreType } from "src/Types.sol";
+import { WormholeBasePrototypeId } from "codegen/Prototypes.sol";
 
 contract WormholeDepositSystem is PrimodiumSystem {
   function getRandomResource(bytes32 seed, uint8 prevResource) private view returns (uint8 resource) {
@@ -32,24 +33,28 @@ contract WormholeDepositSystem is PrimodiumSystem {
   }
 
   function wormholeDeposit(
-    bytes32 wormholeEntity,
+    bytes32 wormholeBaseEntity,
     uint256 count
-  ) public _claimResources(Position.getParentEntity(wormholeEntity)) {
+  ) public _claimResources(Position.getParentEntity(wormholeBaseEntity)) {
     bytes32 playerEntity = _player();
-    bytes32 asteroidEntity = Position.getParentEntity(wormholeEntity);
+    bytes32 asteroidEntity = OwnedBy.get(wormholeBaseEntity);
 
+    require(
+      BuildingType.get(wormholeBaseEntity) == WormholeBasePrototypeId,
+      "[WormholeDeposit] Building is not a wormhole generator"
+    );
     require(OwnedBy.get(asteroidEntity) == playerEntity, "[WormholeDeposit] Only owner can deposit");
-    require(CooldownEnd.get(wormholeEntity) < block.timestamp, "[WormholeDeposit] Cooldown not finished");
+    require(CooldownEnd.get(wormholeBaseEntity) <= block.timestamp, "[WormholeDeposit] Wormhole in cooldown");
 
     LibStorage.checkedDecreaseStoredResource(asteroidEntity, Wormhole.getResource(), count);
 
     uint256 scoreIncrease = count * P_ScoreMultiplier.get(Wormhole.getResource());
     LibScore.addScore(playerEntity, EScoreType.Extraction, scoreIncrease);
 
-    CooldownEnd.set(wormholeEntity, block.timestamp + P_WormholeConfig.getCooldown());
+    CooldownEnd.set(wormholeBaseEntity, block.timestamp + P_WormholeConfig.getCooldown());
 
     Wormhole.setHash(
-      keccak256(abi.encode(uint256(wormholeEntity), count, block.timestamp, blockhash(block.number - 1)))
+      keccak256(abi.encode(uint256(wormholeBaseEntity), count, block.timestamp, blockhash(block.number - 1)))
     );
   }
 }

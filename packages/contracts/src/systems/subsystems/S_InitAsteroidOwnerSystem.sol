@@ -16,11 +16,12 @@ contract S_InitAsteroidOwnerSystem is PrimodiumSystem {
     // todo: figure out how to just call the BuildSystem with the playerEntity as msg.sender
 
     bytes32 basePrototype = Asteroid.getWormhole(asteroidEntity) ? WormholeBasePrototypeId : MainBasePrototypeId;
-    PositionData memory position = Position.get(basePrototype);
 
+    PositionData memory position = Position.get(basePrototype);
     position.parentEntity = asteroidEntity;
 
     bytes32 buildingEntity = LibBuilding.build(playerEntity, basePrototype, position);
+
     IWorld world = IWorld(_world());
     world.Primodium__increaseMaxStorage(buildingEntity, 1);
     world.Primodium__upgradeProductionRate(buildingEntity, 1);

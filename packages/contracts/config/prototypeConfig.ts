@@ -80,13 +80,18 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
   },
 
-  P_WormholeConfig: {
+  Wormhole: {
     keys: [],
     tables: {
       P_WormholeConfig: {
         startTime: BigInt(Math.round(Date.now() / 1000)),
         turnDuration: 69420n,
         cooldown: 6n * 60n * 60n,
+      },
+      Wormhole: {
+        resource: EResource.Titanium,
+        turn: 0n,
+        hash: encodeBytes32("your mother"),
       },
     },
   },

@@ -1623,7 +1623,7 @@
     "name": "Primodium__wormholeDeposit",
     "inputs": [
       {
-        "name": "wormholeEntity",
+        "name": "wormholeBaseEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },

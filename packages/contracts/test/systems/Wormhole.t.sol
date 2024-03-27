@@ -6,9 +6,9 @@ import { addressToEntity } from "src/utils.sol";
 
 import { EResource } from "src/Types.sol";
 
-import { BuildingType, Home, OwnedBy, P_EnumToPrototype, P_Transportables, P_UnitPrototypes, Asteroid, AsteroidData, Position, PositionData, Position, PositionData, ReversePosition, MaxResourceCount, UnitCount, ResourceCount, UnitCount, ResourceCount, P_GameConfig, P_GameConfigData, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
+import { CooldownEnd, Score, P_ScoreMultiplier, P_WormholeConfig, P_WormholeConfigData, Wormhole, WormholeData, BuildingType, Home, OwnedBy, P_EnumToPrototype, P_Transportables, P_UnitPrototypes, Asteroid, AsteroidData, Position, PositionData, Position, PositionData, ReversePosition, MaxResourceCount, UnitCount, ResourceCount, UnitCount, ResourceCount, P_GameConfig, P_GameConfigData, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
 import { WormholeBasePrototypeId } from "codegen/Prototypes.sol";
-import { EUnit } from "src/Types.sol";
+import { EUnit, EScoreType } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
@@ -60,7 +60,7 @@ contract WormholeTest is PrimodiumTest {
     return actualAsteroidEntity;
   }
 
-  function testWormholeAsteroidHasWormholeBase() public {
+  function testWormholeAsteroidHasWormholeBase() public returns (bytes32) {
     bytes32 asteroidEntity = Home.get(aliceEntity);
 
     bytes32 wormholeAsteroidEntity = testCreateWormholeAsteroid();
@@ -68,5 +68,126 @@ contract WormholeTest is PrimodiumTest {
 
     assertEq(OwnedBy.get(wormholeAsteroidEntity), aliceEntity);
     assertEq(BuildingType.get(Home.get(wormholeAsteroidEntity)), WormholeBasePrototypeId);
+    return wormholeAsteroidEntity;
   }
+
+  function testDepositWormhole() public returns (bytes32) {
+    bytes32 wormholeAsteroidEntity = testWormholeAsteroidHasWormholeBase();
+    bytes32 wormholeBaseEntity = Home.get(wormholeAsteroidEntity);
+    bytes32 asteroidEntity = Position.getParentEntity(wormholeBaseEntity);
+    bytes32 asteroidEntity2 = OwnedBy.get(wormholeBaseEntity);
+    console.logBytes32(asteroidEntity);
+    console.logBytes32(asteroidEntity2);
+
+    WormholeData memory wormholeData = Wormhole.get();
+    P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
+
+    increaseResource(wormholeAsteroidEntity, EResource(wormholeData.resource), 100);
+
+    vm.prank(alice);
+    world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
+
+    assertEq(
+      Score.get(aliceEntity, uint8(EScoreType.Extraction)),
+      100 * P_ScoreMultiplier.get(wormholeData.resource),
+      "score"
+    );
+    assertEq(CooldownEnd.get(wormholeBaseEntity), block.timestamp + wormholeConfig.cooldown, "cooldown");
+    assertFalse(Wormhole.getHash() == wormholeData.hash, "hash");
+    assertEq(Wormhole.getResource(), wormholeData.resource, "resource");
+    return wormholeAsteroidEntity;
+  }
+
+  function testDepositWormholeAfterCooldown() public returns (bytes32) {
+    bytes32 wormholeAsteroidEntity = testWormholeAsteroidHasWormholeBase();
+    bytes32 wormholeBaseEntity = Home.get(wormholeAsteroidEntity);
+    bytes32 asteroidEntity = Position.getParentEntity(wormholeBaseEntity);
+    bytes32 asteroidEntity2 = OwnedBy.get(wormholeBaseEntity);
+    console.logBytes32(asteroidEntity);
+    console.logBytes32(asteroidEntity2);
+
+    WormholeData memory wormholeData = Wormhole.get();
+    P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
+
+    increaseResource(wormholeAsteroidEntity, EResource(wormholeData.resource), 100);
+
+    vm.prank(alice);
+    world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
+
+    vm.warp(CooldownEnd.get(wormholeBaseEntity) + 1);
+
+    increaseResource(wormholeAsteroidEntity, EResource(wormholeData.resource), 100);
+
+    vm.prank(alice);
+    world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
+
+    assertEq(
+      Score.get(aliceEntity, uint8(EScoreType.Extraction)),
+      200 * P_ScoreMultiplier.get(wormholeData.resource),
+      "score"
+    );
+    assertEq(CooldownEnd.get(wormholeBaseEntity), block.timestamp + wormholeConfig.cooldown, "cooldown");
+    assertFalse(Wormhole.getHash() == wormholeData.hash, "hash");
+    assertEq(Wormhole.getResource(), wormholeData.resource, "resource");
+    return wormholeAsteroidEntity;
+  }
+
+  function testDepositWormholeFailNotEnoughResources() public {
+    bytes32 wormholeAsteroidEntity = testWormholeAsteroidHasWormholeBase();
+    bytes32 wormholeBaseEntity = Home.get(wormholeAsteroidEntity);
+    bytes32 asteroidEntity = Position.getParentEntity(wormholeBaseEntity);
+    bytes32 asteroidEntity2 = OwnedBy.get(wormholeBaseEntity);
+    console.logBytes32(asteroidEntity);
+    console.logBytes32(asteroidEntity2);
+
+    WormholeData memory wormholeData = Wormhole.get();
+    P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
+
+    increaseResource(wormholeAsteroidEntity, EResource(wormholeData.resource), 99);
+
+    vm.startPrank(alice);
+    vm.expectRevert("[StorageUsage] not enough resources to decrease");
+    world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
+  }
+
+  function testDepositWormholeFailNotWormholeBase() public {
+    WormholeData memory wormholeData = Wormhole.get();
+    bytes32 wormholeAsteroidEntity = testWormholeAsteroidHasWormholeBase();
+    increaseResource(wormholeAsteroidEntity, EResource(wormholeData.resource), 100);
+    vm.startPrank(alice);
+    vm.expectRevert("[WormholeDeposit] Building is not a wormhole generator");
+    world.Primodium__wormholeDeposit(wormholeAsteroidEntity, 100);
+  }
+  function testDepositWormholeFailInCooldown() public {
+    WormholeData memory wormholeData = Wormhole.get();
+    bytes32 wormholeAsteroidEntity = testDepositWormhole();
+    bytes32 wormholeEntity = Home.get(wormholeAsteroidEntity);
+    increaseResource(wormholeAsteroidEntity, EResource(wormholeData.resource), 100);
+    console.log("cooldown: %s %s", block.timestamp, CooldownEnd.get(Home.get(wormholeAsteroidEntity)));
+    vm.startPrank(alice);
+    vm.expectRevert("[WormholeDeposit] Wormhole in cooldown");
+    world.Primodium__wormholeDeposit((wormholeEntity), 100);
+  }
+
+  function testDepositWormholeFailOnlyOwner() public {
+    WormholeData memory wormholeData = Wormhole.get();
+    bytes32 wormholeAsteroidEntity = testWormholeAsteroidHasWormholeBase();
+    bytes32 wormholeEntity = Home.get(wormholeAsteroidEntity);
+    increaseResource(wormholeAsteroidEntity, EResource(wormholeData.resource), 100);
+
+    console.logBytes32(OwnedBy.get(wormholeAsteroidEntity));
+    console.log(bob);
+    vm.startPrank(bob);
+    vm.expectRevert("[WormholeDeposit] Only owner can deposit");
+    world.Primodium__wormholeDeposit(wormholeEntity, 100);
+  }
+
+  /*
+   todo: 
+ . - resource switch 
+     - after given time and not before
+     - updates hash
+     - updates resource
+     - updates turn
+  */
 }
