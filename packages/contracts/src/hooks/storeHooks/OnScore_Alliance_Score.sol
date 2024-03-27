@@ -5,7 +5,7 @@ pragma solidity >=0.8.24;
 
 import { StoreHook } from "@latticexyz/store/src/StoreHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-import { Score, Alliance, PlayerAlliance } from "codegen/index.sol";
+import { Score, PlayerAlliance } from "codegen/index.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 
 /// @title OnScore_Alliance_Score - Updates alliance scores based on player scores.
@@ -23,25 +23,26 @@ contract OnScore_Alliance_Score is StoreHook {
     bytes memory data
   ) public override {
     bytes32 playerEntity = keyTuple[0];
+    uint8 scoreType = uint8(uint256(keyTuple[1]));
     bytes32 allianceEntity = PlayerAlliance.getAlliance(playerEntity);
 
-    // Check if the player is part of an alliance
-    if (allianceEntity == 0) {
-      // If the player is not part of an alliance, there is no alliance score to update
-      return;
-    }
+    if (allianceEntity == 0) return;
 
     bytes memory newScoreRaw = SliceInstance.toBytes(SliceLib.getSubslice(data, start));
     uint256 newScore = abi.decode(newScoreRaw, (uint256));
-    uint256 oldScore = Score.get(playerEntity);
-    uint256 allianceScore = Alliance.getScore(allianceEntity);
+    uint256 oldScore = Score.get(playerEntity, scoreType);
+    uint256 allianceScore = Score.get(allianceEntity, scoreType);
 
     if (newScore > oldScore) {
       uint256 scoreDiff = newScore - oldScore;
-      Alliance.setScore(allianceEntity, allianceScore + scoreDiff);
+      Score.set(allianceEntity, scoreType, allianceScore + scoreDiff);
     } else {
       uint256 scoreDiff = oldScore - newScore;
-      Alliance.setScore(allianceEntity, allianceScore - scoreDiff);
+      if (scoreDiff > allianceScore) {
+        Score.set(allianceEntity, scoreType, 0);
+        return;
+      }
+      Score.set(allianceEntity, scoreType, allianceScore - scoreDiff);
     }
   }
 }
