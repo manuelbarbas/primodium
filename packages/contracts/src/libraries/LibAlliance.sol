@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 
 // tables
-import { P_AllianceConfig, Score, AllianceJoinRequest, PlayerAlliance, Alliance, AllianceData, AllianceInvitation } from "codegen/index.sol";
+import { P_AllianceConfig, AllianceJoinRequest, PlayerAlliance, Alliance, AllianceData, AllianceInvitation } from "codegen/index.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -157,8 +157,6 @@ library LibAlliance {
   {
     PlayerAlliance.set(playerEntity, allianceEntity, uint8(EAllianceRole.Member));
     AllianceInvitation.deleteRecord(playerEntity, allianceEntity);
-    uint256 playerScore = Score.get(playerEntity, 1);
-    Score.set(allianceEntity, Score.get(allianceEntity) + playerScore);
     AllianceMemberSet.add(allianceEntity, playerEntity);
   }
 
@@ -176,9 +174,6 @@ library LibAlliance {
     allianceEntity = LibEncode.getHash(AllianceKey, playerEntity);
     PlayerAlliance.set(playerEntity, allianceEntity, uint8(EAllianceRole.Owner));
     Alliance.set(allianceEntity, AllianceData(name, 0, uint8(allianceInviteMode)));
-    uint256 playerScore = Score.get(playerEntity);
-    Alliance.setScore(allianceEntity, Score.get(allianceEntity) + playerScore);
-    Score.set(allianceEntity, Score.get(allianceEntity) + playerScore);
     AllianceMemberSet.add(allianceEntity, playerEntity);
   }
 
@@ -206,8 +201,6 @@ library LibAlliance {
       PlayerAlliance.set(currEntity, allianceEntity, uint8(EAllianceRole.Owner));
     }
     PlayerAlliance.deleteRecord(playerEntity);
-    uint256 playerScore = Score.get(playerEntity);
-    Alliance.setScore(allianceEntity, Score.get(allianceEntity) - playerScore);
   }
 
   /**
@@ -244,8 +237,6 @@ library LibAlliance {
   function kick(bytes32 playerEntity, bytes32 targetEntity) internal onlyCanKick(playerEntity, targetEntity) {
     bytes32 allianceEntity = PlayerAlliance.getAlliance(playerEntity);
     PlayerAlliance.deleteRecord(targetEntity);
-    uint256 playerScore = Score.get(targetEntity);
-    Alliance.setScore(allianceEntity, Score.get(allianceEntity) - playerScore);
     AllianceMemberSet.remove(allianceEntity, targetEntity);
   }
 
@@ -303,9 +294,6 @@ library LibAlliance {
   {
     bytes32 allianceEntity = PlayerAlliance.getAlliance(playerEntity);
     PlayerAlliance.set(acceptedEntity, allianceEntity, uint8(EAllianceRole.Member));
-
-    uint256 playerScore = Score.get(acceptedEntity);
-    Alliance.setScore(allianceEntity, Score.get(allianceEntity) + playerScore);
 
     AllianceJoinRequest.deleteRecord(acceptedEntity, allianceEntity);
     AllianceMemberSet.add(allianceEntity, acceptedEntity);
