@@ -511,16 +511,6 @@ export const worldInput = {
       schema: { entity: "bytes32", value: "uint256" },
     },
 
-    /* ------------------------------ Test Hook ----------------------------- */
-    HookedValue: {
-      key: ["entity"],
-      schema: { entity: "bytes32", value: "uint256" },
-    },
-
-    OnHookChangedValue: {
-      key: ["entity"],
-      schema: { entity: "bytes32", value: "uint256" },
-    },
     /* ------------------------------ Pirate Asteroids ----------------------------- */
 
     P_SpawnPirateAsteroid: {
@@ -767,6 +757,22 @@ export const worldInput = {
         amountOut: "uint256",
       },
       type: "offchainTable",
+    },
+
+    /* -------------------------------- Wormhole -------------------------------- */
+
+    P_WormholeConfig: {
+      key: [],
+      schema: {
+        startTime: "uint256",
+        turnDuration: "uint256",
+        cooldown: "uint256",
+      },
+    },
+
+    Wormhole: {
+      key: [],
+      schema: { resource: "uint8", turn: "uint256", nextResourceHash: "uint256" },
     },
 
     /* ---------------------------- Player Asteroids ---------------------------- */

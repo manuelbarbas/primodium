@@ -1,5 +1,6 @@
 export enum EBuilding {
   MainBase = 1,
+  WormholeBase,
 
   // Mines
   LithiumMine,
