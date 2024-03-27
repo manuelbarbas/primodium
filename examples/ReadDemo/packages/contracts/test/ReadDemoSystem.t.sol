@@ -6,6 +6,9 @@ import { console2 } from "forge-std/Test.sol";
 
 import { WorldRegistrationSystem } from "@latticexyz/world/src/modules/init/implementations/WorldRegistrationSystem.sol";
 import { System } from "@latticexyz/world/src/System.sol";
+
+import { Systems } from "@latticexyz/world/src/codegen/tables/Systems.sol";
+
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdLib, ROOT_NAMESPACE } from "@latticexyz/world/src/WorldResourceId.sol";
 import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
@@ -24,7 +27,8 @@ contract ReadDemoTest is MudTest {
 
   // the environment variables are pulled from your .env
   address extensionDeployerAddress = vm.envAddress("ADDRESS_ALICE");
-  address playerAddress = vm.envAddress("ADDRESS_BOB");
+  address playerAddressActive = vm.envAddress("ADDRESS_PLAYER_ACTIVE");
+  address playerAddressInactive = vm.envAddress("ADDRESS_PLAYER_INACTIVE");
 
   // defining these up top for use below.
   // namespaces are truncated to 14 bytes, and systems to 16 bytes.
@@ -82,13 +86,11 @@ contract ReadDemoTest is MudTest {
     vm.stopPrank();
   }
 
-  function test_ReadMainBaseLevel() public {
+  function test_ReadMainBaseLevel_Inactive() public {
     // pretend to be the player now.
     // you can update this address to be any address you want in the .env
-    vm.startPrank(playerAddress);
-    console2.log("\nChecking Main Base Level for player address: ", playerAddress);
-
-    // call a system function
+    vm.startPrank(playerAddressInactive);
+    console2.log("\nChecking Main Base Level for player address: ", playerAddressInactive);
 
     // function format is namespace__function
     uint32 baseLevel = IWorld(worldAddress).PluginExamples__readMainBaseLevel();
@@ -102,50 +104,21 @@ contract ReadDemoTest is MudTest {
     assertEq(baseLevel, 0, "The base level should be 0 for an Inactive player.");
   }
 
-  function test_SpawnAndReadMainBaseLevel() public {
-    vm.startPrank(playerAddress);
-    IPrimodiumWorld primodiumWorld = IPrimodiumWorld(worldAddress);
+  function test_ReadMainBaseLevel_Active() public {
+    // pretend to be an active player now.
+    // you can update this address to be any address you want in the .env
+    vm.startPrank(playerAddressActive);
+    console2.log("\nChecking Main Base Level for player address: ", playerAddressActive);
 
-    // this time, we're calling a system imported from the Primodium World
-    ResourceId spawnSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, PRIMODIUM_NAMESPACE, "SpawnSystem");
-    bytes memory homeAsteroidEntity = primodiumWorld.call(spawnSystemId, abi.encodeWithSignature("Primodium__spawn()"));
+    // function format is namespace__function
+    uint32 baseLevel = IWorld(worldAddress).PluginExamples__readMainBaseLevel();
 
-    // bytes32 homeAsteroidEntity = primodiumWorld.Primodium__spawn();
-    // bytes32 homeAsteroidEntity = IPrimodiumWorld(worldAddress).Primodium__spawn();
-    // uint32 baseLevel = IWorld(worldAddress).PluginExamples__readMainBaseLevel();
+    // stop pretending to be the player
     vm.stopPrank();
 
-    // console2.log("baseLevel: ", baseLevel);
-    // assertEq(baseLevel, 1, "The base level should be 1 for a freshly spawned player.");
-  }
+    // report the result
+    console2.log("baseLevel: ", baseLevel);
 
-  function test_FunctionSelectors() public {
-    //     // string[] memory keyNames = FunctionSelectors.getKeyNames();
-    //     // string[] memory keyNames = ("dave", "coleman");
-    //     // console2.log("FunctionSelectors keyNames: ", keyNames);
-    //     // console2.log("hello dave");
-    //     // // string[2] memory keyNames = ["dave", "coleman"];
-    //     // for (uint256 i = 0; i < keyNames.length; i++) {
-    //     //     console2.log("keyNames[%d]: %s", i, keyNames[i]);
-    //     // }
-
-    //     // string[] memory fieldNames = FunctionSelectors.getFieldNames();
-    //     // for (uint256 i = 0; i < fieldNames.length; i++) {
-    //     //     console2.log("fieldNames[%d]: %s", i, fieldNames[i]);
-    //     // }
-
-    //     // bytes4 functionSelector = bytes4(keccak256(bytes("Primodium__spawn()")));
-    //     //     ResourceId spawnSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, PRIMODIUM_NAMESPACE, "SpawnSystem");
-
-    ResourceId systemId;
-    bytes4 systemFunctionSelector;
-    (systemId, systemFunctionSelector) = FunctionSelectors.get(bytes4(abi.encodeWithSignature("Primodium__spawn()")));
-    //     console2.log("systemId:               %x", uint256(ResourceId.unwrap(systemId)));
-    //     console2.logBytes4(systemFunctionSelector);
-
-    //     // string[] memory worldFunctionSelectors = FunctionSelectors.get(keyNames[0]);
-    //     // for (uint256 i = 0; i < worldFunctionSelectors.length; i++) {
-    //     //     console2.log("worldFunctionSelectors[%d]: %s", i, worldFunctionSelectors[i]);
-    //     // }
+    assertEq(baseLevel, 1, "The base level should be 1 for an Active player.");
   }
 }
