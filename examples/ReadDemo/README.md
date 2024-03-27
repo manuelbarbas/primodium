@@ -18,13 +18,13 @@ You shouldn't need it, but the chain config for the Primodium Testnet is:
 
 ## MUD Versions
 
-You may need to update your MUD version before running this tutorial. It was built against `2.0.0-next.17`. The command to update to the latest MUD version is:
+You may need to update your MUD version before running this tutorial. It was built against `2.0.1`. The command to update to the latest MUD version is:
 
 ```bash
-pnpm mud set-version --mudVersion 2.0.0-main && pnpm i && pnpm build
+pnpm mud set-version --mudVersion 2.0.1 && pnpm i && pnpm build
 ```
 
-The world address for v0.11.x is `0xbcc5fbba516733d9947025bb959cb44a272756b4`
+The world address for the extension developer testnet v0.11.x is `0x46c1e9dd144fcf5477a542d3152d28bc0cfba0b6`
 
 The `WORLD_ADDRESS` and `BLOCK_NUMBER` are pre-configured in the `.env.example`. You should copy this to `.env`, and make any desired changes there. This guide was written before the world was deployed, so the `BLOCK_NUMBER` will need to be updated.
 
