@@ -21,7 +21,7 @@ import {
   storageUnitStorageUpgrades,
   wormholeBaseStorageUpgrades,
 } from "./storageUpgrades";
-import { getBlueprint, wormholeBlueprint } from "./util/blueprints";
+import { getBlueprint } from "./util/blueprints";
 import encodeBytes32, { encodeAddress } from "./util/encodeBytes32";
 
 const maxRange = { xBounds: 37, yBounds: 25 };
@@ -240,7 +240,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
 
   WormholeBase: {
     tables: {
-      P_Blueprint: { value: wormholeBlueprint },
+      P_Blueprint: { value: getBlueprint(5, 5) },
       Position: {
         x: Math.floor(maxRange.xBounds / 2) + 1,
         y: Math.floor(maxRange.yBounds / 2) + 1,
