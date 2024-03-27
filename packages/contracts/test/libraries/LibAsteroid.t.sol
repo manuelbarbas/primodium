@@ -6,8 +6,8 @@ import { addressToEntity } from "src/utils.sol";
 
 import { EResource } from "src/Types.sol";
 
-import { P_EnumToPrototype, P_Transportables, P_UnitPrototypes, Asteroid, AsteroidData, Position, PositionData, Position, PositionData, ReversePosition, MaxResourceCount, UnitCount, ResourceCount, UnitCount, ResourceCount, P_GameConfig, P_GameConfigData, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
-import { DroidPrototypeId } from "codegen/Prototypes.sol";
+import { Home, OwnedBy, BuildingType, P_EnumToPrototype, P_Transportables, P_UnitPrototypes, Asteroid, AsteroidData, Position, PositionData, Position, PositionData, ReversePosition, MaxResourceCount, UnitCount, ResourceCount, UnitCount, ResourceCount, P_GameConfig, P_GameConfigData, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
+import { MainBasePrototypeId, DroidPrototypeId } from "codegen/Prototypes.sol";
 import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
@@ -53,45 +53,7 @@ contract LibAsteroidTest is PrimodiumTest {
     assertLe(asteroidData.maxLevel, 8, "max level too low");
   }
 
-  function testCreateWormholeAsteroid() public {
-    asteroidEntity = spawn(alice);
-    PositionData memory position = findWormholeAsteroid(asteroidEntity);
-
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
-    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
-    bytes32 minutemanEntity = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
-    for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (unitPrototypes[i] == minutemanEntity) unitCounts[i] = 1;
-    }
-
-    setupCreateFleet(alice, asteroidEntity, unitCounts, resourceCounts);
-    vm.startPrank(alice);
-
-    bytes32 fleetEntity = world.Primodium__createFleet(asteroidEntity, unitCounts, resourceCounts);
-    world.Primodium__sendFleet(fleetEntity, position);
-
-    bytes32 actualAsteroidEntity = ReversePosition.get(position.x, position.y);
-    bytes32 expectedAsteroidEntity = keccak256(abi.encode(asteroidEntity, bytes32("asteroid"), position.x, position.y));
-
-    assertEq(actualAsteroidEntity, expectedAsteroidEntity, "asteroidEntity");
-    AsteroidData memory expectedAsteroidData = LibAsteroid.getAsteroidData(expectedAsteroidEntity, false, true);
-    AsteroidData memory actualAsteroidData = Asteroid.get(expectedAsteroidEntity);
-
-    assertEq(expectedAsteroidData.isAsteroid, actualAsteroidData.isAsteroid, "isAsteroid");
-    assertEq(expectedAsteroidData.spawnsSecondary, actualAsteroidData.spawnsSecondary, "spawnsSecondary");
-    assertEq(expectedAsteroidData.mapId, actualAsteroidData.mapId, "mapId");
-    assertTrue(actualAsteroidData.wormhole, "wormhole");
-    assertEq(Position.get(actualAsteroidEntity), position);
-    assertEq(ReversePosition.get(position.x, position.y), actualAsteroidEntity, "reversePosition");
-    assertEq(
-      MaxResourceCount.get(actualAsteroidEntity, uint8(EResource.U_MaxFleets)),
-      0,
-      "Asteroid should have 0 max fleets"
-    );
-  }
-
-  function testCreateSecondaryAsteroid() public {
+  function testCreateSecondaryAsteroid() public returns (bytes32) {
     vm.startPrank(creator);
     PositionData memory position = findSecondaryAsteroid(asteroidEntity);
 
@@ -112,6 +74,15 @@ contract LibAsteroidTest is PrimodiumTest {
       0,
       "Asteroid should have 0 max fleets"
     );
+    return expectedAsteroidEntity;
+  }
+
+  function testSecondaryAsteroidHasMainBase() public {
+    bytes32 secondaryAsteroidEntity = testCreateSecondaryAsteroid();
+    conquerAsteroid(creator, Home.get(playerEntity), secondaryAsteroidEntity);
+
+    assertEq(OwnedBy.get(secondaryAsteroidEntity), playerEntity);
+    assertEq(BuildingType.get(Home.get(secondaryAsteroidEntity)), MainBasePrototypeId);
   }
 
   function testSecondaryAsteroidDefense() public {
