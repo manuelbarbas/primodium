@@ -173,7 +173,7 @@ library LibAlliance {
   ) internal onlyNotMemberOfAlliance(playerEntity) returns (bytes32 allianceEntity) {
     allianceEntity = LibEncode.getHash(AllianceKey, playerEntity);
     PlayerAlliance.set(playerEntity, allianceEntity, uint8(EAllianceRole.Owner));
-    Alliance.set(allianceEntity, AllianceData(name, 0, uint8(allianceInviteMode)));
+    Alliance.set(allianceEntity, AllianceData(name, uint8(allianceInviteMode)));
     AllianceMemberSet.add(allianceEntity, playerEntity);
   }
 
