@@ -5,16 +5,26 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { Position, P_WormholeConfig, P_WormholeConfigData, Wormhole } from "codegen/index.sol";
 
 contract WormholeDepositSystem is PrimodiumSystem {
+  function getRandomResource(uint256 seed, uint8 prevResource) internal view returns (uint8 resource) {
+    do {
+      resource = uint8(seed % P_Transportables.getLength());
+    } while (resouce != prevResource);
+  }
+
   function _advanceTurn() {
     P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
     uint256 expectedTurn = (block.timestamp - wormholeConfig.startTime) / wormholeConfig.turnDuration;
     uint256 turn = Wormhole.getTurn();
 
-    if (wormhole.turn >= expectedTurn) return;
+    if (turn >= expectedTurn) return;
 
-    wormhole.turn = expectedTurn;
-    wormhole.resource = getRandomResource(wormhole.nextResourceHash);
-    Wormhole.set(WormholeData({ turn: expectedTurn, resource: wormhole.resource, nextResourceHash: 1 }));
+    Wormhole.set(
+      WormholeData({
+        turn: expectedTurn,
+        resource: getRandomResource(wormhole.nextResourceHash, wormhole),
+        nextResourceHash: block.timestamp
+      })
+    );
   }
 
   function wormholeDeposit(

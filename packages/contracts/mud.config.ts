@@ -503,12 +503,12 @@ export const worldInput = {
     /* ---------------------------------- Score --------------------------------- */
 
     P_ScoreMultiplier: {
-      key: ["entity"],
-      schema: { entity: "uint8", value: "uint256" },
+      key: ["resource"],
+      schema: { resource: "uint8", value: "uint256" },
     },
     Score: {
-      key: ["entity"],
-      schema: { entity: "bytes32", value: "uint256" },
+      key: ["entity", "type"],
+      schema: { entity: "bytes32", type: "uint8", value: "uint256" },
     },
 
     /* ------------------------------ Pirate Asteroids ----------------------------- */

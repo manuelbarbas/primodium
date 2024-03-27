@@ -84,18 +84,6 @@ export enum EUnit {
   Droid,
 }
 
-export enum ESendType {
-  Reinforce = 1,
-  Invade,
-  Raid,
-  Recall,
-}
-
-export enum EOrderType {
-  Resource = 1,
-  Unit,
-}
-
 export enum EObjectives {
   BuildIronMine = 1,
   BuildCopperMine,
@@ -159,11 +147,6 @@ export enum EObjectives {
   ExpandBase6,
 }
 
-export enum EFleetKey {
-  OwnedBy = 1,
-  Incoming = 2,
-}
-
 export enum EAllianceInviteMode {
   Open = 1,
   Closed,
@@ -183,18 +166,21 @@ export enum EFleetStance {
   Block,
 }
 
+export enum EScoreType {
+  Conquest = 1,
+  Extraction,
+}
+
 export const MUDEnums = {
   EBuilding: enumToArray(EBuilding),
   EResource: enumToArray(EResource),
   ESize: enumToArray(ESize),
   EUnit: enumToArray(EUnit),
-  ESendType: enumToArray(ESendType),
   EObjectives: enumToArray(EObjectives),
   EAllianceInviteMode: enumToArray(EAllianceInviteMode),
   EAllianceRole: enumToArray(EAllianceRole),
-  EOrderType: enumToArray(EOrderType),
-  EFleetKey: enumToArray(EFleetKey),
   EFleetStance: enumToArray(EFleetStance),
+  EScoreType: enumToArray(EScoreType),
 };
 
 function enumToArray(enumObj: object): string[] {

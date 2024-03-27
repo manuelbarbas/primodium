@@ -1159,9 +1159,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   FleetStance: {
     levels: idsToPrototypes(MUDEnums.EFleetStance),
   },
-  OrderType: {
-    levels: idsToPrototypes(MUDEnums.EOrderType),
-  },
 
   LightningCraft: {
     tables: {
@@ -1781,70 +1778,21 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
     },
   },
-  /* ------------------------------- Multipliers! ------------------------------ */
-  Iron: {
-    keys: [{ [EResource.Iron]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 10n },
-    },
-  },
-  Copper: {
-    keys: [{ [EResource.Copper]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 10n },
-    },
-  },
-  Lithium: {
-    keys: [{ [EResource.Lithium]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 10n },
-    },
-  },
-  Titanium: {
-    keys: [{ [EResource.Titanium]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 750n },
-    },
-  },
-  Iridium: {
-    keys: [{ [EResource.Iridium]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 3000n },
-    },
-  },
-  Kimberlite: {
-    keys: [{ [EResource.Kimberlite]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 8000n },
-    },
-  },
-  Platinum: {
-    keys: [{ [EResource.Platinum]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 1500n },
-    },
-  },
-  IronPlate: {
-    keys: [{ [EResource.IronPlate]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 50n },
-      P_ConsumesResource: { value: EResource.Iron },
-    },
-  },
-  PVCell: {
-    keys: [{ [EResource.PVCell]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 50n },
-      P_ConsumesResource: { value: EResource.Lithium },
-    },
-  },
-  Alloy: {
-    keys: [{ [EResource.Alloy]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 50n },
-      P_ConsumesResource: { value: EResource.Copper },
-    },
-  },
+
+  // ScoreMultipliers: {
+  //   levels: {
+  //     [MUDEnums.EResource.indexOf("Iron")]: { P_ScoreMultiplier: { value: 1n } },
+  //     [MUDEnums.EResource.indexOf("Copper")]: { P_ScoreMultiplier: { value: 1n } },
+  //     [MUDEnums.EResource.indexOf("Lithium")]: { P_ScoreMultiplier: { value: 1n } },
+  //     [MUDEnums.EResource.indexOf("Titanium")]: { P_ScoreMultiplier: { value: 75n } },
+  //     [MUDEnums.EResource.indexOf("Iridium")]: { P_ScoreMultiplier: { value: 300n } },
+  //     [MUDEnums.EResource.indexOf("Kimberlite")]: { P_ScoreMultiplier: { value: 800n } },
+  //     [MUDEnums.EResource.indexOf("Platinum")]: { P_ScoreMultiplier: { value: 150n } },
+  //     [MUDEnums.EResource.indexOf("IronPlate")]: { P_ScoreMultiplier: { value: 5n } },
+  //     [MUDEnums.EResource.indexOf("PVCell")]: { P_ScoreMultiplier: { value: 5n } },
+  //     [MUDEnums.EResource.indexOf("Alloy")]: { P_ScoreMultiplier: { value: 5n } },
+  //   },
+  // },
 
   Small: {
     keys: [{ [ESize.Small]: "uint8" }],
