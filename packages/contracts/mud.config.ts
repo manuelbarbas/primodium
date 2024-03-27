@@ -13,7 +13,6 @@ export const worldInput = {
   namespace: "Primodium",
   systems: {
     // these systems are closed access by default
-    S_SpawnPirateAsteroidSystem: {},
     S_ProductionRateSystem: {},
     S_SpendResourcesSystem: {},
     S_RewardsSystem: {},
@@ -24,7 +23,6 @@ export const worldInput = {
     S_FleetResetIfNoUnitsLeftSystem: {},
     S_InitAsteroidOwnerSystem: {},
     S_TransferAsteroidSystem: {},
-    S_FleetResolvePirateAsteroidSystem: {},
     S_CreateSecondaryAsteroidSystem: {},
   },
 
@@ -123,6 +121,11 @@ export const worldInput = {
     Asteroid: {
       key: ["entity"],
       schema: { entity: "bytes32", isAsteroid: "bool", maxLevel: "uint256", mapId: "uint8", spawnsSecondary: "bool" },
+    },
+
+    P_WormholeAsteroidConfig: {
+      key: [],
+      schema: { wormholeAsteroidSlot: "uint256", maxLevel: "uint256", mapId: "uint8" },
     },
 
     // note: dimensions will always be positive, but are int32s so they work with coords
@@ -510,32 +513,6 @@ export const worldInput = {
       schema: { entity: "bytes32", scoreType: "uint8", value: "uint256" },
     },
 
-    /* ------------------------------ Pirate Asteroids ----------------------------- */
-
-    P_SpawnPirateAsteroid: {
-      key: ["prototype"],
-      schema: {
-        prototype: "bytes32",
-        x: "int32",
-        y: "int32",
-        resources: "uint8[]",
-        resourceAmounts: "uint256[]",
-        units: "bytes32[]",
-        unitAmounts: "uint256[]",
-      },
-    },
-
-    PirateAsteroid: {
-      key: ["entity"],
-      schema: {
-        entity: "bytes32",
-        isPirateAsteroid: "bool",
-        isDefeated: "bool",
-        playerEntity: "bytes32",
-        prototype: "bytes32",
-      },
-    },
-
     /* ------------------------------ Objectives ----------------------------- */
 
     P_RequiredObjectives: {
@@ -628,19 +605,6 @@ export const worldInput = {
     RaidedResource: {
       key: ["entity", "resource"],
       schema: { entity: "bytes32", resource: "uint8", value: "uint256" },
-    },
-
-    P_DefeatedPirates: {
-      key: ["prototype"],
-      schema: {
-        prototype: "bytes32",
-        value: "bytes32[]",
-      },
-    },
-
-    DefeatedPirate: {
-      key: ["entity", "pirate"],
-      schema: { entity: "bytes32", pirate: "bytes32", value: "bool" },
     },
 
     P_RequiredUnits: {

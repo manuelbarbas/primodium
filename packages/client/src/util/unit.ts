@@ -3,9 +3,8 @@ import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { components, components as comps } from "src/network/components";
 import { Hex } from "viem";
-import { EntityType, PIRATE_KEY, SPEED_SCALE, UnitStorages } from "./constants";
+import { EntityType, SPEED_SCALE, UnitStorages } from "./constants";
 import { getInGracePeriod } from "./defense";
-import { hashKeyEntity } from "./encode";
 import { entityToFleetName } from "./name";
 
 export function getFleetUnitCounts(fleet: Entity) {
@@ -110,12 +109,7 @@ export const getFleetStatsFromUnits = (units: Map<Entity, bigint>, fleetOwner?: 
 
 export const getOrbitingFleets = (entity: Entity) => {
   const playerEntity = components.Account.get()?.value;
-  if (
-    !playerEntity ||
-    (components.PirateAsteroid.has(entity) &&
-      hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(entity)?.value)
-  )
-    return [];
+  if (!playerEntity) return [];
 
   return [...runQuery([Has(components.IsFleet), HasValue(components.FleetMovement, { destination: entity })])].filter(
     (entity) => {
@@ -236,10 +230,5 @@ export function getCanSend(originEntity: Entity, targetEntity: Entity) {
   const currentRock = components.FleetMovement.get(originEntity)?.destination as Entity | undefined;
   if (!currentRock || isFleet || components.BuildingType.has(targetEntity) || currentRock == targetEntity) return false;
 
-  const currentRockIsPirate = components.PirateAsteroid.has(currentRock);
-  if (!currentRockIsPirate) return true;
-
-  const player = components.Account.get()?.value;
-  const playerHome = components.Home.get(player)?.value;
-  return targetEntity == playerHome;
+  return true;
 }

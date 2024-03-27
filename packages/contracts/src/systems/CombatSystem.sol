@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 
 import { IWorld } from "codegen/world/IWorld.sol";
-import { PirateAsteroid, UnitCount, ResourceCount, IsFleet, BattleResult, BattleResultData, GracePeriod, OwnedBy } from "codegen/index.sol";
+import { UnitCount, ResourceCount, IsFleet, BattleResult, BattleResultData, GracePeriod, OwnedBy } from "codegen/index.sol";
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
 import { EResource } from "src/Types.sol";
@@ -67,7 +67,6 @@ contract CombatSystem is PrimodiumSystem {
     _onlyWhenNotInStance(fleetEntity)
     _onlyWhenNotInGracePeriod(targetAsteroid)
     _onlyWhenFleetIsInOrbitOfAsteroid(fleetEntity, targetAsteroid)
-    _onlyNotPirateOrNotDefeated(targetAsteroid)
     _claimResources(targetAsteroid)
     _claimUnits(targetAsteroid)
   {
@@ -99,11 +98,10 @@ contract CombatSystem is PrimodiumSystem {
     bytes32 defendingPlayerEntity = isTargetFleet
       ? OwnedBy.get(OwnedBy.get(battleResult.targetEntity))
       : OwnedBy.get(battleResult.targetEntity);
-    bool isPirateAsteroid = PirateAsteroid.getIsPirateAsteroid(battleResult.targetEntity);
 
     bool decrypt = isAggressorFleet && UnitCount.get(battleResult.aggressorEntity, CapitalShipPrototypeId) > 0;
-    bool isRaid = isAggressorWinner && (isTargetFleet || !decrypt || isPirateAsteroid);
-    bool isDecryption = !isRaid && isAggressorWinner && !isTargetFleet && decrypt && !isPirateAsteroid;
+    bool isRaid = isAggressorWinner && (isTargetFleet || !decrypt);
+    bool isDecryption = !isRaid && isAggressorWinner && !isTargetFleet && decrypt;
 
     IWorld world = IWorld(_world());
     if (battleResult.targetDamage > 0)
@@ -129,8 +127,5 @@ contract CombatSystem is PrimodiumSystem {
       }
     }
     world.Primodium__applyDamage(battleEntity, _player(), battleResult.targetEntity, battleResult.aggressorDamage);
-    if (isPirateAsteroid && isAggressorWinner) {
-      world.Primodium__resolvePirateAsteroid(_player(), battleResult.targetEntity);
-    }
   }
 }

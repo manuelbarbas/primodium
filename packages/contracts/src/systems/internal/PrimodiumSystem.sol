@@ -8,7 +8,7 @@ import { NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 
 import { EFleetStance } from "src/Types.sol";
-import { GracePeriod, CooldownEnd, FleetStance, OwnedBy, FleetMovement, P_UnitPrototypes, P_Transportables, PirateAsteroid } from "src/codegen/index.sol";
+import { GracePeriod, CooldownEnd, FleetStance, OwnedBy, FleetMovement, P_UnitPrototypes, P_Transportables } from "src/codegen/index.sol";
 
 /**
  * @title PrimodiumSystem
@@ -130,29 +130,6 @@ contract PrimodiumSystem is System {
    */
   modifier _resourceCountIsValid(uint256[] memory resourceCounts) {
     require(resourceCounts.length == P_Transportables.length(), "[Fleet] Incorrect resource array length");
-    _;
-  }
-
-  /**
-   * @dev Ensures the specified asteroid is not a pirate asteroid before proceeding.
-   * @param asteroidEntity The unique identifier for the asteroid.
-   */
-  modifier _onlyWhenNotPirateAsteroid(bytes32 asteroidEntity) {
-    require(!PirateAsteroid.getIsPirateAsteroid(asteroidEntity), "[Fleet] Target cannot be pirate asteroid");
-    _;
-  }
-
-  /**
-   * @dev Ensures the specified pirate asteroid has not been defeated or belongs to the player before proceeding.
-   * @param asteroidEntity The unique identifier for the asteroid.
-   */
-  modifier _onlyNotPirateOrNotDefeated(bytes32 asteroidEntity) {
-    require(!PirateAsteroid.getIsDefeated(asteroidEntity), "[Fleet] Target pirate asteroid has been defeated");
-    require(
-      !PirateAsteroid.getIsPirateAsteroid(asteroidEntity) ||
-        PirateAsteroid.getPlayerEntity(asteroidEntity) == _player(),
-      "[Fleet] Can only attack personal pirate asteroid"
-    );
     _;
   }
 

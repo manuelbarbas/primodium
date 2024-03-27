@@ -112,23 +112,6 @@ export function getBuildingCountRequirement(objective: Entity): Requirement[] | 
   }));
 }
 
-export function getHasDefeatedPirateRequirement(objective: Entity): Requirement[] | undefined {
-  const defeatedPirates = comps.P_DefeatedPirates.get(objective)?.value;
-
-  if (!defeatedPirates) return;
-
-  const player = comps.Account.get()?.value;
-  if (!player) return;
-
-  return defeatedPirates.map((pirate) => ({
-    id: pirate as Entity,
-    requiredValue: 1n,
-    currentValue: comps.DefeatedPirate.getWithKeys({ pirate: pirate as Hex, entity: player as Hex })?.value ? 1n : 0n,
-    scale: 1n,
-    type: RequirementType.DefeatedPirates,
-  }));
-}
-
 export function getRequiredUnitsRequirement(objective: Entity, asteroid: Entity): Requirement[] | undefined {
   const rawRequiredUnits = comps.P_RequiredUnits.get(objective, {
     units: [],
@@ -247,7 +230,6 @@ export function getAllRequirements(objective: Entity, asteroid: Entity): Record<
     [RequirementType.Expansion]: getExpansionRequirement(objective),
     [RequirementType.ProducedResources]: getResourceRequirement(objective),
     [RequirementType.Buildings]: getBuildingCountRequirement(objective),
-    [RequirementType.DefeatedPirates]: getHasDefeatedPirateRequirement(objective),
     [RequirementType.RaidedResources]: getRaidRequirement(objective),
     [RequirementType.RequiredUnits]: getRequiredUnitsRequirement(objective, asteroid),
     [RequirementType.ProducedUnits]: getProducedUnitsRequirement(objective),
