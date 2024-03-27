@@ -49,9 +49,6 @@ export const getInitalQuery = ({
               on: "entity",
             },
             {
-              tableId: tables.PirateAsteroid.tableId,
-            },
-            {
               tableId: tables.Level.tableId,
             },
           ],

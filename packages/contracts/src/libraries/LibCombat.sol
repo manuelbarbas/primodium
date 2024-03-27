@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { P_CapitalShipConfig, CooldownEnd, DefeatedPirate, PirateAsteroid, DestroyedUnit, DamageDealt, BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, BattleResult, BattleResultData, FleetMovement, GracePeriod, PirateAsteroid, DefeatedPirate, UnitCount, P_Unit, UnitLevel, P_GameConfig, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { P_CapitalShipConfig, CooldownEnd, DestroyedUnit, DamageDealt, BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, BattleResult, BattleResultData, FleetMovement, GracePeriod, UnitCount, P_Unit, UnitLevel, P_GameConfig, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { CapitalShipPrototypeId } from "codegen/Prototypes.sol";
 import { LibMath } from "libraries/LibMath.sol";
@@ -352,22 +352,5 @@ library LibCombat {
     }
     time *= 60;
     return (time * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
-  }
-  /**
-   * @notice Resolves the outcome of a battle involving a pirate asteroid, including handling defeated pirates and incoming fleets.
-   * @param playerEntity The player entity involved in the battle.
-   * @param pirateAsteroidEntity The pirate asteroid entity involved in the battle.
-   */
-  function resolvePirateAsteroid(bytes32 playerEntity, bytes32 pirateAsteroidEntity) internal {
-    PirateAsteroid.setIsDefeated(pirateAsteroidEntity, true);
-    DefeatedPirate.set(playerEntity, PirateAsteroid.getPrototype(pirateAsteroidEntity), true);
-    bytes32[] memory incomingFleets = FleetSet.getFleetEntities(pirateAsteroidEntity, FleetIncomingKey);
-    for (uint256 i = 0; i < incomingFleets.length; i++) {
-      if (FleetMovement.getArrivalTime(incomingFleets[i]) <= block.timestamp) {
-        LibFleetMove.sendFleet(incomingFleets[i], OwnedBy.get(incomingFleets[i]));
-      } else {
-        LibFleetMove.recallFleet(incomingFleets[i]);
-      }
-    }
   }
 }

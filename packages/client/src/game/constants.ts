@@ -192,10 +192,6 @@ export enum SpriteKeys {
   Asteroid4 = "sprites/spacerocks/asteroids/asteroid4.png",
   Asteroid5 = "sprites/spacerocks/asteroids/asteroid5.png",
 
-  //PIRATE ASTEROIDS
-  PirateAsteroid1 = "sprites/spacerocks/pirate_asteroids/Pirate_Asteroid1.png",
-  PirateAsteroid2 = "sprites/spacerocks/pirate_asteroids/Pirate_Asteroid2.png",
-
   //MOTHERLODES
   MotherlodeIridiumSmall = "sprites/spacerocks/motherlodes/motherlode_iridium_small.png",
   MotherlodeIridiumMedium = "sprites/spacerocks/motherlodes/motherlode_iridium_medium.png",
@@ -216,7 +212,6 @@ export enum SpriteKeys {
   //ASTEROID BORDERS
   AsteroidPlayer = "sprites/spacerocks/borders/Border_Player.png",
   AsteroidEnemy = "sprites/spacerocks/borders/Border_Enemy.png",
-  AsteroidPirate = "sprites/spacerocks/borders/Border_Pirate.png",
   AsteroidAlliance = "sprites/spacerocks/borders/Border_Alliance.png",
 
   MotherlodePlayerSmall = "sprites/spacerocks/borders/Border_Player_Motherlode1.png",

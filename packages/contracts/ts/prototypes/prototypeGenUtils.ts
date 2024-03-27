@@ -108,10 +108,6 @@ export const getResourceValues = (resourceValues: Record<string, number>) => {
   );
   return { resources, amounts };
 };
-export const getPirateObjectiveResourceValues = (resourceValues: Record<string, number>) => {
-  const amounts = getResourceValues(resourceValues);
-  return { ...amounts, resourceAmounts: amounts.amounts };
-};
 
 export const getUnitValues = (unitValues: Record<string, number>) => {
   const [units, amounts] = Object.entries(unitValues).reduce(

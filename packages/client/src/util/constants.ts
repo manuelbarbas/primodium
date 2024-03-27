@@ -38,12 +38,10 @@ export const RESOURCE_SCALE = BigInt(10 ** DECIMALS);
 export const MULTIPLIER_SCALE = BigInt(100);
 export const UNIT_SPEED_SCALE = BigInt(100);
 
-export const PIRATE_KEY = toHex32("pirate");
 export const NUM_UNITS = Object.keys(EUnit).length / 2;
 export const STORAGE_PREFIX = "primodiumSessionKey:";
 
 export const Keys = {
-  PIRATE: toHex32("pirate") as Entity,
   SELECTED: toHex32("selected") as Entity,
   ACTIVE: toHex32("active") as Entity,
   BATTLE: toHex32("battle") as Entity,
@@ -71,7 +69,6 @@ export enum RequirementType {
   DestroyedUnits,
   ProducedUnits,
   RequiredUnits,
-  DefeatedPirates,
   RewardUtilities,
 }
 

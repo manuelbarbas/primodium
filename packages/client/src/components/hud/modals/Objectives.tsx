@@ -23,7 +23,6 @@ import { getBlockTypeName } from "src/util/common";
 import {
   BackgroundImage,
   ObjectiveEntityLookup,
-  RequirementType,
   ResourceImage,
   ResourceType,
   TransactionQueueType,
@@ -158,11 +157,7 @@ const Objective: React.FC<{
                           }
                           text={formatNumber(value / _req.scale, { short: true, fractionDigits: 3 })}
                           tooltipDirection={"bottom"}
-                          tooltipText={
-                            _req.type === RequirementType.DefeatedPirates
-                              ? "Defeated Pirates"
-                              : getBlockTypeName(_req.id)
-                          }
+                          tooltipText={getBlockTypeName(_req.id)}
                           className="text-xs font-bold"
                         />
 
