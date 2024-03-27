@@ -1,8 +1,8 @@
-import { getNetworkConfig } from "../config/getNetworkConfig";
-import { SetupResult } from "../types";
-import { hydrateFromRPC, subToRPC } from "../sync/rpc";
-import { hydrateInitialGameState } from "../sync/indexer";
 import { SyncSourceType, SyncStep } from "src/util/constants";
+import { getNetworkConfig } from "../config/getNetworkConfig";
+import { hydrateInitialGameState } from "../sync/indexer";
+import { hydrateFromRPC, subToRPC } from "../sync/rpc";
+import { SetupResult } from "../types";
 
 export const setupInitialSync = async (setupResult: SetupResult) => {
   const { network, components } = setupResult;
@@ -53,8 +53,7 @@ export const setupInitialSync = async (setupResult: SetupResult) => {
     },
     //on error
     async (err) => {
-      console.warn("Failed to fetch from indexer, hydrating from RPC");
-      console.error(err);
+      console.warn("Failed to fetch from indexer, hydrating from RPC", err);
 
       const toBlock = await publicClient.getBlockNumber();
       hydrateFromRPC(
