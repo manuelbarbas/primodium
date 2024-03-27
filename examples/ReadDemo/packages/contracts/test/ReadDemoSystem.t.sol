@@ -41,6 +41,9 @@ contract ReadDemoTest is MudTest {
   // override MudTest setUp
   // the setUp function is run before each test function that follows
   function setUp() public override {
+    // import MUD specific test setup
+    super.setUp();
+
     // configure the target world
     worldAddress = vm.envAddress("WORLD_ADDRESS");
     StoreSwitch.setStoreAddress(worldAddress);
@@ -120,5 +123,21 @@ contract ReadDemoTest is MudTest {
     console2.log("baseLevel: ", baseLevel);
 
     assertEq(baseLevel, 1, "The base level should be 1 for an Active player.");
+  }
+
+  function test_SpawnAndReadMainBaseLevel() public {
+    vm.startPrank(playerAddressInactive);
+    console2.log("\ntest_SpawnAndReadMainaseLevel worldAddress: ", worldAddress);
+
+    uint32 baseLevel = IWorld(worldAddress).PluginExamples__readMainBaseLevel();
+    console2.log("baseLevelBefore:", baseLevel);
+
+    // this time, we're calling a system imported from the Primodium World
+    bytes32 homeAsteroidEntity = IPrimodiumWorld(worldAddress).Primodium__spawn();
+    baseLevel = IWorld(worldAddress).PluginExamples__readMainBaseLevel();
+    vm.stopPrank();
+
+    console2.log("baseLevelAfter: ", baseLevel);
+    assertEq(baseLevel, 1, "The base level should be 1 for a freshly spawned player.");
   }
 }
