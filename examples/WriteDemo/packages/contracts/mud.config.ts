@@ -1,6 +1,6 @@
-import { mudConfig } from "@latticexyz/world/register";
+import { defineWorld } from "@latticexyz/world";
 
-export default mudConfig({
+export default defineWorld({
   namespace: "PluginExamples",
   systems: {
     WriteDemoSystem: {
