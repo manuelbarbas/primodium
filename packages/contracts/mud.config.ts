@@ -120,7 +120,14 @@ export const worldInput = {
 
     Asteroid: {
       key: ["entity"],
-      schema: { entity: "bytes32", isAsteroid: "bool", maxLevel: "uint256", mapId: "uint8", spawnsSecondary: "bool" },
+      schema: {
+        entity: "bytes32",
+        isAsteroid: "bool",
+        maxLevel: "uint256",
+        mapId: "uint8",
+        spawnsSecondary: "bool",
+        wormhole: "bool",
+      },
     },
 
     P_WormholeAsteroidConfig: {

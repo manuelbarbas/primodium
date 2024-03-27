@@ -1620,6 +1620,24 @@
   },
   {
     "type": "function",
+    "name": "Primodium__wormholeDeposit",
+    "inputs": [
+      {
+        "name": "wormholeEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "count",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "batchCall",
     "inputs": [
       {

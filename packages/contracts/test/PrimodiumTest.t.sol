@@ -421,8 +421,8 @@ contract PrimodiumTest is MudTest {
       );
       logPosition(sourcePosition);
       targetPosition = PositionData(
-        sourcePosition.x + targetPositionRelative.x,
-        sourcePosition.y + targetPositionRelative.y,
+        sourcePosition.x - targetPositionRelative.x,
+        sourcePosition.y - targetPositionRelative.y,
         0
       );
       logPosition(targetPosition);
@@ -446,8 +446,8 @@ contract PrimodiumTest is MudTest {
       config.maxAsteroidsPerPlayer
     );
     PositionData memory targetPosition = PositionData({
-      x: sourcePosition.x + targetPositionRelative.x,
-      y: sourcePosition.y + targetPositionRelative.y,
+      x: sourcePosition.x - targetPositionRelative.x,
+      y: sourcePosition.y - targetPositionRelative.y,
       parentEntity: 0
     });
     logPosition(targetPosition);
