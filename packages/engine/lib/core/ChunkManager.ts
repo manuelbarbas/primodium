@@ -1,7 +1,8 @@
-import { Coord, Scene } from "engine/types";
+import { Coord } from "../../types";
+import type { createCamera } from "./createCamera";
 
 export class ChunkManager {
-  private scene;
+  private camera;
   private chunkSize;
   private onEnterChunk;
   private onExitChunk;
@@ -9,21 +10,21 @@ export class ChunkManager {
   private worldViewUnsub;
 
   constructor(
-    scene: Scene,
+    camera: ReturnType<typeof createCamera>,
     chunkSize: number,
     onEnterChunk: (chunkCoord: Coord) => void,
     onExitChunk: (chunkCoord: Coord) => void
   ) {
-    this.scene = scene;
+    this.camera = camera;
     this.chunkSize = chunkSize;
     this.onEnterChunk = onEnterChunk;
     this.onExitChunk = onExitChunk;
     this.visibleChunks = new Set();
-    this.worldViewUnsub = scene.camera.worldView$.subscribe(() => this.update());
+    this.worldViewUnsub = camera.worldView$.subscribe(() => this.update());
   }
 
   private _getVisibleChunks(): Set<string> {
-    const cam = this.scene.camera.phaserCamera;
+    const cam = this.camera.phaserCamera;
     const chunks = new Set<string>();
 
     const startX = Math.floor(cam.worldView.x / this.chunkSize);

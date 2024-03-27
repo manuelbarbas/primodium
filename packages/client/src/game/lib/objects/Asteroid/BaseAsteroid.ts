@@ -5,6 +5,7 @@ import { Assets } from "../../constants/assets";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { SpriteKeys } from "../../constants/assets/sprites";
 import { AsteroidRelationship } from "../../constants/common";
+import { OrbitRing } from "./OrbitRing";
 
 export abstract class BaseAsteroid extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
   protected coord: Coord;
@@ -15,7 +16,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
   protected outlineSprite: Phaser.GameObjects.Image;
   // protected emblemSprite: Phaser.GameObjects.Sprite;
   // protected asteroidLabel: Phaser.GameObjects.BitmapText;
-  // protected orbitRing: OrbitRing;
+  protected orbitRing: OrbitRing;
 
   constructor(scene: Scene, coord: Coord, sprite: SpriteKeys, outlineSprite: SpriteKeys) {
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
@@ -23,24 +24,11 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
 
     this.outlineSprite = new Phaser.GameObjects.Image(scene.phaserScene, 0, 0, Assets.SpriteAtlas, outlineSprite);
     this.asteroidSprite = new Phaser.GameObjects.Image(scene.phaserScene, 0, 0, Assets.SpriteAtlas, sprite);
+    this.orbitRing = new OrbitRing(scene, { x: 0, y: 0 });
 
     this.coord = coord;
     this._scene = scene;
     this.setSize(this.outlineSprite.width, this.outlineSprite.height).setInteractive();
-    // this.checkVisibility();
-    // scene.camera.worldView$.subscribe(() => this.checkVisibility());
-  }
-
-  // Method to check visibility and update the object's active and visible properties
-  private checkVisibility() {
-    const camera = this.scene.cameras.main;
-    const bounds = this.getBounds();
-
-    // Check if the asteroid's bounds overlap with the camera's visible area
-    const isVisible = Phaser.Geom.Intersects.RectangleToRectangle(bounds, camera.worldView);
-
-    this.setVisible(isVisible);
-    this.setActive(isVisible);
   }
 
   spawn() {
@@ -49,7 +37,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
       this.outlineSprite,
       // this.emblemSprite,
       // this.asteroidLabel,
-      // this.orbitRing
+      this.orbitRing,
     ]);
     this.spawned = true;
     this.scene.add.existing(this);
@@ -62,6 +50,10 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
 
   getCoord() {
     return this.coord;
+  }
+
+  getOrbitRing() {
+    return this.orbitRing;
   }
 
   abstract setRelationship(relationship: AsteroidRelationship): void;

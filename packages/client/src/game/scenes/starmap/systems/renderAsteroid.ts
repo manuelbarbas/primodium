@@ -9,13 +9,11 @@ import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroi
 import { PrimaryAsteroid, SecondaryAsteroid } from "src/game/lib/objects/Asteroid";
 import { EntityType, MapIdToAsteroidType } from "src/util/constants";
 import { createCameraApi } from "src/game/api/camera";
-import { StaticObjectManager } from "src/game/lib/utils/StaticObjectManager";
 
 export const renderAsteroid = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const cameraApi = createCameraApi(scene);
 
-  const objectManager = new StaticObjectManager(scene, scene.tiled.tileHeight * 32);
   const render = (entity: Entity, coord: Coord) => {
     const asteroidData = components.Asteroid.get(entity);
     if (!asteroidData) throw new Error("Asteroid data not found");
@@ -51,22 +49,12 @@ export const renderAsteroid = (scene: Scene) => {
       })
       .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
         components.HoverEntity.set({ value: entity });
-        scene.phaserScene.tweens.add({
-          targets: asteroid,
-          scale: 1.2,
-          duration: 100,
-        });
       })
       .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => {
         components.HoverEntity.remove();
-        scene.phaserScene.tweens.add({
-          targets: asteroid,
-          scale: spriteScale,
-          duration: 100,
-        });
       });
 
-    objectManager.add(entity, asteroid);
+    scene.objects.add(entity, asteroid, true);
   };
 
   const query = [Has(components.Asteroid), Has(components.Position), Not(components.PirateAsteroid)];
@@ -82,9 +70,5 @@ export const renderAsteroid = (scene: Scene) => {
 
     render(entity, coord);
     if (asteroidData?.spawnsSecondary) initializeSecondaryAsteroids(entity, coord);
-  });
-
-  systemsWorld.registerDisposer(() => {
-    objectManager.dispose();
   });
 };

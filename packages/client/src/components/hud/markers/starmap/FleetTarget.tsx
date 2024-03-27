@@ -1,22 +1,23 @@
 import { Entity } from "@latticexyz/recs";
-import { useMemo, useRef } from "react";
+import { useMemo } from "react";
 import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Marker } from "src/components/core/Marker";
 import { Modal } from "src/components/core/Modal";
 import { useMud } from "src/hooks";
 import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
-import { usePrimodium } from "src/hooks/usePrimodium";
 import { useSpaceRock } from "src/hooks/useSpaceRock";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { clearFleetStance } from "src/network/setup/contractCalls/fleetStance";
-import { getCanAttackSomeone, getFleetPixelPosition, getFleetStats } from "src/util/unit";
+import { getCanAttackSomeone, getFleetStats } from "src/util/unit";
 import { Fleets } from "../../panes/fleets/Fleets";
 import { DepthLayers } from "src/game/lib/constants/common";
+import { usePrimodium } from "src/hooks/usePrimodium";
 
 // this component assumes the fleet is owned by the player
 export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fleet, position }) => {
+  const primodium = usePrimodium();
   const mapOpen = components.MapOpen.use()?.value ?? false;
   const selectingAttackDestination = !!components.Attack.use()?.originFleet;
   const selectingMoveDestination = !!components.Send.use()?.originFleet;
@@ -25,18 +26,18 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
   const spaceRockData = useSpaceRock(position);
   const { inCooldown } = useInCooldownEnd(fleet);
   const mud = useMud();
-  const primodium = usePrimodium();
-  const {
-    scene: { getScene },
-  } = useRef(primodium.api("STARMAP")).current;
 
   const coord = useMemo(() => {
-    const scene = getScene("STARMAP");
+    const fleetEntity = components.SelectedFleet.get()?.value;
 
-    if (!scene) throw new Error("Scene not found");
+    if (!fleetEntity) return { x: 0, y: 0 };
 
-    return getFleetPixelPosition(scene, fleet);
-  }, [fleet, getScene]);
+    const fleetObj = primodium.api("STARMAP").objects.getFleet(fleetEntity);
+
+    if (!fleetObj) return { x: 0, y: 0 };
+
+    return fleetObj.getPixelCoord();
+  }, [fleet, primodium]);
 
   const disableAttack = useMemo(
     () => noUnits || selectingMoveDestination || stats.attack === 0n || !getCanAttackSomeone(fleet) || inCooldown,

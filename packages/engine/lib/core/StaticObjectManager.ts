@@ -1,27 +1,25 @@
 import { CoordMap } from "@latticexyz/utils";
-import { Coord, Scene } from "engine/types";
 import { ChunkManager } from "./ChunkManager";
 import { pixelToChunkCoord } from "@latticexyz/phaserx";
-import { BaseAsteroid } from "../objects/Asteroid/BaseAsteroid";
-import { Building } from "../objects/Building";
-type PrimodiumGameObject = BaseAsteroid | Building;
+import { BaseAsteroid } from "../../../client/src/game/lib/objects/Asteroid/BaseAsteroid";
+import { Building } from "../../../client/src/game/lib/objects/Building";
+import { Fleet } from "../../../client/src/game/lib/objects/Fleet";
+import { createCamera } from "./createCamera";
+import { Coord } from "../../types";
+type PrimodiumGameObject = BaseAsteroid | Building | Fleet;
 
 export class StaticObjectManager {
   private chunkManager;
   private coordMap = new CoordMap<PrimodiumGameObject[]>();
   private objMap = new Map<string, PrimodiumGameObject>();
-  private scene: Scene;
   private chunkSize: number;
   private count = 0;
+  private onNewChildCallbacks: ((id: string) => void)[] = [];
 
-  constructor(scene: Scene, chunkSize: number) {
-    if (chunkSize % scene.tiled.tileWidth !== 0 || chunkSize % scene.tiled.tileHeight !== 0)
-      throw new Error("Chunk size must be a factor of tile size");
-
-    this.scene = scene;
+  constructor(camera: ReturnType<typeof createCamera>, chunkSize: number) {
     this.chunkSize = chunkSize;
     this.chunkManager = new ChunkManager(
-      scene,
+      camera,
       chunkSize,
       (coord) => this.onEnterChunk(coord),
       (coord) => this.onExitChunk(coord)
@@ -47,24 +45,37 @@ export class StaticObjectManager {
     });
   }
 
-  add(id: string, object: PrimodiumGameObject) {
+  add(id: string, object: PrimodiumGameObject, cull = false) {
     if (this.objMap.has(id)) return;
     this.objMap.set(id, object);
 
-    const chunkCoord = pixelToChunkCoord({ x: object.x, y: object.y }, this.chunkSize);
+    if (cull) {
+      const chunkCoord = pixelToChunkCoord({ x: object.x, y: object.y }, this.chunkSize);
 
-    const objects = this.coordMap.get(chunkCoord) ?? [];
+      const objects = this.coordMap.get(chunkCoord) ?? [];
 
-    if (!objects.length) this.coordMap.set(chunkCoord, [object]);
-    else objects.push(object);
+      if (!objects.length) this.coordMap.set(chunkCoord, [object]);
+      else objects.push(object);
 
-    if (this.chunkManager.getVisibleChunks().has(this.chunkManager.getKeyForChunk(chunkCoord))) {
-      this.count--;
-      if (!object.isSpawned()) {
-        object.spawn();
+      if (this.chunkManager.getVisibleChunks().has(this.chunkManager.getKeyForChunk(chunkCoord))) {
+        this.count--;
+        if (!object.isSpawned()) {
+          object.spawn();
+        }
+        object.setActive(true).setVisible(true);
       }
-      object.setActive(true).setVisible(true);
     }
+
+    this.onNewChildCallbacks.forEach((callback) => callback(id));
+  }
+
+  onNewChild(callback: (id: string) => void) {
+    this.onNewChildCallbacks.push(callback);
+
+    return () => {
+      const index = this.onNewChildCallbacks.indexOf(callback);
+      if (index !== -1) this.onNewChildCallbacks.splice(index, 1);
+    };
   }
 
   remove(id: string) {
@@ -79,6 +90,10 @@ export class StaticObjectManager {
 
     this.objMap.delete(id);
     object.dispose();
+  }
+
+  get(id: string) {
+    return this.objMap.get(id);
   }
 
   dispose() {

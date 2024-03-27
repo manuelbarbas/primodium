@@ -1,4 +1,3 @@
-import { Scenes } from "src/game/lib/mappings";
 import { Entity } from "@latticexyz/recs";
 import { EFleetStance } from "contracts/config/enums";
 import { FC, useMemo } from "react";
@@ -23,8 +22,8 @@ import { useFleetNav } from "./Fleets";
 
 const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   const mud = useMud();
-  const api = usePrimodium().api(Scenes.Starmap);
-  const scene = api.scene.getScene(Scenes.Starmap);
+  const api = usePrimodium().api("STARMAP");
+  const scene = api.scene.getScene("STARMAP");
 
   const { BackButton, NavButton } = useFleetNav();
 

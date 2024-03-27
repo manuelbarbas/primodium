@@ -32,6 +32,7 @@ import { createHooksApi } from "./hooks";
 import { createInputApi } from "./input";
 import { createSceneApi } from "./scene";
 import { createSpriteApi } from "./sprite";
+import { createObjectApi } from "./objects";
 
 export type Primodium = Awaited<ReturnType<typeof initPrimodium>>;
 export type PrimodiumApi = ReturnType<Primodium["api"]>;
@@ -125,6 +126,7 @@ export function api(sceneKey: SceneKeys = "ASTEROID", instance: string | Game = 
     fx: createFxApi(scene),
     sprite: createSpriteApi(scene),
     audio: createAudioApi(scene),
+    objects: createObjectApi(scene),
     util: { openMap, closeMap },
   };
 }

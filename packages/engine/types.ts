@@ -88,3 +88,7 @@ export type Coord = {
   x: number;
   y: number;
 };
+
+export type PixelCoord = Coord;
+export type TileCoord = Coord;
+export type ChunkCoord = Coord;

@@ -132,7 +132,7 @@ export const setupBasicCameraMovement = (
     if (drag) handleDrag();
   };
 
-  scene.scriptManager.add(handleGameTickMovement);
+  scene.phaserScene.events.addListener("update", handleGameTickMovement);
 
   //handle double click events and zoom to mouse position
   const doubleClickSub = scene.input.doubleClick$.subscribe((event) => {
@@ -187,6 +187,6 @@ export const setupBasicCameraMovement = (
   world.registerDisposer(() => {
     doubleClickSub.unsubscribe();
     scene.input.phaserInput.off("wheel");
-    scene.scriptManager.remove(handleGameTickMovement);
+    scene.phaserScene.events.removeListener("update", handleGameTickMovement);
   }, "game");
 };

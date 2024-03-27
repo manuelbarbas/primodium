@@ -18,9 +18,10 @@ export class Fleet extends Phaser.GameObjects.Sprite implements IPrimodiumGameOb
       Assets.SpriteAtlas,
       SpriteKeys.LightningCraft
     );
-    this.setOrigin(0.5, 0.5);
-    this.setDepth(DepthLayers.Marker - coord.y);
-    this.setInteractive();
+    this.setOrigin(0.5, 0.5)
+      .setScale(0.5)
+      .setDepth(DepthLayers.Marker - coord.y)
+      .setInteractive();
     this._scene = scene;
     this.coord = coord;
   }
@@ -37,6 +38,22 @@ export class Fleet extends Phaser.GameObjects.Sprite implements IPrimodiumGameOb
 
   getCoord() {
     return this.coord;
+  }
+
+  getPixelCoord() {
+    const container = this.parentContainer;
+    const matrix = container.getWorldTransformMatrix();
+    const point = matrix.transformPoint(this.x, this.y);
+
+    return { x: point.x, y: point.y };
+  }
+
+  getTileCoord() {
+    const container = this.parentContainer;
+    const matrix = container.getWorldTransformMatrix();
+    const point = matrix.transformPoint(this.x, this.y);
+
+    return { x: point.x / this._scene.tiled.tileWidth, y: -point.y / this._scene.tiled.tileHeight };
   }
 
   dispose() {

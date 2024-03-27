@@ -1,4 +1,3 @@
-import { DepthLayers } from "src/game/lib/mappings";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import {
   ComponentUpdate,
@@ -24,7 +23,6 @@ import {
   SetValue,
 } from "../../common/object-components/common";
 import { Circle, Line, Triangle } from "../../common/object-components/graphics";
-import { renderEntityOrbitingFleets } from "./renderFleetsInOrbit";
 
 export const renderFleetsInTransit = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tiled;

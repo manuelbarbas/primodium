@@ -19,7 +19,6 @@ import { components } from "src/network/components";
 import { EntityType } from "src/util/constants";
 import { entityToFleetName, entityToRockName } from "src/util/name";
 import { formatNumber, formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
-import { getFleetTilePosition } from "src/util/unit";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -134,7 +133,7 @@ const _OwnedFleets: React.FC = () => {
     playerAccount: { entity: playerEntity },
   } = useMud();
   const primodium = usePrimodium();
-  const getScene = primodium.api("STARMAP").scene.getScene;
+  // const objects = primodium.api("STARMAP").objects;
 
   const query = [Has(components.IsFleet)];
   const fleets = useEntityQuery(query).filter((entity) => {
@@ -158,8 +157,6 @@ const _OwnedFleets: React.FC = () => {
               key={entity}
               fleet={entity}
               onClick={async () => {
-                const scene = getScene("STARMAP");
-                if (!scene) return;
                 const mapOpen = components.MapOpen.get(undefined, {
                   value: false,
                 }).value;
@@ -176,7 +173,12 @@ const _OwnedFleets: React.FC = () => {
                 const time = components.Time.get()?.value ?? 0n;
 
                 if (arrivalTime < time) components.SelectedFleet.set({ value: entity });
-                const position = getFleetTilePosition(scene, entity);
+
+                const objects = primodium.api("STARMAP").objects;
+                const fleet = objects.getFleet(entity);
+
+                if (!fleet) return;
+                const position = fleet.getTileCoord();
 
                 pan({
                   x: position.x,
