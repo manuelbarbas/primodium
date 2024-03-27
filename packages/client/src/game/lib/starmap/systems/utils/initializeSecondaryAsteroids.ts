@@ -36,11 +36,11 @@ const spawnDroidBase = (asteroidEntity: Entity) => {
 
 export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord) {
   const config = components.P_GameConfig.get();
-  const basicAsteroidConfig = components.P_BasicAsteroidConfig.get();
+  const wormholeAsteroidConfig = components.P_WormholeAsteroidConfig.get();
 
-  let basicAsteroid: boolean = false;
+  let wormholeAsteroid: boolean = false;
   if (!config) throw new Error("GameConfig not found");
-  if (!basicAsteroidConfig) throw new Error("BasicAsteroidConfig not found");
+  if (!wormholeAsteroidConfig) throw new Error("WormholeAsteroidConfig not found");
   for (let i = 0; i < config.maxAsteroidsPerPlayer; i++) {
     const asteroidPosition = getPositionByVector(
       Number(config.asteroidDistance),
@@ -49,10 +49,10 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
     );
     const asteroidEntity = getSecondaryAsteroidEntity(sourceEntity, asteroidPosition);
 
-    if (i == Number(basicAsteroidConfig.basicSecondarySlot)) {
-      basicAsteroid = true;
+    if (i == Number(wormholeAsteroidConfig.wormholeAsteroidSlot)) {
+      wormholeAsteroid = true;
     } else {
-      basicAsteroid = false;
+      wormholeAsteroid = false;
     }
 
     if (!components.OwnedBy.get(asteroidEntity)) spawnDroidBase(asteroidEntity);
@@ -61,9 +61,9 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
 
     world.registerEntity({ id: asteroidEntity });
     components.ReversePosition.setWithKeys({ entity: asteroidEntity as string, ...emptyData }, asteroidPosition);
-    if (!isSecondaryAsteroid(asteroidEntity, Number(config.asteroidChanceInv), basicAsteroid)) continue;
+    if (!isSecondaryAsteroid(asteroidEntity, Number(config.asteroidChanceInv), wormholeAsteroid)) continue;
 
-    const asteroidData = getAsteroidData(asteroidEntity, basicAsteroid);
+    const asteroidData = getAsteroidData(asteroidEntity, wormholeAsteroid);
     components.Asteroid.set({ ...emptyData, ...asteroidData }, asteroidEntity);
     components.Position.set({ ...emptyData, ...asteroidPosition, parentEntity: toHex32("0") }, asteroidEntity);
 
@@ -84,8 +84,8 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
   }
 }
 
-function isSecondaryAsteroid(entity: Entity, chanceInv: number, basicAsteroid: boolean) {
-  if (basicAsteroid) {
+function isSecondaryAsteroid(entity: Entity, chanceInv: number, wormholeAsteroid: boolean) {
+  if (wormholeAsteroid) {
     return true;
   }
   const motherlodeType = getByteUInt(entity, 6, 128);
@@ -98,14 +98,14 @@ function getSecondaryAsteroidUnitsAndEncryption(asteroidEntity: Entity, level: b
   return { droidCount, encryption };
 }
 
-function getAsteroidData(asteroidEntity: Entity, basicAsteroid: boolean) {
-  const basicAsteroidConfig = components.P_BasicAsteroidConfig.get();
-  if (!basicAsteroidConfig) throw new Error("basicAsteroidConfig not found");
-  if (basicAsteroid) {
+function getAsteroidData(asteroidEntity: Entity, wormholeAsteroid: boolean) {
+  const wormholeAsteroidConfig = components.P_WormholeAsteroidConfig.get();
+  if (!wormholeAsteroidConfig) throw new Error("wormholeAsteroidConfig not found");
+  if (wormholeAsteroid) {
     return {
       isAsteroid: true,
-      maxLevel: basicAsteroidConfig.maxLevel,
-      mapId: basicAsteroidConfig.mapId,
+      maxLevel: wormholeAsteroidConfig.maxLevel,
+      mapId: wormholeAsteroidConfig.mapId,
       spawnsSecondary: false,
     };
   }

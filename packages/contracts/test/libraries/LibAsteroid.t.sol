@@ -6,7 +6,7 @@ import { addressToEntity } from "src/utils.sol";
 
 import { EResource } from "src/Types.sol";
 
-import { Asteroid, AsteroidData, Position, PositionData, Position, PositionData, ReversePosition, MaxResourceCount, UnitCount, ResourceCount, UnitCount, ResourceCount, P_GameConfig, P_GameConfigData, P_BasicAsteroidConfig, P_BasicAsteroidConfigData } from "codegen/index.sol";
+import { Asteroid, AsteroidData, Position, PositionData, Position, PositionData, ReversePosition, MaxResourceCount, UnitCount, ResourceCount, UnitCount, ResourceCount, P_GameConfig, P_GameConfigData, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
 import { DroidPrototypeId } from "codegen/Prototypes.sol";
 
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
@@ -34,11 +34,11 @@ contract LibAsteroidTest is PrimodiumTest {
     uint256 chanceInv = 4;
     P_GameConfig.setAsteroidChanceInv(4);
     bytes32 entity = 0 << 128;
-    assertTrue(LibAsteroid.isAsteroid(entity, chanceInv, P_BasicAsteroidConfig.getBasicSecondarySlot() + 1));
+    assertTrue(LibAsteroid.isAsteroid(entity, chanceInv, P_WormholeAsteroidConfig.getWormholeAsteroidSlot() + 1));
     entity = bytes32(uint256(1 << 128));
-    assertFalse(LibAsteroid.isAsteroid(entity, chanceInv, P_BasicAsteroidConfig.getBasicSecondarySlot() + 1));
+    assertFalse(LibAsteroid.isAsteroid(entity, chanceInv, P_WormholeAsteroidConfig.getWormholeAsteroidSlot() + 1));
     entity = bytes32(uint256(2 << 128));
-    assertFalse(LibAsteroid.isAsteroid(entity, chanceInv, P_BasicAsteroidConfig.getBasicSecondarySlot() + 1));
+    assertFalse(LibAsteroid.isAsteroid(entity, chanceInv, P_WormholeAsteroidConfig.getWormholeAsteroidSlot() + 1));
   }
 
   function testFuzzAsteroidData(bytes32 entity) public {
@@ -51,9 +51,9 @@ contract LibAsteroidTest is PrimodiumTest {
     assertLe(asteroidData.maxLevel, 8, "max level too low");
   }
 
-  function testCreateBasicSecondaryAsteroid() public {
+  function testCreateWormholeAsteroid() public {
     asteroidEntity = spawn(alice);
-    PositionData memory position = findBasicSecondaryAsteroid(asteroidEntity);
+    PositionData memory position = findWormholeAsteroid(asteroidEntity);
 
     bytes32 actualAsteroidEntity = ReversePosition.get(position.x, position.y);
     bytes32 expectedAsteroidEntity = keccak256(abi.encode(asteroidEntity, bytes32("asteroid"), position.x, position.y));

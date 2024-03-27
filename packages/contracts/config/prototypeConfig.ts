@@ -189,8 +189,8 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         tax: 10n, // out of 1000
       },
 
-      P_BasicAsteroidConfig: {
-        basicSecondarySlot: 0n,
+      P_WormholeAsteroidConfig: {
+        wormholeAsteroidSlot: 0n,
         maxLevel: 1n,
         mapId: 6,
       },

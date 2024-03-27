@@ -9,7 +9,7 @@ import { NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { BuildingKey, UnitKey } from "src/Keys.sol";
-import { P_IsUtility, MaxResourceCount, ResourceCount, P_UnitPrototypes, P_GameConfig, P_GameConfigData, P_Unit, P_Transportables, BuildingType, OwnedBy, FleetMovement, P_Blueprint, P_EnumToPrototype, PositionData, Position, P_RequiredResourcesData, Asteroid, Home, P_RequiredTile, P_MaxLevel, P_RequiredResources, P_RequiredBaseLevel, UnitLevel, P_CapitalShipConfig, Level, P_UnitProdTypes, P_UnitProdMultiplier, P_BasicAsteroidConfig } from "codegen/index.sol";
+import { P_IsUtility, MaxResourceCount, ResourceCount, P_UnitPrototypes, P_GameConfig, P_GameConfigData, P_Unit, P_Transportables, BuildingType, OwnedBy, FleetMovement, P_Blueprint, P_EnumToPrototype, PositionData, Position, P_RequiredResourcesData, Asteroid, Home, P_RequiredTile, P_MaxLevel, P_RequiredResources, P_RequiredBaseLevel, UnitLevel, P_CapitalShipConfig, Level, P_UnitProdTypes, P_UnitProdMultiplier, P_WormholeAsteroidConfig } from "codegen/index.sol";
 import { EResource, EBuilding, EUnit, Bounds } from "src/Types.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
@@ -410,7 +410,7 @@ contract PrimodiumTest is MudTest {
     uint256 i = 0;
     bool found = false;
     while (i < 6 && !found) {
-      if (i == P_BasicAsteroidConfig.getBasicSecondarySlot()) {
+      if (i == P_WormholeAsteroidConfig.getWormholeAsteroidSlot()) {
         i++;
         continue;
       }
@@ -435,13 +435,13 @@ contract PrimodiumTest is MudTest {
     return (targetPosition);
   }
 
-  function findBasicSecondaryAsteroid(bytes32 asteroidEntity) public view returns (PositionData memory) {
+  function findWormholeAsteroid(bytes32 asteroidEntity) public view returns (PositionData memory) {
     P_GameConfigData memory config = P_GameConfig.get();
     PositionData memory sourcePosition = Position.get(asteroidEntity);
     logPosition(sourcePosition);
 
     PositionData memory targetPositionRelative = LibAsteroid.getPosition(
-      P_BasicAsteroidConfig.getBasicSecondarySlot(),
+      P_WormholeAsteroidConfig.getWormholeAsteroidSlot(),
       config.asteroidDistance,
       config.maxAsteroidsPerPlayer
     );

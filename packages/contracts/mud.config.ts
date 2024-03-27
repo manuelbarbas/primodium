@@ -125,9 +125,9 @@ export const worldInput = {
       schema: { entity: "bytes32", isAsteroid: "bool", maxLevel: "uint256", mapId: "uint8", spawnsSecondary: "bool" },
     },
 
-    P_BasicAsteroidConfig: {
+    P_WormholeAsteroidConfig: {
       key: [],
-      schema: { basicSecondarySlot: "uint256", maxLevel: "uint256", mapId: "uint8" },
+      schema: { wormholeAsteroidSlot: "uint256", maxLevel: "uint256", mapId: "uint8" },
     },
 
     // note: dimensions will always be positive, but are int32s so they work with coords
