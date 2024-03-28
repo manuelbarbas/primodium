@@ -62,8 +62,8 @@ contract WriteDemoTest is MudTest {
     ResourceId namespaceResource = WorldResourceIdLib.encodeNamespace(bytes14(namespace));
     ResourceId systemResource = WorldResourceIdLib.encode(RESOURCE_SYSTEM, namespace, system);
     console2.log("World Address: ", worldAddress);
-    console2.log("Namespace ID: %x", uint256(ResourceId.unwrap(namespaceResource)));
-    console2.log("System ID:    %x", uint256(ResourceId.unwrap(systemResource)));
+    console2.log("Namespace ID:   %x", uint256(ResourceId.unwrap(namespaceResource)));
+    console2.log("System ID:      %x", uint256(ResourceId.unwrap(systemResource)));
 
     // interacting with the chain requires us to pretend to be someone
     // here, we are pretending to be the extension deployer
@@ -80,10 +80,23 @@ contract WriteDemoTest is MudTest {
 
     // register all functions in the system
     // if you have multiple functions, you will need ro register each one
-    world.registerFunctionSelector(systemResource, "readMainBaseLevel()");
+    world.registerFunctionSelector(systemResource, "buildIronMine()");
     console2.log(
-      "Alice successfully registered the PluginExamples namespace, WriteDemoSystem contract, --- function selector, to the Primodium world address."
+      "Alice successfully registered the PluginExamples namespace, WriteDemoSystem contract, buildIronMine function selector, to the Primodium world address."
     );
+
+    // stop interacting with the chain
+    vm.stopPrank();
+  }
+
+  function test_buildIronMine() public {
+    console2.log("\ntest_buildIronMine");
+
+    // interact with the world as the active player
+    vm.startPrank(playerAddressActive);
+
+    // IPrimodiumWorld(worldAddress).Primodium__spawn();
+    IWorld(worldAddress).PluginExamples__buildIronMine();
 
     // stop interacting with the chain
     vm.stopPrank();
