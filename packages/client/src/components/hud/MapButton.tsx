@@ -63,7 +63,7 @@ export const MapButton = () => {
       {!mapOpen && (
         <div className="z-40">
           <img
-            src={ResourceImage.get(EntityType.CapitalShip)}
+            src={ResourceImage.get(EntityType.ColonyShip)}
             className="pixel-images absolute origin-right -top-10 right-12 opacity-0 scale-x-[-100%] -translate-x-1/2 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500 ease-out pointer-events-none"
           />
           <img

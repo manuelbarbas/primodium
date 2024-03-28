@@ -4,7 +4,6 @@ import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Cheatcode, Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import { EBuilding, EResource } from "contracts/config/enums";
-import encodeBytes32 from "contracts/config/util/encodeBytes32";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { toast } from "react-toastify";
 import { components } from "src/network/components";
@@ -14,14 +13,13 @@ import { createFleet as callCreateFleet } from "src/network/setup/contractCalls/
 import { setComponentValue } from "src/network/setup/contractCalls/dev";
 import { upgradeBuilding as upgradeBuildingCall } from "src/network/setup/contractCalls/upgradeBuilding";
 import { MUD } from "src/network/types";
-import { encodeEntity, hashEntities, hashKeyEntity, toHex32 } from "src/util/encode";
+import { encodeEntity, toHex32 } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
 import { getBlockTypeName } from "../common";
 import {
   BuildingEnumLookup,
   EntityType,
-  PIRATE_KEY,
   RESOURCE_SCALE,
   ResourceEntityLookup,
   ResourceEnumLookup,
@@ -89,7 +87,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
     aegis: EntityType.AegisDrone,
     anvil: EntityType.AnvilDrone,
     hammer: EntityType.HammerDrone,
-    capitalShip: EntityType.CapitalShip,
+    colonyShip: EntityType.ColonyShip,
     droid: EntityType.Droid,
   };
 
@@ -596,80 +594,6 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             if (!position) throw new Error("No main base found");
             await buildBuilding(mud, EBuilding.MainBase, { ...position, parentEntity: selectedRock as Hex });
             toast.success(`Asteroid ${entityToRockName(selectedRock)} conquered`);
-          },
-        },
-
-        createPirateAsteroid: {
-          params: [],
-          function: async () => {
-            const playerEntity = mud.playerAccount.entity;
-            const asteroid = components.ActiveRock.get()?.value;
-            const ownerEntity = hashKeyEntity(PIRATE_KEY, playerEntity);
-            const asteroidEntity = hashEntities(ownerEntity);
-            const homePromise = setComponentValue(
-              mud,
-              components.Home,
-              { entity: ownerEntity as Hex },
-              { value: asteroidEntity as Hex }
-            );
-            const position = components.Position.get(asteroid);
-            const coord = { x: (position?.x ?? 0) + 10, y: (position?.y ?? 0) + 10, parentEntity: encodeBytes32("0") };
-
-            await setComponentValue(
-              mud,
-              components.PirateAsteroid,
-              { entity: asteroidEntity as Hex },
-              {
-                isDefeated: false,
-                isPirateAsteroid: true,
-                prototype: encodeBytes32("0"),
-                playerEntity: playerEntity,
-              }
-            );
-
-            const positionPromise = setComponentValue(
-              mud,
-              components.Position,
-              { entity: asteroidEntity as Hex },
-              coord
-            );
-            const asteroidPromise = setComponentValue(
-              mud,
-              components.Asteroid,
-              { entity: asteroidEntity as Hex },
-              { isAsteroid: true }
-            );
-
-            const reversePositionPromise = setComponentValue(
-              mud,
-              components.ReversePosition,
-              {
-                x: coord.x,
-                y: coord.y,
-              },
-              {
-                entity: asteroidEntity as Hex,
-              }
-            );
-            const ownedByPromise = setComponentValue(
-              mud,
-              components.OwnedBy,
-              { entity: asteroidEntity as Hex },
-              { value: ownerEntity }
-            );
-
-            await Promise.all([homePromise, positionPromise, reversePositionPromise, asteroidPromise, ownedByPromise]);
-
-            await setComponentValue(
-              mud,
-              components.PirateAsteroid,
-              { entity: asteroidEntity as Hex },
-              {
-                isDefeated: false,
-              }
-            );
-            toast.success("Pirate asteroid created");
-            primodium.api("STARMAP").camera.pan(coord);
           },
         },
         setTerrain: {

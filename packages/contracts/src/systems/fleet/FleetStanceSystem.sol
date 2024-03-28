@@ -33,7 +33,7 @@ contract FleetStanceSystem is PrimodiumSystem {
     bytes32 fleetEntity,
     uint8 stance,
     bytes32 target
-  ) public _onlyFleetOwner(fleetEntity) _onlyWhenFleetIsInOrbit(fleetEntity) _onlyWhenNotPirateAsteroid(target) {
+  ) public _onlyFleetOwner(fleetEntity) _onlyWhenFleetIsInOrbit(fleetEntity) {
     require(
       FleetStance.getStance(target) == uint8(EFleetStance.NULL),
       "[Fleet] Cannot target a fleet that is taking a stance"

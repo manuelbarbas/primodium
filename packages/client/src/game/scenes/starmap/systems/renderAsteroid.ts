@@ -1,4 +1,4 @@
-import { Entity, Has, Not, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
+import { Entity, Has, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
@@ -58,7 +58,7 @@ export const renderAsteroid = (scene: Scene) => {
     scene.objects.add(entity, asteroid, true);
   };
 
-  const query = [Has(components.Asteroid), Has(components.Position), Not(components.PirateAsteroid)];
+  const query = [Has(components.Asteroid), Has(components.Position)];
 
   defineEnterSystem(systemsWorld, query, async ({ entity }) => {
     const coord = components.Position.get(entity);

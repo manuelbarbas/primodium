@@ -22,7 +22,6 @@ export const renderBattle = (scene: Scene) => {
   const attackAnimation = async (entity: Entity, attacker: Entity, defender: Entity, attackerWinner?: boolean) => {
     const attackerPosition = objects.getFleet(attacker)?.getTileCoord() ?? { x: 0, y: 0 };
 
-    const isPirate = components.PirateAsteroid.has(defender);
     const isFleet = components.IsFleet.get(defender)?.value;
     const position = isFleet
       ? objects.getFleet(defender)?.getTileCoord() ?? { x: 0, y: 0 }
@@ -62,7 +61,6 @@ export const renderBattle = (scene: Scene) => {
     };
     const clearRender = () => components.BattleRender.clear();
     components.FleetMovement.pauseUpdates(attacker);
-    if (isPirate) components.PirateAsteroid.pauseUpdates(defender);
     if (isFleet) components.FleetMovement.pauseUpdates(defender);
 
     scene.phaserScene.add
@@ -75,7 +73,6 @@ export const renderBattle = (scene: Scene) => {
           at: animationRuntime * 1.2,
           run: () => {
             components.FleetMovement.resumeUpdates(attacker);
-            if (isPirate) components.PirateAsteroid.resumeUpdates(defender);
             if (isFleet) components.FleetMovement.resumeUpdates(defender);
           },
         },
@@ -134,9 +131,6 @@ export const renderBattle = (scene: Scene) => {
 
     const destination = components.Position.get(battle.rock as Entity);
     if (!destination) return;
-
-    if (components.PirateAsteroid.has(battle.rock) && battle.attackingPlayer !== components.Account.get()?.value)
-      return;
 
     attackAnimation(update.entity, battle.attacker, battle.defender, battle.attacker === battle.winner);
   });

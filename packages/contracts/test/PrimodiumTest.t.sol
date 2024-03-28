@@ -9,7 +9,7 @@ import { NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { BuildingKey, UnitKey } from "src/Keys.sol";
-import { P_IsUtility, MaxResourceCount, ResourceCount, P_UnitPrototypes, P_GameConfig, P_GameConfigData, P_Unit, P_Transportables, BuildingType, OwnedBy, FleetMovement, P_Blueprint, P_EnumToPrototype, PositionData, Position, P_RequiredResourcesData, Asteroid, Home, P_RequiredTile, P_MaxLevel, P_RequiredResources, P_RequiredBaseLevel, UnitLevel, P_CapitalShipConfig, Level, P_UnitProdTypes, P_UnitProdMultiplier } from "codegen/index.sol";
+import { P_IsUtility, MaxResourceCount, ResourceCount, P_UnitPrototypes, P_GameConfig, P_GameConfigData, P_Unit, P_Transportables, BuildingType, OwnedBy, FleetMovement, P_Blueprint, P_EnumToPrototype, PositionData, Position, P_RequiredResourcesData, Asteroid, Home, P_RequiredTile, P_MaxLevel, P_RequiredResources, P_RequiredBaseLevel, UnitLevel, P_ColonyShipConfig, Level, P_UnitProdTypes, P_UnitProdMultiplier, P_WormholeAsteroidConfig } from "codegen/index.sol";
 import { EResource, EBuilding, EUnit, Bounds } from "src/Types.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
@@ -199,13 +199,13 @@ contract PrimodiumTest is MudTest {
 
     provideResources(asteroidEntity, requiredResources);
 
-    if (unitPrototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip))) {
-      uint8 capitalShipResource = P_CapitalShipConfig.getResource();
+    if (unitPrototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip))) {
+      uint8 colonyShipResource = P_ColonyShipConfig.getResource();
       uint256 countLeft = count;
       while (countLeft > 0) {
-        uint256 cost = P_CapitalShipConfig.getInitialCost() *
-          LibUnit.getCapitalShipCostMultiplier(OwnedBy.get(asteroidEntity));
-        increaseResource(asteroidEntity, EResource(capitalShipResource), cost);
+        uint256 cost = P_ColonyShipConfig.getInitialCost() *
+          LibUnit.getColonyShipCostMultiplier(OwnedBy.get(asteroidEntity));
+        increaseResource(asteroidEntity, EResource(colonyShipResource), cost);
         trainUnits(player, mainBase, unitPrototype, 1, fastForward);
         countLeft--;
       }
@@ -410,6 +410,10 @@ contract PrimodiumTest is MudTest {
     uint256 i = 0;
     bool found = false;
     while (i < 6 && !found) {
+      if (i == P_WormholeAsteroidConfig.getWormholeAsteroidSlot()) {
+        i++;
+        continue;
+      }
       PositionData memory targetPositionRelative = LibAsteroid.getPosition(
         i,
         config.asteroidDistance,
@@ -424,17 +428,37 @@ contract PrimodiumTest is MudTest {
       logPosition(targetPosition);
 
       asteroidSeed = keccak256(abi.encode(asteroidEntity, bytes32("asteroid"), targetPosition.x, targetPosition.y));
-      found = LibAsteroid.isAsteroid(asteroidSeed, config.asteroidChanceInv);
+      found = LibAsteroid.isAsteroid(asteroidSeed, config.asteroidChanceInv, i);
       i++;
     }
     require(found, "uh oh, no asteroid found");
     return (targetPosition);
   }
+
+  function findWormholeAsteroid(bytes32 asteroidEntity) public view returns (PositionData memory) {
+    P_GameConfigData memory config = P_GameConfig.get();
+    PositionData memory sourcePosition = Position.get(asteroidEntity);
+    logPosition(sourcePosition);
+
+    PositionData memory targetPositionRelative = LibAsteroid.getPosition(
+      P_WormholeAsteroidConfig.getWormholeAsteroidSlot(),
+      config.asteroidDistance,
+      config.maxAsteroidsPerPlayer
+    );
+    PositionData memory targetPosition = PositionData({
+      x: sourcePosition.x + targetPositionRelative.x,
+      y: sourcePosition.y + targetPositionRelative.y,
+      parentEntity: 0
+    });
+    logPosition(targetPosition);
+    return (targetPosition);
+  }
+
   function conquerAsteroid(address player, bytes32 sourceAsteroid, bytes32 targetAsteroid) internal returns (bytes32) {
     bytes32 playerEntity = addressToEntity(player);
     uint256 asteroidDefense = LibCombatAttributes.getDefense(targetAsteroid);
     bytes32 minutemanEntity = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
-    bytes32 capitalShip = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
+    bytes32 colonyShip = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
     uint256 minutemanAttack = P_Unit.getAttack(minutemanEntity, 1);
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
@@ -442,7 +466,7 @@ contract PrimodiumTest is MudTest {
     uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == minutemanEntity) unitCounts[i] = (10 * asteroidDefense) / minutemanAttack + 1;
-      else if (unitPrototypes[i] == capitalShip) unitCounts[i] = 1;
+      else if (unitPrototypes[i] == colonyShip) unitCounts[i] = 1;
       else unitCounts[i] = 0;
     }
     setupCreateFleet(player, sourceAsteroid, unitCounts, resourceCounts);

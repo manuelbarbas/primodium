@@ -40,12 +40,10 @@ export const RESOURCE_SCALE = BigInt(10 ** DECIMALS);
 export const MULTIPLIER_SCALE = BigInt(100);
 export const UNIT_SPEED_SCALE = BigInt(100);
 
-export const PIRATE_KEY = toHex32("pirate");
 export const NUM_UNITS = Object.keys(EUnit).length / 2;
 export const STORAGE_PREFIX = "primodiumSessionKey:";
 
 export const Keys = {
-  PIRATE: toHex32("pirate") as Entity,
   SELECTED: toHex32("selected") as Entity,
   ACTIVE: toHex32("active") as Entity,
   BATTLE: toHex32("battle") as Entity,
@@ -73,7 +71,6 @@ export enum RequirementType {
   DestroyedUnits,
   ProducedUnits,
   RequiredUnits,
-  DefeatedPirates,
   RewardUtilities,
 }
 
@@ -184,7 +181,7 @@ export const EntityType = {
   FleetCount: toHex32("U_MaxFleets") as Entity,
   Unraidable: toHex32("U_Unraidable") as Entity,
   AdvancedUnraidable: toHex32("U_AdvancedUnraidable") as Entity,
-  CapitalShipCapacity: toHex32("U_CapitalShip") as Entity,
+  ColonyShipCapacity: toHex32("U_ColonyShip") as Entity,
 
   Defense: toHex32("U_Defense") as Entity,
   DefenseMultiplier: toHex32("M_DefenseMultiplier") as Entity,
@@ -212,7 +209,7 @@ export const EntityType = {
   StingerDrone: toHex32("StingerDrone") as Entity,
   AnvilDrone: toHex32("AnvilDrone") as Entity,
   AegisDrone: toHex32("AegisDrone") as Entity,
-  CapitalShip: toHex32("CapitalShip") as Entity,
+  ColonyShip: toHex32("ColonyShip") as Entity,
   Droid: toHex32("Droid") as Entity,
 
   MinutemanMarine: toHex32("MinutemanMarine") as Entity,
@@ -252,11 +249,11 @@ export const EntityType = {
   StingerDroneUpgrade4: encodeEntityLevel("StingerDrone", 4) as Entity,
   StingerDroneUpgrade5: encodeEntityLevel("StingerDrone", 5) as Entity,
 
-  CapitalShipUpgrade1: encodeEntityLevel("CapitalShip", 1) as Entity,
-  CapitalShipUpgrade2: encodeEntityLevel("CapitalShip", 2) as Entity,
-  CapitalShipUpgrade3: encodeEntityLevel("CapitalShip", 3) as Entity,
-  CapitalShipUpgrade4: encodeEntityLevel("CapitalShip", 4) as Entity,
-  CapitalShipUpgrade5: encodeEntityLevel("CapitalShip", 5) as Entity,
+  ColonyShipUpgrade1: encodeEntityLevel("ColonyShip", 1) as Entity,
+  ColonyShipUpgrade2: encodeEntityLevel("ColonyShip", 2) as Entity,
+  ColonyShipUpgrade3: encodeEntityLevel("ColonyShip", 3) as Entity,
+  ColonyShipUpgrade4: encodeEntityLevel("ColonyShip", 4) as Entity,
+  ColonyShipUpgrade5: encodeEntityLevel("ColonyShip", 5) as Entity,
 
   MinutemanMarineUpgrade1: toHex32("MinutemanMarineUpgrade") as Entity,
   MinutemanMarineUpgrade2: toHex32("MinutemanMarineUpgrade") as Entity,
@@ -304,7 +301,7 @@ export const BackgroundImage = new Map<Entity, string[]>([
   [EntityType.StingerDrone, ["/img/unit/stingerdrone.png"]],
   [EntityType.AnvilDrone, ["/img/unit/anvildrone.png"]],
   [EntityType.AegisDrone, ["/img/unit/aegisdrone.png"]],
-  [EntityType.CapitalShip, ["/img/unit/capitalship.png"]],
+  [EntityType.ColonyShip, ["/img/unit/colonyship.png"]],
   [EntityType.Droid, ["/img/unit/miningvessel.png"]],
   [EntityType.LightningCraft, ["/img/unit/lightningcraft.png"]],
   [EntityType.MinutemanMarine, ["/img/unit/minutemen_marine.png"]],
@@ -354,11 +351,11 @@ export const ResearchImage = new Map<Entity, string>([
   [EntityType.StingerDroneUpgrade4, "/img/unit/stingerdrone.png"],
   [EntityType.StingerDroneUpgrade5, "/img/unit/stingerdrone.png"],
 
-  [EntityType.CapitalShipUpgrade1, "/img/unit/capitalship.png"],
-  [EntityType.CapitalShipUpgrade2, "/img/unit/capitalship.png"],
-  [EntityType.CapitalShipUpgrade3, "/img/unit/capitalship.png"],
-  [EntityType.CapitalShipUpgrade4, "/img/unit/capitalship.png"],
-  [EntityType.CapitalShipUpgrade5, "/img/unit/capitalship.png"],
+  [EntityType.ColonyShipUpgrade1, "/img/unit/colonyship.png"],
+  [EntityType.ColonyShipUpgrade2, "/img/unit/colonyship.png"],
+  [EntityType.ColonyShipUpgrade3, "/img/unit/colonyship.png"],
+  [EntityType.ColonyShipUpgrade4, "/img/unit/colonyship.png"],
+  [EntityType.ColonyShipUpgrade5, "/img/unit/colonyship.png"],
 
   [EntityType.TridentMarineUpgrade1, "img/unit/trident_marine.png"],
   [EntityType.TridentMarineUpgrade2, "img/unit/trident_marine.png"],
@@ -390,7 +387,7 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.Electricity, "/img/icons/powericon.png"],
   [EntityType.Housing, "/img/icons/utilitiesicon.png"],
   [EntityType.FleetCount, "/img/icons/moveicon.png"],
-  [EntityType.CapitalShipCapacity, "/img/unit/capitalship.png"],
+  [EntityType.ColonyShipCapacity, "/img/unit/colonyship.png"],
   [EntityType.Defense, "/img/icons/defenseicon.png"],
   [EntityType.DefenseMultiplier, "/img/icons/defenseicon.png"],
   [EntityType.Unraidable, "/img/icons/unraidableicon.png"],
@@ -403,7 +400,7 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.StingerDrone, "/img/unit/stingerdrone.png"],
   [EntityType.AnvilDrone, "/img/unit/anvildrone.png"],
   [EntityType.AegisDrone, "/img/unit/aegisdrone.png"],
-  [EntityType.CapitalShip, "/img/unit/capitalship.png"],
+  [EntityType.ColonyShip, "/img/unit/colonyship.png"],
   [EntityType.Droid, "/img/unit/droid.png"],
   [EntityType.MinutemanMarine, "img/unit/minutemen_marine.png"],
   [EntityType.TridentMarine, "img/unit/trident_marine.png"],
@@ -458,7 +455,7 @@ export const UnitStorages = new Set([
   EntityType.StingerDrone,
   EntityType.AnvilDrone,
   EntityType.AegisDrone,
-  EntityType.CapitalShip,
+  EntityType.ColonyShip,
   EntityType.Droid,
   EntityType.MinutemanMarine,
   EntityType.TridentMarine,
@@ -481,7 +478,7 @@ export const ResourceEnumLookup: Record<Entity, EResource> = {
 
   [EntityType.Electricity]: EResource.U_Electricity,
   [EntityType.Housing]: EResource.U_Housing,
-  [EntityType.CapitalShipCapacity]: EResource.U_CapitalShipCapacity,
+  [EntityType.ColonyShipCapacity]: EResource.U_ColonyShipCapacity,
   [EntityType.FleetCount]: EResource.U_MaxFleets,
   [EntityType.Defense]: EResource.U_Defense,
   [EntityType.Unraidable]: EResource.U_Unraidable,
@@ -529,7 +526,7 @@ export const UnitEnumLookup: Record<Entity, EUnit> = {
   [EntityType.MinutemanMarine]: EUnit.MinutemanMarine,
   [EntityType.TridentMarine]: EUnit.TridentMarine,
   [EntityType.LightningCraft]: EUnit.LightningCraft,
-  [EntityType.CapitalShip]: EUnit.CapitalShip,
+  [EntityType.ColonyShip]: EUnit.ColonyShip,
   [EntityType.Droid]: EUnit.Droid,
 };
 

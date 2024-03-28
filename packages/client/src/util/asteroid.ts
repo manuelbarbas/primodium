@@ -17,28 +17,11 @@ import { SpriteKeys } from "src/game/lib/constants/assets/sprites";
 export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
   const { getSpriteBase64 } = primodium.api().sprite;
   console.log("getAsteroidImage", asteroid);
-  // const asteroidData = comps.Asteroid.get(asteroid);
-  // const expansionLevel = comps.Level.get(asteroid, {
-  //   value: 1n,
-  // }).value;
-
-  // if (!asteroidData) {
-  //   console.error("Asteroid data not found for: " + asteroid);
-  //   return undefined;
-  // }
-
-  // if (components.PirateAsteroid.has(asteroid)) return getSpriteBase64(getRockSprite(1, 1n), Assets.SpriteAtlas);
-  // const spriteKey = getRockSprite(
-  //   asteroidData.mapId,
-  //   asteroidData.mapId === 1 ? expansionLevel : asteroidData.maxLevel
-  // );
-
   return getSpriteBase64(SpriteKeys.Asteroid1, Assets.SpriteAtlas);
 }
 
 export function getAsteroidName(spaceRock: Entity) {
   const expansionLevel = comps.Level.get(spaceRock)?.value;
-  const isPirate = !!comps.PirateAsteroid.get(spaceRock);
   const asteroidData = comps.Asteroid.get(spaceRock);
 
   const asteroidResource = MapIdToAsteroidType[asteroidData?.mapId ?? 0];
@@ -53,7 +36,7 @@ export function getAsteroidName(spaceRock: Entity) {
 
   return ` ${expansionLevel ? `LVL. ${expansionLevel} ` : asteroidSize} ${
     asteroidResource ? getBlockTypeName(asteroidResource) : ""
-  } ${isPirate ? "Pirate" : "Asteroid"}`;
+  } ${"Asteroid"}`;
 }
 
 export function getAsteroidDescription(asteroid: Entity) {
