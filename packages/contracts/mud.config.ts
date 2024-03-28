@@ -734,7 +734,7 @@ export const worldInput = {
     P_WormholeConfig: {
       key: [],
       schema: {
-        startTime: "uint256",
+        initTime: "uint256",
         turnDuration: "uint256",
         cooldown: "uint256",
       },

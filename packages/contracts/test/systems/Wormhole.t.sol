@@ -196,7 +196,7 @@ contract WormholeTest is PrimodiumTest {
 
   function getTurnStartTimestamp(uint256 turn) private returns (uint256) {
     P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
-    return wormholeConfig.startTime + (turn * wormholeConfig.turnDuration);
+    return wormholeConfig.initTime + (turn * wormholeConfig.turnDuration);
   }
 
   function testUpdateWormholeResource() public {
@@ -208,10 +208,10 @@ contract WormholeTest is PrimodiumTest {
 
     // get the start of the next turn
     //
-    uint256 expectedTurn = (block.timestamp - wormholeConfig.startTime) / wormholeConfig.turnDuration;
+    uint256 expectedTurn = (block.timestamp - wormholeConfig.initTime) / wormholeConfig.turnDuration;
     vm.warp(LibMath.max(CooldownEnd.get((wormholeBaseEntity)), getTurnStartTimestamp(wormholeData.turn + 1) + 1));
 
-    expectedTurn = (block.timestamp - wormholeConfig.startTime) / wormholeConfig.turnDuration;
+    expectedTurn = (block.timestamp - wormholeConfig.initTime) / wormholeConfig.turnDuration;
 
     bytes32 wormholeHash = Wormhole.getHash();
     uint8 expectedNewResource = LibWormhole.getRandomResource(wormholeHash, wormholeData.resource);
@@ -222,7 +222,7 @@ contract WormholeTest is PrimodiumTest {
     world.Primodium__wormholeDeposit((wormholeBaseEntity), 100);
     assertEq(
       Score.get(aliceEntity, uint8(EScoreType.Extraction)),
-      200 * P_ScoreMultiplier.get(wormholeData.resource) + prevScore,
+      100 * P_ScoreMultiplier.get(expectedNewResource) + prevScore,
       "score"
     );
     assertEq(CooldownEnd.get(wormholeBaseEntity), block.timestamp + wormholeConfig.cooldown, "cooldown");
