@@ -7,7 +7,7 @@ import { addressToEntity } from "src/utils.sol";
 import { EResource, EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
-import { OwnedBy, UnitCount, ProductionRate, P_CapitalShipConfig, CooldownEnd, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, UnitLevel } from "codegen/index.sol";
+import { OwnedBy, UnitCount, ProductionRate, CooldownEnd, P_ColonyShipConfig, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, UnitLevel } from "codegen/index.sol";
 
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibCombat } from "libraries/LibCombat.sol";

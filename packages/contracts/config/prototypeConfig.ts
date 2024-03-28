@@ -89,9 +89,9 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         cooldown: 6n * 60n * 60n,
       },
       Wormhole: {
-        resource: EResource.Titanium,
+        resource: EResource.Iron,
         turn: 0n,
-        hash: encodeBytes32("your mother"),
+        hash: encodeBytes32("i love wormholes"),
       },
     },
   },

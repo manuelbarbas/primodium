@@ -8,7 +8,7 @@ import { EResource } from "src/Types.sol";
 
 import { CooldownEnd, Score, P_ScoreMultiplier, P_WormholeConfig, P_WormholeConfigData, Wormhole, WormholeData, BuildingType, Home, OwnedBy, P_EnumToPrototype, P_Transportables, P_UnitPrototypes, Asteroid, AsteroidData, Position, PositionData, Position, PositionData, ReversePosition, MaxResourceCount, UnitCount, ResourceCount, UnitCount, ResourceCount, P_GameConfig, P_GameConfigData, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
 import { WormholeBasePrototypeId } from "codegen/Prototypes.sol";
-import { EUnit, EScoreType } from "src/Types.sol";
+import { EUnit, EScoreType, EAllianceInviteMode } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
@@ -77,9 +77,6 @@ contract WormholeTest is PrimodiumTest {
     bytes32 wormholeAsteroidEntity = testWormholeAsteroidHasWormholeBase();
     bytes32 wormholeBaseEntity = Home.get(wormholeAsteroidEntity);
     bytes32 asteroidEntity = Position.getParentEntity(wormholeBaseEntity);
-    bytes32 asteroidEntity2 = OwnedBy.get(wormholeBaseEntity);
-    console.logBytes32(asteroidEntity);
-    console.logBytes32(asteroidEntity2);
 
     WormholeData memory wormholeData = Wormhole.get();
     P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
@@ -100,13 +97,32 @@ contract WormholeTest is PrimodiumTest {
     return wormholeAsteroidEntity;
   }
 
+  function testWormholeAllianceScore() public {
+    bytes32 wormholeAsteroidEntity = testWormholeAsteroidHasWormholeBase();
+    bytes32 wormholeBaseEntity = Home.get(wormholeAsteroidEntity);
+    bytes32 asteroidEntity = Position.getParentEntity(wormholeBaseEntity);
+
+    WormholeData memory wormholeData = Wormhole.get();
+    P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
+
+    increaseResource(wormholeAsteroidEntity, EResource(wormholeData.resource), 100);
+
+    vm.startPrank(alice);
+    bytes32 allianceEntity = world.Primodium__create(bytes32("alice's alliance"), EAllianceInviteMode.Open);
+    world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
+
+    assertEq(
+      Score.get(allianceEntity, uint8(EScoreType.Extraction)),
+      100 * P_ScoreMultiplier.get(wormholeData.resource),
+      "score"
+    );
+    assertEq(Score.get(allianceEntity, uint8(EScoreType.Conquest)), 0, "score");
+  }
+
   function testDepositWormholeAfterCooldown() public returns (bytes32) {
     bytes32 wormholeAsteroidEntity = testWormholeAsteroidHasWormholeBase();
     bytes32 wormholeBaseEntity = Home.get(wormholeAsteroidEntity);
     bytes32 asteroidEntity = Position.getParentEntity(wormholeBaseEntity);
-    bytes32 asteroidEntity2 = OwnedBy.get(wormholeBaseEntity);
-    console.logBytes32(asteroidEntity);
-    console.logBytes32(asteroidEntity2);
 
     WormholeData memory wormholeData = Wormhole.get();
     P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
@@ -138,9 +154,6 @@ contract WormholeTest is PrimodiumTest {
     bytes32 wormholeAsteroidEntity = testWormholeAsteroidHasWormholeBase();
     bytes32 wormholeBaseEntity = Home.get(wormholeAsteroidEntity);
     bytes32 asteroidEntity = Position.getParentEntity(wormholeBaseEntity);
-    bytes32 asteroidEntity2 = OwnedBy.get(wormholeBaseEntity);
-    console.logBytes32(asteroidEntity);
-    console.logBytes32(asteroidEntity2);
 
     WormholeData memory wormholeData = Wormhole.get();
     P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
