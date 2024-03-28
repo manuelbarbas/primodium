@@ -251,10 +251,10 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
 
   WormholeBase: {
     tables: {
-      P_Blueprint: { value: getBlueprint(5, 5) },
+      P_Blueprint: { value: getBlueprint(7, 5) },
       Position: {
-        x: Math.floor(maxRange.xBounds / 2) + 1,
-        y: Math.floor(maxRange.yBounds / 2) + 1,
+        x: Math.floor(maxRange.xBounds / 2) + 3,
+        y: Math.floor(maxRange.yBounds / 2) + 2,
         parentEntity: encodeBytes32(0),
       },
     },

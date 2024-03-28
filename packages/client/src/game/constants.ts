@@ -110,6 +110,8 @@ export enum SpriteKeys {
   Mainbase7 = "sprites/mainbase/level7/Main_Base_LVL7_1.png",
   Mainbase8 = "sprites/mainbase/level8/Main_Base_LVL8_1.png",
 
+  Wormholebase1 = "sprites/wormholebase/level1/WormholeBase_LVL1_1.png",
+
   IronMine1 = "sprites/miners/ironmine/level1/Miner_Iron_LVL1_1.png",
   IronMine2 = "sprites/miners/ironmine/level2/Miner_Iron_LVL2_1.png",
   IronMine3 = "sprites/miners/ironmine/level3/Miner_Iron_LVL3_1.png",
@@ -267,6 +269,8 @@ export enum AnimationKeys {
   Mainbase7 = "mainbase/level7",
   Mainbase8 = "mainbase/level8",
 
+  Wormholebase1 = "wormholebase/level1",
+
   IronMine1 = "ironmine/level1",
   IronMine2 = "ironmine/level2",
   IronMine3 = "ironmine/level3",
@@ -421,6 +425,16 @@ export const EntitytoBuildingSpriteKey = {
     SpriteKeys.Mainbase7,
     SpriteKeys.Mainbase8,
   ],
+  [EntityType.WormholeBase]: [
+    SpriteKeys.Wormholebase1,
+    SpriteKeys.Wormholebase1,
+    SpriteKeys.Wormholebase1,
+    SpriteKeys.Wormholebase1,
+    SpriteKeys.Wormholebase1,
+    SpriteKeys.Wormholebase1,
+    SpriteKeys.Wormholebase1,
+    SpriteKeys.Wormholebase1,
+  ],
 
   [EntityType.IronMine]: [SpriteKeys.IronMine1, SpriteKeys.IronMine2, SpriteKeys.IronMine3],
 
@@ -488,6 +502,16 @@ export const EntityIDtoAnimationKey = {
     AnimationKeys.Mainbase8,
   ],
 
+  // [EntityType.WormholeBase]: [
+  //   AnimationKeys.Wormholebase1,
+  //   AnimationKeys.Wormholebase1,
+  //   AnimationKeys.Wormholebase1,
+  //   AnimationKeys.Wormholebase1,
+  //   AnimationKeys.Wormholebase1,
+  //   AnimationKeys.Wormholebase1,
+  //   AnimationKeys.Wormholebase1,
+  //   AnimationKeys.Wormholebase1,
+  // ],
   [EntityType.IronMine]: [AnimationKeys.IronMine1, AnimationKeys.IronMine2, AnimationKeys.IronMine3],
   [EntityType.CopperMine]: [AnimationKeys.CopperMine1, AnimationKeys.CopperMine2, AnimationKeys.CopperMine3],
   [EntityType.LithiumMine]: [AnimationKeys.LithiumMine1],

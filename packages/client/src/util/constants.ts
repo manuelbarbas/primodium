@@ -140,6 +140,7 @@ export const EntityType = {
   Platinum: toHex32("Platinum") as Entity,
 
   MainBase: toHex32("MainBase") as Entity,
+  WormholeBase: toHex32("WormholeBase") as Entity,
   DroidBase: toHex32("DroidBase") as Entity,
 
   // Basic Buildings
@@ -506,6 +507,7 @@ export const BuildingEnumLookup: Record<Entity, EBuilding> = {
   [EntityType.DroneFactory]: EBuilding.DroneFactory,
   [EntityType.Hangar]: EBuilding.Hangar,
   [EntityType.MainBase]: EBuilding.MainBase,
+  [EntityType.WormholeBase]: EBuilding.WormholeBase,
   [EntityType.SAMLauncher]: EBuilding.SAM,
   [EntityType.StarmapperStation]: EBuilding.Starmapper,
   [EntityType.ShieldGenerator]: EBuilding.ShieldGenerator,

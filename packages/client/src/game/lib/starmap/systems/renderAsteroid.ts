@@ -1,4 +1,5 @@
 import { Assets, DepthLayers, SpriteKeys } from "@game/constants";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, Has, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
@@ -27,13 +28,13 @@ import { Outline, Texture } from "../../common/object-components/sprite";
 import { ObjectText } from "../../common/object-components/text";
 import { getOutlineSprite, getRockSprite, getSecondaryOutlineSprite } from "./utils/getSprites";
 import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 
 export const renderAsteroid = (scene: Scene) => {
   const { tileWidth, tileHeight } = scene.tilemap;
   const systemsWorld = namespaceWorld(world, "systems");
 
   const render = (entity: Entity, coord: Coord) => {
+    console.log("rendering asteroid at ", coord);
     scene.objectPool.removeGroup("asteroid_" + entity);
 
     const asteroidData = components.Asteroid.get(entity);

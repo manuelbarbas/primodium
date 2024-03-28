@@ -13,7 +13,7 @@ import { createFleet as callCreateFleet } from "src/network/setup/contractCalls/
 import { setComponentValue } from "src/network/setup/contractCalls/dev";
 import { upgradeBuilding as upgradeBuildingCall } from "src/network/setup/contractCalls/upgradeBuilding";
 import { MUD } from "src/network/types";
-import { encodeEntity, toHex32 } from "src/util/encode";
+import { encodeEntity } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
 import { getBlockTypeName } from "../common";
@@ -590,9 +590,9 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             }
             const player = mud.playerAccount.entity;
             await setComponentValue(mud, components.OwnedBy, { entity: selectedRock as Hex }, { value: player });
-            const position = components.Position.get(toHex32("MainBase") as Entity);
+            const position = components.Position.get(EntityType.WormholeBase);
             if (!position) throw new Error("No main base found");
-            await buildBuilding(mud, EBuilding.MainBase, { ...position, parentEntity: selectedRock as Hex });
+            await buildBuilding(mud, EBuilding.WormholeBase, { ...position, parentEntity: selectedRock as Hex });
             toast.success(`Asteroid ${entityToRockName(selectedRock)} conquered`);
           },
         },
