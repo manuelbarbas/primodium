@@ -92,7 +92,7 @@ export const getPUnitData = (data: {
 const unscaledResources = new Set([
   EResource.U_Housing,
   EResource.U_MaxFleets,
-  EResource.U_CapitalShipCapacity,
+  EResource.U_ColonyShipCapacity,
   EResource.M_DefenseMultiplier,
 ]);
 export const getResourceValues = (resourceValues: Record<string, number>) => {
