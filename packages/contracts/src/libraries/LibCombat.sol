@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { P_CapitalShipConfig, CooldownEnd, DestroyedUnit, DamageDealt, BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, BattleResult, BattleResultData, FleetMovement, GracePeriod, UnitCount, P_Unit, UnitLevel, P_GameConfig, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { P_ColonyShipConfig, CooldownEnd, DestroyedUnit, DamageDealt, BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, BattleResult, BattleResultData, FleetMovement, GracePeriod, UnitCount, P_Unit, UnitLevel, P_GameConfig, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
-import { CapitalShipPrototypeId } from "codegen/Prototypes.sol";
+import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
@@ -50,7 +50,7 @@ library LibCombat {
       if (GracePeriod.get(ownerEntity) > 0) GracePeriod.deleteRecord(ownerEntity);
 
       // todo: should all allies have cooldown too?
-      bool decrypt = UnitCount.get(entity, CapitalShipPrototypeId) > 0;
+      bool decrypt = UnitCount.get(entity, ColonyShipPrototypeId) > 0;
       uint256 cooldownEnd = getCooldownTime(totalAggressorDamage, decrypt);
       CooldownEnd.set(entity, block.timestamp + cooldownEnd);
     }
@@ -98,7 +98,7 @@ library LibCombat {
   }
 
   /**
-   * @notice Resolves the encryption aspect of a battle, particularly relevant when a capital ship is involved.
+   * @notice Resolves the encryption aspect of a battle, particularly relevant when a colony ship is involved.
    * @param battleEntity The unique identifier for the battle instance.
    * @param targetAsteroidEntity The asteroid entity involved in the battle, if any.
    * @param aggressorEntity The aggressor entity in the battle.
@@ -110,7 +110,7 @@ library LibCombat {
     bytes32 aggressorEntity
   ) internal returns (uint256 encryptionAtEnd) {
     uint256 encryptionAtStart = ResourceCount.get(targetAsteroidEntity, uint8(EResource.R_Encryption));
-    uint256 decryption = P_CapitalShipConfig.getDecryption();
+    uint256 decryption = P_ColonyShipConfig.getDecryption();
     encryptionAtEnd = encryptionAtStart;
     if (encryptionAtStart != 0) {
       if (decryption > encryptionAtStart) {
@@ -122,7 +122,7 @@ library LibCombat {
       }
     }
     if (encryptionAtEnd == 0) {
-      LibFleet.decreaseFleetUnit(aggressorEntity, CapitalShipPrototypeId, 1, true);
+      LibFleet.decreaseFleetUnit(aggressorEntity, ColonyShipPrototypeId, 1, true);
     }
     BattleEncryptionResult.set(battleEntity, targetAsteroidEntity, encryptionAtStart, encryptionAtEnd);
   }
@@ -343,7 +343,7 @@ library LibCombat {
    * @return time The cooldown time in minutes, adjusted for game speed.
    */
   function getCooldownTime(uint256 attackVal, bool withDecryption) internal view returns (uint256 time) {
-    time = withDecryption ? P_CapitalShipConfig.getCooldownExtension() : 0;
+    time = withDecryption ? P_ColonyShipConfig.getCooldownExtension() : 0;
     attackVal = attackVal / 1e18;
     if (attackVal <= 20000) time += (attackVal * 24) / 10000;
     else {

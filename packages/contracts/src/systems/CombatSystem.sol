@@ -6,7 +6,7 @@ import { UnitCount, ResourceCount, IsFleet, BattleResult, BattleResultData, Grac
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
 import { EResource } from "src/Types.sol";
-import { CapitalShipPrototypeId } from "codegen/Prototypes.sol";
+import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
 /**
  * @title CombatSystem
@@ -99,7 +99,7 @@ contract CombatSystem is PrimodiumSystem {
       ? OwnedBy.get(OwnedBy.get(battleResult.targetEntity))
       : OwnedBy.get(battleResult.targetEntity);
 
-    bool decrypt = isAggressorFleet && UnitCount.get(battleResult.aggressorEntity, CapitalShipPrototypeId) > 0;
+    bool decrypt = isAggressorFleet && UnitCount.get(battleResult.aggressorEntity, ColonyShipPrototypeId) > 0;
     bool isRaid = isAggressorWinner && (isTargetFleet || !decrypt);
     bool isDecryption = !isRaid && isAggressorWinner && !isTargetFleet && decrypt;
 

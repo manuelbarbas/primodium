@@ -53,7 +53,7 @@ export enum EResource {
   // Utilities
   U_Electricity,
   U_Housing,
-  U_CapitalShipCapacity,
+  U_ColonyShipCapacity,
   U_MaxFleets,
   U_Defense,
   U_Unraidable,
@@ -79,7 +79,7 @@ export enum EUnit {
   MinutemanMarine,
   TridentMarine,
   LightningCraft,
-  CapitalShip,
+  ColonyShip,
   Droid,
 }
 
@@ -124,7 +124,7 @@ export enum EObjectives {
   TrainHammerDrone1,
   TrainAegisDrone1,
   TrainStingerDrone1,
-  BuildCapitalShip1,
+  BuildColonyShip1,
 
   ExpandBase1,
 

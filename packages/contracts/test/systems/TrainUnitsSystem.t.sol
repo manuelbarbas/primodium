@@ -7,7 +7,7 @@ import { addressToEntity } from "src/utils.sol";
 import { EResource, EUnit } from "src/Types.sol";
 import { UnitKey, AsteroidOwnedByKey } from "src/Keys.sol";
 
-import { P_CapitalShipConfig, UnitCount, MaxResourceCount, ProductionRate, Value_UnitProductionQueueData, P_UnitProdTypes, BuildingType, IsActive, P_EnumToPrototype, P_GameConfigData, P_GameConfig, Asteroid, Home, OwnedBy, Spawned, Level, LastClaimedAt, P_Unit, P_UnitProdMultiplier, P_EnumToPrototype, ResourceCount, ResourceCount, P_UnitPrototypes, P_RequiredResources, P_RequiredResourcesData } from "codegen/index.sol";
+import { P_ColonyShipConfig, UnitCount, MaxResourceCount, ProductionRate, Value_UnitProductionQueueData, P_UnitProdTypes, BuildingType, IsActive, P_EnumToPrototype, P_GameConfigData, P_GameConfig, Asteroid, Home, OwnedBy, Spawned, Level, LastClaimedAt, P_Unit, P_UnitProdMultiplier, P_EnumToPrototype, ResourceCount, ResourceCount, P_UnitPrototypes, P_RequiredResources, P_RequiredResourcesData } from "codegen/index.sol";
 
 import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
@@ -115,55 +115,55 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     assertEq(UnitCount.get(asteroidEntity, unitPrototype), 100, "unit count");
   }
 
-  function testTrainCapitalShip() public {
-    uint256 multiplier = LibUnit.getCapitalShipCostMultiplier(aliceEntity);
+  function testTrainColonyShip() public {
+    uint256 multiplier = LibUnit.getColonyShipCostMultiplier(aliceEntity);
     assertEq(multiplier, 1);
-    uint256 amount = P_CapitalShipConfig.getInitialCost() * multiplier;
+    uint256 amount = P_ColonyShipConfig.getInitialCost() * multiplier;
     assertEq(
       amount,
-      P_CapitalShipConfig.getInitialCost() * LibUnit.getCapitalShipCostMultiplier(aliceEntity),
+      P_ColonyShipConfig.getInitialCost() * LibUnit.getColonyShipCostMultiplier(aliceEntity),
       "next colony ship cost"
     );
-    uint8 resource = P_CapitalShipConfig.getResource();
-    trainUnits(alice, EUnit.CapitalShip, 1, true);
+    uint8 resource = P_ColonyShipConfig.getResource();
+    trainUnits(alice, EUnit.ColonyShip, 1, true);
     assertEq(ResourceCount.get(aliceAsteroidEntity, uint8(resource)), 0, "special resource should have been spent");
   }
 
-  function testFailTrainCapitalShipNoSpecialResource() public {
+  function testFailTrainColonyShipNoSpecialResource() public {
     vm.stopPrank();
-    increaseResource(aliceAsteroidEntity, EResource.U_CapitalShipCapacity, 1);
+    increaseResource(aliceAsteroidEntity, EResource.U_ColonyShipCapacity, 1);
     //this func doesn't provide resources
-    trainUnits(alice, Home.get(aliceAsteroidEntity), P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip)), 1, true);
+    trainUnits(alice, Home.get(aliceAsteroidEntity), P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip)), 1, true);
   }
 
-  function testTrainCapitalShipsCostIncrease() public {
-    uint256 initialShips = LibUnit.getCapitalShipsPlusAsteroids(aliceEntity);
-    uint256 initialMultiplier = LibUnit.getCapitalShipCostMultiplier(aliceEntity);
+  function testTrainColonyShipsCostIncrease() public {
+    uint256 initialShips = LibUnit.getColonyShipsPlusAsteroids(aliceEntity);
+    uint256 initialMultiplier = LibUnit.getColonyShipCostMultiplier(aliceEntity);
     assertEq(initialShips, 0, "initial ship and asteroid count");
 
-    uint256 amount = P_CapitalShipConfig.getInitialCost() * initialMultiplier;
-    uint8 resource = P_CapitalShipConfig.getResource();
+    uint256 amount = P_ColonyShipConfig.getInitialCost() * initialMultiplier;
+    uint8 resource = P_ColonyShipConfig.getResource();
     increaseResource(aliceAsteroidEntity, EResource(resource), amount);
-    increaseResource(aliceAsteroidEntity, EResource.U_CapitalShipCapacity, 1);
-    trainUnits(alice, Home.get(aliceAsteroidEntity), P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip)), 1, true);
-    assertEq(LibUnit.getCapitalShipsPlusAsteroids(aliceEntity), initialShips + 1, "colony ship count");
-    assertEq(LibUnit.getCapitalShipCostMultiplier(aliceEntity), initialMultiplier * 2, "colony ship cost multiplier");
+    increaseResource(aliceAsteroidEntity, EResource.U_ColonyShipCapacity, 1);
+    trainUnits(alice, Home.get(aliceAsteroidEntity), P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip)), 1, true);
+    assertEq(LibUnit.getColonyShipsPlusAsteroids(aliceEntity), initialShips + 1, "colony ship count");
+    assertEq(LibUnit.getColonyShipCostMultiplier(aliceEntity), initialMultiplier * 2, "colony ship cost multiplier");
 
     assertEq(
       amount * 2,
-      P_CapitalShipConfig.getInitialCost() * LibUnit.getCapitalShipCostMultiplier(aliceEntity),
+      P_ColonyShipConfig.getInitialCost() * LibUnit.getColonyShipCostMultiplier(aliceEntity),
       "colony ship 1 cost"
     );
 
     increaseResource(aliceAsteroidEntity, EResource(resource), amount * 2);
-    increaseResource(aliceAsteroidEntity, EResource.U_CapitalShipCapacity, 1);
-    trainUnits(alice, Home.get(aliceAsteroidEntity), P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip)), 1, true);
-    assertEq(LibUnit.getCapitalShipsPlusAsteroids(aliceEntity), initialShips + 2, "colony ship 2 count");
-    assertEq(LibUnit.getCapitalShipCostMultiplier(aliceEntity), initialMultiplier * 2 * 2, "colony ship 2 cost");
+    increaseResource(aliceAsteroidEntity, EResource.U_ColonyShipCapacity, 1);
+    trainUnits(alice, Home.get(aliceAsteroidEntity), P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip)), 1, true);
+    assertEq(LibUnit.getColonyShipsPlusAsteroids(aliceEntity), initialShips + 2, "colony ship 2 count");
+    assertEq(LibUnit.getColonyShipCostMultiplier(aliceEntity), initialMultiplier * 2 * 2, "colony ship 2 cost");
 
     assertEq(
       amount * 4,
-      P_CapitalShipConfig.getInitialCost() * LibUnit.getCapitalShipCostMultiplier(aliceEntity),
+      P_ColonyShipConfig.getInitialCost() * LibUnit.getColonyShipCostMultiplier(aliceEntity),
       "next colony ship 2 cost"
     );
   }

@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 
 import { P_Transportables, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
-import { CapitalShipPrototypeId } from "codegen/Prototypes.sol";
+import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
@@ -29,8 +29,8 @@ library LibTransfer {
     bool sameOwner = OwnedBy.get(fleetEntity) == asteroidEntity;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
-      if (!sameOwner && unitPrototypes[i] == CapitalShipPrototypeId)
-        revert("[Fleet] Cannot transfer capital ships to other players");
+      if (!sameOwner && unitPrototypes[i] == ColonyShipPrototypeId)
+        revert("[Fleet] Cannot transfer colony ships to other players");
       LibUnit.decreaseUnitCount(asteroidEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
       LibFleet.increaseFleetUnit(fleetEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
@@ -75,8 +75,8 @@ library LibTransfer {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
-      if (!sameOwner && unitPrototypes[i] == CapitalShipPrototypeId)
-        revert("[Fleet] Cannot transfer capital ships to other players");
+      if (!sameOwner && unitPrototypes[i] == ColonyShipPrototypeId)
+        revert("[Fleet] Cannot transfer colony ships to other players");
       LibFleet.increaseFleetUnit(fleetEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
@@ -105,8 +105,8 @@ library LibTransfer {
     bool sameOwner = OwnedBy.get(fleetEntity) == asteroidEntity;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
-      if (!sameOwner && unitPrototypes[i] == CapitalShipPrototypeId)
-        revert("[Fleet] Cannot transfer capital ships to other players");
+      if (!sameOwner && unitPrototypes[i] == ColonyShipPrototypeId)
+        revert("[Fleet] Cannot transfer colony ships to other players");
       LibFleet.decreaseFleetUnit(fleetEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
       LibUnit.increaseUnitCount(asteroidEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
@@ -155,8 +155,8 @@ library LibTransfer {
     bool sameOwner = OwnedBy.get(fleetEntity) == asteroidEntity;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
-      if (!sameOwner && unitPrototypes[i] == CapitalShipPrototypeId)
-        revert("[Fleet] Cannot transfer capital ships to other players");
+      if (!sameOwner && unitPrototypes[i] == ColonyShipPrototypeId)
+        revert("[Fleet] Cannot transfer colony ships to other players");
       LibUnit.increaseUnitCount(asteroidEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
@@ -189,8 +189,8 @@ library LibTransfer {
     bool sameOwner = OwnedBy.get(toFleetEntity) == OwnedBy.get(fromFleetEntity);
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
-      if (!sameOwner && unitPrototypes[i] == CapitalShipPrototypeId)
-        revert("[Fleet] Cannot transfer capital ships to other players");
+      if (!sameOwner && unitPrototypes[i] == ColonyShipPrototypeId)
+        revert("[Fleet] Cannot transfer colony ships to other players");
       LibFleet.increaseFleetUnit(toFleetEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
       LibFleet.decreaseFleetUnit(fromFleetEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
@@ -241,8 +241,8 @@ library LibTransfer {
 
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
-      if (!sameOwner && unitPrototypes[i] == CapitalShipPrototypeId)
-        revert("[Fleet] Cannot transfer capital ships to other players");
+      if (!sameOwner && unitPrototypes[i] == ColonyShipPrototypeId)
+        revert("[Fleet] Cannot transfer colony ships to other players");
       LibFleet.increaseFleetUnit(toFleetEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
