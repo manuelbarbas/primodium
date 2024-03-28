@@ -3,12 +3,15 @@ import { Scene } from "engine/types";
 import { IPrimodiumGameObject } from "./interfaces";
 import { Assets } from "../constants/assets";
 import { SpriteKeys } from "../constants/assets/sprites";
-import { DepthLayers } from "../constants/common";
+import { OrbitRing } from "./Asteroid/OrbitRing";
+import { TransitLine } from "./TransitLine";
 
-export class Fleet extends Phaser.GameObjects.Sprite implements IPrimodiumGameObject {
+export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObject {
   private _scene: Scene;
   private coord: Coord;
   private spawned = false;
+  private orbitRingRef: OrbitRing | null = null;
+  private transitLineRef: TransitLine | null = null;
   constructor(scene: Scene, coord: Coord) {
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
     super(
@@ -18,10 +21,7 @@ export class Fleet extends Phaser.GameObjects.Sprite implements IPrimodiumGameOb
       Assets.SpriteAtlas,
       SpriteKeys.LightningCraft
     );
-    this.setOrigin(0.5, 0.5)
-      .setScale(0.5)
-      .setDepth(DepthLayers.Marker - coord.y)
-      .setInteractive();
+    this.setOrigin(0.5, 0.5).setScale(0.3).setInteractive();
     this._scene = scene;
     this.coord = coord;
   }
@@ -54,6 +54,26 @@ export class Fleet extends Phaser.GameObjects.Sprite implements IPrimodiumGameOb
     const point = matrix.transformPoint(this.x, this.y);
 
     return { x: point.x / this._scene.tiled.tileWidth, y: -point.y / this._scene.tiled.tileHeight };
+  }
+
+  getOrbitRing() {
+    return this.orbitRingRef;
+  }
+
+  getTransitLine() {
+    return this.transitLineRef;
+  }
+
+  setOrbitRingRef(orbitRing: OrbitRing | null) {
+    this.orbitRingRef = orbitRing;
+
+    return this;
+  }
+
+  setTransitLineRef(transitLine: TransitLine | null) {
+    this.transitLineRef = transitLine;
+
+    return this;
   }
 
   dispose() {

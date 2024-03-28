@@ -5,10 +5,10 @@ export class TargetLine extends Phaser.GameObjects.Line implements IPrimodiumGam
   private _scene: Scene;
   private spawned = false;
   private start;
-  constructor(scene: Scene, start: PixelCoord) {
+  constructor(scene: Scene, start: PixelCoord, color = 0x808080) {
     const pointer = scene.input.phaserInput.activePointer;
 
-    super(scene.phaserScene, start.x, start.y, 0, 0, pointer.worldX - start.x, pointer.worldY - start.y, 0x808080);
+    super(scene.phaserScene, start.x, start.y, 0, 0, pointer.worldX - start.x, pointer.worldY - start.y, color);
     this.setOrigin(0, 0);
     this.setLineWidth(2);
     this._scene = scene;

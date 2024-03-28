@@ -6,9 +6,10 @@ import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getCanAttack, getCanSend } from "src/util/unit";
 import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
-import { PrimaryAsteroid, SecondaryAsteroid } from "src/game/lib/objects/Asteroid";
+import { BaseAsteroid } from "src/game/lib/objects/Asteroid/BaseAsteroid";
 import { EntityType, MapIdToAsteroidType } from "src/util/constants";
 import { createCameraApi } from "src/game/api/camera";
+import { PrimaryAsteroid, SecondaryAsteroid } from "src/game/lib/objects/Asteroid";
 
 export const renderAsteroid = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -21,7 +22,7 @@ export const renderAsteroid = (scene: Scene) => {
     const expansionLevel = components.Level.get(entity)?.value ?? 1n;
 
     const spriteScale = 0.34 + 0.05 * Number(asteroidData.maxLevel);
-    let asteroid: PrimaryAsteroid | SecondaryAsteroid;
+    let asteroid: BaseAsteroid;
     if (!asteroidData?.spawnsSecondary)
       asteroid = new SecondaryAsteroid(
         scene,
@@ -65,8 +66,8 @@ export const renderAsteroid = (scene: Scene) => {
 
     if (!coord) return;
 
-    //TODO: not sure why this is needed but rendering of unitialized asteroids wont work otherwise
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    // //TODO: not sure why this is needed but rendering of unitialized asteroids wont work otherwise
+    // await new Promise((resolve) => setTimeout(resolve, 0));
 
     render(entity, coord);
     if (asteroidData?.spawnsSecondary) initializeSecondaryAsteroids(entity, coord);

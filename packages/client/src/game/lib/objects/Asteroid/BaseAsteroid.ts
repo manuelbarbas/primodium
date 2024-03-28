@@ -4,7 +4,7 @@ import { IPrimodiumGameObject } from "../interfaces";
 import { Assets } from "../../constants/assets";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { SpriteKeys } from "../../constants/assets/sprites";
-import { AsteroidRelationship } from "../../constants/common";
+import { AsteroidRelationship, DepthLayers } from "../../constants/common";
 import { OrbitRing } from "./OrbitRing";
 
 export abstract class BaseAsteroid extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
@@ -29,6 +29,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
     this.coord = coord;
     this._scene = scene;
     this.setSize(this.outlineSprite.width, this.outlineSprite.height).setInteractive();
+    this.setDepth(DepthLayers.Rock);
   }
 
   spawn() {
@@ -41,6 +42,12 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
     ]);
     this.spawned = true;
     this.scene.add.existing(this);
+    return this;
+  }
+
+  setScale(x?: number, y?: number) {
+    this.asteroidSprite.setScale(x, y);
+    this.outlineSprite.setScale(x, y);
     return this;
   }
 

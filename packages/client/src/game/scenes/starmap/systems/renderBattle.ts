@@ -3,12 +3,12 @@ import { Scene } from "engine/types";
 import { toast } from "react-toastify";
 import { createCameraApi } from "src/game/api/camera";
 import { createFxApi } from "src/game/api/fx";
+import { createObjectApi } from "src/game/api/objects";
 import { getPlayerOwner } from "src/hooks/usePlayerOwner";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getDistance } from "src/util/common";
 import { entityToFleetName, entityToRockName } from "src/util/name";
-import { getFleetTilePosition } from "src/util/unit";
 
 export const renderBattle = (scene: Scene) => {
   const gameWorld = namespaceWorld(world, "game");
@@ -17,13 +17,16 @@ export const renderBattle = (scene: Scene) => {
   /* Can we pass in the custom scene instead of building it again here? */
   const fx = createFxApi(scene);
   const camera = createCameraApi(scene);
+  const objects = createObjectApi(scene);
 
   const attackAnimation = async (entity: Entity, attacker: Entity, defender: Entity, attackerWinner?: boolean) => {
-    const attackerPosition = getFleetTilePosition(scene, attacker);
+    const attackerPosition = objects.getFleet(attacker)?.getTileCoord() ?? { x: 0, y: 0 };
 
     const isPirate = components.PirateAsteroid.has(defender);
     const isFleet = components.IsFleet.get(defender)?.value;
-    const position = isFleet ? getFleetTilePosition(scene, defender) : components.Position.get(defender);
+    const position = isFleet
+      ? objects.getFleet(defender)?.getTileCoord() ?? { x: 0, y: 0 }
+      : components.Position.get(defender);
 
     const playerEntity = components.Account.get()?.value;
     const attackerRock = components.FleetMovement.get(attacker)?.destination as Entity;

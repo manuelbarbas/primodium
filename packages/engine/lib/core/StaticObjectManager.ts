@@ -6,7 +6,9 @@ import { Building } from "../../../client/src/game/lib/objects/Building";
 import { Fleet } from "../../../client/src/game/lib/objects/Fleet";
 import { createCamera } from "./createCamera";
 import { Coord } from "../../types";
-type PrimodiumGameObject = BaseAsteroid | Building | Fleet;
+import { TransitLine } from "src/game/lib/objects/TransitLine";
+import { TargetLine } from "src/game/lib/objects/TargetLine";
+type PrimodiumGameObject = BaseAsteroid | Building | Fleet | TransitLine | TargetLine;
 
 export class StaticObjectManager {
   private chunkManager;

@@ -6,9 +6,17 @@ import { BaseAsteroid } from "src/game/lib/objects/Asteroid/BaseAsteroid";
 import { Fleet } from "src/game/lib/objects/Fleet";
 import { createAudioApi } from "src/game/api/audio";
 import { AudioKeys } from "src/game/lib/constants/assets/audio";
-export const renderFleetsInOrbit = (scene: Scene) => {
+import { createObjectApi } from "src/game/api/objects";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { TransitLine } from "src/game/lib/objects/TransitLine";
+import { hashKeyEntity } from "src/util/encode";
+import { PIRATE_KEY } from "src/util/constants";
+
+export const renderFleets = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const audioApi = createAudioApi(scene);
+  const objects = createObjectApi(scene);
+  const transitsToUpdate = new Set<Entity>();
 
   // handle rendering fleets if asteroid is not yet spawned
   const spawnQueue = new Map<Entity, Entity[]>();
@@ -19,57 +27,114 @@ export const renderFleetsInOrbit = (scene: Scene) => {
 
     if (fleets) {
       fleets.forEach((entity) => {
-        renderOrbitingFleet(entity, asteroidEntity);
+        handleFleetOrbit(entity, asteroidEntity);
       });
       spawnQueue.delete(asteroidEntity);
     }
   });
 
-  const renderOrbitingFleet = (entity: Entity, asteroidEntity: Entity) => {
-    const asteroid = scene.objects.get(asteroidEntity);
+  function handleFleetTransit(fleet: Entity, origin: Entity, destination: Entity) {
+    const movement = components.FleetMovement.get(fleet);
+    const playerEntity = components.Account.get()?.value;
+    const originPosition = components.Position.get(origin) ?? { x: 0, y: 0 };
+    const destinationPosition = components.Position.get(destination) ?? { x: 0, y: 0 };
+    const originPixelPosition = tileCoordToPixelCoord(
+      { x: originPosition.x, y: -originPosition.y },
+      scene.tiled.tileWidth,
+      scene.tiled.tileHeight
+    );
+    const destinationPixelPosition = tileCoordToPixelCoord(
+      { x: destinationPosition.x, y: -destinationPosition.y },
+      scene.tiled.tileWidth,
+      scene.tiled.tileHeight
+    );
 
-    // if asteroid is not yet spawned, add entity to spawn queue
+    const fleetObject = getFleetObject(fleet);
+
+    const hide =
+      playerEntity &&
+      ((components.PirateAsteroid.has(movement?.destination as Entity) &&
+        hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(movement?.destination as Entity)?.value) ||
+        (components.PirateAsteroid.has(movement?.origin as Entity) &&
+          hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(movement?.origin as Entity)?.value));
+
+    transitsToUpdate.add(fleet);
+    const transitLine = getTransitLineObject(fleet);
+    transitLine.setFleet(fleetObject);
+    transitLine.setCoordinates(originPixelPosition, destinationPixelPosition);
+    if (hide) {
+      transitLine.setVisible(false);
+      return;
+    }
+  }
+
+  function handleFleetOrbit(fleet: Entity, asteroidEntity: Entity) {
+    const asteroid = objects.getAsteroid(asteroidEntity);
+
     if (!asteroid) {
       const queue = spawnQueue.get(asteroidEntity) ?? [];
-      if (queue.length) queue.push(entity);
-      else spawnQueue.set(asteroidEntity, [entity]);
+      if (queue.length) queue.push(fleet);
+      else spawnQueue.set(asteroidEntity, [fleet]);
       return;
     }
 
     if (!(asteroid instanceof BaseAsteroid)) return;
 
-    // add fleet to asteroid's orbit
-    const fleet = new Fleet(scene, { x: 0, y: 0 })
-      .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
-        components.SelectedFleet.set({
-          value: entity,
+    const fleetObject = getFleetObject(fleet);
+
+    asteroid.getOrbitRing().addFleet(fleetObject);
+  }
+
+  function getFleetObject(entity: Entity) {
+    const fleet = objects.getFleet(entity);
+
+    if (!fleet) {
+      const newFleet = new Fleet(scene, { x: 0, y: 0 })
+        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+          components.SelectedFleet.set({
+            value: entity,
+          });
+          audioApi.play(AudioKeys.Bleep, "ui");
+        })
+        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
+          components.HoverEntity.set({
+            value: entity,
+          });
+        })
+        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => {
+          components.HoverEntity.remove();
         });
-        audioApi.play(AudioKeys.Bleep, "ui");
-      })
-      .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
-        components.HoverEntity.set({
-          value: entity,
-        });
-      })
-      .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => {
-        components.HoverEntity.remove();
-      });
-    asteroid.getOrbitRing().addFleet(fleet);
-    scene.objects.add(entity, fleet);
-  };
+      scene.objects.add(entity, newFleet);
+      return newFleet;
+    }
+
+    return fleet;
+  }
+
+  function getTransitLineObject(entity: Entity) {
+    const transitLine = objects.getTransitLine(entity);
+
+    if (!transitLine) {
+      const newTransitLine = new TransitLine(scene, { x: 0, y: 0 }, { x: 0, y: 0 }).spawn();
+      scene.objects.add(`transit_${entity}`, newTransitLine);
+      return newTransitLine;
+    }
+
+    return transitLine;
+  }
 
   defineComponentSystem(systemsWorld, components.FleetMovement, async (update) => {
     const newMovement = update.value[0];
-    const oldMovement = update.value[1];
 
     if (newMovement) {
       const time = components.Time.get()?.value ?? 0n;
       const arrivalTime = newMovement.arrivalTime ?? 0n;
       if (arrivalTime <= time) {
-        renderOrbitingFleet(update.entity, newMovement.destination as Entity);
+        handleFleetOrbit(update.entity, newMovement.destination as Entity);
+      } else {
+        handleFleetTransit(update.entity, newMovement.origin as Entity, newMovement.destination as Entity);
       }
     }
-    if (oldMovement) renderOrbitingFleet(update.entity, oldMovement.destination as Entity);
   });
 
   defineComponentSystem(systemsWorld, components.SelectedFleet, ({ value }) => {
@@ -101,9 +166,9 @@ export const renderFleetsInOrbit = (scene: Scene) => {
 
   defineComponentSystem(systemsWorld, components.SelectedRock, ({ value }) => {
     if (value[0]) {
-      const asteroid = scene.objects.get(value[0].value);
+      const asteroid = objects.getAsteroid(value[0].value as Entity);
 
-      if (asteroid instanceof BaseAsteroid) {
+      if (asteroid) {
         asteroid.getOrbitRing().pauseRotation();
       }
 
@@ -115,12 +180,45 @@ export const renderFleetsInOrbit = (scene: Scene) => {
     }
 
     if (value[1]) {
-      const asteroid = scene.objects.get(value[1].value);
+      const asteroid = objects.getAsteroid(value[1].value as Entity);
 
-      if (asteroid instanceof BaseAsteroid) {
+      if (asteroid) {
         asteroid.getOrbitRing().resumeRotation();
       }
     }
+  });
+
+  defineComponentSystem(systemsWorld, components.Time, ({ value }) => {
+    const now = value[0]?.value ?? 0n;
+
+    transitsToUpdate.forEach((transit) => {
+      const transitObj = objects.getTransitLine(transit);
+
+      if (!transitObj) return;
+
+      const movement = components.FleetMovement.get(transit);
+
+      if (!movement) return;
+
+      const timeTraveled = now - movement.sendTime;
+      const totaltime = movement.arrivalTime - movement.sendTime;
+
+      const progress = Number(timeTraveled) / Number(totaltime);
+
+      transitObj.setFleetProgress(progress);
+
+      if (progress >= 1) {
+        const fleet = objects.getFleet(transit);
+        const orbitRing = objects.getAsteroid(movement.destination as Entity)?.getOrbitRing();
+
+        if (orbitRing && fleet) {
+          orbitRing.addFleet(fleet);
+          scene.objects.remove(`transit_${transit}`);
+        }
+
+        transitsToUpdate.delete(transit);
+      }
+    });
   });
 
   systemsWorld.registerDisposer(() => {
