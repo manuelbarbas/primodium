@@ -5,37 +5,33 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { BuildingType, OwnedBy, Position, P_Transportables, P_WormholeConfig, P_WormholeConfigData, Wormhole, WormholeData, CooldownEnd, P_ScoreMultiplier } from "codegen/index.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibScore } from "libraries/LibScore.sol";
+import { LibWormhole } from "libraries/LibWormhole.sol";
 import { EScoreType } from "src/Types.sol";
 import { WormholeBasePrototypeId } from "codegen/Prototypes.sol";
 
 contract WormholeDepositSystem is PrimodiumSystem {
-  function getRandomResource(bytes32 seed, uint8 prevResource) private view returns (uint8 resource) {
-    do {
-      resource = uint8(uint256(seed) % P_Transportables.length());
-    } while (resource != prevResource);
-  }
-
-  function advanceTurn() private {
+  modifier _advanceTurn() {
     P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
 
     uint256 expectedTurn = (block.timestamp - wormholeConfig.startTime) / wormholeConfig.turnDuration;
-    uint256 turn = Wormhole.getTurn();
+    WormholeData memory wormholeData = Wormhole.get();
 
-    if (turn >= expectedTurn) return;
-
-    Wormhole.set(
-      WormholeData({
-        turn: expectedTurn,
-        resource: getRandomResource(Wormhole.getHash(), Wormhole.getResource()),
-        hash: blockhash(block.number)
-      })
-    );
+    if (wormholeData.turn < expectedTurn) {
+      Wormhole.set(
+        WormholeData({
+          turn: expectedTurn,
+          resource: LibWormhole.getRandomResource(wormholeData.hash, wormholeData.resource),
+          hash: blockhash(block.number)
+        })
+      );
+    }
+    _;
   }
 
   function wormholeDeposit(
     bytes32 wormholeBaseEntity,
     uint256 count
-  ) public _claimResources(Position.getParentEntity(wormholeBaseEntity)) {
+  ) public _claimResources(Position.getParentEntity(wormholeBaseEntity)) _advanceTurn {
     bytes32 playerEntity = _player();
     bytes32 asteroidEntity = OwnedBy.get(wormholeBaseEntity);
 

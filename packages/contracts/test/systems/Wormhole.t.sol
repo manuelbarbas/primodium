@@ -12,6 +12,8 @@ import { EUnit, EScoreType } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
+import { LibMath } from "libraries/LibMath.sol";
+import { LibWormhole } from "libraries/LibWormhole.sol";
 
 contract WormholeTest is PrimodiumTest {
   bytes32 aliceEntity;
@@ -163,7 +165,6 @@ contract WormholeTest is PrimodiumTest {
     bytes32 wormholeAsteroidEntity = testDepositWormhole();
     bytes32 wormholeEntity = Home.get(wormholeAsteroidEntity);
     increaseResource(wormholeAsteroidEntity, EResource(wormholeData.resource), 100);
-    console.log("cooldown: %s %s", block.timestamp, CooldownEnd.get(Home.get(wormholeAsteroidEntity)));
     vm.startPrank(alice);
     vm.expectRevert("[WormholeDeposit] Wormhole in cooldown");
     world.Primodium__wormholeDeposit((wormholeEntity), 100);
@@ -175,19 +176,45 @@ contract WormholeTest is PrimodiumTest {
     bytes32 wormholeEntity = Home.get(wormholeAsteroidEntity);
     increaseResource(wormholeAsteroidEntity, EResource(wormholeData.resource), 100);
 
-    console.logBytes32(OwnedBy.get(wormholeAsteroidEntity));
-    console.log(bob);
     vm.startPrank(bob);
     vm.expectRevert("[WormholeDeposit] Only owner can deposit");
     world.Primodium__wormholeDeposit(wormholeEntity, 100);
   }
 
-  /*
-   todo: 
- . - resource switch 
-     - after given time and not before
-     - updates hash
-     - updates resource
-     - updates turn
-  */
+  function getTurnStartTimestamp(uint256 turn) private returns (uint256) {
+    P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
+    return wormholeConfig.startTime + (turn * wormholeConfig.turnDuration);
+  }
+
+  function testUpdateWormholeResource() public {
+    WormholeData memory wormholeData = Wormhole.get();
+    P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
+
+    bytes32 wormholeAsteroidEntity = testDepositWormhole();
+    bytes32 wormholeBaseEntity = Home.get(wormholeAsteroidEntity);
+
+    // get the start of the next turn
+    //
+    uint256 expectedTurn = (block.timestamp - wormholeConfig.startTime) / wormholeConfig.turnDuration;
+    vm.warp(LibMath.max(CooldownEnd.get((wormholeBaseEntity)), getTurnStartTimestamp(wormholeData.turn + 1) + 1));
+
+    expectedTurn = (block.timestamp - wormholeConfig.startTime) / wormholeConfig.turnDuration;
+
+    bytes32 wormholeHash = Wormhole.getHash();
+    uint8 expectedNewResource = LibWormhole.getRandomResource(wormholeHash, wormholeData.resource);
+    uint256 prevScore = Score.get(aliceEntity, wormholeData.resource);
+
+    increaseResource(wormholeAsteroidEntity, EResource(expectedNewResource), 100);
+    vm.startPrank(alice);
+    world.Primodium__wormholeDeposit((wormholeBaseEntity), 100);
+    assertEq(
+      Score.get(aliceEntity, uint8(EScoreType.Extraction)),
+      200 * P_ScoreMultiplier.get(wormholeData.resource) + prevScore,
+      "score"
+    );
+    assertEq(CooldownEnd.get(wormholeBaseEntity), block.timestamp + wormholeConfig.cooldown, "cooldown");
+    assertFalse(Wormhole.getHash() == wormholeData.hash, "hash");
+    assertTrue(Wormhole.getResource() == expectedNewResource, "resource");
+    assertEq(Wormhole.getTurn(), expectedTurn, "turn");
+  }
 }
