@@ -3,7 +3,7 @@ import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Cheatcode, Cheatcodes } from "@primodiumxyz/mud-game-tools";
-import { EBuilding, EResource } from "contracts/config/enums";
+import { EResource } from "contracts/config/enums";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { toast } from "react-toastify";
 import { components } from "src/network/components";
@@ -574,8 +574,8 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
           },
         },
         conquerAsteroid: {
-          params: [],
-          function: async () => {
+          params: [{ name: "baseType", type: "dropdown", dropdownOptions: ["MainBase", "WormholeBase"] }],
+          function: async (baseType: string) => {
             const selectedRock = mud.components.SelectedRock.get()?.value;
             if (!selectedRock) {
               toast.error(`No rock selected`);
@@ -588,11 +588,12 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
               toast.error("Asteroid not initialized. Send fleet to initialize it");
               throw new Error("Asteroid not initialized");
             }
+            const entity = baseType == "MainBase" ? EntityType.MainBase : EntityType.WormholeBase;
             const player = mud.playerAccount.entity;
             await setComponentValue(mud, components.OwnedBy, { entity: selectedRock as Hex }, { value: player });
-            const position = components.Position.get(EntityType.WormholeBase);
+            const position = components.Position.get(entity);
             if (!position) throw new Error("No main base found");
-            await buildBuilding(mud, EBuilding.WormholeBase, { ...position, parentEntity: selectedRock as Hex });
+            await buildBuilding(mud, BuildingEnumLookup[entity], { ...position, parentEntity: selectedRock as Hex });
             toast.success(`Asteroid ${entityToRockName(selectedRock)} conquered`);
           },
         },
