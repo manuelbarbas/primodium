@@ -386,6 +386,12 @@ export const worldInput = {
       schema: { entity: "bytes32", value: "uint256" },
     },
 
+    // can only increase, never decrease. Assigned to player to prevent weird edge cases of losing asteroids
+    ColonyShipSlots: {
+      key: ["playerEntity"],
+      schema: { playerEntity: "bytes32", usedCount: "uint256", capacity: "uint256" },
+    },
+
     /* ------------------------------ Sending Units ----------------------------- */
 
     FleetMovement: {
