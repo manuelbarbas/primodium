@@ -4,14 +4,12 @@ import { focusAsteroid } from "./focusAsteroid";
 import { renderAsteroid } from "./renderAsteroid";
 import { renderAttackLine } from "./renderAttackLine";
 import { renderBattle } from "./renderBattle";
-import { renderFleets } from "./renderFleetsInOrbit";
+import { renderFleets } from "./renderFleets";
 import { renderMoveLine } from "./renderMoveLine";
-import { renderPirateAsteroid } from "./renderPirateAsteroid";
 
 export const runSystems = (scene: Scene, mud: MUD) => {
   focusAsteroid(scene);
   renderAsteroid(scene);
-  renderPirateAsteroid(scene);
   renderMoveLine(scene, mud);
   renderAttackLine(scene, mud);
   renderFleets(scene);

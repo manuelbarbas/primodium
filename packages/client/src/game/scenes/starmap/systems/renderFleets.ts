@@ -9,8 +9,6 @@ import { AudioKeys } from "src/game/lib/constants/assets/audio";
 import { createObjectApi } from "src/game/api/objects";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { TransitLine } from "src/game/lib/objects/TransitLine";
-import { hashKeyEntity } from "src/util/encode";
-import { PIRATE_KEY } from "src/util/constants";
 
 export const renderFleets = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -34,8 +32,6 @@ export const renderFleets = (scene: Scene) => {
   });
 
   function handleFleetTransit(fleet: Entity, origin: Entity, destination: Entity) {
-    const movement = components.FleetMovement.get(fleet);
-    const playerEntity = components.Account.get()?.value;
     const originPosition = components.Position.get(origin) ?? { x: 0, y: 0 };
     const destinationPosition = components.Position.get(destination) ?? { x: 0, y: 0 };
     const originPixelPosition = tileCoordToPixelCoord(
@@ -51,21 +47,10 @@ export const renderFleets = (scene: Scene) => {
 
     const fleetObject = getFleetObject(fleet);
 
-    const hide =
-      playerEntity &&
-      ((components.PirateAsteroid.has(movement?.destination as Entity) &&
-        hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(movement?.destination as Entity)?.value) ||
-        (components.PirateAsteroid.has(movement?.origin as Entity) &&
-          hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(movement?.origin as Entity)?.value));
-
     transitsToUpdate.add(fleet);
     const transitLine = getTransitLineObject(fleet);
     transitLine.setFleet(fleetObject);
     transitLine.setCoordinates(originPixelPosition, destinationPixelPosition);
-    if (hide) {
-      transitLine.setVisible(false);
-      return;
-    }
   }
 
   function handleFleetOrbit(fleet: Entity, asteroidEntity: Entity) {
