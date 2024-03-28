@@ -16,7 +16,7 @@ export class StaticObjectManager {
   private objMap = new Map<string, PrimodiumGameObject>();
   private chunkSize: number;
   private count = 0;
-  private onNewChildCallbacks: ((id: string) => void)[] = [];
+  private onNewObjectCallbacks: ((id: string) => void)[] = [];
 
   constructor(camera: ReturnType<typeof createCamera>, chunkSize: number) {
     this.chunkSize = chunkSize;
@@ -59,7 +59,7 @@ export class StaticObjectManager {
       if (!objects.length) this.coordMap.set(chunkCoord, [object]);
       else objects.push(object);
 
-      if (this.chunkManager.getVisibleChunks().has(this.chunkManager.getKeyForChunk(chunkCoord))) {
+      if (this.chunkManager.isVisible(chunkCoord)) {
         this.count--;
         if (!object.isSpawned()) {
           object.spawn();
@@ -68,15 +68,15 @@ export class StaticObjectManager {
       }
     }
 
-    this.onNewChildCallbacks.forEach((callback) => callback(id));
+    this.onNewObjectCallbacks.forEach((callback) => callback(id));
   }
 
-  onNewChild(callback: (id: string) => void) {
-    this.onNewChildCallbacks.push(callback);
+  onNewObject(callback: (id: string) => void) {
+    this.onNewObjectCallbacks.push(callback);
 
     return () => {
-      const index = this.onNewChildCallbacks.indexOf(callback);
-      if (index !== -1) this.onNewChildCallbacks.splice(index, 1);
+      const index = this.onNewObjectCallbacks.indexOf(callback);
+      if (index !== -1) this.onNewObjectCallbacks.splice(index, 1);
     };
   }
 

@@ -61,9 +61,14 @@ export class ChunkManager {
     });
     this.visibleChunks = currentVisible;
   }
-  getKeyForChunk({ x, y }: Coord): string {
+  private getKeyForChunk({ x, y }: Coord): string {
     return `${x}:${y}`;
   }
+
+  isVisible(chunkCoord: Coord): boolean {
+    return this.visibleChunks.has(this.getKeyForChunk(chunkCoord));
+  }
+
   getVisibleChunks(): Set<string> {
     return this.visibleChunks;
   }

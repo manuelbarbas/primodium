@@ -18,7 +18,7 @@ export const renderFleets = (scene: Scene) => {
 
   // handle rendering fleets if asteroid is not yet spawned
   const spawnQueue = new Map<Entity, Entity[]>();
-  const unsub = scene.objects.onNewChild((id) => {
+  const unsub = scene.objects.onNewObject((id) => {
     const asteroidEntity = id as Entity;
     //does fleets exist in spawn queue
     const fleets = spawnQueue.get(asteroidEntity);

@@ -68,6 +68,7 @@ export class OrbitRing extends Phaser.GameObjects.Container {
     }
 
     fleet.getTransitLine()?.removeFleet();
+    fleet.getOrbitRing()?.removeFleet(fleet);
     fleet.setOrbitRingRef(this);
     fleet.setFlip(false, false);
     this.fleetsContainer.add(fleet);

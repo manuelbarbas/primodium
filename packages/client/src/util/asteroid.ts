@@ -13,10 +13,10 @@ import { getOrbitingFleets } from "./unit";
 import { Assets } from "src/game/lib/constants/assets";
 import { SpriteKeys } from "src/game/lib/constants/assets/sprites";
 
-//TODO: proper implementation
+//TODO: proper implementation, this is just a placeholder so stuff doesn't break.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
   const { getSpriteBase64 } = primodium.api().sprite;
-  console.log("getAsteroidImage", asteroid);
   return getSpriteBase64(SpriteKeys.Asteroid1, Assets.SpriteAtlas);
 }
 

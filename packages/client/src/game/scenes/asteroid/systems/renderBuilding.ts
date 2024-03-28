@@ -60,7 +60,14 @@ export const renderBuilding = (scene: Scene) => {
     }
 
     const render = ({ entity }: { entity: Entity }) => {
-      if (buildings.has(entity)) return;
+      if (buildings.has(entity)) {
+        const building = buildings.get(entity);
+        if (!building) return;
+        building.setLevel(components.Level.get(entity)?.value ?? 1n);
+        building.setActive(components.IsActive.get(entity)?.value ?? true);
+
+        return;
+      }
 
       const buildingType = components.BuildingType.get(entity)?.value as Entity | undefined;
 

@@ -55,18 +55,17 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
     return this;
   }
 
-  setActive() {
-    this.setTint(0xffffff);
-    this.anims.resume();
-    return this;
-  }
+  setActive(active: boolean) {
+    if (active) {
+      this.setTint(0xffffff);
+      this.anims.resume();
+      return this;
+    }
 
-  setInactive() {
     this.setTint(0x777777);
     this.anims.pause();
     return this;
   }
-
   setLevel(level: bigint) {
     this.level = level;
     const assetPair = getAssetKeyPair(level, this.buildingType);
