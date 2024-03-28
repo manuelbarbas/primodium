@@ -96,7 +96,6 @@ contract TransferSystem is PrimodiumSystem {
     _onlyFleetOwner(fromFleetEntity)
     _onlyWhenNotInCooldown(fromFleetEntity)
     _onlyWhenFleetIsInOrbitOfAsteroid(fromFleetEntity, asteroidEntity)
-    _onlyWhenNotPirateAsteroid(asteroidEntity)
     _claimUnits(asteroidEntity)
     _unitCountIsValid(unitCounts)
   {
@@ -119,7 +118,6 @@ contract TransferSystem is PrimodiumSystem {
     _onlyFleetOwner(fleetEntity)
     _onlyWhenNotInCooldown(fleetEntity)
     _onlyWhenFleetIsInOrbitOfAsteroid(fleetEntity, asteroidEntity)
-    _onlyWhenNotPirateAsteroid(asteroidEntity)
     _claimResources(asteroidEntity)
     _resourceCountIsValid(resourceCounts)
   {
@@ -144,7 +142,6 @@ contract TransferSystem is PrimodiumSystem {
     _onlyFleetOwner(fromFleetEntity)
     _onlyWhenFleetIsInOrbitOfAsteroid(fromFleetEntity, asteroidEntity)
     _onlyWhenNotInCooldown(fromFleetEntity)
-    _onlyWhenNotPirateAsteroid(asteroidEntity)
     _claimResources(asteroidEntity)
     _claimUnits(asteroidEntity)
     _unitCountIsValid(unitCounts)
