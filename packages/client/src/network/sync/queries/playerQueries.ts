@@ -53,10 +53,6 @@ export const getPlayerQuery = ({
           key0: playerEntity,
         },
         {
-          tableId: tables.DefeatedPirate.tableId,
-          key0: playerEntity,
-        },
-        {
           tableId: tables.ProducedUnit.tableId,
           key0: playerEntity,
         },

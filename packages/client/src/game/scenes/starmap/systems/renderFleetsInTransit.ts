@@ -12,8 +12,7 @@ import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getRockRelationship } from "src/util/asteroid";
-import { PIRATE_KEY, RockRelationship } from "src/util/constants";
-import { hashKeyEntity } from "src/util/encode";
+import { RockRelationship } from "src/util/constants";
 import { getAngleBetweenPoints } from "src/util/vector";
 import {
   ObjectPosition,
@@ -21,7 +20,6 @@ import {
   OnHover,
   OnOnce,
   OnRxjsSystem,
-  SetValue,
 } from "../../common/object-components/common";
 import { Circle, Line, Triangle } from "../../common/object-components/graphics";
 import { renderEntityOrbitingFleets } from "./renderFleetsInOrbit";
@@ -50,16 +48,6 @@ export const renderFleetsInTransit = (scene: Scene) => {
 
     if (!originPosition || !destinationPosition) return;
 
-    //render personal pirates only
-    const hide =
-      playerEntity &&
-      ((components.PirateAsteroid.has(destination) &&
-        hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(destination)?.value) ||
-        (components.PirateAsteroid.has(origin) &&
-          hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(origin)?.value));
-
-    const sharedComponents = hide ? [SetValue({ alpha: 0 })] : [];
-
     const originPixelCoord = tileCoordToPixelCoord(
       { x: originPosition.x, y: -originPosition.y },
       tileWidth,
@@ -76,7 +64,6 @@ export const renderFleetsInTransit = (scene: Scene) => {
 
     const trajectory = sendTrajectory.add("Graphics", `${entity}-move-trajectory`, true);
     trajectory.setComponents([
-      ...sharedComponents,
       ObjectPosition(originPixelCoord, DepthLayers.Marker),
       Line(destinationPixelCoord, {
         id: `${entity}-trajectoryline`,
@@ -116,7 +103,6 @@ export const renderFleetsInTransit = (scene: Scene) => {
       relationship === RockRelationship.Ally ? 0x00ff00 : relationship === RockRelationship.Enemy ? 0xff0000 : 0x00ffff;
 
     fleetIcon.setComponents([
-      ...sharedComponents,
       ObjectPosition(originPixelCoord, DepthLayers.Marker),
 
       Triangle(15, 20, {
@@ -159,10 +145,7 @@ export const renderFleetsInTransit = (scene: Scene) => {
     ]);
   };
 
-  const query = [
-    Has(components.FleetMovement),
-    // Not(components.Pirate)
-  ];
+  const query = [Has(components.FleetMovement)];
 
   defineComponentSystem(systemsWorld, components.FleetMovement, (update) => {
     if (!update.value[0]) {

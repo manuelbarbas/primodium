@@ -1036,24 +1036,6 @@
   },
   {
     "type": "function",
-    "name": "Primodium__resolvePirateAsteroid",
-    "inputs": [
-      {
-        "name": "playerEntity",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "pirateAsteroid",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "Primodium__revokeInvite",
     "inputs": [
       {
@@ -1148,30 +1130,6 @@
     "outputs": [
       {
         "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__spawnPirateAsteroid",
-    "inputs": [
-      {
-        "name": "playerEntity",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "prototypeEntity",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "asteroidEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       }

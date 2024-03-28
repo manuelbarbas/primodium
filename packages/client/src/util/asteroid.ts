@@ -24,7 +24,6 @@ export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
     return undefined;
   }
 
-  if (components.PirateAsteroid.has(asteroid)) return getSpriteBase64(getRockSprite(1, 1n), Assets.SpriteAtlas);
   const spriteKey = getRockSprite(
     asteroidData.mapId,
     asteroidData.mapId === 1 ? expansionLevel : asteroidData.maxLevel
@@ -35,7 +34,6 @@ export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
 
 export function getAsteroidName(spaceRock: Entity) {
   const expansionLevel = comps.Level.get(spaceRock)?.value;
-  const isPirate = !!comps.PirateAsteroid.get(spaceRock);
   const asteroidData = comps.Asteroid.get(spaceRock);
 
   const asteroidResource = MapIdToAsteroidType[asteroidData?.mapId ?? 0];
@@ -50,7 +48,7 @@ export function getAsteroidName(spaceRock: Entity) {
 
   return ` ${expansionLevel ? `LVL. ${expansionLevel} ` : asteroidSize} ${
     asteroidResource ? getBlockTypeName(asteroidResource) : ""
-  } ${isPirate ? "Pirate" : "Asteroid"}`;
+  } ${"Asteroid"}`;
 }
 
 export function getAsteroidDescription(asteroid: Entity) {

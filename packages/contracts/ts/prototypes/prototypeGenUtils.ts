@@ -92,7 +92,7 @@ export const getPUnitData = (data: {
 const unscaledResources = new Set([
   EResource.U_Housing,
   EResource.U_MaxFleets,
-  EResource.U_CapitalShipCapacity,
+  EResource.U_ColonyShipCapacity,
   EResource.M_DefenseMultiplier,
 ]);
 export const getResourceValues = (resourceValues: Record<string, number>) => {
@@ -107,10 +107,6 @@ export const getResourceValues = (resourceValues: Record<string, number>) => {
     [[], []] as [number[], bigint[]]
   );
   return { resources, amounts };
-};
-export const getPirateObjectiveResourceValues = (resourceValues: Record<string, number>) => {
-  const amounts = getResourceValues(resourceValues);
-  return { ...amounts, resourceAmounts: amounts.amounts };
 };
 
 export const getUnitValues = (unitValues: Record<string, number>) => {

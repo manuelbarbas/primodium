@@ -109,7 +109,7 @@ export const TransferFrom = (props: {
             return (
               <ResourceIcon
                 key={`from-unit-${unit}`}
-                disabled={unit === EntityType.CapitalShip && !props.sameOwner}
+                disabled={unit === EntityType.ColonyShip && !props.sameOwner}
                 className="bg-neutral/50"
                 resource={unit as Entity}
                 amount={count.toString()}
