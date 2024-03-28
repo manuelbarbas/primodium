@@ -7,7 +7,7 @@ import { addressToEntity } from "src/utils.sol";
 import { EResource, EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
-import { OwnedBy, UnitCount, Score, ProductionRate, P_CapitalShipConfig, CooldownEnd, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, UnitLevel } from "codegen/index.sol";
+import { OwnedBy, UnitCount, Score, ProductionRate, P_ColonyShipConfig, CooldownEnd, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, UnitLevel } from "codegen/index.sol";
 
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
@@ -41,12 +41,12 @@ contract CombatEncryptionTest is PrimodiumTest {
 
     //create fleet with 1 minuteman marine
     bytes32 minuteman = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
-    bytes32 capitalShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
-    uint256 decryption = P_CapitalShipConfig.getDecryption();
+    bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
+    uint256 decryption = P_ColonyShipConfig.getDecryption();
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == minuteman) unitCounts[i] = numberOfUnits;
-      if (unitPrototypes[i] == capitalShipPrototype) unitCounts[i] = 2;
+      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 2;
     }
 
     //create fleet with 1 iron
@@ -132,13 +132,13 @@ contract CombatEncryptionTest is PrimodiumTest {
 
     //create fleet with 1 minuteman marine
     bytes32 minuteman = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
-    bytes32 capitalShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
-    uint256 decryption = P_CapitalShipConfig.getDecryption();
+    bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
+    uint256 decryption = P_ColonyShipConfig.getDecryption();
 
     console.log("decryption: %s", decryption);
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == minuteman) unitCounts[i] = numberOfUnits;
-      if (unitPrototypes[i] == capitalShipPrototype) unitCounts[i] = 1;
+      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 1;
     }
     uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
 
@@ -223,7 +223,7 @@ contract CombatEncryptionTest is PrimodiumTest {
 
     assertEq(UnitCount.get(bobFleet, minuteman), 0, "fleet should have been disbanded and marine units");
     assertEq(
-      UnitCount.get(bobFleet, capitalShipPrototype),
+      UnitCount.get(bobFleet, colonyShipPrototype),
       0,
       "fleet should have been disbanded and colony ship unit lost"
     );
@@ -246,7 +246,7 @@ contract CombatEncryptionTest is PrimodiumTest {
     console.log("end");
   }
 
-  function testFleetAttackMultipleCapitalShips() public {
+  function testFleetAttackMultipleColonyShips() public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
@@ -254,12 +254,12 @@ contract CombatEncryptionTest is PrimodiumTest {
 
     //create fleet with 1 minuteman marine
     bytes32 minuteman = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
-    bytes32 capitalShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
-    uint256 decryption = P_CapitalShipConfig.getDecryption();
+    bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
+    uint256 decryption = P_ColonyShipConfig.getDecryption();
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == minuteman) unitCounts[i] = numberOfUnits;
-      if (unitPrototypes[i] == capitalShipPrototype) unitCounts[i] = 2;
+      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 2;
     }
 
     //create fleet with 1 iron
@@ -271,7 +271,7 @@ contract CombatEncryptionTest is PrimodiumTest {
 
     vm.startPrank(alice);
     bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    console.log("number of capital ships:", UnitCount.get(fleetEntity, capitalShipPrototype));
+    console.log("number of colony ships:", UnitCount.get(fleetEntity, colonyShipPrototype));
     vm.stopPrank();
 
     vm.startPrank(alice);

@@ -59,7 +59,7 @@ export const worldInput = {
       },
     },
 
-    P_CapitalShipConfig: {
+    P_ColonyShipConfig: {
       key: [],
       schema: {
         resource: "uint8",

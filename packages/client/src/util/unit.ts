@@ -47,14 +47,14 @@ export function getUnitStatsLevel(entity: Entity, level: bigint) {
     }
   );
 
-  const decryption = comps.P_CapitalShipConfig.get()?.decryption ?? 0n;
+  const decryption = comps.P_ColonyShipConfig.get()?.decryption ?? 0n;
   return {
     ATK: attack,
     CTR: defense,
     SPD: speed,
     CGO: cargo,
     HP: hp,
-    DEC: entity == EntityType.CapitalShip ? decryption : 0n,
+    DEC: entity == EntityType.ColonyShip ? decryption : 0n,
   };
 }
 
@@ -86,7 +86,7 @@ export const getFleetStats = (fleet: Entity) => {
     ret.hp += unitData.HP * count;
     ret.cargo += unitData.CGO * count;
     ret.speed = bigIntMin(ret.speed == 0n ? BigInt(10e100) : ret.speed, unitData.SPD);
-    ret.decryption = unitEntity === EntityType.CapitalShip ? unitData.DEC : ret.decryption;
+    ret.decryption = unitEntity === EntityType.ColonyShip ? unitData.DEC : ret.decryption;
   });
   return { ...ret, title: entityToFleetName(fleet) };
 };
