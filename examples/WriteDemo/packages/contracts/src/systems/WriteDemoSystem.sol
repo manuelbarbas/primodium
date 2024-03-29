@@ -24,7 +24,7 @@ import { console } from "forge-std/console.sol";
 contract WriteDemoSystem is System {
   bytes14 PRIMODIUM_NAMESPACE = bytes14("Primodium");
 
-  function buildIronMine() public returns (bytes32) {
+  function buildIronMine() public returns (bytes memory) {
     // we want to read from the Primodium World, not the Extension World
     StoreSwitch.setStoreAddress(_world());
 
@@ -58,27 +58,17 @@ contract WriteDemoSystem is System {
 
     // if we get this far, then we have found a valid tile position to build on
     // build it
-    // bytes32 buildingEntity = IPrimodiumWorld(_world()).Primodium__build(building, position);
-    // bytes32 buildingEntity = IPrimodiumWorld(_world()).delegatecall
-    (bool success, bytes memory data) = _world().delegatecall(
-      abi.encodeWithSignature("build(EBuilding,(int32, int32, bytes32))", building, (position))
+    ResourceId buildSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, PRIMODIUM_NAMESPACE, "BuildSystem");
+    bytes memory buildingEntity = IPrimodiumWorld(_world()).callFrom(
+      _msgSender(),
+      buildSystemId,
+      abi.encodeWithSignature("Primodium__build((uint256),(int32, int32, bytes32))", building, (position))
     );
 
-    if (!success) {
-      console.log("Failed to build Iron Mine");
-      // console.log(data);
-      revert("Failed to build Iron Mine");
-    }
+    console.logBytes(buildingEntity);
 
-    // ResourceId buildSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, PRIMODIUM_NAMESPACE, "BuildSystem");
-    // bytes memory buildingEntity = IPrimodiumWorld(_world()).callFrom(
-    //     _msgSender(),
-    //     buildSystemId,
-    //     abi.encodeWithSignature("build(EBuilding,(int32, int32, bytes32))", building, (position))
-    // );
-
-    // return buildingEntity;
-    return 0;
+    return buildingEntity;
+    // return 0;
   }
 
   /*//////////////////////////////////////////////////////////////

@@ -10,9 +10,10 @@ import { System } from "@latticexyz/world/src/System.sol";
 import { Systems } from "@latticexyz/world/src/codegen/tables/Systems.sol";
 
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-import { WorldResourceIdLib, ROOT_NAMESPACE } from "@latticexyz/world/src/WorldResourceId.sol";
+import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
+import { UNLIMITED_DELEGATION } from "@latticexyz/world/src/constants.sol";
 
 import { WriteDemoSystem } from "../src/systems/WriteDemoSystem.sol";
 
@@ -73,7 +74,7 @@ contract WriteDemoTest is MudTest {
     world.registerNamespace(namespaceResource);
 
     WriteDemoSystem writeDemoSystem = new WriteDemoSystem();
-    console2.log("ReadDemoSystem address: ", address(writeDemoSystem));
+    console2.log("WriteDemoSystem address: ", address(writeDemoSystem));
 
     // register the system
     world.registerSystem(systemResource, writeDemoSystem, true);
@@ -85,7 +86,15 @@ contract WriteDemoTest is MudTest {
       "Alice successfully registered the PluginExamples namespace, WriteDemoSystem contract, buildIronMine function selector, to the Primodium world address."
     );
 
-    // stop interacting with the chain
+    // stop being the system deployer
+    vm.stopPrank();
+
+    vm.startPrank(playerAddressActive);
+
+    world.registerDelegation(address(writeDemoSystem), UNLIMITED_DELEGATION, new bytes(0));
+    console2.log("ACTIVE_PLAYER successfully delegated to WriteDemoSystem for unlimited delegation.");
+
+    // stop being the active player
     vm.stopPrank();
   }
 
