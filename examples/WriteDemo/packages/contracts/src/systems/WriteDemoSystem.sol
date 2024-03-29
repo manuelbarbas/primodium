@@ -7,13 +7,12 @@ import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 // previously, we imported these directly,
 // but MUD collects and exposes them in index.sol automatically
 // so we can import them all from there
-import { Home, Level, Asteroid, P_AsteroidData, P_Asteroid, DimensionsData, Dimensions, PositionData, P_RequiredTile, P_Terrain, P_EnumToPrototype, P_Blueprint, UsedTiles, P_MaxLevel } from "../primodium/index.sol";
+import { Home, Level, Asteroid, P_AsteroidData, P_Asteroid, DimensionsData, Dimensions, PositionData, P_RequiredTile, P_Terrain, P_EnumToPrototype, P_Blueprint, UsedTiles, P_MaxLevel, Spawned } from "../primodium/index.sol";
 
 import { Bounds, EResource } from "src/Types.sol";
 import { BuildingKey, ExpansionKey } from "src/Keys.sol";
 
 import { EBuilding } from "../primodium/common.sol";
-
 import { IWorld as IPrimodiumWorld } from "../primodium/world/IWorld.sol";
 
 import { console } from "forge-std/console.sol";
@@ -48,28 +47,13 @@ contract WriteDemoSystem is System {
     // They are included further down the contract.
     PositionData memory position = getTilePosition(asteroidEntity, building);
 
+    // check if the player is spawned
+    bool playerIsSpawned = Spawned.get(playerEntity);
+    console.log("playerIsSpawned: ", playerIsSpawned);
+
     // if we get this far, then we have found a valid tile position to build on
     // build it
-    // bytes32 buildingEntity = world.Primodium__build(building, position);
     bytes32 buildingEntity = IPrimodiumWorld(_world()).Primodium__build(building, position);
-    // bytes32 buildingEntity = IPrimodiumWorld(_world()).callFrom(
-    //     _msgSender(),
-    //     BuildSystem,
-    //     abi.encodeWithSignature("Primodium__build((EBuilding,PositionData))", (building, position))
-    // );
-
-    // get the mapId of the asteroid
-    // uint8 mapId = Asteroid.getMapId(asteroidEntity);
-    // console.log("mapId: ", mapId);
-
-    // get boundary limits of the home asteroid
-    // Bounds memory bounds = getAsteroidBounds(asteroidEntity);
-    // console.log("Bounds X:");
-    // console.logInt(bounds.minX);
-    // console.logInt(bounds.maxX);
-    // console.log("Bounds Y:");
-    // console.logInt(bounds.minY);
-    // console.logInt(bounds.maxY);
   }
 
   /*//////////////////////////////////////////////////////////////
@@ -197,28 +181,10 @@ contract WriteDemoSystem is System {
 
     return true;
   }
-
-  /// @notice Checks if a building can be constructed on a specific tile
-  /// @param prototype The type of building
-  /// @param coord The coordinate to check
-  /// @return True if the building's required terrain matches the terrain of the given coord
-  // function canBuildOnTile(bytes32 prototype, PositionData memory coord) internal view returns (bool) {
-  //     EResource resource = EResource(P_RequiredTile.get(prototype));
-  //     uint8 mapId = Asteroid.getMapId(coord.parentEntity);
-  //     return resource == EResource.NULL || uint8(resource) == P_Terrain.get(mapId, coord.x, coord.y);
-  // }
-
-  // function findEmptyMine(Bounds memory bound) internal view returns (int32 x, int32 y) {
-  //     for (int32 i = bound.minX; i <= bound.maxX; i++) {
-  //         for (int32 j = bound.minY; j <= bound.maxY; j++) {
-  //             if (P_Terrain.get(EBuilding.IronMine, i, j) == 0) {
-  //                 return (i, j);
-  //             }
-  //         }
-  //     }
-  //     return (-1, -1);
-  // }
 }
+
+// I'm following this function since it matched my original idea
+// PrimodiumTest.t.sol line 281
 
 //   function buildBuilding(address player, EBuilding building) internal returns (bytes32) {
 //     P_RequiredResourcesData memory requiredResources = getBuildCost(building);

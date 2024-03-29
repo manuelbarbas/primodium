@@ -95,6 +95,9 @@ contract WriteDemoTest is MudTest {
     // interact with the world as the active player
     vm.startPrank(playerAddressActive);
 
+    // TODO: spawned / not spawned error
+    // appears to be ossuring in LibBuilding.sol line 53
+    // attempting to spawn the player says it's already spawned
     // IPrimodiumWorld(worldAddress).Primodium__spawn();
     IWorld(worldAddress).PluginExamples__buildIronMine();
 
