@@ -5,7 +5,7 @@ pragma solidity >=0.8.24;
 
 import { StoreHook } from "@latticexyz/store/src/StoreHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-import { Score, PlayerAlliance } from "codegen/index.sol";
+import { Score, AllianceScoreContribution, PlayerAlliance } from "codegen/index.sol";
 import { SliceLib, SliceInstance } from "@latticexyz/store/src/Slice.sol";
 
 /// @title OnScore_Alliance_Score - Updates alliance scores based on player scores.
@@ -32,17 +32,22 @@ contract OnScore_Alliance_Score is StoreHook {
     uint256 newScore = abi.decode(newScoreRaw, (uint256));
     uint256 oldScore = Score.get(playerEntity, scoreType);
     uint256 allianceScore = Score.get(allianceEntity, scoreType);
+    uint256 prevContribution = AllianceScoreContribution.get(allianceEntity, scoreType, playerEntity);
 
     if (newScore > oldScore) {
       uint256 scoreDiff = newScore - oldScore;
       Score.set(allianceEntity, scoreType, allianceScore + scoreDiff);
+      AllianceScoreContribution.set(allianceEntity, scoreType, playerEntity, prevContribution + scoreDiff);
     } else {
       uint256 scoreDiff = oldScore - newScore;
+
       if (scoreDiff > allianceScore) {
         Score.set(allianceEntity, scoreType, 0);
-        return;
-      }
-      Score.set(allianceEntity, scoreType, allianceScore - scoreDiff);
+      } else Score.set(allianceEntity, scoreType, allianceScore - scoreDiff);
+
+      if (scoreDiff > prevContribution) {
+        AllianceScoreContribution.set(allianceEntity, scoreType, playerEntity, 0);
+      } else AllianceScoreContribution.set(allianceEntity, scoreType, playerEntity, allianceScore - scoreDiff);
     }
   }
 }

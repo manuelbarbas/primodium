@@ -13,7 +13,7 @@ contract WormholeDepositSystem is PrimodiumSystem {
   modifier _advanceTurn() {
     P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
 
-    uint256 expectedTurn = (block.timestamp - wormholeConfig.startTime) / wormholeConfig.turnDuration;
+    uint256 expectedTurn = (block.timestamp - wormholeConfig.initTime) / wormholeConfig.turnDuration;
     WormholeData memory wormholeData = Wormhole.get();
 
     if (wormholeData.turn < expectedTurn) {

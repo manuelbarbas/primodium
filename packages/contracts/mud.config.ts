@@ -520,6 +520,11 @@ export const worldInput = {
       schema: { entity: "bytes32", scoreType: "uint8", value: "uint256" },
     },
 
+    AllianceScoreContribution: {
+      key: ["alliance", "scoreType", "entity"],
+      schema: { alliance: "bytes32", scoreType: "uint8", entity: "bytes32", value: "uint256" },
+    },
+
     /* ------------------------------ Objectives ----------------------------- */
 
     P_RequiredObjectives: {
@@ -734,7 +739,7 @@ export const worldInput = {
     P_WormholeConfig: {
       key: [],
       schema: {
-        startTime: "uint256",
+        initTime: "uint256",
         turnDuration: "uint256",
         cooldown: "uint256",
       },

@@ -84,7 +84,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     keys: [],
     tables: {
       P_WormholeConfig: {
-        startTime: BigInt(Math.round(Date.now() / 1000)),
+        initTime: BigInt(Math.round(Date.now() / 1000)),
         turnDuration: 69420n,
         cooldown: 6n * 60n * 60n,
       },
@@ -262,42 +262,42 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     levels: {
       1: {
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(mainBaseStorageUpgrades[1]),
+          value: upgradesToList(wormholeBaseStorageUpgrades[1]),
         },
         P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
       2: {
         P_RequiredResources: getResourceValues({ Copper: 1500 }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(mainBaseStorageUpgrades[2]),
+          value: upgradesToList(wormholeBaseStorageUpgrades[2]),
         },
         P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
       3: {
         P_RequiredResources: getResourceValues({ Copper: 10000, PVCell: 1500 }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(mainBaseStorageUpgrades[3]),
+          value: upgradesToList(wormholeBaseStorageUpgrades[3]),
         },
         P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
       4: {
         P_RequiredResources: getResourceValues({ Copper: 25000, PVCell: 5000 }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(mainBaseStorageUpgrades[4]),
+          value: upgradesToList(wormholeBaseStorageUpgrades[4]),
         },
         P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
       5: {
         P_RequiredResources: getResourceValues({ Copper: 75000, PVCell: 500 }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(mainBaseStorageUpgrades[5]),
+          value: upgradesToList(wormholeBaseStorageUpgrades[5]),
         },
         P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
       6: {
         P_RequiredResources: getResourceValues({ Copper: 125000, Titanium: 1500, Platinum: 1500 }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(mainBaseStorageUpgrades[6]),
+          value: upgradesToList(wormholeBaseStorageUpgrades[6]),
         },
         P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
@@ -309,7 +309,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           Iridium: 5000,
         }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(mainBaseStorageUpgrades[7]),
+          value: upgradesToList(wormholeBaseStorageUpgrades[7]),
         },
         P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
@@ -321,7 +321,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           Iridium: 15000,
         }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(mainBaseStorageUpgrades[8]),
+          value: upgradesToList(wormholeBaseStorageUpgrades[8]),
         },
         P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
