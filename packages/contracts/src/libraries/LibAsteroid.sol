@@ -35,7 +35,14 @@ library LibAsteroid {
     Position.set(asteroidEntity, coord);
     Asteroid.set(
       asteroidEntity,
-      AsteroidData({ isAsteroid: true, maxLevel: 5, mapId: 1, spawnsSecondary: true, wormhole: false })
+      AsteroidData({
+        isAsteroid: true,
+        maxLevel: 5,
+        mapId: 1,
+        spawnsSecondary: true,
+        wormhole: false,
+        conquestPoints: 0
+      })
     );
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
 
@@ -100,6 +107,7 @@ library LibAsteroid {
           isAsteroid: true,
           maxLevel: wormholeConfig.maxLevel,
           mapId: wormholeConfig.mapId,
+          conquestPoints: wormholeConfig.conquestPoints,
           spawnsSecondary: spawnsSecondary,
           wormhole: true
         });
@@ -107,18 +115,23 @@ library LibAsteroid {
     uint256 distributionVal = (LibEncode.getByteUInt(uint256(asteroidEntity), 7, 12) % 100);
 
     uint256 maxLevel;
+    uint256 conquestPoints;
     //micro
     if (distributionVal <= 50) {
       maxLevel = 1;
+      conquestPoints = 3;
       //small
     } else if (distributionVal <= 75) {
       maxLevel = 3;
+      conquestPoints = 4;
       //medium
     } else if (distributionVal <= 90) {
       maxLevel = 5;
+      conquestPoints = 5;
       //large
     } else {
       maxLevel = 8;
+      conquestPoints = 1;
     }
 
     // number between 2 and 5
@@ -129,7 +142,8 @@ library LibAsteroid {
         maxLevel: maxLevel,
         mapId: mapId,
         spawnsSecondary: spawnsSecondary,
-        wormhole: false
+        wormhole: false,
+        conquestPoints: conquestPoints
       });
   }
 

@@ -127,12 +127,13 @@ export const worldInput = {
         mapId: "uint8",
         spawnsSecondary: "bool",
         wormhole: "bool",
+        conquestPoints: "uint256",
       },
     },
 
     P_WormholeAsteroidConfig: {
       key: [],
-      schema: { wormholeAsteroidSlot: "uint256", maxLevel: "uint256", mapId: "uint8" },
+      schema: { wormholeAsteroidSlot: "uint256", maxLevel: "uint256", mapId: "uint8", conquestPoints: "uint256" },
     },
 
     // note: dimensions will always be positive, but are int32s so they work with coords
@@ -748,6 +749,20 @@ export const worldInput = {
     Wormhole: {
       key: [],
       schema: { resource: "uint8", turn: "uint256", hash: "bytes32" },
+    },
+
+    /* -------------------------------- Conquest -------------------------------- */
+
+    P_ConquestConfig: {
+      key: [],
+      schema: {
+        holdTime: "uint256",
+      },
+    },
+
+    LastConquered: {
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256" },
     },
 
     /* ---------------------------- Player Asteroids ---------------------------- */
