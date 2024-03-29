@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
-import { OwnedBy } from "src/codegen/index.sol";
+import { OwnedBy, LastConquered } from "src/codegen/index.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { LibFleetDisband } from "libraries/fleet/LibFleetDisband.sol";
 import { FleetSet } from "libraries/fleet/FleetSet.sol";
@@ -24,6 +24,7 @@ contract S_TransferAsteroidSystem is PrimodiumSystem {
     }
     OwnedBy.set(asteroidEntity, ownerEntity);
     AsteroidSet.add(ownerEntity, AsteroidOwnedByKey, asteroidEntity);
+    LastConquered.set(asteroidEntity, block.timestamp);
   }
 
   function disbandAllFleets(bytes32 asteroidEntity) internal {
