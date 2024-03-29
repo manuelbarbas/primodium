@@ -16,7 +16,7 @@ import { ReadDemoSystem } from "../src/systems/ReadDemoSystem.sol";
 contract RegisterReadDemoSystem is Script {
   // the environment variables are pulled from your .env
   address worldAddress = vm.envAddress("WORLD_ADDRESS");
-  address deployerPrivateKey = vm.envAddress("PRIVATE_KEY_ALICE");
+  uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY_ALICE");
   address playerAddress = vm.envAddress("ADDRESS_PLAYER");
 
   // predefine the namespace and system
