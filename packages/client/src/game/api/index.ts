@@ -1,11 +1,11 @@
-import { Scenes } from "@game/constants";
 import { Entity, namespaceWorld } from "@latticexyz/recs";
+import { Scenes, SceneKeys } from "../lib/constants/common";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import engine from "engine";
 import { Game } from "engine/types";
-import { runSystems as runAsteroidSystems } from "src/game/lib/asteroid/systems";
-import { runSystems as runStarmapSystems } from "src/game/lib/starmap/systems";
+import { runSystems as runAsteroidSystems } from "src/game/scenes/asteroid/systems";
+import { runSystems as runStarmapSystems } from "src/game/scenes/starmap/systems";
 import { components } from "src/network/components";
 import { setupAllianceLeaderboard } from "src/network/systems/setupAllianceLeaderboard";
 import { setupBattleComponents } from "src/network/systems/setupBattleComponents";
@@ -32,12 +32,13 @@ import { createHooksApi } from "./hooks";
 import { createInputApi } from "./input";
 import { createSceneApi } from "./scene";
 import { createSpriteApi } from "./sprite";
+import { createObjectApi } from "./objects";
 
 export type Primodium = Awaited<ReturnType<typeof initPrimodium>>;
 export type PrimodiumApi = ReturnType<Primodium["api"]>;
 
 //pull out api so we can use in non react contexts
-export function api(sceneKey = "MAIN", instance: string | Game = "MAIN") {
+export function api(sceneKey: SceneKeys = "ASTEROID", instance: string | Game = "MAIN") {
   const _instance = typeof instance === "string" ? engine.getGame().get(instance) : instance;
 
   if (_instance === undefined) {
@@ -54,8 +55,8 @@ export function api(sceneKey = "MAIN", instance: string | Game = "MAIN") {
   const closeMap = async () => {
     if (!components.MapOpen.get()?.value) return;
     await sceneApi.transitionToScene(
-      Scenes.Starmap,
-      Scenes.Asteroid,
+      "STARMAP",
+      "ASTEROID",
       0,
       (_, targetScene) => {
         targetScene.camera.phaserCamera.fadeOut(0, 0, 0, 0);
@@ -86,7 +87,9 @@ export function api(sceneKey = "MAIN", instance: string | Game = "MAIN") {
     const ownedBy = components.OwnedBy.get(activeRock)?.value;
     const isSpectating = ownedBy !== components.Account.get()?.value;
 
-    cameraApi.pan(pos, 0);
+    cameraApi.pan(pos, {
+      duration: 0,
+    });
 
     await sceneApi.transitionToScene(
       Scenes.Asteroid,
@@ -125,6 +128,7 @@ export function api(sceneKey = "MAIN", instance: string | Game = "MAIN") {
     fx: createFxApi(scene),
     sprite: createSpriteApi(scene),
     audio: createAudioApi(scene),
+    objects: createObjectApi(scene),
     util: { openMap, closeMap },
   };
 }

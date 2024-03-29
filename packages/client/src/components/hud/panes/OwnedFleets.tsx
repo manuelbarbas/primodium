@@ -1,4 +1,3 @@
-import { KeybindActions, Scenes } from "@game/constants";
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has } from "@latticexyz/recs";
 import { EFleetStance } from "contracts/config/enums";
@@ -9,6 +8,7 @@ import { SecondaryCard } from "src/components/core/Card";
 import { Loader } from "src/components/core/Loader";
 import { Tooltip } from "src/components/core/Tooltip";
 import { Widget } from "src/components/core/Widget";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 import { useMud } from "src/hooks";
 import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
 import { useFleetStats } from "src/hooks/useFleetCount";
@@ -19,7 +19,6 @@ import { components } from "src/network/components";
 import { EntityType } from "src/util/constants";
 import { entityToFleetName, entityToRockName } from "src/util/name";
 import { formatNumber, formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
-import { getFleetTilePosition } from "src/util/unit";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -134,7 +133,7 @@ const _OwnedFleets: React.FC = () => {
     playerAccount: { entity: playerEntity },
   } = useMud();
   const primodium = usePrimodium();
-  const getScene = primodium.api(Scenes.Starmap).scene.getScene;
+  // const objects = primodium.api("STARMAP").objects;
 
   const query = [Has(components.IsFleet)];
   const fleets = useEntityQuery(query).filter((entity) => {
@@ -158,8 +157,6 @@ const _OwnedFleets: React.FC = () => {
               key={entity}
               fleet={entity}
               onClick={async () => {
-                const scene = getScene(Scenes.Starmap);
-                if (!scene) return;
                 const mapOpen = components.MapOpen.get(undefined, {
                   value: false,
                 }).value;
@@ -167,16 +164,21 @@ const _OwnedFleets: React.FC = () => {
                 if (!mapOpen) {
                   const { transitionToScene } = primodium.api().scene;
 
-                  await transitionToScene(Scenes.Asteroid, Scenes.Starmap);
+                  await transitionToScene("ASTEROID", "STARMAP");
                   components.MapOpen.set({ value: true });
                 }
 
-                const { pan, zoomTo } = primodium.api(Scenes.Starmap).camera;
+                const { pan, zoomTo } = primodium.api("STARMAP").camera;
                 const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
                 const time = components.Time.get()?.value ?? 0n;
 
                 if (arrivalTime < time) components.SelectedFleet.set({ value: entity });
-                const position = getFleetTilePosition(scene, entity);
+
+                const objects = primodium.api("STARMAP").objects;
+                const fleet = objects.getFleet(entity);
+
+                if (!fleet) return;
+                const position = fleet.getTileCoord();
 
                 pan({
                   x: position.x,
@@ -208,7 +210,7 @@ export const OwnedFleets = () => {
       draggable
       persist
       hotkey={KeybindActions.Fleets}
-      scene={Scenes.Starmap}
+      scene={"STARMAP"}
       active={!!mapOpen}
       defaultCoord={{ x: 0, y: 0 }}
     >
