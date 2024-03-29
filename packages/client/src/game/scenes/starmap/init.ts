@@ -1,5 +1,5 @@
 // STAR MAP ENTRY POINT
-import { starmapSceneConfig } from "../../config/starmapScene";
+import { starmapSceneConfig } from "../../lib/config/starmapScene";
 
 import { Game } from "engine/types";
 import { components } from "src/network/components";

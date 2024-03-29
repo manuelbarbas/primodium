@@ -7,7 +7,9 @@ import { Key } from "engine/types";
 import { encodeEntity } from "src/util/encode";
 import { reverseRecord } from "./common";
 import { toHex32 } from "./encode";
+import { parseEther } from "viem";
 
+export const minEth = parseEther("0.0049");
 export const UNLIMITED_DELEGATION = resourceToHex({ type: "system", namespace: "", name: "unlimited" });
 
 export const encodeEntityLevel = (entity: string, level: number) => {

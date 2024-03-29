@@ -596,7 +596,6 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             toast.success(`Asteroid ${entityToRockName(selectedRock)} conquered`);
           },
         },
-
         setTerrain: {
           params: [
             { name: "resource", type: "dropdown", dropdownOptions: Object.keys(resources) },

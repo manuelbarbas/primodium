@@ -15,7 +15,7 @@ import { world } from "src/network/world";
 
 import { EntityType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
-import { Building } from "../../../objects/Building";
+import { Building } from "../../../lib/objects/Building";
 import { components } from "src/network/components";
 import { getBuildingBottomLeft } from "src/util/building";
 
@@ -35,7 +35,7 @@ export const renderBuilding = (scene: Scene) => {
 
     const positionQuery = [
       HasValue(components.Position, {
-        parent: value[0]?.value,
+        parentEntity: value[0]?.value,
       }),
       Has(components.BuildingType),
       Has(components.IsActive),
@@ -44,7 +44,7 @@ export const renderBuilding = (scene: Scene) => {
 
     const oldPositionQuery = [
       HasValue(components.Position, {
-        parent: value[1]?.value,
+        parentEntity: value[1]?.value,
       }),
       Has(components.BuildingType),
       Has(components.IsActive),
@@ -60,7 +60,14 @@ export const renderBuilding = (scene: Scene) => {
     }
 
     const render = ({ entity }: { entity: Entity }) => {
-      if (buildings.has(entity)) return;
+      if (buildings.has(entity)) {
+        const building = buildings.get(entity);
+        if (!building) return;
+        building.setLevel(components.Level.get(entity)?.value ?? 1n);
+        building.setActive(components.IsActive.get(entity)?.value ?? true);
+
+        return;
+      }
 
       const buildingType = components.BuildingType.get(entity)?.value as Entity | undefined;
 
@@ -83,7 +90,8 @@ export const renderBuilding = (scene: Scene) => {
       const building = new Building(scene, buildingType, tilePosition)
         .spawn()
         .setLevel(components.Level.get(entity)?.value ?? 1n)
-        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => {
+        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
+          if (pointer.getDuration() > 250) return;
           components.SelectedBuilding.set({
             value: entity,
           });

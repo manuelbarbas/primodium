@@ -1,11 +1,12 @@
 // UI MAP ENTRY POINT
-import { AudioKeys, Scenes } from "@game/constants";
 import { Game } from "engine/types";
 import { createAudioApi } from "src/game/api/audio";
 import { world } from "src/network/world";
-import { uiSceneConfig } from "src/game/config/uiScene";
+import { uiSceneConfig } from "src/game/lib/config/uiScene";
 import { defineComponentSystem } from "@latticexyz/recs";
 import { components } from "src/network/components";
+import { Scenes } from "src/game/lib/constants/common";
+import { AudioKeys } from "src/game/lib/constants/assets/audio";
 
 export const initUIScene = async (game: Game) => {
   const scene = await game.sceneManager.addScene(uiSceneConfig, true);

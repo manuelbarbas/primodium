@@ -1,10 +1,8 @@
-import { Coord } from "@latticexyz/utils";
 import { GameObjectClasses } from "./constants";
 import { createObjectPool } from "./lib/core/createObjectPool";
 import { Animation } from "@latticexyz/phaserx/src/types";
 import { createGame } from "./lib/core/createGame";
 import { createScene } from "./lib/core/createScene";
-import { Tilemaps } from "@game/constants";
 
 export type Game = Awaited<ReturnType<typeof createGame>>;
 export type Scene = Awaited<ReturnType<typeof createScene>>;
@@ -90,3 +88,7 @@ export type Coord = {
   x: number;
   y: number;
 };
+
+export type PixelCoord = Coord;
+export type TileCoord = Coord;
+export type ChunkCoord = Coord;

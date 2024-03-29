@@ -1,8 +1,8 @@
-import { KeybindActions } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { createCameraApi } from "src/game/api/camera";
 import { createInputApi } from "src/game/api/input";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 

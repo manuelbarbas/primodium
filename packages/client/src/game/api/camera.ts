@@ -4,10 +4,18 @@ import { Scene } from "engine/types";
 
 // const anchorMap =
 export const createCameraApi = (targetScene: Scene) => {
-  function pan(coord: Coord, duration = 1000, ease = "Power2") {
+  function pan(
+    coord: Coord,
+    options: {
+      duration?: number;
+      pixel?: boolean;
+      ease?: string;
+    } = {}
+  ) {
     const { phaserScene, camera, tiled: tilemap } = targetScene;
+    const { pixel = false, ease = "Power2", duration = 1000 } = options;
 
-    const pixelCoord = tileCoordToPixelCoord(coord, tilemap.tileWidth, tilemap.tileHeight);
+    const pixelCoord = pixel ? coord : tileCoordToPixelCoord(coord, tilemap.tileWidth, tilemap.tileHeight);
 
     const scroll = camera.phaserCamera.getScroll(pixelCoord.x, -pixelCoord.y);
 

@@ -1,9 +1,9 @@
-import { KeybindActions } from "@game/constants";
 import { createCameraApi } from "src/game/api/camera";
 import { Scene } from "engine/types";
 import { createInputApi } from "src/game/api/input";
 import { world } from "src/network/world";
 import { Coord, pixelCoordToTileCoord } from "@latticexyz/phaserx";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 const SPEED = 750;
 const ZOOM_SPEED = 5;
@@ -132,7 +132,7 @@ export const setupBasicCameraMovement = (
     if (drag) handleDrag();
   };
 
-  scene.scriptManager.add(handleGameTickMovement);
+  scene.phaserScene.events.addListener("update", handleGameTickMovement);
 
   //handle double click events and zoom to mouse position
   const doubleClickSub = scene.input.doubleClick$.subscribe((event) => {
@@ -187,6 +187,6 @@ export const setupBasicCameraMovement = (
   world.registerDisposer(() => {
     doubleClickSub.unsubscribe();
     scene.input.phaserInput.off("wheel");
-    scene.scriptManager.remove(handleGameTickMovement);
+    scene.phaserScene.events.removeListener("update", handleGameTickMovement);
   }, "game");
 };

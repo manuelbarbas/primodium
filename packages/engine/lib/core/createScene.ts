@@ -1,12 +1,10 @@
-import { createChunks, createCulling, generateFrames } from "@latticexyz/phaserx";
-
+import { generateFrames } from "@latticexyz/phaserx";
+import { createTilemap } from "./createTilemap";
 import { SceneConfig } from "../../types";
 import { createPhaserScene } from "../util/createPhaserScene";
 import { createCamera } from "./createCamera";
 import createInput from "./createInput";
-import { createObjectPool } from "./createObjectPool";
-import { createScriptManager } from "./createScriptManager";
-import { createTilemap } from "./createTilemap";
+import { StaticObjectManager } from "./StaticObjectManager";
 
 type PhaserAudio =
   | Phaser.Sound.HTML5AudioSoundManager
@@ -39,6 +37,8 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
     defaultZoom,
   });
 
+  const objects = new StaticObjectManager(camera, cullingChunkSize);
+
   const tiled = createTilemap(scene, tileWidth, tileHeight, defaultKey, tilemapConfig);
 
   //create sprite animations
@@ -52,30 +52,6 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
       });
     }
   }
-
-  // Setup object pool
-  const objectPool = createObjectPool(scene);
-
-  // Setup chunks for viewport culling
-  const cullingChunks = createChunks(camera.worldView$, cullingChunkSize * tileWidth);
-
-  const scriptManager = createScriptManager(scene);
-
-  // const debug = createDebugger(
-  //   camera,
-  //   cullingChunks,
-  //   scene,
-  //   objectPool,
-  //   tilemap.map
-  // );
-
-  // Setup culling
-  const culling = createCulling(
-    //override since we modified embodied entity
-    objectPool as any,
-    camera,
-    cullingChunks
-  );
 
   const input = createInput(scene.input);
 
@@ -96,12 +72,10 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
   return {
     phaserScene: scene,
     tiled,
-    scriptManager,
     camera,
-    culling,
-    objectPool,
     config,
     input,
+    objects,
     audio: {
       music,
       sfx,
@@ -109,9 +83,8 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
     },
     dispose: () => {
       input.dispose();
-      tiled.dispose();
       camera.dispose();
-      culling.dispose();
+      objects.dispose();
       music.destroy();
       sfx.destroy();
       ui.destroy();
