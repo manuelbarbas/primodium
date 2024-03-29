@@ -1,5 +1,4 @@
 import { defineWorld } from "@latticexyz/world";
-
 import { MUDEnums } from "./config/enums";
 import { prototypeConfig } from "./config/prototypeConfig";
 import { ConfigWithPrototypes } from "./ts/prototypes/types";
@@ -29,7 +28,6 @@ export const worldInput = {
 
   // using as any here for now because of a type issue and also because the enums are not being recognized in our codebase rn
   enums: MUDEnums as unknown as { [key: string]: ["NULL"] },
-  codegen: {},
   tables: {
     /* ----------------------------------- Dev ---------------------------------- */
     Counter: {
@@ -122,7 +120,14 @@ export const worldInput = {
 
     Asteroid: {
       key: ["entity"],
-      schema: { entity: "bytes32", isAsteroid: "bool", maxLevel: "uint256", mapId: "uint8", spawnsSecondary: "bool" },
+      schema: {
+        entity: "bytes32",
+        isAsteroid: "bool",
+        maxLevel: "uint256",
+        mapId: "uint8",
+        spawnsSecondary: "bool",
+        wormhole: "bool",
+      },
     },
 
     P_WormholeAsteroidConfig: {
@@ -506,23 +511,18 @@ export const worldInput = {
     /* ---------------------------------- Score --------------------------------- */
 
     P_ScoreMultiplier: {
-      key: ["entity"],
-      schema: { entity: "uint8", value: "uint256" },
+      key: ["resource"],
+      schema: { resource: "uint8", value: "uint256" },
     },
+
     Score: {
-      key: ["entity"],
-      schema: { entity: "bytes32", value: "uint256" },
+      key: ["entity", "scoreType"],
+      schema: { entity: "bytes32", scoreType: "uint8", value: "uint256" },
     },
 
-    /* ------------------------------ Test Hook ----------------------------- */
-    HookedValue: {
-      key: ["entity"],
-      schema: { entity: "bytes32", value: "uint256" },
-    },
-
-    OnHookChangedValue: {
-      key: ["entity"],
-      schema: { entity: "bytes32", value: "uint256" },
+    AllianceScoreContribution: {
+      key: ["alliance", "scoreType", "entity"],
+      schema: { alliance: "bytes32", scoreType: "uint8", entity: "bytes32", value: "uint256" },
     },
 
     /* ------------------------------ Objectives ----------------------------- */
@@ -684,7 +684,7 @@ export const worldInput = {
 
     Alliance: {
       key: ["entity"],
-      schema: { entity: "bytes32", name: "bytes32", score: "uint256", inviteMode: "uint8" },
+      schema: { entity: "bytes32", name: "bytes32", inviteMode: "uint8" },
     },
 
     Keys_AllianceMemberSet: {
@@ -732,6 +732,22 @@ export const worldInput = {
         amountOut: "uint256",
       },
       type: "offchainTable",
+    },
+
+    /* -------------------------------- Wormhole -------------------------------- */
+
+    P_WormholeConfig: {
+      key: [],
+      schema: {
+        initTime: "uint256",
+        turnDuration: "uint256",
+        cooldown: "uint256",
+      },
+    },
+
+    Wormhole: {
+      key: [],
+      schema: { resource: "uint8", turn: "uint256", hash: "bytes32" },
     },
 
     /* ---------------------------- Player Asteroids ---------------------------- */

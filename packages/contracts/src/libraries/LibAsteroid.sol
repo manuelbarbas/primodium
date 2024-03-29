@@ -33,15 +33,16 @@ library LibAsteroid {
 
     Level.set(asteroidEntity, 1);
     Position.set(asteroidEntity, coord);
-    Asteroid.set(asteroidEntity, AsteroidData({ isAsteroid: true, maxLevel: 5, mapId: 1, spawnsSecondary: true }));
+    Asteroid.set(
+      asteroidEntity,
+      AsteroidData({ isAsteroid: true, maxLevel: 5, mapId: 1, spawnsSecondary: true, wormhole: false })
+    );
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
 
     UsedTiles.set(asteroidEntity, new uint256[](getUsedTilesLength()));
 
     LibProduction.increaseResourceProduction(asteroidEntity, EResource.U_MaxFleets, 1);
     AsteroidCount.set(asteroidCount);
-
-    createWormholeAsteroid(coord, P_WormholeAsteroidConfig.getWormholeAsteroidSlot());
   }
 
   function getUsedTilesLength() private view returns (uint256) {
@@ -63,12 +64,13 @@ library LibAsteroid {
   }
 
   /// @notice Create a new asteroid at a position
+  /// @dev if the slot is the wormhole asteroid slot, it will always create a wormhole asteroid
   /// @param position Position to place the asteroid
   /// @return asteroidSeed Hash of the newly created asteroid
   function createSecondaryAsteroid(PositionData memory position) internal returns (bytes32) {
     P_GameConfigData memory config = P_GameConfig.get();
+    uint256 wormholeSlot = P_WormholeAsteroidConfig.getWormholeAsteroidSlot();
     for (uint256 i = 0; i < config.maxAsteroidsPerPlayer; i++) {
-      if (i == P_WormholeAsteroidConfig.getWormholeAsteroidSlot()) continue;
       PositionData memory sourcePosition = getPosition(i, config.asteroidDistance, config.maxAsteroidsPerPlayer);
       sourcePosition.x += position.x;
       sourcePosition.y += position.y;
@@ -76,50 +78,30 @@ library LibAsteroid {
       if (sourceAsteroidEntity == 0) continue;
       if (!Asteroid.getSpawnsSecondary(sourceAsteroidEntity)) continue;
       bytes32 asteroidSeed = keccak256(abi.encode(sourceAsteroidEntity, bytes32("asteroid"), position.x, position.y));
-      if (!isAsteroid(asteroidSeed, config.asteroidChanceInv, i)) continue;
-      initSecondaryAsteroid(position, asteroidSeed, false);
+
+      bool isWormholeAsteroidSlot = i == wormholeSlot;
+      if (!isWormholeAsteroidSlot && !isAsteroid(asteroidSeed, config.asteroidChanceInv, i)) continue;
+      initSecondaryAsteroid(position, asteroidSeed, isWormholeAsteroidSlot);
 
       return asteroidSeed;
     }
     revert("no asteroid found");
   }
 
-  /// @notice Create a new basic asteroid at slotIndex's position, must only be called at player spawn
-  /// @param primaryPosition Position of the primary asteroid
-  /// @param slotIndex Index of the basic asteroid slot
-  /// @return asteroidSeed Hash of the newly created asteroid
-  function createWormholeAsteroid(PositionData memory primaryPosition, uint256 slotIndex) internal returns (bytes32) {
-    P_GameConfigData memory config = P_GameConfig.get();
-    require(slotIndex < config.maxAsteroidsPerPlayer, "invalid slot index");
-
-    PositionData memory positionOffset = getPosition(slotIndex, config.asteroidDistance, config.maxAsteroidsPerPlayer);
-    PositionData memory position = PositionData({
-      x: primaryPosition.x + positionOffset.x,
-      y: primaryPosition.y + positionOffset.y,
-      parentEntity: 0
-    });
-    require(ReversePosition.get(position.x, position.y) == 0, "asteroid already exists at secondary position");
-
-    bytes32 primaryAsteroidEntity = ReversePosition.get(primaryPosition.x, primaryPosition.y);
-    bytes32 asteroidSeed = keccak256(abi.encode(primaryAsteroidEntity, bytes32("asteroid"), position.x, position.y));
-    initSecondaryAsteroid(position, asteroidSeed, true);
-
-    return asteroidSeed;
-  }
-
   function getAsteroidData(
     bytes32 asteroidEntity,
     bool spawnsSecondary,
-    bool basicAsteroid
+    bool wormholeAsteroid
   ) internal view returns (AsteroidData memory) {
-    if (basicAsteroid) {
-      P_WormholeAsteroidConfigData memory basicConfig = P_WormholeAsteroidConfig.get();
+    if (wormholeAsteroid) {
+      P_WormholeAsteroidConfigData memory wormholeConfig = P_WormholeAsteroidConfig.get();
       return
         AsteroidData({
           isAsteroid: true,
-          maxLevel: basicConfig.maxLevel,
-          mapId: basicConfig.mapId,
-          spawnsSecondary: spawnsSecondary
+          maxLevel: wormholeConfig.maxLevel,
+          mapId: wormholeConfig.mapId,
+          spawnsSecondary: spawnsSecondary,
+          wormhole: true
         });
     }
     uint256 distributionVal = (LibEncode.getByteUInt(uint256(asteroidEntity), 7, 12) % 100);
@@ -141,7 +123,14 @@ library LibAsteroid {
 
     // number between 2 and 5
     uint8 mapId = uint8((LibEncode.getByteUInt(uint256(asteroidEntity), 3, 20) % 4) + 2);
-    return AsteroidData({ isAsteroid: true, maxLevel: maxLevel, mapId: mapId, spawnsSecondary: spawnsSecondary });
+    return
+      AsteroidData({
+        isAsteroid: true,
+        maxLevel: maxLevel,
+        mapId: mapId,
+        spawnsSecondary: spawnsSecondary,
+        wormhole: false
+      });
   }
 
   function getSecondaryAsteroidUnitsAndEncryption(uint256 level) internal pure returns (uint256, uint256) {
@@ -159,8 +148,8 @@ library LibAsteroid {
   /// @dev Initialize a motherlode
   /// @param position Position to place the motherlode
   /// @param asteroidEntity Hash of the asteroid to be initialized
-  function initSecondaryAsteroid(PositionData memory position, bytes32 asteroidEntity, bool basicAsteroid) internal {
-    AsteroidData memory data = getAsteroidData(asteroidEntity, false, basicAsteroid);
+  function initSecondaryAsteroid(PositionData memory position, bytes32 asteroidEntity, bool wormholeAsteroid) internal {
+    AsteroidData memory data = getAsteroidData(asteroidEntity, false, wormholeAsteroid);
     Asteroid.set(asteroidEntity, data);
     Position.set(asteroidEntity, position);
     ReversePosition.set(position.x, position.y, asteroidEntity);

@@ -7,7 +7,7 @@ import { addressToEntity } from "src/utils.sol";
 import { EResource, EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
-import { OwnedBy, UnitCount, Score, ProductionRate, P_ColonyShipConfig, CooldownEnd, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, UnitLevel } from "codegen/index.sol";
+import { OwnedBy, UnitCount, ProductionRate, CooldownEnd, P_ColonyShipConfig, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, UnitLevel } from "codegen/index.sol";
 
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
@@ -187,9 +187,6 @@ contract CombatEncryptionTest is PrimodiumTest {
 
     vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetEntities[0]), block.timestamp));
 
-    uint256 bobHomeScore = Score.get(bobHomeAsteroid);
-    uint256 aliceScore = Score.get(aliceEntity);
-
     vm.startPrank(alice);
     for (uint256 i = 0; i < fleetCountToWin; i++) {
       console.log("fleet attack %s", i);
@@ -215,9 +212,6 @@ contract CombatEncryptionTest is PrimodiumTest {
 
     vm.stopPrank();
     console.log("encryption after battles: %s", ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_Encryption)));
-    assertEq(Score.get(aliceEntity), aliceScore + bobHomeScore, "alice should have gained bob's home asteroid score");
-    assertEq(Score.get(bobHomeAsteroid), bobHomeScore, "bobs home score should not have changed");
-    assertEq(Score.get(bobEntity), 0, "bob's score should reset to zero after losing asteroid control");
 
     assertEq(OwnedBy.get(bobHomeAsteroid), aliceEntity, "asteroid should have been taken over");
 

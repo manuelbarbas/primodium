@@ -6,8 +6,10 @@ import { addressToEntity } from "src/utils.sol";
 
 import { EResource } from "src/Types.sol";
 
-import { Asteroid, AsteroidData, Position, PositionData, Position, PositionData, ReversePosition, MaxResourceCount, UnitCount, ResourceCount, UnitCount, ResourceCount, P_GameConfig, P_GameConfigData, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
-import { DroidPrototypeId } from "codegen/Prototypes.sol";
+import { Home, OwnedBy, BuildingType, P_EnumToPrototype, P_Transportables, P_UnitPrototypes, Asteroid, AsteroidData, Position, PositionData, Position, PositionData, ReversePosition, MaxResourceCount, UnitCount, ResourceCount, UnitCount, ResourceCount, P_GameConfig, P_GameConfigData, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
+import { MainBasePrototypeId, DroidPrototypeId } from "codegen/Prototypes.sol";
+import { EUnit } from "src/Types.sol";
+import { UnitKey } from "src/Keys.sol";
 
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 
@@ -51,30 +53,7 @@ contract LibAsteroidTest is PrimodiumTest {
     assertLe(asteroidData.maxLevel, 8, "max level too low");
   }
 
-  function testCreateWormholeAsteroid() public {
-    asteroidEntity = spawn(alice);
-    PositionData memory position = findWormholeAsteroid(asteroidEntity);
-
-    bytes32 actualAsteroidEntity = ReversePosition.get(position.x, position.y);
-    bytes32 expectedAsteroidEntity = keccak256(abi.encode(asteroidEntity, bytes32("asteroid"), position.x, position.y));
-
-    assertEq(actualAsteroidEntity, expectedAsteroidEntity, "asteroidEntity");
-    AsteroidData memory expectedAsteroidData = LibAsteroid.getAsteroidData(expectedAsteroidEntity, false, true);
-    AsteroidData memory actualAsteroidData = Asteroid.get(expectedAsteroidEntity);
-
-    assertEq(expectedAsteroidData.isAsteroid, actualAsteroidData.isAsteroid, "isAsteroid");
-    assertEq(expectedAsteroidData.spawnsSecondary, actualAsteroidData.spawnsSecondary, "spawnsSecondary");
-    assertEq(expectedAsteroidData.mapId, actualAsteroidData.mapId, "mapId");
-    assertEq(Position.get(expectedAsteroidEntity), position);
-    assertEq(ReversePosition.get(position.x, position.y), expectedAsteroidEntity, "reversePosition");
-    assertEq(
-      MaxResourceCount.get(expectedAsteroidEntity, uint8(EResource.U_MaxFleets)),
-      0,
-      "Asteroid should have 0 max fleets"
-    );
-  }
-
-  function testCreateSecondaryAsteroid() public {
+  function testCreateSecondaryAsteroid() public returns (bytes32) {
     vm.startPrank(creator);
     PositionData memory position = findSecondaryAsteroid(asteroidEntity);
 
@@ -95,6 +74,15 @@ contract LibAsteroidTest is PrimodiumTest {
       0,
       "Asteroid should have 0 max fleets"
     );
+    return expectedAsteroidEntity;
+  }
+
+  function testSecondaryAsteroidHasMainBase() public {
+    bytes32 secondaryAsteroidEntity = testCreateSecondaryAsteroid();
+    conquerAsteroid(creator, Home.get(playerEntity), secondaryAsteroidEntity);
+
+    assertEq(OwnedBy.get(secondaryAsteroidEntity), playerEntity);
+    assertEq(BuildingType.get(Home.get(secondaryAsteroidEntity)), MainBasePrototypeId);
   }
 
   function testSecondaryAsteroidDefense() public {
