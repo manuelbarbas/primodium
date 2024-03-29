@@ -13,9 +13,9 @@ export const useWormholeResource = (): { resource: Entity; timeUntilNextResource
   return useMemo(() => {
     if (!wormholeData || !wormholeConfig) return { resource: EntityType.NULL, timeUntilNextResource: 0n };
     const storedTurn = wormholeData.turn;
-    const expectedTurn = (time - wormholeConfig.startTime) / wormholeConfig.turnDuration;
+    const expectedTurn = (time - wormholeConfig.initTime) / wormholeConfig.turnDuration;
 
-    const timeUntilNextResource = wormholeConfig.startTime + (expectedTurn + 1n) * wormholeConfig.turnDuration - time;
+    const timeUntilNextResource = wormholeConfig.initTime + (expectedTurn + 1n) * wormholeConfig.turnDuration - time;
     const resourceEntity = ResourceEntityLookup[wormholeData.resource as EResource];
     if (storedTurn === expectedTurn) return { timeUntilNextResource, resource: resourceEntity };
     return { timeUntilNextResource, resource: getRandomResource(wormholeData.hash as Entity, resourceEntity) };
