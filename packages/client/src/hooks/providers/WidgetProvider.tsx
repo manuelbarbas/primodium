@@ -1,4 +1,4 @@
-import { KeybindActions } from "@game/constants";
+import { KeybindActions } from "src/game/lib/mappings";
 import React, { ReactNode, createContext, useCallback, useContext, useMemo, useState } from "react";
 
 interface Widget {

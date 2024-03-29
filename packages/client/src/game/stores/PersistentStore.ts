@@ -3,9 +3,9 @@ import { persist } from "zustand/middleware";
 
 import { mountStoreDevtool } from "simple-zustand-devtools";
 
-import { KeybindActions } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
 import { Key } from "engine/types";
+import { KeybindActions } from "../lib/constants/keybinds";
 
 const VERSION = 5;
 
