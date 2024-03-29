@@ -1,10 +1,10 @@
-import { KeybindActions, Scenes } from "@game/constants";
 import { Join } from "src/components/core/Join";
 import { Tabs } from "src/components/core/Tabs";
 import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { Channel } from "./Channel";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 export const Chat = () => {
   const {
@@ -24,7 +24,7 @@ export const Chat = () => {
       hotkey={KeybindActions.Chat}
       draggable
       defaultCoord={{ x: 0, y: 0 }}
-      scene={Scenes.UI}
+      scene={"UI"}
     >
       <Tabs defaultIndex={0}>
         <Join className="w-full border border-secondary/25 border-b-0">

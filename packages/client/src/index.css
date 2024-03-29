@@ -58,11 +58,6 @@
     background: #4b5563;
   }
 
-  canvas {
-    touch-action: none;
-    @apply h-full w-full;
-  }
-
   .screen-container {
     width: 100vw;
     height: 100vh;

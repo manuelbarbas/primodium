@@ -1,4 +1,3 @@
-import { Scenes } from "@game/constants";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { adjustDecimals } from "src/util/number";
 import { Button } from "./Button";
@@ -11,9 +10,9 @@ export const NumberInput: React.FC<{
   count: string;
 }> = ({ count, min = 0, max = Infinity, onChange, toFixed = 0 }) => {
   const primodium = usePrimodium();
-  const input = primodium.api(Scenes.UI).input;
-  const input2 = primodium.api(Scenes.Asteroid).input;
-  const input3 = primodium.api(Scenes.Starmap).input;
+  const input = primodium.api("UI").input;
+  const input2 = primodium.api("ASTEROID").input;
+  const input3 = primodium.api("STARMAP").input;
 
   const handleUpdate = (newCount: string) => {
     newCount = adjustDecimals(newCount, toFixed);

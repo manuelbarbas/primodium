@@ -1,4 +1,3 @@
-import { DepthLayers, Scenes } from "@game/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
@@ -16,7 +15,7 @@ import { Button } from "../../../core/Button";
 import { IconLabel } from "../../../core/IconLabel";
 import { Modal } from "../../../core/Modal";
 import { Fleets } from "../../panes/fleets/Fleets";
-
+import { DepthLayers } from "src/game/lib/constants/common";
 export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ selectedAsteroid }) => {
   const {
     playerAccount: { entity: playerEntity },
@@ -26,7 +25,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
     scene: { getConfig },
     hooks: { useCamera },
     util: { closeMap },
-  } = useRef(primodium.api(Scenes.Starmap)).current;
+  } = useRef(primodium.api("STARMAP")).current;
   const ownedBy = components.OwnedBy.use(selectedAsteroid)?.value;
   const mapOpen = components.MapOpen.use()?.value ?? false;
   const position = components.Position.use(selectedAsteroid);
@@ -51,7 +50,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   );
 
   const [coord, defaultZoom, minZoom] = useMemo(() => {
-    const config = getConfig(Scenes.Starmap);
+    const config = getConfig("STARMAP");
 
     if (!config) throw Error("No config found for scene");
 
@@ -69,7 +68,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
 
   return (
     <Marker
-      scene={Scenes.Starmap}
+      scene={"STARMAP"}
       coord={coord}
       id={`asteroid-target`}
       offScreenIconUri="/img/icons/attackicon.png"
