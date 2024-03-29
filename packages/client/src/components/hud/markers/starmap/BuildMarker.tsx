@@ -1,9 +1,9 @@
-import { DepthLayers, Scenes } from "@game/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMemo } from "react";
 import { IconMarker } from "src/components/core/Marker";
+import { DepthLayers } from "src/game/lib/constants/common";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 
@@ -15,8 +15,8 @@ export const BuildMarker = () => {
   const coord = useMemo(() => {
     const {
       scene: { getConfig },
-    } = primodium.api(Scenes.Starmap);
-    const config = getConfig(Scenes.Starmap);
+    } = primodium.api("STARMAP");
+    const config = getConfig("STARMAP");
 
     const pixelCoord = tileCoordToPixelCoord(
       position ?? { x: 0, y: 0 },
@@ -30,7 +30,7 @@ export const BuildMarker = () => {
   return (
     <IconMarker
       id="home-icon"
-      scene={Scenes.Starmap}
+      scene={"STARMAP"}
       depth={DepthLayers.Path - 1}
       coord={coord}
       iconUri="/img/icons/minersicon.png"

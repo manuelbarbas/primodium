@@ -1,4 +1,3 @@
-import { Scenes } from "@game/constants";
 import { addCoords, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
@@ -22,7 +21,7 @@ export const BuildingMenuPopup = () => {
     const {
       scene: { getConfig },
     } = primodium.api();
-    const config = getConfig(Scenes.Asteroid);
+    const config = getConfig("ASTEROID");
 
     const pixelCoord = tileCoordToPixelCoord(
       addCoords(position ?? { x: 0, y: 0 }, { x: dimensions.width + 0.5, y: 0 }),
@@ -37,7 +36,7 @@ export const BuildingMenuPopup = () => {
     <Widget
       title={getBlockTypeName(buildingType as Entity)}
       id="building-target"
-      scene={Scenes.Asteroid}
+      scene={"ASTEROID"}
       defaultCoord={coord}
       defaultPinned
       draggable

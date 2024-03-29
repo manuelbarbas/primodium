@@ -1,4 +1,3 @@
-import { Scenes } from "@game/constants";
 import { addCoords, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMemo } from "react";
@@ -19,7 +18,7 @@ export const BlueprintInfoMarker = () => {
     const {
       scene: { getConfig },
     } = primodium.api();
-    const config = getConfig(Scenes.Asteroid);
+    const config = getConfig("ASTEROID");
 
     const pixelCoord = tileCoordToPixelCoord(
       addCoords(hoverCoord ?? { x: 0, y: 0 }, { x: dimensions.width / 2, y: 1 }),
@@ -33,7 +32,7 @@ export const BlueprintInfoMarker = () => {
   if (!building || !hoverCoord || buildingType) return null;
 
   return (
-    <Marker id="blueprint-info-target" scene={Scenes.Asteroid} coord={coord} origin="center-bottom">
+    <Marker id="blueprint-info-target" scene={"ASTEROID"} coord={coord} origin="center-bottom">
       <BlueprintInfo building={building} />
     </Marker>
   );

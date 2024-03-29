@@ -1,7 +1,6 @@
 import { FaHandshake, FaHandshakeSlash } from "react-icons/fa";
 import { useMud } from "src/hooks";
 // import { Card } from "../core/Card";
-import { KeybindActions, Scenes } from "@game/constants";
 import { components } from "src/network/components";
 import { getRandomRange } from "src/util/common";
 import { Modal } from "../core/Modal";
@@ -11,6 +10,7 @@ import { AccountDisplay } from "../shared/AccountDisplay";
 import { Account } from "../transfer/Account";
 import { Score } from "./Score";
 import { SpectatingDetails } from "./SpectatingDetails";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 const ProfileContent = () => {
   const {
@@ -60,7 +60,7 @@ export const Profile = () => {
         y: window.innerHeight / 2 + getRandomRange(-50, 50),
       }}
       hotkey={KeybindActions.Account}
-      scene={Scenes.UI}
+      scene={"UI"}
       minOpacity={0.5}
       defaultLocked
       defaultVisible

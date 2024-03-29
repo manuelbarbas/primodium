@@ -7,7 +7,6 @@ import { entityToColor } from "src/util/color";
 import { RockRelationshipColors } from "src/util/constants";
 import { getRockRelationship } from "src/util/asteroid";
 import { usePrimodium } from "src/hooks/usePrimodium";
-import { Scenes } from "@game/constants";
 import { Modal } from "../core/Modal";
 import { useMemo } from "react";
 
@@ -54,10 +53,10 @@ export const AccountDisplay: React.FC<{
         if (!playerHomeAsteroidPosition) return;
 
         if (!components.MapOpen.get()?.value) {
-          primodium.api(Scenes.Starmap).util.openMap();
+          primodium.api("STARMAP").util.openMap();
         }
 
-        primodium.api(Scenes.Starmap).camera.pan({ x: playerHomeAsteroidPosition.x, y: playerHomeAsteroidPosition.y });
+        primodium.api("STARMAP").camera.pan({ x: playerHomeAsteroidPosition.x, y: playerHomeAsteroidPosition.y });
       }}
       className={`btn-xs btn-ghost p-0 uppercase inline-flex font-bold gap-1 ${className} ${
         loading ? "animate-pulse" : ""
