@@ -87,7 +87,9 @@ export function api(sceneKey: SceneKeys = "ASTEROID", instance: string | Game = 
     const ownedBy = components.OwnedBy.get(activeRock)?.value;
     const isSpectating = ownedBy !== components.Account.get()?.value;
 
-    cameraApi.pan(pos, 0);
+    cameraApi.pan(pos, {
+      duration: 0,
+    });
 
     await sceneApi.transitionToScene(
       Scenes.Asteroid,

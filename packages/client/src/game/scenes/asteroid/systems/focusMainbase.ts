@@ -13,7 +13,9 @@ export const focusMainbase = (scene: Scene) => {
   const handleMove = () => {
     const mainBaseCoord = components.Position.get(EntityType.MainBase) ?? { x: 0, y: 0 };
 
-    pan(mainBaseCoord, 0);
+    pan(mainBaseCoord, {
+      duration: 0,
+    });
   };
 
   defineComponentSystem(systemsWorld, components.ActiveRock, handleMove);

@@ -6,17 +6,14 @@ import { Scene } from "engine/types";
 export const createCameraApi = (targetScene: Scene) => {
   function pan(
     coord: Coord,
-    duration = 1000,
     options: {
-      pixel: boolean;
-      ease: string;
-    } = {
-      pixel: false,
-      ease: "Power2",
-    }
+      duration?: number;
+      pixel?: boolean;
+      ease?: string;
+    } = {}
   ) {
     const { phaserScene, camera, tiled: tilemap } = targetScene;
-    const { pixel, ease } = options;
+    const { pixel = false, ease = "Power2", duration = 1000 } = options;
 
     const pixelCoord = pixel ? coord : tileCoordToPixelCoord(coord, tilemap.tileWidth, tilemap.tileHeight);
 
