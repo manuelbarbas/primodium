@@ -3,11 +3,14 @@ pragma solidity >=0.8.24;
 
 import { System } from "@latticexyz/world/src/System.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
+import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
+import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
+import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 
 // previously, we imported these directly,
 // but MUD collects and exposes them in index.sol automatically
 // so we can import them all from there
-import { Home, Level, Asteroid, P_AsteroidData, P_Asteroid, DimensionsData, Dimensions, PositionData, P_RequiredTile, P_Terrain, P_EnumToPrototype, P_Blueprint, UsedTiles, P_MaxLevel, Spawned } from "../primodium/index.sol";
+import { Asteroid, Home, Level, Dimensions, DimensionsData, PositionData, Spawned, UsedTiles, P_AsteroidData, P_Asteroid, P_Blueprint, P_EnumToPrototype, P_MaxLevel, P_RequiredTile, P_Terrain } from "../primodium/index.sol";
 
 import { Bounds, EResource } from "src/Types.sol";
 import { BuildingKey, ExpansionKey } from "src/Keys.sol";
@@ -19,7 +22,9 @@ import { console } from "forge-std/console.sol";
 
 // We're building a System, to extend the System contract
 contract WriteDemoSystem is System {
-  function buildIronMine() public {
+  bytes14 PRIMODIUM_NAMESPACE = bytes14("Primodium");
+
+  function buildIronMine() public returns (bytes32) {
     // we want to read from the Primodium World, not the Extension World
     StoreSwitch.setStoreAddress(_world());
 
@@ -53,7 +58,27 @@ contract WriteDemoSystem is System {
 
     // if we get this far, then we have found a valid tile position to build on
     // build it
-    bytes32 buildingEntity = IPrimodiumWorld(_world()).Primodium__build(building, position);
+    // bytes32 buildingEntity = IPrimodiumWorld(_world()).Primodium__build(building, position);
+    // bytes32 buildingEntity = IPrimodiumWorld(_world()).delegatecall
+    (bool success, bytes memory data) = _world().delegatecall(
+      abi.encodeWithSignature("build(EBuilding,(int32, int32, bytes32))", building, (position))
+    );
+
+    if (!success) {
+      console.log("Failed to build Iron Mine");
+      // console.log(data);
+      revert("Failed to build Iron Mine");
+    }
+
+    // ResourceId buildSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, PRIMODIUM_NAMESPACE, "BuildSystem");
+    // bytes memory buildingEntity = IPrimodiumWorld(_world()).callFrom(
+    //     _msgSender(),
+    //     buildSystemId,
+    //     abi.encodeWithSignature("build(EBuilding,(int32, int32, bytes32))", building, (position))
+    // );
+
+    // return buildingEntity;
+    return 0;
   }
 
   /*//////////////////////////////////////////////////////////////
@@ -100,12 +125,12 @@ contract WriteDemoSystem is System {
     // the asteroid level determines the possible dimensions and range of an asteroid
     uint256 asteroidLevel = Level.get(asteroidEntity);
 
-    // get the dimensions of the asteroid
-    P_AsteroidData memory asteroidDims = P_Asteroid.get();
-
     // find the range based on the current expansion level
     // ExpansionKey is a constant defined in the Keys.sol file
     DimensionsData memory range = Dimensions.get(ExpansionKey, asteroidLevel);
+
+    // get the dimensions of the asteroid
+    P_AsteroidData memory asteroidDims = P_Asteroid.get();
 
     // fetch, calculate, and return the locations where you can build
     return
