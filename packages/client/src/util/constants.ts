@@ -2,7 +2,7 @@ import { resourceToHex } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { DECIMALS } from "contracts/config/constants";
-import { EBuilding, EObjectives, EResource, EUnit } from "contracts/config/enums";
+import { EBuilding, EObjectives, EResource, EScoreType, EUnit } from "contracts/config/enums";
 import { Key } from "engine/types";
 import { encodeEntity } from "src/util/encode";
 import { parseEther } from "viem";
@@ -269,6 +269,16 @@ export const EntityType = {
   TridentMarineUpgrade3: toHex32("TridentMarineUpgrade") as Entity,
   TridentMarineUpgrade4: toHex32("TridentMarineUpgrade") as Entity,
   TridentMarineUpgrade5: toHex32("TridentMarineUpgrade") as Entity,
+
+  // Leaderboards
+  PlayerConquestLeaderboard: toHex32("Player_Conquest") as Entity,
+  PlayerExtractionLeaderboard: toHex32("Player_Extraction") as Entity,
+  PlayerGrandLeaderboard: toHex32("Player_Grand") as Entity,
+
+  // Leaderboards
+  AllianceConquestLeaderboard: toHex32("Alliance_Conquest") as Entity,
+  AllianceExtractionLeaderboard: toHex32("Alliance_Extraction") as Entity,
+  AllianceGrandLeaderboard: toHex32("Alliance_Grand") as Entity,
 
   //Objectives
   ...Object.keys(EObjectives).reduce((acc, key) => {
@@ -546,3 +556,14 @@ export const ObjectiveEnumLookup: Record<Entity, EObjectives> = {
 };
 
 export const ObjectiveEntityLookup = reverseRecord(ObjectiveEnumLookup);
+
+export const LeaderboardEntityLookup = {
+  player: {
+    [EScoreType.Conquest]: EntityType.PlayerConquestLeaderboard,
+    [EScoreType.Extraction]: EntityType.PlayerExtractionLeaderboard,
+  },
+  alliance: {
+    [EScoreType.Conquest]: EntityType.AllianceConquestLeaderboard,
+    [EScoreType.Extraction]: EntityType.AllianceExtractionLeaderboard,
+  },
+};

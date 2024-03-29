@@ -10,13 +10,12 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { invite } from "src/network/setup/contractCalls/alliance";
-import { EntityType, TransactionQueueType } from "src/util/constants";
+import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
-import { formatResourceCount } from "src/util/number";
 
-export const PlayerLeaderboard = () => {
+export const PlayerLeaderboard = ({ leaderboard }: { leaderboard: Entity }) => {
   const { playerAccount } = useMud();
-  const data = components.Leaderboard.use();
+  const data = components.Leaderboard.use(leaderboard);
 
   if (!data || !playerAccount.address) return null;
   const playerIndex = data.players.indexOf(playerAccount.entity);
@@ -67,7 +66,7 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
           {player === playerEntity && <p className="text-accent">(You)</p>}
         </div>
         <div className="flex items-center gap-1">
-          <p className="font-bold bg-cyan-700 px-2 ">{formatResourceCount(EntityType.Iron, BigInt(score))}</p>
+          <p className="font-bold bg-cyan-700 px-2 ">{score}</p>
           {role <= EAllianceRole.CanInvite && player !== playerEntity && playerAlliance !== alliance && (
             <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Invite, player)}>
               <Button

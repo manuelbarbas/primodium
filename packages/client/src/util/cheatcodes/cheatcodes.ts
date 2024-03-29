@@ -623,7 +623,29 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
         },
       },
     },
-
+    {
+      title: "Building",
+      content: {
+        clearCooldown: {
+          params: [],
+          function: async () => {
+            const selectedBuilding = mud.components.SelectedBuilding.get()?.value;
+            if (!selectedBuilding) {
+              toast.error("No building selected");
+              throw new Error("No building selected");
+            }
+            await setComponentValue(
+              mud,
+              mud.components.CooldownEnd,
+              { entity: selectedBuilding as Hex },
+              {
+                value: 0n,
+              }
+            );
+          },
+        },
+      },
+    },
     {
       title: "Fleet",
       content: {
