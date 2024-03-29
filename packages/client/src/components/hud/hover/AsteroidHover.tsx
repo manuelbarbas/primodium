@@ -33,8 +33,6 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const ownedBy = components.OwnedBy.use(entity)?.value as Entity | undefined;
   const { strength, maxStrength } = useAsteroidStrength(entity, loading);
 
-  const position = components.Position.use(entity);
-  console.log("position: ", position.x, position.y);
   if (loading)
     return (
       <Card className="relative flex items-center justify-center w-56 h-24 px-auto uppercase font-bold">
@@ -54,7 +52,11 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
           </div>
           <AsteroidEta entity={entity} />
         </div>
-
+        {wormhole && (
+          <div className="flex rainbow-bg uppercase text-primary font-bold border border-secondary/50 text-sm flex justify-center items-center">
+            WORMHOLE DETECTED
+          </div>
+        )}
         <div className="flex gap-1">
           <div className="flex bg-primary uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4 max-w-48">
             {ownedBy ? <AccountDisplay className="w-12" noColor player={ownedBy} raw /> : "DROID INFESTED"}
@@ -67,11 +69,6 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
           <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
             {desc.type}
           </div>
-          {wormhole && (
-            <div className="flex rainbow-bg uppercase text-neutral font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
-              WORMHOLE
-            </div>
-          )}
         </div>
         {inGracePeriod && (
           <div className="flex bg-success/25 font-bold border border-success/50 gap-2 text-xs p-1 items-center h-4 w-fit">

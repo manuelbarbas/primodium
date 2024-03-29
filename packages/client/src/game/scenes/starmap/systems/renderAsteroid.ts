@@ -2,14 +2,14 @@ import { Entity, Has, defineEnterSystem, namespaceWorld } from "@latticexyz/recs
 import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
-import { components } from "src/network/components";
-import { world } from "src/network/world";
-import { getCanAttack, getCanSend } from "src/util/unit";
-import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
-import { BaseAsteroid } from "src/game/lib/objects/Asteroid/BaseAsteroid";
-import { EntityType, MapIdToAsteroidType } from "src/util/constants";
 import { createCameraApi } from "src/game/api/camera";
 import { PrimaryAsteroid, SecondaryAsteroid } from "src/game/lib/objects/Asteroid";
+import { BaseAsteroid } from "src/game/lib/objects/Asteroid/BaseAsteroid";
+import { components } from "src/network/components";
+import { world } from "src/network/world";
+import { EntityType, MapIdToAsteroidType } from "src/util/constants";
+import { getCanAttack, getCanSend } from "src/util/unit";
+import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
 
 export const renderAsteroid = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -67,7 +67,7 @@ export const renderAsteroid = (scene: Scene) => {
     if (!coord) return;
 
     // //TODO: not sure why this is needed but rendering of unitialized asteroids wont work otherwise
-    // await new Promise((resolve) => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     render(entity, coord);
     if (asteroidData?.spawnsSecondary) initializeSecondaryAsteroids(entity, coord);
