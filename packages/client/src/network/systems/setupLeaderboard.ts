@@ -22,7 +22,6 @@ export const setupLeaderboard = (mud: MUD) => {
   defineComponentSystem(systemWorld, components.Score, ({ entity: rawEntity, value }) => {
     const scoreValue = Number(value[0]?.value ?? 0n);
     const { entity, scoreType } = decodeEntity(components.Score.metadata.keySchema, rawEntity);
-    console.log("entity", entity, "scoreType", scoreType, value);
 
     const entityIsPlayer = isPlayer(entity as Entity);
     const player = mud.playerAccount.entity;

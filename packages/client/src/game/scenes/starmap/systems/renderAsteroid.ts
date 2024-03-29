@@ -44,7 +44,7 @@ export const renderAsteroid = (scene: Scene) => {
           else toast.error("Cannot send to this asteroid.");
         } else {
           components.SelectedRock.set({ value: entity });
-          cameraApi.pan(coord, 500);
+          cameraApi.pan(coord, { duration: 500 });
           cameraApi.zoomTo(1.5, 500);
         }
       })
