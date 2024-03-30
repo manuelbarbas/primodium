@@ -11,7 +11,7 @@ import { Systems } from "@latticexyz/world/src/codegen/tables/Systems.sol";
 
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
-import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
+import { RESOURCE_SYSTEM, RESOURCE_NAMESPACE } from "@latticexyz/world/src/worldResourceTypes.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 import { UNLIMITED_DELEGATION } from "@latticexyz/world/src/constants.sol";
 
@@ -23,6 +23,9 @@ import { ISpawnSystem } from "../src/primodium/world/ISpawnSystem.sol";
 
 import { FunctionSelectors } from "@latticexyz/world/src/codegen/tables/FunctionSelectors.sol";
 
+import { EBuilding } from "../src/primodium/common.sol";
+import { PositionData, Spawned } from "../src/primodium/index.sol";
+
 contract WriteDemoTest is MudTest {
   // address public worldAddress; // inherited from MudTest
 
@@ -30,6 +33,9 @@ contract WriteDemoTest is MudTest {
   address extensionDeployerAddress = vm.envAddress("ADDRESS_ALICE");
   address playerAddressActive = vm.envAddress("ADDRESS_PLAYER_ACTIVE");
   address playerAddressInactive = vm.envAddress("ADDRESS_PLAYER_INACTIVE");
+
+  address playerAddressBob = vm.envAddress("ADDRESS_BOB");
+  uint256 playerPrivateKeyBob = vm.envUint("PRIVATE_KEY_BOB");
 
   // defining these up top for use below.
   // namespaces are truncated to 14 bytes, and systems to 16 bytes.
@@ -89,20 +95,23 @@ contract WriteDemoTest is MudTest {
     // stop being the system deployer
     vm.stopPrank();
 
-    vm.startPrank(playerAddressActive);
+    vm.startBroadcast(playerPrivateKeyBob);
 
     world.registerDelegation(address(writeDemoSystem), UNLIMITED_DELEGATION, new bytes(0));
-    console2.log("ACTIVE_PLAYER successfully delegated to WriteDemoSystem for unlimited delegation.");
+    console2.log("Bob successfully delegated to WriteDemoSystem for unlimited delegation.");
 
     // stop being the active player
-    vm.stopPrank();
+    vm.stopBroadcast();
+
+    // uint256 height = block.number;
+    // vm.roll(height + 10);
   }
 
   function test_buildIronMine() public {
     console2.log("\ntest_buildIronMine");
 
     // interact with the world as the active player
-    vm.startPrank(playerAddressActive);
+    vm.startBroadcast(playerPrivateKeyBob);
 
     // TODO: spawned / not spawned error
     // appears to be ossuring in LibBuilding.sol line 53
@@ -111,6 +120,57 @@ contract WriteDemoTest is MudTest {
     IWorld(worldAddress).PluginExamples__buildIronMine();
 
     // stop interacting with the chain
-    vm.stopPrank();
+    vm.stopBroadcast();
+  }
+
+  function test_buildIronMineDirect() public {
+    console2.log("\ntest_buildIronMineDirect");
+    vm.startBroadcast(playerPrivateKeyBob);
+
+    bytes32 playerEntity = bytes32(uint256(uint160(playerAddressBob)));
+    console2.log("playerEntity:    %x", uint256(playerEntity));
+
+    // check if the player is spawned
+    bool playerIsSpawned = Spawned.get(playerEntity);
+    console2.log("playerIsSpawned: ", playerIsSpawned);
+
+    // attempting to spawn the player says it's already spawned
+    if (!playerIsSpawned) {
+      console2.log("Spawning Player");
+      IPrimodiumWorld(worldAddress).Primodium__spawn();
+    }
+    // check if the player is spawned
+    playerIsSpawned = Spawned.get(playerEntity);
+    console2.log("playerIsSpawned: ", playerIsSpawned);
+
+    EBuilding building = EBuilding.IronMine;
+    PositionData memory position;
+    position.x = 15;
+    position.y = 8;
+    position.parentEntity = bytes32(0x46bbaf0b4538f2a67d22ff10dd34eb53250dab22d37a8b57b46a0318e9f0293a);
+
+    ResourceId buildSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, PRIMODIUM_NAMESPACE, "BuildSystem");
+    console2.log("Primodium__build((uint256,(int32, int32, bytes32))");
+    console2.log("building enum: %s", uint256(building));
+    console2.log("position x: %s", uint256(int256(position.x)));
+    console2.log("position y: %s", uint256(int256(position.y)));
+    console2.log("position parent: %x", uint256(position.parentEntity));
+    console2.log("buildSystemId: %x", uint256(ResourceId.unwrap(buildSystemId)));
+
+    // bytes memory buildingEntity = IPrimodiumWorld(worldAddress).callFrom(
+    //     playerAddressBob,
+    //     buildSystemId,
+    //     abi.encodeWithSignature("Primodium__build((uint8),(int32,int32,bytes32))", (building), (position))
+    // );
+
+    (bool success, bytes memory data) = worldAddress.delegatecall(
+      abi.encodeWithSignature("Primodium__build((uint8),(int32,int32,bytes32))", (building), (position))
+    );
+    console2.log("success: %s", success);
+    console2.logBytes(data);
+    assertEq(success, true);
+
+    // stop interacting with the chain
+    vm.stopBroadcast();
   }
 }

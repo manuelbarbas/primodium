@@ -32,11 +32,17 @@ contract WriteDemoSystem is System {
     // instead of bytes32(uint256(uint160(_msgSender())))
     // this time we're going to use a helper function
     bytes32 playerEntity = addressToEntity(_msgSender());
-    console.log("playerEntity:   %x", uint256(playerEntity));
+    console.log("playerEntity:    %x", uint256(playerEntity));
+
+    // check if the player is spawned
+    bool playerIsSpawned = Spawned.get(playerEntity);
+    console.log("playerIsSpawned: ", playerIsSpawned);
+
+    require(playerIsSpawned, "Player is not spawned");
 
     // get the ID of the players home base asteroid
     bytes32 asteroidEntity = Home.get(playerEntity);
-    console.log("asteroidEntity: %x", uint256(asteroidEntity));
+    console.log("asteroidEntity:  %x", uint256(asteroidEntity));
 
     // the building list is stored in a list of enums
     EBuilding building = EBuilding.IronMine;
@@ -52,20 +58,21 @@ contract WriteDemoSystem is System {
     // They are included further down the contract.
     PositionData memory position = getTilePosition(asteroidEntity, building);
 
-    // check if the player is spawned
-    bool playerIsSpawned = Spawned.get(playerEntity);
-    console.log("playerIsSpawned: ", playerIsSpawned);
-
     // if we get this far, then we have found a valid tile position to build on
     // build it
     ResourceId buildSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, PRIMODIUM_NAMESPACE, "BuildSystem");
+    console.log("Primodium__build((uint256,(int32,int32,bytes32))");
+    // console.log("building enum: %s", uint256(building));
+    // console.log("position x: %s", uint256(int256(position.x)));
+    // console.log("position y: %s", uint256(int256(position.y)));
+    // console.log("position parent: %x", uint256(position.parentEntity));
+    console.log("buildSystemId: %x", uint256(ResourceId.unwrap(buildSystemId)));
+
     bytes memory buildingEntity = IPrimodiumWorld(_world()).callFrom(
       _msgSender(),
       buildSystemId,
-      abi.encodeWithSignature("Primodium__build((uint256),(int32, int32, bytes32))", building, (position))
+      abi.encodeWithSignature("Primodium__build(uint8,(int32,int32,bytes32)))", uint8(building), (position))
     );
-
-    console.logBytes(buildingEntity);
 
     return buildingEntity;
     // return 0;
