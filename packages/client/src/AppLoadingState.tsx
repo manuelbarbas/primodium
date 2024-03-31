@@ -1,4 +1,3 @@
-import { minEth } from "@game/constants";
 import { transportObserver } from "@latticexyz/common";
 import { useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
@@ -12,6 +11,7 @@ import { Enter } from "./screens/Enter";
 import { Game } from "./screens/Game";
 import { Increment } from "./screens/Increment";
 import { Statistics } from "./screens/Statistics";
+import { minEth } from "./util/constants";
 
 export const DEV = import.meta.env.PRI_DEV === "true";
 export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";

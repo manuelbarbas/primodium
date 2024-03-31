@@ -1,4 +1,4 @@
-import { Scenes } from "@game/constants";
+import { Scenes } from "src/game/lib/mappings";
 import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";

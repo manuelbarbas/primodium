@@ -9,7 +9,6 @@ export const createTilemap = (
   config?: TilemapConfig
 ) => {
   const renderTilemap = (key: string) => {
-    currentMap?.destroy();
     const mapData = scene.cache.tilemap.get(key).data as Phaser.Tilemaps.MapData;
 
     const map = scene.add.tilemap(key);
@@ -27,18 +26,8 @@ export const createTilemap = (
       }
     });
 
-    currentMap = map;
     return map;
   };
 
-  let currentMap: Phaser.Tilemaps.Tilemap | null = defaultKey ? renderTilemap(defaultKey) : null;
-
-  const dispose = () => {
-    // currentMap?.removeAllLayers();
-    currentMap?.destroy();
-  };
-
-  const getMap = () => currentMap;
-
-  return { render: renderTilemap, getMap, tileHeight, tileWidth, dispose };
+  return { render: renderTilemap, tileHeight, tileWidth };
 };

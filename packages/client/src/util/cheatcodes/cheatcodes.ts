@@ -87,7 +87,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
     aegis: EntityType.AegisDrone,
     anvil: EntityType.AnvilDrone,
     hammer: EntityType.HammerDrone,
-    capitalShip: EntityType.CapitalShip,
+    colonyShip: EntityType.ColonyShip,
     droid: EntityType.Droid,
   };
 
@@ -596,7 +596,6 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             toast.success(`Asteroid ${entityToRockName(selectedRock)} conquered`);
           },
         },
-
         setTerrain: {
           params: [
             { name: "resource", type: "dropdown", dropdownOptions: Object.keys(resources) },

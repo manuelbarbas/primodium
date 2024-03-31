@@ -84,8 +84,8 @@ export const ObjectiveDescriptions = new Map<EObjectives, string>([
     "Upgrade the drone factory you placed on the map to Level 3 to unlock the ability to build Stinger drones. Stinger drones are strong but slow offensive units and take up more housing.",
   ],
   [
-    EObjectives.BuildCapitalShip1,
-    "Select the Shipyard you placed on the map to build a Capital Ship. Capital ships can decrypt other asteroids and colonize on them.",
+    EObjectives.BuildColonyShip1,
+    "Select the Shipyard you placed on the map to build a Colony Ship. Colony ships can decrypt other asteroids and colonize on them.",
   ],
   [EObjectives.UpgradeMainBase, "Upgrade your main base by clicking on the upgrade button in your main base."],
   [
@@ -108,7 +108,7 @@ export const ObjectiveDescriptions = new Map<EObjectives, string>([
   ],
   [
     EObjectives.BuildShipyard,
-    "Select the Shipyard from the building menu and place it on an empty tile. Shipyards can build Capital Ships, which are used to colonize other asteroids.",
+    "Select the Shipyard from the building menu and place it on an empty tile. Shipyards can build Colony Ships, which are used to colonize other asteroids.",
   ],
   [
     EObjectives.BuildMarket,

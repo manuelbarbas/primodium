@@ -94,12 +94,10 @@ export const BuildUnit: React.FC<{
                 })}
               </div>
 
-              {selectedUnit && selectedUnit !== EntityType.CapitalShip && (
-                <TrainNonCapitalShip building={building} unit={selectedUnit} asteroid={activeRock} />
+              {selectedUnit && selectedUnit !== EntityType.ColonyShip && (
+                <TrainNonColonyShip building={building} unit={selectedUnit} asteroid={activeRock} />
               )}
-              {selectedUnit === EntityType.CapitalShip && (
-                <TrainCapitalShip building={building} asteroid={activeRock} />
-              )}
+              {selectedUnit === EntityType.ColonyShip && <TrainColonyShip building={building} asteroid={activeRock} />}
             </>
           )}
         </div>
@@ -108,7 +106,7 @@ export const BuildUnit: React.FC<{
   );
 };
 
-const TrainNonCapitalShip = ({ building, unit, asteroid }: { building: Entity; unit: Entity; asteroid: Entity }) => {
+const TrainNonColonyShip = ({ building, unit, asteroid }: { building: Entity; unit: Entity; asteroid: Entity }) => {
   const [count, setCount] = useState("");
 
   useEffect(() => {
@@ -148,12 +146,12 @@ const TrainNonCapitalShip = ({ building, unit, asteroid }: { building: Entity; u
   );
 };
 
-const TrainCapitalShip = ({ building, asteroid }: { building: Entity; asteroid: Entity }) => {
+const TrainColonyShip = ({ building, asteroid }: { building: Entity; asteroid: Entity }) => {
   const mud = useMud();
   const { playerAccount } = mud;
-  const capitalShipResourceData = components.P_CapitalShipConfig.get();
-  if (!capitalShipResourceData) throw new Error("No capital ship resource data found");
-  const resource = ResourceEntityLookup[capitalShipResourceData.resource as EResource];
+  const colonyShipResourceData = components.P_ColonyShipConfig.get();
+  if (!colonyShipResourceData) throw new Error("No colony ship resource data found");
+  const resource = ResourceEntityLookup[colonyShipResourceData.resource as EResource];
 
   const playerAsteroidsQuery = [
     Has(components.Asteroid),
@@ -162,11 +160,11 @@ const TrainCapitalShip = ({ building, asteroid }: { building: Entity; asteroid: 
 
   const playerAsteroids = useEntityQuery(playerAsteroidsQuery);
   const ships = playerAsteroids.reduce((acc, entity) => {
-    const data = getFullResourceCount(EntityType.CapitalShipCapacity, entity);
+    const data = getFullResourceCount(EntityType.ColonyShipCapacity, entity);
     return acc + data.resourceStorage - data.resourceCount;
   }, BigInt(playerAsteroids.length - 1));
 
-  const cost = capitalShipResourceData.initialCost * 2n ** ships;
+  const cost = colonyShipResourceData.initialCost * 2n ** ships;
 
   return (
     <>
@@ -188,7 +186,7 @@ const TrainCapitalShip = ({ building, asteroid }: { building: Entity; asteroid: 
         <Navigator.BackButton
           className="btn-sm btn-secondary"
           onClick={() => {
-            train(mud, building, UnitEnumLookup[EntityType.CapitalShip], 1n);
+            train(mud, building, UnitEnumLookup[EntityType.ColonyShip], 1n);
           }}
         >
           Train
