@@ -24,7 +24,7 @@ import { ISpawnSystem } from "../src/primodium/world/ISpawnSystem.sol";
 import { FunctionSelectors } from "@latticexyz/world/src/codegen/tables/FunctionSelectors.sol";
 
 import { EBuilding } from "../src/primodium/common.sol";
-import { PositionData, Spawned } from "../src/primodium/index.sol";
+import { Home, PositionData, Spawned } from "../src/primodium/index.sol";
 
 contract WriteDemoTest is MudTest {
   // address public worldAddress; // inherited from MudTest
@@ -143,34 +143,44 @@ contract WriteDemoTest is MudTest {
     playerIsSpawned = Spawned.get(playerEntity);
     console2.log("playerIsSpawned: ", playerIsSpawned);
 
+    bytes32 asteroidEntity = Home.get(playerEntity);
+    console2.log("asteroidEntity:  %x", uint256(asteroidEntity));
+
     EBuilding building = EBuilding.IronMine;
     PositionData memory position;
     position.x = 15;
     position.y = 8;
-    position.parentEntity = bytes32(0x46bbaf0b4538f2a67d22ff10dd34eb53250dab22d37a8b57b46a0318e9f0293a);
+    position.parentEntity = asteroidEntity;
 
     ResourceId buildSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, PRIMODIUM_NAMESPACE, "BuildSystem");
-    console2.log("Primodium__build((uint256,(int32, int32, bytes32))");
+    // console2.log("Primodium__build((uint256,(int32, int32, bytes32))");
     console2.log("building enum: %s", uint256(building));
     console2.log("position x: %s", uint256(int256(position.x)));
     console2.log("position y: %s", uint256(int256(position.y)));
     console2.log("position parent: %x", uint256(position.parentEntity));
     console2.log("buildSystemId: %x", uint256(ResourceId.unwrap(buildSystemId)));
 
-    // bytes memory buildingEntity = IPrimodiumWorld(worldAddress).callFrom(
-    //     playerAddressBob,
-    //     buildSystemId,
-    //     abi.encodeWithSignature("Primodium__build((uint8),(int32,int32,bytes32))", (building), (position))
-    // );
+    bytes4 worldFunctionSelector = bytes4(keccak256(bytes("Primodium__build(uint8,(int32,int32,bytes32))")));
+    console2.log("worldFunctionSelector:");
+    console2.logBytes4(worldFunctionSelector);
 
-    (bool success, bytes memory data) = worldAddress.delegatecall(
-      abi.encodeWithSignature("Primodium__build((uint8),(int32,int32,bytes32))", (building), (position))
+    (ResourceId systemId, bytes4 systemFunctionSelector) = FunctionSelectors.get(worldFunctionSelector);
+    console2.log("systemId: %x", uint256(ResourceId.unwrap(systemId)));
+    console2.logBytes4(systemFunctionSelector);
+
+    console2.logBytes(abi.encodeWithSignature("Primodium__build(uint8,(int32,int32,bytes32))", building, (position)));
+    console2.logBytes(
+      abi.encodeWithSelector(bytes4(systemFunctionSelector), building, position.x, position.y, position.parentEntity)
     );
-    console2.log("success: %s", success);
-    console2.logBytes(data);
-    assertEq(success, true);
 
-    // stop interacting with the chain
+    bytes memory buildingEntity = IPrimodiumWorld(worldAddress).callFrom(
+      playerAddressBob,
+      systemId,
+      abi.encodeWithSelector(bytes4(systemFunctionSelector), building, position.x, position.y, position.parentEntity)
+    );
+
+    // TODO: add an assert to confirm functionality
+
     vm.stopBroadcast();
   }
 }
