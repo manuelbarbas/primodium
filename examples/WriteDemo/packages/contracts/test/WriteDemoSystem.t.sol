@@ -11,7 +11,7 @@ import { Systems } from "@latticexyz/world/src/codegen/tables/Systems.sol";
 
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
-import { RESOURCE_SYSTEM, RESOURCE_NAMESPACE } from "@latticexyz/world/src/worldResourceTypes.sol";
+import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 import { UNLIMITED_DELEGATION } from "@latticexyz/world/src/constants.sol";
 
@@ -113,74 +113,91 @@ contract WriteDemoTest is MudTest {
     // interact with the world as the active player
     vm.startBroadcast(playerPrivateKeyBob);
 
-    // TODO: spawned / not spawned error
-    // appears to be ossuring in LibBuilding.sol line 53
-    // attempting to spawn the player says it's already spawned
-    // IPrimodiumWorld(worldAddress).Primodium__spawn();
-    IWorld(worldAddress).PluginExamples__buildIronMine();
+    // attempting to spawn the player if they have not started the game yet
+    bytes32 playerEntity = bytes32(uint256(uint160(playerAddressBob)));
+    bool playerIsSpawned = Spawned.get(playerEntity);
+    if (!playerIsSpawned) {
+      console2.log("Spawning Player");
+      IPrimodiumWorld(worldAddress).Primodium__spawn();
+    }
+
+    // build an iron mine on their home base
+    console2.log("Building Iron Mine");
+    bytes32 buildingEntity = IWorld(worldAddress).PluginExamples__buildIronMine();
+
+    // assert that the iron mine was built
+    assert(uint256(buildingEntity) != 0);
 
     // stop interacting with the chain
     vm.stopBroadcast();
   }
 
-  function test_buildIronMineDirect() public {
-    console2.log("\ntest_buildIronMineDirect");
-    vm.startBroadcast(playerPrivateKeyBob);
+  // DEBUG Tests.  Leaving for reference.
 
-    bytes32 playerEntity = bytes32(uint256(uint160(playerAddressBob)));
-    console2.log("playerEntity:    %x", uint256(playerEntity));
+  // function test_buildIronMineDirect() public {
+  //     console2.log("\ntest_buildIronMineDirect");
+  //     vm.startBroadcast(playerPrivateKeyBob);
 
-    // check if the player is spawned
-    bool playerIsSpawned = Spawned.get(playerEntity);
-    console2.log("playerIsSpawned: ", playerIsSpawned);
+  //     bytes32 playerEntity = bytes32(uint256(uint160(playerAddressBob)));
+  //     console2.log("playerEntity:    %x", uint256(playerEntity));
 
-    // attempting to spawn the player says it's already spawned
-    if (!playerIsSpawned) {
-      console2.log("Spawning Player");
-      IPrimodiumWorld(worldAddress).Primodium__spawn();
-    }
-    // check if the player is spawned
-    playerIsSpawned = Spawned.get(playerEntity);
-    console2.log("playerIsSpawned: ", playerIsSpawned);
+  //     // check if the player is spawned
+  //     bool playerIsSpawned = Spawned.get(playerEntity);
+  //     console2.log("playerIsSpawned: ", playerIsSpawned);
 
-    bytes32 asteroidEntity = Home.get(playerEntity);
-    console2.log("asteroidEntity:  %x", uint256(asteroidEntity));
+  //     // attempting to spawn the player says it's already spawned
+  //     if (!playerIsSpawned) {
+  //         console2.log("Spawning Player");
+  //         IPrimodiumWorld(worldAddress).Primodium__spawn();
+  //     }
+  //     // check if the player is spawned
+  //     playerIsSpawned = Spawned.get(playerEntity);
+  //     console2.log("playerIsSpawned: ", playerIsSpawned);
 
-    EBuilding building = EBuilding.IronMine;
-    PositionData memory position;
-    position.x = 15;
-    position.y = 8;
-    position.parentEntity = asteroidEntity;
+  //     bytes32 asteroidEntity = Home.get(playerEntity);
+  //     console2.log("asteroidEntity:  %x", uint256(asteroidEntity));
 
-    ResourceId buildSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, PRIMODIUM_NAMESPACE, "BuildSystem");
-    // console2.log("Primodium__build((uint256,(int32, int32, bytes32))");
-    console2.log("building enum: %s", uint256(building));
-    console2.log("position x: %s", uint256(int256(position.x)));
-    console2.log("position y: %s", uint256(int256(position.y)));
-    console2.log("position parent: %x", uint256(position.parentEntity));
-    console2.log("buildSystemId: %x", uint256(ResourceId.unwrap(buildSystemId)));
+  //     EBuilding building = EBuilding.IronMine;
+  //     PositionData memory position;
+  //     position.x = 15;
+  //     position.y = 8;
+  //     position.parentEntity = asteroidEntity;
 
-    bytes4 worldFunctionSelector = bytes4(keccak256(bytes("Primodium__build(uint8,(int32,int32,bytes32))")));
-    console2.log("worldFunctionSelector:");
-    console2.logBytes4(worldFunctionSelector);
+  //     ResourceId buildSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, PRIMODIUM_NAMESPACE, "BuildSystem");
+  //     // console2.log("Primodium__build((uint256,(int32, int32, bytes32))");
+  //     console2.log("building enum: %s", uint256(building));
+  //     console2.log("position x: %s", uint256(int256(position.x)));
+  //     console2.log("position y: %s", uint256(int256(position.y)));
+  //     console2.log("position parent: %x", uint256(position.parentEntity));
+  //     console2.log("buildSystemId: %x", uint256(ResourceId.unwrap(buildSystemId)));
 
-    (ResourceId systemId, bytes4 systemFunctionSelector) = FunctionSelectors.get(worldFunctionSelector);
-    console2.log("systemId: %x", uint256(ResourceId.unwrap(systemId)));
-    console2.logBytes4(systemFunctionSelector);
+  //     bytes4 worldFunctionSelector = bytes4(keccak256(bytes("Primodium__build(uint8,(int32,int32,bytes32))")));
+  //     console2.log("worldFunctionSelector:");
+  //     console2.logBytes4(worldFunctionSelector);
 
-    console2.logBytes(abi.encodeWithSignature("Primodium__build(uint8,(int32,int32,bytes32))", building, (position)));
-    console2.logBytes(
-      abi.encodeWithSelector(bytes4(systemFunctionSelector), building, position.x, position.y, position.parentEntity)
-    );
+  //     (ResourceId systemId, bytes4 systemFunctionSelector) = FunctionSelectors.get(worldFunctionSelector);
+  //     console2.log("systemId: %x", uint256(ResourceId.unwrap(systemId)));
+  //     console2.logBytes4(systemFunctionSelector);
 
-    bytes memory buildingEntity = IPrimodiumWorld(worldAddress).callFrom(
-      playerAddressBob,
-      systemId,
-      abi.encodeWithSelector(bytes4(systemFunctionSelector), building, position.x, position.y, position.parentEntity)
-    );
+  //     console2.logBytes(
+  //         abi.encodeWithSignature("Primodium__build(uint8,(int32,int32,bytes32))", building, (position))
+  //     );
+  //     console2.logBytes(
+  //         abi.encodeWithSelector(
+  //             bytes4(systemFunctionSelector), building, position.x, position.y, position.parentEntity
+  //         )
+  //     );
 
-    // TODO: add an assert to confirm functionality
+  //     bytes memory buildingEntity = IPrimodiumWorld(worldAddress).callFrom(
+  //         playerAddressBob,
+  //         systemId,
+  //         abi.encodeWithSelector(
+  //             bytes4(systemFunctionSelector), building, position.x, position.y, position.parentEntity
+  //         )
+  //     );
 
-    vm.stopBroadcast();
-  }
+  //     // TODO: add an assert to confirm functionality
+
+  //     vm.stopBroadcast();
+  // }
 }

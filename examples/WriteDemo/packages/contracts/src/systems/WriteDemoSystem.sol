@@ -6,6 +6,7 @@ import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
+import { FunctionSelectors } from "@latticexyz/world/src/codegen/tables/FunctionSelectors.sol";
 
 // previously, we imported these directly,
 // but MUD collects and exposes them in index.sol automatically
@@ -24,7 +25,7 @@ import { console } from "forge-std/console.sol";
 contract WriteDemoSystem is System {
   bytes14 PRIMODIUM_NAMESPACE = bytes14("Primodium");
 
-  function buildIronMine() public returns (bytes memory) {
+  function buildIronMine() public returns (bytes32 buildingEntity) {
     // we want to read from the Primodium World, not the Extension World
     StoreSwitch.setStoreAddress(_world());
 
@@ -32,17 +33,15 @@ contract WriteDemoSystem is System {
     // instead of bytes32(uint256(uint160(_msgSender())))
     // this time we're going to use a helper function
     bytes32 playerEntity = addressToEntity(_msgSender());
-    console.log("playerEntity:    %x", uint256(playerEntity));
+    // console.log("playerEntity:    %x", uint256(playerEntity));
 
     // check if the player is spawned
     bool playerIsSpawned = Spawned.get(playerEntity);
-    console.log("playerIsSpawned: ", playerIsSpawned);
-
-    require(playerIsSpawned, "Player is not spawned");
+    require(playerIsSpawned, "[WriteDemoSystem] Player is not spawned");
 
     // get the ID of the players home base asteroid
     bytes32 asteroidEntity = Home.get(playerEntity);
-    console.log("asteroidEntity:  %x", uint256(asteroidEntity));
+    // console.log("asteroidEntity:  %x", uint256(asteroidEntity));
 
     // the building list is stored in a list of enums
     EBuilding building = EBuilding.IronMine;
@@ -60,22 +59,38 @@ contract WriteDemoSystem is System {
 
     // if we get this far, then we have found a valid tile position to build on
     // build it
-    ResourceId buildSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, PRIMODIUM_NAMESPACE, "BuildSystem");
-    console.log("Primodium__build((uint256,(int32,int32,bytes32))");
-    // console.log("building enum: %s", uint256(building));
-    // console.log("position x: %s", uint256(int256(position.x)));
-    // console.log("position y: %s", uint256(int256(position.y)));
-    // console.log("position parent: %x", uint256(position.parentEntity));
-    console.log("buildSystemId: %x", uint256(ResourceId.unwrap(buildSystemId)));
 
-    bytes memory buildingEntity = IPrimodiumWorld(_world()).callFrom(
+    // this is the correct way to implement this.  however, there is a bug in how MUD handles function selectors
+    // when using callFrom, so we're going to have to do it a different way.
+
+    // ResourceId buildSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, PRIMODIUM_NAMESPACE, "BuildSystem");
+    // bytes memory buildingEntity = IPrimodiumWorld(_world()).callFrom(
+    //     _msgSender(),
+    //     buildSystemId,
+    //     abi.encodeWithSignature("Primodium__build(uint8,(int32,int32,bytes32))", building, (position))
+    // );
+
+    // find the expected function selector
+    bytes4 worldFunctionSelector = bytes4(keccak256(bytes("Primodium__build(uint8,(int32,int32,bytes32))")));
+
+    // look up that function selector in the MUD FunctionSelectors talbe, and get the actual function selector.
+    // eventually, these should match, but currently that is not the case.
+    (ResourceId buildSystemId, bytes4 buildSystemFunctionSelector) = FunctionSelectors.get(worldFunctionSelector);
+
+    // now we can call the build function in the BuildSystem
+    bytes memory result = IPrimodiumWorld(_world()).callFrom(
       _msgSender(),
       buildSystemId,
-      abi.encodeWithSignature("Primodium__build(uint8,(int32,int32,bytes32)))", uint8(building), (position))
+      abi.encodeWithSelector(
+        bytes4(buildSystemFunctionSelector),
+        building,
+        position.x,
+        position.y,
+        position.parentEntity
+      )
     );
 
-    return buildingEntity;
-    // return 0;
+    buildingEntity = abi.decode(result, (bytes32));
   }
 
   /*//////////////////////////////////////////////////////////////
