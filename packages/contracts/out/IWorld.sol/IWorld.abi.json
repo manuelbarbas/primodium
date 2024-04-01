@@ -161,7 +161,7 @@
     "name": "Primodium__claimConquestPoints",
     "inputs": [
       {
-        "name": "asteroid",
+        "name": "asteroidEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       }
