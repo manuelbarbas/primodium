@@ -3,8 +3,9 @@ pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
-import { Spawned, Home } from "codegen/index.sol";
+import { Spawned, Home, Score } from "codegen/index.sol";
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
+import { EScoreType } from "src/Types.sol";
 
 /// @title Spawn System for Primodium Game
 /// @notice Handles player spawning in the game world
@@ -22,6 +23,9 @@ contract SpawnSystem is PrimodiumSystem {
     Spawned.set(playerEntity, true);
     IWorld(_world()).Primodium__initAsteroidOwner(asteroidEntity, playerEntity);
     Home.set(playerEntity, asteroidEntity);
+    for (uint8 i = 1; i < uint8(EScoreType.LENGTH); i++) {
+      Score.set(playerEntity, i, 0);
+    }
     return asteroidEntity;
   }
 }

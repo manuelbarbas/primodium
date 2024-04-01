@@ -1,26 +1,27 @@
 import { Entity } from "@latticexyz/recs";
 import { Badge } from "src/components/core/Badge";
 import { IconLabel } from "src/components/core/IconLabel";
+import { Loader } from "src/components/core/Loader";
+import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
 import { useFullResourceCount, useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
+import { useSyncStatus } from "src/hooks/useSyncStatus";
 import { components } from "src/network/components";
+import { getAsteroidDescription } from "src/util/asteroid";
 import { EntityType, Keys, ResourceImage } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
 import { getMoveLength } from "src/util/send";
 import { getCanSend, getFleetUnitCounts } from "src/util/unit";
 import { Card } from "../../core/Card";
 import { HealthBar } from "../HealthBar";
-import { useSyncStatus } from "src/hooks/useSyncStatus";
-import { hashEntities } from "src/util/encode";
-import { Loader } from "src/components/core/Loader";
-import { getAsteroidDescription } from "src/util/asteroid";
-import { AccountDisplay } from "src/components/shared/AccountDisplay";
 
 export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const { loading } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
   const name = entityToRockName(entity);
+  const wormhole = components.Asteroid.get(entity)?.wormhole;
   const desc = getAsteroidDescription(entity);
   const { inGracePeriod, duration } = useInGracePeriod(entity, loading);
   const { resourceCount: encryption, resourceStorage: maxEncryption } = useFullResourceCount(
@@ -51,7 +52,11 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
           </div>
           <AsteroidEta entity={entity} />
         </div>
-
+        {wormhole && (
+          <div className="flex rainbow-bg uppercase text-primary font-bold border border-secondary/50 text-sm flex justify-center items-center">
+            WORMHOLE DETECTED
+          </div>
+        )}
         <div className="flex gap-1">
           <div className="flex bg-primary uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4 max-w-48">
             {ownedBy ? <AccountDisplay className="w-12" noColor player={ownedBy} raw /> : "DROID INFESTED"}

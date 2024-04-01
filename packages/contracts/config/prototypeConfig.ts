@@ -261,12 +261,13 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
 
   WormholeBase: {
     tables: {
-      P_Blueprint: { value: getBlueprint(5, 5) },
+      P_Blueprint: { value: getBlueprint(7, 5) },
       Position: {
-        x: Math.floor(maxRange.xBounds / 2) + 1,
-        y: Math.floor(maxRange.yBounds / 2) + 1,
+        x: Math.floor(maxRange.xBounds / 2) + 3,
+        y: Math.floor(maxRange.yBounds / 2) + 2,
         parentEntity: encodeBytes32(0),
       },
+      P_MaxLevel: { value: 8n },
     },
     levels: {
       1: {
@@ -1801,20 +1802,21 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
   },
 
-  // ScoreMultipliers: {
-  //   levels: {
-  //     [MUDEnums.EResource.indexOf("Iron")]: { P_ScoreMultiplier: { value: 1n } },
-  //     [MUDEnums.EResource.indexOf("Copper")]: { P_ScoreMultiplier: { value: 1n } },
-  //     [MUDEnums.EResource.indexOf("Lithium")]: { P_ScoreMultiplier: { value: 1n } },
-  //     [MUDEnums.EResource.indexOf("Titanium")]: { P_ScoreMultiplier: { value: 75n } },
-  //     [MUDEnums.EResource.indexOf("Iridium")]: { P_ScoreMultiplier: { value: 300n } },
-  //     [MUDEnums.EResource.indexOf("Kimberlite")]: { P_ScoreMultiplier: { value: 800n } },
-  //     [MUDEnums.EResource.indexOf("Platinum")]: { P_ScoreMultiplier: { value: 150n } },
-  //     [MUDEnums.EResource.indexOf("IronPlate")]: { P_ScoreMultiplier: { value: 5n } },
-  //     [MUDEnums.EResource.indexOf("PVCell")]: { P_ScoreMultiplier: { value: 5n } },
-  //     [MUDEnums.EResource.indexOf("Alloy")]: { P_ScoreMultiplier: { value: 5n } },
-  //   },
-  // },
+  ScoreMultipliers: {
+    keys: [],
+    levels: {
+      [MUDEnums.EResource.indexOf("Iron")]: { P_ScoreMultiplier: { value: 1n } },
+      [MUDEnums.EResource.indexOf("Copper")]: { P_ScoreMultiplier: { value: 1n } },
+      [MUDEnums.EResource.indexOf("Lithium")]: { P_ScoreMultiplier: { value: 1n } },
+      [MUDEnums.EResource.indexOf("Titanium")]: { P_ScoreMultiplier: { value: 75n } },
+      [MUDEnums.EResource.indexOf("Iridium")]: { P_ScoreMultiplier: { value: 300n } },
+      [MUDEnums.EResource.indexOf("Kimberlite")]: { P_ScoreMultiplier: { value: 800n } },
+      [MUDEnums.EResource.indexOf("Platinum")]: { P_ScoreMultiplier: { value: 150n } },
+      [MUDEnums.EResource.indexOf("IronPlate")]: { P_ScoreMultiplier: { value: 5n } },
+      [MUDEnums.EResource.indexOf("PVCell")]: { P_ScoreMultiplier: { value: 5n } },
+      [MUDEnums.EResource.indexOf("Alloy")]: { P_ScoreMultiplier: { value: 5n } },
+    },
+  },
 
   Small: {
     keys: [{ [ESize.Small]: "uint8" }],

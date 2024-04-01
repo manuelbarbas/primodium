@@ -1,5 +1,4 @@
 import { Entity, namespaceWorld } from "@latticexyz/recs";
-import { Scenes, SceneKeys } from "../lib/constants/common";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import engine from "engine";
@@ -7,7 +6,6 @@ import { Game } from "engine/types";
 import { runSystems as runAsteroidSystems } from "src/game/scenes/asteroid/systems";
 import { runSystems as runStarmapSystems } from "src/game/scenes/starmap/systems";
 import { components } from "src/network/components";
-import { setupAllianceLeaderboard } from "src/network/systems/setupAllianceLeaderboard";
 import { setupBattleComponents } from "src/network/systems/setupBattleComponents";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
 import { setupBuildRock } from "src/network/systems/setupBuildRock";
@@ -24,15 +22,16 @@ import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import _init from "../init";
+import { SceneKeys, Scenes } from "../lib/constants/common";
 import { createAudioApi } from "./audio";
 import { createCameraApi } from "./camera";
 import { createFxApi } from "./fx";
 import { createGameApi } from "./game";
 import { createHooksApi } from "./hooks";
 import { createInputApi } from "./input";
+import { createObjectApi } from "./objects";
 import { createSceneApi } from "./scene";
 import { createSpriteApi } from "./sprite";
-import { createObjectApi } from "./objects";
 
 export type Primodium = Awaited<ReturnType<typeof initPrimodium>>;
 export type PrimodiumApi = ReturnType<Primodium["api"]>;
@@ -186,7 +185,6 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     //holds the last rock the player can build on
     setupBuildRock();
     setupSwapNotifications(mud);
-    setupAllianceLeaderboard(mud);
     setupBattleComponents();
     setupMoveNotifications();
     setupBlockNumber(mud.network.latestBlockNumber$);
