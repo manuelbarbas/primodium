@@ -6,7 +6,7 @@ import { addressToEntity } from "src/utils.sol";
 
 import { EResource } from "src/Types.sol";
 
-import { Home, OwnedBy, BuildingType, P_EnumToPrototype, P_Transportables, P_UnitPrototypes, Asteroid, AsteroidData, Position, PositionData, Position, PositionData, ReversePosition, MaxResourceCount, UnitCount, ResourceCount, UnitCount, ResourceCount, P_GameConfig, P_GameConfigData, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
+import { LastConquered, Home, OwnedBy, BuildingType, P_EnumToPrototype, P_Transportables, P_UnitPrototypes, Asteroid, AsteroidData, Position, PositionData, Position, PositionData, ReversePosition, MaxResourceCount, UnitCount, ResourceCount, UnitCount, ResourceCount, P_GameConfig, P_GameConfigData, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
 import { MainBasePrototypeId, DroidPrototypeId } from "codegen/Prototypes.sol";
 import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
@@ -54,8 +54,8 @@ contract LibAsteroidTest is PrimodiumTest {
   }
 
   function testCreateSecondaryAsteroid() public returns (bytes32) {
-    vm.startPrank(creator);
     PositionData memory position = findSecondaryAsteroid(asteroidEntity);
+    vm.startPrank(creator);
 
     bytes32 actualAsteroidEntity = LibAsteroid.createSecondaryAsteroid(position);
     bytes32 expectedAsteroidEntity = keccak256(abi.encode(asteroidEntity, bytes32("asteroid"), position.x, position.y));
@@ -69,6 +69,10 @@ contract LibAsteroidTest is PrimodiumTest {
     assertEq(expectedAsteroidData.mapId, actualAsteroidData.mapId, "mapId");
     assertEq(Position.get(expectedAsteroidEntity), position);
     assertEq(ReversePosition.get(position.x, position.y), expectedAsteroidEntity, "reversePosition");
+
+    assertGe(expectedAsteroidData.conquestPoints, 0, "conquestPoints");
+    assertEq(LastConquered.get(asteroidEntity), block.timestamp, "last conquered");
+
     assertEq(
       MaxResourceCount.get(expectedAsteroidEntity, uint8(EResource.U_MaxFleets)),
       0,
@@ -86,8 +90,8 @@ contract LibAsteroidTest is PrimodiumTest {
   }
 
   function testSecondaryAsteroidDefense() public {
-    vm.startPrank(creator);
     PositionData memory position = findSecondaryAsteroid(asteroidEntity);
+    vm.startPrank(creator);
 
     asteroidEntity = LibAsteroid.createSecondaryAsteroid(position);
     AsteroidData memory asteroidData = Asteroid.get(asteroidEntity);

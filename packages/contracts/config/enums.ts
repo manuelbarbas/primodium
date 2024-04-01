@@ -66,12 +66,6 @@ export enum EResource {
   M_DefenseMultiplier,
 }
 
-export enum ESize {
-  Small = 1,
-  Medium,
-  Large,
-}
-
 export enum EUnit {
   AegisDrone = 1,
   AnvilDrone,
@@ -165,7 +159,6 @@ export enum EScoreType {
 export const MUDEnums = {
   EBuilding: enumToArray(EBuilding),
   EResource: enumToArray(EResource),
-  ESize: enumToArray(ESize),
   EUnit: enumToArray(EUnit),
   EObjectives: enumToArray(EObjectives),
   EAllianceInviteMode: enumToArray(EAllianceInviteMode),

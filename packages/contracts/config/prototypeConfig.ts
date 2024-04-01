@@ -13,7 +13,7 @@ import {
 } from "../ts/prototypes/prototypeGenUtils";
 import { PrototypesConfig } from "../ts/prototypes/types";
 import { SCALE } from "./constants";
-import { EResource, ESize, MUDEnums } from "./enums";
+import { EResource, MUDEnums } from "./enums";
 import {
   mainBaseStorageUpgrades,
   samSiteStorageUpgrades,
@@ -48,6 +48,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         wormholeAsteroidSlot: 0n,
         maxLevel: 1n,
         mapId: 6,
+        conquestPoints: 0n,
       },
 
       P_ColonyShipConfig: {
@@ -92,6 +93,15 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         resource: EResource.Iron,
         turn: 0n,
         hash: encodeBytes32("i love wormholes"),
+      },
+    },
+  },
+
+  Conquest: {
+    keys: [],
+    tables: {
+      P_ConquestConfig: {
+        holdTime: 6n * 60n * 60n,
       },
     },
   },
@@ -1805,27 +1815,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       [MUDEnums.EResource.indexOf("IronPlate")]: { P_ScoreMultiplier: { value: 5n } },
       [MUDEnums.EResource.indexOf("PVCell")]: { P_ScoreMultiplier: { value: 5n } },
       [MUDEnums.EResource.indexOf("Alloy")]: { P_ScoreMultiplier: { value: 5n } },
-    },
-  },
-
-  Small: {
-    keys: [{ [ESize.Small]: "uint8" }],
-    tables: {
-      P_SizeToAmount: { value: 100000n },
-    },
-  },
-
-  Medium: {
-    keys: [{ [ESize.Medium]: "uint8" }],
-    tables: {
-      P_SizeToAmount: { value: 250000n },
-    },
-  },
-
-  Large: {
-    keys: [{ [ESize.Large]: "uint8" }],
-    tables: {
-      P_SizeToAmount: { value: 500000n },
     },
   },
 

@@ -6,7 +6,7 @@ import { WORLD_SPEED_SCALE } from "src/constants.sol";
 import { DroidPrototypeId } from "codegen/Prototypes.sol";
 
 // tables
-import { UsedTiles, Dimensions, DimensionsData, P_MaxLevel, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, P_GameConfigData, P_GameConfig, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
+import { LastConquered, UsedTiles, Dimensions, DimensionsData, P_MaxLevel, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, P_GameConfigData, P_GameConfig, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
 
 // libraries
 import { ExpansionKey } from "src/Keys.sol";
@@ -35,7 +35,14 @@ library LibAsteroid {
     Position.set(asteroidEntity, coord);
     Asteroid.set(
       asteroidEntity,
-      AsteroidData({ isAsteroid: true, maxLevel: 5, mapId: 1, spawnsSecondary: true, wormhole: false })
+      AsteroidData({
+        isAsteroid: true,
+        maxLevel: 5,
+        mapId: 1,
+        spawnsSecondary: true,
+        wormhole: false,
+        conquestPoints: 0
+      })
     );
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
 
@@ -88,6 +95,14 @@ library LibAsteroid {
     revert("no asteroid found");
   }
 
+  /*
+   * @dev Get asteroid data based on asteroid entity
+   * @param asteroidEntity Hash of the asteroid
+   * @param spawnsSecondary Whether the asteroid spawns secondary asteroids
+   * @param wormholeAsteroid Whether the asteroid is a wormhole asteroid
+   * @return AsteroidData struct
+   * @notice todo: move max level and conquest points into a prototype table
+   */
   function getAsteroidData(
     bytes32 asteroidEntity,
     bool spawnsSecondary,
@@ -100,6 +115,7 @@ library LibAsteroid {
           isAsteroid: true,
           maxLevel: wormholeConfig.maxLevel,
           mapId: wormholeConfig.mapId,
+          conquestPoints: wormholeConfig.conquestPoints,
           spawnsSecondary: spawnsSecondary,
           wormhole: true
         });
@@ -107,18 +123,23 @@ library LibAsteroid {
     uint256 distributionVal = (LibEncode.getByteUInt(uint256(asteroidEntity), 7, 12) % 100);
 
     uint256 maxLevel;
+    uint256 conquestPoints;
     //micro
     if (distributionVal <= 50) {
       maxLevel = 1;
+      conquestPoints = 3;
       //small
     } else if (distributionVal <= 75) {
       maxLevel = 3;
+      conquestPoints = 4;
       //medium
     } else if (distributionVal <= 90) {
       maxLevel = 5;
+      conquestPoints = 5;
       //large
     } else {
       maxLevel = 8;
+      conquestPoints = 1;
     }
 
     // number between 2 and 5
@@ -129,7 +150,8 @@ library LibAsteroid {
         maxLevel: maxLevel,
         mapId: mapId,
         spawnsSecondary: spawnsSecondary,
-        wormhole: false
+        wormhole: false,
+        conquestPoints: conquestPoints
       });
   }
 
@@ -164,6 +186,7 @@ library LibAsteroid {
   function initAsteroidOwner(bytes32 asteroidEntity, bytes32 ownerEntity) internal {
     OwnedBy.set(asteroidEntity, ownerEntity);
     AsteroidSet.add(ownerEntity, AsteroidOwnedByKey, asteroidEntity);
+    LastConquered.set(asteroidEntity, block.timestamp);
   }
 
   /// @dev Calculates position based on distance and max index
