@@ -30,7 +30,7 @@ contract ConquestSystemTest is PrimodiumTest {
 
     world.Primodium__claimConquestPoints(asteroidEntity);
     assertEq(Score.get(playerEntity, uint8(EScoreType.Conquest)), asteroidData.conquestPoints);
-    assertEq(LastConquered.get(asteroidEntity), block.timestamp + P_ConquestConfig.get());
+    assertEq(LastConquered.get(asteroidEntity), block.timestamp);
   }
 
   function testConquerAsteroidFailNotOwner() public {
