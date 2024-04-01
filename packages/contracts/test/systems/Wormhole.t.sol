@@ -81,19 +81,22 @@ contract WormholeTest is PrimodiumTest {
     WormholeData memory wormholeData = Wormhole.get();
     P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
 
-    increaseResource(wormholeAsteroidEntity, EResource(wormholeData.resource), 100);
+    vm.startPrank(creator);
+    uint8 resource = LibWormhole.advanceTurn();
+    uint256 resourceCount = 100;
+    increaseResource(wormholeAsteroidEntity, EResource(resource), resourceCount);
 
     vm.prank(alice);
-    world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
+    world.Primodium__wormholeDeposit(wormholeBaseEntity, resourceCount);
 
     assertEq(
       Score.get(aliceEntity, uint8(EScoreType.Extraction)),
-      100 * P_ScoreMultiplier.get(wormholeData.resource),
+      resourceCount * P_ScoreMultiplier.get(resource),
       "score"
     );
     assertEq(CooldownEnd.get(wormholeBaseEntity), block.timestamp + wormholeConfig.cooldown, "cooldown");
     assertFalse(Wormhole.getHash() == wormholeData.hash, "hash");
-    assertEq(Wormhole.getResource(), wormholeData.resource, "resource");
+    assertEq(Wormhole.getResource(), resource, "resource");
     return wormholeAsteroidEntity;
   }
 
@@ -105,17 +108,16 @@ contract WormholeTest is PrimodiumTest {
     WormholeData memory wormholeData = Wormhole.get();
     P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
 
-    increaseResource(wormholeAsteroidEntity, EResource(wormholeData.resource), 100);
+    vm.startPrank(creator);
+    uint8 resource = LibWormhole.advanceTurn();
+
+    increaseResource(wormholeAsteroidEntity, EResource(resource), 100);
 
     vm.startPrank(alice);
     bytes32 allianceEntity = world.Primodium__create(bytes32("alice's alliance"), EAllianceInviteMode.Open);
     world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
 
-    assertEq(
-      Score.get(allianceEntity, uint8(EScoreType.Extraction)),
-      100 * P_ScoreMultiplier.get(wormholeData.resource),
-      "score"
-    );
+    assertEq(Score.get(allianceEntity, uint8(EScoreType.Extraction)), 100 * P_ScoreMultiplier.get(resource), "score");
     assertEq(Score.get(allianceEntity, uint8(EScoreType.Conquest)), 0, "score");
   }
 
@@ -127,26 +129,25 @@ contract WormholeTest is PrimodiumTest {
     WormholeData memory wormholeData = Wormhole.get();
     P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
 
-    increaseResource(wormholeAsteroidEntity, EResource(wormholeData.resource), 100);
+    vm.startPrank(creator);
+    uint8 resource = LibWormhole.advanceTurn();
+
+    increaseResource(wormholeAsteroidEntity, EResource(resource), 100);
 
     vm.prank(alice);
     world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
 
     vm.warp(CooldownEnd.get(wormholeBaseEntity) + 1);
 
-    increaseResource(wormholeAsteroidEntity, EResource(wormholeData.resource), 100);
+    increaseResource(wormholeAsteroidEntity, EResource(resource), 100);
 
     vm.prank(alice);
     world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
 
-    assertEq(
-      Score.get(aliceEntity, uint8(EScoreType.Extraction)),
-      200 * P_ScoreMultiplier.get(wormholeData.resource),
-      "score"
-    );
+    assertEq(Score.get(aliceEntity, uint8(EScoreType.Extraction)), 200 * P_ScoreMultiplier.get(resource), "score");
     assertEq(CooldownEnd.get(wormholeBaseEntity), block.timestamp + wormholeConfig.cooldown, "cooldown");
     assertFalse(Wormhole.getHash() == wormholeData.hash, "hash");
-    assertEq(Wormhole.getResource(), wormholeData.resource, "resource");
+    assertEq(Wormhole.getResource(), resource, "resource");
     return wormholeAsteroidEntity;
   }
 
@@ -200,27 +201,28 @@ contract WormholeTest is PrimodiumTest {
   }
 
   function testUpdateWormholeResource() public {
-    WormholeData memory wormholeData = Wormhole.get();
-    P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
-
     bytes32 wormholeAsteroidEntity = testDepositWormhole();
     bytes32 wormholeBaseEntity = Home.get(wormholeAsteroidEntity);
 
-    // get the start of the next turn
-    //
-    uint256 expectedTurn = (block.timestamp - wormholeConfig.initTime) / wormholeConfig.turnDuration;
+    WormholeData memory wormholeData = Wormhole.get();
+    P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
+
     vm.warp(LibMath.max(CooldownEnd.get((wormholeBaseEntity)), getTurnStartTimestamp(wormholeData.turn + 1) + 1));
 
-    expectedTurn = (block.timestamp - wormholeConfig.initTime) / wormholeConfig.turnDuration;
-
     bytes32 wormholeHash = Wormhole.getHash();
-    uint8 expectedNewResource = LibWormhole.getRandomResource(wormholeHash, wormholeData.resource);
+    uint8 expectedNewResource = LibWormhole.getRandomResource(
+      wormholeHash,
+      wormholeData.turn + 1,
+      wormholeData.resource
+    );
+
     uint256 prevScore = Score.get(aliceEntity, uint8(EScoreType.Extraction));
-    console.log("prev score:", prevScore);
 
     increaseResource(wormholeAsteroidEntity, EResource(expectedNewResource), 100);
+
     vm.startPrank(alice);
-    world.Primodium__wormholeDeposit((wormholeBaseEntity), 100);
+    world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
+
     assertEq(
       Score.get(aliceEntity, uint8(EScoreType.Extraction)),
       100 * P_ScoreMultiplier.get(expectedNewResource) + prevScore,
@@ -229,6 +231,21 @@ contract WormholeTest is PrimodiumTest {
     assertEq(CooldownEnd.get(wormholeBaseEntity), block.timestamp + wormholeConfig.cooldown, "cooldown");
     assertFalse(Wormhole.getHash() == wormholeData.hash, "hash");
     assertTrue(Wormhole.getResource() == expectedNewResource, "resource");
-    assertEq(Wormhole.getTurn(), expectedTurn, "turn");
+    assertEq(Wormhole.getTurn(), wormholeData.turn + 1, "turn");
+  }
+
+  function testRandomResourceSanityCheck() public {
+    bytes32 seed = bytes32("hello");
+    uint8 prevResource = 1;
+    uint256 turn = 1;
+    uint256 resource;
+    do {
+      seed = keccak256(abi.encode(seed, turn));
+      console.logBytes32(seed);
+      resource = uint8(uint256(seed) % P_Transportables.length());
+    } while (resource == prevResource);
+
+    assertTrue(resource != prevResource, "resource should not be the same as prevResource");
+    console.log("resource:", resource);
   }
 }

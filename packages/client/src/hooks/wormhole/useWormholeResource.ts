@@ -3,7 +3,7 @@ import { EResource } from "contracts/config/enums";
 import { useMemo } from "react";
 import { components } from "src/network/components";
 import { EntityType, ResourceEntityLookup, SPEED_SCALE } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
+import { encodeAbiParameters, Hex, keccak256 } from "viem";
 
 export const useWormholeResource = (): { resource: Entity; timeUntilNextResource: bigint } => {
   const wormholeData = components.Wormhole.use();
@@ -21,17 +21,36 @@ export const useWormholeResource = (): { resource: Entity; timeUntilNextResource
     const timeUntilNextResource = wormholeConfig.initTime + (expectedTurn + 1n) * turnDuration - time;
     const resourceEntity = ResourceEntityLookup[wormholeData.resource as EResource];
     if (storedTurn === expectedTurn) return { timeUntilNextResource, resource: resourceEntity };
-    return { timeUntilNextResource, resource: getRandomResource(wormholeData.hash as Entity, resourceEntity) };
+    return {
+      timeUntilNextResource,
+      resource: getRandomResource(wormholeData.hash as Entity, expectedTurn, resourceEntity),
+    };
   }, [time, wormholeConfig, wormholeData]);
 };
 
-function getRandomResource(seed: Entity, prevResource: Entity) {
+function getRandomResource(seed: Entity, turn: bigint, prevResource: Entity) {
   const transportableLength = components.P_Transportables.get()?.value.length ?? 0;
   let resource = EntityType.NULL;
   do {
-    seed = hashEntities(seed);
+    seed = keccak256(
+      encodeAbiParameters(
+        [
+          { name: "seed", type: "bytes32" },
+          { name: "turn", type: "uint256" },
+        ],
+        [seed as Hex, turn]
+      )
+    ) as Entity;
+
     const resourceIndex = Number(BigInt(seed) % BigInt(transportableLength));
     resource = ResourceEntityLookup[resourceIndex as EResource];
   } while (resource == prevResource);
   return resource;
 }
+
+// function testRandomResourceSanityCheck() {
+//   const seed = encodeBytes32("hello");
+//   const prevResource = EntityType.Iron;
+//   const turn = 1n;
+//   const resource = getRandomResource(seed as Entity, turn, prevResource);
+// }

@@ -1,16 +1,32 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { BuildingType, OwnedBy, Position, P_Transportables, P_WormholeConfig, P_WormholeConfigData, Wormhole, WormholeData, CooldownEnd, P_ScoreMultiplier } from "codegen/index.sol";
+import { P_GameConfig, BuildingType, OwnedBy, Position, P_Transportables, P_WormholeConfig, P_WormholeConfigData, Wormhole, WormholeData, CooldownEnd, P_ScoreMultiplier } from "codegen/index.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibScore } from "libraries/LibScore.sol";
 import { EScoreType } from "src/Types.sol";
 import { WormholeBasePrototypeId } from "codegen/Prototypes.sol";
+import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibWormhole {
-  function getRandomResource(bytes32 seed, uint8 prevResource) internal view returns (uint8 resource) {
+  function advanceTurn() internal returns (uint8) {
+    P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
+    WormholeData memory wormholeData = Wormhole.get();
+
+    uint256 turnDuration = (wormholeConfig.turnDuration * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
+    uint256 expectedTurn = (block.timestamp - wormholeConfig.initTime) / turnDuration;
+
+    if (wormholeData.turn < expectedTurn) {
+      uint8 resource = getRandomResource(wormholeData.hash, expectedTurn, wormholeData.resource);
+      Wormhole.set(WormholeData({ turn: expectedTurn, resource: resource, hash: blockhash(block.number) }));
+      return resource;
+    }
+    return wormholeData.resource;
+  }
+
+  function getRandomResource(bytes32 seed, uint256 turn, uint8 prevResource) internal view returns (uint8 resource) {
     do {
-      seed = keccak256(abi.encode(seed));
+      seed = keccak256(abi.encode(seed, turn));
       resource = uint8(uint256(seed) % P_Transportables.length());
     } while (resource == prevResource);
   }
