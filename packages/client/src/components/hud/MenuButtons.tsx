@@ -17,7 +17,7 @@ export const MenuButtons = () => {
           <Modal.Button className={buttonClass}>
             <IconLabel imageUri="/img/icons/leaderboardicon.png" tooltipText="leaderboard" tooltipDirection="right" />
           </Modal.Button>
-          <Modal.Content className="w-[40rem] h-[50rem]">
+          <Modal.Content className="w-[50rem] h-[50rem]">
             <Leaderboard />
           </Modal.Content>
         </Modal>

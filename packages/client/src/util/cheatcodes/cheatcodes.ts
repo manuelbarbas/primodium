@@ -80,6 +80,8 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
     electricity: EntityType.Electricity,
     defense: EntityType.Defense,
     moves: EntityType.FleetCount,
+    encryption: EntityType.Encryption,
+    colonyShipCapacity: EntityType.ColonyShipCapacity,
   };
 
   const units: Record<string, Entity> = {
@@ -571,6 +573,29 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
               }
             );
             toast.success(`${count} ${resource} storage given to ${entityToRockName(selectedRock)}`);
+          },
+        },
+        setResource: {
+          params: [
+            { name: "count", type: "number" },
+            { name: "resource", type: "dropdown", dropdownOptions: Object.keys(resources) },
+          ],
+          function: async (count: number, resource: string) => {
+            const selectedRock = mud.components.ActiveRock.get()?.value;
+            const resourceEntity = resources[resource];
+            if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
+
+            const value = BigInt(count * Number(RESOURCE_SCALE));
+
+            await setComponentValue(
+              mud,
+              mud.components.ResourceCount,
+              { entity: selectedRock as Hex, resource: ResourceEnumLookup[resourceEntity] },
+              {
+                value,
+              }
+            );
+            toast.success(`${count} ${resource} set for ${entityToRockName(selectedRock)}`);
           },
         },
         conquerAsteroid: {

@@ -1,4 +1,4 @@
-import { ComponentValue, Entity } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
 import { useEffect, useMemo, useState } from "react";
@@ -7,9 +7,7 @@ import {
   FaArrowLeft,
   FaArrowUp,
   FaCheck,
-  FaCog,
   FaCopy,
-  FaEnvelope,
   FaInfoCircle,
   FaLock,
   FaTimes,
@@ -152,7 +150,6 @@ export const ScoreScreen = () => {
       )}
       <div className="w-full">
         <hr className="w-full border-t border-cyan-800 my-2" />
-        <InfoRow data={data} />
       </div>
     </Navigator.Screen>
   );
@@ -203,7 +200,7 @@ export const ManageScreen: React.FC = () => {
   const mud = useMud();
   const playerEntity = mud.playerAccount.entity;
   const data = components.Leaderboard.use();
-  const allianceEntity = data?.players[data?.playerRank - 1];
+  const allianceEntity = data?.players[data?.playerRank ?? 1 - 1];
   const playerRole = components.PlayerAlliance.get(playerEntity)?.role ?? EAllianceRole.Member;
   const playerEntities = components.PlayerAlliance.useAllWith({
     alliance: allianceEntity,
@@ -615,61 +612,61 @@ const LeaderboardItem = ({
   );
 };
 
-const InfoRow = ({ data }: { data?: ComponentValue<typeof components.Leaderboard.schema> }) => {
-  if (!data) return <SoloPlayerInfo />;
+// const InfoRow = ({ data }: { data?: ComponentValue<typeof components.Leaderboard.schema> }) => {
+//   if (!data) return <SoloPlayerInfo />;
 
-  const score = data.scores[data.playerRank - 1];
-  const rank = data.playerRank;
-  const allianceEntity = data.players[data.playerRank - 1];
+//   const score = data.scores[data.playerRank - 1];
+//   const rank = data.playerRank;
+//   const allianceEntity = data.players[data.playerRank - 1];
 
-  if (!allianceEntity) return <SoloPlayerInfo />;
+//   if (!allianceEntity) return <SoloPlayerInfo />;
 
-  return <PlayerInfo rank={rank} alliance={allianceEntity} score={Number(score)} />;
-};
+//   return <PlayerInfo rank={rank} alliance={allianceEntity} score={Number(score)} />;
+// };
 
-const PlayerInfo = ({ rank, score, alliance }: { rank: number; alliance: Entity; score: number }) => {
-  const {
-    playerAccount: { entity: playerEntity },
-  } = useMud();
-  const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
-  const playerAlliance = components.PlayerAlliance.use(playerEntity)?.alliance as Entity | undefined;
-  const joinRequests = components.AllianceRequest.useAllWith({ alliance: playerAlliance ?? singletonEntity }) ?? [];
+// const PlayerInfo = ({ rank, score, alliance }: { rank: number; alliance: Entity; score: number }) => {
+//   const {
+//     playerAccount: { entity: playerEntity },
+//   } = useMud();
+//   const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
+//   const playerAlliance = components.PlayerAlliance.use(playerEntity)?.alliance as Entity | undefined;
+//   const joinRequests = components.AllianceRequest.useAllWith({ alliance: playerAlliance ?? singletonEntity }) ?? [];
 
-  return (
-    <SecondaryCard className="w-full border border-slate-700 p-2 bg-slate-800">
-      {
-        <div className="grid grid-cols-6 w-full items-center gap-2">
-          <LeaderboardItem index={rank - 1} score={score} entity={alliance} className="col-span-4 h-full" />
-          <Navigator.NavButton to="manage" className="flex bg-secondary btn-sm">
-            <FaCog />
-          </Navigator.NavButton>
-          <Navigator.NavButton to="invites" className="flex bg-secondary btn-sm">
-            <FaEnvelope /> <b>{joinRequests.length ?? invites.length}</b>
-          </Navigator.NavButton>
-        </div>
-      }
-    </SecondaryCard>
-  );
-};
+//   return (
+//     <SecondaryCard className="w-full border border-slate-700 p-2 bg-slate-800">
+//       {
+//         <div className="grid grid-cols-6 w-full items-center gap-2">
+//           <LeaderboardItem index={rank - 1} score={score} entity={alliance} className="col-span-4 h-full" />
+//           <Navigator.NavButton to="manage" className="flex bg-secondary btn-sm">
+//             <FaCog />
+//           </Navigator.NavButton>
+//           <Navigator.NavButton to="invites" className="flex bg-secondary btn-sm">
+//             <FaEnvelope /> <b>{joinRequests.length ?? invites.length}</b>
+//           </Navigator.NavButton>
+//         </div>
+//       }
+//     </SecondaryCard>
+//   );
+// };
 
-const SoloPlayerInfo = () => {
-  const {
-    playerAccount: { entity: playerEntity },
-  } = useMud();
-  const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
+// const SoloPlayerInfo = () => {
+//   const {
+//     playerAccount: { entity: playerEntity },
+//   } = useMud();
+//   const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
 
-  return (
-    <SecondaryCard className="w-full border border-slate-700 p-2 bg-slate-800">
-      {
-        <div className="grid grid-cols-6 w-full items-center gap-2">
-          <Navigator.NavButton to="create" className="btn-xs btn-secondary col-span-5">
-            + Create Alliance
-          </Navigator.NavButton>
-          <Navigator.NavButton to="invites" className="btn-xs flex">
-            <FaEnvelope /> <b>{invites.length}</b>
-          </Navigator.NavButton>
-        </div>
-      }
-    </SecondaryCard>
-  );
-};
+//   return (
+//     <SecondaryCard className="w-full border border-slate-700 p-2 bg-slate-800">
+//       {
+//         <div className="grid grid-cols-6 w-full items-center gap-2">
+//           <Navigator.NavButton to="create" className="btn-xs btn-secondary col-span-5">
+//             + Create Alliance
+//           </Navigator.NavButton>
+//           <Navigator.NavButton to="invites" className="btn-xs flex">
+//             <FaEnvelope /> <b>{invites.length}</b>
+//           </Navigator.NavButton>
+//         </div>
+//       }
+//     </SecondaryCard>
+//   );
+// };

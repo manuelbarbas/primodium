@@ -1,8 +1,7 @@
 import { Join } from "src/components/core/Join";
 import { Tabs } from "src/components/core/Tabs";
-import { EntityType } from "src/util/constants";
 import { AllianceLeaderboard } from "./AllianceLeaderboard";
-import { PlayerLeaderboard } from "./PlayerLeaderboard";
+import { Leaderboards } from "./Leaderboards";
 
 export const Leaderboard: React.FC = () => {
   return (
@@ -20,7 +19,7 @@ export const Leaderboard: React.FC = () => {
         <AllianceLeaderboard />
       </Tabs.Pane>
       <Tabs.Pane index={1} className="w-full h-full p-0 border-none">
-        <PlayerLeaderboard leaderboard={EntityType.PlayerExtractionLeaderboard} />
+        <Leaderboards />
       </Tabs.Pane>
     </Tabs>
   );

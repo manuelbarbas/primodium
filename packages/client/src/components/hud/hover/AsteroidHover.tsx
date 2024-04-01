@@ -3,6 +3,7 @@ import { Badge } from "src/components/core/Badge";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Loader } from "src/components/core/Loader";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
+import { useClaimConquestTime } from "src/hooks/conquest/useClaimConquestTime";
 import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
 import { useFullResourceCount, useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
@@ -32,6 +33,7 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
 
   const ownedBy = components.OwnedBy.use(entity)?.value as Entity | undefined;
   const { strength, maxStrength } = useAsteroidStrength(entity, loading);
+  const claimConquerTime = useClaimConquestTime(entity);
 
   if (loading)
     return (
@@ -57,6 +59,11 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
             WORMHOLE DETECTED
           </div>
         )}
+        {desc.conquestPoints > 0n && !!claimConquerTime && (
+          <div className="flex victory-bg uppercase text-primary font-bold border border-secondary/50 text-sm flex justify-center items-center">
+            CLAIM {!claimConquerTime.canConquer ? `IN ${formatTime(claimConquerTime.timeUntilClaim)}` : "NOW"}
+          </div>
+        )}
         <div className="flex gap-1">
           <div className="flex bg-primary uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4 max-w-48">
             {ownedBy ? <AccountDisplay className="w-12" noColor player={ownedBy} raw /> : "DROID INFESTED"}
@@ -68,6 +75,9 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
           </div>
           <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
             {desc.type}
+          </div>
+          <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
+            {desc.conquestPoints.toLocaleString()} CP
           </div>
         </div>
         {inGracePeriod && (
