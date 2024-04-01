@@ -16,8 +16,8 @@ import { WriteDemoSystem } from "../src/systems/WriteDemoSystem.sol";
 contract RegisterReadDemoSystem is Script {
   // the environment variables are pulled from your .env
   address worldAddress = vm.envAddress("WORLD_ADDRESS");
-  uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY_ALICE");
   address playerAddress = vm.envAddress("ADDRESS_PLAYER");
+  address playerPrivateKeyBob = vm.envAddress("PRIVATE_KEY_BOB");
 
   // predefine the namespace and system
   bytes14 namespace = bytes14("PluginExamples");
@@ -36,29 +36,16 @@ contract RegisterReadDemoSystem is Script {
     console2.log("World Address: %x", worldAddress);
     console2.log("Namespace ID: %x", uint256(ResourceId.unwrap(namespaceResource)));
     console2.log("System ID:    %x", uint256(ResourceId.unwrap(systemResource)));
-    console2.log("Alice private key: %x", deployerPrivateKey);
+    console2.log("Bob private key: %x", playerPrivateKeyBob);
 
-    // writing to the chain requires us to be someone with funds to pay for gas
-    // in testing, we prank(). to write to the live chain, we broadcast()
-    vm.startBroadcast(deployerPrivateKey);
+    vm.startBroadcast(playerPrivateKeyBob);
 
-    // register the namespace
-    world.registerNamespace(namespaceResource);
+    // Before a system can take actions on behalf of a player, they have to delegate
+    // authority to the system.  There are various delegation levels, but for this demo,
+    // we will use the UNLIMITED delegation level.
+    world.registerDelegation(address(writeDemoSystem), UNLIMITED_DELEGATION, new bytes(0));
+    console2.log("Bob successfully delegated to WriteDemoSystem for UNLIMITED delegation.");
 
-    // create the system
-    WriteDemoSystem writeDemoSystem = new WriteDemoSystem();
-    console2.log("WriteDemoSystem address: ", address(writeDemoSystem));
-
-    // register the system
-    world.registerSystem(systemResource, writeDemoSystem, true);
-
-    // register all functions in the system
-    world.registerFunctionSelector(systemResource, "buildIronMine()");
-    console2.log(
-      "Alice successfully registered the PluginExamples namespace, WriteDemoSystem contract, buildIronMine function selector, to the Primodium world address."
-    );
-
-    // stop interacting with the chain
     vm.stopBroadcast();
   }
 }

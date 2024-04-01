@@ -1,6 +1,6 @@
 # Primodium Extension - Write Demo
 
-This demo finds an open resource tile on your main base, and calls the `BuildSystem` to build an Iron Mine on it. It introduces resource enumerations, prototypes, blueprints, and other Primodium game structures. You'll be reading heavily from game `Table`s, and working with various game Types.
+This demo finds an open resource tile on your main base, and calls the Primodium `BuildSystem` to build an Iron Mine on it. It introduces resource enumerations, prototypes, blueprints, and other Primodium game structures. You'll also interact with delegations. You'll be reading heavily from game `Table`s, and working with various game Types.
 
 ## Quickstart
 
@@ -21,10 +21,14 @@ This demo finds an open resource tile on your main base, and calls the `BuildSys
   - `pnpm build`
 - Test the project:
   - `forge test`
+- Update namespaces in scripts (choose your own to avoid collision).
+- Update addresses and private keys in `.env`
 - Do a dry-run of deployment:
   - `forge script script/RegisterWriteDemoSystem.s.sol --fork-url https://primodium-sepolia.rpc.caldera.xyz/http`
 - Deploy the System:
   - `forge script script/RegisterWriteDemoSystem.s.sol --fork-url https://primodium-sepolia.rpc.caldera.xyz/http --broadcast`
+- Delegate authority to the system:
+  - `forge script script/DelegateToWriteDemoSystem.s.sol --fork-url https://primodium-sepolia.rpc.caldera.xyz/http --broadcast`
 - Use a script to interact with the system:
   - `forge script script/BuildIronMine.s.sol --fork-url https://primodium-sepolia.rpc.caldera.xyz/http --broadcast`
 

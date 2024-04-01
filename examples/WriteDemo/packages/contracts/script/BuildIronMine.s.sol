@@ -10,10 +10,10 @@ contract BuildIronMine is Script {
   function run() external {
     address worldAddress = vm.envAddress("WORLD_ADDRESS");
     console2.log("World Address: %x", worldAddress);
-    address playerAddress = vm.envAddress("ADDRESS_PLAYER");
-    console2.log("Player Address: %x", playerAddress);
+    uint256 playerPrivateKeyBob = vm.envUint("PRIVATE_KEY_BOB");
+    console2.log("Player Private Key: %x", playerPrivateKeyBob);
 
-    vm.startBroadcast(playerAddress);
+    vm.startBroadcast(playerPrivateKeyBob);
 
     // you can cache the IWorld, or cast it inline as seen in the test script
     IWorld iworld = IWorld(worldAddress);
