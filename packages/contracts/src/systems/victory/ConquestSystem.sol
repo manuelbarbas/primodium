@@ -2,9 +2,10 @@
 pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { OwnedBy, Asteroid, LastConquered, P_ConquestConfig } from "codegen/index.sol";
+import { OwnedBy, Asteroid, LastConquered, P_ConquestConfig, P_GameConfig } from "codegen/index.sol";
 import { EScoreType } from "src/Types.sol";
 import { LibScore } from "libraries/LibScore.sol";
+import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 contract ConquestSystem is PrimodiumSystem {
   function claimConquestPoints(bytes32 asteroidEntity) public {
@@ -16,7 +17,8 @@ contract ConquestSystem is PrimodiumSystem {
     require(conquestPoints > 0, "[Conquest] No conquest points to claim");
 
     uint256 lastConquered = LastConquered.get(asteroidEntity);
-    bool canConquer = lastConquered + P_ConquestConfig.get() <= block.timestamp;
+    uint256 holdTime = (P_ConquestConfig.get() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
+    bool canConquer = lastConquered + holdTime <= block.timestamp;
     require(canConquer, "[Conquest] Asteroid hasn't been held long enough to conquer");
 
     LibScore.addScore(playerEntity, EScoreType.Conquest, conquestPoints);
