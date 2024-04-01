@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { Position, Asteroid, IsActive, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, P_UnitProdTypes, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt } from "codegen/index.sol";
+import { Position, Asteroid, IsActive, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, P_UnitProdTypes, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, ColonyShipSlots } from "codegen/index.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 import { EResource } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
@@ -10,6 +10,7 @@ import { AsteroidSet } from "libraries/AsteroidSet.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
 import { AsteroidOwnedByKey, FleetOwnedByKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
+import { FleetSet } from "libraries/fleet/FleetSet.sol";
 
 library LibUnit {
   /**
@@ -175,16 +176,16 @@ library LibUnit {
 
   function getColonyShipsPlusAsteroids(bytes32 playerEntity) internal view returns (uint256) {
     bytes32[] memory ownedAsteroids = AsteroidSet.getAsteroidEntities(playerEntity, AsteroidOwnedByKey);
-    bytes32[] memory ownedFleets = FleetSet.getFleetEntities(playerEntity, FleetOwnedByKey);
+
     uint256 ret = 0;
     for (uint256 i = 0; i < ownedAsteroids.length; i++) {
-      uint256 shipsEachAsteroid = UnitCount.get(ownedAsteroids[i], uint8(EUnit.ColonyShip));
+      uint256 shipsEachAsteroid = UnitCount.get(ownedAsteroids[i], ColonyShipPrototypeId);
       ret += shipsEachAsteroid;
 
       // Fleets are owned by asteroids
       bytes32[] memory ownedFleets = FleetSet.getFleetEntities(ownedAsteroids[i], FleetOwnedByKey);
       for (uint256 j = 0; j < ownedFleets.length; j++) {
-        uint256 shipsEachFleet = UnitCount.get(ownedFleets[j], uint8(EUnit.ColonyShip));
+        uint256 shipsEachFleet = UnitCount.get(ownedFleets[j], ColonyShipPrototypeId);
         ret += shipsEachFleet;
       }
     }

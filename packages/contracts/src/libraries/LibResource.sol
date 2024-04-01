@@ -57,7 +57,7 @@ library LibResource {
       uint256 cost = P_ColonyShipConfig.getInitialCost();
       bytes32 playerEntity = OwnedBy.get(asteroidEntity);
       require(
-        getColonyShipsPlusAsteroid(playerEntity) < ColonyShipSlots.getCapacity(playerEntity),
+        LibUnit.getColonyShipsPlusAsteroids(playerEntity) < ColonyShipSlots.getCapacity(playerEntity),
         "[SpendResources] No available slots to train colony ship"
       );
 
