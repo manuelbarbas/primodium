@@ -116,18 +116,6 @@ export const Leaderboard = createExtendedComponent(
   }
 );
 
-export const AllianceLeaderboard = createExtendedComponent(
-  world,
-  {
-    alliances: Type.EntityArray,
-    playerAllianceRank: Type.Number,
-    scores: Type.BigIntArray,
-  },
-  {
-    id: "AllianceLeaderboard",
-  }
-);
-
 /* -------------------------------------------------------------------------- */
 /*                                  ALLIANCES                                 */
 /* -------------------------------------------------------------------------- */
@@ -219,7 +207,6 @@ export default {
 
   /* ------------------------------ Leaderboard ------------------------------- */
   Leaderboard,
-  AllianceLeaderboard,
 
   /* ------------------------------- Alliances -------------------------------- */
   PlayerInvite,

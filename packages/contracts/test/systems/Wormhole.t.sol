@@ -215,7 +215,8 @@ contract WormholeTest is PrimodiumTest {
 
     bytes32 wormholeHash = Wormhole.getHash();
     uint8 expectedNewResource = LibWormhole.getRandomResource(wormholeHash, wormholeData.resource);
-    uint256 prevScore = Score.get(aliceEntity, wormholeData.resource);
+    uint256 prevScore = Score.get(aliceEntity, uint8(EScoreType.Extraction));
+    console.log("prev score:", prevScore);
 
     increaseResource(wormholeAsteroidEntity, EResource(expectedNewResource), 100);
     vm.startPrank(alice);
