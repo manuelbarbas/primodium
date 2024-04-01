@@ -109,7 +109,7 @@ export const Leaderboard = createExtendedComponent(
   {
     players: Type.EntityArray,
     playerRank: Type.Number,
-    scores: Type.NumberArray,
+    scores: Type.BigIntArray,
   },
   {
     id: "Leaderboard",

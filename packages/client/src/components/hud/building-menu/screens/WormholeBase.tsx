@@ -12,8 +12,8 @@ import { useWormholeResource } from "src/hooks/wormhole/useWormholeResource";
 import { components } from "src/network/components";
 import { wormholeDeposit } from "src/network/setup/contractCalls/wormholeDeposit";
 import { getBlockTypeName } from "src/util/common";
-import { EntityType } from "src/util/constants";
-import { formatResourceCount, formatTime } from "src/util/number";
+import { EntityType, ResourceEnumLookup } from "src/util/constants";
+import { formatResourceCount, formatTime, parseResourceCount } from "src/util/number";
 import { BuildingInfo } from "../widgets/BuildingInfo";
 import { ExpandRange } from "../widgets/ExpandRange";
 import { Upgrade } from "../widgets/Upgrade";
@@ -37,7 +37,9 @@ const WormholeDeposit: React.FC<{ building: Entity; asteroid: Entity }> = ({ bui
   const { resource: wormholeResource, timeUntilNextResource } = useWormholeResource();
   const resourceData = useFullResourceCount(wormholeResource, asteroid);
   const { inCooldown, timeLeft } = useWormholeBaseCooldown(building);
-  const multiplier = components.P_ScoreMultiplier.use(wormholeResource)?.value ?? 1n;
+  const multiplier = components.P_ScoreMultiplier.useWithKeys({
+    resource: ResourceEnumLookup[wormholeResource],
+  })?.value;
   if (wormholeResource === EntityType.NULL) return null;
 
   const max = formatResourceCount(wormholeResource, resourceData.resourceCount, { notLocale: true, showZero: true });
@@ -50,7 +52,7 @@ const WormholeDeposit: React.FC<{ building: Entity; asteroid: Entity }> = ({ bui
           <div className="flex flex-col items-center h-full">
             <p>Current: {getBlockTypeName(wormholeResource)}</p>
             <p className="opacity-50">
-              {multiplier.toString()} pts / {getBlockTypeName(wormholeResource)}
+              {(multiplier ?? 1n).toString()} pts / {getBlockTypeName(wormholeResource)}
             </p>
           </div>
           <NumberInput count={count} onChange={setCount} max={Number(max)} />
@@ -60,7 +62,7 @@ const WormholeDeposit: React.FC<{ building: Entity; asteroid: Entity }> = ({ bui
             className="btn-sm"
             onClick={() => {
               // deposit wormhole resource
-              wormholeDeposit(mud, building, BigInt(count));
+              wormholeDeposit(mud, building, parseResourceCount(wormholeResource, count));
               setCount("0");
             }}
           >

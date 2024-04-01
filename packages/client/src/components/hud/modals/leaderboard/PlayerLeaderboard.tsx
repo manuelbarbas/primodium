@@ -40,13 +40,13 @@ export const PlayerLeaderboard = ({ leaderboard }: { leaderboard: Entity }) => {
       </AutoSizer>
       <div className="w-full">
         <hr className="w-full border-t border-cyan-800 my-2" />
-        <LeaderboardItem player={playerAccount.entity} index={playerIndex} score={playerScore ?? 0} />
+        <LeaderboardItem player={playerAccount.entity} index={playerIndex} score={playerScore ?? 0n} />
       </div>
     </div>
   );
 };
 
-const LeaderboardItem = ({ player, index, score }: { player: Entity; index: number; score: number }) => {
+const LeaderboardItem = ({ player, index, score }: { player: Entity; index: number; score: bigint }) => {
   const mud = useMud();
   const playerEntity = mud.playerAccount.entity;
   const role = components.PlayerAlliance.use(playerEntity)?.role ?? EAllianceRole.Member;
@@ -66,7 +66,7 @@ const LeaderboardItem = ({ player, index, score }: { player: Entity; index: numb
           {player === playerEntity && <p className="text-accent">(You)</p>}
         </div>
         <div className="flex items-center gap-1">
-          <p className="font-bold bg-cyan-700 px-2 ">{score}</p>
+          <p className="font-bold bg-cyan-700 px-2 ">{score.toLocaleString()}</p>
           {role <= EAllianceRole.CanInvite && player !== playerEntity && playerAlliance !== alliance && (
             <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Invite, player)}>
               <Button

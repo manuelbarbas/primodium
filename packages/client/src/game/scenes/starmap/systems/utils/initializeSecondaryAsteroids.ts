@@ -53,9 +53,6 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
     const asteroidEntity = getSecondaryAsteroidEntity(sourceEntity, asteroidPosition);
 
     const wormholeAsteroid = i == Number(wormholeAsteroidConfig.wormholeAsteroidSlot);
-    if (wormholeAsteroid) {
-      console.log("wormhole expected position:", asteroidPosition.x, asteroidPosition.y);
-    }
 
     if (components.ReversePosition.getWithKeys(asteroidPosition)) continue;
 

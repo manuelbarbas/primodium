@@ -12,6 +12,6 @@ library LibWormhole {
     do {
       seed = keccak256(abi.encode(seed));
       resource = uint8(uint256(seed) % P_Transportables.length());
-    } while (resource != prevResource);
+    } while (resource == prevResource);
   }
 }

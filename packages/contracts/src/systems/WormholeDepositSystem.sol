@@ -49,9 +49,8 @@ contract WormholeDepositSystem is PrimodiumSystem {
     uint256 scoreIncrease = count * P_ScoreMultiplier.get(Wormhole.getResource());
     LibScore.addScore(playerEntity, EScoreType.Extraction, scoreIncrease);
 
-    uint256 cooldownEnd = ((block.timestamp + P_WormholeConfig.getCooldown()) * WORLD_SPEED_SCALE) /
-      P_GameConfig.getWorldSpeed();
-    CooldownEnd.set(wormholeBaseEntity, cooldownEnd);
+    uint256 cooldownLength = (P_WormholeConfig.getCooldown() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
+    CooldownEnd.set(wormholeBaseEntity, block.timestamp + cooldownLength);
 
     Wormhole.setHash(
       keccak256(abi.encode(uint256(wormholeBaseEntity), count, block.timestamp, blockhash(block.number - 1)))
