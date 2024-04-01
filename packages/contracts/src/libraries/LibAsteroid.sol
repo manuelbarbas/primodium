@@ -95,6 +95,14 @@ library LibAsteroid {
     revert("no asteroid found");
   }
 
+  /*
+   * @dev Get asteroid data based on asteroid entity
+   * @param asteroidEntity Hash of the asteroid
+   * @param spawnsSecondary Whether the asteroid spawns secondary asteroids
+   * @param wormholeAsteroid Whether the asteroid is a wormhole asteroid
+   * @return AsteroidData struct
+   * @notice todo: move max level and conquest points into a prototype table
+   */
   function getAsteroidData(
     bytes32 asteroidEntity,
     bool spawnsSecondary,

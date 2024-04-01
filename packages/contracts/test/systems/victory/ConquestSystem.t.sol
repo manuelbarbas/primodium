@@ -64,7 +64,7 @@ contract ConquestSystemTest is PrimodiumTest {
     vm.startPrank(creator);
     Asteroid.setConquestPoints(asteroidEntity, 0);
 
-    vm.expectRevert("[Conquest] No conquest points to claim");
+    vm.expectRevert("[Conquest] This asteroid does not generate conquest points");
     world.Primodium__claimConquestPoints(asteroidEntity);
   }
 
@@ -81,7 +81,7 @@ contract ConquestSystemTest is PrimodiumTest {
     vm.warp(conquerTime - 1);
 
     vm.startPrank(alice);
-    vm.expectRevert("[Conquest] Asteroid hasn't been held long enough to conquer");
+    vm.expectRevert("[Conquest] Asteroid hasn't been held long enough to claim conquest points");
     world.Primodium__claimConquestPoints(secondaryAsteroidEntity);
   }
 }

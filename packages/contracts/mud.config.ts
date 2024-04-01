@@ -333,18 +333,6 @@ export const worldInput = {
       schema: { entity: "bytes32", value: "bool" },
     },
 
-    /* ------------------------------- Motherlode ------------------------------- */
-
-    P_SizeToAmount: {
-      key: ["size"],
-      schema: { size: "uint8", value: "uint256" },
-    },
-
-    P_RawResource: {
-      key: ["resource"],
-      schema: { resource: "uint8", value: "uint8" },
-    },
-
     /* ----------------------------- Unit Production ---------------------------- */
     // stores an array of all unit prototypes in the game
     P_UnitPrototypes: {
