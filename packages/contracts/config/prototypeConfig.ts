@@ -97,6 +97,15 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
   },
 
+  Conquest: {
+    keys: [],
+    tables: {
+      P_ConquestConfig: {
+        holdTime: 6n * 60n * 60n,
+      },
+    },
+  },
+
   Building: {
     levels: idsToPrototypes(MUDEnums.EBuilding),
   },

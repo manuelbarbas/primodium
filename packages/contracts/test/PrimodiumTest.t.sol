@@ -401,10 +401,11 @@ contract PrimodiumTest is MudTest {
     }
   }
 
-  function findSecondaryAsteroid(bytes32 asteroidEntity) public view returns (PositionData memory) {
+  function findSecondaryAsteroid(bytes32 asteroidEntity) public returns (PositionData memory) {
+    switchPrank(creator);
+    P_GameConfig.setAsteroidChanceInv(1);
     P_GameConfigData memory config = P_GameConfig.get();
     PositionData memory sourcePosition = Position.get(asteroidEntity);
-    logPosition(sourcePosition);
     bytes32 asteroidSeed;
     PositionData memory targetPosition;
     uint256 i = 0;
@@ -419,12 +420,12 @@ contract PrimodiumTest is MudTest {
         config.asteroidDistance,
         config.maxAsteroidsPerPlayer
       );
-      logPosition(sourcePosition);
       targetPosition = PositionData(
         sourcePosition.x - targetPositionRelative.x,
         sourcePosition.y - targetPositionRelative.y,
         0
       );
+      console.log("position %s: ", i);
       logPosition(targetPosition);
 
       asteroidSeed = keccak256(abi.encode(asteroidEntity, bytes32("asteroid"), targetPosition.x, targetPosition.y));
@@ -432,6 +433,7 @@ contract PrimodiumTest is MudTest {
       i++;
     }
     require(found, "uh oh, no asteroid found");
+    vm.stopPrank();
     return (targetPosition);
   }
 

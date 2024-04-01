@@ -17,8 +17,9 @@ contract ConquestSystemTest is PrimodiumTest {
   }
 
   function testConquerAsteroid() public {
-    vm.startPrank(creator);
+    console.logBytes32(Home.get(playerEntity));
     PositionData memory position = findSecondaryAsteroid(Home.get(playerEntity));
+    vm.startPrank(creator);
 
     bytes32 asteroidEntity = LibAsteroid.createSecondaryAsteroid(position);
     AsteroidData memory asteroidData = Asteroid.get(asteroidEntity);
@@ -36,11 +37,10 @@ contract ConquestSystemTest is PrimodiumTest {
   }
 
   function testConquerAsteroidFailNotOwner() public {
-    vm.startPrank(creator);
     PositionData memory position = findSecondaryAsteroid(Home.get(playerEntity));
+    vm.startPrank(creator);
 
     bytes32 asteroidEntity = LibAsteroid.createSecondaryAsteroid(position);
-    AsteroidData memory asteroidData = Asteroid.get(asteroidEntity);
 
     conquerAsteroid(creator, Home.get(playerEntity), asteroidEntity);
     uint256 conquerTime = block.timestamp + P_ConquestConfig.get();
@@ -52,22 +52,36 @@ contract ConquestSystemTest is PrimodiumTest {
     world.Primodium__claimConquestPoints(asteroidEntity);
   }
 
-  function testConquerAsteroidFailNotLongEnough() public {
-    vm.startPrank(creator);
+  function testConquerAsteroidFailNoPoints() public {
     PositionData memory position = findSecondaryAsteroid(Home.get(playerEntity));
+    vm.startPrank(creator);
 
     bytes32 asteroidEntity = LibAsteroid.createSecondaryAsteroid(position);
-    AsteroidData memory asteroidData = Asteroid.get(asteroidEntity);
 
     conquerAsteroid(creator, Home.get(playerEntity), asteroidEntity);
     uint256 holdTime = (P_ConquestConfig.get() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
-    uint256 conquerTime = block.timestamp + holdTime;
-    vm.warp(conquerTime - 1);
 
     vm.startPrank(creator);
     Asteroid.setConquestPoints(asteroidEntity, 0);
 
     vm.expectRevert("[Conquest] No conquest points to claim");
     world.Primodium__claimConquestPoints(asteroidEntity);
+  }
+
+  function testConquerAsteroidFailNotLongEnough() public {
+    bytes32 asteroidEntity = spawn(alice);
+    PositionData memory position = findSecondaryAsteroid(asteroidEntity);
+    vm.startPrank(creator);
+
+    bytes32 secondaryAsteroidEntity = LibAsteroid.createSecondaryAsteroid(position);
+
+    conquerAsteroid(alice, asteroidEntity, secondaryAsteroidEntity);
+    uint256 holdTime = (P_ConquestConfig.get() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
+    uint256 conquerTime = LastConquered.get(secondaryAsteroidEntity) + holdTime;
+    vm.warp(conquerTime - 1);
+
+    vm.startPrank(alice);
+    vm.expectRevert("[Conquest] Asteroid hasn't been held long enough to conquer");
+    world.Primodium__claimConquestPoints(secondaryAsteroidEntity);
   }
 }
