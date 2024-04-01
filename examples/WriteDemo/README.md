@@ -60,13 +60,14 @@ Finally, we step through each tile and check if it is the correct type. Next we 
 
 ### Calling a Game System
 
-Lastly, we want our expansion system to call a system on the Primodium world. If all of this is successful, we return the buildingEntity.
+We want our expansion system to call a system on the Primodium world. If all of this is successful, we return the `buildingEntity`.
 
-`System` contracts are created in `packages/contracts/src/systems`. They are fairly standard smart contracts that only need to import the critical functionality from MUD or the `World` you are interacting with.
+Unlike the ReadDemo, the WriteDemo acts on behalf of the user. Our system needs to have permission to do so. This is allowed through a Delegation that needs to occur before the system it called. You can find documentation and example code for delegations at:
 
-The contract itself is a `System` so we need to import that MUD library. We also need to tell the contract our `Store` target. In this case, we aren't interacting with any local `Table`s since we have none. `StoreSwitch` allows us to specify the `World` address where our target `Table`s reside. The `_world()` function allows us to get the address of the calling `World`, which is the Primodium world in this case.
+- https://mud.dev/world/account-delegation
+- `WriteDemoSystem.t.sol:100`
 
-We import the necessary `Table` libraries from the target `World`. These libraries are constructed by MUD scripts during `pnpm build`, and include the specific `tableId`s and `fieldLayout`s, with appropriate setters and getters. They handle the encoding and decoding of the underlying storage records for us.
+Normally we would get the system `ResourceId`, and the use `abi.encodeWithSignature` to call the function. However, there is currently a bug in MUD, and we need to retrieve the internal function selector from the `FunctionSelectors` table, and then use that with `abi.encodeWithSelector`. Example code is provided; we expect the normal usage to return in future MUD versions.
 
 ## Testing the World Extension
 
@@ -92,9 +93,11 @@ forge script script/RegisterWriteDemoSystem.s.sol --fork-url https://primodium-s
 
 ## Testing the Deployment
 
-The commented code can be found in `packages/contracts/scripts/BuildIronMine.s.sol`
+The commented code can be found at `packages/contracts/scripts/BuildIronMine.s.sol`
 
-Now that the code is live, we can use a script that largely replicates the function we wrote in the test.
+Remember we need to delegate before the system is allowed to build. We have included delegation code in the build script.
+
+Now that the code is live and we have delegated permission to the system, we can use a script that largely replicates the function we wrote in the test.
 
 Simulation:
 

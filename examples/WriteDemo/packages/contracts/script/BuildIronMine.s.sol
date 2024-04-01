@@ -18,6 +18,11 @@ contract BuildIronMine is Script {
     // you can cache the IWorld, or cast it inline as seen in the test script
     IWorld iworld = IWorld(worldAddress);
 
+    // Before a system can take actions on behalf of a player, they have to delegate
+    // authority to the system.  There are various delegation levels, but for this demo,
+    // we will use the UNLIMITED delegation level.
+    world.registerDelegation(address(writeDemoSystem), UNLIMITED_DELEGATION, new bytes(0));
+
     // function format is namespace__function
     iworld.PluginExamples__buildIronMine();
 
