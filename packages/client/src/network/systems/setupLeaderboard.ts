@@ -3,24 +3,24 @@ import { decodeEntity } from "@latticexyz/store-sync/recs";
 import { EScoreType } from "contracts/config/enums";
 import { world } from "src/network/world";
 import { isPlayer } from "src/util/common";
-import { EntityType, LeaderboardEntityLookup } from "src/util/constants";
+import { EntityType, LeaderboardEntityLookup, RESOURCE_SCALE } from "src/util/constants";
 import { components } from "../components";
 import { Leaderboard } from "../components/clientComponents";
 import { MUD } from "../types";
 
 export const setupLeaderboard = (mud: MUD) => {
-  const leaderboardMaps: Record<Entity, Map<Entity, number>> = {
-    [EntityType.PlayerConquestLeaderboard]: new Map<Entity, number>(),
-    [EntityType.PlayerExtractionLeaderboard]: new Map<Entity, number>(),
-    [EntityType.PlayerGrandLeaderboard]: new Map<Entity, number>(),
-    [EntityType.AllianceConquestLeaderboard]: new Map<Entity, number>(),
-    [EntityType.AllianceExtractionLeaderboard]: new Map<Entity, number>(),
-    [EntityType.AllianceGrandLeaderboard]: new Map<Entity, number>(),
+  const leaderboardMaps: Record<Entity, Map<Entity, bigint>> = {
+    [EntityType.PlayerConquestLeaderboard]: new Map<Entity, bigint>(),
+    [EntityType.PlayerExtractionLeaderboard]: new Map<Entity, bigint>(),
+    [EntityType.PlayerGrandLeaderboard]: new Map<Entity, bigint>(),
+    [EntityType.AllianceConquestLeaderboard]: new Map<Entity, bigint>(),
+    [EntityType.AllianceExtractionLeaderboard]: new Map<Entity, bigint>(),
+    [EntityType.AllianceGrandLeaderboard]: new Map<Entity, bigint>(),
   };
   const systemWorld = namespaceWorld(world, "systems");
 
   defineComponentSystem(systemWorld, components.Score, ({ entity: rawEntity, value }) => {
-    const scoreValue = Number(value[0]?.value ?? 0n);
+    const scoreValue = value[0]?.value ?? 0n;
     const { entity, scoreType } = decodeEntity(components.Score.metadata.keySchema, rawEntity);
 
     const entityIsPlayer = isPlayer(entity as Entity);
@@ -32,9 +32,10 @@ export const setupLeaderboard = (mud: MUD) => {
 
     if (!leaderboardMap) return;
 
-    leaderboardMap.set(entity as Entity, scoreValue);
+    const scale = scoreType === EScoreType.Extraction ? RESOURCE_SCALE : 1n;
+    leaderboardMap.set(entity as Entity, scoreValue / scale);
 
-    const leaderboardArray = [...leaderboardMap.entries()].sort((a, b) => b[1] - a[1]);
+    const leaderboardArray = [...leaderboardMap.entries()].sort((a, b) => Number(b[1] - a[1]));
 
     const players = leaderboardArray.map((entry) => entry[0]);
     const scores = leaderboardArray.map((entry) => entry[1]);
