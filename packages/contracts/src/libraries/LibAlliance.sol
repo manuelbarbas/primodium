@@ -175,6 +175,9 @@ library LibAlliance {
     PlayerAlliance.set(playerEntity, allianceEntity, uint8(EAllianceRole.Owner));
     Alliance.set(allianceEntity, AllianceData(name, uint8(allianceInviteMode)));
     AllianceMemberSet.add(allianceEntity, playerEntity);
+    for (uint8 i = 1; i < uint8(EScoreType.LENGTH); i++) {
+      Score.set(allianceEntity, i, 0);
+    }
   }
 
   /**

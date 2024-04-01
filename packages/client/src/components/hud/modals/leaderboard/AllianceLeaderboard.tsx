@@ -50,7 +50,6 @@ import { entityToColor } from "src/util/color";
 import { entityToAddress } from "src/util/common";
 import { EntityType, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
-import { formatResourceCount } from "src/util/number";
 import { isProfane } from "src/util/profanity";
 import { Hex, isAddress, padHex } from "viem";
 
@@ -116,7 +115,7 @@ export const ErrorScreen = () => {
 };
 
 export const ScoreScreen = () => {
-  const data = components.AllianceLeaderboard.use();
+  const data = components.Leaderboard.use(EntityType.AllianceExtractionLeaderboard);
 
   return (
     <Navigator.Screen
@@ -129,12 +128,12 @@ export const ScoreScreen = () => {
             <List
               height={height - 50}
               width={width}
-              itemCount={data.alliances.length}
+              itemCount={data.players.length}
               itemSize={47}
               className="scrollbar"
             >
               {({ index, style }) => {
-                const alliance = data.alliances[index];
+                const alliance = data.players[index];
                 const score = data.scores[index];
                 return (
                   <div style={style} className="pr-2">
@@ -203,8 +202,8 @@ export const CreateScreen = () => {
 export const ManageScreen: React.FC = () => {
   const mud = useMud();
   const playerEntity = mud.playerAccount.entity;
-  const data = components.AllianceLeaderboard.use();
-  const allianceEntity = data?.alliances[data?.playerAllianceRank - 1];
+  const data = components.Leaderboard.use();
+  const allianceEntity = data?.players[data?.playerRank - 1];
   const playerRole = components.PlayerAlliance.get(playerEntity)?.role ?? EAllianceRole.Member;
   const playerEntities = components.PlayerAlliance.useAllWith({
     alliance: allianceEntity,
@@ -595,7 +594,7 @@ const LeaderboardItem = ({
           </p>
         </div>
         <div className="flex items-center gap-1">
-          <p className="font-bold bg-cyan-700 px-2 ">{formatResourceCount(EntityType.Iron, BigInt(score))}</p>
+          <p className="font-bold bg-cyan-700 px-2 ">{score}</p>
           {!playerAlliance && (
             <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.JoinAlliance, entity)}>
               <Button
@@ -616,12 +615,12 @@ const LeaderboardItem = ({
   );
 };
 
-const InfoRow = ({ data }: { data?: ComponentValue<typeof components.AllianceLeaderboard.schema> }) => {
+const InfoRow = ({ data }: { data?: ComponentValue<typeof components.Leaderboard.schema> }) => {
   if (!data) return <SoloPlayerInfo />;
 
-  const score = data.scores[data.playerAllianceRank - 1];
-  const rank = data.playerAllianceRank;
-  const allianceEntity = data.alliances[data.playerAllianceRank - 1];
+  const score = data.scores[data.playerRank - 1];
+  const rank = data.playerRank;
+  const allianceEntity = data.players[data.playerRank - 1];
 
   if (!allianceEntity) return <SoloPlayerInfo />;
 

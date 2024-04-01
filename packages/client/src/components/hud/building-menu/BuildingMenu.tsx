@@ -1,8 +1,11 @@
+import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { FaArrowsAlt, FaPowerOff, FaTrash } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
+import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { toggleBuilding } from "src/network/setup/contractCalls/toggleBuilding";
 import { Action, EntityType, TransactionQueueType } from "src/util/constants";
@@ -16,9 +19,7 @@ import { MainBase } from "./screens/Mainbase";
 import { Market } from "./screens/Market";
 import { Move } from "./screens/Move";
 import { UnitFactory } from "./screens/UnitFactory";
-import { Entity } from "@latticexyz/recs";
-import { SecondaryCard } from "src/components/core/Card";
-import { useMud } from "src/hooks";
+import { WormholeBase } from "./screens/WormholeBase";
 
 export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedBuilding }) => {
   const buildingType = useMemo(() => {
@@ -37,6 +38,8 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
     switch (buildingType) {
       case EntityType.MainBase:
         return <MainBase building={selectedBuilding} />;
+      case EntityType.WormholeBase:
+        return <WormholeBase building={selectedBuilding} />;
       case EntityType.DroneFactory:
       case EntityType.Workshop:
       case EntityType.Shipyard:
