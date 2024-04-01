@@ -9,6 +9,7 @@
     "deploy:caldera-sepolia": "pnpm --filter 'contracts' deploy:caldera-sepolia",
     "deploy:redstone-holesky": "pnpm --filter 'contracts' deploy:redstone-holesky",
     "dev": "concurrently -n node,contracts,client,indexer -c yellow,cyan,magenta,red \"cd packages/contracts && pnpm run devnode\" \"cd packages/contracts && pnpm run deploy:local\" \"cd packages/client && pnpm run dev\" \"pnpm dev:indexer\"",
+    "dev-ext:pty": "run-pty % pnpm dev:node % pnpm dev:contracts ",
     "dev:client": "pnpm --filter 'client' run dev",
     "dev:contracts": "pnpm --filter 'contracts' deploy:local",
     "dev:indexer": "pnpm clean-local-docker-indexer && pnpm local-docker-indexer",
