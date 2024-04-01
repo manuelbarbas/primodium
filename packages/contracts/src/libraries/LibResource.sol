@@ -7,7 +7,7 @@ import { LibUnit } from "libraries/LibUnit.sol";
 import { UtilityMap } from "libraries/UtilityMap.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
-import { P_ColonyShipConfig, P_Transportables, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_IsUtility, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { P_ColonyShipConfig, P_Transportables, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_IsUtility, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy, ColonyShipSlots } from "codegen/index.sol";
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -46,11 +46,26 @@ library LibResource {
   /// @param count Quantity of units to be trained
   function spendUnitRequiredResources(bytes32 asteroidEntity, bytes32 prototype, uint256 count) internal {
     if (prototype == ColonyShipPrototypeId) {
-      require(count == 1, "[SpendResources] Colony ships can only be trained one at a time");
-      uint256 cost = P_ColonyShipConfig.getInitialCost() *
-        LibUnit.getColonyShipCostMultiplier(OwnedBy.get(asteroidEntity));
+      // require(count == 1, "[SpendResources] Colony ships can only be trained one at a time");
+      // uint256 cost = P_ColonyShipConfig.getInitialCost() *
+      //   LibUnit.getColonyShipCostMultiplier(OwnedBy.get(asteroidEntity));
 
+      // spendResource(asteroidEntity, prototype, P_ColonyShipConfig.getResource(), cost);
+
+      // todo: redesign to allow for multiple colony ships to be trained at once, this can already be done across multiple asteroids that have shipyards
+      require(count == 1, "[SpendResources] Colony ships can only be trained one at a time");
+      uint256 cost = P_ColonyShipConfig.getInitialCost();
+      bytes32 playerEntity = OwnedBy.get(asteroidEntity);
+      require(
+        getColonyShipsPlusAsteroid(playerEntity) < ColonyShipSlots.getCapacity(playerEntity),
+        "[SpendResources] No available slots to train colony ship"
+      );
+
+      ColonyShipSlots.setTraining(playerEntity, ColonyShipSlots.getTraining(playerEntity) + 1);
+
+      // todo: Should we reconfigure Colony Ships to comply with P_RequiredResources, then skip the next two lines but comply with the spendResource() call later in this function?
       spendResource(asteroidEntity, prototype, P_ColonyShipConfig.getResource(), cost);
+      return;
     }
 
     uint256 level = UnitLevel.get(asteroidEntity, prototype);

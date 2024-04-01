@@ -2,13 +2,13 @@
 pragma solidity >=0.8.24;
 
 import { Position, Asteroid, IsActive, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, P_UnitProdTypes, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt } from "codegen/index.sol";
-
+import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 import { EResource } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { AsteroidSet } from "libraries/AsteroidSet.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
-import { AsteroidOwnedByKey } from "src/Keys.sol";
+import { AsteroidOwnedByKey, FleetOwnedByKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibUnit {
@@ -86,6 +86,15 @@ library LibUnit {
       }
       ProducedUnit.set(playerEntity, item.unitEntity, ProducedUnit.get(playerEntity, item.unitEntity) + trainedUnits);
 
+      // todo: verify this correctly grabs the colony ship
+      if (item.unitEntity == ColonyShipPrototypeId) {
+        require(
+          ColonyShipSlots.getTraining(playerEntity) >= trainedUnits,
+          "[ClaimBuildingUnits] Not enough colony ships to claim"
+        );
+        ColonyShipSlots.setTraining(playerEntity, ColonyShipSlots.getTraining(playerEntity) - trainedUnits);
+      }
+
       increaseUnitCount(asteroidEntity, item.unitEntity, trainedUnits, false);
     }
   }
@@ -117,6 +126,14 @@ library LibUnit {
     if (count == 0) return;
     uint256 unitLevel = UnitLevel.get(asteroidEntity, unitType);
 
+    // Check the player's colony ship capacity
+    if (add && (unitType == ColonyShipPrototypeId)) {
+      bytes32 playerEntity = OwnedBy.get(asteroidEntity);
+      uint256 capacity = ColonyShipSlots.getCapacity(playerEntity);
+      uint256 training = ColonyShipSlots.getTraining(playerEntity);
+      require(training + count <= capacity, "[LibUnit] Not enough colony ship slots");
+    }
+
     P_RequiredResourcesData memory resources = P_RequiredResources.get(unitType, unitLevel);
     for (uint8 i = 0; i < resources.resources.length; i++) {
       uint8 resource = resources.resources[i];
@@ -143,17 +160,37 @@ library LibUnit {
     return 2 ** multiplier;
   }
 
+  // function getColonyShipsPlusAsteroids(bytes32 playerEntity) internal view returns (uint256) {
+  //   bytes32[] memory ownedAsteroids = AsteroidSet.getAsteroidEntities(playerEntity, AsteroidOwnedByKey);
+  //   uint256 ret = 0;
+  //   for (uint256 i = 0; i < ownedAsteroids.length; i++) {
+  //     uint256 ships = MaxResourceCount.get(ownedAsteroids[i], uint8(EResource.U_ColonyShipCapacity)) -
+  //       ResourceCount.get(ownedAsteroids[i], uint8(EResource.U_ColonyShipCapacity));
+
+  //     ret += ships;
+  //   }
+  //   // subtract one so the first asteroid doesn't count
+  //   return ret + ownedAsteroids.length - 1;
+  // }
+
   function getColonyShipsPlusAsteroids(bytes32 playerEntity) internal view returns (uint256) {
     bytes32[] memory ownedAsteroids = AsteroidSet.getAsteroidEntities(playerEntity, AsteroidOwnedByKey);
+    bytes32[] memory ownedFleets = FleetSet.getFleetEntities(playerEntity, FleetOwnedByKey);
     uint256 ret = 0;
     for (uint256 i = 0; i < ownedAsteroids.length; i++) {
-      uint256 ships = MaxResourceCount.get(ownedAsteroids[i], uint8(EResource.U_ColonyShipCapacity)) -
-        ResourceCount.get(ownedAsteroids[i], uint8(EResource.U_ColonyShipCapacity));
+      uint256 shipsEachAsteroid = UnitCount.get(ownedAsteroids[i], uint8(EUnit.ColonyShip));
+      ret += shipsEachAsteroid;
 
-      ret += ships;
+      // Fleets are owned by asteroids
+      bytes32[] memory ownedFleets = FleetSet.getFleetEntities(ownedAsteroids[i], FleetOwnedByKey);
+      for (uint256 j = 0; j < ownedFleets.length; j++) {
+        uint256 shipsEachFleet = UnitCount.get(ownedFleets[j], uint8(EUnit.ColonyShip));
+        ret += shipsEachFleet;
+      }
     }
-    // subtract one so the first asteroid doesn't count
-    return ret + ownedAsteroids.length - 1;
+    ret += ColonyShipSlots.getTraining(playerEntity);
+
+    return ret + ownedAsteroids.length;
   }
 
   /**

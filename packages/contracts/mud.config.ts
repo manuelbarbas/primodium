@@ -389,7 +389,7 @@ export const worldInput = {
     // can only increase, never decrease. Assigned to player to prevent weird edge cases of losing asteroids
     ColonyShipSlots: {
       key: ["playerEntity"],
-      schema: { playerEntity: "bytes32", usedCount: "uint256", capacity: "uint256" },
+      schema: { playerEntity: "bytes32", training: "uint256", capacity: "uint256" },
     },
 
     /* ------------------------------ Sending Units ----------------------------- */
