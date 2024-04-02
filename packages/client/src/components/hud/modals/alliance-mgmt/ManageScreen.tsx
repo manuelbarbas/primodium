@@ -10,14 +10,14 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { grantRole, kickPlayer, leaveAlliance } from "src/network/setup/contractCalls/alliance";
-import { TransactionQueueType } from "src/util/constants";
+import { EntityType, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 
 export const ManageScreen: React.FC = () => {
   const mud = useMud();
   const playerEntity = mud.playerAccount.entity;
-  const data = components.Leaderboard.use();
-  const allianceEntity = data?.players[data?.playerRank ?? 1 - 1];
+  const data = components.Leaderboard.use(EntityType.AllianceConquestLeaderboard);
+  const allianceEntity = data?.players[(data?.playerRank ?? 1) - 1];
   const playerRole = components.PlayerAlliance.get(playerEntity)?.role ?? EAllianceRole.Member;
   const playerEntities = components.PlayerAlliance.useAllWith({
     alliance: allianceEntity,
