@@ -4,7 +4,7 @@ import { getBuildingName } from "src/util/building";
 import { Card } from "../../core/Card";
 import { AsteroidHover } from "./AsteroidHover";
 import { FleetHover } from "./FleetHover";
-import { BlueprintInfo } from "../panes/blueprints/BlueprintInfo";
+import { BlueprintInfo } from "../widgets/blueprints/BlueprintInfo";
 
 export const HoverInfo = () => {
   const BuildingInfo: React.FC<{ entity: Entity }> = ({ entity }) => {

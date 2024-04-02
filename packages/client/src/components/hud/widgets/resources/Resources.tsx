@@ -28,7 +28,7 @@ export const Resources = () => {
       lockable
       pinnable
       persist
-      noborder
+      noBorder
     >
       <AllResourceLabels />
       <AllUtilityLabels />

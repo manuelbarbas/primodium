@@ -19,8 +19,6 @@ import { getFullResourceCount } from "src/util/resource";
 import { getUnitStats } from "src/util/unit";
 import { Hex } from "viem";
 import { ResourceIconTooltip } from "../../../shared/ResourceIconTooltip";
-import { Unit } from "../../panes/hangar/HangarContent";
-import { RecipeDisplay } from "../widgets/UnitUpgrade";
 
 export const BuildUnit: React.FC<{
   building: Entity;
@@ -127,9 +125,9 @@ const TrainNonColonyShip = ({ building, unit, asteroid }: { building: Entity; un
     <>
       <p className="text-sm leading-none opacity-75">COST</p>
 
-      {requiredResources && (
+      {recipe && (
         <div className="flex justify-center items-center gap-1">
-          {requiredResources.map((resource, i) => (
+          {recipe.map((resource, i) => (
             <Badge key={`resource-${i}`}>
               <ResourceIconTooltip
                 image={ResourceImage.get(resource.id) ?? ""}
@@ -146,8 +144,6 @@ const TrainNonColonyShip = ({ building, unit, asteroid }: { building: Entity; un
       )}
 
       <hr className="border-t border-cyan-600 w-full" />
-
-      <NumberInput max={maximum} onChange={(val) => setCount(val)} />
 
       <NumberInput max={maximum} count={count} onChange={(val) => setCount(val)} />
       <div className="flex gap-2 pt-5">
