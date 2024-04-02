@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getBuildingDimensions } from "src/util/building";
-import { BlueprintInfo } from "../../panes/blueprints/BlueprintInfo";
+import { BlueprintInfo } from "../../widgets/blueprints/BlueprintInfo";
 import { Marker } from "src/components/core/Marker";
 
 export const BlueprintInfoMarker = () => {

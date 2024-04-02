@@ -33,7 +33,11 @@ export const ResourceLabel = ({ name, resource }: { name: string; resource: Enti
     production == 1n ? "0.6" : formatNumber((production * 60n * worldSpeed) / (SPEED_SCALE * RESOURCE_SCALE));
 
   return (
-    <Badge className={`gap-1 group ${resourceStorage === 0n ? "badge-error opacity-25" : ""}`}>
+    <Badge
+      className={`gap-1.5 group bg-transparent border-transparent ${
+        resourceStorage === 0n ? "badge-error opacity-25" : ""
+      }`}
+    >
       <ResourceIconTooltip
         name={name}
         amount={resourceCount}
@@ -43,7 +47,7 @@ export const ResourceLabel = ({ name, resource }: { name: string; resource: Enti
         direction="top"
         className={`${tooltipClass}`}
       />
-      <b className={`text-accent text-xs opacity-50`}>
+      <b className={`text-gray-400 text-xs opacity-50`}>
         /
         {formatResourceCount(resource, resourceStorage, {
           short: true,

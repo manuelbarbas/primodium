@@ -14,7 +14,7 @@ import { Hex } from "viem";
 import { Button } from "../../../core/Button";
 import { IconLabel } from "../../../core/IconLabel";
 import { Modal } from "../../../core/Modal";
-import { Fleets } from "../../panes/fleets/Fleets";
+import { Fleets } from "../../widgets/fleets/Fleets";
 import { DepthLayers } from "src/game/lib/constants/common";
 export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ selectedAsteroid }) => {
   const {

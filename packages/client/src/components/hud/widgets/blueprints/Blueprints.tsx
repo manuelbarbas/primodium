@@ -1,7 +1,8 @@
 import { memo } from "react";
 import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
-import { AllBlueprints } from "./AllBlueprints";
+
+import { BlueprintPane } from "./BlueprintPane";
 import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 export const Blueprints = memo(() => {
@@ -27,8 +28,9 @@ export const Blueprints = memo(() => {
       draggable
       pinnable
       persist
+      noBorder
     >
-      <AllBlueprints />
+      <BlueprintPane />
     </Widget>
   );
 });

@@ -40,7 +40,7 @@ const AccordionContent: FC<{ children?: ReactNode }> = ({ children }) => (
   </div>
 );
 
-const Accordion: FC<{ children?: ReactNode }> & {
+export const Accordion: FC<{ children?: ReactNode }> & {
   Item: typeof AccordionItem;
   Title: typeof AccordionTitle;
   Content: typeof AccordionContent;

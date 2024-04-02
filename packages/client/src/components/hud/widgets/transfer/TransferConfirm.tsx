@@ -3,7 +3,7 @@ import { EResource } from "contracts/config/enums";
 import { useMemo } from "react";
 import { Button } from "src/components/core/Button";
 import { components } from "src/network/components";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { ResourceEntityLookup, UtilityStorages } from "src/util/constants";
 import { getFullResourceCount } from "src/util/resource";
 import { getFleetStatsFromUnits } from "src/util/unit";
@@ -105,7 +105,7 @@ const TransferConfirmAsteroid = ({
     });
 
     if (enoughUtilities)
-      return { disabled: true, submitMessage: `Not enough ${getBlockTypeName(enoughUtilities[0] as Entity)} storage` };
+      return { disabled: true, submitMessage: `Not enough ${getEntityTypeName(enoughUtilities[0] as Entity)} storage` };
 
     // make sure we have enough storage for resources
     const enoughResources = [...toResources.entries()].find(([resource, count]) => {
@@ -113,7 +113,7 @@ const TransferConfirmAsteroid = ({
       return count > resourceStorage;
     });
     if (enoughResources)
-      return { disabled: true, submitMessage: `Not enough ${getBlockTypeName(enoughResources[0] as Entity)} storage` };
+      return { disabled: true, submitMessage: `Not enough ${getEntityTypeName(enoughResources[0] as Entity)} storage` };
     return { disabled: false, submitMessage: "Transfer" };
   }, [toUnits, toResources, entity]);
 

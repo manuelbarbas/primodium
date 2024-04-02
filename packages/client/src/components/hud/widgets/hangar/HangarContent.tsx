@@ -1,10 +1,11 @@
 import { Entity } from "@latticexyz/recs";
 import { IconLabel } from "src/components/core/IconLabel";
 import { components } from "src/network/components";
-import { getBlockTypeName, toRomanNumeral } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { ResourceImage } from "src/util/constants";
 import { formatResourceCount } from "src/util/number";
 import { Hex } from "viem";
+import { toRomanNumeral } from "src/util/common";
 
 export const HangarContent = () => {
   const activeRock = components.ActiveRock.use()?.value;
@@ -19,7 +20,7 @@ export const HangarContent = () => {
         <div key={`unit-${i}`} className="flex gap-2 items-center">
           <IconLabel imageUri={ResourceImage.get(unit) ?? ""} className="text-xs" />
           <p>{formatResourceCount(unit, hangar.counts[i])}</p>
-          <Unit unit={unit} asteroid={activeRock} className="opacity-50 text-xs" />
+          <p className="opacity-50 text-xs">{getEntityTypeName(unit)}</p>
         </div>
       ))}
     </div>
@@ -30,7 +31,7 @@ export const Unit = ({ unit, asteroid, className = "" }: { unit: Entity; asteroi
   const level = components.UnitLevel.getWithKeys({ entity: asteroid as Hex, unit: unit as Hex })?.value ?? 0n;
   return (
     <p className={className}>
-      {getBlockTypeName(unit)} {toRomanNumeral(Number(level + 1n))}
+      {getEntityTypeName(unit)} {toRomanNumeral(Number(level + 1n))}
     </p>
   );
 };
