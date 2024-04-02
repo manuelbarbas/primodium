@@ -6,7 +6,7 @@ import { WORLD_SPEED_SCALE } from "src/constants.sol";
 import { DroidPrototypeId } from "codegen/Prototypes.sol";
 
 // tables
-import { LastConquered, UsedTiles, Dimensions, DimensionsData, P_MaxLevel, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, P_GameConfigData, P_GameConfig, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
+import { P_ConquestConfigData, P_ConquestConfig, LastConquered, UsedTiles, Dimensions, DimensionsData, P_MaxLevel, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, P_GameConfigData, P_GameConfig, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
 
 // libraries
 import { ExpansionKey } from "src/Keys.sol";
@@ -28,8 +28,13 @@ library LibAsteroid {
 
     PositionData memory coord = getUniqueAsteroidPosition(asteroidCount);
 
-    // spawn a conquest asteroid every 100 asteroids, starting at the 25th
-    if (asteroidCount % 100 == 25) {
+    P_ConquestConfigData memory conquestConfig = P_ConquestConfig.get();
+    if (
+      // limit conquest asteroids to <maxConquestAsteroids>
+      asteroidCount / conquestConfig.conquestAsteroidSpawnFrequency < conquestConfig.maxConquestAsteroids &&
+      // spawn a conquest asteroid every <conquestAsteroidSpawnFrequency> asteroids, starting at the <conquestAsteroidOffset> asteroid
+      asteroidCount % conquestConfig.conquestAsteroidSpawnFrequency == conquestConfig.conquestAsteroidSpawnOffset
+    ) {
       LibConquestAsteroid.createConquestAsteroid(asteroidCount);
     }
 

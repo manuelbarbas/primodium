@@ -745,6 +745,9 @@ export const worldInput = {
       key: [],
       schema: {
         holdTime: "uint256",
+        conquestAsteroidSpawnOffset: "uint256",
+        conquestAsteroidSpawnFrequency: "uint256",
+        maxConquestAsteroids: "uint256",
         // the asteroid leaks this amount during its lifespan and emits this amount when it is claimed
         conquestAsteroidPoints: "uint256",
         conquestAsteroidLifeSpan: "uint256",

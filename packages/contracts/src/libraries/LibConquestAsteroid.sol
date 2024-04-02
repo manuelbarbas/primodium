@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { PositionData, LastConquered, ConquestAsteroid, ConquestAsteroidData, ReversePosition } from "codegen/index.sol";
+import { Position, PositionData, LastConquered, ConquestAsteroid, ConquestAsteroidData, ReversePosition } from "codegen/index.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 
@@ -24,7 +24,8 @@ library LibConquestAsteroid {
     LastConquered.set(asteroidEntity, block.timestamp);
     PositionData memory position;
     do {
-      LibMath.getPositionByVector(distance, LibMath.getRandomDirection(asteroidEntity));
+      position = LibMath.getPositionByVector(distance, LibMath.getRandomDirection(asteroidEntity));
     } while (ReversePosition.get(position.x, position.y) != 0);
+    Position.set(asteroidEntity, position);
   }
 }
