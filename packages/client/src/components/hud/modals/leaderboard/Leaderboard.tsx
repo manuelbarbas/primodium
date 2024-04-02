@@ -1,7 +1,7 @@
 import { Join } from "src/components/core/Join";
 import { Tabs } from "src/components/core/Tabs";
-import { AllianceLeaderboard } from "./AllianceLeaderboard";
-import { Leaderboards } from "./Leaderboards";
+import { AllianceLeaderboards } from "./AllianceLeaderboard";
+import { PlayerLeaderboards } from "./PlayerLeaderboards";
 
 export const Leaderboard: React.FC = () => {
   return (
@@ -11,15 +11,15 @@ export const Leaderboard: React.FC = () => {
           Alliances
         </Tabs.Button>
         <Tabs.Button showActive index={1} className="btn-sm">
-          All Players
+          Players
         </Tabs.Button>
       </Join>
 
       <Tabs.Pane index={0} className="w-full h-full p-0 border-none">
-        <AllianceLeaderboard />
+        <AllianceLeaderboards />
       </Tabs.Pane>
       <Tabs.Pane index={1} className="w-full h-full p-0 border-none">
-        <Leaderboards />
+        <PlayerLeaderboards />
       </Tabs.Pane>
     </Tabs>
   );

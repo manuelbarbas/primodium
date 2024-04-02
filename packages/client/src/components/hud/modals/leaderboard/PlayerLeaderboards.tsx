@@ -4,7 +4,7 @@ import { EntityType } from "src/util/constants";
 import { GrandLeaderboard } from "./GrandLeaderboard";
 import { SubLeaderboard } from "./SubLeaderboard";
 
-export const Leaderboards = () => {
+export const PlayerLeaderboards = () => {
   const [activeTab, setActiveTab] = useState("Grand");
 
   const tabs = [

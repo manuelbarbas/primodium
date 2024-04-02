@@ -61,7 +61,10 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
         )}
         {desc.conquestPoints > 0n && !!claimConquerTime && (
           <div className="flex victory-bg uppercase text-primary font-bold border border-secondary/50 text-sm flex justify-center items-center">
-            CLAIM {!claimConquerTime.canConquer ? `IN ${formatTime(claimConquerTime.timeUntilClaim)}` : "NOW"}
+            CLAIM{" "}
+            {!claimConquerTime.canConquer
+              ? `IN ${formatTime(claimConquerTime.timeUntilClaim)}`
+              : `${claimConquerTime.points} PTS`}
           </div>
         )}
         <div className="flex gap-1">

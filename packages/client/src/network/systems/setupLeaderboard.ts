@@ -23,7 +23,8 @@ export const setupLeaderboard = (mud: MUD) => {
 
   function setGrandLeaderboard(
     inputLeaderboards: { extraction: Leaderboard; conquest: Leaderboard },
-    leaderboardEntity: Entity
+    leaderboardEntity: Entity,
+    entityIsPlayer: boolean
   ) {
     const grandLeaderboard = new Map<Entity, { score: number; extractionRank: number; conquestRank: number }>();
 
@@ -56,11 +57,18 @@ export const setupLeaderboard = (mud: MUD) => {
         conquestRanks: [] as number[],
       }
     );
+
+    const playerAlliance = entityIsPlayer
+      ? mud.playerAccount.entity
+      : components.PlayerAlliance.get(mud.playerAccount.entity)?.alliance;
     components.GrandLeaderboard.set(
       {
         players: finalLeaderboard.map(([entity]) => entity),
         ...data,
-        playerRank: finalLeaderboard.findIndex(([entity]) => entity == mud.playerAccount.entity),
+        playerRank:
+          finalLeaderboard.findIndex(
+            ([entity]) => entity == (entityIsPlayer ? mud.playerAccount.entity : playerAlliance)
+          ) + 1,
       },
       leaderboardEntity
     );
@@ -110,14 +118,16 @@ export const setupLeaderboard = (mud: MUD) => {
             conquest: leaderboardMaps[EntityType.PlayerConquestLeaderboard],
             extraction: leaderboardMaps[EntityType.PlayerExtractionLeaderboard],
           },
-          EntityType.PlayerGrandLeaderboard
+          EntityType.PlayerGrandLeaderboard,
+          entityIsPlayer
         )
       : setGrandLeaderboard(
           {
             conquest: leaderboardMaps[EntityType.AllianceConquestLeaderboard],
             extraction: leaderboardMaps[EntityType.AllianceExtractionLeaderboard],
           },
-          EntityType.AllianceGrandLeaderboard
+          EntityType.AllianceGrandLeaderboard,
+          entityIsPlayer
         );
   });
 

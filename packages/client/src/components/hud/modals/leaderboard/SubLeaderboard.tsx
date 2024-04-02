@@ -7,12 +7,21 @@ import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { rankToScore } from "src/util/score";
 
-export const SubLeaderboard = ({ leaderboard }: { leaderboard: Entity }) => {
+export const SubLeaderboard = ({ leaderboard, alliance = false }: { leaderboard: Entity; alliance?: boolean }) => {
   const { playerAccount } = useMud();
   const data = components.Leaderboard.get(leaderboard);
 
-  if (!data || !playerAccount.address) return null;
-  const playerIndex = data.players.indexOf(playerAccount.entity);
+  if (!playerAccount.address) return null;
+  if (!data)
+    return (
+      <SecondaryCard className="w-full h-full flex justify-center items-center uppercase font-bold text-sm">
+        No Data Found
+      </SecondaryCard>
+    );
+  const entity = alliance
+    ? (components.PlayerAlliance.get(playerAccount.entity)?.alliance as Entity)
+    : playerAccount.entity;
+  const playerIndex = data.players.indexOf(entity);
   const playerScore = playerIndex == -1 ? undefined : data.scores[playerIndex];
 
   return (

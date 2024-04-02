@@ -138,7 +138,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
           <div className="absolute bottom-0 left-0 -translate-x-full w-28">
             <Button
               onClick={() => claimConquest(mud, selectedAsteroid)}
-              className="victory-bg btn-xs text-xs text-black border border-r-0 border-secondary/50"
+              className="victory-bg btn-xs w-full text-xs text-black border border-r-0 border-secondary/50"
             >
               CLAIM
             </Button>
