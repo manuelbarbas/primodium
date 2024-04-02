@@ -102,6 +102,8 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     tables: {
       P_ConquestConfig: {
         holdTime: 6n * 60n * 60n,
+        conquestAsteroidPoints: 50n,
+        conquestAsteroidLifeSpan: 6n * 60n * 60n,
       },
     },
   },

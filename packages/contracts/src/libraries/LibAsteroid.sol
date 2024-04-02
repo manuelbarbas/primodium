@@ -16,6 +16,7 @@ import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
+import { LibConquestAsteroid } from "libraries/LibConquestAsteroid.sol";
 
 library LibAsteroid {
   /// @notice Creates new asteroid for player in world
@@ -24,7 +25,13 @@ library LibAsteroid {
   function createPrimaryAsteroid(bytes32 ownerEntity) internal returns (bytes32 asteroidEntity) {
     asteroidEntity = LibEncode.getHash(ownerEntity);
     uint256 asteroidCount = AsteroidCount.get() + 1;
+
     PositionData memory coord = getUniqueAsteroidPosition(asteroidCount);
+
+    // spawn a conquest asteroid every 100 asteroids, starting at the 25th
+    if (asteroidCount % 100 == 25) {
+      LibConquestAsteroid.createConquestAsteroid(asteroidCount);
+    }
 
     asteroidEntity = LibEncode.getTimedHash(bytes32("asteroid"), coord);
     require(!Asteroid.getIsAsteroid(asteroidEntity), "[LibAsteroid] asteroid already exists");
