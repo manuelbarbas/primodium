@@ -1,12 +1,15 @@
-import { useState } from "react";
 import { Button } from "src/components/core/Button";
 import { EntityType } from "src/util/constants";
 import { GrandLeaderboard } from "./GrandLeaderboard";
 import { SubLeaderboard } from "./SubLeaderboard";
 
-export const PlayerLeaderboards = () => {
-  const [activeTab, setActiveTab] = useState("Grand");
-
+export const PlayerLeaderboards = ({
+  activeTab,
+  setActiveTab,
+}: {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+}) => {
   const tabs = [
     { name: "Grand", leaderboard: <GrandLeaderboard key={"grand"} leaderboard={EntityType.PlayerGrandLeaderboard} /> },
     {

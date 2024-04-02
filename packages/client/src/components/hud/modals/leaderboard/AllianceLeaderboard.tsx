@@ -1,25 +1,30 @@
 import { Button } from "src/components/core/Button";
 import { EntityType } from "src/util/constants";
 
-import { useState } from "react";
 import { GrandLeaderboard } from "./GrandLeaderboard";
 import { SubLeaderboard } from "./SubLeaderboard";
 
-export const AllianceLeaderboards = () => {
-  const [activeTab, setActiveTab] = useState("Grand");
-
+export const AllianceLeaderboards = ({
+  activeTab,
+  setActiveTab,
+}: {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+}) => {
   const tabs = [
     {
       name: "Grand",
-      leaderboard: <GrandLeaderboard key={"grand"} leaderboard={EntityType.AllianceGrandLeaderboard} />,
+      leaderboard: <GrandLeaderboard key={"grand"} leaderboard={EntityType.AllianceGrandLeaderboard} alliance />,
     },
     {
       name: "Conquest",
-      leaderboard: <SubLeaderboard key={"conquest"} leaderboard={EntityType.AllianceConquestLeaderboard} />,
+      leaderboard: <SubLeaderboard key={"conquest"} leaderboard={EntityType.AllianceConquestLeaderboard} alliance />,
     },
     {
       name: "Extraction",
-      leaderboard: <SubLeaderboard key={"extraction"} leaderboard={EntityType.AllianceExtractionLeaderboard} />,
+      leaderboard: (
+        <SubLeaderboard key={"extraction"} leaderboard={EntityType.AllianceExtractionLeaderboard} alliance />
+      ),
     },
   ];
 

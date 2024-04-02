@@ -5,6 +5,7 @@ import { SecondaryCard } from "src/components/core/Card";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
+import { getAllianceName } from "src/util/alliance";
 import { rankToScore } from "src/util/score";
 
 export const GrandLeaderboard = ({ leaderboard, alliance = false }: { leaderboard: Entity; alliance?: boolean }) => {
@@ -31,7 +32,7 @@ export const GrandLeaderboard = ({ leaderboard, alliance = false }: { leaderboar
     <SecondaryCard className="flex flex-col w-full h-full text-xs pointer-events-auto">
       <div className={`grid grid-cols-8 w-full p-2 font-bold uppercase`}>
         <div>Rank</div>
-        <div className="col-span-4">Player</div>
+        <div className="col-span-4">Name</div>
         <div>Extraction</div>
         <div>Conquest</div>
         <div>Pts</div>
@@ -59,6 +60,7 @@ export const GrandLeaderboard = ({ leaderboard, alliance = false }: { leaderboar
                       player={player}
                       index={index}
                       score={score}
+                      alliance={alliance}
                       extractionRank={extractionRank}
                       conquestRank={conquestRank}
                     />
@@ -69,16 +71,19 @@ export const GrandLeaderboard = ({ leaderboard, alliance = false }: { leaderboar
           )}
         </AutoSizer>
       </div>
-      <div className="w-full self-end">
-        <hr className="w-full border-t border-cyan-800 my-2" />
-        <GrandLeaderboardItem
-          player={playerAccount.entity}
-          index={playerIndex}
-          score={playerScore ?? 0}
-          extractionRank={playerExtractionRank}
-          conquestRank={playerConquestRank}
-        />
-      </div>
+      {entity && (
+        <div className="w-full self-end">
+          <hr className="w-full border-t border-cyan-800 my-2" />
+          <GrandLeaderboardItem
+            player={entity}
+            index={playerIndex}
+            score={playerScore ?? 0}
+            alliance={alliance}
+            extractionRank={playerExtractionRank}
+            conquestRank={playerConquestRank}
+          />
+        </div>
+      )}
     </SecondaryCard>
   );
 };
@@ -91,6 +96,7 @@ export const GrandLeaderboardItem = ({
   score,
   extractionRank,
   conquestRank,
+  alliance = false,
   className = "",
 }: {
   player: Entity;
@@ -98,16 +104,19 @@ export const GrandLeaderboardItem = ({
   score: number;
   extractionRank: number;
   conquestRank: number;
+  alliance?: boolean;
   className?: string;
 }) => {
-  const mud = useMud();
-  const playerEntity = mud.playerAccount.entity;
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
+  const entity = alliance ? (components.PlayerAlliance.get(playerEntity)?.alliance as Entity) : playerEntity;
 
   const rank = index + 1;
   return (
     <SecondaryCard
       className={`grid grid-cols-8 gap-1 w-full border border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center h-14 ${
-        player === playerEntity ? "border-success" : ""
+        player === entity ? "border-success" : ""
       } ${className}`}
     >
       <div>
@@ -116,8 +125,8 @@ export const GrandLeaderboardItem = ({
       </div>
       <div className="col-span-4 flex gap-1 justify-between items-center">
         <div className="flex items-center gap-1">
-          <AccountDisplay player={player} />
-          {player === playerEntity && <p className="text-accent">(You)</p>}
+          {alliance ? `[${getAllianceName(player, true)}]` : <AccountDisplay player={player} />}
+          {player === entity && <p className="text-accent">(You)</p>}
         </div>
       </div>
       <div className="font-bold w-fit bg-cyan-700 px-2">

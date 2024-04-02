@@ -9,8 +9,7 @@ import { GrandLeaderboardItem } from "../leaderboard/GrandLeaderboard";
 
 export const InfoRow = ({ data }: { data?: ComponentValue<typeof components.GrandLeaderboard.schema> }) => {
   const rank = data?.playerRank ?? -1;
-  console.log("InfoRow", data, rank);
-  if (!data || rank == -1) return <SoloPlayerInfo />;
+  if (!data || rank == 0) return <SoloPlayerInfo />;
   const allianceEntity = data.players[rank - 1];
   const score = data.scores[rank - 1];
   const extractionRank = data.extractionRanks[rank - 1];
@@ -52,7 +51,8 @@ const PlayerInfo = ({
       {
         <div className="grid grid-cols-6 w-full items-center gap-2">
           <GrandLeaderboardItem
-            index={rank - 1}
+            alliance
+            index={rank}
             score={score}
             player={alliance}
             conquestRank={conquestRank}

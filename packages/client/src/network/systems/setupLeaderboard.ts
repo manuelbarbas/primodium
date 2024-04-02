@@ -14,10 +14,8 @@ export const setupLeaderboard = (mud: MUD) => {
   const leaderboardMaps: Record<Entity, Map<Entity, bigint>> = {
     [EntityType.PlayerConquestLeaderboard]: new Map<Entity, bigint>(),
     [EntityType.PlayerExtractionLeaderboard]: new Map<Entity, bigint>(),
-    [EntityType.PlayerGrandLeaderboard]: new Map<Entity, bigint>(),
     [EntityType.AllianceConquestLeaderboard]: new Map<Entity, bigint>(),
     [EntityType.AllianceExtractionLeaderboard]: new Map<Entity, bigint>(),
-    [EntityType.AllianceGrandLeaderboard]: new Map<Entity, bigint>(),
   };
   const systemWorld = namespaceWorld(world, "systems");
 
