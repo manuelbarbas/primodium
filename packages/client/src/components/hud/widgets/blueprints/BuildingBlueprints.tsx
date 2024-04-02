@@ -86,11 +86,7 @@ const BlueprintButton: React.FC<{
         </div>
       )}
       {!hasEnough && hasMainbaseLevel && (
-        <div className="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 gap-1 flex items-center justify-center bg-neutral/50 w-full">
-          <span className="h-fit flex items-center justify-center gap-1 text-error  text-[.6rem] bg-gray-800/75 z-30">
-            NOT ENOUGH RESOURCES
-          </span>
-        </div>
+        <div className="absolute inset-0 gap-1 flex items-center justify-center bg-gradient-to-t from-error/30 to-transparent w-full h-full" />
       )}
       {!hideHotkeys && keybindActive && (
         <p className="absolute bottom-2 right-2 flex text-xs kbd kbd-xs">
@@ -105,10 +101,14 @@ const BlueprintButton: React.FC<{
 type BuildingBlueprintsProps = {
   buildingTypeToShow: number;
   active?: boolean;
-  expanded?: boolean;
+  showHighlight?: boolean;
 };
 
-export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({ buildingTypeToShow, active, expanded }) => {
+export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({
+  buildingTypeToShow,
+  active,
+  showHighlight: expanded,
+}) => {
   const selectedRockEntity = components.ActiveRock.use()?.value;
   const mapId = components.Asteroid.use(selectedRockEntity)?.mapId;
 

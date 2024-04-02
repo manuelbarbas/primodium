@@ -1,13 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BuildingBlueprints } from "./BuildingBlueprints";
 import { Button } from "src/components/core/Button";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { KeybindActions } from "src/game/lib/constants/keybinds";
+import { useShallow } from "zustand/react/shallow";
+import { usePersistentStore } from "src/game/stores/PersistentStore";
 
 export const BlueprintPane = () => {
   const [visibleDiv, setVisibleDiv] = useState(0);
   const [arePanesExpanded, setArePanesExpanded] = useState(false);
   const primodium = usePrimodium();
+  const {
+    hooks: { useKeybinds },
+    input: { addListener },
+  } = useRef(primodium.api("ASTEROID")).current;
+  const keybinds = useKeybinds();
+  const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
 
   // Shows a specific div
   const showDiv = (index: number) => {
@@ -21,21 +29,14 @@ export const BlueprintPane = () => {
   };
 
   useEffect(() => {
-    const input = primodium.api("ASTEROID").input;
-
-    const prev = input.addListener(KeybindActions.PrevHotbar, () => {
-      setVisibleDiv((prev) => (prev === 0 ? 3 : prev - 1));
-    });
-
-    const next = input.addListener(KeybindActions.NextHotbar, () => {
-      setVisibleDiv((prev) => (prev === 3 ? 0 : prev + 1));
+    const cycle = addListener(KeybindActions.Cycle, () => {
+      setVisibleDiv((prev) => (prev + 1) % 4);
     });
 
     return () => {
-      prev.dispose();
-      next.dispose();
+      cycle.dispose();
     };
-  }, [primodium]);
+  }, [addListener]);
 
   const labels = ["Production", "Military", "Storage", "Infrastructure"];
 
@@ -59,7 +60,7 @@ export const BlueprintPane = () => {
                   <BuildingBlueprints
                     buildingTypeToShow={index}
                     active={visibleDiv === index}
-                    expanded={arePanesExpanded}
+                    showHighlight={arePanesExpanded && !hideHotkeys}
                   />
 
                   {/* Show title when expanded */}
@@ -96,7 +97,7 @@ export const BlueprintPane = () => {
 
       {/* Menu Buttons (hidden when expanded) */}
       {!arePanesExpanded && (
-        <div className="flex flex-col items-end">
+        <div className="flex flex-col">
           {labels.map((label, index) => (
             <Button
               key={index}
@@ -127,6 +128,11 @@ export const BlueprintPane = () => {
               )}
             </Button>
           ))}
+          {!hideHotkeys && (
+            <p className="flex text-xs kbd kbd-xs py-2 w-fit" style={{ writingMode: "vertical-lr" }}>
+              {keybinds[KeybindActions.Cycle]?.entries().next().value[0] ?? "?"}
+            </p>
+          )}
         </div>
       )}
     </div>
