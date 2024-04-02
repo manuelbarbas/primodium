@@ -50,12 +50,12 @@ export const BlueprintPane = () => {
     <div className="flex gap-0">
       <div>
         {/* Pane */}
-        <div className={`flex ${arePanesExpanded ? "flex-row" : "flex-col"}`}>
+        <div className={`grid ${arePanesExpanded ? "grid-cols-2 xl:grid-cols-4" : "grid-cols-1"}`}>
           {labels.map(
             (label, index) =>
               // Show only the selected div or all when expanded
               (arePanesExpanded || visibleDiv === index) && (
-                <div key={index} className={`flex flex-row card bg-neutral border border-secondary gap-1`}>
+                <div key={index} className={`flex bg-neutral border border-secondary gap-1`}>
                   <BuildingBlueprints
                     buildingTypeToShow={index}
                     active={visibleDiv === index}
