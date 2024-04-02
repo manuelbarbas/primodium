@@ -107,7 +107,7 @@ type BuildingBlueprintsProps = {
 export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({
   buildingTypeToShow,
   active,
-  showHighlight: expanded,
+  showHighlight,
 }) => {
   const selectedRockEntity = components.ActiveRock.use()?.value;
   const mapId = components.Asteroid.use(selectedRockEntity)?.mapId;
@@ -203,7 +203,7 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({
     <>
       <div
         className={`flex flex-wrap p-3 w-60 h-96 gap-y-1.5 gap-x-1 overflow-y-auto hide-scrollbar grid-background ${
-          active && expanded ? "ring ring-warning" : ""
+          active && showHighlight ? "ring ring-warning" : ""
         }`}
       >
         {buildingsWithDimensions.map(({ type, dimensions }, i) => {
