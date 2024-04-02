@@ -1,9 +1,9 @@
-import { KeybindActions, Scenes } from "@game/constants";
 import { memo } from "react";
 import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
 
 import { BlueprintPane } from "./BlueprintPane";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 export const Blueprints = memo(() => {
   const { components } = useMud();
@@ -20,7 +20,7 @@ export const Blueprints = memo(() => {
       defaultPinned
       defaultVisible
       origin="center-left"
-      scene={Scenes.Asteroid}
+      scene={"ASTEROID"}
       active={!mapOpen && isBuilding}
       hotkey={KeybindActions.Blueprints}
       minOpacity={0.6}

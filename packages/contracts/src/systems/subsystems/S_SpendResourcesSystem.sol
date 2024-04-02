@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 import { System } from "@latticexyz/world/src/System.sol";
 
@@ -11,8 +11,8 @@ contract S_SpendResourcesSystem is System {
     LibResource.spendBuildingRequiredResources(buildingEntity, level);
   }
 
-  function spendUpgradeResources(bytes32 spaceRockEntity, bytes32 upgradePrototype, uint256 level) public {
-    LibResource.spendUpgradeResources(spaceRockEntity, upgradePrototype, level);
+  function spendUpgradeResources(bytes32 asteroidEntity, bytes32 upgradePrototype, uint256 level) public {
+    LibResource.spendUpgradeResources(asteroidEntity, upgradePrototype, level);
   }
 
   function toggleBuildingUtility(bytes32 buildingEntity) public {

@@ -1,5 +1,3 @@
-import { minEth } from "@game/constants";
-
 import { createBurnerAccount as createMudBurnerAccount, transportObserver } from "@latticexyz/common";
 import { createClient as createFaucetClient } from "@latticexyz/faucet";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -9,7 +7,8 @@ import { createExternalAccount } from "src/network/setup/createExternalAccount";
 import { setup } from "src/network/setup/setup";
 import { hydratePlayerData } from "src/network/sync/indexer";
 import { BurnerAccount, ExternalAccount, SetupResult } from "src/network/types";
-import { Hex, createWalletClient, fallback, formatEther, http } from "viem";
+import { minEth } from "src/util/constants";
+import { Address, Hex, createWalletClient, fallback, formatEther, http } from "viem";
 
 const useSetupResult = () => {
   const [network, setNetwork] = useState<SetupResult>(); // Created once when the site loads
@@ -55,7 +54,7 @@ const useSetupResult = () => {
         const lowBalance = balance < minEth;
         if (!lowBalance) return;
         console.log("[Dev Drip] balance:", formatEther(balance));
-        const amountToDrip = 69n * 10n ** 18n;
+        const amountToDrip = 10n * 10n ** 18n;
         await externalWalletClient.sendTransaction({ to: address, value: amountToDrip });
         console.info(`[Dev Drip] Dripped ${formatEther(amountToDrip)} to ${address}`);
       }
@@ -91,23 +90,24 @@ const useSetupResult = () => {
     setSessionAccount(undefined);
   }, []);
 
-  function updatePlayerAccount(options: { address: Hex }): void;
+  function updatePlayerAccount(options: { address: Address }): void;
   function updatePlayerAccount(options: { burner: true; privateKey?: Hex }): void;
-  function updatePlayerAccount(options: { address?: Hex; burner?: boolean; privateKey?: Hex }) {
+  function updatePlayerAccount(options: { address?: Address; burner?: boolean; privateKey?: Hex }) {
     const useBurner = options.burner;
-    const address = options.address;
-    if (!useBurner && !address) throw new Error("Must provide address or burner option");
-    (useBurner ? createBurnerAccount(options.privateKey, false) : createExternalAccount(address!)).then((account) => {
-      if (useBurner) localStorage.setItem("primodiumPlayerAccount", account.privateKey ?? "");
-      setPlayerAccount(account);
+    if (!useBurner && !options.address) throw new Error("Must provide address or burner option");
+    (useBurner ? createBurnerAccount(options.privateKey, false) : createExternalAccount(options.address!)).then(
+      (account) => {
+        if (useBurner) localStorage.setItem("primodiumPlayerAccount", account.privateKey ?? "");
+        setPlayerAccount(account);
 
-      if (playerAccountInterval.current) {
-        clearInterval(playerAccountInterval.current);
+        if (playerAccountInterval.current) {
+          clearInterval(playerAccountInterval.current);
+        }
+        requestDrip(account.address);
+        if (network) hydratePlayerData(account.entity, account.address, network);
+        playerAccountInterval.current = setInterval(() => requestDrip(account.address), 4000);
       }
-      requestDrip(account.address);
-      if (network) hydratePlayerData(account.entity, account.address, network);
-      playerAccountInterval.current = setInterval(() => requestDrip(account.address), 4000);
-    });
+    );
   }
 
   const memoizedUpdatePlayerAccount = useCallback(updatePlayerAccount, [requestDrip]);

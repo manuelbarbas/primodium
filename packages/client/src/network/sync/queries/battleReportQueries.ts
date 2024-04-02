@@ -1,6 +1,6 @@
-import { Hex } from "viem";
 import { Entity } from "@latticexyz/recs";
 import type { Sync } from "@primodiumxyz/sync-stack";
+import { Hex } from "viem";
 
 export const getBattleReportQuery = ({
   tables,
@@ -29,23 +29,23 @@ export const getBattleReportQuery = ({
           include: [
             {
               tableId: tables.BattleDamageDealtResult.tableId,
-              on: "battle_id",
+              on: "battle_entity",
             },
             {
               tableId: tables.BattleDamageTakenResult.tableId,
-              on: "battle_id",
+              on: "battle_entity",
             },
             {
               tableId: tables.BattleEncryptionResult.tableId,
-              on: "battle_id",
+              on: "battle_entity",
             },
             {
               tableId: tables.BattleRaidResult.tableId,
-              on: "battle_id",
+              on: "battle_entity",
             },
             {
               tableId: tables.BattleUnitResult.tableId,
-              on: "battle_id",
+              on: "battle_entity",
             },
           ],
         },
@@ -59,23 +59,23 @@ export const getBattleReportQuery = ({
           include: [
             {
               tableId: tables.BattleDamageDealtResult.tableId,
-              on: "battle_id",
+              on: "battle_entity",
             },
             {
               tableId: tables.BattleDamageTakenResult.tableId,
-              on: "battle_id",
+              on: "battle_entity",
             },
             {
               tableId: tables.BattleEncryptionResult.tableId,
-              on: "battle_id",
+              on: "battle_entity",
             },
             {
               tableId: tables.BattleRaidResult.tableId,
-              on: "battle_id",
+              on: "battle_entity",
             },
             {
               tableId: tables.BattleUnitResult.tableId,
-              on: "battle_id",
+              on: "battle_entity",
             },
           ],
         },

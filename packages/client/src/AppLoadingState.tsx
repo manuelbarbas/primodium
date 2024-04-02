@@ -1,7 +1,4 @@
-import { minEth } from "@game/constants";
 import { transportObserver } from "@latticexyz/common";
-import { ComponentValue, Entity, Schema } from "@latticexyz/recs";
-import { Browser, ContractComponent } from "@primodiumxyz/mud-game-tools";
 import { useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { createPublicClient, fallback, http } from "viem";
@@ -10,13 +7,11 @@ import { useMud } from "./hooks";
 import { useInit } from "./hooks/useInit";
 import { useSyncStatus } from "./hooks/useSyncStatus";
 import { getNetworkConfig } from "./network/config/getNetworkConfig";
-import { setComponentValue } from "./network/setup/contractCalls/dev";
-import { world } from "./network/world";
 import { Enter } from "./screens/Enter";
 import { Game } from "./screens/Game";
 import { Increment } from "./screens/Increment";
 import { Statistics } from "./screens/Statistics";
-import { setupCheatcodes } from "./util/cheatcodes";
+import { minEth } from "./util/constants";
 
 export const DEV = import.meta.env.PRI_DEV === "true";
 export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
@@ -90,20 +85,6 @@ export default function AppLoadingState() {
                 <Route path="/statistics" element={<Statistics />} />
               </Routes>
             </BrowserRouter>
-          )}
-          {DEV && (
-            <div className="font-mono text-xs">
-              <Browser
-                layers={{ react: { world, components: mud.components } }}
-                setContractComponentValue={(
-                  component: ContractComponent<Schema>,
-                  entity: Entity,
-                  newValue: ComponentValue<Schema>
-                ) => setComponentValue(mud, component, entity, newValue)}
-                world={world}
-                cheatcodes={setupCheatcodes(mud)}
-              />
-            </div>
           )}
         </div>
       )}

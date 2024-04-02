@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { ampli } from "src/ampli";
-import { execute } from "src/network/actions";
 import { components } from "src/network/components";
+import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { getEntityTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
@@ -18,20 +18,21 @@ export async function demolishBuilding(mud: MUD, building: Entity) {
   await execute(
     {
       mud,
-      functionName: "destroy",
+      functionName: "Primodium__destroy",
       systemId: getSystemId("DestroySystem"),
-      args: [{ ...position, parent: position.parent as Hex }],
+      args: [building as Hex],
       withSession: true,
     },
     {
       id: hashEntities(TransactionQueueType.Demolish, building),
     },
+    // TODO: we don't need to use coord here any longer
     (receipt) => {
       const buildingType = components.BuildingType.get(building)?.value as Entity;
       const currLevel = components.Level.get(building)?.value || 0;
 
       ampli.systemDestroy({
-        asteroidCoord: position.parent,
+        asteroidCoord: position.parentEntity,
         buildingType: getEntityTypeName(buildingType),
         coord: [position.x, position.y],
         currLevel: bigintToNumber(currLevel),

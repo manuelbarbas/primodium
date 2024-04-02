@@ -1,8 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { EUnit } from "contracts/config/enums";
 import { ampli } from "src/ampli";
-import { execute } from "src/network/actions";
 import { components } from "src/network/components";
+import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { getEntityTypeName } from "src/util/common";
 import { TransactionQueueType, UnitEntityLookup } from "src/util/constants";
@@ -15,7 +15,7 @@ export const upgradeUnit = async (mud: MUD, spaceRock: Entity, unit: EUnit) => {
   await execute(
     {
       mud,
-      functionName: "upgradeUnit",
+      functionName: "Primodium__upgradeUnit",
       systemId: getSystemId("UpgradeUnitSystem"),
       args: [spaceRock as Hex, unit],
       withSession: true,

@@ -1,8 +1,8 @@
 import { throttle } from "lodash";
 
-import { KeybindActions } from "@game/constants";
 import { Key, Scene } from "engine/types";
 import { usePersistentStore } from "../stores/PersistentStore";
+import { KeybindActions } from "../lib/constants/keybinds";
 
 export function createInputApi(targetScene: Scene) {
   const keybinds = usePersistentStore.getState().keybinds;

@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+
+import { BuildingType, Level, P_RequiredDependencyData, P_RequiredDependency, ProductionRate, ConsumptionRate, Home } from "codegen/index.sol";
+
+import { LibReduceProductionRate } from "libraries/LibReduceProductionRate.sol";
 
 contract LibReduceProductionRateTest is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";
@@ -25,9 +29,9 @@ contract LibReduceProductionRateTest is PrimodiumTest {
     // Set up mock data
     uint256 originalProduction = 100;
     uint256 productionReduction = 10;
-    bytes32 spaceRockEntity = Home.get(playerEntity);
-    ProductionRate.set(spaceRockEntity, Iron, originalProduction);
-    ConsumptionRate.set(spaceRockEntity, Iron, productionReduction);
+    bytes32 asteroidEntity = Home.get(playerEntity);
+    ProductionRate.set(asteroidEntity, Iron, originalProduction);
+    ConsumptionRate.set(asteroidEntity, Iron, productionReduction);
     P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(
       uint8(Iron),
       productionReduction
@@ -37,16 +41,16 @@ contract LibReduceProductionRateTest is PrimodiumTest {
 
     LibReduceProductionRate.clearProductionRateReduction(buildingEntity);
 
-    assertEq(ConsumptionRate.get(spaceRockEntity, Iron), 0);
+    assertEq(ConsumptionRate.get(asteroidEntity, Iron), 0);
   }
 
   function testReduceProductionRate() public {
     // Set up mock data
     uint256 originalProduction = 100;
     uint256 productionReduction = 10;
-    bytes32 spaceRockEntity = Home.get(playerEntity);
-    ProductionRate.set(spaceRockEntity, Iron, originalProduction);
-    ConsumptionRate.set(spaceRockEntity, Iron, prevReduction);
+    bytes32 asteroidEntity = Home.get(playerEntity);
+    ProductionRate.set(asteroidEntity, Iron, originalProduction);
+    ConsumptionRate.set(asteroidEntity, Iron, prevReduction);
     P_RequiredDependencyData memory requiredDependenciesData = P_RequiredDependencyData(
       uint8(Iron),
       productionReduction
@@ -56,6 +60,6 @@ contract LibReduceProductionRateTest is PrimodiumTest {
 
     LibReduceProductionRate.reduceProductionRate(buildingEntity, level);
 
-    assertEq(ConsumptionRate.get(spaceRockEntity, Iron), productionReduction);
+    assertEq(ConsumptionRate.get(asteroidEntity, Iron), productionReduction);
   }
 }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // This contract handles resource counting and scoring.
 
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 import { StoreHook } from "@latticexyz/store/src/StoreHook.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
@@ -23,12 +23,12 @@ contract OnResourceCount_Score is StoreHook {
     uint48 start,
     bytes memory data
   ) public override {
-    bytes32 spaceRockEntity = keyTuple[0];
-    if (!Asteroid.getIsAsteroid(spaceRockEntity)) return;
+    bytes32 asteroidEntity = keyTuple[0];
+    if (!Asteroid.getIsAsteroid(asteroidEntity)) return;
 
     uint8 resource = uint8(uint256(keyTuple[1]));
     bytes memory amountRaw = SliceInstance.toBytes(SliceLib.getSubslice(data, start));
     uint256 amount = abi.decode(amountRaw, (uint256));
-    LibScore.updateScore(spaceRockEntity, resource, amount);
+    LibScore.updateScore(asteroidEntity, resource, amount);
   }
 }

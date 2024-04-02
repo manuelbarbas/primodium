@@ -1,41 +1,27 @@
 import { Primodium } from "@game/api";
 import { Entity } from "@latticexyz/recs";
 
-import { Assets } from "@game/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EFleetStance } from "contracts/config/enums";
-import { getRockSprite } from "src/game/lib/starmap/systems/utils/getSprites";
+// import { getRockSprite } from "src/game/scenes/starmap/systems/utils/getSprites";
 import { components, components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
 import { getEntityTypeName } from "./common";
 import { EntityType, MapIdToAsteroidType, ResourceStorages, RockRelationship } from "./constants";
 import { getFullResourceCount } from "./resource";
 import { getOrbitingFleets } from "./unit";
+import { Assets } from "src/game/lib/constants/assets";
+import { SpriteKeys } from "src/game/lib/constants/assets/sprites";
 
+//TODO: proper implementation, this is just a placeholder so stuff doesn't break.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
   const { getSpriteBase64 } = primodium.api().sprite;
-  const asteroidData = comps.Asteroid.get(asteroid);
-  const expansionLevel = comps.Level.get(asteroid, {
-    value: 1n,
-  }).value;
-
-  if (!asteroidData) {
-    console.error("Asteroid data not found for: " + asteroid);
-    return undefined;
-  }
-
-  if (components.PirateAsteroid.has(asteroid)) return getSpriteBase64(getRockSprite(1, 1n), Assets.SpriteAtlas);
-  const spriteKey = getRockSprite(
-    asteroidData.mapId,
-    asteroidData.mapId === 1 ? expansionLevel : asteroidData.maxLevel
-  );
-
-  return getSpriteBase64(spriteKey, Assets.SpriteAtlas);
+  return getSpriteBase64(SpriteKeys.Asteroid1, Assets.SpriteAtlas);
 }
 
 export function getAsteroidName(spaceRock: Entity) {
   const expansionLevel = comps.Level.get(spaceRock)?.value;
-  const isPirate = !!comps.PirateAsteroid.get(spaceRock);
   const asteroidData = comps.Asteroid.get(spaceRock);
 
   const asteroidResource = MapIdToAsteroidType[asteroidData?.mapId ?? 0];
@@ -50,7 +36,7 @@ export function getAsteroidName(spaceRock: Entity) {
 
   return ` ${expansionLevel ? `LVL. ${expansionLevel} ` : asteroidSize} ${
     asteroidResource ? getEntityTypeName(asteroidResource) : ""
-  } ${isPirate ? "Pirate" : "Asteroid"}`;
+  } ${"Asteroid"}`;
 }
 
 export function getAsteroidDescription(asteroid: Entity) {
@@ -80,7 +66,7 @@ export function getAsteroidInfo(primodium: Primodium, spaceRock: Entity) {
   const position = comps.Position.get(spaceRock, {
     x: 0,
     y: 0,
-    parent: "0" as Entity,
+    parentEntity: "0" as Entity,
   });
 
   const resources = [...ResourceStorages].reduce((acc, resource) => {

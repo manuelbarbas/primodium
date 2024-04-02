@@ -71,7 +71,7 @@ function generateContent(jsonContent: JsonCoords[]) {
 
 function addContext(str: string) {
   return `// SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 import { P_Terrain } from "codegen/index.sol";
 import { EResource } from "codegen/common.sol";

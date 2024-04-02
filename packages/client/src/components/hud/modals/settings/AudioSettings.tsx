@@ -1,4 +1,3 @@
-import { Scenes } from "@game/constants";
 import { useCallback } from "react";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
@@ -14,8 +13,8 @@ export const AudioSettings = () => {
   const setVolume = useCallback(
     (amount: number, channel: Channel | "master") => {
       primodium.api().audio.setVolume(amount, channel);
-      primodium.api(Scenes.UI).audio.setVolume(amount, channel);
-      primodium.api(Scenes.Starmap).audio.setVolume(amount, channel);
+      primodium.api("UI").audio.setVolume(amount, channel);
+      primodium.api("STARMAP").audio.setVolume(amount, channel);
     },
     [primodium]
   );

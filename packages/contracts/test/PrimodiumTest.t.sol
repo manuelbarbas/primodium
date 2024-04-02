@@ -1,23 +1,25 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
-import "forge-std/Test.sol";
-import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
-import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
-import { ResourceAccess, NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
-import { ROOT_NAMESPACE_ID } from "@latticexyz/world/src/constants.sol";
-import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
-import { IERC20Mintable } from "@latticexyz/world-modules/src/modules/erc20-puppet/IERC20Mintable.sol";
+pragma solidity >=0.8.24;
 
-import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
-import "src/utils.sol";
-import { RESERVE_CURRENCY, RESERVE_CURRENCY_RESOURCE } from "src/constants.sol";
-import "codegen/world/IWorld.sol";
-import "codegen/index.sol";
-import "src/Types.sol";
-import "codegen/Prototypes.sol";
-import "codegen/Libraries.sol";
-import "src/Keys.sol";
-import "src/Types.sol";
+import "forge-std/Test.sol";
+import { addressToEntity } from "src/utils.sol";
+import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
+import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
+import { NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
+
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { BuildingKey, UnitKey } from "src/Keys.sol";
+import { P_IsUtility, MaxResourceCount, ResourceCount, P_UnitPrototypes, P_GameConfig, P_GameConfigData, P_Unit, P_Transportables, BuildingType, OwnedBy, FleetMovement, P_Blueprint, P_EnumToPrototype, PositionData, Position, P_RequiredResourcesData, Asteroid, Home, P_RequiredTile, P_MaxLevel, P_RequiredResources, P_RequiredBaseLevel, UnitLevel, P_ColonyShipConfig, Level, P_UnitProdTypes, P_UnitProdMultiplier, P_WormholeAsteroidConfig } from "codegen/index.sol";
+import { EResource, EBuilding, EUnit, Bounds } from "src/Types.sol";
+import { IWorld } from "codegen/world/IWorld.sol";
+import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
+import { LibBuilding } from "libraries/LibBuilding.sol";
+import { LibAsteroid } from "libraries/LibAsteroid.sol";
+import { LibUnit } from "libraries/LibUnit.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
+import { LibProduction } from "libraries/LibProduction.sol";
+import { LibCombat } from "libraries/LibCombat.sol";
+import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 
 struct PositionData2D {
   int32 x;
@@ -49,14 +51,8 @@ contract PrimodiumTest is MudTest {
   function setUp() public virtual override {
     super.setUp();
     world = IWorld(worldAddress);
-    creator = world.creator();
-
-    uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
-
-    vm.startPrank(creator);
-    ResourceAccess.set(ROOT_NAMESPACE_ID, creator, true);
-    NamespaceOwner.set(ROOT_NAMESPACE_ID, creator);
-    vm.stopPrank();
+    address namespaceOwner = NamespaceOwner.get(WorldResourceIdLib.encodeNamespace(bytes14("Primodium")));
+    creator = namespaceOwner;
 
     alice = getUser();
     bob = getUser();
@@ -83,7 +79,7 @@ contract PrimodiumTest is MudTest {
   function assertEq(PositionData memory coordA, PositionData memory coordB) internal {
     assertEq(coordA.x, coordB.x, "[assertEq]: x doesn't match");
     assertEq(coordA.y, coordB.y, "[assertEq]: y doesn't match");
-    assertEq(coordA.parent, coordB.parent, "[assertEq]: parent doesn't match");
+    assertEq(coordA.parentEntity, coordB.parentEntity, "[assertEq]: parentEntity doesn't match");
   }
 
   function assertEq(EResource a, EResource b) internal {
@@ -95,7 +91,7 @@ contract PrimodiumTest is MudTest {
     console.logInt(coord.x);
     console.log("y");
     console.logInt(coord.y);
-    console.log("parent", uint256(coord.parent));
+    console.log("parent", uint256(coord.parentEntity));
   }
 
   function canPlaceBuildingTiles(
@@ -104,35 +100,24 @@ contract PrimodiumTest is MudTest {
     PositionData memory position
   ) internal view returns (bool) {
     int32[] memory blueprint = P_Blueprint.get(buildingPrototype);
-    Bounds memory bounds = LibBuilding.getSpaceRockBounds(asteroidEntity);
-    bytes32[] memory tiles = new bytes32[](blueprint.length / 2);
+    int32[] memory tileCoords = new int32[](blueprint.length);
+    Bounds memory bounds = LibBuilding.getAsteroidBounds(asteroidEntity);
     for (uint256 i = 0; i < blueprint.length; i += 2) {
-      PositionData memory relativeCoord = PositionData(blueprint[i], blueprint[i + 1], 0);
-      PositionData memory absoluteCoord = PositionData(
-        position.x + relativeCoord.x,
-        position.y + relativeCoord.y,
-        position.parent
-      );
-      bytes32 tileEntity = LibEncode.getHash(BuildingTileKey, absoluteCoord);
-      if (OwnedBy.get(tileEntity) != 0) return false;
-      if (
-        bounds.minX > absoluteCoord.x ||
-        bounds.minY > absoluteCoord.y ||
-        bounds.maxX < absoluteCoord.x ||
-        bounds.maxY < absoluteCoord.y
-      ) return false;
+      int32 x = blueprint[i] + position.x;
+      int32 y = blueprint[i + 1] + position.y;
+      if (bounds.minX > x || bounds.minY > y || bounds.maxX < x || bounds.maxY < y) return false;
+      tileCoords[i] = blueprint[i] + position.x;
+      tileCoords[i + 1] = blueprint[i + 1] + position.y;
     }
-    return true;
+    return LibAsteroid.allTilesAvailable(asteroidEntity, tileCoords);
   }
 
   function getTilePosition(bytes32 asteroidEntity, EBuilding buildingType) internal view returns (PositionData memory) {
     bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
-    uint8 mapId = Asteroid.getMapId(asteroidEntity);
-    Bounds memory bounds = LibBuilding.getSpaceRockBounds(asteroidEntity);
+    Bounds memory bounds = LibBuilding.getAsteroidBounds(asteroidEntity);
     for (int32 i = bounds.minX; i < bounds.maxX; i++) {
       for (int32 j = bounds.minY; j < bounds.maxY; j++) {
         PositionData memory coord = PositionData(i, j, asteroidEntity);
-        if (Spawned.get(LibBuilding.getBuildingFromCoord(coord))) continue;
         if (!LibBuilding.canBuildOnTile(buildingPrototype, coord)) continue;
         if (!canPlaceBuildingTiles(asteroidEntity, buildingPrototype, coord)) continue;
         return coord;
@@ -143,10 +128,10 @@ contract PrimodiumTest is MudTest {
 
   function spawn(address player) internal returns (bytes32) {
     vm.prank(player);
-    world.spawn();
+    world.Primodium__spawn();
     bytes32 playerEntity = addressToEntity(player);
-    bytes32 homeRock = Home.get(playerEntity);
-    return homeRock;
+    bytes32 homeAsteroidEntity = Home.get(playerEntity);
+    return homeAsteroidEntity;
   }
 
   function get2x2Blueprint() internal pure returns (int32[] memory blueprint) {
@@ -190,7 +175,7 @@ contract PrimodiumTest is MudTest {
     removeRequiredTile(building);
   }
 
-  function getUnitArray(uint256 unit1Count, uint256 unit2Count) internal view returns (uint256[] memory unitArray) {
+  function getUnitArray(uint256 unit1Count, uint256 unit2Count) internal pure returns (uint256[] memory unitArray) {
     unitArray = new uint256[](8);
     //unitArray = new uint256[](P_UnitPrototypes.length());
     unitArray[0] = unit1Count;
@@ -204,23 +189,23 @@ contract PrimodiumTest is MudTest {
 
   function trainUnits(address player, bytes32 unitPrototype, uint256 count, bool fastForward) internal {
     bytes32 playerEntity = addressToEntity(player);
-    bytes32 spaceRock = Home.get(playerEntity);
-    bytes32 mainBase = Home.get(spaceRock);
+    bytes32 asteroidEntity = Home.get(playerEntity);
+    bytes32 mainBase = Home.get(asteroidEntity);
     P_RequiredResourcesData memory requiredResources = getTrainCost(
       unitPrototype,
-      UnitLevel.get(spaceRock, unitPrototype),
+      UnitLevel.get(asteroidEntity, unitPrototype),
       count
     );
 
-    provideResources(spaceRock, requiredResources);
+    provideResources(asteroidEntity, requiredResources);
 
-    if (unitPrototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip))) {
-      uint8 capitalShipResource = P_CapitalShipConfig.getResource();
+    if (unitPrototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip))) {
+      uint8 colonyShipResource = P_ColonyShipConfig.getResource();
       uint256 countLeft = count;
       while (countLeft > 0) {
-        uint256 cost = P_CapitalShipConfig.getInitialCost() *
-          LibUnit.getCapitalShipCostMultiplier(OwnedBy.get(spaceRock));
-        increaseResource(spaceRock, EResource(capitalShipResource), cost);
+        uint256 cost = P_ColonyShipConfig.getInitialCost() *
+          LibUnit.getColonyShipCostMultiplier(OwnedBy.get(asteroidEntity));
+        increaseResource(asteroidEntity, EResource(colonyShipResource), cost);
         trainUnits(player, mainBase, unitPrototype, 1, fastForward);
         countLeft--;
       }
@@ -242,19 +227,18 @@ contract PrimodiumTest is MudTest {
     uint256 level = Level.get(buildingEntity);
 
     bytes32[] memory prodTypes = P_UnitProdTypes.get(buildingType, level);
-    uint256 unitProdMultiplier = P_UnitProdMultiplier.get(buildingType, level);
     bytes32[] memory newProdTypes = new bytes32[](1);
     newProdTypes[0] = unitPrototype;
 
     P_UnitProdTypes.set(buildingType, level, newProdTypes);
     P_UnitProdMultiplier.set(buildingType, level, 100);
-    if (!UnitFactorySet.has(Position.getParent(buildingEntity), buildingEntity))
-      UnitFactorySet.add(Position.getParent(buildingEntity), buildingEntity);
+    if (!UnitFactorySet.has(Position.getParentEntity(buildingEntity), buildingEntity))
+      UnitFactorySet.add(Position.getParentEntity(buildingEntity), buildingEntity);
 
     vm.stopPrank();
 
     vm.startPrank(player);
-    world.trainUnits(buildingEntity, unitPrototype, count);
+    world.Primodium__trainUnits(buildingEntity, unitPrototype, count);
     if (fastForward) vm.warp(block.timestamp + (LibUnit.getUnitBuildTime(buildingEntity, unitPrototype) * count));
     vm.stopPrank();
 
@@ -263,19 +247,19 @@ contract PrimodiumTest is MudTest {
     vm.stopPrank();
   }
 
-  function upgradeMainBase(address player) internal returns (uint256) {
+  function upgradeMainBase(address player) internal {
     bytes32 playerEntity = addressToEntity(player);
-    bytes32 spaceRock = Home.get(playerEntity);
-    bytes32 mainBase = Home.get(spaceRock);
+    bytes32 asteroidEntity = Home.get(playerEntity);
+    bytes32 mainBase = Home.get(asteroidEntity);
     P_RequiredResourcesData memory requiredResources = getUpgradeCost(mainBase);
-    provideResources(spaceRock, requiredResources);
+    provideResources(asteroidEntity, requiredResources);
     upgradeBuilding(player, mainBase);
   }
 
-  function upgradeMainBase(address player, uint256 level) internal returns (uint256) {
+  function upgradeMainBase(address player, uint256 level) internal {
     bytes32 playerEntity = addressToEntity(player);
-    bytes32 spaceRock = Home.get(playerEntity);
-    bytes32 mainBase = Home.get(spaceRock);
+    bytes32 asteroidEntity = Home.get(playerEntity);
+    bytes32 mainBase = Home.get(asteroidEntity);
     while (Level.get(mainBase) < level) {
       upgradeBuilding(player, mainBase);
     }
@@ -283,73 +267,73 @@ contract PrimodiumTest is MudTest {
 
   function upgradeBuilding(address player, bytes32 buildingEntity) internal {
     P_RequiredResourcesData memory requiredResources = getUpgradeCost(buildingEntity);
-    provideResources(Position.get(buildingEntity).parent, requiredResources);
+    provideResources(Position.getParentEntity(buildingEntity), requiredResources);
     uint256 requiredMainBaseLevel = P_RequiredBaseLevel.get(
       BuildingType.get(buildingEntity),
       Level.get(buildingEntity) + 1
     );
     upgradeMainBase(player, requiredMainBaseLevel);
     vm.startPrank(player);
-    world.upgradeBuilding(Position.get(buildingEntity));
+    world.Primodium__upgradeBuilding(buildingEntity);
     vm.stopPrank();
   }
 
   function buildBuilding(address player, EBuilding building) internal returns (bytes32) {
     P_RequiredResourcesData memory requiredResources = getBuildCost(building);
     PositionData memory position = getTilePosition(Home.get(addressToEntity(player)), building);
-    provideResources(position.parent, requiredResources);
+    provideResources(position.parentEntity, requiredResources);
     uint256 requiredMainBaseLevel = P_RequiredBaseLevel.get(P_EnumToPrototype.get(BuildingKey, uint8(building)), 1);
     upgradeMainBase(player, requiredMainBaseLevel);
     vm.startPrank(player);
-    bytes32 building = world.build(building, position);
+    bytes32 buildingEntity = world.Primodium__build(building, position);
     vm.stopPrank();
-    return building;
+    return buildingEntity;
   }
 
-  function provideMaxStorage(bytes32 spaceRock, P_RequiredResourcesData memory requiredResources) internal {
+  function provideMaxStorage(bytes32 asteroidEntity, P_RequiredResourcesData memory requiredResources) internal {
     vm.startPrank(creator);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       if (P_IsUtility.get(requiredResources.resources[i])) continue;
-      if (MaxResourceCount.get(spaceRock, requiredResources.resources[i]) < requiredResources.amounts[i])
+      if (MaxResourceCount.get(asteroidEntity, requiredResources.resources[i]) < requiredResources.amounts[i])
         LibStorage.increaseMaxStorage(
-          spaceRock,
+          asteroidEntity,
           requiredResources.resources[i],
-          requiredResources.amounts[i] - MaxResourceCount.get(spaceRock, requiredResources.resources[i])
+          requiredResources.amounts[i] - MaxResourceCount.get(asteroidEntity, requiredResources.resources[i])
         );
     }
     vm.stopPrank();
   }
 
-  function provideResources(bytes32 spaceRock, P_RequiredResourcesData memory requiredResources) internal {
+  function provideResources(bytes32 asteroidEntity, P_RequiredResourcesData memory requiredResources) internal {
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
-      increaseResource(spaceRock, EResource(requiredResources.resources[i]), requiredResources.amounts[i]);
+      increaseResource(asteroidEntity, EResource(requiredResources.resources[i]), requiredResources.amounts[i]);
     }
   }
 
-  function claimResources(bytes32 spaceRock) internal {
+  function claimResources(bytes32 asteroidEntity) internal {
     vm.startPrank(creator);
-    world.claimResources(spaceRock);
+    world.Primodium__claimResources(asteroidEntity);
     vm.stopPrank();
   }
 
-  function increaseProduction(bytes32 spaceRock, EResource resource, uint256 amount) internal {
+  function increaseProduction(bytes32 asteroidEntity, EResource resource, uint256 amount) internal {
     vm.startPrank(creator);
-    LibProduction.increaseResourceProduction(spaceRock, resource, amount);
+    LibProduction.increaseResourceProduction(asteroidEntity, resource, amount);
     vm.stopPrank();
   }
 
-  function increaseResource(bytes32 spaceRock, EResource resourceType, uint256 count) internal {
+  function increaseResource(bytes32 asteroidEntity, EResource resourceType, uint256 count) internal {
     vm.startPrank(creator);
     if (P_IsUtility.get(uint8(resourceType))) {
-      LibProduction.increaseResourceProduction(spaceRock, resourceType, count);
+      LibProduction.increaseResourceProduction(asteroidEntity, resourceType, count);
     } else {
-      if (MaxResourceCount.get(spaceRock, uint8(resourceType)) < count)
+      if (MaxResourceCount.get(asteroidEntity, uint8(resourceType)) < count)
         LibStorage.increaseMaxStorage(
-          spaceRock,
+          asteroidEntity,
           uint8(resourceType),
-          count - MaxResourceCount.get(spaceRock, uint8(resourceType))
+          count - MaxResourceCount.get(asteroidEntity, uint8(resourceType))
         );
-      LibStorage.increaseStoredResource(spaceRock, uint8(resourceType), count);
+      LibStorage.increaseStoredResource(asteroidEntity, uint8(resourceType), count);
     }
     vm.stopPrank();
   }
@@ -391,19 +375,19 @@ contract PrimodiumTest is MudTest {
 
   function setupCreateFleet(
     address player,
-    bytes32 spaceRock,
+    bytes32 asteroidEntity,
     uint256[] memory unitCounts,
     uint256[] memory resourceCounts
   ) public {
-    if (ResourceCount.get(spaceRock, uint8(EResource.U_MaxFleets)) == 0) {
-      increaseProduction(spaceRock, EResource.U_MaxFleets, 1);
+    if (ResourceCount.get(asteroidEntity, uint8(EResource.U_MaxFleets)) == 0) {
+      increaseProduction(asteroidEntity, EResource.U_MaxFleets, 1);
     }
-    setupCreateFleetNoMaxMovesGranted(player, spaceRock, unitCounts, resourceCounts);
+    setupCreateFleetNoMaxMovesGranted(player, asteroidEntity, unitCounts, resourceCounts);
   }
 
   function setupCreateFleetNoMaxMovesGranted(
     address player,
-    bytes32 spaceRock,
+    bytes32 asteroidEntity,
     uint256[] memory unitCounts,
     uint256[] memory resourceCounts
   ) public {
@@ -413,19 +397,23 @@ contract PrimodiumTest is MudTest {
     }
     uint8[] memory transportables = P_Transportables.get();
     for (uint256 i = 0; i < transportables.length; i++) {
-      increaseResource(spaceRock, EResource(transportables[i]), resourceCounts[i]);
+      increaseResource(asteroidEntity, EResource(transportables[i]), resourceCounts[i]);
     }
   }
 
-  function findSecondaryAsteroid(bytes32 player, bytes32 asteroid) public returns (PositionData memory) {
+  function findSecondaryAsteroid(bytes32 asteroidEntity) public view returns (PositionData memory) {
     P_GameConfigData memory config = P_GameConfig.get();
-    PositionData memory sourcePosition = Position.get(asteroid);
+    PositionData memory sourcePosition = Position.get(asteroidEntity);
     logPosition(sourcePosition);
     bytes32 asteroidSeed;
     PositionData memory targetPosition;
     uint256 i = 0;
     bool found = false;
     while (i < 6 && !found) {
+      if (i == P_WormholeAsteroidConfig.getWormholeAsteroidSlot()) {
+        i++;
+        continue;
+      }
       PositionData memory targetPositionRelative = LibAsteroid.getPosition(
         i,
         config.asteroidDistance,
@@ -439,18 +427,38 @@ contract PrimodiumTest is MudTest {
       );
       logPosition(targetPosition);
 
-      asteroidSeed = keccak256(abi.encode(asteroid, bytes32("asteroid"), targetPosition.x, targetPosition.y));
-      found = LibAsteroid.isAsteroid(asteroidSeed, config.asteroidChanceInv);
+      asteroidSeed = keccak256(abi.encode(asteroidEntity, bytes32("asteroid"), targetPosition.x, targetPosition.y));
+      found = LibAsteroid.isAsteroid(asteroidSeed, config.asteroidChanceInv, i);
       i++;
     }
     require(found, "uh oh, no asteroid found");
     return (targetPosition);
   }
+
+  function findWormholeAsteroid(bytes32 asteroidEntity) public view returns (PositionData memory) {
+    P_GameConfigData memory config = P_GameConfig.get();
+    PositionData memory sourcePosition = Position.get(asteroidEntity);
+    logPosition(sourcePosition);
+
+    PositionData memory targetPositionRelative = LibAsteroid.getPosition(
+      P_WormholeAsteroidConfig.getWormholeAsteroidSlot(),
+      config.asteroidDistance,
+      config.maxAsteroidsPerPlayer
+    );
+    PositionData memory targetPosition = PositionData({
+      x: sourcePosition.x + targetPositionRelative.x,
+      y: sourcePosition.y + targetPositionRelative.y,
+      parentEntity: 0
+    });
+    logPosition(targetPosition);
+    return (targetPosition);
+  }
+
   function conquerAsteroid(address player, bytes32 sourceAsteroid, bytes32 targetAsteroid) internal returns (bytes32) {
     bytes32 playerEntity = addressToEntity(player);
     uint256 asteroidDefense = LibCombatAttributes.getDefense(targetAsteroid);
     bytes32 minutemanEntity = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
-    bytes32 capitalShip = P_EnumToPrototype.get(UnitKey, uint8(EUnit.CapitalShip));
+    bytes32 colonyShip = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
     uint256 minutemanAttack = P_Unit.getAttack(minutemanEntity, 1);
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
@@ -458,21 +466,21 @@ contract PrimodiumTest is MudTest {
     uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == minutemanEntity) unitCounts[i] = (10 * asteroidDefense) / minutemanAttack + 1;
-      else if (unitPrototypes[i] == capitalShip) unitCounts[i] = 1;
+      else if (unitPrototypes[i] == colonyShip) unitCounts[i] = 1;
       else unitCounts[i] = 0;
     }
     setupCreateFleet(player, sourceAsteroid, unitCounts, resourceCounts);
     vm.startPrank(player);
     console.log("creating");
-    bytes32 fleetEntity = world.createFleet(sourceAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Primodium__createFleet(sourceAsteroid, unitCounts, resourceCounts);
     console.log("sending");
-    world.sendFleet(fleetEntity, targetAsteroid);
+    world.Primodium__sendFleet(fleetEntity, targetAsteroid);
     vm.warp(FleetMovement.getArrivalTime(fleetEntity));
 
     while (OwnedBy.get(targetAsteroid) != playerEntity) {
       console.log("attacking");
-      uint256 cooldown = LibFleetCombat.getCooldownTime(LibCombatAttributes.getAttack(fleetEntity), true);
-      world.attack(fleetEntity, targetAsteroid);
+      uint256 cooldown = LibCombat.getCooldownTime(LibCombatAttributes.getAttack(fleetEntity), true);
+      world.Primodium__attack(fleetEntity, targetAsteroid);
       vm.warp(block.timestamp + cooldown);
     }
     vm.stopPrank();

@@ -4,7 +4,6 @@ import { Account, Time } from "src/network/components/clientComponents";
 
 import { useMemo } from "react";
 
-import { AudioKeys } from "@game/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { FaCheck, FaGift, FaMedal, FaSpinner } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
@@ -23,7 +22,6 @@ import { getEntityTypeName } from "src/util/common";
 import {
   BackgroundImage,
   ObjectiveEntityLookup,
-  RequirementType,
   ResourceImage,
   ResourceType,
   TransactionQueueType,
@@ -40,6 +38,7 @@ import {
 import { getFullResourceCount } from "src/util/resource";
 import { getRewards } from "src/util/reward";
 import { Hex } from "viem";
+import { AudioKeys } from "src/game/lib/constants/assets/audio";
 
 const ClaimObjectiveButton: React.FC<{
   objectiveEntity: Entity;
@@ -158,11 +157,7 @@ const Objective: React.FC<{
                           }
                           text={formatNumber(value / _req.scale, { short: true, fractionDigits: 3 })}
                           tooltipDirection={"bottom"}
-                          tooltipText={
-                            _req.type === RequirementType.DefeatedPirates
-                              ? "Defeated Pirates"
-                              : getEntityTypeName(_req.id)
-                          }
+                          tooltipText={getEntityTypeName(_req.id)}
                           className="text-xs font-bold"
                         />
 

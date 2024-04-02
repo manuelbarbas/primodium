@@ -1,26 +1,32 @@
 import { Coord } from "@latticexyz/utils";
 import { EBuilding } from "contracts/config/enums";
 import { ampli } from "src/ampli";
-import { execute } from "src/network/actions";
 import { components } from "src/network/components";
+import { TxQueueOptions } from "src/network/components/customComponents/TransactionQueueComponent";
+import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
-import { getBuildingTopLeft } from "src/util/building";
 import { getEntityTypeName } from "src/util/common";
+import { getBuildingBottomLeft } from "src/util/building";
 import { BuildingEntityLookup, TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const buildBuilding = async (mud: MUD, building: EBuilding, coord: Coord) => {
+export const buildBuilding = async (
+  mud: MUD,
+  building: EBuilding,
+  coord: Coord & { parentEntity?: Hex },
+  options?: Partial<TxQueueOptions<TransactionQueueType.Upgrade>>
+) => {
   const activeAsteroid = components.ActiveRock.get()?.value;
   if (!activeAsteroid) return;
 
-  const position = { ...coord, parent: activeAsteroid as Hex };
+  const position = { ...coord, parentEntity: coord.parentEntity ?? (activeAsteroid as Hex) };
 
   await execute(
     {
       mud,
-      functionName: "build",
+      functionName: "Primodium__build",
       systemId: getSystemId("BuildSystem"),
       args: [building, position],
       withSession: true,
@@ -30,9 +36,10 @@ export const buildBuilding = async (mud: MUD, building: EBuilding, coord: Coord)
       id: hashEntities(TransactionQueueType.Build, coord.x, coord.y),
       type: TransactionQueueType.Build,
       metadata: {
-        coord: getBuildingTopLeft(coord, BuildingEntityLookup[building]),
+        coord: getBuildingBottomLeft(coord, BuildingEntityLookup[building]),
         buildingType: BuildingEntityLookup[building],
       },
+      ...options,
     },
     (receipt) => {
       ampli.systemBuild({

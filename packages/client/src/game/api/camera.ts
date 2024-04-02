@@ -4,10 +4,18 @@ import { Scene } from "engine/types";
 
 // const anchorMap =
 export const createCameraApi = (targetScene: Scene) => {
-  function pan(coord: Coord, duration = 1000, ease = "Power2") {
-    const { phaserScene, camera, tilemap } = targetScene;
+  function pan(
+    coord: Coord,
+    options: {
+      duration?: number;
+      pixel?: boolean;
+      ease?: string;
+    } = {}
+  ) {
+    const { phaserScene, camera, tiled: tilemap } = targetScene;
+    const { pixel = false, ease = "Power2", duration = 1000 } = options;
 
-    const pixelCoord = tileCoordToPixelCoord(coord, tilemap.tileWidth, tilemap.tileHeight);
+    const pixelCoord = pixel ? coord : tileCoordToPixelCoord(coord, tilemap.tileWidth, tilemap.tileHeight);
 
     const scroll = camera.phaserCamera.getScroll(pixelCoord.x, -pixelCoord.y);
 
@@ -51,7 +59,7 @@ export const createCameraApi = (targetScene: Scene) => {
   }
 
   function getPosition() {
-    const { camera, tilemap } = targetScene;
+    const { camera, tiled: tilemap } = targetScene;
 
     const coord = camera?.phaserCamera.worldView;
     if (!coord) throw new Error("Camera not found.");
@@ -102,7 +110,7 @@ export const createCameraApi = (targetScene: Scene) => {
 
   function createDOMContainer(id: string, coord: Coord, raw = false) {
     const {
-      tilemap: { tileHeight, tileWidth },
+      tiled: { tileHeight, tileWidth },
     } = targetScene;
     const pixelCoord = raw ? coord : tileCoordToPixelCoord(coord, tileWidth, tileHeight);
     pixelCoord.y = raw ? pixelCoord.y : -pixelCoord.y;

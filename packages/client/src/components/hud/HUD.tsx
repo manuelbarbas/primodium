@@ -1,4 +1,3 @@
-import { KeybindActions, Scenes } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { FC, memo, useEffect, useMemo, useRef } from "react";
@@ -8,9 +7,11 @@ import { useMud } from "src/hooks";
 import { useWidgets } from "src/hooks/providers/WidgetProvider";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
+import { useShallow } from "zustand/react/shallow";
 import { HUD } from "../core/HUD";
 import { Modal } from "../core/Modal";
 import { BrandingLabel } from "../shared/BrandingLabel";
+import { AsteroidLoading } from "./AsteroidLoading";
 import { CurrentObjective } from "./CurrentObjective";
 import { Profile } from "./Profile";
 import { Companion } from "./companion/Companion";
@@ -27,10 +28,10 @@ import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 import { OwnedFleets } from "./panes/OwnedFleets";
 import { Blueprints } from "./panes/blueprints/Blueprints";
 import { Chat } from "./panes/chat/Chat";
+import { Cheatcodes } from "./panes/dev/Cheatcodes";
 import { Hangar } from "./panes/hangar/Hangar";
 import { Resources } from "./panes/resources/Resources";
-import { AsteroidLoading } from "./AsteroidLoading";
-import { useShallow } from "zustand/react/shallow";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 export const GameHUD = memo(() => {
   const {
@@ -41,7 +42,7 @@ export const GameHUD = memo(() => {
     camera: { createDOMContainer },
     input: { addListener },
     scene: { transitionToScene },
-  } = useRef(primodium.api(Scenes.UI)).current;
+  } = useRef(primodium.api("UI")).current;
 
   const mapOpen = components.MapOpen.use(undefined, {
     value: false,
@@ -76,8 +77,8 @@ export const GameHUD = memo(() => {
     const closeMap = async () => {
       if (!components.MapOpen.get()?.value) return;
       await transitionToScene(
-        Scenes.Starmap,
-        Scenes.Asteroid,
+        "STARMAP",
+        "ASTEROID",
         0,
         (_, targetScene) => {
           targetScene.camera.phaserCamera.fadeOut(0, 0, 0, 0);
@@ -104,13 +105,13 @@ export const GameHUD = memo(() => {
       if (components.MapOpen.get()?.value) return;
       const activeRock = components.ActiveRock.get()?.value;
       const position = components.Position.get(activeRock) ?? { x: 0, y: 0 };
-      const { pan } = primodium.api(Scenes.Starmap).camera;
+      const { pan } = primodium.api("STARMAP").camera;
 
       pan(position, 0);
 
       await transitionToScene(
-        Scenes.Asteroid,
-        Scenes.Starmap,
+        "ASTEROID",
+        "STARMAP",
         0,
         (_, targetScene) => {
           targetScene.camera.phaserCamera.fadeOut(0, 0, 0, 0);
@@ -138,9 +139,9 @@ export const GameHUD = memo(() => {
   }, [isSpectating, primodium, transitionToScene]);
 
   useEffect(() => {
-    const starmapListener = primodium.api(Scenes.Starmap).input.addListener(KeybindActions.Map, closeMap);
+    const starmapListener = primodium.api("STARMAP").input.addListener(KeybindActions.Map, closeMap);
 
-    const asteroidListener = primodium.api(Scenes.Asteroid).input.addListener(KeybindActions.Map, openMap);
+    const asteroidListener = primodium.api("ASTEROID").input.addListener(KeybindActions.Map, openMap);
 
     return () => {
       starmapListener.dispose();
@@ -190,6 +191,9 @@ export const GameHUD = memo(() => {
               <Blueprints />
             </HUD.TopLeft>
 
+            <HUD.TopMiddle className="flex flex-col items-center gap-2">
+              <Cheatcodes />
+            </HUD.TopMiddle>
             <HUD.TopRight className="flex flex-col items-end gap-2">
               <CurrentObjective />
               <Resources />

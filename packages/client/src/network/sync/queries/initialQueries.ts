@@ -23,6 +23,8 @@ export const getInitalQuery = ({
       address: worldAddress as Hex,
       queries: [
         ...configTableQueries,
+        { tableId: tables.FunctionSelectors.tableId },
+        { tableId: tables.FunctionSignatures.tableId },
         { tableId: tables.Dimensions.tableId },
         { tableId: tables.GracePeriod.tableId },
         { tableId: tables.Score.tableId },
@@ -45,9 +47,6 @@ export const getInitalQuery = ({
             {
               tableId: tables.ReversePosition.tableId,
               on: "entity",
-            },
-            {
-              tableId: tables.PirateAsteroid.tableId,
             },
             {
               tableId: tables.Level.tableId,

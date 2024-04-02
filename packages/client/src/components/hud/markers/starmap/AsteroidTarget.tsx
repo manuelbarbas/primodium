@@ -1,4 +1,3 @@
-import { DepthLayers, Scenes } from "@game/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
@@ -16,7 +15,7 @@ import { Button } from "../../../core/Button";
 import { IconLabel } from "../../../core/IconLabel";
 import { Modal } from "../../../core/Modal";
 import { Fleets } from "../../panes/fleets/Fleets";
-
+import { DepthLayers } from "src/game/lib/constants/common";
 export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ selectedAsteroid }) => {
   const {
     playerAccount: { entity: playerEntity },
@@ -26,14 +25,13 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
     scene: { getConfig },
     hooks: { useCamera },
     util: { closeMap },
-  } = useRef(primodium.api(Scenes.Starmap)).current;
+  } = useRef(primodium.api("STARMAP")).current;
   const ownedBy = components.OwnedBy.use(selectedAsteroid)?.value;
   const mapOpen = components.MapOpen.use()?.value ?? false;
   const position = components.Position.use(selectedAsteroid);
   const imageUri = getAsteroidImage(primodium, selectedAsteroid);
 
   const { zoom } = useCamera();
-  const isPirate = components.PirateAsteroid.has(selectedAsteroid);
   const ownedByPlayer = ownedBy === playerEntity;
   const canAddFleets =
     ownedByPlayer &&
@@ -52,7 +50,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   );
 
   const [coord, defaultZoom, minZoom] = useMemo(() => {
-    const config = getConfig(Scenes.Starmap);
+    const config = getConfig("STARMAP");
 
     if (!config) throw Error("No config found for scene");
 
@@ -70,7 +68,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
 
   return (
     <Marker
-      scene={Scenes.Starmap}
+      scene={"STARMAP"}
       coord={coord}
       id={`asteroid-target`}
       offScreenIconUri="/img/icons/attackicon.png"
@@ -82,21 +80,19 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
           background: `rgba(0,0,0, ${Math.max(0, (defaultZoom - zoom) / (defaultZoom - minZoom))}`,
         }}
       >
-        {!isPirate && (
-          <div className="absolute top-0 right-0 translate-x-full w-24">
-            <Button
-              className="btn-ghost btn-xs text-xs text-accent bg-slate-900 border border-l-0 border-secondary/50"
-              onClick={async () => {
-                components.Send.reset();
-                components.ActiveRock.set({ value: selectedAsteroid });
-                await closeMap();
-              }}
-            >
-              {!ownedByPlayer && <IconLabel imageUri="/img/icons/spectateicon.png" className={``} text="VIEW" />}
-              {ownedByPlayer && <IconLabel imageUri="/img/icons/minersicon.png" className={``} text="BUILD" />}
-            </Button>
-          </div>
-        )}
+        <div className="absolute top-0 right-0 translate-x-full w-24">
+          <Button
+            className="btn-ghost btn-xs text-xs text-accent bg-slate-900 border border-l-0 border-secondary/50"
+            onClick={async () => {
+              components.Send.reset();
+              components.ActiveRock.set({ value: selectedAsteroid });
+              await closeMap();
+            }}
+          >
+            {!ownedByPlayer && <IconLabel imageUri="/img/icons/spectateicon.png" className={``} text="VIEW" />}
+            {ownedByPlayer && <IconLabel imageUri="/img/icons/minersicon.png" className={``} text="BUILD" />}
+          </Button>
+        </div>
         {ownedByPlayer && !selectingDestination && (
           <div className="absolute bottom-0 right-0 translate-x-full w-36">
             <Button

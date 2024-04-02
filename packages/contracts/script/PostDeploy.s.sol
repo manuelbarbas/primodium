@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 import { Script } from "forge-std/Script.sol";
 import { console } from "forge-std/console.sol";
@@ -18,9 +18,10 @@ contract PostDeploy is Script {
     uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
 
     IWorld world = IWorld(worldAddress);
+    console.log("world address:", worldAddress);
     vm.startBroadcast(deployerPrivateKey);
     StoreSwitch.setStoreAddress(worldAddress);
-    world.increment();
+    world.Primodium__increment();
 
     world.installRootModule(new StandardDelegationsModule(), new bytes(0));
 

@@ -1,4 +1,3 @@
-import { Scenes } from "@game/constants";
 import { useEffect, useRef } from "react";
 import { usePrimodium } from "src/hooks/usePrimodium";
 
@@ -24,9 +23,9 @@ export const TextInput: React.FC<{
   requirePattern,
 }) => {
   const primodium = usePrimodium();
-  const input = primodium.api(Scenes.UI).input;
-  const input2 = primodium.api(Scenes.Asteroid).input;
-  const input3 = primodium.api(Scenes.Starmap).input;
+  const input = primodium.api("UI").input;
+  const input2 = primodium.api("ASTEROID").input;
+  const input3 = primodium.api("STARMAP").input;
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {

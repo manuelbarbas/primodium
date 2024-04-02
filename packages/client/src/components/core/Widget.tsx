@@ -1,4 +1,3 @@
-import { KeybindActions, Scenes } from "@game/constants";
 import { Coord } from "@latticexyz/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { ReactNode, memo, useCallback, useEffect, useMemo, useState } from "react";
@@ -9,10 +8,12 @@ import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useWidgets } from "../../hooks/providers/WidgetProvider";
 import { Card, NoBorderCard } from "./Card";
+import { SceneKeys } from "src/game/lib/constants/common";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 type WidgetProps = {
   title: string;
-  scene: Scenes;
+  scene: SceneKeys;
   id: string;
   defaultCoord: Coord;
   children: ReactNode;
@@ -168,13 +169,13 @@ export const Content: React.FC<WidgetContentProps> = memo(
       >
         <div
           className={`flex p-1 text-xs items-center gap-3 justify-between w-full cursor-move ring-1 ring-secondary ${
-            locked ? "bg-info/50 cursor-default" : pinned ? "bg-neutral/75" : "bg-secondary/20"
+            locked ? "bg-info/50 cursor-default" : pinned ? "bg-neutral/75" : "bg-secondary/50"
           }`}
           onPointerDown={onMouseDown}
           onDoubleClick={onDoubleClick}
         >
           {/* Title */}
-          <div className="flex gap-1 px-2 items-center">
+          <div className="flex gap-1 bg-gray-900 px-2 items-center">
             {icon && <img src={icon} className="pixel-images h-5" />}
             <p className=" uppercase font-bold">{title}</p>
           </div>
@@ -199,7 +200,7 @@ export const Content: React.FC<WidgetContentProps> = memo(
 
         {noBorder ? (
           <NoBorderCard
-            className={`relative !p-0 min-w-72 !pointer-events-none filter !bg-opacity-0 ${
+            className={`relative !p-0 min-w-72 filter !bg-opacity-0 ${
               minimized ? "!border-0 h-0 overflow-hidden opacity-0" : ""
             }`}
           >
@@ -207,7 +208,7 @@ export const Content: React.FC<WidgetContentProps> = memo(
           </NoBorderCard>
         ) : (
           <Card
-            className={`relative !p-0 min-w-72 border border-t-success border-secondary !pointer-events-none filter ${
+            className={`relative !p-0 min-w-72 border border-t-success border-secondary filter ${
               minimized ? "!border-0 h-0 overflow-hidden opacity-0" : ""
             }`}
           >
@@ -252,7 +253,7 @@ export const Widget: React.FC<WidgetProps> = memo(
     const [minimized, setMinimized] = useState(false);
     const [dragging, setDragging] = useState(false);
     const [dragOffset, setDragOffset] = useState<Coord>({ x: 0, y: 0 });
-    const [pinned, setPinned] = useState(paneInfo[id]?.pinned ?? (scene === Scenes.UI ? false : defaultPinned));
+    const [pinned, setPinned] = useState(paneInfo[id]?.pinned ?? (scene === "UI" ? false : defaultPinned));
     const [locked, setLocked] = useState(paneInfo[id]?.locked ?? defaultLocked);
     // const [coord, setCoord] = useState<Coord>(paneInfo[id]?.coord ?? defaultCoord);
     const [visible, setVisible] = useState(paneInfo[id]?.visible ?? defaultVisible);
@@ -268,7 +269,7 @@ export const Widget: React.FC<WidgetProps> = memo(
 
     const [camera, uiCamera] = useMemo(() => {
       const { camera } = primodium.api(scene);
-      const { camera: uiCamera } = primodium.api(Scenes.UI);
+      const { camera: uiCamera } = primodium.api("UI");
 
       return [camera, uiCamera];
     }, [primodium, scene]);
@@ -617,8 +618,8 @@ export const Widget: React.FC<WidgetProps> = memo(
               onPointerEnter={handlePointerEnter}
               onPointerLeave={handlePointerLeave}
               minimized={minimized}
-              onPin={pinnable && scene !== Scenes.UI ? handlePin : undefined}
-              onUnpin={pinnable && scene !== Scenes.UI ? handleUnpin : undefined}
+              onPin={pinnable && scene !== "UI" ? handlePin : undefined}
+              onUnpin={pinnable && scene !== "UI" ? handleUnpin : undefined}
               pinned={pinned}
               onMouseDown={handleMouseDown}
               onDoubleClick={handleReset}

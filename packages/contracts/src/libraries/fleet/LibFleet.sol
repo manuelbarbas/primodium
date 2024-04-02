@@ -1,47 +1,51 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 import { EResource } from "src/Types.sol";
-import { IsFleet, IsFleetEmpty, GracePeriod, P_GracePeriod, P_Transportables, P_EnumToPrototype, FleetStance, FleetStanceData, Position, FleetMovementData, FleetMovement, Spawned, PirateAsteroid, DefeatedPirate, UnitCount, ReversePosition, PositionData, P_Unit, P_UnitData, UnitLevel, P_GameConfig, P_GameConfigData, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { IsFleet, IsFleetEmpty, GracePeriod, P_GracePeriod, P_Transportables, FleetMovementData, FleetMovement, UnitCount, P_GameConfig, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
-import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
-import { FleetsMap } from "libraries/fleet/FleetsMap.sol";
+import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
-import { FleetKey, FleetOwnedByKey, FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
+import { FleetKey, FleetOwnedByKey, FleetIncomingKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
-import { EResource, EFleetStance } from "src/Types.sol";
-
 library LibFleet {
-  /// @notice creates a fleet.
+  /**
+   * @notice Creates a new fleet and assigns units and resources to it from an asteroid.
+   * @param playerEntity The identifier of the player creating the fleet.
+   * @param asteroidEntity The identifier of the asteroid from which units and resources are drawn.
+   * @param unitCounts The quantities of each unit type to be included in the fleet.
+   * @param resourceCounts The quantities of each resource type to be included in the fleet.
+   * @return fleetEntity The identifier of the newly created fleet.
+   * @dev Decrements the corresponding units and resources from the asteroid and increments them in the new fleet.
+   */
   function createFleet(
     bytes32 playerEntity,
-    bytes32 spaceRock,
+    bytes32 asteroidEntity,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
-  ) internal returns (bytes32 fleetId) {
-    require(ResourceCount.get(spaceRock, uint8(EResource.U_MaxFleets)) > 0, "[Fleet] Space rock has no max moves");
-    LibStorage.decreaseStoredResource(spaceRock, uint8(EResource.U_MaxFleets), 1);
-    //require(ResourceCount.get(spaceRock, EResource.U_Cargo) > 0, "[Fleet] Space rock has no cargo capacity"))
-    fleetId = LibEncode.getTimedHash(playerEntity, FleetKey);
+  ) internal returns (bytes32 fleetEntity) {
+    require(ResourceCount.get(asteroidEntity, uint8(EResource.U_MaxFleets)) > 0, "[Fleet] asteroid has no max moves");
+    LibStorage.decreaseStoredResource(asteroidEntity, uint8(EResource.U_MaxFleets), 1);
+    fleetEntity = LibEncode.getTimedHash(playerEntity, FleetKey);
     uint256 gracePeriodLength = (P_GracePeriod.getFleet() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
-    GracePeriod.set(fleetId, block.timestamp + gracePeriodLength);
+    GracePeriod.set(fleetEntity, block.timestamp + gracePeriodLength);
 
-    OwnedBy.set(fleetId, spaceRock);
-    IsFleet.set(fleetId, true);
-    IsFleetEmpty.set(fleetId, false);
+    OwnedBy.set(fleetEntity, asteroidEntity);
+    IsFleet.set(fleetEntity, true);
+    IsFleetEmpty.set(fleetEntity, false);
 
     FleetMovement.set(
-      fleetId,
+      fleetEntity,
       FleetMovementData({
         arrivalTime: block.timestamp,
         sendTime: block.timestamp,
-        origin: spaceRock,
-        destination: spaceRock
+        origin: asteroidEntity,
+        destination: asteroidEntity
       })
     );
 
@@ -49,112 +53,165 @@ library LibFleet {
 
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
-      uint256 rockUnitCount = UnitCount.get(spaceRock, unitPrototypes[i]);
-      require(rockUnitCount >= unitCounts[i], "[Fleet] Not enough units to add to fleet");
-      LibUnit.decreaseUnitCount(spaceRock, unitPrototypes[i], unitCounts[i], false);
-      increaseFleetUnit(fleetId, unitPrototypes[i], unitCounts[i], false);
+      uint256 asteroidUnitCount = UnitCount.get(asteroidEntity, unitPrototypes[i]);
+      require(asteroidUnitCount >= unitCounts[i], "[Fleet] Not enough units to add to fleet");
+      LibUnit.decreaseUnitCount(asteroidEntity, unitPrototypes[i], unitCounts[i], false);
+      increaseFleetUnit(fleetEntity, unitPrototypes[i], unitCounts[i], false);
     }
 
-    uint256 freeCargoSpace = LibCombatAttributes.getCargoSpace(fleetId);
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
-      uint8 resource = transportables[i];
       if (resourceCounts[i] == 0) continue;
-      uint256 rockResourceCount = ResourceCount.get(spaceRock, transportables[i]);
-      require(rockResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
-      LibStorage.decreaseStoredResource(spaceRock, transportables[i], resourceCounts[i]);
-      increaseFleetResource(fleetId, transportables[i], resourceCounts[i]);
+      uint256 asteroidResourceCount = ResourceCount.get(asteroidEntity, transportables[i]);
+      require(asteroidResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to add to fleet");
+      LibStorage.decreaseStoredResource(asteroidEntity, transportables[i], resourceCounts[i]);
+      increaseFleetResource(fleetEntity, transportables[i], resourceCounts[i]);
     }
 
-    FleetsMap.add(spaceRock, FleetOwnedByKey, fleetId);
-    FleetsMap.add(spaceRock, FleetIncomingKey, fleetId);
+    FleetSet.add(asteroidEntity, FleetOwnedByKey, fleetEntity);
+    FleetSet.add(asteroidEntity, FleetIncomingKey, fleetEntity);
   }
 
-  function increaseFleetUnit(bytes32 fleetId, bytes32 unitPrototype, uint256 unitCount, bool updatesUtility) internal {
+  /**
+   * @notice Increases the count of a specific unit type in a fleet.
+   * @param fleetEntity The identifier of the fleet to modify.
+   * @param unitPrototype The prototype of the unit to be added to the fleet.
+   * @param unitCount The quantity of the units to be added.
+   * @param updatesUtility A flag indicating whether the addition of units should update stored utilities.
+   * @dev Adds units to the fleet and optionally updates the utility storage.
+   */
+  function increaseFleetUnit(
+    bytes32 fleetEntity,
+    bytes32 unitPrototype,
+    uint256 unitCount,
+    bool updatesUtility
+  ) internal {
     if (unitCount == 0) return;
     if (updatesUtility) {
-      LibUnit.updateStoredUtilities(OwnedBy.get(fleetId), unitPrototype, unitCount, true);
+      LibUnit.updateStoredUtilities(OwnedBy.get(fleetEntity), unitPrototype, unitCount, true);
     }
-    UnitCount.set(fleetId, unitPrototype, UnitCount.get(fleetId, unitPrototype) + unitCount);
+    UnitCount.set(fleetEntity, unitPrototype, UnitCount.get(fleetEntity, unitPrototype) + unitCount);
   }
 
-  function decreaseFleetUnit(bytes32 fleetId, bytes32 unitPrototype, uint256 unitCount, bool updatesUtility) internal {
+  /**
+   * @notice Decreases the count of a specific unit type in a fleet.
+   * @param fleetEntity The identifier of the fleet to modify.
+   * @param unitPrototype The prototype of the unit to be removed from the fleet.
+   * @param unitCount The quantity of the units to be removed.
+   * @param updatesUtility A flag indicating whether the removal of units should update stored utilities.
+   * @dev Removes units from the fleet and optionally updates the utility storage.
+   */
+  function decreaseFleetUnit(
+    bytes32 fleetEntity,
+    bytes32 unitPrototype,
+    uint256 unitCount,
+    bool updatesUtility
+  ) internal {
     if (unitCount == 0) return;
-    uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototype);
+    uint256 fleetUnitCount = UnitCount.get(fleetEntity, unitPrototype);
     require(fleetUnitCount >= unitCount, "[Fleet] Not enough units to remove from fleet");
     if (updatesUtility) {
-      LibUnit.updateStoredUtilities(OwnedBy.get(fleetId), unitPrototype, unitCount, false);
+      LibUnit.updateStoredUtilities(OwnedBy.get(fleetEntity), unitPrototype, unitCount, false);
     }
-    UnitCount.set(fleetId, unitPrototype, fleetUnitCount - unitCount);
+    UnitCount.set(fleetEntity, unitPrototype, fleetUnitCount - unitCount);
   }
 
-  function getResourceCounts(bytes32 fleetId) internal view returns (uint256[] memory resourceCounts) {
+  /**
+   * @notice Retrieves the resource counts for a given fleet.
+   * @param fleetEntity The identifier of the fleet.
+   * @return resourceCounts An array of resource counts for each transportable resource.
+   */
+  function getResourceCounts(bytes32 fleetEntity) internal view returns (uint256[] memory resourceCounts) {
     uint8[] memory transportables = P_Transportables.get();
     resourceCounts = new uint256[](transportables.length);
     for (uint256 i = 0; i < transportables.length; i++) {
-      resourceCounts[i] = ResourceCount.get(fleetId, transportables[i]);
+      resourceCounts[i] = ResourceCount.get(fleetEntity, transportables[i]);
     }
     return resourceCounts;
   }
 
-  function getResourceCountsWithAllies(
-    bytes32 fleetId
-  ) internal view returns (uint256[] memory resourceCounts, uint256 totalResources) {
-    bytes32[] memory followerFleetIds = LibFleetStance.getFollowerFleets(fleetId);
+  /**
+   * @notice Retrieves the resource counts for a fleet, including contributions from allied fleets.
+   * @param fleetEntity The identifier of the fleet.
+   * @return totalResources The total number of resources across all transportable types.
+   */
+  function getResourceCountsWithAllies(bytes32 fleetEntity) internal view returns (uint256 totalResources) {
+    bytes32[] memory followerFleetEntities = LibFleetStance.getFollowerFleets(fleetEntity);
     uint8[] memory transportables = P_Transportables.get();
-    resourceCounts = new uint256[](transportables.length);
     for (uint256 i = 0; i < transportables.length; i++) {
-      resourceCounts[i] = ResourceCount.get(fleetId, transportables[i]);
-      for (uint8 j = 0; j < followerFleetIds.length; j++) {
-        resourceCounts[i] += ResourceCount.get(followerFleetIds[j], transportables[i]);
+      totalResources += ResourceCount.get(fleetEntity, transportables[i]);
+      for (uint8 j = 0; j < followerFleetEntities.length; j++) {
+        totalResources += ResourceCount.get(followerFleetEntities[j], transportables[i]);
       }
-      totalResources += resourceCounts[i];
     }
   }
 
-  function increaseFleetResource(bytes32 fleetId, uint8 resource, uint256 amount) internal {
+  /**
+   * @notice Increases the amount of a specific resource in a fleet.
+   * @param fleetEntity The identifier of the fleet.
+   * @param resource The type of resource to be added.
+   * @param amount The quantity of the resource to be added.
+   * @dev Ensures that the fleet has sufficient cargo space to store the added resources.
+   */
+  function increaseFleetResource(bytes32 fleetEntity, uint8 resource, uint256 amount) internal {
     if (amount == 0) return;
-    uint256 freeCargoSpace = LibCombatAttributes.getCargoSpace(fleetId);
+    uint256 freeCargoSpace = LibCombatAttributes.getCargoSpace(fleetEntity);
     require(freeCargoSpace >= amount, "[Fleet] Not enough storage to add resource");
-    ResourceCount.set(fleetId, resource, ResourceCount.get(fleetId, resource) + amount);
+    ResourceCount.set(fleetEntity, resource, ResourceCount.get(fleetEntity, resource) + amount);
   }
 
-  function decreaseFleetResource(bytes32 fleetId, uint8 resource, uint256 amount) internal {
+  /**
+   * @notice Decreases the amount of a specific resource in a fleet.
+   * @param fleetEntity The identifier of the fleet.
+   * @param resource The type of resource to be removed.
+   * @param amount The quantity of the resource to be removed.
+   * @dev Ensures that the fleet has enough of the resource to remove the specified amount.
+   */
+  function decreaseFleetResource(bytes32 fleetEntity, uint8 resource, uint256 amount) internal {
     if (amount == 0) return;
-    uint256 currResourceCount = ResourceCount.get(fleetId, resource);
+    uint256 currResourceCount = ResourceCount.get(fleetEntity, resource);
     require(currResourceCount >= amount, "[Fleet] Not enough stored resource to remove");
-    ResourceCount.set(fleetId, resource, currResourceCount - amount);
+    ResourceCount.set(fleetEntity, resource, currResourceCount - amount);
   }
 
-  function landFleet(bytes32 playerEntity, bytes32 fleetId, bytes32 spaceRock) internal {
-    bytes32 spaceRockOwner = OwnedBy.get(fleetId);
+  /**
+   * @notice Lands a fleet on an asteroid, transferring its units and resources to the asteroid.
+   * @param fleetEntity The identifier of the fleet landing on the asteroid.
+   * @param asteroidEntity The identifier of the asteroid where the fleet is landing.
+   * @dev Transfers all units and resources from the fleet to the asteroid. Resets the fleet's orbit if it lands on a foreign asteroid.
+   */
+  function landFleet(bytes32 fleetEntity, bytes32 asteroidEntity) internal {
+    bytes32 asteroidOwnerEntity = OwnedBy.get(fleetEntity);
 
-    bool isOwner = spaceRockOwner == spaceRock;
+    bool isOwner = asteroidOwnerEntity == asteroidEntity;
 
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
-      uint256 fleetResourceCount = ResourceCount.get(fleetId, transportables[i]);
+      uint256 fleetResourceCount = ResourceCount.get(fleetEntity, transportables[i]);
       if (fleetResourceCount == 0) continue;
-      LibStorage.increaseStoredResource(spaceRock, transportables[i], fleetResourceCount);
-      decreaseFleetResource(fleetId, transportables[i], fleetResourceCount);
+      LibStorage.increaseStoredResource(asteroidEntity, transportables[i], fleetResourceCount);
+      decreaseFleetResource(fleetEntity, transportables[i], fleetResourceCount);
     }
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
-      uint256 fleetUnitCount = UnitCount.get(fleetId, unitPrototypes[i]);
+      uint256 fleetUnitCount = UnitCount.get(fleetEntity, unitPrototypes[i]);
       if (fleetUnitCount == 0) continue;
-      decreaseFleetUnit(fleetId, unitPrototypes[i], fleetUnitCount, !isOwner);
-      LibUnit.increaseUnitCount(spaceRock, unitPrototypes[i], fleetUnitCount, !isOwner);
+      decreaseFleetUnit(fleetEntity, unitPrototypes[i], fleetUnitCount, !isOwner);
+      LibUnit.increaseUnitCount(asteroidEntity, unitPrototypes[i], fleetUnitCount, !isOwner);
     }
     if (!isOwner) {
-      resetFleetOrbit(fleetId);
+      resetFleetOrbit(fleetEntity);
     }
   }
 
-  function mergeFleets(bytes32 playerEntity, bytes32[] calldata fleets) internal {
+  /**
+   * @notice Merges multiple fleets into the first fleet in the array.
+   * @param fleets An array of fleet identifiers, with the first fleet being the target for merging.
+   * @dev Transfers all units and resources from the other fleets in the array to the first fleet.
+   */
+  function mergeFleets(bytes32[] calldata fleets) internal {
     require(fleets.length > 1, "[Fleet] Can only merge more than one fleet");
-    bytes32 spaceRock = FleetMovement.getDestination(fleets[0]);
-    bytes32 spaceRockOwner = OwnedBy.get(fleets[0]);
 
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
@@ -191,53 +248,71 @@ library LibFleet {
     }
   }
 
-  function isFleetEmpty(bytes32 fleetId) internal view returns (bool) {
+  /**
+   * @notice Checks if a fleet is empty, meaning it has no units.
+   * @param fleetEntity The identifier of the fleet to check.
+   * @return True if the fleet has no units, false otherwise.
+   */
+  function isFleetEmpty(bytes32 fleetEntity) internal view returns (bool) {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (UnitCount.get(fleetId, unitPrototypes[i]) > 0) return false;
+      if (UnitCount.get(fleetEntity, unitPrototypes[i]) > 0) return false;
     }
 
     return true;
   }
 
-  function resetFleetIfNoUnitsLeft(bytes32 fleetId) internal {
-    if (!isFleetEmpty(fleetId)) return;
+  /**
+   * @notice Resets the fleet's orbit if it has no units left.
+   * @param fleetEntity The identifier of the fleet to check and potentially reset.
+   * @dev Clears the fleet's stance and following fleets if it is empty.
+   */
+  function resetFleetIfNoUnitsLeft(bytes32 fleetEntity) internal {
+    if (!isFleetEmpty(fleetEntity)) return;
 
-    resetFleetOrbit(fleetId);
+    resetFleetOrbit(fleetEntity);
   }
 
-  function checkAndSetFleetEmpty(bytes32 fleetId) internal {
-    if (isFleetEmpty(fleetId)) {
-      IsFleetEmpty.set(fleetId, true);
+  /**
+   * @notice Checks if a fleet is empty and updates its status accordingly.
+   * @param fleetEntity The identifier of the fleet to check and update.
+   */
+  function checkAndSetFleetEmpty(bytes32 fleetEntity) internal {
+    if (isFleetEmpty(fleetEntity)) {
+      IsFleetEmpty.set(fleetEntity, true);
     } else {
-      IsFleetEmpty.set(fleetId, false);
+      IsFleetEmpty.set(fleetEntity, false);
     }
   }
 
-  function resetFleetOrbit(bytes32 fleetId) internal {
+  /**
+   * @notice Resets a fleet's orbit, clearing any stances and following fleets.
+   * @param fleetEntity The identifier of the fleet to reset.
+   */
+  function resetFleetOrbit(bytes32 fleetEntity) internal {
     //clears any stance
-    LibFleetStance.clearFleetStance(fleetId);
+    LibFleetStance.clearFleetStance(fleetEntity);
     //clears any following fleets
-    LibFleetStance.clearFollowingFleets(fleetId);
-    IsFleetEmpty.set(fleetId, true);
+    LibFleetStance.clearFollowingFleets(fleetEntity);
+    IsFleetEmpty.set(fleetEntity, true);
 
-    bytes32 spaceRock = FleetMovement.getDestination(fleetId);
-    bytes32 spaceRockOwner = OwnedBy.get(fleetId);
+    bytes32 asteroidEntity = FleetMovement.getDestination(fleetEntity);
+    bytes32 asteroidOwnerEntity = OwnedBy.get(fleetEntity);
 
-    if (spaceRockOwner != spaceRock) {
-      //remove fleet from incoming of current space rock
-      FleetsMap.remove(spaceRock, FleetIncomingKey, fleetId);
-      //set fleet to orbit of owner space rock
-      FleetsMap.add(spaceRockOwner, FleetIncomingKey, fleetId);
+    if (asteroidOwnerEntity != asteroidEntity) {
+      //remove fleet from incoming of current asteroid
+      FleetSet.remove(asteroidEntity, FleetIncomingKey, fleetEntity);
+      //set fleet to orbit of owner asteroid
+      FleetSet.add(asteroidOwnerEntity, FleetIncomingKey, fleetEntity);
     }
 
     FleetMovement.set(
-      fleetId,
+      fleetEntity,
       FleetMovementData({
         arrivalTime: block.timestamp,
         sendTime: block.timestamp,
-        origin: spaceRockOwner,
-        destination: spaceRockOwner
+        origin: asteroidOwnerEntity,
+        destination: asteroidOwnerEntity
       })
     );
   }

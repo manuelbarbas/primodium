@@ -1,31 +1,96 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EResource, EBuilding } from "src/Types.sol";
+
+import { Spawned, Home, Level, UsedTiles, MaxResourceCount, Position, PositionData, OwnedBy, P_GameConfig } from "codegen/index.sol";
+
+import { MainBasePrototypeId } from "codegen/Prototypes.sol";
+
+import { LibAsteroid } from "libraries/LibAsteroid.sol";
+
+import { UNLIMITED_DELEGATION } from "@latticexyz/world/src/constants.sol";
+import { ResourceId, WorldResourceIdLib, WorldResourceIdInstance } from "@latticexyz/world/src/WorldResourceId.sol";
+import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
+import { SystemCallData } from "@latticexyz/world/src/modules/init/types.sol";
+import { WorldRegistrationSystem } from "@latticexyz/world/src/modules/init/implementations/WorldRegistrationSystem.sol";
+import { SpawnSystem } from "systems/SpawnSystem.sol";
+import { ROOT_NAMESPACE } from "@latticexyz/world/src/constants.sol";
+import { UserDelegationControl } from "@latticexyz/world/src/codegen/tables/UserDelegationControl.sol";
+import { ISpawnSystem } from "codegen/world/ISpawnSystem.sol";
 
 contract SpawnSystemTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
   }
 
+  function testSpawnStuff() public returns (bytes32) {
+    uint256 speed = P_GameConfig.getWorldSpeed();
+    console.log("speed", speed);
+    // bytes32 playerEntity = addressToEntity(creator);
+    // vm.startPrank(creator);
+    // assertTrue(!Spawned.get(playerEntity), "[SpawnSystem] Already spawned");
+
+    // bytes32 asteroidEntity = LibAsteroid.createPrimaryAsteroid(playerEntity);
+    // Spawned.set(playerEntity, true);
+    // IWorld(_world()).Primodium__initAsteroidOwner(asteroidEntity, playerEntity);
+    // Home.set(playerEntity, asteroidEntity);
+    // return asteroidEntity;
+  }
   function testSpawnu() public {
     bytes32 playerEntity = addressToEntity(creator);
-    bytes32 asteroidEntity = LibEncode.getHash(playerEntity);
-    spawn(creator);
+    bytes32 asteroidEntity = spawn(creator);
     vm.startPrank(creator);
 
     bool spawned = Spawned.get(playerEntity);
     assertTrue(spawned, "Player should have spawned");
     assertEq(Home.get(playerEntity), asteroidEntity, "Player should have spawned on their own asteroid");
 
-    assertEq(Level.get(asteroidEntity), 1, "Player should have level 1");
+    assertEq(Level.get(asteroidEntity), 1, "Asteroid should have level 1");
+    assertEq(UsedTiles.length(asteroidEntity), 4, "Asteroid should have 5 * 256 size bitmap");
     assertEq(MaxResourceCount.get(asteroidEntity, uint8(EResource.U_MaxFleets)), 1, "Asteroid should have 1 max fleet");
   }
 
+  function testSpawnAndAuthorizeBatch() public {
+    vm.startPrank(alice);
+    SystemCallData[] memory systemCalls = new SystemCallData[](2);
+
+    ResourceId systemId = WorldResourceIdLib.encode({
+      typeId: RESOURCE_SYSTEM,
+      namespace: ROOT_NAMESPACE,
+      name: bytes14("Registration")
+    });
+
+    systemCalls[0] = SystemCallData(
+      systemId,
+      abi.encodeCall(WorldRegistrationSystem.registerDelegation, (bob, UNLIMITED_DELEGATION, new bytes(0)))
+    );
+
+    systemId = WorldResourceIdLib.encode({
+      typeId: RESOURCE_SYSTEM,
+      namespace: bytes14("Primodium"),
+      name: bytes16("SpawnSystem")
+    });
+    console.logBytes8(ISpawnSystem.Primodium__spawn.selector);
+    console.logBytes8(SpawnSystem.spawn.selector);
+    systemCalls[1] = SystemCallData(systemId, abi.encodeCall(ISpawnSystem.Primodium__spawn, ()));
+
+    vm.expectRevert();
+    world.batchCall(systemCalls);
+
+    systemCalls[1] = SystemCallData(systemId, abi.encodeCall(SpawnSystem.spawn, ()));
+    world.batchCall(systemCalls);
+    assertTrue(Spawned.get(addressToEntity(alice)), "Alice should have spawned");
+    console.log(WorldResourceIdInstance.toString(UserDelegationControl.get(alice, bob)));
+  }
+
   function testSpawnTwice() public {
-    world.spawn();
+    world.Primodium__spawn();
     vm.expectRevert(bytes("[SpawnSystem] Already spawned"));
-    world.spawn();
+    world.Primodium__spawn();
   }
 
   function testUniqueAsteroidPosition() public {
@@ -36,32 +101,29 @@ contract SpawnSystemTest is PrimodiumTest {
       bytes32 playerEntity = addressToEntity(newAddress);
       PositionData memory position = LibAsteroid.getUniqueAsteroidPosition(i);
       spawn(newAddress);
-      bytes32 asteroid = Home.get(playerEntity);
-      PositionData memory retrievedPosition = Position.get(asteroid);
+      bytes32 asteroidEntity = Home.get(playerEntity);
+      PositionData memory retrievedPosition = Position.get(asteroidEntity);
       assertEq(position, retrievedPosition);
     }
   }
 
   function testBuildMainBase() public {
-    bytes32 asteroid = spawn(creator);
+    bytes32 asteroidEntity = spawn(creator);
     vm.startPrank(creator);
-    // P_AsteroidData memory maxRange = P_Asteroid.get();
-    // PositionData memory calculatedPosition = PositionData(maxRange.xBounds / 2, maxRange.yBounds / 2, asteroid);
-    // logPosition(calculatedPosition);
 
     PositionData memory coord = Position.get(MainBasePrototypeId);
-    coord.parent = asteroid;
-    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
+    coord.parentEntity = asteroidEntity;
+    bytes32 buildingEntity = Home.get(asteroidEntity);
     PositionData memory position = Position.get(buildingEntity);
     assertEq(position.x, coord.x, "x values differ");
     assertEq(position.y, coord.y, "y values differ");
 
     assertTrue(OwnedBy.get(buildingEntity) != 0);
-    assertEq(OwnedBy.get(buildingEntity), asteroid);
+    assertEq(OwnedBy.get(buildingEntity), asteroidEntity);
   }
 
   function testBuildBeforeSpawnFail() public {
     vm.expectRevert(bytes("[BuildSystem] Player has not spawned"));
-    world.build(EBuilding.IronMine, PositionData(0, 0, 0));
+    world.Primodium__build(EBuilding.IronMine, PositionData(0, 0, 0));
   }
 }

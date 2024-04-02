@@ -1,13 +1,10 @@
 import config from "contracts/mud.config";
 
 const tableParams: Record<string, string> = Object.entries(config.tables).reduce((acc, [tableName, data]) => {
-  const formattedKeys = Object.entries(data.keySchema).map(([key, type]) => {
+  const schema = Object.entries(data.schema).map(([key, type]) => {
     return `${key}: ${type}`;
   }, "");
-  const formattedValues = Object.entries(data.valueSchema).map(([key, type]) => {
-    return `${key}: ${type}`;
-  }, "");
-  acc[tableName] = `Keys: {${formattedKeys.join(", ")}} Values: {${formattedValues.join(", ")}}`;
+  acc[tableName] = `Schema: {${schema.join(", ")}}`;
   return acc;
 }, {} as Record<string, string>);
 
@@ -33,9 +30,6 @@ const consoleApiDescriptions: Record<string, string> = {
   grantAccess: "Grants access to an authorized account.",
   revokeAccess: "Revokes previously granted authorized account.",
   revokeAllAccess: "Revokes all access from all authorized accounts.",
-
-  // Delegation
-  switchAuthorized: "Switches the authorization for this session.",
 
   // Alliance management
   createAlliance: "Creates a new alliance.",

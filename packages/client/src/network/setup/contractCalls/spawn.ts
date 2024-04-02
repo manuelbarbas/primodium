@@ -1,18 +1,18 @@
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { ampli } from "src/ampli";
-import { execute, executeBatch } from "src/network/actions";
+import { execute, executeBatch } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { UNLIMITED_DELEGATION } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const spawn = async (mud: MUD) => {
+export const spawnu = async (mud: MUD) => {
   await execute(
     {
       mud,
       systemId: getSystemId("SpawnSystem"),
-      functionName: "spawn",
+      functionName: "Primodium__spawn",
     },
     { id: singletonEntity },
     (receipt) => {
@@ -27,17 +27,17 @@ export const spawnAndAuthorizeSessionAccount = async (mud: MUD, sessionAccount: 
   const spawn = {
     mud,
     systemId: getSystemId("SpawnSystem"),
-    functionName: "spawn",
+    functionName: "Primodium__spawn",
+    withSession: false,
   } as const;
 
   const authorize = {
-    systemId: getSystemId("core"),
+    systemId: getSystemId("Registration", "CORE"),
     functionName: "registerDelegation" as const,
     args: [sessionAccount, UNLIMITED_DELEGATION, "0x0"] as [Hex, Hex, Hex],
     withSession: false,
   };
 
-  // await execute({ mud, ...authorize });
   await executeBatch(
     {
       mud,

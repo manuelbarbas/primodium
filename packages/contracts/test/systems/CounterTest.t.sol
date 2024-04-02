@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 
+import { Counter } from "codegen/index.sol";
 contract CounterTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
@@ -23,7 +24,7 @@ contract CounterTest is PrimodiumTest {
     assertEq(counter, 1);
 
     // Expect the counter to be 2 after calling increment.
-    world.increment();
+    world.Primodium__increment();
     counter = Counter.get();
     assertEq(counter, 2);
   }

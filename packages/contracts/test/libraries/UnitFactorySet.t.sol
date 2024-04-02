@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
-import "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 
 contract UnitFactorySetTest is PrimodiumTest {
-  bytes32 player = "player";
-  bytes32 building = "building";
+  bytes32 playerEntity = "playerEntity";
+  bytes32 buildingEntity = "buildingEntity";
 
   function setUp() public override {
     super.setUp();
@@ -13,60 +14,60 @@ contract UnitFactorySetTest is PrimodiumTest {
   }
 
   function testAdd() public {
-    UnitFactorySet.add(player, building);
-    assertTrue(UnitFactorySet.has(player, building));
-    assertFalse(UnitFactorySet.has(player, bytes32("other")));
+    UnitFactorySet.add(playerEntity, buildingEntity);
+    assertTrue(UnitFactorySet.has(playerEntity, buildingEntity));
+    assertFalse(UnitFactorySet.has(playerEntity, bytes32("other")));
   }
 
   function testAddDuplicate() public {
-    UnitFactorySet.add(player, building);
-    UnitFactorySet.add(player, building);
-    assertTrue(UnitFactorySet.has(player, building));
-    assertFalse(UnitFactorySet.has(player, bytes32("other")));
+    UnitFactorySet.add(playerEntity, buildingEntity);
+    UnitFactorySet.add(playerEntity, buildingEntity);
+    assertTrue(UnitFactorySet.has(playerEntity, buildingEntity));
+    assertFalse(UnitFactorySet.has(playerEntity, bytes32("other")));
   }
 
   function testGetAll() public {
-    UnitFactorySet.add(player, building);
-    UnitFactorySet.add(player, bytes32("other"));
-    bytes32[] memory all = UnitFactorySet.getAll(player);
+    UnitFactorySet.add(playerEntity, buildingEntity);
+    UnitFactorySet.add(playerEntity, bytes32("other"));
+    bytes32[] memory all = UnitFactorySet.getAll(playerEntity);
     assertEq(all.length, 2);
-    assertEq(all[0], building);
+    assertEq(all[0], buildingEntity);
     assertEq(all[1], bytes32("other"));
   }
 
   function testGetAllEmpty() public {
-    bytes32[] memory all = UnitFactorySet.getAll(player);
+    bytes32[] memory all = UnitFactorySet.getAll(playerEntity);
     assertEq(all.length, 0);
   }
 
   function testRemove() public {
-    UnitFactorySet.add(player, building);
-    UnitFactorySet.remove(player, building);
-    assertFalse(UnitFactorySet.has(player, building));
+    UnitFactorySet.add(playerEntity, buildingEntity);
+    UnitFactorySet.remove(playerEntity, buildingEntity);
+    assertFalse(UnitFactorySet.has(playerEntity, buildingEntity));
   }
 
   function testRemovePlayerDoesntExist() public {
-    UnitFactorySet.remove(player, building);
-    assertFalse(UnitFactorySet.has(player, building));
+    UnitFactorySet.remove(playerEntity, buildingEntity);
+    assertFalse(UnitFactorySet.has(playerEntity, buildingEntity));
   }
 
   function testRemoveBuildingDoesntExist() public {
-    UnitFactorySet.add(player, building);
-    UnitFactorySet.remove(player, bytes32("other"));
-    assertTrue(UnitFactorySet.has(player, building));
+    UnitFactorySet.add(playerEntity, buildingEntity);
+    UnitFactorySet.remove(playerEntity, bytes32("other"));
+    assertTrue(UnitFactorySet.has(playerEntity, buildingEntity));
   }
 
   function testRemoveOnlyOneBuilding() public {
-    UnitFactorySet.add(player, building);
-    UnitFactorySet.remove(player, building);
-    assertFalse(UnitFactorySet.has(player, building));
+    UnitFactorySet.add(playerEntity, buildingEntity);
+    UnitFactorySet.remove(playerEntity, buildingEntity);
+    assertFalse(UnitFactorySet.has(playerEntity, buildingEntity));
   }
 
   function testClear() public {
-    UnitFactorySet.add(player, building);
-    UnitFactorySet.add(player, bytes32("other"));
-    UnitFactorySet.clear(player);
-    assertFalse(UnitFactorySet.has(player, building));
-    assertFalse(UnitFactorySet.has(player, bytes32("other")));
+    UnitFactorySet.add(playerEntity, buildingEntity);
+    UnitFactorySet.add(playerEntity, bytes32("other"));
+    UnitFactorySet.clear(playerEntity);
+    assertFalse(UnitFactorySet.has(playerEntity, buildingEntity));
+    assertFalse(UnitFactorySet.has(playerEntity, bytes32("other")));
   }
 }
