@@ -80,6 +80,7 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
             {desc.type}
           </div>
           <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
+            {/* todo replace CP with icon */}
             {desc.conquestPoints.toLocaleString()} CP
           </div>
         </div>
