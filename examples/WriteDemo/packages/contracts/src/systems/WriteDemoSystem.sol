@@ -57,8 +57,7 @@ contract WriteDemoSystem is System {
     // They are included further down the contract.
     PositionData memory position = getTilePosition(asteroidEntity, building);
 
-    // if we get this far, then we have found a valid tile position to build on
-    // build it
+    // if we didn't revert in the above step, then we have found a valid tile position to build on
 
     // this is the correct way to implement this.  however, there is a bug in how MUD handles function selectors
     // when using callFrom, so we're going to have to do it a different way.
@@ -71,7 +70,7 @@ contract WriteDemoSystem is System {
     // );
 
     // find the expected function selector
-    bytes4 worldFunctionSelector = bytes4(keccak256(bytes("Primodium__build(uint8,(int32,int32,bytes32))")));
+    bytes4 worldFunctionSelector = IPrimodiumWorld(_world()).Primodium__build.selector;
 
     // look up that function selector in the MUD FunctionSelectors talbe, and get the actual function selector.
     // eventually, these should match, but currently that is not the case.

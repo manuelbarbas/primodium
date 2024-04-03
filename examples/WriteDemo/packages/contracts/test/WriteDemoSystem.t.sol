@@ -131,6 +131,12 @@ contract WriteDemoTest is MudTest {
 
   // DEBUG Tests.  Leaving for reference.
 
+  // I found that I lose visibility to some console.log outputs that are deeper in the system, when running from test.
+  // To do debug, I ended up taking some of the internal system code, and bringing it up to the test level,
+  // so the debug comments would remain visible.
+
+  // The commented out code below is an example of how to build an Iron Mine directly, without calling the System function.
+
   // function test_buildIronMineDirect() public {
   //     console2.log("\ntest_buildIronMineDirect");
   //     vm.startBroadcast(playerPrivateKeyBob);
