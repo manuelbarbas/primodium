@@ -73,7 +73,7 @@ contract ConquestSystemTest is PrimodiumTest {
     assertGt(LibMath.distance(position2, center), LibMath.distance(position1, center), "Distance not increased");
   }
 
-  function testConquestAsteroidConquer() public {
+  function testConquestAsteroidConquer() public returns (bytes32) {
     spawnPlayers(config.conquestAsteroidSpawnOffset - 1);
 
     bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("conquestAsteroid"), bytes32(AsteroidCount.get()));
@@ -83,6 +83,7 @@ contract ConquestSystemTest is PrimodiumTest {
     conquerAsteroid(alice, homeAsteroidEntity, asteroidEntity);
 
     assertEq(OwnedBy.get(asteroidEntity), addressToEntity(alice), "Asteroid not conquered");
+    return asteroidEntity;
   }
 
   function testConquestAsteroidClaimDrip() public {
@@ -102,5 +103,23 @@ contract ConquestSystemTest is PrimodiumTest {
 
     uint256 oneTenthOfPoints = config.conquestAsteroidPoints / 10;
     assertEq(Score.get(addressToEntity(alice), uint8(EScoreType.Conquest)), oneTenthOfPoints);
+  }
+
+  function testConquestAsteroidEncryptionRegen() public {
+    bytes32 asteroidEntity = testConquestAsteroidConquer();
+    uint256 encryption = ResourceCount.get(asteroidEntity, uint8(EResource.R_Encryption));
+    vm.warp(block.timestamp + 1000);
+
+    world.Primodium__claimResources(asteroidEntity);
+    uint256 regen = config.conquestAsteroidEncryptionRegen;
+    if (regen > 0) {
+      assertGt(
+        ResourceCount.get(asteroidEntity, uint8(EResource.R_Encryption)),
+        encryption,
+        "Encryption not regenerating"
+      );
+    } else {
+      assertEq(ResourceCount.get(asteroidEntity, uint8(EResource.R_Encryption)), encryption, "Encryption regenerating");
+    }
   }
 }

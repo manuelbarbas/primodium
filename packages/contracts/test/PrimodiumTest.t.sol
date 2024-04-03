@@ -487,7 +487,6 @@ contract PrimodiumTest is MudTest {
 
     while (OwnedBy.get(targetAsteroid) != playerEntity) {
       console.log("attacking");
-      uint256 cooldown = LibCombat.getCooldownTime(LibCombatAttributes.getAttack(fleetEntity), true);
       switchPrank(player);
       world.Primodium__attack(fleetEntity, targetAsteroid);
       switchPrank(creator);
