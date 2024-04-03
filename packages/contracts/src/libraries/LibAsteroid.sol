@@ -31,7 +31,7 @@ library LibAsteroid {
     P_ConquestConfigData memory conquestConfig = P_ConquestConfig.get();
     if (
       // limit conquest asteroids to <maxConquestAsteroids>
-      asteroidCount / conquestConfig.conquestAsteroidSpawnFrequency < conquestConfig.maxConquestAsteroids &&
+      asteroidCount / conquestConfig.conquestAsteroidSpawnFrequency <= conquestConfig.maxConquestAsteroids &&
       // spawn a conquest asteroid every <conquestAsteroidSpawnFrequency> asteroids, starting at the <conquestAsteroidOffset> asteroid
       asteroidCount % conquestConfig.conquestAsteroidSpawnFrequency == conquestConfig.conquestAsteroidSpawnOffset
     ) {

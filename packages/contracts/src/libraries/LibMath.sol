@@ -87,8 +87,8 @@ library LibMath {
     return generalDirection * 90 + countMod3 * 30 + countMod27;
   }
 
-  function getRandomDirection(bytes32 asteroidEntity) internal view returns (uint256) {
-    return uint256(keccak256(abi.encode(asteroidEntity, (blockhash(block.number - 1))))) % 360;
+  function getRandomDirection(uint256 seed) internal view returns (uint256) {
+    return uint256(keccak256(abi.encode(seed, (blockhash(block.number - 1))))) % 360;
   }
 
   /**

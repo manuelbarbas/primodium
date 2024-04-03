@@ -37,10 +37,13 @@ library LibConquestAsteroid {
 
     LastConquered.set(asteroidEntity, block.timestamp);
     PositionData memory position;
+    uint256 seed = uint256(asteroidEntity);
     do {
-      position = LibMath.getPositionByVector(distance, LibMath.getRandomDirection(asteroidEntity));
+      position = LibMath.getPositionByVector(distance, LibMath.getRandomDirection(seed));
+      seed++;
     } while (ReversePosition.get(position.x, position.y) != 0);
     Position.set(asteroidEntity, position);
     ConquestAsteroid.setSpawnTime(asteroidEntity, block.timestamp);
+    ReversePosition.set(position.x, position.y, asteroidEntity);
   }
 }
