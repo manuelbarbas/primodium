@@ -216,11 +216,11 @@ contract CombatEncryptionTest is PrimodiumTest {
 
     assertEq(OwnedBy.get(bobHomeAsteroid), aliceEntity, "asteroid should have been taken over");
 
-    assertEq(UnitCount.get(bobFleet, minuteman), 0, "fleet should have been disbanded and marine units");
+    assertEq(UnitCount.get(bobFleet, minuteman), 0, "fleet should have been cleared and marine units");
     assertEq(
       UnitCount.get(bobFleet, colonyShipPrototype),
       0,
-      "fleet should have been disbanded and colony ship unit lost"
+      "fleet should have been cleared and colony ship unit lost"
     );
 
     assertEq(FleetMovement.getDestination(bobFleet), bobHomeAsteroid, "fleet should have been reset to orbit");

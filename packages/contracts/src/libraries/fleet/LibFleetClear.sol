@@ -7,16 +7,31 @@ import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 
 /**
- * @title LibFleetDisband
- * @dev Library for managing fleet disbanding operations, including resource and unit management.
+ * @title LibFleetClear
+ * @dev Library for managing fleet clearing operations, including resource and unit management.
  */
-library LibFleetDisband {
+library LibFleetClear {
+  // function abandonFleet(bytes32 fleetEntity) internal {
+  //   clearFleet(fleetEntity);
+  //   //clears any stance
+  //   LibFleetStance.clearFleetStance(fleetEntity);
+  //   //clears any following fleets
+  //   LibFleetStance.clearFollowingFleets(fleetEntity);
+  //   IsFleetEmpty.set(fleetEntity, true);
+  //   IsFleet.deleteRecord(fleetEntity);
+
+  //   bytes32 asteroidEntity = FleetMovement.getDestination(fleetEntity);
+  //   FleetSet.remove(asteroidEntity, FleetIncomingKey, fleetEntity);
+
+  //   FleetMovement.deleteRecord(fleetEntity);
+  // }
+
   /**
-   * @notice Disbands a fleet, removing all resources and units from it.
+   * @notice Clears a fleet, removing all resources and units from it.
    * @dev Iterates through all transportable resources and unit prototypes, removing them from the fleet.
-   * @param fleetEntity The identifier of the fleet to disband.
+   * @param fleetEntity The identifier of the fleet to clear.
    */
-  function disbandFleet(bytes32 fleetEntity) internal {
+  function clearFleet(bytes32 fleetEntity) internal {
     uint8[] memory transportables = P_Transportables.get();
     //remove resources from fleet
     for (uint8 i = 0; i < transportables.length; i++) {
@@ -34,53 +49,53 @@ library LibFleetDisband {
     }
   }
   /**
-   * @notice Disbands specified units and resources from a fleet.
-   * @dev Calls `disbandResources` and `disbandUnits` with the specified amounts.
+   * @notice Clears specified units and resources from a fleet.
+   * @dev Calls `clearResources` and `clearUnits` with the specified amounts.
    * @param fleetEntity The identifier of the fleet.
-   * @param unitCounts Array of unit counts to disband, indexed by unit prototype.
-   * @param resourceCounts Array of resource counts to disband, indexed by resource type.
+   * @param unitCounts Array of unit counts to clear, indexed by unit prototype.
+   * @param resourceCounts Array of resource counts to clear, indexed by resource type.
    */
-  function disbandUnitsAndResourcesFromFleet(
+  function clearUnitsAndResourcesFromFleet(
     bytes32 fleetEntity,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
   ) internal {
-    disbandResources(fleetEntity, resourceCounts);
-    disbandUnits(fleetEntity, unitCounts);
+    clearResources(fleetEntity, resourceCounts);
+    clearUnits(fleetEntity, unitCounts);
   }
   /**
-   * @notice Disbands specified units from a fleet.
+   * @notice Clears specified units from a fleet.
    * @dev Iterates through unit prototypes and removes the specified amounts from the fleet.
-   * Checks if the fleet has enough units to disband and enough cargo capacity after disbanding.
+   * Checks if the fleet has enough units to clear and enough cargo capacity after clearing.
    * @param fleetEntity The identifier of the fleet.
-   * @param unitCounts Array of unit counts to disband, indexed by unit prototype.
+   * @param unitCounts Array of unit counts to clear, indexed by unit prototype.
    */
-  function disbandUnits(bytes32 fleetEntity, uint256[] calldata unitCounts) internal {
+  function clearUnits(bytes32 fleetEntity, uint256[] calldata unitCounts) internal {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
       uint256 fleetUnitCount = UnitCount.get(fleetEntity, unitPrototypes[i]);
-      require(fleetUnitCount >= unitCounts[i], "[Fleet] Not enough units to disband from fleet");
+      require(fleetUnitCount >= unitCounts[i], "[Fleet] Not enough units to clear from fleet");
       LibFleet.decreaseFleetUnit(fleetEntity, unitPrototypes[i], unitCounts[i], true);
     }
     uint256 cargoCapacity = LibCombatAttributes.getCargoCapacity(fleetEntity);
     uint256 cargo = LibCombatAttributes.getCargo(fleetEntity);
-    require(cargoCapacity >= cargo, "[Fleet] Not enough cargo to disband units from fleet");
+    require(cargoCapacity >= cargo, "[Fleet] Not enough cargo to clear units from fleet");
   }
 
   /**
-   * @notice Disbands specified resources from a fleet.
+   * @notice Clears specified resources from a fleet.
    * @dev Iterates through transportable resources and removes the specified amounts from the fleet.
-   * Checks if the fleet has enough resources to disband.
+   * Checks if the fleet has enough resources to clear.
    * @param fleetEntity The identifier of the fleet.
-   * @param resourceCounts Array of resource counts to disband, indexed by resource type.
+   * @param resourceCounts Array of resource counts to clear, indexed by resource type.
    */
-  function disbandResources(bytes32 fleetEntity, uint256[] calldata resourceCounts) internal {
+  function clearResources(bytes32 fleetEntity, uint256[] calldata resourceCounts) internal {
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       if (resourceCounts[i] == 0) continue;
       uint256 fleetResourceCount = ResourceCount.get(fleetEntity, transportables[i]);
-      require(fleetResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to disband from fleet");
+      require(fleetResourceCount >= resourceCounts[i], "[Fleet] Not enough resources to clear from fleet");
       LibFleet.decreaseFleetResource(fleetEntity, transportables[i], resourceCounts[i]);
     }
   }

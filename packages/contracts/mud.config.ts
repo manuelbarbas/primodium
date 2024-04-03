@@ -20,7 +20,7 @@ export const worldInput = {
     S_BattleApplyDamageSystem: {},
     S_BattleRaidResolveSystem: {},
     S_BattleEncryptionResolveSystem: {},
-    S_FleetResetIfNoUnitsLeftSystem: {},
+    S_FleetClearSystem: {},
     S_InitAsteroidOwnerSystem: {},
     S_TransferAsteroidSystem: {},
     S_CreateSecondaryAsteroidSystem: {},

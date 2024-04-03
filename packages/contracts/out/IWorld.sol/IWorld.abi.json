@@ -1,6 +1,19 @@
 [
   {
     "type": "function",
+    "name": "Primodium__abandonFleet",
+    "inputs": [
+      {
+        "name": "fleetEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "Primodium__acceptRequestToJoin",
     "inputs": [
       {
@@ -228,6 +241,19 @@
   },
   {
     "type": "function",
+    "name": "Primodium__clearFleet",
+    "inputs": [
+      {
+        "name": "fleetEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "Primodium__clearFleetStance",
     "inputs": [
       {
@@ -260,6 +286,65 @@
         "name": "buildingEntity",
         "type": "bytes32",
         "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Primodium__clearResources",
+    "inputs": [
+      {
+        "name": "fleetEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "resourceCounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Primodium__clearUnits",
+    "inputs": [
+      {
+        "name": "fleetEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "unitCounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Primodium__clearUnitsAndResourcesFromFleet",
+    "inputs": [
+      {
+        "name": "fleetEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "unitCounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "resourceCounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
       }
     ],
     "outputs": [],
@@ -683,78 +768,6 @@
         "name": "data",
         "type": "bytes",
         "internalType": "bytes"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__disbandFleet",
-    "inputs": [
-      {
-        "name": "fleetEntity",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__disbandResources",
-    "inputs": [
-      {
-        "name": "fleetEntity",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "resourceCounts",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__disbandUnits",
-    "inputs": [
-      {
-        "name": "fleetEntity",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "unitCounts",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__disbandUnitsAndResourcesFromFleet",
-    "inputs": [
-      {
-        "name": "fleetEntity",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "unitCounts",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      },
-      {
-        "name": "resourceCounts",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
       }
     ],
     "outputs": [],
@@ -1577,6 +1590,19 @@
         "name": "unitCounts",
         "type": "uint256[]",
         "internalType": "uint256[]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Primodium__uncheckedAbandonFleet",
+    "inputs": [
+      {
+        "name": "fleetEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
       }
     ],
     "outputs": [],

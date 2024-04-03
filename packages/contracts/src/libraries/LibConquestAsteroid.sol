@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { Position, PositionData, LastConquered, ConquestAsteroid, P_ConquestConfig, ConquestAsteroidData, ReversePosition } from "codegen/index.sol";
+import { OwnedBy, ResourceCount, Position, PositionData, LastConquered, ConquestAsteroid, P_ConquestConfig, ConquestAsteroidData, ReversePosition } from "codegen/index.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
-import { EResource } from "src/Types.sol";
+import { LibScore } from "libraries/LibScore.sol";
+import { EResource, EScoreType } from "src/Types.sol";
 
 library LibConquestAsteroid {
   function createConquestAsteroid(uint256 asteroidCount) internal {
@@ -45,5 +46,22 @@ library LibConquestAsteroid {
     Position.set(asteroidEntity, position);
     ConquestAsteroid.setSpawnTime(asteroidEntity, block.timestamp);
     ReversePosition.set(position.x, position.y, asteroidEntity);
+  }
+
+  function explodeConquestAsteroid(bytes32 asteroidEntity) internal {
+    // add score to owner and remove owner
+    bytes32 owner = OwnedBy.get(asteroidEntity);
+    if (owner != 0) {
+      LibScore.addScore(owner, EScoreType.Conquest, P_ConquestConfig.getConquestAsteroidPoints());
+      OwnedBy.deleteRecord(asteroidEntity);
+    }
+
+    // kill all fleets
+
+    // reset encryption
+    ResourceCount.set(asteroidEntity, uint8(EResource.R_Encryption), P_ConquestConfig.getConquestAsteroidEncryption());
+
+    // respawn in a new location
+    spawnConquestAsteroid(asteroidEntity);
   }
 }

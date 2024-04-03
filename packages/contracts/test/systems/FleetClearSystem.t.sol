@@ -9,7 +9,7 @@ import { UnitKey } from "src/Keys.sol";
 
 import { P_EnumToPrototype, ResourceCount, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes, P_Unit, FleetMovement, UnitLevel, FleetStance, OwnedBy, P_RequiredResources, P_RequiredResourcesData, P_IsUtility } from "codegen/index.sol";
 
-contract FleetDisbandSystemTest is PrimodiumTest {
+contract FleetClearSystemTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;
   bytes32 aliceEntity;
 
@@ -25,7 +25,7 @@ contract FleetDisbandSystemTest is PrimodiumTest {
     bobHomeAsteroid = spawn(bob);
   }
 
-  function testDisbandFleet() public {
+  function testClearFleet() public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
     //create fleet with 1 minuteman marine
@@ -53,7 +53,7 @@ contract FleetDisbandSystemTest is PrimodiumTest {
     vm.warp(block.timestamp + 1);
 
     vm.startPrank(alice);
-    world.Primodium__disbandFleet(fleetEntity);
+    world.Primodium__clearFleet(fleetEntity);
     vm.stopPrank();
     assertEq(UnitCount.get(fleetEntity, unitPrototype), 0, "fleet unit count doesn't match");
     assertEq(UnitCount.get(aliceHomeAsteroid, unitPrototype), 0, "asteroid unit count doesn't match");
@@ -68,7 +68,7 @@ contract FleetDisbandSystemTest is PrimodiumTest {
         assertEq(
           ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]),
           requiredResources.amounts[i],
-          "asteroid resource utility was not refunded correctly after disband"
+          "asteroid resource utility was not refunded correctly after clear"
         );
     }
     assertEq(ResourceCount.get(aliceHomeAsteroid, uint8(EResource.Iron)), 0, "asteroid resource count doesn't match");
@@ -79,7 +79,7 @@ contract FleetDisbandSystemTest is PrimodiumTest {
     assertEq(FleetStance.getStance(fleetEntity), uint8(EFleetStance.NULL), "fleet stance doesn't match");
   }
 
-  function testDisbandResourcesFleet() public {
+  function testClearResourcesFleet() public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
     //create fleet with 1 minuteman marine
@@ -108,7 +108,7 @@ contract FleetDisbandSystemTest is PrimodiumTest {
     vm.warp(block.timestamp + 1);
 
     vm.startPrank(alice);
-    world.Primodium__disbandResources(fleetEntity, resourceCounts);
+    world.Primodium__clearResources(fleetEntity, resourceCounts);
     vm.stopPrank();
 
     assertEq(UnitCount.get(fleetEntity, unitPrototype), 1, "fleet unit count doesn't match");
@@ -117,7 +117,7 @@ contract FleetDisbandSystemTest is PrimodiumTest {
     assertEq(ResourceCount.get(aliceHomeAsteroid, uint8(EResource.Iron)), 0, "asteroid resource count doesn't match");
   }
 
-  function testFailDisbandUnitsCargo() public {
+  function testFailClearUnitsCargo() public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
     //create fleet with 1 minuteman marine
@@ -145,11 +145,11 @@ contract FleetDisbandSystemTest is PrimodiumTest {
     }
 
     vm.startPrank(alice);
-    world.Primodium__disbandUnits(fleetEntity, unitCounts);
+    world.Primodium__clearUnits(fleetEntity, unitCounts);
     vm.stopPrank();
   }
 
-  function testFailDisbandUnitsNotInOrbit() public {
+  function testFailClearUnitsNotInOrbit() public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
     //create fleet with 1 minuteman marine
@@ -178,11 +178,11 @@ contract FleetDisbandSystemTest is PrimodiumTest {
     vm.warp(block.timestamp + 1);
 
     vm.startPrank(alice);
-    world.Primodium__disbandUnits(fleetEntity, unitCounts);
+    world.Primodium__clearUnits(fleetEntity, unitCounts);
     vm.stopPrank();
   }
 
-  function testDisbandUnitsNoUnitsLeftReset() public {
+  function testClearUnitsNoUnitsLeftReset() public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
     //create fleet with 1 minuteman marine
@@ -208,7 +208,7 @@ contract FleetDisbandSystemTest is PrimodiumTest {
     vm.warp(FleetMovement.getArrivalTime(fleetEntity));
 
     vm.startPrank(alice);
-    world.Primodium__disbandUnits(fleetEntity, unitCounts);
+    world.Primodium__clearUnits(fleetEntity, unitCounts);
     vm.stopPrank();
 
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(
@@ -220,7 +220,7 @@ contract FleetDisbandSystemTest is PrimodiumTest {
         assertEq(
           ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]),
           requiredResources.amounts[i],
-          "asteroid resource utility was not refunded correctly after disband"
+          "asteroid resource utility was not refunded correctly after clear"
         );
     }
     assertEq(ResourceCount.get(aliceHomeAsteroid, uint8(EResource.Iron)), 0, "asteroid resource count doesn't match");
