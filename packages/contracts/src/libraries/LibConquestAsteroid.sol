@@ -29,5 +29,6 @@ library LibConquestAsteroid {
       seed++;
     } while (ReversePosition.get(position.x, position.y) != 0);
     Position.set(asteroidEntity, position);
+    ReversePosition.set(position.x, position.y, asteroidEntity);
   }
 }
