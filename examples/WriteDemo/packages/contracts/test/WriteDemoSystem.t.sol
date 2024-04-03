@@ -7,8 +7,6 @@ import { console2 } from "forge-std/Test.sol";
 import { WorldRegistrationSystem } from "@latticexyz/world/src/modules/init/implementations/WorldRegistrationSystem.sol";
 import { System } from "@latticexyz/world/src/System.sol";
 
-import { Systems } from "@latticexyz/world/src/codegen/tables/Systems.sol";
-
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
@@ -19,11 +17,10 @@ import { WriteDemoSystem } from "../src/systems/WriteDemoSystem.sol";
 
 import { IWorld } from "../src/codegen/world/IWorld.sol";
 import { IWorld as IPrimodiumWorld } from "../src/primodium/world/IWorld.sol";
-import { ISpawnSystem } from "../src/primodium/world/ISpawnSystem.sol";
 
-import { FunctionSelectors } from "@latticexyz/world/src/codegen/tables/FunctionSelectors.sol";
+// import {FunctionSelectors} from "@latticexyz/world/src/codegen/tables/FunctionSelectors.sol";
+// import {EBuilding} from "../src/primodium/common.sol";
 
-import { EBuilding } from "../src/primodium/common.sol";
 import { Home, PositionData, Spawned } from "../src/primodium/index.sol";
 
 contract WriteDemoTest is MudTest {

@@ -13,7 +13,7 @@ import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 
 import { WriteDemoSystem } from "../src/systems/WriteDemoSystem.sol";
 
-contract RegisterReadDemoSystem is Script {
+contract RegisterWriteDemoSystem is Script {
   // the environment variables are pulled from your .env
   address worldAddress = vm.envAddress("WORLD_ADDRESS");
   uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY_ALICE");
