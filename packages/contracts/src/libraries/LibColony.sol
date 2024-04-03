@@ -7,7 +7,7 @@ import { LibUnit } from "libraries/LibUnit.sol";
 import { UtilityMap } from "libraries/UtilityMap.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
-import { P_ColonyShipConfig, P_Transportables, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_IsUtility, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy, ColonyShipSlots } from "codegen/index.sol";
+import { P_ColonyShipConfig, P_Transportables, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_IsUtility, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy, ColonySlots } from "codegen/index.sol";
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -15,13 +15,13 @@ library LibColony {
   /**
    * @notice Should this restrict to _player() here? maybe so, and pull it into a normal System
    */
-  function increaseColonyShipSlotCapacity(bytes32 playerEntity) internal returns (uint256 newCapacity) {
-    newCapacity = ColonyShipSlots.getCapacity(playerEntity) + 1;
-    ColonyShipSlots.setCapacity(playerEntity, newCapacity);
+  function increaseColonySlotsCapacity(bytes32 playerEntity) internal returns (uint256 newCapacity) {
+    newCapacity = ColonySlots.getCapacity(playerEntity) + 1;
+    ColonySlots.setCapacity(playerEntity, newCapacity);
   }
 
-  function getColonyShipSlotCostMultiplier(bytes32 playerEntity) internal view returns (uint256) {
-    uint256 capacity = ColonyShipSlots.getCapacity(playerEntity);
+  function getColonySlotsCostMultiplier(bytes32 playerEntity) internal view returns (uint256) {
+    uint256 capacity = ColonySlots.getCapacity(playerEntity);
     uint256 multiplier = 4;
     return multiplier * capacity;
   }
@@ -39,21 +39,21 @@ library LibColony {
   // /**
   // * @notice Should this restrict to _player() here? maybe so, and pull it into a normal System
   // */
-  // function occupyColonyShipSlot(bytes32 playerEntity) internal returns (uint256) {
-  //     uint256 capacity = ColonyShipSlots.getCapacity(playerEntity);
-  //     uint256 occupied = ColonyShipSlots.getOccupied(playerEntity);
+  // function occupyColonySlots(bytes32 playerEntity) internal returns (uint256) {
+  //     uint256 capacity = ColonySlots.getCapacity(playerEntity);
+  //     uint256 occupied = ColonySlots.getOccupied(playerEntity);
   //     require(occupied < capacity, "[LibColony] no more slots available");
-  //     ColonyShipSlots.setOccupied(playerEntity, occupied + 1);
+  //     ColonySlots.setOccupied(playerEntity, occupied + 1);
   //     return occupied + 1;
   // }
 
   // /**
   // * @notice don't use _player() here, other players capture to cause a decrease in occupied slots for a different player
   // */
-  // function releaseColonyShipSlot(bytes32 playerEntity) internal returns (uint256) {
-  //     uint256 occupied = ColonyShipSlots.getOccupied(playerEntity);
+  // function releaseColonySlots(bytes32 playerEntity) internal returns (uint256) {
+  //     uint256 occupied = ColonySlots.getOccupied(playerEntity);
   //     require(occupied > 0, "[LibColony] no occupied slots to release");
-  //     ColonyShipSlots.setOccupied(playerEntity, occupied - 1);
+  //     ColonySlots.setOccupied(playerEntity, occupied - 1);
   //     return occupied - 1;
   // }
 }

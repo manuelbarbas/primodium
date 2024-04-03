@@ -915,7 +915,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__payForColonyShipSlotCapacity",
+    "name": "Primodium__payForColonySlotsCapacity",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -925,7 +925,7 @@
       {
         "name": "payment",
         "type": "tuple",
-        "internalType": "struct P_ColonyShipSlotConfigData",
+        "internalType": "struct P_ColonySlotsConfigData",
         "components": [
           {
             "name": "resources",

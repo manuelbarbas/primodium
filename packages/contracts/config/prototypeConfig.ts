@@ -1214,10 +1214,10 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
   },
 
-  ColonyShipSlotConfig: {
+  ColonySlotsConfig: {
     keys: [],
     tables: {
-      P_ColonyShipSlotConfig: getResourceValues({ Lithium: 1000, Copper: 500 }),
+      P_ColonySlotsConfig: getResourceValues({ Lithium: 1000, Copper: 500 }),
     },
   },
 

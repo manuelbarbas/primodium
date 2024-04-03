@@ -8,7 +8,7 @@ import { LibColony } from "libraries/LibColony.sol";
 import { UtilityMap } from "libraries/UtilityMap.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
-import { P_ColonyShipConfig, P_Transportables, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_IsUtility, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy, ColonyShipSlots, P_ColonyShipSlotConfig, P_ColonyShipSlotConfigData, ColonyShipSlotInstallments } from "codegen/index.sol";
+import { P_ColonyShipConfig, P_Transportables, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_IsUtility, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy, ColonySlots, P_ColonySlotsConfig, P_ColonySlotsConfigData, ColonySlotsInstallments } from "codegen/index.sol";
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -52,11 +52,11 @@ library LibResource {
       uint256 cost = P_ColonyShipConfig.getInitialCost();
       bytes32 playerEntity = OwnedBy.get(asteroidEntity);
       require(
-        LibUnit.getColonyShipsPlusAsteroids(playerEntity) < ColonyShipSlots.getCapacity(playerEntity),
+        LibUnit.getColonyShipsPlusAsteroids(playerEntity) < ColonySlots.getCapacity(playerEntity),
         "[SpendResources] No available slots to train colony ship"
       );
 
-      ColonyShipSlots.setTraining(playerEntity, ColonyShipSlots.getTraining(playerEntity) + 1);
+      ColonySlots.setTraining(playerEntity, ColonySlots.getTraining(playerEntity) + 1);
 
       // todo: Should we reconfigure Colony Ships to comply with P_RequiredResources, then skip the next two lines but comply with the spendResource() call later in this function?
       spendResource(asteroidEntity, prototype, P_ColonyShipConfig.getResource(), cost);
@@ -83,15 +83,15 @@ library LibResource {
   }
 
   /// @notice Only one can be bought at a time
-  function spendColonyShipSlotCapacityResources(
+  function spendColonySlotsCapacityResources(
     bytes32 asteroidEntity,
-    P_ColonyShipSlotConfigData memory payment
+    P_ColonySlotsConfigData memory payment
   ) internal returns (bool) {
     bytes32 playerEntity = OwnedBy.get(asteroidEntity);
-    uint256 multiplier = LibColony.getColonyShipSlotCostMultiplier(playerEntity);
+    uint256 multiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);
 
     // get the initial cost of the slot for each resource type from prototype
-    P_ColonyShipSlotConfigData memory costData = P_ColonyShipSlotConfig.get();
+    P_ColonySlotsConfigData memory costData = P_ColonySlotsConfig.get();
 
     // multiply the cost amounts with the multiplier
     for (uint256 i = 0; i < costData.resources.length; i++) {
@@ -110,9 +110,9 @@ library LibResource {
     }
 
     // get previous payment installment data, for each resource type
-    P_ColonyShipSlotConfigData memory installmentData = P_ColonyShipSlotConfigData(
-      ColonyShipSlotInstallments.getResources(playerEntity),
-      ColonyShipSlotInstallments.getAmounts(playerEntity)
+    P_ColonySlotsConfigData memory installmentData = P_ColonySlotsConfigData(
+      ColonySlotsInstallments.getResources(playerEntity),
+      ColonySlotsInstallments.getAmounts(playerEntity)
     );
 
     // if installmentData is empty, set it to have the same resources as the cost data, but with 0 amounts
@@ -140,10 +140,10 @@ library LibResource {
     // if not full payment, set the installment data to the new installment data and return false.
     // if full payment, empty the installment data and return true.
     if (!fullPayment) {
-      ColonyShipSlotInstallments.set(playerEntity, installmentData.resources, installmentData.amounts);
+      ColonySlotsInstallments.set(playerEntity, installmentData.resources, installmentData.amounts);
       return false;
     } else {
-      ColonyShipSlotInstallments.set(playerEntity, costData.resources, new uint256[](costData.resources.length));
+      ColonySlotsInstallments.set(playerEntity, costData.resources, new uint256[](costData.resources.length));
       return true;
     }
   }

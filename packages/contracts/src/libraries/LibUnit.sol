@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { Position, Asteroid, IsActive, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, P_UnitProdTypes, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, ColonyShipSlots } from "codegen/index.sol";
+import { Position, Asteroid, IsActive, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, P_UnitProdTypes, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, ColonySlots } from "codegen/index.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 import { EResource } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
@@ -90,10 +90,10 @@ library LibUnit {
       // todo: verify this correctly grabs the colony ship
       if (item.unitEntity == ColonyShipPrototypeId) {
         require(
-          ColonyShipSlots.getTraining(playerEntity) >= trainedUnits,
+          ColonySlots.getTraining(playerEntity) >= trainedUnits,
           "[ClaimBuildingUnits] Not enough colony ships to claim"
         );
-        ColonyShipSlots.setTraining(playerEntity, ColonyShipSlots.getTraining(playerEntity) - trainedUnits);
+        ColonySlots.setTraining(playerEntity, ColonySlots.getTraining(playerEntity) - trainedUnits);
       }
 
       increaseUnitCount(asteroidEntity, item.unitEntity, trainedUnits, false);
@@ -130,8 +130,8 @@ library LibUnit {
     // Check the player's colony ship capacity
     if (add && (unitType == ColonyShipPrototypeId)) {
       bytes32 playerEntity = OwnedBy.get(asteroidEntity);
-      uint256 capacity = ColonyShipSlots.getCapacity(playerEntity);
-      uint256 training = ColonyShipSlots.getTraining(playerEntity);
+      uint256 capacity = ColonySlots.getCapacity(playerEntity);
+      uint256 training = ColonySlots.getTraining(playerEntity);
       require(training + count <= capacity, "[LibUnit] Not enough colony ship slots");
     }
 
@@ -176,7 +176,7 @@ library LibUnit {
         ret += shipsEachFleet;
       }
     }
-    ret += ColonyShipSlots.getTraining(playerEntity);
+    ret += ColonySlots.getTraining(playerEntity);
 
     return ret + ownedAsteroids.length;
   }

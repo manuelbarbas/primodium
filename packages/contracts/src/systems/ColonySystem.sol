@@ -5,7 +5,7 @@ pragma solidity >=0.8.24;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 // tables
-import { P_ColonyShipSlotConfigData, OwnedBy } from "codegen/index.sol";
+import { P_ColonySlotsConfigData, OwnedBy } from "codegen/index.sol";
 
 // libraries
 import { LibColony } from "libraries/LibColony.sol";
@@ -17,16 +17,16 @@ import { BuildingKey } from "src/Keys.sol";
 import { EBuilding } from "src/Types.sol";
 
 contract ColonySystem is PrimodiumSystem {
-  function payForColonyShipSlotCapacity(
+  function payForColonySlotsCapacity(
     bytes32 asteroidEntity,
-    P_ColonyShipSlotConfigData calldata payment
+    P_ColonySlotsConfigData calldata payment
   ) external returns (bool) {
     bytes32 playerEntity = OwnedBy.get(asteroidEntity);
 
     IWorld world = IWorld(_world());
-    bool fullPayment = LibResource.spendColonyShipSlotCapacityResources(asteroidEntity, payment);
+    bool fullPayment = LibResource.spendColonySlotsCapacityResources(asteroidEntity, payment);
     if (fullPayment) {
-      LibColony.increaseColonyShipSlotCapacity(playerEntity);
+      LibColony.increaseColonySlotsCapacity(playerEntity);
     }
 
     return fullPayment;
