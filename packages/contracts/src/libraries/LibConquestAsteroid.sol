@@ -54,10 +54,7 @@ library LibConquestAsteroid {
   function explodeConquestAsteroid(bytes32 asteroidEntity) internal {
     // add score to owner and remove owner
     bytes32 owner = OwnedBy.get(asteroidEntity);
-    if (owner != 0) {
-      LibScore.addScore(owner, EScoreType.Conquest, P_ConquestConfig.getConquestAsteroidPoints());
-      OwnedBy.deleteRecord(asteroidEntity);
-    }
+    if (!owner) return;
 
     // kill all incoming and orbiting fleets
     bytes32[] memory incomingFleetEntities = FleetSet.getFleetEntities(FleetIncomingKey, asteroidEntity);
