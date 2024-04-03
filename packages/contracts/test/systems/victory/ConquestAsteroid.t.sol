@@ -3,7 +3,9 @@ pragma solidity >=0.8.24;
 
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { addressToEntity } from "src/utils.sol";
-import { ConquestAsteroid, Position, P_ConquestConfig, P_ConquestConfigData, PositionData, LastConquered, AsteroidCount } from "codegen/index.sol";
+import { Score, OwnedBy, ResourceCount, ConquestAsteroid, Position, P_ConquestConfig, P_ConquestConfigData, PositionData, LastConquered, AsteroidCount } from "codegen/index.sol";
+
+import { EResource, EScoreType } from "src/Types.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -43,6 +45,11 @@ contract ConquestSystemTest is PrimodiumTest {
       LibMath.getRandomDirection(expectedAsteroidEntity)
     );
     assertEq(Position.get(expectedAsteroidEntity), expectedPosition);
+    assertEq(
+      ResourceCount.get(expectedAsteroidEntity, uint8(EResource.R_Encryption)),
+      config.conquestAsteroidEncryption,
+      "Conquest asteroid encryption incorrect"
+    );
   }
 
   function testConquestAsteroidSpawnDistanceIncrease() public {
@@ -64,5 +71,36 @@ contract ConquestSystemTest is PrimodiumTest {
     PositionData memory position2 = Position.get(asteroidEntity2);
     PositionData memory center = PositionData(0, 0, bytes32(""));
     assertGt(LibMath.distance(position2, center), LibMath.distance(position1, center), "Distance not increased");
+  }
+
+  function testConquestAsteroidConquer() public {
+    spawnPlayers(config.conquestAsteroidSpawnOffset - 1);
+
+    bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("conquestAsteroid"), bytes32(AsteroidCount.get()));
+
+    bytes32 homeAsteroidEntity = spawn(alice);
+
+    conquerAsteroid(alice, homeAsteroidEntity, asteroidEntity);
+
+    assertEq(OwnedBy.get(asteroidEntity), addressToEntity(alice), "Asteroid not conquered");
+  }
+
+  function testConquestAsteroidClaimDrip() public {
+    spawnPlayers(config.conquestAsteroidSpawnOffset - 1);
+
+    bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("conquestAsteroid"), bytes32(AsteroidCount.get()));
+
+    bytes32 homeAsteroidEntity = spawn(alice);
+
+    conquerAsteroid(alice, homeAsteroidEntity, asteroidEntity);
+
+    uint256 oneTenthOfLifespan = config.conquestAsteroidLifeSpan / 10;
+    console.log("oneTenthOfLifespan", oneTenthOfLifespan);
+    vm.warp(block.timestamp + oneTenthOfLifespan);
+
+    world.Primodium__claimConquestAsteroidPoints(asteroidEntity);
+
+    uint256 oneTenthOfPoints = config.conquestAsteroidPoints / 10;
+    assertEq(Score.get(addressToEntity(alice), uint8(EScoreType.Conquest)), oneTenthOfPoints);
   }
 }

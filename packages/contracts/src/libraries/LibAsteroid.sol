@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import { AsteroidOwnedByKey } from "src/Keys.sol";
-import { WORLD_SPEED_SCALE } from "src/constants.sol";
+import { WORLD_SPEED_SCALE, RESOURCE_SCALE } from "src/constants.sol";
 import { DroidPrototypeId } from "codegen/Prototypes.sol";
 
 // tables
@@ -139,19 +139,19 @@ library LibAsteroid {
     //micro
     if (distributionVal <= 50) {
       maxLevel = 1;
-      conquestPoints = 3;
+      conquestPoints = 3 * RESOURCE_SCALE;
       //small
     } else if (distributionVal <= 75) {
       maxLevel = 3;
-      conquestPoints = 4;
+      conquestPoints = 4 * RESOURCE_SCALE;
       //medium
     } else if (distributionVal <= 90) {
       maxLevel = 5;
-      conquestPoints = 5;
+      conquestPoints = 5 * RESOURCE_SCALE;
       //large
     } else {
       maxLevel = 8;
-      conquestPoints = 1;
+      conquestPoints = 1 * RESOURCE_SCALE;
     }
 
     // number between 2 and 5

@@ -34,7 +34,7 @@ contract FleetDisbandSystem is PrimodiumSystem {
   )
     public
     _onlyFleetOwner(fleetEntity)
-    _onlyWhenFleetIsInOrbit(fleetEntity)
+    _onlyOrbiting(fleetEntity)
     _unitCountIsValid(unitCounts)
     _resourceCountIsValid(resourceCounts)
   {
@@ -51,7 +51,7 @@ contract FleetDisbandSystem is PrimodiumSystem {
   function disbandUnits(
     bytes32 fleetEntity,
     uint256[] calldata unitCounts
-  ) public _onlyWhenFleetIsInOrbit(fleetEntity) _onlyFleetOwner(fleetEntity) _unitCountIsValid(unitCounts) {
+  ) public _onlyOrbiting(fleetEntity) _onlyFleetOwner(fleetEntity) _unitCountIsValid(unitCounts) {
     LibFleetDisband.disbandUnits(fleetEntity, unitCounts);
     IWorld(_world()).Primodium__resetFleetIfNoUnitsLeft(fleetEntity);
   }

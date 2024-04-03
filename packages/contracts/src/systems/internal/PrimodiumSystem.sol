@@ -3,6 +3,7 @@ pragma solidity >=0.8.24;
 
 import { System } from "@latticexyz/world/src/System.sol";
 
+import { console } from "forge-std/console.sol";
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
@@ -44,6 +45,7 @@ contract PrimodiumSystem is System {
 
   modifier _claimConquestAsteroidPoints(bytes32 asteroidEntity) {
     if (ConquestAsteroid.getIsConquestAsteroid(asteroidEntity)) {
+      console.log("claiming conquest points");
       IWorld(_world()).Primodium__claimConquestAsteroidPoints(asteroidEntity);
     }
     _;
@@ -62,7 +64,7 @@ contract PrimodiumSystem is System {
    * @dev Ensures the fleet is in orbit (has arrived) before proceeding.
    * @param fleetEntity The unique identifier for the fleet.
    */
-  modifier _onlyWhenFleetIsInOrbit(bytes32 fleetEntity) {
+  modifier _onlyOrbiting(bytes32 fleetEntity) {
     require(FleetMovement.getArrivalTime(fleetEntity) <= block.timestamp, "[Fleet] Fleet is not in orbit");
     _;
   }
@@ -71,7 +73,7 @@ contract PrimodiumSystem is System {
    * @dev Ensures the fleet is not in a cooldown period before proceeding.
    * @param fleetEntity The unique identifier for the fleet.
    */
-  modifier _onlyWhenNotInCooldown(bytes32 fleetEntity) {
+  modifier _onlyNotInCooldown(bytes32 fleetEntity) {
     require(block.timestamp >= CooldownEnd.get(fleetEntity), "[Fleet] Fleet is in cooldown");
     _;
   }
@@ -80,7 +82,7 @@ contract PrimodiumSystem is System {
    * @dev Ensures the entity is not within a grace period before allowing combat-related actions.
    * @param entity The unique identifier for the entity (fleet or asteroid).
    */
-  modifier _onlyWhenNotInGracePeriod(bytes32 entity) {
+  modifier _onlyNotInGracePeriod(bytes32 entity) {
     require(block.timestamp >= GracePeriod.get(entity), "[Fleet] Target is in grace period");
     _;
   }
@@ -89,7 +91,7 @@ contract PrimodiumSystem is System {
    * @param fleetEntity The unique identifier for the fleet.
    * @param asteroidEntity The unique identifier for the asteroid.
    */
-  modifier _onlyWhenFleetIsInOrbitOfAsteroid(bytes32 fleetEntity, bytes32 asteroidEntity) {
+  modifier _onlyOrbitingAsteroid(bytes32 fleetEntity, bytes32 asteroidEntity) {
     require(
       (FleetMovement.getArrivalTime(fleetEntity) <= block.timestamp) &&
         (FleetMovement.getDestination(fleetEntity) == asteroidEntity),
@@ -103,7 +105,7 @@ contract PrimodiumSystem is System {
    * @param fleetEntity The unique identifier for the first fleet.
    * @param fleetEntity2 The unique identifier for the second fleet.
    */
-  modifier _onlyWhenFleetsAreIsInSameOrbit(bytes32 fleetEntity, bytes32 fleetEntity2) {
+  modifier _onlySameOrbit(bytes32 fleetEntity, bytes32 fleetEntity2) {
     require(
       (FleetMovement.getArrivalTime(fleetEntity) <= block.timestamp) &&
         (FleetMovement.getArrivalTime(fleetEntity2) <= block.timestamp) &&
@@ -144,7 +146,7 @@ contract PrimodiumSystem is System {
    * @dev Ensures the fleet is not in any stance before proceeding.
    * @param fleetEntity The unique identifier for the fleet.
    */
-  modifier _onlyWhenNotInStance(bytes32 fleetEntity) {
+  modifier _onlyNotInStance(bytes32 fleetEntity) {
     require(FleetStance.getStance(fleetEntity) == uint8(EFleetStance.NULL), "[Fleet] Fleet cannot be in stance");
     _;
   }

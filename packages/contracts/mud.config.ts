@@ -751,6 +751,8 @@ export const worldInput = {
         // the asteroid leaks this amount during its lifespan and emits this amount when it is claimed
         conquestAsteroidPoints: "uint256",
         conquestAsteroidLifeSpan: "uint256",
+        conquestAsteroidEncryption: "uint256",
+        conquestAsteroidEncryptionRegen: "uint256",
       },
     },
 
@@ -765,6 +767,7 @@ export const worldInput = {
         entity: "bytes32",
         isConquestAsteroid: "bool",
         distanceFromCenter: "uint256",
+        spawnTime: "uint256",
       },
     },
     /* ---------------------------- Player Asteroids ---------------------------- */
