@@ -58,6 +58,7 @@ const PlayerInfo = ({
             conquestRank={conquestRank}
             extractionRank={extractionRank}
             className="col-span-4 h-full"
+            hideRanks
           />
           <Navigator.NavButton to="manage" className="flex bg-secondary btn-sm">
             <FaCog />

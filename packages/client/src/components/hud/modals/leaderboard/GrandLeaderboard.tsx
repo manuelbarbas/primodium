@@ -98,6 +98,7 @@ export const GrandLeaderboardItem = ({
   conquestRank,
   alliance = false,
   className = "",
+  hideRanks = false,
 }: {
   player: Entity;
   index: number;
@@ -106,6 +107,7 @@ export const GrandLeaderboardItem = ({
   conquestRank: number;
   alliance?: boolean;
   className?: string;
+  hideRanks?: boolean;
 }) => {
   const {
     playerAccount: { entity: playerEntity },
@@ -129,14 +131,18 @@ export const GrandLeaderboardItem = ({
           {player === entity && <p className="text-accent">(You)</p>}
         </div>
       </div>
-      <div className="font-bold w-fit bg-cyan-700 px-2">
-        {rankToScore(extractionRank)}
-        <p className="inline opacity-70">[{extractionRank.toLocaleString() + rankSuffix(extractionRank)}]</p>
-      </div>
-      <div className="font-bold w-fit bg-cyan-700 px-2">
-        {rankToScore(conquestRank)}
-        <p className="inline opacity-70">[{conquestRank.toLocaleString() + rankSuffix(conquestRank)}]</p>
-      </div>
+      {!hideRanks && (
+        <>
+          <div className="font-bold w-fit bg-cyan-700 px-2">
+            {rankToScore(extractionRank)}
+            <p className="inline opacity-70">[{extractionRank.toLocaleString() + rankSuffix(extractionRank)}]</p>
+          </div>
+          <div className="font-bold w-fit bg-cyan-700 px-2">
+            {rankToScore(conquestRank)}
+            <p className="inline opacity-70">[{conquestRank.toLocaleString() + rankSuffix(conquestRank)}]</p>
+          </div>
+        </>
+      )}
       <p className="font-bold w-fit bg-yellow-700 px-2 flex justify-end">{score.toLocaleString()}</p>
     </SecondaryCard>
   );

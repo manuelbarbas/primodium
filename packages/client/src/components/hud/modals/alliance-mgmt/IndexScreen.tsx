@@ -92,7 +92,7 @@ const LeaderboardItem = ({
           </p>
         </div>
         <div className="flex items-center gap-1">
-          <p className="font-bold bg-cyan-700 px-2 ">{score}</p>
+          <p className="font-bold bg-yellow-700 px-2 ">{score}</p>
           {!playerAlliance && (
             <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.JoinAlliance, entity)}>
               <Button
