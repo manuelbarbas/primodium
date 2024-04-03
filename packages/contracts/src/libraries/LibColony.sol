@@ -20,6 +20,20 @@ library LibColony {
     ColonyShipSlots.setCapacity(playerEntity, newCapacity);
   }
 
+  function getColonyShipSlotCostMultiplier(bytes32 playerEntity) internal view returns (uint256) {
+    uint256 capacity = ColonyShipSlots.getCapacity(playerEntity);
+    uint256 multiplier = 4;
+    return multiplier * capacity;
+  }
+
+  // require(count == 1, "[SpendResources] Colony ships can only be trained one at a time");
+  // uint256 cost = P_ColonyShipConfig.getInitialCost() *
+  //   LibUnit.getColonyShipCostMultiplier(OwnedBy.get(asteroidEntity));
+
+  // spendResource(asteroidEntity, prototype, P_ColonyShipConfig.getResource(), cost);
+
+  // todo: maybe migrate getColonyShipsPlusAsteroids() here
+
   // Was initially useful, but redesign may have made it obsolete
   //
   // /**

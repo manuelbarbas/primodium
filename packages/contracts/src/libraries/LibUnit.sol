@@ -161,19 +161,6 @@ library LibUnit {
     return 2 ** multiplier;
   }
 
-  // function getColonyShipsPlusAsteroids(bytes32 playerEntity) internal view returns (uint256) {
-  //   bytes32[] memory ownedAsteroids = AsteroidSet.getAsteroidEntities(playerEntity, AsteroidOwnedByKey);
-  //   uint256 ret = 0;
-  //   for (uint256 i = 0; i < ownedAsteroids.length; i++) {
-  //     uint256 ships = MaxResourceCount.get(ownedAsteroids[i], uint8(EResource.U_ColonyShipCapacity)) -
-  //       ResourceCount.get(ownedAsteroids[i], uint8(EResource.U_ColonyShipCapacity));
-
-  //     ret += ships;
-  //   }
-  //   // subtract one so the first asteroid doesn't count
-  //   return ret + ownedAsteroids.length - 1;
-  // }
-
   function getColonyShipsPlusAsteroids(bytes32 playerEntity) internal view returns (uint256) {
     bytes32[] memory ownedAsteroids = AsteroidSet.getAsteroidEntities(playerEntity, AsteroidOwnedByKey);
 

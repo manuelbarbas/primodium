@@ -392,6 +392,24 @@ export const worldInput = {
       schema: { playerEntity: "bytes32", training: "uint256", capacity: "uint256" },
     },
 
+    P_ColonyShipSlotConfig: {
+      key: [],
+      schema: {
+        resources: "uint8[]",
+        amounts: "uint256[]",
+      },
+    },
+
+    ColonyShipSlotInstallments: {
+      key: ["playerEntity"],
+      schema: {
+        playerEntity: "bytes32",
+        // mud doesnt recognize EResource arrays so we will manually convert them
+        resources: "uint8[]",
+        amounts: "uint256[]",
+      },
+    },
+
     /* ------------------------------ Sending Units ----------------------------- */
 
     FleetMovement: {

@@ -1168,6 +1168,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
     },
   },
+
   /* -------------------------------- Resources ------------------------------- */
   // NOTE: To check if a resource is a utility, call P_IsUtility.get(EResource.<resource>);
   IsUtility: {
@@ -1210,6 +1211,13 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       [MUDEnums.EResource.indexOf("Platinum")]: { P_IsResource: { isResource: true, isAdvanced: true } },
       [MUDEnums.EResource.indexOf("Iridium")]: { P_IsResource: { isResource: true, isAdvanced: true } },
       [MUDEnums.EResource.indexOf("Kimberlite")]: { P_IsResource: { isResource: true, isAdvanced: true } },
+    },
+  },
+
+  ColonyShipSlotConfig: {
+    keys: [],
+    tables: {
+      P_ColonyShipSlotConfig: getResourceValues({ Lithium: 1000, Copper: 500 }),
     },
   },
 
