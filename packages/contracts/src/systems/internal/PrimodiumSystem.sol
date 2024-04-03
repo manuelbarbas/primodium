@@ -3,7 +3,6 @@ pragma solidity >=0.8.24;
 
 import { System } from "@latticexyz/world/src/System.sol";
 
-import { console } from "forge-std/console.sol";
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
@@ -45,7 +44,6 @@ contract PrimodiumSystem is System {
 
   modifier _claimConquestAsteroidPoints(bytes32 asteroidEntity) {
     if (ConquestAsteroid.getIsConquestAsteroid(asteroidEntity)) {
-      console.log("claiming conquest points");
       IWorld(_world()).Primodium__claimConquestAsteroidPoints(asteroidEntity);
     }
     _;
