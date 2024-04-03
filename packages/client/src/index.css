@@ -150,3 +150,9 @@
   background-size: 200% 200%;
   animation: rainbow 4s linear infinite;
 }
+
+.victory-bg {
+  @apply bg-gradient-to-r from-yellow-700 via-yellow-300 to-yellow-700;
+  background-size: 200% 200%;
+  animation: rainbow 4s linear infinite;
+}
