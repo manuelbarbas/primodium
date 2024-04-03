@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { console } from "forge-std/console.sol";
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { OwnedBy, Asteroid, LastConquered, P_ConquestConfig, P_GameConfig, ConquestAsteroid } from "codegen/index.sol";
 import { EScoreType } from "src/Types.sol";
@@ -36,20 +35,13 @@ contract ConquestSystem is PrimodiumSystem {
     uint256 lifespan = (P_ConquestConfig.getConquestAsteroidLifeSpan() * WORLD_SPEED_SCALE) /
       P_GameConfig.getWorldSpeed();
 
-    console.log("lifespan", lifespan);
     uint256 explodeTime = ConquestAsteroid.getSpawnTime(asteroidEntity) + lifespan;
-    console.log("explode time", explodeTime);
 
     uint256 lastConquered = LastConquered.get(asteroidEntity);
-    console.log("last conquered", lastConquered);
-    console.log("last conquered", lastConquered);
     uint256 endTime = block.timestamp > explodeTime ? explodeTime : block.timestamp;
-    console.log("end time", endTime);
 
     if (endTime > lastConquered) {
       uint256 holdPctX1000 = ((endTime - lastConquered) * 1000) / lifespan;
-      console.log("hold pct", holdPctX1000);
-      console.log("conquest asteroid points", (holdPctX1000 * P_ConquestConfig.getConquestAsteroidPoints()) / 1000);
       LibScore.addScore(
         ownerEntity,
         EScoreType.Conquest,
