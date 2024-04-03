@@ -5,6 +5,7 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { OwnedBy, Asteroid, LastConquered, P_ConquestConfig, P_GameConfig, ConquestAsteroid } from "codegen/index.sol";
 import { EScoreType } from "src/Types.sol";
 import { LibScore } from "libraries/LibScore.sol";
+import { LibConquestAsteroid } from "libraries/LibConquestAsteroid.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 contract ConquestSystem is PrimodiumSystem {
@@ -47,6 +48,9 @@ contract ConquestSystem is PrimodiumSystem {
         EScoreType.Conquest,
         (holdPctX1000 * P_ConquestConfig.getConquestAsteroidPoints()) / 1000
       );
+    }
+    if (block.timestamp > explodeTime) {
+      LibConquestAsteroid.explodeConquestAsteroid(asteroidEntity);
     }
   }
 }

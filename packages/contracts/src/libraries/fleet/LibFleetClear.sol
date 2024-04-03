@@ -1,30 +1,37 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes } from "codegen/index.sol";
+import { OwnedBy, FleetMovement, IsFleetEmpty, IsFleet, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
+import { FleetSet } from "libraries/fleet/FleetSet.sol";
+import { LibFleetStance } from "libraries/fleet/LibFleet.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
+import { FleetKey, FleetOwnedByKey, FleetIncomingKey } from "src/Keys.sol";
 
 /**
  * @title LibFleetClear
  * @dev Library for managing fleet clearing operations, including resource and unit management.
  */
 library LibFleetClear {
-  // function abandonFleet(bytes32 fleetEntity) internal {
-  //   clearFleet(fleetEntity);
-  //   //clears any stance
-  //   LibFleetStance.clearFleetStance(fleetEntity);
-  //   //clears any following fleets
-  //   LibFleetStance.clearFollowingFleets(fleetEntity);
-  //   IsFleetEmpty.set(fleetEntity, true);
-  //   IsFleet.deleteRecord(fleetEntity);
+  function abandonFleet(bytes32 fleetEntity) internal {
+    clearFleet(fleetEntity);
+    //clears any stance
+    LibFleetStance.clearFleetStance(fleetEntity);
+    //clears any following fleets
+    LibFleetStance.clearFollowingFleets(fleetEntity);
+    IsFleetEmpty.set(fleetEntity, true);
 
-  //   bytes32 asteroidEntity = FleetMovement.getDestination(fleetEntity);
-  //   FleetSet.remove(asteroidEntity, FleetIncomingKey, fleetEntity);
+    bytes32 asteroidEntity = FleetMovement.getDestination(fleetEntity);
+    FleetSet.remove(asteroidEntity, FleetIncomingKey, fleetEntity);
 
-  //   FleetMovement.deleteRecord(fleetEntity);
-  // }
+    bytes32 ownerAsteroidEntity = OwnedBy.get(fleetEntity);
+    FleetSet.remove(asteroidEntity, FleetOwnedByKey, fleetEntity);
+
+    FleetMovement.deleteRecord(fleetEntity);
+    IsFleet.deleteRecord(fleetEntity);
+    OwnedBy.deleteRecord(fleetEntity);
+  }
 
   /**
    * @notice Clears a fleet, removing all resources and units from it.

@@ -1,13 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { OwnedBy, ResourceCount, Position, PositionData, LastConquered, ConquestAsteroid, P_ConquestConfig, ConquestAsteroidData, ReversePosition } from "codegen/index.sol";
+import { FleetMovement, OwnedBy, ResourceCount, Position, PositionData, LastConquered, ConquestAsteroid, P_ConquestConfig, ConquestAsteroidData, ReversePosition } from "codegen/index.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
 import { LibScore } from "libraries/LibScore.sol";
+import { LibFleetClear } from "libraries/fleet/LibFleetClear.sol";
+import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { EResource, EScoreType } from "src/Types.sol";
+import { FleetIncomingKey, FleetOutgoingKey } from "src/Keys.sol";
 
 library LibConquestAsteroid {
   function createConquestAsteroid(uint256 asteroidCount) internal {
@@ -56,7 +59,21 @@ library LibConquestAsteroid {
       OwnedBy.deleteRecord(asteroidEntity);
     }
 
-    // kill all fleets
+    // kill all incoming and orbiting fleets
+    bytes32[] memory incomingFleetEntities = FleetSet.getFleetEntities(FleetIncomingKey, asteroidEntity);
+    for (uint i = 0; i < incomingFleetEntities.length; i++) {
+      LibFleetClear.abandonFleet(incomingFleetEntities[i]);
+    }
+    FleetSet.clear(FleetIncomingKey, asteroidEntity);
+
+    // kill all outgoing fleets
+    bytes32[] memory outgoingFleetEntities = FleetSet.getFleetEntities(FleetOutgoingKey, asteroidEntity);
+    for (uint i = 0; i < outgoingFleetEntities.length; i++) {
+      // only kill if fleet hasn't arrived yet
+      if (FleetMovement.getArrivalTime(outgoingFleetEntities[i]) > block.timestamp)
+        LibFleetClear.abandonFleet(outgoingFleetEntities[i]);
+    }
+    FleetSet.clear(FleetOutgoingKey, asteroidEntity);
 
     // reset encryption
     ResourceCount.set(asteroidEntity, uint8(EResource.R_Encryption), P_ConquestConfig.getConquestAsteroidEncryption());

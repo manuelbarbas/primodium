@@ -200,8 +200,11 @@ library LibFleet {
       decreaseFleetUnit(fleetEntity, unitPrototypes[i], fleetUnitCount, !isOwner);
       LibUnit.increaseUnitCount(asteroidEntity, unitPrototypes[i], fleetUnitCount, !isOwner);
     }
+
     if (!isOwner) {
-      resetFleetOrbit(fleetEntity);
+      FleetSet.remove(asteroidOwnerEntity, FleetOwnedByKey, fleetEntity);
+      FleetSet.add(asteroidEntity, FleetOwnedByKey, fleetEntity);
+      OwnedBy.set(fleetEntity, asteroidEntity);
     }
   }
 

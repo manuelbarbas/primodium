@@ -11,7 +11,7 @@ import { IWorld } from "codegen/world/IWorld.sol";
  */
 contract FleetClearSystem is PrimodiumSystem {
   function abandonFleet(bytes32 fleetEntity) public _onlyFleetOwner(fleetEntity) {
-    // LibFleetClear.abandonFleet(fleetEntity);
+    LibFleetClear.abandonFleet(fleetEntity);
   }
 
   /**
