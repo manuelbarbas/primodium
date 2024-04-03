@@ -15,7 +15,6 @@ import { HealthBar } from "../HealthBar";
 import { formatResourceCount } from "src/util/number";
 import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
 import { Badge } from "src/components/core/Badge";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -155,7 +154,6 @@ export const OwnedAsteroids = () => {
         y: window.innerHeight / 2 + getRandomRange(-50, 50),
       }}
       defaultLocked
-      hotkey={KeybindActions.Asteroids}
       defaultVisible
       persist
       lockable

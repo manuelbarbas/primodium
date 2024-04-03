@@ -67,7 +67,7 @@ export function toRomanNumeral(number: number) {
   return result;
 }
 
-export const getBlockTypeName = (blockType: Entity | undefined) => {
+export const getEntityTypeName = (blockType: Entity | undefined) => {
   if (blockType === undefined || BlockIdToKey[blockType] == undefined) return "";
 
   return BlockIdToKey[blockType]

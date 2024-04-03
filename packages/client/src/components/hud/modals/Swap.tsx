@@ -9,7 +9,7 @@ import { useMud } from "src/hooks";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
 import { swap } from "src/network/setup/contractCalls/swap";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { EntityType, RESERVE_RESOURCE, ResourceStorages } from "src/util/constants";
 import { formatResourceCount, parseResourceCount } from "src/util/number";
 import { getInAmount, getOutAmount } from "src/util/swap";
@@ -191,7 +191,7 @@ const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
         >
           {[...ResourceStorages].map((resource) => (
             <option key={resource} value={resource}>
-              {getBlockTypeName(resource)}
+              {getEntityTypeName(resource)}
             </option>
           ))}
         </select>

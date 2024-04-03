@@ -6,7 +6,7 @@ import { Coord } from "@latticexyz/utils";
 import { EResource, MUDEnums } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Hex } from "viem";
-import { clampedIndex, getBlockTypeName, toRomanNumeral } from "./common";
+import { clampedIndex, getEntityTypeName, toRomanNumeral } from "./common";
 import {
   MultiplierStorages,
   ResourceEntityLookup,
@@ -162,7 +162,7 @@ export const getBuildingName = (building: Entity) => {
 
   if (!buildingType) return null;
 
-  return `${getBlockTypeName(buildingType)} ${toRomanNumeral(Number(level))}`;
+  return `${getEntityTypeName(buildingType)} ${toRomanNumeral(Number(level))}`;
 };
 
 export const getBuildingImage = (primodium: Primodium, building: Entity) => {

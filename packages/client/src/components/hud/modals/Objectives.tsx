@@ -17,7 +17,7 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { components as comps } from "src/network/components";
 import { claimObjective } from "src/network/setup/contractCalls/claimObjective";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 
 import {
   BackgroundImage,
@@ -105,7 +105,7 @@ const Objective: React.FC<{
 
   const objectiveName = useMemo(() => {
     if (!objective) return;
-    return getBlockTypeName(objective);
+    return getEntityTypeName(objective);
   }, [objective]);
   const objectiveDescription = useMemo(() => {
     if (!objective) return;
@@ -157,7 +157,7 @@ const Objective: React.FC<{
                           }
                           text={formatNumber(value / _req.scale, { short: true, fractionDigits: 3 })}
                           tooltipDirection={"bottom"}
-                          tooltipText={getBlockTypeName(_req.id)}
+                          tooltipText={getEntityTypeName(_req.id)}
                           className="text-xs font-bold"
                         />
 
@@ -189,7 +189,7 @@ const Objective: React.FC<{
                     className={`text-xs gap-2 badge-neutral ${!canClaim ? "border-error opacity-60 bg-error" : ""}`}
                   >
                     <ResourceIconTooltip
-                      name={getBlockTypeName(resource.id)}
+                      name={getEntityTypeName(resource.id)}
                       image={ResourceImage.get(resource.id) ?? BackgroundImage.get(resource.id)?.at(0) ?? ""}
                       resource={resource.id}
                       amount={resource.amount}

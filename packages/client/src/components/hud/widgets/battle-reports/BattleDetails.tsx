@@ -5,7 +5,7 @@ import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { useMud } from "src/hooks";
 import { usePlayerOwner } from "src/hooks/usePlayerOwner";
 import { components } from "src/network/components";
-import { getBlockTypeName, toRomanNumeral } from "src/util/common";
+import { getEntityTypeName, toRomanNumeral } from "src/util/common";
 import { BackgroundImage, EntityType, ResourceImage } from "src/util/constants";
 import { entityToFleetName, entityToRockName } from "src/util/name";
 import { formatResourceCount } from "src/util/number";
@@ -28,7 +28,7 @@ export const UnitStatus: React.FC<{
           <p className="bg-primary text-xs p-1 uppercase font-bold">
             {(unitsAtStart - casualties).toLocaleString()} LEFT
           </p>
-          {getBlockTypeName(unit)} {toRomanNumeral(Number(level))}
+          {getEntityTypeName(unit)} {toRomanNumeral(Number(level))}
         </div>
         <div className="flex gap-1 p-1 px-2 text-xs bg-slate-900 items-center uppercase font-bold">
           <p className="text-rose-500">{casualties.toLocaleString()}</p>

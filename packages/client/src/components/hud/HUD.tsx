@@ -24,13 +24,13 @@ import { BuildMarker } from "./markers/starmap/BuildMarker";
 import { FleetTarget } from "./markers/starmap/FleetTarget";
 import { HomeMarker } from "./markers/starmap/HomeMarker";
 import HackerConsole from "./modals/HackerConsole";
-import { OwnedAsteroids } from "./panes/OwnedAsteroids";
-import { OwnedFleets } from "./panes/OwnedFleets";
-import { Blueprints } from "./panes/blueprints/Blueprints";
-import { Chat } from "./panes/chat/Chat";
-import { Cheatcodes } from "./panes/dev/Cheatcodes";
-import { Hangar } from "./panes/hangar/Hangar";
-import { Resources } from "./panes/resources/Resources";
+import { OwnedAsteroids } from "./widgets/OwnedAsteroids";
+import { OwnedFleets } from "./widgets/OwnedFleets";
+import { Blueprints } from "./widgets/blueprints/Blueprints";
+import { Chat } from "./widgets/chat/Chat";
+import { Cheatcodes } from "./widgets/dev/Cheatcodes";
+import { Hangar } from "./widgets/hangar/Hangar";
+import { Resources } from "./widgets/resources/Resources";
 import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 export const GameHUD = memo(() => {
@@ -107,7 +107,9 @@ export const GameHUD = memo(() => {
       const position = components.Position.get(activeRock) ?? { x: 0, y: 0 };
       const { pan } = primodium.api("STARMAP").camera;
 
-      pan(position, 0);
+      pan(position, {
+        duration: 0,
+      });
 
       await transitionToScene(
         "ASTEROID",

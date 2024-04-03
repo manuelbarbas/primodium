@@ -6,7 +6,7 @@ import { Widget } from "src/components/core/Widget";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getBuildingDimensions, getBuildingImageFromType, getBuildingName } from "src/util/building";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { BuildingMenu } from "../../building-menu/BuildingMenu";
 
 export const BuildingMenuPopup = () => {
@@ -34,7 +34,7 @@ export const BuildingMenuPopup = () => {
 
   return (
     <Widget
-      title={getBlockTypeName(buildingType as Entity)}
+      title={getEntityTypeName(buildingType as Entity)}
       id="building-target"
       scene={"ASTEROID"}
       defaultCoord={coord}
