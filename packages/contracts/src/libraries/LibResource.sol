@@ -85,7 +85,7 @@ library LibResource {
   /// @notice Only one can be bought at a time
   function spendColonySlotsCapacityResources(
     bytes32 asteroidEntity,
-    P_ColonySlotsConfigData memory payment
+    P_ColonySlotsConfigData calldata payment
   ) internal returns (bool) {
     bytes32 playerEntity = OwnedBy.get(asteroidEntity);
     uint256 multiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);
@@ -121,6 +121,7 @@ library LibResource {
       installmentData.amounts = new uint256[](costData.resources.length);
     }
 
+    // todo: the following could probably be implemented as a installment utility function
     bool fullPayment = true;
     // check if payment + previous installment is greater than or equal to the cost of the slot, for each resource type
     for (uint256 i = 0; i < costData.resources.length; i++) {

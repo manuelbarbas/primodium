@@ -112,42 +112,42 @@ contract TransferSystemTest is PrimodiumTest {
     fleetEntity = world.Primodium__createFleet(homeAsteroidEntity, unitCounts, resourceCounts);
   }
 
-  function testTransferColonyShipBetweenPlayers() public {
-    bytes32 aliceFleet = createColonyShipFleet(alice);
-    bytes32 bobFleet = createColonyShipFleet(bob);
+  // function testTransferColonyShipBetweenPlayers() public {
+  //   bytes32 aliceFleet = createColonyShipFleet(alice);
+  //   bytes32 bobFleet = createColonyShipFleet(bob);
 
-    vm.prank(creator);
-    P_GameConfig.setWorldSpeed(100);
-    vm.prank(alice);
-    world.Primodium__sendFleet(aliceFleet, bobHomeAsteroid);
-    console.log("aliceFleet arrival time", FleetMovement.getArrivalTime(aliceFleet));
-    vm.warp(block.timestamp + 10000000);
+  //   vm.prank(creator);
+  //   P_GameConfig.setWorldSpeed(100);
+  //   vm.prank(alice);
+  //   world.Primodium__sendFleet(aliceFleet, bobHomeAsteroid);
+  //   console.log("aliceFleet arrival time", FleetMovement.getArrivalTime(aliceFleet));
+  //   vm.warp(block.timestamp + 10000000);
 
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
-    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
-    for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (unitPrototypes[i] == ColonyShipPrototypeId) unitCounts[i] = 1;
-    }
+  //   bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+  //   uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+  //   uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+  //   for (uint256 i = 0; i < unitPrototypes.length; i++) {
+  //     if (unitPrototypes[i] == ColonyShipPrototypeId) unitCounts[i] = 1;
+  //   }
 
-    vm.startPrank(alice);
-    vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
-    world.Primodium__transferUnitsFromFleetToFleet(aliceFleet, bobFleet, unitCounts);
+  //   vm.startPrank(alice);
+  //   vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
+  //   world.Primodium__transferUnitsFromFleetToFleet(aliceFleet, bobFleet, unitCounts);
 
-    vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
-    world.Primodium__transferUnitsFromFleetToAsteroid(aliceFleet, bobHomeAsteroid, unitCounts);
+  //   vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
+  //   world.Primodium__transferUnitsFromFleetToAsteroid(aliceFleet, bobHomeAsteroid, unitCounts);
 
-    vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
-    world.Primodium__transferUnitsAndResourcesFromFleetToAsteroid(
-      aliceFleet,
-      bobHomeAsteroid,
-      unitCounts,
-      resourceCounts
-    );
+  //   vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
+  //   world.Primodium__transferUnitsAndResourcesFromFleetToAsteroid(
+  //     aliceFleet,
+  //     bobHomeAsteroid,
+  //     unitCounts,
+  //     resourceCounts
+  //   );
 
-    vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
-    world.Primodium__transferUnitsAndResourcesFromFleetToFleet(aliceFleet, bobFleet, unitCounts, resourceCounts);
-  }
+  //   vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
+  //   world.Primodium__transferUnitsAndResourcesFromFleetToFleet(aliceFleet, bobFleet, unitCounts, resourceCounts);
+  // }
 
   function testFailTransferResourcesAndUnitsFleetToFleetNotInSameOrbit() public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();

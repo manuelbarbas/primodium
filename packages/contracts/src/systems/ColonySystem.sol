@@ -10,11 +10,8 @@ import { P_ColonySlotsConfigData, OwnedBy } from "codegen/index.sol";
 // libraries
 import { LibColony } from "libraries/LibColony.sol";
 import { LibResource } from "libraries/LibResource.sol";
-import { IWorld } from "codegen/world/IWorld.sol";
 
 // types
-import { BuildingKey } from "src/Keys.sol";
-import { EBuilding } from "src/Types.sol";
 
 contract ColonySystem is PrimodiumSystem {
   function payForColonySlotsCapacity(
@@ -23,7 +20,6 @@ contract ColonySystem is PrimodiumSystem {
   ) external returns (bool) {
     bytes32 playerEntity = OwnedBy.get(asteroidEntity);
 
-    IWorld world = IWorld(_world());
     bool fullPayment = LibResource.spendColonySlotsCapacityResources(asteroidEntity, payment);
     if (fullPayment) {
       LibColony.increaseColonySlotsCapacity(playerEntity);

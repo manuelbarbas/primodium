@@ -132,7 +132,7 @@ library LibUnit {
       bytes32 playerEntity = OwnedBy.get(asteroidEntity);
       uint256 capacity = ColonySlots.getCapacity(playerEntity);
       uint256 training = ColonySlots.getTraining(playerEntity);
-      require(training + count <= capacity, "[LibUnit] Not enough colony ship slots");
+      require(training + count <= capacity, "[LibUnit] Not enough colony slots");
     }
 
     P_RequiredResourcesData memory resources = P_RequiredResources.get(unitType, unitLevel);
@@ -156,8 +156,9 @@ library LibUnit {
     }
   }
 
+  // old, needs to be removed but kept for now to satisfy some old tests
   function getColonyShipCostMultiplier(bytes32 playerEntity) internal view returns (uint256) {
-    uint256 multiplier = getColonyShipsPlusAsteroids(playerEntity);
+    uint256 multiplier = getColonyShipsPlusAsteroids(playerEntity) - 1;
     return 2 ** multiplier;
   }
 

@@ -7,11 +7,12 @@ import { addressToEntity } from "src/utils.sol";
 import { EResource, EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
-import { OwnedBy, UnitCount, Score, ProductionRate, P_ColonyShipConfig, CooldownEnd, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, UnitLevel } from "codegen/index.sol";
+import { OwnedBy, UnitCount, Score, ProductionRate, P_ColonyShipConfig, CooldownEnd, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, UnitLevel, ColonySlots } from "codegen/index.sol";
 
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
 import { LibMath } from "libraries/LibMath.sol";
+import { LibColony } from "libraries/LibColony.sol";
 
 contract CombatEncryptionTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;
@@ -43,6 +44,12 @@ contract CombatEncryptionTest is PrimodiumTest {
     bytes32 minuteman = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
     bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
     uint256 decryption = P_ColonyShipConfig.getDecryption();
+
+    vm.startPrank(creator);
+    // Add 2 colony slots to account for the 2 colony ships about to be created
+    LibColony.increaseColonySlotsCapacity(aliceEntity);
+    LibColony.increaseColonySlotsCapacity(aliceEntity);
+    vm.stopPrank();
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == minuteman) unitCounts[i] = numberOfUnits;
@@ -151,6 +158,12 @@ contract CombatEncryptionTest is PrimodiumTest {
 
     for (uint256 i = 0; i < fleetCountToWin; i++) {
       console.log("create fleet %s", i);
+
+      // Add 1 colony slot to account for the colony ship about to be created
+      vm.startPrank(creator);
+      LibColony.increaseColonySlotsCapacity(aliceEntity);
+      vm.stopPrank();
+
       setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
       vm.startPrank(alice);
@@ -173,9 +186,11 @@ contract CombatEncryptionTest is PrimodiumTest {
 
     vm.startPrank(creator);
     GracePeriod.set(bobHomeAsteroid, block.timestamp);
+    // Add 1 colony slot to account for the colony ship about to be created
+    LibColony.increaseColonySlotsCapacity(bobEntity);
     vm.stopPrank();
 
-    console.log("creaete bob fleet");
+    console.log("create bob fleet");
     setupCreateFleet(bob, bobHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(bob);
@@ -183,7 +198,7 @@ contract CombatEncryptionTest is PrimodiumTest {
 
     world.Primodium__sendFleet(bobFleet, aliceHomeAsteroid);
     vm.stopPrank();
-    console.log("creaete bob fleet done");
+    console.log("create bob fleet done");
 
     vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetEntities[0]), block.timestamp));
 
@@ -256,6 +271,14 @@ contract CombatEncryptionTest is PrimodiumTest {
     bytes32 minuteman = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
     bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
     uint256 decryption = P_ColonyShipConfig.getDecryption();
+
+    vm.startPrank(creator);
+    // Add 4 colony slots to account for the colony ships about to be created
+    LibColony.increaseColonySlotsCapacity(aliceEntity);
+    LibColony.increaseColonySlotsCapacity(aliceEntity);
+    LibColony.increaseColonySlotsCapacity(aliceEntity);
+    LibColony.increaseColonySlotsCapacity(aliceEntity);
+    vm.stopPrank();
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == minuteman) unitCounts[i] = numberOfUnits;
