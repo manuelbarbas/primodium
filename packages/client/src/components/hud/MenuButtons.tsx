@@ -4,7 +4,7 @@ import { Join } from "../core/Join";
 import { Modal } from "../core/Modal";
 import { UnitUpgrades } from "./building-menu/screens/UnitUpgrades";
 import { AllianceManagement } from "./modals/alliance-mgmt/AllianceManagement";
-import { Leaderboard } from "./modals/leaderboard/Leaderboard";
+import { LeaderboardScreen } from "./modals/leaderboard/LeaderboardScreen";
 import { Settings } from "./modals/settings/Settings";
 import { BattleReports } from "./panes/battle-reports/BattleReports";
 
@@ -27,7 +27,7 @@ export const MenuButtons = () => {
             <IconLabel imageUri="/img/icons/leaderboardicon.png" tooltipText="leaderboard" tooltipDirection="right" />
           </Modal.Button>
           <Modal.Content className="w-[50rem] h-[50rem]">
-            <Leaderboard />
+            <LeaderboardScreen />
           </Modal.Content>
         </Modal>
         <Modal title="battles">

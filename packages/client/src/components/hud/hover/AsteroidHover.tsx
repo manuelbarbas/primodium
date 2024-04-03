@@ -3,7 +3,6 @@ import { Badge } from "src/components/core/Badge";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Loader } from "src/components/core/Loader";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useClaimConquestTime } from "src/hooks/conquest/useClaimConquestTime";
 import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
 import { useFullResourceCount, useFullResourceCounts } from "src/hooks/useFullResourceCount";
@@ -61,15 +60,12 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
           </div>
         )}
         {desc.conquestPoints > 0n && !!claimConquerTime && (
-          <TransactionQueueMask
-            queueItemId={"Conquest" as Entity}
-            className="flex victory-bg uppercase text-primary font-bold border border-secondary/50 text-sm flex justify-center items-center"
-          >
+          <div className="flex victory-bg uppercase text-primary font-bold border border-secondary/50 text-sm flex justify-center items-center">
             CLAIM
             {!claimConquerTime.canConquer
               ? ` IN ${formatTime(claimConquerTime.timeUntilClaim)}`
               : ` ${claimConquerTime.points} PTS`}
-          </TransactionQueueMask>
+          </div>
         )}
         <div className="flex gap-1">
           <div className="flex bg-primary uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4 max-w-48">
