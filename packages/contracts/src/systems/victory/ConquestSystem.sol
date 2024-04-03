@@ -17,7 +17,7 @@ contract ConquestSystem is PrimodiumSystem {
     require(conquestPoints > 0, "[Conquest] This asteroid does not generate conquest points");
 
     uint256 lastConquered = LastConquered.get(asteroidEntity);
-    uint256 holdTime = (P_ConquestConfig.get() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
+    uint256 holdTime = (P_ConquestConfig.getHoldTime() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
     bool canConquer = lastConquered + holdTime <= block.timestamp;
 
     require(canConquer, "[Conquest] Asteroid hasn't been held long enough to claim conquest points");
@@ -26,4 +26,6 @@ contract ConquestSystem is PrimodiumSystem {
 
     LastConquered.set(asteroidEntity, block.timestamp);
   }
+
+  function claimConquestAsteroidPoints(bytes32 asteroidEntity) public {}
 }

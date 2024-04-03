@@ -86,6 +86,11 @@ library LibMath {
     uint256 generalDirection = asteroidCount % 4;
     return generalDirection * 90 + countMod3 * 30 + countMod27;
   }
+
+  function getRandomDirection(uint256 seed) internal view returns (uint256) {
+    return uint256(keccak256(abi.encode(seed, (blockhash(block.number - 1))))) % 360;
+  }
+
   /**
    * @notice Calculates the Euclidean distance between two positions in a 2D space.
    * @param a The first position, represented as `PositionData` which includes x and y coordinates.

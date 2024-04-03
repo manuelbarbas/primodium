@@ -102,6 +102,13 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     tables: {
       P_ConquestConfig: {
         holdTime: 6n * 60n * 60n,
+        // spawn a conquest asteroid every <conquestAsteroidSpawnFrequency> players, starting at the <conquestAsteroidOffset>th player
+        conquestAsteroidSpawnFrequency: 100n,
+        conquestAsteroidSpawnOffset: 25n,
+        // limit conquest asteroids to <maxConquestAsteroids>
+        maxConquestAsteroids: 10n,
+        conquestAsteroidPoints: 50n,
+        conquestAsteroidLifeSpan: 6n * 60n * 60n,
       },
     },
   },

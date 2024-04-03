@@ -488,4 +488,10 @@ contract PrimodiumTest is MudTest {
     vm.stopPrank();
     return fleetEntity;
   }
+
+  function spawnPlayers(uint256 count) internal {
+    for (uint256 i = 0; i < count; i++) {
+      spawn(getUser());
+    }
+  }
 }

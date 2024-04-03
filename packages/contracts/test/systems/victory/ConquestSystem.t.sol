@@ -25,7 +25,7 @@ contract ConquestSystemTest is PrimodiumTest {
     AsteroidData memory asteroidData = Asteroid.get(asteroidEntity);
 
     conquerAsteroid(creator, Home.get(playerEntity), asteroidEntity);
-    uint256 holdTime = (P_ConquestConfig.get() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
+    uint256 holdTime = (P_ConquestConfig.getHoldTime() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
     uint256 conquerTime = block.timestamp + holdTime;
     vm.warp(conquerTime);
 
@@ -43,7 +43,7 @@ contract ConquestSystemTest is PrimodiumTest {
     bytes32 asteroidEntity = LibAsteroid.createSecondaryAsteroid(position);
 
     conquerAsteroid(creator, Home.get(playerEntity), asteroidEntity);
-    uint256 conquerTime = block.timestamp + P_ConquestConfig.get();
+    uint256 conquerTime = block.timestamp + P_ConquestConfig.getHoldTime();
     vm.warp(conquerTime);
 
     vm.startPrank(alice);
@@ -59,7 +59,7 @@ contract ConquestSystemTest is PrimodiumTest {
     bytes32 asteroidEntity = LibAsteroid.createSecondaryAsteroid(position);
 
     conquerAsteroid(creator, Home.get(playerEntity), asteroidEntity);
-    uint256 holdTime = (P_ConquestConfig.get() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
+    uint256 holdTime = (P_ConquestConfig.getHoldTime() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
 
     vm.startPrank(creator);
     Asteroid.setConquestPoints(asteroidEntity, 0);
@@ -76,7 +76,7 @@ contract ConquestSystemTest is PrimodiumTest {
     bytes32 secondaryAsteroidEntity = LibAsteroid.createSecondaryAsteroid(position);
 
     conquerAsteroid(alice, asteroidEntity, secondaryAsteroidEntity);
-    uint256 holdTime = (P_ConquestConfig.get() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
+    uint256 holdTime = (P_ConquestConfig.getHoldTime() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
     uint256 conquerTime = LastConquered.get(secondaryAsteroidEntity) + holdTime;
     vm.warp(conquerTime - 1);
 

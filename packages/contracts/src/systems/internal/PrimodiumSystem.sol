@@ -8,7 +8,7 @@ import { NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 
 import { EFleetStance } from "src/Types.sol";
-import { GracePeriod, CooldownEnd, FleetStance, OwnedBy, FleetMovement, P_UnitPrototypes, P_Transportables } from "src/codegen/index.sol";
+import { ConquestAsteroid, GracePeriod, CooldownEnd, FleetStance, OwnedBy, FleetMovement, P_UnitPrototypes, P_Transportables } from "src/codegen/index.sol";
 
 /**
  * @title PrimodiumSystem
@@ -39,6 +39,13 @@ contract PrimodiumSystem is System {
    */
   modifier _claimUnits(bytes32 asteroidEntity) {
     IWorld(_world()).Primodium__claimUnits(asteroidEntity);
+    _;
+  }
+
+  modifier _claimConquestAsteroidPoints(bytes32 asteroidEntity) {
+    if (ConquestAsteroid.getIsConquestAsteroid(asteroidEntity)) {
+      IWorld(_world()).Primodium__claimConquestAsteroidPoints(asteroidEntity);
+    }
     _;
   }
 
