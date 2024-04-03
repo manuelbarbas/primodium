@@ -13,7 +13,8 @@ export const TransactionQueueMask: React.FC<{
   if (queuePosition === -1) return <div className={className}>{children}</div>;
 
   return (
-    <div className={`relative ${className}`}>
+    // @NAB5 - This allows an absolute div to retain its position. Is there a better way?
+    <div className={`${className} ${className?.includes("absolute") ? "" : "relative"}`}>
       {children}
       <div className="absolute inset-0 bg-black/75 rounded-box">
         {queuePosition !== 0 && (

@@ -3,6 +3,7 @@ import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { useMemo, useRef } from "react";
 import { Marker } from "src/components/core/Marker";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { DepthLayers } from "src/game/lib/constants/common";
 import { useMud } from "src/hooks";
 import { useClaimConquestTime } from "src/hooks/conquest/useClaimConquestTime";
@@ -135,14 +136,17 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
           </div>
         )}
         {ownedByPlayer && claimConquerTime?.canConquer && (
-          <div className="absolute bottom-0 left-0 -translate-x-full w-28">
+          <TransactionQueueMask
+            queueItemId={"Conquest" as Entity}
+            className="absolute bottom-0 left-0 -translate-x-full w-28"
+          >
             <Button
               onClick={() => claimConquest(mud, selectedAsteroid)}
               className="victory-bg btn-xs w-full text-xs text-black border border-r-0 border-secondary/50"
             >
               CLAIM
             </Button>
-          </div>
+          </TransactionQueueMask>
         )}
         {ownedByPlayer && !claimConquerTime?.canConquer && (
           <div className="absolute bottom-0 left-0 -translate-x-full w-28">
