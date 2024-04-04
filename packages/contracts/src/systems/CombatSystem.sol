@@ -42,10 +42,10 @@ contract CombatSystem is PrimodiumSystem {
   )
     private
     _onlyFleetOwner(fleetEntity)
-    _onlyWhenNotInCooldown(fleetEntity)
-    _onlyWhenNotInGracePeriod(targetFleet)
-    _onlyWhenNotInStance(fleetEntity)
-    _onlyWhenFleetsAreIsInSameOrbit(fleetEntity, targetFleet)
+    _onlyNotInCooldown(fleetEntity)
+    _onlyNotInGracePeriod(targetFleet)
+    _onlyNotInStance(fleetEntity)
+    _onlySameOrbit(fleetEntity, targetFleet)
   {
     (bytes32 battleEntity, BattleResultData memory batteResult) = LibCombat.attack(fleetEntity, targetFleet);
 
@@ -63,10 +63,10 @@ contract CombatSystem is PrimodiumSystem {
   )
     private
     _onlyFleetOwner(fleetEntity)
-    _onlyWhenNotInCooldown(fleetEntity)
-    _onlyWhenNotInStance(fleetEntity)
-    _onlyWhenNotInGracePeriod(targetAsteroid)
-    _onlyWhenFleetIsInOrbitOfAsteroid(fleetEntity, targetAsteroid)
+    _onlyNotInCooldown(fleetEntity)
+    _onlyNotInStance(fleetEntity)
+    _onlyNotInGracePeriod(targetAsteroid)
+    _onlyOrbitingAsteroid(fleetEntity, targetAsteroid)
     _claimResources(targetAsteroid)
     _claimUnits(targetAsteroid)
     _claimConquestAsteroidPoints(targetAsteroid)
@@ -80,9 +80,9 @@ contract CombatSystem is PrimodiumSystem {
     bytes32 targetFleet
   )
     private
-    _onlyWhenNotInGracePeriod(targetFleet)
+    _onlyNotInGracePeriod(targetFleet)
     _onlyAsteroidOwner(asteroidEntity)
-    _onlyWhenFleetIsInOrbitOfAsteroid(targetFleet, asteroidEntity)
+    _onlyOrbitingAsteroid(targetFleet, asteroidEntity)
     _claimResources(asteroidEntity)
     _claimUnits(asteroidEntity)
     _claimConquestAsteroidPoints(asteroidEntity)

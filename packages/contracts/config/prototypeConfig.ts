@@ -48,7 +48,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         wormholeAsteroidSlot: 0n,
         maxLevel: 1n,
         mapId: 6,
-        conquestPoints: 0n,
+        conquestPoints: 0n * BigInt(SCALE),
       },
 
       P_ColonyShipConfig: {
@@ -107,8 +107,10 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         conquestAsteroidSpawnOffset: 25n,
         // limit conquest asteroids to <maxConquestAsteroids>
         maxConquestAsteroids: 10n,
-        conquestAsteroidPoints: 50n,
+        conquestAsteroidPoints: 50n * BigInt(SCALE),
         conquestAsteroidLifeSpan: 6n * 60n * 60n,
+        conquestAsteroidEncryption: 15n * BigInt(SCALE),
+        conquestAsteroidEncryptionRegen: BigInt(Math.round(0.00056 * SCALE)),
       },
     },
   },

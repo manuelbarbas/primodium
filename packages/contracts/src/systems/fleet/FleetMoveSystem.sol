@@ -62,8 +62,8 @@ contract FleetMoveSystem is PrimodiumSystem {
     public
     _onlyIfAsteroidExists(asteroidEntity)
     _onlyFleetOwner(fleetEntity)
-    _onlyWhenFleetIsInOrbit(fleetEntity)
-    _onlyWhenNotInStance(fleetEntity)
+    _onlyOrbiting(fleetEntity)
+    _onlyNotInStance(fleetEntity)
     _onlyDifferentAsteroid(fleetEntity, asteroidEntity)
     _claimConquestAsteroidPoints(asteroidEntity)
   {

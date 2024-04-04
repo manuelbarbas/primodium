@@ -139,12 +139,22 @@ contract WormholeTest is PrimodiumTest {
 
     vm.warp(CooldownEnd.get(wormholeBaseEntity) + 1);
 
+    vm.startPrank(creator);
+    resource = LibWormhole.advanceTurn();
+    vm.stopPrank();
+
     increaseResource(wormholeAsteroidEntity, EResource(resource), 100);
+
+    uint256 prevScore = Score.get(aliceEntity, uint8(EScoreType.Extraction));
 
     vm.prank(alice);
     world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
 
-    assertEq(Score.get(aliceEntity, uint8(EScoreType.Extraction)), 200 * P_ScoreMultiplier.get(resource), "score");
+    assertEq(
+      Score.get(aliceEntity, uint8(EScoreType.Extraction)),
+      100 * P_ScoreMultiplier.get(resource) + prevScore,
+      "score"
+    );
     assertEq(CooldownEnd.get(wormholeBaseEntity), block.timestamp + wormholeConfig.cooldown, "cooldown");
     assertFalse(Wormhole.getHash() == wormholeData.hash, "hash");
     assertEq(Wormhole.getResource(), resource, "resource");

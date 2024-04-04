@@ -9,7 +9,7 @@ import { NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { BuildingKey, UnitKey } from "src/Keys.sol";
-import { P_IsUtility, MaxResourceCount, ResourceCount, P_UnitPrototypes, P_GameConfig, P_GameConfigData, P_Unit, P_Transportables, BuildingType, OwnedBy, FleetMovement, P_Blueprint, P_EnumToPrototype, PositionData, Position, P_RequiredResourcesData, Asteroid, Home, P_RequiredTile, P_MaxLevel, P_RequiredResources, P_RequiredBaseLevel, UnitLevel, P_ColonyShipConfig, Level, P_UnitProdTypes, P_UnitProdMultiplier, P_WormholeAsteroidConfig } from "codegen/index.sol";
+import { P_Unit, CooldownEnd, P_IsUtility, MaxResourceCount, ResourceCount, P_UnitPrototypes, P_GameConfig, P_GameConfigData, P_Unit, P_Transportables, BuildingType, OwnedBy, FleetMovement, P_Blueprint, P_EnumToPrototype, PositionData, Position, P_RequiredResourcesData, Asteroid, Home, P_RequiredTile, P_MaxLevel, P_RequiredResources, P_RequiredBaseLevel, UnitLevel, P_ColonyShipConfig, Level, P_UnitProdTypes, P_UnitProdMultiplier, P_WormholeAsteroidConfig } from "codegen/index.sol";
 import { EResource, EBuilding, EUnit, Bounds } from "src/Types.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
@@ -239,10 +239,14 @@ contract PrimodiumTest is MudTest {
 
     vm.startPrank(player);
     world.Primodium__trainUnits(buildingEntity, unitPrototype, count);
-    if (fastForward) vm.warp(block.timestamp + (LibUnit.getUnitBuildTime(buildingEntity, unitPrototype) * count));
-    vm.stopPrank();
+    if (fastForward) {
+      uint256 unitLevel = UnitLevel.get(Position.getParentEntity(buildingEntity), unitPrototype);
+      switchPrank(creator);
+      P_Unit.setTrainingTime(unitPrototype, unitLevel, 0);
+      vm.warp(block.timestamp + 1);
+    }
 
-    vm.startPrank(creator);
+    switchPrank(creator);
     P_UnitProdTypes.set(buildingType, level, prodTypes);
     vm.stopPrank();
   }
@@ -477,13 +481,16 @@ contract PrimodiumTest is MudTest {
     bytes32 fleetEntity = world.Primodium__createFleet(sourceAsteroid, unitCounts, resourceCounts);
     console.log("sending");
     world.Primodium__sendFleet(fleetEntity, targetAsteroid);
-    vm.warp(FleetMovement.getArrivalTime(fleetEntity));
+    switchPrank(creator);
+    FleetMovement.setArrivalTime(fleetEntity, block.timestamp);
+    vm.warp(block.timestamp + 1);
 
     while (OwnedBy.get(targetAsteroid) != playerEntity) {
       console.log("attacking");
-      uint256 cooldown = LibCombat.getCooldownTime(LibCombatAttributes.getAttack(fleetEntity), true);
+      switchPrank(player);
       world.Primodium__attack(fleetEntity, targetAsteroid);
-      vm.warp(block.timestamp + cooldown);
+      switchPrank(creator);
+      CooldownEnd.set(fleetEntity, block.timestamp - 1);
     }
     vm.stopPrank();
     return fleetEntity;

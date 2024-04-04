@@ -21,8 +21,8 @@ contract FleetLandSystem is PrimodiumSystem {
   )
     public
     _onlyFleetOwner(fleetEntity)
-    _onlyWhenNotInCooldown(fleetEntity)
-    _onlyWhenFleetIsInOrbitOfAsteroid(fleetEntity, asteroidEntity)
+    _onlyNotInCooldown(fleetEntity)
+    _onlyOrbitingAsteroid(fleetEntity, asteroidEntity)
     _claimResources(asteroidEntity)
     _claimUnits(asteroidEntity)
   {

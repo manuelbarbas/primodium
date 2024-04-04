@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { Position, PositionData, LastConquered, ConquestAsteroid, ConquestAsteroidData, ReversePosition } from "codegen/index.sol";
+import { Position, PositionData, LastConquered, ConquestAsteroid, P_ConquestConfig, ConquestAsteroidData, ReversePosition } from "codegen/index.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
+import { LibProduction } from "libraries/LibProduction.sol";
+import { EResource } from "src/Types.sol";
 
 library LibConquestAsteroid {
   function createConquestAsteroid(uint256 asteroidCount) internal {
@@ -12,7 +15,18 @@ library LibConquestAsteroid {
 
     ConquestAsteroid.set(
       asteroidEntity,
-      ConquestAsteroidData({ isConquestAsteroid: true, distanceFromCenter: distance })
+      ConquestAsteroidData({ isConquestAsteroid: true, distanceFromCenter: distance, spawnTime: block.timestamp })
+    );
+
+    LibStorage.increaseMaxStorage(
+      asteroidEntity,
+      uint8(EResource.R_Encryption),
+      P_ConquestConfig.getConquestAsteroidEncryption()
+    );
+    LibProduction.increaseResourceProduction(
+      asteroidEntity,
+      EResource.R_Encryption,
+      P_ConquestConfig.getConquestAsteroidEncryptionRegen()
     );
 
     spawnConquestAsteroid(asteroidEntity);
@@ -29,6 +43,7 @@ library LibConquestAsteroid {
       seed++;
     } while (ReversePosition.get(position.x, position.y) != 0);
     Position.set(asteroidEntity, position);
+    ConquestAsteroid.setSpawnTime(asteroidEntity, block.timestamp);
     ReversePosition.set(position.x, position.y, asteroidEntity);
   }
 }
