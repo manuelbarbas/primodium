@@ -202,9 +202,7 @@ library LibFleet {
     }
 
     if (!isOwner) {
-      FleetSet.remove(asteroidOwnerEntity, FleetOwnedByKey, fleetEntity);
-      FleetSet.add(asteroidEntity, FleetOwnedByKey, fleetEntity);
-      OwnedBy.set(fleetEntity, asteroidEntity);
+      resetFleetOrbit(fleetEntity);
     }
   }
 
