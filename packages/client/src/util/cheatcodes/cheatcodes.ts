@@ -450,8 +450,10 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
               const worldContract = getContract({
                 address: networkConfig.worldAddress as Hex,
                 abi: IWorldAbi,
-                publicClient: mud.network.publicClient,
-                walletClient: burnerWalletClient,
+                client: {
+                  public: mud.network.publicClient,
+                  wallet: burnerWalletClient,
+                },
               });
 
               await worldContract.write.Primodium__spawn();
