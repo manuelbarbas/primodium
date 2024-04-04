@@ -6,6 +6,8 @@ import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { getAllianceName } from "src/util/alliance";
+import { EntityType } from "src/util/constants";
+import { formatResourceCount } from "src/util/number";
 import { rankToScore } from "src/util/score";
 
 export const SubLeaderboard = ({ leaderboard, alliance = false }: { leaderboard: Entity; alliance?: boolean }) => {
@@ -100,7 +102,12 @@ const LeaderboardItem = ({
           {player === entity && <p className="text-accent">(You)</p>}
         </div>
       </div>
-      <p className="font-bold w-fit col-span-2 bg-cyan-700 px-2 flex justify-center">{score.toLocaleString()}</p>
+      <p className="font-bold w-fit col-span-2 bg-cyan-700 px-2 flex justify-center">
+        {formatResourceCount(EntityType.Iron, score, {
+          notLocale: true,
+          fractionDigits: 2,
+        }).toLocaleString()}
+      </p>
       <div className="flex items-center gap-1 px-1 bg-yellow-700 font-bold">{rankToScore(index + 1)}pts</div>
     </SecondaryCard>
   );

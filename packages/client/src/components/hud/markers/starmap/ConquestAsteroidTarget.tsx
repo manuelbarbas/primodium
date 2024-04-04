@@ -5,7 +5,7 @@ import { Marker } from "src/components/core/Marker";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { DepthLayers } from "src/game/lib/constants/common";
 import { useMud } from "src/hooks";
-import { useConquestAsteroid } from "src/hooks/useConquestAsteroid";
+import { useConquestAsteroid } from "src/hooks/conquest/useConquestAsteroid";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { claimConquestAsteroid } from "src/network/setup/contractCalls/claimConquest";
@@ -77,6 +77,7 @@ export const _ConquestAsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = (
               CLAIM
               {formatResourceCount(EntityType.Iron, conquestData.unclaimedPoints, {
                 notLocale: true,
+                fractionDigits: 2,
               }).toLocaleString()}{" "}
               PTS
             </Button>

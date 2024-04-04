@@ -13,7 +13,7 @@ import { EResource, EScoreType } from "src/Types.sol";
 import { FleetIncomingKey, FleetOutgoingKey } from "src/Keys.sol";
 
 library LibConquestAsteroid {
-  function createConquestAsteroid(uint256 asteroidCount) internal {
+  function createConquestAsteroid(uint256 asteroidCount, uint256 asteroidConquestIndex) internal {
     bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("conquestAsteroid"), bytes32(asteroidCount));
     uint256 distance = LibMath.getSpawnDistance(asteroidCount);
 
@@ -21,7 +21,7 @@ library LibConquestAsteroid {
       asteroidEntity,
       ConquestAsteroidData({ isConquestAsteroid: true, distanceFromCenter: distance, spawnTime: block.timestamp })
     );
-    ConquestAsteroidIndex.set(asteroidEntity, asteroidCount);
+    ConquestAsteroidIndex.set(asteroidEntity, asteroidConquestIndex);
 
     LibStorage.increaseMaxStorage(
       asteroidEntity,

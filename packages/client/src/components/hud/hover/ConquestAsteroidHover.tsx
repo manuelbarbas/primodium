@@ -3,7 +3,7 @@ import { Badge } from "src/components/core/Badge";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Loader } from "src/components/core/Loader";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { useConquestAsteroid } from "src/hooks/useConquestAsteroid";
+import { useConquestAsteroid } from "src/hooks/conquest/useConquestAsteroid";
 import { useSyncStatus } from "src/hooks/useSyncStatus";
 import { components } from "src/network/components";
 import { EntityType, Keys, ResourceImage } from "src/util/constants";

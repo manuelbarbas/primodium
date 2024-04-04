@@ -583,7 +583,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             { name: "resource", type: "dropdown", dropdownOptions: Object.keys(resources) },
           ],
           function: async (count: number, resource: string) => {
-            const selectedRock = mud.components.ActiveRock.get()?.value;
+            const selectedRock = mud.components.SelectedRock.get()?.value;
             const resourceEntity = resources[resource];
             if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
 

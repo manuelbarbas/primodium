@@ -69,6 +69,7 @@ contract CombatSystem is PrimodiumSystem {
     _onlyOrbitingAsteroid(fleetEntity, targetAsteroid)
     _claimResources(targetAsteroid)
     _claimUnits(targetAsteroid)
+    _claimConquestAsteroidPoints(targetAsteroid)
   {
     (bytes32 battleEntity, BattleResultData memory batteResult) = LibCombat.attack(fleetEntity, targetAsteroid);
     afterBattle(battleEntity, batteResult);

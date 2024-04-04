@@ -35,7 +35,10 @@ library LibAsteroid {
       // spawn a conquest asteroid every <conquestAsteroidSpawnFrequency> asteroids, starting at the <conquestAsteroidOffset> asteroid
       asteroidCount % conquestConfig.conquestAsteroidSpawnFrequency == conquestConfig.conquestAsteroidSpawnOffset
     ) {
-      LibConquestAsteroid.createConquestAsteroid(asteroidCount / conquestConfig.conquestAsteroidSpawnFrequency);
+      LibConquestAsteroid.createConquestAsteroid(
+        asteroidCount,
+        asteroidCount / conquestConfig.conquestAsteroidSpawnFrequency
+      );
     }
 
     asteroidEntity = LibEncode.getTimedHash(bytes32("asteroid"), coord);

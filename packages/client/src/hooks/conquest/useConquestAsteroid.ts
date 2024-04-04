@@ -2,7 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { components } from "src/network/components";
 import { EntityType, SPEED_SCALE } from "src/util/constants";
-import { useFullResourceCount } from "./useFullResourceCount";
+import { useFullResourceCount } from "../useFullResourceCount";
 
 export const useConquestAsteroid = (entity: Entity) => {
   const conquestConfigData = components.P_ConquestConfig.use();
@@ -30,8 +30,9 @@ export const useConquestAsteroid = (entity: Entity) => {
     if (!!owner && owner === player) {
       const endTime = time > explodeTime ? explodeTime : time;
       const timeSinceClaimed = endTime - lastConquered;
-      unclaimedPoints = dripPerSec * timeSinceClaimed + (canExplode ? 0n : conquestConfigData.conquestAsteroidPoints);
+      unclaimedPoints = dripPerSec * timeSinceClaimed + (canExplode ? conquestConfigData.conquestAsteroidPoints : 0n);
     }
+
     return {
       distance: conquestAsteroid.distanceFromCenter,
       points: conquestConfigData.conquestAsteroidPoints,
