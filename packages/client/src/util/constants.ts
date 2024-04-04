@@ -95,7 +95,7 @@ export enum TransactionQueueType {
   Access,
   Attack,
   CreateFleet,
-  DisbandFleet,
+  ClearFleet,
   LandFleet,
   MergeFleets,
   SendFleet,
