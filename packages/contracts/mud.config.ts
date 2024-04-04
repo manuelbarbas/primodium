@@ -62,8 +62,6 @@ export const worldInput = {
     P_ColonyShipConfig: {
       key: [],
       schema: {
-        resource: "uint8",
-        initialCost: "uint256",
         decryption: "uint256",
         cooldownExtension: "uint256",
       },

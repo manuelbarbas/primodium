@@ -196,8 +196,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
 
       P_ColonyShipConfig: {
-        resource: EResource.Alloy, // todo: make this obsolete
-        initialCost: 10000n * BigInt(SCALE), // todo: make this obsolete
         decryption: 10n * BigInt(SCALE),
         cooldownExtension: 60n * 1n, // one hour
       },
@@ -999,7 +997,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredResources: getResourceValues({ IronPlate: 2500, Alloy: 2500, PVCell: 2500 }),
         P_RequiredBaseLevel: { value: 3n },
         P_UnitProdMultiplier: { value: 100n },
-        P_Production: getResourceValues({ U_ColonyShipCapacity: 1_000_000_000_000 }), // todo: make this obsolete
         P_UnitProdTypes: { value: encodeArray(["ColonyShip"]) },
       },
       2: {
@@ -1176,7 +1173,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     levels: {
       [MUDEnums.EResource.indexOf("U_Electricity")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Housing")]: { P_IsUtility: { value: true } },
-      [MUDEnums.EResource.indexOf("U_ColonyShipCapacity")]: { P_IsUtility: { value: true } }, // todo: make this obsolete
       [MUDEnums.EResource.indexOf("U_MaxFleets")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Defense")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("M_DefenseMultiplier")]: { P_IsUtility: { value: true } },

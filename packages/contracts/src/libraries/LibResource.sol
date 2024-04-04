@@ -49,7 +49,6 @@ library LibResource {
     if (prototype == ColonyShipPrototypeId) {
       // todo: redesign to allow for multiple colony ships to be trained at once, this can already be done across multiple asteroids that have shipyards
       require(count == 1, "[SpendResources] Colony ships can only be trained one at a time");
-      // uint256 cost = P_ColonyShipConfig.getInitialCost();
       bytes32 playerEntity = OwnedBy.get(asteroidEntity);
       require(
         LibUnit.getColonyShipsPlusAsteroids(playerEntity) < ColonySlots.getCapacity(playerEntity),

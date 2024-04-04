@@ -200,12 +200,8 @@ contract PrimodiumTest is MudTest {
     provideResources(asteroidEntity, requiredResources);
 
     if (unitPrototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip))) {
-      uint8 colonyShipResource = P_ColonyShipConfig.getResource();
       uint256 countLeft = count;
       while (countLeft > 0) {
-        uint256 cost = P_ColonyShipConfig.getInitialCost() *
-          LibUnit.getColonyShipCostMultiplier(OwnedBy.get(asteroidEntity));
-        increaseResource(asteroidEntity, EResource(colonyShipResource), cost);
         trainUnits(player, mainBase, unitPrototype, 1, fastForward);
         countLeft--;
       }
