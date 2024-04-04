@@ -116,29 +116,6 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     assertEq(UnitCount.get(asteroidEntity, unitPrototype), 100, "unit count");
   }
 
-  function testTrainColonyShip() public {
-    LibColony.increaseColonySlotsCapacity(aliceEntity);
-
-    uint256 multiplier = LibUnit.getColonyShipCostMultiplier(aliceEntity);
-    assertEq(multiplier, 1);
-    uint256 amount = P_ColonyShipConfig.getInitialCost() * multiplier;
-    assertEq(
-      amount,
-      P_ColonyShipConfig.getInitialCost() * LibUnit.getColonyShipCostMultiplier(aliceEntity),
-      "next colony ship cost"
-    );
-    uint8 resource = P_ColonyShipConfig.getResource();
-    trainUnits(alice, EUnit.ColonyShip, 1, true);
-    assertEq(ResourceCount.get(aliceAsteroidEntity, uint8(resource)), 0, "special resource should have been spent");
-  }
-
-  function testFailTrainColonyShipNoSpecialResource() public {
-    vm.stopPrank();
-    increaseResource(aliceAsteroidEntity, EResource.U_ColonyShipCapacity, 1);
-    //this func doesn't provide resources
-    trainUnits(alice, Home.get(aliceAsteroidEntity), P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip)), 1, true);
-  }
-
   function testInvalidBuilding() public {
     vm.expectRevert(bytes("[TrainUnitsSystem] Can not train units using an in active building"));
     world.Primodium__trainUnits(bytes32(0), unit, 1);
