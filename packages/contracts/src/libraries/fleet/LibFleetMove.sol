@@ -46,11 +46,11 @@ library LibFleetMove {
     bytes32 origin = FleetMovement.getDestination(fleetEntity);
 
     if (ConquestAsteroid.getIsConquestAsteroid(prevOrigin)) {
-      FleetSet.remove(destination, FleetOutgoingKey, fleetEntity);
+      FleetSet.remove(prevOrigin, FleetOutgoingKey, fleetEntity);
     }
 
     if (ConquestAsteroid.getIsConquestAsteroid(origin)) {
-      FleetSet.add(destination, FleetOutgoingKey, fleetEntity);
+      FleetSet.add(origin, FleetOutgoingKey, fleetEntity);
     }
 
     FleetSet.remove(FleetMovement.getDestination(fleetEntity), FleetIncomingKey, fleetEntity);

@@ -40,37 +40,54 @@ library LibConquestAsteroid {
     uint256 distance = ConquestAsteroid.getDistanceFromCenter(asteroidEntity);
 
     LastConquered.set(asteroidEntity, block.timestamp);
+    PositionData memory prevPosition = Position.get(asteroidEntity);
     PositionData memory position;
     uint256 seed = uint256(asteroidEntity);
     do {
       position = LibMath.getPositionByVector(distance, LibMath.getRandomDirection(seed));
       seed++;
-    } while (ReversePosition.get(position.x, position.y) != 0);
+    } while (ReversePosition.get(position.x, position.y) != 0 || getQuadrant(position) == getQuadrant(prevPosition));
     Position.set(asteroidEntity, position);
     ConquestAsteroid.setSpawnTime(asteroidEntity, block.timestamp);
     ReversePosition.set(position.x, position.y, asteroidEntity);
   }
 
+  function getQuadrant(PositionData memory position) internal pure returns (uint8) {
+    if (position.x > 0 && position.y > 0) {
+      return 1; // Quadrant 1
+    } else if (position.x < 0 && position.y > 0) {
+      return 2; // Quadrant 2
+    } else if (position.x < 0 && position.y < 0) {
+      return 3; // Quadrant 3
+    } else if (position.x > 0 && position.y < 0) {
+      return 4; // Quadrant 4
+    } else {
+      return 0; // Position is on an axis or origin, not in any quadrant
+    }
+  }
+
   function explodeConquestAsteroid(bytes32 asteroidEntity) internal {
-    // add score to owner and remove owner
     bytes32 owner = OwnedBy.get(asteroidEntity);
-    if (!owner) return;
+    if (owner != 0) {
+      LibScore.addScore(owner, EScoreType.Conquest, P_ConquestConfig.getConquestAsteroidPoints());
+      OwnedBy.deleteRecord(asteroidEntity);
+    }
 
     // kill all incoming and orbiting fleets
-    bytes32[] memory incomingFleetEntities = FleetSet.getFleetEntities(FleetIncomingKey, asteroidEntity);
+    bytes32[] memory incomingFleetEntities = FleetSet.getFleetEntities(asteroidEntity, FleetIncomingKey);
     for (uint i = 0; i < incomingFleetEntities.length; i++) {
       LibFleetClear.abandonFleet(incomingFleetEntities[i]);
     }
-    FleetSet.clear(FleetIncomingKey, asteroidEntity);
+    FleetSet.clear(asteroidEntity, FleetIncomingKey);
 
     // kill all outgoing fleets
-    bytes32[] memory outgoingFleetEntities = FleetSet.getFleetEntities(FleetOutgoingKey, asteroidEntity);
+    bytes32[] memory outgoingFleetEntities = FleetSet.getFleetEntities(asteroidEntity, FleetOutgoingKey);
     for (uint i = 0; i < outgoingFleetEntities.length; i++) {
       // only kill if fleet hasn't arrived yet
       if (FleetMovement.getArrivalTime(outgoingFleetEntities[i]) > block.timestamp)
         LibFleetClear.abandonFleet(outgoingFleetEntities[i]);
     }
-    FleetSet.clear(FleetOutgoingKey, asteroidEntity);
+    FleetSet.clear(asteroidEntity, FleetOutgoingKey);
 
     // reset encryption
     ResourceCount.set(asteroidEntity, uint8(EResource.R_Encryption), P_ConquestConfig.getConquestAsteroidEncryption());

@@ -42,13 +42,6 @@ contract PrimodiumSystem is System {
     _;
   }
 
-  modifier _claimConquestAsteroidPoints(bytes32 asteroidEntity) {
-    if (ConquestAsteroid.getIsConquestAsteroid(asteroidEntity)) {
-      IWorld(_world()).Primodium__claimConquestAsteroidPoints(asteroidEntity);
-    }
-    _;
-  }
-
   /**
    * @dev Ensures the caller is the owner of the specified fleet.
    * @param fleetEntity The unique identifier for the fleet.

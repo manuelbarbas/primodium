@@ -26,7 +26,7 @@ library LibFleetClear {
     FleetSet.remove(asteroidEntity, FleetIncomingKey, fleetEntity);
 
     bytes32 ownerAsteroidEntity = OwnedBy.get(fleetEntity);
-    FleetSet.remove(asteroidEntity, FleetOwnedByKey, fleetEntity);
+    FleetSet.remove(ownerAsteroidEntity, FleetOwnedByKey, fleetEntity);
 
     FleetMovement.deleteRecord(fleetEntity);
     IsFleet.deleteRecord(fleetEntity);

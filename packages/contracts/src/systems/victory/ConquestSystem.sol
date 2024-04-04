@@ -49,7 +49,7 @@ contract ConquestSystem is PrimodiumSystem {
         (holdPctX1000 * P_ConquestConfig.getConquestAsteroidPoints()) / 1000
       );
     }
-    if (block.timestamp > explodeTime) {
+    if (block.timestamp >= explodeTime) {
       LibConquestAsteroid.explodeConquestAsteroid(asteroidEntity);
     }
   }
