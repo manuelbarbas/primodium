@@ -38,7 +38,7 @@ export const ConquestAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) 
     );
 
   return (
-    <Card className="ml-5 w-60 relative">
+    <Card className="ml-5 w-72 relative">
       <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50 " />
       <div className="flex flex-col gap-1 z-10">
         <div className="grid grid-cols-2 gap-1">
@@ -49,7 +49,7 @@ export const ConquestAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) 
           <AsteroidEta entity={entity} />
         </div>
         <div className="flex victory-bg uppercase text-primary font-bold border border-secondary/50 text-sm flex justify-center items-center">
-          EXPLOSION
+          {formatResourceCount(EntityType.Iron, conquestData.points, { notLocale: true }).toLocaleString()} CP EXPLOSION
           {conquestData.canExplode ? " IMMINENT" : ` IN ${formatTime(conquestData.timeUntilExplode)}`}
         </div>
         <div className="flex gap-1">
@@ -62,10 +62,16 @@ export const ConquestAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) 
               <AccountDisplay className="w-12" noColor player={ownedBy} raw />
             </div>
           )}
-          <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
-            {/* todo replace CP with icon */}
-            {formatResourceCount(EntityType.Iron, conquestData.points, { notLocale: true }).toLocaleString()} CP
-          </div>
+          {conquestData.dripPerSec > 0n && (
+            <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
+              {/* todo replace CP with icon */}
+              {formatResourceCount(EntityType.Iron, conquestData.dripPerSec * 60n * 60n, {
+                notLocale: true,
+                fractionDigits: 1,
+              }).toLocaleString()}{" "}
+              CP/HR
+            </div>
+          )}
         </div>
 
         <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">

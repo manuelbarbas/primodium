@@ -16,7 +16,10 @@ export const useConquestAsteroid = (entity: Entity) => {
     if (!conquestConfigData || !conquestAsteroid) return null;
     const explodeTime = conquestAsteroid.spawnTime + conquestConfigData.conquestAsteroidLifeSpan;
     const canExplode = time >= explodeTime;
-    const timeUntilExplode = canExplode ? 0 : Number(explodeTime - time);
+    const timeUntilExplode = canExplode ? 0n : Number(explodeTime - time);
+    const dripPerSec = canExplode
+      ? 0n
+      : conquestConfigData.conquestAsteroidPoints / conquestConfigData.conquestAsteroidLifeSpan;
     return {
       distance: conquestAsteroid.distanceFromCenter,
       points: conquestConfigData.conquestAsteroidPoints,
@@ -28,6 +31,7 @@ export const useConquestAsteroid = (entity: Entity) => {
       canExplode,
       encryption,
       maxEncryption,
+      dripPerSec,
     };
   }, [conquestConfigData, conquestAsteroid, time, encryption, maxEncryption]);
 };

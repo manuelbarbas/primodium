@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { Position, PositionData, LastConquered, ConquestAsteroid, P_ConquestConfig, ConquestAsteroidData, ReversePosition } from "codegen/index.sol";
+import { ConquestAsteroidIndex, Position, PositionData, LastConquered, ConquestAsteroid, P_ConquestConfig, ConquestAsteroidData, ReversePosition } from "codegen/index.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
@@ -17,6 +17,7 @@ library LibConquestAsteroid {
       asteroidEntity,
       ConquestAsteroidData({ isConquestAsteroid: true, distanceFromCenter: distance, spawnTime: block.timestamp })
     );
+    ConquestAsteroidIndex.set(asteroidEntity, asteroidCount);
 
     LibStorage.increaseMaxStorage(
       asteroidEntity,
