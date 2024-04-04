@@ -82,6 +82,10 @@ contract PrimodiumTest is MudTest {
     assertEq(coordA.parentEntity, coordB.parentEntity, "[assertEq]: parentEntity doesn't match");
   }
 
+  function assertXYNotEq(PositionData memory coordA, PositionData memory coordB) internal {
+    assertTrue(coordA.x != coordB.x || coordA.y != coordB.y, "[assertNe]: positions match");
+  }
+
   function assertEq(EResource a, EResource b) internal {
     assertEq(uint256(a), uint256(b));
   }
@@ -477,16 +481,13 @@ contract PrimodiumTest is MudTest {
     }
     setupCreateFleet(player, sourceAsteroid, unitCounts, resourceCounts);
     vm.startPrank(player);
-    console.log("creating");
     bytes32 fleetEntity = world.Primodium__createFleet(sourceAsteroid, unitCounts, resourceCounts);
-    console.log("sending");
     world.Primodium__sendFleet(fleetEntity, targetAsteroid);
     switchPrank(creator);
     FleetMovement.setArrivalTime(fleetEntity, block.timestamp);
     vm.warp(block.timestamp + 1);
 
     while (OwnedBy.get(targetAsteroid) != playerEntity) {
-      console.log("attacking");
       switchPrank(player);
       world.Primodium__attack(fleetEntity, targetAsteroid);
       switchPrank(creator);

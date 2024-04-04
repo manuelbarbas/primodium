@@ -88,7 +88,7 @@ library LibMath {
   }
 
   function getRandomDirection(uint256 seed) internal view returns (uint256) {
-    return uint256(keccak256(abi.encode(seed, (blockhash(block.number - 1))))) % 360;
+    return uint256(keccak256(abi.encode(seed, block.timestamp, (blockhash(block.number - 1))))) % 360;
   }
 
   /**

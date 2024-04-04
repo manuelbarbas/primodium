@@ -65,7 +65,6 @@ contract FleetMoveSystem is PrimodiumSystem {
     _onlyOrbiting(fleetEntity)
     _onlyNotInStance(fleetEntity)
     _onlyDifferentAsteroid(fleetEntity, asteroidEntity)
-    _claimConquestAsteroidPoints(asteroidEntity)
   {
     LibFleetMove.sendFleet(fleetEntity, asteroidEntity);
   }
