@@ -124,6 +124,7 @@ contract WriteDemoTest is MudTest {
 
     // assert that the iron mine was built
     assert(uint256(buildingEntity) != 0);
+    console2.log("confirmed new IronMine Entity: %x", uint256(buildingEntity));
 
     // stop interacting with the chain
     vm.stopBroadcast();
