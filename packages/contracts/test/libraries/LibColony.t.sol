@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { console, PrimodiumTest, toString } from "test/PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { addressToEntity } from "src/utils.sol";
 
-import { EResource, EUnit } from "src/Types.sol";
+import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
-import { P_IsUtility, ClaimOffset, Position, PositionData, UnitCount, MaxResourceCount, Value_UnitProductionQueueData, P_UnitProdTypes, BuildingType, P_GameConfigData, P_GameConfig, Asteroid, Home, OwnedBy, Level, LastClaimedAt, P_Unit, P_UnitProdMultiplier, ResourceCount, ResourceCount, P_RequiredResources, P_RequiredResourcesData, ColonySlots, P_Transportables, P_UnitPrototypes, P_EnumToPrototype, P_ColonySlotsConfigData, P_ColonySlotsConfig, MaxResourceCount, ResourceCount, ColonySlotsInstallments, ColonySlotsInstallmentsData } from "codegen/index.sol";
+import { UnitCount, MaxResourceCount, Asteroid, Home, OwnedBy, ResourceCount, ColonySlots, P_Transportables, P_UnitPrototypes, P_EnumToPrototype, P_ColonySlotsConfigData, P_ColonySlotsConfig, ColonySlotsInstallments, ColonySlotsInstallmentsData } from "codegen/index.sol";
 
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
@@ -26,9 +26,6 @@ contract LibColonyTest is PrimodiumTest {
 
     OwnedBy.set(Home.get(playerEntity), playerEntity);
     creatorHomeAsteroid = Home.get(playerEntity);
-    // P_GameConfigData memory config = P_GameConfig.get();
-    // config.unitProductionRate = 100;
-    // P_GameConfig.set(config);
   }
 
   function testIncreaseColonySlotsCapacity() public {
