@@ -5,7 +5,7 @@ pragma solidity >=0.8.24;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 // tables
-import { P_ColonySlotsConfigData, OwnedBy } from "codegen/index.sol";
+import { P_ColonySlotsConfigData, OwnedBy, Asteroid } from "codegen/index.sol";
 
 // libraries
 import { LibColony } from "libraries/LibColony.sol";
@@ -18,6 +18,7 @@ contract ColonySystem is PrimodiumSystem {
     bytes32 asteroidEntity,
     P_ColonySlotsConfigData calldata payment
   ) external returns (bool) {
+    require(Asteroid.IsAsteroid(asteroidEntity), "ColonySystem: not an asteroid");
     bytes32 playerEntity = OwnedBy.get(asteroidEntity);
 
     bool fullPayment = LibResource.spendColonySlotsCapacityResources(asteroidEntity, payment);
