@@ -13,6 +13,7 @@ import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibColony } from "libraries/LibColony.sol";
+import { LibUnit } from "libraries/LibUnit.sol";
 
 contract CombatEncryptionTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;
@@ -205,6 +206,9 @@ contract CombatEncryptionTest is PrimodiumTest {
     uint256 bobHomeScore = Score.get(bobHomeAsteroid);
     uint256 aliceScore = Score.get(aliceEntity);
 
+    uint256 aliceSlotsOccupied = LibUnit.getColonyShipsPlusAsteroids(aliceEntity);
+    uint256 bobSlotsOccupied = LibUnit.getColonyShipsPlusAsteroids(bobEntity);
+
     vm.startPrank(alice);
     for (uint256 i = 0; i < fleetCountToWin; i++) {
       console.log("fleet attack %s", i);
@@ -235,6 +239,16 @@ contract CombatEncryptionTest is PrimodiumTest {
     assertEq(Score.get(bobEntity), 0, "bob's score should reset to zero after losing asteroid control");
 
     assertEq(OwnedBy.get(bobHomeAsteroid), aliceEntity, "asteroid should have been taken over");
+    assertEq(
+      LibUnit.getColonyShipsPlusAsteroids(aliceEntity),
+      aliceSlotsOccupied,
+      "alice should have same slots occupied because her colony ship turned into a colony"
+    );
+    assertEq(
+      LibUnit.getColonyShipsPlusAsteroids(bobEntity),
+      bobSlotsOccupied - 2,
+      "bob should have 2 fewer slots occupied because his colony ship was destroyed and he also lost a colony"
+    );
 
     assertEq(UnitCount.get(bobFleet, minuteman), 0, "fleet should have been disbanded and marine units");
     assertEq(

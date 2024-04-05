@@ -331,8 +331,6 @@ contract LibColonyTest is PrimodiumTest {
     }
   }
 
-  // todo: test capturing an asteroid and checking count (spent colony ship to gain asteroid)
-  // todo: test losing an asteroid when another player captures yours
   // todo: fix case when losing an asteroid that was training a colony ship
   // todo: fix case when losing an asteroid that owns a colony ship, have to destroy the colony ship if player has no other colony slots
   // todo: (future release) players may try to stash resources in slot payments to avoid losing them in battle. Need to have a way to prevent this, likely by adding a stash inside the main base that can be looted if base is captured, or pulled for full payment when ready to pay in full.
