@@ -4,22 +4,22 @@ import { Scene } from "engine/types";
 import { toast } from "react-toastify";
 import { createCameraApi } from "src/game/api/camera";
 import { createObjectApi } from "src/game/api/objects";
-import { ConquestAsteroid } from "src/game/lib/objects/Asteroid/ConquestAsteroid";
+import { ShardAsteroid } from "src/game/lib/objects/Asteroid/ShardAsteroid";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getCanAttack, getCanSend } from "src/util/unit";
 
-export const renderConquestAsteroid = (scene: Scene) => {
+export const renderShardAsteroid = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const cameraApi = createCameraApi(scene);
   const objects = createObjectApi(scene);
 
   const renderNewAsteroid = (entity: Entity, coord: Coord) => {
-    const asteroidData = components.ConquestAsteroid.get(entity);
-    if (!asteroidData) throw new Error("Conquest asteroid data not found");
+    const asteroidData = components.ShardAsteroid.get(entity);
+    if (!asteroidData) throw new Error("Shard asteroid data not found");
 
     const spriteScale = 5;
-    const asteroid = new ConquestAsteroid(scene, entity, coord).setScale(spriteScale);
+    const asteroid = new ShardAsteroid(scene, entity, coord).setScale(spriteScale);
 
     asteroid
       .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
@@ -75,7 +75,7 @@ export const renderConquestAsteroid = (scene: Scene) => {
     });
   };
 
-  const query = [Has(components.ConquestAsteroid), Has(components.Position)];
+  const query = [Has(components.ShardAsteroid), Has(components.Position)];
 
   defineEnterSystem(systemsWorld, query, async ({ entity }) => {
     const coord = components.Position.get(entity);

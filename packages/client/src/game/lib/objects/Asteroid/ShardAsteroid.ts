@@ -6,7 +6,7 @@ import { AsteroidRelationship } from "../../constants/common";
 import { BaseAsteroid } from "./BaseAsteroid";
 import { getSecondaryOutlineSprite, getSecondarySprite } from "./helpers";
 
-export class ConquestAsteroid extends BaseAsteroid {
+export class ShardAsteroid extends BaseAsteroid {
   protected entity: Entity;
   constructor(scene: Scene, entity: Entity, coord: Coord, relationship: AsteroidRelationship = "Neutral") {
     const sprite = getSecondarySprite(EntityType.Kimberlite, 3n);

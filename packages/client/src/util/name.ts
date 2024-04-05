@@ -92,7 +92,7 @@ export const entityToRockName = (entity: Entity) => {
   if (entityRockname.has(entity)) return entityRockname.get(entity) as string;
 
   const hash = hashEntities(entity);
-  const conquestIndex = components.ConquestAsteroidIndex.get(entity)?.value;
+  const conquestIndex = components.ShardAsteroidIndex.get(entity)?.value;
   if (conquestIndex !== undefined) {
     const name = mythologicalNames[Number(conquestIndex) % mythologicalNames.length];
     entityRockname.set(entity, name);
