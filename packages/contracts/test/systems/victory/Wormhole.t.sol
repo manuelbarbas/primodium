@@ -121,6 +121,31 @@ contract WormholeTest is PrimodiumTest {
     assertEq(Score.get(allianceEntity, uint8(EScoreType.Conquest)), 0, "score");
   }
 
+  function testDepositWormholeScoreAfterGameOver() public returns (bytes32) {
+    uint256 deaths = 4;
+    vm.prank(creator);
+    P_GameConfig.setUnitDeathLimit(deaths);
+    bytes32 fleetEntity = spawnFleetWithUnit(Home.get(addressToEntity(creator)), EUnit.MinutemanMarine, deaths);
+
+    vm.prank(creator);
+    world.Primodium__abandonFleet(fleetEntity);
+
+    bytes32 wormholeAsteroidEntity = testWormholeAsteroidHasWormholeBase();
+    bytes32 wormholeBaseEntity = Home.get(wormholeAsteroidEntity);
+    bytes32 asteroidEntity = Position.getParentEntity(wormholeBaseEntity);
+
+    WormholeData memory wormholeData = Wormhole.get();
+    P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
+
+    uint8 resource = LibWormhole.advanceTurn();
+    uint256 resourceCount = 100;
+    increaseResource(wormholeAsteroidEntity, EResource(resource), resourceCount);
+
+    switchPrank(alice);
+    world.Primodium__wormholeDeposit(wormholeBaseEntity, resourceCount);
+
+    assertEq(Score.get(aliceEntity, uint8(EScoreType.Extraction)), 0, "score");
+  }
   function testDepositWormholeAfterCooldown() public returns (bytes32) {
     bytes32 wormholeAsteroidEntity = testWormholeAsteroidHasWormholeBase();
     bytes32 wormholeBaseEntity = Home.get(wormholeAsteroidEntity);

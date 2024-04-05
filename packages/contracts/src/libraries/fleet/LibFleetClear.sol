@@ -4,6 +4,7 @@ pragma solidity >=0.8.24;
 import { OwnedBy, FleetMovement, IsFleetEmpty, IsFleet, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
+import { LibScore } from "libraries/LibScore.sol";
 import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleet.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
@@ -49,11 +50,14 @@ library LibFleetClear {
 
     //remove units and return utility to asteroid
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    uint256 unitDeaths = 0;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       uint256 unitCount = UnitCount.get(fleetEntity, unitPrototypes[i]);
       if (unitCount == 0) continue;
       LibFleet.decreaseFleetUnit(fleetEntity, unitPrototypes[i], unitCount, true);
+      unitDeaths += unitCount;
     }
+    LibScore.addUnitDeaths(unitDeaths);
   }
   /**
    * @notice Clears specified units and resources from a fleet.
@@ -79,15 +83,18 @@ library LibFleetClear {
    */
   function clearUnits(bytes32 fleetEntity, uint256[] calldata unitCounts) internal {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    uint256 unitDeaths = 0;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
       uint256 fleetUnitCount = UnitCount.get(fleetEntity, unitPrototypes[i]);
       require(fleetUnitCount >= unitCounts[i], "[Fleet] Not enough units to clear from fleet");
       LibFleet.decreaseFleetUnit(fleetEntity, unitPrototypes[i], unitCounts[i], true);
+      unitDeaths += unitCounts[i];
     }
     uint256 cargoCapacity = LibCombatAttributes.getCargoCapacity(fleetEntity);
     uint256 cargo = LibCombatAttributes.getCargo(fleetEntity);
     require(cargoCapacity >= cargo, "[Fleet] Not enough cargo to clear units from fleet");
+    LibScore.addUnitDeaths(unitDeaths);
   }
 
   /**
