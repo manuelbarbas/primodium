@@ -126,7 +126,7 @@ library LibUnit {
     if (count == 0) return;
     uint256 unitLevel = UnitLevel.get(asteroidEntity, unitType);
 
-    // Check the player's colony ship capacity
+    // Check the player's colony slot capacity
     if (add && (unitType == ColonyShipPrototypeId)) {
       bytes32 playerEntity = OwnedBy.get(asteroidEntity);
       uint256 capacity = ColonySlots.getCapacity(playerEntity);
@@ -153,12 +153,6 @@ library LibUnit {
         ResourceCount.set(asteroidEntity, resource, currentAmount + requiredAmount);
       }
     }
-  }
-
-  // old, needs to be removed but kept for now to satisfy some old tests
-  function getColonyShipCostMultiplier(bytes32 playerEntity) internal view returns (uint256) {
-    uint256 multiplier = getColonyShipsPlusAsteroids(playerEntity) - 1;
-    return 2 ** multiplier;
   }
 
   function getColonyShipsPlusAsteroids(bytes32 playerEntity) internal view returns (uint256) {
