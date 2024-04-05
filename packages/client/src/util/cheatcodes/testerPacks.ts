@@ -7,11 +7,14 @@ type TesterPackFleet = {
 };
 
 export type TesterPack = {
+  worldSpeed?: number;
+  players?: number;
   buildings?: Entity[];
   fleets?: TesterPackFleet[];
   expansion?: number;
   mainBaseLevel?: number;
   resources?: Map<Entity, number>;
+  storages?: Map<Entity, number>;
   units?: Map<Entity, number>;
 };
 
@@ -51,5 +54,16 @@ export const testerPacks: Record<string, TesterPack> = {
       [EntityType.AnvilDrone, 69],
       [EntityType.MinutemanMarine, 69000],
     ]),
+  },
+  asteroidExplosionPack: {
+    worldSpeed: 50000,
+    players: 25,
+    fleets: [
+      {
+        units: new Map([[EntityType.ColonyShip, 10]]),
+        resources: new Map([]),
+      },
+    ],
+    storages: new Map([[EntityType.ColonyShipCapacity, 100000]]),
   },
 };

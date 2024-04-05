@@ -204,6 +204,11 @@ library LibAsteroid {
     LastConquered.set(asteroidEntity, block.timestamp);
   }
 
+  function removeAsteroidOwner(bytes32 asteroidEntity, bytes32 ownerEntity) internal {
+    AsteroidSet.remove(ownerEntity, AsteroidOwnedByKey, asteroidEntity);
+    OwnedBy.deleteRecord(asteroidEntity);
+  }
+
   /// @dev Calculates position based on distance and max index
   /// @param i Index
   /// @param distance Distance

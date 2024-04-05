@@ -7,6 +7,7 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
 import { LibScore } from "libraries/LibScore.sol";
+import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibFleetClear } from "libraries/fleet/LibFleetClear.sol";
 import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { EResource, EScoreType } from "src/Types.sol";
@@ -68,10 +69,10 @@ library LibConquestAsteroid {
   }
 
   function explodeConquestAsteroid(bytes32 asteroidEntity) internal {
-    bytes32 owner = OwnedBy.get(asteroidEntity);
-    if (owner != 0) {
-      LibScore.addScore(owner, EScoreType.Conquest, P_ConquestConfig.getConquestAsteroidPoints());
-      OwnedBy.deleteRecord(asteroidEntity);
+    bytes32 ownerEntity = OwnedBy.get(asteroidEntity);
+    if (ownerEntity != 0) {
+      LibAsteroid.removeAsteroidOwner(asteroidEntity, ownerEntity);
+      LibScore.addScore(ownerEntity, EScoreType.Conquest, P_ConquestConfig.getConquestAsteroidPoints());
     }
 
     // kill all incoming and orbiting fleets

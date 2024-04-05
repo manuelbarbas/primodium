@@ -252,6 +252,36 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
     }
   }
 
+  async function spawnPlayers(count: number) {
+    const networkConfig = getNetworkConfig();
+    const clientOptions = {
+      chain: networkConfig.chain,
+      transport: transportObserver(fallback([webSocket(), http()])),
+      pollingInterval: 1000,
+    };
+
+    for (let i = 0; i < count; i++) {
+      const privateKey = generatePrivateKey();
+      const burnerAccount = createBurnerAccount(privateKey as Hex);
+
+      const burnerWalletClient = createWalletClient({
+        ...clientOptions,
+        account: burnerAccount,
+      });
+
+      const worldContract = getContract({
+        address: networkConfig.worldAddress as Hex,
+        abi: IWorldAbi,
+        client: {
+          public: mud.network.publicClient,
+          wallet: burnerWalletClient,
+        },
+      });
+
+      await worldContract.write.Primodium__spawn();
+    }
+  }
+
   async function waitUntilTxQueueEmpty() {
     let txQueueSize = components.TransactionQueue.getSize();
     while (txQueueSize > 0) {
@@ -275,12 +305,43 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             function: async () => {
               const start = Date.now();
               toast.info(`running cheatcode: ${name}`);
+              // world speed
+              pack.worldSpeed &&
+                (await setComponentValue(
+                  mud,
+                  mud.components.P_GameConfig,
+                  {},
+                  {
+                    worldSpeed: BigInt(pack.worldSpeed),
+                  }
+                ));
+
+              pack.players && (await spawnPlayers(pack.players));
+
               const activeAsteroid = mud.components.ActiveRock.get()?.value;
               if (!activeAsteroid) throw new Error("No active asteroid found");
               if (pack.resources) {
                 // provide resources
                 for (const [resource, count] of pack.resources.entries()) {
                   await provideResource(activeAsteroid, resource, parseResourceCount(resource, count.toString()));
+                  await waitUntilTxQueueEmpty();
+                }
+
+                toast.success(`${name}:Resources provided`);
+              }
+              if (pack.storages) {
+                // provide resources
+                for (const [resource, count] of pack.storages.entries()) {
+                  const value = BigInt(count * Number(RESOURCE_SCALE));
+
+                  await setComponentValue(
+                    mud,
+                    mud.components.MaxResourceCount,
+                    { entity: activeAsteroid as Hex, resource: ResourceEnumLookup[resource] },
+                    {
+                      value,
+                    }
+                  );
                   await waitUntilTxQueueEmpty();
                 }
 
