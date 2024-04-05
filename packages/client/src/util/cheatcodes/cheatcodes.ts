@@ -316,6 +316,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
                   }
                 ));
 
+              // spawn players
               pack.players && (await spawnPlayers(pack.players));
 
               const activeAsteroid = mud.components.ActiveRock.get()?.value;

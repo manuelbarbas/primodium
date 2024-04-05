@@ -17,7 +17,6 @@ export const renderConquestAsteroid = (scene: Scene) => {
   const renderNewAsteroid = (entity: Entity, coord: Coord) => {
     const asteroidData = components.ConquestAsteroid.get(entity);
     if (!asteroidData) throw new Error("Conquest asteroid data not found");
-    cameraApi.pan(coord, { duration: 500 });
 
     const spriteScale = 5;
     const asteroid = new ConquestAsteroid(scene, entity, coord).setScale(spriteScale);
@@ -52,7 +51,6 @@ export const renderConquestAsteroid = (scene: Scene) => {
     // explode
 
     const asteroid = objects.getAsteroid(entity);
-    console.log({ asteroid });
     if (!asteroid) return;
 
     asteroid.getOrbitRing().clear();
@@ -70,7 +68,6 @@ export const renderConquestAsteroid = (scene: Scene) => {
         if (getCanSend(sendOrigin, entity)) components.Send.setDestination(entity);
         else toast.error("Cannot send to this asteroid.");
       } else {
-        console.log({ coord });
         components.SelectedRock.set({ value: entity });
         cameraApi.pan(coord, { duration: 500 });
         cameraApi.zoomTo(1.5, 500);

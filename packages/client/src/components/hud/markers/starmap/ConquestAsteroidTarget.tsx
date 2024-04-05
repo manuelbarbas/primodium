@@ -83,6 +83,19 @@ export const _ConquestAsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = (
             </Button>
           </TransactionQueueMask>
         )}
+        {conquestData && !!ownedBy && !ownedByPlayer && conquestData.canExplode && (
+          <TransactionQueueMask
+            queueItemId={"Conquest" as Entity}
+            className="absolute bottom-0 left-0 -translate-x-full w-28"
+          >
+            <Button
+              onClick={() => claimConquestAsteroid(mud, selectedAsteroid)}
+              className="victory-bg btn-xs w-full text-xs text-black border border-r-0 border-secondary/50"
+            >
+              EXPLODE
+            </Button>
+          </TransactionQueueMask>
+        )}
 
         <img
           src={imageUri}
