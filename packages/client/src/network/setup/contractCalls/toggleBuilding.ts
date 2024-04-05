@@ -3,7 +3,7 @@ import { ampli } from "src/ampli";
 import { components } from "src/network/components";
 import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { bigintToNumber } from "src/util/number";
@@ -33,7 +33,7 @@ export async function toggleBuilding(mud: MUD, building: Entity) {
 
       ampli.systemToggleBuilding({
         asteroidCoord: position.parentEntity,
-        buildingType: getBlockTypeName(buildingType),
+        buildingType: getEntityTypeName(buildingType),
         buildingActiveFrom: active.value,
         coord: [position.x, position.y],
         currLevel: bigintToNumber(currLevel),

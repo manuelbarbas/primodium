@@ -5,7 +5,7 @@ import { Modal } from "../core/Modal";
 import { UnitUpgrades } from "./building-menu/screens/UnitUpgrades";
 import { Leaderboard } from "./modals/leaderboard/Leaderboard";
 import { Settings } from "./modals/settings/Settings";
-import { BattleReports } from "./panes/battle-reports/BattleReports";
+import { BattleReports } from "./widgets/battle-reports/BattleReports";
 
 const buttonClass = "rounded-t-none btn-sm pt-1 border border-dotted border-secondary/50";
 

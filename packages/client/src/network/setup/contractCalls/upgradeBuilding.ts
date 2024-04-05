@@ -4,7 +4,7 @@ import { components } from "src/network/components";
 import { TxQueueOptions } from "src/network/components/customComponents/TransactionQueueComponent";
 import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { bigintToNumber } from "src/util/number";
@@ -40,7 +40,7 @@ export const upgradeBuilding = async (
 
       ampli.systemUpgrade({
         asteroidCoord: position.parentEntity!,
-        buildingType: getBlockTypeName(buildingType),
+        buildingType: getEntityTypeName(buildingType),
         coord: [position.x, position.y],
         currLevel: bigintToNumber(currLevel),
         ...parseReceipt(receipt),

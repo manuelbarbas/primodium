@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { components } from "src/network/components";
 import { Hex } from "viem";
-import { getBlockTypeName } from "./common";
+import { getEntityTypeName } from "./common";
 import { EntityType } from "./constants";
 import { getRecipe } from "./recipe";
 
@@ -29,7 +29,7 @@ export function getUpgradeInfo(research: Entity, asteroid: Entity) {
   return {
     maxLevel,
     level,
-    name: getBlockTypeName(research),
+    name: getEntityTypeName(research),
     mainBaseLvlReq,
     isResearched,
     recipe,

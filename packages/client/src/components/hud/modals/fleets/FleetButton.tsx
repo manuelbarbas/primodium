@@ -3,7 +3,7 @@ import { ComponentProps } from "react";
 import { Button } from "src/components/core/Button";
 import { components } from "src/network/components";
 import { formatTime } from "src/util/number";
-import { FleetEntityHeader } from "../../panes/fleets/FleetHeader";
+import { FleetEntityHeader } from "../../widgets/fleets/FleetHeader";
 
 export const LabeledValue: React.FC<{
   label: string;
