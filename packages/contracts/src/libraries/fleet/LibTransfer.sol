@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { P_Transportables, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { P_Transportables, OwnedBy, P_UnitPrototypes, Asteroid, IsFleet, ColonySlots } from "codegen/index.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
 import { LibUnit } from "libraries/LibUnit.sol";
@@ -29,8 +29,7 @@ library LibTransfer {
     bool sameOwner = OwnedBy.get(fleetEntity) == asteroidEntity;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
-      if (!sameOwner && unitPrototypes[i] == ColonyShipPrototypeId)
-        revert("[Fleet] Cannot transfer colony ships to other players");
+      if (!sameOwner && unitPrototypes[i] == ColonyShipPrototypeId) checkColonySlot(fleetEntity, unitCounts[i]);
       LibUnit.decreaseUnitCount(asteroidEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
       LibFleet.increaseFleetUnit(fleetEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
@@ -75,8 +74,7 @@ library LibTransfer {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
-      if (!sameOwner && unitPrototypes[i] == ColonyShipPrototypeId)
-        revert("[Fleet] Cannot transfer colony ships to other players");
+      if (!sameOwner && unitPrototypes[i] == ColonyShipPrototypeId) checkColonySlot(fleetEntity, unitCounts[i]);
       LibFleet.increaseFleetUnit(fleetEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
@@ -105,8 +103,7 @@ library LibTransfer {
     bool sameOwner = OwnedBy.get(fleetEntity) == asteroidEntity;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
-      if (!sameOwner && unitPrototypes[i] == ColonyShipPrototypeId)
-        revert("[Fleet] Cannot transfer colony ships to other players");
+      if (!sameOwner && unitPrototypes[i] == ColonyShipPrototypeId) checkColonySlot(asteroidEntity, unitCounts[i]);
       LibFleet.decreaseFleetUnit(fleetEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
       LibUnit.increaseUnitCount(asteroidEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
@@ -155,8 +152,7 @@ library LibTransfer {
     bool sameOwner = OwnedBy.get(fleetEntity) == asteroidEntity;
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
-      if (!sameOwner && unitPrototypes[i] == ColonyShipPrototypeId)
-        revert("[Fleet] Cannot transfer colony ships to other players");
+      if (!sameOwner && unitPrototypes[i] == ColonyShipPrototypeId) checkColonySlot(asteroidEntity, unitCounts[i]);
       LibUnit.increaseUnitCount(asteroidEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
@@ -189,8 +185,7 @@ library LibTransfer {
     bool sameOwner = OwnedBy.get(toFleetEntity) == OwnedBy.get(fromFleetEntity);
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
-      if (!sameOwner && unitPrototypes[i] == ColonyShipPrototypeId)
-        revert("[Fleet] Cannot transfer colony ships to other players");
+      if (!sameOwner && unitPrototypes[i] == ColonyShipPrototypeId) checkColonySlot(toFleetEntity, unitCounts[i]);
       LibFleet.increaseFleetUnit(toFleetEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
       LibFleet.decreaseFleetUnit(fromFleetEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
@@ -241,8 +236,7 @@ library LibTransfer {
 
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       if (unitCounts[i] == 0) continue;
-      if (!sameOwner && unitPrototypes[i] == ColonyShipPrototypeId)
-        revert("[Fleet] Cannot transfer colony ships to other players");
+      if (!sameOwner && unitPrototypes[i] == ColonyShipPrototypeId) checkColonySlot(toFleetEntity, unitCounts[i]);
       LibFleet.increaseFleetUnit(toFleetEntity, unitPrototypes[i], unitCounts[i], !sameOwner);
     }
 
@@ -259,5 +253,22 @@ library LibTransfer {
 
     LibFleet.checkAndSetFleetEmpty(toFleetEntity);
     LibFleet.checkAndSetFleetEmpty(fromFleetEntity);
+  }
+
+  // make a function for checking if the receiving entity has enough Colony Slot capacity
+  function checkColonySlot(bytes32 receivingEntity, uint256 colonySlotsNeeded) internal view {
+    bool isAsteroid = Asteroid.getIsAsteroid(receivingEntity);
+    bool isFleet = IsFleet.get(receivingEntity);
+    require(isAsteroid || isFleet, "[Fleet] Receiving entity must be an asteroid or fleet");
+
+    // if is asteroid, use OwnedBy.get(entity) to get the player entity. If is fleet, use OwnedBy.get(entity) to get the asteroid entity and then use OwnedBy.get(asteroidEntity) to get the player entity
+    bytes32 playerEntity = isAsteroid ? OwnedBy.get(receivingEntity) : OwnedBy.get(OwnedBy.get(receivingEntity));
+
+    uint256 colonySlotsOccupied = LibUnit.getColonyShipsPlusAsteroids(playerEntity);
+    uint256 capacity = ColonySlots.getCapacity(playerEntity);
+    require(
+      capacity - colonySlotsOccupied >= colonySlotsNeeded,
+      "[Fleet] Receiver not enough colony slots to transfer colony ships"
+    );
   }
 }

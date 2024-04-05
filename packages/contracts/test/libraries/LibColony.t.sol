@@ -42,10 +42,14 @@ contract LibColonyTest is PrimodiumTest {
     LibColony.increaseColonySlotsCapacity(playerEntity);
     assertEq(ColonySlots.getCapacity(playerEntity), 2);
 
-    assertEq(LibUnit.getColonyShipsPlusAsteroids(playerEntity), 1);
+    assertEq(LibUnit.getColonyShipsPlusAsteroids(playerEntity), 1, "primary asteroid should count as a colony slot");
     trainUnits(creator, ColonyShipPrototypeId, 1, true);
     vm.startPrank(creator);
-    assertEq(LibUnit.getColonyShipsPlusAsteroids(playerEntity), 2);
+    assertEq(
+      LibUnit.getColonyShipsPlusAsteroids(playerEntity),
+      2,
+      "trained and claimed colony ship isn't being counted"
+    );
 
     // prepare to make a fleet for testing
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
@@ -66,10 +70,22 @@ contract LibColonyTest is PrimodiumTest {
     // train and setup everything
     LibColony.increaseColonySlotsCapacity(playerEntity);
     setupCreateFleet(creator, creatorHomeAsteroid, unitCounts, resourceCounts);
+    assertEq(LibUnit.getColonyShipsPlusAsteroids(playerEntity), 3, "colony ship on asteroid isn't being counted");
+
     vm.startPrank(creator);
     // create the fleet
     world.Primodium__createFleet(creatorHomeAsteroid, unitCounts, resourceCounts);
-    assertEq(LibUnit.getColonyShipsPlusAsteroids(playerEntity), 3);
+    assertEq(
+      LibUnit.getColonyShipsPlusAsteroids(playerEntity),
+      3,
+      "colony ship transfer from asteroid to fleet isn't being counted"
+    );
+
+    // Start colony ship training but don't claim it
+    LibColony.increaseColonySlotsCapacity(playerEntity);
+    trainUnits(creator, ColonyShipPrototypeId, 1, false);
+    vm.startPrank(creator);
+    assertEq(LibUnit.getColonyShipsPlusAsteroids(playerEntity), 4, "colony ship in training isn't being counted");
   }
 
   // todo: make the multiplier a prototypeConfig changeable value
@@ -316,9 +332,6 @@ contract LibColonyTest is PrimodiumTest {
     }
   }
 
-  // todo: test primary asteroid counts
-  // todo: test colony ship in training
-  // todo: test claimed colony ship
   // todo: test self-transfer colony ship (from fleet to fleet of same player, asteroid to fleet of same player, etc.)
   // todo: test transfer colony ship, does it remove from old player and add to new player, does it revert when invalid
 
@@ -366,7 +379,6 @@ contract LibColonyTest is PrimodiumTest {
   // todo: test secondary asteroid counts
   // todo: test losing an asteroid when another player captures yours
   // todo: test losing an asteroid that was training a colony ship
-  // todo: what if the order of the installment resource types is different??? probably need to require the same order at the beginning of the function.
   // todo: players may try to stash resources in slot payments to avoid losing them in battle. Need to have a way to prevent this, likely by adding a stash inside the main base that can be looted if base is captured, or pulled for full payment when ready to pay in full.
   // todo: in the future add a few hr lock between making an installment and being able to use it (so that people don't use creative ways to avoid losing resources for imminent battle)
 }
