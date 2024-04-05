@@ -104,7 +104,6 @@ contract LibColonyTest is PrimodiumTest {
     assertEq(LibColony.getColonySlotsCostMultiplier(playerEntity), 12);
   }
 
-  // todo: test buying a colony slot in full payment
   function testPayForColonySlotsCapacity() public {
     P_ColonySlotsConfigData memory costData = P_ColonySlotsConfig.get();
     P_ColonySlotsConfigData memory payment;
@@ -332,53 +331,10 @@ contract LibColonyTest is PrimodiumTest {
     }
   }
 
-  // todo: test self-transfer colony ship (from fleet to fleet of same player, asteroid to fleet of same player, etc.)
-  // todo: test transfer colony ship, does it remove from old player and add to new player, does it revert when invalid
-
-  // TransferSystem.t.sol
-  // function testTransferColonyShipBetweenPlayers() public {
-  //   bytes32 aliceFleet = createColonyShipFleet(alice);
-  //   bytes32 bobFleet = createColonyShipFleet(bob);
-
-  //   vm.prank(creator);
-  //   P_GameConfig.setWorldSpeed(100);
-  //   vm.prank(alice);
-  //   world.Primodium__sendFleet(aliceFleet, bobHomeAsteroid);
-  //   console.log("aliceFleet arrival time", FleetMovement.getArrivalTime(aliceFleet));
-  //   vm.warp(block.timestamp + 10000000);
-
-  //   bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-  //   uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
-  //   uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
-  //   for (uint256 i = 0; i < unitPrototypes.length; i++) {
-  //     if (unitPrototypes[i] == ColonyShipPrototypeId) unitCounts[i] = 1;
-  //   }
-
-  //   vm.startPrank(alice);
-  //   vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
-  //   world.Primodium__transferUnitsFromFleetToFleet(aliceFleet, bobFleet, unitCounts);
-
-  //   vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
-  //   world.Primodium__transferUnitsFromFleetToAsteroid(aliceFleet, bobHomeAsteroid, unitCounts);
-
-  //   vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
-  //   world.Primodium__transferUnitsAndResourcesFromFleetToAsteroid(
-  //     aliceFleet,
-  //     bobHomeAsteroid,
-  //     unitCounts,
-  //     resourceCounts
-  //   );
-
-  //   vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
-  //   world.Primodium__transferUnitsAndResourcesFromFleetToFleet(aliceFleet, bobFleet, unitCounts, resourceCounts);
-  // }
-
-  // todo: test battle destroyed colony ship
   // todo: test capturing an asteroid and checking count (spent colony ship to gain asteroid)
-  // todo: test wormhole asteroid counts
-  // todo: test secondary asteroid counts
   // todo: test losing an asteroid when another player captures yours
-  // todo: test losing an asteroid that was training a colony ship
-  // todo: players may try to stash resources in slot payments to avoid losing them in battle. Need to have a way to prevent this, likely by adding a stash inside the main base that can be looted if base is captured, or pulled for full payment when ready to pay in full.
-  // todo: in the future add a few hr lock between making an installment and being able to use it (so that people don't use creative ways to avoid losing resources for imminent battle)
+  // todo: fix case when losing an asteroid that was training a colony ship
+  // todo: fix case when losing an asteroid that owns a colony ship, have to destroy the colony ship if player has no other colony slots
+  // todo: (future release) players may try to stash resources in slot payments to avoid losing them in battle. Need to have a way to prevent this, likely by adding a stash inside the main base that can be looted if base is captured, or pulled for full payment when ready to pay in full.
+  // todo: (future release) in the future add a few hr lock between making an installment and being able to use it (so that people don't use creative ways to avoid losing resources for imminent battle)
 }

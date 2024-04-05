@@ -56,10 +56,6 @@ library LibResource {
       );
 
       ColonySlots.setTraining(playerEntity, ColonySlots.getTraining(playerEntity) + 1);
-
-      // todo: Should we reconfigure Colony Ships to comply with P_RequiredResources, then skip the next two lines but comply with the spendResource() call later in this function?
-      // spendResource(asteroidEntity, prototype, P_ColonyShipConfig.getResource(), cost);
-      // return;
     }
 
     uint256 level = UnitLevel.get(asteroidEntity, prototype);
@@ -120,7 +116,7 @@ library LibResource {
       installmentData.amounts = new uint256[](costData.resources.length);
     }
 
-    // todo: the following could probably be implemented as a installment utility function
+    // todo: the following might be useful as a installment utility function that can be used in multiple places in the future
     bool fullPayment = true;
     // check if payment + previous installment is greater than or equal to the cost of the slot, for each resource type
     for (uint256 i = 0; i < costData.resources.length; i++) {

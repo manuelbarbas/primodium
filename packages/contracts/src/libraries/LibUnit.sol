@@ -87,7 +87,6 @@ library LibUnit {
       }
       ProducedUnit.set(playerEntity, item.unitEntity, ProducedUnit.get(playerEntity, item.unitEntity) + trainedUnits);
 
-      // todo: verify this correctly grabs the colony ship
       if (item.unitEntity == ColonyShipPrototypeId) {
         require(
           ColonySlots.getTraining(playerEntity) >= trainedUnits,
