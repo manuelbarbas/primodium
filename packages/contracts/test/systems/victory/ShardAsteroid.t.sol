@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { addressToEntity } from "src/utils.sol";
-import { IsFleet, Home, FleetMovement, P_UnitPrototypes, P_EnumToPrototype, P_Transportables, P_GameConfig, ReversePosition, Score, OwnedBy, ResourceCount, ConquestAsteroid, Position, P_ConquestConfig, P_ConquestConfigData, PositionData, LastConquered, AsteroidCount } from "codegen/index.sol";
+import { IsFleet, Home, FleetMovement, P_UnitPrototypes, P_EnumToPrototype, P_Transportables, P_GameConfig, ReversePosition, Score, OwnedBy, ResourceCount, ShardAsteroid, Position, P_ConquestConfig, P_ConquestConfigData, PositionData, LastConquered, AsteroidCount } from "codegen/index.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 import { EResource, EScoreType, EUnit } from "src/Types.sol";
@@ -12,9 +12,9 @@ import { UnitKey, FleetOwnedByKey, FleetIncomingKey, FleetOutgoingKey } from "sr
 import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
-import { LibConquestAsteroid } from "libraries/LibConquestAsteroid.sol";
+import { LibShardAsteroid } from "libraries/LibShardAsteroid.sol";
 
-contract ConquestSystemTest is PrimodiumTest {
+contract ShardAsteroidTest is PrimodiumTest {
   bytes32 playerEntity;
   P_ConquestConfigData config;
   function setUp() public override {
@@ -24,55 +24,55 @@ contract ConquestSystemTest is PrimodiumTest {
     config = P_ConquestConfig.get();
   }
 
-  function testConquestAsteroidSpawn() public {
-    spawnPlayers(config.conquestAsteroidSpawnOffset - 2);
+  function testShardAsteroidSpawn() public {
+    spawnPlayers(config.shardAsteroidSpawnOffset - 2);
 
     bytes32 expectedAsteroidEntity = LibEncode.getTimedHash(
-      bytes32("conquestAsteroid"),
-      bytes32(config.conquestAsteroidSpawnOffset)
+      bytes32("shardAsteroid"),
+      bytes32(config.shardAsteroidSpawnOffset)
     );
 
-    uint256 expectedDistance = LibMath.getSpawnDistance(config.conquestAsteroidSpawnOffset);
+    uint256 expectedDistance = LibMath.getSpawnDistance(config.shardAsteroidSpawnOffset);
 
     PositionData memory expectedPosition = LibMath.getPositionByVector(
       expectedDistance,
       LibMath.getRandomDirection(uint256(expectedAsteroidEntity))
     );
     console.logBytes32(ReversePosition.get(expectedPosition.x, expectedPosition.y));
-    console.log("quadrant a", LibConquestAsteroid.getQuadrant(expectedPosition));
+    console.log("quadrant a", LibShardAsteroid.getQuadrant(expectedPosition));
 
     spawn(alice);
 
-    console.log("quadrant b", LibConquestAsteroid.getQuadrant(Position.get(expectedAsteroidEntity)));
-    assertTrue(ConquestAsteroid.get(expectedAsteroidEntity).isConquestAsteroid, "Conquest asteroid not created");
-    assertGt(expectedDistance, 0, "Conquest asteroid distance 0");
+    console.log("quadrant b", LibShardAsteroid.getQuadrant(Position.get(expectedAsteroidEntity)));
+    assertTrue(ShardAsteroid.get(expectedAsteroidEntity).isShardAsteroid, "Shard asteroid not created");
+    assertGt(expectedDistance, 0, "Shard asteroid distance 0");
     assertEq(
-      ConquestAsteroid.getDistanceFromCenter(expectedAsteroidEntity),
+      ShardAsteroid.getDistanceFromCenter(expectedAsteroidEntity),
       expectedDistance,
-      "Conquest asteroid distance incorrect"
+      "Shard asteroid distance incorrect"
     );
     assertEq(LastConquered.get(expectedAsteroidEntity), block.timestamp, "Last conquered time incorrect");
 
     assertEq(Position.get(expectedAsteroidEntity), expectedPosition);
     assertEq(
       ResourceCount.get(expectedAsteroidEntity, uint8(EResource.R_Encryption)),
-      config.conquestAsteroidEncryption,
-      "Conquest asteroid encryption incorrect"
+      config.shardAsteroidEncryption,
+      "Shard asteroid encryption incorrect"
     );
   }
 
-  function testConquestAsteroidSpawnDistanceIncrease() public {
-    spawnPlayers(config.conquestAsteroidSpawnOffset - 2);
+  function testShardAsteroidSpawnDistanceIncrease() public {
+    spawnPlayers(config.shardAsteroidSpawnOffset - 2);
 
-    bytes32 asteroidEntity1 = LibEncode.getTimedHash(bytes32("conquestAsteroid"), bytes32(AsteroidCount.get() + 1));
+    bytes32 asteroidEntity1 = LibEncode.getTimedHash(bytes32("shardAsteroid"), bytes32(AsteroidCount.get() + 1));
 
     spawn(alice);
 
     vm.warp(block.timestamp + 1 days);
 
-    spawnPlayers(config.conquestAsteroidSpawnFrequency - 1);
+    spawnPlayers(config.shardAsteroidSpawnFrequency - 1);
 
-    bytes32 asteroidEntity2 = LibEncode.getTimedHash(bytes32("conquestAsteroid"), bytes32(AsteroidCount.get() + 1));
+    bytes32 asteroidEntity2 = LibEncode.getTimedHash(bytes32("shardAsteroid"), bytes32(AsteroidCount.get() + 1));
 
     spawn(bob);
 
@@ -82,10 +82,10 @@ contract ConquestSystemTest is PrimodiumTest {
     assertGt(LibMath.distance(position2, center), LibMath.distance(position1, center), "Distance not increased");
   }
 
-  function testConquestAsteroidConquer() public returns (bytes32) {
-    spawnPlayers(config.conquestAsteroidSpawnOffset - 2);
+  function testShardAsteroidConquer() public returns (bytes32) {
+    spawnPlayers(config.shardAsteroidSpawnOffset - 2);
 
-    bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("conquestAsteroid"), bytes32(AsteroidCount.get() + 1));
+    bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("shardAsteroid"), bytes32(AsteroidCount.get() + 1));
 
     bytes32 homeAsteroidEntity = spawn(alice);
 
@@ -95,13 +95,13 @@ contract ConquestSystemTest is PrimodiumTest {
     return asteroidEntity;
   }
 
-  function testConquestAsteroidEncryptionRegen() public {
-    bytes32 asteroidEntity = testConquestAsteroidConquer();
+  function testShardAsteroidEncryptionRegen() public {
+    bytes32 asteroidEntity = testShardAsteroidConquer();
     uint256 encryption = ResourceCount.get(asteroidEntity, uint8(EResource.R_Encryption));
     vm.warp(block.timestamp + 1000);
 
     world.Primodium__claimResources(asteroidEntity);
-    uint256 regen = config.conquestAsteroidEncryptionRegen;
+    uint256 regen = config.shardAsteroidEncryptionRegen;
     if (regen > 0) {
       assertGt(
         ResourceCount.get(asteroidEntity, uint8(EResource.R_Encryption)),
@@ -113,9 +113,9 @@ contract ConquestSystemTest is PrimodiumTest {
     }
   }
 
-  function testConquestAsteroidSpawnCollision() public {
-    spawnPlayers(config.conquestAsteroidSpawnOffset - 2);
-    uint256 distance = LibMath.getSpawnDistance(config.conquestAsteroidSpawnOffset);
+  function testShardAsteroidSpawnCollision() public {
+    spawnPlayers(config.shardAsteroidSpawnOffset - 2);
+    uint256 distance = LibMath.getSpawnDistance(config.shardAsteroidSpawnOffset);
     vm.startPrank(creator);
     uint256 spawnSlot = 69;
     for (uint256 i = 0; i < 360; i++) {
@@ -128,109 +128,104 @@ contract ConquestSystemTest is PrimodiumTest {
       Position.set(dummyEntity, position);
     }
 
-    bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("conquestAsteroid"), bytes32(AsteroidCount.get() + 1));
-    // LibConquestAsteroid.spawnConquestAsteroid(asteroidEntity);
+    bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("shardAsteroid"), bytes32(AsteroidCount.get() + 1));
+    // LibShardAsteroid.spawnShardAsteroid(asteroidEntity);
     vm.stopPrank();
     spawn(alice);
-    assertEq(ConquestAsteroid.getDistanceFromCenter(asteroidEntity), distance);
+    assertEq(ShardAsteroid.getDistanceFromCenter(asteroidEntity), distance);
 
     // assertEq(LibMath.getPositionByVector(distance, spawnSlot), Position.get(asteroidEntity));
   }
 
-  function testConquestAsteroidClaimDrip() public {
-    spawnPlayers(config.conquestAsteroidSpawnOffset - 2);
+  function testShardAsteroidClaimDrip() public {
+    spawnPlayers(config.shardAsteroidSpawnOffset - 2);
 
-    bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("conquestAsteroid"), bytes32(AsteroidCount.get() + 1));
+    bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("shardAsteroid"), bytes32(AsteroidCount.get() + 1));
 
     bytes32 homeAsteroidEntity = spawn(alice);
 
     conquerAsteroid(alice, homeAsteroidEntity, asteroidEntity);
 
-    uint256 oneTenthOfLifespan = config.conquestAsteroidLifeSpan / 10;
+    uint256 oneTenthOfLifespan = config.shardAsteroidLifeSpan / 10;
     console.log("oneTenthOfLifespan", oneTenthOfLifespan);
     vm.warp(block.timestamp + oneTenthOfLifespan);
 
-    world.Primodium__claimConquestAsteroidPoints(asteroidEntity);
+    world.Primodium__claimShardAsteroidPoints(asteroidEntity);
 
-    uint256 oneTenthOfPoints = config.conquestAsteroidPoints / 10;
+    uint256 oneTenthOfPoints = config.shardAsteroidPoints / 10;
     assertEq(Score.get(addressToEntity(alice), uint8(EScoreType.Conquest)), oneTenthOfPoints);
   }
 
-  function testConquestAsteroidPastLifeSpanScore() public {
-    spawnPlayers(config.conquestAsteroidSpawnOffset - 2);
+  function testShardAsteroidPastLifeSpanScore() public {
+    spawnPlayers(config.shardAsteroidSpawnOffset - 2);
 
-    bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("conquestAsteroid"), bytes32(AsteroidCount.get() + 1));
+    bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("shardAsteroid"), bytes32(AsteroidCount.get() + 1));
 
     bytes32 homeAsteroidEntity = spawn(alice);
 
     conquerAsteroid(alice, homeAsteroidEntity, asteroidEntity);
 
-    vm.warp(block.timestamp + config.conquestAsteroidLifeSpan + 1_000_000);
+    vm.warp(block.timestamp + config.shardAsteroidLifeSpan + 1_000_000);
 
     // should only count time up to the end of the lifespan
-    uint256 timeNotMissed = ConquestAsteroid.getSpawnTime(asteroidEntity) +
-      config.conquestAsteroidLifeSpan -
+    uint256 timeNotMissed = ShardAsteroid.getSpawnTime(asteroidEntity) +
+      config.shardAsteroidLifeSpan -
       LastConquered.get(asteroidEntity);
-    uint256 timeNotMissedPct = (timeNotMissed * 1_000) / config.conquestAsteroidLifeSpan;
+    uint256 timeNotMissedPct = (timeNotMissed * 1_000) / config.shardAsteroidLifeSpan;
 
     // add points for explosion
-    uint256 points = P_ConquestConfig.getConquestAsteroidPoints() +
-      (timeNotMissedPct * config.conquestAsteroidPoints) /
+    uint256 points = P_ConquestConfig.getShardAsteroidPoints() +
+      (timeNotMissedPct * config.shardAsteroidPoints) /
       1_000;
 
-    world.Primodium__claimConquestAsteroidPoints(asteroidEntity);
+    world.Primodium__claimShardAsteroidPoints(asteroidEntity);
 
     assertEq(Score.get(addressToEntity(alice), uint8(EScoreType.Conquest)), points);
   }
 
   // nothing should happen if the asteroid is not owned
-  function testConquestAsteroidNoExplodeNoOwner() public {
-    spawnPlayers(config.conquestAsteroidSpawnOffset - 2);
+  function testShardAsteroidNoExplodeNoOwner() public {
+    spawnPlayers(config.shardAsteroidSpawnOffset - 2);
 
-    bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("conquestAsteroid"), bytes32(AsteroidCount.get() + 1));
+    bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("shardAsteroid"), bytes32(AsteroidCount.get() + 1));
 
     spawn(alice);
 
-    vm.warp(ConquestAsteroid.getSpawnTime(asteroidEntity) + config.conquestAsteroidLifeSpan);
+    vm.warp(ShardAsteroid.getSpawnTime(asteroidEntity) + config.shardAsteroidLifeSpan);
 
     PositionData memory position = Position.get(asteroidEntity);
-    world.Primodium__claimConquestAsteroidPoints(asteroidEntity);
+    world.Primodium__claimShardAsteroidPoints(asteroidEntity);
     assertEq(position, Position.get(asteroidEntity));
   }
 
   function checkRespawn(bytes32 asteroidEntity, PositionData memory prevPosition) internal {
     assertEq(OwnedBy.get(asteroidEntity), bytes32(""), "Asteroid still owned");
     assertEq(LastConquered.get(asteroidEntity), block.timestamp, "Last conquered time not reset");
-    assertEq(ConquestAsteroid.getSpawnTime(asteroidEntity), block.timestamp, "Spawn time not reset");
+    assertEq(ShardAsteroid.getSpawnTime(asteroidEntity), block.timestamp, "Spawn time not reset");
     assertXYNotEq(Position.get(asteroidEntity), prevPosition);
-    assertNotEq(
-      LibConquestAsteroid.getQuadrant(prevPosition),
-      LibConquestAsteroid.getQuadrant(Position.get(asteroidEntity))
-    );
+    assertNotEq(LibShardAsteroid.getQuadrant(prevPosition), LibShardAsteroid.getQuadrant(Position.get(asteroidEntity)));
   }
 
-  function testConquestAsteroidExplodeRespawn() public {
-    bytes32 asteroidEntity = testConquestAsteroidConquer();
+  function testShardAsteroidExplodeRespawn() public {
+    bytes32 asteroidEntity = testShardAsteroidConquer();
 
-    uint256 lifespan = (P_ConquestConfig.getConquestAsteroidLifeSpan() * WORLD_SPEED_SCALE) /
-      P_GameConfig.getWorldSpeed();
+    uint256 lifespan = (P_ConquestConfig.getShardAsteroidLifeSpan() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
 
-    uint256 explodeTime = ConquestAsteroid.getSpawnTime(asteroidEntity) + lifespan;
+    uint256 explodeTime = ShardAsteroid.getSpawnTime(asteroidEntity) + lifespan;
 
     vm.warp(explodeTime);
 
     PositionData memory position = Position.get(asteroidEntity);
-    world.Primodium__claimConquestAsteroidPoints(asteroidEntity);
+    world.Primodium__claimShardAsteroidPoints(asteroidEntity);
     checkRespawn(asteroidEntity, position);
   }
 
-  function testConquestAsteroidExplodeKillIncomingFleet() public {
-    bytes32 asteroidEntity = testConquestAsteroidConquer();
+  function testShardAsteroidExplodeKillIncomingFleet() public {
+    bytes32 asteroidEntity = testShardAsteroidConquer();
 
-    uint256 lifespan = (P_ConquestConfig.getConquestAsteroidLifeSpan() * WORLD_SPEED_SCALE) /
-      P_GameConfig.getWorldSpeed();
+    uint256 lifespan = (P_ConquestConfig.getShardAsteroidLifeSpan() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
 
-    uint256 explodeTime = ConquestAsteroid.getSpawnTime(asteroidEntity) + lifespan;
+    uint256 explodeTime = ShardAsteroid.getSpawnTime(asteroidEntity) + lifespan;
 
     vm.warp(explodeTime);
 
@@ -260,7 +255,7 @@ contract ConquestSystemTest is PrimodiumTest {
 
     assertGe(incomingFleetEntities.length, 1, "Fleet length not 1 or more");
 
-    world.Primodium__claimConquestAsteroidPoints(asteroidEntity);
+    world.Primodium__claimShardAsteroidPoints(asteroidEntity);
 
     incomingFleetEntities = FleetSet.getFleetEntities(asteroidEntity, FleetIncomingKey);
 
@@ -272,13 +267,12 @@ contract ConquestSystemTest is PrimodiumTest {
     assertEq(OwnedBy.get(fleetEntity), 0, "fleet still owned");
   }
 
-  function testConquestAsteroidExplodeKillOrbitingFleet() public {
-    bytes32 asteroidEntity = testConquestAsteroidConquer();
+  function testShardAsteroidExplodeKillOrbitingFleet() public {
+    bytes32 asteroidEntity = testShardAsteroidConquer();
 
-    uint256 lifespan = (P_ConquestConfig.getConquestAsteroidLifeSpan() * WORLD_SPEED_SCALE) /
-      P_GameConfig.getWorldSpeed();
+    uint256 lifespan = (P_ConquestConfig.getShardAsteroidLifeSpan() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
 
-    uint256 explodeTime = ConquestAsteroid.getSpawnTime(asteroidEntity) + lifespan;
+    uint256 explodeTime = ShardAsteroid.getSpawnTime(asteroidEntity) + lifespan;
 
     vm.warp(explodeTime);
 
@@ -309,7 +303,7 @@ contract ConquestSystemTest is PrimodiumTest {
 
     assertGe(incomingFleetEntities.length, 1, "Fleet length not 1 or more");
 
-    world.Primodium__claimConquestAsteroidPoints(asteroidEntity);
+    world.Primodium__claimShardAsteroidPoints(asteroidEntity);
 
     incomingFleetEntities = FleetSet.getFleetEntities(asteroidEntity, FleetIncomingKey);
 
@@ -321,13 +315,12 @@ contract ConquestSystemTest is PrimodiumTest {
     assertEq(OwnedBy.get(fleetEntity), 0, "fleet still owned");
   }
 
-  function testConquestAsteroidExplodeKillOutgoingFleet() public {
-    bytes32 asteroidEntity = testConquestAsteroidConquer();
+  function testShardAsteroidExplodeKillOutgoingFleet() public {
+    bytes32 asteroidEntity = testShardAsteroidConquer();
 
-    uint256 lifespan = (P_ConquestConfig.getConquestAsteroidLifeSpan() * WORLD_SPEED_SCALE) /
-      P_GameConfig.getWorldSpeed();
+    uint256 lifespan = (P_ConquestConfig.getShardAsteroidLifeSpan() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
 
-    uint256 explodeTime = ConquestAsteroid.getSpawnTime(asteroidEntity) + lifespan;
+    uint256 explodeTime = ShardAsteroid.getSpawnTime(asteroidEntity) + lifespan;
 
     vm.warp(explodeTime);
 
@@ -360,7 +353,7 @@ contract ConquestSystemTest is PrimodiumTest {
 
     assertGe(outgoingFleetEntities.length, 1, "Fleet length not 1 or more");
 
-    world.Primodium__claimConquestAsteroidPoints(asteroidEntity);
+    world.Primodium__claimShardAsteroidPoints(asteroidEntity);
 
     outgoingFleetEntities = FleetSet.getFleetEntities(asteroidEntity, FleetOutgoingKey);
 
@@ -372,13 +365,12 @@ contract ConquestSystemTest is PrimodiumTest {
     assertEq(OwnedBy.get(fleetEntity), 0, "fleet still owned");
   }
 
-  function testConquestAsteroidExplodeDontKillArrivedOutgoingFleet() public {
-    bytes32 asteroidEntity = testConquestAsteroidConquer();
+  function testShardAsteroidExplodeDontKillArrivedOutgoingFleet() public {
+    bytes32 asteroidEntity = testShardAsteroidConquer();
 
-    uint256 lifespan = (P_ConquestConfig.getConquestAsteroidLifeSpan() * WORLD_SPEED_SCALE) /
-      P_GameConfig.getWorldSpeed();
+    uint256 lifespan = (P_ConquestConfig.getShardAsteroidLifeSpan() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
 
-    uint256 explodeTime = ConquestAsteroid.getSpawnTime(asteroidEntity) + lifespan;
+    uint256 explodeTime = ShardAsteroid.getSpawnTime(asteroidEntity) + lifespan;
 
     vm.warp(explodeTime);
 
@@ -412,7 +404,7 @@ contract ConquestSystemTest is PrimodiumTest {
     assertGe(outgoingFleetEntities.length, 1, "Fleet length not 1 or more");
 
     assertEq(OwnedBy.get(fleetEntity), Home.get(playerEntity), "fleet not owned 1");
-    world.Primodium__claimConquestAsteroidPoints(asteroidEntity);
+    world.Primodium__claimShardAsteroidPoints(asteroidEntity);
 
     outgoingFleetEntities = FleetSet.getFleetEntities(asteroidEntity, FleetOutgoingKey);
 
@@ -424,8 +416,8 @@ contract ConquestSystemTest is PrimodiumTest {
     assertEq(OwnedBy.get(fleetEntity), Home.get(playerEntity), "fleet not owned");
   }
 
-  function testConquestAsteroidFleetNotOutgoingOnNextMove() public {
-    bytes32 asteroidEntity = testConquestAsteroidConquer();
+  function testShardAsteroidFleetNotOutgoingOnNextMove() public {
+    bytes32 asteroidEntity = testShardAsteroidConquer();
 
     // create and send fleet to asteroid
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();

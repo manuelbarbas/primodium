@@ -745,14 +745,14 @@ export const worldInput = {
       key: [],
       schema: {
         holdTime: "uint256",
-        conquestAsteroidSpawnOffset: "uint256",
-        conquestAsteroidSpawnFrequency: "uint256",
-        maxConquestAsteroids: "uint256",
+        shardAsteroidSpawnOffset: "uint256",
+        shardAsteroidSpawnFrequency: "uint256",
+        maxShardAsteroids: "uint256",
         // the asteroid leaks this amount during its lifespan and emits this amount when it is claimed
-        conquestAsteroidPoints: "uint256",
-        conquestAsteroidLifeSpan: "uint256",
-        conquestAsteroidEncryption: "uint256",
-        conquestAsteroidEncryptionRegen: "uint256",
+        shardAsteroidPoints: "uint256",
+        shardAsteroidLifeSpan: "uint256",
+        shardAsteroidEncryption: "uint256",
+        shardAsteroidEncryptionRegen: "uint256",
       },
     },
 
@@ -761,17 +761,17 @@ export const worldInput = {
       schema: { entity: "bytes32", value: "uint256" },
     },
 
-    ConquestAsteroid: {
+    ShardAsteroid: {
       key: ["entity"],
       schema: {
         entity: "bytes32",
-        isConquestAsteroid: "bool",
+        isShardAsteroid: "bool",
         distanceFromCenter: "uint256",
         spawnTime: "uint256",
       },
     },
 
-    ConquestAsteroidIndex: {
+    ShardAsteroidIndex: {
       key: ["entity"],
       schema: { entity: "bytes32", value: "uint256" },
       type: "offchainTable",

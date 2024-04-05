@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { ConquestAsteroid, P_EnumToPrototype, Position, FleetMovementData, FleetMovement, UnitCount, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { ShardAsteroid, P_EnumToPrototype, Position, FleetMovementData, FleetMovement, UnitCount, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
@@ -45,11 +45,11 @@ library LibFleetMove {
     bytes32 prevOrigin = FleetMovement.getOrigin(fleetEntity);
     bytes32 origin = FleetMovement.getDestination(fleetEntity);
 
-    if (ConquestAsteroid.getIsConquestAsteroid(prevOrigin)) {
+    if (ShardAsteroid.getIsShardAsteroid(prevOrigin)) {
       FleetSet.remove(prevOrigin, FleetOutgoingKey, fleetEntity);
     }
 
-    if (ConquestAsteroid.getIsConquestAsteroid(origin)) {
+    if (ShardAsteroid.getIsShardAsteroid(origin)) {
       FleetSet.add(origin, FleetOutgoingKey, fleetEntity);
     }
 
