@@ -420,6 +420,20 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             );
           },
         },
+        setUnitDeathLimit: {
+          params: [{ name: "value", type: "number" }],
+          function: async (value: number) => {
+            toast.info("running cheatcode: Set World Speed");
+            await setComponentValue(
+              mud,
+              mud.components.P_GameConfig,
+              {},
+              {
+                unitDeathLimit: BigInt(value),
+              }
+            );
+          },
+        },
         stopGracePeriod: {
           params: [],
           function: async () => {
