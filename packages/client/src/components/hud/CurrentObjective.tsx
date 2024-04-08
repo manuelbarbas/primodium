@@ -61,7 +61,7 @@ export const CurrentObjective = () => {
         <Modal.Button className="border-secondary border-t-0 border-r-0 px-5 rounded-t-none rounded-r-none w-fit">
           <IconLabel imageUri="img/icons/objectiveicon.png" className="text-sm" text="VIEW OBJECTIVES" />
         </Modal.Button>
-        <Modal.Content className="w-[50rem] h-[50rem]">
+        <Modal.Content className="w-[50rem] h-[60rem]">
           <ObjectivesScreen />
         </Modal.Content>
       </Modal>
@@ -102,7 +102,7 @@ export const CurrentObjective = () => {
               <Modal.Button className={`btn-xs flex items-center justify-center gap-1 text-accent`}>
                 <FaGift /> {"Claim"}
               </Modal.Button>
-              <Modal.Content className="w-[50rem] h-[50rem]">
+              <Modal.Content className="w-[50rem] h-[60rem]">
                 <ObjectivesScreen highlight={objectiveEntity} />
               </Modal.Content>
             </Modal>

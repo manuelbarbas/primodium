@@ -2,12 +2,14 @@ import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { Hex } from "viem";
-import { ResourceEntityLookup, ResourceType, UtilityStorages } from "../constants";
+import { getEntityTypeName } from "../common";
+import { ResourceEntityLookup, ResourceImage, ResourceType, UtilityStorages } from "../constants";
 import { getFullResourceCount } from "../resource";
 import { ObjectiveReq } from "./types";
 
 export function getRewardUtilitiesRequirement(objective: Entity, asteroid: Entity): ObjectiveReq[] {
-  const requiredUtilities = getRewards(objective).reduce((acc, cur) => {
+  const rewards = getRewards(objective);
+  const requiredUtilities = rewards.reduce((acc, cur) => {
     if (cur.type !== ResourceType.Utility) return acc;
     const prototype = cur.id as Hex;
     const level = components.UnitLevel.getWithKeys({ unit: prototype, entity: asteroid as Hex })?.value ?? 0n;
@@ -24,12 +26,14 @@ export function getRewardUtilitiesRequirement(objective: Entity, asteroid: Entit
 
   return Object.entries(requiredUtilities).map(([entity, requiredValue]) => {
     const { resourceCount, resourceStorage } = getFullResourceCount(entity as Entity, asteroid);
+    const val = requiredValue + (resourceStorage - resourceCount);
     return {
       entity: entity as Entity,
-      requiredValue: requiredValue + (resourceStorage - resourceCount),
+      requiredValue: val,
       currentValue: resourceStorage,
       scale: 1n,
-      type: "RewardUtilities",
+      backgroundImage: ResourceImage.get(entity as Entity),
+      tooltipText: `${val} ${getEntityTypeName(entity as Entity)}`,
     };
   });
 }

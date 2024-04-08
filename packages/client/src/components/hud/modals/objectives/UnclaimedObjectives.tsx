@@ -16,7 +16,7 @@ import { Hex } from "viem";
 import { Objective } from "./Objective";
 
 export const UnclaimedObjectives: React.FC<{ highlight?: Entity }> = ({ highlight }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 6;
   const player = Account.use()?.value ?? singletonEntity;
   const asteroidEntity = comps.ActiveRock.use()?.value;
@@ -36,13 +36,13 @@ export const UnclaimedObjectives: React.FC<{ highlight?: Entity }> = ({ highligh
   }, [time, asteroidEntity]);
 
   const paginatedObjectiveEntities = useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
+    const start = currentPage * itemsPerPage;
     const end = start + itemsPerPage;
     return filteredObjectiveEntities.slice(start, end);
   }, [filteredObjectiveEntities, currentPage]);
 
-  const startIdx = (currentPage - 1) * itemsPerPage + 1;
-  const endIdx = Math.min(startIdx + itemsPerPage + 1, filteredObjectiveEntities.length);
+  const startIdx = currentPage * itemsPerPage + 1;
+  const endIdx = Math.min(startIdx + itemsPerPage - 1, filteredObjectiveEntities.length);
   if (!asteroidEntity || player === singletonEntity) return <></>;
 
   if (filteredObjectiveEntities.length === 0)
@@ -69,14 +69,14 @@ export const UnclaimedObjectives: React.FC<{ highlight?: Entity }> = ({ highligh
           <Button
             className="btn-sm btn-primary"
             onClick={() => setCurrentPage(currentPage - 1)}
-            disabled={currentPage === 1}
+            disabled={currentPage === 0}
           >
             <FaChevronLeft />
           </Button>
           <Button
             className="btn-sm btn-primary"
             onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={currentPage * itemsPerPage >= filteredObjectiveEntities.length}
+            disabled={(currentPage + 1) * itemsPerPage >= filteredObjectiveEntities.length - 1}
           >
             <FaChevronRight />
           </Button>

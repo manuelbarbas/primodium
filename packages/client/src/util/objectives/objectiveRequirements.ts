@@ -2,7 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { getHasRequiredBuilding } from "./getHasRequiredBuilding";
 import { getHasRequiredMainBase } from "./getHasRequiredMainBase";
 import { getHasRequiredObjectives } from "./getHasRequiredObjectives";
-import { getHasRequiredRewards } from "./getHasRequiredRewards";
+import { getHasRequiredRewards, getRewardUtilitiesRequirement } from "./getHasRequiredRewards";
 import { getHasRequiredBuildingUpgrade } from "./getHasRequiredUpgrade";
 import { getObjective } from "./objectives";
 import { ObjectiveReq } from "./types";
@@ -28,7 +28,7 @@ export function getCanClaimObjective(asteroidEntity: Entity, objectiveEntity: En
 export function getAllObjectiveRequirements(asteroidEntity: Entity, objectiveEntity: Entity) {
   const objective = getObjective(objectiveEntity);
   if (!objective) return [];
-  const reqs: ObjectiveReq[] = [];
+  const reqs: ObjectiveReq[] = getRewardUtilitiesRequirement(objectiveEntity, asteroidEntity);
   if (objective.type === "Build") reqs.push(getHasRequiredBuilding(asteroidEntity, objective));
   if (objective.type === "Upgrade") reqs.push(getHasRequiredBuildingUpgrade(asteroidEntity, objective));
   return reqs;

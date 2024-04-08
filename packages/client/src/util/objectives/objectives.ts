@@ -18,10 +18,10 @@ export const Objectives = new Map<EObjectives, Objective & { type: ObjectiveType
   [
     EObjectives.BuildIronMine,
     {
-      description:
-        "Iron mines produce iron, which you can see in the Resources pane. To build, the iron mine on the building menu. Place it on an ore tile. ",
       type: "Build",
       buildingType: EntityType.IronMine,
+      description:
+        "Iron mines produce iron, which you can see in the Resources pane. To build, the iron mine on the building menu. Place it on an ore tile. ",
     },
   ],
   [
@@ -29,7 +29,6 @@ export const Objectives = new Map<EObjectives, Objective & { type: ObjectiveType
     {
       type: "Build",
       buildingType: EntityType.CopperMine,
-
       description: "Copper mines produce copper. Select the copper mine on the building menu. Place it on an ore tile.",
     },
   ],
@@ -38,6 +37,7 @@ export const Objectives = new Map<EObjectives, Objective & { type: ObjectiveType
     {
       type: "Build",
       buildingType: EntityType.Garage,
+      requiredObjectives: [EObjectives.BuildIronMine, EObjectives.BuildWorkshop],
       description:
         "Garages provide housing for units. To build, Select the garage from the building menu. Place it on any empty tile.",
     },
@@ -46,7 +46,7 @@ export const Objectives = new Map<EObjectives, Objective & { type: ObjectiveType
     EObjectives.BuildWorkshop,
     {
       type: "Build",
-      buildingType: EntityType.Garage,
+      buildingType: EntityType.Workshop,
       description:
         "Workshops train marines, which are basic units. To build, select the workshop from the building menu and place it on any empty tile.",
     },
@@ -70,38 +70,80 @@ export const Objectives = new Map<EObjectives, Objective & { type: ObjectiveType
       requiredMainBase: 2n,
 
       description:
-        "Lithium mines produce lithium. To build, select the lithium mine on the building menu. Place it on an ore tile.",
+        "Lithium mines produce lithium. To build, select the lithium mine in the building menu. Place it on an ore tile.",
     },
   ],
-  // [
-  //   EObjectives.BuildIronPlateFactory,
-  //   "Select the plating factory on the building menu and place it on an empty tile. It produces iron plates by consuming iron production.",
-  // ],
-  // [
-  //   EObjectives.BuildPVCellFactory,
-  //   "Select the photovoltaic cell factory on the building menu and place it on an empty tile. It produces photovoltaic cells by consuming lithium production.",
-  // ],
+  [
+    EObjectives.BuildIronPlateFactory,
+    {
+      type: "Build",
+      buildingType: EntityType.IronPlateFactory,
+      description:
+        "Iron Plate Factories produce iron plates by burning iron. To build, select the factory in the building menu. Place it on any empty tile.",
+    },
+  ],
+  [
+    EObjectives.BuildPVCellFactory,
+    {
+      type: "Build",
+      buildingType: EntityType.PVCellFactory,
+      requiredMainBase: 2n,
+      description:
+        "The PV Cell factory produces photovoltaic cells by burning lithium. To build, select the PV Cell factory on the building menu and place it on any empty tile.",
+    },
+  ],
 
-  // [
-  //   EObjectives.BuildStorageUnit,
-  //   "Select the Storage Unit from the building menu and place it on an empty tile. Storage units increase your resource storage.",
-  // ],
-  // [
-  //   EObjectives.BuildSolarPanel,
-  //   "Select the solar panel from the building menu and place it on an empty tile. Solar panels provide electricity, which is used for advanced buildings.",
-  // ],
-  // [
-  //   EObjectives.BuildDroneFactory,
-  //   "Select the drone factory from the building menu and place it on an empty tile. Drone factories train drones, which are stronger.",
-  // ],
-  // [
-  //   EObjectives.BuildHangar,
-  //   "Select the hangar from the building menu and place it on an empty tile. Hangars provide more housing for units than Garages.",
-  // ],
-  // [
-  //   EObjectives.TrainMinutemanMarines,
-  //   "Select the workshop you placed on the map to train Minuteman marines. Minutemen are weak units that are fast to build, fast to travel, and carry lots of cargo.",
-  // ],
+  [
+    EObjectives.BuildStorageUnit,
+    {
+      type: "Build",
+      buildingType: EntityType.StorageUnit,
+      requiredMainBase: 2n,
+      description:
+        "Storage units increase your resource storage. To build, select the Storage Unit from the building menu and place it on any empty tile.",
+    },
+  ],
+  [
+    EObjectives.BuildSolarPanel,
+    {
+      type: "Build",
+      buildingType: EntityType.SolarPanel,
+      requiredMainBase: 2n,
+      description:
+        "Solar panels provide electricity, which is used for advanced buildings. To build, select the solar panel from the building menu and place it on any empty tile.",
+    },
+  ],
+  [
+    EObjectives.BuildDroneFactory,
+    {
+      type: "Build",
+      buildingType: EntityType.DroneFactory,
+      requiredMainBase: 2n,
+      description:
+        "Drone factories train drones, which are strong and specialized. To build, select the drone factory from the building menu and place it on any empty tile.",
+    },
+  ],
+  [
+    EObjectives.BuildHangar,
+    {
+      type: "Build",
+      buildingType: EntityType.LithiumMine,
+      requiredMainBase: 2n,
+      description:
+        "Hangars provide large amounts of housing for units. To build, select the hangar from the building menu and place it on an empty tile.",
+    },
+  ],
+  [
+    EObjectives.TrainMinutemanMarines,
+    {
+      type: "Train",
+      unitType: EntityType.MinutemanMarine,
+      unitCount: 16n,
+      requiredMainBase: 2n,
+      description:
+        "Minutemen are weak units that are trained quickly, move fast, and carry lots of cargo. To train, select a workshop and press TRAIN UNITS.",
+    },
+  ],
   // [
   //   EObjectives.TrainTridentMarines,
   //   "Select the workshop you placed on the map to train Trident marines. Trident marines are basic well-rounded units.",

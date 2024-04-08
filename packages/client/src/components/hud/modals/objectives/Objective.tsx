@@ -14,7 +14,7 @@ import { getEntityTypeName } from "src/util/common";
 import { BackgroundImage, ResourceImage, ResourceType } from "src/util/constants";
 import { formatNumber } from "src/util/number";
 import { getRewards } from "src/util/objectives/getHasRequiredRewards";
-import { getAllObjectiveRequirements, isAllRequirementsMet } from "src/util/objectives/objectiveRequirements";
+import { getAllObjectiveRequirements } from "src/util/objectives/objectiveRequirements";
 import { getObjective } from "src/util/objectives/objectives";
 import { getFullResourceCount } from "src/util/resource";
 import { ClaimObjectiveButton } from "./ClaimObjectiveButton";
@@ -36,7 +36,6 @@ export const Objective: React.FC<{
     [asteroidEntity, time, objectiveEntity]
   );
 
-  const complete = isAllRequirementsMet(requirements);
   return (
     <SecondaryCard
       className={`text-xs w-full flex flex-col justify-between ${highlight ? "border border-warning" : ""}`}
@@ -59,10 +58,11 @@ export const Objective: React.FC<{
             </span>
             <div className="flex flex-wrap gap-1">
               {requirements.map((_req, index) => {
+                const reqComplete = _req.currentValue >= _req.requiredValue;
                 const value = _req.currentValue > _req.requiredValue ? _req.requiredValue : _req.currentValue;
 
                 return (
-                  <Badge key={index} className={`text-xs gap-2 ${complete ? "badge-success" : "badge-neutral"}`}>
+                  <Badge key={index} className={`text-xs gap-2 ${reqComplete ? "badge-success" : "badge-neutral"}`}>
                     <IconLabel
                       imageUri={_req.backgroundImage ?? "/img/icons/minersicon.png"}
                       text={formatNumber(value / _req.scale, { short: true, fractionDigits: 3 })}
