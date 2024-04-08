@@ -11,5 +11,6 @@ export function getHasRequiredMainBase(asteroidEntity: Entity, objectiveEntity: 
   if (!mainBase) return false;
 
   const currentMainBaseLevel = components.Level.getWithKeys({ entity: mainBase as Hex })?.value ?? 0n;
-  return requirement >= currentMainBaseLevel;
+  console.log("main base level:", currentMainBaseLevel, "required:", requirement);
+  return currentMainBaseLevel >= requirement;
 }

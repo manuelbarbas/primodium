@@ -19,7 +19,7 @@ export const Objectives = new Map<EObjectives, Objective & { type: ObjectiveType
     EObjectives.BuildIronMine,
     {
       description:
-        "Select the iron mine on the building menu. Place it on the ore tile. It will start producing iron, which you can see in your Resources.",
+        "Select the iron mine on the building menu. Place it on an ore tile. It will start producing iron, which you can see in your Resources.",
       type: "Build",
       buildingType: EntityType.IronMine,
       level: 1n,
@@ -32,13 +32,43 @@ export const Objectives = new Map<EObjectives, Objective & { type: ObjectiveType
       buildingType: EntityType.CopperMine,
       level: 1n,
 
-      description: "Select the copper mine on the building menu. Place it on the ore tile.",
+      description: "Select the copper mine on the building menu. Place it on an ore tile.",
     },
   ],
-  // [
-  //   EObjectives.BuildLithiumMine,
-  //   "Select the lithium mine on the building menu below and place it on the lithium ore tile. Lithium mines produce lithium.",
-  // ],
+  [
+    EObjectives.BuildGarage,
+    {
+      type: "Build",
+      buildingType: EntityType.Garage,
+      level: 1n,
+      description:
+        "Garages provide housing for units. To build, Select the garage from the building menu. Place it on any empty tile.",
+    },
+  ],
+  [
+    EObjectives.BuildWorkshop,
+    {
+      type: "Build",
+      buildingType: EntityType.Garage,
+      level: 1n,
+      description:
+        "Workshops train marines, a basic unit. To build, select the workshop from the building menu and place it on any empty tile.",
+    },
+  ],
+
+  // [EObjectives.UpgradeMainBase, "Upgrade your main base by clicking on the upgrade button in your main base."],
+
+  [
+    EObjectives.BuildLithiumMine,
+    {
+      type: "Build",
+      buildingType: EntityType.LithiumMine,
+      level: 1n,
+      requiredMainBase: 2n,
+
+      description: "Select the lithium mine on the building menu. Place it on an ore tile.",
+    },
+  ],
   // [
   //   EObjectives.BuildIronPlateFactory,
   //   "Select the plating factory on the building menu and place it on an empty tile. It produces iron plates by consuming iron production.",
@@ -47,14 +77,7 @@ export const Objectives = new Map<EObjectives, Objective & { type: ObjectiveType
   //   EObjectives.BuildPVCellFactory,
   //   "Select the photovoltaic cell factory on the building menu and place it on an empty tile. It produces photovoltaic cells by consuming lithium production.",
   // ],
-  // [
-  //   EObjectives.BuildGarage,
-  //   "Select the garage from the building menu and place it on an empty tile. Garages provide housing for units.",
-  // ],
-  // [
-  //   EObjectives.BuildWorkshop,
-  //   "Select the workshop from the building menu and place it on an empty tile. Workshops train basic units, like marines.",
-  // ],
+
   // [
   //   EObjectives.BuildStorageUnit,
   //   "Select the Storage Unit from the building menu and place it on an empty tile. Storage units increase your resource storage.",
@@ -103,7 +126,6 @@ export const Objectives = new Map<EObjectives, Objective & { type: ObjectiveType
   //   EObjectives.BuildColonyShips,
   //   "Select the Shipyard you placed on the map to build a Colony Ship. Colony ships can decrypt other asteroids and colonize on them.",
   // ],
-  // [EObjectives.UpgradeMainBase, "Upgrade your main base by clicking on the upgrade button in your main base."],
   // [
   //   EObjectives.ExpandBase1,
   //   "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",

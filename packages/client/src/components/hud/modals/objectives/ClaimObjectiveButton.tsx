@@ -20,7 +20,6 @@ import { Hex } from "viem";
 
 export const ClaimObjectiveButton: React.FC<{
   objectiveEntity: Entity;
-  complete: boolean;
 }> = ({ objectiveEntity }) => {
   const mud = useMud();
   const selectedRock = comps.ActiveRock.use()?.value ?? singletonEntity;
@@ -30,7 +29,7 @@ export const ClaimObjectiveButton: React.FC<{
     comps.CompletedObjective.useWithKeys({ objective: objectiveEntity as Hex, entity: player as Hex })?.value ?? false;
 
   const canClaim = useMemo(() => {
-    return getCanClaimObjective(objectiveEntity, selectedRock);
+    return getCanClaimObjective(selectedRock, objectiveEntity);
   }, [selectedRock, objectiveEntity]);
 
   if (!hasCompletedObjective)

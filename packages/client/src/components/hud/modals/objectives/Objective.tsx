@@ -38,7 +38,9 @@ export const Objective: React.FC<{
 
   const complete = isAllRequirementsMet(requirements);
   return (
-    <SecondaryCard className={`text-xs w-full flex flex-col justify-between ${highlight ? "ring ring-warning" : ""}`}>
+    <SecondaryCard
+      className={`text-xs w-full flex flex-col justify-between ${highlight ? "border border-warning" : ""}`}
+    >
       <div>
         <div className="grid grid-cols-10">
           <div className="flex items-center col-span-1">
@@ -58,18 +60,17 @@ export const Objective: React.FC<{
             <div className="flex flex-wrap gap-1">
               {requirements.map((_req, index) => {
                 const value = _req.currentValue > _req.requiredValue ? _req.requiredValue : _req.currentValue;
+                const backgroundImage = _req.resourceEntity
+                  ? ResourceImage.get(_req.resourceEntity) ?? BackgroundImage.get(_req.resourceEntity)?.at(0)
+                  : undefined;
 
                 return (
                   <Badge key={index} className={`text-xs gap-2 ${complete ? "badge-success" : "badge-neutral"}`}>
                     <IconLabel
-                      imageUri={
-                        // ResourceImage.get(_req.entity) ??
-                        // BackgroundImage.get(_req.entity)?.at(0) ??
-                        "/img/icons/minersicon.png"
-                      }
+                      imageUri={backgroundImage ?? "/img/icons/minersicon.png"}
                       text={formatNumber(value / _req.scale, { short: true, fractionDigits: 3 })}
-                      tooltipDirection={"bottom"}
-                      //   tooltipText={getEntityTypeName(_req.entity)}
+                      tooltipDirection={"top"}
+                      tooltipText={_req.tooltipText ?? ""}
                       className="text-xs font-bold"
                     />
 

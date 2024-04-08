@@ -15,6 +15,8 @@ export type BuildObjective = {
 };
 
 export type ObjectiveReq = {
+  tooltipText?: string;
+  resourceEntity?: Entity;
   requiredValue: bigint;
   currentValue: bigint;
   scale: bigint;

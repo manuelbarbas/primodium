@@ -1,6 +1,7 @@
 import { Entity, HasValue, runQuery } from "@latticexyz/recs";
 import { components } from "src/network/components";
 import { Hex } from "viem";
+import { getEntityTypeName } from "../common";
 import { BuildObjective, ObjectiveReq } from "./types";
 
 export function getHasRequiredBuilding(asteroid: Entity, objective: BuildObjective): ObjectiveReq {
@@ -9,15 +10,11 @@ export function getHasRequiredBuilding(asteroid: Entity, objective: BuildObjecti
     HasValue(components.BuildingType, { value: objective.buildingType as Hex }),
   ]);
 
-  const maxLevel = !![...buildings].find((building) => {
-    const level = components.Level.get(building as Entity)?.value ?? 0n;
-    return level >= objective.level;
-  });
-
   return {
+    tooltipText: `Build a ${getEntityTypeName(objective.buildingType)}`,
     type: "Building",
-    requiredValue: objective.level,
-    currentValue: maxLevel ? objective.level : 0n,
+    requiredValue: 1n,
+    currentValue: BigInt(buildings.size),
     scale: 1n,
   };
 }
