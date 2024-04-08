@@ -7,7 +7,7 @@ import { addressToEntity } from "src/utils.sol";
 import { EResource, EUnit, EFleetStance } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
-import { P_EnumToPrototype, ResourceCount, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes, P_Unit, FleetMovement, UnitLevel, FleetStance, OwnedBy, P_RequiredResources, P_RequiredResourcesData, P_IsUtility } from "codegen/index.sol";
+import { P_GameConfig, VictoryStatus, P_EnumToPrototype, ResourceCount, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes, P_Unit, FleetMovement, UnitLevel, FleetStance, OwnedBy, P_RequiredResources, P_RequiredResourcesData, P_IsUtility } from "codegen/index.sol";
 
 contract FleetClearSystemTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;
@@ -229,5 +229,29 @@ contract FleetClearSystemTest is PrimodiumTest {
     assertEq(FleetMovement.getDestination(fleetEntity), aliceHomeAsteroid, "fleet destination doesn't match");
     assertEq(FleetMovement.getArrivalTime(fleetEntity), block.timestamp, "fleet arrival time doesn't match");
     assertEq(FleetStance.getStance(fleetEntity), uint8(EFleetStance.NULL), "fleet stance doesn't match");
+  }
+
+  function testAbandonFleetUnitDeaths() public {
+    uint256 deaths = 4;
+    bytes32 fleetEntity = spawnFleetWithUnit(aliceHomeAsteroid, EUnit.MinutemanMarine, deaths);
+
+    vm.prank(alice);
+    world.Primodium__abandonFleet(fleetEntity);
+
+    assertEq(VictoryStatus.getUnitDeaths(), deaths, "unit deaths doesn't match");
+    assertFalse(VictoryStatus.getGameOver(), "game over doesn't match");
+  }
+
+  function testAbandonFleetGameOver() public {
+    uint256 deaths = 4;
+    vm.prank(creator);
+    P_GameConfig.setUnitDeathLimit(deaths);
+    bytes32 fleetEntity = spawnFleetWithUnit(aliceHomeAsteroid, EUnit.MinutemanMarine, deaths);
+
+    vm.prank(alice);
+    world.Primodium__abandonFleet(fleetEntity);
+
+    assertEq(VictoryStatus.getUnitDeaths(), deaths, "unit deaths doesn't match");
+    assertTrue(VictoryStatus.getGameOver(), "game over doesn't match");
   }
 }

@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 
 import "forge-std/Test.sol";
-import { addressToEntity } from "src/utils.sol";
+import { entityToAddress, addressToEntity } from "src/utils.sol";
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import { NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
@@ -501,5 +501,22 @@ contract PrimodiumTest is MudTest {
     for (uint256 i = 0; i < count; i++) {
       spawn(getUser());
     }
+  }
+
+  function spawnFleetWithUnit(bytes32 asteroidEntity, EUnit unit, uint256 count) internal returns (bytes32) {
+    bytes32 playerEntity = OwnedBy.get(asteroidEntity);
+    address player = entityToAddress(playerEntity);
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = count;
+    }
+    setupCreateFleet(player, asteroidEntity, unitCounts, resourceCounts);
+    vm.startPrank(player);
+    bytes32 fleetEntity = world.Primodium__createFleet(asteroidEntity, unitCounts, resourceCounts);
+    vm.stopPrank();
+    return fleetEntity;
   }
 }

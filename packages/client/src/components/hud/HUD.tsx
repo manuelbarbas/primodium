@@ -2,6 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { FC, memo, useEffect, useMemo, useRef } from "react";
 import ReactDOM from "react-dom";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks";
 import { useWidgets } from "src/hooks/providers/WidgetProvider";
@@ -26,12 +27,12 @@ import { HomeMarker } from "./markers/starmap/HomeMarker";
 import HackerConsole from "./modals/HackerConsole";
 import { OwnedAsteroids } from "./panes/OwnedAsteroids";
 import { OwnedFleets } from "./panes/OwnedFleets";
+import { UnitDeaths } from "./panes/UnitDeaths";
 import { Blueprints } from "./panes/blueprints/Blueprints";
 import { Chat } from "./panes/chat/Chat";
 import { Cheatcodes } from "./panes/dev/Cheatcodes";
 import { Hangar } from "./panes/hangar/Hangar";
 import { Resources } from "./panes/resources/Resources";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 export const GameHUD = memo(() => {
   const {
@@ -193,6 +194,7 @@ export const GameHUD = memo(() => {
 
             <HUD.TopMiddle className="flex flex-col items-center gap-2">
               <Cheatcodes />
+              <UnitDeaths />
             </HUD.TopMiddle>
             <HUD.TopRight className="flex flex-col items-end gap-2">
               <CurrentObjective />
