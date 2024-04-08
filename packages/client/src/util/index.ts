@@ -1,4 +1,5 @@
 import { getAllianceName, getAllianceNameFromPlayer } from "./alliance";
+import { getAsteroidImage, getAsteroidInfo, getAsteroidName, getRockRelationship } from "./asteroid";
 import {
   calcDims,
   getBuildingDimensions,
@@ -14,13 +15,12 @@ import {
 import { entityToColor } from "./color";
 import { findEntriesWithPrefix, getPrivateKey } from "./localStorage";
 import { entityToPlayerName, entityToRockName, playerNameToEntity, rockNameToEntity } from "./name";
-import { getCanClaimObjective, getIsObjectiveAvailable } from "./objectives";
+import { getCanClaimObjective, getIsObjectiveAvailable } from "./objectives/objectiveRequirements";
 import { getAsteroidBounds, getAsteroidMaxBounds, outOfBounds } from "./outOfBounds";
 import { getRecipe, getRecipeDifference } from "./recipe";
 import { getAsteroidResourceCount, getFullResourceCount, getFullResourceCounts, getScale, isUtility } from "./resource";
 import { getRewards } from "./reward";
 import { getMoveLength, getSlowestUnitSpeed } from "./send";
-import { getRockRelationship, getAsteroidImage, getAsteroidInfo, getAsteroidName } from "./asteroid";
 import { getBuildingAtCoord, getBuildingsOfTypeInRange } from "./tile";
 import { getUnitStats, getUnitTrainingTime } from "./unit";
 import { getUpgradeInfo } from "./upgrade";
