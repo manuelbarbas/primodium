@@ -60,14 +60,11 @@ export const Objective: React.FC<{
             <div className="flex flex-wrap gap-1">
               {requirements.map((_req, index) => {
                 const value = _req.currentValue > _req.requiredValue ? _req.requiredValue : _req.currentValue;
-                const backgroundImage = _req.resourceEntity
-                  ? ResourceImage.get(_req.resourceEntity) ?? BackgroundImage.get(_req.resourceEntity)?.at(0)
-                  : undefined;
 
                 return (
                   <Badge key={index} className={`text-xs gap-2 ${complete ? "badge-success" : "badge-neutral"}`}>
                     <IconLabel
-                      imageUri={backgroundImage ?? "/img/icons/minersicon.png"}
+                      imageUri={_req.backgroundImage ?? "/img/icons/minersicon.png"}
                       text={formatNumber(value / _req.scale, { short: true, fractionDigits: 3 })}
                       tooltipDirection={"top"}
                       tooltipText={_req.tooltipText ?? ""}

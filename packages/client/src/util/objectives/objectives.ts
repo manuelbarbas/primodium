@@ -19,10 +19,9 @@ export const Objectives = new Map<EObjectives, Objective & { type: ObjectiveType
     EObjectives.BuildIronMine,
     {
       description:
-        "Select the iron mine on the building menu. Place it on an ore tile. It will start producing iron, which you can see in your Resources.",
+        "Iron mines produce iron, which you can see in the Resources pane. To build, the iron mine on the building menu. Place it on an ore tile. ",
       type: "Build",
       buildingType: EntityType.IronMine,
-      level: 1n,
     },
   ],
   [
@@ -30,9 +29,8 @@ export const Objectives = new Map<EObjectives, Objective & { type: ObjectiveType
     {
       type: "Build",
       buildingType: EntityType.CopperMine,
-      level: 1n,
 
-      description: "Select the copper mine on the building menu. Place it on an ore tile.",
+      description: "Copper mines produce copper. Select the copper mine on the building menu. Place it on an ore tile.",
     },
   ],
   [
@@ -40,7 +38,6 @@ export const Objectives = new Map<EObjectives, Objective & { type: ObjectiveType
     {
       type: "Build",
       buildingType: EntityType.Garage,
-      level: 1n,
       description:
         "Garages provide housing for units. To build, Select the garage from the building menu. Place it on any empty tile.",
     },
@@ -50,23 +47,30 @@ export const Objectives = new Map<EObjectives, Objective & { type: ObjectiveType
     {
       type: "Build",
       buildingType: EntityType.Garage,
-      level: 1n,
       description:
-        "Workshops train marines, a basic unit. To build, select the workshop from the building menu and place it on any empty tile.",
+        "Workshops train marines, which are basic units. To build, select the workshop from the building menu and place it on any empty tile.",
     },
   ],
 
-  // [EObjectives.UpgradeMainBase, "Upgrade your main base by clicking on the upgrade button in your main base."],
-
+  [
+    EObjectives.UpgradeMainBase,
+    {
+      type: "Upgrade",
+      buildingType: EntityType.MainBase,
+      level: 2n,
+      description:
+        "Upgrading a main base gives you more resource storage and makes your asteroid stronger. To upgrade, select your main base and press UPGRADE.",
+    },
+  ],
   [
     EObjectives.BuildLithiumMine,
     {
       type: "Build",
       buildingType: EntityType.LithiumMine,
-      level: 1n,
       requiredMainBase: 2n,
 
-      description: "Select the lithium mine on the building menu. Place it on an ore tile.",
+      description:
+        "Lithium mines produce lithium. To build, select the lithium mine on the building menu. Place it on an ore tile.",
     },
   ],
   // [

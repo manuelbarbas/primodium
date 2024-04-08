@@ -1,26 +1,33 @@
 import { Entity } from "@latticexyz/recs";
 import { EObjectives } from "contracts/config/enums";
 
-export type ObjectiveType = "Build";
-export type Objective = {
-  type: ObjectiveType;
+export type ObjectiveType = "Build" | "Upgrade";
+
+// Define a base type for common properties
+export type BaseObjective = {
   description?: string;
   requiredMainBase?: bigint;
   requiredObjectives?: EObjectives[];
-} & BuildObjective;
+};
 
-export type BuildObjective = {
+export type BuildObjective = BaseObjective & {
+  type: "Build";
+  buildingType: Entity;
+};
+
+export type UpgradeObjective = BaseObjective & {
+  type: "Upgrade";
   buildingType: Entity;
   level: bigint;
 };
 
+// Union of all Objective types
+export type Objective = BuildObjective | UpgradeObjective;
+
 export type ObjectiveReq = {
   tooltipText?: string;
-  resourceEntity?: Entity;
+  backgroundImage?: string;
   requiredValue: bigint;
   currentValue: bigint;
   scale: bigint;
-  type: ObjectiveReqType;
 };
-
-export type ObjectiveReqType = "Building" | "Resource" | "RewardResources" | "RewardUtilities";

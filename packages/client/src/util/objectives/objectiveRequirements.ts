@@ -3,6 +3,7 @@ import { getHasRequiredBuilding } from "./getHasRequiredBuilding";
 import { getHasRequiredMainBase } from "./getHasRequiredMainBase";
 import { getHasRequiredObjectives } from "./getHasRequiredObjectives";
 import { getHasRequiredRewards } from "./getHasRequiredRewards";
+import { getHasRequiredBuildingUpgrade } from "./getHasRequiredUpgrade";
 import { getObjective } from "./objectives";
 import { ObjectiveReq } from "./types";
 
@@ -29,5 +30,6 @@ export function getAllObjectiveRequirements(asteroidEntity: Entity, objectiveEnt
   if (!objective) return [];
   const reqs: ObjectiveReq[] = [];
   if (objective.type === "Build") reqs.push(getHasRequiredBuilding(asteroidEntity, objective));
+  if (objective.type === "Upgrade") reqs.push(getHasRequiredBuildingUpgrade(asteroidEntity, objective));
   return reqs;
 }

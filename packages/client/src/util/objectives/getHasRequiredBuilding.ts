@@ -12,7 +12,7 @@ export function getHasRequiredBuilding(asteroid: Entity, objective: BuildObjecti
 
   return {
     tooltipText: `Build a ${getEntityTypeName(objective.buildingType)}`,
-    type: "Building",
+    backgroundImage: "/img/icons/minersicon.png",
     requiredValue: 1n,
     currentValue: BigInt(buildings.size),
     scale: 1n,

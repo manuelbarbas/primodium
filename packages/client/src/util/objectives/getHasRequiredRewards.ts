@@ -22,10 +22,10 @@ export function getRewardUtilitiesRequirement(objective: Entity, asteroid: Entit
     return acc;
   }, {} as Record<Entity, bigint>);
 
-  return Object.entries(requiredUtilities).map(([id, requiredValue]) => {
-    const { resourceCount, resourceStorage } = getFullResourceCount(id as Entity, asteroid);
+  return Object.entries(requiredUtilities).map(([entity, requiredValue]) => {
+    const { resourceCount, resourceStorage } = getFullResourceCount(entity as Entity, asteroid);
     return {
-      entity: id as Entity,
+      entity: entity as Entity,
       requiredValue: requiredValue + (resourceStorage - resourceCount),
       currentValue: resourceStorage,
       scale: 1n,
