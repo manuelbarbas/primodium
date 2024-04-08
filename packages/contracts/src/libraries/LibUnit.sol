@@ -88,11 +88,13 @@ library LibUnit {
       ProducedUnit.set(playerEntity, item.unitEntity, ProducedUnit.get(playerEntity, item.unitEntity) + trainedUnits);
 
       if (item.unitEntity == ColonyShipPrototypeId) {
-        require(
-          ColonySlots.getTraining(playerEntity) >= trainedUnits,
-          "[ClaimBuildingUnits] Not enough colony ships to claim"
-        );
-        ColonySlots.setTraining(playerEntity, ColonySlots.getTraining(playerEntity) - trainedUnits);
+        uint256 playerTrainingShipCount = ColonySlots.getTraining(playerEntity); // Colony ships being trained across all of player's asteroids
+
+        if (playerTrainingShipCount < trainedUnits) {
+          // Some previous error has happened such that there are more colony ships being trained than available slots, so we need to mitigate
+          trainedUnits = playerTrainingShipCount;
+        }
+        ColonySlots.setTraining(playerEntity, playerTrainingShipCount - trainedUnits);
       }
 
       increaseUnitCount(asteroidEntity, item.unitEntity, trainedUnits, false);
