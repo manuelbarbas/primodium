@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { P_ColonyShipConfig, CooldownEnd, DestroyedUnit, DamageDealt, BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, BattleResult, BattleResultData, FleetMovement, GracePeriod, UnitCount, P_Unit, UnitLevel, P_GameConfig, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { P_ColonyShipConfig, CooldownEnd, DamageDealt, BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, BattleResult, BattleResultData, FleetMovement, GracePeriod, UnitCount, P_Unit, UnitLevel, P_GameConfig, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 import { LibMath } from "libraries/LibMath.sol";
@@ -194,15 +194,6 @@ library LibCombat {
       }
     }
     DamageDealt.set(attackingPlayer, DamageDealt.get(attackingPlayer) + damageDealt);
-    for (uint256 i = 0; i < totalUnitCasualties.length; i++) {
-      if (totalUnitCasualties[i] > 0) {
-        DestroyedUnit.set(
-          attackingPlayer,
-          unitPrototypes[i],
-          DestroyedUnit.get(attackingPlayer, unitPrototypes[i]) + totalUnitCasualties[i]
-        );
-      }
-    }
     return damageDealt;
   }
 

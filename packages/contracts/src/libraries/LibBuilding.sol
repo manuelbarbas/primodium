@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 
 // tables
-import { TilePositions, IsActive, HasBuiltBuilding, Asteroid, P_UnitProdTypes, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, OwnedBy, P_Blueprint } from "codegen/index.sol";
+import { TilePositions, IsActive, Asteroid, P_UnitProdTypes, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, OwnedBy, P_Blueprint } from "codegen/index.sol";
 
 // libraries
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
@@ -113,8 +113,6 @@ library LibBuilding {
     Level.set(buildingEntity, 1);
     LastClaimedAt.set(buildingEntity, block.timestamp);
     OwnedBy.set(buildingEntity, coord.parentEntity);
-    HasBuiltBuilding.set(playerEntity, buildingPrototype, true);
-    HasBuiltBuilding.set(coord.parentEntity, buildingPrototype, true);
     IsActive.set(buildingEntity, true);
     if (buildingPrototype == MainBasePrototypeId) {
       Home.set(coord.parentEntity, buildingEntity);
