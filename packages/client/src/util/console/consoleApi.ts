@@ -60,7 +60,7 @@ import {
 } from "../constants";
 import { findEntriesWithPrefix, getPrivateKey } from "../localStorage";
 import { entityToFleetName, entityToPlayerName, entityToRockName, playerNameToEntity, rockNameToEntity } from "../name";
-import { getCanClaimObjective } from "../objectives/objectiveRequirements";
+import { getCanClaimObjective, getIsObjectiveAvailable } from "../objectives";
 import { getAsteroidBounds, getAsteroidMaxBounds, outOfBounds } from "../outOfBounds";
 import { getRecipe, getRecipeDifference } from "../recipe";
 import {
@@ -70,6 +70,7 @@ import {
   getScale,
   isUtility,
 } from "../resource";
+import { getRewards } from "../reward";
 import { getMoveLength, getSlowestUnitSpeed } from "../send";
 import { getBuildingAtCoord, getBuildingsOfTypeInRange } from "../tile";
 import { getUnitStats, getUnitTrainingTime } from "../unit";
@@ -111,6 +112,7 @@ export default function createConsoleApi(mud: MUD, primodium: Primodium) {
       rockNameToEntity,
     },
     objective: {
+      getIsObjectiveAvailable,
       getCanClaimObjective,
     },
     bounds: {
@@ -128,6 +130,9 @@ export default function createConsoleApi(mud: MUD, primodium: Primodium) {
       getFullResourceCount,
       getAsteroidResourceCount,
       getFullResourceCounts,
+    },
+    reward: {
+      getRewards,
     },
     sendUtils: {
       getMoveLength,

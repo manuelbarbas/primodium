@@ -1,19 +1,19 @@
 import { EObjectives } from "contracts/config/enums";
 import { useEffect, useState } from "react";
 import { FaGift, FaMapPin } from "react-icons/fa";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { clampedIndex, getEntityTypeName } from "src/util/common";
 import { ObjectiveEntityLookup } from "src/util/constants";
-import { Objectives } from "src/util/objectives/objectives";
+import { ObjectiveDescriptions } from "src/util/objectiveDescriptions";
 import { Hex } from "viem";
 import { Badge } from "../core/Badge";
 import { Card } from "../core/Card";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
 import { Widget } from "../core/Widget";
-import { ObjectivesScreen } from "./modals/objectives/ObjectivesScreen";
+import { Objectives } from "./modals/Objectives";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 const tutorialObjectives = [
   EObjectives.BuildIronMine,
@@ -62,7 +62,7 @@ export const CurrentObjective = () => {
           <IconLabel imageUri="img/icons/objectiveicon.png" className="text-sm" text="VIEW OBJECTIVES" />
         </Modal.Button>
         <Modal.Content className="w-[50rem] h-[50rem]">
-          <ObjectivesScreen />
+          <Objectives />
         </Modal.Content>
       </Modal>
     );
@@ -93,7 +93,7 @@ export const CurrentObjective = () => {
             <hr className="border-secondary/50" />
             <div className="flex gap-1 text-right justify-end px-2 border-secondary/50 p-1 w-72">
               <p className="text-xs text-success text-left normal-case font-normal">
-                {Objectives.get(tutorialObjectives[currentStep])?.description ?? "A Primodium objective."}
+                {ObjectiveDescriptions.get(tutorialObjectives[currentStep])}
               </p>
             </div>
           </div>
@@ -103,7 +103,7 @@ export const CurrentObjective = () => {
                 <FaGift /> {"Claim"}
               </Modal.Button>
               <Modal.Content className="w-[50rem] h-[50rem]">
-                <ObjectivesScreen highlight={objectiveEntity} />
+                <Objectives highlight={objectiveEntity} />
               </Modal.Content>
             </Modal>
 

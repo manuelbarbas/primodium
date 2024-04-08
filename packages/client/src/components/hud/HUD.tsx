@@ -2,7 +2,6 @@ import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { FC, memo, useEffect, useMemo, useRef } from "react";
 import ReactDOM from "react-dom";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks";
 import { useWidgets } from "src/hooks/providers/WidgetProvider";
@@ -32,6 +31,7 @@ import { Chat } from "./widgets/chat/Chat";
 import { Cheatcodes } from "./widgets/dev/Cheatcodes";
 import { Hangar } from "./widgets/hangar/Hangar";
 import { Resources } from "./widgets/resources/Resources";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 export const GameHUD = memo(() => {
   const {

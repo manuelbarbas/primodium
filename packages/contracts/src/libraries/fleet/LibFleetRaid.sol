@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { BattleRaidResult, BattleRaidResultData, P_Transportables, IsFleet, ResourceCount, OwnedBy } from "codegen/index.sol";
+import { RaidedResource, BattleRaidResult, BattleRaidResultData, P_Transportables, IsFleet, ResourceCount, OwnedBy } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
@@ -190,7 +190,11 @@ library LibFleetRaid {
       } else {
         LibStorage.increaseStoredResource(defenderEntity, transportables[i], resourcePortion);
       }
-
+      RaidedResource.set(
+        playerEntity,
+        transportables[i],
+        RaidedResource.get(playerEntity, transportables[i]) + resourcePortion
+      );
       receivedResources += resourcePortion;
       raidResult.resourcesAtEnd[i] = ResourceCount.get(defenderEntity, transportables[i]);
     }

@@ -1,5 +1,5 @@
-import type { Sync } from "@primodiumxyz/sync-stack";
 import { Hex, pad } from "viem";
+import type { Sync } from "@primodiumxyz/sync-stack";
 
 export const getPlayerQuery = ({
   tables,
@@ -38,6 +38,26 @@ export const getPlayerQuery = ({
         },
         {
           tableId: tables.CompletedObjective.tableId,
+          key0: playerEntity,
+        },
+        {
+          tableId: tables.HasBuiltBuilding.tableId,
+          key0: playerEntity,
+        },
+        {
+          tableId: tables.ProducedResource.tableId,
+          key0: playerEntity,
+        },
+        {
+          tableId: tables.RaidedResource.tableId,
+          key0: playerEntity,
+        },
+        {
+          tableId: tables.ProducedUnit.tableId,
+          key0: playerEntity,
+        },
+        {
+          tableId: tables.DestroyedUnit.tableId,
           key0: playerEntity,
         },
       ],

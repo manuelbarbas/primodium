@@ -5,9 +5,9 @@ import { DECIMALS } from "contracts/config/constants";
 import { EBuilding, EObjectives, EResource, EUnit } from "contracts/config/enums";
 import { Key } from "engine/types";
 import { encodeEntity } from "src/util/encode";
-import { parseEther } from "viem";
 import { reverseRecord } from "./common";
 import { toHex32 } from "./encode";
+import { parseEther } from "viem";
 
 export const minEth = parseEther("0.0049");
 export const UNLIMITED_DELEGATION = resourceToHex({ type: "system", namespace: "", name: "unlimited" });
@@ -59,6 +59,19 @@ export enum ResourceType {
 export enum RewardType {
   Resource,
   Unit,
+}
+
+export enum RequirementType {
+  Objectives,
+  MainBase,
+  Expansion,
+  Buildings,
+  ProducedResources,
+  RaidedResources,
+  DestroyedUnits,
+  ProducedUnits,
+  RequiredUnits,
+  RewardUtilities,
 }
 
 export enum TransactionQueueType {
