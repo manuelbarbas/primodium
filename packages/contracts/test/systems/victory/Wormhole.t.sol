@@ -144,7 +144,7 @@ contract WormholeTest is PrimodiumTest {
     switchPrank(alice);
     world.Primodium__wormholeDeposit(wormholeBaseEntity, resourceCount);
 
-    assertEq(Score.get(aliceEntity, uint8(EScoreType.Extraction)), 0, "score");
+    assertEq(Score.get(aliceEntity, uint8(EScoreType.Extraction)), 0, "don't allow score after game end");
   }
   function testDepositWormholeAfterCooldown() public returns (bytes32) {
     bytes32 wormholeAsteroidEntity = testWormholeAsteroidHasWormholeBase();
