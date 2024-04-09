@@ -7,7 +7,7 @@ import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { getAllianceName } from "src/util/alliance";
 import { EntityType } from "src/util/constants";
-import { formatResourceCount } from "src/util/number";
+import { formatNumber, formatResourceCount } from "src/util/number";
 import { rankToScore } from "src/util/score";
 
 export const SubLeaderboard = ({ leaderboard, alliance = false }: { leaderboard: Entity; alliance?: boolean }) => {
@@ -108,7 +108,10 @@ const LeaderboardItem = ({
           fractionDigits: 2,
         }).toLocaleString()}
       </p>
-      <div className="flex items-center gap-1 px-1 bg-yellow-700 font-bold">{rankToScore(index + 1)}pts</div>
+      <div className="flex items-center gap-1 px-1 bg-yellow-700 font-bold">
+        {formatNumber(rankToScore(index + 1), { fractionDigits: 2 })}
+        pts
+      </div>
     </SecondaryCard>
   );
 };

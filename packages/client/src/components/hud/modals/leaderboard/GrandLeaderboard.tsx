@@ -6,6 +6,7 @@ import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { getAllianceName } from "src/util/alliance";
+import { formatNumber } from "src/util/number";
 import { rankToScore } from "src/util/score";
 
 export const GrandLeaderboard = ({ leaderboard, alliance = false }: { leaderboard: Entity; alliance?: boolean }) => {
@@ -134,11 +135,11 @@ export const GrandLeaderboardItem = ({
       {!hideRanks && (
         <>
           <div className="font-bold w-fit bg-cyan-700 px-2">
-            {rankToScore(wormholeRank)}
+            {formatNumber(rankToScore(wormholeRank), { fractionDigits: 2 })}
             <p className="inline opacity-70">[{wormholeRank.toLocaleString() + rankSuffix(wormholeRank)}]</p>
           </div>
           <div className="font-bold w-fit bg-cyan-700 px-2">
-            {rankToScore(primodiumRank)}
+            {formatNumber(rankToScore(primodiumRank), { fractionDigits: 2 })}
             <p className="inline opacity-70">[{primodiumRank.toLocaleString() + rankSuffix(primodiumRank)}]</p>
           </div>
         </>
