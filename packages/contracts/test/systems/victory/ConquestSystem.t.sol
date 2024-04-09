@@ -31,8 +31,8 @@ contract ConquestSystemTest is PrimodiumTest {
 
     vm.startPrank(creator);
 
-    world.Primodium__claimConquestPoints(asteroidEntity);
-    assertEq(Score.get(playerEntity, uint8(EScoreType.Conquest)), asteroidData.conquestPoints);
+    world.Primodium__claimPrimodium(asteroidEntity);
+    assertEq(Score.get(playerEntity, uint8(EScoreType.Primodium)), asteroidData.primodium);
     assertEq(LastConquered.get(asteroidEntity), block.timestamp);
   }
 
@@ -48,8 +48,8 @@ contract ConquestSystemTest is PrimodiumTest {
 
     vm.startPrank(alice);
 
-    vm.expectRevert("[Conquest] Only owner can claim conquest points");
-    world.Primodium__claimConquestPoints(asteroidEntity);
+    vm.expectRevert("[Claim Primodium] Only owner can claim Primodium");
+    world.Primodium__claimPrimodium(asteroidEntity);
   }
 
   function testConquerAsteroidFailNoPoints() public {
@@ -62,10 +62,10 @@ contract ConquestSystemTest is PrimodiumTest {
     uint256 holdTime = (P_ConquestConfig.getHoldTime() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
 
     vm.startPrank(creator);
-    Asteroid.setConquestPoints(asteroidEntity, 0);
+    Asteroid.setPrimodium(asteroidEntity, 0);
 
-    vm.expectRevert("[Conquest] This asteroid does not generate conquest points");
-    world.Primodium__claimConquestPoints(asteroidEntity);
+    vm.expectRevert("[Claim Primodium] This asteroid does not generate Primodium");
+    world.Primodium__claimPrimodium(asteroidEntity);
   }
 
   function testConquerAsteroidFailNotLongEnough() public {
@@ -81,7 +81,7 @@ contract ConquestSystemTest is PrimodiumTest {
     vm.warp(conquerTime - 1);
 
     vm.startPrank(alice);
-    vm.expectRevert("[Conquest] Asteroid hasn't been held long enough to claim conquest points");
-    world.Primodium__claimConquestPoints(secondaryAsteroidEntity);
+    vm.expectRevert("[Claim Primodium] Asteroid hasn't been held long enough to claim Primodium");
+    world.Primodium__claimPrimodium(secondaryAsteroidEntity);
   }
 }

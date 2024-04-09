@@ -13,18 +13,18 @@ type Leaderboard = Map<Entity, bigint>;
 export const setupLeaderboard = (mud: MUD) => {
   const leaderboardMaps: Record<Entity, Map<Entity, bigint>> = {
     [EntityType.PlayerConquestLeaderboard]: new Map<Entity, bigint>(),
-    [EntityType.PlayerExtractionLeaderboard]: new Map<Entity, bigint>(),
+    [EntityType.PlayerWormholeLeaderboard]: new Map<Entity, bigint>(),
     [EntityType.AllianceConquestLeaderboard]: new Map<Entity, bigint>(),
-    [EntityType.AllianceExtractionLeaderboard]: new Map<Entity, bigint>(),
+    [EntityType.AllianceWormholeLeaderboard]: new Map<Entity, bigint>(),
   };
   const systemWorld = namespaceWorld(world, "systems");
 
   function setGrandLeaderboard(
-    inputLeaderboards: { extraction: Leaderboard; conquest: Leaderboard },
+    inputLeaderboards: { wormhole: Leaderboard; conquest: Leaderboard },
     leaderboardEntity: Entity,
     entityIsPlayer: boolean
   ) {
-    const grandLeaderboard = new Map<Entity, { score: number; extractionRank: number; conquestRank: number }>();
+    const grandLeaderboard = new Map<Entity, { score: number; wormholeRank: number; conquestRank: number }>();
 
     Object.entries(inputLeaderboards).forEach(([name, leaderboard]) => {
       const leaderboardArray = [...leaderboard.entries()].sort((a, b) => Number(b[1] - a[1]));
@@ -32,10 +32,10 @@ export const setupLeaderboard = (mud: MUD) => {
         const rank = index + 1;
         const score = rankToScore(rank);
         const rankObj =
-          name == "extraction"
-            ? { conquestRank: grandLeaderboard.get(entity)?.conquestRank ?? 0, extractionRank: rank }
+          name == "wormhole"
+            ? { conquestRank: grandLeaderboard.get(entity)?.conquestRank ?? 0, wormholeRank: rank }
             : {
-                extractionRank: grandLeaderboard.get(entity)?.extractionRank ?? 0,
+                wormholeRank: grandLeaderboard.get(entity)?.wormholeRank ?? 0,
                 conquestRank: rank,
               };
         grandLeaderboard.set(entity, { score: (grandLeaderboard.get(entity)?.score ?? 0) + score, ...rankObj });
@@ -43,15 +43,15 @@ export const setupLeaderboard = (mud: MUD) => {
     });
     const finalLeaderboard = [...grandLeaderboard.entries()].sort((a, b) => Number(b[1].score - a[1].score));
     const data = finalLeaderboard.reduce(
-      (acc, [, { score, extractionRank, conquestRank }]) => {
+      (acc, [, { score, wormholeRank, conquestRank }]) => {
         acc.scores.push(score);
-        acc.extractionRanks.push(extractionRank);
+        acc.wormholeRanks.push(wormholeRank);
         acc.conquestRanks.push(conquestRank);
         return acc;
       },
       {
         scores: [] as number[],
-        extractionRanks: [] as number[],
+        wormholeRanks: [] as number[],
         conquestRanks: [] as number[],
       }
     );
@@ -105,7 +105,7 @@ export const setupLeaderboard = (mud: MUD) => {
 
     if (!leaderboardMap) return;
 
-    const scale = scoreType === EScoreType.Extraction ? RESOURCE_SCALE : 1n;
+    const scale = scoreType === EScoreType.Wormhole ? RESOURCE_SCALE : 1n;
     leaderboardMap.set(entity as Entity, scoreValue / scale);
 
     setLeaderboard(leaderboardMap, leaderboardEntity, entityIsPlayer);
@@ -114,7 +114,7 @@ export const setupLeaderboard = (mud: MUD) => {
       ? setGrandLeaderboard(
           {
             conquest: leaderboardMaps[EntityType.PlayerConquestLeaderboard],
-            extraction: leaderboardMaps[EntityType.PlayerExtractionLeaderboard],
+            wormhole: leaderboardMaps[EntityType.PlayerWormholeLeaderboard],
           },
           EntityType.PlayerGrandLeaderboard,
           entityIsPlayer
@@ -122,7 +122,7 @@ export const setupLeaderboard = (mud: MUD) => {
       : setGrandLeaderboard(
           {
             conquest: leaderboardMaps[EntityType.AllianceConquestLeaderboard],
-            extraction: leaderboardMaps[EntityType.AllianceExtractionLeaderboard],
+            wormhole: leaderboardMaps[EntityType.AllianceWormholeLeaderboard],
           },
           EntityType.AllianceGrandLeaderboard,
           entityIsPlayer

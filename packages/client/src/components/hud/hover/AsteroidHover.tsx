@@ -58,7 +58,7 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
             WORMHOLE DETECTED
           </div>
         )}
-        {desc.conquestPoints > 0n && !!claimConquerTime && (
+        {desc.primodium > 0n && !!claimConquerTime && (
           <div className="flex victory-bg uppercase text-primary font-bold border border-secondary/50 text-sm flex justify-center items-center">
             CLAIM
             {!claimConquerTime.canConquer
@@ -79,8 +79,8 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
             {desc.type}
           </div>
           <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
-            {/* todo replace CP with icon */}
-            {desc.conquestPoints.toLocaleString()} CP
+            {/* todo replace PRI with icon */}
+            {desc.primodium.toLocaleString()} PRI
           </div>
         </div>
         {inGracePeriod && (

@@ -70,7 +70,7 @@ contract LibAsteroidTest is PrimodiumTest {
     assertEq(Position.get(expectedAsteroidEntity), position);
     assertEq(ReversePosition.get(position.x, position.y), expectedAsteroidEntity, "reversePosition");
 
-    assertGe(expectedAsteroidData.conquestPoints, 0, "conquestPoints");
+    assertGe(expectedAsteroidData.primodium, 0, "primodium");
     assertEq(LastConquered.get(asteroidEntity), block.timestamp, "last conquered");
 
     assertEq(

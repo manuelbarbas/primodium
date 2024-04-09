@@ -53,7 +53,7 @@ export function getAsteroidDescription(asteroid: Entity) {
   return {
     type: asteroidResource ? getEntityTypeName(asteroidResource) : "Basic",
     size: asteroidSize,
-    conquestPoints: asteroidData?.conquestPoints ?? 0n,
+    primodium: asteroidData?.primodium ?? 0n,
   };
 }
 

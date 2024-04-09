@@ -10,7 +10,7 @@ import { EScoreType } from "src/Types.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 import { WormholeBasePrototypeId } from "codegen/Prototypes.sol";
 
-contract WormholeDepositSystem is PrimodiumSystem {
+contract ClaimWormholeSystem is PrimodiumSystem {
   function wormholeDeposit(
     bytes32 wormholeBaseEntity,
     uint256 count
@@ -29,7 +29,7 @@ contract WormholeDepositSystem is PrimodiumSystem {
     LibStorage.checkedDecreaseStoredResource(asteroidEntity, resource, count);
 
     uint256 scoreIncrease = count * P_ScoreMultiplier.get(resource);
-    LibScore.addScore(playerEntity, EScoreType.Extraction, scoreIncrease);
+    LibScore.addScore(playerEntity, EScoreType.Wormhole, scoreIncrease);
 
     uint256 cooldownLength = (P_WormholeConfig.getCooldown() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
     CooldownEnd.set(wormholeBaseEntity, block.timestamp + cooldownLength);

@@ -47,14 +47,7 @@ library LibAsteroid {
     Position.set(asteroidEntity, coord);
     Asteroid.set(
       asteroidEntity,
-      AsteroidData({
-        isAsteroid: true,
-        maxLevel: 5,
-        mapId: 1,
-        spawnsSecondary: true,
-        wormhole: false,
-        conquestPoints: 0
-      })
+      AsteroidData({ isAsteroid: true, maxLevel: 5, mapId: 1, spawnsSecondary: true, wormhole: false, primodium: 0 })
     );
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
 
@@ -113,7 +106,7 @@ library LibAsteroid {
    * @param spawnsSecondary Whether the asteroid spawns secondary asteroids
    * @param wormholeAsteroid Whether the asteroid is a wormhole asteroid
    * @return AsteroidData struct
-   * @notice todo: move max level and conquest points into a prototype table
+   * @notice todo: move max level and Primodium into a prototype table
    */
   function getAsteroidData(
     bytes32 asteroidEntity,
@@ -127,7 +120,7 @@ library LibAsteroid {
           isAsteroid: true,
           maxLevel: wormholeConfig.maxLevel,
           mapId: wormholeConfig.mapId,
-          conquestPoints: wormholeConfig.conquestPoints,
+          primodium: wormholeConfig.primodium,
           spawnsSecondary: spawnsSecondary,
           wormhole: true
         });
@@ -135,23 +128,23 @@ library LibAsteroid {
     uint256 distributionVal = (LibEncode.getByteUInt(uint256(asteroidEntity), 7, 12) % 100);
 
     uint256 maxLevel;
-    uint256 conquestPoints;
+    uint256 primodium;
     //micro
     if (distributionVal <= 50) {
       maxLevel = 1;
-      conquestPoints = 3 * RESOURCE_SCALE;
+      primodium = 3 * RESOURCE_SCALE;
       //small
     } else if (distributionVal <= 75) {
       maxLevel = 3;
-      conquestPoints = 4 * RESOURCE_SCALE;
+      primodium = 4 * RESOURCE_SCALE;
       //medium
     } else if (distributionVal <= 90) {
       maxLevel = 5;
-      conquestPoints = 5 * RESOURCE_SCALE;
+      primodium = 5 * RESOURCE_SCALE;
       //large
     } else {
       maxLevel = 8;
-      conquestPoints = 1 * RESOURCE_SCALE;
+      primodium = 1 * RESOURCE_SCALE;
     }
 
     // number between 2 and 5
@@ -163,7 +156,7 @@ library LibAsteroid {
         mapId: mapId,
         spawnsSecondary: spawnsSecondary,
         wormhole: false,
-        conquestPoints: conquestPoints
+        primodium: primodium
       });
   }
 

@@ -111,26 +111,26 @@ function getAsteroidData(
       isAsteroid: true,
       maxLevel: wormholeAsteroidConfig.maxLevel,
       mapId: wormholeAsteroidConfig.mapId,
-      conquestPoints: wormholeAsteroidConfig.conquestPoints,
+      primodium: wormholeAsteroidConfig.primodium,
       spawnsSecondary: false,
       wormhole: true,
     };
   }
   const distributionVal = getByteUInt(asteroidEntity, 7, 12) % 100;
   let maxLevel = 8;
-  let conquestPoints = 1n;
+  let primodium = 1n;
   // //micro
   if (distributionVal <= 50) {
     maxLevel = 1;
-    conquestPoints = 3n;
+    primodium = 3n;
     //small
   } else if (distributionVal <= 75) {
     maxLevel = 3;
-    conquestPoints = 4n;
+    primodium = 4n;
     //medium
   } else if (distributionVal <= 90) {
     maxLevel = 5;
-    conquestPoints = 5n;
+    primodium = 5n;
     //large
   }
 
@@ -142,7 +142,7 @@ function getAsteroidData(
     mapId: mapId,
     spawnsSecondary: false,
     wormhole: false,
-    conquestPoints,
+    primodium,
   };
 }
 

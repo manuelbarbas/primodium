@@ -72,7 +72,7 @@ library LibShardAsteroid {
     bytes32 ownerEntity = OwnedBy.get(asteroidEntity);
     if (ownerEntity != 0) {
       LibAsteroid.removeAsteroidOwner(asteroidEntity, ownerEntity);
-      LibScore.addScore(ownerEntity, EScoreType.Conquest, P_ConquestConfig.getShardAsteroidPoints());
+      LibScore.addScore(ownerEntity, EScoreType.Primodium, P_ConquestConfig.getShardAsteroidPoints());
     }
 
     // kill all incoming and orbiting fleets

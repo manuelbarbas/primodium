@@ -152,8 +152,8 @@ export enum EFleetStance {
 }
 
 export enum EScoreType {
-  Conquest = 1,
-  Extraction,
+  Primodium = 1,
+  Wormhole,
 }
 
 export const MUDEnums = {

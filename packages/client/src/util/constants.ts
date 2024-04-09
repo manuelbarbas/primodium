@@ -272,12 +272,12 @@ export const EntityType = {
 
   // Leaderboards
   PlayerConquestLeaderboard: toHex32("Player_Conquest") as Entity,
-  PlayerExtractionLeaderboard: toHex32("Player_Extraction") as Entity,
+  PlayerWormholeLeaderboard: toHex32("Player_Wormhole") as Entity,
   PlayerGrandLeaderboard: toHex32("Player_Grand") as Entity,
 
   // Leaderboards
   AllianceConquestLeaderboard: toHex32("Alliance_Conquest") as Entity,
-  AllianceExtractionLeaderboard: toHex32("Alliance_Extraction") as Entity,
+  AllianceWormholeLeaderboard: toHex32("Alliance_Wormhole") as Entity,
   AllianceGrandLeaderboard: toHex32("Alliance_Grand") as Entity,
 
   //Objectives
@@ -559,11 +559,11 @@ export const ObjectiveEntityLookup = reverseRecord(ObjectiveEnumLookup);
 
 export const LeaderboardEntityLookup = {
   player: {
-    [EScoreType.Conquest]: EntityType.PlayerConquestLeaderboard,
-    [EScoreType.Extraction]: EntityType.PlayerExtractionLeaderboard,
+    [EScoreType.Primodium]: EntityType.PlayerConquestLeaderboard,
+    [EScoreType.Wormhole]: EntityType.PlayerWormholeLeaderboard,
   },
   alliance: {
-    [EScoreType.Conquest]: EntityType.AllianceConquestLeaderboard,
-    [EScoreType.Extraction]: EntityType.AllianceExtractionLeaderboard,
+    [EScoreType.Primodium]: EntityType.AllianceConquestLeaderboard,
+    [EScoreType.Wormhole]: EntityType.AllianceWormholeLeaderboard,
   },
 };

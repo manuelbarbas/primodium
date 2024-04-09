@@ -49,7 +49,8 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
           <AsteroidEta entity={entity} />
         </div>
         <div className="flex victory-bg uppercase text-primary font-bold border border-secondary/50 text-sm flex justify-center items-center">
-          {formatResourceCount(EntityType.Iron, conquestData.points, { notLocale: true }).toLocaleString()} CP EXPLOSION
+          {formatResourceCount(EntityType.Iron, conquestData.points, { notLocale: true }).toLocaleString()} PRI
+          EXPLOSION
           {conquestData.canExplode ? " IMMINENT" : ` IN ${formatTime(conquestData.timeUntilExplode)}`}
         </div>
         <div className="flex gap-1">
@@ -64,18 +65,18 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
           )}
           {conquestData.dripPerSec > 0n && (
             <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
-              {/* todo replace CP with icon */}
+              {/* todo replace PRI with icon */}
               {formatResourceCount(EntityType.Iron, conquestData.dripPerSec * 60n * 60n, {
                 notLocale: true,
                 fractionDigits: 1,
               }).toLocaleString()}{" "}
-              CP/HR
+              PRI/HR
             </div>
           )}
         </div>
         {conquestData.unclaimedPoints > 0n && (
           <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
-            {/* todo replace CP with icon */}
+            {/* todo replace PRI with icon */}
             {formatResourceCount(EntityType.Iron, conquestData.unclaimedPoints, {
               notLocale: true,
               fractionDigits: 1,

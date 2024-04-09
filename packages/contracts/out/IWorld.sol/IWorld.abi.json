@@ -171,19 +171,6 @@
   },
   {
     "type": "function",
-    "name": "Primodium__claimConquestPoints",
-    "inputs": [
-      {
-        "name": "asteroidEntity",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "Primodium__claimObjective",
     "inputs": [
       {
@@ -195,6 +182,19 @@
         "name": "objective",
         "type": "uint8",
         "internalType": "enum EObjectives"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Primodium__claimPrimodium",
+    "inputs": [
+      {
+        "name": "asteroidEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
       }
     ],
     "outputs": [],

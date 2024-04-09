@@ -137,13 +137,13 @@ export const worldInput = {
         mapId: "uint8",
         spawnsSecondary: "bool",
         wormhole: "bool",
-        conquestPoints: "uint256",
+        primodium: "uint256",
       },
     },
 
     P_WormholeAsteroidConfig: {
       key: [],
-      schema: { wormholeAsteroidSlot: "uint256", maxLevel: "uint256", mapId: "uint8", conquestPoints: "uint256" },
+      schema: { wormholeAsteroidSlot: "uint256", maxLevel: "uint256", mapId: "uint8", primodium: "uint256" },
     },
 
     // note: dimensions will always be positive, but are int32s so they work with coords

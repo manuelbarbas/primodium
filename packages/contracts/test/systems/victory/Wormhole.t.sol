@@ -90,7 +90,7 @@ contract WormholeTest is PrimodiumTest {
     world.Primodium__wormholeDeposit(wormholeBaseEntity, resourceCount);
 
     assertEq(
-      Score.get(aliceEntity, uint8(EScoreType.Extraction)),
+      Score.get(aliceEntity, uint8(EScoreType.Wormhole)),
       resourceCount * P_ScoreMultiplier.get(resource),
       "score"
     );
@@ -117,8 +117,8 @@ contract WormholeTest is PrimodiumTest {
     bytes32 allianceEntity = world.Primodium__create(bytes32("alice's alliance"), EAllianceInviteMode.Open);
     world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
 
-    assertEq(Score.get(allianceEntity, uint8(EScoreType.Extraction)), 100 * P_ScoreMultiplier.get(resource), "score");
-    assertEq(Score.get(allianceEntity, uint8(EScoreType.Conquest)), 0, "score");
+    assertEq(Score.get(allianceEntity, uint8(EScoreType.Wormhole)), 100 * P_ScoreMultiplier.get(resource), "score");
+    assertEq(Score.get(allianceEntity, uint8(EScoreType.Primodium)), 0, "score");
   }
 
   function testDepositWormholeScoreAfterGameOver() public returns (bytes32) {
@@ -144,7 +144,7 @@ contract WormholeTest is PrimodiumTest {
     switchPrank(alice);
     world.Primodium__wormholeDeposit(wormholeBaseEntity, resourceCount);
 
-    assertEq(Score.get(aliceEntity, uint8(EScoreType.Extraction)), 0, "don't allow score after game end");
+    assertEq(Score.get(aliceEntity, uint8(EScoreType.Wormhole)), 0, "don't allow score after game end");
   }
   function testDepositWormholeAfterCooldown() public returns (bytes32) {
     bytes32 wormholeAsteroidEntity = testWormholeAsteroidHasWormholeBase();
@@ -170,13 +170,13 @@ contract WormholeTest is PrimodiumTest {
 
     increaseResource(wormholeAsteroidEntity, EResource(resource), 100);
 
-    uint256 prevScore = Score.get(aliceEntity, uint8(EScoreType.Extraction));
+    uint256 prevScore = Score.get(aliceEntity, uint8(EScoreType.Wormhole));
 
     vm.prank(alice);
     world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
 
     assertEq(
-      Score.get(aliceEntity, uint8(EScoreType.Extraction)),
+      Score.get(aliceEntity, uint8(EScoreType.Wormhole)),
       100 * P_ScoreMultiplier.get(resource) + prevScore,
       "score"
     );
@@ -251,7 +251,7 @@ contract WormholeTest is PrimodiumTest {
       wormholeData.resource
     );
 
-    uint256 prevScore = Score.get(aliceEntity, uint8(EScoreType.Extraction));
+    uint256 prevScore = Score.get(aliceEntity, uint8(EScoreType.Wormhole));
 
     increaseResource(wormholeAsteroidEntity, EResource(expectedNewResource), 100);
 
@@ -259,7 +259,7 @@ contract WormholeTest is PrimodiumTest {
     world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
 
     assertEq(
-      Score.get(aliceEntity, uint8(EScoreType.Extraction)),
+      Score.get(aliceEntity, uint8(EScoreType.Wormhole)),
       100 * P_ScoreMultiplier.get(expectedNewResource) + prevScore,
       "score"
     );

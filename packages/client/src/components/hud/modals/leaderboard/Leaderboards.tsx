@@ -34,11 +34,11 @@ export const Leaderboards = ({
         ),
       },
       {
-        name: "Extraction",
+        name: "Wormhole",
         leaderboard: (
           <SubLeaderboard
-            key={"extraction"}
-            leaderboard={alliance ? EntityType.AllianceExtractionLeaderboard : EntityType.PlayerExtractionLeaderboard}
+            key={"wormhole"}
+            leaderboard={alliance ? EntityType.AllianceWormholeLeaderboard : EntityType.PlayerWormholeLeaderboard}
           />
         ),
       },

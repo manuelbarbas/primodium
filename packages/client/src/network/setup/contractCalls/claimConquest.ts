@@ -8,7 +8,7 @@ export const claimConquest = async (mud: MUD, asteroidEntity: Entity) => {
   await execute(
     {
       mud,
-      functionName: "Primodium__claimConquestPoints",
+      functionName: "Primodium__claimPrimodium",
       systemId: getSystemId("ConquestSystem"),
       args: [asteroidEntity as Hex],
       withSession: true,

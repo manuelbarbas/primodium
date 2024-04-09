@@ -170,72 +170,72 @@ contract AllianceSystemTest is PrimodiumTest {
 
   function testScoreKick() public {
     bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
-    Score.set(bobEntity, uint8(EScoreType.Extraction), 100);
-    Score.set(bobEntity, uint8(EScoreType.Conquest), 500);
+    Score.set(bobEntity, uint8(EScoreType.Wormhole), 100);
+    Score.set(bobEntity, uint8(EScoreType.Primodium), 500);
     vm.stopPrank();
 
     vm.startPrank(bob);
     world.Primodium__join(allianceEntity);
     vm.stopPrank();
 
-    assertEq(Score.get(allianceEntity, uint8(EScoreType.Extraction)), 0, "alliance should have 0 score");
-    assertEq(Score.get(allianceEntity, uint8(EScoreType.Conquest)), 0, "alliance should have 0 score");
+    assertEq(Score.get(allianceEntity, uint8(EScoreType.Wormhole)), 0, "alliance should have 0 score");
+    assertEq(Score.get(allianceEntity, uint8(EScoreType.Primodium)), 0, "alliance should have 0 score");
 
     vm.prank(creator);
-    Score.set(bobEntity, uint8(EScoreType.Extraction), 200);
+    Score.set(bobEntity, uint8(EScoreType.Wormhole), 200);
 
     assertEq(
-      AllianceScoreContribution.get(allianceEntity, uint8(EScoreType.Extraction), bobEntity),
+      AllianceScoreContribution.get(allianceEntity, uint8(EScoreType.Wormhole), bobEntity),
       100,
-      "extraction score should be 100"
+      "wormhole score should be 100"
     );
     assertEq(
-      AllianceScoreContribution.get(allianceEntity, uint8(EScoreType.Conquest), bobEntity),
+      AllianceScoreContribution.get(allianceEntity, uint8(EScoreType.Primodium), bobEntity),
       0,
       "conquest score should be 100"
     );
-    assertEq(Score.get(allianceEntity, uint8(EScoreType.Extraction)), 100, "alliance should have 100 score");
+    assertEq(Score.get(allianceEntity, uint8(EScoreType.Wormhole)), 100, "alliance should have 100 score");
 
     vm.startPrank(creator);
     world.Primodium__kick(bob);
 
-    assertEq(Score.get(allianceEntity, uint8(EScoreType.Extraction)), 0, "alliance should have 0 score");
-    assertEq(Score.get(bobEntity, uint8(EScoreType.Extraction)), 200, "bob should have 200 score");
+    assertEq(Score.get(allianceEntity, uint8(EScoreType.Wormhole)), 0, "alliance should have 0 score");
+    assertEq(Score.get(bobEntity, uint8(EScoreType.Wormhole)), 200, "bob should have 200 score");
   }
 
   function testScoreLeave() public {
     bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
-    Score.set(bobEntity, uint8(EScoreType.Extraction), 100);
-    Score.set(bobEntity, uint8(EScoreType.Conquest), 500);
+    Score.set(bobEntity, uint8(EScoreType.Wormhole), 100);
+    Score.set(bobEntity, uint8(EScoreType.Primodium), 500);
     vm.stopPrank();
 
     vm.startPrank(bob);
     world.Primodium__join(allianceEntity);
     vm.stopPrank();
 
-    assertEq(Score.get(allianceEntity, uint8(EScoreType.Extraction)), 0, "alliance should have 0 score");
-    assertEq(Score.get(allianceEntity, uint8(EScoreType.Conquest)), 0, "alliance should have 0 score");
+    assertEq(Score.get(allianceEntity, uint8(EScoreType.Wormhole)), 0, "alliance should have 0 score");
+    assertEq(Score.get(allianceEntity, uint8(EScoreType.Primodium)), 0, "alliance should have 0 score");
 
     vm.prank(creator);
-    Score.set(bobEntity, uint8(EScoreType.Extraction), 200);
+    Score.set(bobEntity, uint8(EScoreType.Wormhole), 200);
 
     assertEq(
-      AllianceScoreContribution.get(allianceEntity, uint8(EScoreType.Extraction), bobEntity),
+      AllianceScoreContribution.get(allianceEntity, uint8(EScoreType.Wormhole), bobEntity),
       100,
-      "extraction score should be 100"
+      "wormhole score should be 100"
     );
     assertEq(
-      AllianceScoreContribution.get(allianceEntity, uint8(EScoreType.Conquest), bobEntity),
+      AllianceScoreContribution.get(allianceEntity, uint8(EScoreType.Primodium), bobEntity),
       0,
       "conquest score should be 100"
     );
-    assertEq(Score.get(allianceEntity, uint8(EScoreType.Extraction)), 100, "alliance should have 100 score");
+    assertEq(Score.get(allianceEntity, uint8(EScoreType.Wormhole)), 100, "alliance should have 100 score");
 
     vm.startPrank(bob);
     world.Primodium__leave();
 
-    assertEq(Score.get(allianceEntity, uint8(EScoreType.Extraction)), 0, "alliance should have 0 score");
-    assertEq(Score.get(bobEntity, uint8(EScoreType.Extraction)), 200, "bob should have 200 score");
+    assertEq(Score.get(allianceEntity, uint8(EScoreType.Wormhole)), 0, "alliance should have 0 score");
+    assertEq(Score.get(bobEntity, uint8(EScoreType.Wormhole)), 200, "bob should have 200 score");
   }
   function testCanGrantRoleAlliance() public {
     bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);

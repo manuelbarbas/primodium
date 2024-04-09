@@ -118,7 +118,7 @@ export const Leaderboard = createExtendedComponent(
 
 export const GrandLeaderboard = createExtendedComponent(world, {
   players: Type.EntityArray,
-  extractionRanks: Type.NumberArray,
+  wormholeRanks: Type.NumberArray,
   conquestRanks: Type.NumberArray,
   scores: Type.NumberArray,
   playerRank: Type.OptionalNumber,

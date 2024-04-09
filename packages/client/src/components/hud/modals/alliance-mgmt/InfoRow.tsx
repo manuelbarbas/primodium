@@ -12,13 +12,13 @@ export const InfoRow = ({ data }: { data?: ComponentValue<typeof components.Gran
   if (!data || rank == 0) return <SoloPlayerInfo />;
   const allianceEntity = data.players[rank - 1];
   const score = data.scores[rank - 1];
-  const extractionRank = data.extractionRanks[rank - 1];
+  const wormholeRank = data.wormholeRanks[rank - 1];
   const conquestRank = data.conquestRanks[rank - 1];
 
   return (
     <PlayerInfo
       conquestRank={conquestRank}
-      extractionRank={extractionRank}
+      wormholeRank={wormholeRank}
       rank={rank}
       score={score}
       alliance={allianceEntity}
@@ -28,13 +28,13 @@ export const InfoRow = ({ data }: { data?: ComponentValue<typeof components.Gran
 
 const PlayerInfo = ({
   conquestRank,
-  extractionRank,
+  wormholeRank,
   rank,
   score,
   alliance,
 }: {
   conquestRank: number;
-  extractionRank: number;
+  wormholeRank: number;
   rank: number;
   score: number;
   alliance: Entity;
@@ -56,7 +56,7 @@ const PlayerInfo = ({
             score={score}
             player={alliance}
             conquestRank={conquestRank}
-            extractionRank={extractionRank}
+            wormholeRank={wormholeRank}
             className="col-span-4 h-full"
             hideRanks
           />

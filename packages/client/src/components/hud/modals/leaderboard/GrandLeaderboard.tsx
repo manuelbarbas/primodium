@@ -25,7 +25,7 @@ export const GrandLeaderboard = ({ leaderboard, alliance = false }: { leaderboar
 
   const playerIndex = data.players.indexOf(entity);
   const playerScore = playerIndex == -1 ? 0 : data.scores[playerIndex];
-  const playerExtractionRank = playerIndex == -1 ? 0 : data.extractionRanks[playerIndex];
+  const playerWormholeRank = playerIndex == -1 ? 0 : data.wormholeRanks[playerIndex];
   const playerConquestRank = playerIndex == -1 ? 0 : data.conquestRanks[playerIndex];
 
   return (
@@ -33,7 +33,7 @@ export const GrandLeaderboard = ({ leaderboard, alliance = false }: { leaderboar
       <div className={`grid grid-cols-8 w-full p-2 font-bold uppercase`}>
         <div>Rank</div>
         <div className="col-span-4">Name</div>
-        <div>Extraction</div>
+        <div>Wormhole</div>
         <div>Conquest</div>
         <div>Pts</div>
       </div>
@@ -51,7 +51,7 @@ export const GrandLeaderboard = ({ leaderboard, alliance = false }: { leaderboar
               {({ index, style }) => {
                 const player = data.players[index];
                 const score = data.scores[index];
-                const extractionRank = data.extractionRanks[index];
+                const wormholeRank = data.wormholeRanks[index];
                 const conquestRank = data.conquestRanks[index];
                 return (
                   <div style={style} className="pr-2">
@@ -61,7 +61,7 @@ export const GrandLeaderboard = ({ leaderboard, alliance = false }: { leaderboar
                       index={index}
                       score={score}
                       alliance={alliance}
-                      extractionRank={extractionRank}
+                      wormholeRank={wormholeRank}
                       conquestRank={conquestRank}
                     />
                   </div>
@@ -79,7 +79,7 @@ export const GrandLeaderboard = ({ leaderboard, alliance = false }: { leaderboar
             index={playerIndex}
             score={playerScore ?? 0}
             alliance={alliance}
-            extractionRank={playerExtractionRank}
+            wormholeRank={playerWormholeRank}
             conquestRank={playerConquestRank}
           />
         </div>
@@ -94,7 +94,7 @@ export const GrandLeaderboardItem = ({
   player,
   index,
   score,
-  extractionRank,
+  wormholeRank,
   conquestRank,
   alliance = false,
   className = "",
@@ -103,7 +103,7 @@ export const GrandLeaderboardItem = ({
   player: Entity;
   index: number;
   score: number;
-  extractionRank: number;
+  wormholeRank: number;
   conquestRank: number;
   alliance?: boolean;
   className?: string;
@@ -134,8 +134,8 @@ export const GrandLeaderboardItem = ({
       {!hideRanks && (
         <>
           <div className="font-bold w-fit bg-cyan-700 px-2">
-            {rankToScore(extractionRank)}
-            <p className="inline opacity-70">[{extractionRank.toLocaleString() + rankSuffix(extractionRank)}]</p>
+            {rankToScore(wormholeRank)}
+            <p className="inline opacity-70">[{wormholeRank.toLocaleString() + rankSuffix(wormholeRank)}]</p>
           </div>
           <div className="font-bold w-fit bg-cyan-700 px-2">
             {rankToScore(conquestRank)}

@@ -48,7 +48,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         wormholeAsteroidSlot: 0n,
         maxLevel: 1n,
         mapId: 6,
-        conquestPoints: 0n * BigInt(SCALE),
+        primodium: 0n * BigInt(SCALE),
       },
 
       P_ColonyShipConfig: {

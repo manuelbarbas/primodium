@@ -4,7 +4,7 @@ import { components } from "src/network/components";
 import { SPEED_SCALE } from "src/util/constants";
 
 export const useClaimConquestTime = (asteroidEntity: Entity) => {
-  const points = components.Asteroid.use(asteroidEntity)?.conquestPoints ?? 0n;
+  const points = components.Asteroid.use(asteroidEntity)?.primodium ?? 0n;
   const owner = components.OwnedBy.use(asteroidEntity)?.value as Entity | undefined;
   const lastConquered = components.LastConquered.use(asteroidEntity)?.value ?? 0n;
   const time = components.Time.use()?.value ?? 0n;

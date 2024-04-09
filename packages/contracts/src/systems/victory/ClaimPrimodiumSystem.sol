@@ -8,22 +8,22 @@ import { LibScore } from "libraries/LibScore.sol";
 import { LibShardAsteroid } from "libraries/LibShardAsteroid.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
-contract ConquestSystem is PrimodiumSystem {
-  function claimConquestPoints(bytes32 asteroidEntity) public {
+contract ClaimPrimodiumSystem is PrimodiumSystem {
+  function claimPrimodium(bytes32 asteroidEntity) public {
     bytes32 playerEntity = _player();
     bytes32 ownerEntity = OwnedBy.get(asteroidEntity);
-    require(ownerEntity == playerEntity, "[Conquest] Only owner can claim conquest points");
+    require(ownerEntity == playerEntity, "[Claim Primodium] Only owner can claim Primodium");
 
-    uint256 conquestPoints = Asteroid.getConquestPoints(asteroidEntity);
-    require(conquestPoints > 0, "[Conquest] This asteroid does not generate conquest points");
+    uint256 primodium = Asteroid.getPrimodium(asteroidEntity);
+    require(primodium > 0, "[Claim Primodium] This asteroid does not generate Primodium");
 
     uint256 lastConquered = LastConquered.get(asteroidEntity);
     uint256 holdTime = (P_ConquestConfig.getHoldTime() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
     bool canConquer = lastConquered + holdTime <= block.timestamp;
 
-    require(canConquer, "[Conquest] Asteroid hasn't been held long enough to claim conquest points");
+    require(canConquer, "[Claim Primodium] Asteroid hasn't been held long enough to claim Primodium");
 
-    LibScore.addScore(playerEntity, EScoreType.Conquest, conquestPoints);
+    LibScore.addScore(playerEntity, EScoreType.Primodium, primodium);
 
     LastConquered.set(asteroidEntity, block.timestamp);
   }
@@ -44,7 +44,7 @@ contract ConquestSystem is PrimodiumSystem {
       uint256 holdPct = ((endTime - lastConquered) * 100000) / lifespan;
       LibScore.addScore(
         ownerEntity,
-        EScoreType.Conquest,
+        EScoreType.Primodium,
         (holdPct * P_ConquestConfig.getShardAsteroidPoints()) / 100000
       );
     }

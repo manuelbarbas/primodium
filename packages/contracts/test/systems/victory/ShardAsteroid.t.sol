@@ -153,7 +153,7 @@ contract ShardAsteroidTest is PrimodiumTest {
     world.Primodium__claimShardAsteroidPoints(asteroidEntity);
 
     uint256 oneTenthOfPoints = config.shardAsteroidPoints / 10;
-    assertEq(Score.get(addressToEntity(alice), uint8(EScoreType.Conquest)), oneTenthOfPoints);
+    assertEq(Score.get(addressToEntity(alice), uint8(EScoreType.Primodium)), oneTenthOfPoints);
   }
 
   function testShardAsteroidGameOver() public {
@@ -178,7 +178,7 @@ contract ShardAsteroidTest is PrimodiumTest {
 
     world.Primodium__claimShardAsteroidPoints(asteroidEntity);
 
-    assertEq(Score.get(addressToEntity(alice), uint8(EScoreType.Conquest)), 0);
+    assertEq(Score.get(addressToEntity(alice), uint8(EScoreType.Primodium)), 0);
   }
 
   function testShardAsteroidPastLifeSpanScore() public {
@@ -205,7 +205,7 @@ contract ShardAsteroidTest is PrimodiumTest {
 
     world.Primodium__claimShardAsteroidPoints(asteroidEntity);
 
-    assertEq(Score.get(addressToEntity(alice), uint8(EScoreType.Conquest)), points);
+    assertEq(Score.get(addressToEntity(alice), uint8(EScoreType.Primodium)), points);
   }
 
   // nothing should happen if the asteroid is not owned
