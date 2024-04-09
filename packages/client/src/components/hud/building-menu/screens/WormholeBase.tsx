@@ -11,7 +11,7 @@ import { useWormholeBaseCooldown } from "src/hooks/wormhole/useWormholeBaseCoold
 import { useWormholeResource } from "src/hooks/wormhole/useWormholeResource";
 import { components } from "src/network/components";
 import { wormholeDeposit } from "src/network/setup/contractCalls/wormholeDeposit";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { EntityType, ResourceEnumLookup } from "src/util/constants";
 import { formatResourceCount, formatTime, parseResourceCount } from "src/util/number";
 import { BuildingInfo } from "../widgets/BuildingInfo";
@@ -50,9 +50,9 @@ const WormholeDeposit: React.FC<{ building: Entity; asteroid: Entity }> = ({ bui
         <p className="text-xs">Next resource in {formatTime(timeUntilNextResource)}</p>
         <div className="flex gap-1 mb-6 w-full text-xs items-center justify-center">
           <div className="flex flex-col items-center h-full">
-            <p>Current: {getBlockTypeName(wormholeResource)}</p>
+            <p>Current: {getEntityTypeName(wormholeResource)}</p>
             <p className="opacity-50">
-              {(multiplier ?? 1n).toString()} pts / {getBlockTypeName(wormholeResource)}
+              {(multiplier ?? 1n).toString()} pts / {getEntityTypeName(wormholeResource)}
             </p>
           </div>
           <NumberInput count={count} onChange={setCount} max={Number(max)} />

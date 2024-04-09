@@ -24,7 +24,7 @@ export const useConquestAsteroid = (entity: Entity) => {
     const explodeTime = conquestAsteroid.spawnTime + lifespan;
     const canExplode = time >= explodeTime;
     const timeUntilExplode = canExplode ? 0n : Number(explodeTime - time);
-    const dripPerSec = canExplode ? 0n : conquestConfigData.conquestAsteroidPoints / lifespan;
+    const dripPerSec = conquestConfigData.conquestAsteroidPoints / lifespan;
 
     let unclaimedPoints = 0n;
     if (!!owner && owner === player) {

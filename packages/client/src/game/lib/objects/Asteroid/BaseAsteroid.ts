@@ -45,19 +45,6 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
     return this;
   }
 
-  despawn() {
-    this.remove([
-      this.asteroidSprite,
-      this.outlineSprite,
-      // this.emblemSprite,
-      // this.asteroidLabel,
-      this.orbitRing,
-    ]);
-    this.destroy(true);
-    this.spawned = false;
-    return this;
-  }
-
   setScale(x?: number, y?: number) {
     this.asteroidSprite.setScale(x, y);
     this.outlineSprite.setScale(x, y);
