@@ -42,11 +42,11 @@ contract ConquestSystem is PrimodiumSystem {
     uint256 endTime = block.timestamp > explodeTime ? explodeTime : block.timestamp;
 
     if (endTime > lastConquered) {
-      uint256 holdPctX1000 = ((endTime - lastConquered) * 1000) / lifespan;
+      uint256 holdPct = ((endTime - lastConquered) * 100000) / lifespan;
       LibScore.addScore(
         ownerEntity,
         EScoreType.Conquest,
-        (holdPctX1000 * P_ConquestConfig.getConquestAsteroidPoints()) / 1000
+        (holdPctX1000 * P_ConquestConfig.getConquestAsteroidPoints()) / 100000
       );
     }
 

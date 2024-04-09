@@ -1,3 +1,4 @@
+import { bigIntMax } from "@latticexyz/common/utils";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { components } from "src/network/components";
@@ -29,8 +30,9 @@ export const useConquestAsteroid = (entity: Entity) => {
     let unclaimedPoints = 0n;
     if (!!owner && owner === player) {
       const endTime = time > explodeTime ? explodeTime : time;
-      const timeSinceClaimed = endTime - lastConquered;
-      unclaimedPoints = dripPerSec * timeSinceClaimed + (canExplode ? conquestConfigData.conquestAsteroidPoints : 0n);
+      const timeSinceClaimed = bigIntMax(0n, endTime - lastConquered);
+      const holdPct = (timeSinceClaimed * 100000n) / lifespan;
+      unclaimedPoints = (holdPct * conquestConfigData.conquestAsteroidPoints) / 100000n;
     }
 
     return {
@@ -44,6 +46,7 @@ export const useConquestAsteroid = (entity: Entity) => {
       canExplode,
       dripPerSec,
       unclaimedPoints,
+      explodePoints: conquestConfigData.conquestAsteroidPoints,
     };
   }, [conquestConfigData, conquestAsteroid, worldSpeed, time, owner, player, lastConquered]);
 
