@@ -117,14 +117,14 @@ export enum EObjectives {
   BuildShipyard,
   BuildMarket,
 
-  HasMinutemanMarines,
-  HasTridentMarines,
-  HasLightningShips,
-  HasAnvilDrones,
-  HasHammerDrones,
-  HasAegisDrones,
-  HasStingerDrones,
-  HasColonyShip,
+  TrainMinutemanMarines,
+  TrainTridentMarines,
+  TrainLightningCrafts,
+  TrainAnvilDrones,
+  TrainHammerDrones,
+  TrainAegisDrones,
+  TrainStingerDrones,
+  TrainColonyShip,
 
   ExpandBase1,
 

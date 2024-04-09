@@ -144,34 +144,83 @@ export const Objectives = new Map<EObjectives, Objective & { type: ObjectiveType
         "Minutemen are weak units that are trained quickly, move fast, and carry lots of cargo. To train, select a workshop and press TRAIN UNITS.",
     },
   ],
-  // [
-  //   EObjectives.TrainTridentMarines,
-  //   "Select the workshop you placed on the map to train Trident marines. Trident marines are basic well-rounded units.",
-  // ],
-  // [
-  //   EObjectives.TrainLightningShips,
-  //   "Upgrade the workshop you placed on the map to Level 2 to unlock the ability to train Lightning Ships. Lightning Ships are weak but travel extremely fast without other types of ships.",
-  // ],
-  // [
-  //   EObjectives.TrainAnvilDrones,
-  //   "Select the drone factory you placed on the map to build anvil drones. Anvil drones are standard defensive drones.",
-  // ],
-  // [
-  //   EObjectives.TrainHammerDrones,
-  //   "Select the drone factory you placed on the map to build hammer drones. Hammer drones are standard attacking drones.",
-  // ],
-  // [
-  //   EObjectives.TrainAegisDrones,
-  //   "Upgrade the drone factory you placed on the map to Level 2 to unlock the ability to build Aegis drones. Aegis drones are strong but slow defensive units and take up more housing.",
-  // ],
-  // [
-  //   EObjectives.TrainStingerDrones,
-  //   "Upgrade the drone factory you placed on the map to Level 3 to unlock the ability to build Stinger drones. Stinger drones are strong but slow offensive units and take up more housing.",
-  // ],
-  // [
-  //   EObjectives.BuildColonyShips,
-  //   "Select the Shipyard you placed on the map to build a Colony Ship. Colony ships can decrypt other asteroids and colonize on them.",
-  // ],
+  [
+    EObjectives.TrainTridentMarines,
+    {
+      type: "Train",
+      unitType: EntityType.MinutemanMarine,
+      unitCount: 16n,
+      requiredMainBase: 2n,
+      description:
+        "Select the workshop you placed on the map to train Trident marines. Trident marines are basic well-rounded units.",
+    },
+  ],
+  [
+    EObjectives.TrainLightningCrafts,
+    {
+      type: "Train",
+      unitType: EntityType.LightningCraft,
+      unitCount: 16n,
+      requiredMainBase: 2n,
+      description:
+        "Upgrade the workshop you placed on the map to Level 2 to unlock the ability to train Lightning Ships. Lightning Ships are weak but travel extremely fast without other types of ships.",
+    },
+  ],
+  [
+    EObjectives.TrainAnvilDrones,
+    {
+      type: "Train",
+      unitType: EntityType.AnvilDrone,
+      unitCount: 16n,
+      requiredMainBase: 2n,
+      description:
+        "Select the drone factory you placed on the map to build anvil drones. Anvil drones are standard defensive drones.",
+    },
+  ],
+  [
+    EObjectives.TrainHammerDrones,
+    {
+      type: "Train",
+      unitType: EntityType.HammerDrone,
+      unitCount: 16n,
+      requiredMainBase: 2n,
+      description:
+        "Select the drone factory you placed on the map to build hammer drones. Hammer drones are standard attacking drones.",
+    },
+  ],
+  [
+    EObjectives.TrainAegisDrones,
+    {
+      type: "Train",
+      unitType: EntityType.AegisDrone,
+      unitCount: 16n,
+      requiredMainBase: 2n,
+      description:
+        "Upgrade the drone factory you placed on the map to Level 2 to unlock the ability to build Aegis drones. Aegis drones are strong but slow defensive units and take up more housing.",
+    },
+  ],
+  [
+    EObjectives.TrainStingerDrones,
+    {
+      type: "Train",
+      unitType: EntityType.StingerDrone,
+      unitCount: 16n,
+      requiredMainBase: 2n,
+      description:
+        "Upgrade the drone factory you placed on the map to Level 3 to unlock the ability to build Stinger drones. Stinger drones are strong but slow offensive units and take up more housing.",
+    },
+  ],
+  [
+    EObjectives.TrainColonyShip,
+    {
+      type: "Train",
+      unitType: EntityType.ColonyShip,
+      unitCount: 16n,
+      requiredMainBase: 2n,
+      description:
+        "Select the Shipyard you placed on the map to build a Colony Ship. Colony ships can decrypt other asteroids and colonize on them.",
+    },
+  ],
   // [
   //   EObjectives.ExpandBase1,
   //   "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",

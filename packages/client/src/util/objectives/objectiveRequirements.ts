@@ -3,6 +3,7 @@ import { getHasRequiredBuilding } from "./getHasRequiredBuilding";
 import { getHasRequiredMainBase } from "./getHasRequiredMainBase";
 import { getHasRequiredObjectives } from "./getHasRequiredObjectives";
 import { getHasRequiredRewards, getRewardUtilitiesRequirement } from "./getHasRequiredRewards";
+import { getHasRequiredUnit } from "./getHasRequiredUnit";
 import { getHasRequiredBuildingUpgrade } from "./getHasRequiredUpgrade";
 import { getObjective } from "./objectives";
 import { ObjectiveReq } from "./types";
@@ -31,5 +32,6 @@ export function getAllObjectiveRequirements(asteroidEntity: Entity, objectiveEnt
   const reqs: ObjectiveReq[] = getRewardUtilitiesRequirement(objectiveEntity, asteroidEntity);
   if (objective.type === "Build") reqs.push(getHasRequiredBuilding(asteroidEntity, objective));
   if (objective.type === "Upgrade") reqs.push(getHasRequiredBuildingUpgrade(asteroidEntity, objective));
+  if (objective.type === "Train") reqs.push(getHasRequiredUnit(asteroidEntity, objective));
   return reqs;
 }

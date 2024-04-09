@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { EObjectives } from "contracts/config/enums";
 
-export type ObjectiveType = "Build" | "Upgrade";
+export type ObjectiveType = "Build" | "Upgrade" | "Train";
 
 // Define a base type for common properties
 export type BaseObjective = {
@@ -21,8 +21,14 @@ export type UpgradeObjective = BaseObjective & {
   level: bigint;
 };
 
+export type TrainUnitObjective = BaseObjective & {
+  type: "Train";
+  unitType: Entity;
+  unitCount: bigint;
+};
+
 // Union of all Objective types
-export type Objective = BuildObjective | UpgradeObjective;
+export type Objective = BuildObjective | UpgradeObjective | TrainUnitObjective;
 
 export type ObjectiveReq = {
   tooltipText?: string;
