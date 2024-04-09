@@ -7,7 +7,7 @@ import { addressToEntity } from "src/utils.sol";
 import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
-import { UnitCount, MaxResourceCount, Asteroid, Home, OwnedBy, ResourceCount, ColonySlots, P_Transportables, P_UnitPrototypes, P_EnumToPrototype, P_ColonySlotsConfigData, P_ColonySlotsConfig, ColonySlotsInstallments, ColonySlotsInstallmentsData } from "codegen/index.sol";
+import { UnitCount, MaxResourceCount, Asteroid, Home, OwnedBy, ResourceCount, ColonySlots, P_Transportables, P_UnitPrototypes, P_EnumToPrototype, P_ColonySlotsConfigData, P_ColonySlotsConfig, ColonySlotsInstallments } from "codegen/index.sol";
 
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
@@ -101,11 +101,30 @@ contract LibColonyTest is PrimodiumTest {
     assertEq(LibColony.getColonySlotsCostMultiplier(playerEntity), 12);
   }
 
+  function testPayForColonySlotsCapacityInput() public {
+    P_ColonySlotsConfigData memory costData = P_ColonySlotsConfig.get();
+    uint256[] memory emptyPaymentAmounts = new uint256[](0);
+    uint256[] memory undersizedPaymentAmounts = new uint256[](costData.resources.length - 1);
+    uint256[] memory oversizedPaymentAmounts = new uint256[](costData.resources.length + 1);
+
+    // Pass the various incorrect payment data
+    vm.expectRevert("[SpendResources] Payment data does not match cost data");
+    world.Primodium__payForColonySlotsCapacity(creatorHomeAsteroid, emptyPaymentAmounts);
+
+    vm.expectRevert("[SpendResources] Payment data does not match cost data");
+    world.Primodium__payForColonySlotsCapacity(creatorHomeAsteroid, undersizedPaymentAmounts);
+
+    vm.expectRevert("[SpendResources] Payment data does not match cost data");
+    world.Primodium__payForColonySlotsCapacity(creatorHomeAsteroid, oversizedPaymentAmounts);
+
+    // Pass a player entity instead of an asteroid entity
+    vm.expectRevert("[Colony] Paying entity is not an asteroid");
+    world.Primodium__payForColonySlotsCapacity(playerEntity, costData.amounts);
+  }
+
   function testPayForColonySlotsCapacity() public {
     P_ColonySlotsConfigData memory costData = P_ColonySlotsConfig.get();
-    P_ColonySlotsConfigData memory payment;
-    payment.resources = new uint8[](costData.resources.length);
-    payment.amounts = new uint256[](costData.amounts.length);
+    uint256[] memory paymentAmounts = new uint256[](costData.resources.length);
 
     uint256 colonySlotsCostMultiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);
     uint256 currentSlotCapacity = ColonySlots.getCapacity(playerEntity);
@@ -113,61 +132,39 @@ contract LibColonyTest is PrimodiumTest {
     assertEq(currentSlotCapacity, 1);
     assertEq(colonySlotsCostMultiplier, currentSlotCapacity * 4);
 
-    // Pass empty payment data
-    vm.expectRevert("[SpendResources] Payment data does not match cost data");
-    world.Primodium__payForColonySlotsCapacity(creatorHomeAsteroid, payment);
-
-    // ------------
-
-    // Pass payment data with different resources but correct amounts
-    for (uint256 i = 0; i < costData.resources.length; i++) {
-      uint8 resource = costData.resources[i] + 1;
-      uint256 amount = costData.amounts[i] * colonySlotsCostMultiplier;
-      MaxResourceCount.set(creatorHomeAsteroid, resource, amount);
-      ResourceCount.set(creatorHomeAsteroid, resource, amount);
-      payment.resources[i] = resource;
-      payment.amounts[i] = amount;
-    }
-    vm.expectRevert("[SpendResources] Payment data does not match cost data");
-    world.Primodium__payForColonySlotsCapacity(creatorHomeAsteroid, payment);
-
-    // ------------
-
-    // properly structure the payment data but don't own enough resources
+    // properly structure the payment data but don't own any resources
     for (uint256 i = 0; i < costData.resources.length; i++) {
       uint8 resource = costData.resources[i];
       uint256 amount = costData.amounts[i] * colonySlotsCostMultiplier;
       MaxResourceCount.set(creatorHomeAsteroid, resource, amount);
       ResourceCount.set(creatorHomeAsteroid, resource, 0);
-      payment.resources[i] = resource;
-      payment.amounts[i] = amount;
+      paymentAmounts[i] = amount;
     }
     vm.expectRevert("[SpendResources] Not enough resources to spend");
-    world.Primodium__payForColonySlotsCapacity(creatorHomeAsteroid, payment);
+    world.Primodium__payForColonySlotsCapacity(creatorHomeAsteroid, paymentAmounts);
 
     // ------------
 
-    // properly get the max resources and resource count for each resource in costData
+    // properly pay for the colony slot in full
     for (uint256 i = 0; i < costData.resources.length; i++) {
       uint8 resource = costData.resources[i];
       uint256 amount = costData.amounts[i] * colonySlotsCostMultiplier;
       MaxResourceCount.set(creatorHomeAsteroid, resource, amount);
       ResourceCount.set(creatorHomeAsteroid, resource, amount);
-      payment.resources[i] = resource;
-      payment.amounts[i] = amount;
+      paymentAmounts[i] = amount;
     }
 
-    world.Primodium__payForColonySlotsCapacity(creatorHomeAsteroid, payment);
+    world.Primodium__payForColonySlotsCapacity(creatorHomeAsteroid, paymentAmounts);
     currentSlotCapacity = ColonySlots.getCapacity(playerEntity);
     uint256 prevColonySlotsCostMultiplier = colonySlotsCostMultiplier;
     colonySlotsCostMultiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);
     assertEq(currentSlotCapacity, 2);
     assertEq(colonySlotsCostMultiplier, currentSlotCapacity * 4);
 
-    // Check that installments amounts are currently empty (resources are already initialized from first payment)
-    ColonySlotsInstallmentsData memory installments = ColonySlotsInstallments.get(playerEntity);
-    for (uint256 i = 0; i < payment.resources.length; i++) {
-      assertEq(installments.amounts[i], 0, "installment amounts should be empty");
+    // Check that installment amounts are currently empty (resources are already initialized from first payment)
+    for (uint256 i = 0; i < costData.resources.length; i++) {
+      uint256 installment = ColonySlotsInstallments.get(playerEntity, i);
+      assertEq(installment, 0, "installment amounts should be empty");
     }
 
     // ------------
@@ -178,27 +175,27 @@ contract LibColonyTest is PrimodiumTest {
       uint256 amount = costData.amounts[i] * prevColonySlotsCostMultiplier;
       MaxResourceCount.set(creatorHomeAsteroid, resource, amount);
       ResourceCount.set(creatorHomeAsteroid, resource, amount);
-      payment.resources[i] = resource;
-      payment.amounts[i] = amount;
+      paymentAmounts[i] = amount;
     }
-    bool fullPayment = world.Primodium__payForColonySlotsCapacity(creatorHomeAsteroid, payment);
+    bool fullPayment = world.Primodium__payForColonySlotsCapacity(creatorHomeAsteroid, paymentAmounts);
     assertEq(fullPayment, false);
     currentSlotCapacity = ColonySlots.getCapacity(playerEntity);
     colonySlotsCostMultiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);
     assertEq(currentSlotCapacity, 2);
     assertEq(colonySlotsCostMultiplier, currentSlotCapacity * 4);
-    installments = ColonySlotsInstallments.get(playerEntity);
 
-    // because foundry doesn't have a way to compare uint8[] arrays, we need to compare each element
-    for (uint256 i = 0; i < payment.resources.length; i++) {
-      assertEq(installments.resources[i], payment.resources[i], "installment resources should match payment resources");
+    for (uint256 i = 0; i < costData.resources.length; i++) {
+      uint256 installment = ColonySlotsInstallments.get(playerEntity, i);
+      assertEq(installment, paymentAmounts[i], "installment resources should match payment resources");
     }
-    assertEq(installments.amounts, payment.amounts, "installment amounts should match payment amounts");
 
     // ------------
 
     // check additional installment doesn't overwrite the previous one, and do it for just one resource
-    ColonySlotsInstallmentsData memory prevInstallments = installments;
+    uint256[] memory prevInstallments = new uint256[](costData.resources.length);
+    for (uint256 i = 0; i < costData.resources.length; i++) {
+      prevInstallments[i] = ColonySlotsInstallments.get(playerEntity, i);
+    }
 
     for (uint256 i = 0; i < costData.resources.length; i++) {
       uint8 resource = costData.resources[i];
@@ -211,33 +208,25 @@ contract LibColonyTest is PrimodiumTest {
       }
       MaxResourceCount.set(creatorHomeAsteroid, resource, amount);
       ResourceCount.set(creatorHomeAsteroid, resource, amount);
-      payment.resources[i] = resource;
-      payment.amounts[i] = amount;
+      paymentAmounts[i] = amount;
     }
-    fullPayment = world.Primodium__payForColonySlotsCapacity(creatorHomeAsteroid, payment);
+    fullPayment = world.Primodium__payForColonySlotsCapacity(creatorHomeAsteroid, paymentAmounts);
     assertEq(fullPayment, false);
     currentSlotCapacity = ColonySlots.getCapacity(playerEntity);
     colonySlotsCostMultiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);
     assertEq(currentSlotCapacity, 2);
     assertEq(colonySlotsCostMultiplier, currentSlotCapacity * 4);
-    installments = ColonySlotsInstallments.get(playerEntity);
 
-    // because foundry doesn't have a way to compare uint8[] arrays, we need to compare each element
-    for (uint256 i = 0; i < payment.resources.length; i++) {
-      assertEq(installments.resources[i], payment.resources[i], "installment resources should match payment resources");
+    // add the amounts of the payment and the previous installment and compare to the installment table
+    for (uint i = 0; i < costData.resources.length; i++) {
+      uint256 totalInstallmentsCheck = paymentAmounts[i] + prevInstallments[i];
+      uint256 installment = ColonySlotsInstallments.get(playerEntity, i);
+      assertEq(
+        installment,
+        totalInstallmentsCheck,
+        "installment table amounts should match paymentAmounts + prevInstallment amounts"
+      );
     }
-
-    uint256[] memory totalInstallmentsCheck = new uint256[](payment.resources.length);
-    // add the amounts of the payment and the previous installment
-    for (uint i = 0; i < payment.resources.length; i++) {
-      totalInstallmentsCheck[i] = payment.amounts[i] + prevInstallments.amounts[i];
-    }
-
-    assertEq(
-      installments.amounts,
-      totalInstallmentsCheck,
-      "installment amounts should match payment + prevInstallment amounts"
-    );
 
     // ------------
 
@@ -245,44 +234,37 @@ contract LibColonyTest is PrimodiumTest {
 
     assertGt(costData.resources.length, 1, "Colony Slots Config Data resources length is less than 2 for next test");
     // get remaining amount required for all resources
-    P_ColonySlotsConfigData memory remainingCost;
-    remainingCost.resources = new uint8[](costData.resources.length);
-    remainingCost.amounts = new uint256[](costData.amounts.length);
+    uint256[] memory remainingCost = new uint256[](costData.resources.length);
     for (uint256 i = 0; i < costData.resources.length; i++) {
-      uint8 resource = costData.resources[i];
-      uint256 amount = costData.amounts[i] * colonySlotsCostMultiplier - installments.amounts[i];
-      remainingCost.resources[i] = resource;
-      remainingCost.amounts[i] = amount;
+      remainingCost[i] = costData.amounts[i] * colonySlotsCostMultiplier - ColonySlotsInstallments.get(playerEntity, i);
     }
 
     for (uint256 i = 0; i < costData.resources.length; i++) {
       uint8 resource = costData.resources[i];
       uint256 amount;
       if (i == 0) {
-        amount = remainingCost.amounts[i] + 1;
+        amount = remainingCost[i] + 1;
       } else {
         amount = 0;
       }
       MaxResourceCount.set(creatorHomeAsteroid, resource, amount);
       ResourceCount.set(creatorHomeAsteroid, resource, amount);
-      payment.resources[i] = resource;
-      payment.amounts[i] = amount;
+      paymentAmounts[i] = amount;
     }
 
-    fullPayment = world.Primodium__payForColonySlotsCapacity(creatorHomeAsteroid, payment);
+    fullPayment = world.Primodium__payForColonySlotsCapacity(creatorHomeAsteroid, paymentAmounts);
     assertEq(fullPayment, false);
     currentSlotCapacity = ColonySlots.getCapacity(playerEntity);
     colonySlotsCostMultiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);
     assertEq(currentSlotCapacity, 2);
     assertEq(colonySlotsCostMultiplier, currentSlotCapacity * 4);
-    installments = ColonySlotsInstallments.get(playerEntity);
 
     for (uint256 i = 0; i < costData.resources.length; i++) {
-      uint256 asteroidResourceAmounts = ResourceCount.get(creatorHomeAsteroid, remainingCost.resources[i]);
+      uint256 asteroidResourceAmounts = ResourceCount.get(creatorHomeAsteroid, costData.resources[i]);
       if (i == 0) {
         assertEq(asteroidResourceAmounts, 1, "no rebate from overpayment");
         assertEq(
-          installments.amounts[i],
+          ColonySlotsInstallments.get(playerEntity, i),
           costData.amounts[i] * colonySlotsCostMultiplier,
           "installments should be at full cost for the resource that was paid for in full"
         );
@@ -298,33 +280,28 @@ contract LibColonyTest is PrimodiumTest {
     assertGt(costData.resources.length, 1, "Colony Slots Config Data resources length is less than 2 for next test");
     // get remaining amount required for all resources
     for (uint256 i = 0; i < costData.resources.length; i++) {
-      uint8 resource = costData.resources[i];
-      uint256 amount = costData.amounts[i] * colonySlotsCostMultiplier - installments.amounts[i];
-      remainingCost.resources[i] = resource;
-      remainingCost.amounts[i] = amount;
+      remainingCost[i] = costData.amounts[i] * colonySlotsCostMultiplier - ColonySlotsInstallments.get(playerEntity, i);
     }
 
     for (uint256 i = 0; i < costData.resources.length; i++) {
       uint8 resource = costData.resources[i];
-      uint256 amount = remainingCost.amounts[i] + 2;
+      uint256 amount = remainingCost[i] + 2;
       MaxResourceCount.set(creatorHomeAsteroid, resource, amount);
       ResourceCount.set(creatorHomeAsteroid, resource, amount);
-      payment.resources[i] = resource;
-      payment.amounts[i] = amount;
+      paymentAmounts[i] = amount;
     }
 
-    fullPayment = world.Primodium__payForColonySlotsCapacity(creatorHomeAsteroid, payment);
+    fullPayment = world.Primodium__payForColonySlotsCapacity(creatorHomeAsteroid, paymentAmounts);
     assertEq(fullPayment, true);
     currentSlotCapacity = ColonySlots.getCapacity(playerEntity);
     colonySlotsCostMultiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);
     assertEq(currentSlotCapacity, 3);
     assertEq(colonySlotsCostMultiplier, currentSlotCapacity * 4);
-    installments = ColonySlotsInstallments.get(playerEntity);
 
     for (uint256 i = 0; i < costData.resources.length; i++) {
-      uint256 asteroidResourceAmounts = ResourceCount.get(creatorHomeAsteroid, remainingCost.resources[i]);
+      uint256 asteroidResourceAmounts = ResourceCount.get(creatorHomeAsteroid, costData.resources[i]);
       assertEq(asteroidResourceAmounts, 2, "missing a rebate from overpayment");
-      assertEq(installments.amounts[i], 0, "installments should be reset to 0");
+      assertEq(ColonySlotsInstallments.get(playerEntity, i), 0, "installments should be reset to 0");
     }
   }
 

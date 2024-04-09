@@ -399,12 +399,11 @@ export const worldInput = {
     },
 
     ColonySlotsInstallments: {
-      key: ["playerEntity"],
+      key: ["playerEntity", "resourceIndex"],
       schema: {
         playerEntity: "bytes32",
-        // mud doesnt recognize EResource arrays so we will manually convert them
-        resources: "uint8[]",
-        amounts: "uint256[]",
+        resourceIndex: "uint256", // index of the resource in the P_ColonySlotsConfig
+        amounts: "uint256",
       },
     },
 

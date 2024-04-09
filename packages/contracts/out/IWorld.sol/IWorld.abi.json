@@ -923,21 +923,9 @@
         "internalType": "bytes32"
       },
       {
-        "name": "payment",
-        "type": "tuple",
-        "internalType": "struct P_ColonySlotsConfigData",
-        "components": [
-          {
-            "name": "resources",
-            "type": "uint8[]",
-            "internalType": "uint8[]"
-          },
-          {
-            "name": "amounts",
-            "type": "uint256[]",
-            "internalType": "uint256[]"
-          }
-        ]
+        "name": "paymentAmounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
       }
     ],
     "outputs": [

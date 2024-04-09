@@ -80,68 +80,54 @@ library LibResource {
   /// @notice Only one can be bought at a time
   function spendColonySlotsCapacityResources(
     bytes32 asteroidEntity,
-    P_ColonySlotsConfigData calldata payment
+    uint256[] calldata paymentAmounts
   ) internal returns (bool) {
     bytes32 playerEntity = OwnedBy.get(asteroidEntity);
     uint256 multiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);
 
-    // get the initial cost of the slot for each resource type from prototype
+    // Get the initial cost of the slot for each resource type from prototype
     P_ColonySlotsConfigData memory costData = P_ColonySlotsConfig.get();
 
-    // multiply the cost amounts with the multiplier
+    // Multiply the cost amounts with the multiplier
     for (uint256 i = 0; i < costData.resources.length; i++) {
       costData.amounts[i] *= multiplier;
     }
 
-    // require that the payment data has the same resources as the cost data
+    // Require that the payment data has the same resources as the cost data
     require(
-      payment.resources.length == costData.resources.length,
+      paymentAmounts.length == costData.resources.length,
       "[SpendResources] Payment data does not match cost data"
     );
-
-    // iterate through the payment data and cost data to ensure the resource types match
-    for (uint256 i = 0; i < costData.resources.length; i++) {
-      require(payment.resources[i] == costData.resources[i], "[SpendResources] Payment data does not match cost data");
-    }
-
-    // get previous payment installment data, for each resource type
-    P_ColonySlotsConfigData memory installmentData = P_ColonySlotsConfigData(
-      ColonySlotsInstallments.getResources(playerEntity),
-      ColonySlotsInstallments.getAmounts(playerEntity)
-    );
-
-    // if installmentData is empty, set it to have the same resources as the cost data, but with 0 amounts
-    if (installmentData.resources.length == 0) {
-      installmentData.resources = costData.resources;
-      installmentData.amounts = new uint256[](costData.resources.length);
-    }
 
     // todo: the following might be useful as a installment utility function that can be used in multiple places in the future
     bool fullPayment = true;
     // check if payment + previous installment is greater than or equal to the cost of the slot, for each resource type
     for (uint256 i = 0; i < costData.resources.length; i++) {
+      uint256 previousInstallment = ColonySlotsInstallments.get(playerEntity, i);
+      uint256 paymentAmount = paymentAmounts[i];
+      uint256 totalCost = costData.amounts[i];
+
       // if not enough to pay in full, spend the payment up to the costData amount and update the installment data and set fullPayment false
-      if (payment.amounts[i] + installmentData.amounts[i] < costData.amounts[i]) {
+      if (paymentAmount + previousInstallment < totalCost) {
         fullPayment = false;
-        spendResource(asteroidEntity, playerEntity, payment.resources[i], payment.amounts[i]);
-        installmentData.amounts[i] += payment.amounts[i];
+        spendResource(asteroidEntity, playerEntity, costData.resources[i], paymentAmount);
+        ColonySlotsInstallments.set(playerEntity, i, paymentAmount + previousInstallment);
       } else {
         // if this resource is filled, spend the remaining required cost, update installment data and iterate to the next resource
-        uint256 remainingCost = costData.amounts[i] - installmentData.amounts[i];
-        spendResource(asteroidEntity, playerEntity, payment.resources[i], remainingCost);
-        installmentData.amounts[i] += remainingCost;
+        uint256 remainingCost = totalCost - previousInstallment;
+        spendResource(asteroidEntity, playerEntity, costData.resources[i], remainingCost);
+        ColonySlotsInstallments.set(playerEntity, i, totalCost);
       }
     }
 
-    // if not full payment, set the installment data to the new installment data and return false.
-    // if full payment, empty the installment data and return true.
-    if (!fullPayment) {
-      ColonySlotsInstallments.set(playerEntity, installmentData.resources, installmentData.amounts);
-      return false;
-    } else {
-      ColonySlotsInstallments.set(playerEntity, costData.resources, new uint256[](costData.resources.length));
-      return true;
+    if (fullPayment) {
+      // if full payment, iterate through and empty the installment data.
+      for (uint256 i = 0; i < costData.resources.length; i++) {
+        ColonySlotsInstallments.set(playerEntity, i, 0);
+      }
     }
+
+    return fullPayment;
   }
 
   /**
