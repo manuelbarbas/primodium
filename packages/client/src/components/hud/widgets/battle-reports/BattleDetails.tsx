@@ -8,9 +8,10 @@ import { useMud } from "src/hooks";
 import { usePlayerOwner } from "src/hooks/usePlayerOwner";
 import { components } from "src/network/components";
 import { getEntityTypeName, toRomanNumeral } from "src/util/common";
-import { BackgroundImage, EntityType, ObjectiveEntityLookup, ResourceImage } from "src/util/constants";
+import { BackgroundImage, EntityType, ResourceImage } from "src/util/constants";
 import { entityToFleetName, entityToRockName } from "src/util/name";
 import { formatResourceCount } from "src/util/number";
+import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 
 export const UnitStatus: React.FC<{
   unit: Entity;
@@ -57,11 +58,9 @@ export const BattleDetails: React.FC<{
   const position = components.Position.use(battle?.rock as Entity);
 
   useEffect(() => {
-    const hasCompletedObjective = components.CompletedObjective.get(
-      ObjectiveEntityLookup[EObjectives.OpenBattleReport]
-    )?.value;
-    if (hasCompletedObjective) return;
-    components.IsObjectiveClaimable.set({ value: true }, ObjectiveEntityLookup[EObjectives.OpenBattleReport]);
+    const selectedAsteroid = components.SelectedRock.get()?.value;
+    if (!selectedAsteroid) return;
+    makeObjectiveClaimable(selectedAsteroid, EObjectives.OpenBattleReport);
   }, []);
 
   if (!battle) return <></>;

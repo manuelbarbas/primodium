@@ -133,7 +133,7 @@ export enum EObjectives {
   TransferToFleet,
   RecallFleet,
   LandFleet,
-  MoveFleet,
+  SendFleet,
   BattleAsteroid,
   BattleFleet,
   SuccessfulRaid,

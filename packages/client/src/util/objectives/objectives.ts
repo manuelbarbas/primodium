@@ -294,13 +294,53 @@ export const Objectives = new Map<EObjectives, Objective>([
       description: "Open a battle report to see the results of a battle.",
     },
   ],
-
-  //   CreateFleet,
-  //   TransferResourcesToAsteroid,
-  //   TransferResourcesToFleet,
-  //   RecallFleet,
-  //   LandFleet,
-  //   MoveFleet,
+  [
+    EObjectives.CreateFleet,
+    {
+      type: "Claim",
+      description:
+        'Fleets transport units and resources between asteroids. Create a fleet on the starmap by selecting your asteroid and pressing "Create Fleet".',
+    },
+  ],
+  [
+    EObjectives.TransferToAsteroid,
+    {
+      type: "Claim",
+      description:
+        "Transfer units and resources to an asteroid by selecting the asteroid and pressing the Transfer button.",
+    },
+  ],
+  [
+    EObjectives.TransferToFleet,
+    {
+      type: "Claim",
+      description: "Transfer units and resources to a fleet by selecting the fleet and pressing the Transfer button.",
+    },
+  ],
+  [
+    EObjectives.RecallFleet,
+    {
+      type: "Claim",
+      description:
+        "Recalling a fleet allows it to return to its origin mid-flight. To recall, select a fleet and press the Recall button.",
+    },
+  ],
+  [
+    EObjectives.LandFleet,
+    {
+      type: "Claim",
+      description:
+        "Landing a fleet on an asteroid sets the fleet's owner to that asteroid. It also deposit all resources and units. To land, select a fleet and press the Land button.",
+    },
+  ],
+  [
+    EObjectives.SendFleet,
+    {
+      type: "Claim",
+      description:
+        "Sending a fleet to an asteroid allows it to deposit resources and units or fight other fleets. To send, select a fleet and press the Send button. Then select the destination asteroid.",
+    },
+  ],
   //   BattleAsteroid,
   //   BattleFleet,
   //   SuccessfulRaid,

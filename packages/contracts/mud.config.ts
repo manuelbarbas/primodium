@@ -527,15 +527,6 @@ export const worldInput = {
 
     /* ------------------------------ Objectives ----------------------------- */
 
-    P_RequiredObjectives: {
-      key: ["prototype"],
-      schema: {
-        prototype: "bytes32",
-        // mud doesnt recognize EObjective arrays so we will manually convert them
-        objectives: "bytes32[]",
-      },
-    },
-
     CompletedObjective: {
       key: ["entity", "objective"],
       schema: { entity: "bytes32", objective: "bytes32", value: "bool" },
