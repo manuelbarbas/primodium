@@ -25,7 +25,7 @@ export const _ShardAsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ s
     hooks: { useCamera },
   } = useRef(primodium.api("STARMAP")).current;
 
-  const conquestData = useShardAsteroid(selectedAsteroid);
+  const shardData = useShardAsteroid(selectedAsteroid);
   const ownedBy = components.OwnedBy.use(selectedAsteroid)?.value;
   const mapOpen = components.MapOpen.use()?.value ?? false;
   const position = components.Position.use(selectedAsteroid);
@@ -65,7 +65,7 @@ export const _ShardAsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ s
           background: `rgba(0,0,0, ${Math.max(0, (defaultZoom - zoom) / (defaultZoom - minZoom))}`,
         }}
       >
-        {conquestData && ownedByPlayer && conquestData.canExplode && (
+        {shardData && ownedByPlayer && shardData.canExplode && (
           <TransactionQueueMask
             queueItemId={"Conquest" as Entity}
             className="absolute bottom-0 left-0 -translate-x-full w-28"
@@ -75,7 +75,7 @@ export const _ShardAsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ s
               className="victory-bg btn-xs w-full text-xs text-black border border-r-0 border-secondary/50"
             >
               CLAIM{" "}
-              {formatResourceCount(EntityType.Iron, conquestData.explodePoints, {
+              {formatResourceCount(EntityType.Iron, shardData.explodePoints, {
                 notLocale: true,
                 fractionDigits: 2,
               }).toLocaleString()}{" "}
@@ -83,7 +83,7 @@ export const _ShardAsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ s
             </Button>
           </TransactionQueueMask>
         )}
-        {conquestData && !!ownedBy && !ownedByPlayer && conquestData.canExplode && (
+        {shardData && !!ownedBy && !ownedByPlayer && shardData.canExplode && (
           <TransactionQueueMask
             queueItemId={"Conquest" as Entity}
             className="absolute bottom-0 left-0 -translate-x-full w-28"
