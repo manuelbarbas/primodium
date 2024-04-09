@@ -5,7 +5,7 @@ import { components } from "src/network/components";
 import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { getBuildingTopLeft } from "src/util/building";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { bigintToNumber } from "src/util/number";
@@ -47,7 +47,7 @@ export const moveBuilding = async (mud: MUD, building: Entity, coord: Coord) => 
 
       ampli.systemMoveBuilding({
         asteroidCoord: activeAsteroid,
-        buildingType: getBlockTypeName(buildingType),
+        buildingType: getEntityTypeName(buildingType),
         coord: [prevPosition.x, prevPosition.y],
         endCoord: [position.x, position.y],
         currLevel: bigintToNumber(currLevel),

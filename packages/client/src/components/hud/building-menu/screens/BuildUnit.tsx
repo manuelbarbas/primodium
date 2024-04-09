@@ -11,7 +11,7 @@ import { useMud } from "src/hooks";
 import { useMaxCountOfRecipe } from "src/hooks/useMaxCountOfRecipe";
 import { components } from "src/network/components";
 import { train } from "src/network/setup/contractCalls/train";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { BackgroundImage, EntityType, ResourceEntityLookup, ResourceImage, UnitEnumLookup } from "src/util/constants";
 import { formatNumber, formatResourceCount } from "src/util/number";
 import { getRecipe } from "src/util/recipe";
@@ -19,8 +19,6 @@ import { getFullResourceCount } from "src/util/resource";
 import { getUnitStats } from "src/util/unit";
 import { Hex } from "viem";
 import { ResourceIconTooltip } from "../../../shared/ResourceIconTooltip";
-import { Unit } from "../../panes/hangar/HangarContent";
-import { RecipeDisplay } from "../widgets/UnitUpgrade";
 
 export const BuildUnit: React.FC<{
   building: Entity;
@@ -66,7 +64,7 @@ export const BuildUnit: React.FC<{
                     }`}
                   />
                   <p className="opacity-0 absolute -bottom-4 text-xs bg-error rounded-box px-1 group-hover:opacity-100 whitespace-nowrap transition-opacity">
-                    {getBlockTypeName(unit)}
+                    {getEntityTypeName(unit)}
                   </p>
                 </button>
               );
@@ -79,7 +77,7 @@ export const BuildUnit: React.FC<{
             </p>
           ) : (
             <>
-              <Unit unit={selectedUnit} asteroid={activeRock} />
+              <p className="uppercase font-bold">{getEntityTypeName(selectedUnit)}</p>
 
               <div className="grid grid-cols-6 gap-2 border-y border-cyan-400/30 mx-auto">
                 {Object.entries(getUnitStats(selectedUnit, activeRock)).map(([name, value]) => {
@@ -125,7 +123,27 @@ const TrainNonColonyShip = ({ building, unit, asteroid }: { building: Entity; un
   const maximum = useMaxCountOfRecipe(recipe, asteroid);
   return (
     <>
-      <RecipeDisplay asteroid={asteroid} recipe={recipe} count={Number(count) > 0 ? BigInt(count) : 1n} />
+      <p className="text-sm leading-none opacity-75">COST</p>
+
+      {recipe && (
+        <div className="flex justify-center items-center gap-1">
+          {recipe.map((resource, i) => (
+            <Badge key={`resource-${i}`}>
+              <ResourceIconTooltip
+                image={ResourceImage.get(resource.id) ?? ""}
+                resource={resource.id}
+                name={getEntityTypeName(resource.id)}
+                amount={resource.amount * BigInt(count)}
+                fontSize="sm"
+                validate
+                spaceRock={asteroid}
+              />
+            </Badge>
+          ))}
+        </div>
+      )}
+
+      <hr className="border-t border-cyan-600 w-full" />
 
       <NumberInput max={maximum} count={count} onChange={(val) => setCount(val)} />
       <div className="flex gap-2 pt-5">
@@ -173,7 +191,7 @@ const TrainColonyShip = ({ building, asteroid }: { building: Entity; asteroid: E
         <ResourceIconTooltip
           image={ResourceImage.get(resource) ?? ""}
           resource={resource}
-          name={getBlockTypeName(resource)}
+          name={getEntityTypeName(resource)}
           amount={cost}
           fontSize="sm"
           validate

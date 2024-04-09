@@ -16,7 +16,6 @@ import { MUD } from "src/network/types";
 import { encodeEntity } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
-import { getBlockTypeName } from "../common";
 import {
   BuildingEnumLookup,
   EntityType,
@@ -31,6 +30,7 @@ import { getAsteroidBounds, outOfBounds } from "../outOfBounds";
 import { getFullResourceCount } from "../resource";
 import { getBuildingAtCoord } from "../tile";
 import { TesterPack, testerPacks } from "./testerPacks";
+import { getEntityTypeName } from "../common";
 
 export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
   const buildings: Record<string, Entity> = {
@@ -127,7 +127,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
     );
     await Promise.all(systemCalls);
     toast.success(
-      `${formatResourceCount(resource, value)} ${getBlockTypeName(resource)} given to ${entityToRockName(spaceRock)}`
+      `${formatResourceCount(resource, value)} ${getEntityTypeName(resource)} given to ${entityToRockName(spaceRock)}`
     );
   };
 

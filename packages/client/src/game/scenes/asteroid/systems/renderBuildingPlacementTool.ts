@@ -14,11 +14,11 @@ import { buildBuilding } from "src/network/setup/contractCalls/buildBuilding";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
-import { getBlockTypeName } from "src/util/common";
 import { Action, BuildingEnumLookup } from "src/util/constants";
 import { getRecipe, hasEnoughResources } from "src/util/recipe";
 import { Building } from "../../../lib/objects/Building";
 import { DepthLayers } from "src/game/lib/constants/common";
+import { getEntityTypeName } from "src/util/common";
 
 export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scene) => {
   if (pointer?.rightButtonDown()) {
@@ -36,7 +36,7 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scen
   const validPlacement = validateBuildingPlacement(tileCoord, buildingPrototype, asteroid);
 
   if (!hasEnough || !validPlacement) {
-    if (!hasEnough) toast.error("Not enough resources to build " + getBlockTypeName(buildingPrototype));
+    if (!hasEnough) toast.error("Not enough resources to build " + getEntityTypeName(buildingPrototype));
     if (!validPlacement) toast.error("Cannot place building here");
     scene.camera.phaserCamera.shake(200, 0.001);
     return;

@@ -6,7 +6,7 @@ import { UnitUpgrades } from "./building-menu/screens/UnitUpgrades";
 import { AllianceManagement } from "./modals/alliance-mgmt/AllianceManagement";
 import { LeaderboardScreen } from "./modals/leaderboard/LeaderboardScreen";
 import { Settings } from "./modals/settings/Settings";
-import { BattleReports } from "./panes/battle-reports/BattleReports";
+import { BattleReports } from "./widgets/battle-reports/BattleReports";
 
 const buttonClass = "rounded-t-none btn-sm pt-1 border border-dotted border-secondary/50";
 

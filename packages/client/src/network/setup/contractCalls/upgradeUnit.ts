@@ -4,7 +4,7 @@ import { ampli } from "src/ampli";
 import { components } from "src/network/components";
 import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { TransactionQueueType, UnitEntityLookup } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { bigintToNumber } from "src/util/number";
@@ -32,7 +32,7 @@ export const upgradeUnit = async (mud: MUD, spaceRock: Entity, unit: EUnit) => {
 
       ampli.systemUpgradeUnit({
         currLevel: bigintToNumber(unitLevel),
-        unitName: getBlockTypeName(UnitEntityLookup[unit]),
+        unitName: getEntityTypeName(UnitEntityLookup[unit]),
         ...parseReceipt(receipt),
       });
     }

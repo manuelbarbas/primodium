@@ -4,7 +4,7 @@ import { ampli } from "src/ampli";
 import { components } from "src/network/components";
 import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { UnitEntityLookup } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
 import { bigintToNumber } from "src/util/number";
@@ -27,8 +27,8 @@ export const train = async (mud: MUD, buildingEntity: Entity, unit: EUnit, count
       const buildingType = components.BuildingType.get(buildingEntity)?.value as Entity;
 
       ampli.systemTrainUnits({
-        buildingName: getBlockTypeName(buildingType),
-        unitName: getBlockTypeName(UnitEntityLookup[unit]),
+        buildingName: getEntityTypeName(buildingType),
+        unitName: getEntityTypeName(UnitEntityLookup[unit]),
         unitCount: bigintToNumber(count),
         ...parseReceipt(receipt),
       });
