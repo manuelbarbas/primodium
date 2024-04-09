@@ -25,11 +25,11 @@ export const Leaderboards = ({
         ),
       },
       {
-        name: "Conquest",
+        name: "Primodium",
         leaderboard: (
           <SubLeaderboard
-            key={"conquest"}
-            leaderboard={alliance ? EntityType.AllianceConquestLeaderboard : EntityType.PlayerConquestLeaderboard}
+            key={"Primodium"}
+            leaderboard={alliance ? EntityType.AlliancePrimodiumLeaderboard : EntityType.PlayerPrimodiumLeaderboard}
           />
         ),
       },

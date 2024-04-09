@@ -3,7 +3,7 @@ import { Badge } from "src/components/core/Badge";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Loader } from "src/components/core/Loader";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { useShardAsteroid } from "src/hooks/conquest/useShardAsteroid";
+import { useShardAsteroid } from "src/hooks/primodium/useShardAsteroid";
 import { useSyncStatus } from "src/hooks/useSyncStatus";
 import { components } from "src/network/components";
 import { EntityType, Keys, ResourceImage } from "src/util/constants";
@@ -18,7 +18,7 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
   const { loading } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
   const name = entityToRockName(entity);
 
-  const conquestData = useShardAsteroid(entity);
+  const shardData = useShardAsteroid(entity);
 
   const ownedBy = components.OwnedBy.use(entity)?.value as Entity | undefined;
 
@@ -30,7 +30,7 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
       </Card>
     );
 
-  if (!conquestData)
+  if (!shardData)
     return (
       <Card className="relative flex items-center justify-center w-56 h-24 px-auto uppercase font-bold">
         No data found...
@@ -49,9 +49,8 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
           <AsteroidEta entity={entity} />
         </div>
         <div className="flex victory-bg uppercase text-primary font-bold border border-secondary/50 text-sm flex justify-center items-center">
-          {formatResourceCount(EntityType.Iron, conquestData.points, { notLocale: true }).toLocaleString()} PRI
-          EXPLOSION
-          {conquestData.canExplode ? " IMMINENT" : ` IN ${formatTime(conquestData.timeUntilExplode)}`}
+          {formatResourceCount(EntityType.Iron, shardData.points, { notLocale: true }).toLocaleString()} PRI EXPLOSION
+          {shardData.canExplode ? " IMMINENT" : ` IN ${formatTime(shardData.timeUntilExplode)}`}
         </div>
         <div className="flex gap-1">
           <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
@@ -63,10 +62,10 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
               <AccountDisplay className="w-12" noColor player={ownedBy} raw />
             </div>
           )}
-          {conquestData.dripPerSec > 0n && (
+          {shardData.dripPerSec > 0n && (
             <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
               {/* todo replace PRI with icon */}
-              {formatResourceCount(EntityType.Iron, conquestData.dripPerSec * 60n * 60n, {
+              {formatResourceCount(EntityType.Iron, shardData.dripPerSec * 60n * 60n, {
                 notLocale: true,
                 fractionDigits: 1,
               }).toLocaleString()}{" "}
@@ -74,10 +73,10 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
             </div>
           )}
         </div>
-        {conquestData.unclaimedPoints > 0n && (
+        {shardData.unclaimedPoints > 0n && (
           <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
             {/* todo replace PRI with icon */}
-            {formatResourceCount(EntityType.Iron, conquestData.unclaimedPoints, {
+            {formatResourceCount(EntityType.Iron, shardData.unclaimedPoints, {
               notLocale: true,
               fractionDigits: 1,
             }).toLocaleString()}
@@ -87,10 +86,8 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
         <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
           <HealthBar
             imgUrl={ResourceImage.get(EntityType.Encryption) ?? ""}
-            health={Number(formatResourceCount(EntityType.Encryption, conquestData.encryption, { notLocale: true }))}
-            maxHealth={Number(
-              formatResourceCount(EntityType.Encryption, conquestData.maxEncryption, { notLocale: true })
-            )}
+            health={Number(formatResourceCount(EntityType.Encryption, shardData.encryption, { notLocale: true }))}
+            maxHealth={Number(formatResourceCount(EntityType.Encryption, shardData.maxEncryption, { notLocale: true }))}
           />
         </Badge>
       </div>

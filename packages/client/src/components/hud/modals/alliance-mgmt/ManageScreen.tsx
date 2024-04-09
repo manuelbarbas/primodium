@@ -16,7 +16,7 @@ import { hashEntities } from "src/util/encode";
 export const ManageScreen: React.FC = () => {
   const mud = useMud();
   const playerEntity = mud.playerAccount.entity;
-  const data = components.Leaderboard.use(EntityType.AllianceConquestLeaderboard);
+  const data = components.Leaderboard.use(EntityType.AlliancePrimodiumLeaderboard);
   const allianceEntity = data?.players[(data?.playerRank ?? 1) - 1];
   const playerRole = components.PlayerAlliance.get(playerEntity)?.role ?? EAllianceRole.Member;
   const playerEntities = components.PlayerAlliance.useAllWith({

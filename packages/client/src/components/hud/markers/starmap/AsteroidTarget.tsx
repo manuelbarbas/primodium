@@ -6,12 +6,12 @@ import { Marker } from "src/components/core/Marker";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { DepthLayers } from "src/game/lib/constants/common";
 import { useMud } from "src/hooks";
-import { useClaimConquestTime } from "src/hooks/conquest/useClaimConquestTime";
+import { useClaimPrimodium } from "src/hooks/primodium/useClaimPrimodium";
 import { useOrbitingFleets } from "src/hooks/useOrbitingFleets";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
-import { claimConquest } from "src/network/setup/contractCalls/claimConquest";
+import { claimPrimodium } from "src/network/setup/contractCalls/claimPrimodium";
 import { getAsteroidImage } from "src/util/asteroid";
 import { getCanAttackSomeone } from "src/util/unit";
 import { Hex } from "viem";
@@ -48,7 +48,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   const canTransfer = useOrbitingFleets(selectedAsteroid).length > 0 && ownedByPlayer;
   const noUnits = [...useUnitCounts(selectedAsteroid).entries()].every(([, count]) => count === 0n);
 
-  const claimConquerTime = useClaimConquestTime(selectedAsteroid);
+  const claimConquerTime = useClaimPrimodium(selectedAsteroid);
   const selectingDestination = !!components.Attack.use()?.originFleet;
 
   const hideAttack = useMemo(
@@ -139,11 +139,11 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
         )}
         {ownedByPlayer && claimConquerTime?.canConquer && (
           <TransactionQueueMask
-            queueItemId={"Conquest" as Entity}
+            queueItemId={"Primodium " as Entity}
             className="absolute bottom-0 left-0 -translate-x-full w-28"
           >
             <Button
-              onClick={() => claimConquest(mud, selectedAsteroid)}
+              onClick={() => claimPrimodium(mud, selectedAsteroid)}
               className="victory-bg btn-xs w-full text-xs text-black border border-r-0 border-secondary/50"
             >
               CLAIM

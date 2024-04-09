@@ -12,19 +12,19 @@ import { MUD } from "../types";
 type Leaderboard = Map<Entity, bigint>;
 export const setupLeaderboard = (mud: MUD) => {
   const leaderboardMaps: Record<Entity, Map<Entity, bigint>> = {
-    [EntityType.PlayerConquestLeaderboard]: new Map<Entity, bigint>(),
+    [EntityType.PlayerPrimodiumLeaderboard]: new Map<Entity, bigint>(),
     [EntityType.PlayerWormholeLeaderboard]: new Map<Entity, bigint>(),
-    [EntityType.AllianceConquestLeaderboard]: new Map<Entity, bigint>(),
+    [EntityType.AlliancePrimodiumLeaderboard]: new Map<Entity, bigint>(),
     [EntityType.AllianceWormholeLeaderboard]: new Map<Entity, bigint>(),
   };
   const systemWorld = namespaceWorld(world, "systems");
 
   function setGrandLeaderboard(
-    inputLeaderboards: { wormhole: Leaderboard; conquest: Leaderboard },
+    inputLeaderboards: { wormhole: Leaderboard; primodium: Leaderboard },
     leaderboardEntity: Entity,
     entityIsPlayer: boolean
   ) {
-    const grandLeaderboard = new Map<Entity, { score: number; wormholeRank: number; conquestRank: number }>();
+    const grandLeaderboard = new Map<Entity, { score: number; wormholeRank: number; primodiumRank: number }>();
 
     Object.entries(inputLeaderboards).forEach(([name, leaderboard]) => {
       const leaderboardArray = [...leaderboard.entries()].sort((a, b) => Number(b[1] - a[1]));
@@ -33,26 +33,26 @@ export const setupLeaderboard = (mud: MUD) => {
         const score = rankToScore(rank);
         const rankObj =
           name == "wormhole"
-            ? { conquestRank: grandLeaderboard.get(entity)?.conquestRank ?? 0, wormholeRank: rank }
+            ? { primodiumRank: grandLeaderboard.get(entity)?.primodiumRank ?? 0, wormholeRank: rank }
             : {
                 wormholeRank: grandLeaderboard.get(entity)?.wormholeRank ?? 0,
-                conquestRank: rank,
+                primodiumRank: rank,
               };
         grandLeaderboard.set(entity, { score: (grandLeaderboard.get(entity)?.score ?? 0) + score, ...rankObj });
       });
     });
     const finalLeaderboard = [...grandLeaderboard.entries()].sort((a, b) => Number(b[1].score - a[1].score));
     const data = finalLeaderboard.reduce(
-      (acc, [, { score, wormholeRank, conquestRank }]) => {
+      (acc, [, { score, wormholeRank, primodiumRank }]) => {
         acc.scores.push(score);
         acc.wormholeRanks.push(wormholeRank);
-        acc.conquestRanks.push(conquestRank);
+        acc.primodiumRanks.push(primodiumRank);
         return acc;
       },
       {
         scores: [] as number[],
         wormholeRanks: [] as number[],
-        conquestRanks: [] as number[],
+        primodiumRanks: [] as number[],
       }
     );
 
@@ -113,7 +113,7 @@ export const setupLeaderboard = (mud: MUD) => {
     entityIsPlayer
       ? setGrandLeaderboard(
           {
-            conquest: leaderboardMaps[EntityType.PlayerConquestLeaderboard],
+            primodium: leaderboardMaps[EntityType.PlayerPrimodiumLeaderboard],
             wormhole: leaderboardMaps[EntityType.PlayerWormholeLeaderboard],
           },
           EntityType.PlayerGrandLeaderboard,
@@ -121,7 +121,7 @@ export const setupLeaderboard = (mud: MUD) => {
         )
       : setGrandLeaderboard(
           {
-            conquest: leaderboardMaps[EntityType.AllianceConquestLeaderboard],
+            primodium: leaderboardMaps[EntityType.AlliancePrimodiumLeaderboard],
             wormhole: leaderboardMaps[EntityType.AllianceWormholeLeaderboard],
           },
           EntityType.AllianceGrandLeaderboard,

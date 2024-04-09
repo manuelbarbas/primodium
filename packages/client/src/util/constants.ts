@@ -271,12 +271,12 @@ export const EntityType = {
   TridentMarineUpgrade5: toHex32("TridentMarineUpgrade") as Entity,
 
   // Leaderboards
-  PlayerConquestLeaderboard: toHex32("Player_Conquest") as Entity,
+  PlayerPrimodiumLeaderboard: toHex32("Player_Primodium") as Entity,
   PlayerWormholeLeaderboard: toHex32("Player_Wormhole") as Entity,
   PlayerGrandLeaderboard: toHex32("Player_Grand") as Entity,
 
   // Leaderboards
-  AllianceConquestLeaderboard: toHex32("Alliance_Conquest") as Entity,
+  AlliancePrimodiumLeaderboard: toHex32("Alliance_Primodium") as Entity,
   AllianceWormholeLeaderboard: toHex32("Alliance_Wormhole") as Entity,
   AllianceGrandLeaderboard: toHex32("Alliance_Grand") as Entity,
 
@@ -559,11 +559,11 @@ export const ObjectiveEntityLookup = reverseRecord(ObjectiveEnumLookup);
 
 export const LeaderboardEntityLookup = {
   player: {
-    [EScoreType.Primodium]: EntityType.PlayerConquestLeaderboard,
+    [EScoreType.Primodium]: EntityType.PlayerPrimodiumLeaderboard,
     [EScoreType.Wormhole]: EntityType.PlayerWormholeLeaderboard,
   },
   alliance: {
-    [EScoreType.Primodium]: EntityType.AllianceConquestLeaderboard,
+    [EScoreType.Primodium]: EntityType.AlliancePrimodiumLeaderboard,
     [EScoreType.Wormhole]: EntityType.AllianceWormholeLeaderboard,
   },
 };

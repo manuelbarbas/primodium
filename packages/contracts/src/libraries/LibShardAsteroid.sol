@@ -14,7 +14,7 @@ import { EResource, EScoreType } from "src/Types.sol";
 import { FleetIncomingKey, FleetOutgoingKey } from "src/Keys.sol";
 
 library LibShardAsteroid {
-  function createShardAsteroid(uint256 asteroidCount, uint256 asteroidConquestIndex) internal {
+  function createShardAsteroid(uint256 asteroidCount, uint256 primodiumAsteroidIndex) internal {
     bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("shardAsteroid"), bytes32(asteroidCount));
     uint256 distance = LibMath.getSpawnDistance(asteroidCount);
 
@@ -22,7 +22,7 @@ library LibShardAsteroid {
       asteroidEntity,
       ShardAsteroidData({ isShardAsteroid: true, distanceFromCenter: distance, spawnTime: block.timestamp })
     );
-    ShardAsteroidIndex.set(asteroidEntity, asteroidConquestIndex);
+    ShardAsteroidIndex.set(asteroidEntity, primodiumAsteroidIndex);
 
     LibStorage.increaseMaxStorage(
       asteroidEntity,

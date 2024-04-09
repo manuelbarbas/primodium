@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { components } from "src/network/components";
 import { SPEED_SCALE } from "src/util/constants";
 
-export const useClaimConquestTime = (asteroidEntity: Entity) => {
+export const useClaimPrimodium = (asteroidEntity: Entity) => {
   const points = components.Asteroid.use(asteroidEntity)?.primodium ?? 0n;
   const owner = components.OwnedBy.use(asteroidEntity)?.value as Entity | undefined;
   const lastConquered = components.LastConquered.use(asteroidEntity)?.value ?? 0n;

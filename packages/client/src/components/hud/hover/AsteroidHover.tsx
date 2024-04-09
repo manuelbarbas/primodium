@@ -3,7 +3,7 @@ import { Badge } from "src/components/core/Badge";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Loader } from "src/components/core/Loader";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { useClaimConquestTime } from "src/hooks/conquest/useClaimConquestTime";
+import { useClaimPrimodium } from "src/hooks/primodium/useClaimPrimodium";
 import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
 import { useFullResourceCount, useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
@@ -32,7 +32,7 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
 
   const ownedBy = components.OwnedBy.use(entity)?.value as Entity | undefined;
   const { strength, maxStrength } = useAsteroidStrength(entity, loading);
-  const claimConquerTime = useClaimConquestTime(entity);
+  const claimConquerTime = useClaimPrimodium(entity);
 
   if (loading)
     return (

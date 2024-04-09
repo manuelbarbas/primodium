@@ -8,7 +8,7 @@ import { P_GameConfig, PositionData, Asteroid, AsteroidData, P_ConquestConfig, S
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
-contract ConquestSystemTest is PrimodiumTest {
+contract ClaimPrimodiumSystemTest is PrimodiumTest {
   bytes32 playerEntity;
   function setUp() public override {
     super.setUp();

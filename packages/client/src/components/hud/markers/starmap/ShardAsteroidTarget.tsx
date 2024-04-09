@@ -5,10 +5,10 @@ import { Marker } from "src/components/core/Marker";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { DepthLayers } from "src/game/lib/constants/common";
 import { useMud } from "src/hooks";
-import { useShardAsteroid } from "src/hooks/conquest/useShardAsteroid";
+import { useShardAsteroid } from "src/hooks/primodium/useShardAsteroid";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
-import { claimShardAsteroid } from "src/network/setup/contractCalls/claimConquest";
+import { claimShardAsteroid } from "src/network/setup/contractCalls/claimPrimodium";
 import { getAsteroidImage } from "src/util/asteroid";
 import { EntityType } from "src/util/constants";
 import { formatResourceCount } from "src/util/number";
@@ -67,7 +67,7 @@ export const _ShardAsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ s
       >
         {shardData && ownedByPlayer && shardData.canExplode && (
           <TransactionQueueMask
-            queueItemId={"Conquest" as Entity}
+            queueItemId={"ClaimPrimodium" as Entity}
             className="absolute bottom-0 left-0 -translate-x-full w-28"
           >
             <Button
@@ -85,7 +85,7 @@ export const _ShardAsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ s
         )}
         {shardData && !!ownedBy && !ownedByPlayer && shardData.canExplode && (
           <TransactionQueueMask
-            queueItemId={"Conquest" as Entity}
+            queueItemId={"ClaimPrimodium" as Entity}
             className="absolute bottom-0 left-0 -translate-x-full w-28"
           >
             <Button
