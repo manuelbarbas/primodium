@@ -129,8 +129,8 @@ export enum EObjectives {
   ExpandBase1,
 
   CreateFleet,
-  TransferResourcesToAsteroid,
-  TransferResourcesToFleet,
+  TransferToAsteroid,
+  TransferToFleet,
   RecallFleet,
   LandFleet,
   MoveFleet,

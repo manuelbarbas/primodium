@@ -129,6 +129,13 @@ export const AllianceLeaderboard = createExtendedComponent(
 );
 
 /* -------------------------------------------------------------------------- */
+/*                                 Objectives                                 */
+/* -------------------------------------------------------------------------- */
+
+export const IsObjectiveClaimable = createExtendedBoolComponent(world, {
+  id: "IsObjectiveClaimable",
+});
+/* -------------------------------------------------------------------------- */
 /*                                  ALLIANCES                                 */
 /* -------------------------------------------------------------------------- */
 export const PlayerInvite = createExtendedComponent(
@@ -221,6 +228,8 @@ export default {
   Leaderboard,
   AllianceLeaderboard,
 
+  /* -------------------------------- Objective ------------------------------- */
+  IsObjectiveClaimable,
   /* ------------------------------- Alliances -------------------------------- */
   PlayerInvite,
   AllianceRequest,

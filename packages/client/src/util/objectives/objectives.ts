@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { EObjectives } from "contracts/config/enums";
 import { EntityType, ObjectiveEnumLookup } from "../constants";
-import { Objective, ObjectiveType } from "./types";
+import { Objective } from "./types";
 
 export const getObjective = (objectiveEntity: Entity) => {
   const objectiveEnum = ObjectiveEnumLookup[objectiveEntity];
@@ -13,7 +13,7 @@ export const getObjective = (objectiveEntity: Entity) => {
   return objective;
 };
 
-export const Objectives = new Map<EObjectives, Objective & { type: ObjectiveType; description?: string }>([
+export const Objectives = new Map<EObjectives, Objective>([
   //landscape blocks
   [
     EObjectives.BuildIronMine,
@@ -134,6 +134,61 @@ export const Objectives = new Map<EObjectives, Objective & { type: ObjectiveType
     },
   ],
   [
+    EObjectives.BuildStarmapper,
+    {
+      type: "Build",
+      buildingType: EntityType.LithiumMine,
+      requiredMainBase: 2n,
+      description: "A starmapper station increases the number of fleets you can create.",
+    },
+  ],
+  [
+    EObjectives.BuildSAMLauncher,
+    {
+      type: "Build",
+      buildingType: EntityType.LithiumMine,
+      requiredMainBase: 2n,
+      description: "SAM sites protect you from enemy attacks and raids by providing defense.",
+    },
+  ],
+  [
+    EObjectives.BuildVault,
+    {
+      type: "Build",
+      buildingType: EntityType.LithiumMine,
+      requiredMainBase: 2n,
+      description: "Vaults protect your resources from being raided.",
+    },
+  ],
+
+  [
+    EObjectives.BuildShieldGenerator,
+    {
+      type: "Build",
+      buildingType: EntityType.LithiumMine,
+      requiredMainBase: 2n,
+      description: "Shield generators boost your asteroid's defense.",
+    },
+  ],
+  [
+    EObjectives.BuildShipyard,
+    {
+      type: "Build",
+      buildingType: EntityType.LithiumMine,
+      requiredMainBase: 2n,
+      description: "Shipyards constuct Colony Ships, which colonize asteroids.",
+    },
+  ],
+  [
+    EObjectives.BuildMarket,
+    {
+      type: "Build",
+      buildingType: EntityType.LithiumMine,
+      requiredMainBase: 2n,
+      description: "Markets trade resources with other players. There is a tax on all trades.",
+    },
+  ],
+  [
     EObjectives.TrainMinutemanMarines,
     {
       type: "Train",
@@ -221,30 +276,41 @@ export const Objectives = new Map<EObjectives, Objective & { type: ObjectiveType
         "Select the Shipyard you placed on the map to build a Colony Ship. Colony ships can decrypt other asteroids and colonize on them.",
     },
   ],
-  // [
-  //   EObjectives.ExpandBase1,
-  //   "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
-  // ],
-  // [
-  //   EObjectives.BuildStarmapper,
-  //   "Construct a starmapper station. A starmapper station increases the number of fleets you can send at a time.",
-  // ],
-  // [
-  //   EObjectives.BuildSAMLauncher,
-  //   "Construct a SAM site. SAM sites protect you from enemy attacks and raids by providing a base level of defense.",
-  // ],
-  // [EObjectives.BuildVault, "Build a vault. Vaults protect your resources from being raided."],
+  [
+    EObjectives.ExpandBase1,
+    {
+      type: "Expand",
+      level: 2n,
+      requiredMainBase: 2n,
+      description:
+        "Select your main base and click on Expand base to expand your buildable zone and uncover more resource ores.",
+    },
+  ],
+  [
+    EObjectives.OpenBattleReport,
+    {
+      type: "Claim",
+      requiredObjectives: [EObjectives.BattleAsteroid],
+      description: "Open a battle report to see the results of a battle.",
+    },
+  ],
 
-  // [
-  //   EObjectives.BuildShieldGenerator,
-  //   "Build a shield generator. Shield generators multiply your asteroid's defense numbers.",
-  // ],
-  // [
-  //   EObjectives.BuildShipyard,
-  //   "Select the Shipyard from the building menu and place it on an empty tile. Shipyards can build Colony Ships, which are used to colonize other asteroids.",
-  // ],
-  // [
-  //   EObjectives.BuildMarket,
-  //   "Build a Market. A Market is used to globally trade resources with other players for a built-in percentage fee.",
-  // ],
+  //   CreateFleet,
+  //   TransferResourcesToAsteroid,
+  //   TransferResourcesToFleet,
+  //   RecallFleet,
+  //   LandFleet,
+  //   MoveFleet,
+  //   BattleAsteroid,
+  //   BattleFleet,
+  //   SuccessfulRaid,
+  //   UpgradeUnitType,
+  //   BuildColonyShip,
+  //   DecryptAttack,
+  //   CaptureAsteroid,
+
+  //   MarketSwap,
+  //   MarketLiquidity,
+
+  //   JoinAlliance,
 ]);

@@ -1,4 +1,6 @@
 import { Entity } from "@latticexyz/recs";
+import { EObjectives } from "contracts/config/enums";
+import { useEffect } from "react";
 import { FaTimes, FaTrophy } from "react-icons/fa";
 import { Navigator } from "src/components/core/Navigator";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
@@ -6,7 +8,7 @@ import { useMud } from "src/hooks";
 import { usePlayerOwner } from "src/hooks/usePlayerOwner";
 import { components } from "src/network/components";
 import { getEntityTypeName, toRomanNumeral } from "src/util/common";
-import { BackgroundImage, EntityType, ResourceImage } from "src/util/constants";
+import { BackgroundImage, EntityType, ObjectiveEntityLookup, ResourceImage } from "src/util/constants";
 import { entityToFleetName, entityToRockName } from "src/util/name";
 import { formatResourceCount } from "src/util/number";
 
@@ -53,6 +55,14 @@ export const BattleDetails: React.FC<{
   const attackerIsFleet = components.IsFleet.use(battle?.attacker);
   const defenderIsFleet = components.IsFleet.use(battle?.defender);
   const position = components.Position.use(battle?.rock as Entity);
+
+  useEffect(() => {
+    const hasCompletedObjective = components.CompletedObjective.get(
+      ObjectiveEntityLookup[EObjectives.OpenBattleReport]
+    )?.value;
+    if (hasCompletedObjective) return;
+    components.IsObjectiveClaimable.set({ value: true }, ObjectiveEntityLookup[EObjectives.OpenBattleReport]);
+  }, []);
 
   if (!battle) return <></>;
 

@@ -1,4 +1,6 @@
 import { Entity } from "@latticexyz/recs";
+import { getHasClaimableObjective } from "./getHasClaimableObjective";
+import { getHasExpansion } from "./getHasExpansion";
 import { getHasRequiredBuilding } from "./getHasRequiredBuilding";
 import { getHasRequiredMainBase } from "./getHasRequiredMainBase";
 import { getHasRequiredObjectives } from "./getHasRequiredObjectives";
@@ -33,5 +35,7 @@ export function getAllObjectiveRequirements(asteroidEntity: Entity, objectiveEnt
   if (objective.type === "Build") reqs.push(getHasRequiredBuilding(asteroidEntity, objective));
   if (objective.type === "Upgrade") reqs.push(getHasRequiredBuildingUpgrade(asteroidEntity, objective));
   if (objective.type === "Train") reqs.push(getHasRequiredUnit(asteroidEntity, objective));
+  if (objective.type === "Expand") reqs.push(getHasExpansion(asteroidEntity, objective));
+  if (objective.type === "Claim") reqs.push(getHasClaimableObjective(objectiveEntity));
   return reqs;
 }
