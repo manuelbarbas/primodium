@@ -18,11 +18,9 @@ import { ObjectivesScreen } from "./modals/objectives/ObjectivesScreen";
 const tutorialObjectives = [
   EObjectives.BuildIronMine,
   EObjectives.BuildCopperMine,
-  EObjectives.BuildGarage,
-  EObjectives.BuildWorkshop,
   EObjectives.BuildIronPlateFactory,
   EObjectives.UpgradeMainBase,
-  EObjectives.BuildStarmapper,
+  EObjectives.ExpandBase1,
 ];
 
 export const CurrentObjective = () => {

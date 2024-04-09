@@ -48,7 +48,7 @@ export const UnclaimedObjectives: React.FC<{ highlight?: Entity }> = ({ highligh
   if (filteredObjectiveEntities.length === 0)
     return (
       <SecondaryCard className="w-full h-full items-center justify-center text-xs">
-        <p className="opacity-50 font-bold">NO COMPLETED OBJECTIVES</p>
+        <p className="opacity-50 font-bold">NO OBJECTIVES AVAILABLE</p>
       </SecondaryCard>
     );
 

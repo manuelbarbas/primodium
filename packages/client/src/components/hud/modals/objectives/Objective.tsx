@@ -39,11 +39,15 @@ export const Objective: React.FC<{
 
   return (
     <SecondaryCard
-      className={`text-xs w-full flex flex-col justify-between ${highlight ? "border border-warning" : ""}`}
+      className={`text-xs relative w-full flex flex-col justify-between ${highlight ? "border border-warning" : ""}`}
     >
       <div>
-        {objective && <p className="bg-primary text-white font-bold text-xs uppercase p-1">{objective.category}</p>}
-        <div className="grid grid-cols-10 pt-2">
+        {objective && (
+          <p className="absolute right-0 top-0 bg-primary text-white/80 font-bold text-xs uppercase py-1 px-2">
+            {objective.category}
+          </p>
+        )}
+        <div className="grid grid-cols-10">
           <div className="flex items-center col-span-1">
             <FaMedal className="text-accent" />
           </div>

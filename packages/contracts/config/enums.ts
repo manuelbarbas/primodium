@@ -103,7 +103,7 @@ export enum EObjectives {
   UpgradeMainBase,
   ExpandBase1,
 
-  // (A-A) Conquest basics
+  // (A-A) Conquest
   BuildGarage,
   BuildWorkshop,
   CreateFleet,
@@ -118,33 +118,47 @@ export enum EObjectives {
   BattleFleet,
   SuccessfulRaid,
 
-  // (A-A-A-B) Conquering asteroids
+  // (A-A-A-B) Conquest (cont)
   BuildShipyard,
   TrainColonyShip,
   DecryptAttack,
   CaptureAsteroid,
 
-  // (A-A-A-B) fleet management and trade
+  // (A-A-A-B-A) Motherlode Extraction
+  CaptureMotherlodeAsteroid,
+  ExtractMotherlodeResource,
+
+  // (A-A-A-B-B) Victory: Primodium Points
+  ClaimAsteroidPrimodium,
+  ClaimShardPrimodium,
+
+  // (A-A-A-B-C) Victory; Extraction Points
+  CaptureWormholeAsteroid,
+  ClaimExtractionPoints,
+
+  // (A-A-A-C) fleet management
   RecallFleet,
   TransferToAsteroid,
   LandFleet,
   BuildStarmapper,
 
-  // (A-A-B) basic unit production
+  // (A-A-B) unit production
   TrainMinutemanMarines,
   TrainTridentMarines,
   TrainLightningCrafts,
 
-  // (A-A-C) advanced unit production
+  // (A-A-B-A) unit production (cont)
   BuildDroneFactory,
   UpgradeUnit,
   TrainAnvilDrones,
   TrainHammerDrones,
   TrainAegisDrones,
   TrainStingerDrones,
+
+  // (A-A-B-B) Hangar
   BuildHangar,
 
-  // (A-A-D) Defense
+  // (A-A-C) Defense
   BuildSAMLauncher,
   BuildShieldGenerator,
   BuildVault,
@@ -153,7 +167,7 @@ export enum EObjectives {
   BuildLithiumMine,
   BuildStorageUnit,
 
-  // (A-B-A) Advanced Production
+  // (A-B-A) Production (cont)
   BuildPVCellFactory,
   BuildSolarPanel,
 
