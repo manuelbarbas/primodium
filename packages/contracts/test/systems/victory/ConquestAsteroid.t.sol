@@ -196,12 +196,12 @@ contract ConquestSystemTest is PrimodiumTest {
     uint256 timeNotMissed = ConquestAsteroid.getSpawnTime(asteroidEntity) +
       config.conquestAsteroidLifeSpan -
       LastConquered.get(asteroidEntity);
-    uint256 timeNotMissedPct = (timeNotMissed * 1_000) / config.conquestAsteroidLifeSpan;
+    uint256 timeNotMissedPct = (timeNotMissed * 100_000) / config.conquestAsteroidLifeSpan;
 
     // add points for explosion
     uint256 points = P_ConquestConfig.getConquestAsteroidPoints() +
       (timeNotMissedPct * config.conquestAsteroidPoints) /
-      1_000;
+      100_000;
 
     world.Primodium__claimConquestAsteroidPoints(asteroidEntity);
 

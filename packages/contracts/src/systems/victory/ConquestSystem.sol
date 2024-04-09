@@ -46,7 +46,7 @@ contract ConquestSystem is PrimodiumSystem {
       LibScore.addScore(
         ownerEntity,
         EScoreType.Conquest,
-        (holdPctX1000 * P_ConquestConfig.getConquestAsteroidPoints()) / 100000
+        (holdPct * P_ConquestConfig.getConquestAsteroidPoints()) / 100000
       );
     }
 
