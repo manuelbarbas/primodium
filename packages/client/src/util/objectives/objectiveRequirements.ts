@@ -7,6 +7,7 @@ import { getHasRequiredObjectives } from "./getHasRequiredObjectives";
 import { getHasRequiredRewards, getRewardUtilitiesRequirement } from "./getHasRequiredRewards";
 import { getHasRequiredUnit } from "./getHasRequiredUnit";
 import { getHasRequiredBuildingUpgrade } from "./getHasRequiredUpgrade";
+import { getInAlliance } from "./getInAlliance";
 import { getObjective } from "./objectives";
 import { ObjectiveReq } from "./types";
 
@@ -36,6 +37,7 @@ export function getAllObjectiveRequirements(asteroidEntity: Entity, objectiveEnt
   if (objective.type === "Upgrade") reqs.push(getHasRequiredBuildingUpgrade(asteroidEntity, objective));
   if (objective.type === "Train") reqs.push(getHasRequiredUnit(asteroidEntity, objective));
   if (objective.type === "Expand") reqs.push(getHasExpansion(asteroidEntity, objective));
-  if (objective.type === "Claim") reqs.push(getHasClaimableObjective(objectiveEntity));
+  if (objective.type === "JoinAlliance") reqs.push(getInAlliance(asteroidEntity));
+  if (objective.type === "Claim") reqs.push(getHasClaimableObjective(objectiveEntity, objective));
   return reqs;
 }

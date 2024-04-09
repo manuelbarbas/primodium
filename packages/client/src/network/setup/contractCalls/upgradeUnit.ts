@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { EUnit } from "contracts/config/enums";
+import { EObjectives, EUnit } from "contracts/config/enums";
 import { ampli } from "src/ampli";
 import { components } from "src/network/components";
 import { execute } from "src/network/txExecute";
@@ -8,6 +8,7 @@ import { getEntityTypeName } from "src/util/common";
 import { TransactionQueueType, UnitEntityLookup } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { bigintToNumber } from "src/util/number";
+import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
@@ -24,6 +25,7 @@ export const upgradeUnit = async (mud: MUD, spaceRock: Entity, unit: EUnit) => {
       id: hashEntities(TransactionQueueType.Upgrade, UnitEntityLookup[unit]),
     },
     (receipt) => {
+      makeObjectiveClaimable(spaceRock, EObjectives.UpgradeUnit);
       const unitLevel =
         components.UnitLevel.getWithKeys({
           entity: mud.playerAccount.entity as Hex,

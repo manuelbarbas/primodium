@@ -3,6 +3,7 @@ import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { useMemo, useRef } from "react";
 import { Marker } from "src/components/core/Marker";
+import { DepthLayers } from "src/game/lib/constants/common";
 import { useMud } from "src/hooks";
 import { useOrbitingFleets } from "src/hooks/useOrbitingFleets";
 import { usePrimodium } from "src/hooks/usePrimodium";
@@ -15,7 +16,6 @@ import { Button } from "../../../core/Button";
 import { IconLabel } from "../../../core/IconLabel";
 import { Modal } from "../../../core/Modal";
 import { Fleets } from "../../widgets/fleets/Fleets";
-import { DepthLayers } from "src/game/lib/constants/common";
 export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ selectedAsteroid }) => {
   const {
     playerAccount: { entity: playerEntity },
@@ -122,7 +122,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
                 disabled={selectingDestination || !canTransfer}
                 className="btn-ghost btn-xs text-xs text-accent bg-neutral border border-r-0 pl-2 border-secondary/50 w-28 transition-[width] duration-200"
               >
-                <IconLabel imageUri="/img/icons/trade.png" text={"Transfer"} />
+                <IconLabel imageUri="/img/icons/tradeicon.png" text={"Transfer"} />
               </Modal.Button>
               <Modal.Content className="w-3/4 h-[800px]">
                 <Fleets initialState="transfer" from={selectedAsteroid} />

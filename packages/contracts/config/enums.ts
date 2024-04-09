@@ -138,13 +138,12 @@ export enum EObjectives {
   BattleFleet,
   SuccessfulRaid,
   OpenBattleReport,
-  UpgradeUnitType,
+  UpgradeUnit,
   BuildColonyShip,
   DecryptAttack,
   CaptureAsteroid,
 
   MarketSwap,
-  MarketLiquidity,
 
   JoinAlliance,
 }

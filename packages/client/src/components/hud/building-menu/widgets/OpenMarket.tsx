@@ -10,7 +10,7 @@ export const OpenMarket: React.FC<{ building: Entity }> = ({ building }) => {
       <Modal title="Swap Resources">
         <Modal.Button className="btn-md w-fit btn-secondary">
           <div className="flex gap-2 items-center z-10">
-            <img src="/img/icons/trade.png" className="w-8 h-8" />
+            <img src="/img/icons/tradeicon.png" className="w-8 h-8" />
             <p className="uppercase text-xs font-bold">Swap</p>
           </div>
         </Modal.Button>

@@ -2170,7 +2170,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
   },
 
-  UpgradeUnitType: {
+  UpgradeUnit: {
     tables: {
       P_ResourceReward: getResourceValues({ Kimberlite: 1 }),
     },
