@@ -171,19 +171,6 @@
   },
   {
     "type": "function",
-    "name": "Primodium__claimConquestAsteroidPoints",
-    "inputs": [
-      {
-        "name": "asteroidEntity",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "Primodium__claimConquestPoints",
     "inputs": [
       {
@@ -216,6 +203,19 @@
   {
     "type": "function",
     "name": "Primodium__claimResources",
+    "inputs": [
+      {
+        "name": "asteroidEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Primodium__claimShardAsteroidPoints",
     "inputs": [
       {
         "name": "asteroidEntity",

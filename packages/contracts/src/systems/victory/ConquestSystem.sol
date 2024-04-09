@@ -2,10 +2,10 @@
 pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { OwnedBy, Asteroid, LastConquered, P_ConquestConfig, P_GameConfig, ConquestAsteroid } from "codegen/index.sol";
+import { OwnedBy, Asteroid, LastConquered, P_ConquestConfig, P_GameConfig, ShardAsteroid } from "codegen/index.sol";
 import { EScoreType } from "src/Types.sol";
 import { LibScore } from "libraries/LibScore.sol";
-import { LibConquestAsteroid } from "libraries/LibConquestAsteroid.sol";
+import { LibShardAsteroid } from "libraries/LibShardAsteroid.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 contract ConquestSystem is PrimodiumSystem {
@@ -29,14 +29,13 @@ contract ConquestSystem is PrimodiumSystem {
   }
 
   // @dev like claimUnits and claimResources, this function can be called by anyone
-  function claimConquestAsteroidPoints(bytes32 asteroidEntity) public {
+  function claimShardAsteroidPoints(bytes32 asteroidEntity) public {
     bytes32 ownerEntity = OwnedBy.get(asteroidEntity);
     if (ownerEntity == 0) return;
 
-    uint256 lifespan = (P_ConquestConfig.getConquestAsteroidLifeSpan() * WORLD_SPEED_SCALE) /
-      P_GameConfig.getWorldSpeed();
+    uint256 lifespan = (P_ConquestConfig.getShardAsteroidLifeSpan() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
 
-    uint256 explodeTime = ConquestAsteroid.getSpawnTime(asteroidEntity) + lifespan;
+    uint256 explodeTime = ShardAsteroid.getSpawnTime(asteroidEntity) + lifespan;
 
     uint256 lastConquered = LastConquered.get(asteroidEntity);
     uint256 endTime = block.timestamp > explodeTime ? explodeTime : block.timestamp;
@@ -46,12 +45,12 @@ contract ConquestSystem is PrimodiumSystem {
       LibScore.addScore(
         ownerEntity,
         EScoreType.Conquest,
-        (holdPct * P_ConquestConfig.getConquestAsteroidPoints()) / 100000
+        (holdPct * P_ConquestConfig.getShardAsteroidPoints()) / 100000
       );
     }
 
     if (block.timestamp >= explodeTime) {
-      LibConquestAsteroid.explodeConquestAsteroid(asteroidEntity);
+      LibShardAsteroid.explodeShardAsteroid(asteroidEntity);
     } else {
       LastConquered.set(asteroidEntity, block.timestamp);
     }

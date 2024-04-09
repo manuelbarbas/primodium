@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { ConquestAsteroidIndex, FleetMovement, OwnedBy, ResourceCount, Position, PositionData, LastConquered, ConquestAsteroid, P_ConquestConfig, ConquestAsteroidData, ReversePosition } from "codegen/index.sol";
+import { ShardAsteroidIndex, FleetMovement, OwnedBy, ResourceCount, Position, PositionData, LastConquered, ShardAsteroid, P_ConquestConfig, ShardAsteroidData, ReversePosition } from "codegen/index.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
@@ -13,33 +13,33 @@ import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { EResource, EScoreType } from "src/Types.sol";
 import { FleetIncomingKey, FleetOutgoingKey } from "src/Keys.sol";
 
-library LibConquestAsteroid {
-  function createConquestAsteroid(uint256 asteroidCount, uint256 asteroidConquestIndex) internal {
-    bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("conquestAsteroid"), bytes32(asteroidCount));
+library LibShardAsteroid {
+  function createShardAsteroid(uint256 asteroidCount, uint256 asteroidConquestIndex) internal {
+    bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("shardAsteroid"), bytes32(asteroidCount));
     uint256 distance = LibMath.getSpawnDistance(asteroidCount);
 
-    ConquestAsteroid.set(
+    ShardAsteroid.set(
       asteroidEntity,
-      ConquestAsteroidData({ isConquestAsteroid: true, distanceFromCenter: distance, spawnTime: block.timestamp })
+      ShardAsteroidData({ isShardAsteroid: true, distanceFromCenter: distance, spawnTime: block.timestamp })
     );
-    ConquestAsteroidIndex.set(asteroidEntity, asteroidConquestIndex);
+    ShardAsteroidIndex.set(asteroidEntity, asteroidConquestIndex);
 
     LibStorage.increaseMaxStorage(
       asteroidEntity,
       uint8(EResource.R_Encryption),
-      P_ConquestConfig.getConquestAsteroidEncryption()
+      P_ConquestConfig.getShardAsteroidEncryption()
     );
     LibProduction.increaseResourceProduction(
       asteroidEntity,
       EResource.R_Encryption,
-      P_ConquestConfig.getConquestAsteroidEncryptionRegen()
+      P_ConquestConfig.getShardAsteroidEncryptionRegen()
     );
 
-    spawnConquestAsteroid(asteroidEntity);
+    spawnShardAsteroid(asteroidEntity);
   }
 
-  function spawnConquestAsteroid(bytes32 asteroidEntity) internal {
-    uint256 distance = ConquestAsteroid.getDistanceFromCenter(asteroidEntity);
+  function spawnShardAsteroid(bytes32 asteroidEntity) internal {
+    uint256 distance = ShardAsteroid.getDistanceFromCenter(asteroidEntity);
 
     LastConquered.set(asteroidEntity, block.timestamp);
     PositionData memory prevPosition = Position.get(asteroidEntity);
@@ -50,7 +50,7 @@ library LibConquestAsteroid {
       seed++;
     } while (ReversePosition.get(position.x, position.y) != 0 || getQuadrant(position) == getQuadrant(prevPosition));
     Position.set(asteroidEntity, position);
-    ConquestAsteroid.setSpawnTime(asteroidEntity, block.timestamp);
+    ShardAsteroid.setSpawnTime(asteroidEntity, block.timestamp);
     ReversePosition.set(position.x, position.y, asteroidEntity);
   }
 
@@ -68,11 +68,11 @@ library LibConquestAsteroid {
     }
   }
 
-  function explodeConquestAsteroid(bytes32 asteroidEntity) internal {
+  function explodeShardAsteroid(bytes32 asteroidEntity) internal {
     bytes32 ownerEntity = OwnedBy.get(asteroidEntity);
     if (ownerEntity != 0) {
       LibAsteroid.removeAsteroidOwner(asteroidEntity, ownerEntity);
-      LibScore.addScore(ownerEntity, EScoreType.Conquest, P_ConquestConfig.getConquestAsteroidPoints());
+      LibScore.addScore(ownerEntity, EScoreType.Conquest, P_ConquestConfig.getShardAsteroidPoints());
     }
 
     // kill all incoming and orbiting fleets
@@ -92,9 +92,9 @@ library LibConquestAsteroid {
     FleetSet.clear(asteroidEntity, FleetOutgoingKey);
 
     // reset encryption
-    ResourceCount.set(asteroidEntity, uint8(EResource.R_Encryption), P_ConquestConfig.getConquestAsteroidEncryption());
+    ResourceCount.set(asteroidEntity, uint8(EResource.R_Encryption), P_ConquestConfig.getShardAsteroidEncryption());
 
     // respawn in a new location
-    spawnConquestAsteroid(asteroidEntity);
+    spawnShardAsteroid(asteroidEntity);
   }
 }

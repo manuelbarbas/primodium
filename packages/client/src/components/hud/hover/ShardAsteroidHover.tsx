@@ -3,7 +3,7 @@ import { Badge } from "src/components/core/Badge";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Loader } from "src/components/core/Loader";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { useConquestAsteroid } from "src/hooks/conquest/useConquestAsteroid";
+import { useShardAsteroid } from "src/hooks/conquest/useShardAsteroid";
 import { useSyncStatus } from "src/hooks/useSyncStatus";
 import { components } from "src/network/components";
 import { EntityType, Keys, ResourceImage } from "src/util/constants";
@@ -14,11 +14,11 @@ import { Card } from "../../core/Card";
 import { HealthBar } from "../HealthBar";
 import { AsteroidEta } from "./AsteroidEta";
 
-export const ConquestAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
+export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const { loading } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
   const name = entityToRockName(entity);
 
-  const conquestData = useConquestAsteroid(entity);
+  const conquestData = useShardAsteroid(entity);
 
   const ownedBy = components.OwnedBy.use(entity)?.value as Entity | undefined;
 
@@ -54,7 +54,7 @@ export const ConquestAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) 
         </div>
         <div className="flex gap-1">
           <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
-            Conquest Asteroid
+            Volatile Shard
           </div>
 
           {ownedBy && (

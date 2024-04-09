@@ -5,9 +5,9 @@ import { components } from "src/network/components";
 import { EntityType, SPEED_SCALE } from "src/util/constants";
 import { useFullResourceCount } from "../useFullResourceCount";
 
-export const useConquestAsteroid = (entity: Entity) => {
+export const useShardAsteroid = (entity: Entity) => {
   const conquestConfigData = components.P_ConquestConfig.use();
-  const conquestAsteroid = components.ConquestAsteroid.use(entity);
+  const shardAsteroid = components.ShardAsteroid.use(entity);
   const worldSpeed = components.P_GameConfig.use()?.worldSpeed ?? 100n;
   const time = components.Time.use()?.value ?? 0n;
   const owner = components.OwnedBy.use(entity)?.value;
@@ -19,36 +19,36 @@ export const useConquestAsteroid = (entity: Entity) => {
   );
 
   const timeData = useMemo(() => {
-    if (!conquestConfigData || !conquestAsteroid) return null;
-    const lifespan = (conquestConfigData.conquestAsteroidLifeSpan * SPEED_SCALE) / worldSpeed;
+    if (!conquestConfigData || !shardAsteroid) return null;
+    const lifespan = (conquestConfigData.shardAsteroidLifeSpan * SPEED_SCALE) / worldSpeed;
 
-    const explodeTime = conquestAsteroid.spawnTime + lifespan;
+    const explodeTime = shardAsteroid.spawnTime + lifespan;
     const canExplode = time >= explodeTime;
     const timeUntilExplode = canExplode ? 0n : Number(explodeTime - time);
-    const dripPerSec = conquestConfigData.conquestAsteroidPoints / lifespan;
+    const dripPerSec = conquestConfigData.shardAsteroidPoints / lifespan;
 
     let unclaimedPoints = 0n;
     if (!!owner && owner === player) {
       const endTime = time > explodeTime ? explodeTime : time;
       const timeSinceClaimed = bigIntMax(0n, endTime - lastConquered);
       const holdPct = (timeSinceClaimed * 100000n) / lifespan;
-      unclaimedPoints = (holdPct * conquestConfigData.conquestAsteroidPoints) / 100000n;
+      unclaimedPoints = (holdPct * conquestConfigData.shardAsteroidPoints) / 100000n;
     }
 
     return {
-      distance: conquestAsteroid.distanceFromCenter,
-      points: conquestConfigData.conquestAsteroidPoints,
+      distance: shardAsteroid.distanceFromCenter,
+      points: conquestConfigData.shardAsteroidPoints,
       lifespan,
-      regen: conquestConfigData.conquestAsteroidEncryptionRegen,
-      spawnTime: conquestAsteroid.spawnTime,
+      regen: conquestConfigData.shardAsteroidEncryptionRegen,
+      spawnTime: shardAsteroid.spawnTime,
       explodeTime,
       timeUntilExplode,
       canExplode,
       dripPerSec,
       unclaimedPoints,
-      explodePoints: conquestConfigData.conquestAsteroidPoints,
+      explodePoints: conquestConfigData.shardAsteroidPoints,
     };
-  }, [conquestConfigData, conquestAsteroid, worldSpeed, time, owner, player, lastConquered]);
+  }, [conquestConfigData, shardAsteroid, worldSpeed, time, owner, player, lastConquered]);
 
   if (!timeData) return null;
   return {

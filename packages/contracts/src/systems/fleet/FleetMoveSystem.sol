@@ -5,7 +5,7 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
 import { FleetMovement } from "codegen/index.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
-import { OwnedBy, Asteroid, PositionData, ReversePosition, ConquestAsteroid } from "codegen/index.sol";
+import { OwnedBy, Asteroid, PositionData, ReversePosition, ShardAsteroid } from "codegen/index.sol";
 
 /**
  * @title FleetMoveSystem
@@ -31,7 +31,7 @@ contract FleetMoveSystem is PrimodiumSystem {
    */
   modifier _onlyIfAsteroidExists(bytes32 asteroidEntity) {
     require(
-      Asteroid.getIsAsteroid(asteroidEntity) || ConquestAsteroid.getIsConquestAsteroid(asteroidEntity),
+      Asteroid.getIsAsteroid(asteroidEntity) || ShardAsteroid.getIsShardAsteroid(asteroidEntity),
       "[Fleet] Asteroid does not exist"
     );
     _;

@@ -4,8 +4,8 @@ import { getBuildingName } from "src/util/building";
 import { Card } from "../../core/Card";
 import { BlueprintInfo } from "../widgets/blueprints/BlueprintInfo";
 import { AsteroidHover } from "./AsteroidHover";
-import { ConquestAsteroidHover } from "./ConquestAsteroidHover";
 import { FleetHover } from "./FleetHover";
+import { ShardAsteroidHover } from "./ShardAsteroidHover";
 
 export const HoverInfo = () => {
   const BuildingInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
@@ -26,7 +26,7 @@ export const HoverInfo = () => {
   let content = <></>;
   if (components.BuildingType.has(hoverEntity)) content = <BuildingInfo entity={hoverEntity} />;
   else if (components.Asteroid.has(hoverEntity)) content = <AsteroidHover entity={hoverEntity} />;
-  else if (components.ConquestAsteroid.has(hoverEntity)) content = <ConquestAsteroidHover entity={hoverEntity} />;
+  else if (components.ShardAsteroid.has(hoverEntity)) content = <ShardAsteroidHover entity={hoverEntity} />;
   else if (components.IsFleet.has(hoverEntity)) content = <FleetHover entity={hoverEntity} />;
   else if (components.P_Blueprint.has(hoverEntity)) content = <BlueprintInfo building={hoverEntity} />;
 

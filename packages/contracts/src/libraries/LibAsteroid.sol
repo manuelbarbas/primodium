@@ -16,7 +16,7 @@ import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
-import { LibConquestAsteroid } from "libraries/LibConquestAsteroid.sol";
+import { LibShardAsteroid } from "libraries/LibShardAsteroid.sol";
 
 library LibAsteroid {
   /// @notice Creates new asteroid for player in world
@@ -30,15 +30,12 @@ library LibAsteroid {
 
     P_ConquestConfigData memory conquestConfig = P_ConquestConfig.get();
     if (
-      // limit conquest asteroids to <maxConquestAsteroids>
-      asteroidCount / conquestConfig.conquestAsteroidSpawnFrequency <= conquestConfig.maxConquestAsteroids &&
-      // spawn a conquest asteroid every <conquestAsteroidSpawnFrequency> asteroids, starting at the <conquestAsteroidOffset> asteroid
-      asteroidCount % conquestConfig.conquestAsteroidSpawnFrequency == conquestConfig.conquestAsteroidSpawnOffset
+      // limit shard asteroids to <maxShardAsteroids>
+      asteroidCount / conquestConfig.shardAsteroidSpawnFrequency <= conquestConfig.maxShardAsteroids &&
+      // spawn a shard asteroid every <shardAsteroidSpawnFrequency> asteroids, starting at the <shardAsteroidOffset> asteroid
+      asteroidCount % conquestConfig.shardAsteroidSpawnFrequency == conquestConfig.shardAsteroidSpawnOffset
     ) {
-      LibConquestAsteroid.createConquestAsteroid(
-        asteroidCount,
-        asteroidCount / conquestConfig.conquestAsteroidSpawnFrequency
-      );
+      LibShardAsteroid.createShardAsteroid(asteroidCount, asteroidCount / conquestConfig.shardAsteroidSpawnFrequency);
     }
 
     asteroidEntity = LibEncode.getTimedHash(bytes32("asteroid"), coord);
