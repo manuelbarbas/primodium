@@ -24,7 +24,7 @@ contract ColonySystem is PrimodiumSystem {
   function payForColonySlotsCapacity(
     bytes32 asteroidEntity,
     uint256[] calldata paymentAmounts
-  ) external returns (bool) {
+  ) public _claimResources(asteroidEntity) _claimUnits(asteroidEntity) returns (bool) {
     require(Asteroid.getIsAsteroid(asteroidEntity), "[Colony] Paying entity is not an asteroid");
     bytes32 playerEntity = OwnedBy.get(asteroidEntity);
 
