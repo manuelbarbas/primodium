@@ -177,7 +177,7 @@ export const Companion = () => {
   const [scope, animate] = useAnimate();
 
   useEffect(() => {
-    const listener = addListener(KeybindActions.SpacerockMenu, () => {
+    const listener = addListener(KeybindActions.Aura, () => {
       setMinimized((prev) => !prev);
     });
 
@@ -211,7 +211,7 @@ export const Companion = () => {
               {"<"} HIDE
               {!hideHotkeys && (
                 <p className="absolute top-0 right-2 translate-x-full z-30 -translate-y-1/2 flex text-xs kbd kbd-xs">
-                  {[keybinds[KeybindActions.SpacerockMenu]?.entries().next().value[0]] ?? "?"}
+                  {[keybinds[KeybindActions.Aura]?.entries().next().value[0]] ?? "?"}
                 </p>
               )}
             </Button>
@@ -223,10 +223,8 @@ export const Companion = () => {
         {minimized && (
           <p className="mb-5 drop-shadow-hard">
             PRESS{" "}
-            <span className="kbd kbd-xs">
-              {[keybinds[KeybindActions.SpacerockMenu]?.entries().next().value[0]] ?? "?"}
-            </span>{" "}
-            TO CALL <span className="text-accent">AURA</span>
+            <span className="kbd kbd-xs">{[keybinds[KeybindActions.Aura]?.entries().next().value[0]] ?? "?"}</span> TO
+            CALL <span className="text-accent">AURA</span>
           </p>
         )}
       </div>

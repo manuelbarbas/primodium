@@ -102,7 +102,6 @@ export enum TransactionQueueType {
   SendFleet,
   FleetStance,
   TransferFleet,
-
   WormholeDeposit,
 }
 

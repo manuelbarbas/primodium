@@ -73,7 +73,16 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
             </div>
           )}
         </div>
-
+        {conquestData.unclaimedPoints > 0n && (
+          <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
+            {/* todo replace CP with icon */}
+            {formatResourceCount(EntityType.Iron, conquestData.unclaimedPoints, {
+              notLocale: true,
+              fractionDigits: 1,
+            }).toLocaleString()}
+            unclaimed points
+          </div>
+        )}
         <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
           <HealthBar
             imgUrl={ResourceImage.get(EntityType.Encryption) ?? ""}

@@ -2,7 +2,7 @@
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { toast } from "react-toastify";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { ResourceEntityLookup } from "src/util/constants";
 import { formatResourceCount } from "src/util/number";
 import { components } from "../components";
@@ -25,7 +25,7 @@ export function setupSwapNotifications(mud: MUD) {
       const formattedIn = formatResourceCount(inResource, swap.amountIn, { fractionDigits: 2 });
       const formattedOut = formatResourceCount(outResource, swap.amountOut, { fractionDigits: 2 });
       toast.success(
-        `Swap success! ${formattedIn} ${getBlockTypeName(inResource)} swapped for ${formattedOut} ${getBlockTypeName(
+        `Swap success! ${formattedIn} ${getEntityTypeName(inResource)} swapped for ${formattedOut} ${getEntityTypeName(
           outResource
         )}.`
       );

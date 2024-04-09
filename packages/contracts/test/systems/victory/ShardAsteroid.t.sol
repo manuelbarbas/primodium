@@ -156,6 +156,31 @@ contract ShardAsteroidTest is PrimodiumTest {
     assertEq(Score.get(addressToEntity(alice), uint8(EScoreType.Conquest)), oneTenthOfPoints);
   }
 
+  function testShardAsteroidGameOver() public {
+    uint256 deaths = 4;
+    vm.prank(creator);
+    P_GameConfig.setUnitDeathLimit(deaths);
+    bytes32 fleetEntity = spawnFleetWithUnit(Home.get(addressToEntity(creator)), EUnit.MinutemanMarine, deaths);
+
+    vm.prank(creator);
+    world.Primodium__abandonFleet(fleetEntity);
+
+    spawnPlayers(config.shardAsteroidSpawnOffset - 2);
+
+    bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("shardAsteroid"), bytes32(AsteroidCount.get() + 1));
+
+    bytes32 homeAsteroidEntity = spawn(alice);
+
+    conquerAsteroid(alice, homeAsteroidEntity, asteroidEntity);
+
+    uint256 oneTenthOfLifespan = config.shardAsteroidLifeSpan / 10;
+    vm.warp(block.timestamp + oneTenthOfLifespan);
+
+    world.Primodium__claimShardAsteroidPoints(asteroidEntity);
+
+    assertEq(Score.get(addressToEntity(alice), uint8(EScoreType.Conquest)), 0);
+  }
+
   function testShardAsteroidPastLifeSpanScore() public {
     spawnPlayers(config.shardAsteroidSpawnOffset - 2);
 
@@ -171,12 +196,12 @@ contract ShardAsteroidTest is PrimodiumTest {
     uint256 timeNotMissed = ShardAsteroid.getSpawnTime(asteroidEntity) +
       config.shardAsteroidLifeSpan -
       LastConquered.get(asteroidEntity);
-    uint256 timeNotMissedPct = (timeNotMissed * 1_000) / config.shardAsteroidLifeSpan;
+    uint256 timeNotMissedPct = (timeNotMissed * 100_000) / config.shardAsteroidLifeSpan;
 
     // add points for explosion
     uint256 points = P_ConquestConfig.getShardAsteroidPoints() +
       (timeNotMissedPct * config.shardAsteroidPoints) /
-      1_000;
+      100_000;
 
     world.Primodium__claimShardAsteroidPoints(asteroidEntity);
 

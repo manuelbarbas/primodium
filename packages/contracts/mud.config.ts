@@ -50,11 +50,21 @@ export const worldInput = {
         unitProductionRate: "uint256",
         travelTime: "uint256",
         worldSpeed: "uint256",
-        tax: "uint256",
         maxAsteroidsPerPlayer: "uint256",
         asteroidChanceInv: "uint256",
         asteroidDistance: "uint256",
+        unitDeathLimit: "uint256",
       },
+    },
+
+    SpawnAllowed: {
+      key: [],
+      schema: { value: "bool" },
+    },
+
+    VictoryStatus: {
+      key: [],
+      schema: { unitDeaths: "uint256", gameOver: "bool" },
     },
 
     P_ColonyShipConfig: {

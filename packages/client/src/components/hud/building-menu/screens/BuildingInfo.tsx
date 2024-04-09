@@ -4,7 +4,7 @@ import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useBuildingInfo } from "src/hooks/useBuildingInfo";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
 
 const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
@@ -34,7 +34,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
   return (
     <Navigator.Screen title="BuildingInfo" className="w-full gap-1">
       <DataLabel label="building type">
-        <b>{getBlockTypeName(buildingType as Entity)}</b>
+        <b>{getEntityTypeName(buildingType as Entity)}</b>
       </DataLabel>
       <div className="grid grid-cols-3 w-full gap-1">
         <DataLabel label="level">
@@ -58,7 +58,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
               production.map(({ resource, amount, type }) => (
                 <Badge className="text-xs gap-2" key={`production-${resource}`}>
                   <ResourceIconTooltip
-                    name={getBlockTypeName(resource)}
+                    name={getEntityTypeName(resource)}
                     image={ResourceImage.get(resource) ?? ""}
                     resource={resource}
                     amount={amount}
@@ -76,7 +76,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
               upgrade?.production.map(({ resource, amount, type }) => (
                 <Badge className="text-xs gap-2" key={`next-production-${resource}`}>
                   <ResourceIconTooltip
-                    name={getBlockTypeName(resource)}
+                    name={getEntityTypeName(resource)}
                     image={ResourceImage.get(resource) ?? ""}
                     resource={resource}
                     amount={amount}
@@ -98,7 +98,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
               requiredDependencies.map(({ resource, amount, type }) => (
                 <Badge className="text-xs gap-2" key={`production-${resource}`}>
                   <ResourceIconTooltip
-                    name={getBlockTypeName(resource)}
+                    name={getEntityTypeName(resource)}
                     image={ResourceImage.get(resource) ?? ""}
                     resource={resource}
                     amount={amount}
@@ -117,7 +117,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                 <Badge className="text-xs gap-2" key={`next-production-${resource}`}>
                   <ResourceIconTooltip
                     fractionDigits={3}
-                    name={getBlockTypeName(resource)}
+                    name={getEntityTypeName(resource)}
                     image={ResourceImage.get(resource) ?? ""}
                     resource={resource}
                     amount={amount}
@@ -151,7 +151,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                 <Badge key={storage.resource} className="text-xs gap-2">
                   <ResourceIconTooltip
                     fractionDigits={3}
-                    name={getBlockTypeName(storage.resource)}
+                    name={getEntityTypeName(storage.resource)}
                     image={ResourceImage.get(storage.resource) ?? ""}
                     resource={storage.resource}
                     amount={storage.amount}
@@ -172,7 +172,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                   <Badge key={storage.resource} className="text-xs gap-2">
                     <ResourceIconTooltip
                       fractionDigits={3}
-                      name={getBlockTypeName(storage.resource)}
+                      name={getEntityTypeName(storage.resource)}
                       image={ResourceImage.get(storage.resource) ?? ""}
                       resource={storage.resource}
                       amount={storage.amount}

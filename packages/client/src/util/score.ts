@@ -1,16 +1,45 @@
-const rankToScoreMap = new Map<number, number>(
+const rankToScoreMap = new Map(
   // define the top ten ranks
-  [1000, 800, 666, 520, 450, 380, 310, 240, 170, 100].map((score, index) => [index + 1, score])
+  [1000, 800, 666, 540, 430, 330, 250, 190, 140, 100].map((score, index) => [index + 1, score])
 );
 
-export const rankToScore = (rank: number): number => {
+const log20 = (x: number) => Math.log(x) / Math.log(20);
+export const rankToScore = (rank: number) => {
   if (rank < 1) return 0;
-  if (rankToScoreMap.has(rank)) return rankToScoreMap.get(rank) as number;
-  /*
-  this was inspired by this:
-    https://geri43.github.io/TrackmaniaSeasonPointCalculator/
-*/
-  const val = ((100 / 2) ^ (Math.ceil(Math.log10(rank)) - 1)) * (10 ^ ((Math.ceil(Math.log10(rank)) - 1) / rank + 0.9));
-  rankToScoreMap.set(rank, val);
-  return val;
+  if (rankToScoreMap.has(rank)) return rankToScoreMap.get(rank)!;
+  return 54 / log20(rank - 5);
 };
+
+/*
+outputs:
+[
+  { '1': 1000 },
+  { '2': 800 },
+  { '3': 666 },
+  { '4': 520 },
+  { '5': 450 },
+  { '6': 380 },
+  { '7': 310 },
+  { '8': 240 },
+  { '9': 170 },
+  { '10': 100 },
+  { '11': 90.28530087334255 },
+  { '12': 83.13309987639987 },
+  { '13': 77.79470570797253 },
+  { '14': 73.62449175224273 },
+  { '15': 70.25561976585497 },
+  { '16': 67.46313928177882 },
+  { '17': 65.10085309873385 },
+  { '18': 63.06929308421691 },
+  { '19': 61.29822984766287 },
+  { '20': 59.736537641020576 },
+  { '50': 42.49642389012431 },
+  { '100': 35.52347738479569 },
+  { '200': 30.67884625728626 },
+  { '500': 26.07269509969762 },
+  { '1000': 23.43554568549739 },
+  { '1500': 22.130255201211757 },
+  { '2000': 21.28995012773411 },
+  { '3000': 20.209321106771874 }
+]
+*/

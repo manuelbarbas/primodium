@@ -65,7 +65,7 @@ export const _ShardAsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ s
           background: `rgba(0,0,0, ${Math.max(0, (defaultZoom - zoom) / (defaultZoom - minZoom))}`,
         }}
       >
-        {conquestData && ownedByPlayer && (
+        {conquestData && ownedByPlayer && conquestData.canExplode && (
           <TransactionQueueMask
             queueItemId={"Conquest" as Entity}
             className="absolute bottom-0 left-0 -translate-x-full w-28"
@@ -74,8 +74,8 @@ export const _ShardAsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ s
               onClick={() => claimShardAsteroid(mud, selectedAsteroid)}
               className="victory-bg btn-xs w-full text-xs text-black border border-r-0 border-secondary/50"
             >
-              CLAIM
-              {formatResourceCount(EntityType.Iron, conquestData.unclaimedPoints, {
+              CLAIM{" "}
+              {formatResourceCount(EntityType.Iron, conquestData.explodePoints, {
                 notLocale: true,
                 fractionDigits: 2,
               }).toLocaleString()}{" "}

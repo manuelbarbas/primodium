@@ -7,7 +7,7 @@ import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useWidgets } from "../../hooks/providers/WidgetProvider";
-import { Card } from "./Card";
+import { Card, NoBorderCard } from "./Card";
 import { SceneKeys } from "src/game/lib/constants/common";
 import { KeybindActions } from "src/game/lib/constants/keybinds";
 
@@ -39,6 +39,7 @@ type WidgetProps = {
     | "center-right"
     | "center-top"
     | "center-bottom";
+  noBorder?: boolean;
 };
 
 type WidgetContentProps = {
@@ -71,6 +72,7 @@ type WidgetContentProps = {
     | "center-top"
     | "center-bottom";
   locked?: boolean;
+  noBorder?: boolean;
 };
 
 let pinnedDepth = -10000;
@@ -96,6 +98,7 @@ export const Content: React.FC<WidgetContentProps> = memo(
     onLock,
     onUnlock,
     popUp,
+    noBorder: noBorder,
   }) => {
     const [uiScale] = usePersistentStore((state) => [state.uiScale]);
 
@@ -159,18 +162,19 @@ export const Content: React.FC<WidgetContentProps> = memo(
           transformOrigin: transformOrigin,
         }}
         className={`relative min-w-44 w-fit transition-opacity duration-600 pointer-events-auto select-none ${
-          !pinned && !minimized ? "ring-1 ring-secondary" : ""
-        } ${locked ? "" : ""}`}
+          noBorder ? "ring-0" : "ring-1"
+        } ${!pinned && !minimized ? " ring-secondary" : ""} ${locked ? "" : ""}`}
         onPointerEnter={onPointerEnter}
         onPointerLeave={onPointerLeave}
       >
         <div
-          className={`flex p-1 text-xs items-center gap-3 justify-between w-full cursor-move ${
+          className={`flex p-1 text-xs items-center gap-3 justify-between w-full cursor-move ring-1 ring-secondary ${
             locked ? "bg-info/50 cursor-default" : pinned ? "bg-neutral/75" : "bg-secondary/50"
           }`}
           onPointerDown={onMouseDown}
           onDoubleClick={onDoubleClick}
         >
+          {/* Title */}
           <div className="flex gap-1 bg-gray-900 px-2 items-center">
             {icon && <img src={icon} className="pixel-images h-5" />}
             <p className=" uppercase font-bold">{title}</p>
@@ -194,13 +198,23 @@ export const Content: React.FC<WidgetContentProps> = memo(
           )}
         </div>
 
-        <Card
-          className={`relative !p-0 min-w-72 border border-t-success border-secondary filter ${
-            minimized ? "!border-0 h-0 overflow-hidden opacity-0" : ""
-          }`}
-        >
-          {children}
-        </Card>
+        {noBorder ? (
+          <NoBorderCard
+            className={`relative !p-0 min-w-72 filter !bg-opacity-0 ${
+              minimized ? "!border-0 h-0 overflow-hidden opacity-0" : ""
+            }`}
+          >
+            {children}
+          </NoBorderCard>
+        ) : (
+          <Card
+            className={`relative !p-0 min-w-72 border border-t-success border-secondary filter ${
+              minimized ? "!border-0 h-0 overflow-hidden opacity-0" : ""
+            }`}
+          >
+            {children}
+          </Card>
+        )}
       </div>
     );
   }
@@ -226,6 +240,7 @@ export const Widget: React.FC<WidgetProps> = memo(
     defaultVisible = false,
     popUp = false,
     active = true,
+    noBorder = false,
   }) => {
     const primodium = usePrimodium();
     const [paneInfo, setPane, removePane] = usePersistentStore((state) => [
@@ -577,6 +592,7 @@ export const Widget: React.FC<WidgetProps> = memo(
                 onMinimize={toggleMinimize}
                 onMaximize={toggleMinimize}
                 popUp={popUp}
+                noBorder={noBorder}
               >
                 {children}
               </Content>
@@ -614,6 +630,7 @@ export const Widget: React.FC<WidgetProps> = memo(
               onUnlock={lockable ? handleUnlock : undefined}
               origin={origin}
               popUp={popUp}
+              noBorder={noBorder}
             >
               {children}
             </Content>

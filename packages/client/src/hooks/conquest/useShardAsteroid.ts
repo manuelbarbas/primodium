@@ -1,3 +1,4 @@
+import { bigIntMax } from "@latticexyz/common/utils";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { components } from "src/network/components";
@@ -24,13 +25,14 @@ export const useShardAsteroid = (entity: Entity) => {
     const explodeTime = shardAsteroid.spawnTime + lifespan;
     const canExplode = time >= explodeTime;
     const timeUntilExplode = canExplode ? 0n : Number(explodeTime - time);
-    const dripPerSec = canExplode ? 0n : conquestConfigData.shardAsteroidPoints / lifespan;
+    const dripPerSec = conquestConfigData.shardAsteroidPoints / lifespan;
 
     let unclaimedPoints = 0n;
     if (!!owner && owner === player) {
       const endTime = time > explodeTime ? explodeTime : time;
-      const timeSinceClaimed = endTime - lastConquered;
-      unclaimedPoints = dripPerSec * timeSinceClaimed + (canExplode ? conquestConfigData.shardAsteroidPoints : 0n);
+      const timeSinceClaimed = bigIntMax(0n, endTime - lastConquered);
+      const holdPct = (timeSinceClaimed * 100000n) / lifespan;
+      unclaimedPoints = (holdPct * conquestConfigData.shardAsteroidPoints) / 100000n;
     }
 
     return {
@@ -44,6 +46,7 @@ export const useShardAsteroid = (entity: Entity) => {
       canExplode,
       dripPerSec,
       unclaimedPoints,
+      explodePoints: conquestConfigData.shardAsteroidPoints,
     };
   }, [conquestConfigData, shardAsteroid, worldSpeed, time, owner, player, lastConquered]);
 
