@@ -23,7 +23,7 @@ library AsteroidSet {
    * @param asteroidEntity the unique asteroidEntity for the asteroid.
    */
   function add(bytes32 entity, bytes32 key, bytes32 asteroidEntity) internal {
-    require(!has(entity, key, asteroidEntity), "[AsteroidSet] asteroid is alread associated with entity");
+    if (has(entity, key, asteroidEntity)) return;
     Keys_AsteroidSet.push(entity, key, asteroidEntity);
     Meta_AsteroidSet.set(entity, key, asteroidEntity, true, Keys_AsteroidSet.length(entity, key) - 1);
   }
@@ -45,6 +45,8 @@ library AsteroidSet {
    * @param asteroidEntity The unique asteroidEntity for the asteroid to remove.
    */
   function remove(bytes32 entity, bytes32 key, bytes32 asteroidEntity) internal {
+    if (!has(entity, key, asteroidEntity)) return;
+
     if (Keys_AsteroidSet.length(entity, key) == 1) {
       clear(entity, key);
       return;

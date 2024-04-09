@@ -98,11 +98,10 @@ export enum TransactionQueueType {
   ClearFleet,
   LandFleet,
   MergeFleets,
+  AbandonFleet,
   SendFleet,
   FleetStance,
   TransferFleet,
-  AbandonFleet,
-
   WormholeDeposit,
 }
 

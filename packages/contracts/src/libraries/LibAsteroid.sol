@@ -35,7 +35,10 @@ library LibAsteroid {
       // spawn a conquest asteroid every <conquestAsteroidSpawnFrequency> asteroids, starting at the <conquestAsteroidOffset> asteroid
       asteroidCount % conquestConfig.conquestAsteroidSpawnFrequency == conquestConfig.conquestAsteroidSpawnOffset
     ) {
-      LibConquestAsteroid.createConquestAsteroid(asteroidCount);
+      LibConquestAsteroid.createConquestAsteroid(
+        asteroidCount,
+        asteroidCount / conquestConfig.conquestAsteroidSpawnFrequency
+      );
     }
 
     asteroidEntity = LibEncode.getTimedHash(bytes32("asteroid"), coord);
@@ -199,6 +202,11 @@ library LibAsteroid {
     OwnedBy.set(asteroidEntity, ownerEntity);
     AsteroidSet.add(ownerEntity, AsteroidOwnedByKey, asteroidEntity);
     LastConquered.set(asteroidEntity, block.timestamp);
+  }
+
+  function removeAsteroidOwner(bytes32 asteroidEntity, bytes32 ownerEntity) internal {
+    AsteroidSet.remove(ownerEntity, AsteroidOwnedByKey, asteroidEntity);
+    OwnedBy.deleteRecord(asteroidEntity);
   }
 
   /// @dev Calculates position based on distance and max index

@@ -12,11 +12,11 @@ import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
-import { abandonFleet } from "src/network/setup/contractCalls/abandonFleet";
+import { abandonFleet } from "src/network/setup/contractCalls/fleetAbandon";
 import { clearFleet } from "src/network/setup/contractCalls/fleetClear";
 import { landFleet } from "src/network/setup/contractCalls/fleetLand";
 import { clearFleetStance, setFleetStance } from "src/network/setup/contractCalls/fleetStance";
-import { formatNumber, formatResourceCount, formatTime } from "src/util/number";
+import { formatNumber, formatResourceCount } from "src/util/number";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { FleetEntityHeader } from "./FleetHeader";
 import { useFleetNav } from "./Fleets";
@@ -217,7 +217,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
                 api.camera.pan(fleetDestinationPosition);
               }}
             >
-              ATTACK {inCooldown ? `(${formatTime(inCooldown.duration)})` : ""}
+              ATTACK
             </Modal.CloseButton>
             <TransactionQueueMask queueItemId={"landFleet" as Entity}>
               <Button
@@ -225,7 +225,7 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
                 onClick={() => movement?.destination && landFleet(mud, fleetEntity, movement.destination as Entity)}
                 disabled={totalUnits <= 0n || inCooldown.inCooldown}
               >
-                LAND {inCooldown ? `(${formatTime(inCooldown.duration)})` : ""}
+                LAND
               </Button>
             </TransactionQueueMask>
             <TransactionQueueMask queueItemId={"abandonFleet" as Entity}>

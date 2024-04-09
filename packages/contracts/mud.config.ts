@@ -780,6 +780,12 @@ export const worldInput = {
         spawnTime: "uint256",
       },
     },
+
+    ConquestAsteroidIndex: {
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256" },
+      type: "offchainTable",
+    },
     /* ---------------------------- Player Asteroids ---------------------------- */
 
     Keys_AsteroidSet: {
