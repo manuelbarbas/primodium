@@ -398,6 +398,13 @@ export const worldInput = {
       },
     },
 
+    P_ColonySlotsMultiplier: {
+      key: [],
+      schema: {
+        value: "uint256",
+      },
+    },
+
     ColonySlotsInstallments: {
       key: ["playerEntity", "resourceIndex"],
       schema: {

@@ -1213,7 +1213,8 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   ColonySlotsConfig: {
     keys: [],
     tables: {
-      P_ColonySlotsConfig: getResourceValues({ Lithium: 1000, Copper: 500 }),
+      P_ColonySlotsConfig: getResourceValues({ Lithium: 1000, Copper: 500 }), // Order impacts Installment payment index
+      P_ColonySlotsMultiplier: { value: 4n },
     },
   },
 
