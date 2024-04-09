@@ -8,7 +8,7 @@ import { useMud } from "src/hooks";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { upgradeRange } from "src/network/setup/contractCalls/upgradeRange";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { EntityType, ResourceImage, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { getUpgradeInfo } from "src/util/upgrade";
@@ -48,7 +48,7 @@ export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
                   return (
                     <Badge key={resource.id + resource.type} className="text-xs gap-2">
                       <ResourceIconTooltip
-                        name={getBlockTypeName(resource.id)}
+                        name={getEntityTypeName(resource.id)}
                         image={ResourceImage.get(resource.id) ?? ""}
                         resource={resource.id}
                         amount={resource.amount}

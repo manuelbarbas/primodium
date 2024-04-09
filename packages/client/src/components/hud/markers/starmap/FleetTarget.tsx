@@ -11,7 +11,7 @@ import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { clearFleetStance } from "src/network/setup/contractCalls/fleetStance";
 import { getCanAttackSomeone, getFleetStats } from "src/util/unit";
-import { Fleets } from "../../panes/fleets/Fleets";
+import { Fleets } from "../../widgets/fleets/Fleets";
 import { DepthLayers } from "src/game/lib/constants/common";
 import { usePrimodium } from "src/hooks/usePrimodium";
 

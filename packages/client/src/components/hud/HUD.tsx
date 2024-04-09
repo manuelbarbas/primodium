@@ -2,6 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { FC, memo, useEffect, useMemo, useRef } from "react";
 import ReactDOM from "react-dom";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks";
 import { useWidgets } from "src/hooks/providers/WidgetProvider";
@@ -24,14 +25,14 @@ import { BuildMarker } from "./markers/starmap/BuildMarker";
 import { FleetTarget } from "./markers/starmap/FleetTarget";
 import { HomeMarker } from "./markers/starmap/HomeMarker";
 import HackerConsole from "./modals/HackerConsole";
-import { OwnedAsteroids } from "./panes/OwnedAsteroids";
-import { OwnedFleets } from "./panes/OwnedFleets";
-import { Blueprints } from "./panes/blueprints/Blueprints";
-import { Chat } from "./panes/chat/Chat";
-import { Cheatcodes } from "./panes/dev/Cheatcodes";
-import { Hangar } from "./panes/hangar/Hangar";
-import { Resources } from "./panes/resources/Resources";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
+import { OwnedAsteroids } from "./widgets/OwnedAsteroids";
+import { OwnedFleets } from "./widgets/OwnedFleets";
+import { UnitDeaths } from "./widgets/UnitDeaths";
+import { Blueprints } from "./widgets/blueprints/Blueprints";
+import { Chat } from "./widgets/chat/Chat";
+import { Cheatcodes } from "./widgets/dev/Cheatcodes";
+import { Hangar } from "./widgets/hangar/Hangar";
+import { Resources } from "./widgets/resources/Resources";
 
 export const GameHUD = memo(() => {
   const {
@@ -107,7 +108,9 @@ export const GameHUD = memo(() => {
       const position = components.Position.get(activeRock) ?? { x: 0, y: 0 };
       const { pan } = primodium.api("STARMAP").camera;
 
-      pan(position, 0);
+      pan(position, {
+        duration: 0,
+      });
 
       await transitionToScene(
         "ASTEROID",
@@ -193,6 +196,7 @@ export const GameHUD = memo(() => {
 
             <HUD.TopMiddle className="flex flex-col items-center gap-2">
               <Cheatcodes />
+              <UnitDeaths />
             </HUD.TopMiddle>
             <HUD.TopRight className="flex flex-col items-end gap-2">
               <CurrentObjective />

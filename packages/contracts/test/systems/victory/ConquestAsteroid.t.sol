@@ -156,6 +156,31 @@ contract ConquestSystemTest is PrimodiumTest {
     assertEq(Score.get(addressToEntity(alice), uint8(EScoreType.Conquest)), oneTenthOfPoints);
   }
 
+  function testShardAsteroidGameOver() public {
+    uint256 deaths = 4;
+    vm.prank(creator);
+    P_GameConfig.setUnitDeathLimit(deaths);
+    bytes32 fleetEntity = spawnFleetWithUnit(Home.get(addressToEntity(creator)), EUnit.MinutemanMarine, deaths);
+
+    vm.prank(creator);
+    world.Primodium__abandonFleet(fleetEntity);
+
+    spawnPlayers(config.conquestAsteroidSpawnOffset - 2);
+
+    bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("conquestAsteroid"), bytes32(AsteroidCount.get() + 1));
+
+    bytes32 homeAsteroidEntity = spawn(alice);
+
+    conquerAsteroid(alice, homeAsteroidEntity, asteroidEntity);
+
+    uint256 oneTenthOfLifespan = config.conquestAsteroidLifeSpan / 10;
+    vm.warp(block.timestamp + oneTenthOfLifespan);
+
+    world.Primodium__claimConquestAsteroidPoints(asteroidEntity);
+
+    assertEq(Score.get(addressToEntity(alice), uint8(EScoreType.Conquest)), 0);
+  }
+
   function testConquestAsteroidPastLifeSpanScore() public {
     spawnPlayers(config.conquestAsteroidSpawnOffset - 2);
 

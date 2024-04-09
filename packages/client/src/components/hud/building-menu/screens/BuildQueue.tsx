@@ -3,7 +3,7 @@ import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { components } from "src/network/components";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { BackgroundImage } from "src/util/constants";
 
 export const BuildQueue: React.FC<{ building: Entity }> = ({ building }) => {
@@ -68,7 +68,7 @@ const ProgressBar: React.FC<{
   if (index === 0) {
     return (
       <SecondaryCard key={index} className={`w-full text-sm flex-row justify-between p-2 mb-1`}>
-        <div className="flex gap-2 items-center justify-center">{getBlockTypeName(unit)}</div>
+        <div className="flex gap-2 items-center justify-center">{getEntityTypeName(unit)}</div>
         <div>
           <div className="relative flex gap-1 p-1 bg-slate-600 items-center">
             <img
@@ -91,7 +91,7 @@ const ProgressBar: React.FC<{
     <SecondaryCard key={index} className="flex flex-row justify-between p-2 w-full text-xs !bg-neutral border-0">
       <div className="flex gap-2 items-center justify-center">
         <p className="text-slate-400"> {index}.</p>
-        {getBlockTypeName(unit)}
+        {getEntityTypeName(unit)}
       </div>
       <div className="relative flex gap-1 p-1 bg-slate-600 items-center">
         <img
