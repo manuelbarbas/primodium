@@ -96,55 +96,72 @@ export enum EOrderType {
 }
 
 export enum EObjectives {
+  // (A) Intro
   BuildIronMine = 1,
   BuildCopperMine,
+  BuildIronPlateFactory,
+  UpgradeMainBase,
+  ExpandBase1,
+
+  // (A-A) Conquest basics
   BuildGarage,
   BuildWorkshop,
+  CreateFleet,
 
-  UpgradeMainBase,
+  // (A-A-A) Fleet basics
+  TransferToFleet,
+  SendFleet,
+  BattleAsteroid,
+  OpenBattleReport,
 
-  BuildLithiumMine,
-  BuildIronPlateFactory,
-  BuildStorageUnit,
-  BuildHangar,
-  BuildPVCellFactory,
-  BuildSolarPanel,
-  BuildDroneFactory,
-  BuildStarmapper,
-  BuildSAMLauncher,
-  BuildVault,
-  BuildShieldGenerator,
+  // (A-A-A-A) Fleet combat
+  BattleFleet,
+  SuccessfulRaid,
+
+  // (A-A-A-B) Conquering asteroids
   BuildShipyard,
-  BuildMarket,
+  TrainColonyShip,
+  DecryptAttack,
+  CaptureAsteroid,
 
+  // (A-A-A-B) fleet management and trade
+  RecallFleet,
+  TransferToAsteroid,
+  LandFleet,
+  BuildStarmapper,
+
+  // (A-A-B) basic unit production
   TrainMinutemanMarines,
   TrainTridentMarines,
   TrainLightningCrafts,
+
+  // (A-A-C) advanced unit production
+  BuildDroneFactory,
+  UpgradeUnit,
   TrainAnvilDrones,
   TrainHammerDrones,
   TrainAegisDrones,
   TrainStingerDrones,
-  TrainColonyShip,
+  BuildHangar,
 
-  ExpandBase1,
+  // (A-A-D) Defense
+  BuildSAMLauncher,
+  BuildShieldGenerator,
+  BuildVault,
 
-  CreateFleet,
-  TransferToAsteroid,
-  TransferToFleet,
-  RecallFleet,
-  LandFleet,
-  SendFleet,
-  BattleAsteroid,
-  BattleFleet,
-  SuccessfulRaid,
-  OpenBattleReport,
-  UpgradeUnit,
-  BuildColonyShip,
-  DecryptAttack,
-  CaptureAsteroid,
+  // (A-B) Production
+  BuildLithiumMine,
+  BuildStorageUnit,
 
+  // (A-B-A) Advanced Production
+  BuildPVCellFactory,
+  BuildSolarPanel,
+
+  // (A-B-B) Market
+  BuildMarket,
   MarketSwap,
 
+  // (A-C) Alliance
   JoinAlliance,
 }
 

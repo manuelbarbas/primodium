@@ -5,6 +5,7 @@ export type ObjectiveType = "Build" | "Upgrade" | "Train" | "Expand" | "Claimabl
 
 // Define a base type for common properties
 export type BaseObjective = {
+  category: string;
   description?: string;
   requiredMainBase?: bigint;
   requiredObjectives?: EObjectives[];

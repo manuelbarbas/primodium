@@ -28,7 +28,8 @@ export const Objective: React.FC<{
 
   const objectiveName = getEntityTypeName(objectiveEntity);
 
-  const objectiveDescription = getObjective(objectiveEntity)?.description ?? "A Primodium objective.";
+  const objective = getObjective(objectiveEntity);
+  const description = objective?.description ?? "A Primodium objective.";
   const rewardRecipe = getRewards(objectiveEntity);
 
   const requirements = useMemo(
@@ -41,7 +42,8 @@ export const Objective: React.FC<{
       className={`text-xs w-full flex flex-col justify-between ${highlight ? "border border-warning" : ""}`}
     >
       <div>
-        <div className="grid grid-cols-10">
+        {objective && <p className="bg-primary text-white font-bold text-xs uppercase p-1">{objective.category}</p>}
+        <div className="grid grid-cols-10 pt-2">
           <div className="flex items-center col-span-1">
             <FaMedal className="text-accent" />
           </div>
@@ -49,9 +51,9 @@ export const Objective: React.FC<{
         </div>
 
         <div className="flex flex-wrap gap-1 items-center">
-          <hr className="border-t border-accent/20 w-full mb-1 mt-3" />
-          <p className=" col-span-7 flex items-center px-1 opacity-75 font-normal">{objectiveDescription}</p>
-          <hr className="border-t border-accent/20 w-full mb-1 mt-3" />
+          <hr className="border-t border-accent/20 w-full my-1" />
+          <p className=" col-span-7 flex items-center px-1 opacity-75 font-normal">{description}</p>
+          <hr className="border-t border-accent/20 w-full my-1" />
           <div className="col-span-10 w-full flex flex-wrap gap-1">
             <span className="flex gap-1 items-center opacity-75">
               <FaSpinner /> PROGRESS:
@@ -60,7 +62,19 @@ export const Objective: React.FC<{
               {requirements.map((_req, index) => {
                 const reqComplete = _req.currentValue >= _req.requiredValue;
                 const value = _req.currentValue > _req.requiredValue ? _req.requiredValue : _req.currentValue;
-
+                if (_req.isBool) {
+                  return (
+                    <Badge key={index} className={`text-xs gap-2 ${reqComplete ? "badge-success" : "badge-neutral"}`}>
+                      <IconLabel
+                        imageUri={_req.backgroundImage ?? "/img/icons/minersicon.png"}
+                        text={reqComplete ? "Complete" : "Incomplete"}
+                        tooltipDirection={"top"}
+                        tooltipText={_req.tooltipText ?? ""}
+                        className="text-xs font-bold"
+                      />
+                    </Badge>
+                  );
+                }
                 return (
                   <Badge key={index} className={`text-xs gap-2 ${reqComplete ? "badge-success" : "badge-neutral"}`}>
                     <IconLabel

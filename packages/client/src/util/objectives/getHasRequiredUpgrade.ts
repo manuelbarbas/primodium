@@ -15,7 +15,7 @@ export function getHasRequiredBuildingUpgrade(asteroid: Entity, objective: Upgra
     return level > acc ? level : acc;
   }, 0n);
   return {
-    tooltipText: `Upgrade ${getEntityTypeName(objective.buildingType)} to Lvl ${objective.level.toLocaleString()}`,
+    tooltipText: `${getEntityTypeName(objective.buildingType)} Level`,
     backgroundImage: "/img/icons/addicon.png",
     requiredValue: objective.level,
     currentValue: maxLevel,

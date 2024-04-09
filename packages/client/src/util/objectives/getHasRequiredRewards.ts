@@ -33,7 +33,7 @@ export function getRewardUtilitiesRequirement(objective: Entity, asteroid: Entit
       currentValue: resourceStorage,
       scale: 1n,
       backgroundImage: ResourceImage.get(entity as Entity),
-      tooltipText: `${val} ${getEntityTypeName(entity as Entity)}`,
+      tooltipText: `${getEntityTypeName(entity as Entity)}`,
     };
   });
 }

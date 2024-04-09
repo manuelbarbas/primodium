@@ -15,6 +15,7 @@ export function getHasRequiredBuilding(asteroid: Entity, objective: BuildObjecti
     backgroundImage: "/img/icons/minersicon.png",
     requiredValue: 1n,
     currentValue: BigInt(buildings.size),
+    isBool: true,
     scale: 1n,
   };
 }
