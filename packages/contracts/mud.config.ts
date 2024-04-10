@@ -62,8 +62,6 @@ export const worldInput = {
     P_ColonyShipConfig: {
       key: [],
       schema: {
-        resource: "uint8",
-        initialCost: "uint256",
         decryption: "uint256",
         cooldownExtension: "uint256",
       },
@@ -382,6 +380,35 @@ export const worldInput = {
 
     // used to record the progress of claiming the current unit
     ClaimOffset: {
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256" },
+    },
+
+    // can only increase, never decrease. Assigned to player to prevent weird edge cases of losing asteroids
+    MaxColonySlots: {
+      key: ["playerEntity"],
+      schema: { playerEntity: "bytes32", value: "uint256" },
+    },
+
+    P_ColonySlotsConfig: {
+      key: [],
+      schema: {
+        multiplier: "uint256",
+        resources: "uint8[]",
+        amounts: "uint256[]",
+      },
+    },
+
+    ColonySlotsInstallments: {
+      key: ["playerEntity", "resourceIndex"],
+      schema: {
+        playerEntity: "bytes32",
+        resourceIndex: "uint256", // index of the resource in the P_ColonySlotsConfig
+        amounts: "uint256",
+      },
+    },
+
+    ColonyShipsInTraining: {
       key: ["entity"],
       schema: { entity: "bytes32", value: "uint256" },
     },
