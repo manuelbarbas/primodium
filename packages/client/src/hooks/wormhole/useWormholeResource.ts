@@ -26,7 +26,7 @@ export const useWormholeResource = () => {
       return { timeUntilNextResource, resource: resourceEntity, nextResource: nextResourceEntity };
     return {
       timeUntilNextResource,
-      nextResource: getRandomResource(wormholeData.hash as Entity, expectedTurn, resourceEntity),
+      nextResource: getRandomResource(wormholeData.hash as Entity, expectedTurn, nextResourceEntity),
       resource: nextResourceEntity,
     };
   }, [time, wormholeConfig, wormholeData]);

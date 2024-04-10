@@ -250,7 +250,7 @@ contract WormholeTest is PrimodiumTest {
     uint8 expectedNewNextResource = LibWormhole.getRandomResource(
       wormholeHash,
       wormholeData.turn + 1,
-      wormholeData.resource
+      wormholeData.nextResource
     );
 
     uint256 prevScore = Score.get(aliceEntity, uint8(EScoreType.Wormhole));
