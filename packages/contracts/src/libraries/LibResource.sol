@@ -3,7 +3,6 @@ pragma solidity >=0.8.24;
 import { EResource } from "src/Types.sol";
 
 import { LibStorage } from "libraries/LibStorage.sol";
-import { LibUnit } from "libraries/LibUnit.sol";
 import { LibColony } from "libraries/LibColony.sol";
 import { UtilityMap } from "libraries/UtilityMap.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
@@ -51,7 +50,7 @@ library LibResource {
       require(count == 1, "[SpendResources] Colony ships can only be trained one at a time");
       bytes32 playerEntity = OwnedBy.get(asteroidEntity);
       require(
-        LibUnit.getColonyShipsPlusAsteroids(playerEntity) < MaxColonySlots.get(playerEntity),
+        LibColony.getColonyShipsPlusAsteroids(playerEntity) < MaxColonySlots.get(playerEntity),
         "[SpendResources] No available slots to train colony ship"
       );
 

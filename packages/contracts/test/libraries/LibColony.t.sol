@@ -12,7 +12,6 @@ import { UnitCount, MaxResourceCount, Asteroid, Home, OwnedBy, ResourceCount, Ma
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
 import { LibColony } from "libraries/LibColony.sol";
-import { LibUnit } from "libraries/LibUnit.sol";
 import { S_TransferAsteroidSystem } from "systems/subsystems/S_TransferAsteroidSystem.sol";
 
 contract LibColonyTest is PrimodiumTest {
@@ -40,11 +39,11 @@ contract LibColonyTest is PrimodiumTest {
     LibColony.increaseMaxColonySlots(playerEntity);
     assertEq(MaxColonySlots.get(playerEntity), 2);
 
-    assertEq(LibUnit.getColonyShipsPlusAsteroids(playerEntity), 1, "primary asteroid should count as a colony slot");
+    assertEq(LibColony.getColonyShipsPlusAsteroids(playerEntity), 1, "primary asteroid should count as a colony slot");
     trainUnits(creator, ColonyShipPrototypeId, 1, true);
     vm.startPrank(creator);
     assertEq(
-      LibUnit.getColonyShipsPlusAsteroids(playerEntity),
+      LibColony.getColonyShipsPlusAsteroids(playerEntity),
       2,
       "trained and claimed colony ship isn't being counted"
     );
@@ -68,13 +67,13 @@ contract LibColonyTest is PrimodiumTest {
     // train and setup everything
     LibColony.increaseMaxColonySlots(playerEntity);
     setupCreateFleet(creator, creatorHomeAsteroid, unitCounts, resourceCounts);
-    assertEq(LibUnit.getColonyShipsPlusAsteroids(playerEntity), 3, "colony ship on asteroid isn't being counted");
+    assertEq(LibColony.getColonyShipsPlusAsteroids(playerEntity), 3, "colony ship on asteroid isn't being counted");
 
     vm.startPrank(creator);
     // create the fleet
     world.Primodium__createFleet(creatorHomeAsteroid, unitCounts, resourceCounts);
     assertEq(
-      LibUnit.getColonyShipsPlusAsteroids(playerEntity),
+      LibColony.getColonyShipsPlusAsteroids(playerEntity),
       3,
       "colony ship transfer from asteroid to fleet isn't being counted"
     );
@@ -83,7 +82,7 @@ contract LibColonyTest is PrimodiumTest {
     LibColony.increaseMaxColonySlots(playerEntity);
     trainUnits(creator, ColonyShipPrototypeId, 1, false);
     vm.startPrank(creator);
-    assertEq(LibUnit.getColonyShipsPlusAsteroids(playerEntity), 4, "colony ship in training isn't being counted");
+    assertEq(LibColony.getColonyShipsPlusAsteroids(playerEntity), 4, "colony ship in training isn't being counted");
   }
 
   // todo: make the multiplier a prototypeConfig changeable value

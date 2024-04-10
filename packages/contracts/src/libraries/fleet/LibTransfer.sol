@@ -8,6 +8,7 @@ import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
+import { LibColony } from "libraries/LibColony.sol";
 
 /**
  * @title LibTransfer
@@ -264,7 +265,7 @@ library LibTransfer {
     // if is asteroid, use OwnedBy.get(entity) to get the player entity. If is fleet, use OwnedBy.get(entity) to get the asteroid entity and then use OwnedBy.get(asteroidEntity) to get the player entity
     bytes32 playerEntity = isAsteroid ? OwnedBy.get(receivingEntity) : OwnedBy.get(OwnedBy.get(receivingEntity));
 
-    uint256 colonySlotsOccupied = LibUnit.getColonyShipsPlusAsteroids(playerEntity);
+    uint256 colonySlotsOccupied = LibColony.getColonyShipsPlusAsteroids(playerEntity);
     uint256 maxColonySlots = MaxColonySlots.get(playerEntity);
     require(
       maxColonySlots - colonySlotsOccupied >= colonySlotsNeeded,

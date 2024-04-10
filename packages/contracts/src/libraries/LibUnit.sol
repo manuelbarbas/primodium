@@ -6,11 +6,9 @@ import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 import { EResource } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
-import { AsteroidSet } from "libraries/AsteroidSet.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
-import { AsteroidOwnedByKey, FleetOwnedByKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
-import { FleetSet } from "libraries/fleet/FleetSet.sol";
+import { LibColony } from "libraries/LibColony.sol";
 
 library LibUnit {
   /**
@@ -157,27 +155,7 @@ library LibUnit {
     }
   }
 
-  function getColonyShipsPlusAsteroids(bytes32 playerEntity) internal view returns (uint256) {
-    bytes32[] memory ownedAsteroids = AsteroidSet.getAsteroidEntities(playerEntity, AsteroidOwnedByKey);
-
-    uint256 ret = 0;
-    for (uint256 i = 0; i < ownedAsteroids.length; i++) {
-      uint256 shipsEachAsteroid = UnitCount.get(ownedAsteroids[i], ColonyShipPrototypeId);
-      ret += shipsEachAsteroid;
-
-      // Fleets are owned by asteroids
-      bytes32[] memory ownedFleets = FleetSet.getFleetEntities(ownedAsteroids[i], FleetOwnedByKey);
-      for (uint256 j = 0; j < ownedFleets.length; j++) {
-        uint256 shipsEachFleet = UnitCount.get(ownedFleets[j], ColonyShipPrototypeId);
-        ret += shipsEachFleet;
-      }
-
-      // Colony ships being trained on each asteroid
-      ret += ColonyShipsInTraining.get(ownedAsteroids[i]);
-    }
-
-    return ret + ownedAsteroids.length;
-  }
+  function getColonyShipsPlusAsteroids(bytes32 playerEntity) internal view returns (uint256) {}
 
   /**
    * @dev Increases the count of a specific unit type for a player's asteroid.

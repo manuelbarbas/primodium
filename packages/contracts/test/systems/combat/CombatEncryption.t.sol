@@ -13,7 +13,6 @@ import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibColony } from "libraries/LibColony.sol";
-import { LibUnit } from "libraries/LibUnit.sol";
 
 contract CombatEncryptionTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;
@@ -206,7 +205,7 @@ contract CombatEncryptionTest is PrimodiumTest {
     uint256 bobHomeScore = Score.get(bobHomeAsteroid);
     uint256 aliceScore = Score.get(aliceEntity);
 
-    uint256 aliceSlotsOccupied = LibUnit.getColonyShipsPlusAsteroids(aliceEntity);
+    uint256 aliceSlotsOccupied = LibColony.getColonyShipsPlusAsteroids(aliceEntity);
     uint256 bobSlotsOccupied;
     console.log("Alice MaxColonySlots: ", MaxColonySlots.get(aliceEntity));
     console.log("Alice Occupied Slots: ", aliceSlotsOccupied);
@@ -224,7 +223,7 @@ contract CombatEncryptionTest is PrimodiumTest {
         LibColony.increaseMaxColonySlots(bobEntity);
         UnitCount.set(bobHomeAsteroid, colonyShipPrototype, 1);
         trainUnits(bob, colonyShipPrototype, 1, false); // still in training
-        bobSlotsOccupied = LibUnit.getColonyShipsPlusAsteroids(bobEntity);
+        bobSlotsOccupied = LibColony.getColonyShipsPlusAsteroids(bobEntity);
         console.log("Bob MaxColonySlots: ", MaxColonySlots.get(bobEntity));
         console.log("Bob Occupied Slots: ", bobSlotsOccupied);
         vm.stopPrank();
@@ -257,12 +256,12 @@ contract CombatEncryptionTest is PrimodiumTest {
 
     assertEq(OwnedBy.get(bobHomeAsteroid), aliceEntity, "asteroid should have been taken over");
     assertEq(
-      LibUnit.getColonyShipsPlusAsteroids(aliceEntity),
+      LibColony.getColonyShipsPlusAsteroids(aliceEntity),
       aliceSlotsOccupied,
       "alice should have same slots occupied because her colony ship turned into a colony, and she shouldn't get Bob's colony ships"
     );
     assertEq(
-      LibUnit.getColonyShipsPlusAsteroids(bobEntity),
+      LibColony.getColonyShipsPlusAsteroids(bobEntity),
       bobSlotsOccupied - 4,
       "bob should have 4 fewer slots occupied. Lost: asteroid, training colony ship, colony ship on asteroid, colony ship in fleet"
     );
