@@ -1451,6 +1451,10 @@ export interface SystemReceiveReinforcementProperties {
   transactionValid: boolean;
 }
 
+export interface SystemRegisterDelegationProperties {
+  delegateAddress: string;
+}
+
 export interface SystemRejectJoinRequestProperties {
   /**
    * Name of an alliance.
@@ -2547,6 +2551,14 @@ export class SystemReceiveReinforcement implements BaseEvent {
   }
 }
 
+export class SystemRegisterDelegation implements BaseEvent {
+  event_type = "system.RegisterDelegation";
+
+  constructor(public event_properties: SystemRegisterDelegationProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
 export class SystemRejectJoinRequest implements BaseEvent {
   event_type = "system.RejectJoinRequest";
 
@@ -3216,6 +3228,23 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemReceiveReinforcement(properties), options);
+  }
+
+  /**
+   * system.RegisterDelegation
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.RegisterDelegation)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. delegateAddress)
+   * @param options Amplitude event options.
+   */
+  systemRegisterDelegation(
+    properties: SystemRegisterDelegationProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemRegisterDelegation(properties), options);
   }
 
   /**

@@ -4,14 +4,9 @@ import { execute, executeBatch } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { UNLIMITED_DELEGATION } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
-import { Hex, TransactionReceipt } from "viem";
+import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-const postCall = (receipt: TransactionReceipt | undefined) => {
-  ampli.systemSpawn({
-    ...parseReceipt(receipt),
-  });
-};
 export const spawn = async (mud: MUD) => {
   await execute(
     {
@@ -20,7 +15,11 @@ export const spawn = async (mud: MUD) => {
       functionName: "Primodium__spawn",
     },
     { id: singletonEntity },
-    postCall
+    (receipt) => {
+      ampli.systemSpawn({
+        ...parseReceipt(receipt),
+      });
+    }
   );
 };
 
@@ -45,6 +44,14 @@ export const spawnAndAuthorizeSessionAccount = async (mud: MUD, sessionAccount: 
       systemCalls: [spawn, authorize],
     },
     { id: singletonEntity },
-    postCall
+    (receipt) => {
+      ampli.systemSpawn({
+        ...parseReceipt(receipt),
+      });
+      ampli.systemRegisterDelegation({
+        delegateAddress: sessionAccount,
+        ...parseReceipt(receipt),
+      });
+    }
   );
 };
