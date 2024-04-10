@@ -5,13 +5,14 @@ import { components } from "src/network/components";
 import { EntityType, ResourceEntityLookup, SPEED_SCALE } from "src/util/constants";
 import { encodeAbiParameters, Hex, keccak256 } from "viem";
 
-export const useWormholeResource = (): { resource: Entity; timeUntilNextResource: bigint } => {
+export const useWormholeResource = () => {
   const wormholeData = components.Wormhole.use();
   const wormholeConfig = components.P_WormholeConfig.use();
   const time = components.Time.use()?.value ?? 0n;
 
   return useMemo(() => {
-    if (!wormholeData || !wormholeConfig) return { resource: EntityType.NULL, timeUntilNextResource: 0n };
+    if (!wormholeData || !wormholeConfig)
+      return { resource: EntityType.NULL, nextResource: EntityType.NULL, timeUntilNextResource: 0n };
     const storedTurn = wormholeData.turn;
     const worldSpeed = components.P_GameConfig.get()?.worldSpeed ?? 0n;
 
@@ -20,10 +21,13 @@ export const useWormholeResource = (): { resource: Entity; timeUntilNextResource
 
     const timeUntilNextResource = wormholeConfig.initTime + (expectedTurn + 1n) * turnDuration - time;
     const resourceEntity = ResourceEntityLookup[wormholeData.resource as EResource];
-    if (storedTurn === expectedTurn) return { timeUntilNextResource, resource: resourceEntity };
+    const nextResourceEntity = ResourceEntityLookup[wormholeData.nextResource as EResource];
+    if (storedTurn === expectedTurn)
+      return { timeUntilNextResource, resource: resourceEntity, nextResource: nextResourceEntity };
     return {
       timeUntilNextResource,
-      resource: getRandomResource(wormholeData.hash as Entity, expectedTurn, resourceEntity),
+      nextResource: getRandomResource(wormholeData.hash as Entity, expectedTurn, resourceEntity),
+      resource: nextResourceEntity,
     };
   }, [time, wormholeConfig, wormholeData]);
 };

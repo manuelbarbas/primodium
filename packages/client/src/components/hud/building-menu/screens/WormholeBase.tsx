@@ -34,7 +34,7 @@ export const WormholeBase: React.FC<{ building: Entity }> = ({ building }) => {
 const WormholeDeposit: React.FC<{ building: Entity; asteroid: Entity }> = ({ building, asteroid }) => {
   const [count, setCount] = useState<string>("0");
   const mud = useMud();
-  const { resource: wormholeResource, timeUntilNextResource } = useWormholeResource();
+  const { resource: wormholeResource, nextResource, timeUntilNextResource } = useWormholeResource();
   const resourceData = useFullResourceCount(wormholeResource, asteroid);
   const { inCooldown, timeLeft } = useWormholeBaseCooldown(building);
   const multiplier = components.P_ScoreMultiplier.useWithKeys({
@@ -47,7 +47,9 @@ const WormholeDeposit: React.FC<{ building: Entity; asteroid: Entity }> = ({ bui
     <SecondaryCard className="w-full items-center">
       <TransactionQueueMask queueItemId={"DEPOSIT" as Entity} className="flex flex-col justify-center text-center">
         <p>WORMHOLE DEPOSIT</p>
-        <p className="text-xs">Next resource in {formatTime(timeUntilNextResource)}</p>
+        <p className="text-xs">
+          Next resource ({getEntityTypeName(nextResource)}) in {formatTime(timeUntilNextResource)}
+        </p>
         <div className="flex gap-1 mb-6 w-full text-xs items-center justify-center">
           <div className="flex flex-col items-center h-full">
             <p>Current: {getEntityTypeName(wormholeResource)}</p>
