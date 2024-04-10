@@ -14,6 +14,7 @@ import { getEntityTypeName } from "src/util/common";
 import { BackgroundImage, ResourceImage, ResourceType } from "src/util/constants";
 import { formatNumber } from "src/util/number";
 import { getRewards } from "src/util/objectives/getHasRequiredRewards";
+import { objectiveCategoryColors } from "src/util/objectives/objectiveCategoryColors";
 import { getAllObjectiveRequirements } from "src/util/objectives/objectiveRequirements";
 import { getObjective } from "src/util/objectives/objectives";
 import { getFullResourceCount } from "src/util/resource";
@@ -42,16 +43,20 @@ export const Objective: React.FC<{
       className={`text-xs relative w-full flex flex-col justify-between ${highlight ? "border border-warning" : ""}`}
     >
       <div>
-        {objective && (
-          <p className="absolute right-0 top-0 bg-primary text-white/80 font-bold text-xs uppercase py-1 px-2">
-            {objective.category}
-          </p>
-        )}
         <div className="grid grid-cols-10">
           <div className="flex items-center col-span-1">
             <FaMedal className="text-accent" />
           </div>
-          <p className=" col-span-7 font-bold flex items-center px-1">{objectiveName}</p>
+          <p className=" col-span-5 font-bold flex items-center px-1">{objectiveName}</p>
+          {objective && (
+            <p
+              className={`absolute col-span-4 right-0 top-0 text-white/80 font-bold text-xs uppercase py-1 px-2 ${
+                objectiveCategoryColors[objective.category]
+              }`}
+            >
+              {objective.category}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-wrap gap-1 items-center">

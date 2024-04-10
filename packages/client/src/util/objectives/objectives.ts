@@ -75,7 +75,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.BuildGarage,
     {
-      category: "Conquest",
+      category: "Unit Production",
       type: "Build",
       buildingType: EntityType.Garage,
       requiredObjectives: [EObjectives.ExpandBase1],
@@ -86,7 +86,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.BuildWorkshop,
     {
-      category: "Conquest",
+      category: "Unit Production",
       type: "Build",
       buildingType: EntityType.Workshop,
       requiredObjectives: [EObjectives.BuildGarage],
@@ -97,7 +97,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.CreateFleet,
     {
-      category: "Conquest",
+      category: "Fleet",
       type: "Claim",
       requiredObjectives: [EObjectives.BuildWorkshop],
       description:
@@ -107,11 +107,11 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
 
-  /* ------------------------------ A-A-A Fleet Basics ------------------------------ */
+  /* ------------------------------ A-A-A Fleet ------------------------------ */
   [
     EObjectives.TransferToFleet,
     {
-      category: "Fleet Basics",
+      category: "Fleet",
       type: "Claim",
       requiredObjectives: [EObjectives.CreateFleet],
       description: "Transfer units and resources to a fleet by selecting the fleet and pressing the Transfer button.",
@@ -122,7 +122,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.SendFleet,
     {
-      category: "Fleet Basics",
+      category: "Fleet",
       type: "Claim",
       requiredObjectives: [EObjectives.TransferToFleet],
       description:
@@ -134,7 +134,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.BattleAsteroid,
     {
-      category: "Fleet Basics",
+      category: "Combat",
       type: "Claim",
       requiredObjectives: [EObjectives.BattleAsteroid],
       description:
@@ -146,7 +146,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.OpenBattleReport,
     {
-      category: "Fleet Basics",
+      category: "Combat",
       type: "Claim",
       requiredObjectives: [EObjectives.BattleAsteroid],
       description: "Open a battle report to see the results of a battle.",
@@ -160,7 +160,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.BattleFleet,
     {
-      category: "Fleet Combat",
+      category: "Combat",
       type: "Claim",
       requiredObjectives: [EObjectives.OpenBattleReport],
       description:
@@ -229,7 +229,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.CaptureAsteroid],
       description:
         "Capturing motherlode asteroids lets you mine elite resources. Capture a motherlode asteroid near your home asteroid (hint: elite resources are Kimberlite, Iridium, Titanium, and Platinum).",
-      icon: "/img/icons/extracticon.png",
+      icon: "/img/resource/iridium_resource.png",
       tooltip: "Extracted a motherlode",
     },
   ],
@@ -242,7 +242,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.CaptureMotherlodeAsteroid],
       description:
         "To extract an elite resource, capture a motherlode asteroid and build an elite mine on an ore tile.",
-      icon: "/img/icons/extracticon.png",
+      icon: "/img/resource/iridium_resource.png",
       tooltip: "Extracted a motherlode",
     },
   ],
@@ -252,24 +252,24 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.ClaimAsteroidPrimodium,
     {
-      category: "Victory: Primodium Pts",
+      category: "Victory (Primodium)",
       type: "Claim",
       requiredObjectives: [EObjectives.CaptureAsteroid],
       description:
         "Claiming Primodium allows you to win the game. To claim, capture asteroids and hold them until you can claim their Primodium.",
-      icon: "/img/icons/claimicon.png",
+      icon: "/img/icons/leaderboardicon.png",
       tooltip: "Claimed Primodium",
     },
   ],
   [
     EObjectives.ClaimShardPrimodium,
     {
-      category: "Victory: Primodium Pts",
+      category: "Victory (Primodium)",
       type: "Claim",
       requiredObjectives: [EObjectives.CaptureAsteroid],
       description:
         "Volatile Shards are rare space rocks that are made of 100% Primodium. Over time, a Shard leaches Primodium to the player controlling it. Beware, they regularly explode and annihilate anything nearby! To claim, capture a Shard and start earning its Primodium.",
-      icon: "/img/icons/claimicon.png",
+      icon: "/img/icons/leaderboardicon.png",
       tooltip: "Claimed Primodium",
     },
   ],
@@ -279,24 +279,24 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.CaptureWormholeAsteroid,
     {
-      category: "Extraction Points",
+      category: "Victory (Wormhole)",
       type: "Claim",
       requiredObjectives: [EObjectives.BuildStorageUnit],
       description:
         "A wormhole asteroid is a special asteroid that lets you earn points on the Extraction leaderboard. To capture, decrypt a nearby Wormhole Asteroid.",
-      icon: "/img/icons/claimicon.png",
+      icon: "/img/icons/leaderboardicon.png",
       tooltip: "Captured wormhole asteroid",
     },
   ],
   [
     EObjectives.ClaimExtractionPoints,
     {
-      category: "Extraction Points",
+      category: "Victory (Wormhole)",
       type: "Claim",
       requiredObjectives: [EObjectives.BuildStorageUnit],
       description:
         "Claiming extraction points improves your rank on the Extraction leaderboard. To claim, click on a Wormhole Generator and send it the resource it currently requires.",
-      icon: "/img/icons/claimicon.png",
+      icon: "/img/icons/leaderboardicon.png",
       tooltip: "Claimed extraction points",
     },
   ],
@@ -304,7 +304,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.TransferToAsteroid,
     {
-      category: "Fleet Management and Trade",
+      category: "Fleet",
       type: "Claim",
       requiredObjectives: [EObjectives.OpenBattleReport],
       description:
@@ -316,7 +316,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.BuildStarmapper,
     {
-      category: "Fleet Management and Trade",
+      category: "Fleet",
       type: "Build",
       requiredObjectives: [EObjectives.TransferToAsteroid],
       buildingType: EntityType.StarmapperStation,
@@ -327,7 +327,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.LandFleet,
     {
-      category: "Fleet Management and Trade",
+      category: "Fleet",
       type: "Claim",
       requiredObjectives: [EObjectives.LandFleet],
       description:
@@ -339,7 +339,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.RecallFleet,
     {
-      category: "Fleet Management and Trade",
+      category: "Fleet",
       type: "Claim",
       requiredObjectives: [EObjectives.RecallFleet],
       description:
@@ -472,7 +472,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.BuildHangar,
     {
-      category: "Unit Storage",
+      category: "Unit Production",
       type: "Build",
       requiredObjectives: [EObjectives.TrainLightningCrafts],
       buildingType: EntityType.Hangar,
@@ -522,7 +522,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.BuildLithiumMine,
     {
-      category: "Production",
+      category: "Resource Production",
       type: "Build",
       requiredObjectives: [EObjectives.ExpandBase1],
       buildingType: EntityType.LithiumMine,
@@ -535,7 +535,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.BuildStorageUnit,
     {
-      category: "Production",
+      category: "Resource Production",
       type: "Build",
       requiredObjectives: [EObjectives.BuildLithiumMine],
       buildingType: EntityType.StorageUnit,
@@ -550,7 +550,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.BuildPVCellFactory,
     {
-      category: "Production",
+      category: "Resource Production",
       type: "Build",
       requiredObjectives: [EObjectives.BuildStorageUnit],
       buildingType: EntityType.PVCellFactory,
@@ -563,7 +563,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.BuildSolarPanel,
     {
-      category: "Production",
+      category: "Resource Production",
       type: "Build",
       requiredObjectives: [EObjectives.BuildPVCellFactory],
       buildingType: EntityType.SolarPanel,

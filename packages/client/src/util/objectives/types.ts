@@ -5,7 +5,7 @@ export type ObjectiveType = "Build" | "Upgrade" | "Train" | "Expand" | "Claimabl
 
 // Define a base type for common properties
 export type BaseObjective = {
-  category: string;
+  category: ObjectiveCategory;
   description?: string;
   requiredMainBase?: bigint;
   requiredObjectives?: EObjectives[];
@@ -60,3 +60,19 @@ export type ObjectiveReq = {
   isBool?: boolean;
   scale: bigint;
 };
+
+export const objectiveCategories = [
+  "Fundamentals",
+  "Conquest",
+  "Fleet",
+  "Combat",
+  "Motherlode",
+  "Victory (Primodium)",
+  "Victory (Wormhole)",
+  "Unit Production",
+  "Defense",
+  "Resource Production",
+  "Market",
+  "Alliance",
+] as const;
+export type ObjectiveCategory = (typeof objectiveCategories)[number];

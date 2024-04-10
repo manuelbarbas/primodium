@@ -116,7 +116,6 @@ export enum EObjectives {
 
   // (A-A-A-A) Fleet combat
   BattleFleet,
-  SuccessfulRaid,
 
   // (A-A-A-B) Conquest (cont)
   BuildShipyard,
