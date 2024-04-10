@@ -6,7 +6,7 @@ import { WORLD_SPEED_SCALE } from "src/constants.sol";
 import { DroidPrototypeId } from "codegen/Prototypes.sol";
 
 // tables
-import { UsedTiles, Dimensions, DimensionsData, P_MaxLevel, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, P_GameConfigData, P_GameConfig, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
+import { UsedTiles, Dimensions, DimensionsData, P_MaxLevel, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, P_GameConfigData, P_GameConfig, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData, ColonyShipTraining } from "codegen/index.sol";
 
 // libraries
 import { ExpansionKey } from "src/Keys.sol";
@@ -37,6 +37,7 @@ library LibAsteroid {
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
 
     UsedTiles.set(asteroidEntity, new uint256[](getUsedTilesLength()));
+    ColonyShipTraining.set(asteroidEntity, 0);
 
     LibProduction.increaseResourceProduction(asteroidEntity, EResource.U_MaxFleets, 1);
     AsteroidCount.set(asteroidCount);
@@ -166,6 +167,7 @@ library LibAsteroid {
     ReversePosition.set(position.x, position.y, asteroidEntity);
     Level.set(asteroidEntity, 1);
     UsedTiles.set(asteroidEntity, new uint256[](getUsedTilesLength()));
+    ColonyShipTraining.set(asteroidEntity, 0);
 
     (uint256 droidCount, uint256 encryption) = getSecondaryAsteroidUnitsAndEncryption(data.maxLevel);
     UnitCount.set(asteroidEntity, DroidPrototypeId, droidCount);

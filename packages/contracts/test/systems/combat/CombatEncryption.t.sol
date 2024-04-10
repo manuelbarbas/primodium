@@ -207,12 +207,29 @@ contract CombatEncryptionTest is PrimodiumTest {
     uint256 aliceScore = Score.get(aliceEntity);
 
     uint256 aliceSlotsOccupied = LibUnit.getColonyShipsPlusAsteroids(aliceEntity);
-    uint256 bobSlotsOccupied = LibUnit.getColonyShipsPlusAsteroids(bobEntity);
+    uint256 bobSlotsOccupied;
+    console.log("Alice Slot Capacity: ", ColonySlots.getCapacity(aliceEntity));
+    console.log("Alice Occupied Slots: ", aliceSlotsOccupied);
 
     vm.startPrank(alice);
     for (uint256 i = 0; i < fleetCountToWin; i++) {
       console.log("fleet attack %s", i);
       uint256 encryptionBeforeAttack = ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_Encryption));
+
+      // For testing destruction of colony ship on a transferred asteroid
+      if (i == fleetCountToWin - 1) {
+        vm.startPrank(creator);
+        // Add 1 Colony Slot for Colony Ship on the Bob's Asteroid, and 1 Colony Slot for one starting training
+        LibColony.increaseColonySlotsCapacity(bobEntity);
+        LibColony.increaseColonySlotsCapacity(bobEntity);
+        UnitCount.set(bobHomeAsteroid, colonyShipPrototype, 1);
+        trainUnits(bob, colonyShipPrototype, 1, false); // still in training
+        bobSlotsOccupied = LibUnit.getColonyShipsPlusAsteroids(bobEntity);
+        console.log("Bob Slot Capacity: ", ColonySlots.getCapacity(bobEntity));
+        console.log("Bob Occupied Slots: ", bobSlotsOccupied);
+        vm.stopPrank();
+        vm.startPrank(alice);
+      }
 
       world.Primodium__attack(fleetEntities[i], bobHomeAsteroid);
       if (encryptionBeforeAttack > decryption) {
@@ -235,19 +252,19 @@ contract CombatEncryptionTest is PrimodiumTest {
     vm.stopPrank();
     console.log("encryption after battles: %s", ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_Encryption)));
     assertEq(Score.get(aliceEntity), aliceScore + bobHomeScore, "alice should have gained bob's home asteroid score");
-    assertEq(Score.get(bobHomeAsteroid), bobHomeScore, "bobs home score should not have changed");
+    assertEq(Score.get(bobHomeAsteroid), bobHomeScore, "bob's home score should not have changed");
     assertEq(Score.get(bobEntity), 0, "bob's score should reset to zero after losing asteroid control");
 
     assertEq(OwnedBy.get(bobHomeAsteroid), aliceEntity, "asteroid should have been taken over");
     assertEq(
       LibUnit.getColonyShipsPlusAsteroids(aliceEntity),
       aliceSlotsOccupied,
-      "alice should have same slots occupied because her colony ship turned into a colony"
+      "alice should have same slots occupied because her colony ship turned into a colony, and she shouldn't get Bob's colony ships"
     );
     assertEq(
       LibUnit.getColonyShipsPlusAsteroids(bobEntity),
-      bobSlotsOccupied - 2,
-      "bob should have 2 fewer slots occupied because his colony ship was destroyed and he also lost a colony"
+      bobSlotsOccupied - 4,
+      "bob should have 4 fewer slots occupied. Lost: asteroid, training colony ship, colony ship on asteroid, colony ship in fleet"
     );
 
     assertEq(UnitCount.get(bobFleet, minuteman), 0, "fleet should have been disbanded and marine units");

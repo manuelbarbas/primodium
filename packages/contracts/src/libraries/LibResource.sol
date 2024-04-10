@@ -8,7 +8,7 @@ import { LibColony } from "libraries/LibColony.sol";
 import { UtilityMap } from "libraries/UtilityMap.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
-import { P_ColonyShipConfig, P_Transportables, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_IsUtility, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy, ColonySlots, P_ColonySlotsConfig, P_ColonySlotsConfigData, ColonySlotsInstallments } from "codegen/index.sol";
+import { P_ColonyShipConfig, P_Transportables, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_IsUtility, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy, ColonySlots, P_ColonySlotsConfig, P_ColonySlotsConfigData, ColonySlotsInstallments, ColonyShipTraining } from "codegen/index.sol";
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -55,7 +55,7 @@ library LibResource {
         "[SpendResources] No available slots to train colony ship"
       );
 
-      ColonySlots.setTraining(playerEntity, ColonySlots.getTraining(playerEntity) + 1);
+      ColonyShipTraining.set(asteroidEntity, ColonyShipTraining.get(asteroidEntity) + 1);
     }
 
     uint256 level = UnitLevel.get(asteroidEntity, prototype);

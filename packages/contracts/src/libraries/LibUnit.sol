@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { Position, Asteroid, IsActive, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, P_UnitProdTypes, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, ColonySlots } from "codegen/index.sol";
+import { Position, Asteroid, IsActive, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, P_UnitProdTypes, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, ColonySlots, ColonyShipTraining } from "codegen/index.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 import { EResource } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
@@ -88,13 +88,13 @@ library LibUnit {
       ProducedUnit.set(playerEntity, item.unitEntity, ProducedUnit.get(playerEntity, item.unitEntity) + trainedUnits);
 
       if (item.unitEntity == ColonyShipPrototypeId) {
-        uint256 playerTrainingShipCount = ColonySlots.getTraining(playerEntity); // Colony ships being trained across all of player's asteroids
+        uint256 asteroidTrainingShipCount = ColonyShipTraining.get(asteroidEntity);
 
-        if (playerTrainingShipCount < trainedUnits) {
-          // Some previous error has happened such that there are more colony ships being trained than available slots, so we need to mitigate
-          trainedUnits = playerTrainingShipCount;
+        if (asteroidTrainingShipCount < trainedUnits) {
+          // Some previous error has happened such that there are more colony ships being trained than available slots, so we need to mitigate this back to a valid state. Player unlikely to claim a colony ship in this state.
+          trainedUnits = asteroidTrainingShipCount;
         }
-        ColonySlots.setTraining(playerEntity, playerTrainingShipCount - trainedUnits);
+        ColonyShipTraining.set(asteroidEntity, asteroidTrainingShipCount - trainedUnits);
       }
 
       increaseUnitCount(asteroidEntity, item.unitEntity, trainedUnits, false);
@@ -131,9 +131,9 @@ library LibUnit {
     // Check the player's colony slot capacity
     if (add && (unitType == ColonyShipPrototypeId)) {
       bytes32 playerEntity = OwnedBy.get(asteroidEntity);
+      uint256 occupiedSlots = getColonyShipsPlusAsteroids(playerEntity);
       uint256 capacity = ColonySlots.getCapacity(playerEntity);
-      uint256 training = ColonySlots.getTraining(playerEntity);
-      require(training + count <= capacity, "[LibUnit] Not enough colony slots");
+      require(occupiedSlots + count <= capacity, "[LibUnit] Not enough colony slots");
     }
 
     P_RequiredResourcesData memory resources = P_RequiredResources.get(unitType, unitLevel);
@@ -171,8 +171,10 @@ library LibUnit {
         uint256 shipsEachFleet = UnitCount.get(ownedFleets[j], ColonyShipPrototypeId);
         ret += shipsEachFleet;
       }
+
+      // Colony ships being trained on each asteroid
+      ret += ColonyShipTraining.get(ownedAsteroids[i]);
     }
-    ret += ColonySlots.getTraining(playerEntity);
 
     return ret + ownedAsteroids.length;
   }

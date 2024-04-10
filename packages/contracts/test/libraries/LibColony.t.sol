@@ -13,6 +13,7 @@ import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
 import { LibColony } from "libraries/LibColony.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
+import { S_TransferAsteroidSystem } from "systems/subsystems/S_TransferAsteroidSystem.sol";
 
 contract LibColonyTest is PrimodiumTest {
   bytes32 playerEntity;
@@ -305,8 +306,6 @@ contract LibColonyTest is PrimodiumTest {
     }
   }
 
-  // todo: fix case when losing an asteroid that was training a colony ship
-  // todo: fix case when losing an asteroid that owns a colony ship, have to destroy the colony ship if player has no other colony slots
   // todo: (future release) players may try to stash resources in slot payments to avoid losing them in battle. Need to have a way to prevent this, likely by adding a stash inside the main base that can be looted if base is captured, or pulled for full payment when ready to pay in full.
   // todo: (future release) in the future add a few hr lock between making an installment and being able to use it (so that people don't use creative ways to avoid losing resources for imminent battle)
 }

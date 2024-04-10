@@ -387,7 +387,7 @@ export const worldInput = {
     // can only increase, never decrease. Assigned to player to prevent weird edge cases of losing asteroids
     ColonySlots: {
       key: ["playerEntity"],
-      schema: { playerEntity: "bytes32", training: "uint256", capacity: "uint256" },
+      schema: { playerEntity: "bytes32", capacity: "uint256" },
     },
 
     P_ColonySlotsConfig: {
@@ -412,6 +412,11 @@ export const worldInput = {
         resourceIndex: "uint256", // index of the resource in the P_ColonySlotsConfig
         amounts: "uint256",
       },
+    },
+
+    ColonyShipTraining: {
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256" },
     },
 
     /* ------------------------------ Sending Units ----------------------------- */
