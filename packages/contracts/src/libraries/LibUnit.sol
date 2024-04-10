@@ -155,8 +155,6 @@ library LibUnit {
     }
   }
 
-  function getColonyShipsPlusAsteroids(bytes32 playerEntity) internal view returns (uint256) {}
-
   /**
    * @dev Increases the count of a specific unit type for a player's asteroid.
    * @param asteroidEntity The identifier of the player's asteroid entity.
