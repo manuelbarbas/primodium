@@ -5,7 +5,7 @@ import { IconLabel } from "src/components/core/IconLabel";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { formatResourceCount } from "src/util/number";
-import { CapacityBar } from "./CapacityBar";
+import { CapacityBar } from "../../../core/CapacityBar";
 
 export const UtilityLabel = ({
   name,

@@ -11,10 +11,10 @@ export const HoverInfo = () => {
     const buildingName = getBuildingName(entity);
 
     return (
-      <Card className="ml-5 uppercase font-bold text-xs relative">
+      <div className="uppercase font-bold text-xs relative p-1">
         <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
         <p className="z-10">{buildingName}</p>
-      </Card>
+      </div>
     );
   };
 
@@ -29,8 +29,12 @@ export const HoverInfo = () => {
   else if (components.P_Blueprint.has(hoverEntity)) content = <BlueprintInfo building={hoverEntity} />;
 
   return (
-    <div className="relative" style={{ zIndex: 1001 }}>
+    <Card className="relative ml-5 grid-background-sm shadow-2xl shadow-secondary/25 border-0">
+      <div className="absolute inset-0 hover-gradient" />
+      <div className="absolute inset-0 pixel-border2 scale-105 blur-[3px] opacity-50 bg-blend-hard-light" />
+      <div className="absolute inset-0 pixel-border2" />
+      <div className="absolute inset-0 pixel-border2 blur-[2px] opacity-50 bg-blend-screen" />
       {content}
-    </div>
+    </Card>
   );
 };
