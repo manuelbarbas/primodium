@@ -393,15 +393,9 @@ export const worldInput = {
     P_ColonySlotsConfig: {
       key: [],
       schema: {
+        multiplier: "uint256",
         resources: "uint8[]",
         amounts: "uint256[]",
-      },
-    },
-
-    P_ColonySlotsMultiplier: {
-      key: [],
-      schema: {
-        value: "uint256",
       },
     },
 

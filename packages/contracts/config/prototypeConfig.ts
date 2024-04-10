@@ -170,6 +170,8 @@ const samSiteMaxResourceUpgrades = {
 
 const maxRange = { xBounds: 37, yBounds: 25 };
 
+const colonySlotsConfigResourceValues = getResourceValues({ Copper: 10000, Lithium: 5000 }); // Order impacts Installment payment index
+
 export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = {
   /* ---------------------------------- World --------------------------------- */
   World: {
@@ -1213,8 +1215,11 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   ColonySlotsConfig: {
     keys: [],
     tables: {
-      P_ColonySlotsConfig: getResourceValues({ Lithium: 1000, Copper: 500 }), // Order impacts Installment payment index
-      P_ColonySlotsMultiplier: { value: 4n },
+      P_ColonySlotsConfig: {
+        resources: colonySlotsConfigResourceValues.resources, // Order impacts Installment payment index
+        amounts: colonySlotsConfigResourceValues.amounts,
+        multiplier: 4n,
+      },
     },
   },
 

@@ -85,8 +85,6 @@ contract LibUnitTest is PrimodiumTest {
     P_GameConfig.setAsteroidChanceInv(1);
     LibColony.increaseMaxColonySlots(playerEntity);
     LibColony.increaseMaxColonySlots(playerEntity);
-    console.log("Max Colony Slots: ", MaxColonySlots.get(playerEntity));
-    console.log("Slots used: ", LibUnit.getColonyShipsPlusAsteroids(playerEntity));
 
     bytes32 secondaryAsteroid = LibAsteroid.createSecondaryAsteroid(findSecondaryAsteroid(Home.get(playerEntity)));
     conquerAsteroid(creator, Home.get(playerEntity), secondaryAsteroid);

@@ -7,7 +7,7 @@ import { addressToEntity } from "src/utils.sol";
 import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
-import { UnitCount, MaxResourceCount, Asteroid, Home, OwnedBy, ResourceCount, MaxColonySlots, P_Transportables, P_UnitPrototypes, P_EnumToPrototype, P_ColonySlotsConfigData, P_ColonySlotsConfig, P_ColonySlotsMultiplier, ColonySlotsInstallments } from "codegen/index.sol";
+import { UnitCount, MaxResourceCount, Asteroid, Home, OwnedBy, ResourceCount, MaxColonySlots, P_Transportables, P_UnitPrototypes, P_EnumToPrototype, P_ColonySlotsConfigData, P_ColonySlotsConfig, ColonySlotsInstallments } from "codegen/index.sol";
 
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
@@ -89,17 +89,17 @@ contract LibColonyTest is PrimodiumTest {
   // todo: make the multiplier a prototypeConfig changeable value
   function testGetColonySlotsCostMultiplier() public {
     assertEq(MaxColonySlots.get(playerEntity), 1);
-    assertEq(LibColony.getColonySlotsCostMultiplier(playerEntity), P_ColonySlotsMultiplier.get());
+    assertEq(LibColony.getColonySlotsCostMultiplier(playerEntity), P_ColonySlotsConfig.getMultiplier());
 
     LibColony.increaseMaxColonySlots(playerEntity);
 
     assertEq(MaxColonySlots.get(playerEntity), 2);
-    assertEq(LibColony.getColonySlotsCostMultiplier(playerEntity), P_ColonySlotsMultiplier.get() * 2);
+    assertEq(LibColony.getColonySlotsCostMultiplier(playerEntity), P_ColonySlotsConfig.getMultiplier() * 2);
 
     LibColony.increaseMaxColonySlots(playerEntity);
 
     assertEq(MaxColonySlots.get(playerEntity), 3);
-    assertEq(LibColony.getColonySlotsCostMultiplier(playerEntity), P_ColonySlotsMultiplier.get() * 3);
+    assertEq(LibColony.getColonySlotsCostMultiplier(playerEntity), P_ColonySlotsConfig.getMultiplier() * 3);
   }
 
   function testPayForMaxColonySlotsInput() public {
@@ -131,7 +131,7 @@ contract LibColonyTest is PrimodiumTest {
     uint256 currentMaxColonySlots = MaxColonySlots.get(playerEntity);
 
     assertEq(currentMaxColonySlots, 1);
-    assertEq(colonySlotsCostMultiplier, currentMaxColonySlots * P_ColonySlotsMultiplier.get());
+    assertEq(colonySlotsCostMultiplier, currentMaxColonySlots * P_ColonySlotsConfig.getMultiplier());
 
     // properly structure the payment data but don't own any resources
     for (uint256 i = 0; i < costData.resources.length; i++) {
@@ -160,7 +160,7 @@ contract LibColonyTest is PrimodiumTest {
     uint256 prevColonySlotsCostMultiplier = colonySlotsCostMultiplier;
     colonySlotsCostMultiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);
     assertEq(currentMaxColonySlots, 2);
-    assertEq(colonySlotsCostMultiplier, currentMaxColonySlots * P_ColonySlotsMultiplier.get());
+    assertEq(colonySlotsCostMultiplier, currentMaxColonySlots * P_ColonySlotsConfig.getMultiplier());
 
     // Check that installment amounts are currently empty (resources are already initialized from first payment)
     for (uint256 i = 0; i < costData.resources.length; i++) {
@@ -183,7 +183,7 @@ contract LibColonyTest is PrimodiumTest {
     currentMaxColonySlots = MaxColonySlots.get(playerEntity);
     colonySlotsCostMultiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);
     assertEq(currentMaxColonySlots, 2);
-    assertEq(colonySlotsCostMultiplier, currentMaxColonySlots * P_ColonySlotsMultiplier.get());
+    assertEq(colonySlotsCostMultiplier, currentMaxColonySlots * P_ColonySlotsConfig.getMultiplier());
 
     for (uint256 i = 0; i < costData.resources.length; i++) {
       uint256 installment = ColonySlotsInstallments.get(playerEntity, i);
@@ -216,7 +216,7 @@ contract LibColonyTest is PrimodiumTest {
     currentMaxColonySlots = MaxColonySlots.get(playerEntity);
     colonySlotsCostMultiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);
     assertEq(currentMaxColonySlots, 2);
-    assertEq(colonySlotsCostMultiplier, currentMaxColonySlots * P_ColonySlotsMultiplier.get());
+    assertEq(colonySlotsCostMultiplier, currentMaxColonySlots * P_ColonySlotsConfig.getMultiplier());
 
     // add the amounts of the payment and the previous installment and compare to the installment table
     for (uint i = 0; i < costData.resources.length; i++) {
@@ -258,7 +258,7 @@ contract LibColonyTest is PrimodiumTest {
     currentMaxColonySlots = MaxColonySlots.get(playerEntity);
     colonySlotsCostMultiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);
     assertEq(currentMaxColonySlots, 2);
-    assertEq(colonySlotsCostMultiplier, currentMaxColonySlots * P_ColonySlotsMultiplier.get());
+    assertEq(colonySlotsCostMultiplier, currentMaxColonySlots * P_ColonySlotsConfig.getMultiplier());
 
     for (uint256 i = 0; i < costData.resources.length; i++) {
       uint256 asteroidResourceAmounts = ResourceCount.get(creatorHomeAsteroid, costData.resources[i]);
@@ -297,7 +297,7 @@ contract LibColonyTest is PrimodiumTest {
     currentMaxColonySlots = MaxColonySlots.get(playerEntity);
     colonySlotsCostMultiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);
     assertEq(currentMaxColonySlots, 3);
-    assertEq(colonySlotsCostMultiplier, currentMaxColonySlots * P_ColonySlotsMultiplier.get());
+    assertEq(colonySlotsCostMultiplier, currentMaxColonySlots * P_ColonySlotsConfig.getMultiplier());
 
     for (uint256 i = 0; i < costData.resources.length; i++) {
       uint256 asteroidResourceAmounts = ResourceCount.get(creatorHomeAsteroid, costData.resources[i]);

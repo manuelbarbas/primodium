@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
-import { MaxColonySlots, P_ColonySlotsMultiplier } from "codegen/index.sol";
+import { MaxColonySlots, P_ColonySlotsConfig } from "codegen/index.sol";
 
 library LibColony {
   function increaseMaxColonySlots(bytes32 playerEntity) internal returns (uint256 newMaxColonySlots) {
@@ -12,7 +12,7 @@ library LibColony {
 
   function getColonySlotsCostMultiplier(bytes32 playerEntity) internal view returns (uint256) {
     uint256 maxColonySlots = MaxColonySlots.get(playerEntity);
-    uint256 multiplier = P_ColonySlotsMultiplier.get();
+    uint256 multiplier = P_ColonySlotsConfig.getMultiplier();
     return multiplier * maxColonySlots;
   }
 
