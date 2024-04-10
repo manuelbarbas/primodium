@@ -7,7 +7,7 @@ import { addressToEntity } from "src/utils.sol";
 import { EResource, EUnit } from "src/Types.sol";
 import { UnitKey, AsteroidOwnedByKey } from "src/Keys.sol";
 
-import { P_ColonyShipConfig, UnitCount, MaxResourceCount, ProductionRate, Value_UnitProductionQueueData, P_UnitProdTypes, BuildingType, IsActive, P_EnumToPrototype, P_GameConfigData, P_GameConfig, Asteroid, Home, OwnedBy, Spawned, Level, LastClaimedAt, P_Unit, P_UnitProdMultiplier, P_EnumToPrototype, ResourceCount, ResourceCount, P_UnitPrototypes, P_RequiredResources, P_RequiredResourcesData, ColonySlots } from "codegen/index.sol";
+import { P_ColonyShipConfig, UnitCount, MaxResourceCount, ProductionRate, Value_UnitProductionQueueData, P_UnitProdTypes, BuildingType, IsActive, P_EnumToPrototype, P_GameConfigData, P_GameConfig, Asteroid, Home, OwnedBy, Spawned, Level, LastClaimedAt, P_Unit, P_UnitProdMultiplier, P_EnumToPrototype, ResourceCount, ResourceCount, P_UnitPrototypes, P_RequiredResources, P_RequiredResourcesData, MaxColonySlots } from "codegen/index.sol";
 
 import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";

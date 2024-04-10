@@ -915,7 +915,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__payForColonySlotsCapacity",
+    "name": "Primodium__payForMaxColonySlots",
     "inputs": [
       {
         "name": "asteroidEntity",

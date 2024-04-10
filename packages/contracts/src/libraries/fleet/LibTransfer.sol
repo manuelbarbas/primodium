@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { P_Transportables, OwnedBy, P_UnitPrototypes, Asteroid, IsFleet, ColonySlots } from "codegen/index.sol";
+import { P_Transportables, OwnedBy, P_UnitPrototypes, Asteroid, IsFleet, MaxColonySlots } from "codegen/index.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
 import { LibUnit } from "libraries/LibUnit.sol";
@@ -255,7 +255,7 @@ library LibTransfer {
     LibFleet.checkAndSetFleetEmpty(fromFleetEntity);
   }
 
-  // make a function for checking if the receiving entity has enough Colony Slot capacity
+  // make a function for checking if the receiving entity has enough Colony Slots available
   function checkColonySlot(bytes32 receivingEntity, uint256 colonySlotsNeeded) internal view {
     bool isAsteroid = Asteroid.getIsAsteroid(receivingEntity);
     bool isFleet = IsFleet.get(receivingEntity);
@@ -265,9 +265,9 @@ library LibTransfer {
     bytes32 playerEntity = isAsteroid ? OwnedBy.get(receivingEntity) : OwnedBy.get(OwnedBy.get(receivingEntity));
 
     uint256 colonySlotsOccupied = LibUnit.getColonyShipsPlusAsteroids(playerEntity);
-    uint256 capacity = ColonySlots.getCapacity(playerEntity);
+    uint256 maxColonySlots = MaxColonySlots.get(playerEntity);
     require(
-      capacity - colonySlotsOccupied >= colonySlotsNeeded,
+      maxColonySlots - colonySlotsOccupied >= colonySlotsNeeded,
       "[Fleet] Receiver not enough colony slots to transfer colony ships"
     );
   }

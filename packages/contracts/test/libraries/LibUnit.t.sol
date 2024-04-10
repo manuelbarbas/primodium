@@ -6,7 +6,7 @@ import { addressToEntity } from "src/utils.sol";
 
 import { EResource } from "src/Types.sol";
 
-import { P_IsUtility, ClaimOffset, Position, PositionData, UnitCount, MaxResourceCount, Value_UnitProductionQueueData, P_UnitProdTypes, BuildingType, P_GameConfigData, P_GameConfig, Asteroid, Home, OwnedBy, Level, LastClaimedAt, P_Unit, P_UnitProdMultiplier, ResourceCount, ResourceCount, P_RequiredResources, P_RequiredResourcesData, ColonySlots } from "codegen/index.sol";
+import { P_IsUtility, ClaimOffset, Position, PositionData, UnitCount, MaxResourceCount, Value_UnitProductionQueueData, P_UnitProdTypes, BuildingType, P_GameConfigData, P_GameConfig, Asteroid, Home, OwnedBy, Level, LastClaimedAt, P_Unit, P_UnitProdMultiplier, ResourceCount, ResourceCount, P_RequiredResources, P_RequiredResourcesData, MaxColonySlots } from "codegen/index.sol";
 
 import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
@@ -83,9 +83,9 @@ contract LibUnitTest is PrimodiumTest {
 
   function testClaimUnitsConqueredAsteroid() public {
     P_GameConfig.setAsteroidChanceInv(1);
-    LibColony.increaseColonySlotsCapacity(playerEntity);
-    LibColony.increaseColonySlotsCapacity(playerEntity);
-    console.log("Slot Capacity: ", ColonySlots.getCapacity(playerEntity));
+    LibColony.increaseMaxColonySlots(playerEntity);
+    LibColony.increaseMaxColonySlots(playerEntity);
+    console.log("Max Colony Slots: ", MaxColonySlots.get(playerEntity));
     console.log("Slots used: ", LibUnit.getColonyShipsPlusAsteroids(playerEntity));
 
     bytes32 secondaryAsteroid = LibAsteroid.createSecondaryAsteroid(findSecondaryAsteroid(Home.get(playerEntity)));

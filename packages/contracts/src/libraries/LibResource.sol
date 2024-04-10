@@ -8,7 +8,7 @@ import { LibColony } from "libraries/LibColony.sol";
 import { UtilityMap } from "libraries/UtilityMap.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
-import { P_ColonyShipConfig, P_Transportables, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_IsUtility, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy, ColonySlots, P_ColonySlotsConfig, P_ColonySlotsConfigData, ColonySlotsInstallments, ColonyShipTraining } from "codegen/index.sol";
+import { P_ColonyShipConfig, P_Transportables, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_IsUtility, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy, MaxColonySlots, P_ColonySlotsConfig, P_ColonySlotsConfigData, ColonySlotsInstallments, ColonyShipsInTraining } from "codegen/index.sol";
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -51,11 +51,11 @@ library LibResource {
       require(count == 1, "[SpendResources] Colony ships can only be trained one at a time");
       bytes32 playerEntity = OwnedBy.get(asteroidEntity);
       require(
-        LibUnit.getColonyShipsPlusAsteroids(playerEntity) < ColonySlots.getCapacity(playerEntity),
+        LibUnit.getColonyShipsPlusAsteroids(playerEntity) < MaxColonySlots.get(playerEntity),
         "[SpendResources] No available slots to train colony ship"
       );
 
-      ColonyShipTraining.set(asteroidEntity, ColonyShipTraining.get(asteroidEntity) + 1);
+      ColonyShipsInTraining.set(asteroidEntity, ColonyShipsInTraining.get(asteroidEntity) + 1);
     }
 
     uint256 level = UnitLevel.get(asteroidEntity, prototype);
@@ -78,7 +78,7 @@ library LibResource {
   }
 
   /// @notice Only one can be bought at a time
-  function spendColonySlotsCapacityResources(
+  function spendMaxColonySlotsResources(
     bytes32 asteroidEntity,
     uint256[] calldata paymentAmounts
   ) internal returns (bool) {

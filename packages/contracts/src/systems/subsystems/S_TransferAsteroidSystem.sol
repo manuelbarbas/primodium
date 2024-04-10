@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
-import { OwnedBy, ColonyShipTraining, UnitCount } from "src/codegen/index.sol";
+import { OwnedBy, ColonyShipsInTraining, UnitCount } from "src/codegen/index.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { LibFleetDisband } from "libraries/fleet/LibFleetDisband.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
@@ -41,7 +41,7 @@ contract S_TransferAsteroidSystem is PrimodiumSystem {
   }
 
   function destroyAsteroidColonyShips(bytes32 asteroidEntity) internal {
-    ColonyShipTraining.set(asteroidEntity, 0); // when later claimed, the colony ships are destroyed via LibUnit.claimBuildingUnits
+    ColonyShipsInTraining.set(asteroidEntity, 0); // when later claimed, the colony ships are destroyed via LibUnit.claimBuildingUnits
     // Technically the new owner could quickly queue another colony ship (with sufficient resources and slots) and skip some training time, but that's fine for now. This could likely be reworked in v0.12 with fleet/unit reassigned to player entities.
 
     uint256 shipCount = UnitCount.get(asteroidEntity, ColonyShipPrototypeId);

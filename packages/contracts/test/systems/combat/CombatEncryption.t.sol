@@ -7,7 +7,7 @@ import { addressToEntity } from "src/utils.sol";
 import { EResource, EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
-import { OwnedBy, UnitCount, Score, ProductionRate, P_ColonyShipConfig, CooldownEnd, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, UnitLevel, ColonySlots } from "codegen/index.sol";
+import { OwnedBy, UnitCount, Score, ProductionRate, P_ColonyShipConfig, CooldownEnd, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, UnitLevel, MaxColonySlots } from "codegen/index.sol";
 
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
@@ -48,8 +48,8 @@ contract CombatEncryptionTest is PrimodiumTest {
 
     vm.startPrank(creator);
     // Add 2 colony slots to account for the 2 colony ships about to be created
-    LibColony.increaseColonySlotsCapacity(aliceEntity);
-    LibColony.increaseColonySlotsCapacity(aliceEntity);
+    LibColony.increaseMaxColonySlots(aliceEntity);
+    LibColony.increaseMaxColonySlots(aliceEntity);
     vm.stopPrank();
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
@@ -162,7 +162,7 @@ contract CombatEncryptionTest is PrimodiumTest {
 
       // Add 1 colony slot to account for the colony ship about to be created
       vm.startPrank(creator);
-      LibColony.increaseColonySlotsCapacity(aliceEntity);
+      LibColony.increaseMaxColonySlots(aliceEntity);
       vm.stopPrank();
 
       setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
@@ -188,7 +188,7 @@ contract CombatEncryptionTest is PrimodiumTest {
     vm.startPrank(creator);
     GracePeriod.set(bobHomeAsteroid, block.timestamp);
     // Add 1 colony slot to account for the colony ship about to be created
-    LibColony.increaseColonySlotsCapacity(bobEntity);
+    LibColony.increaseMaxColonySlots(bobEntity);
     vm.stopPrank();
 
     console.log("create bob fleet");
@@ -208,7 +208,7 @@ contract CombatEncryptionTest is PrimodiumTest {
 
     uint256 aliceSlotsOccupied = LibUnit.getColonyShipsPlusAsteroids(aliceEntity);
     uint256 bobSlotsOccupied;
-    console.log("Alice Slot Capacity: ", ColonySlots.getCapacity(aliceEntity));
+    console.log("Alice MaxColonySlots: ", MaxColonySlots.get(aliceEntity));
     console.log("Alice Occupied Slots: ", aliceSlotsOccupied);
 
     vm.startPrank(alice);
@@ -220,12 +220,12 @@ contract CombatEncryptionTest is PrimodiumTest {
       if (i == fleetCountToWin - 1) {
         vm.startPrank(creator);
         // Add 1 Colony Slot for Colony Ship on the Bob's Asteroid, and 1 Colony Slot for one starting training
-        LibColony.increaseColonySlotsCapacity(bobEntity);
-        LibColony.increaseColonySlotsCapacity(bobEntity);
+        LibColony.increaseMaxColonySlots(bobEntity);
+        LibColony.increaseMaxColonySlots(bobEntity);
         UnitCount.set(bobHomeAsteroid, colonyShipPrototype, 1);
         trainUnits(bob, colonyShipPrototype, 1, false); // still in training
         bobSlotsOccupied = LibUnit.getColonyShipsPlusAsteroids(bobEntity);
-        console.log("Bob Slot Capacity: ", ColonySlots.getCapacity(bobEntity));
+        console.log("Bob MaxColonySlots: ", MaxColonySlots.get(bobEntity));
         console.log("Bob Occupied Slots: ", bobSlotsOccupied);
         vm.stopPrank();
         vm.startPrank(alice);
@@ -305,10 +305,10 @@ contract CombatEncryptionTest is PrimodiumTest {
 
     vm.startPrank(creator);
     // Add 4 colony slots to account for the colony ships about to be created
-    LibColony.increaseColonySlotsCapacity(aliceEntity);
-    LibColony.increaseColonySlotsCapacity(aliceEntity);
-    LibColony.increaseColonySlotsCapacity(aliceEntity);
-    LibColony.increaseColonySlotsCapacity(aliceEntity);
+    LibColony.increaseMaxColonySlots(aliceEntity);
+    LibColony.increaseMaxColonySlots(aliceEntity);
+    LibColony.increaseMaxColonySlots(aliceEntity);
+    LibColony.increaseMaxColonySlots(aliceEntity);
     vm.stopPrank();
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {

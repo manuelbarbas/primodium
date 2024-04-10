@@ -21,7 +21,7 @@ contract SpawnSystem is PrimodiumSystem {
 
     bytes32 asteroidEntity = LibAsteroid.createPrimaryAsteroid(playerEntity);
     Spawned.set(playerEntity, true);
-    LibColony.increaseColonySlotsCapacity(playerEntity);
+    LibColony.increaseMaxColonySlots(playerEntity);
     IWorld(_world()).Primodium__initAsteroidOwner(asteroidEntity, playerEntity);
     Home.set(playerEntity, asteroidEntity);
     return asteroidEntity;

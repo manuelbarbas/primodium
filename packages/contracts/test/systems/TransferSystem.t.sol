@@ -9,7 +9,7 @@ import { EResource, EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 import { LibColony } from "libraries/LibColony.sol";
 
-import { P_GameConfig, CooldownEnd, Home, P_EnumToPrototype, ResourceCount, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes, FleetMovement, P_RequiredResources, P_RequiredResourcesData, UnitLevel, P_IsUtility, ColonySlots } from "codegen/index.sol";
+import { P_GameConfig, CooldownEnd, Home, P_EnumToPrototype, ResourceCount, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes, FleetMovement, P_RequiredResources, P_RequiredResourcesData, UnitLevel, P_IsUtility, MaxColonySlots } from "codegen/index.sol";
 
 contract TransferSystemTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;
@@ -115,9 +115,8 @@ contract TransferSystemTest is PrimodiumTest {
 
   function testTransferColonyShipBetweenPlayers() public {
     vm.startPrank(creator);
-    LibColony.increaseColonySlotsCapacity(aliceEntity);
-    // ColonySlots.setCapacity(aliceEntity, ColonySlots.getCapacity(aliceEntity) + 1);
-    LibColony.increaseColonySlotsCapacity(bobEntity);
+    LibColony.increaseMaxColonySlots(aliceEntity);
+    LibColony.increaseMaxColonySlots(bobEntity);
 
     console.log("here2");
 
