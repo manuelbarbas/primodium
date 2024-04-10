@@ -17,6 +17,7 @@ export const ObjectivesScreen: React.FC<{ highlight?: Entity }> = ({ highlight }
         </Tabs.Button>
       </Join>
 
+      <br className="h-4" />
       <Tabs.Pane className="border-none w-full h-full" index={0}>
         <UnclaimedObjectives highlight={highlight} />
       </Tabs.Pane>

@@ -47,7 +47,7 @@ export const Objective: React.FC<{
           <div className="flex items-center col-span-1">
             <FaMedal className="text-accent" />
           </div>
-          <p className=" col-span-5 font-bold flex items-center px-1">{objectiveName}</p>
+          <p className="col-span-5 font-bold flex items-center px-1">{objectiveName}</p>
           {objective && (
             <p
               className={`absolute col-span-4 right-0 top-0 text-white/80 font-bold text-xs uppercase py-1 px-2 ${

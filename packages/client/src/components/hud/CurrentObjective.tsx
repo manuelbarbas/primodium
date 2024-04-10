@@ -6,7 +6,8 @@ import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { clampedIndex, getEntityTypeName } from "src/util/common";
 import { ObjectiveEntityLookup } from "src/util/constants";
-import { Objectives } from "src/util/objectives/objectives";
+import { objectiveCategoryColors } from "src/util/objectives/objectiveCategoryColors";
+import { getObjective, Objectives } from "src/util/objectives/objectives";
 import { Hex } from "viem";
 import { Badge } from "../core/Badge";
 import { Card } from "../core/Card";
@@ -30,6 +31,7 @@ export const CurrentObjective = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const objectiveEntity =
     ObjectiveEntityLookup[tutorialObjectives[clampedIndex(currentStep, tutorialObjectives.length)]];
+  const objective = getObjective(objectiveEntity);
   const claimed =
     components.CompletedObjective.useWithKeys({ entity: playerEntity as Hex, objective: objectiveEntity as Hex })
       ?.value ?? false;
@@ -87,6 +89,15 @@ export const CurrentObjective = () => {
             <div className="flex gap-1 items-center p-1">
               <FaMapPin className="text-accent" />
               <p className="font-bold">{getEntityTypeName(objectiveEntity)}</p>
+              {objective && (
+                <p
+                  className={`absolute col-span-4 right-0 top-0 text-white/80 font-bold text-xs uppercase py-1 px-2 ${
+                    objectiveCategoryColors[objective.category]
+                  }`}
+                >
+                  {objective.category}
+                </p>
+              )}
             </div>
             <hr className="border-secondary/50" />
             <div className="flex gap-1 text-right justify-end px-2 border-secondary/50 p-1 w-72">
