@@ -17,9 +17,16 @@ library LibWormhole {
     uint256 expectedTurn = (block.timestamp - wormholeConfig.initTime) / turnDuration;
 
     if (wormholeData.turn < expectedTurn) {
-      uint8 resource = getRandomResource(wormholeData.hash, expectedTurn, wormholeData.resource);
-      Wormhole.set(WormholeData({ turn: expectedTurn, resource: resource, hash: blockhash(block.number) }));
-      return resource;
+      uint8 newNextResource = getRandomResource(wormholeData.hash, expectedTurn, wormholeData.resource);
+      Wormhole.set(
+        WormholeData({
+          turn: expectedTurn,
+          resource: wormholeData.nextResource,
+          nextResource: newNextResource,
+          hash: blockhash(block.number)
+        })
+      );
+      return wormholeData.nextResource;
     }
     return wormholeData.resource;
   }

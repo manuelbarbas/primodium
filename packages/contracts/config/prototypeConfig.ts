@@ -91,6 +91,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       Wormhole: {
         resource: EResource.Iron,
+        nextResource: EResource.Copper,
         turn: 0n,
         hash: encodeBytes32("i love wormholes"),
       },
