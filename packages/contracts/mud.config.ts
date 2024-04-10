@@ -746,7 +746,7 @@ export const worldInput = {
 
     Wormhole: {
       key: [],
-      schema: { resource: "uint8", turn: "uint256", hash: "bytes32" },
+      schema: { resource: "uint8", nextResource: "uint8", turn: "uint256", hash: "bytes32" },
     },
 
     /* -------------------------------- Conquest -------------------------------- */

@@ -245,10 +245,12 @@ contract WormholeTest is PrimodiumTest {
     vm.warp(LibMath.max(CooldownEnd.get((wormholeBaseEntity)), getTurnStartTimestamp(wormholeData.turn + 1) + 1));
 
     bytes32 wormholeHash = Wormhole.getHash();
-    uint8 expectedNewResource = LibWormhole.getRandomResource(
+    uint8 expectedNewResource = Wormhole.getNextResource();
+
+    uint8 expectedNewNextResource = LibWormhole.getRandomResource(
       wormholeHash,
       wormholeData.turn + 1,
-      wormholeData.resource
+      wormholeData.nextResource
     );
 
     uint256 prevScore = Score.get(aliceEntity, uint8(EScoreType.Wormhole));
@@ -266,6 +268,7 @@ contract WormholeTest is PrimodiumTest {
     assertEq(CooldownEnd.get(wormholeBaseEntity), block.timestamp + wormholeConfig.cooldown, "cooldown");
     assertFalse(Wormhole.getHash() == wormholeData.hash, "hash");
     assertTrue(Wormhole.getResource() == expectedNewResource, "resource");
+    assertTrue(Wormhole.getNextResource() == expectedNewNextResource, "next resource");
     assertEq(Wormhole.getTurn(), wormholeData.turn + 1, "turn");
   }
 
