@@ -87,16 +87,16 @@ library LibResource {
     // Get the initial cost of the slot for each resource type from prototype
     P_ColonySlotsConfigData memory costData = P_ColonySlotsConfig.get();
 
-    // Multiply the cost amounts with the multiplier
-    for (uint256 i = 0; i < costData.resources.length; i++) {
-      costData.amounts[i] *= multiplier;
-    }
-
     // Require that the payment data has the same resources as the cost data
     require(
       paymentAmounts.length == costData.resources.length,
       "[SpendResources] Payment data does not match cost data"
     );
+
+    // Multiply the cost amounts with the multiplier
+    for (uint256 i = 0; i < costData.resources.length; i++) {
+      costData.amounts[i] *= multiplier;
+    }
 
     // todo: the following might be useful as a installment utility function that can be used in multiple places in the future
     bool fullPayment = true;
