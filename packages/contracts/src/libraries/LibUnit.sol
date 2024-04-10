@@ -129,7 +129,7 @@ library LibUnit {
     // Check the player's colony slot maxColonySlots
     if (add && (unitType == ColonyShipPrototypeId)) {
       bytes32 playerEntity = OwnedBy.get(asteroidEntity);
-      uint256 occupiedSlots = getColonyShipsPlusAsteroids(playerEntity);
+      uint256 occupiedSlots = LibColony.getColonyShipsPlusAsteroids(playerEntity);
       uint256 maxColonySlots = MaxColonySlots.get(playerEntity);
       require(occupiedSlots + count <= maxColonySlots, "[LibUnit] Not enough colony slots");
     }
