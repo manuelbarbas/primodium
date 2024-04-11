@@ -2,11 +2,11 @@
 import { starmapSceneConfig } from "../../lib/config/starmapScene";
 
 import { Game } from "engine/types";
+import { createAudioApi } from "src/game/api/audio";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { setupKeybinds } from "../asteroid/setup/setupKeybinds";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
-import { createAudioApi } from "src/game/api/audio";
 
 export const initStarmapScene = async (game: Game) => {
   const scene = await game.sceneManager.addScene(starmapSceneConfig, false);
@@ -37,6 +37,5 @@ export const initStarmapScene = async (game: Game) => {
 
   world.registerDisposer(() => {
     clickSub.unsubscribe();
-    game.dispose();
   }, "game");
 };

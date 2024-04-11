@@ -8,9 +8,9 @@ import { getRandomRange } from "src/util/common";
 
 export const setupAudioEffects = (scene: Scene) => {
   const audio = createAudioApi(scene);
-  const gameWorld = namespaceWorld(world, "game");
+  const systemsWorld = namespaceWorld(world, "systems");
 
-  defineComponentSystem(gameWorld, components.HoverEntity, ({ value }) => {
+  defineComponentSystem(systemsWorld, components.HoverEntity, ({ value }) => {
     if (!value[0]) return;
 
     audio.play(AudioKeys.DataPoint2, "ui", {
@@ -20,7 +20,7 @@ export const setupAudioEffects = (scene: Scene) => {
   });
 
   defineComponentSystem(
-    gameWorld,
+    systemsWorld,
     components.SelectedRock,
     ({ value }) => {
       if (!value[0] || value[0]?.value === value[1]?.value) return;
