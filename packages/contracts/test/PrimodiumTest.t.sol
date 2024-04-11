@@ -9,6 +9,7 @@ import { NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { BuildingKey, UnitKey } from "src/Keys.sol";
+import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 import { P_Unit, CooldownEnd, P_IsUtility, MaxResourceCount, ResourceCount, P_UnitPrototypes, P_GameConfig, P_GameConfigData, P_Unit, P_Transportables, BuildingType, OwnedBy, FleetMovement, P_Blueprint, P_EnumToPrototype, PositionData, Position, P_RequiredResourcesData, Asteroid, Home, P_RequiredTile, P_MaxLevel, P_RequiredResources, P_RequiredBaseLevel, UnitLevel, P_ColonyShipConfig, Level, P_UnitProdTypes, P_UnitProdMultiplier, P_WormholeAsteroidConfig } from "codegen/index.sol";
 import { EResource, EBuilding, EUnit, Bounds } from "src/Types.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
@@ -16,6 +17,7 @@ import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
+import { LibColony } from "libraries/LibColony.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
@@ -204,12 +206,8 @@ contract PrimodiumTest is MudTest {
     provideResources(asteroidEntity, requiredResources);
 
     if (unitPrototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip))) {
-      uint8 colonyShipResource = P_ColonyShipConfig.getResource();
       uint256 countLeft = count;
       while (countLeft > 0) {
-        uint256 cost = P_ColonyShipConfig.getInitialCost() *
-          LibUnit.getColonyShipCostMultiplier(OwnedBy.get(asteroidEntity));
-        increaseResource(asteroidEntity, EResource(colonyShipResource), cost);
         trainUnits(player, mainBase, unitPrototype, 1, fastForward);
         countLeft--;
       }
@@ -239,6 +237,9 @@ contract PrimodiumTest is MudTest {
     if (!UnitFactorySet.has(Position.getParentEntity(buildingEntity), buildingEntity))
       UnitFactorySet.add(Position.getParentEntity(buildingEntity), buildingEntity);
 
+    // if (unitPrototype == ColonyShipPrototypeId) {
+    //   LibColony.increaseMaxColonySlots(addressToEntity(player));
+    // }
     vm.stopPrank();
 
     vm.startPrank(player);
@@ -474,6 +475,9 @@ contract PrimodiumTest is MudTest {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
     uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+
+    vm.startPrank(creator);
+    LibColony.increaseMaxColonySlots(addressToEntity(player));
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == minutemanEntity) unitCounts[i] = (10 * asteroidDefense) / minutemanAttack + 1;
       else if (unitPrototypes[i] == colonyShip) unitCounts[i] = 1;

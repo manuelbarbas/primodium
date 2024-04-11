@@ -6,6 +6,7 @@ import { IWorld } from "codegen/world/IWorld.sol";
 import { Spawned, Home, Score, SpawnAllowed } from "codegen/index.sol";
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { EScoreType } from "src/Types.sol";
+import { LibColony } from "libraries/LibColony.sol";
 
 /// @title Spawn System for Primodium Game
 /// @notice Handles player spawning in the game world
@@ -26,6 +27,7 @@ contract SpawnSystem is PrimodiumSystem {
 
     bytes32 asteroidEntity = LibAsteroid.createPrimaryAsteroid(playerEntity);
     Spawned.set(playerEntity, true);
+    LibColony.increaseMaxColonySlots(playerEntity);
     IWorld(_world()).Primodium__initAsteroidOwner(asteroidEntity, playerEntity);
     Home.set(playerEntity, asteroidEntity);
     for (uint8 i = 1; i < uint8(EScoreType.LENGTH); i++) {

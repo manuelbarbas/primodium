@@ -5,7 +5,7 @@ import { Keys_AsteroidSet, Meta_AsteroidSet } from "codegen/index.sol";
 
 library AsteroidSet {
   /**
-   * @dev Checks if a asteroid is stored for a specific entity, and asteroidEntity.
+   * @dev Checks if an asteroid is stored for a specific entity, and asteroidEntity.
    * @param entity The entity's identifier.
    * @param key defines the type of association the asteroid has with the entity.
    * @param asteroidEntity The unique asteroidEntity for the asteroid.
@@ -16,7 +16,7 @@ library AsteroidSet {
   }
 
   /**
-   * @dev Sets a asteroid for a specific entity.
+   * @dev Sets an asteroid for a specific entity.
    * If the asteroid already exists, it updates the existing one.
    * @param entity The entity's identifier.
    * @param key defines the type of association the asteroid has with the entity.
