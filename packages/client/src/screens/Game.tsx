@@ -15,6 +15,7 @@ export const Game = () => {
   const [primodium, setPrimodium] = useState<Primodium | null>(null);
 
   const destroy = async () => {
+    if (primodium === null) return;
     setPrimodium(null);
     await new Promise((resolve) => setTimeout(resolve, 100));
     primodium?.destroy();
