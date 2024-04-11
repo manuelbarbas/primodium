@@ -184,7 +184,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
       throw new Error("No primodium scene found");
     }
 
-    //holds the last rock the player can build on
+    components.MapOpen.set({ value: false });
     setupBuildRock();
     setupSwapNotifications(mud);
     setupAllianceLeaderboard(mud);
