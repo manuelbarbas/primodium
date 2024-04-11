@@ -1,6 +1,19 @@
 [
   {
     "type": "function",
+    "name": "Primodium__abandonAsteroid",
+    "inputs": [
+      {
+        "name": "asteroidEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "Primodium__acceptRequestToJoin",
     "inputs": [
       {
