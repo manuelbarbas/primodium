@@ -2,7 +2,6 @@ import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs"
 import { world } from "src/network/world";
 import { isPlayer } from "src/util/common";
 import { components } from "../components";
-import { Leaderboard } from "../components/clientComponents";
 import { MUD } from "../types";
 
 export const setupLeaderboard = (mud: MUD) => {
@@ -29,7 +28,7 @@ export const setupLeaderboard = (mud: MUD) => {
     const playerIndex = players.indexOf(player);
     const playerRank = playerIndex !== -1 ? playerIndex + 1 : leaderboardArray.length + 1;
 
-    Leaderboard.set({
+    components.Leaderboard.set({
       scores,
       players,
       playerRank,
