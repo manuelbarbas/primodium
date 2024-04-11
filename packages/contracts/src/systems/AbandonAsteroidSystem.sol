@@ -2,6 +2,7 @@
 pragma solidity >=0.8.24;
 
 // external
+import { IWorld } from "codegen/world/IWorld.sol";
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { Asteroid, OwnedBy } from "src/codegen/index.sol";
 
@@ -12,6 +13,7 @@ contract AbandonAsteroidSystem is PrimodiumSystem {
 
     require(OwnedBy.get(asteroidEntity) == _player(), "[AbandonAsteroidSystem] Entity is not owned by player");
 
+    IWorld world = IWorld(_world());
     world.Primodium__transferAsteroid(asteroidEntity, bytes32(0));
   }
 }
