@@ -9,7 +9,7 @@ import { AsteroidOwnedByKey } from "src/Keys.sol";
 import { LibColony } from "libraries/LibColony.sol";
 import { AsteroidSet } from "libraries/AsteroidSet.sol";
 
-import { OwnedBy, Asteroid } from "src/codegen/index.sol";
+import { OwnedBy, Asteroid, GracePeriod } from "src/codegen/index.sol";
 
 contract AbandonAsteroidSystemTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;
@@ -44,6 +44,7 @@ contract AbandonAsteroidSystemTest is PrimodiumTest {
     vm.startPrank(creator);
     LibColony.increaseMaxColonySlots(aliceEntity);
     bytes32[] memory prevOwnedAsteroids = AsteroidSet.getAsteroidEntities(aliceEntity, AsteroidOwnedByKey);
+    GracePeriod.deleteRecord(eveHomeAsteroid);
     conquerAsteroid(alice, aliceHomeAsteroid, eveHomeAsteroid);
     bytes32[] memory currentOwnedAsteroids = AsteroidSet.getAsteroidEntities(aliceEntity, AsteroidOwnedByKey);
 

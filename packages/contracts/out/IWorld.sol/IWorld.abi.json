@@ -1,10 +1,10 @@
 [
   {
     "type": "function",
-    "name": "Primodium__abandonFleet",
+    "name": "Primodium__abandonAsteroid",
     "inputs": [
       {
-        "name": "fleetEntity",
+        "name": "asteroidEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       }
@@ -14,10 +14,10 @@
   },
   {
     "type": "function",
-    "name": "Primodium__abandonAsteroid",
+    "name": "Primodium__abandonFleet",
     "inputs": [
       {
-        "name": "asteroidEntity",
+        "name": "fleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       }
