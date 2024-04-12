@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { Position, Asteroid, IsActive, OwnedBy, MaxResourceCount, ClaimOffset, BuildingType, P_UnitProdTypes, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt } from "codegen/index.sol";
-
+import { Position, Asteroid, IsActive, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, P_UnitProdTypes, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, MaxColonySlots, ColonyShipsInTraining } from "codegen/index.sol";
+import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 import { EResource } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
-import { AsteroidSet } from "libraries/AsteroidSet.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
-import { AsteroidOwnedByKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
+import { LibColony } from "libraries/LibColony.sol";
 
 library LibUnit {
   /**
@@ -85,6 +84,16 @@ library LibUnit {
         stillClaiming = false;
       }
 
+      if (item.unitEntity == ColonyShipPrototypeId) {
+        uint256 asteroidTrainingShipCount = ColonyShipsInTraining.get(asteroidEntity);
+
+        if (asteroidTrainingShipCount < trainedUnits) {
+          // Some previous error has happened such that there are more colony ships being trained than available slots, so we need to mitigate this back to a valid state. Player unlikely to claim a colony ship in this state.
+          trainedUnits = asteroidTrainingShipCount;
+        }
+        ColonyShipsInTraining.set(asteroidEntity, asteroidTrainingShipCount - trainedUnits);
+      }
+
       increaseUnitCount(asteroidEntity, item.unitEntity, trainedUnits, false);
     }
   }
@@ -116,6 +125,14 @@ library LibUnit {
     if (count == 0) return;
     uint256 unitLevel = UnitLevel.get(asteroidEntity, unitType);
 
+    // Check the player's colony slot maxColonySlots
+    if (add && (unitType == ColonyShipPrototypeId)) {
+      bytes32 playerEntity = OwnedBy.get(asteroidEntity);
+      uint256 occupiedSlots = LibColony.getColonyShipsPlusAsteroids(playerEntity);
+      uint256 maxColonySlots = MaxColonySlots.get(playerEntity);
+      require(occupiedSlots + count <= maxColonySlots, "[LibUnit] Not enough colony slots");
+    }
+
     P_RequiredResourcesData memory resources = P_RequiredResources.get(unitType, unitLevel);
     for (uint8 i = 0; i < resources.resources.length; i++) {
       uint8 resource = resources.resources[i];
@@ -135,24 +152,6 @@ library LibUnit {
         ResourceCount.set(asteroidEntity, resource, currentAmount + requiredAmount);
       }
     }
-  }
-
-  function getColonyShipCostMultiplier(bytes32 playerEntity) internal view returns (uint256) {
-    uint256 multiplier = getColonyShipsPlusAsteroids(playerEntity);
-    return 2 ** multiplier;
-  }
-
-  function getColonyShipsPlusAsteroids(bytes32 playerEntity) internal view returns (uint256) {
-    bytes32[] memory ownedAsteroids = AsteroidSet.getAsteroidEntities(playerEntity, AsteroidOwnedByKey);
-    uint256 ret = 0;
-    for (uint256 i = 0; i < ownedAsteroids.length; i++) {
-      uint256 ships = MaxResourceCount.get(ownedAsteroids[i], uint8(EResource.U_ColonyShipCapacity)) -
-        ResourceCount.get(ownedAsteroids[i], uint8(EResource.U_ColonyShipCapacity));
-
-      ret += ships;
-    }
-    // subtract one so the first asteroid doesn't count
-    return ret + ownedAsteroids.length - 1;
   }
 
   /**

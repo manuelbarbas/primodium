@@ -2,7 +2,7 @@ import { resourceToHex } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { DECIMALS } from "contracts/config/constants";
-import { EBuilding, EObjectives, EResource, EUnit } from "contracts/config/enums";
+import { EBuilding, EObjectives, EResource, EScoreType, EUnit } from "contracts/config/enums";
 import { Key } from "engine/types";
 import { encodeEntity } from "src/util/encode";
 import { parseEther } from "viem";
@@ -82,12 +82,14 @@ export enum TransactionQueueType {
   Access,
   Attack,
   CreateFleet,
-  DisbandFleet,
+  ClearFleet,
   LandFleet,
   MergeFleets,
+  AbandonFleet,
   SendFleet,
   FleetStance,
   TransferFleet,
+  WormholeDeposit,
 }
 
 export enum RockRelationship {
@@ -129,6 +131,7 @@ export const EntityType = {
   Platinum: toHex32("Platinum") as Entity,
 
   MainBase: toHex32("MainBase") as Entity,
+  WormholeBase: toHex32("WormholeBase") as Entity,
   DroidBase: toHex32("DroidBase") as Entity,
 
   // Basic Buildings
@@ -253,6 +256,16 @@ export const EntityType = {
   TridentMarineUpgrade3: toHex32("TridentMarineUpgrade") as Entity,
   TridentMarineUpgrade4: toHex32("TridentMarineUpgrade") as Entity,
   TridentMarineUpgrade5: toHex32("TridentMarineUpgrade") as Entity,
+
+  // Leaderboards
+  PlayerPrimodiumLeaderboard: toHex32("Player_Primodium") as Entity,
+  PlayerWormholeLeaderboard: toHex32("Player_Wormhole") as Entity,
+  PlayerGrandLeaderboard: toHex32("Player_Grand") as Entity,
+
+  // Leaderboards
+  AlliancePrimodiumLeaderboard: toHex32("Alliance_Primodium") as Entity,
+  AllianceWormholeLeaderboard: toHex32("Alliance_Wormhole") as Entity,
+  AllianceGrandLeaderboard: toHex32("Alliance_Grand") as Entity,
 
   //Objectives
   ...Object.keys(EObjectives).reduce((acc, key) => {
@@ -495,6 +508,7 @@ export const BuildingEnumLookup: Record<Entity, EBuilding> = {
   [EntityType.DroneFactory]: EBuilding.DroneFactory,
   [EntityType.Hangar]: EBuilding.Hangar,
   [EntityType.MainBase]: EBuilding.MainBase,
+  [EntityType.WormholeBase]: EBuilding.WormholeBase,
   [EntityType.SAMLauncher]: EBuilding.SAM,
   [EntityType.StarmapperStation]: EBuilding.Starmapper,
   [EntityType.ShieldGenerator]: EBuilding.ShieldGenerator,
@@ -529,3 +543,14 @@ export const ObjectiveEnumLookup: Record<Entity, EObjectives> = {
 };
 
 export const ObjectiveEntityLookup = reverseRecord(ObjectiveEnumLookup);
+
+export const LeaderboardEntityLookup = {
+  player: {
+    [EScoreType.Primodium]: EntityType.PlayerPrimodiumLeaderboard,
+    [EScoreType.Wormhole]: EntityType.PlayerWormholeLeaderboard,
+  },
+  alliance: {
+    [EScoreType.Primodium]: EntityType.AlliancePrimodiumLeaderboard,
+    [EScoreType.Wormhole]: EntityType.AllianceWormholeLeaderboard,
+  },
+};

@@ -1,8 +1,8 @@
 import { Coord, Scene } from "engine/types";
 import { IPrimodiumGameObject } from "../interfaces";
 // import { OrbitRing } from "./OrbitRing";
-import { Assets } from "../../constants/assets";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { Assets } from "../../constants/assets";
 import { SpriteKeys } from "../../constants/assets/sprites";
 import { AsteroidRelationship, DepthLayers } from "../../constants/common";
 import { OrbitRing } from "./OrbitRing";
@@ -48,6 +48,13 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
   setScale(x?: number, y?: number) {
     this.asteroidSprite.setScale(x, y);
     this.outlineSprite.setScale(x, y);
+    return this;
+  }
+
+  setTilePosition(coord: Coord) {
+    this.coord = coord;
+    const pixelCoord = tileCoordToPixelCoord(coord, this._scene.tiled.tileWidth, this._scene.tiled.tileHeight);
+    this.setPosition(pixelCoord.x, -pixelCoord.y);
     return this;
   }
 

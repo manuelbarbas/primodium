@@ -3,11 +3,11 @@ pragma solidity >=0.8.24;
 import { EResource } from "src/Types.sol";
 
 import { LibStorage } from "libraries/LibStorage.sol";
-import { LibUnit } from "libraries/LibUnit.sol";
+import { LibColony } from "libraries/LibColony.sol";
 import { UtilityMap } from "libraries/UtilityMap.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
-import { P_ColonyShipConfig, P_Transportables, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsResource, P_RequiredResources, P_IsUtility, P_IsUtility, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy } from "codegen/index.sol";
+import { P_ColonyShipConfig, P_Transportables, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsResource, P_RequiredResources, P_IsUtility, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy, MaxColonySlots, P_ColonySlotsConfig, P_ColonySlotsConfigData, ColonySlotsInstallments, ColonyShipsInTraining } from "codegen/index.sol";
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -46,11 +46,15 @@ library LibResource {
   /// @param count Quantity of units to be trained
   function spendUnitRequiredResources(bytes32 asteroidEntity, bytes32 prototype, uint256 count) internal {
     if (prototype == ColonyShipPrototypeId) {
+      // todo: redesign to allow for multiple colony ships to be trained at once, this can already be done across multiple asteroids that have shipyards
       require(count == 1, "[SpendResources] Colony ships can only be trained one at a time");
-      uint256 cost = P_ColonyShipConfig.getInitialCost() *
-        LibUnit.getColonyShipCostMultiplier(OwnedBy.get(asteroidEntity));
+      bytes32 playerEntity = OwnedBy.get(asteroidEntity);
+      require(
+        LibColony.getColonyShipsPlusAsteroids(playerEntity) < MaxColonySlots.get(playerEntity),
+        "[SpendResources] No available slots to train colony ship"
+      );
 
-      spendResource(asteroidEntity, prototype, P_ColonyShipConfig.getResource(), cost);
+      ColonyShipsInTraining.set(asteroidEntity, ColonyShipsInTraining.get(asteroidEntity) + 1);
     }
 
     uint256 level = UnitLevel.get(asteroidEntity, prototype);
@@ -70,6 +74,59 @@ library LibResource {
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       spendResource(asteroidEntity, prototype, requiredResources.resources[i], requiredResources.amounts[i]);
     }
+  }
+
+  /// @notice Only one can be bought at a time
+  function spendMaxColonySlotsResources(
+    bytes32 asteroidEntity,
+    uint256[] calldata paymentAmounts
+  ) internal returns (bool) {
+    bytes32 playerEntity = OwnedBy.get(asteroidEntity);
+    uint256 multiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);
+
+    // Get the initial cost of the slot for each resource type from prototype
+    P_ColonySlotsConfigData memory costData = P_ColonySlotsConfig.get();
+
+    // Require that the payment data has the same resources as the cost data
+    require(
+      paymentAmounts.length == costData.resources.length,
+      "[SpendResources] Payment data does not match cost data"
+    );
+
+    // Multiply the cost amounts with the multiplier
+    for (uint256 i = 0; i < costData.resources.length; i++) {
+      costData.amounts[i] *= multiplier;
+    }
+
+    // todo: the following might be useful as a installment utility function that can be used in multiple places in the future
+    bool fullPayment = true;
+    // check if payment + previous installment is greater than or equal to the cost of the slot, for each resource type
+    for (uint256 i = 0; i < costData.resources.length; i++) {
+      uint256 previousInstallment = ColonySlotsInstallments.get(playerEntity, i);
+      uint256 paymentAmount = paymentAmounts[i];
+      uint256 totalCost = costData.amounts[i];
+
+      // if not enough to pay in full, spend the payment up to the costData amount and update the installment data and set fullPayment false
+      if (paymentAmount + previousInstallment < totalCost) {
+        fullPayment = false;
+        spendResource(asteroidEntity, playerEntity, costData.resources[i], paymentAmount);
+        ColonySlotsInstallments.set(playerEntity, i, paymentAmount + previousInstallment);
+      } else {
+        // if this resource is filled, spend the remaining required cost, update installment data and iterate to the next resource
+        uint256 remainingCost = totalCost - previousInstallment;
+        spendResource(asteroidEntity, playerEntity, costData.resources[i], remainingCost);
+        ColonySlotsInstallments.set(playerEntity, i, totalCost);
+      }
+    }
+
+    if (fullPayment) {
+      // if full payment, iterate through and empty the installment data.
+      for (uint256 i = 0; i < costData.resources.length; i++) {
+        ColonySlotsInstallments.set(playerEntity, i, 0);
+      }
+    }
+
+    return fullPayment;
   }
 
   /**

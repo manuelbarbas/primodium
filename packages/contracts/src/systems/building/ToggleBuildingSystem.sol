@@ -4,7 +4,9 @@ pragma solidity >=0.8.24;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { Position, IsActive, OwnedBy, BuildingType } from "src/codegen/index.sol";
 import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
-import { MainBasePrototypeId } from "codegen/Prototypes.sol";
+
+import { MainBasePrototypeId, WormholeBasePrototypeId } from "codegen/Prototypes.sol";
+
 import { IWorld } from "codegen/world/IWorld.sol";
 
 contract ToggleBuildingSystem is PrimodiumSystem {
@@ -27,7 +29,10 @@ contract ToggleBuildingSystem is PrimodiumSystem {
     );
 
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
-    require(buildingPrototype != MainBasePrototypeId, "[ToggleBuilding] Can not toggle main base");
+    require(
+      buildingPrototype != MainBasePrototypeId && buildingPrototype != WormholeBasePrototypeId,
+      "[ToggleBuilding] Can not toggle main base"
+    );
 
     require(
       UnitProductionQueue.isEmpty(buildingEntity),

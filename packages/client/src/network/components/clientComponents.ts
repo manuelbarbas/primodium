@@ -108,26 +108,21 @@ export const Leaderboard = createExtendedComponent(
   world,
   {
     players: Type.EntityArray,
-    playerRank: Type.Number,
-    scores: Type.NumberArray,
+    playerRank: Type.OptionalNumber,
+    scores: Type.BigIntArray,
   },
   {
     id: "Leaderboard",
   }
 );
 
-export const AllianceLeaderboard = createExtendedComponent(
-  world,
-  {
-    alliances: Type.EntityArray,
-    playerAllianceRank: Type.Number,
-    scores: Type.BigIntArray,
-  },
-  {
-    id: "AllianceLeaderboard",
-  }
-);
-
+export const GrandLeaderboard = createExtendedComponent(world, {
+  players: Type.EntityArray,
+  wormholeRanks: Type.NumberArray,
+  primodiumRanks: Type.NumberArray,
+  scores: Type.NumberArray,
+  playerRank: Type.OptionalNumber,
+});
 /* -------------------------------------------------------------------------- */
 /*                                 Objectives                                 */
 /* -------------------------------------------------------------------------- */
@@ -226,7 +221,7 @@ export default {
 
   /* ------------------------------ Leaderboard ------------------------------- */
   Leaderboard,
-  AllianceLeaderboard,
+  GrandLeaderboard,
 
   /* -------------------------------- Objective ------------------------------- */
   IsObjectiveClaimable,

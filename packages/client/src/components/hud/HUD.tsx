@@ -27,6 +27,7 @@ import { HomeMarker } from "./markers/starmap/HomeMarker";
 import HackerConsole from "./modals/HackerConsole";
 import { OwnedAsteroids } from "./widgets/OwnedAsteroids";
 import { OwnedFleets } from "./widgets/OwnedFleets";
+import { UnitDeaths } from "./widgets/UnitDeaths";
 import { Blueprints } from "./widgets/blueprints/Blueprints";
 import { Chat } from "./widgets/chat/Chat";
 import { Cheatcodes } from "./widgets/dev/Cheatcodes";
@@ -195,6 +196,7 @@ export const GameHUD = memo(() => {
 
             <HUD.TopMiddle className="flex flex-col items-center gap-2">
               <Cheatcodes />
+              <UnitDeaths />
             </HUD.TopMiddle>
             <HUD.TopRight className="flex flex-col items-end gap-2">
               <CurrentObjective />

@@ -7,11 +7,13 @@ import { IsFleet, IsFleetEmpty, GracePeriod, P_GracePeriod, P_Transportables, Fl
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
+import { LibTransfer } from "libraries/fleet/LibTransfer.sol";
 import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { FleetKey, FleetOwnedByKey, FleetIncomingKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
+import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
 library LibFleet {
   /**
@@ -197,9 +199,12 @@ library LibFleet {
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       uint256 fleetUnitCount = UnitCount.get(fleetEntity, unitPrototypes[i]);
       if (fleetUnitCount == 0) continue;
+      if (!isOwner && unitPrototypes[i] == ColonyShipPrototypeId)
+        LibTransfer.checkColonySlot(asteroidEntity, fleetUnitCount);
       decreaseFleetUnit(fleetEntity, unitPrototypes[i], fleetUnitCount, !isOwner);
       LibUnit.increaseUnitCount(asteroidEntity, unitPrototypes[i], fleetUnitCount, !isOwner);
     }
+
     if (!isOwner) {
       resetFleetOrbit(fleetEntity);
     }

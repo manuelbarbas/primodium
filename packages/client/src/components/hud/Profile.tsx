@@ -1,6 +1,7 @@
 import { FaHandshake, FaHandshakeSlash } from "react-icons/fa";
 import { useMud } from "src/hooks";
 // import { Card } from "../core/Card";
+import { KeybindActions } from "src/game/lib/constants/keybinds";
 import { components } from "src/network/components";
 import { getRandomRange } from "src/util/common";
 import { Modal } from "../core/Modal";
@@ -8,9 +9,7 @@ import { Tooltip } from "../core/Tooltip";
 import { Widget } from "../core/Widget";
 import { AccountDisplay } from "../shared/AccountDisplay";
 import { Account } from "../transfer/Account";
-import { Score } from "./Score";
 import { SpectatingDetails } from "./SpectatingDetails";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 const ProfileContent = () => {
   const {
@@ -42,8 +41,7 @@ const ProfileContent = () => {
           </Modal.Content>
         </Modal>
       </div>
-
-      <Score player={playerEntity} />
+      {/* <Score player={playerEntity} /> */}
     </>
   );
 };

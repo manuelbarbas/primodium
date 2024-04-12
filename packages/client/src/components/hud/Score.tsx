@@ -1,13 +1,13 @@
+import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { useMemo } from "react";
 import { components } from "src/network/components";
 import { formatResourceCount } from "src/util/number";
 import { SecondaryCard } from "../core/Card";
-import { Entity } from "@latticexyz/recs";
-import { useMemo } from "react";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 
-export const Score: React.FC<{ player: Entity }> = ({ player }) => {
-  const leaderboardPlayers = components.Leaderboard.use()?.players;
-  const leaderboardScores = components.Leaderboard.use()?.scores;
+export const Score: React.FC<{ player: Entity; leaderboard: Entity }> = ({ player, leaderboard }) => {
+  const leaderboardPlayers = components.Leaderboard.use(leaderboard)?.players;
+  const leaderboardScores = components.Leaderboard.use(leaderboard)?.scores;
 
   const [rank, score] = useMemo(() => {
     const _rank = (leaderboardPlayers ?? []).indexOf(player);
@@ -19,7 +19,7 @@ export const Score: React.FC<{ player: Entity }> = ({ player }) => {
     return [_rank + 1, leaderboardScores ? leaderboardScores[_rank] : 0];
   }, [leaderboardPlayers, leaderboardScores, player]);
 
-  const data = components.Leaderboard.use();
+  const data = components.Leaderboard.use(leaderboard);
 
   if (!data) return null;
 

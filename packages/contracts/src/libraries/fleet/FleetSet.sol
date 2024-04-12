@@ -45,7 +45,7 @@ library FleetSet {
    * @param fleetEntity The unique fleetEntity for the fleet to remove.
    */
   function remove(bytes32 entity, bytes32 key, bytes32 fleetEntity) internal {
-    // if (!has(entity, key, fleetEntity)) return;
+    if (!has(entity, key, fleetEntity)) return;
     if (Keys_FleetSet.length(entity, key) == 1) {
       clear(entity, key);
       return;

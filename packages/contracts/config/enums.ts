@@ -1,5 +1,6 @@
 export enum EBuilding {
   MainBase = 1,
+  WormholeBase,
 
   // Mines
   LithiumMine,
@@ -53,7 +54,6 @@ export enum EResource {
   // Utilities
   U_Electricity,
   U_Housing,
-  U_ColonyShipCapacity,
   U_MaxFleets,
   U_Defense,
   U_Unraidable,
@@ -63,12 +63,6 @@ export enum EResource {
 
   // Multipliers
   M_DefenseMultiplier,
-}
-
-export enum ESize {
-  Small = 1,
-  Medium,
-  Large,
 }
 
 export enum EUnit {
@@ -81,18 +75,6 @@ export enum EUnit {
   LightningCraft,
   ColonyShip,
   Droid,
-}
-
-export enum ESendType {
-  Reinforce = 1,
-  Invade,
-  Raid,
-  Recall,
-}
-
-export enum EOrderType {
-  Resource = 1,
-  Unit,
 }
 
 export enum EObjectives {
@@ -178,11 +160,6 @@ export enum EObjectives {
   JoinAlliance,
 }
 
-export enum EFleetKey {
-  OwnedBy = 1,
-  Incoming = 2,
-}
-
 export enum EAllianceInviteMode {
   Open = 1,
   Closed,
@@ -202,18 +179,20 @@ export enum EFleetStance {
   Block,
 }
 
+export enum EScoreType {
+  Primodium = 1,
+  Wormhole,
+}
+
 export const MUDEnums = {
   EBuilding: enumToArray(EBuilding),
   EResource: enumToArray(EResource),
-  ESize: enumToArray(ESize),
   EUnit: enumToArray(EUnit),
-  ESendType: enumToArray(ESendType),
   EObjectives: enumToArray(EObjectives),
   EAllianceInviteMode: enumToArray(EAllianceInviteMode),
   EAllianceRole: enumToArray(EAllianceRole),
-  EOrderType: enumToArray(EOrderType),
-  EFleetKey: enumToArray(EFleetKey),
   EFleetStance: enumToArray(EFleetStance),
+  EScoreType: enumToArray(EScoreType),
 };
 
 function enumToArray(enumObj: object): string[] {

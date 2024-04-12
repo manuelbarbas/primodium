@@ -6,6 +6,7 @@ import { P_ColonyShipConfig, CooldownEnd, DamageDealt, BattleEncryptionResult, B
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
+import { LibScore } from "libraries/LibScore.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
@@ -260,6 +261,7 @@ library LibCombat {
       casualties: new uint256[](unitPrototypes.length)
     });
 
+    uint256 unitsKilled = 0;
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       unitResult.unitsAtStart[i] = UnitCount.get(targetEntity, unitPrototypes[i]);
       if (unitResult.unitsAtStart[i] == 0) continue;
@@ -268,6 +270,7 @@ library LibCombat {
       uint256 unitHp = P_Unit.getHp(unitPrototypes[i], unitResult.unitLevels[i]);
       uint256 damagePortion = LibMath.divideRound((unitResult.unitsAtStart[i] * unitHp * damage), totalHp);
       unitResult.casualties[i] = LibMath.divideRound(damagePortion, unitHp);
+      unitsKilled += unitResult.casualties[i];
 
       if (unitResult.casualties[i] > unitResult.unitsAtStart[i]) unitResult.casualties[i] = unitResult.unitsAtStart[i];
       applyUnitCasualty(targetEntity, unitPrototypes[i], unitResult.casualties[i]);
@@ -277,6 +280,7 @@ library LibCombat {
       if (damageDealt >= damage) break;
     }
 
+    LibScore.addUnitDeaths(unitsKilled);
     BattleUnitResult.set(battleEntity, targetEntity, unitResult);
 
     if (IsFleet.get(targetEntity)) {
