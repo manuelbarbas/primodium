@@ -7,7 +7,7 @@ import { addressToEntity } from "src/utils.sol";
 import { EResource, EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
-import { MaxColonySlots, LastConquered, OwnedBy, UnitCount, ProductionRate, CooldownEnd, P_ColonyShipConfig, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, UnitLevel } from "codegen/index.sol";
+import { MaxColonySlots, LastConquered, OwnedBy, UnitCount, ProductionRate, CooldownEnd, P_ColonyShipConfig, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, IsFleet, UnitLevel } from "codegen/index.sol";
 
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
@@ -268,10 +268,11 @@ contract CombatEncryptionTest is PrimodiumTest {
       "fleet should have been cleared and colony ship unit lost"
     );
 
-    assertEq(FleetMovement.getDestination(bobFleet), bobHomeAsteroid, "fleet should have been reset to orbit");
-    assertEq(FleetMovement.getOrigin(bobFleet), bobHomeAsteroid, "fleet should have been reset to orbit");
-    assertEq(FleetMovement.getArrivalTime(bobFleet), block.timestamp, "fleet should have been reset to orbit");
-    assertEq(FleetMovement.getSendTime(bobFleet), block.timestamp, "fleet should have been reset to orbit");
+    assertEq(FleetMovement.getDestination(bobFleet), bytes32(0), "fleet should have been destroyed/abandoned");
+    assertEq(FleetMovement.getOrigin(bobFleet), bytes32(0), "fleet should have been destroyed/abandoned");
+    assertEq(FleetMovement.getArrivalTime(bobFleet), 0, "fleet should have been destroyed/abandoned");
+    assertEq(FleetMovement.getSendTime(bobFleet), 0, "fleet should have been destroyed/abandoned");
+    assertEq(IsFleet.get(bobFleet), false, "fleet should have been destroyed/abandoned");
 
     assertEq(
       ResourceCount.get(bobHomeAsteroid, uint8(EResource.Iron)),

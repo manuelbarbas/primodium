@@ -13,7 +13,6 @@ import { UnitCount, MaxResourceCount, Asteroid, Home, OwnedBy, Level, ResourceCo
 import { ColonyShipPrototypeId, ShipyardPrototypeId } from "codegen/Prototypes.sol";
 
 import { LibColony } from "libraries/LibColony.sol";
-import { S_TransferAsteroidSystem } from "systems/subsystems/S_TransferAsteroidSystem.sol";
 
 contract LibColonyTest is PrimodiumTest {
   bytes32 playerEntity;

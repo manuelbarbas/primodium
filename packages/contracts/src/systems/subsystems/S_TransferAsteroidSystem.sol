@@ -17,11 +17,11 @@ contract S_TransferAsteroidSystem is PrimodiumSystem {
   function transferAsteroid(bytes32 asteroidEntity, bytes32 ownerEntity) public {
     bytes32 lastOwnerEntity = OwnedBy.get(asteroidEntity);
     if (lastOwnerEntity != bytes32(0)) {
-      //clear defending fleets
+      // clear defending fleets, including ones owned by other players
       LibFleetStance.clearDefendingFleets(asteroidEntity);
-      //clear all fleets
-      clearAllFleets(asteroidEntity);
-      //destroy colony ships
+      // abandon all owned fleets
+      LibFleetClear.abandonAllOwnedFleets(asteroidEntity);
+      // destroy colony ships on the asteroid
       destroyAsteroidColonyShips(asteroidEntity);
 
       AsteroidSet.remove(lastOwnerEntity, AsteroidOwnedByKey, asteroidEntity);
