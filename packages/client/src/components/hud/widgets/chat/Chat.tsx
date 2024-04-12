@@ -4,7 +4,6 @@ import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { Channel } from "./Channel";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 export const Chat = () => {
   const {
@@ -21,7 +20,7 @@ export const Chat = () => {
       lockable
       defaultVisible
       persist
-      hotkey={KeybindActions.Chat}
+      hotkey={"Chat"}
       draggable
       defaultCoord={{ x: 0, y: 0 }}
       scene={"UI"}

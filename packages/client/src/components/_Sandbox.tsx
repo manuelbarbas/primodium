@@ -1,19 +1,20 @@
-import { Button, TestButton } from "@/components/core/Button";
+import { Button } from "@/components/core/Button";
 import { Card, SecondaryCard } from "@/components/core/Card";
 import { Range } from "@/components/core/Range";
-import { Loader } from "./core/Loader";
-import { Toggle } from "./core/Toggle";
-import { Badge } from "./core/Badge";
-import { Progress } from "./core/Progress";
-import { Accordion } from "./core/Accordion";
-import { Tabs } from "./core/Tabs";
-import { Join } from "./core/Join";
-import { CapacityBar } from "./core/CapacityBar";
-import { EntityType } from "src/util/constants";
-import { NumberInput } from "./core/NumberInput";
-import { HUD } from "./core/HUD";
-import { Modal } from "./core/Modal";
-import { TextInput } from "./core/TextInput";
+import { NumberInput } from "@/components/core/NumberInput";
+import { EntityType } from "@/util/constants";
+import { Accordion } from "@/components/core/Accordion";
+import { Badge } from "@/components/core/Badge";
+import { CapacityBar } from "@/components/core/CapacityBar";
+import { HUD } from "@/components/core/HUD";
+import { Join } from "@/components/core/Join";
+import { Modal } from "@/components/core/Modal";
+import { Progress } from "@/components/core/Progress";
+import { Tabs } from "@/components/core/Tabs";
+import { TextInput } from "@/components/core/TextInput";
+import { Toggle } from "@/components/core/Toggle";
+import { Loader } from "@/components/core/Loader";
+import { IconLabel } from "@/components/core/IconLabel";
 
 export const _Sandbox = () => {
   return (
@@ -30,21 +31,22 @@ export const _Sandbox = () => {
             <div className="w-8 h-8 bg-success border" />
             <div className="w-8 h-8 bg-info border" />
           </div>
-          <div className="flex gap-2">
-            <TestButton variant={"secondary"} size={"lg"} modifier={"outline"} shape={"square"}>
-              TEST
-            </TestButton>
-            <Button className="bg-error">Error</Button>
-            <Button className="bg-warning">Error</Button>
-            <Button className="bg-success">Error</Button>
-            <Button className="bg-secondary">Secondary</Button>
-            <Button className="bg-primary">Primary</Button>
+          <div className="flex gap-2 flex-wrap">
+            <Button variant={"info"} tooltip="test">
+              info
+            </Button>
+            <Button variant={"warning"}>warning</Button>
+            <Button variant={"error"}>error</Button>
+            <Button variant={"accent"}>accent</Button>
+            <Button variant={"secondary"}>secondary</Button>
+            <Button variant={"primary"}>primary</Button>
+            <Button variant={"success"}>primary</Button>
           </div>
           <div className="flex gap-2">
-            <Button className="bg-primary btn-lg">Large</Button>
-            <Button className="bg-primary btn-md">Medium</Button>
-            <Button className="bg-primary btn-sm">Small</Button>
-            <Button className="bg-primary btn-xs">XSmall</Button>
+            <Button size={"lg"}>Large</Button>
+            <Button size={"md"}>Medium</Button>
+            <Button size={"sm"}>Small</Button>
+            <Button size={"xs"}>XSmall</Button>
           </div>
           <div className="flex gap-2">
             <Card className="w-72 h-72">
@@ -85,7 +87,7 @@ export const _Sandbox = () => {
           </div>
 
           <Modal>
-            <Modal.Button className="btn-secondary">OPEN MODAL</Modal.Button>
+            <Modal.Button variant={"secondary"}>OPEN MODAL</Modal.Button>
             <Modal.Content className="w-96">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus
               ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent
@@ -127,13 +129,15 @@ export const _Sandbox = () => {
             <Toggle defaultChecked className="toggle-lg toggle-info" />
           </div>
           <div className="flex gap-2">
-            <Badge className="badge-neutral">Badge</Badge>
-            <Badge className="badge-primary">Badge</Badge>
-            <Badge className="badge-accent">Badge</Badge>
-            <Badge className="badge-success">Badge</Badge>
-            <Badge className="badge-warning badge">Badge</Badge>
-            <Badge className="badge-info">Badge</Badge>
-            <Badge className="badge-accent badge-outline">Badge</Badge>
+            <Badge variant={"info"}>info</Badge>
+            <Badge variant={"warning"}>warning</Badge>
+            <Badge variant={"error"}>error</Badge>
+            <Badge variant={"accent"}>accent</Badge>
+            <Badge variant={"secondary"}>secondary</Badge>
+            <Badge variant={"primary"}>primary</Badge>
+            <Badge variant={"success"} tooltip={<IconLabel text="Debug Tooltip" imageUri="/img/icons/debugicon.png" />}>
+              primary
+            </Badge>
           </div>
 
           <Tabs defaultIndex={0}>
@@ -147,7 +151,6 @@ export const _Sandbox = () => {
               <Tabs.Button showActive index={2}>
                 Tab3
               </Tabs.Button>
-              <Tabs.IconButton imageUri="/img/icons/debugicon.png" text="Tab4" index={3} hideText />
             </Join>
             <Tabs.Pane index={0}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus
@@ -177,7 +180,7 @@ export const _Sandbox = () => {
       </div>
 
       <HUD.CursorFollower className="ml-5">
-        <Card>🎉</Card>
+        <Card>WOW 🎉</Card>
       </HUD.CursorFollower>
     </HUD>
   );

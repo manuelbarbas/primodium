@@ -1,6 +1,51 @@
-export const Badge: React.FC<{
-  children?: React.ReactNode;
-  className?: string;
-}> = ({ children, className }) => {
-  return <div className={`badge badge-neutral ${className}`}>{children}</div>;
-};
+import { Tooltip } from "@/components/core/Tooltip";
+import { cn } from "@/util/client";
+import { VariantProps, cva } from "class-variance-authority";
+import { forwardRef } from "react";
+
+const badgeVariants = cva(" pointer-events-auto", {
+  variants: {
+    variant: {
+      neutral: "badge-neutral",
+      primary: "badge-primary",
+      accent: "badge-accent",
+      secondary: "badge-secondary",
+      success: "badge-success",
+      info: "badge-info",
+      warning: "badge-warning",
+      error: "badge-error",
+      ghost: "badge-ghost",
+    },
+    size: {
+      xs: "badge-xs",
+      sm: "badge-sm",
+      md: "badge-md",
+      lg: "badge-lg",
+    },
+    modifier: {
+      default: "",
+      outline: "btn-outline",
+    },
+  },
+  defaultVariants: {
+    modifier: "default",
+    variant: "neutral",
+    size: "sm",
+  },
+});
+
+interface BadgeProps extends React.ButtonHTMLAttributes<HTMLDivElement>, VariantProps<typeof badgeVariants> {
+  tooltip?: React.ReactNode;
+  tooltipDirection?: "right" | "left" | "top" | "bottom";
+}
+
+export const Badge = forwardRef<HTMLDivElement, BadgeProps>(
+  ({ className, variant, size, modifier, tooltip, tooltipDirection, ...props }, ref) => {
+    return (
+      <Tooltip tooltipContent={tooltip} direction={tooltipDirection}>
+        <div className={cn(badgeVariants({ variant, size, modifier, className }))} ref={ref} {...props} />
+      </Tooltip>
+    );
+  }
+);
+Badge.displayName = "Badge";

@@ -17,7 +17,7 @@ function stringify(obj: unknown) {
   });
 }
 
-const HackerConsole: React.FC = () => {
+export const HackerConsole: React.FC = () => {
   const primodium = usePrimodium();
   const mud = useMud();
 
@@ -218,5 +218,3 @@ const Dropdown: React.FC<Props> = ({ data }) => {
     </div>
   );
 };
-
-export default HackerConsole;

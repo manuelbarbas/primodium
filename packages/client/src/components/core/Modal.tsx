@@ -1,10 +1,10 @@
 import React, { ReactNode, createContext, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaTimes } from "react-icons/fa";
-import { usePrimodium } from "src/hooks/usePrimodium";
-import { Button, IconButton } from "./Button";
-import { Card } from "./Card";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
+import { usePrimodium } from "@/hooks/usePrimodium";
+import { Button } from "@/components/core/Button";
+import { Card } from "@/components/core/Card";
+import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
 
 interface ModalContextType {
   isOpen: boolean;
@@ -21,7 +21,7 @@ const ModalContext = createContext<ModalContextType>({
 interface ModalProps {
   children: ReactNode;
   title?: string;
-  keybind?: KeybindActions;
+  keybind?: KeybindActionKeys;
   keybindClose?: boolean;
 }
 
@@ -29,7 +29,6 @@ export const Modal: React.FC<ModalProps> & {
   Button: React.FC<React.ComponentProps<typeof Button>>;
   CloseButton: React.FC<React.ComponentProps<typeof Button>>;
   Content: React.FC<{ children: ReactNode; className?: string }>;
-  IconButton: React.FC<React.ComponentProps<typeof IconButton>>;
 } = ({ children, title, keybind, keybindClose }) => {
   const [isOpen, setIsOpen] = useState(false);
   const primodium = usePrimodium();
@@ -56,7 +55,7 @@ export const Modal: React.FC<ModalProps> & {
       enableInput();
     }
 
-    const escListener = addListener(KeybindActions.Esc, handleEscPress);
+    const escListener = addListener("Esc", handleEscPress);
     const openListener = keybind ? addListener(keybind, handleOpenPress) : null;
 
     return () => {
@@ -77,8 +76,8 @@ Modal.Button = function ModalButton(props: React.ComponentProps<typeof Button>) 
     <Button
       {...props}
       clickSound={props.clickSound ?? "Sequence"}
-      onClick={() => {
-        if (props.onClick) props.onClick();
+      onClick={(e) => {
+        if (props.onClick) props.onClick(e);
         setIsOpen(true);
       }}
     />
@@ -92,23 +91,9 @@ Modal.CloseButton = function ModalButton(props: React.ComponentProps<typeof Butt
     <Button
       {...props}
       clickSound={props.clickSound ?? "Sequence"}
-      onClick={() => {
-        if (props.onClick) props.onClick();
+      onClick={(e) => {
+        if (props.onClick) props.onClick(e);
         setIsOpen(false);
-      }}
-    />
-  );
-};
-
-Modal.IconButton = function ModalIconButton(props: React.ComponentProps<typeof IconButton>) {
-  const { setIsOpen } = useContext(ModalContext);
-
-  return (
-    <IconButton
-      {...props}
-      onClick={() => {
-        if (props.onClick) props.onClick();
-        setIsOpen(true);
       }}
     />
   );

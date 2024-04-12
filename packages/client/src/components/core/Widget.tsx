@@ -4,12 +4,12 @@ import { ReactNode, memo, useCallback, useEffect, useMemo, useState } from "reac
 import ReactDOM from "react-dom";
 import { FaMinus, FaRegWindowMaximize, FaRegWindowRestore } from "react-icons/fa";
 import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
-import { usePersistentStore } from "src/game/stores/PersistentStore";
-import { usePrimodium } from "src/hooks/usePrimodium";
-import { useWidgets } from "../../hooks/providers/WidgetProvider";
-import { Card, NoBorderCard } from "./Card";
-import { SceneKeys } from "src/game/lib/constants/common";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
+import { usePersistentStore } from "@game/stores/PersistentStore";
+import { usePrimodium } from "@/hooks/usePrimodium";
+import { useWidgets } from "@/hooks/providers/WidgetProvider";
+import { Card, NoBorderCard } from "@/components/core/Card";
+import { SceneKeys } from "@game/lib/constants/common";
+import { KeybindActionKeys } from "@game/lib/constants/keybinds";
 
 type WidgetProps = {
   title: string;
@@ -20,7 +20,7 @@ type WidgetProps = {
   draggable?: boolean;
   minOpacity?: number;
   persist?: boolean;
-  hotkey?: KeybindActions;
+  hotkey?: KeybindActionKeys;
   pinnable?: boolean;
   lockable?: boolean;
   defaultPinned?: boolean;

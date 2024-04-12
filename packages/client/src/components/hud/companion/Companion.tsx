@@ -4,11 +4,12 @@ import { FaEyeSlash, FaUndo } from "react-icons/fa";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useWidgets } from "../../../hooks/providers/WidgetProvider";
-import { Button, IconButton } from "../../core/Button";
+import { Button } from "../../core/Button";
 import { Card, SecondaryCard } from "../../core/Card";
 import { MapButton } from "../MapButton";
 import { MenuButtons } from "../MenuButtons";
-import { KeyNames, KeybindActions } from "src/game/lib/constants/keybinds";
+import { KeyNames, KeybindActionKeys } from "src/game/lib/constants/keybinds";
+import { IconLabel } from "@/components/core/IconLabel";
 
 export const WidgetButton: React.FC<{
   imageUri: string;
@@ -20,7 +21,7 @@ export const WidgetButton: React.FC<{
   onClose: () => void;
   onDoubleClick?: () => void;
   disable?: boolean;
-  hotkey?: KeybindActions;
+  hotkey?: KeybindActionKeys;
   active: boolean;
 }> = ({ hotkey, imageUri, tooltipText, visible, onClose, onOpen, className, text, disable = false, active }) => {
   const primodium = usePrimodium();
@@ -39,11 +40,9 @@ export const WidgetButton: React.FC<{
           {KeyNames[keybindId] ?? keybindId ?? "?"}
         </p>
       )}
-      <IconButton
-        imageUri={imageUri}
-        tooltipText={tooltipText}
+      <Button
+        tooltip={tooltipText}
         tooltipDirection="top"
-        text={text}
         clickSound={!visible ? "DataPoint" : "Sequence3"}
         onClick={() => {
           if (!visible) onOpen();
@@ -53,7 +52,9 @@ export const WidgetButton: React.FC<{
         className={`border btn-md btn-neutral border-secondary/50 bg-opacity-25 rounded-tl-lg text-lg hover:z-20 hover:drop-shadow-hard transition-all ${
           visible ? "border-warning bg-warning/25" : "bg-secondary/25"
         } ${!active ? "!bg-error/50 !border-error" : ""} ${className}`}
-      />
+      >
+        <IconLabel imageUri={imageUri} text={text} />
+      </Button>
     </div>
   );
 };
@@ -133,7 +134,7 @@ export const Actions = () => {
         >
           {!hideHotkeys && (
             <p className="absolute top-1 z-10 right-4 translate-x-full -translate-y-1/2 flex text-xs kbd kbd-xs">
-              {keybinds[KeybindActions.HideAll]?.entries().next().value[0] ?? "?"}
+              {keybinds["HideAll"]?.entries().next().value[0] ?? "?"}
             </p>
           )}
           {numOpen == 0 ? <FaUndo /> : <FaEyeSlash className="text-error" />}
@@ -176,7 +177,7 @@ export const Companion = () => {
   const [scope, animate] = useAnimate();
 
   useEffect(() => {
-    const listener = addListener(KeybindActions.Aura, () => {
+    const listener = addListener("Aura", () => {
       setMinimized((prev) => !prev);
     });
 
@@ -210,7 +211,7 @@ export const Companion = () => {
               {"<"} HIDE
               {!hideHotkeys && (
                 <p className="absolute top-0 right-2 translate-x-full z-30 -translate-y-1/2 flex text-xs kbd kbd-xs">
-                  {[keybinds[KeybindActions.Aura]?.entries().next().value[0]] ?? "?"}
+                  {[keybinds["Aura"]?.entries().next().value[0]] ?? "?"}
                 </p>
               )}
             </Button>
@@ -221,9 +222,8 @@ export const Companion = () => {
 
         {minimized && (
           <p className="mb-5 drop-shadow-hard">
-            PRESS{" "}
-            <span className="kbd kbd-xs">{[keybinds[KeybindActions.Aura]?.entries().next().value[0]] ?? "?"}</span> TO
-            CALL <span className="text-accent">AURA</span>
+            PRESS <span className="kbd kbd-xs">{[keybinds["Aura"]?.entries().next().value[0]] ?? "?"}</span> TO CALL{" "}
+            <span className="text-accent">AURA</span>
           </p>
         )}
       </div>
