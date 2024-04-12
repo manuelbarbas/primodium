@@ -7,8 +7,9 @@ import { addressToEntity } from "src/utils.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 import { EResource, EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
+import { LibColony } from "libraries/LibColony.sol";
 
-import { P_GameConfig, CooldownEnd, Home, P_EnumToPrototype, ResourceCount, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes, FleetMovement, P_RequiredResources, P_RequiredResourcesData, UnitLevel, P_IsUtility } from "codegen/index.sol";
+import { P_GameConfig, CooldownEnd, Home, P_EnumToPrototype, ResourceCount, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes, FleetMovement, P_RequiredResources, P_RequiredResourcesData, UnitLevel, P_IsUtility, MaxColonySlots } from "codegen/index.sol";
 
 contract TransferSystemTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;
@@ -113,8 +114,15 @@ contract TransferSystemTest is PrimodiumTest {
   }
 
   function testTransferColonyShipBetweenPlayers() public {
+    vm.startPrank(creator);
+    LibColony.increaseMaxColonySlots(aliceEntity);
+    LibColony.increaseMaxColonySlots(bobEntity);
+
+    console.log("here2");
+
     bytes32 aliceFleet = createColonyShipFleet(alice);
     bytes32 bobFleet = createColonyShipFleet(bob);
+    vm.stopPrank();
 
     vm.prank(creator);
     P_GameConfig.setWorldSpeed(100);
@@ -131,13 +139,13 @@ contract TransferSystemTest is PrimodiumTest {
     }
 
     vm.startPrank(alice);
-    vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
+    vm.expectRevert("[Fleet] Receiver not enough colony slots to transfer colony ships");
     world.Primodium__transferUnitsFromFleetToFleet(aliceFleet, bobFleet, unitCounts);
 
-    vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
+    vm.expectRevert("[Fleet] Receiver not enough colony slots to transfer colony ships");
     world.Primodium__transferUnitsFromFleetToAsteroid(aliceFleet, bobHomeAsteroid, unitCounts);
 
-    vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
+    vm.expectRevert("[Fleet] Receiver not enough colony slots to transfer colony ships");
     world.Primodium__transferUnitsAndResourcesFromFleetToAsteroid(
       aliceFleet,
       bobHomeAsteroid,
@@ -145,7 +153,7 @@ contract TransferSystemTest is PrimodiumTest {
       resourceCounts
     );
 
-    vm.expectRevert("[Fleet] Cannot transfer colony ships to other players");
+    vm.expectRevert("[Fleet] Receiver not enough colony slots to transfer colony ships");
     world.Primodium__transferUnitsAndResourcesFromFleetToFleet(aliceFleet, bobFleet, unitCounts, resourceCounts);
   }
 
