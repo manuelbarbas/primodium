@@ -9,6 +9,8 @@ export enum SpriteKeys {
   Mainbase7 = "sprites/mainbase/level7/Main_Base_LVL7_1.png",
   Mainbase8 = "sprites/mainbase/level8/Main_Base_LVL8_1.png",
 
+  Wormholebase1 = "sprites/wormholebase/level1/WormholeBase_LVL1_1.png",
+
   IronMine1 = "sprites/miners/ironmine/level1/Miner_Iron_LVL1_1.png",
   IronMine2 = "sprites/miners/ironmine/level2/Miner_Iron_LVL2_1.png",
   IronMine3 = "sprites/miners/ironmine/level3/Miner_Iron_LVL3_1.png",

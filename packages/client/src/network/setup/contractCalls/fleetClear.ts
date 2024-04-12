@@ -7,26 +7,26 @@ import { getSystemId, hashEntities } from "src/util/encode";
 import { toTransportableResourceArray, toUnitCountArray } from "src/util/send";
 import { Hex } from "viem";
 
-const disbandId = "disband" as Entity;
+const clearId = "clear" as Entity;
 
-export const disbandFleet = async (mud: MUD, fleet: Entity) => {
+export const clearFleet = async (mud: MUD, fleet: Entity) => {
   await execute(
     {
       mud,
-      functionName: "Primodium__disbandFleet",
-      systemId: getSystemId("FleetDisbandSystem"),
+      functionName: "Primodium__clearFleet",
+      systemId: getSystemId("FleetClearSystem"),
       args: [fleet as Hex],
       withSession: true,
     },
     {
-      id: disbandId,
-      type: TransactionQueueType.DisbandFleet,
+      id: clearId,
+      type: TransactionQueueType.ClearFleet,
     },
     () => components.SelectedFleet.remove()
   );
 };
 
-export const disbandFleetUnitsResources = async (mud: MUD, fleet: Entity, content: Map<Entity, bigint>) => {
+export const clearFleetUnitsResources = async (mud: MUD, fleet: Entity, content: Map<Entity, bigint>) => {
   const unitCounts = toUnitCountArray(content);
   const resourceCounts = toTransportableResourceArray(content);
   const totalUnits = unitCounts.reduce((acc, cur) => acc + cur, 0n);
@@ -38,13 +38,13 @@ export const disbandFleetUnitsResources = async (mud: MUD, fleet: Entity, conten
     return await execute(
       {
         mud,
-        functionName: "Primodium__disbandResources",
-        systemId: getSystemId("FleetDisbandSystem"),
+        functionName: "Primodium__clearResources",
+        systemId: getSystemId("FleetClearSystem"),
         args: [fleet as Hex, resourceCounts],
         withSession: true,
       },
       {
-        id: disbandId,
+        id: clearId,
         type: TransactionQueueType.CreateFleet,
       }
     );
@@ -53,13 +53,13 @@ export const disbandFleetUnitsResources = async (mud: MUD, fleet: Entity, conten
     return await execute(
       {
         mud,
-        functionName: "Primodium__disbandUnits",
-        systemId: getSystemId("FleetDisbandSystem"),
+        functionName: "Primodium__clearUnits",
+        systemId: getSystemId("FleetClearSystem"),
         args: [fleet as Hex, unitCounts],
         withSession: true,
       },
       {
-        id: hashEntities(TransactionQueueType.DisbandFleet, fleet),
+        id: hashEntities(TransactionQueueType.ClearFleet, fleet),
         type: TransactionQueueType.CreateFleet,
       }
     );
@@ -67,13 +67,13 @@ export const disbandFleetUnitsResources = async (mud: MUD, fleet: Entity, conten
     await execute(
       {
         mud,
-        functionName: "Primodium__disbandUnitsAndResourcesFromFleet",
-        systemId: getSystemId("FleetDisbandSystem"),
+        functionName: "Primodium__clearUnitsAndResourcesFromFleet",
+        systemId: getSystemId("FleetClearSystem"),
         args: [fleet as Hex, unitCounts, resourceCounts],
         withSession: true,
       },
       {
-        id: hashEntities(TransactionQueueType.DisbandFleet, fleet),
+        id: hashEntities(TransactionQueueType.ClearFleet, fleet),
         type: TransactionQueueType.CreateFleet,
       }
     );

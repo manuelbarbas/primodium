@@ -3,11 +3,15 @@ import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { useMemo, useRef } from "react";
 import { Marker } from "src/components/core/Marker";
+import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { DepthLayers } from "src/game/lib/constants/common";
 import { useMud } from "src/hooks";
+import { useClaimPrimodium } from "src/hooks/primodium/useClaimPrimodium";
 import { useOrbitingFleets } from "src/hooks/useOrbitingFleets";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
+import { claimPrimodium } from "src/network/setup/contractCalls/claimPrimodium";
 import { getAsteroidImage } from "src/util/asteroid";
 import { getCanAttackSomeone } from "src/util/unit";
 import { Hex } from "viem";
@@ -15,11 +19,13 @@ import { Button } from "../../../core/Button";
 import { IconLabel } from "../../../core/IconLabel";
 import { Modal } from "../../../core/Modal";
 import { Fleets } from "../../widgets/fleets/Fleets";
-import { DepthLayers } from "src/game/lib/constants/common";
+import { _ShardAsteroidTarget } from "./ShardAsteroidTarget";
+
 export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ selectedAsteroid }) => {
+  const mud = useMud();
   const {
     playerAccount: { entity: playerEntity },
-  } = useMud();
+  } = mud;
   const primodium = usePrimodium();
   const {
     scene: { getConfig },
@@ -42,6 +48,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   const canTransfer = useOrbitingFleets(selectedAsteroid).length > 0 && ownedByPlayer;
   const noUnits = [...useUnitCounts(selectedAsteroid).entries()].every(([, count]) => count === 0n);
 
+  const claimConquerTime = useClaimPrimodium(selectedAsteroid);
   const selectingDestination = !!components.Attack.use()?.originFleet;
 
   const hideAttack = useMemo(
@@ -130,7 +137,20 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             </Modal>
           </div>
         )}
-        {ownedByPlayer && (
+        {ownedByPlayer && claimConquerTime?.canConquer && (
+          <TransactionQueueMask
+            queueItemId={"Primodium " as Entity}
+            className="absolute bottom-0 left-0 -translate-x-full w-28"
+          >
+            <Button
+              onClick={() => claimPrimodium(mud, selectedAsteroid)}
+              className="victory-bg btn-xs w-full text-xs text-black border border-r-0 border-secondary/50"
+            >
+              CLAIM
+            </Button>
+          </TransactionQueueMask>
+        )}
+        {ownedByPlayer && !claimConquerTime?.canConquer && (
           <div className="absolute bottom-0 left-0 -translate-x-full w-28">
             <Modal title="Create Fleet">
               <Modal.Button
@@ -158,5 +178,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
 export const AsteroidTarget = () => {
   const selectedAsteroid = components.SelectedRock.use()?.value;
   if (!selectedAsteroid) return <></>;
+  if (components.ShardAsteroid.has(selectedAsteroid))
+    return <_ShardAsteroidTarget selectedAsteroid={selectedAsteroid} />;
   return <_AsteroidTarget selectedAsteroid={selectedAsteroid} />;
 };

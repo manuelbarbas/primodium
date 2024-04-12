@@ -3,9 +3,9 @@ pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
-import { OwnedBy, ColonyShipsInTraining, UnitCount } from "src/codegen/index.sol";
+import { OwnedBy, LastConquered, ColonyShipsInTraining, UnitCount } from "src/codegen/index.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
-import { LibFleetDisband } from "libraries/fleet/LibFleetDisband.sol";
+import { LibFleetClear } from "libraries/fleet/LibFleetClear.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { AsteroidSet } from "libraries/AsteroidSet.sol";
@@ -19,8 +19,8 @@ contract S_TransferAsteroidSystem is PrimodiumSystem {
     if (lastOwnerEntity != bytes32(0)) {
       //clear defending fleets
       LibFleetStance.clearDefendingFleets(asteroidEntity);
-      //disband all fleets
-      disbandAllFleets(asteroidEntity);
+      //clear all fleets
+      clearAllFleets(asteroidEntity);
       //destroy colony ships
       destroyAsteroidColonyShips(asteroidEntity);
 
@@ -28,12 +28,13 @@ contract S_TransferAsteroidSystem is PrimodiumSystem {
     }
     OwnedBy.set(asteroidEntity, ownerEntity);
     AsteroidSet.add(ownerEntity, AsteroidOwnedByKey, asteroidEntity);
+    LastConquered.set(asteroidEntity, block.timestamp);
   }
 
-  function disbandAllFleets(bytes32 asteroidEntity) internal {
+  function clearAllFleets(bytes32 asteroidEntity) internal {
     bytes32[] memory ownedFleets = FleetSet.getFleetEntities(asteroidEntity, FleetOwnedByKey);
     for (uint256 i = 0; i < ownedFleets.length; i++) {
-      LibFleetDisband.disbandFleet(ownedFleets[i]);
+      LibFleetClear.clearFleet(ownedFleets[i]);
 
       IWorld world = IWorld(_world());
       world.Primodium__resetFleetIfNoUnitsLeft(ownedFleets[i]);

@@ -15,7 +15,7 @@ contract FleetRecallSystem is PrimodiumSystem {
    * @dev Can only be called by the fleet owner and ensures the fleet is not in any stance.
    * @param fleetEntity The unique identifier for the fleet to be recalled.
    */
-  function recallFleet(bytes32 fleetEntity) public _onlyFleetOwner(fleetEntity) _onlyWhenNotInStance(fleetEntity) {
+  function recallFleet(bytes32 fleetEntity) public _onlyFleetOwner(fleetEntity) _onlyNotInStance(fleetEntity) {
     LibFleetMove.recallFleet(fleetEntity);
   }
 }

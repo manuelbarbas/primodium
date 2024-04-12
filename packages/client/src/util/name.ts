@@ -1,5 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { components } from "src/network/components";
 import { hashEntities } from "./encode";
 
 const adjectives = [
@@ -91,6 +92,12 @@ export const entityToRockName = (entity: Entity) => {
   if (entityRockname.has(entity)) return entityRockname.get(entity) as string;
 
   const hash = hashEntities(entity);
+  const shardIndex = components.ShardAsteroidIndex.get(entity)?.value;
+  if (shardIndex !== undefined) {
+    const name = mythologicalNames[Number(shardIndex) % mythologicalNames.length];
+    entityRockname.set(entity, name);
+    return name;
+  }
 
   const prefix1 = parseInt(hash.substring(0, 4), 16) % 26;
   const prefix2 = parseInt(hash.substring(4, 8), 16) % 26;
@@ -109,6 +116,20 @@ export const entityToRockName = (entity: Entity) => {
 export const rockNameToEntity = (name: string) => {
   return [...entityRockname.entries()].find(([, v]) => v === name)?.[0];
 };
+
+const mythologicalNames = [
+  "Ares",
+  "Cronus",
+  "Dionysus",
+  "Hades",
+  "Icarus",
+  "Lysander",
+  "Morpheus",
+  "Odysseus",
+  "Prometheus",
+  "Sisyphus",
+  "Zeus",
+];
 
 const phoneticAlphabet: Record<string, string> = {
   A: "Alpha",

@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { P_EnumToPrototype, Position, FleetMovementData, FleetMovement, UnitCount, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { ShardAsteroid, P_EnumToPrototype, Position, FleetMovementData, FleetMovement, UnitCount, PositionData, P_Unit, UnitLevel, P_GameConfig, P_GameConfigData, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibMath } from "libraries/LibMath.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { FleetSet } from "libraries/fleet/FleetSet.sol";
-import { FleetIncomingKey, FleetStanceKey } from "src/Keys.sol";
+import { FleetIncomingKey, FleetStanceKey, FleetOutgoingKey } from "src/Keys.sol";
 
 import { WORLD_SPEED_SCALE, UNIT_SPEED_SCALE } from "src/constants.sol";
 import { EFleetStance } from "src/Types.sol";
@@ -42,17 +42,23 @@ library LibFleetMove {
   }
 
   function _sendFleet(bytes32 fleetEntity, bytes32 destination, uint256 sendTime, uint256 arrivalTime) private {
+    bytes32 prevOrigin = FleetMovement.getOrigin(fleetEntity);
+    bytes32 origin = FleetMovement.getDestination(fleetEntity);
+
+    if (ShardAsteroid.getIsShardAsteroid(prevOrigin)) {
+      FleetSet.remove(prevOrigin, FleetOutgoingKey, fleetEntity);
+    }
+
+    if (ShardAsteroid.getIsShardAsteroid(origin)) {
+      FleetSet.add(origin, FleetOutgoingKey, fleetEntity);
+    }
+
     FleetSet.remove(FleetMovement.getDestination(fleetEntity), FleetIncomingKey, fleetEntity);
     FleetSet.add(destination, FleetIncomingKey, fleetEntity);
 
     FleetMovement.set(
       fleetEntity,
-      FleetMovementData({
-        arrivalTime: arrivalTime,
-        sendTime: sendTime,
-        origin: FleetMovement.getDestination(fleetEntity),
-        destination: destination
-      })
+      FleetMovementData({ arrivalTime: arrivalTime, sendTime: sendTime, origin: origin, destination: destination })
     );
   }
 

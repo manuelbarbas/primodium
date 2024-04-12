@@ -97,6 +97,12 @@ export class OrbitRing extends Phaser.GameObjects.Container {
     return this;
   }
 
+  clear() {
+    this.fleetsContainer.list.forEach((fleet) => {
+      this.removeFleet(fleet as Fleet);
+    });
+  }
+
   pauseRotation() {
     this.rotationTween.pause();
     return this;

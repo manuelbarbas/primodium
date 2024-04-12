@@ -1,6 +1,19 @@
 [
   {
     "type": "function",
+    "name": "Primodium__abandonFleet",
+    "inputs": [
+      {
+        "name": "fleetEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "Primodium__abandonAsteroid",
     "inputs": [
       {
@@ -189,7 +202,33 @@
   },
   {
     "type": "function",
+    "name": "Primodium__claimPrimodium",
+    "inputs": [
+      {
+        "name": "asteroidEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "Primodium__claimResources",
+    "inputs": [
+      {
+        "name": "asteroidEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Primodium__claimShardAsteroidPoints",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -206,6 +245,19 @@
     "inputs": [
       {
         "name": "asteroidEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Primodium__clearFleet",
+    "inputs": [
+      {
+        "name": "fleetEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       }
@@ -247,6 +299,65 @@
         "name": "buildingEntity",
         "type": "bytes32",
         "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Primodium__clearResources",
+    "inputs": [
+      {
+        "name": "fleetEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "resourceCounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Primodium__clearUnits",
+    "inputs": [
+      {
+        "name": "fleetEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "unitCounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Primodium__clearUnitsAndResourcesFromFleet",
+    "inputs": [
+      {
+        "name": "fleetEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "unitCounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "resourceCounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
       }
     ],
     "outputs": [],
@@ -677,78 +788,6 @@
   },
   {
     "type": "function",
-    "name": "Primodium__disbandFleet",
-    "inputs": [
-      {
-        "name": "fleetEntity",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__disbandResources",
-    "inputs": [
-      {
-        "name": "fleetEntity",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "resourceCounts",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__disbandUnits",
-    "inputs": [
-      {
-        "name": "fleetEntity",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "unitCounts",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__disbandUnitsAndResourcesFromFleet",
-    "inputs": [
-      {
-        "name": "fleetEntity",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "unitCounts",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      },
-      {
-        "name": "resourceCounts",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "Primodium__grantRole",
     "inputs": [
       {
@@ -931,7 +970,7 @@
     "name": "Primodium__payForMaxColonySlots",
     "inputs": [
       {
-        "name": "asteroidEntity",
+        "name": "shipyardEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
@@ -1595,6 +1634,19 @@
   },
   {
     "type": "function",
+    "name": "Primodium__uncheckedAbandonFleet",
+    "inputs": [
+      {
+        "name": "fleetEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "Primodium__upgradeBuilding",
     "inputs": [
       {
@@ -1650,6 +1702,24 @@
         "name": "unit",
         "type": "uint8",
         "internalType": "enum EUnit"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Primodium__wormholeDeposit",
+    "inputs": [
+      {
+        "name": "wormholeBaseEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "count",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "outputs": [],

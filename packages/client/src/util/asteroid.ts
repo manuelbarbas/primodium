@@ -4,14 +4,14 @@ import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EFleetStance } from "contracts/config/enums";
 // import { getRockSprite } from "src/game/scenes/starmap/systems/utils/getSprites";
+import { Assets } from "src/game/lib/constants/assets";
+import { SpriteKeys } from "src/game/lib/constants/assets/sprites";
 import { components, components as comps } from "src/network/components";
 import { Hangar } from "src/network/components/clientComponents";
 import { getEntityTypeName } from "./common";
 import { EntityType, MapIdToAsteroidType, ResourceStorages, RockRelationship } from "./constants";
 import { getFullResourceCount } from "./resource";
 import { getOrbitingFleets } from "./unit";
-import { Assets } from "src/game/lib/constants/assets";
-import { SpriteKeys } from "src/game/lib/constants/assets/sprites";
 
 //TODO: proper implementation, this is just a placeholder so stuff doesn't break.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -53,6 +53,7 @@ export function getAsteroidDescription(asteroid: Entity) {
   return {
     type: asteroidResource ? getEntityTypeName(asteroidResource) : "Basic",
     size: asteroidSize,
+    primodium: asteroidData?.primodium ?? 0n,
   };
 }
 
