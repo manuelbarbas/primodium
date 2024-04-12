@@ -5,7 +5,7 @@ import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibFleetMove } from "libraries/fleet/LibFleetMove.sol";
 import { FleetMovement } from "codegen/index.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
-import { OwnedBy, Asteroid, PositionData, ReversePosition } from "codegen/index.sol";
+import { OwnedBy, Asteroid, PositionData, ReversePosition, ShardAsteroid } from "codegen/index.sol";
 
 /**
  * @title FleetMoveSystem
@@ -30,7 +30,10 @@ contract FleetMoveSystem is PrimodiumSystem {
    * @param asteroidEntity The unique identifier for the target asteroid.
    */
   modifier _onlyIfAsteroidExists(bytes32 asteroidEntity) {
-    require(Asteroid.getIsAsteroid(asteroidEntity), "[Fleet] Asteroid does not exist");
+    require(
+      Asteroid.getIsAsteroid(asteroidEntity) || ShardAsteroid.getIsShardAsteroid(asteroidEntity),
+      "[Fleet] Asteroid does not exist"
+    );
     _;
   }
 
@@ -59,8 +62,8 @@ contract FleetMoveSystem is PrimodiumSystem {
     public
     _onlyIfAsteroidExists(asteroidEntity)
     _onlyFleetOwner(fleetEntity)
-    _onlyWhenFleetIsInOrbit(fleetEntity)
-    _onlyWhenNotInStance(fleetEntity)
+    _onlyOrbiting(fleetEntity)
+    _onlyNotInStance(fleetEntity)
     _onlyDifferentAsteroid(fleetEntity, asteroidEntity)
   {
     LibFleetMove.sendFleet(fleetEntity, asteroidEntity);

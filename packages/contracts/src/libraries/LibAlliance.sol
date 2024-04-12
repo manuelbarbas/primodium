@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 
 // tables
-import { P_AllianceConfig, Score, AllianceJoinRequest, PlayerAlliance, Alliance, AllianceData, AllianceInvitation } from "codegen/index.sol";
+import { P_AllianceConfig, AllianceScoreContribution, Score, AllianceJoinRequest, PlayerAlliance, Alliance, AllianceData, AllianceInvitation } from "codegen/index.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -10,7 +10,7 @@ import { AllianceMemberSet } from "libraries/AllianceMemberSet.sol";
 
 // types
 import { AllianceKey } from "src/Keys.sol";
-import { EAllianceRole, EAllianceInviteMode } from "src/Types.sol";
+import { EAllianceRole, EAllianceInviteMode, EScoreType } from "src/Types.sol";
 
 library LibAlliance {
   /**
@@ -157,8 +157,6 @@ library LibAlliance {
   {
     PlayerAlliance.set(playerEntity, allianceEntity, uint8(EAllianceRole.Member));
     AllianceInvitation.deleteRecord(playerEntity, allianceEntity);
-    uint256 playerScore = Score.get(playerEntity);
-    Alliance.setScore(allianceEntity, Alliance.getScore(allianceEntity) + playerScore);
     AllianceMemberSet.add(allianceEntity, playerEntity);
   }
 
@@ -175,39 +173,11 @@ library LibAlliance {
   ) internal onlyNotMemberOfAlliance(playerEntity) returns (bytes32 allianceEntity) {
     allianceEntity = LibEncode.getHash(AllianceKey, playerEntity);
     PlayerAlliance.set(playerEntity, allianceEntity, uint8(EAllianceRole.Owner));
-    Alliance.set(allianceEntity, AllianceData(name, 0, uint8(allianceInviteMode)));
-    uint256 playerScore = Score.get(playerEntity);
-    Alliance.setScore(allianceEntity, Alliance.getScore(allianceEntity) + playerScore);
-    Score.set(allianceEntity, Score.get(allianceEntity) + playerScore);
+    Alliance.set(allianceEntity, AllianceData(name, uint8(allianceInviteMode)));
     AllianceMemberSet.add(allianceEntity, playerEntity);
-  }
-
-  /**
-   * @dev leave an alliance
-   * @param playerEntity The entity ID of the playerEntity.
-   */
-  function leave(bytes32 playerEntity) internal {
-    bytes32 allianceEntity = PlayerAlliance.getAlliance(playerEntity);
-    if (allianceEntity == 0) return;
-    AllianceMemberSet.remove(allianceEntity, playerEntity);
-    if (PlayerAlliance.getRole(playerEntity) == uint8(EAllianceRole.Owner)) {
-      if (AllianceMemberSet.length(allianceEntity) == 0) {
-        Alliance.deleteRecord(allianceEntity);
-        PlayerAlliance.deleteRecord(playerEntity);
-        return;
-      }
-      bytes32[] memory memberEntities = AllianceMemberSet.getMembers(allianceEntity);
-      bytes32 currEntity = memberEntities[0];
-      for (uint256 i = 0; i < memberEntities.length; i++) {
-        if (PlayerAlliance.getRole(memberEntities[i]) < PlayerAlliance.getRole(currEntity)) {
-          currEntity = memberEntities[i];
-        }
-      }
-      PlayerAlliance.set(currEntity, allianceEntity, uint8(EAllianceRole.Owner));
+    for (uint8 i = 1; i < uint8(EScoreType.LENGTH); i++) {
+      Score.set(allianceEntity, i, 0);
     }
-    PlayerAlliance.deleteRecord(playerEntity);
-    uint256 playerScore = Score.get(playerEntity);
-    Alliance.setScore(allianceEntity, Alliance.getScore(allianceEntity) - playerScore);
   }
 
   /**
@@ -236,6 +206,45 @@ library LibAlliance {
     AllianceInvitation.deleteRecord(inviteeEntity, allianceEntity);
   }
 
+  function removePlayerScoreContributions(bytes32 playerEntity, bytes32 allianceEntity) private {
+    for (uint8 i = 1; i < uint8(EScoreType.LENGTH); i++) {
+      uint256 playerContribution = AllianceScoreContribution.get(allianceEntity, i, playerEntity);
+      uint256 allianceScore = Score.get(allianceEntity, i);
+      if (playerContribution > 0) {
+        AllianceScoreContribution.deleteRecord(allianceEntity, i, playerEntity);
+        Score.set(allianceEntity, i, allianceScore - playerContribution);
+      }
+    }
+  }
+
+  /**
+   * @dev leave an alliance
+   * @param playerEntity The entity ID of the playerEntity.
+   */
+  function leave(bytes32 playerEntity) internal {
+    bytes32 allianceEntity = PlayerAlliance.getAlliance(playerEntity);
+    if (allianceEntity == 0) return;
+    AllianceMemberSet.remove(allianceEntity, playerEntity);
+    if (PlayerAlliance.getRole(playerEntity) == uint8(EAllianceRole.Owner)) {
+      if (AllianceMemberSet.length(allianceEntity) == 0) {
+        Alliance.deleteRecord(allianceEntity);
+        PlayerAlliance.deleteRecord(playerEntity);
+        return;
+      }
+      bytes32[] memory memberEntities = AllianceMemberSet.getMembers(allianceEntity);
+      bytes32 currEntity = memberEntities[0];
+      for (uint256 i = 0; i < memberEntities.length; i++) {
+        if (PlayerAlliance.getRole(memberEntities[i]) < PlayerAlliance.getRole(currEntity)) {
+          currEntity = memberEntities[i];
+        }
+      }
+      PlayerAlliance.set(currEntity, allianceEntity, uint8(EAllianceRole.Owner));
+    }
+    PlayerAlliance.deleteRecord(playerEntity);
+
+    removePlayerScoreContributions(playerEntity, allianceEntity);
+  }
+
   /**
    * @dev kick a player from an alliance
    * @param playerEntity The entity ID of the player kicking.
@@ -244,8 +253,7 @@ library LibAlliance {
   function kick(bytes32 playerEntity, bytes32 targetEntity) internal onlyCanKick(playerEntity, targetEntity) {
     bytes32 allianceEntity = PlayerAlliance.getAlliance(playerEntity);
     PlayerAlliance.deleteRecord(targetEntity);
-    uint256 playerScore = Score.get(targetEntity);
-    Alliance.setScore(allianceEntity, Alliance.getScore(allianceEntity) - playerScore);
+    removePlayerScoreContributions(targetEntity, allianceEntity);
     AllianceMemberSet.remove(allianceEntity, targetEntity);
   }
 
@@ -303,9 +311,6 @@ library LibAlliance {
   {
     bytes32 allianceEntity = PlayerAlliance.getAlliance(playerEntity);
     PlayerAlliance.set(acceptedEntity, allianceEntity, uint8(EAllianceRole.Member));
-
-    uint256 playerScore = Score.get(acceptedEntity);
-    Alliance.setScore(allianceEntity, Alliance.getScore(allianceEntity) + playerScore);
 
     AllianceJoinRequest.deleteRecord(acceptedEntity, allianceEntity);
     AllianceMemberSet.add(allianceEntity, acceptedEntity);

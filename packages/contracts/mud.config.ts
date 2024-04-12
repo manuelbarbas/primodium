@@ -1,5 +1,4 @@
 import { defineWorld } from "@latticexyz/world";
-
 import { MUDEnums } from "./config/enums";
 import { prototypeConfig } from "./config/prototypeConfig";
 import { ConfigWithPrototypes } from "./ts/prototypes/types";
@@ -21,7 +20,7 @@ export const worldInput = {
     S_BattleApplyDamageSystem: {},
     S_BattleRaidResolveSystem: {},
     S_BattleEncryptionResolveSystem: {},
-    S_FleetResetIfNoUnitsLeftSystem: {},
+    S_FleetClearSystem: {},
     S_InitAsteroidOwnerSystem: {},
     S_TransferAsteroidSystem: {},
     S_CreateSecondaryAsteroidSystem: {},
@@ -29,7 +28,6 @@ export const worldInput = {
 
   // using as any here for now because of a type issue and also because the enums are not being recognized in our codebase rn
   enums: MUDEnums as unknown as { [key: string]: ["NULL"] },
-  codegen: {},
   tables: {
     /* ----------------------------------- Dev ---------------------------------- */
     Counter: {
@@ -52,11 +50,21 @@ export const worldInput = {
         unitProductionRate: "uint256",
         travelTime: "uint256",
         worldSpeed: "uint256",
-        tax: "uint256",
         maxAsteroidsPerPlayer: "uint256",
         asteroidChanceInv: "uint256",
         asteroidDistance: "uint256",
+        unitDeathLimit: "uint256",
       },
+    },
+
+    SpawnAllowed: {
+      key: [],
+      schema: { value: "bool" },
+    },
+
+    VictoryStatus: {
+      key: [],
+      schema: { unitDeaths: "uint256", gameOver: "bool" },
     },
 
     P_ColonyShipConfig: {
@@ -120,12 +128,20 @@ export const worldInput = {
 
     Asteroid: {
       key: ["entity"],
-      schema: { entity: "bytes32", isAsteroid: "bool", maxLevel: "uint256", mapId: "uint8", spawnsSecondary: "bool" },
+      schema: {
+        entity: "bytes32",
+        isAsteroid: "bool",
+        maxLevel: "uint256",
+        mapId: "uint8",
+        spawnsSecondary: "bool",
+        wormhole: "bool",
+        primodium: "uint256",
+      },
     },
 
     P_WormholeAsteroidConfig: {
       key: [],
-      schema: { wormholeAsteroidSlot: "uint256", maxLevel: "uint256", mapId: "uint8" },
+      schema: { wormholeAsteroidSlot: "uint256", maxLevel: "uint256", mapId: "uint8", primodium: "uint256" },
     },
 
     // note: dimensions will always be positive, but are int32s so they work with coords
@@ -325,18 +341,6 @@ export const worldInput = {
       schema: { entity: "bytes32", value: "bool" },
     },
 
-    /* ------------------------------- Motherlode ------------------------------- */
-
-    P_SizeToAmount: {
-      key: ["size"],
-      schema: { size: "uint8", value: "uint256" },
-    },
-
-    P_RawResource: {
-      key: ["resource"],
-      schema: { resource: "uint8", value: "uint8" },
-    },
-
     /* ----------------------------- Unit Production ---------------------------- */
     // stores an array of all unit prototypes in the game
     P_UnitPrototypes: {
@@ -533,23 +537,18 @@ export const worldInput = {
     /* ---------------------------------- Score --------------------------------- */
 
     P_ScoreMultiplier: {
-      key: ["entity"],
-      schema: { entity: "uint8", value: "uint256" },
+      key: ["resource"],
+      schema: { resource: "uint8", value: "uint256" },
     },
+
     Score: {
-      key: ["entity"],
-      schema: { entity: "bytes32", value: "uint256" },
+      key: ["entity", "scoreType"],
+      schema: { entity: "bytes32", scoreType: "uint8", value: "uint256" },
     },
 
-    /* ------------------------------ Test Hook ----------------------------- */
-    HookedValue: {
-      key: ["entity"],
-      schema: { entity: "bytes32", value: "uint256" },
-    },
-
-    OnHookChangedValue: {
-      key: ["entity"],
-      schema: { entity: "bytes32", value: "uint256" },
+    AllianceScoreContribution: {
+      key: ["alliance", "scoreType", "entity"],
+      schema: { alliance: "bytes32", scoreType: "uint8", entity: "bytes32", value: "uint256" },
     },
 
     /* ------------------------------ Objectives ----------------------------- */
@@ -711,7 +710,7 @@ export const worldInput = {
 
     Alliance: {
       key: ["entity"],
-      schema: { entity: "bytes32", name: "bytes32", score: "uint256", inviteMode: "uint8" },
+      schema: { entity: "bytes32", name: "bytes32", inviteMode: "uint8" },
     },
 
     Keys_AllianceMemberSet: {
@@ -761,6 +760,59 @@ export const worldInput = {
       type: "offchainTable",
     },
 
+    /* -------------------------------- Wormhole -------------------------------- */
+
+    P_WormholeConfig: {
+      key: [],
+      schema: {
+        initTime: "uint256",
+        turnDuration: "uint256",
+        cooldown: "uint256",
+      },
+    },
+
+    Wormhole: {
+      key: [],
+      schema: { resource: "uint8", nextResource: "uint8", turn: "uint256", hash: "bytes32" },
+    },
+
+    /* -------------------------------- Conquest -------------------------------- */
+
+    P_ConquestConfig: {
+      key: [],
+      schema: {
+        holdTime: "uint256",
+        shardAsteroidSpawnOffset: "uint256",
+        shardAsteroidSpawnFrequency: "uint256",
+        maxShardAsteroids: "uint256",
+        // the asteroid leaks this amount during its lifespan and emits this amount when it is claimed
+        shardAsteroidPoints: "uint256",
+        shardAsteroidLifeSpan: "uint256",
+        shardAsteroidEncryption: "uint256",
+        shardAsteroidEncryptionRegen: "uint256",
+      },
+    },
+
+    LastConquered: {
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256" },
+    },
+
+    ShardAsteroid: {
+      key: ["entity"],
+      schema: {
+        entity: "bytes32",
+        isShardAsteroid: "bool",
+        distanceFromCenter: "uint256",
+        spawnTime: "uint256",
+      },
+    },
+
+    ShardAsteroidIndex: {
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256" },
+      type: "offchainTable",
+    },
     /* ---------------------------- Player Asteroids ---------------------------- */
 
     Keys_AsteroidSet: {

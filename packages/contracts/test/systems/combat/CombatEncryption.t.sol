@@ -7,7 +7,7 @@ import { addressToEntity } from "src/utils.sol";
 import { EResource, EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
-import { OwnedBy, UnitCount, Score, ProductionRate, P_ColonyShipConfig, CooldownEnd, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, UnitLevel, MaxColonySlots } from "codegen/index.sol";
+import { MaxColonySlots, LastConquered, OwnedBy, UnitCount, ProductionRate, CooldownEnd, P_ColonyShipConfig, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, UnitLevel } from "codegen/index.sol";
 
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
@@ -202,9 +202,6 @@ contract CombatEncryptionTest is PrimodiumTest {
 
     vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetEntities[0]), block.timestamp));
 
-    uint256 bobHomeScore = Score.get(bobHomeAsteroid);
-    uint256 aliceScore = Score.get(aliceEntity);
-
     uint256 aliceSlotsOccupied = LibColony.getColonyShipsPlusAsteroids(aliceEntity);
     uint256 bobSlotsOccupied;
     console.log("Alice MaxColonySlots: ", MaxColonySlots.get(aliceEntity));
@@ -249,10 +246,8 @@ contract CombatEncryptionTest is PrimodiumTest {
     }
 
     vm.stopPrank();
+    assertEq(LastConquered.get(bobHomeAsteroid), block.timestamp, "last conquered should have been updated");
     console.log("encryption after battles: %s", ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_Encryption)));
-    assertEq(Score.get(aliceEntity), aliceScore + bobHomeScore, "alice should have gained bob's home asteroid score");
-    assertEq(Score.get(bobHomeAsteroid), bobHomeScore, "bob's home score should not have changed");
-    assertEq(Score.get(bobEntity), 0, "bob's score should reset to zero after losing asteroid control");
 
     assertEq(OwnedBy.get(bobHomeAsteroid), aliceEntity, "asteroid should have been taken over");
     assertEq(
@@ -266,11 +261,11 @@ contract CombatEncryptionTest is PrimodiumTest {
       "bob should have 4 fewer slots occupied. Lost: asteroid, training colony ship, colony ship on asteroid, colony ship in fleet"
     );
 
-    assertEq(UnitCount.get(bobFleet, minuteman), 0, "fleet should have been disbanded and marine units");
+    assertEq(UnitCount.get(bobFleet, minuteman), 0, "fleet should have been cleared and marine units");
     assertEq(
       UnitCount.get(bobFleet, colonyShipPrototype),
       0,
-      "fleet should have been disbanded and colony ship unit lost"
+      "fleet should have been cleared and colony ship unit lost"
     );
 
     assertEq(FleetMovement.getDestination(bobFleet), bobHomeAsteroid, "fleet should have been reset to orbit");
