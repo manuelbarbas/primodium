@@ -14,6 +14,7 @@ import { getUnitStats } from "src/util/unit";
 import { TargetHeader } from "../../TargetHeader";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { FleetHeader } from "../fleets/FleetHeader";
+import { hydrateFleetData } from "src/network/sync/indexer";
 
 export const TransferFrom = (props: {
   dragging?: boolean;
@@ -25,9 +26,10 @@ export const TransferFrom = (props: {
   setDragging?: (e: React.MouseEvent, entity: Entity, count: bigint) => void;
   remove?: () => void;
 }) => {
+  const mud = useMud();
   const {
     playerAccount: { entity: playerEntity },
-  } = useMud();
+  } = mud;
   const [keyDown, setKeyDown] = useState("");
   const { inCooldown, duration } = useInCooldownEnd(props.entity as Entity);
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -84,6 +86,12 @@ export const TransferFrom = (props: {
 
     return <FleetHeader title={entityToFleetName(props.entity)} {...data} />;
   }, [isFleet, props.entity, props.unitCounts]);
+
+  useEffect(() => {
+    if (!components.IsFleet.get(props.entity)?.value) return;
+
+    hydrateFleetData(props.entity, mud);
+  }, [props.entity, mud]);
 
   return (
     <div className={`w-full h-full bg-base-100 p-2 pb-8 flex flex-col gap-2 border border-secondary/50 relative`}>
