@@ -38,7 +38,6 @@ import {
 import { getFullResourceCount } from "src/util/resource";
 import { getRewards } from "src/util/reward";
 import { Hex } from "viem";
-import { AudioKeys } from "src/game/lib/constants/assets/audio";
 
 const ClaimObjectiveButton: React.FC<{
   objectiveEntity: Entity;
@@ -81,7 +80,7 @@ const ClaimObjectiveButton: React.FC<{
         <Button
           disabled={!canClaim}
           className={`btn-sm btn-secondary border-accent w-full`}
-          clickSound={AudioKeys.Complete2}
+          clickSound={"Complete2"}
           onClick={() => claimObjective(mud, selectedRock, objectiveEntity)}
         >
           Claim

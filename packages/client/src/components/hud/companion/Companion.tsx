@@ -9,7 +9,6 @@ import { Card, SecondaryCard } from "../../core/Card";
 import { MapButton } from "../MapButton";
 import { MenuButtons } from "../MenuButtons";
 import { KeyNames, KeybindActions } from "src/game/lib/constants/keybinds";
-import { AudioKeys } from "src/game/lib/constants/assets/audio";
 
 export const WidgetButton: React.FC<{
   imageUri: string;
@@ -45,7 +44,7 @@ export const WidgetButton: React.FC<{
         tooltipText={tooltipText}
         tooltipDirection="top"
         text={text}
-        clickSound={!visible ? AudioKeys.DataPoint : AudioKeys.Sequence3}
+        clickSound={!visible ? "DataPoint" : "Sequence3"}
         onClick={() => {
           if (!visible) onOpen();
           else onClose();

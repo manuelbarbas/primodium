@@ -5,7 +5,6 @@ import { world } from "src/network/world";
 import { BaseAsteroid } from "src/game/lib/objects/Asteroid/BaseAsteroid";
 import { Fleet } from "src/game/lib/objects/Fleet";
 import { createAudioApi } from "src/game/api/audio";
-import { AudioKeys } from "src/game/lib/constants/assets/audio";
 import { createObjectApi } from "src/game/api/objects";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { TransitLine } from "src/game/lib/objects/TransitLine";
@@ -79,7 +78,7 @@ export const renderFleets = (scene: Scene) => {
           components.SelectedFleet.set({
             value: entity,
           });
-          audioApi.play(AudioKeys.Bleep, "ui");
+          audioApi.play("Bleep", "ui");
         })
         .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
           components.HoverEntity.set({

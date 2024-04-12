@@ -11,7 +11,7 @@ export const Range: React.FC<{
       min={min}
       max={max}
       defaultValue={defaultValue}
-      className={`range ${className}`}
+      className={`range pointer-events-auto ${className}`}
       onChange={(e) => {
         onChange?.(parseInt(e.target.value));
       }}

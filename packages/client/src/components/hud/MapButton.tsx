@@ -2,7 +2,6 @@ import { useEffect, useMemo, useCallback } from "react";
 
 import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
-import { AudioKeys } from "src/game/lib/constants/assets/audio";
 import { KeybindActions } from "src/game/lib/constants/keybinds";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useMud } from "src/hooks";
@@ -47,7 +46,7 @@ export const MapButton = () => {
   return (
     <Button
       className={`relative flex grow w-80 btn-sm !p-3 !px-10 gap-5 filter group hover:scale-110 hover:z-50 star-background-sm hover:border-secondary hover:drop-shadow-hard`}
-      clickSound={AudioKeys.Sequence}
+      clickSound={"Sequence"}
       onClick={!mapOpen ? openMap : closeMap}
     >
       {!mapOpen && !isSpectating && <IconLabel imageUri="/img/icons/starmapicon.png" className="text-xl" />}

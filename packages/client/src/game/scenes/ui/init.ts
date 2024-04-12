@@ -6,7 +6,6 @@ import { uiSceneConfig } from "src/game/lib/config/uiScene";
 import { defineComponentSystem } from "@latticexyz/recs";
 import { components } from "src/network/components";
 import { Scenes } from "src/game/lib/constants/common";
-import { AudioKeys } from "src/game/lib/constants/assets/audio";
 
 export const initUIScene = async (game: Game) => {
   const scene = await game.sceneManager.addScene(uiSceneConfig, true);
@@ -14,14 +13,14 @@ export const initUIScene = async (game: Game) => {
   audio.initializeAudioVolume();
   scene.phaserScene.scene.bringToTop(Scenes.UI);
 
-  audio.play(AudioKeys.Background, "music");
-  audio.play(AudioKeys.Background2, "music", {
+  audio.play("Background", "music");
+  audio.play("Background2", "music", {
     loop: true,
     volume: 0,
   });
   audio.setPauseOnBlur(false);
-  const bg = audio.get(AudioKeys.Background, "music");
-  const bg2 = audio.get(AudioKeys.Background2, "music");
+  const bg = audio.get("Background", "music");
+  const bg2 = audio.get("Background2", "music");
 
   defineComponentSystem(world, components.MapOpen, ({ value }) => {
     if (!bg || !bg2) return;

@@ -51,7 +51,7 @@ export const TextInput: React.FC<{
   }, []);
 
   return (
-    <div className="form-control w-full max-w-xs">
+    <div className="form-control w-full max-w-xs pointer-events-auto">
       <label className="label">
         {topLeftLabel && <span className="label-text opacity-90">{topLeftLabel}</span>}
         {topRightLabel && <span className="label-text-alt opacity-75">{topRightLabel}</span>}

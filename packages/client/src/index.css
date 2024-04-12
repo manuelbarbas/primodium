@@ -1,7 +1,6 @@
 @import "@fontsource/space-mono";
 @import "@fontsource/space-mono/700.css";
 @import "@fontsource/silkscreen/400.css";
-/* @import "@fontsource/silkscreen/700.css"; */
 
 @tailwind base;
 @tailwind components;
@@ -165,6 +164,15 @@
     background-size: 200% 200%;
     background-repeat: no-repeat;
     animation: pan 30s linear infinite;
+  }
+
+  .triangle {
+    width: 0px;
+    height: 0px;
+    border-style: solid;
+    border-width: 0 100.5px 202px 100.5px;
+    border-color: transparent transparent #ff4532 transparent;
+    transform: rotate(0deg);
   }
 
   @keyframes slideDown {

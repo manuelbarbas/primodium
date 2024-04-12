@@ -4,7 +4,6 @@ import { FaTimes } from "react-icons/fa";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { Button, IconButton } from "./Button";
 import { Card } from "./Card";
-import { AudioKeys } from "src/game/lib/constants/assets/audio";
 import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 interface ModalContextType {
@@ -42,7 +41,7 @@ export const Modal: React.FC<ModalProps> & {
   useEffect(() => {
     const handleEscPress = () => {
       if (!isOpen) return;
-      audio.play(AudioKeys.Sequence2, "ui");
+      audio.play("Sequence2", "ui");
       setIsOpen(false);
     };
 
@@ -77,7 +76,7 @@ Modal.Button = function ModalButton(props: React.ComponentProps<typeof Button>) 
   return (
     <Button
       {...props}
-      clickSound={props.clickSound ?? AudioKeys.Sequence}
+      clickSound={props.clickSound ?? "Sequence"}
       onClick={() => {
         if (props.onClick) props.onClick();
         setIsOpen(true);
@@ -92,7 +91,7 @@ Modal.CloseButton = function ModalButton(props: React.ComponentProps<typeof Butt
   return (
     <Button
       {...props}
-      clickSound={props.clickSound ?? AudioKeys.Sequence}
+      clickSound={props.clickSound ?? "Sequence"}
       onClick={() => {
         if (props.onClick) props.onClick();
         setIsOpen(false);
@@ -123,7 +122,7 @@ Modal.Content = function ModalContent({ children, className }) {
 
   const handleClickOutside = (event: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-      audio.play(AudioKeys.Sequence2, "ui");
+      audio.play("Sequence2", "ui");
       setIsOpen(false);
     }
   };
@@ -141,7 +140,7 @@ Modal.Content = function ModalContent({ children, className }) {
             <p className="font-bold uppercase pr-2 text-accent">{title}</p>
             <Button
               onClick={() => {
-                audio.play(AudioKeys.Sequence2, "ui");
+                audio.play("Sequence2", "ui");
                 setIsOpen(false);
               }}
               className="btn-sm ghost"

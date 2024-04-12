@@ -1,11 +1,126 @@
-import { useEffect } from "react";
-import { usePrimodium } from "src/hooks/usePrimodium";
-import { getRandomRange } from "src/util/common";
-import { IconLabel } from "./IconLabel";
-import { Loader } from "./Loader";
-import { Tooltip } from "./Tooltip";
-import { AudioKeys } from "src/game/lib/constants/assets/audio";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
+import { useEffect, forwardRef, useCallback } from "react";
+import { usePrimodium } from "@/hooks/usePrimodium";
+import { getRandomRange } from "@/util/common";
+import { IconLabel } from "@/components/core/IconLabel";
+import { Loader } from "@/components/core/Loader";
+import { Tooltip } from "@/components/core/Tooltip";
+import { AudioKeys } from "@game/lib/constants/assets/audio";
+import { KeybindActions } from "@game/lib/constants/keybinds";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/util/client";
+
+const buttonVariants = cva(
+  "btn join-item pointer-events-auto inline-flex rounded-box items-center justify-center whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+  {
+    variants: {
+      variant: {
+        primary: "btn-primary",
+        accent: "btn-accent",
+        secondary: "btn-secondary",
+        success: "btn-success",
+        info: "btn-info",
+        warning: "btn-warning",
+        error: "btn-error",
+      },
+      size: {
+        xs: "btn-xs",
+        sm: "btn-sm",
+        md: "btn-md",
+        lg: "btn-lg",
+      },
+      modifier: {
+        default: "",
+        outline: "btn-outline",
+      },
+      shape: {
+        default: "",
+        block: "btn-block",
+        wide: "btn-wide",
+        circle: "btn-circle",
+        square: "btn-square",
+      },
+    },
+    defaultVariants: {
+      modifier: "default",
+      variant: "secondary",
+      size: "sm",
+      shape: "default",
+    },
+  }
+);
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+  mute?: boolean;
+  clickSound?: AudioKeys;
+}
+
+export const TestButton = forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    { className, variant, size, modifier, shape, asChild = false, mute = false, clickSound = "Confirm2", ...props },
+    ref
+  ) => {
+    const primodium = usePrimodium();
+    const api = primodium.api("UI");
+
+    const handleClick = useCallback(
+      (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        !mute &&
+          api?.audio.play(clickSound, "ui", {
+            detune: getRandomRange(-100, 100),
+          });
+
+        props.onClick?.(e);
+      },
+      [api?.audio, clickSound, mute, props]
+    );
+
+    const handleHoverEnter = useCallback(
+      (e: React.PointerEvent<HTMLButtonElement>) => {
+        !mute &&
+          api?.audio.play("DataPoint2", "ui", {
+            volume: 0.1,
+            detune: getRandomRange(-200, 200),
+          });
+
+        props.onPointerEnter?.(e);
+      },
+      [api?.audio, mute, props]
+    );
+
+    // useEffect(() => {
+    //   if (!keybind || !api || disabled) return;
+
+    //   const callback = () => {
+    //     onClick && onClick();
+    //     !mute &&
+    //       api.audio.play(clickSound, "ui", {
+    //         detune: getRandomRange(-100, 100),
+    //       });
+    //   };
+
+    //   const listener = api.input.addListener(keybind, callback);
+
+    //   return () => {
+    //     listener.dispose();
+    //   };
+    // }, [keybind, api, clickSound, mute, disabled, onClick]);
+
+    const Comp = asChild ? "button" : "button";
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, modifier, shape, className }))}
+        ref={ref}
+        {...props}
+        onClick={handleClick}
+        onPointerEnter={handleHoverEnter}
+      />
+    );
+  }
+);
+TestButton.displayName = "TestButton";
 
 export const Button: React.FC<{
   children: React.ReactNode;
@@ -35,7 +150,7 @@ export const Button: React.FC<{
   tooltip,
   tooltipDirection = "top",
   mute = false,
-  clickSound = AudioKeys.Confirm2,
+  clickSound = "Confirm2",
   keybind,
 }) => {
   const primodium = usePrimodium();
@@ -74,7 +189,7 @@ export const Button: React.FC<{
         disabled={disabled}
         onPointerEnter={() => {
           !mute &&
-            api?.audio.play(AudioKeys.DataPoint2, "ui", {
+            api?.audio.play("DataPoint2", "ui", {
               volume: 0.1,
               detune: getRandomRange(-200, 200),
             });
@@ -119,7 +234,7 @@ export const IconButton: React.FC<{
   tooltipDirection = "right",
   tooltipText,
   mute = false,
-  clickSound = AudioKeys.Confirm2,
+  clickSound = "Confirm2",
   onDoubleClick,
 }) => {
   const primodium = usePrimodium();
@@ -138,7 +253,7 @@ export const IconButton: React.FC<{
         onDoubleClick={onDoubleClick}
         onPointerEnter={() => {
           !mute &&
-            audio.play(AudioKeys.DataPoint2, "ui", {
+            audio.play("DataPoint2", "ui", {
               volume: 0.1,
               detune: getRandomRange(-200, 200),
             });

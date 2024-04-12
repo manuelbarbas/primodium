@@ -16,6 +16,9 @@ const gameConfig: GameConfig = {
   roundPixels: true,
   transparent: true,
   pixelArt: true,
+  fps: {
+    limit: 60,
+  },
   assetPackUrl: ASSET_PACK,
   dom: {
     createContainer: true,

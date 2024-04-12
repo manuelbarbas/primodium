@@ -12,7 +12,6 @@ import { Button } from "../../../core/Button";
 import { BuildingImageFromType } from "../../../shared/BuildingImage";
 import { getBuildingDimensions } from "src/util/building";
 import { useShallow } from "zustand/react/shallow";
-import { AudioKeys } from "src/game/lib/constants/assets/audio";
 import { KeyNames, KeybindActions } from "src/game/lib/constants/keybinds";
 
 const BlueprintButton: React.FC<{
@@ -64,7 +63,7 @@ const BlueprintButton: React.FC<{
       tooltipDirection={tooltipDirection ?? "right"}
       onPointerEnter={() => components.HoverEntity.set({ value: buildingType })}
       onPointerLeave={() => components.HoverEntity.remove()}
-      clickSound={AudioKeys.Bleep7}
+      clickSound={"Bleep7"}
       onClick={() => {
         if (selectedBuilding === buildingType) {
           components.SelectedBuilding.remove();

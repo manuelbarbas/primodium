@@ -1,6 +1,6 @@
-import { Button } from "src/components/core/Button";
-import { Card, SecondaryCard } from "./core/Card";
-import { Range } from "./core/Range";
+import { Button, TestButton } from "@/components/core/Button";
+import { Card, SecondaryCard } from "@/components/core/Card";
+import { Range } from "@/components/core/Range";
 import { Loader } from "./core/Loader";
 import { Toggle } from "./core/Toggle";
 import { Badge } from "./core/Badge";
@@ -13,6 +13,7 @@ import { EntityType } from "src/util/constants";
 import { NumberInput } from "./core/NumberInput";
 import { HUD } from "./core/HUD";
 import { Modal } from "./core/Modal";
+import { TextInput } from "./core/TextInput";
 
 export const _Sandbox = () => {
   return (
@@ -30,6 +31,9 @@ export const _Sandbox = () => {
             <div className="w-8 h-8 bg-info border" />
           </div>
           <div className="flex gap-2">
+            <TestButton variant={"secondary"} size={"lg"} modifier={"outline"} shape={"square"}>
+              TEST
+            </TestButton>
             <Button className="bg-error">Error</Button>
             <Button className="bg-warning">Error</Button>
             <Button className="bg-success">Error</Button>
@@ -143,6 +147,7 @@ export const _Sandbox = () => {
               <Tabs.Button showActive index={2}>
                 Tab3
               </Tabs.Button>
+              <Tabs.IconButton imageUri="/img/icons/debugicon.png" text="Tab4" index={3} hideText />
             </Join>
             <Tabs.Pane index={0}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus
@@ -159,9 +164,15 @@ export const _Sandbox = () => {
               ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent
               mauris.
             </Tabs.Pane>
+            <Tabs.Pane index={3}>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus
+              ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent
+              mauris.
+            </Tabs.Pane>
           </Tabs>
 
           <NumberInput count="0" />
+          <TextInput placeholder="test" topRightLabel="Text input" />
         </div>
       </div>
 
