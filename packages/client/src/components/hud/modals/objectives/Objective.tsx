@@ -11,6 +11,7 @@ import { IconLabel } from "src/components/core/IconLabel";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { getEntityTypeName } from "src/util/common";
 
+import { components } from "src/network/components";
 import { BackgroundImage, ResourceImage, ResourceType } from "src/util/constants";
 import { formatNumber } from "src/util/number";
 import { getRewards } from "src/util/objectives/getHasRequiredRewards";
@@ -25,6 +26,7 @@ export const Objective: React.FC<{
   asteroidEntity: Entity;
   highlight?: boolean;
 }> = ({ objectiveEntity, asteroidEntity, highlight = false }) => {
+  const playerEntity = components.Account.use()?.value;
   const time = Time.use()?.value;
 
   const objectiveName = getEntityTypeName(objectiveEntity);
@@ -34,8 +36,8 @@ export const Objective: React.FC<{
   const rewardRecipe = getRewards(objectiveEntity);
 
   const requirements = useMemo(
-    () => getAllObjectiveRequirements(asteroidEntity, objectiveEntity),
-    [asteroidEntity, time, objectiveEntity]
+    () => playerEntity && getAllObjectiveRequirements(playerEntity, asteroidEntity, objectiveEntity),
+    [asteroidEntity, time, playerEntity, objectiveEntity]
   );
 
   return (
@@ -44,10 +46,10 @@ export const Objective: React.FC<{
     >
       <div>
         <div className="grid grid-cols-10">
-          <div className="flex items-center col-span-1">
+          <div className="flex items-center col-span-6 gap-1">
             <FaMedal className="text-accent" />
+            <p className="col-span-5 font-bold flex items-center px-1">{objectiveName}</p>
           </div>
-          <p className="col-span-5 font-bold flex items-center px-1">{objectiveName}</p>
           {objective && (
             <p
               className={`absolute col-span-4 right-0 top-0 text-white/80 font-bold text-xs uppercase py-1 px-2 ${

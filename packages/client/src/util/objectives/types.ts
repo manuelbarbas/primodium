@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { EObjectives } from "contracts/config/enums";
 
-export type ObjectiveType = "Build" | "Upgrade" | "Train" | "Expand" | "Claimable" | "JoinAlliance";
+export type ObjectiveType = "Build" | "Upgrade" | "Train" | "Expand" | "Claimable" | "JoinAlliance" | "Asteroid";
 
 // Define a base type for common properties
 export type BaseObjective = {
@@ -43,6 +43,11 @@ export type JoinAllianceObjective = BaseObjective & {
   type: "JoinAlliance";
 };
 
+export type AsteroidObjective = BaseObjective & {
+  asteroidType: "wormhole" | "shard" | "motherlode" | "basic";
+  type: "Asteroid";
+};
+
 // Union of all Objective types
 export type Objective =
   | BuildObjective
@@ -50,7 +55,8 @@ export type Objective =
   | TrainUnitObjective
   | ExpandObjective
   | ClaimableObjective
-  | JoinAllianceObjective;
+  | JoinAllianceObjective
+  | AsteroidObjective;
 
 export type ObjectiveReq = {
   tooltipText?: string;
@@ -69,6 +75,8 @@ export const objectiveCategories = [
   "Motherlode",
   "Victory (Primodium)",
   "Victory (Wormhole)",
+  "Unit Management",
+  "Unit Storage",
   "Unit Production",
   "Defense",
   "Resource Production",

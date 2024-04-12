@@ -6,8 +6,7 @@ import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { clampedIndex, getEntityTypeName } from "src/util/common";
 import { ObjectiveEntityLookup } from "src/util/constants";
-import { objectiveCategoryColors } from "src/util/objectives/objectiveCategoryColors";
-import { getObjective, Objectives } from "src/util/objectives/objectives";
+import { Objectives } from "src/util/objectives/objectives";
 import { Hex } from "viem";
 import { Badge } from "../core/Badge";
 import { Card } from "../core/Card";
@@ -21,7 +20,7 @@ const tutorialObjectives = [
   EObjectives.BuildCopperMine,
   EObjectives.BuildIronPlateFactory,
   EObjectives.UpgradeMainBase,
-  EObjectives.ExpandBase1,
+  EObjectives.ExpandBase,
 ];
 
 export const CurrentObjective = () => {
@@ -31,10 +30,17 @@ export const CurrentObjective = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const objectiveEntity =
     ObjectiveEntityLookup[tutorialObjectives[clampedIndex(currentStep, tutorialObjectives.length)]];
-  const objective = getObjective(objectiveEntity);
   const claimed =
     components.CompletedObjective.useWithKeys({ entity: playerEntity as Hex, objective: objectiveEntity as Hex })
       ?.value ?? false;
+  const completedEntities = Object.values(ObjectiveEntityLookup).filter((objective) => {
+    const claimed =
+      components.CompletedObjective.getWithKeys({ entity: playerEntity as Hex, objective: objective as Hex })?.value ??
+      false;
+
+    return claimed;
+  }).length;
+  const totalEntities = Object.values(ObjectiveEntityLookup).length;
 
   useEffect(() => {
     // Function to find the next unclaimed objective
@@ -58,8 +64,11 @@ export const CurrentObjective = () => {
   if (currentStep === -1)
     return (
       <Modal title="objectives">
-        <Modal.Button className="border-secondary border-t-0 border-r-0 px-5 rounded-t-none rounded-r-none w-fit">
-          <IconLabel imageUri="img/icons/objectiveicon.png" className="text-sm" text="VIEW OBJECTIVES" />
+        <Modal.Button className="border-secondary flex p-3 flex-col w-fit">
+          <IconLabel imageUri="img/icons/objectiveicon.png" className="text-sm" text="EARN OBJECTIVES" />
+          <p className="opacity-60 text-xs">
+            {completedEntities} / {totalEntities} completed
+          </p>
         </Modal.Button>
         <Modal.Content className="w-[50rem] h-[60rem]">
           <ObjectivesScreen />
@@ -89,15 +98,6 @@ export const CurrentObjective = () => {
             <div className="flex gap-1 items-center p-1">
               <FaMapPin className="text-accent" />
               <p className="font-bold">{getEntityTypeName(objectiveEntity)}</p>
-              {objective && (
-                <p
-                  className={`absolute col-span-4 right-0 top-0 text-white/80 font-bold text-xs uppercase py-1 px-2 ${
-                    objectiveCategoryColors[objective.category]
-                  }`}
-                >
-                  {objective.category}
-                </p>
-              )}
             </div>
             <hr className="border-secondary/50" />
             <div className="flex gap-1 text-right justify-end px-2 border-secondary/50 p-1 w-72">
@@ -117,7 +117,7 @@ export const CurrentObjective = () => {
             </Modal>
 
             <Badge className="text-xs text-secondary">
-              {currentStep + 1} / {tutorialObjectives.length}
+              {currentStep + 1} / {totalEntities}
             </Badge>
           </div>
         </Card>

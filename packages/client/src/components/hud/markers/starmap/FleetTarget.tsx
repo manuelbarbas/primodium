@@ -4,16 +4,16 @@ import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Marker } from "src/components/core/Marker";
 import { Modal } from "src/components/core/Modal";
+import { DepthLayers } from "src/game/lib/constants/common";
 import { useMud } from "src/hooks";
 import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { useSpaceRock } from "src/hooks/useSpaceRock";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { clearFleetStance } from "src/network/setup/contractCalls/fleetStance";
 import { getCanAttackSomeone, getFleetStats } from "src/util/unit";
 import { Fleets } from "../../widgets/fleets/Fleets";
-import { DepthLayers } from "src/game/lib/constants/common";
-import { usePrimodium } from "src/hooks/usePrimodium";
 
 // this component assumes the fleet is owned by the player
 export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fleet, position }) => {
@@ -88,7 +88,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
             >
               <IconLabel
                 imageUri="/img/icons/moveicon.png"
-                text={spaceRockData.isBlocked ? "Blocked" : selectingMoveDestination ? "Cancel" : "Move"}
+                text={spaceRockData.isBlocked ? "Blocked" : selectingMoveDestination ? "Cancel" : "Send"}
               />
             </Button>
           </div>

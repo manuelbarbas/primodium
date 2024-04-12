@@ -83,9 +83,9 @@ export enum EObjectives {
   BuildCopperMine,
   BuildIronPlateFactory,
   UpgradeMainBase,
-  ExpandBase1,
+  ExpandBase,
 
-  // (A-A) Conquest
+  // (A-A) Military basics
   BuildGarage,
   BuildWorkshop,
   CreateFleet,
@@ -93,10 +93,10 @@ export enum EObjectives {
   // (A-A-A) Fleet basics
   TransferToFleet,
   SendFleet,
-  BattleAsteroid,
-  OpenBattleReport,
 
   // (A-A-A-A) Fleet combat
+  BattleAsteroid,
+  OpenBattleReport,
   BattleFleet,
 
   // (A-A-A-B) Conquest (cont)
@@ -110,12 +110,12 @@ export enum EObjectives {
   ExtractMotherlodeResource,
 
   // (A-A-A-B-B) Victory: Primodium Points
-  ClaimAsteroidPrimodium,
-  ClaimShardPrimodium,
+  EarnPrimodiumOnAsteroid,
+  EarnPrimodiumOnShard,
 
   // (A-A-A-B-C) Victory; Extraction Points
   CaptureWormholeAsteroid,
-  ClaimExtractionPoints,
+  ClaimWormholePoints,
 
   // (A-A-A-C) fleet management
   RecallFleet,
@@ -124,19 +124,21 @@ export enum EObjectives {
   BuildStarmapper,
 
   // (A-A-B) unit production
-  TrainMinutemanMarines,
-  TrainTridentMarines,
-  TrainLightningCrafts,
-
-  // (A-A-B-A) unit production (cont)
+  TrainMinutemanMarine,
+  TrainTridentMarine,
+  TrainLightningCraft,
   BuildDroneFactory,
-  UpgradeUnit,
-  TrainAnvilDrones,
-  TrainHammerDrones,
-  TrainAegisDrones,
-  TrainStingerDrones,
 
-  // (A-A-B-B) Hangar
+  // (A-A-B-A) unit management
+  UpgradeUnit,
+
+  // (A-A-B-B) unit production (cont)
+  TrainAnvilDrone,
+  TrainHammerDrone,
+  TrainAegisDrone,
+  TrainStingerDrone,
+
+  // (A-A-B-C) unit storage
   BuildHangar,
 
   // (A-A-C) Defense
@@ -145,6 +147,7 @@ export enum EObjectives {
   BuildVault,
 
   // (A-B) Production
+  BuildAlloyFactory,
   BuildLithiumMine,
   BuildStorageUnit,
 

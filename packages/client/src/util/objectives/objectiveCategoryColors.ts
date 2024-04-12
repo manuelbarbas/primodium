@@ -14,13 +14,17 @@ export const objectiveCategoryColors: Record<ObjectiveCategory, string> = {
   "Victory (Primodium)": "bg-secondary",
   "Victory (Wormhole)": "bg-secondary",
 
-  // production
-  Motherlode: "bg-yellow-700", // yellow-600
-  "Unit Production": "bg-yellow-800", // yellow-700
-  "Resource Production": "bg-yellow-700", // yellow-600
+  // units
+  "Unit Production": "bg-slate-700",
+  "Unit Management": "bg-slate-700",
+  "Unit Storage": "bg-slate-700",
+
+  // resources
+  Motherlode: "bg-yellow-700",
+  "Resource Production": "bg-yellow-700",
 
   // infra
-  Market: "bg-blue-600", // amber-500
+  Market: "bg-blue-600",
 
   // other
   Alliance: "bg-rose-700",

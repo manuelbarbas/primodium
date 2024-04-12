@@ -29,7 +29,7 @@ export const ClaimObjectiveButton: React.FC<{
     comps.CompletedObjective.useWithKeys({ objective: objectiveEntity as Hex, entity: player as Hex })?.value ?? false;
 
   const canClaim = useMemo(() => {
-    return getCanClaimObjective(selectedRock, objectiveEntity);
+    return getCanClaimObjective(mud.playerAccount.entity, selectedRock, objectiveEntity);
   }, [selectedRock, objectiveEntity]);
 
   if (!hasCompletedObjective)

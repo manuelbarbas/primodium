@@ -1,4 +1,5 @@
 import { Entity } from "@latticexyz/recs";
+import { getHasAsteroid } from "./getHasAsteroid";
 import { getHasClaimableObjective } from "./getHasClaimableObjective";
 import { getHasExpansion } from "./getHasExpansion";
 import { getHasRequiredBuilding } from "./getHasRequiredBuilding";
@@ -23,13 +24,13 @@ export function canShowObjective(asteroidEntity: Entity, objectiveEntity: Entity
   return canShow;
 }
 
-export function getCanClaimObjective(asteroidEntity: Entity, objectiveEntity: Entity) {
+export function getCanClaimObjective(playerEntity: Entity, asteroidEntity: Entity, objectiveEntity: Entity) {
   const hasRequiredRewards = getHasRequiredRewards(asteroidEntity, objectiveEntity);
-  const allObjectiveRequirements = getAllObjectiveRequirements(asteroidEntity, objectiveEntity);
+  const allObjectiveRequirements = getAllObjectiveRequirements(playerEntity, asteroidEntity, objectiveEntity);
   return hasRequiredRewards && isAllRequirementsMet(allObjectiveRequirements);
 }
 
-export function getAllObjectiveRequirements(asteroidEntity: Entity, objectiveEntity: Entity) {
+export function getAllObjectiveRequirements(playerEntity: Entity, asteroidEntity: Entity, objectiveEntity: Entity) {
   const objective = getObjective(objectiveEntity);
   if (!objective) return [];
   const reqs: ObjectiveReq[] = getRewardUtilitiesRequirement(objectiveEntity, asteroidEntity);
@@ -39,5 +40,6 @@ export function getAllObjectiveRequirements(asteroidEntity: Entity, objectiveEnt
   if (objective.type === "Expand") reqs.push(getHasExpansion(asteroidEntity, objective));
   if (objective.type === "JoinAlliance") reqs.push(getInAlliance(asteroidEntity));
   if (objective.type === "Claim") reqs.push(getHasClaimableObjective(objectiveEntity, objective));
+  if (objective.type === "Asteroid") reqs.push(getHasAsteroid(playerEntity, objective.asteroidType));
   return reqs;
 }

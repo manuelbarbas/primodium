@@ -58,7 +58,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.ExpandBase1,
+    EObjectives.ExpandBase,
     {
       category: "Fundamentals",
       type: "Expand",
@@ -78,7 +78,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Unit Production",
       type: "Build",
       buildingType: EntityType.Garage,
-      requiredObjectives: [EObjectives.ExpandBase1],
+      requiredObjectives: [EObjectives.ExpandBase],
       description:
         "Garages provide housing for units. To build, Select the garage from the building menu. Place it on any empty tile.",
     },
@@ -131,14 +131,16 @@ export const Objectives = new Map<EObjectives, Objective>([
       tooltip: "Executed a fleet send",
     },
   ],
+
+  /* ------------------------------ A-A-A-A Fleet Combat ------------------------------ */
   [
     EObjectives.BattleAsteroid,
     {
       category: "Combat",
       type: "Claim",
-      requiredObjectives: [EObjectives.BattleAsteroid],
+      requiredObjectives: [EObjectives.SendFleet],
       description:
-        "Battling an asteroid allows you to raid resources. To battle, select a fleet and press the Attack button. Then select the target asteroid.",
+        "Battling an asteroid allows you to raid resources and conquer asteroids. To battle, select a fleet and press the Attack button. Then select the target asteroid.",
       icon: "/img/icons/attackicon.png",
       tooltip: "Executed an attack",
     },
@@ -154,9 +156,6 @@ export const Objectives = new Map<EObjectives, Objective>([
       tooltip: "Viewed a battle report",
     },
   ],
-
-  /* ------------------------------ A-A-A-A Fleet Combat ------------------------------ */
-
   [
     EObjectives.BattleFleet,
     {
@@ -211,12 +210,11 @@ export const Objectives = new Map<EObjectives, Objective>([
     EObjectives.CaptureAsteroid,
     {
       category: "Conquest",
-      type: "Claim",
+      type: "Asteroid",
       requiredObjectives: [EObjectives.DecryptAttack],
+      asteroidType: "basic",
       description:
         "Capturing an asteroid allows you to take control of it. To capture, you need to reduce an asteroid's encryption to 0 using Colony Ships.",
-      icon: "/img/icons/encryptionicon.png",
-      tooltip: "Captured an asteroid",
     },
   ],
 
@@ -225,12 +223,11 @@ export const Objectives = new Map<EObjectives, Objective>([
     EObjectives.CaptureMotherlodeAsteroid,
     {
       category: "Motherlode",
-      type: "Claim",
+      type: "Asteroid",
+      asteroidType: "motherlode",
       requiredObjectives: [EObjectives.CaptureAsteroid],
       description:
         "Capturing motherlode asteroids lets you mine elite resources. Capture a motherlode asteroid near your home asteroid (hint: elite resources are Kimberlite, Iridium, Titanium, and Platinum).",
-      icon: "/img/resource/iridium_resource.png",
-      tooltip: "Extracted a motherlode",
     },
   ],
 
@@ -250,7 +247,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   /* ------------------------ A-A-A-B-B Primodium Points ----------------------- */
 
   [
-    EObjectives.ClaimAsteroidPrimodium,
+    EObjectives.EarnPrimodiumOnAsteroid,
     {
       category: "Victory (Primodium)",
       type: "Claim",
@@ -262,15 +259,14 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.ClaimShardPrimodium,
+    EObjectives.EarnPrimodiumOnShard,
     {
       category: "Victory (Primodium)",
-      type: "Claim",
+      type: "Asteroid",
+      asteroidType: "shard",
       requiredObjectives: [EObjectives.CaptureAsteroid],
       description:
-        "Volatile Shards are rare space rocks that are made of 100% Primodium. Over time, a Shard leaches Primodium to the player controlling it. Beware, they regularly explode and annihilate anything nearby! To claim, capture a Shard and start earning its Primodium.",
-      icon: "/img/icons/leaderboardicon.png",
-      tooltip: "Claimed Primodium",
+        "Volatile Shards are rare space rocks that are made of Primodium. Over time, shards leach Primodium. Beware, they explode and annihilate anything nearby! To earn, capture a Shard.",
     },
   ],
 
@@ -280,20 +276,19 @@ export const Objectives = new Map<EObjectives, Objective>([
     EObjectives.CaptureWormholeAsteroid,
     {
       category: "Victory (Wormhole)",
-      type: "Claim",
-      requiredObjectives: [EObjectives.BuildStorageUnit],
+      type: "Asteroid",
+      asteroidType: "wormhole",
+      requiredObjectives: [EObjectives.CaptureAsteroid],
       description:
         "A wormhole asteroid is a special asteroid that lets you earn points on the Extraction leaderboard. To capture, decrypt a nearby Wormhole Asteroid.",
-      icon: "/img/icons/leaderboardicon.png",
-      tooltip: "Captured wormhole asteroid",
     },
   ],
   [
-    EObjectives.ClaimExtractionPoints,
+    EObjectives.ClaimWormholePoints,
     {
       category: "Victory (Wormhole)",
       type: "Claim",
-      requiredObjectives: [EObjectives.BuildStorageUnit],
+      requiredObjectives: [EObjectives.CaptureWormholeAsteroid],
       description:
         "Claiming extraction points improves your rank on the Extraction leaderboard. To claim, click on a Wormhole Generator and send it the resource it currently requires.",
       icon: "/img/icons/leaderboardicon.png",
@@ -306,7 +301,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fleet",
       type: "Claim",
-      requiredObjectives: [EObjectives.OpenBattleReport],
+      requiredObjectives: [EObjectives.SendFleet],
       description:
         "Transfer units and resources to an asteroid by selecting the asteroid and pressing the Transfer button.",
       icon: "/img/icons/tradeicon.png",
@@ -329,7 +324,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fleet",
       type: "Claim",
-      requiredObjectives: [EObjectives.LandFleet],
+      requiredObjectives: [EObjectives.BuildStarmapper],
       description:
         "Landing a fleet on an asteroid sets the fleet's owner to that asteroid. It also deposit all resources and units. To land, select a fleet and press the Land button.",
       icon: "/img/icons/moveicon.png",
@@ -341,7 +336,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fleet",
       type: "Claim",
-      requiredObjectives: [EObjectives.RecallFleet],
+      requiredObjectives: [EObjectives.LandFleet],
       description:
         "Recalling a fleet allows it to return to its origin mid-flight. To recall, select a fleet and press the Recall button.",
       icon: "/img/icons/moveicon.png",
@@ -351,7 +346,7 @@ export const Objectives = new Map<EObjectives, Objective>([
 
   /* ----------------------- A-A-B Unit Production ---------------------- */
   [
-    EObjectives.TrainMinutemanMarines,
+    EObjectives.TrainMinutemanMarine,
     {
       category: "Unit Production",
       type: "Train",
@@ -364,11 +359,11 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.TrainTridentMarines,
+    EObjectives.TrainTridentMarine,
     {
       category: "Unit Production",
       type: "Train",
-      requiredObjectives: [EObjectives.TrainMinutemanMarines],
+      requiredObjectives: [EObjectives.TrainMinutemanMarine],
       unitType: EntityType.MinutemanMarine,
       unitCount: 16n,
       requiredMainBase: 2n,
@@ -377,11 +372,11 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.TrainLightningCrafts,
+    EObjectives.TrainLightningCraft,
     {
       category: "Unit Production",
       type: "Train",
-      requiredObjectives: [EObjectives.TrainLightningCrafts],
+      requiredObjectives: [EObjectives.TrainTridentMarine],
       unitType: EntityType.LightningCraft,
       unitCount: 16n,
       requiredMainBase: 2n,
@@ -390,23 +385,24 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
 
-  /* --------------------- A-A-B-A Unit Production (cont) --------------------- */
   [
     EObjectives.BuildDroneFactory,
     {
       category: "Unit Production",
       type: "Build",
-      requiredObjectives: [EObjectives.CreateFleet],
+      requiredObjectives: [EObjectives.TrainLightningCraft],
       buildingType: EntityType.DroneFactory,
       requiredMainBase: 2n,
       description:
         "Drone factories train drones, which are strong and specialized. To build, select the drone factory from the building menu and place it on any empty tile.",
     },
   ],
+
+  /* --------------------- A-A-B-A Unit Management ---------------------------- */
   [
     EObjectives.UpgradeUnit,
     {
-      category: "Unit Production",
+      category: "Unit Management",
       type: "Claim",
       requiredObjectives: [EObjectives.BuildDroneFactory],
       description:
@@ -415,12 +411,13 @@ export const Objectives = new Map<EObjectives, Objective>([
       tooltip: "Upgraded a unit",
     },
   ],
+  /* --------------------- A-A-B-B Unit Production (cont) --------------------- */
   [
-    EObjectives.TrainAnvilDrones,
+    EObjectives.TrainAnvilDrone,
     {
       category: "Unit Production",
       type: "Train",
-      requiredObjectives: [EObjectives.UpgradeUnit],
+      requiredObjectives: [EObjectives.BuildDroneFactory],
       unitType: EntityType.AnvilDrone,
       unitCount: 16n,
       requiredMainBase: 2n,
@@ -429,11 +426,11 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.TrainHammerDrones,
+    EObjectives.TrainHammerDrone,
     {
       category: "Unit Production",
       type: "Train",
-      requiredObjectives: [EObjectives.TrainAnvilDrones],
+      requiredObjectives: [EObjectives.TrainAnvilDrone],
       unitType: EntityType.HammerDrone,
       unitCount: 16n,
       requiredMainBase: 2n,
@@ -442,12 +439,12 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.TrainAegisDrones,
+    EObjectives.TrainAegisDrone,
     {
       category: "Unit Production",
       type: "Train",
       unitType: EntityType.AegisDrone,
-      requiredObjectives: [EObjectives.TrainHammerDrones],
+      requiredObjectives: [EObjectives.TrainHammerDrone],
       unitCount: 16n,
       requiredMainBase: 2n,
       description:
@@ -455,11 +452,11 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.TrainStingerDrones,
+    EObjectives.TrainStingerDrone,
     {
       category: "Unit Production",
       type: "Train",
-      requiredObjectives: [EObjectives.TrainAegisDrones],
+      requiredObjectives: [EObjectives.TrainAegisDrone],
       unitType: EntityType.StingerDrone,
       unitCount: 16n,
       requiredMainBase: 2n,
@@ -468,13 +465,13 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
 
-  /* --------------------- A-A-B-B Unit Storage --------------------- */
+  /* --------------------- A-A-B-C Unit Storage --------------------- */
   [
     EObjectives.BuildHangar,
     {
-      category: "Unit Production",
+      category: "Unit Storage",
       type: "Build",
-      requiredObjectives: [EObjectives.TrainLightningCrafts],
+      requiredObjectives: [EObjectives.BuildDroneFactory],
       buildingType: EntityType.Hangar,
       requiredMainBase: 2n,
       description:
@@ -482,7 +479,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
 
-  /* ------------------------------ A-A-D Defense ----------------------------- */
+  /* ------------------------------ A-A-C Defense ----------------------------- */
   [
     EObjectives.BuildSAMLauncher,
     {
@@ -491,7 +488,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.CreateFleet],
       buildingType: EntityType.SAMLauncher,
       requiredMainBase: 2n,
-      description: "SAM sites protect you from enemy attacks and raids by providing defense.",
+      description: "SAM launchers give your asteroid strength, protecting you from enemy attacks!",
     },
   ],
   [
@@ -502,7 +499,8 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BuildSAMLauncher],
       buildingType: EntityType.ShieldGenerator,
       requiredMainBase: 2n,
-      description: "Shield generators boost your asteroid's defense.",
+      description:
+        "Shield generators provide strength boosts to supplement defense provided by fleets and SAM launchers.",
     },
   ],
   [
@@ -518,13 +516,25 @@ export const Objectives = new Map<EObjectives, Objective>([
   ],
 
   /* ----------------------------- A-B Production ----------------------------- */
+  [
+    EObjectives.BuildAlloyFactory,
+    {
+      category: "Resource Production",
+      type: "Build",
+      requiredObjectives: [EObjectives.ExpandBase],
+      buildingType: EntityType.AlloyFactory,
+      requiredMainBase: 2n,
 
+      description:
+        "Alloy factories produce alloys by burning iron and copper. To build, select the alloy factory in the building menu. Place it on any empty tile.",
+    },
+  ],
   [
     EObjectives.BuildLithiumMine,
     {
       category: "Resource Production",
       type: "Build",
-      requiredObjectives: [EObjectives.ExpandBase1],
+      requiredObjectives: [EObjectives.BuildAlloyFactory],
       buildingType: EntityType.LithiumMine,
       requiredMainBase: 2n,
 
@@ -583,7 +593,8 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BuildStorageUnit],
       buildingType: EntityType.Market,
       requiredMainBase: 2n,
-      description: "Markets trade resources with other players. There is a tax on all trades.",
+      description:
+        "Markets grant access to the global resource marketplace. It's perfect for moments when you are missing a rare resource!",
     },
   ],
 
@@ -607,7 +618,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Alliance",
       type: "JoinAlliance",
 
-      requiredObjectives: [EObjectives.ExpandBase1],
+      requiredObjectives: [EObjectives.ExpandBase],
       requiredMainBase: 2n,
       description:
         "Joining an alliance allows you to combine your points with other players. Press the Alliances button in the stack of buttons next to the Aura menu. Find an Alliance to join and press the Join button.",
