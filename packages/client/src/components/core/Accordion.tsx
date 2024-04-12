@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode, FC } from "react";
-import { SecondaryCard } from "./Card";
+import { SecondaryCard } from "@/components/core/Card";
 
 interface AccordionContextValue {
   activeIndex: number;

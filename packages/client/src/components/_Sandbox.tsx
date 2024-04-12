@@ -142,15 +142,9 @@ export const _Sandbox = () => {
 
           <Tabs defaultIndex={0}>
             <Join className="border border-secondary/50">
-              <Tabs.Button showActive index={0}>
-                Tab1
-              </Tabs.Button>
-              <Tabs.Button showActive index={1}>
-                Tab2
-              </Tabs.Button>
-              <Tabs.Button showActive index={2}>
-                Tab3
-              </Tabs.Button>
+              <Tabs.Button index={0}>Tab1</Tabs.Button>
+              <Tabs.Button index={1}>Tab2</Tabs.Button>
+              <Tabs.Button index={2}>Tab3</Tabs.Button>
             </Join>
             <Tabs.Pane index={0}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus

@@ -7,7 +7,6 @@ import { Tooltip } from "@/components/core/Tooltip";
 import { Widget } from "@/components/core/Widget";
 import { AccountDisplay } from "@/components/shared/AccountDisplay";
 import { Account } from "@/components/transfer/Account";
-import { Score } from "@/components/hud/Score";
 import { SpectatingDetails } from "@/components/hud/SpectatingDetails";
 
 const ProfileContent = () => {
@@ -24,7 +23,7 @@ const ProfileContent = () => {
         <AccountDisplay player={playerEntity} />
         <Modal title="account">
           <Modal.Button className="btn-sm btn-neutral border-secondary !p-1 flex gap-2 text-accent text-xs w-fit">
-            <Tooltip text={`${sessionEntity ? "" : "not"} authorizing`} direction="right">
+            <Tooltip tooltipContent={`${sessionEntity ? "" : "not"} authorizing`} direction="right">
               <div>
                 {sessionEntity ? (
                   <FaHandshake className="text-success w-4 h-4" />
@@ -40,8 +39,6 @@ const ProfileContent = () => {
           </Modal.Content>
         </Modal>
       </div>
-
-      <Score player={playerEntity} />
     </>
   );
 };

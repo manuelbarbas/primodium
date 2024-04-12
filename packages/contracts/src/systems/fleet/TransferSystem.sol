@@ -26,7 +26,7 @@ contract TransferSystem is PrimodiumSystem {
   )
     public
     _onlyAsteroidOwner(asteroidEntity)
-    _onlyWhenFleetIsInOrbitOfAsteroid(fleetEntity, asteroidEntity)
+    _onlyOrbitingAsteroid(fleetEntity, asteroidEntity)
     _claimUnits(asteroidEntity)
     _unitCountIsValid(unitCounts)
   {
@@ -46,7 +46,7 @@ contract TransferSystem is PrimodiumSystem {
   )
     public
     _onlyAsteroidOwner(asteroidEntity)
-    _onlyWhenFleetIsInOrbitOfAsteroid(fleetEntity, asteroidEntity)
+    _onlyOrbitingAsteroid(fleetEntity, asteroidEntity)
     _claimResources(asteroidEntity)
     _resourceCountIsValid(resourceCounts)
   {
@@ -69,7 +69,7 @@ contract TransferSystem is PrimodiumSystem {
   )
     public
     _onlyAsteroidOwner(asteroidEntity)
-    _onlyWhenFleetIsInOrbitOfAsteroid(fleetEntity, asteroidEntity)
+    _onlyOrbitingAsteroid(fleetEntity, asteroidEntity)
     _claimResources(asteroidEntity)
     _claimUnits(asteroidEntity)
     _unitCountIsValid(unitCounts)
@@ -94,8 +94,8 @@ contract TransferSystem is PrimodiumSystem {
   )
     public
     _onlyFleetOwner(fromFleetEntity)
-    _onlyWhenNotInCooldown(fromFleetEntity)
-    _onlyWhenFleetIsInOrbitOfAsteroid(fromFleetEntity, asteroidEntity)
+    _onlyNotInCooldown(fromFleetEntity)
+    _onlyOrbitingAsteroid(fromFleetEntity, asteroidEntity)
     _claimUnits(asteroidEntity)
     _unitCountIsValid(unitCounts)
   {
@@ -116,8 +116,8 @@ contract TransferSystem is PrimodiumSystem {
   )
     public
     _onlyFleetOwner(fleetEntity)
-    _onlyWhenNotInCooldown(fleetEntity)
-    _onlyWhenFleetIsInOrbitOfAsteroid(fleetEntity, asteroidEntity)
+    _onlyNotInCooldown(fleetEntity)
+    _onlyOrbitingAsteroid(fleetEntity, asteroidEntity)
     _claimResources(asteroidEntity)
     _resourceCountIsValid(resourceCounts)
   {
@@ -140,8 +140,8 @@ contract TransferSystem is PrimodiumSystem {
   )
     public
     _onlyFleetOwner(fromFleetEntity)
-    _onlyWhenFleetIsInOrbitOfAsteroid(fromFleetEntity, asteroidEntity)
-    _onlyWhenNotInCooldown(fromFleetEntity)
+    _onlyOrbitingAsteroid(fromFleetEntity, asteroidEntity)
+    _onlyNotInCooldown(fromFleetEntity)
     _claimResources(asteroidEntity)
     _claimUnits(asteroidEntity)
     _unitCountIsValid(unitCounts)
@@ -171,8 +171,8 @@ contract TransferSystem is PrimodiumSystem {
   )
     public
     _onlyFleetOwner(fromFleetEntity)
-    _onlyWhenNotInCooldown(fromFleetEntity)
-    _onlyWhenFleetsAreIsInSameOrbit(fromFleetEntity, toFleetEntity)
+    _onlyNotInCooldown(fromFleetEntity)
+    _onlySameOrbit(fromFleetEntity, toFleetEntity)
     _unitCountIsValid(unitCounts)
   {
     LibTransfer.transferUnitsFromFleetToFleet(fromFleetEntity, toFleetEntity, unitCounts);
@@ -192,8 +192,8 @@ contract TransferSystem is PrimodiumSystem {
   )
     public
     _onlyFleetOwner(fromFleetEntity)
-    _onlyWhenNotInCooldown(fromFleetEntity)
-    _onlyWhenFleetsAreIsInSameOrbit(fromFleetEntity, toFleetEntity)
+    _onlyNotInCooldown(fromFleetEntity)
+    _onlySameOrbit(fromFleetEntity, toFleetEntity)
     _resourceCountIsValid(resourceCounts)
   {
     LibTransfer.transferResourcesFromFleetToFleet(fromFleetEntity, toFleetEntity, resourceCounts);
@@ -215,8 +215,8 @@ contract TransferSystem is PrimodiumSystem {
   )
     public
     _onlyFleetOwner(fromFleetEntity)
-    _onlyWhenNotInCooldown(fromFleetEntity)
-    _onlyWhenFleetsAreIsInSameOrbit(fromFleetEntity, toFleetEntity)
+    _onlyNotInCooldown(fromFleetEntity)
+    _onlySameOrbit(fromFleetEntity, toFleetEntity)
     _unitCountIsValid(unitCounts)
     _resourceCountIsValid(resourceCounts)
   {

@@ -77,8 +77,8 @@ Modal.Button = function ModalButton(props: React.ComponentProps<typeof Button>) 
       {...props}
       clickSound={props.clickSound ?? "Sequence"}
       onClick={(e) => {
-        if (props.onClick) props.onClick(e);
         setIsOpen(true);
+        props.onClick?.(e);
       }}
     />
   );

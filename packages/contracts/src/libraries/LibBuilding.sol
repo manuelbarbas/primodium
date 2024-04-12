@@ -13,7 +13,7 @@ import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { BuildingKey, ExpansionKey } from "src/Keys.sol";
 import { Bounds, EResource } from "src/Types.sol";
 
-import { MainBasePrototypeId } from "codegen/Prototypes.sol";
+import { MainBasePrototypeId, WormholeBasePrototypeId } from "codegen/Prototypes.sol";
 
 library LibBuilding {
   /**
@@ -32,7 +32,10 @@ library LibBuilding {
   function checkDestroyRequirements(bytes32 playerEntity, bytes32 buildingEntity) internal view {
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
 
-    require(buildingPrototype != MainBasePrototypeId, "[Destroy] Cannot destroy main base");
+    require(
+      buildingPrototype != MainBasePrototypeId && buildingPrototype != WormholeBasePrototypeId,
+      "[Destroy] Cannot destroy main base"
+    );
     require(
       OwnedBy.get(Position.getParentEntity(buildingEntity)) == playerEntity,
       "[Destroy] Only owner can destroy building"
@@ -51,7 +54,7 @@ library LibBuilding {
     PositionData memory coord
   ) internal view {
     require(Spawned.get(playerEntity), "[BuildSystem] Player has not spawned");
-    if (buildingPrototype == MainBasePrototypeId) {
+    if (buildingPrototype == MainBasePrototypeId || buildingPrototype == WormholeBasePrototypeId) {
       require(
         Home.get(coord.parentEntity) == bytes32(0),
         "[BuildSystem] Cannot build more than one main base per asteroid"
@@ -116,12 +119,15 @@ library LibBuilding {
     HasBuiltBuilding.set(playerEntity, buildingPrototype, true);
     HasBuiltBuilding.set(coord.parentEntity, buildingPrototype, true);
     IsActive.set(buildingEntity, true);
-    if (buildingPrototype == MainBasePrototypeId) {
+
+    if (buildingPrototype == MainBasePrototypeId || buildingPrototype == WormholeBasePrototypeId) {
       Home.set(coord.parentEntity, buildingEntity);
     }
+
     if (P_UnitProdTypes.length(buildingPrototype, 1) != 0) {
       UnitFactorySet.add(coord.parentEntity, buildingEntity);
     }
+
     placeBuildingTiles(buildingEntity, buildingPrototype, coord);
   }
 

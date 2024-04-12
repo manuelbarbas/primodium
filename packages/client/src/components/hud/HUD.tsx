@@ -31,6 +31,7 @@ import { Chat } from "@/components/hud/widgets/chat/Chat";
 import { Cheatcodes } from "@/components/hud/widgets/dev/Cheatcodes";
 import { Hangar } from "@/components/hud/widgets/hangar/Hangar";
 import { Resources } from "@/components/hud/widgets/resources/Resources";
+import { UnitDeaths } from "@/components/hud/widgets/UnitDeaths";
 
 export const GameHUD = memo(() => {
   const {
@@ -194,6 +195,7 @@ export const GameHUD = memo(() => {
 
             <HUD.TopMiddle className="flex flex-col items-center gap-2">
               <Cheatcodes />
+              <UnitDeaths />
             </HUD.TopMiddle>
             <HUD.TopRight className="flex flex-col items-end gap-2">
               <CurrentObjective />

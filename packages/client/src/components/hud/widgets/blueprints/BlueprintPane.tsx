@@ -88,7 +88,7 @@ export const BlueprintPane = () => {
 
         {/* Toggle Expand/Collapse button ${arePanesExpanded ? 'mr-0' : 'mr-11'} */}
         <div className={`flex justify-end`}>
-          <Button onClick={togglePanes} className="text-[.7rem] px-1 min-h-4 bg-transparent border-none">
+          <Button onClick={togglePanes} variant={"ghost"} size={"xs"} className="text-[.7rem] px-2 m-1">
             {arePanesExpanded ? "- Collapse" : "+ Expand"}
           </Button>
         </div>
@@ -101,7 +101,7 @@ export const BlueprintPane = () => {
             <Button
               key={index}
               onClick={() => showDiv(index)}
-              className={`text-s flex items-center bg-neutral/100 border border-secondary py-2 px-4 ${
+              className={`!flex !items-center !bg-neutral/100 !border !border-secondary !py-3 px-4 ${
                 index === 3 ? "rounded-br-lg" : ""
               }`}
               style={{ writingMode: "vertical-lr" }}

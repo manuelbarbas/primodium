@@ -13,7 +13,7 @@ const tooltipTranslation = {
     y: "50%",
   },
   right: {
-    x: "50%",
+    x: "0%",
     y: "50%",
   },
   bottom: {
@@ -27,7 +27,7 @@ const tooltipVariants = cva(" pointer-events-auto", {
     direction: {
       top: "left-1/2 -top-12",
       left: "bottom-1/2",
-      right: "bottom-1/2",
+      right: "bottom-1/2 left-full",
       bottom: "left-1/2",
     },
   },

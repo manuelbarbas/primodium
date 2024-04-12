@@ -8,7 +8,7 @@ import { cn } from "@/util/client";
 import { cva, type VariantProps } from "class-variance-authority";
 
 const buttonVariants = cva(
-  "btn join-item pointer-events-auto inline-flex rounded-box items-center justify-center whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+  "btn join-item pointer-events-auto min-h-fit items-center justify-center whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
   {
     variants: {
       variant: {
@@ -20,6 +20,7 @@ const buttonVariants = cva(
         info: "btn-info",
         warning: "btn-warning",
         error: "btn-error",
+        ghost: "btn-ghost",
       },
       size: {
         xs: "btn-xs",

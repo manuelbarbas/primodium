@@ -1,13 +1,13 @@
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { components } from "src/network/components";
-import { world } from "src/network/world";
-import { BaseAsteroid } from "src/game/lib/objects/Asteroid/BaseAsteroid";
-import { Fleet } from "src/game/lib/objects/Fleet";
-import { createAudioApi } from "src/game/api/audio";
-import { createObjectApi } from "src/game/api/objects";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { TransitLine } from "src/game/lib/objects/TransitLine";
+import { createAudioApi } from "@/game/api/audio";
+import { createObjectApi } from "@/game/api/objects";
+import { BaseAsteroid } from "@game/lib/objects/Asteroid/BaseAsteroid";
+import { Fleet } from "@game/lib/objects/Fleet";
+import { TransitLine } from "@game/lib/objects/TransitLine";
+import { components } from "@/network/components";
+import { world } from "@/network/world";
 
 export const renderFleets = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -108,7 +108,7 @@ export const renderFleets = (scene: Scene) => {
   }
 
   defineComponentSystem(systemsWorld, components.FleetMovement, async (update) => {
-    const newMovement = update.value[0];
+    const [newMovement, oldMovement] = update.value;
 
     if (newMovement) {
       const time = components.Time.get()?.value ?? 0n;
@@ -117,6 +117,17 @@ export const renderFleets = (scene: Scene) => {
         handleFleetOrbit(update.entity, newMovement.destination as Entity);
       } else {
         handleFleetTransit(update.entity, newMovement.origin as Entity, newMovement.destination as Entity);
+      }
+    } else if (oldMovement) {
+      const transitLine = objects.getTransitLine(update.entity);
+
+      if (transitLine) {
+        scene.objects.remove(`transit_${update.entity}`);
+        transitsToUpdate.delete(update.entity);
+      } else {
+        const orbitRing = objects.getAsteroid(oldMovement.destination as Entity)?.getOrbitRing();
+        const fleet = objects.getFleet(update.entity);
+        if (fleet) orbitRing?.removeFleet(fleet);
       }
     }
   });

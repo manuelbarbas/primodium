@@ -43,24 +43,23 @@ const Pane: FC<{
   );
 });
 
-const Button: FC<React.ComponentProps<typeof _Button> & { index: number; togglable?: boolean; showActive?: boolean }> =
-  memo((props) => {
+const Button: FC<React.ComponentProps<typeof _Button> & { index: number; togglable?: boolean }> = memo(
+  ({ togglable = false, index, ...props }) => {
     const { index: currIndex, setIndex } = useIndex();
-    const { togglable = false, index, showActive = false } = props;
-
     const selected = currIndex === index;
 
     return (
       <_Button
         {...props}
-        selected={selected && showActive}
+        selected={selected}
         onClick={(e) => {
           setIndex(selected && togglable ? undefined : index);
           if (props.onClick) props.onClick(e);
         }}
       />
     );
-  });
+  }
+);
 
 export const Tabs: FC<TabProps> & {
   Button: typeof Button;

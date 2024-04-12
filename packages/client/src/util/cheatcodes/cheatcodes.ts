@@ -3,7 +3,7 @@ import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Cheatcode, Cheatcodes } from "@primodiumxyz/mud-game-tools";
-import { EBuilding, EResource } from "contracts/config/enums";
+import { EResource } from "contracts/config/enums";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { toast } from "react-toastify";
 import { components } from "src/network/components";
@@ -13,7 +13,7 @@ import { createFleet as callCreateFleet } from "src/network/setup/contractCalls/
 import { setComponentValue } from "src/network/setup/contractCalls/dev";
 import { upgradeBuilding as upgradeBuildingCall } from "src/network/setup/contractCalls/upgradeBuilding";
 import { MUD } from "src/network/types";
-import { encodeEntity, toHex32 } from "src/util/encode";
+import { encodeEntity } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
 import {
@@ -80,6 +80,8 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
     electricity: EntityType.Electricity,
     defense: EntityType.Defense,
     moves: EntityType.FleetCount,
+    encryption: EntityType.Encryption,
+    colonyShipCapacity: EntityType.ColonyShipCapacity,
   };
 
   const units: Record<string, Entity> = {
@@ -250,6 +252,36 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
     }
   }
 
+  async function spawnPlayers(count: number) {
+    const networkConfig = getNetworkConfig();
+    const clientOptions = {
+      chain: networkConfig.chain,
+      transport: transportObserver(fallback([webSocket(), http()])),
+      pollingInterval: 1000,
+    };
+
+    for (let i = 0; i < count; i++) {
+      const privateKey = generatePrivateKey();
+      const burnerAccount = createBurnerAccount(privateKey as Hex);
+
+      const burnerWalletClient = createWalletClient({
+        ...clientOptions,
+        account: burnerAccount,
+      });
+
+      const worldContract = getContract({
+        address: networkConfig.worldAddress as Hex,
+        abi: IWorldAbi,
+        client: {
+          public: mud.network.publicClient,
+          wallet: burnerWalletClient,
+        },
+      });
+
+      await worldContract.write.Primodium__spawn();
+    }
+  }
+
   async function waitUntilTxQueueEmpty() {
     let txQueueSize = components.TransactionQueue.getSize();
     while (txQueueSize > 0) {
@@ -273,12 +305,44 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             function: async () => {
               const start = Date.now();
               toast.info(`running cheatcode: ${name}`);
+              // world speed
+              pack.worldSpeed &&
+                (await setComponentValue(
+                  mud,
+                  mud.components.P_GameConfig,
+                  {},
+                  {
+                    worldSpeed: BigInt(pack.worldSpeed),
+                  }
+                ));
+
+              // spawn players
+              pack.players && (await spawnPlayers(pack.players));
+
               const activeAsteroid = mud.components.ActiveRock.get()?.value;
               if (!activeAsteroid) throw new Error("No active asteroid found");
               if (pack.resources) {
                 // provide resources
                 for (const [resource, count] of pack.resources.entries()) {
                   await provideResource(activeAsteroid, resource, parseResourceCount(resource, count.toString()));
+                  await waitUntilTxQueueEmpty();
+                }
+
+                toast.success(`${name}:Resources provided`);
+              }
+              if (pack.storages) {
+                // provide resources
+                for (const [resource, count] of pack.storages.entries()) {
+                  const value = BigInt(count * Number(RESOURCE_SCALE));
+
+                  await setComponentValue(
+                    mud,
+                    mud.components.MaxResourceCount,
+                    { entity: activeAsteroid as Hex, resource: ResourceEnumLookup[resource] },
+                    {
+                      value,
+                    }
+                  );
                   await waitUntilTxQueueEmpty();
                 }
 
@@ -418,6 +482,20 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             );
           },
         },
+        setUnitDeathLimit: {
+          params: [{ name: "value", type: "number" }],
+          function: async (value: number) => {
+            toast.info("running cheatcode: Set World Speed");
+            await setComponentValue(
+              mud,
+              mud.components.P_GameConfig,
+              {},
+              {
+                unitDeathLimit: BigInt(value),
+              }
+            );
+          },
+        },
         stopGracePeriod: {
           params: [],
           function: async () => {
@@ -448,8 +526,10 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
               const worldContract = getContract({
                 address: networkConfig.worldAddress as Hex,
                 abi: IWorldAbi,
-                publicClient: mud.network.publicClient,
-                walletClient: burnerWalletClient,
+                client: {
+                  public: mud.network.publicClient,
+                  wallet: burnerWalletClient,
+                },
               });
 
               await worldContract.write.Primodium__spawn();
@@ -573,9 +653,32 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             toast.success(`${count} ${resource} storage given to ${entityToRockName(selectedRock)}`);
           },
         },
+        setResource: {
+          params: [
+            { name: "count", type: "number" },
+            { name: "resource", type: "dropdown", dropdownOptions: Object.keys(resources) },
+          ],
+          function: async (count: number, resource: string) => {
+            const selectedRock = mud.components.SelectedRock.get()?.value;
+            const resourceEntity = resources[resource];
+            if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
+
+            const value = BigInt(count * Number(RESOURCE_SCALE));
+
+            await setComponentValue(
+              mud,
+              mud.components.ResourceCount,
+              { entity: selectedRock as Hex, resource: ResourceEnumLookup[resourceEntity] },
+              {
+                value,
+              }
+            );
+            toast.success(`${count} ${resource} set for ${entityToRockName(selectedRock)}`);
+          },
+        },
         conquerAsteroid: {
-          params: [],
-          function: async () => {
+          params: [{ name: "baseType", type: "dropdown", dropdownOptions: ["MainBase", "WormholeBase"] }],
+          function: async (baseType: string) => {
             const selectedRock = mud.components.SelectedRock.get()?.value;
             if (!selectedRock) {
               toast.error(`No rock selected`);
@@ -588,11 +691,12 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
               toast.error("Asteroid not initialized. Send fleet to initialize it");
               throw new Error("Asteroid not initialized");
             }
+            const entity = baseType == "MainBase" ? EntityType.MainBase : EntityType.WormholeBase;
             const player = mud.playerAccount.entity;
             await setComponentValue(mud, components.OwnedBy, { entity: selectedRock as Hex }, { value: player });
-            const position = components.Position.get(toHex32("MainBase") as Entity);
+            const position = components.Position.get(entity);
             if (!position) throw new Error("No main base found");
-            await buildBuilding(mud, EBuilding.MainBase, { ...position, parentEntity: selectedRock as Hex });
+            await buildBuilding(mud, BuildingEnumLookup[entity], { ...position, parentEntity: selectedRock as Hex });
             toast.success(`Asteroid ${entityToRockName(selectedRock)} conquered`);
           },
         },
@@ -622,7 +726,29 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
         },
       },
     },
-
+    {
+      title: "Building",
+      content: {
+        clearCooldown: {
+          params: [],
+          function: async () => {
+            const selectedBuilding = mud.components.SelectedBuilding.get()?.value;
+            if (!selectedBuilding) {
+              toast.error("No building selected");
+              throw new Error("No building selected");
+            }
+            await setComponentValue(
+              mud,
+              mud.components.CooldownEnd,
+              { entity: selectedBuilding as Hex },
+              {
+                value: 0n,
+              }
+            );
+          },
+        },
+      },
+    },
     {
       title: "Fleet",
       content: {

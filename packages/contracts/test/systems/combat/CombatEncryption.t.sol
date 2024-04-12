@@ -7,11 +7,12 @@ import { addressToEntity } from "src/utils.sol";
 import { EResource, EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
-import { OwnedBy, UnitCount, Score, ProductionRate, P_ColonyShipConfig, CooldownEnd, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, UnitLevel } from "codegen/index.sol";
+import { MaxColonySlots, LastConquered, OwnedBy, UnitCount, ProductionRate, CooldownEnd, P_ColonyShipConfig, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, UnitLevel } from "codegen/index.sol";
 
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
 import { LibMath } from "libraries/LibMath.sol";
+import { LibColony } from "libraries/LibColony.sol";
 
 contract CombatEncryptionTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;
@@ -43,6 +44,12 @@ contract CombatEncryptionTest is PrimodiumTest {
     bytes32 minuteman = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
     bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
     uint256 decryption = P_ColonyShipConfig.getDecryption();
+
+    vm.startPrank(creator);
+    // Add 2 colony slots to account for the 2 colony ships about to be created
+    LibColony.increaseMaxColonySlots(aliceEntity);
+    LibColony.increaseMaxColonySlots(aliceEntity);
+    vm.stopPrank();
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == minuteman) unitCounts[i] = numberOfUnits;
@@ -151,6 +158,12 @@ contract CombatEncryptionTest is PrimodiumTest {
 
     for (uint256 i = 0; i < fleetCountToWin; i++) {
       console.log("create fleet %s", i);
+
+      // Add 1 colony slot to account for the colony ship about to be created
+      vm.startPrank(creator);
+      LibColony.increaseMaxColonySlots(aliceEntity);
+      vm.stopPrank();
+
       setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
       vm.startPrank(alice);
@@ -173,9 +186,11 @@ contract CombatEncryptionTest is PrimodiumTest {
 
     vm.startPrank(creator);
     GracePeriod.set(bobHomeAsteroid, block.timestamp);
+    // Add 1 colony slot to account for the colony ship about to be created
+    LibColony.increaseMaxColonySlots(bobEntity);
     vm.stopPrank();
 
-    console.log("creaete bob fleet");
+    console.log("create bob fleet");
     setupCreateFleet(bob, bobHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(bob);
@@ -183,17 +198,34 @@ contract CombatEncryptionTest is PrimodiumTest {
 
     world.Primodium__sendFleet(bobFleet, aliceHomeAsteroid);
     vm.stopPrank();
-    console.log("creaete bob fleet done");
+    console.log("create bob fleet done");
 
     vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetEntities[0]), block.timestamp));
 
-    uint256 bobHomeScore = Score.get(bobHomeAsteroid);
-    uint256 aliceScore = Score.get(aliceEntity);
+    uint256 aliceSlotsOccupied = LibColony.getColonyShipsPlusAsteroids(aliceEntity);
+    uint256 bobSlotsOccupied;
+    console.log("Alice MaxColonySlots: ", MaxColonySlots.get(aliceEntity));
+    console.log("Alice Occupied Slots: ", aliceSlotsOccupied);
 
     vm.startPrank(alice);
     for (uint256 i = 0; i < fleetCountToWin; i++) {
       console.log("fleet attack %s", i);
       uint256 encryptionBeforeAttack = ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_Encryption));
+
+      // For testing destruction of colony ship on a transferred asteroid
+      if (i == fleetCountToWin - 1) {
+        vm.startPrank(creator);
+        // Add 1 Colony Slot for Colony Ship on the Bob's Asteroid, and 1 Colony Slot for one starting training
+        LibColony.increaseMaxColonySlots(bobEntity);
+        LibColony.increaseMaxColonySlots(bobEntity);
+        UnitCount.set(bobHomeAsteroid, colonyShipPrototype, 1);
+        trainUnits(bob, colonyShipPrototype, 1, false); // still in training
+        bobSlotsOccupied = LibColony.getColonyShipsPlusAsteroids(bobEntity);
+        console.log("Bob MaxColonySlots: ", MaxColonySlots.get(bobEntity));
+        console.log("Bob Occupied Slots: ", bobSlotsOccupied);
+        vm.stopPrank();
+        vm.startPrank(alice);
+      }
 
       world.Primodium__attack(fleetEntities[i], bobHomeAsteroid);
       if (encryptionBeforeAttack > decryption) {
@@ -214,18 +246,26 @@ contract CombatEncryptionTest is PrimodiumTest {
     }
 
     vm.stopPrank();
+    assertEq(LastConquered.get(bobHomeAsteroid), block.timestamp, "last conquered should have been updated");
     console.log("encryption after battles: %s", ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_Encryption)));
-    assertEq(Score.get(aliceEntity), aliceScore + bobHomeScore, "alice should have gained bob's home asteroid score");
-    assertEq(Score.get(bobHomeAsteroid), bobHomeScore, "bobs home score should not have changed");
-    assertEq(Score.get(bobEntity), 0, "bob's score should reset to zero after losing asteroid control");
 
     assertEq(OwnedBy.get(bobHomeAsteroid), aliceEntity, "asteroid should have been taken over");
+    assertEq(
+      LibColony.getColonyShipsPlusAsteroids(aliceEntity),
+      aliceSlotsOccupied,
+      "alice should have same slots occupied because her colony ship turned into a colony, and she shouldn't get Bob's colony ships"
+    );
+    assertEq(
+      LibColony.getColonyShipsPlusAsteroids(bobEntity),
+      bobSlotsOccupied - 4,
+      "bob should have 4 fewer slots occupied. Lost: asteroid, training colony ship, colony ship on asteroid, colony ship in fleet"
+    );
 
-    assertEq(UnitCount.get(bobFleet, minuteman), 0, "fleet should have been disbanded and marine units");
+    assertEq(UnitCount.get(bobFleet, minuteman), 0, "fleet should have been cleared and marine units");
     assertEq(
       UnitCount.get(bobFleet, colonyShipPrototype),
       0,
-      "fleet should have been disbanded and colony ship unit lost"
+      "fleet should have been cleared and colony ship unit lost"
     );
 
     assertEq(FleetMovement.getDestination(bobFleet), bobHomeAsteroid, "fleet should have been reset to orbit");
@@ -256,6 +296,14 @@ contract CombatEncryptionTest is PrimodiumTest {
     bytes32 minuteman = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
     bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
     uint256 decryption = P_ColonyShipConfig.getDecryption();
+
+    vm.startPrank(creator);
+    // Add 4 colony slots to account for the colony ships about to be created
+    LibColony.increaseMaxColonySlots(aliceEntity);
+    LibColony.increaseMaxColonySlots(aliceEntity);
+    LibColony.increaseMaxColonySlots(aliceEntity);
+    LibColony.increaseMaxColonySlots(aliceEntity);
+    vm.stopPrank();
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == minuteman) unitCounts[i] = numberOfUnits;

@@ -1,7 +1,5 @@
 import { Entity } from "@latticexyz/recs";
 
-import { Account, Time } from "src/network/components/clientComponents";
-
 import { useMemo } from "react";
 
 import { singletonEntity } from "@latticexyz/store-sync/recs";
@@ -43,7 +41,7 @@ const ClaimObjectiveButton: React.FC<{
   objectiveEntity: Entity;
 }> = ({ objectiveEntity }) => {
   const mud = useMud();
-  const time = Time.use()?.value;
+  const time = comps.Time.use()?.value;
   const selectedRock = comps.ActiveRock.use()?.value ?? singletonEntity;
   const levelRequirement = comps.Level.use(objectiveEntity);
   const objectiveClaimedRequirement = comps.CompletedObjective.use(objectiveEntity);
@@ -53,7 +51,7 @@ const ClaimObjectiveButton: React.FC<{
 
   const resourceRequirement = comps.P_RequiredResources.use(objectiveEntity);
   const unitRequirement = comps.P_ProducedUnits.use(objectiveEntity);
-  const player = Account.use()?.value ?? singletonEntity;
+  const player = comps.Account.use()?.value ?? singletonEntity;
   const hasCompletedObjective =
     comps.CompletedObjective.useWithKeys({ objective: objectiveEntity as Hex, entity: player as Hex })?.value ?? false;
 
@@ -100,7 +98,7 @@ const Objective: React.FC<{
   asteroid: Entity;
   highlight?: boolean;
 }> = ({ objective, asteroid, highlight = false }) => {
-  const time = Time.use()?.value;
+  const time = comps.Time.use()?.value;
 
   const objectiveName = useMemo(() => {
     if (!objective) return;
@@ -147,7 +145,12 @@ const Objective: React.FC<{
                     const value = _req.currentValue > _req.requiredValue ? _req.requiredValue : _req.currentValue;
 
                     return (
-                      <Badge key={index} className={`text-xs gap-2 ${complete ? "badge-success" : "badge-neutral"}`}>
+                      <Badge
+                        key={index}
+                        className={`text-xs gap-2 ${complete ? "badge-success" : "badge-neutral"}`}
+                        tooltipDirection={"bottom"}
+                        tooltip={getEntityTypeName(_req.id)}
+                      >
                         <IconLabel
                           imageUri={
                             ResourceImage.get(_req.id) ??
@@ -155,8 +158,6 @@ const Objective: React.FC<{
                             "/img/icons/minersicon.png"
                           }
                           text={formatNumber(value / _req.scale, { short: true, fractionDigits: 3 })}
-                          tooltipDirection={"bottom"}
-                          tooltipText={getEntityTypeName(_req.id)}
                           className="text-xs font-bold"
                         />
 
@@ -209,9 +210,9 @@ const Objective: React.FC<{
 };
 
 const UnclaimedObjective: React.FC<{ highlight?: Entity }> = ({ highlight }) => {
-  const player = Account.use()?.value ?? singletonEntity;
+  const player = comps.Account.use()?.value ?? singletonEntity;
   const asteroid = comps.ActiveRock.use()?.value;
-  const time = Time.use()?.value;
+  const time = comps.Time.use()?.value;
   const objectives = Object.values(ObjectiveEntityLookup);
 
   const filteredObjectives = useMemo(() => {
@@ -243,7 +244,7 @@ const UnclaimedObjective: React.FC<{ highlight?: Entity }> = ({ highlight }) => 
 };
 
 const ClaimedObjective: React.FC = () => {
-  const player = Account.use()?.value ?? singletonEntity;
+  const player = comps.Account.use()?.value ?? singletonEntity;
   const asteroid = comps.ActiveRock.use()?.value;
 
   const filteredObjectives = Object.values(ObjectiveEntityLookup).filter((objective) => {
@@ -273,10 +274,10 @@ export const Objectives: React.FC<{ highlight?: Entity }> = ({ highlight }) => {
   return (
     <Tabs className="flex flex-col items-center w-full h-full">
       <Join className="border-secondary border border-secondary/25">
-        <Tabs.Button showActive index={0} className="btn-sm">
+        <Tabs.Button index={0} className="btn-sm">
           Available
         </Tabs.Button>
-        <Tabs.Button showActive index={1} className="btn-sm">
+        <Tabs.Button index={1} className="btn-sm">
           Completed
         </Tabs.Button>
       </Join>

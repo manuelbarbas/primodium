@@ -1,13 +1,12 @@
 import { Entity, namespaceWorld } from "@latticexyz/recs";
-import { Scenes, SceneKeys } from "../lib/constants/common";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Coord } from "@latticexyz/utils";
 import engine from "engine";
 import { Game } from "engine/types";
 import { runSystems as runAsteroidSystems } from "src/game/scenes/asteroid/systems";
 import { runSystems as runStarmapSystems } from "src/game/scenes/starmap/systems";
+import { runSystems as runUISystems } from "src/game/scenes/ui/systems";
 import { components } from "src/network/components";
-import { setupAllianceLeaderboard } from "src/network/systems/setupAllianceLeaderboard";
 import { setupBattleComponents } from "src/network/systems/setupBattleComponents";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
 import { setupBuildRock } from "src/network/systems/setupBuildRock";
@@ -24,15 +23,16 @@ import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import _init from "../init";
+import { SceneKeys, Scenes } from "../lib/constants/common";
 import { createAudioApi } from "./audio";
 import { createCameraApi } from "./camera";
 import { createFxApi } from "./fx";
 import { createGameApi } from "./game";
 import { createHooksApi } from "./hooks";
 import { createInputApi } from "./input";
+import { createObjectApi } from "./objects";
 import { createSceneApi } from "./scene";
 import { createSpriteApi } from "./sprite";
-import { createObjectApi } from "./objects";
 
 export type Primodium = Awaited<ReturnType<typeof initPrimodium>>;
 export type PrimodiumApi = ReturnType<Primodium["api"]>;
@@ -151,13 +151,12 @@ export async function initPrimodium(mud: MUD, version = "v1") {
   namespaceWorld(world, "game");
 
   await _init();
-  // runSystems(mud);
 
   function destroy() {
     //for each instance, call game destroy
-    const instances = engine.getGame();
+    const game = engine.getGame();
 
-    for (const [, instance] of instances.entries()) {
+    for (const [, instance] of game.entries()) {
       //dispose phaser
       instance.dispose();
     }
@@ -177,16 +176,16 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     }
     const starmapScene = _instance.sceneManager.scenes.get(Scenes.Starmap);
     const asteroidScene = _instance.sceneManager.scenes.get(Scenes.Asteroid);
+    const uiScene = _instance.sceneManager.scenes.get(Scenes.UI);
 
-    if (starmapScene === undefined || asteroidScene === undefined) {
+    if (starmapScene === undefined || asteroidScene === undefined || uiScene === undefined) {
       console.log(_instance.sceneManager.scenes);
       throw new Error("No primodium scene found");
     }
 
-    //holds the last rock the player can build on
+    components.MapOpen.set({ value: false });
     setupBuildRock();
     setupSwapNotifications(mud);
-    setupAllianceLeaderboard(mud);
     setupBattleComponents();
     setupMoveNotifications();
     setupBlockNumber(mud.network.latestBlockNumber$);
@@ -201,6 +200,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
 
     runAsteroidSystems(asteroidScene, mud);
     runStarmapSystems(starmapScene, mud);
+    runUISystems(uiScene);
   }
 
   return { api, destroy, runSystems };

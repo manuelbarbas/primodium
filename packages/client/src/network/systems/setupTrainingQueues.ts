@@ -2,7 +2,6 @@ import { Entity, Has, HasValue, defineComponentSystem, namespaceWorld, runQuery 
 import { getUnitTrainingTime } from "src/util/unit";
 import { Hex } from "viem";
 import { components } from "../components";
-import { BlockNumber } from "../components/clientComponents";
 import { world } from "../world";
 
 export function setupTrainingQueues() {
@@ -77,7 +76,7 @@ export function setupTrainingQueues() {
 
   // update local queues each second
   // todo: create a component that tracks active asteroids (to be updated each second)
-  defineComponentSystem(systemWorld, BlockNumber, (update) => {
+  defineComponentSystem(systemWorld, components.BlockNumber, (update) => {
     const selectedRock = components.ActiveRock.get()?.value;
     const destination = Send.get()?.destination;
     const parents: string[] = [];

@@ -5,10 +5,10 @@ const FleetsPane: React.FC = () => (
   <div className="w-full h-full border-0">
     <Tabs className="flex flex-col items-center gap-2 w-full h-full">
       <div className="flex gap-1 w-full">
-        <Tabs.Button index={0} showActive className="flex-1 btn-md hover:text-accent hover:bg-accent">
+        <Tabs.Button index={0} className="flex-1 btn-md hover:text-accent hover:bg-accent">
           Owned Fleets
         </Tabs.Button>
-        <Tabs.Button index={1} showActive className="flex-1 btn-md hover:text-accent hover:bg-accent">
+        <Tabs.Button index={1} className="flex-1 btn-md hover:text-accent hover:bg-accent">
           Orbiting Fleets
         </Tabs.Button>
       </div>

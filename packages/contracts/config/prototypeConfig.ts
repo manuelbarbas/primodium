@@ -13,162 +13,19 @@ import {
 } from "../ts/prototypes/prototypeGenUtils";
 import { PrototypesConfig } from "../ts/prototypes/types";
 import { SCALE } from "./constants";
-import { EResource, ESize, MUDEnums } from "./enums";
+import { EResource, MUDEnums } from "./enums";
+import {
+  mainBaseStorageUpgrades,
+  samSiteStorageUpgrades,
+  storageUnitStorageUpgrades,
+  wormholeBaseStorageUpgrades,
+} from "./storageUpgrades";
 import { getBlueprint } from "./util/blueprints";
 import encodeBytes32, { encodeAddress } from "./util/encodeBytes32";
 
-const mainBaseMaxResourceUpgrades = {
-  1: { Iron: 5000, Copper: 5000, IronPlate: 2500, R_Encryption: 100, R_HP: 100 },
-  2: {
-    Iron: 10000,
-    Copper: 10000,
-    IronPlate: 5000,
-    Lithium: 10000,
-    PVCell: 5000,
-    Alloy: 5000,
-    R_Encryption: 105,
-    R_HP: 150,
-  },
-  3: {
-    Iron: 25000,
-    Copper: 25000,
-    IronPlate: 15000,
-    Lithium: 25000,
-    PVCell: 15000,
-    Alloy: 15000,
-    Titanium: 500,
-    Platinum: 500,
-    Iridium: 500,
-    Kimberlite: 500,
-    R_Encryption: 110,
-    R_HP: 200,
-  },
-  4: {
-    Iron: 75000,
-    Copper: 75000,
-    Lithium: 75000,
-    IronPlate: 50000,
-    PVCell: 50000,
-    Alloy: 50000,
-    Titanium: 1000,
-    Platinum: 1000,
-    Iridium: 1000,
-    Kimberlite: 1000,
-    R_Encryption: 115,
-    R_HP: 250,
-  },
-  5: {
-    Iron: 150000,
-    Copper: 150000,
-    IronPlate: 100000,
-    Lithium: 150000,
-    PVCell: 100000,
-    Alloy: 100000,
-    Titanium: 3000,
-    Platinum: 3000,
-    Iridium: 3000,
-    Kimberlite: 3000,
-    R_Encryption: 120,
-    R_HP: 300,
-  },
-  6: {
-    Iron: 250000,
-    Copper: 250000,
-    IronPlate: 250000,
-    Lithium: 250000,
-    PVCell: 250000,
-    Alloy: 250000,
-    Titanium: 6000,
-    Platinum: 6000,
-    Iridium: 6000,
-    Kimberlite: 6000,
-    R_Encryption: 125,
-    R_HP: 400,
-  },
-  7: {
-    Iron: 750000,
-    Copper: 750000,
-    IronPlate: 500000,
-    Lithium: 750000,
-    PVCell: 500000,
-    Alloy: 500000,
-    Titanium: 7500,
-    Platinum: 7500,
-    Iridium: 7500,
-    Kimberlite: 7500,
-    R_Encryption: 130,
-    R_HP: 500,
-  },
-  8: {
-    Iron: 1500000,
-    Copper: 1500000,
-    IronPlate: 1250000,
-    Lithium: 1500000,
-    PVCell: 1250000,
-    Alloy: 1250000,
-    Titanium: 10000,
-    Platinum: 10000,
-    Iridium: 10000,
-    Kimberlite: 10000,
-    R_Encryption: 135,
-    R_HP: 600,
-  },
-};
-
-const storageUnitMaxResourceUpgrades = {
-  1: {
-    Iron: 2000,
-    Copper: 2000,
-    Lithium: 2000,
-    IronPlate: 1000,
-    PVCell: 1000,
-    Alloy: 1000,
-  },
-  2: {
-    Iron: 5000,
-    Copper: 5000,
-    Lithium: 5000,
-    IronPlate: 2500,
-    PVCell: 2500,
-    Alloy: 2500,
-    Titanium: 250,
-    Platinum: 250,
-    Iridium: 250,
-    Kimberlite: 250,
-  },
-  3: {
-    Iron: 15000,
-    Copper: 15000,
-    Lithium: 15000,
-    IronPlate: 5000,
-    PVCell: 5000,
-    Alloy: 5000,
-    Titanium: 500,
-    Platinum: 500,
-    Iridium: 500,
-    Kimberlite: 500,
-  },
-  4: {
-    Iron: 25000,
-    Copper: 25000,
-    Lithium: 25000,
-    IronPlate: 10000,
-    PVCell: 10000,
-    Alloy: 10000,
-    Titanium: 1000,
-    Platinum: 1000,
-    Iridium: 1000,
-    Kimberlite: 1000,
-  },
-};
-
-const samSiteMaxResourceUpgrades = {
-  1: { R_HP: 1000 },
-  2: { R_HP: 2500 },
-  3: { R_HP: 7500 },
-};
-
 const maxRange = { xBounds: 37, yBounds: 25 };
+
+const colonySlotsConfigResourceValues = getResourceValues({ Copper: 10000, Lithium: 5000 }); // Order impacts Installment payment index
 
 export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = {
   /* ---------------------------------- World --------------------------------- */
@@ -186,18 +43,17 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         unitProductionRate: 100n,
         travelTime: 10n,
         worldSpeed: 100n,
-        tax: 10n, // out of 1000
+        unitDeathLimit: BigInt(1e18),
       },
 
       P_WormholeAsteroidConfig: {
         wormholeAsteroidSlot: 0n,
         maxLevel: 1n,
         mapId: 6,
+        primodium: 0n * BigInt(SCALE),
       },
 
       P_ColonyShipConfig: {
-        resource: EResource.Alloy,
-        initialCost: 10000n * BigInt(SCALE),
         decryption: 10n * BigInt(SCALE),
         cooldownExtension: 60n * 1n, // one hour
       },
@@ -221,6 +77,41 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           EResource.Iridium,
           EResource.Kimberlite,
         ],
+      },
+    },
+  },
+
+  Wormhole: {
+    keys: [],
+    tables: {
+      P_WormholeConfig: {
+        initTime: BigInt(Math.round(Date.now() / 1000)),
+        turnDuration: 69420n,
+        cooldown: 6n * 60n * 60n,
+      },
+      Wormhole: {
+        resource: EResource.Iron,
+        nextResource: EResource.Copper,
+        turn: 0n,
+        hash: encodeBytes32("i love wormholes"),
+      },
+    },
+  },
+
+  Conquest: {
+    keys: [],
+    tables: {
+      P_ConquestConfig: {
+        holdTime: 6n * 60n * 60n,
+        // spawn a shard asteroid every <shardAsteroidSpawnFrequency> players, starting at the <shardAsteroidOffset>th player
+        shardAsteroidSpawnFrequency: 100n,
+        shardAsteroidSpawnOffset: 25n,
+        // limit shard asteroids to <maxShardAsteroids>
+        maxShardAsteroids: 10n,
+        shardAsteroidPoints: 50n * BigInt(SCALE),
+        shardAsteroidLifeSpan: 6n * 60n * 60n,
+        shardAsteroidEncryption: 15n * BigInt(SCALE),
+        shardAsteroidEncryptionRegen: BigInt(Math.round(0.00056 * SCALE)),
       },
     },
   },
@@ -311,42 +202,42 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     levels: {
       1: {
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(mainBaseMaxResourceUpgrades[1]),
+          value: upgradesToList(mainBaseStorageUpgrades[1]),
         },
         P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
       2: {
         P_RequiredResources: getResourceValues({ Copper: 1500 }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(mainBaseMaxResourceUpgrades[2]),
+          value: upgradesToList(mainBaseStorageUpgrades[2]),
         },
         P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
       3: {
         P_RequiredResources: getResourceValues({ Copper: 10000, PVCell: 1500 }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(mainBaseMaxResourceUpgrades[3]),
+          value: upgradesToList(mainBaseStorageUpgrades[3]),
         },
         P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
       4: {
         P_RequiredResources: getResourceValues({ Copper: 25000, PVCell: 5000 }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(mainBaseMaxResourceUpgrades[4]),
+          value: upgradesToList(mainBaseStorageUpgrades[4]),
         },
         P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
       5: {
         P_RequiredResources: getResourceValues({ Copper: 75000, PVCell: 500 }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(mainBaseMaxResourceUpgrades[5]),
+          value: upgradesToList(mainBaseStorageUpgrades[5]),
         },
         P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
       6: {
         P_RequiredResources: getResourceValues({ Copper: 125000, Titanium: 1500, Platinum: 1500 }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(mainBaseMaxResourceUpgrades[6]),
+          value: upgradesToList(mainBaseStorageUpgrades[6]),
         },
         P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
@@ -358,7 +249,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           Iridium: 5000,
         }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(mainBaseMaxResourceUpgrades[7]),
+          value: upgradesToList(mainBaseStorageUpgrades[7]),
         },
         P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
@@ -370,13 +261,93 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           Iridium: 15000,
         }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(mainBaseMaxResourceUpgrades[8]),
+          value: upgradesToList(mainBaseStorageUpgrades[8]),
         },
         P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
       },
     },
   },
-  ...upgradesByLevel("MainBase", mainBaseMaxResourceUpgrades),
+  ...upgradesByLevel("MainBase", mainBaseStorageUpgrades),
+
+  WormholeBase: {
+    tables: {
+      P_Blueprint: { value: getBlueprint(7, 5) },
+      Position: {
+        x: Math.floor(maxRange.xBounds / 2) + 3,
+        y: Math.floor(maxRange.yBounds / 2) + 2,
+        parentEntity: encodeBytes32(0),
+      },
+      P_MaxLevel: { value: 8n },
+    },
+    levels: {
+      1: {
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(wormholeBaseStorageUpgrades[1]),
+        },
+        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+      },
+      2: {
+        P_RequiredResources: getResourceValues({ Copper: 1500 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(wormholeBaseStorageUpgrades[2]),
+        },
+        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+      },
+      3: {
+        P_RequiredResources: getResourceValues({ Copper: 10000, PVCell: 1500 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(wormholeBaseStorageUpgrades[3]),
+        },
+        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+      },
+      4: {
+        P_RequiredResources: getResourceValues({ Copper: 25000, PVCell: 5000 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(wormholeBaseStorageUpgrades[4]),
+        },
+        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+      },
+      5: {
+        P_RequiredResources: getResourceValues({ Copper: 75000, PVCell: 500 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(wormholeBaseStorageUpgrades[5]),
+        },
+        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+      },
+      6: {
+        P_RequiredResources: getResourceValues({ Copper: 125000, Titanium: 1500, Platinum: 1500 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(wormholeBaseStorageUpgrades[6]),
+        },
+        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+      },
+      7: {
+        P_RequiredResources: getResourceValues({
+          Copper: 250000,
+          Titanium: 5000,
+          Platinum: 5000,
+          Iridium: 5000,
+        }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(wormholeBaseStorageUpgrades[7]),
+        },
+        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+      },
+      8: {
+        P_RequiredResources: getResourceValues({
+          Copper: 250000,
+          Titanium: 15000,
+          Platinum: 15000,
+          Iridium: 15000,
+        }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(wormholeBaseStorageUpgrades[8]),
+        },
+        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+      },
+    },
+  },
+  ...upgradesByLevel("WormholeBase", wormholeBaseStorageUpgrades),
 
   // Mines
   IronMine: {
@@ -773,14 +744,14 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredBaseLevel: { value: 2n },
         P_RequiredResources: getResourceValues({ Iron: 3000 }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(storageUnitMaxResourceUpgrades[1]),
+          value: upgradesToList(storageUnitStorageUpgrades[1]),
         },
       },
       2: {
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ Iron: 20000 }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(storageUnitMaxResourceUpgrades[2]),
+          value: upgradesToList(storageUnitStorageUpgrades[2]),
         },
       },
       3: {
@@ -790,7 +761,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           U_Electricity: 50,
         }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(storageUnitMaxResourceUpgrades[3]),
+          value: upgradesToList(storageUnitStorageUpgrades[3]),
         },
       },
       4: {
@@ -800,12 +771,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           U_Electricity: 100,
         }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(storageUnitMaxResourceUpgrades[3]),
+          value: upgradesToList(storageUnitStorageUpgrades[3]),
         },
       },
     },
   },
-  ...upgradesByLevel("StorageUnit", storageUnitMaxResourceUpgrades),
+  ...upgradesByLevel("StorageUnit", storageUnitStorageUpgrades),
   SolarPanel: {
     tables: {
       P_Blueprint: { value: getBlueprint(2, 2) },
@@ -999,7 +970,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredResources: getResourceValues({ IronPlate: 2500, Alloy: 2500, PVCell: 2500 }),
         P_RequiredBaseLevel: { value: 3n },
         P_UnitProdMultiplier: { value: 100n },
-        P_Production: getResourceValues({ U_ColonyShipCapacity: 1_000_000_000_000 }),
         P_UnitProdTypes: { value: encodeArray(["ColonyShip"]) },
       },
       2: {
@@ -1059,7 +1029,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredResources: getResourceValues({ Alloy: 2000, U_Electricity: 100 }),
         P_Production: getResourceValues({ U_Defense: 1500, R_HP: 0.1 }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(samSiteMaxResourceUpgrades[1]),
+          value: upgradesToList(samSiteStorageUpgrades[1]),
         },
       },
       2: {
@@ -1071,7 +1041,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
 
         P_Production: getResourceValues({ U_Defense: 2500, R_HP: 0.25 }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(samSiteMaxResourceUpgrades[2]),
+          value: upgradesToList(samSiteStorageUpgrades[2]),
         },
       },
       3: {
@@ -1083,12 +1053,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
 
         P_Production: getResourceValues({ U_Defense: 5000, R_HP: 0.75 }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(samSiteMaxResourceUpgrades[3]),
+          value: upgradesToList(samSiteStorageUpgrades[3]),
         },
       },
     },
   },
-  ...upgradesByLevel("SAM", samSiteMaxResourceUpgrades),
+  ...upgradesByLevel("SAM", samSiteStorageUpgrades),
 
   ShieldGenerator: {
     tables: {
@@ -1168,6 +1138,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
     },
   },
+
   /* -------------------------------- Resources ------------------------------- */
   // NOTE: To check if a resource is a utility, call P_IsUtility.get(EResource.<resource>);
   IsUtility: {
@@ -1175,7 +1146,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     levels: {
       [MUDEnums.EResource.indexOf("U_Electricity")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Housing")]: { P_IsUtility: { value: true } },
-      [MUDEnums.EResource.indexOf("U_ColonyShipCapacity")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_MaxFleets")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Defense")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("M_DefenseMultiplier")]: { P_IsUtility: { value: true } },
@@ -1213,6 +1183,17 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
   },
 
+  ColonySlotsConfig: {
+    keys: [],
+    tables: {
+      P_ColonySlotsConfig: {
+        resources: colonySlotsConfigResourceValues.resources, // Order impacts Installment payment index
+        amounts: colonySlotsConfigResourceValues.amounts,
+        multiplier: 4n,
+      },
+    },
+  },
+
   /* --------------------------------- Units --------------------------------- */
   Unit: {
     levels: idsToPrototypes(MUDEnums.EUnit),
@@ -1220,9 +1201,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
 
   FleetStance: {
     levels: idsToPrototypes(MUDEnums.EFleetStance),
-  },
-  OrderType: {
-    levels: idsToPrototypes(MUDEnums.EOrderType),
   },
 
   LightningCraft: {
@@ -1647,7 +1625,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: {
       0: {
-        P_RequiredResources: getResourceValues({ U_ColonyShipCapacity: 1 }),
+        P_RequiredResources: getResourceValues({ Alloy: 10000 }),
         P_RequiredBaseLevel: { value: 3n },
         P_Unit: getPUnitData({
           hp: 2000,
@@ -1843,89 +1821,20 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
     },
   },
-  /* ------------------------------- Multipliers ------------------------------ */
-  Iron: {
-    keys: [{ [EResource.Iron]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 10n },
-    },
-  },
-  Copper: {
-    keys: [{ [EResource.Copper]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 10n },
-    },
-  },
-  Lithium: {
-    keys: [{ [EResource.Lithium]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 10n },
-    },
-  },
-  Titanium: {
-    keys: [{ [EResource.Titanium]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 750n },
-    },
-  },
-  Iridium: {
-    keys: [{ [EResource.Iridium]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 3000n },
-    },
-  },
-  Kimberlite: {
-    keys: [{ [EResource.Kimberlite]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 8000n },
-    },
-  },
-  Platinum: {
-    keys: [{ [EResource.Platinum]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 1500n },
-    },
-  },
-  IronPlate: {
-    keys: [{ [EResource.IronPlate]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 50n },
-      P_ConsumesResource: { value: EResource.Iron },
-    },
-  },
-  PVCell: {
-    keys: [{ [EResource.PVCell]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 50n },
-      P_ConsumesResource: { value: EResource.Lithium },
-    },
-  },
-  Alloy: {
-    keys: [{ [EResource.Alloy]: "uint8" }],
-    tables: {
-      P_ScoreMultiplier: { value: 50n },
-      P_ConsumesResource: { value: EResource.Copper },
-    },
-  },
 
-  Small: {
-    keys: [{ [ESize.Small]: "uint8" }],
-    tables: {
-      P_SizeToAmount: { value: 100000n },
-    },
-  },
-
-  Medium: {
-    keys: [{ [ESize.Medium]: "uint8" }],
-    tables: {
-      P_SizeToAmount: { value: 250000n },
-    },
-  },
-
-  Large: {
-    keys: [{ [ESize.Large]: "uint8" }],
-    tables: {
-      P_SizeToAmount: { value: 500000n },
+  ScoreMultipliers: {
+    keys: [],
+    levels: {
+      [MUDEnums.EResource.indexOf("Iron")]: { P_ScoreMultiplier: { value: 1n } },
+      [MUDEnums.EResource.indexOf("Copper")]: { P_ScoreMultiplier: { value: 1n } },
+      [MUDEnums.EResource.indexOf("Lithium")]: { P_ScoreMultiplier: { value: 1n } },
+      [MUDEnums.EResource.indexOf("Titanium")]: { P_ScoreMultiplier: { value: 75n } },
+      [MUDEnums.EResource.indexOf("Iridium")]: { P_ScoreMultiplier: { value: 300n } },
+      [MUDEnums.EResource.indexOf("Kimberlite")]: { P_ScoreMultiplier: { value: 800n } },
+      [MUDEnums.EResource.indexOf("Platinum")]: { P_ScoreMultiplier: { value: 150n } },
+      [MUDEnums.EResource.indexOf("IronPlate")]: { P_ScoreMultiplier: { value: 5n } },
+      [MUDEnums.EResource.indexOf("PVCell")]: { P_ScoreMultiplier: { value: 5n } },
+      [MUDEnums.EResource.indexOf("Alloy")]: { P_ScoreMultiplier: { value: 5n } },
     },
   },
 

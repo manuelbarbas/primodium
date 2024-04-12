@@ -1,6 +1,7 @@
 import { Hex } from "viem";
 import { Entity } from "@latticexyz/recs";
 import type { Sync } from "@primodiumxyz/sync-stack";
+import { components } from "src/network/components";
 
 export const getFleetQuery = ({
   tables,
@@ -38,6 +39,10 @@ export const getFleetQuery = ({
         {
           tableId: tables.UnitCount.tableId,
           key0: fleet,
+        },
+        {
+          tableId: tables.UnitLevel.tableId,
+          key0: components.OwnedBy.get(fleet)?.value,
         },
       ],
     },

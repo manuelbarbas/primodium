@@ -16,9 +16,7 @@ contract FleetStanceSystem is PrimodiumSystem {
    * @dev Can only be called by the fleet owner and when the fleet is in orbit. Removes any stance the fleet is currently taking.
    * @param fleetEntity The unique identifier for the fleet whose stance is to be cleared.
    */
-  function clearFleetStance(
-    bytes32 fleetEntity
-  ) public _onlyFleetOwner(fleetEntity) _onlyWhenFleetIsInOrbit(fleetEntity) {
+  function clearFleetStance(bytes32 fleetEntity) public _onlyFleetOwner(fleetEntity) _onlyOrbiting(fleetEntity) {
     LibFleetStance.clearFleetStance(fleetEntity);
   }
 
@@ -33,7 +31,7 @@ contract FleetStanceSystem is PrimodiumSystem {
     bytes32 fleetEntity,
     uint8 stance,
     bytes32 target
-  ) public _onlyFleetOwner(fleetEntity) _onlyWhenFleetIsInOrbit(fleetEntity) {
+  ) public _onlyFleetOwner(fleetEntity) _onlyOrbiting(fleetEntity) {
     require(
       FleetStance.getStance(target) == uint8(EFleetStance.NULL),
       "[Fleet] Cannot target a fleet that is taking a stance"
