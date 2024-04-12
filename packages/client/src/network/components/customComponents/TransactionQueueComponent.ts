@@ -2,7 +2,6 @@ import { Entity, Metadata, Type } from "@latticexyz/recs";
 import { useEffect, useState } from "react";
 import { world } from "src/network/world";
 import { TransactionQueueMetadataTypes, TransactionQueueType } from "src/util/constants";
-import { TransactionQueue } from "../clientComponents";
 import { Options, createExtendedComponent } from "./ExtendedComponent";
 
 export type MetadataTypes = {
@@ -95,7 +94,7 @@ export function createTransactionQueueComponent<M extends Metadata>(options?: Op
     const [position, setPosition] = useState<number>(getIndex(id));
 
     useEffect(() => {
-      const sub = TransactionQueue.update$.subscribe(() => {
+      const sub = component.update$.subscribe(() => {
         const position = getIndex(id);
         setPosition(position);
       });
@@ -112,7 +111,7 @@ export function createTransactionQueueComponent<M extends Metadata>(options?: Op
     const [size, setSize] = useState<number>(getSize());
 
     useEffect(() => {
-      const sub = TransactionQueue.update$.subscribe(() => {
+      const sub = component.update$.subscribe(() => {
         const size = getSize();
         setSize(size);
       });

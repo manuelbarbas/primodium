@@ -7,7 +7,6 @@ import { EFleetStance } from "contracts/config/enums";
 import { Assets } from "src/game/lib/constants/assets";
 import { SpriteKeys } from "src/game/lib/constants/assets/sprites";
 import { components, components as comps } from "src/network/components";
-import { Hangar } from "src/network/components/clientComponents";
 import { getEntityTypeName } from "./common";
 import { EntityType, MapIdToAsteroidType, ResourceStorages, RockRelationship } from "./constants";
 import { getFullResourceCount } from "./resource";
@@ -83,7 +82,7 @@ export function getAsteroidInfo(primodium: Primodium, spaceRock: Entity) {
   }, [] as { id: Entity; amount: bigint }[]);
   const { resourceCount: encryption } = getFullResourceCount(EntityType.Encryption, spaceRock);
 
-  const hangar = Hangar.get(spaceRock);
+  const hangar = comps.Hangar.get(spaceRock);
 
   const gracePeriodValue = comps.GracePeriod.get(ownedBy)?.value ?? 0n;
   const now = comps.Time.get()?.value ?? 0n;

@@ -1,11 +1,11 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { BlockNumber } from "src/network/components/clientComponents";
+import { components } from "src/network/components";
 import { getAsteroidInfo } from "src/util/asteroid";
 import { usePrimodium } from "./usePrimodium";
 
 export function useSpaceRock(rock: Entity) {
-  const { value: blockNumber } = BlockNumber.use(undefined, {
+  const { value: blockNumber } = components.BlockNumber.use(undefined, {
     value: 0n,
     avgBlockTime: 1,
   });

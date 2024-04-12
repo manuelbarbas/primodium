@@ -1,7 +1,6 @@
 // ASTEROID MAP ENTRY POINT
 import { Game } from "engine/types";
 import { createAudioApi } from "src/game/api/audio";
-import { world } from "src/network/world";
 import { asteroidSceneConfig } from "../../lib/config/asteroidScene";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
 import { setupKeybinds } from "./setup/setupKeybinds";
@@ -17,8 +16,4 @@ export const initAsteroidScene = async (game: Game) => {
   setupMouseInputs(scene);
   setupBasicCameraMovement(scene);
   setupKeybinds(scene);
-
-  world.registerDisposer(() => {
-    game.dispose();
-  }, "game");
 };

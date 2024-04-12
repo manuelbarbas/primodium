@@ -1,7 +1,5 @@
 import { Entity } from "@latticexyz/recs";
 
-import { Account, Time } from "src/network/components/clientComponents";
-
 import { useMemo } from "react";
 
 import { singletonEntity } from "@latticexyz/store-sync/recs";
@@ -19,6 +17,7 @@ import { components as comps } from "src/network/components";
 import { claimObjective } from "src/network/setup/contractCalls/claimObjective";
 import { getEntityTypeName } from "src/util/common";
 
+import { AudioKeys } from "src/game/lib/constants/assets/audio";
 import {
   BackgroundImage,
   ObjectiveEntityLookup,
@@ -38,13 +37,12 @@ import {
 import { getFullResourceCount } from "src/util/resource";
 import { getRewards } from "src/util/reward";
 import { Hex } from "viem";
-import { AudioKeys } from "src/game/lib/constants/assets/audio";
 
 const ClaimObjectiveButton: React.FC<{
   objectiveEntity: Entity;
 }> = ({ objectiveEntity }) => {
   const mud = useMud();
-  const time = Time.use()?.value;
+  const time = comps.Time.use()?.value;
   const selectedRock = comps.ActiveRock.use()?.value ?? singletonEntity;
   const levelRequirement = comps.Level.use(objectiveEntity);
   const objectiveClaimedRequirement = comps.CompletedObjective.use(objectiveEntity);
@@ -54,7 +52,7 @@ const ClaimObjectiveButton: React.FC<{
 
   const resourceRequirement = comps.P_RequiredResources.use(objectiveEntity);
   const unitRequirement = comps.P_ProducedUnits.use(objectiveEntity);
-  const player = Account.use()?.value ?? singletonEntity;
+  const player = comps.Account.use()?.value ?? singletonEntity;
   const hasCompletedObjective =
     comps.CompletedObjective.useWithKeys({ objective: objectiveEntity as Hex, entity: player as Hex })?.value ?? false;
 
@@ -101,7 +99,7 @@ const Objective: React.FC<{
   asteroid: Entity;
   highlight?: boolean;
 }> = ({ objective, asteroid, highlight = false }) => {
-  const time = Time.use()?.value;
+  const time = comps.Time.use()?.value;
 
   const objectiveName = useMemo(() => {
     if (!objective) return;
@@ -210,9 +208,9 @@ const Objective: React.FC<{
 };
 
 const UnclaimedObjective: React.FC<{ highlight?: Entity }> = ({ highlight }) => {
-  const player = Account.use()?.value ?? singletonEntity;
+  const player = comps.Account.use()?.value ?? singletonEntity;
   const asteroid = comps.ActiveRock.use()?.value;
-  const time = Time.use()?.value;
+  const time = comps.Time.use()?.value;
   const objectives = Object.values(ObjectiveEntityLookup);
 
   const filteredObjectives = useMemo(() => {
@@ -244,7 +242,7 @@ const UnclaimedObjective: React.FC<{ highlight?: Entity }> = ({ highlight }) => 
 };
 
 const ClaimedObjective: React.FC = () => {
-  const player = Account.use()?.value ?? singletonEntity;
+  const player = comps.Account.use()?.value ?? singletonEntity;
   const asteroid = comps.ActiveRock.use()?.value;
 
   const filteredObjectives = Object.values(ObjectiveEntityLookup).filter((objective) => {
