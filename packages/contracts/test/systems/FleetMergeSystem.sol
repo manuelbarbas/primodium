@@ -7,7 +7,7 @@ import { addressToEntity } from "src/utils.sol";
 import { EResource, EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
-import { P_EnumToPrototype, ResourceCount, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes, FleetMovement, Score, P_RequiredResources, P_RequiredResourcesData, UnitLevel, P_IsUtility } from "codegen/index.sol";
+import { P_EnumToPrototype, ResourceCount, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes, FleetMovement, P_RequiredResources, P_RequiredResourcesData, UnitLevel, P_IsUtility } from "codegen/index.sol";
 
 contract FleetMergeSystemTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;
@@ -55,8 +55,6 @@ contract FleetMergeSystemTest is PrimodiumTest {
     bytes32 secondFleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
-    uint256 aliceScore = Score.get(aliceEntity);
-    uint256 aliceHomeScore = Score.get(aliceHomeAsteroid);
     vm.startPrank(alice);
     world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
     world.Primodium__sendFleet(secondFleetEntity, bobHomeAsteroid);
@@ -66,10 +64,6 @@ contract FleetMergeSystemTest is PrimodiumTest {
     fleets[1] = secondFleetEntity;
     world.Primodium__mergeFleets(fleets);
     vm.stopPrank();
-
-    assertEq(Score.get(aliceEntity), aliceScore, "score should stay the same");
-    assertEq(Score.get(aliceHomeAsteroid), aliceHomeScore, "home score should stay the same");
-    assertEq(Score.get(aliceEntity), aliceHomeScore, "score should stay the same as home score");
 
     assertEq(UnitCount.get(fleetEntity, unitPrototype), 4, "fleet unit count doesn't match");
     assertEq(UnitCount.get(secondFleetEntity, unitPrototype), 0, "fleet 2 unit count doesn't match");

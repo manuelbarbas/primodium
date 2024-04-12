@@ -530,6 +530,14 @@ contract CombatSystemTest is PrimodiumTest {
       FleetMovement.getArrivalTime(aliceFleetEntity),
       FleetMovement.getArrivalTime(bobFleetEntity)
     );
+
+    vm.warp(
+      LibMath.max(
+        LibMath.max(FleetMovement.getArrivalTime(bobFleetEntity), FleetMovement.getArrivalTime(aliceFleetEntity)),
+        GracePeriod.get(bobHomeAsteroid)
+      )
+    );
+
     world.Primodium__attack(aliceFleetEntity, bobFleetEntity);
 
     FleetMovementData memory fleetMovement = FleetMovement.get(aliceFleetEntity);
