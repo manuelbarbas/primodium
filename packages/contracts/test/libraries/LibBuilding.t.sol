@@ -6,7 +6,7 @@ import { addressToEntity } from "src/utils.sol";
 
 import { ExpansionKey } from "src/Keys.sol";
 
-import { P_MaxLevel, Dimensions, Level, Home, P_Asteroid, DimensionsData } from "codegen/index.sol";
+import { UsedTiles, P_MaxLevel, Dimensions, Level, Home, P_Asteroid, DimensionsData } from "codegen/index.sol";
 
 import { Bounds } from "src/Types.sol";
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
