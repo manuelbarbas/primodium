@@ -58,9 +58,7 @@ export const BattleDetails: React.FC<{
   const position = components.Position.use(battle?.rock as Entity);
 
   useEffect(() => {
-    const selectedAsteroid = components.SelectedRock.get()?.value;
-    if (!selectedAsteroid) return;
-    makeObjectiveClaimable(selectedAsteroid, EObjectives.OpenBattleReport);
+    makeObjectiveClaimable(playerEntity, EObjectives.OpenBattleReport);
   }, []);
 
   if (!battle) return <></>;

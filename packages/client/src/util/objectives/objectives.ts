@@ -269,7 +269,17 @@ export const Objectives = new Map<EObjectives, Objective>([
         "Volatile Shards are rare space rocks that are made of Primodium. Over time, shards leach Primodium. Beware, they explode and annihilate anything nearby! To earn, capture a Shard.",
     },
   ],
-
+  [
+    EObjectives.ExplodeShard,
+    {
+      category: "Victory (Primodium)",
+      type: "Asteroid",
+      asteroidType: "shard",
+      requiredObjectives: [EObjectives.EarnPrimodiumOnShard],
+      description:
+        "To explode a shard, select an owned shard when an explosion is imminent and press Explode. Be warned, the explosion kills all fleets in the area!",
+    },
+  ],
   /* ------------------------- A-A-A-B-C Extraction Points ------------------------ */
 
   [
@@ -320,11 +330,35 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.LandFleet,
+    EObjectives.DefendWithFleet,
     {
       category: "Fleet",
       type: "Claim",
       requiredObjectives: [EObjectives.BuildStarmapper],
+      description:
+        "Defending an asteroid with a fleet provides the fleet's defense to that asteroid's strength. To defend, go to the fleet's Management pane and select Defend.",
+      icon: "/img/icons/moveicon.png",
+      tooltip: "Landed a fleet",
+    },
+  ],
+  [
+    EObjectives.BlockWithFleet,
+    {
+      category: "Fleet",
+      type: "Claim",
+      requiredObjectives: [EObjectives.DefendWithFleet],
+      description:
+        "Blocking with a fleet prevents all other fleets from leaving the current asteroid. To block, go to the fleet's Management pane and select Block.",
+      icon: "/img/icons/moveicon.png",
+      tooltip: "Landed a fleet",
+    },
+  ],
+  [
+    EObjectives.LandFleet,
+    {
+      category: "Fleet",
+      type: "Claim",
+      requiredObjectives: [EObjectives.BlockWithFleet],
       description:
         "Landing a fleet on an asteroid sets the fleet's owner to that asteroid. It also deposit all resources and units. To land, select a fleet and press the Land button.",
       icon: "/img/icons/moveicon.png",

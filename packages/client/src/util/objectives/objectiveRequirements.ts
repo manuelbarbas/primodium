@@ -18,9 +18,9 @@ export const isRequirementMet = (requirement: ObjectiveReq) =>
 export const isAllRequirementsMet = (requirements: ObjectiveReq[]) =>
   !requirements || requirements.every(isRequirementMet);
 
-export function canShowObjective(asteroidEntity: Entity, objectiveEntity: Entity) {
+export function canShowObjective(playerEntity: Entity, objectiveEntity: Entity) {
   if (!getObjective(objectiveEntity)) return false;
-  const canShow = getHasRequiredMainBase(asteroidEntity, objectiveEntity) && getHasRequiredObjectives(objectiveEntity);
+  const canShow = getHasRequiredMainBase(playerEntity, objectiveEntity) && getHasRequiredObjectives(objectiveEntity);
   return canShow;
 }
 

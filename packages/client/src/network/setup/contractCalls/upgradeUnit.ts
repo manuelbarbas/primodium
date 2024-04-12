@@ -25,7 +25,7 @@ export const upgradeUnit = async (mud: MUD, spaceRock: Entity, unit: EUnit) => {
       id: hashEntities(TransactionQueueType.Upgrade, UnitEntityLookup[unit]),
     },
     (receipt) => {
-      makeObjectiveClaimable(spaceRock, EObjectives.UpgradeUnit);
+      makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.UpgradeUnit);
       const unitLevel =
         components.UnitLevel.getWithKeys({
           entity: mud.playerAccount.entity as Hex,

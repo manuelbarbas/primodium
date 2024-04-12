@@ -36,7 +36,7 @@ export const Objective: React.FC<{
   const rewardRecipe = getRewards(objectiveEntity);
 
   const requirements = useMemo(
-    () => playerEntity && getAllObjectiveRequirements(playerEntity, asteroidEntity, objectiveEntity),
+    () => (playerEntity ? getAllObjectiveRequirements(playerEntity, asteroidEntity, objectiveEntity) : []),
     [asteroidEntity, time, playerEntity, objectiveEntity]
   );
 

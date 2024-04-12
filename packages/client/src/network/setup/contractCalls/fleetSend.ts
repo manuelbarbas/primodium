@@ -24,7 +24,7 @@ export const sendFleet = async (mud: MUD, fleet: Entity, spaceRock: Entity) => {
       type: TransactionQueueType.SendFleet,
     },
     () => {
-      activeAsteroid && makeObjectiveClaimable(activeAsteroid, EObjectives.SendFleet);
+      activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.SendFleet);
     }
   );
 };
@@ -43,6 +43,6 @@ export const sendFleetPosition = async (mud: MUD, fleet: Entity, position: Coord
       id: hashEntities(TransactionQueueType.SendFleet),
       type: TransactionQueueType.SendFleet,
     },
-    () => activeAsteroid && makeObjectiveClaimable(activeAsteroid, EObjectives.SendFleet)
+    () => activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.SendFleet)
   );
 };

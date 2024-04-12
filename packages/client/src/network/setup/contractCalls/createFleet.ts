@@ -29,7 +29,7 @@ export const createFleet = async (
       ...options,
     },
     () => {
-      makeObjectiveClaimable(asteroidEntity, EObjectives.CreateFleet);
+      makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.CreateFleet);
     }
   );
 };

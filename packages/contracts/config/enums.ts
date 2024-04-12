@@ -112,16 +112,19 @@ export enum EObjectives {
   // (A-A-A-B-B) Victory: Primodium Points
   EarnPrimodiumOnAsteroid,
   EarnPrimodiumOnShard,
+  ExplodeShard,
 
   // (A-A-A-B-C) Victory; Extraction Points
   CaptureWormholeAsteroid,
   ClaimWormholePoints,
 
   // (A-A-A-C) fleet management
-  RecallFleet,
   TransferToAsteroid,
-  LandFleet,
   BuildStarmapper,
+  DefendWithFleet,
+  BlockWithFleet,
+  RecallFleet,
+  LandFleet,
 
   // (A-A-B) unit production
   TrainMinutemanMarine,

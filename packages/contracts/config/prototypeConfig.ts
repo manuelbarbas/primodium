@@ -1968,7 +1968,11 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_ResourceReward: getResourceValues({ PVCell: 10 }),
     },
   },
-
+  ExplodeShard: {
+    tables: {
+      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+    },
+  },
   /* ------------------------- A-A-A-B-C Wormhole Points ------------------------ */
 
   CaptureWormholeAsteroid: {
@@ -1983,9 +1987,9 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   },
 
   /* ------------------------ A-A-A-C Fleet Management ------------------------ */
-  RecallFleet: {
+  BuildStarmapper: {
     tables: {
-      P_ResourceReward: getResourceValues({ Iron: 10 }),
+      P_UnitReward: getUnitValues({ StingerDrone: 1 }),
     },
   },
   TransferToAsteroid: {
@@ -1993,14 +1997,24 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_ResourceReward: getResourceValues({ IronPlate: 10 }),
     },
   },
+  DefendWithFleet: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 10 }),
+    },
+  },
+  BlockWithFleet: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 10 }),
+    },
+  },
+  RecallFleet: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 10 }),
+    },
+  },
   LandFleet: {
     tables: {
       P_ResourceReward: getResourceValues({ Copper: 10 }),
-    },
-  },
-  BuildStarmapper: {
-    tables: {
-      P_UnitReward: getUnitValues({ StingerDrone: 1 }),
     },
   },
 

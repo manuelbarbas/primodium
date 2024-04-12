@@ -1,7 +1,9 @@
 import { Entity } from "@latticexyz/recs";
+import { EObjectives } from "contracts/config/enums";
 import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { getSystemId } from "src/util/encode";
+import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 import { Hex } from "viem";
 
 export const claimPrimodium = async (mud: MUD, asteroidEntity: Entity) => {
@@ -15,7 +17,9 @@ export const claimPrimodium = async (mud: MUD, asteroidEntity: Entity) => {
     },
     {
       id: "ClaimPrimodium" as Entity,
-    }
+    },
+
+    () => makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.EarnPrimodiumOnAsteroid)
   );
 };
 
@@ -30,6 +34,7 @@ export const claimShardAsteroid = async (mud: MUD, asteroidEntity: Entity) => {
     },
     {
       id: "ClaimPrimodium" as Entity,
-    }
+    },
+    () => makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.ExplodeShard)
   );
 };

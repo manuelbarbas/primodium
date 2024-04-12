@@ -20,6 +20,6 @@ export const landFleet = async (mud: MUD, fleet: Entity, asteroidEntity: Entity)
       id: "landFleet" as Entity,
       type: TransactionQueueType.LandFleet,
     },
-    () => makeObjectiveClaimable(asteroidEntity, EObjectives.LandFleet)
+    () => makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.LandFleet)
   );
 };

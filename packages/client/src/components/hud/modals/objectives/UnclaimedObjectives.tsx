@@ -26,7 +26,7 @@ export const UnclaimedObjectives: React.FC<{ highlight?: Entity }> = ({ highligh
   const filteredObjectiveEntities = useMemo(() => {
     if (!asteroidEntity) return [];
     return objectives.filter((objective) => {
-      const canShow = canShowObjective(asteroidEntity, objective);
+      const canShow = canShowObjective(player, objective);
 
       const claimed =
         comps.CompletedObjective.getWithKeys({ entity: player as Hex, objective: objective as Hex })?.value ?? false;

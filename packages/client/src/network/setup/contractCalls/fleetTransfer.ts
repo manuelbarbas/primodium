@@ -44,7 +44,7 @@ export const transfer = async (mud: MUD, from: Entity, to: Entity, deltas: Map<E
         withSession: true,
       },
       metadata,
-      () => activeAsteroid && makeObjectiveClaimable(activeAsteroid, claimableObjective)
+      () => activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, claimableObjective)
     );
   } else if (totalUnits == 0n) {
     const functionName = fromIsAsteroid
@@ -61,7 +61,7 @@ export const transfer = async (mud: MUD, from: Entity, to: Entity, deltas: Map<E
         withSession: true,
       },
       metadata,
-      () => activeAsteroid && makeObjectiveClaimable(activeAsteroid, claimableObjective)
+      () => activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, claimableObjective)
     );
   } else {
     const functionName = fromIsAsteroid
@@ -78,7 +78,7 @@ export const transfer = async (mud: MUD, from: Entity, to: Entity, deltas: Map<E
         withSession: true,
       },
       metadata,
-      () => activeAsteroid && makeObjectiveClaimable(activeAsteroid, claimableObjective)
+      () => activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, claimableObjective)
     );
   }
 };

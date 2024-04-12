@@ -34,11 +34,11 @@ export const attack = async (mud: MUD, entity: Entity, target: Entity) => {
 
       const isDecryptionAttack = attackerIsFleet && attackerHasColonyShip;
       if (isDecryptionAttack) {
-        makeObjectiveClaimable(homeAsteroid, EObjectives.DecryptAttack);
+        makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.DecryptAttack);
       }
       const objective = targetIsFleet ? EObjectives.BattleFleet : EObjectives.BattleAsteroid;
 
-      makeObjectiveClaimable(homeAsteroid, objective);
+      makeObjectiveClaimable(mud.playerAccount.entity, objective);
     }
   );
 };
