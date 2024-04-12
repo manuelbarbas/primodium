@@ -957,7 +957,7 @@
     "name": "Primodium__payForMaxColonySlots",
     "inputs": [
       {
-        "name": "asteroidEntity",
+        "name": "shipyardEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
