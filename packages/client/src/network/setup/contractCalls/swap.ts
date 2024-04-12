@@ -3,8 +3,11 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
+import { getEntityTypeName } from "src/util/common";
 import { ResourceEnumLookup } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
+import { formatResourceCount } from "src/util/number";
+import { getOutAmount } from "src/util/swap";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
@@ -20,7 +23,19 @@ export const swap = async (mud: MUD, marketEntity: Entity, path: Entity[], amoun
     },
     { id: singletonEntity },
     (receipt) => {
-      ampli.systemSpawn({
+      const resourceIn = path[0];
+      const resourceOut = path[path.length - 1];
+      const amountOut = getOutAmount(amountIn, path);
+      const amountInScaled = formatResourceCount(resourceOut, amountIn, { fractionDigits: 2, notLocale: true });
+      const amountOutScaled = formatResourceCount(resourceOut, amountOut, { fractionDigits: 2, notLocale: true });
+
+      ampli.systemSwap({
+        address: mud.playerAccount.address,
+        resourceIn: getEntityTypeName(resourceIn),
+        resourceOut: getEntityTypeName(resourceOut),
+        amountIn: Number(amountInScaled),
+        amountOut: Number(amountOutScaled),
+
         ...parseReceipt(receipt),
       });
     }

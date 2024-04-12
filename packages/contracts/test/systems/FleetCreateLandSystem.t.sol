@@ -51,29 +51,6 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     assertEq(FleetMovement.getOrigin(fleetEntity), aliceHomeAsteroid, "fleet origin doesn't match");
   }
 
-  function testCreateFleetScore() public {
-    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
-    //create fleet with 1 minuteman marine
-    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
-    for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = 1;
-    }
-
-    //create fleet with 1 iron
-    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
-    for (uint256 i = 0; i < resourceCounts.length; i++) {
-      if (P_Transportables.getItemValue(i) == uint8(EResource.Iron)) resourceCounts[i] = 1;
-    }
-
-    //provide resource and unit requirements to create fleet
-    setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
-    uint256 aliceScore = Score.get(aliceEntity);
-    assertEq(aliceScore, P_ScoreMultiplier.get(uint8(EResource.Iron)), "score should be one iron");
-    vm.startPrank(alice);
-    world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    assertEq(Score.get(aliceEntity), 0, "score should be 0");
-  }
   function testLandFleet() public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);

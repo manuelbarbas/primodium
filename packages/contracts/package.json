@@ -5,11 +5,12 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "pnpm run build:lib && pnpm run build:mud && pnpm run build:abi && pnpm run build:abi-ts",
+    "build": "forge clean && pnpm run build:lib && pnpm run build:mud && pnpm run build:abi-ts",
     "build:abi": "forge clean && forge build",
     "build:abi-ts": "mud abi-ts",
     "build:lib": "rm -rf src/codegen && pnpm run build:terrain",
-    "build:mud": "pnpm run prototypegen && pnpm mud build",
+    "build:mud": "pnpm run build:prototype && pnpm mud build",
+    "build:prototype": "tsx ./ts/prototypes/commands/prototypegen.ts",
     "build:terrain": "tsx ./ts/terrain/commands/terraingen.ts",
     "deploy:caldera": "pnpm mud deploy --profile=caldera",
     "deploy:caldera-sepolia": "pnpm mud deploy --profile=caldera-sepolia",
@@ -19,7 +20,6 @@
     "devnode": "mud devnode",
     "lint": "pnpm run prettier && pnpm run solhint",
     "prettier": "prettier --write './**/*.sol'",
-    "prototypegen": "tsx ./ts/prototypes/commands/prototypegen.ts",
     "solhint": "solhint --config ./.solhint.json 'src/**/*.sol' --fix",
     "test": "forge build && mud test --skipBuild"
   },

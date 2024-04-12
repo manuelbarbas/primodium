@@ -1,8 +1,8 @@
+import { Entity } from "@latticexyz/recs";
+import { EntityType } from "src/util/constants";
+import { AnimationKeys } from "./constants/assets/animations";
 import { SpriteKeys } from "./constants/assets/sprites";
 import { ResourceTilekeys, Tilemaps } from "./constants/assets/tiles";
-import { AnimationKeys } from "./constants/assets/animations";
-import { EntityType } from "src/util/constants";
-import { Entity } from "@latticexyz/recs";
 import { AsteroidRelationship, AsteroidSize } from "./constants/common";
 
 export const EntityTypeToTilesetKey: Record<Entity, ResourceTilekeys> = {
@@ -44,6 +44,16 @@ export const EntityTypetoBuildingSpriteKey: Record<string, SpriteKeys[]> = {
     SpriteKeys.Mainbase6,
     SpriteKeys.Mainbase7,
     SpriteKeys.Mainbase8,
+  ],
+  [EntityType.WormholeBase]: [
+    SpriteKeys.Wormholebase1,
+    SpriteKeys.Wormholebase1,
+    SpriteKeys.Wormholebase1,
+    SpriteKeys.Wormholebase1,
+    SpriteKeys.Wormholebase1,
+    SpriteKeys.Wormholebase1,
+    SpriteKeys.Wormholebase1,
+    SpriteKeys.Wormholebase1,
   ],
 
   [EntityType.IronMine]: [SpriteKeys.IronMine1, SpriteKeys.IronMine2, SpriteKeys.IronMine3],

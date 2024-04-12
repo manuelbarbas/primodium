@@ -75,30 +75,6 @@ export default function setupClientComponents() {
 
   const BattleRender = createExtendedEntityComponent(world, { id: "BattleRender" });
 
-  const Leaderboard = createExtendedComponent(
-    world,
-    {
-      players: Type.EntityArray,
-      playerRank: Type.Number,
-      scores: Type.NumberArray,
-    },
-    {
-      id: "Leaderboard",
-    }
-  );
-
-  const AllianceLeaderboard = createExtendedComponent(
-    world,
-    {
-      alliances: Type.EntityArray,
-      playerAllianceRank: Type.Number,
-      scores: Type.BigIntArray,
-    },
-    {
-      id: "AllianceLeaderboard",
-    }
-  );
-
   const PlayerInvite = createExtendedComponent(
     world,
     {
@@ -137,6 +113,28 @@ export default function setupClientComponents() {
       id: "SyncStatus",
     }
   );
+  /* -------------------------------------------------------------------------- */
+  /*                                 Leaderboard                                */
+  /* -------------------------------------------------------------------------- */
+  const Leaderboard = createExtendedComponent(
+    world,
+    {
+      players: Type.EntityArray,
+      playerRank: Type.OptionalNumber,
+      scores: Type.BigIntArray,
+    },
+    {
+      id: "Leaderboard",
+    }
+  );
+
+  const GrandLeaderboard = createExtendedComponent(world, {
+    players: Type.EntityArray,
+    wormholeRanks: Type.NumberArray,
+    primodiumRanks: Type.NumberArray,
+    scores: Type.NumberArray,
+    playerRank: Type.OptionalNumber,
+  });
 
   const SyncSource = createExtendedNumberComponent(world, { id: "SyncSource" });
 
@@ -164,7 +162,7 @@ export default function setupClientComponents() {
     Battle,
     BattleRender,
     Leaderboard,
-    AllianceLeaderboard,
+    GrandLeaderboard,
     PlayerInvite,
     AllianceRequest,
     TransactionQueue,

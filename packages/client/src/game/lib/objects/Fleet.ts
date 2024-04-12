@@ -1,9 +1,9 @@
 import { Coord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Scene } from "engine/types";
-import { IPrimodiumGameObject } from "./interfaces";
 import { Assets } from "../constants/assets";
 import { SpriteKeys } from "../constants/assets/sprites";
 import { OrbitRing } from "./Asteroid/OrbitRing";
+import { IPrimodiumGameObject } from "./interfaces";
 import { TransitLine } from "./TransitLine";
 
 export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObject {
@@ -29,6 +29,12 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
   spawn() {
     this.scene.add.existing(this);
     this.spawned = true;
+    return this;
+  }
+
+  despawn() {
+    this.destroy();
+    this.spawned = false;
     return this;
   }
 

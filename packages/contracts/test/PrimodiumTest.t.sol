@@ -2,20 +2,22 @@
 pragma solidity >=0.8.24;
 
 import "forge-std/Test.sol";
-import { addressToEntity } from "src/utils.sol";
+import { entityToAddress, addressToEntity } from "src/utils.sol";
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import { NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { BuildingKey, UnitKey } from "src/Keys.sol";
-import { P_IsUtility, MaxResourceCount, ResourceCount, P_UnitPrototypes, P_GameConfig, P_GameConfigData, P_Unit, P_Transportables, BuildingType, OwnedBy, FleetMovement, P_Blueprint, P_EnumToPrototype, PositionData, Position, P_RequiredResourcesData, Asteroid, Home, P_RequiredTile, P_MaxLevel, P_RequiredResources, P_RequiredBaseLevel, UnitLevel, P_ColonyShipConfig, Level, P_UnitProdTypes, P_UnitProdMultiplier, P_WormholeAsteroidConfig } from "codegen/index.sol";
+import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
+import { P_Unit, CooldownEnd, P_IsUtility, MaxResourceCount, ResourceCount, P_UnitPrototypes, P_GameConfig, P_GameConfigData, P_Unit, P_Transportables, BuildingType, OwnedBy, FleetMovement, P_Blueprint, P_EnumToPrototype, PositionData, Position, P_RequiredResourcesData, Asteroid, Home, P_RequiredTile, P_MaxLevel, P_RequiredResources, P_RequiredBaseLevel, UnitLevel, P_ColonyShipConfig, Level, P_UnitProdTypes, P_UnitProdMultiplier, P_WormholeAsteroidConfig } from "codegen/index.sol";
 import { EResource, EBuilding, EUnit, Bounds } from "src/Types.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
+import { LibColony } from "libraries/LibColony.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
@@ -80,6 +82,10 @@ contract PrimodiumTest is MudTest {
     assertEq(coordA.x, coordB.x, "[assertEq]: x doesn't match");
     assertEq(coordA.y, coordB.y, "[assertEq]: y doesn't match");
     assertEq(coordA.parentEntity, coordB.parentEntity, "[assertEq]: parentEntity doesn't match");
+  }
+
+  function assertXYNotEq(PositionData memory coordA, PositionData memory coordB) internal {
+    assertTrue(coordA.x != coordB.x || coordA.y != coordB.y, "[assertNe]: positions match");
   }
 
   function assertEq(EResource a, EResource b) internal {
@@ -231,14 +237,21 @@ contract PrimodiumTest is MudTest {
     if (!UnitFactorySet.has(Position.getParentEntity(buildingEntity), buildingEntity))
       UnitFactorySet.add(Position.getParentEntity(buildingEntity), buildingEntity);
 
+    // if (unitPrototype == ColonyShipPrototypeId) {
+    //   LibColony.increaseMaxColonySlots(addressToEntity(player));
+    // }
     vm.stopPrank();
 
     vm.startPrank(player);
     world.Primodium__trainUnits(buildingEntity, unitPrototype, count);
-    if (fastForward) vm.warp(block.timestamp + (LibUnit.getUnitBuildTime(buildingEntity, unitPrototype) * count));
-    vm.stopPrank();
+    if (fastForward) {
+      uint256 unitLevel = UnitLevel.get(Position.getParentEntity(buildingEntity), unitPrototype);
+      switchPrank(creator);
+      P_Unit.setTrainingTime(unitPrototype, unitLevel, 0);
+      vm.warp(block.timestamp + 1);
+    }
 
-    vm.startPrank(creator);
+    switchPrank(creator);
     P_UnitProdTypes.set(buildingType, level, prodTypes);
     vm.stopPrank();
   }
@@ -397,10 +410,11 @@ contract PrimodiumTest is MudTest {
     }
   }
 
-  function findSecondaryAsteroid(bytes32 asteroidEntity) public view returns (PositionData memory) {
+  function findSecondaryAsteroid(bytes32 asteroidEntity) public returns (PositionData memory) {
+    switchPrank(creator);
+    P_GameConfig.setAsteroidChanceInv(1);
     P_GameConfigData memory config = P_GameConfig.get();
     PositionData memory sourcePosition = Position.get(asteroidEntity);
-    logPosition(sourcePosition);
     bytes32 asteroidSeed;
     PositionData memory targetPosition;
     uint256 i = 0;
@@ -415,12 +429,12 @@ contract PrimodiumTest is MudTest {
         config.asteroidDistance,
         config.maxAsteroidsPerPlayer
       );
-      logPosition(sourcePosition);
       targetPosition = PositionData(
-        sourcePosition.x + targetPositionRelative.x,
-        sourcePosition.y + targetPositionRelative.y,
+        sourcePosition.x - targetPositionRelative.x,
+        sourcePosition.y - targetPositionRelative.y,
         0
       );
+      console.log("position %s: ", i);
       logPosition(targetPosition);
 
       asteroidSeed = keccak256(abi.encode(asteroidEntity, bytes32("asteroid"), targetPosition.x, targetPosition.y));
@@ -428,6 +442,7 @@ contract PrimodiumTest is MudTest {
       i++;
     }
     require(found, "uh oh, no asteroid found");
+    vm.stopPrank();
     return (targetPosition);
   }
 
@@ -442,8 +457,8 @@ contract PrimodiumTest is MudTest {
       config.maxAsteroidsPerPlayer
     );
     PositionData memory targetPosition = PositionData({
-      x: sourcePosition.x + targetPositionRelative.x,
-      y: sourcePosition.y + targetPositionRelative.y,
+      x: sourcePosition.x - targetPositionRelative.x,
+      y: sourcePosition.y - targetPositionRelative.y,
       parentEntity: 0
     });
     logPosition(targetPosition);
@@ -460,6 +475,9 @@ contract PrimodiumTest is MudTest {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
     uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+
+    vm.startPrank(creator);
+    LibColony.increaseMaxColonySlots(addressToEntity(player));
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == minutemanEntity) unitCounts[i] = (10 * asteroidDefense) / minutemanAttack + 1;
       else if (unitPrototypes[i] == colonyShip) unitCounts[i] = 1;
@@ -467,18 +485,41 @@ contract PrimodiumTest is MudTest {
     }
     setupCreateFleet(player, sourceAsteroid, unitCounts, resourceCounts);
     vm.startPrank(player);
-    console.log("creating");
     bytes32 fleetEntity = world.Primodium__createFleet(sourceAsteroid, unitCounts, resourceCounts);
-    console.log("sending");
     world.Primodium__sendFleet(fleetEntity, targetAsteroid);
-    vm.warp(FleetMovement.getArrivalTime(fleetEntity));
+    switchPrank(creator);
+    FleetMovement.setArrivalTime(fleetEntity, block.timestamp);
+    vm.warp(block.timestamp + 1);
 
     while (OwnedBy.get(targetAsteroid) != playerEntity) {
-      console.log("attacking");
-      uint256 cooldown = LibCombat.getCooldownTime(LibCombatAttributes.getAttack(fleetEntity), true);
+      switchPrank(player);
       world.Primodium__attack(fleetEntity, targetAsteroid);
-      vm.warp(block.timestamp + cooldown);
+      switchPrank(creator);
+      CooldownEnd.set(fleetEntity, block.timestamp - 1);
     }
+    vm.stopPrank();
+    return fleetEntity;
+  }
+
+  function spawnPlayers(uint256 count) internal {
+    for (uint256 i = 0; i < count; i++) {
+      spawn(getUser());
+    }
+  }
+
+  function spawnFleetWithUnit(bytes32 asteroidEntity, EUnit unit, uint256 count) internal returns (bytes32) {
+    bytes32 playerEntity = OwnedBy.get(asteroidEntity);
+    address player = entityToAddress(playerEntity);
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = count;
+    }
+    setupCreateFleet(player, asteroidEntity, unitCounts, resourceCounts);
+    vm.startPrank(player);
+    bytes32 fleetEntity = world.Primodium__createFleet(asteroidEntity, unitCounts, resourceCounts);
     vm.stopPrank();
     return fleetEntity;
   }

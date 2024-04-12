@@ -7,7 +7,6 @@ import { runSystems as runAsteroidSystems } from "src/game/scenes/asteroid/syste
 import { runSystems as runStarmapSystems } from "src/game/scenes/starmap/systems";
 import { runSystems as runUISystems } from "src/game/scenes/ui/systems";
 import { components } from "src/network/components";
-import { setupAllianceLeaderboard } from "src/network/systems/setupAllianceLeaderboard";
 import { setupBattleComponents } from "src/network/systems/setupBattleComponents";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
 import { setupBuildRock } from "src/network/systems/setupBuildRock";
@@ -187,7 +186,6 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     components.MapOpen.set({ value: false });
     setupBuildRock();
     setupSwapNotifications(mud);
-    setupAllianceLeaderboard(mud);
     setupBattleComponents();
     setupMoveNotifications();
     setupBlockNumber(mud.network.latestBlockNumber$);

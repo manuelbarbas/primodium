@@ -7,7 +7,7 @@ import { getSystemId } from "src/util/encode";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const spawnu = async (mud: MUD) => {
+export const spawn = async (mud: MUD) => {
   await execute(
     {
       mud,
@@ -46,6 +46,10 @@ export const spawnAndAuthorizeSessionAccount = async (mud: MUD, sessionAccount: 
     { id: singletonEntity },
     (receipt) => {
       ampli.systemSpawn({
+        ...parseReceipt(receipt),
+      });
+      ampli.systemRegisterDelegation({
+        delegateAddress: sessionAccount,
         ...parseReceipt(receipt),
       });
     }

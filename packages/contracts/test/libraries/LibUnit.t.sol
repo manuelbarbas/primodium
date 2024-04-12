@@ -82,14 +82,15 @@ contract LibUnitTest is PrimodiumTest {
   }
 
   function testClaimUnitsConqueredAsteroid() public {
+    PositionData memory asteroidPosition = findSecondaryAsteroid(Home.get(playerEntity));
+    vm.startPrank(creator);
     P_GameConfig.setAsteroidChanceInv(1);
     LibColony.increaseMaxColonySlots(playerEntity);
     LibColony.increaseMaxColonySlots(playerEntity);
 
-    bytes32 secondaryAsteroid = LibAsteroid.createSecondaryAsteroid(findSecondaryAsteroid(Home.get(playerEntity)));
+    bytes32 secondaryAsteroid = LibAsteroid.createSecondaryAsteroid(asteroidPosition);
     conquerAsteroid(creator, Home.get(playerEntity), secondaryAsteroid);
     vm.startPrank(creator);
-    console.log("here:");
     OwnedBy.set(buildingEntity, secondaryAsteroid);
     Level.set(buildingEntity, 1);
     LastClaimedAt.set(buildingEntity, block.timestamp);
