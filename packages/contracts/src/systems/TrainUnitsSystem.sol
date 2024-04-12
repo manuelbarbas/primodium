@@ -9,7 +9,7 @@ import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { LibResource } from "libraries/LibResource.sol";
-import { LibUnit } from "libraries/LibResource.sol";
+import { LibUnit } from "libraries/LibUnit.sol";
 
 contract TrainUnitsSystem is PrimodiumSystem {
   /// @notice Trains units based on specified unit type and count

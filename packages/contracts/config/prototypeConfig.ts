@@ -170,6 +170,8 @@ const samSiteMaxResourceUpgrades = {
 
 const maxRange = { xBounds: 37, yBounds: 25 };
 
+const colonySlotsConfigResourceValues = getResourceValues({ Copper: 10000, Lithium: 5000 }); // Order impacts Installment payment index
+
 export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = {
   /* ---------------------------------- World --------------------------------- */
   World: {
@@ -196,8 +198,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
 
       P_ColonyShipConfig: {
-        resource: EResource.Alloy,
-        initialCost: 10000n * BigInt(SCALE),
         decryption: 10n * BigInt(SCALE),
         cooldownExtension: 60n * 1n, // one hour
       },
@@ -999,7 +999,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredResources: getResourceValues({ IronPlate: 2500, Alloy: 2500, PVCell: 2500 }),
         P_RequiredBaseLevel: { value: 3n },
         P_UnitProdMultiplier: { value: 100n },
-        P_Production: getResourceValues({ U_ColonyShipCapacity: 1_000_000_000_000 }),
         P_UnitProdTypes: { value: encodeArray(["ColonyShip"]) },
       },
       2: {
@@ -1168,6 +1167,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
     },
   },
+
   /* -------------------------------- Resources ------------------------------- */
   // NOTE: To check if a resource is a utility, call P_IsUtility.get(EResource.<resource>);
   IsUtility: {
@@ -1175,7 +1175,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     levels: {
       [MUDEnums.EResource.indexOf("U_Electricity")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Housing")]: { P_IsUtility: { value: true } },
-      [MUDEnums.EResource.indexOf("U_ColonyShipCapacity")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_MaxFleets")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("U_Defense")]: { P_IsUtility: { value: true } },
       [MUDEnums.EResource.indexOf("M_DefenseMultiplier")]: { P_IsUtility: { value: true } },
@@ -1210,6 +1209,17 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       [MUDEnums.EResource.indexOf("Platinum")]: { P_IsResource: { isResource: true, isAdvanced: true } },
       [MUDEnums.EResource.indexOf("Iridium")]: { P_IsResource: { isResource: true, isAdvanced: true } },
       [MUDEnums.EResource.indexOf("Kimberlite")]: { P_IsResource: { isResource: true, isAdvanced: true } },
+    },
+  },
+
+  ColonySlotsConfig: {
+    keys: [],
+    tables: {
+      P_ColonySlotsConfig: {
+        resources: colonySlotsConfigResourceValues.resources, // Order impacts Installment payment index
+        amounts: colonySlotsConfigResourceValues.amounts,
+        multiplier: 4n,
+      },
     },
   },
 
@@ -1647,7 +1657,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: {
       0: {
-        P_RequiredResources: getResourceValues({ U_ColonyShipCapacity: 1 }),
+        P_RequiredResources: getResourceValues({ Alloy: 10000 }),
         P_RequiredBaseLevel: { value: 3n },
         P_Unit: getPUnitData({
           hp: 2000,

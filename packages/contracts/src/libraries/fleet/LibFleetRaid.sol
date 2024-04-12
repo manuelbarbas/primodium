@@ -39,7 +39,7 @@ library LibFleetRaid {
     (uint256 freeCargoSpace, uint256[] memory freeCargoSpaces, uint256 totalFreeCargoSpace) = LibCombatAttributes
       .getCargoSpacesWithAllies(attacker);
     if (totalFreeCargoSpace == 0) return;
-    // will caculate how much of each resource was successfuly raided from defender and increase those to be used for increasing resources of the attackers
+    // will calculate how much of each resource was successfuly raided from defender and increase those to be used for increasing resources of the attackers
     (uint256[] memory totalRaidedResourceCounts, ) = calculateRaidFromWithAllies(
       battleEntity,
       defender,

@@ -53,7 +53,6 @@ export enum EResource {
   // Utilities
   U_Electricity,
   U_Housing,
-  U_ColonyShipCapacity,
   U_MaxFleets,
   U_Defense,
   U_Unraidable,

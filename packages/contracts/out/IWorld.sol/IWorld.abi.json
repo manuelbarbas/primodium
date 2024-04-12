@@ -915,6 +915,30 @@
   },
   {
     "type": "function",
+    "name": "Primodium__payForMaxColonySlots",
+    "inputs": [
+      {
+        "name": "asteroidEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "paymentAmounts",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "Primodium__recallFleet",
     "inputs": [
       {
