@@ -11,7 +11,7 @@ import { getDistance } from "src/util/common";
 import { entityToFleetName, entityToRockName } from "src/util/name";
 
 export const renderBattle = (scene: Scene) => {
-  const gameWorld = namespaceWorld(world, "game");
+  const systemsWorld = namespaceWorld(world, "systems");
   const { BattleResult } = components;
 
   /* Can we pass in the custom scene instead of building it again here? */
@@ -120,7 +120,7 @@ export const renderBattle = (scene: Scene) => {
     }
   }
 
-  defineComponentSystem(gameWorld, BattleResult, (update) => {
+  defineComponentSystem(systemsWorld, BattleResult, (update) => {
     const now = components.Time.get()?.value ?? 0n;
 
     const battle = components.Battle.get(update.entity);

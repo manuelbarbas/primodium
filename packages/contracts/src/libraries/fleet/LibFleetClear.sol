@@ -34,6 +34,13 @@ library LibFleetClear {
     OwnedBy.deleteRecord(fleetEntity);
   }
 
+  function abandonAllOwnedFleets(bytes32 asteroidEntity) internal {
+    bytes32[] memory ownedFleets = FleetSet.getFleetEntities(asteroidEntity, FleetOwnedByKey);
+    for (uint256 i = 0; i < ownedFleets.length; i++) {
+      abandonFleet(ownedFleets[i]);
+    }
+  }
+
   /**
    * @notice Clears a fleet, removing all resources and units from it.
    * @dev Iterates through all transportable resources and unit prototypes, removing them from the fleet.

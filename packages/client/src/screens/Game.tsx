@@ -14,6 +14,27 @@ export const Game = () => {
   const mud = useMud();
   const [primodium, setPrimodium] = useState<Primodium | null>(null);
 
+  const destroy = async () => {
+    if (primodium === null) return;
+    setPrimodium(null);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    primodium?.destroy();
+    const phaserContainer = document.getElementById("phaser-container");
+    for (const child of Array.from(phaserContainer?.children ?? [])) {
+      phaserContainer?.removeChild(child);
+    }
+  };
+
+  const init = async () => {
+    try {
+      await destroy();
+      const pri = await initPrimodium(mud, params.get("version") ? params.get("version")! : "🔥");
+      setPrimodium(pri);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   /* Since this system modifies mud.sessionAccount, it can't have mud as a dependency */
   useEffect(() => {
     setupSessionAccount(mud.playerAccount.entity, mud.removeSessionAccount, mud.updateSessionAccount);
@@ -25,17 +46,10 @@ export const Game = () => {
   }, [mud, primodium]);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const pri = await initPrimodium(mud, params.get("version") ? params.get("version")! : "🔥");
-        setPrimodium(pri);
-      } catch (e) {
-        console.log(e);
-      }
-    })();
+    init();
 
     return () => {
-      primodium?.destroy();
+      destroy();
     };
   }, []);
 

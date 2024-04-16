@@ -1,6 +1,19 @@
 [
   {
     "type": "function",
+    "name": "Primodium__abandonAsteroid",
+    "inputs": [
+      {
+        "name": "asteroidEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "Primodium__abandonFleet",
     "inputs": [
       {
@@ -957,7 +970,7 @@
     "name": "Primodium__payForMaxColonySlots",
     "inputs": [
       {
-        "name": "asteroidEntity",
+        "name": "shipyardEntity",
         "type": "bytes32",
         "internalType": "bytes32"
       },

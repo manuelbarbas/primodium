@@ -1,6 +1,6 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
 import { Entity } from "@latticexyz/recs";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { FaTimes } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { components } from "src/network/components";
@@ -10,6 +10,8 @@ import { getUnitStats } from "src/util/unit";
 import { TargetHeader } from "../../TargetHeader";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { FleetHeader } from "../fleets/FleetHeader";
+import { hydrateFleetData } from "src/network/sync/indexer";
+import { useMud } from "src/hooks";
 
 export const TransferTo = (props: {
   sameOwner?: boolean;
@@ -27,6 +29,7 @@ export const TransferTo = (props: {
   clearAll?: () => void;
   hovering?: boolean;
 }) => {
+  const mud = useMud();
   const isFleet = props.entity !== "newFleet" && components.IsFleet.has(props.entity);
   const noUnitsOrResources =
     !props.deltas || props.deltas.size === 0 || (props.unitCounts.size === 0 && props.resourceCounts.size === 0);
@@ -53,6 +56,12 @@ export const TransferTo = (props: {
       <FleetHeader title={props.entity === "newFleet" ? "New Fleet" : entityToFleetName(props.entity)} {...data} />
     );
   }, [isFleet, props.entity, props.unitCounts, props.from]);
+
+  useEffect(() => {
+    if (props.entity === "newFleet" || !components.IsFleet.get(props.entity)?.value) return;
+
+    hydrateFleetData(props.entity, mud);
+  }, [props.entity, mud]);
 
   return (
     <div

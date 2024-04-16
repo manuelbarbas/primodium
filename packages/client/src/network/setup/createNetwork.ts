@@ -6,7 +6,14 @@ import { createClock } from "../createClock";
 import { world } from "../world";
 import { setupRecs } from "./setupRecs";
 
-export async function createNetwork() {
+export let network: ReturnType<typeof _createNetwork>;
+
+export function createNetwork() {
+  if (network) return network;
+  return _createNetwork();
+}
+
+function _createNetwork() {
   const networkConfig = getNetworkConfig();
   const clientOptions = {
     chain: networkConfig.chain,
@@ -29,7 +36,7 @@ export async function createNetwork() {
     syncInterval: 10000,
   });
 
-  const network = {
+  const networkResult = {
     world,
     tables,
     publicClient,
@@ -42,5 +49,6 @@ export async function createNetwork() {
     waitForTransaction,
   };
 
-  return network;
+  network = networkResult;
+  return networkResult;
 }
