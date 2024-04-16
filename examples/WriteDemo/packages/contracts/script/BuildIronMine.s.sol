@@ -5,7 +5,7 @@ import { Script } from "forge-std/Script.sol";
 import { console2 } from "forge-std/Test.sol";
 
 import { IWorld } from "../src/codegen/world/IWorld.sol";
-import { IWorld as IPrimodiumWorld } from "../src/primodium/world/IWorld.sol";
+import { IWorld as IPrimodiumWorld } from "primodium/world/IWorld.sol";
 
 import { Systems } from "@latticexyz/world/src/codegen/tables/Systems.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";

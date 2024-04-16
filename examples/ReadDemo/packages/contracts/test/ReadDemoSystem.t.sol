@@ -17,8 +17,8 @@ import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 import { ReadDemoSystem } from "../src/systems/ReadDemoSystem.sol";
 
 import { IWorld } from "../src/codegen/world/IWorld.sol";
-import { IWorld as IPrimodiumWorld } from "../src/primodium/world/IWorld.sol";
-import { ISpawnSystem } from "../src/primodium/world/ISpawnSystem.sol";
+import { IWorld as IPrimodiumWorld } from "primodium/world/IWorld.sol";
+import { ISpawnSystem } from "primodium/world/ISpawnSystem.sol";
 
 import { FunctionSelectors } from "@latticexyz/world/src/codegen/tables/FunctionSelectors.sol";
 

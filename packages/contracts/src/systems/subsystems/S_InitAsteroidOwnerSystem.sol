@@ -20,6 +20,8 @@ contract S_InitAsteroidOwnerSystem is PrimodiumSystem {
 
     PositionData memory position = Position.get(basePrototype);
     position.parentEntity = asteroidEntity;
+    // For cases of abandoned asteroids, skip building main base
+    if (Home.get(position.parentEntity) != bytes32(0)) return;
 
     bytes32 buildingEntity = LibBuilding.build(playerEntity, basePrototype, position);
 
