@@ -8,13 +8,13 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 
 // Primodium Tables
-import "../primodium/index.sol";
-import "../primodium/common.sol";
+import "primodium/index.sol";
+import "primodium/common.sol";
 
 import "src/Types.sol";
 import "src/Keys.sol";
 
-import { IWorld as IPrimodiumWorld } from "../primodium/world/IWorld.sol";
+import { IWorld as IPrimodiumWorld } from "primodium/world/IWorld.sol";
 
 import { console } from "forge-std/console.sol";
 
