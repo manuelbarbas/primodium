@@ -16,7 +16,7 @@ import { UNLIMITED_DELEGATION } from "@latticexyz/world/src/constants.sol";
 import { YourSystem } from "../src/systems/YourSystem.sol";
 
 import { IWorld } from "../src/codegen/world/IWorld.sol";
-import { IWorld as IPrimodiumWorld } from "../src/primodium/world/IWorld.sol";
+import { IWorld as IPrimodiumWorld } from "primodium/world/IWorld.sol";
 
 contract WriteDemoTest is MudTest {
   // address public worldAddress; // inherited from MudTest

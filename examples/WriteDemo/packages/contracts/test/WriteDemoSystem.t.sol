@@ -16,12 +16,12 @@ import { UNLIMITED_DELEGATION } from "@latticexyz/world/src/constants.sol";
 import { WriteDemoSystem } from "../src/systems/WriteDemoSystem.sol";
 
 import { IWorld } from "../src/codegen/world/IWorld.sol";
-import { IWorld as IPrimodiumWorld } from "../src/primodium/world/IWorld.sol";
+import { IWorld as IPrimodiumWorld } from "primodium/world/IWorld.sol";
 
 // import {FunctionSelectors} from "@latticexyz/world/src/codegen/tables/FunctionSelectors.sol";
 // import {EBuilding} from "../src/primodium/common.sol";
 
-import { Home, PositionData, Spawned } from "../src/primodium/index.sol";
+import { Home, PositionData, Spawned } from "primodium/index.sol";
 
 contract WriteDemoTest is MudTest {
   // address public worldAddress; // inherited from MudTest
