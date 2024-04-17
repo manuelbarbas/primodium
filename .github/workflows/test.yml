@@ -16,7 +16,7 @@ jobs:
           node-version: "20.12.2"
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        run: npm install -g pnpm@8.15.7
 
       - name: Install dependencies
         run: pnpm install --ignore-scripts
