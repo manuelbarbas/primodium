@@ -44,7 +44,7 @@ library LibFleetTransfer {
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       if (resourceCounts[i] == 0) continue;
-      LibStorage.decreaseStoredResource(spaceRock, transportables[i], resourceCounts[i]);
+      LibStorage.checkedDecreaseStoredResource(spaceRock, transportables[i], resourceCounts[i]);
       LibFleet.increaseFleetResource(fleetId, transportables[i], resourceCounts[i]);
     }
   }
@@ -105,7 +105,7 @@ library LibFleetTransfer {
     uint8[] memory transportables = P_Transportables.get();
     for (uint8 i = 0; i < transportables.length; i++) {
       if (resourceCounts[i] == 0) continue;
-      LibStorage.increaseStoredResource(spaceRock, transportables[i], resourceCounts[i]);
+      LibStorage.checkedIncreaseStoredResource(spaceRock, transportables[i], resourceCounts[i]);
       LibFleet.decreaseFleetResource(fleetId, transportables[i], resourceCounts[i]);
     }
   }
