@@ -1110,41 +1110,77 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   StorageUnit: {
     tables: {
       P_Blueprint: { value: getBlueprint(2, 2) },
-      P_MaxLevel: { value: 4n },
+      P_MaxLevel: { value: 10n },
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 2n },
-        P_RequiredResources: getResourceValues({ Iron: 3000 }),
+        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ Iron: 50, Copper: 50, Lithium: 50 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(storageUnitStorageUpgrades[1]),
         },
       },
       2: {
-        P_RequiredBaseLevel: { value: 3n },
-        P_RequiredResources: getResourceValues({ Iron: 20000 }),
+        P_RequiredBaseLevel: { value: 4n },
+        P_RequiredResources: getResourceValues({ Iron: 100, Copper: 100, Lithium: 100 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(storageUnitStorageUpgrades[2]),
         },
       },
       3: {
-        P_RequiredBaseLevel: { value: 4n },
-        P_RequiredResources: getResourceValues({
-          Iron: 100000,
-          U_Electricity: 50,
-        }),
+        P_RequiredBaseLevel: { value: 5n },
+        P_RequiredResources: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250, U_Electricity: 25 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(storageUnitStorageUpgrades[3]),
         },
       },
       4: {
-        P_RequiredBaseLevel: { value: 5n },
-        P_RequiredResources: getResourceValues({
-          Iron: 500000,
-          U_Electricity: 100,
-        }),
+        P_RequiredBaseLevel: { value: 6n },
+        P_RequiredResources: getResourceValues({ IronPlate: 500, Alloy: 500, PVCell: 500, U_Electricity: 50 }),
         P_ListMaxResourceUpgrades: {
-          value: upgradesToList(storageUnitStorageUpgrades[3]),
+          value: upgradesToList(storageUnitStorageUpgrades[4]),
+        },
+      },
+      5: {
+        P_RequiredBaseLevel: { value: 7n },
+        P_RequiredResources: getResourceValues({ IronPlate: 1000, Alloy: 1000, PVCell: 1000, U_Electricity: 50 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(storageUnitStorageUpgrades[5]),
+        },
+      },
+      6: {
+        P_RequiredBaseLevel: { value: 8n },
+        P_RequiredResources: getResourceValues({ IronPlate: 2500, Alloy: 2500, PVCell: 2500, U_Electricity: 50 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(storageUnitStorageUpgrades[6]),
+        },
+      },
+      7: {
+        P_RequiredBaseLevel: { value: 9n },
+        P_RequiredResources: getResourceValues({ IronPlate: 5000, Alloy: 5000, PVCell: 5000, U_Electricity: 100 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(storageUnitStorageUpgrades[7]),
+        },
+      },
+      8: {
+        P_RequiredBaseLevel: { value: 10n },
+        P_RequiredResources: getResourceValues({ IronPlate: 10000, Alloy: 10000, PVCell: 10000, Kimberlite: 100 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(storageUnitStorageUpgrades[8]),
+        },
+      },
+      9: {
+        P_RequiredBaseLevel: { value: 11n },
+        P_RequiredResources: getResourceValues({ IronPlate: 20000, Alloy: 20000, PVCell: 20000, Kimberlite: 500 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(storageUnitStorageUpgrades[9]),
+        },
+      },
+      10: {
+        P_RequiredBaseLevel: { value: 12n },
+        P_RequiredResources: getResourceValues({ IronPlate: 50000, Alloy: 50000, PVCell: 50000, Kimberlite: 1000 }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(storageUnitStorageUpgrades[10]),
         },
       },
     },
@@ -1153,37 +1189,82 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   SolarPanel: {
     tables: {
       P_Blueprint: { value: getBlueprint(2, 2) },
-      P_MaxLevel: { value: 3n },
+      P_MaxLevel: { value: 15n },
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 2n },
-        P_RequiredResources: getResourceValues({ PVCell: 200 }),
-        P_Production: getResourceValues({ U_Electricity: 300 }),
+        P_RequiredBaseLevel: { value: 5n },
+        P_RequiredResources: getResourceValues({ Iron: 50, Copper: 50, Lithium: 50 }),
+        P_Production: getResourceValues({ U_Electricity: 50 }),
       },
       2: {
-        P_RequiredBaseLevel: { value: 3n },
-        P_RequiredResources: getResourceValues({ PVCell: 4000 }),
-        P_Production: getResourceValues({ U_Electricity: 600 }),
+        P_RequiredBaseLevel: { value: 5n },
+        P_RequiredResources: getResourceValues({ Iron: 100, Copper: 100, Lithium: 100 }),
+        P_Production: getResourceValues({ U_Electricity: 100 }),
       },
       3: {
-        P_RequiredBaseLevel: { value: 4n },
-        P_RequiredResources: getResourceValues({ PVCell: 10000 }),
-        P_Production: getResourceValues({ U_Electricity: 800 }),
+        P_RequiredBaseLevel: { value: 6n },
+        P_RequiredResources: getResourceValues({ Iron: 200, Copper: 200, Lithium: 200 }),
+        P_Production: getResourceValues({ U_Electricity: 150 }),
       },
       4: {
-        P_RequiredBaseLevel: { value: 5n },
-        P_RequiredResources: getResourceValues({ PVCell: 25000 }),
-        P_Production: getResourceValues({ U_Electricity: 800 }),
+        P_RequiredBaseLevel: { value: 6n },
+        P_RequiredResources: getResourceValues({ Iron: 400, Copper: 400, Lithium: 400 }),
+        P_Production: getResourceValues({ U_Electricity: 200 }),
       },
       5: {
-        P_RequiredBaseLevel: { value: 6n },
-        P_RequiredResources: getResourceValues({ PVCell: 75000 }),
-        P_Production: getResourceValues({ U_Electricity: 1000 }),
+        P_RequiredBaseLevel: { value: 7n },
+        P_RequiredResources: getResourceValues({ Iron: 1000, Copper: 1000, Lithium: 1000 }),
+        P_Production: getResourceValues({ U_Electricity: 275 }),
       },
       6: {
         P_RequiredBaseLevel: { value: 7n },
-        P_RequiredResources: getResourceValues({ PVCell: 175000 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 500, Alloy: 500, PVCell: 500 }),
+        P_Production: getResourceValues({ U_Electricity: 350 }),
+      },
+      7: {
+        P_RequiredBaseLevel: { value: 8n },
+        P_RequiredResources: getResourceValues({ IronPlate: 1000, Alloy: 1000, PVCell: 1000 }),
+        P_Production: getResourceValues({ U_Electricity: 425 }),
+      },
+      8: {
+        P_RequiredBaseLevel: { value: 8n },
+        P_RequiredResources: getResourceValues({ IronPlate: 1500, Alloy: 1500, PVCell: 1500, Kimberlite: 100 }),
+        P_Production: getResourceValues({ U_Electricity: 500 }),
+      },
+      9: {
+        P_RequiredBaseLevel: { value: 9n },
+        P_RequiredResources: getResourceValues({ IronPlate: 2500, Alloy: 2500, PVCell: 2500, Kimberlite: 200 }),
+        P_Production: getResourceValues({ U_Electricity: 575 }),
+      },
+      10: {
+        P_RequiredBaseLevel: { value: 10n },
+        P_RequiredResources: getResourceValues({ Titanium: 500, Iridium: 500, Platinum: 500 }),
+        P_Production: getResourceValues({ U_Electricity: 650 }),
+      },
+      11: {
+        P_RequiredBaseLevel: { value: 11n },
+        P_RequiredResources: getResourceValues({ Titanium: 1000, Iridium: 1000, Platinum: 1000 }),
+        P_Production: getResourceValues({ U_Electricity: 750 }),
+      },
+      12: {
+        P_RequiredBaseLevel: { value: 12n },
+        P_RequiredResources: getResourceValues({ Titanium: 2000, Iridium: 2000, Platinum: 2000 }),
+        P_Production: getResourceValues({ U_Electricity: 850 }),
+      },
+      13: {
+        P_RequiredBaseLevel: { value: 13n },
+        P_RequiredResources: getResourceValues({ Titanium: 3000, Iridium: 3000, Platinum: 3000, Kimberlite: 100 }),
+        P_Production: getResourceValues({ U_Electricity: 950 }),
+      },
+      14: {
+        P_RequiredBaseLevel: { value: 14n },
+        P_RequiredResources: getResourceValues({ Titanium: 4000, Iridium: 4000, Platinum: 4000, Kimberlite: 500 }),
+        P_Production: getResourceValues({ U_Electricity: 1050 }),
+      },
+      15: {
+        P_RequiredBaseLevel: { value: 15n },
+        P_RequiredResources: getResourceValues({ Titanium: 5000, Iridium: 5000, Platinum: 5000, Kimberlite: 1000 }),
         P_Production: getResourceValues({ U_Electricity: 1200 }),
       },
     },
