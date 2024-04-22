@@ -78,11 +78,11 @@ export const BlueprintInfo: React.FC<{
   if (!getEntityTypeName(building)) return <></>;
 
   return (
-    <div className="items-center p-0 w-full z-100">
+    <div className="items-center p-0 w-full z-100 animate-out">
       <div className="flex flex-col items-center w-full h-full text-xs relative gap-1 ">
         <div className="absolute top-0 w-full h-full" />
 
-        <SecondaryCard className="flex flex-col gap-4 p-1">
+        <div className="flex flex-col gap-4 p-1">
           {/* Building Name */}
           <div className="text-sm font-bold">{buildingName}</div>
 
@@ -120,8 +120,6 @@ export const BlueprintInfo: React.FC<{
                         <IconLabel
                           className={`text-xs font-bold justify-center`}
                           imageUri={ResourceImage.get(unit as Entity) ?? ""}
-                          tooltipDirection={"top"}
-                          tooltipText={getEntityTypeName(unit as Entity)}
                           text={""}
                           hideText
                         />
@@ -172,7 +170,7 @@ export const BlueprintInfo: React.FC<{
               {dimensions.width}x{dimensions.height} tiles
             </span>
           </div>
-        </SecondaryCard>
+        </div>
       </div>
     </div>
   );

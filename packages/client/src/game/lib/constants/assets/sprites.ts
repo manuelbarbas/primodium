@@ -93,6 +93,8 @@ export enum SpriteKeys {
   Asteroid4 = "sprites/spacerocks/asteroids/asteroid4.png",
   Asteroid5 = "sprites/spacerocks/asteroids/asteroid5.png",
 
+  Shard = "sprites/shard/shard.png",
+
   //PIRATE ASTEROIDS
   PirateAsteroid1 = "sprites/spacerocks/pirate_asteroids/Pirate_Asteroid1.png",
   PirateAsteroid2 = "sprites/spacerocks/pirate_asteroids/Pirate_Asteroid2.png",

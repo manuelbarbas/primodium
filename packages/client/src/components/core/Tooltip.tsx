@@ -38,11 +38,12 @@ const tooltipVariants = cva(" pointer-events-auto", {
 
 interface TooltipProps extends React.ButtonHTMLAttributes<HTMLDivElement>, VariantProps<typeof tooltipVariants> {
   tooltipContent?: React.ReactNode;
+  show?: boolean;
 }
 
-export const Tooltip = ({ className, tooltipContent, children, direction }: TooltipProps) => {
+export const Tooltip = ({ className, tooltipContent, children, direction, show = false }: TooltipProps) => {
   const [visible, setVisible] = useState(false);
-  const springConfig = { stiffness: 100, damping: 5 };
+  const springConfig = { stiffness: 125, damping: 10 };
   const x = useMotionValue(0); // going to set this value on mouse move
   // rotate the tooltip
   const rotate = useSpring(useTransform(x, [-100, 100], [-10, 10]), springConfig);
@@ -65,9 +66,9 @@ export const Tooltip = ({ className, tooltipContent, children, direction }: Tool
       onMouseMove={handleMouseMove}
       onPointerEnter={() => setVisible(true)}
       onPointerLeave={() => setVisible(false)}
-      className="relative"
+      className="relative w-fit"
     >
-      {visible && (
+      {(visible || show) && (
         <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.6, x: tooltipTranslation[direction ?? "top"].x }}
           animate={{
@@ -88,7 +89,7 @@ export const Tooltip = ({ className, tooltipContent, children, direction }: Tool
           }}
           className={cn(
             tooltipVariants({ direction }),
-            "absolute flex text-xs flex-col items-center justify-center bg-neutral grid-background z-50 shadow-xl px-4 py-2 pixel-border2 ",
+            "absolute flex text-xs flex-col items-center justify-center bg-neutral heropattern-graphpaper-slate-800/50 z-50 shadow-xl px-4 py-2 pixel-border",
             className
           )}
         >

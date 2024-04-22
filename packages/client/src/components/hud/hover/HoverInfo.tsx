@@ -31,11 +31,10 @@ export const HoverInfo = () => {
   else if (components.P_Blueprint.has(hoverEntity)) content = <BlueprintInfo building={hoverEntity} />;
 
   return (
-    <Card className="relative ml-5 grid-background-sm shadow-2xl shadow-secondary/25 border-0">
-      <div className="absolute inset-0 hover-gradient" />
-      <div className="absolute inset-0 pixel-border2 scale-105 blur-[3px] opacity-50 bg-blend-hard-light" />
-      <div className="absolute inset-0 pixel-border2" />
-      <div className="absolute inset-0 pixel-border2 blur-[2px] opacity-50 bg-blend-screen" />
+    <Card
+      className="relative ml-5 !heropattern-graphpaper-slate-800/50 shadow-2xl shadow-secondary/25 border-0 animate-in fade-in-50 zoom-in-90 duration-300 slide-in-from-right-5"
+      noDecor
+    >
       {content}
     </Card>
   );

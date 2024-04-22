@@ -1,6 +1,6 @@
+import { PushButton } from "@/components/core/PushButton";
 import { Entity } from "@latticexyz/recs";
 import { Badge } from "src/components/core/Badge";
-import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
@@ -73,13 +73,13 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
           </div>
         </div>
         <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, building)}>
-          <Button
+          <PushButton
             className="w-fit btn-secondary btn-sm"
             disabled={!canUpgrade}
             onClick={() => upgradeBuilding(mud, building)}
           >
             Upgrade
-          </Button>
+          </PushButton>
         </TransactionQueueMask>
       </div>
       {error && <p className="animate-pulse text-error text-xs uppercase mt-2">{error}</p>}

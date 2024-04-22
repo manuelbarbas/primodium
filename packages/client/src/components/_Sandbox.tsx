@@ -15,11 +15,13 @@ import { TextInput } from "@/components/core/TextInput";
 import { Toggle } from "@/components/core/Toggle";
 import { Loader } from "@/components/core/Loader";
 import { IconLabel } from "@/components/core/IconLabel";
+import { PushButton } from "@/components/core/PushButton";
+import { Dropdown } from "@/components/core/Dropdown";
 
 export const _Sandbox = () => {
   return (
     <HUD>
-      <div className="absolute top-0 right-0 min-h-screen w-full grid-background bg-slate-900/45 p-10 grid grid-cols-2 gap-4 drop-shadow-hard">
+      <div className="absolute top-0 right-0 min-h-screen w-full heropattern-graphpaper-slate-800/50 bg-slate-900/45 p-10 grid grid-cols-2 gap-4 drop-shadow-hard">
         <div className="space-y-4">
           <div className="flex gap-2">
             <div className="w-8 h-8 bg-secondary border" />
@@ -41,6 +43,24 @@ export const _Sandbox = () => {
             <Button variant={"secondary"}>secondary</Button>
             <Button variant={"primary"}>primary</Button>
             <Button variant={"success"}>primary</Button>
+            <PushButton variant={"secondary"} size={"sm"} tooltip={"test"}>
+              primary
+            </PushButton>
+            <PushButton variant={"success"} size={"sm"} tooltip={"test"}>
+              primary
+            </PushButton>
+            <PushButton variant={"info"} size={"sm"} tooltip={"test"}>
+              primary
+            </PushButton>
+            <PushButton variant={"secondary"} size={"sm"} tooltip={"test"}>
+              primary
+            </PushButton>
+            <PushButton variant={"error"} size={"sm"} tooltip={"test"}>
+              primary
+            </PushButton>
+            <PushButton variant={"error"} size={"md"} tooltip={"test"}>
+              primary
+            </PushButton>
           </div>
           <div className="flex gap-2">
             <Button size={"lg"}>Large</Button>
@@ -48,9 +68,19 @@ export const _Sandbox = () => {
             <Button size={"sm"}>Small</Button>
             <Button size={"xs"}>XSmall</Button>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-10">
             <Card className="w-72 h-72">
-              <SecondaryCard className="w-32 h-32">Large Card</SecondaryCard>
+              <SecondaryCard>
+                <PushButton variant={"secondary"} size={"sm"} className="w-32">
+                  Claim
+                </PushButton>
+                <PushButton variant={"success"} size={"sm"} className="w-32">
+                  Upgrade
+                </PushButton>
+                <PushButton variant={"error"} size={"sm"} tooltip={"attack"} className="w-32">
+                  Attack
+                </PushButton>
+              </SecondaryCard>
             </Card>
             <Card className="w-32 h-32">Small Card</Card>
             <SecondaryCard className="w-32 h-32">Secondary Card</SecondaryCard>
@@ -105,11 +135,11 @@ export const _Sandbox = () => {
             <Range className="range-info" />
           </div>
           <div className="grid grid-cols-3 gap-2">
-            <Progress value={30} max={100} className="progress-secondary" />
-            <Progress value={30} max={100} className="progress-primary" />
-            <Progress value={30} max={100} className="progress-warning" />
-            <Progress value={30} max={100} className="progress-success" />
-            <Progress value={30} max={100} className="progress-error" />
+            <Progress value={30} max={100} variant={"secondary"} />
+            <Progress value={30} max={100} variant={"accent"} />
+            <Progress max={100} variant={"accent"} />
+            <Progress value={30} max={100} variant={"neutral"} />
+            <Progress value={30} max={100} variant={"error"} />
             <Progress value={30} max={100} className="progress-info" />
           </div>
           <div className="grid grid-cols-3 gap-2">
@@ -170,11 +200,17 @@ export const _Sandbox = () => {
 
           <NumberInput count="0" />
           <TextInput placeholder="test" topRightLabel="Text input" />
+
+          <Dropdown variant={"bottomLeft"}>
+            <Dropdown.Item onSelect={() => console.log("hello")}>Test 1</Dropdown.Item>
+            <Dropdown.Item onSelect={() => console.log("hello")}>Test 2</Dropdown.Item>
+            <Dropdown.Item onSelect={() => console.log("hello")}>Test 3</Dropdown.Item>
+          </Dropdown>
         </div>
       </div>
 
       <HUD.CursorFollower className="ml-5">
-        <Card>WOW 🎉</Card>
+        <Card noDecor>WOW 🎉</Card>
       </HUD.CursorFollower>
     </HUD>
   );

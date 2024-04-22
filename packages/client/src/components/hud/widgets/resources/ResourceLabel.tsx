@@ -34,9 +34,8 @@ export const ResourceLabel = ({ name, resource }: { name: string; resource: Enti
 
   return (
     <Badge
-      className={`gap-1.5 group bg-transparent border-transparent ${
-        resourceStorage === 0n ? "badge-error opacity-25" : ""
-      }`}
+      variant={resourceStorage === 0n ? "error" : "neutral"}
+      className={`${resourceStorage === 0n ? "opacity-25" : ""}`}
     >
       <ResourceIconTooltip
         name={name}

@@ -3,7 +3,6 @@ import { useMud } from "@/hooks";
 import { components } from "@/network/components";
 import { getRandomRange } from "@/util/common";
 import { Modal } from "@/components/core/Modal";
-import { Tooltip } from "@/components/core/Tooltip";
 import { Widget } from "@/components/core/Widget";
 import { AccountDisplay } from "@/components/shared/AccountDisplay";
 import { Account } from "@/components/transfer/Account";
@@ -22,16 +21,19 @@ const ProfileContent = () => {
         <span className="text-white/50 text-xs">id:</span>
         <AccountDisplay player={playerEntity} />
         <Modal title="account">
-          <Modal.Button className="btn-sm btn-neutral border-secondary !p-1 flex gap-2 text-accent text-xs w-fit">
-            <Tooltip tooltipContent={`${sessionEntity ? "" : "not"} authorizing`} direction="right">
-              <div>
-                {sessionEntity ? (
-                  <FaHandshake className="text-success w-4 h-4" />
-                ) : (
-                  <FaHandshakeSlash className="text-error w-4 h-4" />
-                )}
-              </div>
-            </Tooltip>
+          <Modal.Button
+            className="btn-sm btn-neutral border-secondary !p-1 flex gap-2 text-accent text-xs w-fit"
+            tooltip={`${sessionEntity ? "" : "not"} authorizing`}
+            tooltipDirection="right"
+          >
+            <div>
+              {sessionEntity ? (
+                <FaHandshake className="text-success w-4 h-4" />
+              ) : (
+                <FaHandshakeSlash className="text-error w-4 h-4" />
+              )}
+            </div>
+
             <p>MANAGE</p>
           </Modal.Button>
           <Modal.Content className="w-[40rem] h-fit">

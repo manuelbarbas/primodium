@@ -201,7 +201,7 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({
   return (
     <>
       <div
-        className={`flex flex-wrap p-3 w-60 h-96 gap-y-1.5 gap-x-1 overflow-y-auto hide-scrollbar grid-background ${
+        className={`flex flex-wrap p-3 w-60 h-96 gap-y-1.5 gap-x-1 overflow-y-auto hide-scrollbar heropattern-graphpaper-slate-800/50 ${
           active && showHighlight ? "ring ring-warning" : ""
         }`}
       >

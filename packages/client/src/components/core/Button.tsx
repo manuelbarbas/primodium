@@ -8,7 +8,7 @@ import { cn } from "@/util/client";
 import { cva, type VariantProps } from "class-variance-authority";
 
 const buttonVariants = cva(
-  "btn join-item pointer-events-auto min-h-fit items-center justify-center whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+  "btn join-item pointer-events-auto min-h-fit items-center justify-center whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 relative hover:translate-y-[-2px] hover:shadow-xl transition-all",
   {
     variants: {
       variant: {
@@ -43,7 +43,7 @@ const buttonVariants = cva(
     defaultVariants: {
       modifier: "default",
       variant: "neutral",
-      size: "sm",
+      size: "xs",
       shape: "default",
     },
   }
@@ -54,7 +54,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, Var
   mute?: boolean;
   clickSound?: AudioKeys;
   keybind?: KeybindActionKeys;
-  tooltip?: string;
+  tooltip?: React.ReactNode;
   tooltipDirection?: "right" | "left" | "top" | "bottom";
   selected?: boolean;
 }
@@ -126,7 +126,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           {...props}
           onClick={handleClick}
           onPointerEnter={handleHoverEnter}
-        />
+        >
+          {props.children}
+        </button>
       </Tooltip>
     );
   }

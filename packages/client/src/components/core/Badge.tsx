@@ -3,7 +3,7 @@ import { cn } from "@/util/client";
 import { VariantProps, cva } from "class-variance-authority";
 import { forwardRef } from "react";
 
-const badgeVariants = cva(" pointer-events-auto", {
+const badgeVariants = cva("badge flex pointer-events-auto shadow-inner", {
   variants: {
     variant: {
       neutral: "badge-neutral",
@@ -14,11 +14,11 @@ const badgeVariants = cva(" pointer-events-auto", {
       info: "badge-info",
       warning: "badge-warning",
       error: "badge-error",
-      ghost: "badge-ghost",
+      ghost: "badge-ghost ring-0",
     },
     size: {
-      xs: "badge-xs",
-      sm: "badge-sm",
+      xs: "badge-xs border",
+      sm: "badge-sm border-2",
       md: "badge-md",
       lg: "badge-lg",
     },

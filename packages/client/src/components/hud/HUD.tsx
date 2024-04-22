@@ -164,14 +164,6 @@ export const GameHUD = memo(() => {
       return ReactDOM.createPortal(
         <div className={`screen-container`}>
           <HUD scale={uiScale} pad>
-            {/* Make map look inset */}
-            {mapOpen && (
-              <>
-                <div className="absolute inset-0 border-8 blur-lg border-secondary/25" />
-                <div className="absolute inset-0 scale-[98%] border-8 blur-lg border-info/25" />
-              </>
-            )}
-
             <Modal title="hacker console" keybind={allowHackerModal ? "Console" : undefined} keybindClose>
               <Modal.Content className="w-4/5 h-[40rem]">
                 <HackerConsole />

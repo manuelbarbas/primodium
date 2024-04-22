@@ -18,8 +18,9 @@ export const renderShardAsteroid = (scene: Scene) => {
     const asteroidData = components.ShardAsteroid.get(entity);
     if (!asteroidData) throw new Error("Shard asteroid data not found");
 
-    const spriteScale = 5;
+    const spriteScale = 0.75;
     const asteroid = new ShardAsteroid(scene, entity, coord).setScale(spriteScale);
+    getSecondaryOutlineSprite(relationship, 1n);
 
     asteroid
       .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {

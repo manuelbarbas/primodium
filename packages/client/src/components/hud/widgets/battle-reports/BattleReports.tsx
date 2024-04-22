@@ -83,7 +83,7 @@ export const BattleReports = () => {
       <LoadingScreen />
       <ErrorScreen />
       <Navigator.Screen title={"BattleReports"} className="full h-full">
-        <div className="text-xs gap-2 w-full h-full overflow-x-hidden flex flex-col items-center">
+        <div className="text-xs gap-2 w-full h-full flex flex-col items-center">
           {battles.length === 0 && (
             <SecondaryCard className="w-full h-full flex items-center justify-center font-bold">
               <p className="opacity-50">NO BATTLE REPORTS FOUND</p>

@@ -167,36 +167,38 @@ export const Content: React.FC<WidgetContentProps> = memo(
         onPointerEnter={onPointerEnter}
         onPointerLeave={onPointerLeave}
       >
-        <div
-          className={`flex p-1 text-xs items-center gap-3 justify-between w-full cursor-move ring-1 ring-secondary ${
-            locked ? "bg-info/50 cursor-default" : pinned ? "bg-neutral/75" : "bg-secondary/50"
-          }`}
-          onPointerDown={onMouseDown}
-          onDoubleClick={onDoubleClick}
-        >
-          {/* Title */}
-          <div className="flex gap-1 bg-gray-900 px-2 items-center">
-            {icon && <img src={icon} className="pixel-images h-5" />}
-            <p className=" uppercase font-bold">{title}</p>
-          </div>
-
-          {!popUp && (
-            <div className="flex items-center gap-1">
-              {
-                <>
-                  {!pinned && onPin && <RiPushpinFill className="cursor-crosshair" onClick={onPin} />}
-                  {pinned && onUnpin && <RiUnpinFill className="cursor-crosshair" onClick={onUnpin} />}
-                </>
-              }
-
-              {locked && onUnlock && <FaRegWindowRestore className="cursor-pointer" onClick={onUnlock} />}
-              {!locked && onLock && <FaRegWindowMaximize className="cursor-pointer" onClick={onLock} />}
-              {/* {!minimized && onMinimize && <FaMinus className="cursor-nesw-resize" onClick={onMinimize} />}
-            {minimized && onMaximize && <FaPlus className="cursor-nesw-resize" onClick={onMaximize} />} */}
-              {onClose && <FaMinus className="cursor-pointer" onClick={onClose} />}
+        {false && (
+          <div
+            className={`flex p-1 text-xs items-center gap-3 justify-between w-full cursor-move ring-1 ring-secondary ${
+              locked ? "bg-info/50 cursor-default" : pinned ? "bg-neutral/75" : "bg-secondary/50"
+            }`}
+            onPointerDown={onMouseDown}
+            onDoubleClick={onDoubleClick}
+          >
+            {/* Title */}
+            <div className="flex gap-1 bg-gray-900 px-2 items-center">
+              {icon && <img src={icon} className="pixel-images h-5" />}
+              <p className=" uppercase font-bold">{title}</p>
             </div>
-          )}
-        </div>
+
+            {!popUp && (
+              <div className="flex items-center gap-1">
+                {
+                  <>
+                    {!pinned && onPin && <RiPushpinFill className="cursor-crosshair" onClick={onPin} />}
+                    {pinned && onUnpin && <RiUnpinFill className="cursor-crosshair" onClick={onUnpin} />}
+                  </>
+                }
+
+                {locked && onUnlock && <FaRegWindowRestore className="cursor-pointer" onClick={onUnlock} />}
+                {!locked && onLock && <FaRegWindowMaximize className="cursor-pointer" onClick={onLock} />}
+                {/* {!minimized && onMinimize && <FaMinus className="cursor-nesw-resize" onClick={onMinimize} />}
+            {minimized && onMaximize && <FaPlus className="cursor-nesw-resize" onClick={onMaximize} />} */}
+                {onClose && <FaMinus className="cursor-pointer" onClick={onClose} />}
+              </div>
+            )}
+          </div>
+        )}
 
         {noBorder ? (
           <NoBorderCard
@@ -569,15 +571,9 @@ export const Widget: React.FC<WidgetProps> = memo(
 
     if (locked)
       return (
-        <AnimatePresence>
+        <>
           {containerRef && container && visible && active && (
-            <motion.div
-              key={id}
-              transition={{ duration: 0.1 }}
-              initial={{ opacity: 0, scale: 0.2, translateX: -50, translateY: -50 }}
-              animate={{ opacity: 1, scale: 1, translateX: 0, translateY: 0 }}
-              exit={{ opacity: 0, scale: 0, translateX: -50, translateY: -50 }}
-            >
+            <div key={id}>
               <Content
                 id={id}
                 title={title}
@@ -596,21 +592,15 @@ export const Widget: React.FC<WidgetProps> = memo(
               >
                 {children}
               </Content>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
+        </>
       );
 
     return ReactDOM.createPortal(
-      <AnimatePresence>
+      <>
         {containerRef && container && visible && active && (
-          <motion.div
-            key={id}
-            transition={{ duration: 0.1 }}
-            initial={{ opacity: 0, scale: 0.2, translateX: -50, translateY: -50 }}
-            animate={{ opacity: 1, scale: 1, translateX: 0, translateY: 0 }}
-            exit={{ opacity: 0, scale: 0, translateX: -50, translateY: -50 }}
-          >
+          <div key={id} className="animate-in fade-in zoom-in-90 slide-in-from-top-5">
             <Content
               id={id}
               title={title}
@@ -634,9 +624,9 @@ export const Widget: React.FC<WidgetProps> = memo(
             >
               {children}
             </Content>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>,
+      </>,
       containerRef ?? document.body
     );
   }

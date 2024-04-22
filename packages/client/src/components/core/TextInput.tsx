@@ -74,7 +74,7 @@ export const TextInput: React.FC<{
         required={!!requirePattern}
         pattern={requirePattern}
         placeholder={placeholder ?? "Type here"}
-        className={`${className} input w-full max-w-xs`}
+        className={`${className} input w-full max-w-xs bg-neutral border-secondary/25`}
       />
       <label className="label">
         {bottomLeftLabel && <span className="label-text-alt opacity-75">{bottomLeftLabel}</span>}

@@ -116,11 +116,11 @@ Modal.Content = function ModalContent({ children, className }) {
 
   return ReactDOM.createPortal(
     <div
-      className="top-0 w-screen h-screen absolute z-50 bg-neutral/25 backdrop-blur-md flex items-center justify-center"
+      className="top-0 w-screen h-screen absolute bg-neutral/75 flex items-center justify-center animate-in fade-in-0"
       onClick={handleClickOutside}
     >
       <div className={`max-w-screen max-h-screen space-y-2 ${className} p-5 pt-12`} ref={modalRef}>
-        <Card className="relative w-full h-full block">
+        <Card className="w-full h-full shadow-2xl pointer-events-auto">
           <div className="absolute top-0 -translate-y-full w-full flex justify-between items-center p-2">
             <p className="font-bold uppercase pr-2 text-accent">{title}</p>
             <Button
