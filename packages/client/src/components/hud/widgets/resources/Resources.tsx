@@ -1,40 +1,34 @@
-import { Widget } from "@/components/core/Widget";
 import { useMud } from "@/hooks";
-import { getRandomRange } from "@/util/common";
 import { AllResourceLabels } from "@/components/hud/widgets/resources/AllResourceLabels";
 import { AllUtilityLabels } from "@/components/hud/widgets/resources/AllUtilityLabels";
 import { Card } from "@/components/core/Card";
+import { Tabs } from "@/components/core/Tabs";
+import { IconLabel } from "@/components/core/IconLabel";
 
 export const Resources = () => {
   const { components } = useMud();
   const mapOpen = components.MapOpen.use()?.value;
 
-  return (
-    <Widget
-      id="resources"
-      title="RESOURCES"
-      icon="/img/resource/iridium_resource.png"
-      defaultCoord={{
-        x: window.innerWidth / 2 + getRandomRange(-50, 50),
-        y: window.innerHeight / 2 + getRandomRange(-50, 50),
-      }}
-      defaultVisible
-      defaultLocked
-      scene={"ASTEROID"}
-      hotkey={"Resources"}
-      active={!mapOpen}
-      minOpacity={0.5}
-      draggable
-      lockable
-      pinnable
-      persist
+  if (mapOpen) return;
 
-      // noBorder
-    >
-      <Card>
-        <AllResourceLabels />
-        <AllUtilityLabels />
-      </Card>
-    </Widget>
+  return (
+    <Tabs defaultIndex={0} className="pointer-events-auto flex items-center">
+      <Tabs.Button
+        index={0}
+        togglable
+        size={"sm"}
+        style={{
+          writingMode: "vertical-lr",
+        }}
+      >
+        <IconLabel text="Resources" imageUri="/img/resource/iridium_resource.png" className="gap-2 py-2" />
+      </Tabs.Button>
+      <Tabs.Pane index={0}>
+        <Card noDecor>
+          <AllResourceLabels />
+          <AllUtilityLabels />
+        </Card>
+      </Tabs.Pane>
+    </Tabs>
   );
 };

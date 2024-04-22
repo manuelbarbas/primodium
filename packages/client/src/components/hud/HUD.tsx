@@ -12,7 +12,6 @@ import { HUD } from "@/components/core/HUD";
 import { Modal } from "@/components/core/Modal";
 import { BrandingLabel } from "@/components/shared/BrandingLabel";
 import { AsteroidLoading } from "@/components/hud/AsteroidLoading";
-import { CurrentObjective } from "@/components/hud/CurrentObjective";
 import { Profile } from "@/components/hud/Profile";
 import { Companion } from "@/components/hud/companion/Companion";
 import { HoverInfo } from "./hover/HoverInfo";
@@ -191,12 +190,14 @@ export const GameHUD = memo(() => {
               <UnitDeaths />
             </HUD.TopMiddle>
             <HUD.TopRight className="flex flex-col items-end gap-2">
-              <CurrentObjective />
-              <Resources />
               <Hangar />
               <OwnedAsteroids />
               <OwnedFleets />
             </HUD.TopRight>
+
+            <HUD.Right>
+              <Resources />
+            </HUD.Right>
 
             <HUD.BottomMiddle>
               <Dock />
