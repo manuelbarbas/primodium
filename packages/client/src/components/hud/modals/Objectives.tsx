@@ -17,7 +17,6 @@ import { components as comps } from "src/network/components";
 import { claimObjective } from "src/network/setup/contractCalls/claimObjective";
 import { getEntityTypeName } from "src/util/common";
 
-import { AudioKeys } from "src/game/lib/constants/assets/audio";
 import {
   BackgroundImage,
   ObjectiveEntityLookup,
@@ -79,7 +78,7 @@ const ClaimObjectiveButton: React.FC<{
         <Button
           disabled={!canClaim}
           className={`btn-sm btn-secondary border-accent w-full`}
-          clickSound={AudioKeys.Complete2}
+          clickSound={"Complete2"}
           onClick={() => claimObjective(mud, selectedRock, objectiveEntity)}
         >
           Claim
@@ -146,7 +145,12 @@ const Objective: React.FC<{
                     const value = _req.currentValue > _req.requiredValue ? _req.requiredValue : _req.currentValue;
 
                     return (
-                      <Badge key={index} className={`text-xs gap-2 ${complete ? "badge-success" : "badge-neutral"}`}>
+                      <Badge
+                        key={index}
+                        className={`text-xs gap-2 ${complete ? "badge-success" : "badge-neutral"}`}
+                        tooltipDirection={"bottom"}
+                        tooltip={getEntityTypeName(_req.id)}
+                      >
                         <IconLabel
                           imageUri={
                             ResourceImage.get(_req.id) ??
@@ -154,8 +158,6 @@ const Objective: React.FC<{
                             "/img/icons/minersicon.png"
                           }
                           text={formatNumber(value / _req.scale, { short: true, fractionDigits: 3 })}
-                          tooltipDirection={"bottom"}
-                          tooltipText={getEntityTypeName(_req.id)}
                           className="text-xs font-bold"
                         />
 
@@ -272,10 +274,10 @@ export const Objectives: React.FC<{ highlight?: Entity }> = ({ highlight }) => {
   return (
     <Tabs className="flex flex-col items-center w-full h-full">
       <Join className="border-secondary border border-secondary/25">
-        <Tabs.Button showActive index={0} className="btn-sm">
+        <Tabs.Button index={0} className="btn-sm">
           Available
         </Tabs.Button>
-        <Tabs.Button showActive index={1} className="btn-sm">
+        <Tabs.Button index={1} className="btn-sm">
           Completed
         </Tabs.Button>
       </Join>

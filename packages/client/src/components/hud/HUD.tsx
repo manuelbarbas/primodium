@@ -2,37 +2,36 @@ import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { FC, memo, useEffect, useMemo, useRef } from "react";
 import ReactDOM from "react-dom";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
-import { usePersistentStore } from "src/game/stores/PersistentStore";
-import { useMud } from "src/hooks";
-import { useWidgets } from "src/hooks/providers/WidgetProvider";
-import { usePrimodium } from "src/hooks/usePrimodium";
-import { components } from "src/network/components";
+import { usePersistentStore } from "@game/stores/PersistentStore";
+import { useMud } from "@/hooks";
+import { useWidgets } from "@/hooks/providers/WidgetProvider";
+import { usePrimodium } from "@/hooks/usePrimodium";
+import { components } from "@/network/components";
 import { useShallow } from "zustand/react/shallow";
-import { HUD } from "../core/HUD";
-import { Modal } from "../core/Modal";
-import { BrandingLabel } from "../shared/BrandingLabel";
-import { AsteroidLoading } from "./AsteroidLoading";
-import { CurrentObjective } from "./CurrentObjective";
-import { Profile } from "./Profile";
-import { Companion } from "./companion/Companion";
+import { HUD } from "@/components/core/HUD";
+import { Modal } from "@/components/core/Modal";
+import { BrandingLabel } from "@/components/shared/BrandingLabel";
+import { AsteroidLoading } from "@/components/hud/AsteroidLoading";
+import { CurrentObjective } from "@/components/hud/CurrentObjective";
+import { Profile } from "@/components/hud/Profile";
+import { Companion } from "@/components/hud/companion/Companion";
 import { HoverInfo } from "./hover/HoverInfo";
-import { HoverTarget } from "./markers/HoverTarget";
-import { BlueprintInfoMarker } from "./markers/asteroid/BlueprintInfoMarker";
-import { BuildingMenuPopup } from "./markers/asteroid/BuildingMenuPopup";
-import { AsteroidTarget } from "./markers/starmap/AsteroidTarget";
-import { BuildMarker } from "./markers/starmap/BuildMarker";
-import { FleetTarget } from "./markers/starmap/FleetTarget";
-import { HomeMarker } from "./markers/starmap/HomeMarker";
-import HackerConsole from "./modals/HackerConsole";
-import { OwnedAsteroids } from "./widgets/OwnedAsteroids";
-import { OwnedFleets } from "./widgets/OwnedFleets";
-import { UnitDeaths } from "./widgets/UnitDeaths";
-import { Blueprints } from "./widgets/blueprints/Blueprints";
-import { Chat } from "./widgets/chat/Chat";
-import { Cheatcodes } from "./widgets/dev/Cheatcodes";
-import { Hangar } from "./widgets/hangar/Hangar";
-import { Resources } from "./widgets/resources/Resources";
+import { HoverTarget } from "@/components/hud/markers/HoverTarget";
+import { BlueprintInfoMarker } from "@/components/hud/markers/asteroid/BlueprintInfoMarker";
+import { BuildingMenuPopup } from "@/components/hud/markers/asteroid/BuildingMenuPopup";
+import { AsteroidTarget } from "@/components/hud/markers/starmap/AsteroidTarget";
+import { BuildMarker } from "@/components/hud/markers/starmap/BuildMarker";
+import { FleetTarget } from "@/components/hud/markers/starmap/FleetTarget";
+import { HomeMarker } from "@/components/hud/markers/starmap/HomeMarker";
+import { HackerConsole } from "@/components/hud/modals/HackerConsole";
+import { OwnedAsteroids } from "@/components/hud/widgets/OwnedAsteroids";
+import { OwnedFleets } from "@/components/hud/widgets/OwnedFleets";
+import { Blueprints } from "@/components/hud/widgets/blueprints/Blueprints";
+import { Chat } from "@/components/hud/widgets/chat/Chat";
+import { Cheatcodes } from "@/components/hud/widgets/dev/Cheatcodes";
+import { Hangar } from "@/components/hud/widgets/hangar/Hangar";
+import { Resources } from "@/components/hud/widgets/resources/Resources";
+import { UnitDeaths } from "@/components/hud/widgets/UnitDeaths";
 
 export const GameHUD = memo(() => {
   const {
@@ -56,7 +55,7 @@ export const GameHUD = memo(() => {
   const { widgets } = useWidgets();
 
   useEffect(() => {
-    const hideAllListener = addListener(KeybindActions.HideAll, () => {
+    const hideAllListener = addListener("HideAll", () => {
       const numOpen = widgets.filter((widget) => widget.visible && widget.active).length;
       if (numOpen > 0) widgets.forEach((widget) => widget.close());
       else widgets.forEach((widget) => widget.open());
@@ -142,9 +141,9 @@ export const GameHUD = memo(() => {
   }, [isSpectating, primodium, transitionToScene]);
 
   useEffect(() => {
-    const starmapListener = primodium.api("STARMAP").input.addListener(KeybindActions.Map, closeMap);
+    const starmapListener = primodium.api("STARMAP").input.addListener("Map", closeMap);
 
-    const asteroidListener = primodium.api("ASTEROID").input.addListener(KeybindActions.Map, openMap);
+    const asteroidListener = primodium.api("ASTEROID").input.addListener("Map", openMap);
 
     return () => {
       starmapListener.dispose();
@@ -165,15 +164,7 @@ export const GameHUD = memo(() => {
       return ReactDOM.createPortal(
         <div className={`screen-container`}>
           <HUD scale={uiScale} pad>
-            {/* Make map look inset */}
-            {mapOpen && (
-              <>
-                <div className="absolute inset-0 border-8 blur-lg border-secondary/25" />
-                <div className="absolute inset-0 scale-[98%] border-8 blur-lg border-info/25" />
-              </>
-            )}
-
-            <Modal title="hacker console" keybind={allowHackerModal ? KeybindActions.Console : undefined} keybindClose>
+            <Modal title="hacker console" keybind={allowHackerModal ? "Console" : undefined} keybindClose>
               <Modal.Content className="w-4/5 h-[40rem]">
                 <HackerConsole />
               </Modal.Content>

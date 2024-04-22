@@ -1,4 +1,4 @@
-import { FC, ReactNode, createContext, memo, useContext, useEffect, useState } from "react";
+import { FC, ReactNode, createContext, memo, useContext, useEffect, useRef } from "react";
 
 interface HUDProps {
   children?: ReactNode;
@@ -9,11 +9,6 @@ interface HUDProps {
 interface HUDElementProps {
   children?: ReactNode;
   className?: string;
-}
-
-interface MousePosition {
-  x: number;
-  y: number;
 }
 
 const ScaleContext = createContext<number | undefined>(undefined);
@@ -28,11 +23,14 @@ const useScale = () => {
 
 const CursorFollower: FC<HUDElementProps> = ({ children, className }) => {
   const scale = useScale();
-  const [mousePosition, setMousePosition] = useState<MousePosition>({ x: 0, y: 0 });
+  const divRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
-      setMousePosition({ x: event.clientX, y: event.clientY });
+      if (divRef.current) {
+        divRef.current.style.left = `${event.clientX}px`;
+        divRef.current.style.top = `${event.clientY}px`;
+      }
     };
 
     document.addEventListener("mousemove", handleMouseMove);
@@ -43,14 +41,12 @@ const CursorFollower: FC<HUDElementProps> = ({ children, className }) => {
 
   return (
     <div
+      ref={divRef}
       style={{
-        position: "fixed",
-        left: mousePosition.x,
-        top: mousePosition.y,
-        transform: `scale(${scale})`,
         zIndex: 1001,
+        scale,
       }}
-      className={className}
+      className={`fixed z-[1001] ${className}`}
     >
       {children}
     </div>

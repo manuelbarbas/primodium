@@ -47,6 +47,8 @@ export enum KeybindActions {
   NULL,
 }
 
+export type KeybindActionKeys = keyof typeof KeybindActions;
+
 export const KeyNames: { [key: string]: string } = {
   ["ONE"]: "1",
   ["TWO"]: "2",

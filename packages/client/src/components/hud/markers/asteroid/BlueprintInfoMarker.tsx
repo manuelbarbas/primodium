@@ -1,11 +1,12 @@
 import { addCoords, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMemo } from "react";
-import { usePrimodium } from "src/hooks/usePrimodium";
-import { components } from "src/network/components";
-import { getBuildingDimensions } from "src/util/building";
-import { BlueprintInfo } from "../../widgets/blueprints/BlueprintInfo";
-import { Marker } from "src/components/core/Marker";
+import { usePrimodium } from "@/hooks/usePrimodium";
+import { components } from "@/network/components";
+import { getBuildingDimensions } from "@/util/building";
+import { Marker } from "@/components/core/Marker";
+import { Card } from "@/components/core/Card";
+import { BlueprintInfo } from "@/components/hud/widgets/blueprints/BlueprintInfo";
 
 export const BlueprintInfoMarker = () => {
   const primodium = usePrimodium();
@@ -33,7 +34,9 @@ export const BlueprintInfoMarker = () => {
 
   return (
     <Marker id="blueprint-info-target" scene={"ASTEROID"} coord={coord} origin="center-bottom">
-      <BlueprintInfo building={building} />
+      <Card>
+        <BlueprintInfo building={building} />
+      </Card>
     </Marker>
   );
 };

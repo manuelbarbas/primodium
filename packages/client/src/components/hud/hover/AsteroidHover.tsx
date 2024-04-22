@@ -43,7 +43,7 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
     );
 
   return (
-    <Card className="ml-5 w-60 relative">
+    <div className="w-60 relative">
       <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50 " />
       <div className="flex flex-col gap-1 z-10">
         <div className="grid grid-cols-2 gap-1">
@@ -113,7 +113,7 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
           </>
         )}
       </div>
-    </Card>
+    </div>
   );
 };
 

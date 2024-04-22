@@ -3,22 +3,21 @@ import { Entity, Has } from "@latticexyz/recs";
 import { EFleetStance } from "contracts/config/enums";
 import { useMemo } from "react";
 import { FaFire } from "react-icons/fa";
-import { Button } from "src/components/core/Button";
-import { SecondaryCard } from "src/components/core/Card";
-import { Loader } from "src/components/core/Loader";
-import { Tooltip } from "src/components/core/Tooltip";
-import { Widget } from "src/components/core/Widget";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
-import { useMud } from "src/hooks";
-import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
-import { useFleetStats } from "src/hooks/useFleetCount";
-import { usePlayerOwner } from "src/hooks/usePlayerOwner";
-import { usePrimodium } from "src/hooks/usePrimodium";
-import { useSyncStatus } from "src/hooks/useSyncStatus";
-import { components } from "src/network/components";
-import { EntityType } from "src/util/constants";
-import { entityToFleetName, entityToRockName } from "src/util/name";
-import { formatNumber, formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
+import { Button } from "@/components/core/Button";
+import { SecondaryCard } from "@/components/core/Card";
+import { Loader } from "@/components/core/Loader";
+import { Tooltip } from "@/components/core/Tooltip";
+import { Widget } from "@/components/core/Widget";
+import { useMud } from "@/hooks";
+import { useInCooldownEnd } from "@/hooks/useCooldownEnd";
+import { useFleetStats } from "@/hooks/useFleetCount";
+import { usePlayerOwner } from "@/hooks/usePlayerOwner";
+import { usePrimodium } from "@/hooks/usePrimodium";
+import { useSyncStatus } from "@/hooks/useSyncStatus";
+import { components } from "@/network/components";
+import { EntityType } from "@/util/constants";
+import { entityToFleetName, entityToRockName } from "@/util/name";
+import { formatNumber, formatResourceCount, formatTime, formatTimeShort } from "@/util/number";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -209,7 +208,7 @@ export const OwnedFleets = () => {
       lockable
       draggable
       persist
-      hotkey={KeybindActions.Fleets}
+      hotkey={"Fleets"}
       scene={"STARMAP"}
       active={!!mapOpen}
       defaultCoord={{ x: 0, y: 0 }}

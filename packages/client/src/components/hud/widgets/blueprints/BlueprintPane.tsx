@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { BuildingBlueprints } from "./BuildingBlueprints";
-import { Button } from "src/components/core/Button";
-import { usePrimodium } from "src/hooks/usePrimodium";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
 import { useShallow } from "zustand/react/shallow";
-import { usePersistentStore } from "src/game/stores/PersistentStore";
+import { BuildingBlueprints } from "@/components/hud/widgets/blueprints/BuildingBlueprints";
+import { Button } from "@/components/core/Button";
+import { usePrimodium } from "@/hooks/usePrimodium";
+import { usePersistentStore } from "@/game/stores/PersistentStore";
 
 export const BlueprintPane = () => {
   const [visibleDiv, setVisibleDiv] = useState(0);
@@ -29,7 +28,7 @@ export const BlueprintPane = () => {
   };
 
   useEffect(() => {
-    const cycle = addListener(KeybindActions.Cycle, () => {
+    const cycle = addListener("Cycle", () => {
       setVisibleDiv((prev) => (prev + 1) % 4);
     });
 
@@ -89,7 +88,7 @@ export const BlueprintPane = () => {
 
         {/* Toggle Expand/Collapse button ${arePanesExpanded ? 'mr-0' : 'mr-11'} */}
         <div className={`flex justify-end`}>
-          <Button onClick={togglePanes} className="text-[.7rem] px-1 min-h-4 bg-transparent border-none">
+          <Button onClick={togglePanes} variant={"ghost"} size={"xs"} className="text-[.7rem] px-2 m-1">
             {arePanesExpanded ? "- Collapse" : "+ Expand"}
           </Button>
         </div>
@@ -102,7 +101,7 @@ export const BlueprintPane = () => {
             <Button
               key={index}
               onClick={() => showDiv(index)}
-              className={`text-s flex items-center bg-neutral/100 border border-secondary py-2 px-4 ${
+              className={`!flex !items-center !bg-neutral/100 !border !border-secondary !py-3 px-4 ${
                 index === 3 ? "rounded-br-lg" : ""
               }`}
               style={{ writingMode: "vertical-lr" }}
@@ -130,7 +129,7 @@ export const BlueprintPane = () => {
           ))}
           {!hideHotkeys && (
             <p className="flex text-xs kbd kbd-xs py-2 w-fit" style={{ writingMode: "vertical-lr" }}>
-              {keybinds[KeybindActions.Cycle]?.entries().next().value[0] ?? "?"}
+              {keybinds["Cycle"]?.entries().next().value[0] ?? "?"}
             </p>
           )}
         </div>

@@ -1,5 +1,6 @@
 import { ReactNode, memo, createContext, useContext, useState, FC, useEffect, useRef } from "react";
-import { Button as _Button, IconButton as _IconButton } from "./Button";
+import { Button as _Button } from "./Button";
+import { SecondaryCard } from "./Card";
 
 interface TabProps {
   children?: ReactNode;
@@ -35,49 +36,33 @@ const Pane: FC<{
     return null;
   }
 
-  return fragment ? <>{children}</> : <div className={`overflow-y-auto scrollbar ${className} `}>{children}</div>;
+  return fragment ? (
+    <>{children}</>
+  ) : (
+    <SecondaryCard className={`overflow-y-auto scrollbar ${className} `}>{children}</SecondaryCard>
+  );
 });
 
-const Button: FC<React.ComponentProps<typeof _Button> & { index: number; togglable?: boolean; showActive?: boolean }> =
-  memo((props) => {
+const Button: FC<React.ComponentProps<typeof _Button> & { index: number; togglable?: boolean }> = memo(
+  ({ togglable = false, index, ...props }) => {
     const { index: currIndex, setIndex } = useIndex();
-    const { togglable = false, index, showActive = false } = props;
-
     const selected = currIndex === index;
 
     return (
       <_Button
         {...props}
-        selected={selected && showActive}
+        selected={selected}
         onClick={(e) => {
           setIndex(selected && togglable ? undefined : index);
           if (props.onClick) props.onClick(e);
         }}
       />
     );
-  });
-
-const IconButton: React.FC<React.ComponentProps<typeof _IconButton> & { index: number }> = memo((props) => {
-  const { index: currIndex, setIndex } = useIndex();
-  const { index } = props;
-
-  const selected = currIndex === index;
-
-  return (
-    <_IconButton
-      {...props}
-      selected={selected}
-      onClick={() => {
-        setIndex(selected ? undefined : index);
-        if (props.onClick) props.onClick();
-      }}
-    />
-  );
-});
+  }
+);
 
 export const Tabs: FC<TabProps> & {
   Button: typeof Button;
-  IconButton: typeof IconButton;
   Pane: typeof Pane;
 } = ({ children, defaultIndex = 0, className, onChange }) => {
   const [currentIndex, setCurrentIndex] = useState<number | undefined>(defaultIndex);
@@ -103,5 +88,4 @@ export const Tabs: FC<TabProps> & {
 };
 
 Tabs.Button = Button;
-Tabs.IconButton = IconButton;
 Tabs.Pane = Pane;

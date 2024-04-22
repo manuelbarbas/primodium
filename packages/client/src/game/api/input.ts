@@ -1,22 +1,22 @@
 import { throttle } from "lodash";
 
 import { Key, Scene } from "engine/types";
-import { usePersistentStore } from "../stores/PersistentStore";
-import { KeybindActions } from "../lib/constants/keybinds";
+import { usePersistentStore } from "@game/stores/PersistentStore";
+import { KeybindActionKeys } from "@game/lib/constants/keybinds";
 
 export function createInputApi(targetScene: Scene) {
   const keybinds = usePersistentStore.getState().keybinds;
-  function isDown(keybindAction: KeybindActions) {
+  function isDown(keybindAction: KeybindActionKeys) {
     const { input } = targetScene;
 
     if (!keybinds[keybindAction]) return false;
 
-    if (KeybindActions.LeftClick === keybindAction) {
+    if ("LeftClick" === keybindAction) {
       if (input.phaserInput.activePointer.downElement?.nodeName !== "CANVAS") return false;
       return input.phaserInput.activePointer.leftButtonDown();
     }
 
-    if (KeybindActions.RightClick === keybindAction) {
+    if ("RightClick" === keybindAction) {
       if (input.phaserInput.activePointer.downElement?.nodeName !== "CANVAS") return false;
       return input.phaserInput.activePointer.rightButtonDown();
     }
@@ -30,17 +30,17 @@ export function createInputApi(targetScene: Scene) {
     return false;
   }
 
-  function isUp(keybindAction: KeybindActions) {
+  function isUp(keybindAction: KeybindActionKeys) {
     const keybinds = usePersistentStore.getState().keybinds;
     const { input } = targetScene;
 
     if (!keybinds[keybindAction]) return false;
 
-    if (KeybindActions.LeftClick === keybindAction) {
+    if ("LeftClick" === keybindAction) {
       return input.phaserInput.activePointer.leftButtonReleased();
     }
 
-    if (KeybindActions.RightClick === keybindAction) {
+    if ("RightClick" === keybindAction) {
       return input.phaserInput.activePointer.rightButtonReleased();
     }
 
@@ -53,13 +53,13 @@ export function createInputApi(targetScene: Scene) {
     return false;
   }
 
-  function addListener(KeybindActions: KeybindActions, callback: () => void, emitOnRepeat = false, wait = 0) {
+  function addListener(keybindAction: KeybindActionKeys, callback: () => void, emitOnRepeat = false, wait = 0) {
     const keybinds = usePersistentStore.getState().keybinds;
     const { input } = targetScene;
 
     const fn = throttle(callback, wait);
 
-    for (const key of keybinds[KeybindActions]!) {
+    for (const key of keybinds[keybindAction]!) {
       input.phaserKeys
         .get(key as Key)
         ?.on("down", fn)
@@ -68,7 +68,7 @@ export function createInputApi(targetScene: Scene) {
 
     return {
       dispose: () => {
-        for (const key of keybinds[KeybindActions]!) {
+        for (const key of keybinds[keybindAction]!) {
           input.phaserKeys.get(key as Key)?.removeListener("down", fn);
         }
       },

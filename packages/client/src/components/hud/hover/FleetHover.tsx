@@ -47,7 +47,7 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
     );
 
   return (
-    <Card className="ml-5 relative w-56 font-bold">
+    <div className="relative w-56 font-bold">
       <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
       <div className="flex flex-col gap-1 z-10">
         <div className="flex gap-1 items-center">
@@ -126,6 +126,6 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
           </div>
         )}
       </div>
-    </Card>
+    </div>
   );
 };

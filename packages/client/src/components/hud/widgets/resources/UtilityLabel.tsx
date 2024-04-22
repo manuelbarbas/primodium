@@ -5,7 +5,7 @@ import { IconLabel } from "src/components/core/IconLabel";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { EntityType, ResourceImage } from "src/util/constants";
 import { formatResourceCount } from "src/util/number";
-import { CapacityBar } from "./CapacityBar";
+import { CapacityBar } from "../../../core/CapacityBar";
 
 export const UtilityLabel = ({
   name,
@@ -24,10 +24,8 @@ export const UtilityLabel = ({
   const resourceIcon = ResourceImage.get(resourceId);
 
   return (
-    <Badge className="w-full flex justify-start">
+    <Badge className="w-full flex justify-start" tooltip={name}>
       <IconLabel
-        tooltipText={name}
-        tooltipDirection="top"
         imageUri={resourceIcon ?? ""}
         text={formatResourceCount(resourceId, showCount ? resourceCount : used)}
         className="mr-1"
@@ -51,13 +49,12 @@ export const VaultUtilityLabel = ({
   const resourceIcon = ResourceImage.get(resourceId);
 
   return (
-    <Badge className="w-full flex justify-start text-[.7rem] bg-transparent border-none">
-      <IconLabel
-        tooltipText={name}
-        tooltipDirection="left"
-        imageUri={resourceIcon ?? ""}
-        text={formatResourceCount(resourceId, resourceStorage)}
-      />
+    <Badge
+      className="w-full flex justify-start text-[.7rem] bg-transparent border-none pointer-events-auto"
+      tooltip={name}
+      tooltipDirection="left"
+    >
+      <IconLabel imageUri={resourceIcon ?? ""} text={formatResourceCount(resourceId, resourceStorage)} />
     </Badge>
   );
 };

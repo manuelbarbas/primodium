@@ -10,7 +10,7 @@ import { ResourceImage, ResourceType } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
 import { Badge } from "../../../core/Badge";
-import { Card, SecondaryCard } from "../../../core/Card";
+import { SecondaryCard } from "../../../core/Card";
 import { IconLabel } from "../../../core/IconLabel";
 
 export const RecipeDisplay: React.FC<{
@@ -78,104 +78,100 @@ export const BlueprintInfo: React.FC<{
   if (!getEntityTypeName(building)) return <></>;
 
   return (
-    <Card>
-      <div className="items-center p-0 w-full z-100">
-        <div className="flex flex-col items-center w-full h-full text-xs relative gap-1 ">
-          <div className="absolute top-0 w-full h-full" />
+    <div className="items-center p-0 w-full z-100 animate-out">
+      <div className="flex flex-col items-center w-full h-full text-xs relative gap-1 ">
+        <div className="absolute top-0 w-full h-full" />
 
-          <SecondaryCard className="flex flex-col gap-4 p-1">
-            {/* Building Name */}
-            <div className="text-sm font-bold">{buildingName}</div>
+        <div className="flex flex-col gap-4 p-1">
+          {/* Building Name */}
+          <div className="text-sm font-bold">{buildingName}</div>
 
-            {/* Function/Effect */}
-            {(!!production.length || !!unitProduction?.value?.length || !!storageUpgrades?.length) && (
-              <SecondaryCard className="flex flex-col p-1">
-                <span className="mb-2">Effect</span>
+          {/* Function/Effect */}
+          {(!!production.length || !!unitProduction?.value?.length || !!storageUpgrades?.length) && (
+            <SecondaryCard className="flex flex-col p-1">
+              <span className="mb-2">Effect</span>
 
-                <div className="flex flex-col gap-1 w-56 relative bg-transparent border-none -mt-1">
-                  {production.map(({ resource, amount, type }) => (
-                    <Badge
-                      key={`prototypeproduction-${resource}`}
-                      className="text-xs gap-2 bg-neutral/50 text-success/50"
-                    >
-                      <ResourceIconTooltip
-                        name={getEntityTypeName(resource)}
-                        image={ResourceImage.get(resource) ?? ""}
-                        resource={resource}
-                        amount={amount}
-                        resourceType={type}
-                        short
-                        fontSize="xs"
-                        direction="top"
-                        fractionDigits={3}
-                      />
-                    </Badge>
-                  ))}
-                  {!!unitProduction && (
-                    <div className="gap-1 flex flex-wrap">
-                      {/* <img src="UI_defense.png" alt="Defense Icon" className="w-4 h-4 m-1" /> */}
-                      <span className="text-xs text-success/50 w-full"> Unlock training of </span>
+              <div className="flex flex-col gap-1 w-56 relative bg-transparent border-none -mt-1">
+                {production.map(({ resource, amount, type }) => (
+                  <Badge
+                    key={`prototypeproduction-${resource}`}
+                    className="text-xs gap-2 bg-neutral/50 text-success/50"
+                  >
+                    <ResourceIconTooltip
+                      name={getEntityTypeName(resource)}
+                      image={ResourceImage.get(resource) ?? ""}
+                      resource={resource}
+                      amount={amount}
+                      resourceType={type}
+                      short
+                      fontSize="xs"
+                      direction="top"
+                      fractionDigits={3}
+                    />
+                  </Badge>
+                ))}
+                {!!unitProduction && (
+                  <div className="gap-1 flex flex-wrap">
+                    {/* <img src="UI_defense.png" alt="Defense Icon" className="w-4 h-4 m-1" /> */}
+                    <span className="text-xs text-success/50 w-full"> Unlock training of </span>
 
-                      {unitProduction?.value.map((unit) => (
-                        <Badge key={`unitProduction-${unit}`} className="text-xs gap-2 bg-neutral/50">
-                          <IconLabel
-                            className={`text-xs font-bold justify-center`}
-                            imageUri={ResourceImage.get(unit as Entity) ?? ""}
-                            tooltipDirection={"top"}
-                            tooltipText={getEntityTypeName(unit as Entity)}
-                            text={""}
-                            hideText
+                    {unitProduction?.value.map((unit) => (
+                      <Badge key={`unitProduction-${unit}`} className="text-xs gap-2 bg-neutral/50">
+                        <IconLabel
+                          className={`text-xs font-bold justify-center`}
+                          imageUri={ResourceImage.get(unit as Entity) ?? ""}
+                          text={""}
+                          hideText
+                        />
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+                {!!storageUpgrades?.length && (
+                  <div className="flex flex-col">
+                    <p className="text-left font-bold opacity-50">Increase storage</p>
+                    <div className="flex flex-wrap gap-1 w-56">
+                      {storageUpgrades.map(({ resource, amount }) => (
+                        <Badge key={`storage-${resource}`} className="text-xs bg-neutral/50 text-success/50">
+                          <ResourceIconTooltip
+                            name={getEntityTypeName(resource)}
+                            image={ResourceImage.get(resource) ?? ""}
+                            resource={resource}
+                            amount={amount}
+                            resourceType={ResourceType.Resource}
+                            short
+                            fontSize="xs"
+                            direction="top"
+                            fractionDigits={3}
                           />
                         </Badge>
                       ))}
                     </div>
-                  )}
-                  {!!storageUpgrades?.length && (
-                    <div className="flex flex-col">
-                      <p className="text-left font-bold opacity-50">Increase storage</p>
-                      <div className="flex flex-wrap gap-1 w-56">
-                        {storageUpgrades.map(({ resource, amount }) => (
-                          <Badge key={`storage-${resource}`} className="text-xs bg-neutral/50 text-success/50">
-                            <ResourceIconTooltip
-                              name={getEntityTypeName(resource)}
-                              image={ResourceImage.get(resource) ?? ""}
-                              resource={resource}
-                              amount={amount}
-                              resourceType={ResourceType.Resource}
-                              short
-                              fontSize="xs"
-                              direction="top"
-                              fractionDigits={3}
-                            />
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </SecondaryCard>
-            )}
-
-            {/* Cost */}
-            <SecondaryCard className="flex flex-col">
-              <span>Cost</span>
-              <RecipeDisplay building={building} asteroid={spaceRock} />
-
-              {/* if not enough resources */}
-              {!hasEnough && (
-                <p className="text-error animate-pulse duration-2000 text-xs text-center mt-2">NOT ENOUGH RESOURCES</p>
-              )}
+                  </div>
+                )}
+              </div>
             </SecondaryCard>
+          )}
 
-            {/* Size Tile */}
-            <div className="mt-auto self-end">
-              <span className="text-xs text-gray-400">
-                {dimensions.width}x{dimensions.height} tiles
-              </span>
-            </div>
+          {/* Cost */}
+          <SecondaryCard className="flex flex-col">
+            <span>Cost</span>
+            <RecipeDisplay building={building} asteroid={spaceRock} />
+
+            {/* if not enough resources */}
+            {!hasEnough && (
+              <p className="text-error animate-pulse duration-2000 text-xs text-center mt-2">NOT ENOUGH RESOURCES</p>
+            )}
           </SecondaryCard>
+
+          {/* Size Tile */}
+          <div className="mt-auto self-end">
+            <span className="text-xs text-gray-400">
+              {dimensions.width}x{dimensions.height} tiles
+            </span>
+          </div>
         </div>
       </div>
-    </Card>
+    </div>
   );
 });
