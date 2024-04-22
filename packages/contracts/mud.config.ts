@@ -126,6 +126,18 @@ export const worldInput = {
       },
     },
 
+    P_AsteroidProbabilityConfig: {
+      key: [],
+      schema: {
+        common1: "uint256",
+        common2: "uint256",
+        eliteMicro: "uint256",
+        eliteSmall: "uint256",
+        eliteMedium: "uint256",
+        eliteLarge: "uint256",
+      },
+    },
+
     Asteroid: {
       key: ["entity"],
       schema: {

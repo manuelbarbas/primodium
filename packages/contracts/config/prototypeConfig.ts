@@ -39,7 +39,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         admin: encodeAddress("0"),
         asteroidDistance: 10n,
         maxAsteroidsPerPlayer: 6n,
-        asteroidChanceInv: 4n,
+        asteroidChanceInv: 2n,
         unitProductionRate: 100n,
         travelTime: 10n,
         worldSpeed: 100n,
@@ -51,6 +51,16 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         maxLevel: 1n,
         mapId: 6,
         primodium: 0n * BigInt(SCALE),
+      },
+
+      // Must add up to 100
+      P_AsteroidProbabilityConfig: {
+        common1: 30n,
+        common2: 15n,
+        eliteMicro: 5n,
+        eliteSmall: 25n,
+        eliteMedium: 15n,
+        eliteLarge: 10n,
       },
 
       P_ColonyShipConfig: {
