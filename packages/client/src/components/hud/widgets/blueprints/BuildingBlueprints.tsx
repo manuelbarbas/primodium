@@ -12,13 +12,12 @@ import { Button } from "../../../core/Button";
 import { BuildingImageFromType } from "../../../shared/BuildingImage";
 import { getBuildingDimensions } from "src/util/building";
 import { useShallow } from "zustand/react/shallow";
-import { AudioKeys } from "src/game/lib/constants/assets/audio";
-import { KeyNames, KeybindActions } from "src/game/lib/constants/keybinds";
+import { KeyNames, KeybindActionKeys } from "@game/lib/constants/keybinds";
 
 const BlueprintButton: React.FC<{
   buildingType: Entity;
   tooltipDirection?: "left" | "right" | "top" | "bottom";
-  keybind?: KeybindActions;
+  keybind?: KeybindActionKeys;
   keybindActive?: boolean;
   className?: string;
   style?: React.CSSProperties;
@@ -64,7 +63,7 @@ const BlueprintButton: React.FC<{
       tooltipDirection={tooltipDirection ?? "right"}
       onPointerEnter={() => components.HoverEntity.set({ value: buildingType })}
       onPointerLeave={() => components.HoverEntity.remove()}
-      clickSound={AudioKeys.Bleep7}
+      clickSound={"Bleep7"}
       onClick={() => {
         if (selectedBuilding === buildingType) {
           components.SelectedBuilding.remove();
@@ -90,7 +89,7 @@ const BlueprintButton: React.FC<{
       )}
       {!hideHotkeys && keybindActive && (
         <p className="absolute bottom-2 right-2 flex text-xs kbd kbd-xs">
-          {KeyNames[keybinds[keybind ?? KeybindActions.NULL]?.entries().next().value[0]] ?? "?"}
+          {KeyNames[keybinds[keybind ?? "NULL"]?.entries().next().value[0]] ?? "?"}
         </p>
       )}
     </Button>
@@ -160,15 +159,15 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({
     []
   );
 
-  const keybinds = [
-    KeybindActions.Hotbar0,
-    KeybindActions.Hotbar1,
-    KeybindActions.Hotbar2,
-    KeybindActions.Hotbar3,
-    KeybindActions.Hotbar4,
-    KeybindActions.Hotbar5,
-    KeybindActions.Hotbar6,
-    KeybindActions.Hotbar7,
+  const keybinds: KeybindActionKeys[] = [
+    "Hotbar0",
+    "Hotbar1",
+    "Hotbar2",
+    "Hotbar3",
+    "Hotbar4",
+    "Hotbar5",
+    "Hotbar6",
+    "Hotbar7",
   ];
 
   // Decide which buildings to show based on the buildingTypeToShow prop
@@ -202,7 +201,7 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({
   return (
     <>
       <div
-        className={`flex flex-wrap p-3 w-60 h-96 gap-y-1.5 gap-x-1 overflow-y-auto hide-scrollbar grid-background ${
+        className={`flex flex-wrap p-3 w-60 h-96 gap-y-1.5 gap-x-1 overflow-y-auto hide-scrollbar heropattern-graphpaper-slate-800/50 ${
           active && showHighlight ? "ring ring-warning" : ""
         }`}
       >

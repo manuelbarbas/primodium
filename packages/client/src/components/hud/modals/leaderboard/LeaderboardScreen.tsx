@@ -8,10 +8,10 @@ export const LeaderboardScreen: React.FC = () => {
   return (
     <Tabs className="flex flex-col items-center gap-2 w-full h-full">
       <Join className="border border-secondary/25">
-        <Tabs.Button showActive index={0} className="btn-sm">
+        <Tabs.Button index={0} className="btn-sm">
           Alliances
         </Tabs.Button>
-        <Tabs.Button showActive index={1} className="btn-sm">
+        <Tabs.Button index={1} className="btn-sm">
           Players
         </Tabs.Button>
       </Join>

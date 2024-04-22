@@ -55,7 +55,7 @@ const nouns = [
   "Moon",
   "Sun",
   "Universe",
-  "Wormhole",
+  "Neutron",
   "Spacesuit",
   "Telescope",
   "Astrolab",

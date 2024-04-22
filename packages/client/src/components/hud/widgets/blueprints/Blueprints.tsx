@@ -1,9 +1,7 @@
 import { memo } from "react";
 import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
-
 import { BlueprintPane } from "./BlueprintPane";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 export const Blueprints = memo(() => {
   const { components } = useMud();
@@ -22,7 +20,7 @@ export const Blueprints = memo(() => {
       origin="center-left"
       scene={"ASTEROID"}
       active={!mapOpen && isBuilding}
-      hotkey={KeybindActions.Blueprints}
+      hotkey={"Blueprints"}
       minOpacity={0.6}
       lockable
       draggable

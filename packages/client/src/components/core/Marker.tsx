@@ -118,7 +118,12 @@ export const Marker: React.FC<{
       obj.destroy();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [coord, id, visible, offScreenIconUri]);
+  }, [id, visible, offScreenIconUri]);
+
+  useEffect(() => {
+    marker?.setX(coord.x);
+    marker?.setY(coord.y);
+  }, [coord, marker]);
 
   useEffect(() => {
     if (!marker || !container) return;

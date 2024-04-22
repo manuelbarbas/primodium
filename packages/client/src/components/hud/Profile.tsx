@@ -1,15 +1,12 @@
 import { FaHandshake, FaHandshakeSlash } from "react-icons/fa";
-import { useMud } from "src/hooks";
-// import { Card } from "../core/Card";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
-import { components } from "src/network/components";
-import { getRandomRange } from "src/util/common";
-import { Modal } from "../core/Modal";
-import { Tooltip } from "../core/Tooltip";
-import { Widget } from "../core/Widget";
-import { AccountDisplay } from "../shared/AccountDisplay";
-import { Account } from "../transfer/Account";
-import { SpectatingDetails } from "./SpectatingDetails";
+import { useMud } from "@/hooks";
+import { components } from "@/network/components";
+import { getRandomRange } from "@/util/common";
+import { Modal } from "@/components/core/Modal";
+import { Widget } from "@/components/core/Widget";
+import { AccountDisplay } from "@/components/shared/AccountDisplay";
+import { Account } from "@/components/transfer/Account";
+import { SpectatingDetails } from "@/components/hud/SpectatingDetails";
 
 const ProfileContent = () => {
   const {
@@ -24,16 +21,19 @@ const ProfileContent = () => {
         <span className="text-white/50 text-xs">id:</span>
         <AccountDisplay player={playerEntity} />
         <Modal title="account">
-          <Modal.Button className="btn-sm btn-neutral border-secondary !p-1 flex gap-2 text-accent text-xs w-fit">
-            <Tooltip text={`${sessionEntity ? "" : "not"} authorizing`} direction="right">
-              <div>
-                {sessionEntity ? (
-                  <FaHandshake className="text-success w-4 h-4" />
-                ) : (
-                  <FaHandshakeSlash className="text-error w-4 h-4" />
-                )}
-              </div>
-            </Tooltip>
+          <Modal.Button
+            className="btn-sm btn-neutral border-secondary !p-1 flex gap-2 text-accent text-xs w-fit"
+            tooltip={`${sessionEntity ? "" : "not"} authorizing`}
+            tooltipDirection="right"
+          >
+            <div>
+              {sessionEntity ? (
+                <FaHandshake className="text-success w-4 h-4" />
+              ) : (
+                <FaHandshakeSlash className="text-error w-4 h-4" />
+              )}
+            </div>
+
             <p>MANAGE</p>
           </Modal.Button>
           <Modal.Content className="w-[40rem] h-fit">
@@ -41,7 +41,6 @@ const ProfileContent = () => {
           </Modal.Content>
         </Modal>
       </div>
-      {/* <Score player={playerEntity} /> */}
     </>
   );
 };
@@ -57,7 +56,7 @@ export const Profile = () => {
         x: window.innerWidth / 2 + getRandomRange(-50, 50),
         y: window.innerHeight / 2 + getRandomRange(-50, 50),
       }}
-      hotkey={KeybindActions.Account}
+      hotkey={"Account"}
       scene={"UI"}
       minOpacity={0.5}
       defaultLocked

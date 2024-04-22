@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode, FC } from "react";
+import { SecondaryCard } from "@/components/core/Card";
 
 interface AccordionContextValue {
   activeIndex: number;
@@ -21,10 +22,10 @@ const AccordionItem: FC<{ index: number; children?: ReactNode }> = ({ index, chi
   const handleToggle = () => setActiveIndex(isActive ? -1 : index);
 
   return (
-    <div className="collapse collapse-arrow join-item border border-base-300">
+    <SecondaryCard className="border border-secondary/25 collapse collapse-arrow join-item">
       <input type="radio" name="my-accordion" checked={isActive} onChange={handleToggle} />
       {children}
-    </div>
+    </SecondaryCard>
   );
 };
 
@@ -45,7 +46,7 @@ export const Accordion: FC<{ children?: ReactNode }> & {
 
   return (
     <AccordionContext.Provider value={{ activeIndex, setActiveIndex }}>
-      <div className="join join-vertical w-full">{children}</div>
+      <div className="join join-vertical w-full pointer-events-auto">{children}</div>
     </AccordionContext.Provider>
   );
 };

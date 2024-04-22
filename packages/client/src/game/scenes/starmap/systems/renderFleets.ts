@@ -1,14 +1,13 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { createAudioApi } from "src/game/api/audio";
-import { createObjectApi } from "src/game/api/objects";
-import { AudioKeys } from "src/game/lib/constants/assets/audio";
-import { BaseAsteroid } from "src/game/lib/objects/Asteroid/BaseAsteroid";
-import { Fleet } from "src/game/lib/objects/Fleet";
-import { TransitLine } from "src/game/lib/objects/TransitLine";
-import { components } from "src/network/components";
-import { world } from "src/network/world";
+import { createAudioApi } from "@/game/api/audio";
+import { createObjectApi } from "@/game/api/objects";
+import { BaseAsteroid } from "@game/lib/objects/Asteroid/BaseAsteroid";
+import { Fleet } from "@game/lib/objects/Fleet";
+import { TransitLine } from "@game/lib/objects/TransitLine";
+import { components } from "@/network/components";
+import { world } from "@/network/world";
 
 export const renderFleets = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -79,7 +78,7 @@ export const renderFleets = (scene: Scene) => {
           components.SelectedFleet.set({
             value: entity,
           });
-          audioApi.play(AudioKeys.Bleep, "ui");
+          audioApi.play("Bleep", "ui");
         })
         .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
           components.HoverEntity.set({

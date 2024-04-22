@@ -1,9 +1,8 @@
-import { Coord, pixelCoordToTileCoord } from "@latticexyz/phaserx";
+import { createCameraApi } from "@game/api/camera";
 import { Scene } from "engine/types";
-import { createCameraApi } from "src/game/api/camera";
-import { createInputApi } from "src/game/api/input";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
-import { world } from "src/network/world";
+import { createInputApi } from "@game/api/input";
+import { world } from "@/network/world";
+import { Coord, pixelCoordToTileCoord } from "@latticexyz/phaserx";
 
 const SPEED = 750;
 const ZOOM_SPEED = 5;
@@ -42,15 +41,15 @@ export const setupBasicCameraMovement = (
 
   function handleZoom(delta: number) {
     const zoom = scene.camera.phaserCamera.zoom;
-    const zoomSpeed = isDown(KeybindActions.Modifier) ? ZOOM_SPEED / 3 : ZOOM_SPEED;
+    const zoomSpeed = isDown("Modifier") ? ZOOM_SPEED / 3 : ZOOM_SPEED;
 
     const zoomAmount = zoomSpeed * (delta / 1000);
-    if (isDown(KeybindActions.ZoomIn)) {
+    if (isDown("ZoomIn")) {
       const targetZoom = Math.min(zoom + zoomAmount, maxZoom);
       scene.camera.setZoom(targetZoom);
     }
 
-    if (isDown(KeybindActions.ZoomOut)) {
+    if (isDown("ZoomOut")) {
       const targetZoom = Math.max(zoom - zoomAmount, minZoom);
       scene.camera.setZoom(targetZoom);
     }
@@ -59,7 +58,7 @@ export const setupBasicCameraMovement = (
   function handleDrag() {
     const zoom = scene.camera.phaserCamera.zoom;
 
-    if (isDown(KeybindActions.LeftClick)) {
+    if (isDown("LeftClick")) {
       if (originDragPoint) {
         const { x, y } = scene.input.phaserInput.activePointer.position;
         const { x: prevX, y: prevY } = originDragPoint;
@@ -80,16 +79,16 @@ export const setupBasicCameraMovement = (
 
   function handleTranslate(delta: number) {
     // HANDLE CAMERA SCROLL MOVEMENT KEYS
-    const speed = isDown(KeybindActions.Modifier) ? SPEED / 3 : SPEED;
+    const speed = isDown("Modifier") ? SPEED / 3 : SPEED;
     const moveDistance = speed * (delta / 1000);
     let scrollX = scene.camera.phaserCamera.scrollX;
     let scrollY = scene.camera.phaserCamera.scrollY;
     let moveX = 0;
     let moveY = 0;
-    if (isDown(KeybindActions.Up)) moveY--;
-    if (isDown(KeybindActions.Down)) moveY++;
-    if (isDown(KeybindActions.Left)) moveX--;
-    if (isDown(KeybindActions.Right)) moveX++;
+    if (isDown("Up")) moveY--;
+    if (isDown("Down")) moveY++;
+    if (isDown("Left")) moveX--;
+    if (isDown("Right")) moveX++;
 
     //only register movement when no tweens are running
     if ((moveX !== 0 || moveY !== 0) && !scene.phaserScene.tweens.getTweensOf(scene.camera.phaserCamera).length) {
@@ -117,7 +116,7 @@ export const setupBasicCameraMovement = (
   }
 
   function handleCenter() {
-    if (isDown(KeybindActions.Center)) {
+    if (isDown("Center")) {
       pan({ x: 15, y: 6 });
     }
   }
@@ -165,7 +164,7 @@ export const setupBasicCameraMovement = (
 
       let scale = 0.0002;
 
-      if (isDown(KeybindActions.Modifier)) scale /= 2;
+      if (isDown("Modifier")) scale /= 2;
 
       const camera = scene.camera.phaserCamera;
       // Get the current world point under pointer.

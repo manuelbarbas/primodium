@@ -13,7 +13,6 @@ import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
 import { Widget } from "../core/Widget";
 import { Objectives } from "./modals/Objectives";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 const tutorialObjectives = [
   EObjectives.BuildIronMine,
@@ -72,7 +71,7 @@ export const CurrentObjective = () => {
       id="objectives"
       title="objectives"
       icon="/img/icons/objectiveicon.png"
-      hotkey={KeybindActions.Objectives}
+      hotkey={"Objectives"}
       defaultCoord={{ x: 69, y: 420 }}
       defaultLocked
       lockable
