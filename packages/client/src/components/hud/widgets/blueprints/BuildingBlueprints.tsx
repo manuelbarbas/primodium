@@ -57,7 +57,8 @@ const BlueprintButton: React.FC<{
 
   return (
     <Button
-      className={`hover:scale-110 drop-shadow-hard ${buildingType === selectedBuilding ? "btn-warning" : "btn-ghost"}`}
+      className={`hover:scale-110 drop-shadow-hard`}
+      variant={buildingType === selectedBuilding ? "warning" : "ghost"}
       disabled={mainbaseLevel < levelRequirement}
       keybind={keybindActive ? keybind : undefined}
       tooltipDirection={tooltipDirection ?? "right"}

@@ -182,7 +182,6 @@ export const GameHUD = memo(() => {
             {/* Widgets */}
             <HUD.TopLeft className="flex flex-col gap-2">
               <Profile />
-              <Blueprints />
             </HUD.TopLeft>
 
             <HUD.TopMiddle className="flex flex-col items-center gap-2">
@@ -198,6 +197,10 @@ export const GameHUD = memo(() => {
             <HUD.Right>
               <Resources />
             </HUD.Right>
+
+            <HUD.Left>
+              <Blueprints />
+            </HUD.Left>
 
             <HUD.BottomMiddle>
               <Dock />
