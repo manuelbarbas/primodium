@@ -30,7 +30,7 @@ export const NumberInput: React.FC<{
       newCount = min.toString();
     }
 
-    onChange(newCount);
+    onChange?.(newCount);
   };
 
   return (
