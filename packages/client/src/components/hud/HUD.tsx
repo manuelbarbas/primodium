@@ -32,6 +32,7 @@ import { Cheatcodes } from "@/components/hud/widgets/dev/Cheatcodes";
 import { Hangar } from "@/components/hud/widgets/hangar/Hangar";
 import { Resources } from "@/components/hud/widgets/resources/Resources";
 import { UnitDeaths } from "@/components/hud/widgets/UnitDeaths";
+import { Dock } from "@/components/hud/Dock";
 
 export const GameHUD = memo(() => {
   const {
@@ -197,6 +198,9 @@ export const GameHUD = memo(() => {
               <OwnedFleets />
             </HUD.TopRight>
 
+            <HUD.BottomMiddle>
+              <Dock />
+            </HUD.BottomMiddle>
             <HUD.BottomRight>
               <Chat />
             </HUD.BottomRight>
