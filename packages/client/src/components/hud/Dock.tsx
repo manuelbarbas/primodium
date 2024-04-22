@@ -1,7 +1,7 @@
-import { SecondaryCard } from "../core/Card";
+import { Objectives } from "@/components/hud/modals/Objectives";
+import { SecondaryCard } from "@/components/core/Card";
 import { IconLabel } from "../core/IconLabel";
 import { Modal } from "../core/Modal";
-import { UnitUpgrades } from "./building-menu/screens/UnitUpgrades";
 import { AllianceManagement } from "./modals/alliance-mgmt/AllianceManagement";
 import { LeaderboardScreen } from "./modals/leaderboard/LeaderboardScreen";
 import { Settings } from "./modals/settings/Settings";
@@ -15,7 +15,13 @@ export const Dock = () => {
       <SecondaryCard className="bg-secondary/10 heropattern-topography-white/10">
         <div className="flex flex-row gap-2 items-center pointer-events-auto -translate-y-1/2">
           <Modal title="alliance management">
-            <Modal.Button shape={"square"} size={"lg"} variant={"neutral"} tooltip="alliance management">
+            <Modal.Button
+              className="hover:drop-shadow-xl hover:shadow-accent/25"
+              shape={"square"}
+              size={"lg"}
+              variant={"neutral"}
+              tooltip="alliance management"
+            >
               <IconLabel imageUri="/img/icons/debugicon.png" />
             </Modal.Button>
             <Modal.Content className="w-[40rem] h-[50rem]">
@@ -23,7 +29,13 @@ export const Dock = () => {
             </Modal.Content>
           </Modal>
           <Modal title="leaderboard">
-            <Modal.Button tooltip="leaderboard" shape={"square"} size={"lg"} variant={"neutral"}>
+            <Modal.Button
+              className="hover:drop-shadow-xl hover:shadow-accent/25"
+              tooltip="leaderboard"
+              shape={"square"}
+              size={"lg"}
+              variant={"neutral"}
+            >
               <IconLabel imageUri="/img/icons/leaderboardicon.png" />
             </Modal.Button>
             <Modal.Content className="w-[50rem] h-[50rem]">
@@ -31,23 +43,49 @@ export const Dock = () => {
             </Modal.Content>
           </Modal>
           <Modal title="battles">
-            <Modal.Button tooltip="battle reports" shape={"square"} size={"lg"} variant={"neutral"}>
-              <IconLabel imageUri="/img/icons/reportsicon.png" />
+            <Modal.Button
+              className="hover:drop-shadow-xl hover:shadow-accent/25"
+              tooltip="battle reports"
+              shape={"square"}
+              size={"lg"}
+              variant={"neutral"}
+            >
+              <IconLabel className="text-2xl" imageUri="/img/icons/reportsicon.png" />
             </Modal.Button>
             <Modal.Content className="w-[40rem] h-[50rem]">
               <BattleReports />
             </Modal.Content>
           </Modal>
-          <Modal title="upgrade units">
+          {/* <Modal title="upgrade units">
             <Modal.Button tooltip="upgrade units" shape={"square"} size={"lg"} variant={"neutral"}>
               <IconLabel imageUri="/img/icons/addicon.png" />
             </Modal.Button>
             <Modal.Content className="w-[62rem]">
               <UnitUpgrades />
             </Modal.Content>
+          </Modal> */}
+          <Modal title="Objectives">
+            <Modal.Button
+              className="hover:drop-shadow-xl hover:shadow-accent/25"
+              tooltip="Objectives"
+              shape={"square"}
+              size={"lg"}
+              variant={"neutral"}
+            >
+              <IconLabel imageUri="/img/icons/objectiveicon.png" />
+            </Modal.Button>
+            <Modal.Content className="w-[50rem] h-[50rem]">
+              <Objectives />
+            </Modal.Content>
           </Modal>
           <Modal title="settings">
-            <Modal.Button tooltip="settings" shape={"square"} size={"lg"} variant={"neutral"}>
+            <Modal.Button
+              className="hover:drop-shadow-xl hover:shadow-accent/25"
+              tooltip="settings"
+              shape={"square"}
+              size={"lg"}
+              variant={"neutral"}
+            >
               <IconLabel imageUri="/img/icons/settingsicon.png" />
             </Modal.Button>
             <Modal.Content className="w-132 h-120">

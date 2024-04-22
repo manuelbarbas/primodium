@@ -34,7 +34,7 @@ export default {
         hard: "4px 5px 0px rgba(0, 0, 0, 0.3)", // Add your custom shadow here
       },
       animation: {
-        float: "float 5s ease-in-out infinite !important",
+        float: "float 5s ease-in-out infinite",
       },
     },
   },
