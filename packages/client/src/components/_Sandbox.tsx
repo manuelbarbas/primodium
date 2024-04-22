@@ -21,7 +21,7 @@ import { Dropdown } from "@/components/core/Dropdown";
 export const _Sandbox = () => {
   return (
     <HUD>
-      <div className="absolute top-0 right-0 min-h-screen w-full heropattern-graphpaper-slate-800/50 bg-slate-900/45 p-10 grid grid-cols-2 gap-4 drop-shadow-hard">
+      <div className="absolute top-0 right-0 min-h-screen w-full heropattern-graphpaper-slate-800/50 bg-slate-900/45 p-10 grid grid-cols-2 gap-4 drop-shadow-hard pointer-events-auto">
         <div className="space-y-4">
           <div className="flex gap-2">
             <div className="w-8 h-8 bg-secondary border" />
@@ -127,12 +127,12 @@ export const _Sandbox = () => {
         </div>
         <div className="space-y-4">
           <div className="grid grid-cols-3 gap-2">
-            <Range className="range-secondary" />
-            <Range className="range-primary" />
-            <Range className="range-warning" />
-            <Range className="range-success" />
-            <Range className="range-error" />
-            <Range className="range-info" />
+            <Range variant={"secondary"} />
+            <Range variant={"primary"} />
+            <Range variant={"warning"} />
+            <Range variant={"success"} />
+            <Range variant={"error"} />
+            <Range variant={"info"} />
           </div>
           <div className="grid grid-cols-3 gap-2">
             <Progress value={30} max={100} variant={"secondary"} />
@@ -178,8 +178,7 @@ export const _Sandbox = () => {
             </Join>
             <Tabs.Pane index={0}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus
-              ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent
-              mauris.
+              ante dapibus diam. Sed nisi.
             </Tabs.Pane>
             <Tabs.Pane index={1}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus
@@ -189,13 +188,11 @@ export const _Sandbox = () => {
             <Tabs.Pane index={2}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus
               ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent
-              mauris.
+              mauris. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed
+              cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum.
+              Praesent mauris.
             </Tabs.Pane>
-            <Tabs.Pane index={3}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus
-              ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent
-              mauris.
-            </Tabs.Pane>
+            <Tabs.Pane index={3}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.</Tabs.Pane>
           </Tabs>
 
           <NumberInput count="0" />

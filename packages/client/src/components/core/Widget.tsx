@@ -1,5 +1,4 @@
 import { Coord } from "@latticexyz/utils";
-import { AnimatePresence, motion } from "framer-motion";
 import { ReactNode, memo, useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaMinus, FaRegWindowMaximize, FaRegWindowRestore } from "react-icons/fa";
@@ -73,6 +72,7 @@ type WidgetContentProps = {
     | "center-bottom";
   locked?: boolean;
   noBorder?: boolean;
+  topBar?: boolean;
 };
 
 let pinnedDepth = -10000;
@@ -99,6 +99,7 @@ export const Content: React.FC<WidgetContentProps> = memo(
     onUnlock,
     popUp,
     noBorder: noBorder,
+    topBar = false,
   }) => {
     const [uiScale] = usePersistentStore((state) => [state.uiScale]);
 
@@ -167,7 +168,7 @@ export const Content: React.FC<WidgetContentProps> = memo(
         onPointerEnter={onPointerEnter}
         onPointerLeave={onPointerLeave}
       >
-        {false && (
+        {topBar && (
           <div
             className={`flex p-1 text-xs items-center gap-3 justify-between w-full cursor-move ring-1 ring-secondary ${
               locked ? "bg-info/50 cursor-default" : pinned ? "bg-neutral/75" : "bg-secondary/50"

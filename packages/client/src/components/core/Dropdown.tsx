@@ -6,7 +6,7 @@ import { SecondaryCard } from "@/components/core/Card";
 import { VariantProps, cva } from "class-variance-authority";
 
 const dropdownVariants = cva(
-  "z-50 absolute mt-1 p-2 bg-neutral border border-secondary/25 w-44 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=close]:animate-out data-[state=close]:fade-out fill-mode-forwards",
+  "z-50 absolute mt-1 p-2 bg-neutral border border-secondary/25 w-44 pointer-events-auto data-[state=close]:pointer-events-none data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=close]:animate-out data-[state=close]:fade-out fill-mode-forwards",
   {
     variants: {
       variant: {

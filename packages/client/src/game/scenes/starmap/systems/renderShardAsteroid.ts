@@ -20,7 +20,6 @@ export const renderShardAsteroid = (scene: Scene) => {
 
     const spriteScale = 0.75;
     const asteroid = new ShardAsteroid(scene, entity, coord).setScale(spriteScale);
-    getSecondaryOutlineSprite(relationship, 1n);
 
     asteroid
       .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {

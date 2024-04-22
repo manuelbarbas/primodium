@@ -12,7 +12,7 @@ const buttonClass = "rounded-t-none btn-sm pt-1 border border-dotted border-seco
 
 export const MenuButtons = () => {
   return (
-    <SecondaryCard className="flex flex-col items-center">
+    <SecondaryCard className="flex flex-col items-center pointer-events-auto">
       <Join className="drop-shadow-hard border border-secondary/50" direction="vertical">
         <Modal title="alliance management">
           <Modal.Button className={buttonClass} tooltip="alliance management" tooltipDirection="right">
