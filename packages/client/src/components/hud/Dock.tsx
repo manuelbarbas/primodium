@@ -7,8 +7,6 @@ import { LeaderboardScreen } from "./modals/leaderboard/LeaderboardScreen";
 import { Settings } from "./modals/settings/Settings";
 import { BattleReports } from "./widgets/battle-reports/BattleReports";
 
-// const buttonClass = "rounded-t-none btn-sm pt-1 border border-dotted border-secondary/50";
-
 export const Dock = () => {
   return (
     <div className="translate-y-1/2">
@@ -56,14 +54,6 @@ export const Dock = () => {
               <BattleReports />
             </Modal.Content>
           </Modal>
-          {/* <Modal title="upgrade units">
-            <Modal.Button tooltip="upgrade units" shape={"square"} size={"lg"} variant={"neutral"}>
-              <IconLabel imageUri="/img/icons/addicon.png" />
-            </Modal.Button>
-            <Modal.Content className="w-[62rem]">
-              <UnitUpgrades />
-            </Modal.Content>
-          </Modal> */}
           <Modal title="Objectives">
             <Modal.Button
               className="hover:drop-shadow-xl hover:shadow-accent/25"
