@@ -8,7 +8,7 @@ import { cn } from "@/util/client";
 import { cva, type VariantProps } from "class-variance-authority";
 
 const buttonVariants = cva(
-  "btn join-item min-h-fit items-center justify-center whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 relative hover:translate-y-[-2px] hover:shadow-xl transition-all",
+  "btn join-item min-h-fit items-center justify-center whitespace-nowrap ring-offset-background focus-visible:outline-none relative hover:translate-y-[-2px] hover:shadow-xl transition-all",
   {
     variants: {
       variant: {
@@ -123,6 +123,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             buttonVariants({ variant, size, modifier, shape, className })
           )}
           ref={ref}
+          tabIndex={-1}
           {...props}
           onClick={handleClick}
           onPointerEnter={handleHoverEnter}
