@@ -381,4 +381,11 @@ export const samSiteStorageUpgrades = {
   1: { R_HP: 1000 },
   2: { R_HP: 2500 },
   3: { R_HP: 7500 },
+  4: { R_HP: 7500 },
+  5: { R_HP: 7500 },
+  6: { R_HP: 7500 },
+  7: { R_HP: 7500 },
+  8: { R_HP: 7500 },
+  9: { R_HP: 7500 },
+  10: { R_HP: 7500 },
 } as const;
