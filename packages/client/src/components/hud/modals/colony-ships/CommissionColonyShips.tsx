@@ -59,7 +59,12 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
         </div>
         {activeTile !== null && tiles[activeTile] === "train" && <TrainColonyShip buildingEntity={buildingEntity} />}
         {activeTile !== null && tiles[activeTile] === "unlock" && (
-          <UnlockSlot asteroidEntity={asteroid} playerEntity={playerEntity} index={activeTile} />
+          <UnlockSlot
+            asteroidEntity={asteroid}
+            buildingEntity={buildingEntity}
+            playerEntity={playerEntity}
+            index={activeTile}
+          />
         )}
       </div>
       <Navigator.BackButton className="btn-primary w-fit" />

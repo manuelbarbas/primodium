@@ -3,12 +3,14 @@ import { CapacityBar } from "@/components/core/CapacityBar";
 import { SecondaryCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
 import { NumberInput } from "@/components/core/NumberInput";
+import { useMud } from "@/hooks";
 import { useColonySlots } from "@/hooks/useColonySlots";
 import { useFullResourceCount } from "@/hooks/useFullResourceCount";
 import { components } from "@/network/components";
+import { payForColonySlot } from "@/network/setup/contractCalls/payForColonySlot";
 import { getEntityTypeName } from "@/util/common";
 import { ResourceImage } from "@/util/constants";
-import { formatResourceCount } from "@/util/number";
+import { formatResourceCount, parseResourceCount } from "@/util/number";
 import { getFullResourceCount } from "@/util/resource";
 import { bigIntMin } from "@latticexyz/common/utils";
 import { Entity } from "@latticexyz/recs";
@@ -16,10 +18,12 @@ import React, { useEffect, useMemo, useState } from "react";
 
 export const UnlockSlot: React.FC<{
   playerEntity: Entity;
+  buildingEntity: Entity;
   asteroidEntity: Entity;
   className?: string;
   index: number;
-}> = ({ asteroidEntity, playerEntity, className = "" }) => {
+}> = ({ asteroidEntity, buildingEntity, playerEntity, className = "" }) => {
+  const mud = useMud();
   const colonySlotsData = useColonySlots(playerEntity);
   const [activeResource, setActiveResource] = useState<Entity | null>(null);
   const [activeResourceCount, setActiveResourceCount] = useState("0");
@@ -41,6 +45,13 @@ export const UnlockSlot: React.FC<{
     setActiveResourceCount("0");
   }, [activeResource]);
 
+  const handleSubmit = () => {
+    if (!activeResource) return;
+    payForColonySlot(mud, buildingEntity, {
+      [activeResource]: BigInt(parseResourceCount(activeResource, activeResourceCount)),
+    });
+    setActiveResource(null);
+  };
   return (
     <SecondaryCard className={`h-full max-w-[250px] flex flex-col gap-6 p-3 justify-center items-center ${className}`}>
       <p>Add Slot</p>
@@ -59,7 +70,7 @@ export const UnlockSlot: React.FC<{
       {activeResource && <NumberInput count={activeResourceCount} max={max} onChange={setActiveResourceCount} />}
       {!activeResource && <NumberInput count={"0"} max={0} />}
 
-      <Button variant="primary" size="sm" disabled={activeResourceCount == "0"}>
+      <Button variant="primary" size="sm" disabled={activeResourceCount == "0"} onClick={handleSubmit}>
         Pay
       </Button>
     </SecondaryCard>
