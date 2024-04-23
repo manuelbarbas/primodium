@@ -1,7 +1,7 @@
 import { useMud } from "@/hooks";
 import { AllResourceLabels } from "@/components/hud/widgets/resources/AllResourceLabels";
 import { AllUtilityLabels } from "@/components/hud/widgets/resources/AllUtilityLabels";
-import { Card } from "@/components/core/Card";
+import { Card, GlassCard } from "@/components/core/Card";
 import { Tabs } from "@/components/core/Tabs";
 import { IconLabel } from "@/components/core/IconLabel";
 
@@ -24,14 +24,13 @@ export const Resources = () => {
       >
         <IconLabel text="Resources" imageUri="/img/resource/iridium_resource.png" className="gap-2 py-3" />
       </Tabs.Button>
-      <Tabs.Pane
-        index={0}
-        className="animate-in fade-in-0 slide-in-from-right-full !border-l-accent rounded-l-xl p-3 heropattern-topography-slate-300/10 overflow-x-hidden backdrop-blur-md"
-      >
-        <Card noDecor>
-          <AllResourceLabels />
-          <AllUtilityLabels />
-        </Card>
+      <Tabs.Pane index={0} fragment>
+        <GlassCard direction={"left"} className="animate-in slide-in-from-right-full">
+          <Card noDecor>
+            <AllResourceLabels />
+            <AllUtilityLabels />
+          </Card>
+        </GlassCard>
       </Tabs.Pane>
     </Tabs>
   );

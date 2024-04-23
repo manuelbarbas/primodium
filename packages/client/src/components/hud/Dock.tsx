@@ -1,9 +1,9 @@
 import { Objectives } from "@/components/hud/modals/Objectives";
-import { SecondaryCard } from "@/components/core/Card";
-import { IconLabel } from "../core/IconLabel";
-import { Modal } from "../core/Modal";
-import { AllianceManagement } from "./modals/alliance-mgmt/AllianceManagement";
-import { LeaderboardScreen } from "./modals/leaderboard/LeaderboardScreen";
+import { GlassCard } from "@/components/core/Card";
+import { IconLabel } from "@/components/core/IconLabel";
+import { Modal } from "@/components/core/Modal";
+import { AllianceManagement } from "@/components/hud/modals/alliance-mgmt/AllianceManagement";
+import { LeaderboardScreen } from "@/components/hud/modals/leaderboard/LeaderboardScreen";
 import { Settings } from "./modals/settings/Settings";
 import { BattleReports } from "./widgets/battle-reports/BattleReports";
 
@@ -13,7 +13,7 @@ const iconClass = "text-4xl hover:animate-float drop-shadow-hard";
 export const Dock = () => {
   return (
     <div className="translate-y-1/3">
-      <SecondaryCard className="bg-secondary/10 heropattern-topography-slate-300/10 rounded-t-xl !border-t-accent backdrop-blur-md ">
+      <GlassCard direction={"top"}>
         <div className="flex flex-row gap-2 items-center pointer-events-auto -translate-y-1/2">
           <Modal title="alliance management">
             <Modal.Button
@@ -23,7 +23,7 @@ export const Dock = () => {
               variant={"ghost"}
               tooltip="alliance management"
             >
-              <IconLabel imageUri="/img/icons/leaderboardicon.png" className={iconClass} />
+              <IconLabel imageUri="/img/icons/allianceicon.png" className={iconClass} />
             </Modal.Button>
             <Modal.Content className="w-[40rem] h-[50rem]">
               <AllianceManagement />
@@ -62,7 +62,7 @@ export const Dock = () => {
             </Modal.Content>
           </Modal>
         </div>
-      </SecondaryCard>
+      </GlassCard>
     </div>
   );
 };

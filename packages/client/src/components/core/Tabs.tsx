@@ -39,7 +39,7 @@ const Pane: FC<{
   return fragment ? (
     <>{children}</>
   ) : (
-    <SecondaryCard className={`overflow-y-auto scrollbar ${className} t`}>{children}</SecondaryCard>
+    <SecondaryCard className={`overflow-y-auto scrollbar ${className}`}>{children}</SecondaryCard>
   );
 });
 

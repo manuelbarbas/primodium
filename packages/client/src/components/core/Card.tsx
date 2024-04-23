@@ -1,5 +1,6 @@
 import { cn } from "@/util/client";
-import { forwardRef, useRef } from "react";
+import { VariantProps, cva } from "class-variance-authority";
+import { forwardRef, useCallback, useRef } from "react";
 
 const lerp = (value: number, inMin: number, inMax: number, outMin: number, outMax: number) => {
   return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
@@ -10,26 +11,27 @@ export const Card: React.FC<{
   className?: string;
   noDecor?: boolean;
   fragment?: boolean;
-}> = ({ children, className, noDecor = false, fragment = false }) => {
+  noMotion?: boolean;
+}> = ({ children, className, noDecor = false, fragment = false, noMotion = false }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
     const { left, top, width, height } = containerRef.current.getBoundingClientRect();
 
-    const x = lerp(e.clientX - left - width / 2, -width, width, -5, 5);
-    const y = lerp(e.clientY - top - height / 2, -height, height, -5, 5);
+    const x = lerp(e.clientX - left - width / 2, -width, width, -6, 6);
+    const y = lerp(e.clientY - top - height / 2, -height, height, -6, 6);
     containerRef.current.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
-  };
+  }, []);
 
-  const handleMouseEnter = () => {
+  const handleMouseEnter = useCallback(() => {
     if (!containerRef.current) return;
-  };
+  }, []);
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     if (!containerRef.current) return;
     containerRef.current.style.transform = `rotateY(0deg) rotateX(0deg)`;
-  };
+  }, []);
 
   if (fragment)
     return (
@@ -42,9 +44,13 @@ export const Card: React.FC<{
       >
         <div
           ref={containerRef}
-          onMouseEnter={handleMouseEnter}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
+          {...(!noMotion
+            ? {
+                onMouseEnter: handleMouseEnter,
+                onMouseMove: handleMouseMove,
+                onMouseLeave: handleMouseLeave,
+              }
+            : {})}
           className={cn(className)}
         >
           {children}
@@ -62,9 +68,13 @@ export const Card: React.FC<{
     >
       <div
         ref={containerRef}
-        onMouseEnter={handleMouseEnter}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
+        {...(!noMotion
+          ? {
+              onMouseEnter: handleMouseEnter,
+              onMouseMove: handleMouseMove,
+              onMouseLeave: handleMouseLeave,
+            }
+          : {})}
         className={`card bg-neutral pixel-border p-3 bg-opacity-90 relative pointer-events-auto transition-all duration-100 ease-linear ${className} `}
       >
         <div className="absolute inset-0 bg-gradient-to-br from-transparent to-neutral" />
@@ -104,9 +114,23 @@ export const SecondaryCard = forwardRef<
   );
 });
 
-export const NoBorderCard: React.FC<{
-  children: React.ReactNode | React.ReactNode[];
-  className?: string;
-}> = ({ children, className }) => {
-  return <div className={`card p-2 ${className}`}>{children}</div>;
-};
+const glassProps = cva("card border border-secondary/50 heropattern-topography-slate-500/10 backdrop-blur-md p-3", {
+  variants: {
+    direction: {
+      left: "rounded-l-xl border-l-accent",
+      right: "rounded-r-xl border-r-accent",
+      top: "rounded-t-xl border-t-accent",
+      bottom: "rounded-b-xl border-b-accent",
+    },
+  },
+});
+interface GlassProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof glassProps> {}
+
+export const GlassCard = forwardRef<HTMLDivElement, GlassProps>(({ children, className, direction }, ref) => {
+  return (
+    <div ref={ref} className={cn(glassProps({ direction, className }))}>
+      <div className="absolute inset-0 bg-gradient-to-br from-secondary/25 to-secondary/15" />
+      {children}
+    </div>
+  );
+});

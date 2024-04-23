@@ -6,7 +6,7 @@ import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
 import { usePersistentStore } from "@game/stores/PersistentStore";
 import { usePrimodium } from "@/hooks/usePrimodium";
 import { useWidgets } from "@/hooks/providers/WidgetProvider";
-import { Card, NoBorderCard } from "@/components/core/Card";
+import { Card } from "@/components/core/Card";
 import { SceneKeys } from "@game/lib/constants/common";
 import { KeybindActionKeys } from "@game/lib/constants/keybinds";
 
@@ -202,16 +202,12 @@ export const Content: React.FC<WidgetContentProps> = memo(
         )}
 
         {noBorder ? (
-          <NoBorderCard
-            className={`relative !p-0 min-w-72 filter !bg-opacity-0 ${
-              minimized ? "!border-0 h-0 overflow-hidden opacity-0" : ""
-            }`}
-          >
+          <div className={`relative !p-0 min-w-72 ${minimized ? "!border-0 h-0 overflow-hidden opacity-0" : ""}`}>
             {children}
-          </NoBorderCard>
+          </div>
         ) : (
           <Card
-            className={`relative !p-0 min-w-72 border border-t-success border-secondary filter ${
+            className={`relative !p-0 min-w-72 border border-t-success border-secondary ${
               minimized ? "!border-0 h-0 overflow-hidden opacity-0" : ""
             }`}
           >
