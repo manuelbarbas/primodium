@@ -15,6 +15,7 @@ const badgeVariants = cva("badge flex pointer-events-auto shadow-inner", {
       warning: "badge-warning",
       error: "badge-error",
       ghost: "badge-ghost ring-0",
+      glass: "badge-secondary bg-opacity-25 border-secondary/50",
     },
     size: {
       xs: "badge-xs border",

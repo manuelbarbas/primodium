@@ -42,7 +42,7 @@ export const Card: React.FC<{
   if (fragment)
     return (
       <div
-        className={`h-full drop-shadow-hard`}
+        className={`h-full`}
         style={{
           perspective: "1000px",
           transformStyle: "preserve-3d",
@@ -65,7 +65,7 @@ export const Card: React.FC<{
 
   return (
     <div
-      className={`h-full drop-shadow-hard`}
+      className={`h-full`}
       style={{
         perspective: "1000px",
         transformStyle: "preserve-3d",
@@ -118,16 +118,19 @@ export const SecondaryCard = forwardRef<
   );
 });
 
-const glassProps = cva("card border border-secondary/50 heropattern-topography-slate-500/10 backdrop-blur-md p-3", {
-  variants: {
-    direction: {
-      left: "rounded-l-xl border-l-accent",
-      right: "rounded-r-xl border-r-accent",
-      top: "rounded-t-xl border-t-accent",
-      bottom: "rounded-b-xl border-b-accent",
+const glassProps = cva(
+  "card border border-secondary/50 heropattern-topography-slate-500/10 backdrop-blur-md p-3 pointer-events-auto drop-shadow-hard",
+  {
+    variants: {
+      direction: {
+        left: "rounded-l-xl border-l-accent",
+        right: "rounded-r-xl border-r-accent",
+        top: "rounded-t-xl border-t-accent",
+        bottom: "rounded-b-xl border-b-accent",
+      },
     },
-  },
-});
+  }
+);
 interface GlassProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof glassProps> {}
 
 export const GlassCard = forwardRef<HTMLDivElement, GlassProps>(({ children, className, direction }, ref) => {

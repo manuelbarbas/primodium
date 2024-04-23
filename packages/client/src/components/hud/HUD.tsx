@@ -31,6 +31,7 @@ import { Hangar } from "@/components/hud/widgets/hangar/Hangar";
 import { Resources } from "@/components/hud/widgets/resources/Resources";
 import { UnitDeaths } from "@/components/hud/widgets/UnitDeaths";
 import { Dock } from "@/components/hud/Dock";
+import { ModeSelector } from "@/components/hud/ModeSelector";
 
 export const GameHUD = memo(() => {
   const {
@@ -174,6 +175,7 @@ export const GameHUD = memo(() => {
         </HUD.TopLeft>
 
         <HUD.TopMiddle className="flex flex-col items-center gap-2">
+          <ModeSelector />
           <Cheatcodes />
         </HUD.TopMiddle>
         <HUD.TopRight className="flex flex-col items-end gap-2">

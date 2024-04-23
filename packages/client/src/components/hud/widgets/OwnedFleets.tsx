@@ -58,7 +58,7 @@ export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ 
   return (
     <Button
       className={`row-span-1 flex flex-col p-2 gap-1 items-center !h-52 text-xs bg-base-100 flex-nowrap border-secondary ${
-        selected ? "drop-shadow-hard ring-2 ring-warning" : ""
+        selected ? "ring-2 ring-warning" : ""
       }`}
       onClick={async () => {
         onClick && onClick();
