@@ -1,7 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { FC, memo, useEffect, useMemo, useRef } from "react";
-import ReactDOM from "react-dom";
+import { memo, useEffect, useMemo, useRef } from "react";
 import { usePersistentStore } from "@game/stores/PersistentStore";
 import { useMud } from "@/hooks";
 import { useWidgets } from "@/hooks/providers/WidgetProvider";
@@ -39,15 +38,12 @@ export const GameHUD = memo(() => {
   } = useMud();
   const primodium = usePrimodium();
   const {
-    camera: { createDOMContainer },
     input: { addListener },
     scene: { transitionToScene },
   } = useRef(primodium.api("UI")).current;
 
-  const mapOpen = components.MapOpen.use(undefined, {
-    value: false,
-  }).value;
-
+  const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
+  const allowHackerModal = usePersistentStore(useShallow((state) => state.allowHackerModal));
   const activeRock = components.ActiveRock.use()?.value;
   const ownedBy = components.OwnedBy.use(activeRock)?.value;
   const isSpectating = useMemo(() => ownedBy !== playerEntity, [ownedBy, playerEntity]);
@@ -151,81 +147,60 @@ export const GameHUD = memo(() => {
     };
   }, [closeMap, openMap, primodium]);
 
-  const PhaserHUD = useMemo(() => {
-    const { container, obj } = createDOMContainer("hud", { x: 0, y: 0 });
-    obj.pointerEvents = "none";
-    obj.transformOnly = true;
-
-    const Portal: FC = memo(() => {
-      const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
-      const allowHackerModal = usePersistentStore(useShallow((state) => state.allowHackerModal));
-      if (!container) return <></>;
-
-      return ReactDOM.createPortal(
-        <div className={`screen-container`}>
-          <HUD scale={uiScale}>
-            <Modal title="hacker console" keybind={allowHackerModal ? "Console" : undefined} keybindClose>
-              <Modal.Content className="w-4/5 h-[40rem]">
-                <HackerConsole />
-              </Modal.Content>
-            </Modal>
-
-            {/* MARKERS */}
-            <BuildMarker />
-            <HomeMarker />
-            <AsteroidTarget />
-            <FleetTarget />
-            <HoverTarget />
-            <BuildingMenuPopup />
-            <BlueprintInfoMarker />
-
-            {/* Widgets */}
-            <HUD.TopLeft className="flex flex-col gap-2">
-              <Profile />
-            </HUD.TopLeft>
-
-            <HUD.TopMiddle className="flex flex-col items-center gap-2">
-              <Cheatcodes />
-              <UnitDeaths />
-            </HUD.TopMiddle>
-            <HUD.TopRight className="flex flex-col items-end gap-2">
-              <Hangar />
-              <OwnedAsteroids />
-              <OwnedFleets />
-            </HUD.TopRight>
-
-            <HUD.Right>
-              <Resources />
-            </HUD.Right>
-
-            <HUD.Left>
-              <Blueprints />
-            </HUD.Left>
-
-            <HUD.BottomMiddle>
-              <Dock />
-            </HUD.BottomMiddle>
-            <HUD.BottomRight>
-              <Chat />
-            </HUD.BottomRight>
-
-            <HUD.BottomLeft>
-              <Companion />
-            </HUD.BottomLeft>
-          </HUD>
-        </div>,
-        container
-      );
-    });
-
-    return Portal;
-  }, [createDOMContainer, mapOpen]);
-
   //align element with phaser elements
   //align element with phaser elements
   return (
     <div className={`screen-container`}>
-      <PhaserHUD />
+      <HUD scale={uiScale}>
+        <Modal title="hacker console" keybind={allowHackerModal ? "Console" : undefined} keybindClose>
+          <Modal.Content className="w-4/5 h-[40rem]">
+            <HackerConsole />
+          </Modal.Content>
+        </Modal>
+
+        {/* MARKERS */}
+        <BuildMarker />
+        <HomeMarker />
+        <AsteroidTarget />
+        <FleetTarget />
+        <HoverTarget />
+        <BuildingMenuPopup />
+        <BlueprintInfoMarker />
+
+        {/* Widgets */}
+        <HUD.TopLeft className="flex flex-col gap-2">
+          <Profile />
+          <UnitDeaths />
+        </HUD.TopLeft>
+
+        <HUD.TopMiddle className="flex flex-col items-center gap-2">
+          <Cheatcodes />
+        </HUD.TopMiddle>
+        <HUD.TopRight className="flex flex-col items-end gap-2">
+          <Hangar />
+          <OwnedAsteroids />
+          <OwnedFleets />
+        </HUD.TopRight>
+
+        <HUD.Right>
+          <Resources />
+        </HUD.Right>
+
+        <HUD.Left>
+          <Blueprints />
+        </HUD.Left>
+
+        <HUD.BottomMiddle>
+          <Dock />
+        </HUD.BottomMiddle>
+        <HUD.BottomRight>
+          <Chat />
+        </HUD.BottomRight>
+
+        <HUD.BottomLeft>
+          <Companion />
+        </HUD.BottomLeft>
+      </HUD>
       <HUD>
         <HUD.CursorFollower>
           <HoverInfo />
