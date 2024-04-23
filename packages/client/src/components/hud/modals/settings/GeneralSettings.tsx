@@ -1,3 +1,4 @@
+import { Join } from "@/components/core/Join";
 import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
@@ -47,7 +48,7 @@ export const GeneralSettings = () => {
 
           <div>
             <p className="text-xs opacity-50 font-bold pb-1 uppercase">font style</p>
-            <div>
+            <Join className="block">
               <Button
                 className={`btn-sm ${fontStyle === "font-mono" ? "border border-accent" : ""}`}
                 onClick={() => setFontStyle("font-mono")}
@@ -60,7 +61,7 @@ export const GeneralSettings = () => {
               >
                 PIXEL
               </Button>
-            </div>
+            </Join>
           </div>
         </SecondaryCard>
       </div>

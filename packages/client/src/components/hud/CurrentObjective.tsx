@@ -1,7 +1,6 @@
 import { EObjectives } from "contracts/config/enums";
 import { useEffect, useState } from "react";
 import { FaGift, FaMapPin } from "react-icons/fa";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { clampedIndex, getEntityTypeName } from "src/util/common";
@@ -81,7 +80,7 @@ export const CurrentObjective = () => {
       id="objectives"
       title="objectives"
       icon="/img/icons/objectiveicon.png"
-      hotkey={KeybindActions.Objectives}
+      hotkey={"Objectives"}
       defaultCoord={{ x: 69, y: 420 }}
       defaultLocked
       lockable

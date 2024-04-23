@@ -1,4 +1,4 @@
-export enum AudioKeys {
+export enum Audio {
   Background = "background",
   Background2 = "background2",
   Bleep = "Bleep_01",
@@ -33,3 +33,5 @@ export enum AudioKeys {
   Complete = "Complete_01",
   Complete2 = "Complete_02",
 }
+
+export type AudioKeys = keyof typeof Audio;

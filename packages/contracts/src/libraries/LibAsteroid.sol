@@ -58,7 +58,7 @@ library LibAsteroid {
     AsteroidCount.set(asteroidCount);
   }
 
-  function getUsedTilesLength() private view returns (uint256) {
+  function getUsedTilesLength() internal view returns (uint256) {
     DimensionsData memory dimensions = Dimensions.get(ExpansionKey, P_MaxLevel.get(ExpansionKey));
     return ((uint256(uint32(dimensions.width * dimensions.height))) / 256) + 1;
   }
@@ -224,7 +224,7 @@ library LibAsteroid {
 
     int32 width = Dimensions.getWidth(ExpansionKey, P_MaxLevel.get(ExpansionKey));
     for (uint256 i = 0; i < coords.length; i += 2) {
-      uint256 index = uint256(uint32(coords[i] * width + coords[i + 1]));
+      uint256 index = uint256(uint32(coords[i + 1] * width + coords[i]));
       uint256 wordIndex = index / 256;
       if (wordIndex >= bitmap.length) return false; // out of bounds (not available)
       uint256 bitIndex = index % 256;
@@ -247,7 +247,7 @@ library LibAsteroid {
 
     int32 width = Dimensions.getWidth(ExpansionKey, P_MaxLevel.get(ExpansionKey));
     for (uint256 i = 0; i < coords.length; i += 2) {
-      uint256 index = uint256(uint32(coords[i] * width + coords[i + 1]));
+      uint256 index = uint256(uint32(coords[i + 1] * width + coords[i]));
       uint256 wordIndex = index / 256;
       require(wordIndex < bitmap.length, "Tile out of bounds");
       uint256 bitIndex = index % 256;
@@ -270,7 +270,7 @@ library LibAsteroid {
 
     int32 width = Dimensions.getWidth(ExpansionKey, P_MaxLevel.get(ExpansionKey));
     for (uint256 i = 0; i < coords.length; i += 2) {
-      uint256 index = uint256(uint32(coords[i] * width + coords[i + 1]));
+      uint256 index = uint256(uint32(coords[i + 1] * width + coords[i]));
       uint256 wordIndex = index / 256;
       require(wordIndex < bitmap.length, "Tile out of bounds");
       uint256 bitIndex = index % 256;

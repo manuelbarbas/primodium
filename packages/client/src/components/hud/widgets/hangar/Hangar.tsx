@@ -3,7 +3,6 @@ import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
 import { getRandomRange } from "src/util/common";
 import { HangarContent } from "./HangarContent";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
 
 export const Hangar = memo(() => {
   const { components } = useMud();
@@ -24,7 +23,7 @@ export const Hangar = memo(() => {
         origin="center"
         scene={"ASTEROID"}
         active={!mapOpen}
-        hotkey={KeybindActions.Units}
+        hotkey={"Units"}
         minOpacity={0.6}
         draggable
         pinnable

@@ -2,13 +2,13 @@ import { EntityType } from "src/util/constants";
 import { components } from "src/network/components";
 import { ResourceLabel } from "./ResourceLabel";
 import { VaultUtilityLabel } from "./UtilityLabel";
-import { Card, SecondaryCard } from "src/components/core/Card";
+import { SecondaryCard } from "src/components/core/Card";
 
 export const AllResourceLabels = () => {
   const activeRock = components.ActiveRock.use()?.value;
   if (!activeRock) return null;
   return (
-    <Card className="flex flex-col items-end p-4 bg-neutral border border-secondary w-72">
+    <div className="flex flex-col items-end p-2 border-b border-secondary/25 w-72">
       {/* Common Resources */}
       <div className="flex flex-col w-full">
         {/* Title & Unraidable Storage */}
@@ -19,7 +19,7 @@ export const AllResourceLabels = () => {
           </div>
         </div>
 
-        <SecondaryCard className="flex flex-col gap-1 bg-zinc-600 bg-opacity-20 p-2">
+        <SecondaryCard className="flex flex-col gap-1 p-2 mt-1">
           <ResourceLabel name={"Iron"} resource={EntityType.Iron} />
           <ResourceLabel name={"Copper"} resource={EntityType.Copper} />
           <ResourceLabel name={"Lithium"} resource={EntityType.Lithium} />
@@ -43,13 +43,13 @@ export const AllResourceLabels = () => {
           </div>
         </div>
 
-        <SecondaryCard className="flex flex-col gap-1 bg-zinc-600 bg-opacity-20 p-2">
+        <SecondaryCard className="flex flex-col gap-1 p-2 mt-1">
           <ResourceLabel name={"Titanium"} resource={EntityType.Titanium} />
           <ResourceLabel name={"Platinum"} resource={EntityType.Platinum} />
           <ResourceLabel name={"Iridium"} resource={EntityType.Iridium} />
           <ResourceLabel name={"Kimberlite"} resource={EntityType.Kimberlite} />
         </SecondaryCard>
       </div>
-    </Card>
+    </div>
   );
 };

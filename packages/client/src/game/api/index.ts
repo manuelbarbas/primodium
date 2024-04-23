@@ -5,6 +5,7 @@ import engine from "engine";
 import { Game } from "engine/types";
 import { runSystems as runAsteroidSystems } from "src/game/scenes/asteroid/systems";
 import { runSystems as runStarmapSystems } from "src/game/scenes/starmap/systems";
+import { runSystems as runUISystems } from "src/game/scenes/ui/systems";
 import { components } from "src/network/components";
 import { setupBattleComponents } from "src/network/systems/setupBattleComponents";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
@@ -150,13 +151,12 @@ export async function initPrimodium(mud: MUD, version = "v1") {
   namespaceWorld(world, "game");
 
   await _init();
-  // runSystems(mud);
 
   function destroy() {
     //for each instance, call game destroy
-    const instances = engine.getGame();
+    const game = engine.getGame();
 
-    for (const [, instance] of instances.entries()) {
+    for (const [, instance] of game.entries()) {
       //dispose phaser
       instance.dispose();
     }
@@ -176,13 +176,14 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     }
     const starmapScene = _instance.sceneManager.scenes.get(Scenes.Starmap);
     const asteroidScene = _instance.sceneManager.scenes.get(Scenes.Asteroid);
+    const uiScene = _instance.sceneManager.scenes.get(Scenes.UI);
 
-    if (starmapScene === undefined || asteroidScene === undefined) {
+    if (starmapScene === undefined || asteroidScene === undefined || uiScene === undefined) {
       console.log(_instance.sceneManager.scenes);
       throw new Error("No primodium scene found");
     }
 
-    //holds the last rock the player can build on
+    components.MapOpen.set({ value: false });
     setupBuildRock();
     setupSwapNotifications(mud);
     setupBattleComponents();
@@ -199,6 +200,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
 
     runAsteroidSystems(asteroidScene, mud);
     runStarmapSystems(starmapScene, mud);
+    runUISystems(uiScene);
   }
 
   return { api, destroy, runSystems };

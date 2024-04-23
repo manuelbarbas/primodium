@@ -1,6 +1,6 @@
 import { namespaceWorld } from "@latticexyz/recs";
 import { Observable } from "rxjs";
-import { BlockNumber } from "../components/clientComponents";
+import { components } from "../components";
 import { world } from "../world";
 
 export const setupBlockNumber = (blockNumber$: Observable<bigint>) => {
@@ -29,7 +29,7 @@ export const setupBlockNumber = (blockNumber$: Observable<bigint>) => {
     const total = blockTimes.reduce((sum, time) => sum + time, 0);
     const avgBlockTime = Math.round(total / blockTimes.length);
 
-    BlockNumber.set({ value: blockNumber, avgBlockTime: avgBlockTime });
+    components.BlockNumber.set({ value: blockNumber, avgBlockTime: avgBlockTime });
   });
 
   systemWorld.registerDisposer(() => blockListener.unsubscribe());

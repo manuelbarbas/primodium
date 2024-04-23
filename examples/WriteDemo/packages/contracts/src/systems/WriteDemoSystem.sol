@@ -11,13 +11,13 @@ import { FunctionSelectors } from "@latticexyz/world/src/codegen/tables/Function
 // previously, we imported these directly,
 // but MUD collects and exposes them in index.sol automatically
 // so we can import them all from there
-import { Asteroid, Home, Level, Dimensions, DimensionsData, PositionData, Spawned, UsedTiles, P_AsteroidData, P_Asteroid, P_Blueprint, P_EnumToPrototype, P_MaxLevel, P_RequiredTile, P_Terrain } from "../primodium/index.sol";
+import { Asteroid, Home, Level, Dimensions, DimensionsData, PositionData, Spawned, UsedTiles, P_AsteroidData, P_Asteroid, P_Blueprint, P_EnumToPrototype, P_MaxLevel, P_RequiredTile, P_Terrain } from "primodium/index.sol";
 
 import { Bounds, EResource } from "src/Types.sol";
 import { BuildingKey, ExpansionKey } from "src/Keys.sol";
 
-import { EBuilding } from "../primodium/common.sol";
-import { IWorld as IPrimodiumWorld } from "../primodium/world/IWorld.sol";
+import { EBuilding } from "primodium/common.sol";
+import { IWorld as IPrimodiumWorld } from "primodium/world/IWorld.sol";
 
 import { console } from "forge-std/console.sol";
 

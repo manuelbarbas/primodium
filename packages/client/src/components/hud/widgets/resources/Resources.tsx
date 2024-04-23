@@ -1,9 +1,9 @@
-import { Widget } from "src/components/core/Widget";
-import { useMud } from "src/hooks";
-import { getRandomRange } from "src/util/common";
-import { AllResourceLabels } from "./AllResourceLabels";
-import { AllUtilityLabels } from "./AllUtilityLabels";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
+import { Widget } from "@/components/core/Widget";
+import { useMud } from "@/hooks";
+import { getRandomRange } from "@/util/common";
+import { AllResourceLabels } from "@/components/hud/widgets/resources/AllResourceLabels";
+import { AllUtilityLabels } from "@/components/hud/widgets/resources/AllUtilityLabels";
+import { Card } from "@/components/core/Card";
 
 export const Resources = () => {
   const { components } = useMud();
@@ -21,17 +21,20 @@ export const Resources = () => {
       defaultVisible
       defaultLocked
       scene={"ASTEROID"}
-      hotkey={KeybindActions.Resources}
+      hotkey={"Resources"}
       active={!mapOpen}
       minOpacity={0.5}
       draggable
       lockable
       pinnable
       persist
-      noBorder
+
+      // noBorder
     >
-      <AllResourceLabels />
-      <AllUtilityLabels />
+      <Card>
+        <AllResourceLabels />
+        <AllUtilityLabels />
+      </Card>
     </Widget>
   );
 };

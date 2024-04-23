@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useMemo } from "react";
 
-import { Button } from "src/components/core/Button";
-import { IconLabel } from "src/components/core/IconLabel";
-import { AudioKeys } from "src/game/lib/constants/assets/audio";
-import { KeybindActions } from "src/game/lib/constants/keybinds";
-import { usePersistentStore } from "src/game/stores/PersistentStore";
-import { useMud } from "src/hooks";
-import { usePrimodium } from "src/hooks/usePrimodium";
-import { components } from "src/network/components";
-import { EntityType, ResourceImage } from "src/util/constants";
+import { Button } from "@/components/core/Button";
+import { IconLabel } from "@/components/core/IconLabel";
+import { usePersistentStore } from "@game/stores/PersistentStore";
+import { useMud } from "@/hooks";
+import { usePrimodium } from "@/hooks/usePrimodium";
+import { components } from "@/network/components";
+import { EntityType, ResourceImage } from "@/util/constants";
 
 export const MapButton = () => {
   const {
@@ -34,9 +32,9 @@ export const MapButton = () => {
 
   const [hideHotkeys] = usePersistentStore((state) => [state.hideHotkeys]);
   useEffect(() => {
-    const starmapListener = primodium.api("STARMAP").input.addListener(KeybindActions.Map, closeMap);
+    const starmapListener = primodium.api("STARMAP").input.addListener("Map", closeMap);
 
-    const asteroidListener = primodium.api("ASTEROID").input.addListener(KeybindActions.Map, openMap);
+    const asteroidListener = primodium.api("ASTEROID").input.addListener("Map", openMap);
 
     return () => {
       starmapListener.dispose();
@@ -47,7 +45,7 @@ export const MapButton = () => {
   return (
     <Button
       className={`relative flex grow w-80 btn-sm !p-3 !px-10 gap-5 filter group hover:scale-110 hover:z-50 star-background-sm hover:border-secondary hover:drop-shadow-hard`}
-      clickSound={AudioKeys.Sequence}
+      clickSound={"Sequence"}
       onClick={!mapOpen ? openMap : closeMap}
     >
       {!mapOpen && !isSpectating && <IconLabel imageUri="/img/icons/starmapicon.png" className="text-xl" />}

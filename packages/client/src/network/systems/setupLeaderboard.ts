@@ -6,7 +6,6 @@ import { isPlayer } from "src/util/common";
 import { EntityType, LeaderboardEntityLookup, RESOURCE_SCALE } from "src/util/constants";
 import { rankToScore } from "src/util/score";
 import { components } from "../components";
-import { Leaderboard } from "../components/clientComponents";
 import { MUD } from "../types";
 
 type Leaderboard = Map<Entity, bigint>;
@@ -85,7 +84,7 @@ export const setupLeaderboard = (mud: MUD) => {
     const playerIndex = players.indexOf(entityIsPlayer ? player : (playerAlliance as Entity));
     const playerRank = playerIndex !== -1 ? playerIndex + 1 : leaderboardArray.length + 1;
 
-    Leaderboard.set(
+    components.Leaderboard.set(
       {
         scores,
         players,

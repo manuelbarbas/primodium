@@ -8,7 +8,7 @@ import { STORAGE_PREFIX } from "src/util/constants";
 import { Address, Hex } from "viem";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { Button } from "../core/Button";
-import { Card, SecondaryCard } from "../core/Card";
+import { SecondaryCard } from "../core/Card";
 import { TransactionQueueMask } from "../shared/TransactionQueueMask";
 
 const sessionWalletTooltip =
@@ -57,13 +57,9 @@ export function Authorize() {
   };
 
   return (
-    <Card className="bg-base-100 gap-1">
-      <div className="text-xs font-bold uppercase flex gap-2 items-center">
-        <p className="opacity-50">Authorize</p>
-      </div>
-
+    <SecondaryCard className="gap-1">
       {showHelp && (
-        <SecondaryCard className="flex flex-row gap-1 relative p-4">
+        <SecondaryCard className="flex flex-row gap-1 relative p-4 bg-info/50">
           <FaInfoCircle className="w-6" />
           <div className="text-xs opacity-75 space-y-2 normal-case">{sessionWalletTooltip}</div>
           <Button className="btn-ghost btn-xs absolute top-0 right-0" onClick={hideHelp}>
@@ -143,6 +139,6 @@ export function Authorize() {
           </Button>
         )}
       </TransactionQueueMask>
-    </Card>
+    </SecondaryCard>
   );
 }

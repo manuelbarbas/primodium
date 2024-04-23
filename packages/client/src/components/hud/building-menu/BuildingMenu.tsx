@@ -2,7 +2,6 @@ import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { FaArrowsAlt, FaPowerOff, FaTrash } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
-import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
@@ -106,19 +105,17 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
     );
   };
   return (
-    <SecondaryCard>
-      <Navigator initialScreen={selectedBuilding} className="w-80 border-none p-0 relative overflow-visible">
-        <TopBar />
+    <Navigator initialScreen={selectedBuilding} className="w-80 border-none p-0 relative overflow-visible">
+      <TopBar />
 
-        {/* Initial Screen */}
-        <RenderScreen />
-        {/* Sub Screens */}
-        <Demolish building={selectedBuilding} />
-        <Move building={selectedBuilding} />
-        <BuildingInfo building={selectedBuilding} />
-        <BuildQueue building={selectedBuilding} />
-        <BuildUnit building={selectedBuilding} />
-      </Navigator>
-    </SecondaryCard>
+      {/* Initial Screen */}
+      <RenderScreen />
+      {/* Sub Screens */}
+      <Demolish building={selectedBuilding} />
+      <Move building={selectedBuilding} />
+      <BuildingInfo building={selectedBuilding} />
+      <BuildQueue building={selectedBuilding} />
+      <BuildUnit building={selectedBuilding} />
+    </Navigator>
   );
 };

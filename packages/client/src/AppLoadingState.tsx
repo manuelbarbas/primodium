@@ -12,6 +12,7 @@ import { Game } from "./screens/Game";
 import { Increment } from "./screens/Increment";
 import { Statistics } from "./screens/Statistics";
 import { minEth } from "./util/constants";
+import { Sandbox } from "./screens/Sandbox";
 
 export const DEV = import.meta.env.PRI_DEV === "true";
 export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
@@ -83,6 +84,7 @@ export default function AppLoadingState() {
                 <Route path="/game" element={initialized ? <Game /> : <Enter />} />
                 <Route path="/increment" element={<Increment />} />
                 <Route path="/statistics" element={<Statistics />} />
+                <Route path="/sandbox" element={<Sandbox />} />
               </Routes>
             </BrowserRouter>
           )}
