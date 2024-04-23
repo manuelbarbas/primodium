@@ -35,7 +35,12 @@ const BoundedMarker: React.FC<{ scene: SceneKeys; coord: Coord; iconUri: string;
   }, [coord, primodium, scene]);
 
   return (
-    <Button className="border border-secondary hover:bg-secondary hover:border-accent" onClick={handleClick}>
+    <Button
+      shape="square"
+      size="md"
+      className="border border-secondary hover:bg-secondary hover:border-accent"
+      onClick={handleClick}
+    >
       <IconLabel imageUri={iconUri} className={`text-xl drop-shadow-hard`} />
       <div className="absolute inset-0 pointer-events-none" style={{ transform: `rotate(${degrees}deg)` }}>
         <FaChevronRight size={24} className="text-success font-bold absolute top-1/2 -translate-y-1/2 -right-10" />
