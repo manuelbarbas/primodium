@@ -26,10 +26,10 @@ export const ObjectivesScreen: React.FC<{ highlight?: Entity }> = ({ highlight }
   return (
     <Tabs className="flex flex-col relative gap-2 items-center w-full h-full">
       <Join className="border-secondary border border-secondary/25">
-        <Tabs.Button showActive index={0} className="btn-sm">
+        <Tabs.Button index={0} className="btn-sm">
           Available
         </Tabs.Button>
-        <Tabs.Button showActive index={1} className="btn-sm">
+        <Tabs.Button index={1} className="btn-sm">
           Completed
         </Tabs.Button>
       </Join>

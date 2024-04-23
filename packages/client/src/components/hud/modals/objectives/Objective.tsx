@@ -1,7 +1,5 @@
 import { Entity } from "@latticexyz/recs";
 
-import { Time } from "src/network/components/clientComponents";
-
 import { useMemo } from "react";
 
 import { FaGift, FaMedal, FaSpinner } from "react-icons/fa";
@@ -27,7 +25,7 @@ export const Objective: React.FC<{
   highlight?: boolean;
 }> = ({ objectiveEntity, asteroidEntity, highlight = false }) => {
   const playerEntity = components.Account.use()?.value;
-  const time = Time.use()?.value;
+  const time = components.Time.use()?.value;
 
   const objectiveName = getEntityTypeName(objectiveEntity);
 
@@ -79,8 +77,6 @@ export const Objective: React.FC<{
                       <IconLabel
                         imageUri={_req.backgroundImage ?? "/img/icons/minersicon.png"}
                         text={reqComplete ? "Complete" : "Incomplete"}
-                        tooltipDirection={"top"}
-                        tooltipText={_req.tooltipText ?? ""}
                         className="text-xs font-bold"
                       />
                     </Badge>
@@ -91,8 +87,6 @@ export const Objective: React.FC<{
                     <IconLabel
                       imageUri={_req.backgroundImage ?? "/img/icons/minersicon.png"}
                       text={formatNumber(value / _req.scale, { short: true, fractionDigits: 3 })}
-                      tooltipDirection={"top"}
-                      tooltipText={_req.tooltipText ?? ""}
                       className="text-xs font-bold"
                     />
 

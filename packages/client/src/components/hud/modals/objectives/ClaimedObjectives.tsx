@@ -1,8 +1,6 @@
-import { Account } from "src/network/components/clientComponents";
-
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { SecondaryCard } from "src/components/core/Card";
-import { components as comps } from "src/network/components";
+import { components, components as comps } from "src/network/components";
 
 import { useMemo, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
@@ -15,7 +13,7 @@ export const ClaimedObjectives: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  const player = Account.use()?.value ?? singletonEntity;
+  const player = components.Account.use()?.value ?? singletonEntity;
   const asteroidEntity = comps.ActiveRock.use()?.value;
 
   const filteredObjectiveEntities = Object.values(ObjectiveEntityLookup).filter((objective) => {

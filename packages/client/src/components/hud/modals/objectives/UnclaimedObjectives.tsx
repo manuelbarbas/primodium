@@ -1,12 +1,10 @@
 import { Entity } from "@latticexyz/recs";
 
-import { Account, Time } from "src/network/components/clientComponents";
-
 import { useMemo, useState } from "react";
 
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { SecondaryCard } from "src/components/core/Card";
-import { components as comps } from "src/network/components";
+import { components } from "src/network/components";
 
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
@@ -18,9 +16,9 @@ import { Objective } from "./Objective";
 export const UnclaimedObjectives: React.FC<{ highlight?: Entity }> = ({ highlight }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 6;
-  const player = Account.use()?.value ?? singletonEntity;
-  const asteroidEntity = comps.ActiveRock.use()?.value;
-  const time = Time.use()?.value;
+  const player = components.Account.use()?.value ?? singletonEntity;
+  const asteroidEntity = components.ActiveRock.use()?.value;
+  const time = components.Time.use()?.value;
   const objectives = Object.values(ObjectiveEntityLookup);
 
   const filteredObjectiveEntities = useMemo(() => {
@@ -29,7 +27,8 @@ export const UnclaimedObjectives: React.FC<{ highlight?: Entity }> = ({ highligh
       const canShow = canShowObjective(player, objective);
 
       const claimed =
-        comps.CompletedObjective.getWithKeys({ entity: player as Hex, objective: objective as Hex })?.value ?? false;
+        components.CompletedObjective.getWithKeys({ entity: player as Hex, objective: objective as Hex })?.value ??
+        false;
 
       return canShow && !claimed;
     });
