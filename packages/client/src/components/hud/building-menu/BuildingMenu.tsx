@@ -107,7 +107,6 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
   return (
     <Navigator initialScreen={selectedBuilding} className="w-80 border-none p-0 relative overflow-visible">
       <TopBar />
-
       {/* Initial Screen */}
       <RenderScreen />
       {/* Sub Screens */}
