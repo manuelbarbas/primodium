@@ -17,6 +17,7 @@ import { LibEncode } from "libraries/LibEncode.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
 import { LibShardAsteroid } from "libraries/LibShardAsteroid.sol";
+import { LibRaidableAsteroid } from "libraries/LibRaidableAsteroid.sol";
 
 library LibAsteroid {
   /// @notice Creates new asteroid for player in world
@@ -214,6 +215,10 @@ library LibAsteroid {
     (uint256 droidCount, uint256 encryption) = getSecondaryAsteroidUnitsAndEncryption(data.maxLevel);
     UnitCount.set(asteroidEntity, DroidPrototypeId, droidCount);
     LibStorage.increaseMaxStorage(asteroidEntity, uint8(EResource.R_Encryption), encryption);
+
+    if (data.mapId == 7) {
+      LibRaidableAsteroid.buildRaidableAsteroid(asteroidEntity);
+    }
   }
 
   function initAsteroidOwner(bytes32 asteroidEntity, bytes32 ownerEntity) internal {
