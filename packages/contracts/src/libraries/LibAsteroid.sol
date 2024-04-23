@@ -132,15 +132,15 @@ library LibAsteroid {
     uint256 primodium;
     //micro
     if (distributionVal <= 50) {
-      maxLevel = 1;
+      maxLevel = 2;
       primodium = 3 * RESOURCE_SCALE;
       //small
     } else if (distributionVal <= 75) {
-      maxLevel = 3;
+      maxLevel = 4;
       primodium = 4 * RESOURCE_SCALE;
       //medium
     } else if (distributionVal <= 90) {
-      maxLevel = 5;
+      maxLevel = 6;
       primodium = 5 * RESOURCE_SCALE;
       //large
     } else {

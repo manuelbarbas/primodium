@@ -123,36 +123,36 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   Expansion: {
     tables: { P_MaxLevel: { value: 8n } },
     levels: {
-      1: { Dimensions: { width: 11, height: 9 }, P_RequiredBaseLevel: { value: 1n } },
+      1: { Dimensions: { width: 9, height: 7 }, P_RequiredBaseLevel: { value: 1n } },
       2: {
         P_RequiredUpgradeResources: getResourceValues({ Iron: 50, Copper: 50, Lithium: 50 }),
-        Dimensions: { width: 13, height: 11 },
+        Dimensions: { width: 11, height: 9 },
         P_RequiredBaseLevel: { value: 2n },
       },
       3: {
         P_RequiredUpgradeResources: getResourceValues({ Iron: 500, Copper: 500, Lithium: 500 }),
-        Dimensions: { width: 17, height: 13 },
+        Dimensions: { width: 13, height: 11 },
         P_RequiredBaseLevel: { value: 3n },
       },
       4: {
         P_RequiredUpgradeResources: getResourceValues({ Iron: 1500, Copper: 1500, Lithium: 1500 }),
-        Dimensions: { width: 21, height: 15 },
+        Dimensions: { width: 17, height: 13 },
         P_RequiredBaseLevel: { value: 5n },
       },
 
       5: {
         P_RequiredUpgradeResources: getResourceValues({ Iron: 3000, Copper: 3000, Lithium: 3000, Kimberlite: 300 }),
-        Dimensions: { width: 25, height: 17 },
+        Dimensions: { width: 21, height: 15 },
         P_RequiredBaseLevel: { value: 8n },
       },
       6: {
         P_RequiredUpgradeResources: getResourceValues({ Iron: 7500, Copper: 7500, Lithium: 7500, Kimberlite: 1500 }),
-        Dimensions: { width: 29, height: 19 },
+        Dimensions: { width: 25, height: 17 },
         P_RequiredBaseLevel: { value: 13n },
       },
       7: {
         P_RequiredUpgradeResources: getResourceValues({ Iron: 25000, Copper: 25000, Lithium: 25000, Kimberlite: 3000 }),
-        Dimensions: { width: 33, height: 23 },
+        Dimensions: { width: 31, height: 21 },
         P_RequiredBaseLevel: { value: 13n },
       },
       8: {
