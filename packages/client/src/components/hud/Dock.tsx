@@ -8,13 +8,13 @@ import { Settings } from "./modals/settings/Settings";
 import { BattleReports } from "./widgets/battle-reports/BattleReports";
 
 const btnClass = "hover:drop-shadow-xl group hover:bg-transparent";
-const iconClass = "text-4xl hover:animate-float drop-shadow-hard";
+const iconClass = "text-3xl hover:animate-float drop-shadow-hard";
 
 export const Dock = () => {
   return (
-    <div className="translate-y-1/3">
+    <div className="translate-y-1/2">
       <GlassCard direction={"top"}>
-        <div className="flex flex-row gap-2 items-center pointer-events-auto -translate-y-1/2">
+        <div className="flex flex-row gap-2 items-center pointer-events-auto -translate-y-[40px]">
           <Modal title="alliance management">
             <Modal.Button
               className={btnClass}
