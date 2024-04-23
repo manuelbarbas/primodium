@@ -465,18 +465,29 @@ contract PrimodiumTest is MudTest {
     return (targetPosition);
   }
 
-  function findRaidableAsteroid(bytes32 asteroidEntity) public returns (PositionData memory) {
+  function findRaidableAsteroid(bytes32 asteroidEntity, bool common2) public returns (PositionData memory) {
     switchPrank(creator);
     P_GameConfig.setAsteroidChanceInv(1);
     P_GameConfigData memory config = P_GameConfig.get();
-    P_AsteroidProbabilityConfig.set({
-      common1: 100,
-      common2: 0,
-      eliteMicro: 0,
-      eliteSmall: 0,
-      eliteMedium: 0,
-      eliteLarge: 0
-    });
+    if (common2) {
+      P_AsteroidProbabilityConfig.set({
+        common1: 100,
+        common2: 0,
+        eliteMicro: 0,
+        eliteSmall: 0,
+        eliteMedium: 0,
+        eliteLarge: 0
+      });
+    } else {
+      P_AsteroidProbabilityConfig.set({
+        common1: 0,
+        common2: 100,
+        eliteMicro: 0,
+        eliteSmall: 0,
+        eliteMedium: 0,
+        eliteLarge: 0
+      });
+    }
     PositionData memory sourcePosition = Position.get(asteroidEntity);
     bytes32 asteroidSeed;
     PositionData memory targetPosition;

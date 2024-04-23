@@ -45,8 +45,14 @@ contract LibRaidableAsteroidTest is PrimodiumTest {
     );
   }
 
-  function testBuildRaidableAsteroid() public {
-    PositionData memory raidablePosition = findRaidableAsteroid(asteroidEntity);
+  function testBuildRaidableAsteroidCommon1() public {
+    PositionData memory raidablePosition = findRaidableAsteroid(asteroidEntity, false);
+    vm.startPrank(creator);
+    bytes32 raidableAsteroid = LibAsteroid.createSecondaryAsteroid(raidablePosition);
+  }
+
+  function testBuildRaidableAsteroidCommon2() public {
+    PositionData memory raidablePosition = findRaidableAsteroid(asteroidEntity, true);
     vm.startPrank(creator);
     bytes32 raidableAsteroid = LibAsteroid.createSecondaryAsteroid(raidablePosition);
   }
