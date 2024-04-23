@@ -3,6 +3,7 @@ import { useMud } from "src/hooks";
 import { BlueprintPane } from "./BlueprintPane";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Tabs } from "@/components/core/Tabs";
+import { Card } from "@/components/core/Card";
 
 export const Blueprints = memo(() => {
   const { components } = useMud();
@@ -13,14 +14,19 @@ export const Blueprints = memo(() => {
 
   return (
     <Tabs defaultIndex={0} className="pointer-events-auto flex items-center">
-      <Tabs.Pane index={0} className="animate-in fade-in-0 slide-in-from-left-full">
-        <BlueprintPane />
+      <Tabs.Pane
+        index={0}
+        className="animate-in fade-in-0 slide-in-from-left-full !border-r-accent rounded-r-xl p-3 heropattern-topography-slate-300/10 overflow-x-hidden backdrop-blur-md"
+      >
+        <Card fragment noDecor>
+          <BlueprintPane />
+        </Card>
       </Tabs.Pane>
       <Tabs.Button
         index={0}
         togglable
         size={"sm"}
-        className="border-l-0 heropattern-topography-slate-500/10"
+        className="heropattern-topography-slate-500/10 !border-l-0"
         style={{
           writingMode: "vertical-lr",
         }}

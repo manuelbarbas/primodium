@@ -39,7 +39,7 @@ const Pane: FC<{
   return fragment ? (
     <>{children}</>
   ) : (
-    <SecondaryCard className={`overflow-y-auto scrollbar ${className} `}>{children}</SecondaryCard>
+    <SecondaryCard className={`overflow-y-auto scrollbar ${className} t`}>{children}</SecondaryCard>
   );
 });
 
@@ -82,7 +82,7 @@ export const Tabs: FC<TabProps> & {
 
   return (
     <IndexContext.Provider value={{ index: currentIndex, setIndex: setCurrentIndex }}>
-      <div className={`gap-1 ${className}`}>{children}</div>
+      <div className={`${className}`}>{children}</div>
     </IndexContext.Provider>
   );
 };

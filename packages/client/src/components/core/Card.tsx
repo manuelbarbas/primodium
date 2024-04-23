@@ -9,7 +9,8 @@ export const Card: React.FC<{
   children: React.ReactNode;
   className?: string;
   noDecor?: boolean;
-}> = ({ children, className, noDecor = false }) => {
+  fragment?: boolean;
+}> = ({ children, className, noDecor = false, fragment = false }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -30,9 +31,30 @@ export const Card: React.FC<{
     containerRef.current.style.transform = `rotateY(0deg) rotateX(0deg)`;
   };
 
+  if (fragment)
+    return (
+      <div
+        className={`h-full drop-shadow-hard`}
+        style={{
+          perspective: "1000px",
+          transformStyle: "preserve-3d",
+        }}
+      >
+        <div
+          ref={containerRef}
+          onMouseEnter={handleMouseEnter}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          className={cn(className)}
+        >
+          {children}
+        </div>
+      </div>
+    );
+
   return (
     <div
-      className={`h-full`}
+      className={`h-full drop-shadow-hard`}
       style={{
         perspective: "1000px",
         transformStyle: "preserve-3d",
@@ -43,7 +65,7 @@ export const Card: React.FC<{
         onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className={`card bg-neutral pixel-border p-3 bg-opacity-90 heropattern-plus-slate-800/25 hover:heropattern-plus-slate-800/50 relative pointer-events-auto transition-all duration-100 ease-linear !shadow-2xl !shadow-secondary/25 ${className} `}
+        className={`card bg-neutral pixel-border p-3 bg-opacity-90 relative pointer-events-auto transition-all duration-100 ease-linear ${className} `}
       >
         <div className="absolute inset-0 bg-gradient-to-br from-transparent to-neutral" />
         <div className="absolute inset-0 pixel-border" />
@@ -72,10 +94,11 @@ export const SecondaryCard = forwardRef<
     <div
       ref={ref}
       className={cn(
-        "card bg-gradient-to-br from-secondary/15 to-secondary/5 border border-secondary/25 hover:border-secondary/50 transition-all p-2 hover:translate-y-[-2px] hover:shadow-2xl pointer-events-auto",
+        "card border border-secondary/25 hover:border-secondary/50 transition-all p-2 hover:translate-y-[-2px] hover:shadow-2xl pointer-events-auto",
         className
       )}
     >
+      <div className="absolute inset-0 bg-gradient-to-br from-secondary/15 to-secondary/5" />
       {children}
     </div>
   );

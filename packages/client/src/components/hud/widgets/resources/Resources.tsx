@@ -17,14 +17,17 @@ export const Resources = () => {
         index={0}
         togglable
         size={"sm"}
-        className="border-r-0"
+        className="!border-r-0"
         style={{
           writingMode: "vertical-lr",
         }}
       >
         <IconLabel text="Resources" imageUri="/img/resource/iridium_resource.png" className="gap-2 py-3" />
       </Tabs.Button>
-      <Tabs.Pane index={0} className="animate-in fade-in-0 slide-in-from-right-full">
+      <Tabs.Pane
+        index={0}
+        className="animate-in fade-in-0 slide-in-from-right-full !border-l-accent rounded-l-xl p-3 heropattern-topography-slate-300/10 overflow-x-hidden backdrop-blur-md"
+      >
         <Card noDecor>
           <AllResourceLabels />
           <AllUtilityLabels />

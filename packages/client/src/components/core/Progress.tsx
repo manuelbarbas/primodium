@@ -2,7 +2,7 @@ import { cn } from "@/util/client";
 import { VariantProps, cva } from "class-variance-authority";
 import { forwardRef } from "react";
 
-const progressVariants = cva("progress ", {
+const progressVariants = cva("progress", {
   variants: {
     variant: {
       neutral: "progress-neutral",
