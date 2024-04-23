@@ -164,7 +164,7 @@ export const GameHUD = memo(() => {
 
       return ReactDOM.createPortal(
         <div className={`screen-container`}>
-          <HUD scale={uiScale} pad>
+          <HUD scale={uiScale}>
             <Modal title="hacker console" keybind={allowHackerModal ? "Console" : undefined} keybindClose>
               <Modal.Content className="w-4/5 h-[40rem]">
                 <HackerConsole />
