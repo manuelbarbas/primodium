@@ -19,18 +19,23 @@ export const Card: React.FC<{
     if (!containerRef.current) return;
     const { left, top, width, height } = containerRef.current.getBoundingClientRect();
 
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+
+    const isInBoundingBox = mouseX >= left && mouseX <= left + width && mouseY >= top && mouseY <= top + height;
+
+    if (!isInBoundingBox) {
+      containerRef.current.style.transform = `rotateY(0deg) rotateX(0deg)`;
+      return;
+    }
+
     const x = lerp(e.clientX - left - width / 2, -width, width, -6, 6);
     const y = lerp(e.clientY - top - height / 2, -height, height, -6, 6);
     containerRef.current.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
   }, []);
 
-  const handleMouseEnter = useCallback(() => {
-    if (!containerRef.current) return;
-  }, []);
-
   const handleMouseLeave = useCallback(() => {
     if (!containerRef.current) return;
-    containerRef.current.style.transform = `rotateY(0deg) rotateX(0deg)`;
   }, []);
 
   if (fragment)
@@ -46,7 +51,6 @@ export const Card: React.FC<{
           ref={containerRef}
           {...(!noMotion
             ? {
-                onMouseEnter: handleMouseEnter,
                 onMouseMove: handleMouseMove,
                 onMouseLeave: handleMouseLeave,
               }
@@ -70,7 +74,6 @@ export const Card: React.FC<{
         ref={containerRef}
         {...(!noMotion
           ? {
-              onMouseEnter: handleMouseEnter,
               onMouseMove: handleMouseMove,
               onMouseLeave: handleMouseLeave,
             }
