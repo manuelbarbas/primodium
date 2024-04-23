@@ -34,8 +34,12 @@ export const _Sandbox = () => {
             <div className="w-8 h-8 bg-info border" />
           </div>
           <div className="flex gap-2 flex-wrap">
-            <Button variant={"info"} tooltip="test">
-              info
+            <Button variant="neutral" size="content" tooltip="test">
+              🔥
+              <SecondaryCard>
+                <Range variant={"secondary"} />
+                <CapacityBar current={50n} max={100n} segments={20} resourceType={EntityType.AegisDrone} />
+              </SecondaryCard>
             </Button>
             <Button variant={"warning"}>warning</Button>
             <Button variant={"error"}>error</Button>

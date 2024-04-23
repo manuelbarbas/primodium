@@ -8,7 +8,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
 
 const buttonVariants = cva(
-  "btn join-item min-h-fit items-center justify-center whitespace-nowrap ring-offset-background focus-visible:outline-none relative hover:translate-y-[-2px] hover:shadow-xl transition-all",
+  "btn min-h-fit join-item items-center justify-center whitespace-nowrap ring-offset-background focus-visible:outline-none relative hover:translate-y-[-2px] hover:shadow-xl transition-all",
   {
     variants: {
       variant: {
@@ -27,6 +27,7 @@ const buttonVariants = cva(
         sm: "btn-sm",
         md: "btn-md",
         lg: "btn-lg",
+        content: "h-fit p-2",
       },
       modifier: {
         default: "",
