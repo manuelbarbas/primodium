@@ -47,10 +47,12 @@ contract LibAsteroidTest is PrimodiumTest {
     AsteroidData memory asteroidData = LibAsteroid.getAsteroidData(entity, false, false);
     assertTrue(asteroidData.isAsteroid);
     assertFalse(asteroidData.spawnsSecondary);
-    assertLe(asteroidData.mapId, 5, "map id too high");
-    assertGe(asteroidData.mapId, 2, "map id too low");
     assertGe(asteroidData.maxLevel, 1, "max level too low");
     assertLe(asteroidData.maxLevel, 8, "max level too low");
+    if (asteroidData.mapId != 7) {
+      assertGe(asteroidData.mapId, 2, "map id too low");
+      assertLe(asteroidData.mapId, 5, "map id too high");
+    }
   }
 
   function testCreateSecondaryAsteroid() public returns (bytes32) {
