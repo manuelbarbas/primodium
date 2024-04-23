@@ -47,6 +47,8 @@ export const Keys = {
   SELECTED: toHex32("selected") as Entity,
   ACTIVE: toHex32("active") as Entity,
   BATTLE: toHex32("battle") as Entity,
+  ASTEROID: toHex32("asteroid.key") as Entity,
+  FLEET_OWNED_BY: toHex32("fleet.key") as Entity,
 };
 
 export enum ResourceType {
@@ -491,7 +493,6 @@ export const ResourceEnumLookup: Record<Entity, EResource> = {
 
   [EntityType.Electricity]: EResource.U_Electricity,
   [EntityType.Housing]: EResource.U_Housing,
-  [EntityType.ColonyShipCapacity]: EResource.U_ColonyShipCapacity,
   [EntityType.FleetCount]: EResource.U_MaxFleets,
   [EntityType.Defense]: EResource.U_Defense,
   [EntityType.Unraidable]: EResource.U_Unraidable,

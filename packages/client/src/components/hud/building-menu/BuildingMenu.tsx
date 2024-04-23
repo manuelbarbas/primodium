@@ -1,3 +1,4 @@
+import { Shipyard } from "@/components/hud/building-menu/screens/shipyard/Shipyard";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { FaArrowsAlt, FaPowerOff, FaTrash } from "react-icons/fa";
@@ -41,8 +42,9 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
         return <WormholeBase building={selectedBuilding} />;
       case EntityType.DroneFactory:
       case EntityType.Workshop:
-      case EntityType.Shipyard:
         return <UnitFactory building={selectedBuilding} />;
+      case EntityType.Shipyard:
+        return <Shipyard building={selectedBuilding} />;
       case EntityType.Market:
         return <Market building={selectedBuilding} />;
       default:
@@ -113,6 +115,8 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
       <Demolish building={selectedBuilding} />
       <Move building={selectedBuilding} />
       <BuildingInfo building={selectedBuilding} />
+
+      {/* Unit Training */}
       <BuildQueue building={selectedBuilding} />
       <BuildUnit building={selectedBuilding} />
     </Navigator>
