@@ -59,6 +59,7 @@ export const TextInput: React.FC<{
       <input
         ref={inputRef}
         type="text"
+        tabIndex={-1}
         onChange={onChange}
         maxLength={maxLength}
         onFocus={() => {

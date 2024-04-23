@@ -36,6 +36,7 @@ export const Card: React.FC<{
 
   const handleMouseLeave = useCallback(() => {
     if (!containerRef.current) return;
+    containerRef.current.style.transform = `rotateY(0deg) rotateX(0deg)`;
   }, []);
 
   if (fragment)
