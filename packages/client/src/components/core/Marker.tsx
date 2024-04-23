@@ -8,6 +8,7 @@ import { calculateAngleBetweenPoints } from "src/util/common";
 import { Button } from "./Button";
 import { IconLabel } from "./IconLabel";
 import { DepthLayers, SceneKeys } from "src/game/lib/constants/common";
+import { cn } from "@/util/client";
 
 const BoundedMarker: React.FC<{ scene: SceneKeys; coord: Coord; iconUri: string; degrees: number }> = ({
   coord,
@@ -172,7 +173,7 @@ export const Marker: React.FC<{
   if (!marker || !container || !camera.phaserCamera.scene.scene.isActive()) return;
 
   return ReactDOM.createPortal(
-    <div className={translateClass}>
+    <div className={cn("pointer-events-auto", translateClass)}>
       {!visible && offScreenIconUri && (
         <BoundedMarker scene={scene} coord={coord} iconUri={offScreenIconUri} degrees={degrees} />
       )}
