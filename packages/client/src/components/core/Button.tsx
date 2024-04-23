@@ -119,8 +119,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <Tooltip tooltipContent={tooltip} direction={tooltipDirection}>
         <button
           className={cn(
-            selected && "ring-1 ring-accent z-10",
-            buttonVariants({ variant, size, modifier, shape, className })
+            buttonVariants({ variant, size, modifier, shape, className }),
+            selected && "border-1 border-accent z-10"
           )}
           ref={ref}
           tabIndex={-1}

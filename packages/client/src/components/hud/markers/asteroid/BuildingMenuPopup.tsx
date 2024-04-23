@@ -8,7 +8,7 @@ import { components } from "src/network/components";
 import { getBuildingDimensions, getBuildingImageFromType, getBuildingName } from "src/util/building";
 import { getEntityTypeName } from "src/util/common";
 import { BuildingMenu } from "../../building-menu/BuildingMenu";
-import { Card } from "@/components/core/Card";
+import { Card, GlassCard } from "@/components/core/Card";
 
 export const BuildingMenuPopup = () => {
   const primodium = usePrimodium();
@@ -49,9 +49,11 @@ export const BuildingMenuPopup = () => {
       active={!!building && !!buildingName}
       icon={getBuildingImageFromType(primodium, buildingType as Entity) ?? "img/icons/minersicon.png"}
     >
-      <Card>
-        <BuildingMenu selectedBuilding={building ?? singletonEntity} />
-      </Card>
+      <GlassCard direction={"top"}>
+        <Card noDecor>
+          <BuildingMenu selectedBuilding={building ?? singletonEntity} />
+        </Card>
+      </GlassCard>
     </Widget>
   );
 };
