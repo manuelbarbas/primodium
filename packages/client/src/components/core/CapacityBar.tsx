@@ -1,15 +1,15 @@
 import { Entity } from "@latticexyz/recs";
-import React, { FC } from "react";
+import { FC } from "react";
 import { EntityType } from "src/util/constants";
 
 type SegmentedCapacityBarProps = {
   current: bigint;
   max: bigint | null;
-  segments: number;
-  resourceType: Entity;
+  segments?: number;
+  resourceType?: Entity;
 };
 
-export const CapacityBar: FC<SegmentedCapacityBarProps> = ({ current, max, segments, resourceType }) => {
+export const CapacityBar: FC<SegmentedCapacityBarProps> = ({ current, max, segments = 20, resourceType }) => {
   // Calculate the number of filled segments
   const filledSegments = max !== null && max > 0n ? Math.round((Number(current) / Number(max)) * segments) : 0;
 

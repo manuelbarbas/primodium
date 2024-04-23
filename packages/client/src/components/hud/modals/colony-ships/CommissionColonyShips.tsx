@@ -19,17 +19,27 @@ import { FaPlus } from "react-icons/fa";
 import { Navigator } from "src/components/core/Navigator";
 import { Hex } from "viem";
 
+type TileType = "train" | "unlock" | "blank";
+
 export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ buildingEntity }) => {
-  const [activeTile, setActiveTile] = React.useState<"train" | number | null>(null);
+  const [activeTile, setActiveTile] = React.useState<number | null>(null);
   const primodium = usePrimodium();
   const {
     playerAccount: { entity: playerEntity },
   } = useMud();
+  const asteroid = components.OwnedBy.use(buildingEntity)?.value as Entity;
+  if (!asteroid) throw new Error("[ColonyShipData] No asteroid selected");
+
   const buildingImage = getBuildingImage(primodium, buildingEntity);
   const colonySlotsData = useColonySlots(playerEntity);
 
-  const totalTilesAvailable = 9 - Number(colonySlotsData.shipsInTraining + colonySlotsData.availableSlots);
-  const currSlotIndex = colonySlotsData.occupiedSlots.length;
+  const tiles = Array(9)
+    .fill(0)
+    .map((_, i) => {
+      if (i < Number(colonySlotsData.shipsInTraining)) return "train";
+      if (i < Number(colonySlotsData.shipsInTraining) + Number(colonySlotsData.availableSlots)) return "unlock";
+      return "blank";
+    }) as TileType[];
 
   return (
     <div className="flex flex-col gap-2 h-[28rem]">
@@ -39,25 +49,18 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
       </div>
       <div className="flex h-full gap-2">
         <div className="grid grid-rows-3 grid-cols-3 gap-1 aspect-square">
-          {Array(Number(colonySlotsData.shipsInTraining))
-            .fill(0)
-            .map((_, i) => (
-              <TrainShipTile onClick={() => setActiveTile("train")} key={`tile-${i}`} />
-            ))}
-          {Array(Number(colonySlotsData.availableSlots))
-            .fill(0)
-            .map((_, i) => (
-              <UnlockTile key={`tile-${i}`} onClick={() => setActiveTile(i + currSlotIndex)} />
-            ))}
-
-          {Array(totalTilesAvailable)
-            .fill(0)
-            .map((_, i) => (
-              <BlankTile key={`tile-${i}`} />
-            ))}
+          {tiles.map((tile, i) => {
+            if (tile === "train")
+              return <TrainShipTile onClick={() => setActiveTile(i)} key={`tile-${i}`} active={activeTile == i} />;
+            if (tile === "unlock")
+              return <UnlockTile key={`tile-${i}`} onClick={() => setActiveTile(i)} active={activeTile == i} />;
+            return <BlankTile key={`tile-${i}`} />;
+          })}
         </div>
-        {activeTile === "train" && <TrainColonyShip buildingEntity={buildingEntity} />}
-        {typeof activeTile === "number" && <UnlockSlot playerEntity={playerEntity} index={activeTile} />}
+        {activeTile !== null && tiles[activeTile] === "train" && <TrainColonyShip buildingEntity={buildingEntity} />}
+        {activeTile !== null && tiles[activeTile] === "unlock" && (
+          <UnlockSlot asteroidEntity={asteroid} playerEntity={playerEntity} index={activeTile} />
+        )}
       </div>
       <Navigator.BackButton className="btn-primary w-fit" />
     </div>
@@ -70,9 +73,9 @@ const BlankTile: React.FC = () => {
   );
 };
 
-const TrainShipTile: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
+const TrainShipTile: React.FC<{ active?: boolean; onClick?: () => void }> = ({ onClick, active }) => {
   return (
-    <SecondaryCard className="w-full h-full !p-0">
+    <SecondaryCard className={`w-full h-full !p-0 ${active ? "ring ring-secondary" : ""}`}>
       <Button onClick={onClick} variant="ghost" className="w-full h-full flex text-xs justify-center items-center">
         + Ship
       </Button>
@@ -80,9 +83,9 @@ const TrainShipTile: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
   );
 };
 
-const UnlockTile: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
+const UnlockTile: React.FC<{ active?: boolean; onClick?: () => void }> = ({ onClick, active }) => {
   return (
-    <SecondaryCard className="w-full h-full !p-0">
+    <SecondaryCard className={`w-full h-full !p-0 ${active ? "ring ring-secondary" : ""}`}>
       <Button onClick={onClick} variant="ghost" className="w-full h-full flex text-xs justify-center items-center">
         <FaPlus /> Add Slot
       </Button>
