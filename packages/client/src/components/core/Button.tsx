@@ -3,16 +3,16 @@ import { usePrimodium } from "@/hooks/usePrimodium";
 import { getRandomRange } from "@/util/common";
 import { Tooltip } from "@/components/core/Tooltip";
 import { AudioKeys } from "@game/lib/constants/assets/audio";
-import { KeybindActionKeys } from "@game/lib/constants/keybinds";
 import { cn } from "@/util/client";
 import { cva, type VariantProps } from "class-variance-authority";
+import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
 
 const buttonVariants = cva(
   "btn join-item min-h-fit items-center justify-center whitespace-nowrap ring-offset-background focus-visible:outline-none relative hover:translate-y-[-2px] hover:shadow-xl transition-all",
   {
     variants: {
       variant: {
-        neutral: "btn-neutral",
+        neutral: "btn-neutral border-2 border-secondary/50",
         primary: "btn-primary",
         accent: "btn-accent",
         secondary: "btn-secondary",

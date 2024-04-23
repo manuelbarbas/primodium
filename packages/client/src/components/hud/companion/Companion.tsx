@@ -7,7 +7,6 @@ import { useWidgets } from "../../../hooks/providers/WidgetProvider";
 import { Button } from "../../core/Button";
 import { Card, SecondaryCard } from "../../core/Card";
 import { MapButton } from "../MapButton";
-import { MenuButtons } from "../MenuButtons";
 import { KeyNames, KeybindActionKeys } from "src/game/lib/constants/keybinds";
 import { IconLabel } from "@/components/core/IconLabel";
 
@@ -159,9 +158,6 @@ export const WidgetsPane = () => {
           <span className="text-accent">PRIMODIUM</span>
         </p>
       </Card>
-      <div className="pl-2 z-0">
-        <MenuButtons />
-      </div>
     </>
   );
 };

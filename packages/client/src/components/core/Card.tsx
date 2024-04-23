@@ -1,3 +1,4 @@
+import { cn } from "@/util/client";
 import { forwardRef, useRef } from "react";
 
 const lerp = (value: number, inMin: number, inMax: number, outMin: number, outMax: number) => {
@@ -70,7 +71,10 @@ export const SecondaryCard = forwardRef<
   return (
     <div
       ref={ref}
-      className={`card bg-gradient-to-br from-secondary/15 to-secondary/5 border border-secondary/25 hover:border-secondary/50 transition-all p-2 hover:translate-y-[-2px] hover:shadow-2xl ${className}`}
+      className={cn(
+        "card bg-gradient-to-br from-secondary/15 to-secondary/5 border border-secondary/25 hover:border-secondary/50 transition-all p-2 hover:translate-y-[-2px] hover:shadow-2xl pointer-events-auto",
+        className
+      )}
     >
       {children}
     </div>

@@ -32,6 +32,7 @@ import { Cheatcodes } from "@/components/hud/widgets/dev/Cheatcodes";
 import { Hangar } from "@/components/hud/widgets/hangar/Hangar";
 import { Resources } from "@/components/hud/widgets/resources/Resources";
 import { UnitDeaths } from "@/components/hud/widgets/UnitDeaths";
+import { Dock } from "@/components/hud/Dock";
 
 export const GameHUD = memo(() => {
   const {
@@ -163,7 +164,7 @@ export const GameHUD = memo(() => {
 
       return ReactDOM.createPortal(
         <div className={`screen-container`}>
-          <HUD scale={uiScale} pad>
+          <HUD scale={uiScale}>
             <Modal title="hacker console" keybind={allowHackerModal ? "Console" : undefined} keybindClose>
               <Modal.Content className="w-4/5 h-[40rem]">
                 <HackerConsole />
@@ -197,6 +198,9 @@ export const GameHUD = memo(() => {
               <OwnedFleets />
             </HUD.TopRight>
 
+            <HUD.BottomMiddle>
+              <Dock />
+            </HUD.BottomMiddle>
             <HUD.BottomRight>
               <Chat />
             </HUD.BottomRight>
