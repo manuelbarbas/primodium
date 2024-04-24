@@ -1,5 +1,5 @@
 import { components } from "@/network/components";
-import { EntityType, Keys } from "@/util/constants";
+import { EntityType } from "@/util/constants";
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { Hex } from "viem";
 
@@ -22,9 +22,9 @@ export function getColonyShipsPlusAsteroids(playerEntity: Entity) {
     for (let j = 0; j < shipsOnAsteroid; j++) ret.push({ type: "ship", parentEntity: asteroidEntity as Entity });
 
     // Fleets are owned by asteroids
-    const ownedFleets =
-      components.Ids_FleetSet.getWithKeys({ entity: asteroidEntity as Hex, key: Keys.FLEET_OWNED_BY as Hex })
-        ?.itemKeys ?? [];
+    const fleetQuery = [HasValue(components.OwnedBy, { value: asteroidEntity }), Has(components.IsFleet)];
+    const ownedFleets = [...runQuery(fleetQuery)];
+
     for (let j = 0; j < ownedFleets.length; j++) {
       const shipsOnFleet =
         components.UnitCount.getWithKeys({ entity: ownedFleets[j] as Hex, unit: EntityType.ColonyShip as Hex })

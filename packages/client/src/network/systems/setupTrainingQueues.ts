@@ -26,6 +26,7 @@ export function setupTrainingQueues() {
     const queueUnits = Meta_UnitProductionQueue.getWithKeys({
       entity: building as Hex,
     });
+
     if (!queueUnits || queueUnits.back == queueUnits.front) return TrainingQueue.remove(building);
     let foundUnfinished = false;
     const queue = [];

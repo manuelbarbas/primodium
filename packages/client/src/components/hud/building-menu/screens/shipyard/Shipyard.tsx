@@ -37,7 +37,7 @@ export const Shipyard: React.FC<{ building: Entity }> = ({ building }) => {
           />
           <span className="w-fit px-2 text-xs">Commission Colony Ships</span>
         </Modal.Button>
-        <Modal.Content>
+        <Modal.Content className="flex">
           <CommissionColonyShips buildingEntity={building} />
         </Modal.Content>
       </Modal>

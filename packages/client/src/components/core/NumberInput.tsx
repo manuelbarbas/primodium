@@ -34,7 +34,7 @@ export const NumberInput: React.FC<{
   };
 
   return (
-    <div className={`flex my-2 relative`}>
+    <div className={`flex mb-4 relative`}>
       <Button
         className="btn-xs btn-ghost"
         disabled={Number(count) <= min}

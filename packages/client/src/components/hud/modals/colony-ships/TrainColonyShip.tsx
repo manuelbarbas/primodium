@@ -2,6 +2,7 @@ import { Badge } from "@/components/core/Badge";
 import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { useMud } from "@/hooks";
 import { components } from "@/network/components";
 import { train } from "@/network/setup/contractCalls/train";
@@ -48,7 +49,9 @@ export const TrainColonyShip: React.FC<{ buildingEntity: Entity; className?: str
   }, [buildingEntity, mud, unit]);
 
   return (
-    <SecondaryCard className={`h-full w-full flex flex-col gap-6 p-3 justify-center items-center ${className}`}>
+    <SecondaryCard
+      className={`h-full min-h-[24rem] w-full flex flex-col gap-6 p-3 justify-center items-center ${className}`}
+    >
       <div className="flex flex-col items-center gap-2">
         <img src={shipImage} className="h-10" />
         <p>Colony Ship</p>
@@ -80,9 +83,11 @@ export const TrainColonyShip: React.FC<{ buildingEntity: Entity; className?: str
           ))}
         </div>
       )}
-      <Button onClick={handleCommission} variant="primary" size="sm" disabled={!canCommission}>
-        Commission
-      </Button>
+      <TransactionQueueMask queueItemId={"TRAIN" as Entity}>
+        <Button onClick={handleCommission} variant="primary" size="sm" disabled={!canCommission}>
+          Commission
+        </Button>
+      </TransactionQueueMask>
     </SecondaryCard>
   );
 };
