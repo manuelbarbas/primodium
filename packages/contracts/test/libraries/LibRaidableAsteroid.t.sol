@@ -79,9 +79,8 @@ contract LibRaidableAsteroidTest is PrimodiumTest {
     P_GameConfig.set(gameConfig);
 
     assertEq(OwnedBy.get(raidableAsteroid), bytes32(0), "initialized raidable asteroid should be owned by 0x0");
-    assertEq(
+    assertTrue(
       Asteroid.getIsAsteroid(raidableAsteroid),
-      true,
       "initialized raidable asteroid should be considered an asteroid"
     );
 
@@ -110,16 +109,8 @@ contract LibRaidableAsteroidTest is PrimodiumTest {
     vm.warp(block.timestamp + 1);
   }
 
-  // todo: test claimRaidableUnits
-  // check it only works for 0x0
-  // check isasteroid
-  // check proper rate
-  // check does not exceed max droids
-  // check case of 0 build time
-  // verify client is working
-
   function testRegenAfterRaid() public {
-    testInitRaidableAsteroidCommon1();
+    testInitRaidableAsteroidCommon2();
     world.Primodium__attack(fleetEntity, raidableAsteroid);
 
     assertEq(UnitCount.get(raidableAsteroid, DroidPrototypeId), 0, "Not all droids destroyed");
@@ -135,10 +126,14 @@ contract LibRaidableAsteroidTest is PrimodiumTest {
       0,
       "Resources should regenerate after raid"
     );
+
+    vm.warp(block.timestamp + droidTrainingTime * maxDroidCount * 2);
+    world.Primodium__claimUnits(raidableAsteroid);
+    assertEq(UnitCount.get(raidableAsteroid, DroidPrototypeId), maxDroidCount, "Droid regen should not exceed maximum");
   }
 
   function testNoDroidRegenWhenOwned() public {
-    testInitRaidableAsteroidCommon1();
+    testInitRaidableAsteroidCommon2();
     conquerAsteroid(creator, asteroidEntity, raidableAsteroid);
     assertEq(OwnedBy.get(raidableAsteroid), playerEntity, "Asteroid was not conquered");
     assertEq(UnitCount.get(raidableAsteroid, DroidPrototypeId), 0, "Not all droids destroyed");
@@ -147,5 +142,22 @@ contract LibRaidableAsteroidTest is PrimodiumTest {
 
     world.Primodium__claimUnits(raidableAsteroid);
     assertEq(UnitCount.get(raidableAsteroid, DroidPrototypeId), 0, "Droids should not regen when owned by player");
+  }
+
+  function testDroid0BuildTime() public {
+    testInitRaidableAsteroidCommon2();
+    P_Unit.setTrainingTime(DroidPrototypeId, 0, 0);
+    world.Primodium__attack(fleetEntity, raidableAsteroid);
+
+    assertEq(UnitCount.get(raidableAsteroid, DroidPrototypeId), 0, "Not all droids destroyed");
+    assertEq(ResourceCount.get(raidableAsteroid, uint8(EResource.Lithium)), 0, "Resources not looted");
+
+    vm.warp(block.timestamp + 1);
+    world.Primodium__claimUnits(raidableAsteroid);
+    assertEq(
+      UnitCount.get(raidableAsteroid, DroidPrototypeId),
+      maxDroidCount,
+      "Droids are not regenerating when 0 build time"
+    );
   }
 }
