@@ -105,6 +105,7 @@ export enum TransactionQueueType {
   FleetStance,
   TransferFleet,
   WormholeDeposit,
+  PayForColonySlot,
 }
 
 export enum RockRelationship {

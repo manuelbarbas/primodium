@@ -26,9 +26,6 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
     return components.BuildingType.get(selectedBuilding)?.value;
   }, [selectedBuilding]);
 
-  const active = components.IsActive.use(selectedBuilding)?.value;
-  const canToggle = !components.TrainingQueue.use(selectedBuilding)?.units.length;
-
   const handleClose = () => {
     components.SelectedBuilding.remove();
     components.SelectedAction.remove();
@@ -52,8 +49,6 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
     }
   };
   const TopBar = () => {
-    const mud = useMud();
-
     return (
       <div className="absolute -top-2 right-0 -translate-y-full flex flex-row-reverse gap-1 p-1 bg-neutral border border-1 border-secondary border-b-base-100">
         <Button
@@ -88,19 +83,8 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
                 <FaTrash size={12} />
               </Navigator.NavButton>
             </TransactionQueueMask>
-            <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Toggle, selectedBuilding)}>
-              <Button
-                tooltip={active ? "Deactivate" : "Activate"}
-                disabled={!canToggle}
-                tooltipDirection="top"
-                className={`btn-square btn-xs font-bold border ${
-                  active ? "border-error" : "border-success"
-                } inline-flex`}
-                onClick={() => toggleBuilding(mud, selectedBuilding)}
-              >
-                <FaPowerOff size={12} />
-              </Button>
-            </TransactionQueueMask>
+
+            <ToggleButton buildingEntity={selectedBuilding} />
           </>
         )}
       </div>
@@ -120,5 +104,25 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
       <BuildQueue building={selectedBuilding} />
       <BuildUnit building={selectedBuilding} />
     </Navigator>
+  );
+};
+
+const ToggleButton = ({ buildingEntity }: { buildingEntity: Entity }) => {
+  const mud = useMud();
+  const active = components.IsActive.use(buildingEntity)?.value;
+  const canToggle = !components.TrainingQueue.use(buildingEntity)?.units.length;
+
+  return (
+    <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Toggle, buildingEntity)}>
+      <Button
+        tooltip={active ? "Deactivate" : "Activate"}
+        disabled={!canToggle}
+        tooltipDirection="top"
+        className={`btn-square btn-xs font-bold border ${active ? "border-error" : "border-success"} inline-flex`}
+        onClick={() => toggleBuilding(mud, buildingEntity)}
+      >
+        <FaPowerOff size={12} />
+      </Button>
+    </TransactionQueueMask>
   );
 };

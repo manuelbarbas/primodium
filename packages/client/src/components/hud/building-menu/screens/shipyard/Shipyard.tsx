@@ -1,7 +1,6 @@
 import { Modal } from "@/components/core/Modal";
 import { Upgrade } from "@/components/hud/building-menu/widgets/Upgrade";
 import { CommissionColonyShips } from "@/components/hud/modals/colony-ships/CommissionColonyShips";
-import { useBuildingInfo } from "@/hooks/useBuildingInfo";
 import { usePrimodium } from "@/hooks/usePrimodium";
 import { getBuildingImage } from "@/util/building";
 import { EntityType, ResourceImage } from "@/util/constants";
@@ -10,7 +9,7 @@ import { FaInfoCircle } from "react-icons/fa";
 import { Navigator } from "src/components/core/Navigator";
 
 export const Shipyard: React.FC<{ building: Entity }> = ({ building }) => {
-  const info = useBuildingInfo(building);
+  // const info = useBuildingInfo(building);
   const primodium = usePrimodium();
   const buildingImage = getBuildingImage(primodium, building);
 
@@ -25,7 +24,7 @@ export const Shipyard: React.FC<{ building: Entity }> = ({ building }) => {
               <FaInfoCircle />
             </Navigator.NavButton>
           </div>
-          <p className="opacity-50 text-xs">Level {info.level.toString()}</p>
+          {/* <p className="opacity-50 text-xs">Level {info.level.toString()}</p> */}
         </div>
       </div>
 

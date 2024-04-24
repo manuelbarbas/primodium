@@ -1,5 +1,5 @@
 import { components } from "@/network/components";
-import { getColonyShipsPlusAsteroids, getColonySlotsCostMultiplier } from "@/util/colonyShip";
+import { getColonyShipsPlusAsteroids } from "@/util/colonyShip";
 import { ResourceEntityLookup } from "@/util/constants";
 import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
@@ -8,12 +8,12 @@ import { Hex } from "viem";
 
 export const useColonySlots = (playerEntity: Entity) => {
   const maxSlots = components.MaxColonySlots.use(playerEntity)?.value ?? 0n;
-  const shipsInTraining = components.ColonyShipsInTraining.get(playerEntity)?.value ?? 0n;
+  const shipsInTraining = components.ColonyShipsInTraining.use(playerEntity)?.value ?? 0n;
   const config = components.P_ColonySlotsConfig.use();
+  const costMultiplier = useColonySlotsMultiplier(playerEntity);
   const data = useMemo(() => {
     if (!config) throw new Error("No colony slots config found");
     const occupiedSlots = getColonyShipsPlusAsteroids(playerEntity);
-    const costMultiplier = getColonySlotsCostMultiplier(playerEntity);
 
     const resourceCosts = config.resources.reduce((acc, resource, i) => {
       const paid =
@@ -31,7 +31,7 @@ export const useColonySlots = (playerEntity: Entity) => {
       costMultiplier,
       resourceCosts,
     };
-  }, [config, maxSlots, playerEntity]);
+  }, [config, costMultiplier, maxSlots, playerEntity]);
 
   return {
     ...data,
@@ -39,4 +39,10 @@ export const useColonySlots = (playerEntity: Entity) => {
     shipsInTraining,
     maxSlots,
   };
+};
+
+export const useColonySlotsMultiplier = (playerEntity: Entity) => {
+  const maxColonySlots = components.MaxColonySlots.use(playerEntity)?.value ?? 0n;
+  const multiplier = components.P_ColonySlotsConfig.use()?.multiplier ?? 1n;
+  return multiplier * maxColonySlots;
 };

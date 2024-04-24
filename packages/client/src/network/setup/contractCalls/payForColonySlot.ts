@@ -11,7 +11,6 @@ export const payForColonySlot = async (mud: MUD, shipyardEntity: Entity, deltas:
   if (!resources) return;
 
   const resourceCounts = resources.map((r) => deltas[ResourceEntityLookup[r as EResource]] || 0n);
-  console.log("payForColonySlot", resourceCounts);
   await execute(
     {
       mud,
@@ -22,7 +21,7 @@ export const payForColonySlot = async (mud: MUD, shipyardEntity: Entity, deltas:
     },
     {
       id: "pay" as Entity,
-      type: TransactionQueueType.LandFleet,
+      type: TransactionQueueType.PayForColonySlot,
     }
   );
 };

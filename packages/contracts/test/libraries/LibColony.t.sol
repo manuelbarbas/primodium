@@ -8,11 +8,12 @@ import { EUnit, EBuilding } from "src/Types.sol";
 
 import { UnitKey } from "src/Keys.sol";
 
-import { UnitCount, MaxResourceCount, Asteroid, Home, OwnedBy, Level, ResourceCount, MaxColonySlots, P_Transportables, P_UnitPrototypes, P_EnumToPrototype, P_RequiredBaseLevel, P_RequiredResources, P_ColonySlotsConfigData, P_ColonySlotsConfig, ColonySlotsInstallments } from "codegen/index.sol";
+import { Position, Value_UnitProductionQueueData, UnitCount, MaxResourceCount, Asteroid, Home, OwnedBy, Level, ResourceCount, MaxColonySlots, P_Transportables, P_UnitPrototypes, P_EnumToPrototype, P_RequiredBaseLevel, P_RequiredResources, P_RequiredResourcesData, P_ColonySlotsConfigData, P_ColonySlotsConfig, ColonySlotsInstallments } from "codegen/index.sol";
 
 import { ColonyShipPrototypeId, ShipyardPrototypeId } from "codegen/Prototypes.sol";
 
 import { LibColony } from "libraries/LibColony.sol";
+import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
 
 contract LibColonyTest is PrimodiumTest {
   bytes32 playerEntity;
@@ -39,6 +40,7 @@ contract LibColonyTest is PrimodiumTest {
     P_RequiredResources.deleteRecord(ShipyardPrototypeId, 1);
 
     creatorHomeAsteroidShipyard = buildShipyard(creatorHomeAsteroid);
+    costData = P_ColonySlotsConfig.get();
   }
 
   function buildShipyard(bytes32 asteroidEntity) public returns (bytes32) {
@@ -56,6 +58,34 @@ contract LibColonyTest is PrimodiumTest {
   function testIncreaseMaxColonySlots() public {
     assertEq(LibColony.increaseMaxColonySlots(playerEntity), 2);
     assertEq(LibColony.increaseMaxColonySlots(playerEntity), 3);
+  }
+
+  function testTrainColonyShip() public {
+    vm.startPrank(creator);
+    bytes32 shipyardEntity = buildBuilding(creator, EBuilding.Shipyard);
+
+    P_RequiredResourcesData memory requiredResources;
+    requiredResources.resources = new uint8[](costData.resources.length);
+    requiredResources.amounts = new uint256[](costData.resources.length);
+
+    for (uint i = 0; i < costData.resources.length; i++) {
+      requiredResources.resources[i] = costData.resources[i];
+      requiredResources.amounts[i] = costData.amounts[i] * LibColony.getColonySlotsCostMultiplier(playerEntity);
+    }
+
+    provideResources(Position.getParentEntity(shipyardEntity), requiredResources);
+    assertEq(1, MaxColonySlots.get(playerEntity));
+    vm.startPrank(creator);
+    world.Primodium__payForMaxColonySlots(shipyardEntity, requiredResources.amounts);
+    assertEq(2, MaxColonySlots.get(playerEntity));
+    requiredResources = P_RequiredResources.get(ColonyShipPrototypeId, 0);
+    console.log("resources", requiredResources.resources.length);
+    provideResources(Position.getParentEntity(shipyardEntity), requiredResources);
+    trainUnits(creator, shipyardEntity, ColonyShipPrototypeId, 1, true);
+
+    Value_UnitProductionQueueData memory data = UnitProductionQueue.peek(shipyardEntity);
+    assertEq(uint256(data.unitEntity), uint256(ColonyShipPrototypeId));
+    assertEq(data.quantity, 1);
   }
 
   function testGetColonyShipsPlusAsteroids() public {
@@ -127,7 +157,6 @@ contract LibColonyTest is PrimodiumTest {
   }
 
   function testPayForMaxColonySlotsInput() public {
-    costData = P_ColonySlotsConfig.get();
     uint256[] memory emptyPaymentAmounts = new uint256[](0);
     uint256[] memory undersizedPaymentAmounts = new uint256[](costData.resources.length - 1);
     uint256[] memory oversizedPaymentAmounts = new uint256[](costData.resources.length + 1);
@@ -152,7 +181,6 @@ contract LibColonyTest is PrimodiumTest {
   }
 
   function testPayForMaxColonySlotsNoResources() public {
-    costData = P_ColonySlotsConfig.get();
     paymentAmounts = new uint256[](costData.resources.length);
 
     colonySlotsCostMultiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);

@@ -3,18 +3,19 @@ import { CapacityBar } from "@/components/core/CapacityBar";
 import { SecondaryCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
 import { NumberInput } from "@/components/core/NumberInput";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { useMud } from "@/hooks";
-import { useColonySlots } from "@/hooks/useColonySlots";
+import { useColonySlots, useColonySlotsMultiplier } from "@/hooks/useColonySlots";
 import { useFullResourceCount } from "@/hooks/useFullResourceCount";
 import { components } from "@/network/components";
 import { payForColonySlot } from "@/network/setup/contractCalls/payForColonySlot";
-import { getEntityTypeName } from "@/util/common";
-import { ResourceImage } from "@/util/constants";
+import { ResourceEnumLookup, ResourceImage } from "@/util/constants";
 import { formatResourceCount, parseResourceCount } from "@/util/number";
 import { getFullResourceCount } from "@/util/resource";
 import { bigIntMin } from "@latticexyz/common/utils";
 import { Entity } from "@latticexyz/recs";
 import React, { useEffect, useMemo, useState } from "react";
+import { Hex } from "viem";
 
 export const UnlockSlot: React.FC<{
   playerEntity: Entity;
@@ -28,18 +29,16 @@ export const UnlockSlot: React.FC<{
   const [activeResource, setActiveResource] = useState<Entity | null>(null);
   const [activeResourceCount, setActiveResourceCount] = useState("0");
 
-  const time = components.Time.use()?.value;
-
   const max = useMemo(() => {
     if (!activeResource) return 0;
     const resourceData = getFullResourceCount(activeResource, asteroidEntity);
     if (!resourceData) return 0;
     const resourceCosts = colonySlotsData.resourceCosts[activeResource];
     const resourcesLeft = resourceCosts.cost - resourceCosts.paid;
-    const resourceStorage = resourceData.resourceStorage;
-    const ret = bigIntMin(resourcesLeft, resourceStorage);
+    const resourceCount = resourceData.resourceCount;
+    const ret = bigIntMin(resourcesLeft, resourceCount);
     return Number(formatResourceCount(activeResource, ret, { notLocale: true, showZero: true }));
-  }, [time]);
+  }, [activeResource, asteroidEntity, colonySlotsData.resourceCosts]);
 
   useEffect(() => {
     setActiveResourceCount("0");
@@ -53,15 +52,14 @@ export const UnlockSlot: React.FC<{
     setActiveResource(null);
   };
   return (
-    <SecondaryCard className={`h-full max-w-[250px] flex flex-col gap-6 p-3 justify-center items-center ${className}`}>
+    <SecondaryCard className={`flex flex-col gap-3 p-2 justify-center items-center ${className}`}>
       <p>Add Slot</p>
-      {Object.entries(colonySlotsData.resourceCosts).map(([resource, { cost, paid }], i) => (
+      {Object.entries(colonySlotsData.resourceCosts).map(([resource], i) => (
         <SlotResourceDisplay
           key={`slot-resource-${i}`}
+          playerEntity={playerEntity}
           asteroidEntity={asteroidEntity}
           resource={resource as Entity}
-          cost={cost}
-          paid={paid}
           onClick={() => setActiveResource(resource as Entity)}
           active={activeResource === resource}
         />
@@ -70,30 +68,47 @@ export const UnlockSlot: React.FC<{
       {activeResource && <NumberInput count={activeResourceCount} max={max} onChange={setActiveResourceCount} />}
       {!activeResource && <NumberInput count={"0"} max={0} />}
 
-      <Button variant="primary" size="sm" disabled={activeResourceCount == "0"} onClick={handleSubmit}>
-        Pay
-      </Button>
+      <TransactionQueueMask queueItemId={"pay" as Entity}>
+        <Button variant="primary" size="sm" disabled={activeResourceCount == "0"} onClick={handleSubmit}>
+          Pay
+        </Button>
+      </TransactionQueueMask>
     </SecondaryCard>
   );
 };
 
 const SlotResourceDisplay: React.FC<{
   active?: boolean;
+  playerEntity: Entity;
   asteroidEntity: Entity;
   resource: Entity;
-  cost: bigint;
-  paid: bigint;
   onClick?: () => void;
-}> = ({ active, asteroidEntity, resource, cost, paid, onClick }) => {
-  const resourceCount = useFullResourceCount(asteroidEntity, resource)?.resourceCount;
+}> = ({ active, asteroidEntity, playerEntity, resource, onClick }) => {
+  const resourceCount = useFullResourceCount(resource, asteroidEntity)?.resourceCount;
+
+  const config = components.P_ColonySlotsConfig.use();
+  if (!config) throw new Error("No colony slots config found");
+  const index = config?.resources.findIndex((r) => r === ResourceEnumLookup[resource]);
+  const paid =
+    components.ColonySlotsInstallments.useWithKeys({
+      playerEntity: playerEntity as Hex,
+      resourceIndex: BigInt(index),
+    })?.amounts ?? 0n;
+
+  const costMultiplier = useColonySlotsMultiplier(playerEntity);
+  const cost = config.amounts[index] * costMultiplier;
+  const complete = cost == paid;
+
+  let content = "";
+  if (complete) content = "COMPLETE";
+  else content = `${formatResourceCount(resource, paid)} / ${formatResourceCount(resource, cost, { short: true })}`;
   return (
-    <Button size="content" onClick={onClick} className={active ? "ring ring-secondary" : ""}>
-      <IconLabel imageUri={ResourceImage.get(resource) ?? ""} text={getEntityTypeName(resource)} />
-      <p>Balance: {formatResourceCount(resource, resourceCount ?? 0n)}</p>
+    <Button size="content" onClick={onClick} className={`w-full gap-1 ${active ? "ring ring-secondary" : ""}`}>
+      <IconLabel imageUri={ResourceImage.get(resource) ?? ""} text={content} />
       <CapacityBar current={paid} max={cost} segments={20} />
-      <p className="self-end text-xs opacity-50">
-        {formatResourceCount(resource, paid)} / {formatResourceCount(resource, cost)}
-      </p>
+      {!complete && (
+        <p className="self-end text-xs opacity-50">Available: {formatResourceCount(resource, resourceCount ?? 0n)}</p>
+      )}
     </Button>
   );
 };
