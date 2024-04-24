@@ -6,13 +6,16 @@ import { AllianceManagement } from "@/components/hud/modals/alliance-mgmt/Allian
 import { LeaderboardScreen } from "@/components/hud/modals/leaderboard/LeaderboardScreen";
 import { Settings } from "./modals/settings/Settings";
 import { BattleReports } from "./widgets/battle-reports/BattleReports";
+import { Cheatcodes } from "@/components/hud/widgets/dev/Cheatcodes";
 
 const btnClass = "group hover:bg-transparent";
 const iconClass = "text-3xl hover:animate-float";
 
 export const Dock = () => {
+  const DEV = import.meta.env.PRI_DEV === "true";
+
   return (
-    <GlassCard direction={"top"} className="h-12">
+    <GlassCard direction={"top"} className="h-12 px-5">
       <div className="flex flex-row gap-2 items-center pointer-events-auto -translate-y-[35px]">
         <Modal title="alliance management">
           <Modal.Button
@@ -60,6 +63,16 @@ export const Dock = () => {
             <Settings />
           </Modal.Content>
         </Modal>
+        {DEV && (
+          <Modal title="cheatcodes">
+            <Modal.Button className={btnClass} tooltip="cheatcodes" shape={"circle"} size={"lg"} variant={"ghost"}>
+              <IconLabel className={iconClass} imageUri="/img/icons/trollface.png" />
+            </Modal.Button>
+            <Modal.Content className="h-[700px] w-[500px] font-mono">
+              <Cheatcodes />
+            </Modal.Content>
+          </Modal>
+        )}
       </div>
     </GlassCard>
   );

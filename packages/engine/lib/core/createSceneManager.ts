@@ -1,15 +1,20 @@
 import { deferred } from "@latticexyz/utils";
-import { createScene } from "./createScene";
+import { createScene as _createScene } from "./createScene";
 
-export type Scene = Awaited<ReturnType<typeof createScene>>;
+export type Scene = Awaited<ReturnType<typeof _createScene>>;
 
 export const createSceneManager = (phaserGame: Phaser.Game) => {
   const scenes = new Map<string, Scene>();
 
-  const addScene = async (config: Parameters<typeof createScene>[1], autoStart = true) => {
-    const scene = await createScene(phaserGame, config, autoStart);
+  const createScene = async (config: Parameters<typeof _createScene>[1], autoStart = true) => {
+    const scene = await _createScene(phaserGame, config, autoStart);
     scenes.set(config.key, scene);
 
+    return scene;
+  };
+
+  const addScene = async (scene: Scene) => {
+    scenes.set(scene.config.key, scene);
     return scene;
   };
 
@@ -62,6 +67,7 @@ export const createSceneManager = (phaserGame: Phaser.Game) => {
 
   return {
     scenes,
+    createScene,
     addScene,
     removeScene,
     transitionToScene,

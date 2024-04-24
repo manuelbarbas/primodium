@@ -134,9 +134,10 @@ export const key = {
 };
 
 export const Mode = {
-  Building: toHex32("mode:Building") as Entity,
+  Asteroid: toHex32("mode:Building") as Entity,
   Starmap: toHex32("mode:Starmap") as Entity,
-  EmpireManager: toHex32("mode:Manager") as Entity,
+  CommandCenter: toHex32("mode:Manager") as Entity,
+  Spectate: toHex32("mode:Spectate") as Entity,
 };
 
 export const EntityType = {

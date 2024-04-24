@@ -14,11 +14,12 @@ import { getCanAttackSomeone, getFleetStats } from "src/util/unit";
 import { Fleets } from "../../widgets/fleets/Fleets";
 import { DepthLayers } from "src/game/lib/constants/common";
 import { usePrimodium } from "src/hooks/usePrimodium";
+import { Mode } from "@/util/constants";
 
 // this component assumes the fleet is owned by the player
 export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fleet, position }) => {
   const primodium = usePrimodium();
-  const mapOpen = components.MapOpen.use()?.value ?? false;
+  const mapOpen = components.SelectedMode.use()?.value !== Mode.Asteroid;
   const selectingAttackDestination = !!components.Attack.use()?.originFleet;
   const selectingMoveDestination = !!components.Send.use()?.originFleet;
   const noUnits = useUnitCounts(fleet).size === 0;
@@ -28,11 +29,9 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
   const mud = useMud();
 
   const coord = useMemo(() => {
-    const fleetEntity = components.SelectedFleet.get()?.value;
+    if (!fleet) return { x: 0, y: 0 };
 
-    if (!fleetEntity) return { x: 0, y: 0 };
-
-    const fleetObj = primodium.api("STARMAP").objects.getFleet(fleetEntity);
+    const fleetObj = primodium.api("STARMAP").objects.getFleet(fleet);
 
     if (!fleetObj) return { x: 0, y: 0 };
 

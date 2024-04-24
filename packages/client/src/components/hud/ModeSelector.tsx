@@ -7,14 +7,9 @@ import { cn } from "@/util/client";
 
 import { Mode } from "@/util/constants";
 import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useCallback } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-
-const ModeToName = {
-  [Mode.Building]: "Building",
-  [Mode.Starmap]: "Starmap",
-  [Mode.EmpireManager]: "Empire Manager",
-};
 
 export const ModeButton = (props: { mode: Entity; image: string }) => {
   const { components } = useMud();
@@ -42,18 +37,18 @@ export const ModeButton = (props: { mode: Entity; image: string }) => {
 
 const selectableModes = [
   {
-    type: Mode.Building,
-    name: "Building",
+    type: Mode.Asteroid,
+    name: "Asteroid",
     image: "/img/icons/minersicon.png",
   },
   {
     type: Mode.Starmap,
-    name: "Starmap",
+    name: "Starbelt",
     image: "/img/icons/starmapicon.png",
   },
   {
-    type: Mode.EmpireManager,
-    name: "Empire Manager",
+    type: Mode.CommandCenter,
+    name: "Command Center",
     image: "/img/icons/outgoingicon.png",
   },
 ];
@@ -61,6 +56,7 @@ const selectableModes = [
 export const ModeSelector = () => {
   const { components } = useMud();
   const currentMode = components.SelectedMode.use()?.value;
+  const spectating = currentMode === Mode.Spectate;
 
   const handlePrev = useCallback(() => {
     const currentIndex = selectableModes.findIndex((mode) => mode.type === currentMode);
@@ -83,35 +79,59 @@ export const ModeSelector = () => {
   return (
     <div className="flex flex-col items-center pointer-events-auto">
       <div className="flex items-center relative">
-        <Button
-          shape="square"
-          variant="neutral"
-          size="sm"
-          className="text-accent text-sm drop-shadow-hard border-r-0"
-          onClick={handlePrev}
-          keybind="PrevHotbar"
-        >
-          <FaChevronLeft />
-        </Button>
-        <GlassCard direction="bottom" className="flex-row items-center gap-4">
+        {!spectating && (
+          <Button
+            shape="square"
+            variant="neutral"
+            size="sm"
+            className="text-accent text-sm drop-shadow-hard border-r-0"
+            onClick={handlePrev}
+            keybind="PrevHotbar"
+          >
+            <FaChevronLeft />
+          </Button>
+        )}
+        <GlassCard direction="bottom" className="flex-row items-center gap-6 px-10">
           {selectableModes.map((mode) => (
             <ModeButton key={mode.type} mode={mode.type} image={mode.image} />
           ))}
+          {spectating && (
+            <div className="absolute inset-0 bg-neutral/75 backdrop-blur-md rounded-b-xl w-full h-full flex items-center justify-center pointer-events-auto">
+              <Button
+                variant={"ghost"}
+                size="sm"
+                className=" drop-shadow-hard hover:bg-transparent"
+                onClick={() => {
+                  components.SelectedMode.set({
+                    value: Mode.Starmap,
+                  });
+
+                  components.ActiveRock.set({
+                    value: components.BuildRock.get()?.value ?? singletonEntity,
+                  });
+                }}
+              >
+                <IconLabel imageUri="/img/icons/returnicon.png" className="text-2xl" />
+              </Button>
+            </div>
+          )}
         </GlassCard>
-        <Button
-          shape="square"
-          variant="neutral"
-          size="sm"
-          className="text-accent text-sm drop-shadow-hard border-l-0"
-          onClick={handleNext}
-          keybind="NextHotbar"
-        >
-          <FaChevronRight />
-        </Button>
+        {!spectating && (
+          <Button
+            shape="square"
+            variant="neutral"
+            size="sm"
+            className="text-accent text-sm drop-shadow-hard border-l-0"
+            onClick={handleNext}
+            keybind="NextHotbar"
+          >
+            <FaChevronRight />
+          </Button>
+        )}
       </div>
       {currentMode && (
         <Badge variant="neutral" size="md" className="border-accent drop-shadow-hard border-t-0">
-          {ModeToName[currentMode]}
+          {spectating ? "STOP SPECTATING" : selectableModes.find((mode) => mode.type === currentMode)?.name}
         </Badge>
       )}
     </div>
