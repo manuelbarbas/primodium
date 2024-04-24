@@ -49,7 +49,7 @@ export const UnlockSlot: React.FC<{
     payForColonySlot(mud, buildingEntity, {
       [activeResource]: BigInt(parseResourceCount(activeResource, activeResourceCount)),
     });
-    setActiveResource(null);
+    setActiveResourceCount("0");
   };
   return (
     <SecondaryCard className={`flex flex-col gap-3 p-2 justify-center items-center ${className}`}>

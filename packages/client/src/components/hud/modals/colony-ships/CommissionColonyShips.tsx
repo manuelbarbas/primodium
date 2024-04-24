@@ -34,14 +34,13 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
   const rawQueue = components.TrainingQueue.use(buildingEntity);
 
   const queue = rawQueue ? convertTrainingQueue(rawQueue) : [];
-  console.log(queue);
 
   const tiles = Array(9)
     .fill(0)
     .map((_, i) => {
       if (i < queue.length) return { type: "training", ...queue[i] };
-      if (i < Number(colonySlotsData.availableSlots)) return { type: "train" };
-      if (i == Number(colonySlotsData.availableSlots)) return { type: "unlock" };
+      if (i < queue.length + Number(colonySlotsData.availableSlots)) return { type: "train" };
+      if (i == queue.length + Number(colonySlotsData.availableSlots)) return { type: "unlock" };
       return { type: "blank" };
     }) as Tile[];
 
@@ -54,10 +53,7 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
       <div className="flex gap-2">
         <div className="grid grid-rows-3 grid-cols-3 gap-1 aspect-square">
           {tiles.map((tile, i) => {
-            if (tile.type === "training") {
-              return <TrainingTile training={tile} key={`tile-${i}`} />;
-            }
-
+            if (tile.type === "training") return <TrainingTile training={tile} key={`tile-${i}`} />;
             if (tile.type === "train")
               return <TrainShipTile onClick={() => setActiveTile(i)} key={`tile-${i}`} active={activeTile == i} />;
             if (tile.type === "unlock")
@@ -84,7 +80,7 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
 
 const BlankTile: React.FC = () => {
   return (
-    <SecondaryCard className="w-full h-full flex text-xs justify-center items-center opacity-50">{null}</SecondaryCard>
+    <SecondaryCard className="w-full h-full flex text-xs justify-center items-center opacity-20">{null}</SecondaryCard>
   );
 };
 
@@ -97,7 +93,7 @@ const TrainingTile: React.FC<{
         <img src={ResourceImage.get(training.unit) ?? ""} className="h-6" />
       </div>
       <div className="flex flex-col gap-2 items-center">
-        <div className="text-xs text-warning animate-pulse">Training</div>
+        <div className="text-xs text-warning animate-pulse">Building</div>
         <div className="text-xs opacity-50">{formatTime(training.timeRemaining)}</div>
       </div>
     </SecondaryCard>
@@ -108,7 +104,7 @@ const TrainShipTile: React.FC<{ active?: boolean; onClick?: () => void }> = ({ o
   return (
     <SecondaryCard className={`w-full h-full !p-0 ${active ? "ring ring-secondary" : ""}`}>
       <Button onClick={onClick} variant="ghost" className="w-full h-full flex text-xs justify-center items-center">
-        + Ship
+        Build Ship
       </Button>
     </SecondaryCard>
   );

@@ -1,6 +1,6 @@
 import { components } from "@/network/components";
 import { EntityType, Keys } from "@/util/constants";
-import { Entity } from "@latticexyz/recs";
+import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { Hex } from "viem";
 
 export function getColonySlotsCostMultiplier(playerEntity: Entity) {
@@ -10,8 +10,8 @@ export function getColonySlotsCostMultiplier(playerEntity: Entity) {
 }
 
 export function getColonyShipsPlusAsteroids(playerEntity: Entity) {
-  const ownedAsteroids =
-    components.Keys_AsteroidSet.getWithKeys({ entity: playerEntity as Hex, key: Keys.ASTEROID as Hex })?.itemKeys ?? [];
+  const query = [HasValue(components.OwnedBy, { value: playerEntity }), Has(components.Asteroid)];
+  const ownedAsteroids = runQuery(query);
 
   const ret: Array<{ type: "asteroid" | "ship" | "training"; parentEntity: Entity }> = [];
   ownedAsteroids.forEach((asteroidEntity) => {
@@ -23,7 +23,7 @@ export function getColonyShipsPlusAsteroids(playerEntity: Entity) {
 
     // Fleets are owned by asteroids
     const ownedFleets =
-      components.Keys_FleetSet.getWithKeys({ entity: asteroidEntity as Hex, key: Keys.FLEET_OWNED_BY as Hex })
+      components.Ids_FleetSet.getWithKeys({ entity: asteroidEntity as Hex, key: Keys.FLEET_OWNED_BY as Hex })
         ?.itemKeys ?? [];
     for (let j = 0; j < ownedFleets.length; j++) {
       const shipsOnFleet =
