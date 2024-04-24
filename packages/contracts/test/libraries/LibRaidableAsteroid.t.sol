@@ -56,4 +56,9 @@ contract LibRaidableAsteroidTest is PrimodiumTest {
     vm.startPrank(creator);
     bytes32 raidableAsteroid = LibAsteroid.createSecondaryAsteroid(raidablePosition);
   }
+
+  // todo: test claimRaidableUnits
+  // check it only works for 0x0
+  // check proper rate
+  // check does not exceed max droids
 }

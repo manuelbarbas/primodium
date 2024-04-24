@@ -400,6 +400,11 @@ export const worldInput = {
       schema: { entity: "bytes32", value: "uint256" },
     },
 
+    DroidRegenTimestamp: {
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256" },
+    },
+
     // can only increase, never decrease. Assigned to player to prevent weird edge cases of losing asteroids
     MaxColonySlots: {
       key: ["playerEntity"],
