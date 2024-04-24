@@ -8,6 +8,7 @@ import { calculateAngleBetweenPoints } from "src/util/common";
 import { Button } from "./Button";
 import { IconLabel } from "./IconLabel";
 import { DepthLayers, SceneKeys } from "src/game/lib/constants/common";
+import { cn } from "@/util/client";
 
 const BoundedMarker: React.FC<{ scene: SceneKeys; coord: Coord; iconUri: string; degrees: number }> = ({
   coord,
@@ -35,7 +36,12 @@ const BoundedMarker: React.FC<{ scene: SceneKeys; coord: Coord; iconUri: string;
   }, [coord, primodium, scene]);
 
   return (
-    <Button className="border border-secondary hover:bg-secondary hover:border-accent" onClick={handleClick}>
+    <Button
+      shape="square"
+      size="md"
+      className="border border-secondary hover:bg-secondary hover:border-accent"
+      onClick={handleClick}
+    >
       <IconLabel imageUri={iconUri} className={`text-xl drop-shadow-hard`} />
       <div className="absolute inset-0 pointer-events-none" style={{ transform: `rotate(${degrees}deg)` }}>
         <FaChevronRight size={24} className="text-success font-bold absolute top-1/2 -translate-y-1/2 -right-10" />
@@ -172,7 +178,7 @@ export const Marker: React.FC<{
   if (!marker || !container || !camera.phaserCamera.scene.scene.isActive()) return;
 
   return ReactDOM.createPortal(
-    <div className={translateClass}>
+    <div className={cn("pointer-events-auto", translateClass)}>
       {!visible && offScreenIconUri && (
         <BoundedMarker scene={scene} coord={coord} iconUri={offScreenIconUri} degrees={degrees} />
       )}

@@ -12,7 +12,6 @@ import { HUD } from "@/components/core/HUD";
 import { Modal } from "@/components/core/Modal";
 import { BrandingLabel } from "@/components/shared/BrandingLabel";
 import { AsteroidLoading } from "@/components/hud/AsteroidLoading";
-import { CurrentObjective } from "@/components/hud/CurrentObjective";
 import { Profile } from "@/components/hud/Profile";
 import { Companion } from "@/components/hud/companion/Companion";
 import { HoverInfo } from "./hover/HoverInfo";
@@ -32,6 +31,7 @@ import { Cheatcodes } from "@/components/hud/widgets/dev/Cheatcodes";
 import { Hangar } from "@/components/hud/widgets/hangar/Hangar";
 import { Resources } from "@/components/hud/widgets/resources/Resources";
 import { UnitDeaths } from "@/components/hud/widgets/UnitDeaths";
+import { Dock } from "@/components/hud/Dock";
 
 export const GameHUD = memo(() => {
   const {
@@ -163,7 +163,7 @@ export const GameHUD = memo(() => {
 
       return ReactDOM.createPortal(
         <div className={`screen-container`}>
-          <HUD scale={uiScale} pad>
+          <HUD scale={uiScale}>
             <Modal title="hacker console" keybind={allowHackerModal ? "Console" : undefined} keybindClose>
               <Modal.Content className="w-4/5 h-[40rem]">
                 <HackerConsole />
@@ -182,7 +182,6 @@ export const GameHUD = memo(() => {
             {/* Widgets */}
             <HUD.TopLeft className="flex flex-col gap-2">
               <Profile />
-              <Blueprints />
             </HUD.TopLeft>
 
             <HUD.TopMiddle className="flex flex-col items-center gap-2">
@@ -190,13 +189,22 @@ export const GameHUD = memo(() => {
               <UnitDeaths />
             </HUD.TopMiddle>
             <HUD.TopRight className="flex flex-col items-end gap-2">
-              <CurrentObjective />
-              <Resources />
               <Hangar />
               <OwnedAsteroids />
               <OwnedFleets />
             </HUD.TopRight>
 
+            <HUD.Right>
+              <Resources />
+            </HUD.Right>
+
+            <HUD.Left>
+              <Blueprints />
+            </HUD.Left>
+
+            <HUD.BottomMiddle>
+              <Dock />
+            </HUD.BottomMiddle>
             <HUD.BottomRight>
               <Chat />
             </HUD.BottomRight>

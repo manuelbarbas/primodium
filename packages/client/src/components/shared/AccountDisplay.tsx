@@ -45,6 +45,8 @@ export const AccountDisplay: React.FC<{
 
   return (
     <Modal.CloseButton
+      variant="ghost"
+      size="xs"
       onClick={() => {
         if (!playerHomeAsteroid) return;
 
@@ -58,9 +60,7 @@ export const AccountDisplay: React.FC<{
 
         primodium.api("STARMAP").camera.pan({ x: playerHomeAsteroidPosition.x, y: playerHomeAsteroidPosition.y });
       }}
-      className={`btn-xs btn-ghost p-0 uppercase inline-flex font-bold gap-1 ${className} ${
-        loading ? "animate-pulse" : ""
-      }`}
+      className={`p-0 uppercase inline-flex font-bold gap-1 ${className} ${loading ? "animate-pulse" : ""}`}
     >
       <Content />
     </Modal.CloseButton>
