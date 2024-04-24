@@ -54,7 +54,7 @@ export const Modal: React.FC<ModalProps> & {
     } else {
       primodium.enableGlobalInput();
     }
-    //
+
     const escListener = addListener("Esc", handleEscPress);
     const openListener = keybind ? addListener(keybind, handleOpenPress) : null;
 

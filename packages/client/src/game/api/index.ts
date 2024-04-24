@@ -157,7 +157,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     const game = engine.getGame();
     for (const [, instance] of game.entries()) {
       instance.sceneManager.scenes.forEach((scene) => {
-        if (scene.config.key === "UI") return;
+        if (scene.config.key === Scenes.UI) return;
         scene.input.disableInput();
       });
     }
