@@ -655,7 +655,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.ExpandBase],
       requiredMainBase: 2n,
       description:
-        "Joining an alliance allows you to combine your points with other players. Press the Alliances button in the stack of buttons next to the Aura menu. Find an Alliance to join and press the Join button.",
+        "Joining an alliance allows you to combine your points with other players. Press the Alliances button Find an Alliance to join and press the Join button.",
     },
   ],
 ]);

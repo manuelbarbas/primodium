@@ -49,13 +49,15 @@ export const Objective: React.FC<{
             <p className="col-span-5 font-bold flex items-center px-1">{objectiveName}</p>
           </div>
           {objective && (
-            <p
-              className={`absolute col-span-4 right-0 top-0 text-white/80 font-bold text-xs uppercase py-1 px-2 ${
-                objectiveCategoryColors[objective.category]
-              }`}
-            >
-              {objective.category}
-            </p>
+            <div className={`col-span-4`}>
+              <p
+                className={`text-center text-white/80 font-bold text-xs uppercase py-1 px-2 ${
+                  objectiveCategoryColors[objective.category]
+                }`}
+              >
+                {objective.category}
+              </p>
+            </div>
           )}
         </div>
 
