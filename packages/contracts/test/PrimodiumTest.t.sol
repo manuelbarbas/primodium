@@ -471,8 +471,8 @@ contract PrimodiumTest is MudTest {
     P_GameConfigData memory config = P_GameConfig.get();
     if (common2) {
       P_AsteroidProbabilityConfig.set({
-        common1: 100,
-        common2: 0,
+        common1: 0,
+        common2: 100,
         eliteMicro: 0,
         eliteSmall: 0,
         eliteMedium: 0,
@@ -480,8 +480,8 @@ contract PrimodiumTest is MudTest {
       });
     } else {
       P_AsteroidProbabilityConfig.set({
-        common1: 0,
-        common2: 100,
+        common1: 100,
+        common2: 0,
         eliteMicro: 0,
         eliteSmall: 0,
         eliteMedium: 0,

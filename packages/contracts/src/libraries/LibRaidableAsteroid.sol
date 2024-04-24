@@ -5,6 +5,7 @@ import { OwnedBy, Asteroid, PositionData, MaxResourceCount, P_Unit, UnitCount, D
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
+import { LibProduction } from "libraries/LibProduction.sol";
 import { StorageUnitPrototypeId, IronMinePrototypeId, CopperMinePrototypeId, LithiumMinePrototypeId, IronPlateFactoryPrototypeId, AlloyFactoryPrototypeId, PVCellFactoryPrototypeId, DroidPrototypeId } from "codegen/Prototypes.sol";
 import { EResource } from "src/Types.sol";
 
@@ -12,11 +13,17 @@ library LibRaidableAsteroid {
   function buildRaidableAsteroid(bytes32 asteroidEntity) internal {
     // get max level to determine if common1 (maxLevel: 1) or common2 (maxLevel: 3)
     uint256 maxLevel = Asteroid.getMaxLevel(asteroidEntity);
+    bytes32 buildingEntity;
     int32 x;
     int32 y;
 
     // build one storage building
-    LibBuilding.uncheckedBuild(bytes32(0), StorageUnitPrototypeId, PositionData(21, 15, asteroidEntity));
+    buildingEntity = LibBuilding.uncheckedBuild(
+      bytes32(0),
+      StorageUnitPrototypeId,
+      PositionData(21, 15, asteroidEntity)
+    );
+    LibStorage.increaseMaxStorage(buildingEntity, 1);
 
     // fill storage with max common resources
     uint256 resourceMax = MaxResourceCount.get(asteroidEntity, uint8(EResource.Iron));
@@ -29,9 +36,20 @@ library LibRaidableAsteroid {
     LibStorage.checkedIncreaseStoredResource(asteroidEntity, uint8(EResource.Lithium), resourceMax);
 
     // build each mine type
-    LibBuilding.uncheckedBuild(bytes32(0), IronMinePrototypeId, PositionData(23, 16, asteroidEntity));
-    LibBuilding.uncheckedBuild(bytes32(0), CopperMinePrototypeId, PositionData(23, 15, asteroidEntity));
-    LibBuilding.uncheckedBuild(bytes32(0), LithiumMinePrototypeId, PositionData(23, 14, asteroidEntity));
+    buildingEntity = LibBuilding.uncheckedBuild(bytes32(0), IronMinePrototypeId, PositionData(23, 16, asteroidEntity));
+    LibProduction.upgradeResourceProduction(buildingEntity, 1);
+    buildingEntity = LibBuilding.uncheckedBuild(
+      bytes32(0),
+      CopperMinePrototypeId,
+      PositionData(23, 15, asteroidEntity)
+    );
+    LibProduction.upgradeResourceProduction(buildingEntity, 1);
+    buildingEntity = LibBuilding.uncheckedBuild(
+      bytes32(0),
+      LithiumMinePrototypeId,
+      PositionData(23, 14, asteroidEntity)
+    );
+    LibProduction.upgradeResourceProduction(buildingEntity, 1);
 
     // if common2, add max advanced resources and build each factory type
     if (maxLevel >= 3) {
@@ -44,12 +62,27 @@ library LibRaidableAsteroid {
       resourceMax = MaxResourceCount.get(asteroidEntity, uint8(EResource.PVCell));
       LibStorage.checkedIncreaseStoredResource(asteroidEntity, uint8(EResource.PVCell), resourceMax);
 
-      LibBuilding.uncheckedBuild(bytes32(0), IronPlateFactoryPrototypeId, PositionData(19, 15, asteroidEntity));
-      LibBuilding.uncheckedBuild(bytes32(0), AlloyFactoryPrototypeId, PositionData(17, 15, asteroidEntity));
-      LibBuilding.uncheckedBuild(bytes32(0), PVCellFactoryPrototypeId, PositionData(15, 15, asteroidEntity));
+      buildingEntity = LibBuilding.uncheckedBuild(
+        bytes32(0),
+        IronPlateFactoryPrototypeId,
+        PositionData(19, 15, asteroidEntity)
+      );
+      LibProduction.upgradeResourceProduction(buildingEntity, 1);
+      buildingEntity = LibBuilding.uncheckedBuild(
+        bytes32(0),
+        AlloyFactoryPrototypeId,
+        PositionData(17, 15, asteroidEntity)
+      );
+      LibProduction.upgradeResourceProduction(buildingEntity, 1);
+      buildingEntity = LibBuilding.uncheckedBuild(
+        bytes32(0),
+        PVCellFactoryPrototypeId,
+        PositionData(15, 15, asteroidEntity)
+      );
+      LibProduction.upgradeResourceProduction(buildingEntity, 1);
     }
 
-    // max droid units are already added in separate function, just init timestamp
+    // max droid units are already added in initSecondaryAsteroid(), just need to init a special timestamp
     DroidRegenTimestamp.set(asteroidEntity, block.timestamp);
   }
 
@@ -69,11 +102,11 @@ library LibRaidableAsteroid {
     (uint256 maxDroidCount, ) = LibAsteroid.getSecondaryAsteroidUnitsAndEncryption(
       Asteroid.getMaxLevel(asteroidEntity)
     );
-    uint256 droidTrainingTime = P_Unit.getTrainingTime(DroidPrototypeId, 1);
+    uint256 droidTrainingTime = P_Unit.getTrainingTime(DroidPrototypeId, 0);
     uint256 currentDroidCount = UnitCount.get(asteroidEntity, DroidPrototypeId);
     uint256 timeSinceLastClaimed = block.timestamp - DroidRegenTimestamp.get(asteroidEntity);
     uint256 droidClaimRemainder;
-    if (droidTrainingTime != 0) {
+    if (droidTrainingTime > 0) {
       currentDroidCount = (timeSinceLastClaimed / droidTrainingTime) + currentDroidCount;
       droidClaimRemainder = timeSinceLastClaimed % droidTrainingTime;
     } else {
