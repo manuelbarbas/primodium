@@ -144,5 +144,24 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     runRootSystems(rootScene, _instance);
   }
 
-  return { api, destroy, runSystems };
+  function enableGlobalInput() {
+    const game = engine.getGame();
+    for (const [, instance] of game.entries()) {
+      instance.sceneManager.scenes.forEach((scene) => {
+        scene.input.enableInput();
+      });
+    }
+  }
+
+  function disableGlobalInput() {
+    const game = engine.getGame();
+    for (const [, instance] of game.entries()) {
+      instance.sceneManager.scenes.forEach((scene) => {
+        if (scene.config.key === "UI") return;
+        scene.input.disableInput();
+      });
+    }
+  }
+
+  return { api, destroy, runSystems, enableGlobalInput, disableGlobalInput };
 }

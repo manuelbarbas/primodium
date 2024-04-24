@@ -34,7 +34,7 @@ export const Modal: React.FC<ModalProps> & {
   const primodium = usePrimodium();
   const {
     audio,
-    input: { disableInput, enableInput, addListener },
+    input: { addListener },
   } = useRef(primodium.api("UI")).current;
 
   useEffect(() => {
@@ -50,11 +50,11 @@ export const Modal: React.FC<ModalProps> & {
     };
 
     if (isOpen) {
-      disableInput();
+      primodium.disableGlobalInput();
     } else {
-      enableInput();
+      primodium.enableGlobalInput();
     }
-
+    //
     const escListener = addListener("Esc", handleEscPress);
     const openListener = keybind ? addListener(keybind, handleOpenPress) : null;
 
@@ -62,9 +62,9 @@ export const Modal: React.FC<ModalProps> & {
       escListener.dispose();
       openListener?.dispose();
 
-      enableInput();
+      primodium.enableGlobalInput();
     };
-  }, [isOpen, disableInput, enableInput, audio, keybind, keybindClose, addListener]);
+  }, [isOpen, audio, keybind, keybindClose, addListener, primodium]);
 
   return <ModalContext.Provider value={{ isOpen, setIsOpen, title }}>{children}</ModalContext.Provider>;
 };
