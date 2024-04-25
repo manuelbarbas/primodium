@@ -51,6 +51,10 @@ export class AsteroidMap {
     return this;
   }
 
+  getTilemapBounds() {
+    return this.asteroidTiledMap?.layer.tilemapLayer.getBounds();
+  }
+
   dispose() {
     this.asteroidTiledMap?.destroy();
     this.resources.dispose();
