@@ -8,9 +8,10 @@ import { Assets } from "src/game/lib/constants/assets";
 import { SpriteKeys } from "src/game/lib/constants/assets/sprites";
 import { components, components as comps } from "src/network/components";
 import { getEntityTypeName } from "./common";
-import { EntityType, MapIdToAsteroidType, ResourceStorages, RockRelationship } from "./constants";
+import { EntityType, ResourceStorages, RockRelationship } from "./constants";
 import { getFullResourceCount } from "./resource";
 import { getOrbitingFleets } from "./unit";
+import { MapIdToAsteroidType } from "@/util/mappings";
 
 //TODO: proper implementation, this is just a placeholder so stuff doesn't break.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

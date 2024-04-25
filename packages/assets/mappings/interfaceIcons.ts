@@ -28,6 +28,10 @@ import Starmap from "../icons/UI_Starmap.png?url";
 import Trade from "../icons/UI_Trade.png?url";
 import Vault from "../icons/UI_Vault.png?url";
 import Debug from "../icons/UI_Debug.png?url";
+import CategoryInfra from "../icons/category/infra.png?url";
+import CategoryMilitary from "../icons/category/military.png?url";
+import CategoryProduction from "../icons/category/production.png?url";
+import CategoryStorage from "../icons/category/storage.png?url";
 
 export const InterfaceIcons = {
   Add,
@@ -59,4 +63,8 @@ export const InterfaceIcons = {
   Starmap,
   Trade,
   Vault,
+  CategoryInfra,
+  CategoryMilitary,
+  CategoryProduction,
+  CategoryStorage,
 };

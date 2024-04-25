@@ -12,7 +12,7 @@ import { useMaxCountOfRecipe } from "src/hooks/useMaxCountOfRecipe";
 import { components } from "src/network/components";
 import { train } from "src/network/setup/contractCalls/train";
 import { getEntityTypeName } from "src/util/common";
-import { BackgroundImage, EntityType, ResourceEntityLookup, ResourceImage, UnitEnumLookup } from "src/util/constants";
+import { EntityType, ResourceEntityLookup, ResourceImage, UnitEnumLookup } from "src/util/constants";
 import { formatNumber, formatResourceCount } from "src/util/number";
 import { getRecipe } from "src/util/recipe";
 import { getFullResourceCount } from "src/util/resource";
@@ -20,6 +20,7 @@ import { getUnitStats } from "src/util/unit";
 import { Hex } from "viem";
 import { ResourceIconTooltip } from "../../../shared/ResourceIconTooltip";
 import { InterfaceIcons } from "@primodiumxyz/assets";
+import { EntityToUnitImage } from "@/util/mappings";
 
 export const BuildUnit: React.FC<{
   building: Entity;
@@ -59,7 +60,7 @@ export const BuildUnit: React.FC<{
                   onClick={() => (selectedUnit == unit ? setSelectedUnit(undefined) : setSelectedUnit(unit))}
                 >
                   <img
-                    src={BackgroundImage.get(unit)?.at(0) ?? InterfaceIcons.Debug}
+                    src={EntityToUnitImage[unit] ?? InterfaceIcons.Debug}
                     className={`border w-[72px] p-2 group-hover:opacity-50 bg-neutral ${
                       selectedUnit == unit ? "border-2 border-accent" : "border-secondary/75"
                     }`}

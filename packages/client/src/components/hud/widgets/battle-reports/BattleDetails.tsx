@@ -1,3 +1,4 @@
+import { EntityToUnitImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { FaTimes, FaTrophy } from "react-icons/fa";
@@ -7,7 +8,7 @@ import { useMud } from "src/hooks";
 import { usePlayerOwner } from "src/hooks/usePlayerOwner";
 import { components } from "src/network/components";
 import { getEntityTypeName, toRomanNumeral } from "src/util/common";
-import { BackgroundImage, EntityType, ResourceImage } from "src/util/constants";
+import { EntityType, ResourceImage } from "src/util/constants";
 import { entityToFleetName, entityToRockName } from "src/util/name";
 import { formatResourceCount } from "src/util/number";
 
@@ -23,7 +24,7 @@ export const UnitStatus: React.FC<{
         <div className="flex gap-2 items-center justify-center">
           <img
             key={`unit-${unit}`}
-            src={BackgroundImage.get(unit)?.at(0) ?? InterfaceIcons.Debug}
+            src={EntityToUnitImage[unit] ?? InterfaceIcons.Debug}
             className={`border border-secondary w-8 h-8 p-1`}
           />
           <p className="bg-primary text-xs p-1 uppercase font-bold">

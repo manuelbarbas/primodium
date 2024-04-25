@@ -7,9 +7,10 @@ import { PrimaryAsteroid, SecondaryAsteroid } from "src/game/lib/objects/Asteroi
 import { BaseAsteroid } from "src/game/lib/objects/Asteroid/BaseAsteroid";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { EntityType, MapIdToAsteroidType } from "src/util/constants";
+import { EntityType } from "src/util/constants";
 import { getCanAttack, getCanSend } from "src/util/unit";
 import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
+import { MapIdToAsteroidType } from "@/util/mappings";
 
 export const renderAsteroid = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
