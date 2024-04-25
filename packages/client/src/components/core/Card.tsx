@@ -11,8 +11,8 @@ export const Card: React.FC<{
   className?: string;
   noDecor?: boolean;
   fragment?: boolean;
-  motion?: boolean;
-}> = ({ children, className, noDecor = false, fragment = false, motion = false }) => {
+  noMotion?: boolean;
+}> = ({ children, className, noDecor = false, fragment = false, noMotion = false }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -50,7 +50,7 @@ export const Card: React.FC<{
       >
         <div
           ref={containerRef}
-          {...(motion
+          {...(!noMotion
             ? {
                 onMouseMove: handleMouseMove,
                 onMouseLeave: handleMouseLeave,
@@ -73,7 +73,7 @@ export const Card: React.FC<{
     >
       <div
         ref={containerRef}
-        {...(motion
+        {...(!noMotion
           ? {
               onMouseMove: handleMouseMove,
               onMouseLeave: handleMouseLeave,
