@@ -1,12 +1,13 @@
-import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
-import { cn } from "@/util/client";
 import { Button } from "@/components/core/Button";
-import { FaAngleDown } from "react-icons/fa";
 import { SecondaryCard } from "@/components/core/Card";
+import { cn } from "@/util/client";
+import { Entity } from "@latticexyz/recs";
 import { VariantProps, cva } from "class-variance-authority";
+import { ReactNode, useEffect, useRef } from "react";
+import { FaAngleDown } from "react-icons/fa";
 
 const dropdownVariants = cva(
-  "z-50 absolute mt-1 p-2 bg-neutral border border-secondary/25 w-44 pointer-events-auto data-[state=close]:pointer-events-none data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=close]:animate-out data-[state=close]:fade-out fill-mode-forwards",
+  "z-50 absolute mt-1 p-1 bg-neutral border border-secondary/25 w-44 pointer-events-auto data-[state=close]:pointer-events-none data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=close]:animate-out data-[state=close]:fade-out fill-mode-forwards",
   {
     variants: {
       variant: {
@@ -19,15 +20,21 @@ const dropdownVariants = cva(
     },
   }
 );
+type DropdownValue = string | number | boolean | Entity;
 
-interface DropdownProps extends VariantProps<typeof dropdownVariants> {
-  children?: ReactNode[];
+interface DropdownProps<T extends DropdownValue> extends VariantProps<typeof dropdownVariants> {
+  children?: React.ReactElement<DropdownItemProps<T>>[];
   className?: string;
+  value: T;
+  onChange?: (value: T) => void;
 }
-export const Dropdown: FC<DropdownProps> & {
-  Item: typeof DropdownItem;
-} = ({ children, className, variant }) => {
-  const [index, setIndex] = useState(0);
+export const Dropdown = <T extends DropdownValue>({
+  children,
+  className,
+  variant,
+  value,
+  onChange,
+}: DropdownProps<T>) => {
   const ref = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -56,6 +63,7 @@ export const Dropdown: FC<DropdownProps> & {
     const currentState = menuRef.current.dataset.state;
     menuRef.current.dataset.state = currentState === "open" ? "close" : "open";
   };
+  const selectedChild = children.find((child) => child.props.value === value);
 
   return (
     <div ref={ref} className={cn("pointer-events-auto relative w-fit", className)}>
@@ -67,7 +75,7 @@ export const Dropdown: FC<DropdownProps> & {
         onClick={toggleMenu}
       >
         <div className="pointer-events-none flex flex-row gap-2 items-center justify-center">
-          {children[index]} <FaAngleDown className="opacity-50" />
+          {selectedChild} <FaAngleDown className="opacity-50" />
         </div>
       </Button>
       <SecondaryCard ref={menuRef} className={cn(dropdownVariants({ variant }))}>
@@ -79,7 +87,9 @@ export const Dropdown: FC<DropdownProps> & {
             onClick={() => {
               if (!menuRef.current) return;
               menuRef.current.dataset.state = "close";
-              setIndex(i);
+              const value = child.props.value as T;
+
+              onChange && onChange(value);
             }}
           >
             {child}
@@ -90,11 +100,13 @@ export const Dropdown: FC<DropdownProps> & {
   );
 };
 
-const DropdownItem: FC<{
+interface DropdownItemProps<T extends DropdownValue> {
+  value: T;
   children: ReactNode;
-  onSelect?: () => void;
-}> = ({ children, onSelect }) => (
-  <div className="w-full" onClick={onSelect}>
+}
+
+const DropdownItem = <T extends DropdownValue>({ children, value }: DropdownItemProps<T>) => (
+  <div className="w-full" data-value={value}>
     {children}
   </div>
 );
