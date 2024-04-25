@@ -91,7 +91,7 @@ export enum EObjectives {
   CreateFleet,
 
   // (A-A-A) Fleet basics
-  TransferToFleet,
+  TransferFromFleet,
   SendFleet,
 
   // (A-A-A-A) Fleet combat
@@ -119,11 +119,10 @@ export enum EObjectives {
   ClaimWormholePoints,
 
   // (A-A-A-C) fleet management
-  TransferToAsteroid,
+  TransferFromAsteroid,
   BuildStarmapper,
   DefendWithFleet,
   BlockWithFleet,
-  RecallFleet,
   LandFleet,
 
   // (A-A-B) unit production

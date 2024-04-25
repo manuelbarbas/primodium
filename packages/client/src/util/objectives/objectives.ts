@@ -54,7 +54,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.MainBase,
       level: 2n,
       description:
-        "Upgrading a main base gives you more resource storage and makes your asteroid stronger. To upgrade, select your main base and press Upgrade.",
+        "Upgrading a main base gives you more resource storage and makes your asteroid stronger. To upgrade, select your main base and select Upgrade.",
     },
   ],
   [
@@ -101,7 +101,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.BuildWorkshop],
       description:
-        'Fleets transport units and resources between asteroids. Create a fleet on the starmap by selecting your asteroid and pressing "Create Fleet".',
+        'Fleets transport units and resources between asteroids. Create a fleet on the starmap by selecting your asteroid and selecting "Add Fleet".',
       icon: "/img/icons/outgoingicon.png",
       tooltip: "Created a fleet",
     },
@@ -109,12 +109,12 @@ export const Objectives = new Map<EObjectives, Objective>([
 
   /* ------------------------------ A-A-A Fleet ------------------------------ */
   [
-    EObjectives.TransferToFleet,
+    EObjectives.TransferFromFleet,
     {
       category: "Fleet",
       type: "Claim",
       requiredObjectives: [EObjectives.CreateFleet],
-      description: "Transfer units and resources to a fleet by selecting the fleet and pressing the Transfer button.",
+      description: "Transfer units and resources from a fleet by selecting the fleet and selecting Transfer.",
       icon: "/img/icons/tradeicon.png",
       tooltip: "Executed a transfer",
     },
@@ -124,9 +124,9 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fleet",
       type: "Claim",
-      requiredObjectives: [EObjectives.TransferToFleet],
+      requiredObjectives: [EObjectives.TransferFromFleet],
       description:
-        "Sending a fleet to an asteroid allows it to deposit resources and units or fight other fleets. To send, select a fleet and press the Send button. Then select the target asteroid.",
+        "Sending a fleet to an asteroid allows it to deposit resources and units or fight other fleets. To send, select a fleet and select Send. Then select the target asteroid.",
       icon: "/img/icons/moveicon.png",
       tooltip: "Executed a fleet send",
     },
@@ -140,7 +140,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.SendFleet],
       description:
-        "Battling an asteroid allows you to raid resources and conquer asteroids. To battle, select a fleet and press the Attack button. Then select the target asteroid.",
+        "Battling an asteroid allows you to raid resources and conquer asteroids. To battle, select a fleet and select Attack. Then select the target asteroid.",
       icon: "/img/icons/attackicon.png",
       tooltip: "Executed an attack",
     },
@@ -152,7 +152,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.BattleAsteroid],
       description:
-        "Open a battle report to see the results of a battle. To open, select the Battle Reports button in the bottom bar.",
+        "Open a battle report to see the results of a battle. To open, select Battle Reports in the bottom bar.",
       icon: "/img/icons/reportsicon.png",
       tooltip: "Viewed a battle report",
     },
@@ -164,7 +164,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.OpenBattleReport],
       description:
-        "Battling a fleet lets you defend asteroids and steal resources. To battle, select a fleet or asteroid and press the Attack button. Then select the target fleet.",
+        "Battling a fleet lets you defend asteroids and steal resources. To battle, select a fleet or asteroid and select Attack. Then select the target fleet.",
       icon: "/img/icons/attackicon.png",
       tooltip: "Executed an attack",
     },
@@ -189,7 +189,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Train",
       requiredObjectives: [EObjectives.BuildShipyard],
       unitType: EntityType.ColonyShip,
-      unitCount: 16n,
+      unitCount: 1n,
       requiredMainBase: 2n,
       description:
         "Select the Shipyard you placed on the map to build a Colony Ship. Colony ships can decrypt other asteroids and colonize on them.",
@@ -278,7 +278,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       asteroidType: "shard",
       requiredObjectives: [EObjectives.EarnPrimodiumOnShard],
       description:
-        "To explode a shard, select an owned shard when an explosion is imminent and press Explode. Be warned, the explosion kills all fleets in the area!",
+        "To explode a shard, select an owned shard when an explosion is imminent and select Explode. Be warned, the explosion kills all fleets in the area!",
     },
   ],
   /* ------------------------- A-A-A-B-C Extraction Points ------------------------ */
@@ -308,13 +308,12 @@ export const Objectives = new Map<EObjectives, Objective>([
   ],
   /* ------------------------ A-A-A-C Fleet Management ------------------------ */
   [
-    EObjectives.TransferToAsteroid,
+    EObjectives.TransferFromAsteroid,
     {
       category: "Fleet",
       type: "Claim",
       requiredObjectives: [EObjectives.SendFleet],
-      description:
-        "Transfer units and resources to an asteroid by selecting the asteroid and pressing the Transfer button.",
+      description: "Transfer units and resources from an asteroid by selecting the asteroid and selecting Transfer.",
       icon: "/img/icons/tradeicon.png",
       tooltip: "Executed a transfer",
     },
@@ -324,7 +323,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fleet",
       type: "Build",
-      requiredObjectives: [EObjectives.TransferToAsteroid],
+      requiredObjectives: [EObjectives.TransferFromAsteroid],
       buildingType: EntityType.StarmapperStation,
       requiredMainBase: 2n,
       description: "A starmapper station increases the number of fleets you can create.",
@@ -361,21 +360,9 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.BlockWithFleet],
       description:
-        "Landing a fleet on an asteroid sets the fleet's owner to that asteroid. It also deposit all resources and units. To land, select a fleet and press the Land button.",
+        "Landing a fleet on an asteroid sets the fleet's owner to that asteroid. It also deposit all resources and units. To land, select a fleet and select Land.",
       icon: "/img/icons/moveicon.png",
       tooltip: "Landed a fleet",
-    },
-  ],
-  [
-    EObjectives.RecallFleet,
-    {
-      category: "Fleet",
-      type: "Claim",
-      requiredObjectives: [EObjectives.LandFleet],
-      description:
-        "Recalling a fleet allows it to return to its origin mid-flight. To recall, select a fleet and press the Recall button.",
-      icon: "/img/icons/moveicon.png",
-      tooltip: "Recalled a fleet",
     },
   ],
 
@@ -390,7 +377,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       unitCount: 16n,
       requiredMainBase: 2n,
       description:
-        "Minutemen are weak units that are trained quickly, move fast, and carry lots of cargo. To train, select a workshop and press Train Units.",
+        "Minutemen are weak units that are trained quickly, move fast, and carry lots of cargo. To train, select a workshop and select Train Units.",
     },
   ],
   [
@@ -441,7 +428,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.BuildDroneFactory],
       description:
-        "Upgrading a unit increases its stats. To upgrade, press the Upgrade Units button next to Battle Reports and choose a unit to upgrade.",
+        "Upgrading a unit increases its stats. To upgrade, select Upgrade Units next to Battle Reports and choose a unit to upgrade.",
       icon: "/img/icons/addicon.png",
       tooltip: "Upgraded a unit",
     },
@@ -640,7 +627,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.BuildMarket],
       description:
-        "Swapping resources on the market allows you to get resources you need. To swap, select the Market and press the Swap button.",
+        "Swapping resources on the market allows you to get resources you need. To swap, select the Market and select Swap.",
       icon: "/img/icons/tradeicon.png",
       tooltip: "Executed a swap",
     },
@@ -656,7 +643,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.ExpandBase],
       requiredMainBase: 2n,
       description:
-        "Joining an alliance allows you to combine your points with other players. Press the Alliances button Find an Alliance to join and press the Join button.",
+        "Joining an alliance allows you to combine your points with other players. Select Alliance Management in the bottom bar. Find an Alliance to join and select Join.",
     },
   ],
 ]);

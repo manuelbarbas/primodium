@@ -51,7 +51,7 @@ export const Dock = () => {
           <Modal.Button className={btnClass} tooltip="Objectives" shape={"circle"} size={"lg"} variant={"ghost"}>
             <IconLabel className={iconClass} imageUri="/img/icons/objectiveicon.png" />
           </Modal.Button>
-          <Modal.Content className="w-[50rem] h-[50rem]">
+          <Modal.Content className="w-[50rem] h-[60rem]">
             <ObjectivesScreen />
           </Modal.Content>
         </Modal>

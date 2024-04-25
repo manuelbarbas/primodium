@@ -14,7 +14,7 @@ export const transfer = async (mud: MUD, from: Entity, to: Entity, deltas: Map<E
   const toIsAsteroid = components.Asteroid.has(to);
 
   const activeAsteroid = components.ActiveRock.get()?.value;
-  const claimableObjective = toIsAsteroid ? EObjectives.TransferToAsteroid : EObjectives.TransferToFleet;
+  const claimableObjective = fromIsAsteroid ? EObjectives.TransferFromAsteroid : EObjectives.TransferFromFleet;
 
   const unitCounts = toUnitCountArray(deltas);
   const resourceCounts = toTransportableResourceArray(deltas);

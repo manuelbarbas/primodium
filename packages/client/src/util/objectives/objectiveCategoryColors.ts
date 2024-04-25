@@ -3,7 +3,7 @@ import { ObjectiveCategory } from "./types";
 export const objectiveCategoryColors: Record<ObjectiveCategory, string> = {
   // fundamentals
   Fundamentals: "bg-primary",
-  Fleet: "bg-green-800",
+  Fleet: "bg-primary",
 
   // military
   Conquest: "bg-green-700",

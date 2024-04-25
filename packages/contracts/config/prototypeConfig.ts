@@ -1893,7 +1893,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   },
 
   /* ------------------------------ A-A-A Fleet ------------------------------ */
-  TransferToFleet: {
+  TransferFromFleet: {
     tables: {
       P_ResourceReward: getResourceValues({ Alloy: 10 }),
     },
@@ -1992,7 +1992,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_UnitReward: getUnitValues({ StingerDrone: 1 }),
     },
   },
-  TransferToAsteroid: {
+  TransferFromAsteroid: {
     tables: {
       P_ResourceReward: getResourceValues({ IronPlate: 10 }),
     },
@@ -2003,11 +2003,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
   },
   BlockWithFleet: {
-    tables: {
-      P_ResourceReward: getResourceValues({ Iron: 10 }),
-    },
-  },
-  RecallFleet: {
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 10 }),
     },
