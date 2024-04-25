@@ -577,11 +577,23 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.BuildStorageUnit,
+    EObjectives.BuildPVCellFactory,
     {
       category: "Resource Production",
       type: "Build",
       requiredObjectives: [EObjectives.BuildLithiumMine],
+      buildingType: EntityType.PVCellFactory,
+      requiredMainBase: 2n,
+      description:
+        "The PV Cell factory produces photovoltaic cells by burning lithium. To build, select the PV Cell factory on the building menu and place it on any empty tile.",
+    },
+  ],
+  [
+    EObjectives.BuildStorageUnit,
+    {
+      category: "Resource Production",
+      type: "Build",
+      requiredObjectives: [EObjectives.BuildPVCellFactory],
       buildingType: EntityType.StorageUnit,
       requiredMainBase: 2n,
       description:
@@ -592,24 +604,11 @@ export const Objectives = new Map<EObjectives, Objective>([
   /* ------------------------ A-B-A Production ----------------------- */
 
   [
-    EObjectives.BuildPVCellFactory,
-    {
-      category: "Resource Production",
-      type: "Build",
-      requiredObjectives: [EObjectives.BuildStorageUnit],
-      buildingType: EntityType.PVCellFactory,
-      requiredMainBase: 2n,
-      description:
-        "The PV Cell factory produces photovoltaic cells by burning lithium. To build, select the PV Cell factory on the building menu and place it on any empty tile.",
-    },
-  ],
-
-  [
     EObjectives.BuildSolarPanel,
     {
       category: "Resource Production",
       type: "Build",
-      requiredObjectives: [EObjectives.BuildPVCellFactory],
+      requiredObjectives: [EObjectives.BuildStorageUnit],
       buildingType: EntityType.SolarPanel,
       requiredMainBase: 2n,
       description:

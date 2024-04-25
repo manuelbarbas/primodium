@@ -2113,6 +2113,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
+  BuildPVCellFactory: {
+    tables: {
+      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
+  },
   BuildStorageUnit: {
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 100 }),
@@ -2121,12 +2127,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   },
 
   /* ------------------------ A-B-A Production ----------------------- */
-  BuildPVCellFactory: {
-    tables: {
-      P_ResourceReward: getResourceValues({ PVCell: 10 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
-  },
 
   BuildSolarPanel: {
     tables: {

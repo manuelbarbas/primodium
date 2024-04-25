@@ -152,10 +152,10 @@ export enum EObjectives {
   // (A-B) Production
   BuildAlloyFactory,
   BuildLithiumMine,
+  BuildPVCellFactory,
   BuildStorageUnit,
 
   // (A-B-A) Production (cont)
-  BuildPVCellFactory,
   BuildSolarPanel,
 
   // (A-B-B) Market
