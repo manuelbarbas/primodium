@@ -101,53 +101,25 @@ library LibBuilding {
   /// @param playerEntity The entity ID of the player
   /// @param buildingPrototype The type of building to construct
   /// @param coord The coordinate where the building should be placed
+  /// @param uncheckedRequirements If true, requirements will not be checked. Internal use only.
   /// @return buildingEntity The entity ID of the newly constructed building
   function build(
     bytes32 playerEntity,
     bytes32 buildingPrototype,
-    PositionData memory coord
+    PositionData memory coord,
+    bool uncheckedRequirements
   ) internal returns (bytes32 buildingEntity) {
-    checkBuildRequirements(playerEntity, buildingPrototype, coord);
-    buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
-
-    Spawned.set(buildingEntity, true);
-    BuildingType.set(buildingEntity, buildingPrototype);
-    Position.set(buildingEntity, coord);
-    Level.set(buildingEntity, 1);
-    LastClaimedAt.set(buildingEntity, block.timestamp);
-    OwnedBy.set(buildingEntity, coord.parentEntity);
-    HasBuiltBuilding.set(playerEntity, buildingPrototype, true);
-    HasBuiltBuilding.set(coord.parentEntity, buildingPrototype, true);
-    IsActive.set(buildingEntity, true);
-
-    if (buildingPrototype == MainBasePrototypeId || buildingPrototype == WormholeBasePrototypeId) {
-      Home.set(coord.parentEntity, buildingEntity);
+    if (!uncheckedRequirements) {
+      checkBuildRequirements(playerEntity, buildingPrototype, coord);
+    } else {
+      if (buildingPrototype == MainBasePrototypeId || buildingPrototype == WormholeBasePrototypeId) {
+        require(
+          Home.get(coord.parentEntity) == bytes32(0),
+          "[BuildSystem] Cannot build more than one main base per asteroid"
+        );
+      }
+      require(LibBuilding.canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
     }
-
-    if (P_UnitProdTypes.length(buildingPrototype, 1) != 0) {
-      UnitFactorySet.add(coord.parentEntity, buildingEntity);
-    }
-
-    placeBuildingTiles(buildingEntity, buildingPrototype, coord);
-  }
-
-  /// @notice Builds a building at a specified coordinate, does not check requirements. Use with caution, only for world state initialization
-  /// @param playerEntity The entity ID of the player
-  /// @param buildingPrototype The type of building to construct
-  /// @param coord The coordinate where the building should be placed
-  /// @return buildingEntity The entity ID of the newly constructed building
-  function uncheckedBuild(
-    bytes32 playerEntity,
-    bytes32 buildingPrototype,
-    PositionData memory coord
-  ) internal returns (bytes32 buildingEntity) {
-    if (buildingPrototype == MainBasePrototypeId || buildingPrototype == WormholeBasePrototypeId) {
-      require(
-        Home.get(coord.parentEntity) == bytes32(0),
-        "[BuildSystem] Cannot build more than one main base per asteroid"
-      );
-    }
-    require(LibBuilding.canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
 
     buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
 

@@ -23,11 +23,7 @@ library LibRaidableAsteroid {
     int32 y;
 
     // build one storage building
-    buildingEntity = LibBuilding.uncheckedBuild(
-      bytes32(0),
-      StorageUnitPrototypeId,
-      PositionData(21, 15, asteroidEntity)
-    );
+    buildingEntity = LibBuilding.build(bytes32(0), StorageUnitPrototypeId, PositionData(21, 15, asteroidEntity), true);
     LibStorage.increaseMaxStorage(buildingEntity, 1);
 
     // fill storage with max common resources
@@ -41,19 +37,11 @@ library LibRaidableAsteroid {
     LibStorage.checkedIncreaseStoredResource(asteroidEntity, uint8(EResource.Lithium), resourceMax);
 
     // build each mine type
-    buildingEntity = LibBuilding.uncheckedBuild(bytes32(0), IronMinePrototypeId, PositionData(23, 16, asteroidEntity));
+    buildingEntity = LibBuilding.build(bytes32(0), IronMinePrototypeId, PositionData(23, 16, asteroidEntity), true);
     LibProduction.upgradeResourceProduction(buildingEntity, 1);
-    buildingEntity = LibBuilding.uncheckedBuild(
-      bytes32(0),
-      CopperMinePrototypeId,
-      PositionData(23, 15, asteroidEntity)
-    );
+    buildingEntity = LibBuilding.build(bytes32(0), CopperMinePrototypeId, PositionData(23, 15, asteroidEntity), true);
     LibProduction.upgradeResourceProduction(buildingEntity, 1);
-    buildingEntity = LibBuilding.uncheckedBuild(
-      bytes32(0),
-      LithiumMinePrototypeId,
-      PositionData(23, 14, asteroidEntity)
-    );
+    buildingEntity = LibBuilding.build(bytes32(0), LithiumMinePrototypeId, PositionData(23, 14, asteroidEntity), true);
     LibProduction.upgradeResourceProduction(buildingEntity, 1);
 
     // if common2, add max advanced resources and build each factory type
@@ -67,22 +55,25 @@ library LibRaidableAsteroid {
       resourceMax = MaxResourceCount.get(asteroidEntity, uint8(EResource.PVCell));
       LibStorage.checkedIncreaseStoredResource(asteroidEntity, uint8(EResource.PVCell), resourceMax);
 
-      buildingEntity = LibBuilding.uncheckedBuild(
+      buildingEntity = LibBuilding.build(
         bytes32(0),
         IronPlateFactoryPrototypeId,
-        PositionData(19, 15, asteroidEntity)
+        PositionData(19, 15, asteroidEntity),
+        true
       );
       LibProduction.upgradeResourceProduction(buildingEntity, 1);
-      buildingEntity = LibBuilding.uncheckedBuild(
+      buildingEntity = LibBuilding.build(
         bytes32(0),
         AlloyFactoryPrototypeId,
-        PositionData(17, 15, asteroidEntity)
+        PositionData(17, 15, asteroidEntity),
+        true
       );
       LibProduction.upgradeResourceProduction(buildingEntity, 1);
-      buildingEntity = LibBuilding.uncheckedBuild(
+      buildingEntity = LibBuilding.build(
         bytes32(0),
         PVCellFactoryPrototypeId,
-        PositionData(15, 15, asteroidEntity)
+        PositionData(15, 15, asteroidEntity),
+        true
       );
       LibProduction.upgradeResourceProduction(buildingEntity, 1);
     }
