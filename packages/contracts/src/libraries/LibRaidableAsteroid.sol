@@ -7,7 +7,7 @@ import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
 import { StorageUnitPrototypeId, IronMinePrototypeId, CopperMinePrototypeId, LithiumMinePrototypeId, IronPlateFactoryPrototypeId, AlloyFactoryPrototypeId, PVCellFactoryPrototypeId, DroidPrototypeId } from "codegen/Prototypes.sol";
-import { EResource } from "src/Types.sol";
+import { EResource, EMap } from "src/Types.sol";
 
 library LibRaidableAsteroid {
   /**
@@ -100,7 +100,7 @@ library LibRaidableAsteroid {
     if (
       !Asteroid.getIsAsteroid(asteroidEntity) ||
       OwnedBy.get(asteroidEntity) != bytes32(0) ||
-      Asteroid.getMapId(asteroidEntity) != 7
+      Asteroid.getMapId(asteroidEntity) != uint8(EMap.Common)
     ) {
       return;
     }

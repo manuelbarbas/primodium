@@ -8,7 +8,7 @@ import { EResource } from "src/Types.sol";
 
 import { LastConquered, Home, OwnedBy, BuildingType, P_EnumToPrototype, P_Transportables, P_UnitPrototypes, Asteroid, AsteroidData, Position, PositionData, Position, PositionData, ReversePosition, MaxResourceCount, UnitCount, ResourceCount, UnitCount, ResourceCount, P_GameConfig, P_GameConfigData, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
 import { MainBasePrototypeId, DroidPrototypeId } from "codegen/Prototypes.sol";
-import { EUnit } from "src/Types.sol";
+import { EUnit, EMap } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
@@ -49,7 +49,7 @@ contract LibAsteroidTest is PrimodiumTest {
     assertFalse(asteroidData.spawnsSecondary);
     assertGe(asteroidData.maxLevel, 1, "max level too low");
     assertLe(asteroidData.maxLevel, 8, "max level too low");
-    if (asteroidData.mapId != 7) {
+    if (asteroidData.mapId != uint8(EMap.Common)) {
       assertGe(asteroidData.mapId, 2, "map id too low");
       assertLe(asteroidData.mapId, 5, "map id too high");
     }

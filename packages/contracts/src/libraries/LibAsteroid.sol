@@ -11,7 +11,7 @@ import { ColonyShipsInTraining, P_ConquestConfigData, P_ConquestConfig, LastConq
 // libraries
 import { ExpansionKey } from "src/Keys.sol";
 import { AsteroidSet } from "src/libraries/AsteroidSet.sol";
-import { EResource } from "src/Types.sol";
+import { EResource, EMap } from "src/Types.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
@@ -148,12 +148,12 @@ library LibAsteroid {
       // common resources
       maxLevel = 1; // micro
       primodium = 1 * RESOURCE_SCALE;
-      mapId = 7;
+      mapId = uint8(EMap.Common);
     } else if (distributionVal < common2Distrib) {
       // common + advanced resources
       maxLevel = 3; // small
       primodium = 2 * RESOURCE_SCALE;
-      mapId = 7;
+      mapId = uint8(EMap.Common);
     } else if (distributionVal < eliteMicroDistrib) {
       // elite resources, micro
       maxLevel = 1;
@@ -172,7 +172,7 @@ library LibAsteroid {
       primodium = 5 * RESOURCE_SCALE;
     }
 
-    if (mapId != 7) {
+    if (mapId != uint8(EMap.Common)) {
       // elite resources
       // number between 2 and 5
       mapId = uint8((LibEncode.getByteUInt(uint256(asteroidEntity), 3, 20) % 4) + 2);
@@ -216,7 +216,7 @@ library LibAsteroid {
     UnitCount.set(asteroidEntity, DroidPrototypeId, droidCount);
     LibStorage.increaseMaxStorage(asteroidEntity, uint8(EResource.R_Encryption), encryption);
 
-    if (data.mapId == 7) {
+    if (data.mapId == uint8(EMap.Common)) {
       LibRaidableAsteroid.buildRaidableAsteroid(asteroidEntity);
     }
   }
