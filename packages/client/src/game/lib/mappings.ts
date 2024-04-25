@@ -1,9 +1,9 @@
 import { Entity } from "@latticexyz/recs";
-import { EntityType } from "src/util/constants";
+import { EntityType, Mode } from "src/util/constants";
 import { AnimationKeys } from "./constants/assets/animations";
 import { SpriteKeys } from "./constants/assets/sprites";
 import { ResourceTilekeys, Tilemaps } from "./constants/assets/tiles";
-import { AsteroidRelationship, AsteroidSize } from "./constants/common";
+import { AsteroidRelationship, AsteroidSize, SceneKeys } from "./constants/common";
 
 export const EntityTypeToTilesetKey: Record<Entity, ResourceTilekeys> = {
   [EntityType.Iron]: ResourceTilekeys.Iron,
@@ -24,7 +24,7 @@ export const EntityTypeToResourceSpriteKey = {
   [EntityType.Alloy]: SpriteKeys.Alloy,
 };
 
-export const EntityTypeToUnitSpriteKey: Record<string, SpriteKeys> = {
+export const EntityTypeToUnitSpriteKey: Record<Entity, SpriteKeys> = {
   [EntityType.AegisDrone]: SpriteKeys.AegisDrone,
   [EntityType.AnvilDrone]: SpriteKeys.AnvilDrone,
   [EntityType.HammerDrone]: SpriteKeys.HammerDrone,
@@ -34,7 +34,7 @@ export const EntityTypeToUnitSpriteKey: Record<string, SpriteKeys> = {
   [EntityType.MinutemanMarine]: SpriteKeys.MinutemanMarine,
 };
 
-export const EntityTypetoBuildingSpriteKey: Record<string, SpriteKeys[]> = {
+export const EntityTypetoBuildingSpriteKey: Record<Entity, SpriteKeys[]> = {
   [EntityType.MainBase]: [
     SpriteKeys.Mainbase1,
     SpriteKeys.Mainbase2,
@@ -256,4 +256,11 @@ export const RelationshipToPrimaryAsteroidOutlineSpriteKey: Record<AsteroidRelat
   ["Neutral"]: SpriteKeys.AsteroidPlayer,
   ["Enemy"]: SpriteKeys.AsteroidEnemy,
   ["Self"]: SpriteKeys.AsteroidPlayer,
+};
+
+export const ModeToSceneKey: Record<Entity, SceneKeys> = {
+  [Mode.Asteroid]: "ASTEROID",
+  [Mode.Starmap]: "STARMAP",
+  [Mode.CommandCenter]: "COMMAND_CENTER",
+  [Mode.Spectate]: "ASTEROID",
 };
