@@ -6,7 +6,7 @@ import { addressToEntity } from "src/utils.sol";
 
 import { P_AsteroidThresholdProbConfig, P_AsteroidThresholdProbConfigData, PositionData, P_GameConfigData, P_GameConfig, OwnedBy, ReversePosition, UnitCount, P_Unit, Asteroid, ResourceCount, MaxResourceCount, FleetMovement, DroidRegenTimestamp } from "codegen/index.sol";
 
-import { EResource, EUnit } from "src/Types.sol";
+import { EResource, EUnit, EMap } from "src/Types.sol";
 import { MainBasePrototypeId, DroidPrototypeId } from "codegen/Prototypes.sol";
 
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
@@ -127,6 +127,94 @@ contract LibRaidableAsteroidTest is PrimodiumTest {
 
     world.Primodium__claimUnits(raidableAsteroid);
     assertEq(UnitCount.get(raidableAsteroid, DroidPrototypeId), 0, "Droids should not regen when owned by player");
+  }
+
+  function testNoDroidRegenOnNonRaidableAsteroids() public {
+    PositionData memory wormholePosition = findWormholeAsteroid(asteroidEntity);
+    bytes32 wormholeAsteroid = world.Primodium__createSecondaryAsteroid(wormholePosition);
+    bytes32 eliteMicroAsteroid = manipulateAsteroidMapSpawn("eliteMicro");
+    bytes32 eliteSmallAsteroid = manipulateAsteroidMapSpawn("eliteSmall");
+    bytes32 eliteMediumAsteroid = manipulateAsteroidMapSpawn("eliteMedium");
+    bytes32 eliteLargeAsteroid = manipulateAsteroidMapSpawn("eliteLarge");
+
+    // some droids spawn with asteroid initialization, but do not regen. Destroy them with UnitCount.set
+    vm.startPrank(creator);
+    UnitCount.set(asteroidEntity, DroidPrototypeId, 0);
+    UnitCount.set(wormholeAsteroid, DroidPrototypeId, 0);
+    UnitCount.set(eliteMicroAsteroid, DroidPrototypeId, 0);
+    UnitCount.set(eliteSmallAsteroid, DroidPrototypeId, 0);
+    UnitCount.set(eliteMediumAsteroid, DroidPrototypeId, 0);
+    UnitCount.set(eliteLargeAsteroid, DroidPrototypeId, 0);
+
+    vm.warp(block.timestamp + droidTrainingTime * maxDroidCount * 2);
+    world.Primodium__claimUnits(asteroidEntity);
+    world.Primodium__claimUnits(wormholeAsteroid);
+    world.Primodium__claimUnits(eliteMicroAsteroid);
+    world.Primodium__claimUnits(eliteSmallAsteroid);
+    world.Primodium__claimUnits(eliteMediumAsteroid);
+    world.Primodium__claimUnits(eliteLargeAsteroid);
+
+    assertEq(UnitCount.get(asteroidEntity, DroidPrototypeId), 0, "Droids should not regen on primary asteroid");
+    assertEq(UnitCount.get(wormholeAsteroid, DroidPrototypeId), 0, "Droids should not regen on wormhole asteroid");
+    assertEq(UnitCount.get(eliteMicroAsteroid, DroidPrototypeId), 0, "Droids should not regen on eliteMicro asteroid");
+    assertEq(UnitCount.get(eliteSmallAsteroid, DroidPrototypeId), 0, "Droids should not regen on eliteSmall asteroid");
+    assertEq(
+      UnitCount.get(eliteMediumAsteroid, DroidPrototypeId),
+      0,
+      "Droids should not regen on eliteMedium asteroid"
+    );
+    assertEq(UnitCount.get(eliteLargeAsteroid, DroidPrototypeId), 0, "Droids should not regen on eliteLarge asteroid");
+
+    world.Primodium__abandonAsteroid(asteroidEntity);
+    vm.warp(block.timestamp + droidTrainingTime * maxDroidCount * 2);
+    assertEq(
+      UnitCount.get(asteroidEntity, DroidPrototypeId),
+      0,
+      "Droids should not regen on abandoned primary asteroid"
+    );
+  }
+
+  function manipulateAsteroidMapSpawn(string memory field) public returns (bytes32 spawnedAsteroid) {
+    vm.startPrank(creator);
+    uint256 initialConfig = P_GameConfig.getAsteroidChanceInv();
+    P_GameConfig.setAsteroidChanceInv(1);
+    manipulateAsteroidMapSpawnConfig(field);
+    PositionData memory asteroidPosition = findSecondaryAsteroid(asteroidEntity);
+    spawnedAsteroid = world.Primodium__createSecondaryAsteroid(asteroidPosition);
+    vm.startPrank(creator);
+    P_GameConfig.setAsteroidChanceInv(initialConfig);
+  }
+
+  function manipulateAsteroidMapSpawnConfig(string memory field) public {
+    // Create a default configuration
+    P_AsteroidThresholdProbConfigData memory config = P_AsteroidThresholdProbConfigData({
+      common1: 0,
+      common2: 0,
+      eliteMicro: 0,
+      eliteSmall: 0,
+      eliteMedium: 0,
+      eliteLarge: 0
+    });
+
+    // Update the selected field
+    if (keccak256(abi.encodePacked(field)) == keccak256(abi.encodePacked("common1"))) {
+      config.common1 = 100;
+    } else if (keccak256(abi.encodePacked(field)) == keccak256(abi.encodePacked("common2"))) {
+      config.common2 = 100;
+    } else if (keccak256(abi.encodePacked(field)) == keccak256(abi.encodePacked("eliteMicro"))) {
+      config.eliteMicro = 100;
+    } else if (keccak256(abi.encodePacked(field)) == keccak256(abi.encodePacked("eliteSmall"))) {
+      config.eliteSmall = 100;
+    } else if (keccak256(abi.encodePacked(field)) == keccak256(abi.encodePacked("eliteMedium"))) {
+      config.eliteMedium = 100;
+    } else if (keccak256(abi.encodePacked(field)) == keccak256(abi.encodePacked("eliteLarge"))) {
+      config.eliteLarge = 100;
+    } else {
+      revert("Invalid field");
+    }
+
+    // Set the configuration
+    P_AsteroidThresholdProbConfig.set(config);
   }
 
   function testDroid0BuildTime() public {

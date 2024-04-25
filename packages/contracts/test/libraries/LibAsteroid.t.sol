@@ -62,7 +62,7 @@ contract LibAsteroidTest is PrimodiumTest {
     assertGt(asteroidProb.eliteSmall + 1, asteroidProb.eliteMicro, "EliteSmall probability threshold is too low");
     assertGt(asteroidProb.eliteMedium + 1, asteroidProb.eliteSmall, "EliteMedium probability threshold is too low");
     assertGt(asteroidProb.eliteLarge + 1, asteroidProb.eliteMedium, "EliteLarge probability threshold is too low");
-    assertEq(asteroidProb.eliteLarge, 100, "EliteLarge probability threshold is not 99");
+    assertEq(asteroidProb.eliteLarge, 100, "EliteLarge probability threshold is not 100");
   }
 
   function testCreateSecondaryAsteroid() public returns (bytes32) {
