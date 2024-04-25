@@ -36,6 +36,7 @@ import {
 import { getFullResourceCount } from "src/util/resource";
 import { getRewards } from "src/util/reward";
 import { Hex } from "viem";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 
 const ClaimObjectiveButton: React.FC<{
   objectiveEntity: Entity;
@@ -153,9 +154,7 @@ const Objective: React.FC<{
                       >
                         <IconLabel
                           imageUri={
-                            ResourceImage.get(_req.id) ??
-                            BackgroundImage.get(_req.id)?.at(0) ??
-                            "/img/icons/minersicon.png"
+                            ResourceImage.get(_req.id) ?? BackgroundImage.get(_req.id)?.at(0) ?? InterfaceIcons.Build
                           }
                           text={formatNumber(value / _req.scale, { short: true, fractionDigits: 3 })}
                           className="text-xs font-bold"

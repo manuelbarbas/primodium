@@ -427,11 +427,6 @@ export const ResourceImage = new Map<Entity, string>([
   [EntityType.LightningCraft, "img/unit/lightningcraft.png"],
 ]);
 
-export type DisplayKeyPair = {
-  terrain: Entity | null;
-  resource: Entity | null;
-};
-
 export const KeyImages = new Map<Key, string>([
   ["ONE", "/img/keys/one.png"],
   ["TWO", "/img/keys/two.png"],

@@ -1,5 +1,6 @@
 import { PushButton } from "@/components/core/PushButton";
 import { Entity } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { Badge } from "src/components/core/Badge";
 import { SecondaryCard } from "src/components/core/Card";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
@@ -38,7 +39,7 @@ export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
     <SecondaryCard className="w-full items-center">
       <div className="flex items-center justify-between w-full">
         <div className="flex gap-2 items-center">
-          <img src="img/icons/expansionicon.png" className="pixel-images h-8 w-8" />
+          <img src={InterfaceIcons.Expansion} className="pixel-images h-8 w-8" />
           <div>
             {recipe.length !== 0 && <p className="text-xs opacity-75 px-2 mb-1">EXPANSION COST</p>}
             <div className="flex flex-wrap gap-1 px-2">

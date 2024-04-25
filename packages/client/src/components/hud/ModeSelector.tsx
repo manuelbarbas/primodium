@@ -8,6 +8,7 @@ import { cn } from "@/util/client";
 import { Mode } from "@/util/constants";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useCallback } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
@@ -39,17 +40,17 @@ const selectableModes = [
   {
     type: Mode.Asteroid,
     name: "Asteroid",
-    image: "/img/icons/minersicon.png",
+    image: InterfaceIcons.Build,
   },
   {
     type: Mode.Starmap,
     name: "Starbelt",
-    image: "/img/icons/starmapicon.png",
+    image: InterfaceIcons.Starmap,
   },
   {
     type: Mode.CommandCenter,
     name: "Command Center",
-    image: "/img/icons/outgoingicon.png",
+    image: InterfaceIcons.Outgoing,
   },
 ];
 
@@ -111,7 +112,7 @@ export const ModeSelector = () => {
                   });
                 }}
               >
-                <IconLabel imageUri="/img/icons/returnicon.png" className="text-2xl" />
+                <IconLabel imageUri={InterfaceIcons.Return} className="text-2xl" />
               </Button>
             </div>
           )}

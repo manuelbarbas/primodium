@@ -17,6 +17,7 @@ import { Loader } from "@/components/core/Loader";
 import { IconLabel } from "@/components/core/IconLabel";
 import { PushButton } from "@/components/core/PushButton";
 import { Dropdown } from "@/components/core/Dropdown";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 
 export const _Sandbox = () => {
   return (
@@ -169,7 +170,7 @@ export const _Sandbox = () => {
             <Badge variant={"accent"}>accent</Badge>
             <Badge variant={"secondary"}>secondary</Badge>
             <Badge variant={"primary"}>primary</Badge>
-            <Badge variant={"success"} tooltip={<IconLabel text="Debug Tooltip" imageUri="/img/icons/debugicon.png" />}>
+            <Badge variant={"success"} tooltip={<IconLabel text="Debug Tooltip" imageUri={InterfaceIcons.Chat} />}>
               primary
             </Badge>
           </div>

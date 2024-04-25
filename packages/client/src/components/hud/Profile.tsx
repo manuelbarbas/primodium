@@ -7,6 +7,7 @@ import { Widget } from "@/components/core/Widget";
 import { AccountDisplay } from "@/components/shared/AccountDisplay";
 import { Account } from "@/components/transfer/Account";
 import { SpectatingDetails } from "@/components/hud/SpectatingDetails";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 
 const ProfileContent = () => {
   const {
@@ -51,7 +52,7 @@ export const Profile = () => {
     <Widget
       id="account"
       title="account"
-      icon="/img/icons/debugicon.png"
+      icon={InterfaceIcons.Debug}
       defaultCoord={{
         x: window.innerWidth / 2 + getRandomRange(-50, 50),
         y: window.innerHeight / 2 + getRandomRange(-50, 50),

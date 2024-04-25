@@ -1,4 +1,5 @@
 import { Entity } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
@@ -73,7 +74,7 @@ const ProgressBar: React.FC<{
           <div className="relative flex gap-1 p-1 bg-slate-600 items-center">
             <img
               key={`unit-${index}`}
-              src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}
+              src={BackgroundImage.get(unit)?.at(0) ?? InterfaceIcons.Debug}
               className={`border border-cyan-400 w-7 h-7 rounded-xs`}
             />
 
@@ -96,7 +97,7 @@ const ProgressBar: React.FC<{
       <div className="relative flex gap-1 p-1 bg-slate-600 items-center">
         <img
           key={`unit-${index}`}
-          src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}
+          src={BackgroundImage.get(unit)?.at(0) ?? InterfaceIcons.Debug}
           className={`border border-cyan-400 w-4 h-4 rounded-xs`}
         />
         <p className="bg-cyan-700 text-xs p-1">x{count.toLocaleString()}</p>

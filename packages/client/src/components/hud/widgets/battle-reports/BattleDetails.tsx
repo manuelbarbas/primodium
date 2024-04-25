@@ -1,4 +1,5 @@
 import { Entity } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { FaTimes, FaTrophy } from "react-icons/fa";
 import { Navigator } from "src/components/core/Navigator";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
@@ -22,7 +23,7 @@ export const UnitStatus: React.FC<{
         <div className="flex gap-2 items-center justify-center">
           <img
             key={`unit-${unit}`}
-            src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}
+            src={BackgroundImage.get(unit)?.at(0) ?? InterfaceIcons.Debug}
             className={`border border-secondary w-8 h-8 p-1`}
           />
           <p className="bg-primary text-xs p-1 uppercase font-bold">
@@ -98,10 +99,7 @@ export const BattleDetails: React.FC<{
                   <p className="font-bold text-xs uppercase text-white">
                     {attackerIsFleet ? entityToFleetName(battle.attacker) : entityToRockName(battle.attacker)}
                   </p>
-                  <img
-                    src={attackerIsFleet ? "img/icons/outgoingicon.png" : "img/icons/asteroidicon.png"}
-                    className="w-6 h-6"
-                  />
+                  <img src={attackerIsFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="w-6 h-6" />
                 </div>
                 <AccountDisplay player={attackingPlayer} className="text-xs opacity-80" />
               </div>
@@ -119,10 +117,7 @@ export const BattleDetails: React.FC<{
                   <p className="font-bold text-xs uppercase text-white">
                     {defenderIsFleet ? entityToFleetName(battle.defender) : entityToRockName(battle.defender)}
                   </p>
-                  <img
-                    src={defenderIsFleet ? "img/icons/outgoingicon.png" : "img/icons/asteroidicon.png"}
-                    className="w-6 h-6"
-                  />
+                  <img src={defenderIsFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="w-6 h-6" />
                 </div>
                 <AccountDisplay player={defendingPlayer} className="text-xs opacity-80" />
               </div>
@@ -306,7 +301,7 @@ const Ally = ({ entity }: { entity: Entity }) => {
       className={`flex bg-black/10 border  text-xs justify-center items-center gap-2 p-1 w-full border-secondary/50`}
     >
       {isFleet ? entityToFleetName(entity) : entityToRockName(entity)}
-      <img src={isFleet ? "img/icons/outgoingicon.png" : "img/icons/asteroidicon.png"} className="w-4" />
+      <img src={isFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="w-4" />
     </div>
   );
 };

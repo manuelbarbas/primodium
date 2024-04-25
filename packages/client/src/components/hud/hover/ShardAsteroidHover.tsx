@@ -13,6 +13,7 @@ import { formatResourceCount, formatTime } from "src/util/number";
 import { Card } from "../../core/Card";
 import { HealthBar } from "../HealthBar";
 import { AsteroidEta } from "./AsteroidEta";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 
 export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const { loading } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
@@ -43,12 +44,12 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
       <div className="flex flex-col gap-1 z-10">
         <div className="grid grid-cols-2 gap-1">
           <div className="flex gap-1 items-center">
-            <IconLabel imageUri="/img/icons/asteroidicon.png" className={`pixel-images w-3 h-3 bg-base-100`} />
+            <IconLabel imageUri={InterfaceIcons.Asteroid} className={`pixel-images w-3 h-3 bg-base-100`} />
             <p className="text-sm font-bold uppercase">{name}</p>
           </div>
           <AsteroidEta entity={entity} />
         </div>
-        <div className="flex victory-bg uppercase text-primary font-bold border border-secondary/50 text-sm flex justify-center items-center">
+        <div className="flex victory-bg uppercase text-primary font-bold border border-secondary/50 text-sm justify-center items-center">
           {formatResourceCount(EntityType.Iron, shardData.points, { notLocale: true }).toLocaleString()} PRI EXPLOSION
           {shardData.canExplode ? " IMMINENT" : ` IN ${formatTime(shardData.timeUntilExplode)}`}
         </div>
