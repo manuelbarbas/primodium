@@ -102,13 +102,14 @@ export const Card: React.FC<{
 
 export const SecondaryCard = forwardRef<
   HTMLDivElement,
-  { children: React.ReactNode | React.ReactNode[]; className?: string }
->(({ children, className }, ref) => {
+  { children: React.ReactNode | React.ReactNode[]; className?: string; noDecor?: boolean }
+>(({ children, className, noDecor }, ref) => {
   return (
     <div
       ref={ref}
       className={cn(
-        "card border border-secondary/25 hover:border-secondary/50 transition-all p-2 hover:translate-y-[-2px] hover:shadow-2xl pointer-events-auto",
+        "card border border-secondary/25 transition-all p-2 pointer-events-auto",
+        noDecor ? "" : "hover:shadow-2xl hover:border-secondary/50",
         className
       )}
     >

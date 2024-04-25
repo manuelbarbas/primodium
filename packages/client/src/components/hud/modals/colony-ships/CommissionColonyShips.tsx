@@ -11,6 +11,7 @@ import { ResourceImage } from "@/util/constants";
 import { formatTime } from "@/util/number";
 import { Entity } from "@latticexyz/recs";
 import React from "react";
+import { FaLock } from "react-icons/fa";
 import { Navigator } from "src/components/core/Navigator";
 
 type Tile =
@@ -75,8 +76,8 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
           />
         )}
         {(activeTile === null || ["blank", "training"].includes(tiles[activeTile].type)) && (
-          <SecondaryCard className="w-56 h-full flex text-xs justify-center items-center opacity-60">
-            {null}
+          <SecondaryCard noDecor className="w-56 h-full flex text-xs justify-center items-center opacity-60">
+            Select a Slot
           </SecondaryCard>
         )}
       </div>
@@ -89,7 +90,9 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
 
 const BlankTile: React.FC = () => {
   return (
-    <SecondaryCard className="w-full h-full flex text-xs justify-center items-center opacity-60">{null}</SecondaryCard>
+    <SecondaryCard noDecor className="w-full h-full flex text-xs justify-center items-center opacity-60">
+      <FaLock />
+    </SecondaryCard>
   );
 };
 
@@ -97,7 +100,7 @@ const TrainingTile: React.FC<{
   training: { unit: Entity; progress: bigint; timeRemaining: bigint; count: bigint };
 }> = ({ training: { unit, timeRemaining } }) => {
   return (
-    <SecondaryCard className="w-full h-full justify-center items-center flex flex-col gap-1">
+    <SecondaryCard noDecor className="w-full h-full justify-center items-center flex flex-col gap-1">
       <div className="flex gap-2 items-center">
         <img src={ResourceImage.get(unit) ?? ""} className="h-6" />
       </div>
@@ -113,6 +116,7 @@ const TrainShipTile: React.FC<{ active?: boolean; onClick?: () => void }> = ({ o
   return (
     <SecondaryCard className={`w-full h-full !p-0 ${active ? "ring ring-secondary" : ""}`}>
       <Button
+        motion="disabled"
         onClick={onClick}
         variant="ghost"
         className="w-full h-full flex flex-col gap-2 text-xs justify-center items-center"
@@ -130,7 +134,12 @@ const TrainShipTile: React.FC<{ active?: boolean; onClick?: () => void }> = ({ o
 const UnlockTile: React.FC<{ active?: boolean; onClick?: () => void }> = ({ onClick, active }) => {
   return (
     <SecondaryCard className={`w-full h-full !p-0 ${active ? "ring ring-secondary" : ""}`}>
-      <Button onClick={onClick} variant="ghost" className="w-full h-full flex text-xs justify-center items-center">
+      <Button
+        motion="disabled"
+        onClick={onClick}
+        variant="ghost"
+        className="w-full h-full flex text-xs justify-center items-center"
+      >
         Add Slot
       </Button>
     </SecondaryCard>

@@ -1,14 +1,14 @@
-import { useEffect, forwardRef, useCallback } from "react";
-import { usePrimodium } from "@/hooks/usePrimodium";
-import { getRandomRange } from "@/util/common";
 import { Tooltip } from "@/components/core/Tooltip";
-import { AudioKeys } from "@game/lib/constants/assets/audio";
-import { cn } from "@/util/client";
-import { cva, type VariantProps } from "class-variance-authority";
 import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
+import { usePrimodium } from "@/hooks/usePrimodium";
+import { cn } from "@/util/client";
+import { getRandomRange } from "@/util/common";
+import { AudioKeys } from "@game/lib/constants/assets/audio";
+import { cva, type VariantProps } from "class-variance-authority";
+import { forwardRef, useCallback, useEffect } from "react";
 
 const buttonVariants = cva(
-  "btn min-h-fit join-item items-center justify-center whitespace-nowrap ring-offset-background focus-visible:outline-none relative hover:translate-y-[-2px] hover:shadow-xl transition-all",
+  "btn min-h-fit join-item items-center justify-center whitespace-nowrap ring-offset-background focus-visible:outline-none relative",
   {
     variants: {
       variant: {
@@ -40,9 +40,14 @@ const buttonVariants = cva(
         circle: "btn-circle",
         square: "btn-square",
       },
+      motion: {
+        enabled: "hover:translate-y-[-2px] hover:shadow-xl transition-all",
+        disabled: "",
+      },
     },
     defaultVariants: {
       modifier: "default",
+      motion: "enabled",
       variant: "neutral",
       size: "xs",
       shape: "default",
@@ -68,6 +73,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       size,
       modifier,
       shape,
+      motion,
       mute = false,
       clickSound = "Confirm2",
       keybind,
@@ -120,7 +126,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <Tooltip tooltipContent={tooltip} direction={tooltipDirection}>
         <button
           className={cn(
-            buttonVariants({ variant, size, modifier, shape, className }),
+            buttonVariants({ variant, size, motion, modifier, shape, className }),
             selected && "border-1 border-accent z-10"
           )}
           ref={ref}
