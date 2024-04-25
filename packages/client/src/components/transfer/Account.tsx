@@ -76,7 +76,7 @@ export function Account() {
 
   return (
     <div className="h-full w-full relative flex flex-col justify-center items-center">
-      <div className="flex w-full items-center px-4">
+      <div className="flex w-full items-center px-4 gap-1">
         <AccountDisplay noColor player={playerAccount.entity} className="text-sm" />
         {!!playerAccount.privateKey && (
           <>

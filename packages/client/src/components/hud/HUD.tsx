@@ -2,7 +2,6 @@ import { HUD } from "@/components/core/HUD";
 import { AsteroidLoading } from "@/components/hud/AsteroidLoading";
 import { Dock } from "@/components/hud/Dock";
 import { ModeSelector } from "@/components/hud/ModeSelector";
-import { Profile } from "@/components/hud/Profile";
 import { HoverTarget } from "@/components/hud/markers/HoverTarget";
 import { BlueprintInfoMarker } from "@/components/hud/markers/asteroid/BlueprintInfoMarker";
 import { BuildingMenuPopup } from "@/components/hud/markers/asteroid/BuildingMenuPopup";
@@ -40,7 +39,6 @@ export const GameHUD = memo(() => {
 
         {/* Widgets */}
         <HUD.TopLeft className="flex flex-col gap-2">
-          <Profile />
           <UnitDeaths />
         </HUD.TopLeft>
 
