@@ -1,15 +1,21 @@
+import { Badge } from "@/components/core/Badge";
 import { Shipyard } from "@/components/hud/building-menu/screens/shipyard/Shipyard";
 import { CommissionColonyShips } from "@/components/hud/modals/colony-ships/CommissionColonyShips";
+import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
+import { useBuildingInfo } from "@/hooks/useBuildingInfo";
+import { usePrimodium } from "@/hooks/usePrimodium";
+import { getBuildingImage } from "@/util/building";
+import { getEntityTypeName, toRomanNumeral } from "@/util/common";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { FaArrowsAlt, FaPowerOff, FaTrash } from "react-icons/fa";
+import { FaArrowsAlt, FaInfoCircle, FaPowerOff, FaTrash } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { toggleBuilding } from "src/network/setup/contractCalls/toggleBuilding";
-import { Action, EntityType, TransactionQueueType } from "src/util/constants";
+import { Action, EntityType, ResourceImage, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { Basic } from "./screens/Basic";
 import { BuildQueue } from "./screens/BuildQueue";
@@ -24,7 +30,7 @@ import { WormholeBase } from "./screens/WormholeBase";
 
 export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedBuilding }) => {
   const buildingType = useMemo(() => {
-    return components.BuildingType.get(selectedBuilding)?.value;
+    return components.BuildingType.get(selectedBuilding)?.value as Entity | undefined;
   }, [selectedBuilding]);
 
   const handleClose = () => {
@@ -91,9 +97,58 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
       </div>
     );
   };
+
+  const Header = () => {
+    const primodium = usePrimodium();
+    const buildingImage = getBuildingImage(primodium, selectedBuilding);
+    const buildingName = buildingType ? getEntityTypeName(buildingType) : "";
+    const info = useBuildingInfo(selectedBuilding);
+
+    return (
+      <div className="flex gap-2 items-center relative">
+        <p className="absolute top-0 right-0 opacity-50 text-xs">
+          [{info.position.x},{info.position.y}]
+        </p>
+
+        <img src={buildingImage} className="h-16" />
+        <div className="flex flex-col gap-1">
+          <div className="flex gap-1 items-center justify-center">
+            <p>
+              {buildingName} {toRomanNumeral(Number(info.level))}
+            </p>
+            <Navigator.NavButton
+              to="BuildingInfo"
+              variant="ghost"
+              className="btn-xs btn-ghost flex gap-2 w-fit opacity-75"
+            >
+              <FaInfoCircle />
+            </Navigator.NavButton>
+          </div>
+          {info.production.map(({ resource, amount, type }) => (
+            <Badge key={`buildingproduction-${resource}`} className="text-xs gap-2 bg-base-100 py-2 text-success">
+              <ResourceIconTooltip
+                name={getEntityTypeName(resource)}
+                image={ResourceImage.get(resource) ?? ""}
+                resource={resource}
+                amount={amount}
+                resourceType={type}
+                short
+                fractionDigits={3}
+              />
+            </Badge>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <Navigator initialScreen={selectedBuilding} className="border-none p-0 relative overflow-visible">
+    <Navigator
+      initialScreen={selectedBuilding}
+      className="border-none p-0 relative overflow-visible flex flex-col gap-2"
+    >
       <TopBar />
+      <Header />
       {/* Initial Screen */}
       <RenderScreen />
       {/* Sub Screens */}

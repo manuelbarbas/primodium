@@ -41,7 +41,7 @@ export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
           <img src="img/icons/expansionicon.png" className="pixel-images h-8 w-8" />
           <div>
             {recipe.length !== 0 && <p className="text-xs opacity-75 px-2 mb-1">EXPANSION COST</p>}
-            <div className="flex flex-wrap gap-1 px-2">
+            <div className="flex flex-col flex-wrap gap-1 px-2">
               {!atMaxLevel &&
                 recipe.length !== 0 &&
                 recipe.map((resource) => {
