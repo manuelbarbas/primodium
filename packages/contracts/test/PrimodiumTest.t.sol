@@ -10,7 +10,7 @@ import { NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { BuildingKey, UnitKey } from "src/Keys.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
-import { P_Unit, CooldownEnd, P_IsUtility, MaxResourceCount, ResourceCount, P_UnitPrototypes, P_GameConfig, P_GameConfigData, P_Unit, P_Transportables, BuildingType, OwnedBy, FleetMovement, P_Blueprint, P_EnumToPrototype, PositionData, Position, P_RequiredResourcesData, Asteroid, Home, P_RequiredTile, P_MaxLevel, P_RequiredResources, P_RequiredBaseLevel, UnitLevel, P_ColonyShipConfig, Level, P_UnitProdTypes, P_UnitProdMultiplier, P_WormholeAsteroidConfig, P_AsteroidProbabilityConfig } from "codegen/index.sol";
+import { P_Unit, CooldownEnd, P_IsUtility, MaxResourceCount, ResourceCount, P_UnitPrototypes, P_GameConfig, P_GameConfigData, P_Unit, P_Transportables, BuildingType, OwnedBy, FleetMovement, P_Blueprint, P_EnumToPrototype, PositionData, Position, P_RequiredResourcesData, Asteroid, Home, P_RequiredTile, P_MaxLevel, P_RequiredResources, P_RequiredBaseLevel, UnitLevel, P_ColonyShipConfig, Level, P_UnitProdTypes, P_UnitProdMultiplier, P_WormholeAsteroidConfig, P_AsteroidThresholdProbConfig } from "codegen/index.sol";
 import { EResource, EBuilding, EUnit, Bounds } from "src/Types.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
@@ -470,7 +470,7 @@ contract PrimodiumTest is MudTest {
     P_GameConfig.setAsteroidChanceInv(1);
     P_GameConfigData memory config = P_GameConfig.get();
     if (common2) {
-      P_AsteroidProbabilityConfig.set({
+      P_AsteroidThresholdProbConfig.set({
         common1: 0,
         common2: 100,
         eliteMicro: 0,
@@ -479,7 +479,7 @@ contract PrimodiumTest is MudTest {
         eliteLarge: 0
       });
     } else {
-      P_AsteroidProbabilityConfig.set({
+      P_AsteroidThresholdProbConfig.set({
         common1: 100,
         common2: 0,
         eliteMicro: 0,

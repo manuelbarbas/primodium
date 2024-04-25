@@ -126,7 +126,7 @@ export const worldInput = {
       },
     },
 
-    P_AsteroidProbabilityConfig: {
+    P_AsteroidThresholdProbConfig: {
       key: [],
       schema: {
         common1: "uint256",

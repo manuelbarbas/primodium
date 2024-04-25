@@ -53,14 +53,14 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         primodium: 0n * BigInt(SCALE),
       },
 
-      // Must add up to 100
-      P_AsteroidProbabilityConfig: {
-        common1: 30n,
-        common2: 15n,
-        eliteMicro: 5n,
-        eliteSmall: 25n,
-        eliteMedium: 15n,
-        eliteLarge: 10n,
+      // Don't forget modulus forces a range of 0-99 instead of 1-100
+      P_AsteroidThresholdProbConfig: {
+        common1: 29n,
+        common2: 44n,
+        eliteMicro: 49n,
+        eliteSmall: 74n,
+        eliteMedium: 89n,
+        eliteLarge: 99n,
       },
 
       P_ColonyShipConfig: {

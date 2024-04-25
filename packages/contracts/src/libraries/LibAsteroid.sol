@@ -6,7 +6,7 @@ import { WORLD_SPEED_SCALE, RESOURCE_SCALE } from "src/constants.sol";
 import { DroidPrototypeId } from "codegen/Prototypes.sol";
 
 // tables
-import { ColonyShipsInTraining, P_ConquestConfigData, P_ConquestConfig, LastConquered, UsedTiles, Dimensions, DimensionsData, P_MaxLevel, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, P_GameConfigData, P_GameConfig, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData, P_AsteroidProbabilityConfig, P_AsteroidProbabilityConfigData } from "codegen/index.sol";
+import { ColonyShipsInTraining, P_ConquestConfigData, P_ConquestConfig, LastConquered, UsedTiles, Dimensions, DimensionsData, P_MaxLevel, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, P_GameConfigData, P_GameConfig, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData, P_AsteroidThresholdProbConfig, P_AsteroidThresholdProbConfigData } from "codegen/index.sol";
 
 // libraries
 import { ExpansionKey } from "src/Keys.sol";
@@ -132,37 +132,30 @@ library LibAsteroid {
     uint256 maxLevel;
     uint256 primodium;
 
-    P_AsteroidProbabilityConfigData memory asteroidProb = P_AsteroidProbabilityConfig.get();
-
-    uint256 common1Distrib = asteroidProb.common1;
-    uint256 common2Distrib = common1Distrib + asteroidProb.common2;
-    uint256 eliteMicroDistrib = common2Distrib + asteroidProb.eliteMicro;
-    uint256 eliteSmallDistrib = eliteMicroDistrib + asteroidProb.eliteSmall;
-    uint256 eliteMediumDistrib = eliteSmallDistrib + asteroidProb.eliteMedium;
-    // eliteLargeDistrib = eliteMediumDistrib + asteroidProb.eliteLarge should equal 100, checked in tests
+    P_AsteroidThresholdProbConfigData memory asteroidThresholdProb = P_AsteroidThresholdProbConfig.get();
 
     uint8 mapId;
 
     // Distribution
-    if (distributionVal < common1Distrib) {
+    if (distributionVal < asteroidThresholdProb.common1) {
       // common resources
       maxLevel = 1; // micro
       primodium = 1 * RESOURCE_SCALE;
       mapId = uint8(EMap.Common);
-    } else if (distributionVal < common2Distrib) {
+    } else if (distributionVal < asteroidThresholdProb.common2) {
       // common + advanced resources
       maxLevel = 3; // small
       primodium = 2 * RESOURCE_SCALE;
       mapId = uint8(EMap.Common);
-    } else if (distributionVal < eliteMicroDistrib) {
+    } else if (distributionVal < asteroidThresholdProb.eliteMicro) {
       // elite resources, micro
       maxLevel = 1;
       primodium = 3 * RESOURCE_SCALE;
-    } else if (distributionVal < eliteSmallDistrib) {
+    } else if (distributionVal < asteroidThresholdProb.eliteSmall) {
       // elite resources, small
       maxLevel = 3;
       primodium = 4 * RESOURCE_SCALE;
-    } else if (distributionVal < eliteMediumDistrib) {
+    } else if (distributionVal < asteroidThresholdProb.eliteMedium) {
       // elite resources, medium
       maxLevel = 5;
       primodium = 5 * RESOURCE_SCALE;
