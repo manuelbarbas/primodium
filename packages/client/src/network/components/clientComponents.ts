@@ -113,6 +113,8 @@ export default function setupClientComponents() {
       id: "SyncStatus",
     }
   );
+
+  const IsObjectiveClaimable = createExtendedBoolComponent(world, { id: "IsObjectiveClaimable" });
   /* -------------------------------------------------------------------------- */
   /*                                 Leaderboard                                */
   /* -------------------------------------------------------------------------- */
@@ -159,6 +161,7 @@ export default function setupClientComponents() {
     Send,
     Attack,
     SelectedFleet,
+    IsObjectiveClaimable,
     Battle,
     BattleRender,
     Leaderboard,

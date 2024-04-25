@@ -321,10 +321,6 @@ export const worldInput = {
       key: ["entity"],
       schema: { entity: "bytes32", value: "int32[]" },
     },
-    Children: {
-      key: ["entity"],
-      schema: { entity: "bytes32", value: "bytes32[]" },
-    },
 
     ProductionRate: {
       key: ["entity", "resource"],
