@@ -4,12 +4,14 @@ import { TrainColonyShip } from "@/components/hud/modals/colony-ships/TrainColon
 import { UnlockSlot } from "@/components/hud/modals/colony-ships/UnlockSlot";
 import { useMud } from "@/hooks";
 import { useColonySlots } from "@/hooks/useColonySlots";
+import { usePrimodium } from "@/hooks/usePrimodium";
 import { components } from "@/network/components";
+import { getBuildingImage } from "@/util/building";
 import { ResourceImage } from "@/util/constants";
 import { formatTime } from "@/util/number";
 import { Entity } from "@latticexyz/recs";
 import React from "react";
-import { FaPlus } from "react-icons/fa";
+import { Navigator } from "src/components/core/Navigator";
 
 type Tile =
   | { type: "training"; unit: Entity; progress: bigint; timeRemaining: bigint; count: bigint }
@@ -24,6 +26,9 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
   } = useMud();
   const asteroid = components.OwnedBy.use(buildingEntity)?.value as Entity;
   if (!asteroid) throw new Error("[ColonyShipData] No asteroid selected");
+
+  const primodium = usePrimodium();
+  const buildingImage = getBuildingImage(primodium, buildingEntity);
 
   const colonySlotsData = useColonySlots(playerEntity);
 
@@ -41,36 +46,50 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
     }) as Tile[];
 
   return (
-    <div className="flex h-[24rem] gap-2">
-      <div className="h-full grid grid-rows-3 grid-cols-3 gap-1 aspect-square">
-        {tiles.map((tile, i) => {
-          if (tile.type === "training") return <TrainingTile training={tile} key={`tile-${i}`} />;
-          if (tile.type === "train")
-            return <TrainShipTile onClick={() => setActiveTile(i)} key={`tile-${i}`} active={activeTile == i} />;
-          if (tile.type === "unlock")
-            return <UnlockTile key={`tile-${i}`} onClick={() => setActiveTile(i)} active={activeTile == i} />;
-          return <BlankTile key={`tile-${i}`} />;
-        })}
+    <Navigator.Screen title="Commission" className="gap-2">
+      <div className="flex gap-2">
+        <img src={buildingImage} className="h-10" />
+        <div className="flex items-center justify-center">Shipyard</div>
       </div>
-      {activeTile !== null && tiles[activeTile].type === "train" && (
-        <TrainColonyShip buildingEntity={buildingEntity} className="w-64 h-full" />
-      )}
-      {activeTile !== null && tiles[activeTile].type === "unlock" && (
-        <UnlockSlot
-          asteroidEntity={asteroid}
-          buildingEntity={buildingEntity}
-          playerEntity={playerEntity}
-          index={activeTile}
-          className="w-64 h-full"
-        />
-      )}
-    </div>
+      <div className="flex h-[20rem] gap-2">
+        <div className="h-full grid grid-rows-3 grid-cols-3 gap-1 aspect-square">
+          {tiles.map((tile, i) => {
+            if (tile.type === "training") return <TrainingTile training={tile} key={`tile-${i}`} />;
+            if (tile.type === "train")
+              return <TrainShipTile onClick={() => setActiveTile(i)} key={`tile-${i}`} active={activeTile == i} />;
+            if (tile.type === "unlock")
+              return <UnlockTile key={`tile-${i}`} onClick={() => setActiveTile(i)} active={activeTile == i} />;
+            return <BlankTile key={`tile-${i}`} />;
+          })}
+        </div>
+        {activeTile !== null && tiles[activeTile].type === "train" && (
+          <TrainColonyShip buildingEntity={buildingEntity} className="w-56 h-full" />
+        )}
+        {activeTile !== null && tiles[activeTile].type === "unlock" && (
+          <UnlockSlot
+            asteroidEntity={asteroid}
+            buildingEntity={buildingEntity}
+            playerEntity={playerEntity}
+            index={activeTile}
+            className="w-56 h-full"
+          />
+        )}
+        {(activeTile === null || ["blank", "training"].includes(tiles[activeTile].type)) && (
+          <SecondaryCard className="w-56 h-full flex text-xs justify-center items-center opacity-60">
+            {null}
+          </SecondaryCard>
+        )}
+      </div>
+      <div className="flex justify-center w-full">
+        <Navigator.BackButton className="w-fit" />
+      </div>
+    </Navigator.Screen>
   );
 };
 
 const BlankTile: React.FC = () => {
   return (
-    <SecondaryCard className="w-full h-full flex text-xs justify-center items-center opacity-20">{null}</SecondaryCard>
+    <SecondaryCard className="w-full h-full flex text-xs justify-center items-center opacity-60">{null}</SecondaryCard>
   );
 };
 
@@ -112,7 +131,7 @@ const UnlockTile: React.FC<{ active?: boolean; onClick?: () => void }> = ({ onCl
   return (
     <SecondaryCard className={`w-full h-full !p-0 ${active ? "ring ring-secondary" : ""}`}>
       <Button onClick={onClick} variant="ghost" className="w-full h-full flex text-xs justify-center items-center">
-        <FaPlus /> Add Slot
+        Add Slot
       </Button>
     </SecondaryCard>
   );

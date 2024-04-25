@@ -1,4 +1,5 @@
 import { Shipyard } from "@/components/hud/building-menu/screens/shipyard/Shipyard";
+import { CommissionColonyShips } from "@/components/hud/modals/colony-ships/CommissionColonyShips";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { FaArrowsAlt, FaPowerOff, FaTrash } from "react-icons/fa";
@@ -91,7 +92,7 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
     );
   };
   return (
-    <Navigator initialScreen={selectedBuilding} className="w-80 border-none p-0 relative overflow-visible">
+    <Navigator initialScreen={selectedBuilding} className="border-none p-0 relative overflow-visible">
       <TopBar />
       {/* Initial Screen */}
       <RenderScreen />
@@ -103,6 +104,9 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
       {/* Unit Training */}
       <BuildQueue building={selectedBuilding} />
       <BuildUnit building={selectedBuilding} />
+
+      {/* Colony Ship */}
+      <CommissionColonyShips buildingEntity={selectedBuilding} />
     </Navigator>
   );
 };

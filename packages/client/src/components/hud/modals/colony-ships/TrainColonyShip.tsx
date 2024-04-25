@@ -15,7 +15,8 @@ import { Entity } from "@latticexyz/recs";
 import React, { useCallback, useMemo } from "react";
 import { Hex } from "viem";
 
-export const TrainColonyShip: React.FC<{ buildingEntity: Entity; className?: string }> = ({
+export const TrainColonyShip: React.FC<{ onCommission?: () => void; buildingEntity: Entity; className?: string }> = ({
+  onCommission,
   buildingEntity,
   className = "",
 }) => {
@@ -45,13 +46,11 @@ export const TrainColonyShip: React.FC<{ buildingEntity: Entity; className?: str
 
   const handleCommission = useCallback(() => {
     train(mud, buildingEntity, UnitEnumLookup[unit], 1n);
-    // TODO
-  }, [buildingEntity, mud, unit]);
+    onCommission && onCommission();
+  }, [buildingEntity, mud, onCommission, unit]);
 
   return (
-    <SecondaryCard
-      className={`h-full min-h-[24rem] w-full flex flex-col gap-6 p-3 justify-center items-center ${className}`}
-    >
+    <SecondaryCard className={`h-full w-full flex flex-col gap-6 p-3 justify-center items-center ${className}`}>
       <div className="flex flex-col items-center gap-2">
         <img src={shipImage} className="h-10" />
         <p>Colony Ship</p>

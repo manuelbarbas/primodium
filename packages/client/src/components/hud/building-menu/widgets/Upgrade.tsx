@@ -41,7 +41,7 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
   }
 
   return (
-    <SecondaryCard className="w-full items-center">
+    <SecondaryCard className="w-80 items-center">
       <div className="flex items-center justify-between w-full">
         <div className="flex gap-2 items-center">
           <img src="img/icons/minersicon.png" className="pixel-images h-8 w-8" />
