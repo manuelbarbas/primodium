@@ -1,7 +1,8 @@
 import { CapacityBar } from "@/components/core/CapacityBar";
 import { Dropdown } from "@/components/core/Dropdown";
 import { formatResourceCount } from "@/util/number";
-import { Entity } from "@latticexyz/recs";
+import { useEntityQuery } from "@latticexyz/react";
+import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { useState } from "react";
 import { useMud } from "src/hooks";
 import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
@@ -12,16 +13,18 @@ import { entityToRockName } from "src/util/name";
 
 export const FavoriteAsteroids = () => {
   const playerEntity = useMud().playerAccount.entity;
+  const query = [HasValue(components.OwnedBy, { value: playerEntity }), Has(components.Asteroid)];
+  const asteroids = useEntityQuery(query);
+
   const home = components.Home.use(playerEntity)?.value as Entity;
-  if (!home) throw new Error("No home asteroid found");
-  const asteroids = [home];
   const [selectedAsteroid, setSelectedAsteroid] = useState<Entity>(asteroids[0]);
 
   return (
-    <div className="flex flex-col lg:flex-row justify-end items-center p-6 gap-4">
+    <div className="flex flex-col lg:flex-row justify-end p-6 gap-4">
       <Dropdown value={selectedAsteroid} onChange={setSelectedAsteroid} size="sm">
         {asteroids.map((asteroid) => (
-          <Dropdown.Item key={`favorite-asteroid-${asteroid}`} value={asteroid}>
+          <Dropdown.Item className="flex items-center gap-1" key={`favorite-asteroid-${asteroid}`} value={asteroid}>
+            {asteroid === home && <img src={ResourceImage.get(EntityType.Housing)} className="w-4 h-4" alt="home" />}
             {entityToRockName(asteroid)}
           </Dropdown.Item>
         ))}

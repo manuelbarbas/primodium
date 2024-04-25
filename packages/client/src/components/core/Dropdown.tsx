@@ -111,10 +111,11 @@ export const Dropdown = <T extends DropdownValue>({
 interface DropdownItemProps<T extends DropdownValue> {
   value: T;
   children: ReactNode;
+  className?: string;
 }
 
-const DropdownItem = <T extends DropdownValue>({ children, value }: DropdownItemProps<T>) => (
-  <div className="w-full" data-value={value}>
+const DropdownItem = <T extends DropdownValue>({ children, value, className = "" }: DropdownItemProps<T>) => (
+  <div className={`${className}`} data-value={value}>
     {children}
   </div>
 );
