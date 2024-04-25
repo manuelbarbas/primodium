@@ -151,7 +151,8 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Combat",
       type: "Claim",
       requiredObjectives: [EObjectives.BattleAsteroid],
-      description: "Open a battle report to see the results of a battle.",
+      description:
+        "Open a battle report to see the results of a battle. To open, select the Battle Reports button in the bottom bar.",
       icon: "/img/icons/reportsicon.png",
       tooltip: "Viewed a battle report",
     },
@@ -522,7 +523,8 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.CreateFleet],
       buildingType: EntityType.SAMLauncher,
       requiredMainBase: 2n,
-      description: "SAM launchers give your asteroid strength, protecting you from enemy attacks!",
+      description:
+        "SAM launchers give your asteroid strength, protecting you from enemy attacks! You need electricity to power them.",
     },
   ],
   [
