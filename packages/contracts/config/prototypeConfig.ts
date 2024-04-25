@@ -53,14 +53,13 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         primodium: 0n * BigInt(SCALE),
       },
 
-      // Don't forget modulus forces a range of 0-99 instead of 1-100
       P_AsteroidThresholdProbConfig: {
-        common1: 29n,
-        common2: 44n,
-        eliteMicro: 49n,
-        eliteSmall: 74n,
-        eliteMedium: 89n,
-        eliteLarge: 99n,
+        common1: 30n,
+        common2: 45n,
+        eliteMicro: 50n,
+        eliteSmall: 75n,
+        eliteMedium: 90n,
+        eliteLarge: 100n,
       },
 
       P_ColonyShipConfig: {
