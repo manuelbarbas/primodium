@@ -24,6 +24,7 @@ export const worldInput = {
     S_InitAsteroidOwnerSystem: {},
     S_TransferAsteroidSystem: {},
     S_CreateSecondaryAsteroidSystem: {},
+    S_BuildRaidableAsteroidSystem: {},
   },
 
   // using as any here for now because of a type issue and also because the enums are not being recognized in our codebase rn

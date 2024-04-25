@@ -208,10 +208,6 @@ library LibAsteroid {
     (uint256 droidCount, uint256 encryption) = getSecondaryAsteroidUnitsAndEncryption(data.maxLevel);
     UnitCount.set(asteroidEntity, DroidPrototypeId, droidCount);
     LibStorage.increaseMaxStorage(asteroidEntity, uint8(EResource.R_Encryption), encryption);
-
-    if (data.mapId == uint8(EMap.Common)) {
-      LibRaidableAsteroid.buildRaidableAsteroid(asteroidEntity);
-    }
   }
 
   function initAsteroidOwner(bytes32 asteroidEntity, bytes32 ownerEntity) internal {
