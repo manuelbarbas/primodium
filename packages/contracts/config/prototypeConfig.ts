@@ -130,7 +130,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredBaseLevel: { value: 1n },
       },
       3: {
-        P_RequiredUpgradeResources: getResourceValues({ Iron: 500, Copper: 500, Lithium: 500 }),
+        P_RequiredUpgradeResources: getResourceValues({ Iron: 400, Copper: 400, Lithium: 400 }),
         Dimensions: { width: 13, height: 11 },
         P_RequiredBaseLevel: { value: 3n },
       },
