@@ -10,6 +10,11 @@ import { StorageUnitPrototypeId, IronMinePrototypeId, CopperMinePrototypeId, Lit
 import { EResource } from "src/Types.sol";
 
 library LibRaidableAsteroid {
+  /**
+   * @notice Initializes a secondary asteroid as a raidable asteroid
+   * @dev Takes a secondary asteroid and constructs the necessary buildings, initializes resources, and initializes droids to be raidable.
+   * @param asteroidEntity Entity ID of the raidable asteroid
+   */
   function buildRaidableAsteroid(bytes32 asteroidEntity) internal {
     // get max level to determine if common1 (maxLevel: 1) or common2 (maxLevel: 3)
     uint256 maxLevel = Asteroid.getMaxLevel(asteroidEntity);
@@ -86,16 +91,17 @@ library LibRaidableAsteroid {
     DroidRegenTimestamp.set(asteroidEntity, block.timestamp);
   }
 
-  // modifier for claiming raidable asteroid units
-  // make sure it is an asteroid
-  // make sure it is owned by 0x0
-  // getSecondaryAsteroidUnitsAndEncryption to get max droids
-  // build droids over time until max droids
+  /**
+   * @notice Claims the droid units built on a raidable asteroid until its maximum
+   * @dev This function is called by Primodium__claimUnits in the S_ClaimSystem contract
+   * @param asteroidEntity Entity ID of the raidable asteroid
+   */
   function claimRaidableUnits(bytes32 asteroidEntity) internal {
-    if (!Asteroid.getIsAsteroid(asteroidEntity) || OwnedBy.get(asteroidEntity) != bytes32(0)) {
-      return;
-    }
-    if (Asteroid.getMapId(asteroidEntity) != 7) {
+    if (
+      !Asteroid.getIsAsteroid(asteroidEntity) ||
+      OwnedBy.get(asteroidEntity) != bytes32(0) ||
+      Asteroid.getMapId(asteroidEntity) != 7
+    ) {
       return;
     }
 
