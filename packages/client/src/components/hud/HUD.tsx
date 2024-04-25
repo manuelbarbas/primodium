@@ -9,12 +9,10 @@ import { AsteroidTarget } from "@/components/hud/markers/starmap/AsteroidTarget"
 import { BuildMarker } from "@/components/hud/markers/starmap/BuildMarker";
 import { FleetTarget } from "@/components/hud/markers/starmap/FleetTarget";
 import { HomeMarker } from "@/components/hud/markers/starmap/HomeMarker";
-import { OwnedAsteroids } from "@/components/hud/widgets/OwnedAsteroids";
-import { OwnedFleets } from "@/components/hud/widgets/OwnedFleets";
+import { FavoriteAsteroids } from "@/components/hud/widgets/FavoriteAsteroids";
 import { UnitDeaths } from "@/components/hud/widgets/UnitDeaths";
 import { Blueprints } from "@/components/hud/widgets/blueprints/Blueprints";
 import { Chat } from "@/components/hud/widgets/chat/Chat";
-import { Hangar } from "@/components/hud/widgets/hangar/Hangar";
 import { Resources } from "@/components/hud/widgets/resources/Resources";
 import { BrandingLabel } from "@/components/shared/BrandingLabel";
 import { usePersistentStore } from "@game/stores/PersistentStore";
@@ -26,8 +24,9 @@ export const GameHUD = memo(() => {
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
 
   return (
-    <div className={`screen-container`}>
+    <div className={`screen-container relative`}>
       <HUD scale={uiScale}>
+        <div className="absolute top-0 left-0 h-32 w-screen bg-gradient-to-b from-black to-transparent" />
         {/* MARKERS */}
         <BuildMarker />
         <HomeMarker />
@@ -38,7 +37,7 @@ export const GameHUD = memo(() => {
         <BlueprintInfoMarker />
 
         {/* Widgets */}
-        <HUD.TopLeft className="flex flex-col gap-2">
+        <HUD.TopLeft>
           <UnitDeaths />
         </HUD.TopLeft>
 
@@ -46,9 +45,10 @@ export const GameHUD = memo(() => {
           <ModeSelector />
         </HUD.TopMiddle>
         <HUD.TopRight className="flex flex-col items-end gap-2">
-          <Hangar />
+          <FavoriteAsteroids />
+          {/* <Hangar />
           <OwnedAsteroids />
-          <OwnedFleets />
+          <OwnedFleets /> */}
         </HUD.TopRight>
 
         <HUD.Right>

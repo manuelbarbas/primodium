@@ -1,36 +1,32 @@
-import { usePrimodium } from "src/hooks/usePrimodium";
+import { Tooltip } from "@/components/core/Tooltip";
+import { AccountDisplay } from "@/components/shared/AccountDisplay";
+import { useMud } from "@/hooks";
+import { formatNumber } from "@/util/number";
 import { components } from "src/network/components";
-import { HealthBar } from "../HealthBar";
 
 export const UnitDeaths = () => {
   const { unitDeaths, gameOver } = components.VictoryStatus.use() ?? { unitDeaths: 0n, gameOver: false };
   const unitDeathLimit = components.P_GameConfig.use()?.unitDeathLimit ?? 0n;
-  const primodium = usePrimodium();
-  const input = primodium.api("UI").input;
-  const input2 = primodium.api("ASTEROID").input;
-  const input3 = primodium.api("STARMAP").input;
+  const playerEntity = useMud().playerAccount.entity;
+  const tooltipContent = `${formatNumber(unitDeaths, { showZero: true })} / ${formatNumber(unitDeathLimit, {
+    short: true,
+  })}`;
 
   return (
-    <div
-      className="font-mono min-w-[200px]"
-      onMouseEnter={() => {
-        input.disableInput();
-        input2.disableInput();
-        input3.disableInput();
-      }}
-      onMouseLeave={() => {
-        input.enableInput();
-        input2.enableInput();
-        input3.enableInput();
-      }}
-    >
+    <div className="font-bold uppercase p-6 flex gap-10">
+      <div>
+        ID: <AccountDisplay noColor player={playerEntity} className="text-sm" />
+      </div>
       {gameOver ? (
-        "Game Over!"
+        <p>Game Over</p>
       ) : (
-        <>
-          Unit Deaths: {unitDeaths.toLocaleString()} / {unitDeathLimit.toLocaleString()}
-          <HealthBar health={Number(unitDeaths)} maxHealth={Number(unitDeathLimit)} />
-        </>
+        <span className="pointer-events-auto">
+          <Tooltip tooltipContent={tooltipContent} direction="bottom">
+            <p className="flex inline gap-2">
+              Unit Deaths: <p className="text-secondary">{(unitDeaths / unitDeathLimit).toLocaleString()}%</p>
+            </p>
+          </Tooltip>
+        </span>
       )}
     </div>
   );
