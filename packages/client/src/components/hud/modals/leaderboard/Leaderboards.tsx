@@ -25,7 +25,7 @@ export const Leaderboards = ({
         ),
       },
       {
-        name: "Primodium",
+        name: "Shard",
         leaderboard: (
           <SubLeaderboard
             key={"Primodium"}

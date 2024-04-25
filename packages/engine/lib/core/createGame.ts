@@ -16,21 +16,20 @@ export const createGame = async (config: GameConfig) => {
 
   // Create scene for loading assets
   const phaserScene = createPhaserScene({
-    key: "ROOT",
+    key: "LOAD",
     preload: async (scene: Phaser.Scene) => {
       scene.load.pack(config.key, config.assetPackUrl, config.key);
     },
   });
 
+  /* -------------------------- Create Scene Manager -------------------------- */
+
   const loadScene = new phaserScene();
 
-  phaserGame.scene.add("ROOT", loadScene, true);
+  phaserGame.scene.add("LOAD", loadScene, true);
   loadScene.input.enabled = false;
 
   await getSceneLoadPromise(loadScene);
-
-  /* -------------------------- Create Scene Manager -------------------------- */
-
   const sceneManager = createSceneManager(phaserGame);
 
   /* -------------------------------------------------------------------------- */

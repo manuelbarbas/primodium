@@ -4,7 +4,7 @@ import { useMud } from "src/hooks";
 import { useAccount } from "src/hooks/useAccount";
 import { components } from "src/network/components";
 import { entityToColor } from "src/util/color";
-import { RockRelationshipColors } from "src/util/constants";
+import { Mode, RockRelationshipColors } from "src/util/constants";
 import { getRockRelationship } from "src/util/asteroid";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { Modal } from "../core/Modal";
@@ -54,10 +54,11 @@ export const AccountDisplay: React.FC<{
 
         if (!playerHomeAsteroidPosition) return;
 
-        if (!components.MapOpen.get()?.value) {
-          primodium.api("STARMAP").util.openMap();
+        if (components.SelectedMode.get()?.value !== Mode.Starmap) {
+          components.SelectedMode.set({ value: Mode.Starmap });
         }
 
+        components.SelectedRock.set({ value: playerHomeAsteroid as Entity });
         primodium.api("STARMAP").camera.pan({ x: playerHomeAsteroidPosition.x, y: playerHomeAsteroidPosition.y });
       }}
       className={`p-0 uppercase inline-flex font-bold gap-1 ${className} ${loading ? "animate-pulse" : ""}`}

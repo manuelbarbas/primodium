@@ -1,10 +1,10 @@
 import engine from "engine";
-import gameConfig from "./lib/config/game";
-import { Scenes } from "./lib/constants/common";
-import { initAsteroidScene } from "./scenes/asteroid/init";
-import { setupAudioEffects } from "./scenes/common/setup/setupAudioEffects";
-import { initStarmapScene } from "./scenes/starmap/init";
-import { initUIScene } from "./scenes/ui/init";
+import gameConfig from "@game/lib/config/game";
+import { initAsteroidScene } from "@game/scenes/asteroid/init";
+import { initStarmapScene } from "@game/scenes/starmap/init";
+import { initUIScene } from "@game/scenes/ui/init";
+import { initRootScene } from "@game/scenes/root/init";
+import { initCommandCenter } from "@/game/scenes/command-center/init";
 
 async function init() {
   const game = await engine.createGame(gameConfig);
@@ -12,8 +12,8 @@ async function init() {
   await initAsteroidScene(game);
   await initStarmapScene(game);
   await initUIScene(game);
-
-  setupAudioEffects(game.sceneManager.scenes.get(Scenes.UI)!);
+  await initRootScene(game);
+  await initCommandCenter(game);
 }
 
 export default init;

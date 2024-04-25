@@ -1,11 +1,9 @@
-import { Entity, namespaceWorld } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { Coord } from "@latticexyz/utils";
+import { namespaceWorld } from "@latticexyz/recs";
 import engine from "engine";
 import { Game } from "engine/types";
 import { runSystems as runAsteroidSystems } from "src/game/scenes/asteroid/systems";
 import { runSystems as runStarmapSystems } from "src/game/scenes/starmap/systems";
-import { runSystems as runUISystems } from "src/game/scenes/ui/systems";
+import { runSystems as runRootSystems } from "src/game/scenes/root/systems";
 import { components } from "src/network/components";
 import { setupBattleComponents } from "src/network/systems/setupBattleComponents";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
@@ -33,12 +31,17 @@ import { createInputApi } from "./input";
 import { createObjectApi } from "./objects";
 import { createSceneApi } from "./scene";
 import { createSpriteApi } from "./sprite";
+import { Mode } from "@/util/constants";
 
 export type Primodium = Awaited<ReturnType<typeof initPrimodium>>;
 export type PrimodiumApi = ReturnType<Primodium["api"]>;
 
+const apiMap = new Map<string, PrimodiumApi>();
+
 //pull out api so we can use in non react contexts
 export function api(sceneKey: SceneKeys = "ASTEROID", instance: string | Game = "MAIN") {
+  // if (!apiMap.has(sceneKey + instance)) return apiMap.get(sceneKey + instance);
+
   const _instance = typeof instance === "string" ? engine.getGame().get(instance) : instance;
 
   if (_instance === undefined) {
@@ -52,74 +55,8 @@ export function api(sceneKey: SceneKeys = "ASTEROID", instance: string | Game = 
   }
   const sceneApi = createSceneApi(_instance);
   const cameraApi = createCameraApi(scene);
-  const closeMap = async () => {
-    if (!components.MapOpen.get()?.value) return;
-    await sceneApi.transitionToScene(
-      "STARMAP",
-      "ASTEROID",
-      0,
-      (_, targetScene) => {
-        targetScene.camera.phaserCamera.fadeOut(0, 0, 0, 0);
-      },
-      (_, targetScene) => {
-        targetScene.phaserScene.add.tween({
-          targets: targetScene.camera.phaserCamera,
-          zoom: { from: 0.5, to: 1 },
-          duration: 500,
-          ease: "Cubic.easeInOut",
-          onUpdate: () => {
-            targetScene.camera.zoom$.next(targetScene.camera.phaserCamera.zoom);
-            targetScene.camera.worldView$.next(targetScene.camera.phaserCamera.worldView);
-          },
-        });
-        targetScene.camera.phaserCamera.fadeIn(500, 0, 0, 0);
-      }
-    );
-    components.MapOpen.set({ value: false });
-    components.SelectedRock.set({ value: components.ActiveRock.get()?.value ?? singletonEntity });
-    components.HoverEntity.remove();
-  };
 
-  const openMap = async (position?: Coord) => {
-    if (components.MapOpen.get()?.value) return;
-    const activeRock = components.ActiveRock.get()?.value;
-    const pos = position ?? components.Position.get(activeRock) ?? { x: 0, y: 0 };
-    const ownedBy = components.OwnedBy.get(activeRock)?.value;
-    const isSpectating = ownedBy !== components.Account.get()?.value;
-
-    cameraApi.pan(pos, {
-      duration: 0,
-    });
-
-    await sceneApi.transitionToScene(
-      Scenes.Asteroid,
-      Scenes.Starmap,
-      0,
-      (_, targetScene) => {
-        targetScene.camera.phaserCamera.fadeOut(0, 0, 0, 0);
-      },
-      (_, targetScene) => {
-        targetScene.phaserScene.add.tween({
-          targets: targetScene.camera.phaserCamera,
-          zoom: { from: 2, to: 1 },
-          duration: 500,
-          ease: "Cubic.easeInOut",
-          onUpdate: () => {
-            targetScene.camera.zoom$.next(targetScene.camera.phaserCamera.zoom);
-            targetScene.camera.worldView$.next(targetScene.camera.phaserCamera.worldView);
-          },
-        });
-        targetScene.camera.phaserCamera.fadeIn(500, 0, 0, 0);
-      }
-    );
-    components.MapOpen.set({ value: true });
-    components.SelectedBuilding.remove();
-    components.HoverEntity.remove();
-    if (isSpectating)
-      components.ActiveRock.set({ value: (components.BuildRock.get()?.value ?? singletonEntity) as Entity });
-  };
-
-  return {
+  const apiObject = {
     camera: cameraApi,
     game: createGameApi(_instance),
     hooks: createHooksApi(scene),
@@ -129,8 +66,11 @@ export function api(sceneKey: SceneKeys = "ASTEROID", instance: string | Game = 
     sprite: createSpriteApi(scene),
     audio: createAudioApi(scene),
     objects: createObjectApi(scene),
-    util: { openMap, closeMap },
   };
+
+  apiMap.set(sceneKey + instance, apiObject);
+
+  return apiObject;
 }
 export async function initPrimodium(mud: MUD, version = "v1") {
   const asciiArt = `
@@ -177,13 +117,14 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     const starmapScene = _instance.sceneManager.scenes.get(Scenes.Starmap);
     const asteroidScene = _instance.sceneManager.scenes.get(Scenes.Asteroid);
     const uiScene = _instance.sceneManager.scenes.get(Scenes.UI);
+    const rootScene = _instance.sceneManager.scenes.get(Scenes.Root);
 
-    if (starmapScene === undefined || asteroidScene === undefined || uiScene === undefined) {
+    if (starmapScene === undefined || asteroidScene === undefined || uiScene === undefined || rootScene === undefined) {
       console.log(_instance.sceneManager.scenes);
       throw new Error("No primodium scene found");
     }
 
-    components.MapOpen.set({ value: false });
+    components.SelectedMode.set({ value: Mode.Asteroid });
     setupBuildRock();
     setupSwapNotifications(mud);
     setupBattleComponents();
@@ -200,8 +141,27 @@ export async function initPrimodium(mud: MUD, version = "v1") {
 
     runAsteroidSystems(asteroidScene, mud);
     runStarmapSystems(starmapScene, mud);
-    runUISystems(uiScene);
+    runRootSystems(rootScene, _instance);
   }
 
-  return { api, destroy, runSystems };
+  function enableGlobalInput() {
+    const game = engine.getGame();
+    for (const [, instance] of game.entries()) {
+      instance.sceneManager.scenes.forEach((scene) => {
+        scene.input.enableInput();
+      });
+    }
+  }
+
+  function disableGlobalInput() {
+    const game = engine.getGame();
+    for (const [, instance] of game.entries()) {
+      instance.sceneManager.scenes.forEach((scene) => {
+        if (scene.config.key === Scenes.UI) return;
+        scene.input.disableInput();
+      });
+    }
+  }
+
+  return { api, destroy, runSystems, enableGlobalInput, disableGlobalInput };
 }

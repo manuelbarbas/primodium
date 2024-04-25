@@ -1,3 +1,4 @@
+import { Mode } from "@/util/constants";
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { createAudioApi } from "src/game/api/audio";
@@ -10,10 +11,11 @@ export const mapOpenFx = (scene: Scene) => {
   const bg = audio.get("Background", "music");
   const bg2 = audio.get("Background2", "music");
 
-  defineComponentSystem(systemsWorld, components.MapOpen, ({ value }) => {
+  defineComponentSystem(systemsWorld, components.SelectedMode, ({ value }) => {
+    const mode = value[0]?.value;
     if (!bg || !bg2) return;
 
-    if (value[0]?.value) {
+    if (mode === Mode.Asteroid) {
       scene.phaserScene.add.tween({
         targets: bg,
         volume: 0,
