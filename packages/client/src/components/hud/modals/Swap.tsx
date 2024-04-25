@@ -97,7 +97,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
   );
 
   const { disabled, message: swapButtonMsg } = useMemo(() => {
-    if (!inAmountRendered || !outAmountRendered) return { disabled: true, message: "Enter an amount to swap" };
+    if (!inAmountRendered || !outAmountRendered) return { disabled: true, message: "Enter amount" };
 
     if (fromResourceCount < parseResourceCount(fromResource, inAmountRendered))
       return { disabled: true, message: `Not enough ${getEntityTypeName(fromResource)}` };
@@ -183,13 +183,9 @@ const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
         onChange={(e) => props.onAmountChange(e.target.value)}
       />
       <div className="col-span-4 flex flex-col justify-end items-end gap-1">
-        <Dropdown>
+        <Dropdown value={props.resource} onChange={(value) => props.onResourceSelect(value)}>
           {[...ResourceStorages].map((resource) => (
-            <Dropdown.Item
-              key={resource}
-              value={resource}
-              onSelect={(value) => props.onResourceSelect(value as Entity)}
-            >
+            <Dropdown.Item key={resource} value={resource}>
               <IconLabel text={getEntityTypeName(resource)} imageUri={ResourceImage.get(resource) ?? ""} />
             </Dropdown.Item>
           ))}

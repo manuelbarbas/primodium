@@ -17,8 +17,11 @@ import { Tabs } from "@/components/core/Tabs";
 import { TextInput } from "@/components/core/TextInput";
 import { Toggle } from "@/components/core/Toggle";
 import { EntityType } from "@/util/constants";
+import { useState } from "react";
 
 export const _Sandbox = () => {
+  const [dropdownValue, setDropdownValue] = useState(1);
+
   return (
     <HUD>
       <div className="absolute top-0 right-0 min-h-screen w-full heropattern-graphpaper-slate-800/50 bg-slate-900/45 p-10 grid grid-cols-2 gap-4 drop-shadow-hard pointer-events-auto">
@@ -202,16 +205,10 @@ export const _Sandbox = () => {
           <NumberInput count="0" />
           <TextInput placeholder="test" topRightLabel="Text input" />
 
-          <Dropdown variant={"bottomLeft"}>
-            <Dropdown.Item value={1} onSelect={() => console.log("hello")}>
-              Test 1
-            </Dropdown.Item>
-            <Dropdown.Item value={2} onSelect={() => console.log("hello")}>
-              Test 2
-            </Dropdown.Item>
-            <Dropdown.Item value={3} onSelect={() => console.log("hello")}>
-              Test 3
-            </Dropdown.Item>
+          <Dropdown variant={"bottomLeft"} value={dropdownValue} onChange={setDropdownValue}>
+            <Dropdown.Item value={1}>Test 1</Dropdown.Item>
+            <Dropdown.Item value={2}>Test 2</Dropdown.Item>
+            <Dropdown.Item value={3}>Test 3</Dropdown.Item>
           </Dropdown>
         </div>
       </div>
