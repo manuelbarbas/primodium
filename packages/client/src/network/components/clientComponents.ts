@@ -38,7 +38,7 @@ export default function setupClientComponents() {
   const HoverEntity = createExtendedEntityComponent(world, { id: "HoverEntity" });
   const SelectedBuilding = createExtendedComponent(world, { value: Type.Entity }, { id: "SelectedBuilding" });
   const SelectedAction = createExtendedNumberComponent(world, { id: "SelectedAction" });
-  const MapOpen = createExtendedBoolComponent(world, { id: "MapOpen" });
+  const SelectedMode = createExtendedEntityComponent(world, { id: "SelectedMode" });
 
   const ReverseBuildingPosition = createExtendedEntityComponent(world, { id: "ReverseBuildingPosition" });
 
@@ -154,7 +154,7 @@ export default function setupClientComponents() {
     HoverEntity,
     SelectedBuilding,
     SelectedAction,
-    MapOpen,
+    SelectedMode,
     ReverseBuildingPosition,
     TrainingQueue,
     Hangar,

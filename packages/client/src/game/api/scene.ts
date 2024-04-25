@@ -20,6 +20,8 @@ export function createSceneApi(game: Awaited<ReturnType<typeof createGame>>) {
     onTransitionStart?: (originScene: Scene, targetScene: Scene) => undefined,
     onTransitionEnd?: (originScene: Scene, targetScene: Scene) => undefined
   ) {
+    if (origin === target) return;
+
     await game.sceneManager.transitionToScene(origin, target, duration, onTransitionStart, onTransitionEnd);
   }
 

@@ -20,6 +20,7 @@ import { IconLabel } from "../../../core/IconLabel";
 import { Modal } from "../../../core/Modal";
 import { Fleets } from "../../widgets/fleets/Fleets";
 import { _ShardAsteroidTarget } from "./ShardAsteroidTarget";
+import { Mode } from "@/util/constants";
 
 export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ selectedAsteroid }) => {
   const mud = useMud();
@@ -30,10 +31,9 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   const {
     scene: { getConfig },
     hooks: { useCamera },
-    util: { closeMap },
   } = useRef(primodium.api("STARMAP")).current;
   const ownedBy = components.OwnedBy.use(selectedAsteroid)?.value;
-  const mapOpen = components.MapOpen.use()?.value ?? false;
+  const mapOpen = components.SelectedMode.use()?.value !== Mode.Asteroid;
   const position = components.Position.use(selectedAsteroid);
   const imageUri = getAsteroidImage(primodium, selectedAsteroid);
 
@@ -93,7 +93,9 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             onClick={async () => {
               components.Send.reset();
               components.ActiveRock.set({ value: selectedAsteroid });
-              await closeMap();
+              ownedBy === playerEntity
+                ? components.SelectedMode.set({ value: Mode.Asteroid })
+                : components.SelectedMode.set({ value: Mode.Spectate });
             }}
           >
             {!ownedByPlayer && <IconLabel imageUri="/img/icons/spectateicon.png" className={``} text="VIEW" />}

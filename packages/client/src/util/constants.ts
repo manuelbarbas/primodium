@@ -120,6 +120,13 @@ export const key = {
   UnitKey: toHex32("Unit"),
 };
 
+export const Mode = {
+  Asteroid: toHex32("mode:Building") as Entity,
+  Starmap: toHex32("mode:Starmap") as Entity,
+  CommandCenter: toHex32("mode:Manager") as Entity,
+  Spectate: toHex32("mode:Spectate") as Entity,
+};
+
 export const EntityType = {
   // Ores
   Iron: toHex32("Iron") as Entity,

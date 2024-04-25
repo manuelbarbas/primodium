@@ -7,7 +7,7 @@ import { setupKeybinds } from "./setup/setupKeybinds";
 import { setupMouseInputs } from "./setup/setupMouseInputs";
 
 export const initAsteroidScene = async (game: Game) => {
-  const scene = await game.sceneManager.addScene(asteroidSceneConfig, true);
+  const scene = await game.sceneManager.createScene(asteroidSceneConfig, true);
   const audio = createAudioApi(scene);
   audio.initializeAudioVolume();
 

@@ -6,6 +6,7 @@ import { starmapSceneConfig } from "src/game/lib/config/starmapScene";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getCanAttack, getCanSend } from "src/util/unit";
+import { Mode } from "@/util/constants";
 
 export const HoverSendTarget: React.FC<{ hoverEntity: Entity; sendUnit: Entity }> = ({ hoverEntity, sendUnit }) => {
   const canSend = getCanSend(sendUnit, hoverEntity);
@@ -57,7 +58,7 @@ export const HoverAttackTarget: React.FC<{ hoverEntity: Entity; attackOrigin: En
 };
 
 export const HoverTarget = () => {
-  const mapOpen = components.MapOpen.use()?.value ?? false;
+  const mapOpen = components.SelectedMode.use()?.value !== Mode.Asteroid;
   const hoverEntity = components.HoverEntity.use()?.value;
   const sendOrigin = components.Send.use()?.originFleet;
   const attackOrigin = components.Attack.use()?.originFleet;
