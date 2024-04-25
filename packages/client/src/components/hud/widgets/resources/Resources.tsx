@@ -4,10 +4,11 @@ import { AllUtilityLabels } from "@/components/hud/widgets/resources/AllUtilityL
 import { Card, GlassCard } from "@/components/core/Card";
 import { Tabs } from "@/components/core/Tabs";
 import { IconLabel } from "@/components/core/IconLabel";
+import { Mode } from "@/util/constants";
 
 export const Resources = () => {
   const { components } = useMud();
-  const mapOpen = components.MapOpen.use()?.value;
+  const mapOpen = components.SelectedMode.use()?.value !== Mode.Asteroid;
 
   if (mapOpen) return;
 
@@ -17,7 +18,7 @@ export const Resources = () => {
         index={0}
         togglable
         size={"sm"}
-        className="!border-r-0"
+        className="!border-r-0 animate-in fade-in zoom-in"
         style={{
           writingMode: "vertical-lr",
         }}

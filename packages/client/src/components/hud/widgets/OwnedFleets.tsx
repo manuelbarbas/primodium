@@ -4,10 +4,9 @@ import { EFleetStance } from "contracts/config/enums";
 import { useMemo } from "react";
 import { FaFire } from "react-icons/fa";
 import { Button } from "@/components/core/Button";
-import { SecondaryCard } from "@/components/core/Card";
+import { Card, SecondaryCard } from "@/components/core/Card";
 import { Loader } from "@/components/core/Loader";
 import { Tooltip } from "@/components/core/Tooltip";
-import { Widget } from "@/components/core/Widget";
 import { useMud } from "@/hooks";
 import { useInCooldownEnd } from "@/hooks/useCooldownEnd";
 import { useFleetStats } from "@/hooks/useFleetCount";
@@ -15,7 +14,7 @@ import { usePlayerOwner } from "@/hooks/usePlayerOwner";
 import { usePrimodium } from "@/hooks/usePrimodium";
 import { useSyncStatus } from "@/hooks/useSyncStatus";
 import { components } from "@/network/components";
-import { EntityType } from "@/util/constants";
+import { EntityType, Mode } from "@/util/constants";
 import { entityToFleetName, entityToRockName } from "@/util/name";
 import { formatNumber, formatResourceCount, formatTime, formatTimeShort } from "@/util/number";
 
@@ -58,7 +57,7 @@ export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ 
   return (
     <Button
       className={`row-span-1 flex flex-col p-2 gap-1 items-center !h-52 text-xs bg-base-100 flex-nowrap border-secondary ${
-        selected ? "drop-shadow-hard ring-2 ring-warning" : ""
+        selected ? "ring-2 ring-warning" : ""
       }`}
       onClick={async () => {
         onClick && onClick();
@@ -76,7 +75,7 @@ export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ 
         {!!movement && <span className="text-accent">{entityToRockName(movement.destination as Entity)}</span>}
       </p>
       {inCooldown && (
-        <Tooltip text="cooldown" direction="left">
+        <Tooltip tooltipContent="cooldown" direction="left">
           <div className="absolute right-0 top-0 flex bg-error font-bold border border-error/50 gap-1 text-xs p-1 h-4 items-center">
             <FaFire />
             {formatTimeShort(duration)}
@@ -143,7 +142,7 @@ const _OwnedFleets: React.FC = () => {
   });
 
   return (
-    <div className="p-2 max-h-96 overflow-y-auto scrollbar w-96">
+    <Card noDecor className="p-2 max-h-96 overflow-y-auto scrollbar w-96">
       {fleets.length === 0 && (
         <SecondaryCard className="w-full h-full flex text-xs items-center justify-center font-bold">
           <p className="opacity-50 uppercase">you control no fleets</p>
@@ -156,16 +155,9 @@ const _OwnedFleets: React.FC = () => {
               key={entity}
               fleet={entity}
               onClick={async () => {
-                const mapOpen = components.MapOpen.get(undefined, {
-                  value: false,
-                }).value;
+                const { transitionToScene } = primodium.api().scene;
 
-                if (!mapOpen) {
-                  const { transitionToScene } = primodium.api().scene;
-
-                  await transitionToScene("ASTEROID", "STARMAP");
-                  components.MapOpen.set({ value: true });
-                }
+                await transitionToScene("ASTEROID", "STARMAP");
 
                 const { pan, zoomTo } = primodium.api("STARMAP").camera;
                 const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
@@ -190,30 +182,14 @@ const _OwnedFleets: React.FC = () => {
           );
         })}
       </div>
-    </div>
+    </Card>
   );
 };
 
 export const OwnedFleets = () => {
-  const { components } = useMud();
-  const mapOpen = components.MapOpen.use()?.value;
+  const mapOpen = components.SelectedMode.use()?.value === Mode.Starmap;
 
-  return (
-    <Widget
-      id="owned_fleets"
-      title="Owned Fleets"
-      icon="img/icons/outgoingicon.png"
-      defaultLocked
-      defaultVisible
-      lockable
-      draggable
-      persist
-      hotkey={"Fleets"}
-      scene={"STARMAP"}
-      active={!!mapOpen}
-      defaultCoord={{ x: 0, y: 0 }}
-    >
-      <_OwnedFleets />
-    </Widget>
-  );
+  if (!mapOpen) return null;
+
+  return <_OwnedFleets />;
 };
