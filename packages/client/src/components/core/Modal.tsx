@@ -120,7 +120,7 @@ Modal.Content = function ModalContent({ children, className }) {
       onClick={handleClickOutside}
     >
       <div className={`max-w-screen max-h-screen space-y-2 ${className} p-5 pt-12`} ref={modalRef}>
-        <Card className="w-full h-full shadow-2xl pointer-events-auto">
+        <Card className="w-full h-full shadow-2xl pointer-events-auto" noMotion>
           <div className="absolute top-0 -translate-y-full w-full flex justify-between items-center p-2">
             <p className="font-bold uppercase pr-2 text-accent">{title}</p>
             <Button
