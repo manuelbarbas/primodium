@@ -13,10 +13,7 @@ export const GeneralSettings = () => {
     state.hideHotkeys,
     state.setHideHotkeys,
   ]);
-  const [allowHackerModal, toggleAllowHackerModal] = usePersistentStore((state) => [
-    state.allowHackerModal,
-    state.toggleAllowHackerModal,
-  ]);
+
   const [fontStyle, setFontStyle] = usePersistentStore((state) => [state.fontStyle, state.setFontStyle]);
 
   return (
@@ -34,12 +31,6 @@ export const GeneralSettings = () => {
                 setUiScale(e / 100);
               }}
             />
-          </div>
-          <div className="">
-            <div className="text-xs opacity-50 font-bold pb-1">
-              PRESS <p className="kbd">~</p> TO OPEN HACKER PANE
-            </div>
-            <Toggle onToggle={toggleAllowHackerModal} defaultChecked={allowHackerModal} />
           </div>
           <div className="">
             <div className="text-xs opacity-50 font-bold pb-1">HIDE HOTKEYS</div>
