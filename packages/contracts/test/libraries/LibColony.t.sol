@@ -86,6 +86,31 @@ contract LibColonyTest is PrimodiumTest {
     assertEq(data.quantity, 1);
   }
 
+  function testTrainMultipleColonyShipsFail() public {
+    bytes32 shipyardEntity = buildBuilding(creator, EBuilding.Shipyard);
+
+    vm.startPrank(creator);
+
+    LibColony.increaseMaxColonySlots(playerEntity);
+    LibColony.increaseMaxColonySlots(playerEntity);
+
+    P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(ColonyShipPrototypeId, 0);
+    provideResources(Position.getParentEntity(shipyardEntity), requiredResources);
+
+    vm.startPrank(creator);
+    world.Primodium__trainUnits(shipyardEntity, EUnit.ColonyShip, 1);
+
+    provideResources(Position.getParentEntity(shipyardEntity), requiredResources);
+
+    Value_UnitProductionQueueData memory data = UnitProductionQueue.peek(shipyardEntity);
+    assertEq(uint256(data.unitEntity), uint256(ColonyShipPrototypeId));
+    assertEq(data.quantity, 1);
+
+    vm.startPrank(creator);
+    vm.expectRevert("[TrainUnitsSystem] Cannot train more than one colony ship at a time");
+    world.Primodium__trainUnits(shipyardEntity, EUnit.ColonyShip, 1);
+  }
+
   function testGetColonyShipsPlusAsteroids() public {
     vm.startPrank(creator);
     assertEq(MaxColonySlots.get(playerEntity), 1);
