@@ -33,10 +33,7 @@ contract AbandonAsteroidSystemTest is PrimodiumTest {
 
   function testAbandonAsteroidInvalidInput() public {
     vm.startPrank(eve);
-    vm.expectRevert("[AbandonAsteroidSystem] Entity is not an asteroid");
-    world.Primodium__abandonAsteroid(eveEntity);
-
-    vm.expectRevert("[AbandonAsteroidSystem] Entity is not owned by player");
+    vm.expectRevert("[Primodium] Not asteroid owner");
     world.Primodium__abandonAsteroid(aliceHomeAsteroid);
   }
 

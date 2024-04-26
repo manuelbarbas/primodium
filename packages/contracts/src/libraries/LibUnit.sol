@@ -18,7 +18,11 @@ library LibUnit {
    * @notice Checks if the unit exists and if the building can produce the specified unit.
    */
   function checkTrainUnitsRequirements(bytes32 buildingEntity, bytes32 unitPrototype) internal view {
-    require(IsActive.get(buildingEntity), "[TrainUnitsSystem] Can not train units using an in active building");
+    require(IsActive.get(buildingEntity), "[TrainUnitsSystem] Can not train units using an inactive building");
+    require(
+      unitPrototype != ColonyShipPrototypeId || UnitProductionQueue.size(buildingEntity) == 0,
+      "[TrainUnitsSystem] Cannot train more than one colony ship at a time"
+    );
 
     // Determine the prototype of the unit based on its unit key.
     bytes32 buildingType = BuildingType.get(buildingEntity);
@@ -48,39 +52,39 @@ library LibUnit {
     // get all player buildings that can produce units
     bytes32[] memory buildings = UnitFactorySet.getAll(asteroidEntity);
     for (uint256 i = 0; i < buildings.length; i++) {
-      bytes32 building = buildings[i];
-      claimBuildingUnits(building);
+      bytes32 buildingEntity = buildings[i];
+      claimBuildingUnits(buildingEntity);
     }
   }
 
   /// @notice Claim units for a single building
-  /// @param building Entity ID of the building
-  function claimBuildingUnits(bytes32 building) internal {
-    uint256 startTime = LastClaimedAt.get(building) - ClaimOffset.get(building);
-    LastClaimedAt.set(building, block.timestamp);
-    bytes32 asteroidEntity = OwnedBy.get(building);
+  /// @param buildingEntity Entity ID of the building
+  function claimBuildingUnits(bytes32 buildingEntity) internal {
+    uint256 startTime = LastClaimedAt.get(buildingEntity) - ClaimOffset.get(buildingEntity);
+    LastClaimedAt.set(buildingEntity, block.timestamp);
+    bytes32 asteroidEntity = OwnedBy.get(buildingEntity);
     require(Asteroid.getIsAsteroid(asteroidEntity), "[ClaimBuildingUnits]: Asteroid does not exist");
     bytes32 playerEntity = OwnedBy.get(asteroidEntity);
-    bool stillClaiming = !UnitProductionQueue.isEmpty(building);
+    bool stillClaiming = !UnitProductionQueue.isEmpty(buildingEntity);
     while (stillClaiming) {
-      UnitProductionQueueData memory item = UnitProductionQueue.peek(building);
-      uint256 trainingTime = getUnitBuildTime(building, item.unitEntity);
+      UnitProductionQueueData memory item = UnitProductionQueue.peek(buildingEntity);
+      uint256 trainingTime = getUnitBuildTime(buildingEntity, item.unitEntity);
       uint256 trainedUnits = item.quantity;
       if (trainingTime > 0) trainedUnits = LibMath.min(item.quantity, ((block.timestamp - startTime) / (trainingTime)));
 
       if (trainedUnits == 0) {
-        ClaimOffset.set(building, (block.timestamp - startTime) % trainingTime);
+        ClaimOffset.set(buildingEntity, (block.timestamp - startTime) % trainingTime);
         return;
       }
       if (trainedUnits == item.quantity) {
-        UnitProductionQueue.dequeue(building);
-        stillClaiming = !UnitProductionQueue.isEmpty(building);
+        UnitProductionQueue.dequeue(buildingEntity);
+        stillClaiming = !UnitProductionQueue.isEmpty(buildingEntity);
         startTime += trainingTime * trainedUnits;
-        if (!stillClaiming) ClaimOffset.set(building, 0);
+        if (!stillClaiming) ClaimOffset.set(buildingEntity, 0);
       } else {
         item.quantity -= trainedUnits;
-        UnitProductionQueue.updateFront(building, item);
-        ClaimOffset.set(building, (block.timestamp - startTime) % trainingTime);
+        UnitProductionQueue.updateFront(buildingEntity, item);
+        ClaimOffset.set(buildingEntity, (block.timestamp - startTime) % trainingTime);
         stillClaiming = false;
       }
       ProducedUnit.set(playerEntity, item.unitEntity, ProducedUnit.get(playerEntity, item.unitEntity) + trainedUnits);
@@ -100,14 +104,14 @@ library LibUnit {
   }
 
   /// @notice Get the build time for a unit
-  /// @param building Entity ID of the building
+  /// @param buildingEntity Entity ID of the building
   /// @param unitPrototype Unit prototype to check
   /// @return Time in seconds
-  function getUnitBuildTime(bytes32 building, bytes32 unitPrototype) internal view returns (uint256) {
-    uint256 buildingLevel = Level.get(building);
-    bytes32 buildingType = BuildingType.get(building);
+  function getUnitBuildTime(bytes32 buildingEntity, bytes32 unitPrototype) internal view returns (uint256) {
+    uint256 buildingLevel = Level.get(buildingEntity);
+    bytes32 buildingType = BuildingType.get(buildingEntity);
     uint256 multiplier = P_UnitProdMultiplier.get(buildingType, buildingLevel);
-    uint256 unitLevel = UnitLevel.get(Position.getParentEntity(building), unitPrototype);
+    uint256 unitLevel = UnitLevel.get(Position.getParentEntity(buildingEntity), unitPrototype);
     uint256 rawTrainingTime = P_Unit.getTrainingTime(unitPrototype, unitLevel);
     require(multiplier > 0, "Building has no unit production multiplier");
     P_GameConfigData memory config = P_GameConfig.get();

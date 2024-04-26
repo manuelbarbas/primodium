@@ -44,8 +44,6 @@ contract LibColonyTest is PrimodiumTest {
   }
 
   function buildShipyard(bytes32 asteroidEntity) public returns (bytes32) {
-    bytes32 player = OwnedBy.get(asteroidEntity);
-
     Level.set(asteroidEntity, 3);
 
     bytes32 shipyardEntity = world.Primodium__build(
@@ -161,6 +159,7 @@ contract LibColonyTest is PrimodiumTest {
     uint256[] memory undersizedPaymentAmounts = new uint256[](costData.resources.length - 1);
     uint256[] memory oversizedPaymentAmounts = new uint256[](costData.resources.length + 1);
 
+    vm.startPrank(creator);
     // Pass the various incorrect payment data
     vm.expectRevert("[SpendResources] Payment data does not match cost data");
     world.Primodium__payForMaxColonySlots(creatorHomeAsteroidShipyard, emptyPaymentAmounts);
@@ -172,11 +171,11 @@ contract LibColonyTest is PrimodiumTest {
     world.Primodium__payForMaxColonySlots(creatorHomeAsteroidShipyard, oversizedPaymentAmounts);
 
     // Pass a player entity instead of a shipyard entity
-    vm.expectRevert("[Colony] Building is not a Shipyard");
+    vm.expectRevert("[Primodium] Not building owner");
     world.Primodium__payForMaxColonySlots(playerEntity, costData.amounts);
 
     // Pass an asteroid entity instead of a shipyard entity
-    vm.expectRevert("[Colony] Building is not a Shipyard");
+    vm.expectRevert("[Primodium] Not building owner");
     world.Primodium__payForMaxColonySlots(creatorHomeAsteroid, costData.amounts);
   }
 

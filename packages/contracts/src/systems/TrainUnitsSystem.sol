@@ -16,7 +16,7 @@ contract TrainUnitsSystem is PrimodiumSystem {
   /// @param buildingEntity Entity identifier of the building
   /// @param unit Unit type to be trained
   /// @param count Quantity of units to be trained
-  function trainUnits(bytes32 buildingEntity, EUnit unit, uint256 count) public {
+  function trainUnits(bytes32 buildingEntity, EUnit unit, uint256 count) public _onlyBuildingOwner(buildingEntity) {
     // Ensure the unit is valid (within the defined range of unit types).
     require(unit > EUnit.NULL && unit < EUnit.LENGTH, "[TrainUnitsSystem] Unit does not exist");
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
@@ -27,7 +27,11 @@ contract TrainUnitsSystem is PrimodiumSystem {
   /// @param buildingEntity Entity identifier of the building
   /// @param unitPrototype Unit prototype to be trained
   /// @param count Quantity of units to be trained
-  function trainUnits(bytes32 buildingEntity, bytes32 unitPrototype, uint256 count) public {
+  function trainUnits(
+    bytes32 buildingEntity,
+    bytes32 unitPrototype,
+    uint256 count
+  ) public _onlyBuildingOwner(buildingEntity) {
     // Ensure the unit is valid (within the defined range of unit types).
     bool isValid = false;
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();

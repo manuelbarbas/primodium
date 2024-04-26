@@ -25,7 +25,13 @@ contract ColonySystem is PrimodiumSystem {
   function payForMaxColonySlots(
     bytes32 shipyardEntity,
     uint256[] calldata paymentAmounts
-  ) public _claimResources(OwnedBy.get(shipyardEntity)) _claimUnits(OwnedBy.get(shipyardEntity)) returns (bool) {
+  )
+    public
+    _onlyBuildingOwner(shipyardEntity)
+    _claimResources(OwnedBy.get(shipyardEntity))
+    _claimUnits(OwnedBy.get(shipyardEntity))
+    returns (bool)
+  {
     require(BuildingType.get(shipyardEntity) == ShipyardPrototypeId, "[Colony] Building is not a Shipyard");
 
     bytes32 asteroidEntity = OwnedBy.get(shipyardEntity);

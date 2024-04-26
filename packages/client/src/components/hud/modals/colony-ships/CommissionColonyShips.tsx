@@ -4,10 +4,8 @@ import { TrainColonyShip } from "@/components/hud/modals/colony-ships/TrainColon
 import { UnlockSlot } from "@/components/hud/modals/colony-ships/UnlockSlot";
 import { useMud } from "@/hooks";
 import { useColonySlots } from "@/hooks/useColonySlots";
-import { usePrimodium } from "@/hooks/usePrimodium";
 import { components } from "@/network/components";
-import { getBuildingImage } from "@/util/building";
-import { ResourceImage } from "@/util/constants";
+import { EntityType, ResourceImage } from "@/util/constants";
 import { formatTime } from "@/util/number";
 import { Entity } from "@latticexyz/recs";
 import React from "react";
@@ -28,9 +26,6 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
   const asteroid = components.OwnedBy.use(buildingEntity)?.value as Entity;
   if (!asteroid) throw new Error("[ColonyShipData] No asteroid selected");
 
-  const primodium = usePrimodium();
-  const buildingImage = getBuildingImage(primodium, buildingEntity);
-
   const colonySlotsData = useColonySlots(playerEntity);
 
   const rawQueue = components.TrainingQueue.use(buildingEntity);
@@ -48,12 +43,9 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
 
   return (
     <Navigator.Screen title="Commission" className="gap-2">
-      <div className="flex gap-2">
-        <img src={buildingImage} className="h-10" />
-        <div className="flex items-center justify-center">Shipyard</div>
-      </div>
       <div className="flex h-[20rem] gap-2">
         <div className="h-full grid grid-rows-3 grid-cols-3 gap-1 aspect-square">
+          <BuiltTile unit={EntityType.ColonyShip} />
           {tiles.map((tile, i) => {
             if (tile.type === "training") return <TrainingTile training={tile} key={`tile-${i}`} />;
             if (tile.type === "train")
@@ -92,6 +84,19 @@ const BlankTile: React.FC = () => {
   return (
     <SecondaryCard noDecor className="w-full h-full flex text-xs justify-center items-center opacity-60">
       <FaLock />
+    </SecondaryCard>
+  );
+};
+
+const BuiltTile: React.FC<{ unit: Entity }> = ({ unit }) => {
+  return (
+    <SecondaryCard noDecor className="w-full h-full justify-center items-center flex flex-col gap-1">
+      <div className="flex gap-2 items-center">
+        <img src={ResourceImage.get(unit) ?? ""} className="h-6" />
+      </div>
+      <div className="flex flex-col gap-1 items-center">
+        <div className="text-xs text-success">Idling on Asteroid A</div>
+      </div>
     </SecondaryCard>
   );
 };
