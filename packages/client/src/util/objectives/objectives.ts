@@ -80,7 +80,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.Garage,
       requiredObjectives: [EObjectives.ExpandBase],
       description:
-        "Garages provide housing for units. To build, Select the garage from the building menu. Place it on any empty tile.",
+        "Garages provide housing for units. View your asteroid's housing in the Resources pane. To build, Select the garage from the Storage tab of the building menu. Place it on any empty tile.",
     },
   ],
   [
@@ -91,7 +91,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.Workshop,
       requiredObjectives: [EObjectives.BuildGarage],
       description:
-        "Workshops train marines, which are basic units. To build, select the workshop from the building menu and place it on any empty tile.",
+        "Workshops train marines, which are basic units. To build, select the workshop from the Military tab of the building menu and place it on any empty tile.",
     },
   ],
   [
@@ -228,7 +228,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       asteroidType: "motherlode",
       requiredObjectives: [EObjectives.CaptureAsteroid],
       description:
-        "Capturing motherlode asteroids lets you mine elite resources. Capture a motherlode asteroid near your home asteroid (hint: elite resources are Kimberlite, Iridium, Titanium, and Platinum).",
+        "Capturing motherlode asteroids lets you mine rare resources. To earn, capture a motherlode asteroid near your home asteroid.",
     },
   ],
 

@@ -1,3 +1,4 @@
+import { getFullResourceCount } from "@/util/resource";
 import { Entity } from "@latticexyz/recs";
 import { EObjectives } from "contracts/config/enums";
 import { components } from "src/network/components";
@@ -9,6 +10,8 @@ import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimab
 import { Hex } from "viem";
 
 export const attack = async (mud: MUD, entity: Entity, target: Entity) => {
+  const targetIsAsteroid = components.Asteroid.has(target);
+  const initialDecryption = targetIsAsteroid ? getFullResourceCount(EntityType.Encryption, target) : 0n;
   await execute(
     {
       mud,
@@ -34,7 +37,9 @@ export const attack = async (mud: MUD, entity: Entity, target: Entity) => {
 
       const isDecryptionAttack = attackerIsFleet && attackerHasColonyShip;
       if (isDecryptionAttack) {
-        makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.DecryptAttack);
+        const finalDecryption = getFullResourceCount(EntityType.Encryption, target);
+        if (finalDecryption < initialDecryption)
+          makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.DecryptAttack);
       }
       const objective = targetIsFleet ? EObjectives.BattleFleet : EObjectives.BattleAsteroid;
 
