@@ -11,7 +11,7 @@ import { Hex } from "viem";
 
 export const attack = async (mud: MUD, entity: Entity, target: Entity) => {
   const targetIsAsteroid = components.Asteroid.has(target);
-  const initialDecryption = targetIsAsteroid ? getFullResourceCount(EntityType.Encryption, target) : 0n;
+  const initialDecryption = targetIsAsteroid ? getFullResourceCount(EntityType.Encryption, target).resourceCount : 0n;
   await execute(
     {
       mud,
@@ -37,7 +37,7 @@ export const attack = async (mud: MUD, entity: Entity, target: Entity) => {
 
       const isDecryptionAttack = attackerIsFleet && attackerHasColonyShip;
       if (isDecryptionAttack) {
-        const finalDecryption = getFullResourceCount(EntityType.Encryption, target);
+        const finalDecryption = getFullResourceCount(EntityType.Encryption, target).resourceCount;
         if (finalDecryption < initialDecryption)
           makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.DecryptAttack);
       }
