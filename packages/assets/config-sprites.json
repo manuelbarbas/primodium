@@ -1,5 +1,5 @@
 {
-  "savePath": "../client/public/assets/sprites/",
+  "savePath": "./atlas/sprites",
   "folders": ["sprites"],
   "images": [],
   "packOptions": {
@@ -16,7 +16,7 @@
     "prependFolderName": true,
     "packer" : "OptimalPacker",
     "appInfo": {
-      "version" : "v0.5",
+      "version" : "v0.11",
       "url": "https://www.primodium.com"
     }
   }

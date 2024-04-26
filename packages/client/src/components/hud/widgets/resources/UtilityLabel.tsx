@@ -3,9 +3,10 @@ import { Entity } from "@latticexyz/recs";
 import { Badge } from "src/components/core/Badge";
 import { IconLabel } from "src/components/core/IconLabel";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
-import { EntityType, ResourceImage } from "src/util/constants";
+import { EntityType } from "src/util/constants";
 import { formatResourceCount } from "src/util/number";
 import { CapacityBar } from "../../../core/CapacityBar";
+import { EntityToResourceImage } from "@/util/mappings";
 
 export const UtilityLabel = ({
   name,
@@ -21,12 +22,11 @@ export const UtilityLabel = ({
   const { resourceCount, resourceStorage } = useFullResourceCount(resourceId, asteroid);
 
   const used = resourceStorage - resourceCount;
-  const resourceIcon = ResourceImage.get(resourceId);
 
   return (
     <Badge className="w-full flex justify-start" tooltip={name}>
       <IconLabel
-        imageUri={resourceIcon ?? ""}
+        imageUri={EntityToResourceImage[resourceId]}
         text={formatResourceCount(resourceId, showCount ? resourceCount : used)}
         className="mr-1"
       />
@@ -46,15 +46,13 @@ export const VaultUtilityLabel = ({
 }) => {
   const { resourceStorage } = useFullResourceCount(resourceId, asteroid);
 
-  const resourceIcon = ResourceImage.get(resourceId);
-
   return (
     <Badge
       className="w-full flex justify-start text-[.7rem] bg-transparent border-none pointer-events-auto"
       tooltip={name}
       tooltipDirection="left"
     >
-      <IconLabel imageUri={resourceIcon ?? ""} text={formatResourceCount(resourceId, resourceStorage)} />
+      <IconLabel imageUri={EntityToResourceImage[resourceId]} text={formatResourceCount(resourceId, resourceStorage)} />
     </Badge>
   );
 };
@@ -72,7 +70,6 @@ export const BarLayoutUtilityLabel = ({
 
   const used = resourceStorage - resourceCount;
   const maxStorage = resourceStorage;
-  const resourceIcon = ResourceImage.get(resourceId);
 
   const renderCapacityBar = maxStorage >= 0n;
 
@@ -90,7 +87,7 @@ export const BarLayoutUtilityLabel = ({
   return (
     <>
       <div className="flex flex-row w-full">
-        <img src={resourceIcon} className="pixel-images h-5 w-5 mt-0.5" alt={`${name} icon`} />
+        <img src={EntityToResourceImage[resourceId]} className="pixel-images h-5 w-5 mt-0.5" alt={`${name} icon`} />
 
         <div className="w-full flex flex-col">
           {renderCapacityBar && <CapacityBar current={used} max={maxStorage} segments={10} resourceType={resourceId} />}

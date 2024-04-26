@@ -1,28 +1,27 @@
-import { SpriteKeys } from "../../constants/assets/sprites";
 import { AsteroidRelationship } from "../../constants/common";
 import {
-  EntityTypeSizeToSecondaryAsteroidSpriteKey,
-  LevelToPrimaryAsteroidSpriteKey,
+  EntityTypeSizeToSecondaryAsteroidSprites,
+  LevelToPrimaryAsteroidSprites,
   MaxLevelToAsteroidSpriteSize,
-  RelationshipSizeToSecondaryAsteroidOutlineSpriteKey,
-  RelationshipToPrimaryAsteroidOutlineSpriteKey,
+  RelationshipSizeToSecondaryAsteroidOutlineSprites,
+  RelationshipToPrimaryAsteroidOutlineSprites,
 } from "../../mappings";
 import { Entity } from "@latticexyz/recs";
 
 export const getPrimarySprite = (level: bigint) => {
-  return LevelToPrimaryAsteroidSpriteKey[Number(level)];
+  return LevelToPrimaryAsteroidSprites[Number(level)];
 };
 
 export const getSecondarySprite = (resourceType: Entity, maxLevel: bigint) => {
   const size = MaxLevelToAsteroidSpriteSize[Number(maxLevel)];
-  return EntityTypeSizeToSecondaryAsteroidSpriteKey[resourceType][size] ?? SpriteKeys.MotherlodeKimberliteSmall;
+  return EntityTypeSizeToSecondaryAsteroidSprites[resourceType][size] ?? SpriteKeys.MotherlodeKimberliteSmall;
 };
 
 export const getPrimaryOutlineSprite = (rockRelationship: AsteroidRelationship) => {
-  return RelationshipToPrimaryAsteroidOutlineSpriteKey[rockRelationship];
+  return RelationshipToPrimaryAsteroidOutlineSprites[rockRelationship];
 };
 
 export const getSecondaryOutlineSprite = (relationship: AsteroidRelationship, maxLevel: bigint) => {
   const size = MaxLevelToAsteroidSpriteSize[Number(maxLevel)];
-  return RelationshipSizeToSecondaryAsteroidOutlineSpriteKey[relationship][size] ?? SpriteKeys.MotherlodeNeutralSmall;
+  return RelationshipSizeToSecondaryAsteroidOutlineSprites[relationship][size] ?? SpriteKeys.MotherlodeNeutralSmall;
 };

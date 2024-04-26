@@ -7,6 +7,7 @@ import { components } from "src/network/components";
 import { Hex } from "viem";
 import { OwnedAsteroid } from "../OwnedAsteroids";
 import { OwnedFleet } from "../OwnedFleets";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 
 export const TransferSelect = ({
   activeEntity,
@@ -54,7 +55,7 @@ export const TransferSelect = ({
                   className="row-span-1 flex flex-col p-2 min-h-36 items-center text-xs bg-base-100 h-full flex-nowrap border-secondary"
                   onClick={() => setEntity("newFleet")}
                 >
-                  <img src="/img/icons/addicon.png" className="w-8" />
+                  <img src={InterfaceIcons.Add} className="w-8" />
                   New Fleet
                 </Button>
               ))}

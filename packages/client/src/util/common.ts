@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Hex, getAddress, isAddress, pad, size, trim } from "viem";
-import { BlockIdToKey } from "./constants";
+import { EntityType } from "./constants";
 
 export function hasCommonElement<T>(setA: Set<T>, setB: Set<T>) {
   for (const element of setA) {
@@ -68,6 +68,13 @@ export function toRomanNumeral(number: number) {
 }
 
 export const getEntityTypeName = (blockType: Entity | undefined) => {
+  const BlockIdToKey = Object.entries(EntityType).reduce<{
+    [key: Entity]: string;
+  }>((acc, [key, id]) => {
+    acc[id] = key;
+    return acc;
+  }, {});
+
   if (blockType === undefined || BlockIdToKey[blockType] == undefined) return "";
 
   return BlockIdToKey[blockType]

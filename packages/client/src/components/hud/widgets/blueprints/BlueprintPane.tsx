@@ -4,6 +4,7 @@ import { BuildingBlueprints } from "@/components/hud/widgets/blueprints/Building
 import { Button } from "@/components/core/Button";
 import { usePrimodium } from "@/hooks/usePrimodium";
 import { usePersistentStore } from "@/game/stores/PersistentStore";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 
 export const BlueprintPane = () => {
   const [visibleDiv, setVisibleDiv] = useState(0);
@@ -40,10 +41,10 @@ export const BlueprintPane = () => {
   const labels = ["Production", "Military", "Storage", "Infrastructure"];
 
   const imagePaths = [
-    "/img/icons/blueprints/production.png",
-    "/img/icons/blueprints/military.png",
-    "/img/icons/blueprints/storage.png",
-    "/img/icons/blueprints/infra.png",
+    InterfaceIcons.CategoryProduction,
+    InterfaceIcons.CategoryMilitary,
+    InterfaceIcons.CategoryStorage,
+    InterfaceIcons.CategoryInfra,
   ];
 
   return (

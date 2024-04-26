@@ -2,10 +2,10 @@ import { Entity } from "@latticexyz/recs";
 import { IconLabel } from "src/components/core/IconLabel";
 import { components } from "src/network/components";
 import { getEntityTypeName } from "src/util/common";
-import { ResourceImage } from "src/util/constants";
 import { formatResourceCount } from "src/util/number";
 import { Hex } from "viem";
 import { toRomanNumeral } from "src/util/common";
+import { EntityToUnitImage } from "@/util/mappings";
 
 export const HangarContent = () => {
   const activeRock = components.ActiveRock.use()?.value;
@@ -18,7 +18,7 @@ export const HangarContent = () => {
       )}
       {hangar?.units?.map((unit, i) => (
         <div key={`unit-${i}`} className="flex gap-2 items-center">
-          <IconLabel imageUri={ResourceImage.get(unit) ?? ""} className="text-xs" />
+          <IconLabel imageUri={EntityToUnitImage[unit]} className="text-xs" />
           <p>{formatResourceCount(unit, hangar.counts[i])}</p>
           <p className="opacity-50 text-xs">{getEntityTypeName(unit)}</p>
         </div>

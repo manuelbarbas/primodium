@@ -1,7 +1,6 @@
 import { Scene } from "engine/types";
 import { usePersistentStore } from "../stores/PersistentStore";
-import { AudioKeys, Audio } from "../lib/constants/assets/audio";
-import { Assets } from "../lib/constants/assets";
+import { Assets, AudioKeys, Audio } from "@primodiumxyz/assets";
 
 export type Channel = "music" | "sfx" | "ui";
 

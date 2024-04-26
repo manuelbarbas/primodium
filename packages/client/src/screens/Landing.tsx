@@ -1,7 +1,8 @@
+import { EntityToUnitImage } from "@/util/mappings";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import { FaRegCopyright } from "react-icons/fa";
-import { EntityType, ResourceImage } from "src/util/constants";
+import { EntityType } from "src/util/constants";
 
 const params = new URLSearchParams(window.location.search);
 export const Landing: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -48,7 +49,7 @@ export const Landing: React.FC<{ children: React.ReactNode }> = ({ children }) =
                 delay: 0.5,
               },
             }}
-            src={ResourceImage.get(EntityType.StingerDrone)}
+            src={EntityToUnitImage[EntityType.StingerDrone]}
             className="absolute top-0 right-0 p-0 w-32 pixel-images opacity-75"
           />
           <motion.img
@@ -63,7 +64,7 @@ export const Landing: React.FC<{ children: React.ReactNode }> = ({ children }) =
                 delay: 1,
               },
             }}
-            src={ResourceImage.get(EntityType.StingerDrone)}
+            src={EntityToUnitImage[EntityType.StingerDrone]}
             className="absolute -top-10 -right-24 p-0 w-14 pixel-images opacity-25"
           />
           <motion.img
@@ -78,7 +79,7 @@ export const Landing: React.FC<{ children: React.ReactNode }> = ({ children }) =
                 delay: 0,
               },
             }}
-            src={ResourceImage.get(EntityType.HammerDrone)}
+            src={EntityToUnitImage[EntityType.HammerDrone]}
             className="absolute top-10 -right-24 translate-x-full -translate-y-1/2 p-0 w-16 pixel-images opacity-50"
           />
           <motion.img
@@ -93,7 +94,7 @@ export const Landing: React.FC<{ children: React.ReactNode }> = ({ children }) =
                 delay: 0,
               },
             }}
-            src={ResourceImage.get(EntityType.ColonyShip)}
+            src={EntityToUnitImage[EntityType.ColonyShip]}
             className="absolute -top-0 left-10 p-0 w-44 pixel-images scale-x-[-1]"
           />
           <div className="w-full h-full absolute top-0 overflow-hidden"></div>
