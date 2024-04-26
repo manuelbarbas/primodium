@@ -1,4 +1,4 @@
-import Iron from "../sprites/resources/Iron_resource.png";
+import Iron from "../sprites/resources/iron_resource.png";
 import Copper from "../sprites/resources/copper_Resource.png?url";
 import Lithium from "../sprites/resources/lithium_Resource.png?url";
 import IronPlate from "../sprites/resources/ironplating_resource.png";

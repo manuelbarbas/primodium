@@ -3,7 +3,6 @@ import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { DECIMALS } from "contracts/config/constants";
 import { EBuilding, EObjectives, EResource, EScoreType, EUnit } from "contracts/config/enums";
-import { Key } from "engine/types";
 import { encodeEntity } from "src/util/encode";
 import { parseEther } from "viem";
 import { reverseRecord } from "./common";
@@ -300,21 +299,6 @@ export const EntityType = {
 };
 
 export const RESERVE_RESOURCE = EntityType.Kimberlite;
-
-export const KeyImages = new Map<Key, string>([
-  ["ONE", "/img/keys/one.png"],
-  ["TWO", "/img/keys/two.png"],
-  ["THREE", "/img/keys/three.png"],
-  ["FOUR", "/img/keys/four.png"],
-  ["FIVE", "/img/keys/five.png"],
-  ["SIX", "/img/keys/six.png"],
-  ["SEVEN", "/img/keys/seven.png"],
-  ["EIGHT", "/img/keys/eight.png"],
-  ["NINE", "/img/keys/nine.png"],
-  ["ZERO", "/img/keys/zero.png"],
-  ["Q", "/img/keys/q.png"],
-  ["E", "/img/keys/e.png"],
-]);
 
 export const ResourceStorages = new Set([
   EntityType.Iron,
