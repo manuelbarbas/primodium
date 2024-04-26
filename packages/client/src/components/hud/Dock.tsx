@@ -67,7 +67,7 @@ export const Dock = () => {
         {DEV && (
           <Modal title="cheatcodes">
             <Modal.Button className={btnClass} tooltip="cheatcodes" shape={"circle"} size={"lg"} variant={"ghost"}>
-              <IconLabel className={iconClass} imageUri={InterfaceIcons.Trade} />
+              <IconLabel className={iconClass} imageUri={InterfaceIcons.Debug} />
             </Modal.Button>
             <Modal.Content className="h-[700px] w-[500px] font-mono">
               <Cheatcodes />
