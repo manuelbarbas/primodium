@@ -9,8 +9,8 @@ import { BattleReports } from "./widgets/battle-reports/BattleReports";
 import { Cheatcodes } from "@/components/hud/widgets/dev/Cheatcodes";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 
-const btnClass = "group hover:bg-transparent";
-const iconClass = "text-3xl hover:animate-float";
+const btnClass = "group hover:bg-transparent hover:scale-[115%]";
+const iconClass = "text-3xl";
 
 export const Dock = () => {
   const DEV = import.meta.env.PRI_DEV === "true";
