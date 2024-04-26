@@ -4,6 +4,7 @@ import { Widget } from "src/components/core/Widget";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { Channel } from "./Channel";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 
 export const Chat = () => {
   const {
@@ -15,7 +16,7 @@ export const Chat = () => {
     <Widget
       id="chat"
       title="chat"
-      icon="/img/icons/chaticon.png"
+      icon={InterfaceIcons.Chat}
       defaultLocked
       lockable
       defaultVisible

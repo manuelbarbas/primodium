@@ -1,5 +1,6 @@
 import { GameConfig } from "engine/types";
-import { ASSET_PACK, KEY } from "../constants/common";
+import { KEY } from "@game/lib/constants/common";
+import { Pack } from "@primodiumxyz/assets";
 
 const gameConfig: GameConfig = {
   key: KEY,
@@ -16,7 +17,7 @@ const gameConfig: GameConfig = {
   roundPixels: true,
   transparent: true,
   pixelArt: true,
-  assetPackUrl: ASSET_PACK,
+  assetPack: Pack,
   dom: {
     createContainer: true,
     pointerEvents: "none",

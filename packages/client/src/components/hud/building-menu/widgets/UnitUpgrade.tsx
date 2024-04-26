@@ -1,3 +1,4 @@
+import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { memo } from "react";
 import { Badge } from "src/components/core/Badge";
@@ -11,14 +12,7 @@ import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { upgradeUnit } from "src/network/setup/contractCalls/upgradeUnit";
 import { getEntityTypeName } from "src/util/common";
-import {
-  BackgroundImage,
-  EntityType,
-  ResourceImage,
-  ResourceType,
-  TransactionQueueType,
-  UnitEnumLookup,
-} from "src/util/constants";
+import { EntityType, ResourceType, TransactionQueueType, UnitEnumLookup } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { formatNumber, formatResourceCount } from "src/util/number";
 import { getUnitStatsLevel } from "src/util/unit";
@@ -41,17 +35,15 @@ export const RecipeDisplay: React.FC<{
           <Badge className="font-bold">FREE</Badge>
         ) : (
           recipe.map((resource, i) => {
-            const resourceImage = ResourceImage.get(resource.id)!;
-            const resourceName = getEntityTypeName(resource.id);
             return (
               <Badge key={`recipe-chunk-${i}`} className="border border-secondary/75">
                 <ResourceIconTooltip
                   key={resource.id + resource.type}
                   spaceRock={asteroid}
-                  image={resourceImage}
+                  image={EntityToResourceImage[resource.id]}
                   resource={resource.id}
                   resourceType={resource.type}
-                  name={resourceName}
+                  name={getEntityTypeName(resource.id)}
                   amount={resource.amount * count}
                   validate
                   fontSize={"xs"}

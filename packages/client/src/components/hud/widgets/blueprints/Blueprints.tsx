@@ -5,6 +5,7 @@ import { IconLabel } from "@/components/core/IconLabel";
 import { Tabs } from "@/components/core/Tabs";
 import { Card, GlassCard } from "@/components/core/Card";
 import { Mode } from "@/util/constants";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 
 export const Blueprints = memo(() => {
   const { components } = useMud();
@@ -31,7 +32,7 @@ export const Blueprints = memo(() => {
           writingMode: "vertical-lr",
         }}
       >
-        <IconLabel text="Blueprints" imageUri="/img/icons/blueprinticon.png" className="gap-2 py-4" />
+        <IconLabel text="Blueprints" imageUri={InterfaceIcons.Blueprints} className="gap-2 py-4" />
       </Tabs.Button>
     </Tabs>
   );

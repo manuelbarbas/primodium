@@ -16,6 +16,7 @@ import { Range } from "@/components/core/Range";
 import { Tabs } from "@/components/core/Tabs";
 import { TextInput } from "@/components/core/TextInput";
 import { Toggle } from "@/components/core/Toggle";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EntityType } from "@/util/constants";
 import { useState } from "react";
 
@@ -172,7 +173,7 @@ export const _Sandbox = () => {
             <Badge variant={"accent"}>accent</Badge>
             <Badge variant={"secondary"}>secondary</Badge>
             <Badge variant={"primary"}>primary</Badge>
-            <Badge variant={"success"} tooltip={<IconLabel text="Debug Tooltip" imageUri="/img/icons/debugicon.png" />}>
+            <Badge variant={"success"} tooltip={<IconLabel text="Debug Tooltip" imageUri={InterfaceIcons.Chat} />}>
               primary
             </Badge>
           </div>

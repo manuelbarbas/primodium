@@ -13,6 +13,7 @@ import { getAsteroidImage } from "src/util/asteroid";
 import { EntityType, Mode } from "src/util/constants";
 import { formatResourceCount } from "src/util/number";
 import { Button } from "../../../core/Button";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 
 export const _ShardAsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ selectedAsteroid }) => {
   const mud = useMud();
@@ -56,7 +57,7 @@ export const _ShardAsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ s
       scene={"STARMAP"}
       coord={coord}
       id={`asteroid-target`}
-      offScreenIconUri="/img/icons/attackicon.png"
+      offScreenIconUri={InterfaceIcons.Crosshairs}
       depth={DepthLayers.Path - 5}
     >
       <div

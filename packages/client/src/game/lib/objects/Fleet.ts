@@ -1,10 +1,9 @@
 import { Coord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Scene } from "engine/types";
-import { Assets } from "../constants/assets";
-import { SpriteKeys } from "../constants/assets/sprites";
 import { OrbitRing } from "./Asteroid/OrbitRing";
 import { IPrimodiumGameObject } from "./interfaces";
 import { TransitLine } from "./TransitLine";
+import { Assets, Sprites } from "@primodiumxyz/assets";
 
 export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObject {
   private _scene: Scene;
@@ -19,7 +18,7 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
       pixelCoord.x,
       -pixelCoord.y + scene.tiled.tileHeight,
       Assets.SpriteAtlas,
-      SpriteKeys.LightningCraft
+      Sprites.LightningCraft
     );
     this.setOrigin(0.5, 0.5).setScale(0.3).setInteractive();
     this._scene = scene;

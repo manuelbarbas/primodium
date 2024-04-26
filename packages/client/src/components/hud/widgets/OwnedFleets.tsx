@@ -17,6 +17,7 @@ import { components } from "@/network/components";
 import { EntityType, Mode } from "@/util/constants";
 import { entityToFleetName, entityToRockName } from "@/util/name";
 import { formatNumber, formatResourceCount, formatTime, formatTimeShort } from "@/util/number";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -64,7 +65,7 @@ export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ 
       }}
     >
       {owner !== playerEntity && <div className="absolute top-0 right-0 px-1 bg-error text-[.6rem]">enemy</div>}
-      <img src="img/icons/outgoingicon.png" className=" w-12 h-12 p-2 bg-neutral border border-secondary" />
+      <img src={InterfaceIcons.Outgoing} className=" w-12 h-12 p-2 bg-neutral border border-secondary" />
       <div className="flex flex-col h-fit text-xs">
         <div className="flex gap-1 items-center justify-center"></div>
         <p className={`"font-bold -mt-3 ${playerEntity !== owner ? "bg-error" : "bg-secondary"} px-1`}>{description}</p>
