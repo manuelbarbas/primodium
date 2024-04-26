@@ -1,17 +1,17 @@
 //tilesets
-import plain from "./tilesets/images/plain.png?url";
-import patches from "./tilesets/images/patches.png?url";
-import lightPatches from "./tilesets/images/light-patches.png?url";
-import walls from "./tilesets/images/walls.png?url";
-import wallShadows from "./tilesets/images/wall_shadows.png?url";
-import craters from "./tilesets/images/craters.png?url";
-import decorations from "./tilesets/images/decorations.png?url";
-import fog from "./tilesets/images/fog.png?url";
-import darkFog from "./tilesets/images/dark-fog.png?url";
-import ores from "./tilesets/images/ores.png?url";
-import nonBuildable from "./tilesets/images/bounds-nonbuildable.png?url";
-import outerBorder from "./tilesets/images/bounds-outerborder.png?url";
-import innerBorder from "./tilesets/images/bounds-innerborder.png?url";
+import plain from "./tile/tilesets/plain.png?url";
+import patches from "./tile//tilesets/patches.png?url";
+import lightPatches from "./tile/tilesets/light-patches.png?url";
+import walls from "./tile/tilesets/walls.png?url";
+import wallShadows from "./tile/tilesets/wall_shadows.png?url";
+import craters from "./tile/tilesets/craters.png?url";
+import decorations from "./tile/tilesets/decorations.png?url";
+import fog from "./tile/tilesets/fog.png?url";
+import darkFog from "./tile/tilesets/dark-fog.png?url";
+import ores from "./tile/tilesets/ores.png?url";
+import nonBuildable from "./tile/tilesets/bounds-nonbuildable.png?url";
+import outerBorder from "./tile/tilesets/bounds-outerborder.png?url";
+import innerBorder from "./tile/tilesets/bounds-innerborder.png?url";
 
 //sprite atlas and texture
 import spriteAtlas from "./atlas/sprites/atlas.json?url";
@@ -27,10 +27,10 @@ import audioM4a from "./atlas/audio/atlas.m4a?url";
 import audioAc3 from "./atlas/audio/atlas.ac3?url";
 
 //tilemaps
-import asteroidMicro from "./maps/asteroid-micro.tmj?url";
-import asteroidSmall from "./maps/asteroid-small.tmj?url";
-import asteroidMedium from "./maps/asteroid-medium.tmj?url";
-import asteroidLarge from "./maps/asteroid-large.tmj?url";
+import asteroidMicro from "./tile/maps/asteroid-micro.tmj?url";
+import asteroidSmall from "./tile/maps/asteroid-small.tmj?url";
+import asteroidMedium from "./tile/maps/asteroid-medium.tmj?url";
+import asteroidLarge from "./tile/maps/asteroid-large.tmj?url";
 
 //fonts
 import teletactile from "./fonts/bitmap/teletactile/teletactile.png?url";

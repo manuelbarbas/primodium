@@ -1,4 +1,4 @@
-export enum AnimationKeys {
+export enum Animations {
   Mainbase1 = "mainbase/level1",
   Mainbase2 = "mainbase/level2",
   Mainbase3 = "mainbase/level3",
@@ -87,3 +87,5 @@ export enum AnimationKeys {
   //DECORATIONS
   Drone = "decorations/drone",
 }
+
+export type AnimationKeys = keyof typeof Animations;

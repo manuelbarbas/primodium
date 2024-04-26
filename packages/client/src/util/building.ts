@@ -19,7 +19,7 @@ import { outOfBounds } from "./outOfBounds";
 import { getRecipe } from "./recipe";
 import { getScale } from "./resource";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
-import { EntityTypetoBuildingSpriteKey } from "src/game/lib/mappings";
+import { EntityTypetoBuildingSprites } from "src/game/lib/mappings";
 
 type Dimensions = { width: number; height: number };
 export const blueprintCache = new Map<Entity, Dimensions>();
@@ -170,12 +170,12 @@ export const getBuildingImage = (primodium: Primodium, building: Entity) => {
   const level = comps.Level.get(building)?.value ?? 1n;
   const { getSpriteBase64 } = primodium.api().sprite;
 
-  if (EntityTypetoBuildingSpriteKey[buildingType]) {
+  if (EntityTypetoBuildingSprites[buildingType]) {
     const imageIndex = parseInt(level ? level.toString() : "1") - 1;
 
     return getSpriteBase64(
-      EntityTypetoBuildingSpriteKey[buildingType][
-        clampedIndex(imageIndex, EntityTypetoBuildingSpriteKey[buildingType].length)
+      EntityTypetoBuildingSprites[buildingType][
+        clampedIndex(imageIndex, EntityTypetoBuildingSprites[buildingType].length)
       ]
     );
   }
@@ -187,12 +187,12 @@ export const getBuildingImageFromType = (primodium: Primodium, buildingType: Ent
   const level = comps.Level.get(buildingType)?.value ?? 1n;
   const { getSpriteBase64 } = primodium.api().sprite;
 
-  if (EntityTypetoBuildingSpriteKey[buildingType]) {
+  if (EntityTypetoBuildingSprites[buildingType]) {
     const imageIndex = parseInt(level ? level.toString() : "1") - 1;
 
     return getSpriteBase64(
-      EntityTypetoBuildingSpriteKey[buildingType][
-        clampedIndex(imageIndex, EntityTypetoBuildingSpriteKey[buildingType].length)
+      EntityTypetoBuildingSprites[buildingType][
+        clampedIndex(imageIndex, EntityTypetoBuildingSprites[buildingType].length)
       ]
     );
   }

@@ -1,5 +1,4 @@
 import { Entity } from "@latticexyz/recs";
-import { Key } from "engine/types";
 import { EntityType } from "@/util/constants";
 import { InterfaceIcons, ResourceImages, UnitImages } from "@primodiumxyz/assets";
 
@@ -52,18 +51,3 @@ export const EntityToResourceImage = {
   [EntityType.Encryption]: ResourceImages.U_Encryption,
   [EntityType.HP]: InterfaceIcons.Debug,
 };
-
-export const KeyImages = new Map<Key, string>([
-  ["ONE", "/img/keys/one.png"],
-  ["TWO", "/img/keys/two.png"],
-  ["THREE", "/img/keys/three.png"],
-  ["FOUR", "/img/keys/four.png"],
-  ["FIVE", "/img/keys/five.png"],
-  ["SIX", "/img/keys/six.png"],
-  ["SEVEN", "/img/keys/seven.png"],
-  ["EIGHT", "/img/keys/eight.png"],
-  ["NINE", "/img/keys/nine.png"],
-  ["ZERO", "/img/keys/zero.png"],
-  ["Q", "/img/keys/q.png"],
-  ["E", "/img/keys/e.png"],
-]);

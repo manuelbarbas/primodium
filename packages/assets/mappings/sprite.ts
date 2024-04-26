@@ -1,4 +1,4 @@
-export enum SpriteKeys {
+export enum Sprites {
   //BUILDINGS
   Mainbase1 = "sprites/mainbase/level1/Main_Base_LVL1_1.png",
   Mainbase2 = "sprites/mainbase/level2/Main_Base_LVL2_1.png",
@@ -147,20 +147,22 @@ export enum SpriteKeys {
   Construction4x6 = "sprites/construction/4x6.png",
 
   // Resource Icons
-  GracePeriod = "sprites/icons/grace.png",
-  Iron = "sprites/icons/resources/iron_resource.png",
-  Copper = "sprites/icons/resources/copper_resource.png",
-  Lithium = "sprites/icons/resources/lithium_resource.png",
-  IronPlate = "sprites/icons/resources/ironplate.png",
-  PVCell = "sprites/icons/resources/photovoltaiccell_resource.png",
-  Alloy = "sprites/icons/resources/alloy_resource.png",
+  GracePeriod = "sprites/grace.png",
+  Iron = "sprites/resources/iron_resource.png",
+  Copper = "sprites/resources/copper_resource.png",
+  Lithium = "sprites/resources/lithium_resource.png",
+  IronPlate = "sprites/resources/ironplate.png",
+  PVCell = "sprites/resources/photovoltaiccell_resource.png",
+  Alloy = "sprites/resources/alloy_resource.png",
 
   // Unit Icons
-  StingerDrone = "sprites/icons/units/stingerdrone.png",
-  AegisDrone = "sprites/icons/units/aegisdrone.png",
-  AnvilDrone = "sprites/icons/units/anvildrone.png",
-  HammerDrone = "sprites/icons/units/hammerdrone.png",
-  TridentMarine = "sprites/icons/units/trident_marine.png",
-  MinutemanMarine = "sprites/icons/units/minutemen_marine.png",
-  LightningCraft = "sprites/icons/units/lightningcraft.png",
+  StingerDrone = "sprites/units/stingerdrone.png",
+  AegisDrone = "sprites/units/aegisdrone.png",
+  AnvilDrone = "sprites/units/anvildrone.png",
+  HammerDrone = "sprites/units/hammerdrone.png",
+  TridentMarine = "sprites/units/trident_marine.png",
+  MinutemanMarine = "sprites/units/minutemen_marine.png",
+  LightningCraft = "sprites/units/lightningcraft.png",
 }
+
+export type SpriteKeys = keyof typeof Sprites;

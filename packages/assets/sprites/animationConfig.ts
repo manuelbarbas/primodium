@@ -1,6 +1,4 @@
-import { Animation, Assets } from "@latticexyz/phaserx/src/types";
-
-export const animationConfig: Animation<Assets>[] = [
+export const AnimationConfig = [
   {
     key: "mainbase/level1",
     assetKey: "sprite-atlas",

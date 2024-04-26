@@ -1,4 +1,9 @@
-export { InterfaceIcons } from "./mappings/interfaceIcons";
-export { UnitImages } from "./mappings/unitImages";
-export { ResourceImages } from "./mappings/resourceImages";
+export * from "./mappings/index";
+export { AnimationConfig } from "./sprites/animationConfig";
 export { pack as Pack } from "./pack";
+
+export enum Assets {
+  SpriteAtlas = "sprite-atlas",
+  ResourceTileset = "resource",
+  AudioAtlas = "audio-atlas",
+}
