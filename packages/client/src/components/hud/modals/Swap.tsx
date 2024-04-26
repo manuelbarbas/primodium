@@ -1,4 +1,6 @@
 // SwapPane.tsx
+import { Dropdown } from "@/components/core/Dropdown";
+import { IconLabel } from "@/components/core/IconLabel";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -10,7 +12,7 @@ import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
 import { swap } from "src/network/setup/contractCalls/swap";
 import { getEntityTypeName } from "src/util/common";
-import { EntityType, RESERVE_RESOURCE, ResourceStorages } from "src/util/constants";
+import { EntityType, RESERVE_RESOURCE, ResourceImage, ResourceStorages } from "src/util/constants";
 import { formatResourceCount, parseResourceCount } from "src/util/number";
 import { getInAmount, getOutAmount } from "src/util/swap";
 
@@ -95,12 +97,12 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
   );
 
   const { disabled, message: swapButtonMsg } = useMemo(() => {
-    if (!inAmountRendered || !outAmountRendered) return { disabled: true, message: "Enter an amount to swap" };
+    if (!inAmountRendered || !outAmountRendered) return { disabled: true, message: "Enter amount" };
 
     if (fromResourceCount < parseResourceCount(fromResource, inAmountRendered))
-      return { disabled: true, message: "Not enough resources" };
+      return { disabled: true, message: `Not enough ${getEntityTypeName(fromResource)}` };
     if (toResourceCount + parseResourceCount(toResource, outAmountRendered) > toResourceStorage)
-      return { disabled: true, message: "Not enough space" };
+      return { disabled: true, message: `Not enough space for ${getEntityTypeName(toResource)}` };
     return { disabled: false, message: "swap" };
   }, [
     fromResource,
@@ -145,7 +147,6 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
         resource={toResource}
         onResourceSelect={(resource) => changeInAmount(fromResource, resource, inAmountRendered)}
         className="row-span-4"
-        showSpaceRemaining
       />
       <TransactionQueueMask queueItemId={singletonEntity}>
         <Button className="btn-primary btn-lg w-full" disabled={disabled} onClick={handleSubmit}>
@@ -163,7 +164,6 @@ interface ResourceSelectorProps {
   onAmountChange: (amount: string) => void;
   onResourceSelect: (resource: Entity) => void;
   resource: Entity;
-  showSpaceRemaining?: boolean;
 }
 
 const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
@@ -172,33 +172,27 @@ const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
 
   return (
     <div
-      className={`w-full h-20 bg-base-100 relative border border-secondary flex px-2 items-center ${props.className}`}
+      className={`w-full h-20 bg-base-100 relative border border-secondary grid grid-cols-10 px-2 items-center ${props.className}`}
     >
       <p className="absolute top-2 left-2 text-xs opacity-50">{props.placeholder ?? ""}</p>
       <input
-        className="bg-transparent text-lg w-full h-full focus:outline-none"
+        className="bg-transparent col-span-6 text-lg w-full h-full focus:outline-none"
         type="number"
         placeholder="0"
         value={props.amount}
         onChange={(e) => props.onAmountChange(e.target.value)}
       />
-      <div className="flex flex-col gap-1">
-        <select
-          id="resource-select"
-          value={props.resource}
-          className="bg-black/20 h-fit p-1 text-center"
-          onChange={(e) => props.onResourceSelect(e.target.value as Entity)}
-        >
+      <div className="col-span-4 flex flex-col justify-end items-end gap-1">
+        <Dropdown value={props.resource} onChange={(value) => props.onResourceSelect(value)}>
           {[...ResourceStorages].map((resource) => (
-            <option key={resource} value={resource}>
-              {getEntityTypeName(resource)}
-            </option>
+            <Dropdown.Item key={resource} value={resource}>
+              <IconLabel text={getEntityTypeName(resource)} imageUri={ResourceImage.get(resource) ?? ""} />
+            </Dropdown.Item>
           ))}
-        </select>
-        <p className="text-xs font-bold uppercase text-right opacity-70">
-          {props.showSpaceRemaining
-            ? `Space: ${formatResourceCount(props.resource, resourceStorage - resourceCount, { fractionDigits: 0 })}`
-            : `Balance: ${formatResourceCount(props.resource, resourceCount, { fractionDigits: 0 })}`}
+        </Dropdown>
+        <p className="text-xs font-bold uppercase opacity-60">
+          {formatResourceCount(props.resource, resourceCount, { fractionDigits: 0 })} /{" "}
+          {formatResourceCount(props.resource, resourceStorage, { fractionDigits: 0 })}
         </p>
       </div>
     </div>

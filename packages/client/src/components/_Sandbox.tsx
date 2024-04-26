@@ -1,25 +1,28 @@
-import { Button } from "@/components/core/Button";
-import { Card, SecondaryCard } from "@/components/core/Card";
-import { Range } from "@/components/core/Range";
-import { NumberInput } from "@/components/core/NumberInput";
-import { EntityType } from "@/util/constants";
 import { Accordion } from "@/components/core/Accordion";
 import { Badge } from "@/components/core/Badge";
+import { Button } from "@/components/core/Button";
 import { CapacityBar } from "@/components/core/CapacityBar";
+import { Card, SecondaryCard } from "@/components/core/Card";
+import { Dropdown } from "@/components/core/Dropdown";
 import { HUD } from "@/components/core/HUD";
+import { IconLabel } from "@/components/core/IconLabel";
 import { Join } from "@/components/core/Join";
+import { Loader } from "@/components/core/Loader";
 import { Modal } from "@/components/core/Modal";
+import { NumberInput } from "@/components/core/NumberInput";
 import { Progress } from "@/components/core/Progress";
+import { PushButton } from "@/components/core/PushButton";
+import { Range } from "@/components/core/Range";
 import { Tabs } from "@/components/core/Tabs";
 import { TextInput } from "@/components/core/TextInput";
 import { Toggle } from "@/components/core/Toggle";
-import { Loader } from "@/components/core/Loader";
-import { IconLabel } from "@/components/core/IconLabel";
-import { PushButton } from "@/components/core/PushButton";
-import { Dropdown } from "@/components/core/Dropdown";
 import { InterfaceIcons } from "@primodiumxyz/assets";
+import { EntityType } from "@/util/constants";
+import { useState } from "react";
 
 export const _Sandbox = () => {
+  const [dropdownValue, setDropdownValue] = useState(1);
+
   return (
     <HUD>
       <div className="absolute top-0 right-0 min-h-screen w-full heropattern-graphpaper-slate-800/50 bg-slate-900/45 p-10 grid grid-cols-2 gap-4 drop-shadow-hard pointer-events-auto">
@@ -203,10 +206,10 @@ export const _Sandbox = () => {
           <NumberInput count="0" />
           <TextInput placeholder="test" topRightLabel="Text input" />
 
-          <Dropdown variant={"bottomLeft"}>
-            <Dropdown.Item onSelect={() => console.log("hello")}>Test 1</Dropdown.Item>
-            <Dropdown.Item onSelect={() => console.log("hello")}>Test 2</Dropdown.Item>
-            <Dropdown.Item onSelect={() => console.log("hello")}>Test 3</Dropdown.Item>
+          <Dropdown variant={"bottomLeft"} value={dropdownValue} onChange={setDropdownValue}>
+            <Dropdown.Item value={1}>Test 1</Dropdown.Item>
+            <Dropdown.Item value={2}>Test 2</Dropdown.Item>
+            <Dropdown.Item value={3}>Test 3</Dropdown.Item>
           </Dropdown>
         </div>
       </div>
