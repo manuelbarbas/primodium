@@ -1,7 +1,16 @@
 import { Entity } from "@latticexyz/recs";
 import { EObjectives } from "contracts/config/enums";
 
-export type ObjectiveType = "Build" | "Upgrade" | "Train" | "Expand" | "Claimable" | "JoinAlliance" | "Asteroid";
+export type ObjectiveType =
+  | "Build"
+  | "BuildAny"
+  | "Upgrade"
+  | "Train"
+  | "Expand"
+  | "Claimable"
+  | "JoinAlliance"
+  | "Asteroid"
+  | "Resource";
 
 // Define a base type for common properties
 export type BaseObjective = {
@@ -14,6 +23,11 @@ export type BaseObjective = {
 export type BuildObjective = BaseObjective & {
   type: "Build";
   buildingType: Entity;
+};
+
+export type BuildAnyObjective = BaseObjective & {
+  type: "BuildAny";
+  buildingTypes: Entity[];
 };
 
 export type UpgradeObjective = BaseObjective & {
@@ -48,15 +62,23 @@ export type AsteroidObjective = BaseObjective & {
   type: "Asteroid";
 };
 
+export type ResourceObjective = BaseObjective & {
+  type: "Resource";
+  resources: Record<Entity, bigint>;
+  anyOrEvery: "any" | "every";
+};
+
 // Union of all Objective types
 export type Objective =
   | BuildObjective
+  | BuildAnyObjective
   | UpgradeObjective
   | TrainUnitObjective
   | ExpandObjective
   | ClaimableObjective
   | JoinAllianceObjective
-  | AsteroidObjective;
+  | AsteroidObjective
+  | ResourceObjective;
 
 export type ObjectiveReq = {
   tooltipText?: string;
@@ -73,7 +95,7 @@ export const objectiveCategories = [
   "Fleet",
   "Combat",
   "Motherlode",
-  "Victory (Primodium)",
+  "Victory (Shard)",
   "Victory (Wormhole)",
   "Unit Management",
   "Unit Storage",

@@ -35,6 +35,6 @@ export const claimShardAsteroid = async (mud: MUD, asteroidEntity: Entity) => {
     {
       id: "ClaimPrimodium" as Entity,
     },
-    () => makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.ExplodeShard)
+    () => makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.ExplodeVolatileShard)
   );
 };

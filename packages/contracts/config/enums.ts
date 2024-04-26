@@ -107,12 +107,12 @@ export enum EObjectives {
 
   // (A-A-A-B-A) Motherlode Extraction
   CaptureMotherlodeAsteroid,
-  ExtractMotherlodeResource,
+  BuildRareMine,
 
   // (A-A-A-B-B) Victory: Primodium Points
   EarnPrimodiumOnAsteroid,
-  EarnPrimodiumOnShard,
-  ExplodeShard,
+  CaptureVolatileShard,
+  ExplodeVolatileShard,
 
   // (A-A-A-B-C) Victory; Extraction Points
   CaptureWormholeAsteroid,

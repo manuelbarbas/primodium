@@ -233,15 +233,18 @@ export const Objectives = new Map<EObjectives, Objective>([
   ],
 
   [
-    EObjectives.ExtractMotherlodeResource,
+    EObjectives.BuildRareMine,
     {
       category: "Motherlode",
-      type: "Claim",
+      type: "BuildAny",
+      buildingTypes: [
+        EntityType.KimberliteMine,
+        EntityType.IridiumMine,
+        EntityType.PlatinumMine,
+        EntityType.TitaniumMine,
+      ],
       requiredObjectives: [EObjectives.CaptureMotherlodeAsteroid],
-      description:
-        "To extract an elite resource, capture a motherlode asteroid and build an elite mine on an ore tile.",
-      icon: "/img/resource/iridium_resource.png",
-      tooltip: "Extracted a motherlode",
+      description: "To extract a rare resource, capture a motherlode asteroid and build a rare mine on an ore tile.",
     },
   ],
 
@@ -250,7 +253,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.EarnPrimodiumOnAsteroid,
     {
-      category: "Victory (Primodium)",
+      category: "Victory (Shard)",
       type: "Claim",
       requiredObjectives: [EObjectives.CaptureAsteroid],
       description:
@@ -260,23 +263,23 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.EarnPrimodiumOnShard,
+    EObjectives.CaptureVolatileShard,
     {
-      category: "Victory (Primodium)",
+      category: "Victory (Shard)",
       type: "Asteroid",
       asteroidType: "shard",
       requiredObjectives: [EObjectives.CaptureAsteroid],
       description:
-        "Volatile Shards are rare space rocks that are made of Primodium. Over time, shards leach Primodium. Beware, they explode and annihilate anything nearby! To earn, capture a Shard.",
+        "Volatile Shards are rare space rocks that are made of Primodium. Over time, shards leach Primodium. To earn, capture a Shard while it is leaching Primodium.",
     },
   ],
   [
-    EObjectives.ExplodeShard,
+    EObjectives.ExplodeVolatileShard,
     {
-      category: "Victory (Primodium)",
+      category: "Victory (Shard)",
       type: "Asteroid",
       asteroidType: "shard",
-      requiredObjectives: [EObjectives.EarnPrimodiumOnShard],
+      requiredObjectives: [EObjectives.CaptureVolatileShard],
       description:
         "To explode a shard, select an owned shard when an explosion is imminent and select Explode. Be warned, the explosion kills all fleets in the area!",
     },
@@ -386,7 +389,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Unit Production",
       type: "Train",
       requiredObjectives: [EObjectives.TrainMinutemanMarine],
-      unitType: EntityType.MinutemanMarine,
+      unitType: EntityType.TridentMarine,
       unitCount: 16n,
       requiredMainBase: 2n,
       description:

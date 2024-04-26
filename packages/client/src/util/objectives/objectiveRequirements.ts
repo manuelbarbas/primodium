@@ -1,3 +1,4 @@
+import { getHasAnyRequiredBuilding } from "@/util/objectives/getHasAnyRequiredBuilding";
 import { Entity } from "@latticexyz/recs";
 import { getHasAsteroid } from "./getHasAsteroid";
 import { getHasClaimableObjective } from "./getHasClaimableObjective";
@@ -35,6 +36,7 @@ export function getAllObjectiveRequirements(playerEntity: Entity, asteroidEntity
   if (!objective) return [];
   const reqs: ObjectiveReq[] = getRewardUtilitiesRequirement(objectiveEntity, asteroidEntity);
   if (objective.type === "Build") reqs.push(getHasRequiredBuilding(asteroidEntity, objective));
+  if (objective.type === "BuildAny") reqs.push(getHasAnyRequiredBuilding(asteroidEntity, objective));
   if (objective.type === "Upgrade") reqs.push(getHasRequiredBuildingUpgrade(asteroidEntity, objective));
   if (objective.type === "Train") reqs.push(getHasRequiredUnit(asteroidEntity, objective));
   if (objective.type === "Expand") reqs.push(getHasExpansion(asteroidEntity, objective));

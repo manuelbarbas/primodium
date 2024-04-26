@@ -11,7 +11,7 @@ export const objectiveCategoryColors: Record<ObjectiveCategory, string> = {
   Defense: "bg-green-800",
 
   // winning
-  "Victory (Primodium)": "bg-secondary",
+  "Victory (Shard)": "bg-secondary",
   "Victory (Wormhole)": "bg-secondary",
 
   // units

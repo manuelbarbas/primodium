@@ -6,10 +6,10 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { SecondaryCard } from "src/components/core/Card";
 import { components } from "src/network/components";
 
+import { canShowObjective } from "@/util/objectives/objectiveRequirements";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { ObjectiveEntityLookup } from "src/util/constants";
-import { canShowObjective } from "src/util/objectives/objectiveRequirements";
 import { Hex } from "viem";
 import { Objective } from "./Objective";
 
