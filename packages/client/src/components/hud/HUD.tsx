@@ -13,9 +13,8 @@ import { HomeMarker } from "@/components/hud/markers/starmap/HomeMarker";
 import { OwnedAsteroids } from "@/components/hud/widgets/OwnedAsteroids";
 import { OwnedFleets } from "@/components/hud/widgets/OwnedFleets";
 import { UnitDeaths } from "@/components/hud/widgets/UnitDeaths";
-import { Blueprints } from "@/components/hud/widgets/blueprints/Blueprints";
-import { Hangar } from "@/components/hud/widgets/hangar/Hangar";
-import { Resources } from "@/components/hud/widgets/resources/Resources";
+import { Blueprints } from "@/components/hud/blueprints/Blueprints";
+import { Resources } from "@/components/hud/resources/Resources";
 import { BrandingLabel } from "@/components/shared/BrandingLabel";
 import { usePersistentStore } from "@game/stores/PersistentStore";
 import { memo } from "react";
@@ -47,7 +46,6 @@ export const GameHUD = memo(() => {
           <ModeSelector />
         </HUD.TopMiddle>
         <HUD.TopRight className="flex flex-col items-end gap-2">
-          <Hangar />
           <OwnedAsteroids />
           <OwnedFleets />
         </HUD.TopRight>

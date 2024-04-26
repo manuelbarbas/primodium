@@ -1,11 +1,11 @@
 import { useCallback } from "react";
 import { Entity } from "@latticexyz/recs";
-import { Badge } from "src/components/core/Badge";
-import { IconLabel } from "src/components/core/IconLabel";
-import { useFullResourceCount } from "src/hooks/useFullResourceCount";
-import { EntityType } from "src/util/constants";
-import { formatResourceCount } from "src/util/number";
-import { CapacityBar } from "../../../core/CapacityBar";
+import { Badge } from "@/components/core/Badge";
+import { IconLabel } from "@/components/core/IconLabel";
+import { useFullResourceCount } from "@/hooks/useFullResourceCount";
+import { EntityType } from "@/util/constants";
+import { formatResourceCount } from "@/util/number";
+import { CapacityBar } from "@/components/core/CapacityBar";
 import { EntityToResourceImage } from "@/util/mappings";
 
 export const UtilityLabel = ({

@@ -1,16 +1,17 @@
 import { Entity } from "@latticexyz/recs";
-import { IconLabel } from "src/components/core/IconLabel";
-import { components } from "src/network/components";
-import { getEntityTypeName } from "src/util/common";
-import { formatResourceCount } from "src/util/number";
+import { IconLabel } from "@/components/core/IconLabel";
+import { components } from "@/network/components";
+import { getEntityTypeName } from "@/util/common";
+import { formatResourceCount } from "@/util/number";
 import { Hex } from "viem";
 import { toRomanNumeral } from "src/util/common";
 import { EntityToUnitImage } from "@/util/mappings";
 
-export const HangarContent = () => {
+export const Hangar = () => {
   const activeRock = components.ActiveRock.use()?.value;
   const hangar = components.Hangar.use(activeRock);
   if (!activeRock) return null;
+
   return (
     <div className="flex flex-col p-2 text-sm">
       {(!hangar || !hangar.units || hangar.units.length === 0) && (
