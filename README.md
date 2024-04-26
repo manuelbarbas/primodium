@@ -2,8 +2,6 @@
 
 ## Overview
 
----
-
 Primodium is a resource management game entirely on-chain. (resource mgmt/allocation is the core loop)
 
 ### In the players’ base asteroid
@@ -22,8 +20,6 @@ The whole point of the game is to accumulate resources and beat others in accumu
 with alliances.
 
 ## Setup, installation, and running the game locally
-
----
 
 ### Prerequisites
 
@@ -185,7 +181,7 @@ The client is automatically deployed on Vercel from the main branch. The live in
 
 To clean types/ and abis/ in the git diff, run `pnpm clean` in the top level directory.
 
-## Vercel Environment Variables
+### Vercel Environment Variables and testing the chat functionality
 
 The chat functionality in the client is built on [Vercel Serverless functions](https://vercel.com/docs/functions/serverless-functions) and therefore requires Vercel
 environment variables to test. If you encounter any errors with the above steps while running the client, you may use
@@ -198,7 +194,7 @@ the following:
 2. Check that the `.vercel` exists in the top level directory.
 3. Run `pnpm dev:vercel` to start the client.
 
-## Account Authorization
+### Account Authorization testing
 
 Authorizing an account to act on behalf of another account requires ETH in the player's main account. To test this
 feature locally with the Anvil development chain, do the following:
@@ -213,9 +209,9 @@ feature locally with the Anvil development chain, do the following:
 
 See [here](https://github.com/primodiumxyz/primodium/pull/873) for more information on account authorization.
 
-# Config
+## Config
 
-## There are four sources of configuration for the game:
+### There are four sources of configuration for the game:
 
 1. `mud.config.ts`: Houses tables. To create/modify a table, [read here.](https://mud.dev/world/config)
 2. `enums.ts`: Houses enums.
@@ -239,7 +235,7 @@ See [here](https://github.com/primodiumxyz/primodium/pull/873) for more informat
 
 To regenerate solidity based on updated typescript source, run `pnpm build`.
 
-# Dev Systems
+## Dev Systems
 
 Functions in `DevSystem` expose direct table access. We can add abstractions as necessary.
 
