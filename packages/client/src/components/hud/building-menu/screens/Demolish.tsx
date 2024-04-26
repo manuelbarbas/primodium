@@ -1,3 +1,4 @@
+import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { Button } from "src/components/core/Button";
@@ -9,8 +10,7 @@ import { useBuildingInfo } from "src/hooks/useBuildingInfo";
 import { useBuildingName } from "src/hooks/useBuildingName";
 import { components } from "src/network/components";
 import { demolishBuilding } from "src/network/setup/contractCalls/demolishBuilding";
-import { getEntityTypeName } from "src/util/common";
-import { ResourceImage, ResourceType } from "src/util/constants";
+import { ResourceType } from "src/util/constants";
 import { getFullResourceCount } from "src/util/resource";
 
 export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
@@ -42,9 +42,7 @@ export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
           <IconLabel
             text=""
             hideText
-            imageUri={ResourceImage.get(blockingResource.resource) ?? ""}
-            tooltipDirection={"left"}
-            tooltipText={getEntityTypeName(blockingResource.resource)}
+            imageUri={EntityToResourceImage[blockingResource.resource]}
             className="mx-2 w-5"
           />
           will drop below zero.

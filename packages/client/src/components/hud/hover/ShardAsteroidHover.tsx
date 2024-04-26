@@ -6,7 +6,7 @@ import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { useShardAsteroid } from "src/hooks/primodium/useShardAsteroid";
 import { useSyncStatus } from "src/hooks/useSyncStatus";
 import { components } from "src/network/components";
-import { EntityType, Keys, ResourceImage } from "src/util/constants";
+import { EntityType, Keys } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount, formatTime } from "src/util/number";
@@ -14,6 +14,7 @@ import { Card } from "../../core/Card";
 import { HealthBar } from "../HealthBar";
 import { AsteroidEta } from "./AsteroidEta";
 import { InterfaceIcons } from "@primodiumxyz/assets";
+import { EntityToResourceImage } from "@/util/mappings";
 
 export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const { loading } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
@@ -86,7 +87,7 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
         )}
         <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
           <HealthBar
-            imgUrl={ResourceImage.get(EntityType.Encryption) ?? ""}
+            imgUrl={EntityToResourceImage[EntityType.Encryption]}
             health={Number(formatResourceCount(EntityType.Encryption, shardData.encryption, { notLocale: true }))}
             maxHealth={Number(formatResourceCount(EntityType.Encryption, shardData.maxEncryption, { notLocale: true }))}
           />

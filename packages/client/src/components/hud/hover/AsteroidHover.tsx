@@ -10,7 +10,7 @@ import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { useSyncStatus } from "src/hooks/useSyncStatus";
 import { components } from "src/network/components";
 import { getAsteroidDescription } from "src/util/asteroid";
-import { EntityType, Keys, ResourceImage } from "src/util/constants";
+import { EntityType, Keys } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
@@ -18,6 +18,7 @@ import { Card } from "../../core/Card";
 import { HealthBar } from "../HealthBar";
 import { AsteroidEta } from "./AsteroidEta";
 import { InterfaceIcons } from "@primodiumxyz/assets";
+import { EntityToResourceImage } from "@/util/mappings";
 
 export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const { loading } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
@@ -95,14 +96,14 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
             <div className="grid grid-cols-2 gap-1">
               <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
                 <HealthBar
-                  imgUrl={ResourceImage.get(EntityType.Encryption) ?? ""}
+                  imgUrl={EntityToResourceImage[EntityType.Encryption]}
                   health={Number(formatResourceCount(EntityType.Encryption, encryption, { notLocale: true }))}
                   maxHealth={Number(formatResourceCount(EntityType.Encryption, maxEncryption, { notLocale: true }))}
                 />
               </Badge>
               <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
                 <HealthBar
-                  imgUrl={ResourceImage.get(EntityType.HP) ?? ""}
+                  imgUrl={EntityToResourceImage[EntityType.HP]}
                   health={Number(formatResourceCount(EntityType.HP, strength, { notLocale: true, showZero: true }))}
                   maxHealth={Number(
                     formatResourceCount(EntityType.HP, maxStrength, { notLocale: true, showZero: true })
@@ -123,7 +124,7 @@ const ResourceDisplay = ({ type, count }: { type: Entity; count: bigint }) => {
   return (
     <IconLabel
       key={`show-resource-${type}`}
-      imageUri={ResourceImage.get(type) ?? ""}
+      imageUri={EntityToResourceImage[type]}
       text={formatResourceCount(type, count, { short: true })}
     />
   );

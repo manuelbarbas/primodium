@@ -17,7 +17,7 @@ import { components as comps } from "src/network/components";
 import { claimObjective } from "src/network/setup/contractCalls/claimObjective";
 import { getEntityTypeName } from "src/util/common";
 
-import { ObjectiveEntityLookup, ResourceImage, ResourceType, TransactionQueueType } from "src/util/constants";
+import { ObjectiveEntityLookup, ResourceType, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { formatNumber } from "src/util/number";
 import { getObjectiveDescription } from "src/util/objectiveDescriptions";
@@ -31,7 +31,7 @@ import { getFullResourceCount } from "src/util/resource";
 import { getRewards } from "src/util/reward";
 import { Hex } from "viem";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { EntityToUnitImage } from "@/util/mappings";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 
 const ClaimObjectiveButton: React.FC<{
   objectiveEntity: Entity;
@@ -148,7 +148,9 @@ const Objective: React.FC<{
                         tooltip={getEntityTypeName(_req.id)}
                       >
                         <IconLabel
-                          imageUri={ResourceImage.get(_req.id) ?? EntityToUnitImage[_req.id] ?? InterfaceIcons.Build}
+                          imageUri={
+                            EntityToResourceImage[_req.id] ?? EntityToUnitImage[_req.id] ?? InterfaceIcons.Build
+                          }
                           text={formatNumber(value / _req.scale, { short: true, fractionDigits: 3 })}
                           className="text-xs font-bold"
                         />
@@ -182,7 +184,7 @@ const Objective: React.FC<{
                   >
                     <ResourceIconTooltip
                       name={getEntityTypeName(resource.id)}
-                      image={ResourceImage.get(resource.id) ?? EntityToUnitImage[resource.id] ?? ""}
+                      image={EntityToResourceImage[resource.id] ?? EntityToUnitImage[resource.id] ?? ""}
                       resource={resource.id}
                       amount={resource.amount}
                       resourceType={resource.type}

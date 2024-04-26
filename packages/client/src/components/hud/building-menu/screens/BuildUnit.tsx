@@ -12,7 +12,7 @@ import { useMaxCountOfRecipe } from "src/hooks/useMaxCountOfRecipe";
 import { components } from "src/network/components";
 import { train } from "src/network/setup/contractCalls/train";
 import { getEntityTypeName } from "src/util/common";
-import { EntityType, ResourceEntityLookup, ResourceImage, UnitEnumLookup } from "src/util/constants";
+import { EntityType, ResourceEntityLookup, UnitEnumLookup } from "src/util/constants";
 import { formatNumber, formatResourceCount } from "src/util/number";
 import { getRecipe } from "src/util/recipe";
 import { getFullResourceCount } from "src/util/resource";
@@ -20,7 +20,7 @@ import { getUnitStats } from "src/util/unit";
 import { Hex } from "viem";
 import { ResourceIconTooltip } from "../../../shared/ResourceIconTooltip";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { EntityToUnitImage } from "@/util/mappings";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 
 export const BuildUnit: React.FC<{
   building: Entity;
@@ -132,7 +132,7 @@ const TrainNonColonyShip = ({ building, unit, asteroid }: { building: Entity; un
           {recipe.map((resource, i) => (
             <Badge key={`resource-${i}`}>
               <ResourceIconTooltip
-                image={ResourceImage.get(resource.id) ?? ""}
+                image={EntityToResourceImage[resource.id]}
                 resource={resource.id}
                 name={getEntityTypeName(resource.id)}
                 amount={resource.amount * BigInt(count)}
@@ -191,7 +191,7 @@ const TrainColonyShip = ({ building, asteroid }: { building: Entity; asteroid: E
       <div className="flex justify-center items-center gap-1">COST</div>
       <Badge>
         <ResourceIconTooltip
-          image={ResourceImage.get(resource) ?? ""}
+          image={EntityToResourceImage[resource]}
           resource={resource}
           name={getEntityTypeName(resource)}
           amount={cost}

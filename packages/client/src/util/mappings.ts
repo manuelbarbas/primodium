@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { Key } from "engine/types";
 import { EntityType } from "@/util/constants";
-import { UnitImages } from "@primodiumxyz/assets";
+import { InterfaceIcons, ResourceImages, UnitImages } from "@primodiumxyz/assets";
 
 export const MapIdToAsteroidType: Record<number, Entity> = {
   2: EntityType.Kimberlite,
@@ -22,42 +22,36 @@ export const EntityToUnitImage = {
   [EntityType.TridentMarine]: UnitImages.TridentMarine,
 };
 
-export const ResourceImage = new Map<Entity, string>([
-  [EntityType.Iron, "/img/resource/iron_resource.png"],
-  [EntityType.Copper, "/img/resource/copper_resource.png"],
-  [EntityType.Lithium, "/img/resource/lithium_resource.png"],
-  [EntityType.Titanium, "/img/resource/titanium_resource.png"],
-  [EntityType.Iridium, "/img/resource/iridium_resource.png"],
-  [EntityType.Kimberlite, "/img/resource/kimberlite_resource.png"],
-  [EntityType.Platinum, "/img/resource/platinum_resource.png"],
+//TODO: Replace debug with actual images
+export const EntityToResourceImage = {
+  //Basic
+  [EntityType.Iron]: ResourceImages.Iron,
+  [EntityType.Copper]: ResourceImages.Copper,
+  [EntityType.Lithium]: ResourceImages.Lithium,
 
-  [EntityType.IronPlate, "/img/resource/ironplate.png"],
+  //Advanced
+  [EntityType.IronPlate]: ResourceImages.IronPlate,
+  [EntityType.Alloy]: ResourceImages.Alloy,
+  [EntityType.PVCell]: ResourceImages.PVC,
 
-  [EntityType.Alloy, "/img/resource/alloy_resource.png"],
-  [EntityType.PVCell, "/img/resource/photovoltaiccell_resource.png"],
+  //Rare
+  [EntityType.Titanium]: ResourceImages.Titanium,
+  [EntityType.Iridium]: ResourceImages.Iridium,
+  [EntityType.Kimberlite]: ResourceImages.Kimberlite,
+  [EntityType.Platinum]: ResourceImages.Platinum,
 
-  [EntityType.Electricity, "/img/ui/icons/battery.svg"],
-  [EntityType.Housing, "/img/icons/utilitiesicon.png"],
-  [EntityType.FleetCount, "/img/icons/moveicon.png"],
-  [EntityType.ColonyShipCapacity, "/img/unit/colonyship.png"],
-  [EntityType.Defense, "/img/icons/defenseicon.png"],
-  [EntityType.DefenseMultiplier, "/img/icons/defenseicon.png"],
-  [EntityType.Unraidable, "/img/icons/unraidableicon.png"],
-  [EntityType.AdvancedUnraidable, "/img/icons/advancedunraidableicon.png"],
-  [EntityType.Encryption, "/img/icons/encryptionicon.png"],
-  [EntityType.HP, "/img/icons/reinforcementicon.png"],
-
-  //units
-  [EntityType.HammerDrone, "/img/unit/hammerdrone.png"],
-  [EntityType.StingerDrone, "/img/unit/stingerdrone.png"],
-  [EntityType.AnvilDrone, "/img/unit/anvildrone.png"],
-  [EntityType.AegisDrone, "/img/unit/aegisdrone.png"],
-  [EntityType.ColonyShip, "/img/unit/colonyship.png"],
-  [EntityType.Droid, "/img/unit/droid.png"],
-  [EntityType.MinutemanMarine, "img/unit/minutemen_marine.png"],
-  [EntityType.TridentMarine, "img/unit/trident_marine.png"],
-  [EntityType.LightningCraft, "img/unit/lightningcraft.png"],
-]);
+  //Utility
+  [EntityType.Electricity]: ResourceImages.U_Electricity,
+  [EntityType.Housing]: ResourceImages.U_Housing,
+  [EntityType.FleetCount]: InterfaceIcons.Debug,
+  [EntityType.ColonyShipCapacity]: InterfaceIcons.Debug,
+  [EntityType.Defense]: ResourceImages.U_BuildingDefense,
+  [EntityType.DefenseMultiplier]: ResourceImages.U_BuildingDefenseMult,
+  [EntityType.Unraidable]: ResourceImages.U_Unraidable,
+  [EntityType.AdvancedUnraidable]: ResourceImages.U_AdvancedUnraidable,
+  [EntityType.Encryption]: ResourceImages.U_Encryption,
+  [EntityType.HP]: InterfaceIcons.Debug,
+};
 
 export const KeyImages = new Map<Key, string>([
   ["ONE", "/img/keys/one.png"],

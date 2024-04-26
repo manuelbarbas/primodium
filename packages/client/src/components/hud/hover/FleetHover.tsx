@@ -1,3 +1,4 @@
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EFleetStance } from "contracts/config/enums";
@@ -12,7 +13,7 @@ import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { useSyncStatus } from "src/hooks/useSyncStatus";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
-import { EntityType, ResourceImage } from "src/util/constants";
+import { EntityType } from "src/util/constants";
 import { entityToFleetName } from "src/util/name";
 import { formatNumber, formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
 import { getFleetStats } from "src/util/unit";
@@ -105,7 +106,7 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
                 {[...units.entries()].map(([unit, count]) => (
                   <div key={`unit-${unit}`} className="flex gap-1">
                     <img
-                      src={ResourceImage.get(unit as Entity) ?? ""}
+                      src={EntityToUnitImage[unit]}
                       className={`pixel-images w-4 scale-200 font-bold text-lg pointer-events-none`}
                     />
                     {formatNumber(count, { short: true })}
@@ -116,7 +117,7 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
                 {[...resources.entries()].map(([resource, count]) => (
                   <div key={`resource-${resource}`} className="flex gap-1">
                     <img
-                      src={ResourceImage.get(resource as Entity) ?? ""}
+                      src={EntityToResourceImage[resource]}
                       className={`pixel-images w-4 scale-200 font-bold text-lg pointer-events-none`}
                     />
                     {formatResourceCount(resource as Entity, count.resourceCount, { short: true })}

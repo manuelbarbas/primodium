@@ -9,11 +9,12 @@ import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getBuildingLevelStorageUpgrades, transformProductionData } from "src/util/building";
 import { getEntityTypeName } from "src/util/common";
-import { ResourceImage, ResourceType } from "src/util/constants";
+import { ResourceType } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
 import { Badge } from "../core/Badge";
 import { IconLabel } from "../core/IconLabel";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 
 export const RecipeDisplay: React.FC<{
   building: Entity;
@@ -29,16 +30,14 @@ export const RecipeDisplay: React.FC<{
         {_.chunk(recipe, 2).map((chunk, i) => (
           <div key={`recipe-chunk-${i}`} className="flex flex-row gap-1">
             {chunk.map((resource) => {
-              const resourceImage = ResourceImage.get(resource.id)!;
-              const resourceName = getEntityTypeName(resource.id);
               return (
                 <ResourceIconTooltip
                   key={resource.id + resource.type}
                   spaceRock={asteroid}
-                  image={resourceImage}
+                  image={EntityToResourceImage[resource.id]}
                   resource={resource.id}
                   resourceType={resource.type}
-                  name={resourceName}
+                  name={getEntityTypeName(resource.id)}
                   amount={resource.amount}
                   validate
                   fontSize={"xs"}
@@ -95,7 +94,7 @@ export const PrototypeInfo: React.FC<{
               >
                 <ResourceIconTooltip
                   name={getEntityTypeName(resource)}
-                  image={ResourceImage.get(resource) ?? ""}
+                  image={EntityToResourceImage[resource]}
                   resource={resource}
                   amount={amount}
                   resourceType={type}
@@ -105,15 +104,15 @@ export const PrototypeInfo: React.FC<{
               </Badge>
             ))}
             {!!unitProduction && (
-              <Badge className="text-xs gap-2 bg-green-800/60 py-3 border border-green-600 rounded-md w-fit justify-center">
+              <Badge
+                className="text-xs gap-2 bg-green-800/60 py-3 border border-green-600 rounded-md w-fit justify-center"
+                tooltipDirection={"bottom"}
+              >
                 {unitProduction?.value.map((unit) => (
                   <IconLabel
                     className={`text-xs font-bold justify-center`}
-                    imageUri={ResourceImage.get(unit as Entity) ?? ""}
+                    imageUri={EntityToUnitImage[unit]}
                     key={`unitProduction-${unit}`}
-                    tooltipDirection={"bottom"}
-                    tooltipText={getEntityTypeName(unit as Entity)}
-                    text={""}
                     hideText
                   />
                 ))}
@@ -131,7 +130,7 @@ export const PrototypeInfo: React.FC<{
                       >
                         <ResourceIconTooltip
                           name={getEntityTypeName(resource)}
-                          image={ResourceImage.get(resource) ?? ""}
+                          image={EntityToResourceImage[resource]}
                           resource={resource}
                           amount={amount}
                           resourceType={ResourceType.Resource}

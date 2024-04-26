@@ -1,4 +1,5 @@
 import { PushButton } from "@/components/core/PushButton";
+import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { Badge } from "src/components/core/Badge";
@@ -10,7 +11,7 @@ import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { upgradeRange } from "src/network/setup/contractCalls/upgradeRange";
 import { getEntityTypeName } from "src/util/common";
-import { EntityType, ResourceImage, TransactionQueueType } from "src/util/constants";
+import { EntityType, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { getUpgradeInfo } from "src/util/upgrade";
 
@@ -50,7 +51,7 @@ export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
                     <Badge key={resource.id + resource.type} className="text-xs gap-2">
                       <ResourceIconTooltip
                         name={getEntityTypeName(resource.id)}
-                        image={ResourceImage.get(resource.id) ?? ""}
+                        image={EntityToResourceImage[resource.id]}
                         resource={resource.id}
                         amount={resource.amount}
                         resourceType={resource.type}

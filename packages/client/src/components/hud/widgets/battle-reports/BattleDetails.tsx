@@ -1,4 +1,4 @@
-import { EntityToUnitImage } from "@/util/mappings";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { FaTimes, FaTrophy } from "react-icons/fa";
@@ -8,7 +8,7 @@ import { useMud } from "src/hooks";
 import { usePlayerOwner } from "src/hooks/usePlayerOwner";
 import { components } from "src/network/components";
 import { getEntityTypeName, toRomanNumeral } from "src/util/common";
-import { EntityType, ResourceImage } from "src/util/constants";
+import { EntityType } from "src/util/constants";
 import { entityToFleetName, entityToRockName } from "src/util/name";
 import { formatResourceCount } from "src/util/number";
 
@@ -172,7 +172,7 @@ export const BattleDetails: React.FC<{
                             resourceDelta > 0n ? "border-green-800" : "border-rose-800"
                           } flex items-center`}
                         >
-                          <img src={ResourceImage.get(resource as Entity) ?? ""} className={`w-8 h-8 p-1`} />
+                          <img src={EntityToResourceImage[resource] ?? ""} className={`w-8 h-8 p-1`} />
 
                           <p className={`grid place-items-center text-sm p-1 uppercase font-bold w-full h-full`}>
                             {resourceDelta > 0n ? "+" : ""}
@@ -245,7 +245,7 @@ export const BattleDetails: React.FC<{
                             resourceDelta > 0n ? "border-green-800" : "border-rose-800"
                           } flex items-center`}
                         >
-                          <img src={ResourceImage.get(resource as Entity) ?? ""} className={`w-8 h-8 p-1`} />
+                          <img src={EntityToResourceImage[resource] ?? ""} className={`w-8 h-8 p-1`} />
 
                           <p className={`grid place-items-center text-sm p-1 uppercase font-bold w-full h-full`}>
                             {resourceDelta > 0n ? "+" : ""}
