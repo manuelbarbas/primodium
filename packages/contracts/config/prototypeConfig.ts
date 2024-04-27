@@ -204,42 +204,42 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseStorageUpgrades[1]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001, U_Housing: 25 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.003, U_Housing: 25 }),
       },
       2: {
         P_RequiredResources: getResourceValues({ Iron: 50, Copper: 50, Lithium: 50 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseStorageUpgrades[2]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001, U_Housing: 50 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.006, U_Housing: 50 }),
       },
       3: {
         P_RequiredResources: getResourceValues({ Iron: 400, Copper: 400, Lithium: 400 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseStorageUpgrades[3]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001, U_Housing: 50 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.009, U_Housing: 50 }),
       },
       4: {
         P_RequiredResources: getResourceValues({ Iron: 800, Copper: 800, Lithium: 800 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseStorageUpgrades[4]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001, U_Housing: 100 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.012, U_Housing: 100 }),
       },
       5: {
         P_RequiredResources: getResourceValues({ Iron: 1500, Copper: 1500, Lithium: 1500, U_Electricity: 50 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseStorageUpgrades[5]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001, U_Housing: 100 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.015, U_Housing: 100 }),
       },
       6: {
         P_RequiredResources: getResourceValues({ IronPlate: 1200, Alloy: 1200, PVCell: 1200, U_Electricity: 50 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseStorageUpgrades[6]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001, U_Housing: 175 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.019, U_Housing: 175 }),
       },
       7: {
         P_RequiredResources: getResourceValues({
@@ -251,7 +251,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseStorageUpgrades[7]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001, U_Housing: 175 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.023, U_Housing: 175 }),
       },
       8: {
         P_RequiredResources: getResourceValues({
@@ -263,7 +263,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseStorageUpgrades[8]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001, U_Housing: 250 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.027, U_Housing: 250 }),
       },
       9: {
         P_RequiredResources: getResourceValues({
@@ -275,7 +275,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseStorageUpgrades[9]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001, U_Housing: 250 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.031, U_Housing: 250 }),
       },
       10: {
         P_RequiredResources: getResourceValues({
@@ -287,7 +287,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseStorageUpgrades[10]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001, U_Housing: 325 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.035, U_Housing: 325 }),
       },
       11: {
         P_RequiredResources: getResourceValues({
@@ -299,7 +299,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseStorageUpgrades[11]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001, U_Housing: 325 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.039, U_Housing: 325 }),
       },
       12: {
         P_RequiredResources: getResourceValues({
@@ -311,7 +311,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseStorageUpgrades[12]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001, U_Housing: 400 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.043, U_Housing: 400 }),
       },
       13: {
         P_RequiredResources: getResourceValues({
@@ -323,7 +323,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseStorageUpgrades[13]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001, U_Housing: 400 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.047, U_Housing: 400 }),
       },
       14: {
         P_RequiredResources: getResourceValues({
@@ -335,7 +335,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseStorageUpgrades[14]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001, U_Housing: 500 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.051, U_Housing: 500 }),
       },
       15: {
         P_RequiredResources: getResourceValues({
@@ -347,7 +347,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseStorageUpgrades[15]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001, U_Housing: 600 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.06, U_Housing: 600 }),
       },
     },
   },
@@ -1752,116 +1752,89 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     levels: {
       1: {
         P_RequiredBaseLevel: { value: 8n },
-        P_RequiredResources: getResourceValues({ Alloy: 2000, U_Electricity: 100 }),
-        P_Production: getResourceValues({ U_Defense: 1500, R_HP: 0.1 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 100, PVCell: 100, Alloy: 100, U_Electricity: 100 }),
+        P_Production: getResourceValues({ U_Defense: 400 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(samSiteStorageUpgrades[1]),
         },
       },
       2: {
         P_RequiredBaseLevel: { value: 8n },
-        P_RequiredResources: getResourceValues({
-          Alloy: 15000,
-          U_Electricity: 200,
-        }),
+        P_RequiredResources: getResourceValues({ IronPlate: 200, PVCell: 200, Alloy: 200, U_Electricity: 100 }),
 
-        P_Production: getResourceValues({ U_Defense: 2500, R_HP: 0.25 }),
+        P_Production: getResourceValues({ U_Defense: 800 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(samSiteStorageUpgrades[2]),
         },
       },
       3: {
         P_RequiredBaseLevel: { value: 9n },
-        P_RequiredResources: getResourceValues({
-          Alloy: 40000,
-          U_Electricity: 300,
-        }),
+        P_RequiredResources: getResourceValues({ IronPlate: 300, PVCell: 300, Alloy: 300, U_Electricity: 100 }),
 
-        P_Production: getResourceValues({ U_Defense: 5000, R_HP: 0.75 }),
+        P_Production: getResourceValues({ U_Defense: 1200 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(samSiteStorageUpgrades[3]),
         },
       },
       4: {
         P_RequiredBaseLevel: { value: 9n },
-        P_RequiredResources: getResourceValues({
-          Alloy: 40000,
-          U_Electricity: 300,
-        }),
+        P_RequiredResources: getResourceValues({ IronPlate: 500, PVCell: 500, Alloy: 500, U_Electricity: 100 }),
 
-        P_Production: getResourceValues({ U_Defense: 5000, R_HP: 0.75 }),
+        P_Production: getResourceValues({ U_Defense: 1600 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(samSiteStorageUpgrades[3]),
         },
       },
       5: {
         P_RequiredBaseLevel: { value: 10n },
-        P_RequiredResources: getResourceValues({
-          Alloy: 40000,
-          U_Electricity: 300,
-        }),
+        P_RequiredResources: getResourceValues({ Titanium: 100, Iridium: 100, Platinum: 100, U_Electricity: 100 }),
 
-        P_Production: getResourceValues({ U_Defense: 5000, R_HP: 0.75 }),
+        P_Production: getResourceValues({ U_Defense: 2000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(samSiteStorageUpgrades[3]),
         },
       },
       6: {
         P_RequiredBaseLevel: { value: 11n },
-        P_RequiredResources: getResourceValues({
-          Alloy: 40000,
-          U_Electricity: 300,
-        }),
+        P_RequiredResources: getResourceValues({ Titanium: 200, Iridium: 200, Platinum: 200, U_Electricity: 100 }),
 
-        P_Production: getResourceValues({ U_Defense: 5000, R_HP: 0.75 }),
+        P_Production: getResourceValues({ U_Defense: 2500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(samSiteStorageUpgrades[3]),
         },
       },
       7: {
         P_RequiredBaseLevel: { value: 12n },
-        P_RequiredResources: getResourceValues({
-          Alloy: 40000,
-          U_Electricity: 300,
-        }),
+        P_RequiredResources: getResourceValues({ Titanium: 300, Iridium: 300, Platinum: 300, U_Electricity: 100 }),
 
-        P_Production: getResourceValues({ U_Defense: 5000, R_HP: 0.75 }),
+        P_Production: getResourceValues({ U_Defense: 3000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(samSiteStorageUpgrades[3]),
         },
       },
       8: {
         P_RequiredBaseLevel: { value: 13n },
-        P_RequiredResources: getResourceValues({
-          Alloy: 40000,
-          U_Electricity: 300,
-        }),
+        P_RequiredResources: getResourceValues({ Titanium: 500, Iridium: 500, Platinum: 500, U_Electricity: 100 }),
 
-        P_Production: getResourceValues({ U_Defense: 5000, R_HP: 0.75 }),
+        P_Production: getResourceValues({ U_Defense: 3500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(samSiteStorageUpgrades[3]),
         },
       },
       9: {
         P_RequiredBaseLevel: { value: 14n },
-        P_RequiredResources: getResourceValues({
-          Alloy: 40000,
-          U_Electricity: 300,
-        }),
+        P_RequiredResources: getResourceValues({ Titanium: 500, Iridium: 500, Platinum: 500, Kimberlite: 500 }),
 
-        P_Production: getResourceValues({ U_Defense: 5000, R_HP: 0.75 }),
+        P_Production: getResourceValues({ U_Defense: 4000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(samSiteStorageUpgrades[3]),
         },
       },
       10: {
         P_RequiredBaseLevel: { value: 15n },
-        P_RequiredResources: getResourceValues({
-          Alloy: 40000,
-          U_Electricity: 300,
-        }),
+        P_RequiredResources: getResourceValues({ Titanium: 1000, Iridium: 1000, Platinum: 1000, Kimberlite: 1000 }),
 
-        P_Production: getResourceValues({ U_Defense: 5000, R_HP: 0.75 }),
+        P_Production: getResourceValues({ U_Defense: 5000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(samSiteStorageUpgrades[3]),
         },
@@ -1879,17 +1852,17 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       1: {
         P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ IronPlate: 1000, Alloy: 1000, PVCell: 1000, U_Electricity: 200 }),
-        P_Production: getResourceValues({ M_DefenseMultiplier: 10 }),
+        P_Production: getResourceValues({ M_DefenseMultiplier: 5, R_HP: 0.006 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 10n },
         P_RequiredResources: getResourceValues({ Titanium: 500, Iridium: 500, Platinum: 500, U_Electricity: 1100 }),
-        P_Production: getResourceValues({ M_DefenseMultiplier: 20 }),
+        P_Production: getResourceValues({ M_DefenseMultiplier: 15, R_HP: 0.012 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 15n },
         P_RequiredResources: getResourceValues({ Kimberlite: 4000, U_Electricity: 1100 }),
-        P_Production: getResourceValues({ M_DefenseMultiplier: 35 }),
+        P_Production: getResourceValues({ M_DefenseMultiplier: 30, R_HP: 0.024 }),
       },
     },
   },

@@ -11,21 +11,21 @@ export const mainBaseStorageUpgrades = {
     Copper: 500,
     Lithium: 500,
     R_Encryption: 3150,
-    R_HP: 150,
+    R_HP: 250,
   },
   3: {
     Iron: 750,
     Copper: 750,
     Lithium: 750,
     R_Encryption: 3300,
-    R_HP: 200,
+    R_HP: 500,
   },
   4: {
     Iron: 1000,
     Copper: 1000,
     Lithium: 1000,
     R_Encryption: 3450,
-    R_HP: 250,
+    R_HP: 1000,
   },
   5: {
     Iron: 1500,
@@ -35,7 +35,7 @@ export const mainBaseStorageUpgrades = {
     Alloy: 1000,
     PVCell: 1000,
     R_Encryption: 3600,
-    R_HP: 300,
+    R_HP: 2000,
   },
   6: {
     Iron: 3000,
@@ -45,7 +45,7 @@ export const mainBaseStorageUpgrades = {
     Alloy: 1500,
     PVCell: 1500,
     R_Encryption: 3750,
-    R_HP: 400,
+    R_HP: 3000,
   },
   7: {
     Iron: 6000,
@@ -59,7 +59,7 @@ export const mainBaseStorageUpgrades = {
     Platinum: 50,
     Kimberlite: 50,
     R_Encryption: 3900,
-    R_HP: 500,
+    R_HP: 4500,
   },
   8: {
     Iron: 10000,
@@ -73,7 +73,7 @@ export const mainBaseStorageUpgrades = {
     Platinum: 150,
     Kimberlite: 150,
     R_Encryption: 4050,
-    R_HP: 600,
+    R_HP: 6000,
   },
   9: {
     Iron: 20000,
@@ -87,7 +87,7 @@ export const mainBaseStorageUpgrades = {
     Platinum: 400,
     Kimberlite: 400,
     R_Encryption: 4200,
-    R_HP: 700,
+    R_HP: 8000,
   },
   10: {
     Iron: 30000,
@@ -101,7 +101,7 @@ export const mainBaseStorageUpgrades = {
     Platinum: 600,
     Kimberlite: 600,
     R_Encryption: 4500,
-    R_HP: 700,
+    R_HP: 10000,
   },
   11: {
     Iron: 40000,
@@ -115,7 +115,7 @@ export const mainBaseStorageUpgrades = {
     Platinum: 800,
     Kimberlite: 800,
     R_Encryption: 4800,
-    R_HP: 800,
+    R_HP: 12500,
   },
   12: {
     Iron: 50000,
@@ -129,7 +129,7 @@ export const mainBaseStorageUpgrades = {
     Platinum: 1000,
     Kimberlite: 1000,
     R_Encryption: 5100,
-    R_HP: 900,
+    R_HP: 15000,
   },
   13: {
     Iron: 60000,
@@ -143,7 +143,7 @@ export const mainBaseStorageUpgrades = {
     Platinum: 1500,
     Kimberlite: 1500,
     R_Encryption: 5400,
-    R_HP: 1000,
+    R_HP: 17500,
   },
   14: {
     Iron: 70000,
@@ -157,7 +157,7 @@ export const mainBaseStorageUpgrades = {
     Platinum: 2000,
     Kimberlite: 2000,
     R_Encryption: 5700,
-    R_HP: 1100,
+    R_HP: 20000,
   },
   15: {
     Iron: 80000,
@@ -171,7 +171,7 @@ export const mainBaseStorageUpgrades = {
     Platinum: 2500,
     Kimberlite: 2500,
     R_Encryption: 6000,
-    R_HP: 1200,
+    R_HP: 25000,
   },
 } as const;
 
@@ -378,14 +378,14 @@ export const storageUnitStorageUpgrades = {
 } as const;
 
 export const samSiteStorageUpgrades = {
-  1: { R_HP: 1000 },
-  2: { R_HP: 2500 },
-  3: { R_HP: 7500 },
-  4: { R_HP: 7500 },
-  5: { R_HP: 7500 },
-  6: { R_HP: 7500 },
-  7: { R_HP: 7500 },
-  8: { R_HP: 7500 },
-  9: { R_HP: 7500 },
-  10: { R_HP: 7500 },
+  1: { R_HP: 800 },
+  2: { R_HP: 1600 },
+  3: { R_HP: 2400 },
+  4: { R_HP: 3200 },
+  5: { R_HP: 4000 },
+  6: { R_HP: 5000 },
+  7: { R_HP: 6000 },
+  8: { R_HP: 7000 },
+  9: { R_HP: 8000 },
+  10: { R_HP: 10000 },
 } as const;
