@@ -6,17 +6,16 @@ import { useMud } from "@/hooks";
 import { useColonySlots } from "@/hooks/useColonySlots";
 import { components } from "@/network/components";
 import { EntityType, ResourceImage } from "@/util/constants";
+import { entityToRockName } from "@/util/name";
 import { formatTime } from "@/util/number";
 import { Entity } from "@latticexyz/recs";
 import React from "react";
-import { FaLock } from "react-icons/fa";
 import { Navigator } from "src/components/core/Navigator";
 
 type Tile =
   | { type: "training"; unit: Entity; progress: bigint; timeRemaining: bigint; count: bigint }
   | { type: "train" }
-  | { type: "unlock" }
-  | { type: "blank" };
+  | { type: "unlock" };
 
 export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ buildingEntity }) => {
   const [activeTile, setActiveTile] = React.useState<number | null>(null);
@@ -28,37 +27,57 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
 
   const colonySlotsData = useColonySlots(playerEntity);
 
+  const trainingShips = colonySlotsData.occupiedSlots.filter((slot) => slot.type === "training");
   const rawQueue = components.TrainingQueue.use(buildingEntity);
 
   const queue = rawQueue ? convertTrainingQueue(rawQueue) : [];
 
-  const tiles = Array(9)
-    .fill(0)
-    .map((_, i) => {
-      if (i < queue.length) return { type: "training", ...queue[i] };
-      if (i < queue.length + Number(colonySlotsData.availableSlots)) return { type: "train" };
-      if (i == queue.length + Number(colonySlotsData.availableSlots)) return { type: "unlock" };
-      return { type: "blank" };
-    }) as Tile[];
+  const tiles: Tile[] = Array(Number(colonySlotsData.availableSlots)).fill({ type: "train" });
+  tiles.push({ type: "unlock" });
 
   return (
     <Navigator.Screen title="Commission" className="gap-2">
       <div className="flex h-[20rem] gap-2">
-        <div className="h-full grid grid-rows-3 grid-cols-3 gap-1 aspect-square">
-          <BuiltTile unit={EntityType.ColonyShip} />
-          {tiles.map((tile, i) => {
-            if (tile.type === "training") return <TrainingTile training={tile} key={`tile-${i}`} />;
-            if (tile.type === "train")
-              return <TrainShipTile onClick={() => setActiveTile(i)} key={`tile-${i}`} active={activeTile == i} />;
-            if (tile.type === "unlock")
-              return <UnlockTile key={`tile-${i}`} onClick={() => setActiveTile(i)} active={activeTile == i} />;
-            return <BlankTile key={`tile-${i}`} />;
-          })}
+        <div className="flex flex-col gap-2">
+          {queue.length > 0 ? (
+            <TrainingTile timeRemaining={queue[0].timeRemaining} className="h-[6rem]" />
+          ) : colonySlotsData.availableSlots > 0 ? (
+            <TrainShipTile
+              onClick={() => setActiveTile(0)}
+              className={`h-[6rem] ${activeTile == 0 ? "ring ring-secondary" : ""}`}
+            />
+          ) : (
+            <SecondaryCard noDecor className="h-[6rem] w-full text-xs flex justify-center items-center">
+              Add slots to train ships
+            </SecondaryCard>
+          )}
+          <div className="text-xs pt-1 flex justify-between">
+            <p>Colony Ship Slots</p>
+            <p>
+              {Number(colonySlotsData.availableSlots)}/
+              {colonySlotsData.occupiedSlots.length + Number(colonySlotsData.availableSlots)} unused
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-1 overflow-auto scrollbar p-1">
+            {trainingShips.map((slot, index) => (
+              <TrainingTile key={index} timeRemaining={slot.timeRemaining} asteroidEntity={slot.asteroidEntity} />
+            ))}
+            {tiles.map((tile, index) => {
+              if (tile.type === "unlock")
+                return (
+                  <UnlockTile key={index} onClick={() => setActiveTile(index + 1)} active={activeTile == index + 1} />
+                );
+            })}
+          </div>
         </div>
-        {activeTile !== null && tiles[activeTile].type === "train" && (
-          <TrainColonyShip buildingEntity={buildingEntity} className="w-56 h-full" />
+        {activeTile === 0 && (
+          <TrainColonyShip
+            buildingEntity={buildingEntity}
+            className="w-56 h-full"
+            onCommission={() => setActiveTile(null)}
+          />
         )}
-        {activeTile !== null && tiles[activeTile].type === "unlock" && (
+        {!!activeTile && tiles[activeTile - 1].type === "unlock" && (
           <UnlockSlot
             asteroidEntity={asteroid}
             buildingEntity={buildingEntity}
@@ -67,12 +86,14 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
             className="w-56 h-full"
           />
         )}
-        {(activeTile === null || ["blank", "training"].includes(tiles[activeTile].type)) && (
-          <SecondaryCard noDecor className="w-56 h-full flex text-xs justify-center items-center opacity-60">
-            Select a Slot
-          </SecondaryCard>
-        )}
+        {(!activeTile || ["training", "train"].includes(tiles[activeTile - 1].type)) &&
+          (activeTile === 0 ? null : (
+            <SecondaryCard noDecor className="w-56 h-full flex text-xs justify-center items-center opacity-60">
+              Select a Slot
+            </SecondaryCard>
+          ))}
       </div>
+
       <div className="flex justify-center w-full">
         <Navigator.BackButton className="w-fit" />
       </div>
@@ -80,56 +101,41 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
   );
 };
 
-const BlankTile: React.FC = () => {
-  return (
-    <SecondaryCard noDecor className="w-full h-full flex text-xs justify-center items-center opacity-60">
-      <FaLock />
-    </SecondaryCard>
-  );
-};
-
-const BuiltTile: React.FC<{ unit: Entity }> = ({ unit }) => {
-  return (
-    <SecondaryCard noDecor className="w-full h-full justify-center items-center flex flex-col gap-1">
-      <div className="flex gap-2 items-center">
-        <img src={ResourceImage.get(unit) ?? ""} className="h-6" />
-      </div>
-      <div className="flex flex-col gap-1 items-center">
-        <div className="text-xs text-success">Idling on Asteroid A</div>
-      </div>
-    </SecondaryCard>
-  );
-};
-
 const TrainingTile: React.FC<{
-  training: { unit: Entity; progress: bigint; timeRemaining: bigint; count: bigint };
-}> = ({ training: { unit, timeRemaining } }) => {
+  asteroidEntity?: Entity;
+  timeRemaining: bigint;
+  className?: string;
+}> = ({ timeRemaining, asteroidEntity, className = "" }) => {
   return (
-    <SecondaryCard noDecor className="w-full h-full justify-center items-center flex flex-col gap-1">
+    <SecondaryCard noDecor className={`w-full justify-center items-center flex flex-col gap-1 ${className}`}>
       <div className="flex gap-2 items-center">
-        <img src={ResourceImage.get(unit) ?? ""} className="h-6" />
+        <img src={ResourceImage.get(EntityType.ColonyShip) ?? ""} className="h-6" />
       </div>
       <div className="flex flex-col gap-1 items-center">
         <div className="text-xs text-warning animate-pulse">{timeRemaining === 0n ? "IN QUEUE" : "Building"}</div>
-        {timeRemaining > 0n && <div className="text-xs opacity-50"> {formatTime(timeRemaining)}</div>}
+        {timeRemaining > 0n && <div className="text-xs opacity-70"> {formatTime(timeRemaining)}</div>}
+        {asteroidEntity && <div className="text-xs text-accent opacity-50">{entityToRockName(asteroidEntity)}</div>}
       </div>
     </SecondaryCard>
   );
 };
 
-const TrainShipTile: React.FC<{ active?: boolean; onClick?: () => void }> = ({ onClick, active }) => {
+const TrainShipTile: React.FC<{ active?: boolean; onClick?: () => void; className?: string }> = ({
+  onClick,
+  active,
+  className,
+}) => {
   return (
-    <SecondaryCard className={`w-full h-full !p-0 ${active ? "ring ring-secondary" : ""}`}>
+    <SecondaryCard className={`w-full h-full !p-0 ${active ? "ring ring-secondary" : ""} ${className}`}>
       <Button
         motion="disabled"
         onClick={onClick}
         variant="ghost"
-        className="w-full h-full flex flex-col gap-2 text-xs justify-center items-center"
+        className="w-full h-full flex gap-2 text-xs justify-center items-center"
       >
         <img src={"/img/icons/addicon.png"} className={`pixel-images w-4 scale-150`} />
         <div className="flex flex-col">
-          <p>Commission</p>
-          <p>Ship</p>
+          <p>Commission Ship</p>
         </div>
       </Button>
     </SecondaryCard>
@@ -138,7 +144,7 @@ const TrainShipTile: React.FC<{ active?: boolean; onClick?: () => void }> = ({ o
 
 const UnlockTile: React.FC<{ active?: boolean; onClick?: () => void }> = ({ onClick, active }) => {
   return (
-    <SecondaryCard className={`w-full h-full !p-0 ${active ? "ring ring-secondary" : ""}`}>
+    <SecondaryCard className={`min-h-24 w-full !p-0 ${active ? "ring ring-secondary" : ""}`}>
       <Button
         motion="disabled"
         onClick={onClick}

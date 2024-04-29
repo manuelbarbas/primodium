@@ -1,4 +1,5 @@
 import { components } from "@/network/components";
+import { updateTrainingQueue } from "@/network/systems/setupTrainingQueues";
 import { EntityType } from "@/util/constants";
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { Hex } from "viem";
@@ -9,17 +10,21 @@ export function getColonySlotsCostMultiplier(playerEntity: Entity) {
   return multiplier * maxColonySlots;
 }
 
-export function getColonyShipsPlusAsteroids(playerEntity: Entity) {
+type ColonyShipType =
+  | { type: "asteroid" | "ship"; asteroidEntity: Entity }
+  | { type: "training"; timeRemaining: bigint; shipyardEntity: Entity; asteroidEntity: Entity };
+
+export function getColonyShipsPlusAsteroids(playerEntity: Entity): Array<ColonyShipType> {
   const query = [HasValue(components.OwnedBy, { value: playerEntity }), Has(components.Asteroid)];
   const ownedAsteroids = runQuery(query);
 
-  const ret: Array<{ type: "asteroid" | "ship" | "training"; parentEntity: Entity }> = [];
+  const ret: Array<ColonyShipType> = [];
   ownedAsteroids.forEach((asteroidEntity) => {
-    ret.push({ type: "asteroid", parentEntity: asteroidEntity as Entity });
+    ret.push({ type: "asteroid", asteroidEntity: asteroidEntity as Entity });
     const shipsOnAsteroid =
       components.UnitCount.getWithKeys({ entity: asteroidEntity as Hex, unit: EntityType.ColonyShip as Hex })?.value ??
       0n;
-    for (let j = 0; j < shipsOnAsteroid; j++) ret.push({ type: "ship", parentEntity: asteroidEntity as Entity });
+    for (let j = 0; j < shipsOnAsteroid; j++) ret.push({ type: "ship", asteroidEntity: asteroidEntity as Entity });
 
     // Fleets are owned by asteroids
     const fleetQuery = [HasValue(components.OwnedBy, { value: asteroidEntity }), Has(components.IsFleet)];
@@ -29,13 +34,26 @@ export function getColonyShipsPlusAsteroids(playerEntity: Entity) {
       const shipsOnFleet =
         components.UnitCount.getWithKeys({ entity: ownedFleets[j] as Hex, unit: EntityType.ColonyShip as Hex })
           ?.value ?? 0n;
-      for (let k = 0; k < shipsOnFleet; k++) ret.push({ type: "ship", parentEntity: ownedFleets[j] as Entity });
+      for (let k = 0; k < shipsOnFleet; k++) ret.push({ type: "ship", asteroidEntity: ownedFleets[j] as Entity });
     }
 
     // Colony ships being trained on each asteroid
     const shipsInTraining = components.ColonyShipsInTraining.get(asteroidEntity as Entity)?.value ?? 0n;
-    for (let j = 0; j < shipsInTraining; j++) ret.push({ type: "training", parentEntity: asteroidEntity as Entity });
-  });
+    if (shipsInTraining > 0) {
+      const shipyards = runQuery([HasValue(components.BuildingType, { value: EntityType.Shipyard })]);
 
+      shipyards.forEach((shipyardEntity) => {
+        updateTrainingQueue(shipyardEntity as Entity);
+        const queue = components.TrainingQueue.get(shipyardEntity as Entity);
+        if (!queue || queue?.units.length == 0) return;
+        ret.push({
+          type: "training",
+          timeRemaining: queue.timeRemaining[0],
+          shipyardEntity: shipyardEntity as Entity,
+          asteroidEntity: asteroidEntity as Entity,
+        });
+      });
+    }
+  });
   return ret;
 }
