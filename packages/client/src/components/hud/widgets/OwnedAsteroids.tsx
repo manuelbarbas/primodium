@@ -1,20 +1,19 @@
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { Button } from "src/components/core/Button";
-import { SecondaryCard } from "src/components/core/Card";
-import { Widget } from "src/components/core/Widget";
+import { SecondaryCard, Card } from "src/components/core/Card";
 import { useMud } from "src/hooks";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getAsteroidImage, getAsteroidInfo, getAsteroidName } from "src/util/asteroid";
-import { getRandomRange } from "src/util/common";
-import { EntityType, ResourceImage } from "src/util/constants";
+import { EntityType, Mode } from "src/util/constants";
 import { entityToRockName } from "src/util/name";
 import { HealthBar } from "../HealthBar";
 import { formatResourceCount } from "src/util/number";
 import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
 import { Badge } from "src/components/core/Badge";
+import { EntityToResourceImage } from "@/util/mappings";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -69,7 +68,7 @@ export const OwnedAsteroid: React.FC<{ asteroid: Entity; onClick?: () => void }>
       <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
         <HealthBar
           tooltipText="Encryption"
-          imgUrl={ResourceImage.get(EntityType.Encryption) ?? ""}
+          imgUrl={EntityToResourceImage[EntityType.Encryption]}
           health={Number(formatResourceCount(EntityType.Encryption, encryption, { notLocale: true }))}
           maxHealth={Number(formatResourceCount(EntityType.Encryption, maxEncryption, { notLocale: true }))}
         />
@@ -77,7 +76,7 @@ export const OwnedAsteroid: React.FC<{ asteroid: Entity; onClick?: () => void }>
       <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
         <HealthBar
           tooltipText="Strength"
-          imgUrl={ResourceImage.get(EntityType.HP) ?? ""}
+          imgUrl={EntityToResourceImage[EntityType.HP]}
           health={Number(formatResourceCount(EntityType.HP, strength, { notLocale: true, showZero: true }))}
           maxHealth={Number(formatResourceCount(EntityType.HP, maxStrength, { notLocale: true, showZero: true }))}
         />
@@ -96,7 +95,7 @@ export const _OwnedAsteroids: React.FC = () => {
   const asteroids = useEntityQuery(query);
 
   return (
-    <div className="p-2 max-h-96 overflow-y-auto scrollbar w-96">
+    <Card noDecor className="p-2 max-h-96 overflow-y-auto scrollbar w-96">
       {asteroids.length === 0 && (
         <SecondaryCard className="w-full h-full flex text-xs items-center justify-center font-bold">
           <p className="opacity-50 uppercase">you control no asteroids</p>
@@ -110,16 +109,10 @@ export const _OwnedAsteroids: React.FC = () => {
               asteroid={entity}
               onClick={async () => {
                 const { position } = getAsteroidInfo(primodium, entity);
-                const mapOpen = components.MapOpen.get(undefined, {
-                  value: false,
-                }).value;
 
-                if (!mapOpen) {
-                  const { transitionToScene } = primodium.api().scene;
+                const { transitionToScene } = primodium.api().scene;
 
-                  await transitionToScene("ASTEROID", "STARMAP");
-                  components.MapOpen.set({ value: true });
-                }
+                await transitionToScene("ASTEROID", "STARMAP");
 
                 const { pan, zoomTo } = primodium.api("STARMAP").camera;
 
@@ -136,32 +129,14 @@ export const _OwnedAsteroids: React.FC = () => {
           );
         })}
       </div>
-    </div>
+    </Card>
   );
 };
 
 export const OwnedAsteroids = () => {
-  const { components } = useMud();
-  const mapOpen = components.MapOpen.use()?.value;
+  const mapOpen = components.SelectedMode.use()?.value === Mode.Starmap;
 
-  return (
-    <Widget
-      id="owned_asteroids"
-      title="Owned Asteroids"
-      icon="/img/icons/asteroidicon.png"
-      defaultCoord={{
-        x: window.innerWidth / 2 + getRandomRange(-50, 50),
-        y: window.innerHeight / 2 + getRandomRange(-50, 50),
-      }}
-      defaultLocked
-      defaultVisible
-      persist
-      lockable
-      draggable
-      scene={"ASTEROID"}
-      active={!!mapOpen}
-    >
-      <_OwnedAsteroids />
-    </Widget>
-  );
+  if (!mapOpen) return null;
+
+  return <_OwnedAsteroids />;
 };

@@ -1,7 +1,7 @@
 import { Scene } from "engine/types";
 import { Bounds, Dimensions, getRelativeCoord } from "./helpers";
-import { Tilesets } from "../../constants/assets/tiles";
 import { DepthLayers } from "../../constants/common";
+import { Tilesets } from "@primodiumxyz/assets";
 
 export class AsteroidBounds {
   private scene: Scene;

@@ -1,18 +1,18 @@
 import { Entity } from "@latticexyz/recs";
-import { EntityTypeToAnimationKey, EntityTypetoBuildingSpriteKey } from "src/game/lib/mappings";
+import { Sprites } from "@primodiumxyz/assets";
+import { EntityTypeToAnimations, EntityTypetoBuildingSprites } from "src/game/lib/mappings";
 import { safeIndex } from "src/util/array";
-import { SpriteKeys } from "../../constants/assets/sprites";
 
 export function getAnimationAsset(level: bigint, buildingType: Entity) {
-  const animations = EntityTypeToAnimationKey[buildingType];
+  const animations = EntityTypeToAnimations[buildingType];
   const _level = Number(level);
   return animations ? safeIndex(_level - 1, animations) : undefined;
 }
 
 export function getSpriteAsset(level: bigint, buildingType: Entity) {
-  const sprites = EntityTypetoBuildingSpriteKey[buildingType];
+  const sprites = EntityTypetoBuildingSprites[buildingType];
   const _level = Number(level);
-  return sprites ? safeIndex(_level - 1, sprites) : SpriteKeys.IronMine1;
+  return sprites ? safeIndex(_level - 1, sprites) : Sprites.IronMine1;
 }
 
 export function getAssetKeyPair(level: bigint, buildingType: Entity) {
@@ -26,9 +26,9 @@ export function getAssetKeyPair(level: bigint, buildingType: Entity) {
 }
 
 export function getConstructionSprite(buildingDimensions: BuildingDimensions) {
-  return SpriteKeys[
-    `Construction${buildingDimensions.height}x${buildingDimensions.width}` as keyof typeof SpriteKeys
-  ] as SpriteKeys | undefined;
+  return Sprites[`Construction${buildingDimensions.height}x${buildingDimensions.width}` as keyof typeof Sprites] as
+    | Sprites
+    | undefined;
 }
 export type BuildingDimensions = {
   width: number;

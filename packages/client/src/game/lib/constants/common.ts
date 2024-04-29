@@ -3,10 +3,10 @@ export const KEY = "MAIN";
 
 export const Scenes = {
   Root: "ROOT",
-  Main: "MAIN",
   Asteroid: "ASTEROID",
   Starmap: "STARMAP",
   UI: "UI",
+  CommandCenter: "COMMAND_CENTER",
 } as const;
 
 export type SceneKeys = (typeof Scenes)[keyof typeof Scenes];

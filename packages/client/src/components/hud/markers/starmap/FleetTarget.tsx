@@ -14,11 +14,13 @@ import { getCanAttackSomeone, getFleetStats } from "src/util/unit";
 import { Fleets } from "../../widgets/fleets/Fleets";
 import { DepthLayers } from "src/game/lib/constants/common";
 import { usePrimodium } from "src/hooks/usePrimodium";
+import { Mode } from "@/util/constants";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 
 // this component assumes the fleet is owned by the player
 export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fleet, position }) => {
   const primodium = usePrimodium();
-  const mapOpen = components.MapOpen.use()?.value ?? false;
+  const mapOpen = components.SelectedMode.use()?.value !== Mode.Asteroid;
   const selectingAttackDestination = !!components.Attack.use()?.originFleet;
   const selectingMoveDestination = !!components.Send.use()?.originFleet;
   const noUnits = useUnitCounts(fleet).size === 0;
@@ -28,11 +30,9 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
   const mud = useMud();
 
   const coord = useMemo(() => {
-    const fleetEntity = components.SelectedFleet.get()?.value;
+    if (!fleet) return { x: 0, y: 0 };
 
-    if (!fleetEntity) return { x: 0, y: 0 };
-
-    const fleetObj = primodium.api("STARMAP").objects.getFleet(fleetEntity);
+    const fleetObj = primodium.api("STARMAP").objects.getFleet(fleet);
 
     if (!fleetObj) return { x: 0, y: 0 };
 
@@ -54,7 +54,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
       scene={"STARMAP"}
       coord={coord}
       depth={DepthLayers.Path + 1}
-      offScreenIconUri="/img/icons/outgoingicon.png"
+      offScreenIconUri={InterfaceIcons.Outgoing}
     >
       <div className="w-14 h-14 border-2 border-error flex items-center justify-center bg-transparent">
         <div className="absolute top-0 right-0 translate-x-full w-36">
@@ -65,7 +65,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
             }
             className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
           >
-            <IconLabel imageUri="/img/icons/weaponryicon.png" text={selectingAttackDestination ? "Cancel" : "Attack"} />
+            <IconLabel imageUri={InterfaceIcons.Crosshairs} text={selectingAttackDestination ? "Cancel" : "Attack"} />
           </Button>
         </div>
         {!!stance && (
@@ -74,7 +74,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
               onClick={() => clearFleetStance(mud, fleet)}
               className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
             >
-              <IconLabel imageUri="/img/icons/moveicon.png" text="Clear Stance" />
+              <IconLabel imageUri={InterfaceIcons.Debug} text="Clear Stance" />
             </Button>
           </div>
         )}
@@ -87,7 +87,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
               className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
             >
               <IconLabel
-                imageUri="/img/icons/moveicon.png"
+                imageUri={InterfaceIcons.Debug}
                 text={spaceRockData.isBlocked ? "Blocked" : selectingMoveDestination ? "Cancel" : "Move"}
               />
             </Button>
@@ -101,7 +101,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
               disabled={selectingAttackDestination || selectingMoveDestination}
               className="btn-ghost btn-xs text-xs text-accent bg-neutral border border-r-0 pl-2 border-secondary/50 w-28 transition-[width] duration-200"
             >
-              <IconLabel imageUri="/img/icons/settingsicon.png" text={"MANAGE"} />
+              <IconLabel imageUri={InterfaceIcons.Settings} text={"MANAGE"} />
             </Modal.Button>
             <Modal.Content className="w-3/4 h-[800px]">
               <Fleets initialState="manageFleet" fleetEntity={fleet} />

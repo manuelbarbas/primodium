@@ -1,8 +1,8 @@
+import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import React from "react";
 import { FaSync } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
-import { ResourceImage } from "src/util/constants";
 import { formatResourceCount } from "src/util/number";
 
 export const ResourceIcon = ({
@@ -35,7 +35,7 @@ export const ResourceIcon = ({
     } ${className}`}
   >
     <img
-      src={ResourceImage.get(resource) ?? ""}
+      src={EntityToResourceImage[resource]}
       className={`pixel-images ${size == "md" ? "w-12" : "w-10"} scale-200 font-bold text-lg pointer-events-none`}
     />
     <p className={`${size == "sm" ? "text-sm" : ""} font-bold`}>{amount}</p>

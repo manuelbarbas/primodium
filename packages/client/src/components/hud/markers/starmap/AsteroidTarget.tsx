@@ -20,6 +20,8 @@ import { IconLabel } from "../../../core/IconLabel";
 import { Modal } from "../../../core/Modal";
 import { Fleets } from "../../widgets/fleets/Fleets";
 import { _ShardAsteroidTarget } from "./ShardAsteroidTarget";
+import { Mode } from "@/util/constants";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 
 export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ selectedAsteroid }) => {
   const mud = useMud();
@@ -30,10 +32,9 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   const {
     scene: { getConfig },
     hooks: { useCamera },
-    util: { closeMap },
   } = useRef(primodium.api("STARMAP")).current;
   const ownedBy = components.OwnedBy.use(selectedAsteroid)?.value;
-  const mapOpen = components.MapOpen.use()?.value ?? false;
+  const mapOpen = components.SelectedMode.use()?.value !== Mode.Asteroid;
   const position = components.Position.use(selectedAsteroid);
   const imageUri = getAsteroidImage(primodium, selectedAsteroid);
 
@@ -78,7 +79,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
       scene={"STARMAP"}
       coord={coord}
       id={`asteroid-target`}
-      offScreenIconUri="/img/icons/attackicon.png"
+      offScreenIconUri={InterfaceIcons.Attack}
       depth={DepthLayers.Path - 5}
     >
       <div
@@ -93,11 +94,13 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
             onClick={async () => {
               components.Send.reset();
               components.ActiveRock.set({ value: selectedAsteroid });
-              await closeMap();
+              ownedBy === playerEntity
+                ? components.SelectedMode.set({ value: Mode.Asteroid })
+                : components.SelectedMode.set({ value: Mode.Spectate });
             }}
           >
-            {!ownedByPlayer && <IconLabel imageUri="/img/icons/spectateicon.png" className={``} text="VIEW" />}
-            {ownedByPlayer && <IconLabel imageUri="/img/icons/minersicon.png" className={``} text="BUILD" />}
+            {!ownedByPlayer && <IconLabel imageUri={InterfaceIcons.Spectate} className={``} text="VIEW" />}
+            {ownedByPlayer && <IconLabel imageUri={InterfaceIcons.Build} className={``} text="BUILD" />}
           </Button>
         </div>
         {ownedByPlayer && !selectingDestination && (
@@ -107,7 +110,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
               onClick={() => components.Attack.setOrigin(selectedAsteroid)}
               className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
             >
-              <IconLabel imageUri="/img/icons/weaponryicon.png" text="Attack" />
+              <IconLabel imageUri={InterfaceIcons.Crosshairs} text="Attack" />
             </Button>
           </div>
         )}
@@ -117,7 +120,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
               onClick={() => components.Attack.reset()}
               className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
             >
-              <IconLabel imageUri="/img/icons/returnicon.png" text="CANCEL" />
+              <IconLabel imageUri={InterfaceIcons.Return} text="CANCEL" />
             </Button>
           </div>
         )}
@@ -129,7 +132,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
                 disabled={selectingDestination || !canTransfer}
                 className="btn-ghost btn-xs text-xs text-accent bg-neutral border border-r-0 pl-2 border-secondary/50 w-28 transition-[width] duration-200"
               >
-                <IconLabel imageUri="/img/icons/trade.png" text={"Transfer"} />
+                <IconLabel imageUri={InterfaceIcons.Trade} text={"Transfer"} />
               </Modal.Button>
               <Modal.Content className="w-3/4 h-[800px]">
                 <Fleets initialState="transfer" from={selectedAsteroid} />
@@ -157,7 +160,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
                 disabled={!canAddFleets}
                 className="btn-ghost btn-xs w-full text-xs text-accent bg-slate-900 border border-r-0 border-secondary/50"
               >
-                <IconLabel imageUri="/img/icons/addicon.png" text="ADD FLEET" />
+                <IconLabel imageUri={InterfaceIcons.Add} text="ADD FLEET" />
               </Modal.Button>
               <Modal.Content className="w-3/4 h-[800px]">
                 <Fleets initialState="transfer" from={selectedAsteroid} to={"newFleet"} />

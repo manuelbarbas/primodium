@@ -52,6 +52,12 @@ export const renderAsteroidMap = (scene: Scene) => {
       .drawMap(asteroidData.maxLevel)
       .drawBounds(currentBounds, maxBounds)
       .drawResources(tiles);
+
+    const bounds = asteroidMap.getTilemapBounds();
+
+    if (!bounds) return;
+
+    scene.camera.phaserCamera.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
   });
 
   defineComponentSystem(systemsWorld, components.Level, ({ entity }) => {

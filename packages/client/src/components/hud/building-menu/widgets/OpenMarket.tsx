@@ -2,6 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { SecondaryCard } from "src/components/core/Card";
 import { Modal } from "src/components/core/Modal";
 import { Swap } from "../../modals/Swap";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 
 export const OpenMarket: React.FC<{ building: Entity }> = ({ building }) => {
   return (
@@ -10,7 +11,7 @@ export const OpenMarket: React.FC<{ building: Entity }> = ({ building }) => {
       <Modal title="Swap Resources">
         <Modal.Button className="btn-md w-fit btn-secondary">
           <div className="flex gap-2 items-center z-10">
-            <img src="/img/icons/trade.png" className="w-8 h-8" />
+            <img src={InterfaceIcons.Trade} className="w-8 h-8" />
             <p className="uppercase text-xs font-bold">Swap</p>
           </div>
         </Modal.Button>

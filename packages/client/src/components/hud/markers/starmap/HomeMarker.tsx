@@ -1,6 +1,7 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useMemo } from "react";
 import { IconMarker } from "src/components/core/Marker";
 import { DepthLayers } from "src/game/lib/constants/common";
@@ -37,7 +38,7 @@ export const HomeMarker = () => {
       depth={DepthLayers.Path}
       scene={"STARMAP"}
       coord={coord}
-      iconUri="/img/icons/utilitiesicon.png"
+      iconUri={InterfaceIcons.Housing}
     />
   );
 };

@@ -9,7 +9,7 @@ import { setupKeybinds } from "../asteroid/setup/setupKeybinds";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
 
 export const initStarmapScene = async (game: Game) => {
-  const scene = await game.sceneManager.addScene(starmapSceneConfig, false);
+  const scene = await game.sceneManager.createScene(starmapSceneConfig, false);
   const audio = createAudioApi(scene);
   audio.initializeAudioVolume();
 

@@ -12,13 +12,15 @@ import { useMaxCountOfRecipe } from "src/hooks/useMaxCountOfRecipe";
 import { components } from "src/network/components";
 import { train } from "src/network/setup/contractCalls/train";
 import { getEntityTypeName } from "src/util/common";
-import { BackgroundImage, EntityType, ResourceEntityLookup, ResourceImage, UnitEnumLookup } from "src/util/constants";
+import { EntityType, ResourceEntityLookup, UnitEnumLookup } from "src/util/constants";
 import { formatNumber, formatResourceCount } from "src/util/number";
 import { getRecipe } from "src/util/recipe";
 import { getFullResourceCount } from "src/util/resource";
 import { getUnitStats } from "src/util/unit";
 import { Hex } from "viem";
 import { ResourceIconTooltip } from "../../../shared/ResourceIconTooltip";
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 
 export const BuildUnit: React.FC<{
   building: Entity;
@@ -58,7 +60,7 @@ export const BuildUnit: React.FC<{
                   onClick={() => (selectedUnit == unit ? setSelectedUnit(undefined) : setSelectedUnit(unit))}
                 >
                   <img
-                    src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}
+                    src={EntityToUnitImage[unit] ?? InterfaceIcons.Debug}
                     className={`border w-[72px] p-2 group-hover:opacity-50 bg-neutral ${
                       selectedUnit == unit ? "border-2 border-accent" : "border-secondary/75"
                     }`}
@@ -130,7 +132,7 @@ const TrainNonColonyShip = ({ building, unit, asteroid }: { building: Entity; un
           {recipe.map((resource, i) => (
             <Badge key={`resource-${i}`}>
               <ResourceIconTooltip
-                image={ResourceImage.get(resource.id) ?? ""}
+                image={EntityToResourceImage[resource.id]}
                 resource={resource.id}
                 name={getEntityTypeName(resource.id)}
                 amount={resource.amount * BigInt(count)}
@@ -189,7 +191,7 @@ const TrainColonyShip = ({ building, asteroid }: { building: Entity; asteroid: E
       <div className="flex justify-center items-center gap-1">COST</div>
       <Badge>
         <ResourceIconTooltip
-          image={ResourceImage.get(resource) ?? ""}
+          image={EntityToResourceImage[resource]}
           resource={resource}
           name={getEntityTypeName(resource)}
           amount={cost}

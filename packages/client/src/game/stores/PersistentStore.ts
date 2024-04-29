@@ -1,11 +1,11 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { mountStoreDevtool } from "simple-zustand-devtools";
+import { KeybindActionKeys } from "@game/lib/constants/keybinds";
 import { Coord } from "@latticexyz/utils";
 import { Key } from "engine/types";
-import { KeybindActionKeys } from "@game/lib/constants/keybinds";
+import { mountStoreDevtool } from "simple-zustand-devtools";
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-const VERSION = 6;
+const VERSION = 7;
 
 type Keybinds = Partial<{
   [key in KeybindActionKeys]: Set<Key>;
@@ -35,7 +35,6 @@ type PersistentState = {
   newPlayer: boolean;
   keybinds: Keybinds;
   volume: Volume;
-  allowHackerModal: boolean;
   uiScale: number;
   consoleHistory: { input: string; output: string }[];
   noExternalAccount: boolean;
@@ -52,7 +51,6 @@ type PersistentActions = {
   setNewPlayer: (val: boolean) => void;
   setVolume: (volume: number, channel: Channel) => void;
   setFontStyle: (style: string) => void;
-  toggleAllowHackerModal: () => void;
   setUiScale: (scale: number) => void;
   setConsoleHistory: (history: { input: string; output: string }[]) => void;
   setPane: (id: string, coord: Coord, pinned: boolean, locked: boolean, visible: boolean) => void;
@@ -66,7 +64,6 @@ type PersistentActions = {
 const defaults: PersistentState = {
   fontStyle: "font-pixel",
   newPlayer: true,
-  allowHackerModal: false,
   uiScale: 1,
   consoleHistory: [],
   noExternalAccount: false,
@@ -151,10 +148,6 @@ export const usePersistentStore = create<PersistentState & PersistentActions>()(
       setKeybind: (keybindAction, keys) => set({ keybinds: { [keybindAction]: keys } }),
       setVolume: (volume, channel) => {
         set({ volume: { ...get().volume, [channel]: volume } });
-      },
-      toggleAllowHackerModal: () => {
-        const allow = get().allowHackerModal === false ? true : false;
-        set({ allowHackerModal: allow });
       },
       setUiScale: (scale) => {
         set({ uiScale: scale });

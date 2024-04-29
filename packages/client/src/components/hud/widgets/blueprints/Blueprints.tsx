@@ -4,10 +4,12 @@ import { BlueprintPane } from "./BlueprintPane";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Tabs } from "@/components/core/Tabs";
 import { Card, GlassCard } from "@/components/core/Card";
+import { Mode } from "@/util/constants";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 
 export const Blueprints = memo(() => {
   const { components } = useMud();
-  const mapOpen = components.MapOpen.use()?.value;
+  const mapOpen = components.SelectedMode.use()?.value !== Mode.Asteroid;
   const isBuilding = components.ActiveRock.use()?.value === components.BuildRock.use()?.value;
 
   if (mapOpen || !isBuilding) return;
@@ -25,12 +27,12 @@ export const Blueprints = memo(() => {
         index={0}
         togglable
         size={"sm"}
-        className="heropattern-topography-slate-500/10 !border-l-0"
+        className="heropattern-topography-slate-500/10 !border-l-0 animate-in fade-in zoom-in"
         style={{
           writingMode: "vertical-lr",
         }}
       >
-        <IconLabel text="Blueprints" imageUri="/img/icons/blueprinticon.png" className="gap-2 py-4" />
+        <IconLabel text="Blueprints" imageUri={InterfaceIcons.Blueprints} className="gap-2 py-4" />
       </Tabs.Button>
     </Tabs>
   );

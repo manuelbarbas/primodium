@@ -1,3 +1,4 @@
+import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { Badge } from "src/components/core/Badge";
 import { SecondaryCard } from "src/components/core/Card";
@@ -5,7 +6,7 @@ import { Navigator } from "src/components/core/Navigator";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useBuildingInfo } from "src/hooks/useBuildingInfo";
 import { getEntityTypeName } from "src/util/common";
-import { RESOURCE_SCALE, ResourceImage } from "src/util/constants";
+import { RESOURCE_SCALE } from "src/util/constants";
 
 const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
@@ -59,7 +60,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                 <Badge className="text-xs gap-2" key={`production-${resource}`}>
                   <ResourceIconTooltip
                     name={getEntityTypeName(resource)}
-                    image={ResourceImage.get(resource) ?? ""}
+                    image={EntityToResourceImage[resource]}
                     resource={resource}
                     amount={amount}
                     resourceType={type}
@@ -77,7 +78,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                 <Badge className="text-xs gap-2" key={`next-production-${resource}`}>
                   <ResourceIconTooltip
                     name={getEntityTypeName(resource)}
-                    image={ResourceImage.get(resource) ?? ""}
+                    image={EntityToResourceImage[resource]}
                     resource={resource}
                     amount={amount}
                     resourceType={type}
@@ -99,7 +100,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                 <Badge className="text-xs gap-2" key={`production-${resource}`}>
                   <ResourceIconTooltip
                     name={getEntityTypeName(resource)}
-                    image={ResourceImage.get(resource) ?? ""}
+                    image={EntityToResourceImage[resource]}
                     resource={resource}
                     amount={amount}
                     resourceType={type}
@@ -118,7 +119,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                   <ResourceIconTooltip
                     fractionDigits={3}
                     name={getEntityTypeName(resource)}
-                    image={ResourceImage.get(resource) ?? ""}
+                    image={EntityToResourceImage[resource]}
                     resource={resource}
                     amount={amount}
                     resourceType={type}
@@ -152,7 +153,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                   <ResourceIconTooltip
                     fractionDigits={3}
                     name={getEntityTypeName(storage.resource)}
-                    image={ResourceImage.get(storage.resource) ?? ""}
+                    image={EntityToResourceImage[storage.resource]}
                     resource={storage.resource}
                     amount={storage.amount}
                     resourceType={storage.resourceType}
@@ -173,7 +174,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     <ResourceIconTooltip
                       fractionDigits={3}
                       name={getEntityTypeName(storage.resource)}
-                      image={ResourceImage.get(storage.resource) ?? ""}
+                      image={EntityToResourceImage[storage.resource]}
                       resource={storage.resource}
                       amount={storage.amount}
                       resourceType={storage.resourceType}
