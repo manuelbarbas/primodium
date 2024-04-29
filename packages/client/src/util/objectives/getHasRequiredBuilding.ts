@@ -1,4 +1,5 @@
 import { Entity, HasValue, runQuery } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { components } from "src/network/components";
 import { Hex } from "viem";
 import { getEntityTypeName } from "../common";
@@ -12,7 +13,7 @@ export function getHasRequiredBuilding(asteroid: Entity, objective: BuildObjecti
 
   return {
     tooltipText: `Build a ${getEntityTypeName(objective.buildingType)}`,
-    backgroundImage: "/img/icons/minersicon.png",
+    backgroundImage: InterfaceIcons.Build,
     requiredValue: 1n,
     currentValue: BigInt(buildings.size),
     isBool: true,

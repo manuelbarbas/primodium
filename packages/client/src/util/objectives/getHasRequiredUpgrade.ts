@@ -1,4 +1,5 @@
 import { Entity, HasValue, runQuery } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { components } from "src/network/components";
 import { Hex } from "viem";
 import { getEntityTypeName } from "../common";
@@ -16,7 +17,7 @@ export function getHasRequiredBuildingUpgrade(asteroid: Entity, objective: Upgra
   }, 0n);
   return {
     tooltipText: `${getEntityTypeName(objective.buildingType)} Level`,
-    backgroundImage: "/img/icons/addicon.png",
+    backgroundImage: InterfaceIcons.Add,
     requiredValue: objective.level,
     currentValue: maxLevel,
     scale: 1n,

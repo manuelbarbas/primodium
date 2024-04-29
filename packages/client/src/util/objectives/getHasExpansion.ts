@@ -1,4 +1,5 @@
 import { Entity } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { components } from "src/network/components";
 import { Hex } from "viem";
 import { ExpandObjective, ObjectiveReq } from "./types";
@@ -8,7 +9,7 @@ export function getHasExpansion(asteroid: Entity, objective: ExpandObjective): O
 
   return {
     tooltipText: `Expand to Lvl ${objective.level}`,
-    backgroundImage: "/img/icons/minersicon.png",
+    backgroundImage: InterfaceIcons.Build,
     requiredValue: objective.level,
     currentValue: level,
     scale: 1n,

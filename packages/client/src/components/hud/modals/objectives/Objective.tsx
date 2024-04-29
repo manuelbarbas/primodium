@@ -9,8 +9,10 @@ import { IconLabel } from "src/components/core/IconLabel";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { getEntityTypeName } from "src/util/common";
 
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { components } from "src/network/components";
-import { BackgroundImage, ResourceImage, ResourceType } from "src/util/constants";
+import { ResourceType } from "src/util/constants";
 import { formatNumber } from "src/util/number";
 import { getRewards } from "src/util/objectives/getHasRequiredRewards";
 import { objectiveCategoryColors } from "src/util/objectives/objectiveCategoryColors";
@@ -77,7 +79,7 @@ export const Objective: React.FC<{
                   return (
                     <Badge key={index} className={`text-xs gap-2 ${reqComplete ? "badge-success" : "badge-neutral"}`}>
                       <IconLabel
-                        imageUri={_req.backgroundImage ?? "/img/icons/minersicon.png"}
+                        imageUri={_req.backgroundImage ?? InterfaceIcons.Build}
                         text={reqComplete ? "Complete" : "Incomplete"}
                         className="text-xs font-bold"
                       />
@@ -87,7 +89,7 @@ export const Objective: React.FC<{
                 return (
                   <Badge key={index} className={`text-xs gap-2 ${reqComplete ? "badge-success" : "badge-neutral"}`}>
                     <IconLabel
-                      imageUri={_req.backgroundImage ?? "/img/icons/minersicon.png"}
+                      imageUri={_req.backgroundImage ?? InterfaceIcons.Build}
                       text={formatNumber(value / _req.scale, { short: true, fractionDigits: 3 })}
                       className="text-xs font-bold"
                     />
@@ -122,7 +124,7 @@ export const Objective: React.FC<{
                   >
                     <ResourceIconTooltip
                       name={getEntityTypeName(resource.id)}
-                      image={ResourceImage.get(resource.id) ?? BackgroundImage.get(resource.id)?.at(0) ?? ""}
+                      image={EntityToResourceImage[resource.id] ?? EntityToUnitImage[resource.id] ?? ""}
                       resource={resource.id}
                       amount={resource.amount}
                       resourceType={resource.type}

@@ -1,7 +1,8 @@
+import { MapIdToAsteroidType } from "@/util/mappings";
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { components } from "src/network/components";
 import { Hex } from "viem";
-import { MapIdToAsteroidType } from "../constants";
 
 export const getHasAsteroid = (
   playerEntity: Entity | undefined,
@@ -20,7 +21,7 @@ export const getHasAsteroid = (
   if (type === "basic") currentValue = playerAsteroids.size > 1 ? 1n : 0n;
   else currentValue = [...playerAsteroids].some((asteroid) => isCorrectType(asteroid, type)) ? 1n : 0n;
 
-  const icon = "/img/spacerocks/asteroids/asteroid1.png";
+  const icon = InterfaceIcons.Asteroid;
   return {
     tooltipText: `Capture a ${type} asteroid`,
     backgroundImage: icon,

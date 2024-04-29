@@ -1,4 +1,4 @@
-import { EntityToResourceImage } from "@/util/mappings";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { memo } from "react";
 import { Badge } from "src/components/core/Badge";
@@ -98,7 +98,7 @@ export const UnitUpgrade: React.FC<{ unit: Entity }> = memo(({ unit }) => {
 
       <IconLabel
         className="text-lg font-bold gap-4 mt-2"
-        imageUri={BackgroundImage.get(unit)?.at(0) ?? ""}
+        imageUri={EntityToUnitImage[unit]?.at(0) ?? ""}
         text={getEntityTypeName(unit)}
       />
       <div className="grid grid-cols-6 gap-2 border-y border-cyan-400/30 mx-auto">

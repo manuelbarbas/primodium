@@ -1,4 +1,5 @@
 import { Entity, HasValue, runQuery } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { components } from "src/network/components";
 import { Hex } from "viem";
 import { getEntityTypeName } from "../common";
@@ -21,7 +22,7 @@ export function getHasAnyRequiredBuilding(asteroid: Entity, objective: BuildAnyO
     .join(", ");
   return {
     tooltipText: `Build a ${message}`,
-    backgroundImage: "/img/icons/minersicon.png",
+    backgroundImage: InterfaceIcons.Build,
     requiredValue: 1n,
     currentValue: complete ? 1n : 0n,
     isBool: true,

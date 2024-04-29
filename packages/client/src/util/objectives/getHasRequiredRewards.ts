@@ -1,9 +1,10 @@
+import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { Hex } from "viem";
 import { getEntityTypeName } from "../common";
-import { ResourceEntityLookup, ResourceImage, ResourceType, UtilityStorages } from "../constants";
+import { ResourceEntityLookup, ResourceType, UtilityStorages } from "../constants";
 import { getFullResourceCount } from "../resource";
 import { ObjectiveReq } from "./types";
 
@@ -32,7 +33,7 @@ export function getRewardUtilitiesRequirement(objective: Entity, asteroid: Entit
       requiredValue: val,
       currentValue: resourceStorage,
       scale: 1n,
-      backgroundImage: ResourceImage.get(entity as Entity),
+      backgroundImage: EntityToResourceImage[entity as Entity],
       tooltipText: `${getEntityTypeName(entity as Entity)}`,
     };
   });

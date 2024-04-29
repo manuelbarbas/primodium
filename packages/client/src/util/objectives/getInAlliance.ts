@@ -1,4 +1,5 @@
 import { Entity } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { components } from "src/network/components";
 import { ObjectiveReq } from "./types";
 
@@ -8,7 +9,7 @@ export function getInAlliance(asteroidEntity: Entity): ObjectiveReq {
 
   return {
     tooltipText: `Joined alliance`,
-    backgroundImage: "/img/icons/minersicon.png",
+    backgroundImage: InterfaceIcons.Add,
     requiredValue: 1n,
     currentValue: inAlliance ? 1n : 0n,
     isBool: true,

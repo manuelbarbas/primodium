@@ -1,4 +1,5 @@
 import { Entity } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EObjectives } from "contracts/config/enums";
 import { EntityType, ObjectiveEnumLookup } from "../constants";
 import { Objective } from "./types";
@@ -102,7 +103,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BuildWorkshop],
       description:
         'Fleets transport units and resources between asteroids. Create a fleet on the starmap by selecting your asteroid and selecting "Add Fleet".',
-      icon: "/img/icons/outgoingicon.png",
+      icon: InterfaceIcons.Outgoing,
       tooltip: "Created a fleet",
     },
   ],
@@ -115,7 +116,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.CreateFleet],
       description: "Transfer units and resources from a fleet by selecting the fleet and selecting Transfer.",
-      icon: "/img/icons/tradeicon.png",
+      icon: InterfaceIcons.Trade,
       tooltip: "Executed a transfer",
     },
   ],
@@ -127,7 +128,8 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.TransferFromFleet],
       description:
         "Sending a fleet to an asteroid allows it to deposit resources and units or fight other fleets. To send, select a fleet and select Send. Then select the target asteroid.",
-      icon: "/img/icons/moveicon.png",
+      icon: InterfaceIcons.Outgoing,
+
       tooltip: "Executed a fleet send",
     },
   ],
@@ -141,7 +143,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.SendFleet],
       description:
         "Battling an asteroid allows you to raid resources and conquer asteroids. To battle, select a fleet and select Attack. Then select the target asteroid.",
-      icon: "/img/icons/attackicon.png",
+      icon: InterfaceIcons.Attack,
       tooltip: "Executed an attack",
     },
   ],
@@ -153,7 +155,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BattleAsteroid],
       description:
         "Open a battle report to see the results of a battle. To open, select Battle Reports in the bottom bar.",
-      icon: "/img/icons/reportsicon.png",
+      icon: InterfaceIcons.Reports,
       tooltip: "Viewed a battle report",
     },
   ],
@@ -165,7 +167,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.OpenBattleReport],
       description:
         "Battling a fleet lets you defend asteroids and steal resources. To battle, select a fleet or asteroid and select Attack. Then select the target fleet.",
-      icon: "/img/icons/attackicon.png",
+      icon: InterfaceIcons.Attack,
       tooltip: "Executed an attack",
     },
   ],
@@ -203,7 +205,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.TrainColonyShip],
       description:
         "Once an asteroid's decryption reaches zero, you can conquer it. To decrypt an asteroid, attack it using a fleet with a Colony Ship. View the asteroid's decryption when you hover.",
-      icon: "/img/icons/encryptionicon.png",
+      icon: InterfaceIcons.EncryptionBlue,
       tooltip: "Decrypted an asteroid",
     },
   ],
@@ -258,7 +260,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.CaptureAsteroid],
       description:
         "Claiming Primodium allows you to win the game. To claim, capture asteroids and hold them until you can claim their Primodium.",
-      icon: "/img/icons/leaderboardicon.png",
+      icon: InterfaceIcons.Leaderboard,
       tooltip: "Claimed Primodium",
     },
   ],
@@ -305,7 +307,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.CaptureWormholeAsteroid],
       description:
         "Claiming extraction points improves your rank on the Extraction leaderboard. To claim, click on a Wormhole Generator and send it the resource it currently requires.",
-      icon: "/img/icons/leaderboardicon.png",
+      icon: InterfaceIcons.Leaderboard,
       tooltip: "Claimed extraction points",
     },
   ],
@@ -317,7 +319,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.SendFleet],
       description: "Transfer units and resources from an asteroid by selecting the asteroid and selecting Transfer.",
-      icon: "/img/icons/tradeicon.png",
+      icon: InterfaceIcons.Trade,
       tooltip: "Executed a transfer",
     },
   ],
@@ -340,7 +342,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BuildStarmapper],
       description:
         "Defending an asteroid with a fleet provides the fleet's defense to that asteroid's strength. To defend, go to the fleet's Management pane and select Defend.",
-      icon: "/img/icons/moveicon.png",
+      icon: InterfaceIcons.Outgoing,
       tooltip: "Landed a fleet",
     },
   ],
@@ -352,7 +354,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.DefendWithFleet],
       description:
         "Blocking with a fleet prevents all other fleets from leaving the current asteroid. To block, go to the fleet's Management pane and select Block.",
-      icon: "/img/icons/moveicon.png",
+      icon: InterfaceIcons.Outgoing,
       tooltip: "Landed a fleet",
     },
   ],
@@ -364,7 +366,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BlockWithFleet],
       description:
         "Landing a fleet on an asteroid sets the fleet's owner to that asteroid. It also deposit all resources and units. To land, select a fleet and select Land.",
-      icon: "/img/icons/moveicon.png",
+      icon: InterfaceIcons.Outgoing,
       tooltip: "Landed a fleet",
     },
   ],
@@ -432,7 +434,8 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BuildDroneFactory],
       description:
         "Upgrading a unit increases its stats. To upgrade, select Upgrade Units next to Battle Reports and choose a unit to upgrade.",
-      icon: "/img/icons/addicon.png",
+
+      icon: InterfaceIcons.Add,
       tooltip: "Upgraded a unit",
     },
   ],
@@ -631,7 +634,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BuildMarket],
       description:
         "Swapping resources on the market allows you to get resources you need. To swap, select the Market and select Swap.",
-      icon: "/img/icons/tradeicon.png",
+      icon: InterfaceIcons.Trade,
       tooltip: "Executed a swap",
     },
   ],

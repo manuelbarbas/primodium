@@ -6,7 +6,6 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { SecondaryCard } from "src/components/core/Card";
 import { components } from "src/network/components";
 
-import { canShowObjective } from "@/util/objectives/objectiveRequirements";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { ObjectiveEntityLookup } from "src/util/constants";
@@ -24,7 +23,8 @@ export const UnclaimedObjectives: React.FC<{ highlight?: Entity }> = ({ highligh
   const filteredObjectiveEntities = useMemo(() => {
     if (!asteroidEntity) return [];
     return objectives.filter((objective) => {
-      const canShow = canShowObjective(player, objective);
+      // const canShow = canShowObjective(player, objective);
+      const canShow = true;
 
       const claimed =
         components.CompletedObjective.getWithKeys({ entity: player as Hex, objective: objective as Hex })?.value ??
