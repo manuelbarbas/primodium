@@ -10,7 +10,7 @@ import { BuildMarker } from "@/components/hud/markers/starmap/BuildMarker";
 import { FleetTarget } from "@/components/hud/markers/starmap/FleetTarget";
 import { HomeMarker } from "@/components/hud/markers/starmap/HomeMarker";
 import { FavoriteAsteroids } from "@/components/hud/widgets/FavoriteAsteroids";
-import { UnitDeaths } from "@/components/hud/widgets/UnitDeaths";
+import { WarshipPopulation } from "@/components/hud/widgets/WarshipPopulation";
 import { Blueprints } from "@/components/hud/widgets/blueprints/Blueprints";
 import { Resources } from "@/components/hud/widgets/resources/Resources";
 import { BrandingLabel } from "@/components/shared/BrandingLabel";
@@ -37,7 +37,7 @@ export const GameHUD = memo(() => {
 
         {/* Widgets */}
         <HUD.TopLeft>
-          <UnitDeaths />
+          <WarshipPopulation />
         </HUD.TopLeft>
 
         <HUD.TopMiddle className="flex flex-col items-center gap-2">

@@ -1,5 +1,6 @@
 import { CapacityBar } from "@/components/core/CapacityBar";
 import { Dropdown } from "@/components/core/Dropdown";
+import { EntityToResourceImage } from "@/util/mappings";
 import { formatResourceCount } from "@/util/number";
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
@@ -8,7 +9,7 @@ import { useMud } from "src/hooks";
 import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
-import { EntityType, ResourceImage } from "src/util/constants";
+import { EntityType } from "src/util/constants";
 import { entityToRockName } from "src/util/name";
 
 export const FavoriteAsteroids = () => {
@@ -24,7 +25,9 @@ export const FavoriteAsteroids = () => {
       <Dropdown value={selectedAsteroid} onChange={setSelectedAsteroid} size="sm">
         {asteroids.map((asteroid) => (
           <Dropdown.Item className="flex items-center gap-1" key={`favorite-asteroid-${asteroid}`} value={asteroid}>
-            {asteroid === home && <img src={ResourceImage.get(EntityType.Housing)} className="w-4 h-4" alt="home" />}
+            {asteroid === home && (
+              <img src={EntityToResourceImage[EntityType.Housing]} className="w-4 h-4" alt="home" />
+            )}
             {entityToRockName(asteroid)}
           </Dropdown.Item>
         ))}
@@ -40,8 +43,8 @@ const SelectedFavoriteAsteroid = ({ asteroid }: { asteroid: Entity }) => {
     asteroid
   );
   const { strength, maxStrength } = useAsteroidStrength(asteroid);
-  const encryptionImg = ResourceImage.get(EntityType.Encryption) ?? "";
-  const strengthImg = ResourceImage.get(EntityType.HP) ?? "";
+  const encryptionImg = EntityToResourceImage[EntityType.Encryption] ?? "";
+  const strengthImg = EntityToResourceImage[EntityType.HP] ?? "";
   return (
     <div className="flex flex-col 2xl:flex-row gap-4 justify-end">
       <div className="flex gap-2 items-center">
