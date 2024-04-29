@@ -1,14 +1,14 @@
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { useMemo } from "react";
 import { useMud } from "src/hooks";
 import { useAccount } from "src/hooks/useAccount";
+import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
+import { getRockRelationship } from "src/util/asteroid";
 import { entityToColor } from "src/util/color";
 import { Mode, RockRelationshipColors } from "src/util/constants";
-import { getRockRelationship } from "src/util/asteroid";
-import { usePrimodium } from "src/hooks/usePrimodium";
 import { Modal } from "../core/Modal";
-import { useMemo } from "react";
 
 export const AccountDisplay: React.FC<{
   player: Entity | undefined;
@@ -28,7 +28,7 @@ export const AccountDisplay: React.FC<{
 
   const Content = useMemo(() => {
     return () => (
-      <div className="w-full flex">
+      <div className={`w-full flex ${className}`}>
         {allianceName && (
           <div className="font-bold text-accent" style={{ color: noColor ? "auto" : entityToColor(player) }}>
             [{allianceName.toUpperCase()}]
@@ -39,7 +39,7 @@ export const AccountDisplay: React.FC<{
         </p>
       </div>
     );
-  }, [allianceName, noColor, player, playerColor, linkedAddress?.ensName, address]);
+  }, [className, allianceName, noColor, player, playerColor, linkedAddress?.ensName, address]);
 
   if (raw) return <Content />;
 

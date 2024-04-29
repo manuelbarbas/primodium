@@ -97,3 +97,12 @@ export function formatTimeShort(rawSeconds: number | bigint): string {
   const secs = Math.floor(seconds % 60);
   return `${secs}s`;
 }
+
+export function formatTimeAgo(time: number | bigint): string {
+  const now = Math.floor(Date.now() / 1000);
+  const diff = now - Number(time);
+  if (diff < 60) return "Just now";
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  return `${Math.floor(diff / 86400)}d ago`;
+}

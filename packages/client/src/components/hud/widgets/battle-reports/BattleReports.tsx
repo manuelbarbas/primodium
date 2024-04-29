@@ -1,19 +1,21 @@
+import { AccountDisplay } from "@/components/shared/AccountDisplay";
+import { formatTimeAgo } from "@/util/number";
 import { Entity } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useMemo, useState } from "react";
+import { FaTimes } from "react-icons/fa";
 import { SecondaryCard } from "src/components/core/Card";
+import { Loader } from "src/components/core/Loader";
 import { Navigator } from "src/components/core/Navigator";
 import { useMud } from "src/hooks";
 import { usePlayerOwner } from "src/hooks/usePlayerOwner";
+import { useSyncStatus } from "src/hooks/useSyncStatus";
 import { components } from "src/network/components";
+import { hydrateBattleReports } from "src/network/sync/indexer";
+import { Keys } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
 import { entityToFleetName, entityToRockName } from "src/util/name";
 import { BattleDetails } from "./BattleDetails";
-import { hydrateBattleReports } from "src/network/sync/indexer";
-import { useSyncStatus } from "src/hooks/useSyncStatus";
-import { hashEntities } from "src/util/encode";
-import { Keys } from "src/util/constants";
-import { Loader } from "src/components/core/Loader";
-import { FaTimes } from "react-icons/fa";
-import { InterfaceIcons } from "@primodiumxyz/assets";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -84,10 +86,10 @@ export const BattleReports = () => {
       <LoadingScreen />
       <ErrorScreen />
       <Navigator.Screen title={"BattleReports"} className="full h-full">
-        <div className="text-xs gap-2 w-full h-full flex flex-col items-center">
+        <div className="text-xs gap-3 w-full h-full flex flex-col items-center">
           {battles.length === 0 && (
             <SecondaryCard className="w-full h-full flex items-center justify-center font-bold">
-              <p className="opacity-50">NO BATTLE REPORTS FOUND</p>
+              <p className="opacity-50">NO BATTLE REPORTS</p>
             </SecondaryCard>
           )}
           {battles.length !== 0 &&
@@ -114,54 +116,51 @@ const BattleButton = ({
 
   const battle = components.Battle.use(battleEntity);
 
+  const attackingPlayer = usePlayerOwner(battle?.attacker as Entity);
+  const defendingPlayer = usePlayerOwner(battle?.defender as Entity);
+
   const playerIsWinner = usePlayerOwner(battle?.winner as Entity) === playerEntity;
+  const playerIsAttacker = attackingPlayer === playerEntity;
   const attackerIsFleet = components.IsFleet.use(battle?.attacker);
   const defenderIsFleet = components.IsFleet.use(battle?.defender);
-  const position = components.Position.use(battle?.rock as Entity);
 
   if (!battle) return <></>;
 
   return (
-    <Navigator.NavButton
-      to="BattleDetails"
-      onClick={() => setSelectedBattle(battleEntity)}
-      className="w-full p-0 flex justify-between text-xs bg-base-100 relative border-gray-700"
-    >
-      {!playerIsWinner && (
-        <div className="h-full bg-rose-800 gap-1 p-1 mr-2 flex items-center">
-          <p className="bg-rose-900 border border-rose-500  rounded-md px-1 text-2xl">L</p>
-        </div>
-      )}
-      {playerIsWinner && (
-        <div className="h-full bg-green-800 gap-1 p-1 mr-2 flex items-center">
-          <p className="bg-green-900 border border-green-500  rounded-md px-1 text-2xl">W</p>
-        </div>
-      )}
-      <div className="grid grid-cols-[10rem_3rem_10rem] place-items-center gap-1 p-1">
-        <div
-          className={`flex bg-black/10 border  text-xs justify-center items-center gap-2 p-1 w-full ${
-            battle.winner == battle.attacker ? "border-success/50" : "border-error/50"
-          }`}
-        >
-          {attackerIsFleet ? entityToFleetName(battle.attacker) : entityToRockName(battle.attacker)}
-          <img src={attackerIsFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="w-4" />
-        </div>
-        <p className="grid place-items-center uppercase font-bold">vs</p>
-        <div
-          className={`flex bg-black/10 border text-xs justify-center items-center gap-2 p-1 w-full ${
-            battle.winner == battle.defender ? "border-success/50" : "border-error/50"
-          }`}
-        >
-          {defenderIsFleet ? entityToFleetName(battle.defender) : entityToRockName(battle.defender)}
-          <img src={defenderIsFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="w-4" />
-        </div>
+    <div className="flex flex-col gap-1 w-full">
+      <div className="opacity-80">
+        Battle at <span className="text-accent">{entityToRockName(battle?.rock)}</span>
       </div>
-      <div className="px-4 flex flex-col gap-1 items-center text-end">
-        <p>{new Date(Number(battle.timestamp * 1000n)).toLocaleDateString()}</p>
-        <p className="opacity-50">
-          [{position?.x ?? 0},{position?.y ?? 0}]
-        </p>
-      </div>
-    </Navigator.NavButton>
+      <Navigator.NavButton
+        size="content"
+        variant="ghost"
+        to="BattleDetails"
+        onClick={() => setSelectedBattle(battleEntity)}
+        className={`w-full flex justify-between text-xs relative ${playerIsWinner ? "bg-success/20" : "bg-error/20"}`}
+      >
+        <div className="grid grid-cols-[10fr_2fr_10fr] place-items-center gap-1">
+          <div className={`flex bg-white/[.05] text-xs justify-center items-center gap-2 p-1 w-full`}>
+            <img src={attackerIsFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="h-8" />
+            <div className={`flex flex-col h-full text-left ${playerIsAttacker ? "text-success" : "text-error"}`}>
+              <p>{attackerIsFleet ? entityToFleetName(battle.attacker) : entityToRockName(battle.attacker)}</p>
+              <AccountDisplay raw player={attackingPlayer} noColor className="opacity-50" />
+            </div>
+          </div>
+
+          <p className="grid place-items-center uppercase font-bold">vs</p>
+          <div className={`flex bg-white/[.05] text-xs text-left justify-center items-center gap-2 p-1 w-full`}>
+            <img src={defenderIsFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="h-8" />
+            <div className={`flex flex-col h-full ${!playerIsAttacker ? "text-success" : "text-error"}`}>
+              <p>{defenderIsFleet ? entityToFleetName(battle.defender) : entityToRockName(battle.defender)}</p>
+              <AccountDisplay raw player={defendingPlayer} noColor className="opacity-50" />
+            </div>
+          </div>
+        </div>
+        <div className="pr-4 flex flex-col gap-1  justify-end text-right">
+          <p className="text-right">{formatTimeAgo(battle?.timestamp!)}</p>
+          <p className="opacity-50"> {new Date(Number(battle.timestamp * 1000n)).toLocaleDateString()}</p>
+        </div>
+      </Navigator.NavButton>
+    </div>
   );
 };
