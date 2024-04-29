@@ -77,6 +77,16 @@ export enum EUnit {
   Droid,
 }
 
+export enum EMap {
+  Primary = 1,
+  Kimberlite = 2,
+  Iridium = 3,
+  Platinum = 4,
+  Titanium = 5,
+  Wormhole = 6,
+  Common = 7,
+}
+
 export enum EObjectives {
   // (A) Intro
   BuildIronMine = 1,
@@ -193,6 +203,7 @@ export const MUDEnums = {
   EBuilding: enumToArray(EBuilding),
   EResource: enumToArray(EResource),
   EUnit: enumToArray(EUnit),
+  EMap: enumToArray(EMap),
   EObjectives: enumToArray(EObjectives),
   EAllianceInviteMode: enumToArray(EAllianceInviteMode),
   EAllianceRole: enumToArray(EAllianceRole),

@@ -4,12 +4,12 @@ import { Scene } from "engine/types";
 import { AsteroidRelationship } from "../../constants/common";
 import { BaseAsteroid } from "./BaseAsteroid";
 import { getSecondaryOutlineSprite } from "./helpers";
-import { SpriteKeys } from "@/game/lib/constants/assets/sprites";
+import { Sprites } from "@primodiumxyz/assets";
 
 export class ShardAsteroid extends BaseAsteroid {
   protected entity: Entity;
   constructor(scene: Scene, entity: Entity, coord: Coord) {
-    super(scene, coord, SpriteKeys.Shard, SpriteKeys.AegisDrone);
+    super(scene, coord, Sprites.Shard, Sprites.AegisDrone);
     this.entity = entity;
   }
 

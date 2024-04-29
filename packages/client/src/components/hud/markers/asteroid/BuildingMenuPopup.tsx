@@ -9,6 +9,7 @@ import { getBuildingDimensions, getBuildingImageFromType, getBuildingName } from
 import { getEntityTypeName } from "src/util/common";
 import { BuildingMenu } from "../../building-menu/BuildingMenu";
 import { Card, GlassCard } from "@/components/core/Card";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 
 export const BuildingMenuPopup = () => {
   const primodium = usePrimodium();
@@ -47,7 +48,7 @@ export const BuildingMenuPopup = () => {
       popUp
       noBorder
       active={!!building && !!buildingName}
-      icon={getBuildingImageFromType(primodium, buildingType as Entity) ?? "img/icons/minersicon.png"}
+      icon={getBuildingImageFromType(primodium, buildingType as Entity) ?? InterfaceIcons.Build}
     >
       <GlassCard direction={"top"}>
         <Card noDecor>

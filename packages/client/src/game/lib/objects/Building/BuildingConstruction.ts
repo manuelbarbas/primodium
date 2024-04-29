@@ -3,7 +3,7 @@ import { BuildingDimensions, getConstructionSprite } from "./helpers";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { IPrimodiumGameObject } from "../interfaces";
 import { DepthLayers } from "../../constants/common";
-import { Assets } from "../../constants/assets";
+import { Assets } from "@primodiumxyz/assets";
 
 export class BuildingConstruction extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
   private coord: Coord;

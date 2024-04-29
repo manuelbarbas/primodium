@@ -1,5 +1,6 @@
 import { Mode } from "@/util/constants";
 import { Entity } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useMemo } from "react";
 import { Button } from "src/components/core/Button";
 import { IconLabel } from "src/components/core/IconLabel";
@@ -53,7 +54,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
       scene={"STARMAP"}
       coord={coord}
       depth={DepthLayers.Path + 1}
-      offScreenIconUri="/img/icons/outgoingicon.png"
+      offScreenIconUri={InterfaceIcons.Outgoing}
     >
       <div className="w-14 h-14 border-2 border-error flex items-center justify-center bg-transparent">
         <div className="absolute top-0 right-0 translate-x-full w-36">
@@ -64,7 +65,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
             }
             className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
           >
-            <IconLabel imageUri="/img/icons/weaponryicon.png" text={selectingAttackDestination ? "Cancel" : "Attack"} />
+            <IconLabel imageUri={InterfaceIcons.Crosshairs} text={selectingAttackDestination ? "Cancel" : "Attack"} />
           </Button>
         </div>
         {!!stance && (
@@ -73,7 +74,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
               onClick={() => clearFleetStance(mud, fleet)}
               className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
             >
-              <IconLabel imageUri="/img/icons/moveicon.png" text="Clear Stance" />
+              <IconLabel imageUri={InterfaceIcons.Debug} text="Clear Stance" />
             </Button>
           </div>
         )}
@@ -86,8 +87,8 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
               className="btn-ghost btn-xs text-xs text-accent bg-rose-900 border border-l-0 border-secondary/50"
             >
               <IconLabel
-                imageUri="/img/icons/moveicon.png"
-                text={spaceRockData.isBlocked ? "Blocked" : selectingMoveDestination ? "Cancel" : "Send"}
+                imageUri={InterfaceIcons.Debug}
+                text={spaceRockData.isBlocked ? "Blocked" : selectingMoveDestination ? "Cancel" : "Move"}
               />
             </Button>
           </div>
@@ -100,7 +101,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
               disabled={selectingAttackDestination || selectingMoveDestination}
               className="btn-ghost btn-xs text-xs text-accent bg-neutral border border-r-0 pl-2 border-secondary/50 w-28 transition-[width] duration-200"
             >
-              <IconLabel imageUri="/img/icons/settingsicon.png" text={"MANAGE"} />
+              <IconLabel imageUri={InterfaceIcons.Settings} text={"MANAGE"} />
             </Modal.Button>
             <Modal.Content className="w-3/4 h-[800px]">
               <Fleets initialState="manageFleet" fleetEntity={fleet} />

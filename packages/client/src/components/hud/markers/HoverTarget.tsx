@@ -7,6 +7,7 @@ import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getCanAttack, getCanSend } from "src/util/unit";
 import { Mode } from "@/util/constants";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 
 export const HoverSendTarget: React.FC<{ hoverEntity: Entity; sendUnit: Entity }> = ({ hoverEntity, sendUnit }) => {
   const canSend = getCanSend(sendUnit, hoverEntity);
@@ -23,7 +24,7 @@ export const HoverSendTarget: React.FC<{ hoverEntity: Entity; sendUnit: Entity }
 
   return (
     <Marker coord={coord} id="hoverSend" scene={"STARMAP"}>
-      <img src={canSend ? "/img/icons/crosshairsicon.png" : "/img/icons/notallowedicon.png"} />
+      <img src={canSend ? InterfaceIcons.Crosshairs : InterfaceIcons.NotAllowed} />
     </Marker>
   );
 };
@@ -52,7 +53,7 @@ export const HoverAttackTarget: React.FC<{ hoverEntity: Entity; attackOrigin: En
 
   return (
     <Marker coord={coord} id={"hoverAttack"} scene={"STARMAP"}>
-      <img src={canAttack ? "/img/icons/crosshairsicon.png" : "/img/icons/notallowedicon.png"} />
+      <img src={canAttack ? InterfaceIcons.Crosshairs : InterfaceIcons.NotAllowed} />
     </Marker>
   );
 };

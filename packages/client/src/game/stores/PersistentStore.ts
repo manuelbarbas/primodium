@@ -5,7 +5,7 @@ import { mountStoreDevtool } from "simple-zustand-devtools";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-const VERSION = 6;
+const VERSION = 7;
 
 type Keybinds = Partial<{
   [key in KeybindActionKeys]: Set<Key>;

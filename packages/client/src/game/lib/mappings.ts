@@ -1,11 +1,9 @@
 import { Entity } from "@latticexyz/recs";
 import { EntityType, Mode } from "src/util/constants";
-import { AnimationKeys } from "./constants/assets/animations";
-import { SpriteKeys } from "./constants/assets/sprites";
-import { ResourceTilekeys, Tilemaps } from "./constants/assets/tiles";
 import { AsteroidRelationship, AsteroidSize, SceneKeys } from "./constants/common";
+import { ResourceTilekeys, Sprites, Animations, Tilemaps } from "@primodiumxyz/assets";
 
-export const EntityTypeToTilesetKey: Record<Entity, ResourceTilekeys> = {
+export const EntityTypeToResourceTilekey: Record<Entity, ResourceTilekeys> = {
   [EntityType.Iron]: ResourceTilekeys.Iron,
   [EntityType.Copper]: ResourceTilekeys.Copper,
   [EntityType.Lithium]: ResourceTilekeys.Lithium,
@@ -15,152 +13,140 @@ export const EntityTypeToTilesetKey: Record<Entity, ResourceTilekeys> = {
   [EntityType.Titanium]: ResourceTilekeys.Titanium,
 };
 
-export const EntityTypeToResourceSpriteKey = {
-  [EntityType.Iron]: SpriteKeys.Iron,
-  [EntityType.Copper]: SpriteKeys.Copper,
-  [EntityType.Lithium]: SpriteKeys.Lithium,
-  [EntityType.IronPlate]: SpriteKeys.IronPlate,
-  [EntityType.PVCell]: SpriteKeys.PVCell,
-  [EntityType.Alloy]: SpriteKeys.Alloy,
+export const EntityTypeToResourceSprites = {
+  [EntityType.Iron]: Sprites.Iron,
+  [EntityType.Copper]: Sprites.Copper,
+  [EntityType.Lithium]: Sprites.Lithium,
+  [EntityType.IronPlate]: Sprites.IronPlate,
+  [EntityType.PVCell]: Sprites.PVCell,
+  [EntityType.Alloy]: Sprites.Alloy,
 };
 
-export const EntityTypeToUnitSpriteKey: Record<Entity, SpriteKeys> = {
-  [EntityType.AegisDrone]: SpriteKeys.AegisDrone,
-  [EntityType.AnvilDrone]: SpriteKeys.AnvilDrone,
-  [EntityType.HammerDrone]: SpriteKeys.HammerDrone,
-  [EntityType.StingerDrone]: SpriteKeys.StingerDrone,
-  [EntityType.TridentMarine]: SpriteKeys.TridentMarine,
-  [EntityType.LightningCraft]: SpriteKeys.LightningCraft,
-  [EntityType.MinutemanMarine]: SpriteKeys.MinutemanMarine,
+export const EntityTypeToUnitSprites: Record<Entity, Sprites> = {
+  [EntityType.AegisDrone]: Sprites.AegisDrone,
+  [EntityType.AnvilDrone]: Sprites.AnvilDrone,
+  [EntityType.HammerDrone]: Sprites.HammerDrone,
+  [EntityType.StingerDrone]: Sprites.StingerDrone,
+  [EntityType.TridentMarine]: Sprites.TridentMarine,
+  [EntityType.LightningCraft]: Sprites.LightningCraft,
+  [EntityType.MinutemanMarine]: Sprites.MinutemanMarine,
 };
 
-export const EntityTypetoBuildingSpriteKey: Record<Entity, SpriteKeys[]> = {
+export const EntityTypetoBuildingSprites: Record<Entity, Sprites[]> = {
   [EntityType.MainBase]: [
-    SpriteKeys.Mainbase1,
-    SpriteKeys.Mainbase2,
-    SpriteKeys.Mainbase3,
-    SpriteKeys.Mainbase4,
-    SpriteKeys.Mainbase5,
-    SpriteKeys.Mainbase6,
-    SpriteKeys.Mainbase7,
-    SpriteKeys.Mainbase8,
+    Sprites.Mainbase1,
+    Sprites.Mainbase2,
+    Sprites.Mainbase3,
+    Sprites.Mainbase4,
+    Sprites.Mainbase5,
+    Sprites.Mainbase6,
+    Sprites.Mainbase7,
+    Sprites.Mainbase8,
   ],
   [EntityType.WormholeBase]: [
-    SpriteKeys.Wormholebase1,
-    SpriteKeys.Wormholebase1,
-    SpriteKeys.Wormholebase1,
-    SpriteKeys.Wormholebase1,
-    SpriteKeys.Wormholebase1,
-    SpriteKeys.Wormholebase1,
-    SpriteKeys.Wormholebase1,
-    SpriteKeys.Wormholebase1,
+    Sprites.Wormholebase1,
+    Sprites.Wormholebase1,
+    Sprites.Wormholebase1,
+    Sprites.Wormholebase1,
+    Sprites.Wormholebase1,
+    Sprites.Wormholebase1,
+    Sprites.Wormholebase1,
+    Sprites.Wormholebase1,
   ],
 
-  [EntityType.IronMine]: [SpriteKeys.IronMine1, SpriteKeys.IronMine2, SpriteKeys.IronMine3],
+  [EntityType.IronMine]: [Sprites.IronMine1, Sprites.IronMine2, Sprites.IronMine3],
 
-  [EntityType.CopperMine]: [SpriteKeys.CopperMine1, SpriteKeys.CopperMine2, SpriteKeys.CopperMine3],
+  [EntityType.CopperMine]: [Sprites.CopperMine1, Sprites.CopperMine2, Sprites.CopperMine3],
 
-  [EntityType.LithiumMine]: [SpriteKeys.LithiumMine1],
+  [EntityType.LithiumMine]: [Sprites.LithiumMine1],
 
-  [EntityType.KimberliteMine]: [SpriteKeys.KimberliteMine1, SpriteKeys.KimberliteMine2, SpriteKeys.KimberliteMine3],
-  [EntityType.IridiumMine]: [SpriteKeys.IridiumMine1, SpriteKeys.IridiumMine2, SpriteKeys.IridiumMine3],
-  [EntityType.TitaniumMine]: [SpriteKeys.TitaniumMine1, SpriteKeys.TitaniumMine2, SpriteKeys.TitaniumMine3],
-  [EntityType.PlatinumMine]: [SpriteKeys.PlatinumMine1, SpriteKeys.PlatinumMine2, SpriteKeys.PlatinumMine3],
+  [EntityType.KimberliteMine]: [Sprites.KimberliteMine1, Sprites.KimberliteMine2, Sprites.KimberliteMine3],
+  [EntityType.IridiumMine]: [Sprites.IridiumMine1, Sprites.IridiumMine2, Sprites.IridiumMine3],
+  [EntityType.TitaniumMine]: [Sprites.TitaniumMine1, Sprites.TitaniumMine2, Sprites.TitaniumMine3],
+  [EntityType.PlatinumMine]: [Sprites.PlatinumMine1, Sprites.PlatinumMine2, Sprites.PlatinumMine3],
 
-  [EntityType.StorageUnit]: [SpriteKeys.StorageUnit1, SpriteKeys.StorageUnit2, SpriteKeys.StorageUnit3],
+  [EntityType.StorageUnit]: [Sprites.StorageUnit1, Sprites.StorageUnit2, Sprites.StorageUnit3],
 
-  [EntityType.IronPlateFactory]: [SpriteKeys.IronPlateFactory1, SpriteKeys.IronPlateFactory2],
+  [EntityType.IronPlateFactory]: [Sprites.IronPlateFactory1, Sprites.IronPlateFactory2],
 
-  [EntityType.AlloyFactory]: [SpriteKeys.AlloyFactory1, SpriteKeys.AlloyFactory2, SpriteKeys.AlloyFactory3],
+  [EntityType.AlloyFactory]: [Sprites.AlloyFactory1, Sprites.AlloyFactory2, Sprites.AlloyFactory3],
 
-  [EntityType.PVCellFactory]: [SpriteKeys.PhotovoltaicCellFactory1, SpriteKeys.PhotovoltaicCellFactory2],
+  [EntityType.PVCellFactory]: [Sprites.PhotovoltaicCellFactory1, Sprites.PhotovoltaicCellFactory2],
 
-  [EntityType.SolarPanel]: [SpriteKeys.SolarPanel1, SpriteKeys.SolarPanel2],
+  [EntityType.SolarPanel]: [Sprites.SolarPanel1, Sprites.SolarPanel2],
 
-  [EntityType.StarmapperStation]: [
-    SpriteKeys.StarmapperStation1,
-    SpriteKeys.StarmapperStation2,
-    SpriteKeys.StarmapperStation3,
-  ],
+  [EntityType.StarmapperStation]: [Sprites.StarmapperStation1, Sprites.StarmapperStation2, Sprites.StarmapperStation3],
 
-  [EntityType.Hangar]: [SpriteKeys.Hangar1],
+  [EntityType.Hangar]: [Sprites.Hangar1],
 
-  [EntityType.Garage]: [SpriteKeys.Garage1, SpriteKeys.Garage2],
+  [EntityType.Garage]: [Sprites.Garage1, Sprites.Garage2],
 
-  [EntityType.Workshop]: [SpriteKeys.Workshop1, SpriteKeys.Workshop2, SpriteKeys.Workshop3],
+  [EntityType.Workshop]: [Sprites.Workshop1, Sprites.Workshop2, Sprites.Workshop3],
 
-  [EntityType.SAMLauncher]: [SpriteKeys.SAMLauncher1, SpriteKeys.SAMLauncher2, SpriteKeys.SAMLauncher3],
+  [EntityType.SAMLauncher]: [Sprites.SAMLauncher1, Sprites.SAMLauncher2, Sprites.SAMLauncher3],
 
-  [EntityType.DroneFactory]: [SpriteKeys.DroneFactory1],
+  [EntityType.DroneFactory]: [Sprites.DroneFactory1],
 
-  [EntityType.ShieldGenerator]: [SpriteKeys.ShieldGenerator1, SpriteKeys.ShieldGenerator2, SpriteKeys.ShieldGenerator3],
-  [EntityType.Vault]: [SpriteKeys.Vault1, SpriteKeys.Vault2, SpriteKeys.Vault3],
-  [EntityType.Market]: [SpriteKeys.Market1],
-  [EntityType.Shipyard]: [SpriteKeys.Shipyard1],
-  [EntityType.DroidBase]: [SpriteKeys.DroidBase],
+  [EntityType.ShieldGenerator]: [Sprites.ShieldGenerator1, Sprites.ShieldGenerator2, Sprites.ShieldGenerator3],
+  [EntityType.Vault]: [Sprites.Vault1, Sprites.Vault2, Sprites.Vault3],
+  [EntityType.Market]: [Sprites.Market1],
+  [EntityType.Shipyard]: [Sprites.Shipyard1],
+  [EntityType.DroidBase]: [Sprites.DroidBase],
 };
 
-export const EntityTypeToAnimationKey: Record<string, (AnimationKeys | undefined)[]> = {
+export const EntityTypeToAnimations: Record<string, (Animations | undefined)[]> = {
   [EntityType.MainBase]: [
-    AnimationKeys.Mainbase1,
-    AnimationKeys.Mainbase2,
-    AnimationKeys.Mainbase3,
-    AnimationKeys.Mainbase4,
-    AnimationKeys.Mainbase5,
-    AnimationKeys.Mainbase6,
-    AnimationKeys.Mainbase7,
-    AnimationKeys.Mainbase8,
+    Animations.Mainbase1,
+    Animations.Mainbase2,
+    Animations.Mainbase3,
+    Animations.Mainbase4,
+    Animations.Mainbase5,
+    Animations.Mainbase6,
+    Animations.Mainbase7,
+    Animations.Mainbase8,
   ],
 
-  [EntityType.IronMine]: [AnimationKeys.IronMine1, AnimationKeys.IronMine2, AnimationKeys.IronMine3],
-  [EntityType.CopperMine]: [AnimationKeys.CopperMine1, AnimationKeys.CopperMine2, AnimationKeys.CopperMine3],
-  [EntityType.LithiumMine]: [AnimationKeys.LithiumMine1],
+  [EntityType.IronMine]: [Animations.IronMine1, Animations.IronMine2, Animations.IronMine3],
+  [EntityType.CopperMine]: [Animations.CopperMine1, Animations.CopperMine2, Animations.CopperMine3],
+  [EntityType.LithiumMine]: [Animations.LithiumMine1],
 
-  [EntityType.KimberliteMine]: [
-    AnimationKeys.KimberliteMine1,
-    AnimationKeys.KimberliteMine2,
-    AnimationKeys.KimberliteMine3,
-  ],
-  [EntityType.IridiumMine]: [AnimationKeys.IridiumMine1, AnimationKeys.IridiumMine2, AnimationKeys.IridiumMine3],
-  [EntityType.PlatinumMine]: [AnimationKeys.PlatinumMine1, AnimationKeys.PlatinumMine2, AnimationKeys.PlatinumMine3],
-  [EntityType.TitaniumMine]: [AnimationKeys.TitaniumMine1, AnimationKeys.TitaniumMine2, AnimationKeys.TitaniumMine3],
+  [EntityType.KimberliteMine]: [Animations.KimberliteMine1, Animations.KimberliteMine2, Animations.KimberliteMine3],
+  [EntityType.IridiumMine]: [Animations.IridiumMine1, Animations.IridiumMine2, Animations.IridiumMine3],
+  [EntityType.PlatinumMine]: [Animations.PlatinumMine1, Animations.PlatinumMine2, Animations.PlatinumMine3],
+  [EntityType.TitaniumMine]: [Animations.TitaniumMine1, Animations.TitaniumMine2, Animations.TitaniumMine3],
 
-  [EntityType.StorageUnit]: [undefined, undefined, AnimationKeys.StorageUnit3],
+  [EntityType.StorageUnit]: [undefined, undefined, Animations.StorageUnit3],
 
-  [EntityType.IronPlateFactory]: [AnimationKeys.IronPlateFactory1, AnimationKeys.IronPlateFactory2],
+  [EntityType.IronPlateFactory]: [Animations.IronPlateFactory1, Animations.IronPlateFactory2],
 
-  [EntityType.AlloyFactory]: [AnimationKeys.AlloyFactory1, AnimationKeys.AlloyFactory2, AnimationKeys.AlloyFactory3],
+  [EntityType.AlloyFactory]: [Animations.AlloyFactory1, Animations.AlloyFactory2, Animations.AlloyFactory3],
 
-  [EntityType.PVCellFactory]: [AnimationKeys.PhotovoltaicCellFactory1, AnimationKeys.PhotovoltaicCellFactory2],
+  [EntityType.PVCellFactory]: [Animations.PhotovoltaicCellFactory1, Animations.PhotovoltaicCellFactory2],
 
-  [EntityType.SolarPanel]: [AnimationKeys.SolarPanel1, AnimationKeys.SolarPanel2],
+  [EntityType.SolarPanel]: [Animations.SolarPanel1, Animations.SolarPanel2],
 
   [EntityType.StarmapperStation]: [
-    AnimationKeys.StarmapperStation1,
-    AnimationKeys.StarmapperStation2,
-    AnimationKeys.StarmapperStation3,
+    Animations.StarmapperStation1,
+    Animations.StarmapperStation2,
+    Animations.StarmapperStation3,
   ],
 
-  [EntityType.Hangar]: [AnimationKeys.Hangar1],
+  [EntityType.Hangar]: [Animations.Hangar1],
 
-  [EntityType.Garage]: [AnimationKeys.Garage1, AnimationKeys.Garage2],
+  [EntityType.Garage]: [Animations.Garage1, Animations.Garage2],
 
-  [EntityType.Workshop]: [AnimationKeys.Workshop1, AnimationKeys.Workshop2, AnimationKeys.Workshop3],
+  [EntityType.Workshop]: [Animations.Workshop1, Animations.Workshop2, Animations.Workshop3],
 
-  [EntityType.DroneFactory]: [AnimationKeys.DroneFactory1],
+  [EntityType.DroneFactory]: [Animations.DroneFactory1],
 
-  [EntityType.SAMLauncher]: [AnimationKeys.SAMLauncher1, AnimationKeys.SAMLauncher2, AnimationKeys.SAMLauncher3],
+  [EntityType.SAMLauncher]: [Animations.SAMLauncher1, Animations.SAMLauncher2, Animations.SAMLauncher3],
 
-  [EntityType.ShieldGenerator]: [
-    AnimationKeys.ShieldGenerator1,
-    AnimationKeys.ShieldGenerator2,
-    AnimationKeys.ShieldGenerator3,
-  ],
+  [EntityType.ShieldGenerator]: [Animations.ShieldGenerator1, Animations.ShieldGenerator2, Animations.ShieldGenerator3],
 
-  [EntityType.Vault]: [AnimationKeys.Vault1, AnimationKeys.Vault2, AnimationKeys.Vault3],
-  [EntityType.Market]: [AnimationKeys.Market1],
-  [EntityType.Shipyard]: [AnimationKeys.Shipyard1],
-  [EntityType.DroidBase]: [AnimationKeys.DroidBase],
+  [EntityType.Vault]: [Animations.Vault1, Animations.Vault2, Animations.Vault3],
+  [EntityType.Market]: [Animations.Market1],
+  [EntityType.Shipyard]: [Animations.Shipyard1],
+  [EntityType.DroidBase]: [Animations.DroidBase],
 };
 
 export const MaxLevelToTilemap: Record<number, Tilemaps> = {
@@ -170,43 +156,43 @@ export const MaxLevelToTilemap: Record<number, Tilemaps> = {
   8: Tilemaps.AsteroidLarge,
 };
 
-export const LevelToPrimaryAsteroidSpriteKey: Record<number, SpriteKeys> = {
-  1: SpriteKeys.Asteroid1,
-  2: SpriteKeys.Asteroid1,
-  3: SpriteKeys.Asteroid2,
-  4: SpriteKeys.Asteroid2,
-  5: SpriteKeys.Asteroid3,
-  6: SpriteKeys.Asteroid3,
-  7: SpriteKeys.Asteroid4,
-  8: SpriteKeys.Asteroid4,
-  9: SpriteKeys.Asteroid5,
-  10: SpriteKeys.Asteroid5,
+export const LevelToPrimaryAsteroidSprites: Record<number, Sprites> = {
+  1: Sprites.Asteroid1,
+  2: Sprites.Asteroid1,
+  3: Sprites.Asteroid2,
+  4: Sprites.Asteroid2,
+  5: Sprites.Asteroid3,
+  6: Sprites.Asteroid3,
+  7: Sprites.Asteroid4,
+  8: Sprites.Asteroid4,
+  9: Sprites.Asteroid5,
+  10: Sprites.Asteroid5,
 };
 
-export const EntityTypeSizeToSecondaryAsteroidSpriteKey: Record<Entity, Record<AsteroidSize, SpriteKeys>> = {
+export const EntityTypeSizeToSecondaryAsteroidSprites: Record<Entity, Record<AsteroidSize, Sprites>> = {
   [EntityType.Kimberlite]: {
-    Micro: SpriteKeys.MotherlodeKimberliteSmall,
-    Small: SpriteKeys.MotherlodeKimberliteSmall,
-    Medium: SpriteKeys.MotherlodeKimberliteMedium,
-    Large: SpriteKeys.MotherlodeKimberliteLarge,
+    Micro: Sprites.MotherlodeKimberliteSmall,
+    Small: Sprites.MotherlodeKimberliteSmall,
+    Medium: Sprites.MotherlodeKimberliteMedium,
+    Large: Sprites.MotherlodeKimberliteLarge,
   },
   [EntityType.Iridium]: {
-    Micro: SpriteKeys.MotherlodeIridiumSmall,
-    Small: SpriteKeys.MotherlodeIridiumSmall,
-    Medium: SpriteKeys.MotherlodeIridiumMedium,
-    Large: SpriteKeys.MotherlodeIridiumLarge,
+    Micro: Sprites.MotherlodeIridiumSmall,
+    Small: Sprites.MotherlodeIridiumSmall,
+    Medium: Sprites.MotherlodeIridiumMedium,
+    Large: Sprites.MotherlodeIridiumLarge,
   },
   [EntityType.Platinum]: {
-    Micro: SpriteKeys.MotherlodePlatinumSmall,
-    Small: SpriteKeys.MotherlodePlatinumSmall,
-    Medium: SpriteKeys.MotherlodePlatinumMedium,
-    Large: SpriteKeys.MotherlodePlatinumLarge,
+    Micro: Sprites.MotherlodePlatinumSmall,
+    Small: Sprites.MotherlodePlatinumSmall,
+    Medium: Sprites.MotherlodePlatinumMedium,
+    Large: Sprites.MotherlodePlatinumLarge,
   },
   [EntityType.Titanium]: {
-    Micro: SpriteKeys.MotherlodeTitaniumSmall,
-    Small: SpriteKeys.MotherlodeTitaniumSmall,
-    Medium: SpriteKeys.MotherlodeTitaniumMedium,
-    Large: SpriteKeys.MotherlodeTitaniumLarge,
+    Micro: Sprites.MotherlodeTitaniumSmall,
+    Small: Sprites.MotherlodeTitaniumSmall,
+    Medium: Sprites.MotherlodeTitaniumMedium,
+    Large: Sprites.MotherlodeTitaniumLarge,
   },
 };
 
@@ -221,41 +207,41 @@ export const MaxLevelToAsteroidSpriteSize: Record<number, AsteroidSize> = {
   8: "Large",
 } as const;
 
-export const RelationshipSizeToSecondaryAsteroidOutlineSpriteKey: Record<
+export const RelationshipSizeToSecondaryAsteroidOutlineSprites: Record<
   AsteroidRelationship,
-  Record<AsteroidSize, SpriteKeys>
+  Record<AsteroidSize, Sprites>
 > = {
   Ally: {
-    Micro: SpriteKeys.MotherlodeAllianceSmall,
-    Small: SpriteKeys.MotherlodeAllianceSmall,
-    Medium: SpriteKeys.MotherlodeAllianceMedium,
-    Large: SpriteKeys.MotherlodeAllianceLarge,
+    Micro: Sprites.MotherlodeAllianceSmall,
+    Small: Sprites.MotherlodeAllianceSmall,
+    Medium: Sprites.MotherlodeAllianceMedium,
+    Large: Sprites.MotherlodeAllianceLarge,
   },
   Enemy: {
-    Micro: SpriteKeys.MotherlodeEnemySmall,
-    Small: SpriteKeys.MotherlodeEnemySmall,
-    Medium: SpriteKeys.MotherlodeEnemyMedium,
-    Large: SpriteKeys.MotherlodeEnemyLarge,
+    Micro: Sprites.MotherlodeEnemySmall,
+    Small: Sprites.MotherlodeEnemySmall,
+    Medium: Sprites.MotherlodeEnemyMedium,
+    Large: Sprites.MotherlodeEnemyLarge,
   },
   Neutral: {
-    Micro: SpriteKeys.MotherlodeNeutralSmall,
-    Small: SpriteKeys.MotherlodeNeutralSmall,
-    Medium: SpriteKeys.MotherlodeNeutralMedium,
-    Large: SpriteKeys.MotherlodeNeutralLarge,
+    Micro: Sprites.MotherlodeNeutralSmall,
+    Small: Sprites.MotherlodeNeutralSmall,
+    Medium: Sprites.MotherlodeNeutralMedium,
+    Large: Sprites.MotherlodeNeutralLarge,
   },
   Self: {
-    Micro: SpriteKeys.MotherlodePlayerSmall,
-    Small: SpriteKeys.MotherlodePlayerSmall,
-    Medium: SpriteKeys.MotherlodePlatinumMedium,
-    Large: SpriteKeys.MotherlodePlayerLarge,
+    Micro: Sprites.MotherlodePlayerSmall,
+    Small: Sprites.MotherlodePlayerSmall,
+    Medium: Sprites.MotherlodePlatinumMedium,
+    Large: Sprites.MotherlodePlayerLarge,
   },
 };
 
-export const RelationshipToPrimaryAsteroidOutlineSpriteKey: Record<AsteroidRelationship, SpriteKeys> = {
-  ["Ally"]: SpriteKeys.AsteroidAlliance,
-  ["Neutral"]: SpriteKeys.AsteroidPlayer,
-  ["Enemy"]: SpriteKeys.AsteroidEnemy,
-  ["Self"]: SpriteKeys.AsteroidPlayer,
+export const RelationshipToPrimaryAsteroidOutlineSprites: Record<AsteroidRelationship, Sprites> = {
+  ["Ally"]: Sprites.AsteroidAlliance,
+  ["Neutral"]: Sprites.AsteroidPlayer,
+  ["Enemy"]: Sprites.AsteroidEnemy,
+  ["Self"]: Sprites.AsteroidPlayer,
 };
 
 export const ModeToSceneKey: Record<Entity, SceneKeys> = {

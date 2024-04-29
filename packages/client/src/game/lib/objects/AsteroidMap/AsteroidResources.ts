@@ -1,8 +1,8 @@
 import { Scene } from "engine/types";
 import { Bounds, Dimensions, ResourceTile, isOutOfBounds } from "./helpers";
-import { EntityTypeToTilesetKey } from "src/game/lib/mappings";
-import { Tilesets } from "../../constants/assets/tiles";
+import { EntityTypeToResourceTilekey } from "src/game/lib/mappings";
 import { DepthLayers } from "../../constants/common";
+import { Tilesets } from "@primodiumxyz/assets";
 
 export class AsteroidResources {
   private scene: Scene;
@@ -38,7 +38,7 @@ export class AsteroidResources {
       const { resourceType, x, y } = tile;
 
       if (isOutOfBounds({ x, y }, maxBounds)) return this;
-      this.resourcesMap?.putTileAt(EntityTypeToTilesetKey[resourceType], x, this.asteroidDimensions.yBounds - y);
+      this.resourcesMap?.putTileAt(EntityTypeToResourceTilekey[resourceType], x, this.asteroidDimensions.yBounds - y);
     });
 
     return this;

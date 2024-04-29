@@ -23,7 +23,7 @@ contract BuildSystem is PrimodiumSystem {
     require(buildingType > EBuilding.NULL && buildingType < EBuilding.LENGTH, "[BuildSystem] Invalid building type");
 
     bytes32 buildingPrototype = P_EnumToPrototype.get(BuildingKey, uint8(buildingType));
-    buildingEntity = LibBuilding.build(_player(), buildingPrototype, coord);
+    buildingEntity = LibBuilding.build(_player(), buildingPrototype, coord, false);
 
     IWorld world = IWorld(_world());
     world.Primodium__increaseMaxStorage(buildingEntity, 1);

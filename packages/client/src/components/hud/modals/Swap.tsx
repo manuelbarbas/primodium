@@ -1,6 +1,7 @@
 // SwapPane.tsx
 import { Dropdown } from "@/components/core/Dropdown";
 import { IconLabel } from "@/components/core/IconLabel";
+import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -12,7 +13,7 @@ import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
 import { swap } from "src/network/setup/contractCalls/swap";
 import { getEntityTypeName } from "src/util/common";
-import { EntityType, RESERVE_RESOURCE, ResourceImage, ResourceStorages } from "src/util/constants";
+import { EntityType, RESERVE_RESOURCE, ResourceStorages } from "src/util/constants";
 import { formatResourceCount, parseResourceCount } from "src/util/number";
 import { getInAmount, getOutAmount } from "src/util/swap";
 
@@ -186,7 +187,7 @@ const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
         <Dropdown value={props.resource} onChange={(value) => props.onResourceSelect(value)}>
           {[...ResourceStorages].map((resource) => (
             <Dropdown.Item key={resource} value={resource}>
-              <IconLabel text={getEntityTypeName(resource)} imageUri={ResourceImage.get(resource) ?? ""} />
+              <IconLabel text={getEntityTypeName(resource)} imageUri={EntityToResourceImage[resource] ?? ""} />
             </Dropdown.Item>
           ))}
         </Dropdown>

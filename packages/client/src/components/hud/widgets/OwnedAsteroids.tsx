@@ -7,12 +7,13 @@ import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getAsteroidImage, getAsteroidInfo, getAsteroidName } from "src/util/asteroid";
-import { EntityType, Mode, ResourceImage } from "src/util/constants";
+import { EntityType, Mode } from "src/util/constants";
 import { entityToRockName } from "src/util/name";
 import { HealthBar } from "../HealthBar";
 import { formatResourceCount } from "src/util/number";
 import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
 import { Badge } from "src/components/core/Badge";
+import { EntityToResourceImage } from "@/util/mappings";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -67,7 +68,7 @@ export const OwnedAsteroid: React.FC<{ asteroid: Entity; onClick?: () => void }>
       <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
         <HealthBar
           tooltipText="Encryption"
-          imgUrl={ResourceImage.get(EntityType.Encryption) ?? ""}
+          imgUrl={EntityToResourceImage[EntityType.Encryption]}
           health={Number(formatResourceCount(EntityType.Encryption, encryption, { notLocale: true }))}
           maxHealth={Number(formatResourceCount(EntityType.Encryption, maxEncryption, { notLocale: true }))}
         />
@@ -75,7 +76,7 @@ export const OwnedAsteroid: React.FC<{ asteroid: Entity; onClick?: () => void }>
       <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
         <HealthBar
           tooltipText="Strength"
-          imgUrl={ResourceImage.get(EntityType.HP) ?? ""}
+          imgUrl={EntityToResourceImage[EntityType.HP]}
           health={Number(formatResourceCount(EntityType.HP, strength, { notLocale: true, showZero: true }))}
           maxHealth={Number(formatResourceCount(EntityType.HP, maxStrength, { notLocale: true, showZero: true }))}
         />

@@ -10,13 +10,15 @@ import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { useSyncStatus } from "src/hooks/useSyncStatus";
 import { components } from "src/network/components";
 import { getAsteroidDescription } from "src/util/asteroid";
-import { EntityType, Keys, ResourceImage } from "src/util/constants";
+import { EntityType, Keys } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
 import { Card } from "../../core/Card";
 import { HealthBar } from "../HealthBar";
 import { AsteroidEta } from "./AsteroidEta";
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { EntityToResourceImage } from "@/util/mappings";
 
 export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const { loading } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
@@ -48,18 +50,18 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
       <div className="flex flex-col gap-1 z-10">
         <div className="grid grid-cols-2 gap-1">
           <div className="flex gap-1 items-center">
-            <IconLabel imageUri="/img/icons/asteroidicon.png" className={`pixel-images w-3 h-3 bg-base-100`} />
+            <IconLabel imageUri={InterfaceIcons.Asteroid} className={`pixel-images w-3 h-3 bg-base-100`} />
             <p className="text-sm font-bold uppercase">{name}</p>
           </div>
           <AsteroidEta entity={entity} />
         </div>
         {wormhole && (
-          <div className="flex rainbow-bg uppercase text-primary font-bold border border-secondary/50 text-sm flex justify-center items-center">
+          <div className="flex rainbow-bg uppercase text-primary font-bold border border-secondary/50 text-sm justify-center items-center">
             WORMHOLE DETECTED
           </div>
         )}
         {desc.primodium > 0n && !!claimConquerTime && (
-          <div className="flex victory-bg uppercase text-primary font-bold border border-secondary/50 text-sm flex justify-center items-center">
+          <div className="flex victory-bg uppercase text-primary font-bold border border-secondary/50 text-sm justify-center items-center">
             CLAIM
             {!claimConquerTime.canConquer
               ? ` IN ${formatTime(claimConquerTime.timeUntilClaim)}`
@@ -85,7 +87,7 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
         </div>
         {inGracePeriod && (
           <div className="flex bg-success/25 font-bold border border-success/50 gap-2 text-xs p-1 items-center h-4 w-fit">
-            <IconLabel imageUri="/img/icons/graceicon.png" className={`pixel-images w-3 h-3`} />
+            <IconLabel imageUri={InterfaceIcons.Grace} className={`pixel-images w-3 h-3`} />
             {formatTimeShort(duration)}
           </div>
         )}
@@ -94,14 +96,14 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
             <div className="grid grid-cols-2 gap-1">
               <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
                 <HealthBar
-                  imgUrl={ResourceImage.get(EntityType.Encryption) ?? ""}
+                  imgUrl={EntityToResourceImage[EntityType.Encryption]}
                   health={Number(formatResourceCount(EntityType.Encryption, encryption, { notLocale: true }))}
                   maxHealth={Number(formatResourceCount(EntityType.Encryption, maxEncryption, { notLocale: true }))}
                 />
               </Badge>
               <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
                 <HealthBar
-                  imgUrl={ResourceImage.get(EntityType.HP) ?? ""}
+                  imgUrl={EntityToResourceImage[EntityType.HP]}
                   health={Number(formatResourceCount(EntityType.HP, strength, { notLocale: true, showZero: true }))}
                   maxHealth={Number(
                     formatResourceCount(EntityType.HP, maxStrength, { notLocale: true, showZero: true })
@@ -122,7 +124,7 @@ const ResourceDisplay = ({ type, count }: { type: Entity; count: bigint }) => {
   return (
     <IconLabel
       key={`show-resource-${type}`}
-      imageUri={ResourceImage.get(type) ?? ""}
+      imageUri={EntityToResourceImage[type]}
       text={formatResourceCount(type, count, { short: true })}
     />
   );

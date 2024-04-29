@@ -14,7 +14,6 @@ import { OwnedAsteroids } from "@/components/hud/widgets/OwnedAsteroids";
 import { OwnedFleets } from "@/components/hud/widgets/OwnedFleets";
 import { UnitDeaths } from "@/components/hud/widgets/UnitDeaths";
 import { Blueprints } from "@/components/hud/widgets/blueprints/Blueprints";
-import { Chat } from "@/components/hud/widgets/chat/Chat";
 import { Hangar } from "@/components/hud/widgets/hangar/Hangar";
 import { Resources } from "@/components/hud/widgets/resources/Resources";
 import { BrandingLabel } from "@/components/shared/BrandingLabel";
@@ -64,9 +63,7 @@ export const GameHUD = memo(() => {
         <HUD.BottomMiddle>
           <Dock />
         </HUD.BottomMiddle>
-        <HUD.BottomRight>
-          <Chat />
-        </HUD.BottomRight>
+        <HUD.BottomRight>{/* <Chat /> */}</HUD.BottomRight>
       </HUD>
       <HUD>
         <HUD.CursorFollower>

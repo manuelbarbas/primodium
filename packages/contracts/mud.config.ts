@@ -24,6 +24,7 @@ export const worldInput = {
     S_InitAsteroidOwnerSystem: {},
     S_TransferAsteroidSystem: {},
     S_CreateSecondaryAsteroidSystem: {},
+    S_BuildRaidableAsteroidSystem: {},
   },
 
   // using as any here for now because of a type issue and also because the enums are not being recognized in our codebase rn
@@ -123,6 +124,18 @@ export const worldInput = {
       schema: {
         xBounds: "int32",
         yBounds: "int32",
+      },
+    },
+
+    P_AsteroidThresholdProbConfig: {
+      key: [],
+      schema: {
+        common1: "uint256",
+        common2: "uint256",
+        eliteMicro: "uint256",
+        eliteSmall: "uint256",
+        eliteMedium: "uint256",
+        eliteLarge: "uint256",
       },
     },
 
@@ -380,6 +393,11 @@ export const worldInput = {
 
     // used to record the progress of claiming the current unit
     ClaimOffset: {
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256" },
+    },
+
+    DroidRegenTimestamp: {
       key: ["entity"],
       schema: { entity: "bytes32", value: "uint256" },
     },

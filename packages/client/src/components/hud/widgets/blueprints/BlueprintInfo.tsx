@@ -6,12 +6,13 @@ import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { components } from "src/network/components";
 import { getBuildingLevelStorageUpgrades, transformProductionData, getBuildingDimensions } from "src/util/building";
 import { getEntityTypeName } from "src/util/common";
-import { ResourceImage, ResourceType } from "src/util/constants";
+import { ResourceType } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
 import { Badge } from "../../../core/Badge";
 import { SecondaryCard } from "../../../core/Card";
 import { IconLabel } from "../../../core/IconLabel";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 
 export const RecipeDisplay: React.FC<{
   building: Entity;
@@ -27,17 +28,15 @@ export const RecipeDisplay: React.FC<{
           <Badge className="bg-neutral/50">FREE</Badge>
         ) : (
           recipe.map((resource, i) => {
-            const resourceImage = ResourceImage.get(resource.id)!;
-            const resourceName = getEntityTypeName(resource.id);
             return (
               <Badge key={`recipe-chunk-${i}`}>
                 <ResourceIconTooltip
                   key={resource.id + resource.type}
                   spaceRock={asteroid}
-                  image={resourceImage}
+                  image={EntityToResourceImage[resource.id]}
                   resource={resource.id}
                   resourceType={resource.type}
-                  name={resourceName}
+                  name={getEntityTypeName(resource.id)}
                   amount={resource.amount}
                   validate
                   fontSize={"xs"}
@@ -99,7 +98,7 @@ export const BlueprintInfo: React.FC<{
                   >
                     <ResourceIconTooltip
                       name={getEntityTypeName(resource)}
-                      image={ResourceImage.get(resource) ?? ""}
+                      image={EntityToResourceImage[resource]}
                       resource={resource}
                       amount={amount}
                       resourceType={type}
@@ -119,7 +118,7 @@ export const BlueprintInfo: React.FC<{
                       <Badge key={`unitProduction-${unit}`} className="text-xs gap-2 bg-neutral/50">
                         <IconLabel
                           className={`text-xs font-bold justify-center`}
-                          imageUri={ResourceImage.get(unit as Entity) ?? ""}
+                          imageUri={EntityToUnitImage[unit]}
                           text={""}
                           hideText
                         />
@@ -135,7 +134,7 @@ export const BlueprintInfo: React.FC<{
                         <Badge key={`storage-${resource}`} className="text-xs bg-neutral/50 text-success/50">
                           <ResourceIconTooltip
                             name={getEntityTypeName(resource)}
-                            image={ResourceImage.get(resource) ?? ""}
+                            image={EntityToResourceImage[resource]}
                             resource={resource}
                             amount={amount}
                             resourceType={ResourceType.Resource}
