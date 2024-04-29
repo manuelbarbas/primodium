@@ -1,10 +1,7 @@
 import { cn } from "@/util/client";
+import { lerp } from "@/util/common";
 import { VariantProps, cva } from "class-variance-authority";
 import { forwardRef, useCallback, useRef } from "react";
-
-const lerp = (value: number, inMin: number, inMax: number, outMin: number, outMax: number) => {
-  return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
-};
 
 export const Card: React.FC<{
   children: React.ReactNode;
@@ -31,7 +28,7 @@ export const Card: React.FC<{
 
     const x = lerp(e.clientX - left - width / 2, -width, width, -6, 6);
     const y = lerp(e.clientY - top - height / 2, -height, height, -6, 6);
-    containerRef.current.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+    containerRef.current.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
   }, []);
 
   const handleMouseLeave = useCallback(() => {
