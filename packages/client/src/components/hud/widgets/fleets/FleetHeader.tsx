@@ -1,4 +1,5 @@
 import { Entity } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { IconLabel } from "src/components/core/IconLabel";
 import { EntityType } from "src/util/constants";
 import { formatNumber, formatResourceCount } from "src/util/number";
@@ -17,7 +18,7 @@ export const FleetHeader = (props: {
   return (
     <div className={`flex flex-col gap-1 w-full ${props.className}`}>
       <div className="flex justify-center uppercase font-bold">
-        <IconLabel imageUri={"img/icons/outgoingicon.png"} className="" text={`${props.title}`} />
+        <IconLabel imageUri={InterfaceIcons.Outgoing} className="" text={`${props.title}`} />
       </div>
 
       <div className="flex justify-center gap-1">

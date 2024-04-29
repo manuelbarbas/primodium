@@ -1,5 +1,4 @@
 import { GameObjectClasses } from "./constants";
-import { createObjectPool } from "./lib/core/createObjectPool";
 import { Animation } from "@latticexyz/phaserx/src/types";
 import { createGame } from "./lib/core/createGame";
 import { createScene } from "./lib/core/createScene";
@@ -15,11 +14,37 @@ export type CameraConfig = {
   defaultZoom: number;
 };
 
+type PackConfig = {
+  image: Array<{
+    key: string;
+    url: string;
+  }>;
+  audioSprite: Array<{
+    key: string;
+    urls: string[];
+    jsonURL: string;
+  }>;
+  atlas: Array<{
+    key: string;
+    textureURL: string;
+    atlasURL: string;
+  }>;
+  tilemapTiledJSON: Array<{
+    key: string;
+    url: string;
+  }>;
+  bitmapFont: Array<{
+    key: string;
+    textureURL: string;
+    fontDataURL: string;
+  }>;
+};
+
 export type Key = keyof typeof Phaser.Input.Keyboard.KeyCodes | "POINTER_LEFT" | "POINTER_RIGHT";
 
 export type GameConfig = Phaser.Types.Core.GameConfig & {
   key: string;
-  assetPackUrl: string;
+  assetPack: PackConfig;
 };
 
 export type LayerConfig = Record<string, { depth: number }>;
@@ -61,28 +86,11 @@ export type GameObjectComponent<Type extends keyof GameObjectTypes> = {
   exit?: GameObjectFunction<Type>;
 };
 
-export declare type ObjectPool = ReturnType<typeof createObjectPool>;
-
 export type GameObjectFunction<Type extends keyof GameObjectTypes> = (
   gameObject: GameObject<Type>,
   time: number,
   delta: number
 ) => Promise<void> | void;
-
-export type EmbodiedEntity<Type extends keyof GameObjectTypes> = {
-  getGameObject: () => GameObject<Type> | undefined;
-  setComponent: (component: GameObjectComponent<Type>) => void;
-  setComponents: (components: (GameObjectComponent<Type> | undefined)[]) => void;
-  hasComponent: (id: string) => boolean;
-  removeComponent: (id: string, stop?: boolean) => void;
-  spawn: () => void;
-  reset: (stop?: boolean) => void;
-  despawn: (force?: boolean) => void;
-  position: Coord;
-  id: string;
-  setCameraFilter: (filter: number) => void;
-  type: Type;
-};
 
 export type Coord = {
   x: number;

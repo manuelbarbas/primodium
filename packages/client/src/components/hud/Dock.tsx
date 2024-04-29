@@ -7,9 +7,10 @@ import { LeaderboardScreen } from "@/components/hud/modals/leaderboard/Leaderboa
 import { Settings } from "./modals/settings/Settings";
 import { BattleReports } from "./widgets/battle-reports/BattleReports";
 import { Cheatcodes } from "@/components/hud/widgets/dev/Cheatcodes";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 
-const btnClass = "group hover:bg-transparent";
-const iconClass = "text-3xl hover:animate-float";
+const btnClass = "group hover:bg-transparent hover:scale-[115%]";
+const iconClass = "text-3xl";
 
 export const Dock = () => {
   const DEV = import.meta.env.PRI_DEV === "true";
@@ -25,7 +26,7 @@ export const Dock = () => {
             variant={"ghost"}
             tooltip="alliance management"
           >
-            <IconLabel imageUri="/img/icons/allianceicon.png" className={iconClass} />
+            <IconLabel imageUri={InterfaceIcons.Alliance} className={iconClass} />
           </Modal.Button>
           <Modal.Content className="w-[40rem] h-[50rem]">
             <AllianceManagement />
@@ -33,7 +34,7 @@ export const Dock = () => {
         </Modal>
         <Modal title="leaderboard">
           <Modal.Button className={btnClass} tooltip="leaderboard" shape={"circle"} size={"lg"} variant={"ghost"}>
-            <IconLabel className={iconClass} imageUri="/img/icons/leaderboardicon.png" />
+            <IconLabel className={iconClass} imageUri={InterfaceIcons.Leaderboard} />
           </Modal.Button>
           <Modal.Content className="w-[50rem] h-[50rem]">
             <LeaderboardScreen />
@@ -41,7 +42,7 @@ export const Dock = () => {
         </Modal>
         <Modal title="battles">
           <Modal.Button className={btnClass} tooltip="battle reports" shape={"circle"} size={"lg"} variant={"ghost"}>
-            <IconLabel className={iconClass} imageUri="/img/icons/reportsicon.png" />
+            <IconLabel className={iconClass} imageUri={InterfaceIcons.Reports} />
           </Modal.Button>
           <Modal.Content className="w-[40rem] h-[50rem]">
             <BattleReports />
@@ -49,7 +50,7 @@ export const Dock = () => {
         </Modal>
         <Modal title="Objectives">
           <Modal.Button className={btnClass} tooltip="Objectives" shape={"circle"} size={"lg"} variant={"ghost"}>
-            <IconLabel className={iconClass} imageUri="/img/icons/objectiveicon.png" />
+            <IconLabel className={iconClass} imageUri={InterfaceIcons.Objective} />
           </Modal.Button>
           <Modal.Content className="w-[50rem] h-[50rem]">
             <Objectives />
@@ -57,7 +58,7 @@ export const Dock = () => {
         </Modal>
         <Modal title="settings">
           <Modal.Button className={btnClass} tooltip="settings" shape={"circle"} size={"lg"} variant={"ghost"}>
-            <IconLabel className={iconClass} imageUri="/img/icons/settingsicon.png" />
+            <IconLabel className={iconClass} imageUri={InterfaceIcons.Settings} />
           </Modal.Button>
           <Modal.Content className="w-132 h-120">
             <Settings />
@@ -66,7 +67,7 @@ export const Dock = () => {
         {DEV && (
           <Modal title="cheatcodes">
             <Modal.Button className={btnClass} tooltip="cheatcodes" shape={"circle"} size={"lg"} variant={"ghost"}>
-              <IconLabel className={iconClass} imageUri="/img/icons/trollface.png" />
+              <IconLabel className={iconClass} imageUri={InterfaceIcons.Debug} />
             </Modal.Button>
             <Modal.Content className="h-[700px] w-[500px] font-mono">
               <Cheatcodes />

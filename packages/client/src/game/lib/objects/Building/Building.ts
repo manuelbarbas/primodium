@@ -3,9 +3,9 @@ import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 import { getAssetKeyPair } from "./helpers";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Assets } from "../../constants/assets";
 import { DepthLayers } from "../../constants/common";
 import { IPrimodiumGameObject } from "../interfaces";
+import { Assets } from "@primodiumxyz/assets";
 
 export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGameObject {
   private buildingType: Entity;

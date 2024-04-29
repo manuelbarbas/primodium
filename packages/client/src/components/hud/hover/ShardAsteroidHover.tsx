@@ -6,13 +6,15 @@ import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { useShardAsteroid } from "src/hooks/primodium/useShardAsteroid";
 import { useSyncStatus } from "src/hooks/useSyncStatus";
 import { components } from "src/network/components";
-import { EntityType, Keys, ResourceImage } from "src/util/constants";
+import { EntityType, Keys } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount, formatTime } from "src/util/number";
 import { Card } from "../../core/Card";
 import { HealthBar } from "../HealthBar";
 import { AsteroidEta } from "./AsteroidEta";
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { EntityToResourceImage } from "@/util/mappings";
 
 export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const { loading } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
@@ -43,12 +45,12 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
       <div className="flex flex-col gap-1 z-10">
         <div className="grid grid-cols-2 gap-1">
           <div className="flex gap-1 items-center">
-            <IconLabel imageUri="/img/icons/asteroidicon.png" className={`pixel-images w-3 h-3 bg-base-100`} />
+            <IconLabel imageUri={InterfaceIcons.Asteroid} className={`pixel-images w-3 h-3 bg-base-100`} />
             <p className="text-sm font-bold uppercase">{name}</p>
           </div>
           <AsteroidEta entity={entity} />
         </div>
-        <div className="flex victory-bg uppercase text-primary font-bold border border-secondary/50 text-sm flex justify-center items-center">
+        <div className="flex victory-bg uppercase text-primary font-bold border border-secondary/50 text-sm justify-center items-center">
           {formatResourceCount(EntityType.Iron, shardData.points, { notLocale: true }).toLocaleString()} PRI EXPLOSION
           {shardData.canExplode ? " IMMINENT" : ` IN ${formatTime(shardData.timeUntilExplode)}`}
         </div>
@@ -85,7 +87,7 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
         )}
         <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
           <HealthBar
-            imgUrl={ResourceImage.get(EntityType.Encryption) ?? ""}
+            imgUrl={EntityToResourceImage[EntityType.Encryption]}
             health={Number(formatResourceCount(EntityType.Encryption, shardData.encryption, { notLocale: true }))}
             maxHealth={Number(formatResourceCount(EntityType.Encryption, shardData.maxEncryption, { notLocale: true }))}
           />

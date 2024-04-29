@@ -1,3 +1,4 @@
+import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { FaUser } from "react-icons/fa";
@@ -8,7 +9,7 @@ import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getAsteroidImage, getAsteroidName } from "src/util/asteroid";
-import { EntityType, ResourceImage } from "src/util/constants";
+import { EntityType } from "src/util/constants";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount } from "src/util/number";
 export const TargetHeader = ({ entity: selectedSpacerock, hideStats }: { entity: Entity; hideStats?: boolean }) => {
@@ -31,16 +32,12 @@ export const TargetHeader = ({ entity: selectedSpacerock, hideStats }: { entity:
           <div className="flex gap-1 uppercase font-bold text-xs bg-primary items-center p-1">{description}</div>
           <div className="flex gap-2 items-center font-bold bg-primary text-xs p-1">
             <IconLabel
-              imageUri={ResourceImage.get(EntityType.HP) ?? ""}
+              imageUri={EntityToResourceImage[EntityType.HP]}
               text={formatResourceCount(EntityType.Iron, strength, { short: true, fractionDigits: 2 })}
-              tooltipText="Strength"
-              tooltipDirection="bottom"
             />
             <IconLabel
-              imageUri={ResourceImage.get(EntityType.Encryption) ?? ""}
+              imageUri={EntityToResourceImage[EntityType.Encryption]}
               text={formatResourceCount(EntityType.Encryption, encryption, { short: true, fractionDigits: 2 })}
-              tooltipText="Encryption"
-              tooltipDirection="bottom"
             />
           </div>
           <div className="flex gap-1 uppercase font-bold text-xs bg-primary items-center p-1">

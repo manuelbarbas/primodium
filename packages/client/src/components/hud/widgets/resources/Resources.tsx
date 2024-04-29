@@ -5,6 +5,7 @@ import { Card, GlassCard } from "@/components/core/Card";
 import { Tabs } from "@/components/core/Tabs";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Mode } from "@/util/constants";
+import { ResourceImages } from "@primodiumxyz/assets";
 
 export const Resources = () => {
   const { components } = useMud();
@@ -23,7 +24,7 @@ export const Resources = () => {
           writingMode: "vertical-lr",
         }}
       >
-        <IconLabel text="Resources" imageUri="/img/resource/iridium_resource.png" className="gap-2 py-3" />
+        <IconLabel text="Resources" imageUri={ResourceImages.Iridium} className="gap-2 py-3" />
       </Tabs.Button>
       <Tabs.Pane index={0} fragment>
         <GlassCard direction={"left"} className="animate-in slide-in-from-right-full">

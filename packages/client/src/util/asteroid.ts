@@ -3,20 +3,19 @@ import { Entity } from "@latticexyz/recs";
 
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EFleetStance } from "contracts/config/enums";
-// import { getRockSprite } from "src/game/scenes/starmap/systems/utils/getSprites";
-import { Assets } from "src/game/lib/constants/assets";
-import { SpriteKeys } from "src/game/lib/constants/assets/sprites";
 import { components, components as comps } from "src/network/components";
 import { getEntityTypeName } from "./common";
-import { EntityType, MapIdToAsteroidType, ResourceStorages, RockRelationship } from "./constants";
+import { EntityType, ResourceStorages, RockRelationship } from "./constants";
 import { getFullResourceCount } from "./resource";
 import { getOrbitingFleets } from "./unit";
+import { MapIdToAsteroidType } from "@/util/mappings";
+import { Sprites } from "@primodiumxyz/assets";
 
 //TODO: proper implementation, this is just a placeholder so stuff doesn't break.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
   const { getSpriteBase64 } = primodium.api().sprite;
-  return getSpriteBase64(SpriteKeys.Asteroid1, Assets.SpriteAtlas);
+  return getSpriteBase64(Sprites.Asteroid1);
 }
 
 export function getAsteroidName(spaceRock: Entity) {

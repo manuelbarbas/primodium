@@ -1,17 +1,17 @@
+import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { Badge } from "src/components/core/Badge";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
-import { RESOURCE_SCALE, ResourceImage, SPEED_SCALE } from "src/util/constants";
+import { RESOURCE_SCALE, SPEED_SCALE } from "src/util/constants";
 import { formatNumber, formatResourceCount } from "src/util/number";
 
 export const ResourceLabel = ({ name, resource }: { name: string; resource: Entity }) => {
   const activeRock = components.ActiveRock.use()?.value;
   if (!activeRock) throw new Error("[ResourceLabel] No active rock");
 
-  const resourceIcon = ResourceImage.get(resource);
   const worldSpeed = components.P_GameConfig.use()?.worldSpeed ?? SPEED_SCALE;
   const { resourceCount, production, resourceStorage } = useFullResourceCount(resource, activeRock);
 
@@ -41,7 +41,7 @@ export const ResourceLabel = ({ name, resource }: { name: string; resource: Enti
         name={name}
         amount={resourceCount}
         resource={resource}
-        image={resourceIcon ?? ""}
+        image={EntityToResourceImage[resource]}
         fontSize={"sm"}
         direction="top"
         className={`${tooltipClass}`}

@@ -12,7 +12,6 @@ import { HomeMarker } from "@/components/hud/markers/starmap/HomeMarker";
 import { FavoriteAsteroids } from "@/components/hud/widgets/FavoriteAsteroids";
 import { UnitDeaths } from "@/components/hud/widgets/UnitDeaths";
 import { Blueprints } from "@/components/hud/widgets/blueprints/Blueprints";
-import { Chat } from "@/components/hud/widgets/chat/Chat";
 import { Resources } from "@/components/hud/widgets/resources/Resources";
 import { BrandingLabel } from "@/components/shared/BrandingLabel";
 import { usePersistentStore } from "@game/stores/PersistentStore";
@@ -62,9 +61,7 @@ export const GameHUD = memo(() => {
         <HUD.BottomMiddle>
           <Dock />
         </HUD.BottomMiddle>
-        <HUD.BottomRight>
-          <Chat />
-        </HUD.BottomRight>
+        <HUD.BottomRight>{/* <Chat /> */}</HUD.BottomRight>
       </HUD>
       <HUD>
         <HUD.CursorFollower>
