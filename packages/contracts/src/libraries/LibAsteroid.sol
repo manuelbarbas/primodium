@@ -6,17 +6,18 @@ import { WORLD_SPEED_SCALE, RESOURCE_SCALE } from "src/constants.sol";
 import { DroidPrototypeId } from "codegen/Prototypes.sol";
 
 // tables
-import { ColonyShipsInTraining, P_ConquestConfigData, P_ConquestConfig, LastConquered, UsedTiles, Dimensions, DimensionsData, P_MaxLevel, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, P_GameConfigData, P_GameConfig, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
+import { ColonyShipsInTraining, P_ConquestConfigData, P_ConquestConfig, LastConquered, UsedTiles, Dimensions, DimensionsData, P_MaxLevel, GracePeriod, P_GracePeriod, ReversePosition, Level, OwnedBy, Asteroid, UnitCount, AsteroidData, Position, PositionData, AsteroidCount, Asteroid, P_GameConfigData, P_GameConfig, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData, P_AsteroidThresholdProbConfig, P_AsteroidThresholdProbConfigData } from "codegen/index.sol";
 
 // libraries
 import { ExpansionKey } from "src/Keys.sol";
 import { AsteroidSet } from "src/libraries/AsteroidSet.sol";
-import { EResource } from "src/Types.sol";
+import { EResource, EMap } from "src/Types.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
 import { LibShardAsteroid } from "libraries/LibShardAsteroid.sol";
+import { LibRaidableAsteroid } from "libraries/LibRaidableAsteroid.sol";
 
 library LibAsteroid {
   /// @notice Creates new asteroid for player in world
@@ -130,26 +131,45 @@ library LibAsteroid {
 
     uint256 maxLevel;
     uint256 primodium;
-    //micro
-    if (distributionVal <= 50) {
+
+    P_AsteroidThresholdProbConfigData memory asteroidThresholdProb = P_AsteroidThresholdProbConfig.get();
+
+    uint8 mapId;
+
+    // Distribution
+    if (distributionVal < asteroidThresholdProb.common1) {
+      // common resources
+      maxLevel = 1; // micro
+      primodium = 1 * RESOURCE_SCALE;
+      mapId = uint8(EMap.Common);
+    } else if (distributionVal < asteroidThresholdProb.common2) {
+      // common + advanced resources
+      maxLevel = 3; // small
+      primodium = 2 * RESOURCE_SCALE;
+      mapId = uint8(EMap.Common);
+    } else if (distributionVal < asteroidThresholdProb.eliteMicro) {
+      // elite resources, micro
       maxLevel = 1;
       primodium = 3 * RESOURCE_SCALE;
-      //small
-    } else if (distributionVal <= 75) {
+    } else if (distributionVal < asteroidThresholdProb.eliteSmall) {
+      // elite resources, small
       maxLevel = 3;
       primodium = 4 * RESOURCE_SCALE;
-      //medium
-    } else if (distributionVal <= 90) {
+    } else if (distributionVal < asteroidThresholdProb.eliteMedium) {
+      // elite resources, medium
       maxLevel = 5;
       primodium = 5 * RESOURCE_SCALE;
-      //large
     } else {
+      // elite resources, large
       maxLevel = 8;
-      primodium = 1 * RESOURCE_SCALE;
+      primodium = 5 * RESOURCE_SCALE;
     }
 
-    // number between 2 and 5
-    uint8 mapId = uint8((LibEncode.getByteUInt(uint256(asteroidEntity), 3, 20) % 4) + 2);
+    if (mapId != uint8(EMap.Common)) {
+      // elite resources
+      // number between 2 and 5
+      mapId = uint8((LibEncode.getByteUInt(uint256(asteroidEntity), 3, 20) % 4) + 2);
+    }
     return
       AsteroidData({
         isAsteroid: true,
