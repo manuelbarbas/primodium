@@ -279,11 +279,12 @@ export const Objectives = new Map<EObjectives, Objective>([
     EObjectives.ExplodeVolatileShard,
     {
       category: "Victory (Shard)",
-      type: "Asteroid",
-      asteroidType: "shard",
+      type: "Claim",
       requiredObjectives: [EObjectives.CaptureVolatileShard],
       description:
         "To explode a shard, select an owned shard when an explosion is imminent and select Explode. Be warned, the explosion kills all fleets in the area!",
+      icon: InterfaceIcons.Asteroid,
+      tooltip: "Exploded Shard",
     },
   ],
   /* ------------------------- A-A-A-B-C Extraction Points ------------------------ */

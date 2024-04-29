@@ -1,3 +1,5 @@
+import { components } from "@/network/components";
+import { SPEED_SCALE } from "@/util/constants";
 import { Entity } from "@latticexyz/recs";
 import { EObjectives } from "contracts/config/enums";
 import { execute } from "src/network/txExecute";
@@ -24,6 +26,21 @@ export const claimPrimodium = async (mud: MUD, asteroidEntity: Entity) => {
 };
 
 export const claimShardAsteroid = async (mud: MUD, asteroidEntity: Entity) => {
+  const worldSpeed = components.P_GameConfig.get()?.worldSpeed ?? 100n;
+  const conquestConfigData = components.P_ConquestConfig.get();
+  const shardAsteroid = components.ShardAsteroid.get(asteroidEntity);
+  const time = components.Time.get()?.value ?? 0n;
+  let explosive = false;
+  if (conquestConfigData && shardAsteroid) {
+    const lifespan = (conquestConfigData.shardAsteroidLifeSpan * SPEED_SCALE) / worldSpeed;
+
+    const explodeTime = shardAsteroid.spawnTime + lifespan;
+    const canExplode = time >= explodeTime;
+    const timeUntilExplode = canExplode ? 0n : Number(explodeTime - time);
+    if (timeUntilExplode === 0n) {
+      explosive = true;
+    }
+  }
   await execute(
     {
       mud,
@@ -35,6 +52,8 @@ export const claimShardAsteroid = async (mud: MUD, asteroidEntity: Entity) => {
     {
       id: "ClaimPrimodium" as Entity,
     },
-    () => makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.ExplodeVolatileShard)
+    () => {
+      if (explosive) makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.ExplodeVolatileShard);
+    }
   );
 };

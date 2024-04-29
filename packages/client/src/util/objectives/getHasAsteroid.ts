@@ -13,13 +13,14 @@ export const getHasAsteroid = (
     const complete =
       runQuery([Has(components.ShardAsteroid), HasValue(components.OwnedBy, { value: playerEntity as Hex })]).size > 0;
     currentValue = complete ? 1n : 0n;
+  } else {
+    const playerAsteroids = runQuery([
+      HasValue(components.OwnedBy, { value: playerEntity as Hex }),
+      Has(components.Asteroid),
+    ]);
+    if (type === "basic") currentValue = playerAsteroids.size > 1 ? 1n : 0n;
+    else currentValue = [...playerAsteroids].some((asteroid) => isCorrectType(asteroid, type)) ? 1n : 0n;
   }
-  const playerAsteroids = runQuery([
-    HasValue(components.OwnedBy, { value: playerEntity as Hex }),
-    Has(components.Asteroid),
-  ]);
-  if (type === "basic") currentValue = playerAsteroids.size > 1 ? 1n : 0n;
-  else currentValue = [...playerAsteroids].some((asteroid) => isCorrectType(asteroid, type)) ? 1n : 0n;
 
   const icon = InterfaceIcons.Asteroid;
   return {
