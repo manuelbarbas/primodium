@@ -19,6 +19,7 @@ export function getColonyShipsPlusAsteroids(playerEntity: Entity): Array<ColonyS
   const ownedAsteroids = runQuery(query);
 
   const ret: Array<ColonyShipType> = [];
+  console.log("ownedAsteroids", ownedAsteroids);
   ownedAsteroids.forEach((asteroidEntity) => {
     ret.push({ type: "asteroid", asteroidEntity: asteroidEntity as Entity });
     const shipsOnAsteroid =
@@ -40,12 +41,16 @@ export function getColonyShipsPlusAsteroids(playerEntity: Entity): Array<ColonyS
     // Colony ships being trained on each asteroid
     const shipsInTraining = components.ColonyShipsInTraining.get(asteroidEntity as Entity)?.value ?? 0n;
     if (shipsInTraining > 0) {
-      const shipyards = runQuery([HasValue(components.BuildingType, { value: EntityType.Shipyard })]);
+      const shipyards = runQuery([
+        HasValue(components.OwnedBy, { value: asteroidEntity }),
+        HasValue(components.BuildingType, { value: EntityType.Shipyard }),
+      ]);
 
       shipyards.forEach((shipyardEntity) => {
         updateTrainingQueue(shipyardEntity as Entity);
         const queue = components.TrainingQueue.get(shipyardEntity as Entity);
         if (!queue || queue?.units.length == 0) return;
+        console.log("pushing training ship");
         ret.push({
           type: "training",
           timeRemaining: queue.timeRemaining[0],
