@@ -1,13 +1,13 @@
-import { Objectives } from "@/components/hud/modals/Objectives";
 import { GlassCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Modal } from "@/components/core/Modal";
 import { AllianceManagement } from "@/components/hud/modals/alliance-mgmt/AllianceManagement";
 import { LeaderboardScreen } from "@/components/hud/modals/leaderboard/LeaderboardScreen";
-import { Settings } from "./modals/settings/Settings";
-import { BattleReports } from "./widgets/battle-reports/BattleReports";
+import { Objectives } from "@/components/hud/modals/Objectives";
 import { Cheatcodes } from "@/components/hud/widgets/dev/Cheatcodes";
 import { InterfaceIcons } from "@primodiumxyz/assets";
+import { Settings } from "./modals/settings/Settings";
+import { BattleReports } from "./widgets/battle-reports/BattleReports";
 
 const btnClass = "group hover:bg-transparent hover:scale-[115%]";
 const iconClass = "text-3xl";
@@ -44,7 +44,7 @@ export const Dock = () => {
           <Modal.Button className={btnClass} tooltip="battle reports" shape={"circle"} size={"lg"} variant={"ghost"}>
             <IconLabel className={iconClass} imageUri={InterfaceIcons.Reports} />
           </Modal.Button>
-          <Modal.Content className="w-[40rem] h-[50rem]">
+          <Modal.Content className="w-[50rem] h-[45rem]">
             <BattleReports />
           </Modal.Content>
         </Modal>

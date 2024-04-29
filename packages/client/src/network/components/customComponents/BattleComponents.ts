@@ -23,7 +23,7 @@ export const createBattleComponents = () => {
       defender: Type.Entity,
       defenderDamage: Type.BigInt,
       attackingPlayer: Type.Entity,
-      defendingPlayer: Type.Entity,
+      defendingPlayer: Type.OptionalEntity,
       winner: Type.Entity,
       rock: Type.Entity,
       timestamp: Type.BigInt,

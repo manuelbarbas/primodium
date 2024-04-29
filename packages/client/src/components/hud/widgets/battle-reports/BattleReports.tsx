@@ -8,7 +8,6 @@ import { SecondaryCard } from "src/components/core/Card";
 import { Loader } from "src/components/core/Loader";
 import { Navigator } from "src/components/core/Navigator";
 import { useMud } from "src/hooks";
-import { usePlayerOwner } from "src/hooks/usePlayerOwner";
 import { useSyncStatus } from "src/hooks/useSyncStatus";
 import { components } from "src/network/components";
 import { hydrateBattleReports } from "src/network/sync/indexer";
@@ -116,11 +115,11 @@ const BattleButton = ({
 
   const battle = components.Battle.use(battleEntity);
 
-  const attackingPlayer = usePlayerOwner(battle?.attacker as Entity);
-  const defendingPlayer = usePlayerOwner(battle?.defender as Entity);
+  const attackingPlayer = battle?.attackingPlayer as Entity;
+  const defendingPlayer = battle?.defendingPlayer as Entity;
 
-  const playerIsWinner = usePlayerOwner(battle?.winner as Entity) === playerEntity;
   const playerIsAttacker = attackingPlayer === playerEntity;
+  const playerIsWinner = (battle?.winner as Entity) === battle?.attacker ? playerIsAttacker : !playerIsAttacker;
   const attackerIsFleet = components.IsFleet.use(battle?.attacker);
   const defenderIsFleet = components.IsFleet.use(battle?.defender);
 
