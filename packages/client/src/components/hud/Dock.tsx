@@ -3,7 +3,7 @@ import { IconLabel } from "@/components/core/IconLabel";
 import { Modal } from "@/components/core/Modal";
 import { AllianceManagement } from "@/components/hud/modals/alliance-mgmt/AllianceManagement";
 import { LeaderboardScreen } from "@/components/hud/modals/leaderboard/LeaderboardScreen";
-import { Objectives } from "@/components/hud/modals/Objectives";
+import { ObjectivesScreen } from "@/components/hud/modals/objectives/ObjectivesScreen";
 import { Cheatcodes } from "@/components/hud/widgets/dev/Cheatcodes";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { Settings } from "./modals/settings/Settings";
@@ -52,8 +52,8 @@ export const Dock = () => {
           <Modal.Button className={btnClass} tooltip="Objectives" shape={"circle"} size={"lg"} variant={"ghost"}>
             <IconLabel className={iconClass} imageUri={InterfaceIcons.Objective} />
           </Modal.Button>
-          <Modal.Content className="w-[50rem] h-[50rem]">
-            <Objectives />
+          <Modal.Content className="w-[50rem] h-[60rem]">
+            <ObjectivesScreen />
           </Modal.Content>
         </Modal>
         <Modal title="settings">

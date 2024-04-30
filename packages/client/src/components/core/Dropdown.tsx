@@ -10,12 +10,18 @@ const dropdownVariants = cva(
   "z-50 absolute mt-1 p-1 bg-neutral border border-secondary/25 w-44 pointer-events-auto data-[state=close]:pointer-events-none data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=close]:animate-out data-[state=close]:fade-out fill-mode-forwards",
   {
     variants: {
+      size: {
+        sm: "sm",
+        md: "md",
+        lg: "md",
+      },
       variant: {
         bottomLeft: "origin-top-right right-0",
         bottomRight: "",
       },
     },
     defaultVariants: {
+      size: "md",
       variant: "bottomLeft",
     },
   }
@@ -32,6 +38,7 @@ export const Dropdown = <T extends DropdownValue>({
   children,
   className,
   variant,
+  size = "md",
   value,
   onChange,
 }: DropdownProps<T>) => {
@@ -65,11 +72,12 @@ export const Dropdown = <T extends DropdownValue>({
   };
   const selectedChild = children.find((child) => child.props.value === value);
 
+  console.log("size", size);
   return (
     <div ref={ref} className={cn("pointer-events-auto relative w-fit", className)}>
       <Button
         variant="neutral"
-        size="md"
+        size={size}
         className="border border-secondary/25 shadow-inner"
         role="button"
         onClick={toggleMenu}
@@ -103,10 +111,11 @@ export const Dropdown = <T extends DropdownValue>({
 interface DropdownItemProps<T extends DropdownValue> {
   value: T;
   children: ReactNode;
+  className?: string;
 }
 
-const DropdownItem = <T extends DropdownValue>({ children, value }: DropdownItemProps<T>) => (
-  <div className="w-full" data-value={value}>
+const DropdownItem = <T extends DropdownValue>({ children, value, className = "" }: DropdownItemProps<T>) => (
+  <div className={`${className}`} data-value={value}>
     {children}
   </div>
 );

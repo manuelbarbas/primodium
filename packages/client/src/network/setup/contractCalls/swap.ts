@@ -1,5 +1,7 @@
+import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { EObjectives } from "contracts/config/enums";
 import { ampli } from "src/ampli";
 import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
@@ -38,6 +40,8 @@ export const swap = async (mud: MUD, marketEntity: Entity, path: Entity[], amoun
 
         ...parseReceipt(receipt),
       });
+
+      makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.MarketSwap);
     }
   );
 };

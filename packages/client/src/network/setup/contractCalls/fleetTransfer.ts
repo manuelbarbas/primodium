@@ -1,15 +1,20 @@
 import { Entity } from "@latticexyz/recs";
+import { EObjectives } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
+import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 import { toTransportableResourceArray, toUnitCountArray } from "src/util/send";
 import { Hex } from "viem";
 
 export const transfer = async (mud: MUD, from: Entity, to: Entity, deltas: Map<Entity, bigint>) => {
   const fromIsAsteroid = components.Asteroid.has(from);
   const toIsAsteroid = components.Asteroid.has(to);
+
+  const activeAsteroid = components.ActiveRock.get()?.value;
+  const claimableObjective = fromIsAsteroid ? EObjectives.TransferFromAsteroid : EObjectives.TransferFromFleet;
 
   const unitCounts = toUnitCountArray(deltas);
   const resourceCounts = toTransportableResourceArray(deltas);
@@ -38,7 +43,8 @@ export const transfer = async (mud: MUD, from: Entity, to: Entity, deltas: Map<E
         args: [from as Hex, to as Hex, unitCounts],
         withSession: true,
       },
-      metadata
+      metadata,
+      () => activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, claimableObjective)
     );
   } else if (totalUnits == 0n) {
     const functionName = fromIsAsteroid
@@ -54,7 +60,8 @@ export const transfer = async (mud: MUD, from: Entity, to: Entity, deltas: Map<E
         args: [from as Hex, to as Hex, resourceCounts],
         withSession: true,
       },
-      metadata
+      metadata,
+      () => activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, claimableObjective)
     );
   } else {
     const functionName = fromIsAsteroid
@@ -70,7 +77,8 @@ export const transfer = async (mud: MUD, from: Entity, to: Entity, deltas: Map<E
         args: [from as Hex, to as Hex, unitCounts, resourceCounts],
         withSession: true,
       },
-      metadata
+      metadata,
+      () => activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, claimableObjective)
     );
   }
 };

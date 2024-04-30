@@ -17,7 +17,7 @@ export const HealthBar: React.FC<Props> = ({ imgUrl, health, maxHealth = 100, hi
   };
 
   return (
-    <Tooltip text={tooltipText} direction="top">
+    <Tooltip tooltipContent={tooltipText} direction="top">
       <div className={`flex gap-1 text-xs items-center justify-center pointer-events-auto w-full ${className}`}>
         {!hideValue && (
           <>

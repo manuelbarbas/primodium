@@ -3,12 +3,14 @@ import { EntityType } from "@/util/constants";
 import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import React from "react";
+import { EObjectives } from "contracts/config/enums";
+import React, { useEffect } from "react";
 import { Navigator } from "src/components/core/Navigator";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { entityToFleetName, entityToRockName } from "src/util/name";
 import { formatResourceCount } from "src/util/number";
+import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 
 interface UnitData {
   level: bigint;
@@ -107,6 +109,10 @@ export const BattleDetails: React.FC<{
   const winnerIsAttacker = winningPlayer === attackingPlayer;
   const attackerIsFleet = components.IsFleet.use(battle?.attacker);
   const defenderIsFleet = components.IsFleet.use(battle?.defender);
+
+  useEffect(() => {
+    makeObjectiveClaimable(playerEntity, EObjectives.OpenBattleReport);
+  }, []);
 
   if (!battle) return <></>;
 

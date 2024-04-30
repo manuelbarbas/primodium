@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 
 // tables
-import { TilePositions, IsActive, HasBuiltBuilding, Asteroid, P_UnitProdTypes, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, OwnedBy, P_Blueprint } from "codegen/index.sol";
+import { TilePositions, IsActive, Asteroid, P_UnitProdTypes, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, OwnedBy, P_Blueprint } from "codegen/index.sol";
 
 // libraries
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
@@ -101,13 +101,26 @@ library LibBuilding {
   /// @param playerEntity The entity ID of the player
   /// @param buildingPrototype The type of building to construct
   /// @param coord The coordinate where the building should be placed
+  /// @param uncheckedRequirements If true, requirements will not be checked. Internal use only.
   /// @return buildingEntity The entity ID of the newly constructed building
   function build(
     bytes32 playerEntity,
     bytes32 buildingPrototype,
-    PositionData memory coord
+    PositionData memory coord,
+    bool uncheckedRequirements
   ) internal returns (bytes32 buildingEntity) {
-    checkBuildRequirements(playerEntity, buildingPrototype, coord);
+    if (!uncheckedRequirements) {
+      checkBuildRequirements(playerEntity, buildingPrototype, coord);
+    } else {
+      if (buildingPrototype == MainBasePrototypeId || buildingPrototype == WormholeBasePrototypeId) {
+        require(
+          Home.get(coord.parentEntity) == bytes32(0),
+          "[BuildSystem] Cannot build more than one main base per asteroid"
+        );
+      }
+      require(LibBuilding.canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
+    }
+
     buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
 
     Spawned.set(buildingEntity, true);
@@ -116,8 +129,6 @@ library LibBuilding {
     Level.set(buildingEntity, 1);
     LastClaimedAt.set(buildingEntity, block.timestamp);
     OwnedBy.set(buildingEntity, coord.parentEntity);
-    HasBuiltBuilding.set(playerEntity, buildingPrototype, true);
-    HasBuiltBuilding.set(coord.parentEntity, buildingPrototype, true);
     IsActive.set(buildingEntity, true);
 
     if (buildingPrototype == MainBasePrototypeId || buildingPrototype == WormholeBasePrototypeId) {

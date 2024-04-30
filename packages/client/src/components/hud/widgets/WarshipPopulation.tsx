@@ -1,0 +1,56 @@
+import { Tooltip } from "@/components/core/Tooltip";
+import { HealthBar } from "@/components/hud/HealthBar";
+import { AccountDisplay } from "@/components/shared/AccountDisplay";
+import { useMud } from "@/hooks";
+import { formatNumber } from "@/util/number";
+import { useMemo } from "react";
+import { components } from "src/network/components";
+
+export const WarshipPopulation = () => {
+  const { unitDeaths, gameOver } = components.VictoryStatus.use() ?? { unitDeaths: 0n, gameOver: false };
+  const unitDeathLimit = components.P_GameConfig.use()?.unitDeathLimit ?? 0n;
+  const playerEntity = useMud().playerAccount.entity;
+
+  const TooltipContent: React.FC = () => {
+    return (
+      <div className="flex flex-col w-96 gap-1">
+        <p>Warship Casualties: {formatNumber(unitDeaths)}</p>
+        <HealthBar health={Number(unitDeaths)} maxHealth={Number(unitDeathLimit)} hideValue />
+        <p className="opacity-70 pt-2 text-center text-wrap">
+          {gameOver
+            ? "The connect to the belt has closed. Game Over."
+            : `Once warship casualties reach ${formatNumber(unitDeathLimit, {
+                short: true,
+              })}, Star Command will close the wormhole and abandon the Belt, ending the round.`}
+        </p>
+      </div>
+    );
+  };
+
+  const color = useMemo(() => {
+    if (gameOver) return "text-error";
+    const pct = (100n * unitDeaths) / unitDeathLimit;
+    if (pct < 70) return "text-success";
+    if (pct < 90) return "text-warning";
+    return "text-error";
+  }, [gameOver, unitDeathLimit, unitDeaths]);
+
+  return (
+    <div className="font-bold uppercase p-6 flex flex-col lg:flex-row gap-10">
+      <div>
+        ID: <AccountDisplay noColor player={playerEntity} className="text-sm" />
+      </div>
+      {gameOver ? (
+        <p>Game Over</p>
+      ) : (
+        <span className="pointer-events-auto">
+          <Tooltip tooltipContent={<TooltipContent />} direction="bottom">
+            <p className="flex inline gap-2">
+              Warship Casualties: <p className={color}>{((100n * unitDeaths) / unitDeathLimit).toLocaleString()}%</p>
+            </p>
+          </Tooltip>
+        </span>
+      )}
+    </div>
+  );
+};
