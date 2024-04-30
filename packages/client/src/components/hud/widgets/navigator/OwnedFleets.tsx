@@ -1,23 +1,15 @@
 import { Button } from "@/components/core/Button";
-import { Card, SecondaryCard } from "@/components/core/Card";
-import { Loader } from "@/components/core/Loader";
-import { Tooltip } from "@/components/core/Tooltip";
+import { SecondaryCard } from "@/components/core/Card";
 import { useMud } from "@/hooks";
-import { useInCooldownEnd } from "@/hooks/useCooldownEnd";
-import { useFleetStats } from "@/hooks/useFleetCount";
-import { usePlayerOwner } from "@/hooks/usePlayerOwner";
 import { usePrimodium } from "@/hooks/usePrimodium";
-import { useSyncStatus } from "@/hooks/useSyncStatus";
 import { components } from "@/network/components";
-import { EntityType, Mode } from "@/util/constants";
 import { entityToFleetName, entityToRockName } from "@/util/name";
-import { formatNumber, formatResourceCount, formatTime, formatTimeShort } from "@/util/number";
+import { formatTime } from "@/util/number";
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EFleetStance } from "contracts/config/enums";
 import { useMemo } from "react";
-import { FaFire } from "react-icons/fa";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -32,16 +24,11 @@ export const LabeledValue: React.FC<{
 };
 
 export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ fleet, onClick }) => {
-  const description = entityToFleetName(fleet);
+  const fleetName = entityToFleetName(fleet);
   const selected = components.SelectedFleet.use()?.value === fleet;
-  const { loading, exists } = useSyncStatus(fleet);
-  const fleetStats = useFleetStats(fleet, loading);
   const movement = components.FleetMovement.use(fleet);
   const time = components.Time.use()?.value ?? 0n;
   const stance = components.FleetStance.use(fleet);
-  const { duration, inCooldown } = useInCooldownEnd(fleet);
-  const owner = usePlayerOwner(fleet);
-  const playerEntity = useMud().playerAccount.entity;
 
   const fleetStateText = useMemo(() => {
     const arrivalTime = movement?.arrivalTime ?? 0n;
@@ -56,83 +43,24 @@ export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ 
   }, [movement?.arrivalTime, time, stance]);
 
   return (
-    <Button
-      className={`row-span-1 flex flex-col p-2 gap-1 items-center !h-52 text-xs bg-base-100 flex-nowrap border-secondary ${
-        selected ? "ring-2 ring-warning" : ""
-      }`}
-      onClick={async () => {
-        onClick && onClick();
-      }}
-    >
-      {owner !== playerEntity && <div className="absolute top-0 right-0 px-1 bg-error text-[.6rem]">enemy</div>}
-      <img src={InterfaceIcons.Outgoing} className=" w-12 h-12 p-2 bg-neutral border border-secondary" />
-      <div className="flex flex-col h-fit text-xs">
-        <div className="flex gap-1 items-center justify-center"></div>
-        <p className={`"font-bold -mt-3 ${playerEntity !== owner ? "bg-error" : "bg-secondary"} px-1`}>{description}</p>
+    <Button size="content" selected={selected} onClick={onClick} className="!gap-1">
+      <p className="text-wrap">{fleetName}</p>
+      <div className="flex justify-around w-full items-center">
+        <img src={InterfaceIcons.Outgoing} className="w-10 h-10" />
+        <p className="flex flex-col text-xs">
+          {fleetStateText}{" "}
+          {!!movement && <span className="text-accent">{entityToRockName(movement.destination as Entity)}</span>}
+        </p>
       </div>
-      <hr className="w-full border border-secondary/25" />
-      <p className="flex flex-col justify-center font-thin">
-        {fleetStateText}
-        {!!movement && <span className="text-accent">{entityToRockName(movement.destination as Entity)}</span>}
-      </p>
-      {inCooldown && (
-        <Tooltip tooltipContent="cooldown" direction="left">
-          <div className="absolute right-0 top-0 flex bg-error font-bold border border-error/50 gap-1 text-xs p-1 h-4 items-center">
-            <FaFire />
-            {formatTimeShort(duration)}
-          </div>
-        </Tooltip>
-      )}
-      <hr className="w-full border border-secondary/25" />
-      {!loading && (
-        <div className="grid grid-cols-2 gap-x-3 p-1">
-          <div className="grid grid-cols-2 gap-1">
-            {formatResourceCount(EntityType.Iron, fleetStats.attack, { short: true })}
-            <p className="text-accent">ATK</p>
-          </div>
-          <div className="grid grid-cols-2 gap-1">
-            {formatResourceCount(EntityType.Iron, fleetStats.defense, { short: true })}
-            <p className="text-accent">CTR</p>
-          </div>
-          <div className="grid grid-cols-2 gap-1">
-            {formatResourceCount(EntityType.Iron, fleetStats.hp, { short: true })}
-            <p className="text-accent">HP</p>
-          </div>
-          <div className="grid grid-cols-2 gap-1">
-            {formatResourceCount(EntityType.Iron, fleetStats.cargo, { short: true })}
-            <p className="text-accent">CGO</p>
-          </div>
-          <div className="grid grid-cols-2 gap-1">
-            <p className="">{formatNumber(fleetStats.speed, { short: true })}</p>
-            <p className="text-accent">SPD</p>
-          </div>
-          <div className="grid grid-cols-2 gap-1">
-            {formatResourceCount(EntityType.Iron, fleetStats.decryption, { short: true })}
-            <p className="text-accent">DEC</p>
-          </div>
-        </div>
-      )}
-      {!exists && (
-        <div className="flex items-center text-xs gap-1 p-1 text-warning uppercase animate-pulse">
-          SELECT TO LOAD FLEET DATA
-        </div>
-      )}
-      {loading && exists && (
-        <div className="flex items-center text-xs gap-1 p-1 uppercase animate-pulse">
-          <Loader />
-          LOADING FLEET DATA
-        </div>
-      )}
     </Button>
   );
 };
 
-const _OwnedFleets: React.FC<{ className?: string }> = ({ className }) => {
+export const OwnedFleets: React.FC<{ className?: string }> = ({ className }) => {
   const {
     playerAccount: { entity: playerEntity },
   } = useMud();
   const primodium = usePrimodium();
-  // const objects = primodium.api("STARMAP").objects;
 
   const query = [Has(components.IsFleet)];
   const fleets = useEntityQuery(query).filter((entity) => {
@@ -142,55 +70,35 @@ const _OwnedFleets: React.FC<{ className?: string }> = ({ className }) => {
     return player == playerEntity;
   });
 
+  const handleSelect = (entity: Entity) => {
+    const { pan, zoomTo } = primodium.api("STARMAP").camera;
+    const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
+    const time = components.Time.get()?.value ?? 0n;
+
+    if (arrivalTime < time) components.SelectedFleet.set({ value: entity });
+
+    const objects = primodium.api("STARMAP").objects;
+    const fleet = objects.getFleet(entity);
+
+    if (!fleet) return;
+    const position = fleet.getTileCoord();
+
+    pan({
+      x: position.x,
+      y: position.y,
+    });
+
+    zoomTo(2);
+  };
+
   return (
-    <Card noDecor className={`p-2 max-h-96 overflow-y-auto scrollbar w-96 ${className}`}>
-      {fleets.length === 0 && (
-        <SecondaryCard className="w-full h-full flex text-xs items-center justify-center font-bold">
-          <p className="opacity-50 uppercase">you control no fleets</p>
-        </SecondaryCard>
-      )}
+    <SecondaryCard className={className}>
+      {fleets.length === 0 && <p className="opacity-50 uppercase">you control no fleets</p>}
       <div className="grid grid-cols-2 gap-1">
         {fleets.map((entity) => {
-          return (
-            <OwnedFleet
-              key={entity}
-              fleet={entity}
-              onClick={async () => {
-                const { transitionToScene } = primodium.api().scene;
-
-                await transitionToScene("ASTEROID", "STARMAP");
-
-                const { pan, zoomTo } = primodium.api("STARMAP").camera;
-                const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
-                const time = components.Time.get()?.value ?? 0n;
-
-                if (arrivalTime < time) components.SelectedFleet.set({ value: entity });
-
-                const objects = primodium.api("STARMAP").objects;
-                const fleet = objects.getFleet(entity);
-
-                if (!fleet) return;
-                const position = fleet.getTileCoord();
-
-                pan({
-                  x: position.x,
-                  y: position.y,
-                });
-
-                zoomTo(2);
-              }}
-            />
-          );
+          return <OwnedFleet key={entity} fleet={entity} onClick={() => handleSelect(entity)} />;
         })}
       </div>
-    </Card>
+    </SecondaryCard>
   );
-};
-
-export const OwnedFleets = ({ className = "" }: { className?: string }) => {
-  const mapOpen = components.SelectedMode.use()?.value === Mode.Starmap;
-
-  if (!mapOpen) return null;
-
-  return <_OwnedFleets className={className} />;
 };

@@ -82,7 +82,6 @@ export const OwnedAsteroids: React.FC<{ className?: string }> = ({ className }) 
   const asteroids = useEntityQuery(query);
 
   const handleSelectRock = (entity: Entity) => {
-    console.log("clicking");
     const { position } = getAsteroidInfo(primodium, entity);
     const { pan, zoomTo } = primodium.api("STARMAP").camera;
 
