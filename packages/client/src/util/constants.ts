@@ -62,19 +62,6 @@ export enum RewardType {
   Unit,
 }
 
-export enum RequirementType {
-  Objectives,
-  MainBase,
-  Expansion,
-  Buildings,
-  ProducedResources,
-  RaidedResources,
-  DestroyedUnits,
-  ProducedUnits,
-  RequiredUnits,
-  RewardUtilities,
-}
-
 export enum TransactionQueueType {
   Build,
   Train,

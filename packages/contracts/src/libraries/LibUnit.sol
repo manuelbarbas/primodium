@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { Position, Asteroid, IsActive, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, P_UnitProdTypes, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, MaxColonySlots, ColonyShipsInTraining } from "codegen/index.sol";
+import { Position, Asteroid, IsActive, OwnedBy, MaxResourceCount, ClaimOffset, BuildingType, P_UnitProdTypes, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, MaxColonySlots, ColonyShipsInTraining } from "codegen/index.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 import { EResource } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
@@ -87,7 +87,6 @@ library LibUnit {
         ClaimOffset.set(buildingEntity, (block.timestamp - startTime) % trainingTime);
         stillClaiming = false;
       }
-      ProducedUnit.set(playerEntity, item.unitEntity, ProducedUnit.get(playerEntity, item.unitEntity) + trainedUnits);
 
       if (item.unitEntity == ColonyShipPrototypeId) {
         uint256 asteroidTrainingShipCount = ColonyShipsInTraining.get(asteroidEntity);
