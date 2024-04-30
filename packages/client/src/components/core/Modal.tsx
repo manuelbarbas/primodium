@@ -1,10 +1,10 @@
-import React, { ReactNode, createContext, useContext, useEffect, useRef, useState } from "react";
-import ReactDOM from "react-dom";
-import { FaTimes } from "react-icons/fa";
-import { usePrimodium } from "@/hooks/usePrimodium";
 import { Button } from "@/components/core/Button";
 import { Card } from "@/components/core/Card";
 import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
+import { usePrimodium } from "@/hooks/usePrimodium";
+import React, { ReactNode, createContext, useContext, useEffect, useRef, useState } from "react";
+import ReactDOM from "react-dom";
+import { FaTimes } from "react-icons/fa";
 
 interface ModalContextType {
   isOpen: boolean;
@@ -23,14 +23,15 @@ interface ModalProps {
   title?: string;
   keybind?: KeybindActionKeys;
   keybindClose?: boolean;
+  startOpen?: boolean;
 }
 
 export const Modal: React.FC<ModalProps> & {
   Button: React.FC<React.ComponentProps<typeof Button>>;
   CloseButton: React.FC<React.ComponentProps<typeof Button>>;
-  Content: React.FC<{ children: ReactNode; className?: string }>;
-} = ({ children, title, keybind, keybindClose }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  Content: React.FC<{ children: ReactNode; className?: string; noClose?: boolean }>;
+} = ({ children, title, keybind, keybindClose, startOpen = false }) => {
+  const [isOpen, setIsOpen] = useState(startOpen);
   const primodium = usePrimodium();
   const {
     audio,
@@ -99,13 +100,14 @@ Modal.CloseButton = function ModalButton(props: React.ComponentProps<typeof Butt
   );
 };
 
-Modal.Content = function ModalContent({ children, className }) {
+Modal.Content = function ModalContent({ children, className, noClose = false }) {
   const { isOpen, setIsOpen, title } = useContext(ModalContext);
   const modalRef = useRef<HTMLDivElement>(null);
   const primodium = usePrimodium();
   const { audio } = primodium.api();
 
   const handleClickOutside = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (noClose) return;
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       audio.play("Sequence2", "ui");
       setIsOpen(false);
@@ -123,15 +125,17 @@ Modal.Content = function ModalContent({ children, className }) {
         <Card className="w-full h-full shadow-2xl pointer-events-auto" noMotion>
           <div className="absolute top-0 -translate-y-full w-full flex justify-between items-center p-2">
             <p className="font-bold uppercase pr-2 text-accent">{title}</p>
-            <Button
-              onClick={() => {
-                audio.play("Sequence2", "ui");
-                setIsOpen(false);
-              }}
-              className="btn-sm ghost"
-            >
-              <FaTimes />
-            </Button>
+            {!noClose && (
+              <Button
+                onClick={() => {
+                  audio.play("Sequence2", "ui");
+                  setIsOpen(false);
+                }}
+                className="btn-sm ghost"
+              >
+                <FaTimes />
+              </Button>
+            )}
           </div>
           {children}
         </Card>
