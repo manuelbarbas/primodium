@@ -27,7 +27,13 @@ contract S_TransferAsteroidSystem is PrimodiumSystem {
       AsteroidSet.remove(lastOwnerEntity, AsteroidOwnedByKey, asteroidEntity);
 
       if (asteroidEntity == Home.get(lastOwnerEntity)) {
-        Home.set(lastOwnerEntity, AsteroidSet.getAsteroidEntities(lastOwnerEntity, AsteroidOwnedByKey)[0]);
+        bytes32[] memory ownedAsteroids = AsteroidSet.getAsteroidEntities(lastOwnerEntity, AsteroidOwnedByKey);
+
+        if (ownedAsteroids.length > 0) {
+          Home.set(lastOwnerEntity, ownedAsteroids[0]);
+        } else {
+          Home.set(lastOwnerEntity, bytes32(0));
+        }
       }
     }
     OwnedBy.set(asteroidEntity, ownerEntity);
