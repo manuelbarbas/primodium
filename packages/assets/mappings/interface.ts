@@ -34,6 +34,7 @@ export const InterfaceIcons = {
   Add,
   Alliance,
   Asteroid,
+  Shard: Asteroid,
   Attack,
   Blueprints,
   Build,

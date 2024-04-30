@@ -1,8 +1,3 @@
-import { useEntityQuery } from "@latticexyz/react";
-import { Entity, Has } from "@latticexyz/recs";
-import { EFleetStance } from "contracts/config/enums";
-import { useMemo } from "react";
-import { FaFire } from "react-icons/fa";
 import { Button } from "@/components/core/Button";
 import { Card, SecondaryCard } from "@/components/core/Card";
 import { Loader } from "@/components/core/Loader";
@@ -17,7 +12,12 @@ import { components } from "@/network/components";
 import { EntityType, Mode } from "@/util/constants";
 import { entityToFleetName, entityToRockName } from "@/util/name";
 import { formatNumber, formatResourceCount, formatTime, formatTimeShort } from "@/util/number";
+import { useEntityQuery } from "@latticexyz/react";
+import { Entity, Has } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
+import { EFleetStance } from "contracts/config/enums";
+import { useMemo } from "react";
+import { FaFire } from "react-icons/fa";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -127,7 +127,7 @@ export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ 
   );
 };
 
-const _OwnedFleets: React.FC = () => {
+const _OwnedFleets: React.FC<{ className?: string }> = ({ className }) => {
   const {
     playerAccount: { entity: playerEntity },
   } = useMud();
@@ -143,7 +143,7 @@ const _OwnedFleets: React.FC = () => {
   });
 
   return (
-    <Card noDecor className="p-2 max-h-96 overflow-y-auto scrollbar w-96">
+    <Card noDecor className={`p-2 max-h-96 overflow-y-auto scrollbar w-96 ${className}`}>
       {fleets.length === 0 && (
         <SecondaryCard className="w-full h-full flex text-xs items-center justify-center font-bold">
           <p className="opacity-50 uppercase">you control no fleets</p>
@@ -187,10 +187,10 @@ const _OwnedFleets: React.FC = () => {
   );
 };
 
-export const OwnedFleets = () => {
+export const OwnedFleets = ({ className = "" }: { className?: string }) => {
   const mapOpen = components.SelectedMode.use()?.value === Mode.Starmap;
 
   if (!mapOpen) return null;
 
-  return <_OwnedFleets />;
+  return <_OwnedFleets className={className} />;
 };
