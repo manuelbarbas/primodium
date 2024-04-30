@@ -10,7 +10,7 @@ import { NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { BuildingKey, UnitKey } from "src/Keys.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
-import { P_Unit, CooldownEnd, P_IsUtility, MaxResourceCount, ResourceCount, P_UnitPrototypes, P_GameConfig, P_GameConfigData, P_Unit, P_Transportables, BuildingType, OwnedBy, FleetMovement, P_Blueprint, P_EnumToPrototype, PositionData, Position, P_RequiredResourcesData, Asteroid, Home, P_RequiredTile, P_MaxLevel, P_RequiredResources, P_RequiredBaseLevel, UnitLevel, P_ColonyShipConfig, Level, P_UnitProdTypes, P_UnitProdMultiplier, P_WormholeAsteroidConfig } from "codegen/index.sol";
+import { P_Unit, CooldownEnd, P_IsUtility, MaxResourceCount, ResourceCount, P_UnitPrototypes, P_GameConfig, P_GameConfigData, P_Unit, P_Transportables, BuildingType, OwnedBy, FleetMovement, P_Blueprint, P_EnumToPrototype, PositionData, Position, P_RequiredResourcesData, Asteroid, Home, P_RequiredTile, P_MaxLevel, P_RequiredResources, P_RequiredBaseLevel, UnitLevel, P_ColonyShipConfig, Level, P_UnitProdTypes, P_UnitProdMultiplier, P_WormholeAsteroidConfig, P_AsteroidThresholdProbConfig } from "codegen/index.sol";
 import { EResource, EBuilding, EUnit, Bounds } from "src/Types.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
@@ -462,6 +462,61 @@ contract PrimodiumTest is MudTest {
       parentEntity: 0
     });
     logPosition(targetPosition);
+    return (targetPosition);
+  }
+
+  function findRaidableAsteroid(bytes32 asteroidEntity, bool common2) public returns (PositionData memory) {
+    switchPrank(creator);
+    P_GameConfig.setAsteroidChanceInv(1);
+    P_GameConfigData memory config = P_GameConfig.get();
+    if (common2) {
+      P_AsteroidThresholdProbConfig.set({
+        common1: 0,
+        common2: 100,
+        eliteMicro: 0,
+        eliteSmall: 0,
+        eliteMedium: 0,
+        eliteLarge: 0
+      });
+    } else {
+      P_AsteroidThresholdProbConfig.set({
+        common1: 100,
+        common2: 0,
+        eliteMicro: 0,
+        eliteSmall: 0,
+        eliteMedium: 0,
+        eliteLarge: 0
+      });
+    }
+    PositionData memory sourcePosition = Position.get(asteroidEntity);
+    bytes32 asteroidSeed;
+    PositionData memory targetPosition;
+    uint256 i = 0;
+    bool found = false;
+    while (i < 6 && !found) {
+      if (i == P_WormholeAsteroidConfig.getWormholeAsteroidSlot()) {
+        i++;
+        continue;
+      }
+      PositionData memory targetPositionRelative = LibAsteroid.getPosition(
+        i,
+        config.asteroidDistance,
+        config.maxAsteroidsPerPlayer
+      );
+      targetPosition = PositionData(
+        sourcePosition.x - targetPositionRelative.x,
+        sourcePosition.y - targetPositionRelative.y,
+        0
+      );
+      console.log("position %s: ", i);
+      logPosition(targetPosition);
+
+      asteroidSeed = keccak256(abi.encode(asteroidEntity, bytes32("asteroid"), targetPosition.x, targetPosition.y));
+      found = LibAsteroid.isAsteroid(asteroidSeed, config.asteroidChanceInv, i);
+      i++;
+    }
+    require(found, "uh oh, no asteroid found");
+    vm.stopPrank();
     return (targetPosition);
   }
 

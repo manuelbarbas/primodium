@@ -6,6 +6,7 @@ import { useBuildingInfo } from "@/hooks/useBuildingInfo";
 import { usePrimodium } from "@/hooks/usePrimodium";
 import { getBuildingImage } from "@/util/building";
 import { getEntityTypeName, toRomanNumeral } from "@/util/common";
+import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { FaArrowsAlt, FaInfoCircle, FaPowerOff, FaTrash } from "react-icons/fa";
@@ -15,7 +16,7 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { toggleBuilding } from "src/network/setup/contractCalls/toggleBuilding";
-import { Action, EntityType, ResourceImage, TransactionQueueType } from "src/util/constants";
+import { Action, EntityType, TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { Basic } from "./screens/Basic";
 import { BuildQueue } from "./screens/BuildQueue";
@@ -128,7 +129,7 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
             <Badge key={`buildingproduction-${resource}`} className="text-xs gap-2 bg-base-100 py-2 text-success">
               <ResourceIconTooltip
                 name={getEntityTypeName(resource)}
-                image={ResourceImage.get(resource) ?? ""}
+                image={EntityToResourceImage[resource] ?? ""}
                 resource={resource}
                 amount={amount}
                 resourceType={type}

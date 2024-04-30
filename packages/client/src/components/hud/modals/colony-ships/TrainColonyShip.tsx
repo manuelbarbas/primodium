@@ -7,7 +7,8 @@ import { useMud } from "@/hooks";
 import { components } from "@/network/components";
 import { train } from "@/network/setup/contractCalls/train";
 import { getEntityTypeName } from "@/util/common";
-import { EntityType, ResourceEnumLookup, ResourceImage, UnitEnumLookup } from "@/util/constants";
+import { EntityType, ResourceEnumLookup, UnitEnumLookup } from "@/util/constants";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 import { formatNumber, formatResourceCount } from "@/util/number";
 import { getRecipe } from "@/util/recipe";
 import { getUnitStats } from "@/util/unit";
@@ -33,7 +34,7 @@ export const TrainColonyShip: React.FC<{ onCommission?: () => void; buildingEnti
     return getRecipe(unit, unitLevel);
   }, [unit, unitLevel]);
 
-  const shipImage = ResourceImage.get(unit) ?? "";
+  const shipImage = EntityToUnitImage[unit] ?? "";
 
   const canCommission = recipe.every((resource) => {
     const resourceCount =
@@ -70,7 +71,7 @@ export const TrainColonyShip: React.FC<{ onCommission?: () => void; buildingEnti
           {recipe.map((resource, i) => (
             <Badge key={`resource-${i}`}>
               <ResourceIconTooltip
-                image={ResourceImage.get(resource.id) ?? ""}
+                image={EntityToResourceImage[resource.id] ?? ""}
                 resource={resource.id}
                 name={getEntityTypeName(resource.id)}
                 amount={resource.amount}

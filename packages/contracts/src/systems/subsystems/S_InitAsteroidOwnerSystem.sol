@@ -23,7 +23,7 @@ contract S_InitAsteroidOwnerSystem is PrimodiumSystem {
     // For cases of abandoned asteroids, skip building main base
     if (Home.get(position.parentEntity) != bytes32(0)) return;
 
-    bytes32 buildingEntity = LibBuilding.build(playerEntity, basePrototype, position);
+    bytes32 buildingEntity = LibBuilding.build(playerEntity, basePrototype, position, false);
 
     IWorld world = IWorld(_world());
     world.Primodium__increaseMaxStorage(buildingEntity, 1);

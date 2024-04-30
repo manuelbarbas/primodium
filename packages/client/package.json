@@ -31,6 +31,7 @@
     "@latticexyz/store-sync": "2.0.6",
     "@latticexyz/utils": "2.0.6",
     "@latticexyz/world": "2.0.6",
+    "@primodiumxyz/assets": "^1.0.0",
     "@primodiumxyz/mud-game-tools": "^1.0.15",
     "@primodiumxyz/sync-stack": "^0.6.1",
     "@sentry/react": "^7.88.0",

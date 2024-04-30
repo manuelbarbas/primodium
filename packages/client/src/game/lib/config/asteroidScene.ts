@@ -1,7 +1,6 @@
 import { SceneConfig } from "engine/types";
-import { animationConfig } from "./animation";
 import { DepthLayers, Scenes } from "../constants/common";
-import { Tilemaps } from "../constants/assets/tiles";
+import { AnimationConfig, Tilemaps } from "@primodiumxyz/assets";
 
 export const asteroidSceneConfig: SceneConfig = {
   key: Scenes.Asteroid,
@@ -12,7 +11,7 @@ export const asteroidSceneConfig: SceneConfig = {
     pinchSpeed: 0.01,
     wheelSpeed: 3,
   },
-  animations: animationConfig,
+  animations: AnimationConfig,
   cullingChunkSize: 64,
   tilemap: {
     tileWidth: 32,

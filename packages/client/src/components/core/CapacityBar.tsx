@@ -7,9 +7,16 @@ type SegmentedCapacityBarProps = {
   max: bigint | null;
   segments?: number;
   resourceType?: Entity;
+  className?: string;
 };
 
-export const CapacityBar: FC<SegmentedCapacityBarProps> = ({ current, max, segments = 20, resourceType }) => {
+export const CapacityBar: FC<SegmentedCapacityBarProps> = ({
+  current,
+  max,
+  segments = 20,
+  resourceType,
+  className = "",
+}) => {
   // Calculate the number of filled segments
   const filledSegments = max !== null && max > 0n ? Math.round((Number(current) / Number(max)) * segments) : 0;
 
@@ -29,7 +36,7 @@ export const CapacityBar: FC<SegmentedCapacityBarProps> = ({ current, max, segme
   };
 
   return (
-    <div className="relative w-full bg-transparent overflow-hidden h-6 flex p-0.5 gap-0.5">
+    <div className={`relative h-6 flex p-0.5 gap-0.5 ${className}`}>
       {[...Array(segments)].map((_, index) => (
         <div
           key={index}

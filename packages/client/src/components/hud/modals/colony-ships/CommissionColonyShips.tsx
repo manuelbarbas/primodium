@@ -5,7 +5,8 @@ import { UnlockSlot } from "@/components/hud/modals/colony-ships/UnlockSlot";
 import { useMud } from "@/hooks";
 import { useColonySlots } from "@/hooks/useColonySlots";
 import { components } from "@/network/components";
-import { EntityType, ResourceImage } from "@/util/constants";
+import { EntityType } from "@/util/constants";
+import { EntityToUnitImage } from "@/util/mappings";
 import { entityToRockName } from "@/util/name";
 import { formatTime } from "@/util/number";
 import { Entity } from "@latticexyz/recs";
@@ -109,7 +110,7 @@ const TrainingTile: React.FC<{
   return (
     <SecondaryCard noDecor className={`w-full justify-center items-center flex flex-col gap-1 ${className}`}>
       <div className="flex gap-2 items-center">
-        <img src={ResourceImage.get(EntityType.ColonyShip) ?? ""} className="h-6" />
+        <img src={EntityToUnitImage[EntityType.ColonyShip] ?? ""} className="h-6" />
       </div>
       <div className="flex flex-col gap-1 items-center">
         <div className="text-xs text-warning animate-pulse">{timeRemaining === 0n ? "IN QUEUE" : "Building"}</div>

@@ -13,6 +13,7 @@ import { hashEntities } from "src/util/encode";
 import { Keys } from "src/util/constants";
 import { Loader } from "src/components/core/Loader";
 import { FaTimes } from "react-icons/fa";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -143,7 +144,7 @@ const BattleButton = ({
           }`}
         >
           {attackerIsFleet ? entityToFleetName(battle.attacker) : entityToRockName(battle.attacker)}
-          <img src={attackerIsFleet ? "img/icons/outgoingicon.png" : "img/icons/asteroidicon.png"} className="w-4" />
+          <img src={attackerIsFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="w-4" />
         </div>
         <p className="grid place-items-center uppercase font-bold">vs</p>
         <div
@@ -152,7 +153,7 @@ const BattleButton = ({
           }`}
         >
           {defenderIsFleet ? entityToFleetName(battle.defender) : entityToRockName(battle.defender)}
-          <img src={defenderIsFleet ? "img/icons/outgoingicon.png" : "img/icons/asteroidicon.png"} className="w-4" />
+          <img src={defenderIsFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="w-4" />
         </div>
       </div>
       <div className="px-4 flex flex-col gap-1 items-center text-end">

@@ -9,7 +9,8 @@ import { useColonySlots, useColonySlotsMultiplier } from "@/hooks/useColonySlots
 import { useFullResourceCount } from "@/hooks/useFullResourceCount";
 import { components } from "@/network/components";
 import { payForColonySlot } from "@/network/setup/contractCalls/payForColonySlot";
-import { ResourceEnumLookup, ResourceImage } from "@/util/constants";
+import { ResourceEnumLookup } from "@/util/constants";
+import { EntityToResourceImage } from "@/util/mappings";
 import { formatResourceCount, parseResourceCount } from "@/util/number";
 import { getFullResourceCount } from "@/util/resource";
 import { bigIntMin } from "@latticexyz/common/utils";
@@ -104,7 +105,7 @@ const SlotResourceDisplay: React.FC<{
   else content = `${formatResourceCount(resource, paid)} / ${formatResourceCount(resource, cost, { short: true })}`;
   return (
     <Button size="content" onClick={onClick} className={`w-full gap-1 ${active ? "ring ring-secondary" : ""}`}>
-      <IconLabel imageUri={ResourceImage.get(resource) ?? ""} text={content} />
+      <IconLabel imageUri={EntityToResourceImage[resource] ?? ""} text={content} />
       <CapacityBar current={paid} max={cost} segments={20} />
       {!complete && (
         <p className="self-end text-xs opacity-50">Available: {formatResourceCount(resource, resourceCount ?? 0n)}</p>

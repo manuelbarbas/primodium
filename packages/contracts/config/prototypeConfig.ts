@@ -39,11 +39,11 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         admin: encodeAddress("0"),
         asteroidDistance: 10n,
         maxAsteroidsPerPlayer: 6n,
-        asteroidChanceInv: 4n,
+        asteroidChanceInv: 2n,
         unitProductionRate: 100n,
         travelTime: 10n,
         worldSpeed: 100n,
-        unitDeathLimit: BigInt(1e18),
+        unitDeathLimit: 1_000_000n,
       },
 
       P_WormholeAsteroidConfig: {
@@ -51,6 +51,15 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         maxLevel: 1n,
         mapId: 6,
         primodium: 0n * BigInt(SCALE),
+      },
+
+      P_AsteroidThresholdProbConfig: {
+        common1: 30n,
+        common2: 45n,
+        eliteMicro: 50n,
+        eliteSmall: 75n,
+        eliteMedium: 90n,
+        eliteLarge: 100n,
       },
 
       P_ColonyShipConfig: {
@@ -1650,7 +1659,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 100,
           cargo: 0,
           speed: 1,
-          trainingTime: 100000,
+          trainingTime: 300,
         }),
       },
     },

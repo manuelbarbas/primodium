@@ -1,4 +1,6 @@
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useMemo, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
@@ -10,7 +12,7 @@ import { useMaxCountOfRecipe } from "src/hooks/useMaxCountOfRecipe";
 import { components } from "src/network/components";
 import { train } from "src/network/setup/contractCalls/train";
 import { getEntityTypeName } from "src/util/common";
-import { BackgroundImage, EntityType, ResourceImage, UnitEnumLookup } from "src/util/constants";
+import { EntityType, UnitEnumLookup } from "src/util/constants";
 import { formatNumber, formatResourceCount } from "src/util/number";
 import { getRecipe } from "src/util/recipe";
 import { getUnitStats } from "src/util/unit";
@@ -55,7 +57,7 @@ export const BuildUnit: React.FC<{
                   onClick={() => (selectedUnit == unit ? setSelectedUnit(undefined) : setSelectedUnit(unit))}
                 >
                   <img
-                    src={BackgroundImage.get(unit)?.at(0) ?? "/img/icons/debugicon.png"}
+                    src={EntityToUnitImage[unit] ?? InterfaceIcons.Debug}
                     className={`border w-[72px] p-2 group-hover:opacity-50 bg-neutral ${
                       selectedUnit == unit ? "border-2 border-accent" : "border-secondary/75"
                     }`}
@@ -124,7 +126,7 @@ const TrainShip = ({ building, unit, asteroid }: { building: Entity; unit: Entit
           {recipe.map((resource, i) => (
             <Badge key={`resource-${i}`}>
               <ResourceIconTooltip
-                image={ResourceImage.get(resource.id) ?? ""}
+                image={EntityToResourceImage[resource.id]}
                 resource={resource.id}
                 name={getEntityTypeName(resource.id)}
                 amount={resource.amount * BigInt(count)}
