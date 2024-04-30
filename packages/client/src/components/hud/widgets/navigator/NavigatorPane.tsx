@@ -51,7 +51,7 @@ export const NavigatorPane = () => {
   ];
 
   const Content = ({ index }: { index: number }) => {
-    const className = "h-96";
+    const className = "h-96 w-96";
     if (index === 0) return <OwnedAsteroids className={className} />;
     if (index === 1) return <OwnedFleets className={className} />;
     if (index === 2) return <OwnedFleets className={className} />;
