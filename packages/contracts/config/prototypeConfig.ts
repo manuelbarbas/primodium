@@ -39,11 +39,11 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         admin: encodeAddress("0"),
         asteroidDistance: 10n,
         maxAsteroidsPerPlayer: 6n,
-        asteroidChanceInv: 4n,
+        asteroidChanceInv: 2n,
         unitProductionRate: 100n,
         travelTime: 10n,
         worldSpeed: 100n,
-        unitDeathLimit: BigInt(1e18),
+        unitDeathLimit: 1_000_000n,
       },
 
       P_WormholeAsteroidConfig: {
@@ -51,6 +51,15 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         maxLevel: 1n,
         mapId: 6,
         primodium: 0n * BigInt(SCALE),
+      },
+
+      P_AsteroidThresholdProbConfig: {
+        common1: 30n,
+        common2: 45n,
+        eliteMicro: 50n,
+        eliteSmall: 75n,
+        eliteMedium: 90n,
+        eliteLarge: 100n,
       },
 
       P_ColonyShipConfig: {
@@ -1650,7 +1659,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 100,
           cargo: 0,
           speed: 1,
-          trainingTime: 100000,
+          trainingTime: 300,
         }),
       },
     },
@@ -1843,6 +1852,22 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     levels: idsToPrototypes(MUDEnums.EObjectives),
   },
 
+  /* ---------------------------------- A Fundamentals --------------------------------- */
+  BuildIronMine: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 100 }),
+    },
+  },
+  BuildCopperMine: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Copper: 100 }),
+    },
+  },
+  BuildIronPlateFactory: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
+    },
+  },
   UpgradeMainBase: {
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 100 }),
@@ -1852,340 +1877,281 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
   },
 
-  BuildIronMine: {
+  ExpandBase: {
     tables: {
-      P_HasBuiltBuildings: { value: encodeArray(["IronMine"]) },
-      P_ResourceReward: getResourceValues({ Iron: 100 }),
-    },
-  },
-
-  BuildCopperMine: {
-    tables: {
-      P_HasBuiltBuildings: { value: encodeArray(["CopperMine"]) },
       P_ResourceReward: getResourceValues({ Copper: 100 }),
     },
   },
 
-  BuildLithiumMine: {
-    tables: {
-      P_HasBuiltBuildings: { value: encodeArray(["LithiumMine"]) },
-      P_ResourceReward: getResourceValues({ Lithium: 100 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
-  },
-
-  BuildIronPlateFactory: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildIronMine"]) },
-      P_HasBuiltBuildings: { value: encodeArray(["IronPlateFactory"]) },
-      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
-    },
-  },
-
-  BuildAlloyFactory: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildCopperMine"]) },
-      P_HasBuiltBuildings: { value: encodeArray(["AlloyFactory"]) },
-      P_ResourceReward: getResourceValues({ Alloy: 10 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
-  },
-
+  /* ----------------------------- A-A Military Basics ---------------------------- */
   BuildGarage: {
     tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildIronMine"]) },
-      P_HasBuiltBuildings: { value: encodeArray(["Garage"]) },
       P_UnitReward: getUnitValues({ MinutemanMarine: 1 }),
     },
   },
 
   BuildWorkshop: {
     tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildGarage"]) },
-      P_HasBuiltBuildings: { value: encodeArray(["Workshop"]) },
       P_UnitReward: getUnitValues({ TridentMarine: 1 }),
     },
   },
-
-  BuildPVCellFactory: {
+  CreateFleet: {
     tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildLithiumMine"]) },
-      P_HasBuiltBuildings: { value: encodeArray(["PVCellFactory"]) },
+      P_ResourceReward: getResourceValues({ Iron: 10 }),
+    },
+  },
+
+  /* ------------------------------ A-A-A Fleet ------------------------------ */
+  TransferFromFleet: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Alloy: 10 }),
+    },
+  },
+  SendFleet: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Lithium: 10 }),
+    },
+  },
+
+  /* ------------------------------ A-A-A-A Fleet Combat ------------------------------ */
+
+  BattleAsteroid: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
+    },
+  },
+  OpenBattleReport: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 10 }),
+    },
+  },
+  BattleFleet: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Alloy: 10 }),
+    },
+  },
+
+  /* -------------------------- A-A-A-B Conquest (continued) ------------------------- */
+  BuildShipyard: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
+    },
+  },
+  TrainColonyShip: {
+    tables: {
       P_ResourceReward: getResourceValues({ PVCell: 10 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
+  },
+  DecryptAttack: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
+    },
+  },
+  CaptureAsteroid: {
+    tables: {
+      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+    },
   },
 
-  BuildStorageUnit: {
+  /* --------------------- A-A-A-B-A Motherlode Extraction -------------------- */
+  CaptureMotherlodeAsteroid: {
     tables: {
-      P_HasBuiltBuildings: { value: encodeArray(["StorageUnit"]) },
+      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+    },
+  },
+  ExtractMotherlodeResource: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Alloy: 10 }),
+    },
+  },
+
+  /* ------------------------ A-A-A-B-B Primodium Points ----------------------- */
+
+  EarnPrimodiumOnAsteroid: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
+    },
+  },
+  EarnPrimodiumOnShard: {
+    tables: {
+      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+    },
+  },
+  ExplodeShard: {
+    tables: {
+      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+    },
+  },
+  /* ------------------------- A-A-A-B-C Wormhole Points ------------------------ */
+
+  CaptureWormholeAsteroid: {
+    tables: {
+      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+    },
+  },
+  ClaimWormholePoints: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Alloy: 10 }),
+    },
+  },
+
+  /* ------------------------ A-A-A-C Fleet Management ------------------------ */
+  BuildStarmapper: {
+    tables: {
+      P_UnitReward: getUnitValues({ StingerDrone: 1 }),
+    },
+  },
+  TransferFromAsteroid: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
+    },
+  },
+  DefendWithFleet: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 10 }),
+    },
+  },
+  BlockWithFleet: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 10 }),
+    },
+  },
+  LandFleet: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Copper: 10 }),
+    },
+  },
+
+  /* ----------------------- A-A-B Unit Production ---------------------- */
+  TrainMinutemanMarine: {
+    tables: {
       P_ResourceReward: getResourceValues({ Iron: 100 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
 
-  BuildSolarPanel: {
+  TrainTridentMarine: {
     tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildPVCellFactory"]) },
-      P_HasBuiltBuildings: { value: encodeArray(["SolarPanel"]) },
+      P_ResourceReward: getResourceValues({ Copper: 100 }),
+    },
+  },
+
+  TrainLightningCraft: {
+    tables: {
       P_ResourceReward: getResourceValues({ Lithium: 100 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
-
   BuildDroneFactory: {
     tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildSolarPanel"]) },
-      P_HasBuiltBuildings: { value: encodeArray(["DroneFactory"]) },
       P_UnitReward: getUnitValues({ HammerDrone: 1 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
+
+  /* --------------------- A-A-B-A Unit Management (cont) --------------------- */
+  UpgradeUnit: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Kimberlite: 1 }),
+    },
+  },
+
+  /* --------------------- A-A-B-A Unit Production (cont) --------------------- */
+  TrainAnvilDrone: {
+    tables: {
+      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+    },
+  },
+
+  TrainHammerDrone: {
+    tables: {
+      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+    },
+  },
+
+  TrainAegisDrone: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Alloy: 10 }),
+    },
+  },
+
+  TrainStingerDrone: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
+    },
+  },
+
+  /* --------------------- A-A-B-C Unit Storage --------------------- */
   BuildHangar: {
     tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildSolarPanel"]) },
-      P_HasBuiltBuildings: { value: encodeArray(["Hangar"]) },
       P_UnitReward: getUnitValues({ AnvilDrone: 1 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
   },
 
-  BuildStarmapper: {
-    tables: {
-      P_HasBuiltBuildings: { value: encodeArray(["Starmapper"]) },
-      P_UnitReward: getUnitValues({ StingerDrone: 1 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
-  },
+  /* ------------------------------ A-A-C Defense ----------------------------- */
 
   BuildSAMLauncher: {
     tables: {
-      P_HasBuiltBuildings: { value: encodeArray(["SAM"]) },
       P_ResourceReward: getResourceValues({ Copper: 100 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
-
-  BuildVault: {
-    tables: {
-      P_HasBuiltBuildings: { value: encodeArray(["Vault"]) },
-      P_UnitReward: getUnitValues({ LightningCraft: 1 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
-  },
-
-  BuildShipyard: {
-    tables: {
-      P_HasBuiltBuildings: { value: encodeArray(["Shipyard"]) },
-      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
-  },
-
   BuildShieldGenerator: {
     tables: {
-      P_HasBuiltBuildings: { value: encodeArray(["ShieldGenerator"]) },
       P_UnitReward: getUnitValues({ AegisDrone: 1 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
   },
-
-  BuildMarket: {
+  BuildVault: {
     tables: {
-      P_HasBuiltBuildings: { value: encodeArray(["Market"]) },
-      P_ResourceReward: getResourceValues({ Kimberlite: 1 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 4n } } },
-  },
-
-  TrainMinutemanMarine1: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
-      P_ProducedUnits: getUnitValues({ MinutemanMarine: 25 }),
-      P_ResourceReward: getResourceValues({ Iron: 100 }),
+      P_UnitReward: getUnitValues({ LightningCraft: 1 }),
     },
   },
 
-  TrainTridentMarine1: {
+  /* ----------------------------- A-B Production ----------------------------- */
+  BuildAlloyFactory: {
     tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
-      P_ProducedUnits: getUnitValues({ TridentMarine: 25 }),
-      P_ResourceReward: getResourceValues({ Copper: 100 }),
+      P_ResourceReward: getResourceValues({ Alloy: 10 }),
     },
   },
-
-  TrainLightningShip1: {
+  BuildLithiumMine: {
     tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
-      P_ProducedUnits: getUnitValues({ LightningShip: 10 }),
       P_ResourceReward: getResourceValues({ Lithium: 100 }),
     },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
-
-  TrainAnvilDrone1: {
+  BuildPVCellFactory: {
     tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildDroneFactory"]) },
-      P_ProducedUnits: getUnitValues({ AnvilDrone: 10 }),
       P_ResourceReward: getResourceValues({ PVCell: 10 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
-
-  TrainHammerDrone1: {
+  BuildStorageUnit: {
     tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildDroneFactory"]) },
-      P_ProducedUnits: getUnitValues({ HammerDrone: 10 }),
-      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+      P_ResourceReward: getResourceValues({ Iron: 100 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
 
-  TrainAegisDrone1: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildDroneFactory"]) },
-      P_ProducedUnits: getUnitValues({ AegisDrone: 10 }),
-      P_ResourceReward: getResourceValues({ Alloy: 10 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
-  },
+  /* ------------------------ A-B-A Production ----------------------- */
 
-  TrainStingerDrone1: {
+  BuildSolarPanel: {
     tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildDroneFactory"]) },
-      P_ProducedUnits: getUnitValues({ StingerDrone: 10 }),
-      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
-  },
-
-  BuildColonyShip1: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
-      P_ProducedUnits: getUnitValues({ ColonyShip: 1 }),
-      P_ResourceReward: getResourceValues({ Kimberlite: 1 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
-  },
-
-  ExpandBase1: {
-    tables: {
-      P_RequiredExpansion: { value: 2n },
-      P_ResourceReward: getResourceValues({ Copper: 100 }),
+      P_ResourceReward: getResourceValues({ Lithium: 100 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
 
-  CreateFleet: {
+  /* ------------------------------ A-B-B Market ------------------------------ */
+  BuildMarket: {
     tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
-      P_ResourceReward: getResourceValues({ Iron: 10 }),
-    },
-  },
-
-  TransferResourcesToAsteroid: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["CreateFleet"]) },
-      P_ResourceReward: getResourceValues({ Copper: 10 }),
-    },
-  },
-
-  TransferResourcesToFleet: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["CreateFleet"]) },
-      P_ResourceReward: getResourceValues({ Lithium: 10 }),
-    },
-  },
-
-  RecallFleet: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["CreateFleet"]) },
-      P_ResourceReward: getResourceValues({ Iron: 10 }),
-    },
-  },
-
-  LandFleet: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["CreateFleet"]) },
-      P_ResourceReward: getResourceValues({ Copper: 10 }),
-    },
-  },
-
-  MoveFleet: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["CreateFleet"]) },
-      P_ResourceReward: getResourceValues({ Lithium: 10 }),
-    },
-  },
-
-  BattleAsteroid: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["CreateFleet"]) },
-      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
-    },
-  },
-
-  BattleFleet: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["CreateFleet"]) },
-      P_ResourceReward: getResourceValues({ Alloy: 10 }),
-    },
-  },
-
-  SuccessfulRaid: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["CreateFleet"]) },
-      P_ResourceReward: getResourceValues({ PVCell: 10 }),
-    },
-  },
-
-  OpenBattleReport: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["CreateFleet"]) },
-      P_ResourceReward: getResourceValues({ Iron: 10 }),
-    },
-  },
-
-  UpgradeUnitType: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildWorkshop"]) },
       P_ResourceReward: getResourceValues({ Kimberlite: 1 }),
     },
   },
-
-  BuildColonyShip: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildShipyard"]) },
-      P_ResourceReward: getResourceValues({ Alloy: 10 }),
-    },
-  },
-
-  DecryptAttack: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildColonyShip"]) },
-      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
-    },
-  },
-
-  CaptureAsteroid: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildColonyShip"]) },
-      P_ResourceReward: getResourceValues({ PVCell: 10 }),
-    },
-  },
-
   MarketSwap: {
     tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildMarket"]) },
       P_ResourceReward: getResourceValues({ Kimberlite: 1 }),
     },
   },
 
-  MarketLiquidity: {
-    tables: {
-      P_RequiredObjectives: { objectives: encodeArray(["BuildMarket"]) },
-      P_ResourceReward: getResourceValues({ Kimberlite: 1 }),
-    },
-  },
+  /* ------------------------------- A-C Alliance ------------------------------ */
 
   JoinAlliance: {
     tables: {

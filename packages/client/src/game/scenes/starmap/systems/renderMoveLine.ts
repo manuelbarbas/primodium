@@ -4,11 +4,11 @@ import { toast } from "react-toastify";
 import { createCameraApi } from "src/game/api/camera";
 import { createObjectApi } from "src/game/api/objects";
 import { starmapSceneConfig } from "src/game/lib/config/starmapScene";
+import { TargetLine } from "src/game/lib/objects/TargetLine";
 import { components } from "src/network/components";
-import { sendFleetPosition } from "src/network/setup/contractCalls/fleetMove";
+import { sendFleetPosition } from "src/network/setup/contractCalls/fleetSend";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
-import { TargetLine } from "src/game/lib/objects/TargetLine";
 
 export const renderMoveLine = (scene: Scene, mud: MUD) => {
   const systemsWorld = namespaceWorld(world, "systems");

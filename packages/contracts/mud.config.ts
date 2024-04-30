@@ -24,6 +24,7 @@ export const worldInput = {
     S_InitAsteroidOwnerSystem: {},
     S_TransferAsteroidSystem: {},
     S_CreateSecondaryAsteroidSystem: {},
+    S_BuildRaidableAsteroidSystem: {},
   },
 
   // using as any here for now because of a type issue and also because the enums are not being recognized in our codebase rn
@@ -123,6 +124,18 @@ export const worldInput = {
       schema: {
         xBounds: "int32",
         yBounds: "int32",
+      },
+    },
+
+    P_AsteroidThresholdProbConfig: {
+      key: [],
+      schema: {
+        common1: "uint256",
+        common2: "uint256",
+        eliteMicro: "uint256",
+        eliteSmall: "uint256",
+        eliteMedium: "uint256",
+        eliteLarge: "uint256",
       },
     },
 
@@ -321,10 +334,6 @@ export const worldInput = {
       key: ["entity"],
       schema: { entity: "bytes32", value: "int32[]" },
     },
-    Children: {
-      key: ["entity"],
-      schema: { entity: "bytes32", value: "bytes32[]" },
-    },
 
     ProductionRate: {
       key: ["entity", "resource"],
@@ -384,6 +393,11 @@ export const worldInput = {
 
     // used to record the progress of claiming the current unit
     ClaimOffset: {
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256" },
+    },
+
+    DroidRegenTimestamp: {
       key: ["entity"],
       schema: { entity: "bytes32", value: "uint256" },
     },
@@ -553,15 +567,6 @@ export const worldInput = {
 
     /* ------------------------------ Objectives ----------------------------- */
 
-    P_RequiredObjectives: {
-      key: ["prototype"],
-      schema: {
-        prototype: "bytes32",
-        // mud doesnt recognize EObjective arrays so we will manually convert them
-        objectives: "bytes32[]",
-      },
-    },
-
     CompletedObjective: {
       key: ["entity", "objective"],
       schema: { entity: "bytes32", objective: "bytes32", value: "bool" },
@@ -585,94 +590,6 @@ export const worldInput = {
         resources: "uint8[]",
         amounts: "uint256[]",
       },
-    },
-
-    P_HasBuiltBuildings: {
-      key: ["prototype"],
-      schema: {
-        prototype: "bytes32",
-        value: "bytes32[]",
-      },
-    },
-
-    HasBuiltBuilding: {
-      key: ["entity", "buildingType"],
-      schema: { entity: "bytes32", buildingType: "bytes32", value: "bool" },
-    },
-
-    P_ProducedResources: {
-      key: ["prototype"],
-      schema: {
-        prototype: "bytes32",
-        // mud doesnt recognize EResource arrays so we will manually convert them
-        resources: "uint8[]",
-        amounts: "uint256[]",
-      },
-    },
-
-    ProducedResource: {
-      key: ["entity", "resource"],
-      schema: { entity: "bytes32", resource: "uint8", value: "uint256" },
-    },
-
-    P_DestroyedUnits: {
-      key: ["prototype"],
-      schema: {
-        prototype: "bytes32",
-        // mud doesnt recognize EUnit arrays so we will manually convert them
-        units: "bytes32[]",
-        amounts: "uint256[]",
-      },
-    },
-
-    DestroyedUnit: {
-      key: ["entity", "unit"],
-      schema: { entity: "bytes32", unit: "bytes32", value: "uint256" },
-    },
-
-    P_RaidedResources: {
-      key: ["prototype"],
-      schema: {
-        prototype: "bytes32",
-        // mud doesnt recognize EResource arrays so we will manually convert them
-        resources: "uint8[]",
-        amounts: "uint256[]",
-      },
-    },
-
-    RaidedResource: {
-      key: ["entity", "resource"],
-      schema: { entity: "bytes32", resource: "uint8", value: "uint256" },
-    },
-
-    P_RequiredUnits: {
-      key: ["prototype"],
-      schema: {
-        prototype: "bytes32",
-        // mud doesnt recognize EUnit arrays so we will manually convert them
-        units: "bytes32[]",
-        amounts: "uint256[]",
-      },
-    },
-
-    P_ProducedUnits: {
-      key: ["prototype"],
-      schema: {
-        prototype: "bytes32",
-        // mud doesnt recognize EUnit arrays so we will manually convert them
-        units: "bytes32[]",
-        amounts: "uint256[]",
-      },
-    },
-
-    ProducedUnit: {
-      key: ["entity", "unit"],
-      schema: { entity: "bytes32", unit: "bytes32", value: "uint256" },
-    },
-
-    P_RequiredExpansion: {
-      key: ["prototype"],
-      schema: { prototype: "bytes32", value: "uint256" },
     },
 
     /* ------------------------------ Defense ----------------------------- */
