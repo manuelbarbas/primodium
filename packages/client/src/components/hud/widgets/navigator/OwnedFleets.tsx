@@ -43,7 +43,7 @@ export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ 
   }, [movement?.arrivalTime, time, stance]);
 
   return (
-    <Button size="content" selected={selected} onClick={onClick} className="!gap-1">
+    <Button size="content" selected={selected} onClick={onClick} className="!gap-1 min-h-24">
       <p className="text-wrap">{fleetName}</p>
       <div className="flex justify-around w-full items-center">
         <img src={InterfaceIcons.Outgoing} className="w-10 h-10" />
@@ -93,8 +93,10 @@ export const OwnedFleets: React.FC<{ className?: string }> = ({ className }) => 
 
   return (
     <SecondaryCard className={className}>
-      {fleets.length === 0 && <p className="opacity-50 uppercase">you control no fleets</p>}
-      <div className="grid grid-cols-2 gap-1">
+      {fleets.length === 0 && (
+        <p className="w-full h-full text-xs grid place-items-center opacity-50 uppercase">you control no fleets</p>
+      )}
+      <div className="grid grid-cols-2 gap-1 auto-rows-max overflow-auto scrollbar">
         {fleets.map((entity) => {
           return <OwnedFleet key={entity} fleet={entity} onClick={() => handleSelect(entity)} />;
         })}

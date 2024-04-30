@@ -97,8 +97,10 @@ export const OwnedAsteroids: React.FC<{ className?: string }> = ({ className }) 
 
   return (
     <SecondaryCard className={className}>
-      {asteroids.length === 0 && <p className="opacity-50 uppercase">you control no asteroids</p>}
-      <div className="grid grid-cols-2 gap-1">
+      {asteroids.length === 0 && (
+        <p className="w-full h-full text-xs grid place-items-center opacity-50 uppercase">you control no asteroids</p>
+      )}
+      <div className="grid grid-cols-2 gap-1 auto-rows-max overflow-auto scrollbar">
         {asteroids.map((entity) => {
           return <OwnedAsteroid key={entity} asteroid={entity} onClick={() => handleSelectRock(entity)} />;
         })}
