@@ -5,7 +5,7 @@ pragma solidity >=0.8.24;
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
 // tables
-import { P_ColonySlotsConfigData, OwnedBy, Asteroid, BuildingType } from "codegen/index.sol";
+import { P_ColonySlotsConfigData, OwnedBy, Asteroid, BuildingType, Home } from "codegen/index.sol";
 
 // libraries
 import { LibColony } from "libraries/LibColony.sol";
@@ -38,5 +38,19 @@ contract ColonySystem is PrimodiumSystem {
     }
 
     return fullPayment;
+  }
+
+  /**
+   * @dev Changes the home asteroid for the player.
+   * @param asteroidEntity The entity ID of the asteroid to set as the new home.
+   * @notice A player can only change their own home asteroid.
+   * @notice The asteroid must be owned by the player.
+   */
+  function changeHome(bytes32 asteroidEntity) public {
+    bytes32 playerEntity = _player();
+    require(Asteroid.getIsAsteroid(asteroidEntity), "[Colony] Entity is not an asteroid");
+    require(OwnedBy.get(asteroidEntity) == playerEntity, "[Colony] Asteroid not owned by player");
+
+    Home.set(playerEntity, asteroidEntity);
   }
 }
