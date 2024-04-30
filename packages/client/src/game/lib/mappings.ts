@@ -250,3 +250,15 @@ export const ModeToSceneKey: Record<Entity, SceneKeys> = {
   [Mode.CommandCenter]: "COMMAND_CENTER",
   [Mode.Spectate]: "ASTEROID",
 };
+
+//index is level
+export const MainbaseLevelToEmblem = [
+  Sprites.Emblem1,
+  Sprites.Emblem2,
+  Sprites.Emblem3,
+  Sprites.Emblem4,
+  Sprites.Emblem5,
+  Sprites.Emblem6,
+  Sprites.Emblem7,
+  Sprites.Emblem8,
+];

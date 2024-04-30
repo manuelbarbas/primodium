@@ -9,7 +9,7 @@ import { Sprites } from "@primodiumxyz/assets";
 export class ShardAsteroid extends BaseAsteroid {
   protected entity: Entity;
   constructor(scene: Scene, entity: Entity, coord: Coord) {
-    super(scene, coord, Sprites.Shard, Sprites.AegisDrone);
+    super({ scene, coord, sprite: Sprites.Shard, outlineSprite: Sprites.AegisDrone });
     this.entity = entity;
   }
 

@@ -8,7 +8,6 @@ export class OrbitRing extends Phaser.GameObjects.Container {
   private coord: TileCoord;
   private orbitRing: Phaser.GameObjects.Graphics;
   private fleetsContainer: Phaser.GameObjects.Container;
-  private unsubZoom;
   private rotationTween: Phaser.Tweens.Tween;
 
   constructor(scene: Scene, coord: TileCoord) {
@@ -23,13 +22,13 @@ export class OrbitRing extends Phaser.GameObjects.Container {
     this.coord = coord;
     this._scene = scene;
 
-    this.unsubZoom = scene.camera.zoom$.subscribe((zoom) => {
-      if (!this.fleetsContainer.length) return;
-      this.orbitRing
-        .clear()
-        .lineStyle(2 / zoom, 0x808080)
-        .strokeCircle(0, 0, RADIUS);
-    });
+    // this.unsubZoom = scene.camera.zoom$.subscribe((zoom) => {
+    //   if (!this.fleetsContainer.length || !this.active) return;
+    //   this.orbitRing
+    //     .clear()
+    //     .lineStyle(2 / zoom, 0x808080)
+    //     .strokeCircle(0, 0, RADIUS);
+    // });
 
     this.rotationTween = this.scene.tweens.add({
       targets: this.fleetsContainer,
@@ -51,6 +50,15 @@ export class OrbitRing extends Phaser.GameObjects.Container {
     const point = matrix.transformPoint(this.x, this.y);
 
     return { x: point.x, y: point.y };
+  }
+
+  update() {
+    if (!this.fleetsContainer.length) return;
+
+    this.orbitRing
+      .clear()
+      .lineStyle(2 / this._scene.camera.phaserCamera.zoom, 0x808080)
+      .strokeCircle(0, 0, RADIUS);
   }
 
   getTileCoord() {
@@ -109,6 +117,7 @@ export class OrbitRing extends Phaser.GameObjects.Container {
   }
 
   resumeRotation() {
+    if (!this.fleetsContainer.length) return;
     this.rotationTween.resume();
     return this;
   }
@@ -121,6 +130,5 @@ export class OrbitRing extends Phaser.GameObjects.Container {
   dispose() {
     this.destroy();
     this.rotationTween.destroy();
-    this.unsubZoom.unsubscribe();
   }
 }

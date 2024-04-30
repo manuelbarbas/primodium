@@ -27,6 +27,8 @@ import CategoryInfra from "../icons/category/infra.png?url";
 import CategoryMilitary from "../icons/category/military.png?url";
 import CategoryProduction from "../icons/category/production.png?url";
 import CategoryStorage from "../icons/category/storage.png?url";
+import Navigator from "../icons/UI_Navigator.png?url";
+import Command from "../icons/UI_Command.png?url";
 
 export const InterfaceIcons = {
   Add,
@@ -53,6 +55,8 @@ export const InterfaceIcons = {
   Starmap,
   Trade,
   Vault,
+  Navigator,
+  Command,
   CategoryInfra,
   CategoryMilitary,
   CategoryProduction,

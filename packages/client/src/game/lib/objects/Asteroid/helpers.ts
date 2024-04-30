@@ -1,3 +1,4 @@
+import { Sprites } from "@primodiumxyz/assets";
 import { AsteroidRelationship } from "../../constants/common";
 import {
   EntityTypeSizeToSecondaryAsteroidSprites,
@@ -14,7 +15,7 @@ export const getPrimarySprite = (level: bigint) => {
 
 export const getSecondarySprite = (resourceType: Entity, maxLevel: bigint) => {
   const size = MaxLevelToAsteroidSpriteSize[Number(maxLevel)];
-  return EntityTypeSizeToSecondaryAsteroidSprites[resourceType][size] ?? SpriteKeys.MotherlodeKimberliteSmall;
+  return EntityTypeSizeToSecondaryAsteroidSprites[resourceType][size] ?? Sprites.MotherlodeKimberliteSmall;
 };
 
 export const getPrimaryOutlineSprite = (rockRelationship: AsteroidRelationship) => {
@@ -23,5 +24,5 @@ export const getPrimaryOutlineSprite = (rockRelationship: AsteroidRelationship) 
 
 export const getSecondaryOutlineSprite = (relationship: AsteroidRelationship, maxLevel: bigint) => {
   const size = MaxLevelToAsteroidSpriteSize[Number(maxLevel)];
-  return RelationshipSizeToSecondaryAsteroidOutlineSprites[relationship][size] ?? SpriteKeys.MotherlodeNeutralSmall;
+  return RelationshipSizeToSecondaryAsteroidOutlineSprites[relationship][size] ?? Sprites.MotherlodeNeutralSmall;
 };

@@ -27,7 +27,6 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
     this.setOrigin(0, 1);
     this.setDepth(DepthLayers.Building - coord.y);
     this.setInteractive();
-    // this.setPipeline("Light2D");
 
     this.buildingType = buildingType;
     this.coord = coord;

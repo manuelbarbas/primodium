@@ -11,6 +11,10 @@ import { EntityType } from "src/util/constants";
 import { getCanAttack, getCanSend } from "src/util/unit";
 import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
 import { MapIdToAsteroidType } from "@/util/mappings";
+import { entityToPlayerName, entityToRockName } from "@/util/name";
+import { getRockRelationship } from "@/util/asteroid";
+import { getAllianceName } from "@/util/alliance";
+import { entityToColor } from "@/util/color";
 
 export const renderAsteroid = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -21,6 +25,13 @@ export const renderAsteroid = (scene: Scene) => {
     if (!asteroidData) throw new Error("Asteroid data not found");
 
     const expansionLevel = components.Level.get(entity)?.value ?? 1n;
+    const playerEntity = components.Account.get()?.value;
+
+    if (!playerEntity) return;
+
+    const ownedBy = components.OwnedBy.get(entity)?.value;
+    const ownedByPlayer = ownedBy === playerEntity;
+    const level = components.Level.get(entity)?.value;
 
     const spriteScale = 0.34 + 0.05 * Number(asteroidData.maxLevel);
     let asteroid: BaseAsteroid;
@@ -29,9 +40,14 @@ export const renderAsteroid = (scene: Scene) => {
         scene,
         coord,
         MapIdToAsteroidType[asteroidData.mapId] ?? EntityType.Kimberlite,
-        asteroidData?.maxLevel
+        asteroidData?.maxLevel,
+        getRockRelationship(playerEntity, entity)
       ).setScale(spriteScale);
-    else asteroid = new PrimaryAsteroid(scene, coord, expansionLevel ?? 1n, "Self").setScale(spriteScale);
+    // .setLevel(level ?? 1n);
+    else
+      asteroid = new PrimaryAsteroid(scene, coord, expansionLevel ?? 1n, getRockRelationship(playerEntity, entity))
+        .setScale(spriteScale)
+        .setLevel(level ?? 1n);
 
     asteroid
       .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
@@ -55,6 +71,16 @@ export const renderAsteroid = (scene: Scene) => {
       .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => {
         components.HoverEntity.remove();
       });
+
+    const alliance = components.PlayerAlliance.get(ownedBy as Entity)?.alliance;
+
+    asteroid.getAsteroidLabel().setProperties({
+      nameLabel: entityToRockName(entity),
+      nameLabelColor: ownedByPlayer ? 0x00ffff : 0xffffff,
+      ownerLabel: entityToPlayerName(ownedBy as Entity | undefined),
+      allianceLabel: alliance ? getAllianceName(alliance as Entity) : undefined,
+      allianceLabelColor: alliance ? parseInt(entityToColor(alliance as Entity).slice(1), 16) : undefined,
+    });
 
     scene.objects.add(entity, asteroid, true);
   };

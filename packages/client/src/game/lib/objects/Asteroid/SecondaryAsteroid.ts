@@ -14,7 +14,12 @@ export class SecondaryAsteroid extends BaseAsteroid {
     maxLevel: bigint,
     relationship: AsteroidRelationship = "Neutral"
   ) {
-    super(scene, coord, getSecondarySprite(resourceType, maxLevel), getSecondaryOutlineSprite(relationship, maxLevel));
+    super({
+      scene,
+      coord,
+      sprite: getSecondarySprite(resourceType, maxLevel),
+      outlineSprite: getSecondaryOutlineSprite(relationship, maxLevel),
+    });
 
     this.maxLevel = maxLevel;
   }
