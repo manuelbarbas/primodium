@@ -17,9 +17,9 @@ export const BattleAllies = ({ allies }: { allies: (BattleData | undefined)[] })
 
   if (allies.length === 0) return;
   return (
-    <div className="flex bg-white/[.06] w-full gap-4">
-      <p className="w-60 p-4 text-xs font-bold text-accent text-right">ALLIES</p>
-      <div className="flex flex-col w-full py-2 pr-2 gap-1">
+    <div className="flex w-full gap-4">
+      <p className="w-60 pt-2 text-xs font-bold text-accent text-right">ALLIES</p>
+      <div className="flex flex-col w-full gap-1">
         <div className="grid grid-cols-4 gap-1">
           {allies.map(
             (ally, i) =>

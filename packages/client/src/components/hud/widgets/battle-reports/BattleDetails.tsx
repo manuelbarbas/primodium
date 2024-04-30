@@ -70,35 +70,36 @@ export const BattleDetails: React.FC<{
 
           <p className="p-1 text-xs font-bold text-accent flex justify-start w-full">Attacker</p>
 
-          <div className="w-full flex gap-4 p-2 bg-white/[.06]">
-            <div className="w-60 flex flex-col gap-1 justify-center items-center text-center text-sm">
-              <img src={attackerIsFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="h-12 w-12" />
-              <p className={`${winnerIsAttacker ? "text-success" : "text-error"}`}>
-                {attackerIsFleet ? entityToFleetName(battle.attacker) : entityToRockName(battle.attacker)}
-              </p>
-              <AccountDisplay raw player={attackingPlayer} noColor className="opacity-50" />
+          <div className="w-full flex flex-col gap-2 p-2 bg-white/[.06]">
+            <div className="w-full flex gap-4">
+              <div className="w-60 flex flex-col gap-1 justify-center items-center text-center text-sm">
+                <img src={attackerIsFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="h-12 w-12" />
+                <p className={`${winnerIsAttacker ? "text-success" : "text-error"}`}>
+                  {attackerIsFleet ? entityToFleetName(battle.attacker) : entityToRockName(battle.attacker)}
+                </p>
+                <AccountDisplay raw player={attackingPlayer} noColor className="opacity-50" />
+              </div>
+              {!attackerDetails && (
+                <div className="w-full bg-base-100 h-32 border border-slate-500 pulse text-secondary uppercase text-sm flex justify-center items-center">
+                  Nothing to report
+                </div>
+              )}
+              {attackerDetails && (
+                <div className="flex flex-col gap-2 w-full">
+                  {defenderDetails?.encryptionAtEnd === 0n && (
+                    <p className="opacity-70 text-xs">Gained control of {entityToRockName(battle.defender)}</p>
+                  )}
+                  {Object.entries(attackerDetails.units).length > 0 && <UnitStatus data={attackerDetails.units} />}
+
+                  {Object.entries(attackerDetails.resources).length !== 0 && (
+                    <ResourceStatus resources={attackerDetails.resources} />
+                  )}
+                </div>
+              )}
             </div>
-            {!attackerDetails && (
-              <div className="w-full bg-base-100 h-32 border border-slate-500 pulse text-secondary uppercase text-sm flex justify-center items-center">
-                Nothing to report
-              </div>
-            )}
-            {attackerDetails && (
-              <div className="flex flex-col gap-2 w-full">
-                {defenderDetails?.encryptionAtEnd === 0n && (
-                  <p className="opacity-70 text-xs">Gained control of {entityToRockName(battle.defender)}</p>
-                )}
-                {Object.entries(attackerDetails.units).length > 0 && <UnitStatus data={attackerDetails.units} />}
 
-                {Object.entries(attackerDetails.resources).length !== 0 && (
-                  <ResourceStatus resources={attackerDetails.resources} />
-                )}
-              </div>
-            )}
+            <BattleAllies allies={attackerAllyDetails} />
           </div>
-
-          <BattleAllies allies={attackerAllyDetails} />
-
           <p className="p-1 text-xs font-bold text-accent flex justify-start w-full">Defender</p>
 
           {!defenderDetails && (
