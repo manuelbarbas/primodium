@@ -10,6 +10,7 @@ import { EntityToUnitImage } from "@/util/mappings";
 import { entityToRockName } from "@/util/name";
 import { formatTime } from "@/util/number";
 import { Entity } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import React from "react";
 import { Navigator } from "src/components/core/Navigator";
 
@@ -48,7 +49,7 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
               className={`h-[6rem] ${activeTile == 0 ? "ring ring-secondary" : ""}`}
             />
           ) : (
-            <SecondaryCard noDecor className="h-[6rem] w-full text-xs flex justify-center items-center">
+            <SecondaryCard noDecor className="h-[6rem] w-full opacity-50 text-xs flex justify-center items-center">
               Add slots to train ships
             </SecondaryCard>
           )}
@@ -64,6 +65,15 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
               <TrainingTile key={index} timeRemaining={slot.timeRemaining} asteroidEntity={slot.asteroidEntity} />
             ))}
             {tiles.map((tile, index) => {
+              if (tile.type === "train") {
+                return (
+                  <SecondaryCard key={`tile-${index}`} noDecor className="text-xs flex justify-center items-center">
+                    <img src={EntityToUnitImage[EntityType.ColonyShip] ?? ""} className="h-6" />
+                    <p className="text-success">Ready to</p>
+                    <p className="text-success">Commission</p>
+                  </SecondaryCard>
+                );
+              }
               if (tile.type === "unlock")
                 return (
                   <UnlockTile key={index} onClick={() => setActiveTile(index + 1)} active={activeTile == index + 1} />
@@ -89,7 +99,7 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
         )}
         {(!activeTile || ["training", "train"].includes(tiles[activeTile - 1].type)) &&
           (activeTile === 0 ? null : (
-            <SecondaryCard noDecor className="w-56 h-full flex text-xs justify-center items-center opacity-60">
+            <SecondaryCard noDecor className="w-56 h-full flex text-xs justify-center items-center opacity-50">
               Select a Slot
             </SecondaryCard>
           ))}
@@ -134,7 +144,7 @@ const TrainShipTile: React.FC<{ active?: boolean; onClick?: () => void; classNam
         variant="ghost"
         className="w-full h-full flex gap-2 text-xs justify-center items-center"
       >
-        <img src={"/img/icons/addicon.png"} className={`pixel-images w-4 scale-150`} />
+        <img src={InterfaceIcons.Add} className={`pixel-images w-4 scale-150`} />
         <div className="flex flex-col">
           <p>Commission Ship</p>
         </div>
