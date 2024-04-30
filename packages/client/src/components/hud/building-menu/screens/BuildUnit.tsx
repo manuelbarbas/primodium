@@ -1,6 +1,6 @@
-import { useEntityQuery } from "@latticexyz/react";
-import { Entity, Has, HasValue } from "@latticexyz/recs";
-import { EResource } from "contracts/config/enums";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
+import { Entity } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useMemo, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import { Badge } from "src/components/core/Badge";
@@ -12,15 +12,12 @@ import { useMaxCountOfRecipe } from "src/hooks/useMaxCountOfRecipe";
 import { components } from "src/network/components";
 import { train } from "src/network/setup/contractCalls/train";
 import { getEntityTypeName } from "src/util/common";
-import { EntityType, ResourceEntityLookup, UnitEnumLookup } from "src/util/constants";
+import { EntityType, UnitEnumLookup } from "src/util/constants";
 import { formatNumber, formatResourceCount } from "src/util/number";
 import { getRecipe } from "src/util/recipe";
-import { getFullResourceCount } from "src/util/resource";
 import { getUnitStats } from "src/util/unit";
 import { Hex } from "viem";
 import { ResourceIconTooltip } from "../../../shared/ResourceIconTooltip";
-import { InterfaceIcons } from "@primodiumxyz/assets";
-import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 
 export const BuildUnit: React.FC<{
   building: Entity;
@@ -48,7 +45,7 @@ export const BuildUnit: React.FC<{
   if (trainableUnits.length === 0) return null;
 
   return (
-    <Navigator.Screen title="BuildUnit" className="relative flex flex-col w-full">
+    <Navigator.Screen title="BuildUnit" className="relative flex flex-col !w-96">
       <SecondaryCard className="pixel-images w-full pointer-events-auto">
         <div className="flex flex-col items-center space-y-3">
           <div className="flex flex-wrap gap-2 items-center justify-center">
@@ -94,10 +91,7 @@ export const BuildUnit: React.FC<{
                 })}
               </div>
 
-              {selectedUnit && selectedUnit !== EntityType.ColonyShip && (
-                <TrainNonColonyShip building={building} unit={selectedUnit} asteroid={activeRock} />
-              )}
-              {selectedUnit === EntityType.ColonyShip && <TrainColonyShip building={building} asteroid={activeRock} />}
+              {selectedUnit && <TrainShip building={building} unit={selectedUnit} asteroid={activeRock} />}
             </>
           )}
         </div>
@@ -106,7 +100,7 @@ export const BuildUnit: React.FC<{
   );
 };
 
-const TrainNonColonyShip = ({ building, unit, asteroid }: { building: Entity; unit: Entity; asteroid: Entity }) => {
+const TrainShip = ({ building, unit, asteroid }: { building: Entity; unit: Entity; asteroid: Entity }) => {
   const [count, setCount] = useState("");
 
   useEffect(() => {
@@ -156,57 +150,6 @@ const TrainNonColonyShip = ({ building, unit, asteroid }: { building: Entity; un
             if (!unit) return;
 
             train(mud, building, UnitEnumLookup[unit], BigInt(count));
-          }}
-        >
-          Train
-        </Navigator.BackButton>
-        <Navigator.BackButton className="btn-sm border-secondary" />
-      </div>
-    </>
-  );
-};
-
-const TrainColonyShip = ({ building, asteroid }: { building: Entity; asteroid: Entity }) => {
-  const mud = useMud();
-  const { playerAccount } = mud;
-  const colonyShipResourceData = components.P_ColonyShipConfig.get();
-  if (!colonyShipResourceData) throw new Error("No colony ship resource data found");
-  const resource = ResourceEntityLookup[colonyShipResourceData.resource as EResource];
-
-  const playerAsteroidsQuery = [
-    Has(components.Asteroid),
-    HasValue(components.OwnedBy, { value: playerAccount.entity as Hex }),
-  ];
-
-  const playerAsteroids = useEntityQuery(playerAsteroidsQuery);
-  const ships = playerAsteroids.reduce((acc, entity) => {
-    const data = getFullResourceCount(EntityType.ColonyShipCapacity, entity);
-    return acc + data.resourceStorage - data.resourceCount;
-  }, BigInt(playerAsteroids.length - 1));
-
-  const cost = colonyShipResourceData.initialCost * 2n ** ships;
-
-  return (
-    <>
-      <div className="flex justify-center items-center gap-1">COST</div>
-      <Badge>
-        <ResourceIconTooltip
-          image={EntityToResourceImage[resource]}
-          resource={resource}
-          name={getEntityTypeName(resource)}
-          amount={cost}
-          fontSize="sm"
-          validate
-          spaceRock={asteroid}
-        />
-      </Badge>
-      <hr className="border-t border-cyan-600 w-full" />
-
-      <div className="flex gap-2 pt-5">
-        <Navigator.BackButton
-          className="btn-sm btn-secondary"
-          onClick={() => {
-            train(mud, building, UnitEnumLookup[EntityType.ColonyShip], 1n);
           }}
         >
           Train

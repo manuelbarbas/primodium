@@ -148,9 +148,9 @@ contract MoveBuildingSystemTest is PrimodiumTest {
     uint256 timestamp = block.timestamp;
     vm.warp(block.timestamp + 1);
     assertTrue(timestamp != block.timestamp, "timestamp should have updated");
-    assertEq(
-      Spawned.get(LibEncode.getTimedHash(BuildingKey, mainBasePosition)),
-      false,
+    assertTrue(
+      Position.get(LibEncode.getTimedHash(BuildingKey, mainBasePosition)).x == 0 &&
+        Position.get(LibEncode.getTimedHash(BuildingKey, mainBasePosition)).y == 0,
       "new building should not be spawned"
     );
 

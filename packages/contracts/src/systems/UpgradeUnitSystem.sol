@@ -12,12 +12,13 @@ import { IWorld } from "codegen/world/IWorld.sol";
 contract UpgradeUnitSystem is PrimodiumSystem {
   /// @notice Upgrades the specified unit for the sender
   /// @param unit The type of unit to upgrade
-  function upgradeUnit(bytes32 asteroidEntity, EUnit unit) public _claimResources(asteroidEntity) {
-    bytes32 playerEntity = _player();
+  function upgradeUnit(
+    bytes32 asteroidEntity,
+    EUnit unit
+  ) public _onlyAsteroidOwner(asteroidEntity) _claimResources(asteroidEntity) {
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
     uint256 currentLevel = UnitLevel.get(asteroidEntity, unitPrototype);
     uint256 targetLevel = currentLevel + 1;
-    require(OwnedBy.get(asteroidEntity) == playerEntity, "[UpgradeUnitSystem] asteroid not owned by player");
     require(unit != EUnit.NULL && unit != EUnit.LENGTH, "[UpgradeUnitSystem] Invalid unit");
 
     require(

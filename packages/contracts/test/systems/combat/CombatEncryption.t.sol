@@ -7,7 +7,7 @@ import { addressToEntity } from "src/utils.sol";
 import { EResource, EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
-import { MaxColonySlots, LastConquered, OwnedBy, UnitCount, ProductionRate, CooldownEnd, P_ColonyShipConfig, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, IsFleet, UnitLevel } from "codegen/index.sol";
+import { MaxColonySlots, LastConquered, OwnedBy, UnitCount, ProductionRate, CooldownEnd, P_ColonyShipConfig, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, IsFleet, UnitLevel, Home } from "codegen/index.sol";
 
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
@@ -273,6 +273,8 @@ contract CombatEncryptionTest is PrimodiumTest {
     assertEq(FleetMovement.getArrivalTime(bobFleet), 0, "fleet should have been destroyed/abandoned");
     assertEq(FleetMovement.getSendTime(bobFleet), 0, "fleet should have been destroyed/abandoned");
     assertEq(IsFleet.get(bobFleet), false, "fleet should have been destroyed/abandoned");
+
+    assertEq(Home.get(bobEntity), bytes32(0), "bob should have lost his home asteroid");
 
     assertEq(
       ResourceCount.get(bobHomeAsteroid, uint8(EResource.Iron)),
