@@ -40,6 +40,12 @@ contract ColonySystem is PrimodiumSystem {
     return fullPayment;
   }
 
+  /**
+   * @dev Changes the home asteroid for the player.
+   * @param asteroidEntity The entity ID of the asteroid to set as the new home.
+   * @notice A player can only change their own home asteroid.
+   * @notice The asteroid must be owned by the player.
+   */
   function changeHome(bytes32 asteroidEntity) public {
     bytes32 playerEntity = _player();
     require(Asteroid.getIsAsteroid(asteroidEntity), "[Colony] Entity is not an asteroid");

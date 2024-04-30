@@ -27,11 +27,6 @@ contract SpawnSystemTest is PrimodiumTest {
     super.setUp();
   }
 
-  function testSpawnStuff() public returns (bytes32) {
-    uint256 speed = P_GameConfig.getWorldSpeed();
-    console.log("speed", speed);
-  }
-
   function testSpawnu() public {
     bytes32 playerEntity = addressToEntity(creator);
     bytes32 asteroidEntity = spawn(creator);
