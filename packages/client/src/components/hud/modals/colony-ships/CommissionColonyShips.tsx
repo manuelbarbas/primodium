@@ -60,7 +60,7 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
               {colonySlotsData.occupiedSlots.length + Number(colonySlotsData.availableSlots)} unused
             </p>
           </div>
-          <div className="grid grid-cols-3 gap-1 overflow-auto scrollbar p-1">
+          <div className="grid grid-cols-3 gap-1 overflow-auto scrollbar">
             {trainingShips.map((slot, index) => (
               <TrainingTile key={index} timeRemaining={slot.timeRemaining} asteroidEntity={slot.asteroidEntity} />
             ))}
@@ -68,7 +68,7 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
               if (tile.type === "train") {
                 return (
                   <SecondaryCard key={`tile-${index}`} noDecor className="text-xs flex justify-center items-center">
-                    <img src={EntityToUnitImage[EntityType.ColonyShip] ?? ""} className="h-6" />
+                    <img src={EntityToUnitImage[EntityType.ColonyShip] ?? ""} className="h-6 mb-1" />
                     <p className="text-success">Ready to</p>
                     <p className="text-success">Commission</p>
                   </SecondaryCard>
@@ -119,10 +119,8 @@ const TrainingTile: React.FC<{
 }> = ({ timeRemaining, asteroidEntity, className = "" }) => {
   return (
     <SecondaryCard noDecor className={`w-full justify-center items-center flex flex-col gap-1 ${className}`}>
-      <div className="flex gap-2 items-center">
-        <img src={EntityToUnitImage[EntityType.ColonyShip] ?? ""} className="h-6" />
-      </div>
-      <div className="flex flex-col gap-1 items-center">
+      <img src={EntityToUnitImage[EntityType.ColonyShip] ?? ""} className="h-6 mb-1" />
+      <div className="flex flex-col items-center">
         <div className="text-xs text-warning animate-pulse">{timeRemaining === 0n ? "IN QUEUE" : "Building"}</div>
         {timeRemaining > 0n && <div className="text-xs opacity-70"> {formatTime(timeRemaining)}</div>}
         {asteroidEntity && <div className="text-xs text-accent opacity-50">{entityToRockName(asteroidEntity)}</div>}
