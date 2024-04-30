@@ -123,7 +123,6 @@ library LibBuilding {
 
     buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
 
-    Spawned.set(buildingEntity, true);
     BuildingType.set(buildingEntity, buildingPrototype);
     Position.set(buildingEntity, coord);
     Level.set(buildingEntity, 1);
