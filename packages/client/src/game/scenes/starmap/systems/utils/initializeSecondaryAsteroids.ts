@@ -1,6 +1,6 @@
 import { ComponentValue, Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { EResource } from "contracts/config/enums";
+import { EResource, EMap } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { EntityType, RESOURCE_SCALE } from "src/util/constants";
@@ -119,22 +119,46 @@ function getAsteroidData(
   const distributionVal = getByteUInt(asteroidEntity, 7, 12) % 100;
   let maxLevel = 8;
   let primodium = 1n;
-  // //micro
-  if (distributionVal <= 50) {
+
+  const asteroidThresholdProb = components.P_AsteroidThresholdProbConfig.get();
+  if (!asteroidThresholdProb) throw new Error("asteroidThresholdProb not found");
+
+  let mapId = 1;
+
+  // Distribution
+  if (distributionVal < asteroidThresholdProb.common1) {
+    // common resources
+    maxLevel = 1; // micro
+    primodium = 1n;
+    mapId = EMap.Common;
+  } else if (distributionVal < asteroidThresholdProb.common2) {
+    // common + advanced resources
+    maxLevel = 3; // small
+    primodium = 2n;
+    mapId = EMap.Common;
+  } else if (distributionVal < asteroidThresholdProb.eliteMicro) {
+    // elite resources, micro
     maxLevel = 1;
     primodium = 3n;
-    //small
-  } else if (distributionVal <= 75) {
+  } else if (distributionVal < asteroidThresholdProb.eliteSmall) {
+    // elite resources, small
     maxLevel = 3;
     primodium = 4n;
-    //medium
-  } else if (distributionVal <= 90) {
+  } else if (distributionVal < asteroidThresholdProb.eliteMedium) {
+    // elite resources, medium
     maxLevel = 5;
     primodium = 5n;
-    //large
+  } else {
+    // elite resources, large
+    maxLevel = 8;
+    primodium = 5n;
   }
 
-  const mapId = (getByteUInt(asteroidEntity, 3, 20) % 4) + 2;
+  if (mapId != EMap.Common) {
+    // elite resources
+    // number between 2 and 5
+    mapId = (getByteUInt(asteroidEntity, 3, 20) % 4) + 2;
+  }
   return {
     ...emptyData,
     isAsteroid: true,
