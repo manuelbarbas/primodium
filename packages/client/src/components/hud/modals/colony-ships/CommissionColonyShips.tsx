@@ -40,27 +40,29 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
   return (
     <Navigator.Screen title="Commission" className="gap-2">
       <div className="flex h-[20rem] gap-2">
-        <div className="flex flex-col gap-2">
-          {queue.length > 0 ? (
-            <TrainingTile timeRemaining={queue[0].timeRemaining} className="h-[6rem]" />
-          ) : colonySlotsData.availableSlots > 0 ? (
-            <TrainShipTile
-              onClick={() => setActiveTile(0)}
-              className={`h-[6rem] ${activeTile == 0 ? "ring ring-secondary" : ""}`}
-            />
-          ) : (
-            <SecondaryCard noDecor className="h-[6rem] w-full opacity-50 text-xs flex justify-center items-center">
-              Add slots to train ships
-            </SecondaryCard>
-          )}
-          <div className="text-xs pt-1 flex justify-between">
+        <div className="flex flex-col gap-2 ">
+          <div className="px-1">
+            {queue.length > 0 ? (
+              <TrainingTile timeRemaining={queue[0].timeRemaining} className="h-[6rem]" />
+            ) : colonySlotsData.availableSlots > 0 ? (
+              <TrainShipTile
+                onClick={() => setActiveTile(0)}
+                className={`h-[6rem] ${activeTile == 0 ? "ring ring-secondary" : ""}`}
+              />
+            ) : (
+              <SecondaryCard noDecor className="h-[6rem] w-full opacity-50 text-xs flex justify-center items-center">
+                Add slots to train ships
+              </SecondaryCard>
+            )}
+          </div>
+          <div className="text-xs px-1 pt-1 flex justify-between">
             <p>Colony Ship Slots</p>
             <p>
               {Number(colonySlotsData.availableSlots)}/
               {colonySlotsData.occupiedSlots.length + Number(colonySlotsData.availableSlots)} unused
             </p>
           </div>
-          <div className="grid grid-cols-3 gap-1 overflow-auto scrollbar">
+          <div className="grid grid-cols-3 gap-1 overflow-auto scrollbar p-1">
             {trainingShips.map((slot, index) => (
               <TrainingTile key={index} timeRemaining={slot.timeRemaining} asteroidEntity={slot.asteroidEntity} />
             ))}
