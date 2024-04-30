@@ -45,7 +45,7 @@ export const BuildUnit: React.FC<{
   if (trainableUnits.length === 0) return null;
 
   return (
-    <Navigator.Screen title="BuildUnit" className="relative flex flex-col w-full">
+    <Navigator.Screen title="BuildUnit" className="relative flex flex-col !w-96">
       <SecondaryCard className="pixel-images w-full pointer-events-auto">
         <div className="flex flex-col items-center space-y-3">
           <div className="flex flex-wrap gap-2 items-center justify-center">

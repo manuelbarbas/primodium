@@ -34,9 +34,10 @@ export const NumberInput: React.FC<{
   };
 
   return (
-    <div className={`flex mb-4 relative`}>
+    <div className={`flex mb-4 relative justify-center items-center gap-2`}>
       <Button
-        className="btn-xs btn-ghost"
+        size={"xs"}
+        variant={"ghost"}
         disabled={Number(count) <= min}
         onClick={(e) => {
           e?.preventDefault();
@@ -47,7 +48,7 @@ export const NumberInput: React.FC<{
       </Button>
       <input
         type="number"
-        className={`bg-transparent text-center w-fit outline-none border-b border-pink-900 ${
+        className={`bg-neutral px-2 text-center w-24 border border-secondary focus:outline-none ${
           Number(count) > max ? "text-error" : ""
         }`}
         value={count}
@@ -70,7 +71,8 @@ export const NumberInput: React.FC<{
         max={max}
       />
       <Button
-        className="btn-xs btn-ghost"
+        size={"xs"}
+        variant={"ghost"}
         disabled={Number(count) >= max}
         onClick={(e) => {
           e?.preventDefault();
@@ -82,7 +84,8 @@ export const NumberInput: React.FC<{
       {max !== Infinity && (
         <div className="absolute right-1/2 -bottom-1/2 translate-x-1/2 translate-y-1/2">
           <Button
-            className={`${Number(count) >= max ? "opacity-50" : ""} btn-xs btn-ghost  opacity-50`}
+            variant={"ghost"}
+            size={"xs"}
             disabled={Number(count) >= max}
             onClick={() => handleUpdate(max.toString())}
           >

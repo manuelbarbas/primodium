@@ -29,7 +29,9 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
 
   const colonySlotsData = useColonySlots(playerEntity);
 
-  const trainingShips = colonySlotsData.occupiedSlots.filter((slot) => slot.type === "training");
+  const trainingShips = colonySlotsData.occupiedSlots.filter(
+    (slot): slot is typeof slot & { type: "training" } => slot.type === "training"
+  );
   const rawQueue = components.TrainingQueue.use(buildingEntity);
 
   const queue = rawQueue ? convertTrainingQueue(rawQueue) : [];
@@ -58,8 +60,8 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
           <div className="text-xs px-1 pt-1 flex justify-between">
             <p>Colony Ship Slots</p>
             <p>
-              {Number(colonySlotsData.availableSlots)}/
-              {colonySlotsData.occupiedSlots.length + Number(colonySlotsData.availableSlots)} unused
+              {colonySlotsData.occupiedSlots.length - 1}/
+              {colonySlotsData.occupiedSlots.length + Number(colonySlotsData.availableSlots) - 1} slots
             </p>
           </div>
           <div className="grid grid-cols-3 gap-1 overflow-auto scrollbar p-1">
@@ -75,8 +77,10 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
                     className="aspect-square text-xs flex justify-center items-center"
                   >
                     <img src={EntityToUnitImage[EntityType.ColonyShip] ?? ""} className="h-6 mb-1" />
-                    <p className="text-success">Ready to</p>
-                    <p className="text-success">Commission</p>
+                    <div className="flex flex-col flex-grow items-center justify-center">
+                      <p className="text-success">Ready to</p>
+                      <p className="text-success">Commission</p>
+                    </div>
                   </SecondaryCard>
                 );
               }
@@ -126,7 +130,7 @@ const TrainingTile: React.FC<{
   return (
     <SecondaryCard noDecor className={`w-full justify-center items-center flex flex-col gap-1 ${className}`}>
       <img src={EntityToUnitImage[EntityType.ColonyShip] ?? ""} className="h-6 mb-1" />
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center justify-center flex-grow">
         <div className="text-xs text-warning animate-pulse">{timeRemaining === 0n ? "IN QUEUE" : "Building"}</div>
         {timeRemaining > 0n && <div className="text-xs opacity-70"> {formatTime(timeRemaining)}</div>}
         {asteroidEntity && <div className="text-xs text-accent opacity-50">{entityToRockName(asteroidEntity)}</div>}
@@ -149,7 +153,7 @@ const TrainShipTile: React.FC<{ active?: boolean; onClick?: () => void; classNam
         className="w-full h-full flex gap-2 text-xs justify-center items-center"
       >
         <img src={InterfaceIcons.Add} className={`pixel-images w-4 scale-150`} />
-        <div className="flex flex-col">
+        <div className="flex flex-col flex-grow">
           <p>Commission Ship</p>
         </div>
       </Button>
@@ -166,7 +170,7 @@ const UnlockTile: React.FC<{ active?: boolean; onClick?: () => void }> = ({ onCl
         variant="ghost"
         className="w-full h-full flex text-xs justify-center items-center"
       >
-        Add Slot
+        + Add Slot
       </Button>
     </SecondaryCard>
   );

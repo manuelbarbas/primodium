@@ -3,7 +3,7 @@ import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
 import { usePrimodium } from "@/hooks/usePrimodium";
 import { cn } from "@/util/client";
 import { getRandomRange } from "@/util/common";
-import { AudioKeys } from "@game/lib/constants/assets/audio";
+import { AudioKeys } from "@primodiumxyz/assets";
 import { cva, type VariantProps } from "class-variance-authority";
 import { forwardRef, useCallback, useEffect } from "react";
 

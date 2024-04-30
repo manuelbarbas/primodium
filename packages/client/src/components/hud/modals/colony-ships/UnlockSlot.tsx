@@ -106,7 +106,7 @@ const SlotResourceDisplay: React.FC<{
   return (
     <Button size="content" onClick={onClick} className={`w-full gap-1 ${active ? "ring ring-secondary" : ""}`}>
       <IconLabel imageUri={EntityToResourceImage[resource] ?? ""} text={content} />
-      <CapacityBar current={paid} max={cost} segments={20} />
+      <CapacityBar className="w-full" current={paid} max={cost} segments={20} />
       {!complete && (
         <p className="self-end text-xs opacity-50">Available: {formatResourceCount(resource, resourceCount ?? 0n)}</p>
       )}

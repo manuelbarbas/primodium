@@ -29,9 +29,9 @@ export const Card: React.FC<{
       return;
     }
 
-    const x = lerp(e.clientX - left - width / 2, -width, width, -6, 6);
-    const y = lerp(e.clientY - top - height / 2, -height, height, -6, 6);
-    containerRef.current.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+    const x = lerp(e.clientX - left - width / 2, -width, width, -1000 / width, 1000 / width);
+    const y = lerp(e.clientY - top - height / 2, -height, height, -1000 / height, 1000 / height);
+    containerRef.current.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
   }, []);
 
   const handleMouseLeave = useCallback(() => {
