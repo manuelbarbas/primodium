@@ -13,18 +13,6 @@ import { EntityType } from "src/util/constants";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount } from "src/util/number";
 
-export const LabeledValue: React.FC<{
-  label: string;
-  children?: React.ReactNode;
-}> = ({ children = null, label }) => {
-  return (
-    <div className="flex flex-col gap-1 w-fit">
-      <p className="text-xs font-bold text-accent">{label}</p>
-      <div className="flex items-center gap-1">{children}</div>
-    </div>
-  );
-};
-
 export const OwnedAsteroid: React.FC<{ className?: string; asteroid: Entity; onClick?: () => void }> = ({
   className,
   asteroid,

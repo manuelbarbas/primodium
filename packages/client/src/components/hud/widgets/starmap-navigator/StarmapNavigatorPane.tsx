@@ -1,6 +1,7 @@
 import { Button } from "@/components/core/Button";
-import { OwnedAsteroids } from "@/components/hud/widgets/navigator/OwnedAsteroids";
-import { OwnedFleets } from "@/components/hud/widgets/navigator/OwnedFleets";
+import { OwnedAsteroids } from "@/components/hud/widgets/starmap-navigator/OwnedAsteroids";
+import { OwnedFleets } from "@/components/hud/widgets/starmap-navigator/OwnedFleets";
+import { Shards } from "@/components/hud/widgets/starmap-navigator/Shards";
 import { usePersistentStore } from "@/game/stores/PersistentStore";
 import { usePrimodium } from "@/hooks/usePrimodium";
 import { EntityType } from "@/util/constants";
@@ -9,7 +10,7 @@ import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
-export const NavigatorPane = () => {
+export const StarmapNavigatorPane = () => {
   const [visibleDiv, setVisibleDiv] = useState(0);
   const [arePanesExpanded, setArePanesExpanded] = useState(false);
   const primodium = usePrimodium();
@@ -55,7 +56,7 @@ export const NavigatorPane = () => {
     if (index === 0) return <OwnedAsteroids className={className} />;
     if (index === 1) return <OwnedFleets className={className} />;
     if (index === 2) return <OwnedFleets className={className} />;
-    if (index === 3) return <OwnedAsteroids className={className} />;
+    if (index === 3) return <Shards className={className} />;
   };
 
   return (
@@ -102,7 +103,7 @@ export const NavigatorPane = () => {
       )}
       <div>
         {/* Pane */}
-        <div className={`grid ${arePanesExpanded ? "grid-cols-2 xl:grid-cols-4" : "grid-cols-1"}`}>
+        <div className={`grid ${arePanesExpanded ? "grid-cols-2" : "grid-cols-1"}`}>
           {labels.map(
             (label, index) =>
               // Show only the selected div or all when expanded
