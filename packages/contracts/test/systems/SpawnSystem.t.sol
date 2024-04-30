@@ -6,7 +6,7 @@ import { addressToEntity } from "src/utils.sol";
 
 import { EResource, EBuilding } from "src/Types.sol";
 
-import { Spawned, Home, Level, UsedTiles, MaxResourceCount, Position, PositionData, OwnedBy, P_GameConfig } from "codegen/index.sol";
+import { Spawned, Home, Level, UsedTiles, MaxResourceCount, Position, PositionData, OwnedBy, P_GameConfig, MaxColonySlots } from "codegen/index.sol";
 
 import { MainBasePrototypeId } from "codegen/Prototypes.sol";
 
@@ -27,19 +27,6 @@ contract SpawnSystemTest is PrimodiumTest {
     super.setUp();
   }
 
-  function testSpawnStuff() public returns (bytes32) {
-    uint256 speed = P_GameConfig.getWorldSpeed();
-    console.log("speed", speed);
-    // bytes32 playerEntity = addressToEntity(creator);
-    // vm.startPrank(creator);
-    // assertTrue(!Spawned.get(playerEntity), "[SpawnSystem] Already spawned");
-
-    // bytes32 asteroidEntity = LibAsteroid.createPrimaryAsteroid(playerEntity);
-    // Spawned.set(playerEntity, true);
-    // IWorld(_world()).Primodium__initAsteroidOwner(asteroidEntity, playerEntity);
-    // Home.set(playerEntity, asteroidEntity);
-    // return asteroidEntity;
-  }
   function testSpawnu() public {
     bytes32 playerEntity = addressToEntity(creator);
     bytes32 asteroidEntity = spawn(creator);
@@ -89,8 +76,18 @@ contract SpawnSystemTest is PrimodiumTest {
 
   function testSpawnTwice() public {
     world.Primodium__spawn();
-    vm.expectRevert(bytes("[SpawnSystem] Already spawned"));
+    vm.expectRevert(bytes("[SpawnSystem] Already spawned and owns asteroids"));
     world.Primodium__spawn();
+  }
+
+  function testRespawn() public {
+    vm.startPrank(alice);
+    bytes32 aliceEntity = addressToEntity(alice);
+    bytes32 spawnAsteroidEntity = world.Primodium__spawn();
+    world.Primodium__abandonAsteroid(spawnAsteroidEntity);
+    bytes32 respawnAsteroidEntity = world.Primodium__spawn();
+    assertTrue(spawnAsteroidEntity != respawnAsteroidEntity, "Respawned asteroid should be different from spawned one");
+    assertEq(MaxColonySlots.get(aliceEntity), 1, "Player max colony slots should not increase from respawn");
   }
 
   function testUniqueAsteroidPosition() public {

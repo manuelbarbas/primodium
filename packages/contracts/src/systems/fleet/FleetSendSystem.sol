@@ -8,10 +8,10 @@ import { IWorld } from "codegen/world/IWorld.sol";
 import { OwnedBy, Asteroid, PositionData, ReversePosition, ShardAsteroid } from "codegen/index.sol";
 
 /**
- * @title FleetMoveSystem
+ * @title FleetSendSystem
  * @dev Manages fleet movement operations within the Primodium game, extending PrimodiumSystem functionalities.
  */
-contract FleetMoveSystem is PrimodiumSystem {
+contract FleetSendSystem is PrimodiumSystem {
   /**
    * @dev Ensures the fleet is not sent to the asteroid it is already orbiting.
    * @param fleetEntity The unique identifier for the fleet.
@@ -51,7 +51,7 @@ contract FleetMoveSystem is PrimodiumSystem {
   }
 
   /**
-   * @notice Sends a fleet to a specified asteroid, enforcing various preconditions for the move.
+   * @notice Sends a fleet to a specified asteroid, enforcing various preconditions for the send.
    * @param fleetEntity The unique identifier for the fleet being sent.
    * @param asteroidEntity The unique identifier for the target asteroid.
    */

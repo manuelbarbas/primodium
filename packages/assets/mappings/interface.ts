@@ -7,6 +7,8 @@ import Blueprints from "../icons/UI_Blueprints.png?url";
 import Build from "../icons/UI_Build.png?url";
 import Chat from "../icons/UI_Chat.png?url";
 import Crosshairs from "../icons/UI_Crosshairs.png?url";
+import EncryptionBlue from "../icons/UI_Encryption_Blue.png?url";
+import EncryptionGold from "../icons/UI_Encryption_Gold.png?url";
 import Expansion from "../icons/UI_Expansion.png?url";
 import Grace from "../icons/UI_Grace.png?url";
 import Housing from "../icons/UI_Housing.png?url";
@@ -39,6 +41,8 @@ export const InterfaceIcons = {
   Build,
   Chat,
   Crosshairs,
+  EncryptionBlue,
+  EncryptionGold,
   Expansion,
   Grace,
   Debug,

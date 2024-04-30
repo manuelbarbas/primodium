@@ -1,6 +1,8 @@
 import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
+import { EObjectives } from "contracts/config/enums";
+import { useEffect } from "react";
 import { FaTimes, FaTrophy } from "react-icons/fa";
 import { Navigator } from "src/components/core/Navigator";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
@@ -11,6 +13,7 @@ import { getEntityTypeName, toRomanNumeral } from "src/util/common";
 import { EntityType } from "src/util/constants";
 import { entityToFleetName, entityToRockName } from "src/util/name";
 import { formatResourceCount } from "src/util/number";
+import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 
 export const UnitStatus: React.FC<{
   unit: Entity;
@@ -55,6 +58,10 @@ export const BattleDetails: React.FC<{
   const attackerIsFleet = components.IsFleet.use(battle?.attacker);
   const defenderIsFleet = components.IsFleet.use(battle?.defender);
   const position = components.Position.use(battle?.rock as Entity);
+
+  useEffect(() => {
+    makeObjectiveClaimable(playerEntity, EObjectives.OpenBattleReport);
+  }, []);
 
   if (!battle) return <></>;
 

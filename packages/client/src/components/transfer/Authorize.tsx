@@ -72,9 +72,7 @@ export function Authorize() {
         {sessionAddress ? (
           <div className="w-full flex flex-col">
             <div className="w-full flex items-center justify-center p-4">
-              <p className="uppercase font-bold text-success w-full flex justify-center text-sm">
-                AUTHORIZING SESSION ACCOUNT
-              </p>
+              <p className="uppercase font-bold text-success w-full flex justify-center text-sm">AUTHORIZING</p>
               <div className="absolute right-2 flex gap-1">
                 <Button
                   onClick={async () => {

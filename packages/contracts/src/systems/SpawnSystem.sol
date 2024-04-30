@@ -7,6 +7,8 @@ import { Spawned, Home, Score, SpawnAllowed } from "codegen/index.sol";
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { EScoreType } from "src/Types.sol";
 import { LibColony } from "libraries/LibColony.sol";
+import { AsteroidSet } from "libraries/AsteroidSet.sol";
+import { AsteroidOwnedByKey } from "src/Keys.sol";
 
 /// @title Spawn System for Primodium Game
 /// @notice Handles player spawning in the game world
@@ -17,17 +19,23 @@ contract SpawnSystem is PrimodiumSystem {
     _;
   }
 
-  /// @notice Spawns a player into the world
-  /// @notice Checks if player is already spawned, sets initial level and associates asteroid
+  /// @notice Spawns or respawns a player into the world
+  /// @notice Checks if player is already spawned and owns asteroids, sets initial level and associates asteroid
   /// @return bytes32 The entity ID of the spawned asteroid
   function spawn() public onlySpawnAllowed returns (bytes32) {
     bytes32 playerEntity = _player();
 
-    require(!Spawned.get(playerEntity), "[SpawnSystem] Already spawned");
+    if (!Spawned.get(playerEntity)) {
+      LibColony.increaseMaxColonySlots(playerEntity);
+    } else {
+      require(
+        AsteroidSet.getAsteroidEntities(playerEntity, AsteroidOwnedByKey).length == 0,
+        "[SpawnSystem] Already spawned and owns asteroids"
+      );
+    }
 
     bytes32 asteroidEntity = LibAsteroid.createPrimaryAsteroid(playerEntity);
     Spawned.set(playerEntity, true);
-    LibColony.increaseMaxColonySlots(playerEntity);
     IWorld(_world()).Primodium__initAsteroidOwner(asteroidEntity, playerEntity);
     Home.set(playerEntity, asteroidEntity);
     for (uint8 i = 1; i < uint8(EScoreType.LENGTH); i++) {

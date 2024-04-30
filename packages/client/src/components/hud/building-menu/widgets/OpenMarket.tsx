@@ -1,8 +1,8 @@
 import { Entity } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { SecondaryCard } from "src/components/core/Card";
 import { Modal } from "src/components/core/Modal";
 import { Swap } from "../../modals/Swap";
-import { InterfaceIcons } from "@primodiumxyz/assets";
 
 export const OpenMarket: React.FC<{ building: Entity }> = ({ building }) => {
   return (
