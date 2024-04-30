@@ -7,7 +7,7 @@ import { addressToEntity } from "src/utils.sol";
 import { EBuilding, EResource, EObjectives } from "src/Types.sol";
 import { BuildingKey, ObjectiveKey } from "src/Keys.sol";
 
-import { P_HasBuiltBuildings, P_DestroyedUnits, CompletedObjective, P_ProducedResources, P_RequiredUnits, ProducedUnit, ReversePosition, LastClaimedAt, P_IsUtility, P_UnitPrototypes, P_ResourceRewardData, P_ResourceReward, P_RequiredObjectives, UnitCount, P_RaidedResources, P_ProducedUnitsData, P_ProducedUnits, P_RequiredUnitsData, P_DestroyedUnitsData, P_RaidedResourcesData, P_UnitReward, P_ProducedResourcesData, P_UnitRewardData, P_RequiredResourcesData, P_RequiredBaseLevel, P_EnumToPrototype, Position, PositionData, Level, Home, P_RequiredResources, ResourceCount, P_Production, MaxResourceCount } from "codegen/index.sol";
+import { CompletedObjective, ReversePosition, LastClaimedAt, P_IsUtility, P_UnitPrototypes, P_ResourceRewardData, P_ResourceReward, UnitCount, P_UnitReward, P_UnitRewardData, P_RequiredResourcesData, P_RequiredBaseLevel, P_EnumToPrototype, Position, PositionData, Level, Home, P_RequiredResources, ResourceCount, P_Production, MaxResourceCount } from "codegen/index.sol";
 
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibResource } from "libraries/LibResource.sol";
@@ -35,7 +35,6 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   }
 
   function testClaimObjective() public {
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
     console.log("claiming objective", uint256(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronMine))));
     MaxResourceCount.set(asteroidEntity, uint8(EResource.Iron), 100);
     P_ResourceRewardData memory resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
@@ -54,7 +53,6 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   function testClaimObjectiveReceiveResourceRewards() public {
     ResourceCount.set(asteroidEntity, uint8(EResource.Iron), 0);
     MaxResourceCount.set(asteroidEntity, uint8(EResource.Iron), 100);
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
     P_ResourceRewardData memory resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
     resourceRewardData.resources[0] = uint8(EResource.Iron);
     resourceRewardData.amounts[0] = 100;
@@ -69,7 +67,6 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
   function testFailClaimObjectiveReceiveResourceRewards() public {
     ResourceCount.set(asteroidEntity, uint8(EResource.Iron), 0);
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
     P_ResourceRewardData memory resourceRewardData = P_ResourceRewardData(new uint8[](1), new uint256[](1));
     resourceRewardData.resources[0] = uint8(EResource.Iron);
     resourceRewardData.amounts[0] = 100;
@@ -82,7 +79,6 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
   function testClaimObjectiveReceiveUnitRewards() public {
     UnitCount.set(Home.get(playerEntity), unit1, 0);
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
     P_UnitRewardData memory unitRewardData = P_UnitRewardData(new bytes32[](1), new uint256[](1));
     unitRewardData.units[0] = unit1;
     unitRewardData.amounts[0] = 100;
@@ -108,7 +104,6 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
 
   function testFailClaimObjectiveReceiveUnitRewards() public {
     UnitCount.set(Home.get(playerEntity), unit1, 0);
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
     P_UnitRewardData memory unitRewardData = P_UnitRewardData(new bytes32[](1), new uint256[](1));
     unitRewardData.units[0] = unit1;
     unitRewardData.amounts[0] = 100;
@@ -123,7 +118,6 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   }
 
   function testFailClaimObjectiveTwice() public {
-    P_HasBuiltBuildings.deleteRecord(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)));
     world.Primodium__claimObjective(asteroidEntity, EObjectives.BuildIronMine);
     world.Primodium__claimObjective(asteroidEntity, EObjectives.BuildIronMine);
   }

@@ -7,7 +7,7 @@ import { LibColony } from "libraries/LibColony.sol";
 import { UtilityMap } from "libraries/UtilityMap.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
-import { P_ColonyShipConfig, P_Transportables, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsResource, ProducedResource, P_RequiredResources, P_IsUtility, ProducedResource, P_IsUtility, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy, MaxColonySlots, P_ColonySlotsConfig, P_ColonySlotsConfigData, ColonySlotsInstallments, ColonyShipsInTraining } from "codegen/index.sol";
+import { P_ColonyShipConfig, P_Transportables, Level, IsActive, P_ConsumesResource, ConsumptionRate, P_IsResource, P_RequiredResources, P_IsUtility, P_GameConfig, P_RequiredResourcesData, P_RequiredUpgradeResources, P_RequiredUpgradeResourcesData, ResourceCount, MaxResourceCount, UnitLevel, LastClaimedAt, ProductionRate, BuildingType, OwnedBy, MaxColonySlots, P_ColonySlotsConfig, P_ColonySlotsConfigData, ColonySlotsInstallments, ColonyShipsInTraining } from "codegen/index.sol";
 
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -194,7 +194,6 @@ library LibResource {
 
         //the amount of resource that has been produced
         increase = productionRate * producedTime;
-        ProducedResource.set(playerEntity, resource, ProducedResource.get(playerEntity, resource) + increase);
       }
 
       // the maximum amount of resourecs that will decrease if there is enough of the resource available decrease < resourceCount + increase

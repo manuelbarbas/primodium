@@ -1,12 +1,19 @@
 import { Entity } from "@latticexyz/recs";
-import { EFleetStance } from "contracts/config/enums";
+import { EFleetStance, EObjectives } from "contracts/config/enums";
 import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
+import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 import { Hex } from "viem";
 
 export const setFleetStance = async (mud: MUD, fleet: Entity, stance: EFleetStance, target: Entity) => {
+  const objective =
+    stance == EFleetStance.Defend
+      ? EObjectives.DefendWithFleet
+      : stance == EFleetStance.Block
+      ? EObjectives.BlockWithFleet
+      : undefined;
   await execute(
     {
       mud,
@@ -18,7 +25,8 @@ export const setFleetStance = async (mud: MUD, fleet: Entity, stance: EFleetStan
     {
       id: "FleetStance" as Entity,
       type: TransactionQueueType.FleetStance,
-    }
+    },
+    () => !!objective && makeObjectiveClaimable(mud.playerAccount.entity, objective)
   );
 };
 

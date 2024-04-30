@@ -88,56 +88,90 @@ export enum EMap {
 }
 
 export enum EObjectives {
+  // (A) Intro
   BuildIronMine = 1,
   BuildCopperMine,
+  BuildIronPlateFactory,
+  UpgradeMainBase,
+  ExpandBase,
+
+  // (A-A) Military basics
   BuildGarage,
   BuildWorkshop,
-
-  UpgradeMainBase,
-
-  BuildLithiumMine,
-  BuildIronPlateFactory,
-  BuildStorageUnit,
-  BuildHangar,
-  BuildPVCellFactory,
-  BuildSolarPanel,
-  BuildDroneFactory,
-  BuildStarmapper,
-  BuildSAMLauncher,
-  BuildVault,
-  BuildShieldGenerator,
-  BuildShipyard,
-  BuildMarket,
-
-  TrainMinutemanMarine1,
-  TrainTridentMarine1,
-  TrainLightningShip1,
-  TrainAnvilDrone1,
-  TrainHammerDrone1,
-  TrainAegisDrone1,
-  TrainStingerDrone1,
-  BuildColonyShip1,
-
-  ExpandBase1,
-
   CreateFleet,
-  TransferResourcesToAsteroid,
-  TransferResourcesToFleet,
-  RecallFleet,
-  LandFleet,
-  MoveFleet,
+
+  // (A-A-A) Fleet basics
+  TransferFromFleet,
+  SendFleet,
+
+  // (A-A-A-A) Fleet combat
   BattleAsteroid,
-  BattleFleet,
-  SuccessfulRaid,
   OpenBattleReport,
-  UpgradeUnitType,
-  BuildColonyShip,
+  BattleFleet,
+
+  // (A-A-A-B) Conquest (cont)
+  BuildShipyard,
+  TrainColonyShip,
   DecryptAttack,
   CaptureAsteroid,
 
-  MarketSwap,
-  MarketLiquidity,
+  // (A-A-A-B-A) Motherlode Extraction
+  CaptureMotherlodeAsteroid,
+  BuildRareMine,
 
+  // (A-A-A-B-B) Victory: Primodium Points
+  EarnPrimodiumOnAsteroid,
+  CaptureVolatileShard,
+  ExplodeVolatileShard,
+
+  // (A-A-A-B-C) Victory; Extraction Points
+  CaptureWormholeAsteroid,
+  ClaimWormholePoints,
+
+  // (A-A-A-C) fleet management
+  TransferFromAsteroid,
+  BuildStarmapper,
+  DefendWithFleet,
+  BlockWithFleet,
+  LandFleet,
+
+  // (A-A-B) unit production
+  TrainMinutemanMarine,
+  TrainTridentMarine,
+  TrainLightningCraft,
+  BuildDroneFactory,
+
+  // (A-A-B-A) unit management
+  UpgradeUnit,
+
+  // (A-A-B-B) unit production (cont)
+  TrainAnvilDrone,
+  TrainHammerDrone,
+  TrainAegisDrone,
+  TrainStingerDrone,
+
+  // (A-A-B-C) unit storage
+  BuildHangar,
+
+  // (A-A-C) Defense
+  BuildSAMLauncher,
+  BuildShieldGenerator,
+  BuildVault,
+
+  // (A-B) Production
+  BuildAlloyFactory,
+  BuildLithiumMine,
+  BuildPVCellFactory,
+  BuildStorageUnit,
+
+  // (A-B-A) Production (cont)
+  BuildSolarPanel,
+
+  // (A-B-B) Market
+  BuildMarket,
+  MarketSwap,
+
+  // (A-C) Alliance
   JoinAlliance,
 }
 
