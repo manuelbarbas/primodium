@@ -32,7 +32,7 @@ contract S_TransferAsteroidSystem is PrimodiumSystem {
         if (ownedAsteroids.length > 0) {
           Home.set(lastOwnerEntity, ownedAsteroids[0]);
         } else {
-          Home.set(lastOwnerEntity, bytes32(0));
+          Home.deleteRecord(lastOwnerEntity);
         }
       }
     }

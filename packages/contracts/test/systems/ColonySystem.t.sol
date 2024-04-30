@@ -34,6 +34,9 @@ contract ColonySystemTest is PrimodiumTest {
     vm.prank(creator);
     GracePeriod.set(creatorHomeAsteroid, block.timestamp - 1);
     conquerAsteroid(alice, aliceHomeAsteroid, creatorHomeAsteroid);
+
+    vm.prank(creator);
+    GracePeriod.set(aliceHomeAsteroid, block.timestamp - 1);
   }
 
   function testChangeHome() public {
@@ -54,5 +57,20 @@ contract ColonySystemTest is PrimodiumTest {
     vm.startPrank(alice);
     vm.expectRevert("[Colony] Asteroid not owned by player");
     world.Primodium__changeHome(bobHomeAsteroid);
+  }
+
+  function testLostHomeWhenConqueredAndNoOwnedAsteroids() public {
+    testChangeHome();
+    assertEq(Home.get(creatorEntity), bytes32(0), "Creator should have no home asteroid as they own no more asteroids");
+  }
+
+  function testForcedChangeHomeWhenHomeConquered() public {
+    conquerAsteroid(bob, bobHomeAsteroid, aliceHomeAsteroid);
+
+    assertEq(
+      Home.get(aliceEntity),
+      creatorHomeAsteroid,
+      "Alice's home asteroid should have been changed to another asteroid she owns"
+    );
   }
 }
