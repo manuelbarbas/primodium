@@ -16,6 +16,7 @@ import { MUD } from "src/network/types";
 import { encodeEntity } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
+import { getEntityTypeName } from "../common";
 import {
   BuildingEnumLookup,
   EntityType,
@@ -30,7 +31,6 @@ import { getAsteroidBounds, outOfBounds } from "../outOfBounds";
 import { getFullResourceCount } from "../resource";
 import { getBuildingAtCoord } from "../tile";
 import { TesterPack, testerPacks } from "./testerPacks";
-import { getEntityTypeName } from "../common";
 
 export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
   const buildings: Record<string, Entity> = {
@@ -759,6 +759,30 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
           ],
           function: (unit: string, count: number) => {
             createFleet([{ unit: units[unit], count }], []);
+          },
+        },
+        giveFleetUnit: {
+          params: [
+            { name: "unit", type: "dropdown", dropdownOptions: Object.keys(units) },
+            { name: "count", type: "number" },
+          ],
+          function: async (unit: string, count: number) => {
+            const player = mud.playerAccount.entity;
+            if (!player) throw new Error("No player found");
+            const selectedFleet = mud.components.SelectedFleet.get()?.value;
+
+            const unitEntity = units[unit];
+
+            if (!unitEntity || !selectedFleet) throw new Error("Resource not found");
+
+            await setComponentValue(
+              mud,
+              mud.components.UnitCount,
+              { entity: selectedFleet as Hex, unit: unitEntity as Hex },
+              {
+                value: BigInt(count),
+              }
+            );
           },
         },
         giveFleetResource: {
