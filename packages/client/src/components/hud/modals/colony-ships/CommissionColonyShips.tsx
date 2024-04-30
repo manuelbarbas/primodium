@@ -69,7 +69,11 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
             {tiles.map((tile, index) => {
               if (tile.type === "train") {
                 return (
-                  <SecondaryCard key={`tile-${index}`} noDecor className="text-xs flex justify-center items-center">
+                  <SecondaryCard
+                    key={`tile-${index}`}
+                    noDecor
+                    className="aspect-square text-xs flex justify-center items-center"
+                  >
                     <img src={EntityToUnitImage[EntityType.ColonyShip] ?? ""} className="h-6 mb-1" />
                     <p className="text-success">Ready to</p>
                     <p className="text-success">Commission</p>
@@ -155,7 +159,7 @@ const TrainShipTile: React.FC<{ active?: boolean; onClick?: () => void; classNam
 
 const UnlockTile: React.FC<{ active?: boolean; onClick?: () => void }> = ({ onClick, active }) => {
   return (
-    <SecondaryCard className={`min-h-24 w-full !p-0 ${active ? "ring ring-secondary" : ""}`}>
+    <SecondaryCard className={`aspect-square min-h-24 w-full !p-0 ${active ? "ring ring-secondary" : ""}`}>
       <Button
         motion="disabled"
         onClick={onClick}
