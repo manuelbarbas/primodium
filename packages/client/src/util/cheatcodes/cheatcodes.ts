@@ -149,7 +149,15 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
         }
       );
     });
-
+    if (unit === EntityType.ColonyShip) {
+      const colonyShipCap = components.MaxColonySlots.get(mud.playerAccount.entity)?.value ?? 0n;
+      await setComponentValue(
+        mud,
+        components.MaxColonySlots,
+        { playerEntity: mud.playerAccount.entity as Hex },
+        { value: colonyShipCap + value }
+      );
+    }
     const prevUnitCount =
       components.UnitCount.getWithKeys({ unit: unit as Hex, entity: spaceRock as Hex })?.value ?? 0n;
     await setComponentValue(
@@ -697,7 +705,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             await setComponentValue(
               mud,
               components.MaxColonySlots,
-              { entity: player as Hex },
+              { entity: playerEntity as Hex },
               { value: colonyShipCap + 1n }
             );
             await setComponentValue(mud, components.OwnedBy, { entity: selectedRock as Hex }, { value: player });
