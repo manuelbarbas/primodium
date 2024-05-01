@@ -2720,7 +2720,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
 
   UpgradeIronMine: {
     tables: {
-      P_ResourceReward: getResourceValues({ Iron: 100 }),
+      P_ResourceReward: getResourceValues({ Iron: 200 }),
     },
     levels: {
       1: { P_RequiredBaseLevel: { value: 2n } },
