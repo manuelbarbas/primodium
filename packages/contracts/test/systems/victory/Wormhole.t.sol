@@ -137,6 +137,7 @@ contract WormholeTest is PrimodiumTest {
     WormholeData memory wormholeData = Wormhole.get();
     P_WormholeConfigData memory wormholeConfig = P_WormholeConfig.get();
 
+    vm.startPrank(creator);
     uint8 resource = LibWormhole.advanceTurn();
     uint256 resourceCount = 100;
     increaseResource(wormholeAsteroidEntity, EResource(resource), resourceCount);
@@ -146,6 +147,7 @@ contract WormholeTest is PrimodiumTest {
 
     assertEq(Score.get(aliceEntity, uint8(EScoreType.Wormhole)), 0, "don't allow score after game end");
   }
+
   function testDepositWormholeAfterCooldown() public returns (bytes32) {
     bytes32 wormholeAsteroidEntity = testWormholeAsteroidHasWormholeBase();
     bytes32 wormholeBaseEntity = Home.get(wormholeAsteroidEntity);

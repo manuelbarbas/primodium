@@ -20,7 +20,6 @@ export const CapacityBar: FC<SegmentedCapacityBarProps> = ({
   // Calculate the number of filled segments
   const filledSegments = max !== null && max > 0n ? Math.round((Number(current) / Number(max)) * segments) : 0;
 
-  //   console.log(current / max);
   const segmentColor = (index: number) => {
     if (current === max && index === segments - 1) return "bg-error";
     if (resourceType === EntityType.Electricity) {
@@ -36,7 +35,7 @@ export const CapacityBar: FC<SegmentedCapacityBarProps> = ({
   };
 
   return (
-    <div className={`relative h-6 flex p-0.5 gap-0.5 ${className}`}>
+    <div className={`relative h-5 flex p-0.5 gap-0.5 ${className}`}>
       {[...Array(segments)].map((_, index) => (
         <div
           key={index}

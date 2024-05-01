@@ -122,7 +122,16 @@ contract PrimodiumSystem is System {
    * @param asteroidEntity The unique identifier for the asteroid.
    */
   modifier _onlyAsteroidOwner(bytes32 asteroidEntity) {
-    require(OwnedBy.get(asteroidEntity) == _player(), "[Fleet] Not asteroid owner");
+    require(OwnedBy.get(asteroidEntity) == _player(), "[Primodium] Not asteroid owner");
+    _;
+  }
+
+  /**
+   * @dev Ensures the caller is the owner of the specified asteroid before proceeding.
+   * @param buildingEntity The unique identifier for the asteroid.
+   */
+  modifier _onlyBuildingOwner(bytes32 buildingEntity) {
+    require(OwnedBy.get(OwnedBy.get(buildingEntity)) == _player(), "[Primodium] Not building owner");
     _;
   }
 
