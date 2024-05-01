@@ -10,7 +10,6 @@ import { BuildMarker } from "@/components/hud/markers/starmap/BuildMarker";
 import { FleetTarget } from "@/components/hud/markers/starmap/FleetTarget";
 import { HomeMarker } from "@/components/hud/markers/starmap/HomeMarker";
 import { Intro } from "@/components/hud/modals/Intro";
-import { YouDied } from "@/components/hud/modals/YouDied";
 import { FavoriteAsteroids } from "@/components/hud/widgets/FavoriteAsteroids";
 import { WarshipPopulation } from "@/components/hud/widgets/WarshipPopulation";
 import { Blueprints } from "@/components/hud/widgets/blueprints/Blueprints";
@@ -37,7 +36,6 @@ export const GameHUD = memo(() => {
         <BuildingMenuPopup />
         <BlueprintInfoMarker />
         <Intro />
-        <YouDied />
 
         {/* Widgets */}
         <HUD.TopLeft>

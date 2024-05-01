@@ -1,19 +1,19 @@
-import { useEntityQuery } from "@latticexyz/react";
-import { Entity, Has, HasValue } from "@latticexyz/recs";
+import { usePlayerAsteroids } from "@/hooks/usePlayerAsteroids";
+import { EntityToResourceImage } from "@/util/mappings";
+import { Entity } from "@latticexyz/recs";
+import { Badge } from "src/components/core/Badge";
 import { Button } from "src/components/core/Button";
-import { SecondaryCard, Card } from "src/components/core/Card";
+import { Card, SecondaryCard } from "src/components/core/Card";
 import { useMud } from "src/hooks";
+import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getAsteroidImage, getAsteroidInfo, getAsteroidName } from "src/util/asteroid";
 import { EntityType, Mode } from "src/util/constants";
 import { entityToRockName } from "src/util/name";
-import { HealthBar } from "../HealthBar";
 import { formatResourceCount } from "src/util/number";
-import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
-import { Badge } from "src/components/core/Badge";
-import { EntityToResourceImage } from "@/util/mappings";
+import { HealthBar } from "../HealthBar";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -91,8 +91,7 @@ export const _OwnedAsteroids: React.FC = () => {
   } = useMud();
 
   const primodium = usePrimodium();
-  const query = [HasValue(components.OwnedBy, { value: playerEntity }), Has(components.Asteroid)];
-  const asteroids = useEntityQuery(query);
+  const asteroids = usePlayerAsteroids(playerEntity);
 
   return (
     <Card noDecor className="p-2 max-h-96 overflow-y-auto scrollbar w-96">
