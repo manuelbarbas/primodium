@@ -8,7 +8,7 @@ export function getAsteroidDroidCount(asteroid: Entity): Map<Entity, bigint> {
   const homeHex = asteroid as Hex;
 
   const mapId = comps.Asteroid.getWithKeys({ entity: homeHex })?.mapId ?? 0n;
-  const owner = (comps.OwnedBy.getWithKeys({ entity: homeHex })?.value ?? 0n) as Entity | undefined;
+  const owner = comps.OwnedBy.getWithKeys({ entity: homeHex })?.value as Entity | undefined;
   console.log("owner: ", owner);
   if (mapId != EMap.Common || owner != undefined) {
     return new Map<Entity, bigint>();
@@ -27,11 +27,11 @@ export function getAsteroidDroidCount(asteroid: Entity): Map<Entity, bigint> {
   const droidCount = comps.UnitCount.getWithKeys({ entity: homeHex, unit: EntityType.Droid as Hex })?.value ?? 0n;
 
   const droidRegenRate = comps.P_Unit.getWithKeys({ entity: EntityType.Droid as Hex, level: 0n })?.trainingTime ?? 0n;
-  let totalDroidCount = droidCount + droidRegenRate * timeSinceClaimed;
+  let totalDroidCount = droidCount + timeSinceClaimed / droidRegenRate;
   if (totalDroidCount >= maxDroidCount) {
     totalDroidCount = maxDroidCount;
   }
-
+  console.log("totalDroidCount: ", totalDroidCount);
   const result = new Map<Entity, bigint>();
   result.set(EntityType.Droid, totalDroidCount);
   return result;
