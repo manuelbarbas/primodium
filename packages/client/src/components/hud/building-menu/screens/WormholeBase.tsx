@@ -14,7 +14,6 @@ import { wormholeDeposit } from "src/network/setup/contractCalls/wormholeDeposit
 import { getEntityTypeName } from "src/util/common";
 import { EntityType, ResourceEnumLookup } from "src/util/constants";
 import { formatResourceCount, formatTime, parseResourceCount } from "src/util/number";
-import { BuildingInfo } from "../widgets/BuildingInfo";
 import { ExpandRange } from "../widgets/ExpandRange";
 import { Upgrade } from "../widgets/Upgrade";
 
@@ -23,7 +22,6 @@ export const WormholeBase: React.FC<{ building: Entity }> = ({ building }) => {
   if (!asteroid) return null;
   return (
     <Navigator.Screen title={building} className="w-fit gap-1">
-      <BuildingInfo />
       <Upgrade building={building} />
       {asteroid && <ExpandRange asteroid={asteroid as Entity} />}
       <WormholeDeposit building={building} asteroid={asteroid} />
