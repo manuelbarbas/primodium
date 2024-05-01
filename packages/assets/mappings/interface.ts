@@ -20,6 +20,7 @@ import Housing from "../icons/UI_Housing.png?url";
 import Leaderboard from "../icons/UI_Leaderboard.png?url";
 import NotAllowed from "../icons/UI_NotAllowed.png?url";
 import Objective from "../icons/UI_Objective.png?url";
+import OffSetCrownSilver from "../icons/UI_Offset_Crown_Silver.png?url";
 import Outgoing from "../icons/UI_Outgoing.png?url";
 import Reinforcements from "../icons/UI_Reinforcements.png?url";
 import Reports from "../icons/UI_Reports.png?url";
@@ -48,6 +49,7 @@ export const InterfaceIcons = {
   Leaderboard,
   NotAllowed,
   Objective,
+  OffSetCrownSilver,
   Outgoing,
   Reinforcements,
   Reports,

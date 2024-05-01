@@ -28,7 +28,7 @@ export const AccountDisplay: React.FC<{
 
   const Content = useMemo(() => {
     return () => (
-      <div className="w-full flex">
+      <div className="w-full flex gap-2">
         {allianceName && (
           <div className="font-bold text-accent" style={{ color: noColor ? "auto" : entityToColor(player) }}>
             [{allianceName.toUpperCase()}]
