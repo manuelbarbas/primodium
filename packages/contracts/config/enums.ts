@@ -93,12 +93,14 @@ export enum EObjectives {
   BuildCopperMine,
   BuildLithiumMine,
 
-  UpgradeMainBase,
-  ExpandBase,
+  UpgradeMainBase1,
+  ExpandBase1,
 
   UpgradeIronMine,
   UpgradeCopperMine,
   UpgradeLithiumMine,
+
+  UpgradeMainBase2,
 
   // (A-A) Military basics
   BuildGarage,

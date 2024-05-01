@@ -46,7 +46,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.UpgradeMainBase,
+    EObjectives.UpgradeMainBase1,
     {
       category: "Fundamentals",
       type: "Upgrade",
@@ -57,11 +57,11 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.ExpandBase,
+    EObjectives.ExpandBase1,
     {
       category: "Fundamentals",
       type: "Expand",
-      requiredObjectives: [EObjectives.UpgradeMainBase],
+      requiredObjectives: [EObjectives.UpgradeMainBase1],
       requiredMainBase: 2n,
       level: 2n,
       description:
@@ -103,6 +103,18 @@ export const Objectives = new Map<EObjectives, Objective>([
       level: 2n,
       description:
         "Upgrading a mine produces more resources without needing to expand. To upgrade, select the mine and select Upgrade.",
+    },
+  ],
+  [
+    EObjectives.UpgradeMainBase2,
+    {
+      category: "Fundamentals",
+      type: "Upgrade",
+      requiredMainBase: 2n,
+      buildingType: EntityType.MainBase,
+      level: 3n,
+      description:
+        "Upgrading a main base gives you more resource storage and makes your asteroid stronger. To upgrade, select your main base and select Upgrade.",
     },
   ],
 
@@ -150,7 +162,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Upgrade",
       requiredMainBase: 2n,
       requiredObjectives: [EObjectives.BuildWorkshop],
-      buildingType: EntityType.LithiumMWorkshopine,
+      buildingType: EntityType.Workshop,
       level: 2n,
       description:
         "Upgrading a workshop to produce units more quickly, and unlock new units. To upgrade, select the workshop and select Upgrade.",
@@ -249,9 +261,8 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Conquest",
       type: "Build",
-      requiredObjectives: [EObjectives.OpenBattleReport],
+      requiredMainBase: 8n,
       buildingType: EntityType.Shipyard,
-      requiredMainBase: 2n,
       description: "Shipyards constuct Colony Ships, which colonize asteroids.",
     },
   ],
@@ -260,10 +271,10 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Conquest",
       type: "Train",
+      requiredMainBase: 8n,
       requiredObjectives: [EObjectives.BuildShipyard],
       unitType: EntityType.ColonyShip,
       unitCount: 1n,
-      requiredMainBase: 2n,
       description:
         "Select the Shipyard you placed on the map to build a Colony Ship. Colony ships can decrypt other asteroids and colonize on them.",
     },
@@ -400,7 +411,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fleet",
       type: "Claim",
-      requiredObjectives: [EObjectives.BuildStarmapper],
+      requiredObjectives: [EObjectives.CreateFleet],
       description:
         "Defending an asteroid with a fleet provides the fleet's defense to that asteroid's strength. To defend, go to the fleet's Management pane and select Defend.",
       icon: InterfaceIcons.Outgoing,
@@ -697,7 +708,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Alliance",
       type: "JoinAlliance",
       requiredMainBase: 2n,
-      requiredObjectives: [EObjectives.ExpandBase],
+      requiredObjectives: [EObjectives.ExpandBase1],
       description:
         "Joining an alliance allows you to combine your points with other players. Select Alliance Management in the bottom bar. Find an Alliance to join and select Join.",
     },
