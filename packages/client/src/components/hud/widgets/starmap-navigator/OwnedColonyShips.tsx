@@ -86,7 +86,7 @@ export const OwnedColonyShips: React.FC<{ className?: string }> = ({ className }
           you control no colony ships
         </p>
       )}
-      <div className="grid grid-cols-2 gap-1 auto-rows-max overflow-auto scrollbar">
+      <div className="grid grid-cols-2 gap-1 mb-4 auto-rows-max overflow-auto scrollbar">
         {colonyShips.map((shipData, i) => (
           <OwnedColonyShip
             key={`colonyship-${shipData.parentEntity}-${i}`}
@@ -99,6 +99,11 @@ export const OwnedColonyShips: React.FC<{ className?: string }> = ({ className }
           />
         ))}
       </div>
+      {colonyShips.length > 0 && (
+        <div className="absolute bottom-0 right-1 opacity-70">
+          {colonyShips.length} Colony Ship{colonyShips.length > 1 ? "s" : ""}
+        </div>
+      )}
     </SecondaryCard>
   );
 };

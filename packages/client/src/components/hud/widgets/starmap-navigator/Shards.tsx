@@ -45,11 +45,16 @@ export const Shards = ({ className = "" }: { className?: string }) => {
           no volatile shards detected...
         </p>
       )}
-      <div className="grid grid-cols-2 gap-1 auto-rows-max overflow-auto scrollbar">
+      <div className="grid grid-cols-2 gap-1 mb-4 auto-rows-max overflow-auto scrollbar">
         {shards.map((entity) => {
           return <Shard key={entity} shardEntity={entity} onClick={() => handleSelectShard(entity)} />;
         })}
       </div>
+      {shards.length > 0 && (
+        <div className="absolute bottom-0 right-1 opacity-70">
+          {shards.length} Shard{shards.length > 1 ? "s" : ""}
+        </div>
+      )}
     </SecondaryCard>
   );
 };

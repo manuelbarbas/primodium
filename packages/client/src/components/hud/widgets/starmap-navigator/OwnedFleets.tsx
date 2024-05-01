@@ -80,15 +80,20 @@ export const OwnedFleets: React.FC<{ className?: string }> = ({ className }) => 
   };
 
   return (
-    <SecondaryCard className={className}>
+    <SecondaryCard className={`relative ${className}`}>
       {fleets.length === 0 && (
         <p className="w-full h-full text-xs grid place-items-center opacity-50 uppercase">you control no fleets</p>
       )}
-      <div className="grid grid-cols-2 gap-1 auto-rows-max overflow-auto scrollbar">
+      <div className="grid grid-cols-2 gap-1 mb-4 auto-rows-max overflow-auto scrollbar">
         {fleets.map((entity) => {
           return <OwnedFleet key={entity} fleet={entity} onClick={() => handleSelect(entity)} />;
         })}
       </div>
+      {fleets.length > 0 && (
+        <div className="absolute bottom-0 right-1 opacity-70">
+          {fleets.length} fleet{fleets.length > 1 ? "s" : ""}
+        </div>
+      )}
     </SecondaryCard>
   );
 };
