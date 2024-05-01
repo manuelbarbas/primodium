@@ -1,4 +1,5 @@
 import { EntityToUnitImage } from "@/util/mappings";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import { FaRegCopyright } from "react-icons/fa";
@@ -22,6 +23,7 @@ export const Landing: React.FC<{ children: React.ReactNode }> = ({ children }) =
           <h1 className="text-8xl font-bold uppercase stroke stroke-white stroke-4 z-10">Primodium</h1>
           <h1 className="text-8xl font-bold uppercase text-accent z-5 -mt-[6.2rem] opacity-75 z-1">Primodium</h1>
           <h1 className="text-8xl font-bold uppercase text-secondary -mt-[6.15rem] opacity-75 z-0">Primodium</h1>
+          <h3 className="text-2xl font-bold uppercase text-accent z-0">V0.12: Battle for the Shards</h3>
           <div className="w-4/5 relative flex flex-col items-center gap-2 h-40">
             <img
               src={"/img/mainbase.png"}
@@ -83,10 +85,12 @@ export const Landing: React.FC<{ children: React.ReactNode }> = ({ children }) =
             className="absolute top-10 -right-24 translate-x-full -translate-y-1/2 p-0 w-16 pixel-images opacity-50"
           />
           <motion.img
-            initial={{ x: "-100%", y: "-50%", scaleX: "-100%" }}
+            initial={{ x: "-100%", y: "-50%", scale: "75%" }}
             animate={{
               y: "-45%",
               x: "-96%",
+              rotateX: 10,
+              rotateY: 10,
               transition: {
                 repeat: Infinity,
                 repeatType: "reverse",
@@ -94,8 +98,9 @@ export const Landing: React.FC<{ children: React.ReactNode }> = ({ children }) =
                 delay: 0,
               },
             }}
-            src={EntityToUnitImage[EntityType.ColonyShip]}
-            className="absolute -top-0 left-10 p-0 w-44 pixel-images scale-x-[-1]"
+            // TODO: replace with shard
+            src={InterfaceIcons.ShardSprite}
+            className="absolute -top-0 left-24 p-0 w-44 pixel-images"
           />
           <div className="w-full h-full absolute top-0 overflow-hidden"></div>
         </div>
