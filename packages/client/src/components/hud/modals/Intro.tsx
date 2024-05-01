@@ -11,10 +11,10 @@ export const Intro = () => {
   const [page, setPage] = useState(0);
 
   return (
-    <Modal title="Battle of the Shards" startOpen={showIntro}>
+    <Modal title="Battle of the Shards" startOpen={showIntro} onClose={() => setShowIntro(false)}>
       <Modal.Content className="w-[50rem] min-h-[25rem] font-mono p-6">
         {page === 0 && <PageZero onContinue={() => setPage(1)} />}
-        {page === 1 && <PageOne final onContinue={() => setShowIntro(false)} />}
+        {page === 1 && <PageOne final />}
       </Modal.Content>
     </Modal>
   );
@@ -34,15 +34,16 @@ const PageZero = (props: PageProps) => {
         alliances have run out of resources in the Milky Way.
       </p>
       <p className="text-sm">
-        Scientists recently found rifts in time that led to The Belt. No organic matter can pass through these rifts, so
-        Space Command sent you, an autonomous android, to mine resources and investigate signals of a mysterious new
-        resource.
+        Astrogeologists recently found rifts in spacetime that led to The Belt. No organic matter can pass through these
+        rifts, so Space Command sent you, an <span className="font-bold">autonomous astrogeologist android (AAA)</span>,
+        to mine resources and investigate markers of a mysterious mineral:{" "}
+        <span className="text-info font-bold">PRIMODIUM</span>.
       </p>
       <p className="font-bold">
         <span className="text-warning uppercase text-center">Your mission:</span>{" "}
         <ul className="gap-1 pl-4">
           <li>1. Harvest resources and teleport them to Space Command through wormholes.</li>
-          <li>2. Seek out and harvest Primodium, a new type of renewable energy.</li>
+          <li>2. Seek out and harvest Primodium, a new mineral that unlocks vast quantities of renewable energy.</li>
         </ul>
       </p>
       <Btn onClick={props.onContinue} variant="primary" className="self-end">
