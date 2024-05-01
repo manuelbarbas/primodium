@@ -5,14 +5,16 @@ import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 export const Intro = () => {
-  const { showIntro } = usePersistentStore(useShallow((state) => ({ showIntro: state.showIntro })));
+  const { showIntro, setShowIntro } = usePersistentStore(
+    useShallow((state) => ({ setShowIntro: state.setShowIntro, showIntro: state.showIntro }))
+  );
   const [page, setPage] = useState(0);
 
   return (
     <Modal title="Battle of the Shards" startOpen={showIntro}>
       <Modal.Content className="w-[50rem] min-h-[25rem] font-mono p-6">
         {page === 0 && <PageZero onContinue={() => setPage(1)} />}
-        {page === 1 && <PageOne />}
+        {page === 1 && <PageOne final onContinue={() => setShowIntro(false)} />}
       </Modal.Content>
     </Modal>
   );
@@ -20,8 +22,10 @@ export const Intro = () => {
 
 type PageProps = {
   onContinue?: () => void;
+  final?: boolean;
 };
 const PageZero = (props: PageProps) => {
+  const Btn = props.final ? Modal.CloseButton : Button;
   return (
     <div className="flex flex-col gap-6 p-8 h-full">
       <div className="text-center font-bold text-accent uppercase gap-6">Welcome to The Belt.</div>
@@ -41,14 +45,15 @@ const PageZero = (props: PageProps) => {
           <li>2. Seek out and harvest Primodium, a new type of renewable energy.</li>
         </ul>
       </p>
-      <Button onClick={props.onContinue} variant="primary" className="self-end">
+      <Btn onClick={props.onContinue} variant="primary" className="self-end">
         Continue
-      </Button>
+      </Btn>
     </div>
   );
 };
 
 const PageOne = (props: PageProps) => {
+  const Btn = props.final ? Modal.CloseButton : Button;
   return (
     <div className="flex flex-col gap-6 p-8 h-full">
       <p className="text-sm">
@@ -61,9 +66,9 @@ const PageOne = (props: PageProps) => {
       </p>
       <p className="font-bold uppercase text-center text-warning">GOOD LUCK!</p>
       <div className="w-full grid place-items-center">
-        <Button onClick={props.onContinue} size="md" variant="secondary" className="w-fit">
+        <Btn onClick={props.onContinue} size="md" variant="secondary" className="w-fit">
           Begin
-        </Button>
+        </Btn>
       </div>
     </div>
   );
