@@ -1,19 +1,19 @@
 import { Entity } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useMemo, useState } from "react";
+import { FaTimes } from "react-icons/fa";
 import { SecondaryCard } from "src/components/core/Card";
+import { Loader } from "src/components/core/Loader";
 import { Navigator } from "src/components/core/Navigator";
 import { useMud } from "src/hooks";
 import { usePlayerOwner } from "src/hooks/usePlayerOwner";
+import { useSyncStatus } from "src/hooks/useSyncStatus";
 import { components } from "src/network/components";
+import { hydrateBattleReports } from "src/network/sync/indexer";
+import { Keys } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
 import { entityToFleetName, entityToRockName } from "src/util/name";
 import { BattleDetails } from "./BattleDetails";
-import { hydrateBattleReports } from "src/network/sync/indexer";
-import { useSyncStatus } from "src/hooks/useSyncStatus";
-import { hashEntities } from "src/util/encode";
-import { Keys } from "src/util/constants";
-import { Loader } from "src/components/core/Loader";
-import { FaTimes } from "react-icons/fa";
-import { InterfaceIcons } from "@primodiumxyz/assets";
 
 export const LabeledValue: React.FC<{
   label: string;
@@ -101,7 +101,7 @@ export const BattleReports = () => {
   );
 };
 
-const BattleButton = ({
+export const BattleButton = ({
   battleEntity,
   setSelectedBattle,
 }: {
