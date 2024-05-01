@@ -7,7 +7,7 @@ export const ResourceStatus: React.FC<{
   resources: Record<Entity, { resourcesAtStart: bigint; resourcesAtEnd: bigint }>;
 }> = ({ resources }) => {
   return (
-    <div className="flex gap-3 p-1 bg-white/[.06]">
+    <div className="overflow-x-auto hide-scrollbar bg-glass p-2 flex flex-row items-center text-xs">
       {Object.entries(resources).map(([resource, data], i) => {
         const resourceDelta = data.resourcesAtEnd - data.resourcesAtStart;
         return (

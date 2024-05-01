@@ -108,11 +108,10 @@ export const SecondaryCard = forwardRef<
     <div
       ref={ref}
       className={cn(
-        "card border border-secondary/25 hover:border-secondary/50 transition-all p-2 hover:translate-y-[-2px] hover:shadow-2xl pointer-events-auto",
+        "card bg-gradient-to-br from-secondary/15 to-secondary/5 border border-secondary/25 hover:border-secondary/50 transition-all p-2 hover:translate-y-[-2px] hover:shadow-2xl pointer-events-auto",
         className
       )}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-secondary/15 to-secondary/5" />
       {children}
     </div>
   );

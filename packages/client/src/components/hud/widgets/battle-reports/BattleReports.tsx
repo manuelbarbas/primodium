@@ -127,7 +127,7 @@ const BattleButton = ({
 
   return (
     <div className="flex flex-col gap-1 w-full">
-      <div className="opacity-80">
+      <div className="opacity-50">
         Battle at <span className="text-accent">{entityToRockName(battle?.rock)}</span>
       </div>
       <Navigator.NavButton
@@ -138,7 +138,7 @@ const BattleButton = ({
         className={`w-full flex justify-between text-xs relative ${playerIsWinner ? "bg-success/20" : "bg-error/20"}`}
       >
         <div className="grid grid-cols-[10fr_2fr_10fr] place-items-center gap-1">
-          <div className={`flex bg-white/[.05] text-xs justify-center items-center gap-2 p-1 w-full`}>
+          <div className={`flex bg-glass text-xs justify-center items-center gap-2 p-1 w-full`}>
             <img src={attackerIsFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="h-8" />
             <div className={`flex flex-col h-full text-left ${playerIsAttacker ? "text-success" : "text-error"}`}>
               <p>{attackerIsFleet ? entityToFleetName(battle.attacker) : entityToRockName(battle.attacker)}</p>
@@ -147,7 +147,7 @@ const BattleButton = ({
           </div>
 
           <p className="grid place-items-center uppercase font-bold">vs</p>
-          <div className={`flex bg-white/[.05] text-xs text-left justify-center items-center gap-2 p-1 w-full`}>
+          <div className={`flex bg-glass text-xs text-left justify-center items-center gap-2 p-1 w-full`}>
             <img src={defenderIsFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="h-8" />
             <div className={`flex flex-col h-full ${!playerIsAttacker ? "text-success" : "text-error"}`}>
               <p>{defenderIsFleet ? entityToFleetName(battle.defender) : entityToRockName(battle.defender)}</p>
@@ -155,7 +155,7 @@ const BattleButton = ({
             </div>
           </div>
         </div>
-        <div className="pr-4 flex flex-col gap-1  justify-end text-right">
+        <div className="pr-4 flex flex-col gap-1 justify-end text-right">
           <p className="text-right">{formatTimeAgo(battle?.timestamp!)}</p>
           <p className="opacity-50"> {new Date(Number(battle.timestamp * 1000n)).toLocaleDateString()}</p>
         </div>

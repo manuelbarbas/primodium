@@ -16,43 +16,22 @@ export const UnitStatus: React.FC<UnitStatusProps> = ({ data }) => {
   const units = Object.keys(data);
 
   return (
-    <div className="w-full h-full bg-white/[.06] p-2">
-      <div className="text-xs w-fit flex flex-col gap-2">
-        <div className={`grid grid-cols-${units.length + 1} gap-4`}>
-          <div className="col-span-1" />
-          {units.map((unit, index) => (
-            <div key={`unit-header-${index}`} className="text-center">
-              <img
-                src={EntityToUnitImage[unit] ?? InterfaceIcons.Debug}
-                alt={`${unit} icon`}
-                className="w-8 h-8 mx-auto p-1"
-              />
-            </div>
-          ))}
-        </div>
-        <div className={`grid grid-cols-${units.length + 1} gap-4`}>
-          <p className="font-bold text-left text-rose-500">Lost</p>
-          {units.map((unit, index) => {
-            const { casualties } = data[unit];
-            return (
-              <p key={`lost-${index}`} className="text-center text-rose-500">
-                {casualties.toLocaleString()}
-              </p>
-            );
-          })}
-        </div>
-        <div className={`grid grid-cols-${units.length + 1} gap-4`}>
-          <p className="font-bold text-left">Remain</p>
-          {units.map((unit, index) => {
-            const { unitsAtStart, casualties } = data[unit];
-            return (
-              <p key={`remaining-${index}`} className="text-center">
-                {(unitsAtStart - casualties).toLocaleString()}
-              </p>
-            );
-          })}
-        </div>
+    <div className="h-full overflow-x-auto hide-scrollbar bg-glass p-2 flex flex-row items-center text-xs">
+      <div className="flex flex-col gap-2">
+        <div className="h-8 w-8" />
+        <p className="font-bold text-left text-error">Lost</p>
+        <p className="font-bold text-left">Remain</p>
       </div>
+      {units.map((unit, index) => {
+        const { casualties, unitsAtStart } = data[unit];
+        return (
+          <div key={`unit-${index}`} className="flex flex-col items-center min-w-14 gap-2">
+            <img src={EntityToUnitImage[unit] ?? InterfaceIcons.Debug} alt={`${unit} icon`} className="w-8 h-8" />
+            <p className="text-center text-error">{casualties.toLocaleString()}</p>
+            <p className="text-center">{(unitsAtStart - casualties).toLocaleString()}</p>
+          </div>
+        );
+      })}
     </div>
   );
 };

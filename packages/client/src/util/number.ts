@@ -48,7 +48,7 @@ export const parseResourceCount = (resource: Entity, amount: string) => {
 const shorten = (n: number, digits: number): string => {
   const units = ["", "K", "M", "B", "T"];
   let unitIndex = 0;
-  while (n >= 1000 && unitIndex < units.length - 1) {
+  while (Math.abs(n) >= 1000 && unitIndex < units.length - 1) {
     n /= 1000;
     unitIndex++;
   }

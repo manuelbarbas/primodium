@@ -25,6 +25,9 @@ export default {
         mono: ["Space Mono", ...defaultTheme.fontFamily.mono],
         pixel: ["Silkscreen", ...defaultTheme.fontFamily.mono],
       },
+      backgroundColor: {
+        glass: "rgb(255 255 255 / .05)",
+      },
       width: {
         108: "27rem",
         120: "30rem",

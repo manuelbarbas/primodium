@@ -1,3 +1,4 @@
+import { SecondaryCard } from "@/components/core/Card";
 import { BattleAllies } from "@/components/hud/widgets/battle-reports/BattleAllies";
 import { ResourceStatus } from "@/components/hud/widgets/battle-reports/ResourceStatus";
 import { UnitStatus } from "@/components/hud/widgets/battle-reports/UnitStatus";
@@ -24,7 +25,6 @@ export const BattleDetails: React.FC<{
 
   const attackingPlayer = battle?.attackingPlayer as Entity;
   const defendingPlayer = battle?.defendingPlayer as Entity;
-  console.log({ defendingPlayer });
   const winningPlayer = battle?.winner === battle?.attacker ? attackingPlayer : defendingPlayer;
   const winnerIsAttacker = winningPlayer === attackingPlayer;
   const attackerIsFleet = components.IsFleet.use(battle?.attacker);
@@ -45,12 +45,13 @@ export const BattleDetails: React.FC<{
   const defenderAllyDetails = battle.targetAllies.map((ally) =>
     Object.values(battle.participants).find((p) => p.entity === ally)
   );
+
   return (
     <Navigator.Screen
       title="BattleDetails"
       className="relative gap-3 flex flex-col items-center text-white h-full w-full p-1 mb-1 "
     >
-      <div className="relative bg-slate-800 pixel-images p-3 w-full h-full overflow-y-scroll scrollbar">
+      <SecondaryCard className="relative pixel-images p-3 w-full h-full overflow-y-auto scrollbar">
         <div className="flex flex-col items-center gap-1">
           {playerEntity === winningPlayer && <p className="font-bold text-2xl text-success">VICTORY</p>}
           {playerEntity !== winningPlayer && <p className="font-bold text-2xl text-error">DEFEAT</p>}
@@ -70,7 +71,7 @@ export const BattleDetails: React.FC<{
 
           <p className="p-1 text-xs font-bold text-accent flex justify-start w-full">Attacker</p>
 
-          <div className="w-full flex flex-col gap-2 p-2 bg-white/[.06]">
+          <SecondaryCard className="w-full flex flex-col gap-2 p-2">
             <div className="w-full flex gap-4">
               <div className="w-60 flex flex-col gap-1 justify-center items-center text-center text-sm">
                 <img src={attackerIsFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="h-12 w-12" />
@@ -85,7 +86,7 @@ export const BattleDetails: React.FC<{
                 </div>
               )}
               {attackerDetails && (
-                <div className="flex flex-col gap-2 w-full">
+                <div className="flex flex-col gap-2 w-2/3">
                   {defenderDetails?.encryptionAtEnd === 0n && (
                     <p className="opacity-70 text-xs">Gained control of {entityToRockName(battle.defender)}</p>
                   )}
@@ -99,7 +100,7 @@ export const BattleDetails: React.FC<{
             </div>
 
             <BattleAllies allies={attackerAllyDetails} />
-          </div>
+          </SecondaryCard>
           <p className="p-1 text-xs font-bold text-accent flex justify-start w-full">Defender</p>
 
           {!defenderDetails && (
@@ -108,7 +109,7 @@ export const BattleDetails: React.FC<{
             </div>
           )}
           {defenderDetails && (
-            <div className="w-full flex gap-4 p-2 bg-white/[.06]">
+            <SecondaryCard className="w-full flex flex-row gap-4 p-2 ">
               <div className="w-60 flex flex-col gap-1 justify-center items-center text-center text-sm">
                 <img src={defenderIsFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="h-12 w-12" />
                 <p className={`${!winnerIsAttacker ? "text-success" : "text-error"}`}>
@@ -116,7 +117,7 @@ export const BattleDetails: React.FC<{
                 </p>
                 <AccountDisplay raw player={defendingPlayer} noColor className="opacity-50" />
               </div>
-              <div className="flex flex-col gap-2 w-full">
+              <div className="flex flex-col gap-2 w-2/3">
                 {!!defenderDetails.encryptionAtStart &&
                   !!defenderDetails.encryptionAtEnd &&
                   defenderDetails.encryptionAtStart !== defenderDetails.encryptionAtEnd && (
@@ -135,17 +136,16 @@ export const BattleDetails: React.FC<{
                     </div>
                   )}
                 {Object.entries(defenderDetails.units).length > 0 && <UnitStatus data={defenderDetails.units} />}
-
                 {Object.entries(defenderDetails.resources).length !== 0 && (
                   <ResourceStatus resources={defenderDetails.resources} />
                 )}
               </div>
-            </div>
+            </SecondaryCard>
           )}
 
           <BattleAllies allies={defenderAllyDetails} />
         </div>
-      </div>
+      </SecondaryCard>
       <Navigator.BackButton className="btn btn-primary btn-xs" />
     </Navigator.Screen>
   );
