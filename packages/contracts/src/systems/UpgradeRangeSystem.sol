@@ -18,9 +18,9 @@ contract UpgradeRangeSystem is PrimodiumSystem {
    * @dev Claims necessary resources before performing the upgrade. Verifies ownership, level requirements, and max level constraints.
    * @param asteroidEntity The unique identifier for the asteroid being upgraded.
    */
-  function upgradeRange(bytes32 asteroidEntity) public _claimResources(asteroidEntity) {
-    bytes32 playerEntity = _player();
-
+  function upgradeRange(
+    bytes32 asteroidEntity
+  ) public _onlyAsteroidOwner(asteroidEntity) _claimResources(asteroidEntity) {
     uint256 targetLevel = Level.get(asteroidEntity) + 1;
 
     require(Asteroid.getMaxLevel(asteroidEntity) >= targetLevel, "[UpgradeRangeSystem] Max level reached");
@@ -28,7 +28,6 @@ contract UpgradeRangeSystem is PrimodiumSystem {
       LibBuilding.hasRequiredBaseLevel(asteroidEntity, ExpansionKey, targetLevel),
       "[UpgradeRangeSystem] MainBase level requirement not met"
     );
-    require(OwnedBy.get(asteroidEntity) == playerEntity, "[UpgradeRangeSystem] Asteroid not owned by player");
 
     IWorld world = IWorld(_world());
     world.Primodium__spendUpgradeResources(asteroidEntity, ExpansionKey, targetLevel);

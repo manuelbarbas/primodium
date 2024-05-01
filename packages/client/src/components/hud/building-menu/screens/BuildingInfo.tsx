@@ -33,7 +33,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
   } = buildingInfo;
 
   return (
-    <Navigator.Screen title="BuildingInfo" className="w-full gap-1">
+    <Navigator.Screen title="BuildingInfo" className="!w-96 gap-1">
       <DataLabel label="building type">
         <b>{getEntityTypeName(buildingType as Entity)}</b>
       </DataLabel>

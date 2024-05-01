@@ -1,10 +1,10 @@
-import React, { ReactNode, createContext, useContext, useEffect, useRef, useState } from "react";
-import ReactDOM from "react-dom";
-import { FaTimes } from "react-icons/fa";
-import { usePrimodium } from "@/hooks/usePrimodium";
 import { Button } from "@/components/core/Button";
 import { Card } from "@/components/core/Card";
 import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
+import { usePrimodium } from "@/hooks/usePrimodium";
+import React, { ReactNode, createContext, useContext, useEffect, useRef, useState } from "react";
+import ReactDOM from "react-dom";
+import { FaTimes } from "react-icons/fa";
 
 interface ModalContextType {
   isOpen: boolean;
