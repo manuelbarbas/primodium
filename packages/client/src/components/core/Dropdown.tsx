@@ -72,7 +72,6 @@ export const Dropdown = <T extends DropdownValue>({
   };
   const selectedChild = children.find((child) => child.props.value === value);
 
-  console.log("size", size);
   return (
     <div ref={ref} className={cn("pointer-events-auto relative w-fit", className)}>
       <Button
