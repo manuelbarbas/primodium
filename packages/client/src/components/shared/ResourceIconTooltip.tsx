@@ -31,8 +31,6 @@ const ResourceIconTooltipContent = <V extends boolean>({
   resourceType,
   amount,
   image,
-  name,
-  direction,
   fontSize = "md",
   className,
   hasEnough,
@@ -56,8 +54,6 @@ const ResourceIconTooltipContent = <V extends boolean>({
     <IconLabel
       imageUri={image}
       text={label}
-      tooltipDirection={direction}
-      tooltipText={name}
       className={`text-${fontSize} font-bold ${className} ${!hasEnough ? `text-error animate-pulse ` : ""}`}
     />
   );

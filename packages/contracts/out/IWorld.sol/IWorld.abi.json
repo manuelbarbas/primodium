@@ -184,6 +184,32 @@
   },
   {
     "type": "function",
+    "name": "Primodium__buildRaidableAsteroid",
+    "inputs": [
+      {
+        "name": "asteroidEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Primodium__changeHome",
+    "inputs": [
+      {
+        "name": "asteroidEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "Primodium__claimObjective",
     "inputs": [
       {

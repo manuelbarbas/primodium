@@ -41,6 +41,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     P_GameConfig.set(config);
     Asteroid.setIsAsteroid(asteroidEntity, true);
     Home.set(playerEntity, asteroidEntity);
+    OwnedBy.set(asteroidEntity, playerEntity);
     OwnedBy.set(buildingEntity, asteroidEntity);
     Spawned.set(playerEntity, true);
 
@@ -117,7 +118,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
   }
 
   function testInvalidBuilding() public {
-    vm.expectRevert(bytes("[TrainUnitsSystem] Can not train units using an in active building"));
+    vm.expectRevert(bytes("[Primodium] Not building owner"));
     world.Primodium__trainUnits(bytes32(0), unit, 1);
   }
 
