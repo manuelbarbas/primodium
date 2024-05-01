@@ -1,5 +1,6 @@
 import { Button } from "@/components/core/Button";
 import { OwnedAsteroids } from "@/components/hud/widgets/starmap-navigator/OwnedAsteroids";
+import { OwnedColonyShips } from "@/components/hud/widgets/starmap-navigator/OwnedColonyShips";
 import { OwnedFleets } from "@/components/hud/widgets/starmap-navigator/OwnedFleets";
 import { Shards } from "@/components/hud/widgets/starmap-navigator/Shards";
 import { usePersistentStore } from "@/game/stores/PersistentStore";
@@ -42,7 +43,7 @@ export const StarmapNavigatorPane = () => {
     };
   }, [addListener]);
 
-  const labels = ["Asteroids", "Fleets", "Colony Ships", "Shards"];
+  const labels = ["Asteroids", "Fleets", "Colony Ships", "Volatile Shards"];
 
   const imagePaths = [
     InterfaceIcons.Asteroid,
@@ -55,7 +56,7 @@ export const StarmapNavigatorPane = () => {
     const className = "h-96 w-96";
     if (index === 0) return <OwnedAsteroids className={className} />;
     if (index === 1) return <OwnedFleets className={className} />;
-    if (index === 2) return <OwnedFleets className={className} />;
+    if (index === 2) return <OwnedColonyShips className={className} />;
     if (index === 3) return <Shards className={className} />;
   };
 

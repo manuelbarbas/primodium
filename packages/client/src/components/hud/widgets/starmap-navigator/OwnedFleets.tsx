@@ -11,18 +11,6 @@ import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EFleetStance } from "contracts/config/enums";
 import { useMemo } from "react";
 
-export const LabeledValue: React.FC<{
-  label: string;
-  children?: React.ReactNode;
-}> = ({ children = null, label }) => {
-  return (
-    <div className="flex flex-col gap-1 w-fit">
-      <p className="text-xs font-bold text-accent">{label}</p>
-      <div className="flex items-center gap-1">{children}</div>
-    </div>
-  );
-};
-
 export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ fleet, onClick }) => {
   const fleetName = entityToFleetName(fleet);
   const selected = components.SelectedFleet.use()?.value === fleet;
