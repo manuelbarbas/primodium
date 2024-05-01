@@ -1,6 +1,7 @@
 import { ComponentValue, Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { EResource, EMap } from "contracts/config/enums";
+import { storageUnitStorageUpgrades } from "contracts/config/storageUpgrades";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { EntityType, RESOURCE_SCALE } from "src/util/constants";
@@ -82,6 +83,10 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
       { ...emptyData, value: defenseData.encryption },
       { entity: asteroidEntity as Hex, resource: EResource.R_Encryption }
     );
+
+    if (asteroidData.mapId == EMap.Common) {
+      buildRaidableAsteroid(asteroidEntity);
+    }
   }
 }
 
@@ -168,6 +173,62 @@ function getAsteroidData(
     wormhole: false,
     primodium,
   };
+}
+
+function buildRaidableAsteroid(asteroidEntity: Entity) {
+  // get maxlevel to determine if factories should be added
+  const maxLevel = components.Asteroid.get(asteroidEntity)?.maxLevel ?? 1n;
+
+  // storage building at 21, 15
+  anticipateBuilding(EntityType.StorageUnit, { x: 21, y: 15 }, asteroidEntity);
+
+  const storageMax = storageUnitStorageUpgrades[1];
+
+  // set storage to max out common resources
+  anticipateStorage(EResource.Iron, storageMax.Iron, asteroidEntity);
+  anticipateStorage(EResource.Copper, storageMax.Copper, asteroidEntity);
+  anticipateStorage(EResource.Lithium, storageMax.Lithium, asteroidEntity);
+
+  // build iron mine at 23, 16
+  anticipateBuilding(EntityType.IronMine, { x: 23, y: 16 }, asteroidEntity);
+  // build copper mine at 23, 15
+  anticipateBuilding(EntityType.CopperMine, { x: 23, y: 15 }, asteroidEntity);
+  // build lithium mine at 23, 14
+  anticipateBuilding(EntityType.LithiumMine, { x: 23, y: 14 }, asteroidEntity);
+
+  if (maxLevel >= 3n) {
+    // set storage to max out advanced resources
+    anticipateStorage(EResource.IronPlate, storageMax.IronPlate, asteroidEntity);
+    anticipateStorage(EResource.Alloy, storageMax.Alloy, asteroidEntity);
+    anticipateStorage(EResource.PVCell, storageMax.PVCell, asteroidEntity);
+
+    // build Iron Plate factory at 19, 15
+    anticipateBuilding(EntityType.IronPlateFactory, { x: 19, y: 15 }, asteroidEntity);
+    // build Alloy factory at 17, 15
+    anticipateBuilding(EntityType.AlloyFactory, { x: 17, y: 15 }, asteroidEntity);
+    // build PVCell factory at 15, 15
+    anticipateBuilding(EntityType.PVCellFactory, { x: 15, y: 15 }, asteroidEntity);
+  }
+}
+
+function anticipateBuilding(buildingPrototype: Entity, coord: Coord, asteroidEntity: Entity) {
+  const buildingEntity = hashEntities(asteroidEntity, buildingPrototype);
+  components.BuildingType.set({ ...emptyData, value: buildingPrototype }, buildingEntity);
+  components.Position.set({ ...emptyData, x: coord.x, y: coord.y, parentEntity: asteroidEntity }, buildingEntity);
+  components.Level.set({ ...emptyData, value: 1n }, buildingEntity);
+  components.IsActive.set({ ...emptyData, value: true }, buildingEntity);
+  components.OwnedBy.set({ ...emptyData, value: asteroidEntity }, buildingEntity);
+}
+
+function anticipateStorage(resource: EResource, amount: number, asteroidEntity: Entity) {
+  components.ResourceCount.setWithKeys(
+    { ...emptyData, value: BigInt(amount) * RESOURCE_SCALE },
+    { entity: asteroidEntity as Hex, resource: resource }
+  );
+  components.MaxResourceCount.setWithKeys(
+    { ...emptyData, value: BigInt(amount) * RESOURCE_SCALE },
+    { entity: asteroidEntity as Hex, resource: resource }
+  );
 }
 
 const ONE = BigInt(1);
