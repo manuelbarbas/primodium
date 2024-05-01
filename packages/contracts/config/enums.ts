@@ -169,6 +169,7 @@ export enum EObjectives {
 
   // (A-B) Production
   BuildStorageUnit,
+  UpgradeStorageUnit1,
   BuildIronPlateFactory,
   BuildAlloyFactory,
   BuildPVCellFactory,

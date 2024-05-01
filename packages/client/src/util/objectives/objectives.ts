@@ -134,7 +134,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.UpgradeGarage,
     {
-      category: "Fundamentals",
+      category: "Unit Production",
       type: "Upgrade",
       requiredMainBase: 2n,
       requiredObjectives: [EObjectives.BuildGarage],
@@ -158,7 +158,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.UpgradeWorkshop,
     {
-      category: "Fundamentals",
+      category: "Unit Production",
       type: "Upgrade",
       requiredMainBase: 2n,
       requiredObjectives: [EObjectives.BuildWorkshop],
@@ -621,6 +621,18 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.StorageUnit,
       description:
         "Storage units increase your resource storage. To build, select the Storage Unit from the building menu and place it on any empty tile.",
+    },
+  ],
+  [
+    EObjectives.UpgradeStorageUnit1,
+    {
+      category: "Resource Production",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildStorageUnit],
+      buildingType: EntityType.StorageUnit,
+      level: 3n,
+      description:
+        "Upgrading a workshop to produce units more quickly, and unlock new units. To upgrade, select the workshop and select Upgrade.",
     },
   ],
   [

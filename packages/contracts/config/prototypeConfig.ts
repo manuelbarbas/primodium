@@ -2746,9 +2746,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
     },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 3n } },
-    },
   },
 
   /* ----------------------------- A-A Military Basics ---------------------------- */
@@ -2983,7 +2980,11 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 100, Copper: 100, Lithium: 100 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
+  },
+  UpgradeStorageUnit1: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 200, Copper: 200, Lithium: 200 }),
+    },
   },
   BuildIronPlateFactory: {
     tables: {
