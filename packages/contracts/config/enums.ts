@@ -91,16 +91,24 @@ export enum EObjectives {
   // (A) Intro
   BuildIronMine = 1,
   BuildCopperMine,
-  BuildIronPlateFactory,
+  BuildLithiumMine,
+
   UpgradeMainBase,
   ExpandBase,
 
+  UpgradeIronMine,
+  UpgradeCopperMine,
+  UpgradeLithiumMine,
+
   // (A-A) Military basics
   BuildGarage,
+  UpgradeGarage,
   BuildWorkshop,
-  CreateFleet,
+  UpgradeWorkshop,
 
   // (A-A-A) Fleet basics
+  CreateFleet,
+  TransferFromAsteroid,
   TransferFromFleet,
   SendFleet,
 
@@ -129,7 +137,6 @@ export enum EObjectives {
   ClaimWormholePoints,
 
   // (A-A-A-C) fleet management
-  TransferFromAsteroid,
   BuildStarmapper,
   DefendWithFleet,
   BlockWithFleet,
@@ -139,12 +146,12 @@ export enum EObjectives {
   TrainMinutemanMarine,
   TrainTridentMarine,
   TrainLightningCraft,
-  BuildDroneFactory,
 
   // (A-A-B-A) unit management
   UpgradeUnit,
 
   // (A-A-B-B) unit production (cont)
+  BuildDroneFactory,
   TrainAnvilDrone,
   TrainHammerDrone,
   TrainAegisDrone,
@@ -154,15 +161,15 @@ export enum EObjectives {
   BuildHangar,
 
   // (A-A-C) Defense
-  BuildSAMLauncher,
   BuildShieldGenerator,
   BuildVault,
+  BuildSAMLauncher,
 
   // (A-B) Production
-  BuildAlloyFactory,
-  BuildLithiumMine,
-  BuildPVCellFactory,
   BuildStorageUnit,
+  BuildIronPlateFactory,
+  BuildAlloyFactory,
+  BuildPVCellFactory,
 
   // (A-B-A) Production (cont)
   BuildSolarPanel,

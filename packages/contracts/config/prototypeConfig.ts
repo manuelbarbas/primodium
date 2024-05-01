@@ -2690,20 +2690,35 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   /* ---------------------------------- A Fundamentals --------------------------------- */
   BuildIronMine: {
     tables: {
-      P_ResourceReward: getResourceValues({ Iron: 100 }),
+      P_ResourceReward: getResourceValues({ Iron: 50 }),
     },
   },
   BuildCopperMine: {
     tables: {
-      P_ResourceReward: getResourceValues({ Copper: 100 }),
+      P_ResourceReward: getResourceValues({ Copper: 50 }),
     },
   },
-  BuildIronPlateFactory: {
+  BuildLithiumMine: {
     tables: {
-      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
+      P_ResourceReward: getResourceValues({ Lithium: 50 }),
     },
   },
+
   UpgradeMainBase: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 50, Copper: 50, Lithium: 50 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 2n } },
+    },
+  },
+  ExpandBase: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 100, Copper: 100, Lithium: 100 }),
+    },
+  },
+
+  UpgradeIronMine: {
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 100 }),
     },
@@ -2711,40 +2726,65 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       1: { P_RequiredBaseLevel: { value: 2n } },
     },
   },
-
-  ExpandBase: {
+  UpgradeCopperMine: {
     tables: {
       P_ResourceReward: getResourceValues({ Copper: 100 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 2n } },
+    },
+  },
+  UpgradeLithiumMine: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Lithium: 100 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 2n } },
     },
   },
 
   /* ----------------------------- A-A Military Basics ---------------------------- */
   BuildGarage: {
     tables: {
-      P_UnitReward: getUnitValues({ MinutemanMarine: 1 }),
+      P_UnitReward: getUnitValues({ MinutemanMarine: 5, AnvilDrone: 5, HammerDrone: 5 }),
     },
   },
-
+  UpgradeGarage: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 100, Copper: 100, Lithium: 100 }),
+      P_UnitReward: getUnitValues({ LightningCraft: 5 }),
+    },
+  },
   BuildWorkshop: {
     tables: {
-      P_UnitReward: getUnitValues({ TridentMarine: 1 }),
+      P_ResourceReward: getResourceValues({ Iron: 100, Copper: 100, Lithium: 100 }),
     },
   },
-  CreateFleet: {
+  UpgradeWorkshop: {
     tables: {
-      P_ResourceReward: getResourceValues({ Iron: 10 }),
+      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
     },
   },
 
   /* ------------------------------ A-A-A Fleet ------------------------------ */
+  CreateFleet: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
+    },
+  },
+  TransferFromAsteroid: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
+    },
+  },
   TransferFromFleet: {
     tables: {
-      P_ResourceReward: getResourceValues({ Alloy: 10 }),
+      P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
     },
   },
   SendFleet: {
     tables: {
-      P_ResourceReward: getResourceValues({ Lithium: 10 }),
+      P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
     },
   },
 
@@ -2752,12 +2792,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
 
   BattleAsteroid: {
     tables: {
-      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
+      P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
     },
   },
   OpenBattleReport: {
     tables: {
-      P_ResourceReward: getResourceValues({ Iron: 10 }),
+      P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
     },
   },
   BattleFleet: {
@@ -2836,19 +2876,14 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_UnitReward: getUnitValues({ StingerDrone: 1 }),
     },
   },
-  TransferFromAsteroid: {
-    tables: {
-      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
-    },
-  },
   DefendWithFleet: {
     tables: {
-      P_ResourceReward: getResourceValues({ Iron: 10 }),
+      P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
     },
   },
   BlockWithFleet: {
     tables: {
-      P_ResourceReward: getResourceValues({ Iron: 10 }),
+      P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
     },
   },
   LandFleet: {
@@ -2860,7 +2895,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   /* ----------------------- A-A-B Unit Production ---------------------- */
   TrainMinutemanMarine: {
     tables: {
-      P_ResourceReward: getResourceValues({ Iron: 100 }),
+      P_ResourceReward: getResourceValues({ Copper: 250 }),
     },
   },
 
@@ -2869,17 +2904,10 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_ResourceReward: getResourceValues({ Copper: 100 }),
     },
   },
-
   TrainLightningCraft: {
     tables: {
       P_ResourceReward: getResourceValues({ Lithium: 100 }),
     },
-  },
-  BuildDroneFactory: {
-    tables: {
-      P_UnitReward: getUnitValues({ HammerDrone: 1 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
 
   /* --------------------- A-A-B-A Unit Management (cont) --------------------- */
@@ -2890,24 +2918,27 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   },
 
   /* --------------------- A-A-B-A Unit Production (cont) --------------------- */
+  BuildDroneFactory: {
+    tables: {
+      P_UnitReward: getUnitValues({ HammerDrone: 1 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
+  },
   TrainAnvilDrone: {
     tables: {
       P_ResourceReward: getResourceValues({ PVCell: 10 }),
     },
   },
-
   TrainHammerDrone: {
     tables: {
       P_ResourceReward: getResourceValues({ PVCell: 10 }),
     },
   },
-
   TrainAegisDrone: {
     tables: {
       P_ResourceReward: getResourceValues({ Alloy: 10 }),
     },
   },
-
   TrainStingerDrone: {
     tables: {
       P_ResourceReward: getResourceValues({ IronPlate: 10 }),
@@ -2924,11 +2955,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
 
   /* ------------------------------ A-A-C Defense ----------------------------- */
 
-  BuildSAMLauncher: {
-    tables: {
-      P_ResourceReward: getResourceValues({ Copper: 100 }),
-    },
-  },
   BuildShieldGenerator: {
     tables: {
       P_UnitReward: getUnitValues({ AegisDrone: 1 }),
@@ -2939,30 +2965,36 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_UnitReward: getUnitValues({ LightningCraft: 1 }),
     },
   },
+  BuildSAMLauncher: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Copper: 100 }),
+    },
+  },
 
   /* ----------------------------- A-B Production ----------------------------- */
+  BuildStorageUnit: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 100 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
+  },
+  BuildIronPlateFactory: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
+    },
+    levels: { 1: { P_RequiredBaseLevel: { value: 5n } } },
+  },
   BuildAlloyFactory: {
     tables: {
       P_ResourceReward: getResourceValues({ Alloy: 10 }),
     },
-  },
-  BuildLithiumMine: {
-    tables: {
-      P_ResourceReward: getResourceValues({ Lithium: 100 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
+    levels: { 1: { P_RequiredBaseLevel: { value: 5n } } },
   },
   BuildPVCellFactory: {
     tables: {
       P_ResourceReward: getResourceValues({ PVCell: 10 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
-  },
-  BuildStorageUnit: {
-    tables: {
-      P_ResourceReward: getResourceValues({ Iron: 100 }),
-    },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
+    levels: { 1: { P_RequiredBaseLevel: { value: 5n } } },
   },
 
   /* ------------------------ A-B-A Production ----------------------- */
@@ -2990,7 +3022,8 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
 
   JoinAlliance: {
     tables: {
-      P_ResourceReward: getResourceValues({ Iron: 100 }),
+      P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
+      P_UnitReward: getUnitValues({ LightningCraft: 5 }),
     },
   },
 };
