@@ -72,7 +72,6 @@ export const createBattleComponents = () => {
     }, {} as Record<string, { level: bigint; unitsAtStart: bigint; casualties: bigint }>);
 
     const resources = Object.entries(ResourceEnumLookup).reduce((acc, [entity, index]) => {
-      console.log(participant);
       const resourcesAtStart = participant.resourcesAtStart ? participant.resourcesAtStart[index - 1] : 0n;
       const resourcesAtEnd = participant.resourcesAtEnd ? participant.resourcesAtEnd[index - 1] : 0n;
       if (resourcesAtStart === resourcesAtEnd) return acc;
