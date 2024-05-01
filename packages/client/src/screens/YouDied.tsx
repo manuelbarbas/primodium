@@ -30,14 +30,12 @@ export const YouDied = () => {
     <Navigator.Screen title="YouDied" className="flex flex-col gap-6 px-8">
       <h1 className="font-bold text-error">Ashes to ashes, dust to dust</h1>
       <p className="text-xl">All your asteroids have been captured. Will you reclaim your glory?</p>
-      {battles.length > 0 && (
-        <div className="w-full grid place-items-center">
-          <Navigator.NavButton to="BattleReports" variant="neutral" size="content" className="!w-56">
-            <img src={InterfaceIcons.Reports} alt="reports" className="w-8" />
-            <p className="text-xs">View Battle Reports</p>
-          </Navigator.NavButton>
-        </div>
-      )}
+      <div className="w-full grid place-items-center">
+        <Navigator.NavButton to="BattleReports" variant="neutral" size="content" className="!w-56">
+          <img src={InterfaceIcons.Reports} alt="reports" className="w-8" />
+          <p className="text-xs">View Battle Reports</p>
+        </Navigator.NavButton>
+      </div>
       <div className="w-full grid place-items-center">
         <TransactionQueueMask queueItemId={singletonEntity}>
           <Button variant="secondary" size="md" onClick={() => spawn(mud)} className="!w-56">
