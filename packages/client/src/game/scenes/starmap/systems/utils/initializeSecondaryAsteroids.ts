@@ -98,7 +98,7 @@ function isSecondaryAsteroid(entity: Entity, chanceInv: number, wormholeAsteroid
   return motherlodeType % chanceInv === 0;
 }
 
-function getSecondaryAsteroidUnitsAndEncryption(asteroidEntity: Entity, level: bigint) {
+export function getSecondaryAsteroidUnitsAndEncryption(asteroidEntity: Entity, level: bigint) {
   const droidCount = 4n ** level + 100n;
   const encryption = (level * 10n + 10n) * RESOURCE_SCALE;
   return { droidCount, encryption };

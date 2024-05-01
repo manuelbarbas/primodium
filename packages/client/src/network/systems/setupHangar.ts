@@ -1,5 +1,6 @@
 import { Entity, Has, HasValue, defineComponentSystem, namespaceWorld, runQuery } from "@latticexyz/recs";
 import { getUnitTrainingTime } from "src/util/unit";
+import { getAsteroidDroidCount } from "src/util/droidRegen";
 import { Hex } from "viem";
 import { components } from "../components";
 import { world } from "../world";
@@ -22,6 +23,11 @@ export function createHangar(spaceRock: Entity) {
   const trainedUnclaimedUnits = getTrainedUnclaimedUnits(spaceRock);
   Array.from(trainedUnclaimedUnits).map(([unit, count]) => {
     units.set(unit as Entity, (units.get(unit as Entity) ?? 0n) + count);
+  });
+
+  const droidCount = getAsteroidDroidCount(spaceRock);
+  Array.from(droidCount).map(([unit, count]) => {
+    units.set(unit as Entity, count);
   });
 
   const value = { units: [...units.keys()], counts: [...units.values()] };
