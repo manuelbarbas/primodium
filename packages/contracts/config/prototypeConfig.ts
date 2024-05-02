@@ -2688,6 +2688,10 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   },
 
   /* ---------------------------------- A Fundamentals --------------------------------- */
+
+  /*//////////////////////////////////////////////////////////////
+                          Build Mines
+  //////////////////////////////////////////////////////////////*/
   BuildIronMine: {
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 50 }),
@@ -2704,29 +2708,104 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
   },
 
+  /*//////////////////////////////////////////////////////////////
+                          Main Base
+  //////////////////////////////////////////////////////////////*/
   UpgradeMainBase1: {
-    tables: {
-      P_ResourceReward: getResourceValues({ Iron: 50, Copper: 50, Lithium: 50 }),
-    },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 2n } },
-    },
-  },
-  ExpandBase1: {
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 100, Copper: 100, Lithium: 100 }),
     },
   },
-
-  UpgradeIronMine: {
+  UpgradeMainBase2: {
     tables: {
-      P_ResourceReward: getResourceValues({ Iron: 200 }),
+      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
     },
     levels: {
       1: { P_RequiredBaseLevel: { value: 2n } },
     },
   },
-  UpgradeCopperMine: {
+  UpgradeMainBase3: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 3n } },
+    },
+  },
+  UpgradeMainBase4: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 4n } },
+    },
+  },
+
+  /*//////////////////////////////////////////////////////////////
+                          Expand Base
+  //////////////////////////////////////////////////////////////*/
+  ExpandBase1: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 100, Copper: 100, Lithium: 100 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 2n } },
+    },
+  },
+  ExpandBase2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 3n } },
+    },
+  },
+  ExpandBase3: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 5n } },
+    },
+  },
+
+  /*//////////////////////////////////////////////////////////////
+                          Upgrade Mines
+  //////////////////////////////////////////////////////////////*/
+  UpgradeIronMine1: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 100 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 2n } },
+    },
+  },
+  UpgradeIronMine2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 250 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 3n } },
+    },
+  },
+  UpgradeIronMine3: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 250 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 4n } },
+    },
+  },
+  UpgradeIronMine4: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 250 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 5n } },
+    },
+  },
+
+  UpgradeCopperMine1: {
     tables: {
       P_ResourceReward: getResourceValues({ Copper: 100 }),
     },
@@ -2734,7 +2813,32 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       1: { P_RequiredBaseLevel: { value: 2n } },
     },
   },
-  UpgradeLithiumMine: {
+  UpgradeCopperMine2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Copper: 250 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 3n } },
+    },
+  },
+  UpgradeCopperMine3: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Copper: 250 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 4n } },
+    },
+  },
+  UpgradeCopperMine4: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Copper: 250 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 5n } },
+    },
+  },
+
+  UpgradeLithiumMine1: {
     tables: {
       P_ResourceReward: getResourceValues({ Lithium: 100 }),
     },
@@ -2742,14 +2846,28 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       1: { P_RequiredBaseLevel: { value: 2n } },
     },
   },
-  UpgradeMainBase2: {
+  UpgradeLithiumMine2: {
     tables: {
-      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
+      P_ResourceReward: getResourceValues({ Lithium: 250 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 3n } },
     },
   },
-  ExpandBase2: {
+  UpgradeLithiumMine3: {
     tables: {
-      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
+      P_ResourceReward: getResourceValues({ Lithium: 250 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 4n } },
+    },
+  },
+  UpgradeLithiumMine4: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Lithium: 250 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 5n } },
     },
   },
 
@@ -3037,6 +3155,9 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
       P_UnitReward: getUnitValues({ LightningCraft: 5 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 2n } },
     },
   },
 };
