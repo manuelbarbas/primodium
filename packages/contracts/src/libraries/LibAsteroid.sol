@@ -157,7 +157,7 @@ library LibAsteroid {
       primodium = 4 * RESOURCE_SCALE;
     } else if (distributionVal < asteroidThresholdProb.eliteMedium) {
       // elite resources, medium
-      maxLevel = 5;
+      maxLevel = 6;
       primodium = 5 * RESOURCE_SCALE;
     } else {
       // elite resources, large
@@ -182,8 +182,8 @@ library LibAsteroid {
   }
 
   function getSecondaryAsteroidUnitsAndEncryption(uint256 level) internal pure returns (uint256, uint256) {
-    uint256 droidCount = 4 ** level + 100;
-    uint256 encryption = (level * 10 + 10) * 1e18;
+    uint256 droidCount = (4 ** level) + (10 * (level ** 2));
+    uint256 encryption = (level * 300 + 130) * 1e18;
     return (droidCount, encryption);
   }
 

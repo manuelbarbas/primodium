@@ -94,8 +94,8 @@ function isSecondaryAsteroid(entity: Entity, chanceInv: number, wormholeAsteroid
 }
 
 function getSecondaryAsteroidUnitsAndEncryption(asteroidEntity: Entity, level: bigint) {
-  const droidCount = 4n ** level + 100n;
-  const encryption = (level * 10n + 10n) * RESOURCE_SCALE;
+  const droidCount = 4n ** level + 10n * level ** 2n;
+  const encryption = (level * 300n + 300n) * RESOURCE_SCALE;
   return { droidCount, encryption };
 }
 
@@ -117,9 +117,10 @@ function getAsteroidData(
     };
   }
   const distributionVal = getByteUInt(asteroidEntity, 7, 12) % 100;
+  // default large
   let maxLevel = 8;
-  let primodium = 1n;
-  // //micro
+  let primodium = 5n;
+  //micro
   if (distributionVal <= 50) {
     maxLevel = 1;
     primodium = 3n;
@@ -129,9 +130,8 @@ function getAsteroidData(
     primodium = 4n;
     //medium
   } else if (distributionVal <= 90) {
-    maxLevel = 5;
+    maxLevel = 6;
     primodium = 5n;
-    //large
   }
 
   const mapId = (getByteUInt(asteroidEntity, 3, 20) % 4) + 2;
