@@ -14,6 +14,7 @@ import { FavoriteAsteroids } from "@/components/hud/widgets/FavoriteAsteroids";
 import { WarshipPopulation } from "@/components/hud/widgets/WarshipPopulation";
 import { Blueprints } from "@/components/hud/widgets/blueprints/Blueprints";
 import { Resources } from "@/components/hud/widgets/resources/Resources";
+import { StarmapNavigator } from "@/components/hud/widgets/starmap-navigator/StarmapNavigator";
 import { BrandingLabel } from "@/components/shared/BrandingLabel";
 import { usePersistentStore } from "@game/stores/PersistentStore";
 import { memo } from "react";
@@ -54,6 +55,7 @@ export const GameHUD = memo(() => {
 
         <HUD.Right>
           <Resources />
+          <StarmapNavigator />
         </HUD.Right>
 
         <HUD.Left>

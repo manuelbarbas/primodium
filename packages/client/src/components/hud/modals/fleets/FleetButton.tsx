@@ -5,18 +5,6 @@ import { components } from "src/network/components";
 import { formatTime } from "src/util/number";
 import { FleetEntityHeader } from "../../widgets/fleets/FleetHeader";
 
-export const LabeledValue: React.FC<{
-  label: string;
-  children?: React.ReactNode;
-}> = ({ children = null, label }) => {
-  return (
-    <div className="flex flex-col items-center justify-center">
-      <p className="text-xs font-bold text-cyan-400">{label}</p>
-      <div className="flex items-center gap-1">{children}</div>
-    </div>
-  );
-};
-
 export const FleetButton: React.FC<
   Omit<ComponentProps<typeof Button>, "children"> & {
     fleetEntity: Entity;
