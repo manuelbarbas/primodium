@@ -9,6 +9,7 @@ import { getAllianceName } from "src/util/alliance";
 import { EntityType } from "src/util/constants";
 import { formatNumber, formatResourceCount } from "src/util/number";
 import { rankToScore } from "src/util/score";
+import { maybeGetCrownIconFromRank } from "src/components/shared/Crowns";
 
 export const SubLeaderboard = ({ leaderboard, alliance = false }: { leaderboard: Entity; alliance?: boolean }) => {
   const { playerAccount } = useMud();
@@ -32,7 +33,7 @@ export const SubLeaderboard = ({ leaderboard, alliance = false }: { leaderboard:
         <div>Rank</div>
         <div className="col-span-4">Name</div>
         <div className="col-span-2">Score</div>
-        <div>Pts</div>
+        <div>Points</div>
       </div>
       <div className="flex flex-col w-full h-full justify-between text-xs pointer-events-auto">
         <AutoSizer>
@@ -92,9 +93,10 @@ const LeaderboardItem = ({
         player === entity ? "border-success" : ""
       }`}
     >
-      <div>
+      <div className={`flex gap-2 items-center`}>
         {rank}
         {rankSuffix}
+        {maybeGetCrownIconFromRank(rank)}
       </div>
       <div className="col-span-4 flex gap-1 justify-between items-center">
         <div className="flex items-center gap-1">
@@ -102,13 +104,13 @@ const LeaderboardItem = ({
           {player === entity && <p className="text-accent">(You)</p>}
         </div>
       </div>
-      <p className="font-bold w-fit col-span-2 bg-cyan-700 px-2 flex justify-center">
+      <p className="font-bold w-fit col-span-2 px-2 flex justify-center">
         {formatResourceCount(EntityType.Iron, score, {
           notLocale: true,
           fractionDigits: 2,
         }).toLocaleString()}
       </p>
-      <div className="flex items-center gap-1 px-1 bg-yellow-700 font-bold">
+      <div className="flex items-center gap-1 px-1 font-bold">
         {formatNumber(rankToScore(index + 1), { fractionDigits: 2 })}
         pts
       </div>

@@ -1,4 +1,3 @@
-import React from "react";
 import { Entity } from "@latticexyz/recs";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
@@ -8,7 +7,7 @@ import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { formatNumber } from "src/util/number";
 import { rankToScore } from "src/util/score";
-import { FaCrown } from "react-icons/fa6";
+import { maybeGetCrownIconFromRank } from "src/components/shared/Crowns";
 
 export const GrandLeaderboard = ({ leaderboard, alliance = false }: { leaderboard: Entity; alliance?: boolean }) => {
   const { playerAccount } = useMud();
@@ -37,7 +36,7 @@ export const GrandLeaderboard = ({ leaderboard, alliance = false }: { leaderboar
         <div className="col-span-4">Name</div>
         <div>Wormhole</div>
         <div>Primodium</div>
-        <div>Pts</div>
+        <div>Points</div>
       </div>
 
       <div className="flex flex-col w-full h-full justify-between text-xs pointer-events-auto">
@@ -117,19 +116,6 @@ export const GrandLeaderboardItem = ({
   const entity = alliance ? (components.PlayerAlliance.get(playerEntity)?.alliance as Entity) : playerEntity;
 
   const rank = index + 1;
-  let rankIcon: React.ReactElement | null;
-  const iconSize: string = "text-base";
-  const verticalOffsetStyling: string = "translate-y-[-8%]";
-
-  if (rank === 1) {
-    rankIcon = <FaCrown className={`text-yellow-500 ${iconSize} ${verticalOffsetStyling}`} />;
-  } else if (rank === 2) {
-    rankIcon = <FaCrown className={`text-gray-400 ${iconSize} ${verticalOffsetStyling}`} />;
-  } else if (rank === 3) {
-    rankIcon = <FaCrown className={`text-yellow-600 ${iconSize} ${verticalOffsetStyling}`} />;
-  } else {
-    rankIcon = null;
-  }
 
   return (
     <SecondaryCard
@@ -140,8 +126,7 @@ export const GrandLeaderboardItem = ({
       <div className={`flex gap-2 items-center`}>
         {rank}
         {rankSuffix(rank)}
-        {/* TODO(PRI-532): Fix uneven horizontal spacing of rank Icons due to different letter pixels of rank Suffixes*/}
-        {rankIcon}
+        {maybeGetCrownIconFromRank(rank)}
       </div>
       <div className="col-span-4 flex gap-1 justify-between items-center">
         <div className="flex items-center gap-1">
@@ -151,14 +136,13 @@ export const GrandLeaderboardItem = ({
       </div>
       {!hideRanks && (
         <>
-          {/*TODO(PRI-532): Remove ranking suffixes and replace with offset mini crowns*/}
           <div className="font-bold w-fit px-2 flex gap-1">
             {formatNumber(rankToScore(wormholeRank), { fractionDigits: 2 })}
-            <p className="inline opacity-70">[{wormholeRank.toLocaleString() + rankSuffix(wormholeRank)}]</p>
+            {maybeGetCrownIconFromRank(wormholeRank, true)}
           </div>
           <div className="font-bold w-fit px-2 flex gap-1">
             {formatNumber(rankToScore(primodiumRank), { fractionDigits: 2 })}
-            <p className="inline opacity-70">[{primodiumRank.toLocaleString() + rankSuffix(primodiumRank)}]</p>
+            {maybeGetCrownIconFromRank(primodiumRank, true)}
           </div>
         </>
       )}
