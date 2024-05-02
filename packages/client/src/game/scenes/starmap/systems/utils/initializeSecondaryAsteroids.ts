@@ -84,7 +84,7 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
       { entity: asteroidEntity as Hex, resource: EResource.R_Encryption }
     );
 
-    if (asteroidData.mapId == EMap.Common) {
+    if (asteroidData.mapId == EMap.Common && !components.OwnedBy.get(asteroidEntity)) {
       buildRaidableAsteroid(asteroidEntity);
     }
   }
@@ -211,6 +211,27 @@ function buildRaidableAsteroid(asteroidEntity: Entity) {
   }
 }
 
+export function removeRaidableAsteroid(asteroidEntity: Entity) {
+  const maxLevel = components.Asteroid.get(asteroidEntity)?.maxLevel ?? 1n;
+  // remove storage building at 21, 15
+  removeAnticipatedBuilding(EntityType.StorageUnit, asteroidEntity);
+  // remove iron mine at 23, 16
+  removeAnticipatedBuilding(EntityType.IronMine, asteroidEntity);
+  // remove copper mine at 23, 15
+  removeAnticipatedBuilding(EntityType.CopperMine, asteroidEntity);
+  // remove lithium mine at 23, 14
+  removeAnticipatedBuilding(EntityType.LithiumMine, asteroidEntity);
+
+  if (maxLevel >= 3n) {
+    // remove Iron Plate factory at 19, 15
+    removeAnticipatedBuilding(EntityType.IronPlateFactory, asteroidEntity);
+    // remove Alloy factory at 17, 15
+    removeAnticipatedBuilding(EntityType.AlloyFactory, asteroidEntity);
+    // remove PVCell factory at 15, 15
+    removeAnticipatedBuilding(EntityType.PVCellFactory, asteroidEntity);
+  }
+}
+
 function anticipateBuilding(buildingPrototype: Entity, coord: Coord, asteroidEntity: Entity) {
   const buildingEntity = hashEntities(asteroidEntity, buildingPrototype);
   components.BuildingType.set({ ...emptyData, value: buildingPrototype }, buildingEntity);
@@ -218,6 +239,15 @@ function anticipateBuilding(buildingPrototype: Entity, coord: Coord, asteroidEnt
   components.Level.set({ ...emptyData, value: 1n }, buildingEntity);
   components.IsActive.set({ ...emptyData, value: true }, buildingEntity);
   components.OwnedBy.set({ ...emptyData, value: asteroidEntity }, buildingEntity);
+}
+
+function removeAnticipatedBuilding(buildingPrototype: Entity, asteroidEntity: Entity) {
+  const buildingEntity = hashEntities(asteroidEntity, buildingPrototype);
+  components.Position.remove(buildingEntity);
+  components.BuildingType.remove(buildingEntity);
+  components.Level.remove(buildingEntity);
+  components.IsActive.remove(buildingEntity);
+  components.OwnedBy.remove(buildingEntity);
 }
 
 function anticipateStorage(resource: EResource, amount: number, asteroidEntity: Entity) {
@@ -230,6 +260,21 @@ function anticipateStorage(resource: EResource, amount: number, asteroidEntity: 
     { entity: asteroidEntity as Hex, resource: resource }
   );
 }
+
+// preserve this function in case needed later
+// function removeAnticipatedStorage(resource: EResource, amount: number, asteroidEntity: Entity) {
+//   // get the resource count and max resource count
+//   let resourceCount = components.ResourceCount.getWithKeys({ entity: asteroidEntity as Hex, resource: resource} )?.value ?? 0n;
+//   let maxResourceCount = components.MaxResourceCount.getWithKeys({ entity: asteroidEntity as Hex, resource: resource })?.value ?? 0n;
+
+//   // subtract the resource param from resource count and max resource count
+//   resourceCount -= BigInt(amount) * RESOURCE_SCALE;
+//   maxResourceCount -= BigInt(amount) * RESOURCE_SCALE;
+
+//   // set the new resource count and max resource count
+//   components.ResourceCount.setWithKeys({ ...emptyData, value: resourceCount }, { entity: asteroidEntity as Hex, resource: resource });
+//   components.MaxResourceCount.setWithKeys({ ...emptyData, value: maxResourceCount }, { entity: asteroidEntity as Hex, resource: resource });
+// }
 
 const ONE = BigInt(1);
 const getByteUInt = (_b: Entity, length: number, shift: number): number => {
