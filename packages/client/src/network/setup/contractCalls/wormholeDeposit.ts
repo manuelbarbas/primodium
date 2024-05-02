@@ -1,4 +1,6 @@
+import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 import { Entity } from "@latticexyz/recs";
+import { EObjectives } from "contracts/config/enums";
 import { TxQueueOptions } from "src/network/components/customComponents/TransactionQueueComponent";
 import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
@@ -16,7 +18,7 @@ export const wormholeDeposit = async (
     {
       mud,
       functionName: "Primodium__wormholeDeposit",
-      systemId: getSystemId("WormholeDepositSystem"),
+      systemId: getSystemId("ClaimWormholeSystem"),
       args: [wormholeBase as Hex, count],
       withSession: true,
     },
@@ -24,6 +26,10 @@ export const wormholeDeposit = async (
       id: "DEPOSIT" as Entity,
       type: TransactionQueueType.WormholeDeposit,
       ...options,
+    },
+    () => {
+      console.log("Wormhole deposit complete");
+      makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.TeleportResources);
     }
   );
 };
