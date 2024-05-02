@@ -113,13 +113,10 @@ export const createBattleComponents = () => {
 
   const getAllPlayerBattles = (player: Entity) => {
     return RawBattle.getAll().reduce((acc, battleEntity) => {
-      const battle = get(battleEntity);
-      if (!battle) return acc;
+      const battle = RawBattle.get(battleEntity)!;
 
-      const isAcceptable = !![battle.attacker, battle.defender].find((entity) => {
-        const isFleet = components.IsFleet.has(entity);
-        const rockEntity = isFleet ? components.OwnedBy.get(entity)?.value : entity;
-        return components.OwnedBy.get(rockEntity as Entity)?.value === player;
+      const isAcceptable = !![battle.attackingPlayer, battle.defendingPlayer].find((entity) => {
+        return entity === player;
       });
       if (!isAcceptable) return acc;
       return [...acc, battleEntity];

@@ -29,6 +29,7 @@ import Spectate from "../icons/UI_Spectate.png?url";
 import Starmap from "../icons/UI_Starmap.png?url";
 import Trade from "../icons/UI_Trade.png?url";
 import Vault from "../icons/UI_Vault.png?url";
+import ShardSprite from "../sprites/shard/shard.png?url";
 
 export const InterfaceIcons = {
   Add,
@@ -49,10 +50,13 @@ export const InterfaceIcons = {
   NotAllowed,
   Objective,
   Outgoing,
+  Radar: Debug,
   Reinforcements,
   Reports,
   Return,
   Settings,
+  ShardSprite,
+  Shard: Asteroid,
   Spectate,
   Starmap,
   Trade,
