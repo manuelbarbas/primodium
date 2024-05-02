@@ -84,7 +84,7 @@ export const renderBuilding = (scene: Scene) => {
         components.IsActive.remove(droidBaseEntity);
         components.OwnedBy.remove(droidBaseEntity);
         // if droidbaseactive is defined, remove raidable asteroid. if not, it means it was already removed
-        if (droidBaseActive) {
+        if (droidBaseActive && components.Asteroid.get(activeRock)?.mapId === 7) {
           removeRaidableAsteroid(activeRock);
         }
       }
