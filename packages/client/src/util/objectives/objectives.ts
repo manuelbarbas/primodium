@@ -117,6 +117,18 @@ export const Objectives = new Map<EObjectives, Objective>([
         "Upgrading a main base gives you more resource storage and makes your asteroid stronger. To upgrade, select your main base and select Upgrade.",
     },
   ],
+  [
+    EObjectives.ExpandBase2,
+    {
+      category: "Fundamentals",
+      type: "Expand",
+      requiredObjectives: [EObjectives.UpgradeMainBase2],
+      requiredMainBase: 3n,
+      level: 3n,
+      description:
+        "Expansion gives you more room to build and unlocks new ores. To Expand, Select your main base and click on Expand base.",
+    },
+  ],
 
   /* ----------------------------- A-A Conquest Basics ---------------------------- */
 
@@ -630,7 +642,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Upgrade",
       requiredObjectives: [EObjectives.BuildStorageUnit],
       buildingType: EntityType.StorageUnit,
-      level: 3n,
+      level: 2n,
       description:
         "Upgrading a workshop to produce units more quickly, and unlock new units. To upgrade, select the workshop and select Upgrade.",
     },

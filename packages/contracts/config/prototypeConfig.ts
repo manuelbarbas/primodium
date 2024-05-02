@@ -2747,6 +2747,11 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
     },
   },
+  ExpandBase2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
+    },
+  },
 
   /* ----------------------------- A-A Military Basics ---------------------------- */
   BuildGarage: {
