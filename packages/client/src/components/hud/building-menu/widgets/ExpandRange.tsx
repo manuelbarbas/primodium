@@ -65,15 +65,6 @@ export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
             </div>
           </div>
         </div>
-        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, playerAccount.entity)}>
-          <PushButton
-            className="w-fit btn-secondary btn-sm"
-            disabled={!canUpgrade}
-            onClick={() => upgradeRange(mud, asteroid)}
-          >
-            Expand
-          </PushButton>
-        </TransactionQueueMask>
       </div>
       {error && <p className="animate-pulse text-error text-xs uppercase mt-2">{error}</p>}
       <div className="flex gap-1 mt-1">
@@ -88,6 +79,15 @@ export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
             );
           })}
       </div>
+      <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, playerAccount.entity)}>
+        <PushButton
+          className="w-fit btn-secondary btn-sm"
+          disabled={!canUpgrade}
+          onClick={() => upgradeRange(mud, asteroid)}
+        >
+          Expand
+        </PushButton>
+      </TransactionQueueMask>
     </SecondaryCard>
   );
 };

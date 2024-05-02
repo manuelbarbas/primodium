@@ -705,7 +705,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             await setComponentValue(
               mud,
               components.MaxColonySlots,
-              { entity: playerEntity as Hex },
+              { playerEntity: player as Hex },
               { value: colonyShipCap + 1n }
             );
             await setComponentValue(mud, components.OwnedBy, { entity: selectedRock as Hex }, { value: player });
