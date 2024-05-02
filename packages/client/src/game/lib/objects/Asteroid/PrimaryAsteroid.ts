@@ -13,6 +13,7 @@ export class PrimaryAsteroid extends BaseAsteroid {
       sprite: getPrimarySprite(level),
       outlineSprite: getPrimaryOutlineSprite(relationship),
     });
+    this.setLOD(1, true);
   }
 
   setLevel(level: bigint) {

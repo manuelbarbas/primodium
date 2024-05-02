@@ -15,7 +15,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
   protected outlineSprite: Phaser.GameObjects.Image;
   protected asteroidLabel: AsteroidLabel;
   protected orbitRing: OrbitRing;
-  protected currentLOD: number = 0;
+  protected currentLOD: number = -1;
   private circle: Phaser.GameObjects.Arc;
 
   constructor(args: { scene: Scene; coord: Coord; sprite: Sprites; outlineSprite: Sprites }) {
