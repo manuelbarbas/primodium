@@ -1,76 +1,171 @@
-import { Button } from "@/components/core/Button";
+import { SecondaryCard } from "@/components/core/Card";
 import { Modal } from "@/components/core/Modal";
 import { usePersistentStore } from "@/game/stores/PersistentStore";
-import { useState } from "react";
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
+const intervals = {
+  sentence1: 1,
+  sentence2: 2,
+  sentence3: 2,
+  sentence4: 2,
+  missionCritical: 2,
+  harvest: 1,
+  conquer: 2,
+  defend: 2,
+  deliver: 2,
+  ready: 1,
+};
+
+function convertToThresholds(intervals: Record<string, number>): Record<string, number> {
+  const thresholds: Record<string, number> = {};
+  let sum = 0;
+
+  Object.keys(intervals).forEach((key) => {
+    sum += intervals[key];
+    thresholds[key] = sum;
+  });
+
+  return thresholds;
+}
+
+const thresholds = convertToThresholds(intervals) as typeof intervals;
 export const Intro = () => {
   const { showIntro, setShowIntro } = usePersistentStore(
     useShallow((state) => ({ setShowIntro: state.setShowIntro, showIntro: state.showIntro }))
   );
-  const [page, setPage] = useState(0);
+  const [secondsElapsed, setSecondsElapsed] = useState(0);
+
+  const finalSeconds = Object.values(intervals).reduce((acc, val) => acc + val, 0);
+
+  useEffect(() => {
+    if (!showIntro) return;
+    let intervalId = setInterval(() => {
+      if (secondsElapsed >= finalSeconds) return;
+      setSecondsElapsed((prev) => prev + 1);
+    }, 1000);
+
+    // Setup the click event listener
+    const handleClick = () => {
+      if (secondsElapsed >= finalSeconds) return;
+      intervalId && clearInterval(intervalId); // Clear existing interval
+      // set seconds elapsed to match the next interval
+      setSecondsElapsed((prev) => {
+        const keys = Object.keys(intervals) as Array<keyof typeof intervals>;
+        const key = keys.find((key) => prev < thresholds[key]);
+        if (!key) return prev;
+        return thresholds[key];
+      });
+      const newId = setInterval(() => {
+        if (secondsElapsed >= finalSeconds) return;
+        setSecondsElapsed((prev) => prev + 1);
+      }, 1000); // Restart interval
+      intervalId = newId; // Store new interval id
+    };
+
+    window.addEventListener("click", handleClick);
+
+    return () => {
+      clearInterval(intervalId);
+      window.removeEventListener("click", handleClick);
+    };
+  }, [showIntro]);
 
   return (
-    <Modal title="Battle of the Shards" startOpen={showIntro} onClose={() => setShowIntro(false)}>
-      <Modal.Content className="w-[50rem] min-h-[25rem] font-mono p-6">
-        {page === 0 && <PageZero onContinue={() => setPage(1)} />}
-        {page === 1 && <PageOne final />}
+    <Modal
+      title="Battle of the Shards"
+      startOpen={showIntro}
+      onClose={() => setShowIntro(false)}
+      blockClose={secondsElapsed < finalSeconds}
+    >
+      <Modal.Content className="w-[50rem] p-6">
+        <div className="flex flex-col p-8 items-center h-[44rem]">
+          <div className="text-center font-bold text-accent uppercase mb-2">
+            Welcome to The Belt: The last hope for humanity
+          </div>
+          <div className="w-3/4 text-center">
+            {secondsElapsed >= thresholds.sentence1 && (
+              <p className="animate-in fade-in duration-500 text-center text-xs">
+                A long galactic war has depleted resources in the Milky Way.
+              </p>
+            )}{" "}
+            {secondsElapsed >= thresholds.sentence2 && (
+              <p className="animate-in fade-in duration-500 text-xs">
+                Rival alliances have turned to mining asteroid belts within spacetime rifts.
+              </p>
+            )}{" "}
+          </div>
+
+          <br className="w-full h-4" />
+          <div className="w-3/4 text-center">
+            {secondsElapsed >= thresholds.sentence3 && (
+              <p className="animate-in fade-in duration-500 text-xs text-center">
+                Command has selected you to journey to The Belt.
+              </p>
+            )}{" "}
+            {secondsElapsed >= thresholds.sentence4 && (
+              <p className="animate-in fade-in duration-500 text-xs text-center">
+                Your mission: <span>battle for resources that ensure your alliance&apos;s survival.</span>
+              </p>
+            )}
+          </div>
+          <br className="w-full h-4" />
+          <div className="flex flex-col justify-center items-center gap-2">
+            {secondsElapsed >= thresholds.missionCritical && (
+              <p className="animate-pulse duration-1000 text-warning text-center">Mission Critical</p>
+            )}
+
+            {secondsElapsed >= thresholds.harvest && (
+              <SecondaryCard className="animate-in fade-in duration-500 flex flex-row w-96 gap-2 items-center">
+                <img src={InterfaceIcons.Build} alt="build" className="w-10 h-10" />
+                <div className="flex flex-col">
+                  <p>Harvest</p>
+                  <p className="text-xs opacity-70">Mine resources from asteroids you control</p>
+                </div>
+              </SecondaryCard>
+            )}
+            {secondsElapsed >= thresholds.conquer && (
+              <SecondaryCard className="animate-in fade-in duration-500 flex flex-row w-96 gap-2 items-center">
+                <img src={InterfaceIcons.Attack} alt="build" className="w-10 h-10" />
+                <div className="flex flex-col">
+                  <p>Conquer</p>
+                  <p className="text-xs opacity-70">
+                    Expand your empire by decrypting and conquering neighboring asteroids
+                  </p>
+                </div>
+              </SecondaryCard>
+            )}
+            {secondsElapsed >= thresholds.defend && (
+              <SecondaryCard className="animate-in fade-in duration-500 flex flex-row w-96 gap-2 items-center">
+                <img src={InterfaceIcons.Shard} alt="build" className="w-10 h-10" />
+                <div className="flex flex-col">
+                  <p>Defend</p>
+                  <p className="text-xs opacity-70">Capture and defend Volatile Shards to gain Primodium</p>
+                </div>
+              </SecondaryCard>
+            )}
+            {secondsElapsed >= thresholds.deliver && (
+              <SecondaryCard className="animate-in fade-in duration-500 flex flex-row w-96 gap-2 items-center">
+                <img src={InterfaceIcons.Outgoing} alt="build" className="w-10 h-10" />
+                <div className="flex flex-col">
+                  <p>Deliver</p>
+                  <p className="text-xs opacity-70">Teleport your resources to Command through Wormhole Generators</p>
+                </div>
+              </SecondaryCard>
+            )}
+            <br className="w-full h-4" />
+            {secondsElapsed >= thresholds.ready && (
+              <div className="animate-in fade-in duration-500 flex flex-col gap-2 items-center">
+                Ready to command the stars?
+                <Modal.CloseButton variant="primary" size="md" className="w-fit">
+                  Begin
+                </Modal.CloseButton>
+              </div>
+            )}
+          </div>
+        </div>
       </Modal.Content>
     </Modal>
-  );
-};
-
-type PageProps = {
-  onContinue?: () => void;
-  final?: boolean;
-};
-const PageZero = (props: PageProps) => {
-  const Btn = props.final ? Modal.CloseButton : Button;
-  return (
-    <div className="flex flex-col gap-6 p-8 h-full">
-      <div className="text-center font-bold text-accent uppercase gap-6">Welcome to The Belt.</div>
-      <p className="text-sm">
-        For thousands of years, humanity has waged a galactic war across the stars. But over time, these warring
-        alliances have run out of resources in the Milky Way.
-      </p>
-      <p className="text-sm">
-        Astrogeologists recently found rifts in spacetime that led to The Belt. No organic matter can pass through these
-        rifts, so Space Command sent you, an <span className="font-bold">autonomous astrogeologist android (AAA)</span>,
-        to mine resources and investigate markers of a mysterious mineral:{" "}
-        <span className="text-info font-bold">PRIMODIUM</span>.
-      </p>
-      <p className="font-bold">
-        <span className="text-warning uppercase text-center">Your mission:</span>{" "}
-        <ul className="gap-1 pl-4">
-          <li>1. Harvest resources and teleport them to Space Command through wormholes.</li>
-          <li>2. Seek out and harvest Primodium, a new mineral that unlocks vast quantities of renewable energy.</li>
-        </ul>
-      </p>
-      <Btn onClick={props.onContinue} variant="primary" className="self-end">
-        Continue
-      </Btn>
-    </div>
-  );
-};
-
-const PageOne = (props: PageProps) => {
-  const Btn = props.final ? Modal.CloseButton : Button;
-  return (
-    <div className="flex flex-col gap-6 p-8 h-full">
-      <p className="text-sm">
-        To send resources to Space Command, construct a <span className="text-success">Wormhole Generator</span> on a
-        Wormhole Asteroid. Beware -- the needs of Space Command are constantly changing!
-      </p>
-      <p className="text-sm">
-        Sensors have detected the presence of a valuable new energy source, <span className="text-info">Primodium</span>
-        , located on volatile shards in The Belt. Mine these shards and defend them from other alliances.
-      </p>
-      <p className="font-bold uppercase text-center text-warning">GOOD LUCK!</p>
-      <div className="w-full grid place-items-center">
-        <Btn onClick={props.onContinue} size="md" variant="secondary" className="w-fit">
-          Begin
-        </Btn>
-      </div>
-    </div>
   );
 };
