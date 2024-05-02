@@ -6,9 +6,9 @@ import { HoverTarget } from "@/components/hud/markers/HoverTarget";
 import { BlueprintInfoMarker } from "@/components/hud/markers/asteroid/BlueprintInfoMarker";
 import { BuildingMenuPopup } from "@/components/hud/markers/asteroid/BuildingMenuPopup";
 import { AsteroidTarget } from "@/components/hud/markers/starmap/AsteroidTarget";
-import { BuildMarker } from "@/components/hud/markers/starmap/BuildMarker";
+// import { BuildMarker } from "@/components/hud/markers/starmap/BuildMarker";
 import { FleetTarget } from "@/components/hud/markers/starmap/FleetTarget";
-import { HomeMarker } from "@/components/hud/markers/starmap/HomeMarker";
+// import { HomeMarker } from "@/components/hud/markers/starmap/HomeMarker";
 import { Intro } from "@/components/hud/modals/Intro";
 import { FavoriteAsteroids } from "@/components/hud/widgets/FavoriteAsteroids";
 import { WarshipPopulation } from "@/components/hud/widgets/WarshipPopulation";
@@ -29,8 +29,8 @@ export const GameHUD = memo(() => {
       <HUD scale={uiScale}>
         <div className="absolute top-0 left-0 h-32 w-screen bg-gradient-to-b from-black to-transparent" />
         {/* MARKERS */}
-        <BuildMarker />
-        <HomeMarker />
+        {/* <BuildMarker /> */}
+        {/* <HomeMarker /> */}
         <AsteroidTarget />
         <FleetTarget />
         <HoverTarget />

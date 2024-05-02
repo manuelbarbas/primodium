@@ -77,7 +77,7 @@ export const renderAsteroid = (scene: Scene) => {
 
     asteroid.getAsteroidLabel().setProperties({
       nameLabel: entityToRockName(entity),
-      nameLabelColor: ownedByPlayer ? 0x00ffff : 0xffffff,
+      nameLabelColor: ownedByPlayer ? 0xffff00 : asteroidData?.spawnsSecondary ? 0x00ffff : 0xffffff,
       ownerLabel: ownedBy
         ? entityToPlayerName(ownedBy as Entity)
         : getEntityTypeName(MapIdToAsteroidType[asteroidData.mapId]),

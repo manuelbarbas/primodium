@@ -21,6 +21,7 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
   private asteroidLabel: Phaser.GameObjects.BitmapText;
   private ownerLabel: Phaser.GameObjects.BitmapText;
   private allianceLabel: Phaser.GameObjects.BitmapText;
+  private baseScale = 1;
 
   constructor(
     args: {
@@ -57,7 +58,6 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
     this.asteroidLabel = new Phaser.GameObjects.BitmapText(scene.phaserScene, 0, 0, "teletactile", asteroidName, 14)
       .setDepth(1000)
       .setTintFill(asteroidNameColor);
-    // .setOrigin(0, 0.5);
 
     this.ownerLabel = new Phaser.GameObjects.BitmapText(scene.phaserScene, 0, 0, "teletactile", ownerLabel, 12)
       .setDepth(1000)
@@ -65,13 +65,11 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
       .setTintFill(ownerLabelColor)
       .setCharacterTint(1, -1, true, 0xffffff)
       .setCharacterTint(0, 1, true, 0xffffff);
-    // .setOrigin(0, 0.5);
 
     this.allianceLabel = new Phaser.GameObjects.BitmapText(scene.phaserScene, 0, 0, "teletactile", undefined, 12)
       .setDepth(1000)
       .setAlpha(0.8)
       .setTintFill(allianceLabelColor);
-    // .setOrigin(0, 0.5);
 
     this._updatePositions();
     this.labelContainer.add([this.asteroidLabel, this.ownerLabel, this.allianceLabel]);
@@ -114,9 +112,14 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
     return this;
   }
 
+  setBaseScale(scale: number) {
+    this.baseScale = scale;
+    return this;
+  }
+
   update() {
     const zoom = this._scene.camera.phaserCamera.zoom;
-    this.setScale(1 / zoom);
+    this.setScale(this.baseScale / zoom);
   }
 
   dispose() {

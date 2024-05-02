@@ -75,7 +75,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
 
   abstract setRelationship(relationship: AsteroidRelationship): void;
 
-  protected setLOD(level: number) {
+  protected setLOD(level: number, noAnim = false) {
     if (this.currentLOD === level) return;
 
     this.currentLOD = level;
@@ -87,7 +87,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
       // LOD 0: Show asteroid and label
       case 0:
         asteroidAlpha = 1;
-        asteroidLabelPosition = { x: 32, y: -16 };
+        asteroidLabelPosition = { x: this.asteroidSprite.width + 5, y: -16 };
         break;
       // LOD 1: Show asteroid only
       case 1:
@@ -103,6 +103,14 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
       default:
         console.warn("Invalid LOD level");
         return;
+    }
+
+    if (noAnim) {
+      this.asteroidSprite.alpha = asteroidAlpha;
+      this.outlineSprite.alpha = asteroidAlpha;
+      this.orbitRing.alpha = asteroidAlpha;
+      this.asteroidLabel.alpha = asteroidLabelAlpha;
+      this.asteroidLabel.setPosition(asteroidLabelPosition.x, asteroidLabelPosition.y);
     }
 
     this.scene.add.tween({

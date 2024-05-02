@@ -24,6 +24,8 @@ export class SecondaryAsteroid extends BaseAsteroid {
     this._scene = scene;
 
     this.maxLevel = maxLevel;
+    this.setLOD(2, true);
+    this.getAsteroidLabel().setBaseScale(0.75);
   }
 
   setRelationship(relationship: AsteroidRelationship) {
