@@ -5,6 +5,7 @@ import { components } from "src/network/components";
 import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
+import { entityToAddress } from "src/util/common";
 import { getAllianceName, getAllianceNameFromPlayer } from "src/util/alliance";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities, toHex32 } from "src/util/encode";
@@ -83,7 +84,7 @@ export const declineInvite = async (mud: MUD, inviter: Entity) => {
       mud,
       functionName: "Primodium__declineInvite",
       systemId: getSystemId("AllianceSystem"),
-      args: [inviter as Hex],
+      args: [entityToAddress(inviter as Hex)],
       withSession: true,
     },
     {
@@ -129,7 +130,7 @@ export const kickPlayer = async (mud: MUD, player: Entity) => {
       mud,
       functionName: "Primodium__kick",
       systemId: getSystemId("AllianceSystem"),
-      args: [player as Hex],
+      args: [entityToAddress(player as Hex)],
       withSession: true,
     },
     {
@@ -153,7 +154,7 @@ export const grantRole = async (mud: MUD, player: Entity, role: EAllianceRole) =
       mud,
       functionName: "Primodium__grantRole",
       systemId: getSystemId("AllianceSystem"),
-      args: [player as Hex, role],
+      args: [entityToAddress(player as Hex), role],
       withSession: true,
     },
     {
@@ -176,7 +177,7 @@ export const acceptJoinRequest = async (mud: MUD, target: Entity) => {
       mud,
       functionName: "Primodium__acceptRequestToJoin",
       systemId: getSystemId("AllianceSystem"),
-      args: [target as Hex],
+      args: [entityToAddress(target as Hex)],
       withSession: true,
     },
     {
@@ -198,7 +199,7 @@ export const rejectJoinRequest = async (mud: MUD, target: Entity) => {
       mud,
       functionName: "Primodium__rejectRequestToJoin",
       systemId: getSystemId("AllianceSystem"),
-      args: [target as Hex],
+      args: [entityToAddress(target as Hex)],
       withSession: true,
     },
     {
@@ -220,7 +221,7 @@ export const invite = async (mud: MUD, target: Entity) => {
       mud,
       functionName: "Primodium__invite",
       systemId: getSystemId("AllianceSystem"),
-      args: [target as Hex],
+      args: [entityToAddress(target as Hex)],
       withSession: true,
     },
     {
