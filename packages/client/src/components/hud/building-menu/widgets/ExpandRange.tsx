@@ -43,7 +43,7 @@ export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
           <img src={InterfaceIcons.Expansion} className="pixel-images h-8 w-8" />
           <div>
             {recipe.length !== 0 && <p className="text-xs opacity-75 px-2 mb-1">EXPANSION COST</p>}
-            <div className="flex flex-wrap gap-1 px-2">
+            <div className="flex flex-col flex-wrap gap-1 px-2">
               {!atMaxLevel &&
                 recipe.length !== 0 &&
                 recipe.map((resource) => {
@@ -65,15 +65,6 @@ export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
             </div>
           </div>
         </div>
-        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, playerAccount.entity)}>
-          <PushButton
-            className="w-fit btn-secondary btn-sm"
-            disabled={!canUpgrade}
-            onClick={() => upgradeRange(mud, asteroid)}
-          >
-            Expand
-          </PushButton>
-        </TransactionQueueMask>
       </div>
       {error && <p className="animate-pulse text-error text-xs uppercase mt-2">{error}</p>}
       <div className="flex gap-1 mt-1">
@@ -88,6 +79,15 @@ export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
             );
           })}
       </div>
+      <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, playerAccount.entity)}>
+        <PushButton
+          className="w-fit btn-secondary btn-sm"
+          disabled={!canUpgrade}
+          onClick={() => upgradeRange(mud, asteroid)}
+        >
+          Expand
+        </PushButton>
+      </TransactionQueueMask>
     </SecondaryCard>
   );
 };

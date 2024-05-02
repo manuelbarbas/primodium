@@ -67,7 +67,7 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
 
     world.Primodium__toggleBuilding(ironMineEntity);
 
-    assertTrue(!IsActive.get(ironMineEntity), "built iron mine should be in active");
+    assertTrue(!IsActive.get(ironMineEntity), "built iron mine should be inactive");
     assertEq(ProductionRate.get(Home.get(playerEntity), uint8(EResource.Iron)), 0, "iron production should be 0");
 
     world.Primodium__toggleBuilding(ironMineEntity);
@@ -124,7 +124,7 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
 
     vm.warp(block.timestamp + 10);
     world.Primodium__toggleBuilding(ironMineEntity);
-    assertTrue(!IsActive.get(ironMineEntity), "iron mine should be in active");
+    assertTrue(!IsActive.get(ironMineEntity), "iron mine should be inactive");
     assertEq(
       ResourceCount.get(home, uint8(EResource.Iron)),
       ironProduction * 10,

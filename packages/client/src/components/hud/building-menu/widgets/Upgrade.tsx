@@ -49,7 +49,7 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
           <img src={InterfaceIcons.Build} className="pixel-images h-8 w-8" />
           <div>
             {upgrade?.recipe.length !== 0 && <p className="text-xs opacity-75 px-2 mb-1">UPGRADE COST</p>}
-            <div className="flex flex-wrap gap-1 px-2">
+            <div className="flex flex-col flex-wrap gap-1 px-2">
               {!atMaxLevel ? (
                 upgrade?.recipe.length !== 0 &&
                 upgrade?.recipe.map((resource) => {
@@ -74,15 +74,6 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
             </div>
           </div>
         </div>
-        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, building)}>
-          <PushButton
-            className="w-fit btn-secondary btn-sm"
-            disabled={!canUpgrade}
-            onClick={() => upgradeBuilding(mud, building)}
-          >
-            Upgrade
-          </PushButton>
-        </TransactionQueueMask>
       </div>
       {error && <p className="animate-pulse text-error text-xs uppercase mt-2">{error}</p>}
       <div className="flex gap-1 mt-1">
@@ -97,6 +88,15 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
             );
           })}
       </div>
+      <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, building)}>
+        <PushButton
+          className="w-fit btn-secondary btn-sm"
+          disabled={!canUpgrade}
+          onClick={() => upgradeBuilding(mud, building)}
+        >
+          Upgrade
+        </PushButton>
+      </TransactionQueueMask>
     </SecondaryCard>
   );
 };

@@ -19,25 +19,10 @@ export type TesterPack = {
 };
 
 export const testerPacks: Record<string, TesterPack> = {
-  starterPack: {
+  shipyardPack: {
     mainBaseLevel: 2,
     expansion: 4,
-    buildings: [
-      EntityType.Garage,
-      EntityType.IronMine,
-      EntityType.IronMine,
-      EntityType.CopperMine,
-      EntityType.CopperMine,
-      EntityType.AlloyFactory,
-      EntityType.Market,
-      EntityType.Shipyard,
-      EntityType.StarmapperStation,
-      EntityType.DroneFactory,
-      EntityType.Garage,
-      EntityType.SolarPanel,
-      EntityType.Hangar,
-      EntityType.PVCellFactory,
-    ],
+    buildings: [EntityType.Shipyard, EntityType.DroneFactory, EntityType.Workshop],
     fleets: [
       {
         units: new Map([[EntityType.AnvilDrone, 10]]),
@@ -45,14 +30,9 @@ export const testerPacks: Record<string, TesterPack> = {
       },
     ],
     resources: new Map([
-      [EntityType.Kimberlite, 10000],
-      [EntityType.Platinum, 10000],
-      [EntityType.Iridium, 10000],
-      [EntityType.Titanium, 10000],
-    ]),
-    units: new Map([
-      [EntityType.AnvilDrone, 69],
-      [EntityType.MinutemanMarine, 69000],
+      [EntityType.Copper, 1000000],
+      [EntityType.Alloy, 1000000],
+      [EntityType.Lithium, 1000000],
     ]),
   },
   asteroidExplosionPack: {

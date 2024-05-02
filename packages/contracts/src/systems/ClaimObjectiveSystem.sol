@@ -19,7 +19,7 @@ contract ClaimObjectiveSystem is PrimodiumSystem {
   function claimObjective(
     bytes32 asteroidEntity,
     EObjectives objective
-  ) public _claimResources(asteroidEntity) _claimUnits(asteroidEntity) {
+  ) public _onlyAsteroidOwner(asteroidEntity) _claimResources(asteroidEntity) _claimUnits(asteroidEntity) {
     bytes32 playerEntity = _player();
     bytes32 objectivePrototype = P_EnumToPrototype.get(ObjectiveKey, uint8(objective));
 

@@ -9,10 +9,12 @@ import { AsteroidTarget } from "@/components/hud/markers/starmap/AsteroidTarget"
 import { BuildMarker } from "@/components/hud/markers/starmap/BuildMarker";
 import { FleetTarget } from "@/components/hud/markers/starmap/FleetTarget";
 import { HomeMarker } from "@/components/hud/markers/starmap/HomeMarker";
+import { Intro } from "@/components/hud/modals/Intro";
 import { FavoriteAsteroids } from "@/components/hud/widgets/FavoriteAsteroids";
 import { WarshipPopulation } from "@/components/hud/widgets/WarshipPopulation";
 import { Blueprints } from "@/components/hud/widgets/blueprints/Blueprints";
 import { Resources } from "@/components/hud/widgets/resources/Resources";
+import { StarmapNavigator } from "@/components/hud/widgets/starmap-navigator/StarmapNavigator";
 import { BrandingLabel } from "@/components/shared/BrandingLabel";
 import { usePersistentStore } from "@game/stores/PersistentStore";
 import { memo } from "react";
@@ -34,6 +36,7 @@ export const GameHUD = memo(() => {
         <HoverTarget />
         <BuildingMenuPopup />
         <BlueprintInfoMarker />
+        <Intro />
 
         {/* Widgets */}
         <HUD.TopLeft>
@@ -52,6 +55,7 @@ export const GameHUD = memo(() => {
 
         <HUD.Right>
           <Resources />
+          <StarmapNavigator />
         </HUD.Right>
 
         <HUD.Left>
