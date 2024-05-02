@@ -6,16 +6,16 @@ import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 const intervals = {
-  sentence1: 2,
-  sentence2: 3,
-  sentence3: 3,
-  sentence4: 3,
+  sentence1: 1,
+  sentence2: 2,
+  sentence3: 2,
+  sentence4: 2,
   missionCritical: 2,
-  harvest: 2,
-  conquer: 3,
-  defend: 3,
-  deliver: 3,
-  ready: 3,
+  harvest: 1,
+  conquer: 2,
+  defend: 2,
+  deliver: 2,
+  ready: 1,
 };
 
 function convertToThresholds(intervals: Record<string, number>): Record<string, number> {
@@ -32,12 +32,10 @@ function convertToThresholds(intervals: Record<string, number>): Record<string, 
 
 const thresholds = convertToThresholds(intervals) as typeof intervals;
 export const Intro = () => {
-  const { setShowIntro } = usePersistentStore(
+  const { showIntro, setShowIntro } = usePersistentStore(
     useShallow((state) => ({ setShowIntro: state.setShowIntro, showIntro: state.showIntro }))
   );
-  const showIntro = true;
   const [secondsElapsed, setSecondsElapsed] = useState(0);
-  console.log({ secondsElapsed, thresholds });
 
   const finalSeconds = Object.values(intervals).reduce((acc, val) => acc + val, 0);
 
@@ -82,30 +80,34 @@ export const Intro = () => {
       blockClose={secondsElapsed < finalSeconds}
     >
       <Modal.Content className="w-[50rem] p-6">
-        <div className="flex flex-col p-8 h-full items-center h-[44rem]">
+        <div className="flex flex-col p-8 items-center h-[44rem]">
           <div className="text-center font-bold text-accent uppercase mb-2">
             Welcome to The Belt: The last hope for humanity
           </div>
           <div className="w-3/4 text-center">
             {secondsElapsed >= thresholds.sentence1 && (
-              <span className="animate-in fade-in duration-500 text-center text-xs">
+              <p className="animate-in fade-in duration-500 text-center text-xs">
                 A long galactic war has depleted resources in the Milky Way.
-              </span>
+              </p>
             )}{" "}
             {secondsElapsed >= thresholds.sentence2 && (
-              <span className="animate-in fade-in duration-500 text-xs">
+              <p className="animate-in fade-in duration-500 text-xs">
                 Rival alliances have turned to mining asteroid belts within spacetime rifts.
-              </span>
+              </p>
             )}{" "}
+          </div>
+
+          <br className="w-full h-4" />
+          <div className="w-3/4 text-center">
             {secondsElapsed >= thresholds.sentence3 && (
-              <span className="animate-in fade-in duration-500 text-xs text-center">
+              <p className="animate-in fade-in duration-500 text-xs text-center">
                 Command has selected you to journey to The Belt.
-              </span>
+              </p>
             )}{" "}
             {secondsElapsed >= thresholds.sentence4 && (
-              <span className="animate-in fade-in duration-500 text-xs text-center">
+              <p className="animate-in fade-in duration-500 text-xs text-center">
                 Your mission: <span>battle for resources that ensure your alliance&apos;s survival.</span>
-              </span>
+              </p>
             )}
           </div>
           <br className="w-full h-4" />
