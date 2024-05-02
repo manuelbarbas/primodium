@@ -23,7 +23,7 @@ export const createBattleComponents = () => {
       defender: Type.Entity,
       defenderDamage: Type.BigInt,
       attackingPlayer: Type.Entity,
-      defendingPlayer: Type.Entity,
+      defendingPlayer: Type.OptionalEntity,
       winner: Type.Entity,
       rock: Type.Entity,
       timestamp: Type.BigInt,
@@ -72,8 +72,8 @@ export const createBattleComponents = () => {
     }, {} as Record<string, { level: bigint; unitsAtStart: bigint; casualties: bigint }>);
 
     const resources = Object.entries(ResourceEnumLookup).reduce((acc, [entity, index]) => {
-      const resourcesAtStart = participant.resourcesAtStart ? participant.resourcesAtStart[index] : 0n;
-      const resourcesAtEnd = participant.resourcesAtEnd ? participant.resourcesAtEnd[index] : 0n;
+      const resourcesAtStart = participant.resourcesAtStart ? participant.resourcesAtStart[index - 1] : 0n;
+      const resourcesAtEnd = participant.resourcesAtEnd ? participant.resourcesAtEnd[index - 1] : 0n;
       if (resourcesAtStart === resourcesAtEnd) return acc;
       acc[entity] = {
         resourcesAtStart,

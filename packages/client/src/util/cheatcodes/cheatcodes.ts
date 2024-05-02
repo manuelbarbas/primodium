@@ -793,6 +793,30 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             createFleet([{ unit: units[unit], count }], []);
           },
         },
+        giveFleetUnit: {
+          params: [
+            { name: "unit", type: "dropdown", dropdownOptions: Object.keys(units) },
+            { name: "count", type: "number" },
+          ],
+          function: async (unit: string, count: number) => {
+            const player = mud.playerAccount.entity;
+            if (!player) throw new Error("No player found");
+            const selectedFleet = mud.components.SelectedFleet.get()?.value;
+
+            const unitEntity = units[unit];
+
+            if (!unitEntity || !selectedFleet) throw new Error("Resource not found");
+
+            await setComponentValue(
+              mud,
+              mud.components.UnitCount,
+              { entity: selectedFleet as Hex, unit: unitEntity as Hex },
+              {
+                value: BigInt(count),
+              }
+            );
+          },
+        },
         giveFleetResource: {
           params: [
             { name: "resource", type: "dropdown", dropdownOptions: Object.keys(resources) },
