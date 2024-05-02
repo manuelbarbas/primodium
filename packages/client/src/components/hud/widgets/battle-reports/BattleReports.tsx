@@ -123,9 +123,9 @@ const BattleButton = ({
         variant="ghost"
         to="BattleDetails"
         onClick={() => setSelectedBattle(battleEntity)}
-        className={`w-full flex justify-between text-xs relative ${playerIsWinner ? "bg-success/20" : "bg-error/20"}`}
+        className={`w-full grid grid-cols-6 text-xs relative ${playerIsWinner ? "bg-success/20" : "bg-error/20"}`}
       >
-        <div className="grid grid-cols-[10fr_2fr_10fr] place-items-center gap-1">
+        <div className="col-span-5 grid grid-cols-[10fr_2fr_10fr] place-items-center gap-1">
           <div className={`flex bg-glass text-xs justify-center items-center gap-2 p-1 w-full`}>
             <img src={attackerIsFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="h-8" />
             <div className={`flex flex-col h-full text-left ${playerIsAttacker ? "text-success" : "text-error"}`}>
