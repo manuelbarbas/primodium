@@ -15,7 +15,7 @@ export const BuildQueue: React.FC<{ building: Entity }> = ({ building }) => {
   const active = queue.shift();
 
   return (
-    <Navigator.Screen title="BuildQueue" className="w-full pointer-events-auto">
+    <Navigator.Screen title="BuildQueue" className="!w-96 pointer-events-auto">
       {active && (
         <ProgressBar
           index={0}
@@ -48,7 +48,7 @@ export const BuildQueue: React.FC<{ building: Entity }> = ({ building }) => {
           )}
         </TransactionQueueMask>
       </SecondaryCard>
-      <div className="mt-2 flex gap-2">
+      <div className="mt-2 flex gap-2 mx-auto">
         <Navigator.NavButton to="BuildUnit" className="btn-sm btn-secondary">
           + Add Build Order
         </Navigator.NavButton>

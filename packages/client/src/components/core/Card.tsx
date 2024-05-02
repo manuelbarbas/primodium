@@ -29,9 +29,9 @@ export const Card: React.FC<{
       return;
     }
 
-    const x = lerp(e.clientX - left - width / 2, -width, width, -6, 6);
-    const y = lerp(e.clientY - top - height / 2, -height, height, -6, 6);
-    containerRef.current.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+    const x = lerp(e.clientX - left - width / 2, -width, width, -1000 / width, 1000 / width);
+    const y = lerp(e.clientY - top - height / 2, -height, height, -1000 / height, 1000 / height);
+    containerRef.current.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
   }, []);
 
   const handleMouseLeave = useCallback(() => {
@@ -102,13 +102,14 @@ export const Card: React.FC<{
 
 export const SecondaryCard = forwardRef<
   HTMLDivElement,
-  { children: React.ReactNode | React.ReactNode[]; className?: string }
->(({ children, className }, ref) => {
+  { children: React.ReactNode | React.ReactNode[]; className?: string; noDecor?: boolean }
+>(({ children, className, noDecor }, ref) => {
   return (
     <div
       ref={ref}
       className={cn(
-        "card bg-gradient-to-br from-secondary/15 to-secondary/5 border border-secondary/25 hover:border-secondary/50 transition-all p-2 hover:translate-y-[-2px] hover:shadow-2xl pointer-events-auto",
+        "card bg-gradient-to-br from-secondary/15 to-secondary/5 border border-secondary/25 transition-all p-2 pointer-events-auto",
+        noDecor ? "" : "hover:shadow-2xl hover:border-secondary/50",
         className
       )}
     >

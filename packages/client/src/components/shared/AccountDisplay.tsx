@@ -1,6 +1,5 @@
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { useMemo } from "react";
 import { useMud } from "src/hooks";
 import { useAccount } from "src/hooks/useAccount";
 import { usePrimodium } from "src/hooks/usePrimodium";
@@ -26,22 +25,20 @@ export const AccountDisplay: React.FC<{
   const { allianceName, loading, address, linkedAddress } = useAccount(playerEntity, showAddress);
   const playerColor = RockRelationshipColors[getRockRelationship(playerEntity, myHomeAsteroid as Entity)];
 
-  const Content = useMemo(() => {
-    return () => (
-      <div className={`w-full flex ${className}`}>
-        {allianceName && (
-          <div className="font-bold text-accent" style={{ color: noColor ? "auto" : entityToColor(player) }}>
-            [{allianceName.toUpperCase()}]
-          </div>
-        )}
-        <p className={`grow truncate ${noColor ? "text-white" : `text-${playerColor}`}`}>
-          {linkedAddress?.ensName ?? address}
-        </p>
-      </div>
-    );
-  }, [className, allianceName, noColor, player, playerColor, linkedAddress?.ensName, address]);
+  const Content = ({ className = "" }: { className?: string }) => (
+    <div className={`w-full flex ${className}`}>
+      {allianceName && (
+        <div className="font-bold text-accent" style={{ color: noColor ? "auto" : entityToColor(player) }}>
+          [{allianceName.toUpperCase()}]
+        </div>
+      )}
+      <p className={`grow truncate ${noColor ? "text-white" : `text-${playerColor}`}`}>
+        {linkedAddress?.ensName ?? address}
+      </p>
+    </div>
+  );
 
-  if (raw) return <Content />;
+  if (raw) return <Content className={className} />;
 
   return (
     <Modal.CloseButton

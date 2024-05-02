@@ -16,18 +16,6 @@ import { hashEntities } from "src/util/encode";
 import { entityToFleetName, entityToRockName } from "src/util/name";
 import { BattleDetails } from "./BattleDetails";
 
-export const LabeledValue: React.FC<{
-  label: string;
-  children: React.ReactNode;
-}> = ({ children, label }) => {
-  return (
-    <div className="flex flex-col gap-1 p-1">
-      <p className="text-xs font-bold text-cyan-400">{label}</p>
-      <div className="flex items-center gap-1">{children}</div>
-    </div>
-  );
-};
-
 export const LoadingScreen = () => {
   return (
     <Navigator.Screen

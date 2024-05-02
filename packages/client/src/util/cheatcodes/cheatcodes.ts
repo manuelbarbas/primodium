@@ -700,6 +700,23 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             toast.success(`Asteroid ${entityToRockName(selectedRock)} conquered`);
           },
         },
+        conquerAllPrimaryAsteroids: {
+          params: [],
+          function: async () => {
+            const asteroids = mud.components.Asteroid.getAllWith({ spawnsSecondary: true });
+            for (const asteroid of asteroids) {
+              const position = components.Position.get(asteroid);
+              if (!position) continue;
+              await setComponentValue(
+                mud,
+                mud.components.OwnedBy,
+                { entity: asteroid as Hex },
+                { value: mud.playerAccount.entity }
+              );
+            }
+            toast.success("All primary asteroids conquered");
+          },
+        },
         setTerrain: {
           params: [
             { name: "resource", type: "dropdown", dropdownOptions: Object.keys(resources) },

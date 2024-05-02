@@ -24,7 +24,7 @@ library LibAsteroid {
   /// @notice Checks if asteroid already exists, sets position and other properties
   /// @return asteroidEntity Created asteroid's entity ID
   function createPrimaryAsteroid(bytes32 ownerEntity) internal returns (bytes32 asteroidEntity) {
-    asteroidEntity = LibEncode.getHash(ownerEntity);
+    asteroidEntity = LibEncode.getTimedHash(ownerEntity);
     uint256 asteroidCount = AsteroidCount.get() + 1;
 
     PositionData memory coord = getUniqueAsteroidPosition(asteroidCount);
