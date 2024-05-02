@@ -8,7 +8,7 @@ import { BaseAsteroid } from "src/game/lib/objects/Asteroid/BaseAsteroid";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { EntityType } from "src/util/constants";
-import { getCanAttack, getCanSend } from "src/util/unit";
+import { getCanSend } from "src/util/unit";
 import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
 import { MapIdToAsteroidType } from "@/util/mappings";
 import { entityToPlayerName, entityToRockName } from "@/util/name";
@@ -55,8 +55,9 @@ export const renderAsteroid = (scene: Scene) => {
         const attackOrigin = components.Attack.get()?.originFleet;
         const sendOrigin = components.Send.get()?.originFleet;
         if (attackOrigin) {
-          if (getCanAttack(attackOrigin, entity)) components.Attack.setDestination(entity);
-          else toast.error("Cannot attack this asteroid.");
+          components.Attack.setDestination(entity);
+          // if (getCanAttack(attackOrigin, entity)) components.Attack.setDestination(entity);
+          // else toast.error("Cannot attack this asteroid.");
         } else if (sendOrigin) {
           if (getCanSend(sendOrigin, entity)) components.Send.setDestination(entity);
           else toast.error("Cannot send to this asteroid.");
