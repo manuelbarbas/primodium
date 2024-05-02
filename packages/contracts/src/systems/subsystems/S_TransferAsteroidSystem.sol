@@ -36,8 +36,13 @@ contract S_TransferAsteroidSystem is PrimodiumSystem {
         }
       }
     }
-    OwnedBy.set(asteroidEntity, ownerEntity);
-    AsteroidSet.add(ownerEntity, AsteroidOwnedByKey, asteroidEntity);
+
+    if (ownerEntity == bytes32(0)) {
+      OwnedBy.deleteRecord(asteroidEntity);
+    } else {
+      OwnedBy.set(asteroidEntity, ownerEntity);
+      AsteroidSet.add(ownerEntity, AsteroidOwnedByKey, asteroidEntity);
+    }
     LastConquered.set(asteroidEntity, block.timestamp);
   }
 

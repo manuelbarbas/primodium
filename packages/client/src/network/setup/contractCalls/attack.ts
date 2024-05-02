@@ -26,8 +26,6 @@ export const attack = async (mud: MUD, entity: Entity, target: Entity) => {
     },
 
     () => {
-      const homeAsteroid = components.Home.get(mud.playerAccount.entity)?.value as Entity;
-      if (!homeAsteroid) return;
       const targetIsFleet = components.IsFleet.has(target);
 
       const attackerIsFleet = components.IsFleet.has(entity);

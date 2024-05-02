@@ -89,7 +89,7 @@ export const BattleReports = () => {
   );
 };
 
-const BattleButton = ({
+export const BattleButton = ({
   battleEntity,
   setSelectedBattle,
 }: {
