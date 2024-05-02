@@ -1,14 +1,64 @@
-import { ReactNode } from "react";
-import { FaDiscord, FaTwitter } from "react-icons/fa";
+import { useMud } from "@/hooks";
+import { forfeit } from "@/network/setup/contractCalls/forfeit";
+import { ReactNode, useState } from "react";
+import { FaDiscord, FaExclamationTriangle, FaTwitter } from "react-icons/fa";
+import { toast } from "react-toastify";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
+import { AccountSettings } from "./AccountSettings";
 import { AudioSettings } from "./AudioSettings";
 import { GeneralSettings } from "./GeneralSettings";
-import { AccountSettings } from "./AccountSettings";
 
 const params = new URLSearchParams(window.location.search);
 
 export const Settings = () => {
+  const [showingToast, setShowingToast] = useState(false);
+  const mud = useMud();
+  const forfeitGame = async () => {
+    toast.dismiss();
+    if (showingToast) await new Promise((resolve) => setTimeout(resolve, 500));
+    setShowingToast(true);
+    toast(
+      ({ closeToast }) => (
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col text-center justify-center items-center gap-2 w-full">
+            <FaExclamationTriangle size={24} className="text-warning" />
+            Are you sure you want to forfeit? You will lose all of your asteroids and fleets!
+          </div>
+
+          <div className="flex justify-center w-full gap-2">
+            <button
+              className="btn btn-secondary btn-xs"
+              onClick={() => {
+                forfeit(mud);
+                closeToast && closeToast();
+              }}
+            >
+              Confirm
+            </button>
+            <button
+              onClick={() => {
+                setShowingToast(false);
+                closeToast && closeToast();
+              }}
+              className="btn btn-primary btn-xs"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        // className: "border-error",
+        position: "top-center",
+        autoClose: false,
+        closeOnClick: false,
+        draggable: false,
+        closeButton: false,
+        hideProgressBar: true,
+      }
+    );
+  };
   return (
     <Navigator initialScreen="main" className="flex flex-col items-center gap-2 text-white w-full h-full border-0 p-0">
       <Navigator.Screen title="main">
@@ -36,6 +86,9 @@ export const Settings = () => {
           <Navigator.NavButton to="account" className="btn-sm btn-seconday border-secondary w-28">
             Account
           </Navigator.NavButton>
+          <Button variant="error" onClick={forfeitGame} className="btn-sm btn-error w-28">
+            forfeit
+          </Button>
         </div>
 
         <div className="space-x-4 mt-4">

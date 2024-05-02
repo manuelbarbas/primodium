@@ -31,6 +31,7 @@ import CategoryProduction from "../icons/category/production.png?url";
 import CategoryStorage from "../icons/category/storage.png?url";
 import Navigator from "../icons/UI_Navigator.png?url";
 import Command from "../icons/UI_Command.png?url";
+import ShardSprite from "../sprites/shard/shard.png?url";
 
 export const InterfaceIcons = {
   Add,
@@ -51,10 +52,13 @@ export const InterfaceIcons = {
   NotAllowed,
   Objective,
   Outgoing,
+  Radar: Debug,
   Reinforcements,
   Reports,
   Return,
   Settings,
+  ShardSprite,
+  Shard: Asteroid,
   Spectate,
   Starmap,
   Trade,
