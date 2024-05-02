@@ -86,9 +86,9 @@ export const Intro = () => {
           <div className="text-center font-bold text-accent uppercase mb-2">
             Welcome to The Belt: The last hope for humanity
           </div>
-          <div className="w-3/4">
+          <div className="w-3/4 text-center">
             {secondsElapsed >= thresholds.sentence1 && (
-              <span className="animate-in fade-in duration-500 text-xs">
+              <span className="animate-in fade-in duration-500 text-center text-xs">
                 Mankind has exhausted natural resources in the Milky Way.
               </span>
             )}{" "}
