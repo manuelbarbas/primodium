@@ -684,6 +684,22 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             toast.success(`${count} ${resource} set for ${entityToRockName(selectedRock)}`);
           },
         },
+        increaseMaxColonySlots: {
+          params: [{ name: "count", type: "number" }],
+          function: async (count: number) => {
+            const player = mud.playerAccount.entity;
+            if (!player) throw new Error("No player found");
+
+            const colonyShipCap = components.MaxColonySlots.get(player)?.value ?? 0n;
+            await setComponentValue(
+              mud,
+              components.MaxColonySlots,
+              { entity: player as Hex },
+              { value: colonyShipCap + BigInt(count) }
+            );
+            toast.success(`Colony Ship Capacity increased by ${count}`);
+          },
+        },
         conquerAsteroid: {
           params: [{ name: "baseType", type: "dropdown", dropdownOptions: ["MainBase", "WormholeBase"] }],
           function: async (baseType: string) => {
