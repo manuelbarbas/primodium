@@ -44,6 +44,7 @@ export const useShardAsteroid = (entity: Entity) => {
       explodeTime,
       timeUntilExplode,
       canExplode,
+      owner,
       dripPerSec,
       unclaimedPoints,
       explodePoints: conquestConfigData.shardAsteroidPoints,

@@ -16,6 +16,7 @@ import { MUD } from "src/network/types";
 import { encodeEntity } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
+import { getEntityTypeName } from "../common";
 import {
   BuildingEnumLookup,
   EntityType,
@@ -30,7 +31,6 @@ import { getAsteroidBounds, outOfBounds } from "../outOfBounds";
 import { getFullResourceCount } from "../resource";
 import { getBuildingAtCoord } from "../tile";
 import { TesterPack, testerPacks } from "./testerPacks";
-import { getEntityTypeName } from "../common";
 
 export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
   const buildings: Record<string, Entity> = {
@@ -698,6 +698,23 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             if (!position) throw new Error("No main base found");
             await buildBuilding(mud, BuildingEnumLookup[entity], { ...position, parentEntity: selectedRock as Hex });
             toast.success(`Asteroid ${entityToRockName(selectedRock)} conquered`);
+          },
+        },
+        conquerAllPrimaryAsteroids: {
+          params: [],
+          function: async () => {
+            const asteroids = mud.components.Asteroid.getAllWith({ spawnsSecondary: true });
+            for (const asteroid of asteroids) {
+              const position = components.Position.get(asteroid);
+              if (!position) continue;
+              await setComponentValue(
+                mud,
+                mud.components.OwnedBy,
+                { entity: asteroid as Hex },
+                { value: mud.playerAccount.entity }
+              );
+            }
+            toast.success("All primary asteroids conquered");
           },
         },
         setTerrain: {
