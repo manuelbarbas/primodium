@@ -1989,7 +1989,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_ResourceReward: getResourceValues({ PVCell: 10 }),
     },
   },
-  ClaimWormholePoints: {
+  TeleportResources: {
     tables: {
       P_ResourceReward: getResourceValues({ Alloy: 10 }),
     },

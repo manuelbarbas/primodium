@@ -74,15 +74,6 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
             </div>
           </div>
         </div>
-        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, building)}>
-          <PushButton
-            className="w-fit btn-secondary btn-sm"
-            disabled={!canUpgrade}
-            onClick={() => upgradeBuilding(mud, building)}
-          >
-            Upgrade
-          </PushButton>
-        </TransactionQueueMask>
       </div>
       {error && <p className="animate-pulse text-error text-xs uppercase mt-2">{error}</p>}
       <div className="flex gap-1 mt-1">
@@ -97,6 +88,15 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
             );
           })}
       </div>
+      <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, building)}>
+        <PushButton
+          className="w-fit btn-secondary btn-sm"
+          disabled={!canUpgrade}
+          onClick={() => upgradeBuilding(mud, building)}
+        >
+          Upgrade
+        </PushButton>
+      </TransactionQueueMask>
     </SecondaryCard>
   );
 };
