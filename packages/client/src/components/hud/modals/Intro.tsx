@@ -82,19 +82,19 @@ export const Intro = () => {
       blockClose={secondsElapsed < finalSeconds}
     >
       <Modal.Content className="w-[50rem] p-6">
-        <div className="flex flex-col p-8 h-full items-center h-[42rem]">
+        <div className="flex flex-col p-8 h-full items-center h-[44rem]">
           <div className="text-center font-bold text-accent uppercase mb-2">
             Welcome to The Belt: The last hope for humanity
           </div>
           <div className="w-3/4 text-center">
             {secondsElapsed >= thresholds.sentence1 && (
               <span className="animate-in fade-in duration-500 text-center text-xs">
-                Mankind has exhausted natural resources in the Milky Way.
+                A long galactic war has depleted resources in the Milky Way.
               </span>
             )}{" "}
             {secondsElapsed >= thresholds.sentence2 && (
               <span className="animate-in fade-in duration-500 text-xs">
-                They have turned to mining asteroid belts within spacetime rifts.
+                Rival alliances have turned to mining asteroid belts within spacetime rifts.
               </span>
             )}{" "}
             {secondsElapsed >= thresholds.sentence3 && (
@@ -104,7 +104,7 @@ export const Intro = () => {
             )}{" "}
             {secondsElapsed >= thresholds.sentence4 && (
               <span className="animate-in fade-in duration-500 text-xs text-center">
-                Your mission: <span>battle for resources that ensure humanity&apos;s survival.</span>
+                Your mission: <span>battle for resources that ensure your alliance&apos;s survival.</span>
               </span>
             )}
           </div>
