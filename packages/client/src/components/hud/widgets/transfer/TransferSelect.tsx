@@ -1,13 +1,13 @@
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EResource } from "contracts/config/enums";
 import { Button } from "src/components/core/Button";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { Hex } from "viem";
-import { OwnedAsteroid } from "../OwnedAsteroids";
-import { OwnedFleet } from "../OwnedFleets";
-import { InterfaceIcons } from "@primodiumxyz/assets";
+import { OwnedAsteroid } from "../starmap-navigator/OwnedAsteroids";
+import { OwnedFleet } from "../starmap-navigator/OwnedFleets";
 
 export const TransferSelect = ({
   activeEntity,
