@@ -21,10 +21,35 @@ export class SecondaryAsteroid extends BaseAsteroid {
       outlineSprite: getSecondaryOutlineSprite(relationship, maxLevel),
     });
 
+    this._scene = scene;
+
     this.maxLevel = maxLevel;
   }
 
   setRelationship(relationship: AsteroidRelationship) {
     this.outlineSprite.setTexture(getSecondaryOutlineSprite(relationship, this.maxLevel));
+  }
+
+  update() {
+    super.update();
+    const zoom = this._scene.camera.phaserCamera.zoom;
+    const minZoom = this._scene.config.camera.minZoom;
+    const maxZoom = this._scene.config.camera.maxZoom;
+
+    // Normalize the zoom level
+    const normalizedZoom = (zoom - minZoom) / (maxZoom - minZoom);
+
+    if (normalizedZoom >= 0.1) {
+      this.setLOD(0);
+      return;
+    }
+    if (normalizedZoom >= 0.05) {
+      this.setLOD(1);
+      return;
+    }
+    if (normalizedZoom >= 0) {
+      this.setLOD(2);
+      return;
+    }
   }
 }

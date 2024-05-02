@@ -24,7 +24,7 @@ export const StarmapNavigator = memo(() => {
           writingMode: "vertical-rl",
         }}
       >
-        <IconLabel text="Navigator" imageUri={InterfaceIcons.Debug} className="gap-2 py-4" />
+        <IconLabel text="Navigator" imageUri={InterfaceIcons.Navigator} className="gap-2 py-4" />
       </Tabs.Button>
       <Tabs.Pane index={0} fragment>
         <GlassCard direction={"left"} className="animate-in slide-in-from-right-full">

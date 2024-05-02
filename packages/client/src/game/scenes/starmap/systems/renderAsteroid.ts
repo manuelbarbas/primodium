@@ -15,6 +15,7 @@ import { entityToPlayerName, entityToRockName } from "@/util/name";
 import { getRockRelationship } from "@/util/asteroid";
 import { getAllianceName } from "@/util/alliance";
 import { entityToColor } from "@/util/color";
+import { getEntityTypeName } from "@/util/common";
 
 export const renderAsteroid = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -77,7 +78,9 @@ export const renderAsteroid = (scene: Scene) => {
     asteroid.getAsteroidLabel().setProperties({
       nameLabel: entityToRockName(entity),
       nameLabelColor: ownedByPlayer ? 0x00ffff : 0xffffff,
-      ownerLabel: entityToPlayerName(ownedBy as Entity | undefined),
+      ownerLabel: ownedBy
+        ? entityToPlayerName(ownedBy as Entity)
+        : getEntityTypeName(MapIdToAsteroidType[asteroidData.mapId]),
       allianceLabel: alliance ? getAllianceName(alliance as Entity) : undefined,
       allianceLabelColor: alliance ? parseInt(entityToColor(alliance as Entity).slice(1), 16) : undefined,
     });

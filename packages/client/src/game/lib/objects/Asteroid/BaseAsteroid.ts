@@ -1,8 +1,7 @@
 import { Coord, Scene } from "engine/types";
 import { IPrimodiumGameObject } from "../interfaces";
-// import { OrbitRing } from "./OrbitRing";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { AsteroidRelationship, DepthLayers } from "../../constants/common";
+import { AsteroidRelationship } from "../../constants/common";
 import { OrbitRing } from "./OrbitRing";
 import { Assets, Sprites } from "@primodiumxyz/assets";
 import { AsteroidLabel } from "@/game/lib/objects/Asteroid/AsteroidLabel";
@@ -16,6 +15,8 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
   protected outlineSprite: Phaser.GameObjects.Image;
   protected asteroidLabel: AsteroidLabel;
   protected orbitRing: OrbitRing;
+  protected currentLOD: number = 0;
+  private circle: Phaser.GameObjects.Arc;
 
   constructor(args: { scene: Scene; coord: Coord; sprite: Sprites; outlineSprite: Sprites }) {
     const { scene, coord, sprite, outlineSprite } = args;
@@ -28,16 +29,16 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
       scene,
       coord: { x: 0, y: 0 },
     });
+    this.circle = new Phaser.GameObjects.Arc(scene.phaserScene, 0, 0, 2, 0, 360, false, 0xffffff, 0.5);
     this.orbitRing = new OrbitRing(scene, { x: 0, y: 0 });
 
     this.coord = coord;
     this._scene = scene;
     this.setSize(this.outlineSprite.width, this.outlineSprite.height).setInteractive();
-    this.setDepth(DepthLayers.Rock);
   }
 
   spawn() {
-    this.add([this.asteroidSprite, this.outlineSprite, this.orbitRing, this.asteroidLabel]);
+    this.add([this.circle, this.asteroidSprite, this.outlineSprite, this.orbitRing, this.asteroidLabel]);
     this.spawned = true;
     this.scene.add.existing(this);
     return this;
@@ -74,47 +75,64 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
 
   abstract setRelationship(relationship: AsteroidRelationship): void;
 
+  protected setLOD(level: number) {
+    if (this.currentLOD === level) return;
+
+    this.currentLOD = level;
+    let asteroidAlpha = 1;
+    let asteroidLabelPosition = { x: 0, y: 0 };
+    let asteroidLabelAlpha = 1;
+
+    switch (level) {
+      // LOD 0: Show asteroid and label
+      case 0:
+        asteroidAlpha = 1;
+        asteroidLabelPosition = { x: 32, y: -16 };
+        break;
+      // LOD 1: Show asteroid only
+      case 1:
+        asteroidAlpha = 0;
+        asteroidLabelPosition = { x: 0, y: 0 };
+        break;
+      // LOD 2: Hide asteroid and label
+      case 2:
+        asteroidAlpha = 0;
+        asteroidLabelPosition = { x: 0, y: 0 };
+        asteroidLabelAlpha = 0;
+        break;
+      default:
+        console.warn("Invalid LOD level");
+        return;
+    }
+
+    this.scene.add.tween({
+      targets: [this.asteroidSprite, this.outlineSprite, this.orbitRing],
+      alpha: asteroidAlpha,
+      duration: 200,
+      ease: "Linear",
+    });
+
+    this.scene.add.tween({
+      targets: this.asteroidLabel,
+      alpha: asteroidLabelAlpha,
+      duration: 200,
+      ease: "Linear",
+    });
+
+    this.scene.add.tween({
+      targets: this.asteroidLabel,
+      x: asteroidLabelPosition.x,
+      y: asteroidLabelPosition.y,
+      duration: 200,
+      ease: "Linear",
+    });
+  }
+
   update() {
-    this.orbitRing.update();
-
     const zoom = this._scene.camera.phaserCamera.zoom;
-
-    if (zoom < 0.5) {
-      // this.orbitRing.setActive(false).setVisible(false).pauseRotation();
-      this.scene.add.tween({
-        targets: [this.asteroidSprite, this.outlineSprite, this.orbitRing],
-        alpha: 0,
-        duration: 200,
-        ease: "Linear",
-      });
-      this.scene.add.tween({
-        targets: this.asteroidLabel,
-        x: 0,
-        y: 0,
-        duration: 200,
-        ease: "Linear",
-      });
-      // this.outlineSprite.alpha = 0;
-      // this.orbitRing.alpha = 0;
-    }
-
-    if (zoom >= 0.5) {
-      this.scene.add.tween({
-        targets: [this.asteroidSprite, this.outlineSprite, this.orbitRing],
-        alpha: 1,
-        duration: 200,
-        ease: "Linear",
-      });
-      this.scene.add.tween({
-        targets: this.asteroidLabel,
-        x: 32,
-        y: -16,
-        duration: 200,
-        ease: "Linear",
-      });
-    }
-
-    this.asteroidLabel.setScale(1 / zoom);
+    this.orbitRing.update();
+    this.asteroidLabel.update();
+    this.circle.setScale(1 / zoom);
   }
 
   dispose() {

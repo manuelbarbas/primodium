@@ -61,7 +61,7 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
 
     this.ownerLabel = new Phaser.GameObjects.BitmapText(scene.phaserScene, 0, 0, "teletactile", ownerLabel, 12)
       .setDepth(1000)
-      .setAlpha(0.8)
+      .setAlpha(0.5)
       .setTintFill(ownerLabelColor)
       .setCharacterTint(1, -1, true, 0xffffff)
       .setCharacterTint(0, 1, true, 0xffffff);
@@ -112,6 +112,11 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
       MainbaseLevelToEmblem[Phaser.Math.Clamp(Number(level) - 1, 0, MainbaseLevelToEmblem.length - 1)]
     );
     return this;
+  }
+
+  update() {
+    const zoom = this._scene.camera.phaserCamera.zoom;
+    this.setScale(1 / zoom);
   }
 
   dispose() {
