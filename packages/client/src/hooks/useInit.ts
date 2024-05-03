@@ -1,4 +1,3 @@
-import { Entity } from "@latticexyz/recs";
 import { useEffect } from "react";
 import { ampli } from "src/ampli";
 import { components } from "src/network/components";
@@ -11,11 +10,7 @@ export const useInit = () => {
 
   useEffect(() => {
     if (!initialized) return;
-    const homeAsteroid = components.Home.get(playerEntity)?.value as Entity;
     mud.components.Account.set({ value: playerEntity });
-    mud.components.SelectedRock.set({ value: homeAsteroid });
-    mud.components.ActiveRock.set({ value: homeAsteroid });
-    mud.components.BuildRock.set({ value: homeAsteroid });
   }, [initialized, playerEntity, mud]);
 
   // The network object and user wallet will have been loaded by the time the loading state is ready
