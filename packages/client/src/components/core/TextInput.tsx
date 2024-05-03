@@ -1,3 +1,4 @@
+import { cn } from "@/util/client";
 import { useEffect, useRef } from "react";
 import { usePrimodium } from "src/hooks/usePrimodium";
 
@@ -52,10 +53,12 @@ export const TextInput: React.FC<{
 
   return (
     <div className="form-control w-full max-w-xs pointer-events-auto">
-      <label className="label">
-        {topLeftLabel && <span className="label-text opacity-90">{topLeftLabel}</span>}
-        {topRightLabel && <span className="label-text-alt opacity-75">{topRightLabel}</span>}
-      </label>
+      {topLeftLabel || topRightLabel ? (
+        <label className="label">
+          {topLeftLabel && <span className="label-text opacity-90">{topLeftLabel}</span>}
+          {topRightLabel && <span className="label-text-alt opacity-75">{topRightLabel}</span>}
+        </label>
+      ) : null}
       <input
         ref={inputRef}
         type="text"
@@ -75,12 +78,14 @@ export const TextInput: React.FC<{
         required={!!requirePattern}
         pattern={requirePattern}
         placeholder={placeholder ?? "Type here"}
-        className={`${className} input w-full max-w-xs bg-neutral border-secondary/25`}
+        className={cn("input w-full max-w-xs bg-neutral border-secondary/25", className)}
       />
-      <label className="label">
-        {bottomLeftLabel && <span className="label-text-alt opacity-75">{bottomLeftLabel}</span>}
-        {bottomRightLabel && <span className="label-text-alt opacity-75"> {bottomRightLabel} </span>}
-      </label>
+      {bottomLeftLabel || bottomRightLabel ? (
+        <label className="label">
+          {bottomLeftLabel && <span className="label-text-alt opacity-75">{bottomLeftLabel}</span>}
+          {bottomRightLabel && <span className="label-text-alt opacity-75"> {bottomRightLabel} </span>}
+        </label>
+      ) : null}
     </div>
   );
 };

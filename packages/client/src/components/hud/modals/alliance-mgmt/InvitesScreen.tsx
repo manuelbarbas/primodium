@@ -39,7 +39,7 @@ export const InvitesScreen: React.FC = () => {
   return (
     <Navigator.Screen
       title="invites"
-      className="flex flex-col items-center w-full h-full text-xs pointer-events-auto h-full overflow-hidden"
+      className="flex flex-col items-center w-full text-xs pointer-events-auto h-full overflow-hidden"
     >
       <div className="flex flex-grow w-full gap-2 mb-2">
         {!playerAlliance && (
@@ -179,7 +179,7 @@ export const InvitesScreen: React.FC = () => {
       </div>
       <div className="flex p-2 items-center">
         FRIEND CODE:
-        <Tooltip text="Click to copy" direction="top">
+        <Tooltip tooltipContent="Click to copy" direction="top">
           <Button
             className="btn-xs flex gap-1"
             onClick={() => navigator.clipboard.writeText(entityToAddress(playerEntity))}
