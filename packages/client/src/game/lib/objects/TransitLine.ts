@@ -1,7 +1,6 @@
 import { PixelCoord, Scene } from "engine/types";
 import { IPrimodiumGameObject } from "./interfaces";
 import { Fleet } from "./Fleet";
-import { DepthLayers } from "../constants/common";
 
 const FLEET_ANGLE_OFFSET = 45;
 export class TransitLine extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
@@ -50,18 +49,16 @@ export class TransitLine extends Phaser.GameObjects.Container implements IPrimod
         .setLineWidth(2)
         .setAlpha(0.5);
       this.add(this.transitLine);
-      this.setDepth(0);
     }
 
     fleet.setTransitLineRef(this);
     fleet.getOrbitRing()?.removeFleet(fleet);
     this.scene.add.existing(fleet);
-    // this.add(fleet);
+    this.add(fleet);
     this.fleet = fleet;
     fleet.x = 0;
     fleet.y = 0;
     fleet.rotation = 0;
-    fleet.setDepth(DepthLayers.Path);
 
     return this;
   }
@@ -95,8 +92,8 @@ export class TransitLine extends Phaser.GameObjects.Container implements IPrimod
   setFleetProgress(progress: number) {
     if (!this.fleet) return;
 
-    this.fleet.x = this.start.x + (this.end.x - this.start.x) * progress;
-    this.fleet.y = this.start.y + (this.end.y - this.start.y) * progress;
+    this.fleet.x = (this.end.x - this.start.x) * progress;
+    this.fleet.y = (this.end.y - this.start.y) * progress;
   }
 
   dispose() {

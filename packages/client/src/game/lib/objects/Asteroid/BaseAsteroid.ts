@@ -30,7 +30,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
       scene,
       coord: { x: 0, y: 0 },
     });
-    this.circle = new Phaser.GameObjects.Arc(scene.phaserScene, 0, 0, 2, 0, 360, false, 0xffffff, 0.5);
+    this.circle = new Phaser.GameObjects.Arc(scene.phaserScene, 0, 0, 2, 0, 360, false, 0xffff00, 0.4);
     this.fleetsContainer = new FleetsContainer(scene, { x: 0, y: 0 });
 
     this.coord = coord;
@@ -41,7 +41,6 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
       targets: [this.asteroidSprite],
       y: "-=5",
       duration: 2 * 1000,
-      ease: Phaser.Math.Easing.Linear,
       repeat: -1,
       yoyo: true,
     });

@@ -157,6 +157,7 @@ export enum Sprites {
   IronPlate = "sprites/resources/ironplate.png",
   PVCell = "sprites/resources/photovoltaiccell_resource.png",
   Alloy = "sprites/resources/alloy_resource.png",
+  ShardIcon = "sprites/icons/shard.png",
 
   // Unit Icons
   StingerDrone = "sprites/units/stingerdrone.png",
@@ -177,10 +178,11 @@ export enum Sprites {
   Emblem7 = "sprites/emblems/Emblems_LVL7.png",
   Emblem8 = "sprites/emblems/Emblems_LVL8.png",
 
-  // Decord
-
+  // Decor
   DroneBottom = "sprites/decorations/drone/bottom/Drones_Bottom_Left1.png",
   DroneTop = "sprites/decorations/drone/top/Drones_Top_Right1.png",
+
+  EMPTY = "sprites/empty.png",
 }
 
 export type SpriteKeys = keyof typeof Sprites;

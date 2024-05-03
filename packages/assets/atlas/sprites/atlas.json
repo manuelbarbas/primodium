@@ -5,7 +5,7 @@
     },
     "textures": [
         {
-            "image": "atlas.png?timestamp=1714763127961",
+            "image": "atlas.png?timestamp=1714772354735",
             "format": "RGBA8888",
             "size": {
                 "w": 2270,
@@ -13937,7 +13937,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/icons/grace.png",
+                    "filename": "sprites/empty.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13958,7 +13958,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/alloy_resource.png",
+                    "filename": "sprites/icons/grace.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13979,7 +13979,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/copper_resource.png",
+                    "filename": "sprites/icons/shard.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14000,7 +14000,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/iridium_resource.png",
+                    "filename": "sprites/resources/alloy_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14021,7 +14021,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/iron_resource.png",
+                    "filename": "sprites/resources/copper_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14042,7 +14042,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/ironplate_resource.png",
+                    "filename": "sprites/resources/iridium_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14063,7 +14063,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/kimberlite_resource.png",
+                    "filename": "sprites/resources/iron_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14084,7 +14084,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/lithium_resource.png",
+                    "filename": "sprites/resources/ironplate_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14105,7 +14105,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/photovoltaiccell_resource.png",
+                    "filename": "sprites/resources/kimberlite_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14126,7 +14126,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/platinum_resource.png",
+                    "filename": "sprites/resources/lithium_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14147,7 +14147,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource1.png",
+                    "filename": "sprites/resources/photovoltaiccell_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14168,7 +14168,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource2.png",
+                    "filename": "sprites/resources/platinum_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14189,7 +14189,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource3.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14210,7 +14210,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource4.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14231,7 +14231,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource5.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14252,7 +14252,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource6.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14273,7 +14273,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource7.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14294,7 +14294,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource8.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14315,7 +14315,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium_resource.gif",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14336,7 +14336,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/titanium_resource.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14357,7 +14357,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/advanced_unraidable.png",
+                    "filename": "sprites/resources/primodium_resource.gif",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14378,7 +14378,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/building_defense.png",
+                    "filename": "sprites/resources/titanium_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14399,7 +14399,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/building_defense_mult.png",
+                    "filename": "sprites/resources/utility/advanced_unraidable.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14420,7 +14420,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/defense.png",
+                    "filename": "sprites/resources/utility/building_defense.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14441,7 +14441,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/electricity.png",
+                    "filename": "sprites/resources/utility/building_defense_mult.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14462,7 +14462,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/encryption.png",
+                    "filename": "sprites/resources/utility/defense.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14483,7 +14483,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/housing.png",
+                    "filename": "sprites/resources/utility/electricity.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14504,7 +14504,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/unraidable.png",
+                    "filename": "sprites/resources/utility/encryption.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14525,7 +14525,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/units/anvildrone.png",
+                    "filename": "sprites/resources/utility/housing.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14546,7 +14546,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/units/hammerdrone.png",
+                    "filename": "sprites/resources/utility/unraidable.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14561,6 +14561,48 @@
                     },
                     "frame": {
                         "x": 1600,
+                        "y": 2245,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/units/anvildrone.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1632,
+                        "y": 2245,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/units/hammerdrone.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1664,
                         "y": 2245,
                         "w": 32,
                         "h": 32
