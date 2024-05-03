@@ -68,9 +68,22 @@ export const renderAsteroid = (scene: Scene) => {
           if (getCanSend(sendOrigin, entity)) components.Send.setDestination(entity);
           else toast.error("Cannot send to this asteroid.");
         } else {
-          components.SelectedRock.set({ value: entity });
-          cameraApi.pan(coord, { duration: 500 });
-          cameraApi.zoomTo(1.5, 500);
+          scene.phaserScene.add
+            .timeline([
+              {
+                at: 0,
+                run: () => cameraApi.pan(coord, { duration: 300 }),
+              },
+              {
+                at: 300,
+                run: () => cameraApi.zoomTo(scene.config.camera.maxZoom, 500),
+              },
+              {
+                at: 800,
+                run: () => components.SelectedRock.set({ value: entity }),
+              },
+            ])
+            .play();
         }
       })
       .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
