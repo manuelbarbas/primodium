@@ -4,6 +4,7 @@ import { getAsteroidDroidCount } from "src/util/droidRegen";
 import { Hex } from "viem";
 import { components } from "../components";
 import { world } from "../world";
+import { EntityType } from "@/util/constants";
 // import { SetupResult } from "../types";
 export function createHangar(spaceRock: Entity) {
   const units: Map<Entity, bigint> = new Map();
@@ -25,10 +26,7 @@ export function createHangar(spaceRock: Entity) {
     units.set(unit as Entity, (units.get(unit as Entity) ?? 0n) + count);
   });
 
-  const droidCount = getAsteroidDroidCount(spaceRock);
-  Array.from(droidCount).map(([unit, count]) => {
-    units.set(unit as Entity, count);
-  });
+  units.set(EntityType.Droid, getAsteroidDroidCount(spaceRock));
 
   const value = { units: [...units.keys()], counts: [...units.values()] };
   components.Hangar.set(value, spaceRock);

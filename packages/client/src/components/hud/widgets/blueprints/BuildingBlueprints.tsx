@@ -13,6 +13,7 @@ import { Hex } from "viem";
 import { useShallow } from "zustand/react/shallow";
 import { Button } from "../../../core/Button";
 import { BuildingImageFromType } from "../../../shared/BuildingImage";
+import { EMap } from "contracts/config/enums";
 
 const BlueprintButton: React.FC<{
   buildingType: Entity;
@@ -114,14 +115,14 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({
 
   const productionBuildings = useMemo(() => {
     let mines: Entity[] = [];
-    if (mapId === 1)
+    if (mapId === EMap.Primary)
       mines = [EntityType.IronMine, EntityType.CopperMine, EntityType.LithiumMine, EntityType.KimberliteMine];
-    else if (mapId === 2) mines = [EntityType.KimberliteMine];
-    else if (mapId === 3) mines = [EntityType.IridiumMine];
-    else if (mapId === 4) mines = [EntityType.PlatinumMine];
-    else if (mapId === 5) mines = [EntityType.TitaniumMine];
-    else if (mapId === 6) mines = [EntityType.IronMine, EntityType.CopperMine, EntityType.LithiumMine];
-    else if (mapId === 7) mines = [EntityType.IronMine, EntityType.CopperMine, EntityType.LithiumMine];
+    else if (mapId === EMap.Kimberlite) mines = [EntityType.KimberliteMine];
+    else if (mapId === EMap.Iridium) mines = [EntityType.IridiumMine];
+    else if (mapId === EMap.Platinum) mines = [EntityType.PlatinumMine];
+    else if (mapId === EMap.Titanium) mines = [EntityType.TitaniumMine];
+    else if (mapId === EMap.Wormhole) mines = [EntityType.IronMine, EntityType.CopperMine, EntityType.LithiumMine];
+    else if (mapId === EMap.Common) mines = [EntityType.IronMine, EntityType.CopperMine, EntityType.LithiumMine];
     return [
       ...mines,
       EntityType.IronPlateFactory,

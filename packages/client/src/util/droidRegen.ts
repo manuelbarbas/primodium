@@ -1,16 +1,17 @@
 import { Entity } from "@latticexyz/recs";
+import { bigIntMin } from "@latticexyz/common/utils";
 import { EMap } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Hex } from "viem";
 import { EntityType, SPEED_SCALE, RESOURCE_SCALE } from "./constants";
 
-export function getAsteroidDroidCount(asteroid: Entity): Map<Entity, bigint> {
+export function getAsteroidDroidCount(asteroid: Entity): bigint {
   const homeHex = asteroid as Hex;
 
   const mapId = comps.Asteroid.getWithKeys({ entity: homeHex })?.mapId ?? 0n;
   const owner = comps.OwnedBy.getWithKeys({ entity: homeHex })?.value as Entity | undefined;
   if (mapId != EMap.Common || owner != undefined) {
-    return new Map<Entity, bigint>();
+    return 0n;
   }
 
   const time = comps.Time.get()?.value ?? 0n;
@@ -26,13 +27,9 @@ export function getAsteroidDroidCount(asteroid: Entity): Map<Entity, bigint> {
   const droidCount = comps.UnitCount.getWithKeys({ entity: homeHex, unit: EntityType.Droid as Hex })?.value ?? 0n;
 
   const droidRegenRate = comps.P_Unit.getWithKeys({ entity: EntityType.Droid as Hex, level: 0n })?.trainingTime ?? 0n;
-  let totalDroidCount = droidCount + timeSinceClaimed / droidRegenRate;
-  if (totalDroidCount >= maxDroidCount) {
-    totalDroidCount = maxDroidCount;
-  }
-  const result = new Map<Entity, bigint>();
-  result.set(EntityType.Droid, totalDroidCount);
-  return result;
+  const totalDroidCount = droidCount + timeSinceClaimed / droidRegenRate;
+
+  return bigIntMin(totalDroidCount, maxDroidCount);
 }
 
 function getSecondaryAsteroidUnitsAndEncryption(asteroidEntity: Entity, level: bigint) {
