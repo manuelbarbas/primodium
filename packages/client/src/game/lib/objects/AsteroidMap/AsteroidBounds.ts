@@ -1,7 +1,7 @@
 import { Scene } from "engine/types";
 import { Bounds, Dimensions, getRelativeCoord } from "./helpers";
 import { DepthLayers } from "../../constants/common";
-import { Tilesets } from "@primodiumxyz/assets";
+import { Animations, Assets, Sprites, Tilesets } from "@primodiumxyz/assets";
 
 export class AsteroidBounds {
   private scene: Scene;
@@ -9,10 +9,30 @@ export class AsteroidBounds {
   private maxBounds?: Bounds;
   private boundsMap?: Phaser.Tilemaps.Tilemap;
   private asteroidDimensions: Dimensions;
+  private drones: Phaser.GameObjects.Sprite[] = [];
 
   constructor(scene: Scene, asteroidDimensions: Dimensions) {
     this.scene = scene;
     this.asteroidDimensions = asteroidDimensions;
+    this.drones = [
+      new Phaser.GameObjects.Sprite(scene.phaserScene, 0, 0, Assets.SpriteAtlas, Sprites.DroneTop)
+        .setFlipX(true)
+        .play(Animations.DroneTop),
+      new Phaser.GameObjects.Sprite(scene.phaserScene, 0, 0, Assets.SpriteAtlas, Sprites.DroneTop).play(
+        Animations.DroneTop
+      ),
+      new Phaser.GameObjects.Sprite(scene.phaserScene, 0, 0, Assets.SpriteAtlas, Sprites.DroneBottom).play(
+        Animations.DroneBottom
+      ),
+      new Phaser.GameObjects.Sprite(scene.phaserScene, 0, 0, Assets.SpriteAtlas, Sprites.DroneBottom)
+        .setFlipX(true)
+        .play(Animations.DroneBottom),
+    ];
+
+    this.drones.forEach((drone) => {
+      drone.setDepth(DepthLayers.Bounds);
+      scene.phaserScene.add.existing(drone);
+    });
   }
 
   draw(currentBounds: Bounds, maxBounds: Bounds) {
@@ -179,6 +199,16 @@ export class AsteroidBounds {
     }
     nonBuildableLayer.setAlpha(0.8);
 
+    //DRONES
+    //top-left
+    this.drones[0].setPosition(maxBounds.minX * tileWidth - 14, -maxBounds.maxY * tileHeight + 14);
+    //top-right
+    this.drones[1].setPosition((maxBounds.maxX + 1) * tileWidth - 18, -maxBounds.maxY * tileHeight + 14);
+    //bottom-left
+    this.drones[2].setPosition(maxBounds.minX * tileWidth - 18, -(maxBounds.minY - 2) * tileHeight - 12);
+    //bottom-right
+    this.drones[3].setPosition((maxBounds.maxX + 1) * tileWidth - 13, -(maxBounds.minY - 2) * tileHeight - 12);
+
     //EFFECTS
     const glowEffect = outerBordersLayer.postFX.addGlow(0x008b8b, 4, 0, false, 0.05, 30);
     this.scene.phaserScene.tweens.add({
@@ -199,6 +229,10 @@ export class AsteroidBounds {
       repeat: -1,
     });
 
+    this.drones.forEach((drone) => {
+      this.scene.phaserScene.lights.addPointLight(drone.x, drone.y, 0x008b8b, 75, 0.03);
+    });
+
     nonBuildableLayer.postFX.addVignette(0.5, 0.5, 3, 1);
 
     return this;
@@ -207,5 +241,7 @@ export class AsteroidBounds {
   dispose() {
     this.boundsMap?.destroy();
     this.boundsMap = undefined;
+    this.drones.forEach((drone) => drone.destroy());
+    this.drones = [];
   }
 }

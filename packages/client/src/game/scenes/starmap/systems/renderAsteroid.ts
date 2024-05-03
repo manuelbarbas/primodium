@@ -37,13 +37,13 @@ export const renderAsteroid = (scene: Scene) => {
     const spriteScale = 0.34 + 0.05 * Number(asteroidData.maxLevel);
     let asteroid: BaseAsteroid;
     if (!asteroidData?.spawnsSecondary)
-      asteroid = new SecondaryAsteroid(
+      asteroid = new SecondaryAsteroid({
         scene,
         coord,
-        MapIdToAsteroidType[asteroidData.mapId] ?? EntityType.Kimberlite,
-        asteroidData?.maxLevel,
-        getRockRelationship(playerEntity, entity)
-      ).setScale(spriteScale);
+        resourceType: MapIdToAsteroidType[asteroidData.mapId] ?? EntityType.Kimberlite,
+        maxLevel: asteroidData?.maxLevel,
+        relationship: getRockRelationship(playerEntity, entity),
+      }).setScale(spriteScale);
     // .setLevel(level ?? 1n);
     else
       asteroid = new PrimaryAsteroid(scene, coord, expansionLevel ?? 1n, getRockRelationship(playerEntity, entity))
