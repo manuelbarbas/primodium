@@ -49,15 +49,18 @@ export const CreateScreen = () => {
         />
       </div>
 
-      <Button
-        disabled={!allianceTag || isProfane(allianceTag)}
-        onClick={() => createAlliance(mud, allianceTag, inviteOnly)}
-        variant="primary"
-        className="btn-sm border-2 border-secondary mt-auto self-center flex gap-2"
-      >
-        <FaPlus />
-        CREATE
-      </Button>
+      <div className="flex mt-auto self-center gap-8">
+        <Navigator.BackButton />
+        <Button
+          disabled={!allianceTag || isProfane(allianceTag)}
+          onClick={() => createAlliance(mud, allianceTag, inviteOnly)}
+          variant="primary"
+          className="btn-sm border-2 border-secondary flex gap-2"
+        >
+          <FaPlus />
+          CREATE
+        </Button>
+      </div>
     </Navigator.Screen>
   );
 };

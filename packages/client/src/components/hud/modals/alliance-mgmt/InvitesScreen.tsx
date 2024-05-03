@@ -90,18 +90,21 @@ export const InvitesScreen: React.FC = () => {
       ) : (
         <span className="opacity-75">NO INVITATION RECEIVED</span>
       )}
-      <div className="flex justify-center items-center gap-8">
-        FRIEND CODE:
-        <Tooltip tooltipContent="Click to copy" direction="top">
-          <Button
-            variant="ghost"
-            className="btn-xs flex gap-2"
-            onClick={() => navigator.clipboard.writeText(entityToAddress(playerEntity))}
-          >
-            {entityToAddress(playerEntity, true)}
-            <FaCopy />
-          </Button>
-        </Tooltip>
+      <div className="flex justify-between">
+        <Navigator.BackButton />
+        <div className="flex justify-center items-center gap-8">
+          FRIEND CODE:
+          <Tooltip tooltipContent="Click to copy" direction="top">
+            <Button
+              variant="ghost"
+              className="btn-xs flex gap-2"
+              onClick={() => navigator.clipboard.writeText(entityToAddress(playerEntity))}
+            >
+              {entityToAddress(playerEntity, true)}
+              <FaCopy />
+            </Button>
+          </Tooltip>
+        </div>
       </div>
     </Navigator.Screen>
   );
