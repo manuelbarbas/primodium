@@ -694,7 +694,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             await setComponentValue(
               mud,
               components.MaxColonySlots,
-              { entity: player as Hex },
+              { playerEntity: player as Hex },
               { value: colonyShipCap + BigInt(count) }
             );
             toast.success(`Colony Ship Capacity increased by ${count}`);
