@@ -3,12 +3,15 @@ import { Scene, TileCoord } from "engine/types";
 import { Fleet } from "../Fleet";
 
 const RADIUS = 60;
-export class OrbitRing extends Phaser.GameObjects.Container {
+const MARGIN = 5;
+export class FleetsContainer extends Phaser.GameObjects.Container {
   private _scene: Scene;
   private coord: TileCoord;
   private orbitRing: Phaser.GameObjects.Graphics;
   private fleetsContainer: Phaser.GameObjects.Container;
   private rotationTween: Phaser.Tweens.Tween;
+  private paused = false;
+  private inOrbitView = true;
 
   constructor(scene: Scene, coord: TileCoord) {
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
@@ -22,14 +25,6 @@ export class OrbitRing extends Phaser.GameObjects.Container {
     this.coord = coord;
     this._scene = scene;
 
-    // this.unsubZoom = scene.camera.zoom$.subscribe((zoom) => {
-    //   if (!this.fleetsContainer.length || !this.active) return;
-    //   this.orbitRing
-    //     .clear()
-    //     .lineStyle(2 / zoom, 0x808080)
-    //     .strokeCircle(0, 0, RADIUS);
-    // });
-
     this.rotationTween = this.scene.tweens.add({
       targets: this.fleetsContainer,
       rotation: Math.PI * 2,
@@ -40,6 +35,7 @@ export class OrbitRing extends Phaser.GameObjects.Container {
 
     this.setActive(false).setVisible(false);
   }
+
   getFleetCount() {
     return this.fleetsContainer.length;
   }
@@ -53,7 +49,7 @@ export class OrbitRing extends Phaser.GameObjects.Container {
   }
 
   update() {
-    if (!this.fleetsContainer.length) return;
+    if (!this.fleetsContainer.length || !this.active) return;
 
     this.orbitRing
       .clear()
@@ -72,7 +68,7 @@ export class OrbitRing extends Phaser.GameObjects.Container {
   addFleet(fleet: Fleet) {
     if (!this.fleetsContainer.length) {
       this.setActive(true).setVisible(true);
-      this.rotationTween.resume();
+      if (!this.paused) this.rotationTween.resume();
     }
 
     fleet.getTransitLine()?.removeFleet();
@@ -81,15 +77,7 @@ export class OrbitRing extends Phaser.GameObjects.Container {
     fleet.setFlip(false, false);
     this.fleetsContainer.add(fleet);
 
-    const angleStep = (2 * Math.PI) / this.fleetsContainer.length;
-
-    this.fleetsContainer.list.forEach((obj, index) => {
-      const fleet = obj as Fleet;
-      const angle = index * angleStep;
-      fleet.x = this.x + RADIUS * Math.cos(angle);
-      fleet.y = this.y + RADIUS * Math.sin(angle);
-      fleet.angle = Phaser.Math.RadToDeg(angle) - 35;
-    });
+    this.setOrbitView();
 
     return this;
   }
@@ -105,20 +93,70 @@ export class OrbitRing extends Phaser.GameObjects.Container {
     return this;
   }
 
+  setInlineView() {
+    this.rotationTween.pause();
+
+    this.orbitRing.setActive(false).setVisible(false);
+
+    this.fleetsContainer.setAlpha(0);
+    this.fleetsContainer.setRotation(0);
+    this.fleetsContainer.list.forEach((_fleet, i) => {
+      const fleet = _fleet as Fleet;
+      fleet.setFlip(false, false);
+      fleet.setPosition(fleet.displayWidth / 2 + (fleet.displayWidth + MARGIN) * i, 0);
+      fleet.rotation = 0;
+    });
+
+    this.scene.add.tween({
+      targets: this.fleetsContainer,
+      alpha: 1,
+      duration: 200,
+    });
+
+    this.inOrbitView = false;
+  }
+
+  setOrbitView() {
+    if (!this.paused) this.rotationTween.resume();
+    this.orbitRing.setActive(true).setVisible(true);
+
+    this.orbitRing.setAlpha(0);
+    this.scene.add.tween({
+      targets: this.orbitRing,
+      alpha: 1,
+      duration: 200,
+    });
+
+    const angleStep = (2 * Math.PI) / this.fleetsContainer.length;
+    this.fleetsContainer.list.forEach((obj, index) => {
+      const fleet = obj as Fleet;
+      const angle = index * angleStep;
+      fleet.x = this.x + RADIUS * Math.cos(angle);
+      fleet.y = this.y + RADIUS * Math.sin(angle);
+      fleet.angle = Phaser.Math.RadToDeg(angle) - 35;
+    });
+
+    this.inOrbitView = true;
+  }
+
   clear() {
     this.fleetsContainer.list.forEach((fleet) => {
       this.removeFleet(fleet as Fleet);
     });
+    this.rotationTween.pause();
   }
 
   pauseRotation() {
-    this.rotationTween.pause();
+    this.paused = true;
+
+    if (this.inOrbitView) this.rotationTween.pause();
     return this;
   }
 
   resumeRotation() {
+    this.paused = false;
     if (!this.fleetsContainer.length) return;
-    this.rotationTween.resume();
+    if (this.inOrbitView) this.rotationTween.resume();
     return this;
   }
 

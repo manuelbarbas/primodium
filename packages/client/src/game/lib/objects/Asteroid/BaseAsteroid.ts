@@ -1,8 +1,8 @@
 import { Coord, Scene } from "engine/types";
 import { IPrimodiumGameObject } from "../interfaces";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { AsteroidRelationship } from "../../constants/common";
-import { OrbitRing } from "./OrbitRing";
+import { AsteroidRelationship } from "@/game/lib/constants/common";
+import { FleetsContainer } from "@/game/lib/objects/Asteroid/FleetsContainer";
 import { Assets, Sprites } from "@primodiumxyz/assets";
 import { AsteroidLabel } from "@/game/lib/objects/Asteroid/AsteroidLabel";
 
@@ -14,7 +14,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
   protected asteroidSprite: Phaser.GameObjects.Image;
   protected outlineSprite: Phaser.GameObjects.Image;
   protected asteroidLabel: AsteroidLabel;
-  protected orbitRing: OrbitRing;
+  protected fleetsContainer: FleetsContainer;
   protected currentLOD: number = -1;
   private circle: Phaser.GameObjects.Arc;
 
@@ -30,7 +30,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
       coord: { x: 0, y: 0 },
     });
     this.circle = new Phaser.GameObjects.Arc(scene.phaserScene, 0, 0, 2, 0, 360, false, 0xffffff, 0.5);
-    this.orbitRing = new OrbitRing(scene, { x: 0, y: 0 });
+    this.fleetsContainer = new FleetsContainer(scene, { x: 0, y: 0 });
 
     this.coord = coord;
     this._scene = scene;
@@ -38,7 +38,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
   }
 
   spawn() {
-    this.add([this.circle, this.asteroidSprite, this.outlineSprite, this.orbitRing, this.asteroidLabel]);
+    this.add([this.circle, this.asteroidSprite, this.outlineSprite, this.fleetsContainer, this.asteroidLabel]);
     this.spawned = true;
     this.scene.add.existing(this);
     return this;
@@ -66,7 +66,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
   }
 
   getOrbitRing() {
-    return this.orbitRing;
+    return this.fleetsContainer;
   }
 
   getAsteroidLabel() {
@@ -87,12 +87,17 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
       // LOD 0: Show asteroid and label
       case 0:
         asteroidAlpha = 1;
-        asteroidLabelPosition = { x: this.asteroidSprite.width + 5, y: -16 };
+        asteroidLabelPosition = { x: this.asteroidSprite.width, y: -24 };
+        this.asteroidLabel.removeFleetsContainer();
+        this.add(this.fleetsContainer);
+        this.fleetsContainer.setOrbitView();
         break;
       // LOD 1: Show asteroid only
       case 1:
         asteroidAlpha = 0;
         asteroidLabelPosition = { x: 0, y: 0 };
+        this.asteroidLabel.attachFleetsContainer(this.fleetsContainer);
+        this.fleetsContainer.setInlineView();
         break;
       // LOD 2: Hide asteroid and label
       case 2:
@@ -108,13 +113,13 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
     if (noAnim) {
       this.asteroidSprite.alpha = asteroidAlpha;
       this.outlineSprite.alpha = asteroidAlpha;
-      this.orbitRing.alpha = asteroidAlpha;
       this.asteroidLabel.alpha = asteroidLabelAlpha;
       this.asteroidLabel.setPosition(asteroidLabelPosition.x, asteroidLabelPosition.y);
+      return;
     }
 
     this.scene.add.tween({
-      targets: [this.asteroidSprite, this.outlineSprite, this.orbitRing],
+      targets: [this.asteroidSprite, this.outlineSprite],
       alpha: asteroidAlpha,
       duration: 200,
       ease: "Linear",
@@ -138,7 +143,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
 
   update() {
     const zoom = this._scene.camera.phaserCamera.zoom;
-    this.orbitRing.update();
+    this.fleetsContainer.update();
     this.asteroidLabel.update();
     this.circle.setScale(1 / zoom);
   }

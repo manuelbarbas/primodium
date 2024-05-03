@@ -1,4 +1,5 @@
 import { MainbaseLevelToEmblem } from "@/game/lib/mappings";
+import { FleetsContainer } from "@/game/lib/objects/Asteroid/FleetsContainer";
 import { Assets } from "@primodiumxyz/assets";
 import { PixelCoord, Scene } from "engine/types";
 
@@ -21,6 +22,7 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
   private asteroidLabel: Phaser.GameObjects.BitmapText;
   private ownerLabel: Phaser.GameObjects.BitmapText;
   private allianceLabel: Phaser.GameObjects.BitmapText;
+  private fleetsContainer: FleetsContainer | undefined;
   private baseScale = 1;
 
   constructor(
@@ -79,17 +81,19 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
   // [Emblem][Margin][AsteroidLabel]
   // [      ][Margin][AllianceLabel][Margin][OwnerLabel]
   private _updatePositions() {
-    this.asteroidLabel.setPosition(this.emblemSprite.width + MARGIN, 0);
-    this.allianceLabel.setPosition(this.emblemSprite.width + MARGIN, this.asteroidLabel.height + MARGIN);
+    const startX = this.emblemSprite.width + MARGIN;
+    this.asteroidLabel.setPosition(startX, 0);
+    this.allianceLabel.setPosition(startX, this.asteroidLabel.height + MARGIN);
     this.ownerLabel.setPosition(
-      this.allianceLabel.text
-        ? this.allianceLabel.x + this.allianceLabel.width + MARGIN
-        : this.emblemSprite.width + MARGIN,
+      this.allianceLabel.text ? startX + this.allianceLabel.width + MARGIN : startX,
       this.allianceLabel.y
     );
 
+    //TODO: find a more reliable method of getting rendered height. Using phaser methods returns unusable values
+    if (this.fleetsContainer) this.fleetsContainer.setPosition(startX, this.ownerLabel.y + 20 + MARGIN);
+
     //center labels with emblem
-    this.labelContainer.setY(-this.labelContainer.getBounds().height / 2);
+    this.labelContainer.setY(-16);
   }
 
   setProperties(args: Partial<LabelArgs>) {
@@ -120,6 +124,24 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
   update() {
     const zoom = this._scene.camera.phaserCamera.zoom;
     this.setScale(this.baseScale / zoom);
+  }
+
+  attachFleetsContainer(fleetsContainer: FleetsContainer) {
+    this.fleetsContainer = fleetsContainer;
+    this.labelContainer.add(fleetsContainer);
+    this._updatePositions();
+  }
+
+  removeFleetsContainer() {
+    if (!this.fleetsContainer) return;
+
+    this.labelContainer.remove(this.fleetsContainer);
+    this._updatePositions();
+    this.fleetsContainer.setPosition(0, 0);
+    const fleetsContainer = this.fleetsContainer;
+    this.fleetsContainer = undefined;
+
+    return fleetsContainer;
   }
 
   dispose() {
