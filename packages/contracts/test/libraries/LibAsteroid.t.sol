@@ -6,9 +6,9 @@ import { addressToEntity } from "src/utils.sol";
 
 import { EResource } from "src/Types.sol";
 
-import { LastConquered, Home, OwnedBy, BuildingType, P_EnumToPrototype, P_Transportables, P_UnitPrototypes, Asteroid, AsteroidData, Position, PositionData, Position, PositionData, ReversePosition, MaxResourceCount, UnitCount, ResourceCount, UnitCount, ResourceCount, P_GameConfig, P_GameConfigData, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
+import { LastConquered, Home, OwnedBy, BuildingType, P_EnumToPrototype, P_Transportables, P_UnitPrototypes, Asteroid, AsteroidData, Position, PositionData, Position, PositionData, ReversePosition, MaxResourceCount, UnitCount, ResourceCount, UnitCount, ResourceCount, P_GameConfig, P_GameConfigData, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData, P_AsteroidThresholdProbConfig, P_AsteroidThresholdProbConfigData } from "codegen/index.sol";
 import { MainBasePrototypeId, DroidPrototypeId } from "codegen/Prototypes.sol";
-import { EUnit } from "src/Types.sol";
+import { EUnit, EMap } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
@@ -47,10 +47,22 @@ contract LibAsteroidTest is PrimodiumTest {
     AsteroidData memory asteroidData = LibAsteroid.getAsteroidData(entity, false, false);
     assertTrue(asteroidData.isAsteroid);
     assertFalse(asteroidData.spawnsSecondary);
-    assertLe(asteroidData.mapId, 5, "map id too high");
-    assertGe(asteroidData.mapId, 2, "map id too low");
     assertGe(asteroidData.maxLevel, 1, "max level too low");
     assertLe(asteroidData.maxLevel, 8, "max level too low");
+    if (asteroidData.mapId != uint8(EMap.Common)) {
+      assertGe(asteroidData.mapId, 2, "map id too low");
+      assertLe(asteroidData.mapId, 5, "map id too high");
+    }
+  }
+
+  function testAsteroidThresholdProbConfig() public {
+    P_AsteroidThresholdProbConfigData memory asteroidProb = P_AsteroidThresholdProbConfig.get();
+    assertGt(asteroidProb.common2 + 1, asteroidProb.common1, "Common2 probability threshold is too low");
+    assertGt(asteroidProb.eliteMicro + 1, asteroidProb.common2, "EliteMicro probability threshold is too low");
+    assertGt(asteroidProb.eliteSmall + 1, asteroidProb.eliteMicro, "EliteSmall probability threshold is too low");
+    assertGt(asteroidProb.eliteMedium + 1, asteroidProb.eliteSmall, "EliteMedium probability threshold is too low");
+    assertGt(asteroidProb.eliteLarge + 1, asteroidProb.eliteMedium, "EliteLarge probability threshold is too low");
+    assertEq(asteroidProb.eliteLarge, 100, "EliteLarge probability threshold is not 100");
   }
 
   function testCreateSecondaryAsteroid() public returns (bytes32) {

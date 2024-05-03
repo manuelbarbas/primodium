@@ -1,3 +1,6 @@
+import { Button } from "@/components/core/Button";
+import { BuildingImageFromType } from "@/components/shared/BuildingImage";
+import { KeyNames, KeybindActionKeys } from "@game/lib/constants/keybinds";
 import { Entity } from "@latticexyz/recs";
 import { useEffect, useMemo } from "react";
 import { FaLock } from "react-icons/fa";
@@ -5,14 +8,11 @@ import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
+import { getBuildingDimensions } from "src/util/building";
 import { Action, EntityType } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
-import { Button } from "@/components/core/Button";
-import { BuildingImageFromType } from "@/components/shared/BuildingImage";
-import { getBuildingDimensions } from "src/util/building";
 import { useShallow } from "zustand/react/shallow";
-import { KeyNames, KeybindActionKeys } from "@game/lib/constants/keybinds";
 
 const BlueprintButton: React.FC<{
   buildingType: Entity;
@@ -114,7 +114,8 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({
 
   const productionBuildings = useMemo(() => {
     let mines: Entity[] = [];
-    if (mapId === 1) mines = [EntityType.IronMine, EntityType.CopperMine, EntityType.LithiumMine];
+    if (mapId === 1)
+      mines = [EntityType.IronMine, EntityType.CopperMine, EntityType.LithiumMine, EntityType.KimberliteMine];
     else if (mapId === 2) mines = [EntityType.KimberliteMine];
     else if (mapId === 3) mines = [EntityType.IridiumMine];
     else if (mapId === 4) mines = [EntityType.PlatinumMine];

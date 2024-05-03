@@ -1,5 +1,7 @@
+import { Mode } from "@/util/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EResource } from "contracts/config/enums";
 import { useMemo, useRef } from "react";
 import { Marker } from "src/components/core/Marker";
@@ -20,8 +22,6 @@ import { IconLabel } from "../../../core/IconLabel";
 import { Modal } from "../../../core/Modal";
 import { Fleets } from "../../widgets/fleets/Fleets";
 import { _ShardAsteroidTarget } from "./ShardAsteroidTarget";
-import { Mode } from "@/util/constants";
-import { InterfaceIcons } from "@primodiumxyz/assets";
 
 export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ selectedAsteroid }) => {
   const mud = useMud();

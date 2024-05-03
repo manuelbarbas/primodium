@@ -3,6 +3,9 @@ import { decodeEntity } from "@latticexyz/store-sync/recs";
 import { components } from "../components";
 import { world } from "../world";
 
+function isZeroHex(value: string): boolean {
+  return /^0x0+$/i.test(value);
+}
 export const setupBattleComponents = () => {
   const systemWorld = namespaceWorld(world, "systems");
   const { RawBattle, RawBattleParticipant, RawBattleParticipants } = components.Battle;
@@ -16,7 +19,7 @@ export const setupBattleComponents = () => {
       defender: battleData.targetEntity as Entity,
       defenderDamage: battleData.targetDamage,
       attackingPlayer: battleData.playerEntity as Entity,
-      defendingPlayer: battleData.targetPlayerEntity as Entity,
+      defendingPlayer: isZeroHex(battleData.targetPlayerEntity) ? undefined : (battleData.targetPlayerEntity as Entity),
       winner: battleData.winnerEntity as Entity,
       rock: battleData.asteroidEntity as Entity,
       timestamp: battleData.timestamp,

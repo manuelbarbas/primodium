@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, memo } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
 import "react-toastify/dist/ReactToastify.min.css";
 import { Hex } from "viem";
@@ -35,7 +35,7 @@ function SetupResultProvider() {
       setLoading(false);
     }, 100);
 
-    if (noExternalAccount) {
+    if (import.meta.env.PRI_DEV == "true" || noExternalAccount) {
       const privateKey = localStorage.getItem("primodiumPlayerAccount") ?? undefined;
       updatePlayerAccount({ burner: true, privateKey: privateKey as Hex | undefined });
     } else {

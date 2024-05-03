@@ -1,12 +1,12 @@
-import { useCallback } from "react";
-import { Entity } from "@latticexyz/recs";
 import { Badge } from "@/components/core/Badge";
+import { CapacityBar } from "@/components/core/CapacityBar";
 import { IconLabel } from "@/components/core/IconLabel";
 import { useFullResourceCount } from "@/hooks/useFullResourceCount";
 import { EntityType } from "@/util/constants";
-import { formatResourceCount } from "@/util/number";
-import { CapacityBar } from "@/components/core/CapacityBar";
 import { EntityToResourceImage } from "@/util/mappings";
+import { formatResourceCount } from "@/util/number";
+import { Entity } from "@latticexyz/recs";
+import { useCallback } from "react";
 
 export const UtilityLabel = ({
   name,
@@ -76,9 +76,9 @@ export const BarLayoutUtilityLabel = ({
   const getSuffix = useCallback((resourceId: Entity) => {
     switch (resourceId) {
       case EntityType.Electricity:
-        return " MW";
+        return "MW";
       case EntityType.Housing:
-        return " Pop.";
+        return "HOUS";
       default:
         return "";
     }
@@ -94,8 +94,7 @@ export const BarLayoutUtilityLabel = ({
           <div className="flex flex-row">
             <span className="text-xs">{formatResourceCount(resourceId, used)}</span>
             <b className={`text-accent text-xs opacity-50`}>
-              /{formatResourceCount(resourceId, maxStorage)}
-              {getSuffix(resourceId)}
+              /{formatResourceCount(resourceId, maxStorage)} {getSuffix(resourceId)}
             </b>
           </div>
         </div>
