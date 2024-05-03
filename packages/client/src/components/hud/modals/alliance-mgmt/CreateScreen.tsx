@@ -21,10 +21,10 @@ export const CreateScreen = () => {
   return (
     <Navigator.Screen
       title="create"
-      className="flex flex-col w-full text-sm pointer-events-auto h-full py-6 px-20 gap-8"
+      className="flex flex-col w-full text-sm pointer-events-auto h-full py-6 px-24 gap-8"
     >
       <div className="self-center text-base">CREATE ALLIANCE</div>
-      <div className="grid grid-cols-[min-content_1fr] gap-5 whitespace-nowrap">
+      <div className="grid grid-cols-[min-content_1fr] justify-center gap-8 whitespace-nowrap">
         <div className="mt-1">ALLIANCE TAG</div>
         <Tooltip tooltipContent={`MAX ${ALLIANCE_TAG_SIZE} CHAR.`} direction="right">
           <TextInput

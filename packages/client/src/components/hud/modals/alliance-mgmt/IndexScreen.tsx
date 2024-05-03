@@ -51,7 +51,7 @@ export const IndexScreen = () => {
   return (
     <Navigator.Screen
       title="score"
-      className="grid grid-rows-[min-content_1fr_min-content] w-full h-full text-xs pointer-events-auto py-6 px-20 gap-8"
+      className="grid grid-rows-[min-content_1fr_min-content] w-full h-full text-xs pointer-events-auto py-6 px-24 gap-8"
     >
       <div className="flex flex-col items-center gap-2 text-base">
         <div>ALLIANCE</div>

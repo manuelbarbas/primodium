@@ -28,7 +28,7 @@ export const Dock = () => {
           >
             <IconLabel imageUri={InterfaceIcons.Alliance} className={iconClass} />
           </Modal.Button>
-          <Modal.Content className="w-[40rem] h-[50rem]">
+          <Modal.Content className="w-[50rem] h-[40rem]">
             <AllianceManagement />
           </Modal.Content>
         </Modal>
