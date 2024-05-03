@@ -46,7 +46,12 @@ export const renderAsteroid = (scene: Scene) => {
         relationship: getRockRelationship(playerEntity, entity),
       }).setScale(spriteScale);
     else
-      asteroid = new PrimaryAsteroid(scene, coord, expansionLevel ?? 1n, getRockRelationship(playerEntity, entity))
+      asteroid = new PrimaryAsteroid({
+        scene,
+        coord,
+        level: expansionLevel ?? 1n,
+        relationship: getRockRelationship(playerEntity, entity),
+      })
         .setScale(spriteScale)
         .setLevel(level ?? 1n);
 

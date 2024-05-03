@@ -119,8 +119,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
         this.fleetsContainer.setInlineView();
         break;
       default:
-        console.warn("Invalid LOD level");
-        return;
+        throw new Error("Invalid LOD level");
     }
 
     if (noAnim) {

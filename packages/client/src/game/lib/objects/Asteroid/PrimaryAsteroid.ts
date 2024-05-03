@@ -6,7 +6,8 @@ import { AsteroidRelationship } from "../../constants/common";
 import { Assets } from "@primodiumxyz/assets";
 
 export class PrimaryAsteroid extends BaseAsteroid {
-  constructor(scene: Scene, coord: Coord, level = 1n, relationship: AsteroidRelationship = "Enemy") {
+  constructor(args: { scene: Scene; coord: Coord; level: bigint; relationship?: AsteroidRelationship }) {
+    const { scene, coord, level = 1n, relationship = "Enemy" } = args;
     super({
       scene,
       coord,
