@@ -17,6 +17,7 @@ import { getAllianceName } from "@/util/alliance";
 import { entityToColor } from "@/util/color";
 import { getEntityTypeName } from "@/util/common";
 import { MainbaseLevelToEmblem } from "@/game/lib/mappings";
+import { EMap } from "contracts/config/enums";
 
 export const renderAsteroid = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -81,13 +82,19 @@ export const renderAsteroid = (scene: Scene) => {
 
     const alliance = components.PlayerAlliance.get(ownedBy as Entity)?.alliance;
 
+    const ownerLabel = (() => {
+      if (ownedByPlayer) return "You";
+      if (ownedBy) return entityToPlayerName(ownedBy as Entity);
+      if (asteroidData.wormhole) return "Wormhole";
+      if (asteroidData.mapId === EMap.Common) return "BASIC";
+      return getEntityTypeName(MapIdToAsteroidType[asteroidData.mapId]);
+    })();
+
     asteroid.getAsteroidLabel().setProperties({
       nameLabel: entityToRockName(entity),
       nameLabelColor: ownedByPlayer ? 0xffff00 : asteroidData?.spawnsSecondary ? 0x00ffff : 0xffffff,
       emblemSprite: MainbaseLevelToEmblem[Phaser.Math.Clamp(Number(level) - 1, 0, MainbaseLevelToEmblem.length - 1)],
-      ownerLabel: ownedBy
-        ? entityToPlayerName(ownedBy as Entity)
-        : getEntityTypeName(MapIdToAsteroidType[asteroidData.mapId]),
+      ownerLabel: ownerLabel,
       allianceLabel: alliance ? getAllianceName(alliance as Entity) : undefined,
       allianceLabelColor: alliance ? parseInt(entityToColor(alliance as Entity).slice(1), 16) : undefined,
     });

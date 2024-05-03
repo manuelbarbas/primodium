@@ -8,7 +8,7 @@ export const starmapSceneConfig: SceneConfig = {
     maxZoom: 3,
     defaultZoom: 0.75,
     pinchSpeed: 0.01,
-    wheelSpeed: 1,
+    wheelSpeed: 2,
   },
   cullingChunkSize: 128 * 2,
   tilemap: {

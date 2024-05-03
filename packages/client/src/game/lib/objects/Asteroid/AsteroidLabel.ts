@@ -81,10 +81,9 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
     this._updatePositions();
     this.labelContainer.add([this.asteroidLabel, this.ownerLabel, this.allianceLabel]);
     this.add([this.emblemSprite, this.labelContainer]);
+    this.setDepth(10000000);
   }
 
-  // [Emblem][Margin][AsteroidLabel]
-  // [      ][Margin][AllianceLabel][Margin][OwnerLabel]
   private _updatePositions() {
     const startX = this.emblemSprite.width + MARGIN;
     this.asteroidLabel.setPosition(startX, 0);

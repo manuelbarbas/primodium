@@ -85,7 +85,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
 
   // abstract setRelationship(relationship: AsteroidRelationship): void;
 
-  protected setLOD(level: number, noAnim = false) {
+  protected setLOD(level: 0 | 1 | 2, noAnim = false) {
     if (this.currentLOD === level) return;
 
     this.currentLOD = level;

@@ -76,6 +76,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     fleet.getOrbitRing()?.removeFleet(fleet);
     fleet.setOrbitRingRef(this);
     fleet.setFlip(false, false);
+    fleet.setScale(0.3);
     this.fleetsContainer.add(fleet);
 
     if (this.inOrbitView) this.setOrbitView();

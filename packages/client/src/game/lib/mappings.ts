@@ -159,9 +159,10 @@ export const MaxLevelToTilemap: Record<number, Tilemaps> = {
 export const LevelToPrimaryAsteroidSprites = [
   Sprites.Asteroid1,
   Sprites.Asteroid2,
-  Sprites.Asteroid3_4,
-  Sprites.Asteroid3_4,
-  Sprites.Asteroid5_6,
+  Sprites.Asteroid3,
+  Sprites.Asteroid4,
+  Sprites.Asteroid5,
+  Sprites.Asteroid6,
   Sprites.Asteroid7,
   Sprites.Asteroid8,
 ];

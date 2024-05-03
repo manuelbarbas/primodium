@@ -31,6 +31,7 @@ export class AsteroidBounds {
 
     this.drones.forEach((drone) => {
       drone.setDepth(DepthLayers.Bounds);
+      drone.setScale(0.8);
       scene.phaserScene.add.existing(drone);
     });
   }
@@ -201,13 +202,13 @@ export class AsteroidBounds {
 
     //DRONES
     //top-left
-    this.drones[0].setPosition(maxBounds.minX * tileWidth - 14, -maxBounds.maxY * tileHeight + 14);
+    this.drones[0].setPosition(maxBounds.minX * tileWidth - 10, -maxBounds.maxY * tileHeight + 17);
     //top-right
-    this.drones[1].setPosition((maxBounds.maxX + 1) * tileWidth - 18, -maxBounds.maxY * tileHeight + 14);
+    this.drones[1].setPosition((maxBounds.maxX + 1) * tileWidth - 20, -maxBounds.maxY * tileHeight + 17);
     //bottom-left
-    this.drones[2].setPosition(maxBounds.minX * tileWidth - 18, -(maxBounds.minY - 2) * tileHeight - 12);
+    this.drones[2].setPosition(maxBounds.minX * tileWidth - 14, -(maxBounds.minY - 2) * tileHeight - 17);
     //bottom-right
-    this.drones[3].setPosition((maxBounds.maxX + 1) * tileWidth - 13, -(maxBounds.minY - 2) * tileHeight - 12);
+    this.drones[3].setPosition((maxBounds.maxX + 1) * tileWidth - 18, -(maxBounds.minY - 2) * tileHeight - 17);
 
     //EFFECTS
     const glowEffect = outerBordersLayer.postFX.addGlow(0x008b8b, 4, 0, false, 0.05, 30);
@@ -230,7 +231,7 @@ export class AsteroidBounds {
     });
 
     this.drones.forEach((drone) => {
-      this.scene.phaserScene.lights.addPointLight(drone.x, drone.y, 0x008b8b, 75, 0.03);
+      this.scene.phaserScene.lights.addPointLight(drone.x, drone.y, 0x008b8b, 75, 0.015);
     });
 
     nonBuildableLayer.postFX.addVignette(0.5, 0.5, 3, 1);
