@@ -21,7 +21,7 @@ export const WarshipPopulation = () => {
             ? "The connect to the belt has closed. Game Over."
             : `Once warship casualties reach ${formatNumber(unitDeathLimit, {
                 short: true,
-              })}, Star Command will close the wormhole and abandon the Belt, ending the round.`}
+              })}, Star Command will close the rift to the belt, ending the round.`}
         </p>
       </div>
     );
@@ -43,13 +43,14 @@ export const WarshipPopulation = () => {
       {gameOver ? (
         <p>Game Over</p>
       ) : (
-        <span className="pointer-events-auto">
+        <div className="pointer-events-auto">
           <Tooltip tooltipContent={<TooltipContent />} direction="bottom">
             <p className="flex inline gap-2">
-              Warship Casualties: <p className={color}>{((100n * unitDeaths) / unitDeathLimit).toLocaleString()}%</p>
+              Warship Casualties:{" "}
+              <span className={color}>{((100n * unitDeaths) / unitDeathLimit).toLocaleString()}%</span>
             </p>
           </Tooltip>
-        </span>
+        </div>
       )}
     </div>
   );

@@ -1,13 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { OwnedBy, Asteroid, PositionData, MaxResourceCount, P_Unit, UnitCount, DroidRegenTimestamp } from "codegen/index.sol";
+import { OwnedBy, Asteroid, PositionData, MaxResourceCount, P_Unit, UnitCount, DroidRegenTimestamp, P_GameConfig } from "codegen/index.sol";
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
 import { StorageUnitPrototypeId, IronMinePrototypeId, CopperMinePrototypeId, LithiumMinePrototypeId, IronPlateFactoryPrototypeId, AlloyFactoryPrototypeId, PVCellFactoryPrototypeId, DroidPrototypeId } from "codegen/Prototypes.sol";
 import { EResource, EMap } from "src/Types.sol";
+
+import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
 library LibRaidableAsteroid {
   /**
@@ -102,6 +104,7 @@ library LibRaidableAsteroid {
     uint256 droidTrainingTime = P_Unit.getTrainingTime(DroidPrototypeId, 0);
     uint256 currentDroidCount = UnitCount.get(asteroidEntity, DroidPrototypeId);
     uint256 timeSinceLastClaimed = block.timestamp - DroidRegenTimestamp.get(asteroidEntity);
+    timeSinceLastClaimed = (timeSinceLastClaimed * P_GameConfig.getWorldSpeed()) / WORLD_SPEED_SCALE;
     uint256 droidClaimRemainder;
     if (droidTrainingTime > 0) {
       currentDroidCount = (timeSinceLastClaimed / droidTrainingTime) + currentDroidCount;

@@ -1,6 +1,8 @@
+import { PushButton } from "@/components/core/PushButton";
+import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
+import { EScoreType } from "contracts/config/enums";
 import { useState } from "react";
-import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { NumberInput } from "src/components/core/NumberInput";
@@ -14,6 +16,7 @@ import { wormholeDeposit } from "src/network/setup/contractCalls/wormholeDeposit
 import { getEntityTypeName } from "src/util/common";
 import { EntityType, ResourceEnumLookup } from "src/util/constants";
 import { formatResourceCount, formatTime, parseResourceCount } from "src/util/number";
+import { Hex } from "viem";
 import { ExpandRange } from "../widgets/ExpandRange";
 import { Upgrade } from "../widgets/Upgrade";
 
@@ -21,10 +24,10 @@ export const WormholeBase: React.FC<{ building: Entity }> = ({ building }) => {
   const asteroid = components.OwnedBy.use(building)?.value as Entity;
   if (!asteroid) return null;
   return (
-    <Navigator.Screen title={building} className="w-fit gap-1">
+    <Navigator.Screen title={building} className="w-fit grid grid-rows-2 grid-cols-2 gap-1">
       <Upgrade building={building} />
-      {asteroid && <ExpandRange asteroid={asteroid as Entity} />}
       <WormholeDeposit building={building} asteroid={asteroid} />
+      {asteroid && <ExpandRange asteroid={asteroid as Entity} />}
     </Navigator.Screen>
   );
 };
@@ -38,27 +41,47 @@ const WormholeDeposit: React.FC<{ building: Entity; asteroid: Entity }> = ({ bui
   const multiplier = components.P_ScoreMultiplier.useWithKeys({
     resource: ResourceEnumLookup[wormholeResource],
   })?.value;
+  const score =
+    components.Score.useWithKeys({
+      entity: mud.playerAccount.entity as Hex,
+      scoreType: EScoreType.Wormhole,
+    })?.value ?? 0n;
   if (wormholeResource === EntityType.NULL) return null;
 
   const max = formatResourceCount(wormholeResource, resourceData.resourceCount, { notLocale: true, showZero: true });
   return (
-    <SecondaryCard className="w-full items-center">
-      <TransactionQueueMask queueItemId={"DEPOSIT" as Entity} className="flex flex-col justify-center text-center">
-        <p>WORMHOLE DEPOSIT</p>
-        <p className="text-xs">
-          Next resource ({getEntityTypeName(nextResource)}) in {formatTime(timeUntilNextResource)}
+    <SecondaryCard className="row-span-2 gap-2 justify-center items-center">
+      <p className="text-lg flex flex-col items-center text-center">
+        Teleporter
+        <span className="text-xs w-3/4 center opacity-70">Deliver resources to Command</span>
+      </p>
+      <div className="flex flex-row items-center gap-2 text-sm">
+        <img
+          src={EntityToResourceImage[wormholeResource]}
+          alt={getEntityTypeName(wormholeResource)}
+          className="w-8 h-8"
+        />
+        <p>
+          {(multiplier ?? 1n).toString()} pt{multiplier != 1n ? "s" : ""} / {getEntityTypeName(wormholeResource)}
         </p>
-        <div className="flex gap-1 mb-6 w-full text-xs items-center justify-center">
-          <div className="flex flex-col items-center h-full">
-            <p>Current: {getEntityTypeName(wormholeResource)}</p>
-            <p className="opacity-50">
-              {(multiplier ?? 1n).toString()} pts / {getEntityTypeName(wormholeResource)}
-            </p>
-          </div>
-          <NumberInput count={count} onChange={setCount} max={Number(max)} />
-        </div>
-        {!inCooldown && (
-          <Button
+      </div>
+      <p className="text-xs opacity-70">
+        Next:{" "}
+        <img
+          src={EntityToResourceImage[nextResource]}
+          alt={getEntityTypeName(nextResource)}
+          className="w-6 h-6 inline"
+        />{" "}
+        in {formatTime(timeUntilNextResource)}
+      </p>
+      <p className="text-xs text-warning">
+        Points earned: {formatResourceCount(wormholeResource, score, { notLocale: true, showZero: true })}
+      </p>
+      <NumberInput count={count} onChange={setCount} max={Number(max)} />
+      {!inCooldown && (
+        <TransactionQueueMask queueItemId={"DEPOSIT" as Entity} className="flex flex-col justify-center text-center">
+          <PushButton
+            disabled={count === "0"}
             className="btn-sm"
             onClick={() => {
               // deposit wormhole resource
@@ -67,10 +90,10 @@ const WormholeDeposit: React.FC<{ building: Entity; asteroid: Entity }> = ({ bui
             }}
           >
             Deposit
-          </Button>
-        )}
-        {inCooldown && <p className="text-xs">Cooldown ends in {formatTime(timeLeft)}</p>}
-      </TransactionQueueMask>
+          </PushButton>
+        </TransactionQueueMask>
+      )}
+      {inCooldown && <p className="text-xs">Cooldown ends in {formatTime(timeLeft)}</p>}
     </SecondaryCard>
   );
 };

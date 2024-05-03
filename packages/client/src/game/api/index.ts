@@ -1,9 +1,11 @@
+import { setupHomeAsteroid } from "@/network/systems/setupHomeAsteroid";
+import { Mode } from "@/util/constants";
 import { namespaceWorld } from "@latticexyz/recs";
 import engine from "engine";
 import { Game } from "engine/types";
 import { runSystems as runAsteroidSystems } from "src/game/scenes/asteroid/systems";
-import { runSystems as runStarmapSystems } from "src/game/scenes/starmap/systems";
 import { runSystems as runRootSystems } from "src/game/scenes/root/systems";
+import { runSystems as runStarmapSystems } from "src/game/scenes/starmap/systems";
 import { components } from "src/network/components";
 import { setupBattleComponents } from "src/network/systems/setupBattleComponents";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
@@ -31,7 +33,6 @@ import { createInputApi } from "./input";
 import { createObjectApi } from "./objects";
 import { createSceneApi } from "./scene";
 import { createSpriteApi } from "./sprite";
-import { Mode } from "@/util/constants";
 
 export type Primodium = Awaited<ReturnType<typeof initPrimodium>>;
 export type PrimodiumApi = ReturnType<Primodium["api"]>;
@@ -136,6 +137,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     setupInvitations(mud);
     setupTime(mud);
     setupTrainingQueues();
+    setupHomeAsteroid(mud);
     setupBuildingReversePosition();
     setupSync(mud);
 

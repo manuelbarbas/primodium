@@ -1,6 +1,7 @@
 import { ComponentValue, Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { EResource } from "contracts/config/enums";
+import { EResource, EMap } from "contracts/config/enums";
+import { storageUnitStorageUpgrades } from "contracts/config/storageUpgrades";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { EntityType, RESOURCE_SCALE } from "src/util/constants";
@@ -82,6 +83,10 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
       { ...emptyData, value: defenseData.encryption },
       { entity: asteroidEntity as Hex, resource: EResource.R_Encryption }
     );
+
+    if (asteroidData.mapId == EMap.Common && !components.OwnedBy.get(asteroidEntity)) {
+      buildRaidableAsteroid(asteroidEntity);
+    }
   }
 }
 
@@ -93,7 +98,7 @@ function isSecondaryAsteroid(entity: Entity, chanceInv: number, wormholeAsteroid
   return motherlodeType % chanceInv === 0;
 }
 
-function getSecondaryAsteroidUnitsAndEncryption(asteroidEntity: Entity, level: bigint) {
+export function getSecondaryAsteroidUnitsAndEncryption(asteroidEntity: Entity, level: bigint) {
   const droidCount = 4n ** level + 100n;
   const encryption = (level * 10n + 10n) * RESOURCE_SCALE;
   return { droidCount, encryption };
@@ -119,22 +124,46 @@ function getAsteroidData(
   const distributionVal = getByteUInt(asteroidEntity, 7, 12) % 100;
   let maxLevel = 8;
   let primodium = 1n;
-  // //micro
-  if (distributionVal <= 50) {
+
+  const asteroidThresholdProb = components.P_AsteroidThresholdProbConfig.get();
+  if (!asteroidThresholdProb) throw new Error("asteroidThresholdProb not found");
+
+  let mapId = 1;
+
+  // Distribution
+  if (distributionVal < asteroidThresholdProb.common1) {
+    // common resources
+    maxLevel = 1; // micro
+    primodium = 1n;
+    mapId = EMap.Common;
+  } else if (distributionVal < asteroidThresholdProb.common2) {
+    // common + advanced resources
+    maxLevel = 3; // small
+    primodium = 2n;
+    mapId = EMap.Common;
+  } else if (distributionVal < asteroidThresholdProb.eliteMicro) {
+    // elite resources, micro
     maxLevel = 1;
     primodium = 3n;
-    //small
-  } else if (distributionVal <= 75) {
+  } else if (distributionVal < asteroidThresholdProb.eliteSmall) {
+    // elite resources, small
     maxLevel = 3;
     primodium = 4n;
-    //medium
-  } else if (distributionVal <= 90) {
+  } else if (distributionVal < asteroidThresholdProb.eliteMedium) {
+    // elite resources, medium
     maxLevel = 5;
     primodium = 5n;
-    //large
+  } else {
+    // elite resources, large
+    maxLevel = 8;
+    primodium = 5n;
   }
 
-  const mapId = (getByteUInt(asteroidEntity, 3, 20) % 4) + 2;
+  if (mapId != EMap.Common) {
+    // elite resources
+    // number between 2 and 5
+    mapId = (getByteUInt(asteroidEntity, 3, 20) % 4) + 2;
+  }
   return {
     ...emptyData,
     isAsteroid: true,
@@ -145,6 +174,107 @@ function getAsteroidData(
     primodium,
   };
 }
+
+function buildRaidableAsteroid(asteroidEntity: Entity) {
+  // get maxlevel to determine if factories should be added
+  const maxLevel = components.Asteroid.get(asteroidEntity)?.maxLevel ?? 1n;
+
+  // storage building at 21, 15
+  anticipateBuilding(EntityType.StorageUnit, { x: 21, y: 15 }, asteroidEntity);
+
+  const storageMax = storageUnitStorageUpgrades[1];
+
+  // set storage to max out common resources
+  anticipateStorage(EResource.Iron, storageMax.Iron, asteroidEntity);
+  anticipateStorage(EResource.Copper, storageMax.Copper, asteroidEntity);
+  anticipateStorage(EResource.Lithium, storageMax.Lithium, asteroidEntity);
+
+  // build iron mine at 23, 16
+  anticipateBuilding(EntityType.IronMine, { x: 23, y: 16 }, asteroidEntity);
+  // build copper mine at 23, 15
+  anticipateBuilding(EntityType.CopperMine, { x: 23, y: 15 }, asteroidEntity);
+  // build lithium mine at 23, 14
+  anticipateBuilding(EntityType.LithiumMine, { x: 23, y: 14 }, asteroidEntity);
+
+  if (maxLevel >= 3n) {
+    // set storage to max out advanced resources
+    anticipateStorage(EResource.IronPlate, storageMax.IronPlate, asteroidEntity);
+    anticipateStorage(EResource.Alloy, storageMax.Alloy, asteroidEntity);
+    anticipateStorage(EResource.PVCell, storageMax.PVCell, asteroidEntity);
+
+    // build Iron Plate factory at 19, 15
+    anticipateBuilding(EntityType.IronPlateFactory, { x: 19, y: 15 }, asteroidEntity);
+    // build Alloy factory at 17, 15
+    anticipateBuilding(EntityType.AlloyFactory, { x: 17, y: 15 }, asteroidEntity);
+    // build PVCell factory at 15, 15
+    anticipateBuilding(EntityType.PVCellFactory, { x: 15, y: 15 }, asteroidEntity);
+  }
+}
+
+export function removeRaidableAsteroid(asteroidEntity: Entity) {
+  const maxLevel = components.Asteroid.get(asteroidEntity)?.maxLevel ?? 1n;
+  // remove storage building at 21, 15
+  removeAnticipatedBuilding(EntityType.StorageUnit, asteroidEntity);
+  // remove iron mine at 23, 16
+  removeAnticipatedBuilding(EntityType.IronMine, asteroidEntity);
+  // remove copper mine at 23, 15
+  removeAnticipatedBuilding(EntityType.CopperMine, asteroidEntity);
+  // remove lithium mine at 23, 14
+  removeAnticipatedBuilding(EntityType.LithiumMine, asteroidEntity);
+
+  if (maxLevel >= 3n) {
+    // remove Iron Plate factory at 19, 15
+    removeAnticipatedBuilding(EntityType.IronPlateFactory, asteroidEntity);
+    // remove Alloy factory at 17, 15
+    removeAnticipatedBuilding(EntityType.AlloyFactory, asteroidEntity);
+    // remove PVCell factory at 15, 15
+    removeAnticipatedBuilding(EntityType.PVCellFactory, asteroidEntity);
+  }
+}
+
+function anticipateBuilding(buildingPrototype: Entity, coord: Coord, asteroidEntity: Entity) {
+  const buildingEntity = hashEntities(asteroidEntity, buildingPrototype);
+  components.BuildingType.set({ ...emptyData, value: buildingPrototype }, buildingEntity);
+  components.Position.set({ ...emptyData, x: coord.x, y: coord.y, parentEntity: asteroidEntity }, buildingEntity);
+  components.Level.set({ ...emptyData, value: 1n }, buildingEntity);
+  components.IsActive.set({ ...emptyData, value: true }, buildingEntity);
+  components.OwnedBy.set({ ...emptyData, value: asteroidEntity }, buildingEntity);
+}
+
+function removeAnticipatedBuilding(buildingPrototype: Entity, asteroidEntity: Entity) {
+  const buildingEntity = hashEntities(asteroidEntity, buildingPrototype);
+  components.Position.remove(buildingEntity);
+  components.BuildingType.remove(buildingEntity);
+  components.Level.remove(buildingEntity);
+  components.IsActive.remove(buildingEntity);
+  components.OwnedBy.remove(buildingEntity);
+}
+
+function anticipateStorage(resource: EResource, amount: number, asteroidEntity: Entity) {
+  components.ResourceCount.setWithKeys(
+    { ...emptyData, value: BigInt(amount) * RESOURCE_SCALE },
+    { entity: asteroidEntity as Hex, resource: resource }
+  );
+  components.MaxResourceCount.setWithKeys(
+    { ...emptyData, value: BigInt(amount) * RESOURCE_SCALE },
+    { entity: asteroidEntity as Hex, resource: resource }
+  );
+}
+
+// preserve this function in case needed later
+// function removeAnticipatedStorage(resource: EResource, amount: number, asteroidEntity: Entity) {
+//   // get the resource count and max resource count
+//   let resourceCount = components.ResourceCount.getWithKeys({ entity: asteroidEntity as Hex, resource: resource} )?.value ?? 0n;
+//   let maxResourceCount = components.MaxResourceCount.getWithKeys({ entity: asteroidEntity as Hex, resource: resource })?.value ?? 0n;
+
+//   // subtract the resource param from resource count and max resource count
+//   resourceCount -= BigInt(amount) * RESOURCE_SCALE;
+//   maxResourceCount -= BigInt(amount) * RESOURCE_SCALE;
+
+//   // set the new resource count and max resource count
+//   components.ResourceCount.setWithKeys({ ...emptyData, value: resourceCount }, { entity: asteroidEntity as Hex, resource: resource });
+//   components.MaxResourceCount.setWithKeys({ ...emptyData, value: maxResourceCount }, { entity: asteroidEntity as Hex, resource: resource });
+// }
 
 const ONE = BigInt(1);
 const getByteUInt = (_b: Entity, length: number, shift: number): number => {

@@ -1,9 +1,9 @@
 import { CapacityBar } from "@/components/core/CapacityBar";
 import { Dropdown } from "@/components/core/Dropdown";
+import { usePlayerAsteroids } from "@/hooks/usePlayerAsteroids";
 import { EntityToResourceImage } from "@/util/mappings";
 import { formatResourceCount } from "@/util/number";
-import { useEntityQuery } from "@latticexyz/react";
-import { Entity, Has, HasValue } from "@latticexyz/recs";
+import { Entity } from "@latticexyz/recs";
 import { useState } from "react";
 import { useMud } from "src/hooks";
 import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
@@ -14,11 +14,12 @@ import { entityToRockName } from "src/util/name";
 
 export const FavoriteAsteroids = () => {
   const playerEntity = useMud().playerAccount.entity;
-  const query = [HasValue(components.OwnedBy, { value: playerEntity }), Has(components.Asteroid)];
-  const asteroids = useEntityQuery(query);
+
+  const asteroids = usePlayerAsteroids(playerEntity);
 
   const home = components.Home.use(playerEntity)?.value as Entity;
-  const [selectedAsteroid, setSelectedAsteroid] = useState<Entity>(asteroids[0]);
+  const [selectedAsteroid, setSelectedAsteroid] = useState<Entity | null>(asteroids.length > 0 ? asteroids[0] : null);
+  if (!selectedAsteroid) return null;
 
   return (
     <div className="flex flex-col lg:flex-row justify-end p-6 gap-4">
