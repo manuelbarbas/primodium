@@ -85,10 +85,13 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
   };
 
   const units: Record<string, Entity> = {
+    minuteman: EntityType.MinutemanMarine,
+    trident: EntityType.TridentMarine,
     stinger: EntityType.StingerDrone,
     aegis: EntityType.AegisDrone,
     anvil: EntityType.AnvilDrone,
     hammer: EntityType.HammerDrone,
+    lightningCraft: EntityType.LightningCraft,
     colonyShip: EntityType.ColonyShip,
     droid: EntityType.Droid,
   };
