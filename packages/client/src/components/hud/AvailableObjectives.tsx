@@ -5,6 +5,7 @@ import { ObjectivesScreen } from "@/components/hud/modals/objectives/ObjectivesS
 import { usePersistentStore } from "@/game/stores/PersistentStore";
 import { useMud } from "@/hooks";
 import { components } from "@/network/components";
+import { cn } from "@/util/client";
 import { getEntityTypeName } from "@/util/common";
 import { ObjectiveEntityLookup } from "@/util/constants";
 import { getCanClaimObjective } from "@/util/objectives/objectiveRequirements";
@@ -73,11 +74,16 @@ export const AvailableObjectives = () => {
       <div
         onMouseLeave={handleMouseLeave}
         onMouseEnter={handleHover}
-        className="absolute right-0 top-0 animate"
-        style={{
-          transition: "transform 150ms ease-in-out",
-          transform: showObjectives ? "" : `translate(100%,0)`,
-        }}
+        // className="absolute right-0 top-0 animate"
+        className={cn(
+          "absolute right-0 top-0 transition-transform duration-150 ease-in-out",
+          !showObjectives && "translate-x-full"
+        )}
+
+        // style={{
+        //   transition: "transform 150ms ease-in-out",
+        //   transform: showObjectives ? "" : `translate(100%,0)`,
+        // }}
       >
         <Card className="absolute right-0 margin-auto relative">
           <div className="flex flex-col">
@@ -94,7 +100,7 @@ export const AvailableObjectives = () => {
             <List>
               {incompleteObjectives.slice(0, 5).map(([key]) => (
                 <AvailableObjectiveItem
-                  onClick={handleMouseLeave}
+                  onClick={() => setShowObjectives(false)}
                   playerEntity={player}
                   asteroidEntity={asteroid}
                   objectiveEntity={ObjectiveEntityLookup[key]}
