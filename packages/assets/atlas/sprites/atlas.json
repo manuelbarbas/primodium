@@ -5,7 +5,7 @@
     },
     "textures": [
         {
-            "image": "atlas.png?timestamp=1714719578624",
+            "image": "atlas.png?timestamp=1714763127961",
             "format": "RGBA8888",
             "size": {
                 "w": 2270,
@@ -14147,7 +14147,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/titanium_resource.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14168,7 +14168,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/advanced_unraidable.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14189,7 +14189,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/building_defense.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14210,7 +14210,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/building_defense_mult.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14231,7 +14231,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/defense.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14252,7 +14252,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/electricity.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14273,7 +14273,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/encryption.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14294,7 +14294,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/housing.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14315,7 +14315,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/unraidable.png",
+                    "filename": "sprites/resources/primodium_resource.gif",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14336,7 +14336,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/units/anvildrone.png",
+                    "filename": "sprites/resources/titanium_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14357,7 +14357,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/units/hammerdrone.png",
+                    "filename": "sprites/resources/utility/advanced_unraidable.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14373,6 +14373,195 @@
                     "frame": {
                         "x": 2048,
                         "y": 2033,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/utility/building_defense.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 192,
+                        "y": 640,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/utility/building_defense_mult.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1152,
+                        "y": 1220,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/utility/defense.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1184,
+                        "y": 1220,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/utility/electricity.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 288,
+                        "y": 1402,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/utility/encryption.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 320,
+                        "y": 1402,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/utility/housing.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1440,
+                        "y": 1873,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/utility/unraidable.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1472,
+                        "y": 1873,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/units/anvildrone.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1504,
+                        "y": 1873,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/units/hammerdrone.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1600,
+                        "y": 2245,
                         "w": 32,
                         "h": 32
                     }
@@ -14518,8 +14707,8 @@
                         "h": 27
                     },
                     "frame": {
-                        "x": 794,
-                        "y": 1129,
+                        "x": 352,
+                        "y": 1402,
                         "w": 26,
                         "h": 27
                     }
@@ -14539,8 +14728,8 @@
                         "h": 27
                     },
                     "frame": {
-                        "x": 732,
-                        "y": 1664,
+                        "x": 794,
+                        "y": 1129,
                         "w": 26,
                         "h": 27
                     }

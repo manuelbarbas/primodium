@@ -31,7 +31,8 @@ import CategoryProduction from "../icons/category/production.png?url";
 import CategoryStorage from "../icons/category/storage.png?url";
 import Navigator from "../icons/UI_Navigator.png?url";
 import Command from "../icons/UI_Command.png?url";
-import ShardSprite from "../sprites/shard/shard.png?url";
+import Shard from "../icons/UI_Shard.png?url";
+import Wormhole from "../icons/UI_WormholeBase.png?url";
 
 export const InterfaceIcons = {
   Add,
@@ -42,6 +43,7 @@ export const InterfaceIcons = {
   Build,
   Chat,
   Crosshairs,
+  Command,
   EncryptionBlue,
   EncryptionGold,
   Expansion,
@@ -52,21 +54,19 @@ export const InterfaceIcons = {
   NotAllowed,
   Objective,
   Outgoing,
-  Radar: Debug,
   Reinforcements,
   Reports,
   Return,
   Settings,
-  ShardSprite,
-  Shard: Asteroid,
+  Shard,
   Spectate,
   Starmap,
   Trade,
   Vault,
   Navigator,
-  Command,
   CategoryInfra,
   CategoryMilitary,
   CategoryProduction,
   CategoryStorage,
+  Wormhole,
 };
