@@ -151,7 +151,7 @@ export enum EObjectives {
 
   // (A-A-A-B-C) Victory; Extraction Points
   CaptureWormholeAsteroid,
-  ClaimWormholePoints,
+  TeleportResources,
 
   // (A-A-A-C) fleet management
   BuildStarmapper,

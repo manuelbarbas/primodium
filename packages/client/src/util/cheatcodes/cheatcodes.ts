@@ -16,6 +16,7 @@ import { MUD } from "src/network/types";
 import { encodeEntity } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
+import { getEntityTypeName } from "../common";
 import {
   BuildingEnumLookup,
   EntityType,
@@ -30,7 +31,6 @@ import { getAsteroidBounds, outOfBounds } from "../outOfBounds";
 import { getFullResourceCount } from "../resource";
 import { getBuildingAtCoord } from "../tile";
 import { TesterPack, testerPacks } from "./testerPacks";
-import { getEntityTypeName } from "../common";
 
 export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
   const buildings: Record<string, Entity> = {
@@ -149,7 +149,15 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
         }
       );
     });
-
+    if (unit === EntityType.ColonyShip) {
+      const colonyShipCap = components.MaxColonySlots.get(mud.playerAccount.entity)?.value ?? 0n;
+      await setComponentValue(
+        mud,
+        components.MaxColonySlots,
+        { playerEntity: mud.playerAccount.entity as Hex },
+        { value: colonyShipCap + value }
+      );
+    }
     const prevUnitCount =
       components.UnitCount.getWithKeys({ unit: unit as Hex, entity: spaceRock as Hex })?.value ?? 0n;
     await setComponentValue(
@@ -676,6 +684,22 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             toast.success(`${count} ${resource} set for ${entityToRockName(selectedRock)}`);
           },
         },
+        increaseMaxColonySlots: {
+          params: [{ name: "count", type: "number" }],
+          function: async (count: number) => {
+            const player = mud.playerAccount.entity;
+            if (!player) throw new Error("No player found");
+
+            const colonyShipCap = components.MaxColonySlots.get(player)?.value ?? 0n;
+            await setComponentValue(
+              mud,
+              components.MaxColonySlots,
+              { playerEntity: player as Hex },
+              { value: colonyShipCap + BigInt(count) }
+            );
+            toast.success(`Colony Ship Capacity increased by ${count}`);
+          },
+        },
         conquerAsteroid: {
           params: [{ name: "baseType", type: "dropdown", dropdownOptions: ["MainBase", "WormholeBase"] }],
           function: async (baseType: string) => {
@@ -693,11 +717,35 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             }
             const entity = baseType == "MainBase" ? EntityType.MainBase : EntityType.WormholeBase;
             const player = mud.playerAccount.entity;
+            const colonyShipCap = components.MaxColonySlots.get(player)?.value ?? 0n;
+            await setComponentValue(
+              mud,
+              components.MaxColonySlots,
+              { playerEntity: player as Hex },
+              { value: colonyShipCap + 1n }
+            );
             await setComponentValue(mud, components.OwnedBy, { entity: selectedRock as Hex }, { value: player });
             const position = components.Position.get(entity);
             if (!position) throw new Error("No main base found");
             await buildBuilding(mud, BuildingEnumLookup[entity], { ...position, parentEntity: selectedRock as Hex });
             toast.success(`Asteroid ${entityToRockName(selectedRock)} conquered`);
+          },
+        },
+        conquerAllPrimaryAsteroids: {
+          params: [],
+          function: async () => {
+            const asteroids = mud.components.Asteroid.getAllWith({ spawnsSecondary: true });
+            for (const asteroid of asteroids) {
+              const position = components.Position.get(asteroid);
+              if (!position) continue;
+              await setComponentValue(
+                mud,
+                mud.components.OwnedBy,
+                { entity: asteroid as Hex },
+                { value: mud.playerAccount.entity }
+              );
+            }
+            toast.success("All primary asteroids conquered");
           },
         },
         setTerrain: {
@@ -759,6 +807,30 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
           ],
           function: (unit: string, count: number) => {
             createFleet([{ unit: units[unit], count }], []);
+          },
+        },
+        giveFleetUnit: {
+          params: [
+            { name: "unit", type: "dropdown", dropdownOptions: Object.keys(units) },
+            { name: "count", type: "number" },
+          ],
+          function: async (unit: string, count: number) => {
+            const player = mud.playerAccount.entity;
+            if (!player) throw new Error("No player found");
+            const selectedFleet = mud.components.SelectedFleet.get()?.value;
+
+            const unitEntity = units[unit];
+
+            if (!unitEntity || !selectedFleet) throw new Error("Resource not found");
+
+            await setComponentValue(
+              mud,
+              mud.components.UnitCount,
+              { entity: selectedFleet as Hex, unit: unitEntity as Hex },
+              {
+                value: BigInt(count),
+              }
+            );
           },
         },
         giveFleetResource: {

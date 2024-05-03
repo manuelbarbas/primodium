@@ -44,7 +44,7 @@ export const Dock = () => {
           <Modal.Button className={btnClass} tooltip="battle reports" shape={"circle"} size={"lg"} variant={"ghost"}>
             <IconLabel className={iconClass} imageUri={InterfaceIcons.Reports} />
           </Modal.Button>
-          <Modal.Content className="w-[40rem] h-[50rem]">
+          <Modal.Content className="w-[50rem] h-[45rem]">
             <BattleReports />
           </Modal.Content>
         </Modal>

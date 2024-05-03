@@ -68,7 +68,7 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
           x
         </Button>
 
-        {buildingType !== EntityType.MainBase && (
+        {buildingType !== EntityType.MainBase && buildingType !== EntityType.WormholeBase && (
           <>
             <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Move, selectedBuilding)}>
               <Navigator.NavButton

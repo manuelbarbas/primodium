@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useMud } from "src/hooks/useMud";
 
+import { usePlayerAsteroids } from "@/hooks/usePlayerAsteroids";
+import { YouDied } from "@/screens/YouDied";
 import { Primodium, initPrimodium } from "@game/api";
 import { Progress } from "src/components/core/Progress";
 import { GameHUD } from "src/components/hud/HUD";
@@ -53,6 +55,7 @@ export const Game = () => {
     };
   }, []);
 
+  const isDead = usePlayerAsteroids(mud.playerAccount.entity).length === 0;
   return (
     <div>
       {!primodium && (
@@ -70,9 +73,7 @@ export const Game = () => {
         <div id="phaser-container" className="cursor-pointer screen-container">
           {!!primodium && (
             <PrimodiumProvider {...primodium}>
-              <WidgetProvider>
-                <GameHUD />
-              </WidgetProvider>
+              <WidgetProvider>{isDead ? <YouDied /> : <GameHUD />}</WidgetProvider>
             </PrimodiumProvider>
           )}
         </div>

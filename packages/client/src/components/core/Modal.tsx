@@ -2,20 +2,24 @@ import { Button } from "@/components/core/Button";
 import { Card } from "@/components/core/Card";
 import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
 import { usePrimodium } from "@/hooks/usePrimodium";
-import React, { ReactNode, createContext, useContext, useEffect, useRef, useState } from "react";
+import React, { ReactNode, createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaTimes } from "react-icons/fa";
 
 interface ModalContextType {
   isOpen: boolean;
   title?: string;
-  setIsOpen: (isOpen: boolean) => void;
+  handleClose: () => void;
+  blockClose: boolean;
+  handleOpen: () => void;
 }
 
 const ModalContext = createContext<ModalContextType>({
   isOpen: false,
   title: undefined,
-  setIsOpen: () => false,
+  handleClose: () => null,
+  handleOpen: () => null,
+  blockClose: false,
 });
 
 interface ModalProps {
@@ -23,27 +27,31 @@ interface ModalProps {
   title?: string;
   keybind?: KeybindActionKeys;
   keybindClose?: boolean;
+  startOpen?: boolean;
+  onClose?: () => void;
+  blockClose?: boolean;
 }
 
 export const Modal: React.FC<ModalProps> & {
   Button: React.FC<React.ComponentProps<typeof Button>>;
   CloseButton: React.FC<React.ComponentProps<typeof Button>>;
   Content: React.FC<{ children: ReactNode; className?: string }>;
-} = ({ children, title, keybind, keybindClose }) => {
-  const [isOpen, setIsOpen] = useState(false);
+} = ({ children, title, keybind, keybindClose, startOpen = false, onClose, blockClose = false }) => {
+  const [isOpen, setIsOpen] = useState(startOpen);
   const primodium = usePrimodium();
   const {
     audio,
     input: { addListener },
   } = useRef(primodium.api("UI")).current;
 
-  useEffect(() => {
-    const handleEscPress = () => {
-      if (!isOpen) return;
-      audio.play("Sequence2", "ui");
-      setIsOpen(false);
-    };
+  const handleClose = useCallback(() => {
+    if (blockClose || !isOpen) return;
+    audio.play("Sequence2", "ui");
+    onClose?.();
+    setIsOpen(false);
+  }, [isOpen, audio, onClose]);
 
+  useEffect(() => {
     const handleOpenPress = () => {
       if (!isOpen) setIsOpen(true);
       if (isOpen && keybindClose) setIsOpen(false);
@@ -55,7 +63,7 @@ export const Modal: React.FC<ModalProps> & {
       primodium.enableGlobalInput();
     }
 
-    const escListener = addListener("Esc", handleEscPress);
+    const escListener = addListener("Esc", handleClose);
     const openListener = keybind ? addListener(keybind, handleOpenPress) : null;
 
     return () => {
@@ -64,20 +72,24 @@ export const Modal: React.FC<ModalProps> & {
 
       primodium.enableGlobalInput();
     };
-  }, [isOpen, audio, keybind, keybindClose, addListener, primodium]);
+  }, [isOpen, audio, keybind, keybindClose, addListener, primodium, handleClose]);
 
-  return <ModalContext.Provider value={{ isOpen, setIsOpen, title }}>{children}</ModalContext.Provider>;
+  return (
+    <ModalContext.Provider value={{ isOpen, handleClose, title, handleOpen: () => setIsOpen(true), blockClose }}>
+      {children}
+    </ModalContext.Provider>
+  );
 };
 
 Modal.Button = function ModalButton(props: React.ComponentProps<typeof Button>) {
-  const { setIsOpen } = useContext(ModalContext);
+  const { handleOpen } = useContext(ModalContext);
 
   return (
     <Button
       {...props}
       clickSound={props.clickSound ?? "Sequence"}
       onClick={(e) => {
-        setIsOpen(true);
+        handleOpen();
         props.onClick?.(e);
       }}
     />
@@ -85,7 +97,7 @@ Modal.Button = function ModalButton(props: React.ComponentProps<typeof Button>) 
 };
 
 Modal.CloseButton = function ModalButton(props: React.ComponentProps<typeof Button>) {
-  const { setIsOpen } = useContext(ModalContext);
+  const { handleClose } = useContext(ModalContext);
 
   return (
     <Button
@@ -93,22 +105,19 @@ Modal.CloseButton = function ModalButton(props: React.ComponentProps<typeof Butt
       clickSound={props.clickSound ?? "Sequence"}
       onClick={(e) => {
         if (props.onClick) props.onClick(e);
-        setIsOpen(false);
+        handleClose();
       }}
     />
   );
 };
 
 Modal.Content = function ModalContent({ children, className }) {
-  const { isOpen, setIsOpen, title } = useContext(ModalContext);
+  const { isOpen, title, blockClose, handleClose } = useContext(ModalContext);
   const modalRef = useRef<HTMLDivElement>(null);
-  const primodium = usePrimodium();
-  const { audio } = primodium.api();
 
   const handleClickOutside = (event: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-      audio.play("Sequence2", "ui");
-      setIsOpen(false);
+      handleClose();
     }
   };
 
@@ -123,15 +132,11 @@ Modal.Content = function ModalContent({ children, className }) {
         <Card className="w-full h-full shadow-2xl pointer-events-auto" noMotion>
           <div className="absolute top-0 -translate-y-full w-full flex justify-between items-center p-2">
             <p className="font-bold uppercase pr-2 text-accent">{title}</p>
-            <Button
-              onClick={() => {
-                audio.play("Sequence2", "ui");
-                setIsOpen(false);
-              }}
-              className="btn-sm ghost"
-            >
-              <FaTimes />
-            </Button>
+            {!blockClose && (
+              <Button onClick={handleClose} className="btn-sm ghost">
+                <FaTimes />
+              </Button>
+            )}
           </div>
           {children}
         </Card>

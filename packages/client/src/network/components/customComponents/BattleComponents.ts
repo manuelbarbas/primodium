@@ -23,7 +23,7 @@ export const createBattleComponents = () => {
       defender: Type.Entity,
       defenderDamage: Type.BigInt,
       attackingPlayer: Type.Entity,
-      defendingPlayer: Type.Entity,
+      defendingPlayer: Type.OptionalEntity,
       winner: Type.Entity,
       rock: Type.Entity,
       timestamp: Type.BigInt,
@@ -72,8 +72,8 @@ export const createBattleComponents = () => {
     }, {} as Record<string, { level: bigint; unitsAtStart: bigint; casualties: bigint }>);
 
     const resources = Object.entries(ResourceEnumLookup).reduce((acc, [entity, index]) => {
-      const resourcesAtStart = participant.resourcesAtStart ? participant.resourcesAtStart[index] : 0n;
-      const resourcesAtEnd = participant.resourcesAtEnd ? participant.resourcesAtEnd[index] : 0n;
+      const resourcesAtStart = participant.resourcesAtStart ? participant.resourcesAtStart[index - 1] : 0n;
+      const resourcesAtEnd = participant.resourcesAtEnd ? participant.resourcesAtEnd[index - 1] : 0n;
       if (resourcesAtStart === resourcesAtEnd) return acc;
       acc[entity] = {
         resourcesAtStart,
@@ -113,13 +113,10 @@ export const createBattleComponents = () => {
 
   const getAllPlayerBattles = (player: Entity) => {
     return RawBattle.getAll().reduce((acc, battleEntity) => {
-      const battle = get(battleEntity);
-      if (!battle) return acc;
+      const battle = RawBattle.get(battleEntity)!;
 
-      const isAcceptable = !![battle.attacker, battle.defender].find((entity) => {
-        const isFleet = components.IsFleet.has(entity);
-        const rockEntity = isFleet ? components.OwnedBy.get(entity)?.value : entity;
-        return components.OwnedBy.get(rockEntity as Entity)?.value === player;
+      const isAcceptable = !![battle.attackingPlayer, battle.defendingPlayer].find((entity) => {
+        return entity === player;
       });
       if (!isAcceptable) return acc;
       return [...acc, battleEntity];

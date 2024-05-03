@@ -5,7 +5,7 @@ import { mountStoreDevtool } from "simple-zustand-devtools";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-const VERSION = 7;
+const VERSION = 8;
 
 type Keybinds = Partial<{
   [key in KeybindActionKeys]: Set<Key>;
@@ -41,6 +41,7 @@ type PersistentState = {
   panes: Panes;
   fontStyle: string;
   hideHotkeys: boolean;
+  showIntro: boolean;
 };
 
 type PersistentActions = {
@@ -59,6 +60,7 @@ type PersistentActions = {
   setNoExternalAccount: (value: boolean) => void; // Add this action
   removeNoExternalAccount: () => void; // Add this action
   setHideHotkeys: (val: boolean) => void;
+  setShowIntro: (val: boolean) => void;
 };
 
 const defaults: PersistentState = {
@@ -74,7 +76,6 @@ const defaults: PersistentState = {
     sfx: 0.5,
     ui: 0.25,
   },
-  hideHotkeys: false,
   keybinds: {
     RightClick: new Set(["POINTER_RIGHT"]),
     LeftClick: new Set(["POINTER_LEFT"]),
@@ -112,6 +113,8 @@ const defaults: PersistentState = {
     Chat: new Set(["OPEN_BRACKET"]),
     HideAll: new Set(["H"]),
   },
+  hideHotkeys: false,
+  showIntro: true,
 };
 
 export const usePersistentStore = create<PersistentState & PersistentActions>()(
@@ -179,6 +182,7 @@ export const usePersistentStore = create<PersistentState & PersistentActions>()(
       setNoExternalAccount: (value: boolean) => set({ noExternalAccount: value }),
       removeNoExternalAccount: () => set({ noExternalAccount: false }),
       setHideHotkeys: (val: boolean) => set({ hideHotkeys: val }),
+      setShowIntro: (val: boolean) => set({ showIntro: val }),
     }),
     {
       name: "persistent-storage",

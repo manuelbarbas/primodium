@@ -569,7 +569,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.ClaimWormholePoints,
+    EObjectives.TeleportResources,
     {
       category: "Victory (Wormhole)",
       type: "Claim",
