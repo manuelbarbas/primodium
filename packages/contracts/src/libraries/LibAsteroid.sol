@@ -183,7 +183,7 @@ library LibAsteroid {
 
   function getSecondaryAsteroidUnitsAndEncryption(uint256 level) internal pure returns (uint256, uint256) {
     uint256 droidCount = (4 ** level) + (10 * (level ** 2));
-    uint256 encryption = (level * 300 + 130) * 1e18;
+    uint256 encryption = (level * 300 + 300) * 1e18;
     return (droidCount, encryption);
   }
 

@@ -76,32 +76,6 @@ export const Objectives = new Map<EObjectives, Objective>([
         "Upgrading a main base gives you more resource storage and makes your asteroid stronger. To upgrade, select your main base and select Upgrade.",
     },
   ],
-  [
-    EObjectives.UpgradeMainBase3,
-    {
-      category: "Fundamentals",
-      type: "Upgrade",
-      requiredObjectives: [EObjectives.UpgradeMainBase2],
-      requiredMainBase: 3n,
-      buildingType: EntityType.MainBase,
-      level: 4n,
-      description:
-        "Upgrading a main base gives you more resource storage and makes your asteroid stronger. To upgrade, select your main base and select Upgrade.",
-    },
-  ],
-  [
-    EObjectives.UpgradeMainBase4,
-    {
-      category: "Fundamentals",
-      type: "Upgrade",
-      requiredObjectives: [EObjectives.UpgradeMainBase3],
-      requiredMainBase: 4n,
-      buildingType: EntityType.MainBase,
-      level: 5n,
-      description:
-        "Upgrading a main base gives you more resource storage and makes your asteroid stronger. To upgrade, select your main base and select Upgrade.",
-    },
-  ],
 
   /*//////////////////////////////////////////////////////////////
                           Expand Base
@@ -126,18 +100,6 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.UpgradeMainBase2],
       requiredMainBase: 3n,
       level: 3n,
-      description:
-        "Expansion gives you more room to build and unlocks new ores. To Expand, Select your main base and click on Expand base.",
-    },
-  ],
-  [
-    EObjectives.ExpandBase3,
-    {
-      category: "Fundamentals",
-      type: "Expand",
-      requiredObjectives: [EObjectives.UpgradeMainBase4],
-      requiredMainBase: 5n,
-      level: 4n,
       description:
         "Expansion gives you more room to build and unlocks new ores. To Expand, Select your main base and click on Expand base.",
     },
@@ -172,32 +134,6 @@ export const Objectives = new Map<EObjectives, Objective>([
         "Upgrading a mine produces more resources without needing to expand. To upgrade, select the mine and select Upgrade.",
     },
   ],
-  [
-    EObjectives.UpgradeIronMine3,
-    {
-      category: "Fundamentals",
-      type: "Upgrade",
-      requiredObjectives: [EObjectives.UpgradeIronMine2, EObjectives.UpgradeMainBase3],
-      requiredMainBase: 4n,
-      buildingType: EntityType.IronMine,
-      level: 4n,
-      description:
-        "Upgrading a mine produces more resources without needing to expand. To upgrade, select the mine and select Upgrade.",
-    },
-  ],
-  [
-    EObjectives.UpgradeIronMine4,
-    {
-      category: "Fundamentals",
-      type: "Upgrade",
-      requiredObjectives: [EObjectives.UpgradeIronMine3, EObjectives.UpgradeMainBase4],
-      requiredMainBase: 5n,
-      buildingType: EntityType.IronMine,
-      level: 5n,
-      description:
-        "Upgrading a mine produces more resources without needing to expand. To upgrade, select the mine and select Upgrade.",
-    },
-  ],
 
   [
     EObjectives.UpgradeCopperMine1,
@@ -225,32 +161,6 @@ export const Objectives = new Map<EObjectives, Objective>([
         "Upgrading a mine produces more resources without needing to expand. To upgrade, select the mine and select Upgrade.",
     },
   ],
-  [
-    EObjectives.UpgradeCopperMine3,
-    {
-      category: "Fundamentals",
-      type: "Upgrade",
-      requiredObjectives: [EObjectives.UpgradeCopperMine2, EObjectives.UpgradeMainBase3],
-      requiredMainBase: 4n,
-      buildingType: EntityType.CopperMine,
-      level: 4n,
-      description:
-        "Upgrading a mine produces more resources without needing to expand. To upgrade, select the mine and select Upgrade.",
-    },
-  ],
-  [
-    EObjectives.UpgradeCopperMine4,
-    {
-      category: "Fundamentals",
-      type: "Upgrade",
-      requiredObjectives: [EObjectives.UpgradeCopperMine3, EObjectives.UpgradeMainBase4],
-      requiredMainBase: 5n,
-      buildingType: EntityType.CopperMine,
-      level: 5n,
-      description:
-        "Upgrading a mine produces more resources without needing to expand. To upgrade, select the mine and select Upgrade.",
-    },
-  ],
 
   [
     EObjectives.UpgradeLithiumMine1,
@@ -274,32 +184,6 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 3n,
       buildingType: EntityType.LithiumMine,
       level: 3n,
-      description:
-        "Upgrading a mine produces more resources without needing to expand. To upgrade, select the mine and select Upgrade.",
-    },
-  ],
-  [
-    EObjectives.UpgradeLithiumMine3,
-    {
-      category: "Fundamentals",
-      type: "Upgrade",
-      requiredObjectives: [EObjectives.UpgradeLithiumMine2, EObjectives.UpgradeMainBase3],
-      requiredMainBase: 4n,
-      buildingType: EntityType.LithiumMine,
-      level: 4n,
-      description:
-        "Upgrading a mine produces more resources without needing to expand. To upgrade, select the mine and select Upgrade.",
-    },
-  ],
-  [
-    EObjectives.UpgradeLithiumMine4,
-    {
-      category: "Fundamentals",
-      type: "Upgrade",
-      requiredObjectives: [EObjectives.UpgradeLithiumMine3, EObjectives.UpgradeMainBase4],
-      requiredMainBase: 5n,
-      buildingType: EntityType.LithiumMine,
-      level: 5n,
       description:
         "Upgrading a mine produces more resources without needing to expand. To upgrade, select the mine and select Upgrade.",
     },

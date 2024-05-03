@@ -21,42 +21,25 @@ library LibRaidableAsteroid {
     // get max level to determine if common1 (maxLevel: 1) or common2 (maxLevel: 3)
     uint256 maxLevel = Asteroid.getMaxLevel(asteroidEntity);
     bytes32 buildingEntity;
+    uint256 resourceMax;
     int32 x;
     int32 y;
 
-    // build one storage building
-    buildingEntity = LibBuilding.build(bytes32(0), StorageUnitPrototypeId, PositionData(21, 15, asteroidEntity), true);
-    LibStorage.increaseMaxStorage(buildingEntity, 1);
-
-    // fill storage with max common resources
-    uint256 resourceMax = MaxResourceCount.get(asteroidEntity, uint8(EResource.Iron));
-    LibStorage.checkedIncreaseStoredResource(asteroidEntity, uint8(EResource.Iron), resourceMax);
-
-    resourceMax = MaxResourceCount.get(asteroidEntity, uint8(EResource.Copper));
-    LibStorage.checkedIncreaseStoredResource(asteroidEntity, uint8(EResource.Copper), resourceMax);
-
-    resourceMax = MaxResourceCount.get(asteroidEntity, uint8(EResource.Lithium));
-    LibStorage.checkedIncreaseStoredResource(asteroidEntity, uint8(EResource.Lithium), resourceMax);
-
     // build each mine type
-    buildingEntity = LibBuilding.build(bytes32(0), IronMinePrototypeId, PositionData(23, 16, asteroidEntity), true);
+    buildingEntity = LibBuilding.build(bytes32(0), IronMinePrototypeId, PositionData(22, 15, asteroidEntity), true);
     LibProduction.upgradeResourceProduction(buildingEntity, 1);
-    buildingEntity = LibBuilding.build(bytes32(0), CopperMinePrototypeId, PositionData(23, 15, asteroidEntity), true);
+    buildingEntity = LibBuilding.build(bytes32(0), CopperMinePrototypeId, PositionData(22, 14, asteroidEntity), true);
     LibProduction.upgradeResourceProduction(buildingEntity, 1);
-    buildingEntity = LibBuilding.build(bytes32(0), LithiumMinePrototypeId, PositionData(23, 14, asteroidEntity), true);
+    buildingEntity = LibBuilding.build(bytes32(0), LithiumMinePrototypeId, PositionData(22, 13, asteroidEntity), true);
     LibProduction.upgradeResourceProduction(buildingEntity, 1);
 
-    // if common2, add max advanced resources and build each factory type
+    // build and (maybe) upgrade two storage buildings
+    buildingEntity = LibBuilding.build(bytes32(0), StorageUnitPrototypeId, PositionData(21, 15, asteroidEntity), true);
+    LibStorage.increaseMaxStorage(buildingEntity, 2);
+
+    // if common2, upgrade storage so it can hold adv resources, and build each factory type
     if (maxLevel >= 3) {
-      resourceMax = MaxResourceCount.get(asteroidEntity, uint8(EResource.IronPlate));
-      LibStorage.checkedIncreaseStoredResource(asteroidEntity, uint8(EResource.IronPlate), resourceMax);
-
-      resourceMax = MaxResourceCount.get(asteroidEntity, uint8(EResource.Alloy));
-      LibStorage.checkedIncreaseStoredResource(asteroidEntity, uint8(EResource.Alloy), resourceMax);
-
-      resourceMax = MaxResourceCount.get(asteroidEntity, uint8(EResource.PVCell));
-      LibStorage.checkedIncreaseStoredResource(asteroidEntity, uint8(EResource.PVCell), resourceMax);
-
+      // build factories
       buildingEntity = LibBuilding.build(
         bytes32(0),
         IronPlateFactoryPrototypeId,
@@ -78,7 +61,27 @@ library LibRaidableAsteroid {
         true
       );
       LibProduction.upgradeResourceProduction(buildingEntity, 1);
+
+      // fill storage with max adv resources
+      resourceMax = MaxResourceCount.get(asteroidEntity, uint8(EResource.IronPlate));
+      LibStorage.checkedIncreaseStoredResource(asteroidEntity, uint8(EResource.IronPlate), resourceMax);
+
+      resourceMax = MaxResourceCount.get(asteroidEntity, uint8(EResource.Alloy));
+      LibStorage.checkedIncreaseStoredResource(asteroidEntity, uint8(EResource.Alloy), resourceMax);
+
+      resourceMax = MaxResourceCount.get(asteroidEntity, uint8(EResource.PVCell));
+      LibStorage.checkedIncreaseStoredResource(asteroidEntity, uint8(EResource.PVCell), resourceMax);
     }
+
+    // fill storage with max common resources
+    resourceMax = MaxResourceCount.get(asteroidEntity, uint8(EResource.Iron));
+    LibStorage.checkedIncreaseStoredResource(asteroidEntity, uint8(EResource.Iron), resourceMax);
+
+    resourceMax = MaxResourceCount.get(asteroidEntity, uint8(EResource.Copper));
+    LibStorage.checkedIncreaseStoredResource(asteroidEntity, uint8(EResource.Copper), resourceMax);
+
+    resourceMax = MaxResourceCount.get(asteroidEntity, uint8(EResource.Lithium));
+    LibStorage.checkedIncreaseStoredResource(asteroidEntity, uint8(EResource.Lithium), resourceMax);
 
     // max droid units are already added in initSecondaryAsteroid(), just need to init a special timestamp
     DroidRegenTimestamp.set(asteroidEntity, block.timestamp);

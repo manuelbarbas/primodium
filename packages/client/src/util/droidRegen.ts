@@ -33,7 +33,7 @@ export function getAsteroidDroidCount(asteroid: Entity): bigint {
 }
 
 function getSecondaryAsteroidUnitsAndEncryption(asteroidEntity: Entity, level: bigint) {
-  const droidCount = 4n ** level + 100n;
-  const encryption = (level * 10n + 10n) * RESOURCE_SCALE;
+  const droidCount = 4n ** level + 10n * level ** 2n;
+  const encryption = (level * 300n + 300n) * RESOURCE_SCALE;
   return { droidCount, encryption };
 }

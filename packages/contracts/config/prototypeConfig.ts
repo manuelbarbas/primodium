@@ -2724,22 +2724,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       1: { P_RequiredBaseLevel: { value: 2n } },
     },
   },
-  UpgradeMainBase3: {
-    tables: {
-      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
-    },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 3n } },
-    },
-  },
-  UpgradeMainBase4: {
-    tables: {
-      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
-    },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 4n } },
-    },
-  },
 
   /*//////////////////////////////////////////////////////////////
                           Expand Base
@@ -2758,14 +2742,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: {
       1: { P_RequiredBaseLevel: { value: 3n } },
-    },
-  },
-  ExpandBase3: {
-    tables: {
-      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
-    },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 5n } },
     },
   },
 
@@ -2788,22 +2764,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       1: { P_RequiredBaseLevel: { value: 3n } },
     },
   },
-  UpgradeIronMine3: {
-    tables: {
-      P_ResourceReward: getResourceValues({ Iron: 250 }),
-    },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 4n } },
-    },
-  },
-  UpgradeIronMine4: {
-    tables: {
-      P_ResourceReward: getResourceValues({ Iron: 250 }),
-    },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 5n } },
-    },
-  },
 
   UpgradeCopperMine1: {
     tables: {
@@ -2821,22 +2781,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       1: { P_RequiredBaseLevel: { value: 3n } },
     },
   },
-  UpgradeCopperMine3: {
-    tables: {
-      P_ResourceReward: getResourceValues({ Copper: 250 }),
-    },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 4n } },
-    },
-  },
-  UpgradeCopperMine4: {
-    tables: {
-      P_ResourceReward: getResourceValues({ Copper: 250 }),
-    },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 5n } },
-    },
-  },
 
   UpgradeLithiumMine1: {
     tables: {
@@ -2852,22 +2796,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: {
       1: { P_RequiredBaseLevel: { value: 3n } },
-    },
-  },
-  UpgradeLithiumMine3: {
-    tables: {
-      P_ResourceReward: getResourceValues({ Lithium: 250 }),
-    },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 4n } },
-    },
-  },
-  UpgradeLithiumMine4: {
-    tables: {
-      P_ResourceReward: getResourceValues({ Lithium: 250 }),
-    },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 5n } },
     },
   },
 
@@ -2930,7 +2858,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   },
   BattleFleet: {
     tables: {
-      P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
+      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
     },
   },
 
@@ -3134,7 +3062,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     tables: {
       P_ResourceReward: getResourceValues({ Lithium: 100 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
+    levels: { 1: { P_RequiredBaseLevel: { value: 4n } } },
   },
 
   /* ------------------------------ A-B-B Market ------------------------------ */

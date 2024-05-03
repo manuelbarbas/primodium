@@ -122,24 +122,49 @@ function getAsteroidData(
     };
   }
   const distributionVal = getByteUInt(asteroidEntity, 7, 12) % 100;
-  // default large
+
   let maxLevel = 8;
-  let primodium = 5n;
-  //micro
-  if (distributionVal <= 50) {
+  let primodium = 1n;
+
+  const asteroidThresholdProb = components.P_AsteroidThresholdProbConfig.get();
+  if (!asteroidThresholdProb) throw new Error("asteroidThresholdProb not found");
+
+  let mapId = 1;
+
+  // Distribution
+  if (distributionVal < asteroidThresholdProb.common1) {
+    // common resources
+    maxLevel = 1; // micro
+    primodium = 1n;
+    mapId = EMap.Common;
+  } else if (distributionVal < asteroidThresholdProb.common2) {
+    // common + advanced resources
+    maxLevel = 3; // small
+    primodium = 2n;
+    mapId = EMap.Common;
+  } else if (distributionVal < asteroidThresholdProb.eliteMicro) {
+    // elite resources, micro
     maxLevel = 1;
     primodium = 3n;
   } else if (distributionVal < asteroidThresholdProb.eliteSmall) {
     // elite resources, small
     maxLevel = 3;
     primodium = 4n;
-    //medium
-  } else if (distributionVal <= 90) {
+  } else if (distributionVal < asteroidThresholdProb.eliteMedium) {
+    // elite resources, medium
     maxLevel = 6;
+    primodium = 5n;
+  } else {
+    // elite resources, large
+    maxLevel = 8;
     primodium = 5n;
   }
 
-  const mapId = (getByteUInt(asteroidEntity, 3, 20) % 4) + 2;
+  if (mapId != EMap.Common) {
+    // elite resources
+    // number between 2 and 5
+    mapId = (getByteUInt(asteroidEntity, 3, 20) % 4) + 2;
+  }
   return {
     ...emptyData,
     isAsteroid: true,
@@ -155,22 +180,16 @@ function buildRaidableAsteroid(asteroidEntity: Entity) {
   // get maxlevel to determine if factories should be added
   const maxLevel = components.Asteroid.get(asteroidEntity)?.maxLevel ?? 1n;
 
+  // build iron mine at 22, 15
+  anticipateBuilding(EntityType.IronMine, { x: 22, y: 15 }, asteroidEntity);
+  // build copper mine at 22, 14
+  anticipateBuilding(EntityType.CopperMine, { x: 22, y: 14 }, asteroidEntity);
+  // build lithium mine at 22, 13
+  anticipateBuilding(EntityType.LithiumMine, { x: 22, y: 13 }, asteroidEntity);
+
   // storage building at 21, 15
   anticipateBuilding(EntityType.StorageUnit, { x: 21, y: 15 }, asteroidEntity);
-
-  const storageMax = storageUnitStorageUpgrades[1];
-
-  // set storage to max out common resources
-  anticipateStorage(EResource.Iron, storageMax.Iron, asteroidEntity);
-  anticipateStorage(EResource.Copper, storageMax.Copper, asteroidEntity);
-  anticipateStorage(EResource.Lithium, storageMax.Lithium, asteroidEntity);
-
-  // build iron mine at 23, 16
-  anticipateBuilding(EntityType.IronMine, { x: 23, y: 16 }, asteroidEntity);
-  // build copper mine at 23, 15
-  anticipateBuilding(EntityType.CopperMine, { x: 23, y: 15 }, asteroidEntity);
-  // build lithium mine at 23, 14
-  anticipateBuilding(EntityType.LithiumMine, { x: 23, y: 14 }, asteroidEntity);
+  const storageMax = storageUnitStorageUpgrades[2];
 
   if (maxLevel >= 3n) {
     // set storage to max out advanced resources
@@ -178,13 +197,18 @@ function buildRaidableAsteroid(asteroidEntity: Entity) {
     anticipateStorage(EResource.Alloy, storageMax.Alloy, asteroidEntity);
     anticipateStorage(EResource.PVCell, storageMax.PVCell, asteroidEntity);
 
-    // build Iron Plate factory at 19, 15
+    // build Iron Plate factory at 17, 15
     anticipateBuilding(EntityType.IronPlateFactory, { x: 19, y: 15 }, asteroidEntity);
-    // build Alloy factory at 17, 15
+    // build Alloy factory at 15, 15
     anticipateBuilding(EntityType.AlloyFactory, { x: 17, y: 15 }, asteroidEntity);
-    // build PVCell factory at 15, 15
+    // build PVCell factory at 15, 17
     anticipateBuilding(EntityType.PVCellFactory, { x: 15, y: 15 }, asteroidEntity);
   }
+
+  // set storage to max out common resources
+  anticipateStorage(EResource.Iron, storageMax.Iron, asteroidEntity);
+  anticipateStorage(EResource.Copper, storageMax.Copper, asteroidEntity);
+  anticipateStorage(EResource.Lithium, storageMax.Lithium, asteroidEntity);
 }
 
 export function removeRaidableAsteroid(asteroidEntity: Entity) {
