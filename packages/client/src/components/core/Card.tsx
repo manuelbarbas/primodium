@@ -6,15 +6,17 @@ const lerp = (value: number, inMin: number, inMax: number, outMin: number, outMa
   return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
 };
 
-export const Card: React.FC<{
-  children: React.ReactNode;
-  className?: string;
-  noDecor?: boolean;
-  fragment?: boolean;
-  noMotion?: boolean;
-}> = ({ children, className, noDecor = false, fragment = false, noMotion = false }) => {
+export const Card = forwardRef<
+  HTMLDivElement,
+  {
+    children: React.ReactNode | React.ReactNode[];
+    className?: string;
+    noDecor?: boolean;
+    fragment?: boolean;
+    noMotion?: boolean;
+  }
+>(({ children, className, noDecor = false, fragment = false, noMotion = false }, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
-
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
     const { left, top, width, height } = containerRef.current.getBoundingClientRect();
@@ -42,6 +44,7 @@ export const Card: React.FC<{
   if (fragment)
     return (
       <div
+        ref={ref}
         className={`h-full`}
         style={{
           perspective: "1000px",
@@ -65,6 +68,7 @@ export const Card: React.FC<{
 
   return (
     <div
+      ref={ref}
       className={`h-full`}
       style={{
         perspective: "1000px",
@@ -72,7 +76,6 @@ export const Card: React.FC<{
       }}
     >
       <div
-        ref={containerRef}
         {...(!noMotion
           ? {
               onMouseMove: handleMouseMove,
@@ -98,7 +101,7 @@ export const Card: React.FC<{
       </div>
     </div>
   );
-};
+});
 
 export const SecondaryCard = forwardRef<
   HTMLDivElement,

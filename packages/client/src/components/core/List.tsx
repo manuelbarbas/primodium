@@ -18,7 +18,6 @@ const ListItem: React.FC<ListItemProps> = ({
   bullet = false,
   className,
 }) => {
-  console.log({ bullet, index });
   return (
     <li className={`flex gap-1 items-center ${strikethrough ? "line-through" : ""} ${className}`}>
       {index !== undefined && <span className="mr-2 font-bold">{index + 1}.</span>}
@@ -57,7 +56,6 @@ export const List: React.FC<ListProps> & { Item: React.FC<ListItemProps> } = ({
     }
     return child;
   });
-  console.log({ enhancedChildren });
 
   return <ListTag className={`list-none shadow rounded-lg ${className}`}>{enhancedChildren}</ListTag>;
 };
