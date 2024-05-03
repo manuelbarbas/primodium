@@ -10,7 +10,7 @@ import { useMud } from "src/hooks";
 import { createAlliance } from "src/network/setup/contractCalls/alliance";
 import { isProfane } from "src/util/profanity";
 
-const ALLIANCE_TAG_SIZE = 6;
+export const ALLIANCE_TAG_SIZE = 6;
 
 export const CreateScreen = () => {
   const mud = useMud();
