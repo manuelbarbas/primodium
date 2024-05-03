@@ -12,6 +12,7 @@ import { isProfane } from "src/util/profanity";
 
 export const ALLIANCE_TAG_SIZE = 6;
 
+// This screen is only accessible to players who are not in an alliance
 export const CreateScreen = () => {
   const mud = useMud();
   const [inviteOnly, setInviteOnly] = useState(true);

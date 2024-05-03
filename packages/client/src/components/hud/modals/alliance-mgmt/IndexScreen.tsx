@@ -19,6 +19,9 @@ import { TextInput } from "@/components/core/TextInput";
 import { ALLIANCE_TAG_SIZE } from "@/components/hud/modals/alliance-mgmt/CreateScreen";
 
 // TODO: add the amount of members to alliance so we can show it
+
+// This screen is the home interface for searching alliances, and accessing both the "create" and "invites" screens
+// It is only accessible to players who are not in an alliance
 export const IndexScreen = () => {
   const {
     playerAccount: { entity: playerEntity },
@@ -33,13 +36,12 @@ export const IndexScreen = () => {
   const joinRequests = components.AllianceRequest.useAllWith({ player: playerEntity }) ?? [];
 
   const alliances = useMemo(() => {
-    console.log("invites", invites);
-    console.log("joinRequests", joinRequests);
-    console.log("allianceEntities", allianceEntities);
-
     const allAlliances = allianceEntities?.map((entity, i) => ({
       entity,
       name: allianceNames![i],
+      // All players in the alliance
+      members: components.PlayerAlliance.getAllWith({ alliance: entity }),
+      // Whether the player has been invited or requested to join this alliance
       invited: invites.some((invite: Entity) => invite.includes(entity.slice(0, 2))),
       requested: joinRequests.some((request: Entity) => request.includes(entity.slice(0, 2))),
     }));
@@ -100,14 +102,16 @@ export const IndexScreen = () => {
 };
 
 const AllianceItem = ({
-  name,
   entity,
+  name,
+  members,
   invited,
   requested,
   className,
 }: {
-  name: string;
   entity: Entity;
+  name: string;
+  members: Entity[];
   invited: boolean;
   requested: boolean;
   className?: string;
@@ -125,7 +129,8 @@ const AllianceItem = ({
     >
       <div className="col-span-6 flex justify-between items-center">
         <div className="flex gap-2 items-center">
-          <p className="text-sm text-warning">[{name}]</p>
+          <span className="text-sm text-warning">[{name}]</span>
+          <span className="text-xs opacity-75">({members.length})</span>
           {inviteOnly ? <FaLock /> : null}
         </div>
         <div className="flex items-center gap-1">
