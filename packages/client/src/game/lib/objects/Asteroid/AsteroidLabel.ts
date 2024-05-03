@@ -1,6 +1,6 @@
 import { MainbaseLevelToEmblem } from "@/game/lib/mappings";
 import { FleetsContainer } from "@/game/lib/objects/Asteroid/FleetsContainer";
-import { Assets } from "@primodiumxyz/assets";
+import { Assets, Sprites } from "@primodiumxyz/assets";
 import { PixelCoord, Scene } from "engine/types";
 
 const MARGIN = 5;
@@ -8,6 +8,7 @@ const MARGIN = 5;
 type LabelArgs = {
   ownerLabel: string;
   allianceLabel: string;
+  emblemSprite: Sprites;
   nameLabel: string;
   ownerLabelColor: number;
   nameLabelColor: number;
@@ -99,7 +100,7 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
   setProperties(args: Partial<LabelArgs>) {
     args.nameLabel && this.asteroidLabel.setText(args.nameLabel);
     args.ownerLabel && this.ownerLabel.setText(args.ownerLabel);
-
+    args.emblemSprite && this.emblemSprite.setTexture(Assets.SpriteAtlas, args.emblemSprite);
     args.nameLabelColor && this.asteroidLabel.setTintFill(args.nameLabelColor);
     args.ownerLabelColor && this.ownerLabel.setTintFill(args.ownerLabelColor);
     args.allianceLabel && this.allianceLabel.setText(`[${args.allianceLabel}]`);
@@ -108,13 +109,13 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
     this._updatePositions();
   }
 
-  setLevel(level: bigint) {
-    this.emblemSprite.setTexture(
-      Assets.SpriteAtlas,
-      MainbaseLevelToEmblem[Phaser.Math.Clamp(Number(level) - 1, 0, MainbaseLevelToEmblem.length - 1)]
-    );
-    return this;
-  }
+  // setLevel(level: bigint) {
+  //   this.emblemSprite.setTexture(
+  //     Assets.SpriteAtlas,
+  //     MainbaseLevelToEmblem[Phaser.Math.Clamp(Number(level) - 1, 0, MainbaseLevelToEmblem.length - 1)]
+  //   );
+  //   return this;
+  // }
 
   setBaseScale(scale: number) {
     this.baseScale = scale;

@@ -16,6 +16,7 @@ import { getRockRelationship } from "@/util/asteroid";
 import { getAllianceName } from "@/util/alliance";
 import { entityToColor } from "@/util/color";
 import { getEntityTypeName } from "@/util/common";
+import { MainbaseLevelToEmblem } from "@/game/lib/mappings";
 
 export const renderAsteroid = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -44,7 +45,6 @@ export const renderAsteroid = (scene: Scene) => {
         maxLevel: asteroidData?.maxLevel,
         relationship: getRockRelationship(playerEntity, entity),
       }).setScale(spriteScale);
-    // .setLevel(level ?? 1n);
     else
       asteroid = new PrimaryAsteroid(scene, coord, expansionLevel ?? 1n, getRockRelationship(playerEntity, entity))
         .setScale(spriteScale)
@@ -79,6 +79,7 @@ export const renderAsteroid = (scene: Scene) => {
     asteroid.getAsteroidLabel().setProperties({
       nameLabel: entityToRockName(entity),
       nameLabelColor: ownedByPlayer ? 0xffff00 : asteroidData?.spawnsSecondary ? 0x00ffff : 0xffffff,
+      emblemSprite: MainbaseLevelToEmblem[Phaser.Math.Clamp(Number(level) - 1, 0, MainbaseLevelToEmblem.length - 1)],
       ownerLabel: ownedBy
         ? entityToPlayerName(ownedBy as Entity)
         : getEntityTypeName(MapIdToAsteroidType[asteroidData.mapId]),

@@ -22,7 +22,6 @@ export class PrimaryAsteroid extends BaseAsteroid {
 
   setLevel(level: bigint) {
     this.asteroidSprite.setTexture(Assets.SpriteAtlas, getPrimarySprite(level));
-    this.asteroidLabel.setLevel(level);
 
     return this;
   }
