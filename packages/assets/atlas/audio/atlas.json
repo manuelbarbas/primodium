@@ -1,9 +1,9 @@
 {
   "resources": [
-    "export/audio/atlas.ogg",
-    "export/audio/atlas.m4a",
-    "export/audio/atlas.mp3",
-    "export/audio/atlas.ac3"
+    "audio/atlas.ogg",
+    "audio/atlas.m4a",
+    "audio/atlas.mp3",
+    "audio/atlas.ac3"
   ],
   "spritemap": {
     "Bleep_01": {

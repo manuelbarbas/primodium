@@ -156,18 +156,15 @@ export const MaxLevelToTilemap: Record<number, Tilemaps> = {
   8: Tilemaps.AsteroidLarge,
 };
 
-export const LevelToPrimaryAsteroidSprites: Record<number, Sprites> = {
-  1: Sprites.Asteroid1,
-  2: Sprites.Asteroid1,
-  3: Sprites.Asteroid2,
-  4: Sprites.Asteroid2,
-  5: Sprites.Asteroid3,
-  6: Sprites.Asteroid3,
-  7: Sprites.Asteroid4,
-  8: Sprites.Asteroid4,
-  9: Sprites.Asteroid5,
-  10: Sprites.Asteroid5,
-};
+export const LevelToPrimaryAsteroidSprites = [
+  Sprites.Asteroid1,
+  Sprites.Asteroid2,
+  Sprites.Asteroid3_4,
+  Sprites.Asteroid3_4,
+  Sprites.Asteroid5_6,
+  Sprites.Asteroid7,
+  Sprites.Asteroid8,
+];
 
 export const EntityTypeSizeToSecondaryAsteroidSprites: Record<Entity, Record<AsteroidSize, Sprites>> = {
   [EntityType.Kimberlite]: {

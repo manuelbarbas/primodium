@@ -1,8 +1,8 @@
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Scene, TileCoord } from "engine/types";
+import { Coord, Scene, TileCoord } from "engine/types";
 import { Fleet } from "../Fleet";
 
-const RADIUS = 60;
+const WIDTH = 150;
+const HEIGHT = 100;
 const MARGIN = 5;
 export class FleetsContainer extends Phaser.GameObjects.Container {
   private _scene: Scene;
@@ -13,24 +13,34 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
   private paused = false;
   private inOrbitView = true;
 
-  constructor(scene: Scene, coord: TileCoord) {
-    const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
-    super(scene.phaserScene, pixelCoord.x, -pixelCoord.y);
+  constructor(scene: Scene, coord: Coord) {
+    super(scene.phaserScene, coord.x, coord.y);
     this.orbitRing = new Phaser.GameObjects.Graphics(scene.phaserScene)
-      .lineStyle(2 / scene.camera.phaserCamera.zoom, 0x808080)
-      .strokeCircle(0, 0, RADIUS);
+      .lineStyle(2, 0x808080)
+      .strokeEllipse(0, 0, WIDTH, HEIGHT);
 
     this.fleetsContainer = scene.phaserScene.add.container(0, 0);
     this.add([this.orbitRing, this.fleetsContainer]);
     this.coord = coord;
     this._scene = scene;
 
-    this.rotationTween = this.scene.tweens.add({
-      targets: this.fleetsContainer,
-      rotation: Math.PI * 2,
+    this.rotationTween = this.scene.tweens.addCounter({
+      from: 0,
+      to: Math.PI * 2,
       duration: 1000 * 60,
       repeat: -1,
-      paused: true,
+      onUpdate: (tween) => {
+        const angleStep = (2 * Math.PI) / this.fleetsContainer.length;
+        this.fleetsContainer.list.forEach((obj, index) => {
+          const fleet = obj as Fleet;
+          const angle = index * angleStep + tween.getValue();
+          const radiusX = WIDTH / 2; // Radius for the x coordinate
+          const radiusY = HEIGHT / 2; // Radius for the y coordinate
+          fleet.x = this.x + radiusX * Math.cos(angle);
+          fleet.y = this.y + radiusY * Math.sin(angle);
+          fleet.angle = Phaser.Math.RadToDeg(angle) - 40;
+        });
+      },
     });
 
     this.setActive(false).setVisible(false);
@@ -46,15 +56,6 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     const point = matrix.transformPoint(this.x, this.y);
 
     return { x: point.x, y: point.y };
-  }
-
-  update() {
-    if (!this.fleetsContainer.length || !this.active) return;
-
-    this.orbitRing
-      .clear()
-      .lineStyle(2 / this._scene.camera.phaserCamera.zoom, 0x808080)
-      .strokeCircle(0, 0, RADIUS);
   }
 
   getTileCoord() {
@@ -77,7 +78,8 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     fleet.setFlip(false, false);
     this.fleetsContainer.add(fleet);
 
-    this.setOrbitView();
+    if (this.inOrbitView) this.setOrbitView();
+    else this.setInlineView();
 
     return this;
   }
@@ -125,15 +127,6 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
       targets: this.orbitRing,
       alpha: 1,
       duration: 200,
-    });
-
-    const angleStep = (2 * Math.PI) / this.fleetsContainer.length;
-    this.fleetsContainer.list.forEach((obj, index) => {
-      const fleet = obj as Fleet;
-      const angle = index * angleStep;
-      fleet.x = this.x + RADIUS * Math.cos(angle);
-      fleet.y = this.y + RADIUS * Math.sin(angle);
-      fleet.angle = Phaser.Math.RadToDeg(angle) - 35;
     });
 
     this.inOrbitView = true;

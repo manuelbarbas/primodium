@@ -89,9 +89,10 @@ export enum Sprites {
   //ASTEROIDS
   Asteroid1 = "sprites/spacerocks/asteroids/asteroid1.png",
   Asteroid2 = "sprites/spacerocks/asteroids/asteroid2.png",
-  Asteroid3 = "sprites/spacerocks/asteroids/asteroid3.png",
-  Asteroid4 = "sprites/spacerocks/asteroids/asteroid4.png",
-  Asteroid5 = "sprites/spacerocks/asteroids/asteroid5.png",
+  Asteroid3_4 = "sprites/spacerocks/asteroids/asteroid3_4.png",
+  Asteroid5_6 = "sprites/spacerocks/asteroids/asteroid5_6.png",
+  Asteroid7 = "sprites/spacerocks/asteroids/asteroid7.png",
+  Asteroid8 = "sprites/spacerocks/asteroids/asteroid8.png",
 
   Shard = "sprites/shard/shard.png",
 

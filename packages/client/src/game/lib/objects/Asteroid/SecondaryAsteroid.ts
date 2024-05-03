@@ -22,15 +22,19 @@ export class SecondaryAsteroid extends BaseAsteroid {
     });
 
     this._scene = scene;
-
     this.maxLevel = maxLevel;
-    this.setLOD(2, true);
     this.getAsteroidLabel().setBaseScale(0.75);
   }
 
-  setRelationship(relationship: AsteroidRelationship) {
-    this.outlineSprite.setTexture(getSecondaryOutlineSprite(relationship, this.maxLevel));
+  spawn() {
+    super.spawn();
+    this.setLOD(2, true);
+    return this;
   }
+
+  // setRelationship(relationship: AsteroidRelationship) {
+  //   this.outlineSprite.setTexture(getSecondaryOutlineSprite(relationship, this.maxLevel));
+  // }
 
   update() {
     super.update();

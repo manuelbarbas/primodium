@@ -15,6 +15,9 @@ export const renderFleets = (scene: Scene) => {
   const objects = createObjectApi(scene);
   const transitsToUpdate = new Set<Entity>();
 
+  //sleep for 10 sec
+  // await new Promise((r) => setTimeout(r, 10000));
+
   // handle rendering fleets if asteroid is not yet spawned
   const spawnQueue = new Map<Entity, Entity[]>();
   const unsub = scene.objects.onNewObject((id) => {
