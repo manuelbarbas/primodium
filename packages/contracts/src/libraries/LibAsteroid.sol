@@ -48,7 +48,7 @@ library LibAsteroid {
     Position.set(asteroidEntity, coord);
     Asteroid.set(
       asteroidEntity,
-      AsteroidData({ isAsteroid: true, maxLevel: 5, mapId: 1, spawnsSecondary: true, wormhole: false, primodium: 0 })
+      AsteroidData({ isAsteroid: true, maxLevel: 6, mapId: 1, spawnsSecondary: true, wormhole: false, primodium: 0 })
     );
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
 

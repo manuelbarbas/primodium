@@ -27,7 +27,7 @@ export function getAsteroidName(spaceRock: Entity) {
     ? {
         1: "Micro",
         3: "Small",
-        5: "Medium",
+        6: "Medium",
         8: "Large",
       }[Number(asteroidData?.maxLevel ?? 1)]
     : "";
@@ -44,7 +44,7 @@ export function getAsteroidDescription(asteroid: Entity) {
   const asteroidSize = {
     1: "Micro",
     3: "Small",
-    5: "Medium",
+    6: "Medium",
     8: "Large",
   }[Number(asteroidData?.maxLevel ?? 1)];
 
