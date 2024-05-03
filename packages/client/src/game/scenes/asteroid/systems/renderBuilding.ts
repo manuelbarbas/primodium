@@ -18,6 +18,8 @@ import { hashEntities } from "src/util/encode";
 import { Building } from "../../../lib/objects/Building";
 import { components } from "src/network/components";
 import { getBuildingBottomLeft } from "src/util/building";
+import { removeRaidableAsteroid } from "src/game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
+import { EMap } from "contracts/config/enums";
 
 //TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
 export const renderBuilding = (scene: Scene) => {
@@ -76,11 +78,16 @@ export const renderBuilding = (scene: Scene) => {
       //remove droid base if mainbase exists
       if (buildingType === EntityType.MainBase) {
         const droidBaseEntity = hashEntities(activeRock, EntityType.DroidBase);
+        const droidBaseActive = components.IsActive.get(droidBaseEntity)?.value;
         components.Position.remove(droidBaseEntity);
         components.BuildingType.remove(droidBaseEntity);
         components.Level.remove(droidBaseEntity);
         components.IsActive.remove(droidBaseEntity);
         components.OwnedBy.remove(droidBaseEntity);
+        // if droidbaseactive is defined, remove raidable asteroid. if not, it means it was already removed
+        if (droidBaseActive && components.Asteroid.get(activeRock)?.mapId === EMap.Common) {
+          removeRaidableAsteroid(activeRock);
+        }
       }
 
       const origin = components.Position.get(entity);
