@@ -12,7 +12,9 @@ export const Cheatcodes = () => {
 
   return (
     <div className="font-mono w-full h-full overflow-y-auto scrollbar">
-      <CheatcodesList cheatcodes={setupCheatcodes(mud, primodium)} />
+      <div style={{ overflowY: "auto", maxHeight: "100vh" }}>
+        <CheatcodesList cheatcodes={setupCheatcodes(mud, primodium)} />
+      </div>
     </div>
   );
 };
