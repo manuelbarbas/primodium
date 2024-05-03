@@ -8,7 +8,7 @@ import { components } from "@/network/components";
 import { cn } from "@/util/client";
 import { getEntityTypeName } from "@/util/common";
 import { ObjectiveEntityLookup } from "@/util/constants";
-import { getCanClaimObjective } from "@/util/objectives/objectiveRequirements";
+import { canShowObjective, getCanClaimObjective } from "@/util/objectives/objectiveRequirements";
 import { Objectives } from "@/util/objectives/objectives";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
@@ -59,11 +59,11 @@ export const AvailableObjectives = () => {
       setTimeout(() => {
         setShowObjectives(false);
       }, 3000)
-    ); // 5000 milliseconds = 5 seconds
+    );
   };
 
   return (
-    <div className="relative w-64 h-40 flex justify-end items-center">
+    <div className="relative w-64 flex justify-end items-center">
       <div
         className="pointer-events-auto flex flex-row gap-1 items-center justify-center"
         style={{ writingMode: "vertical-lr" }}
@@ -74,23 +74,17 @@ export const AvailableObjectives = () => {
       <div
         onMouseLeave={handleMouseLeave}
         onMouseEnter={handleHover}
-        // className="absolute right-0 top-0 animate"
         className={cn(
           "absolute right-0 top-0 transition-transform duration-150 ease-in-out",
           !showObjectives && "translate-x-full"
         )}
-
-        // style={{
-        //   transition: "transform 150ms ease-in-out",
-        //   transform: showObjectives ? "" : `translate(100%,0)`,
-        // }}
       >
-        <Card className="absolute right-0 margin-auto relative">
+        <Card className="absolute right-0 min-h-40 margin-auto relative">
           <div className="flex flex-col">
-            <div className="absolute top-4 right-4 text-xs">
+            <div className="absolute top-3 right-3 text-xs">
               {Objectives.size - incompleteObjectives.length}/{Objectives.size}
             </div>
-            <div className="flex gap-2 items-center">
+            <div className="flex gap-2 p-2 items-center">
               <img src={InterfaceIcons.Objective} alt="Objectives" className="w-8 h-8" />
               <div>
                 <h2 className="text-lg font-bold">Objectives</h2>
@@ -130,8 +124,7 @@ const AvailableObjectiveItem = ({
   const { claimable, canShow } = useMemo(
     () => ({
       claimable: getCanClaimObjective(playerEntity, asteroidEntity, objectiveEntity),
-      // canShow: canShowObjective(playerEntity, objectiveEntity),
-      canShow: true,
+      canShow: canShowObjective(playerEntity, objectiveEntity),
     }),
     [time, asteroidEntity]
   );
