@@ -26,11 +26,11 @@ export const AllianceManagement = () => {
 
   const initialScreen = useMemo(() => {
     if (error) return "error";
-
     if (loading) return "loading";
 
-    return "score";
-  }, [loading, error]);
+    if (allianceEntity === singletonEntity) return "search";
+    return "manage";
+  }, [loading, error, allianceEntity]);
 
   return (
     <Navigator initialScreen={initialScreen} className="border-none p-0! h-full">
