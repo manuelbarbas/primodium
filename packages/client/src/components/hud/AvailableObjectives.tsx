@@ -27,7 +27,7 @@ export const AvailableObjectives = () => {
   const { showObjectives, setShowObjectives } = usePersistentStore(
     useShallow((state) => ({ setShowObjectives: state.setShowObjectives, showObjectives: state.showObjectives }))
   );
-  const incompleteObjectives = useMemo(() => {
+  const availableObjectives = useMemo(() => {
     return [...Objectives.entries()].filter(([key]) => {
       const objectiveEntity = ObjectiveEntityLookup[key];
 
@@ -55,7 +55,7 @@ export const AvailableObjectives = () => {
   }, []);
 
   if (Objectives.size === 0) return null;
-  if (incompleteObjectives.length === 0 || !asteroid || player !== asteroidOwner) return null;
+  if (availableObjectives.length === 0 || !asteroid || player !== asteroidOwner) return null;
 
   const handleHover = () => {
     if (timeoutId) {
@@ -104,10 +104,10 @@ export const AvailableObjectives = () => {
                 </div>
               </div>
 
-              <p className="text-xs">{incompleteObjectives.length} AVAIL.</p>
+              <p className="text-xs">{availableObjectives.length} AVAIL.</p>
             </div>
             <List className="pl-3 pt-2">
-              {incompleteObjectives.slice(0, 5).map(([key]) => (
+              {availableObjectives.slice(0, 5).map(([key]) => (
                 <AvailableObjectiveItem
                   onClick={() => setShowObjectives(false)}
                   playerEntity={player}
