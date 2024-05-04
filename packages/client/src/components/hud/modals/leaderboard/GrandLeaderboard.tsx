@@ -3,7 +3,7 @@ import { CrownRank } from "@/components/hud/modals/leaderboard/RankCrown";
 import { getAllianceName } from "@/util/alliance";
 import { getFinalLeaderboardData } from "@/util/leaderboard/getFinalLeaderboardData";
 import { Entity } from "@latticexyz/recs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaSync } from "react-icons/fa";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
@@ -17,8 +17,16 @@ import { rankToScore } from "src/util/score";
 export const GrandLeaderboard = ({ alliance = false }: { alliance?: boolean }) => {
   const { playerAccount } = useMud();
   const [data, setData] = useState(getFinalLeaderboardData(playerAccount.entity, alliance));
+  const [showRefresh, setShowRefresh] = useState(false);
 
   const refresh = () => setData(getFinalLeaderboardData(playerAccount.entity, alliance));
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShowRefresh(true);
+    }, 3000);
+    return () => clearInterval(interval);
+  });
 
   const entity = alliance
     ? (components.PlayerAlliance.get(playerAccount.entity)?.alliance as Entity)
@@ -30,10 +38,12 @@ export const GrandLeaderboard = ({ alliance = false }: { alliance?: boolean }) =
     );
   return (
     <div className="flex flex-col w-full h-full text-xs pointer-events-auto">
-      <Button variant="neutral" onClick={refresh} className="absolute top-2 right-2">
-        <FaSync />
-        Refresh
-      </Button>
+      {showRefresh && (
+        <Button variant="neutral" onClick={refresh} className="absolute top-2 right-2 animate-in fade-in">
+          <FaSync />
+          Refresh
+        </Button>
+      )}
       <div className={`grid grid-cols-7 w-full p-2 font-bold uppercase`}>
         <div>Rank</div>
         <div className="col-span-3">Name</div>
