@@ -250,3 +250,14 @@ export const ModeToSceneKey: Record<Entity, SceneKeys> = {
   [Mode.CommandCenter]: "COMMAND_CENTER",
   [Mode.Spectate]: "ASTEROID",
 };
+
+export const AsteroidLevelToSprite: Record<number, Sprites> = {
+  1: Sprites.Emblem1,
+  2: Sprites.Emblem2,
+  3: Sprites.Emblem3,
+  4: Sprites.Emblem4,
+  5: Sprites.Emblem5,
+  6: Sprites.Emblem6,
+  7: Sprites.Emblem7,
+  8: Sprites.Emblem8,
+};
