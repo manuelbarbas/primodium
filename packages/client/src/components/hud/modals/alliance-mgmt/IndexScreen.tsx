@@ -1,3 +1,4 @@
+import { getFinalLeaderboardData } from "@/util/leaderboard/getFinalLeaderboardData";
 import { Entity } from "@latticexyz/recs";
 import { EAllianceInviteMode } from "contracts/config/enums";
 import { FaLock, FaUserPlus } from "react-icons/fa";
@@ -12,12 +13,13 @@ import { components } from "src/network/components";
 import { joinAlliance, requestToJoin } from "src/network/setup/contractCalls/alliance";
 import { getAllianceName } from "src/util/alliance";
 import { entityToColor } from "src/util/color";
-import { EntityType, TransactionQueueType } from "src/util/constants";
+import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { InfoRow } from "./InfoRow";
 
 export const IndexScreen = () => {
-  const data = components.GrandLeaderboard.use(EntityType.AllianceGrandLeaderboard);
+  const player = useMud().playerAccount.entity;
+  const data = getFinalLeaderboardData(player, true);
 
   return (
     <Navigator.Screen
@@ -30,16 +32,16 @@ export const IndexScreen = () => {
             <List
               height={height - 50}
               width={width}
-              itemCount={data.players.length}
+              itemCount={data.allPlayers.length}
               itemSize={47}
               className="scrollbar"
             >
               {({ index, style }) => {
-                const alliance = data.players[index];
-                const score = data.scores[index];
+                const alliance = data.allPlayers[index].player;
+                const score = data.allPlayers[index].finalScore;
                 return (
                   <div style={style} className="pr-2">
-                    <LeaderboardItem key={index} index={index} score={Number(score)} entity={alliance} />
+                    <LeaderboardItem key={index} index={index} score={score} entity={alliance} />
                   </div>
                 );
               }}
@@ -54,7 +56,7 @@ export const IndexScreen = () => {
       )}
       <div className="w-full">
         <hr className="w-full border-t border-cyan-800 my-2" />
-        <InfoRow data={data} />
+        <InfoRow data={data.player} />
       </div>
     </Navigator.Screen>
   );

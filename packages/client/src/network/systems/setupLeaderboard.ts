@@ -1,6 +1,6 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { decodeEntity } from "@latticexyz/store-sync/recs";
-import { EScoreType } from "contracts/config/enums";
+import { EPointType } from "contracts/config/enums";
 import { world } from "src/network/world";
 import { isPlayer } from "src/util/common";
 import { EntityType, LeaderboardEntityLookup } from "src/util/constants";
@@ -19,15 +19,15 @@ export const setupLeaderboard = () => {
     const leaderboardArray = [...leaderboardMap.entries()].sort((a, b) => Number(b[1] - a[1]));
 
     const players = leaderboardArray.map((entry) => entry[0]);
-    const scores = leaderboardArray.map((entry) => entry[1]);
+    const points = leaderboardArray.map((entry) => entry[1]);
     const ranks: number[] = [];
-    scores.forEach((score, index) => {
-      ranks.push(index == 0 ? 1 : score == scores[index - 1] ? ranks[index - 1] : index + 1);
+    points.forEach((point, index) => {
+      ranks.push(index == 0 ? 1 : point == points[index - 1] ? ranks[index - 1] : index + 1);
     });
 
     components.Leaderboard.set(
       {
-        scores,
+        points,
         players,
         ranks,
       },
@@ -35,18 +35,18 @@ export const setupLeaderboard = () => {
     );
   }
 
-  defineComponentSystem(systemWorld, components.Score, ({ entity: rawEntity, value }) => {
-    const scoreValue = value[0]?.value ?? 0n;
-    const { entity, scoreType } = decodeEntity(components.Score.metadata.keySchema, rawEntity);
+  defineComponentSystem(systemWorld, components.Points, ({ entity: rawEntity, value }) => {
+    const pointsValue = value[0]?.value ?? 0n;
+    const { entity, pointType } = decodeEntity(components.Points.metadata.keySchema, rawEntity);
 
     const entityIsPlayer = isPlayer(entity as Entity);
 
-    const leaderboardEntity = LeaderboardEntityLookup[entityIsPlayer ? "player" : "alliance"][scoreType as EScoreType];
+    const leaderboardEntity = LeaderboardEntityLookup[entityIsPlayer ? "player" : "alliance"][pointType as EPointType];
     const leaderboardMap = leaderboardMaps[leaderboardEntity];
 
     if (!leaderboardMap) return;
 
-    leaderboardMap.set(entity as Entity, scoreValue);
+    leaderboardMap.set(entity as Entity, pointsValue);
 
     setLeaderboard(leaderboardMap, leaderboardEntity);
   });

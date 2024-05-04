@@ -17,7 +17,7 @@ import { rankToScore } from "src/util/score";
 type FormattedPlayerData = {
   player: Entity;
   rank: number;
-  score: bigint;
+  points: bigint;
 };
 
 export const SubLeaderboard = ({ leaderboard, alliance = false }: { leaderboard: Entity; alliance?: boolean }) => {
@@ -42,13 +42,13 @@ export const SubLeaderboard = ({ leaderboard, alliance = false }: { leaderboard:
     };
     if (!data) return ret;
     data.players.forEach((player, index) => {
-      const score = data.scores[index];
+      const points = data.points[index];
       const rank =
-        index == 0 ? 1 : score == ret.allPlayers[index - 1]?.score ? ret.allPlayers[index - 1].rank : index + 1;
+        index == 0 ? 1 : points == ret.allPlayers[index - 1]?.points ? ret.allPlayers[index - 1].rank : index + 1;
       const retData = {
         player,
         rank,
-        score,
+        points,
       };
       ret.allPlayers.push(retData);
       if (player == entity) ret.player = retData;
@@ -108,13 +108,13 @@ export const SubLeaderboard = ({ leaderboard, alliance = false }: { leaderboard:
 const LeaderboardItem = ({
   player,
   rank,
-  score,
+  points,
   alliance = false,
   special = false,
 }: {
   player: Entity;
   rank: number;
-  score: bigint;
+  points: bigint;
   alliance?: boolean;
   special?: boolean;
 }) => {
@@ -145,7 +145,7 @@ const LeaderboardItem = ({
         </div>
       </div>
       <p className="font-bold w-fit px-2 flex justify-center opacity-80">
-        {formatResourceCount(EntityType.Iron, score, {
+        {formatResourceCount(EntityType.Iron, points, {
           notLocale: true,
           fractionDigits: 1,
         }).toLocaleString()}

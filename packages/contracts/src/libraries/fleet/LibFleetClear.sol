@@ -4,7 +4,7 @@ pragma solidity >=0.8.24;
 import { OwnedBy, FleetMovement, IsFleetEmpty, IsFleet, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
-import { LibScore } from "libraries/LibScore.sol";
+import { LibPoints } from "libraries/LibPoints.sol";
 import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleet.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
@@ -64,7 +64,7 @@ library LibFleetClear {
       LibFleet.decreaseFleetUnit(fleetEntity, unitPrototypes[i], unitCount, true);
       unitDeaths += unitCount;
     }
-    LibScore.addUnitDeaths(unitDeaths);
+    LibPoints.addUnitDeaths(unitDeaths);
   }
   /**
    * @notice Clears specified units and resources from a fleet.
@@ -101,7 +101,7 @@ library LibFleetClear {
     uint256 cargoCapacity = LibCombatAttributes.getCargoCapacity(fleetEntity);
     uint256 cargo = LibCombatAttributes.getCargo(fleetEntity);
     require(cargoCapacity >= cargo, "[Fleet] Not enough cargo to clear units from fleet");
-    LibScore.addUnitDeaths(unitDeaths);
+    LibPoints.addUnitDeaths(unitDeaths);
   }
 
   /**

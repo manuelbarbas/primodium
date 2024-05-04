@@ -3,10 +3,10 @@ import { EntityType } from "@/util/constants";
 import { rankToScore } from "@/util/score";
 import { Entity } from "@latticexyz/recs";
 
-type FinalLeaderboardData = {
+export type FinalLeaderboardData = {
   player: Entity;
   rank: number;
-  score: number;
+  finalScore: number;
   wormholeRank?: number;
   shardRank?: number;
 };
@@ -32,7 +32,7 @@ export const getFinalLeaderboardData = (
     const retData = {
       player,
       wormholeRank,
-      score: rankToScore(wormholeRank),
+      finalScore: rankToScore(wormholeRank),
       rank: 0,
     };
     playerDatas[player] = retData;
@@ -43,19 +43,19 @@ export const getFinalLeaderboardData = (
     const retData = {
       player,
       shardRank,
-      score: rankToScore(shardRank) + (playerDatas[player].score ?? 0),
+      finalScore: rankToScore(shardRank) + (playerDatas[player].finalScore ?? 0),
       rank: 0,
     };
     playerDatas[player] = { ...playerDatas[player], ...retData };
   });
 
-  const sortedPlayerData = Object.values(playerDatas).sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+  const sortedPlayerData = Object.values(playerDatas).sort((a, b) => (b.finalScore ?? 0) - (a.finalScore ?? 0));
 
   sortedPlayerData.forEach((playerData, index) => {
     const rank =
       index == 0
         ? 1
-        : playerData.score == ret.allPlayers[index - 1]?.score
+        : playerData.finalScore == ret.allPlayers[index - 1]?.finalScore
         ? ret.allPlayers[index - 1].rank
         : index + 1;
 

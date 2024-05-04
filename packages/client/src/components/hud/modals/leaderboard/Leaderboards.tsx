@@ -34,7 +34,7 @@ export const Leaderboards = ({
         name: "Shard",
         leaderboard: (
           <SubLeaderboard
-            key={"Primodium"}
+            key={"shard"}
             leaderboard={alliance ? EntityType.AllianceShardLeaderboard : EntityType.PlayerShardLeaderboard}
             alliance={alliance}
           />

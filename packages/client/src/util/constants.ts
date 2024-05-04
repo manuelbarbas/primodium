@@ -2,7 +2,7 @@ import { resourceToHex } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { DECIMALS } from "contracts/config/constants";
-import { EBuilding, EObjectives, EResource, EScoreType, EUnit } from "contracts/config/enums";
+import { EBuilding, EObjectives, EPointType, EResource, EUnit } from "contracts/config/enums";
 import { encodeEntity } from "src/util/encode";
 import { parseEther } from "viem";
 import { reverseRecord } from "./common";
@@ -408,11 +408,11 @@ export const ObjectiveEntityLookup = reverseRecord(ObjectiveEnumLookup);
 
 export const LeaderboardEntityLookup = {
   player: {
-    [EScoreType.Shard]: EntityType.PlayerShardLeaderboard,
-    [EScoreType.Wormhole]: EntityType.PlayerWormholeLeaderboard,
+    [EPointType.Shard]: EntityType.PlayerShardLeaderboard,
+    [EPointType.Wormhole]: EntityType.PlayerWormholeLeaderboard,
   },
   alliance: {
-    [EScoreType.Shard]: EntityType.AllianceShardLeaderboard,
-    [EScoreType.Wormhole]: EntityType.AllianceWormholeLeaderboard,
+    [EPointType.Shard]: EntityType.AllianceShardLeaderboard,
+    [EPointType.Wormhole]: EntityType.AllianceWormholeLeaderboard,
   },
 };

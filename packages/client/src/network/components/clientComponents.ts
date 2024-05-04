@@ -122,7 +122,7 @@ export default function setupClientComponents() {
     world,
     {
       players: Type.EntityArray,
-      scores: Type.BigIntArray,
+      points: Type.BigIntArray,
       ranks: Type.NumberArray,
     },
     {

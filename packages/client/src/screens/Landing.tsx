@@ -98,8 +98,7 @@ export const Landing: React.FC<{ children: React.ReactNode }> = ({ children }) =
                 delay: 0,
               },
             }}
-            // TODO: replace with shard
-            src={InterfaceIcons.Shard}
+            src={InterfaceIcons.ShardSprite}
             className="absolute -top-0 left-24 p-0 w-44 pixel-images"
           />
           <div className="w-full h-full absolute top-0 overflow-hidden"></div>

@@ -3,7 +3,7 @@ import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Cheatcode, Cheatcodes } from "@primodiumxyz/mud-game-tools";
-import { EResource, EScoreType } from "contracts/config/enums";
+import { EPointType, EResource } from "contracts/config/enums";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { toast } from "react-toastify";
 import { components } from "src/network/components";
@@ -511,19 +511,19 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             setComponentValue(mud, components.P_GracePeriod, {}, { asteroid: 0n });
           },
         },
-        givePlayersRandomScores: {
+        givePlayersRandomPoints: {
           params: [{ name: "leaderboard", type: "dropdown", dropdownOptions: ["shard", "wormhole"] }],
           function: async (type: "shard" | "wormhole") => {
-            toast.info("running cheatcode: Give Players Random Scores");
+            toast.info("running cheatcode: Give Players Random Points");
             const allPlayers = components.Spawned.getAll();
-            const scoreType = type === "shard" ? EScoreType.Shard : EScoreType.Wormhole;
+            const pointType = type === "shard" ? EPointType.Shard : EPointType.Wormhole;
             allPlayers.forEach((player) => {
-              const score = BigInt(Math.floor(Math.random() * 1000)) * RESOURCE_SCALE;
+              const points = BigInt(Math.floor(Math.random() * 1000)) * RESOURCE_SCALE;
               setComponentValue(
                 mud,
-                components.Score,
-                { entity: player as Hex, scoreType },
-                { value: BigInt(score) * RESOURCE_SCALE }
+                components.Points,
+                { entity: player as Hex, pointType },
+                { value: BigInt(points) * RESOURCE_SCALE }
               );
             });
           },
