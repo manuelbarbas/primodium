@@ -517,13 +517,16 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
           },
         },
         givePlayersRandomPoints: {
-          params: [{ name: "leaderboard", type: "dropdown", dropdownOptions: ["shard", "wormhole"] }],
-          function: async (type: "shard" | "wormhole") => {
+          params: [
+            { name: "leaderboard", type: "dropdown", dropdownOptions: ["shard", "wormhole"] },
+            { name: "range", type: "number" },
+          ],
+          function: async (type: "shard" | "wormhole", range: number) => {
             toast.info("running cheatcode: Give Players Random Points");
             const allPlayers = components.Spawned.getAll();
             const pointType = type === "shard" ? EPointType.Shard : EPointType.Wormhole;
             allPlayers.forEach((player) => {
-              const points = BigInt(Math.floor(Math.random() * 100_000_000_000)) * RESOURCE_SCALE;
+              const points = BigInt(Math.floor(Math.random() * range)) * RESOURCE_SCALE;
               setComponentValue(mud, components.Points, { entity: player as Hex, pointType }, { value: points });
             });
           },

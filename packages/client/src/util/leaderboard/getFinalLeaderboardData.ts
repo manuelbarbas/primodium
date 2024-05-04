@@ -28,6 +28,7 @@ export const getFinalLeaderboardData = (
   };
   const playerDatas: Record<Entity, FinalLeaderboardData> = {};
 
+  // inject wormhole data
   wormholeData?.players.forEach((player, index) => {
     const wormholeRank = wormholeData.ranks[index];
     const retData = {
@@ -39,6 +40,7 @@ export const getFinalLeaderboardData = (
     playerDatas[player] = retData;
   });
 
+  // inject shard data
   shardData?.players.forEach((player, index) => {
     const shardRank = shardData.ranks[index];
     const retData = {
@@ -50,8 +52,10 @@ export const getFinalLeaderboardData = (
     playerDatas[player] = { ...playerDatas[player], ...retData };
   });
 
+  // sort by score
   const sortedPlayerData = Object.values(playerDatas).sort((a, b) => (b.finalScore ?? 0) - (a.finalScore ?? 0));
 
+  // derive rank from scores
   sortedPlayerData.forEach((playerData, index) => {
     const rank =
       index == 0

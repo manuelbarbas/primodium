@@ -137,11 +137,11 @@ export const GrandLeaderboardItem = ({
         <>
           <div className="font-bold w-fit px-2 flex gap-1">
             <p className="opacity-80">{formatNumber(rankToScore(wormholeRank), { fractionDigits: 1 })}</p>
-            <CrownRank rank={rank} offset />
+            <CrownRank rank={wormholeRank} offset />
           </div>
           <div className="font-bold w-fit px-2 flex gap-1">
             <p className="opacity-80">{formatNumber(rankToScore(shardRank), { fractionDigits: 1 })}</p>
-            <CrownRank rank={rank} offset />
+            <CrownRank rank={shardRank} offset />
           </div>
         </>
       )}
