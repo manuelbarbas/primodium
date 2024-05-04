@@ -20,8 +20,6 @@ export const Hangar = ({ className = "" }: { className?: string }) => {
   const hangar = components.Hangar.use(activeRock);
   const primodium = usePrimodium();
 
-  const imgShadow = { filter: "drop-shadow(0 0 10px rgba(255, 255, 255, 0.2))" };
-
   const getCounts = (units: Entity[]) => {
     if (!hangar) return { total: 0n, unitCounts: {} };
     return units.reduce(
@@ -29,7 +27,6 @@ export const Hangar = ({ className = "" }: { className?: string }) => {
         const index = hangar.units.indexOf(unit);
         if (index === -1) return acc;
         const count = hangar.counts[index];
-        console.log({ unit, count });
         return { total: acc.total + count, unitCounts: { ...acc.unitCounts, [unit]: hangar.counts[index] } };
       },
       { total: 0n, unitCounts: {} } as { total: bigint; unitCounts: Record<Entity, bigint> }
@@ -57,24 +54,21 @@ export const Hangar = ({ className = "" }: { className?: string }) => {
     [hangar]
   );
 
-  console.log({ marines, drones });
   if (!activeRock) return null;
-  console.log({ hangar });
   if (!hangar || hangar.units.length === 0) {
     return (
-      <Card className={`${className}`}>
+      <Card className={`${className}`} noDecor>
         <div className="w-full h-full flex flex-col justify-center items-center gap-4">
           <p>No Units Available</p>
           {ownedByPlayer && (
-            <div className="flex flex-col gap-2 justify-center items-center">
+            <SecondaryCard className="flex flex-col gap-2 justify-center items-center">
               <p className="text-xs opacity-70">Train Units at</p>
-              <div className="flex gap-4">
+              <div className="flex gap-4 justify-center items-center">
                 <Tooltip tooltipContent="Workshop" direction="bottom">
                   <img
                     src={getBuildingImageFromType(primodium, EntityType.Workshop)}
                     alt="Workshop"
                     className="w-12 h-12"
-                    style={imgShadow}
                   />
                 </Tooltip>
                 <Tooltip tooltipContent="Drone Factory" direction="bottom">
@@ -82,11 +76,10 @@ export const Hangar = ({ className = "" }: { className?: string }) => {
                     src={getBuildingImageFromType(primodium, EntityType.DroneFactory)}
                     alt="DroneFactory"
                     className="w-12 h-12"
-                    style={imgShadow}
                   />
                 </Tooltip>
               </div>
-            </div>
+            </SecondaryCard>
           )}
         </div>
       </Card>
@@ -102,12 +95,7 @@ export const Hangar = ({ className = "" }: { className?: string }) => {
             <SecondaryCard className="gap-1">
               {Object.entries(marines.unitCounts).map(([unit, count], i) => (
                 <div key={`marine-${i}`} className="flex gap-2 items-center">
-                  <img
-                    src={EntityToUnitImage[unit]}
-                    alt={getEntityTypeName(unit as Entity)}
-                    className="w-8 h-8"
-                    style={imgShadow}
-                  />
+                  <img src={EntityToUnitImage[unit]} alt={getEntityTypeName(unit as Entity)} className="w-8 h-8" />
                   <p>{formatResourceCount(unit as Entity, count)}</p>
                   <p className="opacity-50 text-xs">{getEntityTypeName(unit as Entity)}</p>
                 </div>
@@ -121,12 +109,7 @@ export const Hangar = ({ className = "" }: { className?: string }) => {
             <SecondaryCard className="gap-1">
               {Object.entries(drones.unitCounts).map(([unit, count], i) => (
                 <div key={`drone-${i}`} className="flex gap-2 items-center">
-                  <img
-                    src={EntityToUnitImage[unit]}
-                    alt={getEntityTypeName(unit as Entity)}
-                    className="w-8 h-8"
-                    style={imgShadow}
-                  />
+                  <img src={EntityToUnitImage[unit]} alt={getEntityTypeName(unit as Entity)} className="w-8 h-8" />
                   <p>{formatResourceCount(unit as Entity, count)}</p>
                   <p className="opacity-50 text-xs">{getEntityTypeName(unit as Entity)}</p>
                 </div>
@@ -140,7 +123,6 @@ export const Hangar = ({ className = "" }: { className?: string }) => {
               src={EntityToUnitImage[EntityType.ColonyShip]}
               alt={getEntityTypeName(EntityType.ColonyShip)}
               className="h-8"
-              style={imgShadow}
             />
             {colonyShipCount.toLocaleString()} Colony Ships
           </SecondaryCard>

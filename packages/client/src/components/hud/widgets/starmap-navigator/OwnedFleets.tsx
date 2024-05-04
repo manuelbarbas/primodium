@@ -1,5 +1,5 @@
 import { Button } from "@/components/core/Button";
-import { SecondaryCard } from "@/components/core/Card";
+import { Card } from "@/components/core/Card";
 import { useMud } from "@/hooks";
 import { usePrimodium } from "@/hooks/usePrimodium";
 import { components } from "@/network/components";
@@ -80,7 +80,7 @@ export const OwnedFleets: React.FC<{ className?: string }> = ({ className }) => 
   };
 
   return (
-    <SecondaryCard className={`relative ${className}`}>
+    <Card noDecor className={`relative ${className}`}>
       {fleets.length === 0 && (
         <p className="w-full h-full text-xs grid place-items-center opacity-50 uppercase">you control no fleets</p>
       )}
@@ -94,6 +94,6 @@ export const OwnedFleets: React.FC<{ className?: string }> = ({ className }) => 
           {fleets.length} fleet{fleets.length > 1 ? "s" : ""}
         </div>
       )}
-    </SecondaryCard>
+    </Card>
   );
 };

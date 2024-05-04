@@ -34,7 +34,7 @@ export const InventoryPane = () => {
   };
 
   useEffect(() => {
-    const cycle = addListener("Cycle", () => {
+    const cycle = addListener("Base", () => {
       setVisibleDiv((prev) => (prev + 1) % 2);
     });
 
@@ -51,7 +51,7 @@ export const InventoryPane = () => {
     const className = "h-[26rem] !w-72";
     if (index === 0)
       return (
-        <Card className={className}>
+        <Card noDecor className={className}>
           <AllResourceLabels />
           <AllUtilityLabels />
         </Card>
@@ -81,7 +81,7 @@ export const InventoryPane = () => {
           ))}
           {!hideHotkeys && (
             <p className="flex text-xs kbd kbd-xs py-2 w-fit self-end" style={{ writingMode: "vertical-rl" }}>
-              {keybinds["Cycle"]?.entries().next().value[0] ?? "?"}
+              {keybinds["Base"]?.entries().next().value[0] ?? "?"}
             </p>
           )}
         </div>
