@@ -1,4 +1,4 @@
-import { Card } from "@/components/core/Card";
+import { SecondaryCard } from "@/components/core/Card";
 import { List } from "@/components/core/List";
 import { Modal } from "@/components/core/Modal";
 import { ObjectivesScreen } from "@/components/hud/modals/objectives/ObjectivesScreen";
@@ -30,7 +30,18 @@ export const AvailableObjectives = () => {
   const incompleteObjectives = useMemo(() => {
     return [...Objectives.entries()].filter(([key]) => {
       const objectiveEntity = ObjectiveEntityLookup[key];
-      return !components.CompletedObjective.hasWithKeys({ entity: player as Hex, objective: objectiveEntity as Hex });
+
+      const completed = components.CompletedObjective.hasWithKeys({
+        entity: player as Hex,
+        objective: objectiveEntity as Hex,
+      });
+
+      if (completed) return false;
+
+      const canShow = canShowObjective(player, objectiveEntity);
+
+      if (!canShow) return false;
+      return true;
     });
   }, [time, player]);
 
@@ -58,18 +69,21 @@ export const AvailableObjectives = () => {
     setTimeoutId(
       setTimeout(() => {
         setShowObjectives(false);
-      }, 3000)
+      }, 1000)
     );
   };
 
   return (
     <div className="relative w-64 flex justify-end items-center">
       <div
-        className="pointer-events-auto flex flex-row gap-1 items-center justify-center"
+        className={cn(
+          "pointer-events-auto flex flex-row gap-1 items-center justify-center pr-2",
+          showObjectives && "opacity-0"
+        )}
         style={{ writingMode: "vertical-lr" }}
         onMouseEnter={handleHover}
       >
-        Objectives <FaExclamationCircle className="text-warning rotate-90" />
+        <FaExclamationCircle className="text-warning rotate-90 animate-pulse" /> Objectives
       </div>
       <div
         onMouseLeave={handleMouseLeave}
@@ -79,19 +93,20 @@ export const AvailableObjectives = () => {
           !showObjectives && "translate-x-full"
         )}
       >
-        <Card className="absolute right-0 min-h-40 margin-auto relative">
+        <SecondaryCard className="w-72 relative bg-gradient-to-br from-neutral to-neutral/25 border-r-0 p-3">
           <div className="flex flex-col">
-            <div className="absolute top-3 right-3 text-xs">
-              {Objectives.size - incompleteObjectives.length}/{Objectives.size}
-            </div>
-            <div className="flex gap-2 p-2 items-center">
-              <img src={InterfaceIcons.Objective} alt="Objectives" className="w-8 h-8" />
-              <div>
-                <h2 className="text-lg font-bold">Objectives</h2>
-                <p className="text-xs text-warning opacity-80">Recommended</p>
+            <div className="flex gap-2 w-full justify-between items-center">
+              <div className="flex gap-2 items-center">
+                <img src={InterfaceIcons.Objective} alt="Objectives" className="w-6 h-6" />
+                <div>
+                  <h2 className="text-md font-bold">Objectives</h2>
+                  <p className="text-xs text-warning opacity-80">Recommended</p>
+                </div>
               </div>
+
+              <p className="text-xs">{incompleteObjectives.length} AVAIL.</p>
             </div>
-            <List>
+            <List className="pl-3 pt-2">
               {incompleteObjectives.slice(0, 5).map(([key]) => (
                 <AvailableObjectiveItem
                   onClick={() => setShowObjectives(false)}
@@ -103,7 +118,7 @@ export const AvailableObjectives = () => {
               ))}
             </List>
           </div>
-        </Card>
+        </SecondaryCard>
       </div>
     </div>
   );
@@ -121,17 +136,14 @@ const AvailableObjectiveItem = ({
   onClick?: () => void;
 }) => {
   const time = components.Time.use()?.value;
-  const { claimable, canShow } = useMemo(
-    () => ({
-      claimable: getCanClaimObjective(playerEntity, asteroidEntity, objectiveEntity),
-      canShow: canShowObjective(playerEntity, objectiveEntity),
-    }),
+  const claimable = useMemo(
+    () => getCanClaimObjective(playerEntity, asteroidEntity, objectiveEntity),
     [time, asteroidEntity]
   );
+
   const claimed =
     components.CompletedObjective.useWithKeys({ entity: playerEntity as Hex, objective: objectiveEntity as Hex })
       ?.value ?? false;
-  if (!canShow) return null;
 
   return (
     <List.Item strikethrough={claimed} active={claimable && !claimed} bullet>
@@ -139,7 +151,7 @@ const AvailableObjectiveItem = ({
         <Modal.Button
           variant="ghost"
           className={`!p-0 !px-1 ${claimable && !claimed ? "text-warning" : ""}`}
-          disabled={!canShow || claimed}
+          disabled={claimed}
           onClick={onClick}
         >
           {getEntityTypeName(objectiveEntity)}
