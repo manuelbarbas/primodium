@@ -69,8 +69,8 @@ export const SubLeaderboard = ({ leaderboard, alliance = false }: { leaderboard:
       )}
       <div className={`grid grid-cols-7 w-full p-2 pr-6 font-bold uppercase`}>
         <div>Rank</div>
-        <div className="col-span-4">Name</div>
-        <div className="opacity-80">Points</div>
+        <div className="col-span-3">Name</div>
+        <div className="opacity-80 col-span-2">Points</div>
         <div className="text-warning text-right">Score</div>
       </div>
       <div className="flex flex-col w-full h-full justify-between text-xs pointer-events-auto">
@@ -138,17 +138,16 @@ const LeaderboardItem = ({
 
         <CrownRank rank={rank} />
       </div>
-      <div className="col-span-4 flex gap-1 justify-between items-center">
+      <div className="col-span-3 flex gap-1 justify-between items-center">
         <div className="flex items-center gap-1">
           {alliance ? `[${getAllianceName(player, true)}]` : <AccountDisplay noColor={!special} player={player} />}
           {player === entity && <p className="text-accent">(You)</p>}
         </div>
       </div>
-      <p className="font-bold w-fit px-2 flex justify-center opacity-80">
+      <p className="font-bold w-fit px-2 flex justify-center opacity-80 col-span-2">
         {formatResourceCount(EntityType.Iron, points, {
-          notLocale: true,
           fractionDigits: 1,
-        }).toLocaleString()}
+        })}
       </p>
       <div className="font-bold text-warning px-2 w-full text-right">
         {formatNumber(rankToScore(rank), { fractionDigits: 1 })}

@@ -3,7 +3,7 @@ import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Cheatcode, Cheatcodes } from "@primodiumxyz/mud-game-tools";
-import { EPointType, EResource } from "contracts/config/enums";
+import { EAllianceInviteMode, EPointType, EResource } from "contracts/config/enums";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { toast } from "react-toastify";
 import { components } from "src/network/components";
@@ -13,7 +13,7 @@ import { createFleet as callCreateFleet } from "src/network/setup/contractCalls/
 import { setComponentValue } from "src/network/setup/contractCalls/dev";
 import { upgradeBuilding as upgradeBuildingCall } from "src/network/setup/contractCalls/upgradeBuilding";
 import { MUD } from "src/network/types";
-import { encodeEntity } from "src/util/encode";
+import { encodeEntity, toHex32 } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
 import { getEntityTypeName } from "../common";
@@ -286,7 +286,12 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
         },
       });
 
+      const randomName = Math.random().toString(36).substring(7);
       await worldContract.write.Primodium__spawn();
+      await worldContract.write.Primodium__create([
+        toHex32(randomName.substring(0, 6).toUpperCase()),
+        EAllianceInviteMode.Closed,
+      ]);
     }
   }
 
@@ -518,47 +523,15 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             const allPlayers = components.Spawned.getAll();
             const pointType = type === "shard" ? EPointType.Shard : EPointType.Wormhole;
             allPlayers.forEach((player) => {
-              const points = BigInt(Math.floor(Math.random() * 1000)) * RESOURCE_SCALE;
-              setComponentValue(
-                mud,
-                components.Points,
-                { entity: player as Hex, pointType },
-                { value: BigInt(points) * RESOURCE_SCALE }
-              );
+              const points = BigInt(Math.floor(Math.random() * 100_000_000_000)) * RESOURCE_SCALE;
+              setComponentValue(mud, components.Points, { entity: player as Hex, pointType }, { value: points });
             });
           },
         },
         spawnPlayers: {
           params: [{ name: "count", type: "number" }],
           function: async (count: number) => {
-            toast.info("running cheatcode: Spawn Players");
-            const networkConfig = getNetworkConfig();
-            const clientOptions = {
-              chain: networkConfig.chain,
-              transport: transportObserver(fallback([webSocket(), http()])),
-              pollingInterval: 1000,
-            };
-
-            for (let i = 0; i < count; i++) {
-              const privateKey = generatePrivateKey();
-              const burnerAccount = createBurnerAccount(privateKey as Hex);
-
-              const burnerWalletClient = createWalletClient({
-                ...clientOptions,
-                account: burnerAccount,
-              });
-
-              const worldContract = getContract({
-                address: networkConfig.worldAddress as Hex,
-                abi: IWorldAbi,
-                client: {
-                  public: mud.network.publicClient,
-                  wallet: burnerWalletClient,
-                },
-              });
-
-              await worldContract.write.Primodium__spawn();
-            }
+            spawnPlayers(count);
           },
         },
       },
