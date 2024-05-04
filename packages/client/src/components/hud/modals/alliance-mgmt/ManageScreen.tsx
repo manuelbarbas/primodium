@@ -1,4 +1,9 @@
+import { Tabs } from "@/components/core/Tabs";
+import { getAllianceName } from "@/util/alliance";
 import { EAllianceRole } from "contracts/config/enums";
+// import { useState } from "react";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List } from "react-window";
 import { FaArrowDown, FaArrowLeft, FaArrowUp, FaInfoCircle, FaUserMinus } from "react-icons/fa";
 import { GiRank1, GiRank2, GiRank3 } from "react-icons/gi";
 import { Button } from "src/components/core/Button";
@@ -10,21 +15,25 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { grantRole, kickPlayer, leaveAlliance } from "src/network/setup/contractCalls/alliance";
-import { EntityType, TransactionQueueType } from "src/util/constants";
+import { TransactionQueueType } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 
 export const ManageScreen: React.FC = () => {
+  // const [activeTab, setActiveTab] = useState<"members" | "requests" | "settings">("members");
+  // const [editMode, setEditMode] = useState(false);
   const mud = useMud();
   const playerEntity = mud.playerAccount.entity;
-  const data = components.Leaderboard.use(EntityType.AlliancePrimodiumLeaderboard);
-  const allianceEntity = data?.players[(data?.playerRank ?? 1) - 1];
-  const playerRole = components.PlayerAlliance.get(playerEntity)?.role ?? EAllianceRole.Member;
+
+  const alliance = components.PlayerAlliance.get(playerEntity);
+  const allianceEntity = alliance?.alliance;
+  const allianceName = getAllianceName(allianceEntity, true);
+  const playerRole = alliance?.role ?? EAllianceRole.Member;
   const playerEntities = components.PlayerAlliance.useAllWith({
     alliance: allianceEntity,
   });
   const maxAllianceMembers = components.P_AllianceConfig.get()?.maxAllianceMembers ?? 1n;
 
-  if (!data) return <></>;
+  if (!allianceEntity) return <></>;
 
   // sort by role
   const players = playerEntities
@@ -38,8 +47,56 @@ export const ManageScreen: React.FC = () => {
   return (
     <Navigator.Screen
       title="manage"
-      className="flex flex-col items-center w-full text-xs pointer-events-auto h-full overflow-hidden"
+      className="grid grid-rows-[min-content_1fr_min-content] w-full h-full text-xs pointer-events-auto py-6 px-24 gap-4"
     >
+      <div className="justify-self-center text-base text-warning">ALLIANCE [{allianceName}]</div>
+      <Tabs className="flex flex-col items-center gap-2 w-full h-full">
+        <Join className="border border-secondary/25">
+          <Tabs.Button index={0} className="btn-sm">
+            MEMBERS
+          </Tabs.Button>
+          {playerRole <= EAllianceRole.CanInvite ? (
+            <Tabs.Button index={1} className="btn-sm">
+              REQUESTS
+            </Tabs.Button>
+          ) : null}
+          <Tabs.Button index={2} className="btn-sm">
+            SETTINGS
+          </Tabs.Button>
+        </Join>
+
+        <Tabs.Pane index={0} className="w-full h-full p-0 border-none">
+          {/* <Leaderboards alliance activeTab={activeTab} setActiveTab={setActiveTab} /> */}
+          <AutoSizer>
+            {({ height, width }: { height: number; width: number }) => (
+              <List height={height} width={width} itemCount={players.length} itemSize={47} className="scrollbar">
+                {({ index, style }) => {
+                  return (
+                    <div style={style} className="grid grid-cols-[40px_1fr_min-content] gap-4 pr-4">
+                      <span>{index + 1}</span>
+                      <AccountDisplay player={players[index].entity} />
+                      {players[index].role === EAllianceRole.Owner ? (
+                        <span className="text-warning">LEADER</span>
+                      ) : players[index].role === EAllianceRole.Member ? (
+                        <span>MEMBER</span>
+                      ) : (
+                        <span className="text-accent">OFFICER</span>
+                      )}
+                    </div>
+                  );
+                }}
+              </List>
+            )}
+          </AutoSizer>
+        </Tabs.Pane>
+        <Tabs.Pane index={1} className="w-full h-full p-0 border-none">
+          {/* <Leaderboards activeTab={activeTab} setActiveTab={setActiveTab} /> */}
+        </Tabs.Pane>
+        <Tabs.Pane index={2} className="w-full h-full p-0 border-none">
+          {/* <Leaderboards activeTab={activeTab} setActiveTab={setActiveTab} /> */}
+        </Tabs.Pane>
+      </Tabs>
+
       <div className="w-full flex flex-col flex-grow">
         <div className="flex justify-between items-center">
           <p className="font-bold p-1 opacity-75">MEMBERS</p>
