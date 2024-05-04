@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "export": "pnpm export-sprites && pnpm export-audio",
-    "export-audio": "audiosprite --channels 2 --loop background --output ./atlas/audio/atlas --path ./atlas/audio/ atlas/**/*.ogg atlas/*.ogg",
+    "export-audio": "audiosprite --channels 2 --loop background --output ./atlas/audio/atlas --path ./audio/ audio/**/*.ogg audio/*.ogg",
     "export-sprites": "pnpm generate-multiatlas-sprites",
     "generate-multiatlas-sprites": "node ./scripts/cli.mjs --project ./config-sprites.json"
   },
