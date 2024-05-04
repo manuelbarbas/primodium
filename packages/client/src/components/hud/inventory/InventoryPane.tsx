@@ -1,24 +1,24 @@
 import { Button } from "@/components/core/Button";
-import { OwnedAsteroids } from "@/components/hud/widgets/starmap-navigator/OwnedAsteroids";
-import { OwnedColonyShips } from "@/components/hud/widgets/starmap-navigator/OwnedColonyShips";
-import { OwnedFleets } from "@/components/hud/widgets/starmap-navigator/OwnedFleets";
-import { Shards } from "@/components/hud/widgets/starmap-navigator/Shards";
+import { Card } from "@/components/core/Card";
+import { AllResourceLabels } from "@/components/hud/resources/AllResourceLabels";
+import { AllUtilityLabels } from "@/components/hud/resources/AllUtilityLabels";
 import { usePersistentStore } from "@/game/stores/PersistentStore";
 import { usePrimodium } from "@/hooks/usePrimodium";
 import { EntityType } from "@/util/constants";
-import { EntityToUnitImage } from "@/util/mappings";
-import { InterfaceIcons } from "@primodiumxyz/assets";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 import { useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
+import { Hangar } from "../hangar/Hangar";
 
-export const StarmapNavigatorPane = () => {
+export const InventoryPane = () => {
   const [visibleDiv, setVisibleDiv] = useState(0);
   const [arePanesExpanded, setArePanesExpanded] = useState(false);
   const primodium = usePrimodium();
+
   const {
     hooks: { useKeybinds },
     input: { addListener },
-  } = useRef(primodium.api("STARMAP")).current;
+  } = useRef(primodium.api("ASTEROID")).current;
   const keybinds = useKeybinds();
   const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
 
@@ -34,8 +34,8 @@ export const StarmapNavigatorPane = () => {
   };
 
   useEffect(() => {
-    const cycle = addListener("Cycle", () => {
-      setVisibleDiv((prev) => (prev + 1) % 4);
+    const cycle = addListener("Base", () => {
+      setVisibleDiv((prev) => (prev + 1) % 2);
     });
 
     return () => {
@@ -43,21 +43,21 @@ export const StarmapNavigatorPane = () => {
     };
   }, [addListener]);
 
-  const labels = ["Asteroids", "Fleets", "Colony Ships", "Volatile Shards"];
+  const labels = ["Resources", "Units"];
 
-  const imagePaths = [
-    InterfaceIcons.Asteroid,
-    InterfaceIcons.Outgoing,
-    EntityToUnitImage[EntityType.ColonyShip],
-    InterfaceIcons.Shard,
-  ];
+  const imagePaths = [EntityToResourceImage[EntityType.Iridium], EntityToUnitImage[EntityType.AegisDrone]];
 
   const Content = ({ index }: { index: number }) => {
-    const className = "h-96 w-96";
-    if (index === 0) return <OwnedAsteroids className={className} />;
-    if (index === 1) return <OwnedFleets className={className} />;
-    if (index === 2) return <OwnedColonyShips className={className} />;
-    if (index === 3) return <Shards className={className} />;
+    const className = "h-[26rem] !w-72";
+    if (index === 0)
+      return (
+        <Card noDecor className={className}>
+          <AllResourceLabels />
+          <AllUtilityLabels />
+        </Card>
+      );
+
+    if (index === 1) return <Hangar className={className} />;
   };
 
   return (
@@ -76,28 +76,12 @@ export const StarmapNavigatorPane = () => {
             >
               <img src={imagePaths[index]} alt={label} className="w-4 h-4" />
               {/* Show title when active */}
-              {visibleDiv === index && (
-                <span
-                  className={` ${
-                    label === "Production"
-                      ? "text-yellow-500"
-                      : label === "Military"
-                      ? "text-lime-600"
-                      : label === "Storage"
-                      ? "text-violet-400"
-                      : label === "Infrastructure"
-                      ? "text-sky-500"
-                      : ""
-                  }`}
-                >
-                  {label}
-                </span>
-              )}
+              {visibleDiv === index && <span>{label}</span>}
             </Button>
           ))}
           {!hideHotkeys && (
             <p className="flex text-xs kbd kbd-xs py-2 w-fit self-end" style={{ writingMode: "vertical-rl" }}>
-              {keybinds["Cycle"]?.entries().next().value[0] ?? "?"}
+              {keybinds["Base"]?.entries().next().value[0] ?? "?"}
             </p>
           )}
         </div>

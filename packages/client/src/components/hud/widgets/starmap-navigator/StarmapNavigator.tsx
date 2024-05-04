@@ -9,7 +9,7 @@ import { useMud } from "src/hooks";
 
 export const StarmapNavigator = memo(() => {
   const { components } = useMud();
-  const mapOpen = components.SelectedMode.use()?.value !== Mode.Asteroid;
+  const mapOpen = components.SelectedMode.use()?.value === Mode.Starmap;
 
   if (!mapOpen) return null;
 
