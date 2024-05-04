@@ -3,7 +3,7 @@ import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Cheatcode, Cheatcodes } from "@primodiumxyz/mud-game-tools";
-import { EResource } from "contracts/config/enums";
+import { EResource, EScoreType } from "contracts/config/enums";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { toast } from "react-toastify";
 import { components } from "src/network/components";
@@ -509,6 +509,23 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
           function: async () => {
             toast.info("running cheatcode: Stop Grace Period");
             setComponentValue(mud, components.P_GracePeriod, {}, { asteroid: 0n });
+          },
+        },
+        givePlayersRandomScores: {
+          params: [{ name: "leaderboard", type: "dropdown", dropdownOptions: ["shard", "wormhole"] }],
+          function: async (type: "shard" | "wormhole") => {
+            toast.info("running cheatcode: Give Players Random Scores");
+            const allPlayers = components.Spawned.getAll();
+            const scoreType = type === "shard" ? EScoreType.Shard : EScoreType.Wormhole;
+            allPlayers.forEach((player) => {
+              const score = BigInt(Math.floor(Math.random() * 1000)) * RESOURCE_SCALE;
+              setComponentValue(
+                mud,
+                components.Score,
+                { entity: player as Hex, scoreType },
+                { value: BigInt(score) * RESOURCE_SCALE }
+              );
+            });
           },
         },
         spawnPlayers: {

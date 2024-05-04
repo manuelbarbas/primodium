@@ -195,7 +195,7 @@ export enum EFleetStance {
 }
 
 export enum EScoreType {
-  Primodium = 1,
+  Shard = 1,
   Wormhole,
 }
 

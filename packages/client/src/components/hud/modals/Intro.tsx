@@ -101,7 +101,7 @@ export const Intro = () => {
           <div className="w-3/4 text-center">
             {secondsElapsed >= thresholds.sentence3 && (
               <p className="animate-in fade-in duration-500 text-xs text-center">
-                Command has selected you to journey to The Belt.
+                Command has selected you, an android explorer, to journey to The Belt.
               </p>
             )}{" "}
             {secondsElapsed >= thresholds.sentence4 && (

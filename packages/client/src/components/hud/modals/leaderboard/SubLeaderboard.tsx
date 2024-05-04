@@ -1,4 +1,8 @@
+import { Button } from "@/components/core/Button";
+import { CrownRank } from "@/components/hud/modals/leaderboard/RankCrown";
 import { Entity } from "@latticexyz/recs";
+import { useMemo, useState } from "react";
+import { FaSync } from "react-icons/fa";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
 import { SecondaryCard } from "src/components/core/Card";
@@ -9,31 +13,56 @@ import { getAllianceName } from "src/util/alliance";
 import { EntityType } from "src/util/constants";
 import { formatNumber, formatResourceCount } from "src/util/number";
 import { rankToScore } from "src/util/score";
-import { maybeGetCrownIconFromRank } from "src/components/shared/Crowns";
+
+type FormattedPlayerData = {
+  player: Entity;
+  rank: number;
+  score: bigint;
+};
 
 export const SubLeaderboard = ({ leaderboard, alliance = false }: { leaderboard: Entity; alliance?: boolean }) => {
   const { playerAccount } = useMud();
-  const data = components.Leaderboard.get(leaderboard);
+  const [data, setData] = useState(components.Leaderboard.get(leaderboard));
 
-  if (!data)
-    return (
-      <SecondaryCard className="w-full h-full flex justify-center items-center uppercase font-bold text-sm">
-        No Data Found
-      </SecondaryCard>
-    );
+  const refresh = () => setData(components.Leaderboard.get(leaderboard));
   const entity = alliance
     ? (components.PlayerAlliance.get(playerAccount.entity)?.alliance as Entity)
     : playerAccount.entity;
-  const playerIndex = data.players.indexOf(entity);
-  const playerScore = playerIndex == -1 ? undefined : data.scores[playerIndex];
 
+  const formattedData = useMemo(() => {
+    const ret: { allPlayers: FormattedPlayerData[]; player?: FormattedPlayerData } = {
+      allPlayers: [],
+    };
+    if (!data) return ret;
+    data.players.forEach((player, index) => {
+      const score = data.scores[index];
+      const rank =
+        index == 0 ? 1 : score == ret.allPlayers[index - 1]?.score ? ret.allPlayers[index - 1].rank : index + 1;
+      const retData = {
+        player,
+        rank,
+        score,
+      };
+      ret.allPlayers.push(retData);
+      if (player == entity) ret.player = retData;
+    });
+    return ret;
+  }, [data, entity]);
+  if (!data)
+    return (
+      <div className="w-full h-full flex justify-center items-center uppercase font-bold text-sm">No Data Found</div>
+    );
   return (
-    <SecondaryCard className="flex flex-col w-full h-full text-xs pointer-events-auto">
-      <div className={`grid grid-cols-8 w-full p-2 font-bold uppercase`}>
+    <div className="flex flex-col w-full h-full text-xs pointer-events-auto">
+      <Button variant="neutral" onClick={refresh} className="absolute top-2 right-2">
+        <FaSync />
+        Refresh
+      </Button>
+      <div className={`grid grid-cols-7 w-full p-2 pr-6 font-bold uppercase`}>
         <div>Rank</div>
         <div className="col-span-4">Name</div>
-        <div className="col-span-2">Score</div>
-        <div>Points</div>
+        <div className="opacity-80">Points</div>
+        <div className="text-warning text-right">Score</div>
       </div>
       <div className="flex flex-col w-full h-full justify-between text-xs pointer-events-auto">
         <AutoSizer>
@@ -41,43 +70,44 @@ export const SubLeaderboard = ({ leaderboard, alliance = false }: { leaderboard:
             <List
               height={height - 65}
               width={width}
-              itemCount={data.players.length}
-              itemSize={60}
+              itemCount={formattedData.allPlayers.length}
+              itemSize={52}
               className="scrollbar"
             >
               {({ index, style }) => {
-                const player = data.players[index];
-                const score = data.scores[index];
+                const player = formattedData.allPlayers[index];
                 return (
                   <div style={style} className="pr-2">
-                    <LeaderboardItem key={index} player={player} index={index} score={score} alliance={alliance} />
+                    <LeaderboardItem key={index} {...player} special={player.player === entity} />
                   </div>
                 );
               }}
             </List>
           )}
         </AutoSizer>
-        {entity && (
-          <div className="w-full self-end">
+        {formattedData.player && (
+          <div className="w-full self-end pr-4">
             <hr className="w-full border-t border-cyan-800 my-2" />
-            <LeaderboardItem player={entity} index={playerIndex} score={playerScore ?? 0n} alliance={alliance} />
+            <LeaderboardItem {...formattedData.player} special />
           </div>
         )}
       </div>
-    </SecondaryCard>
+    </div>
   );
 };
 
 const LeaderboardItem = ({
   player,
-  index,
+  rank,
   score,
   alliance = false,
+  special = false,
 }: {
   player: Entity;
-  index: number;
+  rank: number;
   score: bigint;
   alliance?: boolean;
+  special?: boolean;
 }) => {
   const {
     playerAccount: { entity: playerEntity },
@@ -85,34 +115,34 @@ const LeaderboardItem = ({
 
   const entity = alliance ? (components.PlayerAlliance.get(playerEntity)?.alliance as Entity) : playerEntity;
 
-  const rank = index + 1;
   const rankSuffix = rank == 1 ? "st" : rank == 2 ? "nd" : rank == 3 ? "rd" : "th";
+
   return (
     <SecondaryCard
-      className={`grid grid-cols-8 gap-1 w-full border border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center h-14 ${
-        player === entity ? "border-success" : ""
-      }`}
+      className={`grid grid-cols-7 w-full items-center h-12 ${special ? "border-success bg-success/20" : ""}`}
     >
-      <div className={`flex gap-2 items-center`}>
-        {rank}
-        {rankSuffix}
-        {maybeGetCrownIconFromRank(rank)}
+      <div className={`grid grid-cols-2 gap-1 items-center`}>
+        <p>
+          {rank}
+          {rankSuffix}
+        </p>
+
+        <CrownRank rank={rank} />
       </div>
       <div className="col-span-4 flex gap-1 justify-between items-center">
         <div className="flex items-center gap-1">
-          {alliance ? `[${getAllianceName(player, true)}]` : <AccountDisplay player={player} />}
+          {alliance ? `[${getAllianceName(player, true)}]` : <AccountDisplay noColor={!special} player={player} />}
           {player === entity && <p className="text-accent">(You)</p>}
         </div>
       </div>
-      <p className="font-bold w-fit col-span-2 px-2 flex justify-center">
+      <p className="font-bold w-fit px-2 flex justify-center opacity-80">
         {formatResourceCount(EntityType.Iron, score, {
           notLocale: true,
-          fractionDigits: 2,
+          fractionDigits: 1,
         }).toLocaleString()}
       </p>
-      <div className="flex items-center gap-1 px-1 font-bold">
-        {formatNumber(rankToScore(index + 1), { fractionDigits: 2 })}
-        pts
+      <div className="font-bold text-warning px-2 w-full text-right">
+        {formatNumber(rankToScore(rank), { fractionDigits: 1 })}
       </div>
     </SecondaryCard>
   );

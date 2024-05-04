@@ -16,11 +16,17 @@ export const Leaderboards = ({
   const tabs = useMemo(
     () => [
       {
-        name: "Grand",
+        name: "Final",
+        leaderboard: <GrandLeaderboard key={"final"} alliance={alliance} />,
+      },
+
+      {
+        name: "Wormhole",
         leaderboard: (
-          <GrandLeaderboard
-            key={"grand"}
-            leaderboard={alliance ? EntityType.AllianceGrandLeaderboard : EntityType.PlayerGrandLeaderboard}
+          <SubLeaderboard
+            key={"wormhole"}
+            leaderboard={alliance ? EntityType.AllianceWormholeLeaderboard : EntityType.PlayerWormholeLeaderboard}
+            alliance={alliance}
           />
         ),
       },
@@ -29,16 +35,8 @@ export const Leaderboards = ({
         leaderboard: (
           <SubLeaderboard
             key={"Primodium"}
-            leaderboard={alliance ? EntityType.AlliancePrimodiumLeaderboard : EntityType.PlayerPrimodiumLeaderboard}
-          />
-        ),
-      },
-      {
-        name: "Wormhole",
-        leaderboard: (
-          <SubLeaderboard
-            key={"wormhole"}
-            leaderboard={alliance ? EntityType.AllianceWormholeLeaderboard : EntityType.PlayerWormholeLeaderboard}
+            leaderboard={alliance ? EntityType.AllianceShardLeaderboard : EntityType.PlayerShardLeaderboard}
+            alliance={alliance}
           />
         ),
       },
@@ -47,10 +45,16 @@ export const Leaderboards = ({
   );
 
   return (
-    <div className="w-full h-full flex justify-center flex-col">
-      <div className="flex space-x-1 justify-center p-1">
+    <div className="w-full h-full flex justify-center flex-col bg-transparent p-2">
+      <div className="flex space-x-1 justify-center p-1 relative">
         {tabs.map((tab) => (
-          <Button selected={activeTab === tab.name} key={tab.name} onClick={() => setActiveTab(tab.name)}>
+          <Button
+            size="content"
+            variant="primary"
+            selected={activeTab === tab.name}
+            key={tab.name}
+            onClick={() => setActiveTab(tab.name)}
+          >
             {tab.name}
           </Button>
         ))}
