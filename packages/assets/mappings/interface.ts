@@ -29,7 +29,10 @@ import Spectate from "../icons/UI_Spectate.png?url";
 import Starmap from "../icons/UI_Starmap.png?url";
 import Trade from "../icons/UI_Trade.png?url";
 import Vault from "../icons/UI_Vault.png?url";
-import ShardSprite from "../sprites/shard/shard.png?url";
+import Shard from "../icons/UI_Shard.png?url";
+import Wormhole from "../icons/UI_WormholeBase.png?url";
+import Navigator from "../icons/UI_Navigator.png?url";
+import Command from "../icons/UI_Command.png?url";
 
 export const InterfaceIcons = {
   Add,
@@ -40,6 +43,7 @@ export const InterfaceIcons = {
   Build,
   Chat,
   Crosshairs,
+  Command,
   EncryptionBlue,
   EncryptionGold,
   Expansion,
@@ -55,8 +59,7 @@ export const InterfaceIcons = {
   Reports,
   Return,
   Settings,
-  ShardSprite,
-  Shard: Asteroid,
+  Shard,
   Spectate,
   Starmap,
   Trade,
@@ -65,4 +68,6 @@ export const InterfaceIcons = {
   CategoryMilitary,
   CategoryProduction,
   CategoryStorage,
+  Wormhole,
+  Navigator,
 };

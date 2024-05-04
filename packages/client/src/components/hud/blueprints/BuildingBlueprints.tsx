@@ -2,6 +2,7 @@ import { Button } from "@/components/core/Button";
 import { BuildingImageFromType } from "@/components/shared/BuildingImage";
 import { KeyNames, KeybindActionKeys } from "@game/lib/constants/keybinds";
 import { Entity } from "@latticexyz/recs";
+import { EMap } from "contracts/config/enums";
 import { useEffect, useMemo } from "react";
 import { FaLock } from "react-icons/fa";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
@@ -114,12 +115,14 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({
 
   const productionBuildings = useMemo(() => {
     let mines: Entity[] = [];
-    if (mapId === 1)
+    if (mapId === EMap.Primary)
       mines = [EntityType.IronMine, EntityType.CopperMine, EntityType.LithiumMine, EntityType.KimberliteMine];
-    else if (mapId === 2) mines = [EntityType.KimberliteMine];
-    else if (mapId === 3) mines = [EntityType.IridiumMine];
-    else if (mapId === 4) mines = [EntityType.PlatinumMine];
-    else if (mapId === 5) mines = [EntityType.TitaniumMine];
+    else if (mapId === EMap.Kimberlite) mines = [EntityType.KimberliteMine];
+    else if (mapId === EMap.Iridium) mines = [EntityType.IridiumMine];
+    else if (mapId === EMap.Platinum) mines = [EntityType.PlatinumMine];
+    else if (mapId === EMap.Titanium) mines = [EntityType.TitaniumMine];
+    else if (mapId === EMap.Wormhole) mines = [EntityType.IronMine, EntityType.CopperMine, EntityType.LithiumMine];
+    else if (mapId === EMap.Common) mines = [EntityType.IronMine, EntityType.CopperMine, EntityType.LithiumMine];
     return [
       ...mines,
       EntityType.IronPlateFactory,
