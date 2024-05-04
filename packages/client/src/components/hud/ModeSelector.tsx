@@ -50,7 +50,7 @@ const selectableModes = [
   {
     type: Mode.CommandCenter,
     name: "Command Center",
-    image: InterfaceIcons.Outgoing,
+    image: InterfaceIcons.Command,
   },
 ];
 

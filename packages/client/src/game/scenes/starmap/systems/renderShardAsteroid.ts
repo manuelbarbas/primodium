@@ -1,3 +1,4 @@
+import { entityToRockName } from "@/util/name";
 import { defineEnterSystem, defineUpdateSystem, Entity, Has, namespaceWorld } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
@@ -18,8 +19,8 @@ export const renderShardAsteroid = (scene: Scene) => {
     const asteroidData = components.ShardAsteroid.get(entity);
     if (!asteroidData) throw new Error("Shard asteroid data not found");
 
-    const spriteScale = 0.75;
-    const asteroid = new ShardAsteroid(scene, entity, coord).setScale(spriteScale);
+    const spriteScale = 0.4;
+    const asteroid = new ShardAsteroid(scene, coord).setScale(spriteScale);
 
     asteroid
       .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
@@ -43,6 +44,10 @@ export const renderShardAsteroid = (scene: Scene) => {
       .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => {
         components.HoverEntity.remove();
       });
+
+    asteroid.getAsteroidLabel().setProperties({
+      nameLabel: entityToRockName(entity),
+    });
 
     scene.objects.add(entity, asteroid, true);
   };

@@ -94,12 +94,12 @@ export enum TransactionQueueType {
   PayForColonySlot,
 }
 
-export enum RockRelationship {
-  Ally,
-  Enemy,
-  Neutral,
-  Self,
-}
+export const RockRelationship = {
+  Ally: "Ally",
+  Enemy: "Enemy",
+  Neutral: "Neutral",
+  Self: "Self",
+} as const;
 
 export const RockRelationshipColors = {
   [RockRelationship.Ally]: "success",

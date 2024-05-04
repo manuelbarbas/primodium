@@ -1,7 +1,6 @@
 import { PixelCoord, Scene } from "engine/types";
 import { IPrimodiumGameObject } from "./interfaces";
 import { Fleet } from "./Fleet";
-import { DepthLayers } from "../constants/common";
 
 const FLEET_ANGLE_OFFSET = 45;
 export class TransitLine extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
@@ -17,7 +16,6 @@ export class TransitLine extends Phaser.GameObjects.Container implements IPrimod
     this._scene = scene;
     this.start = start;
     this.end = end;
-    this.setDepth(DepthLayers.Marker);
 
     this.unsubZoom = scene.camera.zoom$.subscribe((zoom) => {
       this.transitLine?.setLineWidth(2 / zoom);
@@ -49,13 +47,13 @@ export class TransitLine extends Phaser.GameObjects.Container implements IPrimod
       )
         .setOrigin(0, 0)
         .setLineWidth(2)
-        .setAlpha(0.5)
-        .setDepth(0);
+        .setAlpha(0.5);
       this.add(this.transitLine);
     }
 
     fleet.setTransitLineRef(this);
     fleet.getOrbitRing()?.removeFleet(fleet);
+    this.scene.add.existing(fleet);
     this.add(fleet);
     this.fleet = fleet;
     fleet.x = 0;
@@ -70,6 +68,10 @@ export class TransitLine extends Phaser.GameObjects.Container implements IPrimod
     this.fleet.setTransitLineRef(null);
     this.remove(this.fleet);
     this.dispose();
+  }
+
+  update() {
+    this.fleet?.setScale(Math.max(0.3, 0.3 / this._scene.camera.phaserCamera.zoom));
   }
 
   setCoordinates(start: PixelCoord, end: PixelCoord) {
