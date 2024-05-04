@@ -1,5 +1,6 @@
 import { HUD } from "@/components/core/HUD";
 import { AsteroidLoading } from "@/components/hud/AsteroidLoading";
+import { AvailableObjectives } from "@/components/hud/AvailableObjectives";
 import { Dock } from "@/components/hud/Dock";
 import { ModeSelector } from "@/components/hud/ModeSelector";
 import { HoverTarget } from "@/components/hud/markers/HoverTarget";
@@ -48,6 +49,7 @@ export const GameHUD = memo(() => {
         </HUD.TopMiddle>
         <HUD.TopRight className="flex flex-col items-end gap-2">
           <FavoriteAsteroids />
+          <AvailableObjectives />
           {/* <Hangar />
           <OwnedAsteroids />
           <OwnedFleets /> */}
