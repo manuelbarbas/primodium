@@ -138,9 +138,7 @@ export const renderBuilding = (scene: Scene) => {
     });
 
     defineEnterSystem(spectateWorld, positionQuery, render);
-    defineUpdateSystem(spectateWorld, positionQuery, (update) => {
-      render(update);
-    });
+    defineUpdateSystem(spectateWorld, positionQuery, render);
 
     defineExitSystem(spectateWorld, positionQuery, ({ entity }) => {
       const building = buildings.get(entity);

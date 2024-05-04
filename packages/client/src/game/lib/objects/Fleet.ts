@@ -1,6 +1,6 @@
 import { Coord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Scene } from "engine/types";
-import { OrbitRing } from "./Asteroid/OrbitRing";
+import { FleetsContainer } from "./Asteroid/FleetsContainer";
 import { IPrimodiumGameObject } from "./interfaces";
 import { TransitLine } from "./TransitLine";
 import { Assets, Sprites } from "@primodiumxyz/assets";
@@ -9,7 +9,7 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
   private _scene: Scene;
   private coord: Coord;
   private spawned = false;
-  private orbitRingRef: OrbitRing | null = null;
+  private orbitRingRef: FleetsContainer | null = null;
   private transitLineRef: TransitLine | null = null;
   constructor(scene: Scene, coord: Coord) {
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
@@ -69,7 +69,7 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
     return this.transitLineRef;
   }
 
-  setOrbitRingRef(orbitRing: OrbitRing | null) {
+  setOrbitRingRef(orbitRing: FleetsContainer | null) {
     this.orbitRingRef = orbitRing;
 
     return this;

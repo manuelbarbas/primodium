@@ -13,7 +13,6 @@ export class TargetLine extends Phaser.GameObjects.Line implements IPrimodiumGam
     this.setLineWidth(2);
     this._scene = scene;
     this.start = start;
-    this.scene.events.addListener("update", this.update, this);
   }
 
   spawn() {

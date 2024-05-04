@@ -1,10 +1,7 @@
 import { cn } from "@/util/client";
+import { lerp } from "@/util/common";
 import { VariantProps, cva } from "class-variance-authority";
 import { forwardRef, useCallback, useRef } from "react";
-
-const lerp = (value: number, inMin: number, inMax: number, outMin: number, outMax: number) => {
-  return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
-};
 
 export const Card: React.FC<{
   children: React.ReactNode;
