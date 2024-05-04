@@ -84,6 +84,7 @@ export const Card: React.FC<{
         <div className="absolute inset-0 bg-gradient-to-br from-transparent to-neutral" />
         <div className="absolute inset-0 pixel-border" />
         <div className="absolute inset-0 pixel-border blur-[2px] opacity-50 bg-blend-screen" />
+
         {children}
         {!noDecor && (
           <div className="opacity-30 pointer-events-none">

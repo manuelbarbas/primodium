@@ -78,7 +78,7 @@ export const BarLayoutUtilityLabel = ({
       case EntityType.Electricity:
         return "MW";
       case EntityType.Housing:
-        return "HOUS";
+        return "HOUSING";
       default:
         return "";
     }
@@ -90,7 +90,7 @@ export const BarLayoutUtilityLabel = ({
         <img src={EntityToResourceImage[resourceId]} className="pixel-images h-5 w-5 mt-0.5" alt={`${name} icon`} />
 
         <div className="w-full flex flex-col">
-          {renderCapacityBar && <CapacityBar current={used} max={maxStorage} segments={10} resourceType={resourceId} />}
+          {renderCapacityBar && <CapacityBar current={used} max={maxStorage} segments={20} resourceType={resourceId} />}
           <div className="flex flex-row">
             <span className="text-xs">{formatResourceCount(resourceId, used)}</span>
             <b className={`text-accent text-xs opacity-50`}>

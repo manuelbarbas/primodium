@@ -35,14 +35,14 @@ export const ResourceLabel = ({ name, resource }: { name: string; resource: Enti
   return (
     <Badge
       variant={resourceStorage === 0n ? "error" : "neutral"}
-      className={`h-5 ${resourceStorage === 0n ? "opacity-25" : ""}`}
+      className={`${resourceStorage === 0n ? "opacity-25" : ""}`}
     >
       <ResourceIconTooltip
         name={name}
         amount={resourceCount}
         resource={resource}
         image={EntityToResourceImage[resource]}
-        fontSize={"lg"}
+        fontSize={"sm"}
         direction="top"
         className={`${tooltipClass}`}
       />

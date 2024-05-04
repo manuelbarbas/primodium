@@ -89,36 +89,38 @@ export const Hangar = ({ className = "" }: { className?: string }) => {
   return (
     <Card noDecor className={`${className}`}>
       <div className="h-full w-full flex flex-col gap-1 overflow-y-auto scrollbar ">
-        {marines.total > 0n && (
-          <>
-            <p className="opacity-60 text-xs">Marines</p>
-            <SecondaryCard className="gap-1">
-              {Object.entries(marines.unitCounts).map(([unit, count], i) => (
-                <div key={`marine-${i}`} className="flex gap-2 items-center">
-                  <img src={EntityToUnitImage[unit]} alt={getEntityTypeName(unit as Entity)} className="w-8 h-8" />
-                  <p>{formatResourceCount(unit as Entity, count)}</p>
-                  <p className="opacity-50 text-xs">{getEntityTypeName(unit as Entity)}</p>
-                </div>
-              ))}
-            </SecondaryCard>
-          </>
-        )}
-        {drones.total > 0n && (
-          <>
-            <p className="opacity-60 text-xs">Drones</p>
-            <SecondaryCard className="gap-1">
-              {Object.entries(drones.unitCounts).map(([unit, count], i) => (
-                <div key={`drone-${i}`} className="flex gap-2 items-center">
-                  <img src={EntityToUnitImage[unit]} alt={getEntityTypeName(unit as Entity)} className="w-8 h-8" />
-                  <p>{formatResourceCount(unit as Entity, count)}</p>
-                  <p className="opacity-50 text-xs">{getEntityTypeName(unit as Entity)}</p>
-                </div>
-              ))}
-            </SecondaryCard>
-          </>
-        )}
+        <div className="h-full flex flex-col gap-1">
+          {marines.total > 0n && (
+            <>
+              <p className="opacity-60 text-xs">Marines</p>
+              <SecondaryCard className="gap-1">
+                {Object.entries(marines.unitCounts).map(([unit, count], i) => (
+                  <div key={`marine-${i}`} className="flex gap-2 items-center">
+                    <img src={EntityToUnitImage[unit]} alt={getEntityTypeName(unit as Entity)} className="w-8 h-8" />
+                    <p>{formatResourceCount(unit as Entity, count)}</p>
+                    <p className="opacity-50 text-xs">{getEntityTypeName(unit as Entity)}</p>
+                  </div>
+                ))}
+              </SecondaryCard>
+            </>
+          )}
+          {drones.total > 0n && (
+            <>
+              <p className="opacity-60 text-xs">Drones</p>
+              <SecondaryCard className="gap-1">
+                {Object.entries(drones.unitCounts).map(([unit, count], i) => (
+                  <div key={`drone-${i}`} className="flex gap-2 items-center">
+                    <img src={EntityToUnitImage[unit]} alt={getEntityTypeName(unit as Entity)} className="w-8 h-8" />
+                    <p>{formatResourceCount(unit as Entity, count)}</p>
+                    <p className="opacity-50 text-xs">{getEntityTypeName(unit as Entity)}</p>
+                  </div>
+                ))}
+              </SecondaryCard>
+            </>
+          )}
+        </div>
         {colonyShipCount > 0n && (
-          <SecondaryCard variant="highlight" className="flex flex-row gap-4 items-center text-sm">
+          <SecondaryCard className="flex flex-row gap-4 items-center text-sm border-accent hover:border-accent bg-accent/10">
             <img
               src={EntityToUnitImage[EntityType.ColonyShip]}
               alt={getEntityTypeName(EntityType.ColonyShip)}
