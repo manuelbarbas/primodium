@@ -60,7 +60,12 @@ export const GrandLeaderboard = ({ alliance = false }: { alliance?: boolean }) =
                 const player = data.allPlayers[index];
                 return (
                   <div style={style} className="pr-2">
-                    <GrandLeaderboardItem key={index} {...player} special={player.player === entity} />
+                    <GrandLeaderboardItem
+                      key={index}
+                      {...player}
+                      special={player.player === entity}
+                      alliance={alliance}
+                    />
                   </div>
                 );
               }}
@@ -71,7 +76,7 @@ export const GrandLeaderboard = ({ alliance = false }: { alliance?: boolean }) =
       {data.player && (
         <div className="w-full self-end pr-4">
           <hr className="w-full border-t border-cyan-800 my-2" />
-          <GrandLeaderboardItem {...data.player} special />
+          <GrandLeaderboardItem {...data.player} special alliance={alliance} />
         </div>
       )}
     </div>
@@ -86,7 +91,7 @@ const RankSuffix = ({ rank }: { rank: number }) => {
 export const GrandLeaderboardItem = ({
   player,
   rank,
-  score,
+  finalScore,
   wormholeRank = 0,
   shardRank = 0,
   alliance = false,
@@ -96,7 +101,7 @@ export const GrandLeaderboardItem = ({
 }: {
   player: Entity;
   rank: number;
-  score: number;
+  finalScore: number;
   wormholeRank?: number;
   shardRank?: number;
   alliance?: boolean;
@@ -141,7 +146,7 @@ export const GrandLeaderboardItem = ({
         </>
       )}
       <p className="font-bold w-full px-2 flex text-warning text-right justify-end">
-        {formatNumber(score, { fractionDigits: 1 })}
+        {formatNumber(finalScore, { fractionDigits: 1 })}
       </p>
     </SecondaryCard>
   );

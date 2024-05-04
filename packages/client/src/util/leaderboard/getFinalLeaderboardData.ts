@@ -15,6 +15,7 @@ export const getFinalLeaderboardData = (
   playerEntity: Entity,
   alliance: boolean
 ): { allPlayers: FinalLeaderboardData[]; player?: FinalLeaderboardData } => {
+  const selfEntity = alliance ? (components.PlayerAlliance.get(playerEntity)?.alliance as Entity) : playerEntity;
   const wormholeData = components.Leaderboard.get(
     alliance ? EntityType.AllianceWormholeLeaderboard : EntityType.PlayerWormholeLeaderboard
   );
@@ -64,7 +65,7 @@ export const getFinalLeaderboardData = (
       rank,
     };
     ret.allPlayers.push(retData);
-    if (playerData.player == playerEntity) ret.player = retData;
+    if (playerData.player == selfEntity) ret.player = retData;
   });
   return ret;
 };

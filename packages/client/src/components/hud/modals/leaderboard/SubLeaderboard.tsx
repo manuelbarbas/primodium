@@ -87,7 +87,7 @@ export const SubLeaderboard = ({ leaderboard, alliance = false }: { leaderboard:
                 const player = formattedData.allPlayers[index];
                 return (
                   <div style={style} className="pr-2">
-                    <LeaderboardItem key={index} {...player} special={player.player === entity} />
+                    <LeaderboardItem key={index} {...player} special={player.player === entity} alliance={alliance} />
                   </div>
                 );
               }}
@@ -97,7 +97,7 @@ export const SubLeaderboard = ({ leaderboard, alliance = false }: { leaderboard:
         {formattedData.player && (
           <div className="w-full self-end pr-4">
             <hr className="w-full border-t border-cyan-800 my-2" />
-            <LeaderboardItem {...formattedData.player} special />
+            <LeaderboardItem {...formattedData.player} special alliance={alliance} />
           </div>
         )}
       </div>
