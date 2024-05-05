@@ -126,7 +126,7 @@ export const InitialScreen = ({ selectedRock }: { selectedRock: Entity }) => {
             <div className="flex flex-col items-start">
               <p>{ownedBy === playerEntity ? "BUILD" : "SPECTATE"}</p>
               <p className="block text-xs opacity-75">
-                {ownedBy === playerEntity ? "EXTRACT & CONQUER ASTEROID" : "MONITOR LIVE ASTEROID ACTIVIY"}
+                {ownedBy === playerEntity ? "EXTRACT RESOURCES" : "MONITOR LIVE ACTIVITY"}
               </p>
             </div>
           </div>
