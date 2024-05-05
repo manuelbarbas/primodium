@@ -93,6 +93,10 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
                 <p className="text-secondary">CGO</p>
                 {formatResourceCount(EntityType.Iron, fleetStats.cargo, { short: true })}
               </div>
+              <div className="flex gap-1">
+                <p className="text-secondary">SPD</p>
+                {fleetStats.speed.toString()}
+              </div>
 
               {fleetStats.decryption > 0n && (
                 <div className="flex gap-1">

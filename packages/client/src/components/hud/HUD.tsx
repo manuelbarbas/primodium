@@ -18,6 +18,7 @@ import { memo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { HoverInfo } from "./hover/HoverInfo";
 import { AsteroidMenuPopup } from "@/components/hud/markers/starmap/AsteroidMenuPopup";
+// import { AsteroidTarget } from "@/components/hud/markers/starmap/AsteroidTarget";
 
 export const GameHUD = memo(() => {
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
@@ -45,9 +46,6 @@ export const GameHUD = memo(() => {
         </HUD.TopMiddle>
         <HUD.TopRight className="flex flex-col items-end gap-2">
           <FavoriteAsteroids />
-          {/* <Hangar />
-          <OwnedAsteroids />
-          <OwnedFleets /> */}
         </HUD.TopRight>
 
         <HUD.Right>
@@ -62,7 +60,6 @@ export const GameHUD = memo(() => {
         <HUD.BottomMiddle>
           <Dock />
         </HUD.BottomMiddle>
-        <HUD.BottomRight>{/* <Chat /> */}</HUD.BottomRight>
       </HUD>
       <HUD>
         <HUD.CursorFollower>
