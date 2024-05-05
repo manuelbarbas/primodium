@@ -3,22 +3,20 @@ import { EAllianceInviteMode } from "contracts/config/enums";
 import { FaCheck, FaEnvelope, FaLock, FaPlus, FaSearch } from "react-icons/fa";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
-import { Button } from "src/components/core/Button";
-import { SecondaryCard } from "src/components/core/Card";
-import { Navigator } from "src/components/core/Navigator";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { useMud } from "src/hooks";
-import { components } from "src/network/components";
-import { joinAlliance, requestToJoin } from "src/network/setup/contractCalls/alliance";
-import { getAllianceName } from "src/util/alliance";
-import { TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
+import { Button } from "@/components/core/Button";
+import { SecondaryCard } from "@/components/core/Card";
+import { Navigator } from "@/components/core/Navigator";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
+import { useMud } from "@/hooks";
+import { components } from "@/network/components";
+import { joinAlliance, requestToJoin } from "@/network/setup/contractCalls/alliance";
+import { getAllianceName } from "@/util/alliance";
+import { TransactionQueueType } from "@/util/constants";
+import { hashEntities } from "@/util/encode";
 import { cn } from "@/util/client";
 import { useMemo, useState } from "react";
 import { TextInput } from "@/components/core/TextInput";
 import { ALLIANCE_TAG_SIZE } from "@/components/hud/modals/alliance-mgmt/CreateScreen";
-
-// TODO: add the amount of members to alliance so we can show it
 
 // This screen is the home interface for searching alliances, and accessing both the "create" and "invites" screens
 // It is only accessible to players who are not in an alliance
@@ -139,7 +137,7 @@ const AllianceItem = ({
               <Button
                 className="btn-xs"
                 onClick={() => {
-                  inviteOnly ? requestToJoin(mud, entity) : joinAlliance(mud, entity);
+                  inviteOnly && !invited ? requestToJoin(mud, entity) : joinAlliance(mud, entity);
                 }}
                 disabled={requested}
               >

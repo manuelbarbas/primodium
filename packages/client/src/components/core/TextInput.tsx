@@ -52,7 +52,13 @@ export const TextInput: React.FC<{
   }, []);
 
   return (
-    <div className="form-control w-full max-w-xs pointer-events-auto">
+    <div
+      className={cn(
+        "form-control w-full max-w-xs pointer-events-auto",
+        // if className includes a custom width, extract it and pass it to the form-control
+        className && className.includes("w-") && className.split(" ").find((c) => c.includes("w-"))
+      )}
+    >
       {topLeftLabel || topRightLabel ? (
         <label className="label">
           {topLeftLabel && <span className="label-text opacity-90">{topLeftLabel}</span>}

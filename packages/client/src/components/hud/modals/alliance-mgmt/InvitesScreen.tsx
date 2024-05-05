@@ -3,17 +3,17 @@ import { Entity } from "@latticexyz/recs";
 import { FaCheck, FaCopy, FaTimes } from "react-icons/fa";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
-import { Button } from "src/components/core/Button";
-import { Navigator } from "src/components/core/Navigator";
-import { Tooltip } from "src/components/core/Tooltip";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { useMud } from "src/hooks";
-import { components } from "src/network/components";
-import { declineInvite, joinAlliance } from "src/network/setup/contractCalls/alliance";
-import { getAllianceName } from "src/util/alliance";
-import { entityToAddress } from "src/util/common";
-import { TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
+import { Button } from "@/components/core/Button";
+import { Navigator } from "@/components/core/Navigator";
+import { Tooltip } from "@/components/core/Tooltip";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
+import { useMud } from "@/hooks";
+import { components } from "@/network/components";
+import { declineInvite, joinAlliance } from "@/network/setup/contractCalls/alliance";
+import { getAllianceName } from "@/util/alliance";
+import { entityToAddress } from "@/util/common";
+import { TransactionQueueType } from "@/util/constants";
+import { hashEntities } from "@/util/encode";
 
 // This screen is only accessible to players who are not in an alliance
 export const InvitesScreen: React.FC = () => {

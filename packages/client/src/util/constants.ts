@@ -78,6 +78,7 @@ export enum TransactionQueueType {
   AcceptRequest,
   RejectRequest,
   Invite,
+  RevokeInvite,
   DeclineInvite,
   Toggle,
   Access,

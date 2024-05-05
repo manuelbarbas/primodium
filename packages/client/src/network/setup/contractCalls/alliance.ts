@@ -236,3 +236,25 @@ export const invite = async (mud: MUD, target: Entity) => {
     }
   );
 };
+
+export const revokeInvite = async (mud: MUD, target: Entity) => {
+  execute(
+    {
+      mud,
+      functionName: "Primodium__revokeInvite",
+      systemId: getSystemId("AllianceSystem"),
+      args: [entityToAddress(target as Hex)],
+      withSession: true,
+    },
+    {
+      id: hashEntities(TransactionQueueType.RevokeInvite, target),
+    },
+    (receipt) => {
+      ampli.systemRevokeInvite({
+        allianceName: getAllianceNameFromPlayer(target),
+        allianceRejectee: target,
+        ...parseReceipt(receipt),
+      });
+    }
+  );
+};

@@ -4,11 +4,11 @@ import { RadioGroup } from "@/components/core/Radio";
 import { Tooltip } from "@/components/core/Tooltip";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import { Navigator } from "src/components/core/Navigator";
-import { TextInput } from "src/components/core/TextInput";
-import { useMud } from "src/hooks";
-import { createAlliance } from "src/network/setup/contractCalls/alliance";
-import { isProfane } from "src/util/profanity";
+import { Navigator } from "@/components/core/Navigator";
+import { TextInput } from "@/components/core/TextInput";
+import { useMud } from "@/hooks";
+import { createAlliance } from "@/network/setup/contractCalls/alliance";
+import { isProfane } from "@/util/profanity";
 
 export const ALLIANCE_TAG_SIZE = 6;
 
