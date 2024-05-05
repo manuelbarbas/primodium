@@ -41,6 +41,7 @@ export const setupSessionAccount = (
       if (key.delegator !== entityToAddress(playerEntity)) return;
       const newAuthorized = key.delegatee;
       if (!value[0]) return removeSessionAccount();
+      console.log("Setting authorized", newAuthorized);
       setAuthorized(newAuthorized as string);
     },
     { runOnInit: false }

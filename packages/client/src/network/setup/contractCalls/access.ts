@@ -1,7 +1,8 @@
 import { Has, runQuery } from "@latticexyz/recs";
 import { decodeEntity, singletonEntity } from "@latticexyz/store-sync/recs";
 import { components } from "src/network/components";
-import { execute, executeBatch } from "src/network/txExecute";
+import { execute } from "src/network/txExecute/txExecute";
+import { executeBatch } from "src/network/txExecute/txExecuteBatch";
 import { MUD } from "src/network/types";
 import { TransactionQueueType, UNLIMITED_DELEGATION } from "src/util/constants";
 import { getSystemId } from "src/util/encode";

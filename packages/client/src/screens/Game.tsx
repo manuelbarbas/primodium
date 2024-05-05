@@ -73,7 +73,9 @@ export const Game = () => {
         <div id="phaser-container" className="cursor-pointer screen-container">
           {!!primodium && (
             <PrimodiumProvider {...primodium}>
-              <WidgetProvider>{isDead ? <YouDied /> : <GameHUD />}</WidgetProvider>
+              <WidgetProvider>
+                {isDead && <YouDied />} <GameHUD />
+              </WidgetProvider>
             </PrimodiumProvider>
           )}
         </div>

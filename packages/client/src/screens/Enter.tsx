@@ -3,7 +3,9 @@ import { useMud } from "src/hooks";
 import { STORAGE_PREFIX } from "src/util/constants";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 
+import { useCallback, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { components } from "src/network/components";
@@ -21,14 +23,24 @@ export const Enter: React.FC = () => {
     useShallow((state) => ({ noExternalAccount: state.noExternalAccount }))
   );
 
-  const handlePlay = async () => {
-    const hasSpawned = !!components.Home.get(playerEntity)?.value;
-    if (!hasSpawned) {
+  const spawnAndAuthorize = useCallback(async () => {
+    await spawnAndAuthorizeSessionAccount(mud);
+  }, [mud]);
+
+  useEffect(() => {
+    if (!mud.sessionAccount) {
       const privateKey = generatePrivateKey();
       const account = privateKeyToAccount(privateKey);
       localStorage.setItem(STORAGE_PREFIX + account.address, privateKey);
+      mud.updateSessionAccount(privateKey);
+      toast.success("Session account created!");
+    }
+  }, [mud]);
 
-      await spawnAndAuthorizeSessionAccount(mud, account.address);
+  const handlePlay = async () => {
+    const hasSpawned = !!components.Home.get(playerEntity)?.value;
+    if (!hasSpawned) {
+      await spawnAndAuthorize();
     }
 
     navigate("/game" + location.search);

@@ -1,6 +1,7 @@
 import { resourceToHex } from "@latticexyz/common";
 
 const UserDelegationControlTableId = resourceToHex({ type: "table", namespace: "", name: "UserDelegationControl" });
+const CallWithSignatureNoncesTableId = resourceToHex({ type: "table", namespace: "", name: "CallWithSignatur" });
 
 export const otherTables = {
   UserDelegationControl: {
@@ -14,6 +15,19 @@ export const otherTables = {
     valueSchema: {
       delegationControlId: {
         type: "bytes32",
+      },
+    },
+  },
+  CallWithSignatureNonces: {
+    namespace: "world",
+    name: "CallWithSignatureNonces",
+    tableId: CallWithSignatureNoncesTableId,
+    keySchema: {
+      signer: { type: "address" },
+    },
+    valueSchema: {
+      nonce: {
+        type: "uint256",
       },
     },
   },
