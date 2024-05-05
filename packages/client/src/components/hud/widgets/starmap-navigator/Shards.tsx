@@ -1,4 +1,4 @@
-import { SecondaryCard } from "@/components/core/Card";
+import { Card } from "@/components/core/Card";
 import { useMud } from "@/hooks";
 import { useShardAsteroid } from "@/hooks/primodium/useShardAsteroid";
 import { usePrimodium } from "@/hooks/usePrimodium";
@@ -39,7 +39,7 @@ export const Shards = ({ className = "" }: { className?: string }) => {
     zoomTo(0.9);
   };
   return (
-    <SecondaryCard className={className}>
+    <Card noDecor className={className}>
       {shards.length === 0 && (
         <p className="w-full h-full text-xs grid place-items-center opacity-50 uppercase">
           no volatile shards detected...
@@ -55,7 +55,7 @@ export const Shards = ({ className = "" }: { className?: string }) => {
           {shards.length} Shard{shards.length > 1 ? "s" : ""}
         </div>
       )}
-    </SecondaryCard>
+    </Card>
   );
 };
 

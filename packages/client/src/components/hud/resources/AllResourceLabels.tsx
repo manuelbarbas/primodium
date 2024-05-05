@@ -1,14 +1,14 @@
-import { EntityType } from "src/util/constants";
+import { SecondaryCard } from "src/components/core/Card";
 import { components } from "src/network/components";
+import { EntityType } from "src/util/constants";
 import { ResourceLabel } from "./ResourceLabel";
 import { VaultUtilityLabel } from "./UtilityLabel";
-import { SecondaryCard } from "src/components/core/Card";
 
 export const AllResourceLabels = () => {
   const activeRock = components.ActiveRock.use()?.value;
   if (!activeRock) return null;
   return (
-    <div className="flex flex-col items-end p-2 border-b border-secondary/25 w-72">
+    <div className="flex flex-col items-end p-2 border-b border-secondary/25 w-full">
       {/* Common Resources */}
       <div className="flex flex-col w-full">
         {/* Title & Unraidable Storage */}

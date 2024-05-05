@@ -7,6 +7,7 @@ import { Dropdown } from "@/components/core/Dropdown";
 import { HUD } from "@/components/core/HUD";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Join } from "@/components/core/Join";
+import { List } from "@/components/core/List";
 import { Loader } from "@/components/core/Loader";
 import { Modal } from "@/components/core/Modal";
 import { NumberInput } from "@/components/core/NumberInput";
@@ -16,8 +17,8 @@ import { Range } from "@/components/core/Range";
 import { Tabs } from "@/components/core/Tabs";
 import { TextInput } from "@/components/core/TextInput";
 import { Toggle } from "@/components/core/Toggle";
-import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EntityType } from "@/util/constants";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useState } from "react";
 
 export const _Sandbox = () => {
@@ -25,7 +26,7 @@ export const _Sandbox = () => {
 
   return (
     <HUD>
-      <div className="absolute top-0 right-0 min-h-screen w-full heropattern-graphpaper-slate-800/50 bg-slate-900/45 p-10 grid grid-cols-2 gap-4 drop-shadow-hard pointer-events-auto">
+      <div className="absolute top-0 right-0 min-h-screen w-full heropattern-graphpaper-slate-800/50 bg-slate-900 p-10 grid grid-cols-2 gap-4 drop-shadow-hard pointer-events-auto">
         <div className="space-y-4">
           <div className="flex gap-2">
             <div className="w-8 h-8 bg-secondary border" />
@@ -50,24 +51,24 @@ export const _Sandbox = () => {
             <Button variant={"accent"}>accent</Button>
             <Button variant={"secondary"}>secondary</Button>
             <Button variant={"primary"}>primary</Button>
-            <Button variant={"success"}>primary</Button>
+            <Button variant={"success"}>success</Button>
             <PushButton variant={"secondary"} size={"sm"} tooltip={"test"}>
-              primary
+              secondary
             </PushButton>
             <PushButton variant={"success"} size={"sm"} tooltip={"test"}>
-              primary
+              success
             </PushButton>
             <PushButton variant={"info"} size={"sm"} tooltip={"test"}>
-              primary
+              info
             </PushButton>
             <PushButton variant={"secondary"} size={"sm"} tooltip={"test"}>
-              primary
+              secondary
             </PushButton>
             <PushButton variant={"error"} size={"sm"} tooltip={"test"}>
-              primary
+              error
             </PushButton>
             <PushButton variant={"error"} size={"md"} tooltip={"test"}>
-              primary
+              error
             </PushButton>
           </div>
           <div className="flex gap-2">
@@ -177,7 +178,6 @@ export const _Sandbox = () => {
               primary
             </Badge>
           </div>
-
           <Tabs defaultIndex={0}>
             <Join className="border border-secondary/50">
               <Tabs.Button index={0}>Tab1</Tabs.Button>
@@ -202,15 +202,24 @@ export const _Sandbox = () => {
             </Tabs.Pane>
             <Tabs.Pane index={3}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.</Tabs.Pane>
           </Tabs>
-
           <NumberInput count="0" />
           <TextInput placeholder="test" topRightLabel="Text input" />
-
           <Dropdown variant={"bottomLeft"} value={dropdownValue} onChange={setDropdownValue}>
             <Dropdown.Item value={1}>Test 1</Dropdown.Item>
             <Dropdown.Item value={2}>Test 2</Dropdown.Item>
             <Dropdown.Item value={3}>Test 3</Dropdown.Item>
           </Dropdown>
+          <List>
+            <List.Item>hello</List.Item>
+            <List.Item active>active</List.Item>
+            <List.Item strikethrough>strikethrough</List.Item>
+          </List>
+          <List ordered>
+            <List.Item>hello</List.Item>
+            <List.Item>goodbye</List.Item>
+            <List.Item active>active</List.Item>
+            <List.Item strikethrough>strikethrough</List.Item>
+          </List>
         </div>
       </div>
 

@@ -77,7 +77,8 @@ export const SubLeaderboard = ({ leaderboard, alliance = false }: { leaderboard:
         <AutoSizer>
           {({ height, width }: { height: number; width: number }) => (
             <List
-              height={height - 65}
+              // Unsure how this offset works but it is required to have even height with GrandLeaderboard.tsx.
+              height={height - 73}
               width={width}
               itemCount={formattedData.allPlayers.length}
               itemSize={52}
@@ -125,7 +126,6 @@ const LeaderboardItem = ({
   const entity = alliance ? (components.PlayerAlliance.get(playerEntity)?.alliance as Entity) : playerEntity;
 
   const rankSuffix = rank == 1 ? "st" : rank == 2 ? "nd" : rank == 3 ? "rd" : "th";
-
   return (
     <SecondaryCard
       className={`grid grid-cols-7 w-full items-center h-12 ${special ? "border-success bg-success/20" : ""}`}
