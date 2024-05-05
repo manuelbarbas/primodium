@@ -14,12 +14,12 @@ const buttonVariants = cva(
       variant: {
         neutral: "btn-neutral border-2 border-secondary/50",
         primary: "btn-primary",
-        accent: "btn-accent",
-        secondary: "btn-secondary",
+        accent: "btn-accent border border-neutral",
+        secondary: "btn-secondary border border-accent",
         success: "btn-success",
         info: "btn-info",
         warning: "btn-warning",
-        error: "btn-error",
+        error: "btn-error border border-rose-300",
         ghost: "btn-ghost",
       },
       size: {

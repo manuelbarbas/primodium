@@ -10,7 +10,7 @@ import { DepthLayers } from "src/game/lib/constants/common";
 import { useMud } from "src/hooks";
 import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
 import { usePrimodium } from "src/hooks/usePrimodium";
-import { useSpaceRock } from "src/hooks/useSpaceRock";
+import { useAsteroidInfo } from "src/hooks/useSpaceRock";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { clearFleetStance } from "src/network/setup/contractCalls/fleetStance";
@@ -25,7 +25,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
   const selectingMoveDestination = !!components.Send.use()?.originFleet;
   const noUnits = useUnitCounts(fleet).size === 0;
   const stats = getFleetStats(fleet);
-  const spaceRockData = useSpaceRock(position);
+  const spaceRockData = useAsteroidInfo(position);
   const { inCooldown } = useInCooldownEnd(fleet);
   const mud = useMud();
 

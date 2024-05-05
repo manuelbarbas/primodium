@@ -9,7 +9,7 @@ import { getEntityTypeName, toRomanNumeral } from "@/util/common";
 import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { FaArrowsAlt, FaInfoCircle, FaPowerOff, FaTrash } from "react-icons/fa";
+import { FaArrowsAlt, FaInfoCircle, FaPowerOff, FaTimes, FaTrash } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
@@ -65,9 +65,8 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
           className="btn-square btn-xs font-bold border border-secondary"
           onClick={handleClose}
         >
-          x
+          <FaTimes />
         </Button>
-
         {buildingType !== EntityType.MainBase && buildingType !== EntityType.WormholeBase && (
           <>
             <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Move, selectedBuilding)}>
@@ -107,10 +106,6 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
 
     return (
       <div className="flex gap-2 items-center relative">
-        <p className="absolute top-0 right-0 opacity-50 text-xs">
-          [{info.position.x},{info.position.y}]
-        </p>
-
         <img src={buildingImage} className="h-16" />
         <div className="flex flex-col gap-1">
           <div className="flex gap-1 items-center justify-center">

@@ -40,7 +40,7 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
     );
 
   return (
-    <Card className="ml-5 w-72 relative">
+    <div>
       <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50 " />
       <div className="flex flex-col gap-1 z-10">
         <div className="grid grid-cols-2 gap-1">
@@ -93,6 +93,6 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
           />
         </Badge>
       </div>
-    </Card>
+    </div>
   );
 };

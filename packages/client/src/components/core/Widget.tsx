@@ -39,6 +39,7 @@ type WidgetProps = {
     | "center-top"
     | "center-bottom";
   noBorder?: boolean;
+  topBar?: boolean;
 };
 
 type WidgetContentProps = {
@@ -240,6 +241,7 @@ export const Widget: React.FC<WidgetProps> = memo(
     popUp = false,
     active = true,
     noBorder = false,
+    topBar = false,
   }) => {
     const primodium = usePrimodium();
     const [paneInfo, setPane, removePane] = usePersistentStore((state) => [
@@ -586,6 +588,7 @@ export const Widget: React.FC<WidgetProps> = memo(
                 onMaximize={toggleMinimize}
                 popUp={popUp}
                 noBorder={noBorder}
+                topBar={topBar}
               >
                 {children}
               </Content>
@@ -618,6 +621,7 @@ export const Widget: React.FC<WidgetProps> = memo(
               origin={origin}
               popUp={popUp}
               noBorder={noBorder}
+              topBar={topBar}
             >
               {children}
             </Content>

@@ -5,7 +5,6 @@ import { ModeSelector } from "@/components/hud/ModeSelector";
 import { HoverTarget } from "@/components/hud/markers/HoverTarget";
 import { BlueprintInfoMarker } from "@/components/hud/markers/asteroid/BlueprintInfoMarker";
 import { BuildingMenuPopup } from "@/components/hud/markers/asteroid/BuildingMenuPopup";
-import { AsteroidTarget } from "@/components/hud/markers/starmap/AsteroidTarget";
 import { FleetTarget } from "@/components/hud/markers/starmap/FleetTarget";
 import { Intro } from "@/components/hud/modals/Intro";
 import { FavoriteAsteroids } from "@/components/hud/widgets/FavoriteAsteroids";
@@ -18,6 +17,7 @@ import { usePersistentStore } from "@game/stores/PersistentStore";
 import { memo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { HoverInfo } from "./hover/HoverInfo";
+import { AsteroidMenuPopup } from "@/components/hud/markers/starmap/AsteroidMenuPopup";
 
 export const GameHUD = memo(() => {
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
@@ -27,7 +27,8 @@ export const GameHUD = memo(() => {
       <HUD scale={uiScale}>
         <div className="absolute top-0 left-0 h-32 w-screen bg-gradient-to-b from-black to-transparent" />
         {/* MARKERS */}
-        <AsteroidTarget />
+        {/* <AsteroidTarget /> */}
+        <AsteroidMenuPopup />
         <FleetTarget />
         <HoverTarget />
         <BuildingMenuPopup />

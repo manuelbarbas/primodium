@@ -4,7 +4,7 @@ import { components } from "src/network/components";
 import { getAsteroidInfo } from "src/util/asteroid";
 import { usePrimodium } from "./usePrimodium";
 
-export function useSpaceRock(rock: Entity) {
+export function useAsteroidInfo(rock: Entity) {
   const { value: blockNumber } = components.BlockNumber.use(undefined, {
     value: 0n,
     avgBlockTime: 1,

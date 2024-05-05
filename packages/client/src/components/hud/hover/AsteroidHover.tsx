@@ -14,13 +14,15 @@ import { EntityType, Keys } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
-import { Card } from "../../core/Card";
 import { HealthBar } from "../HealthBar";
 import { AsteroidEta } from "./AsteroidEta";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EntityToResourceImage } from "@/util/mappings";
 
-export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
+export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }> = ({
+  entity,
+  hideResources = false,
+}) => {
   const { loading } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
   const name = entityToRockName(entity);
   const wormhole = components.Asteroid.get(entity)?.wormhole;
@@ -38,10 +40,10 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
 
   if (loading)
     return (
-      <Card className="relative flex items-center justify-center w-56 h-24 px-auto uppercase font-bold">
+      <div className="relative flex items-center justify-center w-60 h-24 px-auto uppercase font-bold">
         <Loader />
         Loading Data
-      </Card>
+      </div>
     );
 
   return (
@@ -111,7 +113,7 @@ export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
                 />
               </Badge>
             </div>
-            <AsteroidResources entity={entity} />
+            {!hideResources && <AsteroidResources entity={entity} />}
           </>
         )}
       </div>

@@ -1,4 +1,4 @@
-import { Button } from "@/components/core/Button";
+import { PushButton } from "@/components/core/PushButton";
 import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
@@ -37,7 +37,7 @@ export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
     error = `Mainbase lvl. ${mainBaseLvlReq} required`;
   }
   return (
-    <SecondaryCard className="w-full items-center space-y-2">
+    <SecondaryCard className="w-full items-center">
       <div className="flex items-center justify-between w-full">
         <div className="flex gap-2 items-center">
           <img src={InterfaceIcons.Expansion} className="pixel-images h-8 w-8" />
@@ -80,9 +80,13 @@ export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
           })}
       </div>
       <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, playerAccount.entity)}>
-        <Button size="sm" variant="secondary" disabled={!canUpgrade} onClick={() => upgradeRange(mud, asteroid)}>
+        <PushButton
+          className="w-fit btn-secondary btn-sm"
+          disabled={!canUpgrade}
+          onClick={() => upgradeRange(mud, asteroid)}
+        >
           Expand
-        </Button>
+        </PushButton>
       </TransactionQueueMask>
     </SecondaryCard>
   );

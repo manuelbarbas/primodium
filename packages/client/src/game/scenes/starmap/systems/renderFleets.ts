@@ -1,7 +1,7 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
-import { createAudioApi } from "@/game/api/audio";
+// import { createAudioApi } from "@/game/api/audio";
 import { createObjectApi } from "@/game/api/objects";
 import { BaseAsteroid } from "@game/lib/objects/Asteroid/BaseAsteroid";
 import { Fleet } from "@game/lib/objects/Fleet";
@@ -11,7 +11,7 @@ import { world } from "@/network/world";
 
 export const renderFleets = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
-  const audioApi = createAudioApi(scene);
+  // const audioApi = createAudioApi(scene);
   const objects = createObjectApi(scene);
   const transitsToUpdate = new Set<Entity>();
 
@@ -74,12 +74,12 @@ export const renderFleets = (scene: Scene) => {
 
     if (!fleet) {
       const newFleet = new Fleet(scene, { x: 0, y: 0 })
-        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
-          components.SelectedFleet.set({
-            value: entity,
-          });
-          audioApi.play("Bleep", "ui");
-        })
+        // .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+        //   components.SelectedFleet.set({
+        //     value: entity,
+        //   });
+        //   audioApi.play("Bleep", "ui");
+        // })
         .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
           components.HoverEntity.set({
             value: entity,
@@ -132,56 +132,56 @@ export const renderFleets = (scene: Scene) => {
     }
   });
 
-  defineComponentSystem(systemsWorld, components.SelectedFleet, ({ value }) => {
-    if (value[1]) {
-      const fleet = components.FleetMovement.get(value[1].value);
+  // defineComponentSystem(systemsWorld, components.SelectedFleet, ({ value }) => {
+  //   if (value[1]) {
+  //     const fleet = components.FleetMovement.get(value[1].value);
 
-      if (!fleet) return;
+  //     if (!fleet) return;
 
-      const asteroid = scene.objects.get(fleet.destination);
+  //     const asteroid = scene.objects.get(fleet.destination);
 
-      if (asteroid instanceof BaseAsteroid) {
-        asteroid.getOrbitRing().resumeRotation();
-      }
-    }
+  //     if (asteroid instanceof BaseAsteroid) {
+  //       asteroid.getOrbitRing().resumeRotation();
+  //     }
+  //   }
 
-    if (value[0]) {
-      components.SelectedRock.remove();
-      const fleet = components.FleetMovement.get(value[0].value);
+  //   if (value[0]) {
+  //     components.SelectedRock.remove();
+  //     const fleet = components.FleetMovement.get(value[0].value);
 
-      if (!fleet) return;
+  //     if (!fleet) return;
 
-      const asteroid = scene.objects.get(fleet.destination);
+  //     const asteroid = scene.objects.get(fleet.destination);
 
-      if (asteroid instanceof BaseAsteroid) {
-        asteroid.getOrbitRing().pauseRotation();
-      }
-    }
-  });
+  //     if (asteroid instanceof BaseAsteroid) {
+  //       asteroid.getOrbitRing().pauseRotation();
+  //     }
+  //   }
+  // });
 
-  defineComponentSystem(systemsWorld, components.SelectedRock, ({ value }) => {
-    if (value[0]) {
-      const asteroid = objects.getAsteroid(value[0].value as Entity);
+  // defineComponentSystem(systemsWorld, components.SelectedRock, ({ value }) => {
+  //   if (value[0]) {
+  //     const asteroid = objects.getAsteroid(value[0].value as Entity);
 
-      if (asteroid) {
-        asteroid.getOrbitRing().pauseRotation();
-      }
+  //     if (asteroid) {
+  //       asteroid.getOrbitRing().pauseRotation();
+  //     }
 
-      components.SelectedFleet.remove();
-      if (components.Attack.get()?.originFleet) return;
-      if (components.Send.get()?.originFleet) return;
-      components.Attack.reset();
-      components.Send.reset();
-    }
+  //     components.SelectedFleet.remove();
+  //     if (components.Attack.get()?.originFleet) return;
+  //     if (components.Send.get()?.originFleet) return;
+  //     components.Attack.reset();
+  //     components.Send.reset();
+  //   }
 
-    if (value[1]) {
-      const asteroid = objects.getAsteroid(value[1].value as Entity);
+  //   if (value[1]) {
+  //     const asteroid = objects.getAsteroid(value[1].value as Entity);
 
-      if (asteroid) {
-        asteroid.getOrbitRing().resumeRotation();
-      }
-    }
-  });
+  //     if (asteroid) {
+  //       asteroid.getOrbitRing().resumeRotation();
+  //     }
+  //   }
+  // });
 
   defineComponentSystem(systemsWorld, components.Time, ({ value }) => {
     const now = value[0]?.value ?? 0n;
