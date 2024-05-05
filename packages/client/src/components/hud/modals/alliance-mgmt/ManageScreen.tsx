@@ -5,7 +5,14 @@ import { toast } from "react-toastify";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Hex, padHex } from "viem";
-import { FaCopy, FaExclamationTriangle } from "react-icons/fa";
+import {
+  FaAngleDoubleDown,
+  FaAngleDoubleUp,
+  FaCopy,
+  FaDoorOpen,
+  FaExclamationTriangle,
+  FaQuestion,
+} from "react-icons/fa";
 import { Tabs } from "@/components/core/Tabs";
 import { Button } from "@/components/core/Button";
 import { Join } from "@/components/core/Join";
@@ -41,7 +48,7 @@ export const ManageScreen: React.FC = () => {
   const inviteOnly = components.Alliance.get(allianceEntity)?.inviteMode;
   const maxAllianceMembers = components.P_AllianceConfig.get()?.maxAllianceMembers ?? 1n;
   const playerRole = alliance?.role ?? EAllianceRole.Member;
-  const players = components.PlayerAlliance.useAllWith({
+  const _players = components.PlayerAlliance.useAllWith({
     alliance: allianceEntity,
   })
     // sort by role
@@ -51,6 +58,16 @@ export const ManageScreen: React.FC = () => {
     .sort((a, b) => {
       return (a.role ?? EAllianceRole.Member) - (b.role ?? EAllianceRole.Member);
     });
+  const players = [
+    ..._players,
+    ..._players,
+    ..._players,
+    ..._players,
+    ..._players,
+    ..._players,
+    ..._players,
+    ..._players,
+  ];
 
   /* ------------------------------ JOIN REQUESTS ----------------------------- */
   const joinRequestPlayers = (
@@ -193,13 +210,44 @@ export const ManageScreen: React.FC = () => {
 
       {playerRole < EAllianceRole.CanInvite && activeTabIndex === 0 ? (
         // show edit button on 'members' tab for officers
-        <Button
-          variant="primary"
-          onClick={() => setEditMode(!editMode)}
-          className="btn-sm border-2 border-secondary justify-self-center"
-        >
-          {editMode ? "BACK" : "EDIT"}
-        </Button>
+        <div className="relative flex justify-center w-full">
+          <Button variant="primary" onClick={() => setEditMode(!editMode)} className="btn-sm border-2 border-secondary">
+            {editMode ? "BACK" : "EDIT"}
+          </Button>
+          {editMode ? (
+            <div className="absolute top-[50%] right-[22px] transform translate-y-[-50%] flex items-center">
+              <FaQuestion className="opacity-75 h-3 mr-4" />
+              {playerRole <= EAllianceRole.CanGrantRole ? (
+                <>
+                  <Button
+                    variant="ghost"
+                    tooltip="Promote player"
+                    tooltipDirection="top"
+                    className="btn-xs !rounded-box text-success"
+                  >
+                    <FaAngleDoubleUp />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    tooltip="Demote player"
+                    tooltipDirection="top"
+                    className="btn-xs !rounded-box text-error"
+                  >
+                    <FaAngleDoubleDown />
+                  </Button>{" "}
+                </>
+              ) : null}
+              <Button
+                variant="ghost"
+                tooltip="Kick player"
+                tooltipDirection="top"
+                className="btn-xs flex gap-1 !rounded-box opacity-75"
+              >
+                <FaDoorOpen />
+              </Button>
+            </div>
+          ) : null}
+        </div>
       ) : activeTabIndex === 2 ? (
         // otherwise, if it's the settings tab, show leave button
         <div className="flex flex-col items-center gap-4">

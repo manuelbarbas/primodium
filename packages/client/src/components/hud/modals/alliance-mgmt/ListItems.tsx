@@ -94,8 +94,6 @@ export const MemberItem = ({
               <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Promote, player.entity)}>
                 <Button
                   variant="ghost"
-                  tooltip="Promote"
-                  tooltipDirection="top"
                   className="btn-xs !rounded-box text-success"
                   onClick={() => grantRole(mud, player.entity, Math.max(player.role - 1, EAllianceRole.CanGrantRole))}
                   disabled={
@@ -112,8 +110,6 @@ export const MemberItem = ({
               <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Demote, player.entity)}>
                 <Button
                   variant="ghost"
-                  tooltip="Demote"
-                  tooltipDirection="top"
                   className="btn-xs !rounded-box text-error"
                   onClick={() => grantRole(mud, player.entity, Math.min(player.role + 1, EAllianceRole.Member))}
                   disabled={player.entity === playerEntity || player.role === EAllianceRole.Member}
@@ -127,8 +123,6 @@ export const MemberItem = ({
             <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.KickPlayer, player.entity)}>
               <Button
                 variant="ghost"
-                tooltip="Kick"
-                tooltipDirection="top"
                 className="btn-xs flex gap-1 !rounded-box opacity-75"
                 onClick={() => kickPlayer(mud, player.entity)}
                 disabled={player.entity === playerEntity || player.role <= playerRole}
