@@ -1,3 +1,7 @@
+import { createBurnerAccount } from "@/network/setup/createBurnerAccount";
+import { _execute } from "@/network/txExecute/_execute";
+import { signCall } from "@/network/txExecute/txExecuteWithSignature";
+import { WorldAbi } from "@/network/world";
 import { Has, runQuery } from "@latticexyz/recs";
 import { decodeEntity, singletonEntity } from "@latticexyz/store-sync/recs";
 import { components } from "src/network/components";
@@ -6,7 +10,33 @@ import { executeBatch } from "src/network/txExecute/txExecuteBatch";
 import { MUD } from "src/network/types";
 import { TransactionQueueType, UNLIMITED_DELEGATION } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
-import { Address, Hex } from "viem";
+import { Address, encodeFunctionData, Hex } from "viem";
+
+export const grantAccessWithSignature = async (mud: MUD, privateKey: Hex) => {
+  const tempSessionAccount = await createBurnerAccount(privateKey, false);
+  const delegateCallData = encodeFunctionData({
+    abi: WorldAbi,
+    functionName: "registerDelegation",
+    args: [tempSessionAccount.address, UNLIMITED_DELEGATION, "0x"],
+  });
+
+  const signature = await signCall({
+    userAccountClient: mud.playerAccount.walletClient,
+    worldAddress: mud.playerAccount.worldContract.address,
+    systemId: getSystemId("Registration", "CORE"),
+    callData: delegateCallData,
+  });
+
+  console.log({ delegateCallData, signature });
+
+  const tx = tempSessionAccount.worldContract.write.callWithSignature([
+    mud.playerAccount.address,
+    getSystemId("Registration", "CORE"),
+    delegateCallData,
+    signature,
+  ]);
+  await _execute(mud, tx);
+};
 
 export const grantAccess = async (mud: MUD, address: Address) => {
   await execute(

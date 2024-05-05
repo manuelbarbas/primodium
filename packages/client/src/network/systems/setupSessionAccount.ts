@@ -28,6 +28,8 @@ export const setupSessionAccount = (
 
   function setAuthorized(authorized: string) {
     const privateKey = getPrivateKey(entityToAddress(authorized));
+    console.log("Potential authorizeds", potentialAuthorizeds);
+
     if (!privateKey) return false;
     updateSessionAccount(privateKey);
     return true;
@@ -37,6 +39,7 @@ export const setupSessionAccount = (
     authorizedWorld,
     components.UserDelegationControl,
     ({ entity, value }) => {
+      console.log("UserDelegationControl", entity, value);
       const key = decodeEntity(components.UserDelegationControl.metadata.keySchema, entity);
       if (key.delegator !== entityToAddress(playerEntity)) return;
       const newAuthorized = key.delegatee;

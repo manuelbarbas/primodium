@@ -1,5 +1,5 @@
+import { WorldAbi } from "@/network/world";
 import type { AbiParametersToPrimitiveTypes, ExtractAbiFunction } from "abitype";
-import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { Abi, Address, type ContractFunctionName } from "viem";
 import { SystemCallFrom, encodeSystemCallFrom } from "./encodeSystemCallFrom";
 
@@ -8,7 +8,7 @@ export function encodeSystemCallsFrom<abi extends Abi, functionName extends Cont
   abi: abi,
   from: Address,
   systemCalls: readonly Omit<SystemCallFrom<abi, functionName>, "abi" | "from">[]
-): AbiParametersToPrimitiveTypes<ExtractAbiFunction<typeof IWorldAbi, "callFrom">["inputs"]>[] {
+): AbiParametersToPrimitiveTypes<ExtractAbiFunction<typeof WorldAbi, "callFrom">["inputs"]>[] {
   return systemCalls.map((systemCall) =>
     encodeSystemCallFrom({ ...systemCall, abi, from } as SystemCallFrom<abi, functionName>)
   );
