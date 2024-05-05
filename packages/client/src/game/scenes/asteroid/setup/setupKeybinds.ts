@@ -28,11 +28,6 @@ export const setupKeybinds = (scene: Scene) => {
       components.SelectedAction.remove();
     }
 
-    if (components.Send.get() || components.Attack.get()) {
-      components.Send.reset();
-      components.Attack.reset();
-    } else if (components.SelectedFleet.get()) components.SelectedFleet.remove();
-
     if (components.SelectedRock.get()) components.SelectedRock.remove();
   });
 

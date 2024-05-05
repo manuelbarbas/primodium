@@ -193,9 +193,6 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               disabled={cannotDoAnything}
               onClick={() => {
                 if (!scene) return;
-                components.Attack.reset();
-                components.Send.setOrigin(fleetEntity);
-                api.util.openMap();
               }}
             >
               SEND
@@ -206,9 +203,6 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               disabled={cannotDoAnything || inCooldown.inCooldown}
               onClick={async () => {
                 if (!scene) return;
-                components.Send.reset();
-                components.Attack.setOrigin(fleetEntity);
-                await api.util.openMap();
 
                 const fleetDestinationEntity = components.FleetMovement.get(fleetEntity)?.destination as Entity;
                 if (!fleetDestinationEntity) return;

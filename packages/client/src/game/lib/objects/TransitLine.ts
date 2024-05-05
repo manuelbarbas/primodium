@@ -92,8 +92,20 @@ export class TransitLine extends Phaser.GameObjects.Container implements IPrimod
   setFleetProgress(progress: number) {
     if (!this.fleet) return;
 
-    this.fleet.x = (this.end.x - this.start.x) * progress;
-    this.fleet.y = (this.end.y - this.start.y) * progress;
+    this.scene.tweens.killTweensOf(this.fleet);
+
+    if (progress === 1) {
+      this.fleet.setPosition((this.end.x - this.start.x) * progress, (this.end.y - this.start.y) * progress);
+      return;
+    }
+
+    this.scene.add.tween({
+      targets: this.fleet,
+      duration: 500,
+      ease: Phaser.Math.Easing.Cubic.InOut,
+      x: (this.end.x - this.start.x) * progress,
+      y: (this.end.y - this.start.y) * progress,
+    });
   }
 
   dispose() {

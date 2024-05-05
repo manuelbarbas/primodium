@@ -120,7 +120,6 @@ export const renderFleets = (scene: Scene) => {
       }
     } else if (oldMovement) {
       const transitLine = objects.getTransitLine(update.entity);
-
       if (transitLine) {
         scene.objects.remove(`transit_${update.entity}`);
         transitsToUpdate.delete(update.entity);
@@ -131,57 +130,6 @@ export const renderFleets = (scene: Scene) => {
       }
     }
   });
-
-  // defineComponentSystem(systemsWorld, components.SelectedFleet, ({ value }) => {
-  //   if (value[1]) {
-  //     const fleet = components.FleetMovement.get(value[1].value);
-
-  //     if (!fleet) return;
-
-  //     const asteroid = scene.objects.get(fleet.destination);
-
-  //     if (asteroid instanceof BaseAsteroid) {
-  //       asteroid.getOrbitRing().resumeRotation();
-  //     }
-  //   }
-
-  //   if (value[0]) {
-  //     components.SelectedRock.remove();
-  //     const fleet = components.FleetMovement.get(value[0].value);
-
-  //     if (!fleet) return;
-
-  //     const asteroid = scene.objects.get(fleet.destination);
-
-  //     if (asteroid instanceof BaseAsteroid) {
-  //       asteroid.getOrbitRing().pauseRotation();
-  //     }
-  //   }
-  // });
-
-  // defineComponentSystem(systemsWorld, components.SelectedRock, ({ value }) => {
-  //   if (value[0]) {
-  //     const asteroid = objects.getAsteroid(value[0].value as Entity);
-
-  //     if (asteroid) {
-  //       asteroid.getOrbitRing().pauseRotation();
-  //     }
-
-  //     components.SelectedFleet.remove();
-  //     if (components.Attack.get()?.originFleet) return;
-  //     if (components.Send.get()?.originFleet) return;
-  //     components.Attack.reset();
-  //     components.Send.reset();
-  //   }
-
-  //   if (value[1]) {
-  //     const asteroid = objects.getAsteroid(value[1].value as Entity);
-
-  //     if (asteroid) {
-  //       asteroid.getOrbitRing().resumeRotation();
-  //     }
-  //   }
-  // });
 
   defineComponentSystem(systemsWorld, components.Time, ({ value }) => {
     const now = value[0]?.value ?? 0n;

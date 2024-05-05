@@ -1,14 +1,12 @@
 import { Entity, Has, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
-import { toast } from "react-toastify";
 import { createCameraApi } from "src/game/api/camera";
 import { PrimaryAsteroid, SecondaryAsteroid } from "src/game/lib/objects/Asteroid";
 import { BaseAsteroid } from "src/game/lib/objects/Asteroid/BaseAsteroid";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { EntityType } from "src/util/constants";
-import { getCanSend } from "src/util/unit";
 import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
 import { MapIdToAsteroidType } from "@/util/mappings";
 import { entityToPlayerName, entityToRockName } from "@/util/name";
@@ -58,37 +56,27 @@ export const renderAsteroid = (scene: Scene) => {
 
     asteroid
       .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
-        const attackOrigin = components.Attack.get()?.originFleet;
-        const sendOrigin = components.Send.get()?.originFleet;
-        if (attackOrigin) {
-          components.Attack.setDestination(entity);
-          // if (getCanAttack(attackOrigin, entity)) components.Attack.setDestination(entity);
-          // else toast.error("Cannot attack this asteroid.");
-        } else if (sendOrigin) {
-          if (getCanSend(sendOrigin, entity)) components.Send.setDestination(entity);
-          else toast.error("Cannot send to this asteroid.");
-        } else {
-          const sequence = [
-            {
-              at: 0,
-              run: () => cameraApi.pan(coord, { duration: 300 }),
-            },
-            {
-              at: 300,
-              run: () => cameraApi.zoomTo(scene.config.camera.maxZoom, 500),
-            },
-          ];
-          //set the selected rock immediately if we are sufficiently zoomed in
-          if (scene.camera.phaserCamera.zoom >= scene.config.camera.maxZoom * 0.5)
-            components.SelectedRock.set({ value: entity });
-          else sequence.push({ at: 800, run: () => components.SelectedRock.set({ value: entity }) });
+        //TODO: move to reusable seq in fx
+        const sequence = [
+          {
+            at: 0,
+            run: () => cameraApi.pan(coord, { duration: 300 }),
+          },
+          {
+            at: 300,
+            run: () => cameraApi.zoomTo(scene.config.camera.maxZoom, 500),
+          },
+        ];
+        //set the selected rock immediately if we are sufficiently zoomed in
+        if (scene.camera.phaserCamera.zoom >= scene.config.camera.maxZoom * 0.5)
+          components.SelectedRock.set({ value: entity });
+        else sequence.push({ at: 800, run: () => components.SelectedRock.set({ value: entity }) });
 
-          scene.phaserScene.add.timeline(sequence).play();
+        scene.phaserScene.add.timeline(sequence).play();
 
-          //set the selected rock immediately if we are sufficiently zoomed in
-          if (scene.camera.phaserCamera.zoom >= scene.config.camera.maxZoom * 0.5)
-            components.SelectedRock.set({ value: entity });
-        }
+        //set the selected rock immediately if we are sufficiently zoomed in
+        if (scene.camera.phaserCamera.zoom >= scene.config.camera.maxZoom * 0.5)
+          components.SelectedRock.set({ value: entity });
       })
       .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
         components.HoverEntity.set({ value: entity });

@@ -13,14 +13,24 @@ import { getMoveLength } from "@/util/send";
 import { getFleetUnitCounts } from "@/util/unit";
 import { formatTime } from "@/util/number";
 import { FaInfoCircle } from "react-icons/fa";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
+import { hashEntities } from "@/util/encode";
+import { TransactionQueueType } from "@/util/constants";
+import { sendFleetPosition } from "@/network/setup/contractCalls/fleetSend";
+import { useMud } from "@/hooks";
 
 export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; selectedRock: Entity }> = ({
   fleetEntity,
   playerEntity,
   selectedRock,
 }) => {
+  const mud = useMud();
   const movement = components.FleetMovement.use(fleetEntity);
   const stance = components.FleetStance.use(fleetEntity);
+  const destPos = components.Position.use(selectedRock);
+  const fleetCooldown = components.CooldownEnd.use(fleetEntity)?.value ?? 0n;
+  const now = components.Time.use()?.value ?? 0n;
+  const inCooldown = fleetCooldown > now;
 
   const fleetStateText = useMemo(() => {
     if (stance && stance?.stance === EFleetStance.Follow)
@@ -42,17 +52,19 @@ export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; select
     );
   }, [movement, playerEntity, selectedRock, fleetEntity]);
 
+  if (!destPos) return null;
+
   return (
-    <SecondaryCard className="flex-row justify-between gap-10 items-center">
-      <div
-        className="flex gap-2"
-        onPointerOver={() =>
-          components.HoverEntity.set({
-            value: fleetEntity,
-          })
-        }
-        onPointerLeave={() => components.HoverEntity.remove()}
-      >
+    <SecondaryCard
+      className="flex-row justify-between gap-10 items-center"
+      onPointerOver={() =>
+        components.HoverEntity.set({
+          value: fleetEntity,
+        })
+      }
+      onPointerLeave={() => components.HoverEntity.remove()}
+    >
+      <div className="flex gap-2">
         <IconLabel imageUri={InterfaceIcons.Outgoing} />
         <div>
           <p className="text-sm">{entityToFleetName(fleetEntity)}</p>
@@ -62,10 +74,25 @@ export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; select
         </div>
       </div>
       <div className="flex flex-col items-center gap-2">
-        <Button size="sm" variant="secondary" disabled={!!stance?.stance}>
-          Travel
-        </Button>
-        <p className="text-xs opacity-75">ETA {formatTime(fleetETA)}</p>
+        {inCooldown && (
+          <Button size="sm" variant="error" disabled>
+            IN COOLDOWN
+          </Button>
+        )}
+        {!stance?.stance && !inCooldown && (
+          <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.SendFleet, fleetEntity)}>
+            <Button size="sm" variant="secondary" onClick={() => sendFleetPosition(mud, fleetEntity, destPos)}>
+              Travel
+            </Button>
+          </TransactionQueueMask>
+        )}
+        {stance?.stance && !inCooldown && (
+          <Button size="sm" variant="error">
+            Clear Stance
+          </Button>
+        )}
+        {!inCooldown && <p className="text-xs opacity-75">ETA {formatTime(fleetETA)}</p>}
+        {inCooldown && <p className="text-xs opacity-75">COOLDOWN {formatTime(fleetCooldown - now)}</p>}
       </div>
     </SecondaryCard>
   );
@@ -81,11 +108,12 @@ export const FleetTravelScreen: React.FC<{ selectedRock: Entity }> = ({ selected
     () =>
       fleets
         .filter((entity) => {
-          const rock = components.OwnedBy.get(entity)?.value as Entity;
+          const ownedBy = components.OwnedBy.get(entity)?.value as Entity | undefined;
+          const rock = components.FleetMovement.get(entity)?.destination as Entity | undefined;
           const selectedRock = components.SelectedRock.get()?.value;
-          if (!rock) return false;
+          if (!rock || !ownedBy) return false;
           if (selectedRock === rock) return false;
-          const player = components.OwnedBy.get(rock)?.value;
+          const player = components.OwnedBy.get(ownedBy)?.value;
           return player === playerEntity;
         })
         .sort((a, b) => {
@@ -113,6 +141,9 @@ export const FleetTravelScreen: React.FC<{ selectedRock: Entity }> = ({ selected
   const orbitingFleets = useMemo(() => {
     return ownedFleetsSorted.filter((fleet) => {
       const movement = components.FleetMovement.get(fleet);
+      const isEmpty = !!components.IsFleetEmpty.get(fleet)?.value;
+
+      if (isEmpty) return false;
 
       const arrivalTime = movement?.arrivalTime ?? 0n;
       return arrivalTime <= (time ?? 0n);
@@ -126,7 +157,7 @@ export const FleetTravelScreen: React.FC<{ selectedRock: Entity }> = ({ selected
       {orbitingFleets.length !== 0 && (
         <>
           <div className="text-xs opacity-50 flex gap-2 items-center">
-            <FaInfoCircle /> HOVER OVER FLEET TO SEE DETAILS
+            <FaInfoCircle /> HOVER TO SEE DETAILS
           </div>
           <div className="flex flex-col gap-1 h-48 overflow-y-auto hide-scrollbar">
             {orbitingFleets.map((fleet) => (

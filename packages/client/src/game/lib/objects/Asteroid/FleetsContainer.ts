@@ -88,6 +88,8 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
   removeFleet(fleet: Fleet) {
     this.fleetsContainer.remove(fleet);
     if (!this.fleetsContainer.length) {
+      if (this.inOrbitView) this.setOrbitView();
+      else this.setInlineView();
       this.setActive(false).setVisible(false);
       this.rotationTween.pause();
       fleet.setOrbitRingRef(null);
@@ -98,17 +100,18 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
 
   setInlineView() {
     this.rotationTween.pause();
-
     this.orbitRing.setActive(false).setVisible(false);
 
     this.fleetsContainer.setAlpha(0);
     this.fleetsContainer.setRotation(0);
-    this.fleetsContainer.list.forEach((_fleet, i) => {
-      const fleet = _fleet as Fleet;
-      fleet.setFlip(false, false);
-      fleet.setPosition(fleet.displayWidth / 2 + (fleet.displayWidth + MARGIN) * i, 0);
-      fleet.rotation = 0;
-    });
+    setTimeout(() => {
+      this.fleetsContainer.list.forEach((_fleet, i) => {
+        const fleet = _fleet as Fleet;
+        fleet.setFlip(false, false);
+        fleet.setPosition(fleet.displayWidth / 2 + (fleet.displayWidth + MARGIN) * i, 0);
+        fleet.rotation = 0;
+      });
+    }, 0);
 
     this.scene.add.tween({
       targets: this.fleetsContainer,

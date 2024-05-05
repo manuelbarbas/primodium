@@ -15,7 +15,6 @@ import { hashEntities } from "src/util/encode";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
 import { HealthBar } from "../HealthBar";
-import { AsteroidEta } from "./AsteroidEta";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EntityToResourceImage } from "@/util/mappings";
 
@@ -55,7 +54,6 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
             <IconLabel imageUri={InterfaceIcons.Asteroid} className={`pixel-images w-3 h-3 bg-base-100`} />
             <p className="text-sm font-bold uppercase">{name}</p>
           </div>
-          <AsteroidEta entity={entity} />
         </div>
         {wormhole && (
           <div className="flex rainbow-bg uppercase text-primary font-bold border border-secondary/50 text-sm justify-center items-center">

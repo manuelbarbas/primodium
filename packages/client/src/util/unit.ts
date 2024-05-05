@@ -135,13 +135,13 @@ export const getFleetPixelPosition = (scene: Scene, fleet: Entity) => {
 
   if (movement.arrivalTime > time) {
     const fleetTransitId = fleet + "_fleet";
-    const fleetGroup = scene.objectPool.getGroup(fleetTransitId);
+    const fleetGroup = scene.objects.getGroup(fleetTransitId);
     const fleetIcon = fleetGroup.get(`${fleet}-fleetIcon`, "Graphics");
     return { x: fleetIcon.position.x, y: fleetIcon.position.y };
   }
 
   const spaceRock = movement.destination as Entity;
-  const rockGroup = scene.objectPool.getGroup(spaceRock + "_spacerockOrbits");
+  const rockGroup = scene.objects.getGroup(spaceRock + "_spacerockOrbits");
 
   const fleetOrbitId = `fleetOrbit-${spaceRock}-${fleet}`;
   const gameObject = rockGroup.get(fleetOrbitId, "Graphics")?.getGameObject();

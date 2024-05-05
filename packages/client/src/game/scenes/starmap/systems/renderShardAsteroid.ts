@@ -2,13 +2,11 @@ import { entityToRockName } from "@/util/name";
 import { defineEnterSystem, defineUpdateSystem, Entity, Has, namespaceWorld } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
-import { toast } from "react-toastify";
 import { createCameraApi } from "src/game/api/camera";
 import { createObjectApi } from "src/game/api/objects";
 import { ShardAsteroid } from "src/game/lib/objects/Asteroid/ShardAsteroid";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { getCanAttack, getCanSend } from "src/util/unit";
 
 export const renderShardAsteroid = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -24,19 +22,26 @@ export const renderShardAsteroid = (scene: Scene) => {
 
     asteroid
       .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
-        const attackOrigin = components.Attack.get()?.originFleet;
-        const sendOrigin = components.Send.get()?.originFleet;
-        if (attackOrigin) {
-          if (getCanAttack(attackOrigin, entity)) components.Attack.setDestination(entity);
-          else toast.error("Cannot attack this asteroid.");
-        } else if (sendOrigin) {
-          if (getCanSend(sendOrigin, entity)) components.Send.setDestination(entity);
-          else toast.error("Cannot send to this asteroid.");
-        } else {
+        const sequence = [
+          {
+            at: 0,
+            run: () => cameraApi.pan(asteroid.getCoord(), { duration: 300 }),
+          },
+          {
+            at: 300,
+            run: () => cameraApi.zoomTo(scene.config.camera.maxZoom, 500),
+          },
+        ];
+        //set the selected rock immediately if we are sufficiently zoomed in
+        if (scene.camera.phaserCamera.zoom >= scene.config.camera.maxZoom * 0.5)
           components.SelectedRock.set({ value: entity });
-          cameraApi.pan(coord, { duration: 500 });
-          cameraApi.zoomTo(1.5, 500);
-        }
+        else sequence.push({ at: 800, run: () => components.SelectedRock.set({ value: entity }) });
+
+        scene.phaserScene.add.timeline(sequence).play();
+
+        //set the selected rock immediately if we are sufficiently zoomed in
+        if (scene.camera.phaserCamera.zoom >= scene.config.camera.maxZoom * 0.5)
+          components.SelectedRock.set({ value: entity });
       })
       .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
         components.HoverEntity.set({ value: entity });
@@ -49,35 +54,17 @@ export const renderShardAsteroid = (scene: Scene) => {
       nameLabel: entityToRockName(entity),
     });
 
-    scene.objects.add(entity, asteroid, true);
+    scene.objects.add(entity, asteroid, false);
   };
 
   const renderExplodeAndMoveAsteroid = (entity: Entity, coord: Coord) => {
-    // explode
+    // TODO: explode
 
     const asteroid = objects.getAsteroid(entity);
     if (!asteroid) return;
 
     asteroid.getOrbitRing().clear();
     asteroid.setTilePosition(coord);
-
-    // this is necessary because the asteroid's position changes so the pan breaks
-    asteroid.off(Phaser.Input.Events.GAMEOBJECT_POINTER_UP);
-    asteroid.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
-      const attackOrigin = components.Attack.get()?.originFleet;
-      const sendOrigin = components.Send.get()?.originFleet;
-      if (attackOrigin) {
-        if (getCanAttack(attackOrigin, entity)) components.Attack.setDestination(entity);
-        else toast.error("Cannot attack this asteroid.");
-      } else if (sendOrigin) {
-        if (getCanSend(sendOrigin, entity)) components.Send.setDestination(entity);
-        else toast.error("Cannot send to this asteroid.");
-      } else {
-        components.SelectedRock.set({ value: entity });
-        cameraApi.pan(coord, { duration: 500 });
-        cameraApi.zoomTo(1.5, 500);
-      }
-    });
   };
 
   const query = [Has(components.ShardAsteroid), Has(components.Position)];
