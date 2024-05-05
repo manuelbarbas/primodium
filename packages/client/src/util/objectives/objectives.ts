@@ -53,7 +53,7 @@ export const Objectives = new Map<EObjectives, Objective>([
                           Main Base
   //////////////////////////////////////////////////////////////*/
   [
-    EObjectives.UpgradeMainBase1,
+    EObjectives.UpgradeMainBase2,
     {
       category: "Fundamentals",
       type: "Upgrade",
@@ -64,11 +64,11 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.UpgradeMainBase2,
+    EObjectives.UpgradeMainBase3,
     {
       category: "Fundamentals",
       type: "Upgrade",
-      requiredObjectives: [EObjectives.UpgradeMainBase1],
+      requiredObjectives: [EObjectives.OpenBattleReport],
       requiredMainBase: 2n,
       buildingType: EntityType.MainBase,
       level: 3n,
@@ -81,11 +81,11 @@ export const Objectives = new Map<EObjectives, Objective>([
                           Expand Base
   //////////////////////////////////////////////////////////////*/
   [
-    EObjectives.ExpandBase1,
+    EObjectives.ExpandBase2,
     {
       category: "Fundamentals",
       type: "Expand",
-      requiredObjectives: [EObjectives.UpgradeMainBase1],
+      requiredObjectives: [EObjectives.UpgradeMainBase2],
       requiredMainBase: 2n,
       level: 2n,
       description:
@@ -93,11 +93,11 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.ExpandBase2,
+    EObjectives.ExpandBase3,
     {
       category: "Fundamentals",
       type: "Expand",
-      requiredObjectives: [EObjectives.UpgradeMainBase2],
+      requiredObjectives: [EObjectives.UpgradeMainBase3],
       requiredMainBase: 3n,
       level: 3n,
       description:
@@ -109,11 +109,11 @@ export const Objectives = new Map<EObjectives, Objective>([
                           Upgrade Mines
   //////////////////////////////////////////////////////////////*/
   [
-    EObjectives.UpgradeIronMine1,
+    EObjectives.UpgradeIronMine2,
     {
       category: "Fundamentals",
       type: "Upgrade",
-      requiredObjectives: [EObjectives.BuildIronMine, EObjectives.UpgradeMainBase1],
+      requiredObjectives: [EObjectives.BuildIronMine, EObjectives.OpenBattleReport],
       requiredMainBase: 2n,
       buildingType: EntityType.IronMine,
       level: 2n,
@@ -122,11 +122,11 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.UpgradeIronMine2,
+    EObjectives.UpgradeIronMine3,
     {
       category: "Fundamentals",
       type: "Upgrade",
-      requiredObjectives: [EObjectives.UpgradeIronMine1, EObjectives.UpgradeMainBase2],
+      requiredObjectives: [EObjectives.UpgradeIronMine2, EObjectives.UpgradeMainBase3],
       requiredMainBase: 3n,
       buildingType: EntityType.IronMine,
       level: 3n,
@@ -135,25 +135,25 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
 
-  [
-    EObjectives.UpgradeCopperMine1,
-    {
-      category: "Fundamentals",
-      type: "Upgrade",
-      requiredObjectives: [EObjectives.BuildCopperMine, EObjectives.UpgradeMainBase1],
-      requiredMainBase: 2n,
-      buildingType: EntityType.CopperMine,
-      level: 2n,
-      description:
-        "Upgrading a mine produces more resources without needing to expand. To upgrade, select the mine and select Upgrade.",
-    },
-  ],
   [
     EObjectives.UpgradeCopperMine2,
     {
       category: "Fundamentals",
       type: "Upgrade",
-      requiredObjectives: [EObjectives.UpgradeCopperMine1, EObjectives.UpgradeMainBase2],
+      requiredObjectives: [EObjectives.BuildCopperMine, EObjectives.OpenBattleReport],
+      requiredMainBase: 2n,
+      buildingType: EntityType.CopperMine,
+      level: 2n,
+      description:
+        "Upgrading a mine produces more resources without needing to expand. To upgrade, select the mine and select Upgrade.",
+    },
+  ],
+  [
+    EObjectives.UpgradeCopperMine3,
+    {
+      category: "Fundamentals",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.UpgradeCopperMine2, EObjectives.UpgradeMainBase3],
       requiredMainBase: 3n,
       buildingType: EntityType.CopperMine,
       level: 3n,
@@ -163,11 +163,11 @@ export const Objectives = new Map<EObjectives, Objective>([
   ],
 
   [
-    EObjectives.UpgradeLithiumMine1,
+    EObjectives.UpgradeLithiumMine2,
     {
       category: "Fundamentals",
       type: "Upgrade",
-      requiredObjectives: [EObjectives.BuildLithiumMine, EObjectives.UpgradeMainBase1],
+      requiredObjectives: [EObjectives.BuildLithiumMine, EObjectives.OpenBattleReport],
       requiredMainBase: 2n,
       buildingType: EntityType.LithiumMine,
       level: 2n,
@@ -176,11 +176,11 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.UpgradeLithiumMine2,
+    EObjectives.UpgradeLithiumMine3,
     {
       category: "Fundamentals",
       type: "Upgrade",
-      requiredObjectives: [EObjectives.UpgradeLithiumMine1, EObjectives.UpgradeMainBase2],
+      requiredObjectives: [EObjectives.UpgradeLithiumMine2, EObjectives.UpgradeMainBase3],
       requiredMainBase: 3n,
       buildingType: EntityType.LithiumMine,
       level: 3n,
@@ -196,6 +196,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Unit Production",
       type: "Build",
       requiredMainBase: 2n,
+      requiredObjectives: [EObjectives.BuildWorkshop],
       buildingType: EntityType.Garage,
       description:
         "Garages provide housing for units. View your asteroid's housing in the Resources pane. To build, Select the garage from the Storage tab of the building menu. Place it on any empty tile.",
@@ -220,6 +221,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Unit Production",
       type: "Build",
       requiredMainBase: 2n,
+      requiredObjectives: [EObjectives.UpgradeMainBase2],
       buildingType: EntityType.Workshop,
       description:
         "Workshops train marines, which are basic units. To build, select the workshop from the Military tab of the building menu and place it on any empty tile.",
@@ -231,7 +233,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Unit Production",
       type: "Upgrade",
       requiredMainBase: 2n,
-      requiredObjectives: [EObjectives.BuildWorkshop],
+      requiredObjectives: [EObjectives.UpgradeGarage],
       buildingType: EntityType.Workshop,
       level: 2n,
       description:
@@ -245,7 +247,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fleet",
       type: "Claim",
-      requiredObjectives: [EObjectives.BuildGarage, EObjectives.BuildWorkshop],
+      requiredObjectives: [EObjectives.UpgradeWorkshop],
       description:
         'Fleets transport units and resources between asteroids. Create a fleet on the starmap by selecting your asteroid and selecting "Add Fleet".',
       icon: InterfaceIcons.Outgoing,
@@ -253,33 +255,34 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.TransferFromAsteroid,
-    {
-      category: "Fleet",
-      type: "Claim",
-      requiredObjectives: [EObjectives.CreateFleet],
-      description: "Transfer units and resources from an asteroid by selecting the asteroid and selecting Transfer.",
-      icon: InterfaceIcons.Trade,
-      tooltip: "Executed a transfer",
-    },
-  ],
-  [
     EObjectives.TransferFromFleet,
     {
       category: "Fleet",
       type: "Claim",
-      requiredObjectives: [EObjectives.TransferFromAsteroid],
+      requiredObjectives: [EObjectives.CreateFleet],
       description: "Transfer units and resources from a fleet by selecting the fleet and selecting Transfer.",
       icon: InterfaceIcons.Trade,
       tooltip: "Executed a transfer",
     },
   ],
   [
-    EObjectives.SendFleet,
+    EObjectives.TransferFromAsteroid,
     {
       category: "Fleet",
       type: "Claim",
       requiredObjectives: [EObjectives.TransferFromFleet],
+      description: "Transfer units and resources from an asteroid by selecting the asteroid and selecting Transfer.",
+      icon: InterfaceIcons.Trade,
+      tooltip: "Executed a transfer",
+    },
+  ],
+
+  [
+    EObjectives.SendFleet,
+    {
+      category: "Fleet",
+      type: "Claim",
+      requiredObjectives: [EObjectives.TransferFromAsteroid],
       description:
         "Sending a fleet to an asteroid allows it to deposit resources and units or fight other fleets. To send, select a fleet and select Send. Then select the target asteroid.",
       icon: InterfaceIcons.Outgoing,
@@ -481,7 +484,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fleet",
       type: "Claim",
-      requiredObjectives: [EObjectives.CreateFleet],
+      requiredObjectives: [EObjectives.TransferFromAsteroid],
       description:
         "Defending an asteroid with a fleet provides the fleet's defense to that asteroid's strength. To defend, go to the fleet's Management pane and select Defend.",
       icon: InterfaceIcons.Outgoing,
@@ -520,7 +523,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Unit Production",
       type: "Train",
       requiredMainBase: 2n,
-      requiredObjectives: [EObjectives.BuildWorkshop],
+      requiredObjectives: [EObjectives.UpgradeMainBase3],
       unitType: EntityType.MinutemanMarine,
       unitCount: 8n,
       description:
@@ -789,7 +792,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Alliance",
       type: "JoinAlliance",
-      requiredObjectives: [EObjectives.ExpandBase1],
+      requiredObjectives: [EObjectives.ExpandBase2],
       requiredMainBase: 2n,
       description:
         "Joining an alliance allows you to combine your points with other players. Select Alliance Management in the bottom bar. Find an Alliance to join and select Join.",
