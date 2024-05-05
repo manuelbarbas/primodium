@@ -1,7 +1,7 @@
 import { TxQueueOptions } from "@/network/components/customComponents/TransactionQueueComponent";
 import { createBurnerAccount } from "@/network/setup/createBurnerAccount";
 import { _execute } from "@/network/txExecute/_execute";
-import { signCall } from "@/network/txExecute/txExecuteWithSignature";
+import { signCall } from "@/network/txExecute/signCall";
 import { WorldAbi } from "@/network/world";
 import { Has, runQuery } from "@latticexyz/recs";
 import { decodeEntity, singletonEntity } from "@latticexyz/store-sync/recs";
