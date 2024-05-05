@@ -9,16 +9,16 @@ import {
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
+import { DepthLayers } from "src/game/lib/constants/common";
 import { components } from "src/network/components";
 import { buildBuilding } from "src/network/setup/contractCalls/buildBuilding";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
+import { getEntityTypeName } from "src/util/common";
 import { Action, BuildingEnumLookup } from "src/util/constants";
 import { getRecipe, hasEnoughResources } from "src/util/recipe";
 import { Building } from "../../../lib/objects/Building";
-import { DepthLayers } from "src/game/lib/constants/common";
-import { getEntityTypeName } from "src/util/common";
 
 export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scene) => {
   if (pointer?.rightButtonDown()) {

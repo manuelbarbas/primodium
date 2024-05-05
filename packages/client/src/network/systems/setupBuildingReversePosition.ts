@@ -11,6 +11,7 @@ export const setupBuildingReversePosition = () => {
   const systemWorld = namespaceWorld(world, "systems");
 
   defineComponentSystem(systemWorld, components.TilePositions, ({ entity, value: [newVal, oldVal] }) => {
+    console.log("tile positions:", newVal, oldVal);
     const asteroid = components.OwnedBy.get(entity)?.value as Entity;
     if (!asteroid) return;
 
