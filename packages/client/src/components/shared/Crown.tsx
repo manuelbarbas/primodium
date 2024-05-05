@@ -1,12 +1,12 @@
-import { ReactElement } from "react";
+import React from "react";
 import { FaCrown } from "react-icons/fa6";
 
-export const maybeGetCrownIconFromRank = (rank: number, shouldOffset: boolean = false): ReactElement | null => {
-  const iconSize: string = "text-base";
-  const verticalAdjustment: string = `translate-y-[-10%]`;
-  const offset: string = `translate-x-[-45%] translate-y-[-45%] transform rotate-45 scale-75`;
+export const Crown = ({ rank, shouldOffset = false }: { rank: number; shouldOffset?: boolean }) => {
+  const iconSize = "text-base";
+  const verticalAdjustment = `translate-y-[-10%]`;
+  const offset = `translate-x-[-45%] translate-y-[-45%] transform rotate-45 scale-75`;
 
-  let crownColor: string;
+  let crownColor;
   switch (rank) {
     case 1:
       crownColor = "text-yellow-500";

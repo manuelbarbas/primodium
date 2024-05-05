@@ -26,7 +26,7 @@ export const AccountDisplay: React.FC<{
   const playerColor = RockRelationshipColors[getRockRelationship(playerEntity, myHomeAsteroid as Entity)];
 
   const Content = ({ className = "" }: { className?: string }) => (
-    <div className={`w-full flex gap-2${className}`}>
+    <div className={`w-full flex gap-2 ${className}`}>
       {allianceName && (
         <div className="font-bold text-accent" style={{ color: noColor ? "auto" : entityToColor(player) }}>
           [{allianceName.toUpperCase()}]
