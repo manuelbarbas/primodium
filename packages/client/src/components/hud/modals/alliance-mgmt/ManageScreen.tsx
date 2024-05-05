@@ -89,7 +89,6 @@ export const ManageScreen: React.FC = () => {
           {players.length}/{maxAllianceMembers?.toString() ?? "?"} member(s)
         </div>
       </div>
-      {/* TODO(TEMP): default index 1 for dev */}
       <Tabs className="flex flex-col gap-4 w-full h-full overflow-hidden" onChange={setActiveTabIndex}>
         <Join className="border border-secondary/25 self-center">
           <Tabs.Button index={0} className="btn-sm">
