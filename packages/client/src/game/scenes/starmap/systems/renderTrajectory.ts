@@ -41,6 +41,6 @@ export const renderTrajectory = (scene: Scene) => {
   });
 
   systemsWorld.registerDisposer(() => {
-    trajectoryLine.destroy();
+    trajectoryLine.dispose();
   });
 };
