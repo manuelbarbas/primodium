@@ -5,10 +5,8 @@ export class TargetLine extends Phaser.GameObjects.Line implements IPrimodiumGam
   private _scene: Scene;
   private spawned = false;
   private start;
-  constructor(scene: Scene, start: PixelCoord, color = 0x808080) {
-    const pointer = scene.input.phaserInput.activePointer;
-
-    super(scene.phaserScene, start.x, start.y, 0, 0, pointer.worldX - start.x, pointer.worldY - start.y, color);
+  constructor(scene: Scene, start: PixelCoord, end: PixelCoord, color = 0x808080) {
+    super(scene.phaserScene, start.x, start.y, 0, 0, end.x, end.y, color);
     this.setOrigin(0, 0);
     this.setLineWidth(2);
     this._scene = scene;
@@ -25,10 +23,12 @@ export class TargetLine extends Phaser.GameObjects.Line implements IPrimodiumGam
     return this.spawned;
   }
 
+  setCoordinates(start: PixelCoord, end: PixelCoord) {
+    this.setTo(start.x, start.y, end.x, end.y);
+  }
+
   update() {
-    const pointer = this.scene.input.activePointer;
     this.setLineWidth(2 / this._scene.camera.phaserCamera.zoom);
-    this.setTo(0, 0, pointer.worldX - this.start.x, pointer.worldY - this.start.y);
   }
 
   dispose() {
