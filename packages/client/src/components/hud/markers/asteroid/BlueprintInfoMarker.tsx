@@ -6,7 +6,7 @@ import { components } from "@/network/components";
 import { getBuildingDimensions } from "@/util/building";
 import { Marker } from "@/components/core/Marker";
 import { Card } from "@/components/core/Card";
-import { BlueprintInfo } from "@/components/hud/widgets/blueprints/BlueprintInfo";
+import { BlueprintInfo } from "@/components/hud/blueprints/BlueprintInfo";
 
 export const BlueprintInfoMarker = () => {
   const primodium = usePrimodium();
