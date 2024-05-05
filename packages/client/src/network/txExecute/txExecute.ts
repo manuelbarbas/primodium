@@ -39,7 +39,6 @@ export async function execute<
 
   const run = async () => {
     let tx: Promise<Hex>;
-    console.log(systemId, functionName, args);
     if (authorizing && mud.sessionAccount) {
       const params = encodeSystemCallFrom({
         abi: WorldAbi,

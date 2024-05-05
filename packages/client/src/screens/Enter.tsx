@@ -59,7 +59,7 @@ export const Enter: React.FC = () => {
     const account = privateKeyToAccount(privateKey);
     localStorage.setItem(STORAGE_PREFIX + account.address, privateKey);
 
-    await grantAccessWithSignature(mud, privateKey);
+    await grantAccessWithSignature(mud, privateKey, { id: singletonEntity });
   };
 
   return (

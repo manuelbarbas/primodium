@@ -1,3 +1,4 @@
+import { TxQueueOptions } from "@/network/components/customComponents/TransactionQueueComponent";
 import { createBurnerAccount } from "@/network/setup/createBurnerAccount";
 import { _execute } from "@/network/txExecute/_execute";
 import { signCall } from "@/network/txExecute/txExecuteWithSignature";
@@ -12,7 +13,11 @@ import { TransactionQueueType, UNLIMITED_DELEGATION } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
 import { Address, encodeFunctionData, Hex } from "viem";
 
-export const grantAccessWithSignature = async (mud: MUD, privateKey: Hex) => {
+export const grantAccessWithSignature = async (
+  mud: MUD,
+  privateKey: Hex,
+  txQueueOptions?: TxQueueOptions<TransactionQueueType.Access>
+) => {
   const tempSessionAccount = await createBurnerAccount(privateKey, false);
   const delegateCallData = encodeFunctionData({
     abi: WorldAbi,
@@ -27,15 +32,19 @@ export const grantAccessWithSignature = async (mud: MUD, privateKey: Hex) => {
     callData: delegateCallData,
   });
 
-  console.log({ delegateCallData, signature });
-
   const tx = tempSessionAccount.worldContract.write.callWithSignature([
     mud.playerAccount.address,
     getSystemId("Registration", "CORE"),
     delegateCallData,
     signature,
   ]);
-  await _execute(mud, tx);
+
+  const run = async () => {
+    await _execute(mud, tx);
+  };
+
+  if (txQueueOptions) components.TransactionQueue.enqueue(run, txQueueOptions);
+  else run();
 };
 
 export const grantAccess = async (mud: MUD, address: Address) => {
@@ -56,7 +65,13 @@ export const grantAccess = async (mud: MUD, address: Address) => {
 
 export const revokeAccess = async (mud: MUD, address: Address) => {
   await execute(
-    { mud, systemId: getSystemId("Registration", "CORE"), functionName: "unregisterDelegation", args: [address] },
+    {
+      mud,
+      systemId: getSystemId("Registration", "CORE"),
+      functionName: "unregisterDelegation",
+      args: [address],
+      withSession: true,
+    },
     {
       id: singletonEntity,
       type: TransactionQueueType.Access,
