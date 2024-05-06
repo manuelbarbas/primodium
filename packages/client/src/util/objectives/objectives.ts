@@ -97,7 +97,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BuildSolarPanel],
       requiredMainBase: 4n,
       buildingType: EntityType.MainBase,
-      level: 35n,
+      level: 5n,
       description:
         "Upgrading a main base gives you more resource storage and makes your asteroid stronger. To upgrade, select your main base and select Upgrade.",
     },
