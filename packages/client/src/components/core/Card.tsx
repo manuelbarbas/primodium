@@ -6,15 +6,17 @@ const lerp = (value: number, inMin: number, inMax: number, outMin: number, outMa
   return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
 };
 
-export const Card: React.FC<{
-  children: React.ReactNode;
-  className?: string;
-  noDecor?: boolean;
-  fragment?: boolean;
-  noMotion?: boolean;
-}> = ({ children, className, noDecor = false, fragment = false, noMotion = false }) => {
+export const Card = forwardRef<
+  HTMLDivElement,
+  {
+    children: React.ReactNode | React.ReactNode[];
+    className?: string;
+    noDecor?: boolean;
+    fragment?: boolean;
+    noMotion?: boolean;
+  }
+>(({ children, className, noDecor = false, fragment = false, noMotion = false }, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
-
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
     const { left, top, width, height } = containerRef.current.getBoundingClientRect();
@@ -42,6 +44,7 @@ export const Card: React.FC<{
   if (fragment)
     return (
       <div
+        ref={ref}
         className={`h-full`}
         style={{
           perspective: "1000px",
@@ -65,6 +68,7 @@ export const Card: React.FC<{
 
   return (
     <div
+      ref={ref}
       className={`h-full`}
       style={{
         perspective: "1000px",
@@ -72,7 +76,6 @@ export const Card: React.FC<{
       }}
     >
       <div
-        ref={containerRef}
         {...(!noMotion
           ? {
               onMouseMove: handleMouseMove,
@@ -84,7 +87,8 @@ export const Card: React.FC<{
         <div className="absolute inset-0 bg-gradient-to-br from-transparent to-neutral" />
         <div className="absolute inset-0 pixel-border" />
         <div className="absolute inset-0 pixel-border blur-[2px] opacity-50 bg-blend-screen" />
-        <div className="z-50 w-full h-full">{children}</div>
+
+        {children}
         {!noDecor && (
           <div className="opacity-30 pointer-events-none">
             <img src="img/ui/decor1.png" className="absolute bottom-0 -right-6" />
@@ -98,25 +102,36 @@ export const Card: React.FC<{
       </div>
     </div>
   );
-};
-
-export const SecondaryCard = forwardRef<
-  HTMLDivElement,
-  { children: React.ReactNode | React.ReactNode[]; className?: string; noDecor?: boolean }
->(({ children, className, noDecor }, ref) => {
-  return (
-    <div
-      ref={ref}
-      className={cn(
-        "card bg-gradient-to-br from-secondary/15 to-secondary/5 border border-secondary/25 transition-all p-2 pointer-events-auto",
-        noDecor ? "" : "hover:shadow-2xl hover:border-secondary/50",
-        className
-      )}
-    >
-      {children}
-    </div>
-  );
 });
+
+const secondaryCardVariants = cva("card p-2 pointer-events-auto", {
+  variants: {
+    variant: {
+      default: "bg-gradient-to-br from-secondary/15 to-secondary/5 border border-secondary/25 ",
+      highlight: "bg-transparent border border-accent",
+    },
+    noDecor: {
+      true: "",
+      false: "hover:shadow-2xl hover:border-secondary/50",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+    noDecor: false,
+  },
+});
+
+interface SecondaryCardProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof secondaryCardVariants> {}
+
+export const SecondaryCard = forwardRef<HTMLDivElement, SecondaryCardProps>(
+  ({ children, className, variant, noDecor }, ref) => {
+    return (
+      <div ref={ref} className={cn(secondaryCardVariants({ variant, noDecor }), className)}>
+        {children}
+      </div>
+    );
+  }
+);
 
 const glassProps = cva(
   "card border border-secondary/50 heropattern-topography-slate-500/10 backdrop-blur-md p-3 pointer-events-auto drop-shadow-hard",

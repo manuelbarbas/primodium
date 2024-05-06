@@ -8,6 +8,7 @@ import Iridium from "../sprites/resources/iridium_resource.png";
 import Kimberlite from "../sprites/resources/kimberlite_resource.png";
 import Platinum from "../sprites/resources/platinum_resource.png";
 import Titanium from "../sprites/resources/titanium_resource.png";
+import Primodium from "../sprites/resources/primodium_resource.gif";
 import U_Unraidable from "../sprites/resources/utility/unraidable.png?url";
 import U_AdvancedUnraidable from "../sprites/resources/utility/advanced_unraidable.png?url";
 import U_BuildingDefense from "../sprites/resources/utility/building_defense.png?url";
@@ -15,7 +16,7 @@ import U_BuildingDefenseMult from "../sprites/resources/utility/building_defense
 import U_Defense from "../sprites/resources/utility/defense.png?url";
 import U_Electricity from "../sprites/resources/utility/electricity.png?url";
 import U_Encryption from "../sprites/resources/utility/encryption.png?url";
-import U_Housing from "../sprites/resources/utility/housing.png";
+import U_Housing from "../sprites/resources/utility/housing.png?url";
 
 export const ResourceImages = {
   Iron,
@@ -28,6 +29,7 @@ export const ResourceImages = {
   Kimberlite,
   Platinum,
   Titanium,
+  Primodium,
   U_Unraidable,
   U_AdvancedUnraidable,
   U_BuildingDefense,

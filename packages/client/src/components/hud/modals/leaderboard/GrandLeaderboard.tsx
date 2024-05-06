@@ -5,9 +5,9 @@ import { SecondaryCard } from "src/components/core/Card";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { getAllianceName } from "src/util/alliance";
 import { formatNumber } from "src/util/number";
 import { rankToScore } from "src/util/score";
+import { Crown } from "@/components/shared/Crown";
 
 export const GrandLeaderboard = ({ leaderboard, alliance = false }: { leaderboard: Entity; alliance?: boolean }) => {
   const { playerAccount } = useMud();
@@ -35,20 +35,14 @@ export const GrandLeaderboard = ({ leaderboard, alliance = false }: { leaderboar
         <div>Rank</div>
         <div className="col-span-4">Name</div>
         <div>Wormhole</div>
-        <div>Primodium</div>
-        <div>Pts</div>
+        <div>Shard</div>
+        <div>Points</div>
       </div>
 
       <div className="flex flex-col w-full h-full justify-between text-xs pointer-events-auto">
         <AutoSizer>
           {({ height, width }: { height: number; width: number }) => (
-            <List
-              height={height - 65}
-              width={width}
-              itemCount={data.players.length}
-              itemSize={60}
-              className="scrollbar"
-            >
+            <List height={height} width={width} itemCount={data.players.length} itemSize={60} className="scrollbar">
               {({ index, style }) => {
                 const player = data.players[index];
                 const score = data.scores[index];
@@ -116,35 +110,42 @@ export const GrandLeaderboardItem = ({
   const entity = alliance ? (components.PlayerAlliance.get(playerEntity)?.alliance as Entity) : playerEntity;
 
   const rank = index + 1;
+  let rankString: string;
+  if (rank == 0) {
+    rankString = "";
+  } else {
+    rankString = `${rank}${rankSuffix(rank)}`;
+  }
+
   return (
     <SecondaryCard
       className={`grid grid-cols-8 gap-1 w-full border border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center h-14 ${
         player === entity ? "border-success" : ""
       } ${className}`}
     >
-      <div>
-        {rank}
-        {rankSuffix(rank)}
+      <div className={`grid grid-cols-2 gap-2 items-center`}>
+        <div>{rankString}</div>
+        <Crown rank={rank} />
       </div>
       <div className="col-span-4 flex gap-1 justify-between items-center">
         <div className="flex items-center gap-1">
-          {alliance ? `[${getAllianceName(player, true)}]` : <AccountDisplay player={player} />}
+          {<AccountDisplay player={player} />}
           {player === entity && <p className="text-accent">(You)</p>}
         </div>
       </div>
       {!hideRanks && (
         <>
-          <div className="font-bold w-fit bg-cyan-700 px-2">
-            {formatNumber(rankToScore(wormholeRank), { fractionDigits: 2 })}
-            <p className="inline opacity-70">[{wormholeRank.toLocaleString() + rankSuffix(wormholeRank)}]</p>
+          <div className="font-bold w-fit px-2 flex gap-1">
+            {formatNumber(rankToScore(wormholeRank), { fractionDigits: 1 })}
+            <Crown rank={rank} shouldOffset={true} />
           </div>
-          <div className="font-bold w-fit bg-cyan-700 px-2">
-            {formatNumber(rankToScore(primodiumRank), { fractionDigits: 2 })}
-            <p className="inline opacity-70">[{primodiumRank.toLocaleString() + rankSuffix(primodiumRank)}]</p>
+          <div className="font-bold w-fit px-2 flex gap-1">
+            {formatNumber(rankToScore(primodiumRank), { fractionDigits: 1 })}
+            <Crown rank={rank} shouldOffset={true} />
           </div>
         </>
       )}
-      <p className="font-bold w-fit bg-yellow-700 px-2 flex justify-end">{score.toLocaleString()}</p>
+      <p className="font-bold w-fit px-2 flex justify-end">{formatNumber(score, { fractionDigits: 1 })}</p>
     </SecondaryCard>
   );
 };

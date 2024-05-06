@@ -23,13 +23,17 @@ export const CapacityBar: FC<SegmentedCapacityBarProps> = ({
   const segmentColor = (index: number) => {
     if (current === max && index === segments - 1) return "bg-error";
     if (resourceType === EntityType.Electricity) {
-      if (index < 4) return "bg-amber-200/80";
-      if (index < 7) return "bg-amber-300/90";
+      if (index < segments / 3) return "bg-amber-200/80";
+      if (index < (2 * segments) / 3) return "bg-amber-300/90";
       return "bg-yellow-500";
     } else {
       // Default color scheme
-      if (index < 4) return "bg-emerald-400";
-      if (index < 7) return "bg-emerald-600";
+      const pct = index / segments;
+      if (pct < 0.2) return "bg-emerald-400";
+      if (pct < 0.4) return "bg-emerald-500";
+      if (pct < 0.6) return "bg-emerald-600";
+      if (pct < 0.8) return "bg-emerald-700";
+      if (pct < 0.9) return "bg-emerald-800";
       return "bg-emerald-900";
     }
   };
