@@ -2,7 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { ampli } from "src/ampli";
 import { components } from "src/network/components";
 import { TxQueueOptions } from "src/network/components/customComponents/TransactionQueueComponent";
-import { execute } from "src/network/txExecute";
+import { execute } from "src/network/txExecute/txExecute";
 import { MUD } from "src/network/types";
 import { getEntityTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
