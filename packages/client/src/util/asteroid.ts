@@ -49,7 +49,7 @@ export function getAsteroidDescription(asteroid: Entity) {
   }[Number(asteroidData?.maxLevel ?? 1)];
 
   return {
-    type: asteroidResource ? getEntityTypeName(asteroidResource) : "Basic",
+    type: asteroidResource ? getEntityTypeName(asteroidResource) : "Common",
     size: asteroidSize,
     primodium: asteroidData?.primodium ?? 0n,
   };

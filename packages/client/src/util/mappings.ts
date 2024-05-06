@@ -23,7 +23,7 @@ export const EntityToUnitImage = {
 
 //TODO: Replace debug with actual images
 export const EntityToResourceImage = {
-  //Basic
+  //Common
   [EntityType.Iron]: ResourceImages.Iron,
   [EntityType.Copper]: ResourceImages.Copper,
   [EntityType.Lithium]: ResourceImages.Lithium,
