@@ -1,16 +1,17 @@
+import { Button } from "@/components/core/Button";
+import { Navigator } from "@/components/core/Navigator";
+import { RadioGroup } from "@/components/core/Radio";
+import { TextInput } from "@/components/core/TextInput";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { Navigator } from "@/components/core/Navigator";
-import { TextInput } from "@/components/core/TextInput";
-import { Button } from "@/components/core/Button";
-import { RadioGroup } from "@/components/core/Radio";
 // import { TextArea } from "@/components/core/TextArea";
+import { SecondaryCard } from "@/components/core/Card";
 import { useMud } from "@/hooks";
 import { createAlliance } from "@/network/setup/contractCalls/alliance";
-import { isProfane } from "@/util/profanity";
 import { TransactionQueueType } from "@/util/constants";
 import { hashEntities } from "@/util/encode";
+import { isProfane } from "@/util/profanity";
 
 export const ALLIANCE_TAG_SIZE = 6;
 
@@ -22,13 +23,10 @@ export const CreateScreen = () => {
 
   // TODO: implement description when implemented in backend
   return (
-    <Navigator.Screen
-      title="create"
-      className="flex flex-col w-full text-sm pointer-events-auto h-full py-6 px-24 gap-8"
-    >
-      <div className="self-center text-base">CREATE ALLIANCE</div>
-      <div className="grid grid-cols-[min-content_1fr] justify-center gap-8 whitespace-nowrap">
-        <div className="mt-1">ALLIANCE TAG</div>
+    <Navigator.Screen title="create" className="flex flex-col w-full text-sm pointer-events-auto h-full p-4 gap-4">
+      <p className="self-center text-base">CREATE ALLIANCE</p>
+      <SecondaryCard className="grid grid-cols-[min-content_1fr] items-center py-4 px-24 gap-4 whitespace-nowrap">
+        <div>NAME</div>
         <TextInput
           placeholder=""
           maxLength={ALLIANCE_TAG_SIZE}
@@ -37,17 +35,17 @@ export const CreateScreen = () => {
         />
         {/* <div className="mt-1">DESCRIPTION</div>
         <TextArea placeholder="" className="min-h-20 text-sm" /> */}
-        <div className="self-start mt-[10px]">RESTRICTION</div>
+        <div>ACCESS</div>
         <RadioGroup
           name="create-alliance-restriction"
           value={inviteOnly ? "closed" : "open"}
           options={[
             { id: "open", label: "OPEN" },
-            { id: "closed", label: "CLOSED", bottomLabel: "INVITE ONLY" },
+            { id: "closed", label: "INVITE ONLY" },
           ]}
           onChange={(value) => setInviteOnly(value === "closed")}
         />
-      </div>
+      </SecondaryCard>
 
       <div className="flex mt-auto self-center gap-8">
         <Navigator.BackButton />

@@ -1,5 +1,5 @@
-import React from "react";
 import { cn } from "@/util/client";
+import React from "react";
 
 // A single radio button created from `RadioGroup` below
 const RadioButton: React.FC<{
@@ -18,15 +18,15 @@ const RadioButton: React.FC<{
         {/* The native radio button */}
         <input type="radio" name={name} id={id} checked={checked} onChange={onChange} className="radio hidden" />
         {/* The custom styled square */}
+
         <div
           className={cn(
-            "w-6 h-6 rounded-badge flex justify-center items-center",
-            checked ? "bg-base-100" : "bg-base-100 border-neutral",
+            "w-6 h-6 border border-primary border-2 aspect-square flex justify-center items-center",
             className
           )}
         >
           {/* Render a filled square inside if it's checked */}
-          {checked ? <span className="block w-[18px] h-[18px] bg-primary rounded-badge"></span> : null}
+          {checked ? <span className="block w-[18px] h-[18px] bg-accent"></span> : null}
         </div>
         {label ? <span className="label-text ml-2">{label}</span> : null}
       </label>

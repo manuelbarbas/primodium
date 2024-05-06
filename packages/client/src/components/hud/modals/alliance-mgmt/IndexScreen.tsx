@@ -1,22 +1,22 @@
-import { Entity } from "@latticexyz/recs";
-import { EAllianceInviteMode } from "contracts/config/enums";
-import { FaCheck, FaEnvelope, FaLock, FaPlus, FaSearch } from "react-icons/fa";
-import AutoSizer from "react-virtualized-auto-sizer";
-import { FixedSizeList as List } from "react-window";
 import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { Navigator } from "@/components/core/Navigator";
+import { TextInput } from "@/components/core/TextInput";
+import { ALLIANCE_TAG_SIZE } from "@/components/hud/modals/alliance-mgmt/CreateScreen";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { useMud } from "@/hooks";
 import { components } from "@/network/components";
 import { joinAlliance, requestToJoin } from "@/network/setup/contractCalls/alliance";
 import { getAllianceName } from "@/util/alliance";
+import { cn } from "@/util/client";
 import { TransactionQueueType } from "@/util/constants";
 import { hashEntities } from "@/util/encode";
-import { cn } from "@/util/client";
+import { Entity } from "@latticexyz/recs";
+import { EAllianceInviteMode } from "contracts/config/enums";
 import { useMemo, useState } from "react";
-import { TextInput } from "@/components/core/TextInput";
-import { ALLIANCE_TAG_SIZE } from "@/components/hud/modals/alliance-mgmt/CreateScreen";
+import { FaCheck, FaEnvelope, FaLock, FaPlus, FaSearch } from "react-icons/fa";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List } from "react-window";
 
 // This screen is the home interface for searching alliances, and accessing both the "create" and "invites" screens
 // It is only accessible to players who are not in an alliance
@@ -57,10 +57,10 @@ export const IndexScreen = () => {
   return (
     <Navigator.Screen
       title="search"
-      className="grid grid-rows-[min-content_1fr_min-content] w-full h-full text-xs pointer-events-auto py-6 px-24 gap-8"
+      className="grid grid-rows-[min-content_1fr_min-content] w-full h-full text-xs pointer-events-auto p-4 gap-4"
     >
       <div className="flex flex-col items-center gap-2 text-base">
-        <div>ALLIANCE</div>
+        <p>ALLIANCES</p>
         <div className="relative w-fit">
           <TextInput
             placeholder="SEARCH ALLIANCE"
@@ -71,26 +71,24 @@ export const IndexScreen = () => {
           <FaSearch className="absolute left-4 top-2 opacity-75" />
         </div>
       </div>
-      {alliances ? (
-        <div>
-          <AutoSizer>
-            {({ height, width }: { height: number; width: number }) => (
-              <List height={height} width={width} itemCount={alliances.length} itemSize={47} className="scrollbar">
-                {({ index, style }) => {
-                  return (
-                    <div style={style} className="pr-4">
-                      <AllianceItem
-                        key={index}
-                        {...alliances[index]}
-                        alreadyMember={alliances[index].entity === playerAlliance}
-                      />
-                    </div>
-                  );
-                }}
-              </List>
-            )}
-          </AutoSizer>
-        </div>
+      {alliances && alliances.length > 0 ? (
+        <AutoSizer>
+          {({ height, width }: { height: number; width: number }) => (
+            <List height={height} width={width} itemCount={alliances.length} itemSize={47} className="scrollbar">
+              {({ index, style }) => {
+                return (
+                  <div style={style} className="pr-4">
+                    <AllianceItem
+                      key={index}
+                      {...alliances[index]}
+                      alreadyMember={alliances[index].entity === playerAlliance}
+                    />
+                  </div>
+                );
+              }}
+            </List>
+          )}
+        </AutoSizer>
       ) : (
         <SecondaryCard className="w-full flex-grow items-center justify-center font-bold opacity-50">
           NO ALLIANCES

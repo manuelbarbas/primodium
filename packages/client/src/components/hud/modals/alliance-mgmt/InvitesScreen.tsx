@@ -1,8 +1,3 @@
-import { entityToColor } from "@/util/color";
-import { Entity } from "@latticexyz/recs";
-import { FaCheck, FaCopy, FaTimes } from "react-icons/fa";
-import AutoSizer from "react-virtualized-auto-sizer";
-import { FixedSizeList as List } from "react-window";
 import { Button } from "@/components/core/Button";
 import { Navigator } from "@/components/core/Navigator";
 import { Tooltip } from "@/components/core/Tooltip";
@@ -11,9 +6,14 @@ import { useMud } from "@/hooks";
 import { components } from "@/network/components";
 import { declineInvite, joinAlliance } from "@/network/setup/contractCalls/alliance";
 import { getAllianceName } from "@/util/alliance";
+import { entityToColor } from "@/util/color";
 import { entityToAddress } from "@/util/common";
 import { TransactionQueueType } from "@/util/constants";
 import { hashEntities } from "@/util/encode";
+import { Entity } from "@latticexyz/recs";
+import { FaCheck, FaCopy, FaTimes } from "react-icons/fa";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List } from "react-window";
 
 // This screen is only accessible to players who are not in an alliance
 export const InvitesScreen: React.FC = () => {
@@ -25,7 +25,7 @@ export const InvitesScreen: React.FC = () => {
   return (
     <Navigator.Screen
       title="invites"
-      className="grid grid-rows-[min-content_1fr_min-content] gap-8 w-full text-xs pointer-events-auto h-full overflow-hidden py-6 px-24"
+      className="grid grid-rows-[min-content_1fr_min-content] gap-8 w-full text-xs pointer-events-auto h-full overflow-hidden p-4"
     >
       <div className="justify-self-center text-base">INVITES</div>
       {invites.length > 0 ? (
