@@ -182,6 +182,8 @@ export enum Sprites {
   DroneBottom = "sprites/decorations/drone/bottom/Drones_Bottom_Left1.png",
   DroneTop = "sprites/decorations/drone/top/Drones_Top_Right1.png",
 
+  FleetPlayer = "sprites/fleets/player/Fleets_Default_Player1.png",
+
   EMPTY = "sprites/empty.png",
 }
 

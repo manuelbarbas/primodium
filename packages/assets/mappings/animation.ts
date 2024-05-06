@@ -84,6 +84,8 @@ export enum Animations {
 
   DroidBase = "droidbase/level1",
 
+  FleetPlayer = "fleet/player",
+
   //DECORATIONS
   DroneTop = "decorations/drone-top",
   DroneBottom = "decorations/drone-bottom",

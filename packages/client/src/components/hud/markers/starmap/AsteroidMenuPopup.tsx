@@ -7,11 +7,14 @@ import { GlassCard } from "@/components/core/Card";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 
 import { AsteroidMenu } from "@/components/hud/asteroid-menu/AsteroidMenu";
+import { entityToRockName } from "@/util/name";
+import { Mode } from "@/util/constants";
 
 export const AsteroidMenuPopup = () => {
   const primodium = usePrimodium();
   const selectedAsteroid = components.SelectedRock.use()?.value;
   const position = components.Position.use(selectedAsteroid);
+  const mapOpen = components.SelectedMode.use()?.value === Mode.Starmap;
 
   const coord = useMemo(() => {
     const {
@@ -24,27 +27,27 @@ export const AsteroidMenuPopup = () => {
     const pixelCoord = tileCoordToPixelCoord(position, config.tilemap.tileWidth, config.tilemap.tileHeight);
 
     return { x: pixelCoord.x, y: -pixelCoord.y };
-  }, [selectedAsteroid, primodium, position]);
+  }, [primodium, position]);
 
-  if (!selectedAsteroid) return null;
+  if (!selectedAsteroid || !mapOpen) return null;
 
   return (
     <Widget
-      title={`[${position?.x ?? 0}, ${position?.y ?? 0}]`}
+      title={`${entityToRockName(selectedAsteroid)}`}
       id="asteroid-target"
       scene={"STARMAP"}
       defaultCoord={coord}
       defaultPinned
       draggable
       defaultVisible
-      origin="top-right"
+      origin="top-left"
       minOpacity={1}
       topBar
       popUp
       noBorder
       icon={InterfaceIcons.Crosshairs}
     >
-      <GlassCard direction={"bottom"} className="">
+      <GlassCard direction={"bottom"}>
         <AsteroidMenu selectedRock={selectedAsteroid} />
       </GlassCard>
     </Widget>

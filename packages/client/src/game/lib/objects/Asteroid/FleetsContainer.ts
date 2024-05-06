@@ -3,13 +3,14 @@ import { Fleet } from "../Fleet";
 
 const WIDTH = 150;
 const HEIGHT = 100;
-const MARGIN = 5;
+// const MARGIN = 5;
 export class FleetsContainer extends Phaser.GameObjects.Container {
   private _scene: Scene;
   private coord: TileCoord;
   private orbitRing: Phaser.GameObjects.Graphics;
   private fleetsContainer: Phaser.GameObjects.Container;
   private rotationTween: Phaser.Tweens.Tween;
+  private prevRotationVal: number = -1;
   private paused = false;
   private inOrbitView = true;
 
@@ -27,9 +28,12 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     this.rotationTween = this.scene.tweens.addCounter({
       from: 0,
       to: Math.PI * 2,
-      duration: 1000 * 60,
+      duration: 1000 * 30,
+      ease: (t: number) => Phaser.Math.Easing.Stepped(t, 120),
       repeat: -1,
       onUpdate: (tween) => {
+        if (this.prevRotationVal === tween.getValue()) return;
+        this.prevRotationVal = tween.getValue();
         const angleStep = (2 * Math.PI) / this.fleetsContainer.length;
         this.fleetsContainer.list.forEach((obj, index) => {
           const fleet = obj as Fleet;
@@ -38,7 +42,8 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
           const radiusY = HEIGHT / 2; // Radius for the y coordinate
           fleet.x = this.x + radiusX * Math.cos(angle);
           fleet.y = this.y + radiusY * Math.sin(angle);
-          fleet.angle = Phaser.Math.RadToDeg(angle) - 40;
+          fleet.setRotationFrame(Phaser.Math.RadToDeg(angle));
+          fleet.angle = Phaser.Math.RadToDeg(angle) - fleet.getRotationFrameOffset();
         });
       },
     });
@@ -76,7 +81,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     fleet.getOrbitRing()?.removeFleet(fleet);
     fleet.setOrbitRingRef(this);
     fleet.setFlip(false, false);
-    fleet.setScale(0.3);
+    fleet.setScale(0.75);
     this.fleetsContainer.add(fleet);
 
     if (this.inOrbitView) this.setOrbitView();
@@ -104,14 +109,12 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
 
     this.fleetsContainer.setAlpha(0);
     this.fleetsContainer.setRotation(0);
-    setTimeout(() => {
-      this.fleetsContainer.list.forEach((_fleet, i) => {
-        const fleet = _fleet as Fleet;
-        fleet.setFlip(false, false);
-        fleet.setPosition(fleet.displayWidth / 2 + (fleet.displayWidth + MARGIN) * i, 0);
-        fleet.rotation = 0;
-      });
-    }, 0);
+
+    this.fleetsContainer.list.forEach((_fleet, i) => {
+      const fleet = _fleet as Fleet;
+      fleet.reset();
+      fleet.setPosition(fleet.displayWidth / 2 + fleet.displayWidth * i, 10);
+    });
 
     this.scene.add.tween({
       targets: this.fleetsContainer,
@@ -126,6 +129,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     if (!this.paused) this.rotationTween.resume();
     this.orbitRing.setActive(true).setVisible(true);
 
+    this.prevRotationVal = -1;
     this.orbitRing.setAlpha(0);
     this.scene.add.tween({
       targets: this.orbitRing,

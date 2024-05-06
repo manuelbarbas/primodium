@@ -72,7 +72,7 @@ const Screen: FC<{
 }> = ({ title, className, children }) => {
   const { history } = useNavigation();
   if (history[history.length - 1] !== title) return null;
-  return <div className={`flex flex-col w-full ${className}`}>{children}</div>;
+  return <div className={`flex flex-col w-full ${className} animate-in fade-in duration-300`}>{children}</div>;
 };
 
 const NavButton: FC<

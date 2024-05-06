@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { InterfaceIcons } from "@primodiumxyz/assets";
+import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
 import { Navigator } from "src/components/core/Navigator";
 import { components } from "@/network/components";
 import { IconLabel } from "@/components/core/IconLabel";
@@ -8,7 +8,7 @@ import { EntityType, Mode } from "@/util/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { claimShardAsteroid } from "@/network/setup/contractCalls/claimPrimodium";
-import { formatResourceCount } from "@/util/number";
+import { formatResourceCount, formatTime } from "@/util/number";
 import { useShardAsteroid } from "@/hooks/primodium/useShardAsteroid";
 import { useMud } from "@/hooks/useMud";
 
@@ -21,7 +21,19 @@ export const ShardButton: React.FC<{ shardEntity: Entity }> = ({ shardEntity }) 
 
   return (
     <>
-      {shardData && ownedByPlayer && shardData.canExplode && (
+      {shardData && !shardData.canExplode && (
+        <Button className="w-full py-3 heropattern-topography-slate-100/10" variant="error" size="content" disabled>
+          <div className="absolute inset-0 bg-error/25 animate-ping pointer-events-none" />
+          <div className="flex flex-start px-1 gap-3 w-full">
+            <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Attack} />
+            <div className="flex flex-col items-start">
+              <p>EXPLOSION IMINENT</p>
+              <p className="block text-xs opacity-75">EXPLOSION IN T-{formatTime(shardData.timeUntilExplode)}</p>
+            </div>
+          </div>
+        </Button>
+      )}
+      {shardData && !ownedByPlayer && shardData.canExplode && (
         <TransactionQueueMask queueItemId={"ClaimPrimodium" as Entity} className="w-full">
           <Button
             onClick={() => claimShardAsteroid(mud, shardEntity)}
@@ -31,7 +43,7 @@ export const ShardButton: React.FC<{ shardEntity: Entity }> = ({ shardEntity }) 
           >
             <div className="absolute inset-0 bg-error/25 animate-ping pointer-events-none" />
             <div className="flex flex-start px-1 gap-3 w-full">
-              <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Attack} />
+              <IconLabel className="text-lg drop-shadow-lg" imageUri={ResourceImages.Primodium} />
               <div className="flex flex-col items-start">
                 <p>CLAIM</p>
                 <p className="block text-xs opacity-75">

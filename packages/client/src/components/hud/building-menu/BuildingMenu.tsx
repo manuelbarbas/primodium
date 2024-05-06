@@ -58,7 +58,7 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
   };
   const TopBar = () => {
     return (
-      <div className="absolute -top-2 right-0 -translate-y-full flex flex-row-reverse gap-1 p-1 bg-neutral border border-1 border-secondary border-b-base-100">
+      <div className="absolute -top-6 -right-7 -translate-y-full flex flex-row-reverse gap-1 p-1 border-secondary border-b-base-100 scale-90">
         <Button
           tooltip="Close"
           tooltipDirection="top"

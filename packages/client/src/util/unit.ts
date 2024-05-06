@@ -1,6 +1,5 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
-import { Scene } from "engine/types";
 import { components, components as comps } from "src/network/components";
 import { Hex } from "viem";
 import { EntityType, SPEED_SCALE, UnitStorages } from "./constants";
@@ -118,34 +117,6 @@ export const getOrbitingFleets = (entity: Entity) => {
       return arrivalTime < now;
     }
   );
-};
-
-export const getFleetTilePosition = (scene: Scene, fleet: Entity) => {
-  const { tileHeight, tileWidth } = scene.tiled;
-  const pixelPosition = getFleetPixelPosition(scene, fleet);
-
-  // using the helper function rounds to the nearest tile which doesnt work here
-  return { x: pixelPosition.x / tileWidth, y: -pixelPosition.y / tileHeight };
-};
-
-export const getFleetPixelPosition = (scene: Scene, fleet: Entity) => {
-  const movement = components.FleetMovement.get(fleet);
-  if (!movement) throw new Error("Fleet has no movement component");
-  const time = components.Time.get()?.value ?? 0n;
-
-  if (movement.arrivalTime > time) {
-    const fleetTransitId = fleet + "_fleet";
-    const fleetGroup = scene.objects.getGroup(fleetTransitId);
-    const fleetIcon = fleetGroup.get(`${fleet}-fleetIcon`, "Graphics");
-    return { x: fleetIcon.position.x, y: fleetIcon.position.y };
-  }
-
-  const spaceRock = movement.destination as Entity;
-  const rockGroup = scene.objects.getGroup(spaceRock + "_spacerockOrbits");
-
-  const fleetOrbitId = `fleetOrbit-${spaceRock}-${fleet}`;
-  const gameObject = rockGroup.get(fleetOrbitId, "Graphics")?.getGameObject();
-  return { x: gameObject?.x ?? 0, y: gameObject?.y ?? 0 };
 };
 
 const orbitRadius = 64;

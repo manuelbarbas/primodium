@@ -50,7 +50,7 @@ export const BuildingMenuPopup = () => {
       icon={InterfaceIcons.Build}
     >
       <GlassCard direction={"bottom"}>
-        <Card noDecor className="min-w-80 mt-8">
+        <Card noDecor className="min-w-80">
           <BuildingMenu selectedBuilding={building ?? singletonEntity} />
         </Card>
       </GlassCard>

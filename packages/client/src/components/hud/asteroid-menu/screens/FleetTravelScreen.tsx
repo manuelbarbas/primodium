@@ -142,6 +142,10 @@ export const FleetTravelScreen: React.FC<{ selectedRock: Entity }> = ({ selected
     return ownedFleetsSorted.filter((fleet) => {
       const movement = components.FleetMovement.get(fleet);
       const isEmpty = !!components.IsFleetEmpty.get(fleet)?.value;
+      const rock = components.FleetMovement.get(fleet)?.destination as Entity | undefined;
+      const selectedRock = components.SelectedRock.get()?.value;
+      if (!rock) return false;
+      if (selectedRock === rock) return false;
 
       if (isEmpty) return false;
 
