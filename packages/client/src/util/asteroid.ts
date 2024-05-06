@@ -1,21 +1,32 @@
 import { Primodium } from "@game/api";
 import { Entity } from "@latticexyz/recs";
 
+import { AsteroidLevelToEmblem } from "@/game/lib/mappings";
+import { MapIdToAsteroidType } from "@/util/mappings";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { InterfaceIcons, Sprites } from "@primodiumxyz/assets";
 import { EFleetStance } from "contracts/config/enums";
 import { components, components as comps } from "src/network/components";
 import { getEntityTypeName } from "./common";
 import { EntityType, ResourceStorages, RockRelationship } from "./constants";
 import { getFullResourceCount } from "./resource";
 import { getOrbitingFleets } from "./unit";
-import { MapIdToAsteroidType } from "@/util/mappings";
-import { Sprites } from "@primodiumxyz/assets";
 
 //TODO: proper implementation, this is just a placeholder so stuff doesn't break.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
+export function getAsteroidImage(primodium: Primodium, asteroid?: Entity) {
+  if (!asteroid) return InterfaceIcons.NotAllowed;
   const { getSpriteBase64 } = primodium.api().sprite;
   return getSpriteBase64(Sprites.Asteroid1);
+}
+
+export function getAsteroidEmblem(primodium: Primodium, asteroid?: Entity) {
+  if (!asteroid) return InterfaceIcons.NotAllowed;
+  const level = Number(comps.Level.get(asteroid)?.value ?? 0n);
+  const emblem = AsteroidLevelToEmblem[level];
+  if (!emblem) return InterfaceIcons.NotAllowed;
+  const { getSpriteBase64 } = primodium.api().sprite;
+  return getSpriteBase64(emblem);
 }
 
 export function getAsteroidName(spaceRock: Entity) {

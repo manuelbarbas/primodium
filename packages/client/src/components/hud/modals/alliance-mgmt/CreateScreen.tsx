@@ -26,7 +26,7 @@ export const CreateScreen = () => {
     <Navigator.Screen title="create" className="flex flex-col w-full text-sm pointer-events-auto h-full p-4 gap-4">
       <p className="self-center text-base">CREATE ALLIANCE</p>
       <SecondaryCard className="grid grid-cols-[min-content_1fr] items-center py-4 px-24 gap-4 whitespace-nowrap">
-        <div>NAME</div>
+        <span className="opacity-80">NAME</span>
         <TextInput
           placeholder=""
           maxLength={ALLIANCE_TAG_SIZE}
@@ -35,7 +35,7 @@ export const CreateScreen = () => {
         />
         {/* <div className="mt-1">DESCRIPTION</div>
         <TextArea placeholder="" className="min-h-20 text-sm" /> */}
-        <div>ACCESS</div>
+        <span className="opacity-80">ACCESS</span>
         <RadioGroup
           name="create-alliance-restriction"
           value={inviteOnly ? "closed" : "open"}

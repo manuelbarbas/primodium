@@ -4,8 +4,8 @@ import { ampli } from "src/ampli";
 import { components } from "src/network/components";
 import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
-import { entityToAddress } from "src/util/common";
 import { getAllianceName, getAllianceNameFromPlayer } from "src/util/alliance";
+import { entityToAddress } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities, toHex32 } from "src/util/encode";
 import { Hex } from "viem";
@@ -224,7 +224,7 @@ export const invite = async (mud: MUD, target: Entity) => {
       withSession: true,
     },
     {
-      id: hashEntities(TransactionQueueType.Invite, target),
+      id: "invite" as Entity,
     },
     (receipt) => {
       ampli.systemInvite({

@@ -75,15 +75,13 @@ export const IndexScreen = () => {
         <AutoSizer>
           {({ height, width }: { height: number; width: number }) => (
             <List height={height} width={width} itemCount={alliances.length} itemSize={47} className="scrollbar">
-              {({ index, style }) => {
+              {({ index }) => {
                 return (
-                  <div style={style} className="pr-4">
-                    <AllianceItem
-                      key={index}
-                      {...alliances[index]}
-                      alreadyMember={alliances[index].entity === playerAlliance}
-                    />
-                  </div>
+                  <AllianceItem
+                    key={index}
+                    {...alliances[index]}
+                    alreadyMember={alliances[index].entity === playerAlliance}
+                  />
                 );
               }}
             </List>
@@ -106,12 +104,12 @@ export const IndexScreen = () => {
         </Navigator.NavButton>
         <Navigator.NavButton
           to="invites"
-          variant={playerAlliance ? "ghost" : "primary"}
+          variant={playerAlliance ? "neutral" : "primary"}
           className={cn("btn-sm", !playerAlliance && "border-2 border-secondary")}
         >
           INVITES ({invites.length})
         </Navigator.NavButton>
-        {playerAlliance ? (
+        {playerAlliance && (
           <Navigator.NavButton
             to="manage"
             variant="primary"
@@ -119,7 +117,7 @@ export const IndexScreen = () => {
           >
             YOUR ALLIANCE
           </Navigator.NavButton>
-        ) : null}
+        )}
       </div>
     </Navigator.Screen>
   );
@@ -147,17 +145,12 @@ const AllianceItem = ({
   const inviteOnly = allianceMode === EAllianceInviteMode.Closed;
 
   return (
-    <SecondaryCard
-      className={cn(
-        "grid grid-cols-[1fr_min-content] w-full p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center h-10",
-        className
-      )}
-    >
+    <SecondaryCard className={cn("grid grid-cols-[1fr_min-content] w-full px-4 items-center h-10", className)}>
       <div className="col-span-6 flex justify-between items-center">
         <div className="flex gap-2 items-center">
           <span className="text-sm text-warning">[{name}]</span>
           <span className="text-xs opacity-75">({members.length})</span>
-          {inviteOnly ? <FaLock /> : null}
+          {inviteOnly && <FaLock />}
         </div>
         <div className="flex items-center gap-1">
           {alreadyMember ? (

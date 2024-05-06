@@ -1,17 +1,17 @@
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { useEffect, useMemo } from "react";
 import { Navigator } from "@/components/core/Navigator";
 import { useMud } from "@/hooks";
 import { useSyncStatus } from "@/hooks/useSyncStatus";
 import { components } from "@/network/components";
 import { hydrateAllianceData } from "@/network/sync/indexer";
+import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { useEffect, useMemo } from "react";
 import { CreateScreen } from "./CreateScreen";
 import { ErrorScreen } from "./ErrorScreen";
 import { IndexScreen } from "./IndexScreen";
 import { InvitesScreen } from "./InvitesScreen";
 import { LoadingScreen } from "./LoadingScreen";
-import { ManageScreen } from "./ManageScreen";
+import { ManageScreen } from "./manage/ManageScreen";
 
 export const AllianceManagement = () => {
   const mud = useMud();

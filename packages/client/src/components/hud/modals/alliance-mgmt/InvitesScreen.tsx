@@ -1,4 +1,5 @@
 import { Button } from "@/components/core/Button";
+import { SecondaryCard } from "@/components/core/Card";
 import { Navigator } from "@/components/core/Navigator";
 import { Tooltip } from "@/components/core/Tooltip";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
@@ -6,6 +7,7 @@ import { useMud } from "@/hooks";
 import { components } from "@/network/components";
 import { declineInvite, joinAlliance } from "@/network/setup/contractCalls/alliance";
 import { getAllianceName } from "@/util/alliance";
+import { copyToClipboard } from "@/util/clipboard";
 import { entityToColor } from "@/util/color";
 import { entityToAddress } from "@/util/common";
 import { TransactionQueueType } from "@/util/constants";
@@ -25,41 +27,41 @@ export const InvitesScreen: React.FC = () => {
   return (
     <Navigator.Screen
       title="invites"
-      className="grid grid-rows-[min-content_1fr_min-content] gap-8 w-full text-xs pointer-events-auto h-full overflow-hidden p-4"
+      className="grid grid-rows-[min-content_1fr_min-content] gap-4 w-full text-xs pointer-events-auto h-full overflow-hidden p-4"
     >
       <div className="justify-self-center text-base">INVITES</div>
       {invites.length > 0 ? (
-        <div className="flex flex-col gap-4">
-          <span className="underline">INVITATION{invites.length > 1 ? "S" : ""} RECEIVED</span>
+        <SecondaryCard className="flex flex-col gap-4 p-4">
           <AutoSizer>
             {({ height, width }: { height: number; width: number }) => (
               <List height={height} width={width} itemCount={invites.length} itemSize={35} className="scrollbar">
-                {({ index, style }) => {
-                  return (
-                    <div style={style} className="grid grid-cols-[40px_1fr_min-content_min-content] gap-4 pr-4">
-                      <InviteItem key={index} index={index} entity={invites[index]} max={maxAllianceMembers} />
-                    </div>
-                  );
-                }}
+                {({ index, style }) => (
+                  <div style={style} className="grid grid-cols-[40px_1fr_min-content_min-content] gap-4 pr-4">
+                    <InviteItem key={index} index={index} entity={invites[index]} max={maxAllianceMembers} />
+                  </div>
+                )}
               </List>
             )}
           </AutoSizer>
-        </div>
+        </SecondaryCard>
       ) : (
-        <span className="opacity-75">NO INVITATION RECEIVED</span>
+        <SecondaryCard className="flex justify-center items-center h-full">
+          <p className="opacity-50">NO INVITES</p>
+        </SecondaryCard>
       )}
-      <div className="flex justify-between pt-4">
+      <div className="flex justify-between">
         <Navigator.BackButton />
-        <div className="flex justify-center items-center gap-8">
-          FRIEND CODE:
+        <div className="flex justify-center items-center gap-4">
+          <p className="opacity-80">FRIEND CODE</p>
           <Tooltip tooltipContent="Click to copy" direction="top">
             <Button
               variant="ghost"
-              className="btn-xs flex gap-2"
-              onClick={() => navigator.clipboard.writeText(entityToAddress(playerEntity))}
+              size="xs"
+              className="flex gap-2"
+              onClick={() => copyToClipboard(entityToAddress(playerEntity))}
             >
-              {entityToAddress(playerEntity, true)}
-              <FaCopy />
+              <span className="text-accent">{entityToAddress(playerEntity, true)}</span>
+              <FaCopy className="text-accent" />
             </Button>
           </Tooltip>
         </div>

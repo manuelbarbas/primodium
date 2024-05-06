@@ -28,7 +28,7 @@ const RadioButton: React.FC<{
           {/* Render a filled square inside if it's checked */}
           {checked ? <span className="block w-[18px] h-[18px] bg-accent"></span> : null}
         </div>
-        {label ? <span className="label-text ml-2">{label}</span> : null}
+        {label ? <span className="label-text text-xs ml-2">{label}</span> : null}
       </label>
       {bottomLabel ? <span className="label-text ml-1 text-xs opacity-75">{bottomLabel}</span> : null}
     </div>
