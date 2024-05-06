@@ -12,7 +12,7 @@ import { Entity } from "@latticexyz/recs";
 import { EAllianceRole } from "contracts/config/enums";
 import { FC } from "react";
 import { FaAngleDoubleDown, FaAngleDoubleUp, FaDoorOpen } from "react-icons/fa";
-import { GiCorporal, GiCowled, GiPrivate, GiPrivateFirstClass, GiSergeant } from "react-icons/gi";
+import { GiCowled, GiGraduateCap, GiRank1, GiRank2, GiRank3 } from "react-icons/gi";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
 
@@ -77,10 +77,10 @@ export const MemberItem: FC<{
   const role = player.role ?? EAllianceRole.Member;
   const roleContents = {
     [EAllianceRole.Owner]: { label: "Overseer", color: "accent", Icon: GiCowled },
-    [EAllianceRole.Member]: { label: "Cadet", color: "white", Icon: GiPrivateFirstClass },
-    [EAllianceRole.CanInvite]: { label: "Emissary", color: "warning", Icon: GiPrivate },
-    [EAllianceRole.CanKick]: { label: "Warden", color: "warning", Icon: GiCorporal },
-    [EAllianceRole.CanGrantRole]: { label: "Archon", color: "warning", Icon: GiSergeant },
+    [EAllianceRole.CanGrantRole]: { label: "Archon", color: "warning", Icon: GiRank3 },
+    [EAllianceRole.CanKick]: { label: "Warden", color: "warning", Icon: GiRank2 },
+    [EAllianceRole.CanInvite]: { label: "Emissary", color: "warning", Icon: GiRank1 },
+    [EAllianceRole.Member]: { label: "Cadet", color: "white", Icon: GiGraduateCap },
   };
   const { color, label, Icon } = roleContents[role];
 
