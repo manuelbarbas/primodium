@@ -29,7 +29,7 @@ export const CreateScreen = () => {
         <TextInput
           placeholder=""
           maxLength={ALLIANCE_TAG_SIZE}
-          onChange={(e) => setAllianceTag(e.target.value)}
+          onChange={(e) => setAllianceTag(e.target.value.toUpperCase())}
           className="w-48 uppercase h-8 text-sm"
         />
         <span className="opacity-80">ACCESS</span>

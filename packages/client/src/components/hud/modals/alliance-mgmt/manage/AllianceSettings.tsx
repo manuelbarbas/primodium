@@ -38,6 +38,7 @@ export const AllianceSettings = ({
 
   const [inviteOnly, setInviteOnly] = useState(wasInviteOnly);
   const [allianceTag, setAllianceTag] = useState(currName);
+  console.log({ allianceTag, currName });
 
   return (
     <SecondaryCard
@@ -53,11 +54,11 @@ export const AllianceSettings = ({
             placeholder=""
             maxLength={ALLIANCE_TAG_SIZE}
             value={allianceTag}
-            onChange={(e) => setAllianceTag(e.target.value)}
+            onChange={(e) => setAllianceTag(e.target.value.toUpperCase())}
             className="w-48 uppercase h-8 text-sm"
           />
           <TransactionQueueMask
-            queueItemId={hashEntities(TransactionQueueType.CreateAlliance, mud.playerAccount.entity)}
+            queueItemId={hashEntities(TransactionQueueType.UpdateAllianceName, mud.playerAccount.entity)}
           >
             <Button
               disabled={allianceTag == currName}
@@ -80,7 +81,7 @@ export const AllianceSettings = ({
             }
           />
           <TransactionQueueMask
-            queueItemId={hashEntities(TransactionQueueType.CreateAlliance, mud.playerAccount.entity)}
+            queueItemId={hashEntities(TransactionQueueType.UpdateAllianceAccess, mud.playerAccount.entity)}
           >
             <Button
               disabled={inviteOnly == wasInviteOnly}

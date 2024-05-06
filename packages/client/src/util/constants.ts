@@ -72,6 +72,8 @@ export enum TransactionQueueType {
   ClaimObjective,
   CreateAlliance,
   JoinAlliance,
+  UpdateAllianceAccess,
+  UpdateAllianceName,
   RequestToJoin,
   KickPlayer,
   Promote,

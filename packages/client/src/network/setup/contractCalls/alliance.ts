@@ -39,7 +39,7 @@ export const updateAllianceName = async (mud: MUD, allianceEntity: Entity, name:
       withSession: true,
     },
     {
-      id: hashEntities(TransactionQueueType.CreateAlliance, mud.playerAccount.entity),
+      id: hashEntities(TransactionQueueType.UpdateAllianceName, mud.playerAccount.entity),
     }
   );
 };
@@ -54,7 +54,7 @@ export const updateAllianceAccess = async (mud: MUD, allianceEntity: Entity, inv
       withSession: true,
     },
     {
-      id: hashEntities(TransactionQueueType.CreateAlliance, mud.playerAccount.entity),
+      id: hashEntities(TransactionQueueType.UpdateAllianceAccess, mud.playerAccount.entity),
     }
   );
 };
