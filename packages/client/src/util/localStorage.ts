@@ -16,10 +16,10 @@ export function findEntriesWithPrefix(prefix: string = STORAGE_PREFIX) {
     // Check if the key starts with the specified prefix
     if (key.startsWith(prefix)) {
       // Splice content after the prefix
-      const splicedContent = key.slice(prefix.length);
+      const splicedContent = key.slice(prefix.length) as Hex;
 
       // Retrieve the value
-      const value = localStorage.getItem(key);
+      const value = localStorage.getItem(key) as Hex;
 
       if (!value) continue;
       // Add the spliced content and value to the array as an object
