@@ -38,7 +38,6 @@ export const AllianceSettings = ({
 
   const [inviteOnly, setInviteOnly] = useState(wasInviteOnly);
   const [allianceTag, setAllianceTag] = useState(currName);
-  console.log({ allianceTag, currName });
 
   return (
     <SecondaryCard
