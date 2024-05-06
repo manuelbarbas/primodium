@@ -8,10 +8,11 @@ import { Hex, padHex } from "viem";
 import {
   FaAngleDoubleDown,
   FaAngleDoubleUp,
+  FaArrowLeft,
   FaCopy,
   FaDoorOpen,
   FaExclamationTriangle,
-  FaQuestion,
+  FaInfoCircle,
 } from "react-icons/fa";
 import { Tabs } from "@/components/core/Tabs";
 import { Button } from "@/components/core/Button";
@@ -31,6 +32,7 @@ import { entityToAddress } from "@/util/common";
 import { hashEntities } from "@/util/encode";
 import { entityToPlayerName } from "@/util/name";
 import { InvitedPlayerItem, JoinRequestPlayerItem, MemberItem } from "./ListItems";
+import { GiRank1, GiRank2, GiRank3 } from "react-icons/gi";
 
 export const ManageScreen: React.FC = () => {
   /* ---------------------------------- STATE --------------------------------- */
@@ -48,7 +50,7 @@ export const ManageScreen: React.FC = () => {
   const inviteOnly = components.Alliance.get(allianceEntity)?.inviteMode;
   const maxAllianceMembers = components.P_AllianceConfig.get()?.maxAllianceMembers ?? 1n;
   const playerRole = alliance?.role ?? EAllianceRole.Member;
-  const _players = components.PlayerAlliance.useAllWith({
+  const players = components.PlayerAlliance.useAllWith({
     alliance: allianceEntity,
   })
     // sort by role
@@ -58,16 +60,6 @@ export const ManageScreen: React.FC = () => {
     .sort((a, b) => {
       return (a.role ?? EAllianceRole.Member) - (b.role ?? EAllianceRole.Member);
     });
-  const players = [
-    ..._players,
-    ..._players,
-    ..._players,
-    ..._players,
-    ..._players,
-    ..._players,
-    ..._players,
-    ..._players,
-  ];
 
   /* ------------------------------ JOIN REQUESTS ----------------------------- */
   const joinRequestPlayers = (
@@ -106,31 +98,38 @@ export const ManageScreen: React.FC = () => {
           {players.length}/{maxAllianceMembers?.toString() ?? "?"} member(s)
         </div>
       </div>
-      <Tabs className="flex flex-col gap-4 w-full h-full overflow-hidden" onChange={setActiveTabIndex}>
-        <Join className="border border-secondary/25 self-center">
-          <Tabs.Button index={0} className="btn-sm">
-            MEMBERS
-          </Tabs.Button>
-          {playerRole <= EAllianceRole.CanInvite ? (
-            <Tabs.Button index={1} className="btn-sm">
-              REQUESTS
+      <Tabs className="flex flex-col gap-4 w-full h-full" onChange={setActiveTabIndex}>
+        <div className="relative flex justify-center w-full">
+          <Join className="border border-secondary/25">
+            <Tabs.Button index={0} className="btn-sm">
+              MEMBERS
             </Tabs.Button>
-          ) : null}
-          <Tabs.Button index={2} className="btn-sm">
-            SETTINGS
-          </Tabs.Button>
-        </Join>
+            {playerRole <= EAllianceRole.CanInvite ? (
+              <Tabs.Button index={1} className="btn-sm">
+                REQUESTS
+              </Tabs.Button>
+            ) : null}
+            <Tabs.Button index={2} className="btn-sm">
+              SETTINGS
+            </Tabs.Button>
+          </Join>
+          <IconHints playerRole={playerRole} />
+        </div>
 
         <Tabs.Pane index={0} className="w-full h-full p-0" fragment>
           <AutoSizer>
             {({ height, width }: { height: number; width: number }) => (
-              <List height={height} width={width} itemCount={players.length} itemSize={30} className="scrollbar">
+              <List height={height - 50} width={width} itemCount={players.length} itemSize={30} className="scrollbar">
                 {({ index, style }) => (
                   <MemberItem
                     key={index}
                     index={index}
                     playerRole={playerRole}
-                    player={players[index]}
+                    player={{
+                      entity: players[index].entity,
+                      name: players[index].name,
+                      role: (players[index].role as EAllianceRole) ?? EAllianceRole.Member,
+                    }}
                     editMode={editMode}
                     style={style}
                   />
@@ -147,7 +146,7 @@ export const ManageScreen: React.FC = () => {
                 <AutoSizer>
                   {({ height, width }: { height: number; width: number }) => (
                     <List
-                      height={height}
+                      height={height - 50}
                       width={width}
                       itemCount={joinRequestPlayers.length}
                       itemSize={30}
@@ -177,7 +176,7 @@ export const ManageScreen: React.FC = () => {
                 <AutoSizer>
                   {({ height, width }: { height: number; width: number }) => (
                     <List
-                      height={height}
+                      height={height - 50}
                       width={width}
                       itemCount={invitedPlayers.length}
                       itemSize={30}
@@ -211,42 +210,12 @@ export const ManageScreen: React.FC = () => {
       {playerRole < EAllianceRole.CanInvite && activeTabIndex === 0 ? (
         // show edit button on 'members' tab for officers
         <div className="relative flex justify-center w-full">
+          <Navigator.NavButton size="sm" to="search" className="absolute left-0">
+            <FaArrowLeft />
+          </Navigator.NavButton>
           <Button variant="primary" onClick={() => setEditMode(!editMode)} className="btn-sm border-2 border-secondary">
             {editMode ? "BACK" : "EDIT"}
           </Button>
-          {editMode ? (
-            <div className="absolute top-[50%] right-[22px] transform translate-y-[-50%] flex items-center">
-              <FaQuestion className="opacity-75 h-3 mr-4" />
-              {playerRole <= EAllianceRole.CanGrantRole ? (
-                <>
-                  <Button
-                    variant="ghost"
-                    tooltip="Promote player"
-                    tooltipDirection="top"
-                    className="btn-xs !rounded-box text-success"
-                  >
-                    <FaAngleDoubleUp />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    tooltip="Demote player"
-                    tooltipDirection="top"
-                    className="btn-xs !rounded-box text-error"
-                  >
-                    <FaAngleDoubleDown />
-                  </Button>{" "}
-                </>
-              ) : null}
-              <Button
-                variant="ghost"
-                tooltip="Kick player"
-                tooltipDirection="top"
-                className="btn-xs flex gap-1 !rounded-box opacity-75"
-              >
-                <FaDoorOpen />
-              </Button>
-            </div>
-          ) : null}
         </div>
       ) : activeTabIndex === 2 ? (
         // otherwise, if it's the settings tab, show leave button
@@ -264,19 +233,29 @@ export const ManageScreen: React.FC = () => {
               </Button>
             </Tooltip>
           </div>
-          <Button
-            tooltip={inviteOnly ? "You will need to request to join again" : undefined}
-            tooltipDirection="top"
-            variant="error"
-            onClick={() => (playerRole === EAllianceRole.Owner ? confirmLeaveAlliance(mud) : leaveAlliance(mud))}
-            className="btn-sm justify-self-center"
-          >
-            LEAVE
-          </Button>
+          <div className="relative flex justify-center w-full">
+            <Navigator.NavButton size="sm" to="search" className="absolute left-0">
+              <FaArrowLeft />
+            </Navigator.NavButton>
+            <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.LeaveAlliance, playerEntity)}>
+              <Button
+                tooltip={inviteOnly ? "You will need to request to join again" : undefined}
+                tooltipDirection="top"
+                variant="error"
+                onClick={() => (playerRole === EAllianceRole.Owner ? confirmLeaveAlliance(mud) : leaveAlliance(mud))}
+                className="btn-sm"
+              >
+                LEAVE
+              </Button>
+            </TransactionQueueMask>
+          </div>
         </div>
       ) : (
         // in any other case, show invite input
-        <div className="flex justify-end items-center gap-8">
+        <div className="relative flex justify-end items-center gap-8">
+          <Navigator.NavButton size="sm" to="search" className="absolute left-0">
+            <FaArrowLeft />
+          </Navigator.NavButton>
           <span>INVITE WITH FRIEND CODE:</span>
           <TextInput
             placeholder="ENTER FRIEND CODE"
@@ -287,7 +266,8 @@ export const ManageScreen: React.FC = () => {
             <Button
               variant="primary"
               onClick={() => invite(mud, padHex(friendCode as Hex, { size: 32 }) as Entity)}
-              className="btn-xs border-2 border-secondary"
+              className="btn-sm border-2 border-secondary"
+              disabled={!friendCode}
             >
               SEND
             </Button>
@@ -295,6 +275,52 @@ export const ManageScreen: React.FC = () => {
         </div>
       )}
     </Navigator.Screen>
+  );
+};
+
+const IconHints = ({ playerRole }: { playerRole: EAllianceRole }) => {
+  return (
+    <div className="absolute top-[50%] right-0 transform translate-y-[-50%] flex items-center">
+      <div className="dropdown dropdown-top">
+        <label tabIndex={0} className="btn btn-circle btn-ghost btn-xs">
+          <FaInfoCircle size={16} />
+        </label>
+        <div
+          tabIndex={0}
+          className="card compact dropdown-content z-[1] shadow bg-base-100 w-60 p-2 m-1 border border-secondary gap-1 right-[50%] transform translate-x-[50%]"
+        >
+          <span>ROLES</span>
+          <span className="flex gap-2">
+            <GiRank3 size={16} className="text-warning" /> Promote/Demote Members
+          </span>
+          <span className="flex gap-2">
+            <GiRank2 size={16} className="text-warning" /> Kick Members
+          </span>
+          <span className="flex gap-2">
+            <GiRank1 size={16} className="text-warning" /> Invite Members
+          </span>
+          {playerRole <= EAllianceRole.CanKick ? (
+            <>
+              <span className="border-t border-secondary opacity-50 my-1" />
+              <span>ACTIONS</span>
+              {playerRole <= EAllianceRole.CanGrantRole ? (
+                <>
+                  <span className="flex gap-2">
+                    <FaAngleDoubleUp size={16} className="text-success" /> Promote
+                  </span>
+                  <span className="flex gap-2">
+                    <FaAngleDoubleDown size={16} className="text-warning" /> Demote
+                  </span>
+                </>
+              ) : null}
+              <span className="flex gap-2">
+                <FaDoorOpen size={16} className="text-error" /> Kick
+              </span>
+            </>
+          ) : null}
+        </div>
+      </div>
+    </div>
   );
 };
 

@@ -1,14 +1,16 @@
+import { useState } from "react";
+import { FaPlus } from "react-icons/fa";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
+import { Navigator } from "@/components/core/Navigator";
+import { TextInput } from "@/components/core/TextInput";
 import { Button } from "@/components/core/Button";
 import { RadioGroup } from "@/components/core/Radio";
 // import { TextArea } from "@/components/core/TextArea";
-import { Tooltip } from "@/components/core/Tooltip";
-import { useState } from "react";
-import { FaPlus } from "react-icons/fa";
-import { Navigator } from "@/components/core/Navigator";
-import { TextInput } from "@/components/core/TextInput";
 import { useMud } from "@/hooks";
 import { createAlliance } from "@/network/setup/contractCalls/alliance";
 import { isProfane } from "@/util/profanity";
+import { TransactionQueueType } from "@/util/constants";
+import { hashEntities } from "@/util/encode";
 
 export const ALLIANCE_TAG_SIZE = 6;
 
@@ -27,14 +29,12 @@ export const CreateScreen = () => {
       <div className="self-center text-base">CREATE ALLIANCE</div>
       <div className="grid grid-cols-[min-content_1fr] justify-center gap-8 whitespace-nowrap">
         <div className="mt-1">ALLIANCE TAG</div>
-        <Tooltip tooltipContent={`MAX ${ALLIANCE_TAG_SIZE} CHAR.`} direction="right">
-          <TextInput
-            placeholder=""
-            maxLength={ALLIANCE_TAG_SIZE}
-            onChange={(e) => setAllianceTag(e.target.value)}
-            className="w-48 uppercase h-8 text-sm"
-          />
-        </Tooltip>
+        <TextInput
+          placeholder=""
+          maxLength={ALLIANCE_TAG_SIZE}
+          onChange={(e) => setAllianceTag(e.target.value)}
+          className="w-48 uppercase h-8 text-sm"
+        />
         {/* <div className="mt-1">DESCRIPTION</div>
         <TextArea placeholder="" className="min-h-20 text-sm" /> */}
         <div className="self-start mt-[10px]">RESTRICTION</div>
@@ -43,7 +43,7 @@ export const CreateScreen = () => {
           value={inviteOnly ? "closed" : "open"}
           options={[
             { id: "open", label: "OPEN" },
-            { id: "closed", label: "CLOSED", bottomLabel: "BY INVITATION ONLY" },
+            { id: "closed", label: "CLOSED", bottomLabel: "INVITE ONLY" },
           ]}
           onChange={(value) => setInviteOnly(value === "closed")}
         />
@@ -51,15 +51,17 @@ export const CreateScreen = () => {
 
       <div className="flex mt-auto self-center gap-8">
         <Navigator.BackButton />
-        <Button
-          disabled={!allianceTag || isProfane(allianceTag)}
-          onClick={() => createAlliance(mud, allianceTag, inviteOnly)}
-          variant="primary"
-          className="btn-sm border-2 border-secondary flex gap-2"
-        >
-          <FaPlus />
-          CREATE
-        </Button>
+        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.CreateAlliance, mud.playerAccount.entity)}>
+          <Button
+            disabled={!allianceTag || isProfane(allianceTag)}
+            onClick={() => createAlliance(mud, allianceTag, inviteOnly)}
+            variant="primary"
+            className="btn-sm border-2 border-secondary flex gap-2"
+          >
+            <FaPlus />
+            CREATE
+          </Button>
+        </TransactionQueueMask>
       </div>
     </Navigator.Screen>
   );

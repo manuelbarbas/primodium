@@ -30,7 +30,7 @@ const RadioButton: React.FC<{
         </div>
         {label ? <span className="label-text ml-2">{label}</span> : null}
       </label>
-      {bottomLabel ? <span className="label-text ml-2 text-xs">• {bottomLabel}</span> : null}
+      {bottomLabel ? <span className="label-text ml-1 text-xs opacity-75">{bottomLabel}</span> : null}
     </div>
   );
 };

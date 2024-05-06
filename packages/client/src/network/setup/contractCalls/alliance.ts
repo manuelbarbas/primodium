@@ -4,7 +4,6 @@ import { ampli } from "src/ampli";
 import { components } from "src/network/components";
 import { execute } from "src/network/txExecute";
 import { MUD } from "src/network/types";
-import { world } from "src/network/world";
 import { entityToAddress } from "src/util/common";
 import { getAllianceName, getAllianceNameFromPlayer } from "src/util/alliance";
 import { TransactionQueueType } from "src/util/constants";
@@ -25,7 +24,7 @@ export const createAlliance = async (mud: MUD, name: string, inviteOnly: boolean
       withSession: true,
     },
     {
-      id: world.registerEntity(),
+      id: hashEntities(TransactionQueueType.CreateAlliance, mud.playerAccount.entity),
     },
     (receipt) => {
       ampli.systemCreate({
@@ -46,7 +45,7 @@ export const leaveAlliance = async (mud: MUD) => {
       withSession: true,
     },
     {
-      id: world.registerEntity(),
+      id: hashEntities(TransactionQueueType.LeaveAlliance, mud.playerAccount.entity),
     },
     (receipt) => {
       ampli.systemLeave({
@@ -248,13 +247,14 @@ export const revokeInvite = async (mud: MUD, target: Entity) => {
     },
     {
       id: hashEntities(TransactionQueueType.RevokeInvite, target),
-    },
-    (receipt) => {
-      ampli.systemRevokeInvite({
-        allianceName: getAllianceNameFromPlayer(target),
-        allianceRejectee: target,
-        ...parseReceipt(receipt),
-      });
     }
+    // TODO: add ampli tracker
+    // (receipt) => {
+    //   ampli.systemRevokeInvite({
+    //     allianceName: getAllianceNameFromPlayer(target),
+    //     allianceRejectee: target,
+    //     ...parseReceipt(receipt),
+    //   });
+    // }
   );
 };

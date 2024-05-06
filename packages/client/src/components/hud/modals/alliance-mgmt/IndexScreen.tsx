@@ -48,6 +48,12 @@ export const IndexScreen = () => {
     return allAlliances?.filter((alliance) => alliance.name.toLowerCase().includes(searchTag.toLowerCase()));
   }, [searchTag, allianceEntities, allianceNames, invites, joinRequests]);
 
+  // Check if the player is not already in an alliance (for disabling buttons & custom display)
+  // const playerAlliance = components.PlayerAlliance.use(playerEntity)?.alliance;
+  const playerAlliance = alliances?.find((alliance) =>
+    alliance.members.some((member) => member === playerEntity)
+  )?.entity;
+
   return (
     <Navigator.Screen
       title="search"
@@ -73,7 +79,11 @@ export const IndexScreen = () => {
                 {({ index, style }) => {
                   return (
                     <div style={style} className="pr-4">
-                      <AllianceItem key={index} {...alliances[index]} />
+                      <AllianceItem
+                        key={index}
+                        {...alliances[index]}
+                        alreadyMember={alliances[index].entity === playerAlliance}
+                      />
                     </div>
                   );
                 }}
@@ -86,14 +96,32 @@ export const IndexScreen = () => {
           NO ALLIANCES
         </SecondaryCard>
       )}
-      <div className="flex justify-center gap-8">
-        <Navigator.NavButton to="create" variant="primary" className="btn-sm border-2 border-secondary flex gap-2">
+      <div className={cn("relative flex gap-8", playerAlliance ? "justify-end" : "justify-center")}>
+        <Navigator.NavButton
+          to="create"
+          variant="primary"
+          className="btn-sm border-2 border-secondary flex gap-2"
+          disabled={!!playerAlliance}
+        >
           <FaPlus />
           CREATE
         </Navigator.NavButton>
-        <Navigator.NavButton to="invites" variant="primary" className="btn-sm border-2 border-secondary">
+        <Navigator.NavButton
+          to="invites"
+          variant={playerAlliance ? "ghost" : "primary"}
+          className={cn("btn-sm", !playerAlliance && "border-2 border-secondary")}
+        >
           INVITES ({invites.length})
         </Navigator.NavButton>
+        {playerAlliance ? (
+          <Navigator.NavButton
+            to="manage"
+            variant="primary"
+            className="btn-sm absolute left-0 border-2 border-secondary"
+          >
+            YOUR ALLIANCE
+          </Navigator.NavButton>
+        ) : null}
       </div>
     </Navigator.Screen>
   );
@@ -106,6 +134,7 @@ const AllianceItem = ({
   invited,
   requested,
   className,
+  alreadyMember,
 }: {
   entity: Entity;
   name: string;
@@ -113,6 +142,7 @@ const AllianceItem = ({
   invited: boolean;
   requested: boolean;
   className?: string;
+  alreadyMember?: boolean;
 }) => {
   const mud = useMud();
   const allianceMode = components.Alliance.get(entity)?.inviteMode as EAllianceInviteMode | undefined;
@@ -132,7 +162,9 @@ const AllianceItem = ({
           {inviteOnly ? <FaLock /> : null}
         </div>
         <div className="flex items-center gap-1">
-          {
+          {alreadyMember ? (
+            <span className="text-xs text-success">YOUR ALLIANCE</span>
+          ) : (
             <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.JoinAlliance, entity)}>
               <Button
                 className="btn-xs"
@@ -156,7 +188,7 @@ const AllianceItem = ({
                 )}
               </Button>
             </TransactionQueueMask>
-          }
+          )}
         </div>
       </div>
     </SecondaryCard>

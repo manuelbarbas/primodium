@@ -89,24 +89,24 @@ const InviteItem = ({ index, entity, max }: { index: number; entity: Entity; max
       <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.JoinAlliance, playerInvite.alliance)}>
         <Button
           tooltip={full ? "alliance full" : "accept"}
-          variant="ghost"
-          tooltipDirection="top"
           className="btn-xs border-none !rounded-box text-success"
           onClick={() => joinAlliance(mud, playerInvite.alliance)}
           disabled={full}
         >
-          <FaCheck className="rounded-none" />
+          <div className="flex gap-2">
+            <FaCheck className="rounded-none" /> ACCEPT
+          </div>
         </Button>
       </TransactionQueueMask>
       <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.DeclineInvite, playerInvite.player)}>
         <Button
-          tooltip="decline"
-          tooltipDirection="top"
           variant="ghost"
           className="btn-xs border-none !rounded-box text-error"
           onClick={() => declineInvite(mud, playerInvite.player)}
         >
-          <FaTimes className="rounded-none" />
+          <div className="flex gap-2">
+            <FaTimes className="rounded-none" /> DECLINE
+          </div>
         </Button>
       </TransactionQueueMask>
     </>

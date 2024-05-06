@@ -51,41 +51,42 @@ export const MemberItem = ({
 
   // Get the mainbase level for the emblem
   const mainBase = components.Home.get(player.entity)?.value as Entity | undefined;
-  const level = components.Level.get(mainBase)?.value ?? 1n;
+  const level = Number(components.Level.get(mainBase)?.value ?? 1);
 
-  // Display an additional icon for the officer rank in edit mode
-  const { rankIcon, rankTooltip } = editMode
-    ? player.role === EAllianceRole.CanInvite
-      ? { rankIcon: <GiRank1 />, rankTooltip: "Invite members" }
-      : player.role === EAllianceRole.CanKick
-      ? { rankIcon: <GiRank2 />, rankTooltip: "Invite and kick members" }
-      : player.role === EAllianceRole.CanGrantRole
-      ? { rankIcon: <GiRank3 />, rankTooltip: "Invite, kick and promote/demote members" }
-      : { rankIcon: <></>, rankTooltip: "" }
-    : { rankIcon: <></>, rankTooltip: "" };
+  // Display an additional icon for the officer rank
+  const rankIcon =
+    player.role === EAllianceRole.CanInvite ? (
+      <GiRank1 size={16} />
+    ) : player.role === EAllianceRole.CanKick ? (
+      <GiRank2 size={16} />
+    ) : player.role === EAllianceRole.CanGrantRole ? (
+      <GiRank3 size={16} />
+    ) : (
+      <></>
+    );
 
   return (
     <div
       style={style}
       className={cn(
         "grid grid-cols-[30px_1fr_min-content] items-center gap-4 pr-4",
-        editMode && "grid-cols-[30px_minmax(250px,auto)_min-content_1fr]"
+        editMode && "grid-cols-[30px_minmax(250px,auto)_minmax(100px,auto)_1fr]"
       )}
     >
       <span>{index + 1}.</span>
       {/* small top margin to balance the fact that it's a little above the rest */}
-      <div className={`flex gap-1 mt-[3px] text-${roleColor}`}>
-        <img
-          src={AsteroidLevelToSprite[level] !== undefined ? getSpriteBase64(AsteroidLevelToSprite[level]) : undefined}
-          className="pixel-images"
-        />
+      <div className={`flex items-center gap-1 mt-[3px] text-${roleColor}`}>
+        <Tooltip tooltipContent={`Mainbase level ${level}`} direction="right" className="text-white">
+          <img
+            src={AsteroidLevelToSprite[level] !== undefined ? getSpriteBase64(AsteroidLevelToSprite[level]) : undefined}
+            className="pixel-images h-8"
+          />
+        </Tooltip>
         <AccountDisplay player={player.entity} showAlliance={false} overridePlayerColor={roleColor} />
       </div>
       <div className={`flex items-center gap-1 text-${roleColor}`}>
         {roleLabel}
-        <Tooltip tooltipContent={rankTooltip} direction="bottom">
-          {rankIcon}
-        </Tooltip>
+        {rankIcon}
       </div>
       {editMode ? (
         <div className="flex items-center justify-self-end">
@@ -94,14 +95,14 @@ export const MemberItem = ({
               <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Promote, player.entity)}>
                 <Button
                   variant="ghost"
-                  className="btn-xs !rounded-box text-success"
+                  className="btn-sm !rounded-box text-success"
                   onClick={() => grantRole(mud, player.entity, Math.max(player.role - 1, EAllianceRole.CanGrantRole))}
                   disabled={
                     player.entity === playerEntity ||
                     // the owner should not be able to promote over right below owner
                     (playerRole === EAllianceRole.Owner && player.role === EAllianceRole.CanGrantRole) ||
                     // the officer should not be able to promote over right below grant role
-                    (playerRole === EAllianceRole.CanGrantRole && player.role === EAllianceRole.CanKick)
+                    (playerRole === EAllianceRole.CanGrantRole && player.role <= EAllianceRole.CanKick)
                   }
                 >
                   <FaAngleDoubleUp />
@@ -110,9 +111,13 @@ export const MemberItem = ({
               <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Demote, player.entity)}>
                 <Button
                   variant="ghost"
-                  className="btn-xs !rounded-box text-error"
+                  className="btn-sm !rounded-box text-warning"
                   onClick={() => grantRole(mud, player.entity, Math.min(player.role + 1, EAllianceRole.Member))}
-                  disabled={player.entity === playerEntity || player.role === EAllianceRole.Member}
+                  disabled={
+                    player.entity === playerEntity ||
+                    player.role === EAllianceRole.Member ||
+                    player.role === EAllianceRole.Owner
+                  }
                 >
                   <FaAngleDoubleDown />
                 </Button>
@@ -123,7 +128,7 @@ export const MemberItem = ({
             <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.KickPlayer, player.entity)}>
               <Button
                 variant="ghost"
-                className="btn-xs flex gap-1 !rounded-box opacity-75"
+                className="btn-sm flex gap-1 !rounded-box text-error"
                 onClick={() => kickPlayer(mud, player.entity)}
                 disabled={player.entity === playerEntity || player.role <= playerRole}
               >
@@ -157,17 +162,19 @@ export const JoinRequestPlayerItem = ({
 
   // Get the mainbase level for the emblem
   const mainBase = components.Home.get(playerEntity)?.value as Entity | undefined;
-  const level = components.Level.get(mainBase)?.value ?? 1n;
+  const level = Number(components.Level.get(mainBase)?.value ?? 1);
 
   return (
     <div style={style} className="grid grid-cols-[30px_1fr_min-content] items-center gap-4 pr-4">
       <span>{index + 1}.</span>
       {/* small top margin to balance the fact that it's a little above the rest */}
-      <div className="flex gap-1 mt-[3px]">
-        <img
-          src={AsteroidLevelToSprite[level] !== undefined ? getSpriteBase64(AsteroidLevelToSprite[level]) : undefined}
-          className="pixel-images"
-        />
+      <div className="flex items-center gap-1 mt-[3px]">
+        <Tooltip tooltipContent={`Mainbase level ${level}`} direction="right" className="text-white">
+          <img
+            src={AsteroidLevelToSprite[level] !== undefined ? getSpriteBase64(AsteroidLevelToSprite[level]) : undefined}
+            className="pixel-images h-8"
+          />
+        </Tooltip>
         <AccountDisplay player={playerEntity} showAlliance={false} noColor />
       </div>
       <div className="flex items-center justify-self-end">
@@ -219,17 +226,19 @@ export const InvitedPlayerItem = ({
 
   // Get the mainbase level for the emblem
   const mainBase = components.Home.get(playerEntity)?.value as Entity | undefined;
-  const level = components.Level.get(mainBase)?.value ?? 1n;
+  const level = Number(components.Level.get(mainBase)?.value ?? 1);
 
   return (
     <div style={style} className="grid grid-cols-[30px_1fr_min-content] items-center gap-4 pr-4">
       <span>{index + 1}.</span>
       {/* small top margin to balance the fact that it's a little above the rest */}
-      <div className="flex gap-1 mt-[3px]">
-        <img
-          src={AsteroidLevelToSprite[level] !== undefined ? getSpriteBase64(AsteroidLevelToSprite[level]) : undefined}
-          className="pixel-images"
-        />
+      <div className="flex items-center gap-1 mt-[3px]">
+        <Tooltip tooltipContent={`Mainbase level ${level}`} direction="right" className="text-white">
+          <img
+            src={AsteroidLevelToSprite[level] !== undefined ? getSpriteBase64(AsteroidLevelToSprite[level]) : undefined}
+            className="pixel-images h-8"
+          />
+        </Tooltip>
         <AccountDisplay player={playerEntity} showAlliance={false} noColor />
       </div>
       <div className="flex items-center justify-self-end">
