@@ -1023,43 +1023,43 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 4n },
+        P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ Lithium: 200, Copper: 50 }),
         P_RequiredDependency: getResourceValue({ Lithium: 0.06 }),
         P_Production: getResourceValues({ PVCell: 0.024 }),
       },
       2: {
-        P_RequiredBaseLevel: { value: 4n },
+        P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ Lithium: 400, Copper: 100 }),
         P_RequiredDependency: getResourceValue({ Lithium: 0.09 }),
         P_Production: getResourceValues({ PVCell: 0.036 }),
       },
       3: {
-        P_RequiredBaseLevel: { value: 5n },
+        P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Lithium: 800, Copper: 200 }),
         P_RequiredDependency: getResourceValue({ Lithium: 0.12 }),
         P_Production: getResourceValues({ PVCell: 0.048 }),
       },
       4: {
-        P_RequiredBaseLevel: { value: 5n },
+        P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Lithium: 1200, Copper: 400 }),
         P_RequiredDependency: getResourceValue({ Lithium: 0.15 }),
         P_Production: getResourceValues({ PVCell: 0.06 }),
       },
       5: {
-        P_RequiredBaseLevel: { value: 6n },
+        P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ Lithium: 2000, Copper: 800 }),
         P_RequiredDependency: getResourceValue({ Lithium: 0.2 }),
         P_Production: getResourceValues({ PVCell: 0.085 }),
       },
       6: {
-        P_RequiredBaseLevel: { value: 6n },
+        P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ Copper: 5000, PVCell: 1000, U_Electricity: 50 }),
         P_RequiredDependency: getResourceValue({ Lithium: 0.25 }),
         P_Production: getResourceValues({ PVCell: 0.11 }),
       },
       7: {
-        P_RequiredBaseLevel: { value: 7n },
+        P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Copper: 10000, PVCell: 2000, U_Electricity: 50 }),
         P_RequiredDependency: getResourceValue({ Lithium: 0.3 }),
         P_Production: getResourceValues({ PVCell: 0.135 }),
@@ -1202,27 +1202,27 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 5n },
+        P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Iron: 50, Copper: 50, Lithium: 50 }),
         P_Production: getResourceValues({ U_Electricity: 50 }),
       },
       2: {
-        P_RequiredBaseLevel: { value: 5n },
+        P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ Iron: 100, Copper: 100, Lithium: 100 }),
         P_Production: getResourceValues({ U_Electricity: 100 }),
       },
       3: {
-        P_RequiredBaseLevel: { value: 6n },
+        P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ Iron: 200, Copper: 200, Lithium: 200 }),
         P_Production: getResourceValues({ U_Electricity: 150 }),
       },
       4: {
-        P_RequiredBaseLevel: { value: 6n },
+        P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ Iron: 400, Copper: 400, Lithium: 400 }),
         P_Production: getResourceValues({ U_Electricity: 200 }),
       },
       5: {
-        P_RequiredBaseLevel: { value: 7n },
+        P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Iron: 1000, Copper: 1000, Lithium: 1000 }),
         P_Production: getResourceValues({ U_Electricity: 275 }),
       },
@@ -1232,7 +1232,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_Production: getResourceValues({ U_Electricity: 350 }),
       },
       7: {
-        P_RequiredBaseLevel: { value: 8n },
+        P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ IronPlate: 1000, Alloy: 1000, PVCell: 1000 }),
         P_Production: getResourceValues({ U_Electricity: 425 }),
       },
@@ -3032,7 +3032,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_ResourceReward: getResourceValues({ Iron: 100, Copper: 100, Lithium: 100 }),
     },
   },
-  UpgradeStorageUnit1: {
+  UpgradeStorageUnit2: {
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 200, Copper: 200, Lithium: 200 }),
     },

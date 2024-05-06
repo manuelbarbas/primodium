@@ -68,7 +68,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fundamentals",
       type: "Upgrade",
-      requiredObjectives: [EObjectives.OpenBattleReport],
+      requiredObjectives: [EObjectives.SendFleet],
       requiredMainBase: 2n,
       buildingType: EntityType.MainBase,
       level: 3n,
@@ -247,7 +247,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fleet",
       type: "Claim",
-      requiredObjectives: [EObjectives.UpgradeWorkshop],
+      requiredObjectives: [EObjectives.UpgradeGarage],
       description:
         'Fleets transport units and resources between asteroids. Create a fleet on the starmap by selecting your asteroid and selecting "Add Fleet".',
       icon: InterfaceIcons.Outgoing,
@@ -479,6 +479,18 @@ export const Objectives = new Map<EObjectives, Objective>([
       description: "A starmapper station increases the number of fleets you can create.",
     },
   ],
+  // [
+  //   EObjectives.CreateFleet2,
+  //   {
+  //     category: "Fleet",
+  //     type: "Claim",
+  //     requiredObjectives: [EObjectives.BuildStarmapper],
+  //     requiredMainBase: 3n,
+  //     description: "Having a second fleet for cargo movement is useful.  Assign your Lightning Craft here.",
+  //     icon: InterfaceIcons.Outgoing,
+  //     tooltip: "Created another fleet",
+  //   },
+  // ],
   [
     EObjectives.DefendWithFleet,
     {
@@ -525,7 +537,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 2n,
       requiredObjectives: [EObjectives.UpgradeMainBase3],
       unitType: EntityType.MinutemanMarine,
-      unitCount: 8n,
+      unitCount: 12n,
       description:
         "Minutemen are weak units that are trained quickly, move fast, and carry lots of cargo. To train, select a workshop and select Train Units.",
     },
@@ -697,7 +709,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.UpgradeStorageUnit1,
+    EObjectives.UpgradeStorageUnit2,
     {
       category: "Resource Production",
       type: "Upgrade",

@@ -33,8 +33,9 @@ library LibRaidableAsteroid {
     buildingEntity = LibBuilding.build(bytes32(0), LithiumMinePrototypeId, PositionData(22, 13, asteroidEntity), true);
     LibProduction.upgradeResourceProduction(buildingEntity, 1);
 
-    // build and (maybe) upgrade two storage buildings
+    // build and upgrade a storage building
     buildingEntity = LibBuilding.build(bytes32(0), StorageUnitPrototypeId, PositionData(21, 15, asteroidEntity), true);
+    LibBuilding.upgradeBypassChecks(buildingEntity);
     LibStorage.increaseMaxStorage(buildingEntity, 2);
 
     // if common2, upgrade storage so it can hold adv resources, and build each factory type

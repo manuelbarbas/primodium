@@ -146,6 +146,7 @@ export enum EObjectives {
 
   // (A-A-A-C) fleet management
   BuildStarmapper,
+  CreateFleet2,
   DefendWithFleet,
   BlockWithFleet,
   LandFleet,
@@ -175,7 +176,7 @@ export enum EObjectives {
 
   // (A-B) Production
   BuildStorageUnit,
-  UpgradeStorageUnit1,
+  UpgradeStorageUnit2,
   BuildIronPlateFactory,
   BuildAlloyFactory,
   BuildPVCellFactory,

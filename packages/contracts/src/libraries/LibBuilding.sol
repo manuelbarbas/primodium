@@ -219,4 +219,11 @@ library LibBuilding {
     uint8 mapId = Asteroid.getMapId(coord.parentEntity);
     return resource == EResource.NULL || uint8(resource) == P_Terrain.get(mapId, coord.x, coord.y);
   }
+
+  /// @notice Upgrades a building even if requirements are not met
+  /// @param buildingEntity The building id
+  function upgradeBypassChecks(bytes32 buildingEntity) internal {
+    uint256 targetLevel = Level.get(buildingEntity) + 1;
+    Level.set(buildingEntity, targetLevel);
+  }
 }
