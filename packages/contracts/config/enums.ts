@@ -95,9 +95,12 @@ export enum EObjectives {
 
   UpgradeMainBase2,
   UpgradeMainBase3,
+  UpgradeMainBase4,
+  UpgradeMainBase5,
 
   ExpandBase2,
   ExpandBase3,
+  ExpandBase4,
 
   UpgradeIronMine2,
   UpgradeIronMine3,
@@ -183,6 +186,7 @@ export enum EObjectives {
 
   // (A-B-A) Production (cont)
   BuildSolarPanel,
+  UpgradeSolarPanel2,
 
   // (A-B-B) Market
   BuildMarket,

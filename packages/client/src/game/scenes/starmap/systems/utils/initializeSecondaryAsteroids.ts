@@ -192,17 +192,17 @@ function buildRaidableAsteroid(asteroidEntity: Entity) {
   const storageMax = storageUnitStorageUpgrades[2];
 
   if (maxLevel >= 3n) {
-    // set storage to max out advanced resources
-    anticipateStorage(EResource.IronPlate, storageMax.IronPlate, asteroidEntity);
-    anticipateStorage(EResource.Alloy, storageMax.Alloy, asteroidEntity);
-    anticipateStorage(EResource.PVCell, storageMax.PVCell, asteroidEntity);
-
     // build Iron Plate factory at 17, 15
     anticipateBuilding(EntityType.IronPlateFactory, { x: 19, y: 15 }, asteroidEntity);
     // build Alloy factory at 15, 15
     anticipateBuilding(EntityType.AlloyFactory, { x: 17, y: 15 }, asteroidEntity);
     // build PVCell factory at 15, 17
     anticipateBuilding(EntityType.PVCellFactory, { x: 15, y: 15 }, asteroidEntity);
+
+    // set storage to max out advanced resources
+    anticipateStorage(EResource.IronPlate, storageMax.IronPlate, asteroidEntity);
+    anticipateStorage(EResource.Alloy, storageMax.Alloy, asteroidEntity);
+    anticipateStorage(EResource.PVCell, storageMax.PVCell, asteroidEntity);
   }
 
   // set storage to max out common resources

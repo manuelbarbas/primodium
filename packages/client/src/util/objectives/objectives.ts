@@ -76,6 +76,32 @@ export const Objectives = new Map<EObjectives, Objective>([
         "Upgrading a main base gives you more resource storage and makes your asteroid stronger. To upgrade, select your main base and select Upgrade.",
     },
   ],
+  [
+    EObjectives.UpgradeMainBase4,
+    {
+      category: "Fundamentals",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.UpgradeMainBase3],
+      requiredMainBase: 3n,
+      buildingType: EntityType.MainBase,
+      level: 4n,
+      description:
+        "Upgrading a main base gives you more resource storage and makes your asteroid stronger. To upgrade, select your main base and select Upgrade.",
+    },
+  ],
+  [
+    EObjectives.UpgradeMainBase5,
+    {
+      category: "Fundamentals",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildSolarPanel],
+      requiredMainBase: 4n,
+      buildingType: EntityType.MainBase,
+      level: 35n,
+      description:
+        "Upgrading a main base gives you more resource storage and makes your asteroid stronger. To upgrade, select your main base and select Upgrade.",
+    },
+  ],
 
   /*//////////////////////////////////////////////////////////////
                           Expand Base
@@ -100,6 +126,18 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.UpgradeMainBase3],
       requiredMainBase: 3n,
       level: 3n,
+      description:
+        "Expansion gives you more room to build and unlocks new ores. To Expand, Select your main base and click on Expand base.",
+    },
+  ],
+  [
+    EObjectives.ExpandBase4,
+    {
+      category: "Fundamentals",
+      type: "Expand",
+      requiredObjectives: [EObjectives.UpgradeMainBase5],
+      requiredMainBase: 5n,
+      level: 4n,
       description:
         "Expansion gives you more room to build and unlocks new ores. To Expand, Select your main base and click on Expand base.",
     },
@@ -475,6 +513,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Fleet",
       type: "Build",
       requiredMainBase: 3n,
+      requiredObjectives: [EObjectives.UpgradeStorageUnit2],
       buildingType: EntityType.StarmapperStation,
       description: "A starmapper station increases the number of fleets you can create.",
     },
@@ -764,10 +803,23 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Resource Production",
       type: "Build",
-      requiredMainBase: 5n,
+      requiredMainBase: 4n,
       buildingType: EntityType.SolarPanel,
       description:
         "Solar panels provide electricity, which is used for advanced buildings. To build, select the solar panel from the building menu and place it on any empty tile.",
+    },
+  ],
+  [
+    EObjectives.UpgradeSolarPanel2,
+    {
+      category: "Fundamentals",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildSolarPanel],
+      requiredMainBase: 4n,
+      buildingType: EntityType.SolarPanel,
+      level: 2n,
+      description:
+        "Solar panels provide electricity, which is used for advanced buildings. To upgrade, select the solar panel and select Upgrade.",
     },
   ],
 

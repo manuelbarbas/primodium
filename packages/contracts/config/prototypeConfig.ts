@@ -2724,6 +2724,22 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       1: { P_RequiredBaseLevel: { value: 2n } },
     },
   },
+  UpgradeMainBase4: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 3n } },
+    },
+  },
+  UpgradeMainBase5: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 4n } },
+    },
+  },
 
   /*//////////////////////////////////////////////////////////////
                           Expand Base
@@ -2742,6 +2758,14 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: {
       1: { P_RequiredBaseLevel: { value: 3n } },
+    },
+  },
+  ExpandBase4: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 5n } },
     },
   },
 
@@ -3037,6 +3061,11 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_ResourceReward: getResourceValues({ Iron: 200, Copper: 200, Lithium: 200 }),
     },
   },
+  UpgradeStorageUnit3: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
+    },
+  },
   BuildIronPlateFactory: {
     tables: {
       P_ResourceReward: getResourceValues({ IronPlate: 10 }),
@@ -3060,9 +3089,17 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
 
   BuildSolarPanel: {
     tables: {
-      P_ResourceReward: getResourceValues({ Lithium: 100 }),
+      P_ResourceReward: getResourceValues({ Iron: 100, Copper: 100, Lithium: 100 }),
     },
     levels: { 1: { P_RequiredBaseLevel: { value: 4n } } },
+  },
+  UpgradeSolarPanel2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Iron: 100, Copper: 100, Lithium: 100 }),
+    },
+    levels: {
+      1: { P_RequiredBaseLevel: { value: 4n } },
+    },
   },
 
   /* ------------------------------ A-B-B Market ------------------------------ */
