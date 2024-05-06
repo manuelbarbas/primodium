@@ -1,17 +1,16 @@
 import { Button } from "@/components/core/Button";
+import { SecondaryCard } from "@/components/core/Card";
 import { Navigator } from "@/components/core/Navigator";
 import { RadioGroup } from "@/components/core/Radio";
 import { TextInput } from "@/components/core/TextInput";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { useState } from "react";
-import { FaPlus } from "react-icons/fa";
-// import { TextArea } from "@/components/core/TextArea";
-import { SecondaryCard } from "@/components/core/Card";
 import { useMud } from "@/hooks";
 import { createAlliance } from "@/network/setup/contractCalls/alliance";
 import { TransactionQueueType } from "@/util/constants";
 import { hashEntities } from "@/util/encode";
 import { isProfane } from "@/util/profanity";
+import { useState } from "react";
+import { FaPlus } from "react-icons/fa";
 
 export const ALLIANCE_TAG_SIZE = 6;
 
@@ -33,8 +32,6 @@ export const CreateScreen = () => {
           onChange={(e) => setAllianceTag(e.target.value)}
           className="w-48 uppercase h-8 text-sm"
         />
-        {/* <div className="mt-1">DESCRIPTION</div>
-        <TextArea placeholder="" className="min-h-20 text-sm" /> */}
         <span className="opacity-80">ACCESS</span>
         <RadioGroup
           name="create-alliance-restriction"

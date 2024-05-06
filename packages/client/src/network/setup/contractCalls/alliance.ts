@@ -25,13 +25,36 @@ export const createAlliance = async (mud: MUD, name: string, inviteOnly: boolean
     },
     {
       id: hashEntities(TransactionQueueType.CreateAlliance, mud.playerAccount.entity),
+    }
+  );
+};
+
+export const updateAllianceName = async (mud: MUD, allianceEntity: Entity, name: string) => {
+  await execute(
+    {
+      mud,
+      functionName: "Primodium__setAllianceName",
+      systemId: getSystemId("AllianceSystem"),
+      args: [allianceEntity as Hex, toHex32(name.substring(0, 6).toUpperCase())],
+      withSession: true,
     },
-    (receipt) => {
-      ampli.systemCreate({
-        allianceName: name,
-        allianceInviteOnly: inviteOnly,
-        ...parseReceipt(receipt),
-      });
+    {
+      id: hashEntities(TransactionQueueType.CreateAlliance, mud.playerAccount.entity),
+    }
+  );
+};
+
+export const updateAllianceAccess = async (mud: MUD, allianceEntity: Entity, inviteOnly: boolean) => {
+  await execute(
+    {
+      mud,
+      functionName: "Primodium__setAllianceInviteMode",
+      systemId: getSystemId("AllianceSystem"),
+      args: [allianceEntity as Hex, inviteOnly ? EAllianceInviteMode.Closed : EAllianceInviteMode.Open],
+      withSession: true,
+    },
+    {
+      id: hashEntities(TransactionQueueType.CreateAlliance, mud.playerAccount.entity),
     }
   );
 };

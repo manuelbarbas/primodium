@@ -1,33 +1,17 @@
-import { Button } from "@/components/core/Button";
-import { SecondaryCard } from "@/components/core/Card";
 import { Join } from "@/components/core/Join";
 import { Navigator } from "@/components/core/Navigator";
 import { Tabs } from "@/components/core/Tabs";
-import { Tooltip } from "@/components/core/Tooltip";
 import { AllianceJoinRequests } from "@/components/hud/modals/alliance-mgmt/manage/AllianceJoinRequests";
+import { AllianceSettings } from "@/components/hud/modals/alliance-mgmt/manage/AllianceSettings";
 import { Invite } from "@/components/hud/modals/alliance-mgmt/manage/Invite";
-import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { useMud } from "@/hooks";
+import { useAllianceName } from "@/hooks/useAllianceName";
 import { components } from "@/network/components";
-import { leaveAlliance } from "@/network/setup/contractCalls/alliance";
-import { MUD } from "@/network/types";
-import { getAllianceName } from "@/util/alliance";
-import { entityToAddress } from "@/util/common";
-import { TransactionQueueType } from "@/util/constants";
-import { hashEntities } from "@/util/encode";
 import { entityToPlayerName } from "@/util/name";
 import { Entity } from "@latticexyz/recs";
 import { EAllianceRole } from "contracts/config/enums";
-import {
-  FaAngleDoubleDown,
-  FaAngleDoubleUp,
-  FaCopy,
-  FaDoorOpen,
-  FaExclamationTriangle,
-  FaInfoCircle,
-} from "react-icons/fa";
+import { FaAngleDoubleDown, FaAngleDoubleUp, FaDoorOpen, FaInfoCircle } from "react-icons/fa";
 import { GiRank1, GiRank2, GiRank3 } from "react-icons/gi";
-import { toast } from "react-toastify";
 import { MemberItems } from "./MemberItems";
 
 export const ManageScreen: React.FC = () => {
@@ -36,10 +20,9 @@ export const ManageScreen: React.FC = () => {
   const playerEntity = mud.playerAccount.entity;
 
   /* ----------------------------- ALLIANCE/PLAYER ---------------------------- */
-  const alliance = components.PlayerAlliance.get(playerEntity);
+  const alliance = components.PlayerAlliance.use(playerEntity);
   const allianceEntity = alliance?.alliance as Entity;
-  const allianceName = getAllianceName(allianceEntity, true);
-  const inviteOnly = components.Alliance.get(allianceEntity)?.inviteMode;
+  const allianceName = useAllianceName(allianceEntity, true);
   const maxAllianceMembers = components.P_AllianceConfig.get()?.maxAllianceMembers ?? 1n;
   const playerRole = alliance?.role ?? EAllianceRole.Member;
   const players = components.PlayerAlliance.useAllWith({
@@ -92,34 +75,7 @@ export const ManageScreen: React.FC = () => {
           <Invite />
         </Tabs.Pane>
         <Tabs.Pane index={2} className="w-full h-full p-0" fragment>
-          <SecondaryCard className="flex flex-col items-center gap-4">
-            <div className="flex justify-center items-center gap-8">
-              FRIEND CODE:
-              <Tooltip tooltipContent="Click to copy" direction="top">
-                <Button
-                  variant="ghost"
-                  className="btn-xs flex gap-2"
-                  onClick={() => navigator.clipboard.writeText(entityToAddress(playerEntity))}
-                >
-                  {entityToAddress(playerEntity, true)}
-                  <FaCopy />
-                </Button>
-              </Tooltip>
-            </div>
-            <div className="relative flex justify-center w-full">
-              <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.LeaveAlliance, playerEntity)}>
-                <Button
-                  tooltip={inviteOnly ? "You will need to request to join again" : undefined}
-                  tooltipDirection="top"
-                  variant="error"
-                  onClick={() => (playerRole === EAllianceRole.Owner ? confirmLeaveAlliance(mud) : leaveAlliance(mud))}
-                  className="btn-sm"
-                >
-                  LEAVE
-                </Button>
-              </TransactionQueueMask>
-            </div>
-          </SecondaryCard>
+          <AllianceSettings allianceEntity={allianceEntity} playerEntity={playerEntity} />
         </Tabs.Pane>
       </Tabs>
 
@@ -175,48 +131,5 @@ const IconHints = ({ playerRole }: { playerRole: EAllianceRole }) => {
         </div>
       </div>
     </div>
-  );
-};
-
-const confirmLeaveAlliance = async (mud: MUD) => {
-  toast(
-    ({ closeToast }) => (
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col text-center justify-center items-center gap-2 w-full">
-          <FaExclamationTriangle size={24} className="text-warning" />
-          Are you sure you want to leave the alliance? Leadership will be transferred to the next highest ranking
-          member.
-        </div>
-
-        <div className="flex justify-center w-full gap-2">
-          <button
-            className="btn btn-secondary btn-xs"
-            onClick={() => {
-              leaveAlliance(mud);
-              closeToast && closeToast();
-            }}
-          >
-            Confirm
-          </button>
-          <button
-            onClick={() => {
-              closeToast && closeToast();
-            }}
-            className="btn btn-primary btn-xs"
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
-    ),
-    {
-      // className: "border-error",
-      position: "top-center",
-      autoClose: false,
-      closeOnClick: false,
-      draggable: false,
-      closeButton: false,
-      hideProgressBar: true,
-    }
   );
 };

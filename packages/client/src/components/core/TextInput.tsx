@@ -10,6 +10,7 @@ export const TextInput: React.FC<{
   placeholder?: string;
   className?: string;
   maxLength?: number;
+  value?: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   requirePattern?: string;
 }> = ({
@@ -20,6 +21,7 @@ export const TextInput: React.FC<{
   bottomRightLabel,
   className,
   maxLength,
+  value,
   onChange,
   requirePattern,
 }) => {
@@ -69,6 +71,7 @@ export const TextInput: React.FC<{
         ref={inputRef}
         type="text"
         tabIndex={-1}
+        value={value}
         onChange={onChange}
         maxLength={maxLength}
         onFocus={() => {
