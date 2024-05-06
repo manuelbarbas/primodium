@@ -1,6 +1,7 @@
 import { components } from "@/network/components";
+import { execute } from "@/network/txExecute/txExecute";
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
-import { execute, executeBatch } from "src/network/txExecute";
+import { executeBatch } from "src/network/txExecute/txExecuteBatch";
 import { MUD } from "src/network/types";
 import { getSystemId } from "src/util/encode";
 import { Hex } from "viem";

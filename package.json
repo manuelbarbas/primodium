@@ -30,7 +30,7 @@
     "package.json": "pnpm sort-package-json"
   },
   "devDependencies": {
-    "@latticexyz/cli": "2.0.6",
+    "@latticexyz/cli": "2.0.9",
     "@primodiumxyz/pg-indexer-reader": "^0.5.1",
     "@typescript-eslint/eslint-plugin": "5.46.1",
     "@typescript-eslint/parser": "5.46.1",

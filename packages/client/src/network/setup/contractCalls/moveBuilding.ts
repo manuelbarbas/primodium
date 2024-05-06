@@ -2,7 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { ampli } from "src/ampli";
 import { components } from "src/network/components";
-import { execute } from "src/network/txExecute";
+import { execute } from "src/network/txExecute/txExecute";
 import { MUD } from "src/network/types";
 import { getBuildingTopLeft } from "src/util/building";
 import { getEntityTypeName } from "src/util/common";
