@@ -1,6 +1,6 @@
-import { Hex } from "viem";
-import { EntityType } from "src/util/constants";
 import type { Sync } from "@primodiumxyz/sync-stack";
+import { EntityType } from "src/util/constants";
+import { Hex } from "viem";
 
 export const getInitalQuery = ({
   tables,
@@ -27,7 +27,7 @@ export const getInitalQuery = ({
         { tableId: tables.FunctionSignatures.tableId },
         { tableId: tables.Dimensions.tableId },
         { tableId: tables.GracePeriod.tableId },
-        { tableId: tables.Score.tableId },
+        { tableId: tables.Points.tableId },
         { tableId: tables.Alliance.tableId },
         { tableId: tables.PlayerAlliance.tableId },
         { tableId: tables.Reserves.tableId },

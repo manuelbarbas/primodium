@@ -14,12 +14,14 @@ export const WarshipPopulation = () => {
   const TooltipContent: React.FC = () => {
     return (
       <div className="flex flex-col w-96 gap-1">
-        <p>Warship Casualties: {formatNumber(unitDeaths)}</p>
+        <p>
+          Warship Casualties: {formatNumber(unitDeaths)} / {formatNumber(unitDeathLimit)}
+        </p>
         <HealthBar health={Number(unitDeaths)} maxHealth={Number(unitDeathLimit)} hideValue />
         <p className="opacity-70 pt-2 text-center text-wrap">
           {gameOver
             ? "The connect to the belt has closed. Game Over."
-            : `Once warship casualties reach ${formatNumber(unitDeathLimit, {
+            : `Once warship casualties of all players reach ${formatNumber(unitDeathLimit, {
                 short: true,
               })}, Star Command will close the rift to the belt, ending the round.`}
         </p>

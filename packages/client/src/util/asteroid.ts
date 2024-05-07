@@ -16,6 +16,14 @@ import { getOrbitingFleets } from "./unit";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function getAsteroidImage(primodium: Primodium, asteroid?: Entity) {
   if (!asteroid) return InterfaceIcons.NotAllowed;
+  const isShard = comps.ShardAsteroid.has(asteroid);
+  if (isShard) {
+    return InterfaceIcons.Shard;
+  }
+
+  const level = comps.Level.get(asteroid)?.value;
+  level;
+
   const { getSpriteBase64 } = primodium.api().sprite;
   return getSpriteBase64(Sprites.Asteroid1);
 }

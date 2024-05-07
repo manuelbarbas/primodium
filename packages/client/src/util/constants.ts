@@ -2,7 +2,7 @@ import { resourceToHex } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { DECIMALS } from "contracts/config/constants";
-import { EBuilding, EObjectives, EResource, EScoreType, EUnit } from "contracts/config/enums";
+import { EBuilding, EObjectives, EPointType, EResource, EUnit } from "contracts/config/enums";
 import { encodeEntity } from "src/util/encode";
 import { parseEther } from "viem";
 import { reverseRecord } from "./common";
@@ -272,12 +272,12 @@ export const EntityType = {
   TridentMarineUpgrade5: toHex32("TridentMarineUpgrade") as Entity,
 
   // Leaderboards
-  PlayerPrimodiumLeaderboard: toHex32("Player_Primodium") as Entity,
+  PlayerShardLeaderboard: toHex32("Player_Primodium") as Entity,
   PlayerWormholeLeaderboard: toHex32("Player_Wormhole") as Entity,
   PlayerGrandLeaderboard: toHex32("Player_Grand") as Entity,
 
   // Leaderboards
-  AlliancePrimodiumLeaderboard: toHex32("Alliance_Primodium") as Entity,
+  AllianceShardLeaderboard: toHex32("Alliance_Primodium") as Entity,
   AllianceWormholeLeaderboard: toHex32("Alliance_Wormhole") as Entity,
   AllianceGrandLeaderboard: toHex32("Alliance_Grand") as Entity,
 
@@ -413,11 +413,11 @@ export const ObjectiveEntityLookup = reverseRecord(ObjectiveEnumLookup);
 
 export const LeaderboardEntityLookup = {
   player: {
-    [EScoreType.Primodium]: EntityType.PlayerPrimodiumLeaderboard,
-    [EScoreType.Wormhole]: EntityType.PlayerWormholeLeaderboard,
+    [EPointType.Shard]: EntityType.PlayerShardLeaderboard,
+    [EPointType.Wormhole]: EntityType.PlayerWormholeLeaderboard,
   },
   alliance: {
-    [EScoreType.Primodium]: EntityType.AlliancePrimodiumLeaderboard,
-    [EScoreType.Wormhole]: EntityType.AllianceWormholeLeaderboard,
+    [EPointType.Shard]: EntityType.AllianceShardLeaderboard,
+    [EPointType.Wormhole]: EntityType.AllianceWormholeLeaderboard,
   },
 };

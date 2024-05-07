@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 
 // tables
-import { P_AllianceConfig, AllianceScoreContribution, Score, AllianceJoinRequest, PlayerAlliance, Alliance, AllianceData, AllianceInvitation } from "codegen/index.sol";
+import { P_AllianceConfig, AlliancePointContribution, Points, AllianceJoinRequest, PlayerAlliance, Alliance, AllianceData, AllianceInvitation } from "codegen/index.sol";
 
 // libraries
 import { LibEncode } from "libraries/LibEncode.sol";
@@ -10,7 +10,7 @@ import { AllianceMemberSet } from "libraries/AllianceMemberSet.sol";
 
 // types
 import { AllianceKey } from "src/Keys.sol";
-import { EAllianceRole, EAllianceInviteMode, EScoreType } from "src/Types.sol";
+import { EAllianceRole, EAllianceInviteMode, EPointType } from "src/Types.sol";
 
 library LibAlliance {
   /**
@@ -175,8 +175,8 @@ library LibAlliance {
     PlayerAlliance.set(playerEntity, allianceEntity, uint8(EAllianceRole.Owner));
     Alliance.set(allianceEntity, AllianceData(name, uint8(allianceInviteMode)));
     AllianceMemberSet.add(allianceEntity, playerEntity);
-    for (uint8 i = 1; i < uint8(EScoreType.LENGTH); i++) {
-      Score.set(allianceEntity, i, 0);
+    for (uint8 i = 1; i < uint8(EPointType.LENGTH); i++) {
+      Points.set(allianceEntity, i, 0);
     }
   }
 
@@ -223,13 +223,13 @@ library LibAlliance {
     AllianceInvitation.deleteRecord(inviteeEntity, allianceEntity);
   }
 
-  function removePlayerScoreContributions(bytes32 playerEntity, bytes32 allianceEntity) private {
-    for (uint8 i = 1; i < uint8(EScoreType.LENGTH); i++) {
-      uint256 playerContribution = AllianceScoreContribution.get(allianceEntity, i, playerEntity);
-      uint256 allianceScore = Score.get(allianceEntity, i);
+  function removePlayerPointsContributions(bytes32 playerEntity, bytes32 allianceEntity) private {
+    for (uint8 i = 1; i < uint8(EPointType.LENGTH); i++) {
+      uint256 playerContribution = AlliancePointContribution.get(allianceEntity, i, playerEntity);
+      uint256 alliancePoint = Points.get(allianceEntity, i);
       if (playerContribution > 0) {
-        AllianceScoreContribution.deleteRecord(allianceEntity, i, playerEntity);
-        Score.set(allianceEntity, i, allianceScore - playerContribution);
+        AlliancePointContribution.deleteRecord(allianceEntity, i, playerEntity);
+        Points.set(allianceEntity, i, alliancePoint - playerContribution);
       }
     }
   }
@@ -259,7 +259,7 @@ library LibAlliance {
     }
     PlayerAlliance.deleteRecord(playerEntity);
 
-    removePlayerScoreContributions(playerEntity, allianceEntity);
+    removePlayerPointsContributions(playerEntity, allianceEntity);
   }
 
   /**
@@ -270,7 +270,7 @@ library LibAlliance {
   function kick(bytes32 playerEntity, bytes32 targetEntity) internal onlyCanKick(playerEntity, targetEntity) {
     bytes32 allianceEntity = PlayerAlliance.getAlliance(playerEntity);
     PlayerAlliance.deleteRecord(targetEntity);
-    removePlayerScoreContributions(targetEntity, allianceEntity);
+    removePlayerPointsContributions(targetEntity, allianceEntity);
     AllianceMemberSet.remove(allianceEntity, targetEntity);
   }
 

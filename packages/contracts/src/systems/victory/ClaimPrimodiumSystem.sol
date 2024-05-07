@@ -3,8 +3,8 @@ pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { OwnedBy, Asteroid, LastConquered, P_ConquestConfig, P_GameConfig, ShardAsteroid } from "codegen/index.sol";
-import { EScoreType } from "src/Types.sol";
-import { LibScore } from "libraries/LibScore.sol";
+import { EPointType } from "src/Types.sol";
+import { LibPoints } from "libraries/LibPoints.sol";
 import { LibShardAsteroid } from "libraries/LibShardAsteroid.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -23,7 +23,7 @@ contract ClaimPrimodiumSystem is PrimodiumSystem {
 
     require(canConquer, "[Claim Primodium] Asteroid hasn't been held long enough to claim Primodium");
 
-    LibScore.addScore(playerEntity, EScoreType.Primodium, primodium);
+    LibPoints.addPoints(playerEntity, EPointType.Shard, primodium);
 
     LastConquered.set(asteroidEntity, block.timestamp);
   }
@@ -42,9 +42,9 @@ contract ClaimPrimodiumSystem is PrimodiumSystem {
 
     if (endTime > lastConquered) {
       uint256 holdPct = ((endTime - lastConquered) * 100000) / lifespan;
-      LibScore.addScore(
+      LibPoints.addPoints(
         ownerEntity,
-        EScoreType.Primodium,
+        EPointType.Shard,
         (holdPct * P_ConquestConfig.getShardAsteroidPoints()) / 100000
       );
     }

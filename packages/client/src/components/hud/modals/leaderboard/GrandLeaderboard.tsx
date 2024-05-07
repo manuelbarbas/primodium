@@ -1,4 +1,10 @@
+import { Button } from "@/components/core/Button";
+import { CrownRank } from "@/components/hud/modals/leaderboard/RankCrown";
+import { getAllianceName } from "@/util/alliance";
+import { getFinalLeaderboardData } from "@/util/leaderboard/getFinalLeaderboardData";
 import { Entity } from "@latticexyz/recs";
+import { useEffect, useState } from "react";
+import { FaSync } from "react-icons/fa";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
 import { SecondaryCard } from "src/components/core/Card";
@@ -7,57 +13,58 @@ import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { formatNumber } from "src/util/number";
 import { rankToScore } from "src/util/score";
-import { Crown } from "@/components/shared/Crown";
 
-export const GrandLeaderboard = ({ leaderboard, alliance = false }: { leaderboard: Entity; alliance?: boolean }) => {
+export const GrandLeaderboard = ({ alliance = false }: { alliance?: boolean }) => {
   const { playerAccount } = useMud();
-  const data = components.GrandLeaderboard.use(leaderboard);
+  const [data, setData] = useState(getFinalLeaderboardData(playerAccount.entity, alliance));
+  const [showRefresh, setShowRefresh] = useState(false);
 
-  if (!playerAccount.address) return null;
-  if (!data)
-    return (
-      <SecondaryCard className="w-full h-full flex justify-center items-center uppercase font-bold text-sm">
-        No Data Found
-      </SecondaryCard>
-    );
+  const refresh = () => setData(getFinalLeaderboardData(playerAccount.entity, alliance));
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShowRefresh(true);
+    }, 1000);
+    return () => clearInterval(interval);
+  });
+
   const entity = alliance
     ? (components.PlayerAlliance.get(playerAccount.entity)?.alliance as Entity)
     : playerAccount.entity;
 
-  const playerIndex = data.players.indexOf(entity);
-  const playerScore = playerIndex == -1 ? 0 : data.scores[playerIndex];
-  const playerWormholeRank = playerIndex == -1 ? 0 : data.wormholeRanks[playerIndex];
-  const playerPrimodiumRank = playerIndex == -1 ? 0 : data.primodiumRanks[playerIndex];
-
+  if (!data || !data.allPlayers.length)
+    return (
+      <div className="w-full h-full flex justify-center items-center uppercase font-bold text-sm">No Data Found</div>
+    );
   return (
-    <SecondaryCard className="flex flex-col w-full h-full text-xs pointer-events-auto">
-      <div className={`grid grid-cols-8 w-full p-2 font-bold uppercase`}>
+    <div className="flex flex-col w-full h-full text-xs pointer-events-auto">
+      {showRefresh && (
+        <Button variant="neutral" onClick={refresh} className="absolute top-2 right-2 animate-in fade-in">
+          <FaSync />
+          Refresh
+        </Button>
+      )}
+      <div className={`grid grid-cols-7 w-full p-2 font-bold uppercase`}>
         <div>Rank</div>
-        <div className="col-span-4">Name</div>
-        <div>Wormhole</div>
-        <div>Shard</div>
-        <div>Points</div>
+        <div className="col-span-3">Name</div>
+        <div className="opacity-80">Wormhole</div>
+        <div className="opacity-80">Shard</div>
+        <div className="text-warning">Final Score</div>
       </div>
 
       <div className="flex flex-col w-full h-full justify-between text-xs pointer-events-auto">
         <AutoSizer>
           {({ height, width }: { height: number; width: number }) => (
-            <List height={height} width={width} itemCount={data.players.length} itemSize={60} className="scrollbar">
+            <List height={height} width={width} itemCount={data.allPlayers.length} itemSize={52} className="scrollbar">
               {({ index, style }) => {
-                const player = data.players[index];
-                const score = data.scores[index];
-                const wormholeRank = data.wormholeRanks[index];
-                const primodiumRank = data.primodiumRanks[index];
+                const player = data.allPlayers[index];
                 return (
                   <div style={style} className="pr-2">
                     <GrandLeaderboardItem
                       key={index}
-                      player={player}
-                      index={index}
-                      score={score}
+                      {...player}
+                      special={player.player === entity}
                       alliance={alliance}
-                      wormholeRank={wormholeRank}
-                      primodiumRank={primodiumRank}
                     />
                   </div>
                 );
@@ -66,86 +73,81 @@ export const GrandLeaderboard = ({ leaderboard, alliance = false }: { leaderboar
           )}
         </AutoSizer>
       </div>
-      {entity && (
-        <div className="w-full self-end">
+      {data.player && (
+        <div className="w-full self-end pr-4">
           <hr className="w-full border-t border-cyan-800 my-2" />
-          <GrandLeaderboardItem
-            player={entity}
-            index={playerIndex}
-            score={playerScore ?? 0}
-            alliance={alliance}
-            wormholeRank={playerWormholeRank}
-            primodiumRank={playerPrimodiumRank}
-          />
+          <GrandLeaderboardItem {...data.player} special alliance={alliance} />
         </div>
       )}
-    </SecondaryCard>
+    </div>
   );
 };
 
-const rankSuffix = (rank: number) => (rank == 1 ? "st" : rank == 2 ? "nd" : rank == 3 ? "rd" : "th");
+const RankSuffix = ({ rank }: { rank: number }) => {
+  const modTen = rank % 10;
+  return modTen == 1 ? "st" : modTen == 2 ? "nd" : modTen == 3 ? "rd" : "th";
+};
 
 export const GrandLeaderboardItem = ({
   player,
-  index,
-  score,
-  wormholeRank,
-  primodiumRank,
+  rank,
+  finalScore,
+  wormholeRank = 0,
+  shardRank = 0,
   alliance = false,
   className = "",
   hideRanks = false,
+  special = false,
 }: {
   player: Entity;
-  index: number;
-  score: number;
-  wormholeRank: number;
-  primodiumRank: number;
+  rank: number;
+  finalScore: number;
+  wormholeRank?: number;
+  shardRank?: number;
   alliance?: boolean;
   className?: string;
   hideRanks?: boolean;
+  special?: boolean;
 }) => {
   const {
     playerAccount: { entity: playerEntity },
   } = useMud();
   const entity = alliance ? (components.PlayerAlliance.get(playerEntity)?.alliance as Entity) : playerEntity;
 
-  const rank = index + 1;
-  let rankString: string;
-  if (rank == 0) {
-    rankString = "";
-  } else {
-    rankString = `${rank}${rankSuffix(rank)}`;
-  }
-
   return (
     <SecondaryCard
-      className={`grid grid-cols-8 gap-1 w-full border border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center h-14 ${
-        player === entity ? "border-success" : ""
+      className={`grid grid-cols-7 gap-1 w-full h-12 items-center ${
+        special ? "border-success bg-success/20" : ""
       } ${className}`}
     >
-      <div className={`grid grid-cols-2 gap-2 items-center`}>
-        <div>{rankString}</div>
-        <Crown rank={rank} />
+      <div className={`grid grid-cols-2 gap-1 items-center`}>
+        <p>
+          {rank}
+          <RankSuffix rank={rank} />
+        </p>
+        <CrownRank rank={rank} />
       </div>
-      <div className="col-span-4 flex gap-1 justify-between items-center">
+      <div className="col-span-3 flex gap-1 justify-between items-center">
         <div className="flex items-center gap-1">
-          {<AccountDisplay player={player} />}
+          {alliance ? `[${getAllianceName(player, true)}]` : <AccountDisplay noColor={!special} player={player} />}
           {player === entity && <p className="text-accent">(You)</p>}
         </div>
       </div>
       {!hideRanks && (
         <>
           <div className="font-bold w-fit px-2 flex gap-1">
-            {formatNumber(rankToScore(wormholeRank), { fractionDigits: 1 })}
-            <Crown rank={rank} shouldOffset={true} />
+            <p className="opacity-80">{formatNumber(rankToScore(wormholeRank), { fractionDigits: 1 })}</p>
+            <CrownRank rank={wormholeRank} offset />
           </div>
           <div className="font-bold w-fit px-2 flex gap-1">
-            {formatNumber(rankToScore(primodiumRank), { fractionDigits: 1 })}
-            <Crown rank={rank} shouldOffset={true} />
+            <p className="opacity-80">{formatNumber(rankToScore(shardRank), { fractionDigits: 1 })}</p>
+            <CrownRank rank={shardRank} offset />
           </div>
         </>
       )}
-      <p className="font-bold w-fit px-2 flex justify-end">{formatNumber(score, { fractionDigits: 1 })}</p>
+      <p className="font-bold w-full px-2 flex text-warning text-right justify-end">
+        {formatNumber(finalScore, { fractionDigits: 1 })}
+      </p>
     </SecondaryCard>
   );
 };

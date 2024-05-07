@@ -43,7 +43,7 @@ contract PrimodiumSystem is System {
   }
 
   /**
-   * @dev Claims score for the given asteroid entity before proceeding.
+   * @dev Claims points for the given asteroid entity before proceeding.
    * @param asteroidEntity The unique identifier for the asteroid.
    */
 
