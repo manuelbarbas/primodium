@@ -29,7 +29,7 @@ export const Game = () => {
   const init = async () => {
     try {
       await destroy();
-      const pri = await initPrimodium(mud, params.get("version") ? params.get("version")! : "🔥");
+      const pri = await initPrimodium(params.get("version") ? params.get("version")! : "🔥");
       setPrimodium(pri);
     } catch (e) {
       console.log(e);

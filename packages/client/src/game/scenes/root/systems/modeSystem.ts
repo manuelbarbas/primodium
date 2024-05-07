@@ -1,16 +1,14 @@
 import { createCameraApi } from "@/game/api/camera";
-import { createSceneApi } from "@/game/api/scene";
+import { GameApi } from "@/game/api/game";
 import { ModeToSceneKey } from "@/game/lib/mappings";
 import { Mode } from "@/util/constants";
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { Game } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 
-export const modeSystem = (game: Game) => {
+export const modeSystem = (game: GameApi) => {
   const systemsWorld = namespaceWorld(world, "systems");
-  const sceneApi = createSceneApi(game);
 
   defineComponentSystem(systemsWorld, components.SelectedMode, ({ value }) => {
     const mode = value[0]?.value;
@@ -22,7 +20,7 @@ export const modeSystem = (game: Game) => {
     const sceneKey = ModeToSceneKey[mode];
     const pos = sceneKey === "ASTEROID" ? { x: 18, y: 13 } : components.Position.get(activeRock) ?? { x: 0, y: 0 };
 
-    const targetScene = sceneApi.getScene(sceneKey);
+    const targetScene = game.getScene(sceneKey);
 
     if (targetScene) {
       const cameraApi = createCameraApi(targetScene);
@@ -32,7 +30,7 @@ export const modeSystem = (game: Game) => {
       });
     }
 
-    sceneApi.transitionToScene(
+    game.transitionToScene(
       ModeToSceneKey[prevMode ?? Mode.Asteroid],
       sceneKey,
       0,

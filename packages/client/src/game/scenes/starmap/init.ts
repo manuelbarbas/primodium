@@ -1,8 +1,8 @@
 // STAR MAP ENTRY POINT
 import { starmapSceneConfig } from "../../lib/config/starmapScene";
 
+import { api } from "@/game/api";
 import { Game } from "engine/types";
-import { createAudioApi } from "src/game/api/audio";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { setupKeybinds } from "../asteroid/setup/setupKeybinds";
@@ -10,8 +10,8 @@ import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMoveme
 
 export const initStarmapScene = async (game: Game) => {
   const scene = await game.sceneManager.createScene(starmapSceneConfig, false);
-  const audio = createAudioApi(scene);
-  audio.initializeAudioVolume();
+
+  const sceneApi = api(scene);
 
   setupBasicCameraMovement(scene, {
     translateKeybind: false,
@@ -38,4 +38,6 @@ export const initStarmapScene = async (game: Game) => {
   world.registerDisposer(() => {
     clickSub.unsubscribe();
   }, "game");
+
+  return { scene, api: sceneApi };
 };

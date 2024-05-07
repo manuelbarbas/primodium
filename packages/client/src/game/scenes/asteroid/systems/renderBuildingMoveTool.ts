@@ -10,6 +10,7 @@ import {
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
+import { DepthLayers } from "src/game/lib/constants/common";
 import { components } from "src/network/components";
 import { moveBuilding } from "src/network/setup/contractCalls/moveBuilding";
 import { MUD } from "src/network/types";
@@ -17,7 +18,6 @@ import { world } from "src/network/world";
 import { getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
 import { Action } from "src/util/constants";
 import { Building } from "../../../lib/objects/Building";
-import { DepthLayers } from "src/game/lib/constants/common";
 
 export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scene) => {
   if (pointer?.rightButtonDown()) {

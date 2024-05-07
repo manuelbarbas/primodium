@@ -1,4 +1,7 @@
-import { Game } from "engine/types";
+import { SceneKeys } from "@/game/lib/constants/common";
+import { Game, Scene } from "engine/types";
+
+export type GameApi = ReturnType<typeof createGameApi>;
 
 export function createGameApi(game: Game) {
   function setResolution(width: number, height: number) {
@@ -41,9 +44,27 @@ export function createGameApi(game: Game) {
     return game.phaserGame.config;
   }
 
+  function getScene(scene: SceneKeys) {
+    return game.sceneManager.scenes.get(scene);
+  }
+
+  async function transitionToScene(
+    origin: SceneKeys,
+    target: SceneKeys,
+    duration = 0,
+    onTransitionStart?: (originScene: Scene, targetScene: Scene) => undefined,
+    onTransitionEnd?: (originScene: Scene, targetScene: Scene) => undefined
+  ) {
+    if (origin === target) return;
+
+    await game.sceneManager.transitionToScene(origin, target, duration, onTransitionStart, onTransitionEnd);
+  }
+
   return {
     setResolution,
     setTarget,
     getConfig,
+    transitionToScene,
+    getScene,
   };
 }
