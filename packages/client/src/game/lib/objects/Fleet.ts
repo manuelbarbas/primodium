@@ -43,8 +43,7 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
         quantity: 1,
         blendMode: "ADD",
       })
-      .setAlpha(0.27)
-      .start();
+      .setAlpha(0.27);
   }
 
   spawn() {

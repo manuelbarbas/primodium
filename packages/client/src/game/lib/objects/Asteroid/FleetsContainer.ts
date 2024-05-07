@@ -43,18 +43,20 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
           const radiusY = HEIGHT / 2; // Radius for the y coordinate
           fleet.x = this.x + radiusX * Math.cos(angle);
           fleet.y = this.y + radiusY * Math.sin(angle);
-          fleet.particles.setActive(true).setVisible(true).resume();
           fleet.setRotationFrame(Phaser.Math.RadToDeg(angle));
           fleet.angle = Phaser.Math.RadToDeg(angle) - fleet.getRotationFrameOffset();
-          fleet.particles.angle = Phaser.Math.RadToDeg(angle);
-          fleet.particles.setPosition(fleet.getPixelCoord().x, fleet.getPixelCoord().y);
-          const dx = coord.x - fleet.getPixelCoord().x;
-          const dy = coord.y - fleet.getPixelCoord().y;
-          const magnitude = Math.sqrt(dx * dx + dy * dy);
-          const ux = dx / magnitude;
-          const uy = dy / magnitude;
-          const gravityStrength = 10; // Adjust this value to change the strength of the gravity
-          fleet.particles.setParticleGravity(-ux * gravityStrength, uy * gravityStrength);
+          //TODO: TRAIL PARTICLES
+          // fleet.particles.setActive(true).setVisible(true).resume();
+
+          // fleet.particles.angle = Phaser.Math.RadToDeg(angle);
+          // fleet.particles.setPosition(fleet.getPixelCoord().x, fleet.getPixelCoord().y);
+          // const dx = coord.x - fleet.getPixelCoord().x;
+          // const dy = coord.y - fleet.getPixelCoord().y;
+          // const magnitude = Math.sqrt(dx * dx + dy * dy);
+          // const ux = dx / magnitude;
+          // const uy = dy / magnitude;
+          // const gravityStrength = 10; // Adjust this value to change the strength of the gravity
+          // fleet.particles.setParticleGravity(-ux * gravityStrength, uy * gravityStrength);
         });
       },
     });

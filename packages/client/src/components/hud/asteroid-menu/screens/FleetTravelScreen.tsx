@@ -163,7 +163,7 @@ export const FleetTravelScreen: React.FC<{ selectedRock: Entity }> = ({ selected
           <div className="text-xs opacity-50 flex gap-2 items-center">
             <FaInfoCircle /> HOVER TO SEE DETAILS
           </div>
-          <div className="flex flex-col gap-1 h-48 overflow-y-auto hide-scrollbar">
+          <div className="flex flex-col gap-1 h-48 w-96 overflow-y-auto hide-scrollbar">
             {orbitingFleets.map((fleet) => (
               <Fleet key={fleet} fleetEntity={fleet} playerEntity={playerEntity} selectedRock={selectedRock} />
             ))}
@@ -172,8 +172,8 @@ export const FleetTravelScreen: React.FC<{ selectedRock: Entity }> = ({ selected
       )}
 
       {orbitingFleets.length === 0 && (
-        <SecondaryCard>
-          <p className="text-center px-10 py-16">No fleets available to travel</p>
+        <SecondaryCard className="flex-col items-center justify-center h-48 w-96">
+          <p className="text-xs">No fleets available to travel</p>
         </SecondaryCard>
       )}
       <Navigator.BackButton />
