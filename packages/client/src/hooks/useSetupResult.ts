@@ -118,6 +118,7 @@ const useSetupResult = () => {
     components: network?.components,
     sessionAccount,
     playerAccount,
+    requestDrip,
     updateSessionAccount,
     removeSessionAccount,
     updatePlayerAccount: memoizedUpdatePlayerAccount,
