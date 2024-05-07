@@ -24,7 +24,6 @@ export const Enter: React.FC = () => {
 
   const [state, setState] = useState<"loading" | "delegate" | "play">("loading");
   const confirmSkip = async () => {
-    console.log("state", state);
     toast.dismiss();
     if (showingToast) await new Promise((resolve) => setTimeout(resolve, 500));
     setShowingToast(true);
