@@ -2831,18 +2831,18 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   },
   UpgradeGarage: {
     tables: {
-      P_ResourceReward: getResourceValues({ Iron: 100, Copper: 100, Lithium: 100 }),
+      P_ResourceReward: getResourceValues({ Iron: 50, Copper: 50, Lithium: 50 }),
       P_UnitReward: getUnitValues({ LightningCraft: 5 }),
     },
   },
   BuildWorkshop: {
     tables: {
-      P_ResourceReward: getResourceValues({ Iron: 100, Copper: 100, Lithium: 100 }),
+      P_ResourceReward: getResourceValues({ Iron: 150, Copper: 100, Lithium: 150 }),
     },
   },
   UpgradeWorkshop: {
     tables: {
-      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 150 }),
+      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 150, Lithium: 250 }),
     },
   },
 
@@ -2889,12 +2889,13 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   /* -------------------------- A-A-A-B Conquest (continued) ------------------------- */
   BuildShipyard: {
     tables: {
-      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
+      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
+      P_UnitReward: getUnitValues({ LightningCraft: 10 }),
     },
   },
   TrainColonyShip: {
     tables: {
-      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
     },
   },
   DecryptAttack: {
