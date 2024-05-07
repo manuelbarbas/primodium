@@ -1,3 +1,4 @@
+import { findEntriesWithPrefix } from "@/util/localStorage";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect, useState } from "react";
 import { FaClipboard, FaExclamationCircle, FaEye, FaEyeSlash, FaInfoCircle, FaTimes, FaUnlink } from "react-icons/fa";
@@ -39,7 +40,9 @@ export function Authorize() {
   };
 
   const handleRandomPress = () => {
-    const privateKey = generatePrivateKey();
+    const storedKeys = findEntriesWithPrefix();
+    const privateKey = storedKeys.length > 0 ? storedKeys[0].privateKey : generatePrivateKey();
+
     const account = privateKeyToAccount(privateKey as Hex);
     localStorage.setItem(STORAGE_PREFIX + account.address, privateKey);
 

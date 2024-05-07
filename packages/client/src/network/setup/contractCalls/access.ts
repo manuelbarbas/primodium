@@ -5,41 +5,72 @@ import { signCall } from "@/network/txExecute/signCall";
 import { WorldAbi } from "@/network/world";
 import { Has, runQuery } from "@latticexyz/recs";
 import { decodeEntity, singletonEntity } from "@latticexyz/store-sync/recs";
+import { toast } from "react-toastify";
 import { components } from "src/network/components";
 import { execute } from "src/network/txExecute/txExecute";
 import { executeBatch } from "src/network/txExecute/txExecuteBatch";
 import { MUD } from "src/network/types";
-import { TransactionQueueType, UNLIMITED_DELEGATION } from "src/util/constants";
+import { minEth, TransactionQueueType, UNLIMITED_DELEGATION } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
 import { Address, encodeFunctionData, Hex } from "viem";
 
 export const grantAccessWithSignature = async (
   mud: MUD,
-  privateKey: Hex,
+  privateKey?: Hex,
   txQueueOptions?: TxQueueOptions<TransactionQueueType.Access>
 ) => {
-  const tempSessionAccount = await createBurnerAccount(privateKey, false);
-  const delegateCallData = encodeFunctionData({
-    abi: WorldAbi,
-    functionName: "registerDelegation",
-    args: [tempSessionAccount.address, UNLIMITED_DELEGATION, "0x"],
-  });
+  const dripBeforeCall = async () => {
+    const tempSessionAccount = await createBurnerAccount(privateKey, false);
+    // Initial request for ETH
+    mud.requestDrip(tempSessionAccount.address);
 
-  const signature = await signCall({
-    userAccountClient: mud.playerAccount.walletClient,
-    worldAddress: mud.playerAccount.worldContract.address,
-    systemId: getSystemId("Registration", "CORE"),
-    callData: delegateCallData,
-  });
+    // Poll the address balance to check if it has ETH
+    const hasEth = async () => {
+      const balance = await tempSessionAccount.publicClient.getBalance({ address: tempSessionAccount.address });
+      return balance > minEth;
+    };
 
-  const tx = tempSessionAccount.worldContract.write.callWithSignature([
-    mud.playerAccount.address,
-    getSystemId("Registration", "CORE"),
-    delegateCallData,
-    signature,
-  ]);
+    // Helper function to wait for a condition within a timeout
+    const waitForEth = async (timeoutMs: number) => {
+      const start = Date.now();
+      while (Date.now() - start < timeoutMs) {
+        if (await hasEth()) {
+          return true;
+        }
+        // Wait for a short period before polling again
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+      return false;
+    };
 
+    // Wait for ETH with a 10-second timeout
+    const success = await waitForEth(10000);
+    if (!success) {
+      toast.error("Timeout: ETH not received within 10 seconds. Please try again.");
+      throw new Error("Timeout: ETH not received within 10 seconds. Please try again.");
+    }
+    const delegateCallData = encodeFunctionData({
+      abi: WorldAbi,
+      functionName: "registerDelegation",
+      args: [tempSessionAccount.address, UNLIMITED_DELEGATION, "0x"],
+    });
+
+    const signature = await signCall({
+      userAccountClient: mud.playerAccount.walletClient,
+      worldAddress: mud.playerAccount.worldContract.address,
+      systemId: getSystemId("Registration", "CORE"),
+      callData: delegateCallData,
+    });
+
+    return await tempSessionAccount.worldContract.write.callWithSignature([
+      mud.playerAccount.address,
+      getSystemId("Registration", "CORE"),
+      delegateCallData,
+      signature,
+    ]);
+  };
   const run = async () => {
+    const tx = dripBeforeCall();
     await _execute(mud, tx);
   };
 
@@ -47,7 +78,7 @@ export const grantAccessWithSignature = async (
   else run();
 };
 
-export const grantAccess = async (mud: MUD, address: Address) => {
+export const grantAccess = async (mud: MUD, address: Hex) => {
   await execute(
     {
       mud,
@@ -62,7 +93,6 @@ export const grantAccess = async (mud: MUD, address: Address) => {
     }
   );
 };
-
 export const revokeAccess = async (mud: MUD, address: Address) => {
   await execute(
     {

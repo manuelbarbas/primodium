@@ -115,8 +115,7 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({
 
   const productionBuildings = useMemo(() => {
     let mines: Entity[] = [];
-    if (mapId === EMap.Primary)
-      mines = [EntityType.IronMine, EntityType.CopperMine, EntityType.LithiumMine, EntityType.KimberliteMine];
+    if (mapId === EMap.Primary) mines = [EntityType.IronMine, EntityType.CopperMine, EntityType.LithiumMine];
     else if (mapId === EMap.Kimberlite) mines = [EntityType.KimberliteMine];
     else if (mapId === EMap.Iridium) mines = [EntityType.IridiumMine];
     else if (mapId === EMap.Platinum) mines = [EntityType.PlatinumMine];
