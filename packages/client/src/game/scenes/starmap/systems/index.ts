@@ -1,17 +1,14 @@
 import { Scene } from "engine/types";
-import { MUD } from "src/network/types";
-import { renderAsteroid } from "./renderAsteroid";
-import { renderAttackLine } from "./renderAttackLine";
-import { renderBattle } from "./renderBattle";
-import { renderFleets } from "./renderFleets";
-import { renderMoveLine } from "./renderMoveLine";
-import { renderShardAsteroid } from "./renderShardAsteroid";
+import { renderAsteroid } from "@/game/scenes/starmap/systems/renderAsteroid";
+import { renderBattle } from "@/game/scenes/starmap/systems/renderBattle";
+import { renderFleets } from "@/game/scenes/starmap/systems/renderFleets";
+import { renderShardAsteroid } from "@/game/scenes/starmap/systems/renderShardAsteroid";
+import { renderTrajectory } from "@/game/scenes/starmap/systems/renderTrajectory";
 
-export const runSystems = (scene: Scene, mud: MUD) => {
+export const runSystems = (scene: Scene) => {
   renderAsteroid(scene);
   renderShardAsteroid(scene);
-  renderMoveLine(scene, mud);
-  renderAttackLine(scene, mud);
   renderFleets(scene);
   renderBattle(scene);
+  renderTrajectory(scene);
 };

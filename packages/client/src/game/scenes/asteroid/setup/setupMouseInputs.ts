@@ -66,14 +66,8 @@ export const setupMouseInputs = (scene: Scene) => {
     components.HoverTile.set(mouseCoord);
   });
 
-  const rightClickSub = scene.input.rightClick$.subscribe(() => {
-    components.Send.reset();
-    components.Attack.reset();
-  });
-
   world.registerDisposer(() => {
     clickSub.unsubscribe();
     pointerMoveSub.unsubscribe();
-    rightClickSub.unsubscribe();
   }, "game");
 };

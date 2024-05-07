@@ -1,48 +1,70 @@
 import { cn } from "@/util/client";
-// import { lerp } from "@/util/common";
+import { lerp } from "@/util/common";
 import { VariantProps, cva } from "class-variance-authority";
 import { forwardRef, useCallback, useRef } from "react";
 
-const lerp = (value: number, inMin: number, inMax: number, outMin: number, outMax: number) => {
-  return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
-};
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+  className?: string;
+  noDecor?: boolean;
+  fragment?: boolean;
+  noMotion?: boolean;
+}
 
-export const Card = forwardRef<
-  HTMLDivElement,
-  {
-    children: React.ReactNode | React.ReactNode[];
-    className?: string;
-    noDecor?: boolean;
-    fragment?: boolean;
-    noMotion?: boolean;
-  }
->(({ children, className, noDecor = false, fragment = false, noMotion = false }, ref) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
-    const { left, top, width, height } = containerRef.current.getBoundingClientRect();
+export const Card = forwardRef<HTMLDivElement, CardProps>(
+  ({ children, className, noDecor = false, fragment = false, noMotion = false, ...props }, ref) => {
+    const containerRef = useRef<HTMLDivElement>(null);
 
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
+    const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+      if (!containerRef.current) return;
+      const { left, top, width, height } = containerRef.current.getBoundingClientRect();
 
-    const isInBoundingBox = mouseX >= left && mouseX <= left + width && mouseY >= top && mouseY <= top + height;
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
 
-    if (!isInBoundingBox) {
+      const isInBoundingBox = mouseX >= left && mouseX <= left + width && mouseY >= top && mouseY <= top + height;
+
+      if (!isInBoundingBox) {
+        containerRef.current.style.transform = `rotateY(0deg) rotateX(0deg)`;
+        return;
+      }
+
+      const x = lerp(e.clientX - left - width / 2, -width, width, -1000 / width, 1000 / width);
+      const y = lerp(e.clientY - top - height / 2, -height, height, -1000 / height, 1000 / height);
+      containerRef.current.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
+    }, []);
+
+    const handleMouseLeave = useCallback(() => {
+      if (!containerRef.current) return;
       containerRef.current.style.transform = `rotateY(0deg) rotateX(0deg)`;
-      return;
-    }
+    }, []);
 
-    const x = lerp(e.clientX - left - width / 2, -width, width, -1000 / width, 1000 / width);
-    const y = lerp(e.clientY - top - height / 2, -height, height, -1000 / height, 1000 / height);
-    containerRef.current.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
-  }, []);
+    if (fragment)
+      return (
+        <div
+          className={`h-full`}
+          style={{
+            perspective: "1000px",
+            transformStyle: "preserve-3d",
+          }}
+          ref={ref}
+          {...props}
+        >
+          <div
+            ref={containerRef}
+            {...(!noMotion
+              ? {
+                  onMouseMove: handleMouseMove,
+                  onMouseLeave: handleMouseLeave,
+                }
+              : {})}
+            className={cn(className)}
+          >
+            {children}
+          </div>
+        </div>
+      );
 
-  const handleMouseLeave = useCallback(() => {
-    if (!containerRef.current) return;
-    containerRef.current.style.transform = `rotateY(0deg) rotateX(0deg)`;
-  }, []);
-
-  if (fragment)
     return (
       <div
         ref={ref}
@@ -60,50 +82,27 @@ export const Card = forwardRef<
                 onMouseLeave: handleMouseLeave,
               }
             : {})}
-          className={cn(className)}
+          className={`card bg-neutral pixel-border p-3 bg-opacity-90 relative pointer-events-auto transition-all duration-100 ease-linear ${className} `}
         >
-          {children}
+          <div className="absolute inset-0 bg-gradient-to-br from-transparent to-neutral" />
+          <div className="absolute inset-0 pixel-border" />
+          <div className="absolute inset-0 pixel-border blur-[2px] opacity-50 bg-blend-screen" />
+          <div className="z-50 w-full h-full">{children}</div>
+          {!noDecor && (
+            <div className="opacity-30 pointer-events-none">
+              <img src="img/ui/decor1.png" className="absolute bottom-0 -right-6" />
+              <img src="img/ui/decor2.png" className="absolute -bottom-4" />
+              <div className="absolute top-0 -right-6">
+                <img src="img/ui/decor1.png" />
+                <img src="img/ui/decor3.png" />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
-
-  return (
-    <div
-      ref={ref}
-      className={`h-full`}
-      style={{
-        perspective: "1000px",
-        transformStyle: "preserve-3d",
-      }}
-    >
-      <div
-        {...(!noMotion
-          ? {
-              onMouseMove: handleMouseMove,
-              onMouseLeave: handleMouseLeave,
-            }
-          : {})}
-        className={`card bg-neutral pixel-border p-3 bg-opacity-90 relative pointer-events-auto transition-all duration-100 ease-linear ${className} `}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent to-neutral" />
-        <div className="absolute inset-0 pixel-border" />
-        <div className="absolute inset-0 pixel-border blur-[2px] opacity-50 bg-blend-screen" />
-
-        {children}
-        {!noDecor && (
-          <div className="opacity-30 pointer-events-none">
-            <img src="img/ui/decor1.png" className="absolute bottom-0 -right-6" />
-            <img src="img/ui/decor2.png" className="absolute -bottom-4" />
-            <div className="absolute top-0 -right-6">
-              <img src="img/ui/decor1.png" />
-              <img src="img/ui/decor3.png" />
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-});
+  }
+);
 
 const secondaryCardVariants = cva("card p-2 pointer-events-auto", {
   variants: {

@@ -14,7 +14,6 @@ import { entityToRockName } from "src/util/name";
 import { formatResourceCount, formatTime } from "src/util/number";
 import { Card } from "../../core/Card";
 import { HealthBar } from "../HealthBar";
-import { AsteroidEta } from "./AsteroidEta";
 
 export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const { loading } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
@@ -40,7 +39,7 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
     );
 
   return (
-    <Card className="ml-5 w-72 relative">
+    <div>
       <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50 " />
       <div className="flex flex-col gap-1 z-10">
         <div className="grid grid-cols-2 gap-1">
@@ -48,7 +47,6 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
             <IconLabel imageUri={InterfaceIcons.Asteroid} className={`pixel-images w-3 h-3 bg-base-100`} />
             <p className="text-sm font-bold uppercase">{name}</p>
           </div>
-          <AsteroidEta entity={entity} />
         </div>
         <div className="flex victory-bg uppercase text-primary font-bold border border-secondary/50 text-sm justify-center items-center">
           {formatResourceCount(EntityType.Iron, shardData.points).toLocaleString()} PRI EXPLOSION
@@ -93,6 +91,6 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
           />
         </Badge>
       </div>
-    </Card>
+    </div>
   );
 };

@@ -96,7 +96,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
       // LOD 0: Show asteroid and label
       case 0:
         asteroidAlpha = 1;
-        asteroidLabelPosition = { x: this.asteroidSprite.displayWidth, y: -24 };
+        asteroidLabelPosition = { x: this.asteroidSprite.displayWidth / 2, y: -this.asteroidSprite.displayHeight / 2 };
         this.asteroidLabel.removeFleetsContainer();
         this.add(this.fleetsContainer);
         this.fleetsContainer.setOrbitView();

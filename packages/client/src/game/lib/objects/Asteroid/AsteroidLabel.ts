@@ -58,14 +58,9 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
 
     this.labelContainer = new Phaser.GameObjects.Container(scene.phaserScene, 0, 0);
 
-    this.asteroidLabel = new Phaser.GameObjects.BitmapText(
-      scene.phaserScene,
-      0,
-      0,
-      "teletactile",
-      asteroidName,
-      14
-    ).setTintFill(asteroidNameColor);
+    this.asteroidLabel = new Phaser.GameObjects.BitmapText(scene.phaserScene, 0, 0, "teletactile", asteroidName, 16)
+      .setTintFill(asteroidNameColor)
+      .setDropShadow(2, 2, 0x000000, 1);
 
     this.ownerLabel = new Phaser.GameObjects.BitmapText(scene.phaserScene, 0, 0, "teletactile", ownerLabel, 12)
 

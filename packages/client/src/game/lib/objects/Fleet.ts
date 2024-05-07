@@ -3,7 +3,7 @@ import { Scene } from "engine/types";
 import { FleetsContainer } from "./Asteroid/FleetsContainer";
 import { IPrimodiumGameObject } from "./interfaces";
 import { TransitLine } from "./TransitLine";
-import { Assets, Sprites } from "@primodiumxyz/assets";
+import { Assets, Sprites, Animations } from "@primodiumxyz/assets";
 
 export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObject {
   private _scene: Scene;
@@ -11,6 +11,9 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
   private spawned = false;
   private orbitRingRef: FleetsContainer | null = null;
   private transitLineRef: TransitLine | null = null;
+  private frames: Phaser.Animations.AnimationFrame[];
+  private currentRotationFrame: string | number;
+  public particles: Phaser.GameObjects.Particles.ParticleEmitter;
   constructor(scene: Scene, coord: Coord) {
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
     super(
@@ -18,11 +21,29 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
       pixelCoord.x,
       -pixelCoord.y + scene.tiled.tileHeight,
       Assets.SpriteAtlas,
-      Sprites.LightningCraft
+      Sprites.FleetPlayer
     );
-    this.setOrigin(0.5, 0.5).setScale(0.3).setInteractive();
+    this.setOrigin(0.5, 0.5).setScale(1).setInteractive();
     this._scene = scene;
     this.coord = coord;
+    this.frames = this.scene.anims.get(Animations.FleetPlayer).frames;
+    this.currentRotationFrame = this.frames[0].textureFrame;
+    this.particles = this.scene.add
+      .particles(pixelCoord.x, -pixelCoord.y, "flares", {
+        // frame: "blue",
+        x: pixelCoord.x,
+        y: -pixelCoord.y,
+        lifespan: 1000,
+        speed: { min: 20, max: 25 },
+        tintFill: true,
+        color: [0x472a00, 0x261c01, 0xf5efdf, 0xa3531a, 0xedb33e, 0xf5efdf],
+        // gravityY: 300,
+        scale: { start: 0.2, end: 0 },
+        angle: { min: -80, max: -100 },
+        quantity: 1,
+        blendMode: "ADD",
+      })
+      .setAlpha(0.27);
   }
 
   spawn() {
@@ -51,6 +72,32 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
     const point = matrix.transformPoint(this.x, this.y);
 
     return { x: point.x, y: point.y };
+  }
+
+  setRotationFrame(angle: number) {
+    const segmentWidth = 360 / this.frames.length;
+    const index = Math.floor(((angle + segmentWidth / 2) % 360) / segmentWidth);
+    const frame = this.frames[index].textureFrame;
+
+    if (this.currentRotationFrame === frame) return this;
+
+    this.setFrame(frame);
+    this.currentRotationFrame = frame;
+    return this;
+  }
+
+  reset() {
+    this.setRotationFrame(0);
+    this.setFlip(false, false);
+    this.rotation = 0;
+    return this;
+  }
+
+  getRotationFrameOffset() {
+    const segmentWidth = 360 / this.frames.length;
+    const index = this.frames.findIndex((frame) => frame.textureFrame === this.currentRotationFrame);
+
+    return index * segmentWidth;
   }
 
   getTileCoord() {

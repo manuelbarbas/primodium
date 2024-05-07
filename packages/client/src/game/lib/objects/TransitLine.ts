@@ -2,7 +2,6 @@ import { PixelCoord, Scene } from "engine/types";
 import { IPrimodiumGameObject } from "./interfaces";
 import { Fleet } from "./Fleet";
 
-const FLEET_ANGLE_OFFSET = 45;
 export class TransitLine extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
   private _scene: Scene;
   private spawned = false;
@@ -71,7 +70,7 @@ export class TransitLine extends Phaser.GameObjects.Container implements IPrimod
   }
 
   update() {
-    this.fleet?.setScale(Math.max(0.3, 0.3 / this._scene.camera.phaserCamera.zoom));
+    this.fleet?.setScale(Math.max(0.5, 0.5 / this._scene.camera.phaserCamera.zoom));
   }
 
   setCoordinates(start: PixelCoord, end: PixelCoord) {
@@ -81,19 +80,32 @@ export class TransitLine extends Phaser.GameObjects.Container implements IPrimod
     this.end = end;
 
     this.transitLine?.setTo(0, 0, end.x - start.x, end.y - start.y);
-    const flipped = end.x > start.x;
-    this.fleet?.setFlipX(flipped);
-    this.fleet?.setAngle(
-      Phaser.Math.RadToDeg(Math.atan2(this.end.y - this.start.y, this.end.x - this.start.x)) -
-        (flipped ? FLEET_ANGLE_OFFSET : 180 - FLEET_ANGLE_OFFSET)
-    );
+
+    let angle = Phaser.Math.RadToDeg(Math.atan2(end.y - start.y, end.x - start.x)) - 90;
+    if (angle < 0) {
+      angle += 360;
+    }
+    this.fleet?.setRotationFrame(angle);
+    if (this.fleet) this.fleet.angle = angle - this.fleet.getRotationFrameOffset();
   }
 
   setFleetProgress(progress: number) {
     if (!this.fleet) return;
 
-    this.fleet.x = (this.end.x - this.start.x) * progress;
-    this.fleet.y = (this.end.y - this.start.y) * progress;
+    this.scene.tweens.killTweensOf(this.fleet);
+
+    if (progress === 1) {
+      this.fleet.setPosition((this.end.x - this.start.x) * progress, (this.end.y - this.start.y) * progress);
+      return;
+    }
+
+    this.scene.add.tween({
+      targets: this.fleet,
+      duration: 500,
+      ease: (v: number) => Phaser.Math.Easing.Stepped(v, 5),
+      x: (this.end.x - this.start.x) * progress,
+      y: (this.end.y - this.start.y) * progress,
+    });
   }
 
   dispose() {

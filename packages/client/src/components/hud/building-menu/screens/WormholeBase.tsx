@@ -1,4 +1,4 @@
-import { PushButton } from "@/components/core/PushButton";
+import { Button } from "@/components/core/Button";
 import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { EScoreType } from "contracts/config/enums";
@@ -80,9 +80,9 @@ const WormholeDeposit: React.FC<{ building: Entity; asteroid: Entity }> = ({ bui
       <NumberInput count={count} onChange={setCount} max={Number(max)} />
       {!inCooldown && (
         <TransactionQueueMask queueItemId={"DEPOSIT" as Entity} className="flex flex-col justify-center text-center">
-          <PushButton
+          <Button
             disabled={count === "0"}
-            className="btn-sm"
+            size="sm"
             onClick={() => {
               // deposit wormhole resource
               wormholeDeposit(mud, building, parseResourceCount(wormholeResource, count));
@@ -90,7 +90,7 @@ const WormholeDeposit: React.FC<{ building: Entity; asteroid: Entity }> = ({ bui
             }}
           >
             Deposit
-          </PushButton>
+          </Button>
         </TransactionQueueMask>
       )}
       {inCooldown && <p className="text-xs">Cooldown ends in {formatTime(timeLeft)}</p>}

@@ -3,19 +3,17 @@ import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMemo } from "react";
 import { Widget } from "@/components/core/Widget";
-import { usePrimodium } from "@/hooks/usePrimodium";
 import { components } from "@/network/components";
-import { getBuildingDimensions, getBuildingImageFromType, getBuildingName } from "@/util/building";
-import { getEntityTypeName } from "@/util/common";
+import { getBuildingDimensions, getBuildingName } from "@/util/building";
 import { BuildingMenu } from "@/components/hud/building-menu/BuildingMenu";
-import { Card, GlassCard } from "@/components/core/Card";
 import { InterfaceIcons } from "@primodiumxyz/assets";
+import { usePrimodium } from "@/hooks/usePrimodium";
+import { GlassCard, Card } from "@/components/core/Card";
 
 export const BuildingMenuPopup = () => {
   const primodium = usePrimodium();
   const building = components.SelectedBuilding.use()?.value;
   const position = components.Position.use(building as Entity);
-  const buildingType = components.BuildingType.use(building as Entity)?.value;
   const buildingName = getBuildingName(building as Entity);
   const dimensions = useMemo(() => getBuildingDimensions(building ?? singletonEntity), [building]);
 
@@ -36,7 +34,7 @@ export const BuildingMenuPopup = () => {
 
   return (
     <Widget
-      title={getEntityTypeName(buildingType as Entity)}
+      title={`[${position?.x ?? 0}, ${position?.y ?? 0}]`}
       id="building-target"
       scene={"ASTEROID"}
       defaultCoord={coord}
@@ -47,11 +45,12 @@ export const BuildingMenuPopup = () => {
       minOpacity={1}
       popUp
       noBorder
+      topBar
       active={!!building && !!buildingName}
-      icon={getBuildingImageFromType(primodium, buildingType as Entity) ?? InterfaceIcons.Build}
+      icon={InterfaceIcons.Build}
     >
-      <GlassCard direction={"top"}>
-        <Card noDecor>
+      <GlassCard direction={"bottom"}>
+        <Card noDecor className="min-w-80">
           <BuildingMenu selectedBuilding={building ?? singletonEntity} />
         </Card>
       </GlassCard>

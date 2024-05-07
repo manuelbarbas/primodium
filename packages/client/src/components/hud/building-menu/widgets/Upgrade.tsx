@@ -1,4 +1,4 @@
-import { PushButton } from "@/components/core/PushButton";
+import { Button } from "@/components/core/Button";
 import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
@@ -43,7 +43,7 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
   }
 
   return (
-    <SecondaryCard className="w-full items-center">
+    <SecondaryCard className="w-full items-center space-y-2">
       <div className="flex items-center justify-between w-full">
         <div className="flex gap-2 items-center">
           <img src={InterfaceIcons.Build} className="pixel-images h-8 w-8" />
@@ -89,13 +89,9 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
           })}
       </div>
       <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, building)}>
-        <PushButton
-          className="w-fit btn-secondary btn-sm"
-          disabled={!canUpgrade}
-          onClick={() => upgradeBuilding(mud, building)}
-        >
+        <Button size="sm" variant="secondary" disabled={!canUpgrade} onClick={() => upgradeBuilding(mud, building)}>
           Upgrade
-        </PushButton>
+        </Button>
       </TransactionQueueMask>
     </SecondaryCard>
   );

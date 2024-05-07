@@ -66,7 +66,7 @@ export class StaticObjectManager {
         }
         object.setActive(true).setVisible(true);
       }
-    }
+    } else object.spawn();
 
     this.onNewObjectCallbacks.forEach((callback) => callback(id));
   }

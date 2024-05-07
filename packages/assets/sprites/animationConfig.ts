@@ -590,6 +590,16 @@ export const AnimationConfig = [
     suffix: ".png",
   },
   {
+    key: "fleet/player",
+    assetKey: "sprite-atlas",
+    frameRate: 5,
+    startFrame: 1,
+    endFrame: 16,
+    repeat: -1,
+    prefix: "sprites/fleets/player/Fleets_Default_Player",
+    suffix: ".png",
+  },
+  {
     key: "decorations/drone-top",
     assetKey: "sprite-atlas",
     frameRate: 5,
