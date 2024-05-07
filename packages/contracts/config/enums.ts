@@ -192,8 +192,11 @@ export enum EObjectives {
   BuildMarket,
   MarketSwap,
 
-  // (A-C) Alliance
+  // (A-C) Alliance (Social)
   JoinAlliance,
+  JoinDiscord,
+  FollowTwitter,
+  PrimoPlayer,
 }
 
 export enum EAllianceInviteMode {

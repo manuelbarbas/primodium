@@ -850,7 +850,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
 
-  /* ------------------------------- A-C Alliance ------------------------------ */
+  /* ------------------------------- A-C Alliance (Social) --------------------- */
   [
     EObjectives.JoinAlliance,
     {
@@ -860,6 +860,33 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 2n,
       description:
         "Joining an alliance allows you to combine your points with other players. Select Alliance Management in the bottom bar. Find an Alliance to join and select Join.",
+    },
+  ],
+  [
+    EObjectives.JoinDiscord,
+    {
+      category: "Alliance",
+      type: "JoinAlliance",
+      requiredMainBase: 16n,
+      description: "Joined the Primodium Discord!",
+    },
+  ],
+  [
+    EObjectives.FollowTwitter,
+    {
+      category: "Alliance",
+      type: "JoinAlliance",
+      requiredMainBase: 16n,
+      description: "Followed the Primodium Twitter!",
+    },
+  ],
+  [
+    EObjectives.PrimoPlayer,
+    {
+      category: "Alliance",
+      type: "JoinAlliance",
+      requiredMainBase: 16n,
+      description: "Completed all Objectives",
     },
   ],
 ]);

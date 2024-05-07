@@ -3164,4 +3164,19 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_UnitReward: getUnitValues({ LightningCraft: 5 }),
     },
   },
+  JoinDiscord: {
+    tables: {
+      P_UnitReward: getUnitValues({ LightningCraft: 5 }),
+    },
+  },
+  FollowTwitter: {
+    tables: {
+      P_UnitReward: getUnitValues({ LightningCraft: 5 }),
+    },
+  },
+  PrimoPlayer: {
+    tables: {
+      P_UnitReward: getUnitValues({ LightningCraft: 5 }),
+    },
+  },
 };
