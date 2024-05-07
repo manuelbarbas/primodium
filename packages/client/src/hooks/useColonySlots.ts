@@ -7,7 +7,7 @@ import { useMemo } from "react";
 import { Hex } from "viem";
 
 export const useColonySlots = (playerEntity: Entity) => {
-  const maxSlots = components.MaxColonySlots.use(playerEntity)?.value ?? 0n;
+  const maxSlots = components.MaxColonySlots.use(playerEntity)?.value ?? 1n;
   const shipsInTraining = components.ColonyShipsInTraining.use(playerEntity)?.value ?? 0n;
   const config = components.P_ColonySlotsConfig.use();
   const costMultiplier = useColonySlotsMultiplier(playerEntity);
