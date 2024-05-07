@@ -5,7 +5,7 @@ import { mountStoreDevtool } from "simple-zustand-devtools";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-const VERSION = 8;
+const VERSION = 9;
 
 type Keybinds = Partial<{
   [key in KeybindActionKeys]: Set<Key>;
@@ -42,6 +42,7 @@ type PersistentState = {
   fontStyle: string;
   hideHotkeys: boolean;
   showIntro: boolean;
+  showObjectives: boolean;
 };
 
 type PersistentActions = {
@@ -61,6 +62,7 @@ type PersistentActions = {
   removeNoExternalAccount: () => void; // Add this action
   setHideHotkeys: (val: boolean) => void;
   setShowIntro: (val: boolean) => void;
+  setShowObjectives: (val: boolean) => void;
 };
 
 const defaults: PersistentState = {
@@ -115,6 +117,7 @@ const defaults: PersistentState = {
   },
   hideHotkeys: false,
   showIntro: true,
+  showObjectives: true,
 };
 
 export const usePersistentStore = create<PersistentState & PersistentActions>()(
@@ -183,6 +186,7 @@ export const usePersistentStore = create<PersistentState & PersistentActions>()(
       removeNoExternalAccount: () => set({ noExternalAccount: false }),
       setHideHotkeys: (val: boolean) => set({ hideHotkeys: val }),
       setShowIntro: (val: boolean) => set({ showIntro: val }),
+      setShowObjectives: (val: boolean) => set({ showObjectives: val }),
     }),
     {
       name: "persistent-storage",

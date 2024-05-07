@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { motion, useTransform, useMotionValue, useSpring } from "framer-motion";
-import { VariantProps, cva } from "class-variance-authority";
 import { cn } from "@/util/client";
+import { VariantProps, cva } from "class-variance-authority";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useState } from "react";
 
 const tooltipTranslation = {
   top: {
@@ -85,7 +85,6 @@ export const Tooltip = ({ className, tooltipContent, children, direction, show =
           style={{
             translateX: translateX,
             rotate: rotate,
-            whiteSpace: "nowrap",
           }}
           className={cn(
             tooltipVariants({ direction }),
@@ -93,7 +92,7 @@ export const Tooltip = ({ className, tooltipContent, children, direction, show =
             className
           )}
         >
-          <div className="text-xs">{tooltipContent}</div>
+          {tooltipContent}
         </motion.div>
       )}
 

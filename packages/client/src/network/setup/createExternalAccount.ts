@@ -1,6 +1,6 @@
+import { WorldAbi } from "@/network/world";
 import { ContractWrite } from "@latticexyz/common";
 import { transactionQueue, writeObserver } from "@latticexyz/common/actions";
-import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { Subject } from "rxjs";
 import { normalizeAddress } from "src/util/common";
 import { addressToEntity } from "src/util/encode";
@@ -25,7 +25,7 @@ export async function createExternalAccount(address: Address) {
 
   const worldContract = getContract({
     address: networkConfig.worldAddress as Hex,
-    abi: IWorldAbi,
+    abi: WorldAbi,
     client: {
       public: publicClient,
       wallet: walletClient,

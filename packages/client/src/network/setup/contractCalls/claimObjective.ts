@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { ampli } from "src/ampli";
-import { execute } from "src/network/txExecute";
+import { execute } from "src/network/txExecute/txExecute";
 import { MUD } from "src/network/types";
 import { getEntityTypeName } from "src/util/common";
 import { ObjectiveEntityLookup, ObjectiveEnumLookup, TransactionQueueType } from "src/util/constants";

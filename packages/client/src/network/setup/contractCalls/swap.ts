@@ -3,7 +3,7 @@ import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EObjectives } from "contracts/config/enums";
 import { ampli } from "src/ampli";
-import { execute } from "src/network/txExecute";
+import { execute } from "src/network/txExecute/txExecute";
 import { MUD } from "src/network/types";
 import { getEntityTypeName } from "src/util/common";
 import { ResourceEnumLookup } from "src/util/constants";

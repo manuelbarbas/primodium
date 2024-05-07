@@ -1,5 +1,8 @@
+import { Button } from "@/components/core/Button";
+import { BuildingImageFromType } from "@/components/shared/BuildingImage";
 import { KeyNames, KeybindActionKeys } from "@game/lib/constants/keybinds";
 import { Entity } from "@latticexyz/recs";
+import { EMap } from "contracts/config/enums";
 import { useEffect, useMemo } from "react";
 import { FaLock } from "react-icons/fa";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
@@ -11,9 +14,6 @@ import { Action, EntityType } from "src/util/constants";
 import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
 import { useShallow } from "zustand/react/shallow";
-import { Button } from "../../../core/Button";
-import { BuildingImageFromType } from "../../../shared/BuildingImage";
-import { EMap } from "contracts/config/enums";
 
 const BlueprintButton: React.FC<{
   buildingType: Entity;

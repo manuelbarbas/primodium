@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { BuildingBlueprints } from "@/components/hud/widgets/blueprints/BuildingBlueprints";
+import { BuildingBlueprints } from "@/components/hud/blueprints/BuildingBlueprints";
 import { Button } from "@/components/core/Button";
 import { usePrimodium } from "@/hooks/usePrimodium";
 import { usePersistentStore } from "@/game/stores/PersistentStore";

@@ -8,7 +8,6 @@ import { Progress } from "src/components/core/Progress";
 import { GameHUD } from "src/components/hud/HUD";
 import { PrimodiumProvider } from "src/hooks/providers/PrimodiumProvider";
 import { WidgetProvider } from "src/hooks/providers/WidgetProvider";
-import { setupSessionAccount } from "src/network/systems/setupSessionAccount";
 
 const params = new URLSearchParams(window.location.search);
 
@@ -36,11 +35,6 @@ export const Game = () => {
       console.log(e);
     }
   };
-
-  /* Since this system modifies mud.sessionAccount, it can't have mud as a dependency */
-  useEffect(() => {
-    setupSessionAccount(mud.playerAccount.entity, mud.removeSessionAccount, mud.updateSessionAccount);
-  }, [mud.playerAccount.entity, mud.removeSessionAccount, mud.updateSessionAccount]);
 
   useEffect(() => {
     if (!primodium) return;
@@ -73,7 +67,9 @@ export const Game = () => {
         <div id="phaser-container" className="cursor-pointer screen-container">
           {!!primodium && (
             <PrimodiumProvider {...primodium}>
-              <WidgetProvider>{isDead ? <YouDied /> : <GameHUD />}</WidgetProvider>
+              <WidgetProvider>
+                {isDead && <YouDied />} <GameHUD />
+              </WidgetProvider>
             </PrimodiumProvider>
           )}
         </div>

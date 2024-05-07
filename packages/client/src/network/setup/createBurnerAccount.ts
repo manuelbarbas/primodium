@@ -1,6 +1,6 @@
+import { WorldAbi } from "@/network/world";
 import { ContractWrite, createBurnerAccount as createMudBurnerAccount, transportObserver } from "@latticexyz/common";
 import { transactionQueue, writeObserver } from "@latticexyz/common/actions";
-import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { Subject } from "rxjs";
 import { normalizeAddress } from "src/util/common";
 import { STORAGE_PREFIX } from "src/util/constants";
@@ -32,7 +32,7 @@ export async function createBurnerAccount(privateKey?: Hex, saveToStorage = true
 
   const sessionWorldContract = getContract({
     address: networkConfig.worldAddress as Hex,
-    abi: IWorldAbi,
+    abi: WorldAbi,
     client: {
       public: publicClient,
       wallet: sessionWalletClient,

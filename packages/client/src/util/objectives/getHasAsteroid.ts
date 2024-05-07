@@ -6,7 +6,7 @@ import { Hex } from "viem";
 
 export const getHasAsteroid = (
   playerEntity: Entity | undefined,
-  type: "basic" | "motherlode" | "wormhole" | "shard"
+  type: "common" | "motherlode" | "wormhole" | "shard"
 ) => {
   let currentValue = 0n;
   if (type == "shard") {
@@ -18,7 +18,7 @@ export const getHasAsteroid = (
       HasValue(components.OwnedBy, { value: playerEntity as Hex }),
       Has(components.Asteroid),
     ]);
-    if (type === "basic") currentValue = playerAsteroids.size > 1 ? 1n : 0n;
+    if (type === "common") currentValue = playerAsteroids.size > 1 ? 1n : 0n;
     else currentValue = [...playerAsteroids].some((asteroid) => isCorrectType(asteroid, type)) ? 1n : 0n;
   }
 

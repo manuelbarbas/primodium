@@ -752,7 +752,17 @@ const getConfig = async () => {
     if (process.env.PRI_DEV !== "true") exclude = ["DevSystem"];
   }
 
-  const world = defineWorld({ ...worldInput, excludeSystems: exclude });
+  const world = defineWorld({
+    ...worldInput,
+    modules: [
+      {
+        name: "Unstable_CallWithSignatureModule",
+        root: true,
+        args: [],
+      },
+    ],
+    excludeSystems: exclude,
+  });
 
   return world;
 };

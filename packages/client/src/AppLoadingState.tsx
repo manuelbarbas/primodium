@@ -1,6 +1,7 @@
 import { transportObserver } from "@latticexyz/common";
 import { useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { setupSessionAccount } from "src/network/systems/setupSessionAccount";
 import { createPublicClient, fallback, http } from "viem";
 import { Progress } from "./components/core/Progress";
 import { useMud } from "./hooks";
@@ -10,9 +11,9 @@ import { getNetworkConfig } from "./network/config/getNetworkConfig";
 import { Enter } from "./screens/Enter";
 import { Game } from "./screens/Game";
 import { Increment } from "./screens/Increment";
+import { Sandbox } from "./screens/Sandbox";
 import { Statistics } from "./screens/Statistics";
 import { minEth } from "./util/constants";
-import { Sandbox } from "./screens/Sandbox";
 
 export const DEV = import.meta.env.PRI_DEV === "true";
 export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
@@ -23,11 +24,17 @@ export default function AppLoadingState() {
   const [balance, setBalance] = useState<bigint>();
 
   useEffect(() => {
+    mud.removeSessionAccount();
+    setupSessionAccount(mud.playerAccount.entity, mud.removeSessionAccount, mud.updateSessionAccount);
+  }, [mud.playerAccount.entity]);
+
+  useEffect(() => {
     const networkConfig = getNetworkConfig();
     const clientOptions = {
       chain: networkConfig.chain,
       transport: transportObserver(fallback([http()])),
     };
+    /* Since this system modifies mud.sessionAccount, it can't have mud as a dependency */
 
     const publicClient = createPublicClient(clientOptions);
 
