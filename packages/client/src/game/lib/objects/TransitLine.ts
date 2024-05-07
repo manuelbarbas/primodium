@@ -85,7 +85,6 @@ export class TransitLine extends Phaser.GameObjects.Container implements IPrimod
     if (angle < 0) {
       angle += 360;
     }
-    console.log(angle);
     this.fleet?.setRotationFrame(angle);
     if (this.fleet) this.fleet.angle = angle - this.fleet.getRotationFrameOffset();
   }
