@@ -3,8 +3,8 @@ pragma solidity >=0.8.24;
 
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { addressToEntity } from "src/utils.sol";
-import { EScoreType } from "src/Types.sol";
-import { P_GameConfig, PositionData, Asteroid, AsteroidData, P_ConquestConfig, Score, LastConquered, Home } from "codegen/index.sol";
+import { EPointType } from "src/Types.sol";
+import { P_GameConfig, PositionData, Asteroid, AsteroidData, P_ConquestConfig, Points, LastConquered, Home } from "codegen/index.sol";
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
@@ -32,7 +32,7 @@ contract ClaimPrimodiumSystemTest is PrimodiumTest {
     vm.startPrank(creator);
 
     world.Primodium__claimPrimodium(asteroidEntity);
-    assertEq(Score.get(playerEntity, uint8(EScoreType.Primodium)), asteroidData.primodium);
+    assertEq(Points.get(playerEntity, uint8(EPointType.Shard)), asteroidData.primodium);
     assertEq(LastConquered.get(asteroidEntity), block.timestamp);
   }
 

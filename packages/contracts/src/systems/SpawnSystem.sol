@@ -3,9 +3,9 @@ pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
-import { Spawned, Home, Score, SpawnAllowed } from "codegen/index.sol";
+import { Spawned, Home, Points, SpawnAllowed } from "codegen/index.sol";
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
-import { EScoreType } from "src/Types.sol";
+import { EPointType } from "src/Types.sol";
 import { LibColony } from "libraries/LibColony.sol";
 import { AsteroidSet } from "libraries/AsteroidSet.sol";
 import { AsteroidOwnedByKey } from "src/Keys.sol";
@@ -38,8 +38,8 @@ contract SpawnSystem is PrimodiumSystem {
     Spawned.set(playerEntity, true);
     IWorld(_world()).Primodium__initAsteroidOwner(asteroidEntity, playerEntity);
     Home.set(playerEntity, asteroidEntity);
-    for (uint8 i = 1; i < uint8(EScoreType.LENGTH); i++) {
-      Score.set(playerEntity, i, 0);
+    for (uint8 i = 1; i < uint8(EPointType.LENGTH); i++) {
+      Points.set(playerEntity, i, 0);
     }
     return asteroidEntity;
   }

@@ -2,11 +2,11 @@
 pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { P_GameConfig, BuildingType, OwnedBy, Position, P_WormholeConfig, Wormhole, CooldownEnd, P_ScoreMultiplier } from "codegen/index.sol";
+import { P_GameConfig, BuildingType, OwnedBy, Position, P_WormholeConfig, Wormhole, CooldownEnd, P_PointMultiplier } from "codegen/index.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
-import { LibScore } from "libraries/LibScore.sol";
+import { LibPoints } from "libraries/LibPoints.sol";
 import { LibWormhole } from "libraries/LibWormhole.sol";
-import { EScoreType } from "src/Types.sol";
+import { EPointType } from "src/Types.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 import { WormholeBasePrototypeId } from "codegen/Prototypes.sol";
 
@@ -28,8 +28,8 @@ contract ClaimWormholeSystem is PrimodiumSystem {
 
     LibStorage.checkedDecreaseStoredResource(asteroidEntity, resource, count);
 
-    uint256 scoreIncrease = count * P_ScoreMultiplier.get(resource);
-    LibScore.addScore(playerEntity, EScoreType.Wormhole, scoreIncrease);
+    uint256 pointsIncrease = count * P_PointMultiplier.get(resource);
+    LibPoints.addPoints(playerEntity, EPointType.Wormhole, pointsIncrease);
 
     uint256 cooldownLength = (P_WormholeConfig.getCooldown() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
     CooldownEnd.set(wormholeBaseEntity, block.timestamp + cooldownLength);

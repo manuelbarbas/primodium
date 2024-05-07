@@ -3,10 +3,10 @@ pragma solidity >=0.8.24;
 
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { addressToEntity } from "src/utils.sol";
-import { IsFleet, Home, FleetMovement, P_UnitPrototypes, P_EnumToPrototype, P_Transportables, P_GameConfig, ReversePosition, Score, OwnedBy, ResourceCount, ShardAsteroid, Position, P_ConquestConfig, P_ConquestConfigData, PositionData, LastConquered, AsteroidCount } from "codegen/index.sol";
+import { IsFleet, Home, FleetMovement, P_UnitPrototypes, P_EnumToPrototype, P_Transportables, P_GameConfig, ReversePosition, Points, OwnedBy, ResourceCount, ShardAsteroid, Position, P_ConquestConfig, P_ConquestConfigData, PositionData, LastConquered, AsteroidCount } from "codegen/index.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 
-import { EResource, EScoreType, EUnit } from "src/Types.sol";
+import { EResource, EPointType, EUnit } from "src/Types.sol";
 import { UnitKey, FleetOwnedByKey, FleetIncomingKey, FleetOutgoingKey } from "src/Keys.sol";
 
 import { FleetSet } from "libraries/fleet/FleetSet.sol";
@@ -153,7 +153,7 @@ contract ShardAsteroidTest is PrimodiumTest {
     world.Primodium__claimShardAsteroidPoints(asteroidEntity);
 
     uint256 oneTenthOfPoints = config.shardAsteroidPoints / 10;
-    assertEq(Score.get(addressToEntity(alice), uint8(EScoreType.Primodium)), oneTenthOfPoints);
+    assertEq(Points.get(addressToEntity(alice), uint8(EPointType.Shard)), oneTenthOfPoints);
   }
 
   function testShardAsteroidGameOver() public {
@@ -178,10 +178,10 @@ contract ShardAsteroidTest is PrimodiumTest {
 
     world.Primodium__claimShardAsteroidPoints(asteroidEntity);
 
-    assertEq(Score.get(addressToEntity(alice), uint8(EScoreType.Primodium)), 0);
+    assertEq(Points.get(addressToEntity(alice), uint8(EPointType.Shard)), 0);
   }
 
-  function testShardAsteroidPastLifeSpanScore() public {
+  function testShardAsteroidPastLifeSpanPoints() public {
     spawnPlayers(config.shardAsteroidSpawnOffset - 2);
 
     bytes32 asteroidEntity = LibEncode.getTimedHash(bytes32("shardAsteroid"), bytes32(AsteroidCount.get() + 1));
@@ -205,7 +205,7 @@ contract ShardAsteroidTest is PrimodiumTest {
 
     world.Primodium__claimShardAsteroidPoints(asteroidEntity);
 
-    assertEq(Score.get(addressToEntity(alice), uint8(EScoreType.Primodium)), points);
+    assertEq(Points.get(addressToEntity(alice), uint8(EPointType.Shard)), points);
   }
 
   // nothing should happen if the asteroid is not owned
