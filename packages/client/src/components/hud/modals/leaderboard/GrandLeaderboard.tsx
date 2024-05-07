@@ -24,7 +24,7 @@ export const GrandLeaderboard = ({ alliance = false }: { alliance?: boolean }) =
   useEffect(() => {
     const interval = setInterval(() => {
       setShowRefresh(true);
-    }, 3000);
+    }, 1000);
     return () => clearInterval(interval);
   });
 

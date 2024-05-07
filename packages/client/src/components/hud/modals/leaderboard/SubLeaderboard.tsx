@@ -28,7 +28,7 @@ export const SubLeaderboard = ({ leaderboard, alliance = false }: { leaderboard:
   useEffect(() => {
     const interval = setInterval(() => {
       setShowRefresh(true);
-    }, 3000);
+    }, 1000);
     return () => clearInterval(interval);
   });
   const refresh = () => setData(components.Leaderboard.get(leaderboard));
@@ -78,7 +78,7 @@ export const SubLeaderboard = ({ leaderboard, alliance = false }: { leaderboard:
           {({ height, width }: { height: number; width: number }) => (
             <List
               // Unsure how this offset works but it is required to have even height with GrandLeaderboard.tsx.
-              height={height - 73}
+              height={height}
               width={width}
               itemCount={formattedData.allPlayers.length}
               itemSize={52}
@@ -95,13 +95,13 @@ export const SubLeaderboard = ({ leaderboard, alliance = false }: { leaderboard:
             </List>
           )}
         </AutoSizer>
-        {formattedData.player && (
-          <div className="w-full self-end pr-4">
-            <hr className="w-full border-t border-cyan-800 my-2" />
-            <LeaderboardItem {...formattedData.player} special alliance={alliance} />
-          </div>
-        )}
       </div>
+      {formattedData.player && (
+        <div className="w-full self-end pr-4">
+          <hr className="w-full border-t border-cyan-800 my-2" />
+          <LeaderboardItem {...formattedData.player} special alliance={alliance} />
+        </div>
+      )}
     </div>
   );
 };
