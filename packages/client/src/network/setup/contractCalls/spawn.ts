@@ -1,10 +1,8 @@
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { ampli } from "src/ampli";
-import { execute, executeBatch } from "src/network/txExecute";
+import { execute } from "src/network/txExecute/txExecute";
 import { MUD } from "src/network/types";
-import { UNLIMITED_DELEGATION } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
-import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const spawn = async (mud: MUD) => {
@@ -13,43 +11,11 @@ export const spawn = async (mud: MUD) => {
       mud,
       systemId: getSystemId("SpawnSystem"),
       functionName: "Primodium__spawn",
+      withSession: true,
     },
     { id: singletonEntity },
     (receipt) => {
       ampli.systemSpawn({
-        ...parseReceipt(receipt),
-      });
-    }
-  );
-};
-
-export const spawnAndAuthorizeSessionAccount = async (mud: MUD, sessionAccount: Hex) => {
-  const spawn = {
-    mud,
-    systemId: getSystemId("SpawnSystem"),
-    functionName: "Primodium__spawn",
-    withSession: false,
-  } as const;
-
-  const authorize = {
-    systemId: getSystemId("Registration", "CORE"),
-    functionName: "registerDelegation" as const,
-    args: [sessionAccount, UNLIMITED_DELEGATION, "0x0"] as [Hex, Hex, Hex],
-    withSession: false,
-  };
-
-  await executeBatch(
-    {
-      mud,
-      systemCalls: [spawn, authorize],
-    },
-    { id: singletonEntity },
-    (receipt) => {
-      ampli.systemSpawn({
-        ...parseReceipt(receipt),
-      });
-      ampli.systemRegisterDelegation({
-        delegateAddress: sessionAccount,
         ...parseReceipt(receipt),
       });
     }

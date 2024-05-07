@@ -6,7 +6,7 @@ export const AllUtilityLabels = () => {
   const activeRock = components.ActiveRock.use()?.value;
   if (!activeRock) return null;
   return (
-    <div className="grid grid-cols-2 w-72 gap-1.5 p-2 pt-4">
+    <div className="flex flex-col w-full gap-1.5 p-2 pt-4">
       <BarLayoutUtilityLabel name={"Electricity"} resourceId={EntityType.Electricity} asteroid={activeRock} />
 
       <BarLayoutUtilityLabel name={"Housing"} resourceId={EntityType.Housing} asteroid={activeRock} />

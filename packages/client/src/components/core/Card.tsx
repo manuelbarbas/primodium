@@ -11,12 +11,6 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   noMotion?: boolean;
 }
 
-interface SecondaryCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode | React.ReactNode[];
-  className?: string;
-  noDecor?: boolean;
-}
-
 export const Card = forwardRef<HTMLDivElement, CardProps>(
   ({ children, className, noDecor = false, fragment = false, noMotion = false, ...props }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -73,6 +67,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
 
     return (
       <div
+        ref={ref}
         className={`h-full`}
         style={{
           perspective: "1000px",
@@ -109,18 +104,29 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
   }
 );
 
+const secondaryCardVariants = cva("card p-2 pointer-events-auto", {
+  variants: {
+    variant: {
+      default: "bg-gradient-to-br from-secondary/15 to-secondary/5 border border-secondary/25 ",
+      highlight: "bg-transparent border border-accent",
+    },
+    noDecor: {
+      true: "",
+      false: "hover:shadow-2xl hover:border-secondary/50",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+    noDecor: false,
+  },
+});
+
+interface SecondaryCardProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof secondaryCardVariants> {}
+
 export const SecondaryCard = forwardRef<HTMLDivElement, SecondaryCardProps>(
-  ({ children, className, noDecor, ...props }, ref) => {
+  ({ children, className, variant, noDecor }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={cn(
-          "card bg-gradient-to-br from-secondary/15 to-secondary/5 border border-secondary/25 transition-all p-2 pointer-events-auto",
-          noDecor ? "" : "hover:shadow-2xl hover:border-secondary/50",
-          className
-        )}
-        {...props}
-      >
+      <div ref={ref} className={cn(secondaryCardVariants({ variant, noDecor }), className)}>
         {children}
       </div>
     );

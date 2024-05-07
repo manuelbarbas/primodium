@@ -2,7 +2,7 @@ import { components } from "@/network/components";
 import { SPEED_SCALE } from "@/util/constants";
 import { Entity } from "@latticexyz/recs";
 import { EObjectives } from "contracts/config/enums";
-import { execute } from "src/network/txExecute";
+import { execute } from "src/network/txExecute/txExecute";
 import { MUD } from "src/network/types";
 import { getSystemId } from "src/util/encode";
 import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";

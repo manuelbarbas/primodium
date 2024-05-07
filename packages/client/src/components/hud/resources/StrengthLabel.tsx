@@ -1,12 +1,12 @@
 import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { Badge } from "src/components/core/Badge";
-import { IconLabel } from "src/components/core/IconLabel";
-import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
-import { components } from "src/network/components";
-import { EntityType } from "src/util/constants";
-import { formatResourceCount } from "src/util/number";
+import { Badge } from "@/components/core/Badge";
+import { IconLabel } from "@/components/core/IconLabel";
+import { useAsteroidStrength } from "@/hooks/useAsteroidStrength";
+import { components } from "@/network/components";
+import { EntityType } from "@/util/constants";
+import { formatResourceCount } from "@/util/number";
 
 export const StrengthLabel = ({ player }: { player?: Entity }) => {
   player = player ?? components.Account.use()?.value ?? singletonEntity;

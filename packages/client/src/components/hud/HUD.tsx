@@ -1,14 +1,15 @@
 import { HUD } from "@/components/core/HUD";
 import { AsteroidLoading } from "@/components/hud/AsteroidLoading";
+import { AvailableObjectives } from "@/components/hud/AvailableObjectives";
 import { Dock } from "@/components/hud/Dock";
 import { ModeSelector } from "@/components/hud/ModeSelector";
+import { Blueprints } from "@/components/hud/blueprints/Blueprints";
+import { Inventory } from "@/components/hud/inventory/Inventory";
 import { BlueprintInfoMarker } from "@/components/hud/markers/asteroid/BlueprintInfoMarker";
 import { BuildingMenuPopup } from "@/components/hud/markers/asteroid/BuildingMenuPopup";
 import { Intro } from "@/components/hud/modals/Intro";
 import { FavoriteAsteroids } from "@/components/hud/widgets/FavoriteAsteroids";
 import { WarshipPopulation } from "@/components/hud/widgets/WarshipPopulation";
-import { Blueprints } from "@/components/hud/widgets/blueprints/Blueprints";
-import { Resources } from "@/components/hud/widgets/resources/Resources";
 import { StarmapNavigator } from "@/components/hud/widgets/starmap-navigator/StarmapNavigator";
 import { BrandingLabel } from "@/components/shared/BrandingLabel";
 import { usePersistentStore } from "@game/stores/PersistentStore";
@@ -40,10 +41,11 @@ export const GameHUD = memo(() => {
         </HUD.TopMiddle>
         <HUD.TopRight className="flex flex-col items-end gap-2">
           <FavoriteAsteroids />
+          <AvailableObjectives />
         </HUD.TopRight>
 
         <HUD.Right>
-          <Resources />
+          <Inventory />
           <StarmapNavigator />
         </HUD.Right>
 

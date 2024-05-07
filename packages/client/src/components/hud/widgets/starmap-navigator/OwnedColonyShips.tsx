@@ -1,5 +1,5 @@
 import { Button } from "@/components/core/Button";
-import { SecondaryCard } from "@/components/core/Card";
+import { Card } from "@/components/core/Card";
 import { useMud } from "@/hooks";
 import { useColonySlots } from "@/hooks/useColonySlots";
 import { usePrimodium } from "@/hooks/usePrimodium";
@@ -80,7 +80,7 @@ export const OwnedColonyShips: React.FC<{ className?: string }> = ({ className }
     zoomTo(2);
   };
   return (
-    <SecondaryCard className={className}>
+    <Card noDecor className={className}>
       {colonyShips.length === 0 && (
         <p className="w-full h-full text-xs grid place-items-center opacity-50 uppercase">
           you control no colony ships
@@ -104,6 +104,6 @@ export const OwnedColonyShips: React.FC<{ className?: string }> = ({ className }
           {colonyShips.length} Colony Ship{colonyShips.length > 1 ? "s" : ""}
         </div>
       )}
-    </SecondaryCard>
+    </Card>
   );
 };

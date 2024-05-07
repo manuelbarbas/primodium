@@ -1,7 +1,7 @@
 import { components } from "@/network/components";
 import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
-import { execute } from "src/network/txExecute";
+import { execute } from "src/network/txExecute/txExecute";
 import { MUD } from "src/network/types";
 import { ResourceEntityLookup, TransactionQueueType } from "src/util/constants";
 import { getSystemId } from "src/util/encode";

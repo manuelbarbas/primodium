@@ -2,13 +2,13 @@ import { addCoords, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMemo } from "react";
-import { Widget } from "src/components/core/Widget";
-import { usePrimodium } from "src/hooks/usePrimodium";
-import { components } from "src/network/components";
-import { getBuildingDimensions, getBuildingName } from "src/util/building";
-import { BuildingMenu } from "../../building-menu/BuildingMenu";
-import { Card, GlassCard } from "@/components/core/Card";
+import { Widget } from "@/components/core/Widget";
+import { components } from "@/network/components";
+import { getBuildingDimensions, getBuildingName } from "@/util/building";
+import { BuildingMenu } from "@/components/hud/building-menu/BuildingMenu";
 import { InterfaceIcons } from "@primodiumxyz/assets";
+import { usePrimodium } from "@/hooks/usePrimodium";
+import { GlassCard, Card } from "@/components/core/Card";
 
 export const BuildingMenuPopup = () => {
   const primodium = usePrimodium();

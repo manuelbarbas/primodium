@@ -29,7 +29,7 @@ contract LibResourceTest is PrimodiumTest {
     OwnedBy.set(buildingEntity, asteroidEntity);
   }
 
-  function testClaimAllResourcesBasic() public {
+  function testClaimAllResourcesCommon() public {
     bytes32 asteroidEntity = Home.get(playerEntity);
     MaxResourceCount.set(asteroidEntity, Iron, 1000);
     ProductionRate.set(asteroidEntity, Iron, 10);
@@ -38,7 +38,7 @@ contract LibResourceTest is PrimodiumTest {
     assertEq(ResourceCount.get(asteroidEntity, Iron), 100);
   }
 
-  function testClaimAllResourcesConsumptionBasic() public {
+  function testClaimAllResourcesConsumptionCommon() public {
     bytes32 asteroidEntity = Home.get(playerEntity);
     MaxResourceCount.set(asteroidEntity, Copper, 1000);
     ProductionRate.set(asteroidEntity, Copper, 10);
@@ -54,7 +54,7 @@ contract LibResourceTest is PrimodiumTest {
     assertEq(ResourceCount.get(asteroidEntity, Copper), 100, "copper doesn't match");
   }
 
-  function testClaimAllResourcesConsumptionRunOutBasic() public {
+  function testClaimAllResourcesConsumptionRunOutCommon() public {
     bytes32 asteroidEntity = Home.get(playerEntity);
     MaxResourceCount.set(asteroidEntity, Copper, 1000);
     ProductionRate.set(asteroidEntity, Copper, 10);

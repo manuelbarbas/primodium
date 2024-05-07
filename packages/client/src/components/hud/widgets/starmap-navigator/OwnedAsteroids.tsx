@@ -2,7 +2,7 @@ import { EntityToResourceImage } from "@/util/mappings";
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { Button } from "src/components/core/Button";
-import { SecondaryCard } from "src/components/core/Card";
+import { Card } from "src/components/core/Card";
 import { useMud } from "src/hooks";
 import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
@@ -84,7 +84,7 @@ export const OwnedAsteroids: React.FC<{ className?: string }> = ({ className }) 
   };
 
   return (
-    <SecondaryCard className={`relative ${className}`}>
+    <Card noDecor className={`relative ${className}`}>
       {asteroids.length === 0 && (
         <p className="w-full h-full text-xs grid place-items-center opacity-50 uppercase">you control no asteroids</p>
       )}
@@ -98,6 +98,6 @@ export const OwnedAsteroids: React.FC<{ className?: string }> = ({ className }) 
           {asteroids.length} asteroid{asteroids.length > 1 ? "s" : ""}
         </div>
       )}
-    </SecondaryCard>
+    </Card>
   );
 };
