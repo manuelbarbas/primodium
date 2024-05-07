@@ -10,7 +10,6 @@ import { BlueprintPane } from "./BlueprintPane";
 export const Blueprints = memo(() => {
   const { components } = useMud();
   const [open, setOpen] = useState(true);
-  console.log({ open });
   const mapOpen = components.SelectedMode.use()?.value !== Mode.Asteroid;
   const isBuilding = components.ActiveRock.use()?.value === components.BuildRock.use()?.value;
 
