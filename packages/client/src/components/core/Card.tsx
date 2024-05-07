@@ -88,7 +88,7 @@ export const Card = forwardRef<
         <div className="absolute inset-0 pixel-border" />
         <div className="absolute inset-0 pixel-border blur-[2px] opacity-50 bg-blend-screen" />
 
-        <div className="z-50 w-full h-full">{children}</div>
+        {children}
         {!noDecor && (
           <div className="opacity-30 pointer-events-none">
             <img src="img/ui/decor1.png" className="absolute bottom-0 -right-6" />
