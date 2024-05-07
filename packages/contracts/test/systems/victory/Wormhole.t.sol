@@ -6,9 +6,9 @@ import { addressToEntity } from "src/utils.sol";
 
 import { EResource } from "src/Types.sol";
 
-import { CooldownEnd, Score, P_ScoreMultiplier, P_WormholeConfig, P_WormholeConfigData, Wormhole, WormholeData, BuildingType, Home, OwnedBy, P_EnumToPrototype, P_Transportables, P_UnitPrototypes, Asteroid, AsteroidData, Position, PositionData, Position, PositionData, ReversePosition, MaxResourceCount, UnitCount, ResourceCount, UnitCount, ResourceCount, P_GameConfig, P_GameConfigData, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
+import { CooldownEnd, Points, P_PointMultiplier, P_WormholeConfig, P_WormholeConfigData, Wormhole, WormholeData, BuildingType, Home, OwnedBy, P_EnumToPrototype, P_Transportables, P_UnitPrototypes, Asteroid, AsteroidData, Position, PositionData, Position, PositionData, ReversePosition, MaxResourceCount, UnitCount, ResourceCount, UnitCount, ResourceCount, P_GameConfig, P_GameConfigData, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData } from "codegen/index.sol";
 import { WormholeBasePrototypeId } from "codegen/Prototypes.sol";
-import { EUnit, EScoreType, EAllianceInviteMode } from "src/Types.sol";
+import { EUnit, EPointType, EAllianceInviteMode } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
@@ -90,9 +90,9 @@ contract WormholeTest is PrimodiumTest {
     world.Primodium__wormholeDeposit(wormholeBaseEntity, resourceCount);
 
     assertEq(
-      Score.get(aliceEntity, uint8(EScoreType.Wormhole)),
-      resourceCount * P_ScoreMultiplier.get(resource),
-      "score"
+      Points.get(aliceEntity, uint8(EPointType.Wormhole)),
+      resourceCount * P_PointMultiplier.get(resource),
+      "points"
     );
     assertEq(CooldownEnd.get(wormholeBaseEntity), block.timestamp + wormholeConfig.cooldown, "cooldown");
     assertFalse(Wormhole.getHash() == wormholeData.hash, "hash");
@@ -100,7 +100,7 @@ contract WormholeTest is PrimodiumTest {
     return wormholeAsteroidEntity;
   }
 
-  function testWormholeAllianceScore() public {
+  function testWormholeAlliancePoint() public {
     bytes32 wormholeAsteroidEntity = testWormholeAsteroidHasWormholeBase();
     bytes32 wormholeBaseEntity = Home.get(wormholeAsteroidEntity);
     bytes32 asteroidEntity = Position.getParentEntity(wormholeBaseEntity);
@@ -117,11 +117,11 @@ contract WormholeTest is PrimodiumTest {
     bytes32 allianceEntity = world.Primodium__create(bytes32("alice's alliance"), EAllianceInviteMode.Open);
     world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
 
-    assertEq(Score.get(allianceEntity, uint8(EScoreType.Wormhole)), 100 * P_ScoreMultiplier.get(resource), "score");
-    assertEq(Score.get(allianceEntity, uint8(EScoreType.Primodium)), 0, "score");
+    assertEq(Points.get(allianceEntity, uint8(EPointType.Wormhole)), 100 * P_PointMultiplier.get(resource), "points");
+    assertEq(Points.get(allianceEntity, uint8(EPointType.Shard)), 0, "points");
   }
 
-  function testDepositWormholeScoreAfterGameOver() public returns (bytes32) {
+  function testDepositWormholePointAfterGameOver() public returns (bytes32) {
     uint256 deaths = 4;
     vm.prank(creator);
     P_GameConfig.setUnitDeathLimit(deaths);
@@ -145,7 +145,7 @@ contract WormholeTest is PrimodiumTest {
     switchPrank(alice);
     world.Primodium__wormholeDeposit(wormholeBaseEntity, resourceCount);
 
-    assertEq(Score.get(aliceEntity, uint8(EScoreType.Wormhole)), 0, "don't allow score after game end");
+    assertEq(Points.get(aliceEntity, uint8(EPointType.Wormhole)), 0, "don't allow points after game end");
   }
 
   function testDepositWormholeAfterCooldown() public returns (bytes32) {
@@ -172,15 +172,15 @@ contract WormholeTest is PrimodiumTest {
 
     increaseResource(wormholeAsteroidEntity, EResource(resource), 100);
 
-    uint256 prevScore = Score.get(aliceEntity, uint8(EScoreType.Wormhole));
+    uint256 prevPoints = Points.get(aliceEntity, uint8(EPointType.Wormhole));
 
     vm.prank(alice);
     world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
 
     assertEq(
-      Score.get(aliceEntity, uint8(EScoreType.Wormhole)),
-      100 * P_ScoreMultiplier.get(resource) + prevScore,
-      "score"
+      Points.get(aliceEntity, uint8(EPointType.Wormhole)),
+      100 * P_PointMultiplier.get(resource) + prevPoints,
+      "points"
     );
     assertEq(CooldownEnd.get(wormholeBaseEntity), block.timestamp + wormholeConfig.cooldown, "cooldown");
     assertFalse(Wormhole.getHash() == wormholeData.hash, "hash");
@@ -255,7 +255,7 @@ contract WormholeTest is PrimodiumTest {
       wormholeData.nextResource
     );
 
-    uint256 prevScore = Score.get(aliceEntity, uint8(EScoreType.Wormhole));
+    uint256 prevPoints = Points.get(aliceEntity, uint8(EPointType.Wormhole));
 
     increaseResource(wormholeAsteroidEntity, EResource(expectedNewResource), 100);
 
@@ -263,9 +263,9 @@ contract WormholeTest is PrimodiumTest {
     world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
 
     assertEq(
-      Score.get(aliceEntity, uint8(EScoreType.Wormhole)),
-      100 * P_ScoreMultiplier.get(expectedNewResource) + prevScore,
-      "score"
+      Points.get(aliceEntity, uint8(EPointType.Wormhole)),
+      100 * P_PointMultiplier.get(expectedNewResource) + prevPoints,
+      "points"
     );
     assertEq(CooldownEnd.get(wormholeBaseEntity), block.timestamp + wormholeConfig.cooldown, "cooldown");
     assertFalse(Wormhole.getHash() == wormholeData.hash, "hash");

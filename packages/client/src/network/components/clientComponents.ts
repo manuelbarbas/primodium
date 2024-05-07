@@ -118,21 +118,13 @@ export default function setupClientComponents() {
     world,
     {
       players: Type.EntityArray,
-      playerRank: Type.OptionalNumber,
-      scores: Type.BigIntArray,
+      points: Type.BigIntArray,
+      ranks: Type.NumberArray,
     },
     {
       id: "Leaderboard",
     }
   );
-
-  const GrandLeaderboard = createExtendedComponent(world, {
-    players: Type.EntityArray,
-    wormholeRanks: Type.NumberArray,
-    primodiumRanks: Type.NumberArray,
-    scores: Type.NumberArray,
-    playerRank: Type.OptionalNumber,
-  });
 
   const SyncSource = createExtendedNumberComponent(world, { id: "SyncSource" });
 
@@ -159,7 +151,6 @@ export default function setupClientComponents() {
     Battle,
     BattleRender,
     Leaderboard,
-    GrandLeaderboard,
     PlayerInvite,
     AllianceRequest,
     TransactionQueue,

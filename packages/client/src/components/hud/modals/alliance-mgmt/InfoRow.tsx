@@ -1,4 +1,5 @@
-import { ComponentValue, Entity } from "@latticexyz/recs";
+import { FinalLeaderboardData } from "@/util/leaderboard/getFinalLeaderboardData";
+import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { FaCog, FaEnvelope } from "react-icons/fa";
 import { SecondaryCard } from "src/components/core/Card";
@@ -7,37 +8,25 @@ import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { GrandLeaderboardItem } from "../leaderboard/GrandLeaderboard";
 
-export const InfoRow = ({ data }: { data?: ComponentValue<typeof components.GrandLeaderboard.schema> }) => {
-  const rank = data?.playerRank ?? -1;
+export const InfoRow = ({ data }: { data?: FinalLeaderboardData }) => {
+  const rank = data?.rank;
   if (!data || rank == 0) return <SoloPlayerInfo />;
-  const allianceEntity = data.players[rank - 1];
-  const score = data.scores[rank - 1];
-  const wormholeRank = data.wormholeRanks[rank - 1];
-  const primodiumRank = data.primodiumRanks[rank - 1];
 
-  return (
-    <PlayerInfo
-      primodiumRank={primodiumRank}
-      wormholeRank={wormholeRank}
-      rank={rank}
-      score={score}
-      alliance={allianceEntity}
-    />
-  );
+  return <PlayerInfo {...data} />;
 };
 
 const PlayerInfo = ({
-  primodiumRank,
+  shardRank,
   wormholeRank,
   rank,
-  score,
-  alliance,
+  finalScore,
+  player: alliance,
 }: {
-  primodiumRank: number;
-  wormholeRank: number;
+  shardRank?: number;
+  wormholeRank?: number;
   rank: number;
-  score: number;
-  alliance: Entity;
+  finalScore: number;
+  player: Entity;
 }) => {
   const {
     playerAccount: { entity: playerEntity },
@@ -52,10 +41,10 @@ const PlayerInfo = ({
         <div className="grid grid-cols-6 w-full items-center gap-2">
           <GrandLeaderboardItem
             alliance
-            index={rank}
-            score={score}
+            rank={rank}
+            finalScore={finalScore}
             player={alliance}
-            primodiumRank={primodiumRank}
+            shardRank={shardRank}
             wormholeRank={wormholeRank}
             className="col-span-4 h-full"
             hideRanks

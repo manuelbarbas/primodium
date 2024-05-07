@@ -1,7 +1,7 @@
 import { Button } from "@/components/core/Button";
 import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
-import { EScoreType } from "contracts/config/enums";
+import { EPointType } from "contracts/config/enums";
 import { useState } from "react";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
@@ -38,13 +38,13 @@ const WormholeDeposit: React.FC<{ building: Entity; asteroid: Entity }> = ({ bui
   const { resource: wormholeResource, nextResource, timeUntilNextResource } = useWormholeResource();
   const resourceData = useFullResourceCount(wormholeResource, asteroid);
   const { inCooldown, timeLeft } = useWormholeBaseCooldown(building);
-  const multiplier = components.P_ScoreMultiplier.useWithKeys({
+  const multiplier = components.P_PointMultiplier.useWithKeys({
     resource: ResourceEnumLookup[wormholeResource],
   })?.value;
-  const score =
-    components.Score.useWithKeys({
+  const points =
+    components.Points.useWithKeys({
       entity: mud.playerAccount.entity as Hex,
-      scoreType: EScoreType.Wormhole,
+      pointType: EPointType.Wormhole,
     })?.value ?? 0n;
   if (wormholeResource === EntityType.NULL) return null;
 
@@ -75,7 +75,7 @@ const WormholeDeposit: React.FC<{ building: Entity; asteroid: Entity }> = ({ bui
         in {formatTime(timeUntilNextResource)}
       </p>
       <p className="text-xs text-warning">
-        Points earned: {formatResourceCount(wormholeResource, score, { notLocale: true, showZero: true })}
+        Points earned: {formatResourceCount(wormholeResource, points, { notLocale: true, showZero: true })}
       </p>
       <NumberInput count={count} onChange={setCount} max={Number(max)} />
       {!inCooldown && (

@@ -7,7 +7,7 @@ import { addressToEntity } from "src/utils.sol";
 import { EResource, EUnit, EFleetStance } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 
-import { P_EnumToPrototype, ResourceCount, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes, P_Unit, FleetMovement, UnitLevel, FleetStance, IsFleet, OwnedBy, Score, P_ScoreMultiplier } from "codegen/index.sol";
+import { P_EnumToPrototype, ResourceCount, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes, P_Unit, FleetMovement, UnitLevel, FleetStance, IsFleet, OwnedBy, Points, P_PointMultiplier } from "codegen/index.sol";
 
 contract FleetCreateLandSystemTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;
