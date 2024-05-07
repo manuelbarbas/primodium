@@ -1,3 +1,4 @@
+import { otherTables } from "@/network/otherTables";
 import { transportObserver } from "@latticexyz/common";
 import mudConfig from "contracts/mud.config";
 import { Hex, createPublicClient, fallback, http } from "viem";
@@ -28,6 +29,7 @@ function _createNetwork() {
     world,
     publicClient,
     address: networkConfig.worldAddress as Hex,
+    otherTables,
   });
 
   const clock = createClock(latestBlock$, {

@@ -79,8 +79,8 @@ export const Intro = () => {
       onClose={() => setShowIntro(false)}
       blockClose={secondsElapsed < finalSeconds}
     >
-      <Modal.Content className="w-[50rem] p-6">
-        <div className="flex flex-col p-8 items-center h-[44rem]">
+      <Modal.Content className="w-[50rem] p-6 ">
+        <div className="flex flex-col p-8 items-center h-[44rem] z-50">
           <div className="text-center font-bold text-accent uppercase mb-2">
             Welcome to The Belt: The last hope for humanity
           </div>

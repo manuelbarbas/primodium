@@ -4,7 +4,7 @@ import { entityToHexKeyTuple } from "@latticexyz/store-sync/recs";
 import { uuid } from "@latticexyz/utils";
 import { ContractComponent } from "@primodiumxyz/mud-game-tools";
 import { ExtendedContractComponent } from "src/network/components/customComponents/ExtendedComponent";
-import { execute } from "src/network/txExecute";
+import { execute } from "src/network/txExecute/txExecute";
 import { MUD } from "src/network/types";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { Hex } from "viem";

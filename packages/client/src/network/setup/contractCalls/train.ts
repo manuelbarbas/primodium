@@ -2,7 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { EUnit } from "contracts/config/enums";
 import { ampli } from "src/ampli";
 import { components } from "src/network/components";
-import { execute } from "src/network/txExecute";
+import { execute } from "src/network/txExecute/txExecute";
 import { MUD } from "src/network/types";
 import { getEntityTypeName } from "src/util/common";
 import { UnitEntityLookup } from "src/util/constants";

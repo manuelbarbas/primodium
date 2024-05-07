@@ -35,7 +35,7 @@ function SetupResultProvider() {
       setLoading(false);
     }, 100);
 
-    if (import.meta.env.PRI_DEV == "true" || noExternalAccount) {
+    if (noExternalAccount) {
       const privateKey = localStorage.getItem("primodiumPlayerAccount") ?? undefined;
       updatePlayerAccount({ burner: true, privateKey: privateKey as Hex | undefined });
     } else {

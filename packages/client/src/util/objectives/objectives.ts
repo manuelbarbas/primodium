@@ -215,7 +215,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Conquest",
       type: "Asteroid",
       requiredObjectives: [EObjectives.DecryptAttack],
-      asteroidType: "basic",
+      asteroidType: "common",
       description:
         "Capturing an asteroid allows you to take control of it. To capture, you need to reduce an asteroid's encryption to 0 using Colony Ships.",
     },
