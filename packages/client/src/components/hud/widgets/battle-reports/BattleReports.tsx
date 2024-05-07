@@ -127,7 +127,7 @@ export const BattleButton = ({
       >
         <div className="col-span-5 grid grid-cols-[10fr_2fr_10fr] place-items-center gap-1">
           <div className={`flex bg-glass text-xs justify-center items-center gap-2 p-1 w-full`}>
-            <img src={attackerIsFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="h-8" />
+            <img src={attackerIsFleet ? InterfaceIcons.Fleet : InterfaceIcons.Asteroid} className="h-8" />
             <div className={`flex flex-col h-full text-left ${playerIsAttacker ? "text-success" : "text-error"}`}>
               <p>{attackerIsFleet ? entityToFleetName(battle.attacker) : entityToRockName(battle.attacker)}</p>
               <AccountDisplay raw player={attackingPlayer} noColor className="opacity-50" />
@@ -136,7 +136,7 @@ export const BattleButton = ({
 
           <p className="grid place-items-center uppercase font-bold">vs</p>
           <div className={`flex bg-glass text-xs text-left justify-center items-center gap-2 p-1 w-full`}>
-            <img src={defenderIsFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="h-8" />
+            <img src={defenderIsFleet ? InterfaceIcons.Fleet : InterfaceIcons.Asteroid} className="h-8" />
             <div className={`flex flex-col h-full ${!playerIsAttacker ? "text-success" : "text-error"}`}>
               <p>{defenderIsFleet ? entityToFleetName(battle.defender) : entityToRockName(battle.defender)}</p>
               <AccountDisplay raw player={defendingPlayer} noColor className="opacity-50" />

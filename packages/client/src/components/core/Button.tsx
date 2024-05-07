@@ -17,7 +17,7 @@ const buttonVariants = cva(
         accent: "btn-accent border border-neutral",
         secondary: "btn-secondary border border-accent",
         success: "btn-success",
-        info: "btn-info",
+        info: "btn-info border-white/50",
         warning: "btn-warning",
         error: "btn-error border border-rose-300/50",
         ghost: "btn-ghost",

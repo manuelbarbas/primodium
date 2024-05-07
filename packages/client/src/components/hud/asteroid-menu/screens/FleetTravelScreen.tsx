@@ -65,7 +65,7 @@ export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; select
       onPointerLeave={() => components.HoverEntity.remove()}
     >
       <div className="flex gap-2">
-        <IconLabel imageUri={InterfaceIcons.Outgoing} />
+        <IconLabel imageUri={InterfaceIcons.Fleet} />
         <div>
           <p className="text-sm">{entityToFleetName(fleetEntity)}</p>
           <p className="opacity-75 text-xs">{`${fleetStateText} ${entityToRockName(

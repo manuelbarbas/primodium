@@ -18,7 +18,7 @@ export const OwnedColonyShip: React.FC<{ parentEntity: Entity; onClick?: () => v
   const isFleet = components.IsFleet.has(parentEntity);
   const name = isFleet ? entityToFleetName(parentEntity) : entityToRockName(parentEntity);
 
-  const image = isFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid;
+  const image = isFleet ? InterfaceIcons.Fleet : InterfaceIcons.Asteroid;
   const Selected = isFleet ? components.SelectedFleet : components.SelectedRock;
 
   const selected = Selected.use()?.value === parentEntity;

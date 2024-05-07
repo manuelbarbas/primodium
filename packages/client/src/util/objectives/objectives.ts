@@ -103,7 +103,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BuildWorkshop],
       description:
         'Fleets transport units and resources between asteroids. Create a fleet on the starmap by selecting your asteroid and selecting "Add Fleet".',
-      icon: InterfaceIcons.Outgoing,
+      icon: InterfaceIcons.Fleet,
       tooltip: "Created a fleet",
     },
   ],
@@ -128,7 +128,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.TransferFromFleet],
       description:
         "Sending a fleet to an asteroid allows it to deposit resources and units or fight other fleets. To send, select a fleet and select Send. Then select the target asteroid.",
-      icon: InterfaceIcons.Outgoing,
+      icon: InterfaceIcons.Fleet,
 
       tooltip: "Executed a fleet send",
     },
@@ -343,7 +343,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BuildStarmapper],
       description:
         "Defending an asteroid with a fleet provides the fleet's defense to that asteroid's strength. To defend, go to the fleet's Management pane and select Defend.",
-      icon: InterfaceIcons.Outgoing,
+      icon: InterfaceIcons.Fleet,
       tooltip: "Landed a fleet",
     },
   ],
@@ -355,7 +355,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.DefendWithFleet],
       description:
         "Blocking with a fleet prevents all other fleets from leaving the current asteroid. To block, go to the fleet's Management pane and select Block.",
-      icon: InterfaceIcons.Outgoing,
+      icon: InterfaceIcons.Fleet,
       tooltip: "Landed a fleet",
     },
   ],
@@ -367,7 +367,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BlockWithFleet],
       description:
         "Landing a fleet on an asteroid sets the fleet's owner to that asteroid. It also deposit all resources and units. To land, select a fleet and select Land.",
-      icon: InterfaceIcons.Outgoing,
+      icon: InterfaceIcons.Fleet,
       tooltip: "Landed a fleet",
     },
   ],

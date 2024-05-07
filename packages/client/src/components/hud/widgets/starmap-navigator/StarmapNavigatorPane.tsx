@@ -47,7 +47,7 @@ export const StarmapNavigatorPane = () => {
 
   const imagePaths = [
     InterfaceIcons.Asteroid,
-    InterfaceIcons.Outgoing,
+    InterfaceIcons.Fleet,
     EntityToUnitImage[EntityType.ColonyShip],
     InterfaceIcons.Shard,
   ];

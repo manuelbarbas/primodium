@@ -15,8 +15,9 @@ import { BrandingLabel } from "@/components/shared/BrandingLabel";
 import { usePersistentStore } from "@game/stores/PersistentStore";
 import { memo } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { HoverInfo } from "./hover/HoverInfo";
+import { HoverInfo } from "@/components/hud/hover/HoverInfo";
 import { AsteroidMenuPopup } from "@/components/hud/markers/starmap/AsteroidMenuPopup";
+import { CommandDock } from "@/components/hud/CommandDock";
 
 export const GameHUD = memo(() => {
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
@@ -51,6 +52,7 @@ export const GameHUD = memo(() => {
 
         <HUD.Left>
           <Blueprints />
+          <CommandDock />
         </HUD.Left>
 
         <HUD.BottomMiddle>

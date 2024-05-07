@@ -98,7 +98,7 @@ export const UnitUpgrade: React.FC<{ unit: Entity }> = memo(({ unit }) => {
 
       <IconLabel
         className="text-lg font-bold gap-4 mt-2"
-        imageUri={EntityToUnitImage[unit]?.at(0) ?? ""}
+        imageUri={EntityToUnitImage[unit] ?? ""}
         text={getEntityTypeName(unit)}
       />
       <div className="grid grid-cols-6 gap-2 border-y border-cyan-400/30 mx-auto">

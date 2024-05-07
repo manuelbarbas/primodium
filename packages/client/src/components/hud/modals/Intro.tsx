@@ -147,7 +147,7 @@ export const Intro = () => {
             )}
             {secondsElapsed >= thresholds.deliver && (
               <SecondaryCard className="animate-in fade-in duration-500 flex flex-row w-96 gap-2 items-center">
-                <img src={InterfaceIcons.Outgoing} alt="build" className="w-10 h-10" />
+                <img src={InterfaceIcons.Fleet} alt="build" className="w-10 h-10" />
                 <div className="flex flex-col">
                   <p>Deliver</p>
                   <p className="text-xs opacity-70">Teleport your resources to Command through Wormhole Generators</p>

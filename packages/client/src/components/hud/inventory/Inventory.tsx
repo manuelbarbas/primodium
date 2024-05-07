@@ -10,7 +10,7 @@ import { useMud } from "src/hooks";
 export const Inventory = memo(() => {
   const { components } = useMud();
   const [open, setOpen] = useState(true);
-  const mapOpen = components.SelectedMode.use()?.value === Mode.Starmap;
+  const mapOpen = components.SelectedMode.use()?.value !== Mode.Asteroid;
 
   if (mapOpen) return;
 

@@ -93,11 +93,11 @@ export const InitialScreen = ({ selectedRock }: { selectedRock: Entity }) => {
       <Navigator.NavButton
         to="travel"
         size="content"
-        variant="secondary"
+        variant="info"
         className="heropattern-topography-slate-100/10 py-3"
       >
         <div className="flex flex-start px-1 gap-3 w-full">
-          <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Outgoing} />
+          <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Fleet} />
           <div className="flex flex-col items-start">
             <p>TRAVEL</p>
             <p className="block text-xs opacity-75">SEND A FLEET HERE</p>

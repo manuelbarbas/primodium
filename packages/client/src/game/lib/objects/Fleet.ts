@@ -30,14 +30,12 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
     this.currentRotationFrame = this.frames[0].textureFrame;
     this.particles = this.scene.add
       .particles(pixelCoord.x, -pixelCoord.y, "flares", {
-        // frame: "blue",
         x: pixelCoord.x,
         y: -pixelCoord.y,
         lifespan: 1000,
         speed: { min: 20, max: 25 },
         tintFill: true,
-        color: [0x472a00, 0x261c01, 0xf5efdf, 0xa3531a, 0xedb33e, 0xf5efdf],
-        // gravityY: 300,
+        color: [0xc7e5fd, 0x0ecaff, 0x00207d, 0x0ecaff],
         scale: { start: 0.2, end: 0 },
         angle: { min: -80, max: -100 },
         quantity: 1,

@@ -48,7 +48,7 @@ const Ally = ({ selected, entity, onClick }: { selected: boolean; entity: Entity
       className={`flex bg-black/10 border text-xs justify-center items-center gap-2 p-1 w-full border-secondary/50`}
       selected={selected}
     >
-      <img src={isFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="w-6" />
+      <img src={isFleet ? InterfaceIcons.Fleet : InterfaceIcons.Asteroid} className="w-6" />
       {isFleet ? entityToFleetName(entity, true) : entityToRockName(entity)}
     </Button>
   );

@@ -18,7 +18,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
   constructor(scene: Scene, coord: Coord) {
     super(scene.phaserScene, coord.x, coord.y);
     this.orbitRing = new Phaser.GameObjects.Graphics(scene.phaserScene)
-      .lineStyle(2, 0x808080, 0.5)
+      .lineStyle(2, 0x808080, 0.25)
       .strokeEllipse(0, 0, WIDTH, HEIGHT);
 
     this.fleetsContainer = scene.phaserScene.add.container(0, 0);
@@ -46,17 +46,17 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
           fleet.setRotationFrame(Phaser.Math.RadToDeg(angle));
           fleet.angle = Phaser.Math.RadToDeg(angle) - fleet.getRotationFrameOffset();
           //TODO: TRAIL PARTICLES
-          // fleet.particles.setActive(true).setVisible(true).resume();
+          fleet.particles.setActive(true).setVisible(true).resume();
 
-          // fleet.particles.angle = Phaser.Math.RadToDeg(angle);
-          // fleet.particles.setPosition(fleet.getPixelCoord().x, fleet.getPixelCoord().y);
-          // const dx = coord.x - fleet.getPixelCoord().x;
-          // const dy = coord.y - fleet.getPixelCoord().y;
-          // const magnitude = Math.sqrt(dx * dx + dy * dy);
-          // const ux = dx / magnitude;
-          // const uy = dy / magnitude;
-          // const gravityStrength = 10; // Adjust this value to change the strength of the gravity
-          // fleet.particles.setParticleGravity(-ux * gravityStrength, uy * gravityStrength);
+          fleet.particles.angle = Phaser.Math.RadToDeg(angle);
+          fleet.particles.setPosition(fleet.getPixelCoord().x, fleet.getPixelCoord().y);
+          const dx = coord.x - fleet.getPixelCoord().x;
+          const dy = coord.y - fleet.getPixelCoord().y;
+          const magnitude = Math.sqrt(dx * dx + dy * dy);
+          const ux = dx / magnitude;
+          const uy = dy / magnitude;
+          const gravityStrength = 10; // Adjust this value to change the strength of the gravity
+          fleet.particles.setParticleGravity(-ux * gravityStrength, uy * gravityStrength);
         });
       },
     });

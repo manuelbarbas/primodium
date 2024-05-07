@@ -53,7 +53,7 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
       <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
       <div className="flex flex-col gap-1 z-10">
         <div className="flex gap-1 items-center">
-          <IconLabel imageUri={InterfaceIcons.Outgoing} className={`pixel-images w-3 h-3 bg-base-100`} />
+          <IconLabel imageUri={InterfaceIcons.Fleet} className={`pixel-images w-3 h-3 bg-base-100`} />
           <p className="text-sm font-bold uppercase">{fleetStats.title}</p>
         </div>
         <div className="flex gap-1">

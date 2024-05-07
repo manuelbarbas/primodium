@@ -11,10 +11,9 @@ import { BattleReports } from "./widgets/battle-reports/BattleReports";
 
 const btnClass = "group hover:bg-transparent hover:scale-[115%]";
 const iconClass = "text-3xl";
+const DEV = import.meta.env.PRI_DEV === "true";
 
 export const Dock = () => {
-  const DEV = import.meta.env.PRI_DEV === "true";
-
   return (
     <GlassCard direction={"top"} className="h-12 px-5">
       <div className="flex flex-row gap-2 items-center pointer-events-auto -translate-y-[35px]">

@@ -34,7 +34,7 @@ export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ 
     <Button size="content" selected={selected} onClick={onClick} className="!gap-1 min-h-24">
       <p className="text-wrap">{fleetName}</p>
       <div className="flex justify-around w-full items-center">
-        <img src={InterfaceIcons.Outgoing} className="w-10 h-10" />
+        <img src={InterfaceIcons.Fleet} className="w-10 h-10" />
         <p className="flex flex-col text-xs">
           {fleetStateText}{" "}
           {!!movement && <span className="text-accent">{entityToRockName(movement.destination as Entity)}</span>}

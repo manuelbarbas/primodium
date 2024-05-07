@@ -17,7 +17,6 @@ import Leaderboard from "../icons/UI_Leaderboard.png?url";
 import Navigator from "../icons/UI_Navigator.png?url";
 import NotAllowed from "../icons/UI_NotAllowed.png?url";
 import Objective from "../icons/UI_Objective.png?url";
-import Outgoing from "../icons/UI_Outgoing.png?url";
 import Reinforcements from "../icons/UI_Reinforcements.png?url";
 import Reports from "../icons/UI_Reports.png?url";
 import Return from "../icons/UI_Return.png?url";
@@ -26,6 +25,7 @@ import Shard from "../icons/UI_Shard.png?url";
 import Spectate from "../icons/UI_Spectate.png?url";
 import Starmap from "../icons/UI_Starmap.png?url";
 import Trade from "../icons/UI_Trade.png?url";
+import Transfer from "../icons/UI_Transfer.png?url";
 import Vault from "../icons/UI_Vault.png?url";
 import Debug from "../icons/UI_Debug.png?url";
 import CategoryInfra from "../icons/category/infra.png?url";
@@ -34,7 +34,7 @@ import CategoryProduction from "../icons/category/production.png?url";
 import CategoryStorage from "../icons/category/storage.png?url";
 import Wormhole from "../icons/UI_WormholeBase.png?url";
 import ShardSprite from "../sprites/shard/shard.png?url";
-
+import Fleet from "../icons/UI_Fleet.png?url";
 export const InterfaceIcons = {
   Add,
   Alliance,
@@ -54,7 +54,6 @@ export const InterfaceIcons = {
   Leaderboard,
   NotAllowed,
   Objective,
-  Outgoing,
   Reinforcements,
   Reports,
   Return,
@@ -64,6 +63,7 @@ export const InterfaceIcons = {
   Spectate,
   Starmap,
   Trade,
+  Transfer,
   Vault,
   Navigator,
   CategoryInfra,
@@ -71,4 +71,5 @@ export const InterfaceIcons = {
   CategoryProduction,
   CategoryStorage,
   Wormhole,
+  Fleet,
 };

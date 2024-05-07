@@ -74,7 +74,7 @@ export const BattleDetails: React.FC<{
           <SecondaryCard className="w-full flex flex-col gap-2 p-2">
             <div className="w-full flex gap-4">
               <div className="w-60 flex flex-col gap-1 justify-center items-center text-center text-sm">
-                <img src={attackerIsFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="h-12 w-12" />
+                <img src={attackerIsFleet ? InterfaceIcons.Fleet : InterfaceIcons.Asteroid} className="h-12 w-12" />
                 <p className={`${winnerIsAttacker ? "text-success" : "text-error"}`}>
                   {attackerIsFleet ? entityToFleetName(battle.attacker) : entityToRockName(battle.attacker)}
                 </p>
@@ -111,7 +111,7 @@ export const BattleDetails: React.FC<{
           {defenderDetails && (
             <SecondaryCard className="w-full flex flex-row gap-4 p-2 ">
               <div className="w-60 flex flex-col gap-1 justify-center items-center text-center text-sm">
-                <img src={defenderIsFleet ? InterfaceIcons.Outgoing : InterfaceIcons.Asteroid} className="h-12 w-12" />
+                <img src={defenderIsFleet ? InterfaceIcons.Fleet : InterfaceIcons.Asteroid} className="h-12 w-12" />
                 <p className={`${!winnerIsAttacker ? "text-success" : "text-error"}`}>
                   {defenderIsFleet ? entityToFleetName(battle.defender) : entityToRockName(battle.defender)}
                 </p>
