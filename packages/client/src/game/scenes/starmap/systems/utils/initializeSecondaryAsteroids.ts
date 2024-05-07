@@ -181,23 +181,23 @@ function buildRaidableAsteroid(asteroidEntity: Entity) {
   const maxLevel = components.Asteroid.get(asteroidEntity)?.maxLevel ?? 1n;
 
   // build iron mine at 22, 15
-  anticipateBuilding(EntityType.IronMine, { x: 22, y: 15 }, asteroidEntity);
+  anticipateBuilding(EntityType.IronMine, { x: 22, y: 15 }, asteroidEntity, 1n);
   // build copper mine at 22, 14
-  anticipateBuilding(EntityType.CopperMine, { x: 22, y: 14 }, asteroidEntity);
+  anticipateBuilding(EntityType.CopperMine, { x: 22, y: 14 }, asteroidEntity, 1n);
   // build lithium mine at 22, 13
-  anticipateBuilding(EntityType.LithiumMine, { x: 22, y: 13 }, asteroidEntity);
+  anticipateBuilding(EntityType.LithiumMine, { x: 22, y: 13 }, asteroidEntity, 1n);
 
   // storage building at 21, 15
-  anticipateBuilding(EntityType.StorageUnit, { x: 21, y: 15 }, asteroidEntity);
+  anticipateBuilding(EntityType.StorageUnit, { x: 21, y: 15 }, asteroidEntity, 2n);
   const storageMax = storageUnitStorageUpgrades[2];
 
   if (maxLevel >= 3n) {
     // build Iron Plate factory at 17, 15
-    anticipateBuilding(EntityType.IronPlateFactory, { x: 19, y: 15 }, asteroidEntity);
+    anticipateBuilding(EntityType.IronPlateFactory, { x: 19, y: 15 }, asteroidEntity, 1n);
     // build Alloy factory at 15, 15
-    anticipateBuilding(EntityType.AlloyFactory, { x: 17, y: 15 }, asteroidEntity);
+    anticipateBuilding(EntityType.AlloyFactory, { x: 17, y: 15 }, asteroidEntity, 1n);
     // build PVCell factory at 15, 17
-    anticipateBuilding(EntityType.PVCellFactory, { x: 15, y: 15 }, asteroidEntity);
+    anticipateBuilding(EntityType.PVCellFactory, { x: 15, y: 15 }, asteroidEntity, 1n);
 
     // set storage to max out advanced resources
     anticipateStorage(EResource.IronPlate, storageMax.IronPlate, asteroidEntity);
@@ -232,11 +232,11 @@ export function removeRaidableAsteroid(asteroidEntity: Entity) {
   }
 }
 
-function anticipateBuilding(buildingPrototype: Entity, coord: Coord, asteroidEntity: Entity) {
+function anticipateBuilding(buildingPrototype: Entity, coord: Coord, asteroidEntity: Entity, level: bigint) {
   const buildingEntity = hashEntities(asteroidEntity, buildingPrototype);
   components.BuildingType.set({ ...emptyData, value: buildingPrototype }, buildingEntity);
   components.Position.set({ ...emptyData, x: coord.x, y: coord.y, parentEntity: asteroidEntity }, buildingEntity);
-  components.Level.set({ ...emptyData, value: 1n }, buildingEntity);
+  components.Level.set({ ...emptyData, value: level }, buildingEntity);
   components.IsActive.set({ ...emptyData, value: true }, buildingEntity);
   components.OwnedBy.set({ ...emptyData, value: asteroidEntity }, buildingEntity);
 }
