@@ -105,7 +105,7 @@ export const Enter: React.FC = () => {
           <div className="grid grid-cols-7 gap-2 items-center pointer-events-auto">
             <button
               onClick={handleDelegate}
-              className="relative btn col-span-6 font-bold outline-none h-fit btn-secondary w-full z-0 star-background hover:scale-110 relative"
+              className="relative btn col-span-6 font-bold outline-none h-fit btn-secondary w-full z-[1] star-background hover:scale-110 relative"
             >
               <Tooltip
                 className="w-56 text-left h-fit text-wrap"
@@ -118,7 +118,7 @@ export const Enter: React.FC = () => {
               </Tooltip>
               Authorize Delegate
             </button>
-            <button onClick={confirmSkip} className="btn btn-neutral opacity-80 hover:scale-110 -z-10">
+            <button onClick={confirmSkip} className="btn btn-neutral opacity-80 hover:scale-110">
               Skip
             </button>
           </div>
