@@ -99,7 +99,11 @@ export const AllianceJoinRequests = ({
                   itemSize={30}
                   className="scrollbar"
                 >
-                  {({ index }) => <InvitedPlayerItem key={index} index={index} playerEntity={invitedPlayers[index]} />}
+                  {({ index, style }) => (
+                    <div style={style} className="pr-2">
+                      <InvitedPlayerItem key={index} index={index} playerEntity={invitedPlayers[index]} />
+                    </div>
+                  )}
                 </List>
               )}
             </AutoSizer>

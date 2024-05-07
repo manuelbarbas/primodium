@@ -54,11 +54,15 @@ export const IndexScreen = () => {
     alliance.members.some((member) => member === playerEntity)
   )?.entity;
 
+  const allianceLength = alliances?.length ?? 0;
   return (
     <Navigator.Screen
       title="search"
-      className="grid grid-rows-[min-content_1fr_min-content] w-full h-full text-xs pointer-events-auto p-4 gap-4"
+      className="relative grid grid-rows-[min-content_1fr_min-content] w-full h-full text-xs pointer-events-auto p-4 gap-4"
     >
+      {allianceLength > 0 && (
+        <div className="absolute top-2 right-2 text-xs opacity-70">{allianceLength} Alliances</div>
+      )}
       <div className="flex flex-col items-center gap-2 text-base">
         <p>ALLIANCES</p>
         <div className="relative w-fit">
@@ -72,21 +76,23 @@ export const IndexScreen = () => {
         </div>
       </div>
       {alliances && alliances.length > 0 ? (
-        <AutoSizer>
-          {({ height, width }: { height: number; width: number }) => (
-            <List height={height} width={width} itemCount={alliances.length} itemSize={47} className="scrollbar">
-              {({ index }) => {
-                return (
-                  <AllianceItem
-                    key={index}
-                    {...alliances[index]}
-                    alreadyMember={alliances[index].entity === playerAlliance}
-                  />
-                );
-              }}
-            </List>
-          )}
-        </AutoSizer>
+        <div className="flex flex-col w-full h-full justify-between text-xs pointer-events-auto">
+          <AutoSizer>
+            {({ height, width }: { height: number; width: number }) => (
+              <List height={height} width={width} itemCount={10} itemSize={52} className="scrollbar">
+                {({ index, style }) => (
+                  <div style={style} className="pr-2">
+                    <AllianceItem
+                      key={alliances[index].entity}
+                      {...alliances[index]}
+                      alreadyMember={alliances[index].entity === playerAlliance}
+                    />
+                  </div>
+                )}
+              </List>
+            )}
+          </AutoSizer>
+        </div>
       ) : (
         <SecondaryCard className="w-full flex-grow items-center justify-center font-bold opacity-50">
           NO ALLIANCES
@@ -145,7 +151,7 @@ const AllianceItem = ({
   const inviteOnly = allianceMode === EAllianceInviteMode.Closed;
 
   return (
-    <SecondaryCard className={cn("grid grid-cols-[1fr_min-content] w-full px-4 items-center h-10", className)}>
+    <SecondaryCard className={cn("grid grid-cols-[1fr_min-content] w-full px-4 items-center h-[48px]", className)}>
       <div className="col-span-6 flex justify-between items-center">
         <div className="flex gap-2 items-center">
           <span className="text-sm text-warning">[{name}]</span>

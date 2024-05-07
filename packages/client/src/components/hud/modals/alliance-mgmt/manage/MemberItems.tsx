@@ -39,17 +39,19 @@ export const MemberItems = ({
           <AutoSizer>
             {({ height, width }: { height: number; width: number }) => (
               <List height={height} width={width} itemCount={players.length} itemSize={35} className="scrollbar">
-                {({ index }) => (
-                  <MemberItem
-                    key={index}
-                    index={index}
-                    playerRole={playerRole}
-                    player={{
-                      entity: players[index].entity,
-                      name: players[index].name,
-                      role: (players[index].role as EAllianceRole) ?? EAllianceRole.Member,
-                    }}
-                  />
+                {({ index, style }) => (
+                  <div style={style} className="pr-2">
+                    <MemberItem
+                      key={index}
+                      index={index}
+                      playerRole={playerRole}
+                      player={{
+                        entity: players[index].entity,
+                        name: players[index].name,
+                        role: (players[index].role as EAllianceRole) ?? EAllianceRole.Member,
+                      }}
+                    />
+                  </div>
                 )}
               </List>
             )}
