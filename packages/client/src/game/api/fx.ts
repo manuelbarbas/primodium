@@ -34,11 +34,12 @@ export const createFxApi = (scene: Scene) => {
         speed,
         lifespan: 800,
         quantity: 10,
-        scale: { start: 0.5, end: 0 },
+        scale: { start: 0.1, end: 0 },
         tintFill: true,
         // emitting: true,
         color: [0x472a00, 0x261c01, 0xf5efdf, 0xa3531a, 0xedb33e, 0xf5efdf],
         // emitZone: { type: 'edge', source: , quantity: 42 },
+        angle: 25,
         duration: 300,
       })
       .start();

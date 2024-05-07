@@ -594,7 +594,7 @@ export const AnimationConfig = [
     assetKey: "sprite-atlas",
     frameRate: 5,
     startFrame: 1,
-    endFrame: 8,
+    endFrame: 16,
     repeat: -1,
     prefix: "sprites/fleets/player/Fleets_Default_Player",
     suffix: ".png",

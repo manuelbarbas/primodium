@@ -5,10 +5,10 @@
     },
     "textures": [
         {
-            "image": "atlas.png?timestamp=1714953683991",
+            "image": "atlas.png?timestamp=1715056554629",
             "format": "RGBA8888",
             "size": {
-                "w": 2270,
+                "w": 2302,
                 "h": 2299
             },
             "scale": 1,
@@ -9758,154 +9758,343 @@
                     }
                 },
                 {
-                    "filename": "sprites/spacerocks/motherlodes/motherlode_iridium_large.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     },
                     "spriteSourceSize": {
                         "x": 0,
                         "y": 0,
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     },
                     "frame": {
                         "x": 1613,
                         "y": 1848,
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     }
                 },
                 {
-                    "filename": "sprites/spacerocks/motherlodes/motherlode_iridium_medium.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player10.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     },
                     "spriteSourceSize": {
                         "x": 0,
                         "y": 0,
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     },
                     "frame": {
                         "x": 2164,
                         "y": 1754,
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     }
                 },
                 {
-                    "filename": "sprites/spacerocks/motherlodes/motherlode_iridium_small.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player11.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     },
                     "spriteSourceSize": {
                         "x": 0,
                         "y": 0,
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     },
                     "frame": {
                         "x": 2164,
                         "y": 1818,
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     }
                 },
                 {
-                    "filename": "sprites/spacerocks/motherlodes/motherlode_kimberlite_large.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player12.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     },
                     "spriteSourceSize": {
                         "x": 0,
                         "y": 0,
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     },
                     "frame": {
                         "x": 2164,
                         "y": 1882,
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     }
                 },
                 {
-                    "filename": "sprites/spacerocks/motherlodes/motherlode_kimberlite_medium.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player13.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     },
                     "spriteSourceSize": {
                         "x": 0,
                         "y": 0,
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     },
                     "frame": {
                         "x": 2164,
                         "y": 1946,
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     }
                 },
                 {
-                    "filename": "sprites/spacerocks/motherlodes/motherlode_kimberlite_small.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player14.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     },
                     "spriteSourceSize": {
                         "x": 0,
                         "y": 0,
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     },
                     "frame": {
                         "x": 2164,
                         "y": 2010,
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     }
                 },
                 {
-                    "filename": "sprites/spacerocks/motherlodes/motherlode_platinum_large.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player15.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     },
                     "spriteSourceSize": {
                         "x": 0,
                         "y": 0,
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     },
                     "frame": {
                         "x": 2112,
                         "y": 2074,
-                        "w": 64,
+                        "w": 62,
                         "h": 64
                     }
                 },
                 {
-                    "filename": "sprites/spacerocks/motherlodes/motherlode_platinum_medium.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player16.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 62,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 62,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 2174,
+                        "y": 2074,
+                        "w": 62,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/fleets/player/Fleets_Default_Player2.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 62,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 62,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 0,
+                        "y": 2182,
+                        "w": 62,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/fleets/player/Fleets_Default_Player3.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 62,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 62,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 62,
+                        "y": 2182,
+                        "w": 62,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/fleets/player/Fleets_Default_Player4.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 62,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 62,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 124,
+                        "y": 2182,
+                        "w": 62,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/fleets/player/Fleets_Default_Player5.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 62,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 62,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 186,
+                        "y": 2182,
+                        "w": 62,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/fleets/player/Fleets_Default_Player6.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 62,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 62,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 248,
+                        "y": 2181,
+                        "w": 62,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/fleets/player/Fleets_Default_Player7.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 62,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 62,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 310,
+                        "y": 2181,
+                        "w": 62,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/fleets/player/Fleets_Default_Player8.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 62,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 62,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 372,
+                        "y": 2181,
+                        "w": 62,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/fleets/player/Fleets_Default_Player9.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 62,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 62,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 434,
+                        "y": 2181,
+                        "w": 62,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_iridium_large.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -9926,7 +10115,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/spacerocks/motherlodes/motherlode_platinum_small.png",
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_iridium_medium.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -9947,70 +10136,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/spacerocks/motherlodes/motherlode_titanium_large.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 64
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 64
-                    },
-                    "frame": {
-                        "x": 0,
-                        "y": 2182,
-                        "w": 64,
-                        "h": 64
-                    }
-                },
-                {
-                    "filename": "sprites/spacerocks/motherlodes/motherlode_titanium_medium.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 64
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 64
-                    },
-                    "frame": {
-                        "x": 64,
-                        "y": 2182,
-                        "w": 64,
-                        "h": 64
-                    }
-                },
-                {
-                    "filename": "sprites/spacerocks/motherlodes/motherlode_titanium_small.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 64
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 64
-                    },
-                    "frame": {
-                        "x": 128,
-                        "y": 2182,
-                        "w": 64,
-                        "h": 64
-                    }
-                },
-                {
-                    "filename": "sprites/units/aegisdrone.png",
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_iridium_small.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10031,6 +10157,216 @@
                     }
                 },
                 {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_kimberlite_large.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 496,
+                        "y": 2174,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_kimberlite_medium.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 560,
+                        "y": 2174,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_kimberlite_small.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 624,
+                        "y": 2174,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_platinum_large.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 688,
+                        "y": 2174,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_platinum_medium.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 752,
+                        "y": 2174,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_platinum_small.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 816,
+                        "y": 2174,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_titanium_large.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 880,
+                        "y": 2174,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_titanium_medium.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 944,
+                        "y": 2174,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/spacerocks/motherlodes/motherlode_titanium_small.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 1008,
+                        "y": 2174,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
+                    "filename": "sprites/units/aegisdrone.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 64
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 64
+                    },
+                    "frame": {
+                        "x": 1072,
+                        "y": 2174,
+                        "w": 64,
+                        "h": 64
+                    }
+                },
+                {
                     "filename": "sprites/units/droid.png",
                     "rotated": false,
                     "trimmed": false,
@@ -10045,8 +10381,8 @@
                         "h": 64
                     },
                     "frame": {
-                        "x": 192,
-                        "y": 2175,
+                        "x": 1136,
+                        "y": 2174,
                         "w": 64,
                         "h": 64
                     }
@@ -10066,8 +10402,8 @@
                         "h": 64
                     },
                     "frame": {
-                        "x": 256,
-                        "y": 2175,
+                        "x": 1200,
+                        "y": 2174,
                         "w": 64,
                         "h": 64
                     }
@@ -10087,7 +10423,7 @@
                         "h": 64
                     },
                     "frame": {
-                        "x": 320,
+                        "x": 1264,
                         "y": 2174,
                         "w": 64,
                         "h": 64
@@ -10108,8 +10444,8 @@
                         "h": 64
                     },
                     "frame": {
-                        "x": 384,
-                        "y": 2174,
+                        "x": 1328,
+                        "y": 2173,
                         "w": 64,
                         "h": 64
                     }
@@ -10129,178 +10465,10 @@
                         "h": 64
                     },
                     "frame": {
-                        "x": 448,
-                        "y": 2174,
+                        "x": 1392,
+                        "y": 2173,
                         "w": 64,
                         "h": 64
-                    }
-                },
-                {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player1.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 54,
-                        "h": 54
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 54,
-                        "h": 54
-                    },
-                    "frame": {
-                        "x": 380,
-                        "y": 1640,
-                        "w": 54,
-                        "h": 54
-                    }
-                },
-                {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player2.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 54,
-                        "h": 54
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 54,
-                        "h": 54
-                    },
-                    "frame": {
-                        "x": 434,
-                        "y": 1640,
-                        "w": 54,
-                        "h": 54
-                    }
-                },
-                {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player3.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 54,
-                        "h": 54
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 54,
-                        "h": 54
-                    },
-                    "frame": {
-                        "x": 488,
-                        "y": 1637,
-                        "w": 54,
-                        "h": 54
-                    }
-                },
-                {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player4.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 54,
-                        "h": 54
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 54,
-                        "h": 54
-                    },
-                    "frame": {
-                        "x": 542,
-                        "y": 1637,
-                        "w": 54,
-                        "h": 54
-                    }
-                },
-                {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player5.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 54,
-                        "h": 54
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 54,
-                        "h": 54
-                    },
-                    "frame": {
-                        "x": 596,
-                        "y": 1637,
-                        "w": 54,
-                        "h": 54
-                    }
-                },
-                {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player6.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 54,
-                        "h": 54
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 54,
-                        "h": 54
-                    },
-                    "frame": {
-                        "x": 650,
-                        "y": 1637,
-                        "w": 54,
-                        "h": 54
-                    }
-                },
-                {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player7.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 54,
-                        "h": 54
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 54,
-                        "h": 54
-                    },
-                    "frame": {
-                        "x": 704,
-                        "y": 1637,
-                        "w": 54,
-                        "h": 54
-                    }
-                },
-                {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player8.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 54,
-                        "h": 54
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 54,
-                        "h": 54
-                    },
-                    "frame": {
-                        "x": 1549,
-                        "y": 1860,
-                        "w": 54,
-                        "h": 54
                     }
                 },
                 {
@@ -10549,14 +10717,287 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 1677,
-                        "y": 1848,
+                        "x": 380,
+                        "y": 1640,
                         "w": 32,
                         "h": 53
                     }
                 },
                 {
                     "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_4.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 412,
+                        "y": 1640,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_5.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 444,
+                        "y": 1640,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_6.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 476,
+                        "y": 1637,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_7.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 508,
+                        "y": 1637,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_8.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 540,
+                        "y": 1637,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_9.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 572,
+                        "y": 1637,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_1.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 604,
+                        "y": 1637,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_2.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 636,
+                        "y": 1637,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_3.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 668,
+                        "y": 1637,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_4.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 700,
+                        "y": 1637,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_5.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 1549,
+                        "y": 1860,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_6.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 1581,
+                        "y": 1860,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_7.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 1675,
+                        "y": 1848,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10577,7 +11018,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_5.png",
+                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10598,7 +11039,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_6.png",
+                    "filename": "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10619,7 +11060,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_7.png",
+                    "filename": "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10640,7 +11081,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_8.png",
+                    "filename": "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10661,7 +11102,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level2/Miner_Copper_LVL2_9.png",
+                    "filename": "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10682,7 +11123,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_1.png",
+                    "filename": "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10703,7 +11144,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_2.png",
+                    "filename": "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10724,7 +11165,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_3.png",
+                    "filename": "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10745,7 +11186,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_4.png",
+                    "filename": "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10766,7 +11207,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_5.png",
+                    "filename": "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10787,7 +11228,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_6.png",
+                    "filename": "sprites/miners/iridiummine/level2/Miner_Iridium_LVL2_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10808,7 +11249,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_7.png",
+                    "filename": "sprites/miners/iridiummine/level2/Miner_Iridium_LVL2_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -10829,279 +11270,6 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_8.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 512,
-                        "y": 2174,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/coppermine/level3/Miner_Copper_LVL3_9.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 544,
-                        "y": 2174,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_1.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 576,
-                        "y": 2174,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_2.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 608,
-                        "y": 2174,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_3.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 640,
-                        "y": 2174,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_4.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 672,
-                        "y": 2174,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_5.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 704,
-                        "y": 2174,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_6.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 736,
-                        "y": 2174,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_7.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 768,
-                        "y": 2174,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_8.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 800,
-                        "y": 2174,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_9.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 832,
-                        "y": 2174,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/iridiummine/level2/Miner_Iridium_LVL2_1.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 864,
-                        "y": 2174,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/iridiummine/level2/Miner_Iridium_LVL2_2.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 896,
-                        "y": 2174,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
                     "filename": "sprites/miners/iridiummine/level2/Miner_Iridium_LVL2_3.png",
                     "rotated": false,
                     "trimmed": false,
@@ -11116,8 +11284,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 928,
-                        "y": 2174,
+                        "x": 1456,
+                        "y": 2173,
                         "w": 32,
                         "h": 53
                     }
@@ -11137,8 +11305,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 960,
-                        "y": 2174,
+                        "x": 1488,
+                        "y": 2173,
                         "w": 32,
                         "h": 53
                     }
@@ -11158,8 +11326,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 992,
-                        "y": 2174,
+                        "x": 1520,
+                        "y": 2173,
                         "w": 32,
                         "h": 53
                     }
@@ -11179,8 +11347,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 1024,
-                        "y": 2174,
+                        "x": 1552,
+                        "y": 2173,
                         "w": 32,
                         "h": 53
                     }
@@ -11200,8 +11368,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 1056,
-                        "y": 2174,
+                        "x": 1584,
+                        "y": 2173,
                         "w": 32,
                         "h": 53
                     }
@@ -11221,8 +11389,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 1088,
-                        "y": 2174,
+                        "x": 1616,
+                        "y": 2173,
                         "w": 32,
                         "h": 53
                     }
@@ -11242,8 +11410,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 1120,
-                        "y": 2174,
+                        "x": 1648,
+                        "y": 2173,
                         "w": 32,
                         "h": 53
                     }
@@ -11263,8 +11431,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 1152,
-                        "y": 2174,
+                        "x": 1680,
+                        "y": 2173,
                         "w": 32,
                         "h": 53
                     }
@@ -11284,8 +11452,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 1184,
-                        "y": 2174,
+                        "x": 1712,
+                        "y": 2173,
                         "w": 32,
                         "h": 53
                     }
@@ -11305,8 +11473,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 1216,
-                        "y": 2174,
+                        "x": 1744,
+                        "y": 2173,
                         "w": 32,
                         "h": 53
                     }
@@ -11326,8 +11494,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 1248,
-                        "y": 2174,
+                        "x": 1776,
+                        "y": 2173,
                         "w": 32,
                         "h": 53
                     }
@@ -11347,7 +11515,7 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 1280,
+                        "x": 1808,
                         "y": 2173,
                         "w": 32,
                         "h": 53
@@ -11368,8 +11536,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 1312,
-                        "y": 2173,
+                        "x": 2048,
+                        "y": 2146,
                         "w": 32,
                         "h": 53
                     }
@@ -11389,8 +11557,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 1344,
-                        "y": 2173,
+                        "x": 2080,
+                        "y": 2146,
                         "w": 32,
                         "h": 53
                     }
@@ -11410,8 +11578,8 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 1376,
-                        "y": 2173,
+                        "x": 2112,
+                        "y": 2138,
                         "w": 32,
                         "h": 53
                     }
@@ -11431,392 +11599,14 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 1408,
-                        "y": 2173,
+                        "x": 2112,
+                        "y": 2191,
                         "w": 32,
                         "h": 53
                     }
                 },
                 {
                     "filename": "sprites/miners/ironmine/level1/Miner_Iron_LVL1_1.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 1440,
-                        "y": 2173,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/ironmine/level1/Miner_Iron_LVL1_2.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 1472,
-                        "y": 2173,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/ironmine/level1/Miner_Iron_LVL1_3.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 1504,
-                        "y": 2173,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/ironmine/level1/Miner_Iron_LVL1_4.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 1536,
-                        "y": 2173,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/ironmine/level1/Miner_Iron_LVL1_5.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 1568,
-                        "y": 2173,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/ironmine/level1/Miner_Iron_LVL1_6.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 1600,
-                        "y": 2173,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/ironmine/level1/Miner_Iron_LVL1_7.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 1632,
-                        "y": 2173,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/ironmine/level1/Miner_Iron_LVL1_8.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 1664,
-                        "y": 2173,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/ironmine/level1/Miner_Iron_LVL1_9.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 1696,
-                        "y": 2173,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/ironmine/level2/Miner_Iron_LVL2_1.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 1728,
-                        "y": 2173,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/ironmine/level2/Miner_Iron_LVL2_2.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 1760,
-                        "y": 2173,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/ironmine/level2/Miner_Iron_LVL2_3.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 1792,
-                        "y": 2173,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/ironmine/level2/Miner_Iron_LVL2_4.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 1824,
-                        "y": 2173,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/ironmine/level2/Miner_Iron_LVL2_5.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 2176,
-                        "y": 2074,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/ironmine/level2/Miner_Iron_LVL2_6.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 2176,
-                        "y": 2127,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/ironmine/level2/Miner_Iron_LVL2_7.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 2048,
-                        "y": 2180,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/ironmine/level2/Miner_Iron_LVL2_8.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 2080,
-                        "y": 2180,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/ironmine/level2/Miner_Iron_LVL2_9.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 53
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 53
-                    },
-                    "frame": {
-                        "x": 2112,
-                        "y": 2180,
-                        "w": 32,
-                        "h": 53
-                    }
-                },
-                {
-                    "filename": "sprites/miners/ironmine/level3/Miner_Iron_LVL3_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -11837,7 +11627,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/ironmine/level3/Miner_Iron_LVL3_2.png",
+                    "filename": "sprites/miners/ironmine/level1/Miner_Iron_LVL1_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -11858,7 +11648,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/ironmine/level3/Miner_Iron_LVL3_3.png",
+                    "filename": "sprites/miners/ironmine/level1/Miner_Iron_LVL1_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -11873,13 +11663,34 @@
                     },
                     "frame": {
                         "x": 2176,
-                        "y": 2180,
+                        "y": 2138,
                         "w": 32,
                         "h": 53
                     }
                 },
                 {
-                    "filename": "sprites/miners/ironmine/level3/Miner_Iron_LVL3_4.png",
+                    "filename": "sprites/miners/ironmine/level1/Miner_Iron_LVL1_4.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 2176,
+                        "y": 2191,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/ironmine/level1/Miner_Iron_LVL1_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -11900,7 +11711,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/ironmine/level3/Miner_Iron_LVL3_5.png",
+                    "filename": "sprites/miners/ironmine/level1/Miner_Iron_LVL1_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -11921,7 +11732,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/ironmine/level3/Miner_Iron_LVL3_6.png",
+                    "filename": "sprites/miners/ironmine/level1/Miner_Iron_LVL1_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -11942,7 +11753,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/ironmine/level3/Miner_Iron_LVL3_7.png",
+                    "filename": "sprites/miners/ironmine/level1/Miner_Iron_LVL1_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -11963,7 +11774,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/ironmine/level3/Miner_Iron_LVL3_8.png",
+                    "filename": "sprites/miners/ironmine/level1/Miner_Iron_LVL1_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -11984,7 +11795,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/ironmine/level3/Miner_Iron_LVL3_9.png",
+                    "filename": "sprites/miners/ironmine/level2/Miner_Iron_LVL2_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12005,7 +11816,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_1.png",
+                    "filename": "sprites/miners/ironmine/level2/Miner_Iron_LVL2_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12026,7 +11837,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_2.png",
+                    "filename": "sprites/miners/ironmine/level2/Miner_Iron_LVL2_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12047,7 +11858,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_3.png",
+                    "filename": "sprites/miners/ironmine/level2/Miner_Iron_LVL2_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12068,7 +11879,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_4.png",
+                    "filename": "sprites/miners/ironmine/level2/Miner_Iron_LVL2_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12089,7 +11900,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_5.png",
+                    "filename": "sprites/miners/ironmine/level2/Miner_Iron_LVL2_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12110,7 +11921,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_6.png",
+                    "filename": "sprites/miners/ironmine/level2/Miner_Iron_LVL2_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12131,7 +11942,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_7.png",
+                    "filename": "sprites/miners/ironmine/level2/Miner_Iron_LVL2_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12152,7 +11963,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_8.png",
+                    "filename": "sprites/miners/ironmine/level2/Miner_Iron_LVL2_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12173,7 +11984,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_9.png",
+                    "filename": "sprites/miners/ironmine/level3/Miner_Iron_LVL3_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12194,7 +12005,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_1.png",
+                    "filename": "sprites/miners/ironmine/level3/Miner_Iron_LVL3_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12215,7 +12026,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_2.png",
+                    "filename": "sprites/miners/ironmine/level3/Miner_Iron_LVL3_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12236,7 +12047,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_3.png",
+                    "filename": "sprites/miners/ironmine/level3/Miner_Iron_LVL3_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12257,7 +12068,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_4.png",
+                    "filename": "sprites/miners/ironmine/level3/Miner_Iron_LVL3_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12278,7 +12089,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_5.png",
+                    "filename": "sprites/miners/ironmine/level3/Miner_Iron_LVL3_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12299,7 +12110,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_6.png",
+                    "filename": "sprites/miners/ironmine/level3/Miner_Iron_LVL3_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12320,7 +12131,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_7.png",
+                    "filename": "sprites/miners/ironmine/level3/Miner_Iron_LVL3_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12341,7 +12152,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_8.png",
+                    "filename": "sprites/miners/ironmine/level3/Miner_Iron_LVL3_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12362,7 +12173,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_9.png",
+                    "filename": "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12383,7 +12194,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_1.png",
+                    "filename": "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12404,7 +12215,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_2.png",
+                    "filename": "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12425,7 +12236,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_3.png",
+                    "filename": "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12446,7 +12257,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_4.png",
+                    "filename": "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12467,7 +12278,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_5.png",
+                    "filename": "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12488,7 +12299,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_6.png",
+                    "filename": "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12509,7 +12320,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_7.png",
+                    "filename": "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12530,7 +12341,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_8.png",
+                    "filename": "sprites/miners/kimberlitemine/level1/Miner_Kimberlite_LVL1_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12551,7 +12362,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_9.png",
+                    "filename": "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12572,7 +12383,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_1.png",
+                    "filename": "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12593,7 +12404,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_2.png",
+                    "filename": "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12607,14 +12418,14 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 2228,
+                        "x": 2236,
                         "y": 1802,
                         "w": 32,
                         "h": 53
                     }
                 },
                 {
-                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_3.png",
+                    "filename": "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12628,14 +12439,14 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 2228,
+                        "x": 2236,
                         "y": 1855,
                         "w": 32,
                         "h": 53
                     }
                 },
                 {
-                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_4.png",
+                    "filename": "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12649,14 +12460,14 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 2228,
+                        "x": 2236,
                         "y": 1908,
                         "w": 32,
                         "h": 53
                     }
                 },
                 {
-                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_5.png",
+                    "filename": "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12670,14 +12481,14 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 2228,
+                        "x": 2236,
                         "y": 1961,
                         "w": 32,
                         "h": 53
                     }
                 },
                 {
-                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_6.png",
+                    "filename": "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12691,14 +12502,14 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 2228,
+                        "x": 2236,
                         "y": 2014,
                         "w": 32,
                         "h": 53
                     }
                 },
                 {
-                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_7.png",
+                    "filename": "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12712,14 +12523,14 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 2228,
+                        "x": 2236,
                         "y": 2067,
                         "w": 32,
                         "h": 53
                     }
                 },
                 {
-                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_8.png",
+                    "filename": "sprites/miners/kimberlitemine/level2/Miner_Kimberlite_LVL2_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12733,14 +12544,14 @@
                         "h": 53
                     },
                     "frame": {
-                        "x": 2208,
+                        "x": 2236,
                         "y": 2120,
                         "w": 32,
                         "h": 53
                     }
                 },
                 {
-                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_9.png",
+                    "filename": "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12761,7 +12572,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_1.png",
+                    "filename": "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12782,7 +12593,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_2.png",
+                    "filename": "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12803,7 +12614,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_3.png",
+                    "filename": "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12824,7 +12635,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_4.png",
+                    "filename": "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12845,7 +12656,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_5.png",
+                    "filename": "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12866,7 +12677,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_6.png",
+                    "filename": "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12887,7 +12698,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_7.png",
+                    "filename": "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12902,13 +12713,13 @@
                     },
                     "frame": {
                         "x": 192,
-                        "y": 2245,
+                        "y": 2246,
                         "w": 32,
                         "h": 53
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_8.png",
+                    "filename": "sprites/miners/kimberlitemine/level3/Miner_Kimberlite_LVL3_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12923,13 +12734,13 @@
                     },
                     "frame": {
                         "x": 224,
-                        "y": 2245,
+                        "y": 2246,
                         "w": 32,
                         "h": 53
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_9.png",
+                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12950,7 +12761,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_1.png",
+                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12971,7 +12782,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_2.png",
+                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12992,7 +12803,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_3.png",
+                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13013,7 +12824,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_4.png",
+                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13034,7 +12845,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_5.png",
+                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13055,7 +12866,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_6.png",
+                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13076,7 +12887,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_7.png",
+                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13097,7 +12908,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_8.png",
+                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13118,7 +12929,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_9.png",
+                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13139,7 +12950,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_1.png",
+                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13160,7 +12971,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_2.png",
+                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13181,7 +12992,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_3.png",
+                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13202,7 +13013,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_4.png",
+                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13223,7 +13034,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_5.png",
+                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13244,7 +13055,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_6.png",
+                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13265,7 +13076,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_7.png",
+                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13286,7 +13097,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_8.png",
+                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13307,7 +13118,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_9.png",
+                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13328,7 +13139,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_1.png",
+                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13349,7 +13160,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_2.png",
+                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13370,7 +13181,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_3.png",
+                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13391,7 +13202,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_4.png",
+                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13412,7 +13223,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_5.png",
+                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13433,7 +13244,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_6.png",
+                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13454,7 +13265,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_7.png",
+                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13475,7 +13286,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_8.png",
+                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13496,7 +13307,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_9.png",
+                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13517,7 +13328,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_1.png",
+                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13538,7 +13349,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_2.png",
+                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13559,7 +13370,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_3.png",
+                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13580,7 +13391,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_4.png",
+                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13601,7 +13412,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_5.png",
+                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13622,7 +13433,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_6.png",
+                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13643,7 +13454,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_7.png",
+                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13664,7 +13475,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_8.png",
+                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13685,7 +13496,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_9.png",
+                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13706,7 +13517,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_1.png",
+                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13727,7 +13538,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_2.png",
+                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13748,7 +13559,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_3.png",
+                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13769,7 +13580,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_4.png",
+                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13790,7 +13601,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_5.png",
+                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13811,7 +13622,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_6.png",
+                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13832,7 +13643,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_7.png",
+                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13853,7 +13664,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_8.png",
+                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13874,7 +13685,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_9.png",
+                    "filename": "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13895,7 +13706,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_1.png",
+                    "filename": "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13916,7 +13727,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_2.png",
+                    "filename": "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13937,7 +13748,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_3.png",
+                    "filename": "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13958,7 +13769,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_4.png",
+                    "filename": "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13979,7 +13790,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_5.png",
+                    "filename": "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14000,7 +13811,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_6.png",
+                    "filename": "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14021,7 +13832,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_7.png",
+                    "filename": "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14042,7 +13853,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_8.png",
+                    "filename": "sprites/miners/titaniummine/level1/Miner_Titanium_LVL1_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14063,7 +13874,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_9.png",
+                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14079,6 +13890,363 @@
                     "frame": {
                         "x": 1984,
                         "y": 2245,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_2.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 2016,
+                        "y": 2245,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_3.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 2048,
+                        "y": 2244,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_4.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 2080,
+                        "y": 2199,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_5.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 2112,
+                        "y": 2244,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_6.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 2144,
+                        "y": 2244,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_7.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 2176,
+                        "y": 2244,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_8.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 2208,
+                        "y": 2226,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_9.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 2270,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_1.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 2270,
+                        "y": 53,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_2.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 2270,
+                        "y": 106,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_3.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 2270,
+                        "y": 159,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_4.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 2270,
+                        "y": 212,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_5.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 2270,
+                        "y": 265,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_6.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 2270,
+                        "y": 318,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_7.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 2270,
+                        "y": 371,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_8.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 2270,
+                        "y": 424,
+                        "w": 32,
+                        "h": 53
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_9.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 53
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 53
+                    },
+                    "frame": {
+                        "x": 2270,
+                        "y": 477,
                         "w": 32,
                         "h": 53
                     }
@@ -14182,8 +14350,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 2112,
-                        "y": 2138,
+                        "x": 2048,
+                        "y": 2199,
                         "w": 32,
                         "h": 32
                     }
@@ -14203,8 +14371,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 240,
-                        "y": 802,
+                        "x": 2080,
+                        "y": 2252,
                         "w": 32,
                         "h": 32
                     }
@@ -14224,8 +14392,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 2048,
-                        "y": 2146,
+                        "x": 2270,
+                        "y": 530,
                         "w": 32,
                         "h": 32
                     }
@@ -14245,8 +14413,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 2080,
-                        "y": 2146,
+                        "x": 2270,
+                        "y": 562,
                         "w": 32,
                         "h": 32
                     }
@@ -14266,8 +14434,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 272,
-                        "y": 802,
+                        "x": 2270,
+                        "y": 594,
                         "w": 32,
                         "h": 32
                     }
@@ -14287,8 +14455,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 304,
-                        "y": 802,
+                        "x": 2270,
+                        "y": 626,
                         "w": 32,
                         "h": 32
                     }
@@ -14308,8 +14476,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 336,
-                        "y": 802,
+                        "x": 2269,
+                        "y": 658,
                         "w": 32,
                         "h": 32
                     }
@@ -14329,8 +14497,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 368,
-                        "y": 802,
+                        "x": 2269,
+                        "y": 690,
                         "w": 32,
                         "h": 32
                     }
@@ -14350,8 +14518,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 400,
-                        "y": 802,
+                        "x": 2269,
+                        "y": 722,
                         "w": 32,
                         "h": 32
                     }
@@ -14371,8 +14539,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 432,
-                        "y": 802,
+                        "x": 2269,
+                        "y": 754,
                         "w": 32,
                         "h": 32
                     }
@@ -14392,8 +14560,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 464,
-                        "y": 802,
+                        "x": 2269,
+                        "y": 786,
                         "w": 32,
                         "h": 32
                     }
@@ -14413,8 +14581,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 496,
-                        "y": 802,
+                        "x": 2269,
+                        "y": 818,
                         "w": 32,
                         "h": 32
                     }
@@ -14434,8 +14602,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 528,
-                        "y": 802,
+                        "x": 2269,
+                        "y": 850,
                         "w": 32,
                         "h": 32
                     }
@@ -14455,8 +14623,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 560,
-                        "y": 802,
+                        "x": 2269,
+                        "y": 882,
                         "w": 32,
                         "h": 32
                     }
@@ -14476,8 +14644,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 592,
-                        "y": 802,
+                        "x": 2269,
+                        "y": 914,
                         "w": 32,
                         "h": 32
                     }
@@ -14497,8 +14665,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1056,
-                        "y": 1696,
+                        "x": 2269,
+                        "y": 946,
                         "w": 32,
                         "h": 32
                     }
@@ -14518,8 +14686,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1088,
-                        "y": 1696,
+                        "x": 2269,
+                        "y": 978,
                         "w": 32,
                         "h": 32
                     }
@@ -14539,8 +14707,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 2048,
-                        "y": 2033,
+                        "x": 2269,
+                        "y": 1010,
                         "w": 32,
                         "h": 32
                     }
@@ -14560,8 +14728,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 192,
-                        "y": 640,
+                        "x": 2269,
+                        "y": 1042,
                         "w": 32,
                         "h": 32
                     }
@@ -14581,8 +14749,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1152,
-                        "y": 1220,
+                        "x": 2269,
+                        "y": 1074,
                         "w": 32,
                         "h": 32
                     }
@@ -14602,8 +14770,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1184,
-                        "y": 1220,
+                        "x": 2269,
+                        "y": 1106,
                         "w": 32,
                         "h": 32
                     }
@@ -14623,8 +14791,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 288,
-                        "y": 1402,
+                        "x": 2269,
+                        "y": 1138,
                         "w": 32,
                         "h": 32
                     }
@@ -14644,8 +14812,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 320,
-                        "y": 1402,
+                        "x": 2269,
+                        "y": 1170,
                         "w": 32,
                         "h": 32
                     }
@@ -14665,8 +14833,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1440,
-                        "y": 1873,
+                        "x": 2269,
+                        "y": 1202,
                         "w": 32,
                         "h": 32
                     }
@@ -14686,8 +14854,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1472,
-                        "y": 1873,
+                        "x": 2269,
+                        "y": 1234,
                         "w": 32,
                         "h": 32
                     }
@@ -14707,8 +14875,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1504,
-                        "y": 1873,
+                        "x": 2269,
+                        "y": 1266,
                         "w": 32,
                         "h": 32
                     }
@@ -14728,8 +14896,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 2016,
-                        "y": 2245,
+                        "x": 2269,
+                        "y": 1298,
                         "w": 32,
                         "h": 32
                     }
@@ -14749,8 +14917,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 2048,
-                        "y": 2244,
+                        "x": 2269,
+                        "y": 1330,
                         "w": 32,
                         "h": 32
                     }
@@ -14770,8 +14938,8 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 2080,
-                        "y": 2244,
+                        "x": 2269,
+                        "y": 1362,
                         "w": 32,
                         "h": 32
                     }
@@ -14896,8 +15064,8 @@
                         "h": 27
                     },
                     "frame": {
-                        "x": 352,
-                        "y": 1402,
+                        "x": 732,
+                        "y": 1637,
                         "w": 26,
                         "h": 27
                     }
@@ -14917,8 +15085,8 @@
                         "h": 27
                     },
                     "frame": {
-                        "x": 794,
-                        "y": 1129,
+                        "x": 2208,
+                        "y": 2138,
                         "w": 26,
                         "h": 27
                     }
@@ -14938,8 +15106,8 @@
                         "h": 27
                     },
                     "frame": {
-                        "x": 1334,
-                        "y": 1666,
+                        "x": 794,
+                        "y": 1129,
                         "w": 26,
                         "h": 27
                     }

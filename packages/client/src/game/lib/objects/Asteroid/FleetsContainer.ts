@@ -3,7 +3,8 @@ import { Fleet } from "../Fleet";
 
 const WIDTH = 150;
 const HEIGHT = 100;
-// const MARGIN = 5;
+const MARGIN = 5;
+const COL = 5;
 export class FleetsContainer extends Phaser.GameObjects.Container {
   private _scene: Scene;
   private coord: TileCoord;
@@ -17,7 +18,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
   constructor(scene: Scene, coord: Coord) {
     super(scene.phaserScene, coord.x, coord.y);
     this.orbitRing = new Phaser.GameObjects.Graphics(scene.phaserScene)
-      .lineStyle(2, 0x808080)
+      .lineStyle(2, 0x808080, 0.5)
       .strokeEllipse(0, 0, WIDTH, HEIGHT);
 
     this.fleetsContainer = scene.phaserScene.add.container(0, 0);
@@ -42,8 +43,18 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
           const radiusY = HEIGHT / 2; // Radius for the y coordinate
           fleet.x = this.x + radiusX * Math.cos(angle);
           fleet.y = this.y + radiusY * Math.sin(angle);
+          fleet.particles.setActive(true).setVisible(true).resume();
           fleet.setRotationFrame(Phaser.Math.RadToDeg(angle));
           fleet.angle = Phaser.Math.RadToDeg(angle) - fleet.getRotationFrameOffset();
+          fleet.particles.angle = Phaser.Math.RadToDeg(angle);
+          fleet.particles.setPosition(fleet.getPixelCoord().x, fleet.getPixelCoord().y);
+          const dx = coord.x - fleet.getPixelCoord().x;
+          const dy = coord.y - fleet.getPixelCoord().y;
+          const magnitude = Math.sqrt(dx * dx + dy * dy);
+          const ux = dx / magnitude;
+          const uy = dy / magnitude;
+          const gravityStrength = 10; // Adjust this value to change the strength of the gravity
+          fleet.particles.setParticleGravity(-ux * gravityStrength, uy * gravityStrength);
         });
       },
     });
@@ -81,7 +92,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     fleet.getOrbitRing()?.removeFleet(fleet);
     fleet.setOrbitRingRef(this);
     fleet.setFlip(false, false);
-    fleet.setScale(0.75);
+    fleet.setScale(0.5);
     this.fleetsContainer.add(fleet);
 
     if (this.inOrbitView) this.setOrbitView();
@@ -113,7 +124,10 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     this.fleetsContainer.list.forEach((_fleet, i) => {
       const fleet = _fleet as Fleet;
       fleet.reset();
-      fleet.setPosition(fleet.displayWidth / 2 + fleet.displayWidth * i, 10);
+      const col = Math.floor(i / COL) * (fleet.displayHeight / 2 + MARGIN);
+      const row = fleet.displayWidth / 2 + (fleet.displayWidth / 2 + MARGIN) * i;
+      fleet.setPosition(row - (col > 0 ? COL : 0) * (fleet.displayWidth / 2 + MARGIN), col);
+      fleet.particles.pause().setActive(false).setVisible(false);
     });
 
     this.scene.add.tween({

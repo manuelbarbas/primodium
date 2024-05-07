@@ -5,7 +5,7 @@ import { IPrimodiumGameObject } from "./interfaces";
 import { TransitLine } from "./TransitLine";
 import { Assets, Sprites, Animations } from "@primodiumxyz/assets";
 
-export class Fleet extends Phaser.GameObjects.Sprite implements IPrimodiumGameObject {
+export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObject {
   private _scene: Scene;
   private coord: Coord;
   private spawned = false;
@@ -13,7 +13,7 @@ export class Fleet extends Phaser.GameObjects.Sprite implements IPrimodiumGameOb
   private transitLineRef: TransitLine | null = null;
   private frames: Phaser.Animations.AnimationFrame[];
   private currentRotationFrame: string | number;
-  private debugText: Phaser.GameObjects.Text;
+  public particles: Phaser.GameObjects.Particles.ParticleEmitter;
   constructor(scene: Scene, coord: Coord) {
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
     super(
@@ -28,7 +28,23 @@ export class Fleet extends Phaser.GameObjects.Sprite implements IPrimodiumGameOb
     this.coord = coord;
     this.frames = this.scene.anims.get(Animations.FleetPlayer).frames;
     this.currentRotationFrame = this.frames[0].textureFrame;
-    this.debugText = this.scene.add.text(0, 0, "Fleet", { fontSize: "10px", color: "#ffffff" });
+    this.particles = this.scene.add
+      .particles(pixelCoord.x, -pixelCoord.y, "flares", {
+        // frame: "blue",
+        x: pixelCoord.x,
+        y: -pixelCoord.y,
+        lifespan: 1000,
+        speed: { min: 20, max: 25 },
+        tintFill: true,
+        color: [0x472a00, 0x261c01, 0xf5efdf, 0xa3531a, 0xedb33e, 0xf5efdf],
+        // gravityY: 300,
+        scale: { start: 0.2, end: 0 },
+        angle: { min: -80, max: -100 },
+        quantity: 1,
+        blendMode: "ADD",
+      })
+      .setAlpha(0.27)
+      .start();
   }
 
   spawn() {
