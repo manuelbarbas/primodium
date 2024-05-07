@@ -103,5 +103,5 @@ contract TestLibStorage is PrimodiumTest {
     assertEq(MaxResourceCount.get(asteroidEntity, mockResource), 0);
   }
 
-  function testDecreaseResourceUpdateScore() public {}
+  function testDecreaseResourceUpdatePoint() public {}
 }

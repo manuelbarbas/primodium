@@ -6,7 +6,7 @@ import { P_ColonyShipConfig, CooldownEnd, DamageDealt, BattleEncryptionResult, B
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
-import { LibScore } from "libraries/LibScore.sol";
+import { LibPoints } from "libraries/LibPoints.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
@@ -280,7 +280,7 @@ library LibCombat {
       if (damageDealt >= damage) break;
     }
 
-    LibScore.addUnitDeaths(unitsKilled);
+    LibPoints.addUnitDeaths(unitsKilled);
     BattleUnitResult.set(battleEntity, targetEntity, unitResult);
 
     if (IsFleet.get(targetEntity)) {
