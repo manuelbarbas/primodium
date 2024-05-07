@@ -2720,24 +2720,15 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
     },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 2n } },
-    },
   },
   UpgradeMainBase4: {
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
     },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 3n } },
-    },
   },
   UpgradeMainBase5: {
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
-    },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 4n } },
     },
   },
 
@@ -2748,24 +2739,15 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 100, Copper: 100, Lithium: 100 }),
     },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 2n } },
-    },
   },
   ExpandBase3: {
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
     },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 3n } },
-    },
   },
   ExpandBase4: {
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
-    },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 5n } },
     },
   },
 
@@ -2776,16 +2758,10 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 100 }),
     },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 2n } },
-    },
   },
   UpgradeIronMine3: {
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 250 }),
-    },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 3n } },
     },
   },
 
@@ -2793,16 +2769,10 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     tables: {
       P_ResourceReward: getResourceValues({ Copper: 100 }),
     },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 2n } },
-    },
   },
   UpgradeCopperMine3: {
     tables: {
       P_ResourceReward: getResourceValues({ Copper: 250 }),
-    },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 3n } },
     },
   },
 
@@ -2810,16 +2780,10 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     tables: {
       P_ResourceReward: getResourceValues({ Lithium: 100 }),
     },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 2n } },
-    },
   },
   UpgradeLithiumMine3: {
     tables: {
       P_ResourceReward: getResourceValues({ Lithium: 250 }),
-    },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 3n } },
     },
   },
 
@@ -3002,7 +2966,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     tables: {
       P_UnitReward: getUnitValues({ HammerDrone: 1 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 2n } } },
   },
   TrainAnvilDrone: {
     tables: {
@@ -3030,7 +2993,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     tables: {
       P_UnitReward: getUnitValues({ AnvilDrone: 1 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 3n } } },
   },
 
   /* ------------------------------ A-A-C Defense ----------------------------- */
@@ -3071,19 +3033,16 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     tables: {
       P_ResourceReward: getResourceValues({ IronPlate: 10 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 5n } } },
   },
   BuildAlloyFactory: {
     tables: {
       P_ResourceReward: getResourceValues({ Alloy: 10 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 5n } } },
   },
   BuildPVCellFactory: {
     tables: {
       P_ResourceReward: getResourceValues({ PVCell: 10 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 5n } } },
   },
 
   /* ------------------------ A-B-A Production ----------------------- */
@@ -3092,15 +3051,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 100, Copper: 100, Lithium: 100 }),
     },
-    levels: { 1: { P_RequiredBaseLevel: { value: 4n } } },
   },
   UpgradeSolarPanel2: {
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 100, Copper: 100, Lithium: 100 }),
     },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 4n } },
-    },
+    levels: {},
   },
 
   /* ------------------------------ A-B-B Market ------------------------------ */
@@ -3121,9 +3077,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
       P_UnitReward: getUnitValues({ LightningCraft: 5 }),
-    },
-    levels: {
-      1: { P_RequiredBaseLevel: { value: 2n } },
     },
   },
 };
