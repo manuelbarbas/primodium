@@ -58,7 +58,7 @@ export type JoinAllianceObjective = BaseObjective & {
 };
 
 export type AsteroidObjective = BaseObjective & {
-  asteroidType: "wormhole" | "shard" | "motherlode" | "basic";
+  asteroidType: "wormhole" | "shard" | "motherlode" | "common";
   type: "Asteroid";
 };
 

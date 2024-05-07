@@ -2,7 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
 import { ampli } from "src/ampli";
 import { components } from "src/network/components";
-import { execute } from "src/network/txExecute";
+import { execute } from "src/network/txExecute/txExecute";
 import { MUD } from "src/network/types";
 import { getAllianceName, getAllianceNameFromPlayer } from "src/util/alliance";
 import { entityToAddress } from "src/util/common";

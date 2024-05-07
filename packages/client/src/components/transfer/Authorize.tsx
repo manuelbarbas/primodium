@@ -2,7 +2,7 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect, useState } from "react";
 import { FaClipboard, FaExclamationCircle, FaEye, FaEyeSlash, FaInfoCircle, FaTimes, FaUnlink } from "react-icons/fa";
 import { useMud } from "src/hooks";
-import { grantAccess, revokeAccess } from "src/network/setup/contractCalls/access";
+import { grantAccessWithSignature, revokeAccess } from "src/network/setup/contractCalls/access";
 import { copyToClipboard } from "src/util/clipboard";
 import { STORAGE_PREFIX } from "src/util/constants";
 import { Address, Hex } from "viem";
@@ -27,7 +27,7 @@ export function Authorize() {
   // Function to handle private key validation and connection
   const sessionAddress = sessionAccount?.address;
 
-  const submitPrivateKey = async (privateKey: string) => {
+  const submitPrivateKey = async (privateKey: Hex) => {
     // Validate the private key format here
     // This is a basic example, adjust the validation according to your requirements
     const isValid = /^0x[a-fA-F0-9]{64}$/.test(privateKey);
@@ -35,7 +35,7 @@ export function Authorize() {
     const account = privateKeyToAccount(privateKey as Hex);
 
     if (sessionAddress && sessionAddress === account.address) return;
-    else await grantAccess(mud, account.address);
+    else await grantAccessWithSignature(mud, privateKey, { id: singletonEntity });
   };
 
   const handleRandomPress = () => {
@@ -99,27 +99,29 @@ export function Authorize() {
             {showDetails && (
               <SecondaryCard className="flex flex-col gap-2 p-3 w-full animate-slide-down bg-base-800">
                 <div className="text-sm flex justify-between items-center">
-                  <div>
-                    <span className="font-bold">Session Address: </span>
-                    <p>{sessionAddress}</p>
-                  </div>
-                  <div className="flex gap-1">
-                    <Button
-                      tooltip="Copy address"
-                      onClick={() => copyToClipboard(sessionAddress, "address")}
-                      tooltipDirection="top"
-                      className="btn-sm btn-primary"
-                    >
-                      <FaClipboard />
-                    </Button>
-                    <Button
-                      tooltip={`Copy private key`}
-                      onClick={() => copyToClipboard(sessionAccount?.privateKey, "private key")}
-                      tooltipDirection="top"
-                      className="btn-sm btn-error"
-                    >
-                      <FaExclamationCircle />
-                    </Button>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex gap-1 items-center">
+                      <span className="font-bold">Session Address: </span>
+                      <Button
+                        size="xs"
+                        variant="primary"
+                        tooltip="Copy address"
+                        onClick={() => copyToClipboard(sessionAddress, "address")}
+                        tooltipDirection="top"
+                      >
+                        <FaClipboard />
+                      </Button>
+                      <Button
+                        size="xs"
+                        variant="error"
+                        tooltip={`Copy private key`}
+                        onClick={() => copyToClipboard(sessionAccount?.privateKey, "private key")}
+                        tooltipDirection="top"
+                      >
+                        <FaExclamationCircle />
+                      </Button>
+                    </div>
+                    <p className="text-xs">{sessionAddress}</p>
                   </div>
                 </div>
               </SecondaryCard>
@@ -127,7 +129,9 @@ export function Authorize() {
           </div>
         ) : (
           <Button
-            className="btn-primary w-full"
+            variant="primary"
+            size="md"
+            className="w-full"
             onClick={() => {
               const key = handleRandomPress();
               submitPrivateKey(key);

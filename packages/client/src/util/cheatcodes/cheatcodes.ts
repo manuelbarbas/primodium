@@ -1,10 +1,10 @@
+import { WorldAbi } from "@/network/world";
 import { Primodium } from "@game/api";
 import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Cheatcode, Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import { EResource } from "contracts/config/enums";
-import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import { toast } from "react-toastify";
 import { components } from "src/network/components";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
@@ -282,7 +282,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
 
       const worldContract = getContract({
         address: networkConfig.worldAddress as Hex,
-        abi: IWorldAbi,
+        abi: WorldAbi,
         client: {
           public: mud.network.publicClient,
           wallet: burnerWalletClient,
@@ -536,7 +536,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
 
               const worldContract = getContract({
                 address: networkConfig.worldAddress as Hex,
-                abi: IWorldAbi,
+                abi: WorldAbi,
                 client: {
                   public: mud.network.publicClient,
                   wallet: burnerWalletClient,

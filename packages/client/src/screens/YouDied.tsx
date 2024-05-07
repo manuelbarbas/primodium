@@ -27,7 +27,7 @@ export const YouDied = () => {
     hydrateBattleReports(playerEntity, mud);
   }, [playerEntity, mud]);
   const BaseContent = () => (
-    <Navigator.Screen title="YouDied" className="flex flex-col gap-6 px-8">
+    <Navigator.Screen title="YouDied" className="flex flex-col gap-6 px-8 z-[1000]">
       <h1 className="font-bold text-error">Ashes to ashes, dust to dust</h1>
       <p className="text-xl">All your asteroids have been captured. Will you reclaim your glory?</p>
       <div className="w-full grid place-items-center">
