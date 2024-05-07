@@ -54,9 +54,9 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
 
       P_AsteroidThresholdProbConfig: {
-        common1: 30n,
-        common2: 45n,
-        eliteMicro: 50n,
+        common1: 35n,
+        common2: 50n,
+        eliteMicro: 55n,
         eliteSmall: 75n,
         eliteMedium: 90n,
         eliteLarge: 100n,
@@ -370,73 +370,156 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         y: Math.floor(maxRange.yBounds / 2) + 2,
         parentEntity: encodeBytes32(0),
       },
-      P_MaxLevel: { value: 8n },
+      P_MaxLevel: { value: 15n },
     },
     levels: {
       1: {
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(wormholeBaseStorageUpgrades[1]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.006, U_Housing: 50 }),
       },
       2: {
-        P_RequiredResources: getResourceValues({ Copper: 1500 }),
+        P_RequiredResources: getResourceValues({ Iron: 50, Copper: 50, Lithium: 50 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(wormholeBaseStorageUpgrades[2]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.012, U_Housing: 100 }),
       },
       3: {
-        P_RequiredResources: getResourceValues({ Copper: 10000, PVCell: 1500 }),
+        P_RequiredResources: getResourceValues({ Iron: 400, Copper: 400, Lithium: 400 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(wormholeBaseStorageUpgrades[3]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.018, U_Housing: 100 }),
       },
       4: {
-        P_RequiredResources: getResourceValues({ Copper: 25000, PVCell: 5000 }),
+        P_RequiredResources: getResourceValues({ Iron: 800, Copper: 800, Lithium: 800 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(wormholeBaseStorageUpgrades[4]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.024, U_Housing: 200 }),
       },
       5: {
-        P_RequiredResources: getResourceValues({ Copper: 75000, PVCell: 500 }),
+        P_RequiredResources: getResourceValues({ Iron: 1500, Copper: 1500, Lithium: 1500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(wormholeBaseStorageUpgrades[5]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.03, U_Housing: 200 }),
       },
       6: {
-        P_RequiredResources: getResourceValues({ Copper: 125000, Titanium: 1500, Platinum: 1500 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 1200, Alloy: 1200, PVCell: 1200 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(wormholeBaseStorageUpgrades[6]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.038, U_Housing: 350 }),
       },
       7: {
         P_RequiredResources: getResourceValues({
-          Copper: 250000,
-          Titanium: 5000,
-          Platinum: 5000,
-          Iridium: 5000,
+          IronPlate: 2000,
+          Alloy: 2000,
+          PVCell: 2000,
         }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(wormholeBaseStorageUpgrades[7]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.046, U_Housing: 350 }),
       },
       8: {
         P_RequiredResources: getResourceValues({
-          Copper: 250000,
-          Titanium: 15000,
-          Platinum: 15000,
-          Iridium: 15000,
+          IronPlate: 3000,
+          Alloy: 3000,
+          PVCell: 3000,
+          Kimberlite: 100,
         }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(wormholeBaseStorageUpgrades[8]),
         },
-        P_Production: getResourceValues({ R_Encryption: 0.00056, R_HP: 0.001 }),
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.054, U_Housing: 500 }),
+      },
+      9: {
+        P_RequiredResources: getResourceValues({
+          IronPlate: 4000,
+          Alloy: 4000,
+          PVCell: 4000,
+          Kimberlite: 200,
+        }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(wormholeBaseStorageUpgrades[9]),
+        },
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.062, U_Housing: 500 }),
+      },
+      10: {
+        P_RequiredResources: getResourceValues({
+          Titanium: 800,
+          Iridium: 800,
+          Platinum: 800,
+          Kimberlite: 100,
+        }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(wormholeBaseStorageUpgrades[10]),
+        },
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.07, U_Housing: 650 }),
+      },
+      11: {
+        P_RequiredResources: getResourceValues({
+          Titanium: 1500,
+          Iridium: 1500,
+          Platinum: 1500,
+          Kimberlite: 100,
+        }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(wormholeBaseStorageUpgrades[11]),
+        },
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.078, U_Housing: 650 }),
+      },
+      12: {
+        P_RequiredResources: getResourceValues({
+          Titanium: 2500,
+          Iridium: 2500,
+          Platinum: 2500,
+          Kimberlite: 250,
+        }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(wormholeBaseStorageUpgrades[12]),
+        },
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.086, U_Housing: 800 }),
+      },
+      13: {
+        P_RequiredResources: getResourceValues({
+          Titanium: 4000,
+          Iridium: 4000,
+          Platinum: 4000,
+          Kimberlite: 800,
+        }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(wormholeBaseStorageUpgrades[13]),
+        },
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.094, U_Housing: 800 }),
+      },
+      14: {
+        P_RequiredResources: getResourceValues({
+          Titanium: 6000,
+          Iridium: 6000,
+          Platinum: 6000,
+          Kimberlite: 1200,
+        }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(wormholeBaseStorageUpgrades[14]),
+        },
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.102, U_Housing: 1000 }),
+      },
+      15: {
+        P_RequiredResources: getResourceValues({
+          Titanium: 10000,
+          Iridium: 10000,
+          Platinum: 10000,
+          Kimberlite: 2000,
+        }),
+        P_ListMaxResourceUpgrades: {
+          value: upgradesToList(wormholeBaseStorageUpgrades[15]),
+        },
+        P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.12, U_Housing: 1200 }),
       },
     },
   },
@@ -2034,7 +2117,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       1: {
-        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 500 }),
+        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 100 }),
         P_RequiredBaseLevel: { value: 11n },
         P_RequiredResources: getResourceValues({
           Titanium: 11,
@@ -2053,7 +2136,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       2: {
-        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 1500 }),
+        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 300 }),
         P_RequiredBaseLevel: { value: 12n },
         P_RequiredResources: getResourceValues({
           Titanium: 12,
@@ -2072,7 +2155,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       3: {
-        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 5000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 1000 }),
         P_RequiredBaseLevel: { value: 13n },
         P_RequiredResources: getResourceValues({
           Titanium: 13,
@@ -2091,7 +2174,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       4: {
-        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 10000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 2000 }),
         P_RequiredBaseLevel: { value: 14n },
         P_RequiredResources: getResourceValues({
           Titanium: 14,
@@ -2110,7 +2193,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       5: {
-        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 25000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Kimberlite: 5000 }),
         P_RequiredBaseLevel: { value: 15n },
         P_RequiredResources: getResourceValues({
           Titanium: 15,
@@ -2148,7 +2231,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       1: {
-        P_RequiredUpgradeResources: getResourceValues({ Platinum: 500 }),
+        P_RequiredUpgradeResources: getResourceValues({ Titanium: 50 }),
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Iron: 25, IronPlate: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
@@ -2161,7 +2244,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       2: {
-        P_RequiredUpgradeResources: getResourceValues({ Platinum: 1500 }),
+        P_RequiredUpgradeResources: getResourceValues({ Titanium: 150 }),
         P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ Iron: 25, IronPlate: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
@@ -2174,7 +2257,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       3: {
-        P_RequiredUpgradeResources: getResourceValues({ Platinum: 5000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Titanium: 500 }),
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Iron: 25, IronPlate: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
@@ -2187,7 +2270,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       4: {
-        P_RequiredUpgradeResources: getResourceValues({ Platinum: 10000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Titanium: 1000 }),
         P_RequiredBaseLevel: { value: 10n },
         P_RequiredResources: getResourceValues({ Iron: 25, IronPlate: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
@@ -2200,7 +2283,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       5: {
-        P_RequiredUpgradeResources: getResourceValues({ Platinum: 25000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Titanium: 2500 }),
         P_RequiredBaseLevel: { value: 15n },
         P_RequiredResources: getResourceValues({ Iron: 25, IronPlate: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
@@ -2231,7 +2314,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       1: {
-        P_RequiredUpgradeResources: getResourceValues({ Iridium: 500 }),
+        P_RequiredUpgradeResources: getResourceValues({ Titanium: 100 }),
         P_RequiredBaseLevel: { value: 9n },
         P_RequiredResources: getResourceValues({ Iron: 100, IronPlate: 100, Titanium: 20, U_Housing: 3 }),
         P_Unit: getPUnitData({
@@ -2244,7 +2327,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       2: {
-        P_RequiredUpgradeResources: getResourceValues({ Iridium: 1500 }),
+        P_RequiredUpgradeResources: getResourceValues({ Titanium: 300 }),
         P_RequiredBaseLevel: { value: 10n },
         P_RequiredResources: getResourceValues({ Iron: 100, IronPlate: 100, Titanium: 20, U_Housing: 3 }),
         P_Unit: getPUnitData({
@@ -2257,7 +2340,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       3: {
-        P_RequiredUpgradeResources: getResourceValues({ Iridium: 5000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Titanium: 1000 }),
         P_RequiredBaseLevel: { value: 11n },
         P_RequiredResources: getResourceValues({ Iron: 100, IronPlate: 100, Titanium: 20, U_Housing: 3 }),
         P_Unit: getPUnitData({
@@ -2270,7 +2353,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       4: {
-        P_RequiredUpgradeResources: getResourceValues({ Iridium: 10000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Titanium: 2000 }),
         P_RequiredBaseLevel: { value: 13n },
         P_RequiredResources: getResourceValues({ Iron: 100, IronPlate: 100, Titanium: 20, U_Housing: 3 }),
         P_Unit: getPUnitData({
@@ -2283,7 +2366,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       5: {
-        P_RequiredUpgradeResources: getResourceValues({ Iridium: 25000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Titanium: 5000 }),
         P_RequiredBaseLevel: { value: 15n },
         P_RequiredResources: getResourceValues({ Iron: 100, IronPlate: 100, Titanium: 20, U_Housing: 3 }),
         P_Unit: getPUnitData({
@@ -2314,7 +2397,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       1: {
-        P_RequiredUpgradeResources: getResourceValues({ Platinum: 500 }),
+        P_RequiredUpgradeResources: getResourceValues({ Platinum: 50 }),
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Lithium: 25, PVCell: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
@@ -2327,7 +2410,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       2: {
-        P_RequiredUpgradeResources: getResourceValues({ Platinum: 1500 }),
+        P_RequiredUpgradeResources: getResourceValues({ Platinum: 150 }),
         P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ Lithium: 25, PVCell: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
@@ -2340,7 +2423,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       3: {
-        P_RequiredUpgradeResources: getResourceValues({ Platinum: 5000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Platinum: 500 }),
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Lithium: 25, PVCell: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
@@ -2353,7 +2436,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       4: {
-        P_RequiredUpgradeResources: getResourceValues({ Platinum: 10000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Platinum: 1000 }),
         P_RequiredBaseLevel: { value: 10n },
         P_RequiredResources: getResourceValues({ Lithium: 25, PVCell: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
@@ -2366,7 +2449,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       5: {
-        P_RequiredUpgradeResources: getResourceValues({ Platinum: 25000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Platinum: 2500 }),
         P_RequiredBaseLevel: { value: 15n },
         P_RequiredResources: getResourceValues({ Lithium: 25, PVCell: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
@@ -2397,7 +2480,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       1: {
-        P_RequiredUpgradeResources: getResourceValues({ Iridium: 500 }),
+        P_RequiredUpgradeResources: getResourceValues({ Platinum: 100 }),
         P_RequiredBaseLevel: { value: 9n },
         P_RequiredResources: getResourceValues({ Lithium: 100, PVCell: 100, Platinum: 20, U_Housing: 3 }),
         P_Unit: getPUnitData({
@@ -2410,7 +2493,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       2: {
-        P_RequiredUpgradeResources: getResourceValues({ Iridium: 1500 }),
+        P_RequiredUpgradeResources: getResourceValues({ Platinum: 300 }),
         P_RequiredBaseLevel: { value: 10n },
         P_RequiredResources: getResourceValues({ Lithium: 100, PVCell: 100, Platinum: 20, U_Housing: 3 }),
         P_Unit: getPUnitData({
@@ -2423,7 +2506,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       3: {
-        P_RequiredUpgradeResources: getResourceValues({ Iridium: 5000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Platinum: 1000 }),
         P_RequiredBaseLevel: { value: 11n },
         P_RequiredResources: getResourceValues({ Lithium: 100, PVCell: 100, Platinum: 20, U_Housing: 3 }),
         P_Unit: getPUnitData({
@@ -2436,7 +2519,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       4: {
-        P_RequiredUpgradeResources: getResourceValues({ Iridium: 10000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Platinum: 2000 }),
         P_RequiredBaseLevel: { value: 13n },
         P_RequiredResources: getResourceValues({ Lithium: 100, PVCell: 100, Platinum: 20, U_Housing: 3 }),
         P_Unit: getPUnitData({
@@ -2449,7 +2532,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       5: {
-        P_RequiredUpgradeResources: getResourceValues({ Iridium: 25000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Platinum: 5000 }),
         P_RequiredBaseLevel: { value: 15n },
         P_RequiredResources: getResourceValues({ Lithium: 100, PVCell: 100, Platinum: 20, U_Housing: 3 }),
         P_Unit: getPUnitData({
@@ -2469,8 +2552,8 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: {
       0: {
-        P_RequiredResources: getResourceValues({ Alloy: 10000 }),
-        P_RequiredBaseLevel: { value: 3n },
+        P_RequiredResources: getResourceValues({ IronPlate: 3000, Alloy: 3000, PVCell: 3000 }),
+        P_RequiredBaseLevel: { value: 8n },
         P_Unit: getPUnitData({
           hp: 2000,
           attack: 20,
@@ -2516,7 +2599,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       1: {
-        P_RequiredUpgradeResources: getResourceValues({ Titanium: 500 }),
+        P_RequiredUpgradeResources: getResourceValues({ Iridium: 50 }),
         P_RequiredBaseLevel: { value: 3n },
         P_RequiredResources: getResourceValues({ Copper: 25, U_Housing: 1 }),
         P_Unit: getPUnitData({
@@ -2529,7 +2612,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       2: {
-        P_RequiredUpgradeResources: getResourceValues({ Titanium: 1500 }),
+        P_RequiredUpgradeResources: getResourceValues({ Iridium: 150 }),
         P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ Copper: 25, U_Housing: 1 }),
         P_Unit: getPUnitData({
@@ -2542,7 +2625,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       3: {
-        P_RequiredUpgradeResources: getResourceValues({ Titanium: 5000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Iridium: 500 }),
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Copper: 25, U_Housing: 1 }),
         P_Unit: getPUnitData({
@@ -2555,7 +2638,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       4: {
-        P_RequiredUpgradeResources: getResourceValues({ Titanium: 10000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Iridium: 1000 }),
         P_RequiredBaseLevel: { value: 10n },
         P_RequiredResources: getResourceValues({ Copper: 25, U_Housing: 1 }),
         P_Unit: getPUnitData({
@@ -2568,7 +2651,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       5: {
-        P_RequiredUpgradeResources: getResourceValues({ Titanium: 25000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Iridium: 2500 }),
         P_RequiredBaseLevel: { value: 15n },
         P_RequiredResources: getResourceValues({ Copper: 25, U_Housing: 1 }),
         P_Unit: getPUnitData({
@@ -2599,7 +2682,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       1: {
-        P_RequiredUpgradeResources: getResourceValues({ Titanium: 500 }),
+        P_RequiredUpgradeResources: getResourceValues({ Iridium: 100 }),
         P_RequiredBaseLevel: { value: 9n },
         P_RequiredResources: getResourceValues({ Copper: 10, Alloy: 10, U_Housing: 1 }),
         P_Unit: getPUnitData({
@@ -2612,7 +2695,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       2: {
-        P_RequiredUpgradeResources: getResourceValues({ Titanium: 1500 }),
+        P_RequiredUpgradeResources: getResourceValues({ Iridium: 300 }),
         P_RequiredBaseLevel: { value: 10n },
         P_RequiredResources: getResourceValues({ Copper: 10, Alloy: 10, U_Housing: 1 }),
         P_Unit: getPUnitData({
@@ -2625,7 +2708,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       3: {
-        P_RequiredUpgradeResources: getResourceValues({ Titanium: 5000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Iridium: 1000 }),
         P_RequiredBaseLevel: { value: 11n },
         P_RequiredResources: getResourceValues({ Copper: 10, Alloy: 10, U_Housing: 1 }),
         P_Unit: getPUnitData({
@@ -2638,7 +2721,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       4: {
-        P_RequiredUpgradeResources: getResourceValues({ Titanium: 10000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Iridium: 2000 }),
         P_RequiredBaseLevel: { value: 13n },
         P_RequiredResources: getResourceValues({ Copper: 10, Alloy: 10, U_Housing: 1 }),
         P_Unit: getPUnitData({
@@ -2651,7 +2734,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         }),
       },
       5: {
-        P_RequiredUpgradeResources: getResourceValues({ Titanium: 25000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Iridium: 5000 }),
         P_RequiredBaseLevel: { value: 15n },
         P_RequiredResources: getResourceValues({ Copper: 10, Alloy: 10, U_Housing: 1 }),
         P_Unit: getPUnitData({
