@@ -2853,35 +2853,36 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   /* -------------------------- A-A-A-B Conquest (continued) ------------------------- */
   BuildShipyard: {
     tables: {
-      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 100, Alloy: 100, PVCell: 100 }),
       P_UnitReward: getUnitValues({ LightningCraft: 10 }),
     },
   },
   TrainColonyShip: {
     tables: {
-      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 100, Alloy: 100, PVCell: 100 }),
     },
   },
   DecryptAttack: {
     tables: {
-      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 25, Alloy: 25, PVCell: 25 }),
     },
   },
   CaptureAsteroid: {
     tables: {
-      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 100, Alloy: 100, PVCell: 100 }),
+      P_UnitReward: getUnitValues({ LightningCraft: 10 }),
     },
   },
 
   /* --------------------- A-A-A-B-A Motherlode Extraction -------------------- */
   CaptureMotherlodeAsteroid: {
     tables: {
-      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+      P_ResourceReward: getResourceValues({ Titanium: 25, Iridium: 25, Platinum: 25 }),
     },
   },
   ExtractMotherlodeResource: {
     tables: {
-      P_ResourceReward: getResourceValues({ Alloy: 10 }),
+      P_ResourceReward: getResourceValues({ Titanium: 10, Iridium: 10, Platinum: 10 }),
     },
   },
 
@@ -2889,29 +2890,29 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
 
   EarnPrimodiumOnAsteroid: {
     tables: {
-      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
+      P_ResourceReward: getResourceValues({ Kimberlite: 10 }),
     },
   },
   EarnPrimodiumOnShard: {
     tables: {
-      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+      P_ResourceReward: getResourceValues({ Kimberlite: 10 }),
     },
   },
   ExplodeShard: {
     tables: {
-      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+      P_ResourceReward: getResourceValues({ Kimberlite: 25 }),
     },
   },
   /* ------------------------- A-A-A-B-C Wormhole Points ------------------------ */
 
   CaptureWormholeAsteroid: {
     tables: {
-      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 100, Alloy: 100, PVCell: 100 }),
     },
   },
   TeleportResources: {
     tables: {
-      P_ResourceReward: getResourceValues({ Alloy: 10 }),
+      P_UnitReward: getUnitValues({ LightningCraft: 10 }),
     },
   },
 
@@ -2945,53 +2946,54 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   },
   TrainTridentMarine: {
     tables: {
-      P_ResourceReward: getResourceValues({ Copper: 100 }),
+      P_ResourceReward: getResourceValues({ Alloy: 100 }),
     },
   },
   TrainLightningCraft: {
     tables: {
-      P_ResourceReward: getResourceValues({ Lithium: 100 }),
+      P_ResourceReward: getResourceValues({ Kimberlite: 10 }),
     },
   },
 
   /* --------------------- A-A-B-A Unit Management (cont) --------------------- */
   UpgradeUnit: {
     tables: {
-      P_ResourceReward: getResourceValues({ Kimberlite: 1 }),
+      P_ResourceReward: getResourceValues({ Titanium: 10, Iridium: 10, Platinum: 10, Kimberlite: 10 }),
     },
   },
 
   /* --------------------- A-A-B-A Unit Production (cont) --------------------- */
   BuildDroneFactory: {
     tables: {
-      P_UnitReward: getUnitValues({ HammerDrone: 1 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 100, PVCell: 100 }),
+      P_UnitReward: getUnitValues({ AnvilDrone: 5, HammerDrone: 5, LightningCraft: 5 }),
     },
   },
   TrainAnvilDrone: {
     tables: {
-      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 25 }),
     },
   },
   TrainHammerDrone: {
     tables: {
-      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+      P_ResourceReward: getResourceValues({ PVCell: 25 }),
     },
   },
   TrainAegisDrone: {
     tables: {
-      P_ResourceReward: getResourceValues({ Alloy: 10 }),
+      P_ResourceReward: getResourceValues({ Titanium: 10 }),
     },
   },
   TrainStingerDrone: {
     tables: {
-      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
+      P_ResourceReward: getResourceValues({ Platinum: 10 }),
     },
   },
 
   /* --------------------- A-A-B-C Unit Storage --------------------- */
   BuildHangar: {
     tables: {
-      P_UnitReward: getUnitValues({ AnvilDrone: 1 }),
+      P_UnitReward: getUnitValues({ AnvilDrone: 5, HammerDrone: 5, LightningCraft: 5 }),
     },
   },
 
@@ -2999,17 +3001,17 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
 
   BuildShieldGenerator: {
     tables: {
-      P_UnitReward: getUnitValues({ AegisDrone: 1 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 100, Alloy: 100, PVCell: 100 }),
     },
   },
   BuildVault: {
     tables: {
-      P_UnitReward: getUnitValues({ LightningCraft: 1 }),
+      P_UnitReward: getUnitValues({ LightningCraft: 5 }),
     },
   },
   BuildSAMLauncher: {
     tables: {
-      P_ResourceReward: getResourceValues({ Copper: 100 }),
+      P_UnitReward: getUnitValues({ LightningCraft: 5 }),
     },
   },
 
@@ -3031,17 +3033,17 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   },
   BuildIronPlateFactory: {
     tables: {
-      P_ResourceReward: getResourceValues({ IronPlate: 10 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 25 }),
     },
   },
   BuildAlloyFactory: {
     tables: {
-      P_ResourceReward: getResourceValues({ Alloy: 10 }),
+      P_ResourceReward: getResourceValues({ Alloy: 25 }),
     },
   },
   BuildPVCellFactory: {
     tables: {
-      P_ResourceReward: getResourceValues({ PVCell: 10 }),
+      P_ResourceReward: getResourceValues({ PVCell: 25 }),
     },
   },
 
@@ -3062,7 +3064,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   /* ------------------------------ A-B-B Market ------------------------------ */
   BuildMarket: {
     tables: {
-      P_ResourceReward: getResourceValues({ Kimberlite: 1 }),
+      P_ResourceReward: getResourceValues({ Titanium: 1, Iridium: 1, Platinum: 1, Kimberlite: 1 }),
     },
   },
   MarketSwap: {
