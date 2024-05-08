@@ -4,11 +4,12 @@ import ReactDOM from "react-dom";
 import { FaMinus, FaRegWindowMaximize, FaRegWindowRestore } from "react-icons/fa";
 import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
 import { usePersistentStore } from "@game/stores/PersistentStore";
-import { usePrimodium } from "@/hooks/usePrimodium";
-import { useWidgets } from "@/hooks/providers/WidgetProvider";
-import { Card } from "@/components/core/Card";
 import { SceneKeys } from "@game/lib/constants/common";
 import { KeybindActionKeys } from "@game/lib/constants/keybinds";
+import { usePrimodium } from "@/hooks/usePrimodium";
+import { useWidgets } from "@/hooks/providers/WidgetProvider";
+import { components } from "@/network/components";
+import { Card } from "@/components/core/Card";
 
 type WidgetProps = {
   title: string;
@@ -434,6 +435,9 @@ export const Widget: React.FC<WidgetProps> = memo(
 
     const handlePointerEnter = useCallback(() => {
       if (!container) return;
+
+      // remove any hovered entity as Phaser will have failed to detect the pointer leaving
+      components.HoverEntity.remove();
 
       if (pinned) {
         container.setAlpha(1);

@@ -6,6 +6,7 @@ import { Tooltip } from "@/components/core/Tooltip";
 import { grantAccessWithSignature } from "@/network/setup/contractCalls/access";
 import { spawn } from "@/network/setup/contractCalls/spawn";
 import { STORAGE_PREFIX } from "@/util/constants";
+import { findEntriesWithPrefix } from "@/util/localStorage";
 import { useEffect, useState } from "react";
 import { FaExclamationTriangle, FaInfoCircle } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -89,7 +90,8 @@ export const Enter: React.FC = () => {
   };
 
   const handleDelegate = async () => {
-    const privateKey = generatePrivateKey();
+    const storedKeys = findEntriesWithPrefix();
+    const privateKey = storedKeys.length > 0 ? storedKeys[0].privateKey : generatePrivateKey();
     const account = privateKeyToAccount(privateKey);
     localStorage.setItem(STORAGE_PREFIX + account.address, privateKey);
 
@@ -98,12 +100,12 @@ export const Enter: React.FC = () => {
 
   return (
     <Landing>
-      <TransactionQueueMask queueItemId={singletonEntity} className="w-4/5 z-10">
+      <TransactionQueueMask queueItemId={singletonEntity} className="w-4/5 z-20">
         {state === "delegate" && (
           <div className="grid grid-cols-7 gap-2 items-center pointer-events-auto">
             <button
               onClick={handleDelegate}
-              className="relative btn col-span-6 font-bold outline-none h-fit btn-secondary w-full z-10 star-background hover:scale-110 relative"
+              className="relative btn col-span-6 font-bold outline-none h-fit btn-secondary w-full z-[1] star-background hover:scale-110 relative"
             >
               <Tooltip
                 className="w-56 text-left h-fit text-wrap"
@@ -116,7 +118,7 @@ export const Enter: React.FC = () => {
               </Tooltip>
               Authorize Delegate
             </button>
-            <button onClick={confirmSkip} className="btn btn-neutral opacity-80 hover:scale-110 z-0">
+            <button onClick={confirmSkip} className="btn btn-neutral opacity-80 hover:scale-110">
               Skip
             </button>
           </div>
