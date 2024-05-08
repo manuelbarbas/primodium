@@ -777,6 +777,256 @@ export interface SystemDestroyPathProperties {
   transactionValid: boolean;
 }
 
+export interface SystemFleetClearSystemPrimodiumAbandonFleetProperties {
+  /**
+   * An array of fleets represented by its Hex string.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | string |
+   */
+  fleets: string[];
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemFleetClearSystemPrimodiumClearFleetProperties {
+  /**
+   * An array of fleets represented by its Hex string.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | string |
+   */
+  fleets: string[];
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemFleetClearSystemPrimodiumClearResourcesProperties {
+  /**
+   * An array of fleets represented by its Hex string.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | string |
+   */
+  fleets: string[];
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemFleetClearSystemPrimodiumClearUnitsProperties {
+  /**
+   * An array of fleets represented by its Hex string.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | string |
+   */
+  fleets: string[];
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemFleetClearSystemPrimodiumClearUnitsAndResourcesFromFleetProperties {
+  /**
+   * An array of fleets represented by its Hex string.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | string |
+   */
+  fleets: string[];
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
 export interface SystemGrantRoleProperties {
   /**
    * A member of an alliance that has been granted a role. Currently only used by `system.GrantRole`.
@@ -2495,6 +2745,46 @@ export class SystemDestroyPath implements BaseEvent {
   }
 }
 
+export class SystemFleetClearSystemPrimodiumAbandonFleet implements BaseEvent {
+  event_type = "system.FleetClearSystem.Primodium__abandonFleet";
+
+  constructor(public event_properties: SystemFleetClearSystemPrimodiumAbandonFleetProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemFleetClearSystemPrimodiumClearFleet implements BaseEvent {
+  event_type = "system.FleetClearSystem.Primodium__clearFleet";
+
+  constructor(public event_properties: SystemFleetClearSystemPrimodiumClearFleetProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemFleetClearSystemPrimodiumClearResources implements BaseEvent {
+  event_type = "system.FleetClearSystem.Primodium__clearResources";
+
+  constructor(public event_properties: SystemFleetClearSystemPrimodiumClearResourcesProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemFleetClearSystemPrimodiumClearUnits implements BaseEvent {
+  event_type = "system.FleetClearSystem.Primodium__clearUnits";
+
+  constructor(public event_properties: SystemFleetClearSystemPrimodiumClearUnitsProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemFleetClearSystemPrimodiumClearUnitsAndResourcesFromFleet implements BaseEvent {
+  event_type = "system.FleetClearSystem.Primodium__clearUnitsAndResourcesFromFleet";
+
+  constructor(public event_properties: SystemFleetClearSystemPrimodiumClearUnitsAndResourcesFromFleetProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
 export class SystemGrantRole implements BaseEvent {
   event_type = "system.GrantRole";
 
@@ -3055,6 +3345,91 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemDestroyPath(properties), options);
+  }
+
+  /**
+   * system.FleetClearSystem.Primodium__abandonFleet
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.FleetClearSystem.Primodium__abandonFleet)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. fleets)
+   * @param options Amplitude event options.
+   */
+  systemFleetClearSystemPrimodiumAbandonFleet(
+    properties: SystemFleetClearSystemPrimodiumAbandonFleetProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemFleetClearSystemPrimodiumAbandonFleet(properties), options);
+  }
+
+  /**
+   * system.FleetClearSystem.Primodium__clearFleet
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.FleetClearSystem.Primodium__clearFleet)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. fleets)
+   * @param options Amplitude event options.
+   */
+  systemFleetClearSystemPrimodiumClearFleet(
+    properties: SystemFleetClearSystemPrimodiumClearFleetProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemFleetClearSystemPrimodiumClearFleet(properties), options);
+  }
+
+  /**
+   * system.FleetClearSystem.Primodium__clearResources
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.FleetClearSystem.Primodium__clearResources)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. fleets)
+   * @param options Amplitude event options.
+   */
+  systemFleetClearSystemPrimodiumClearResources(
+    properties: SystemFleetClearSystemPrimodiumClearResourcesProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemFleetClearSystemPrimodiumClearResources(properties), options);
+  }
+
+  /**
+   * system.FleetClearSystem.Primodium__clearUnits
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.FleetClearSystem.Primodium__clearUnits)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. fleets)
+   * @param options Amplitude event options.
+   */
+  systemFleetClearSystemPrimodiumClearUnits(
+    properties: SystemFleetClearSystemPrimodiumClearUnitsProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemFleetClearSystemPrimodiumClearUnits(properties), options);
+  }
+
+  /**
+   * system.FleetClearSystem.Primodium__clearUnitsAndResourcesFromFleet
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.FleetClearSystem.Primodium__clearUnitsAndResourcesFromFleet)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. fleets)
+   * @param options Amplitude event options.
+   */
+  systemFleetClearSystemPrimodiumClearUnitsAndResourcesFromFleet(
+    properties: SystemFleetClearSystemPrimodiumClearUnitsAndResourcesFromFleetProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemFleetClearSystemPrimodiumClearUnitsAndResourcesFromFleet(properties), options);
   }
 
   /**
