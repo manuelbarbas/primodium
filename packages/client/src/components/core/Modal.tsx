@@ -2,6 +2,7 @@ import { Button } from "@/components/core/Button";
 import { Card } from "@/components/core/Card";
 import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
 import { useGame } from "@/hooks/useGame";
+import { components } from "@/network/components";
 import React, { ReactNode, createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaTimes } from "react-icons/fa";
@@ -58,7 +59,8 @@ export const Modal: React.FC<ModalProps> & {
     };
 
     if (isOpen) {
-      game.GAME.disableGlobalInput();
+      game.disableGlobalInput();
+      components.HoverEntity.remove(); // remove any hovered entity (probably displaying a tooltip)
     } else {
       game.GAME.enableGlobalInput();
     }

@@ -12,12 +12,13 @@ import {
 
 import { world } from "src/network/world";
 
-import { EntityType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
-import { Building } from "../../../lib/objects/Building";
-import { components } from "src/network/components";
-import { getBuildingBottomLeft } from "src/util/building";
-import { removeRaidableAsteroid } from "src/game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
+import { components } from "@/network/components";
+import { Building } from "@/game/lib/objects/Building";
+import { removeRaidableAsteroid } from "@/game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
+import { EntityType } from "@/util/constants";
+import { hashEntities } from "@/util/encode";
+import { getBuildingBottomLeft } from "@/util/building";
+import { isDomInteraction } from "@/util/canvas";
 import { EMap } from "contracts/config/enums";
 import { SceneApi } from "@/game/api/scene";
 
@@ -98,7 +99,7 @@ export const renderBuilding = (scene: SceneApi) => {
         // .spawn()
         .setLevel(components.Level.get(entity)?.value ?? 1n)
         .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
-          if (pointer.getDuration() > 250) return;
+          if (pointer.getDuration() > 250 || isDomInteraction(pointer, "up")) return;
           components.SelectedBuilding.set({
             value: entity,
           });

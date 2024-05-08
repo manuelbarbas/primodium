@@ -14,28 +14,12 @@ async function init(): Promise<Record<SceneKeys, SceneApi> & { GAME: GameApi }> 
   const game = await engine.createGame(gameConfig);
   const gameApi = createGameApi(game);
 
-  // batch these awaits
-
-  const asteroidApiPromise = initAsteroidScene(gameApi);
-  const starmapApiPromise = initStarmapScene(gameApi);
-  const uiApiPromise = initUIScene(gameApi);
-  const rootApiPromise = initRootScene(gameApi);
-  const commandCenterApiPromise = initCommandCenter(gameApi);
-
-  const [asteroidApi, starmapApi, uiApi, rootApi, commandCenterApi] = await Promise.all([
-    asteroidApiPromise,
-    starmapApiPromise,
-    uiApiPromise,
-    rootApiPromise,
-    commandCenterApiPromise,
-  ]);
-
   return {
-    ASTEROID: asteroidApi,
-    STARMAP: starmapApi,
-    UI: uiApi,
-    ROOT: rootApi,
-    COMMAND_CENTER: commandCenterApi,
+    ASTEROID: await initAsteroidScene(gameApi),
+    STARMAP: await initStarmapScene(gameApi),
+    UI: await initUIScene(gameApi),
+    ROOT: await initRootScene(gameApi),
+    COMMAND_CENTER: await initCommandCenter(gameApi),
     GAME: gameApi,
   };
 }

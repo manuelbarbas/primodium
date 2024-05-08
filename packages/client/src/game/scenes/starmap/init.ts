@@ -8,7 +8,6 @@ import { setupKeybinds } from "../asteroid/setup/setupKeybinds";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
 import { GameApi } from "@/game/api/game";
 import { runSystems as runStarmapSystems } from "@/game/scenes/starmap/systems";
-import { MUD } from "@/network/types";
 
 export const initStarmapScene = async (game: GameApi): Promise<SceneApi> => {
   const scene = await game.createScene(starmapSceneConfig, false);
@@ -39,7 +38,7 @@ export const initStarmapScene = async (game: GameApi): Promise<SceneApi> => {
     clickSub.unsubscribe();
   }, "game");
 
-  const runSystems = (mud: MUD) => runStarmapSystems(sceneApi, mud);
+  const runSystems = () => runStarmapSystems(sceneApi);
 
   return { ...sceneApi, runSystems };
 };

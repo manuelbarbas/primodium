@@ -2,6 +2,7 @@ import { Fleet } from "@/game/lib/objects/Fleet";
 import { components } from "@/network/components";
 import { Entity } from "@latticexyz/recs";
 import { SceneApi } from "@/game/api/scene";
+import { isDomInteraction } from "@/util/canvas";
 
 export function renderFleet(args: { scene: SceneApi; entity: Entity }) {
   const { scene, entity } = args;
@@ -12,6 +13,7 @@ export function renderFleet(args: { scene: SceneApi; entity: Entity }) {
 
   const newFleet = new Fleet({ id: entity, scene, coord: { x: 0, y: 0 } })
     .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
+      if (isDomInteraction(pointer, "up")) return;
       if (pointer.downElement.nodeName !== "CANVAS") return;
 
       components.SelectedFleet.set({

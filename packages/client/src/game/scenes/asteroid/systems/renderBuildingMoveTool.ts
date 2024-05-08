@@ -17,6 +17,7 @@ import { world } from "src/network/world";
 import { getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
 import { Action } from "src/util/constants";
 import { Building } from "../../../lib/objects/Building";
+import { isDomInteraction } from "@/util/canvas";
 
 export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: SceneApi) => {
   if (pointer?.rightButtonDown()) {
@@ -81,6 +82,7 @@ export const renderBuildingMoveTool = (scene: SceneApi, mud: MUD) => {
       // .spawn();
 
       placementBuilding.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+        if (isDomInteraction(pointer, "down")) return;
         handleClick(pointer, mud, scene);
       });
     }

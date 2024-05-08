@@ -1,5 +1,6 @@
 import { MainbaseLevelToEmblem } from "@/game/lib/mappings";
 import { PrimaryAsteroid, SecondaryAsteroid } from "@/game/lib/objects/Asteroid";
+import { isDomInteraction } from "@/util/canvas";
 import { BaseAsteroid } from "@/game/lib/objects/Asteroid/BaseAsteroid";
 import { components } from "@/network/components";
 import { getAllianceName } from "@/util/alliance";
@@ -80,6 +81,7 @@ export const renderAsteroid = (args: {
 
   asteroid
     .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
+      if (isDomInteraction(pointer, "up")) return;
       if (pointer.downElement.nodeName !== "CANVAS") return;
 
       //TODO: move to reusable seq in fx

@@ -1,11 +1,12 @@
 import { Tooltip } from "@/components/core/Tooltip";
 import { useGame } from "@/hooks/useGame";
-import { cn } from "@/util/client";
+import { useEffect, forwardRef, useCallback } from "react";
+import { components } from "@/network/components";
+import { AudioKeys } from "@primodiumxyz/assets";
 import { getRandomRange } from "@/util/common";
 import { KeybindActionKeys } from "@game/lib/constants/keybinds";
-import { AudioKeys } from "@primodiumxyz/assets";
+import { cn } from "@/util/client";
 import { cva, type VariantProps } from "class-variance-authority";
-import { forwardRef, useCallback, useEffect } from "react";
 
 const buttonVariants = cva(
   "btn join-item relative group pointer-events-auto min-h-fit flex items-center justify-center whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 !p-0",
@@ -119,6 +120,7 @@ export const PushButton = forwardRef<HTMLButtonElement, ButtonProps>(
           });
 
         props.onPointerEnter?.(e);
+        components.HoverEntity.remove();
       },
       [api.audio, mute, props]
     );

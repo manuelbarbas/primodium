@@ -4,6 +4,7 @@ import { Entity } from "@latticexyz/recs";
 import { Coord } from "engine/types";
 import { entityToRockName } from "@/util/name";
 import { SceneApi } from "@/game/api/scene";
+import { isDomInteraction } from "@/util/canvas";
 
 export const renderShardAsteroid = (args: {
   scene: SceneApi;
@@ -27,6 +28,7 @@ export const renderShardAsteroid = (args: {
 
   asteroid
     .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
+      if (isDomInteraction(pointer, "up")) return;
       if (pointer.downElement.nodeName !== "CANVAS") return;
 
       const sequence = [

@@ -18,6 +18,7 @@ import { getEntityTypeName } from "src/util/common";
 import { Action, BuildingEnumLookup } from "src/util/constants";
 import { getRecipe, hasEnoughResources } from "src/util/recipe";
 import { Building } from "../../../lib/objects/Building";
+import { isDomInteraction } from "@/util/canvas";
 
 export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: SceneApi) => {
   if (pointer?.rightButtonDown()) {
@@ -83,6 +84,7 @@ export const renderBuildingPlacementTool = (scene: SceneApi, mud: MUD) => {
       });
 
       placementBuilding.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+        if (isDomInteraction(pointer, "down")) return;
         handleClick(pointer, mud, scene);
       });
     }

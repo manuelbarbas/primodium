@@ -9,6 +9,7 @@ import { ReactNode, memo, useCallback, useEffect, useMemo, useState } from "reac
 import ReactDOM from "react-dom";
 import { FaMinus, FaRegWindowMaximize, FaRegWindowRestore } from "react-icons/fa";
 import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
+import { components } from "@/network/components";
 
 type WidgetProps = {
   title: string;
@@ -434,6 +435,9 @@ export const Widget: React.FC<WidgetProps> = memo(
 
     const handlePointerEnter = useCallback(() => {
       if (!container) return;
+
+      // remove any hovered entity as Phaser will have failed to detect the pointer leaving
+      components.HoverEntity.remove();
 
       if (pinned) {
         container.setAlpha(1);
