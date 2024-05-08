@@ -27,7 +27,7 @@ export const Shards = ({ className = "" }: { className?: string }) => {
   const handleSelectShard = (entity: Entity) => {
     const position = components.Position.get(entity);
     if (!position) return;
-    const { pan, zoomTo } = primodium.api("STARMAP").camera;
+    const { pan, zoomTo } = primodium.STARMAP.camera;
 
     components.SelectedRock.set({ value: entity });
 

@@ -42,7 +42,7 @@ export const Modal: React.FC<ModalProps> & {
   const {
     audio,
     input: { addListener },
-  } = useRef(primodium.api("UI")).current;
+  } = useRef(primodium.UI).current;
 
   const handleClose = useCallback(() => {
     if (blockClose || !isOpen) return;
@@ -58,9 +58,9 @@ export const Modal: React.FC<ModalProps> & {
     };
 
     if (isOpen) {
-      primodium.disableGlobalInput();
+      primodium.GAME.disableGlobalInput();
     } else {
-      primodium.enableGlobalInput();
+      primodium.GAME.enableGlobalInput();
     }
 
     const escListener = addListener("Esc", handleClose);
@@ -70,7 +70,7 @@ export const Modal: React.FC<ModalProps> & {
       escListener.dispose();
       openListener?.dispose();
 
-      primodium.enableGlobalInput();
+      primodium.GAME.enableGlobalInput();
     };
   }, [isOpen, audio, keybind, keybindClose, addListener, primodium, handleClose]);
 

@@ -30,9 +30,10 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   } = mud;
   const primodium = usePrimodium();
   const {
-    scene: { getConfig },
+    config,
     hooks: { useCamera },
-  } = useRef(primodium.api("STARMAP")).current;
+  } = useRef(primodium.STARMAP).current;
+
   const ownedBy = components.OwnedBy.use(selectedAsteroid)?.value;
   const mapOpen = components.SelectedMode.use()?.value !== Mode.Asteroid;
   const position = components.Position.use(selectedAsteroid);
@@ -58,10 +59,6 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   );
 
   const [coord, defaultZoom, minZoom] = useMemo(() => {
-    const config = getConfig("STARMAP");
-
-    if (!config) throw Error("No config found for scene");
-
     const {
       tilemap: { tileHeight, tileWidth },
       camera: { defaultZoom, minZoom },
@@ -70,7 +67,7 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
     const pixelCoord = tileCoordToPixelCoord(position ?? { x: 0, y: 0 }, tileWidth, tileHeight);
 
     return [{ x: pixelCoord.x, y: -pixelCoord.y }, defaultZoom, minZoom];
-  }, [position, getConfig]);
+  }, [position, config]);
 
   if (!mapOpen) return <></>;
 

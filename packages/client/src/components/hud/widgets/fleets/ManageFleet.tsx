@@ -23,8 +23,7 @@ import { useFleetNav } from "./Fleets";
 
 const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   const mud = useMud();
-  const api = usePrimodium().api("STARMAP");
-  const scene = api.scene.getScene("STARMAP");
+  const api = usePrimodium().STARMAP;
 
   const { BackButton, NavButton } = useFleetNav();
 
@@ -192,10 +191,8 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               className="btn btn-primary btn-sm"
               disabled={cannotDoAnything}
               onClick={() => {
-                if (!scene) return;
                 components.Attack.reset();
                 components.Send.setOrigin(fleetEntity);
-                api.util.openMap();
               }}
             >
               SEND
@@ -205,10 +202,8 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
               className="btn btn-primary btn-sm"
               disabled={cannotDoAnything || inCooldown.inCooldown}
               onClick={async () => {
-                if (!scene) return;
                 components.Send.reset();
                 components.Attack.setOrigin(fleetEntity);
-                await api.util.openMap();
 
                 const fleetDestinationEntity = components.FleetMovement.get(fleetEntity)?.destination as Entity;
                 if (!fleetDestinationEntity) return;

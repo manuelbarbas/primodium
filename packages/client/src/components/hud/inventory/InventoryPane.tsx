@@ -18,7 +18,7 @@ export const InventoryPane = () => {
   const {
     hooks: { useKeybinds },
     input: { addListener },
-  } = useRef(primodium.api("ASTEROID")).current;
+  } = useRef(primodium.ASTEROID).current;
   const keybinds = useKeybinds();
   const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
 

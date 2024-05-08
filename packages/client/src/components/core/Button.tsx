@@ -85,31 +85,31 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const primodium = usePrimodium();
-    const api = primodium.api("UI");
+    const api = primodium.UI;
 
     const handleClick = useCallback(
       (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         !mute &&
-          api?.audio.play(clickSound, "ui", {
+          api.audio.play(clickSound, "ui", {
             detune: getRandomRange(-100, 100),
           });
 
         props.onClick?.(e);
       },
-      [api?.audio, clickSound, mute, props]
+      [api.audio, clickSound, mute, props]
     );
 
     const handleHoverEnter = useCallback(
       (e: React.PointerEvent<HTMLButtonElement>) => {
         !mute &&
-          api?.audio.play("DataPoint2", "ui", {
+          api.audio.play("DataPoint2", "ui", {
             volume: 0.1,
             detune: getRandomRange(-200, 200),
           });
 
         props.onPointerEnter?.(e);
       },
-      [api?.audio, mute, props]
+      [api.audio, mute, props]
     );
 
     useEffect(() => {

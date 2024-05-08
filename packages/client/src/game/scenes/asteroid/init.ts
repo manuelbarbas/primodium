@@ -1,5 +1,5 @@
 // ASTEROID MAP ENTRY POINT
-import { api } from "@/game/api";
+import { createSceneApi } from "@/game/api/scene";
 import { Game } from "engine/types";
 import { asteroidSceneConfig } from "../../lib/config/asteroidScene";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
@@ -9,7 +9,7 @@ import { setupMouseInputs } from "./setup/setupMouseInputs";
 export const initAsteroidScene = async (game: Game) => {
   const scene = await game.sceneManager.createScene(asteroidSceneConfig, true);
 
-  const sceneApi = api(scene);
+  const sceneApi = createSceneApi(scene);
 
   setupMouseInputs(scene);
   setupBasicCameraMovement(scene);

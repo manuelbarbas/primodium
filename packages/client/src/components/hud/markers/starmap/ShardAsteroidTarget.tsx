@@ -1,5 +1,6 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useMemo, useRef } from "react";
 import { Marker } from "src/components/core/Marker";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
@@ -13,7 +14,6 @@ import { getAsteroidImage } from "src/util/asteroid";
 import { EntityType, Mode } from "src/util/constants";
 import { formatResourceCount } from "src/util/number";
 import { Button } from "../../../core/Button";
-import { InterfaceIcons } from "@primodiumxyz/assets";
 
 export const _ShardAsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ selectedAsteroid }) => {
   const mud = useMud();
@@ -22,9 +22,9 @@ export const _ShardAsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ s
   } = mud;
   const primodium = usePrimodium();
   const {
-    scene: { getConfig },
+    config,
     hooks: { useCamera },
-  } = useRef(primodium.api("STARMAP")).current;
+  } = useRef(primodium.STARMAP).current;
 
   const shardData = useShardAsteroid(selectedAsteroid);
   const ownedBy = components.OwnedBy.use(selectedAsteroid)?.value;
@@ -36,10 +36,6 @@ export const _ShardAsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ s
   const ownedByPlayer = ownedBy === playerEntity;
 
   const [coord, defaultZoom, minZoom] = useMemo(() => {
-    const config = getConfig("STARMAP");
-
-    if (!config) throw Error("No config found for scene");
-
     const {
       tilemap: { tileHeight, tileWidth },
       camera: { defaultZoom, minZoom },
@@ -48,7 +44,7 @@ export const _ShardAsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ s
     const pixelCoord = tileCoordToPixelCoord(position ?? { x: 0, y: 0 }, tileWidth, tileHeight);
 
     return [{ x: pixelCoord.x, y: -pixelCoord.y }, defaultZoom, minZoom];
-  }, [position, getConfig]);
+  }, [position, config]);
 
   if (!mapOpen) return <></>;
 

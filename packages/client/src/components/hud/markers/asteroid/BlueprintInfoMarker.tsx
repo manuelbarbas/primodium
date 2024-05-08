@@ -1,12 +1,12 @@
-import { addCoords, tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { useMemo } from "react";
+import { Card } from "@/components/core/Card";
+import { Marker } from "@/components/core/Marker";
+import { BlueprintInfo } from "@/components/hud/blueprints/BlueprintInfo";
 import { usePrimodium } from "@/hooks/usePrimodium";
 import { components } from "@/network/components";
 import { getBuildingDimensions } from "@/util/building";
-import { Marker } from "@/components/core/Marker";
-import { Card } from "@/components/core/Card";
-import { BlueprintInfo } from "@/components/hud/blueprints/BlueprintInfo";
+import { addCoords, tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { useMemo } from "react";
 
 export const BlueprintInfoMarker = () => {
   const primodium = usePrimodium();
@@ -16,10 +16,7 @@ export const BlueprintInfoMarker = () => {
   const dimensions = useMemo(() => getBuildingDimensions(building ?? singletonEntity), [building]);
 
   const coord = useMemo(() => {
-    const {
-      scene: { getConfig },
-    } = primodium.api();
-    const config = getConfig("ASTEROID");
+    const { config } = primodium.ASTEROID;
 
     const pixelCoord = tileCoordToPixelCoord(
       addCoords(hoverCoord ?? { x: 0, y: 0 }, { x: dimensions.width / 2, y: 1 }),

@@ -18,10 +18,7 @@ export const HomeMarker = () => {
   const position = components.Position.use(homeAsteroid as Entity);
 
   const coord = useMemo(() => {
-    const {
-      scene: { getConfig },
-    } = primodium.api("STARMAP");
-    const config = getConfig("STARMAP");
+    const { config } = primodium.STARMAP;
 
     const pixelCoord = tileCoordToPixelCoord(
       position ?? { x: 0, y: 0 },

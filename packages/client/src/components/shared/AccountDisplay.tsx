@@ -56,7 +56,7 @@ export const AccountDisplay: React.FC<{
         }
 
         components.SelectedRock.set({ value: playerHomeAsteroid as Entity });
-        primodium.api("STARMAP").camera.pan({ x: playerHomeAsteroidPosition.x, y: playerHomeAsteroidPosition.y });
+        primodium.STARMAP.camera.pan({ x: playerHomeAsteroidPosition.x, y: playerHomeAsteroidPosition.y });
       }}
       className={`p-0 uppercase inline-flex font-bold gap-1 ${className} ${loading ? "animate-pulse" : ""}`}
     >

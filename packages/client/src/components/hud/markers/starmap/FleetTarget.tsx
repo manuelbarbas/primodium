@@ -32,7 +32,7 @@ export const _FleetTarget: React.FC<{ fleet: Entity; position: Entity }> = ({ fl
   const coord = useMemo(() => {
     if (!fleet) return { x: 0, y: 0 };
 
-    const fleetObj = primodium.api("STARMAP").objects.getFleet(fleet);
+    const fleetObj = primodium.STARMAP.objects.getFleet(fleet);
 
     if (!fleetObj) return { x: 0, y: 0 };
 

@@ -1,11 +1,11 @@
-import { useEffect, forwardRef, useCallback } from "react";
-import { usePrimodium } from "@/hooks/usePrimodium";
-import { getRandomRange } from "@/util/common";
 import { Tooltip } from "@/components/core/Tooltip";
-import { AudioKeys } from "@game/lib/constants/assets/audio";
-import { KeybindActionKeys } from "@game/lib/constants/keybinds";
+import { usePrimodium } from "@/hooks/usePrimodium";
 import { cn } from "@/util/client";
+import { getRandomRange } from "@/util/common";
+import { KeybindActionKeys } from "@game/lib/constants/keybinds";
+import { AudioKeys } from "@primodiumxyz/assets";
 import { cva, type VariantProps } from "class-variance-authority";
+import { forwardRef, useCallback, useEffect } from "react";
 
 const buttonVariants = cva(
   "btn join-item relative group pointer-events-auto min-h-fit flex items-center justify-center whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 !p-0",
@@ -96,35 +96,35 @@ export const PushButton = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const primodium = usePrimodium();
-    const api = primodium.api("UI");
+    const api = primodium.UI;
 
     const handleClick = useCallback(
       (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         !mute &&
-          api?.audio.play(clickSound, "ui", {
+          api.audio.play(clickSound, "ui", {
             detune: getRandomRange(-100, 100),
           });
 
         props.onClick?.(e);
       },
-      [api?.audio, clickSound, mute, props]
+      [api.audio, clickSound, mute, props]
     );
 
     const handleHoverEnter = useCallback(
       (e: React.PointerEvent<HTMLButtonElement>) => {
         !mute &&
-          api?.audio.play("DataPoint2", "ui", {
+          api.audio.play("DataPoint2", "ui", {
             volume: 0.1,
             detune: getRandomRange(-200, 200),
           });
 
         props.onPointerEnter?.(e);
       },
-      [api?.audio, mute, props]
+      [api.audio, mute, props]
     );
 
     useEffect(() => {
-      if (!keybind || !api || props.disabled) return;
+      if (!keybind || props.disabled) return;
 
       const listener = api.input.addListener(keybind, () => handleClick(undefined!));
 

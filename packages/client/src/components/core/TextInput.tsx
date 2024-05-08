@@ -23,9 +23,7 @@ export const TextInput: React.FC<{
   requirePattern,
 }) => {
   const primodium = usePrimodium();
-  const input = primodium.api("UI").input;
-  const input2 = primodium.api("ASTEROID").input;
-  const input3 = primodium.api("STARMAP").input;
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -62,16 +60,8 @@ export const TextInput: React.FC<{
         tabIndex={-1}
         onChange={onChange}
         maxLength={maxLength}
-        onFocus={() => {
-          input.disableInput();
-          input2.disableInput();
-          input3.disableInput();
-        }}
-        onBlur={() => {
-          input.enableInput();
-          input2.enableInput();
-          input3.enableInput();
-        }}
+        onFocus={primodium.GAME.disableGlobalInput}
+        onBlur={primodium.GAME.enableGlobalInput}
         required={!!requirePattern}
         pattern={requirePattern}
         placeholder={placeholder ?? "Type here"}

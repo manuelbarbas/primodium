@@ -1,14 +1,14 @@
+import { cn } from "@/util/client";
 import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { Coord } from "@latticexyz/utils";
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaChevronRight } from "react-icons/fa";
+import { DepthLayers, SceneKeys } from "src/game/lib/constants/common";
 import { usePrimodium } from "src/hooks/usePrimodium";
 import { calculateAngleBetweenPoints } from "src/util/common";
 import { Button } from "./Button";
 import { IconLabel } from "./IconLabel";
-import { DepthLayers, SceneKeys } from "src/game/lib/constants/common";
-import { cn } from "@/util/client";
 
 const BoundedMarker: React.FC<{ scene: SceneKeys; coord: Coord; iconUri: string; degrees: number }> = ({
   coord,
@@ -20,11 +20,9 @@ const BoundedMarker: React.FC<{ scene: SceneKeys; coord: Coord; iconUri: string;
 
   const handleClick = useCallback(() => {
     const {
+      config,
       camera: { pan },
-      scene: { getConfig },
-    } = primodium.api(scene);
-
-    const config = getConfig(scene);
+    } = primodium[scene];
 
     const tileCoord = pixelCoordToTileCoord(
       { x: coord.x, y: -coord.y },
@@ -73,8 +71,8 @@ export const Marker: React.FC<{
   const [container, setContainer] = useState<HTMLDivElement>();
   const [visible, setVisible] = useState(true);
   const [degrees, setDegrees] = useState(0);
-  const camera = useRef(primodium.api(scene).camera).current;
-  const uiCamera = useRef(primodium.api("UI").camera).current;
+  const camera = useRef(primodium[scene].camera).current;
+  const uiCamera = useRef(primodium.UI.camera).current;
   const translateClass = useMemo(() => {
     switch (origin) {
       case "top-left":

@@ -168,7 +168,7 @@ export const getBuildingName = (building: Entity) => {
 export const getBuildingImage = (primodium: Primodium, building: Entity) => {
   const buildingType = components.BuildingType.get(building)?.value as Entity;
   const level = components.Level.get(building)?.value ?? 1n;
-  const { getSpriteBase64 } = primodium.api().sprite;
+  const { getSpriteBase64 } = primodium.ASTEROID.sprite;
 
   if (EntityTypetoBuildingSprites[buildingType]) {
     const imageIndex = parseInt(level ? level.toString() : "1") - 1;
@@ -185,7 +185,7 @@ export const getBuildingImage = (primodium: Primodium, building: Entity) => {
 
 export const getBuildingImageFromType = (primodium: Primodium, buildingType: Entity) => {
   const level = components.Level.get(buildingType)?.value ?? 1n;
-  const { getSpriteBase64 } = primodium.api().sprite;
+  const { getSpriteBase64 } = primodium.ASTEROID.sprite;
 
   if (EntityTypetoBuildingSprites[buildingType]) {
     const imageIndex = parseInt(level ? level.toString() : "1") - 1;

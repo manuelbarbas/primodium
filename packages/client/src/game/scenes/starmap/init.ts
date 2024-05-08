@@ -1,7 +1,7 @@
 // STAR MAP ENTRY POINT
 import { starmapSceneConfig } from "../../lib/config/starmapScene";
 
-import { api } from "@/game/api";
+import { createSceneApi } from "@/game/api/scene";
 import { Game } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
@@ -11,7 +11,7 @@ import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMoveme
 export const initStarmapScene = async (game: Game) => {
   const scene = await game.sceneManager.createScene(starmapSceneConfig, false);
 
-  const sceneApi = api(scene);
+  const sceneApi = createSceneApi(scene);
 
   setupBasicCameraMovement(scene, {
     translateKeybind: false,

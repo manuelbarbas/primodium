@@ -22,7 +22,7 @@ export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
   const level = comps.Level.get(asteroid)?.value;
   level;
 
-  const { getSpriteBase64 } = primodium.api().sprite;
+  const { getSpriteBase64 } = primodium.ASTEROID.sprite;
   return getSpriteBase64(Sprites.Asteroid1);
 }
 

@@ -12,9 +12,11 @@ export const AudioSettings = () => {
 
   const setVolume = useCallback(
     (amount: number, channel: Channel | "master") => {
-      primodium.api().audio.setVolume(amount, channel);
-      primodium.api("UI").audio.setVolume(amount, channel);
-      primodium.api("STARMAP").audio.setVolume(amount, channel);
+      primodium.ASTEROID.audio.setVolume(amount, channel);
+      primodium.UI.audio.setVolume(amount, channel);
+      primodium.STARMAP.audio.setVolume(amount, channel);
+      primodium.COMMAND_CENTER.audio.setVolume(amount, channel);
+      primodium.ROOT.audio.setVolume(amount, channel);
     },
     [primodium]
   );

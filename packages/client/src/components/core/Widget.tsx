@@ -1,14 +1,14 @@
+import { Card } from "@/components/core/Card";
+import { useWidgets } from "@/hooks/providers/WidgetProvider";
+import { usePrimodium } from "@/hooks/usePrimodium";
+import { SceneKeys } from "@game/lib/constants/common";
+import { KeybindActionKeys } from "@game/lib/constants/keybinds";
+import { usePersistentStore } from "@game/stores/PersistentStore";
 import { Coord } from "@latticexyz/utils";
 import { ReactNode, memo, useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaMinus, FaRegWindowMaximize, FaRegWindowRestore } from "react-icons/fa";
 import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
-import { usePersistentStore } from "@game/stores/PersistentStore";
-import { usePrimodium } from "@/hooks/usePrimodium";
-import { useWidgets } from "@/hooks/providers/WidgetProvider";
-import { Card } from "@/components/core/Card";
-import { SceneKeys } from "@game/lib/constants/common";
-import { KeybindActionKeys } from "@game/lib/constants/keybinds";
 
 type WidgetProps = {
   title: string;
@@ -267,8 +267,8 @@ export const Widget: React.FC<WidgetProps> = memo(
     }, [id, defaultCoord]);
 
     const [camera, uiCamera] = useMemo(() => {
-      const { camera } = primodium.api(scene);
-      const { camera: uiCamera } = primodium.api("UI");
+      const { camera } = primodium[scene];
+      const { camera: uiCamera } = primodium.UI;
 
       return [camera, uiCamera];
     }, [primodium, scene]);

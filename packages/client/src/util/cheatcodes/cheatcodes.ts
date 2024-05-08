@@ -1,5 +1,4 @@
 import { WorldAbi } from "@/network/world";
-import { Primodium } from "@game/api";
 import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
@@ -32,7 +31,7 @@ import { getFullResourceCount } from "../resource";
 import { getBuildingAtCoord } from "../tile";
 import { TesterPack, testerPacks } from "./testerPacks";
 
-export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
+export const setupCheatcodes = (mud: MUD): Cheatcodes => {
   const buildings: Record<string, Entity> = {
     mainbase: EntityType.MainBase,
     droidbase: EntityType.DroidBase,
@@ -305,13 +304,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
       txQueueSize = components.TransactionQueue.getSize();
     }
   }
-  function setupTesterPackCheatcodes(
-    testerPacks: Record<string, TesterPack>,
-    mud: MUD,
-    primodium: Primodium
-  ): Record<string, Cheatcode> {
-    mud;
-    primodium;
+  function setupTesterPackCheatcodes(testerPacks: Record<string, TesterPack>): Record<string, Cheatcode> {
     return Object.fromEntries(
       Object.entries(testerPacks).map(([name, pack]) => {
         return [
@@ -475,7 +468,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
     throw new Error("Valid tile position not found");
   }
 
-  const packs = setupTesterPackCheatcodes(testerPacks, mud, primodium);
+  const packs = setupTesterPackCheatcodes(testerPacks);
   return [
     {
       title: "Tester Packs",

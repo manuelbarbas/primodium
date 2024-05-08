@@ -26,7 +26,7 @@ const BlueprintButton: React.FC<{
   const {
     hooks: { useKeybinds },
     input: { addListener },
-  } = usePrimodium().api("ASTEROID");
+  } = usePrimodium().ASTEROID;
   const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
   const keybinds = useKeybinds();
   const selectedRockEntity = components.ActiveRock.use()?.value as Entity | undefined;

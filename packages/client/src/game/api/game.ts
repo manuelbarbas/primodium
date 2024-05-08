@@ -1,4 +1,4 @@
-import { SceneKeys } from "@/game/lib/constants/common";
+import { SceneKeys, Scenes } from "@/game/lib/constants/common";
 import { Game, Scene } from "engine/types";
 
 export type GameApi = ReturnType<typeof createGameApi>;
@@ -60,11 +60,27 @@ export function createGameApi(game: Game) {
     await game.sceneManager.transitionToScene(origin, target, duration, onTransitionStart, onTransitionEnd);
   }
 
+  function enableGlobalInput() {
+    game.sceneManager.scenes.forEach((scene) => {
+      scene.input.enableInput();
+    });
+  }
+
+  function disableGlobalInput() {
+    game.sceneManager.scenes.forEach((scene) => {
+      if (scene.config.key === Scenes.UI) return;
+      scene.input.disableInput();
+    });
+  }
+
   return {
+    dispose: game.dispose,
     setResolution,
     setTarget,
     getConfig,
     transitionToScene,
     getScene,
+    enableGlobalInput,
+    disableGlobalInput,
   };
 }

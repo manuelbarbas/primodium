@@ -18,7 +18,7 @@ export const StarmapNavigatorPane = () => {
   const {
     hooks: { useKeybinds },
     input: { addListener },
-  } = useRef(primodium.api("STARMAP")).current;
+  } = useRef(primodium.STARMAP).current;
   const keybinds = useKeybinds();
   const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
 

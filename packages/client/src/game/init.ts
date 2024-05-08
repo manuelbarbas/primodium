@@ -1,5 +1,5 @@
-import { SceneApi } from "@/game/api";
 import { createGameApi, GameApi } from "@/game/api/game";
+import { SceneApi } from "@/game/api/scene";
 import { SceneKeys } from "@/game/lib/constants/common";
 import { initCommandCenter } from "@/game/scenes/command-center/init";
 import { MUD } from "@/network/types";

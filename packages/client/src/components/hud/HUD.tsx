@@ -26,7 +26,7 @@ import { HoverInfo } from "./hover/HoverInfo";
 
 export const GameHUD = memo(() => {
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
-  const { notify } = usePrimodium().api.UI;
+  const { notify } = usePrimodium().UI;
 
   return (
     <div className={`screen-container relative`}>

@@ -59,13 +59,13 @@ export const OwnedFleets: React.FC<{ className?: string }> = ({ className }) => 
   });
 
   const handleSelect = (entity: Entity) => {
-    const { pan, zoomTo } = primodium.api("STARMAP").camera;
+    const { pan, zoomTo } = primodium.STARMAP.camera;
     const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
     const time = components.Time.get()?.value ?? 0n;
 
     if (arrivalTime < time) components.SelectedFleet.set({ value: entity });
 
-    const objects = primodium.api("STARMAP").objects;
+    const objects = primodium.STARMAP.objects;
     const fleet = objects.getFleet(entity);
 
     if (!fleet) return;

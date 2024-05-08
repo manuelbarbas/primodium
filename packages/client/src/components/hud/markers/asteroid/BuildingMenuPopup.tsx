@@ -1,15 +1,15 @@
-import { addCoords, tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { useMemo } from "react";
+import { Card, GlassCard } from "@/components/core/Card";
 import { Widget } from "@/components/core/Widget";
+import { BuildingMenu } from "@/components/hud/building-menu/BuildingMenu";
 import { usePrimodium } from "@/hooks/usePrimodium";
 import { components } from "@/network/components";
 import { getBuildingDimensions, getBuildingImageFromType, getBuildingName } from "@/util/building";
 import { getEntityTypeName } from "@/util/common";
-import { BuildingMenu } from "@/components/hud/building-menu/BuildingMenu";
-import { Card, GlassCard } from "@/components/core/Card";
+import { addCoords, tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
+import { useMemo } from "react";
 
 export const BuildingMenuPopup = () => {
   const primodium = usePrimodium();
@@ -20,10 +20,7 @@ export const BuildingMenuPopup = () => {
   const dimensions = useMemo(() => getBuildingDimensions(building ?? singletonEntity), [building]);
 
   const coord = useMemo(() => {
-    const {
-      scene: { getConfig },
-    } = primodium.api();
-    const config = getConfig("ASTEROID");
+    const { config } = primodium.ASTEROID;
 
     const pixelCoord = tileCoordToPixelCoord(
       addCoords(position ?? { x: 0, y: 0 }, { x: dimensions.width + 0.5, y: 0 }),
