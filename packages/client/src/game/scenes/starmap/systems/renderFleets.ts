@@ -10,7 +10,6 @@ import { renderFleet } from "@/game/lib/render/renderFleet";
 
 export const renderFleets = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
-  // const audioApi = createAudioApi(scene);
   const objects = createObjectApi(scene);
   const transitsToUpdate = new Set<Entity>();
 
@@ -105,7 +104,7 @@ export const renderFleets = (scene: Scene) => {
     } else if (oldMovement) {
       const transitLine = objects.transitLine.get(update.entity);
       if (transitLine) {
-        scene.objects.remove(`transit_${update.entity}`);
+        transitLine.destroy();
         transitsToUpdate.delete(update.entity);
       } else {
         const orbitRing = objects.asteroid.get(oldMovement.destination as Entity)?.getFleetContainer();

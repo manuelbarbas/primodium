@@ -46,6 +46,8 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
         blendMode: "ADD",
       })
       .setAlpha(0.27);
+
+    this._scene.objects.add(id, this);
   }
 
   spawn() {
@@ -130,8 +132,9 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
     return this;
   }
 
-  dispose() {
+  destroy() {
+    this._scene.objects.remove(this.id);
     this.particles.destroy();
-    this.destroy();
+    super.destroy();
   }
 }
