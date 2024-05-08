@@ -47,16 +47,6 @@ export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, option
     objectPool.ignoreCamera(phaserCamera.id, ignore);
   }
 
-  function centerOnCoord(tileCoord: Coord, tileWidth: number, tileHeight: number) {
-    const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
-    centerOn(pixelCoord.x, pixelCoord.y);
-  }
-
-  function centerOn(x: number, y: number) {
-    phaserCamera.centerOn(x, y);
-    requestAnimationFrame(() => worldView$.next(phaserCamera.worldView));
-  }
-
   function setScroll(x: number, y: number) {
     phaserCamera.setScroll(x, y);
     requestAnimationFrame(() => worldView$.next(phaserCamera.worldView));
@@ -73,8 +63,6 @@ export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, option
       gesture.destroy();
       phaserCamera.scene.scale.removeListener("resize", onResize);
     },
-    centerOnCoord,
-    centerOn,
     setScroll,
     setZoom,
   };

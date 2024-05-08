@@ -9,7 +9,6 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
-import { useGame } from "src/hooks/useGame";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { abandonFleet } from "src/network/setup/contractCalls/fleetAbandon";
@@ -17,13 +16,12 @@ import { clearFleet } from "src/network/setup/contractCalls/fleetClear";
 import { landFleet } from "src/network/setup/contractCalls/fleetLand";
 import { clearFleetStance, setFleetStance } from "src/network/setup/contractCalls/fleetStance";
 import { formatNumber, formatResourceCount } from "src/util/number";
-import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
+import { ResourceIcon } from "../../global/modals/fleets/ResourceIcon";
 import { FleetEntityHeader } from "./FleetHeader";
 import { useFleetNav } from "./Fleets";
 
 const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   const mud = useMud();
-  const api = useGame().STARMAP;
 
   const { BackButton, NavButton } = useFleetNav();
 
@@ -187,31 +185,11 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             >
               Transfer
             </NavButton>
-            <Modal.CloseButton
-              className="btn btn-primary btn-sm"
-              disabled={cannotDoAnything}
-              onClick={() => {
-                components.Attack.reset();
-                components.Send.setOrigin(fleetEntity);
-              }}
-            >
+            <Modal.CloseButton className="btn btn-primary btn-sm" disabled={cannotDoAnything}>
               SEND
             </Modal.CloseButton>
 
-            <Modal.CloseButton
-              className="btn btn-primary btn-sm"
-              disabled={cannotDoAnything || inCooldown.inCooldown}
-              onClick={async () => {
-                components.Send.reset();
-                components.Attack.setOrigin(fleetEntity);
-
-                const fleetDestinationEntity = components.FleetMovement.get(fleetEntity)?.destination as Entity;
-                if (!fleetDestinationEntity) return;
-                const fleetDestinationPosition = components.Position.get(fleetDestinationEntity);
-                if (!fleetDestinationPosition) return;
-                api.camera.pan(fleetDestinationPosition);
-              }}
-            >
+            <Modal.CloseButton className="btn btn-primary btn-sm" disabled={cannotDoAnything || inCooldown.inCooldown}>
               ATTACK
             </Modal.CloseButton>
             <TransactionQueueMask queueItemId={"landFleet" as Entity}>

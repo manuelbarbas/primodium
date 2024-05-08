@@ -72,7 +72,13 @@ export const renderBuildingMoveTool = (scene: SceneApi, mud: MUD) => {
     );
 
     if (!placementBuilding) {
-      placementBuilding = new Building(scene, buildingPrototype, tileCoord).spawn();
+      placementBuilding = new Building({
+        id: "movementTool" as Entity,
+        scene,
+        buildingType: buildingPrototype,
+        coord: tileCoord,
+      });
+      // .spawn();
 
       placementBuilding.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
         handleClick(pointer, mud, scene);
@@ -96,7 +102,7 @@ export const renderBuildingMoveTool = (scene: SceneApi, mud: MUD) => {
   defineUpdateSystem(systemsWorld, query, render);
 
   defineExitSystem(systemsWorld, query, () => {
-    placementBuilding?.dispose();
+    placementBuilding?.destroy();
     placementBuilding = undefined;
   });
 };

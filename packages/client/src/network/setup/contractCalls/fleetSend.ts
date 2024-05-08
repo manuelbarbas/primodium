@@ -20,7 +20,7 @@ export const sendFleet = async (mud: MUD, fleet: Entity, spaceRock: Entity) => {
       withSession: true,
     },
     {
-      id: hashEntities(TransactionQueueType.SendFleet),
+      id: hashEntities(TransactionQueueType.SendFleet, fleet),
       type: TransactionQueueType.SendFleet,
     },
     () => {
@@ -40,7 +40,7 @@ export const sendFleetPosition = async (mud: MUD, fleet: Entity, position: Coord
       withSession: true,
     },
     {
-      id: hashEntities(TransactionQueueType.SendFleet),
+      id: hashEntities(TransactionQueueType.SendFleet, fleet),
       type: TransactionQueueType.SendFleet,
     },
     () => activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.SendFleet)

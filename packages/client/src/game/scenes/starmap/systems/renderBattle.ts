@@ -11,11 +11,11 @@ export const renderBattle = (scene: SceneApi) => {
   const { BattleResult } = components;
 
   const attackAnimation = async (entity: Entity, attacker: Entity, defender: Entity, attackerWinner?: boolean) => {
-    const attackerPosition = scene.objects.getFleet(attacker)?.getTileCoord() ?? { x: 0, y: 0 };
+    const attackerPosition = scene.objects.fleet.get(attacker)?.getTileCoord() ?? { x: 0, y: 0 };
 
     const isFleet = components.IsFleet.get(defender)?.value;
     const position = isFleet
-      ? scene.objects.getFleet(defender)?.getTileCoord() ?? { x: 0, y: 0 }
+      ? scene.objects.fleet.get(defender)?.getTileCoord() ?? { x: 0, y: 0 }
       : components.Position.get(defender);
 
     const playerEntity = components.Account.get()?.value;

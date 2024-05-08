@@ -84,8 +84,11 @@ export enum Animations {
 
   DroidBase = "droidbase/level1",
 
+  FleetPlayer = "fleet/player",
+
   //DECORATIONS
-  Drone = "decorations/drone",
+  DroneTop = "decorations/drone-top",
+  DroneBottom = "decorations/drone-bottom",
 }
 
 export type AnimationKeys = keyof typeof Animations;

@@ -6,6 +6,7 @@ import {
   defineEnterSystem,
   defineExitSystem,
   namespaceWorld,
+  runQuery,
 } from "@latticexyz/recs";
 import { SceneApi } from "@/game/api/scene";
 import { BuildingConstruction } from "src/game/lib/objects/Building";
@@ -29,7 +30,7 @@ export const renderQueuedBuildings = (scene: SceneApi) => {
     }),
   ];
 
-  const buildingConstructions = new Map<Entity, BuildingConstruction>();
+  // const buildingConstructions = new Map<Entity, BuildingConstruction>();
   const render = ({ entity }: ComponentUpdate) => {
     const metadata = components.TransactionQueue.getMetadata<TransactionQueueType.Build>(entity);
 
@@ -37,15 +38,15 @@ export const renderQueuedBuildings = (scene: SceneApi) => {
 
     const dimensions = getBuildingDimensions(metadata.buildingType);
 
-    if (buildingConstructions.has(entity)) return;
+    if (scene.objects.constructionBuilding.has(entity)) return;
 
-    const buildingConstruction = new BuildingConstruction(
+    new BuildingConstruction({
+      id: entity,
       scene,
-      metadata.coord,
-      dimensions,
-      getQueuePositionString(entity)
-    ).spawn();
-    buildingConstructions.set(entity, buildingConstruction);
+      coord: metadata.coord,
+      buildingDimensions: dimensions,
+      queueText: getQueuePositionString(entity),
+    });
   };
 
   defineEnterSystem(systemsWorld, query, (update) => {
@@ -55,15 +56,14 @@ export const renderQueuedBuildings = (scene: SceneApi) => {
   });
 
   defineExitSystem(systemsWorld, [Has(components.TransactionQueue)], ({ entity }) => {
-    const construction = buildingConstructions.get(entity);
+    const construction = scene.objects.constructionBuilding.get(entity);
     if (construction) {
-      construction.dispose();
-      buildingConstructions.delete(entity);
+      construction.destroy();
     }
 
     //udpate text for remaining queued items
-    for (const [entity, buildingConstruction] of buildingConstructions) {
-      buildingConstruction.setQueueText(getQueuePositionString(entity));
+    for (const entity of runQuery([Has(components.TransactionQueue)])) {
+      scene.objects.constructionBuilding.get(entity)?.setQueueText(getQueuePositionString(entity));
     }
     console.info("[EXIT SYSTEM](transaction completed)");
   });

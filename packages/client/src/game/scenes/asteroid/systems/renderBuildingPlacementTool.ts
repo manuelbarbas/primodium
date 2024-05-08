@@ -75,7 +75,12 @@ export const renderBuildingPlacementTool = (scene: SceneApi, mud: MUD) => {
     const validPlacement = validateBuildingPlacement(tileCoord, buildingPrototype, asteroid);
 
     if (!placementBuilding) {
-      placementBuilding = new Building(scene, buildingPrototype, tileCoord).spawn();
+      placementBuilding = new Building({
+        id: "placementTool" as Entity,
+        scene,
+        buildingType: buildingPrototype,
+        coord: tileCoord,
+      });
 
       placementBuilding.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
         handleClick(pointer, mud, scene);
@@ -109,7 +114,7 @@ export const renderBuildingPlacementTool = (scene: SceneApi, mud: MUD) => {
   defineUpdateSystem(systemsWorld, query, render);
 
   defineExitSystem(systemsWorld, query, () => {
-    placementBuilding?.dispose();
+    placementBuilding?.destroy();
     placementBuilding = undefined;
   });
 };

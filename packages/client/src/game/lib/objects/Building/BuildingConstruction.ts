@@ -5,17 +5,28 @@ import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { IPrimodiumGameObject } from "../interfaces";
 import { DepthLayers } from "../../constants/common";
 import { Assets } from "@primodiumxyz/assets";
+import { Entity } from "@latticexyz/recs";
 
 export class BuildingConstruction extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
+  private id: Entity;
   private coord: Coord;
   private _scene: SceneApi;
   private spawned = false;
   private sprite: Phaser.GameObjects.Sprite;
   private text: Phaser.GameObjects.BitmapText;
 
-  constructor(scene: SceneApi, coord: Coord, buildingDimensions: BuildingDimensions, queueText?: string) {
+  constructor(args: {
+    id: Entity;
+    scene: SceneApi;
+    coord: Coord;
+    buildingDimensions: BuildingDimensions;
+    queueText?: string;
+  }) {
+    const { id, scene, coord, buildingDimensions, queueText } = args;
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
     super(scene.phaserScene, pixelCoord.x, -pixelCoord.y + scene.tiled.tileHeight);
+
+    this.id = id;
 
     const spriteName = getConstructionSprite(buildingDimensions);
     if (!spriteName) console.warn("No construction sprite found for building dimensions: ", buildingDimensions);
@@ -40,6 +51,8 @@ export class BuildingConstruction extends Phaser.GameObjects.Container implement
 
     this.coord = coord;
     this._scene = scene;
+
+    this._scene.objects.building.add(id, this);
   }
 
   setQueueText(text: string) {
@@ -62,7 +75,8 @@ export class BuildingConstruction extends Phaser.GameObjects.Container implement
     return this.spawned;
   }
 
-  dispose() {
-    this.destroy();
+  destroy() {
+    this._scene.objects.building.remove(this.id);
+    super.destroy();
   }
 }

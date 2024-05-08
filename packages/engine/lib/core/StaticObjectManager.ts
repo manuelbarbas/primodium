@@ -1,14 +1,22 @@
 import { CoordMap } from "@latticexyz/utils";
 import { ChunkManager } from "./ChunkManager";
 import { pixelToChunkCoord } from "@latticexyz/phaserx";
-import { BaseAsteroid } from "../../../client/src/game/lib/objects/Asteroid/BaseAsteroid";
-import { Building } from "../../../client/src/game/lib/objects/Building";
-import { Fleet } from "../../../client/src/game/lib/objects/Fleet";
 import { createCamera } from "./createCamera";
 import { Coord } from "../../types";
-import { TransitLine } from "src/game/lib/objects/TransitLine";
-import { TargetLine } from "src/game/lib/objects/TargetLine";
-type PrimodiumGameObject = BaseAsteroid | Building | Fleet | TransitLine | TargetLine;
+
+type Spawnable = {
+  spawn(): void;
+  isSpawned(): boolean;
+  setVisible(visible: boolean): Phaser.GameObjects.GameObject;
+};
+export type PrimodiumGameObject = (
+  | Phaser.GameObjects.Sprite
+  | Phaser.GameObjects.Image
+  | Phaser.GameObjects.Container
+  | Phaser.GameObjects.BitmapText
+  | Phaser.GameObjects.Line
+) &
+  Spawnable;
 
 export class StaticObjectManager {
   private chunkManager;
@@ -66,7 +74,7 @@ export class StaticObjectManager {
         }
         object.setActive(true).setVisible(true);
       }
-    }
+    } else object.spawn();
 
     this.onNewObjectCallbacks.forEach((callback) => callback(id));
   }
@@ -80,7 +88,7 @@ export class StaticObjectManager {
     };
   }
 
-  remove(id: string) {
+  remove(id: string, destroy = false) {
     const object = this.objMap.get(id);
     if (!object) return;
 
@@ -91,15 +99,19 @@ export class StaticObjectManager {
     if (index !== -1) objects.splice(index, 1);
 
     this.objMap.delete(id);
-    object.dispose();
+    if (destroy) object.destroy();
   }
 
   get(id: string) {
     return this.objMap.get(id);
   }
 
+  has(id: string) {
+    return this.objMap.has(id);
+  }
+
   dispose() {
-    this.objMap.forEach((object) => object.dispose());
+    this.objMap.forEach((object) => object.destroy());
     this.chunkManager.dispose();
   }
 }

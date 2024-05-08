@@ -1,8 +1,8 @@
-import { SceneApi } from "@/game/api";
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getRandomRange } from "src/util/common";
+import { SceneApi } from "@/game/api/scene";
 
 export const setupAudioEffects = (scene: SceneApi) => {
   const systemsWorld = namespaceWorld(world, "systems");

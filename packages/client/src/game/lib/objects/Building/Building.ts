@@ -8,12 +8,14 @@ import { IPrimodiumGameObject } from "../interfaces";
 import { Assets } from "@primodiumxyz/assets";
 
 export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGameObject {
+  private id: Entity;
   private buildingType: Entity;
   private coord: Coord;
   private _scene: SceneApi;
   private level = 1n;
   private spawned = false;
-  constructor(scene: SceneApi, buildingType: Entity, coord: Coord) {
+  constructor(args: { id: Entity; scene: SceneApi; buildingType: Entity; coord: Coord }) {
+    const { id, scene, buildingType, coord } = args;
     const assetPair = getAssetKeyPair(1n, buildingType);
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
     super(
@@ -23,6 +25,8 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
       Assets.SpriteAtlas,
       assetPair.sprite
     );
+
+    this.id = id;
     assetPair.animation && this.play(assetPair.animation);
     this.setOrigin(0, 1);
     this.setDepth(DepthLayers.Building - coord.y);
@@ -31,6 +35,9 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
     this.buildingType = buildingType;
     this.coord = coord;
     this._scene = scene;
+
+    //add to object pool
+    this._scene.objects.building.add(id, this);
   }
 
   spawn() {
@@ -98,8 +105,10 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
     return this;
   };
 
-  dispose() {
+  destroy() {
     //TODO: despawn animation
-    this.destroy();
+
+    this._scene.objects.building.remove(this.id);
+    super.destroy();
   }
 }

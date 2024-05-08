@@ -25,9 +25,10 @@ import { SceneApi } from "@/game/api/scene";
 export const renderBuilding = (scene: SceneApi) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const spectateWorld = namespaceWorld(world, "game_spectate");
+  const { objects } = scene;
 
   //TODO: temp till smart containers
-  const buildings = new Map<Entity, Building>();
+  // const buildings = new Map<Entity, Building>();
   defineComponentSystem(systemsWorld, components.ActiveRock, ({ value }) => {
     if (!value[0] || value[0]?.value === value[1]?.value) return;
 
@@ -54,16 +55,15 @@ export const renderBuilding = (scene: SceneApi) => {
     ];
 
     for (const entity of runQuery(oldPositionQuery)) {
-      const building = buildings.get(entity);
+      const building = objects.building.get(entity);
       if (building) {
-        building.dispose();
-        buildings.delete(entity);
+        building.destroy();
       }
     }
 
     const render = ({ entity }: { entity: Entity }) => {
-      if (buildings.has(entity)) {
-        const building = buildings.get(entity);
+      if (objects.building.has(entity)) {
+        const building = objects.building.get(entity);
         if (!building) return;
         building.setLevel(components.Level.get(entity)?.value ?? 1n);
         building.setActive(components.IsActive.get(entity)?.value ?? true);
@@ -94,8 +94,8 @@ export const renderBuilding = (scene: SceneApi) => {
       if (!origin) return;
       const tilePosition = getBuildingBottomLeft(origin, buildingType);
 
-      const building = new Building(scene, buildingType, tilePosition)
-        .spawn()
+      const building = new Building({ id: entity, scene, buildingType, coord: tilePosition })
+        // .spawn()
         .setLevel(components.Level.get(entity)?.value ?? 1n)
         .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
           if (pointer.getDuration() > 250) return;
@@ -120,33 +120,30 @@ export const renderBuilding = (scene: SceneApi) => {
           building.clearOutline();
         });
 
-      buildings.set(entity, building);
+      // buildings.set(entity, building);
     };
 
     //handle selectedBuilding changes
     defineComponentSystem(spectateWorld, components.SelectedBuilding, ({ value }) => {
       if (value[0]?.value === value[1]?.value) return;
 
-      const newBuilding = buildings.get(value[0]?.value as Entity);
+      const newBuilding = objects.building.get(value[0]?.value as Entity);
       if (newBuilding) {
         newBuilding.clearOutline();
         newBuilding.setOutline(0x00ffff, 3);
       }
 
-      const oldBuilding = buildings.get(value[1]?.value as Entity);
+      const oldBuilding = objects.building.get(value[1]?.value as Entity);
       if (oldBuilding) oldBuilding.clearOutline();
     });
 
     defineEnterSystem(spectateWorld, positionQuery, render);
-    defineUpdateSystem(spectateWorld, positionQuery, (update) => {
-      render(update);
-    });
+    defineUpdateSystem(spectateWorld, positionQuery, render);
 
     defineExitSystem(spectateWorld, positionQuery, ({ entity }) => {
-      const building = buildings.get(entity);
+      const building = objects.building.get(entity);
       if (building) {
-        building.dispose();
-        buildings.delete(entity);
+        building.destroy();
       }
     });
   });

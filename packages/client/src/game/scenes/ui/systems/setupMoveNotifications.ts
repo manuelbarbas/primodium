@@ -22,8 +22,6 @@ export function setupMoveNotifications(scene: SceneApi) {
 
     //it has arrived
     if (arrival.sendTime + 30n < now || arrival.arrivalTime - 5n) {
-      components.SelectedFleet.clear();
-      components.SelectedRock.clear();
       return;
     }
     const minutes = (arrival.arrivalTime - now) / 60n;

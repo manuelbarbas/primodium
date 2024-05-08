@@ -9,7 +9,6 @@ import {
   createExtendedEntityComponent,
   createExtendedNumberComponent,
 } from "./customComponents/ExtendedComponent";
-import createSendComponent from "./customComponents/SendComponent";
 import { createTransactionQueueComponent } from "./customComponents/TransactionQueueComponent";
 
 export default function setupClientComponents() {
@@ -65,9 +64,6 @@ export default function setupClientComponents() {
       id: "Hangar",
     }
   );
-
-  const Send = createSendComponent();
-  const Attack = createSendComponent();
 
   const SelectedFleet = createExtendedEntityComponent(world, { id: "SelectedFleet" });
 
@@ -150,8 +146,6 @@ export default function setupClientComponents() {
     ReverseBuildingPosition,
     TrainingQueue,
     Hangar,
-    Send,
-    Attack,
     SelectedFleet,
     IsObjectiveClaimable,
     Battle,

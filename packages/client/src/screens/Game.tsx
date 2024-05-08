@@ -5,8 +5,8 @@ import { usePlayerAsteroids } from "@/hooks/usePlayerAsteroids";
 import { YouDied } from "@/screens/YouDied";
 import { PrimodiumGame, initGame } from "@game/api";
 import { Progress } from "src/components/core/Progress";
-import { GameHUD } from "src/components/hud/HUD";
 import { GameProvider } from "src/hooks/providers/GameProvider";
+import { GameHUD } from "@/components/hud";
 import { WidgetProvider } from "src/hooks/providers/WidgetProvider";
 
 const params = new URLSearchParams(window.location.search);

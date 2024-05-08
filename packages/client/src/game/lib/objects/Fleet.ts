@@ -1,28 +1,54 @@
 import { Coord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { SceneApi } from "@/game/api/scene";
-import { OrbitRing } from "./Asteroid/OrbitRing";
+import { FleetsContainer } from "./Asteroid/FleetsContainer";
 import { IPrimodiumGameObject } from "./interfaces";
 import { TransitLine } from "./TransitLine";
-import { Assets, Sprites } from "@primodiumxyz/assets";
+import { Assets, Sprites, Animations } from "@primodiumxyz/assets";
+import { Entity } from "@latticexyz/recs";
 
 export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObject {
   private _scene: SceneApi;
+  private id: Entity;
   private coord: Coord;
   private spawned = false;
-  private orbitRingRef: OrbitRing | null = null;
+  private orbitRingRef: FleetsContainer | null = null;
   private transitLineRef: TransitLine | null = null;
-  constructor(scene: SceneApi, coord: Coord) {
+  private frames: Phaser.Animations.AnimationFrame[];
+  private currentRotationFrame: string | number;
+  public particles: Phaser.GameObjects.Particles.ParticleEmitter;
+
+  constructor(args: { id: Entity; scene: SceneApi; coord: Coord }) {
+    const { id, scene, coord } = args;
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
     super(
       scene.phaserScene,
       pixelCoord.x,
       -pixelCoord.y + scene.tiled.tileHeight,
       Assets.SpriteAtlas,
-      Sprites.LightningCraft
+      Sprites.FleetPlayer
     );
-    this.setOrigin(0.5, 0.5).setScale(0.3).setInteractive();
+    this.id = id;
+    this.setOrigin(0.5, 0.5).setScale(1).setInteractive();
     this._scene = scene;
     this.coord = coord;
+    this.frames = this.scene.anims.get(Animations.FleetPlayer).frames;
+    this.currentRotationFrame = this.frames[0].textureFrame;
+    this.particles = this.scene.add
+      .particles(pixelCoord.x, -pixelCoord.y, "flares", {
+        x: pixelCoord.x,
+        y: -pixelCoord.y,
+        lifespan: 1000,
+        speed: { min: 20, max: 25 },
+        tintFill: true,
+        color: [0xc7e5fd, 0x0ecaff, 0x00207d, 0x0ecaff],
+        scale: { start: 0.2, end: 0 },
+        angle: { min: -80, max: -100 },
+        quantity: 1,
+        blendMode: "ADD",
+      })
+      .setAlpha(0.27);
+
+    this._scene.objects.fleet.add(id, this);
   }
 
   spawn() {
@@ -53,6 +79,32 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
     return { x: point.x, y: point.y };
   }
 
+  setRotationFrame(angle: number) {
+    const segmentWidth = 360 / this.frames.length;
+    const index = Math.floor(((angle + segmentWidth / 2) % 360) / segmentWidth);
+    const frame = this.frames[index].textureFrame;
+
+    if (this.currentRotationFrame === frame) return this;
+
+    this.setFrame(frame);
+    this.currentRotationFrame = frame;
+    return this;
+  }
+
+  reset() {
+    this.setRotationFrame(0);
+    this.setFlip(false, false);
+    this.rotation = 0;
+    return this;
+  }
+
+  getRotationFrameOffset() {
+    const segmentWidth = 360 / this.frames.length;
+    const index = this.frames.findIndex((frame) => frame.textureFrame === this.currentRotationFrame);
+
+    return index * segmentWidth;
+  }
+
   getTileCoord() {
     const container = this.parentContainer;
     const matrix = container.getWorldTransformMatrix();
@@ -69,7 +121,7 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
     return this.transitLineRef;
   }
 
-  setOrbitRingRef(orbitRing: OrbitRing | null) {
+  setOrbitRingRef(orbitRing: FleetsContainer | null) {
     this.orbitRingRef = orbitRing;
 
     return this;
@@ -81,7 +133,9 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
     return this;
   }
 
-  dispose() {
-    this.destroy();
+  destroy() {
+    this._scene.objects.fleet.remove(this.id);
+    this.particles.destroy();
+    super.destroy();
   }
 }

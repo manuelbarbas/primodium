@@ -33,8 +33,6 @@ export const initStarmapScene = async (game: GameApi): Promise<SceneApi> => {
     if (objects.length !== 0) return;
     components.SelectedRock.remove();
     components.SelectedFleet.remove();
-    components.Send.reset();
-    components.Attack.reset();
   });
 
   world.registerDisposer(() => {

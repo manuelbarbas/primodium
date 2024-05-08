@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { components } from "src/network/components";
 import { getAsteroidInfo } from "src/util/asteroid";
 
-export function useSpaceRock(rock: Entity) {
+export function useAsteroidInfo(rock: Entity) {
   const { value: blockNumber } = components.BlockNumber.use(undefined, {
     value: 0n,
     avgBlockTime: 1,

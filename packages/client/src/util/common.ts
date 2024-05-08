@@ -126,3 +126,7 @@ export function calculateAngleBetweenPoints(point1: Coord, point2: Coord) {
   if (degree < 0) degree = 360 + degree;
   return { radian, degree };
 }
+
+export const lerp = (value: number, inMin: number, inMax: number, outMin: number, outMax: number) => {
+  return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+};
