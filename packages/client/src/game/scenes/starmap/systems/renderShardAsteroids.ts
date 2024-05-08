@@ -11,13 +11,13 @@ export const renderShardAsteroids = (scene: Scene) => {
   const objects = createObjectApi(scene);
 
   const renderExplodeAndMoveAsteroid = (entity: Entity, coord: Coord) => {
-    const asteroid = objects.getAsteroid(entity);
+    const asteroid = objects.asteroid.get(entity);
 
     // TODO: explode
 
     if (!asteroid) return;
 
-    asteroid.getOrbitRing().clear();
+    asteroid.getFleetContainer().clear();
     asteroid.setTilePosition(coord);
   };
 

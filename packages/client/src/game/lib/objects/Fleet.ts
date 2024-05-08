@@ -4,8 +4,10 @@ import { FleetsContainer } from "./Asteroid/FleetsContainer";
 import { IPrimodiumGameObject } from "./interfaces";
 import { TransitLine } from "./TransitLine";
 import { Assets, Sprites, Animations } from "@primodiumxyz/assets";
+import { Entity } from "@latticexyz/recs";
 
 export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObject {
+  private id: Entity;
   private _scene: Scene;
   private coord: Coord;
   private spawned = false;
@@ -14,7 +16,8 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
   private frames: Phaser.Animations.AnimationFrame[];
   private currentRotationFrame: string | number;
   public particles: Phaser.GameObjects.Particles.ParticleEmitter;
-  constructor(scene: Scene, coord: Coord) {
+  constructor(args: { id: Entity; scene: Scene; coord: Coord }) {
+    const { id, scene, coord } = args;
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
     super(
       scene.phaserScene,
@@ -23,6 +26,7 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
       Assets.SpriteAtlas,
       Sprites.FleetPlayer
     );
+    this.id = id;
     this.setOrigin(0.5, 0.5).setScale(1).setInteractive();
     this._scene = scene;
     this.coord = coord;

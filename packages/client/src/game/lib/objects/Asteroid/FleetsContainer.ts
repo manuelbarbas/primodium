@@ -163,6 +163,14 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     this.rotationTween.pause();
   }
 
+  clearAndDestroy() {
+    this.fleetsContainer.list.forEach((fleet) => {
+      this.removeFleet(fleet as Fleet);
+      fleet.destroy();
+    });
+    this.rotationTween.pause();
+  }
+
   pauseRotation() {
     this.paused = true;
 
@@ -181,9 +189,8 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     this.scene.add.existing(this);
     return this;
   }
-
-  dispose() {
-    this.destroy();
+  destroy() {
     this.rotationTween.destroy();
+    super.destroy();
   }
 }

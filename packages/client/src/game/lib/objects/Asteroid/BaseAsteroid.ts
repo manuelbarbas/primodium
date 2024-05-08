@@ -5,8 +5,10 @@ import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { FleetsContainer } from "@/game/lib/objects/Asteroid/FleetsContainer";
 import { Assets, Sprites } from "@primodiumxyz/assets";
 import { AsteroidLabel } from "@/game/lib/objects/Asteroid/AsteroidLabel";
+import { Entity } from "@latticexyz/recs";
 
 export abstract class BaseAsteroid extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
+  private id: Entity;
   protected coord: Coord;
   protected _scene: Scene;
   protected fleetCount = 0;
@@ -19,10 +21,12 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
   private circle: Phaser.GameObjects.Arc;
   private animationTween: Phaser.Tweens.Tween;
 
-  constructor(args: { scene: Scene; coord: Coord; sprite: Sprites; outlineSprite: Sprites }) {
-    const { scene, coord, sprite } = args;
+  constructor(args: { id: Entity; scene: Scene; coord: Coord; sprite: Sprites; outlineSprite: Sprites }) {
+    const { id, scene, coord, sprite } = args;
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
     super(scene.phaserScene, pixelCoord.x, -pixelCoord.y);
+
+    this.id = id;
 
     // this.outlineSprite = new Phaser.GameObjects.Image(scene.phaserScene, 0, 0, Assets.SpriteAtlas, outlineSprite);
     this.asteroidSprite = new Phaser.GameObjects.Image(scene.phaserScene, 0, 0, Assets.SpriteAtlas, sprite);
@@ -44,6 +48,8 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
       repeat: -1,
       yoyo: true,
     });
+
+    this._scene.objects.add(id, this, true);
   }
 
   spawn() {
@@ -74,7 +80,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
     return this.coord;
   }
 
-  getOrbitRing() {
+  getFleetContainer() {
     return this.fleetsContainer;
   }
 
@@ -155,8 +161,9 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
     this.circle.setScale(1 / zoom);
   }
 
-  dispose() {
-    this.destroy();
+  destroy() {
     this.animationTween.destroy();
+    this._scene.objects.remove(this.id);
+    super.destroy();
   }
 }

@@ -8,11 +8,11 @@ export function renderFleet(args: { scene: Scene; entity: Entity }) {
   const { scene, entity } = args;
   //TODO: replace with hanks fancy api stuff
   const objects = createObjectApi(scene);
-  const fleet = objects.getFleet(entity);
+  const fleet = objects.fleet.get(entity);
 
   if (fleet) return fleet;
 
-  const newFleet = new Fleet(scene, { x: 0, y: 0 })
+  const newFleet = new Fleet({ id: entity, scene, coord: { x: 0, y: 0 } })
     .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
       if (pointer.downElement.nodeName !== "CANVAS") return;
 
@@ -29,8 +29,6 @@ export function renderFleet(args: { scene: Scene; entity: Entity }) {
     .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => {
       components.HoverEntity.remove();
     });
-
-  scene.objects.add(entity, newFleet);
 
   return newFleet;
 }

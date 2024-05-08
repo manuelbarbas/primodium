@@ -34,6 +34,7 @@ export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coo
   let asteroid: BaseAsteroid;
   if (!asteroidData?.spawnsSecondary)
     asteroid = new SecondaryAsteroid({
+      id: entity,
       scene,
       coord,
       resourceType: MapIdToAsteroidType[asteroidData.mapId] ?? EntityType.Kimberlite,
@@ -42,6 +43,7 @@ export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coo
     }).setScale(spriteScale);
   else
     asteroid = new PrimaryAsteroid({
+      id: entity,
       scene,
       coord,
       level: expansionLevel ?? 1n,
@@ -49,8 +51,6 @@ export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coo
     })
       .setScale(spriteScale)
       .setLevel(level ?? 1n);
-
-  scene.objects.add(entity, asteroid, true);
 
   const alliance = components.PlayerAlliance.get(ownedBy as Entity)?.alliance;
 

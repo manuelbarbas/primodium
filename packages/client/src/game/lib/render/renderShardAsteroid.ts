@@ -18,10 +18,7 @@ export const renderShardAsteroid = (args: {
   if (!asteroidData) throw new Error("Shard asteroid data not found");
 
   const spriteScale = 0.4;
-  const asteroid = new ShardAsteroid(scene, coord).setScale(spriteScale);
-
-  //TODO: figure out how we can update object culling position
-  scene.objects.add(entity, asteroid, false);
+  const asteroid = new ShardAsteroid({ id: entity, scene, coord }).setScale(spriteScale);
 
   asteroid.getAsteroidLabel().setProperties({
     nameLabel: entityToRockName(entity),
