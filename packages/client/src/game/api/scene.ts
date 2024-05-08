@@ -7,8 +7,10 @@ import { createHooksApi } from "./hooks";
 import { createInputApi } from "./input";
 import { createSpriteApi } from "./sprite";
 import { createObjectApi } from "@/game/api/objects";
+import { MUD } from "@/network/types";
 
-export type SceneApi = ReturnType<typeof createSceneApi>;
+export type _SceneApi = ReturnType<typeof createSceneApi>;
+export type SceneApi = _SceneApi & { runSystems?: (mud: MUD) => void };
 
 export function createSceneApi(scene: Scene) {
   const cameraApi = createCameraApi(scene);

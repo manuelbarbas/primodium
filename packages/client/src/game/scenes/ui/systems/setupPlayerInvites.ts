@@ -1,9 +1,9 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { decodeEntity } from "src/util/encode";
 import { Hex, hexToString, padHex, zeroAddress } from "viem";
-import { components } from "../components";
-import { MUD } from "../types";
-import { world } from "../world";
+import { components } from "../../../../network/components";
+import { MUD } from "../../../../network/types";
+import { world } from "../../../../network/world";
 import { SceneApi } from "@/game/api/scene";
 
 export function setupInvitations(mud: MUD, scene: SceneApi) {

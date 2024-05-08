@@ -1,7 +1,7 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { SceneApi } from "@/game/api/scene";
-import { components } from "../components";
-import { world } from "../world";
+import { world } from "@/network/world";
+import { components } from "@/network/components";
 
 export function setupMoveNotifications(scene: SceneApi) {
   const systemWorld = namespaceWorld(world, "systems");

@@ -75,6 +75,7 @@ export function createGameApi(game: Game) {
 
   return {
     dispose: game.dispose,
+    createScene: game.sceneManager.createScene,
     setResolution,
     setTarget,
     getConfig,

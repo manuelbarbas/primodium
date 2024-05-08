@@ -2,7 +2,6 @@ import { createGameApi, GameApi } from "@/game/api/game";
 import { SceneApi } from "@/game/api/scene";
 import { SceneKeys } from "@/game/lib/constants/common";
 import { initCommandCenter } from "@/game/scenes/command-center/init";
-import { MUD } from "@/network/types";
 import gameConfig from "@game/lib/config/game";
 import { initAsteroidScene } from "@game/scenes/asteroid/init";
 import { initRootScene } from "@game/scenes/root/init";
@@ -10,23 +9,18 @@ import { initStarmapScene } from "@game/scenes/starmap/init";
 import { initUIScene } from "@game/scenes/ui/init";
 
 import engine from "engine";
-import { runSystems as runAsteroidSystems } from "src/game/scenes/asteroid/systems";
-import { runSystems as runRootSystems } from "src/game/scenes/root/systems";
-import { runSystems as runStarmapSystems } from "src/game/scenes/starmap/systems";
 
-type SceneSystemsApi = SceneApi & { runSystems?: (mud: MUD) => void };
-
-async function init(): Promise<Record<SceneKeys, SceneSystemsApi> & { GAME: GameApi }> {
+async function init(): Promise<Record<SceneKeys, SceneApi> & { GAME: GameApi }> {
   const game = await engine.createGame(gameConfig);
   const gameApi = createGameApi(game);
 
   // batch these awaits
 
-  const asteroidApiPromise = initAsteroidScene(game);
-  const starmapApiPromise = initStarmapScene(game);
-  const uiApiPromise = initUIScene(game);
-  const rootApiPromise = initRootScene(game);
-  const commandCenterApiPromise = initCommandCenter(game);
+  const asteroidApiPromise = initAsteroidScene(gameApi);
+  const starmapApiPromise = initStarmapScene(gameApi);
+  const uiApiPromise = initUIScene(gameApi);
+  const rootApiPromise = initRootScene(gameApi);
+  const commandCenterApiPromise = initCommandCenter(gameApi);
 
   const [asteroidApi, starmapApi, uiApi, rootApi, commandCenterApi] = await Promise.all([
     asteroidApiPromise,
@@ -37,10 +31,10 @@ async function init(): Promise<Record<SceneKeys, SceneSystemsApi> & { GAME: Game
   ]);
 
   return {
-    ASTEROID: { ...asteroidApi, runSystems: (mud) => runAsteroidSystems(asteroidApi, mud) },
-    STARMAP: { ...starmapApi, runSystems: (mud) => runStarmapSystems(starmapApi, mud) },
+    ASTEROID: asteroidApi,
+    STARMAP: starmapApi,
     UI: uiApi,
-    ROOT: { ...rootApi, runSystems: () => runRootSystems(rootApi, gameApi) },
+    ROOT: rootApi,
     COMMAND_CENTER: commandCenterApi,
     GAME: gameApi,
   };

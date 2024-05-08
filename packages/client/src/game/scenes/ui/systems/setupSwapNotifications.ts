@@ -4,9 +4,9 @@ import { EResource } from "contracts/config/enums";
 import { getEntityTypeName } from "src/util/common";
 import { ResourceEntityLookup } from "src/util/constants";
 import { formatResourceCount } from "src/util/number";
-import { components } from "../components";
-import { MUD } from "../types";
-import { world } from "../world";
+import { components } from "../../../../network/components";
+import { MUD } from "../../../../network/types";
+import { world } from "../../../../network/world";
 import { SceneApi } from "@/game/api/scene";
 
 export function setupSwapNotifications(mud: MUD, scene: SceneApi) {

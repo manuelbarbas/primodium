@@ -1,10 +1,11 @@
 // ROOT ENTRY POINT
-import { createSceneApi } from "@/game/api/scene";
+import { GameApi } from "@/game/api/game";
+import { createSceneApi, SceneApi } from "@/game/api/scene";
 import { rootSceneConfig } from "@game/lib/config/rootScene";
-import { Game } from "engine/types";
+import { runSystems as runRootSystems } from "src/game/scenes/root/systems";
 
-export const initRootScene = async (game: Game) => {
-  const scene = await game.sceneManager.createScene(rootSceneConfig, true);
+export const initRootScene = async (game: GameApi): Promise<SceneApi> => {
+  const scene = await game.createScene(rootSceneConfig, true);
 
   const sceneApi = createSceneApi(scene);
   sceneApi.audio.play("Background", "music");
@@ -14,5 +15,6 @@ export const initRootScene = async (game: Game) => {
   });
   sceneApi.audio.setPauseOnBlur(false);
 
-  return sceneApi;
+  const runSystems = () => runRootSystems(sceneApi, game);
+  return { ...sceneApi, runSystems };
 };

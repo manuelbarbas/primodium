@@ -9,15 +9,13 @@ import { setupBuildingReversePosition } from "src/network/systems/setupBuildingR
 import { setupDoubleCounter } from "src/network/systems/setupDoubleCounter";
 import { setupHangar } from "src/network/systems/setupHangar";
 import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
-import { setupMoveNotifications } from "src/network/systems/setupMoveNotifications";
-import { setupInvitations } from "src/network/systems/setupPlayerInvites";
-import { setupSwapNotifications } from "src/network/systems/setupSwapNotifications";
 import { setupSync } from "src/network/systems/setupSync";
 import { setupTime } from "src/network/systems/setupTime";
 import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import _init from "../init";
+import { Scenes } from "@/game/lib/constants/common";
 
 export type PrimodiumGame = Awaited<ReturnType<typeof initGame>>;
 export async function initGame(version = "v1") {
@@ -54,23 +52,20 @@ export async function initGame(version = "v1") {
 
     components.SelectedMode.set({ value: Mode.Asteroid });
     setupBuildRock();
-    setupSwapNotifications(mud);
     setupBattleComponents();
-    setupMoveNotifications();
     setupBlockNumber(mud.network.latestBlockNumber$);
     setupDoubleCounter(mud);
     setupHangar();
     setupLeaderboard();
-    setupInvitations(mud);
     setupTime(mud);
     setupTrainingQueues();
     setupHomeAsteroid(mud);
     setupBuildingReversePosition();
     setupSync(mud);
 
-    api.ASTEROID.runSystems?.(mud);
-    api.STARMAP.runSystems?.(mud);
-    api.ROOT.runSystems?.(mud);
+    Object.values(Scenes).forEach((scene) => {
+      api[scene].runSystems?.(mud);
+    });
   }
 
   return { ...api, destroy, runSystems };

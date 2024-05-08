@@ -1,10 +1,10 @@
 // COMMAND CENTER ENTRY POINT
-import { createSceneApi } from "@/game/api/scene";
+import { GameApi } from "@/game/api/game";
+import { createSceneApi, SceneApi } from "@/game/api/scene";
 import { commandCenterScene } from "@/game/lib/config/commandCenterScene";
-import { Game } from "engine/types";
 
-export const initCommandCenter = async (game: Game) => {
-  const scene = await game.sceneManager.createScene(commandCenterScene, false);
+export const initCommandCenter = async (game: GameApi): Promise<SceneApi> => {
+  const scene = await game.createScene(commandCenterScene, false);
 
   return createSceneApi(scene);
 };
