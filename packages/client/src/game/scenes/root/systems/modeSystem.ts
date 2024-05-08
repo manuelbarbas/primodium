@@ -2,7 +2,7 @@ import { createCameraApi } from "@/game/api/camera";
 import { createSceneApi } from "@/game/api/scene";
 import { ModeToSceneKey } from "@/game/lib/mappings";
 import { Mode } from "@/util/constants";
-import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
+import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Game } from "engine/types";
 import { components } from "src/network/components";
@@ -11,6 +11,7 @@ import { world } from "src/network/world";
 export const modeSystem = (game: Game) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const sceneApi = createSceneApi(game);
+  const playerEntity = components.Account.get()?.value;
 
   defineComponentSystem(systemsWorld, components.SelectedMode, ({ value }) => {
     const mode = value[0]?.value;
@@ -26,6 +27,11 @@ export const modeSystem = (game: Game) => {
     }
 
     const selectedRock = components.SelectedRock.get()?.value;
+
+    //Make sure command has a selected rock. If not, set it to the player home
+    if (mode === Mode.CommandCenter && !selectedRock)
+      components.SelectedRock.set({ value: (components.Home.get(playerEntity)?.value ?? singletonEntity) as Entity });
+
     const sceneKey = ModeToSceneKey[mode];
 
     let position = { x: 0, y: 0 };
