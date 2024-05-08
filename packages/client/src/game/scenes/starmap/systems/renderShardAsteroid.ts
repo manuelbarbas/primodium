@@ -2,12 +2,13 @@ import { defineEnterSystem, defineUpdateSystem, Entity, Has, namespaceWorld } fr
 import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
-import { createCameraApi } from "src/game/api/camera";
-import { createObjectApi } from "src/game/api/objects";
-import { ShardAsteroid } from "src/game/lib/objects/Asteroid/ShardAsteroid";
-import { components } from "src/network/components";
-import { world } from "src/network/world";
-import { getCanAttack, getCanSend } from "src/util/unit";
+import { createCameraApi } from "@/game/api/camera";
+import { createObjectApi } from "@/game/api/objects";
+import { ShardAsteroid } from "@/game/lib/objects/Asteroid/ShardAsteroid";
+import { components } from "@/network/components";
+import { world } from "@/network/world";
+import { getCanAttack, getCanSend } from "@/util/unit";
+import { isDomInteraction } from "@/util/canvas";
 
 export const renderShardAsteroid = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -22,7 +23,9 @@ export const renderShardAsteroid = (scene: Scene) => {
     const asteroid = new ShardAsteroid(scene, entity, coord).setScale(spriteScale);
 
     asteroid
-      .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+      .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
+        if (isDomInteraction(pointer, "up")) return;
+
         const attackOrigin = components.Attack.get()?.originFleet;
         const sendOrigin = components.Send.get()?.originFleet;
         if (attackOrigin) {
@@ -58,7 +61,9 @@ export const renderShardAsteroid = (scene: Scene) => {
 
     // this is necessary because the asteroid's position changes so the pan breaks
     asteroid.off(Phaser.Input.Events.GAMEOBJECT_POINTER_UP);
-    asteroid.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+    asteroid.on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
+      if (isDomInteraction(pointer, "up")) return;
+
       const attackOrigin = components.Attack.get()?.originFleet;
       const sendOrigin = components.Send.get()?.originFleet;
       if (attackOrigin) {
