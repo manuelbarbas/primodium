@@ -3,9 +3,10 @@ import { Mode } from "@/util/constants";
 import { namespaceWorld } from "@latticexyz/recs";
 import engine from "engine";
 import { Game } from "engine/types";
-import { runSystems as runAsteroidSystems } from "src/game/scenes/asteroid/systems";
-import { runSystems as runRootSystems } from "src/game/scenes/root/systems";
-import { runSystems as runStarmapSystems } from "src/game/scenes/starmap/systems";
+import { runSystems as runAsteroidSystems } from "@/game/scenes/asteroid/systems";
+import { runSystems as runRootSystems } from "@/game/scenes/root/systems";
+import { runSystems as runStarmapSystems } from "@/game/scenes/starmap/systems";
+import { runSystems as runCommandCenterSystems } from "@/game/scenes/command-center/systems";
 import { components } from "src/network/components";
 import { setupBattleComponents } from "src/network/systems/setupBattleComponents";
 import { setupBlockNumber } from "src/network/systems/setupBlockNumber";
@@ -117,10 +118,17 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     }
     const starmapScene = _instance.sceneManager.scenes.get(Scenes.Starmap);
     const asteroidScene = _instance.sceneManager.scenes.get(Scenes.Asteroid);
+    const commandScene = _instance.sceneManager.scenes.get(Scenes.CommandCenter);
     const uiScene = _instance.sceneManager.scenes.get(Scenes.UI);
     const rootScene = _instance.sceneManager.scenes.get(Scenes.Root);
 
-    if (starmapScene === undefined || asteroidScene === undefined || uiScene === undefined || rootScene === undefined) {
+    if (
+      starmapScene === undefined ||
+      asteroidScene === undefined ||
+      uiScene === undefined ||
+      rootScene === undefined ||
+      commandScene === undefined
+    ) {
       console.log(_instance.sceneManager.scenes);
       throw new Error("No primodium scene found");
     }
@@ -133,7 +141,7 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     setupBlockNumber(mud.network.latestBlockNumber$);
     setupDoubleCounter(mud);
     setupHangar();
-    setupLeaderboard(mud);
+    setupLeaderboard();
     setupInvitations(mud);
     setupTime(mud);
     setupTrainingQueues();
@@ -142,7 +150,8 @@ export async function initPrimodium(mud: MUD, version = "v1") {
     setupSync(mud);
 
     runAsteroidSystems(asteroidScene, mud);
-    runStarmapSystems(starmapScene, mud);
+    runStarmapSystems(starmapScene);
+    runCommandCenterSystems(commandScene);
     runRootSystems(rootScene, _instance);
   }
 

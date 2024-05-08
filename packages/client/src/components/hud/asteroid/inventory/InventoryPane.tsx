@@ -70,7 +70,7 @@ export const InventoryPane = () => {
               key={index}
               onClick={() => showDiv(index)}
               className={`!flex !items-center !bg-neutral/100 !border !border-secondary !py-3 px-4 ${
-                index === 3 ? "rounded-bl-lg" : ""
+                index === 1 ? "rounded-bl-lg" : ""
               }`}
               style={{ writingMode: "vertical-rl" }}
             >

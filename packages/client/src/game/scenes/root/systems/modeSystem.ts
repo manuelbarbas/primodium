@@ -18,16 +18,35 @@ export const modeSystem = (game: Game) => {
 
     if (!mode) return;
 
-    const activeRock = components.ActiveRock.get()?.value;
+    // set selected rock to last build rock if transitioning from build mode, fallback to active rock or singleton
+    if (prevMode === Mode.Asteroid) {
+      components.SelectedRock.set({
+        value: components.BuildRock.get()?.value ?? components.ActiveRock.get()?.value ?? singletonEntity,
+      });
+    }
+
+    const selectedRock = components.SelectedRock.get()?.value;
     const sceneKey = ModeToSceneKey[mode];
-    const pos = sceneKey === "ASTEROID" ? { x: 18, y: 13 } : components.Position.get(activeRock) ?? { x: 0, y: 0 };
+
+    let position = { x: 0, y: 0 };
+    switch (mode) {
+      case Mode.Asteroid:
+        position = { x: 19.5, y: 13 };
+        break;
+      case Mode.Starmap:
+        position = components.Position.get(selectedRock) ?? { x: 0, y: 0 };
+        break;
+      case Mode.CommandCenter:
+        position = { x: 0, y: 0 };
+        break;
+    }
 
     const targetScene = sceneApi.getScene(sceneKey);
 
     if (targetScene) {
       const cameraApi = createCameraApi(targetScene);
 
-      cameraApi.pan(pos, {
+      cameraApi.pan(position, {
         duration: 0,
       });
     }
@@ -53,14 +72,8 @@ export const modeSystem = (game: Game) => {
         targetScene.camera.phaserCamera.fadeIn(500, 0, 0, 0);
       }
     );
+
     components.SelectedBuilding.remove();
     components.HoverEntity.remove();
-
-    // set selected rock to last build rock if transitioning from build mode, fallback to active rock or singleton
-    if (prevMode === Mode.Asteroid) {
-      components.SelectedRock.set({
-        value: components.BuildRock.get()?.value ?? components.ActiveRock.get()?.value ?? singletonEntity,
-      });
-    }
   });
 };

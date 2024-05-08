@@ -131,7 +131,6 @@ export const renderFleets = (scene: Scene) => {
     }
   });
 
-  //handle transits
   defineComponentSystem(systemsWorld, components.Time, ({ value }) => {
     const now = value[0]?.value ?? 0n;
 

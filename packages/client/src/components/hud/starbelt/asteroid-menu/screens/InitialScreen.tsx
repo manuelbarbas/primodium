@@ -22,7 +22,11 @@ export const ShardButton: React.FC<{ shardEntity: Entity }> = ({ shardEntity }) 
   return (
     <>
       {shardData && !shardData.canExplode && (
-        <Button className="w-full py-3 heropattern-topography-slate-100/10" variant="error" size="content" disabled>
+        <Button
+          className="w-full py-3 heropattern-topography-slate-100/10 pointer-events-none"
+          variant="error"
+          size="content"
+        >
           <div className="absolute inset-0 bg-error/25 animate-ping pointer-events-none" />
           <div className="flex flex-start px-1 gap-3 w-full">
             <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Attack} />
