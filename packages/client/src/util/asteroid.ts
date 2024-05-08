@@ -1,4 +1,4 @@
-import { Primodium } from "@game/api";
+import { PrimodiumGame } from "@game/api";
 import { Entity } from "@latticexyz/recs";
 
 import { MapIdToAsteroidType } from "@/util/mappings";
@@ -13,7 +13,7 @@ import { getOrbitingFleets } from "./unit";
 
 //TODO: proper implementation, this is just a placeholder so stuff doesn't break.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
+export function getAsteroidImage(primodium: PrimodiumGame, asteroid: Entity) {
   const isShard = comps.ShardAsteroid.has(asteroid);
   if (isShard) {
     return InterfaceIcons.Shard;
@@ -63,7 +63,7 @@ export function getAsteroidDescription(asteroid: Entity) {
   };
 }
 
-export function getAsteroidInfo(primodium: Primodium, spaceRock: Entity) {
+export function getAsteroidInfo(primodium: PrimodiumGame, spaceRock: Entity) {
   const imageUri = getAsteroidImage(primodium, spaceRock);
   const ownedBy = comps.OwnedBy.get(spaceRock)?.value as Entity | undefined;
   const mainBaseEntity = comps.Home.get(spaceRock)?.value as Entity;
