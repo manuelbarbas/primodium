@@ -35,13 +35,20 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
     return [resourceIn, RESERVE_RESOURCE, resourceOut];
   }, []);
 
-  const changeOutAmountMin = useCallback((outAmountRendered: string, slippageRendered: string) => {
-    const outAmount = parseFloat(outAmountRendered);
-    const slippage = parseFloat(slippageRendered);
-    const outAmountMin = outAmount - (outAmount * slippage) / 100;
-    setOutAmountMinRendered(outAmountMin.toString());
-    return outAmountMin;
-  }, []);
+  const changeOutAmountMin = useCallback(
+    (outAmountRendered: string, slippageRendered: string) => {
+      if (!outAmountRendered || !slippageRendered) slippageRendered = "0.5";
+      const outAmount = parseResourceCount(toResource, outAmountRendered);
+      const slippageFloat = parseFloat(slippageRendered) * 100;
+      const slippage = BigInt(slippageFloat);
+      const outAmountMin = outAmount - (outAmount * slippage) / 100n / 100n;
+      if (outAmountMin == 0n) return "";
+      const outAmountMinString = formatResourceCount(toResource, outAmountMin, { fractionDigits: 9, notLocale: true });
+      setOutAmountMinRendered(outAmountMinString);
+      return outAmountMin;
+    },
+    [toResource]
+  );
 
   const changeInAmount = useCallback(
     (resourceIn: Entity, resourceOut: Entity, inAmountRendered: string) => {
@@ -97,8 +104,17 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
 
   const changeSlippage = useCallback(
     (slippageRendered: string) => {
-      setSlippageRendered(slippageRendered);
-      changeOutAmountMin(outAmountRendered, slippageRendered);
+      if (slippageRendered === "") {
+        setSlippageRendered("");
+        return;
+      }
+      const floatSlippage = parseFloat(slippageRendered);
+      const truncatedSlippage = parseFloat(floatSlippage.toFixed(1));
+      const clampedSlippage = Math.min(Math.max(truncatedSlippage, 0.1), 99);
+      const slippage = clampedSlippage.toString();
+
+      setSlippageRendered(slippage);
+      changeOutAmountMin(outAmountRendered, slippage);
     },
     [changeOutAmountMin, outAmountRendered]
   );
@@ -139,10 +155,11 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
 
   const handleSubmit = useCallback(() => {
     const inAmount = parseResourceCount(fromResource, inAmountRendered);
+    const outAmountMin = parseResourceCount(toResource, outAmountMinRendered);
     const path = getPath(fromResource, toResource);
     if (path.length < 2) return;
-    swap(mud, marketEntity, path, inAmount);
-  }, [fromResource, inAmountRendered, getPath, toResource, mud, marketEntity]);
+    swap(mud, marketEntity, path, inAmount, outAmountMin);
+  }, [fromResource, inAmountRendered, getPath, toResource, outAmountMinRendered, mud, marketEntity]);
 
   return (
     <div className="w-[30rem] h-fit flex flex-col gap-2 m-3 items-center">
@@ -245,22 +262,12 @@ interface SlippageInputProps {
 }
 
 const SlippageInput: React.FC<SlippageInputProps> = (props) => {
-  // const handleChange = useCallback((event) => {
-  //   const value = event.target.value;
-  //   const numValue = parseFloat(value);
-  //   if ((numValue >= 0.1 && numValue <= 99) || value === '') {
-  //     props.onAmountChange(value);
-  //   }
-  // }, [props.onAmountChange]);
-
   return (
-    <div
-      className={`w-20 h-20 bg-base-100 absolute top-2 relative border border-secondary grid grid-cols-10 px-2 ${props.className}`}
-    >
+    <div className={`w-20 h-20 bg-base-100 absolute top-2 relative border border-secondary px-2 ${props.className}`}>
       <p className="absolute top-2 left-2 text-xs opacity-50">{props.placeholder ?? ""}</p>
-      <div className="absolute bottom-2 left-2 col-span-10 flex flex-col justify-start items-start gap-1">
+      <div className="absolute bottom-2 left-2 col-span-10 flex flex-col justify-start items-start">
         <input
-          className="bg-transparent text-base opacity-80 w-full h-full focus:outline-none pr-4 justify-start text-left"
+          className="bg-transparent text-base opacity-80 w-auto h-5 focus:outline-none pr-4 justify-start text-left"
           type="number"
           placeholder="0.5"
           step="0.1"
@@ -269,7 +276,7 @@ const SlippageInput: React.FC<SlippageInputProps> = (props) => {
           value={props.amount}
           onChange={(e) => props.onAmountChange(e.target.value)}
         />
-        <span className="absolute inset-y-0 right-0 pr-2 flex items-center text-lg">%</span>
+        <span className="absolute inset-y-0 right-0 pr-2 flex items-center text-base opacity-80">%</span>
       </div>
     </div>
   );
