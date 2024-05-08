@@ -42,6 +42,7 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
 
   spawn() {
     //TODO: placement animation
+
     this.scene.add.existing(this);
     this.spawned = true;
     return this;
@@ -94,13 +95,13 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
   }
 
   setOutline = (color: number, thickness: number, knockout = false) => {
-    this.postFX.addGlow(color, thickness, undefined, knockout);
+    this.postFX?.addGlow(color, thickness, undefined, knockout);
 
     return this;
   };
 
   clearOutline = () => {
-    this.postFX.clear();
+    this.postFX?.clear();
 
     return this;
   };

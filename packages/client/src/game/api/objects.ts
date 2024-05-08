@@ -24,8 +24,13 @@ function factory<T extends { destroy: () => void }>(
 
   return {
     add: (entity: Entity, object: PrimodiumGameObject, cull = false) => {
-      scene.objects.add(fullId(entity), object, cull);
-      return object;
+      if (object instanceof objectClass) {
+        console.log("adding", { entity, object });
+        scene.objects.add(fullId(entity), object, cull);
+        return object;
+      } else {
+        throw new Error("Object is not an instance of the expected class");
+      }
     },
     has: (entity: Entity) => scene.objects.has(fullId(entity)),
     get: (entity: Entity) => {

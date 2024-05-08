@@ -96,7 +96,6 @@ export const renderBuilding = (scene: SceneApi) => {
       const tilePosition = getBuildingBottomLeft(origin, buildingType);
 
       const building = new Building({ id: entity, scene, buildingType, coord: tilePosition })
-        // .spawn()
         .setLevel(components.Level.get(entity)?.value ?? 1n)
         .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
           if (pointer.getDuration() > 250 || isDomInteraction(pointer, "up")) return;
