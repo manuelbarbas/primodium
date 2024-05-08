@@ -5,7 +5,7 @@ import { usePlayerAsteroids } from "@/hooks/usePlayerAsteroids";
 import { YouDied } from "@/screens/YouDied";
 import { Primodium, initPrimodium } from "@game/api";
 import { Progress } from "src/components/core/Progress";
-import { GameHUD } from "src/components/hud/HUD";
+import { GameHUD } from "@/components/hud";
 import { PrimodiumProvider } from "src/hooks/providers/PrimodiumProvider";
 import { WidgetProvider } from "src/hooks/providers/WidgetProvider";
 

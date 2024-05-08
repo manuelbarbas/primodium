@@ -18,7 +18,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
   constructor(scene: Scene, coord: Coord) {
     super(scene.phaserScene, coord.x, coord.y);
     this.orbitRing = new Phaser.GameObjects.Graphics(scene.phaserScene)
-      .lineStyle(2, 0x808080, 0.5)
+      .lineStyle(2, 0x808080, 0.25)
       .strokeEllipse(0, 0, WIDTH, HEIGHT);
 
     this.fleetsContainer = scene.phaserScene.add.container(0, 0);
@@ -163,6 +163,14 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     this.rotationTween.pause();
   }
 
+  clearAndDestroy() {
+    this.fleetsContainer.list.forEach((fleet) => {
+      this.removeFleet(fleet as Fleet);
+      fleet.destroy();
+    });
+    this.rotationTween.pause();
+  }
+
   pauseRotation() {
     this.paused = true;
 
@@ -181,9 +189,8 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     this.scene.add.existing(this);
     return this;
   }
-
-  dispose() {
-    this.destroy();
+  destroy() {
     this.rotationTween.destroy();
+    super.destroy();
   }
 }

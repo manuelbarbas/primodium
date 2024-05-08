@@ -6,8 +6,8 @@ import { Button } from "src/components/core/Button";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { Hex } from "viem";
-import { OwnedAsteroid } from "../starmap-navigator/OwnedAsteroids";
-import { OwnedFleet } from "../starmap-navigator/OwnedFleets";
+import { OwnedAsteroid } from "../../starbelt/starmap-navigator/OwnedAsteroids";
+import { OwnedFleet } from "../../starbelt/starmap-navigator/OwnedFleets";
 
 export const TransferSelect = ({
   activeEntity,

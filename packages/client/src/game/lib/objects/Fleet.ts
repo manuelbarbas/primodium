@@ -4,8 +4,10 @@ import { FleetsContainer } from "./Asteroid/FleetsContainer";
 import { IPrimodiumGameObject } from "./interfaces";
 import { TransitLine } from "./TransitLine";
 import { Assets, Sprites, Animations } from "@primodiumxyz/assets";
+import { Entity } from "@latticexyz/recs";
 
 export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObject {
+  private id: Entity;
   private _scene: Scene;
   private coord: Coord;
   private spawned = false;
@@ -14,7 +16,8 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
   private frames: Phaser.Animations.AnimationFrame[];
   private currentRotationFrame: string | number;
   public particles: Phaser.GameObjects.Particles.ParticleEmitter;
-  constructor(scene: Scene, coord: Coord) {
+  constructor(args: { id: Entity; scene: Scene; coord: Coord }) {
+    const { id, scene, coord } = args;
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
     super(
       scene.phaserScene,
@@ -23,6 +26,7 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
       Assets.SpriteAtlas,
       Sprites.FleetPlayer
     );
+    this.id = id;
     this.setOrigin(0.5, 0.5).setScale(1).setInteractive();
     this._scene = scene;
     this.coord = coord;
@@ -30,20 +34,20 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
     this.currentRotationFrame = this.frames[0].textureFrame;
     this.particles = this.scene.add
       .particles(pixelCoord.x, -pixelCoord.y, "flares", {
-        // frame: "blue",
         x: pixelCoord.x,
         y: -pixelCoord.y,
         lifespan: 1000,
         speed: { min: 20, max: 25 },
         tintFill: true,
-        color: [0x472a00, 0x261c01, 0xf5efdf, 0xa3531a, 0xedb33e, 0xf5efdf],
-        // gravityY: 300,
+        color: [0xc7e5fd, 0x0ecaff, 0x00207d, 0x0ecaff],
         scale: { start: 0.2, end: 0 },
         angle: { min: -80, max: -100 },
         quantity: 1,
         blendMode: "ADD",
       })
       .setAlpha(0.27);
+
+    this._scene.objects.add(id, this);
   }
 
   spawn() {
@@ -128,7 +132,9 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
     return this;
   }
 
-  dispose() {
-    this.destroy();
+  destroy() {
+    this._scene.objects.remove(this.id);
+    this.particles.destroy();
+    super.destroy();
   }
 }

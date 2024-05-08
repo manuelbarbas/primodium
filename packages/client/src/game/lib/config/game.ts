@@ -9,7 +9,7 @@ const gameConfig: GameConfig = {
   width: window.innerWidth,
   height: window.innerHeight,
   scale: {
-    mode: Phaser.Scale.RESIZE,
+    mode: Phaser.Scale.ENVELOP,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
   antialias: false,
@@ -18,9 +18,6 @@ const gameConfig: GameConfig = {
   transparent: true,
   pixelArt: true,
   assetPack: Pack,
-  fps: {
-    target: 30,
-  },
   dom: {
     createContainer: true,
     pointerEvents: "none",

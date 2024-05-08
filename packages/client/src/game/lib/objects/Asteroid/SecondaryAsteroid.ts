@@ -8,14 +8,16 @@ import { AsteroidRelationship } from "../../constants/common";
 export class SecondaryAsteroid extends BaseAsteroid {
   private maxLevel: bigint;
   constructor(args: {
+    id: Entity;
     scene: Scene;
     coord: Coord;
     resourceType: Entity;
     maxLevel: bigint;
     relationship: AsteroidRelationship;
   }) {
-    const { scene, coord, resourceType, maxLevel, relationship = "Neutral" } = args;
+    const { id, scene, coord, resourceType, maxLevel, relationship = "Neutral" } = args;
     super({
+      id,
       scene,
       coord,
       sprite: getSecondarySprite(resourceType, maxLevel),

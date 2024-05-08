@@ -134,8 +134,4 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
 
     return fleetsContainer;
   }
-
-  dispose() {
-    this.destroy();
-  }
 }

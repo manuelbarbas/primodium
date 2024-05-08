@@ -4,11 +4,13 @@ import { BaseAsteroid } from "./BaseAsteroid";
 import { getPrimaryOutlineSprite, getPrimarySprite } from "./helpers";
 import { AsteroidRelationship } from "../../constants/common";
 import { Assets } from "@primodiumxyz/assets";
+import { Entity } from "@latticexyz/recs";
 
 export class PrimaryAsteroid extends BaseAsteroid {
-  constructor(args: { scene: Scene; coord: Coord; level: bigint; relationship?: AsteroidRelationship }) {
-    const { scene, coord, level = 1n, relationship = "Enemy" } = args;
+  constructor(args: { id: Entity; scene: Scene; coord: Coord; level: bigint; relationship?: AsteroidRelationship }) {
+    const { id, scene, coord, level = 1n, relationship = "Enemy" } = args;
     super({
+      id,
       scene,
       coord,
       sprite: getPrimarySprite(level),

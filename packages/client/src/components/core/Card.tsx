@@ -134,7 +134,7 @@ export const SecondaryCard = forwardRef<HTMLDivElement, SecondaryCardProps>(
 );
 
 const glassProps = cva(
-  "card border border-secondary/50 heropattern-topography-slate-500/10 backdrop-blur-md p-3 pointer-events-auto drop-shadow-hard",
+  "card border border-secondary/50 heropattern-topography-slate-500/10 backdrop-blur-md p-3 pointer-events-auto",
   {
     variants: {
       direction: {
@@ -151,7 +151,12 @@ interface GlassProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<
 export const GlassCard = forwardRef<HTMLDivElement, GlassProps>(({ children, className, direction }, ref) => {
   return (
     <div ref={ref} className={cn(glassProps({ direction, className }))}>
-      <div className="absolute inset-0 bg-gradient-to-br from-secondary/25 to-secondary/15" />
+      <div
+        className={cn(
+          "absolute inset-0 !bg-gradient-to-br !border-none from-secondary/25 to-secondary/15",
+          glassProps({ direction })
+        )}
+      />
       {children}
     </div>
   );
