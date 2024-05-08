@@ -5,8 +5,7 @@ import { Badge } from "src/components/core/Badge";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Loader } from "src/components/core/Loader";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
-
-import { useClaimPrimodium } from "@/hooks/primodium/useClaimPrimodium";
+import { useClaimPrimodium } from "src/hooks/primodium/useClaimPrimodium";
 import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
 import { useFullResourceCount, useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";

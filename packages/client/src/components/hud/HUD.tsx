@@ -1,4 +1,3 @@
-import { Button } from "@/components/core/Button";
 import { HUD } from "@/components/core/HUD";
 import { AsteroidLoading } from "@/components/hud/AsteroidLoading";
 import { AvailableObjectives } from "@/components/hud/AvailableObjectives";
@@ -18,7 +17,6 @@ import { FavoriteAsteroids } from "@/components/hud/widgets/FavoriteAsteroids";
 import { WarshipPopulation } from "@/components/hud/widgets/WarshipPopulation";
 import { StarmapNavigator } from "@/components/hud/widgets/starmap-navigator/StarmapNavigator";
 import { BrandingLabel } from "@/components/shared/BrandingLabel";
-import { useGame } from "@/hooks/useGame";
 import { usePersistentStore } from "@game/stores/PersistentStore";
 import { memo } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -26,7 +24,6 @@ import { HoverInfo } from "./hover/HoverInfo";
 
 export const GameHUD = memo(() => {
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
-  const { notify } = useGame().UI;
 
   return (
     <div className={`screen-container relative`}>
@@ -45,18 +42,6 @@ export const GameHUD = memo(() => {
         {/* Widgets */}
         <HUD.TopLeft>
           <WarshipPopulation />
-          <Button className="pointer-events-auto" variant="accent" onClick={() => notify("success", "hello mama")}>
-            Click me
-          </Button>
-          <Button className="pointer-events-auto" variant="accent" onClick={() => notify("error", "hello mama")}>
-            Click me
-          </Button>
-          <Button className="pointer-events-auto" variant="accent" onClick={() => notify("warning", "hello mama")}>
-            Click me
-          </Button>
-          <Button className="pointer-events-auto" variant="accent" onClick={() => notify("info", "hello mama")}>
-            Click me
-          </Button>
         </HUD.TopLeft>
 
         <HUD.TopMiddle className="flex flex-col items-center gap-2">

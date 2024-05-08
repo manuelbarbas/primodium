@@ -1,4 +1,3 @@
-import { useShardAsteroid } from "@/hooks/primodium/useShardAsteroid";
 import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
@@ -6,6 +5,7 @@ import { Badge } from "src/components/core/Badge";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Loader } from "src/components/core/Loader";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
+import { useShardAsteroid } from "src/hooks/primodium/useShardAsteroid";
 import { useSyncStatus } from "src/hooks/useSyncStatus";
 import { components } from "src/network/components";
 import { EntityType, Keys } from "src/util/constants";

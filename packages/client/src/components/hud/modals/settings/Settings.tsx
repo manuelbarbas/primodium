@@ -72,7 +72,7 @@ export const Settings = () => {
           <Button
             className="btn-md btn-secondary border-accent"
             onClick={() => {
-              window.open("https://developer.game.com/game-guide", "_blank", "noopener noreferrer");
+              window.open("https://developer.primodium.com/game-guide", "_blank", "noopener noreferrer");
             }}
           >
             Game Guide

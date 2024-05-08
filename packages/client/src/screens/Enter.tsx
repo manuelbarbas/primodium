@@ -14,13 +14,9 @@ import { toast } from "react-toastify";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { components } from "src/network/components";
 import { Landing } from "./Landing";
-import { useGame } from "@/hooks/useGame";
 
 export const Enter: React.FC = () => {
   const mud = useMud();
-  const {
-    UI: { notify },
-  } = useGame();
   const playerEntity = mud.playerAccount.entity;
   const navigate = useNavigate();
   const location = useLocation();
@@ -82,7 +78,7 @@ export const Enter: React.FC = () => {
 
   useEffect(() => {
     if (!mud.sessionAccount) return;
-    notify("success", `Session account detected! (${mud.sessionAccount.address.slice(0, 7)})`);
+    toast.success(`Session account detected! (${mud.sessionAccount.address.slice(0, 7)})`);
   }, [mud.sessionAccount]);
 
   const handlePlay = async () => {
