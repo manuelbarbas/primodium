@@ -25,12 +25,22 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
   const [inAmountRendered, setInAmountRendered] = useState<string>("");
   const [outAmountRendered, setOutAmountRendered] = useState<string>("");
   const [lastEdited, setLastEdited] = useState<"in" | "out">("in");
+  const [slippageRendered, setSlippageRendered] = useState<string>("");
+  const [outAmountMinRendered, setOutAmountMinRendered] = useState<string>("");
 
   const selectedRock = components.ActiveRock.use()?.value;
   if (!selectedRock) throw new Error("[Swap] No active rock");
   const getPath = useCallback((resourceIn: Entity, resourceOut: Entity) => {
     if (resourceIn == RESERVE_RESOURCE || resourceOut == RESERVE_RESOURCE) return [resourceIn, resourceOut];
     return [resourceIn, RESERVE_RESOURCE, resourceOut];
+  }, []);
+
+  const changeOutAmountMin = useCallback((outAmountRendered: string, slippageRendered: string) => {
+    const outAmount = parseFloat(outAmountRendered);
+    const slippage = parseFloat(slippageRendered);
+    const outAmountMin = outAmount - (outAmount * slippage) / 100;
+    setOutAmountMinRendered(outAmountMin.toString());
+    return outAmountMin;
   }, []);
 
   const changeInAmount = useCallback(
@@ -50,8 +60,10 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
       const outString = formatResourceCount(resourceOut, out, { fractionDigits: 9, notLocale: true });
       setOutAmountRendered(outString);
       setLastEdited("in");
+
+      changeOutAmountMin(outString, slippageRendered);
     },
-    [getPath]
+    [getPath, changeOutAmountMin, slippageRendered]
   );
 
   const swapUpdate = components.Swap.use(mud.playerAccount.entity);
@@ -77,8 +89,18 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
       const inString = formatResourceCount(fromResource, inAmount, { fractionDigits: 9, notLocale: true });
       setInAmountRendered(inString);
       setLastEdited("out");
+
+      changeOutAmountMin(outAmountRendered, slippageRendered);
     },
-    [fromResource, toResource, getPath]
+    [fromResource, toResource, getPath, changeOutAmountMin, slippageRendered]
+  );
+
+  const changeSlippage = useCallback(
+    (slippageRendered: string) => {
+      setSlippageRendered(slippageRendered);
+      changeOutAmountMin(outAmountRendered, slippageRendered);
+    },
+    [changeOutAmountMin, outAmountRendered]
   );
 
   const switchResources = useCallback(() => {
@@ -124,6 +146,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
 
   return (
     <div className="w-[30rem] h-fit flex flex-col gap-2 m-3 items-center">
+      <SlippageInput className="mb-4" amount={slippageRendered} onAmountChange={(amount) => changeSlippage(amount)} />
       <ResourceSelector
         placeholder="from"
         amount={inAmountRendered}
@@ -131,6 +154,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
         resource={fromResource}
         onResourceSelect={(resource) => changeInAmount(resource, toResource, inAmountRendered)}
         className="row-span-4"
+        outAmountMin={outAmountMinRendered}
       />
       <div className="relative w-full z-10">
         <button
@@ -148,6 +172,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
         resource={toResource}
         onResourceSelect={(resource) => changeInAmount(fromResource, resource, inAmountRendered)}
         className="row-span-4"
+        outAmountMin={outAmountMinRendered}
       />
       <TransactionQueueMask queueItemId={singletonEntity}>
         <Button className="btn-primary btn-lg w-full" disabled={disabled} onClick={handleSubmit}>
@@ -165,6 +190,7 @@ interface ResourceSelectorProps {
   onAmountChange: (amount: string) => void;
   onResourceSelect: (resource: Entity) => void;
   resource: Entity;
+  outAmountMin?: string;
 }
 
 const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
@@ -195,7 +221,43 @@ const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
           {formatResourceCount(props.resource, resourceCount, { fractionDigits: 0 })} /{" "}
           {formatResourceCount(props.resource, resourceStorage, { fractionDigits: 0 })}
         </p>
+        <p className="text-xs mt-1">{props.outAmountMin} </p>
       </div>
+    </div>
+  );
+};
+
+interface SlippageInputProps {
+  placeholder?: string;
+  className?: string;
+  amount: string;
+  onAmountChange: (amount: string) => void;
+}
+
+const SlippageInput: React.FC<SlippageInputProps> = (props) => {
+  // const handleChange = useCallback((event) => {
+  //   const value = event.target.value;
+  //   const numValue = parseFloat(value);
+  //   if ((numValue >= 0.1 && numValue <= 99) || value === '') {
+  //     props.onAmountChange(value);
+  //   }
+  // }, [props.onAmountChange]);
+
+  return (
+    <div
+      className={`w-full h-20 bg-base-100 relative border border-secondary grid grid-cols-10 px-2 items-center ${props.className}`}
+    >
+      <p className="absolute top-2 left-2 text-xs opacity-50">{props.placeholder ?? ""}</p>
+      <input
+        className="bg-transparent col-span-6 text-lg w-full h-full focus:outline-none"
+        type="number"
+        placeholder="0.2"
+        step="0.1"
+        min="0.1"
+        max="99"
+        value={props.amount}
+        onChange={(e) => props.onAmountChange(e.target.value)}
+      />
     </div>
   );
 };
