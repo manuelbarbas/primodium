@@ -1,3 +1,5 @@
+import { useShardAsteroid } from "@/hooks/primodium/useShardAsteroid";
+import { useGame } from "@/hooks/useGame";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
@@ -6,8 +8,6 @@ import { Marker } from "src/components/core/Marker";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { DepthLayers } from "src/game/lib/constants/common";
 import { useMud } from "src/hooks";
-import { useShardAsteroid } from "src/hooks/primodium/useShardAsteroid";
-import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { claimShardAsteroid } from "src/network/setup/contractCalls/claimPrimodium";
 import { getAsteroidImage } from "src/util/asteroid";
@@ -20,17 +20,17 @@ export const _ShardAsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ s
   const {
     playerAccount: { entity: playerEntity },
   } = mud;
-  const primodium = usePrimodium();
+  const game = useGame();
   const {
     config,
     hooks: { useCamera },
-  } = useRef(primodium.STARMAP).current;
+  } = useRef(game.STARMAP).current;
 
   const shardData = useShardAsteroid(selectedAsteroid);
   const ownedBy = components.OwnedBy.use(selectedAsteroid)?.value;
   const mapOpen = components.SelectedMode.use()?.value === Mode.Starmap;
   const position = components.Position.use(selectedAsteroid);
-  const imageUri = getAsteroidImage(primodium, selectedAsteroid);
+  const imageUri = getAsteroidImage(game, selectedAsteroid);
 
   const { zoom } = useCamera();
   const ownedByPlayer = ownedBy === playerEntity;

@@ -9,7 +9,7 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
-import { usePrimodium } from "src/hooks/usePrimodium";
+import { useGame } from "src/hooks/useGame";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { abandonFleet } from "src/network/setup/contractCalls/fleetAbandon";
@@ -23,7 +23,7 @@ import { useFleetNav } from "./Fleets";
 
 const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   const mud = useMud();
-  const api = usePrimodium().STARMAP;
+  const api = useGame().STARMAP;
 
   const { BackButton, NavButton } = useFleetNav();
 

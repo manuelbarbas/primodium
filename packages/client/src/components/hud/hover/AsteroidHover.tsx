@@ -1,9 +1,12 @@
+import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { Badge } from "src/components/core/Badge";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Loader } from "src/components/core/Loader";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { useClaimPrimodium } from "src/hooks/primodium/useClaimPrimodium";
+
+import { useClaimPrimodium } from "@/hooks/primodium/useClaimPrimodium";
 import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
 import { useFullResourceCount, useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
@@ -17,8 +20,6 @@ import { formatResourceCount, formatTime, formatTimeShort } from "src/util/numbe
 import { Card } from "../../core/Card";
 import { HealthBar } from "../HealthBar";
 import { AsteroidEta } from "./AsteroidEta";
-import { InterfaceIcons } from "@primodiumxyz/assets";
-import { EntityToResourceImage } from "@/util/mappings";
 
 export const AsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const { loading } = useSyncStatus(hashEntities(Keys.SELECTED, entity));

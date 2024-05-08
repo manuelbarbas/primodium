@@ -1,5 +1,5 @@
 import { Tooltip } from "@/components/core/Tooltip";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { useGame } from "@/hooks/useGame";
 import { cn } from "@/util/client";
 import { getRandomRange } from "@/util/common";
 import { KeybindActionKeys } from "@game/lib/constants/keybinds";
@@ -95,8 +95,8 @@ export const PushButton = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const primodium = usePrimodium();
-    const api = primodium.UI;
+    const game = useGame();
+    const api = game.UI;
 
     const handleClick = useCallback(
       (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

@@ -6,19 +6,19 @@ import { useMemo } from "react";
 import { IconMarker } from "src/components/core/Marker";
 import { DepthLayers } from "src/game/lib/constants/common";
 import { useMud } from "src/hooks";
-import { usePrimodium } from "src/hooks/usePrimodium";
+import { useGame } from "src/hooks/useGame";
 
 export const HomeMarker = () => {
   const {
     components,
     playerAccount: { entity: playerEntity },
   } = useMud();
-  const primodium = usePrimodium();
+  const game = useGame();
   const homeAsteroid = components.Home.use(playerEntity)?.value ?? singletonEntity;
   const position = components.Position.use(homeAsteroid as Entity);
 
   const coord = useMemo(() => {
-    const { config } = primodium.STARMAP;
+    const { config } = game.STARMAP;
 
     const pixelCoord = tileCoordToPixelCoord(
       position ?? { x: 0, y: 0 },
@@ -27,7 +27,7 @@ export const HomeMarker = () => {
     );
 
     return { x: pixelCoord.x, y: -pixelCoord.y };
-  }, [position, primodium]);
+  }, [position, game]);
 
   return (
     <IconMarker

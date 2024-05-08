@@ -18,7 +18,7 @@ import { FavoriteAsteroids } from "@/components/hud/widgets/FavoriteAsteroids";
 import { WarshipPopulation } from "@/components/hud/widgets/WarshipPopulation";
 import { StarmapNavigator } from "@/components/hud/widgets/starmap-navigator/StarmapNavigator";
 import { BrandingLabel } from "@/components/shared/BrandingLabel";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { useGame } from "@/hooks/useGame";
 import { usePersistentStore } from "@game/stores/PersistentStore";
 import { memo } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -26,7 +26,7 @@ import { HoverInfo } from "./hover/HoverInfo";
 
 export const GameHUD = memo(() => {
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
-  const { notify } = usePrimodium().UI;
+  const { notify } = useGame().UI;
 
   return (
     <div className={`screen-container relative`}>

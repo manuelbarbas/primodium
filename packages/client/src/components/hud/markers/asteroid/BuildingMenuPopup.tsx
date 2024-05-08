@@ -1,7 +1,7 @@
 import { Card, GlassCard } from "@/components/core/Card";
 import { Widget } from "@/components/core/Widget";
 import { BuildingMenu } from "@/components/hud/building-menu/BuildingMenu";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { useGame } from "@/hooks/useGame";
 import { components } from "@/network/components";
 import { getBuildingDimensions, getBuildingImageFromType, getBuildingName } from "@/util/building";
 import { getEntityTypeName } from "@/util/common";
@@ -12,7 +12,7 @@ import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useMemo } from "react";
 
 export const BuildingMenuPopup = () => {
-  const primodium = usePrimodium();
+  const game = useGame();
   const building = components.SelectedBuilding.use()?.value;
   const position = components.Position.use(building as Entity);
   const buildingType = components.BuildingType.use(building as Entity)?.value;
@@ -20,7 +20,7 @@ export const BuildingMenuPopup = () => {
   const dimensions = useMemo(() => getBuildingDimensions(building ?? singletonEntity), [building]);
 
   const coord = useMemo(() => {
-    const { config } = primodium.ASTEROID;
+    const { config } = game.ASTEROID;
 
     const pixelCoord = tileCoordToPixelCoord(
       addCoords(position ?? { x: 0, y: 0 }, { x: dimensions.width + 0.5, y: 0 }),
@@ -29,7 +29,7 @@ export const BuildingMenuPopup = () => {
     );
 
     return { x: pixelCoord.x, y: -pixelCoord.y };
-  }, [position, primodium, dimensions]);
+  }, [position, game, dimensions]);
 
   return (
     <Widget
@@ -45,7 +45,7 @@ export const BuildingMenuPopup = () => {
       popUp
       noBorder
       active={!!building && !!buildingName}
-      icon={getBuildingImageFromType(primodium, buildingType as Entity) ?? InterfaceIcons.Build}
+      icon={getBuildingImageFromType(game, buildingType as Entity) ?? InterfaceIcons.Build}
     >
       <GlassCard direction={"top"}>
         <Card noDecor>

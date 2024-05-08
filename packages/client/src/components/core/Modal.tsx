@@ -1,7 +1,7 @@
 import { Button } from "@/components/core/Button";
 import { Card } from "@/components/core/Card";
 import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { useGame } from "@/hooks/useGame";
 import React, { ReactNode, createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaTimes } from "react-icons/fa";
@@ -38,11 +38,11 @@ export const Modal: React.FC<ModalProps> & {
   Content: React.FC<{ children: ReactNode; className?: string }>;
 } = ({ children, title, keybind, keybindClose, startOpen = false, onClose, blockClose = false }) => {
   const [isOpen, setIsOpen] = useState(startOpen);
-  const primodium = usePrimodium();
+  const game = useGame();
   const {
     audio,
     input: { addListener },
-  } = useRef(primodium.UI).current;
+  } = useRef(game.UI).current;
 
   const handleClose = useCallback(() => {
     if (blockClose || !isOpen) return;
@@ -58,9 +58,9 @@ export const Modal: React.FC<ModalProps> & {
     };
 
     if (isOpen) {
-      primodium.GAME.disableGlobalInput();
+      game.GAME.disableGlobalInput();
     } else {
-      primodium.GAME.enableGlobalInput();
+      game.GAME.enableGlobalInput();
     }
 
     const escListener = addListener("Esc", handleClose);
@@ -70,9 +70,9 @@ export const Modal: React.FC<ModalProps> & {
       escListener.dispose();
       openListener?.dispose();
 
-      primodium.GAME.enableGlobalInput();
+      game.GAME.enableGlobalInput();
     };
-  }, [isOpen, audio, keybind, keybindClose, addListener, primodium, handleClose]);
+  }, [isOpen, audio, keybind, keybindClose, addListener, game, handleClose]);
 
   return (
     <ModalContext.Provider value={{ isOpen, handleClose, title, handleOpen: () => setIsOpen(true), blockClose }}>

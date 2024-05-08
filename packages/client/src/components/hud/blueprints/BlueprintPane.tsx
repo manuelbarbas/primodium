@@ -1,7 +1,7 @@
 import { Button } from "@/components/core/Button";
 import { BuildingBlueprints } from "@/components/hud/blueprints/BuildingBlueprints";
 import { usePersistentStore } from "@/game/stores/PersistentStore";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { useGame } from "@/hooks/useGame";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -9,11 +9,11 @@ import { useShallow } from "zustand/react/shallow";
 export const BlueprintPane = () => {
   const [visibleDiv, setVisibleDiv] = useState(0);
   const [arePanesExpanded, setArePanesExpanded] = useState(false);
-  const primodium = usePrimodium();
+  const game = useGame();
   const {
     hooks: { useKeybinds },
     input: { addListener },
-  } = useRef(primodium.ASTEROID).current;
+  } = useRef(game.ASTEROID).current;
   const keybinds = useKeybinds();
   const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
 

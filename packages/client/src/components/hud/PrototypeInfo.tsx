@@ -1,11 +1,12 @@
 import { Entity } from "@latticexyz/recs";
 import React, { useMemo } from "react";
 
-import { EntityTypetoBuildingSprites } from "src/game/lib/mappings";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 import _ from "lodash";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
+import { EntityTypetoBuildingSprites } from "src/game/lib/mappings";
+import { useGame } from "src/hooks/useGame";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
-import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getBuildingLevelStorageUpgrades, transformProductionData } from "src/util/building";
 import { getEntityTypeName } from "src/util/common";
@@ -14,7 +15,6 @@ import { getRecipe } from "src/util/recipe";
 import { Hex } from "viem";
 import { Badge } from "../core/Badge";
 import { IconLabel } from "../core/IconLabel";
-import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 
 export const RecipeDisplay: React.FC<{
   building: Entity;
@@ -57,7 +57,7 @@ export const RecipeDisplay: React.FC<{
 export const PrototypeInfo: React.FC<{
   building: Entity;
 }> = ({ building }) => {
-  const { getSpriteBase64 } = usePrimodium().api().sprite;
+  const { getSpriteBase64 } = useGame().ASTEROID.sprite;
   const rawProduction = components.P_Production.useWithKeys({ prototype: building as Hex, level: 1n });
   const production = useMemo(() => transformProductionData(rawProduction), [rawProduction]);
   const spaceRock = components.ActiveRock.use()?.value;

@@ -1,6 +1,6 @@
 import { Card } from "@/components/core/Card";
 import { useWidgets } from "@/hooks/providers/WidgetProvider";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { useGame } from "@/hooks/useGame";
 import { SceneKeys } from "@game/lib/constants/common";
 import { KeybindActionKeys } from "@game/lib/constants/keybinds";
 import { usePersistentStore } from "@game/stores/PersistentStore";
@@ -241,7 +241,7 @@ export const Widget: React.FC<WidgetProps> = memo(
     active = true,
     noBorder = false,
   }) => {
-    const primodium = usePrimodium();
+    const game = useGame();
     const [paneInfo, setPane, removePane] = usePersistentStore((state) => [
       state.panes,
       state.setPane,
@@ -267,11 +267,11 @@ export const Widget: React.FC<WidgetProps> = memo(
     }, [id, defaultCoord]);
 
     const [camera, uiCamera] = useMemo(() => {
-      const { camera } = primodium[scene];
-      const { camera: uiCamera } = primodium.UI;
+      const { camera } = game[scene];
+      const { camera: uiCamera } = game.UI;
 
       return [camera, uiCamera];
-    }, [primodium, scene]);
+    }, [game, scene]);
 
     const createContainer = useCallback(
       (_camera: typeof camera, _coord: Coord, raw: boolean) => {

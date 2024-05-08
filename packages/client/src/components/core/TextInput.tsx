@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { usePrimodium } from "src/hooks/usePrimodium";
+import { useGame } from "src/hooks/useGame";
 
 export const TextInput: React.FC<{
   topLeftLabel?: string;
@@ -22,7 +22,7 @@ export const TextInput: React.FC<{
   onChange,
   requirePattern,
 }) => {
-  const primodium = usePrimodium();
+  const game = useGame();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -60,8 +60,8 @@ export const TextInput: React.FC<{
         tabIndex={-1}
         onChange={onChange}
         maxLength={maxLength}
-        onFocus={primodium.GAME.disableGlobalInput}
-        onBlur={primodium.GAME.enableGlobalInput}
+        onFocus={game.GAME.disableGlobalInput}
+        onBlur={game.GAME.enableGlobalInput}
         required={!!requirePattern}
         pattern={requirePattern}
         placeholder={placeholder ?? "Type here"}

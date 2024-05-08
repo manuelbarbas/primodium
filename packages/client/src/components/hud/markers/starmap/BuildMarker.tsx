@@ -5,16 +5,16 @@ import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useMemo } from "react";
 import { IconMarker } from "src/components/core/Marker";
 import { DepthLayers } from "src/game/lib/constants/common";
-import { usePrimodium } from "src/hooks/usePrimodium";
+import { useGame } from "src/hooks/useGame";
 import { components } from "src/network/components";
 
 export const BuildMarker = () => {
-  const primodium = usePrimodium();
+  const game = useGame();
   const buildAsteroid = components.BuildRock.use()?.value ?? singletonEntity;
   const position = components.Position.use(buildAsteroid as Entity);
 
   const coord = useMemo(() => {
-    const { config } = primodium.STARMAP;
+    const { config } = game.STARMAP;
 
     const pixelCoord = tileCoordToPixelCoord(
       position ?? { x: 0, y: 0 },
@@ -23,7 +23,7 @@ export const BuildMarker = () => {
     );
 
     return { x: pixelCoord.x, y: -pixelCoord.y };
-  }, [position, primodium]);
+  }, [position, game]);
 
   return (
     <IconMarker

@@ -6,7 +6,7 @@ import { Card } from "src/components/core/Card";
 import { useMud } from "src/hooks";
 import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
-import { usePrimodium } from "src/hooks/usePrimodium";
+import { useGame } from "src/hooks/useGame";
 import { components } from "src/network/components";
 import { getAsteroidImage, getAsteroidInfo } from "src/util/asteroid";
 import { EntityType } from "src/util/constants";
@@ -18,8 +18,8 @@ export const OwnedAsteroid: React.FC<{ className?: string; asteroid: Entity; onC
   asteroid,
   onClick,
 }) => {
-  const primodium = usePrimodium();
-  const imageUri = getAsteroidImage(primodium, asteroid);
+  const game = useGame();
+  const imageUri = getAsteroidImage(game, asteroid);
   const selected = components.SelectedRock.use()?.value === asteroid;
   const { resourceCount: encryption, resourceStorage: maxEncryption } = useFullResourceCount(
     EntityType.Encryption,
@@ -65,13 +65,13 @@ export const OwnedAsteroids: React.FC<{ className?: string }> = ({ className }) 
     playerAccount: { entity: playerEntity },
   } = useMud();
 
-  const primodium = usePrimodium();
+  const game = useGame();
   const query = [HasValue(components.OwnedBy, { value: playerEntity }), Has(components.Asteroid)];
   const asteroids = useEntityQuery(query);
 
   const handleSelectRock = (entity: Entity) => {
-    const { position } = getAsteroidInfo(primodium, entity);
-    const { pan, zoomTo } = primodium.STARMAP.camera;
+    const { position } = getAsteroidInfo(game, entity);
+    const { pan, zoomTo } = game.STARMAP.camera;
 
     components.SelectedRock.set({ value: entity });
 

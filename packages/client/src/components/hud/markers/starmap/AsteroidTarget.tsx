@@ -1,3 +1,5 @@
+import { useClaimPrimodium } from "@/hooks/primodium/useClaimPrimodium";
+import { useGame } from "@/hooks/useGame";
 import { Mode } from "@/util/constants";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
@@ -8,9 +10,7 @@ import { Marker } from "src/components/core/Marker";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { DepthLayers } from "src/game/lib/constants/common";
 import { useMud } from "src/hooks";
-import { useClaimPrimodium } from "src/hooks/primodium/useClaimPrimodium";
 import { useOrbitingFleets } from "src/hooks/useOrbitingFleets";
-import { usePrimodium } from "src/hooks/usePrimodium";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { claimPrimodium } from "src/network/setup/contractCalls/claimPrimodium";
@@ -28,16 +28,16 @@ export const _AsteroidTarget: React.FC<{ selectedAsteroid: Entity }> = ({ select
   const {
     playerAccount: { entity: playerEntity },
   } = mud;
-  const primodium = usePrimodium();
+  const game = useGame();
   const {
     config,
     hooks: { useCamera },
-  } = useRef(primodium.STARMAP).current;
+  } = useRef(game.STARMAP).current;
 
   const ownedBy = components.OwnedBy.use(selectedAsteroid)?.value;
   const mapOpen = components.SelectedMode.use()?.value !== Mode.Asteroid;
   const position = components.Position.use(selectedAsteroid);
-  const imageUri = getAsteroidImage(primodium, selectedAsteroid);
+  const imageUri = getAsteroidImage(game, selectedAsteroid);
 
   const { zoom } = useCamera();
   const ownedByPlayer = ownedBy === playerEntity;

@@ -4,7 +4,7 @@ import { OwnedColonyShips } from "@/components/hud/widgets/starmap-navigator/Own
 import { OwnedFleets } from "@/components/hud/widgets/starmap-navigator/OwnedFleets";
 import { Shards } from "@/components/hud/widgets/starmap-navigator/Shards";
 import { usePersistentStore } from "@/game/stores/PersistentStore";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { useGame } from "@/hooks/useGame";
 import { EntityType } from "@/util/constants";
 import { EntityToUnitImage } from "@/util/mappings";
 import { InterfaceIcons } from "@primodiumxyz/assets";
@@ -14,11 +14,11 @@ import { useShallow } from "zustand/react/shallow";
 export const StarmapNavigatorPane = () => {
   const [visibleDiv, setVisibleDiv] = useState(0);
   const [arePanesExpanded, setArePanesExpanded] = useState(false);
-  const primodium = usePrimodium();
+  const game = useGame();
   const {
     hooks: { useKeybinds },
     input: { addListener },
-  } = useRef(primodium.STARMAP).current;
+  } = useRef(game.STARMAP).current;
   const keybinds = useKeybinds();
   const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
 

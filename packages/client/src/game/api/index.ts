@@ -19,8 +19,8 @@ import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import _init from "../init";
 
-export type Primodium = Awaited<ReturnType<typeof initPrimodium>>;
-export async function initPrimodium(version = "v1") {
+export type PrimodiumGame = Awaited<ReturnType<typeof initGame>>;
+export async function initGame(version = "v1") {
   const asciiArt = `
 
   ██████╗ ██████╗ ██╗███╗   ███╗ ██████╗ ██████╗ ██╗██╗   ██╗███╗   ███╗
@@ -49,7 +49,7 @@ export async function initPrimodium(version = "v1") {
   }
 
   function runSystems(mud: MUD) {
-    console.info("[Primodium] Running systems");
+    console.info("[Game] Running systems");
     world.dispose("systems");
 
     components.SelectedMode.set({ value: Mode.Asteroid });

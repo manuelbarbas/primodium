@@ -5,7 +5,7 @@ import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useMemo } from "react";
 import { Marker } from "src/components/core/Marker";
 import { starmapSceneConfig } from "src/game/lib/config/starmapScene";
-import { usePrimodium } from "src/hooks/usePrimodium";
+import { useGame } from "src/hooks/useGame";
 import { components } from "src/network/components";
 import { getCanAttack, getCanSend } from "src/util/unit";
 
@@ -34,7 +34,7 @@ export const HoverAttackTarget: React.FC<{ hoverEntity: Entity; attackOrigin: En
   attackOrigin,
 }) => {
   const isFleet = components.IsFleet.use(hoverEntity) !== undefined;
-  const objects = usePrimodium().STARMAP.objects;
+  const objects = useGame().STARMAP.objects;
   const position = useMemo(() => {
     return isFleet
       ? objects.getFleet(hoverEntity)?.getTileCoord() ?? { x: 0, y: 0 }
