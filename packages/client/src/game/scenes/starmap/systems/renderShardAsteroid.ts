@@ -1,18 +1,14 @@
 import { defineEnterSystem, defineUpdateSystem, Entity, Has, namespaceWorld } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { Scene } from "engine/types";
+import { SceneApi } from "@/game/api/scene";
 import { toast } from "react-toastify";
-import { createCameraApi } from "src/game/api/camera";
-import { createObjectApi } from "src/game/api/objects";
 import { ShardAsteroid } from "src/game/lib/objects/Asteroid/ShardAsteroid";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getCanAttack, getCanSend } from "src/util/unit";
 
-export const renderShardAsteroid = (scene: Scene) => {
+export const renderShardAsteroid = (scene: SceneApi) => {
   const systemsWorld = namespaceWorld(world, "systems");
-  const cameraApi = createCameraApi(scene);
-  const objects = createObjectApi(scene);
 
   const renderNewAsteroid = (entity: Entity, coord: Coord) => {
     const asteroidData = components.ShardAsteroid.get(entity);
@@ -33,8 +29,8 @@ export const renderShardAsteroid = (scene: Scene) => {
           else toast.error("Cannot send to this asteroid.");
         } else {
           components.SelectedRock.set({ value: entity });
-          cameraApi.pan(coord, { duration: 500 });
-          cameraApi.zoomTo(1.5, 500);
+          scene.camera.pan(coord, { duration: 500 });
+          scene.camera.zoomTo(1.5, 500);
         }
       })
       .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
@@ -44,13 +40,13 @@ export const renderShardAsteroid = (scene: Scene) => {
         components.HoverEntity.remove();
       });
 
-    scene.objects.add(entity, asteroid, true);
+    scene.objects.objectManager.add(entity, asteroid, true);
   };
 
   const renderExplodeAndMoveAsteroid = (entity: Entity, coord: Coord) => {
     // explode
 
-    const asteroid = objects.getAsteroid(entity);
+    const asteroid = scene.objects.getAsteroid(entity);
     if (!asteroid) return;
 
     asteroid.getOrbitRing().clear();
@@ -69,8 +65,8 @@ export const renderShardAsteroid = (scene: Scene) => {
         else toast.error("Cannot send to this asteroid.");
       } else {
         components.SelectedRock.set({ value: entity });
-        cameraApi.pan(coord, { duration: 500 });
-        cameraApi.zoomTo(1.5, 500);
+        scene.camera.pan(coord, { duration: 500 });
+        scene.camera.zoomTo(1.5, 500);
       }
     });
   };

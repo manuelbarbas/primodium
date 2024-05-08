@@ -37,11 +37,11 @@ async function init(): Promise<Record<SceneKeys, SceneSystemsApi> & { GAME: Game
   ]);
 
   return {
-    ASTEROID: { ...asteroidApi.api, runSystems: (mud) => runAsteroidSystems(asteroidApi.scene, mud) },
-    STARMAP: { ...starmapApi.api, runSystems: (mud) => runStarmapSystems(starmapApi.scene, mud) },
-    UI: uiApi.api,
-    ROOT: { ...rootApi.api, runSystems: () => runRootSystems(rootApi.scene, gameApi) },
-    COMMAND_CENTER: commandCenterApi.api,
+    ASTEROID: { ...asteroidApi, runSystems: (mud) => runAsteroidSystems(asteroidApi, mud) },
+    STARMAP: { ...starmapApi, runSystems: (mud) => runStarmapSystems(starmapApi, mud) },
+    UI: uiApi,
+    ROOT: { ...rootApi, runSystems: () => runRootSystems(rootApi, gameApi) },
+    COMMAND_CENTER: commandCenterApi,
     GAME: gameApi,
   };
 }

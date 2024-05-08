@@ -1,5 +1,4 @@
 import { Coord, coordEq, pixelCoordToTileCoord } from "@latticexyz/phaserx";
-import { Scene } from "engine/types";
 import { getBuildingAtCoord } from "src/util/tile";
 
 import { Entity } from "@latticexyz/recs";
@@ -7,8 +6,9 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { outOfBounds } from "src/util/outOfBounds";
+import { SceneApi } from "@/game/api/scene";
 
-export const setupMouseInputs = (scene: Scene) => {
+export const setupMouseInputs = (scene: SceneApi) => {
   const clickSub = scene.input.click$.subscribe(([pointer]) => {
     const activeRock = components.ActiveRock.get()?.value;
 

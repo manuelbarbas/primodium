@@ -1,4 +1,4 @@
-import { Scene } from "engine/types";
+import { SceneApi } from "@/game/api/scene";
 import { MUD } from "src/network/types";
 import { renderAsteroid } from "./renderAsteroid";
 import { renderAttackLine } from "./renderAttackLine";
@@ -7,7 +7,7 @@ import { renderFleets } from "./renderFleets";
 import { renderMoveLine } from "./renderMoveLine";
 import { renderShardAsteroid } from "./renderShardAsteroid";
 
-export const runSystems = (scene: Scene, mud: MUD) => {
+export const runSystems = (scene: SceneApi, mud: MUD) => {
   renderAsteroid(scene);
   renderShardAsteroid(scene);
   renderMoveLine(scene, mud);

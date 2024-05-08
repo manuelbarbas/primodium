@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { Scene } from "engine/types";
+import { SceneApi } from "@/game/api/scene";
 import { getAssetKeyPair } from "./helpers";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { DepthLayers } from "../../constants/common";
@@ -10,10 +10,10 @@ import { Assets } from "@primodiumxyz/assets";
 export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGameObject {
   private buildingType: Entity;
   private coord: Coord;
-  private _scene: Scene;
+  private _scene: SceneApi;
   private level = 1n;
   private spawned = false;
-  constructor(scene: Scene, buildingType: Entity, coord: Coord) {
+  constructor(scene: SceneApi, buildingType: Entity, coord: Coord) {
     const assetPair = getAssetKeyPair(1n, buildingType);
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
     super(

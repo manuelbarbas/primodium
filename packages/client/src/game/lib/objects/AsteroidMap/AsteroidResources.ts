@@ -1,16 +1,16 @@
-import { Scene } from "engine/types";
+import { SceneApi } from "@/game/api/scene";
 import { Bounds, Dimensions, ResourceTile, isOutOfBounds } from "./helpers";
 import { EntityTypeToResourceTilekey } from "src/game/lib/mappings";
 import { DepthLayers } from "../../constants/common";
 import { Tilesets } from "@primodiumxyz/assets";
 
 export class AsteroidResources {
-  private scene: Scene;
+  private scene: SceneApi;
   private maxBounds?: Bounds;
   private resourcesMap?: Phaser.Tilemaps.Tilemap;
   private asteroidDimensions: Dimensions;
 
-  constructor(scene: Scene, asteroidDimensions: Dimensions) {
+  constructor(scene: SceneApi, asteroidDimensions: Dimensions) {
     this.scene = scene;
     this.asteroidDimensions = asteroidDimensions;
   }

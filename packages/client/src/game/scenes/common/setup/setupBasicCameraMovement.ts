@@ -1,6 +1,4 @@
-import { createCameraApi } from "@game/api/camera";
-import { Scene } from "engine/types";
-import { createInputApi } from "@game/api/input";
+import { SceneApi } from "@/game/api/scene";
 import { world } from "@/network/world";
 import { Coord, pixelCoordToTileCoord } from "@latticexyz/phaserx";
 
@@ -9,7 +7,7 @@ const ZOOM_SPEED = 5;
 const SMOOTHNESS = 0.9;
 
 export const setupBasicCameraMovement = (
-  scene: Scene,
+  scene: SceneApi,
   options: {
     zoomKeybind?: boolean;
     drag?: boolean;
@@ -19,8 +17,6 @@ export const setupBasicCameraMovement = (
     center?: boolean;
   } = {}
 ) => {
-  const { isDown } = createInputApi(scene);
-  const { pan, updateWorldView } = createCameraApi(scene);
   const { maxZoom, minZoom, wheelSpeed } = scene.config.camera;
   const {
     zoomKeybind = true,
@@ -41,15 +37,15 @@ export const setupBasicCameraMovement = (
 
   function handleZoom(delta: number) {
     const zoom = scene.camera.phaserCamera.zoom;
-    const zoomSpeed = isDown("Modifier") ? ZOOM_SPEED / 3 : ZOOM_SPEED;
+    const zoomSpeed = scene.input.isDown("Modifier") ? ZOOM_SPEED / 3 : ZOOM_SPEED;
 
     const zoomAmount = zoomSpeed * (delta / 1000);
-    if (isDown("ZoomIn")) {
+    if (scene.input.isDown("ZoomIn")) {
       const targetZoom = Math.min(zoom + zoomAmount, maxZoom);
       scene.camera.setZoom(targetZoom);
     }
 
-    if (isDown("ZoomOut")) {
+    if (scene.input.isDown("ZoomOut")) {
       const targetZoom = Math.max(zoom - zoomAmount, minZoom);
       scene.camera.setZoom(targetZoom);
     }
@@ -58,7 +54,7 @@ export const setupBasicCameraMovement = (
   function handleDrag() {
     const zoom = scene.camera.phaserCamera.zoom;
 
-    if (isDown("LeftClick")) {
+    if (scene.input.isDown("LeftClick")) {
       if (originDragPoint) {
         const { x, y } = scene.input.phaserInput.activePointer.position;
         const { x: prevX, y: prevY } = originDragPoint;
@@ -79,16 +75,16 @@ export const setupBasicCameraMovement = (
 
   function handleTranslate(delta: number) {
     // HANDLE CAMERA SCROLL MOVEMENT KEYS
-    const speed = isDown("Modifier") ? SPEED / 3 : SPEED;
+    const speed = scene.input.isDown("Modifier") ? SPEED / 3 : SPEED;
     const moveDistance = speed * (delta / 1000);
     let scrollX = scene.camera.phaserCamera.scrollX;
     let scrollY = scene.camera.phaserCamera.scrollY;
     let moveX = 0;
     let moveY = 0;
-    if (isDown("Up")) moveY--;
-    if (isDown("Down")) moveY++;
-    if (isDown("Left")) moveX--;
-    if (isDown("Right")) moveX++;
+    if (scene.input.isDown("Up")) moveY--;
+    if (scene.input.isDown("Down")) moveY++;
+    if (scene.input.isDown("Left")) moveX--;
+    if (scene.input.isDown("Right")) moveX++;
 
     //only register movement when no tweens are running
     if ((moveX !== 0 || moveY !== 0) && !scene.phaserScene.tweens.getTweensOf(scene.camera.phaserCamera).length) {
@@ -116,8 +112,8 @@ export const setupBasicCameraMovement = (
   }
 
   function handleCenter() {
-    if (isDown("Center")) {
-      pan({ x: 15, y: 6 });
+    if (scene.input.isDown("Center")) {
+      scene.camera.pan({ x: 15, y: 6 });
     }
   }
 
@@ -149,10 +145,8 @@ export const setupBasicCameraMovement = (
     const gameCoord = { x, y: -y } as Coord;
 
     //set to default zoomTo and pan to mouse position
-    scene.camera.phaserCamera.zoomTo(scene.config.camera.defaultZoom, 1000, undefined, undefined, () =>
-      updateWorldView()
-    );
-    pan(gameCoord);
+    scene.camera.zoomTo(scene.config.camera.defaultZoom, 1000);
+    scene.camera.pan(gameCoord);
   });
 
   //handle wheel zoom
@@ -164,7 +158,7 @@ export const setupBasicCameraMovement = (
 
       let scale = 0.0002;
 
-      if (isDown("Modifier")) scale /= 2;
+      if (scene.input.isDown("Modifier")) scale /= 2;
 
       const camera = scene.camera.phaserCamera;
       // Get the current world point under pointer.

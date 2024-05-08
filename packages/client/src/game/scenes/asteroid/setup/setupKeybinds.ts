@@ -1,15 +1,10 @@
 import { Entity } from "@latticexyz/recs";
-import { Scene } from "engine/types";
-import { createCameraApi } from "@game/api/camera";
-import { createInputApi } from "@game/api/input";
+import { SceneApi } from "@/game/api/scene";
 import { components } from "src/network/components";
 import { world } from "@/network/world";
 
-export const setupKeybinds = (scene: Scene) => {
-  const { pan } = createCameraApi(scene);
-  const { addListener } = createInputApi(scene);
-
-  const mainbaseKeybind = addListener("Base", () => {
+export const setupKeybinds = (scene: SceneApi) => {
+  const mainbaseKeybind = scene.input.addListener("Base", () => {
     //TODO - fix converting to entity
     const selectedRockEntity = components.SelectedRock.get()?.value;
     if (!selectedRockEntity) return;
@@ -18,10 +13,10 @@ export const setupKeybinds = (scene: Scene) => {
     if (!mainBase) return;
 
     const mainBaseCoord = components.Position.get(mainBase);
-    if (mainBaseCoord) pan(mainBaseCoord);
+    if (mainBaseCoord) scene.camera.pan(mainBaseCoord);
   });
 
-  const escapeKeybind = addListener("Esc", () => {
+  const escapeKeybind = scene.input.addListener("Esc", () => {
     // todo: dont run this if a modal is open
     if (components.SelectedBuilding.get()) {
       components.SelectedBuilding.remove();

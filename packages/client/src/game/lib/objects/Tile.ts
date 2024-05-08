@@ -1,9 +1,10 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Coord, Scene } from "engine/types";
+import { Coord } from "engine/types";
+import { SceneApi } from "@/game/api/scene";
 
 export class Tile extends Phaser.GameObjects.Rectangle {
-  private _scene: Scene;
-  constructor(scene: Scene, coord: Coord, color: number, alpha: number) {
+  private _scene: SceneApi;
+  constructor(scene: SceneApi, coord: Coord, color: number, alpha: number) {
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
     super(scene.phaserScene, pixelCoord.x, -pixelCoord.y, scene.tiled.tileWidth, scene.tiled.tileHeight, color, alpha);
 

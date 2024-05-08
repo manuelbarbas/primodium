@@ -1,18 +1,19 @@
-import { PixelCoord, Scene } from "engine/types";
+import { PixelCoord } from "engine/types";
+import { SceneApi } from "@/game/api/scene";
 import { IPrimodiumGameObject } from "./interfaces";
 import { Fleet } from "./Fleet";
 import { DepthLayers } from "../constants/common";
 
 const FLEET_ANGLE_OFFSET = 45;
 export class TransitLine extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
-  private _scene: Scene;
+  private _scene: SceneApi;
   private spawned = false;
   private start;
   private end;
   private fleet: Fleet | undefined;
   private transitLine?: Phaser.GameObjects.Line;
   private unsubZoom;
-  constructor(scene: Scene, start: PixelCoord, end: PixelCoord) {
+  constructor(scene: SceneApi, start: PixelCoord, end: PixelCoord) {
     super(scene.phaserScene, start.x, start.y);
     this._scene = scene;
     this.start = start;

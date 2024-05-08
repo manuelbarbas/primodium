@@ -126,6 +126,7 @@ export const createCameraApi = (targetScene: Scene) => {
   }
 
   return {
+    ...targetScene.camera,
     pan,
     zoomTo,
     getPosition,
@@ -134,6 +135,5 @@ export const createCameraApi = (targetScene: Scene) => {
     updateWorldView,
     shake,
     createDOMContainer,
-    ...targetScene.camera,
   };
 };

@@ -7,7 +7,7 @@ import {
   defineUpdateSystem,
   namespaceWorld,
 } from "@latticexyz/recs";
-import { Scene } from "engine/types";
+import { SceneApi } from "@/game/api/scene";
 import { toast } from "react-toastify";
 import { DepthLayers } from "src/game/lib/constants/common";
 import { components } from "src/network/components";
@@ -20,7 +20,7 @@ import { Action, BuildingEnumLookup } from "src/util/constants";
 import { getRecipe, hasEnoughResources } from "src/util/recipe";
 import { Building } from "../../../lib/objects/Building";
 
-export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scene) => {
+export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: SceneApi) => {
   if (pointer?.rightButtonDown()) {
     components.SelectedAction.remove();
     return;
@@ -38,7 +38,7 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scen
   if (!hasEnough || !validPlacement) {
     if (!hasEnough) toast.error("Not enough resources to build " + getEntityTypeName(buildingPrototype));
     if (!validPlacement) toast.error("Cannot place building here");
-    scene.camera.phaserCamera.shake(200, 0.001);
+    scene.camera.shake();
     return;
   }
 
@@ -50,7 +50,7 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scen
   components.SelectedBuilding.remove();
 };
 
-export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
+export const renderBuildingPlacementTool = (scene: SceneApi, mud: MUD) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   const query = [

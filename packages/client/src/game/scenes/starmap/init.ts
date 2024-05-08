@@ -13,10 +13,10 @@ export const initStarmapScene = async (game: Game) => {
 
   const sceneApi = createSceneApi(scene);
 
-  setupBasicCameraMovement(scene, {
+  setupBasicCameraMovement(sceneApi, {
     translateKeybind: false,
   });
-  setupKeybinds(scene);
+  setupKeybinds(sceneApi);
 
   const clickSub = scene.input.click$.subscribe(([pointer, objects]) => {
     //if we have more than one object, we want to emit the pointerdown and pointerup events on all of them except the first one
@@ -39,5 +39,5 @@ export const initStarmapScene = async (game: Game) => {
     clickSub.unsubscribe();
   }, "game");
 
-  return { scene, api: sceneApi };
+  return sceneApi;
 };

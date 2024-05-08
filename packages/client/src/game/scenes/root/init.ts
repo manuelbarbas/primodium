@@ -14,5 +14,5 @@ export const initRootScene = async (game: Game) => {
   });
   sceneApi.audio.setPauseOnBlur(false);
 
-  return { scene, api: sceneApi };
+  return sceneApi;
 };

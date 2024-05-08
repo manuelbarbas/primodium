@@ -1,5 +1,4 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { AsteroidMap } from "../../../lib/objects/AsteroidMap/AsteroidMap";
@@ -7,9 +6,10 @@ import { getAsteroidBounds as getAsteroidCurrentBounds, getAsteroidMaxBounds } f
 import { decodeEntity } from "@latticexyz/store-sync/recs";
 import { ResourceEntityLookup } from "src/util/constants";
 import { EResource } from "contracts/config/enums";
+import { SceneApi } from "@/game/api/scene";
 
 //TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
-export const renderAsteroidMap = (scene: Scene) => {
+export const renderAsteroidMap = (scene: SceneApi) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   let asteroidMap: AsteroidMap;

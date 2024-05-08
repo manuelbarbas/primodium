@@ -24,6 +24,7 @@ export function createObjectApi(scene: Scene) {
   }
 
   return {
+    objectManager: scene.objects,
     getFleet,
     getTransitLine,
     getAsteroid,

@@ -11,11 +11,11 @@ export const initAsteroidScene = async (game: Game) => {
 
   const sceneApi = createSceneApi(scene);
 
-  setupMouseInputs(scene);
-  setupBasicCameraMovement(scene);
-  setupKeybinds(scene);
+  setupMouseInputs(sceneApi);
+  setupBasicCameraMovement(sceneApi);
+  setupKeybinds(sceneApi);
 
   scene.camera.phaserCamera.fadeIn(1000);
 
-  return { scene, api: sceneApi };
+  return sceneApi;
 };

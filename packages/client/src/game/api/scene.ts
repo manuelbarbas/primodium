@@ -5,25 +5,27 @@ import { createCameraApi } from "./camera";
 import { createFxApi } from "./fx";
 import { createHooksApi } from "./hooks";
 import { createInputApi } from "./input";
-import { createObjectApi } from "./objects";
 import { createSpriteApi } from "./sprite";
+import { createObjectApi } from "@/game/api/objects";
 
 export type SceneApi = ReturnType<typeof createSceneApi>;
 
-//pull out api so we can use in non react contexts
 export function createSceneApi(scene: Scene) {
   const cameraApi = createCameraApi(scene);
 
   const apiObject = {
+    phaserScene: scene.phaserScene,
+    audio: createAudioApi(scene),
     config: scene.config,
     camera: cameraApi,
-    notify: createNotificationApi(scene),
+    dispose: scene.dispose,
+    fx: createFxApi(scene),
     hooks: createHooksApi(scene),
     input: createInputApi(scene),
-    fx: createFxApi(scene),
-    sprite: createSpriteApi(scene),
-    audio: createAudioApi(scene),
+    notify: createNotificationApi(scene),
     objects: createObjectApi(scene),
+    sprite: createSpriteApi(scene),
+    tiled: scene.tiled,
   };
 
   apiObject.audio.initializeAudioVolume();

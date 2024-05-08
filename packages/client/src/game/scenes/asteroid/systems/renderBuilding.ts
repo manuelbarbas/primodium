@@ -10,7 +10,6 @@ import {
   runQuery,
 } from "@latticexyz/recs";
 
-import { Scene } from "engine/types";
 import { world } from "src/network/world";
 
 import { EntityType } from "src/util/constants";
@@ -20,9 +19,10 @@ import { components } from "src/network/components";
 import { getBuildingBottomLeft } from "src/util/building";
 import { removeRaidableAsteroid } from "src/game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
 import { EMap } from "contracts/config/enums";
+import { SceneApi } from "@/game/api/scene";
 
 //TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
-export const renderBuilding = (scene: Scene) => {
+export const renderBuilding = (scene: SceneApi) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const spectateWorld = namespaceWorld(world, "game_spectate");
 

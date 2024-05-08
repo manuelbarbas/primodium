@@ -8,5 +8,5 @@ export const initUIScene = async (game: Game) => {
   const scene = await game.sceneManager.createScene(uiSceneConfig, true);
   scene.phaserScene.scene.bringToTop(Scenes.UI);
 
-  return { scene, api: createSceneApi(scene) };
+  return createSceneApi(scene);
 };

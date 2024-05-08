@@ -1,19 +1,17 @@
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { Scene } from "engine/types";
+import { SceneApi } from "@/game/api/scene";
 
-import { createCameraApi } from "src/game/api/camera";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { EntityType } from "src/util/constants";
 
-export const focusMainbase = (scene: Scene) => {
-  const { pan } = createCameraApi(scene);
+export const focusMainbase = (scene: SceneApi) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   const handleMove = () => {
     const mainBaseCoord = components.Position.get(EntityType.MainBase) ?? { x: 0, y: 0 };
 
-    pan(mainBaseCoord, {
+    scene.camera.pan(mainBaseCoord, {
       duration: 0,
     });
   };

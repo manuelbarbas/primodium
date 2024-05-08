@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { Scene } from "engine/types";
+import { SceneApi } from "@/game/api/scene";
 import { AsteroidRelationship } from "../../constants/common";
 import { BaseAsteroid } from "./BaseAsteroid";
 import { getSecondaryOutlineSprite } from "./helpers";
@@ -8,7 +8,7 @@ import { Sprites } from "@primodiumxyz/assets";
 
 export class ShardAsteroid extends BaseAsteroid {
   protected entity: Entity;
-  constructor(scene: Scene, entity: Entity, coord: Coord) {
+  constructor(scene: SceneApi, entity: Entity, coord: Coord) {
     super(scene, coord, Sprites.Shard, Sprites.AegisDrone);
     this.entity = entity;
   }

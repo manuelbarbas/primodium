@@ -1,11 +1,11 @@
 import { MaxLevelToTilemap } from "src/game/lib/mappings";
-import { Scene } from "engine/types";
+import { SceneApi } from "@/game/api/scene";
 import { Bounds, Dimensions, ResourceTile } from "./helpers";
 import { AsteroidBounds } from "./AsteroidBounds";
 import { AsteroidResources } from "./AsteroidResources";
 
 export class AsteroidMap {
-  private scene: Scene;
+  private scene: SceneApi;
   private asteroidTiledMap?: Phaser.Tilemaps.Tilemap;
 
   private bounds: AsteroidBounds;
@@ -15,7 +15,7 @@ export class AsteroidMap {
   private maxBounds?: Bounds;
   private asteroidDimensions: Dimensions;
 
-  constructor(scene: Scene, asteroidDimensions: Dimensions) {
+  constructor(scene: SceneApi, asteroidDimensions: Dimensions) {
     this.scene = scene;
     this.asteroidDimensions = asteroidDimensions;
     this.bounds = new AsteroidBounds(scene, asteroidDimensions);

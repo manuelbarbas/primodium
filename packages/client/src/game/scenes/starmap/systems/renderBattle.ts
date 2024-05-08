@@ -1,37 +1,29 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { Scene } from "engine/types";
+import { SceneApi } from "@/game/api/scene";
 import { toast } from "react-toastify";
-import { createCameraApi } from "src/game/api/camera";
-import { createFxApi } from "src/game/api/fx";
-import { createObjectApi } from "src/game/api/objects";
 import { getPlayerOwner } from "src/hooks/usePlayerOwner";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getDistance } from "src/util/common";
 import { entityToFleetName, entityToRockName } from "src/util/name";
 
-export const renderBattle = (scene: Scene) => {
+export const renderBattle = (scene: SceneApi) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const { BattleResult } = components;
 
-  /* Can we pass in the custom scene instead of building it again here? */
-  const fx = createFxApi(scene);
-  const camera = createCameraApi(scene);
-  const objects = createObjectApi(scene);
-
   const attackAnimation = async (entity: Entity, attacker: Entity, defender: Entity, attackerWinner?: boolean) => {
-    const attackerPosition = objects.getFleet(attacker)?.getTileCoord() ?? { x: 0, y: 0 };
+    const attackerPosition = scene.objects.getFleet(attacker)?.getTileCoord() ?? { x: 0, y: 0 };
 
     const isFleet = components.IsFleet.get(defender)?.value;
     const position = isFleet
-      ? objects.getFleet(defender)?.getTileCoord() ?? { x: 0, y: 0 }
+      ? scene.objects.getFleet(defender)?.getTileCoord() ?? { x: 0, y: 0 }
       : components.Position.get(defender);
 
     const playerEntity = components.Account.get()?.value;
     const attackerRock = components.FleetMovement.get(attacker)?.destination as Entity;
     if (!position || !playerEntity) return;
     components.BattleRender.set({ value: attackerRock });
-    const { emitExplosion, fireMissile } = fx;
+    const { emitExplosion, fireMissile } = scene.fx;
     const offsetMs = 50;
     const numMissiles = 5;
     const distance = getDistance(attackerPosition, position);
@@ -54,7 +46,7 @@ export const renderBattle = (scene: Scene) => {
       const defenderPlayer = getPlayerOwner(defender);
       const attackerPlayer = getPlayerOwner(attacker);
       if (defenderPlayer === playerEntity || attackerPlayer === playerEntity) {
-        const { shake } = camera;
+        const { shake } = scene.camera;
         shake();
         battleNotification({ entity });
       }

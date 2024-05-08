@@ -1,17 +1,18 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Scene, TileCoord } from "engine/types";
+import { SceneApi } from "@/game/api/scene";
+import { TileCoord } from "engine/types";
 import { Fleet } from "../Fleet";
 
 const RADIUS = 60;
 export class OrbitRing extends Phaser.GameObjects.Container {
-  private _scene: Scene;
+  private _scene: SceneApi;
   private coord: TileCoord;
   private orbitRing: Phaser.GameObjects.Graphics;
   private fleetsContainer: Phaser.GameObjects.Container;
   private unsubZoom;
   private rotationTween: Phaser.Tweens.Tween;
 
-  constructor(scene: Scene, coord: TileCoord) {
+  constructor(scene: SceneApi, coord: TileCoord) {
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
     super(scene.phaserScene, pixelCoord.x, -pixelCoord.y);
     this.orbitRing = new Phaser.GameObjects.Graphics(scene.phaserScene)

@@ -1,4 +1,5 @@
-import { Coord, Scene } from "engine/types";
+import { Coord } from "engine/types";
+import { SceneApi } from "@/game/api/scene";
 import { IPrimodiumGameObject } from "../interfaces";
 // import { OrbitRing } from "./OrbitRing";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
@@ -8,7 +9,7 @@ import { Assets, Sprites } from "@primodiumxyz/assets";
 
 export abstract class BaseAsteroid extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
   protected coord: Coord;
-  protected _scene: Scene;
+  protected _scene: SceneApi;
   protected fleetCount = 0;
   protected spawned = false;
   protected asteroidSprite: Phaser.GameObjects.Image;
@@ -17,7 +18,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
   // protected asteroidLabel: Phaser.GameObjects.BitmapText;
   protected orbitRing: OrbitRing;
 
-  constructor(scene: Scene, coord: Coord, sprite: Sprites, outlineSprite: Sprites) {
+  constructor(scene: SceneApi, coord: Coord, sprite: Sprites, outlineSprite: Sprites) {
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
     super(scene.phaserScene, pixelCoord.x, -pixelCoord.y);
 

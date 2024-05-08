@@ -48,6 +48,7 @@ export const createAudioApi = (scene: Scene) => {
   }
 
   return {
+    ...scene.audio,
     play,
     get,
     setVolume,

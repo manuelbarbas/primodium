@@ -1,32 +1,28 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { Scene } from "engine/types";
 import { toast } from "react-toastify";
-import { createCameraApi } from "src/game/api/camera";
-import { createObjectApi } from "src/game/api/objects";
 import { starmapSceneConfig } from "src/game/lib/config/starmapScene";
 import { TargetLine } from "src/game/lib/objects/TargetLine";
 import { components } from "src/network/components";
 import { sendFleetPosition } from "src/network/setup/contractCalls/fleetSend";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
+import { SceneApi } from "@/game/api/scene";
 
-export const renderMoveLine = (scene: Scene, mud: MUD) => {
+export const renderMoveLine = (scene: SceneApi, mud: MUD) => {
   const systemsWorld = namespaceWorld(world, "systems");
-  const { zoomTo } = createCameraApi(scene);
-  const objects = createObjectApi(scene);
 
   let targetLine: TargetLine | undefined;
   function render(originEntity: Entity) {
     const isFleet = components.IsFleet.get(originEntity)?.value;
 
     if (!isFleet) return;
-    const fleet = objects.getFleet(originEntity);
+    const fleet = scene.objects.getFleet(originEntity);
 
     if (!fleet) return;
 
     targetLine = new TargetLine(scene, fleet.getPixelCoord()).spawn();
 
-    zoomTo(starmapSceneConfig.camera.minZoom, 500);
+    scene.camera.zoomTo(starmapSceneConfig.camera.minZoom, 500);
   }
 
   defineComponentSystem(
@@ -37,7 +33,7 @@ export const renderMoveLine = (scene: Scene, mud: MUD) => {
       if (!send || !send.originFleet) {
         targetLine?.dispose();
         targetLine = undefined;
-        if (value[1]?.originFleet) zoomTo(1);
+        if (value[1]?.originFleet) scene.camera.zoomTo(1);
         return;
       }
       if (send.destination) {

@@ -8,7 +8,7 @@ import {
   namespaceWorld,
 } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { Scene } from "engine/types";
+import { SceneApi } from "@/game/api/scene";
 import { toast } from "react-toastify";
 import { DepthLayers } from "src/game/lib/constants/common";
 import { components } from "src/network/components";
@@ -19,7 +19,7 @@ import { getBuildingOrigin, validateBuildingPlacement } from "src/util/building"
 import { Action } from "src/util/constants";
 import { Building } from "../../../lib/objects/Building";
 
-export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scene) => {
+export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: SceneApi) => {
   if (pointer?.rightButtonDown()) {
     components.SelectedAction.remove();
     return;
@@ -50,7 +50,7 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scen
 };
 
 //TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
-export const renderBuildingMoveTool = (scene: Scene, mud: MUD) => {
+export const renderBuildingMoveTool = (scene: SceneApi, mud: MUD) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   let placementBuilding: Building | undefined;

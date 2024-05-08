@@ -6,5 +6,5 @@ import { Game } from "engine/types";
 export const initCommandCenter = async (game: Game) => {
   const scene = await game.sceneManager.createScene(commandCenterScene, false);
 
-  return { scene, api: createSceneApi(scene) };
+  return createSceneApi(scene);
 };

@@ -1,15 +1,13 @@
+import { SceneApi } from "@/game/api/scene";
 import { Mode } from "@/util/constants";
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { Scene } from "engine/types";
-import { createAudioApi } from "src/game/api/audio";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 
-export const mapOpenFx = (scene: Scene) => {
+export const mapOpenFx = (scene: SceneApi) => {
   const systemsWorld = namespaceWorld(world, "systems");
-  const audio = createAudioApi(scene);
-  const bg = audio.get("Background", "music");
-  const bg2 = audio.get("Background2", "music");
+  const bg = scene.audio.get("Background", "music");
+  const bg2 = scene.audio.get("Background2", "music");
 
   defineComponentSystem(systemsWorld, components.SelectedMode, ({ value }) => {
     const mode = value[0]?.value;

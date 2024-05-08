@@ -1,16 +1,16 @@
-import { Scene } from "engine/types";
 import { Bounds, Dimensions, getRelativeCoord } from "./helpers";
 import { DepthLayers } from "../../constants/common";
 import { Tilesets } from "@primodiumxyz/assets";
+import { SceneApi } from "@/game/api/scene";
 
 export class AsteroidBounds {
-  private scene: Scene;
+  private scene: SceneApi;
   private currentBounds?: Bounds;
   private maxBounds?: Bounds;
   private boundsMap?: Phaser.Tilemaps.Tilemap;
   private asteroidDimensions: Dimensions;
 
-  constructor(scene: Scene, asteroidDimensions: Dimensions) {
+  constructor(scene: SceneApi, asteroidDimensions: Dimensions) {
     this.scene = scene;
     this.asteroidDimensions = asteroidDimensions;
   }

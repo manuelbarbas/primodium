@@ -1,9 +1,8 @@
 import { MapIdToAsteroidType } from "@/util/mappings";
 import { Entity, Has, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
-import { Scene } from "engine/types";
+import { SceneApi } from "@/game/api/scene";
 import { toast } from "react-toastify";
-import { createCameraApi } from "src/game/api/camera";
 import { PrimaryAsteroid, SecondaryAsteroid } from "src/game/lib/objects/Asteroid";
 import { BaseAsteroid } from "src/game/lib/objects/Asteroid/BaseAsteroid";
 import { components } from "src/network/components";
@@ -12,9 +11,8 @@ import { EntityType } from "src/util/constants";
 import { getCanSend } from "src/util/unit";
 import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
 
-export const renderAsteroid = (scene: Scene) => {
+export const renderAsteroid = (scene: SceneApi) => {
   const systemsWorld = namespaceWorld(world, "systems");
-  const cameraApi = createCameraApi(scene);
 
   const render = (entity: Entity, coord: Coord) => {
     const asteroidData = components.Asteroid.get(entity);
@@ -46,8 +44,8 @@ export const renderAsteroid = (scene: Scene) => {
           else toast.error("Cannot send to this asteroid.");
         } else {
           components.SelectedRock.set({ value: entity });
-          cameraApi.pan(coord, { duration: 500 });
-          cameraApi.zoomTo(1.5, 500);
+          scene.camera.pan(coord, { duration: 500 });
+          scene.camera.zoomTo(1.5, 500);
         }
       })
       .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
@@ -57,7 +55,7 @@ export const renderAsteroid = (scene: Scene) => {
         components.HoverEntity.remove();
       });
 
-    scene.objects.add(entity, asteroid, true);
+    scene.objects.objectManager.add(entity, asteroid, true);
   };
 
   const query = [Has(components.Asteroid), Has(components.Position)];

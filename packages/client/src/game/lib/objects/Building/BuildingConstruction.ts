@@ -1,4 +1,5 @@
-import { Coord, Scene } from "engine/types";
+import { Coord } from "engine/types";
+import { SceneApi } from "@/game/api/scene";
 import { BuildingDimensions, getConstructionSprite } from "./helpers";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { IPrimodiumGameObject } from "../interfaces";
@@ -7,12 +8,12 @@ import { Assets } from "@primodiumxyz/assets";
 
 export class BuildingConstruction extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
   private coord: Coord;
-  private _scene: Scene;
+  private _scene: SceneApi;
   private spawned = false;
   private sprite: Phaser.GameObjects.Sprite;
   private text: Phaser.GameObjects.BitmapText;
 
-  constructor(scene: Scene, coord: Coord, buildingDimensions: BuildingDimensions, queueText?: string) {
+  constructor(scene: SceneApi, coord: Coord, buildingDimensions: BuildingDimensions, queueText?: string) {
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
     super(scene.phaserScene, pixelCoord.x, -pixelCoord.y + scene.tiled.tileHeight);
 

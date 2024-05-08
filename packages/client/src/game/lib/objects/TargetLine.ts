@@ -1,11 +1,12 @@
-import { PixelCoord, Scene } from "engine/types";
+import { PixelCoord } from "engine/types";
+import { SceneApi } from "@/game/api/scene";
 import { IPrimodiumGameObject } from "./interfaces";
 
 export class TargetLine extends Phaser.GameObjects.Line implements IPrimodiumGameObject {
-  private _scene: Scene;
+  private _scene: SceneApi;
   private spawned = false;
   private start;
-  constructor(scene: Scene, start: PixelCoord, color = 0x808080) {
+  constructor(scene: SceneApi, start: PixelCoord, color = 0x808080) {
     const pointer = scene.input.phaserInput.activePointer;
 
     super(scene.phaserScene, start.x, start.y, 0, 0, pointer.worldX - start.x, pointer.worldY - start.y, color);
@@ -28,7 +29,7 @@ export class TargetLine extends Phaser.GameObjects.Line implements IPrimodiumGam
 
   update() {
     const pointer = this.scene.input.activePointer;
-    this.setLineWidth(2 / this._scene.camera.phaserCamera.zoom);
+    this.setLineWidth(2 / this._scene.phaserScene.cameras.main.zoom);
     this.setTo(0, 0, pointer.worldX - this.start.x, pointer.worldY - this.start.y);
   }
 

@@ -1,5 +1,5 @@
 import { Coord } from "@latticexyz/utils";
-import { Scene } from "engine/types";
+import { SceneApi } from "@/game/api/scene";
 import { BaseAsteroid } from "./BaseAsteroid";
 import { getSecondaryOutlineSprite, getSecondarySprite } from "./helpers";
 import { Entity } from "@latticexyz/recs";
@@ -8,7 +8,7 @@ import { AsteroidRelationship } from "../../constants/common";
 export class SecondaryAsteroid extends BaseAsteroid {
   private maxLevel: bigint;
   constructor(
-    scene: Scene,
+    scene: SceneApi,
     coord: Coord,
     resourceType: Entity,
     maxLevel: bigint,
