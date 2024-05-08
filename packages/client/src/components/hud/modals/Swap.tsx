@@ -104,10 +104,11 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
 
   const changeSlippage = useCallback(
     (slippageRendered: string) => {
-      if (slippageRendered === "") {
+      if (!slippageRendered.includes(".") && !Number(slippageRendered)) {
         setSlippageRendered("");
         return;
       }
+
       const floatSlippage = parseFloat(slippageRendered);
       const truncatedSlippage = parseFloat(floatSlippage.toFixed(1));
       const clampedSlippage = Math.min(Math.max(truncatedSlippage, 0.1), 99);
