@@ -4,6 +4,8 @@ import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { Hex } from "viem";
+import { ampli } from "src/ampli";
+import { parseReceipt } from "@/util/analytics/parseReceipt";
 
 export const recallFleet = async (mud: MUD, fleet: Entity) => {
   await execute(
@@ -17,6 +19,12 @@ export const recallFleet = async (mud: MUD, fleet: Entity) => {
     {
       id: hashEntities(TransactionQueueType.SendFleet),
       type: TransactionQueueType.SendFleet,
+    },
+    (receipt) => {
+      ampli.systemFleetRecallSystemPrimodiumRecallFleet({
+        fleets: [fleet as Hex],
+        ...parseReceipt(receipt),
+      });
     }
   );
 };
