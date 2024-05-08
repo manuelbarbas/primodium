@@ -1,8 +1,9 @@
 import { useEffect, forwardRef, useCallback } from "react";
+import { components } from "@/network/components";
 import { usePrimodium } from "@/hooks/usePrimodium";
+import { AudioKeys } from "@primodiumxyz/assets";
 import { getRandomRange } from "@/util/common";
 import { Tooltip } from "@/components/core/Tooltip";
-import { AudioKeys } from "@game/lib/constants/assets/audio";
 import { KeybindActionKeys } from "@game/lib/constants/keybinds";
 import { cn } from "@/util/client";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -119,6 +120,7 @@ export const PushButton = forwardRef<HTMLButtonElement, ButtonProps>(
           });
 
         props.onPointerEnter?.(e);
+        components.HoverEntity.remove();
       },
       [api?.audio, mute, props]
     );

@@ -1,3 +1,4 @@
+import { components } from "@/network/components";
 import { Tooltip } from "@/components/core/Tooltip";
 import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
 import { usePrimodium } from "@/hooks/usePrimodium";
@@ -108,6 +109,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           });
 
         props.onPointerEnter?.(e);
+        components.HoverEntity.remove();
       },
       [api?.audio, mute, props]
     );
