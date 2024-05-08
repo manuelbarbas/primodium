@@ -112,7 +112,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         // if the button is supposed to show a tooltip, remove the hover entity to not render its info as well
         if (tooltip) components.HoverEntity.remove();
       },
-      [api?.audio, mute, props]
+      [api?.audio, mute, tooltip, props]
     );
 
     useEffect(() => {
