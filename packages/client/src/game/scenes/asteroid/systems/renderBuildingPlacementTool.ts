@@ -9,16 +9,17 @@ import {
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
-import { DepthLayers } from "src/game/lib/constants/common";
-import { components } from "src/network/components";
-import { buildBuilding } from "src/network/setup/contractCalls/buildBuilding";
-import { MUD } from "src/network/types";
-import { world } from "src/network/world";
-import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
-import { getEntityTypeName } from "src/util/common";
-import { Action, BuildingEnumLookup } from "src/util/constants";
-import { getRecipe, hasEnoughResources } from "src/util/recipe";
-import { Building } from "../../../lib/objects/Building";
+import { components } from "@/network/components";
+import { buildBuilding } from "@/network/setup/contractCalls/buildBuilding";
+import { world } from "@/network/world";
+import { MUD } from "@/network/types";
+import { DepthLayers } from "@/game/lib/constants/common";
+import { Building } from "@/game/lib/objects/Building";
+import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "@/util/building";
+import { getEntityTypeName } from "@/util/common";
+import { Action, BuildingEnumLookup } from "@/util/constants";
+import { getRecipe, hasEnoughResources } from "@/util/recipe";
+import { isDomInteraction } from "@/util/canvas";
 
 export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scene) => {
   if (pointer?.rightButtonDown()) {
@@ -79,6 +80,7 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
       placementBuilding = new Building(scene, buildingPrototype, tileCoord).spawn();
 
       placementBuilding.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+        if (isDomInteraction(pointer, "down")) return;
         handleClick(pointer, mud, scene);
       });
     }
