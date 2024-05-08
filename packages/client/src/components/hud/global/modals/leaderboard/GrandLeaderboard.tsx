@@ -1,5 +1,5 @@
 import { Button } from "@/components/core/Button";
-import { CrownRank } from "@/components/hud/modals/leaderboard/RankCrown";
+import { CrownRank } from "@/components/hud/global/modals/leaderboard/RankCrown";
 import { getAllianceName } from "@/util/alliance";
 import { getFinalLeaderboardData } from "@/util/leaderboard/getFinalLeaderboardData";
 import { Entity } from "@latticexyz/recs";

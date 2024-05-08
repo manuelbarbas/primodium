@@ -1,5 +1,5 @@
 import { Button } from "@/components/core/Button";
-import { UnitStatus } from "@/components/hud/modals/battle-reports/UnitStatus";
+import { UnitStatus } from "@/components/hud/global/modals/battle-reports/UnitStatus";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useMemo, useState } from "react";

@@ -2,17 +2,11 @@ import { Card, GlassCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Tabs } from "@/components/core/Tabs";
 import { InventoryPane } from "@/components/hud/asteroid/inventory/InventoryPane";
-import { EntityType, Mode } from "@/util/constants";
+import { EntityType } from "@/util/constants";
 import { EntityToResourceImage } from "@/util/mappings";
 import { memo } from "react";
-import { useMud } from "src/hooks";
 
 export const Inventory = memo(() => {
-  const { components } = useMud();
-  const mapOpen = components.SelectedMode.use()?.value !== Mode.Asteroid;
-
-  if (mapOpen) return;
-
   return (
     <Tabs className="pointer-events-auto flex items-center" persistIndexKey="inventory">
       <Tabs.Button

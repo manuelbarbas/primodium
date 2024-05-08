@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { components } from "src/network/components";
 import { getBuildingName } from "src/util/building";
-import { Card } from "../../core/Card";
+import { Card } from "../../../core/Card";
 import { BlueprintInfo } from "@/components/hud/asteroid/blueprints/BlueprintInfo";
 import { AsteroidHover } from "./AsteroidHover";
 import { FleetHover } from "./FleetHover";

@@ -1,5 +1,5 @@
 import { Button } from "@/components/core/Button";
-import { CrownRank } from "@/components/hud/modals/leaderboard/RankCrown";
+import { CrownRank } from "@/components/hud/global/modals/leaderboard/RankCrown";
 import { Entity } from "@latticexyz/recs";
 import { useEffect, useMemo, useState } from "react";
 import { FaSync } from "react-icons/fa";

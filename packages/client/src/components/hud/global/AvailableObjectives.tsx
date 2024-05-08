@@ -1,7 +1,7 @@
 import { SecondaryCard } from "@/components/core/Card";
 import { List } from "@/components/core/List";
 import { Modal } from "@/components/core/Modal";
-import { ObjectivesScreen } from "@/components/hud/modals/objectives/ObjectivesScreen";
+import { ObjectivesScreen } from "@/components/hud/global/modals/objectives/ObjectivesScreen";
 import { usePersistentStore } from "@/game/stores/PersistentStore";
 import { useMud } from "@/hooks";
 import { components } from "@/network/components";

@@ -17,7 +17,7 @@ import { clearFleet } from "src/network/setup/contractCalls/fleetClear";
 import { landFleet } from "src/network/setup/contractCalls/fleetLand";
 import { clearFleetStance, setFleetStance } from "src/network/setup/contractCalls/fleetStance";
 import { formatNumber, formatResourceCount } from "src/util/number";
-import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
+import { ResourceIcon } from "../../global/modals/fleets/ResourceIcon";
 import { FleetEntityHeader } from "./FleetHeader";
 import { useFleetNav } from "./Fleets";
 

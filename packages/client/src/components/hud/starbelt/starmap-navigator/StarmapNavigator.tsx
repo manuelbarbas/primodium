@@ -2,17 +2,10 @@ import { Card, GlassCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Tabs } from "@/components/core/Tabs";
 import { StarmapNavigatorPane } from "@/components/hud/starbelt/starmap-navigator/StarmapNavigatorPane";
-import { Mode } from "@/util/constants";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { memo } from "react";
-import { useMud } from "src/hooks";
 
 export const StarmapNavigator = memo(() => {
-  const { components } = useMud();
-  const mapOpen = components.SelectedMode.use()?.value === Mode.Starmap;
-
-  if (!mapOpen) return null;
-
   return (
     <Tabs className="pointer-events-auto flex items-center" persistIndexKey="navigator">
       <Tabs.Button

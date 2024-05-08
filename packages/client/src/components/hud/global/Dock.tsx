@@ -1,13 +1,13 @@
 import { GlassCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Modal } from "@/components/core/Modal";
-import { AllianceManagement } from "@/components/hud/modals/alliance-mgmt/AllianceManagement";
-import { LeaderboardScreen } from "@/components/hud/modals/leaderboard/LeaderboardScreen";
-import { ObjectivesScreen } from "@/components/hud/modals/objectives/ObjectivesScreen";
-import { Cheatcodes } from "@/components/hud/modals/dev/Cheatcodes";
+import { AllianceManagement } from "@/components/hud/global/modals/alliance-mgmt/AllianceManagement";
+import { LeaderboardScreen } from "@/components/hud/global/modals/leaderboard/LeaderboardScreen";
+import { ObjectivesScreen } from "@/components/hud/global/modals/objectives/ObjectivesScreen";
+import { Cheatcodes } from "@/components/hud/global/modals/dev/Cheatcodes";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { Settings } from "../modals/settings/Settings";
-import { BattleReports } from "../modals/battle-reports/BattleReports";
+import { Settings } from "./modals/settings/Settings";
+import { BattleReports } from "./modals/battle-reports/BattleReports";
 
 const btnClass = "group hover:bg-transparent hover:scale-[115%]";
 const iconClass = "text-3xl";

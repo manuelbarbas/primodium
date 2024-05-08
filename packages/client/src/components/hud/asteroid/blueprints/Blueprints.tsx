@@ -1,7 +1,6 @@
 import { Card, GlassCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Tabs } from "@/components/core/Tabs";
-import { Mode } from "@/util/constants";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { memo } from "react";
 import { useMud } from "src/hooks";
@@ -9,10 +8,9 @@ import { BlueprintPane } from "./BlueprintPane";
 
 export const Blueprints = memo(() => {
   const { components } = useMud();
-  const mapOpen = components.SelectedMode.use()?.value !== Mode.Asteroid;
   const isBuilding = components.ActiveRock.use()?.value === components.BuildRock.use()?.value;
 
-  if (mapOpen || !isBuilding) return;
+  if (!isBuilding) return;
 
   return (
     <Tabs className="pointer-events-auto flex items-center" persistIndexKey="blueprints">

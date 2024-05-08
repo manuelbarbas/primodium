@@ -1,7 +1,7 @@
 import { SecondaryCard } from "@/components/core/Card";
-import { BattleAllies } from "@/components/hud/modals/battle-reports/BattleAllies";
-import { ResourceStatus } from "@/components/hud/modals/battle-reports/ResourceStatus";
-import { UnitStatus } from "@/components/hud/modals/battle-reports/UnitStatus";
+import { BattleAllies } from "@/components/hud/global/modals/battle-reports/BattleAllies";
+import { ResourceStatus } from "@/components/hud/global/modals/battle-reports/ResourceStatus";
+import { UnitStatus } from "@/components/hud/global/modals/battle-reports/UnitStatus";
 import { AccountDisplay } from "@/components/shared/AccountDisplay";
 import { EntityType } from "@/util/constants";
 import { Entity } from "@latticexyz/recs";

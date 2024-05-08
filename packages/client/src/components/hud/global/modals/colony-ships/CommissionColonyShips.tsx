@@ -1,7 +1,7 @@
 import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
-import { TrainColonyShip } from "@/components/hud/modals/colony-ships/TrainColonyShip";
-import { UnlockSlot } from "@/components/hud/modals/colony-ships/UnlockSlot";
+import { TrainColonyShip } from "@/components/hud/global/modals/colony-ships/TrainColonyShip";
+import { UnlockSlot } from "@/components/hud/global/modals/colony-ships/UnlockSlot";
 import { useMud } from "@/hooks";
 import { useColonySlots } from "@/hooks/useColonySlots";
 import { components } from "@/network/components";

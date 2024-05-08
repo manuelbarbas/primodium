@@ -1,7 +1,7 @@
 import { Button } from "@/components/core/Button";
 import { Card, SecondaryCard } from "@/components/core/Card";
-import { BattleDetails } from "@/components/hud/modals/battle-reports/BattleDetails";
-import { BattleButton, ErrorScreen, LoadingScreen } from "@/components/hud/modals/battle-reports/BattleReports";
+import { BattleDetails } from "@/components/hud/global/modals/battle-reports/BattleDetails";
+import { BattleButton, ErrorScreen, LoadingScreen } from "@/components/hud/global/modals/battle-reports/BattleReports";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { spawn } from "@/network/setup/contractCalls/spawn";
 import { hydrateBattleReports } from "@/network/sync/indexer";

@@ -1,6 +1,6 @@
 import { Badge } from "@/components/core/Badge";
 import { Shipyard } from "@/components/hud/asteroid/building-menu/screens/shipyard/Shipyard";
-import { CommissionColonyShips } from "@/components/hud/modals/colony-ships/CommissionColonyShips";
+import { CommissionColonyShips } from "@/components/hud/global/modals/colony-ships/CommissionColonyShips";
 import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
 import { useBuildingInfo } from "@/hooks/useBuildingInfo";
 import { usePrimodium } from "@/hooks/usePrimodium";
