@@ -13,6 +13,8 @@ import { UnitProductionQueue } from "src/libraries/UnitProductionQueue.sol";
 import { LibUnit } from "src/libraries/LibUnit.sol";
 import { LibResource } from "src/libraries/LibResource.sol";
 import { LibBuilding } from "src/libraries/LibBuilding.sol";
+import { LibStorage } from "src/libraries/LibStorage.sol";
+import { LibProduction } from "src/libraries/LibProduction.sol";
 
 contract ToggleBuildingSystemTest is PrimodiumTest {
   bytes32 asteroidEntity;
@@ -50,6 +52,8 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
     LibBuilding.upgradeBypassChecks(mainbaseEntity);
     LibBuilding.upgradeBypassChecks(mainbaseEntity);
     LibBuilding.upgradeBypassChecks(mainbaseEntity);
+    LibStorage.increaseMaxStorage(mainbaseEntity, 5);
+    LibProduction.upgradeResourceProduction(mainbaseEntity, 5);
 
     ironPlateFactoryPosition = getTilePosition(Home.get(playerEntity), EBuilding.IronPlateFactory);
     ironPlateFactory = world.Primodium__build(EBuilding.IronPlateFactory, ironPlateFactoryPosition);
