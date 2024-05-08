@@ -25,7 +25,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
   const [inAmountRendered, setInAmountRendered] = useState<string>("");
   const [outAmountRendered, setOutAmountRendered] = useState<string>("");
   const [lastEdited, setLastEdited] = useState<"in" | "out">("in");
-  const [slippageRendered, setSlippageRendered] = useState<string>("");
+  const [slippageRendered, setSlippageRendered] = useState<string>("0.5");
   const [outAmountMinRendered, setOutAmountMinRendered] = useState<string>("");
 
   const selectedRock = components.ActiveRock.use()?.value;
@@ -154,7 +154,6 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
         resource={fromResource}
         onResourceSelect={(resource) => changeInAmount(resource, toResource, inAmountRendered)}
         className="row-span-4"
-        outAmountMin={outAmountMinRendered}
       />
       <div className="relative w-full z-10">
         <button
@@ -221,7 +220,9 @@ const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
           {formatResourceCount(props.resource, resourceCount, { fractionDigits: 0 })} /{" "}
           {formatResourceCount(props.resource, resourceStorage, { fractionDigits: 0 })}
         </p>
-        <p className="text-xs mt-1">{props.outAmountMin} </p>
+        {props.outAmountMin && !isNaN(Number(props.outAmountMin)) && (
+          <p className="text-xs mt-1">{props.outAmountMin}</p>
+        )}
       </div>
     </div>
   );
@@ -251,7 +252,7 @@ const SlippageInput: React.FC<SlippageInputProps> = (props) => {
       <input
         className="bg-transparent col-span-6 text-lg w-full h-full focus:outline-none"
         type="number"
-        placeholder="0.2"
+        placeholder="0.5"
         step="0.1"
         min="0.1"
         max="99"
