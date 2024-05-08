@@ -119,8 +119,6 @@ export const renderBuilding = (scene: SceneApi) => {
 
           building.clearOutline();
         });
-
-      // buildings.set(entity, building);
     };
 
     //handle selectedBuilding changes

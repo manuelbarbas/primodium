@@ -9,6 +9,7 @@ export const initCommandCenter = async (game: GameApi): Promise<SceneApi> => {
 
   scene.camera.phaserCamera.pan(0, 0, 100);
 
-  const runSystems = () => runCommandSystems(scene);
-  return { ...createSceneApi(scene), runSystems };
+  const sceneApi = createSceneApi(scene);
+  const runSystems = () => runCommandSystems(sceneApi);
+  return { ...sceneApi, runSystems };
 };

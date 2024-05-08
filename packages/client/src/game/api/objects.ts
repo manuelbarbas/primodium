@@ -33,10 +33,8 @@ function factory<T extends { destroy: () => void }>(
       return object instanceof objectClass ? object : undefined;
     },
     remove: (entity: Entity) => {
-      const object = scene.objects.get(fullId(entity));
-      if (object instanceof objectClass) {
-        object.destroy();
-      }
+      const id = fullId(entity);
+      scene.objects.remove(id);
     },
     onNewObject: (callback: (entity: string) => void) => {
       return scene.objects.onNewObject(callback);
