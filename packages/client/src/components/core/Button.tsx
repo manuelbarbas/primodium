@@ -1,3 +1,4 @@
+import { components } from "@/network/components";
 import { Tooltip } from "@/components/core/Tooltip";
 import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
 import { usePrimodium } from "@/hooks/usePrimodium";
@@ -14,12 +15,12 @@ const buttonVariants = cva(
       variant: {
         neutral: "btn-neutral border-2 border-secondary/50",
         primary: "btn-primary",
-        accent: "btn-accent",
-        secondary: "btn-secondary",
+        accent: "btn-accent border border-neutral",
+        secondary: "btn-secondary border border-accent",
         success: "btn-success",
-        info: "btn-info",
+        info: "btn-info border-white/50",
         warning: "btn-warning",
-        error: "btn-error",
+        error: "btn-error border border-rose-300/50",
         ghost: "btn-ghost",
       },
       size: {
@@ -108,8 +109,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           });
 
         props.onPointerEnter?.(e);
+        // if the button is supposed to show a tooltip, remove the hover entity to not render its info as well
+        if (tooltip) components.HoverEntity.remove();
       },
-      [api?.audio, mute, props]
+      [api?.audio, mute, tooltip, props]
     );
 
     useEffect(() => {

@@ -548,21 +548,21 @@ export const worldInput = {
       schema: { entity: "bytes32", value: "uint256" },
     },
 
-    /* ---------------------------------- Score --------------------------------- */
+    /* ---------------------------------- Points --------------------------------- */
 
-    P_ScoreMultiplier: {
+    P_PointMultiplier: {
       key: ["resource"],
       schema: { resource: "uint8", value: "uint256" },
     },
 
-    Score: {
-      key: ["entity", "scoreType"],
-      schema: { entity: "bytes32", scoreType: "uint8", value: "uint256" },
+    Points: {
+      key: ["entity", "pointType"],
+      schema: { entity: "bytes32", pointType: "uint8", value: "uint256" },
     },
 
-    AllianceScoreContribution: {
-      key: ["alliance", "scoreType", "entity"],
-      schema: { alliance: "bytes32", scoreType: "uint8", entity: "bytes32", value: "uint256" },
+    AlliancePointContribution: {
+      key: ["alliance", "pointType", "entity"],
+      schema: { alliance: "bytes32", pointType: "uint8", entity: "bytes32", value: "uint256" },
     },
 
     /* ------------------------------ Objectives ----------------------------- */
@@ -752,7 +752,17 @@ const getConfig = async () => {
     if (process.env.PRI_DEV !== "true") exclude = ["DevSystem"];
   }
 
-  const world = defineWorld({ ...worldInput, excludeSystems: exclude });
+  const world = defineWorld({
+    ...worldInput,
+    modules: [
+      {
+        name: "Unstable_CallWithSignatureModule",
+        root: true,
+        args: [],
+      },
+    ],
+    excludeSystems: exclude,
+  });
 
   return world;
 };

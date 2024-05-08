@@ -6,11 +6,11 @@ import { LibMath } from "libraries/LibMath.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
 import { LibProduction } from "libraries/LibProduction.sol";
-import { LibScore } from "libraries/LibScore.sol";
+import { LibPoints } from "libraries/LibPoints.sol";
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibFleetClear } from "libraries/fleet/LibFleetClear.sol";
 import { FleetSet } from "libraries/fleet/FleetSet.sol";
-import { EResource, EScoreType } from "src/Types.sol";
+import { EResource, EPointType } from "src/Types.sol";
 import { FleetIncomingKey, FleetOutgoingKey } from "src/Keys.sol";
 
 library LibShardAsteroid {
@@ -72,7 +72,7 @@ library LibShardAsteroid {
     bytes32 ownerEntity = OwnedBy.get(asteroidEntity);
     if (ownerEntity != 0) {
       LibAsteroid.removeAsteroidOwner(asteroidEntity, ownerEntity);
-      LibScore.addScore(ownerEntity, EScoreType.Primodium, P_ConquestConfig.getShardAsteroidPoints());
+      LibPoints.addPoints(ownerEntity, EPointType.Shard, P_ConquestConfig.getShardAsteroidPoints());
     }
 
     // kill all incoming and orbiting fleets

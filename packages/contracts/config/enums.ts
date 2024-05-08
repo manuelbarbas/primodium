@@ -194,8 +194,8 @@ export enum EFleetStance {
   Block,
 }
 
-export enum EScoreType {
-  Primodium = 1,
+export enum EPointType {
+  Shard = 1,
   Wormhole,
 }
 
@@ -208,7 +208,7 @@ export const MUDEnums = {
   EAllianceInviteMode: enumToArray(EAllianceInviteMode),
   EAllianceRole: enumToArray(EAllianceRole),
   EFleetStance: enumToArray(EFleetStance),
-  EScoreType: enumToArray(EScoreType),
+  EPointType: enumToArray(EPointType),
 };
 
 function enumToArray(enumObj: object): string[] {

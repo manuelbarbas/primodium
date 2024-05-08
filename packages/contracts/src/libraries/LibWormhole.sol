@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { P_GameConfig, BuildingType, OwnedBy, Position, P_Transportables, P_WormholeConfig, P_WormholeConfigData, Wormhole, WormholeData, CooldownEnd, P_ScoreMultiplier } from "codegen/index.sol";
+import { P_GameConfig, BuildingType, OwnedBy, Position, P_Transportables, P_WormholeConfig, P_WormholeConfigData, Wormhole, WormholeData, CooldownEnd, P_PointMultiplier } from "codegen/index.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
-import { LibScore } from "libraries/LibScore.sol";
-import { EScoreType } from "src/Types.sol";
+import { LibPoints } from "libraries/LibPoints.sol";
+import { EPointType } from "src/Types.sol";
 import { WormholeBasePrototypeId } from "codegen/Prototypes.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
 

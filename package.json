@@ -17,6 +17,7 @@
     "dev:pty": "run-pty % pnpm dev:vercel % pnpm dev:node % pnpm dev:contracts % pnpm dev:indexer ",
     "dev:vercel": "vercel dev --local-config packages/client/vercel-dev.json",
     "export:assets": "pnpm --filter 'assets' export",
+    "export:sprites": "pnpm --filter 'assets' export-sprites",
     "foundry:up": "curl -L https://foundry.paradigm.xyz | bash && bash $HOME/.foundry/bin/foundryup",
     "mud:up": "pnpm mud set-version --tag main && pnpm install",
     "prepare": "husky install && (forge --version || pnpm foundry:up)",
@@ -30,8 +31,8 @@
     "package.json": "pnpm sort-package-json"
   },
   "devDependencies": {
-    "@latticexyz/cli": "2.0.6",
-    "@primodiumxyz/pg-indexer-reader": "^0.5.1",
+    "@latticexyz/cli": "2.0.9",
+    "@primodiumxyz/pg-indexer-reader": "^0.6.6",
     "@typescript-eslint/eslint-plugin": "5.46.1",
     "@typescript-eslint/parser": "5.46.1",
     "concurrently": "^8.0.1",

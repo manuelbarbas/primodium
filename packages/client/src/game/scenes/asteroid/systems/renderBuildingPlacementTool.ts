@@ -9,16 +9,17 @@ import {
 } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
-import { components } from "src/network/components";
-import { buildBuilding } from "src/network/setup/contractCalls/buildBuilding";
-import { MUD } from "src/network/types";
-import { world } from "src/network/world";
-import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
-import { Action, BuildingEnumLookup } from "src/util/constants";
-import { getRecipe, hasEnoughResources } from "src/util/recipe";
-import { Building } from "../../../lib/objects/Building";
-import { DepthLayers } from "src/game/lib/constants/common";
-import { getEntityTypeName } from "src/util/common";
+import { components } from "@/network/components";
+import { buildBuilding } from "@/network/setup/contractCalls/buildBuilding";
+import { world } from "@/network/world";
+import { MUD } from "@/network/types";
+import { DepthLayers } from "@/game/lib/constants/common";
+import { Building } from "@/game/lib/objects/Building";
+import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "@/util/building";
+import { getEntityTypeName } from "@/util/common";
+import { Action, BuildingEnumLookup } from "@/util/constants";
+import { getRecipe, hasEnoughResources } from "@/util/recipe";
+import { isDomInteraction } from "@/util/canvas";
 
 export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scene) => {
   if (pointer?.rightButtonDown()) {
@@ -76,9 +77,15 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
     const validPlacement = validateBuildingPlacement(tileCoord, buildingPrototype, asteroid);
 
     if (!placementBuilding) {
-      placementBuilding = new Building(scene, buildingPrototype, tileCoord).spawn();
+      placementBuilding = new Building({
+        id: "placementTool" as Entity,
+        scene,
+        buildingType: buildingPrototype,
+        coord: tileCoord,
+      });
 
       placementBuilding.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+        if (isDomInteraction(pointer, "down")) return;
         handleClick(pointer, mud, scene);
       });
     }
@@ -110,7 +117,7 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
   defineUpdateSystem(systemsWorld, query, render);
 
   defineExitSystem(systemsWorld, query, () => {
-    placementBuilding?.dispose();
+    placementBuilding?.destroy();
     placementBuilding = undefined;
   });
 };

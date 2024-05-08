@@ -19,6 +19,7 @@ export const createTilemap = (
 
     (mapData.layers as Phaser.Tilemaps.LayerData[]).forEach((layer) => {
       const _layer = map.createLayer(layer.name, tilesets, -19 * tileWidth, -50 * tileWidth);
+      _layer?.setPipeline("Light2D");
 
       const depth = config?.[key]?.[layer.name]?.depth;
       if (depth && _layer) {

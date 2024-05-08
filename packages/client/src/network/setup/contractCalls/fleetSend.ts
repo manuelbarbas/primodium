@@ -2,7 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { EObjectives } from "contracts/config/enums";
 import { components } from "src/network/components";
-import { execute } from "src/network/txExecute";
+import { execute } from "src/network/txExecute/txExecute";
 import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
@@ -20,7 +20,7 @@ export const sendFleet = async (mud: MUD, fleet: Entity, spaceRock: Entity) => {
       withSession: true,
     },
     {
-      id: hashEntities(TransactionQueueType.SendFleet),
+      id: hashEntities(TransactionQueueType.SendFleet, fleet),
       type: TransactionQueueType.SendFleet,
     },
     () => {
@@ -40,7 +40,7 @@ export const sendFleetPosition = async (mud: MUD, fleet: Entity, position: Coord
       withSession: true,
     },
     {
-      id: hashEntities(TransactionQueueType.SendFleet),
+      id: hashEntities(TransactionQueueType.SendFleet, fleet),
       type: TransactionQueueType.SendFleet,
     },
     () => activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.SendFleet)

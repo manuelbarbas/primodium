@@ -36,7 +36,8 @@ export const useColonySlots = (playerEntity: Entity) => {
 
   return {
     ...data,
-    availableSlots: maxSlots - BigInt(data.occupiedSlots.length),
+    // default to 0 if it's going to be negative
+    availableSlots: maxSlots <= BigInt(data.occupiedSlots.length) ? 0n : maxSlots - BigInt(data.occupiedSlots.length),
     shipsInTraining,
     maxSlots,
   };

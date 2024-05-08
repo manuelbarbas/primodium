@@ -6,13 +6,13 @@ import { world } from "../world";
 
 export function setupTrainingQueues() {
   const systemWorld = namespaceWorld(world, "systems");
-  const { BuildingType, OwnedBy, Send } = components;
+  const { BuildingType, OwnedBy, SelectedRock } = components;
 
   // update local queues each second
   // todo: create a component that tracks active asteroids (to be updated each second)
   defineComponentSystem(systemWorld, components.BlockNumber, (update) => {
     const selectedRock = components.ActiveRock.get()?.value;
-    const destination = Send.get()?.destination;
+    const destination = SelectedRock.get()?.value;
     const parents: string[] = [];
     if (selectedRock) parents.push(selectedRock);
     if (origin && selectedRock !== origin) parents.push(origin);

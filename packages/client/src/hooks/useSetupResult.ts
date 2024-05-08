@@ -67,18 +67,19 @@ const useSetupResult = () => {
   }, []);
 
   const updateSessionAccount = useCallback(
-    (pKey: Hex) => {
-      createBurnerAccount(pKey).then((account) => {
-        setSessionAccount(account);
+    async (pKey: Hex) => {
+      const account = await createBurnerAccount(pKey);
 
-        if (account.address === playerAccount?.address) return;
-        if (sessionAccountInterval.current) {
-          clearInterval(sessionAccountInterval.current);
-        }
+      setSessionAccount(account);
 
-        requestDrip(account.address);
-        sessionAccountInterval.current = setInterval(() => requestDrip(account.address), 4000);
-      });
+      if (account.address === playerAccount?.address) return;
+      if (sessionAccountInterval.current) {
+        clearInterval(sessionAccountInterval.current);
+      }
+
+      requestDrip(account.address);
+      sessionAccountInterval.current = setInterval(() => requestDrip(account.address), 4000);
+      return account;
     },
     [playerAccount?.address, requestDrip]
   );
@@ -117,6 +118,7 @@ const useSetupResult = () => {
     components: network?.components,
     sessionAccount,
     playerAccount,
+    requestDrip,
     updateSessionAccount,
     removeSessionAccount,
     updatePlayerAccount: memoizedUpdatePlayerAccount,

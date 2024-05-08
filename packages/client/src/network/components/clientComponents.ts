@@ -9,7 +9,6 @@ import {
   createExtendedEntityComponent,
   createExtendedNumberComponent,
 } from "./customComponents/ExtendedComponent";
-import createSendComponent from "./customComponents/SendComponent";
 import { createTransactionQueueComponent } from "./customComponents/TransactionQueueComponent";
 
 export default function setupClientComponents() {
@@ -66,9 +65,6 @@ export default function setupClientComponents() {
     }
   );
 
-  const Send = createSendComponent();
-  const Attack = createSendComponent();
-
   const SelectedFleet = createExtendedEntityComponent(world, { id: "SelectedFleet" });
 
   const Battle = createBattleComponents();
@@ -122,21 +118,13 @@ export default function setupClientComponents() {
     world,
     {
       players: Type.EntityArray,
-      playerRank: Type.OptionalNumber,
-      scores: Type.BigIntArray,
+      points: Type.BigIntArray,
+      ranks: Type.NumberArray,
     },
     {
       id: "Leaderboard",
     }
   );
-
-  const GrandLeaderboard = createExtendedComponent(world, {
-    players: Type.EntityArray,
-    wormholeRanks: Type.NumberArray,
-    primodiumRanks: Type.NumberArray,
-    scores: Type.NumberArray,
-    playerRank: Type.OptionalNumber,
-  });
 
   const SyncSource = createExtendedNumberComponent(world, { id: "SyncSource" });
 
@@ -158,14 +146,11 @@ export default function setupClientComponents() {
     ReverseBuildingPosition,
     TrainingQueue,
     Hangar,
-    Send,
-    Attack,
     SelectedFleet,
     IsObjectiveClaimable,
     Battle,
     BattleRender,
     Leaderboard,
-    GrandLeaderboard,
     PlayerInvite,
     AllianceRequest,
     TransactionQueue,

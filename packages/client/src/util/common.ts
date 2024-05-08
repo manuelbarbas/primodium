@@ -1,3 +1,4 @@
+import { formatName } from "@/util/name";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { Hex, getAddress, isAddress, pad, size, trim } from "viem";
@@ -77,13 +78,7 @@ export const getEntityTypeName = (blockType: Entity | undefined) => {
 
   if (blockType === undefined || BlockIdToKey[blockType] == undefined) return "";
 
-  return BlockIdToKey[blockType]
-    .replace(/([A-Z])([0-9])/g, "$1 $2") // Insert a space between an uppercase letter and a number.
-    .replace(/([0-9])([A-Z])/g, "$1 $2") // Insert a space between a number and an uppercase letter.
-    .replace(/([a-z])([0-9])/g, "$1 $2") // Insert a space between a lowercase letter and a number.
-    .replace(/([A-Z])([A-Z][a-z])/g, "$1 $2") // Insert a space between consecutive uppercase letters where the second one is followed by lowercase letter (camelCase).
-    .replace(/([a-z])([A-Z])/g, "$1 $2") // Handle general camelCase like "minePlatinum".
-    .trimStart();
+  return formatName(BlockIdToKey[blockType]);
 };
 
 export const shortenAddress = (address: Hex): Hex => {
@@ -131,3 +126,7 @@ export function calculateAngleBetweenPoints(point1: Coord, point2: Coord) {
   if (degree < 0) degree = 360 + degree;
   return { radian, degree };
 }
+
+export const lerp = (value: number, inMin: number, inMax: number, outMin: number, outMax: number) => {
+  return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+};
