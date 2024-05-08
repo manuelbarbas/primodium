@@ -146,7 +146,6 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
 
   return (
     <div className="w-[30rem] h-fit flex flex-col gap-2 m-3 items-center">
-      <SlippageInput className="mb-4" amount={slippageRendered} onAmountChange={(amount) => changeSlippage(amount)} />
       <ResourceSelector
         placeholder="from"
         amount={inAmountRendered}
@@ -173,11 +172,19 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
         className="row-span-4"
         outAmountMin={outAmountMinRendered}
       />
-      <TransactionQueueMask queueItemId={singletonEntity}>
-        <Button className="btn-primary btn-lg w-full" disabled={disabled} onClick={handleSubmit}>
-          {swapButtonMsg}
-        </Button>
-      </TransactionQueueMask>
+      <div className="items-center grid grid-cols-2 justify-items-start">
+        <SlippageInput
+          placeholder="Slippage"
+          className="mb-4 relative mr-auto"
+          amount={slippageRendered}
+          onAmountChange={(amount) => changeSlippage(amount)}
+        />
+        <TransactionQueueMask queueItemId={singletonEntity} className="justify-self-end">
+          <Button className="btn-primary btn-lg justify-self-end" disabled={disabled} onClick={handleSubmit}>
+            {swapButtonMsg}
+          </Button>
+        </TransactionQueueMask>
+      </div>
     </div>
   );
 };
@@ -201,13 +208,18 @@ const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
       className={`w-full h-20 bg-base-100 relative border border-secondary grid grid-cols-10 px-2 items-center ${props.className}`}
     >
       <p className="absolute top-2 left-2 text-xs opacity-50">{props.placeholder ?? ""}</p>
-      <input
-        className="bg-transparent col-span-6 text-lg w-full h-full focus:outline-none"
-        type="number"
-        placeholder="0"
-        value={props.amount}
-        onChange={(e) => props.onAmountChange(e.target.value)}
-      />
+      <div className="col-span-6 flex flex-col">
+        <input
+          className="bg-transparent text-lg w-3/4 h-3/4 focus:outline-none"
+          type="number"
+          placeholder="0"
+          value={props.amount}
+          onChange={(e) => props.onAmountChange(e.target.value)}
+        />
+        {props.outAmountMin && !isNaN(Number(props.outAmountMin)) && (
+          <p className="text-xs font-bold uppercase opacity-60 absolute bottom-1">Minimum: {props.outAmountMin}</p>
+        )}
+      </div>
       <div className="col-span-4 flex flex-col justify-end items-end gap-1">
         <Dropdown value={props.resource} onChange={(value) => props.onResourceSelect(value)}>
           {[...ResourceStorages].map((resource) => (
@@ -220,9 +232,6 @@ const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
           {formatResourceCount(props.resource, resourceCount, { fractionDigits: 0 })} /{" "}
           {formatResourceCount(props.resource, resourceStorage, { fractionDigits: 0 })}
         </p>
-        {props.outAmountMin && !isNaN(Number(props.outAmountMin)) && (
-          <p className="text-xs mt-1">{props.outAmountMin}</p>
-        )}
       </div>
     </div>
   );
@@ -246,19 +255,22 @@ const SlippageInput: React.FC<SlippageInputProps> = (props) => {
 
   return (
     <div
-      className={`w-full h-20 bg-base-100 relative border border-secondary grid grid-cols-10 px-2 items-center ${props.className}`}
+      className={`w-20 h-20 bg-base-100 absolute top-2 relative border border-secondary grid grid-cols-10 px-2 ${props.className}`}
     >
       <p className="absolute top-2 left-2 text-xs opacity-50">{props.placeholder ?? ""}</p>
-      <input
-        className="bg-transparent col-span-6 text-lg w-full h-full focus:outline-none"
-        type="number"
-        placeholder="0.5"
-        step="0.1"
-        min="0.1"
-        max="99"
-        value={props.amount}
-        onChange={(e) => props.onAmountChange(e.target.value)}
-      />
+      <div className="absolute bottom-2 left-2 col-span-10 flex flex-col justify-start items-start gap-1">
+        <input
+          className="bg-transparent text-base opacity-80 w-full h-full focus:outline-none pr-4 justify-start text-left"
+          type="number"
+          placeholder="0.5"
+          step="0.1"
+          min="0.1"
+          max="99"
+          value={props.amount}
+          onChange={(e) => props.onAmountChange(e.target.value)}
+        />
+        <span className="absolute inset-y-0 right-0 pr-2 flex items-center text-lg">%</span>
+      </div>
     </div>
   );
 };
