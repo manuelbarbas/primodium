@@ -10,9 +10,8 @@ export const renderShardAsteroid = (args: {
   entity: Entity;
   coord?: Coord;
   addEventHandlers?: boolean;
-  objectId: string;
 }) => {
-  const { scene, entity, objectId, coord = { x: 0, y: 0 }, addEventHandlers = false } = args;
+  const { scene, entity, coord = { x: 0, y: 0 }, addEventHandlers = false } = args;
   //TODO: replace with hanks fancy api stuff
   const cameraApi = createCameraApi(scene);
   const asteroidData = components.ShardAsteroid.get(entity);
@@ -22,7 +21,7 @@ export const renderShardAsteroid = (args: {
   const asteroid = new ShardAsteroid(scene, coord).setScale(spriteScale);
 
   //TODO: figure out how we can update object culling position
-  scene.objects.add(objectId, asteroid, false);
+  scene.objects.add(entity, asteroid, false);
 
   asteroid.getAsteroidLabel().setProperties({
     nameLabel: entityToRockName(entity),
@@ -55,14 +54,10 @@ export const renderShardAsteroid = (args: {
       if (scene.camera.phaserCamera.zoom >= scene.config.camera.maxZoom * 0.5)
         components.SelectedRock.set({ value: entity });
     })
-    .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, (pointer: Phaser.Input.Pointer) => {
-      if (pointer.downElement.nodeName !== "CANVAS") return;
-
+    .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
       components.HoverEntity.set({ value: entity });
     })
-    .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, (pointer: Phaser.Input.Pointer) => {
-      if (pointer.downElement.nodeName !== "CANVAS") return;
-
+    .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => {
       components.HoverEntity.remove();
     });
 

@@ -127,6 +127,7 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
   }
 
   dispose() {
+    this.particles.destroy();
     this.destroy();
   }
 }

@@ -28,7 +28,7 @@ export const renderShardAsteroids = (scene: Scene) => {
 
     if (!coord) return;
 
-    renderShardAsteroid({ scene, entity, objectId: entity, addEventHandlers: true, coord });
+    renderShardAsteroid({ scene, entity, addEventHandlers: true, coord });
   });
 
   defineUpdateSystem(systemsWorld, query, async ({ entity, component }) => {

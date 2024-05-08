@@ -23,7 +23,6 @@ export const renderAsteroids = (scene: Scene) => {
       scene,
       entity,
       coord,
-      objectId: entity,
       addEventHandlers: true,
     });
 

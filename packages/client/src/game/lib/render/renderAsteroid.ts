@@ -14,14 +14,8 @@ import { Entity } from "@latticexyz/recs";
 import { EMap } from "contracts/config/enums";
 import { Coord, Scene } from "engine/types";
 
-export const renderAsteroid = (args: {
-  scene: Scene;
-  entity: Entity;
-  coord?: Coord;
-  addEventHandlers?: boolean;
-  objectId: string;
-}) => {
-  const { scene, entity, coord = { x: 0, y: 0 }, addEventHandlers = false, objectId } = args;
+export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coord; addEventHandlers?: boolean }) => {
+  const { scene, entity, coord = { x: 0, y: 0 }, addEventHandlers = false } = args;
   //TODO: replace with hanks fancy api stuff
   const cameraApi = createCameraApi(scene);
   const asteroidData = components.Asteroid.get(entity);
@@ -56,7 +50,7 @@ export const renderAsteroid = (args: {
       .setScale(spriteScale)
       .setLevel(level ?? 1n);
 
-  scene.objects.add(objectId, asteroid, true);
+  scene.objects.add(entity, asteroid, true);
 
   const alliance = components.PlayerAlliance.get(ownedBy as Entity)?.alliance;
 
@@ -106,14 +100,10 @@ export const renderAsteroid = (args: {
       if (scene.camera.phaserCamera.zoom >= scene.config.camera.maxZoom * 0.5)
         components.SelectedRock.set({ value: entity });
     })
-    .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, (pointer: Phaser.Input.Pointer) => {
-      if (pointer.downElement.nodeName !== "CANVAS") return;
-
+    .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
       components.HoverEntity.set({ value: entity });
     })
-    .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, (pointer: Phaser.Input.Pointer) => {
-      if (pointer.downElement.nodeName !== "CANVAS") return;
-
+    .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => {
       components.HoverEntity.remove();
     });
 
