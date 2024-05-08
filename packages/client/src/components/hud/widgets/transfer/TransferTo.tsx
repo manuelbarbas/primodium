@@ -7,7 +7,7 @@ import { components } from "src/network/components";
 import { entityToFleetName } from "src/util/name";
 import { formatResourceCount } from "src/util/number";
 import { getUnitStats } from "src/util/unit";
-import { TargetHeader } from "../../TargetHeader";
+import { TargetHeader } from "../../../shared/TargetHeader";
 import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
 import { FleetHeader } from "../fleets/FleetHeader";
 import { hydrateFleetData } from "src/network/sync/indexer";

@@ -14,7 +14,7 @@ import { EntityType, Keys } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
-import { HealthBar } from "../HealthBar";
+import { HealthBar } from "../../shared/HealthBar";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EntityToResourceImage } from "@/util/mappings";
 

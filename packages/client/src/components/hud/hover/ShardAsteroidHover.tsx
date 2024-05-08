@@ -13,7 +13,7 @@ import { hashEntities } from "src/util/encode";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount, formatTime } from "src/util/number";
 import { Card } from "../../core/Card";
-import { HealthBar } from "../HealthBar";
+import { HealthBar } from "../../shared/HealthBar";
 
 export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const { loading } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
