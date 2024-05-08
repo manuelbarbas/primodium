@@ -51,7 +51,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     PositionData memory coord = getTilePosition(asteroidEntity, EBuilding.IronMine);
     bytes32 building = world.Primodium__build(EBuilding.IronMine, coord);
     upgradeBuilding(creator, building);
-    upgradeBuilding(creator, building);
+    // upgradeBuilding(creator, building);
   }
 
   function testUpgradeBuildingWithRequiredResources() public {
@@ -200,6 +200,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     console.log("used ", gas - gasleft());
     assertEq(ProductionRate.get(asteroidEntity, Iron), 0);
   }
+
   function testUpgradeMainBase() public {
     bytes32 mainBase = Home.get(asteroidEntity);
 

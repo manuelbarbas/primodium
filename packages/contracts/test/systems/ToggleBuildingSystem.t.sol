@@ -12,6 +12,7 @@ import { P_Production, P_RequiredDependency, P_RequiredDependencyData, P_Require
 import { UnitProductionQueue } from "src/libraries/UnitProductionQueue.sol";
 import { LibUnit } from "src/libraries/LibUnit.sol";
 import { LibResource } from "src/libraries/LibResource.sol";
+import { LibBuilding } from "src/libraries/LibBuilding.sol";
 
 contract ToggleBuildingSystemTest is PrimodiumTest {
   bytes32 asteroidEntity;
@@ -19,6 +20,8 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
 
   EUnit unit = EUnit(1);
   bytes32 unitPrototype = "unitPrototype";
+
+  bytes32 mainbaseEntity;
 
   bytes32 ironMineEntity;
   PositionData ironMinePosition;
@@ -40,6 +43,14 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
     ironMinePosition = getTilePosition(Home.get(playerEntity), EBuilding.IronMine);
     ironMineEntity = world.Primodium__build(EBuilding.IronMine, ironMinePosition);
     P_RequiredResources.deleteRecord(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronPlateFactory)), 1);
+
+    // ironPlate requires main base 5
+    mainbaseEntity = Home.get(asteroidEntity);
+    LibBuilding.upgradeBypassChecks(mainbaseEntity);
+    LibBuilding.upgradeBypassChecks(mainbaseEntity);
+    LibBuilding.upgradeBypassChecks(mainbaseEntity);
+    LibBuilding.upgradeBypassChecks(mainbaseEntity);
+
     ironPlateFactoryPosition = getTilePosition(Home.get(playerEntity), EBuilding.IronPlateFactory);
     ironPlateFactory = world.Primodium__build(EBuilding.IronPlateFactory, ironPlateFactoryPosition);
     ironProduction = P_Production.getAmounts(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronMine)), 1)[0];

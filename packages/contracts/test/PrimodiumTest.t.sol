@@ -234,8 +234,9 @@ contract PrimodiumTest is MudTest {
 
     P_UnitProdTypes.set(buildingType, level, newProdTypes);
     P_UnitProdMultiplier.set(buildingType, level, 100);
-    if (!UnitFactorySet.has(Position.getParentEntity(buildingEntity), buildingEntity))
+    if (!UnitFactorySet.has(Position.getParentEntity(buildingEntity), buildingEntity)) {
       UnitFactorySet.add(Position.getParentEntity(buildingEntity), buildingEntity);
+    }
 
     // if (unitPrototype == ColonyShipPrototypeId) {
     //   LibColony.increaseMaxColonySlots(addressToEntity(player));
@@ -303,12 +304,13 @@ contract PrimodiumTest is MudTest {
     vm.startPrank(creator);
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       if (P_IsUtility.get(requiredResources.resources[i])) continue;
-      if (MaxResourceCount.get(asteroidEntity, requiredResources.resources[i]) < requiredResources.amounts[i])
+      if (MaxResourceCount.get(asteroidEntity, requiredResources.resources[i]) < requiredResources.amounts[i]) {
         LibStorage.increaseMaxStorage(
           asteroidEntity,
           requiredResources.resources[i],
           requiredResources.amounts[i] - MaxResourceCount.get(asteroidEntity, requiredResources.resources[i])
         );
+      }
     }
     vm.stopPrank();
   }
@@ -336,12 +338,13 @@ contract PrimodiumTest is MudTest {
     if (P_IsUtility.get(uint8(resourceType))) {
       LibProduction.increaseResourceProduction(asteroidEntity, resourceType, count);
     } else {
-      if (MaxResourceCount.get(asteroidEntity, uint8(resourceType)) < count)
+      if (MaxResourceCount.get(asteroidEntity, uint8(resourceType)) < count) {
         LibStorage.increaseMaxStorage(
           asteroidEntity,
           uint8(resourceType),
           count - MaxResourceCount.get(asteroidEntity, uint8(resourceType))
         );
+      }
       LibStorage.increaseStoredResource(asteroidEntity, uint8(resourceType), count);
     }
     vm.stopPrank();
