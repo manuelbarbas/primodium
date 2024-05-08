@@ -4,18 +4,17 @@ import { Tabs } from "@/components/core/Tabs";
 import { StarmapNavigatorPane } from "@/components/hud/starbelt/starmap-navigator/StarmapNavigatorPane";
 import { Mode } from "@/util/constants";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { memo, useState } from "react";
+import { memo } from "react";
 import { useMud } from "src/hooks";
 
 export const StarmapNavigator = memo(() => {
   const { components } = useMud();
-  const [open, setOpen] = useState(false);
   const mapOpen = components.SelectedMode.use()?.value === Mode.Starmap;
 
   if (!mapOpen) return null;
 
   return (
-    <Tabs defaultIndex={open ? 0 : 1} className="pointer-events-auto flex items-center">
+    <Tabs className="pointer-events-auto flex items-center" persistIndexKey="navigator">
       <Tabs.Button
         index={0}
         togglable
@@ -24,7 +23,6 @@ export const StarmapNavigator = memo(() => {
         style={{
           writingMode: "vertical-rl",
         }}
-        onClick={() => setOpen(!open)}
       >
         <IconLabel text="Navigator" imageUri={InterfaceIcons.Navigator} className="gap-2 py-4" />
       </Tabs.Button>

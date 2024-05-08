@@ -4,18 +4,17 @@ import { Tabs } from "@/components/core/Tabs";
 import { InventoryPane } from "@/components/hud/asteroid/inventory/InventoryPane";
 import { EntityType, Mode } from "@/util/constants";
 import { EntityToResourceImage } from "@/util/mappings";
-import { memo, useState } from "react";
+import { memo } from "react";
 import { useMud } from "src/hooks";
 
 export const Inventory = memo(() => {
   const { components } = useMud();
-  const [open, setOpen] = useState(true);
   const mapOpen = components.SelectedMode.use()?.value !== Mode.Asteroid;
 
   if (mapOpen) return;
 
   return (
-    <Tabs defaultIndex={open ? 0 : 1} className="pointer-events-auto flex items-center">
+    <Tabs className="pointer-events-auto flex items-center" persistIndexKey="inventory">
       <Tabs.Button
         index={0}
         togglable
@@ -24,7 +23,6 @@ export const Inventory = memo(() => {
         style={{
           writingMode: "vertical-rl",
         }}
-        onClick={() => setOpen(!open)}
       >
         <IconLabel text="Inventory" imageUri={EntityToResourceImage[EntityType.Iridium]} className="gap-2 py-4" />
       </Tabs.Button>

@@ -3,10 +3,6 @@ import { AsteroidLoading } from "@/components/hud/asteroid/AsteroidLoading";
 import { AvailableObjectives } from "@/components/hud/global/AvailableObjectives";
 import { Dock } from "@/components/hud/global/Dock";
 import { ModeSelector } from "@/components/hud/global/ModeSelector";
-import { Blueprints } from "@/components/hud/asteroid/blueprints/Blueprints";
-import { Inventory } from "@/components/hud/asteroid/inventory/Inventory";
-import { BlueprintInfoMarker } from "@/components/hud/asteroid/markers/BlueprintInfoMarker";
-import { BuildingMenuPopup } from "@/components/hud/asteroid/markers/BuildingMenuPopup";
 import { Intro } from "@/components/hud/modals/Intro";
 import { FavoriteAsteroids } from "@/components/hud/global/FavoriteAsteroids";
 import { WarshipPopulation } from "@/components/hud/global/WarshipPopulation";
@@ -18,6 +14,7 @@ import { useShallow } from "zustand/react/shallow";
 import { HoverInfo } from "@/components/hud/hover/HoverInfo";
 import { AsteroidMenuPopup } from "@/components/hud/starbelt/markers/AsteroidMenuPopup";
 import { CommandViewSelector } from "@/components/hud/CommandViewSelector";
+import { AsteroidHUD } from "@/components/hud/asteroid";
 
 export const GameHUD = memo(() => {
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
@@ -28,8 +25,6 @@ export const GameHUD = memo(() => {
         <div className="absolute top-0 left-0 h-32 w-screen bg-gradient-to-b from-black to-transparent" />
         {/* MARKERS */}
         <AsteroidMenuPopup />
-        <BuildingMenuPopup />
-        <BlueprintInfoMarker />
         <Intro />
 
         {/* Widgets */}
@@ -46,12 +41,10 @@ export const GameHUD = memo(() => {
         </HUD.TopRight>
 
         <HUD.Right>
-          <Inventory />
           <StarmapNavigator />
         </HUD.Right>
 
         <HUD.Left>
-          <Blueprints />
           <CommandViewSelector />
         </HUD.Left>
 
@@ -68,6 +61,7 @@ export const GameHUD = memo(() => {
         </HUD.BottomRight>
       </HUD>
       <AsteroidLoading />
+      <AsteroidHUD />
     </div>
   );
 });
