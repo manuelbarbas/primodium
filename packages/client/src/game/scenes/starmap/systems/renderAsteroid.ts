@@ -3,13 +3,14 @@ import { Entity, Has, defineEnterSystem, namespaceWorld } from "@latticexyz/recs
 import { Coord } from "@latticexyz/utils";
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
-import { createCameraApi } from "src/game/api/camera";
-import { PrimaryAsteroid, SecondaryAsteroid } from "src/game/lib/objects/Asteroid";
-import { BaseAsteroid } from "src/game/lib/objects/Asteroid/BaseAsteroid";
-import { components } from "src/network/components";
-import { world } from "src/network/world";
-import { EntityType } from "src/util/constants";
-import { getCanSend } from "src/util/unit";
+import { components } from "@/network/components";
+import { world } from "@/network/world";
+import { createCameraApi } from "@/game/api/camera";
+import { PrimaryAsteroid, SecondaryAsteroid } from "@/game/lib/objects/Asteroid";
+import { BaseAsteroid } from "@/game/lib/objects/Asteroid/BaseAsteroid";
+import { EntityType } from "@/util/constants";
+import { getCanSend } from "@/util/unit";
+import { isDomInteraction } from "@/util/canvas";
 import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
 
 export const renderAsteroid = (scene: Scene) => {
@@ -34,7 +35,9 @@ export const renderAsteroid = (scene: Scene) => {
     else asteroid = new PrimaryAsteroid(scene, coord, expansionLevel ?? 1n, "Self").setScale(spriteScale);
 
     asteroid
-      .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+      .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
+        if (isDomInteraction(pointer, "up")) return;
+
         const attackOrigin = components.Attack.get()?.originFleet;
         const sendOrigin = components.Send.get()?.originFleet;
         if (attackOrigin) {

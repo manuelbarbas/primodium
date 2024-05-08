@@ -8,6 +8,7 @@ import { Fleet } from "@game/lib/objects/Fleet";
 import { TransitLine } from "@game/lib/objects/TransitLine";
 import { components } from "@/network/components";
 import { world } from "@/network/world";
+import { isDomInteraction } from "@/util/canvas";
 
 export const renderFleets = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -74,7 +75,9 @@ export const renderFleets = (scene: Scene) => {
 
     if (!fleet) {
       const newFleet = new Fleet(scene, { x: 0, y: 0 })
-        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
+        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
+          if (isDomInteraction(pointer, "up")) return;
+
           components.SelectedFleet.set({
             value: entity,
           });
