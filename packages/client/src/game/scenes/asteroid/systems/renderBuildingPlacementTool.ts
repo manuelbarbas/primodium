@@ -8,7 +8,6 @@ import {
   namespaceWorld,
 } from "@latticexyz/recs";
 import { SceneApi } from "@/game/api/scene";
-import { toast } from "react-toastify";
 import { DepthLayers } from "src/game/lib/constants/common";
 import { components } from "src/network/components";
 import { buildBuilding } from "src/network/setup/contractCalls/buildBuilding";
@@ -36,8 +35,8 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scen
   const validPlacement = validateBuildingPlacement(tileCoord, buildingPrototype, asteroid);
 
   if (!hasEnough || !validPlacement) {
-    if (!hasEnough) toast.error("Not enough resources to build " + getEntityTypeName(buildingPrototype));
-    if (!validPlacement) toast.error("Cannot place building here");
+    if (!hasEnough) scene.notify("error", "Not enough resources to build " + getEntityTypeName(buildingPrototype));
+    if (!validPlacement) scene.notify("error", "Cannot place building here");
     scene.camera.shake();
     return;
   }

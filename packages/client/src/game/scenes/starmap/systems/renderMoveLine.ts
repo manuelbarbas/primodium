@@ -1,5 +1,4 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { toast } from "react-toastify";
 import { starmapSceneConfig } from "src/game/lib/config/starmapScene";
 import { TargetLine } from "src/game/lib/objects/TargetLine";
 import { components } from "src/network/components";
@@ -43,7 +42,7 @@ export const renderMoveLine = (scene: SceneApi, mud: MUD) => {
         components.SelectedFleet.clear();
         components.SelectedRock.clear();
         const destinationPosition = components.Position.get(send.destination);
-        if (!destinationPosition) return toast.error("Invalid destination");
+        if (!destinationPosition) return scene.notify("error", "Invalid destination");
         await sendFleetPosition(mud, send.originFleet, destinationPosition);
         return;
       }

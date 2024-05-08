@@ -1,7 +1,6 @@
 import { defineEnterSystem, defineUpdateSystem, Entity, Has, namespaceWorld } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { SceneApi } from "@/game/api/scene";
-import { toast } from "react-toastify";
 import { ShardAsteroid } from "src/game/lib/objects/Asteroid/ShardAsteroid";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
@@ -23,10 +22,10 @@ export const renderShardAsteroid = (scene: SceneApi) => {
         const sendOrigin = components.Send.get()?.originFleet;
         if (attackOrigin) {
           if (getCanAttack(attackOrigin, entity)) components.Attack.setDestination(entity);
-          else toast.error("Cannot attack this asteroid.");
+          else scene.notify("error", "Cannot attack this asteroid.");
         } else if (sendOrigin) {
           if (getCanSend(sendOrigin, entity)) components.Send.setDestination(entity);
-          else toast.error("Cannot send to this asteroid.");
+          else scene.notify("error", "Cannot send to this asteroid.");
         } else {
           components.SelectedRock.set({ value: entity });
           scene.camera.pan(coord, { duration: 500 });
@@ -59,10 +58,10 @@ export const renderShardAsteroid = (scene: SceneApi) => {
       const sendOrigin = components.Send.get()?.originFleet;
       if (attackOrigin) {
         if (getCanAttack(attackOrigin, entity)) components.Attack.setDestination(entity);
-        else toast.error("Cannot attack this asteroid.");
+        else scene.notify("error", "Cannot attack this asteroid.");
       } else if (sendOrigin) {
         if (getCanSend(sendOrigin, entity)) components.Send.setDestination(entity);
-        else toast.error("Cannot send to this asteroid.");
+        else scene.notify("error", "Cannot send to this asteroid.");
       } else {
         components.SelectedRock.set({ value: entity });
         scene.camera.pan(coord, { duration: 500 });

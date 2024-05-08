@@ -1,6 +1,5 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { SceneApi } from "@/game/api/scene";
-import { toast } from "react-toastify";
 import { getPlayerOwner } from "src/hooks/usePlayerOwner";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
@@ -95,16 +94,18 @@ export const renderBattle = (scene: SceneApi) => {
     if (defenderRock && attackerRockOwner === playerEntity) {
       const defenderName = defenderIsFleet ? entityToFleetName(battle.defender) : entityToRockName(defenderRock);
       battle.attacker === winner
-        ? toast.success(`Victory! You attacked ${defenderName} and won! View details in the battle report.`)
-        : toast.error(`Defeat! You attacked ${defenderName} and lost! View details in the battle report.`);
+        ? scene.notify("success", `Victory! You attacked ${defenderName} and won! View details in the battle report.`)
+        : scene.notify("error", `Defeat! You attacked ${defenderName} and lost! View details in the battle report.`);
     } else if (attackerRock && defenderRockOwner === playerEntity) {
       battle.defender === winner
-        ? toast.success(
+        ? scene.notify(
+            "success",
             `Victory! You defended against ${entityToFleetName(
               battle.attacker
             )} and won! View details in the battle report.`
           )
-        : toast.error(
+        : scene.notify(
+            "error",
             `Defeat! You defended against ${entityToFleetName(
               battle.attacker
             )} and lost! View details in the battle report .`

@@ -1,12 +1,12 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { toast } from "react-toastify";
 import { decodeEntity } from "src/util/encode";
 import { Hex, hexToString, padHex, zeroAddress } from "viem";
 import { components } from "../components";
 import { MUD } from "../types";
 import { world } from "../world";
+import { SceneApi } from "@/game/api/scene";
 
-export function setupInvitations(mud: MUD) {
+export function setupInvitations(mud: MUD, scene: SceneApi) {
   const { AllianceInvitation, PlayerInvite, Alliance, AllianceJoinRequest, AllianceRequest } = components;
   const systemWorld = namespaceWorld(world, "systems");
   const playerEntity = mud.playerAccount.entity;
@@ -66,6 +66,6 @@ export function setupInvitations(mud: MUD) {
 
     const allianceName = hexToString(inviteAlliance, { size: 32 });
 
-    toast.info(`You have been invited to join [${allianceName}]`);
+    scene.notify("info", `You have been invited to join [${allianceName}]`);
   });
 }

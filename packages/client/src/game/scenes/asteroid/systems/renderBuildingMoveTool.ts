@@ -9,7 +9,6 @@ import {
 } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { SceneApi } from "@/game/api/scene";
-import { toast } from "react-toastify";
 import { DepthLayers } from "src/game/lib/constants/common";
 import { components } from "src/network/components";
 import { moveBuilding } from "src/network/setup/contractCalls/moveBuilding";
@@ -37,7 +36,7 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scen
   const validPlacement = validateBuildingPlacement(tileCoord, buildingPrototype, activeRock, selectedBuilding);
 
   if (!validPlacement) {
-    toast.error("Cannot place building here");
+    scene.notify("error", "Cannot place building here");
     scene.camera.phaserCamera.shake(200, 0.001);
     return;
   }

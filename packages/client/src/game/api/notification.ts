@@ -8,25 +8,25 @@ export const createNotificationApi = (scene: Scene) => {
     const volume = 0.2;
     const audio = createAudioApi(scene);
     if (type === "success") {
-      audio.play("Confirm4", "ui", {
+      audio.play("Confirm6", "ui", {
         volume,
         detune: 400,
       });
       toast.success(content, options);
     } else if (type === "error") {
       toast.error(content, options);
-      audio.play("Confirm4", "ui", {
+      audio.play("Confirm6", "ui", {
         volume,
         detune: -400,
       });
     } else if (type === "info") {
       toast.info(content, options);
-      audio.play("Confirm4", "ui", {
+      audio.play("Confirm6", "ui", {
         volume,
       });
     } else if (type === "warning") {
       toast.warning(content, options);
-      audio.play("Confirm4", "ui", {
+      audio.play("Confirm6", "ui", {
         volume,
         detune: -200,
       });

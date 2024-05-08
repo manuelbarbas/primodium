@@ -2,13 +2,12 @@ import { MapIdToAsteroidType } from "@/util/mappings";
 import { Entity, Has, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Coord } from "@latticexyz/utils";
 import { SceneApi } from "@/game/api/scene";
-import { toast } from "react-toastify";
 import { PrimaryAsteroid, SecondaryAsteroid } from "src/game/lib/objects/Asteroid";
 import { BaseAsteroid } from "src/game/lib/objects/Asteroid/BaseAsteroid";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { EntityType } from "src/util/constants";
-import { getCanSend } from "src/util/unit";
+import { getCanAttack, getCanSend } from "src/util/unit";
 import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
 
 export const renderAsteroid = (scene: SceneApi) => {
@@ -37,11 +36,11 @@ export const renderAsteroid = (scene: SceneApi) => {
         const sendOrigin = components.Send.get()?.originFleet;
         if (attackOrigin) {
           components.Attack.setDestination(entity);
-          // if (getCanAttack(attackOrigin, entity)) components.Attack.setDestination(entity);
-          // else toast.error("Cannot attack this asteroid.");
+          if (getCanAttack(attackOrigin, entity)) components.Attack.setDestination(entity);
+          else scene.notify("error", "Cannot attack this asteroid.");
         } else if (sendOrigin) {
           if (getCanSend(sendOrigin, entity)) components.Send.setDestination(entity);
-          else toast.error("Cannot send to this asteroid.");
+          else scene.notify("error", "Cannot send to this asteroid.");
         } else {
           components.SelectedRock.set({ value: entity });
           scene.camera.pan(coord, { duration: 500 });
