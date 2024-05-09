@@ -37,7 +37,7 @@ export const ModeSelector = () => {
                 <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Command} />
                 <div className="flex flex-col items-start">
                   <p>
-                    COMMAND CENTER <FaMagnifyingGlassMinus size={12} className="inline opacity-50" />
+                    OPEN COMMAND CENTER <FaMagnifyingGlassMinus size={12} className="inline opacity-50" />
                   </p>
                   {ownedByPlayer && <p className="block text-xs opacity-75">CREATE/MANAGE WITH FLEETS IN ORBIT</p>}
                   {!ownedByPlayer && <p className="block text-xs opacity-75">ENGAGE WITH FLEETS IN ORBIT</p>}
@@ -81,7 +81,7 @@ export const ModeSelector = () => {
                 <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Starmap} />
                 <div className="flex flex-col items-start">
                   <p>
-                    STARBELT <FaMagnifyingGlassMinus size={12} className="inline opacity-50" />
+                    OPEN STARBELT <FaMagnifyingGlassMinus size={12} className="inline opacity-50" />
                   </p>
                   <p className="block text-xs opacity-75">VIEW AND TRAVEL TO ASTEROIDS</p>
                 </div>
@@ -150,9 +150,9 @@ export const ModeSelector = () => {
                 <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Build} />
                 <div className="flex flex-col items-start">
                   <p>
-                    HOME <FaMagnifyingGlassPlus size={12} className="inline opacity-50" />
+                    RETURN HOME <FaMagnifyingGlassPlus size={12} className="inline opacity-50" />
                   </p>
-                  <p className="block text-xs opacity-75">RETURN TO HOME ASTEROID</p>
+                  <p className="block text-xs opacity-75">RETURN TO BUILDING</p>
                 </div>
               </div>
             </Button>

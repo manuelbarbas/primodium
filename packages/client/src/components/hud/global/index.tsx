@@ -2,6 +2,7 @@ import { HUD } from "@/components/core/HUD";
 import { AvailableObjectives } from "@/components/hud/global/AvailableObjectives";
 import { Dock } from "@/components/hud/global/Dock";
 import { ModeSelector } from "@/components/hud/global/ModeSelector";
+// import { ModeSelector } from "@/components/hud/global/_ModeSelector";
 import { Intro } from "@/components/hud/global/modals/Intro";
 import { FavoriteAsteroids } from "@/components/hud/global/FavoriteAsteroids";
 import { WarshipPopulation } from "@/components/hud/global/WarshipPopulation";
