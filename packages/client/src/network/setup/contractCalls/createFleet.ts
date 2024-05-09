@@ -8,6 +8,8 @@ import { getSystemId } from "src/util/encode";
 import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 import { toTransportableResourceArray, toUnitCountArray } from "src/util/send";
 import { Hex } from "viem";
+import { ampli } from "src/ampli";
+import { parseReceipt } from "@/util/analytics/parseReceipt";
 
 export const createFleet = async (
   mud: MUD,
@@ -28,8 +30,13 @@ export const createFleet = async (
       type: TransactionQueueType.CreateFleet,
       ...options,
     },
-    () => {
+    (receipt) => {
       makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.CreateFleet);
+
+      ampli.systemFleetCreateSystemPrimodiumCreateFleet({
+        spaceRock: asteroidEntity as Hex,
+        ...parseReceipt(receipt),
+      });
     }
   );
 };
