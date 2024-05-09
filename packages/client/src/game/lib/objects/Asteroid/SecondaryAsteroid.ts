@@ -48,11 +48,11 @@ export class SecondaryAsteroid extends BaseAsteroid {
     // Normalize the zoom level
     const normalizedZoom = (zoom - minZoom) / (maxZoom - minZoom);
 
-    if (normalizedZoom >= 0.1) {
+    if (normalizedZoom >= 0.15) {
       this.setLOD(0);
       return;
     }
-    if (normalizedZoom >= 0.05) {
+    if (normalizedZoom >= 0.1) {
       this.setLOD(1);
       return;
     }

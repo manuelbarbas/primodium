@@ -18,8 +18,10 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
   constructor(scene: Scene, coord: Coord) {
     super(scene.phaserScene, coord.x, coord.y);
     this.orbitRing = new Phaser.GameObjects.Graphics(scene.phaserScene)
-      .lineStyle(2, 0x808080, 0.25)
+      .lineStyle(2, 0x6ad9d9, 0.1)
       .strokeEllipse(0, 0, WIDTH, HEIGHT);
+
+    this.orbitRing.postFX.addShine();
 
     this.fleetsContainer = scene.phaserScene.add.container(0, 0);
     this.add([this.orbitRing, this.fleetsContainer]);
@@ -46,17 +48,17 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
           fleet.setRotationFrame(Phaser.Math.RadToDeg(angle));
           fleet.angle = Phaser.Math.RadToDeg(angle) - fleet.getRotationFrameOffset();
           //TODO: TRAIL PARTICLES
-          // fleet.particles.setActive(true).setVisible(true).resume();
+          fleet.particles.setActive(true).setVisible(true).resume();
 
-          // fleet.particles.angle = Phaser.Math.RadToDeg(angle);
-          // fleet.particles.setPosition(fleet.getPixelCoord().x, fleet.getPixelCoord().y);
-          // const dx = coord.x - fleet.getPixelCoord().x;
-          // const dy = coord.y - fleet.getPixelCoord().y;
-          // const magnitude = Math.sqrt(dx * dx + dy * dy);
-          // const ux = dx / magnitude;
-          // const uy = dy / magnitude;
-          // const gravityStrength = 10; // Adjust this value to change the strength of the gravity
-          // fleet.particles.setParticleGravity(-ux * gravityStrength, uy * gravityStrength);
+          fleet.particles.angle = Phaser.Math.RadToDeg(angle);
+          fleet.particles.setPosition(fleet.getPixelCoord().x, fleet.getPixelCoord().y);
+          const dx = coord.x - fleet.getPixelCoord().x;
+          const dy = coord.y - fleet.getPixelCoord().y;
+          const magnitude = Math.sqrt(dx * dx + dy * dy);
+          const ux = dx / magnitude;
+          const uy = dy / magnitude;
+          const gravityStrength = 10; // Adjust this value to change the strength of the gravity
+          fleet.particles.setParticleGravity(-ux * gravityStrength, uy * gravityStrength);
         });
       },
     });
@@ -94,7 +96,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     fleet.getOrbitRing()?.removeFleet(fleet);
     fleet.setOrbitRingRef(this);
     fleet.setFlip(false, false);
-    fleet.setScale(0.5);
+    fleet.setScale(1);
     this.fleetsContainer.add(fleet);
 
     if (this.inOrbitView) this.setOrbitView();

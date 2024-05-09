@@ -43,8 +43,8 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
 
     this.animationTween = this.scene.add.tween({
       targets: [this.asteroidSprite],
-      y: "-=5",
-      duration: 2 * 1000,
+      y: "-=6",
+      duration: 3 * 1000,
       repeat: -1,
       yoyo: true,
     });

@@ -5,6 +5,7 @@ import { createObjectApi } from "@/game/api/objects";
 import { world } from "src/network/world";
 import { renderAsteroid } from "@/game/lib/render/renderAsteroid";
 import { renderFleet } from "@/game/lib/render/renderFleet";
+import { renderShardAsteroid } from "@/game/lib/render/renderShardAsteroid";
 
 export const renderOverview = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -27,7 +28,9 @@ export const renderOverview = (scene: Scene) => {
 
     if (!entity) return;
 
-    const asteroid = renderAsteroid({ scene, entity });
+    const asteroid = components.ShardAsteroid.has(entity)
+      ? renderShardAsteroid({ scene, entity })
+      : renderAsteroid({ scene, entity });
 
     for (const fleet of runQuery([HasValue(components.FleetMovement, { destination: entity })])) {
       const fleetObject = renderFleet({ scene, entity: fleet });

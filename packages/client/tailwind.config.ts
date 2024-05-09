@@ -50,7 +50,7 @@ export default {
           accent: colors.cyan[400],
           neutral: colors.slate[900],
           "base-100": colors.slate[800],
-          info: colors.indigo[700],
+          info: colors.indigo[800],
           success: colors.emerald[600],
           warning: colors.yellow[600],
           error: "#A8375D",

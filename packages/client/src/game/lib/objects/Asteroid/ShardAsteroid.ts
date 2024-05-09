@@ -9,7 +9,7 @@ export class ShardAsteroid extends BaseAsteroid {
   constructor(args: { id: Entity; scene: Scene; coord: Coord }) {
     const { id, scene, coord } = args;
     super({ id, scene, coord, sprite: Sprites.Shard, outlineSprite: Sprites.AegisDrone });
-    this.asteroidSprite.preFX?.addShine();
+    this.asteroidSprite.postFX?.addShine();
     this.asteroidLabel.setProperties({
       emblemSprite: Sprites.ShardIcon,
       nameLabel: "Shard",
@@ -17,6 +17,7 @@ export class ShardAsteroid extends BaseAsteroid {
       ownerLabel: "shard",
     });
     this.setDepth(DepthLayers.Marker);
+    this.setScale(0.75);
   }
 
   spawn() {
@@ -34,7 +35,7 @@ export class ShardAsteroid extends BaseAsteroid {
     // Normalize the zoom level
     const normalizedZoom = (zoom - minZoom) / (maxZoom - minZoom);
 
-    if (normalizedZoom >= 0.1) {
+    if (normalizedZoom >= 0.15) {
       this.setLOD(0);
       this.asteroidLabel.setProperties({
         emblemSprite: Sprites.EMPTY,

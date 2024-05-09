@@ -17,8 +17,7 @@ export const renderShardAsteroid = (args: {
   const asteroidData = components.ShardAsteroid.get(entity);
   if (!asteroidData) throw new Error("Shard asteroid data not found");
 
-  const spriteScale = 0.4;
-  const asteroid = new ShardAsteroid({ id: entity, scene, coord }).setScale(spriteScale);
+  const asteroid = new ShardAsteroid({ id: entity, scene, coord });
 
   asteroid.getAsteroidLabel().setProperties({
     nameLabel: entityToRockName(entity),

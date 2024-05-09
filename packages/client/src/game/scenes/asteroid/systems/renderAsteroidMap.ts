@@ -57,7 +57,8 @@ export const renderAsteroidMap = (scene: Scene) => {
 
     if (!bounds) return;
 
-    scene.camera.phaserCamera.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
+    //TODO: FIX WIERD JUMP
+    // scene.camera.phaserCamera.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
   });
 
   defineComponentSystem(systemsWorld, components.Level, ({ entity }) => {

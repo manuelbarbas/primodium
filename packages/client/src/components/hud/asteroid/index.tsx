@@ -1,5 +1,4 @@
 import { HUD } from "@/components/core/HUD";
-import { AsteroidLoading } from "@/components/hud/asteroid/AsteroidLoading";
 import { Blueprints } from "@/components/hud/asteroid/blueprints/Blueprints";
 import { Inventory } from "@/components/hud/asteroid/inventory/Inventory";
 import { BlueprintInfoMarker } from "@/components/hud/asteroid/markers/BlueprintInfoMarker";
@@ -31,7 +30,6 @@ export const AsteroidHUD = memo(() => {
           <Blueprints />
         </HUD.Left>
       </HUD>
-      <AsteroidLoading />
     </div>
   );
 });
