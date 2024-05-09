@@ -147,6 +147,7 @@ export const EntityTypeToAnimations: Record<string, (Animations | undefined)[]> 
   [EntityType.Market]: [Animations.Market1],
   [EntityType.Shipyard]: [Animations.Shipyard1],
   [EntityType.DroidBase]: [Animations.DroidBase],
+  [EntityType.WormholeBase]: [Animations.WormholebaseIdle1],
 };
 
 export const MaxLevelToTilemap: Record<number, Tilemaps> = {
@@ -191,6 +192,18 @@ export const EntityTypeSizeToSecondaryAsteroidSprites: Record<Entity, Record<Ast
     Small: Sprites.MotherlodeTitaniumSmall,
     Medium: Sprites.MotherlodeTitaniumMedium,
     Large: Sprites.MotherlodeTitaniumLarge,
+  },
+  [EntityType.Common]: {
+    Micro: Sprites.CommonMicro,
+    Small: Sprites.CommonSmall,
+    Medium: Sprites.CommonSmall,
+    Large: Sprites.CommonSmall,
+  },
+  [EntityType.Wormhole]: {
+    Micro: Sprites.Wormhole,
+    Small: Sprites.Wormhole,
+    Medium: Sprites.Wormhole,
+    Large: Sprites.Wormhole,
   },
 };
 

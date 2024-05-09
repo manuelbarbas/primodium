@@ -89,6 +89,15 @@ export const renderBuilding = (scene: Scene) => {
         }
       }
 
+      if (buildingType === EntityType.WormholeBase) {
+        const wormholeEntity = hashEntities(activeRock, EntityType.Wormhole);
+        components.Position.remove(wormholeEntity);
+        components.BuildingType.remove(wormholeEntity);
+        components.Level.remove(wormholeEntity);
+        components.IsActive.remove(wormholeEntity);
+        components.OwnedBy.remove(wormholeEntity);
+      }
+
       const origin = components.Position.get(entity);
       if (!origin) return;
       const tilePosition = getBuildingBottomLeft(origin, buildingType);

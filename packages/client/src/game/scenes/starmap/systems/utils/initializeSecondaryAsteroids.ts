@@ -35,6 +35,26 @@ const spawnDroidBase = (asteroidEntity: Entity) => {
   );
 };
 
+const spawnWormholeBase = (asteroidEntity: Entity) => {
+  const mainBaseCoord = { x: 21, y: 14 };
+  const wormholeBaseEntity = hashEntities(asteroidEntity, EntityType.WormholeBase);
+  components.Position.set(
+    { ...emptyData, x: mainBaseCoord.x, y: mainBaseCoord.y, parentEntity: asteroidEntity },
+    wormholeBaseEntity
+  );
+  components.BuildingType.set({ ...emptyData, value: EntityType.WormholeBase }, wormholeBaseEntity);
+  components.Level.set({ ...emptyData, value: 1n }, wormholeBaseEntity);
+  components.IsActive.set({ ...emptyData, value: true }, wormholeBaseEntity);
+  components.OwnedBy.set({ ...emptyData, value: asteroidEntity }, wormholeBaseEntity);
+
+  if (components.P_Blueprint.has(EntityType.WormholeBase)) return;
+
+  components.P_Blueprint.set(
+    { ...emptyData, value: components.P_Blueprint.get(EntityType.MainBase)?.value ?? [] },
+    EntityType.WormholeBase
+  );
+};
+
 export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord) {
   const config = components.P_GameConfig.get();
   const wormholeAsteroidConfig = components.P_WormholeAsteroidConfig.get();
@@ -60,7 +80,8 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
     if (!wormholeAsteroid && !isSecondaryAsteroid(asteroidEntity, Number(config.asteroidChanceInv), wormholeAsteroid))
       continue;
 
-    if (!components.OwnedBy.get(asteroidEntity)) spawnDroidBase(asteroidEntity);
+    if (!components.OwnedBy.get(asteroidEntity))
+      wormholeAsteroid ? spawnWormholeBase(asteroidEntity) : spawnDroidBase(asteroidEntity);
 
     world.registerEntity({ id: asteroidEntity });
     components.ReversePosition.setWithKeys({ entity: asteroidEntity as string, ...emptyData }, asteroidPosition);

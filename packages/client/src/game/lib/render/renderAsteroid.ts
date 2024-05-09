@@ -31,6 +31,7 @@ export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coo
   const level = components.Level.get(entity)?.value;
 
   const spriteScale = 0.34 + 0.05 * Number(asteroidData.maxLevel);
+
   let asteroid: BaseAsteroid;
   if (!asteroidData?.spawnsSecondary)
     asteroid = new SecondaryAsteroid({

@@ -5,7 +5,7 @@ export const starmapSceneConfig: SceneConfig = {
   key: Scenes.Starmap,
   camera: {
     minZoom: 0.125,
-    maxZoom: 1.25,
+    maxZoom: 1.4,
     defaultZoom: 0.75,
     pinchSpeed: 0.01,
     wheelSpeed: 2,

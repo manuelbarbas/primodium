@@ -68,7 +68,7 @@ export const ModeSelector = () => {
         {currentMode === Mode.CommandCenter && (
           <>
             <Button
-              variant="info"
+              variant="secondary"
               size="md"
               keybind="NextHotbar"
               onClick={() => {
@@ -136,7 +136,7 @@ export const ModeSelector = () => {
         {currentMode === Mode.Starmap && (
           <>
             <Button
-              variant="info"
+              variant="error"
               size="md"
               keybind="NextHotbar"
               onClick={() => {
