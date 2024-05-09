@@ -6,7 +6,7 @@ import { MUD } from "src/network/types";
 import { getSystemId } from "src/util/encode";
 import { Hex } from "viem";
 import { ampli } from "src/ampli";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const forfeit = async (mud: MUD) => {
   const query = [HasValue(components.OwnedBy, { value: mud.playerAccount.entity }), Has(components.Asteroid)];

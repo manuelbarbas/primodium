@@ -7,7 +7,7 @@ import { getSystemId, hashEntities } from "src/util/encode";
 import { toTransportableResourceArray, toUnitCountArray } from "src/util/send";
 import { Hex } from "viem";
 import { ampli } from "src/ampli";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 const clearId = "clear" as Entity;
 

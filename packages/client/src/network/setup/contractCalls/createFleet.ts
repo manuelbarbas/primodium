@@ -9,7 +9,7 @@ import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimab
 import { toTransportableResourceArray, toUnitCountArray } from "src/util/send";
 import { Hex } from "viem";
 import { ampli } from "src/ampli";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const createFleet = async (
   mud: MUD,

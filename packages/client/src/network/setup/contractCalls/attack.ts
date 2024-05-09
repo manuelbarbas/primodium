@@ -9,7 +9,7 @@ import { getSystemId, hashEntities } from "src/util/encode";
 import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 import { Hex } from "viem";
 import { ampli } from "src/ampli";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const attack = async (mud: MUD, entity: Entity, target: Entity) => {
   const targetIsAsteroid = components.Asteroid.has(target);

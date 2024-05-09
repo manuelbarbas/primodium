@@ -7,7 +7,7 @@ import { getSystemId } from "src/util/encode";
 import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 import { Hex } from "viem";
 import { ampli } from "src/ampli";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const setFleetStance = async (mud: MUD, fleet: Entity, stance: EFleetStance, target: Entity) => {
   const objective =

@@ -6,7 +6,7 @@ import { MUD } from "src/network/types";
 import { ResourceEntityLookup, TransactionQueueType } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
 import { ampli } from "src/ampli";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 import { bigintToNumber } from "src/util/number";
 
 export const payForColonySlot = async (mud: MUD, shipyardEntity: Entity, deltas: Record<Entity, bigint>) => {

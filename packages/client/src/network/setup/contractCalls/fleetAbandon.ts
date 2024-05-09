@@ -5,7 +5,7 @@ import { TransactionQueueType } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
 import { Hex } from "viem";
 import { ampli } from "src/ampli";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const abandonFleet = async (mud: MUD, fleet: Entity) => {
   await execute(
