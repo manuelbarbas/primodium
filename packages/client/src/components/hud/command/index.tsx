@@ -13,6 +13,7 @@ import { TransferContextProvider } from "@/hooks/providers/TransferProvider";
 export const CommandCenterHUD = memo(() => {
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
   const inCommandMode = components.SelectedMode.use()?.value === Mode.CommandCenter;
+  const selectedRock = components.SelectedRock.use()?.value;
 
   if (!inCommandMode) return null;
 
@@ -29,7 +30,7 @@ export const CommandCenterHUD = memo(() => {
         </Tabs.Pane>
         <Tabs.Pane index={2} fragment>
           <HUD.Center>
-            <TransferContextProvider>
+            <TransferContextProvider initialFrom={selectedRock}>
               <Transfer />
             </TransferContextProvider>
           </HUD.Center>
