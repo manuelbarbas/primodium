@@ -7,6 +7,7 @@ import { ResourceEntityLookup, TransactionQueueType } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
 import { ampli } from "src/ampli";
 import { parseReceipt } from "@/util/analytics/parseReceipt";
+import { bigintToNumber } from "src/util/number";
 
 export const payForColonySlot = async (mud: MUD, shipyardEntity: Entity, deltas: Record<Entity, bigint>) => {
   const resources = components.P_ColonySlotsConfig.get()?.resources;
@@ -28,7 +29,7 @@ export const payForColonySlot = async (mud: MUD, shipyardEntity: Entity, deltas:
     (receipt) => {
       ampli.systemColonySystemPrimodiumPayForMaxColonySlots({
         shipyard: shipyardEntity,
-        resourceCounts,
+        resourceCounts: resourceCounts.map((resourceCount) => bigintToNumber(resourceCount)),
         ...parseReceipt(receipt),
       });
     }
