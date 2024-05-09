@@ -2849,6 +2849,552 @@ export interface SystemTrainUnitsProperties {
   unitName: string;
 }
 
+export interface SystemTransferSystemPrimodiumTransferResourcesFromAsteroidToFleetProperties {
+  /**
+   * Corresponds to the `resourceTypes` property in the same order.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | number |
+   */
+  resourceCounts: number[];
+  /**
+   * A space rock entity represented by its Hex string.
+   */
+  spaceRock: string;
+  /**
+   * A space rock entity represented by its Hex string, paired with `spaceRock` as a target for a specific action.
+   */
+  spaceRockTo: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemTransferSystemPrimodiumTransferResourcesFromFleetToAsteroidProperties {
+  /**
+   * Corresponds to the `resourceTypes` property in the same order.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | number |
+   */
+  resourceCounts: number[];
+  /**
+   * A space rock entity represented by its Hex string.
+   */
+  spaceRock: string;
+  /**
+   * A space rock entity represented by its Hex string, paired with `spaceRock` as a target for a specific action.
+   */
+  spaceRockTo: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemTransferSystemPrimodiumTransferResourcesFromFleetToFleetProperties {
+  /**
+   * Corresponds to the `resourceTypes` property in the same order.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | number |
+   */
+  resourceCounts: number[];
+  /**
+   * A space rock entity represented by its Hex string.
+   */
+  spaceRock: string;
+  /**
+   * A space rock entity represented by its Hex string, paired with `spaceRock` as a target for a specific action.
+   */
+  spaceRockTo: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemTransferSystemPrimodiumTransferUnitsAndResourcesFromAsteroidToFleetProperties {
+  /**
+   * Corresponds to the `resourceTypes` property in the same order.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | number |
+   */
+  resourceCounts: number[];
+  /**
+   * A space rock entity represented by its Hex string.
+   */
+  spaceRock: string;
+  /**
+   * A space rock entity represented by its Hex string, paired with `spaceRock` as a target for a specific action.
+   */
+  spaceRockTo: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+  /**
+   * Corresponds to the `unitTypes` property in the same order.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | number |
+   */
+  unitCounts: number[];
+}
+
+export interface SystemTransferSystemPrimodiumTransferUnitsAndResourcesFromFleetToAsteroidProperties {
+  /**
+   * Corresponds to the `resourceTypes` property in the same order.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | number |
+   */
+  resourceCounts: number[];
+  /**
+   * A space rock entity represented by its Hex string.
+   */
+  spaceRock: string;
+  /**
+   * A space rock entity represented by its Hex string, paired with `spaceRock` as a target for a specific action.
+   */
+  spaceRockTo: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+  /**
+   * Corresponds to the `unitTypes` property in the same order.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | number |
+   */
+  unitCounts: number[];
+}
+
+export interface SystemTransferSystemPrimodiumTransferUnitsAndResourcesFromFleetToFleetProperties {
+  /**
+   * Corresponds to the `resourceTypes` property in the same order.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | number |
+   */
+  resourceCounts: number[];
+  /**
+   * A space rock entity represented by its Hex string.
+   */
+  spaceRock: string;
+  /**
+   * A space rock entity represented by its Hex string, paired with `spaceRock` as a target for a specific action.
+   */
+  spaceRockTo: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+  /**
+   * Corresponds to the `unitTypes` property in the same order.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | number |
+   */
+  unitCounts: number[];
+}
+
+export interface SystemTransferSystemPrimodiumTransferUnitsFromAsteroidToFleetProperties {
+  /**
+   * A space rock entity represented by its Hex string.
+   */
+  spaceRock: string;
+  /**
+   * A space rock entity represented by its Hex string, paired with `spaceRock` as a target for a specific action.
+   */
+  spaceRockTo: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+  /**
+   * Corresponds to the `unitTypes` property in the same order.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | number |
+   */
+  unitCounts: number[];
+}
+
+export interface SystemTransferSystemPrimodiumTransferUnitsFromFleetToAsteroidProperties {
+  /**
+   * A space rock entity represented by its Hex string.
+   */
+  spaceRock: string;
+  /**
+   * A space rock entity represented by its Hex string, paired with `spaceRock` as a target for a specific action.
+   */
+  spaceRockTo: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+  /**
+   * Corresponds to the `unitTypes` property in the same order.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | number |
+   */
+  unitCounts: number[];
+}
+
+export interface SystemTransferSystemPrimodiumTransferUnitsFromFleetToFleetProperties {
+  /**
+   * A space rock entity represented by its Hex string.
+   */
+  spaceRock: string;
+  /**
+   * A space rock entity represented by its Hex string, paired with `spaceRock` as a target for a specific action.
+   */
+  spaceRockTo: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+  /**
+   * Corresponds to the `unitTypes` property in the same order.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | number |
+   */
+  unitCounts: number[];
+}
+
 export interface SystemUpdateOrderProperties {
   /**
    * Count of a resource, currently only used in Marketplace events. Logged here with identical scaling displayed in the frontend.
@@ -3624,6 +4170,84 @@ export class SystemTrainUnits implements BaseEvent {
   event_type = "system.TrainUnits";
 
   constructor(public event_properties: SystemTrainUnitsProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemTransferSystemPrimodiumTransferResourcesFromAsteroidToFleet implements BaseEvent {
+  event_type = "system.TransferSystem.Primodium__transferResourcesFromAsteroidToFleet";
+
+  constructor(public event_properties: SystemTransferSystemPrimodiumTransferResourcesFromAsteroidToFleetProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemTransferSystemPrimodiumTransferResourcesFromFleetToAsteroid implements BaseEvent {
+  event_type = "system.TransferSystem.Primodium__transferResourcesFromFleetToAsteroid";
+
+  constructor(public event_properties: SystemTransferSystemPrimodiumTransferResourcesFromFleetToAsteroidProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemTransferSystemPrimodiumTransferResourcesFromFleetToFleet implements BaseEvent {
+  event_type = "system.TransferSystem.Primodium__transferResourcesFromFleetToFleet";
+
+  constructor(public event_properties: SystemTransferSystemPrimodiumTransferResourcesFromFleetToFleetProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemTransferSystemPrimodiumTransferUnitsAndResourcesFromAsteroidToFleet implements BaseEvent {
+  event_type = "system.TransferSystem.Primodium__transferUnitsAndResourcesFromAsteroidToFleet";
+
+  constructor(
+    public event_properties: SystemTransferSystemPrimodiumTransferUnitsAndResourcesFromAsteroidToFleetProperties
+  ) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemTransferSystemPrimodiumTransferUnitsAndResourcesFromFleetToAsteroid implements BaseEvent {
+  event_type = "system.TransferSystem.Primodium__transferUnitsAndResourcesFromFleetToAsteroid";
+
+  constructor(
+    public event_properties: SystemTransferSystemPrimodiumTransferUnitsAndResourcesFromFleetToAsteroidProperties
+  ) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemTransferSystemPrimodiumTransferUnitsAndResourcesFromFleetToFleet implements BaseEvent {
+  event_type = "system.TransferSystem.Primodium__transferUnitsAndResourcesFromFleetToFleet";
+
+  constructor(
+    public event_properties: SystemTransferSystemPrimodiumTransferUnitsAndResourcesFromFleetToFleetProperties
+  ) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemTransferSystemPrimodiumTransferUnitsFromAsteroidToFleet implements BaseEvent {
+  event_type = "system.TransferSystem.Primodium__transferUnitsFromAsteroidToFleet";
+
+  constructor(public event_properties: SystemTransferSystemPrimodiumTransferUnitsFromAsteroidToFleetProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemTransferSystemPrimodiumTransferUnitsFromFleetToAsteroid implements BaseEvent {
+  event_type = "system.TransferSystem.Primodium__transferUnitsFromFleetToAsteroid";
+
+  constructor(public event_properties: SystemTransferSystemPrimodiumTransferUnitsFromFleetToAsteroidProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemTransferSystemPrimodiumTransferUnitsFromFleetToFleet implements BaseEvent {
+  event_type = "system.TransferSystem.Primodium__transferUnitsFromFleetToFleet";
+
+  constructor(public event_properties: SystemTransferSystemPrimodiumTransferUnitsFromFleetToFleetProperties) {
     this.event_properties = event_properties;
   }
 }
@@ -4667,6 +5291,159 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemTrainUnits(properties), options);
+  }
+
+  /**
+   * system.TransferSystem.Primodium__transferResourcesFromAsteroidToFleet
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.TransferSystem.Primodium__transferResourcesFromAsteroidToFleet)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. resourceCounts)
+   * @param options Amplitude event options.
+   */
+  systemTransferSystemPrimodiumTransferResourcesFromAsteroidToFleet(
+    properties: SystemTransferSystemPrimodiumTransferResourcesFromAsteroidToFleetProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemTransferSystemPrimodiumTransferResourcesFromAsteroidToFleet(properties), options);
+  }
+
+  /**
+   * system.TransferSystem.Primodium__transferResourcesFromFleetToAsteroid
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.TransferSystem.Primodium__transferResourcesFromFleetToAsteroid)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. resourceCounts)
+   * @param options Amplitude event options.
+   */
+  systemTransferSystemPrimodiumTransferResourcesFromFleetToAsteroid(
+    properties: SystemTransferSystemPrimodiumTransferResourcesFromFleetToAsteroidProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemTransferSystemPrimodiumTransferResourcesFromFleetToAsteroid(properties), options);
+  }
+
+  /**
+   * system.TransferSystem.Primodium__transferResourcesFromFleetToFleet
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.TransferSystem.Primodium__transferResourcesFromFleetToFleet)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. resourceCounts)
+   * @param options Amplitude event options.
+   */
+  systemTransferSystemPrimodiumTransferResourcesFromFleetToFleet(
+    properties: SystemTransferSystemPrimodiumTransferResourcesFromFleetToFleetProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemTransferSystemPrimodiumTransferResourcesFromFleetToFleet(properties), options);
+  }
+
+  /**
+   * system.TransferSystem.Primodium__transferUnitsAndResourcesFromAsteroidToFleet
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.TransferSystem.Primodium__transferUnitsAndResourcesFromAsteroidToFleet)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. resourceCounts)
+   * @param options Amplitude event options.
+   */
+  systemTransferSystemPrimodiumTransferUnitsAndResourcesFromAsteroidToFleet(
+    properties: SystemTransferSystemPrimodiumTransferUnitsAndResourcesFromAsteroidToFleetProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemTransferSystemPrimodiumTransferUnitsAndResourcesFromAsteroidToFleet(properties), options);
+  }
+
+  /**
+   * system.TransferSystem.Primodium__transferUnitsAndResourcesFromFleetToAsteroid
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.TransferSystem.Primodium__transferUnitsAndResourcesFromFleetToAsteroid)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. resourceCounts)
+   * @param options Amplitude event options.
+   */
+  systemTransferSystemPrimodiumTransferUnitsAndResourcesFromFleetToAsteroid(
+    properties: SystemTransferSystemPrimodiumTransferUnitsAndResourcesFromFleetToAsteroidProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemTransferSystemPrimodiumTransferUnitsAndResourcesFromFleetToAsteroid(properties), options);
+  }
+
+  /**
+   * system.TransferSystem.Primodium__transferUnitsAndResourcesFromFleetToFleet
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.TransferSystem.Primodium__transferUnitsAndResourcesFromFleetToFleet)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. resourceCounts)
+   * @param options Amplitude event options.
+   */
+  systemTransferSystemPrimodiumTransferUnitsAndResourcesFromFleetToFleet(
+    properties: SystemTransferSystemPrimodiumTransferUnitsAndResourcesFromFleetToFleetProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemTransferSystemPrimodiumTransferUnitsAndResourcesFromFleetToFleet(properties), options);
+  }
+
+  /**
+   * system.TransferSystem.Primodium__transferUnitsFromAsteroidToFleet
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.TransferSystem.Primodium__transferUnitsFromAsteroidToFleet)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. spaceRock)
+   * @param options Amplitude event options.
+   */
+  systemTransferSystemPrimodiumTransferUnitsFromAsteroidToFleet(
+    properties: SystemTransferSystemPrimodiumTransferUnitsFromAsteroidToFleetProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemTransferSystemPrimodiumTransferUnitsFromAsteroidToFleet(properties), options);
+  }
+
+  /**
+   * system.TransferSystem.Primodium__transferUnitsFromFleetToAsteroid
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.TransferSystem.Primodium__transferUnitsFromFleetToAsteroid)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. spaceRock)
+   * @param options Amplitude event options.
+   */
+  systemTransferSystemPrimodiumTransferUnitsFromFleetToAsteroid(
+    properties: SystemTransferSystemPrimodiumTransferUnitsFromFleetToAsteroidProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemTransferSystemPrimodiumTransferUnitsFromFleetToAsteroid(properties), options);
+  }
+
+  /**
+   * system.TransferSystem.Primodium__transferUnitsFromFleetToFleet
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.TransferSystem.Primodium__transferUnitsFromFleetToFleet)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. spaceRock)
+   * @param options Amplitude event options.
+   */
+  systemTransferSystemPrimodiumTransferUnitsFromFleetToFleet(
+    properties: SystemTransferSystemPrimodiumTransferUnitsFromFleetToFleetProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemTransferSystemPrimodiumTransferUnitsFromFleetToFleet(properties), options);
   }
 
   /**

@@ -8,6 +8,9 @@ import { getSystemId } from "src/util/encode";
 import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 import { toTransportableResourceArray, toUnitCountArray } from "src/util/send";
 import { Hex } from "viem";
+import { ampli } from "src/ampli";
+import { parseReceipt } from "@/util/analytics/parseReceipt";
+import { bigintToNumber } from "src/util/number";
 
 export const transfer = async (mud: MUD, from: Entity, to: Entity, deltas: Map<Entity, bigint>) => {
   const fromIsAsteroid = components.Asteroid.has(from);
@@ -44,7 +47,24 @@ export const transfer = async (mud: MUD, from: Entity, to: Entity, deltas: Map<E
         withSession: true,
       },
       metadata,
-      () => activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, claimableObjective)
+      (receipt) => {
+        activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, claimableObjective);
+
+        const commonProperties = {
+          spaceRock: from as Hex,
+          spaceRockTo: to as Hex,
+          unitCounts: unitCounts.map((unitCount) => bigintToNumber(unitCount)),
+          ...parseReceipt(receipt),
+        };
+
+        if (fromIsAsteroid) {
+          ampli.systemTransferSystemPrimodiumTransferUnitsFromAsteroidToFleet(commonProperties);
+        } else if (toIsAsteroid) {
+          ampli.systemTransferSystemPrimodiumTransferUnitsFromFleetToAsteroid(commonProperties);
+        } else {
+          ampli.systemTransferSystemPrimodiumTransferUnitsFromFleetToFleet(commonProperties);
+        }
+      }
     );
   } else if (totalUnits == 0n) {
     const functionName = fromIsAsteroid
@@ -61,7 +81,24 @@ export const transfer = async (mud: MUD, from: Entity, to: Entity, deltas: Map<E
         withSession: true,
       },
       metadata,
-      () => activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, claimableObjective)
+      (receipt) => {
+        activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, claimableObjective);
+
+        const commonProperties = {
+          spaceRock: from as Hex,
+          spaceRockTo: to as Hex,
+          resourceCounts: resourceCounts.map((resourceCount) => bigintToNumber(resourceCount)),
+          ...parseReceipt(receipt),
+        };
+
+        if (fromIsAsteroid) {
+          ampli.systemTransferSystemPrimodiumTransferResourcesFromAsteroidToFleet(commonProperties);
+        } else if (toIsAsteroid) {
+          ampli.systemTransferSystemPrimodiumTransferResourcesFromFleetToAsteroid(commonProperties);
+        } else {
+          ampli.systemTransferSystemPrimodiumTransferResourcesFromFleetToFleet(commonProperties);
+        }
+      }
     );
   } else {
     const functionName = fromIsAsteroid
@@ -78,7 +115,25 @@ export const transfer = async (mud: MUD, from: Entity, to: Entity, deltas: Map<E
         withSession: true,
       },
       metadata,
-      () => activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, claimableObjective)
+      (receipt) => {
+        activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, claimableObjective);
+
+        const commonProperties = {
+          spaceRock: from as Hex,
+          spaceRockTo: to as Hex,
+          unitCounts: unitCounts.map((unitCount) => bigintToNumber(unitCount)),
+          resourceCounts: resourceCounts.map((resourceCount) => bigintToNumber(resourceCount)),
+          ...parseReceipt(receipt),
+        };
+
+        if (fromIsAsteroid) {
+          ampli.systemTransferSystemPrimodiumTransferUnitsAndResourcesFromAsteroidToFleet(commonProperties);
+        } else if (toIsAsteroid) {
+          ampli.systemTransferSystemPrimodiumTransferUnitsAndResourcesFromFleetToAsteroid(commonProperties);
+        } else {
+          ampli.systemTransferSystemPrimodiumTransferUnitsAndResourcesFromFleetToFleet(commonProperties);
+        }
+      }
     );
   }
 };
