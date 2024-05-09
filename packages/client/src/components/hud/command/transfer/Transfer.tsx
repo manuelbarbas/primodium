@@ -20,29 +20,23 @@ import { getFleetStatsFromUnits } from "src/util/unit";
 import { ResourceIcon } from "../../global/modals/fleets/ResourceIcon";
 import { TransferConfirm } from "./TransferConfirm";
 import { TransferFrom } from "./TransferFrom";
-import { TransferSelect } from "./TransferSelect";
 import { TransferSwap } from "./TransferSwap";
 import { TransferTo } from "./TransferTo";
+import { Card } from "@/components/core/Card";
+import { useTransfer } from "@/hooks/providers/TransferProvider";
 
 type To = Entity | "newFleet";
-const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = ({
-  from: initialFrom,
-  to: initialTo,
-}) => {
-  const [from, setFrom] = useState(initialFrom);
-  const [to, setTo] = useState<Entity | undefined | "newFleet">(initialTo);
-
-  const [deltas, setDeltas] = useState<Map<Entity, bigint>>(new Map());
+const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = () => {
+  const { from, to, deltas, setDeltas, setFrom, setTo, dragging, setDragging } = useTransfer();
 
   const selectedRock = components.ActiveRock.use()?.value;
   if (!selectedRock) throw new Error("No selected rock");
-  const [dragging, setDragging] = useState<{ entity: Entity; count: bigint } | null>(null);
   const [dragLocation, setDragLocation] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [hoveringArea, setHoveringArea] = useState<"from" | "to" | null>(null);
 
   useEffect(() => {
     setDeltas(new Map());
-    if (to === "newFleet" && !from) setTo(undefined);
+    if (to === "newFleet" && !from) setTo(null);
   }, [from, to]);
 
   // Resources
@@ -60,7 +54,7 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
     return acc;
   }, new Map<Entity, bigint>());
 
-  const toEntity = to === "newFleet" || to === undefined ? singletonEntity : to;
+  const toEntity = to === "newFleet" || to === null ? singletonEntity : to;
 
   const fromOwner = usePlayerOwner(from ?? singletonEntity);
   const toOwner = usePlayerOwner(toEntity ?? singletonEntity);
@@ -78,7 +72,7 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
   }, new Map<Entity, bigint>());
 
   // Units
-  const fromInitialUnitCounts = useUnitCounts(from);
+  const fromInitialUnitCounts = useUnitCounts(from ?? undefined);
   const toInitialUnitCounts = useUnitCounts(toEntity);
 
   const fromUnitCounts = useMemo(() => {
@@ -119,15 +113,15 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
         setDeltas(newMap);
         return;
       }
-      const toIsFleet = to === "newFleet" || !!components.IsFleet.get(to)?.value;
+      const toIsFleet = to === "newFleet" || !!components.IsFleet.get(to ?? undefined)?.value;
 
       const resourceCount = toIsFleet
         ? [...toResourceCounts.entries()].reduce((acc, [, count]) => acc + count, 0n)
         : toResourceCounts.get(dragging.entity) ?? 0n;
 
-      const fleetOwner = (toIsFleet && to !== "newFleet" ? components.OwnedBy.get(to)?.value : undefined) as
-        | Entity
-        | undefined;
+      const fleetOwner = (
+        toIsFleet && to !== "newFleet" ? components.OwnedBy.get(to ?? undefined)?.value : undefined
+      ) as Entity | undefined;
       const resourceStorage = toIsFleet
         ? getFleetStatsFromUnits(toUnitCounts, fleetOwner).cargo
         : getFullResourceCount(dragging.entity, to as Entity).resourceStorage;
@@ -194,9 +188,10 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
   }, [handleKeyDown, stopDragging]);
 
   return (
-    <TransactionQueueMask queueItemId={"TRANSFER" as Entity} className="w-full h-full flex flex-col gap-2 p-2">
+    <div className="w-[60rem] h-[40rem] flex flex-col gap-4">
+      <p>Transfer Units and Resources</p>
       {dragging && <Dragging {...dragging} location={dragLocation} />}
-      <div className="grid grid-cols-[1fr_300px_1fr]  w-full h-full">
+      <div className="relative grid grid-cols-[1fr_1fr] gap-60 h-full w-full">
         {/*Left Side */}
         {from ? (
           <TransferFrom
@@ -207,35 +202,13 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
             resourceCounts={fromResourceCounts}
             deltas={deltas}
             setDragging={initDragging}
-            remove={() => setFrom(undefined)}
+            remove={() => setFrom(null)}
           />
         ) : (
-          <TransferSelect
-            activeEntity={to}
-            setEntity={(entity) => entity !== "newFleet" && setFrom(entity)}
-            hideNotOwned
-          />
+          <Card className="w-full h-full">
+            <p className="h-full w-full grid place-items-center opacity-80 text-xs">Select a fleet or asteroid</p>
+          </Card>
         )}
-
-        {/*Middle*/}
-        <div className="grid grid-rows-3 h-full w-full place-items-center">
-          <div className="grid place-items-center">
-            <div className="w-0 h-0 border-l-[10px] border-l-transparent animate-pulse border-r-[10px] border-r-transparent border-b-[15px] border-b-secondary rotate-90"></div>
-          </div>
-          <TransferSwap
-            from={from}
-            to={to}
-            onClick={(newFrom, newTo) => {
-              setDeltas(new Map());
-              setDeltas(new Map());
-              setFrom(newFrom);
-              setTo(newTo);
-            }}
-          />
-          <div className="grid place-items-center">
-            <div className="w-0 h-0 border-l-[10px] border-l-transparent animate-pulse border-r-[10px] border-r-transparent border-b-[15px] border-b-secondary rotate-90"></div>
-          </div>
-        </div>
 
         {/* Right Side */}
         {to ? (
@@ -261,31 +234,45 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
             clearAll={() => {
               setDeltas(new Map());
             }}
-            remove={() => setTo(undefined)}
+            remove={() => setTo(null)}
           />
         ) : (
-          <TransferSelect activeEntity={from} setEntity={setTo} showNewFleet />
+          <Card className="w-full h-full">
+            <p className="h-full w-full grid place-items-center opacity-80 text-xs">Select a fleet or asteroid</p>
+          </Card>
         )}
       </div>
       <div className="flex gap-4 w-full justify-center items-center">
+        <TransferSwap
+          from={from}
+          to={to}
+          onClick={(newFrom, newTo) => {
+            setDeltas(new Map());
+            setDeltas(new Map());
+            setFrom(newFrom);
+            setTo(newTo);
+          }}
+        />
         {(!from || !to || deltas.size == 0) && (
-          <Button className="btn-primary w-48" disabled>
-            Select
+          <Button variant="secondary" size="sm" disabled>
+            Transfer
           </Button>
         )}
         {!!from && !!to && deltas.size !== 0 && (
-          <TransferConfirm
-            from={from}
-            to={to}
-            fromUnits={fromUnitCounts}
-            fromResources={fromResourceCounts}
-            toUnits={toUnitCounts}
-            toResources={toResourceCounts}
-            handleSubmit={handleSubmit}
-          />
+          <TransactionQueueMask queueItemId={"TRANSFER" as Entity} className="w-full h-full flex flex-col gap-2 p-2">
+            <TransferConfirm
+              from={from}
+              to={to}
+              fromUnits={fromUnitCounts}
+              fromResources={fromResourceCounts}
+              toUnits={toUnitCounts}
+              toResources={toResourceCounts}
+              handleSubmit={handleSubmit}
+            />
+          </TransactionQueueMask>
         )}
       </div>
-    </TransactionQueueMask>
+    </div>
   );
 };
 

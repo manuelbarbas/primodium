@@ -6,26 +6,27 @@ import { useMud } from "src/hooks";
 import { usePlayerOwner } from "src/hooks/usePlayerOwner";
 
 export const TransferSwap: React.FC<{
-  from: Entity | undefined;
-  to: Entity | undefined | "newFleet";
-  onClick: (newFrom: Entity | undefined, newTo: Entity | undefined) => void;
+  from: Entity | null;
+  to: Entity | null | "newFleet";
+  onClick: (newFrom: Entity | null, newTo: Entity | null) => void;
 }> = ({ from, to, onClick }) => {
   const toEntity = to === "newFleet" || to === undefined ? singletonEntity : to;
-  const toOwner = usePlayerOwner(toEntity);
+  const toOwner = usePlayerOwner(toEntity ?? undefined);
   const playerEntity = useMud().playerAccount.entity;
   const disabled = (!from && !to) || to === "newFleet" || (toOwner && toOwner !== playerEntity);
   return (
     <Button
-      className="btn-primary btn-sm"
+      variant="primary"
+      size="sm"
       disabled={disabled}
       onClick={() => {
         if (disabled) return;
         onClick(to, from);
       }}
-      tooltip="Swap to/from"
+      tooltip="Switch to and from"
       tooltipDirection="top"
     >
-      <FaExchangeAlt />
+      <FaExchangeAlt /> Switch
     </Button>
   );
 };

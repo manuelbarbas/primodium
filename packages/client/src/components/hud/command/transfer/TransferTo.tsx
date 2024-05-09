@@ -16,7 +16,7 @@ import { FleetHeader } from "@/components/hud/widgets/fleets/FleetHeader";
 export const TransferTo = (props: {
   sameOwner?: boolean;
   entity: Entity | "newFleet";
-  from: Entity | undefined;
+  from: Entity | null;
   unitCounts: Map<Entity, bigint>;
   resourceCounts: Map<Entity, bigint>;
   deltas?: Map<Entity, bigint>;

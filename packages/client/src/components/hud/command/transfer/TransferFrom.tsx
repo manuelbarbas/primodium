@@ -15,6 +15,7 @@ import { TargetHeader } from "../../../shared/TargetHeader";
 import { ResourceIcon } from "../../global/modals/fleets/ResourceIcon";
 import { hydrateFleetData } from "src/network/sync/indexer";
 import { FleetHeader } from "@/components/hud/widgets/fleets/FleetHeader";
+import { TransferSelect } from "@/components/hud/command/transfer/TransferSelect";
 
 export const TransferFrom = (props: {
   dragging?: boolean;
@@ -95,6 +96,11 @@ export const TransferFrom = (props: {
 
   return (
     <div className={`w-full h-full bg-base-100 p-2 pb-8 flex flex-col gap-2 border border-secondary/50 relative`}>
+      <TransferSelect
+        activeEntities={[from, to]}
+        setEntity={(entity) => entity !== "newFleet" && setFrom(entity)}
+        hideNotOwned
+      />
       <div className="relative h-12 text-sm w-full flex justify-center font-bold gap-1">
         {Header}
         {props.remove && (
