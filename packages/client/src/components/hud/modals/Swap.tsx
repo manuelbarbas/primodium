@@ -1,4 +1,5 @@
 // SwapPane.tsx
+import { SecondaryCard } from "@/components/core/Card";
 import { Dropdown } from "@/components/core/Dropdown";
 import { IconLabel } from "@/components/core/IconLabel";
 import { EntityToResourceImage } from "@/util/mappings";
@@ -190,10 +191,9 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
         className="row-span-4"
         outAmountMin={outAmountMinRendered}
       />
-      <div className="items-center grid grid-cols-2 justify-items-start">
+      <div className="items-center w-full h-full pt-2 grid grid-cols-2 justify-items-start">
         <SlippageInput
           placeholder="Slippage"
-          className="mb-4 relative mr-auto"
           amount={slippageRendered}
           onAmountChange={(amount) => changeSlippage(amount)}
         />
@@ -222,9 +222,7 @@ const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
   const { resourceCount, resourceStorage } = useFullResourceCount(props.resource, selectedAsteroid);
 
   return (
-    <div
-      className={`w-full h-20 bg-base-100 relative border border-secondary grid grid-cols-10 px-2 items-center ${props.className}`}
-    >
+    <SecondaryCard className={`w-full h-20 relative grid grid-cols-10 p-2 items-center ${props.className}`}>
       <p className="absolute top-2 left-2 text-xs opacity-50">{props.placeholder ?? ""}</p>
       <div className="col-span-6 flex flex-col">
         <input
@@ -251,7 +249,7 @@ const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
           {formatResourceCount(props.resource, resourceStorage, { fractionDigits: 0 })}
         </p>
       </div>
-    </div>
+    </SecondaryCard>
   );
 };
 
@@ -264,9 +262,9 @@ interface SlippageInputProps {
 
 const SlippageInput: React.FC<SlippageInputProps> = (props) => {
   return (
-    <div className={`w-20 h-20 bg-base-100 absolute top-2 relative border border-secondary px-2 ${props.className}`}>
-      <p className="absolute top-2 left-2 text-xs opacity-50">{props.placeholder ?? ""}</p>
-      <div className="absolute bottom-2 left-2 col-span-10 flex flex-col justify-start items-start">
+    <SecondaryCard className={`h-full pt-2 flex flex-col justify-around ${props.className}`}>
+      <p className="text-xs opacity-50">{props.placeholder ?? ""}</p>
+      <div className="flex justify-between items-center">
         <input
           className="bg-transparent text-base opacity-80 w-auto h-5 focus:outline-none pr-4 justify-start text-left"
           type="number"
@@ -277,8 +275,8 @@ const SlippageInput: React.FC<SlippageInputProps> = (props) => {
           value={props.amount}
           onChange={(e) => props.onAmountChange(e.target.value)}
         />
-        <span className="absolute inset-y-0 right-0 pr-2 flex items-center text-base opacity-80">%</span>
+        <span className="opacity-80">%</span>
       </div>
-    </div>
+    </SecondaryCard>
   );
 };
