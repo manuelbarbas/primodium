@@ -23,12 +23,12 @@ export const landFleet = async (mud: MUD, fleet: Entity, asteroidEntity: Entity)
       type: TransactionQueueType.LandFleet,
     },
     (receipt) => {
+      makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.LandFleet);
+
       ampli.systemFleetLandSystemPrimodiumLandFleet({
         fleets: [fleet as Hex],
         ...parseReceipt(receipt),
       });
-
-      makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.LandFleet);
     }
   );
 };
