@@ -202,31 +202,35 @@ contract DestroySystemTest is PrimodiumTest {
     P_RequiredResourcesData memory requiredBuildingResources = getBuildCost(building);
     uint256 unitCount = 1;
     uint256 unitLevel = 1;
-    P_RequiredResourcesData memory requiredUnitResources = getTrainCost(
-      MinutemanMarinePrototypeId,
-      unitLevel,
-      unitCount
-    );
 
-    provideResources(Home.get(playerEntity), requiredBuildingResources);
-    provideResources(Home.get(playerEntity), requiredUnitResources);
-    vm.startPrank(creator);
-    P_RequiredBaseLevel.set(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Workshop)), 1, 0);
+    for (uint256 i = 0; i < 2; i++) {
+      unitCount = i + 1;
+      P_RequiredResourcesData memory requiredUnitResources = getTrainCost(
+        MinutemanMarinePrototypeId,
+        unitLevel,
+        unitCount
+      );
 
-    PositionData memory originalPosition = getTilePosition(Home.get(playerEntity), building);
-    bytes32 buildingEntity = world.Primodium__build(building, originalPosition);
+      provideResources(Home.get(playerEntity), requiredBuildingResources);
+      provideResources(Home.get(playerEntity), requiredUnitResources);
+      vm.startPrank(creator);
+      P_RequiredBaseLevel.set(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Workshop)), 1, 0);
 
-    world.Primodium__trainUnits(buildingEntity, EUnit.MinutemanMarine, unitCount);
-    uint256 unitTrainTime = LibUnit.getUnitBuildTime(buildingEntity, MinutemanMarinePrototypeId) * unitCount;
+      PositionData memory originalPosition = getTilePosition(Home.get(playerEntity), building);
+      bytes32 buildingEntity = world.Primodium__build(building, originalPosition);
 
-    vm.expectRevert("[Destroy] Cannot destroy building with units in production");
-    world.Primodium__destroy(buildingEntity);
+      world.Primodium__trainUnits(buildingEntity, EUnit.MinutemanMarine, unitCount);
+      uint256 unitTrainTime = LibUnit.getUnitBuildTime(buildingEntity, MinutemanMarinePrototypeId) * unitCount;
 
-    vm.warp(block.timestamp + unitTrainTime);
+      vm.expectRevert("[Destroy] Cannot destroy building with units in production");
+      world.Primodium__destroy(buildingEntity);
 
-    uint256 gas = gasleft();
-    world.Primodium__destroy(buildingEntity);
-    console.log("after", gas - gasleft());
+      vm.warp(block.timestamp + unitTrainTime);
+
+      uint256 gas = gasleft();
+      world.Primodium__destroy(buildingEntity);
+      console.log("after", gas - gasleft());
+    }
   }
 
   /* TODO: Add test that includes buildings with utility dependencies */

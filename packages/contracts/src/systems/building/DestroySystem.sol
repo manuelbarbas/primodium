@@ -32,13 +32,13 @@ contract DestroySystem is PrimodiumSystem {
 
     LibBuilding.removeBuildingTiles(buildingEntity);
 
+    if (P_UnitProdTypes.length(buildingType, level) != 0) {
+      UnitFactorySet.remove(OwnedBy.get(buildingEntity), buildingEntity);
+    }
     Level.deleteRecord(buildingEntity);
     BuildingType.deleteRecord(buildingEntity);
     OwnedBy.deleteRecord(buildingEntity);
     Position.deleteRecord(buildingEntity);
     IsActive.deleteRecord(buildingEntity);
-    if (P_UnitProdTypes.length(buildingType, level) != 0) {
-      UnitFactorySet.remove(OwnedBy.get(buildingEntity), buildingEntity);
-    }
   }
 }
