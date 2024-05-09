@@ -46,4 +46,13 @@ export const testerPacks: Record<string, TesterPack> = {
     ],
     storages: new Map([[EntityType.ColonyShipCapacity, 100000]]),
   },
+  marketPack: {
+    buildings: [EntityType.Market],
+    resources: new Map([
+      [EntityType.Copper, 1000000],
+      [EntityType.Alloy, 1000000],
+      [EntityType.Lithium, 1000000],
+      [EntityType.Kimberlite, 1000000],
+    ]),
+  },
 };
