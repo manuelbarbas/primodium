@@ -14,7 +14,7 @@ import { components } from "@/network/components";
 import { moveBuilding } from "@/network/setup/contractCalls/moveBuilding";
 import { MUD } from "@/network/types";
 import { world } from "@/network/world";
-import { getBuildingOrigin, validateBuildingPlacement } from "@/util/building";
+import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "@/util/building";
 import { Building } from "@/game/lib/objects/Building";
 import { DepthLayers } from "@/game/lib/constants/common";
 import { Action } from "@/util/constants";
@@ -65,6 +65,8 @@ export const renderBuildingMoveTool = (scene: Scene, mud: MUD) => {
 
     if (!tileCoord || !buildingPrototype) return;
 
+    const buildingDimensions = getBuildingDimensions(buildingPrototype);
+
     const activeRock = components.ActiveRock.get()?.value as Entity;
     const validPlacement = validateBuildingPlacement(
       tileCoord,
@@ -88,10 +90,18 @@ export const renderBuildingMoveTool = (scene: Scene, mud: MUD) => {
       });
     }
 
-    placementBuilding.setCoordPosition(tileCoord).setAlpha(0.9);
+    placementBuilding
+      .setCoordPosition({ x: tileCoord.x, y: tileCoord.y - buildingDimensions.height + 1 })
+      .setAlpha(0.9)
+      .clearOutline()
+      .setOrigin(0, 1)
+      .setDepth(validPlacement ? DepthLayers.Building - tileCoord.y + buildingDimensions.height : DepthLayers.Building);
 
-    if (validPlacement) placementBuilding.setTint(0xffffff).setDepth(DepthLayers.Building - tileCoord.y);
-    else placementBuilding.setTint(0xff0000).setOutline(0xff0000, 3).setDepth(DepthLayers.Building);
+    if (validPlacement) {
+      placementBuilding.setTint(0xffffff).setOutline(0xffff00, 3);
+    } else {
+      placementBuilding.setTint(0xff0000).setOutline(0xff0000, 3);
+    }
   };
 
   const query = [

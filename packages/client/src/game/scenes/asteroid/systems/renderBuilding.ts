@@ -20,7 +20,11 @@ import { components } from "src/network/components";
 import { getBuildingBottomLeft } from "src/util/building";
 import { removeRaidableAsteroid } from "src/game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
 import { createObjectApi } from "@/game/api/objects";
-import { EMap } from "contracts/config/enums";
+import { Building } from "@/game/lib/objects/Building";
+import { removeRaidableAsteroid } from "@/game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
+import { Action, EntityType } from "@/util/constants";
+import { hashEntities } from "@/util/encode";
+import { getBuildingBottomLeft } from "@/util/building";
 import { isDomInteraction } from "@/util/canvas";
 // import { components } from "@/network/components";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
@@ -111,6 +115,13 @@ export const renderBuilding = (scene: Scene) => {
         building.setLevel(components.Level.get(entity)?.value ?? 1n);
         building.setActive(components.IsActive.get(entity)?.value ?? true);
 
+        // at this point, we might be moving a building, so update its position
+        const origin = components.Position.get(entity);
+        const buildingPrototype = components.BuildingType.get(entity)?.value as Entity | undefined;
+        if (!origin || !buildingPrototype) return;
+        const tileCoord = getBuildingBottomLeft(origin, buildingPrototype);
+        building.setCoordPosition(tileCoord);
+
         return;
       }
 
@@ -156,9 +167,13 @@ export const renderBuilding = (scene: Scene) => {
           });
         })
         .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
-          components.HoverEntity.set({
-            value: entity,
-          });
+          const action = components.SelectedAction.get()?.value;
+          // remove annoying tooltips when moving or placing buildings
+          if (action !== Action.MoveBuilding && action !== Action.PlaceBuilding) {
+            components.HoverEntity.set({
+              value: entity,
+            });
+          }
 
           if (components.SelectedBuilding.get()?.value === entity) return;
 
