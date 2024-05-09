@@ -163,6 +163,16 @@ export enum Sprites {
   TridentMarine = "sprites/units/trident_marine.png",
   MinutemanMarine = "sprites/units/minutemen_marine.png",
   LightningCraft = "sprites/units/lightningcraft.png",
+
+  // Emblems
+  Emblem1 = "sprites/emblems/Emblems_LVL1.png",
+  Emblem2 = "sprites/emblems/Emblems_LVL2.png",
+  Emblem3 = "sprites/emblems/Emblems_LVL3.png",
+  Emblem4 = "sprites/emblems/Emblems_LVL4.png",
+  Emblem5 = "sprites/emblems/Emblems_LVL5.png",
+  Emblem6 = "sprites/emblems/Emblems_LVL6.png",
+  Emblem7 = "sprites/emblems/Emblems_LVL7.png",
+  Emblem8 = "sprites/emblems/Emblems_LVL8.png",
 }
 
 export type SpriteKeys = keyof typeof Sprites;

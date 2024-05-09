@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
+import { Animations, ResourceTilekeys, Sprites, Tilemaps } from "@primodiumxyz/assets";
 import { EntityType, Mode } from "src/util/constants";
 import { AsteroidRelationship, AsteroidSize, SceneKeys } from "./constants/common";
-import { ResourceTilekeys, Sprites, Animations, Tilemaps } from "@primodiumxyz/assets";
 
 export const EntityTypeToResourceTilekey: Record<Entity, ResourceTilekeys> = {
   [EntityType.Iron]: ResourceTilekeys.Iron,
@@ -249,4 +249,15 @@ export const ModeToSceneKey: Record<Entity, SceneKeys> = {
   [Mode.Starmap]: "STARMAP",
   [Mode.CommandCenter]: "COMMAND_CENTER",
   [Mode.Spectate]: "ASTEROID",
+};
+
+export const AsteroidLevelToEmblem: Record<number, Sprites> = {
+  1: Sprites.Emblem1,
+  2: Sprites.Emblem2,
+  3: Sprites.Emblem3,
+  4: Sprites.Emblem4,
+  5: Sprites.Emblem5,
+  6: Sprites.Emblem6,
+  7: Sprites.Emblem7,
+  8: Sprites.Emblem8,
 };

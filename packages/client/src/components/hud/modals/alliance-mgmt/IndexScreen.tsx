@@ -1,111 +1,188 @@
-import { getFinalLeaderboardData } from "@/util/leaderboard/getFinalLeaderboardData";
+import { Button } from "@/components/core/Button";
+import { SecondaryCard } from "@/components/core/Card";
+import { Navigator } from "@/components/core/Navigator";
+import { TextInput } from "@/components/core/TextInput";
+import { ALLIANCE_TAG_SIZE } from "@/components/hud/modals/alliance-mgmt/CreateScreen";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
+import { useMud } from "@/hooks";
+import { components } from "@/network/components";
+import { joinAlliance, requestToJoin } from "@/network/setup/contractCalls/alliance";
+import { getAllianceName } from "@/util/alliance";
+import { cn } from "@/util/client";
+import { TransactionQueueType } from "@/util/constants";
+import { hashEntities } from "@/util/encode";
 import { Entity } from "@latticexyz/recs";
 import { EAllianceInviteMode } from "contracts/config/enums";
-import { FaLock, FaUserPlus } from "react-icons/fa";
+import { useMemo, useState } from "react";
+import { FaCheck, FaEnvelope, FaLock, FaPlus, FaSearch } from "react-icons/fa";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
-import { Button } from "src/components/core/Button";
-import { SecondaryCard } from "src/components/core/Card";
-import { Navigator } from "src/components/core/Navigator";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { useMud } from "src/hooks";
-import { components } from "src/network/components";
-import { joinAlliance, requestToJoin } from "src/network/setup/contractCalls/alliance";
-import { getAllianceName } from "src/util/alliance";
-import { entityToColor } from "src/util/color";
-import { TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
-import { InfoRow } from "./InfoRow";
 
+// This screen is the home interface for searching alliances, and accessing both the "create" and "invites" screens
+// It is only accessible to players who are not in an alliance
 export const IndexScreen = () => {
-  const player = useMud().playerAccount.entity;
-  const data = getFinalLeaderboardData(player, true);
+  const {
+    playerAccount: { entity: playerEntity },
+  } = useMud();
 
+  const allianceEntities = components.Alliance.useAll() as Entity[] | undefined;
+  const allianceNames = allianceEntities?.map((entity) => getAllianceName(entity, true));
+  const [searchTag, setSearchTag] = useState("");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const joinRequests = components.AllianceRequest.useAllWith({ player: playerEntity }) ?? [];
+
+  const alliances = useMemo(() => {
+    const allAlliances = allianceEntities?.map((entity, i) => ({
+      entity,
+      name: allianceNames![i],
+      // All players in the alliance
+      members: components.PlayerAlliance.getAllWith({ alliance: entity }),
+      // Whether the player has been invited or requested to join this alliance
+      invited: invites.some((invite: Entity) => invite.includes(entity.slice(0, 2))),
+      requested: joinRequests.some((request: Entity) => request.includes(entity.slice(0, 2))),
+    }));
+    if (!searchTag) return allAlliances;
+    // TODO: better search algorithm
+    return allAlliances?.filter((alliance) => alliance.name.toLowerCase().includes(searchTag.toLowerCase()));
+  }, [searchTag, allianceEntities, allianceNames, invites, joinRequests]);
+
+  // Check if the player is not already in an alliance (for disabling buttons & custom display)
+  // const playerAlliance = components.PlayerAlliance.use(playerEntity)?.alliance;
+  const playerAlliance = alliances?.find((alliance) =>
+    alliance.members.some((member) => member === playerEntity)
+  )?.entity;
+
+  const allianceLength = alliances?.length ?? 0;
   return (
     <Navigator.Screen
-      title="score"
-      className="flex flex-col !items-start justify-between w-full h-full text-xs pointer-events-auto"
+      title="search"
+      className="relative grid grid-rows-[min-content_1fr_min-content] w-full h-full text-xs pointer-events-auto p-4 gap-4"
     >
-      {data && (
-        <AutoSizer>
-          {({ height, width }: { height: number; width: number }) => (
-            <List
-              height={height - 50}
-              width={width}
-              itemCount={data.allPlayers.length}
-              itemSize={47}
-              className="scrollbar"
-            >
-              {({ index, style }) => {
-                const alliance = data.allPlayers[index].player;
-                const score = data.allPlayers[index].finalScore;
-                return (
-                  <div style={style} className="pr-2">
-                    <LeaderboardItem key={index} index={index} score={score} entity={alliance} />
-                  </div>
-                );
-              }}
-            </List>
-          )}
-        </AutoSizer>
+      {allianceLength > 0 && (
+        <div className="absolute top-2 right-2 text-xs opacity-70">{allianceLength} Alliances</div>
       )}
-      {!data && (
+      <div className="flex flex-col items-center gap-2 text-base">
+        <p>ALLIANCES</p>
+        <div className="relative w-fit">
+          <TextInput
+            placeholder="SEARCH ALLIANCE"
+            maxLength={ALLIANCE_TAG_SIZE}
+            onChange={(e) => setSearchTag(e.target.value)}
+            className="uppercase h-8 text-sm pl-12"
+          />
+          <FaSearch className="absolute left-4 top-2 opacity-75" />
+        </div>
+      </div>
+      {alliances && alliances.length > 0 ? (
+        <div className="flex flex-col w-full h-full justify-between text-xs pointer-events-auto">
+          <AutoSizer>
+            {({ height, width }: { height: number; width: number }) => (
+              <List height={height} width={width} itemCount={10} itemSize={52} className="scrollbar">
+                {({ index, style }) => (
+                  <div style={style} className="pr-2">
+                    <AllianceItem
+                      key={alliances[index].entity}
+                      {...alliances[index]}
+                      alreadyMember={alliances[index].entity === playerAlliance}
+                    />
+                  </div>
+                )}
+              </List>
+            )}
+          </AutoSizer>
+        </div>
+      ) : (
         <SecondaryCard className="w-full flex-grow items-center justify-center font-bold opacity-50">
           NO ALLIANCES
         </SecondaryCard>
       )}
-      <div className="w-full">
-        <hr className="w-full border-t border-cyan-800 my-2" />
-        <InfoRow data={data.player} />
+      <div className={cn("relative flex gap-8", playerAlliance ? "justify-end" : "justify-center")}>
+        <Navigator.NavButton
+          to="create"
+          variant="primary"
+          className="btn-sm border-2 border-secondary flex gap-2"
+          disabled={!!playerAlliance}
+        >
+          <FaPlus />
+          CREATE
+        </Navigator.NavButton>
+        <Navigator.NavButton
+          to="invites"
+          variant={playerAlliance ? "neutral" : "primary"}
+          className={cn("btn-sm", !playerAlliance && "border-2 border-secondary")}
+        >
+          INVITES ({invites.length})
+        </Navigator.NavButton>
+        {playerAlliance && (
+          <Navigator.NavButton
+            to="manage"
+            variant="primary"
+            className="btn-sm absolute left-0 border-2 border-secondary"
+          >
+            YOUR ALLIANCE
+          </Navigator.NavButton>
+        )}
       </div>
     </Navigator.Screen>
   );
 };
 
-const LeaderboardItem = ({
-  index,
-  score,
+const AllianceItem = ({
   entity,
+  name,
+  members,
+  invited,
+  requested,
   className,
+  alreadyMember,
 }: {
-  index: number;
-  score: number;
   entity: Entity;
+  name: string;
+  members: Entity[];
+  invited: boolean;
+  requested: boolean;
   className?: string;
+  alreadyMember?: boolean;
 }) => {
   const mud = useMud();
-  const { playerAccount } = mud;
   const allianceMode = components.Alliance.get(entity)?.inviteMode as EAllianceInviteMode | undefined;
-  const playerAlliance = components.PlayerAlliance.get(playerAccount.entity)?.alliance as Entity;
   const inviteOnly = allianceMode === EAllianceInviteMode.Closed;
 
   return (
-    <SecondaryCard
-      className={`grid grid-cols-7 w-full border border-cyan-800 p-2 bg-slate-800 bg-gradient-to-br from-transparent to-bg-slate-900/30 items-center h-10 ${
-        playerAlliance === entity ? "border-success" : ""
-      } ${className}`}
-    >
-      <div>{index + 1}.</div>
+    <SecondaryCard className={cn("grid grid-cols-[1fr_min-content] w-full px-4 items-center h-[48px]", className)}>
       <div className="col-span-6 flex justify-between items-center">
-        <div className="flex gap-1 items-center">
-          <FaLock className="text-warning opacity-75" />
-          <p className="font-bold" style={{ color: entityToColor(entity) }}>
-            [{getAllianceName(entity, true)}]
-          </p>
+        <div className="flex gap-2 items-center">
+          <span className="text-sm text-warning">[{name}]</span>
+          <span className="text-xs opacity-75">({members.length})</span>
+          {inviteOnly && <FaLock />}
         </div>
         <div className="flex items-center gap-1">
-          <p className="font-bold bg-yellow-700 px-2 ">{score}</p>
-          {!playerAlliance && (
+          {alreadyMember ? (
+            <span className="text-xs text-success">YOUR ALLIANCE</span>
+          ) : (
             <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.JoinAlliance, entity)}>
               <Button
-                tooltip={inviteOnly ? "Request to Join" : "Join"}
-                tooltipDirection="left"
-                className={`btn-xs flex border ${inviteOnly ? "border-warning" : "border-secondary"}`}
+                className="btn-xs"
                 onClick={() => {
-                  inviteOnly ? requestToJoin(mud, entity) : joinAlliance(mud, entity);
+                  inviteOnly && !invited ? requestToJoin(mud, entity) : joinAlliance(mud, entity);
                 }}
+                disabled={requested}
               >
-                <FaUserPlus />
+                {requested ? (
+                  <>
+                    <FaCheck /> SENT
+                  </>
+                ) : !inviteOnly || invited ? (
+                  <>
+                    <FaPlus /> JOIN
+                  </>
+                ) : (
+                  <>
+                    <FaEnvelope /> REQUEST
+                  </>
+                )}
               </Button>
             </TransactionQueueMask>
           )}
