@@ -26,13 +26,13 @@ export const sendFleet = async (mud: MUD, fleet: Entity, spaceRock: Entity) => {
       type: TransactionQueueType.SendFleet,
     },
     (receipt) => {
+      activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.SendFleet);
+
       ampli.systemFleetSendSystemPrimodiumSendFleet({
         fleets: [fleet as Hex],
-        spaceRocks: [spaceRock as Hex],
+        spaceRock: spaceRock,
         ...parseReceipt(receipt),
       });
-
-      activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.SendFleet);
     }
   );
 };
@@ -52,14 +52,14 @@ export const sendFleetPosition = async (mud: MUD, fleet: Entity, position: Coord
       type: TransactionQueueType.SendFleet,
     },
     (receipt) => {
+      activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.SendFleet);
+
       ampli.systemFleetSendSystemPrimodiumSendFleet({
         fleets: [fleet as Hex],
-        spaceRocks: [],
+        spaceRock: "",
         spaceRockCoord: [position.x, position.y],
         ...parseReceipt(receipt),
       });
-
-      activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.SendFleet);
     }
   );
 };
