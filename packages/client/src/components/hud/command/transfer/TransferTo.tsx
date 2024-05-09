@@ -12,33 +12,47 @@ import { ResourceIcon } from "../../global/modals/fleets/ResourceIcon";
 import { hydrateFleetData } from "src/network/sync/indexer";
 import { useMud } from "src/hooks";
 import { FleetHeader } from "@/components/hud/widgets/fleets/FleetHeader";
+import { TransferSelect } from "@/components/hud/command/transfer/TransferSelect";
+import { useTransfer } from "@/hooks/providers/TransferProvider";
+import { Card } from "@/components/core/Card";
 
-export const TransferTo = (props: {
-  sameOwner?: boolean;
+export const TransferTo = (props: { unitCounts: Map<Entity, bigint>; resourceCounts: Map<Entity, bigint> }) => {
+  const { to, setTo } = useTransfer();
+
+  return (
+    <div className={`w-full h-full bg-base-100 p-2 pb-8 flex flex-col gap-2 border border-secondary/50 relative`}>
+      <TransferSelect handleSelect={setTo} showNewFleet />
+      {!to && (
+        <Card className="w-full h-full">
+          <p className="h-full w-full grid place-items-center opacity-80 text-xs">Select a fleet or asteroid</p>
+        </Card>
+      )}
+      {!!to && <_TransferTo entity={to} unitCounts={props.unitCounts} resourceCounts={props.resourceCounts} />}
+    </div>
+  );
+};
+
+export const _TransferTo = (props: {
   entity: Entity | "newFleet";
-  from: Entity | null;
   unitCounts: Map<Entity, bigint>;
   resourceCounts: Map<Entity, bigint>;
-  deltas?: Map<Entity, bigint>;
-  setDragging?: (e: React.MouseEvent, entity: Entity, count: bigint) => void;
-  onMouseOver?: (e: React.MouseEvent) => void;
-  onMouseLeave?: (e: React.MouseEvent) => void;
-  remove?: () => void;
-  clearResource?: (entity: Entity) => void;
-  clearUnit?: (entity: Entity) => void;
-  clearAll?: () => void;
-  hovering?: boolean;
+  // onMouseOver?: (e: React.MouseEvent) => void;
+  // onMouseLeave?: (e: React.MouseEvent) => void;
+  // clearResource?: (entity: Entity) => void;
+  // clearUnit?: (entity: Entity) => void;
+  // clearAll?: () => void;
+  // hovering?: boolean;
 }) => {
+  const { from, setTo, setDelta, setDeltas, deltas } = useTransfer();
   const mud = useMud();
   const isFleet = props.entity !== "newFleet" && components.IsFleet.has(props.entity);
-  const noUnitsOrResources =
-    !props.deltas || props.deltas.size === 0 || (props.unitCounts.size === 0 && props.resourceCounts.size === 0);
+  const noUnitsOrResources = deltas.size === 0 || (props.unitCounts.size === 0 && props.resourceCounts.size === 0);
   const Header = useMemo(() => {
     if (!isFleet && props.entity !== "newFleet") {
       return <TargetHeader entity={props.entity} />;
     }
     const data = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
-    const ownerRock = props.entity !== "newFleet" ? components.OwnedBy.get(props.entity)?.value : props.from;
+    const ownerRock = props.entity !== "newFleet" ? components.OwnedBy.get(props.entity)?.value : from;
 
     if (!ownerRock) return <></>;
 
@@ -55,7 +69,7 @@ export const TransferTo = (props: {
     return (
       <FleetHeader title={props.entity === "newFleet" ? "New Fleet" : entityToFleetName(props.entity)} {...data} />
     );
-  }, [isFleet, props.entity, props.unitCounts, props.from]);
+  }, [isFleet, props.entity, props.unitCounts, from]);
 
   useEffect(() => {
     if (props.entity === "newFleet" || !components.IsFleet.get(props.entity)?.value) return;
@@ -66,18 +80,16 @@ export const TransferTo = (props: {
   return (
     <div
       className={`w-full h-full bg-base-100 p-2 pb-8 flex flex-col gap-2 border border-secondary/50 relative ${
-        props.hovering ? "ring-2 ring-secondary" : ""
+        "" // props.hovering ? "ring-2 ring-secondary" : ""
       }`}
-      onMouseOver={props.onMouseOver}
-      onMouseLeave={props.onMouseLeave}
+      // onMouseOver={props.onMouseOver}
+      // onMouseLeave={props.onMouseLeave}
     >
       <div className="relative h-12 text-sm w-full flex justify-center font-bold gap-1">
         {Header}
-        {props.remove && (
-          <Button className="absolute -top-1 -right-1 btn-error p-1 btn-xs" onClick={props.remove}>
-            <FaTimes />
-          </Button>
-        )}
+        <Button className="absolute -top-1 -right-1 btn-error p-1 btn-xs" onClick={() => setTo(undefined)}>
+          <FaTimes />
+        </Button>
       </div>
 
       {/*Units*/}
@@ -89,8 +101,7 @@ export const TransferTo = (props: {
             if (index >= props.unitCounts.size)
               return <div className="w-full h-full bg-white/10 opacity-50" key={`unit-from-${index}`} />;
             const [unit, count] = [...props.unitCounts.entries()][index];
-            const delta = props.deltas?.get(unit) ?? 0n;
-            const canClear = !!props.clearUnit && delta !== 0n;
+            const delta = deltas?.get(unit) ?? 0n;
             return (
               <ResourceIcon
                 key={`to-unit-${unit}`}
@@ -98,7 +109,7 @@ export const TransferTo = (props: {
                 resource={unit as Entity}
                 amount={count.toString()}
                 delta={delta}
-                onClear={canClear ? () => props.clearUnit && props.clearUnit(unit) : undefined}
+                onClear={() => setDelta(unit, 0n)}
               />
             );
           })}
@@ -113,8 +124,7 @@ export const TransferTo = (props: {
             if (index >= props.resourceCounts.size)
               return <div key={`resource-blank-${index}`} className=" w-full h-full bg-white/10 opacity-50 " />;
             const [entity, count] = [...props.resourceCounts.entries()][index];
-            const delta = props.deltas?.get(entity) ?? 0n;
-            const canClear = !!props.clearResource && delta !== 0n;
+            const delta = deltas?.get(entity) ?? 0n;
             return (
               <ResourceIcon
                 key={`to-resource-${entity}`}
@@ -122,20 +132,18 @@ export const TransferTo = (props: {
                 resource={entity as Entity}
                 delta={delta}
                 amount={formatResourceCount(entity as Entity, count, { fractionDigits: 0 })}
-                onClear={canClear ? () => props.clearResource && props.clearResource(entity) : undefined}
+                onClear={() => setDelta(entity, 0n)}
               />
             );
           })}
       </div>
-      {props.clearAll && (
-        <Button
-          disabled={noUnitsOrResources}
-          className="btn-primary btn-xs absolute bottom-1 right-2"
-          onClick={props.clearAll}
-        >
-          Clear all
-        </Button>
-      )}
+      <Button
+        disabled={noUnitsOrResources}
+        className="btn-primary btn-xs absolute bottom-1 right-2"
+        onClick={() => setDeltas(new Map())}
+      >
+        Clear all
+      </Button>
     </div>
   );
 };

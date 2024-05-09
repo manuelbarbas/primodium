@@ -2,12 +2,12 @@ import React, { ReactNode, createContext, useContext, useState } from "react";
 import { Entity } from "@latticexyz/recs";
 
 interface TransferContextType {
-  from: Entity | null;
-  to: Entity | "newFleet" | null;
+  from: Entity | undefined;
+  to: Entity | "newFleet" | undefined;
   deltas: Map<Entity, bigint>;
   dragging: { entity: Entity; count: bigint } | null;
-  setFrom: (entity: Entity | null) => void;
-  setTo: (entity: Entity | "newFleet" | null) => void;
+  setFrom: (entity: Entity | undefined) => void;
+  setTo: (entity: Entity | "newFleet" | undefined) => void;
   setDelta(entity: Entity, count: bigint): void;
   setDeltas(deltas: Map<Entity, bigint>): void;
   setDragging(data: null): void;
@@ -19,8 +19,8 @@ const TransferContext = createContext<TransferContextType | undefined>(undefined
 
 interface TransferContextProviderProps {
   children: ReactNode;
-  initialFrom: Entity | null;
-  initialTo: Entity | "newFleet" | null;
+  initialFrom?: Entity;
+  initialTo?: Entity | "newFleet";
 }
 
 export const TransferContextProvider: React.FC<TransferContextProviderProps> = ({

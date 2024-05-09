@@ -7,18 +7,19 @@ import { components } from "src/network/components";
 import { entityToFleetName, entityToRockName } from "@/util/name";
 import { getAsteroidImage } from "@/util/asteroid";
 import { usePrimodium } from "@/hooks/usePrimodium";
+import { useTransfer } from "@/hooks/providers/TransferProvider";
 
-export const TransferSelect = ({
-  activeEntities,
-  setEntity,
+export const TransferSelect = <NewFleet extends boolean | undefined = false>({
+  handleSelect,
   showNewFleet,
   hideNotOwned,
 }: {
-  activeEntities: (Entity | "newFleet" | undefined)[];
-  setEntity: (entity: Entity | "newFleet") => void;
-  showNewFleet?: boolean;
+  handleSelect: NewFleet extends true ? (entity: Entity | "newFleet") => void : (entity: Entity) => void;
+  showNewFleet?: NewFleet;
   hideNotOwned?: boolean;
 }) => {
+  const { from, to } = useTransfer();
+  const activeEntities = [from, to];
   const rockEntity = components.ActiveRock.use()?.value;
   if (!rockEntity) throw new Error("No active rock");
   const query = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination: rockEntity })];
@@ -34,12 +35,15 @@ export const TransferSelect = ({
     return fleetOwnerPlayer == playerEntity;
   });
 
+  const handleSelectWithNewFleet = handleSelect as (entity: Entity | "newFleet") => void;
+
   return (
     <div className="absolute left-0 -translate-x-full w-36 flex flex-col gap-2">
+      <p className="text-xs opacity-70 text-right pr-2">Select</p>
       <SelectOption
         entity={rockEntity}
         disabled={activeEntities.includes(rockEntity)}
-        onSelect={() => setEntity(rockEntity)}
+        onSelect={() => handleSelect(rockEntity)}
       />
 
       {fleetsOnRock.map((fleet) => (
@@ -47,14 +51,14 @@ export const TransferSelect = ({
           key={`fleet-option-${fleet}`}
           entity={fleet}
           disabled={activeEntities.includes(fleet)}
-          onSelect={() => setEntity(fleet)}
+          onSelect={() => handleSelect(fleet)}
         />
       ))}
-      {showNewFleet && (
+      {showNewFleet == true && (
         <SelectOption
           entity={"newFleet"}
           disabled={activeEntities.includes("newFleet")}
-          onSelect={() => setEntity("newFleet")}
+          onSelect={() => handleSelectWithNewFleet("newFleet")}
         />
       )}
     </div>

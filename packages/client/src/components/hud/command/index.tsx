@@ -29,7 +29,7 @@ export const CommandCenterHUD = memo(() => {
         </Tabs.Pane>
         <Tabs.Pane index={2} fragment>
           <HUD.Center>
-            <TransferContextProvider initialFrom={null} initialTo={null}>
+            <TransferContextProvider>
               <Transfer />
             </TransferContextProvider>
           </HUD.Center>
