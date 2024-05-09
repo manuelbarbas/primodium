@@ -21,8 +21,9 @@ export const TransferSwap: React.FC = () => {
   const disabled = (!from && !to) || to === "newFleet" || (toOwner && toOwner !== playerEntity);
   return (
     <Button
-      variant="primary"
-      size="sm"
+      variant="neutral"
+      size="md"
+      className="w-full"
       disabled={disabled}
       onClick={() => {
         if (to === "newFleet") return;

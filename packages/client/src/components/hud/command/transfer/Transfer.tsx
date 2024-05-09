@@ -4,21 +4,21 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
-import { Button } from "src/components/core/Button";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { ResourceEntityLookup, UnitStorages } from "src/util/constants";
-import { formatResourceCount, parseResourceCount } from "src/util/number";
+import { parseResourceCount } from "src/util/number";
 import { getFullResourceCount } from "src/util/resource";
 import { getFleetStatsFromUnits } from "src/util/unit";
-import { ResourceIcon } from "../../global/modals/fleets/ResourceIcon";
+import { ResourceIcon } from "./ResourceIcon";
 import { TransferConfirm } from "./TransferConfirm";
 import { TransferFrom } from "./TransferFrom";
 import { TransferSwap } from "./TransferSwap";
 import { TransferTo } from "./TransferTo";
 import { useTransfer } from "@/hooks/providers/TransferProvider";
+import { Button } from "@/components/core/Button";
 
 type To = Entity | "newFleet";
 const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = () => {
@@ -163,28 +163,30 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
   }, [handleKeyDown, stopDragging]);
 
   return (
-    <div className="w-[60rem] h-[40rem] flex flex-col gap-4">
+    <div className="w-[70rem] h-[44rem] flex flex-col gap-4">
       <p>Transfer Units and Resources</p>
       {dragging && <Dragging {...dragging} location={dragLocation} />}
-      <div className="relative grid grid-cols-[1fr_1fr] gap-60 h-full w-full">
+      <div className="relative grid grid-cols-[1fr_300px_1fr] gap-2 h-full w-full">
         <TransferFrom unitCounts={fromUnitCounts} resourceCounts={fromResourceCounts} />
+        <div className="flex w-full justify-center items-end w-fit">
+          <div className="grid grid-cols-2 grid-rows-2 gap-4">
+            <TransactionQueueMask queueItemId={"TRANSFER" as Entity} className="col-span-2 w-full">
+              <TransferConfirm
+                fromUnits={fromUnitCounts}
+                fromResources={fromResourceCounts}
+                toUnits={toUnitCounts}
+                toResources={toResourceCounts}
+              />
+            </TransactionQueueMask>
+
+            <Button disabled={deltas.size === 0} variant="error" size="md" onClick={() => setDeltas(new Map())}>
+              Clear
+            </Button>
+
+            <TransferSwap />
+          </div>
+        </div>
         <TransferTo unitCounts={toUnitCounts} resourceCounts={toResourceCounts} />
-      </div>
-      <div className="flex gap-4 w-full justify-center items-center">
-        <TransferSwap />
-        {(!from || !to || deltas.size == 0) && (
-          <Button variant="secondary" size="sm" disabled>
-            Transfer
-          </Button>
-        )}
-        <TransactionQueueMask queueItemId={"TRANSFER" as Entity} className="w-full h-full flex flex-col gap-2 p-2">
-          <TransferConfirm
-            fromUnits={fromUnitCounts}
-            fromResources={fromResourceCounts}
-            toUnits={toUnitCounts}
-            toResources={toResourceCounts}
-          />
-        </TransactionQueueMask>
       </div>
     </div>
   );
@@ -201,7 +203,7 @@ const Dragging = ({
 }) => {
   return ReactDOM.createPortal(
     <div className={`font-mono fixed pointer-events-none`} style={{ left: location.x, top: location.y, zIndex: 1002 }}>
-      <ResourceIcon resource={entity} amount={formatResourceCount(entity, count, { fractionDigits: 0 })} />
+      <ResourceIcon resource={entity} count={count} />
     </div>,
     document.body
   );

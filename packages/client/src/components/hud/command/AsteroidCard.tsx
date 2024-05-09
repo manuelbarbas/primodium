@@ -1,35 +1,27 @@
 import { Entity } from "@latticexyz/recs";
-import { Badge } from "src/components/core/Badge";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Loader } from "src/components/core/Loader";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
-import { useFullResourceCount, useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { useSyncStatus } from "src/hooks/useSyncStatus";
 import { components } from "src/network/components";
-import { EntityType, Keys } from "src/util/constants";
+import { Keys } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { entityToRockName } from "src/util/name";
-import { formatResourceCount, formatTimeShort } from "src/util/number";
+import { formatTimeShort } from "src/util/number";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { EntityToResourceImage } from "@/util/mappings";
-import { HealthBar } from "@/components/shared/HealthBar";
-import { Card } from "@/components/core/Card";
+import { SecondaryCard } from "@/components/core/Card";
+import { getAsteroidEmblem, getAsteroidImage } from "@/util/asteroid";
+import { usePrimodium } from "@/hooks/usePrimodium";
+import { AsteroidStats } from "@/components/hud/command/overview/AsteroidStatsAndActions";
 
-export const AsteroidCard: React.FC = () => {
-  const entity = components.SelectedRock.use()?.value!;
+export const AsteroidCard: React.FC<{ entity: Entity }> = ({ entity }) => {
+  const primodium = usePrimodium();
   const { loading } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
   const name = entityToRockName(entity);
   const { inGracePeriod, duration } = useInGracePeriod(entity, loading);
-  const { resourceCount: encryption, resourceStorage: maxEncryption } = useFullResourceCount(
-    EntityType.Encryption,
-    entity,
-    loading
-  );
 
   const ownedBy = components.OwnedBy.use(entity)?.value as Entity | undefined;
-  const { strength, maxStrength } = useAsteroidStrength(entity, loading);
 
   if (loading)
     return (
@@ -40,83 +32,28 @@ export const AsteroidCard: React.FC = () => {
     );
 
   return (
-    <Card>
+    <SecondaryCard className="w-full">
       <div className="flex flex-col gap-1 z-10">
-        <div className="grid grid-cols-2 gap-1">
+        <div className="flex flex-col gap-1">
           <div className="flex gap-1 items-center">
-            <IconLabel imageUri={InterfaceIcons.Asteroid} className={`pixel-images w-3 h-3 bg-base-100`} />
-            <p className="text-sm font-bold uppercase">{name}</p>
+            <img src={getAsteroidEmblem(primodium, entity)} className="w-8 h-8 translate-y-2" />
+            <div className="flex flex-col">
+              <p className="text-md font-bold uppercase">{name}</p>
+              {ownedBy ? <AccountDisplay className="w-fit" noColor player={ownedBy} /> : "DROID INFESTED"}
+            </div>
           </div>
         </div>
-        <div className="flex gap-1">
-          <div className="flex bg-primary uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4 max-w-48">
-            {ownedBy ? <AccountDisplay className="w-12" noColor player={ownedBy} raw /> : "DROID INFESTED"}
-          </div>
+        <div className="flex gap-1 justify-center items-center">
+          <img src={getAsteroidImage(primodium, entity)} className="w-18 h-18 -mt-6" />
         </div>
         {inGracePeriod && (
-          <div className="flex bg-success/25 font-bold border border-success/50 gap-2 text-xs p-1 items-center h-4 w-fit">
+          <div className="flex gap-2 p-1 justify-center items-center h-4 w-full text-accent text-xs">
             <IconLabel imageUri={InterfaceIcons.Grace} className={`pixel-images w-3 h-3`} />
-            {formatTimeShort(duration)}
+            Protected for {formatTimeShort(duration)}
           </div>
         )}
-        {!inGracePeriod && (
-          <>
-            <div className="grid grid-cols-2 gap-1">
-              <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
-                <HealthBar
-                  imgUrl={EntityToResourceImage[EntityType.Encryption]}
-                  health={Number(formatResourceCount(EntityType.Encryption, encryption, { notLocale: true }))}
-                  maxHealth={Number(formatResourceCount(EntityType.Encryption, maxEncryption, { notLocale: true }))}
-                />
-              </Badge>
-              <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
-                <HealthBar
-                  imgUrl={EntityToResourceImage[EntityType.HP]}
-                  health={Number(formatResourceCount(EntityType.HP, strength, { notLocale: true, showZero: true }))}
-                  maxHealth={Number(
-                    formatResourceCount(EntityType.HP, maxStrength, { notLocale: true, showZero: true })
-                  )}
-                />
-              </Badge>
-            </div>
-            <AsteroidResources entity={entity} />
-          </>
-        )}
+        {!inGracePeriod && <AsteroidStats asteroid={entity} segments={7} />}
       </div>
-    </Card>
-  );
-};
-
-const ResourceDisplay = ({ type, count }: { type: Entity; count: bigint }) => {
-  if (count == 0n) return null;
-  return (
-    <IconLabel
-      key={`show-resource-${type}`}
-      imageUri={EntityToResourceImage[type]}
-      text={formatResourceCount(type, count, { short: true })}
-    />
-  );
-};
-
-const AsteroidResources = ({ entity }: { entity: Entity }) => {
-  const resources = useFullResourceCounts(entity);
-  return (
-    <div className="text-xs grid grid-cols-3 gap-1 divide-x divide-primary/50 pt-1 border-t border-t-primary/50">
-      <div className="uppercase font-bold flex flex-col gap-1 p-1">
-        {[EntityType.Iron, EntityType.Copper, EntityType.Lithium].map((type) => (
-          <ResourceDisplay key={`type-${type}`} type={type} count={resources.get(type)?.resourceCount ?? 0n} />
-        ))}
-      </div>
-      <div>
-        {[EntityType.IronPlate, EntityType.PVCell, EntityType.Alloy].map((type) => (
-          <ResourceDisplay key={`type-${type}`} type={type} count={resources.get(type)?.resourceCount ?? 0n} />
-        ))}
-      </div>
-      <div>
-        {[EntityType.Titanium, EntityType.Platinum, EntityType.Iridium, EntityType.Kimberlite].map((type) => (
-          <ResourceDisplay key={`type-${type}`} type={type} count={resources.get(type)?.resourceCount ?? 0n} />
-        ))}
-      </div>
-    </div>
+    </SecondaryCard>
   );
 };

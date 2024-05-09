@@ -10,6 +10,7 @@ import { getEntityTypeName } from "./common";
 import { EntityType, ResourceStorages, RockRelationship } from "./constants";
 import { getFullResourceCount } from "./resource";
 import { getOrbitingFleets } from "./unit";
+import { MainbaseLevelToEmblem } from "@/game/lib/mappings";
 
 //TODO: proper implementation, this is just a placeholder so stuff doesn't break.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -24,6 +25,16 @@ export function getAsteroidImage(primodium: Primodium, asteroid: Entity) {
 
   const { getSpriteBase64 } = primodium.api().sprite;
   return getSpriteBase64(Sprites.Asteroid1);
+}
+
+export function getAsteroidEmblem(primodium: Primodium, asteroid?: Entity) {
+  if (!asteroid) return InterfaceIcons.NotAllowed;
+  const mainBase = comps.Home.get(asteroid)?.value as Entity | undefined;
+  const level = Number(comps.Level.get(mainBase)?.value ?? 0n);
+  const emblem = MainbaseLevelToEmblem[level];
+  if (!emblem || !mainBase) return InterfaceIcons.NotAllowed;
+  const { getSpriteBase64 } = primodium.api().sprite;
+  return getSpriteBase64(emblem);
 }
 
 export function getAsteroidName(spaceRock: Entity) {

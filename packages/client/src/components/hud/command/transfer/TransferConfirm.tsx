@@ -62,7 +62,7 @@ const TransferConfirmButton = ({
   message: string;
   onClick?: () => void;
 }) => (
-  <Button className="btn-primary w-48" disabled={disabled} onClick={onClick}>
+  <Button variant="primary" size="md" className="w-full" disabled={disabled} onClick={onClick}>
     {message}
   </Button>
 );

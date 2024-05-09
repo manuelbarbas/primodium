@@ -4,31 +4,29 @@ import React, { useEffect, useMemo } from "react";
 import { FaTimes } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { components } from "src/network/components";
-import { entityToFleetName } from "src/util/name";
-import { formatResourceCount } from "src/util/number";
 import { getUnitStats } from "src/util/unit";
-import { TargetHeader } from "../../../shared/TargetHeader";
-import { ResourceIcon } from "../../global/modals/fleets/ResourceIcon";
+import { ResourceIcon } from "./ResourceIcon";
 import { hydrateFleetData } from "src/network/sync/indexer";
 import { useMud } from "src/hooks";
-import { FleetHeader } from "@/components/hud/widgets/fleets/FleetHeader";
 import { TransferSelect } from "@/components/hud/command/transfer/TransferSelect";
 import { useTransfer } from "@/hooks/providers/TransferProvider";
-import { Card } from "@/components/core/Card";
+import { Card, GlassCard, SecondaryCard } from "@/components/core/Card";
+import { AsteroidCard } from "@/components/hud/command/AsteroidCard";
+import { FleetCard } from "@/components/hud/command/FleetCard";
 
 export const TransferTo = (props: { unitCounts: Map<Entity, bigint>; resourceCounts: Map<Entity, bigint> }) => {
   const { to, setTo } = useTransfer();
 
   return (
-    <div className={`w-full h-full bg-base-100 p-2 pb-8 flex flex-col gap-2 border border-secondary/50 relative`}>
+    <GlassCard className={`w-full h-full`}>
       <TransferSelect handleSelect={setTo} showNewFleet />
       {!to && (
-        <Card className="w-full h-full">
+        <Card noDecor className="w-full h-full">
           <p className="h-full w-full grid place-items-center opacity-80 text-xs">Select a fleet or asteroid</p>
         </Card>
       )}
       {!!to && <_TransferTo entity={to} unitCounts={props.unitCounts} resourceCounts={props.resourceCounts} />}
-    </div>
+    </GlassCard>
   );
 };
 
@@ -43,13 +41,12 @@ export const _TransferTo = (props: {
   // clearAll?: () => void;
   // hovering?: boolean;
 }) => {
-  const { from, setTo, setDelta, setDeltas, deltas } = useTransfer();
+  const { from, setTo, setDelta, deltas } = useTransfer();
   const mud = useMud();
   const isFleet = props.entity !== "newFleet" && components.IsFleet.has(props.entity);
-  const noUnitsOrResources = deltas.size === 0 || (props.unitCounts.size === 0 && props.resourceCounts.size === 0);
   const Header = useMemo(() => {
     if (!isFleet && props.entity !== "newFleet") {
-      return <TargetHeader entity={props.entity} />;
+      return <AsteroidCard entity={props.entity} />;
     }
     const data = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
     const ownerRock = props.entity !== "newFleet" ? components.OwnedBy.get(props.entity)?.value : from;
@@ -66,9 +63,7 @@ export const _TransferTo = (props: {
       data.speed = bigIntMin(data.speed == 0n ? BigInt(10e100) : data.speed, unitData.SPD);
     });
 
-    return (
-      <FleetHeader title={props.entity === "newFleet" ? "New Fleet" : entityToFleetName(props.entity)} {...data} />
-    );
+    return <FleetCard entity={props.entity} />;
   }, [isFleet, props.entity, props.unitCounts, from]);
 
   useEffect(() => {
@@ -78,72 +73,64 @@ export const _TransferTo = (props: {
   }, [props.entity, mud]);
 
   return (
-    <div
-      className={`w-full h-full bg-base-100 p-2 pb-8 flex flex-col gap-2 border border-secondary/50 relative ${
-        "" // props.hovering ? "ring-2 ring-secondary" : ""
-      }`}
+    <Card
+      noDecor
+      className={`w-full h-full relative`}
       // onMouseOver={props.onMouseOver}
       // onMouseLeave={props.onMouseLeave}
     >
-      <div className="relative h-12 text-sm w-full flex justify-center font-bold gap-1">
-        {Header}
-        <Button className="absolute -top-1 -right-1 btn-error p-1 btn-xs" onClick={() => setTo(undefined)}>
-          <FaTimes />
-        </Button>
-      </div>
+      <div className="grid grid-rows-[10rem_1fr_1.5fr] gap-2 h-full">
+        <div className="relative text-sm w-full flex justify-center font-bold gap-1">
+          {Header}
+          <Button className="absolute z-20 top-1 right-1" size="sm" variant="ghost" onClick={() => setTo(undefined)}>
+            <FaTimes className="text-error w-3 h-3" />
+          </Button>
+        </div>
 
-      {/*Units*/}
-      <div className="relative flex-1 flex flex-col bg-neutral p-2 grid grid-cols-4 grid-rows-2 gap-2">
-        <div className="absolute left-0 w-full h-full topographic-background opacity-30 z-0" />
-        {Array(8)
-          .fill(0)
-          .map((_, index) => {
-            if (index >= props.unitCounts.size)
-              return <div className="w-full h-full bg-white/10 opacity-50" key={`unit-from-${index}`} />;
-            const [unit, count] = [...props.unitCounts.entries()][index];
-            const delta = deltas?.get(unit) ?? 0n;
-            return (
-              <ResourceIcon
-                key={`to-unit-${unit}`}
-                className="bg-neutral/50"
-                resource={unit as Entity}
-                amount={count.toString()}
-                delta={delta}
-                onClear={() => setDelta(unit, 0n)}
-              />
-            );
-          })}
-      </div>
+        {/*Units*/}
+        <SecondaryCard className="grid grid-cols-4 grid-rows-2 gap-1">
+          {Array(8)
+            .fill(0)
+            .map((_, index) => {
+              if (index >= props.unitCounts.size)
+                return <div className="w-full h-full bg-white/10 opacity-50" key={`unit-from-${index}`} />;
+              const [unit, count] = [...props.unitCounts.entries()][index];
+              const delta = deltas?.get(unit) ?? 0n;
+              return (
+                <ResourceIcon
+                  key={`to-unit-${unit}`}
+                  resource={unit as Entity}
+                  count={count}
+                  delta={delta}
+                  onClear={() => setDelta(unit, 0n)}
+                />
+              );
+            })}
+        </SecondaryCard>
 
-      {/*Resources*/}
-      <div className="relative flex-1 flex flex-col bg-neutral p-2 grid grid-cols-5 grid-rows-2 gap-2">
-        <div className="absolute left-0 w-full h-full topographic-background opacity-30 z-0" />
-        {Array(10)
-          .fill(0)
-          .map((_, index) => {
-            if (index >= props.resourceCounts.size)
-              return <div key={`resource-blank-${index}`} className=" w-full h-full bg-white/10 opacity-50 " />;
-            const [entity, count] = [...props.resourceCounts.entries()][index];
-            const delta = deltas?.get(entity) ?? 0n;
-            return (
-              <ResourceIcon
-                key={`to-resource-${entity}`}
-                className="bg-neutral/50"
-                resource={entity as Entity}
-                delta={delta}
-                amount={formatResourceCount(entity as Entity, count, { fractionDigits: 0 })}
-                onClear={() => setDelta(entity, 0n)}
-              />
-            );
-          })}
+        {/*Resources*/}
+
+        <SecondaryCard className="grid grid-cols-4 grid-rows-3 gap-1">
+          {Array(10)
+            .fill(0)
+            .map((_, index) => {
+              if (index >= props.resourceCounts.size)
+                return <div key={`resource-blank-${index}`} className=" w-full h-full bg-white/10 opacity-50 " />;
+              const [entity, count] = [...props.resourceCounts.entries()][index];
+              const delta = deltas?.get(entity) ?? 0n;
+              return (
+                <ResourceIcon
+                  key={`to-resource-${entity}`}
+                  className="bg-neutral/50"
+                  resource={entity as Entity}
+                  delta={delta}
+                  count={count}
+                  onClear={() => setDelta(entity, 0n)}
+                />
+              );
+            })}
+        </SecondaryCard>
       </div>
-      <Button
-        disabled={noUnitsOrResources}
-        className="btn-primary btn-xs absolute bottom-1 right-2"
-        onClick={() => setDeltas(new Map())}
-      >
-        Clear all
-      </Button>
-    </div>
+    </Card>
   );
 };
