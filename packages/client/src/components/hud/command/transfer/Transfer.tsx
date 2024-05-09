@@ -18,7 +18,6 @@ import { formatResourceCount, parseResourceCount } from "src/util/number";
 import { getFullResourceCount } from "src/util/resource";
 import { getFleetStatsFromUnits } from "src/util/unit";
 import { ResourceIcon } from "../../global/modals/fleets/ResourceIcon";
-import { useFleetNav } from "../fleets/Fleets";
 import { TransferConfirm } from "./TransferConfirm";
 import { TransferFrom } from "./TransferFrom";
 import { TransferSelect } from "./TransferSelect";
@@ -37,7 +36,6 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
 
   const selectedRock = components.ActiveRock.use()?.value;
   if (!selectedRock) throw new Error("No selected rock");
-  const Nav = useFleetNav();
   const [dragging, setDragging] = useState<{ entity: Entity; count: bigint } | null>(null);
   const [dragLocation, setDragLocation] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [hoveringArea, setHoveringArea] = useState<"from" | "to" | null>(null);
@@ -198,7 +196,7 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
   return (
     <TransactionQueueMask queueItemId={"TRANSFER" as Entity} className="w-full h-full flex flex-col gap-2 p-2">
       {dragging && <Dragging {...dragging} location={dragLocation} />}
-      <div className="grid grid-cols-[1fr_3rem_1fr]  w-full h-full">
+      <div className="grid grid-cols-[1fr_300px_1fr]  w-full h-full">
         {/*Left Side */}
         {from ? (
           <TransferFrom
@@ -270,7 +268,6 @@ const Transfer: React.FC<{ from?: Entity | undefined; to?: To | undefined }> = (
         )}
       </div>
       <div className="flex gap-4 w-full justify-center items-center">
-        <Nav.BackButton className="absolute left-2 bottom-2">Back</Nav.BackButton>
         {(!from || !to || deltas.size == 0) && (
           <Button className="btn-primary w-48" disabled>
             Select

@@ -7,6 +7,7 @@ import { Mode } from "@/util/constants";
 import { CommandViewSelector } from "@/components/hud/command/CommandViewSelector";
 import { Tabs } from "@/components/core/Tabs";
 import { Overview } from "@/components/hud/command/overview";
+import Transfer from "@/components/hud/command/transfer/Transfer";
 
 export const CommandCenterHUD = memo(() => {
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
@@ -24,6 +25,11 @@ export const CommandCenterHUD = memo(() => {
 
         <Tabs.Pane index={0} fragment>
           <Overview />
+        </Tabs.Pane>
+        <Tabs.Pane index={2} fragment>
+          <HUD.Center>
+            <Transfer />
+          </HUD.Center>
         </Tabs.Pane>
       </Tabs>
     </HUD>

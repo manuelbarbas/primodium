@@ -13,8 +13,8 @@ import { formatResourceCount, formatTime, parseResourceCount } from "src/util/nu
 import { getUnitStats } from "src/util/unit";
 import { TargetHeader } from "../../../shared/TargetHeader";
 import { ResourceIcon } from "../../global/modals/fleets/ResourceIcon";
-import { FleetHeader } from "../fleets/FleetHeader";
 import { hydrateFleetData } from "src/network/sync/indexer";
+import { FleetHeader } from "@/components/hud/widgets/fleets/FleetHeader";
 
 export const TransferFrom = (props: {
   dragging?: boolean;

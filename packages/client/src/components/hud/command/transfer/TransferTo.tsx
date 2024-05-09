@@ -9,9 +9,9 @@ import { formatResourceCount } from "src/util/number";
 import { getUnitStats } from "src/util/unit";
 import { TargetHeader } from "../../../shared/TargetHeader";
 import { ResourceIcon } from "../../global/modals/fleets/ResourceIcon";
-import { FleetHeader } from "../fleets/FleetHeader";
 import { hydrateFleetData } from "src/network/sync/indexer";
 import { useMud } from "src/hooks";
+import { FleetHeader } from "@/components/hud/widgets/fleets/FleetHeader";
 
 export const TransferTo = (props: {
   sameOwner?: boolean;

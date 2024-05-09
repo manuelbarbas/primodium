@@ -4,7 +4,6 @@ import { Button } from "src/components/core/Button";
 const fleetsPanes = {
   fleets: lazy(() => import("./FleetsPane")),
   manageFleet: lazy(() => import("./ManageFleet")),
-  transfer: lazy(() => import("../transfer/Transfer")),
 };
 
 type NavButtonProps<J extends View = View> = ComponentProps<typeof Button> & {
@@ -85,8 +84,8 @@ export const Fleets = ({ initialState = "fleets", ...initialProps }: { initialSt
       return (
         <Button
           disabled={history.length <= 1 || disabled}
-          onClick={() => {
-            if (onClick) onClick();
+          onClick={(e) => {
+            if (onClick) onClick(e);
             goBack();
           }}
           className={`${className} btn-sm border-secondary`}

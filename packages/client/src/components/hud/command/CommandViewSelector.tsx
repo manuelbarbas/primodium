@@ -6,6 +6,8 @@ import { Mode } from "@/util/constants";
 import { Modal } from "@/components/core/Modal";
 import { UnitUpgrades } from "@/components/hud/asteroid/building-menu/screens/UnitUpgrades";
 import { Tabs } from "@/components/core/Tabs";
+import { usePrimodium } from "@/hooks/usePrimodium";
+import { commandCenterScene } from "@/game/lib/config/commandCenterScene";
 
 const btnClass = "group hover:scale-[115%] bg-gradient-to-r border-l-accent from-secondary/25 to-transparent";
 const iconClass = "text-2xl";
@@ -13,6 +15,7 @@ const iconClass = "text-2xl";
 export const CommandViewSelector = () => {
   const commandOpen = components.SelectedMode.use()?.value === Mode.CommandCenter;
 
+  const { camera } = usePrimodium().api("COMMAND_CENTER")!;
   if (!commandOpen) return null;
 
   return (
@@ -27,6 +30,7 @@ export const CommandViewSelector = () => {
           size={"lg"}
           tooltip="Overview"
           tooltipDirection="right"
+          onClick={() => camera.zoomTo(commandCenterScene.camera.defaultZoom)}
         >
           <IconLabel imageUri={InterfaceIcons.Asteroid} className={iconClass} />
         </Tabs.Button>
@@ -37,6 +41,7 @@ export const CommandViewSelector = () => {
           size={"lg"}
           tooltip="Current Activities"
           tooltipDirection="right"
+          onClick={() => camera.zoomTo(commandCenterScene.camera.defaultZoom)}
         >
           <IconLabel imageUri={InterfaceIcons.Fleet} className={iconClass} />
         </Tabs.Button>
@@ -48,11 +53,19 @@ export const CommandViewSelector = () => {
           size={"lg"}
           tooltip="Transfer Inventory"
           tooltipDirection="right"
+          onClick={() => camera.zoomTo(1)}
         >
           <IconLabel imageUri={InterfaceIcons.Transfer} className={iconClass} />
         </Tabs.Button>
         <Modal title="Upgrade">
-          <Modal.Button className={btnClass} tooltip="upgrade" shape={"square"} size={"lg"} tooltipDirection="right">
+          <Modal.Button
+            className={btnClass}
+            tooltip="upgrade"
+            shape={"square"}
+            size={"lg"}
+            tooltipDirection="right"
+            onClick={() => camera.zoomTo(commandCenterScene.camera.defaultZoom)}
+          >
             <IconLabel className={iconClass} imageUri={InterfaceIcons.Add} />
           </Modal.Button>
           <Modal.Content className="w-[62rem]">
