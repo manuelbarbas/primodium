@@ -17,6 +17,7 @@ import { TransferConfirm } from "./TransferConfirm";
 import { TransferPane } from "./TransferPane";
 import { useTransfer } from "@/hooks/providers/TransferProvider";
 import { Button } from "@/components/core/Button";
+import { usePrimodium } from "@/hooks/usePrimodium";
 
 const Transfer: React.FC = () => {
   const { from, to, hovering, setHovering, deltas, setDeltas, moving, setMoving } = useTransfer();
@@ -110,45 +111,46 @@ const Transfer: React.FC = () => {
     setHovering(null);
   }, [hovering, moving, to, toUnitCounts, toResourceCounts, deltas]);
 
+  const api = usePrimodium().api("COMMAND_CENTER");
+  useEffect(() => {
+    if (!api) return;
+
+    const upListener = api.input.addListener("Up", () => handleKeyDown(10), true);
+    const downListener = api.input.addListener("Down", () => handleKeyDown(-10), true);
+    const leftListener = api.input.addListener("Left", () => handleKeyDown(-100), true);
+    const rightListener = api.input.addListener("Right", () => handleKeyDown(100), true);
+
+    return () => {
+      upListener.dispose();
+      downListener.dispose();
+      leftListener.dispose();
+      rightListener.dispose();
+    };
+  }, [api]);
+
   const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
+    (change: number) => {
       if (!moving) return;
       const initial = UnitStorages.has(moving.entity)
         ? fromUnitCounts.get(moving.entity) ?? 0n
         : fromResourceCounts.get(moving.entity) ?? 0n;
 
-      if (["e", "E", "Dead"].includes(e.key)) {
-        const delta = parseResourceCount(moving.entity, "1");
-        setMoving({
-          ...moving,
-          count: bigIntMin(initial + moving.count, moving.count + delta),
-        });
-      } else if (["q", "œ", "Q"].includes(e.key)) {
-        const delta = parseResourceCount(moving.entity, "1");
-        const min = delta;
-        setMoving({ ...moving, count: bigIntMax(min, moving.count - delta) });
-      } else if (["d", "D", "∂"].includes(e.key)) {
-        const delta = parseResourceCount(moving.entity, "100");
-        setMoving({ ...moving, count: bigIntMin(initial + moving.count, moving.count + delta) });
-      } else if (["a", "A", "å"].includes(e.key)) {
-        const delta = parseResourceCount(moving.entity, "100");
-        const min = parseResourceCount(moving.entity, "1");
-        setMoving({ ...moving, count: bigIntMax(min, moving.count - delta) });
-      } else if (e.key === "Shift") {
-        setMoving({ ...moving, count: initial });
-      } else if (e.key === "Alt") {
-        setMoving({ ...moving, count: initial / 2n });
-      }
+      const negative = change < 0;
+      const delta = parseResourceCount(moving.entity, `${Math.abs(change)}`);
+      setMoving({
+        ...moving,
+        count: !negative
+          ? bigIntMin(initial + moving.count, moving.count + delta)
+          : bigIntMax(0n, moving.count - delta),
+      });
     },
     [moving, fromResourceCounts, fromUnitCounts]
   );
 
   useEffect(() => {
     document.addEventListener("contextmenu", (event) => event.preventDefault());
-    window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("mouseup", stopMoving);
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("contextmenu", (event) => event.preventDefault());
       window.removeEventListener("mouseup", stopMoving);
     };
@@ -159,7 +161,12 @@ const Transfer: React.FC = () => {
       <p>Transfer Units and Resources</p>
       {moving && <Moving {...moving} />}
       <div className="relative grid grid-cols-[1fr_300px_1fr] gap-2 h-full w-full">
-        <TransferPane type="from" unitCounts={fromUnitCounts} resourceCounts={fromResourceCounts} />
+        <TransferPane
+          type="from"
+          unitCounts={fromUnitCounts}
+          resourceCounts={fromResourceCounts}
+          selectPlacement="top-right"
+        />
         <div className="flex w-full justify-center items-end w-full">
           <div className="grid grid-rows-2 gap-4">
             <TransactionQueueMask queueItemId={"TRANSFER" as Entity} className="w-full">
@@ -191,7 +198,7 @@ const Transfer: React.FC = () => {
 const Moving = ({ entity, count }: { entity: Entity; count: bigint }) => {
   const [dragLocation, setDragLocation] = useState({ x: -1000, y: -1000 });
   useEffect(() => {
-    window.addEventListener("mousemove", (e) => setDragLocation({ x: e.clientX, y: e.clientY }));
+    window.addEventListener("mousemove", (e) => setDragLocation({ x: e.clientX + 1, y: e.clientY + 1 }));
     return window.removeEventListener("mousemove", (e) => setDragLocation({ x: e.clientX, y: e.clientY }));
   }, []);
   return ReactDOM.createPortal(

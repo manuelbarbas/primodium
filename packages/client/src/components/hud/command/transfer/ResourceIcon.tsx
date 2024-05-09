@@ -18,7 +18,7 @@ export const ResourceIcon = ({
   count: bigint;
   delta?: bigint;
   className?: string;
-  onClick?: () => void;
+  onClick?: (aux?: boolean) => void;
   size?: "sm" | "md";
   disabled?: boolean;
 }) => {
@@ -28,6 +28,7 @@ export const ResourceIcon = ({
   return (
     <Button
       onClick={() => !disabled && onClick?.()}
+      onAuxClick={() => !disabled && onClick?.(true)}
       className={cn("relative flex flex-col gap-1 items-center justify-center cursor-pointer w-full h-full", className)}
     >
       <img

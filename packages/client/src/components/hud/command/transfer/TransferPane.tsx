@@ -13,8 +13,10 @@ import { AsteroidCard } from "@/components/hud/command/AsteroidCard";
 import { _FleetCard } from "@/components/hud/command/FleetCard";
 import { entityToFleetName } from "@/util/name";
 import { cn } from "@/util/client";
+import { parseResourceCount } from "@/util/number";
 
 export const TransferPane = (props: {
+  selectPlacement?: "top-right" | "top-left";
   type: "from" | "to";
   unitCounts: Map<Entity, bigint>;
   resourceCounts: Map<Entity, bigint>;
@@ -25,6 +27,7 @@ export const TransferPane = (props: {
   return (
     <GlassCard className={`w-full h-full`}>
       <TransferSelect
+        placement={props.selectPlacement}
         handleSelect={props.type === "from" ? setFrom : setTo}
         showNewFleet={props.type === "to"}
         hideNotOwned={props.type === "from"}
@@ -158,12 +161,12 @@ export const _TransferPane = (props: {
                 return <div key={`resource-blank-${index}`} className=" w-full h-full bg-white/10 opacity-50 " />;
               const [entity, count] = [...props.resourceCounts.entries()][index];
               const delta = deltas?.get(entity) ?? 0n;
-              const onClick = () => {
-                console.log("moving", { from: props.type, entity: entity, count: count });
+              const onClick = (aux?: boolean) => {
+                const countMoved = aux ? parseResourceCount(entity, "1") : count;
                 setMoving({
                   from: props.type,
                   entity: entity,
-                  count: count,
+                  count: countMoved,
                 });
               };
               return (
