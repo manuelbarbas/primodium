@@ -779,7 +779,7 @@ export interface SystemDestroyPathProperties {
 
 export interface SystemFleetClearSystemPrimodiumAbandonFleetProperties {
   /**
-   * An array of fleets represented by its Hex string.
+   * An array of fleets represented by their Hex strings.
    *
    * | Rule | Value |
    * |---|---|
@@ -829,7 +829,7 @@ export interface SystemFleetClearSystemPrimodiumAbandonFleetProperties {
 
 export interface SystemFleetClearSystemPrimodiumClearFleetProperties {
   /**
-   * An array of fleets represented by its Hex string.
+   * An array of fleets represented by their Hex strings.
    *
    * | Rule | Value |
    * |---|---|
@@ -879,7 +879,7 @@ export interface SystemFleetClearSystemPrimodiumClearFleetProperties {
 
 export interface SystemFleetClearSystemPrimodiumClearResourcesProperties {
   /**
-   * An array of fleets represented by its Hex string.
+   * An array of fleets represented by their Hex strings.
    *
    * | Rule | Value |
    * |---|---|
@@ -929,7 +929,7 @@ export interface SystemFleetClearSystemPrimodiumClearResourcesProperties {
 
 export interface SystemFleetClearSystemPrimodiumClearUnitsProperties {
   /**
-   * An array of fleets represented by its Hex string.
+   * An array of fleets represented by their Hex strings.
    *
    * | Rule | Value |
    * |---|---|
@@ -979,7 +979,7 @@ export interface SystemFleetClearSystemPrimodiumClearUnitsProperties {
 
 export interface SystemFleetClearSystemPrimodiumClearUnitsAndResourcesFromFleetProperties {
   /**
-   * An array of fleets represented by its Hex string.
+   * An array of fleets represented by their Hex strings.
    *
    * | Rule | Value |
    * |---|---|
@@ -1029,7 +1029,7 @@ export interface SystemFleetClearSystemPrimodiumClearUnitsAndResourcesFromFleetP
 
 export interface SystemFleetLandSystemPrimodiumLandFleetProperties {
   /**
-   * An array of fleets represented by its Hex string.
+   * An array of fleets represented by their Hex strings.
    *
    * | Rule | Value |
    * |---|---|
@@ -1079,7 +1079,7 @@ export interface SystemFleetLandSystemPrimodiumLandFleetProperties {
 
 export interface SystemFleetMergeSystemPrimodiumMergeFleetsProperties {
   /**
-   * An array of fleets represented by its Hex string.
+   * An array of fleets represented by their Hex strings.
    *
    * | Rule | Value |
    * |---|---|
@@ -1129,13 +1129,84 @@ export interface SystemFleetMergeSystemPrimodiumMergeFleetsProperties {
 
 export interface SystemFleetRecallSystemPrimodiumRecallFleetProperties {
   /**
-   * An array of fleets represented by its Hex string.
+   * An array of fleets represented by their Hex strings.
    *
    * | Rule | Value |
    * |---|---|
    * | Item Type | string |
    */
   fleets: string[];
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemFleetSendSystemPrimodiumSendFleetProperties {
+  /**
+   * An array of fleets represented by their Hex strings.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | string |
+   */
+  fleets: string[];
+  /**
+   * Position of a space rock, represented by \[x,y\] as numbers. This property is optional for FleetSendSystem if a space rock entity ID is specified instead.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Min Items | 2 |
+   * | Max Items | 2 |
+   * | Item Type | number |
+   *
+   * @minItems 2
+   * @maxItems 2
+   */
+  spaceRockCoord?: [number, number];
+  /**
+   * An array of space rock entities represented by their Hex strings.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | string |
+   */
+  spaceRocks: string[];
   /**
    * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
    */
@@ -2959,6 +3030,14 @@ export class SystemFleetRecallSystemPrimodiumRecallFleet implements BaseEvent {
   }
 }
 
+export class SystemFleetSendSystemPrimodiumSendFleet implements BaseEvent {
+  event_type = "system.FleetSendSystem.Primodium__sendFleet";
+
+  constructor(public event_properties: SystemFleetSendSystemPrimodiumSendFleetProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
 export class SystemGrantRole implements BaseEvent {
   event_type = "system.GrantRole";
 
@@ -3655,6 +3734,23 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemFleetRecallSystemPrimodiumRecallFleet(properties), options);
+  }
+
+  /**
+   * system.FleetSendSystem.Primodium__sendFleet
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.FleetSendSystem.Primodium__sendFleet)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. fleets)
+   * @param options Amplitude event options.
+   */
+  systemFleetSendSystemPrimodiumSendFleet(
+    properties: SystemFleetSendSystemPrimodiumSendFleetProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemFleetSendSystemPrimodiumSendFleet(properties), options);
   }
 
   /**
