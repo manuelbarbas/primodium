@@ -4,6 +4,8 @@ import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { Hex } from "viem";
+import { ampli } from "src/ampli";
+import { parseReceipt } from "@/util/analytics/parseReceipt";
 
 export const claimUnits = async (mud: MUD, rock: Entity) => {
   await execute(
@@ -17,8 +19,11 @@ export const claimUnits = async (mud: MUD, rock: Entity) => {
     {
       id: hashEntities(TransactionQueueType.ClaimObjective, rock),
     },
-    () => {
-      null;
+    (receipt) => {
+      ampli.systemClaimUnitsSystemPrimodiumClaimUnits({
+        spaceRock: rock as Hex,
+        ...parseReceipt(receipt),
+      });
     }
   );
 };
