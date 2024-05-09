@@ -668,6 +668,60 @@ export interface SystemClaimUnitsSystemPrimodiumClaimUnitsProperties {
   transactionValid: boolean;
 }
 
+export interface SystemColonySystemPrimodiumPayForMaxColonySlotsProperties {
+  /**
+   * Corresponds to the `resourceTypes` property in the same order.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | number |
+   */
+  resourceCounts: number[];
+  /**
+   * A shipyard entity represented by its Hex string.
+   */
+  shipyard: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
 export interface SystemCombatSystemPrimodiumAttackProperties {
   /**
    * A space rock entity represented by its Hex string.
@@ -3904,6 +3958,14 @@ export class SystemClaimUnitsSystemPrimodiumClaimUnits implements BaseEvent {
   }
 }
 
+export class SystemColonySystemPrimodiumPayForMaxColonySlots implements BaseEvent {
+  event_type = "system.ColonySystem.Primodium__payForMaxColonySlots";
+
+  constructor(public event_properties: SystemColonySystemPrimodiumPayForMaxColonySlotsProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
 export class SystemCombatSystemPrimodiumAttack implements BaseEvent {
   event_type = "system.CombatSystem.Primodium__attack";
 
@@ -4669,6 +4731,23 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemClaimUnitsSystemPrimodiumClaimUnits(properties), options);
+  }
+
+  /**
+   * system.ColonySystem.Primodium__payForMaxColonySlots
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.ColonySystem.Primodium__payForMaxColonySlots)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. resourceCounts)
+   * @param options Amplitude event options.
+   */
+  systemColonySystemPrimodiumPayForMaxColonySlots(
+    properties: SystemColonySystemPrimodiumPayForMaxColonySlotsProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemColonySystemPrimodiumPayForMaxColonySlots(properties), options);
   }
 
   /**
