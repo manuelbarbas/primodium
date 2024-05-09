@@ -1,4 +1,5 @@
 // SwapPane.tsx
+import { SecondaryCard } from "@/components/core/Card";
 import { Dropdown } from "@/components/core/Dropdown";
 import { IconLabel } from "@/components/core/IconLabel";
 import { EntityToResourceImage } from "@/util/mappings";
@@ -25,6 +26,8 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
   const [inAmountRendered, setInAmountRendered] = useState<string>("");
   const [outAmountRendered, setOutAmountRendered] = useState<string>("");
   const [lastEdited, setLastEdited] = useState<"in" | "out">("in");
+  const [slippageRendered, setSlippageRendered] = useState<string>("0.5");
+  const [outAmountMinRendered, setOutAmountMinRendered] = useState<string>("");
 
   const selectedRock = components.ActiveRock.use()?.value;
   if (!selectedRock) throw new Error("[Swap] No active rock");
@@ -32,6 +35,21 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
     if (resourceIn == RESERVE_RESOURCE || resourceOut == RESERVE_RESOURCE) return [resourceIn, resourceOut];
     return [resourceIn, RESERVE_RESOURCE, resourceOut];
   }, []);
+
+  const changeOutAmountMin = useCallback(
+    (outAmountRendered: string, slippageRendered: string) => {
+      if (!outAmountRendered || !slippageRendered) slippageRendered = "0.5";
+      const outAmount = parseResourceCount(toResource, outAmountRendered);
+      const slippageFloat = parseFloat(slippageRendered) * 100;
+      const slippage = BigInt(slippageFloat);
+      const outAmountMin = outAmount - (outAmount * slippage) / 100n / 100n;
+      if (outAmountMin == 0n) return "";
+      const outAmountMinString = formatResourceCount(toResource, outAmountMin, { fractionDigits: 9, notLocale: true });
+      setOutAmountMinRendered(outAmountMinString);
+      return outAmountMin;
+    },
+    [toResource]
+  );
 
   const changeInAmount = useCallback(
     (resourceIn: Entity, resourceOut: Entity, inAmountRendered: string) => {
@@ -50,8 +68,10 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
       const outString = formatResourceCount(resourceOut, out, { fractionDigits: 9, notLocale: true });
       setOutAmountRendered(outString);
       setLastEdited("in");
+
+      changeOutAmountMin(outString, slippageRendered);
     },
-    [getPath]
+    [getPath, changeOutAmountMin, slippageRendered]
   );
 
   const swapUpdate = components.Swap.use(mud.playerAccount.entity);
@@ -77,8 +97,28 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
       const inString = formatResourceCount(fromResource, inAmount, { fractionDigits: 9, notLocale: true });
       setInAmountRendered(inString);
       setLastEdited("out");
+
+      changeOutAmountMin(outAmountRendered, slippageRendered);
     },
-    [fromResource, toResource, getPath]
+    [fromResource, toResource, getPath, changeOutAmountMin, slippageRendered]
+  );
+
+  const changeSlippage = useCallback(
+    (slippageRendered: string) => {
+      if (!slippageRendered.includes(".") && !Number(slippageRendered)) {
+        setSlippageRendered("");
+        return;
+      }
+
+      const floatSlippage = parseFloat(slippageRendered);
+      const truncatedSlippage = parseFloat(floatSlippage.toFixed(1));
+      const clampedSlippage = Math.min(Math.max(truncatedSlippage, 0.1), 99);
+      const slippage = clampedSlippage.toString();
+
+      setSlippageRendered(slippage);
+      changeOutAmountMin(outAmountRendered, slippage);
+    },
+    [changeOutAmountMin, outAmountRendered]
   );
 
   const switchResources = useCallback(() => {
@@ -117,10 +157,11 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
 
   const handleSubmit = useCallback(() => {
     const inAmount = parseResourceCount(fromResource, inAmountRendered);
+    const outAmountMin = parseResourceCount(toResource, outAmountMinRendered);
     const path = getPath(fromResource, toResource);
     if (path.length < 2) return;
-    swap(mud, marketEntity, path, inAmount);
-  }, [fromResource, inAmountRendered, getPath, toResource, mud, marketEntity]);
+    swap(mud, marketEntity, path, inAmount, outAmountMin);
+  }, [fromResource, inAmountRendered, getPath, toResource, outAmountMinRendered, mud, marketEntity]);
 
   return (
     <div className="w-[30rem] h-fit flex flex-col gap-2 m-3 items-center">
@@ -148,12 +189,20 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
         resource={toResource}
         onResourceSelect={(resource) => changeInAmount(fromResource, resource, inAmountRendered)}
         className="row-span-4"
+        outAmountMin={outAmountMinRendered}
       />
-      <TransactionQueueMask queueItemId={singletonEntity}>
-        <Button className="btn-primary btn-lg w-full" disabled={disabled} onClick={handleSubmit}>
-          {swapButtonMsg}
-        </Button>
-      </TransactionQueueMask>
+      <div className="items-center w-full h-full pt-2 grid grid-cols-2 justify-items-start">
+        <SlippageInput
+          placeholder="Slippage"
+          amount={slippageRendered}
+          onAmountChange={(amount) => changeSlippage(amount)}
+        />
+        <TransactionQueueMask queueItemId={singletonEntity} className="justify-self-end">
+          <Button className="btn-primary btn-lg justify-self-end" disabled={disabled} onClick={handleSubmit}>
+            {swapButtonMsg}
+          </Button>
+        </TransactionQueueMask>
+      </div>
     </div>
   );
 };
@@ -165,6 +214,7 @@ interface ResourceSelectorProps {
   onAmountChange: (amount: string) => void;
   onResourceSelect: (resource: Entity) => void;
   resource: Entity;
+  outAmountMin?: string;
 }
 
 const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
@@ -172,17 +222,20 @@ const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
   const { resourceCount, resourceStorage } = useFullResourceCount(props.resource, selectedAsteroid);
 
   return (
-    <div
-      className={`w-full h-20 bg-base-100 relative border border-secondary grid grid-cols-10 px-2 items-center ${props.className}`}
-    >
+    <SecondaryCard className={`w-full h-20 relative grid grid-cols-10 p-2 items-center ${props.className}`}>
       <p className="absolute top-2 left-2 text-xs opacity-50">{props.placeholder ?? ""}</p>
-      <input
-        className="bg-transparent col-span-6 text-lg w-full h-full focus:outline-none"
-        type="number"
-        placeholder="0"
-        value={props.amount}
-        onChange={(e) => props.onAmountChange(e.target.value)}
-      />
+      <div className="col-span-6 flex flex-col">
+        <input
+          className="bg-transparent text-lg w-3/4 h-3/4 focus:outline-none"
+          type="number"
+          placeholder="0"
+          value={props.amount}
+          onChange={(e) => props.onAmountChange(e.target.value)}
+        />
+        {props.outAmountMin && !isNaN(Number(props.outAmountMin)) && (
+          <p className="text-xs font-bold uppercase opacity-60 absolute bottom-1">Minimum: {props.outAmountMin}</p>
+        )}
+      </div>
       <div className="col-span-4 flex flex-col justify-end items-end gap-1">
         <Dropdown value={props.resource} onChange={(value) => props.onResourceSelect(value)}>
           {[...ResourceStorages].map((resource) => (
@@ -196,6 +249,34 @@ const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
           {formatResourceCount(props.resource, resourceStorage, { fractionDigits: 0 })}
         </p>
       </div>
-    </div>
+    </SecondaryCard>
+  );
+};
+
+interface SlippageInputProps {
+  placeholder?: string;
+  className?: string;
+  amount: string;
+  onAmountChange: (amount: string) => void;
+}
+
+const SlippageInput: React.FC<SlippageInputProps> = (props) => {
+  return (
+    <SecondaryCard className={`h-full pt-2 flex flex-col justify-around ${props.className}`}>
+      <p className="text-xs opacity-50">{props.placeholder ?? ""}</p>
+      <div className="flex justify-between items-center">
+        <input
+          className="bg-transparent text-base opacity-80 w-auto h-5 focus:outline-none pr-4 justify-start text-left"
+          type="number"
+          placeholder="0.5"
+          step="0.1"
+          min="0.1"
+          max="99"
+          value={props.amount}
+          onChange={(e) => props.onAmountChange(e.target.value)}
+        />
+        <span className="opacity-80">%</span>
+      </div>
+    </SecondaryCard>
   );
 };
