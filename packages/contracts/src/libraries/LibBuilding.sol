@@ -59,14 +59,10 @@ library LibBuilding {
     PositionData memory coord
   ) internal view {
     require(Spawned.get(playerEntity), "[BuildSystem] Player has not spawned");
-    if (
-      buildingPrototype == MainBasePrototypeId ||
-      buildingPrototype == WormholeBasePrototypeId ||
-      buildingPrototype == StarmapperPrototypeId
-    ) {
+    if (buildingPrototype == MainBasePrototypeId || buildingPrototype == WormholeBasePrototypeId) {
       require(
         Home.get(coord.parentEntity) == bytes32(0),
-        "[BuildSystem] Cannot build more than one main base / wormhole base / starmapper per asteroid"
+        "[BuildSystem] Cannot build more than one main base per asteroid"
       );
     }
     require(
