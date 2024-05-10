@@ -30,7 +30,7 @@ export const CommandCenterHUD = memo(() => {
         </Tabs.Pane>
         <Tabs.Pane index={2} fragment>
           <HUD.Center>
-            <TransferContextProvider initialFrom={selectedRock}>
+            <TransferContextProvider initialLeft={selectedRock}>
               <Transfer />
             </TransferContextProvider>
           </HUD.Center>

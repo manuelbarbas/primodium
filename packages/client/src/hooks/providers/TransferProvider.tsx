@@ -2,53 +2,57 @@ import React, { ReactNode, createContext, useContext, useEffect, useState } from
 import { Entity } from "@latticexyz/recs";
 
 interface TransferContextType {
-  from: Entity | undefined;
-  to: Entity | "newFleet" | undefined;
+  left: Entity | undefined;
+  right: Entity | "newFleet" | undefined;
   deltas: Map<Entity, bigint>;
-  moving: { from: "from" | "to"; entity: Entity; count: bigint } | null;
-  hovering: "from" | "to" | null;
-  setFrom: (entity: Entity | undefined) => void;
-  setTo: (entity: Entity | "newFleet" | undefined) => void;
+  moving: { side: "left" | "right"; entity: Entity; count: bigint } | null;
+  hovering: "left" | "right" | null;
+  errors: { left: string | null; right: string | null };
+  setLeft: (entity: Entity | undefined) => void;
+  setRight: (entity: Entity | "newFleet" | undefined) => void;
   setDelta(entity: Entity, count: bigint): void;
   setDeltas(deltas: Map<Entity, bigint>): void;
   setMoving(data: null): void;
-  setMoving(data: { from: "from" | "to"; entity: Entity; count: bigint }): void;
-  setHovering(data: "from" | "to" | null): void;
+  setMoving(data: { side: "left" | "right"; entity: Entity; count: bigint }): void;
+  setHovering(data: "left" | "right" | null): void;
+  setError(side: "left" | "right", error: string | null): void;
 }
 
 const TransferContext = createContext<TransferContextType | undefined>(undefined);
 
 interface TransferContextProviderProps {
   children: ReactNode;
-  initialFrom?: Entity;
-  initialTo?: Entity | "newFleet";
+  initialLeft?: Entity;
+  initialRight?: Entity | "newFleet";
 }
 
 export const TransferContextProvider: React.FC<TransferContextProviderProps> = ({
   children,
-  initialFrom,
-  initialTo,
+  initialLeft,
+  initialRight,
 }) => {
   const [transferContext, setTransferContext] = useState<TransferContextType>({
-    from: initialFrom,
-    to: initialTo,
+    left: initialLeft,
+    right: initialRight,
     deltas: new Map(),
     hovering: null,
     moving: null,
-    setFrom: (entity) => setTransferContext((prev) => ({ ...prev, from: entity })),
-    setTo: (entity) => setTransferContext((prev) => ({ ...prev, to: entity })),
+    errors: { left: null, right: null },
+    setLeft: (entity) => setTransferContext((prev) => ({ ...prev, left: entity })),
+    setRight: (entity) => setTransferContext((prev) => ({ ...prev, right: entity })),
     setDelta: (entity, count) => setTransferContext((prev) => ({ ...prev, deltas: prev.deltas.set(entity, count) })),
     setDeltas: (deltas) => setTransferContext((prev) => ({ ...prev, deltas })),
     setMoving: (data) => setTransferContext((prev) => ({ ...prev, moving: data })),
     setHovering: (data) => setTransferContext((prev) => ({ ...prev, hovering: data })),
+    setError: (side, error) => setTransferContext((prev) => ({ ...prev, error: { ...prev.errors, [side]: error } })),
   });
 
-  const { setDeltas, setTo, to, from } = transferContext;
+  const { setDeltas, setRight, left, right } = transferContext;
 
   useEffect(() => {
     setDeltas(new Map());
-    if (to === "newFleet" && !from) setTo(undefined);
-  }, [from, to]);
+    if (right === "newFleet" && !left) setRight(undefined);
+  }, [left, right]);
 
   return <TransferContext.Provider value={transferContext}>{children}</TransferContext.Provider>;
 };

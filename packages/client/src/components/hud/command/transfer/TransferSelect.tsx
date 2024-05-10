@@ -9,20 +9,20 @@ import { getAsteroidImage } from "@/util/asteroid";
 import { usePrimodium } from "@/hooks/usePrimodium";
 import { useTransfer } from "@/hooks/providers/TransferProvider";
 import { cn } from "@/util/client";
+import { Card } from "@/components/core/Card";
+import { useEffect } from "react";
 
 export const TransferSelect = <NewFleet extends boolean | undefined = false>({
   handleSelect,
   showNewFleet,
   hideNotOwned,
-  placement = "top-left",
 }: {
   handleSelect: NewFleet extends true ? (entity: Entity | "newFleet") => void : (entity: Entity) => void;
   showNewFleet?: NewFleet;
   hideNotOwned?: boolean;
-  placement?: "top-left" | "top-right";
 }) => {
-  const { from, to } = useTransfer();
-  const activeEntities = [from, to];
+  const { left, right } = useTransfer();
+  const activeEntities = [left, right];
   const rockEntity = components.ActiveRock.use()?.value;
   if (!rockEntity) throw new Error("No active rock");
   const query = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination: rockEntity })];
@@ -41,43 +41,31 @@ export const TransferSelect = <NewFleet extends boolean | undefined = false>({
   const handleSelectWithNewFleet = handleSelect as (entity: Entity | "newFleet") => void;
 
   return (
-    <div
-      className={cn(
-        "absolute",
-        placement == "top-left"
-          ? "top-0 left-0 -translate-x-[calc(100%-.75rem)]"
-          : "top-0 right-0 translate-x-[calc(100%-.75rem)]",
-        "w-36 flex flex-col gap-1"
-      )}
-    >
-      <p className={cn("text-xs opacity-70 ", placement == "top-left" ? "text-right pr-5" : "text-left pl-5")}>
-        Select
-      </p>
-      <SelectOption
-        placement={placement}
-        entity={rockEntity}
-        disabled={activeEntities.includes(rockEntity)}
-        onSelect={() => handleSelect(rockEntity)}
-      />
+    <Card className="w-full h-full">
+      <div className="grid grid-cols-3 gap-2 w-full h-full">
+        <SelectOption
+          entity={rockEntity}
+          disabled={activeEntities.includes(rockEntity)}
+          onSelect={() => handleSelect(rockEntity)}
+        />
 
-      {fleetsOnRock.map((fleet) => (
-        <SelectOption
-          placement={placement}
-          key={`fleet-option-${fleet}`}
-          entity={fleet}
-          disabled={activeEntities.includes(fleet)}
-          onSelect={() => handleSelect(fleet)}
-        />
-      ))}
-      {showNewFleet == true && (
-        <SelectOption
-          entity={"newFleet"}
-          placement={placement}
-          disabled={activeEntities.includes("newFleet")}
-          onSelect={() => handleSelectWithNewFleet("newFleet")}
-        />
-      )}
-    </div>
+        {fleetsOnRock.map((fleet) => (
+          <SelectOption
+            key={`fleet-option-${fleet}`}
+            entity={fleet}
+            disabled={activeEntities.includes(fleet)}
+            onSelect={() => handleSelect(fleet)}
+          />
+        ))}
+        {showNewFleet == true && (
+          <SelectOption
+            entity={"newFleet"}
+            disabled={activeEntities.includes("newFleet")}
+            onSelect={() => handleSelectWithNewFleet("newFleet")}
+          />
+        )}
+      </div>
+    </Card>
   );
 };
 
@@ -85,31 +73,31 @@ const SelectOption = ({
   entity,
   onSelect,
   disabled,
-  placement = "top-left",
 }: {
   entity: Entity | "newFleet";
   onSelect: () => void;
   selected?: boolean;
   disabled?: boolean;
-  placement?: "top-left" | "top-right";
 }) => {
   const primodium = usePrimodium();
   const isFleet = entity !== "newFleet" && components.IsFleet.has(entity);
-  const content =
-    entity === "newFleet" ? "New Fleet" : isFleet ? entityToFleetName(entity, true) : entityToRockName(entity);
+  const content = entity === "newFleet" ? "New Fleet" : isFleet ? entityToFleetName(entity) : entityToRockName(entity);
 
   const imgSrc =
     entity === "newFleet" ? InterfaceIcons.Add : isFleet ? InterfaceIcons.Fleet : getAsteroidImage(primodium, entity);
+  useEffect(() => () => components.HoverEntity.remove(), []);
   return (
     <Button
       disabled={disabled}
       variant="neutral"
-      size="sm"
+      size="content"
       onClick={onSelect}
-      className={cn(`flex flex-row gap-2 items-center text-xs `, placement == "top-left" ? "border-r-0" : "border-l-0")}
+      onMouseEnter={() => entity !== "newFleet" && components.HoverEntity.set({ value: entity })}
+      onMouseLeave={() => components.HoverEntity.remove()}
+      className={cn(`flex w-full aspect-square flex-col gap-2 items-center`)}
     >
       <img src={imgSrc} className="w-6" />
-      {content}
+      <span className="text-pretty">{content}</span>
     </Button>
   );
 };

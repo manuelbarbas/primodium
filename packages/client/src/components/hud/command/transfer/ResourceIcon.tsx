@@ -46,7 +46,7 @@ export const ResourceIcon = ({
       >
         {formatResourceCount(resource, count, { short: false })}
       </p>
-      <p className={cn("text-[0.6rem]", delta && delta < 0n ? "text-error" : "text-success")}>
+      <p className={cn("text-[0.6rem] -mt-1", delta && delta < 0n ? "text-error" : "text-success")}>
         {!!delta && delta !== 0n && `(${delta > 0n ? "+" : ""}${formatResourceCount(resource, delta)})`}
       </p>
     </Button>

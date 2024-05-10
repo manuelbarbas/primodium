@@ -1,3 +1,4 @@
+import { PushButton } from "@/components/core/PushButton";
 import { useMud } from "@/hooks";
 import { useTransfer } from "@/hooks/providers/TransferProvider";
 import { createFleet } from "@/network/setup/contractCalls/createFleet";
@@ -5,51 +6,51 @@ import { transfer } from "@/network/setup/contractCalls/fleetTransfer";
 import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { useMemo } from "react";
-import { Button } from "src/components/core/Button";
+import { toast } from "react-toastify";
 import { components } from "src/network/components";
 import { getEntityTypeName } from "src/util/common";
 import { ResourceEntityLookup, UtilityStorages } from "src/util/constants";
 import { getFullResourceCount } from "src/util/resource";
 import { getFleetStatsFromUnits } from "src/util/unit";
 import { Hex } from "viem";
-
 interface TransferConfirmProps {
-  toUnits: Map<Entity, bigint>;
-  toResources: Map<Entity, bigint>;
+  rightUnits: Map<Entity, bigint>;
+  rightResources: Map<Entity, bigint>;
 }
 
 export const TransferConfirm = (props: {
-  toUnits: Map<Entity, bigint>;
-  toResources: Map<Entity, bigint>;
-  fromUnits: Map<Entity, bigint>;
-  fromResources: Map<Entity, bigint>;
+  leftUnits: Map<Entity, bigint>;
+  leftResources: Map<Entity, bigint>;
+  rightUnits: Map<Entity, bigint>;
+  rightResources: Map<Entity, bigint>;
 }) => {
-  const { from, to, deltas, setDeltas } = useTransfer();
+  const { left, right, deltas, setDeltas } = useTransfer();
   const mud = useMud();
-  const fromIsFleet = components.IsFleet.has(from);
-  const toIsFleet = to === "newFleet" || components.IsFleet.has(to);
+  const leftIsFleet = components.IsFleet.has(left);
+  const rightIsFleet = right === "newFleet" || components.IsFleet.has(right);
 
   const handleSubmit = () => {
-    if (!from || !to) return;
-    if (to === "newFleet") createFleet(mud, from, deltas);
-    else transfer(mud, from, to, deltas);
+    if (!left || !right) return;
+    if (right === "newFleet") createFleet(mud, left, deltas);
+    else transfer(mud, left, right, deltas);
     setDeltas(new Map());
   };
 
   const { disabled, submitMessage } = useMemo(() => {
-    if (!fromIsFleet) return { disabled: false, submitMessage: "Transfer" };
-    const owner = (from !== "newFleet" ? components.OwnedBy.get(from)?.value : undefined) as Entity | undefined;
-    const cargo = getFleetStatsFromUnits(props.fromUnits, owner).cargo;
-    if (cargo < [...props.fromResources.entries()].reduce((acc, [, count]) => acc + count, 0n))
+    if (!left || !right) return { disabled: true, submitMessage: "Transfer" };
+    if (!leftIsFleet) return { disabled: false, submitMessage: "Transfer" };
+    const owner = (left !== "newFleet" ? components.OwnedBy.get(left)?.value : undefined) as Entity | undefined;
+    const cargo = getFleetStatsFromUnits(props.leftUnits, owner).cargo;
+    if (cargo < [...props.leftResources.entries()].reduce((acc, [, count]) => acc + count, 0n))
       return { disabled: true, submitMessage: "Sender cargo capacity exceeded" };
     return { disabled: false, submitMessage: "Transfer" };
-  }, [fromIsFleet, from, props.fromUnits, props.fromResources]);
+  }, [leftIsFleet, left, props.leftUnits, props.leftResources]);
 
   if (disabled) return <TransferConfirmButton disabled={disabled} message={submitMessage} onClick={handleSubmit} />;
-  return toIsFleet || to === "newFleet" ? (
-    <TransferConfirmFleet entity={to!} {...props} />
+  return rightIsFleet || right === "newFleet" ? (
+    <TransferConfirmFleet entity={right!} {...props} />
   ) : (
-    <TransferConfirmAsteroid entity={to as Entity} {...props} />
+    <TransferConfirmAsteroid entity={right as Entity} {...props} />
   );
 };
 
@@ -62,53 +63,58 @@ const TransferConfirmButton = ({
   message: string;
   onClick?: () => void;
 }) => (
-  <Button variant="primary" size="md" className="w-full" disabled={disabled} onClick={onClick}>
+  <PushButton variant="primary" size="md" className="w-full" disabled={disabled} onClick={onClick}>
     {message}
-  </Button>
+  </PushButton>
 );
 
 const TransferConfirmFleet = ({
-  toUnits,
-  toResources,
+  rightUnits,
+  rightResources,
   entity,
 }: TransferConfirmProps & { entity: Entity | "newFleet" }) => {
-  const { from, deltas, setDeltas } = useTransfer();
+  const { left, deltas, setDeltas } = useTransfer();
   const mud = useMud();
   const handleSubmit = () => {
-    if (!from) return;
-    if (entity === "newFleet") createFleet(mud, from, deltas);
-    else transfer(mud, from, entity, deltas);
+    if (!left) return;
+    if (entity === "newFleet") createFleet(mud, left, deltas);
+    else transfer(mud, left, entity, deltas);
     setDeltas(new Map());
   };
 
   const owner = (entity !== "newFleet" ? components.OwnedBy.get(entity)?.value : undefined) as Entity | undefined;
   const { disabled, submitMessage } = useMemo(() => {
     const newFleet = entity === "newFleet";
-    if (toUnits.size === 0) return { disabled: true, submitMessage: "Add Units" };
-
-    const cargo = getFleetStatsFromUnits(toUnits, owner).cargo;
-    if (cargo < [...toResources.entries()].reduce((acc, [, count]) => acc + count, 0n))
-      return { disabled: true, submitMessage: "Recipient cargo exceeded" };
+    const rightCargo = getFleetStatsFromUnits(rightUnits, owner).cargo;
+    if (rightCargo < [...rightResources.entries()].reduce((acc, [, count]) => acc + count, 0n)) {
+      toast.info("Sender cargo capacity exceeded");
+      return { disabled: true, submitMessage: "Transfer" };
+    }
+    // const fromCargo = getFleetStatsFromUnits(fromUnits, owner).cargo;
+    // if (fromCargo < [...fromResources.entries()].reduce((acc, [, count]) => acc + count, 0n)) {
+    //   toast.info("Sender cargo capacity exceeded");
+    //   return { disabled: true, submitMessage: "Transfer" };
+    // }
 
     return { disabled: false, submitMessage: newFleet ? "Create Fleet" : "Transfer" };
-  }, [toUnits, entity, toResources, owner]);
+  }, [rightUnits, entity, rightResources, owner]);
 
   return <TransferConfirmButton disabled={disabled} message={submitMessage} onClick={handleSubmit} />;
 };
 
-const TransferConfirmAsteroid = ({ entity, toUnits, toResources }: TransferConfirmProps & { entity: Entity }) => {
+const TransferConfirmAsteroid = ({ entity, rightUnits, rightResources }: TransferConfirmProps & { entity: Entity }) => {
   const mud = useMud();
-  const { from, to, deltas, setDeltas } = useTransfer();
+  const { left, right, deltas, setDeltas } = useTransfer();
   const handleSubmit = () => {
-    if (!from || !to) return;
-    if (to === "newFleet") createFleet(mud, from, deltas);
-    else transfer(mud, from, to, deltas);
+    if (!left || !right) return;
+    if (right === "newFleet") createFleet(mud, left, deltas);
+    else transfer(mud, left, right, deltas);
     setDeltas(new Map());
   };
 
   const { disabled, submitMessage } = useMemo(() => {
     // make sure we have enough storage for housing
-    const utilitiesUsed = [...toUnits.entries()].reduce((acc, [unit, count]) => {
+    const utilitiesUsed = [...rightUnits.entries()].reduce((acc, [unit, count]) => {
       const level = components.UnitLevel.getWithKeys({ unit: unit as Hex, entity: entity as Hex })?.value ?? 0n;
       const requiredResources = components.P_RequiredResources.getWithKeys({ prototype: unit as Hex, level });
       if (!requiredResources) return acc;
@@ -130,14 +136,14 @@ const TransferConfirmAsteroid = ({ entity, toUnits, toResources }: TransferConfi
       return { disabled: true, submitMessage: `Not enough ${getEntityTypeName(enoughUtilities[0] as Entity)} storage` };
 
     // make sure we have enough storage for resources
-    const enoughResources = [...toResources.entries()].find(([resource, count]) => {
+    const enoughResources = [...rightResources.entries()].find(([resource, count]) => {
       const { resourceStorage } = getFullResourceCount(resource as Entity, entity);
       return count > resourceStorage;
     });
     if (enoughResources)
       return { disabled: true, submitMessage: `Not enough ${getEntityTypeName(enoughResources[0] as Entity)} storage` };
     return { disabled: false, submitMessage: "Transfer" };
-  }, [toUnits, toResources, entity]);
+  }, [rightUnits, rightResources, entity]);
 
   return <TransferConfirmButton disabled={disabled} message={submitMessage} onClick={handleSubmit} />;
 };
