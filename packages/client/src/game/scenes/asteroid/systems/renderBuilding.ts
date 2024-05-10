@@ -10,66 +10,18 @@ import {
   runQuery,
 } from "@latticexyz/recs";
 
-import { Scene } from "engine/types";
+import { components } from "@/network/components";
 import { world } from "@/network/world";
-
-import { EntityType, Mode } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
-import { Building } from "../../../lib/objects/Building";
-import { components } from "src/network/components";
-import { getBuildingBottomLeft } from "src/util/building";
-import { removeRaidableAsteroid } from "src/game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
-import { createObjectApi } from "@/game/api/objects";
+import { Scene } from "engine/types";
 import { Building } from "@/game/lib/objects/Building";
 import { removeRaidableAsteroid } from "@/game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
+import { createObjectApi } from "@/game/api/objects";
+import { triggerBuildAnim } from "@/game/scenes/asteroid/systems/triggerBuildAnim";
 import { Action, EntityType } from "@/util/constants";
-import { hashEntities } from "@/util/encode";
 import { getBuildingBottomLeft } from "@/util/building";
+import { hashEntities } from "@/util/encode";
 import { isDomInteraction } from "@/util/canvas";
-// import { components } from "@/network/components";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-// import { Entity } from "@latticexyz/recs";
-import { Coord } from "engine/types";
-import { getBuildingDimensions } from "@/util/building";
-
-export const triggerBuildAnim = (scene: Scene, entity: Entity, mapCoord: Coord) => {
-  const flare = (absoluteCoord: Coord, size = 1) => {
-    scene.phaserScene.add
-      .particles(absoluteCoord.x, absoluteCoord.y, "flare", {
-        speed: 100,
-        lifespan: 300 * size,
-        quantity: 10,
-        scale: { start: 0.3, end: 0 },
-        tintFill: true,
-        color: [0x828282, 0xbfbfbf, 0xe8e8e8],
-        duration: 100,
-      })
-      .start();
-  };
-
-  const {
-    tiled: { tileWidth, tileHeight },
-  } = scene;
-  const buildingType = components.BuildingType.get(entity)?.value as Entity | undefined;
-  if (!buildingType) return;
-
-  const buildingDimensions = getBuildingDimensions(buildingType);
-  // convert coords from bottom left to top left
-  const mapCoordTopLeft = {
-    x: mapCoord.x,
-    y: mapCoord.y + buildingDimensions.height - 1,
-  };
-  const pixelCoord = tileCoordToPixelCoord(mapCoordTopLeft, tileWidth, tileHeight);
-
-  // throw up dust on build
-  flare(
-    {
-      x: pixelCoord.x + (tileWidth * buildingDimensions.width) / 2,
-      y: -pixelCoord.y + (tileHeight * buildingDimensions.height) / 2,
-    },
-    buildingDimensions.width
-  );
-};
+import { EMap } from "contracts/config/enums";
 
 export const renderBuilding = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -83,6 +35,12 @@ export const renderBuilding = (scene: Scene) => {
 
     world.dispose("game_spectate");
 
+    // Wait for a few seconds for initial buildings to be entered into the query and placed, so we don't trigger
+    // the build anim for them
+    let initialBuildingsPlaced = false;
+    setTimeout(() => (initialBuildingsPlaced = true), 3000);
+
+    // Find old buildings that have this asteroid as parent
     const positionQuery = [
       HasValue(components.Position, {
         parentEntity: value[0]?.value,
@@ -92,6 +50,7 @@ export const renderBuilding = (scene: Scene) => {
       Has(components.Level),
     ];
 
+    // Find old buildings that have the previous active asteroid as parent
     const oldPositionQuery = [
       HasValue(components.Position, {
         parentEntity: value[1]?.value,
@@ -101,6 +60,7 @@ export const renderBuilding = (scene: Scene) => {
       Has(components.Level),
     ];
 
+    // Dispose of buildings on the previous active asteroid
     for (const entity of runQuery(oldPositionQuery)) {
       const building = objects.building.get(entity);
       if (building) {
@@ -121,6 +81,8 @@ export const renderBuilding = (scene: Scene) => {
         if (!origin || !buildingPrototype) return;
         const tileCoord = getBuildingBottomLeft(origin, buildingPrototype);
         building.setCoordPosition(tileCoord);
+        // trigger anim since the building was just moved
+        triggerBuildAnim(scene, entity, tileCoord);
 
         return;
       }
@@ -188,9 +150,11 @@ export const renderBuilding = (scene: Scene) => {
         });
 
       // buildings.set(entity, building);
+      // trigger the build anim if it's a new placement (not initializing)
+      if (initialBuildingsPlaced) triggerBuildAnim(scene, entity, tilePosition);
     };
 
-    //handle selectedBuilding changes
+    // handle selectedBuilding changes
     defineComponentSystem(spectateWorld, components.SelectedBuilding, ({ value }) => {
       if (value[0]?.value === value[1]?.value) return;
 
@@ -205,21 +169,6 @@ export const renderBuilding = (scene: Scene) => {
     });
 
     defineEnterSystem(spectateWorld, positionQuery, render);
-    defineEnterSystem(
-      spectateWorld,
-      positionQuery,
-      ({ entity }) => {
-        if (components.SelectedMode.get()?.value === Mode.Spectate) return;
-
-        const origin = components.Position.get(entity);
-        const buildingPrototype = components.BuildingType.get(entity)?.value as Entity | undefined;
-        if (!origin || !buildingPrototype) return;
-        const tileCoord = getBuildingBottomLeft(origin, buildingPrototype);
-
-        triggerBuildAnim(scene, entity, tileCoord);
-      },
-      { runOnInit: false }
-    );
     defineUpdateSystem(spectateWorld, positionQuery, render);
 
     defineExitSystem(spectateWorld, positionQuery, ({ entity }) => {
