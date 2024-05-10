@@ -99,15 +99,14 @@ const Transfer: React.FC = () => {
         return;
       }
 
-      const rawCount = rightClick ? parseResourceCount(moving.entity, "1") : moving.count;
+      const count = rightClick ? parseResourceCount(moving.entity, "1") : moving.count;
       const recipient = hovering === "left" ? left : right;
-      const count = moving.side == "left" ? rawCount : -rawCount;
       let amountMoved = 0n;
 
       if (UnitStorages.has(moving.entity)) {
         const newMap = new Map(deltas);
         amountMoved = count;
-        newMap.set(moving.entity, (deltas.get(moving.entity) ?? 0n) + count);
+        newMap.set(moving.entity, (deltas.get(moving.entity) ?? 0n) + (moving.side === "right" ? -count : count));
         setDeltas(newMap);
       } else {
         const recipientIsFleet = recipient === "newFleet" || !!components.IsFleet.get(recipient)?.value;
@@ -134,11 +133,13 @@ const Transfer: React.FC = () => {
         amountMoved = resourceStorage < outcome ? resourceStorage - resourceCount : count;
 
         const newMap = new Map(deltas);
-        newMap.set(moving.entity, (deltas.get(moving.entity) ?? 0n) + amountMoved);
+        newMap.set(
+          moving.entity,
+          (deltas.get(moving.entity) ?? 0n) + (moving.side === "right" ? -amountMoved : amountMoved)
+        );
         setDeltas(newMap);
       }
       const formattedMin = parseResourceCount(moving.entity, "1");
-      console.log({ count: moving.count, formattedMin });
       if (!rightClick || amountMoved === moving.count || moving.count === formattedMin) {
         setMoving(null);
         setHovering(null);

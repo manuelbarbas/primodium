@@ -145,7 +145,6 @@ export const _TransferPane = (props: {
                 const [unit, count] = [...props.unitCounts.entries()][index];
                 const delta = deltas?.get(unit) ?? 0n;
                 const onClick = (aux?: boolean) => {
-                  if (moving?.entity === unit) return;
                   const countMoved = aux ? 1n : count;
                   setMoving({
                     side: props.side,
@@ -158,6 +157,7 @@ export const _TransferPane = (props: {
                     key={`right-unit-${unit}`}
                     onClick={onClick}
                     size="sm"
+                    disabled={moving !== null}
                     resource={unit as Entity}
                     count={count}
                     rawDelta={delta}
@@ -178,7 +178,8 @@ export const _TransferPane = (props: {
                 const [entity, count] = [...props.resourceCounts.entries()][index];
                 const delta = deltas?.get(entity) ?? 0n;
                 const onClick = (aux?: boolean) => {
-                  if (moving?.entity === entity) return;
+                  console.log({ moving });
+                  if (moving !== null) return;
                   const countMoved = aux ? parseResourceCount(entity, "1") : count;
                   setMoving({
                     side: props.side,
@@ -192,6 +193,7 @@ export const _TransferPane = (props: {
                     key={`right-resource-${entity}`}
                     size="sm"
                     className="bg-neutral/50"
+                    disabled={moving !== null}
                     resource={entity as Entity}
                     rawDelta={delta}
                     count={count}
