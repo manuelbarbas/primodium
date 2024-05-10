@@ -38,9 +38,9 @@ contract CombatEncryptionTest is PrimodiumTest {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
-    uint256 numberOfUnits = 50;
+    uint256 numberOfUnits = 5000;
 
-    //create fleet with 1 minuteman marine
+    //create fleet with minuteman marines
     bytes32 minuteman = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
     bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
     uint256 decryption = P_ColonyShipConfig.getDecryption();
