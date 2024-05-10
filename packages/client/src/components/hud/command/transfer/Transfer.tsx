@@ -35,7 +35,8 @@ const Transfer: React.FC = () => {
     const entity = ResourceEntityLookup[transportable as EResource];
     const resourceCount = toInitialResourceCounts.get(entity)?.resourceCount;
     const delta = deltas.get(entity) ?? 0n;
-    const total = (resourceCount ?? 0n) + delta;
+    const movingCount = moving?.from == "to" && moving?.entity === entity ? moving.count : 0n;
+    const total = (resourceCount ?? 0n) + delta - movingCount;
     if (total == 0n) return acc;
     acc.set(entity, total);
     return acc;
@@ -47,7 +48,7 @@ const Transfer: React.FC = () => {
     const resourceCount = fromInitialResourceCounts.get(entity)?.resourceCount ?? 0n;
     if (resourceCount == 0n) return acc;
     const delta = deltas.get(entity) ?? 0n;
-    const movingCount = moving?.entity === entity ? moving.count : 0n;
+    const movingCount = moving?.from == "from" && moving?.entity === entity ? moving.count : 0n;
     const total = resourceCount - delta - movingCount;
     acc.set(entity, total);
     return acc;
@@ -60,10 +61,10 @@ const Transfer: React.FC = () => {
   const fromUnitCounts = useMemo(() => {
     return [...UnitStorages].reduce((acc, unit) => {
       const count = fromInitialUnitCounts.get(unit) ?? 0n;
-      if (count == 0n) return acc;
       const delta = deltas.get(unit) ?? 0n;
-      const movingCount = moving?.entity === unit ? moving.count : 0n;
+      const movingCount = moving?.from == "from" ? (moving?.entity === unit ? moving.count : 0n) : 0n;
       const total = count - delta - movingCount;
+      if (total === 0n) return acc;
       acc.set(unit, total);
       return acc;
     }, new Map<Entity, bigint>());
@@ -73,37 +74,40 @@ const Transfer: React.FC = () => {
     return [...UnitStorages].reduce((acc, unit) => {
       const count = toInitialUnitCounts.get(unit) ?? 0n;
       const delta = deltas.get(unit) ?? 0n;
-      if (count + delta > 0n) acc.set(unit, count + delta);
+      const movingCount = moving?.from == "to" ? (moving?.entity === unit ? moving.count : 0n) : 0n;
+      if (count + delta > 0n) acc.set(unit, count + delta - movingCount);
       return acc;
     }, new Map<Entity, bigint>());
-  }, [deltas, toInitialUnitCounts]);
+  }, [moving, deltas, toInitialUnitCounts]);
 
   const stopMoving = useCallback(() => {
-    if (!moving) return;
     document.body.style.userSelect = "";
     setMoving(null);
-    if (hovering === "to" && moving) {
+    if (!moving || !hovering) return;
+    if (hovering !== moving.from) {
+      const recipient = hovering === "from" ? from : to;
+      const count = moving.from == "from" ? moving.count : -moving.count;
       if (UnitStorages.has(moving.entity)) {
         const newMap = new Map(deltas);
-        newMap.set(moving.entity, (deltas.get(moving.entity) ?? 0n) + moving.count);
+        newMap.set(moving.entity, (deltas.get(moving.entity) ?? 0n) + count);
         setDeltas(newMap);
         return;
       }
-      const toIsFleet = to === "newFleet" || !!components.IsFleet.get(to)?.value;
+      const toIsFleet = recipient === "newFleet" || !!components.IsFleet.get(recipient)?.value;
 
       const resourceCount = toIsFleet
         ? [...toResourceCounts.entries()].reduce((acc, [, count]) => acc + count, 0n)
         : toResourceCounts.get(moving.entity) ?? 0n;
 
-      const fleetOwner = (toIsFleet && to !== "newFleet" ? components.OwnedBy.get(to)?.value : undefined) as
-        | Entity
-        | undefined;
+      const fleetOwner = (
+        toIsFleet && recipient !== "newFleet" ? components.OwnedBy.get(recipient)?.value : undefined
+      ) as Entity | undefined;
       const resourceStorage = toIsFleet
         ? getFleetStatsFromUnits(toUnitCounts, fleetOwner).cargo
         : getFullResourceCount(moving.entity, to as Entity).resourceStorage;
 
-      const outcome = moving.count + resourceCount;
-      const amountMoved = resourceStorage < outcome ? resourceStorage - resourceCount : moving.count;
+      const outcome = count + resourceCount;
+      const amountMoved = resourceStorage < outcome ? resourceStorage - resourceCount : count;
       const newMap = new Map(deltas);
       newMap.set(moving.entity, bigIntMax(0n, (deltas.get(moving.entity) ?? 0n) + amountMoved));
       setDeltas(newMap);
@@ -159,7 +163,7 @@ const Transfer: React.FC = () => {
   return (
     <div className="w-[70rem] h-[44rem] flex flex-col gap-4">
       <p>Transfer Units and Resources</p>
-      {moving && <Moving {...moving} />}
+      <Moving {...moving} />
       <div className="relative grid grid-cols-[1fr_300px_1fr] gap-2 h-full w-full">
         <TransferPane
           type="from"
@@ -195,15 +199,25 @@ const Transfer: React.FC = () => {
   );
 };
 
-const Moving = ({ entity, count }: { entity: Entity; count: bigint }) => {
+const Moving = ({ entity, count }: { entity?: Entity; count?: bigint }) => {
   const [dragLocation, setDragLocation] = useState({ x: -1000, y: -1000 });
+
   useEffect(() => {
-    window.addEventListener("mousemove", (e) => setDragLocation({ x: e.clientX + 1, y: e.clientY + 1 }));
-    return window.removeEventListener("mousemove", (e) => setDragLocation({ x: e.clientX, y: e.clientY }));
-  }, []);
+    const updatePosition = (e: MouseEvent) => {
+      setDragLocation({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener("mousemove", updatePosition);
+
+    return () => {
+      window.removeEventListener("mousemove", updatePosition);
+    };
+  }, [entity]);
+
+  if (!entity || !count) return null;
   return ReactDOM.createPortal(
     <div
-      className={`font-mono fixed pointer-events-none`}
+      className={`font-mono fixed pointer-events-none transform -translate-x-1/2 -translate-y-1/4`}
       style={{ left: dragLocation.x, top: dragLocation.y, zIndex: 1002 }}
     >
       <ResourceIcon resource={entity} count={count} />

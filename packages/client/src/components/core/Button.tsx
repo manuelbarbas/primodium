@@ -130,7 +130,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         <button
           className={cn(
             buttonVariants({ variant, size, motion, modifier, shape, className }),
-            selected && "border-1 border-accent z-10"
+            selected && "border-1 border-accent z-10",
+            "cursor-pointer active:cursor-pointerDown"
           )}
           ref={ref}
           tabIndex={-1}

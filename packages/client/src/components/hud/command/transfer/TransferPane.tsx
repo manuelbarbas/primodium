@@ -54,24 +54,18 @@ export const _TransferPane = (props: {
   type: "from" | "to";
   unitCounts: Map<Entity, bigint>;
   resourceCounts: Map<Entity, bigint>;
-  // onMouseOver?: (e: React.MouseEvent) => void;
-  // onMouseLeave?: (e: React.MouseEvent) => void;
-  // clearResource?: (entity: Entity) => void;
-  // clearUnit?: (entity: Entity) => void;
-  // clearAll?: () => void;
-  // hovering?: boolean;
 }) => {
-  const { from, deltas, moving, setHovering, setMoving, hovering } = useTransfer();
+  const { from, to, deltas, moving, setHovering, setMoving, hovering } = useTransfer();
   const selectedRock = components.SelectedRock.use()?.value;
   const mud = useMud();
   const newFleet = props.entity === "newFleet";
-  const isFleet = !newFleet && components.IsFleet.has(props.entity as Entity);
+  const isFleet = newFleet || components.IsFleet.has(props.entity as Entity);
   const Header = useMemo(() => {
-    if (!isFleet && props.entity !== "newFleet") {
+    if (!isFleet) {
       return <AsteroidCard entity={props.entity} />;
     }
     const data = { title: "New Fleet", attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
-    const ownerRock = !newFleet ? components.OwnedBy.get(props.entity as Entity)?.value : undefined;
+    const ownerRock = !newFleet ? components.OwnedBy.get(props.entity as Entity)?.value : selectedRock;
 
     if (!ownerRock) return <></>;
 
@@ -112,76 +106,83 @@ export const _TransferPane = (props: {
     }
   };
   return (
-    <Card
-      noDecor
-      className={cn("w-full h-full relative", hovering === props.type ? "ring ring-secondary" : "")}
-      onMouseOver={onMouseOver}
-      onMouseLeave={() => setHovering(null)}
-    >
-      <div className="grid grid-rows-[10rem_1fr_1.5fr] gap-2 h-full">
+    <Card noDecor className={cn("w-full h-full relative", hovering === props.type ? "ring ring-secondary" : "")}>
+      <div
+        className="grid grid-rows-[10rem_1fr] gap-2 h-full"
+        onMouseLeave={() => setHovering(null)}
+        onMouseOver={onMouseOver}
+      >
         <div className="relative text-sm w-full flex justify-center font-bold gap-1">{Header}</div>
 
         {/*Units*/}
-        <SecondaryCard className="grid grid-cols-4 grid-rows-2 gap-1">
-          {Array(8)
-            .fill(0)
-            .map((_, index) => {
-              if (index >= props.unitCounts.size)
-                return <div className="w-full h-full bg-white/10 opacity-50" key={`unit-from-${index}`} />;
-              const [unit, count] = [...props.unitCounts.entries()][index];
-              const delta = deltas?.get(unit) ?? 0n;
-              const onClick = () => {
-                console.log("moving", { from: props.type, entity: unit, count: count });
-                setMoving({
-                  from: props.type,
-                  entity: unit,
-                  count: count,
-                });
-              };
-              return (
-                <ResourceIcon
-                  key={`to-unit-${unit}`}
-                  onClick={onClick}
-                  size="sm"
-                  resource={unit as Entity}
-                  count={count}
-                  delta={delta}
-                />
-              );
-            })}
-        </SecondaryCard>
+        <div className="relative grid grid-rows-[1fr_1.5fr]">
+          {(!from || !to) && (
+            <div className="absolute top-0 left-0 w-full h-full grid place-items-center bg-black/70 z-30">
+              Select a fleet or asteroid
+            </div>
+          )}
+          <SecondaryCard className="grid grid-cols-4 grid-rows-2 gap-1">
+            {Array(8)
+              .fill(0)
+              .map((_, index) => {
+                if (index >= props.unitCounts.size)
+                  return <div className="w-full h-full bg-white/10 opacity-50" key={`unit-from-${index}`} />;
+                const [unit, count] = [...props.unitCounts.entries()][index];
+                const delta = deltas?.get(unit) ?? 0n;
+                const onClick = () => {
+                  setMoving({
+                    from: props.type,
+                    entity: unit,
+                    count: count,
+                  });
+                };
+                return (
+                  <ResourceIcon
+                    key={`to-unit-${unit}`}
+                    onClick={onClick}
+                    size="sm"
+                    resource={unit as Entity}
+                    count={count}
+                    rawDelta={delta}
+                    negative={props.type === "to"}
+                  />
+                );
+              })}
+          </SecondaryCard>
 
-        {/*Resources*/}
+          {/*Resources*/}
 
-        <SecondaryCard className="grid grid-cols-4 grid-rows-3 gap-1">
-          {Array(10)
-            .fill(0)
-            .map((_, index) => {
-              if (index >= props.resourceCounts.size)
-                return <div key={`resource-blank-${index}`} className=" w-full h-full bg-white/10 opacity-50 " />;
-              const [entity, count] = [...props.resourceCounts.entries()][index];
-              const delta = deltas?.get(entity) ?? 0n;
-              const onClick = (aux?: boolean) => {
-                const countMoved = aux ? parseResourceCount(entity, "1") : count;
-                setMoving({
-                  from: props.type,
-                  entity: entity,
-                  count: countMoved,
-                });
-              };
-              return (
-                <ResourceIcon
-                  onClick={onClick}
-                  key={`to-resource-${entity}`}
-                  size="sm"
-                  className="bg-neutral/50"
-                  resource={entity as Entity}
-                  delta={delta}
-                  count={count}
-                />
-              );
-            })}
-        </SecondaryCard>
+          <SecondaryCard className="grid grid-cols-4 grid-rows-3 gap-1">
+            {Array(10)
+              .fill(0)
+              .map((_, index) => {
+                if (index >= props.resourceCounts.size)
+                  return <div key={`resource-blank-${index}`} className=" w-full h-full bg-white/10 opacity-50 " />;
+                const [entity, count] = [...props.resourceCounts.entries()][index];
+                const delta = deltas?.get(entity) ?? 0n;
+                const onClick = (aux?: boolean) => {
+                  const countMoved = aux ? parseResourceCount(entity, "1") : count;
+                  setMoving({
+                    from: props.type,
+                    entity: entity,
+                    count: countMoved,
+                  });
+                };
+                return (
+                  <ResourceIcon
+                    onClick={onClick}
+                    key={`to-resource-${entity}`}
+                    size="sm"
+                    className="bg-neutral/50"
+                    resource={entity as Entity}
+                    rawDelta={delta}
+                    count={count}
+                    negative={props.type === "to"}
+                  />
+                );
+              })}
+          </SecondaryCard>
+        </div>
       </div>
     </Card>
   );

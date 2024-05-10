@@ -8,22 +8,25 @@ import { formatResourceCount } from "src/util/number";
 export const ResourceIcon = ({
   resource,
   count,
-  delta,
+  rawDelta,
   className,
   size = "md",
   onClick,
   disabled,
+  negative,
 }: {
   resource: Entity;
   count: bigint;
-  delta?: bigint;
+  rawDelta?: bigint;
   className?: string;
   onClick?: (aux?: boolean) => void;
   size?: "sm" | "md";
   disabled?: boolean;
+  negative?: boolean;
 }) => {
   const formattedResourceCount = formatResourceCount(resource, count);
   const entityIsUnit = UnitStorages.has(resource);
+  const delta = rawDelta ? (!negative ? -rawDelta : rawDelta) : 0n;
 
   return (
     <Button
