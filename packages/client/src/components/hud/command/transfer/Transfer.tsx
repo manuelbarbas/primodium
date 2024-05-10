@@ -38,7 +38,7 @@ const Transfer: React.FC = () => {
         const delta = deltas.get(entity) ?? 0n;
         const movingCount = moving?.side == "right" && moving?.entity === entity ? moving.count : 0n;
         const total = (resourceCount ?? 0n) + delta - movingCount;
-        if (total == 0n) return acc;
+        if (total <= 0n) return acc;
         acc.set(entity, total);
         return acc;
       }, new Map<Entity, bigint>()),
@@ -51,10 +51,10 @@ const Transfer: React.FC = () => {
       transportables.reduce((acc, transportable) => {
         const entity = ResourceEntityLookup[transportable as EResource];
         const resourceCount = leftInitialResourceCounts.get(entity)?.resourceCount ?? 0n;
-        if (resourceCount == 0n) return acc;
         const delta = deltas.get(entity) ?? 0n;
         const movingCount = moving?.side == "left" && moving?.entity === entity ? moving.count : 0n;
         const total = resourceCount - delta - movingCount;
+        if (total <= 0n) return acc;
         acc.set(entity, total);
         return acc;
       }, new Map<Entity, bigint>()),
@@ -71,7 +71,7 @@ const Transfer: React.FC = () => {
       const delta = deltas.get(unit) ?? 0n;
       const movingCount = moving?.side == "left" ? (moving?.entity === unit ? moving.count : 0n) : 0n;
       const total = count - delta - movingCount;
-      if (total === 0n) return acc;
+      if (total <= 0n) return acc;
       acc.set(unit, total);
       return acc;
     }, new Map<Entity, bigint>());
@@ -82,7 +82,9 @@ const Transfer: React.FC = () => {
       const count = rightInitialUnitCounts.get(unit) ?? 0n;
       const delta = deltas.get(unit) ?? 0n;
       const movingCount = moving?.side == "right" ? (moving?.entity === unit ? moving.count : 0n) : 0n;
-      if (count + delta > 0n) acc.set(unit, count + delta - movingCount);
+      const total = count + delta - movingCount;
+      if (total <= 0n) return acc;
+      acc.set(unit, total);
       return acc;
     }, new Map<Entity, bigint>());
   }, [moving, deltas, rightInitialUnitCounts]);
@@ -91,11 +93,12 @@ const Transfer: React.FC = () => {
     (rightClick?: boolean) => {
       document.body.style.userSelect = "";
       if (!moving) return;
-      if (!hovering || hovering === moving.side) {
+      if (!hovering || hovering == moving.side) {
         setMoving(null);
         setHovering(null);
         return;
       }
+
       const rawCount = rightClick ? parseResourceCount(moving.entity, "1") : moving.count;
       const recipient = hovering === "left" ? left : right;
       const count = moving.side == "left" ? rawCount : -rawCount;
@@ -134,19 +137,39 @@ const Transfer: React.FC = () => {
         newMap.set(moving.entity, (deltas.get(moving.entity) ?? 0n) + amountMoved);
         setDeltas(newMap);
       }
-      if (!rightClick || amountMoved === moving.count || amountMoved === 0n) {
+      const formattedMin = parseResourceCount(moving.entity, "1");
+      console.log({ count: moving.count, formattedMin });
+      if (!rightClick || amountMoved === moving.count || moving.count === formattedMin) {
         setMoving(null);
         setHovering(null);
       } else {
         setMoving({
           ...moving,
-          count: moving.count - parseResourceCount(moving.entity, "1"),
+          count: moving.count - formattedMin,
         });
       }
     },
     [hovering, moving, right, rightUnitCounts, rightResourceCounts, deltas]
   );
 
+  const handleKeyDown = useCallback(
+    (change: number) => {
+      if (!moving) return;
+      const initial = UnitStorages.has(moving.entity)
+        ? (moving.side === "left" ? leftUnitCounts : rightUnitCounts).get(moving.entity) ?? 0n
+        : (moving.side === "left" ? leftResourceCounts : rightResourceCounts).get(moving.entity) ?? 0n;
+
+      const negative = change < 0;
+      const delta = parseResourceCount(moving.entity, `${Math.abs(change)}`);
+      setMoving({
+        ...moving,
+        count: !negative
+          ? bigIntMin(initial + moving.count, moving.count + delta)
+          : bigIntMax(1n, moving.count - delta),
+      });
+    },
+    [moving, leftResourceCounts, leftUnitCounts]
+  );
   const api = usePrimodium().api("COMMAND_CENTER");
   useEffect(() => {
     if (!api) return;
@@ -162,26 +185,7 @@ const Transfer: React.FC = () => {
       leftListener.dispose();
       rightListener.dispose();
     };
-  }, [api]);
-
-  const handleKeyDown = useCallback(
-    (change: number) => {
-      if (!moving) return;
-      const initial = UnitStorages.has(moving.entity)
-        ? leftUnitCounts.get(moving.entity) ?? 0n
-        : leftResourceCounts.get(moving.entity) ?? 0n;
-
-      const negative = change < 0;
-      const delta = parseResourceCount(moving.entity, `${Math.abs(change)}`);
-      setMoving({
-        ...moving,
-        count: !negative
-          ? bigIntMin(initial + moving.count, moving.count + delta)
-          : bigIntMax(1n, moving.count - delta),
-      });
-    },
-    [moving, leftResourceCounts, leftUnitCounts]
-  );
+  }, [api, handleKeyDown]);
 
   useEffect(() => {
     const clickCallback = (e: MouseEvent) => {

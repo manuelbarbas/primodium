@@ -1,5 +1,6 @@
 import React, { ReactNode, createContext, useContext, useEffect, useState } from "react";
 import { Entity } from "@latticexyz/recs";
+import { bigIntMax } from "@latticexyz/common/utils";
 
 interface TransferContextType {
   left: Entity | undefined;
@@ -42,7 +43,12 @@ export const TransferContextProvider: React.FC<TransferContextProviderProps> = (
     setRight: (entity) => setTransferContext((prev) => ({ ...prev, right: entity })),
     setDelta: (entity, count) => setTransferContext((prev) => ({ ...prev, deltas: prev.deltas.set(entity, count) })),
     setDeltas: (deltas) => setTransferContext((prev) => ({ ...prev, deltas })),
-    setMoving: (data) => setTransferContext((prev) => ({ ...prev, moving: data })),
+    setMoving: (data) =>
+      setTransferContext((prev) => {
+        if (data === null) return { ...prev, moving: null };
+        data.count = bigIntMax(0n, data.count);
+        return { ...prev, moving: data };
+      }),
     setHovering: (data) => setTransferContext((prev) => ({ ...prev, hovering: data })),
     setError: (side, error) => setTransferContext((prev) => ({ ...prev, errors: { ...prev.errors, [side]: error } })),
   });

@@ -41,8 +41,8 @@ export const TransferSelect = <NewFleet extends boolean | undefined = false>({
   const handleSelectWithNewFleet = handleSelect as (entity: Entity | "newFleet") => void;
 
   return (
-    <Card className="w-full h-full">
-      <div className="grid grid-cols-3 gap-2 w-full h-full">
+    <Card className="w-full h-full overflow-hidden">
+      <div className="grid grid-cols-3 gap-2 w-full overflow-scroll">
         <SelectOption
           entity={rockEntity}
           disabled={activeEntities.includes(rockEntity)}
@@ -57,13 +57,17 @@ export const TransferSelect = <NewFleet extends boolean | undefined = false>({
             onSelect={() => handleSelect(fleet)}
           />
         ))}
-        {showNewFleet == true && (
-          <SelectOption
-            entity={"newFleet"}
-            disabled={activeEntities.includes("newFleet")}
-            onSelect={() => handleSelectWithNewFleet("newFleet")}
-          />
-        )}
+        {showNewFleet == true &&
+          new Array(30)
+            .fill(null)
+            .map((_, i) => (
+              <SelectOption
+                key={i}
+                entity={"newFleet"}
+                disabled={activeEntities.includes("newFleet")}
+                onSelect={() => handleSelectWithNewFleet("newFleet")}
+              />
+            ))}
       </div>
     </Card>
   );
