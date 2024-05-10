@@ -22,29 +22,29 @@ import { EResource } from "contracts/config/enums";
 import { getEntityTypeName } from "src/util/common";
 import { getFleetStatsFromUnits } from "src/util/unit";
 import { Hex } from "viem";
+import { FaExclamationTriangle } from "react-icons/fa";
 
 export const TransferPane = (props: {
-  selectPlacement?: "top-right" | "top-left";
-  type: "left" | "right";
+  side: "left" | "right";
   unitCounts: Map<Entity, bigint>;
   resourceCounts: Map<Entity, bigint>;
 }) => {
   const { right, setRight, left, setLeft } = useTransfer();
-  const entity = props.type === "right" ? right : left;
+  const entity = props.side === "right" ? right : left;
 
   return (
     <GlassCard className={`w-full h-full`}>
       {!entity && (
         <TransferSelect
-          handleSelect={props.type === "left" ? setLeft : setRight}
-          showNewFleet={props.type === "right"}
-          hideNotOwned={props.type === "left"}
+          handleSelect={props.side === "left" ? setLeft : setRight}
+          showNewFleet={props.side === "right"}
+          hideNotOwned={props.side === "left"}
         />
       )}
       {!!entity && (
         <_TransferPane
           entity={entity}
-          type={props.type}
+          side={props.side}
           unitCounts={props.unitCounts}
           resourceCounts={props.resourceCounts}
         />
@@ -55,11 +55,15 @@ export const TransferPane = (props: {
 
 export const _TransferPane = (props: {
   entity: Entity | "newFleet";
-  type: "left" | "right";
+  side: "left" | "right";
   unitCounts: Map<Entity, bigint>;
   resourceCounts: Map<Entity, bigint>;
 }) => {
-  const { left, right, setLeft, setRight, deltas, moving, setHovering, setMoving, hovering } = useTransfer();
+  const { left, right, setLeft, setRight, deltas, moving, setHovering, setMoving, hovering, errors, setError } =
+    useTransfer();
+
+  console.log({ [props.side]: errors[props.side] });
+  const error = errors[props.side];
   const selectedRock = components.SelectedRock.use()?.value;
   const mud = useMud();
   const newFleet = props.entity === "newFleet";
@@ -101,16 +105,22 @@ export const _TransferPane = (props: {
     hydrateFleetData(props.entity, mud);
   }, [props.entity, mud]);
 
+  useEffect(() => {
+    const { disabled, submitMessage } = checkErrors(props.entity, props.unitCounts, props.resourceCounts);
+    console.log({ side: props.side, disabled, submitMessage });
+    setError(props.side, disabled ? submitMessage : null);
+  }, [props.resourceCounts, props.unitCounts, props.entity]);
+
   const onMouseOver = () => {
     if (!moving) return;
-    if (props.type === "left") {
+    if (props.side === "left") {
       setHovering("left");
     } else {
       setHovering("right");
     }
   };
   return (
-    <Card noDecor className={cn("w-full h-full relative", hovering === props.type ? "ring ring-secondary" : "")}>
+    <Card noDecor className={cn("w-full h-full relative", hovering === props.side ? "ring ring-secondary" : "")}>
       <div
         className="grid grid-rows-[10rem_1fr] gap-2 h-full"
         onMouseLeave={() => setHovering(null)}
@@ -137,9 +147,10 @@ export const _TransferPane = (props: {
                 const [unit, count] = [...props.unitCounts.entries()][index];
                 const delta = deltas?.get(unit) ?? 0n;
                 const onClick = (aux?: boolean) => {
+                  if (moving?.entity === unit) return;
                   const countMoved = aux ? 1n : count;
                   setMoving({
-                    side: props.type,
+                    side: props.side,
                     entity: unit,
                     count: countMoved,
                   });
@@ -152,7 +163,7 @@ export const _TransferPane = (props: {
                     resource={unit as Entity}
                     count={count}
                     rawDelta={delta}
-                    negative={props.type === "right"}
+                    negative={props.side === "right"}
                   />
                 );
               })}
@@ -160,7 +171,7 @@ export const _TransferPane = (props: {
 
           {/*Resources*/}
 
-          <SecondaryCard className="grid grid-cols-4 grid-rows-3 gap-1">
+          <SecondaryCard className="relative grid grid-cols-4 grid-rows-3 gap-1">
             {Array(10)
               .fill(0)
               .map((_, index) => {
@@ -169,9 +180,10 @@ export const _TransferPane = (props: {
                 const [entity, count] = [...props.resourceCounts.entries()][index];
                 const delta = deltas?.get(entity) ?? 0n;
                 const onClick = (aux?: boolean) => {
+                  if (moving?.entity === entity) return;
                   const countMoved = aux ? parseResourceCount(entity, "1") : count;
                   setMoving({
-                    side: props.type,
+                    side: props.side,
                     entity: entity,
                     count: countMoved,
                   });
@@ -185,15 +197,21 @@ export const _TransferPane = (props: {
                     resource={entity as Entity}
                     rawDelta={delta}
                     count={count}
-                    negative={props.type === "right"}
+                    negative={props.side === "right"}
                   />
                 );
               })}
+            {error && (
+              <div className="col-span-2 bg-error flex p-4 justify-center text-center items-center text-xs">
+                <FaExclamationTriangle className="w-6 mr-1" />
+                {error}
+              </div>
+            )}
           </SecondaryCard>
         </TransactionQueueMask>
         <Button
           onClick={() => {
-            if (props.type === "left") {
+            if (props.side === "left") {
               setLeft(undefined);
             } else {
               setRight(undefined);
@@ -215,10 +233,11 @@ const checkErrors = (
   const isFleet = entity === "newFleet" || components.IsFleet.has(entity as Entity);
   if (isFleet) {
     const owner = (entity !== "newFleet" ? components.OwnedBy.get(entity)?.value : undefined) as Entity | undefined;
-    const cargo = getFleetStatsFromUnits(unitCounts, owner).cargo;
-    if (cargo < [...resourceCounts.entries()].reduce((acc, [, count]) => acc + count, 0n))
-      return { disabled: true, submitMessage: "Sender cargo capacity exceeded" };
-    return { disabled: false, submitMessage: "Transfer" };
+    const capacity = getFleetStatsFromUnits(unitCounts, owner).cargo;
+    const cargo = [...resourceCounts.entries()].reduce((acc, [, count]) => acc + count, 0n);
+    console.log({ cargo, capacity, unitCounts, resourceCounts });
+    if (cargo > capacity) return { disabled: true, submitMessage: "Cargo capacity exceeded" };
+    return { disabled: false, submitMessage: "" };
   }
   //ASTEROID
   // make sure we have enough storage for housing
@@ -250,7 +269,5 @@ const checkErrors = (
   });
   if (enoughResources)
     return { disabled: true, submitMessage: `Not enough ${getEntityTypeName(enoughResources[0] as Entity)} storage` };
-  return { disabled: false, submitMessage: "Transfer" };
+  return { disabled: false, submitMessage: "" };
 };
-
-checkErrors;

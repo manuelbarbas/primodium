@@ -44,7 +44,7 @@ export const TransferContextProvider: React.FC<TransferContextProviderProps> = (
     setDeltas: (deltas) => setTransferContext((prev) => ({ ...prev, deltas })),
     setMoving: (data) => setTransferContext((prev) => ({ ...prev, moving: data })),
     setHovering: (data) => setTransferContext((prev) => ({ ...prev, hovering: data })),
-    setError: (side, error) => setTransferContext((prev) => ({ ...prev, error: { ...prev.errors, [side]: error } })),
+    setError: (side, error) => setTransferContext((prev) => ({ ...prev, errors: { ...prev.errors, [side]: error } })),
   });
 
   const { setDeltas, setRight, left, right } = transferContext;

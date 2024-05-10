@@ -4,7 +4,6 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource } from "contracts/config/enums";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
@@ -18,7 +17,6 @@ import { TransferPane } from "./TransferPane";
 import { useTransfer } from "@/hooks/providers/TransferProvider";
 import { Button } from "@/components/core/Button";
 import { usePrimodium } from "@/hooks/usePrimodium";
-import { toast } from "react-toastify";
 
 const Transfer: React.FC = () => {
   const { left, right, hovering, setHovering, deltas, setDeltas, moving, setMoving } = useTransfer();
@@ -26,38 +24,46 @@ const Transfer: React.FC = () => {
   const selectedRock = components.ActiveRock.use()?.value;
   if (!selectedRock) throw new Error("No selected rock");
 
-  const toEntity = right === "newFleet" || right === undefined ? singletonEntity : right;
+  const rightEntity = right === "newFleet" || right === undefined ? singletonEntity : right;
 
   // Resources
   const transportables = components.P_Transportables.use()?.value ?? [];
 
-  const toInitialResourceCounts = useFullResourceCounts(toEntity);
-  const toResourceCounts = transportables.reduce((acc, transportable) => {
-    const entity = ResourceEntityLookup[transportable as EResource];
-    const resourceCount = toInitialResourceCounts.get(entity)?.resourceCount;
-    const delta = deltas.get(entity) ?? 0n;
-    const movingCount = moving?.side == "right" && moving?.entity === entity ? moving.count : 0n;
-    const total = (resourceCount ?? 0n) + delta - movingCount;
-    if (total == 0n) return acc;
-    acc.set(entity, total);
-    return acc;
-  }, new Map<Entity, bigint>());
+  const rightInitialResourceCounts = useFullResourceCounts(rightEntity);
+  const rightResourceCounts = useMemo(
+    () =>
+      transportables.reduce((acc, transportable) => {
+        const entity = ResourceEntityLookup[transportable as EResource];
+        const resourceCount = rightInitialResourceCounts.get(entity)?.resourceCount;
+        const delta = deltas.get(entity) ?? 0n;
+        const movingCount = moving?.side == "right" && moving?.entity === entity ? moving.count : 0n;
+        const total = (resourceCount ?? 0n) + delta - movingCount;
+        if (total == 0n) return acc;
+        acc.set(entity, total);
+        return acc;
+      }, new Map<Entity, bigint>()),
+    [rightInitialResourceCounts, deltas, moving]
+  );
 
   const leftInitialResourceCounts = useFullResourceCounts(left ?? singletonEntity);
-  const leftResourceCounts = transportables.reduce((acc, transportable) => {
-    const entity = ResourceEntityLookup[transportable as EResource];
-    const resourceCount = leftInitialResourceCounts.get(entity)?.resourceCount ?? 0n;
-    if (resourceCount == 0n) return acc;
-    const delta = deltas.get(entity) ?? 0n;
-    const movingCount = moving?.side == "left" && moving?.entity === entity ? moving.count : 0n;
-    const total = resourceCount - delta - movingCount;
-    acc.set(entity, total);
-    return acc;
-  }, new Map<Entity, bigint>());
+  const leftResourceCounts = useMemo(
+    () =>
+      transportables.reduce((acc, transportable) => {
+        const entity = ResourceEntityLookup[transportable as EResource];
+        const resourceCount = leftInitialResourceCounts.get(entity)?.resourceCount ?? 0n;
+        if (resourceCount == 0n) return acc;
+        const delta = deltas.get(entity) ?? 0n;
+        const movingCount = moving?.side == "left" && moving?.entity === entity ? moving.count : 0n;
+        const total = resourceCount - delta - movingCount;
+        acc.set(entity, total);
+        return acc;
+      }, new Map<Entity, bigint>()),
+    [leftInitialResourceCounts, deltas, moving]
+  );
   // Units
 
   const leftInitialUnitCounts = useUnitCounts(left);
-  const toInitialUnitCounts = useUnitCounts(toEntity);
+  const rightInitialUnitCounts = useUnitCounts(rightEntity);
 
   const leftUnitCounts = useMemo(() => {
     return [...UnitStorages].reduce((acc, unit) => {
@@ -71,15 +77,15 @@ const Transfer: React.FC = () => {
     }, new Map<Entity, bigint>());
   }, [moving, leftInitialUnitCounts, deltas]);
 
-  const toUnitCounts = useMemo(() => {
+  const rightUnitCounts = useMemo(() => {
     return [...UnitStorages].reduce((acc, unit) => {
-      const count = toInitialUnitCounts.get(unit) ?? 0n;
+      const count = rightInitialUnitCounts.get(unit) ?? 0n;
       const delta = deltas.get(unit) ?? 0n;
       const movingCount = moving?.side == "right" ? (moving?.entity === unit ? moving.count : 0n) : 0n;
       if (count + delta > 0n) acc.set(unit, count + delta - movingCount);
       return acc;
     }, new Map<Entity, bigint>());
-  }, [moving, deltas, toInitialUnitCounts]);
+  }, [moving, deltas, rightInitialUnitCounts]);
 
   const stopMoving = useCallback(
     (rightClick?: boolean) => {
@@ -111,20 +117,18 @@ const Transfer: React.FC = () => {
         let resourceCount: bigint = 0n;
 
         if (recipientIsFleet) {
-          const unitCounts = moving.side === "left" ? toUnitCounts : leftUnitCounts;
+          const unitCounts = moving.side === "left" ? rightUnitCounts : leftUnitCounts;
           resourceStorage = getFleetStatsFromUnits(unitCounts, fleetOwner).cargo;
-          const resourceCounts = moving.side === "left" ? toResourceCounts : leftResourceCounts;
+          const resourceCounts = moving.side === "left" ? rightResourceCounts : leftResourceCounts;
           resourceCount = [...resourceCounts.entries()].reduce((acc, [, count]) => acc + count, 0n);
         } else {
           resourceStorage = getFullResourceCount(moving.entity, recipient as Entity).resourceStorage;
-          const resourceCounts = moving.side === "left" ? toResourceCounts : leftResourceCounts;
+          const resourceCounts = moving.side === "left" ? rightResourceCounts : leftResourceCounts;
           resourceCount = resourceCounts.get(moving.entity) ?? 0n;
         }
 
         const outcome = count + resourceCount;
         amountMoved = resourceStorage < outcome ? resourceStorage - resourceCount : count;
-        if (amountMoved === 0n)
-          toast.error("Not enough cargo to add resources. Transfer units to increase cargo space.");
 
         const newMap = new Map(deltas);
         newMap.set(moving.entity, (deltas.get(moving.entity) ?? 0n) + amountMoved);
@@ -140,7 +144,7 @@ const Transfer: React.FC = () => {
         });
       }
     },
-    [hovering, moving, right, toUnitCounts, toResourceCounts, deltas]
+    [hovering, moving, right, rightUnitCounts, rightResourceCounts, deltas]
   );
 
   const api = usePrimodium().api("COMMAND_CENTER");
@@ -201,35 +205,23 @@ const Transfer: React.FC = () => {
       <p>Transfer Units and Resources</p>
       <Moving {...moving} />
       <div className="relative grid grid-cols-[1fr_250px_1fr] gap-2 h-full w-full">
-        <TransferPane
-          type="left"
-          unitCounts={leftUnitCounts}
-          resourceCounts={leftResourceCounts}
-          selectPlacement="top-right"
-        />
+        <TransferPane side="left" unitCounts={leftUnitCounts} resourceCounts={leftResourceCounts} />
         <div className="flex w-full justify-center items-end w-full">
-          <div className="grid grid-rows-2 gap-4">
-            <TransactionQueueMask queueItemId={"TRANSFER" as Entity} className="w-full">
-              <TransferConfirm
-                leftUnits={leftUnitCounts}
-                leftResources={leftResourceCounts}
-                rightUnits={toUnitCounts}
-                rightResources={toResourceCounts}
-              />
-            </TransactionQueueMask>
+          <div className="flex flex-col gap-4">
+            <TransferConfirm />
 
             <Button
               disabled={deltas.size === 0}
               variant="error"
-              size="md"
+              size="sm"
               className="w-full"
               onClick={() => setDeltas(new Map())}
             >
-              Clear
+              Reset
             </Button>
           </div>
         </div>
-        <TransferPane type="right" unitCounts={toUnitCounts} resourceCounts={toResourceCounts} />
+        <TransferPane side="right" unitCounts={rightUnitCounts} resourceCounts={rightResourceCounts} />
       </div>
     </div>
   );
