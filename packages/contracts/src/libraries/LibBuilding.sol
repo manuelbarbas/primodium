@@ -17,7 +17,7 @@ import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
 import { BuildingKey, ExpansionKey } from "src/Keys.sol";
 import { Bounds, EResource } from "src/Types.sol";
 
-import { MainBasePrototypeId, WormholeBasePrototypeId, StarmapperPrototypeId } from "codegen/Prototypes.sol";
+import { MainBasePrototypeId, WormholeBasePrototypeId } from "codegen/Prototypes.sol";
 
 library LibBuilding {
   /**
