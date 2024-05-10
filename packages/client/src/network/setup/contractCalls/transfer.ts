@@ -8,34 +8,29 @@ import { getSystemId } from "src/util/encode";
 import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 import { toTransportableResourceArray, toUnitCountArray } from "src/util/send";
 import { Hex } from "viem";
-
+const metadata = {
+  id: "TRANSFER" as Entity,
+  type: TransactionQueueType.TransferFleet,
+} as const;
 export const transfer = async (mud: MUD, left: Entity, right: Entity, deltas: Map<Entity, bigint>) => {
+  if ([...deltas.values()].every((count) => count == 0n)) return;
   const unitCounts = toUnitCountArray(deltas);
   const resourceCounts = toTransportableResourceArray(deltas);
 
-  console.log({ left, right, deltas });
-  const noUnits = unitCounts.every((cur) => cur === 0n);
-  const noResources = resourceCounts.every((cur) => cur === 0n);
+  const allCounts = [...resourceCounts, ...unitCounts];
+  const allSameSign = allCounts.every((count) => count >= 0n) || allCounts.every((count) => count <= 0n);
 
-  if (noUnits && noResources) return;
-
-  const allSameSignUnits = unitCounts.every((count) => count >= 0n) || unitCounts.every((count) => count <= 0n);
-  const allSameSignResources =
-    resourceCounts.every((count) => count >= 0n) || resourceCounts.every((count) => count <= 0n);
-
-  console.log({ allSameSignUnits, allSameSignResources });
-
-  if (!allSameSignUnits || !allSameSignResources) {
+  if (!allSameSign) {
     await transferTwoWay(mud, left, right, {
-      unitCounts: noUnits ? undefined : unitCounts,
-      resourceCounts: noResources ? undefined : resourceCounts,
+      unitCounts: unitCounts,
+      resourceCounts: resourceCounts,
     });
     return;
   }
 
   await transferOneWay(mud, left, right, {
-    unitCounts: noUnits ? undefined : unitCounts,
-    resourceCounts: noResources ? undefined : resourceCounts,
+    unitCounts: unitCounts,
+    resourceCounts: resourceCounts,
   });
 };
 
@@ -67,11 +62,6 @@ const transferOneWay = async (
 
   console.log({ from: fromIsAsteroid, to: toIsAsteroid, unitCounts, resourceCounts });
   const claimableObjective = fromIsAsteroid ? EObjectives.TransferFromAsteroid : EObjectives.TransferFromFleet;
-
-  const metadata = {
-    id: "TRANSFER" as Entity,
-    type: TransactionQueueType.TransferFleet,
-  } as const;
 
   if (!resourceCounts) {
     const functionName = fromIsAsteroid
@@ -134,36 +124,47 @@ const transferTwoWay = async (
     unitCounts,
     resourceCounts,
   }: {
-    unitCounts?: bigint[];
-    resourceCounts?: bigint[];
+    unitCounts: bigint[];
+    resourceCounts: bigint[];
   }
 ) => {
   console.log({ left, right, unitCounts, resourceCounts });
-  if (!unitCounts && !resourceCounts) return;
-  if (!resourceCounts) {
-    return await execute({
-      mud,
-      functionName: "Primodium__transferUnitsTwoWay",
-      systemId: getSystemId("TransferTwoWaySystem"),
-      args: [left as Hex, right as Hex, unitCounts],
-      withSession: true,
-    });
+  const noUnits = unitCounts.every((count) => count == 0n);
+  const noResources = resourceCounts.every((count) => count == 0n);
+  if (noUnits && noResources) return;
+  if (noResources) {
+    return await execute(
+      {
+        mud,
+        functionName: "Primodium__transferUnitsTwoWay",
+        systemId: getSystemId("TransferTwoWaySystem"),
+        args: [left as Hex, right as Hex, unitCounts],
+        withSession: true,
+      },
+      metadata
+    );
   }
-  if (!unitCounts) {
-    await execute({
-      mud,
-      functionName: "Primodium__transferResourcesTwoWay",
-      systemId: getSystemId("TransferTwoWaySystem"),
-      args: [left as Hex, right as Hex, resourceCounts],
-      withSession: true,
-    });
+  if (noUnits) {
+    return await execute(
+      {
+        mud,
+        functionName: "Primodium__transferResourcesTwoWay",
+        systemId: getSystemId("TransferTwoWaySystem"),
+        args: [left as Hex, right as Hex, resourceCounts],
+        withSession: true,
+      },
+      metadata
+    );
   }
 
-  await execute({
-    mud,
-    functionName: "Primodium__transferUnitsAndResourcesTwoWay",
-    systemId: getSystemId("TransferTwoWaySystem"),
-    args: [left as Hex, right as Hex, unitCounts, resourceCounts],
-    withSession: true,
-  });
+  await execute(
+    {
+      mud,
+      functionName: "Primodium__transferUnitsAndResourcesTwoWay",
+      systemId: getSystemId("TransferTwoWaySystem"),
+      args: [left as Hex, right as Hex, unitCounts, resourceCounts],
+      withSession: true,
+    },
+    metadata
+  );
 };
