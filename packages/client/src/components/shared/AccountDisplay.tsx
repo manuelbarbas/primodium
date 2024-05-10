@@ -13,9 +13,11 @@ export const AccountDisplay: React.FC<{
   player: Entity | undefined;
   className?: string;
   noColor?: boolean;
+  overridePlayerColor?: string;
   showAddress?: boolean;
+  showAlliance?: boolean;
   raw?: boolean;
-}> = ({ player, className, noColor, showAddress, raw = false }) => {
+}> = ({ player, className, noColor, overridePlayerColor, showAddress, showAlliance = true, raw = false }) => {
   const primodium = usePrimodium();
   const { playerAccount } = useMud();
   const playerEntity = player ?? singletonEntity;
@@ -23,11 +25,12 @@ export const AccountDisplay: React.FC<{
   const myHomeAsteroid = components.Home.use(playerAccount.entity)?.value;
   const playerHomeAsteroid = components.Home.use(playerEntity)?.value;
   const { allianceName, loading, address, linkedAddress } = useAccount(playerEntity, showAddress);
-  const playerColor = RockRelationshipColors[getRockRelationship(playerEntity, myHomeAsteroid as Entity)];
+  const playerColor =
+    overridePlayerColor ?? RockRelationshipColors[getRockRelationship(playerEntity, myHomeAsteroid as Entity)];
 
   const Content = ({ className = "" }: { className?: string }) => (
     <div className={`w-full flex gap-2 ${className}`}>
-      {allianceName && (
+      {allianceName && showAlliance && (
         <div className="font-bold text-accent" style={{ color: noColor ? "auto" : entityToColor(player) }}>
           [{allianceName.toUpperCase()}]
         </div>

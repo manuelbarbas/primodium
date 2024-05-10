@@ -4,13 +4,14 @@ pragma solidity >=0.8.24;
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { addressToEntity } from "src/utils.sol";
 
-import { EBuilding, EResource } from "src/Types.sol";
+import { EBuilding, EResource, EUnit } from "src/Types.sol";
 import { BuildingKey, ExpansionKey } from "src/Keys.sol";
-import { IronMinePrototypeId } from "codegen/Prototypes.sol";
+import { IronMinePrototypeId, MinutemanMarinePrototypeId } from "codegen/Prototypes.sol";
 
 import { Dimensions, P_RequiredResourcesData, OwnedBy, BuildingType, P_ByLevelMaxResourceUpgrades, P_RequiredBaseLevel, P_EnumToPrototype, PositionData, TilePositions, Level, Home, ProductionRate, ConsumptionRate, P_RequiredDependencyData, P_Production, P_ProductionData, P_RequiredDependency, P_ListMaxResourceUpgrades, MaxResourceCount } from "codegen/index.sol";
 
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
+import { LibUnit } from "libraries/LibUnit.sol";
 
 contract DestroySystemTest is PrimodiumTest {
   bytes32 public playerEntity;
@@ -193,6 +194,43 @@ contract DestroySystemTest is PrimodiumTest {
     assertEq(MaxResourceCount.get(asteroidEntity, uint8(EResource.Iron)), 0);
     world.Primodium__destroy(ironMine);
     assertEq(MaxResourceCount.get(asteroidEntity, uint8(EResource.Iron)), 0);
+  }
+
+  function testDestroyWithUnitsInProduction() public {
+    EBuilding building = EBuilding.Workshop;
+    Dimensions.set(ExpansionKey, 1, 35, 27);
+    P_RequiredResourcesData memory requiredBuildingResources = getBuildCost(building);
+    uint256 unitCount = 1;
+    uint256 unitLevel = 1;
+
+    for (uint256 i = 0; i < 2; i++) {
+      unitCount = i + 1;
+      P_RequiredResourcesData memory requiredUnitResources = getTrainCost(
+        MinutemanMarinePrototypeId,
+        unitLevel,
+        unitCount
+      );
+
+      provideResources(Home.get(playerEntity), requiredBuildingResources);
+      provideResources(Home.get(playerEntity), requiredUnitResources);
+      vm.startPrank(creator);
+      P_RequiredBaseLevel.set(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Workshop)), 1, 0);
+
+      PositionData memory originalPosition = getTilePosition(Home.get(playerEntity), building);
+      bytes32 buildingEntity = world.Primodium__build(building, originalPosition);
+
+      world.Primodium__trainUnits(buildingEntity, EUnit.MinutemanMarine, unitCount);
+      uint256 unitTrainTime = LibUnit.getUnitBuildTime(buildingEntity, MinutemanMarinePrototypeId) * unitCount;
+
+      vm.expectRevert("[Destroy] Cannot destroy building with units in production");
+      world.Primodium__destroy(buildingEntity);
+
+      vm.warp(block.timestamp + unitTrainTime);
+
+      uint256 gas = gasleft();
+      world.Primodium__destroy(buildingEntity);
+      console.log("after", gas - gasleft());
+    }
   }
 
   /* TODO: Add test that includes buildings with utility dependencies */

@@ -4,8 +4,8 @@ import { ampli } from "src/ampli";
 import { components } from "src/network/components";
 import { execute } from "src/network/txExecute/txExecute";
 import { MUD } from "src/network/types";
-import { world } from "src/network/world";
 import { getAllianceName, getAllianceNameFromPlayer } from "src/util/alliance";
+import { entityToAddress } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities, toHex32 } from "src/util/encode";
 import { Hex } from "viem";
@@ -24,14 +24,37 @@ export const createAlliance = async (mud: MUD, name: string, inviteOnly: boolean
       withSession: true,
     },
     {
-      id: world.registerEntity(),
+      id: hashEntities(TransactionQueueType.CreateAlliance, mud.playerAccount.entity),
+    }
+  );
+};
+
+export const updateAllianceName = async (mud: MUD, allianceEntity: Entity, name: string) => {
+  await execute(
+    {
+      mud,
+      functionName: "Primodium__setAllianceName",
+      systemId: getSystemId("AllianceSystem"),
+      args: [allianceEntity as Hex, toHex32(name.substring(0, 6).toUpperCase())],
+      withSession: true,
     },
-    (receipt) => {
-      ampli.systemCreate({
-        allianceName: name,
-        allianceInviteOnly: inviteOnly,
-        ...parseReceipt(receipt),
-      });
+    {
+      id: hashEntities(TransactionQueueType.UpdateAllianceName, mud.playerAccount.entity),
+    }
+  );
+};
+
+export const updateAllianceAccess = async (mud: MUD, allianceEntity: Entity, inviteOnly: boolean) => {
+  await execute(
+    {
+      mud,
+      functionName: "Primodium__setAllianceInviteMode",
+      systemId: getSystemId("AllianceSystem"),
+      args: [allianceEntity as Hex, inviteOnly ? EAllianceInviteMode.Closed : EAllianceInviteMode.Open],
+      withSession: true,
+    },
+    {
+      id: hashEntities(TransactionQueueType.UpdateAllianceAccess, mud.playerAccount.entity),
     }
   );
 };
@@ -45,7 +68,7 @@ export const leaveAlliance = async (mud: MUD) => {
       withSession: true,
     },
     {
-      id: world.registerEntity(),
+      id: hashEntities(TransactionQueueType.LeaveAlliance, mud.playerAccount.entity),
     },
     (receipt) => {
       ampli.systemLeave({
@@ -83,7 +106,7 @@ export const declineInvite = async (mud: MUD, inviter: Entity) => {
       mud,
       functionName: "Primodium__declineInvite",
       systemId: getSystemId("AllianceSystem"),
-      args: [inviter as Hex],
+      args: [entityToAddress(inviter as Hex)],
       withSession: true,
     },
     {
@@ -129,7 +152,7 @@ export const kickPlayer = async (mud: MUD, player: Entity) => {
       mud,
       functionName: "Primodium__kick",
       systemId: getSystemId("AllianceSystem"),
-      args: [player as Hex],
+      args: [entityToAddress(player as Hex)],
       withSession: true,
     },
     {
@@ -153,7 +176,7 @@ export const grantRole = async (mud: MUD, player: Entity, role: EAllianceRole) =
       mud,
       functionName: "Primodium__grantRole",
       systemId: getSystemId("AllianceSystem"),
-      args: [player as Hex, role],
+      args: [entityToAddress(player as Hex), role],
       withSession: true,
     },
     {
@@ -176,7 +199,7 @@ export const acceptJoinRequest = async (mud: MUD, target: Entity) => {
       mud,
       functionName: "Primodium__acceptRequestToJoin",
       systemId: getSystemId("AllianceSystem"),
-      args: [target as Hex],
+      args: [entityToAddress(target as Hex)],
       withSession: true,
     },
     {
@@ -198,7 +221,7 @@ export const rejectJoinRequest = async (mud: MUD, target: Entity) => {
       mud,
       functionName: "Primodium__rejectRequestToJoin",
       systemId: getSystemId("AllianceSystem"),
-      args: [target as Hex],
+      args: [entityToAddress(target as Hex)],
       withSession: true,
     },
     {
@@ -220,11 +243,11 @@ export const invite = async (mud: MUD, target: Entity) => {
       mud,
       functionName: "Primodium__invite",
       systemId: getSystemId("AllianceSystem"),
-      args: [target as Hex],
+      args: [entityToAddress(target as Hex)],
       withSession: true,
     },
     {
-      id: hashEntities(TransactionQueueType.Invite, target),
+      id: "invite" as Entity,
     },
     (receipt) => {
       ampli.systemInvite({
@@ -233,5 +256,28 @@ export const invite = async (mud: MUD, target: Entity) => {
         ...parseReceipt(receipt),
       });
     }
+  );
+};
+
+export const revokeInvite = async (mud: MUD, target: Entity) => {
+  execute(
+    {
+      mud,
+      functionName: "Primodium__revokeInvite",
+      systemId: getSystemId("AllianceSystem"),
+      args: [entityToAddress(target as Hex)],
+      withSession: true,
+    },
+    {
+      id: hashEntities(TransactionQueueType.RevokeInvite, target),
+    }
+    // TODO: add ampli tracker
+    // (receipt) => {
+    //   ampli.systemRevokeInvite({
+    //     allianceName: getAllianceNameFromPlayer(target),
+    //     allianceRejectee: target,
+    //     ...parseReceipt(receipt),
+    //   });
+    // }
   );
 };
