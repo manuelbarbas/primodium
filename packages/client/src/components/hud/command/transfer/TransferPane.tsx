@@ -33,12 +33,11 @@ export const TransferPane = (props: {
   const entity = props.side === "right" ? right : left;
 
   return (
-    <GlassCard className={`w-full h-full`}>
+    <GlassCard className={`w-full h-full overflow-hidden`}>
       {!entity && (
         <TransferSelect
           handleSelect={props.side === "left" ? setLeft : setRight}
           showNewFleet={props.side === "right"}
-          hideNotOwned={props.side === "left"}
         />
       )}
       {!!entity && (
@@ -120,7 +119,7 @@ export const _TransferPane = (props: {
   return (
     <Card noDecor className={cn("w-full h-full relative", hovering === props.side ? "ring ring-secondary" : "")}>
       <div
-        className="grid grid-rows-[10rem_1fr] gap-2 h-full"
+        className="grid grid-rows-[10rem_1fr] gap-2 h-full overflow-y-auto scrollbar"
         onMouseLeave={() => setHovering(null)}
         onMouseOver={onMouseOver}
       >

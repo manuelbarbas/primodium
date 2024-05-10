@@ -11,23 +11,29 @@ import { useTransfer } from "@/hooks/providers/TransferProvider";
 import { cn } from "@/util/client";
 import { Card } from "@/components/core/Card";
 import { useEffect } from "react";
+import { getPlayerOwner } from "@/hooks/usePlayerOwner";
 
 export const TransferSelect = <NewFleet extends boolean | undefined = false>({
+  showNewFleet = false,
   handleSelect,
-  showNewFleet,
-  hideNotOwned,
 }: {
-  handleSelect: NewFleet extends true ? (entity: Entity | "newFleet") => void : (entity: Entity) => void;
   showNewFleet?: NewFleet;
-  hideNotOwned?: boolean;
+  handleSelect: NewFleet extends true ? (entity: Entity | "newFleet") => void : (entity: Entity) => void;
 }) => {
   const { left, right } = useTransfer();
+  const playerEntity = useMud().playerAccount.entity;
   const activeEntities = [left, right];
+  const hideNotOwned = activeEntities.some((entity) => {
+    if (!entity) return false;
+    if (entity === "newFleet") return true;
+    if (getPlayerOwner(entity) !== playerEntity) return true;
+    return false;
+  });
+
   const rockEntity = components.ActiveRock.use()?.value;
   if (!rockEntity) throw new Error("No active rock");
   const query = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination: rockEntity })];
   const time = components.Time.use()?.value ?? 0n;
-  const playerEntity = useMud().playerAccount.entity;
   const fleetsOnRock = [...useEntityQuery(query)].filter((entity) => {
     const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
     if (arrivalTime > time) return false;
@@ -41,8 +47,8 @@ export const TransferSelect = <NewFleet extends boolean | undefined = false>({
   const handleSelectWithNewFleet = handleSelect as (entity: Entity | "newFleet") => void;
 
   return (
-    <Card className="w-full h-full overflow-hidden">
-      <div className="grid grid-cols-3 gap-2 w-full overflow-scroll">
+    <Card className="w-full h-full" noDecor>
+      <div className="grid grid-cols-3 gap-2 w-full">
         <SelectOption
           entity={rockEntity}
           disabled={activeEntities.includes(rockEntity)}
@@ -57,17 +63,13 @@ export const TransferSelect = <NewFleet extends boolean | undefined = false>({
             onSelect={() => handleSelect(fleet)}
           />
         ))}
-        {showNewFleet == true &&
-          new Array(30)
-            .fill(null)
-            .map((_, i) => (
-              <SelectOption
-                key={i}
-                entity={"newFleet"}
-                disabled={activeEntities.includes("newFleet")}
-                onSelect={() => handleSelectWithNewFleet("newFleet")}
-              />
-            ))}
+        {showNewFleet && (
+          <SelectOption
+            entity={"newFleet"}
+            disabled={activeEntities.includes("newFleet")}
+            onSelect={() => handleSelectWithNewFleet("newFleet")}
+          />
+        )}
       </div>
     </Card>
   );

@@ -130,7 +130,7 @@ const Transfer: React.FC = () => {
         }
 
         const outcome = count + resourceCount;
-        amountMoved = resourceStorage < outcome ? resourceStorage - resourceCount : count;
+        amountMoved = bigIntMax(0n, resourceStorage < outcome ? resourceStorage - resourceCount : count);
 
         const newMap = new Map(deltas);
         newMap.set(
