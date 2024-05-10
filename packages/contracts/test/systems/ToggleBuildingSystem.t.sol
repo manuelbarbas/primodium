@@ -48,12 +48,10 @@ contract ToggleBuildingSystemTest is PrimodiumTest {
 
     // ironPlate requires main base 5
     mainbaseEntity = Home.get(asteroidEntity);
-    LibBuilding.upgradeBypassChecks(mainbaseEntity);
-    LibBuilding.upgradeBypassChecks(mainbaseEntity);
-    LibBuilding.upgradeBypassChecks(mainbaseEntity);
-    LibBuilding.upgradeBypassChecks(mainbaseEntity);
-    LibStorage.increaseMaxStorage(mainbaseEntity, 5);
-    LibProduction.upgradeResourceProduction(mainbaseEntity, 5);
+    LibBuilding.uncheckedUpgrade(mainbaseEntity);
+    LibBuilding.uncheckedUpgrade(mainbaseEntity);
+    LibBuilding.uncheckedUpgrade(mainbaseEntity);
+    LibBuilding.uncheckedUpgrade(mainbaseEntity);
 
     ironPlateFactoryPosition = getTilePosition(Home.get(playerEntity), EBuilding.IronPlateFactory);
     ironPlateFactory = world.Primodium__build(EBuilding.IronPlateFactory, ironPlateFactoryPosition);

@@ -252,10 +252,10 @@ contract LibResourceTest is PrimodiumTest {
   function testResourceClaimUnderflow() public {
     bytes32 asteroidEntity = Home.get(playerEntity);
     bytes32 mainbaseEntity = Home.get(asteroidEntity);
-    LibBuilding.upgradeBypassChecks(mainbaseEntity);
-    LibBuilding.upgradeBypassChecks(mainbaseEntity);
-    LibBuilding.upgradeBypassChecks(mainbaseEntity);
-    LibBuilding.upgradeBypassChecks(mainbaseEntity);
+    LibBuilding.uncheckedUpgrade(mainbaseEntity);
+    LibBuilding.uncheckedUpgrade(mainbaseEntity);
+    LibBuilding.uncheckedUpgrade(mainbaseEntity);
+    LibBuilding.uncheckedUpgrade(mainbaseEntity);
 
     uint256 startingResourceCount = 1000;
 

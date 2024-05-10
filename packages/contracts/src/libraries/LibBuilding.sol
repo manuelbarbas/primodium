@@ -7,6 +7,9 @@ import { TilePositions, IsActive, Asteroid, P_UnitProdTypes, P_MaxLevel, Home, P
 // libraries
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
+import { LibProduction } from "libraries/LibProduction.sol";
+
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
 
@@ -228,8 +231,10 @@ library LibBuilding {
 
   /// @notice Upgrades a building even if requirements are not met
   /// @param buildingEntity The building id
-  function upgradeBypassChecks(bytes32 buildingEntity) internal {
+  function uncheckedUpgrade(bytes32 buildingEntity) internal {
     uint256 targetLevel = Level.get(buildingEntity) + 1;
     Level.set(buildingEntity, targetLevel);
+    LibStorage.increaseMaxStorage(buildingEntity, targetLevel);
+    LibProduction.upgradeResourceProduction(buildingEntity, targetLevel);
   }
 }
