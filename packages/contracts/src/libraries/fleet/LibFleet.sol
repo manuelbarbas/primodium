@@ -162,6 +162,11 @@ library LibFleet {
     ResourceCount.set(fleetEntity, resource, ResourceCount.get(fleetEntity, resource) + amount);
   }
 
+  function uncheckedIncreaseFleetResource(bytes32 fleetEntity, uint8 resource, uint256 amount) internal {
+    if (amount == 0) return;
+    ResourceCount.set(fleetEntity, resource, ResourceCount.get(fleetEntity, resource) + amount);
+  }
+
   /**
    * @notice Decreases the amount of a specific resource in a fleet.
    * @param fleetEntity The identifier of the fleet.
