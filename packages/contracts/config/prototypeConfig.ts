@@ -120,7 +120,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         shardAsteroidPoints: 50n * BigInt(SCALE),
         shardAsteroidLifeSpan: 6n * 60n * 60n,
         shardAsteroidEncryption: 15n * BigInt(SCALE),
-        shardAsteroidEncryptionRegen: BigInt(Math.round(0.00056 * SCALE)),
+        shardAsteroidEncryptionRegen: BigInt(Math.round(0.0168 * SCALE)),
       },
     },
   },
