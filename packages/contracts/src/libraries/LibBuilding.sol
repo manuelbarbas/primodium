@@ -14,7 +14,7 @@ import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
 import { BuildingKey, ExpansionKey } from "src/Keys.sol";
 import { Bounds, EResource } from "src/Types.sol";
 
-import { MainBasePrototypeId, WormholeBasePrototypeId } from "codegen/Prototypes.sol";
+import { MainBasePrototypeId, WormholeBasePrototypeId, StarmapperPrototypeId } from "codegen/Prototypes.sol";
 
 library LibBuilding {
   /**
@@ -56,10 +56,14 @@ library LibBuilding {
     PositionData memory coord
   ) internal view {
     require(Spawned.get(playerEntity), "[BuildSystem] Player has not spawned");
-    if (buildingPrototype == MainBasePrototypeId || buildingPrototype == WormholeBasePrototypeId) {
+    if (
+      buildingPrototype == MainBasePrototypeId ||
+      buildingPrototype == WormholeBasePrototypeId ||
+      buildingPrototype == StarmapperPrototypeId
+    ) {
       require(
         Home.get(coord.parentEntity) == bytes32(0),
-        "[BuildSystem] Cannot build more than one main base per asteroid"
+        "[BuildSystem] Cannot build more than one main base / wormhole base / starmapper per asteroid"
       );
     }
     require(
