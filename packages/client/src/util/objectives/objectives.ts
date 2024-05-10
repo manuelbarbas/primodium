@@ -68,7 +68,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fundamentals",
       type: "Upgrade",
-      requiredObjectives: [EObjectives.SendFleet],
+      requiredObjectives: [EObjectives.CreateFleet],
       requiredMainBase: 2n,
       buildingType: EntityType.MainBase,
       level: 3n,
