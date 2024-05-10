@@ -2,7 +2,7 @@ import { PushButton } from "@/components/core/PushButton";
 import { useMud } from "@/hooks";
 import { useTransfer } from "@/hooks/providers/TransferProvider";
 import { createFleet } from "@/network/setup/contractCalls/createFleet";
-import { transfer } from "@/network/setup/contractCalls/fleetTransfer";
+import { transfer } from "@/network/setup/contractCalls/transfer";
 import { Entity } from "@latticexyz/recs";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 

@@ -31,14 +31,14 @@ contract TransferTwoWaySystem is PrimodiumSystem {
     return leftOwnerAsteroid == rightOwnerAsteroid;
   }
 
-  function transferUnitsTwoWay(bytes32 leftEntity, bytes32 rightEntity, int256[] calldata unitCounts) external {
+  function transferUnitsTwoWay(bytes32 leftEntity, bytes32 rightEntity, int256[] calldata unitCounts) public {
     require(unitCounts.length == P_UnitPrototypes.length(), "[Fleet] Incorrect unit array length");
     bool sameOwner = checkCanTransferTwoWay(leftEntity, rightEntity);
 
     LibTransferTwoWay.transferUnitsTwoWay(leftEntity, rightEntity, unitCounts, sameOwner);
   }
 
-  function transferResourcesTwoWay(bytes32 leftEntity, bytes32 rightEntity, int256[] calldata resourceCounts) external {
+  function transferResourcesTwoWay(bytes32 leftEntity, bytes32 rightEntity, int256[] calldata resourceCounts) public {
     require(resourceCounts.length == P_Transportables.get().length, "[Fleet] Incorrect resource array length");
 
     checkCanTransferTwoWay(leftEntity, rightEntity);
@@ -51,7 +51,7 @@ contract TransferTwoWaySystem is PrimodiumSystem {
     bytes32 rightEntity,
     int256[] calldata unitCounts,
     int256[] calldata resourceCounts
-  ) external {
+  ) public {
     require(unitCounts.length == P_UnitPrototypes.length(), "[Fleet] Incorrect unit array length");
     require(resourceCounts.length == P_Transportables.get().length, "[Fleet] Incorrect resource array length");
 

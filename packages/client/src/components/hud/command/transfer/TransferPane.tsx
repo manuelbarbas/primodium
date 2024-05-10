@@ -62,7 +62,6 @@ export const _TransferPane = (props: {
   const { left, right, setLeft, setRight, deltas, moving, setHovering, setMoving, hovering, errors, setError } =
     useTransfer();
 
-  console.log({ [props.side]: errors[props.side] });
   const error = errors[props.side];
   const selectedRock = components.SelectedRock.use()?.value;
   const mud = useMud();
@@ -107,7 +106,6 @@ export const _TransferPane = (props: {
 
   useEffect(() => {
     const { disabled, submitMessage } = checkErrors(props.entity, props.unitCounts, props.resourceCounts);
-    console.log({ side: props.side, disabled, submitMessage });
     setError(props.side, disabled ? submitMessage : null);
   }, [props.resourceCounts, props.unitCounts, props.entity]);
 
@@ -235,7 +233,6 @@ const checkErrors = (
     const owner = (entity !== "newFleet" ? components.OwnedBy.get(entity)?.value : undefined) as Entity | undefined;
     const capacity = getFleetStatsFromUnits(unitCounts, owner).cargo;
     const cargo = [...resourceCounts.entries()].reduce((acc, [, count]) => acc + count, 0n);
-    console.log({ cargo, capacity, unitCounts, resourceCounts });
     if (cargo > capacity) return { disabled: true, submitMessage: "Cargo capacity exceeded" };
     return { disabled: false, submitMessage: "" };
   }
