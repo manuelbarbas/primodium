@@ -349,6 +349,12 @@ contract CombatEncryptionTest is PrimodiumTest {
     uint256 ironAmount = numberOfUnits * P_Unit.getCargo(minuteman, UnitLevel.get(aliceHomeAsteroid, minuteman));
     increaseResource(bobHomeAsteroid, EResource.Iron, ironAmount);
 
+    console.log("asteroid hp before attack: %s", ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_HP)));
+    console.log(
+      "asteroid encryption before attack: %s",
+      ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_Encryption))
+    );
+
     vm.warp(FleetMovement.getArrivalTime(fleetEntity));
     vm.startPrank(alice);
     world.Primodium__attack(fleetEntity, bobHomeAsteroid);
