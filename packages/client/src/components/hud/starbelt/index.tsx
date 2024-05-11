@@ -4,8 +4,9 @@ import { usePersistentStore } from "@game/stores/PersistentStore";
 import { memo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { AsteroidMenuPopup } from "@/components/hud/starbelt/markers/AsteroidMenuPopup";
-import { Mode } from "@/util/constants";
+import { Keys, Mode } from "@/util/constants";
 import { components } from "@/network/components";
+import { LoadingOverlay } from "@/components/shared/LoadingOverlay";
 
 export const StarbeltHUD = memo(() => {
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
@@ -23,6 +24,11 @@ export const StarbeltHUD = memo(() => {
           <StarmapNavigator />
         </HUD.Right>
       </HUD>
+      <LoadingOverlay
+        syncId={Keys.SECONDARY}
+        loadingMessage="Loading Starbelt"
+        errorMessage="Error syncing starbelt data. Please refresh the page."
+      />
     </div>
   );
 });
