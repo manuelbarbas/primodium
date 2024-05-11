@@ -23,6 +23,7 @@ export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coo
 
   const expansionLevel = components.Level.get(entity)?.value ?? 1n;
   const playerEntity = components.Account.get()?.value;
+  const isHome = components.Home.get(playerEntity)?.value === entity;
 
   if (!playerEntity) return;
 
@@ -64,7 +65,7 @@ export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coo
   })();
 
   asteroid.getAsteroidLabel().setProperties({
-    nameLabel: entityToRockName(entity),
+    nameLabel: entityToRockName(entity) + (isHome ? " *" : ""),
     nameLabelColor: ownedByPlayer ? 0xffff00 : asteroidData?.spawnsSecondary ? 0x00ffff : 0xffffff,
     emblemSprite: MainbaseLevelToEmblem[Phaser.Math.Clamp(Number(level) - 1, 0, MainbaseLevelToEmblem.length - 1)],
     ownerLabel: ownerLabel,

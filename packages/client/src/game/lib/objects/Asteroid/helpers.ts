@@ -10,7 +10,7 @@ import {
 import { Entity } from "@latticexyz/recs";
 
 export const getPrimarySprite = (level: bigint) => {
-  return LevelToPrimaryAsteroidSprites[Number(level)];
+  return LevelToPrimaryAsteroidSprites[Number(level - 1n)];
 };
 
 export const getSecondarySprite = (resourceType: Entity, maxLevel: bigint) => {
