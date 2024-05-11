@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 
 // tables
-import { TilePositions, IsActive, Asteroid, P_UnitProdTypes, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, OwnedBy, P_Blueprint } from "codegen/index.sol";
+import { TilePositions, IsActive, Asteroid, P_UnitProdTypes, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, OwnedBy, P_Blueprint, P_HasStarmapper } from "codegen/index.sol";
 
 // libraries
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
@@ -17,7 +17,7 @@ import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
 import { BuildingKey, ExpansionKey } from "src/Keys.sol";
 import { Bounds, EResource } from "src/Types.sol";
 
-import { MainBasePrototypeId, WormholeBasePrototypeId } from "codegen/Prototypes.sol";
+import { MainBasePrototypeId, WormholeBasePrototypeId, StarmapperPrototypeId } from "codegen/Prototypes.sol";
 
 library LibBuilding {
   /**
@@ -63,6 +63,12 @@ library LibBuilding {
       require(
         Home.get(coord.parentEntity) == bytes32(0),
         "[BuildSystem] Cannot build more than one main base per asteroid"
+      );
+    }
+    if (buildingPrototype == StarmapperPrototypeId) {
+      require(
+        P_HasStarmapper.get(coord.parentEntity) == false,
+        "[BuildSystem] Cannot build more than one starmapper per asteroid"
       );
     }
     require(
@@ -141,6 +147,10 @@ library LibBuilding {
 
     if (P_UnitProdTypes.length(buildingPrototype, 1) != 0) {
       UnitFactorySet.add(coord.parentEntity, buildingEntity);
+    }
+
+    if (buildingPrototype == StarmapperPrototypeId) {
+      P_HasStarmapper.set(coord.parentEntity, true);
     }
 
     placeBuildingTiles(buildingEntity, buildingPrototype, coord);
