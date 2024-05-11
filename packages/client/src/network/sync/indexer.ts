@@ -11,10 +11,47 @@ import { getActiveAsteroidQuery, getAsteroidQuery } from "./queries/asteroidQuer
 import { getBattleReportQuery } from "./queries/battleReportQueries";
 import { getFleetQuery } from "./queries/fleetQueries";
 import { getInitalQuery } from "./queries/initialQueries";
+import { getSecondaryQuery } from "@/network/sync/queries/secondaryQueries";
 import { getPlayerQuery } from "./queries/playerQueries";
 import { hydrateFromRPC } from "./rpc";
 
 export const hydrateInitialGameState = (
+  setupResult: SetupResult,
+  onComplete: () => void,
+  onError: (err: unknown) => void
+) => {
+  const { network, components } = setupResult;
+  const { tables, world } = network;
+  const networkConfig = getNetworkConfig();
+
+  // if we're already syncing from RPC, don't hydrate from indexer
+  if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
+
+  if (!networkConfig.indexerUrl) return;
+
+  const sync = Sync.withQueryDecodedIndexerRecsSync(
+    getInitalQuery({
+      tables,
+      world,
+      indexerUrl: networkConfig.indexerUrl,
+      worldAddress: networkConfig.worldAddress as Hex,
+    })
+  );
+
+  sync.start(async (_, blockNumber, progress) => {
+    components.SyncStatus.set({
+      step: SyncStep.Syncing,
+      progress,
+      message: `Hydrating from Indexer`,
+    });
+
+    if (progress === 1) onComplete();
+  }, onError);
+
+  world.registerDisposer(sync.unsubscribe);
+};
+
+export const hydrateSecondaryGameState = (
   setupResult: SetupResult,
   onComplete: () => void,
   onError: (err: unknown) => void
@@ -29,11 +66,12 @@ export const hydrateInitialGameState = (
 
   if (!networkConfig.indexerUrl) return;
 
+  const syncId = Keys.SECONDARY;
   const sync = Sync.withQueryDecodedIndexerRecsSync(
-    getInitalQuery({
+    getSecondaryQuery({
       tables,
       world,
-      indexerUrl: networkConfig.indexerUrl!,
+      indexerUrl: networkConfig.indexerUrl,
       worldAddress: networkConfig.worldAddress as Hex,
     })
   );
@@ -41,18 +79,28 @@ export const hydrateInitialGameState = (
   sync.start(async (_, blockNumber, progress) => {
     fromBlock = blockNumber;
 
-    components.SyncStatus.set({
-      step: SyncStep.Syncing,
-      progress,
-      message: `Hydrating from Indexer`,
-    });
+    components.SyncStatus.set(
+      {
+        step: SyncStep.Syncing,
+        progress,
+        message: `Hydrating from Indexer`,
+      },
+      syncId
+    );
 
     // hydrate remaining blocks from RPC
     if (progress === 1) {
       const latestBlockNumber = await network.publicClient.getBlockNumber();
-      hydrateFromRPC(setupResult, fromBlock, latestBlockNumber, onComplete, () => {
-        console.warn("Failed to hydrate remaining blocks. Client may be out of sync!");
-      });
+      hydrateFromRPC(
+        setupResult,
+        fromBlock,
+        latestBlockNumber,
+        onComplete,
+        () => {
+          console.warn("Failed to hydrate remaining blocks. Client may be out of sync!");
+        },
+        syncId
+      );
     }
   }, onError);
 

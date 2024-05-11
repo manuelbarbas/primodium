@@ -48,6 +48,7 @@ export const Keys = {
   BATTLE: toHex32("battle") as Entity,
   ASTEROID: toHex32("asteroid.key") as Entity,
   FLEET_OWNED_BY: toHex32("fleet.key") as Entity,
+  SECONDARY: toHex32("secondary") as Entity,
 };
 
 export enum ResourceType {

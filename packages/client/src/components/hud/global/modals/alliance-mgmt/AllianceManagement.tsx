@@ -13,10 +13,14 @@ import { InvitesScreen } from "./InvitesScreen";
 import { LoadingScreen } from "./LoadingScreen";
 import { ManageScreen } from "./ManageScreen";
 import { SendInviteScreen } from "./SendInviteScreen";
+import { Keys } from "@/util/constants";
 
 export const AllianceManagement = () => {
   const mud = useMud();
   const playerEntity = mud.playerAccount.entity;
+  // global alliance data
+  const { loading: globalLoading, error: globalError } = useSyncStatus(Keys.SECONDARY);
+  // player alliance data
   const allianceEntity = (components.PlayerAlliance.use(playerEntity)?.alliance ?? singletonEntity) as Entity;
   const { loading, error } = useSyncStatus(allianceEntity);
 
@@ -25,12 +29,11 @@ export const AllianceManagement = () => {
   }, [allianceEntity, mud]);
 
   const initialScreen = useMemo(() => {
-    if (error) return "error";
-
-    if (loading) return "loading";
+    if (error || globalError) return "error";
+    if (loading || globalLoading) return "loading";
 
     return "score";
-  }, [loading, error]);
+  }, [loading, globalLoading, error, globalError]);
 
   return (
     <Navigator initialScreen={initialScreen} className="border-none p-0! h-full">

@@ -1,5 +1,4 @@
 import type { Sync } from "@primodiumxyz/sync-stack";
-import { EntityType } from "src/util/constants";
 import { Hex } from "viem";
 
 export const getInitalQuery = ({
@@ -27,42 +26,11 @@ export const getInitalQuery = ({
         { tableId: tables.FunctionSignatures.tableId },
         { tableId: tables.Dimensions.tableId },
         { tableId: tables.GracePeriod.tableId },
-        { tableId: tables.Points.tableId },
-        { tableId: tables.Alliance.tableId },
-        { tableId: tables.PlayerAlliance.tableId },
         { tableId: tables.Reserves.tableId },
-        { tableId: tables.Home.tableId },
-        //get main base starting coord
-        { tableId: tables.Position.tableId, where: { column: "entity", operation: "eq", value: EntityType.MainBase } },
-        //get asteroids
+        // get minimal asteroid data
         {
-          tableId: tables.Asteroid.tableId!,
-          include: [
-            {
-              tableId: tables.OwnedBy.tableId,
-            },
-            {
-              tableId: tables.Position.tableId,
-            },
-            {
-              tableId: tables.ReversePosition.tableId,
-              on: "entity",
-            },
-            {
-              tableId: tables.Level.tableId,
-            },
-          ],
-        },
-        //get fleets
-        {
-          tableId: tables.FleetMovement.tableId,
-          include: [
-            { tableId: tables.IsFleetEmpty.tableId },
-            { tableId: tables.FleetStance.tableId },
-            { tableId: tables.IsFleet.tableId },
-            { tableId: tables.OwnedBy.tableId, on: "entity" },
-            { tableId: tables.CooldownEnd.tableId },
-          ],
+          tableId: tables.Asteroid.tableId,
+          include: [{ tableId: tables.OwnedBy.tableId }],
         },
       ],
     } as Parameters<typeof Sync.withQueryDecodedIndexerRecsSync>[0]["query"],
