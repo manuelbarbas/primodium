@@ -34,6 +34,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
       duration: 1000 * 30,
       ease: (t: number) => Phaser.Math.Easing.Stepped(t, 120),
       repeat: -1,
+      paused: true,
       onUpdate: (tween) => {
         if (this.prevRotationVal === tween.getValue()) return;
         this.prevRotationVal = tween.getValue();
@@ -189,6 +190,15 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
 
   spawn() {
     this.scene.add.existing(this);
+    return this;
+  }
+
+  setActive(value: boolean): this {
+    if (value && !this.paused) this.rotationTween.play();
+    else this.rotationTween.pause();
+
+    super.setActive(value);
+
     return this;
   }
   destroy() {

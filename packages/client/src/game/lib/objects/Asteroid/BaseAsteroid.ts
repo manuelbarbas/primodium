@@ -7,6 +7,8 @@ import { Assets, Sprites } from "@primodiumxyz/assets";
 import { AsteroidLabel } from "@/game/lib/objects/Asteroid/AsteroidLabel";
 import { Entity } from "@latticexyz/recs";
 
+type LODs = 0 | 1 | 2 | 3;
+
 export abstract class BaseAsteroid extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
   private id: Entity;
   protected coord: Coord;
@@ -47,6 +49,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
       duration: 3 * 1000,
       repeat: -1,
       yoyo: true,
+      paused: true,
     });
 
     this._scene.objects.add(id, this, true);
@@ -56,6 +59,18 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
     this.add([this.circle, this.asteroidSprite, this.fleetsContainer, this.asteroidLabel]);
     this.spawned = true;
     this.scene.add.existing(this);
+    return this;
+  }
+
+  setActive(value: boolean): this {
+    super.setActive(value);
+
+    if (value) this.animationTween.play();
+    else this.animationTween.pause();
+
+    const zoom = this._scene.camera.phaserCamera.zoom;
+    this.setLOD(this.getLod(zoom), true);
+
     return this;
   }
 
@@ -89,14 +104,16 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
   }
 
   // abstract setRelationship(relationship: AsteroidRelationship): void;
+  abstract getLod(zoom: number): LODs;
 
-  protected setLOD(level: 0 | 1 | 2, noAnim = false) {
+  private setLOD(level: LODs, noAnim = false) {
     if (this.currentLOD === level) return;
 
     this.currentLOD = level;
     let asteroidAlpha = 1;
     let asteroidLabelPosition = { x: 0, y: 0 };
     let asteroidLabelAlpha = 1;
+    let ownerLabelAlpha = 0.75;
 
     switch (level) {
       // LOD 0: Show asteroid and label
@@ -120,6 +137,13 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
       case 2:
         asteroidAlpha = 0;
         asteroidLabelPosition = { x: 0, y: 0 };
+        // asteroidLabelAlpha = 0;
+        ownerLabelAlpha = 0;
+        this.fleetsContainer.setInlineView();
+        break;
+      case 3:
+        asteroidAlpha = 0;
+        asteroidLabelPosition = { x: 0, y: 0 };
         asteroidLabelAlpha = 0;
         this.fleetsContainer.setInlineView();
         break;
@@ -129,8 +153,9 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
 
     if (noAnim) {
       this.asteroidSprite.alpha = asteroidAlpha;
-      // this.outlineSprite.alpha = asteroidAlpha;
       this.asteroidLabel.alpha = asteroidLabelAlpha;
+      this.asteroidLabel.ownerLabel.setAlpha(ownerLabelAlpha);
+      this.asteroidLabel.fleetsContainer?.setAlpha(ownerLabelAlpha);
       this.asteroidLabel.setPosition(asteroidLabelPosition.x, asteroidLabelPosition.y);
       return;
     }
@@ -148,6 +173,12 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
     });
 
     this.scene.add.tween({
+      targets: [this.asteroidLabel.ownerLabel, this.asteroidLabel.fleetsContainer],
+      alpha: ownerLabelAlpha,
+      duration: 200,
+    });
+
+    this.scene.add.tween({
       targets: this.asteroidLabel,
       x: asteroidLabelPosition.x,
       y: asteroidLabelPosition.y,
@@ -159,10 +190,11 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
     const zoom = this._scene.camera.phaserCamera.zoom;
     this.asteroidLabel.update();
     this.circle.setScale(1 / zoom);
+    this.setLOD(this.getLod(zoom));
   }
 
   destroy() {
-    this.animationTween.destroy();
+    // this.animationTween.destroy();
     this._scene.objects.remove(this.id);
     super.destroy();
   }

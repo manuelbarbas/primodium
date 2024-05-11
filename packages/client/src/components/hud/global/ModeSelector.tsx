@@ -11,7 +11,8 @@ import { FaMagnifyingGlassMinus, FaMagnifyingGlassPlus } from "react-icons/fa6";
 export const ModeSelector = () => {
   const { components } = useMud();
   const playerEntity = components.Account.use()?.value;
-  const playerHome = components.Home.use(playerEntity)?.value;
+  const buildRock = components.BuildRock.use()?.value;
+  const playerHome = components.Home.use(playerEntity)?.value as Entity | undefined;
   const currentMode = components.SelectedMode.use()?.value;
   const selectedRock = components.SelectedRock.use()?.value;
   const ownedBy = components.OwnedBy.use(selectedRock)?.value;
@@ -49,7 +50,7 @@ export const ModeSelector = () => {
             <Button
               variant="neutral"
               size="content"
-              className="!px-3 py-2 border-t-none"
+              className="!px-3 py-2 border-t-0"
               keybind="PrevHotbar"
               motion="disabled"
               onClick={() => {
@@ -76,7 +77,7 @@ export const ModeSelector = () => {
               size="md"
               keybind="NextHotbar"
               motion="disabled"
-              clickSound="Execute2"
+              clickSound="Execute"
               onClick={() => {
                 components.SelectedMode.set({
                   value: Mode.Starmap,
@@ -97,7 +98,7 @@ export const ModeSelector = () => {
               <Button
                 variant="neutral"
                 size="content"
-                className="!px-3 py-2 border-t-none"
+                className="!px-3 py-2 border-t-0"
                 keybind="PrevHotbar"
                 motion="disabled"
                 onClick={() => {
@@ -121,10 +122,10 @@ export const ModeSelector = () => {
               <Button
                 variant="neutral"
                 size="content"
-                className="!px-3 py-2 border-t-none"
+                className="!px-3 py-2 border-t-0"
                 keybind="PrevHotbar"
                 onClick={() => {
-                  components.ActiveRock.set({ value: selectedRock ?? singletonEntity });
+                  components.ActiveRock.set({ value: buildRock ?? playerHome ?? singletonEntity });
                   components.SelectedMode.set({
                     value: Mode.Spectate,
                   });
@@ -147,9 +148,9 @@ export const ModeSelector = () => {
             <Button
               variant="error"
               size="md"
-              className="w-64"
               keybind="NextHotbar"
               motion="disabled"
+              clickSound="Execute"
               onClick={() => {
                 components.ActiveRock.set({ value: (playerHome ?? singletonEntity) as Entity });
                 components.SelectedMode.set({
@@ -161,16 +162,16 @@ export const ModeSelector = () => {
                 <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Build} />
                 <div className="flex flex-col items-start">
                   <p>
-                    RETURN HOME <FaMagnifyingGlassPlus size={12} className="inline opacity-50" />
+                    RETURN TO BUILDING <FaMagnifyingGlassPlus size={12} className="inline opacity-50" />
                   </p>
-                  <p className="block text-xs opacity-75">RETURN TO BUILDING</p>
+                  <p className="block text-xs opacity-75">CONTINUE RESOURCE EXTRACTION</p>
                 </div>
               </div>
             </Button>
             <Button
               variant="neutral"
               size="content"
-              className="!px-3 py-2 border-t-none"
+              className="!px-3 py-2 border-t-0"
               keybind="PrevHotbar"
               motion="disabled"
               onClick={() => {
