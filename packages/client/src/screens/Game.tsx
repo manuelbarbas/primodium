@@ -49,7 +49,6 @@ export const Game = () => {
   const isDead = usePlayerAsteroids(mud.playerAccount.entity).length === 0;
   return (
     <div>
-      <CommandBackgroundEffect />
       {!primodium && (
         <div className="flex flex-col items-center justify-center h-screen text-white gap-4">
           <p className="text-lg text-white">
@@ -61,8 +60,9 @@ export const Game = () => {
       )}
 
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
-      <div id="game-container" className="relative">
-        <div id="phaser-container" className="cursor-pointer screen-container z-10">
+      <div id="game-container" className="screen-container">
+        <CommandBackgroundEffect />
+        <div id="phaser-container" className="cursor-pointer screen-container absolute z-10">
           {!!primodium && (
             <PrimodiumProvider {...primodium}>
               <WidgetProvider>

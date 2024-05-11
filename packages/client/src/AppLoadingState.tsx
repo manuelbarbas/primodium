@@ -52,8 +52,7 @@ export default function AppLoadingState() {
   const ready = useMemo(() => !loading && enoughEth, [loading, enoughEth]);
 
   return (
-    <div className="bg-black h-screen relative">
-      <div className="absolute top-0 w-full min-h-full star-background opacity-30" />
+    <div className="h-screen relative">
       {!error && (
         <div className="relative">
           {!loading && !enoughEth && (

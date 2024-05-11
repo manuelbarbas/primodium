@@ -180,7 +180,7 @@ export const Content: React.FC<WidgetContentProps> = memo(
           >
             {/* Title */}
             <div className="flex gap-1 bg-gray-900 px-2 items-center">
-              {icon && <img src={icon} className="pixel-images h-5" />}
+              {icon && <img src={icon} className="pixel-images h-5" draggable="false" />}
               <p className=" uppercase font-bold">{title}</p>
             </div>
 

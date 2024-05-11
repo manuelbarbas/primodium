@@ -17,7 +17,7 @@ export default {
     heroPatternsOpacities: ["0", "10", "25", "50", "90", "100"],
     heroPatterns: {
       graphpaper: patterns.graphpaper,
-      plus: patterns.plus,
+      skulls: patterns.skulls,
       topography: patterns.topography,
     },
     extend: {

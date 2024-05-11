@@ -20,13 +20,15 @@ export const ModeSelector = () => {
 
   return (
     <div className="flex flex-col items-center pointer-events-auto p-4 relative">
-      <div className="flex flex-col items-center gap-2 relative">
+      <div className="flex flex-col items-center relative">
         {(currentMode === Mode.Asteroid || currentMode === Mode.Spectate) && (
           <>
             <Button
               variant="info"
               size="md"
               keybind="NextHotbar"
+              motion="disabled"
+              clickSound="Execute"
               onClick={() => {
                 components.SelectedMode.set({
                   value: Mode.CommandCenter,
@@ -46,8 +48,10 @@ export const ModeSelector = () => {
             </Button>
             <Button
               variant="neutral"
-              size="sm"
+              size="content"
+              className="!px-3 py-2 border-t-none"
               keybind="PrevHotbar"
+              motion="disabled"
               onClick={() => {
                 components.SelectedMode.set({
                   value: Mode.Starmap,
@@ -71,6 +75,8 @@ export const ModeSelector = () => {
               variant="secondary"
               size="md"
               keybind="NextHotbar"
+              motion="disabled"
+              clickSound="Execute2"
               onClick={() => {
                 components.SelectedMode.set({
                   value: Mode.Starmap,
@@ -90,8 +96,10 @@ export const ModeSelector = () => {
             {ownedByPlayer && (
               <Button
                 variant="neutral"
-                size="sm"
+                size="content"
+                className="!px-3 py-2 border-t-none"
                 keybind="PrevHotbar"
+                motion="disabled"
                 onClick={() => {
                   components.ActiveRock.set({ value: selectedRock ?? singletonEntity });
                   components.SelectedMode.set({
@@ -112,7 +120,8 @@ export const ModeSelector = () => {
             {!ownedByPlayer && !isShard && (
               <Button
                 variant="neutral"
-                size="sm"
+                size="content"
+                className="!px-3 py-2 border-t-none"
                 keybind="PrevHotbar"
                 onClick={() => {
                   components.ActiveRock.set({ value: selectedRock ?? singletonEntity });
@@ -138,7 +147,9 @@ export const ModeSelector = () => {
             <Button
               variant="error"
               size="md"
+              className="w-64"
               keybind="NextHotbar"
+              motion="disabled"
               onClick={() => {
                 components.ActiveRock.set({ value: (playerHome ?? singletonEntity) as Entity });
                 components.SelectedMode.set({
@@ -158,8 +169,10 @@ export const ModeSelector = () => {
             </Button>
             <Button
               variant="neutral"
-              size="sm"
+              size="content"
+              className="!px-3 py-2 border-t-none"
               keybind="PrevHotbar"
+              motion="disabled"
               onClick={() => {
                 components.SelectedMode.set({
                   value: Mode.CommandCenter,
