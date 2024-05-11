@@ -9,13 +9,11 @@ const params = new URLSearchParams(window.location.search);
 export const Landing: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <AnimatePresence key="animate-2">
-      <div key="star" className="w-full h-full star-background opacity-30" />
-
       <motion.div
         key="play"
-        initial={{ scale: 0.5, opacity: 0, y: 50 }}
-        animate={{ scale: 1, opacity: 1, y: 0, transition: { delay: 0.25, duration: 0.5 } }}
-        className="flex items-center justify-center h-screen text-white"
+        // initial={{ scale: 0.5, opacity: 0, y: 50 }}
+        // animate={{ scale: 1, opacity: 1, y: 0, transition: { delay: 0.25, duration: 0.5 } }}
+        className="flex items-center justify-center h-screen text-white animate-in fade-in duration-1000"
       >
         <div className="relative text-center border border-secondary/25 px-24 py-16 bg-neutral/50 flex flex-col items-center gap-2 mb-4">
           <div className="absolute top-0 w-full h-full heropattern-topography-slate-700/10" />
