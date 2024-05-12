@@ -16,6 +16,8 @@ export class PrimaryAsteroid extends BaseAsteroid {
       sprite: getPrimarySprite(level),
       outlineSprite: getPrimaryOutlineSprite(relationship),
     });
+
+    this.asteroidLabel.setBaseScale(0.9);
   }
   spawn() {
     super.spawn();

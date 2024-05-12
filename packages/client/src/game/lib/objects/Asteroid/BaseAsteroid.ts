@@ -6,6 +6,7 @@ import { FleetsContainer } from "@/game/lib/objects/Asteroid/FleetsContainer";
 import { Assets, Sprites } from "@primodiumxyz/assets";
 import { AsteroidLabel } from "@/game/lib/objects/Asteroid/AsteroidLabel";
 import { Entity } from "@latticexyz/recs";
+import { isValidClick } from "@/game/lib/objects/inputGuards";
 
 type LODs = 0 | 1 | 2 | 3;
 
@@ -41,7 +42,6 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
 
     this.coord = coord;
     this._scene = scene;
-    this.setSize(this.asteroidSprite.width, this.asteroidSprite.height).setInteractive();
 
     this.animationTween = this.scene.add.tween({
       targets: [this.asteroidSprite],
@@ -51,6 +51,8 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
       yoyo: true,
       paused: true,
     });
+
+    this.circle.setInteractive(new Phaser.Geom.Circle(0, 0, 32), Phaser.Geom.Circle.Contains).disableInteractive();
 
     this._scene.objects.add(id, this, true);
   }
@@ -62,11 +64,35 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
     return this;
   }
 
+  onClick(fn: (e: Phaser.Input.Pointer) => void) {
+    this.circle.on(Phaser.Input.Events.POINTER_UP, (e: Phaser.Input.Pointer) => {
+      if (!isValidClick(e)) return;
+
+      fn(e);
+    });
+    return this;
+  }
+
+  onHoverEnter(fn: (e: Phaser.Input.Pointer) => void) {
+    this.circle.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, fn);
+    return this;
+  }
+
+  onHoverExit(fn: (e: Phaser.Input.Pointer) => void) {
+    this.circle.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, fn);
+    return this;
+  }
+
   setActive(value: boolean): this {
     super.setActive(value);
 
-    if (value) this.animationTween.play();
-    else this.animationTween.pause();
+    if (value) {
+      this.animationTween.play();
+      this.circle.setInteractive();
+    } else {
+      this.animationTween.pause();
+      this.circle.disableInteractive();
+    }
 
     const zoom = this._scene.camera.phaserCamera.zoom;
     this.setLOD(this.getLod(zoom), true);
@@ -113,7 +139,8 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
     let asteroidAlpha = 1;
     let asteroidLabelPosition = { x: 0, y: 0 };
     let asteroidLabelAlpha = 1;
-    let ownerLabelAlpha = 0.75;
+    let ownerLabelAlpha = 0.5;
+    let fleetContainerAlpha = 1;
 
     switch (level) {
       // LOD 0: Show asteroid and label
@@ -139,13 +166,16 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
         asteroidLabelPosition = { x: 0, y: 0 };
         // asteroidLabelAlpha = 0;
         ownerLabelAlpha = 0;
-        this.fleetsContainer.setInlineView();
+        fleetContainerAlpha = 0;
+        // this.fleetsContainer.setInlineView();
         break;
       case 3:
         asteroidAlpha = 0;
         asteroidLabelPosition = { x: 0, y: 0 };
         asteroidLabelAlpha = 0;
-        this.fleetsContainer.setInlineView();
+        ownerLabelAlpha = 0;
+        fleetContainerAlpha = 0;
+        // this.fleetsContainer.setInlineView();
         break;
       default:
         throw new Error("Invalid LOD level");
@@ -173,8 +203,14 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
     });
 
     this.scene.add.tween({
-      targets: [this.asteroidLabel.ownerLabel, this.asteroidLabel.fleetsContainer],
+      targets: this.asteroidLabel.ownerLabel,
       alpha: ownerLabelAlpha,
+      duration: 200,
+    });
+
+    this.scene.add.tween({
+      targets: this.fleetsContainer,
+      alpha: fleetContainerAlpha,
       duration: 200,
     });
 
@@ -190,7 +226,10 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
     const zoom = this._scene.camera.phaserCamera.zoom;
     this.asteroidLabel.update();
     this.circle.setScale(1 / zoom);
+    this.setSize(32 / zoom, 32 / zoom);
     this.setLOD(this.getLod(zoom));
+
+    // this.setInteractive(new Phaser.Geom.Circle(0, 0, 32 / zoom), Phaser.Geom.Circle.Contains);
   }
 
   destroy() {
