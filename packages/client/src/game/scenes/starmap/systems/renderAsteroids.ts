@@ -2,8 +2,7 @@ import { Has, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
-import { renderAsteroid } from "@/game/lib/render/renderAsteroid";
+import { createAsteroidContainer } from "@/game/scenes/starmap/systems/createAsteroidContainer";
 
 export const renderAsteroids = (scene: Scene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -19,13 +18,11 @@ export const renderAsteroids = (scene: Scene) => {
     // //TODO: not sure why this is needed but rendering of unitialized asteroids wont work otherwise
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    renderAsteroid({
+    createAsteroidContainer({
       scene,
       entity,
       coord,
-      addEventHandlers: true,
+      spawnsSecondary: asteroidData?.spawnsSecondary ?? false,
     });
-
-    if (asteroidData?.spawnsSecondary) initializeSecondaryAsteroids(entity, coord);
   });
 };
