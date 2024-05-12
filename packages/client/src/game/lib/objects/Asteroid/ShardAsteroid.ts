@@ -9,7 +9,7 @@ export class ShardAsteroid extends BaseAsteroid {
   constructor(args: { id: Entity; scene: Scene; coord: Coord }) {
     const { id, scene, coord } = args;
     super({ id, scene, coord, sprite: Sprites.Shard, outlineSprite: Sprites.AegisDrone });
-    this.asteroidSprite.preFX?.addShine();
+    this.asteroidSprite.postFX?.addShine();
     this.asteroidLabel.setProperties({
       emblemSprite: Sprites.ShardIcon,
       nameLabel: "Shard",
@@ -17,37 +17,23 @@ export class ShardAsteroid extends BaseAsteroid {
       ownerLabel: "shard",
     });
     this.setDepth(DepthLayers.Marker);
+    this.setScale(0.75);
   }
 
   spawn() {
     super.spawn();
-    this.setLOD(1, true);
     return this;
   }
 
-  update() {
-    super.update();
-    const zoom = this._scene.camera.phaserCamera.zoom;
-    const minZoom = this._scene.config.camera.minZoom;
-    const maxZoom = this._scene.config.camera.maxZoom;
-
-    // Normalize the zoom level
-    const normalizedZoom = (zoom - minZoom) / (maxZoom - minZoom);
-
-    if (normalizedZoom >= 0.1) {
-      this.setLOD(0);
-      this.asteroidLabel.setProperties({
-        emblemSprite: Sprites.EMPTY,
-      });
-      return;
+  getLod(zoom: number) {
+    if (zoom >= 0.75) {
+      return 0;
     }
-    if (normalizedZoom >= 0) {
-      this.setLOD(1);
-      this.asteroidLabel.setProperties({
-        emblemSprite: Sprites.ShardIcon,
-      });
-      return;
+    if (zoom >= 0) {
+      return 1;
     }
+
+    return 0;
   }
 
   // setRelationship(relationship: AsteroidRelationship) {

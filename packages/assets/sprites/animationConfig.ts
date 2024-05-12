@@ -619,4 +619,14 @@ export const AnimationConfig = [
     prefix: "sprites/decorations/drone/bottom/Drones_Bottom_Left",
     suffix: ".png",
   },
+  {
+    key: "wormholebase/level1/idle",
+    assetKey: "sprite-atlas",
+    frameRate: 5,
+    startFrame: 1,
+    endFrame: 12,
+    repeat: -1,
+    prefix: "sprites/wormholebase/level1/idle/Wormhole_Idle",
+    suffix: ".png",
+  },
 ];

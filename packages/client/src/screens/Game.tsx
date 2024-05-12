@@ -8,6 +8,7 @@ import { Progress } from "src/components/core/Progress";
 import { GameHUD } from "@/components/hud";
 import { PrimodiumProvider } from "src/hooks/providers/PrimodiumProvider";
 import { WidgetProvider } from "src/hooks/providers/WidgetProvider";
+import { CommandBackgroundEffect } from "@/screens/CommandBackgroundEffect";
 
 const params = new URLSearchParams(window.location.search);
 
@@ -20,10 +21,6 @@ export const Game = () => {
     setPrimodium(null);
     await new Promise((resolve) => setTimeout(resolve, 100));
     primodium?.destroy();
-    const phaserContainer = document.getElementById("phaser-container");
-    for (const child of Array.from(phaserContainer?.children ?? [])) {
-      phaserContainer?.removeChild(child);
-    }
   };
 
   const init = async () => {
@@ -58,13 +55,14 @@ export const Game = () => {
             <span className="">Loading game</span>
             <span>&hellip;</span>
           </p>
-          <Progress value={100} max={100} className="animate-pulse w-56" />
+          <Progress value={100} max={100} variant="secondary" className="animate-pulse w-56" />
         </div>
       )}
 
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
-      <div id="game-container relative">
-        <div id="phaser-container" className="cursor-pointer screen-container">
+      <div id="game-container" className="screen-container">
+        <CommandBackgroundEffect />
+        <div id="phaser-container" className="cursor-pointer screen-container absolute">
           {!!primodium && (
             <PrimodiumProvider {...primodium}>
               <WidgetProvider>

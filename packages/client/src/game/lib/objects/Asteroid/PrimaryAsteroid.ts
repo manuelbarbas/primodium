@@ -16,10 +16,11 @@ export class PrimaryAsteroid extends BaseAsteroid {
       sprite: getPrimarySprite(level),
       outlineSprite: getPrimaryOutlineSprite(relationship),
     });
+
+    this.asteroidLabel.setBaseScale(0.9);
   }
   spawn() {
     super.spawn();
-    this.setLOD(1, true);
     return this;
   }
 
@@ -35,24 +36,17 @@ export class PrimaryAsteroid extends BaseAsteroid {
   //   return this;
   // }
 
-  update() {
-    super.update();
-    const zoom = this._scene.camera.phaserCamera.zoom;
-    const minZoom = this._scene.config.camera.minZoom;
-    const maxZoom = this._scene.config.camera.maxZoom;
-
-    // return;
-
-    // Normalize the zoom level
-    const normalizedZoom = (zoom - minZoom) / (maxZoom - minZoom);
-
-    if (normalizedZoom >= 0.1) {
-      this.setLOD(0);
-      return;
+  getLod(zoom: number) {
+    if (zoom >= 0.75) {
+      return 0;
     }
-    if (normalizedZoom >= 0) {
-      this.setLOD(1);
-      return;
+    if (zoom >= 0.12) {
+      return 1;
     }
+    if (zoom >= 0) {
+      return 2;
+    }
+
+    return 0;
   }
 }

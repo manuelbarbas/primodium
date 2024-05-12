@@ -79,7 +79,7 @@ export const setupBasicCameraMovement = (
 
   function handleTranslate(delta: number) {
     // HANDLE CAMERA SCROLL MOVEMENT KEYS
-    const speed = isDown("Modifier") ? SPEED / 3 : SPEED;
+    const speed = (isDown("Modifier") ? SPEED / 3 : SPEED) / scene.camera.phaserCamera.zoom;
     const moveDistance = speed * (delta / 1000);
     let scrollX = scene.camera.phaserCamera.scrollX;
     let scrollY = scene.camera.phaserCamera.scrollY;

@@ -42,7 +42,7 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
 
   if (loading)
     return (
-      <Card className="relative flex items-center justify-center w-56 h-24 px-auto uppercase font-bold">
+      <Card className="relative flex items-center justify-center w-56 h-24 px-auto uppercase font-bold gap-2">
         <Loader />
         Loading Data
       </Card>

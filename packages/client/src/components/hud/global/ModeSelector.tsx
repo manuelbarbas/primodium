@@ -1,140 +1,197 @@
-import { Badge } from "@/components/core/Badge";
 import { Button } from "@/components/core/Button";
-import { GlassCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
 import { useMud } from "@/hooks";
-import { cn } from "@/util/client";
 
 import { Mode } from "@/util/constants";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { useCallback } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-
-export const ModeButton = (props: { mode: Entity; image: string }) => {
-  const { components } = useMud();
-  const currentMode = components.SelectedMode.use()?.value;
-
-  return (
-    <Button
-      size="md"
-      shape="square"
-      variant="ghost"
-      className={cn(currentMode === props.mode && "scale-125 pixel-border p-3", "hover:bg-transparent")}
-      onClick={() => {
-        components.SelectedMode.set({
-          value: props.mode,
-        });
-      }}
-    >
-      {currentMode === props.mode && (
-        <div className="absolute inset-0 bg-gradient-to-t from-accent/25 to-transparent" />
-      )}
-      <IconLabel imageUri={props.image} className={cn("text-2xl")} />
-    </Button>
-  );
-};
-
-const selectableModes = [
-  {
-    type: Mode.Asteroid,
-    name: "Asteroid",
-    image: InterfaceIcons.Build,
-  },
-  {
-    type: Mode.Starmap,
-    name: "Starbelt",
-    image: InterfaceIcons.Starmap,
-  },
-  {
-    type: Mode.CommandCenter,
-    name: "Command Center",
-    image: InterfaceIcons.Command,
-  },
-];
+import { FaMagnifyingGlassMinus, FaMagnifyingGlassPlus } from "react-icons/fa6";
 
 export const ModeSelector = () => {
   const { components } = useMud();
+  const playerEntity = components.Account.use()?.value;
+  const buildRock = components.BuildRock.use()?.value;
+  const playerHome = components.Home.use(playerEntity)?.value as Entity | undefined;
   const currentMode = components.SelectedMode.use()?.value;
-  const spectating = currentMode === Mode.Spectate;
-
-  const handlePrev = useCallback(() => {
-    const currentIndex = selectableModes.findIndex((mode) => mode.type === currentMode);
-    const nextIndex = (currentIndex - 1 + selectableModes.length) % selectableModes.length;
-
-    components.SelectedMode.set({
-      value: selectableModes[nextIndex].type,
-    });
-  }, [currentMode, components.SelectedMode]);
-
-  const handleNext = useCallback(() => {
-    const currentIndex = selectableModes.findIndex((mode) => mode.type === currentMode);
-    const nextIndex = (currentIndex + 1) % selectableModes.length;
-
-    components.SelectedMode.set({
-      value: selectableModes[nextIndex].type,
-    });
-  }, [currentMode, components.SelectedMode]);
+  const selectedRock = components.SelectedRock.use()?.value;
+  const ownedBy = components.OwnedBy.use(selectedRock)?.value;
+  const isShard = !!components.ShardAsteroid.use(selectedRock);
+  const ownedByPlayer = ownedBy === playerEntity;
 
   return (
-    <div className="flex flex-col items-center pointer-events-auto">
-      <div className="flex items-center relative">
-        {!spectating && (
-          <Button
-            shape="square"
-            variant="neutral"
-            size="sm"
-            className="text-accent text-sm drop-shadow-hard border-r-0"
-            onClick={handlePrev}
-            keybind="PrevHotbar"
-          >
-            <FaChevronLeft />
-          </Button>
+    <div className="flex flex-col items-center pointer-events-auto p-4 relative">
+      <div className="flex flex-col items-center relative">
+        {(currentMode === Mode.Asteroid || currentMode === Mode.Spectate) && (
+          <>
+            <Button
+              variant="info"
+              size="md"
+              keybind="NextHotbar"
+              motion="disabled"
+              clickSound="Execute"
+              onClick={() => {
+                components.SelectedMode.set({
+                  value: Mode.CommandCenter,
+                });
+              }}
+            >
+              <div className="flex flex-start px-1 gap-3 w-full">
+                <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Command} />
+                <div className="flex flex-col items-start">
+                  <p>
+                    OPEN COMMAND CENTER <FaMagnifyingGlassMinus size={12} className="inline opacity-50" />
+                  </p>
+                  {ownedByPlayer && <p className="block text-xs opacity-75">CREATE/MANAGE WITH FLEETS IN ORBIT</p>}
+                  {!ownedByPlayer && <p className="block text-xs opacity-75">ENGAGE WITH FLEETS IN ORBIT</p>}
+                </div>
+              </div>
+            </Button>
+            <Button
+              variant="neutral"
+              size="content"
+              className="!px-3 py-2 border-t-0"
+              keybind="PrevHotbar"
+              motion="disabled"
+              onClick={() => {
+                components.SelectedMode.set({
+                  value: Mode.Starmap,
+                });
+              }}
+            >
+              <div className="flex flex-start px-1 gap-3 w-full">
+                <IconLabel className="text-sm drop-shadow-lg" imageUri={InterfaceIcons.Starmap} />
+                <div className="flex flex-col items-start">
+                  <p>
+                    STARBELT <FaMagnifyingGlassMinus size={12} className="inline opacity-50" />
+                  </p>
+                </div>
+              </div>
+            </Button>
+          </>
         )}
-        <GlassCard direction="bottom" className="flex-row items-center gap-6 px-10">
-          {selectableModes.map((mode) => (
-            <ModeButton key={mode.type} mode={mode.type} image={mode.image} />
-          ))}
-          {spectating && (
-            <div className="absolute inset-0 bg-neutral/75 backdrop-blur-md rounded-b-xl w-full h-full flex items-center justify-center pointer-events-auto">
+        {currentMode === Mode.CommandCenter && (
+          <>
+            <Button
+              variant="secondary"
+              size="md"
+              keybind="NextHotbar"
+              motion="disabled"
+              clickSound="Execute"
+              onClick={() => {
+                components.SelectedMode.set({
+                  value: Mode.Starmap,
+                });
+              }}
+            >
+              <div className="flex flex-start px-1 gap-3 w-full">
+                <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Starmap} />
+                <div className="flex flex-col items-start">
+                  <p>
+                    OPEN STARBELT <FaMagnifyingGlassMinus size={12} className="inline opacity-50" />
+                  </p>
+                  <p className="block text-xs opacity-75">VIEW AND TRAVEL TO ASTEROIDS</p>
+                </div>
+              </div>
+            </Button>
+            {ownedByPlayer && (
               <Button
-                variant={"ghost"}
-                size="sm"
-                className=" drop-shadow-hard hover:bg-transparent"
+                variant="neutral"
+                size="content"
+                className="!px-3 py-2 border-t-0"
+                keybind="PrevHotbar"
+                motion="disabled"
                 onClick={() => {
+                  components.ActiveRock.set({ value: selectedRock ?? singletonEntity });
                   components.SelectedMode.set({
-                    value: Mode.Starmap,
-                  });
-
-                  components.ActiveRock.set({
-                    value: components.BuildRock.get()?.value ?? singletonEntity,
+                    value: Mode.Asteroid,
                   });
                 }}
               >
-                <IconLabel imageUri={InterfaceIcons.Return} className="text-2xl" />
+                <div className="flex flex-start px-1 gap-3 w-full">
+                  <IconLabel className="text-sm drop-shadow-lg" imageUri={InterfaceIcons.Build} />
+                  <div className="flex flex-col items-start">
+                    <p>
+                      BUILD <FaMagnifyingGlassPlus size={12} className="inline opacity-50" />
+                    </p>
+                  </div>
+                </div>
               </Button>
-            </div>
-          )}
-        </GlassCard>
-        {!spectating && (
-          <Button
-            shape="square"
-            variant="neutral"
-            size="sm"
-            className="text-accent text-sm drop-shadow-hard border-l-0"
-            onClick={handleNext}
-            keybind="NextHotbar"
-          >
-            <FaChevronRight />
-          </Button>
+            )}
+            {!ownedByPlayer && !isShard && (
+              <Button
+                variant="neutral"
+                size="content"
+                className="!px-3 py-2 border-t-0"
+                keybind="PrevHotbar"
+                onClick={() => {
+                  components.ActiveRock.set({ value: buildRock ?? playerHome ?? singletonEntity });
+                  components.SelectedMode.set({
+                    value: Mode.Spectate,
+                  });
+                }}
+              >
+                <div className="flex flex-start px-1 gap-3 w-full">
+                  <IconLabel className="text-sm drop-shadow-lg" imageUri={InterfaceIcons.Spectate} />
+                  <div className="flex flex-col items-start">
+                    <p>
+                      SPECTATE <FaMagnifyingGlassPlus size={12} className="inline opacity-50" />
+                    </p>
+                  </div>
+                </div>
+              </Button>
+            )}
+          </>
+        )}
+        {currentMode === Mode.Starmap && (
+          <>
+            <Button
+              variant="error"
+              size="md"
+              keybind="NextHotbar"
+              motion="disabled"
+              clickSound="Execute"
+              onClick={() => {
+                components.ActiveRock.set({ value: (playerHome ?? singletonEntity) as Entity });
+                components.SelectedMode.set({
+                  value: Mode.Asteroid,
+                });
+              }}
+            >
+              <div className="flex flex-start px-1 gap-3 w-full">
+                <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Build} />
+                <div className="flex flex-col items-start">
+                  <p>
+                    RETURN TO BUILDING <FaMagnifyingGlassPlus size={12} className="inline opacity-50" />
+                  </p>
+                  <p className="block text-xs opacity-75">CONTINUE RESOURCE EXTRACTION</p>
+                </div>
+              </div>
+            </Button>
+            <Button
+              variant="neutral"
+              size="content"
+              className="!px-3 py-2 border-t-0"
+              keybind="PrevHotbar"
+              motion="disabled"
+              onClick={() => {
+                components.SelectedMode.set({
+                  value: Mode.CommandCenter,
+                });
+              }}
+            >
+              <div className="flex flex-start px-1 gap-3 w-full">
+                <IconLabel className="text-sm drop-shadow-lg" imageUri={InterfaceIcons.Command} />
+                <div className="flex flex-col items-start">
+                  <p>
+                    COMMAND CENTER <FaMagnifyingGlassPlus size={12} className="inline opacity-50" />
+                  </p>
+                </div>
+              </div>
+            </Button>
+          </>
         )}
       </div>
-      {currentMode && (
-        <Badge variant="neutral" size="md" className="border-accent drop-shadow-hard border-t-0">
-          {spectating ? "STOP SPECTATING" : selectableModes.find((mode) => mode.type === currentMode)?.name}
-        </Badge>
-      )}
     </div>
   );
 };

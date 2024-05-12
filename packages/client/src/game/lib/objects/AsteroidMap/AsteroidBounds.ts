@@ -234,8 +234,6 @@ export class AsteroidBounds {
       this.scene.phaserScene.lights.addPointLight(drone.x, drone.y, 0x008b8b, 75, 0.015);
     });
 
-    nonBuildableLayer.postFX.addVignette(0.5, 0.5, 3, 1);
-
     return this;
   }
 

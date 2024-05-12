@@ -14,7 +14,7 @@ export const initStarmapScene = async (game: Game) => {
   audio.initializeAudioVolume();
 
   setupBasicCameraMovement(scene, {
-    translateKeybind: false,
+    translateKeybind: true,
   });
   setupKeybinds(scene);
 

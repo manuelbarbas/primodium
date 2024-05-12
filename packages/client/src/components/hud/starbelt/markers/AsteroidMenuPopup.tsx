@@ -26,7 +26,7 @@ export const AsteroidMenuPopup = () => {
 
     const pixelCoord = tileCoordToPixelCoord(position, config.tilemap.tileWidth, config.tilemap.tileHeight);
 
-    return { x: pixelCoord.x, y: -pixelCoord.y };
+    return { x: pixelCoord.x + 32, y: -pixelCoord.y - 8 };
   }, [primodium, position]);
 
   if (!selectedAsteroid || !mapOpen) return null;

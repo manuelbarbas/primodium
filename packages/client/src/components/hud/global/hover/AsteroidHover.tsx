@@ -15,7 +15,7 @@ import { hashEntities } from "src/util/encode";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
 import { HealthBar } from "../../../shared/HealthBar";
-import { InterfaceIcons } from "@primodiumxyz/assets";
+import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
 import { EntityToResourceImage } from "@/util/mappings";
 
 export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }> = ({
@@ -39,7 +39,7 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
 
   if (loading)
     return (
-      <div className="relative flex items-center justify-center w-60 h-24 px-auto uppercase font-bold">
+      <div className="relative flex items-center justify-center w-60 h-24 px-auto uppercase font-bold gap-2">
         <Loader />
         Loading Data
       </div>
@@ -82,7 +82,8 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
           </div>
           <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
             {/* todo replace PRI with icon */}
-            {desc.primodium.toLocaleString()} PRI
+            <IconLabel imageUri={ResourceImages.Primodium} />
+            {desc.primodium.toLocaleString()}
           </div>
         </div>
         {inGracePeriod && (

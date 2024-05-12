@@ -23,6 +23,7 @@ export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coo
 
   const expansionLevel = components.Level.get(entity)?.value ?? 1n;
   const playerEntity = components.Account.get()?.value;
+  const isHome = components.Home.get(playerEntity)?.value === entity;
 
   if (!playerEntity) return;
 
@@ -31,6 +32,7 @@ export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coo
   const level = components.Level.get(entity)?.value;
 
   const spriteScale = 0.34 + 0.05 * Number(asteroidData.maxLevel);
+
   let asteroid: BaseAsteroid;
   if (!asteroidData?.spawnsSecondary)
     asteroid = new SecondaryAsteroid({
@@ -63,7 +65,7 @@ export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coo
   })();
 
   asteroid.getAsteroidLabel().setProperties({
-    nameLabel: entityToRockName(entity),
+    nameLabel: entityToRockName(entity) + (isHome ? " *" : ""),
     nameLabelColor: ownedByPlayer ? 0xffff00 : asteroidData?.spawnsSecondary ? 0x00ffff : 0xffffff,
     emblemSprite: MainbaseLevelToEmblem[Phaser.Math.Clamp(Number(level) - 1, 0, MainbaseLevelToEmblem.length - 1)],
     ownerLabel: ownerLabel,
@@ -75,9 +77,7 @@ export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coo
   if (!addEventHandlers) return asteroid;
 
   asteroid
-    .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
-      if (pointer.downElement.nodeName !== "CANVAS") return;
-
+    .onClick(() => {
       //TODO: move to reusable seq in fx
       const sequence = [
         {
@@ -100,10 +100,10 @@ export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coo
       if (scene.camera.phaserCamera.zoom >= scene.config.camera.maxZoom * 0.5)
         components.SelectedRock.set({ value: entity });
     })
-    .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
+    .onHoverEnter(() => {
       components.HoverEntity.set({ value: entity });
     })
-    .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => {
+    .onHoverExit(() => {
       components.HoverEntity.remove();
     });
 

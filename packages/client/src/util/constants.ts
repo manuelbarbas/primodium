@@ -139,6 +139,10 @@ export const EntityType = {
   Kimberlite: toHex32("Kimberlite") as Entity,
   Platinum: toHex32("Platinum") as Entity,
 
+  //Special Asteroid Types
+  Common: toHex32("Common") as Entity,
+  Wormhole: toHex32("Wormhole") as Entity,
+
   MainBase: toHex32("MainBase") as Entity,
   WormholeBase: toHex32("WormholeBase") as Entity,
   DroidBase: toHex32("DroidBase") as Entity,
