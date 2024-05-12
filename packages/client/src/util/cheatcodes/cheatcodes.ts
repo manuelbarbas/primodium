@@ -31,6 +31,7 @@ import { getAsteroidBounds, outOfBounds } from "../outOfBounds";
 import { getFullResourceCount } from "../resource";
 import { getBuildingAtCoord } from "../tile";
 import { TesterPack, testerPacks } from "./testerPacks";
+import { waitForTransactionReceipt } from "viem/actions";
 
 export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
   const buildings: Record<string, Entity> = {
@@ -267,18 +268,44 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
     const networkConfig = getNetworkConfig();
     const clientOptions = {
       chain: networkConfig.chain,
-      transport: transportObserver(fallback([webSocket(), http()])),
+      transport: transportObserver(fallback([webSocket(networkConfig.chain.rpcUrls.default.http[0]), http()])),
       pollingInterval: 1000,
     };
 
-    for (let i = 0; i < count; i++) {
+    const walletClients = Array.from({ length: count }, () => {
       const privateKey = generatePrivateKey();
       const burnerAccount = createBurnerAccount(privateKey as Hex);
 
-      const burnerWalletClient = createWalletClient({
+      return createWalletClient({
         ...clientOptions,
         account: burnerAccount,
       });
+    });
+
+    // prepare enough ETH to each account for spawning if on caldera sepolia
+    if (networkConfig.chain.id === 10017) {
+      const playerAddress = mud.sessionAccount?.address ?? mud.playerAccount.address;
+      const requiredAmountToSpawn = BigInt(1e14);
+
+      let balance = await mud.network.publicClient.getBalance({ address: playerAddress });
+      while (balance < requiredAmountToSpawn * BigInt(count)) {
+        console.log("Not enough balance to spawn players, dripping funds");
+        await mud.requestDrip(playerAddress);
+        balance = await mud.network.publicClient.getBalance({ address: playerAddress });
+      }
+    }
+
+    for (let i = 0; i < count; i++) {
+      const burnerWalletClient = walletClients[i];
+      // send some ETH to the burner account for spawning if on caldera sepolia
+      if (networkConfig.chain.id === 10017) {
+        const player = mud.sessionAccount ?? mud.playerAccount;
+        const hash = await player.walletClient.sendTransaction({
+          to: burnerWalletClient.account.address,
+          value: BigInt(1e14),
+        });
+        await waitForTransactionReceipt(mud.network.publicClient, { hash });
+      }
 
       const worldContract = getContract({
         address: networkConfig.worldAddress as Hex,
