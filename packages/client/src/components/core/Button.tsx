@@ -76,7 +76,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       shape,
       motion,
       mute = false,
-      clickSound = "Confirm2",
+      clickSound = "Bleep7",
       keybind,
       tooltip,
       tooltipDirection,

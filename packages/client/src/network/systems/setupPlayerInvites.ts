@@ -5,9 +5,13 @@ import { Hex, hexToString, padHex, zeroAddress } from "viem";
 import { components } from "../components";
 import { MUD } from "../types";
 import { world } from "../world";
+import { EAllianceRole } from "contracts/config/enums";
+import { entityToPlayerName } from "@/util/name";
+import { getAllianceName } from "@/util/alliance";
 
 export function setupInvitations(mud: MUD) {
-  const { AllianceInvitation, PlayerInvite, Alliance, AllianceJoinRequest, AllianceRequest } = components;
+  const { AllianceInvitation, Alliance, AllianceJoinRequest, AllianceRequest, PlayerAlliance, PlayerInvite } =
+    components;
   const systemWorld = namespaceWorld(world, "systems");
   const playerEntity = mud.playerAccount.entity;
 
@@ -33,8 +37,20 @@ export function setupInvitations(mud: MUD) {
   defineComponentSystem(systemWorld, AllianceJoinRequest, ({ entity, value }) => {
     const { alliance, entity: player } = decodeEntity({ entity: "bytes32", alliance: "bytes32" }, entity);
 
+    // The request has either been accepted or rejected
     if (!value[0]?.timeStamp) {
       AllianceRequest.remove(entity);
+      // Bail if it's not the concerned player
+      if (player !== playerEntity) return;
+
+      // Notify the player about the outcome
+      const allianceName = getAllianceName(alliance as Entity);
+      if (PlayerAlliance.get(playerEntity)?.alliance === alliance) {
+        toast.success(`You have been accepted into [${allianceName}]!`);
+      } else {
+        toast.info(`Your request to join [${allianceName}] was declined`);
+      }
+
       return;
     }
 
@@ -46,6 +62,15 @@ export function setupInvitations(mud: MUD) {
       },
       entity
     );
+
+    // Notify members of the alliance (only officers that can actually accept)
+    const officers = PlayerAlliance.getAllWith({
+      alliance,
+    }).filter((p) => PlayerAlliance.get(p)?.role !== EAllianceRole.Member);
+    if (officers.includes(playerEntity)) {
+      const playerName = entityToPlayerName(player as Entity);
+      toast.info(`${playerName} has requested to join the alliance`);
+    }
   });
 
   defineComponentSystem(systemWorld, PlayerInvite, ({ entity, value }) => {

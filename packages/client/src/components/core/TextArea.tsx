@@ -2,34 +2,18 @@ import { cn } from "@/util/client";
 import { useEffect, useRef } from "react";
 import { usePrimodium } from "src/hooks/usePrimodium";
 
-export const TextInput: React.FC<{
-  topLeftLabel?: string;
-  bottomLeftLabel?: string;
-  topRightLabel?: string;
-  bottomRightLabel?: string;
+export const TextArea: React.FC<{
   placeholder?: string;
   className?: string;
   maxLength?: number;
-  value?: string;
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  onChange?: React.ChangeEventHandler<HTMLTextAreaElement>;
   requirePattern?: string;
-}> = ({
-  placeholder,
-  topLeftLabel,
-  topRightLabel,
-  bottomLeftLabel,
-  bottomRightLabel,
-  className,
-  maxLength,
-  value,
-  onChange,
-  requirePattern,
-}) => {
+}> = ({ placeholder, className, maxLength, onChange, requirePattern }) => {
   const primodium = usePrimodium();
   const input = primodium.api("UI").input;
   const input2 = primodium.api("ASTEROID").input;
   const input3 = primodium.api("STARMAP").input;
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     const handleEscPress = (event: KeyboardEvent) => {
@@ -54,24 +38,10 @@ export const TextInput: React.FC<{
   }, []);
 
   return (
-    <div
-      className={cn(
-        "form-control w-full max-w-xs pointer-events-auto",
-        // if className includes a custom width, extract it and pass it to the form-control
-        className && className.includes("w-") && className.split(" ").find((c) => c.includes("w-"))
-      )}
-    >
-      {topLeftLabel || topRightLabel ? (
-        <label className="label">
-          {topLeftLabel && <span className="label-text opacity-90">{topLeftLabel}</span>}
-          {topRightLabel && <span className="label-text-alt opacity-75">{topRightLabel}</span>}
-        </label>
-      ) : null}
-      <input
+    <div className="form-control w-full max-w-xs pointer-events-auto">
+      <textarea
         ref={inputRef}
-        type="text"
         tabIndex={-1}
-        value={value}
         onChange={onChange}
         maxLength={maxLength}
         onFocus={() => {
@@ -85,16 +55,9 @@ export const TextInput: React.FC<{
           input3.enableInput();
         }}
         required={!!requirePattern}
-        pattern={requirePattern}
         placeholder={placeholder ?? "Type here"}
-        className={cn("input w-full max-w-xs bg-neutral border-secondary/25", className)}
+        className={cn("input w-full max-w-xs py-2 bg-neutral border-secondary/25 resize-none", className)}
       />
-      {bottomLeftLabel || bottomRightLabel ? (
-        <label className="label">
-          {bottomLeftLabel && <span className="label-text-alt opacity-75">{bottomLeftLabel}</span>}
-          {bottomRightLabel && <span className="label-text-alt opacity-75"> {bottomRightLabel} </span>}
-        </label>
-      ) : null}
     </div>
   );
 };
