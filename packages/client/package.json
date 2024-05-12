@@ -50,6 +50,7 @@
     "framer-motion": "^10.12.18",
     "lodash": "^4.17.21",
     "obscenity": "^0.1.4",
+    "phaser": "^3.80.1",
     "proxy-deep": "^3.1.1",
     "pusher": "^5.2.0",
     "pusher-js": "^8.3.0",

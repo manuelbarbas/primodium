@@ -42,6 +42,7 @@ export default defineConfig({
             "@latticexyz/store-sync",
             "@latticexyz/world",
           ],
+          phaser: ["phaser"],
         },
       },
     },

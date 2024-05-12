@@ -212,6 +212,9 @@ importers:
       obscenity:
         specifier: ^0.1.4
         version: 0.1.4
+      phaser:
+        specifier: ^3.80.1
+        version: 3.80.1
       proxy-deep:
         specifier: ^3.1.1
         version: 3.1.1
