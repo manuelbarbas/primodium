@@ -1,12 +1,14 @@
-import { Coord, Scene, TileCoord } from "engine/types";
+import Phaser from "phaser";
+import { Coord, TileCoord } from "engine/types";
 import { Fleet } from "../Fleet";
+import { PrimodiumScene } from "@/game/api/scene";
 
 const WIDTH = 150;
 const HEIGHT = 100;
 const MARGIN = 5;
 const COL = 5;
 export class FleetsContainer extends Phaser.GameObjects.Container {
-  private _scene: Scene;
+  private _scene: PrimodiumScene;
   private coord: TileCoord;
   private orbitRing: Phaser.GameObjects.Graphics;
   private fleetsContainer: Phaser.GameObjects.Container;
@@ -15,7 +17,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
   private paused = false;
   private inOrbitView = true;
 
-  constructor(scene: Scene, coord: Coord) {
+  constructor(scene: PrimodiumScene, coord: Coord) {
     super(scene.phaserScene, coord.x, coord.y);
     this.orbitRing = new Phaser.GameObjects.Graphics(scene.phaserScene)
       .lineStyle(2, 0x6ad9d9, 0.1)

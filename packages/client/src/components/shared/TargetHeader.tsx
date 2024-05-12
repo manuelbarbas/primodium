@@ -6,19 +6,19 @@ import { IconLabel } from "src/components/core/IconLabel";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
-import { usePrimodium } from "src/hooks/usePrimodium";
+import { useGame } from "src/hooks/useGame";
 import { components } from "src/network/components";
 import { getAsteroidImage, getAsteroidName } from "src/util/asteroid";
 import { EntityType } from "src/util/constants";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount } from "src/util/number";
 export const TargetHeader = ({ entity: selectedSpacerock, hideStats }: { entity: Entity; hideStats?: boolean }) => {
-  const primodium = usePrimodium();
+  const game = useGame();
   const { strength } = useAsteroidStrength(selectedSpacerock ?? singletonEntity);
   const { resourceCount: encryption } = useFullResourceCount(EntityType.Encryption, selectedSpacerock);
   const owner = components.OwnedBy.use(selectedSpacerock)?.value;
   if (!selectedSpacerock) return null;
-  const img = getAsteroidImage(primodium, selectedSpacerock) ?? "";
+  const img = getAsteroidImage(game, selectedSpacerock) ?? "";
   const name = entityToRockName(selectedSpacerock);
   const description = getAsteroidName(selectedSpacerock);
 

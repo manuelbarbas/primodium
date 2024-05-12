@@ -1,7 +1,7 @@
 import { Card, SecondaryCard } from "@/components/core/Card";
 import { Tooltip } from "@/components/core/Tooltip";
 import { useMud } from "@/hooks";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { useGame } from "@/hooks/useGame";
 import { components } from "@/network/components";
 import { getBuildingImageFromType } from "@/util/building";
 import { getEntityTypeName } from "@/util/common";
@@ -18,7 +18,7 @@ export const Hangar = ({ className = "" }: { className?: string }) => {
   const player = useMud().playerAccount.entity;
   const ownedByPlayer = components.OwnedBy.use(activeRock)?.value == player;
   const hangar = components.Hangar.use(activeRock);
-  const primodium = usePrimodium();
+  const game = useGame();
 
   const getCounts = (units: Entity[]) => {
     if (!hangar) return { total: 0n, unitCounts: {} };
@@ -65,15 +65,11 @@ export const Hangar = ({ className = "" }: { className?: string }) => {
               <p className="text-xs opacity-70">Train Units at</p>
               <div className="flex gap-4 justify-center items-center">
                 <Tooltip tooltipContent="Workshop" direction="bottom">
-                  <img
-                    src={getBuildingImageFromType(primodium, EntityType.Workshop)}
-                    alt="Workshop"
-                    className="w-12 h-12"
-                  />
+                  <img src={getBuildingImageFromType(game, EntityType.Workshop)} alt="Workshop" className="w-12 h-12" />
                 </Tooltip>
                 <Tooltip tooltipContent="Drone Factory" direction="bottom">
                   <img
-                    src={getBuildingImageFromType(primodium, EntityType.DroneFactory)}
+                    src={getBuildingImageFromType(game, EntityType.DroneFactory)}
                     alt="DroneFactory"
                     className="w-12 h-12"
                   />

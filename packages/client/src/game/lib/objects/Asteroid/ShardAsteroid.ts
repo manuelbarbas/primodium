@@ -1,12 +1,12 @@
-import { Coord } from "@latticexyz/utils";
-import { Scene } from "engine/types";
+import { Coord } from "engine/types";
+import { PrimodiumScene } from "@/game/api/scene";
 import { BaseAsteroid } from "./BaseAsteroid";
 import { Sprites } from "@primodiumxyz/assets";
 import { DepthLayers } from "@/game/lib/constants/common";
 import { Entity } from "@latticexyz/recs";
 
 export class ShardAsteroid extends BaseAsteroid {
-  constructor(args: { id: Entity; scene: Scene; coord: Coord }) {
+  constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord }) {
     const { id, scene, coord } = args;
     super({ id, scene, coord, sprite: Sprites.Shard, outlineSprite: Sprites.AegisDrone });
     this.asteroidSprite.postFX?.addShine();

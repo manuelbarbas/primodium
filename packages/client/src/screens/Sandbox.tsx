@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useMud } from "src/hooks/useMud";
 
-import { Primodium, initPrimodium } from "@game/api";
+import { GameProvider } from "@/hooks/providers/GameProvider";
+import { PrimodiumGame, initGame } from "@game/api";
 import { Progress } from "src/components/core/Progress";
-import { PrimodiumProvider } from "src/hooks/providers/PrimodiumProvider";
 import { setupSessionAccount } from "src/network/systems/setupSessionAccount";
 import { _Sandbox } from "../components/_Sandbox";
 
@@ -11,7 +11,7 @@ const params = new URLSearchParams(window.location.search);
 
 export const Sandbox = () => {
   const mud = useMud();
-  const [primodium, setPrimodium] = useState<Primodium | null>(null);
+  const [game, setGame] = useState<PrimodiumGame | null>(null);
 
   /* Since this system modifies mud.sessionAccount, it can't have mud as a dependency */
   useEffect(() => {
@@ -19,28 +19,28 @@ export const Sandbox = () => {
   }, [mud.playerAccount.entity, mud.removeSessionAccount, mud.updateSessionAccount]);
 
   useEffect(() => {
-    if (!primodium) return;
-    primodium.runSystems(mud);
-  }, [mud, primodium]);
+    if (!game) return;
+    game.runSystems(mud);
+  }, [mud, game]);
 
   useEffect(() => {
     (async () => {
       try {
-        const pri = await initPrimodium(mud, params.get("version") ? params.get("version")! : "🔥");
-        setPrimodium(pri);
+        const pri = await initGame(params.get("version") ? params.get("version")! : "🔥");
+        setGame(pri);
       } catch (e) {
         console.log(e);
       }
     })();
 
     return () => {
-      primodium?.destroy();
+      game?.destroy();
     };
   }, []);
 
   return (
     <div>
-      {!primodium && (
+      {!game && (
         <div className="flex flex-col items-center justify-center h-screen text-white gap-4">
           <p className="text-lg text-white">
             <span className="">Loading game</span>
@@ -53,10 +53,10 @@ export const Sandbox = () => {
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
       <div id="game-container relative">
         <div id="phaser-container" className="cursor-pointer screen-container">
-          {!!primodium && (
-            <PrimodiumProvider {...primodium}>
+          {!!game && (
+            <GameProvider {...game}>
               <_Sandbox />
-            </PrimodiumProvider>
+            </GameProvider>
           )}
         </div>
       </div>

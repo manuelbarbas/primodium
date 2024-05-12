@@ -1,6 +1,6 @@
 import { formatName } from "@/util/name";
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 import { Hex, getAddress, isAddress, pad, size, trim } from "viem";
 import { EntityType } from "./constants";
 

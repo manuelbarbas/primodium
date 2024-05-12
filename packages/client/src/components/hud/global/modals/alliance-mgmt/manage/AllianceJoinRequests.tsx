@@ -2,7 +2,8 @@ import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { AccountDisplay } from "@/components/shared/AccountDisplay";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { useMud, usePrimodium } from "@/hooks";
+import { useGame } from "@/hooks/useGame";
+import { useMud } from "@/hooks/useMud";
 import { components } from "@/network/components";
 import { acceptJoinRequest, rejectJoinRequest, revokeInvite } from "@/network/setup/contractCalls/alliance";
 import { getAsteroidEmblem } from "@/util/asteroid";
@@ -130,7 +131,7 @@ const AllianceJoinRequestsItem = ({
   style: React.CSSProperties;
 }) => {
   const mud = useMud();
-  const primodium = usePrimodium();
+  const game = useGame();
 
   // Get the mainbase level for the emblem
   const asteroidEntity = components.Home.use(playerEntity)?.value as Entity | undefined;
@@ -141,7 +142,7 @@ const AllianceJoinRequestsItem = ({
       <span>{index + 1}.</span>
       {/* small top margin to balance the fact that it's a little above the rest */}
       <div className="flex items-center gap-1 mt-[3px]">
-        <img src={getAsteroidEmblem(primodium, asteroidEntity)} className="pixel-images h-8" />
+        <img src={getAsteroidEmblem(game, asteroidEntity)} className="pixel-images h-8" />
         <AccountDisplay player={playerEntity} showAlliance={false} noColor />
       </div>
       <div className="flex items-center justify-self-end">
@@ -177,7 +178,7 @@ const AllianceJoinRequestsItem = ({
 
 const InvitedPlayerItem = ({ index, playerEntity }: { index: number; playerEntity: Entity }) => {
   const mud = useMud();
-  const primodium = usePrimodium();
+  const game = useGame();
 
   // Get the mainbase level for the emblem
   const asteroidEntity = components.Home.get(playerEntity)?.value as Entity | undefined;
@@ -187,7 +188,7 @@ const InvitedPlayerItem = ({ index, playerEntity }: { index: number; playerEntit
       <span>{index + 1}.</span>
       {/* small top margin to balance the fact that it's a little above the rest */}
       <div className="flex items-center gap-1 mt-[3px]">
-        <img src={getAsteroidEmblem(primodium, asteroidEntity)} className="pixel-images h-8" />
+        <img src={getAsteroidEmblem(game, asteroidEntity)} className="pixel-images h-8" />
         <AccountDisplay player={playerEntity} showAlliance={false} noColor />
       </div>
       <div className="flex items-center justify-self-end">

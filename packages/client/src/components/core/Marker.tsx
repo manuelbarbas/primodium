@@ -1,14 +1,13 @@
-import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
-import { Coord } from "@latticexyz/utils";
+import { cn } from "@/util/client";
+import { Coord } from "engine/types";
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaChevronRight } from "react-icons/fa";
-import { usePrimodium } from "src/hooks/usePrimodium";
+import { DepthLayers, SceneKeys } from "src/game/lib/constants/common";
+import { useGame } from "src/hooks/useGame";
 import { calculateAngleBetweenPoints } from "src/util/common";
 import { Button } from "./Button";
 import { IconLabel } from "./IconLabel";
-import { DepthLayers, SceneKeys } from "src/game/lib/constants/common";
-import { cn } from "@/util/client";
 
 const BoundedMarker: React.FC<{ scene: SceneKeys; coord: Coord; iconUri: string; degrees: number }> = ({
   coord,
@@ -16,24 +15,18 @@ const BoundedMarker: React.FC<{ scene: SceneKeys; coord: Coord; iconUri: string;
   iconUri,
   degrees,
 }) => {
-  const primodium = usePrimodium();
+  const game = useGame();
 
   const handleClick = useCallback(() => {
     const {
       camera: { pan },
-      scene: { getConfig },
-    } = primodium.api(scene);
+      utils,
+    } = game[scene];
 
-    const config = getConfig(scene);
-
-    const tileCoord = pixelCoordToTileCoord(
-      { x: coord.x, y: -coord.y },
-      config.tilemap.tileWidth,
-      config.tilemap.tileHeight
-    );
+    const tileCoord = utils.pixelCoordToTileCoord({ x: coord.x, y: -coord.y });
 
     pan(tileCoord);
-  }, [coord, primodium, scene]);
+  }, [coord, game, scene]);
 
   return (
     <Button
@@ -68,13 +61,13 @@ export const Marker: React.FC<{
     | "center-top"
     | "center-bottom";
 }> = ({ id, scene, coord, children, offScreenIconUri, depth = DepthLayers.Marker, origin = "center" }) => {
-  const primodium = usePrimodium();
+  const game = useGame();
   const [marker, setMarker] = useState<Phaser.GameObjects.DOMElement>();
   const [container, setContainer] = useState<HTMLDivElement>();
   const [visible, setVisible] = useState(true);
   const [degrees, setDegrees] = useState(0);
-  const camera = useRef(primodium.api(scene).camera).current;
-  const uiCamera = useRef(primodium.api("UI").camera).current;
+  const camera = useRef(game[scene].camera).current;
+  const uiCamera = useRef(game.UI.camera).current;
   const translateClass = useMemo(() => {
     switch (origin) {
       case "top-left":

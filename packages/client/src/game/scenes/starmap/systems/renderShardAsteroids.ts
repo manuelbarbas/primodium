@@ -1,14 +1,13 @@
 import { renderShardAsteroid } from "@/game/lib/render/renderShardAsteroid";
 import { defineEnterSystem, defineUpdateSystem, Entity, Has, namespaceWorld } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
-import { Scene } from "engine/types";
-import { createObjectApi } from "src/game/api/objects";
+import { Coord } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
+import { PrimodiumScene } from "@/game/api/scene";
 
-export const renderShardAsteroids = (scene: Scene) => {
+export const renderShardAsteroids = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
-  const objects = createObjectApi(scene);
+  const { objects } = scene;
 
   const renderExplodeAndMoveAsteroid = (entity: Entity, coord: Coord) => {
     const asteroid = objects.asteroid.get(entity);

@@ -2,7 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMud } from "src/hooks";
 import { useAccount } from "src/hooks/useAccount";
-import { usePrimodium } from "src/hooks/usePrimodium";
+import { useGame } from "src/hooks/useGame";
 import { components } from "src/network/components";
 import { getRockRelationship } from "src/util/asteroid";
 import { entityToColor } from "src/util/color";
@@ -18,7 +18,7 @@ export const AccountDisplay: React.FC<{
   showAlliance?: boolean;
   raw?: boolean;
 }> = ({ player, className, noColor, overridePlayerColor, showAddress, showAlliance = true, raw = false }) => {
-  const primodium = usePrimodium();
+  const game = useGame();
   const { playerAccount } = useMud();
   const playerEntity = player ?? singletonEntity;
 
@@ -59,7 +59,7 @@ export const AccountDisplay: React.FC<{
         }
 
         components.SelectedRock.set({ value: playerHomeAsteroid as Entity });
-        primodium.api("STARMAP").camera.pan({ x: playerHomeAsteroidPosition.x, y: playerHomeAsteroidPosition.y });
+        game.STARMAP.camera.pan({ x: playerHomeAsteroidPosition.x, y: playerHomeAsteroidPosition.y });
       }}
       className={`p-0 uppercase inline-flex font-bold gap-1 ${className} ${loading ? "animate-pulse" : ""}`}
     >

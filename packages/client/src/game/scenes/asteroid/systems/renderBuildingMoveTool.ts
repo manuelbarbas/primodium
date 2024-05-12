@@ -8,19 +8,18 @@ import {
   namespaceWorld,
 } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { Scene } from "engine/types";
-import { toast } from "react-toastify";
-import { components } from "@/network/components";
-import { moveBuilding } from "@/network/setup/contractCalls/moveBuilding";
-import { MUD } from "@/network/types";
-import { world } from "@/network/world";
-import { getBuildingOrigin, validateBuildingPlacement } from "@/util/building";
-import { Building } from "@/game/lib/objects/Building";
-import { DepthLayers } from "@/game/lib/constants/common";
-import { Action } from "@/util/constants";
+import { PrimodiumScene } from "@/game/api/scene";
+import { DepthLayers } from "src/game/lib/constants/common";
+import { components } from "src/network/components";
+import { moveBuilding } from "src/network/setup/contractCalls/moveBuilding";
+import { MUD } from "src/network/types";
+import { world } from "src/network/world";
+import { getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
+import { Action } from "src/util/constants";
+import { Building } from "../../../lib/objects/Building";
 import { isDomInteraction } from "@/util/canvas";
 
-export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scene) => {
+export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: PrimodiumScene) => {
   if (pointer?.rightButtonDown()) {
     components.SelectedAction.remove();
     return;
@@ -38,7 +37,7 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scen
   const validPlacement = validateBuildingPlacement(tileCoord, buildingPrototype, activeRock, selectedBuilding);
 
   if (!validPlacement) {
-    toast.error("Cannot place building here");
+    scene.notify("error", "Cannot place building here");
     scene.camera.phaserCamera.shake(200, 0.001);
     return;
   }
@@ -51,7 +50,7 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scen
 };
 
 //TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
-export const renderBuildingMoveTool = (scene: Scene, mud: MUD) => {
+export const renderBuildingMoveTool = (scene: PrimodiumScene, mud: MUD) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   let placementBuilding: Building | undefined;

@@ -1,15 +1,15 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { toast } from "react-toastify";
 import { decodeEntity } from "src/util/encode";
 import { Hex, hexToString, padHex, zeroAddress } from "viem";
-import { components } from "../components";
-import { MUD } from "../types";
-import { world } from "../world";
-import { EAllianceRole } from "contracts/config/enums";
+import { components } from "../../../../network/components";
+import { MUD } from "../../../../network/types";
+import { world } from "../../../../network/world";
+import { PrimodiumScene } from "@/game/api/scene";
 import { entityToPlayerName } from "@/util/name";
+import { EAllianceRole } from "contracts/config/enums";
 import { getAllianceName } from "@/util/alliance";
 
-export function setupInvitations(mud: MUD) {
+export function setupInvitations(mud: MUD, scene: PrimodiumScene) {
   const { AllianceInvitation, Alliance, AllianceJoinRequest, AllianceRequest, PlayerAlliance, PlayerInvite } =
     components;
   const systemWorld = namespaceWorld(world, "systems");
@@ -46,9 +46,9 @@ export function setupInvitations(mud: MUD) {
       // Notify the player about the outcome
       const allianceName = getAllianceName(alliance as Entity);
       if (PlayerAlliance.get(playerEntity)?.alliance === alliance) {
-        toast.success(`You have been accepted into [${allianceName}]!`);
+        scene.notify("success", `You have been accepted into [${allianceName}]!`);
       } else {
-        toast.info(`Your request to join [${allianceName}] was declined`);
+        scene.notify("info", `Your request to join [${allianceName}] was declined`);
       }
 
       return;
@@ -69,7 +69,7 @@ export function setupInvitations(mud: MUD) {
     }).filter((p) => PlayerAlliance.get(p)?.role !== EAllianceRole.Member);
     if (officers.includes(playerEntity)) {
       const playerName = entityToPlayerName(player as Entity);
-      toast.info(`${playerName} has requested to join the alliance`);
+      scene.notify("info", `${playerName} has requested to join the alliance`);
     }
   });
 
@@ -91,6 +91,6 @@ export function setupInvitations(mud: MUD) {
 
     const allianceName = hexToString(inviteAlliance, { size: 32 });
 
-    toast.info(`You have been invited to join [${allianceName}]`);
+    scene.notify("info", `You have been invited to join [${allianceName}]`);
   });
 }

@@ -1,15 +1,15 @@
 // import { SyncState } from "@latticexyz/network";
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
-import { toast } from "react-toastify";
 import { getEntityTypeName } from "src/util/common";
 import { ResourceEntityLookup } from "src/util/constants";
 import { formatResourceCount } from "src/util/number";
-import { components } from "../components";
-import { MUD } from "../types";
-import { world } from "../world";
+import { components } from "../../../../network/components";
+import { MUD } from "../../../../network/types";
+import { world } from "../../../../network/world";
+import { PrimodiumScene } from "@/game/api/scene";
 
-export function setupSwapNotifications(mud: MUD) {
+export function setupSwapNotifications(mud: MUD, scene: PrimodiumScene) {
   const systemWorld = namespaceWorld(world, "systems");
 
   defineComponentSystem(
@@ -24,7 +24,8 @@ export function setupSwapNotifications(mud: MUD) {
       const outResource = ResourceEntityLookup[swap.resourceOut as EResource];
       const formattedIn = formatResourceCount(inResource, swap.amountIn, { fractionDigits: 2 });
       const formattedOut = formatResourceCount(outResource, swap.amountOut, { fractionDigits: 2 });
-      toast.success(
+      scene.notify(
+        "success",
         `Swap success! ${formattedIn} ${getEntityTypeName(inResource)} swapped for ${formattedOut} ${getEntityTypeName(
           outResource
         )}.`

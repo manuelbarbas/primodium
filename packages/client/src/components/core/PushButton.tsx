@@ -1,9 +1,9 @@
+import { Tooltip } from "@/components/core/Tooltip";
+import { useGame } from "@/hooks/useGame";
 import { useEffect, forwardRef, useCallback } from "react";
 import { components } from "@/network/components";
-import { usePrimodium } from "@/hooks/usePrimodium";
 import { AudioKeys } from "@primodiumxyz/assets";
 import { getRandomRange } from "@/util/common";
-import { Tooltip } from "@/components/core/Tooltip";
 import { KeybindActionKeys } from "@game/lib/constants/keybinds";
 import { cn } from "@/util/client";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -96,25 +96,25 @@ export const PushButton = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const primodium = usePrimodium();
-    const api = primodium.api("UI");
+    const game = useGame();
+    const api = game.UI;
 
     const handleClick = useCallback(
       (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         !mute &&
-          api?.audio.play(clickSound, "ui", {
+          api.audio.play(clickSound, "ui", {
             detune: getRandomRange(-100, 100),
           });
 
         props.onClick?.(e);
       },
-      [api?.audio, clickSound, mute, props]
+      [api.audio, clickSound, mute, props]
     );
 
     const handleHoverEnter = useCallback(
       (e: React.PointerEvent<HTMLButtonElement>) => {
         !mute &&
-          api?.audio.play("DataPoint2", "ui", {
+          api.audio.play("DataPoint2", "ui", {
             volume: 0.1,
             detune: getRandomRange(-200, 200),
           });
@@ -122,11 +122,11 @@ export const PushButton = forwardRef<HTMLButtonElement, ButtonProps>(
         props.onPointerEnter?.(e);
         components.HoverEntity.remove();
       },
-      [api?.audio, mute, props]
+      [api.audio, mute, props]
     );
 
     useEffect(() => {
-      if (!keybind || !api || props.disabled) return;
+      if (!keybind || props.disabled) return;
 
       const listener = api.input.addListener(keybind, () => handleClick(undefined!));
 

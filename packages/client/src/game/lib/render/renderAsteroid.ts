@@ -1,7 +1,6 @@
 import { MainbaseLevelToEmblem } from "@/game/lib/mappings";
 import { PrimaryAsteroid, SecondaryAsteroid } from "@/game/lib/objects/Asteroid";
 import { BaseAsteroid } from "@/game/lib/objects/Asteroid/BaseAsteroid";
-import { createCameraApi } from "@/game/api/camera";
 import { components } from "@/network/components";
 import { getAllianceName } from "@/util/alliance";
 import { getRockRelationship } from "@/util/asteroid";
@@ -12,12 +11,17 @@ import { MapIdToAsteroidType } from "@/util/mappings";
 import { entityToPlayerName, entityToRockName } from "@/util/name";
 import { Entity } from "@latticexyz/recs";
 import { EMap } from "contracts/config/enums";
-import { Coord, Scene } from "engine/types";
+import { Coord } from "engine/types";
+import { PrimodiumScene } from "@/game/api/scene";
 
-export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coord; addEventHandlers?: boolean }) => {
+export const renderAsteroid = (args: {
+  scene: PrimodiumScene;
+  entity: Entity;
+  coord?: Coord;
+  addEventHandlers?: boolean;
+}) => {
   const { scene, entity, coord = { x: 0, y: 0 }, addEventHandlers = false } = args;
   //TODO: replace with hanks fancy api stuff
-  const cameraApi = createCameraApi(scene);
   const asteroidData = components.Asteroid.get(entity);
   if (!asteroidData) throw new Error("Asteroid data not found");
 
@@ -82,11 +86,11 @@ export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coo
       const sequence = [
         {
           at: 0,
-          run: () => cameraApi.pan(coord, { duration: 300 }),
+          run: () => scene.camera.pan(coord, { duration: 300 }),
         },
         {
           at: 300,
-          run: () => cameraApi.zoomTo(scene.config.camera.maxZoom, 500),
+          run: () => scene.camera.zoomTo(scene.config.camera.maxZoom, 500),
         },
       ];
       //set the selected rock immediately if we are sufficiently zoomed in

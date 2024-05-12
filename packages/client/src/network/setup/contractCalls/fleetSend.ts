@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 import { EObjectives } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { execute } from "src/network/txExecute/txExecute";

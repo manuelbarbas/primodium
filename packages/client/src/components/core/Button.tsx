@@ -1,7 +1,7 @@
 import { components } from "@/network/components";
 import { Tooltip } from "@/components/core/Tooltip";
 import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { useGame } from "@/hooks/useGame";
 import { cn } from "@/util/client";
 import { getRandomRange } from "@/util/common";
 import { AudioKeys } from "@primodiumxyz/assets";
@@ -85,25 +85,25 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const primodium = usePrimodium();
-    const api = primodium.api("UI");
+    const game = useGame();
+    const api = game.UI;
 
     const handleClick = useCallback(
       (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         !mute &&
-          api?.audio.play(clickSound, "ui", {
+          api.audio.play(clickSound, "ui", {
             detune: getRandomRange(-100, 100),
           });
 
         props.onClick?.(e);
       },
-      [api?.audio, clickSound, mute, props]
+      [api.audio, clickSound, mute, props]
     );
 
     const handleHoverEnter = useCallback(
       (e: React.PointerEvent<HTMLButtonElement>) => {
         !mute &&
-          api?.audio.play("DataPoint2", "ui", {
+          api.audio.play("DataPoint2", "ui", {
             volume: 0.1,
             detune: getRandomRange(-200, 200),
           });
@@ -112,7 +112,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         // if the button is supposed to show a tooltip, remove the hover entity to not render its info as well
         if (tooltip) components.HoverEntity.remove();
       },
-      [api?.audio, mute, tooltip, props]
+      [api.audio, mute, tooltip, props]
     );
 
     useEffect(() => {

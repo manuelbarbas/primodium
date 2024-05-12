@@ -1,15 +1,15 @@
-import { Coord } from "@latticexyz/utils";
+import { Card } from "@/components/core/Card";
+import { useWidgets } from "@/hooks/providers/WidgetProvider";
+import { useGame } from "@/hooks/useGame";
+import { SceneKeys } from "@game/lib/constants/common";
+import { KeybindActionKeys } from "@game/lib/constants/keybinds";
+import { usePersistentStore } from "@game/stores/PersistentStore";
+import { Coord } from "engine/types";
 import { ReactNode, memo, useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaMinus, FaRegWindowMaximize, FaRegWindowRestore } from "react-icons/fa";
 import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
-import { usePersistentStore } from "@game/stores/PersistentStore";
-import { SceneKeys } from "@game/lib/constants/common";
-import { KeybindActionKeys } from "@game/lib/constants/keybinds";
-import { usePrimodium } from "@/hooks/usePrimodium";
-import { useWidgets } from "@/hooks/providers/WidgetProvider";
 import { components } from "@/network/components";
-import { Card } from "@/components/core/Card";
 
 type WidgetProps = {
   title: string;
@@ -244,7 +244,7 @@ export const Widget: React.FC<WidgetProps> = memo(
     noBorder = false,
     topBar = false,
   }) => {
-    const primodium = usePrimodium();
+    const game = useGame();
     const [paneInfo, setPane, removePane] = usePersistentStore((state) => [
       state.panes,
       state.setPane,
@@ -270,11 +270,11 @@ export const Widget: React.FC<WidgetProps> = memo(
     }, [id, defaultCoord]);
 
     const [camera, uiCamera] = useMemo(() => {
-      const { camera } = primodium.api(scene);
-      const { camera: uiCamera } = primodium.api("UI");
+      const { camera } = game[scene];
+      const { camera: uiCamera } = game.UI;
 
       return [camera, uiCamera];
-    }, [primodium, scene]);
+    }, [game, scene]);
 
     const createContainer = useCallback(
       (_camera: typeof camera, _coord: Coord, raw: boolean) => {

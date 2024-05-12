@@ -2,7 +2,8 @@ import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { AccountDisplay } from "@/components/shared/AccountDisplay";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { useMud, usePrimodium } from "@/hooks";
+import { useGame } from "@/hooks/useGame";
+import { useMud } from "@/hooks/useMud";
 import { components } from "@/network/components";
 import { grantRole, kickPlayer } from "@/network/setup/contractCalls/alliance";
 import { getAsteroidEmblem } from "@/util/asteroid";
@@ -74,7 +75,7 @@ export const MemberItem: FC<{
 }> = ({ index, playerRole, player }) => {
   const mud = useMud();
   const playerEntity = mud.playerAccount.entity;
-  const primodium = usePrimodium();
+  const game = useGame();
 
   const role = player.role ?? EAllianceRole.Member;
   const roleContents = {
@@ -93,7 +94,7 @@ export const MemberItem: FC<{
       <span>{index + 1}.</span>
       {/* small top margin to balance the fact that it's a little above the rest */}
       <div className={`flex items-center gap-1 mt-[3px] text-${color}`}>
-        <img src={getAsteroidEmblem(primodium, asteroidEntity)} className="pixel-images h-8" />
+        <img src={getAsteroidEmblem(game, asteroidEntity)} className="pixel-images h-8" />
         <AccountDisplay player={player.entity} showAlliance={false} overridePlayerColor={color} />
       </div>
       <div className={`flex items-center gap-1 text-${color}`}>
