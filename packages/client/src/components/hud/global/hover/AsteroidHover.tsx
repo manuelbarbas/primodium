@@ -39,7 +39,7 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
 
   if (loading)
     return (
-      <div className="relative flex items-center justify-center w-60 h-24 px-auto uppercase font-bold">
+      <div className="relative flex items-center justify-center w-60 h-24 px-auto uppercase font-bold gap-2">
         <Loader />
         Loading Data
       </div>

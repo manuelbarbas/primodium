@@ -77,9 +77,7 @@ export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coo
   if (!addEventHandlers) return asteroid;
 
   asteroid
-    .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
-      if (pointer.downElement.nodeName !== "CANVAS") return;
-
+    .onClick(() => {
       //TODO: move to reusable seq in fx
       const sequence = [
         {
@@ -102,10 +100,10 @@ export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coo
       if (scene.camera.phaserCamera.zoom >= scene.config.camera.maxZoom * 0.5)
         components.SelectedRock.set({ value: entity });
     })
-    .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
+    .onHoverEnter(() => {
       components.HoverEntity.set({ value: entity });
     })
-    .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => {
+    .onHoverExit(() => {
       components.HoverEntity.remove();
     });
 
