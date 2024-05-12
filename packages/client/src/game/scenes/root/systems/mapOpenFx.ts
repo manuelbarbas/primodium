@@ -1,10 +1,10 @@
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 import { Mode } from "@/util/constants";
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 
-export const mapOpenFx = (scene: SceneApi) => {
+export const mapOpenFx = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const bg = scene.audio.get("Background", "music");
   const bg2 = scene.audio.get("Background2", "music");

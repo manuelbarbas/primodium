@@ -1,12 +1,12 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 import { getPlayerOwner } from "src/hooks/usePlayerOwner";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getDistance } from "src/util/common";
 import { entityToFleetName, entityToRockName } from "src/util/name";
 
-export const renderBattle = (scene: SceneApi) => {
+export const renderBattle = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const { BattleResult } = components;
 

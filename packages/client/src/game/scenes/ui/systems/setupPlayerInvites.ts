@@ -4,12 +4,12 @@ import { Hex, hexToString, padHex, zeroAddress } from "viem";
 import { components } from "../../../../network/components";
 import { MUD } from "../../../../network/types";
 import { world } from "../../../../network/world";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 import { entityToPlayerName } from "@/util/name";
 import { EAllianceRole } from "contracts/config/enums";
 import { getAllianceName } from "@/util/alliance";
 
-export function setupInvitations(mud: MUD, scene: SceneApi) {
+export function setupInvitations(mud: MUD, scene: PrimodiumScene) {
   const { AllianceInvitation, Alliance, AllianceJoinRequest, AllianceRequest, PlayerAlliance, PlayerInvite } =
     components;
   const systemWorld = namespaceWorld(world, "systems");

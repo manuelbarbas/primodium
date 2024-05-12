@@ -1,10 +1,10 @@
 // ROOT ENTRY POINT
-import { GameApi } from "@/game/api/game";
-import { createSceneApi, SceneApi } from "@/game/api/scene";
+import { GlobalApi } from "@/game/api/global";
+import { createSceneApi, PrimodiumScene } from "@/game/api/scene";
 import { rootSceneConfig } from "@game/lib/config/rootScene";
 import { runSystems as runRootSystems } from "src/game/scenes/root/systems";
 
-export const initRootScene = async (game: GameApi): Promise<SceneApi> => {
+export const initRootScene = async (game: GlobalApi): Promise<PrimodiumScene> => {
   const scene = await game.createScene(rootSceneConfig, true);
 
   const sceneApi = createSceneApi(scene);

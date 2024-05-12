@@ -7,9 +7,9 @@ import { formatResourceCount } from "src/util/number";
 import { components } from "../../../../network/components";
 import { MUD } from "../../../../network/types";
 import { world } from "../../../../network/world";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 
-export function setupSwapNotifications(mud: MUD, scene: SceneApi) {
+export function setupSwapNotifications(mud: MUD, scene: PrimodiumScene) {
   const systemWorld = namespaceWorld(world, "systems");
 
   defineComponentSystem(

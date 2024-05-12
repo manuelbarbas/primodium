@@ -1,5 +1,5 @@
 import { createCameraApi } from "@/game/api/camera";
-import { GameApi } from "@/game/api/game";
+import { GlobalApi } from "@/game/api/global";
 import { ModeToSceneKey } from "@/game/lib/mappings";
 import { Mode } from "@/util/constants";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
@@ -7,7 +7,7 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 
-export const modeSystem = (game: GameApi) => {
+export const modeSystem = (game: GlobalApi) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   const playerEntity = components.Account.get()?.value;

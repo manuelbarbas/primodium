@@ -4,7 +4,6 @@ import { BlueprintInfo } from "@/components/hud/asteroid/blueprints/BlueprintInf
 import { useGame } from "@/hooks/useGame";
 import { components } from "@/network/components";
 import { getBuildingDimensions } from "@/util/building";
-import { addCoords, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMemo } from "react";
 
@@ -16,12 +15,10 @@ export const BlueprintInfoMarker = () => {
   const dimensions = useMemo(() => getBuildingDimensions(building ?? singletonEntity), [building]);
 
   const coord = useMemo(() => {
-    const { config } = game.ASTEROID;
+    const { utils } = game.ASTEROID;
 
-    const pixelCoord = tileCoordToPixelCoord(
-      addCoords(hoverCoord ?? { x: 0, y: 0 }, { x: dimensions.width / 2, y: 1 }),
-      config.tilemap.tileWidth,
-      config.tilemap.tileHeight
+    const pixelCoord = utils.tileCoordToPixelCoord(
+      utils.addCoords(hoverCoord ?? { x: 0, y: 0 }, { x: dimensions.width / 2, y: 1 })
     );
 
     return { x: pixelCoord.x, y: -pixelCoord.y };

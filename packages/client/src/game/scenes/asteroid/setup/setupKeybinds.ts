@@ -1,9 +1,9 @@
 import { Entity } from "@latticexyz/recs";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 import { components } from "src/network/components";
 import { world } from "@/network/world";
 
-export const setupKeybinds = (scene: SceneApi) => {
+export const setupKeybinds = (scene: PrimodiumScene) => {
   const mainbaseKeybind = scene.input.addListener("Base", () => {
     //TODO - fix converting to entity
     const selectedRockEntity = components.SelectedRock.get()?.value;

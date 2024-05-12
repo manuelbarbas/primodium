@@ -3,9 +3,9 @@ import { renderBattle } from "@/game/scenes/starmap/systems/renderBattle";
 import { renderFleets } from "@/game/scenes/starmap/systems/renderFleets";
 import { renderShardAsteroids } from "@/game/scenes/starmap/systems/renderShardAsteroids";
 import { renderTrajectory } from "@/game/scenes/starmap/systems/renderTrajectory";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 
-export const runSystems = (scene: SceneApi) => {
+export const runSystems = (scene: PrimodiumScene) => {
   renderAsteroids(scene);
   renderShardAsteroids(scene);
   renderFleets(scene);

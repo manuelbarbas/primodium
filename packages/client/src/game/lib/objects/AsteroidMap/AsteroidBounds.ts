@@ -1,17 +1,18 @@
+import Phaser from "phaser";
 import { Bounds, Dimensions, getRelativeCoord } from "./helpers";
 import { DepthLayers } from "../../constants/common";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 import { Animations, Assets, Sprites, Tilesets } from "@primodiumxyz/assets";
 
 export class AsteroidBounds {
-  private scene: SceneApi;
+  private scene: PrimodiumScene;
   private currentBounds?: Bounds;
   private maxBounds?: Bounds;
   private boundsMap?: Phaser.Tilemaps.Tilemap;
   private asteroidDimensions: Dimensions;
   private drones: Phaser.GameObjects.Sprite[] = [];
 
-  constructor(scene: SceneApi, asteroidDimensions: Dimensions) {
+  constructor(scene: PrimodiumScene, asteroidDimensions: Dimensions) {
     this.scene = scene;
     this.asteroidDimensions = asteroidDimensions;
     this.drones = [

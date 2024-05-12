@@ -4,7 +4,6 @@ import { BuildingMenu } from "@/components/hud/asteroid/building-menu/BuildingMe
 import { useGame } from "@/hooks/useGame";
 import { components } from "@/network/components";
 import { getBuildingDimensions, getBuildingName } from "@/util/building";
-import { addCoords, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
@@ -18,12 +17,10 @@ export const BuildingMenuPopup = () => {
   const dimensions = useMemo(() => getBuildingDimensions(building ?? singletonEntity), [building]);
 
   const coord = useMemo(() => {
-    const { config } = game.ASTEROID;
+    const { utils } = game.ASTEROID;
 
-    const pixelCoord = tileCoordToPixelCoord(
-      addCoords(position ?? { x: 0, y: 0 }, { x: dimensions.width + 0.5, y: 0 }),
-      config.tilemap.tileWidth,
-      config.tilemap.tileHeight
+    const pixelCoord = utils.tileCoordToPixelCoord(
+      utils.addCoords(position ?? { x: 0, y: 0 }, { x: dimensions.width + 0.5, y: 0 })
     );
 
     return { x: pixelCoord.x, y: -pixelCoord.y };

@@ -1,12 +1,13 @@
+import Phaser from "phaser";
 import { PixelCoord } from "engine/types";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 import { IPrimodiumGameObject } from "./interfaces";
 
 export class TargetLine extends Phaser.GameObjects.Line implements IPrimodiumGameObject {
-  private _scene: SceneApi;
+  private _scene: PrimodiumScene;
   private spawned = false;
   private start;
-  constructor(scene: SceneApi, start: PixelCoord, end: PixelCoord, color = 0x808080) {
+  constructor(scene: PrimodiumScene, start: PixelCoord, end: PixelCoord, color = 0x808080) {
     super(scene.phaserScene, start.x, start.y, 0, 0, end.x, end.y, color);
     this.setOrigin(0, 0);
     this.setLineWidth(2);

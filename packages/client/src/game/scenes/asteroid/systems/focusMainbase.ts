@@ -1,11 +1,11 @@
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { EntityType } from "src/util/constants";
 
-export const focusMainbase = (scene: SceneApi) => {
+export const focusMainbase = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   const handleMove = () => {

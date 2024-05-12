@@ -8,7 +8,7 @@ import {
   namespaceWorld,
 } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 import { DepthLayers } from "src/game/lib/constants/common";
 import { components } from "src/network/components";
 import { moveBuilding } from "src/network/setup/contractCalls/moveBuilding";
@@ -19,7 +19,7 @@ import { Action } from "src/util/constants";
 import { Building } from "../../../lib/objects/Building";
 import { isDomInteraction } from "@/util/canvas";
 
-export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: SceneApi) => {
+export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: PrimodiumScene) => {
   if (pointer?.rightButtonDown()) {
     components.SelectedAction.remove();
     return;
@@ -50,7 +50,7 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scen
 };
 
 //TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
-export const renderBuildingMoveTool = (scene: SceneApi, mud: MUD) => {
+export const renderBuildingMoveTool = (scene: PrimodiumScene, mud: MUD) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   let placementBuilding: Building | undefined;

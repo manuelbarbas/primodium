@@ -1,24 +1,19 @@
-import { Coord, coordEq, pixelCoordToTileCoord } from "@latticexyz/phaserx";
 import { getBuildingAtCoord } from "src/util/tile";
-
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { outOfBounds } from "src/util/outOfBounds";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
+import { Coord } from "engine/types";
 
-export const setupMouseInputs = (scene: SceneApi) => {
+export const setupMouseInputs = (scene: PrimodiumScene) => {
   const clickSub = scene.input.click$.subscribe(([pointer]) => {
     const activeRock = components.ActiveRock.get()?.value;
 
     if (components.Account.get()?.value !== components.OwnedBy.get(activeRock)?.value) return;
 
-    const { x, y } = pixelCoordToTileCoord(
-      { x: pointer.worldX, y: pointer.worldY },
-      scene.tiled.tileWidth,
-      scene.tiled.tileHeight
-    );
+    const { x, y } = scene.utils.pixelCoordToTileCoord({ x: pointer.worldX, y: pointer.worldY });
 
     const gameCoord = { x, y: -y };
 
@@ -45,17 +40,13 @@ export const setupMouseInputs = (scene: SceneApi) => {
   });
 
   const pointerMoveSub = scene.input.pointermove$.pipe().subscribe((event) => {
-    const { x, y } = pixelCoordToTileCoord(
-      { x: event.worldX, y: event.worldY },
-      scene.tiled.tileWidth,
-      scene.tiled.tileHeight
-    );
+    const { x, y } = scene.utils.pixelCoordToTileCoord({ x: event.worldX, y: event.worldY });
 
     const mouseCoord = { x, y: -y } as Coord;
 
     //set hover tile if it is different
     const currentHoverTile = components.HoverTile.get();
-    if (coordEq(currentHoverTile, mouseCoord)) return;
+    if (scene.utils.coordEq(currentHoverTile, mouseCoord)) return;
 
     const selectedRock = components.ActiveRock.get()?.value;
     if (!selectedRock || outOfBounds(mouseCoord, selectedRock)) {

@@ -1,7 +1,7 @@
 import { WorldAbi } from "@/network/world";
 import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 import { Cheatcode, Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import { EAllianceInviteMode, EPointType, EResource } from "contracts/config/enums";
 import { components } from "src/network/components";

@@ -12,10 +12,10 @@ import { entityToPlayerName, entityToRockName } from "@/util/name";
 import { Entity } from "@latticexyz/recs";
 import { EMap } from "contracts/config/enums";
 import { Coord } from "engine/types";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 
 export const renderAsteroid = (args: {
-  scene: SceneApi;
+  scene: PrimodiumScene;
   entity: Entity;
   coord?: Coord;
   addEventHandlers?: boolean;

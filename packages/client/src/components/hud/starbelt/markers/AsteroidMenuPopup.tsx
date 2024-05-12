@@ -1,4 +1,3 @@
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { useMemo } from "react";
 import { Widget } from "@/components/core/Widget";
 import { useGame } from "@/hooks/useGame";
@@ -17,11 +16,11 @@ export const AsteroidMenuPopup = () => {
   const mapOpen = components.SelectedMode.use()?.value === Mode.Starmap;
 
   const coord = useMemo(() => {
-    const { config } = game.STARMAP;
+    const { utils } = game.STARMAP;
 
     if (!position) return { x: 0, y: 0 };
 
-    const pixelCoord = tileCoordToPixelCoord(position, config.tilemap.tileWidth, config.tilemap.tileHeight);
+    const pixelCoord = utils.tileCoordToPixelCoord(position);
 
     return { x: pixelCoord.x + 32, y: -pixelCoord.y - 8 };
   }, [game, position]);

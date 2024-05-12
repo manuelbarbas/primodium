@@ -1,8 +1,8 @@
+import Phaser from "phaser";
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
-import { SceneApi } from "@/game/api/scene";
+import { Coord } from "engine/types";
+import { PrimodiumScene } from "@/game/api/scene";
 import { getAssetKeyPair } from "./helpers";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { DepthLayers } from "../../constants/common";
 import { IPrimodiumGameObject } from "../interfaces";
 import { Assets } from "@primodiumxyz/assets";
@@ -11,13 +11,13 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
   private id: Entity;
   private buildingType: Entity;
   private coord: Coord;
-  private _scene: SceneApi;
+  private _scene: PrimodiumScene;
   private level = 1n;
   private spawned = false;
-  constructor(args: { id: Entity; scene: SceneApi; buildingType: Entity; coord: Coord }) {
+  constructor(args: { id: Entity; scene: PrimodiumScene; buildingType: Entity; coord: Coord }) {
     const { id, scene, buildingType, coord } = args;
     const assetPair = getAssetKeyPair(1n, buildingType);
-    const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
+    const pixelCoord = scene.utils.tileCoordToPixelCoord(coord);
     super(
       scene.phaserScene,
       pixelCoord.x,
@@ -57,7 +57,7 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
   }
 
   setCoordPosition(coord: Coord) {
-    const pixelCoord = tileCoordToPixelCoord(coord, this._scene.tiled.tileWidth, this._scene.tiled.tileHeight);
+    const pixelCoord = this._scene.utils.tileCoordToPixelCoord(coord);
     super.setPosition(pixelCoord.x, -pixelCoord.y + this._scene.tiled.tileHeight);
     this.coord = coord;
     return this;

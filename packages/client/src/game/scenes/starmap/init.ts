@@ -1,15 +1,15 @@
 // STAR MAP ENTRY POINT
 import { starmapSceneConfig } from "../../lib/config/starmapScene";
 
-import { createSceneApi, SceneApi } from "@/game/api/scene";
+import { createSceneApi, PrimodiumScene } from "@/game/api/scene";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { setupKeybinds } from "../asteroid/setup/setupKeybinds";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
-import { GameApi } from "@/game/api/game";
+import { GlobalApi } from "@/game/api/global";
 import { runSystems as runStarmapSystems } from "@/game/scenes/starmap/systems";
 
-export const initStarmapScene = async (game: GameApi): Promise<SceneApi> => {
+export const initStarmapScene = async (game: GlobalApi): Promise<PrimodiumScene> => {
   const scene = await game.createScene(starmapSceneConfig, false);
 
   const sceneApi = createSceneApi(scene);

@@ -39,7 +39,7 @@ export async function initGame(version = "v1") {
   const api = await _init();
 
   function destroy() {
-    api.GAME.dispose();
+    api.GLOBAL.dispose();
 
     //dispose game logic
     world.dispose("game");

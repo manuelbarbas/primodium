@@ -1,4 +1,4 @@
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 import { TWO_PI, getPositionByVector, solSinDegrees } from "src/util/vector";
 import { expect, test } from "vitest";
 

@@ -1,9 +1,10 @@
 import { SceneKeys, Scenes } from "@/game/lib/constants/common";
 import { Game, Scene } from "engine/types";
 
-export type GameApi = ReturnType<typeof createGameApi>;
+export type GlobalApi = ReturnType<typeof createGlobalApi>;
 
-export function createGameApi(game: Game) {
+//api pertaining
+export function createGlobalApi(game: Game) {
   function setResolution(width: number, height: number) {
     const { phaserGame, sceneManager } = game;
 
@@ -52,8 +53,8 @@ export function createGameApi(game: Game) {
     origin: SceneKeys,
     target: SceneKeys,
     duration = 0,
-    onTransitionStart?: (originScene?: Scene, targetScene?: Scene) => undefined,
-    onTransitionEnd?: (originScene?: Scene, targetScene?: Scene) => undefined
+    onTransitionStart?: (originScene: Scene, targetScene: Scene) => undefined,
+    onTransitionEnd?: (originScene: Scene, targetScene: Scene) => undefined
   ) {
     if (origin === target) return;
 

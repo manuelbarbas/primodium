@@ -7,7 +7,7 @@ import {
   defineUpdateSystem,
   namespaceWorld,
 } from "@latticexyz/recs";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 import { DepthLayers } from "src/game/lib/constants/common";
 import { components } from "src/network/components";
 import { buildBuilding } from "src/network/setup/contractCalls/buildBuilding";
@@ -20,7 +20,7 @@ import { getRecipe, hasEnoughResources } from "src/util/recipe";
 import { Building } from "../../../lib/objects/Building";
 import { isDomInteraction } from "@/util/canvas";
 
-export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: SceneApi) => {
+export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: PrimodiumScene) => {
   if (pointer?.rightButtonDown()) {
     components.SelectedAction.remove();
     return;
@@ -50,7 +50,7 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scen
   components.SelectedBuilding.remove();
 };
 
-export const renderBuildingPlacementTool = (scene: SceneApi, mud: MUD) => {
+export const renderBuildingPlacementTool = (scene: PrimodiumScene, mud: MUD) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   const query = [

@@ -1,9 +1,9 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 import { world } from "@/network/world";
 import { components } from "@/network/components";
 
-export function setupMoveNotifications(scene: SceneApi) {
+export function setupMoveNotifications(scene: PrimodiumScene) {
   const systemWorld = namespaceWorld(world, "systems");
   const { FleetMovement, BlockNumber, Position } = components;
   const fleetTransitQueue = new Map<Entity, bigint>();

@@ -1,6 +1,5 @@
-import { coordEq, pixelCoordToTileCoord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Coord } from "@latticexyz/utils";
-import { Scene } from "engine/types";
+import { coordEq, tileCoordToPixelCoord, pixelCoordToTileCoord } from "engine/lib/util/coords";
+import { Scene, Coord } from "engine/types";
 
 // const anchorMap =
 export const createCameraApi = (targetScene: Scene) => {

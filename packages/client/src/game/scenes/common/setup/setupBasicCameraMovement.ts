@@ -1,13 +1,13 @@
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 import { world } from "@/network/world";
-import { Coord, pixelCoordToTileCoord } from "@latticexyz/phaserx";
+import { Coord } from "engine/types";
 
 const SPEED = 750;
 const ZOOM_SPEED = 5;
 const SMOOTHNESS = 0.9;
 
 export const setupBasicCameraMovement = (
-  scene: SceneApi,
+  scene: PrimodiumScene,
   options: {
     zoomKeybind?: boolean;
     drag?: boolean;
@@ -136,11 +136,7 @@ export const setupBasicCameraMovement = (
     //check if scene is active
     if (!scene.phaserScene.scene.isActive()) return;
 
-    const { x, y } = pixelCoordToTileCoord(
-      { x: event.worldX, y: event.worldY },
-      scene.tiled.tileWidth,
-      scene.tiled.tileHeight
-    );
+    const { x, y } = scene.utils.pixelCoordToTileCoord({ x: event.worldX, y: event.worldY });
 
     const gameCoord = { x, y: -y } as Coord;
 

@@ -40,7 +40,6 @@ export default defineConfig({
             "@latticexyz/schema-type",
             "@latticexyz/store",
             "@latticexyz/store-sync",
-            "@latticexyz/utils",
             "@latticexyz/world",
           ],
         },

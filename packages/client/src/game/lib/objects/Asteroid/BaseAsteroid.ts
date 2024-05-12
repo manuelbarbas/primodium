@@ -1,7 +1,7 @@
+import Phaser from "phaser";
 import { Coord } from "engine/types";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 import { IPrimodiumGameObject } from "../interfaces";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 // import { AsteroidRelationship } from "@/game/lib/constants/common";
 import { FleetsContainer } from "@/game/lib/objects/Asteroid/FleetsContainer";
 import { Assets, Sprites } from "@primodiumxyz/assets";
@@ -14,7 +14,7 @@ type LODs = 0 | 1 | 2 | 3;
 export abstract class BaseAsteroid extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
   private id: Entity;
   protected coord: Coord;
-  protected _scene: SceneApi;
+  protected _scene: PrimodiumScene;
   protected fleetCount = 0;
   protected spawned = false;
   protected asteroidSprite: Phaser.GameObjects.Image;
@@ -25,9 +25,9 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
   private circle: Phaser.GameObjects.Arc;
   private animationTween: Phaser.Tweens.Tween;
 
-  constructor(args: { id: Entity; scene: SceneApi; coord: Coord; sprite: Sprites; outlineSprite: Sprites }) {
+  constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord; sprite: Sprites; outlineSprite: Sprites }) {
     const { id, scene, coord, sprite } = args;
-    const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
+    const pixelCoord = scene.utils.tileCoordToPixelCoord(coord);
     super(scene.phaserScene, pixelCoord.x, -pixelCoord.y);
 
     this.id = id;
@@ -109,7 +109,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Container implemen
 
   setTilePosition(coord: Coord) {
     this.coord = coord;
-    const pixelCoord = tileCoordToPixelCoord(coord, this._scene.tiled.tileWidth, this._scene.tiled.tileHeight);
+    const pixelCoord = this._scene.utils.tileCoordToPixelCoord(coord);
     this.setPosition(pixelCoord.x, -pixelCoord.y);
     return this;
   }

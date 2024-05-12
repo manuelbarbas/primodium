@@ -1,11 +1,11 @@
 import { Has, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { components } from "src/network/components";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 import { world } from "src/network/world";
 import { initializeSecondaryAsteroids } from "./utils/initializeSecondaryAsteroids";
 import { renderAsteroid } from "@/game/lib/render/renderAsteroid";
 
-export const renderAsteroids = (scene: SceneApi) => {
+export const renderAsteroids = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   const query = [Has(components.Asteroid), Has(components.Position)];

@@ -1,7 +1,7 @@
+import Phaser from "phaser";
 import { Coord } from "engine/types";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 import { BuildingDimensions, getConstructionSprite } from "./helpers";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { IPrimodiumGameObject } from "../interfaces";
 import { DepthLayers } from "../../constants/common";
 import { Assets } from "@primodiumxyz/assets";
@@ -10,20 +10,20 @@ import { Entity } from "@latticexyz/recs";
 export class BuildingConstruction extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
   private id: Entity;
   private coord: Coord;
-  private _scene: SceneApi;
+  private _scene: PrimodiumScene;
   private spawned = false;
   private sprite: Phaser.GameObjects.Sprite;
   private text: Phaser.GameObjects.BitmapText;
 
   constructor(args: {
     id: Entity;
-    scene: SceneApi;
+    scene: PrimodiumScene;
     coord: Coord;
     buildingDimensions: BuildingDimensions;
     queueText?: string;
   }) {
     const { id, scene, coord, buildingDimensions, queueText } = args;
-    const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
+    const pixelCoord = scene.utils.tileCoordToPixelCoord(coord);
     super(scene.phaserScene, pixelCoord.x, -pixelCoord.y + scene.tiled.tileHeight);
 
     this.id = id;

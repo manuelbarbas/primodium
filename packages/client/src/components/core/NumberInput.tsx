@@ -54,8 +54,8 @@ export const NumberInput: React.FC<{
           e.preventDefault();
           handleUpdate(e.target.value);
         }}
-        onFocus={game.GAME.disableGlobalInput}
-        onBlur={game.GAME.enableGlobalInput}
+        onFocus={game.GLOBAL.disableGlobalInput}
+        onBlur={game.GLOBAL.enableGlobalInput}
         min={0}
         max={max}
       />

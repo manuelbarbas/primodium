@@ -8,9 +8,10 @@ import { createInputApi } from "./input";
 import { createSpriteApi } from "./sprite";
 import { createObjectApi } from "@/game/api/objects";
 import { MUD } from "@/network/types";
+import { createUtilApi } from "@/game/api/utils";
 
-export type _SceneApi = ReturnType<typeof createSceneApi>;
-export type SceneApi = _SceneApi & { runSystems?: (mud: MUD) => void };
+export type SceneApi = ReturnType<typeof createSceneApi>;
+export type PrimodiumScene = SceneApi & { runSystems?: (mud: MUD) => void };
 
 export function createSceneApi(scene: Scene) {
   const cameraApi = createCameraApi(scene);
@@ -27,6 +28,7 @@ export function createSceneApi(scene: Scene) {
     notify: createNotificationApi(scene),
     objects: createObjectApi(scene),
     sprite: createSpriteApi(scene),
+    utils: createUtilApi(scene),
     tiled: scene.tiled,
   };
 

@@ -1,6 +1,5 @@
 import { cn } from "@/util/client";
-import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaChevronRight } from "react-icons/fa";
@@ -20,15 +19,11 @@ const BoundedMarker: React.FC<{ scene: SceneKeys; coord: Coord; iconUri: string;
 
   const handleClick = useCallback(() => {
     const {
-      config,
       camera: { pan },
+      utils,
     } = game[scene];
 
-    const tileCoord = pixelCoordToTileCoord(
-      { x: coord.x, y: -coord.y },
-      config.tilemap.tileWidth,
-      config.tilemap.tileHeight
-    );
+    const tileCoord = utils.pixelCoordToTileCoord({ x: coord.x, y: -coord.y });
 
     pan(tileCoord);
   }, [coord, game, scene]);

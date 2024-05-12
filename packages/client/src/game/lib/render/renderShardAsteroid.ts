@@ -3,10 +3,10 @@ import { components } from "@/network/components";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "engine/types";
 import { entityToRockName } from "@/util/name";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 
 export const renderShardAsteroid = (args: {
-  scene: SceneApi;
+  scene: PrimodiumScene;
   entity: Entity;
   coord?: Coord;
   addEventHandlers?: boolean;

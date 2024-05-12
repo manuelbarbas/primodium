@@ -72,8 +72,8 @@ export const TextInput: React.FC<{
         value={value}
         onChange={onChange}
         maxLength={maxLength}
-        onFocus={game.GAME.disableGlobalInput}
-        onBlur={game.GAME.enableGlobalInput}
+        onFocus={game.GLOBAL.disableGlobalInput}
+        onBlur={game.GLOBAL.enableGlobalInput}
         required={!!requirePattern}
         pattern={requirePattern}
         placeholder={placeholder ?? "Type here"}

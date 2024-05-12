@@ -1,11 +1,12 @@
+import Phaser from "phaser";
 import { MaxLevelToTilemap } from "src/game/lib/mappings";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 import { Bounds, Dimensions, ResourceTile } from "./helpers";
 import { AsteroidBounds } from "./AsteroidBounds";
 import { AsteroidResources } from "./AsteroidResources";
 
 export class AsteroidMap {
-  private scene: SceneApi;
+  private scene: PrimodiumScene;
   private asteroidTiledMap?: Phaser.Tilemaps.Tilemap;
 
   private bounds: AsteroidBounds;
@@ -15,7 +16,7 @@ export class AsteroidMap {
   private maxBounds?: Bounds;
   private asteroidDimensions: Dimensions;
 
-  constructor(scene: SceneApi, asteroidDimensions: Dimensions) {
+  constructor(scene: PrimodiumScene, asteroidDimensions: Dimensions) {
     this.scene = scene;
     this.asteroidDimensions = asteroidDimensions;
     this.bounds = new AsteroidBounds(scene, asteroidDimensions);

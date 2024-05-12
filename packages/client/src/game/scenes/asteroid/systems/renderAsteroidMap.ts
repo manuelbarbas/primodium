@@ -6,10 +6,10 @@ import { getAsteroidBounds as getAsteroidCurrentBounds, getAsteroidMaxBounds } f
 import { decodeEntity } from "@latticexyz/store-sync/recs";
 import { ResourceEntityLookup } from "src/util/constants";
 import { EResource } from "contracts/config/enums";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 
 //TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
-export const renderAsteroidMap = (scene: SceneApi) => {
+export const renderAsteroidMap = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   let asteroidMap: AsteroidMap;

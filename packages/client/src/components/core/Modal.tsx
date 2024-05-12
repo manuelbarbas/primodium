@@ -59,10 +59,10 @@ export const Modal: React.FC<ModalProps> & {
     };
 
     if (isOpen) {
-      game.GAME.disableGlobalInput();
+      game.GLOBAL.disableGlobalInput();
       components.HoverEntity.remove(); // remove any hovered entity (probably displaying a tooltip)
     } else {
-      game.GAME.enableGlobalInput();
+      game.GLOBAL.enableGlobalInput();
     }
 
     const escListener = addListener("Esc", handleClose);
@@ -72,7 +72,7 @@ export const Modal: React.FC<ModalProps> & {
       escListener.dispose();
       openListener?.dispose();
 
-      game.GAME.enableGlobalInput();
+      game.GLOBAL.enableGlobalInput();
     };
   }, [isOpen, audio, keybind, keybindClose, addListener, game, handleClose]);
 

@@ -3,10 +3,10 @@ import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { renderAsteroid } from "@/game/lib/render/renderAsteroid";
 import { renderFleet } from "@/game/lib/render/renderFleet";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 import { renderShardAsteroid } from "@/game/lib/render/renderShardAsteroid";
 
-export const renderOverview = (scene: SceneApi) => {
+export const renderOverview = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const { objects } = scene;
 

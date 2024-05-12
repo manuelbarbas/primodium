@@ -8,7 +8,7 @@ import {
   namespaceWorld,
   runQuery,
 } from "@latticexyz/recs";
-import { SceneApi } from "@/game/api/scene";
+import { PrimodiumScene } from "@/game/api/scene";
 import { BuildingConstruction } from "src/game/lib/objects/Building";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
@@ -20,7 +20,7 @@ const getQueuePositionString = (entity: Entity) => {
 
   return position > 0 ? position.toString() : "*";
 };
-export const renderQueuedBuildings = (scene: SceneApi) => {
+export const renderQueuedBuildings = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   const query = [
