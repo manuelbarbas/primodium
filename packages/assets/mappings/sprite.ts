@@ -9,7 +9,7 @@ export enum Sprites {
   Mainbase7 = "sprites/mainbase/level7/Main_Base_LVL7_1.png",
   Mainbase8 = "sprites/mainbase/level8/Main_Base_LVL8_1.png",
 
-  Wormholebase1 = "sprites/wormholebase/level1/WormholeBase_LVL1_1.png",
+  Wormholebase1 = "sprites/wormholebase/level1/idle/Wormhole_Idle1.png",
 
   IronMine1 = "sprites/miners/ironmine/level1/Miner_Iron_LVL1_1.png",
   IronMine2 = "sprites/miners/ironmine/level2/Miner_Iron_LVL2_1.png",
@@ -119,6 +119,10 @@ export enum Sprites {
   MotherlodePlatinumMedium = "sprites/spacerocks/motherlodes/motherlode_platinum_medium.png",
   MotherlodePlatinumLarge = "sprites/spacerocks/motherlodes/motherlode_platinum_large.png",
 
+  CommonMicro = "sprites/spacerocks/motherlodes/basic1.png",
+  CommonSmall = "sprites/spacerocks/motherlodes/basic2.png",
+  Wormhole = "sprites/spacerocks/wormhole/wormhole_asteroid.png",
+
   //ASTEROID BORDERS
   AsteroidPlayer = "sprites/spacerocks/borders/Border_Player.png",
   AsteroidEnemy = "sprites/spacerocks/borders/Border_Enemy.png",
@@ -168,7 +172,7 @@ export enum Sprites {
   MinutemanMarine = "sprites/units/minutemen_marine.png",
   LightningCraft = "sprites/units/lightningcraft.png",
 
-  //Emblems
+  // Emblems
   Emblem1 = "sprites/emblems/Emblems_LVL1.png",
   Emblem2 = "sprites/emblems/Emblems_LVL2.png",
   Emblem3 = "sprites/emblems/Emblems_LVL3.png",

@@ -6,7 +6,7 @@ interface TabProps {
   children?: ReactNode;
   defaultIndex?: number;
   className?: string;
-  onChange?: () => void;
+  onChange?: (index?: number) => void;
   persistIndexKey?: string;
 }
 
@@ -43,7 +43,7 @@ const Pane: FC<{
   return fragment ? (
     <>{children}</>
   ) : (
-    <SecondaryCard className={`overflow-y-auto scrollbar ${className}`}>{children}</SecondaryCard>
+    <SecondaryCard className={`overflow-y-auto scrollbar overflow ${className}`}>{children}</SecondaryCard>
   );
 });
 
@@ -85,7 +85,7 @@ export const Tabs: FC<TabProps> & {
       return;
     }
 
-    if (onChange) onChange();
+    if (onChange) onChange(currentIndex);
   }, [currentIndex, onChange]);
 
   return (

@@ -52,7 +52,7 @@ export class BuildingConstruction extends Phaser.GameObjects.Container implement
     this.coord = coord;
     this._scene = scene;
 
-    this._scene.objects.building.add(id, this);
+    this._scene.objects.constructionBuilding.add(id, this);
   }
 
   setQueueText(text: string) {
@@ -76,7 +76,7 @@ export class BuildingConstruction extends Phaser.GameObjects.Container implement
   }
 
   destroy() {
-    this._scene.objects.building.remove(this.id);
+    this._scene.objects.constructionBuilding.remove(this.id);
     super.destroy();
   }
 }

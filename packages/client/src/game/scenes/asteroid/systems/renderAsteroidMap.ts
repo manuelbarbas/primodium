@@ -15,6 +15,8 @@ export const renderAsteroidMap = (scene: SceneApi) => {
   let asteroidMap: AsteroidMap;
 
   defineComponentSystem(systemsWorld, components.ActiveRock, ({ value }) => {
+    if (value[0]?.value === value[1]?.value) return;
+
     const activeRock = value[0]?.value as Entity;
 
     if (!activeRock) return;
@@ -57,7 +59,8 @@ export const renderAsteroidMap = (scene: SceneApi) => {
 
     if (!bounds) return;
 
-    scene.camera.phaserCamera.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
+    //TODO: FIX WIERD JUMP
+    // scene.camera.phaserCamera.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
   });
 
   defineComponentSystem(systemsWorld, components.Level, ({ entity }) => {

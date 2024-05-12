@@ -8,6 +8,7 @@ import { Progress } from "src/components/core/Progress";
 import { GameProvider } from "src/hooks/providers/GameProvider";
 import { GameHUD } from "@/components/hud";
 import { WidgetProvider } from "src/hooks/providers/WidgetProvider";
+import { CommandBackgroundEffect } from "@/screens/CommandBackgroundEffect";
 
 const params = new URLSearchParams(window.location.search);
 
@@ -58,13 +59,14 @@ export const Game = () => {
             <span className="">Loading game</span>
             <span>&hellip;</span>
           </p>
-          <Progress value={100} max={100} className="animate-pulse w-56" />
+          <Progress value={100} max={100} variant="secondary" className="animate-pulse w-56" />
         </div>
       )}
 
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
-      <div id="game-container relative">
-        <div id="phaser-container" className="cursor-pointer screen-container">
+      <div id="game-container" className="screen-container">
+        <CommandBackgroundEffect />
+        <div id="phaser-container" className="cursor-pointer screen-container absolute">
           {!!game && (
             <GameProvider {...game}>
               <WidgetProvider>

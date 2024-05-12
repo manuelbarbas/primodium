@@ -27,22 +27,25 @@ export const modeSystem = (game: GameApi) => {
 
     const selectedRock = components.SelectedRock.get()?.value;
 
-    //Make sure command has a selected rock. If not, set it to the player home
-    if (mode === Mode.CommandCenter && !selectedRock)
-      components.SelectedRock.set({ value: (components.Home.get(playerEntity)?.value ?? singletonEntity) as Entity });
-
     const sceneKey = ModeToSceneKey[mode];
 
     let position = { x: 0, y: 0 };
     switch (mode) {
       case Mode.Asteroid:
-        position = { x: 19.5, y: 13 };
+        position = { x: 18.5, y: 13 };
         break;
       case Mode.Starmap:
         position = components.Position.get(selectedRock) ?? { x: 0, y: 0 };
         break;
       case Mode.CommandCenter:
+        if (!selectedRock)
+          components.SelectedRock.set({
+            value: (components.Home.get(playerEntity)?.value ?? singletonEntity) as Entity,
+          });
         position = { x: 0, y: 0 };
+        break;
+      case Mode.Spectate:
+        position = { x: 18.5, y: 13 };
         break;
     }
 

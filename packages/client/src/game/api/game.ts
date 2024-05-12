@@ -52,8 +52,8 @@ export function createGameApi(game: Game) {
     origin: SceneKeys,
     target: SceneKeys,
     duration = 0,
-    onTransitionStart?: (originScene: Scene, targetScene: Scene) => undefined,
-    onTransitionEnd?: (originScene: Scene, targetScene: Scene) => undefined
+    onTransitionStart?: (originScene?: Scene, targetScene?: Scene) => undefined,
+    onTransitionEnd?: (originScene?: Scene, targetScene?: Scene) => undefined
   ) {
     if (origin === target) return;
 

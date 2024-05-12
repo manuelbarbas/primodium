@@ -51,7 +51,6 @@ export class AsteroidBounds {
         this.asteroidDimensions.xBounds,
         this.asteroidDimensions.yBounds
       );
-      return;
     }
 
     //SETUP TILESETS
@@ -234,8 +233,6 @@ export class AsteroidBounds {
     this.drones.forEach((drone) => {
       this.scene.phaserScene.lights.addPointLight(drone.x, drone.y, 0x008b8b, 75, 0.015);
     });
-
-    nonBuildableLayer.postFX.addVignette(0.5, 0.5, 3, 1);
 
     return this;
   }

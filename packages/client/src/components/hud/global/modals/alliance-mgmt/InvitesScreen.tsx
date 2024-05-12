@@ -1,194 +1,116 @@
+import { Button } from "@/components/core/Button";
+import { SecondaryCard } from "@/components/core/Card";
+import { Navigator } from "@/components/core/Navigator";
+import { Tooltip } from "@/components/core/Tooltip";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
+import { useMud } from "@/hooks";
+import { components } from "@/network/components";
+import { declineInvite, joinAlliance } from "@/network/setup/contractCalls/alliance";
+import { getAllianceName } from "@/util/alliance";
+import { copyToClipboard } from "@/util/clipboard";
+import { entityToColor } from "@/util/color";
+import { entityToAddress } from "@/util/common";
+import { TransactionQueueType } from "@/util/constants";
+import { hashEntities } from "@/util/encode";
 import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { EAllianceRole } from "contracts/config/enums";
-import { FaArrowLeft, FaCheck, FaCopy, FaTimes } from "react-icons/fa";
-import { Button } from "src/components/core/Button";
-import { SecondaryCard } from "src/components/core/Card";
-import { Join } from "src/components/core/Join";
-import { Navigator } from "src/components/core/Navigator";
-import { Tooltip } from "src/components/core/Tooltip";
-import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { useMud } from "src/hooks";
-import { components } from "src/network/components";
-import {
-  acceptJoinRequest,
-  declineInvite,
-  joinAlliance,
-  rejectJoinRequest,
-} from "src/network/setup/contractCalls/alliance";
-import { getAllianceName } from "src/util/alliance";
-import { entityToAddress } from "src/util/common";
-import { TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
+import { FaCheck, FaCopy, FaTimes } from "react-icons/fa";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List } from "react-window";
 
+// This screen is only accessible to players who are not in an alliance
 export const InvitesScreen: React.FC = () => {
   const mud = useMud();
   const playerEntity = mud.playerAccount.entity;
-  const playerAlliance = components.PlayerAlliance.use(playerEntity)?.alliance as Entity | undefined;
-  const role = components.PlayerAlliance.use(playerEntity)?.role ?? EAllianceRole.Member;
   const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
-  const joinRequests = components.AllianceRequest.useAllWith({ alliance: playerAlliance ?? singletonEntity }) ?? [];
-  const playerEntities = components.PlayerAlliance.useAllWith({
-    alliance: playerAlliance,
-  });
   const maxAllianceMembers = components.P_AllianceConfig.get()?.maxAllianceMembers ?? 1n;
-
-  const full = playerEntities.length >= Number(maxAllianceMembers);
 
   return (
     <Navigator.Screen
       title="invites"
-      className="flex flex-col items-center w-full h-full text-xs pointer-events-auto h-full overflow-hidden"
+      className="grid grid-rows-[min-content_1fr_min-content] gap-4 w-full text-xs pointer-events-auto h-full overflow-hidden p-4"
     >
-      <div className="flex flex-grow w-full gap-2 mb-2">
-        {!playerAlliance && (
-          <div className={`w-full flex flex-col`}>
-            <div className="flex justify-between items-center">
-              <p className="font-bold p-1 opacity-75">INVITES</p>
-            </div>
-
-            <Join
-              direction="vertical"
-              className="overflow-auto w-full h-full scrollbar bg-neutral border border-secondary/25"
-            >
-              {invites.map((entity) => {
-                const playerInvite = components.PlayerInvite.get(entity);
-                const playerEntities = components.PlayerAlliance.getAllWith({
-                  alliance: playerInvite?.alliance,
-                });
-
-                if (!playerInvite?.alliance) return <></>;
-
-                return (
-                  <SecondaryCard key={entity} className="border-b rounded-none flex-row justify-between items-center">
-                    <div className="flex gap-2 items-center">
-                      <b>[{getAllianceName(playerInvite.alliance, true)}]</b>
-                      <b className="opacity-75">{playerEntities.length} MEMBER(S)</b>
-                    </div>
-
-                    <div className="flex gap-1">
-                      {/* only kick if not current player, has the ability to kick, and current player is higher than member */}
-                      <TransactionQueueMask
-                        queueItemId={hashEntities(TransactionQueueType.DeclineInvite, playerInvite.player)}
-                      >
-                        <Button
-                          tooltip="Decline"
-                          tooltipDirection="left"
-                          className="btn-xs !rounded-box border-error"
-                          onClick={() => declineInvite(mud, playerInvite.player)}
-                        >
-                          <FaTimes className="rounded-none" size={10} />
-                        </Button>
-                      </TransactionQueueMask>
-                      <TransactionQueueMask
-                        queueItemId={hashEntities(TransactionQueueType.JoinAlliance, playerInvite.alliance)}
-                      >
-                        <Button
-                          tooltip="Accept"
-                          tooltipDirection="left"
-                          className="btn-xs !rounded-box border-success"
-                          onClick={() => joinAlliance(mud, playerInvite.alliance)}
-                        >
-                          <FaCheck className="rounded-none" size={10} />
-                        </Button>
-                      </TransactionQueueMask>
-                    </div>
-                  </SecondaryCard>
-                );
-              })}
-            </Join>
-            <p className="p-1 opacity-50 text-right">{invites.length} invites(s)</p>
-          </div>
-        )}
-        {role <= EAllianceRole.CanInvite && (
-          <div className="w-full flex flex-col">
-            <div className="flex justify-between items-center">
-              <p className="font-bold p-1 opacity-75">REQUESTS</p>
-            </div>
-            {full && (
-              <SecondaryCard className="w-full h-full font-bold items-center justify-center opacity-75 uppercase">
-                alliance full
-              </SecondaryCard>
+      <div className="justify-self-center text-base">INVITES</div>
+      {invites.length > 0 ? (
+        <SecondaryCard className="flex flex-col gap-4 p-4">
+          <AutoSizer>
+            {({ height, width }: { height: number; width: number }) => (
+              <List height={height} width={width} itemCount={invites.length} itemSize={35} className="scrollbar">
+                {({ index, style }) => (
+                  <div style={style} className="grid grid-cols-[40px_1fr_min-content_min-content] gap-4 pr-4">
+                    <InviteItem key={index} index={index} entity={invites[index]} max={maxAllianceMembers} />
+                  </div>
+                )}
+              </List>
             )}
-            {!full && (
-              <Join
-                direction="vertical"
-                className="overflow-auto w-full h-full scrollbar bg-neutral border border-secondary/25"
-              >
-                {joinRequests.map((entity) => {
-                  const request = components.AllianceRequest.get(entity);
-
-                  if (!request?.player) return <></>;
-
-                  return (
-                    <SecondaryCard key={entity} className="border-b rounded-none flex-row justify-between items-center">
-                      <AccountDisplay player={request.player} />
-
-                      <div className="flex gap-1">
-                        {/* only kick if not current player, has the ability to kick, and current player is higher than member */}
-                        <TransactionQueueMask
-                          queueItemId={hashEntities(TransactionQueueType.RejectRequest, request.player)}
-                        >
-                          <Button
-                            tooltip="Decline"
-                            tooltipDirection="left"
-                            className="btn-xs !rounded-box border-error"
-                            onClick={() => rejectJoinRequest(mud, request.player)}
-                          >
-                            <FaTimes className="rounded-none" size={10} />
-                          </Button>
-                        </TransactionQueueMask>
-
-                        <TransactionQueueMask
-                          queueItemId={hashEntities(TransactionQueueType.AcceptRequest, request.player)}
-                        >
-                          <Button
-                            tooltip="Accept"
-                            tooltipDirection="left"
-                            className="btn-xs !rounded-box border-success"
-                            onClick={() => acceptJoinRequest(mud, request.player)}
-                          >
-                            <FaCheck className="rounded-none" size={10} />
-                          </Button>
-                        </TransactionQueueMask>
-                      </div>
-                    </SecondaryCard>
-                  );
-                })}
-              </Join>
-            )}
-            <p className="p-1 opacity-50 text-right">{joinRequests.length} requests(s)</p>
-          </div>
-        )}
-      </div>
-
-      {role > EAllianceRole.CanInvite && playerAlliance && (
-        <SecondaryCard className="w-full h-full items-center justify-center font-bold opacity-50 mb-2 text-center">
-          NEED INVITE ROLE TO SEND INVITES OR ACCEPT JOIN REQUESTS
+          </AutoSizer>
+        </SecondaryCard>
+      ) : (
+        <SecondaryCard className="flex justify-center items-center h-full">
+          <p className="opacity-50">NO INVITES</p>
         </SecondaryCard>
       )}
-
-      <div className="flex gap-1">
-        <Navigator.BackButton>
-          <FaArrowLeft />
-        </Navigator.BackButton>
-        <Navigator.NavButton to="send" className="btn-secondary btn-sm border-none" disabled={full || !playerAlliance}>
-          SEND INVITE
-        </Navigator.NavButton>
-      </div>
-      <div className="flex p-2 items-center">
-        FRIEND CODE:
-        <Tooltip text="Click to copy" direction="top">
-          <Button
-            className="btn-xs flex gap-1"
-            onClick={() => navigator.clipboard.writeText(entityToAddress(playerEntity))}
-          >
-            {entityToAddress(playerEntity, true)}
-            <FaCopy />
-          </Button>
-        </Tooltip>
+      <div className="flex justify-between">
+        <Navigator.BackButton />
+        <div className="flex justify-center items-center gap-4">
+          <p className="opacity-80">FRIEND CODE</p>
+          <Tooltip tooltipContent="Click to copy" direction="top">
+            <Button
+              variant="ghost"
+              size="xs"
+              className="flex gap-2"
+              onClick={() => copyToClipboard(entityToAddress(playerEntity))}
+            >
+              <span className="text-accent">{entityToAddress(playerEntity, true)}</span>
+              <FaCopy className="text-accent" />
+            </Button>
+          </Tooltip>
+        </div>
       </div>
     </Navigator.Screen>
+  );
+};
+
+const InviteItem = ({ index, entity, max }: { index: number; entity: Entity; max: bigint }) => {
+  const mud = useMud();
+  const playerInvite = components.PlayerInvite.get(entity);
+  const playerEntities = components.PlayerAlliance.getAllWith({
+    alliance: playerInvite?.alliance,
+  });
+  const full = playerEntities.length >= Number(max);
+
+  if (!playerInvite?.alliance) return null;
+  return (
+    <>
+      <span>{index + 1}.</span>
+      <div className="flex gap-2">
+        <span style={{ color: entityToColor(entity) }}>[{getAllianceName(playerInvite.alliance, true)}]</span>
+        <span className="opacity-75">
+          ({playerEntities.length} MEMBER{playerEntities.length > 1 ? "S" : ""})
+        </span>
+      </div>
+      <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.JoinAlliance, playerInvite.alliance)}>
+        <Button
+          tooltip={full ? "alliance full" : "accept"}
+          className="btn-xs border-none !rounded-box text-success"
+          onClick={() => joinAlliance(mud, playerInvite.alliance)}
+          disabled={full}
+        >
+          <div className="flex gap-2">
+            <FaCheck className="rounded-none" /> ACCEPT
+          </div>
+        </Button>
+      </TransactionQueueMask>
+      <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.DeclineInvite, playerInvite.player)}>
+        <Button
+          variant="ghost"
+          className="btn-xs border-none !rounded-box text-error"
+          onClick={() => declineInvite(mud, playerInvite.player)}
+        >
+          <div className="flex gap-2">
+            <FaTimes className="rounded-none" /> DECLINE
+          </div>
+        </Button>
+      </TransactionQueueMask>
+    </>
   );
 };

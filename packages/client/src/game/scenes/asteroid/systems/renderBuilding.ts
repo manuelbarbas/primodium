@@ -12,15 +12,60 @@ import {
 
 import { world } from "src/network/world";
 
-import { components } from "@/network/components";
-import { Building } from "@/game/lib/objects/Building";
-import { removeRaidableAsteroid } from "@/game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
-import { EntityType } from "@/util/constants";
-import { hashEntities } from "@/util/encode";
-import { getBuildingBottomLeft } from "@/util/building";
-import { isDomInteraction } from "@/util/canvas";
+import { EntityType, Mode } from "src/util/constants";
+import { hashEntities } from "src/util/encode";
+import { Building } from "../../../lib/objects/Building";
+import { components } from "src/network/components";
+import { getBuildingBottomLeft } from "src/util/building";
+import { removeRaidableAsteroid } from "src/game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
+// import { createObjectApi } from "@/game/api/objects";
 import { EMap } from "contracts/config/enums";
+import { isDomInteraction } from "@/util/canvas";
+// import { components } from "@/network/components";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+// import { Entity } from "@latticexyz/recs";
+import { Coord } from "engine/types";
+import { getBuildingDimensions } from "@/util/building";
 import { SceneApi } from "@/game/api/scene";
+
+export const triggerBuildAnim = (scene: SceneApi, entity: Entity, mapCoord: Coord) => {
+  const flare = (absoluteCoord: Coord, size = 1) => {
+    scene.phaserScene.add
+      .particles(absoluteCoord.x, absoluteCoord.y, "flare", {
+        speed: 100,
+        lifespan: 300 * size,
+        quantity: 10,
+        scale: { start: 0.3, end: 0 },
+        tintFill: true,
+        color: [0x828282, 0xbfbfbf, 0xe8e8e8],
+        duration: 100,
+      })
+      .start();
+  };
+
+  const {
+    tiled: { tileWidth, tileHeight },
+  } = scene;
+  const buildingType = components.BuildingType.get(entity)?.value as Entity | undefined;
+  if (!buildingType) return;
+
+  const buildingDimensions = getBuildingDimensions(buildingType);
+  // convert coords from bottom left to top left
+  const mapCoordTopLeft = {
+    x: mapCoord.x,
+    y: mapCoord.y + buildingDimensions.height - 1,
+  };
+  const pixelCoord = tileCoordToPixelCoord(mapCoordTopLeft, tileWidth, tileHeight);
+
+  // throw up dust on build
+  flare(
+    {
+      x: pixelCoord.x + (tileWidth * buildingDimensions.width) / 2,
+      y: -pixelCoord.y + (tileHeight * buildingDimensions.height) / 2,
+    },
+    buildingDimensions.width
+  );
+};
 
 //TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
 export const renderBuilding = (scene: SceneApi) => {
@@ -28,8 +73,6 @@ export const renderBuilding = (scene: SceneApi) => {
   const spectateWorld = namespaceWorld(world, "game_spectate");
   const { objects } = scene;
 
-  //TODO: temp till smart containers
-  // const buildings = new Map<Entity, Building>();
   defineComponentSystem(systemsWorld, components.ActiveRock, ({ value }) => {
     if (!value[0] || value[0]?.value === value[1]?.value) return;
 
@@ -91,6 +134,15 @@ export const renderBuilding = (scene: SceneApi) => {
         }
       }
 
+      if (buildingType === EntityType.WormholeBase) {
+        const wormholeEntity = hashEntities(activeRock, EntityType.Wormhole);
+        components.Position.remove(wormholeEntity);
+        components.BuildingType.remove(wormholeEntity);
+        components.Level.remove(wormholeEntity);
+        components.IsActive.remove(wormholeEntity);
+        components.OwnedBy.remove(wormholeEntity);
+      }
+
       const origin = components.Position.get(entity);
       if (!origin) return;
       const tilePosition = getBuildingBottomLeft(origin, buildingType);
@@ -136,6 +188,21 @@ export const renderBuilding = (scene: SceneApi) => {
     });
 
     defineEnterSystem(spectateWorld, positionQuery, render);
+    defineEnterSystem(
+      spectateWorld,
+      positionQuery,
+      ({ entity }) => {
+        if (components.SelectedMode.get()?.value === Mode.Spectate) return;
+
+        const origin = components.Position.get(entity);
+        const buildingPrototype = components.BuildingType.get(entity)?.value as Entity | undefined;
+        if (!origin || !buildingPrototype) return;
+        const tileCoord = getBuildingBottomLeft(origin, buildingPrototype);
+
+        triggerBuildAnim(scene, entity, tileCoord);
+      },
+      { runOnInit: false }
+    );
     defineUpdateSystem(spectateWorld, positionQuery, render);
 
     defineExitSystem(spectateWorld, positionQuery, ({ entity }) => {

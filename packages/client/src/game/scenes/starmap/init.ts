@@ -15,7 +15,7 @@ export const initStarmapScene = async (game: GameApi): Promise<SceneApi> => {
   const sceneApi = createSceneApi(scene);
 
   setupBasicCameraMovement(sceneApi, {
-    translateKeybind: false,
+    translateKeybind: true,
   });
   setupKeybinds(sceneApi);
 

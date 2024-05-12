@@ -59,7 +59,7 @@ export const Modal: React.FC<ModalProps> & {
     };
 
     if (isOpen) {
-      game.disableGlobalInput();
+      game.GAME.disableGlobalInput();
       components.HoverEntity.remove(); // remove any hovered entity (probably displaying a tooltip)
     } else {
       game.GAME.enableGlobalInput();

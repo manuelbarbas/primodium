@@ -14,17 +14,18 @@ type LabelArgs = {
   ownerLabelColor: number;
   nameLabelColor: number;
   allianceLabelColor: number;
+  ownerLabelOpacity: number;
 };
 
 export class AsteroidLabel extends Phaser.GameObjects.Container {
   private _scene: SceneApi;
   private coord: PixelCoord;
   private labelContainer: Phaser.GameObjects.Container;
-  private emblemSprite: Phaser.GameObjects.Image;
-  private asteroidLabel: Phaser.GameObjects.BitmapText;
-  private ownerLabel: Phaser.GameObjects.BitmapText;
-  private allianceLabel: Phaser.GameObjects.BitmapText;
-  private fleetsContainer: FleetsContainer | undefined;
+  emblemSprite: Phaser.GameObjects.Image;
+  asteroidLabel: Phaser.GameObjects.BitmapText;
+  ownerLabel: Phaser.GameObjects.BitmapText;
+  allianceLabel: Phaser.GameObjects.BitmapText;
+  fleetsContainer: FleetsContainer | undefined;
   private baseScale = 1;
 
   constructor(
@@ -104,6 +105,8 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
     args.ownerLabelColor && this.ownerLabel.setTintFill(args.ownerLabelColor);
     args.allianceLabel && this.allianceLabel.setText(`[${args.allianceLabel}]`);
     args.allianceLabelColor && this.allianceLabel.setTintFill(args.allianceLabelColor);
+    args.ownerLabelOpacity && this.ownerLabel.setAlpha(args.ownerLabelOpacity);
+    // args.textOpacity && this.labelContainer.setAlpha(args.textOpacity);
 
     this._updatePositions();
   }
