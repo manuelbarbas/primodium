@@ -1,11 +1,14 @@
 import worldsJson from "contracts/worlds.json";
 import { chainConfigs } from "./chainConfigs";
 
-const params = new URLSearchParams(window.location.search);
-
 const worlds = worldsJson as Partial<Record<string, { address: string; blockNumber?: number }>>;
 
 export const getNetworkConfig = () => {
+  // Ignore deployment URL params on production subdomains (primodium.com)
+  const params = window.location.hostname.endsWith("primodium.com")
+    ? new URLSearchParams()
+    : new URLSearchParams(window.location.search);
+
   const chainId = params.get("chainid") || import.meta.env.PRI_CHAIN_ID || "dev";
 
   const chain = chainConfigs[chainId];
