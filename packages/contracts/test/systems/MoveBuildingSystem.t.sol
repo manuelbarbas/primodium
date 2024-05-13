@@ -50,7 +50,7 @@ contract MoveBuildingSystemTest is PrimodiumTest {
     PositionData memory mainBasePosition = Position.get(mainBaseEntity);
     PositionData memory newPosition = PositionData(
       mainBasePosition.x + 3,
-      mainBasePosition.y + 3,
+      mainBasePosition.y - 1,
       mainBasePosition.parentEntity
     );
     int32[] memory oldTilePositions = TilePositions.get(mainBaseEntity);
