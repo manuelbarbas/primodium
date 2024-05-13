@@ -2577,7 +2577,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 80,
           cargo: 0,
           speed: 1,
-          trainingTime: 240,
+          trainingTime: 360,
         }),
       },
     },
