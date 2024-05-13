@@ -48,9 +48,9 @@ contract CombatSystem is PrimodiumSystem {
     _onlyNotInStance(fleetEntity)
     _onlySameOrbit(fleetEntity, targetFleet)
   {
-    (bytes32 battleEntity, BattleResultData memory batteResult) = LibCombat.attack(fleetEntity, targetFleet);
+    (bytes32 battleEntity, BattleResultData memory battleResult) = LibCombat.attack(fleetEntity, targetFleet);
 
-    afterBattle(battleEntity, batteResult);
+    afterBattle(battleEntity, battleResult);
   }
 
   /**
@@ -72,8 +72,8 @@ contract CombatSystem is PrimodiumSystem {
     _claimUnits(targetAsteroid)
     _claimShardAsteroidPoints(targetAsteroid)
   {
-    (bytes32 battleEntity, BattleResultData memory batteResult) = LibCombat.attack(fleetEntity, targetAsteroid);
-    afterBattle(battleEntity, batteResult);
+    (bytes32 battleEntity, BattleResultData memory battleResult) = LibCombat.attack(fleetEntity, targetAsteroid);
+    afterBattle(battleEntity, battleResult);
   }
 
   function asteroidAttackFleet(
