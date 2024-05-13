@@ -8,18 +8,24 @@ import {
   namespaceWorld,
 } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { toHex } from "viem";
 
-import { Scene } from "engine/types";
-import { toast } from "react-toastify";
 import { components } from "@/network/components";
 import { moveBuilding } from "@/network/setup/contractCalls/moveBuilding";
 import { MUD } from "@/network/types";
 import { world } from "@/network/world";
-import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "@/util/building";
-import { Building } from "@/game/lib/objects/Building";
+import {
+  getBuildingBottomLeft,
+  getBuildingDimensions,
+  getBuildingOrigin,
+  validateBuildingPlacement,
+} from "@/util/building";
+import { Building, BuildingConstruction } from "@/game/lib/objects/Building";
 import { DepthLayers } from "@/game/lib/constants/common";
+import { PrimodiumScene } from "@/game/api/scene";
 import { Action } from "@/util/constants";
 import { isDomInteraction } from "@/util/canvas";
+import { hashEntities } from "@/util/encode";
 
 export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: PrimodiumScene) => {
   if (pointer?.rightButtonDown()) {
@@ -29,6 +35,7 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Prim
 
   const selectedBuilding = components.SelectedBuilding.get()?.value;
   if (!selectedBuilding) return;
+  const selectedBuildingObj = scene.objects.building.get(selectedBuilding);
 
   const tileCoord = components.HoverTile.get();
   const activeRock = components.ActiveRock.get()?.value as Entity;
@@ -47,7 +54,33 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Prim
   const buildingOrigin = getBuildingOrigin(tileCoord, buildingPrototype);
   if (!buildingOrigin) return;
 
-  moveBuilding(mud, selectedBuilding, buildingOrigin);
+  // change opacity and place construction building
+  const placeholderBuilding = new BuildingConstruction({
+    id: hashEntities(toHex("placeholder"), selectedBuilding),
+    scene,
+    coord: getBuildingBottomLeft(buildingOrigin, buildingPrototype),
+    buildingDimensions: getBuildingDimensions(buildingPrototype),
+  }).spawn();
+
+  const pendingAnim = scene.phaserScene.tweens.add({
+    targets: [selectedBuildingObj, placeholderBuilding],
+    alpha: 0.6,
+    duration: 600,
+    yoyo: true,
+    repeat: -1,
+  });
+
+  moveBuilding(
+    mud,
+    selectedBuilding,
+    buildingOrigin,
+    // on completion
+    () => {
+      pendingAnim.destroy();
+      placeholderBuilding.destroy();
+      selectedBuildingObj?.setAlpha(1);
+    }
+  );
   components.SelectedAction.remove();
 };
 
