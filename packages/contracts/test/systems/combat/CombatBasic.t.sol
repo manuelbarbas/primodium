@@ -390,8 +390,6 @@ contract CombatSystemTest is PrimodiumTest {
 
     vm.warp(LibMath.max(FleetMovement.getArrivalTime(aliceFleetEntity), GracePeriod.get(bobFleetEntity)));
 
-    uint256 aliceAttack = LibCombatAttributes.getAttack(aliceFleetEntity);
-
     switchPrank(alice);
     world.Primodium__attack(aliceFleetEntity, bobHomeAsteroid);
     uint256 bobHpLost = bobTotalTargetHp - LibCombatAttributes.getHpWithAllies(bobHomeAsteroid);
