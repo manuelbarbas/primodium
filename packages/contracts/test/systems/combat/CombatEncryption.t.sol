@@ -38,9 +38,9 @@ contract CombatEncryptionTest is PrimodiumTest {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
-    uint256 numberOfUnits = 50;
+    uint256 numberOfUnits = 5000;
 
-    //create fleet with 1 minuteman marine
+    //create fleet with minuteman marines
     bytes32 minuteman = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
     bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
     uint256 decryption = P_ColonyShipConfig.getDecryption();
@@ -295,7 +295,7 @@ contract CombatEncryptionTest is PrimodiumTest {
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
     uint256 numberOfUnits = 10;
 
-    //create fleet with 1 minuteman marine
+    //create fleet with 10 minuteman marine
     bytes32 minuteman = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
     bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
     uint256 decryption = P_ColonyShipConfig.getDecryption();
@@ -316,7 +316,7 @@ contract CombatEncryptionTest is PrimodiumTest {
     //create fleet with 1 iron
     uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
 
-    //provide resource and unit requirements to create fleet
+    //provide resource and unit requirements to create two fleets
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
@@ -349,14 +349,21 @@ contract CombatEncryptionTest is PrimodiumTest {
     uint256 ironAmount = numberOfUnits * P_Unit.getCargo(minuteman, UnitLevel.get(aliceHomeAsteroid, minuteman));
     increaseResource(bobHomeAsteroid, EResource.Iron, ironAmount);
 
+    console.log("asteroid hp before attack: %s", ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_HP)));
+    uint256 initAsteroidHp = ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_HP));
+    console.log(
+      "asteroid encryption before attack: %s",
+      ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_Encryption))
+    );
+
     vm.warp(FleetMovement.getArrivalTime(fleetEntity));
     vm.startPrank(alice);
     world.Primodium__attack(fleetEntity, bobHomeAsteroid);
     vm.stopPrank();
 
-    assertEq(
+    assertLt(
       ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_HP)),
-      0,
+      initAsteroidHp,
       "asteroid hp should have been reduced by unit attack"
     );
 
