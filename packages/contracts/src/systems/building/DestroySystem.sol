@@ -3,8 +3,7 @@ pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
-import { IsActive, P_UnitProdTypes, Position, BuildingType, OwnedBy, Level, BuildingType } from "codegen/index.sol";
-import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
+import { Position } from "codegen/index.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
 
 import { IWorld } from "codegen/world/IWorld.sol";
@@ -26,19 +25,7 @@ contract DestroySystem is PrimodiumSystem {
     world.Primodium__clearMaxStorageIncrease(buildingEntity);
     world.Primodium__clearProductionRate(buildingEntity);
 
-    bytes32 buildingType = BuildingType.get(buildingEntity);
-
-    uint256 level = Level.get(buildingEntity);
-
-    LibBuilding.removeBuildingTiles(buildingEntity);
-
-    if (P_UnitProdTypes.length(buildingType, level) != 0) {
-      UnitFactorySet.remove(OwnedBy.get(buildingEntity), buildingEntity);
-    }
-    Level.deleteRecord(buildingEntity);
-    BuildingType.deleteRecord(buildingEntity);
-    OwnedBy.deleteRecord(buildingEntity);
-    Position.deleteRecord(buildingEntity);
-    IsActive.deleteRecord(buildingEntity);
+    // requirements checked on line 20
+    LibBuilding.destroy(_player(), buildingEntity, true);
   }
 }
