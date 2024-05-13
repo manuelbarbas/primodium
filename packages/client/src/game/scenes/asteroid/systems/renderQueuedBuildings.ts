@@ -12,7 +12,7 @@ import { PrimodiumScene } from "@/game/api/scene";
 import { BuildingConstruction } from "src/game/lib/objects/Building";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { getBuildingBottomLeft, getBuildingDimensions } from "src/util/building";
+import { getBuildingDimensions } from "src/util/building";
 import { TransactionQueueType } from "src/util/constants";
 
 const getQueuePositionString = (entity: Entity) => {
@@ -43,7 +43,7 @@ export const renderQueuedBuildings = (scene: PrimodiumScene) => {
     new BuildingConstruction({
       id: entity,
       scene,
-      coord: getBuildingBottomLeft(metadata.coord, metadata.buildingType),
+      coord: metadata.coord,
       buildingDimensions: dimensions,
       queueText: getQueuePositionString(entity),
     });

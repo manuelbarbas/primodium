@@ -14,6 +14,7 @@ import { components } from "@/network/components";
 import { world } from "@/network/world";
 import { Building } from "@/game/lib/objects/Building";
 import { removeRaidableAsteroid } from "@/game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
+import { DepthLayers } from "@/game/lib/constants/common";
 import { PrimodiumScene } from "@/game/api/scene";
 import { Action, EntityType } from "@/util/constants";
 import { getBuildingBottomLeft } from "@/util/building";
@@ -81,6 +82,7 @@ export const renderBuilding = (scene: PrimodiumScene) => {
         if (!origin || !buildingPrototype) return;
         const tileCoord = getBuildingBottomLeft(origin, buildingPrototype);
         building.setCoordPosition(tileCoord);
+        building.setDepth(DepthLayers.Building - tileCoord.y);
         // trigger anim since the building was just moved
         building.triggerPlacementAnim();
 
