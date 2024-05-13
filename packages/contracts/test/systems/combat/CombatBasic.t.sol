@@ -348,20 +348,21 @@ contract CombatSystemTest is PrimodiumTest {
 
   function testFleetAttackCooldown() public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
-    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
-    //create fleet with 1 minuteman marine
+    uint256[] memory aliceUnitCounts = new uint256[](unitPrototypes.length);
+    uint256[] memory bobUnitCounts = new uint256[](unitPrototypes.length);
+
+    //create fleet with minuteman marines
     bytes32 minutemanEntity = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (unitPrototypes[i] == minutemanEntity) unitCounts[i] = 100;
+      if (unitPrototypes[i] == minutemanEntity) aliceUnitCounts[i] = 10000;
     }
 
-    //create fleet with 1 iron
     uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
 
     // create and send alice fleet
-    setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
+    setupCreateFleet(alice, aliceHomeAsteroid, aliceUnitCounts, resourceCounts);
     vm.startPrank(alice);
-    bytes32 aliceFleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 aliceFleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, aliceUnitCounts, resourceCounts);
     world.Primodium__sendFleet(aliceFleetEntity, bobHomeAsteroid);
 
     switchPrank(creator);
@@ -369,11 +370,23 @@ contract CombatSystemTest is PrimodiumTest {
 
     // create bob fleet
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (unitPrototypes[i] == minutemanEntity) unitCounts[i] = 1;
+      if (unitPrototypes[i] == minutemanEntity) bobUnitCounts[i] = 100;
     }
-    setupCreateFleet(bob, bobHomeAsteroid, unitCounts, resourceCounts);
+    setupCreateFleet(bob, bobHomeAsteroid, bobUnitCounts, resourceCounts);
     switchPrank(bob);
-    bytes32 bobFleetEntity = world.Primodium__createFleet(bobHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 bobFleetEntity = world.Primodium__createFleet(bobHomeAsteroid, bobUnitCounts, resourceCounts);
+
+    uint256 bobAsteroidTargetHp = LibCombatAttributes.getHpWithAllies(bobHomeAsteroid);
+
+    // Bob defends his own asteroid
+    world.Primodium__setFleetStance(bobFleetEntity, uint8(EFleetStance.Defend), bobHomeAsteroid);
+
+    uint256 bobTotalTargetHp = LibCombatAttributes.getHpWithAllies(bobHomeAsteroid);
+    assertGt(
+      bobTotalTargetHp,
+      bobAsteroidTargetHp,
+      "Bob's total target hp with defending fleet should be greater than only his asteroid hp"
+    );
 
     vm.warp(LibMath.max(FleetMovement.getArrivalTime(aliceFleetEntity), GracePeriod.get(bobFleetEntity)));
 
@@ -381,14 +394,16 @@ contract CombatSystemTest is PrimodiumTest {
 
     switchPrank(alice);
     world.Primodium__attack(aliceFleetEntity, bobHomeAsteroid);
+    uint256 bobHpLost = bobTotalTargetHp - LibCombatAttributes.getHpWithAllies(bobHomeAsteroid);
+    console.log("Bob HP Lost: ", bobHpLost);
 
-    uint256 cooldown = LibCombat.getCooldownTime(aliceAttack, false);
+    uint256 cooldown = LibCombat.getCooldownTime(bobHpLost, false);
     switchPrank(creator);
     P_GameConfig.setWorldSpeed(P_GameConfig.getWorldSpeed() / 10);
-    uint256 slowCooldown = LibCombat.getCooldownTime(aliceAttack, false);
-    assertEq(cooldown * 10, slowCooldown);
-    assertEq(CooldownEnd.get(aliceFleetEntity), block.timestamp + cooldown);
-    assertGt(CooldownEnd.get(aliceFleetEntity), block.timestamp);
+    uint256 slowCooldown = LibCombat.getCooldownTime(bobHpLost, false);
+    assertEq(cooldown * 10, slowCooldown, "Cooldown should be changed by world speed");
+    assertEq(CooldownEnd.get(aliceFleetEntity), block.timestamp + cooldown, "Cooldown is not set correctly");
+    assertGt(CooldownEnd.get(aliceFleetEntity), block.timestamp, "Cooldown should be in the future");
   }
 
   function testFleetAttackFailedInCooldown() public {

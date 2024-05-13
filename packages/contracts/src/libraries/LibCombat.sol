@@ -49,11 +49,6 @@ library LibCombat {
     if (aggressorIsFleet) {
       bytes32 ownerEntity = OwnedBy.get(entity);
       if (GracePeriod.get(ownerEntity) > 0) GracePeriod.deleteRecord(ownerEntity);
-
-      // todo: should all allies have cooldown too?
-      bool decrypt = UnitCount.get(entity, ColonyShipPrototypeId) > 0;
-      uint256 cooldownEnd = getCooldownTime(totalAggressorDamage, decrypt);
-      CooldownEnd.set(entity, block.timestamp + cooldownEnd);
     }
 
     uint256 totalTargetDamage = handleDamage(targetEntity, battleEntity, !aggressorIsFleet);

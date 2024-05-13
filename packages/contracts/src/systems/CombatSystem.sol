@@ -2,9 +2,10 @@
 pragma solidity >=0.8.24;
 
 import { IWorld } from "codegen/world/IWorld.sol";
-import { UnitCount, ResourceCount, IsFleet, BattleResult, BattleResultData, GracePeriod, OwnedBy } from "codegen/index.sol";
+import { UnitCount, ResourceCount, IsFleet, BattleResult, BattleResultData, GracePeriod, OwnedBy, CooldownEnd } from "codegen/index.sol";
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
+import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { EResource } from "src/Types.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
@@ -104,6 +105,11 @@ contract CombatSystem is PrimodiumSystem {
     bool isRaid = isAggressorWinner && (isTargetFleet || !decrypt);
     bool isDecryption = !isRaid && isAggressorWinner && !isTargetFleet && decrypt;
 
+    uint256 initTargetHp;
+    if (isAggressorFleet) {
+      initTargetHp = LibCombatAttributes.getHpWithAllies(battleResult.targetEntity);
+    }
+
     IWorld world = IWorld(_world());
     if (battleResult.targetDamage > 0)
       world.Primodium__applyDamage(
@@ -128,5 +134,14 @@ contract CombatSystem is PrimodiumSystem {
       }
     }
     world.Primodium__applyDamage(battleEntity, _player(), battleResult.targetEntity, battleResult.aggressorDamage);
+
+    if (isAggressorFleet) {
+      uint256 damageDealtToTarget = initTargetHp - LibCombatAttributes.getHpWithAllies(battleResult.targetEntity);
+      bool decrypt = UnitCount.get(battleResult.aggressorEntity, ColonyShipPrototypeId) > 0;
+      CooldownEnd.set(
+        battleResult.aggressorEntity,
+        block.timestamp + LibCombat.getCooldownTime(damageDealtToTarget, decrypt)
+      );
+    }
   }
 }
