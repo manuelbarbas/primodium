@@ -32,6 +32,8 @@ contract CombatSystemTest is PrimodiumTest {
 
   bytes32 fleetEntity;
 
+  uint256[] initResources = new uint256[](uint8(EResource.LENGTH));
+
   function setUp() public override {
     super.setUp();
     aliceEntity = addressToEntity(alice);
@@ -40,6 +42,10 @@ contract CombatSystemTest is PrimodiumTest {
     bobHomeAsteroid = spawn(bob);
     eveEntity = addressToEntity(eve);
     eveHomeAsteroid = spawn(eve);
+
+    for (uint8 i = 0; i < uint8(EResource.LENGTH); i++) {
+      initResources[i] = ResourceCount.get(aliceHomeAsteroid, i);
+    }
   }
 
   /* --------------------------------- SUCCEED -------------------------------- */
@@ -276,19 +282,12 @@ contract CombatSystemTest is PrimodiumTest {
     );
     for (uint8 i = 0; i < requiredResources.resources.length; i++) {
       if (P_IsUtility.get(requiredResources.resources[i])) {
-        if (requiredResources.resources[i] == uint8(EResource.U_Housing)) {
-          assertEq(
-            ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]) - housingBefore,
-            requiredResources.amounts[i] * casualtyCount,
-            "utility should have been refunded housing to owner asteroid when fleet took casualties"
-          );
-        } else {
-          assertEq(
-            ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]),
-            requiredResources.amounts[i] * casualtyCount,
-            "utility should have been refunded to owner asteroid when fleet took casualties"
-          );
-        }
+        assertEq(
+          ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]) -
+            initResources[requiredResources.resources[i]],
+          requiredResources.amounts[i] * casualtyCount,
+          "utility should have been refunded to owner soace asteroid when fleet took casualties"
+        );
       }
     }
 
