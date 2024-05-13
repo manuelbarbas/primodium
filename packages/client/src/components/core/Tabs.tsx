@@ -6,7 +6,7 @@ interface TabProps {
   children?: ReactNode;
   defaultIndex?: number;
   className?: string;
-  onChange?: () => void;
+  onChange?: (index: number | undefined) => void;
 }
 
 interface IndexContextValue {
@@ -77,11 +77,16 @@ export const Tabs: FC<TabProps> & {
       return;
     }
 
-    if (onChange) onChange();
+    if (onChange) onChange(currentIndex);
   }, [currentIndex, onChange]);
 
   return (
-    <IndexContext.Provider value={{ index: currentIndex, setIndex: setCurrentIndex }}>
+    <IndexContext.Provider
+      value={{
+        index: currentIndex,
+        setIndex: setCurrentIndex,
+      }}
+    >
       <div className={`${className}`}>{children}</div>
     </IndexContext.Provider>
   );

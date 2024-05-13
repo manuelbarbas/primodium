@@ -84,7 +84,7 @@ export const Card = forwardRef<
           : {})}
         className={`card bg-neutral pixel-border p-3 bg-opacity-90 relative pointer-events-auto transition-all duration-100 ease-linear ${className} `}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent to-neutral" />
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent to-neutral -z-10" />
         <div className="absolute inset-0 pixel-border" />
         <div className="absolute inset-0 pixel-border blur-[2px] opacity-50 bg-blend-screen" />
 
@@ -151,8 +151,8 @@ interface GlassProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<
 export const GlassCard = forwardRef<HTMLDivElement, GlassProps>(({ children, className, direction }, ref) => {
   return (
     <div ref={ref} className={cn(glassProps({ direction, className }))}>
-      <div className="absolute inset-0 bg-gradient-to-br from-secondary/25 to-secondary/15" />
       {children}
+      <div className="absolute inset-0 bg-gradient-to-br -z-10 from-secondary/25 to-secondary/15" />
     </div>
   );
 });

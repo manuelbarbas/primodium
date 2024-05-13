@@ -25,6 +25,14 @@ contract AllianceSystem is PrimodiumSystem {
     return LibAlliance.create(_player(), name, allianceInviteMode);
   }
 
+  function setAllianceName(bytes32 entity, bytes32 newName) public {
+    LibAlliance.setName(_player(), entity, newName);
+  }
+
+  function setAllianceInviteMode(bytes32 entity, EAllianceInviteMode allianceInviteMode) public {
+    LibAlliance.setInviteMode(_player(), entity, allianceInviteMode);
+  }
+
   /**
    * @dev leave an alliance
    */

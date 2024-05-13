@@ -180,6 +180,23 @@ library LibAlliance {
     }
   }
 
+  function setName(bytes32 playerEntity, bytes32 entity, bytes32 newName) internal {
+    require(
+      PlayerAlliance.getRole(playerEntity) == uint8(EAllianceRole.Owner),
+      "[Alliance] Only owner can change invite mode"
+    );
+
+    Alliance.setName(entity, newName);
+  }
+
+  function setInviteMode(bytes32 playerEntity, bytes32 entity, EAllianceInviteMode allianceInviteMode) internal {
+    require(
+      PlayerAlliance.getRole(playerEntity) == uint8(EAllianceRole.Owner),
+      "[Alliance] Only owner can change invite mode"
+    );
+
+    Alliance.setInviteMode(entity, uint8(allianceInviteMode));
+  }
   /**
    * @dev invite a player to an alliance
    * @param playerEntity The entity ID of the player.
