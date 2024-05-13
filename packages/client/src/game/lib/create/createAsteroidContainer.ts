@@ -40,19 +40,18 @@ class AsteroidContainer extends Phaser.GameObjects.Container implements IPrimodi
       coord: this.coord,
       addEventHandlers: true,
     });
-    // console.log(asteroid);
 
     if (this.spawnsSecondary) initializeSecondaryAsteroids(this.id, this.coord);
+    if (!asteroid) return undefined;
 
-    // manually enter the actual asteroid into the scene if it's not already
-    if (asteroid && !asteroid.isSpawned()) asteroid.spawn();
-    // if (!asteroid?.active || !asteroid?.visible) {
-    //   asteroid?.setActive(true).setVisible(true);
-    //   this._scene.objects.manualIncrement();
-    // }
+    // we need to manually spawn and set the asteroid, since at this point (during `onEnterChunk`) the visible chunks were not yet updated
+    // meaning that it might not consider the asteroid visible yet, so it won't actually enter it
+    if (!asteroid.isSpawned()) asteroid.spawn();
+    asteroid.setActive(true).setVisible(true);
 
     // we don't need this object anymore: remove, destroy and decrement the count since it won't do it when exiting the chunk as it will not exist anymore
     this._scene.objects.remove(this.containerId, true, true);
+
     return asteroid;
   }
 
