@@ -1,5 +1,4 @@
 import { Entity } from "@latticexyz/recs";
-import { uuid } from "@latticexyz/utils";
 import { useState, useRef, useEffect } from "react";
 import { SecondaryCard, Card } from "src/components/core/Card";
 import { useMud } from "src/hooks";
@@ -11,6 +10,7 @@ import { AccountDisplay } from "src/components/shared/AccountDisplay";
 import { isPlayer } from "src/util/common";
 import { censorText } from "src/util/profanity";
 import { Loader } from "src/components/core/Loader";
+import { uuid } from "@/util/uuid";
 
 const COOLDOWN = 1.5;
 

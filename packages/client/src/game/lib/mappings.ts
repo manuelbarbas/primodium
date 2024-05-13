@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
+import { Animations, ResourceTilekeys, Sprites, Tilemaps } from "@primodiumxyz/assets";
 import { EntityType, Mode } from "src/util/constants";
 import { AsteroidRelationship, AsteroidSize, SceneKeys } from "./constants/common";
-import { ResourceTilekeys, Sprites, Animations, Tilemaps } from "@primodiumxyz/assets";
 
 export const EntityTypeToResourceTilekey: Record<Entity, ResourceTilekeys> = {
   [EntityType.Iron]: ResourceTilekeys.Iron,

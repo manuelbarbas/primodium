@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 
 export type ContractCoord = Coord & { parentEntity: Entity };
 

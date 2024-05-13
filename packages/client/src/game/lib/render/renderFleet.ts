@@ -1,19 +1,19 @@
 import { Fleet } from "@/game/lib/objects/Fleet";
 import { components } from "@/network/components";
-import { createObjectApi } from "@/game/api/objects";
 import { Entity } from "@latticexyz/recs";
-import { Scene } from "engine/types";
+import { PrimodiumScene } from "@/game/api/scene";
+import { isDomInteraction } from "@/util/canvas";
 
-export function renderFleet(args: { scene: Scene; entity: Entity }) {
+export function renderFleet(args: { scene: PrimodiumScene; entity: Entity }) {
   const { scene, entity } = args;
   //TODO: replace with hanks fancy api stuff
-  const objects = createObjectApi(scene);
-  const fleet = objects.fleet.get(entity);
+  const fleet = scene.objects.fleet.get(entity);
 
   if (fleet) return fleet;
 
   const newFleet = new Fleet({ id: entity, scene, coord: { x: 0, y: 0 } })
     .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
+      if (isDomInteraction(pointer, "up")) return;
       if (pointer.downElement.nodeName !== "CANVAS") return;
 
       components.SelectedFleet.set({

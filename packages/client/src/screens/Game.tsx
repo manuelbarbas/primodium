@@ -3,10 +3,10 @@ import { useMud } from "src/hooks/useMud";
 
 import { usePlayerAsteroids } from "@/hooks/usePlayerAsteroids";
 import { YouDied } from "@/screens/YouDied";
-import { Primodium, initPrimodium } from "@game/api";
+import { PrimodiumGame, initGame } from "@game/api";
 import { Progress } from "src/components/core/Progress";
+import { GameProvider } from "src/hooks/providers/GameProvider";
 import { GameHUD } from "@/components/hud";
-import { PrimodiumProvider } from "src/hooks/providers/PrimodiumProvider";
 import { WidgetProvider } from "src/hooks/providers/WidgetProvider";
 import { CommandBackgroundEffect } from "@/screens/CommandBackgroundEffect";
 
@@ -14,29 +14,33 @@ const params = new URLSearchParams(window.location.search);
 
 export const Game = () => {
   const mud = useMud();
-  const [primodium, setPrimodium] = useState<Primodium | null>(null);
+  const [game, setGame] = useState<PrimodiumGame | null>(null);
 
   const destroy = async () => {
-    if (primodium === null) return;
-    setPrimodium(null);
+    if (game === null) return;
+    setGame(null);
     await new Promise((resolve) => setTimeout(resolve, 100));
-    primodium?.destroy();
+    game?.destroy();
+    const phaserContainer = document.getElementById("phaser-container");
+    for (const child of Array.from(phaserContainer?.children ?? [])) {
+      phaserContainer?.removeChild(child);
+    }
   };
 
   const init = async () => {
     try {
       await destroy();
-      const pri = await initPrimodium(mud, params.get("version") ? params.get("version")! : "🔥");
-      setPrimodium(pri);
+      const pri = await initGame(params.get("version") ? params.get("version")! : "🔥");
+      setGame(pri);
     } catch (e) {
       console.log(e);
     }
   };
 
   useEffect(() => {
-    if (!primodium) return;
-    primodium.runSystems(mud);
-  }, [mud, primodium]);
+    if (!game) return;
+    game.runSystems(mud);
+  }, [mud, game]);
 
   useEffect(() => {
     init();
@@ -49,8 +53,7 @@ export const Game = () => {
   const isDead = usePlayerAsteroids(mud.playerAccount.entity).length === 0;
   return (
     <div>
-      <CommandBackgroundEffect />
-      {!primodium && (
+      {!game && (
         <div className="flex flex-col items-center justify-center h-screen text-white gap-4">
           <p className="text-lg text-white">
             <span className="">Loading game</span>
@@ -61,14 +64,15 @@ export const Game = () => {
       )}
 
       {/* cannot unmount. needs to be visible for phaser to attach to DOM element */}
-      <div id="game-container" className="relative">
-        <div id="phaser-container" className="cursor-pointer screen-container z-10">
-          {!!primodium && (
-            <PrimodiumProvider {...primodium}>
+      <div id="game-container" className="screen-container">
+        <CommandBackgroundEffect />
+        <div id="phaser-container" className="cursor-pointer screen-container absolute">
+          {!!game && (
+            <GameProvider {...game}>
               <WidgetProvider>
                 {isDead && <YouDied />} <GameHUD />
               </WidgetProvider>
-            </PrimodiumProvider>
+            </GameProvider>
           )}
         </div>
       </div>

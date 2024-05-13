@@ -1,15 +1,15 @@
-import { CoordMap } from "@latticexyz/utils";
 import { ChunkManager } from "./ChunkManager";
-import { pixelToChunkCoord } from "@latticexyz/phaserx";
 import { createCamera } from "./createCamera";
 import { Coord } from "../../types";
+import { CoordMap } from "../util/coordMap";
+import { pixelToChunkCoord } from "../util/coords";
 
 type Spawnable = {
   spawn(): void;
   isSpawned(): boolean;
   setVisible(visible: boolean): Phaser.GameObjects.GameObject;
 };
-type PrimodiumGameObject = (
+export type PrimodiumGameObject = (
   | Phaser.GameObjects.Sprite
   | Phaser.GameObjects.Image
   | Phaser.GameObjects.Container

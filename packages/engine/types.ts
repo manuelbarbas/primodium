@@ -1,5 +1,4 @@
 import { GameObjectClasses } from "./constants";
-import { Animation } from "@latticexyz/phaserx/src/types";
 import { createGame } from "./lib/core/createGame";
 import { createScene } from "./lib/core/createScene";
 
@@ -50,10 +49,22 @@ export type GameConfig = Phaser.Types.Core.GameConfig & {
 export type LayerConfig = Record<string, { depth: number }>;
 export type TilemapConfig = Record<string, LayerConfig>;
 
+export type Animation = {
+  key: string;
+  assetKey: string;
+  startFrame: number;
+  endFrame: number;
+  frameRate: number;
+  // Number of times to repeat the animation, -1 for infinity
+  repeat: number;
+  prefix?: string;
+  suffix?: string;
+};
+
 export interface SceneConfig {
   key: string;
   camera: CameraConfig;
-  animations?: Animation<any>[];
+  animations?: Animation[];
   cullingChunkSize: number;
   tilemap: {
     tileWidth: number;
@@ -92,6 +103,13 @@ export type GameObjectFunction<Type extends keyof GameObjectTypes> = (
   delta: number
 ) => Promise<void> | void;
 
+export type Area = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
 export type Coord = {
   x: number;
   y: number;
@@ -100,3 +118,4 @@ export type Coord = {
 export type PixelCoord = Coord;
 export type TileCoord = Coord;
 export type ChunkCoord = Coord;
+export type WorldCoord = Coord;

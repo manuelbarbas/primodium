@@ -2,7 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMud } from "src/hooks";
 import { useAccount } from "src/hooks/useAccount";
-import { usePrimodium } from "src/hooks/usePrimodium";
+import { useGame } from "src/hooks/useGame";
 import { components } from "src/network/components";
 import { getRockRelationship } from "src/util/asteroid";
 import { entityToColor } from "src/util/color";
@@ -13,21 +13,24 @@ export const AccountDisplay: React.FC<{
   player: Entity | undefined;
   className?: string;
   noColor?: boolean;
+  overridePlayerColor?: string;
   showAddress?: boolean;
+  showAlliance?: boolean;
   raw?: boolean;
-}> = ({ player, className, noColor, showAddress, raw = false }) => {
-  const primodium = usePrimodium();
+}> = ({ player, className, noColor, overridePlayerColor, showAddress, showAlliance = true, raw = false }) => {
+  const game = useGame();
   const { playerAccount } = useMud();
   const playerEntity = player ?? singletonEntity;
 
   const myHomeAsteroid = components.Home.use(playerAccount.entity)?.value;
   const playerHomeAsteroid = components.Home.use(playerEntity)?.value;
   const { allianceName, loading, address, linkedAddress } = useAccount(playerEntity, showAddress);
-  const playerColor = RockRelationshipColors[getRockRelationship(playerEntity, myHomeAsteroid as Entity)];
+  const playerColor =
+    overridePlayerColor ?? RockRelationshipColors[getRockRelationship(playerEntity, myHomeAsteroid as Entity)];
 
   const Content = ({ className = "" }: { className?: string }) => (
     <div className={`w-full flex gap-2 ${className}`}>
-      {allianceName && (
+      {allianceName && showAlliance && (
         <div className="font-bold text-accent" style={{ color: noColor ? "auto" : entityToColor(player) }}>
           [{allianceName.toUpperCase()}]
         </div>
@@ -56,7 +59,7 @@ export const AccountDisplay: React.FC<{
         }
 
         components.SelectedRock.set({ value: playerHomeAsteroid as Entity });
-        primodium.api("STARMAP").camera.pan({ x: playerHomeAsteroidPosition.x, y: playerHomeAsteroidPosition.y });
+        game.STARMAP.camera.pan({ x: playerHomeAsteroidPosition.x, y: playerHomeAsteroidPosition.y });
       }}
       className={`p-0 uppercase inline-flex font-bold gap-1 ${className} ${loading ? "animate-pulse" : ""}`}
     >

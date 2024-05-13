@@ -8,6 +8,7 @@ import {
   namespaceWorld,
 } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+
 import { Scene } from "engine/types";
 import { toast } from "react-toastify";
 import { components } from "@/network/components";
@@ -20,7 +21,7 @@ import { DepthLayers } from "@/game/lib/constants/common";
 import { Action } from "@/util/constants";
 import { isDomInteraction } from "@/util/canvas";
 
-export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scene) => {
+export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: PrimodiumScene) => {
   if (pointer?.rightButtonDown()) {
     components.SelectedAction.remove();
     return;
@@ -38,7 +39,7 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scen
   const validPlacement = validateBuildingPlacement(tileCoord, buildingPrototype, activeRock, selectedBuilding);
 
   if (!validPlacement) {
-    toast.error("Cannot place building here");
+    scene.notify("error", "Cannot place building here");
     scene.camera.phaserCamera.shake(200, 0.001);
     return;
   }
@@ -51,7 +52,7 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scen
 };
 
 //TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
-export const renderBuildingMoveTool = (scene: Scene, mud: MUD) => {
+export const renderBuildingMoveTool = (scene: PrimodiumScene, mud: MUD) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   let placementBuilding: Building | undefined;

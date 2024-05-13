@@ -1,34 +1,28 @@
-import { addCoords, tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { useMemo } from "react";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { Card } from "@/components/core/Card";
+import { Marker } from "@/components/core/Marker";
+import { BlueprintInfo } from "@/components/hud/asteroid/blueprints/BlueprintInfo";
+import { useGame } from "@/hooks/useGame";
 import { components } from "@/network/components";
 import { getBuildingDimensions } from "@/util/building";
-import { Marker } from "@/components/core/Marker";
-import { Card } from "@/components/core/Card";
-import { BlueprintInfo } from "@/components/hud/asteroid/blueprints/BlueprintInfo";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { useMemo } from "react";
 
 export const BlueprintInfoMarker = () => {
-  const primodium = usePrimodium();
+  const game = useGame();
   const building = components.SelectedBuilding.use()?.value;
   const hoverCoord = components.HoverTile.use();
   const buildingType = components.BuildingType.use(building)?.value;
   const dimensions = useMemo(() => getBuildingDimensions(building ?? singletonEntity), [building]);
 
   const coord = useMemo(() => {
-    const {
-      scene: { getConfig },
-    } = primodium.api();
-    const config = getConfig("ASTEROID");
+    const { utils } = game.ASTEROID;
 
-    const pixelCoord = tileCoordToPixelCoord(
-      addCoords(hoverCoord ?? { x: 0, y: 0 }, { x: dimensions.width / 2, y: 1 }),
-      config.tilemap.tileWidth,
-      config.tilemap.tileHeight
+    const pixelCoord = utils.tileCoordToPixelCoord(
+      utils.addCoords(hoverCoord ?? { x: 0, y: 0 }, { x: dimensions.width / 2, y: 1 })
     );
 
     return { x: pixelCoord.x, y: -pixelCoord.y };
-  }, [hoverCoord, primodium, dimensions]);
+  }, [hoverCoord, game, dimensions]);
 
   if (!building || !hoverCoord || buildingType) return null;
 

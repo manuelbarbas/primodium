@@ -1,12 +1,14 @@
-import { Coord, Scene, TileCoord } from "engine/types";
+import Phaser from "phaser";
+import { Coord, TileCoord } from "engine/types";
 import { Fleet } from "../Fleet";
+import { PrimodiumScene } from "@/game/api/scene";
 
 const WIDTH = 150;
 const HEIGHT = 100;
 const MARGIN = 5;
 const COL = 5;
 export class FleetsContainer extends Phaser.GameObjects.Container {
-  private _scene: Scene;
+  private _scene: PrimodiumScene;
   private coord: TileCoord;
   private orbitRing: Phaser.GameObjects.Graphics;
   private fleetsContainer: Phaser.GameObjects.Container;
@@ -15,7 +17,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
   private paused = false;
   private inOrbitView = true;
 
-  constructor(scene: Scene, coord: Coord) {
+  constructor(scene: PrimodiumScene, coord: Coord) {
     super(scene.phaserScene, coord.x, coord.y);
     this.orbitRing = new Phaser.GameObjects.Graphics(scene.phaserScene)
       .lineStyle(2, 0x6ad9d9, 0.1)
@@ -34,6 +36,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
       duration: 1000 * 30,
       ease: (t: number) => Phaser.Math.Easing.Stepped(t, 120),
       repeat: -1,
+      paused: true,
       onUpdate: (tween) => {
         if (this.prevRotationVal === tween.getValue()) return;
         this.prevRotationVal = tween.getValue();
@@ -189,6 +192,15 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
 
   spawn() {
     this.scene.add.existing(this);
+    return this;
+  }
+
+  setActive(value: boolean): this {
+    if (value && !this.paused) this.rotationTween.play();
+    else this.rotationTween.pause();
+
+    super.setActive(value);
+
     return this;
   }
   destroy() {

@@ -1,6 +1,10 @@
-import { Game } from "engine/types";
+import { SceneKeys, Scenes } from "@/game/lib/constants/common";
+import { Game, Scene } from "engine/types";
 
-export function createGameApi(game: Game) {
+export type GlobalApi = ReturnType<typeof createGlobalApi>;
+
+//api pertaining
+export function createGlobalApi(game: Game) {
   function setResolution(width: number, height: number) {
     const { phaserGame, sceneManager } = game;
 
@@ -41,9 +45,44 @@ export function createGameApi(game: Game) {
     return game.phaserGame.config;
   }
 
+  function getScene(scene: SceneKeys) {
+    return game.sceneManager.scenes.get(scene);
+  }
+
+  async function transitionToScene(
+    origin: SceneKeys,
+    target: SceneKeys,
+    duration = 0,
+    onTransitionStart?: (originScene: Scene, targetScene: Scene) => undefined,
+    onTransitionEnd?: (originScene: Scene, targetScene: Scene) => undefined
+  ) {
+    if (origin === target) return;
+
+    await game.sceneManager.transitionToScene(origin, target, duration, onTransitionStart, onTransitionEnd);
+  }
+
+  function enableGlobalInput() {
+    game.sceneManager.scenes.forEach((scene) => {
+      scene.input.enableInput();
+    });
+  }
+
+  function disableGlobalInput() {
+    game.sceneManager.scenes.forEach((scene) => {
+      if (scene.config.key === Scenes.UI) return;
+      scene.input.disableInput();
+    });
+  }
+
   return {
+    dispose: game.dispose,
+    createScene: game.sceneManager.createScene,
     setResolution,
     setTarget,
     getConfig,
+    transitionToScene,
+    getScene,
+    enableGlobalInput,
+    disableGlobalInput,
   };
 }

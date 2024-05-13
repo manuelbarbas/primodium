@@ -23,12 +23,14 @@ import { hashEntities } from "@/util/encode";
 import { isDomInteraction } from "@/util/canvas";
 import { EMap } from "contracts/config/enums";
 
-export const renderBuilding = (scene: Scene) => {
+//TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
+export const renderBuilding = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const spectateWorld = namespaceWorld(world, "game_spectate");
-  const objects = createObjectApi(scene);
+  const { objects } = scene;
 
-  defineComponentSystem(systemsWorld, components.ActiveRock, ({ value }) => {
+  defineComponentSystem(systemsWorld, components.ActiveRock, async ({ value }) => {
+    //sleep 1 second to allow for building to be removed
     if (!value[0] || value[0]?.value === value[1]?.value) return;
 
     const activeRock = value[0]?.value as Entity;
@@ -120,7 +122,6 @@ export const renderBuilding = (scene: Scene) => {
       const tilePosition = getBuildingBottomLeft(origin, buildingType);
 
       const building = new Building({ id: entity, scene, buildingType, coord: tilePosition })
-        // .spawn()
         .setLevel(components.Level.get(entity)?.value ?? 1n)
         .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
           if (pointer.getDuration() > 250 || isDomInteraction(pointer, "up")) return;

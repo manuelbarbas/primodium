@@ -1,6 +1,6 @@
 import { resourceToHex } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 import { DECIMALS } from "contracts/config/constants";
 import { EBuilding, EObjectives, EPointType, EResource, EUnit } from "contracts/config/enums";
 import { encodeEntity } from "src/util/encode";
@@ -70,7 +70,10 @@ export enum TransactionQueueType {
   Demolish,
   Move,
   ClaimObjective,
+  CreateAlliance,
   JoinAlliance,
+  UpdateAllianceAccess,
+  UpdateAllianceName,
   RequestToJoin,
   KickPlayer,
   Promote,
@@ -78,7 +81,9 @@ export enum TransactionQueueType {
   AcceptRequest,
   RejectRequest,
   Invite,
+  RevokeInvite,
   DeclineInvite,
+  LeaveAlliance,
   Toggle,
   Access,
   Attack,

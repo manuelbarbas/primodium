@@ -1,10 +1,9 @@
-// import { SyncState } from "@latticexyz/network";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { toast } from "react-toastify";
-import { components } from "../components";
-import { world } from "../world";
+import { PrimodiumScene } from "@/game/api/scene";
+import { world } from "@/network/world";
+import { components } from "@/network/components";
 
-export function setupMoveNotifications() {
+export function setupMoveNotifications(scene: PrimodiumScene) {
   const systemWorld = namespaceWorld(world, "systems");
   const { FleetMovement, BlockNumber, Position } = components;
   const fleetTransitQueue = new Map<Entity, bigint>();
@@ -29,7 +28,7 @@ export function setupMoveNotifications() {
     const seconds = (arrival.arrivalTime - now) % 60n;
     const output = minutes > 0 ? `${minutes} minute(s)` : `${seconds} seconds`;
 
-    if (arrival.arrivalTime > now) toast.info(`Your fleet is en route and will arrive in ${output}.`);
+    if (arrival.arrivalTime > now) scene.notify("info", `Your fleet is en route and will arrive in ${output}.`);
     fleetTransitQueue.set(entity, arrival.arrivalTime);
   });
 
@@ -43,7 +42,7 @@ export function setupMoveNotifications() {
 
       const destination = Position.get(arrival.destination as Entity);
       if (now > arrivalTime) {
-        toast.info(`Your fleet has arrived at [${destination?.x ?? 0}, ${destination?.y ?? 0}].`);
+        scene.notify("info", `Your fleet has arrived at [${destination?.x ?? 0}, ${destination?.y ?? 0}].`);
 
         fleetTransitQueue.delete(entityId);
       }

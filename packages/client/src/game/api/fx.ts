@@ -1,6 +1,6 @@
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Scene, Coord } from "engine/types";
 import { DepthLayers } from "../lib/constants/common";
+import { tileCoordToPixelCoord } from "engine/lib/util/coords";
 
 export const createFxApi = (scene: Scene) => {
   function outline(

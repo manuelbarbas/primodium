@@ -1,37 +1,28 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { Scene } from "engine/types";
-import { toast } from "react-toastify";
-import { createCameraApi } from "src/game/api/camera";
-import { createFxApi } from "src/game/api/fx";
-import { createObjectApi } from "src/game/api/objects";
+import { PrimodiumScene } from "@/game/api/scene";
 import { getPlayerOwner } from "src/hooks/usePlayerOwner";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getDistance } from "src/util/common";
 import { entityToFleetName, entityToRockName } from "src/util/name";
 
-export const renderBattle = (scene: Scene) => {
+export const renderBattle = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const { BattleResult } = components;
 
-  /* Can we pass in the custom scene instead of building it again here? */
-  const fx = createFxApi(scene);
-  const camera = createCameraApi(scene);
-  const objects = createObjectApi(scene);
-
   const attackAnimation = async (entity: Entity, attacker: Entity, defender: Entity, attackerWinner?: boolean) => {
-    const attackerPosition = objects.fleet.get(attacker)?.getTileCoord() ?? { x: 0, y: 0 };
+    const attackerPosition = scene.objects.fleet.get(attacker)?.getTileCoord() ?? { x: 0, y: 0 };
 
     const isFleet = components.IsFleet.get(defender)?.value;
     const position = isFleet
-      ? objects.fleet.get(defender)?.getTileCoord() ?? { x: 0, y: 0 }
+      ? scene.objects.fleet.get(defender)?.getTileCoord() ?? { x: 0, y: 0 }
       : components.Position.get(defender);
 
     const playerEntity = components.Account.get()?.value;
     const attackerRock = components.FleetMovement.get(attacker)?.destination as Entity;
     if (!position || !playerEntity) return;
     components.BattleRender.set({ value: attackerRock });
-    const { emitExplosion, fireMissile } = fx;
+    const { emitExplosion, fireMissile } = scene.fx;
     const offsetMs = 50;
     const numMissiles = 5;
     const distance = getDistance(attackerPosition, position);
@@ -54,7 +45,7 @@ export const renderBattle = (scene: Scene) => {
       const defenderPlayer = getPlayerOwner(defender);
       const attackerPlayer = getPlayerOwner(attacker);
       if (defenderPlayer === playerEntity || attackerPlayer === playerEntity) {
-        const { shake } = camera;
+        const { shake } = scene.camera;
         shake();
         battleNotification({ entity });
       }
@@ -103,16 +94,18 @@ export const renderBattle = (scene: Scene) => {
     if (defenderRock && attackerRockOwner === playerEntity) {
       const defenderName = defenderIsFleet ? entityToFleetName(battle.defender) : entityToRockName(defenderRock);
       battle.attacker === winner
-        ? toast.success(`Victory! You attacked ${defenderName} and won! View details in the battle report.`)
-        : toast.error(`Defeat! You attacked ${defenderName} and lost! View details in the battle report.`);
+        ? scene.notify("success", `Victory! You attacked ${defenderName} and won! View details in the battle report.`)
+        : scene.notify("error", `Defeat! You attacked ${defenderName} and lost! View details in the battle report.`);
     } else if (attackerRock && defenderRockOwner === playerEntity) {
       battle.defender === winner
-        ? toast.success(
+        ? scene.notify(
+            "success",
             `Victory! You defended against ${entityToFleetName(
               battle.attacker
             )} and won! View details in the battle report.`
           )
-        : toast.error(
+        : scene.notify(
+            "error",
             `Defeat! You defended against ${entityToFleetName(
               battle.attacker
             )} and lost! View details in the battle report .`

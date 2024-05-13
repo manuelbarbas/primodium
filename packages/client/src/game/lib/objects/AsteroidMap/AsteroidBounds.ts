@@ -1,17 +1,18 @@
-import { Scene } from "engine/types";
+import Phaser from "phaser";
 import { Bounds, Dimensions, getRelativeCoord } from "./helpers";
 import { DepthLayers } from "../../constants/common";
+import { PrimodiumScene } from "@/game/api/scene";
 import { Animations, Assets, Sprites, Tilesets } from "@primodiumxyz/assets";
 
 export class AsteroidBounds {
-  private scene: Scene;
+  private scene: PrimodiumScene;
   private currentBounds?: Bounds;
   private maxBounds?: Bounds;
   private boundsMap?: Phaser.Tilemaps.Tilemap;
   private asteroidDimensions: Dimensions;
   private drones: Phaser.GameObjects.Sprite[] = [];
 
-  constructor(scene: Scene, asteroidDimensions: Dimensions) {
+  constructor(scene: PrimodiumScene, asteroidDimensions: Dimensions) {
     this.scene = scene;
     this.asteroidDimensions = asteroidDimensions;
     this.drones = [
@@ -233,8 +234,6 @@ export class AsteroidBounds {
     this.drones.forEach((drone) => {
       this.scene.phaserScene.lights.addPointLight(drone.x, drone.y, 0x008b8b, 75, 0.015);
     });
-
-    nonBuildableLayer.postFX.addVignette(0.5, 0.5, 3, 1);
 
     return this;
   }
