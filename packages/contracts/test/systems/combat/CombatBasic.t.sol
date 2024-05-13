@@ -393,7 +393,6 @@ contract CombatSystemTest is PrimodiumTest {
     switchPrank(alice);
     world.Primodium__attack(aliceFleetEntity, bobHomeAsteroid);
     uint256 bobHpLost = bobTotalTargetHp - LibCombatAttributes.getHpWithAllies(bobHomeAsteroid);
-    console.log("Bob HP Lost: ", bobHpLost);
 
     uint256 cooldown = LibCombat.getCooldownTime(bobHpLost, false);
     switchPrank(creator);

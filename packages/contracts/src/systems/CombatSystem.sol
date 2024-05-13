@@ -137,7 +137,6 @@ contract CombatSystem is PrimodiumSystem {
 
     if (isAggressorFleet) {
       uint256 damageDealtToTarget = initTargetHp - LibCombatAttributes.getHpWithAllies(battleResult.targetEntity);
-      bool decrypt = UnitCount.get(battleResult.aggressorEntity, ColonyShipPrototypeId) > 0;
       CooldownEnd.set(
         battleResult.aggressorEntity,
         block.timestamp + LibCombat.getCooldownTime(damageDealtToTarget, decrypt)
