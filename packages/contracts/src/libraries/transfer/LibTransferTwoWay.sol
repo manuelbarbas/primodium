@@ -7,7 +7,7 @@ import { LibUnit } from "libraries/LibUnit.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
-import { LibTransfer } from "libraries/fleet/LibTransfer.sol";
+import { LibTransfer } from "libraries/transfer/LibTransfer.sol";
 
 /**
  * @title LibTransferTwoWay
@@ -51,11 +51,10 @@ library LibTransferTwoWay {
     }
   }
 
-  function _transferUnits(
+  function _transferUnitsSameOwner(
     bytes32 fromEntity,
     bytes32 toEntity,
     int256[] memory unitCounts,
-    bool sameOwner,
     bool fromIsFleet,
     bool toIsFleet
   ) private {
@@ -66,16 +65,53 @@ library LibTransferTwoWay {
       bool leftToRight = unitCounts[i] > 0;
       uint256 count = uint256(leftToRight ? unitCounts[i] : -unitCounts[i]);
 
-      if (!sameOwner && unitPrototypes[i] == ColonyShipPrototypeId) {
+      if (unitPrototypes[i] == ColonyShipPrototypeId) {
         LibTransfer.checkColonySlot(leftToRight ? toEntity : fromEntity, count);
       }
 
-      _transferUnit(fromEntity, unitPrototypes[i], count, fromIsFleet, !leftToRight, !sameOwner);
-      _transferUnit(toEntity, unitPrototypes[i], count, toIsFleet, leftToRight, !sameOwner);
+      _transferUnit(fromEntity, unitPrototypes[i], count, fromIsFleet, !leftToRight, false);
+      _transferUnit(toEntity, unitPrototypes[i], count, toIsFleet, leftToRight, false);
+    }
+  }
+
+  /**
+   * @notice  transfers units between different owners
+   * @dev     to avoid utility overflow, we subtract units first and then add units
+   */
+  function _transferUnitsDiffOwner(
+    bytes32 fromEntity,
+    bytes32 toEntity,
+    int256[] memory unitCounts,
+    bool fromIsFleet,
+    bool toIsFleet
+  ) private {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+
+    // only subtract units
+    for (uint8 i = 0; i < unitPrototypes.length; i++) {
+      if (unitCounts[i] == 0) continue;
+
+      bool leftToRight = unitCounts[i] > 0;
+      uint256 count = uint256(leftToRight ? unitCounts[i] : -unitCounts[i]);
+
+      if (unitPrototypes[i] == ColonyShipPrototypeId) {
+        LibTransfer.checkColonySlot(leftToRight ? toEntity : fromEntity, count);
+      }
+
+      if (leftToRight) _transferUnit(fromEntity, unitPrototypes[i], count, fromIsFleet, false, true);
+      else _transferUnit(toEntity, unitPrototypes[i], count, toIsFleet, false, true);
     }
 
-    _checkCargoAndEmpty(fromEntity, fromIsFleet);
-    _checkCargoAndEmpty(toEntity, toIsFleet);
+    // only add units
+    for (uint8 i = 0; i < unitPrototypes.length; i++) {
+      if (unitCounts[i] == 0) continue;
+
+      bool leftToRight = unitCounts[i] > 0;
+      uint256 count = uint256(leftToRight ? unitCounts[i] : -unitCounts[i]);
+
+      if (!leftToRight) _transferUnit(fromEntity, unitPrototypes[i], count, fromIsFleet, true, true);
+      else _transferUnit(toEntity, unitPrototypes[i], count, toIsFleet, true, true);
+    }
   }
 
   function _transferResources(
@@ -95,9 +131,6 @@ library LibTransferTwoWay {
       _transferResource(fromEntity, transportables[i], count, fromIsFleet, !leftToRight);
       _transferResource(toEntity, transportables[i], count, toIsFleet, leftToRight);
     }
-
-    _checkCargoAndEmpty(fromEntity, fromIsFleet);
-    _checkCargoAndEmpty(toEntity, toIsFleet);
   }
 
   function transferUnitsTwoWay(
@@ -108,13 +141,19 @@ library LibTransferTwoWay {
   ) internal {
     bool leftIsFleet = IsFleet.get(leftEntity);
     bool rightIsFleet = IsFleet.get(rightEntity);
-    _transferUnits(leftEntity, rightEntity, unitCounts, sameOwner, leftIsFleet, rightIsFleet);
+
+    if (sameOwner) _transferUnitsSameOwner(leftEntity, rightEntity, unitCounts, leftIsFleet, rightIsFleet);
+    else _transferUnitsDiffOwner(leftEntity, rightEntity, unitCounts, leftIsFleet, rightIsFleet);
+    _checkCargoAndEmpty(leftEntity, leftIsFleet);
+    _checkCargoAndEmpty(rightEntity, rightIsFleet);
   }
 
   function transferResourcesTwoWay(bytes32 leftEntity, bytes32 rightEntity, int256[] memory resourceCounts) internal {
     bool leftIsFleet = IsFleet.get(leftEntity);
     bool rightIsFleet = IsFleet.get(rightEntity);
     _transferResources(leftEntity, rightEntity, resourceCounts, leftIsFleet, rightIsFleet);
+    _checkCargoAndEmpty(leftEntity, leftIsFleet);
+    _checkCargoAndEmpty(rightEntity, rightIsFleet);
   }
 
   function transferUnitsAndResourcesTwoWay(
@@ -126,7 +165,11 @@ library LibTransferTwoWay {
   ) internal {
     bool leftIsFleet = IsFleet.get(leftEntity);
     bool rightIsFleet = IsFleet.get(rightEntity);
-    _transferUnits(leftEntity, rightEntity, unitCounts, sameOwner, leftIsFleet, rightIsFleet);
+    if (sameOwner) _transferUnitsSameOwner(leftEntity, rightEntity, unitCounts, leftIsFleet, rightIsFleet);
+    else _transferUnitsDiffOwner(leftEntity, rightEntity, unitCounts, leftIsFleet, rightIsFleet);
+
     _transferResources(leftEntity, rightEntity, resourceCounts, leftIsFleet, rightIsFleet);
+    _checkCargoAndEmpty(leftEntity, leftIsFleet);
+    _checkCargoAndEmpty(rightEntity, rightIsFleet);
   }
 }

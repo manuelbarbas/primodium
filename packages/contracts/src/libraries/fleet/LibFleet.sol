@@ -7,7 +7,7 @@ import { IsFleet, IsFleetEmpty, GracePeriod, P_GracePeriod, P_Transportables, Fl
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
-import { LibTransfer } from "libraries/fleet/LibTransfer.sol";
+import { LibTransfer } from "libraries/transfer/LibTransfer.sol";
 import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";

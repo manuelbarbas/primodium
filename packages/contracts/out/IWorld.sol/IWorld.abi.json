@@ -1207,7 +1207,7 @@
     "name": "Primodium__setAllianceInviteMode",
     "inputs": [
       {
-        "name": "name",
+        "name": "entity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
@@ -1225,7 +1225,7 @@
     "name": "Primodium__setAllianceName",
     "inputs": [
       {
-        "name": "name",
+        "name": "entity",
         "type": "bytes32",
         "internalType": "bytes32"
       },
