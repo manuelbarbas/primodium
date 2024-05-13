@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { tileCoordToPixelCoord } from "engine/lib/util/coords";
 import { Coord, Scene } from "engine/types";
 import { components } from "@/network/components";
 import { getBuildingDimensions } from "@/util/building";
