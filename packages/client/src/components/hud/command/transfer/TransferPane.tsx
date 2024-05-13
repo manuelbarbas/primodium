@@ -23,6 +23,7 @@ import { getEntityTypeName } from "src/util/common";
 import { getFleetStatsFromUnits } from "src/util/unit";
 import { Hex } from "viem";
 import { FaExclamationTriangle } from "react-icons/fa";
+import { getPlayerOwner } from "@/hooks/usePlayerOwner";
 
 export const TransferPane = (props: {
   side: "left" | "right";
@@ -61,12 +62,16 @@ export const _TransferPane = (props: {
   const selectedRock = components.SelectedRock.use()?.value;
   const newFleet = props.entity === "newFleet";
   const isFleet = newFleet || components.IsFleet.has(props.entity as Entity);
+  const ownerRock = isFleet
+    ? !newFleet
+      ? components.OwnedBy.get(props.entity as Entity)?.value
+      : selectedRock
+    : props.entity;
   const Header = useMemo(() => {
     if (!isFleet && props.entity !== "newFleet") {
       return <AsteroidCard entity={props.entity} />;
     }
     const data = { title: "New Fleet", attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
-    const ownerRock = !newFleet ? components.OwnedBy.get(props.entity as Entity)?.value : selectedRock;
 
     if (!ownerRock) return <></>;
 
@@ -101,7 +106,7 @@ export const _TransferPane = (props: {
   useEffect(() => {
     const { disabled, submitMessage } = checkErrors(
       props.entity,
-      selectedRock,
+      ownerRock as Entity | undefined,
       deltas,
       props.unitCounts,
       props.resourceCounts,
@@ -118,10 +123,22 @@ export const _TransferPane = (props: {
       setHovering("right");
     }
   };
+  const playerOwner = newFleet ? undefined : getPlayerOwner(props.entity as Entity);
+  const playerEntity = mud.playerAccount.entity;
+
+  const onSelect = (entity: Entity, count: bigint) => {
+    if (props.entity !== "newFleet" && playerOwner !== playerEntity) return;
+    if (moving !== null) return;
+    setMoving({ side: props.side, entity, count });
+  };
+
   return (
-    <Card noDecor className={cn("w-full h-full relative", hovering === props.side ? "ring ring-secondary" : "")}>
+    <Card noDecor className={cn("w-full h-full relative")}>
       <div
-        className="grid grid-rows-[10rem_1fr] gap-2 h-full overflow-y-auto scrollbar"
+        className={cn(
+          "grid grid-rows-[10rem_1fr] gap-2 h-full overflow-y-auto scrollbar",
+          hovering === props.side ? "border border-accent" : ""
+        )}
         onMouseLeave={() => setHovering(null)}
         onMouseOver={onMouseOver}
       >
@@ -146,12 +163,8 @@ export const _TransferPane = (props: {
                 const [unit, count] = [...props.unitCounts.entries()][index];
                 const delta = deltas?.get(unit) ?? 0n;
                 const onClick = (aux?: boolean) => {
-                  const countMoved = aux ? 1n : count;
-                  setMoving({
-                    side: props.side,
-                    entity: unit,
-                    count: countMoved,
-                  });
+                  const countMoved = aux ? parseResourceCount(unit, "1") : count;
+                  onSelect(unit, countMoved);
                 };
                 return (
                   <ResourceIcon
@@ -179,14 +192,8 @@ export const _TransferPane = (props: {
                 const [entity, count] = [...props.resourceCounts.entries()][index];
                 const delta = deltas?.get(entity) ?? 0n;
                 const onClick = (aux?: boolean) => {
-                  console.log({ moving });
-                  if (moving !== null) return;
                   const countMoved = aux ? parseResourceCount(entity, "1") : count;
-                  setMoving({
-                    side: props.side,
-                    entity: entity,
-                    count: countMoved,
-                  });
+                  onSelect(entity, countMoved);
                 };
                 return (
                   <ResourceIcon
@@ -242,9 +249,9 @@ const checkErrors = (
     const capacity = getFleetStatsFromUnits(unitCounts, owner).cargo;
     const cargo = [...resourceCounts.entries()].reduce((acc, [, count]) => acc + count, 0n);
     if (cargo > capacity) return { disabled: true, submitMessage: "Cargo capacity exceeded" };
-    return { disabled: false, submitMessage: "" };
+    if (entity === "newFleet") return { disabled: false, submitMessage: "" };
   }
-  //ASTEROID
+
   // make sure we have enough storage for housing
   const utilitiesAdded = [...deltas.entries()].reduce((acc, [unit, count]) => {
     if (!UnitStorages.has(unit)) return acc;
@@ -260,27 +267,31 @@ const checkErrors = (
     return acc;
   }, {} as Record<Entity, bigint>);
 
-  const notEnoughUtilities = Object.entries(utilitiesAdded).find(([resource, count]) => {
+  const notEnoughUtilities = Object.entries(utilitiesAdded).reduce((acc, [resource, count]) => {
     const { resourceCount } = getFullResourceCount(resource as Entity, asteroid);
-    console.log({ entity: getEntityTypeName(resource as Entity), count, resourceCount });
-    return count > resourceCount;
-  });
+    if (count <= resourceCount) return acc;
+    return [...acc, { entity: resource as Entity, resourceCount, count }];
+  }, [] as { entity: Entity; resourceCount: bigint; count: bigint }[]);
 
-  if (notEnoughUtilities)
+  if (notEnoughUtilities.length > 0)
     return {
       disabled: true,
-      submitMessage: `Not enough ${getEntityTypeName(notEnoughUtilities[0] as Entity)} storage`,
+      submitMessage: `Not enough ${getEntityTypeName(notEnoughUtilities[0].entity)} (-${notEnoughUtilities[0].count})`,
     };
 
-  // make sure we have enough storage for resources
-  const notEnoughResources = [...resourceCounts.entries()].find(([resource, count]) => {
-    const { resourceStorage } = getFullResourceCount(resource as Entity, asteroid);
-    return count > resourceStorage;
-  });
-  if (notEnoughResources)
-    return {
-      disabled: true,
-      submitMessage: `Not enough ${getEntityTypeName(notEnoughResources[0] as Entity)} storage`,
-    };
+  if (!isFleet) {
+    // make sure we have enough storage for resources
+    const notEnoughResources = [...resourceCounts.entries()].reduce((acc, [resource, count]) => {
+      const { resourceStorage } = getFullResourceCount(resource as Entity, asteroid);
+      if (count <= resourceStorage) return acc;
+      return [...acc, { entity: resource as Entity, resourceStorage, count }];
+    }, [] as { entity: Entity; resourceStorage: bigint; count: bigint }[]);
+
+    if (notEnoughResources.length > 0)
+      return {
+        disabled: true,
+        submitMessage: `Not enough ${getEntityTypeName(notEnoughResources[0].entity as Entity)} storage`,
+      };
+  }
   return { disabled: false, submitMessage: "" };
 };
