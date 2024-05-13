@@ -1,20 +1,17 @@
 import { Entity } from "@latticexyz/recs";
-import { toHex } from "viem";
 import { tileCoordToPixelCoord } from "engine/lib/util/coords";
 import { Coord } from "engine/types";
 import { IPrimodiumGameObject } from "@/game/lib/objects/interfaces";
 import { PrimodiumScene } from "@/game/api/scene";
 import { renderAsteroid } from "@/game/lib/render/renderAsteroid";
 import { initializeSecondaryAsteroids } from "@/game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
-import { hashEntities } from "@/util/encode";
 
 // Create a wrapper for the future asteroid at its coord, to prevent rendering it on launch and causing stutter
 // This will be called in the enter system (basically on initial load), create this basic object at the coords, which when
 // entering the visible chunk will be spawned, effectively creating the actual asteroid, which will be rendered as well
 // This is nothing more than delaying the creation of the asteroid to the first time it needs to be rendered
-class DeferredRenderContainer extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
+export class DeferredRenderContainer extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
   private id: Entity;
-  private containerId: Entity;
   private coord: Coord;
   private _scene: PrimodiumScene;
   private spawnsSecondary: boolean;
@@ -24,14 +21,12 @@ class DeferredRenderContainer extends Phaser.GameObjects.Container implements IP
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
     super(scene.phaserScene, pixelCoord.x, -pixelCoord.y);
 
-    const containerId = hashEntities(toHex("container"), id);
     this.id = id;
-    this.containerId = containerId;
     this.coord = coord;
     this._scene = scene;
     this.spawnsSecondary = spawnsSecondary;
 
-    this._scene.objects.asteroid.add(containerId, this, true);
+    this._scene.objects.deferredRenderContainer.add(id, this, true);
   }
 
   spawn() {
@@ -51,7 +46,7 @@ class DeferredRenderContainer extends Phaser.GameObjects.Container implements IP
     asteroid.setActive(true).setVisible(true);
 
     // we don't need this object anymore: remove, destroy and decrement the count since it won't do it when exiting the chunk as it will not exist anymore
-    this._scene.objects.asteroid.remove(this.containerId, true, true);
+    this._scene.objects.deferredRenderContainer.remove(this.id, true, true);
 
     return asteroid;
   }
