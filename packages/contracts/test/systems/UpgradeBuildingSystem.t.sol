@@ -47,6 +47,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
+  // TODO: PRI-644
   function testUpgradeBuildingFailRequiredMainBase() public {
     PositionData memory coord = getTilePosition(asteroidEntity, EBuilding.IronMine);
     bytes32 building = world.Primodium__build(EBuilding.IronMine, coord);
