@@ -205,8 +205,6 @@ contract CombatSystemTest is PrimodiumTest {
     //create fleet with 1 iron
     uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
 
-    uint256 housingBefore = ResourceCount.get(aliceHomeAsteroid, uint8(EResource.U_Housing));
-
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
