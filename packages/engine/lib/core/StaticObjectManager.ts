@@ -88,7 +88,7 @@ export class StaticObjectManager {
     };
   }
 
-  remove(id: string, destroy = false) {
+  remove(id: string, destroy = false, decrement = false) {
     const object = this.objMap.get(id);
     if (!object) return;
 
@@ -100,6 +100,7 @@ export class StaticObjectManager {
 
     this.objMap.delete(id);
     if (destroy) object.destroy();
+    if (decrement) this.count--;
   }
 
   get(id: string) {
