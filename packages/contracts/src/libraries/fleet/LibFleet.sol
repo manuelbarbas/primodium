@@ -31,7 +31,7 @@ library LibFleet {
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
   ) internal returns (bytes32 fleetEntity) {
-    require(ResourceCount.get(asteroidEntity, uint8(EResource.U_MaxFleets)) > 0, "[Fleet] asteroid has no max moves");
+    require(ResourceCount.get(asteroidEntity, uint8(EResource.U_MaxFleets)) > 0, "[Fleet] asteroid has no fleet slots");
     LibStorage.decreaseStoredResource(asteroidEntity, uint8(EResource.U_MaxFleets), 1);
     fleetEntity = LibEncode.getTimedHash(playerEntity, FleetKey);
     uint256 gracePeriodLength = (P_GracePeriod.getFleet() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();

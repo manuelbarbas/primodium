@@ -29,17 +29,12 @@ export const TransferPane = (props: {
   unitCounts: Map<Entity, bigint>;
   resourceCounts: Map<Entity, bigint>;
 }) => {
-  const { right, setRight, left, setLeft } = useTransfer();
+  const { right, left } = useTransfer();
   const entity = props.side === "right" ? right : left;
 
   return (
     <GlassCard className={`w-full h-full overflow-hidden`}>
-      {!entity && (
-        <TransferSelect
-          handleSelect={props.side === "left" ? setLeft : setRight}
-          showNewFleet={props.side === "right"}
-        />
-      )}
+      {!entity && <TransferSelect side={props.side} />}
       {!!entity && (
         <_TransferPane
           entity={entity}
@@ -231,6 +226,7 @@ const checkErrors = (
 ) => {
   const isFleet = entity === "newFleet" || components.IsFleet.has(entity as Entity);
   if (isFleet) {
+    if (unitCounts.size === 0) return { disabled: true, submitMessage: "No units on board" };
     const owner = (entity !== "newFleet" ? components.OwnedBy.get(entity)?.value : undefined) as Entity | undefined;
     const capacity = getFleetStatsFromUnits(unitCounts, owner).cargo;
     const cargo = [...resourceCounts.entries()].reduce((acc, [, count]) => acc + count, 0n);

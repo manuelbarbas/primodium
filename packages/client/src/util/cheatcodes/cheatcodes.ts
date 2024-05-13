@@ -81,7 +81,7 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
     vessel: EntityType.VesselCapacity,
     electricity: EntityType.Electricity,
     defense: EntityType.Defense,
-    moves: EntityType.FleetCount,
+    fleetCount: EntityType.FleetCount,
     encryption: EntityType.Encryption,
     colonyShipCapacity: EntityType.ColonyShipCapacity,
   };

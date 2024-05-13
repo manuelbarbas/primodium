@@ -133,10 +133,9 @@ const Transfer: React.FC = () => {
         amountMoved = bigIntMax(0n, resourceStorage < outcome ? resourceStorage - resourceCount : count);
 
         const newMap = new Map(deltas);
-        newMap.set(
-          moving.entity,
-          (deltas.get(moving.entity) ?? 0n) + (moving.side === "right" ? -amountMoved : amountMoved)
-        );
+        const newAmount = (deltas.get(moving.entity) ?? 0n) + (moving.side === "right" ? -amountMoved : amountMoved);
+        if (newAmount == 0n) newMap.delete(moving.entity);
+        else newMap.set(moving.entity, newAmount);
         setDeltas(newMap);
       }
       const formattedMin = parseResourceCount(moving.entity, "1");

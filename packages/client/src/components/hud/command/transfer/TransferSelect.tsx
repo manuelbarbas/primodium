@@ -12,16 +12,22 @@ import { Card } from "@/components/core/Card";
 import { useEffect } from "react";
 import { getPlayerOwner } from "@/hooks/usePlayerOwner";
 import { useGame } from "@/hooks/useGame";
+import { getFullResourceCount } from "@/util/resource";
+import { EntityType } from "@/util/constants";
 
-export const TransferSelect = <NewFleet extends boolean | undefined = false>({
-  showNewFleet = false,
-  handleSelect,
-}: {
-  showNewFleet?: NewFleet;
-  handleSelect: NewFleet extends true ? (entity: Entity | "newFleet") => void : (entity: Entity) => void;
-}) => {
-  const { left, right } = useTransfer();
+export const TransferSelect = ({ side }: { side: "left" | "right" }) => {
+  const { left, right, setLeft, setRight } = useTransfer();
+  const handleSelect = side === "left" ? setLeft : setRight;
+
   const playerEntity = useMud().playerAccount.entity;
+  const selectedRock = components.SelectedRock.use()?.value;
+  const playerOwnsRock = components.OwnedBy.use(selectedRock)?.value === playerEntity;
+  console.log({ selectedRock, playerOwnsRock });
+  const showNewFleet =
+    side === "right" && playerOwnsRock && getFullResourceCount(EntityType.FleetCount, selectedRock).resourceCount > 0n;
+
+  const fleetDisabled = left !== selectedRock;
+
   const activeEntities = [left, right];
   const hideNotOwned = activeEntities.some((entity) => {
     if (!entity) return false;
@@ -66,7 +72,7 @@ export const TransferSelect = <NewFleet extends boolean | undefined = false>({
         {showNewFleet && (
           <SelectOption
             entity={"newFleet"}
-            disabled={activeEntities.includes("newFleet")}
+            disabled={fleetDisabled}
             onSelect={() => handleSelectWithNewFleet("newFleet")}
           />
         )}

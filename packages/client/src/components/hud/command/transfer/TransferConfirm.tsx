@@ -9,6 +9,7 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 export const TransferConfirm = () => {
   const { left, right, deltas, setDeltas, errors } = useTransfer();
   const mud = useMud();
+  console.log(deltas.size);
   const disabled = !!errors["left"] || !!errors["right"] || deltas.size === 0;
 
   const handleSubmit = () => {
