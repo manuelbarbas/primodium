@@ -1,10 +1,11 @@
 import { Entity } from "@latticexyz/recs";
-import { tileCoordToPixelCoord } from "engine/lib/util/coords";
-import { Coord, Scene } from "engine/types";
 import { components } from "@/network/components";
+import { PrimodiumScene } from "@/game/api/scene";
+import { tileCoordToPixelCoord } from "engine/lib/util/coords";
+import { Coord } from "engine/types";
 import { getBuildingDimensions } from "@/util/building";
 
-export const triggerBuildAnim = (scene: Scene, entity: Entity, mapCoord: Coord) => {
+export const triggerPlacementAnim = (scene: PrimodiumScene, entity: Entity, mapCoord: Coord) => {
   const flare = (absoluteCoord: Coord, size = 1) => {
     scene.phaserScene.add
       .particles(absoluteCoord.x, absoluteCoord.y, "flare", {

@@ -6,6 +6,7 @@ import { getAssetKeyPair } from "./helpers";
 import { DepthLayers } from "../../constants/common";
 import { IPrimodiumGameObject } from "../interfaces";
 import { Assets } from "@primodiumxyz/assets";
+import { triggerPlacementAnim } from "@/game/lib/objects/Building/triggerPlacementAnim";
 
 export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGameObject {
   private id: Entity;
@@ -14,6 +15,7 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
   private _scene: PrimodiumScene;
   private level = 1n;
   private spawned = false;
+
   constructor(args: { id: Entity; scene: PrimodiumScene; buildingType: Entity; coord: Coord }) {
     const { id, scene, buildingType, coord } = args;
     const assetPair = getAssetKeyPair(1n, buildingType);
@@ -50,6 +52,10 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
 
   isSpawned() {
     return this.spawned;
+  }
+
+  triggerPlacementAnim() {
+    triggerPlacementAnim(this._scene, this.id, this.coord);
   }
 
   getCoord() {

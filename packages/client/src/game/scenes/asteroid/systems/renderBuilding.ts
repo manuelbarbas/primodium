@@ -12,11 +12,9 @@ import {
 
 import { components } from "@/network/components";
 import { world } from "@/network/world";
-import { Scene } from "engine/types";
 import { Building } from "@/game/lib/objects/Building";
 import { removeRaidableAsteroid } from "@/game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
-import { createObjectApi } from "@/game/api/objects";
-import { triggerBuildAnim } from "@/game/scenes/asteroid/systems/triggerBuildAnim";
+import { PrimodiumScene } from "@/game/api/scene";
 import { Action, EntityType } from "@/util/constants";
 import { getBuildingBottomLeft } from "@/util/building";
 import { hashEntities } from "@/util/encode";
@@ -84,7 +82,7 @@ export const renderBuilding = (scene: PrimodiumScene) => {
         const tileCoord = getBuildingBottomLeft(origin, buildingPrototype);
         building.setCoordPosition(tileCoord);
         // trigger anim since the building was just moved
-        triggerBuildAnim(scene, entity, tileCoord);
+        building.triggerPlacementAnim();
 
         return;
       }
@@ -152,7 +150,7 @@ export const renderBuilding = (scene: PrimodiumScene) => {
 
       // buildings.set(entity, building);
       // trigger the build anim if it's a new placement (not initializing)
-      if (initialBuildingsPlaced) triggerBuildAnim(scene, entity, tilePosition);
+      if (initialBuildingsPlaced) building.triggerPlacementAnim();
     };
 
     // handle selectedBuilding changes
