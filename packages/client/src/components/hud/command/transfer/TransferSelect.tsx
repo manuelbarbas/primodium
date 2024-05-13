@@ -22,9 +22,11 @@ export const TransferSelect = ({ side }: { side: "left" | "right" }) => {
   const playerEntity = useMud().playerAccount.entity;
   const selectedRock = components.SelectedRock.use()?.value;
   const playerOwnsRock = components.OwnedBy.use(selectedRock)?.value === playerEntity;
-  console.log({ selectedRock, playerOwnsRock });
   const showNewFleet =
-    side === "right" && playerOwnsRock && getFullResourceCount(EntityType.FleetCount, selectedRock).resourceCount > 0n;
+    side === "right" &&
+    selectedRock &&
+    playerOwnsRock &&
+    getFullResourceCount(EntityType.FleetCount, selectedRock).resourceCount > 0n;
 
   const fleetDisabled = left !== selectedRock;
 

@@ -7,15 +7,17 @@ import { Entity } from "@latticexyz/recs";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
 
 export const TransferConfirm = () => {
-  const { left, right, deltas, setDeltas, errors } = useTransfer();
+  const { left, right, setRight, deltas, setDeltas, errors } = useTransfer();
   const mud = useMud();
   console.log(deltas.size);
   const disabled = !!errors["left"] || !!errors["right"] || deltas.size === 0;
 
   const handleSubmit = () => {
     if (!left || !right) return;
-    if (right === "newFleet") createFleet(mud, left, deltas);
-    else transfer(mud, left, right, deltas);
+    if (right === "newFleet") {
+      createFleet(mud, left, deltas);
+      setRight(undefined);
+    } else transfer(mud, left, right, deltas);
     setDeltas(new Map());
   };
 
