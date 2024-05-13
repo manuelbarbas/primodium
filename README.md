@@ -85,8 +85,6 @@ In the file, add the following:
 ```yaml
 PRI_CHAIN_ID="dev" # Sets the chain id to the foundry-rs local development chain
 PRI_DEV="true" # This will grant access to the Game Tools browser (for the editor and cheat codes) and Mud Dev Tools
-PRI_PUSHER_APP_KEY="app-key" # This is the application key for the Pusher service used for in-game chat.
-PRI_PUSHER_APP_HOST=soketi-test.primodium.ai # This is the host address of the Pusher service used for in-game chat.
 PRI_DEBUG=mud:* # This is a setting for the debug logging level when deploying smart contracts in production.
 PRI_DEV_PKEY="0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80" # The private key of the wallet for deploying smart contracts on the foundry-rs local development chain
 ```
