@@ -17,7 +17,7 @@ import { parseResourceCount } from "@/util/number";
 import { Button } from "@/components/core/Button";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { getFullResourceCount } from "@/util/resource";
-import { ResourceEntityLookup, UtilityStorages } from "@/util/constants";
+import { ResourceEntityLookup, UnitStorages, UtilityStorages } from "@/util/constants";
 import { EResource } from "contracts/config/enums";
 import { getEntityTypeName } from "src/util/common";
 import { getFleetStatsFromUnits } from "src/util/unit";
@@ -56,9 +56,9 @@ export const _TransferPane = (props: {
   const { left, right, setLeft, setRight, deltas, moving, setHovering, setMoving, hovering, errors, setError } =
     useTransfer();
 
+  const mud = useMud();
   const error = errors[props.side];
   const selectedRock = components.SelectedRock.use()?.value;
-  const mud = useMud();
   const newFleet = props.entity === "newFleet";
   const isFleet = newFleet || components.IsFleet.has(props.entity as Entity);
   const Header = useMemo(() => {
@@ -99,7 +99,14 @@ export const _TransferPane = (props: {
   }, [props.entity, mud]);
 
   useEffect(() => {
-    const { disabled, submitMessage } = checkErrors(props.entity, props.unitCounts, props.resourceCounts);
+    const { disabled, submitMessage } = checkErrors(
+      props.entity,
+      selectedRock,
+      deltas,
+      props.unitCounts,
+      props.resourceCounts,
+      props.side === "left"
+    );
     setError(props.side, disabled ? submitMessage : null);
   }, [props.resourceCounts, props.unitCounts, props.entity]);
 
@@ -221,12 +228,16 @@ export const _TransferPane = (props: {
 
 const checkErrors = (
   entity: Entity | "newFleet",
+  asteroid: Entity | undefined,
+  deltas: Map<Entity, bigint>,
   unitCounts: Map<Entity, bigint>,
-  resourceCounts: Map<Entity, bigint>
+  resourceCounts: Map<Entity, bigint>,
+  invert?: boolean
 ) => {
+  if (!asteroid) return { disabled: true, submitMessage: "No asteroid selected" };
   const isFleet = entity === "newFleet" || components.IsFleet.has(entity as Entity);
   if (isFleet) {
-    if (unitCounts.size === 0) return { disabled: true, submitMessage: "No units on board" };
+    if (unitCounts.size === 0) return { disabled: true, submitMessage: "No units with this fleet" };
     const owner = (entity !== "newFleet" ? components.OwnedBy.get(entity)?.value : undefined) as Entity | undefined;
     const capacity = getFleetStatsFromUnits(unitCounts, owner).cargo;
     const cargo = [...resourceCounts.entries()].reduce((acc, [, count]) => acc + count, 0n);
@@ -235,33 +246,41 @@ const checkErrors = (
   }
   //ASTEROID
   // make sure we have enough storage for housing
-  const utilitiesUsed = [...unitCounts.entries()].reduce((acc, [unit, count]) => {
+  const utilitiesAdded = [...deltas.entries()].reduce((acc, [unit, count]) => {
+    if (!UnitStorages.has(unit)) return acc;
     const level = components.UnitLevel.getWithKeys({ unit: unit as Hex, entity: entity as Hex })?.value ?? 0n;
     const requiredResources = components.P_RequiredResources.getWithKeys({ prototype: unit as Hex, level });
     if (!requiredResources) return acc;
     requiredResources.resources.forEach((rawResource, i) => {
       const resource = ResourceEntityLookup[rawResource as EResource];
       if (!UtilityStorages.has(resource)) return;
-      const amount = requiredResources.amounts[i] * count;
+      const amount = requiredResources.amounts[i] * (invert ? -count : count);
       acc[resource] ? (acc[resource] += amount) : (acc[resource] = amount);
     });
     return acc;
   }, {} as Record<Entity, bigint>);
 
-  const enoughUtilities = Object.entries(utilitiesUsed).find(([resource, count]) => {
-    const { resourceStorage } = getFullResourceCount(resource as Entity, entity);
-    return count > resourceStorage;
+  const notEnoughUtilities = Object.entries(utilitiesAdded).find(([resource, count]) => {
+    const { resourceCount } = getFullResourceCount(resource as Entity, asteroid);
+    console.log({ entity: getEntityTypeName(resource as Entity), count, resourceCount });
+    return count > resourceCount;
   });
 
-  if (enoughUtilities)
-    return { disabled: true, submitMessage: `Not enough ${getEntityTypeName(enoughUtilities[0] as Entity)} storage` };
+  if (notEnoughUtilities)
+    return {
+      disabled: true,
+      submitMessage: `Not enough ${getEntityTypeName(notEnoughUtilities[0] as Entity)} storage`,
+    };
 
   // make sure we have enough storage for resources
-  const enoughResources = [...resourceCounts.entries()].find(([resource, count]) => {
-    const { resourceStorage } = getFullResourceCount(resource as Entity, entity);
+  const notEnoughResources = [...resourceCounts.entries()].find(([resource, count]) => {
+    const { resourceStorage } = getFullResourceCount(resource as Entity, asteroid);
     return count > resourceStorage;
   });
-  if (enoughResources)
-    return { disabled: true, submitMessage: `Not enough ${getEntityTypeName(enoughResources[0] as Entity)} storage` };
+  if (notEnoughResources)
+    return {
+      disabled: true,
+      submitMessage: `Not enough ${getEntityTypeName(notEnoughResources[0] as Entity)} storage`,
+    };
   return { disabled: false, submitMessage: "" };
 };

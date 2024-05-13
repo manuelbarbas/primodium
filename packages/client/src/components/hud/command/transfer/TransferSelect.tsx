@@ -19,16 +19,25 @@ export const TransferSelect = ({ side }: { side: "left" | "right" }) => {
   const { left, right, setLeft, setRight } = useTransfer();
   const handleSelect = side === "left" ? setLeft : setRight;
 
+  const opposingSide = side === "left" ? right : left;
+  const opposingSideOwner = opposingSide
+    ? opposingSide === "newFleet"
+      ? undefined
+      : getPlayerOwner(opposingSide)
+    : undefined;
   const playerEntity = useMud().playerAccount.entity;
-  const selectedRock = components.SelectedRock.use()?.value;
-  const playerOwnsRock = components.OwnedBy.use(selectedRock)?.value === playerEntity;
+  const asteroid = components.SelectedRock.use()?.value;
+  const playerOwnsRock = components.OwnedBy.use(asteroid)?.value === playerEntity;
+
+  // only show new fleet if you own the selected asteroid and there are new fleet slots available
   const showNewFleet =
     side === "right" &&
-    selectedRock &&
+    asteroid &&
     playerOwnsRock &&
-    getFullResourceCount(EntityType.FleetCount, selectedRock).resourceCount > 0n;
+    getFullResourceCount(EntityType.FleetCount, asteroid).resourceCount > 0n;
 
-  const fleetDisabled = left !== selectedRock;
+  // new fleet is disabled if the left side is not the asteroid
+  const fleetDisabled = left !== asteroid;
 
   const activeEntities = [left, right];
   const hideNotOwned = activeEntities.some((entity) => {
@@ -38,9 +47,8 @@ export const TransferSelect = ({ side }: { side: "left" | "right" }) => {
     return false;
   });
 
-  const rockEntity = components.ActiveRock.use()?.value;
-  if (!rockEntity) throw new Error("No active rock");
-  const query = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination: rockEntity })];
+  if (!asteroid) throw new Error("No selected asteroid");
+  const query = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination: asteroid })];
   const time = components.Time.use()?.value ?? 0n;
   const fleetsOnRock = [...useEntityQuery(query)].filter((entity) => {
     const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
@@ -53,15 +61,13 @@ export const TransferSelect = ({ side }: { side: "left" | "right" }) => {
   });
 
   const handleSelectWithNewFleet = handleSelect as (entity: Entity | "newFleet") => void;
+  const disabledAsteroidButton =
+    activeEntities.includes(asteroid) || (!playerOwnsRock && opposingSide && opposingSideOwner !== playerEntity);
 
   return (
     <Card className="w-full h-full" noDecor>
       <div className="grid grid-cols-3 gap-2 w-full">
-        <SelectOption
-          entity={rockEntity}
-          disabled={activeEntities.includes(rockEntity)}
-          onSelect={() => handleSelect(rockEntity)}
-        />
+        <SelectOption entity={asteroid} disabled={disabledAsteroidButton} onSelect={() => handleSelect(asteroid)} />
 
         {fleetsOnRock.map((fleet) => (
           <SelectOption

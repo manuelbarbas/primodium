@@ -9,12 +9,12 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 export const TransferConfirm = () => {
   const { left, right, setRight, deltas, setDeltas, errors } = useTransfer();
   const mud = useMud();
-  console.log(deltas.size);
   const disabled = !!errors["left"] || !!errors["right"] || deltas.size === 0;
+  const newFleet = right === "newFleet";
 
   const handleSubmit = () => {
     if (!left || !right) return;
-    if (right === "newFleet") {
+    if (newFleet) {
       createFleet(mud, left, deltas);
       setRight(undefined);
     } else transfer(mud, left, right, deltas);
@@ -22,9 +22,9 @@ export const TransferConfirm = () => {
   };
 
   return (
-    <TransactionQueueMask queueItemId={"TRANSFER" as Entity} className="w-full">
-      <PushButton variant="primary" size="md" className="w-full" disabled={disabled} onClick={handleSubmit}>
-        Transfer
+    <TransactionQueueMask queueItemId={"TRANSFER" as Entity} className="w-18">
+      <PushButton variant="primary" size="md" className="w-18" disabled={disabled} onClick={handleSubmit}>
+        {newFleet ? "Create" : "Transfer"}
       </PushButton>
     </TransactionQueueMask>
   );

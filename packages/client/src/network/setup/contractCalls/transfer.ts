@@ -42,8 +42,8 @@ const transferOneWay = async (
     unitCounts,
     resourceCounts,
   }: {
-    unitCounts?: bigint[];
-    resourceCounts?: bigint[];
+    unitCounts: bigint[];
+    resourceCounts: bigint[];
   }
 ) => {
   const activeAsteroid = components.ActiveRock.get()?.value;
@@ -60,10 +60,9 @@ const transferOneWay = async (
   const fromIsAsteroid = components.Asteroid.has(from);
   const toIsAsteroid = components.Asteroid.has(to);
 
-  console.log({ from: fromIsAsteroid, to: toIsAsteroid, unitCounts, resourceCounts });
   const claimableObjective = fromIsAsteroid ? EObjectives.TransferFromAsteroid : EObjectives.TransferFromFleet;
 
-  if (!resourceCounts) {
+  if (resourceCounts.every((count) => count == 0n)) {
     const functionName = fromIsAsteroid
       ? "Primodium__transferUnitsFromAsteroidToFleet"
       : toIsAsteroid
@@ -80,7 +79,7 @@ const transferOneWay = async (
       metadata,
       () => activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, claimableObjective)
     );
-  } else if (!unitCounts) {
+  } else if (unitCounts.every((count) => count == 0n)) {
     const functionName = fromIsAsteroid
       ? "Primodium__transferResourcesFromAsteroidToFleet"
       : toIsAsteroid
