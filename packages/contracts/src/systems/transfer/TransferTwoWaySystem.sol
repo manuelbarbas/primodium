@@ -7,7 +7,18 @@ import { LibTransferTwoWay } from "libraries/transfer/LibTransferTwoWay.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { OwnedBy, IsFleet, FleetMovement, P_UnitPrototypes, P_Transportables, CooldownEnd } from "codegen/index.sol";
 
+/**
+ * @title TransferTwoWaySystem
+ * @dev A system to facilitate two-way transfer of units and resources between entities.
+ */
 contract TransferTwoWaySystem is PrimodiumSystem {
+  /**
+   * @notice Checks if two entities can transfer units and resources between them.
+   * @dev Ensures entities are not the same, at least one entity is a fleet, fleets are at destination, and owned by the same player.
+   * @param leftEntity The first entity involved in the transfer.
+   * @param rightEntity The second entity involved in the transfer.
+   * @return sameOwner A boolean indicating if both entities are owned by the same player.
+   */
   function checkCanTransferTwoWay(bytes32 leftEntity, bytes32 rightEntity) private returns (bool sameOwner) {
     require(leftEntity != rightEntity, "[TransferTwoWay] Cannot transfer to self");
     IWorld world = IWorld(_world());
@@ -46,6 +57,12 @@ contract TransferTwoWaySystem is PrimodiumSystem {
     return leftOwnerAsteroid == rightOwnerAsteroid;
   }
 
+  /**
+   * @notice Transfers units between two entities.
+   * @param leftEntity The first entity involved in the transfer.
+   * @param rightEntity The second entity involved in the transfer.
+   * @param unitCounts The counts of each unit type to be transferred.
+   */
   function transferUnitsTwoWay(bytes32 leftEntity, bytes32 rightEntity, int256[] calldata unitCounts) public {
     require(unitCounts.length == P_UnitPrototypes.length(), "[TransferTwoWay] Incorrect unit array length");
 
@@ -54,6 +71,12 @@ contract TransferTwoWaySystem is PrimodiumSystem {
     LibTransferTwoWay.transferUnitsTwoWay(leftEntity, rightEntity, unitCounts, sameOwner);
   }
 
+  /**
+   * @notice Transfers resources between two entities.
+   * @param leftEntity The first entity involved in the transfer.
+   * @param rightEntity The second entity involved in the transfer.
+   * @param resourceCounts The counts of each resource type to be transferred.
+   */
   function transferResourcesTwoWay(bytes32 leftEntity, bytes32 rightEntity, int256[] calldata resourceCounts) public {
     require(resourceCounts.length == P_Transportables.get().length, "[TransferTwoWay] Incorrect resource array length");
 
@@ -62,6 +85,13 @@ contract TransferTwoWaySystem is PrimodiumSystem {
     LibTransferTwoWay.transferResourcesTwoWay(leftEntity, rightEntity, resourceCounts);
   }
 
+  /**
+   * @notice Transfers units and resources between two entities.
+   * @param leftEntity The first entity involved in the transfer.
+   * @param rightEntity The second entity involved in the transfer.
+   * @param unitCounts The counts of each unit type to be transferred.
+   * @param resourceCounts The counts of each resource type to be transferred.
+   */
   function transferUnitsAndResourcesTwoWay(
     bytes32 leftEntity,
     bytes32 rightEntity,

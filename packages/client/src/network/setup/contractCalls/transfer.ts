@@ -127,7 +127,6 @@ const transferTwoWay = async (
     resourceCounts: bigint[];
   }
 ) => {
-  console.log({ left, right, unitCounts, resourceCounts });
   const noUnits = unitCounts.every((count) => count == 0n);
   const noResources = resourceCounts.every((count) => count == 0n);
   if (noUnits && noResources) return;

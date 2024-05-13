@@ -25,7 +25,6 @@ function factory<T extends { destroy: () => void }>(
   return {
     add: (entity: Entity, object: PrimodiumGameObject, cull = false) => {
       if (object instanceof objectClass) {
-        // console.log(object.postFX);
         scene.objects.add(fullId(entity), object, cull);
         return object;
       } else {
