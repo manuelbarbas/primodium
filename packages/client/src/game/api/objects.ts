@@ -9,7 +9,7 @@ import { PrimodiumGameObject } from "engine/lib/core/StaticObjectManager";
 type PrimodiumObjectApi<T extends { destroy: () => void }> = {
   has: (entity: Entity) => boolean;
   get: (entity: Entity) => T | undefined;
-  remove: (entity: Entity) => void;
+  remove: (entity: Entity, destroy?: boolean, decrement?: boolean) => void;
   add: (entity: Entity, object: PrimodiumGameObject, cull?: boolean) => PrimodiumGameObject;
   onNewObject: (callback: (entity: string) => void) => () => void;
 };
@@ -37,9 +37,9 @@ function factory<T extends { destroy: () => void }>(
       const object = scene.objects.get(fullId(entity));
       return object instanceof objectClass ? object : undefined;
     },
-    remove: (entity: Entity) => {
+    remove: (entity: Entity, destroy = false, decrement = false) => {
       const id = fullId(entity);
-      scene.objects.remove(id);
+      scene.objects.remove(id, destroy, decrement);
     },
     onNewObject: (callback: (entity: string) => void) => {
       return scene.objects.onNewObject(callback);

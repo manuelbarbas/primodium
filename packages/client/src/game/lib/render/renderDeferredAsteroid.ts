@@ -1,8 +1,9 @@
 import { Entity } from "@latticexyz/recs";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { toHex } from "viem";
-import { Coord, Scene } from "engine/types";
+import { tileCoordToPixelCoord } from "engine/lib/util/coords";
+import { Coord } from "engine/types";
 import { IPrimodiumGameObject } from "@/game/lib/objects/interfaces";
+import { PrimodiumScene } from "@/game/api/scene";
 import { renderAsteroid } from "@/game/lib/render/renderAsteroid";
 import { initializeSecondaryAsteroids } from "@/game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
 import { hashEntities } from "@/util/encode";
@@ -11,14 +12,14 @@ import { hashEntities } from "@/util/encode";
 // This will be called in the enter system (basically on initial load), create this basic object at the coords, which when
 // entering the visible chunk will be spawned, effectively creating the actual asteroid, which will be rendered as well
 // This is nothing more than delaying the creation of the asteroid to the first time it needs to be rendered
-class AsteroidContainer extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
+class DeferredRenderContainer extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
   private id: Entity;
   private containerId: Entity;
   private coord: Coord;
-  private _scene: Scene;
+  private _scene: PrimodiumScene;
   private spawnsSecondary: boolean;
 
-  constructor(args: { id: Entity; scene: Scene; coord: Coord; spawnsSecondary: boolean }) {
+  constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord; spawnsSecondary: boolean }) {
     const { id, scene, coord, spawnsSecondary } = args;
     const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
     super(scene.phaserScene, pixelCoord.x, -pixelCoord.y);
@@ -30,7 +31,7 @@ class AsteroidContainer extends Phaser.GameObjects.Container implements IPrimodi
     this._scene = scene;
     this.spawnsSecondary = spawnsSecondary;
 
-    this._scene.objects.add(containerId, this, true);
+    this._scene.objects.asteroid.add(containerId, this, true);
   }
 
   spawn() {
@@ -50,7 +51,7 @@ class AsteroidContainer extends Phaser.GameObjects.Container implements IPrimodi
     asteroid.setActive(true).setVisible(true);
 
     // we don't need this object anymore: remove, destroy and decrement the count since it won't do it when exiting the chunk as it will not exist anymore
-    this._scene.objects.remove(this.containerId, true, true);
+    this._scene.objects.asteroid.remove(this.containerId, true, true);
 
     return asteroid;
   }
@@ -60,12 +61,12 @@ class AsteroidContainer extends Phaser.GameObjects.Container implements IPrimodi
   }
 }
 
-export const createAsteroidContainer = (args: {
-  scene: Scene;
+export const renderDeferredAsteroid = (args: {
+  scene: PrimodiumScene;
   entity: Entity;
   coord: Coord;
   spawnsSecondary: boolean;
 }) => {
   const { scene, entity, coord, spawnsSecondary } = args;
-  return new AsteroidContainer({ id: entity, scene, coord, spawnsSecondary });
+  return new DeferredRenderContainer({ id: entity, scene, coord, spawnsSecondary });
 };

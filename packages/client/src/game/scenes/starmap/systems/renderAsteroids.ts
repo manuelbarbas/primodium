@@ -1,8 +1,8 @@
 import { Has, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { components } from "src/network/components";
 import { PrimodiumScene } from "@/game/api/scene";
+import { renderDeferredAsteroid } from "@/game/lib/render/renderDeferredAsteroid";
 import { world } from "src/network/world";
-import { createAsteroidContainer } from "@/game/scenes/starmap/systems/createAsteroidContainer";
 
 export const renderAsteroids = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -18,7 +18,7 @@ export const renderAsteroids = (scene: PrimodiumScene) => {
     // //TODO: not sure why this is needed but rendering of unitialized asteroids wont work otherwise
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    createAsteroidContainer({
+    renderDeferredAsteroid({
       scene,
       entity,
       coord,
