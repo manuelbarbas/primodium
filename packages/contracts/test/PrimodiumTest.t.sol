@@ -578,4 +578,31 @@ contract PrimodiumTest is MudTest {
     vm.stopPrank();
     return fleetEntity;
   }
+
+  function spawnFleetWithUnitAndResource(
+    bytes32 asteroidEntity,
+    EUnit unit,
+    uint256 unitCount,
+    EResource resource,
+    uint256 resourceCount
+  ) internal returns (bytes32) {
+    bytes32 playerEntity = OwnedBy.get(asteroidEntity);
+    address player = entityToAddress(playerEntity);
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = unitCount;
+    }
+    for (uint256 i = 0; i < resourceCounts.length; i++) {
+      if (P_Transportables.getItemValue(i) == uint8(resource)) resourceCounts[i] = resourceCount;
+    }
+
+    setupCreateFleet(player, asteroidEntity, unitCounts, resourceCounts);
+    vm.startPrank(player);
+    bytes32 fleetEntity = world.Primodium__createFleet(asteroidEntity, unitCounts, resourceCounts);
+    vm.stopPrank();
+    return fleetEntity;
+  }
 }

@@ -2,27 +2,38 @@
 pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
+import { IWorld } from "codegen/world/IWorld.sol";
 import { LibTransferTwoWay } from "libraries/transfer/LibTransferTwoWay.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
-import { OwnedBy, IsFleet, FleetMovement, P_UnitPrototypes, P_Transportables } from "codegen/index.sol";
+import { OwnedBy, IsFleet, FleetMovement, P_UnitPrototypes, P_Transportables, CooldownEnd } from "codegen/index.sol";
 
 contract TransferTwoWaySystem is PrimodiumSystem {
-  function checkCanTransferTwoWay(bytes32 leftEntity, bytes32 rightEntity) private view returns (bool sameOwner) {
+  function checkCanTransferTwoWay(bytes32 leftEntity, bytes32 rightEntity) private returns (bool sameOwner) {
+    IWorld world = IWorld(_world());
     bytes32 player = _player();
     bool leftIsFleet = IsFleet.get(leftEntity);
     bool rightIsFleet = IsFleet.get(rightEntity);
 
     require(leftIsFleet || rightIsFleet, "[TransferTwoWay] At least one entity must be a fleet");
-    if (leftIsFleet)
+    if (leftIsFleet) {
       require(FleetMovement.getArrivalTime(leftEntity) <= block.timestamp, "[TransferTwoWay] Fleet not at destination");
-    if (rightIsFleet)
+      require(block.timestamp >= CooldownEnd.get(leftEntity), "[TransferTwoWay] Fleet is in cooldown");
+    } else {
+      world.Primodium__claimUnits(leftEntity);
+      world.Primodium__claimResources(leftEntity);
+    }
+    if (rightIsFleet) {
       require(
         FleetMovement.getArrivalTime(rightEntity) <= block.timestamp,
         "[TransferTwoWay] Fleet not at destination"
       );
-
+      require(block.timestamp >= CooldownEnd.get(rightEntity), "[TransferTwoWay] Fleet is in cooldown");
+    } else {
+      world.Primodium__claimUnits(rightEntity);
+      world.Primodium__claimResources(rightEntity);
+    }
     bytes32 leftAsteroid = leftIsFleet ? FleetMovement.getDestination(leftEntity) : leftEntity;
-    bytes32 rightAsteroid = leftIsFleet ? FleetMovement.getDestination(leftEntity) : leftEntity;
+    bytes32 rightAsteroid = rightIsFleet ? FleetMovement.getDestination(rightEntity) : rightEntity;
     require(leftAsteroid == rightAsteroid, "[TransferTwoWay] Entities not at same location");
 
     bytes32 leftOwnerAsteroid = leftIsFleet ? OwnedBy.get(leftEntity) : leftEntity;
