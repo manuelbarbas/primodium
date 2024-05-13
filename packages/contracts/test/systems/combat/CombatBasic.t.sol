@@ -30,6 +30,10 @@ contract CombatSystemTest is PrimodiumTest {
   bytes32 eveHomeAsteroid;
   bytes32 eveEntity;
 
+  bytes32 fleetEntity;
+
+  uint256[] initResources = new uint256[](uint8(EResource.LENGTH));
+
   function setUp() public override {
     super.setUp();
     aliceEntity = addressToEntity(alice);
@@ -38,6 +42,10 @@ contract CombatSystemTest is PrimodiumTest {
     bobHomeAsteroid = spawn(bob);
     eveEntity = addressToEntity(eve);
     eveHomeAsteroid = spawn(eve);
+
+    for (uint8 i = 0; i < uint8(EResource.LENGTH); i++) {
+      initResources[i] = ResourceCount.get(aliceHomeAsteroid, i);
+    }
   }
 
   /* --------------------------------- SUCCEED -------------------------------- */
@@ -58,7 +66,7 @@ contract CombatSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
 
     switchPrank(creator);
@@ -110,7 +118,7 @@ contract CombatSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.prank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.prank(alice);
     world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
@@ -188,7 +196,7 @@ contract CombatSystemTest is PrimodiumTest {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
     uint256 numberOfUnits = 10;
-    //create fleet with 1 minuteman marine
+    //create fleet with 10 minuteman marine
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
       if (unitPrototypes[i] == unitPrototype) unitCounts[i] = numberOfUnits;
@@ -201,7 +209,7 @@ contract CombatSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.prank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.prank(alice);
     world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
 
@@ -273,7 +281,8 @@ contract CombatSystemTest is PrimodiumTest {
     for (uint8 i = 0; i < requiredResources.resources.length; i++) {
       if (P_IsUtility.get(requiredResources.resources[i])) {
         assertEq(
-          ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]),
+          ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]) -
+            initResources[requiredResources.resources[i]],
           requiredResources.amounts[i] * casualtyCount,
           "utility should have been refunded to owner soace asteroid when fleet took casualties"
         );
@@ -450,6 +459,7 @@ contract CombatSystemTest is PrimodiumTest {
       LibCombat.getCooldownTime(testValue, true)
     );
   }
+
   function testFleetAttackBlockingFleetAttackerWins() public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
@@ -570,7 +580,7 @@ contract CombatSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
 
     switchPrank(creator);
@@ -606,7 +616,7 @@ contract CombatSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
 
     vm.warp(GracePeriod.get(bobHomeAsteroid) - 1);
@@ -636,7 +646,7 @@ contract CombatSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
 
     switchPrank(creator);
@@ -670,7 +680,7 @@ contract CombatSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.warp(LibMath.max(FleetMovement.getArrivalTime(fleetEntity), GracePeriod.get(bobHomeAsteroid)));
 
     switchPrank(alice);

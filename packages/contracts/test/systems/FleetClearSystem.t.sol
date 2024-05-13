@@ -16,6 +16,8 @@ contract FleetClearSystemTest is PrimodiumTest {
   bytes32 bobHomeAsteroid;
   bytes32 bobEntity;
 
+  uint256[] initResources = new uint256[](uint8(EResource.LENGTH));
+
   function setUp() public override {
     super.setUp();
     aliceEntity = addressToEntity(alice);
@@ -23,6 +25,10 @@ contract FleetClearSystemTest is PrimodiumTest {
 
     bobEntity = addressToEntity(bob);
     bobHomeAsteroid = spawn(bob);
+
+    for (uint8 i = 0; i < uint8(EResource.LENGTH); i++) {
+      initResources[i] = ResourceCount.get(aliceHomeAsteroid, i);
+    }
   }
 
   function testClearFleet() public {
@@ -66,7 +72,8 @@ contract FleetClearSystemTest is PrimodiumTest {
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       if (P_IsUtility.get(requiredResources.resources[i]))
         assertEq(
-          ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]),
+          ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]) -
+            initResources[requiredResources.resources[i]],
           requiredResources.amounts[i],
           "asteroid resource utility was not refunded correctly after clear"
         );
@@ -218,7 +225,8 @@ contract FleetClearSystemTest is PrimodiumTest {
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       if (P_IsUtility.get(requiredResources.resources[i]))
         assertEq(
-          ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]),
+          ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]) -
+            initResources[requiredResources.resources[i]],
           requiredResources.amounts[i],
           "asteroid resource utility was not refunded correctly after clear"
         );
