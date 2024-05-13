@@ -9,6 +9,7 @@ import { OwnedBy, IsFleet, FleetMovement, P_UnitPrototypes, P_Transportables, Co
 
 contract TransferTwoWaySystem is PrimodiumSystem {
   function checkCanTransferTwoWay(bytes32 leftEntity, bytes32 rightEntity) private returns (bool sameOwner) {
+    require(leftEntity != rightEntity, "[TransferTwoWay] Cannot transfer to self");
     IWorld world = IWorld(_world());
     bytes32 player = _player();
     bool leftIsFleet = IsFleet.get(leftEntity);

@@ -10,7 +10,7 @@ import { NamespaceOwner } from "@latticexyz/world/src/codegen/index.sol";
 import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { BuildingKey, UnitKey } from "src/Keys.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
-import { P_Unit, CooldownEnd, P_IsUtility, MaxResourceCount, ResourceCount, P_UnitPrototypes, P_GameConfig, P_GameConfigData, P_Unit, P_Transportables, BuildingType, OwnedBy, FleetMovement, P_Blueprint, P_EnumToPrototype, PositionData, Position, P_RequiredResourcesData, Asteroid, Home, P_RequiredTile, P_MaxLevel, P_RequiredResources, P_RequiredBaseLevel, UnitLevel, P_ColonyShipConfig, Level, P_UnitProdTypes, P_UnitProdMultiplier, P_WormholeAsteroidConfig, P_AsteroidThresholdProbConfig } from "codegen/index.sol";
+import { UnitCount, P_Unit, CooldownEnd, P_IsUtility, MaxResourceCount, ResourceCount, P_UnitPrototypes, P_GameConfig, P_GameConfigData, P_Unit, P_Transportables, BuildingType, OwnedBy, FleetMovement, P_Blueprint, P_EnumToPrototype, PositionData, Position, P_RequiredResourcesData, Asteroid, Home, P_RequiredTile, P_MaxLevel, P_RequiredResources, P_RequiredBaseLevel, UnitLevel, P_ColonyShipConfig, Level, P_UnitProdTypes, P_UnitProdMultiplier, P_WormholeAsteroidConfig, P_AsteroidThresholdProbConfig } from "codegen/index.sol";
 import { EResource, EBuilding, EUnit, Bounds } from "src/Types.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
@@ -191,6 +191,29 @@ contract PrimodiumTest is MudTest {
 
   function trainUnits(address player, EUnit unitType, uint256 count, bool fastForward) internal {
     trainUnits(player, P_EnumToPrototype.get(UnitKey, uint8(unitType)), count, fastForward);
+  }
+
+  function trainUnits(bytes32 asteroidEntity, bytes32 unitPrototype, uint256 count, bool fastForward) internal {
+    bytes32 playerEntity = OwnedBy.get(asteroidEntity);
+    address player = entityToAddress(playerEntity);
+    bytes32 mainBase = Home.get(asteroidEntity);
+    P_RequiredResourcesData memory requiredResources = getTrainCost(
+      unitPrototype,
+      UnitLevel.get(asteroidEntity, unitPrototype),
+      count
+    );
+
+    provideResources(asteroidEntity, requiredResources);
+
+    if (unitPrototype == P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip))) {
+      uint256 countLeft = count;
+      while (countLeft > 0) {
+        trainUnits(player, mainBase, unitPrototype, 1, fastForward);
+        countLeft--;
+      }
+    } else {
+      trainUnits(player, mainBase, unitPrototype, count, fastForward);
+    }
   }
 
   function trainUnits(address player, bytes32 unitPrototype, uint256 count, bool fastForward) internal {
@@ -402,11 +425,11 @@ contract PrimodiumTest is MudTest {
   ) public {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      trainUnits(player, unitPrototypes[i], unitCounts[i], true);
+      if (unitCounts[i] > 0) trainUnits(asteroidEntity, unitPrototypes[i], unitCounts[i], true);
     }
     uint8[] memory transportables = P_Transportables.get();
     for (uint256 i = 0; i < transportables.length; i++) {
-      increaseResource(asteroidEntity, EResource(transportables[i]), resourceCounts[i]);
+      if (resourceCounts[i] > 0) increaseResource(asteroidEntity, EResource(transportables[i]), resourceCounts[i]);
     }
   }
 
@@ -573,6 +596,7 @@ contract PrimodiumTest is MudTest {
       if (unitPrototypes[i] == unitPrototype) unitCounts[i] = count;
     }
     setupCreateFleet(player, asteroidEntity, unitCounts, resourceCounts);
+    vm.warp(block.timestamp + 1000000);
     vm.startPrank(player);
     bytes32 fleetEntity = world.Primodium__createFleet(asteroidEntity, unitCounts, resourceCounts);
     vm.stopPrank();

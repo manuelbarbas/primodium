@@ -18,7 +18,7 @@ library LibTransferTwoWay {
     if (isFleet) {
       require(
         LibCombatAttributes.getCargoCapacity(entity) >= LibCombatAttributes.getCargo(entity),
-        "[Fleet] Not enough cargo space to transfer units"
+        "[TransferTwoWay] Not enough cargo space"
       );
       LibFleet.checkAndSetFleetEmpty(entity);
     }
