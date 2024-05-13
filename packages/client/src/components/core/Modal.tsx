@@ -1,7 +1,7 @@
 import { Button } from "@/components/core/Button";
 import { Card } from "@/components/core/Card";
 import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { useGame } from "@/hooks/useGame";
 import { components } from "@/network/components";
 import React, { ReactNode, createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
@@ -39,11 +39,11 @@ export const Modal: React.FC<ModalProps> & {
   Content: React.FC<{ children: ReactNode; className?: string }>;
 } = ({ children, title, keybind, keybindClose, startOpen = false, onClose, blockClose = false }) => {
   const [isOpen, setIsOpen] = useState(startOpen);
-  const primodium = usePrimodium();
+  const game = useGame();
   const {
     audio,
     input: { addListener },
-  } = useRef(primodium.api("UI")).current;
+  } = useRef(game.UI).current;
 
   const handleClose = useCallback(() => {
     if (blockClose || !isOpen) return;
@@ -59,10 +59,10 @@ export const Modal: React.FC<ModalProps> & {
     };
 
     if (isOpen) {
-      primodium.disableGlobalInput();
+      game.GLOBAL.disableGlobalInput();
       components.HoverEntity.remove(); // remove any hovered entity (probably displaying a tooltip)
     } else {
-      primodium.enableGlobalInput();
+      game.GLOBAL.enableGlobalInput();
     }
 
     const escListener = addListener("Esc", handleClose);
@@ -72,9 +72,9 @@ export const Modal: React.FC<ModalProps> & {
       escListener.dispose();
       openListener?.dispose();
 
-      primodium.enableGlobalInput();
+      game.GLOBAL.enableGlobalInput();
     };
-  }, [isOpen, audio, keybind, keybindClose, addListener, primodium, handleClose]);
+  }, [isOpen, audio, keybind, keybindClose, addListener, game, handleClose]);
 
   return (
     <ModalContext.Provider value={{ isOpen, handleClose, title, handleOpen: () => setIsOpen(true), blockClose }}>

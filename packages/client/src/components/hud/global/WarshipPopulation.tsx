@@ -38,7 +38,7 @@ export const WarshipPopulation = () => {
   }, [gameOver, unitDeathLimit, unitDeaths]);
 
   return (
-    <div className="font-bold uppercase p-6 flex flex-col lg:flex-row gap-10">
+    <div className="font-bold uppercase p-6 flex flex-col gap-5">
       <div>
         ID: <AccountDisplay noColor player={playerEntity} className="text-sm" />
       </div>

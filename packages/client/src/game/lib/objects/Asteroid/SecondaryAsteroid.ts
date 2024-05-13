@@ -1,5 +1,5 @@
-import { Coord } from "@latticexyz/utils";
-import { Scene } from "engine/types";
+import { Coord } from "engine/types";
+import { PrimodiumScene } from "@/game/api/scene";
 import { BaseAsteroid } from "./BaseAsteroid";
 import { getSecondaryOutlineSprite, getSecondarySprite } from "./helpers";
 import { Entity } from "@latticexyz/recs";
@@ -9,7 +9,7 @@ export class SecondaryAsteroid extends BaseAsteroid {
   private maxLevel: bigint;
   constructor(args: {
     id: Entity;
-    scene: Scene;
+    scene: PrimodiumScene;
     coord: Coord;
     resourceType: Entity;
     maxLevel: bigint;
@@ -31,7 +31,6 @@ export class SecondaryAsteroid extends BaseAsteroid {
 
   spawn() {
     super.spawn();
-    this.setLOD(2, true);
     return this;
   }
 
@@ -39,26 +38,17 @@ export class SecondaryAsteroid extends BaseAsteroid {
   //   this.outlineSprite.setTexture(getSecondaryOutlineSprite(relationship, this.maxLevel));
   // }
 
-  update() {
-    super.update();
-    const zoom = this._scene.camera.phaserCamera.zoom;
-    const minZoom = this._scene.config.camera.minZoom;
-    const maxZoom = this._scene.config.camera.maxZoom;
+  getLod(zoom: number) {
+    if (zoom >= 0.75) {
+      return 0;
+    }
+    if (zoom >= 0.2) {
+      return 1;
+    }
+    if (zoom >= 0) {
+      return 3;
+    }
 
-    // Normalize the zoom level
-    const normalizedZoom = (zoom - minZoom) / (maxZoom - minZoom);
-
-    if (normalizedZoom >= 0.1) {
-      this.setLOD(0);
-      return;
-    }
-    if (normalizedZoom >= 0.05) {
-      this.setLOD(1);
-      return;
-    }
-    if (normalizedZoom >= 0) {
-      this.setLOD(2);
-      return;
-    }
+    return 0;
   }
 }

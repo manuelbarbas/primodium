@@ -1,36 +1,30 @@
-import { addCoords, tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { useMemo } from "react";
+import { Card, GlassCard } from "@/components/core/Card";
 import { Widget } from "@/components/core/Widget";
+import { BuildingMenu } from "@/components/hud/asteroid/building-menu/BuildingMenu";
+import { useGame } from "@/hooks/useGame";
 import { components } from "@/network/components";
 import { getBuildingDimensions, getBuildingName } from "@/util/building";
-import { BuildingMenu } from "@/components/hud/asteroid/building-menu/BuildingMenu";
+import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { usePrimodium } from "@/hooks/usePrimodium";
-import { GlassCard, Card } from "@/components/core/Card";
+import { useMemo } from "react";
 
 export const BuildingMenuPopup = () => {
-  const primodium = usePrimodium();
+  const game = useGame();
   const building = components.SelectedBuilding.use()?.value;
   const position = components.Position.use(building as Entity);
   const buildingName = getBuildingName(building as Entity);
   const dimensions = useMemo(() => getBuildingDimensions(building ?? singletonEntity), [building]);
 
   const coord = useMemo(() => {
-    const {
-      scene: { getConfig },
-    } = primodium.api();
-    const config = getConfig("ASTEROID");
+    const { utils } = game.ASTEROID;
 
-    const pixelCoord = tileCoordToPixelCoord(
-      addCoords(position ?? { x: 0, y: 0 }, { x: dimensions.width + 0.5, y: 0 }),
-      config.tilemap.tileWidth,
-      config.tilemap.tileHeight
+    const pixelCoord = utils.tileCoordToPixelCoord(
+      utils.addCoords(position ?? { x: 0, y: 0 }, { x: dimensions.width + 0.5, y: 0 })
     );
 
     return { x: pixelCoord.x, y: -pixelCoord.y };
-  }, [position, primodium, dimensions]);
+  }, [position, game, dimensions]);
 
   return (
     <Widget

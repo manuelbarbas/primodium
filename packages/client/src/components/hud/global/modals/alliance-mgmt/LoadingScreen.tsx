@@ -1,6 +1,6 @@
-import { SecondaryCard } from "src/components/core/Card";
-import { Loader } from "src/components/core/Loader";
-import { Navigator } from "src/components/core/Navigator";
+import { SecondaryCard } from "@/components/core/Card";
+import { Loader } from "@/components/core/Loader";
+import { Navigator } from "@/components/core/Navigator";
 
 export const LoadingScreen = () => {
   return (

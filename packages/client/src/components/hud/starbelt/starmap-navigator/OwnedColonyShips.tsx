@@ -3,7 +3,7 @@ import { Badge } from "@/components/core/Badge";
 import { Card } from "@/components/core/Card";
 import { useMud } from "@/hooks";
 import { useColonySlots } from "@/hooks/useColonySlots";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { useGame } from "@/hooks/useGame";
 import { components } from "@/network/components";
 import { getAsteroidInfo } from "@/util/asteroid";
 import { EntityType } from "@/util/constants";
@@ -42,13 +42,13 @@ export const OwnedColonyShips: React.FC<{ className?: string }> = ({ className }
   const {
     playerAccount: { entity: playerEntity },
   } = useMud();
-  const primodium = usePrimodium();
+  const game = useGame();
 
   const colonyShips = useColonySlots(playerEntity).occupiedSlots.filter((slot) => slot.type === "ship");
 
   const handleSelectRock = (entity: Entity) => {
-    const { position } = getAsteroidInfo(primodium, entity);
-    const { pan, zoomTo } = primodium.api("STARMAP").camera;
+    const { position } = getAsteroidInfo(game, entity);
+    const { pan, zoomTo } = game.STARMAP.camera;
 
     components.SelectedRock.set({ value: entity });
 
@@ -61,13 +61,13 @@ export const OwnedColonyShips: React.FC<{ className?: string }> = ({ className }
   };
 
   const handleSelectFleet = (entity: Entity) => {
-    const { pan, zoomTo } = primodium.api("STARMAP").camera;
+    const { pan, zoomTo } = game.STARMAP.camera;
     const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
     const time = components.Time.get()?.value ?? 0n;
 
     if (arrivalTime < time) components.SelectedFleet.set({ value: entity });
 
-    const objects = primodium.api("STARMAP").objects;
+    const objects = game.STARMAP.objects;
     const fleet = objects.getFleet(entity);
 
     if (!fleet) return;

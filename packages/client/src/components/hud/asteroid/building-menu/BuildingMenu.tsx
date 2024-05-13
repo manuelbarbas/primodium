@@ -3,7 +3,7 @@ import { Shipyard } from "@/components/hud/asteroid/building-menu/screens/shipya
 import { CommissionColonyShips } from "@/components/hud/global/modals/colony-ships/CommissionColonyShips";
 import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
 import { useBuildingInfo } from "@/hooks/useBuildingInfo";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { useGame } from "@/hooks/useGame";
 import { getBuildingImage } from "@/util/building";
 import { getEntityTypeName, toRomanNumeral } from "@/util/common";
 import { EntityToResourceImage } from "@/util/mappings";
@@ -99,8 +99,8 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
   };
 
   const Header = () => {
-    const primodium = usePrimodium();
-    const buildingImage = getBuildingImage(primodium, selectedBuilding);
+    const game = useGame();
+    const buildingImage = getBuildingImage(game, selectedBuilding);
     const buildingName = buildingType ? getEntityTypeName(buildingType) : "";
     const info = useBuildingInfo(selectedBuilding);
 

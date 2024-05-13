@@ -16,7 +16,7 @@ import { TransferConfirm } from "./TransferConfirm";
 import { TransferPane } from "./TransferPane";
 import { useTransfer } from "@/hooks/providers/TransferProvider";
 import { Button } from "@/components/core/Button";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { useGame } from "@/hooks/useGame";
 
 const Transfer: React.FC = () => {
   const { left, right, hovering, setHovering, deltas, setDeltas, moving, setMoving } = useTransfer();
@@ -171,7 +171,7 @@ const Transfer: React.FC = () => {
     },
     [moving, leftResourceCounts, leftUnitCounts]
   );
-  const api = usePrimodium().api("COMMAND_CENTER");
+  const api = useGame().COMMAND_CENTER;
   useEffect(() => {
     if (!api) return;
 

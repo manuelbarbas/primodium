@@ -1,16 +1,15 @@
 import { createCameraApi } from "@/game/api/camera";
-import { createSceneApi } from "@/game/api/scene";
+import { GlobalApi } from "@/game/api/global";
 import { ModeToSceneKey } from "@/game/lib/mappings";
 import { Mode } from "@/util/constants";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { Game } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 
-export const modeSystem = (game: Game) => {
+export const modeSystem = (game: GlobalApi) => {
   const systemsWorld = namespaceWorld(world, "systems");
-  const sceneApi = createSceneApi(game);
+
   const playerEntity = components.Account.get()?.value;
 
   defineComponentSystem(systemsWorld, components.SelectedMode, ({ value }) => {
@@ -28,26 +27,29 @@ export const modeSystem = (game: Game) => {
 
     const selectedRock = components.SelectedRock.get()?.value;
 
-    //Make sure command has a selected rock. If not, set it to the player home
-    if (mode === Mode.CommandCenter && !selectedRock)
-      components.SelectedRock.set({ value: (components.Home.get(playerEntity)?.value ?? singletonEntity) as Entity });
-
     const sceneKey = ModeToSceneKey[mode];
 
     let position = { x: 0, y: 0 };
     switch (mode) {
       case Mode.Asteroid:
-        position = { x: 19.5, y: 13 };
+        position = { x: 18.5, y: 13 };
         break;
       case Mode.Starmap:
         position = components.Position.get(selectedRock) ?? { x: 0, y: 0 };
         break;
       case Mode.CommandCenter:
+        if (!selectedRock)
+          components.SelectedRock.set({
+            value: (components.Home.get(playerEntity)?.value ?? singletonEntity) as Entity,
+          });
         position = { x: 0, y: 0 };
+        break;
+      case Mode.Spectate:
+        position = { x: 18.5, y: 13 };
         break;
     }
 
-    const targetScene = sceneApi.getScene(sceneKey);
+    const targetScene = game.getScene(sceneKey);
 
     if (targetScene) {
       const cameraApi = createCameraApi(targetScene);
@@ -57,7 +59,7 @@ export const modeSystem = (game: Game) => {
       });
     }
 
-    sceneApi.transitionToScene(
+    game.transitionToScene(
       ModeToSceneKey[prevMode ?? Mode.Asteroid],
       sceneKey,
       0,

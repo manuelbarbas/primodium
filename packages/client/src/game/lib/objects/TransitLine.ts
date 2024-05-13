@@ -1,18 +1,22 @@
-import { PixelCoord, Scene } from "engine/types";
+import Phaser from "phaser";
+
+import { PixelCoord } from "engine/types";
+import { PrimodiumScene } from "@/game/api/scene";
 import { IPrimodiumGameObject } from "./interfaces";
 import { Fleet } from "./Fleet";
 import { Entity } from "@latticexyz/recs";
 
 export class TransitLine extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
+  private _scene: PrimodiumScene;
   private id: Entity;
-  private _scene: Scene;
   private spawned = false;
   private start;
   private end;
   private fleet: Fleet | undefined;
   private transitLine?: Phaser.GameObjects.Line;
   private unsubZoom;
-  constructor(args: { id: Entity; scene: Scene; start: PixelCoord; end: PixelCoord }) {
+
+  constructor(args: { id: Entity; scene: PrimodiumScene; start: PixelCoord; end: PixelCoord }) {
     const { id, scene, start, end } = args;
     super(scene.phaserScene, start.x, start.y);
     this._scene = scene;
@@ -25,7 +29,7 @@ export class TransitLine extends Phaser.GameObjects.Container implements IPrimod
       this.transitLine?.setLineWidth(2 / zoom);
     });
 
-    this._scene.objects.add(`transit_${id}`, this, false);
+    this._scene.objects.transitLine.add(id, this, false);
   }
 
   spawn() {

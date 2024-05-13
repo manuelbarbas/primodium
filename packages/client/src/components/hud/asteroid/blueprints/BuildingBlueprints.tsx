@@ -6,8 +6,8 @@ import { EMap } from "contracts/config/enums";
 import { useEffect, useMemo } from "react";
 import { FaLock } from "react-icons/fa";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
+import { useGame } from "src/hooks/useGame";
 import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
-import { usePrimodium } from "src/hooks/usePrimodium";
 import { components } from "src/network/components";
 import { getBuildingDimensions } from "src/util/building";
 import { Action, EntityType } from "src/util/constants";
@@ -26,7 +26,7 @@ const BlueprintButton: React.FC<{
   const {
     hooks: { useKeybinds },
     input: { addListener },
-  } = usePrimodium().api("ASTEROID");
+  } = useGame().ASTEROID;
   const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
   const keybinds = useKeybinds();
   const selectedRockEntity = components.ActiveRock.use()?.value as Entity | undefined;

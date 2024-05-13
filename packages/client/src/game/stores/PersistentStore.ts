@@ -1,5 +1,5 @@
 import { KeybindActionKeys } from "@game/lib/constants/keybinds";
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 import { Key } from "engine/types";
 import { mountStoreDevtool } from "simple-zustand-devtools";
 import { create } from "zustand";

@@ -6,12 +6,12 @@ import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { entityToFleetName, entityToRockName } from "@/util/name";
 import { getAsteroidImage } from "@/util/asteroid";
-import { usePrimodium } from "@/hooks/usePrimodium";
 import { useTransfer } from "@/hooks/providers/TransferProvider";
 import { cn } from "@/util/client";
 import { Card } from "@/components/core/Card";
 import { useEffect } from "react";
 import { getPlayerOwner } from "@/hooks/usePlayerOwner";
+import { useGame } from "@/hooks/useGame";
 
 export const TransferSelect = <NewFleet extends boolean | undefined = false>({
   showNewFleet = false,
@@ -85,7 +85,7 @@ const SelectOption = ({
   selected?: boolean;
   disabled?: boolean;
 }) => {
-  const primodium = usePrimodium();
+  const primodium = useGame();
   const isFleet = entity !== "newFleet" && components.IsFleet.has(entity);
   const content = entity === "newFleet" ? "New Fleet" : isFleet ? entityToFleetName(entity) : entityToRockName(entity);
 

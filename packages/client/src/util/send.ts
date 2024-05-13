@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 import { EResource } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { Hex } from "viem";

@@ -12,11 +12,11 @@ import { formatTimeShort } from "src/util/number";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { SecondaryCard } from "@/components/core/Card";
 import { getAsteroidEmblem, getAsteroidImage } from "@/util/asteroid";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { useGame } from "@/hooks/useGame";
 import { AsteroidStats } from "@/components/hud/command/overview/AsteroidStatsAndActions";
 
 export const AsteroidCard: React.FC<{ entity: Entity }> = ({ entity }) => {
-  const primodium = usePrimodium();
+  const game = useGame();
   const { loading } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
   const name = entityToRockName(entity);
   const { inGracePeriod, duration } = useInGracePeriod(entity, loading);
@@ -36,7 +36,7 @@ export const AsteroidCard: React.FC<{ entity: Entity }> = ({ entity }) => {
       <div className="flex flex-col gap-1 z-10">
         <div className="flex flex-col gap-1">
           <div className="flex gap-1 items-center">
-            <img src={getAsteroidEmblem(primodium, entity)} className="w-8 h-8 translate-y-2" />
+            <img src={getAsteroidEmblem(game, entity)} className="w-8 h-8 translate-y-2" />
             <div className="flex flex-col">
               <p className="text-md font-bold uppercase">{name}</p>
               {ownedBy ? <AccountDisplay className="w-fit" noColor player={ownedBy} /> : "DROID INFESTED"}
@@ -44,7 +44,7 @@ export const AsteroidCard: React.FC<{ entity: Entity }> = ({ entity }) => {
           </div>
         </div>
         <div className="flex gap-1 justify-center items-center">
-          <img src={getAsteroidImage(primodium, entity)} className="w-18 h-18 -mt-6" />
+          <img src={getAsteroidImage(game, entity)} className="w-18 h-18 -mt-6" />
         </div>
         {inGracePeriod && (
           <div className="flex gap-2 p-1 justify-center items-center h-4 w-full text-accent text-xs">

@@ -1,9 +1,11 @@
+import Phaser from "phaser";
 import { MainbaseLevelToEmblem } from "@/game/lib/mappings";
 import { FleetsContainer } from "@/game/lib/objects/Asteroid/FleetsContainer";
 import { Assets, Sprites } from "@primodiumxyz/assets";
-import { PixelCoord, Scene } from "engine/types";
+import { PixelCoord } from "engine/types";
+import { PrimodiumScene } from "@/game/api/scene";
 
-const MARGIN = 5;
+const MARGIN = 0;
 
 type LabelArgs = {
   ownerLabel: string;
@@ -13,22 +15,23 @@ type LabelArgs = {
   ownerLabelColor: number;
   nameLabelColor: number;
   allianceLabelColor: number;
+  ownerLabelOpacity: number;
 };
 
 export class AsteroidLabel extends Phaser.GameObjects.Container {
-  private _scene: Scene;
+  private _scene: PrimodiumScene;
   private coord: PixelCoord;
   private labelContainer: Phaser.GameObjects.Container;
-  private emblemSprite: Phaser.GameObjects.Image;
-  private asteroidLabel: Phaser.GameObjects.BitmapText;
-  private ownerLabel: Phaser.GameObjects.BitmapText;
-  private allianceLabel: Phaser.GameObjects.BitmapText;
-  private fleetsContainer: FleetsContainer | undefined;
+  emblemSprite: Phaser.GameObjects.Image;
+  asteroidLabel: Phaser.GameObjects.BitmapText;
+  ownerLabel: Phaser.GameObjects.BitmapText;
+  allianceLabel: Phaser.GameObjects.BitmapText;
+  fleetsContainer: FleetsContainer | undefined;
   private baseScale = 1;
 
   constructor(
     args: {
-      scene: Scene;
+      scene: PrimodiumScene;
       coord: PixelCoord;
       asteroidLevel?: number;
     } & Partial<LabelArgs>
@@ -103,6 +106,8 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
     args.ownerLabelColor && this.ownerLabel.setTintFill(args.ownerLabelColor);
     args.allianceLabel && this.allianceLabel.setText(`[${args.allianceLabel}]`);
     args.allianceLabelColor && this.allianceLabel.setTintFill(args.allianceLabelColor);
+    args.ownerLabelOpacity && this.ownerLabel.setAlpha(args.ownerLabelOpacity);
+    // args.textOpacity && this.labelContainer.setAlpha(args.textOpacity);
 
     this._updatePositions();
   }

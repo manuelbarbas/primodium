@@ -6,7 +6,7 @@ import { Mode } from "@/util/constants";
 import { Modal } from "@/components/core/Modal";
 import { UnitUpgrades } from "@/components/hud/asteroid/building-menu/screens/UnitUpgrades";
 import { Tabs } from "@/components/core/Tabs";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { useGame } from "@/hooks/useGame";
 import { commandCenterScene } from "@/game/lib/config/commandCenterScene";
 
 const btnClass = "group hover:scale-[115%] bg-gradient-to-r border-l-accent from-secondary/25 to-transparent";
@@ -15,7 +15,7 @@ const iconClass = "text-2xl";
 export const CommandViewSelector = () => {
   const commandOpen = components.SelectedMode.use()?.value === Mode.CommandCenter;
 
-  const { camera } = usePrimodium().api("COMMAND_CENTER")!;
+  const { camera } = useGame().COMMAND_CENTER;
   if (!commandOpen) return null;
 
   return (

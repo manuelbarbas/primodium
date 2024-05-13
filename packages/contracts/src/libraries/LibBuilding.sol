@@ -8,6 +8,7 @@ import { TilePositions, IsActive, Asteroid, P_UnitProdTypes, P_MaxLevel, Home, P
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
+import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
 
 // types
 import { BuildingKey, ExpansionKey } from "src/Keys.sol";
@@ -40,6 +41,7 @@ library LibBuilding {
       OwnedBy.get(Position.getParentEntity(buildingEntity)) == playerEntity,
       "[Destroy] Only owner can destroy building"
     );
+    require(UnitProductionQueue.isEmpty(buildingEntity), "[Destroy] Cannot destroy building with units in production");
   }
 
   /**

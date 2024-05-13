@@ -2,7 +2,7 @@ import { Badge } from "@/components/core/Badge";
 import { Card } from "@/components/core/Card";
 import { useMud } from "@/hooks";
 import { useShardAsteroid } from "@/hooks/primodium/useShardAsteroid";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { useGame } from "@/hooks/useGame";
 import { components } from "@/network/components";
 import { EntityType } from "@/util/constants";
 import { formatResourceCount, formatTimeShort } from "@/util/number";
@@ -23,12 +23,12 @@ export const Shards = ({ className = "" }: { className?: string }) => {
     if (aOwner === playerEntity) return -1;
     return -1;
   });
-  const primodium = usePrimodium();
+  const game = useGame();
 
   const handleSelectShard = (entity: Entity) => {
     const position = components.Position.get(entity);
     if (!position) return;
-    const { pan, zoomTo } = primodium.api("STARMAP").camera;
+    const { pan, zoomTo } = game.STARMAP.camera;
 
     components.SelectedRock.set({ value: entity });
 
@@ -72,8 +72,8 @@ const Shard = ({
   const {
     playerAccount: { entity: playerEntity },
   } = useMud();
-  const primodium = usePrimodium();
-  const imageUri = getAsteroidImage(primodium, shardEntity);
+  const game = useGame();
+  const imageUri = getAsteroidImage(game, shardEntity);
   const position = components.Position.get(shardEntity);
   const shardData = useShardAsteroid(shardEntity);
   const selected = components.SelectedRock.use()?.value === shardEntity;

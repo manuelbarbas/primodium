@@ -12,7 +12,13 @@ import { IWorld } from "codegen/world/IWorld.sol";
 contract DestroySystem is PrimodiumSystem {
   /// @notice Destroys a building entity
   /// @param buildingEntity entity of the building to be destroyed
-  function destroy(bytes32 buildingEntity) public _claimResources(Position.getParentEntity(buildingEntity)) {
+  function destroy(
+    bytes32 buildingEntity
+  )
+    public
+    _claimResources(Position.getParentEntity(buildingEntity))
+    _claimUnits(Position.getParentEntity(buildingEntity))
+  {
     LibBuilding.checkDestroyRequirements(_player(), buildingEntity);
 
     IWorld world = IWorld(_world());
@@ -26,13 +32,13 @@ contract DestroySystem is PrimodiumSystem {
 
     LibBuilding.removeBuildingTiles(buildingEntity);
 
+    if (P_UnitProdTypes.length(buildingType, level) != 0) {
+      UnitFactorySet.remove(OwnedBy.get(buildingEntity), buildingEntity);
+    }
     Level.deleteRecord(buildingEntity);
     BuildingType.deleteRecord(buildingEntity);
     OwnedBy.deleteRecord(buildingEntity);
     Position.deleteRecord(buildingEntity);
     IsActive.deleteRecord(buildingEntity);
-    if (P_UnitProdTypes.length(buildingType, level) != 0) {
-      UnitFactorySet.remove(OwnedBy.get(buildingEntity), buildingEntity);
-    }
   }
 }

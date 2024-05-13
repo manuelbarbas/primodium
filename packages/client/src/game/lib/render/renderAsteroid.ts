@@ -1,7 +1,6 @@
 import { MainbaseLevelToEmblem } from "@/game/lib/mappings";
 import { PrimaryAsteroid, SecondaryAsteroid } from "@/game/lib/objects/Asteroid";
 import { BaseAsteroid } from "@/game/lib/objects/Asteroid/BaseAsteroid";
-import { createCameraApi } from "@/game/api/camera";
 import { components } from "@/network/components";
 import { getAllianceName } from "@/util/alliance";
 import { getRockRelationship } from "@/util/asteroid";
@@ -12,17 +11,23 @@ import { MapIdToAsteroidType } from "@/util/mappings";
 import { entityToPlayerName, entityToRockName } from "@/util/name";
 import { Entity } from "@latticexyz/recs";
 import { EMap } from "contracts/config/enums";
-import { Coord, Scene } from "engine/types";
+import { Coord } from "engine/types";
+import { PrimodiumScene } from "@/game/api/scene";
 
-export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coord; addEventHandlers?: boolean }) => {
+export const renderAsteroid = (args: {
+  scene: PrimodiumScene;
+  entity: Entity;
+  coord?: Coord;
+  addEventHandlers?: boolean;
+}) => {
   const { scene, entity, coord = { x: 0, y: 0 }, addEventHandlers = false } = args;
   //TODO: replace with hanks fancy api stuff
-  const cameraApi = createCameraApi(scene);
   const asteroidData = components.Asteroid.get(entity);
   if (!asteroidData) throw new Error("Asteroid data not found");
 
   const expansionLevel = components.Level.get(entity)?.value ?? 1n;
   const playerEntity = components.Account.get()?.value;
+  const isHome = components.Home.get(playerEntity)?.value === entity;
 
   if (!playerEntity) return;
 
@@ -31,6 +36,7 @@ export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coo
   const level = components.Level.get(entity)?.value;
 
   const spriteScale = 0.34 + 0.05 * Number(asteroidData.maxLevel);
+
   let asteroid: BaseAsteroid;
   if (!asteroidData?.spawnsSecondary)
     asteroid = new SecondaryAsteroid({
@@ -63,7 +69,7 @@ export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coo
   })();
 
   asteroid.getAsteroidLabel().setProperties({
-    nameLabel: entityToRockName(entity),
+    nameLabel: entityToRockName(entity) + (isHome ? " *" : ""),
     nameLabelColor: ownedByPlayer ? 0xffff00 : asteroidData?.spawnsSecondary ? 0x00ffff : 0xffffff,
     emblemSprite: MainbaseLevelToEmblem[Phaser.Math.Clamp(Number(level) - 1, 0, MainbaseLevelToEmblem.length - 1)],
     ownerLabel: ownerLabel,
@@ -75,18 +81,16 @@ export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coo
   if (!addEventHandlers) return asteroid;
 
   asteroid
-    .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
-      if (pointer.downElement.nodeName !== "CANVAS") return;
-
+    .onClick(() => {
       //TODO: move to reusable seq in fx
       const sequence = [
         {
           at: 0,
-          run: () => cameraApi.pan(coord, { duration: 300 }),
+          run: () => scene.camera.pan(coord, { duration: 300 }),
         },
         {
           at: 300,
-          run: () => cameraApi.zoomTo(scene.config.camera.maxZoom, 500),
+          run: () => scene.camera.zoomTo(scene.config.camera.maxZoom, 500),
         },
       ];
       //set the selected rock immediately if we are sufficiently zoomed in
@@ -100,10 +104,10 @@ export const renderAsteroid = (args: { scene: Scene; entity: Entity; coord?: Coo
       if (scene.camera.phaserCamera.zoom >= scene.config.camera.maxZoom * 0.5)
         components.SelectedRock.set({ value: entity });
     })
-    .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
+    .onHoverEnter(() => {
       components.HoverEntity.set({ value: entity });
     })
-    .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => {
+    .onHoverExit(() => {
       components.HoverEntity.remove();
     });
 

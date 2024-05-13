@@ -8,7 +8,7 @@ export enum Animations {
   Mainbase7 = "mainbase/level7",
   Mainbase8 = "mainbase/level8",
 
-  Wormholebase1 = "wormholebase/level1",
+  WormholebaseIdle1 = "wormholebase/level1/idle",
 
   IronMine1 = "ironmine/level1",
   IronMine2 = "ironmine/level2",

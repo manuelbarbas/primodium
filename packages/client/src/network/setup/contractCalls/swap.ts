@@ -13,14 +13,14 @@ import { getOutAmount } from "src/util/swap";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const swap = async (mud: MUD, marketEntity: Entity, path: Entity[], amountIn: bigint) => {
+export const swap = async (mud: MUD, marketEntity: Entity, path: Entity[], amountIn: bigint, amountOutMin: bigint) => {
   const enumPath = path.map((p) => ResourceEnumLookup[p]);
   await execute(
     {
       mud,
       systemId: getSystemId("MarketplaceSystem"),
       functionName: "Primodium__swap",
-      args: [marketEntity as Hex, enumPath, amountIn, 0n],
+      args: [marketEntity as Hex, enumPath, amountIn, amountOutMin],
       withSession: true,
     },
     { id: singletonEntity },

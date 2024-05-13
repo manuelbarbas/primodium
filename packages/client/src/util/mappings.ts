@@ -1,12 +1,15 @@
 import { Entity } from "@latticexyz/recs";
 import { EntityType } from "@/util/constants";
 import { InterfaceIcons, ResourceImages, UnitImages } from "@primodiumxyz/assets";
+import { EMap } from "contracts/config/enums";
 
 export const MapIdToAsteroidType: Record<number, Entity> = {
-  2: EntityType.Kimberlite,
-  3: EntityType.Iridium,
-  4: EntityType.Platinum,
-  5: EntityType.Titanium,
+  [EMap.Common]: EntityType.Common,
+  [EMap.Kimberlite]: EntityType.Kimberlite,
+  [EMap.Iridium]: EntityType.Iridium,
+  [EMap.Platinum]: EntityType.Platinum,
+  [EMap.Titanium]: EntityType.Titanium,
+  [EMap.Wormhole]: EntityType.Wormhole,
 };
 
 export const EntityToUnitImage = {

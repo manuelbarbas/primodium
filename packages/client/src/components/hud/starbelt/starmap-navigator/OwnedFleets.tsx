@@ -2,7 +2,7 @@ import { Badge } from "@/components/core/Badge";
 import { Button } from "@/components/core/Button";
 import { Card } from "@/components/core/Card";
 import { useMud } from "@/hooks";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { useGame } from "@/hooks/useGame";
 import { components } from "@/network/components";
 import { entityToFleetName, entityToRockName } from "@/util/name";
 import { formatTime } from "@/util/number";
@@ -49,7 +49,7 @@ export const OwnedFleets: React.FC<{ className?: string }> = ({ className }) => 
   const {
     playerAccount: { entity: playerEntity },
   } = useMud();
-  const primodium = usePrimodium();
+  const game = useGame();
 
   const query = [Has(components.IsFleet)];
   const fleets = useEntityQuery(query).filter((entity) => {
@@ -60,13 +60,13 @@ export const OwnedFleets: React.FC<{ className?: string }> = ({ className }) => 
   });
 
   const handleSelect = (entity: Entity) => {
-    const { pan, zoomTo } = primodium.api("STARMAP").camera;
+    const { pan, zoomTo } = game.STARMAP.camera;
     const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
     const time = components.Time.get()?.value ?? 0n;
 
     if (arrivalTime < time) components.SelectedFleet.set({ value: entity });
 
-    const objects = primodium.api("STARMAP").objects;
+    const objects = game.STARMAP.objects;
     const fleet = objects.getFleet(entity);
 
     if (!fleet) return;
