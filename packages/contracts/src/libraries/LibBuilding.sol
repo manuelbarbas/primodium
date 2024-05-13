@@ -243,4 +243,39 @@ library LibBuilding {
     LibStorage.increaseMaxStorage(buildingEntity, targetLevel);
     LibProduction.upgradeResourceProduction(buildingEntity, targetLevel);
   }
+
+  /// @notice Destroys a specific building entity
+  /// @param playerEntity The entity ID of the player
+  /// @param buildingEntity entity of the building to be destroyed
+  /// @param parentEntity asteroid of the building to be destroyed
+  /// @param uncheckedRequirements If true, requirements will not be checked. Internal use only.
+  function destroy(
+    bytes32 playerEntity,
+    bytes32 buildingEntity,
+    bytes32 parentEntity,
+    bool uncheckedRequirements
+  ) internal {
+    if (!uncheckedRequirements) {
+      checkDestroyRequirements(playerEntity, buildingEntity);
+    }
+
+    bytes32 buildingType = BuildingType.get(buildingEntity);
+    uint256 level = Level.get(buildingEntity);
+
+    removeBuildingTiles(buildingEntity);
+
+    if (P_UnitProdTypes.length(buildingType, level) != 0) {
+      UnitFactorySet.remove(OwnedBy.get(buildingEntity), buildingEntity);
+    }
+
+    if (buildingType == StarmapperPrototypeId) {
+      P_HasStarmapper.set(parentEntity, false);
+    }
+
+    Level.deleteRecord(buildingEntity);
+    BuildingType.deleteRecord(buildingEntity);
+    OwnedBy.deleteRecord(buildingEntity);
+    Position.deleteRecord(buildingEntity);
+    IsActive.deleteRecord(buildingEntity);
+  }
 }
