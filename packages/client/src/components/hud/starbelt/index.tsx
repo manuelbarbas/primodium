@@ -14,15 +14,13 @@ export const StarbeltHUD = memo(() => {
   if (!isStarbeltOpen) return null;
 
   return (
-    <div className={`screen-container relative`}>
-      <HUD scale={uiScale}>
-        {/* MARKERS */}
-        <AsteroidMenuPopup />
+    <HUD scale={uiScale}>
+      {/* MARKERS */}
+      <AsteroidMenuPopup />
 
-        <HUD.Right>
-          <StarmapNavigator />
-        </HUD.Right>
-      </HUD>
-    </div>
+      <HUD.Right>
+        <StarmapNavigator />
+      </HUD.Right>
+    </HUD>
   );
 });

@@ -16,20 +16,18 @@ export const AsteroidHUD = memo(() => {
   if (!inAsteroidMode) return null;
 
   return (
-    <div className={`screen-container relative`}>
-      <HUD scale={uiScale}>
-        {/* MARKERS */}
-        <BuildingMenuPopup />
-        <BlueprintInfoMarker />
+    <HUD scale={uiScale}>
+      {/* MARKERS */}
+      <BuildingMenuPopup />
+      <BlueprintInfoMarker />
 
-        <HUD.Right>
-          <Inventory />
-        </HUD.Right>
+      <HUD.Right>
+        <Inventory />
+      </HUD.Right>
 
-        <HUD.Left>
-          <Blueprints />
-        </HUD.Left>
-      </HUD>
-    </div>
+      <HUD.Left>
+        <Blueprints />
+      </HUD.Left>
+    </HUD>
   );
 });

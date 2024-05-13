@@ -7,12 +7,12 @@ import { AsteroidLoading } from "@/components/hud/asteroid/AsteroidLoading";
 
 export const GameHUD = memo(() => {
   return (
-    <>
+    <div>
       <AsteroidHUD />
       <StarbeltHUD />
       <CommandCenterHUD />
       <GlobalHUD />
       <AsteroidLoading />
-    </>
+    </div>
   );
 });

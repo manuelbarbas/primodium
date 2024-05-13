@@ -52,7 +52,6 @@ export default function App() {
           <SetupResultProvider />
         </QueryClientProvider>
       </WagmiProvider>
-      <div id="modal-root" />
     </div>
   );
 }
