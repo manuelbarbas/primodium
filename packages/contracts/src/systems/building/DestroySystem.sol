@@ -26,6 +26,6 @@ contract DestroySystem is PrimodiumSystem {
     world.Primodium__clearProductionRate(buildingEntity);
 
     // requirements checked on line 20
-    LibBuilding.destroy(_player(), buildingEntity, Position.getParentEntity(buildingEntity), true);
+    LibBuilding.destroy(_player(), buildingEntity, true);
   }
 }

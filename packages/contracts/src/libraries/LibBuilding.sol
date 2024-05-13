@@ -247,14 +247,8 @@ library LibBuilding {
   /// @notice Destroys a specific building entity
   /// @param playerEntity The entity ID of the player
   /// @param buildingEntity entity of the building to be destroyed
-  /// @param parentEntity asteroid of the building to be destroyed
   /// @param uncheckedRequirements If true, requirements will not be checked. Internal use only.
-  function destroy(
-    bytes32 playerEntity,
-    bytes32 buildingEntity,
-    bytes32 parentEntity,
-    bool uncheckedRequirements
-  ) internal {
+  function destroy(bytes32 playerEntity, bytes32 buildingEntity, bool uncheckedRequirements) internal {
     if (!uncheckedRequirements) {
       checkDestroyRequirements(playerEntity, buildingEntity);
     }
@@ -269,7 +263,7 @@ library LibBuilding {
     }
 
     if (buildingType == StarmapperPrototypeId) {
-      P_HasStarmapper.set(parentEntity, false);
+      P_HasStarmapper.set(OwnedBy.get(buildingEntity), false);
     }
 
     Level.deleteRecord(buildingEntity);

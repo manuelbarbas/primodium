@@ -1824,12 +1824,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       2: {
         P_RequiredBaseLevel: { value: 9n },
-        P_RequiredResources: getResourceValues({ IronPlate: 1000, Alloy: 1000, PVCell: 1000, U_Electricity: 50 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 500, Alloy: 500, PVCell: 500, U_Electricity: 50 }),
         P_Production: getResourceValues({ U_MaxFleets: 2 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 15n },
-        P_RequiredResources: getResourceValues({ Titanium: 1000, Iridium: 1000, Platinum: 1000, U_Electricity: 250 }),
+        P_RequiredResources: getResourceValues({ Titanium: 500, Iridium: 500, Platinum: 500, U_Electricity: 250 }),
         P_Production: getResourceValues({ U_MaxFleets: 3 }),
       },
     },
