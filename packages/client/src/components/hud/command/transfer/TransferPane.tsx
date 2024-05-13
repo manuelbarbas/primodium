@@ -67,6 +67,7 @@ export const _TransferPane = (props: {
       ? components.OwnedBy.get(props.entity as Entity)?.value
       : selectedRock
     : props.entity;
+
   const Header = useMemo(() => {
     if (!isFleet && props.entity !== "newFleet") {
       return <AsteroidCard entity={props.entity} />;
@@ -103,15 +104,23 @@ export const _TransferPane = (props: {
     hydrateFleetData(props.entity, mud);
   }, [props.entity, mud]);
 
+  const otherEntityOwnerRock = useMemo(() => {
+    const otherEntity = props.side === "left" ? right : left;
+    if (otherEntity === "newFleet") return undefined;
+    const isFleet = components.IsFleet.get(otherEntity)?.value;
+    return isFleet ? components.OwnedBy.get(otherEntity)?.value : otherEntity;
+  }, [props.side, left, right]);
+
   useEffect(() => {
-    const { disabled, submitMessage } = checkErrors(
-      props.entity,
-      ownerRock as Entity | undefined,
+    const { disabled, submitMessage } = checkErrors({
+      entity: props.entity,
+      asteroid: ownerRock as Entity | undefined,
       deltas,
-      props.unitCounts,
-      props.resourceCounts,
-      props.side === "left"
-    );
+      unitCounts: props.unitCounts,
+      resourceCounts: props.resourceCounts,
+      invert: props.side === "left",
+      sameOwnerRock: ownerRock === otherEntityOwnerRock,
+    });
     setError(props.side, disabled ? submitMessage : null);
   }, [props.resourceCounts, props.unitCounts, props.entity]);
 
@@ -233,18 +242,27 @@ export const _TransferPane = (props: {
   );
 };
 
-const checkErrors = (
-  entity: Entity | "newFleet",
-  asteroid: Entity | undefined,
-  deltas: Map<Entity, bigint>,
-  unitCounts: Map<Entity, bigint>,
-  resourceCounts: Map<Entity, bigint>,
-  invert?: boolean
-) => {
+const checkErrors = ({
+  entity,
+  asteroid,
+  deltas,
+  unitCounts,
+  resourceCounts,
+  invert,
+  sameOwnerRock,
+}: {
+  entity: Entity | "newFleet";
+  asteroid: Entity | undefined;
+  deltas: Map<Entity, bigint>;
+  unitCounts: Map<Entity, bigint>;
+  resourceCounts: Map<Entity, bigint>;
+  invert?: boolean;
+  sameOwnerRock?: boolean;
+}) => {
   if (!asteroid) return { disabled: true, submitMessage: "No asteroid selected" };
   const isFleet = entity === "newFleet" || components.IsFleet.has(entity as Entity);
   if (isFleet) {
-    if (unitCounts.size === 0) return { disabled: true, submitMessage: "No units with this fleet" };
+    if (unitCounts.size === 0) return { disabled: true, submitMessage: "No units" };
     const owner = (entity !== "newFleet" ? components.OwnedBy.get(entity)?.value : undefined) as Entity | undefined;
     const capacity = getFleetStatsFromUnits(unitCounts, owner).cargo;
     const cargo = [...resourceCounts.entries()].reduce((acc, [, count]) => acc + count, 0n);
@@ -267,18 +285,21 @@ const checkErrors = (
     return acc;
   }, {} as Record<Entity, bigint>);
 
-  const notEnoughUtilities = Object.entries(utilitiesAdded).reduce((acc, [resource, count]) => {
-    const { resourceCount } = getFullResourceCount(resource as Entity, asteroid);
-    if (count <= resourceCount) return acc;
-    return [...acc, { entity: resource as Entity, resourceCount, count }];
-  }, [] as { entity: Entity; resourceCount: bigint; count: bigint }[]);
+  if (!sameOwnerRock) {
+    const notEnoughUtilities = Object.entries(utilitiesAdded).reduce((acc, [resource, count]) => {
+      const { resourceCount } = getFullResourceCount(resource as Entity, asteroid);
+      if (count <= resourceCount) return acc;
+      return [...acc, { entity: resource as Entity, resourceCount, count }];
+    }, [] as { entity: Entity; resourceCount: bigint; count: bigint }[]);
 
-  if (notEnoughUtilities.length > 0)
-    return {
-      disabled: true,
-      submitMessage: `Not enough ${getEntityTypeName(notEnoughUtilities[0].entity)} (-${notEnoughUtilities[0].count})`,
-    };
-
+    if (notEnoughUtilities.length > 0)
+      return {
+        disabled: true,
+        submitMessage: `Not enough ${getEntityTypeName(notEnoughUtilities[0].entity)} (-${
+          notEnoughUtilities[0].count
+        })`,
+      };
+  }
   if (!isFleet) {
     // make sure we have enough storage for resources
     const notEnoughResources = [...resourceCounts.entries()].reduce((acc, [resource, count]) => {
