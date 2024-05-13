@@ -172,7 +172,7 @@ export enum Sprites {
   MinutemanMarine = "sprites/units/minutemen_marine.png",
   LightningCraft = "sprites/units/lightningcraft.png",
 
-  //Emblems
+  // Emblems
   Emblem1 = "sprites/emblems/Emblems_LVL1.png",
   Emblem2 = "sprites/emblems/Emblems_LVL2.png",
   Emblem3 = "sprites/emblems/Emblems_LVL3.png",

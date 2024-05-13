@@ -10,8 +10,7 @@ import {
   runQuery,
 } from "@latticexyz/recs";
 
-import { Scene } from "engine/types";
-import { world } from "@/network/world";
+import { world } from "src/network/world";
 
 import { EntityType, Mode } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
@@ -19,16 +18,13 @@ import { Building } from "../../../lib/objects/Building";
 import { components } from "src/network/components";
 import { getBuildingBottomLeft } from "src/util/building";
 import { removeRaidableAsteroid } from "src/game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
-import { createObjectApi } from "@/game/api/objects";
 import { EMap } from "contracts/config/enums";
 import { isDomInteraction } from "@/util/canvas";
-// import { components } from "@/network/components";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-// import { Entity } from "@latticexyz/recs";
 import { Coord } from "engine/types";
 import { getBuildingDimensions } from "@/util/building";
+import { PrimodiumScene } from "@/game/api/scene";
 
-export const triggerBuildAnim = (scene: Scene, entity: Entity, mapCoord: Coord) => {
+export const triggerBuildAnim = (scene: PrimodiumScene, entity: Entity, mapCoord: Coord) => {
   const flare = (absoluteCoord: Coord, size = 1) => {
     scene.phaserScene.add
       .particles(absoluteCoord.x, absoluteCoord.y, "flare", {
@@ -55,7 +51,7 @@ export const triggerBuildAnim = (scene: Scene, entity: Entity, mapCoord: Coord) 
     x: mapCoord.x,
     y: mapCoord.y + buildingDimensions.height - 1,
   };
-  const pixelCoord = tileCoordToPixelCoord(mapCoordTopLeft, tileWidth, tileHeight);
+  const pixelCoord = scene.utils.tileCoordToPixelCoord(mapCoordTopLeft);
 
   // throw up dust on build
   flare(
@@ -67,12 +63,14 @@ export const triggerBuildAnim = (scene: Scene, entity: Entity, mapCoord: Coord) 
   );
 };
 
-export const renderBuilding = (scene: Scene) => {
+//TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
+export const renderBuilding = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const spectateWorld = namespaceWorld(world, "game_spectate");
-  const objects = createObjectApi(scene);
+  const { objects } = scene;
 
-  defineComponentSystem(systemsWorld, components.ActiveRock, ({ value }) => {
+  defineComponentSystem(systemsWorld, components.ActiveRock, async ({ value }) => {
+    //sleep 1 second to allow for building to be removed
     if (!value[0] || value[0]?.value === value[1]?.value) return;
 
     const activeRock = value[0]?.value as Entity;
@@ -147,7 +145,6 @@ export const renderBuilding = (scene: Scene) => {
       const tilePosition = getBuildingBottomLeft(origin, buildingType);
 
       const building = new Building({ id: entity, scene, buildingType, coord: tilePosition })
-        // .spawn()
         .setLevel(components.Level.get(entity)?.value ?? 1n)
         .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
           if (pointer.getDuration() > 250 || isDomInteraction(pointer, "up")) return;
@@ -171,8 +168,6 @@ export const renderBuilding = (scene: Scene) => {
 
           building.clearOutline();
         });
-
-      // buildings.set(entity, building);
     };
 
     //handle selectedBuilding changes

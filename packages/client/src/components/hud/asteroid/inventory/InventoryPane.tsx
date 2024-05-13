@@ -3,7 +3,7 @@ import { Card } from "@/components/core/Card";
 import { AllResourceLabels } from "@/components/hud/asteroid/inventory/resources/AllResourceLabels";
 import { AllUtilityLabels } from "@/components/hud/asteroid/inventory/resources/AllUtilityLabels";
 import { usePersistentStore } from "@/game/stores/PersistentStore";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { useGame } from "@/hooks/useGame";
 import { EntityType } from "@/util/constants";
 import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 import { useEffect, useRef, useState } from "react";
@@ -13,12 +13,12 @@ import { Hangar } from "@/components/hud/asteroid/inventory/hangar/Hangar";
 export const InventoryPane = () => {
   const [visibleDiv, setVisibleDiv] = useState(0);
   const [arePanesExpanded, setArePanesExpanded] = useState(false);
-  const primodium = usePrimodium();
+  const game = useGame();
 
   const {
     hooks: { useKeybinds },
     input: { addListener },
-  } = useRef(primodium.api("ASTEROID")).current;
+  } = useRef(game.ASTEROID).current;
   const keybinds = useKeybinds();
   const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
 

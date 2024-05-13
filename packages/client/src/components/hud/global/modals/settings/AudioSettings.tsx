@@ -4,19 +4,21 @@ import { Navigator } from "src/components/core/Navigator";
 import { Range } from "src/components/core/Range";
 import { Channel } from "src/game/api/audio";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
-import { usePrimodium } from "src/hooks/usePrimodium";
+import { useGame } from "src/hooks/useGame";
 
 export const AudioSettings = () => {
   const { master, sfx, ui, music } = usePersistentStore((state) => state.volume);
-  const primodium = usePrimodium();
+  const game = useGame();
 
   const setVolume = useCallback(
     (amount: number, channel: Channel | "master") => {
-      primodium.api().audio.setVolume(amount, channel);
-      primodium.api("UI").audio.setVolume(amount, channel);
-      primodium.api("STARMAP").audio.setVolume(amount, channel);
+      game.ASTEROID.audio.setVolume(amount, channel);
+      game.UI.audio.setVolume(amount, channel);
+      game.STARMAP.audio.setVolume(amount, channel);
+      game.COMMAND_CENTER.audio.setVolume(amount, channel);
+      game.ROOT.audio.setVolume(amount, channel);
     },
-    [primodium]
+    [game]
   );
 
   return (

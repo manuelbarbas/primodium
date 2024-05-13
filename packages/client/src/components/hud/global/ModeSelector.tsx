@@ -90,7 +90,7 @@ export const ModeSelector = () => {
                   <p>
                     OPEN STARBELT <FaMagnifyingGlassMinus size={12} className="inline opacity-50" />
                   </p>
-                  <p className="block text-xs opacity-75">VIEW AND TRAVEL TO ASTEROIDS</p>
+                  <p className="block text-xs opacity-75">TRAVEL TO AND VIEW ASTEROIDS</p>
                 </div>
               </div>
             </Button>

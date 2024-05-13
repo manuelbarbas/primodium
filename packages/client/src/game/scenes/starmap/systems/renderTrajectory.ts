@@ -1,11 +1,10 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { TargetLine } from "@/game/lib/objects/TargetLine";
+import { PrimodiumScene } from "@/game/api/scene";
 
-export const renderTrajectory = (scene: Scene) => {
+export const renderTrajectory = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const trajectoryLine = new TargetLine(scene, { x: 0, y: 0 }, { x: 0, y: 0 })
     .setAlpha(0.3)
@@ -26,16 +25,8 @@ export const renderTrajectory = (scene: Scene) => {
       return;
     }
 
-    const pixelOrigin = tileCoordToPixelCoord(
-      { x: originPos.x, y: -originPos.y },
-      scene.tiled.tileWidth,
-      scene.tiled.tileHeight
-    );
-    const pixelDest = tileCoordToPixelCoord(
-      { x: destPos.x, y: -destPos.y },
-      scene.tiled.tileWidth,
-      scene.tiled.tileHeight
-    );
+    const pixelOrigin = scene.utils.tileCoordToPixelCoord({ x: originPos.x, y: -originPos.y });
+    const pixelDest = scene.utils.tileCoordToPixelCoord({ x: destPos.x, y: -destPos.y });
     trajectoryLine.setActive(true).setVisible(true);
     trajectoryLine.setCoordinates(pixelOrigin, pixelDest);
   });

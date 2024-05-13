@@ -1,7 +1,6 @@
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { useMemo } from "react";
 import { Widget } from "@/components/core/Widget";
-import { usePrimodium } from "@/hooks/usePrimodium";
+import { useGame } from "@/hooks/useGame";
 import { components } from "@/network/components";
 import { GlassCard } from "@/components/core/Card";
 import { InterfaceIcons } from "@primodiumxyz/assets";
@@ -11,23 +10,20 @@ import { entityToRockName } from "@/util/name";
 import { Mode } from "@/util/constants";
 
 export const AsteroidMenuPopup = () => {
-  const primodium = usePrimodium();
+  const game = useGame();
   const selectedAsteroid = components.SelectedRock.use()?.value;
   const position = components.Position.use(selectedAsteroid);
   const mapOpen = components.SelectedMode.use()?.value === Mode.Starmap;
 
   const coord = useMemo(() => {
-    const {
-      scene: { getConfig },
-    } = primodium.api();
-    const config = getConfig("STARMAP");
+    const { utils } = game.STARMAP;
 
     if (!position) return { x: 0, y: 0 };
 
-    const pixelCoord = tileCoordToPixelCoord(position, config.tilemap.tileWidth, config.tilemap.tileHeight);
+    const pixelCoord = utils.tileCoordToPixelCoord(position);
 
     return { x: pixelCoord.x + 32, y: -pixelCoord.y - 8 };
-  }, [primodium, position]);
+  }, [game, position]);
 
   if (!selectedAsteroid || !mapOpen) return null;
 

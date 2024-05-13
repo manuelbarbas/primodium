@@ -1,5 +1,5 @@
 import { ComponentValue, Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 import { EResource, EMap } from "contracts/config/enums";
 import { storageUnitStorageUpgrades } from "contracts/config/storageUpgrades";
 import { components } from "src/network/components";

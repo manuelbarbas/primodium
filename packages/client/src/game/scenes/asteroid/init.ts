@@ -1,15 +1,21 @@
 // ASTEROID MAP ENTRY POINT
-import { Game } from "engine/types";
-import { createAudioApi } from "src/game/api/audio";
+import { createSceneApi, PrimodiumScene } from "@/game/api/scene";
 import { asteroidSceneConfig } from "../../lib/config/asteroidScene";
 import { setupBasicCameraMovement } from "../common/setup/setupBasicCameraMovement";
 import { setupKeybinds } from "./setup/setupKeybinds";
 import { setupMouseInputs } from "./setup/setupMouseInputs";
+import { MUD } from "@/network/types";
+import { runSystems as runAsteroidSystems } from "src/game/scenes/asteroid/systems";
+import { GlobalApi } from "@/game/api/global";
 
-export const initAsteroidScene = async (game: Game) => {
-  const scene = await game.sceneManager.createScene(asteroidSceneConfig, true);
-  const audio = createAudioApi(scene);
-  audio.initializeAudioVolume();
+export const initAsteroidScene = async (game: GlobalApi): Promise<PrimodiumScene> => {
+  const scene = await game.createScene(asteroidSceneConfig, true);
+
+  const sceneApi = createSceneApi(scene);
+
+  setupMouseInputs(sceneApi);
+  setupBasicCameraMovement(sceneApi);
+  setupKeybinds(sceneApi);
 
   scene.phaserScene.lights.enable();
   scene.phaserScene.lights.setAmbientColor(0x808080);
@@ -32,13 +38,8 @@ export const initAsteroidScene = async (game: Game) => {
     yoyo: true,
   });
 
-  // scene.phaserScene.lights
-  //   .addPointLight(18 * scene.tiled.tileWidth, -10 * scene.tiled.tileHeight, 0xe0ffff, 2000, 0.2, 0.03)
-  //   .setDepth(DepthLayers.Resources + 1);
-
   scene.camera.phaserCamera.fadeIn(1000);
+  const runSystems = (mud: MUD) => runAsteroidSystems(sceneApi, mud);
 
-  setupMouseInputs(scene);
-  setupBasicCameraMovement(scene);
-  setupKeybinds(scene);
+  return { ...sceneApi, runSystems };
 };

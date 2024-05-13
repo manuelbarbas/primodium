@@ -1,14 +1,15 @@
-import { Coord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Scene } from "engine/types";
+import Phaser from "phaser";
+import { PrimodiumScene } from "@/game/api/scene";
 import { FleetsContainer } from "./Asteroid/FleetsContainer";
 import { IPrimodiumGameObject } from "./interfaces";
 import { TransitLine } from "./TransitLine";
 import { Assets, Sprites, Animations } from "@primodiumxyz/assets";
 import { Entity } from "@latticexyz/recs";
+import { Coord } from "engine/types";
 
 export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObject {
+  private _scene: PrimodiumScene;
   private id: Entity;
-  private _scene: Scene;
   private coord: Coord;
   private spawned = false;
   private orbitRingRef: FleetsContainer | null = null;
@@ -16,9 +17,10 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
   private frames: Phaser.Animations.AnimationFrame[];
   private currentRotationFrame: string | number;
   public particles: Phaser.GameObjects.Particles.ParticleEmitter;
-  constructor(args: { id: Entity; scene: Scene; coord: Coord }) {
+
+  constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord }) {
     const { id, scene, coord } = args;
-    const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
+    const pixelCoord = scene.utils.tileCoordToPixelCoord(coord);
     super(
       scene.phaserScene,
       pixelCoord.x,
@@ -47,7 +49,7 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
       })
       .setAlpha(0.27);
 
-    this._scene.objects.add(id, this);
+    this._scene.objects.fleet.add(id, this);
   }
 
   spawn() {
@@ -133,7 +135,7 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
   }
 
   destroy() {
-    this._scene.objects.remove(this.id);
+    this._scene.objects.fleet.remove(this.id);
     this.particles.destroy();
     super.destroy();
   }

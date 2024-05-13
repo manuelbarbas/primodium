@@ -9,7 +9,6 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
 import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
-import { usePrimodium } from "src/hooks/usePrimodium";
 import { useUnitCounts } from "src/hooks/useUnitCount";
 import { components } from "src/network/components";
 import { abandonFleet } from "src/network/setup/contractCalls/fleetAbandon";
@@ -23,8 +22,6 @@ import { useFleetNav } from "./Fleets";
 
 const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
   const mud = useMud();
-  const api = usePrimodium().api("STARMAP");
-  const scene = api.scene.getScene("STARMAP");
 
   const { BackButton, NavButton } = useFleetNav();
 
@@ -188,29 +185,11 @@ const ManageFleet: FC<{ fleetEntity: Entity }> = ({ fleetEntity }) => {
             >
               Transfer
             </NavButton>
-            <Modal.CloseButton
-              className="btn btn-primary btn-sm"
-              disabled={cannotDoAnything}
-              onClick={() => {
-                if (!scene) return;
-              }}
-            >
+            <Modal.CloseButton className="btn btn-primary btn-sm" disabled={cannotDoAnything}>
               SEND
             </Modal.CloseButton>
 
-            <Modal.CloseButton
-              className="btn btn-primary btn-sm"
-              disabled={cannotDoAnything || inCooldown.inCooldown}
-              onClick={async () => {
-                if (!scene) return;
-
-                const fleetDestinationEntity = components.FleetMovement.get(fleetEntity)?.destination as Entity;
-                if (!fleetDestinationEntity) return;
-                const fleetDestinationPosition = components.Position.get(fleetDestinationEntity);
-                if (!fleetDestinationPosition) return;
-                api.camera.pan(fleetDestinationPosition);
-              }}
-            >
+            <Modal.CloseButton className="btn btn-primary btn-sm" disabled={cannotDoAnything || inCooldown.inCooldown}>
               ATTACK
             </Modal.CloseButton>
             <TransactionQueueMask queueItemId={"landFleet" as Entity}>

@@ -1,11 +1,9 @@
 import { WorldAbi } from "@/network/world";
-import { Primodium } from "@game/api";
 import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 import { Cheatcode, Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import { EAllianceInviteMode, EPointType, EResource } from "contracts/config/enums";
-import { toast } from "react-toastify";
 import { components } from "src/network/components";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { buildBuilding } from "src/network/setup/contractCalls/buildBuilding";
@@ -16,6 +14,7 @@ import { MUD } from "src/network/types";
 import { encodeEntity, toHex32 } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
+import { waitForTransactionReceipt } from "viem/actions";
 import { getEntityTypeName } from "../common";
 import {
   BuildingEnumLookup,
@@ -31,9 +30,12 @@ import { getAsteroidBounds, outOfBounds } from "../outOfBounds";
 import { getFullResourceCount } from "../resource";
 import { getBuildingAtCoord } from "../tile";
 import { TesterPack, testerPacks } from "./testerPacks";
-import { waitForTransactionReceipt } from "viem/actions";
+import { PrimodiumGame } from "@/game/api";
 
-export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
+export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
+  const {
+    UI: { notify },
+  } = game;
   const buildings: Record<string, Entity> = {
     mainbase: EntityType.MainBase,
     droidbase: EntityType.DroidBase,
@@ -130,7 +132,8 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
       )
     );
     await Promise.all(systemCalls);
-    toast.success(
+    notify(
+      "success",
       `${formatResourceCount(resource, value)} ${getEntityTypeName(resource)} given to ${entityToRockName(spaceRock)}`
     );
   };
@@ -190,7 +193,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
           value: requiredBaseLevel,
         }
       );
-      toast.success(`Main Base Level set to ${requiredBaseLevel}`);
+      notify("success", `Main Base Level set to ${requiredBaseLevel}`);
     }
     const requiredResources = components.P_RequiredResources.getWithKeys({ prototype: building as Hex, level });
     if (!requiredResources) return;
@@ -242,7 +245,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
   async function upgradeBuilding(building: Entity, level: number | "max" = "max") {
     const position = components.Position.get(building);
     if (!position) {
-      toast.error("No building position ");
+      notify("error", "No building position ");
       throw new Error("No building position");
     }
 
@@ -254,7 +257,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
     else newLevel = BigInt(level);
 
     if (newLevel < currLevel) {
-      toast.error("Cannot downgrade building");
+      notify("error", "Cannot downgrade building");
       throw new Error("Cannot downgrade building");
     }
     while (currLevel < newLevel) {
@@ -332,13 +335,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
       txQueueSize = components.TransactionQueue.getSize();
     }
   }
-  function setupTesterPackCheatcodes(
-    testerPacks: Record<string, TesterPack>,
-    mud: MUD,
-    primodium: Primodium
-  ): Record<string, Cheatcode> {
-    mud;
-    primodium;
+  function setupTesterPackCheatcodes(testerPacks: Record<string, TesterPack>): Record<string, Cheatcode> {
     return Object.fromEntries(
       Object.entries(testerPacks).map(([name, pack]) => {
         return [
@@ -347,7 +344,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             params: [],
             function: async () => {
               const start = Date.now();
-              toast.info(`running cheatcode: ${name}`);
+              notify("info", `running cheatcode: ${name}`);
               // world speed
               pack.worldSpeed &&
                 (await setComponentValue(
@@ -371,7 +368,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
                   await waitUntilTxQueueEmpty();
                 }
 
-                toast.success(`${name}:Resources provided`);
+                notify("success", `${name}:Resources provided`);
               }
               if (pack.storages) {
                 // provide resources
@@ -389,7 +386,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
                   await waitUntilTxQueueEmpty();
                 }
 
-                toast.success(`${name}:Resources provided`);
+                notify("success", `${name}:Resources provided`);
               }
               // provide units
               if (pack.units) {
@@ -405,7 +402,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
                   await upgradeBuilding(mainBase as Entity, pack.mainBaseLevel);
                 }
                 await waitUntilTxQueueEmpty();
-                toast.success(`${name}: Main Base Level set to ${pack.mainBaseLevel}`);
+                notify("success", `${name}: Main Base Level set to ${pack.mainBaseLevel}`);
               }
               // upgrade expansion
               if (pack.expansion) {
@@ -418,7 +415,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
                   }
                 );
                 await waitUntilTxQueueEmpty();
-                toast.success(`${name}:Expansion set to ${pack.expansion}`);
+                notify("success", `${name}:Expansion set to ${pack.expansion}`);
               }
               // build buildings
               if (pack.buildings) {
@@ -434,7 +431,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
                 }
 
                 await waitUntilTxQueueEmpty();
-                toast.success(`${name}:Buildings created`);
+                notify("success", `${name}:Buildings created`);
               }
               // create fleets
               if (pack.fleets) {
@@ -446,11 +443,11 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
                   await waitUntilTxQueueEmpty();
                 }
 
-                toast.success(`${name}:Fleets created`);
+                notify("success", `${name}:Fleets created`);
               }
 
               const end = Date.now();
-              toast.success(`Cheatcode ${name} ran in ${end - start}ms`);
+              notify("success", `Cheatcode ${name} ran in ${end - start}ms`);
             },
           },
         ];
@@ -502,7 +499,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
     throw new Error("Valid tile position not found");
   }
 
-  const packs = setupTesterPackCheatcodes(testerPacks, mud, primodium);
+  const packs = setupTesterPackCheatcodes(testerPacks);
   return [
     {
       title: "Tester Packs",
@@ -514,7 +511,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
         setWorldSpeed: {
           params: [{ name: "value", type: "number" }],
           function: async (value: number) => {
-            toast.info("running cheatcode: Set World Speed");
+            notify("info", "running cheatcode: Set World Speed");
             await setComponentValue(
               mud,
               mud.components.P_GameConfig,
@@ -528,7 +525,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
         setUnitDeathLimit: {
           params: [{ name: "value", type: "number" }],
           function: async (value: number) => {
-            toast.info("running cheatcode: Set World Speed");
+            notify("info", "running cheatcode: Set World Speed");
             await setComponentValue(
               mud,
               mud.components.P_GameConfig,
@@ -542,7 +539,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
         stopGracePeriod: {
           params: [],
           function: async () => {
-            toast.info("running cheatcode: Stop Grace Period");
+            notify("info", "running cheatcode: Stop Grace Period");
             setComponentValue(mud, components.P_GracePeriod, {}, { asteroid: 0n });
           },
         },
@@ -552,7 +549,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             { name: "range", type: "number" },
           ],
           function: async (type: "shard" | "wormhole", range: number) => {
-            toast.info("running cheatcode: Give Players Random Points");
+            notify("info", "running cheatcode: Give Players Random Points");
             const allPlayers = components.Spawned.getAll();
             const pointType = type === "shard" ? EPointType.Shard : EPointType.Wormhole;
             allPlayers.forEach((player) => {
@@ -599,7 +596,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             const selectedBuilding = mud.components.SelectedBuilding.get()?.value;
 
             if (!selectedBuilding) {
-              toast.error("No building selected");
+              notify("error", "No building selected");
               throw new Error("No building selected");
             }
             await upgradeBuilding(selectedBuilding, level == "max" ? "max" : Number(level));
@@ -620,7 +617,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
                 value: BigInt(level),
               }
             );
-            toast.success("Main Base Level set to " + level);
+            notify("success", "Main Base Level set to " + level);
           },
         },
 
@@ -637,7 +634,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             const rock = mud.components.ActiveRock.get()?.value;
             if (!rock) throw new Error("No asteroid found");
             provideUnit(rock, unitEntity, BigInt(count));
-            toast.success(`${count} ${unit} given to ${entityToRockName(rock)}`);
+            notify("success", `${count} ${unit} given to ${entityToRockName(rock)}`);
           },
         },
         addResource: {
@@ -654,7 +651,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
 
             if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
             provideResource(selectedRock, resourceEntity, BigInt(count * Number(RESOURCE_SCALE)));
-            toast.success(`${count} ${resource} given to ${entityToRockName(selectedRock)}`);
+            notify("success", `${count} ${resource} given to ${entityToRockName(selectedRock)}`);
           },
         },
         setStorage: {
@@ -681,7 +678,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
                 value,
               }
             );
-            toast.success(`${count} ${resource} storage given to ${entityToRockName(selectedRock)}`);
+            notify("success", `${count} ${resource} storage given to ${entityToRockName(selectedRock)}`);
           },
         },
         setResource: {
@@ -704,7 +701,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
                 value,
               }
             );
-            toast.success(`${count} ${resource} set for ${entityToRockName(selectedRock)}`);
+            notify("success", `${count} ${resource} set for ${entityToRockName(selectedRock)}`);
           },
         },
         increaseMaxColonySlots: {
@@ -720,7 +717,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
               { playerEntity: player as Hex },
               { value: colonyShipCap + BigInt(count) }
             );
-            toast.success(`Colony Ship Capacity increased by ${count}`);
+            notify("success", `Colony Ship Capacity increased by ${count}`);
           },
         },
         conquerAsteroid: {
@@ -728,14 +725,14 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
           function: async (baseType: string) => {
             const selectedRock = mud.components.SelectedRock.get()?.value;
             if (!selectedRock) {
-              toast.error(`No rock selected`);
+              notify("error", `No rock selected`);
               throw new Error("No asteroid found");
             }
-            toast.info(`Conquering ${entityToRockName(selectedRock)}`);
+            notify("info", `Conquering ${entityToRockName(selectedRock)}`);
             const staticData = components.Asteroid.get(selectedRock)?.__staticData;
             if (staticData === "") {
               await createFleet([{ unit: EntityType.LightningCraft, count: 1 }], []);
-              toast.error("Asteroid not initialized. Send fleet to initialize it");
+              notify("error", "Asteroid not initialized. Send fleet to initialize it");
               throw new Error("Asteroid not initialized");
             }
             const entity = baseType == "MainBase" ? EntityType.MainBase : EntityType.WormholeBase;
@@ -751,7 +748,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             const position = components.Position.get(entity);
             if (!position) throw new Error("No main base found");
             await buildBuilding(mud, BuildingEnumLookup[entity], { ...position, parentEntity: selectedRock as Hex });
-            toast.success(`Asteroid ${entityToRockName(selectedRock)} conquered`);
+            notify("success", `Asteroid ${entityToRockName(selectedRock)} conquered`);
           },
         },
         conquerAllPrimaryAsteroids: {
@@ -768,7 +765,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
                 { value: mud.playerAccount.entity }
               );
             }
-            toast.success("All primary asteroids conquered");
+            notify("success", "All primary asteroids conquered");
           },
         },
         setTerrain: {
@@ -792,7 +789,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
                 value: ResourceEnumLookup[resourceEntity],
               }
             );
-            toast.success(`Terrain set to ${resource} at [${x}, ${y}]. Reload to see change.`);
+            notify("success", `Terrain set to ${resource} at [${x}, ${y}]. Reload to see change.`);
           },
         },
       },
@@ -805,7 +802,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
           function: async () => {
             const selectedBuilding = mud.components.SelectedBuilding.get()?.value;
             if (!selectedBuilding) {
-              toast.error("No building selected");
+              notify("error", "No building selected");
               throw new Error("No building selected");
             }
             await setComponentValue(
@@ -888,7 +885,7 @@ export const setupCheatcodes = (mud: MUD, primodium: Primodium): Cheatcodes => {
             const timestamp = (components.Time.get()?.value ?? 0n) + BigInt(value);
             const selectedFleet = mud.components.SelectedFleet.get()?.value;
             if (!selectedFleet) {
-              toast.error("No fleet selected");
+              notify("error", "No fleet selected");
               throw new Error("No fleet selected");
             }
             await setComponentValue(

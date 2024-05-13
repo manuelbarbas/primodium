@@ -6,7 +6,7 @@ interface TabProps {
   children?: ReactNode;
   defaultIndex?: number;
   className?: string;
-  onChange?: () => void;
+  onChange?: (index?: number) => void;
   persistIndexKey?: string;
 }
 
@@ -85,7 +85,7 @@ export const Tabs: FC<TabProps> & {
       return;
     }
 
-    if (onChange) onChange();
+    if (onChange) onChange(currentIndex);
   }, [currentIndex, onChange]);
 
   return (

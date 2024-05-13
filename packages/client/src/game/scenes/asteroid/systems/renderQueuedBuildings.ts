@@ -8,22 +8,20 @@ import {
   namespaceWorld,
   runQuery,
 } from "@latticexyz/recs";
-import { Scene } from "engine/types";
+import { PrimodiumScene } from "@/game/api/scene";
 import { BuildingConstruction } from "src/game/lib/objects/Building";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { getBuildingDimensions } from "src/util/building";
 import { TransactionQueueType } from "src/util/constants";
-import { createObjectApi } from "@/game/api/objects";
 
 const getQueuePositionString = (entity: Entity) => {
   const position = components.TransactionQueue.getIndex(entity);
 
   return position > 0 ? position.toString() : "*";
 };
-export const renderQueuedBuildings = (scene: Scene) => {
+export const renderQueuedBuildings = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
-  const objects = createObjectApi(scene);
 
   const query = [
     Has(components.TransactionQueue),
@@ -40,7 +38,7 @@ export const renderQueuedBuildings = (scene: Scene) => {
 
     const dimensions = getBuildingDimensions(metadata.buildingType);
 
-    if (objects.constructionBuilding.has(entity)) return;
+    if (scene.objects.constructionBuilding.has(entity)) return;
 
     new BuildingConstruction({
       id: entity,
@@ -58,14 +56,14 @@ export const renderQueuedBuildings = (scene: Scene) => {
   });
 
   defineExitSystem(systemsWorld, [Has(components.TransactionQueue)], ({ entity }) => {
-    const construction = objects.constructionBuilding.get(entity);
+    const construction = scene.objects.constructionBuilding.get(entity);
     if (construction) {
       construction.destroy();
     }
 
     //udpate text for remaining queued items
     for (const entity of runQuery([Has(components.TransactionQueue)])) {
-      objects.constructionBuilding.get(entity)?.setQueueText(getQueuePositionString(entity));
+      scene.objects.constructionBuilding.get(entity)?.setQueueText(getQueuePositionString(entity));
     }
     console.info("[EXIT SYSTEM](transaction completed)");
   });
