@@ -33,7 +33,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     keys: [],
     tables: {
       P_AllianceConfig: { maxAllianceMembers: 30n },
-      P_GracePeriod: { asteroid: 60n * 60n * 12n, fleet: 60n * 30n },
+      P_GracePeriod: { asteroid: 60n * 60n * 48n, fleet: 60n * 30n },
       P_Asteroid: maxRange,
       P_GameConfig: {
         admin: encodeAddress("0"),
