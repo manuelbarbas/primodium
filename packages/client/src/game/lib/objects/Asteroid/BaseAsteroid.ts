@@ -271,6 +271,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
           ownerLabelAlpha: 0.5,
           fleetContainerAlpha: 1,
           setup: () => {
+            this.fleetsContainer.setAlpha(0);
             this.fleetsContainer.setOrbitView();
           },
         };
@@ -282,6 +283,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
           ownerLabelAlpha: 0.5,
           fleetContainerAlpha: 1,
           setup: () => {
+            this.fleetsContainer.setAlpha(0);
             this.fleetsContainer.setInlineView();
           },
         };

@@ -14,7 +14,9 @@ export class TransitLine extends TargetLine {
 
   constructor(args: { id: Entity; scene: PrimodiumScene; start: PixelCoord; end: PixelCoord }) {
     const { id, scene, start, end } = args;
-    super(scene, start, end, 0x808080);
+    super(scene, start, end, 0x6ad9d9);
+
+    this.setAlpha(0.25);
     this.start = start;
     this.end = end;
 
@@ -70,7 +72,15 @@ export class TransitLine extends TargetLine {
 
   destroy() {
     this._scene.objects.transitLine.remove(this.id);
-    super.destroy();
+
+    this.scene.add.tween({
+      targets: this,
+      alpha: 0,
+      duration: 200,
+      onComplete: () => {
+        super.destroy();
+      },
+    });
   }
 
   private _setFleetAngleAndPos() {
