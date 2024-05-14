@@ -19,9 +19,9 @@ export const StarbeltHUD = memo(() => {
         {/* MARKERS */}
         <AsteroidMenuPopup />
 
-        <HUD.Right>
+        <HUD.Left>
           <StarmapNavigator />
-        </HUD.Right>
+        </HUD.Left>
       </HUD>
     </div>
   );
