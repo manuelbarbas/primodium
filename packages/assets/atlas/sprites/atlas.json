@@ -5,7 +5,7 @@
     },
     "textures": [
         {
-            "image": "atlas.png?timestamp=1714761627148",
+            "image": "atlas.png?timestamp=1715712343385",
             "format": "RGBA8888",
             "size": {
                 "w": 2257,
@@ -11879,7 +11879,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_1.png",
+                    "filename": "sprites/miners/lithiummine/level1/Miner_Lithium_LVL1_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -11900,7 +11900,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_2.png",
+                    "filename": "sprites/miners/lithiummine/level1/Miner_Lithium_LVL1_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -11921,7 +11921,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_3.png",
+                    "filename": "sprites/miners/lithiummine/level1/Miner_Lithium_LVL1_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -11942,7 +11942,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_4.png",
+                    "filename": "sprites/miners/lithiummine/level1/Miner_Lithium_LVL1_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -11963,7 +11963,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_5.png",
+                    "filename": "sprites/miners/lithiummine/level1/Miner_Lithium_LVL1_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -11984,7 +11984,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_6.png",
+                    "filename": "sprites/miners/lithiummine/level1/Miner_Lithium_LVL1_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12005,7 +12005,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_7.png",
+                    "filename": "sprites/miners/lithiummine/level1/Miner_Lithium_LVL1_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12026,7 +12026,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_8.png",
+                    "filename": "sprites/miners/lithiummine/level1/Miner_Lithium_LVL1_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -12047,7 +12047,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/lithiummine/Miner_Lithium_LVL1_9.png",
+                    "filename": "sprites/miners/lithiummine/level1/Miner_Lithium_LVL1_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13643,6 +13643,384 @@
                     }
                 },
                 {
+                    "filename": "sprites/miners/lithiummine/level2/Miner_Lithium_LVL2_1.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 256,
+                        "y": 1280,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/lithiummine/level2/Miner_Lithium_LVL2_2.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 1629,
+                        "y": 648,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/lithiummine/level2/Miner_Lithium_LVL2_3.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 336,
+                        "y": 1402,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/lithiummine/level2/Miner_Lithium_LVL2_4.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 752,
+                        "y": 2236,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/lithiummine/level2/Miner_Lithium_LVL2_5.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 784,
+                        "y": 2236,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/lithiummine/level2/Miner_Lithium_LVL2_6.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 816,
+                        "y": 2236,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/lithiummine/level2/Miner_Lithium_LVL2_7.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 848,
+                        "y": 2236,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/lithiummine/level2/Miner_Lithium_LVL2_8.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 880,
+                        "y": 2236,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/lithiummine/level2/Miner_Lithium_LVL2_9.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 912,
+                        "y": 2236,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/lithiummine/level3/Miner_Lithium_LVL3_1.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 944,
+                        "y": 2236,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/lithiummine/level3/Miner_Lithium_LVL3_2.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 976,
+                        "y": 2236,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/lithiummine/level3/Miner_Lithium_LVL3_3.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 1008,
+                        "y": 2236,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/lithiummine/level3/Miner_Lithium_LVL3_4.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 1040,
+                        "y": 2236,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/lithiummine/level3/Miner_Lithium_LVL3_5.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 1072,
+                        "y": 2236,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/lithiummine/level3/Miner_Lithium_LVL3_6.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 1104,
+                        "y": 2236,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/lithiummine/level3/Miner_Lithium_LVL3_7.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 1136,
+                        "y": 2236,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/lithiummine/level3/Miner_Lithium_LVL3_8.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 1168,
+                        "y": 2236,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/lithiummine/level3/Miner_Lithium_LVL3_9.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 1200,
+                        "y": 2236,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
                     "filename": "sprites/construction/1x1.png",
                     "rotated": false,
                     "trimmed": false,
@@ -13657,56 +14035,14 @@
                         "h": 38
                     },
                     "frame": {
-                        "x": 256,
-                        "y": 1280,
+                        "x": 192,
+                        "y": 213,
                         "w": 32,
                         "h": 38
                     }
                 },
                 {
                     "filename": "sprites/icons/grace.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 32
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 32
-                    },
-                    "frame": {
-                        "x": 192,
-                        "y": 213,
-                        "w": 32,
-                        "h": 32
-                    }
-                },
-                {
-                    "filename": "sprites/resources/alloy_resource.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 32
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 32
-                    },
-                    "frame": {
-                        "x": 1629,
-                        "y": 648,
-                        "w": 32,
-                        "h": 32
-                    }
-                },
-                {
-                    "filename": "sprites/resources/copper_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13727,7 +14063,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/iridium_resource.png",
+                    "filename": "sprites/resources/alloy_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13748,7 +14084,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/iron_resource.png",
+                    "filename": "sprites/resources/copper_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13769,7 +14105,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/ironplate_resource.png",
+                    "filename": "sprites/resources/iridium_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13783,14 +14119,14 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 752,
+                        "x": 1232,
                         "y": 2253,
                         "w": 32,
                         "h": 32
                     }
                 },
                 {
-                    "filename": "sprites/resources/kimberlite_resource.png",
+                    "filename": "sprites/resources/iron_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13811,7 +14147,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/lithium_resource.png",
+                    "filename": "sprites/resources/ironplate_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13825,14 +14161,14 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 784,
+                        "x": 1264,
                         "y": 2253,
                         "w": 32,
                         "h": 32
                     }
                 },
                 {
-                    "filename": "sprites/resources/photovoltaiccell_resource.png",
+                    "filename": "sprites/resources/kimberlite_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13853,7 +14189,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/platinum_resource.png",
+                    "filename": "sprites/resources/lithium_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13867,14 +14203,14 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 816,
+                        "x": 1296,
                         "y": 2253,
                         "w": 32,
                         "h": 32
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource1.png",
+                    "filename": "sprites/resources/photovoltaiccell_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13895,7 +14231,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource2.png",
+                    "filename": "sprites/resources/platinum_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13909,14 +14245,14 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 848,
+                        "x": 1328,
                         "y": 2253,
                         "w": 32,
                         "h": 32
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource3.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13937,7 +14273,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource4.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13951,14 +14287,14 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 880,
+                        "x": 1360,
                         "y": 2253,
                         "w": 32,
                         "h": 32
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource5.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13979,7 +14315,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource6.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13993,14 +14329,14 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 912,
+                        "x": 1392,
                         "y": 2253,
                         "w": 32,
                         "h": 32
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource7.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14021,7 +14357,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource8.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14035,14 +14371,14 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 944,
+                        "x": 1424,
                         "y": 2253,
                         "w": 32,
                         "h": 32
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium_resource.gif",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14063,7 +14399,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/titanium_resource.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14077,14 +14413,14 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 976,
+                        "x": 1456,
                         "y": 2253,
                         "w": 32,
                         "h": 32
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/advanced_unraidable.png",
+                    "filename": "sprites/resources/primodium_resource.gif",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14105,7 +14441,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/building_defense.png",
+                    "filename": "sprites/resources/titanium_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14119,14 +14455,14 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1008,
+                        "x": 1488,
                         "y": 2253,
                         "w": 32,
                         "h": 32
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/building_defense_mult.png",
+                    "filename": "sprites/resources/utility/advanced_unraidable.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14147,7 +14483,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/defense.png",
+                    "filename": "sprites/resources/utility/building_defense.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14161,14 +14497,14 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1040,
+                        "x": 1520,
                         "y": 2253,
                         "w": 32,
                         "h": 32
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/electricity.png",
+                    "filename": "sprites/resources/utility/building_defense_mult.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14189,7 +14525,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/encryption.png",
+                    "filename": "sprites/resources/utility/defense.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14210,6 +14546,48 @@
                     }
                 },
                 {
+                    "filename": "sprites/resources/utility/electricity.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1552,
+                        "y": 2253,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/utility/encryption.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 1584,
+                        "y": 2253,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
                     "filename": "sprites/resources/utility/housing.png",
                     "rotated": false,
                     "trimmed": false,
@@ -14224,7 +14602,7 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1072,
+                        "x": 1616,
                         "y": 2253,
                         "w": 32,
                         "h": 32
@@ -14245,7 +14623,7 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1104,
+                        "x": 1648,
                         "y": 2253,
                         "w": 32,
                         "h": 32
@@ -14266,7 +14644,7 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1136,
+                        "x": 1680,
                         "y": 2253,
                         "w": 32,
                         "h": 32
@@ -14287,7 +14665,7 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 1168,
+                        "x": 1712,
                         "y": 2253,
                         "w": 32,
                         "h": 32
@@ -14350,7 +14728,7 @@
                         "h": 27
                     },
                     "frame": {
-                        "x": 752,
+                        "x": 1232,
                         "y": 2225,
                         "w": 26,
                         "h": 27
@@ -14371,7 +14749,7 @@
                         "h": 27
                     },
                     "frame": {
-                        "x": 778,
+                        "x": 1258,
                         "y": 2225,
                         "w": 26,
                         "h": 27
@@ -14392,7 +14770,7 @@
                         "h": 27
                     },
                     "frame": {
-                        "x": 804,
+                        "x": 1284,
                         "y": 2225,
                         "w": 26,
                         "h": 27
@@ -14413,7 +14791,7 @@
                         "h": 27
                     },
                     "frame": {
-                        "x": 830,
+                        "x": 1310,
                         "y": 2225,
                         "w": 26,
                         "h": 27
@@ -14434,7 +14812,7 @@
                         "h": 27
                     },
                     "frame": {
-                        "x": 856,
+                        "x": 1336,
                         "y": 2225,
                         "w": 26,
                         "h": 27
@@ -14455,7 +14833,7 @@
                         "h": 27
                     },
                     "frame": {
-                        "x": 882,
+                        "x": 1362,
                         "y": 2225,
                         "w": 26,
                         "h": 27
