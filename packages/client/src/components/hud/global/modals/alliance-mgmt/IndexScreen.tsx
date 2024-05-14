@@ -47,6 +47,7 @@ export const IndexScreen = () => {
     // TODO: better search algorithm
     return allAlliances?.filter((alliance) => alliance.name.toLowerCase().includes(searchTag.toLowerCase()));
   }, [searchTag, allianceEntities, allianceNames, invites, joinRequests]);
+  console.log(alliances);
 
   // Check if the player is not already in an alliance (for disabling buttons & custom display)
   // const playerAlliance = components.PlayerAlliance.use(playerEntity)?.alliance;
@@ -79,7 +80,13 @@ export const IndexScreen = () => {
         <div className="flex flex-col w-full h-full justify-between text-xs pointer-events-auto">
           <AutoSizer>
             {({ height, width }: { height: number; width: number }) => (
-              <List height={height} width={width} itemCount={10} itemSize={52} className="scrollbar">
+              <List
+                height={height}
+                width={width}
+                itemCount={Math.min(allianceLength, 10)}
+                itemSize={52}
+                className="scrollbar"
+              >
                 {({ index, style }) => (
                   <div style={style} className="pr-2">
                     <AllianceItem
