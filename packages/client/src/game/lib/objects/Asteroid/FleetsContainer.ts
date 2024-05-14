@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import { Coord, TileCoord } from "engine/types";
 import { Fleet } from "../Fleet";
 import { PrimodiumScene } from "@/game/api/scene";
+import { DepthLayers } from "@/game/lib/constants/common";
 
 const WIDTH = 150;
 const HEIGHT = 100;
@@ -115,6 +116,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     // this.fleets.setAlpha(0);
     // this.fleets.setRotation(0);
 
+    this.setDepth(DepthLayers.Marker);
     this.fleets.list.forEach((_fleet, i) => {
       const fleet = _fleet as Fleet;
       fleet.reset();
@@ -144,7 +146,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     } else this.orbitRing.setActive(false).setVisible(false);
 
     this.prevRotationVal = -1;
-    this.setScale(1);
+    this.setScale(1).setDepth(DepthLayers.Rock);
     this.inOrbitView = true;
 
     return this;
