@@ -12,7 +12,7 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
   private id: Entity;
   private buildingType: Entity;
   private coord: Coord;
-  private _scene: PrimodiumScene;
+  protected _scene: PrimodiumScene;
   private level = 1n;
   private spawned = false;
 

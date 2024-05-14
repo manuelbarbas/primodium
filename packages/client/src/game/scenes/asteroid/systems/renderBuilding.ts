@@ -21,6 +21,7 @@ import { getBuildingBottomLeft } from "@/util/building";
 import { hashEntities } from "@/util/encode";
 import { isDomInteraction } from "@/util/canvas";
 import { EMap } from "contracts/config/enums";
+import { WormholeBase } from "@/game/lib/objects/Building/Wormhole";
 
 //TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
 export const renderBuilding = (scene: PrimodiumScene) => {
@@ -121,7 +122,17 @@ export const renderBuilding = (scene: PrimodiumScene) => {
       if (!origin) return;
       const tilePosition = getBuildingBottomLeft(origin, buildingType);
 
-      const building = new Building({ id: entity, scene, buildingType, coord: tilePosition })
+      const building =
+        buildingType === EntityType.WormholeBase
+          ? new WormholeBase({
+              id: entity,
+              scene,
+              coord: tilePosition,
+              resource: components.WormholeResource.get()?.resource ?? EntityType.Iron,
+            })
+          : new Building({ id: entity, scene, buildingType, coord: tilePosition });
+
+      building
         .setLevel(components.Level.get(entity)?.value ?? 1n)
         .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
           if (pointer.getDuration() > 250 || isDomInteraction(pointer, "up")) return;

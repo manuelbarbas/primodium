@@ -1,10 +1,11 @@
 import { components } from "@/network/components";
 import { MUD } from "@/network/types";
 import { world } from "@/network/world";
-import { defineComponentSystem, Entity } from "@latticexyz/recs";
+import { defineComponentSystem, Entity, namespaceWorld } from "@latticexyz/recs";
 
 export const setupHomeAsteroid = async (mud: MUD) => {
-  defineComponentSystem(world, components.Home, ({ entity, value }) => {
+  const systemWorld = namespaceWorld(world, "systems");
+  defineComponentSystem(systemWorld, components.Home, ({ entity, value }) => {
     if (entity !== mud.playerAccount.entity) return;
     const newHome = value[0]?.value as Entity | undefined;
     if (!newHome) return;

@@ -84,11 +84,43 @@ export const createFxApi = (scene: Scene) => {
       ])
       .play();
   }
+  function flashScreen(duration: number = 500) {
+    // Create a white rectangle that covers the entire screen
+    const scale = scene.phaserScene.scale;
+    const camera = scene.camera;
+    const flash = scene.phaserScene.add
+      .rectangle(
+        camera.phaserCamera.scrollX,
+        camera.phaserCamera.scrollY,
+        scale.width * 10,
+        scale.height * 10,
+        0xffffff
+      )
+      .setDepth(DepthLayers.Path);
+
+    // Set the initial alpha to 0 (fully transparent)
+    flash.setAlpha(0);
+
+    camera.phaserCamera.shake(300, 0.02 / camera.phaserCamera.zoom);
+
+    // Create a tween to flash the screen
+    scene.phaserScene.tweens.add({
+      targets: flash,
+      alpha: { from: 0, to: 1 }, // Flash in
+      duration: duration / 2, // First half of the duration
+      ease: "Cubic.easeIn",
+      yoyo: true, // Flash out (reverses the tween)
+      onComplete: () => {
+        flash.destroy(); // Destroy the rectangle after the flash
+      },
+    });
+  }
 
   return {
     outline,
     removeOutline,
     emitExplosion,
     fireMissile,
+    flashScreen,
   };
 };
