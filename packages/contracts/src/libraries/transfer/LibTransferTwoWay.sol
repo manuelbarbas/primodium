@@ -221,7 +221,7 @@ library LibTransferTwoWay {
    * @param rightEntity The second entity
    * @param unitCounts The counts of units to transfer
    * @param resourceCounts The counts of resources to transfer
-   * @param sameAsteroidOwner Boolean indicating if the entities have the same owner
+   * @param sameAsteroidOwner Boolean indicating if the two entities are owned by the same asteroid
    */
   function transferUnitsAndResourcesTwoWay(
     bytes32 leftEntity,
