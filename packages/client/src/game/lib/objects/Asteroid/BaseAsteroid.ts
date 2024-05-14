@@ -191,6 +191,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     this.asteroidLabel.destroy();
     this.fleetsContainer.destroy();
     this._scene.objects.asteroid.remove(this.id);
+    super.destroy();
   }
 
   // Tells the asteroid how to behave at different zoom levels
