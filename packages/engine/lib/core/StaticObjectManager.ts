@@ -3,7 +3,6 @@ import { createCamera } from "./createCamera";
 import { Coord } from "../../types";
 import { CoordMap } from "../util/coordMap";
 import { pixelToChunkCoord } from "../util/coords";
-import { ContainerLite } from "../../objects";
 
 type Spawnable = {
   spawn(): void;
@@ -17,7 +16,6 @@ export type PrimodiumGameObject = (
   | Phaser.GameObjects.BitmapText
   | Phaser.GameObjects.Line
   | Phaser.GameObjects.Zone
-  | ContainerLite
 ) &
   Spawnable;
 
