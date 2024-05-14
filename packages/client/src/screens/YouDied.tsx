@@ -1,14 +1,13 @@
 import { Button } from "@/components/core/Button";
 import { Card, SecondaryCard } from "@/components/core/Card";
-import { BattleDetails } from "@/components/hud/widgets/battle-reports/BattleDetails";
-import { BattleButton, ErrorScreen, LoadingScreen } from "@/components/hud/widgets/battle-reports/BattleReports";
+import { BattleDetails } from "@/components/hud/global/modals/battle-reports/BattleDetails";
+import { BattleButton, ErrorScreen, LoadingScreen } from "@/components/hud/global/modals/battle-reports/BattleReports";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { spawn } from "@/network/setup/contractCalls/spawn";
 import { hydrateBattleReports } from "@/network/sync/indexer";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Navigator } from "src/components/core/Navigator";
 import { useMud } from "src/hooks";
@@ -53,7 +52,7 @@ export const YouDied = () => {
         <LoadingScreen />
         <ErrorScreen />
         <Navigator.Screen title={"BattleReports"} className="full h-full">
-          <div className="text-xs gap-2 w-full h-full flex flex-col items-center">
+          <div className="text-xs gap-z w-full h-full flex flex-col items-center">
             {battles.length === 0 && (
               <SecondaryCard className="w-full h-full flex items-center justify-center font-bold">
                 <p className="opacity-50">NO BATTLE REPORTS FOUND</p>
@@ -64,7 +63,7 @@ export const YouDied = () => {
                 <BattleButton battleEntity={battle} key={`battle-${i}`} setSelectedBattle={setSelectedBattle} />
               ))}
           </div>
-          <div className="flex justify-center w-full">
+          <div className="flex justify-center w-full mt-2">
             <Navigator.BackButton className="w-fit" />
           </div>
         </Navigator.Screen>
@@ -75,26 +74,21 @@ export const YouDied = () => {
   };
 
   return (
-    <AnimatePresence key="animate-3">
-      <div className="w-screen h-screen absolute top-0 left-0 flex justify-center items-center">
-        <div key="bg" className="fixed w-full h-full bg-black" />
-        <div key="star" className="fixed w-full h-full star-background opacity-30" />
+    <div className="w-screen h-screen absolute top-0 left-0 flex justify-center items-center z-50">
+      <div key="bg" className="fixed w-full h-full bg-black" />
+      <div key="star" className="fixed w-full h-full star-background opacity-30" />
 
-        <motion.div
-          key="play"
-          initial={{ scale: 0.5, opacity: 0, y: 50 }}
-          animate={{ scale: 1, opacity: 1, y: 0, transition: { delay: 0.25, duration: 0.5 } }}
-        >
-          <Card className="w-[40rem] h-[30rem]">
-            <Navigator initialScreen={"YouDied"} className="border-none p-0! h-full">
-              <div className="w-full h-full flex text-center justify-center items-center">
-                <BaseContent />
-                <BattleContent />
-              </div>
-            </Navigator>
-          </Card>
-        </motion.div>
+      <div className="animate-in fade-in duration-100">
+        <Card className="w-[40rem] h-[32rem]">
+          <div className="absolute inset-0 w-full h-full heropattern-skulls-slate-800/10" />
+          <Navigator initialScreen={"YouDied"} className="border-none p-0! h-full">
+            <div className="w-full h-full flex text-center justify-center items-center ">
+              <BaseContent />
+              <BattleContent />
+            </div>
+          </Navigator>
+        </Card>
       </div>
-    </AnimatePresence>
+    </div>
   );
 };

@@ -147,6 +147,7 @@ export const EntityTypeToAnimations: Record<string, (Animations | undefined)[]> 
   [EntityType.Market]: [Animations.Market1],
   [EntityType.Shipyard]: [Animations.Shipyard1],
   [EntityType.DroidBase]: [Animations.DroidBase],
+  [EntityType.WormholeBase]: [Animations.WormholebaseIdle1],
 };
 
 export const MaxLevelToTilemap: Record<number, Tilemaps> = {
@@ -156,18 +157,16 @@ export const MaxLevelToTilemap: Record<number, Tilemaps> = {
   8: Tilemaps.AsteroidLarge,
 };
 
-export const LevelToPrimaryAsteroidSprites: Record<number, Sprites> = {
-  1: Sprites.Asteroid1,
-  2: Sprites.Asteroid1,
-  3: Sprites.Asteroid2,
-  4: Sprites.Asteroid2,
-  5: Sprites.Asteroid3,
-  6: Sprites.Asteroid3,
-  7: Sprites.Asteroid4,
-  8: Sprites.Asteroid4,
-  9: Sprites.Asteroid5,
-  10: Sprites.Asteroid5,
-};
+export const LevelToPrimaryAsteroidSprites = [
+  Sprites.Asteroid1,
+  Sprites.Asteroid2,
+  Sprites.Asteroid3,
+  Sprites.Asteroid4,
+  Sprites.Asteroid5,
+  Sprites.Asteroid6,
+  Sprites.Asteroid7,
+  Sprites.Asteroid8,
+];
 
 export const EntityTypeSizeToSecondaryAsteroidSprites: Record<Entity, Record<AsteroidSize, Sprites>> = {
   [EntityType.Kimberlite]: {
@@ -193,6 +192,18 @@ export const EntityTypeSizeToSecondaryAsteroidSprites: Record<Entity, Record<Ast
     Small: Sprites.MotherlodeTitaniumSmall,
     Medium: Sprites.MotherlodeTitaniumMedium,
     Large: Sprites.MotherlodeTitaniumLarge,
+  },
+  [EntityType.Common]: {
+    Micro: Sprites.CommonMicro,
+    Small: Sprites.CommonSmall,
+    Medium: Sprites.CommonSmall,
+    Large: Sprites.CommonSmall,
+  },
+  [EntityType.Wormhole]: {
+    Micro: Sprites.Wormhole,
+    Small: Sprites.Wormhole,
+    Medium: Sprites.Wormhole,
+    Large: Sprites.Wormhole,
   },
 };
 
@@ -251,13 +262,14 @@ export const ModeToSceneKey: Record<Entity, SceneKeys> = {
   [Mode.Spectate]: "ASTEROID",
 };
 
-export const AsteroidLevelToEmblem: Record<number, Sprites> = {
-  1: Sprites.Emblem1,
-  2: Sprites.Emblem2,
-  3: Sprites.Emblem3,
-  4: Sprites.Emblem4,
-  5: Sprites.Emblem5,
-  6: Sprites.Emblem6,
-  7: Sprites.Emblem7,
-  8: Sprites.Emblem8,
-};
+//index is level
+export const MainbaseLevelToEmblem = [
+  Sprites.Emblem1,
+  Sprites.Emblem2,
+  Sprites.Emblem3,
+  Sprites.Emblem4,
+  Sprites.Emblem5,
+  Sprites.Emblem6,
+  Sprites.Emblem7,
+  Sprites.Emblem8,
+];

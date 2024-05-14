@@ -1,4 +1,4 @@
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 import { EBuilding } from "contracts/config/enums";
 import { ampli } from "src/ampli";
 import { components } from "src/network/components";

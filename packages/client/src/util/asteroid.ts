@@ -1,7 +1,7 @@
-import { Primodium } from "@game/api";
+import { PrimodiumGame } from "@game/api";
 import { Entity } from "@latticexyz/recs";
 
-import { AsteroidLevelToEmblem } from "@/game/lib/mappings";
+import { MainbaseLevelToEmblem } from "@/game/lib/mappings";
 import { MapIdToAsteroidType } from "@/util/mappings";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { InterfaceIcons, Sprites } from "@primodiumxyz/assets";
@@ -14,7 +14,7 @@ import { getOrbitingFleets } from "./unit";
 
 //TODO: proper implementation, this is just a placeholder so stuff doesn't break.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function getAsteroidImage(primodium: Primodium, asteroid?: Entity) {
+export function getAsteroidImage(primodium: PrimodiumGame, asteroid: Entity) {
   if (!asteroid) return InterfaceIcons.NotAllowed;
   const isShard = comps.ShardAsteroid.has(asteroid);
   if (isShard) {
@@ -24,16 +24,16 @@ export function getAsteroidImage(primodium: Primodium, asteroid?: Entity) {
   const level = comps.Level.get(asteroid)?.value;
   level;
 
-  const { getSpriteBase64 } = primodium.api().sprite;
+  const { getSpriteBase64 } = primodium.ASTEROID.sprite;
   return getSpriteBase64(Sprites.Asteroid1);
 }
 
-export function getAsteroidEmblem(primodium: Primodium, asteroid?: Entity) {
+export function getAsteroidEmblem(primodium: PrimodiumGame, asteroid?: Entity) {
   if (!asteroid) return InterfaceIcons.NotAllowed;
   const level = Number(comps.Level.get(asteroid)?.value ?? 0n);
-  const emblem = AsteroidLevelToEmblem[level];
+  const emblem = MainbaseLevelToEmblem[level - 1];
   if (!emblem) return InterfaceIcons.NotAllowed;
-  const { getSpriteBase64 } = primodium.api().sprite;
+  const { getSpriteBase64 } = primodium.ASTEROID.sprite;
   return getSpriteBase64(emblem);
 }
 
@@ -74,7 +74,7 @@ export function getAsteroidDescription(asteroid: Entity) {
   };
 }
 
-export function getAsteroidInfo(primodium: Primodium, spaceRock: Entity) {
+export function getAsteroidInfo(primodium: PrimodiumGame, spaceRock: Entity) {
   const imageUri = getAsteroidImage(primodium, spaceRock);
   const ownedBy = comps.OwnedBy.get(spaceRock)?.value as Entity | undefined;
   const mainBaseEntity = comps.Home.get(spaceRock)?.value as Entity;

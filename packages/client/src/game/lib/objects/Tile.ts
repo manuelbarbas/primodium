@@ -1,10 +1,11 @@
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Coord, Scene } from "engine/types";
+import Phaser from "phaser";
+import { Coord } from "engine/types";
+import { PrimodiumScene } from "@/game/api/scene";
 
 export class Tile extends Phaser.GameObjects.Rectangle {
-  private _scene: Scene;
-  constructor(scene: Scene, coord: Coord, color: number, alpha: number) {
-    const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
+  private _scene: PrimodiumScene;
+  constructor(scene: PrimodiumScene, coord: Coord, color: number, alpha: number) {
+    const pixelCoord = scene.utils.tileCoordToPixelCoord(coord);
     super(scene.phaserScene, pixelCoord.x, -pixelCoord.y, scene.tiled.tileWidth, scene.tiled.tileHeight, color, alpha);
 
     this.setOrigin(0, 0);
@@ -18,8 +19,7 @@ export class Tile extends Phaser.GameObjects.Rectangle {
   }
 
   setCoordPosition(coord: Coord) {
-    const { tileWidth, tileHeight } = this._scene.tiled;
-    const pixelCoord = tileCoordToPixelCoord(coord, tileWidth, tileHeight);
+    const pixelCoord = this._scene.utils.tileCoordToPixelCoord(coord);
     this.setPosition(pixelCoord.x, -pixelCoord.y);
     return this;
   }
