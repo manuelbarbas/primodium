@@ -112,7 +112,7 @@ contract FleetLandSystemTest is PrimodiumTest {
     assertEq(FleetMovement.getOrigin(fleetEntity), aliceHomeAsteroid, "fleet origin doesn't match");
     assertEq(FleetMovement.getDestination(fleetEntity), aliceHomeAsteroid, "fleet destination doesn't match");
     assertEq(FleetMovement.getArrivalTime(fleetEntity), block.timestamp, "fleet arrival time doesn't match");
-    assertNotEq(FleetStance.getStance(fleetEntity), uint8(EFleetStance.Defend), "fleet stance was not cleared");
+    assertEq(FleetStance.getStance(fleetEntity), uint8(EFleetStance.NULL), "fleet stance was not cleared");
   }
 
   function testLandFleetClearsBlockStance() public {
@@ -145,6 +145,6 @@ contract FleetLandSystemTest is PrimodiumTest {
     assertEq(FleetMovement.getOrigin(fleetEntity), aliceHomeAsteroid, "fleet origin doesn't match");
     assertEq(FleetMovement.getDestination(fleetEntity), aliceHomeAsteroid, "fleet destination doesn't match");
     assertEq(FleetMovement.getArrivalTime(fleetEntity), block.timestamp, "fleet arrival time doesn't match");
-    assertNotEq(FleetStance.getStance(fleetEntity), uint8(EFleetStance.Block), "fleet stance was not cleared");
+    assertEq(FleetStance.getStance(fleetEntity), uint8(EFleetStance.NULL), "fleet stance was not cleared");
   }
 }
