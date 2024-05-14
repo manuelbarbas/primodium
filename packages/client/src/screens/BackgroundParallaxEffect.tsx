@@ -39,8 +39,8 @@ export const BackgroundParallaxEffect = memo(() => {
 
   return (
     <>
-      <div ref={ref} className="absolute top-0 left-0 w-full h-full bg-black" />;
-      <div ref={ref} className="absolute top-0 left-0 w-full h-full star-background opacity-40" />;
+      <div ref={ref} className="absolute top-0 left-0 w-full h-full bg-black" />
+      <div ref={ref} className="absolute top-0 left-0 w-full h-full star-background opacity-40" />
     </>
   );
 });

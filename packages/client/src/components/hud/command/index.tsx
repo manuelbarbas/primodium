@@ -18,9 +18,9 @@ export const CommandCenterHUD = memo(() => {
     <HUD scale={uiScale}>
       <Tabs persistIndexKey="command-center" className="pointer-events-auto">
         {/* Contains View Buttons */}
-        <HUD.Left>
+        <HUD.Right>
           <CommandViewSelector />
-        </HUD.Left>
+        </HUD.Right>
 
         <Tabs.Pane index={0} fragment>
           <Overview />

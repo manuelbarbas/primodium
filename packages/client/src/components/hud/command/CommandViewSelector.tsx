@@ -16,8 +16,8 @@ export const CommandViewSelector = () => {
   if (!commandOpen) return null;
 
   return (
-    <GlassCard direction={"right"} className="h-fit w-12 px-5 animate-in slide-in-from-left-full fade-in">
-      <div className="flex flex-col gap-2 items-center pointer-events-auto translate-x-[10px]">
+    <GlassCard direction={"left"} className="h-fit w-12 px-5 animate-in slide-in-from-right-full fade-in">
+      <div className="flex flex-col gap-2 items-center pointer-events-auto -translate-x-[10px]">
         {/* Overview */}
         <Tabs.Button
           index={0}
@@ -26,7 +26,7 @@ export const CommandViewSelector = () => {
           shape={"square"}
           size={"lg"}
           tooltip="Overview"
-          tooltipDirection="right"
+          tooltipDirection="left"
         >
           <IconLabel imageUri={InterfaceIcons.Asteroid} className={iconClass} />
         </Tabs.Button>
@@ -36,7 +36,7 @@ export const CommandViewSelector = () => {
           shape={"square"}
           size={"lg"}
           tooltip="Current Activities"
-          tooltipDirection="right"
+          tooltipDirection="left"
         >
           <IconLabel imageUri={InterfaceIcons.Fleet} className={iconClass} />
         </Tabs.Button>
@@ -47,12 +47,12 @@ export const CommandViewSelector = () => {
           shape={"square"}
           size={"lg"}
           tooltip="Transfer Inventory"
-          tooltipDirection="right"
+          tooltipDirection="left"
         >
           <IconLabel imageUri={InterfaceIcons.Transfer} className={iconClass} />
         </Tabs.Button>
         <Modal title="Upgrade">
-          <Modal.Button className={btnClass} tooltip="upgrade" shape={"square"} size={"lg"} tooltipDirection="right">
+          <Modal.Button className={btnClass} tooltip="upgrade" shape={"square"} size={"lg"} tooltipDirection="left">
             <IconLabel className={iconClass} imageUri={InterfaceIcons.Add} />
           </Modal.Button>
           <Modal.Content className="w-[62rem]">

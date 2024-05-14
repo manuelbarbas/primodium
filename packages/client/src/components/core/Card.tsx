@@ -124,9 +124,9 @@ const secondaryCardVariants = cva("card p-2 pointer-events-auto", {
 interface SecondaryCardProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof secondaryCardVariants> {}
 
 export const SecondaryCard = forwardRef<HTMLDivElement, SecondaryCardProps>(
-  ({ children, className, variant, noDecor }, ref) => {
+  ({ children, className, variant, noDecor, ...props }, ref) => {
     return (
-      <div ref={ref} className={cn(secondaryCardVariants({ variant, noDecor }), className)}>
+      <div ref={ref} {...props} className={cn(secondaryCardVariants({ variant, noDecor }), className)}>
         {children}
       </div>
     );

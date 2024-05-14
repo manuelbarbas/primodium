@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { Animations, ResourceTilekeys, Sprites, Tilemaps } from "@primodiumxyz/assets";
 import { EntityType, Mode } from "src/util/constants";
-import { AsteroidRelationship, AsteroidSize, SceneKeys } from "./constants/common";
+import { Relationship, AsteroidSize, SceneKeys } from "./constants/common";
 
 export const EntityTypeToResourceTilekey: Record<Entity, ResourceTilekeys> = {
   [EntityType.Iron]: ResourceTilekeys.Iron,
@@ -218,10 +218,7 @@ export const MaxLevelToAsteroidSpriteSize: Record<number, AsteroidSize> = {
   8: "Large",
 } as const;
 
-export const RelationshipSizeToSecondaryAsteroidOutlineSprites: Record<
-  AsteroidRelationship,
-  Record<AsteroidSize, Sprites>
-> = {
+export const RelationshipSizeToSecondaryAsteroidOutlineSprites: Record<Relationship, Record<AsteroidSize, Sprites>> = {
   Ally: {
     Micro: Sprites.MotherlodeAllianceSmall,
     Small: Sprites.MotherlodeAllianceSmall,
@@ -248,7 +245,7 @@ export const RelationshipSizeToSecondaryAsteroidOutlineSprites: Record<
   },
 };
 
-export const RelationshipToPrimaryAsteroidOutlineSprites: Record<AsteroidRelationship, Sprites> = {
+export const RelationshipToPrimaryAsteroidOutlineSprites: Record<Relationship, Sprites> = {
   ["Ally"]: Sprites.AsteroidAlliance,
   ["Neutral"]: Sprites.AsteroidPlayer,
   ["Enemy"]: Sprites.AsteroidEnemy,

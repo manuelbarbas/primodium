@@ -57,7 +57,7 @@ export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; select
   return (
     <SecondaryCard
       className="flex-row justify-between gap-10 items-center"
-      onPointerOver={() =>
+      onPointerEnter={() =>
         components.HoverEntity.set({
           value: fleetEntity,
         })

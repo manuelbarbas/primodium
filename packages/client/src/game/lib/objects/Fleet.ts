@@ -4,7 +4,7 @@ import { IPrimodiumGameObject } from "./interfaces";
 import { Assets, Sprites, Animations } from "@primodiumxyz/assets";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "engine/types";
-import { DepthLayers } from "@/game/lib/constants/common";
+import { Relationship, DepthLayers } from "@/game/lib/constants/common";
 import { isValidClick } from "@/game/lib/objects/inputGuards";
 
 export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
@@ -66,6 +66,21 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
     }
 
     return super.setActive(value);
+  }
+
+  setRelationship(value: Relationship) {
+    switch (value) {
+      case "Ally":
+        this.fleetImage.setTint(0x00ff00);
+        break;
+      case "Enemy":
+        this.fleetImage.setTint(0xff0000);
+        break;
+      case "Neutral":
+      case "Self":
+        this.fleetImage.clearTint();
+        break;
+    }
   }
 
   onClick(fn: (e: Phaser.Input.Pointer) => void) {
