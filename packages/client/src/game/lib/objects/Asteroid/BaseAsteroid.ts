@@ -27,13 +27,12 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
 
   protected coord: Coord;
   protected _scene: PrimodiumScene;
-  protected fleetsContainer: FleetsContainer | undefined;
+  protected fleetsContainer: FleetsContainer;
   protected fleetCount = 0;
   protected spawned = false;
   protected asteroidSprite: Phaser.GameObjects.Image;
   protected asteroidLabel: AsteroidLabel;
   protected currentLOD: number = -1;
-  private deferred = false;
 
   constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord; sprite: Sprites; outlineSprite: Sprites }) {
     const { id, scene, coord, sprite } = args;
@@ -42,7 +41,6 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     super(scene.phaserScene, pixelCoord.x, -pixelCoord.y);
 
     this.id = id;
-    this.deferred = !!scene.objects.deferredRenderContainer.get(id);
 
     this.asteroidSprite = new Phaser.GameObjects.Image(
       scene.phaserScene,
@@ -72,9 +70,11 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
       .disableInteractive()
       .setDepth(0);
 
-    this.fleetsContainer = this.deferred
-      ? undefined
-      : new FleetsContainer(scene, { x: pixelCoord.x, y: -pixelCoord.y });
+    const renderContainer = scene.objects.deferredRenderContainer.get(id) as
+      | DeferredAsteroidRenderContainer
+      | undefined;
+    this.fleetsContainer =
+      renderContainer?.getFleetsContainer() ?? new FleetsContainer(scene, { x: pixelCoord.x, y: -pixelCoord.y });
 
     this.coord = coord;
     this._scene = scene;
@@ -98,7 +98,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     this.scene.add.existing(this.asteroidSprite);
     this.scene.add.existing(this.circle);
     this.scene.add.existing(this.asteroidLabel);
-    this.scene.add.existing(this.getFleetsContainer());
+    this.scene.add.existing(this.fleetsContainer);
     this.spawned = true;
     return this;
   }
@@ -133,7 +133,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
       this.circle.disableInteractive();
     }
 
-    this.getFleetsContainer().setActive(value);
+    this.fleetsContainer.setActive(value);
     this.circle.setActive(value);
     this.asteroidSprite.setActive(value);
     this.asteroidLabel.setActive(value);
@@ -142,7 +142,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
   }
 
   setVisible(value: boolean): this {
-    this.getFleetsContainer().setVisible(value);
+    this.fleetsContainer.setVisible(value);
     this.circle.setVisible(value);
     this.asteroidSprite.setVisible(value);
     this.asteroidLabel.setVisible(value);
@@ -160,7 +160,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     const pixelCoord = this._scene.utils.tileCoordToPixelCoord(coord);
     this.asteroidSprite.setPosition(pixelCoord.x, -pixelCoord.y);
     this.circle.setPosition(pixelCoord.x, -pixelCoord.y);
-    this.getFleetsContainer().setPosition(pixelCoord.x, -pixelCoord.y);
+    this.fleetsContainer.setPosition(pixelCoord.x, -pixelCoord.y);
     this.asteroidLabel.setPosition(pixelCoord.x, -pixelCoord.y);
     return this;
   }
@@ -169,19 +169,12 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     return this.spawned;
   }
 
-  isDeferred() {
-    return this.deferred;
-  }
-
   getCoord() {
     return this.coord;
   }
 
   getFleetsContainer() {
-    return (
-      this.fleetsContainer ??
-      (this._scene.objects.deferredRenderContainer.get(this.id) as DeferredAsteroidRenderContainer).getFleetsContainer()
-    );
+    return this.fleetsContainer;
   }
 
   getAsteroidLabel() {
@@ -191,7 +184,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
   update() {
     const zoom = this._scene.camera.phaserCamera.zoom;
     this.asteroidLabel.update();
-    this.getFleetsContainer().update();
+    this.fleetsContainer.update();
     this.circle.setScale(1 / zoom);
     this._setLOD(this.getLod(zoom));
   }
@@ -201,7 +194,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     this.asteroidSprite.destroy();
     this.circle.destroy();
     this.asteroidLabel.destroy();
-    this.getFleetsContainer().destroy();
+    this.fleetsContainer.destroy();
     this._scene.objects.asteroid.remove(this.id);
     super.destroy();
   }
@@ -230,7 +223,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     this.asteroidSprite.alpha = config.asteroidAlpha;
     this.asteroidLabel.alpha = config.asteroidLabelAlpha;
     this.asteroidLabel.ownerLabel.setAlpha(config.ownerLabelAlpha);
-    this.getFleetsContainer().setAlpha(config.fleetContainerAlpha);
+    this.fleetsContainer.setAlpha(config.fleetContainerAlpha);
     this.asteroidLabel.setPosition(
       pixelCoord.x + config.asteroidLabelPosition.x,
       -pixelCoord.y + config.asteroidLabelPosition.y
@@ -260,7 +253,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     });
 
     this.scene.add.tween({
-      targets: this.getFleetsContainer(),
+      targets: this.fleetsContainer,
       alpha: config.fleetContainerAlpha,
       duration: 200,
     });
@@ -274,8 +267,6 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
   }
 
   private _getLODConfig(level: LODs): LODConfig {
-    const fleetsContainer = this.getFleetsContainer();
-
     switch (level) {
       case LODs.FullyShow:
         return {
@@ -285,8 +276,8 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
           ownerLabelAlpha: 0.5,
           fleetContainerAlpha: 1,
           setup: () => {
-            fleetsContainer.setAlpha(0);
-            fleetsContainer.setOrbitView();
+            this.fleetsContainer.setAlpha(0);
+            this.fleetsContainer.setOrbitView();
           },
         };
       case LODs.ShowLabelOnly:
@@ -297,8 +288,8 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
           ownerLabelAlpha: 0.5,
           fleetContainerAlpha: 1,
           setup: () => {
-            fleetsContainer.setAlpha(0);
-            fleetsContainer.setInlineView();
+            this.fleetsContainer.setAlpha(0);
+            this.fleetsContainer.setInlineView();
           },
         };
       case LODs.HideAsteroidAndOwnerLabel:
@@ -309,7 +300,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
           ownerLabelAlpha: 0,
           fleetContainerAlpha: 0,
           setup: () => {
-            fleetsContainer.setInlineView();
+            this.fleetsContainer.setInlineView();
           },
         };
       case LODs.FullyHide:
@@ -320,7 +311,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
           ownerLabelAlpha: 0,
           fleetContainerAlpha: 0,
           setup: () => {
-            fleetsContainer.setInlineView();
+            this.fleetsContainer.setInlineView();
           },
         };
       default:

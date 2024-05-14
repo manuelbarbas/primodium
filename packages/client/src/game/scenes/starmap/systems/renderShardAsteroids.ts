@@ -3,26 +3,21 @@ import { Coord } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { PrimodiumScene } from "@/game/api/scene";
-import {
-  DeferredShardAsteroidRenderContainer,
-  renderDeferredShardAsteroid,
-} from "@/game/lib/render/renderDeferredShardAsteroid";
+import { renderDeferredShardAsteroid } from "@/game/lib/render/renderDeferredShardAsteroid";
 
 export const renderShardAsteroids = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const { objects } = scene;
 
   const renderExplodeAndMoveAsteroid = (entity: Entity, coord: Coord) => {
-    const asteroidContainer = objects.deferredRenderContainer.get(entity) as
-      | DeferredShardAsteroidRenderContainer
-      | undefined;
+    const asteroid = objects.asteroid.get(entity);
 
     // TODO: explode
 
-    if (!asteroidContainer) return;
+    if (!asteroid) return;
 
-    asteroidContainer.getFleetsContainer().clear();
-    asteroidContainer.setTilePosition(coord);
+    asteroid.getFleetsContainer().destroy();
+    asteroid.setTilePosition(coord);
   };
 
   const query = [Has(components.ShardAsteroid), Has(components.Position)];

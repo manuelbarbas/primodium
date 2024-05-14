@@ -4,7 +4,6 @@ import { TransitLine } from "@game/lib/objects/TransitLine";
 import { components } from "@/network/components";
 import { world } from "@/network/world";
 import { renderFleet } from "@/game/lib/render/renderFleet";
-import { DeferredAsteroidRenderContainer } from "@/game/lib/render/renderDeferredAsteroid";
 
 export const renderFleets = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -25,10 +24,6 @@ export const renderFleets = (scene: PrimodiumScene) => {
     }
   });
 
-  function getAsteroidContainerObject(entity: Entity) {
-    return scene.objects.deferredRenderContainer.get(entity) as DeferredAsteroidRenderContainer | undefined;
-  }
-
   function handleFleetTransit(fleet: Entity, origin: Entity, destination: Entity) {
     const originPosition = components.Position.get(origin) ?? { x: 0, y: 0 };
     const destinationPosition = components.Position.get(destination) ?? { x: 0, y: 0 };
@@ -47,15 +42,15 @@ export const renderFleets = (scene: PrimodiumScene) => {
 
     //update the view of the container when fleet moves away from origin. This can mean removing the orbit ring render or updating the inline layout
     const originAsteroid = scene.objects.asteroid.get(origin as Entity);
-    originAsteroid?.getFleetContainer().updateView();
+    originAsteroid?.getFleetsContainer().updateView();
   }
 
   function handleFleetOrbit(fleet: Entity, asteroidEntity: Entity) {
-    const asteroidContainer = getAsteroidContainerObject(asteroidEntity);
+    const asteroid = scene.objects.asteroid.get(asteroidEntity);
 
-    if (asteroidContainer) {
+    if (asteroid) {
       const fleetObject = getFleetObject(fleet);
-      asteroidContainer.getFleetsContainer()?.addFleet(fleetObject);
+      asteroid.getFleetsContainer()?.addFleet(fleetObject);
     } else {
       const queue = spawnQueue.get(asteroidEntity) ?? [];
       if (queue.length) queue.push(fleet);
@@ -113,7 +108,7 @@ export const renderFleets = (scene: PrimodiumScene) => {
         transitLine.destroy();
         transitsToUpdate.delete(update.entity);
       } else {
-        const orbitRing = getAsteroidContainerObject(oldMovement.destination as Entity)?.getFleetsContainer();
+        const orbitRing = scene.objects.asteroid.get(oldMovement.destination as Entity)?.getFleetsContainer();
         const fleet = scene.objects.fleet.get(update.entity);
         if (fleet) orbitRing?.removeFleet(fleet);
       }
@@ -140,7 +135,7 @@ export const renderFleets = (scene: PrimodiumScene) => {
 
       if (progress >= 1) {
         const fleet = scene.objects.fleet.get(transit);
-        const orbitRing = getAsteroidContainerObject(movement.destination as Entity)?.getFleetsContainer();
+        const orbitRing = scene.objects.asteroid.get(movement.destination as Entity)?.getFleetsContainer();
 
         if (orbitRing && fleet) {
           scene.objects.transitLine.get(transit)?.destroy();

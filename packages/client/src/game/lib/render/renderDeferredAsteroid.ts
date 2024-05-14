@@ -19,7 +19,11 @@ export class DeferredAsteroidRenderContainer extends DeferredRenderContainer<Bas
     render: () => BaseAsteroid | undefined;
   }) {
     super({ ...args, register: false });
-    this.fleetsContainer = new FleetsContainer(args.scene, { x: 0, y: 0 });
+
+    const { scene, coord } = args;
+    const pixelCoord = scene.utils.tileCoordToPixelCoord(coord);
+    this.fleetsContainer = new FleetsContainer(scene, { x: pixelCoord.x, y: -pixelCoord.y });
+
     this.register();
   }
 
