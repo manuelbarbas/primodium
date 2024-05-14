@@ -29,6 +29,7 @@ export class TransitLine extends TargetLine {
     fleet.reset();
     this.fleet = fleet;
     this._setFleetAngleAndPos();
+    this.fleet.activateBurn();
 
     return this;
   }
@@ -46,7 +47,6 @@ export class TransitLine extends TargetLine {
   }
 
   setFleetProgress(progress: number) {
-    console.log(this.fleet);
     if (!this.fleet) return;
 
     this.scene.tweens.killTweensOf(this.fleet);
@@ -77,11 +77,14 @@ export class TransitLine extends TargetLine {
     if (!this.fleet) return;
 
     let angle = Phaser.Math.RadToDeg(Math.atan2(this.end.y - this.start.y, this.end.x - this.start.x)) - 90;
+
     if (angle < 0) {
       angle += 360;
     }
+
     this.fleet.setRotationFrame(angle);
     this.fleet.setAngle(angle - this.fleet.getRotationFrameOffset());
+    this.fleet.particles.setAngle(angle);
     this.fleet.setPosition(this.start.x, this.start.y);
   }
 }

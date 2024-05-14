@@ -16,6 +16,7 @@ export type PrimodiumGameObject = (
   | Phaser.GameObjects.Container
   | Phaser.GameObjects.BitmapText
   | Phaser.GameObjects.Line
+  | Phaser.GameObjects.Zone
   | ContainerLite
 ) &
   Spawnable;

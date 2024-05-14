@@ -71,7 +71,6 @@ export const OwnedFleets: React.FC<{ className?: string }> = ({ className }) => 
 
     if (!fleet) return;
     const position = fleet.getTileCoord();
-    console.log(fleet);
 
     pan({
       x: position.x,

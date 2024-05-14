@@ -4,7 +4,6 @@ import { MainbaseLevelToEmblem } from "@/game/lib/mappings";
 import { Assets, Sprites } from "@primodiumxyz/assets";
 import { PixelCoord } from "engine/types";
 import { PrimodiumScene } from "@/game/api/scene";
-import { ContainerLite } from "engine/objects";
 import { DepthLayers } from "@/game/lib/constants/common";
 
 const MARGIN = 2;
@@ -20,10 +19,10 @@ type LabelArgs = {
   ownerLabelOpacity: number;
 };
 
-export class AsteroidLabel extends ContainerLite {
+export class AsteroidLabel extends Phaser.GameObjects.Container {
   private _scene: PrimodiumScene;
   private coord: PixelCoord;
-  private labelContainer: ContainerLite;
+  private labelContainer: Phaser.GameObjects.Container;
   emblemSprite: Phaser.GameObjects.Image;
   asteroidLabel: Phaser.GameObjects.BitmapText;
   ownerLabel: Phaser.GameObjects.BitmapText;
@@ -61,7 +60,7 @@ export class AsteroidLabel extends ContainerLite {
       MainbaseLevelToEmblem[asteroidLevel - 1]
     ).setScale(1.5);
 
-    this.labelContainer = new ContainerLite(
+    this.labelContainer = new Phaser.GameObjects.Container(
       scene.phaserScene,
       this.emblemSprite.width + MARGIN,
       -this.emblemSprite.height / 2
@@ -82,8 +81,8 @@ export class AsteroidLabel extends ContainerLite {
       .setAlpha(0.8)
       .setTintFill(allianceLabelColor);
 
-    this.labelContainer.addLocalMultiple([this.asteroidLabel, this.ownerLabel, this.allianceLabel]);
-    this.addLocalMultiple([this.emblemSprite, this.labelContainer]);
+    this.labelContainer.add([this.asteroidLabel, this.ownerLabel, this.allianceLabel]);
+    this.add([this.emblemSprite, this.labelContainer]);
     this._updatePositions();
 
     this.setDepth(DepthLayers.Marker);
@@ -91,12 +90,8 @@ export class AsteroidLabel extends ContainerLite {
 
   private _updatePositions() {
     //set owner position
-    this.labelContainer.setChildLocalPosition(this.allianceLabel, 0, this.asteroidLabel.height + MARGIN);
-    this.labelContainer.setChildLocalPosition(
-      this.ownerLabel,
-      this.allianceLabel.width,
-      this.asteroidLabel.height + MARGIN
-    );
+    this.allianceLabel.setPosition(0, this.asteroidLabel.height + MARGIN);
+    this.ownerLabel.setPosition(this.allianceLabel.width, this.asteroidLabel.height + MARGIN);
   }
 
   setProperties(args: Partial<LabelArgs>) {

@@ -2,13 +2,11 @@ import Phaser from "phaser";
 import { Coord } from "engine/types";
 import { PrimodiumScene } from "@/game/api/scene";
 import { IPrimodiumGameObject } from "../interfaces";
-// import { AsteroidRelationship } from "@/game/lib/constants/common";
 import { FleetsContainer } from "@/game/lib/objects/Asteroid/FleetsContainer";
 import { Assets, Sprites } from "@primodiumxyz/assets";
 import { AsteroidLabel } from "@/game/lib/objects/Asteroid/AsteroidLabel";
 import { Entity } from "@latticexyz/recs";
 import { isValidClick } from "@/game/lib/objects/inputGuards";
-import { ContainerLite } from "engine/objects";
 import { LODs } from "@/game/lib/objects/Asteroid/helpers";
 import { DepthLayers } from "@/game/lib/constants/common";
 
@@ -21,7 +19,7 @@ interface LODConfig {
   setup: () => void;
 }
 
-export abstract class BaseAsteroid extends ContainerLite implements IPrimodiumGameObject {
+export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IPrimodiumGameObject {
   private id: Entity;
   private circle: Phaser.GameObjects.Arc;
   private animationTween: Phaser.Tweens.Tween;
@@ -31,7 +29,6 @@ export abstract class BaseAsteroid extends ContainerLite implements IPrimodiumGa
   protected fleetCount = 0;
   protected spawned = false;
   protected asteroidSprite: Phaser.GameObjects.Image;
-  // protected outlineSprite: Phaser.GameObjects.Image;
   protected asteroidLabel: AsteroidLabel;
   protected fleetsContainer: FleetsContainer;
   protected currentLOD: number = -1;
@@ -39,21 +36,40 @@ export abstract class BaseAsteroid extends ContainerLite implements IPrimodiumGa
   constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord; sprite: Sprites; outlineSprite: Sprites }) {
     const { id, scene, coord, sprite } = args;
     const pixelCoord = scene.utils.tileCoordToPixelCoord(coord);
+
     super(scene.phaserScene, pixelCoord.x, -pixelCoord.y);
 
     this.id = id;
 
-    // this.outlineSprite = new Phaser.GameObjects.Image(scene.phaserScene, 0, 0, Assets.SpriteAtlas, outlineSprite);
-    this.asteroidSprite = new Phaser.GameObjects.Image(scene.phaserScene, 0, 0, Assets.SpriteAtlas, sprite).setDepth(
-      DepthLayers.Rock
-    );
+    this.asteroidSprite = new Phaser.GameObjects.Image(
+      scene.phaserScene,
+      pixelCoord.x,
+      -pixelCoord.y,
+      Assets.SpriteAtlas,
+      sprite
+    ).setDepth(DepthLayers.Rock);
+
     this.asteroidLabel = new AsteroidLabel({
       scene,
-      coord: { x: 0, y: 0 },
+      coord: { x: pixelCoord.x, y: -pixelCoord.y },
     });
 
-    this.circle = new Phaser.GameObjects.Arc(scene.phaserScene, 0, 0, 2, 0, 360, false, 0xffff00, 0.4);
-    this.fleetsContainer = new FleetsContainer(scene, { x: 0, y: 0 });
+    this.circle = new Phaser.GameObjects.Arc(
+      scene.phaserScene,
+      pixelCoord.x,
+      -pixelCoord.y,
+      2,
+      0,
+      360,
+      false,
+      0xffff00,
+      0.4
+    )
+      .setInteractive(new Phaser.Geom.Circle(0, 0, 32), Phaser.Geom.Circle.Contains)
+      .disableInteractive()
+      .setDepth(0);
+
+    this.fleetsContainer = new FleetsContainer(scene, { x: pixelCoord.x, y: -pixelCoord.y });
 
     this.coord = coord;
     this._scene = scene;
@@ -67,36 +83,24 @@ export abstract class BaseAsteroid extends ContainerLite implements IPrimodiumGa
       paused: true,
     });
 
-    this.circle.setInteractive(new Phaser.Geom.Circle(0, 0, 32), Phaser.Geom.Circle.Contains).disableInteractive();
-
-    //add children to container
-    this.addLocalMultiple([
-      // point to indicate position during far zoom
-      this.circle,
-      // asteroid sprite
-      this.asteroidSprite,
-      // container lite for holding fleet objects
-      this.fleetsContainer,
-      // container lite for holding asteroid label and emblem objects
-      this.asteroidLabel,
-    ]);
-
-    //add to object manager
+    // Add to object manager
     this._scene.objects.asteroid.add(id, this, true);
   }
 
   spawn() {
-    this.spawned = true;
+    // Add the individual objects to the scene
     this.scene.add.existing(this);
-    this.addChildrenToScene();
-
+    this.scene.add.existing(this.asteroidSprite);
+    this.scene.add.existing(this.circle);
+    this.scene.add.existing(this.asteroidLabel);
+    this.scene.add.existing(this.fleetsContainer);
+    this.spawned = true;
     return this;
   }
 
   onClick(fn: (e: Phaser.Input.Pointer) => void) {
     this.circle.on(Phaser.Input.Events.POINTER_UP, (e: Phaser.Input.Pointer) => {
       if (!isValidClick(e)) return;
-
       fn(e);
     });
     return this;
@@ -113,32 +117,46 @@ export abstract class BaseAsteroid extends ContainerLite implements IPrimodiumGa
   }
 
   setActive(value: boolean): this {
-    super.setActive(value);
-
     if (value) {
       this.animationTween.play();
       this.circle.setInteractive();
+      const zoom = this._scene.camera.phaserCamera.zoom;
+      this._setLOD(this.getLod(zoom), true);
+      //set all objects to active
     } else {
       this.animationTween.pause();
       this.circle.disableInteractive();
     }
 
-    const zoom = this._scene.camera.phaserCamera.zoom;
-    this._setLOD(this.getLod(zoom), true);
+    this.fleetsContainer.setActive(value);
+    this.circle.setActive(value);
+    this.asteroidSprite.setActive(value);
+    this.asteroidLabel.setActive(value);
 
-    return this;
+    return super.setActive(value);
+  }
+
+  setVisible(value: boolean): this {
+    this.fleetsContainer.setVisible(value);
+    this.circle.setVisible(value);
+    this.asteroidSprite.setVisible(value);
+    this.asteroidLabel.setVisible(value);
+
+    return super.setVisible(value);
   }
 
   setScale(x?: number, y?: number) {
     this.asteroidSprite.setScale(x, y);
-    // this.outlineSprite.setScale(x, y);
     return this;
   }
 
   setTilePosition(coord: Coord) {
     this.coord = coord;
     const pixelCoord = this._scene.utils.tileCoordToPixelCoord(coord);
-    this.setPosition(pixelCoord.x, -pixelCoord.y);
+    this.asteroidSprite.setPosition(pixelCoord.x, -pixelCoord.y);
+    this.circle.setPosition(pixelCoord.x, -pixelCoord.y);
+    this.fleetsContainer.setPosition(pixelCoord.x, -pixelCoord.y);
+    this.asteroidLabel.setPosition(pixelCoord.x, -pixelCoord.y);
     return this;
   }
 
@@ -163,17 +181,19 @@ export abstract class BaseAsteroid extends ContainerLite implements IPrimodiumGa
     this.asteroidLabel.update();
     this.fleetsContainer.update();
     this.circle.setScale(1 / zoom);
-    this.setSize(32 / zoom, 32 / zoom);
     this._setLOD(this.getLod(zoom));
   }
 
   destroy() {
     this.animationTween.destroy();
+    this.asteroidSprite.destroy();
+    this.circle.destroy();
+    this.asteroidLabel.destroy();
+    this.fleetsContainer.destroy();
     this._scene.objects.asteroid.remove(this.id);
-    super.destroy();
   }
 
-  // tells the asteroid how to behave at different zoom levels
+  // Tells the asteroid how to behave at different zoom levels
   abstract getLod(zoom: number): LODs;
 
   // PRIVATE METHODS
@@ -193,15 +213,20 @@ export abstract class BaseAsteroid extends ContainerLite implements IPrimodiumGa
 
   private _applyLODConfigImmediately(config: LODConfig): void {
     config.setup();
+    const pixelCoord = this._scene.utils.tileCoordToPixelCoord(this.coord);
     this.asteroidSprite.alpha = config.asteroidAlpha;
     this.asteroidLabel.alpha = config.asteroidLabelAlpha;
     this.asteroidLabel.ownerLabel.setAlpha(config.ownerLabelAlpha);
-    this.fleetsContainer?.setAlpha(config.fleetContainerAlpha);
-    this.setChildLocalPosition(this.asteroidLabel, config.asteroidLabelPosition.x, config.asteroidLabelPosition.y);
+    this.fleetsContainer.setAlpha(config.fleetContainerAlpha);
+    this.asteroidLabel.setPosition(
+      pixelCoord.x + config.asteroidLabelPosition.x,
+      -pixelCoord.y + config.asteroidLabelPosition.y
+    );
   }
 
   private _applyLODConfigWithAnimation(config: LODConfig): void {
     config.setup();
+    const pixelCoord = this._scene.utils.tileCoordToPixelCoord(this.coord);
 
     this.scene.add.tween({
       targets: [this.asteroidSprite],
@@ -221,21 +246,16 @@ export abstract class BaseAsteroid extends ContainerLite implements IPrimodiumGa
       duration: 200,
     });
 
-    this.fleetsContainer.tweenSelf({
+    this.scene.add.tween({
+      targets: this.fleetsContainer,
       alpha: config.fleetContainerAlpha,
       duration: 200,
     });
 
-    // this.scene.add.tween({
-    //   targets: this.fleetsContainer,
-    //   alpha: config.fleetContainerAlpha,
-    //   delay: 1000,
-    //   duration: 200,
-    // });
-
-    this.asteroidLabel.tweenSelf({
-      x: config.asteroidLabelPosition.x,
-      y: config.asteroidLabelPosition.y,
+    this.scene.add.tween({
+      targets: this.asteroidLabel,
+      x: pixelCoord.x + config.asteroidLabelPosition.x,
+      y: -pixelCoord.y + config.asteroidLabelPosition.y,
       duration: 200,
     });
   }
