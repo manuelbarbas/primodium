@@ -53,8 +53,12 @@ export class TransitLine extends TargetLine {
     super.setCoordinates(start, end);
 
     // set the bounding boxes for visibility checks
-    console.log(this.start, this.end, this.geom, this.getBounds(), this.pathData);
     this._scene.objects.transitLine.setBoundingBoxes(this.id, generateBoundingBoxes(this.geom, this._scene.camera));
+    // for debugging
+    // const bounding = generateBoundingBoxes(this.geom, this._scene.camera);
+    // bounding.forEach((box) => {
+    //   this._scene.phaserScene.add.rectangle(box.x, box.y, box.width, box.height, 0xff0000, 0.5);
+    // });
   }
 
   setFleetProgress(progress: number) {
@@ -118,13 +122,14 @@ export class TransitLine extends TargetLine {
   }
 }
 
+// This is an approximation but more than enough for this purpose
 const generateBoundingBoxes = (
   lineData: Phaser.GameObjects.Line["geom"],
   camera: PrimodiumScene["camera"]
 ): BoundingBox[] => {
   const { x1, y1, x2, y2 } = lineData;
   // this is an arbitrary value that seems reasonable
-  const squareDimension = camera.phaserCamera.height / 10;
+  const squareDimension = camera.phaserCamera.height;
   const boundingBoxes: BoundingBox[] = [];
 
   // calculate the total length of the line and amount of squares needed
@@ -139,10 +144,17 @@ const generateBoundingBoxes = (
 
   // generate bounding boxes
   for (let i = 0; i < numSquares; i++) {
+    // center of the bounding box along the line
     const centerX = x1 + unitVectorX * (i * squareDimension + squareDimension / 2);
     const centerY = y1 + unitVectorY * (i * squareDimension + squareDimension / 2);
-    const topLeftX = centerX - squareDimension / 2;
-    const topLeftY = centerY - squareDimension / 2;
+
+    // apply offset
+    const offsetX = -squareDimension / 2;
+    const offsetY = -squareDimension / 2;
+
+    // calculate the top left corner of the bounding box
+    const topLeftX = centerX + offsetX * unitVectorX + offsetY * -unitVectorY;
+    const topLeftY = centerY + offsetX * unitVectorY + offsetY * unitVectorX;
 
     boundingBoxes.push(new Phaser.Geom.Rectangle(topLeftX, topLeftY, squareDimension, squareDimension));
   }
