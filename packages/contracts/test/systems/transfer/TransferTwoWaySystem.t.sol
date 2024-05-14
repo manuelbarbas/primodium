@@ -300,6 +300,7 @@ contract TransferSystemTest is PrimodiumTest {
     assertEq(ResourceCount.get(aliceFleetEntity, Copper), cargoCapacity);
     assertEq(ResourceCount.get(aliceFleetEntity, Iron), 0);
   }
+  
   function testTransferTwoWayResourcesStorageOverflow() public {
     uint256 maxStorage = MaxResourceCount.get(aliceHomeAsteroid, Iron);
 
