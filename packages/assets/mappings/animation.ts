@@ -19,6 +19,8 @@ export enum Animations {
   CopperMine3 = "coppermine/level3",
 
   LithiumMine1 = "lithiummine/level1",
+  LithiumMine2 = "lithiummine/level2",
+  LithiumMine3 = "lithiummine/level3",
 
   IridiumMine1 = "iridiummine/level1",
   IridiumMine2 = "iridiummine/level2",
