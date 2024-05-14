@@ -2,11 +2,14 @@
 pragma solidity >=0.8.24;
 
 // tables
-import { TilePositions, IsActive, Asteroid, P_UnitProdTypes, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, OwnedBy, P_Blueprint } from "codegen/index.sol";
+import { TilePositions, IsActive, Asteroid, P_UnitProdTypes, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, OwnedBy, P_Blueprint, P_HasStarmapper } from "codegen/index.sol";
 
 // libraries
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
+import { LibProduction } from "libraries/LibProduction.sol";
+
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
 
@@ -14,7 +17,7 @@ import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
 import { BuildingKey, ExpansionKey } from "src/Keys.sol";
 import { Bounds, EResource } from "src/Types.sol";
 
-import { MainBasePrototypeId, WormholeBasePrototypeId } from "codegen/Prototypes.sol";
+import { MainBasePrototypeId, WormholeBasePrototypeId, StarmapperPrototypeId } from "codegen/Prototypes.sol";
 
 library LibBuilding {
   /**
@@ -60,6 +63,12 @@ library LibBuilding {
       require(
         Home.get(coord.parentEntity) == bytes32(0),
         "[BuildSystem] Cannot build more than one main base per asteroid"
+      );
+    }
+    if (buildingPrototype == StarmapperPrototypeId) {
+      require(
+        P_HasStarmapper.get(coord.parentEntity) == false,
+        "[BuildSystem] Cannot build more than one starmapper per asteroid"
       );
     }
     require(
@@ -138,6 +147,10 @@ library LibBuilding {
 
     if (P_UnitProdTypes.length(buildingPrototype, 1) != 0) {
       UnitFactorySet.add(coord.parentEntity, buildingEntity);
+    }
+
+    if (buildingPrototype == StarmapperPrototypeId) {
+      P_HasStarmapper.set(coord.parentEntity, true);
     }
 
     placeBuildingTiles(buildingEntity, buildingPrototype, coord);
@@ -220,5 +233,43 @@ library LibBuilding {
     EResource resource = EResource(P_RequiredTile.get(prototype));
     uint8 mapId = Asteroid.getMapId(coord.parentEntity);
     return resource == EResource.NULL || uint8(resource) == P_Terrain.get(mapId, coord.x, coord.y);
+  }
+
+  /// @notice Upgrades a building even if requirements are not met
+  /// @param buildingEntity The building id
+  function uncheckedUpgrade(bytes32 buildingEntity) internal {
+    uint256 targetLevel = Level.get(buildingEntity) + 1;
+    Level.set(buildingEntity, targetLevel);
+    LibStorage.increaseMaxStorage(buildingEntity, targetLevel);
+    LibProduction.upgradeResourceProduction(buildingEntity, targetLevel);
+  }
+
+  /// @notice Destroys a specific building entity
+  /// @param playerEntity The entity ID of the player
+  /// @param buildingEntity entity of the building to be destroyed
+  /// @param uncheckedRequirements If true, requirements will not be checked. Internal use only.
+  function destroy(bytes32 playerEntity, bytes32 buildingEntity, bool uncheckedRequirements) internal {
+    if (!uncheckedRequirements) {
+      checkDestroyRequirements(playerEntity, buildingEntity);
+    }
+
+    bytes32 buildingType = BuildingType.get(buildingEntity);
+    uint256 level = Level.get(buildingEntity);
+
+    removeBuildingTiles(buildingEntity);
+
+    if (P_UnitProdTypes.length(buildingType, level) != 0) {
+      UnitFactorySet.remove(OwnedBy.get(buildingEntity), buildingEntity);
+    }
+
+    if (buildingType == StarmapperPrototypeId) {
+      P_HasStarmapper.set(OwnedBy.get(buildingEntity), false);
+    }
+
+    Level.deleteRecord(buildingEntity);
+    BuildingType.deleteRecord(buildingEntity);
+    OwnedBy.deleteRecord(buildingEntity);
+    Position.deleteRecord(buildingEntity);
+    IsActive.deleteRecord(buildingEntity);
   }
 }

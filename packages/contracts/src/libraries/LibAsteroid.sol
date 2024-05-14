@@ -48,7 +48,7 @@ library LibAsteroid {
     Position.set(asteroidEntity, coord);
     Asteroid.set(
       asteroidEntity,
-      AsteroidData({ isAsteroid: true, maxLevel: 5, mapId: 1, spawnsSecondary: true, wormhole: false, primodium: 0 })
+      AsteroidData({ isAsteroid: true, maxLevel: 6, mapId: 1, spawnsSecondary: true, wormhole: false, primodium: 0 })
     );
     ReversePosition.set(coord.x, coord.y, asteroidEntity);
 
@@ -157,7 +157,7 @@ library LibAsteroid {
       primodium = 4 * RESOURCE_SCALE;
     } else if (distributionVal < asteroidThresholdProb.eliteMedium) {
       // elite resources, medium
-      maxLevel = 5;
+      maxLevel = 6;
       primodium = 5 * RESOURCE_SCALE;
     } else {
       // elite resources, large
@@ -182,8 +182,8 @@ library LibAsteroid {
   }
 
   function getSecondaryAsteroidUnitsAndEncryption(uint256 level) internal pure returns (uint256, uint256) {
-    uint256 droidCount = 4 ** level + 100;
-    uint256 encryption = (level * 10 + 10) * 1e18;
+    uint256 droidCount = (4 ** level) + (10 * (level ** 2));
+    uint256 encryption = (level * 300 + 300) * 1e18;
     return (droidCount, encryption);
   }
 

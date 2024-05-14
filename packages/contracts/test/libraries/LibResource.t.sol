@@ -10,6 +10,7 @@ import { IsActive, ConsumptionRate, Home, Level, BuildingType, OwnedBy, MaxResou
 
 import { LibResource } from "libraries/LibResource.sol";
 import { UtilityMap } from "libraries/UtilityMap.sol";
+import { LibBuilding } from "src/libraries/LibBuilding.sol";
 
 contract LibResourceTest is PrimodiumTest {
   bytes32 playerEntity = "playerEntity";
@@ -250,8 +251,16 @@ contract LibResourceTest is PrimodiumTest {
 
   function testResourceClaimUnderflow() public {
     bytes32 asteroidEntity = Home.get(playerEntity);
-    uint256 startingResourceCount = 100;
+    bytes32 mainbaseEntity = Home.get(asteroidEntity);
+    LibBuilding.uncheckedUpgrade(mainbaseEntity);
+    LibBuilding.uncheckedUpgrade(mainbaseEntity);
+    LibBuilding.uncheckedUpgrade(mainbaseEntity);
+    LibBuilding.uncheckedUpgrade(mainbaseEntity);
+
+    uint256 startingResourceCount = 1000;
+
     increaseResource(asteroidEntity, EResource.Iron, startingResourceCount);
+    increaseResource(asteroidEntity, EResource.Lithium, startingResourceCount);
     buildBuilding(creator, EBuilding.IronMine);
     buildBuilding(creator, EBuilding.IronPlateFactory);
     buildBuilding(creator, EBuilding.IronPlateFactory);
