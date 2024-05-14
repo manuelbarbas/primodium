@@ -11,6 +11,7 @@ import { usePersistentStore } from "@game/stores/PersistentStore";
 import { memo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { HoverInfo } from "@/components/hud/global/hover/HoverInfo";
+import { FollowSocials } from "@/components/shared/FollowSocials";
 
 export const GlobalHUD = memo(() => {
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
@@ -38,6 +39,9 @@ export const GlobalHUD = memo(() => {
       <HUD.CursorFollower>
         <HoverInfo />
       </HUD.CursorFollower>
+      <HUD.BottomLeft>
+        <FollowSocials />
+      </HUD.BottomLeft>
       <HUD.BottomRight>
         <BrandingLabel />
       </HUD.BottomRight>
