@@ -266,6 +266,11 @@ export const worldInput = {
       key: ["prototype", "level"],
       schema: { prototype: "bytes32", level: "uint256", resources: "uint8[]", amounts: "uint256[]" },
     },
+
+    P_HasStarmapper: {
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "bool" },
+    },
     /* -------------------------------- Buildings ------------------------------- */
 
     P_Blueprint: {
