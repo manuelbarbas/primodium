@@ -24,7 +24,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       description:
         "Join the Primodium Discord by clicking on the button in the lower left. This is the most important decision you will ever make.",
       tooltip: "Joined Primodium on Discord",
-      icon: "img/icons/web3/discord.svg",
+      icon: InterfaceIcons.Discord,
     },
   ],
   [
@@ -34,7 +34,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       description:
         "Follow the Primodium Twitter by clicking on the button in the lower left. This is tied for the most important decision you will ever make.",
-      icon: "img/icons/web3/twitter.svg",
+      icon: InterfaceIcons.Twitter,
       tooltip: "Followed Primodium on Twitter",
     },
   ],

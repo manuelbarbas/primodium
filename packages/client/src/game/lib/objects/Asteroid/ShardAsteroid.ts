@@ -4,6 +4,7 @@ import { BaseAsteroid } from "./BaseAsteroid";
 import { Sprites } from "@primodiumxyz/assets";
 import { DepthLayers } from "@/game/lib/constants/common";
 import { Entity } from "@latticexyz/recs";
+import { LODs } from "@/game/lib/objects/Asteroid/helpers";
 
 export class ShardAsteroid extends BaseAsteroid {
   constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord }) {
@@ -27,10 +28,10 @@ export class ShardAsteroid extends BaseAsteroid {
 
   getLod(zoom: number) {
     if (zoom >= 0.75) {
-      return 0;
+      return LODs.FullyShow;
     }
     if (zoom >= 0) {
-      return 1;
+      return LODs.ShowLabelOnly;
     }
 
     return 0;

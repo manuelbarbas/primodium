@@ -12,7 +12,6 @@ import { EntityType, Keys } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount, formatTime } from "src/util/number";
-import { Card } from "../../../core/Card";
 import { HealthBar } from "../../../shared/HealthBar";
 
 export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
@@ -25,17 +24,19 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
 
   if (loading)
     return (
-      <Card className="relative flex items-center justify-center w-56 h-24 px-auto uppercase font-bold gap-2">
-        <Loader />
-        Loading Data
-      </Card>
+      <div className="relative w-56 h-24 px-auto uppercase font-bold">
+        <div className="flex h-full justify-center items-center gap-2">
+          <Loader />
+          Loading Data
+        </div>
+      </div>
     );
 
   if (!shardData)
     return (
-      <Card className="relative flex items-center justify-center w-56 h-24 px-auto uppercase font-bold">
+      <div className="relative flex justify-center items-center w-56 h-24 px-auto uppercase font-bold">
         No data found...
-      </Card>
+      </div>
     );
 
   return (

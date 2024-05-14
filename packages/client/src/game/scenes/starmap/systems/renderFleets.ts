@@ -40,10 +40,14 @@ export const renderFleets = (scene: PrimodiumScene) => {
 
     const fleetObject = getFleetObject(fleet);
 
-    transitsToUpdate.add(fleet);
     const transitLine = getTransitLineObject(fleet);
     transitLine.setFleet(fleetObject);
     transitLine.setCoordinates(originPixelPosition, destinationPixelPosition);
+    transitsToUpdate.add(fleet);
+
+    //update the view of the container when fleet moves away from origin. This can mean removing the orbit ring render or updating the inline layout
+    const originAsteroid = scene.objects.asteroid.get(origin as Entity);
+    originAsteroid?.getFleetContainer().updateView();
   }
 
   function handleFleetOrbit(fleet: Entity, asteroidEntity: Entity) {
@@ -139,8 +143,8 @@ export const renderFleets = (scene: PrimodiumScene) => {
         const orbitRing = getAsteroidContainerObject(movement.destination as Entity)?.getFleetsContainer();
 
         if (orbitRing && fleet) {
-          orbitRing.addFleet(fleet);
           scene.objects.transitLine.get(transit)?.destroy();
+          orbitRing.addFleet(fleet);
         }
 
         transitsToUpdate.delete(transit);
