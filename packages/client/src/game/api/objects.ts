@@ -5,13 +5,14 @@ import { TransitLine } from "@/game/lib/objects/TransitLine";
 import { BaseAsteroid } from "@/game/lib/objects/Asteroid/BaseAsteroid";
 import { DeferredRenderContainer } from "@/game/lib/objects/DeferredRenderContainer";
 import { Building, BuildingConstruction } from "@/game/lib/objects/Building";
-import { PrimodiumGameObject } from "engine/lib/core/StaticObjectManager";
+import { BoundingBox, PrimodiumGameObject } from "engine/lib/core/StaticObjectManager";
 
 type PrimodiumObjectApi<T extends { destroy: () => void }> = {
   has: (entity: Entity) => boolean;
   get: (entity: Entity) => T | undefined;
   remove: (entity: Entity, destroy?: boolean, decrement?: boolean) => void;
   add: (entity: Entity, object: PrimodiumGameObject, cull?: boolean) => PrimodiumGameObject;
+  setBoundingBoxes: (entity: Entity, boundingBoxes: BoundingBox[]) => void;
   onNewObject: (callback: (entity: string) => void) => () => void;
 };
 
@@ -41,6 +42,10 @@ function factory<T extends { destroy: () => void }>(
     remove: (entity: Entity, destroy = false, decrement = false) => {
       const id = fullId(entity);
       scene.objects.remove(id, destroy, decrement);
+    },
+    setBoundingBoxes: (entity: Entity, boundingBoxes: BoundingBox[]) => {
+      if (!scene.objects.has(fullId(entity))) throw new Error("Object not found");
+      scene.objects.setBoundingBoxes(fullId(entity), boundingBoxes);
     },
     onNewObject: (callback: (entity: string) => void) => {
       return scene.objects.onNewObject(callback);

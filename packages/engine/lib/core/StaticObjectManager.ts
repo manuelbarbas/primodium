@@ -18,11 +18,13 @@ export type PrimodiumGameObject = (
   | Phaser.GameObjects.Zone
 ) &
   Spawnable;
+export type BoundingBox = Phaser.Geom.Rectangle;
 
 export class StaticObjectManager {
   private chunkManager;
   private coordMap = new CoordMap<PrimodiumGameObject[]>();
   private objMap = new Map<string, PrimodiumGameObject>();
+  private boundingBoxes = new Map<string, BoundingBox[]>();
   private chunkSize: number;
   private count = 0;
   private onNewObjectCallbacks: ((id: string) => void)[] = [];
@@ -39,12 +41,32 @@ export class StaticObjectManager {
 
   private onEnterChunk(chunkCoord: Coord) {
     const objects = this.coordMap.get(chunkCoord) ?? [];
+    const boundingBoxes = this.boundingBoxes;
+
     objects.forEach((object) => {
       this.count++;
       if (!object.isSpawned()) {
         object.spawn();
       }
       object.setActive(true).setVisible(true);
+    });
+
+    // same for bounding boxes; considering that we check all boxes here, we don't need to repeat the same logic in `onExitChunk`
+    boundingBoxes.forEach((boundingBoxes, id) => {
+      const object = this.objMap.get(id);
+
+      if (object) {
+        let isVisible = false;
+
+        for (const boundingBox of boundingBoxes) {
+          if (this.chunkManager.isVisibleBoundingBox(boundingBox)) {
+            isVisible = true;
+            break;
+          }
+        }
+
+        object.setActive(isVisible).setVisible(isVisible).spawn();
+      }
     });
   }
 
@@ -61,6 +83,12 @@ export class StaticObjectManager {
     this.objMap.set(id, object);
 
     if (cull) {
+      // if it's a line, we'll handle after creation with bounding boxes so just set to inactive
+      if (object instanceof Phaser.GameObjects.Line) {
+        object.setActive(false).setVisible(false);
+        return;
+      }
+
       const chunkCoord = pixelToChunkCoord({ x: object.x, y: object.y }, this.chunkSize);
 
       const objects = this.coordMap.get(chunkCoord) ?? [];
@@ -68,7 +96,7 @@ export class StaticObjectManager {
       if (!objects.length) this.coordMap.set(chunkCoord, [object]);
       else objects.push(object);
 
-      if (this.chunkManager.isVisible(chunkCoord)) {
+      if (this.chunkManager.isVisibleChunk(chunkCoord)) {
         this.count--;
         if (!object.isSpawned()) {
           object.spawn();
@@ -78,6 +106,30 @@ export class StaticObjectManager {
     } else object.spawn();
 
     this.onNewObjectCallbacks.forEach((callback) => callback(id));
+  }
+
+  setBoundingBoxes(id: string, boundingBoxes: BoundingBox[]) {
+    this.boundingBoxes.set(id, boundingBoxes);
+    let isVisible = false;
+
+    for (const boundingBox of boundingBoxes) {
+      if (this.chunkManager.isVisibleBoundingBox(boundingBox)) {
+        isVisible = true;
+        break;
+      }
+    }
+
+    if (isVisible) {
+      const object = this.objMap.get(id);
+      if (!object) return;
+
+      this.count--;
+      if (!object.isSpawned()) {
+        object.spawn();
+      }
+
+      object.setActive(true).setVisible(true);
+    }
   }
 
   onNewObject(callback: (id: string) => void) {
@@ -100,6 +152,7 @@ export class StaticObjectManager {
     if (index !== -1) objects.splice(index, 1);
 
     this.objMap.delete(id);
+    this.boundingBoxes.delete(id);
     if (destroy) object.destroy();
     if (decrement) this.count--;
   }
