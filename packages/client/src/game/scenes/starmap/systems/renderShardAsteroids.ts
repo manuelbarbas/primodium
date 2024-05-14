@@ -1,23 +1,28 @@
-import { renderShardAsteroid } from "@/game/lib/render/renderShardAsteroid";
 import { defineEnterSystem, defineUpdateSystem, Entity, Has, namespaceWorld } from "@latticexyz/recs";
 import { Coord } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { PrimodiumScene } from "@/game/api/scene";
+import {
+  DeferredShardAsteroidRenderContainer,
+  renderDeferredShardAsteroid,
+} from "@/game/lib/render/renderDeferredShardAsteroid";
 
 export const renderShardAsteroids = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const { objects } = scene;
 
   const renderExplodeAndMoveAsteroid = (entity: Entity, coord: Coord) => {
-    const asteroid = objects.asteroid.get(entity);
+    const asteroidContainer = objects.deferredRenderContainer.get(entity) as
+      | DeferredShardAsteroidRenderContainer
+      | undefined;
 
     // TODO: explode
 
-    if (!asteroid) return;
+    if (!asteroidContainer) return;
 
-    asteroid.getFleetContainer().clear();
-    asteroid.setTilePosition(coord);
+    asteroidContainer.getFleetsContainer().clear();
+    asteroidContainer.setTilePosition(coord);
   };
 
   const query = [Has(components.ShardAsteroid), Has(components.Position)];
@@ -27,7 +32,7 @@ export const renderShardAsteroids = (scene: PrimodiumScene) => {
 
     if (!coord) return;
 
-    renderShardAsteroid({ scene, entity, addEventHandlers: true, coord });
+    renderDeferredShardAsteroid({ scene, entity, coord });
   });
 
   defineUpdateSystem(systemsWorld, query, async ({ entity, component }) => {

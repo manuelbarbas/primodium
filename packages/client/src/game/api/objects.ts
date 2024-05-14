@@ -3,7 +3,7 @@ import { Fleet } from "../lib/objects/Fleet";
 import { Scene } from "engine/types";
 import { TransitLine } from "@/game/lib/objects/TransitLine";
 import { BaseAsteroid } from "@/game/lib/objects/Asteroid/BaseAsteroid";
-import { DeferredRenderContainer } from "@/game/lib/objects/DeferrerRenderContainer";
+import { DeferredRenderContainer } from "@/game/lib/objects/DeferredRenderContainer";
 import { Building, BuildingConstruction } from "@/game/lib/objects/Building";
 import { PrimodiumGameObject } from "engine/lib/core/StaticObjectManager";
 
@@ -48,8 +48,17 @@ function factory<T extends { destroy: () => void }>(
   };
 }
 
+interface PrimodiumObjectApiMap {
+  fleet: PrimodiumObjectApi<Fleet>;
+  transitLine: PrimodiumObjectApi<TransitLine>;
+  asteroid: PrimodiumObjectApi<BaseAsteroid>;
+  building: PrimodiumObjectApi<Building>;
+  constructionBuilding: PrimodiumObjectApi<BuildingConstruction>;
+  deferredRenderContainer: PrimodiumObjectApi<DeferredRenderContainer>;
+}
+
 // Wrapper around scene.objects.get to provide type safety
-export function createObjectApi(scene: Scene) {
+export function createObjectApi(scene: Scene): PrimodiumObjectApiMap {
   return {
     fleet: factory(scene, Fleet),
     transitLine: factory(scene, TransitLine, "transit"),

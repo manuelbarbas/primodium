@@ -1,10 +1,10 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { PrimodiumScene } from "@/game/api/scene";
-import { BaseAsteroid } from "@game/lib/objects/Asteroid/BaseAsteroid";
 import { TransitLine } from "@game/lib/objects/TransitLine";
 import { components } from "@/network/components";
 import { world } from "@/network/world";
 import { renderFleet } from "@/game/lib/render/renderFleet";
+import { DeferredAsteroidRenderContainer } from "@/game/lib/render/renderDeferredAsteroid";
 
 export const renderFleets = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -12,7 +12,7 @@ export const renderFleets = (scene: PrimodiumScene) => {
 
   // handle rendering fleets if asteroid is not yet spawned
   const spawnQueue = new Map<Entity, Entity[]>();
-  const unsub = scene.objects.fleet.onNewObject((id) => {
+  const unsub = scene.objects.deferredRenderContainer.onNewObject((id) => {
     const asteroidEntity = id as Entity;
     //does fleets exist in spawn queue
     const fleets = spawnQueue.get(asteroidEntity);
@@ -24,6 +24,10 @@ export const renderFleets = (scene: PrimodiumScene) => {
       spawnQueue.delete(asteroidEntity);
     }
   });
+
+  function getAsteroidContainerObject(entity: Entity) {
+    return scene.objects.deferredRenderContainer.get(entity) as DeferredAsteroidRenderContainer | undefined;
+  }
 
   function handleFleetTransit(fleet: Entity, origin: Entity, destination: Entity) {
     const originPosition = components.Position.get(origin) ?? { x: 0, y: 0 };
@@ -43,20 +47,16 @@ export const renderFleets = (scene: PrimodiumScene) => {
   }
 
   function handleFleetOrbit(fleet: Entity, asteroidEntity: Entity) {
-    const asteroid = scene.objects.asteroid.get(asteroidEntity);
+    const asteroidContainer = getAsteroidContainerObject(asteroidEntity);
 
-    if (!asteroid) {
+    if (asteroidContainer) {
+      const fleetObject = getFleetObject(fleet);
+      asteroidContainer.getFleetsContainer()?.addFleet(fleetObject);
+    } else {
       const queue = spawnQueue.get(asteroidEntity) ?? [];
       if (queue.length) queue.push(fleet);
       else spawnQueue.set(asteroidEntity, [fleet]);
-      return;
     }
-
-    if (!(asteroid instanceof BaseAsteroid)) return;
-
-    const fleetObject = getFleetObject(fleet);
-
-    asteroid.getFleetContainer().addFleet(fleetObject);
   }
 
   function getFleetObject(entity: Entity) {
@@ -64,7 +64,6 @@ export const renderFleets = (scene: PrimodiumScene) => {
 
     if (!fleet) {
       const newFleet = renderFleet({ scene, entity });
-
       return newFleet;
     }
 
@@ -85,6 +84,17 @@ export const renderFleets = (scene: PrimodiumScene) => {
   defineComponentSystem(systemsWorld, components.FleetMovement, async (update) => {
     const [newMovement, oldMovement] = update.value;
 
+    // if this fleet was in the spawn queue for the previous asteroid, remove it
+    if (oldMovement && spawnQueue.has(oldMovement.destination as Entity)) {
+      const fleets = spawnQueue.get(oldMovement.destination as Entity);
+      if (fleets) {
+        const index = fleets.indexOf(update.entity);
+        if (index !== -1) {
+          fleets.splice(index, 1);
+        }
+      }
+    }
+
     if (newMovement) {
       const time = components.Time.get()?.value ?? 0n;
       const arrivalTime = newMovement.arrivalTime ?? 0n;
@@ -99,7 +109,7 @@ export const renderFleets = (scene: PrimodiumScene) => {
         transitLine.destroy();
         transitsToUpdate.delete(update.entity);
       } else {
-        const orbitRing = scene.objects.asteroid.get(oldMovement.destination as Entity)?.getFleetContainer();
+        const orbitRing = getAsteroidContainerObject(oldMovement.destination as Entity)?.getFleetsContainer();
         const fleet = scene.objects.fleet.get(update.entity);
         if (fleet) orbitRing?.removeFleet(fleet);
       }
@@ -112,11 +122,9 @@ export const renderFleets = (scene: PrimodiumScene) => {
 
     transitsToUpdate.forEach((transit) => {
       const transitObj = scene.objects.transitLine.get(transit);
-
       if (!transitObj) return;
 
       const movement = components.FleetMovement.get(transit);
-
       if (!movement) return;
 
       const timeTraveled = now - movement.sendTime;
@@ -128,7 +136,7 @@ export const renderFleets = (scene: PrimodiumScene) => {
 
       if (progress >= 1) {
         const fleet = scene.objects.fleet.get(transit);
-        const orbitRing = scene.objects.asteroid.get(movement.destination as Entity)?.getFleetContainer();
+        const orbitRing = getAsteroidContainerObject(movement.destination as Entity)?.getFleetsContainer();
 
         if (orbitRing && fleet) {
           orbitRing.addFleet(fleet);
