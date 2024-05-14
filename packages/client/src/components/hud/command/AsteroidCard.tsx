@@ -14,6 +14,9 @@ import { SecondaryCard } from "@/components/core/Card";
 import { getAsteroidEmblem, getAsteroidImage } from "@/util/asteroid";
 import { useGame } from "@/hooks/useGame";
 import { AsteroidStats } from "@/components/hud/command/overview/AsteroidStatsAndActions";
+import { useMud } from "@/hooks";
+const filter =
+  "drop-shadow(1px 0px 0px #FF3232) drop-shadow(-1px  0px 0px #FF3232) drop-shadow( 0px  1px 0px #FF3232) drop-shadow( 0px -1px 0px #FF3232)";
 
 export const AsteroidCard: React.FC<{ entity: Entity }> = ({ entity }) => {
   const game = useGame();
@@ -21,7 +24,9 @@ export const AsteroidCard: React.FC<{ entity: Entity }> = ({ entity }) => {
   const name = entityToRockName(entity);
   const { inGracePeriod, duration } = useInGracePeriod(entity, loading);
 
-  const ownedBy = components.OwnedBy.use(entity)?.value as Entity | undefined;
+  const ownerPlayer = components.OwnedBy.use(entity)?.value as Entity | undefined;
+  const playerEntity = useMud().playerAccount.entity;
+  const friendly = ownerPlayer === playerEntity;
 
   if (loading)
     return (
@@ -38,13 +43,16 @@ export const AsteroidCard: React.FC<{ entity: Entity }> = ({ entity }) => {
           <div className="flex gap-1 items-center">
             <img src={getAsteroidEmblem(game, entity)} className="w-8 h-8 translate-y-2" />
             <div className="flex flex-col">
-              <p className="text-md font-bold uppercase">{name}</p>
-              {ownedBy ? <AccountDisplay className="w-fit" noColor player={ownedBy} /> : "DROID INFESTED"}
+              <p className="text-md font-bold uppercase">
+                {name}
+                {!friendly && <span className="bg-error ml-1 text-[0.6rem] uppercase px-1">hostile</span>}
+              </p>
+              {ownerPlayer ? <AccountDisplay className="w-fit" noColor player={ownerPlayer} /> : "DROID INFESTED"}
             </div>
           </div>
         </div>
         <div className="flex gap-1 justify-center items-center">
-          <img src={getAsteroidImage(game, entity)} className="w-18 h-18 -mt-6" />
+          <img src={getAsteroidImage(game, entity)} className="w-18 h-18 -mt-6" style={friendly ? {} : { filter }} />
         </div>
         {inGracePeriod && (
           <div className="flex gap-2 p-1 justify-center items-center h-4 w-full text-accent text-xs">

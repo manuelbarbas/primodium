@@ -32,7 +32,12 @@ export const ResourceIcon = ({
     <Button
       onClick={() => !disabled && onClick?.()}
       onAuxClick={() => !disabled && onClick?.(true)}
-      className={cn("relative flex flex-col gap-1 items-center justify-center cursor-pointer w-full h-full", className)}
+      className={cn(
+        "relative flex flex-col gap-1 items-center justify-center cursor-pointer w-full h-full disabled:hover:bg-error",
+        disabled ? "disabled:opacity-100 disabled:text-opacity-100" : "",
+        className
+      )}
+      disabled={disabled}
     >
       <img
         src={entityIsUnit ? EntityToUnitImage[resource] : EntityToResourceImage[resource]}

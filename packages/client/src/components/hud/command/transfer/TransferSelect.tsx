@@ -15,6 +15,8 @@ import { useGame } from "@/hooks/useGame";
 import { getFullResourceCount } from "@/util/resource";
 import { EntityType } from "@/util/constants";
 
+const filter = "invert(17%) sepia(70%) saturate(605%) hue-rotate(260deg) brightness(101%) contrast(111%)";
+
 export const TransferSelect = ({ side }: { side: "left" | "right" }) => {
   const { left, right, setLeft, setRight } = useTransfer();
   const handleSelect = side === "left" ? setLeft : setRight;
@@ -100,8 +102,10 @@ const SelectOption = ({
   disabled?: boolean;
 }) => {
   const primodium = useGame();
+  const player = useMud().playerAccount.entity;
   const isFleet = entity !== "newFleet" && components.IsFleet.has(entity);
   const content = entity === "newFleet" ? "New Fleet" : isFleet ? entityToFleetName(entity) : entityToRockName(entity);
+  const playerIsOwner = entity === "newFleet" ? true : getPlayerOwner(entity) === player;
 
   const imgSrc =
     entity === "newFleet" ? InterfaceIcons.Add : isFleet ? InterfaceIcons.Fleet : getAsteroidImage(primodium, entity);
@@ -114,9 +118,9 @@ const SelectOption = ({
       onClick={onSelect}
       onMouseEnter={() => entity !== "newFleet" && components.HoverEntity.set({ value: entity })}
       onMouseLeave={() => components.HoverEntity.remove()}
-      className={cn(`flex w-full aspect-square flex-col gap-2 items-center`)}
+      className={cn(`flex w-full aspect-square flex-col gap-2 items-center`, !playerIsOwner ? "border-error/50" : "")}
     >
-      <img src={imgSrc} className="w-6" />
+      <img src={imgSrc} className={cn("w-8")} style={!isFleet || playerIsOwner ? {} : { filter }} />
       <span className="text-pretty">{content}</span>
     </Button>
   );

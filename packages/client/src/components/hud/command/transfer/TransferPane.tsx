@@ -180,7 +180,7 @@ export const _TransferPane = (props: {
                     key={`right-unit-${unit}`}
                     onClick={onClick}
                     size="sm"
-                    disabled={moving !== null}
+                    disabled={moving !== null || playerOwner !== playerEntity}
                     resource={unit as Entity}
                     count={count}
                     rawDelta={delta}
@@ -210,7 +210,7 @@ export const _TransferPane = (props: {
                     key={`right-resource-${entity}`}
                     size="sm"
                     className="bg-neutral/50"
-                    disabled={moving !== null}
+                    disabled={moving !== null || playerOwner !== playerEntity}
                     resource={entity as Entity}
                     rawDelta={delta}
                     count={count}
