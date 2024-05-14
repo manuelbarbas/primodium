@@ -12,10 +12,14 @@ import { getWormholeAssetKeyPair } from "@/game/lib/objects/Building/wormholeAni
 import { WormholeStates } from "@/game/lib/objects/Building/wormholeAnimations";
 
 export class WormholeBase extends Building implements IPrimodiumGameObject {
-  private resourceSprite: Phaser.GameObjects.Image;
+  private resourceSpriteTop: Phaser.GameObjects.Image;
+  private resourceSpriteBottom: Phaser.GameObjects.Image;
+  private blueTintSprite: Phaser.GameObjects.Image;
   private resource: Entity;
   private wormholeState: WormholeStates;
-
+  private bottomAlpha = 0.8;
+  private topAlpha = 0.7;
+  private tintAlpha = 0.1;
   constructor(args: {
     initialState: WormholeStates;
     resource: Entity;
@@ -27,40 +31,93 @@ export class WormholeBase extends Building implements IPrimodiumGameObject {
     const buildingType = EntityType.WormholeBase;
 
     super({ ...args, buildingType });
-    // this.resource = args.resource;
     const pixelCoord = scene.utils.tileCoordToPixelCoord(coord);
 
     this.resource = args.resource;
 
-    this.resourceSprite = new Phaser.GameObjects.Image(
+    const bob = 3;
+
+    this.resourceSpriteBottom = new Phaser.GameObjects.Image(
       scene.phaserScene,
       pixelCoord.x + this.width / 2,
-      -pixelCoord.y + scene.tiled.tileHeight - this.height + 40,
+      -pixelCoord.y + scene.tiled.tileHeight - this.height + 40 + bob,
       Assets.SpriteAtlas,
       EntityTypeToResourceSprites[args.resource]
-    ).setDepth(DepthLayers.Building + 1);
+    )
+      .setAlpha(this.bottomAlpha)
+      .setBlendMode(Phaser.BlendModes.NORMAL)
+      .setDepth(DepthLayers.Building + 2);
 
-    scene.phaserScene.add.existing(this.resourceSprite);
+    //  Top resource art layer
+    this.resourceSpriteTop = new Phaser.GameObjects.Image(
+      scene.phaserScene,
+      pixelCoord.x + this.width / 2,
+      -pixelCoord.y + scene.tiled.tileHeight - this.height + 40 + bob,
+      Assets.SpriteAtlas,
+      EntityTypeToResourceSprites[args.resource]
+    )
+      .setAlpha(this.topAlpha)
+      .setBlendMode(Phaser.BlendModes.ADD)
+      .setDepth(DepthLayers.Building + 3);
+    this.resourceSpriteTop.postFX?.addGlow(0x00ffff, 3, undefined);
+
+    this.blueTintSprite = new Phaser.GameObjects.Image(
+      scene.phaserScene,
+      pixelCoord.x + this.width / 2,
+      -pixelCoord.y + scene.tiled.tileHeight - this.height + 40 + bob,
+      Assets.SpriteAtlas,
+      EntityTypeToResourceSprites[args.resource]
+    )
+      .setTint(0x00ffff)
+      .setAlpha(this.tintAlpha)
+      .setBlendMode(Phaser.BlendModes.OVERLAY)
+      .setDepth(DepthLayers.Building + 4);
+
+    scene.phaserScene.add.existing(this.blueTintSprite);
+    scene.phaserScene.add.existing(this.resourceSpriteBottom);
+    scene.phaserScene.add.existing(this.resourceSpriteTop);
+
+    this._scene.phaserScene.tweens.add({
+      targets: [this.blueTintSprite, this.resourceSpriteBottom, this.resourceSpriteTop],
+      y: -pixelCoord.y + scene.tiled.tileHeight - this.height + 40 - bob,
+      duration: 3000, // Duration of one bobbing cycle
+      yoyo: true, // Make the tween go back to the original value
+      repeat: -1, // Repeat indefinitely
+      ease: "Sine.easeInOut", // Smooth easing
+    });
     this.wormholeState = args.initialState ?? "idle";
   }
 
   public setResource(resourceEntity: Entity) {
     this.resource = resourceEntity;
-    this.resourceSprite.setTexture(Assets.SpriteAtlas, EntityTypeToResourceSprites[resourceEntity]);
+    const spriteKey = EntityTypeToResourceSprites[resourceEntity];
+    this.resourceSpriteBottom.setTexture(Assets.SpriteAtlas, spriteKey);
+    this.resourceSpriteTop.setTexture(Assets.SpriteAtlas, spriteKey);
+    this.blueTintSprite.setTexture(Assets.SpriteAtlas, spriteKey);
   }
 
-  private hideResourceAnimation() {
-    this.resourceSprite.setAlpha(0);
+  private showResourceAnimation(duration: number = 2000) {
+    const show = (target: Phaser.GameObjects.Image, alpha: number) => {
+      this._scene.phaserScene.tweens.add({
+        targets: target,
+        alpha: alpha,
+        duration: duration,
+        ease: "Power2",
+      });
+    };
+    show(this.resourceSpriteTop, this.topAlpha);
+    show(this.resourceSpriteBottom, this.bottomAlpha);
+    show(this.blueTintSprite, this.tintAlpha);
   }
-
-  private showResourceAnimation() {
+  private hideResourceAnimation(duration: number = 2000) {
     this._scene.phaserScene.tweens.add({
-      targets: this.resourceSprite,
-      alpha: 1,
-      duration: 2000, // Duration of the tween in milliseconds
-      ease: "Power2", // Easing function for the tween
+      targets: [this.resourceSpriteTop, this.resourceSpriteBottom, this.blueTintSprite],
+      alpha: 0,
+      duration: duration,
+      ease: "Power2",
     });
   }
+
   public runExplosionAnimation() {
     if (this.wormholeState === "overheating" || this.wormholeState === "cooldown") return;
     const sequence = {
@@ -70,9 +127,9 @@ export class WormholeBase extends Building implements IPrimodiumGameObject {
         // Listen for the animation complete event
         // Listen for the animation update event once
         const updateCallback = (animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) => {
-          if (animation.key === "overheating" && frame.index === 5) {
-            this._scene.fx.flashScreen();
-            this.hideResourceAnimation();
+          if (animation.key === "overheating" && frame.index === 4) {
+            this._scene.fx.flashScreen({ duration: 300 });
+            this.hideResourceAnimation(0);
           }
         };
         this.on(Phaser.Animations.Events.ANIMATION_UPDATE, updateCallback);
@@ -86,9 +143,9 @@ export class WormholeBase extends Building implements IPrimodiumGameObject {
   }
 
   public runPowerUpAnimation() {
-    if (this.wormholeState === "powerup" || this.wormholeState === "idle") return;
+    if (this.wormholeState === "powerup") return;
     const updateCallback = (animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) => {
-      if (animation.key === "powerup" && frame.index === 9) {
+      if (animation.key === "powerup" && frame.index === 11) {
         this.showResourceAnimation();
       }
     };
@@ -106,6 +163,32 @@ export class WormholeBase extends Building implements IPrimodiumGameObject {
     this._scene.phaserScene.add.timeline(sequence).play();
   }
 
+  public runChangeResourceAnimation(newResource: Entity) {
+    if (this.resource === newResource) return;
+    if (this.wormholeState === "overheating" || this.wormholeState === "cooldown") {
+      this.setResource(newResource);
+      return;
+    }
+
+    const sequence = {
+      at: 0,
+      run: () => {
+        const assetPair = getWormholeAssetKeyPair("powerup");
+        this.setTexture(Assets.SpriteAtlas, assetPair.sprite);
+        this.hideResourceAnimation();
+
+        this.playReverse(assetPair.animation);
+
+        this.anims.currentAnim!.key = "powerdown";
+        this.once("animationcomplete-powerdown", () => {
+          this.setResource(newResource);
+          this.runPowerUpAnimation();
+        });
+      },
+    };
+    this._scene.phaserScene.add.timeline(sequence).play();
+  }
+
   public setWormholeState(state: WormholeStates) {
     if (this.wormholeState === state) return;
     this.wormholeState = state;
@@ -113,8 +196,8 @@ export class WormholeBase extends Building implements IPrimodiumGameObject {
     this.setTexture(Assets.SpriteAtlas, assetPair.sprite);
 
     this.anims.stop();
-    if (state == "idle") this.resourceSprite.setAlpha(1);
-    else if (state == "cooldown") this.resourceSprite.setAlpha(0);
+    if (state == "idle") this.showResourceAnimation(0);
+    else if (state == "cooldown") this.hideResourceAnimation(0);
     if (assetPair.animation) {
       this.play(assetPair.animation);
       this.anims.currentAnim!.key = state;

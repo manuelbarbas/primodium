@@ -20,7 +20,7 @@ export const renderWormholeAnimations = (scene: PrimodiumScene) => {
     const time = components.Time.get()?.value ?? 0n;
     const cooldownEnd = components.CooldownEnd.get(mainBase)?.value ?? 0n;
     const wormholeBuilding = scene.objects.building.get(mainBase) as WormholeBase;
-    wormholeBuilding.setWormholeState(time > -cooldownEnd ? "cooldown" : "idle");
+    wormholeBuilding.setWormholeState(cooldownEnd !== 0n && time < cooldownEnd ? "cooldown" : "idle");
 
     defineComponentSystem(
       wormholeWorld,
@@ -36,15 +36,28 @@ export const renderWormholeAnimations = (scene: PrimodiumScene) => {
       { runOnInit: false }
     );
 
+    let currentResource = components.WormholeResource.get()?.resource;
+    const updateResource = (newResource: Entity) => {
+      if (newResource && currentResource !== newResource) {
+        wormholeBuilding.runChangeResourceAnimation(newResource);
+        currentResource = newResource;
+      }
+    };
+
+    const powerUp = (time: bigint) => {
+      const cooldownEnd = components.CooldownEnd.get(mainBase)?.value ?? 0n;
+      if (time !== cooldownEnd) return;
+      const wormholeBuilding = scene.objects.building.get(mainBase) as WormholeBase;
+      wormholeBuilding.runPowerUpAnimation();
+    };
+
     defineComponentSystem(
       wormholeWorld,
       components.Time,
       ({ value }) => {
-        const time = value[0]?.value ?? 0n;
-        const cooldownEnd = components.CooldownEnd.get(mainBase)?.value ?? 0n;
-        if (time !== cooldownEnd) return;
-        const wormholeBuilding = scene.objects.building.get(mainBase) as WormholeBase;
-        wormholeBuilding.runPowerUpAnimation();
+        const resource = components.WormholeResource.get()?.resource;
+        if (resource) updateResource(resource);
+        powerUp(value[0]?.value ?? 0n);
       },
       { runOnInit: false }
     );

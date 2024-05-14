@@ -20,7 +20,7 @@ export const setupWormholeResource = async () => {
         )
       ) as Entity;
 
-      const resourceIndex = Number(BigInt(seed) % BigInt(transportableLength));
+      const resourceIndex = Number(BigInt(seed) % BigInt(transportableLength)) + 1;
       resource = ResourceEntityLookup[resourceIndex as EResource];
     } while (resource == prevResource);
     return resource;
@@ -32,8 +32,7 @@ export const setupWormholeResource = async () => {
     const wormholeConfig = components.P_WormholeConfig.get();
     const time = value[0]?.value ?? 0n;
 
-    if (!wormholeData || !wormholeConfig)
-      return { resource: EntityType.NULL, nextResource: EntityType.NULL, timeUntilNextResource: 0n };
+    if (!wormholeData || !wormholeConfig) return;
     const storedTurn = wormholeData.turn;
     const worldSpeed = components.P_GameConfig.get()?.worldSpeed ?? 0n;
 
@@ -43,12 +42,19 @@ export const setupWormholeResource = async () => {
     const timeUntilNextResource = wormholeConfig.initTime + (expectedTurn + 1n) * turnDuration - time;
     const resourceEntity = ResourceEntityLookup[wormholeData.resource as EResource];
     const nextResourceEntity = ResourceEntityLookup[wormholeData.nextResource as EResource];
-    if (storedTurn === expectedTurn)
-      return { timeUntilNextResource, resource: resourceEntity, nextResource: nextResourceEntity };
-    components.WormholeResource.set({
+    if (storedTurn === expectedTurn) {
+      components.WormholeResource.set({
+        timeUntilNextResource,
+        nextResource: nextResourceEntity,
+        resource: resourceEntity,
+      });
+      return;
+    }
+    const newData = {
       timeUntilNextResource,
       nextResource: getRandomResource(wormholeData.hash as Entity, expectedTurn, nextResourceEntity),
       resource: nextResourceEntity,
-    });
+    };
+    components.WormholeResource.set(newData);
   });
 };

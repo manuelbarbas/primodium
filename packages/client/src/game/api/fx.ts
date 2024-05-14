@@ -84,24 +84,20 @@ export const createFxApi = (scene: Scene) => {
       ])
       .play();
   }
-  function flashScreen(duration: number = 500) {
+  function flashScreen(options?: { duration?: number; color?: number }) {
+    const duration = options?.duration ?? 500;
+    const color = options?.color ?? 0x0;
     // Create a white rectangle that covers the entire screen
     const scale = scene.phaserScene.scale;
     const camera = scene.camera;
     const flash = scene.phaserScene.add
-      .rectangle(
-        camera.phaserCamera.scrollX,
-        camera.phaserCamera.scrollY,
-        scale.width * 10,
-        scale.height * 10,
-        0xffffff
-      )
+      .rectangle(camera.phaserCamera.scrollX, camera.phaserCamera.scrollY, scale.width * 10, scale.height * 10, color)
       .setDepth(DepthLayers.Path);
 
     // Set the initial alpha to 0 (fully transparent)
     flash.setAlpha(0);
 
-    camera.phaserCamera.shake(300, 0.02 / camera.phaserCamera.zoom);
+    camera.phaserCamera.shake(700, 0.02 / camera.phaserCamera.zoom);
 
     // Create a tween to flash the screen
     scene.phaserScene.tweens.add({
