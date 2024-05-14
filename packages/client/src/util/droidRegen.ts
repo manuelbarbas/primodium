@@ -33,7 +33,8 @@ export function getAsteroidDroidCount(asteroid: Entity): bigint {
 }
 
 function getSecondaryAsteroidUnitsAndEncryption(asteroidEntity: Entity, level: bigint) {
-  const droidCount = 4n ** level + 10n * level ** 2n;
+  // this is a crime but wanted to preserve the const without using an implicit equation.
+  const droidCount = level < 3n ? 1000n : level < 6n ? 16000n : level < 8n ? 256000n : 4096000n;
   const encryption = (level * 300n + 300n) * RESOURCE_SCALE;
   return { droidCount, encryption };
 }
