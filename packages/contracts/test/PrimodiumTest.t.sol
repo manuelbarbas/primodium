@@ -609,7 +609,6 @@ contract PrimodiumTest is MudTest {
       if (unitPrototypes[i] == unitPrototype) unitCounts[i] = count;
     }
     setupCreateFleet(player, asteroidEntity, unitCounts, resourceCounts);
-    vm.warp(block.timestamp + 1000000);
     vm.startPrank(player);
     bytes32 fleetEntity = world.Primodium__createFleet(asteroidEntity, unitCounts, resourceCounts);
     vm.stopPrank();

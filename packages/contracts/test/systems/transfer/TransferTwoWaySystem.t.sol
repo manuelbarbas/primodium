@@ -9,7 +9,7 @@ import { EResource, EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
 import { LibColony } from "libraries/LibColony.sol";
 
-import { OwnedBy, P_Unit, P_GameConfig, CooldownEnd, Home, P_EnumToPrototype, ResourceCount, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes, FleetMovement, P_RequiredResources, P_RequiredResourcesData, UnitLevel, P_IsUtility, MaxColonySlots } from "codegen/index.sol";
+import { GracePeriod, OwnedBy, P_Unit, P_GameConfig, CooldownEnd, Home, P_EnumToPrototype, ResourceCount, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes, FleetMovement, P_RequiredResources, P_RequiredResourcesData, UnitLevel, P_IsUtility, MaxColonySlots } from "codegen/index.sol";
 
 contract TransferSystemTest is PrimodiumTest {
   bytes32 aliceHomeAsteroid;
@@ -32,8 +32,7 @@ contract TransferSystemTest is PrimodiumTest {
     P_GameConfig.setWorldSpeed(100);
     vm.prank(bob);
     world.Primodium__sendFleet(bobFleetEntity, aliceHomeAsteroid);
-    console.log("aliceFleet arrival time", FleetMovement.getArrivalTime(bobFleetEntity));
-    vm.warp(block.timestamp + 10000000);
+    vm.warp(FleetMovement.getArrivalTime(bobFleetEntity) + 1);
   }
 
   /* ------------------ left and right arent owned by player ------------------ */
@@ -84,7 +83,7 @@ contract TransferSystemTest is PrimodiumTest {
     );
     vm.prank(alice);
     world.Primodium__sendFleet(aliceFleetEntity, bobHomeAsteroid);
-    vm.warp(block.timestamp + 10000000);
+    vm.warp(FleetMovement.getArrivalTime(aliceFleetEntity) + 1);
 
     int256[] memory resources = new int256[](P_Transportables.length());
     for (uint256 i = 0; i < resources.length; i++) {
@@ -95,7 +94,7 @@ contract TransferSystemTest is PrimodiumTest {
     world.Primodium__transferResourcesTwoWay(aliceFleetEntity, aliceFleetEntity2, resources);
 
     vm.expectRevert("[TransferTwoWay] Entities not at same location");
-    world.Primodium__transferResourcesTwoWay(aliceFleetEntity, aliceFleetEntity2, resources);
+    world.Primodium__transferResourcesTwoWay(aliceFleetEntity2, aliceFleetEntity, resources);
 
     vm.expectRevert("[TransferTwoWay] Entities not at same location");
     world.Primodium__transferResourcesTwoWay(aliceHomeAsteroid, aliceFleetEntity, resources);
@@ -123,7 +122,7 @@ contract TransferSystemTest is PrimodiumTest {
     );
     vm.prank(alice);
     world.Primodium__sendFleet(aliceFleetEntity, bobHomeAsteroid);
-    vm.warp(block.timestamp + 10000000);
+    vm.warp(FleetMovement.getArrivalTime(aliceFleetEntity) + 1);
 
     vm.prank(alice);
     world.Primodium__sendFleet(aliceFleetEntity, aliceHomeAsteroid);
@@ -137,7 +136,7 @@ contract TransferSystemTest is PrimodiumTest {
     world.Primodium__transferResourcesTwoWay(aliceFleetEntity, aliceFleetEntity2, resources);
 
     vm.expectRevert("[TransferTwoWay] Fleet in transit");
-    world.Primodium__transferResourcesTwoWay(aliceFleetEntity, aliceFleetEntity2, resources);
+    world.Primodium__transferResourcesTwoWay(aliceFleetEntity2, aliceFleetEntity, resources);
 
     vm.expectRevert("[TransferTwoWay] Fleet in transit");
     world.Primodium__transferResourcesTwoWay(aliceHomeAsteroid, aliceFleetEntity, resources);
@@ -191,7 +190,7 @@ contract TransferSystemTest is PrimodiumTest {
     world.Primodium__transferResourcesTwoWay(aliceFleetEntity, aliceFleetEntity2, resources);
 
     vm.expectRevert("[TransferTwoWay] Fleet is in cooldown");
-    world.Primodium__transferResourcesTwoWay(aliceFleetEntity, aliceFleetEntity2, resources);
+    world.Primodium__transferResourcesTwoWay(aliceFleetEntity2, aliceFleetEntity, resources);
 
     vm.expectRevert("[TransferTwoWay] Fleet is in cooldown");
     world.Primodium__transferResourcesTwoWay(aliceHomeAsteroid, aliceFleetEntity, resources);
@@ -355,7 +354,9 @@ contract TransferSystemTest is PrimodiumTest {
     vm.expectRevert();
     world.Primodium__transferUnitsTwoWay(aliceHomeAsteroid, aliceFleetEntity, units);
 
+    uint256 aliceHomeAsteroidHousing = ResourceCount.get(aliceHomeAsteroid, uint8(EResource.U_Housing));
     world.Primodium__transferUnitsTwoWay(aliceFleetEntity, aliceHomeAsteroid, units);
+    assertEq(aliceHomeAsteroidHousing, ResourceCount.get(aliceHomeAsteroid, uint8(EResource.U_Housing)));
     assertEq(UnitCount.get(aliceHomeAsteroid, AegisDronePrototypeId), 1);
     assertEq(UnitCount.get(aliceHomeAsteroid, HammerDronePrototypeId), 99);
     assertEq(UnitCount.get(aliceFleetEntity, HammerDronePrototypeId), 1);
@@ -378,7 +379,9 @@ contract TransferSystemTest is PrimodiumTest {
     vm.expectRevert();
     world.Primodium__transferUnitsTwoWay(aliceFleetEntity2, aliceFleetEntity, units);
 
+    uint256 aliceHomeAsteroidHousing = ResourceCount.get(aliceHomeAsteroid, uint8(EResource.U_Housing));
     world.Primodium__transferUnitsTwoWay(aliceFleetEntity, aliceFleetEntity2, units);
+    assertEq(aliceHomeAsteroidHousing, ResourceCount.get(aliceHomeAsteroid, uint8(EResource.U_Housing)));
     assertEq(UnitCount.get(aliceFleetEntity2, AegisDronePrototypeId), 1);
     assertEq(UnitCount.get(aliceFleetEntity2, HammerDronePrototypeId), 99);
     assertEq(UnitCount.get(aliceFleetEntity, HammerDronePrototypeId), 1);
@@ -442,7 +445,7 @@ contract TransferSystemTest is PrimodiumTest {
 
   function testTransferTwoWayUnitsFailUtilityOverflow() public {
     // clear grace period
-    vm.warp(block.timestamp + 1000000);
+    vm.warp(GracePeriod.get(bobHomeAsteroid) + 1);
 
     conquerAsteroid(alice, aliceHomeAsteroid, bobHomeAsteroid);
     bytes32 playerEntity = OwnedBy.get(bobHomeAsteroid);
@@ -451,8 +454,9 @@ contract TransferSystemTest is PrimodiumTest {
 
     vm.prank(alice);
     world.Primodium__sendFleet(aliceFleetEntity, aliceHomeAsteroid);
+    vm.warp(FleetMovement.getArrivalTime(aliceFleetEntity) + 1);
+
     trainUnits(alice, EUnit.HammerDrone, 100, true);
-    vm.warp(block.timestamp + 1000000);
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     int256[] memory units = new int256[](unitPrototypes.length);
     for (uint256 i = 0; i < units.length; i++) {
@@ -485,7 +489,8 @@ contract TransferSystemTest is PrimodiumTest {
 
     setHousingEqual();
 
-    vm.warp(block.timestamp + 1000000);
+    vm.warp(GracePeriod.get(bobHomeAsteroid) + 1);
+
     conquerAsteroid(alice, aliceHomeAsteroid, bobHomeAsteroid);
     bytes32 playerEntity = OwnedBy.get(bobHomeAsteroid);
     assertEq(playerEntity, aliceEntity);
@@ -493,8 +498,9 @@ contract TransferSystemTest is PrimodiumTest {
 
     vm.prank(alice);
     world.Primodium__sendFleet(aliceFleetEntity, aliceHomeAsteroid);
+    vm.warp(FleetMovement.getArrivalTime(aliceFleetEntity) + 1);
+
     trainUnits(alice, EUnit.HammerDrone, 100, true);
-    vm.warp(block.timestamp + 1000000);
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     int256[] memory units = new int256[](unitPrototypes.length);
     for (uint256 i = 0; i < units.length; i++) {
@@ -575,7 +581,7 @@ contract TransferSystemTest is PrimodiumTest {
       EResource.Iron,
       ironCount
     );
-    vm.warp(block.timestamp + 10000000);
+    vm.warp(GracePeriod.get(bobHomeAsteroid) + 1);
     conquerAsteroid(alice, aliceHomeAsteroid, bobHomeAsteroid);
     bytes32 playerEntity = OwnedBy.get(bobHomeAsteroid);
     assertEq(playerEntity, aliceEntity);
@@ -589,7 +595,7 @@ contract TransferSystemTest is PrimodiumTest {
 
     vm.prank(alice);
     world.Primodium__sendFleet(aliceFleetEntity2, aliceHomeAsteroid);
-    vm.warp(block.timestamp + 10000000);
+    vm.warp(FleetMovement.getArrivalTime(aliceFleetEntity2) + 1);
 
     int256[] memory resources = new int256[](P_Transportables.length());
     for (uint256 i = 0; i < resources.length; i++) {
