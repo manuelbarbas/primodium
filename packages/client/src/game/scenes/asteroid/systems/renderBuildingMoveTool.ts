@@ -8,16 +8,24 @@ import {
   namespaceWorld,
 } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { toHex } from "viem";
+
+import { components } from "@/network/components";
+import { moveBuilding } from "@/network/setup/contractCalls/moveBuilding";
+import { MUD } from "@/network/types";
+import { world } from "@/network/world";
+import {
+  getBuildingBottomLeft,
+  getBuildingDimensions,
+  getBuildingOrigin,
+  validateBuildingPlacement,
+} from "@/util/building";
+import { Building, BuildingConstruction } from "@/game/lib/objects/Building";
+import { DepthLayers } from "@/game/lib/constants/common";
 import { PrimodiumScene } from "@/game/api/scene";
-import { DepthLayers } from "src/game/lib/constants/common";
-import { components } from "src/network/components";
-import { moveBuilding } from "src/network/setup/contractCalls/moveBuilding";
-import { MUD } from "src/network/types";
-import { world } from "src/network/world";
-import { getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
-import { Action } from "src/util/constants";
-import { Building } from "../../../lib/objects/Building";
+import { Action } from "@/util/constants";
 import { isDomInteraction } from "@/util/canvas";
+import { hashEntities } from "@/util/encode";
 
 export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: PrimodiumScene) => {
   if (pointer?.rightButtonDown()) {
@@ -27,6 +35,7 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Prim
 
   const selectedBuilding = components.SelectedBuilding.get()?.value;
   if (!selectedBuilding) return;
+  const selectedBuildingObj = scene.objects.building.get(selectedBuilding);
 
   const tileCoord = components.HoverTile.get();
   const activeRock = components.ActiveRock.get()?.value as Entity;
@@ -45,7 +54,33 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Prim
   const buildingOrigin = getBuildingOrigin(tileCoord, buildingPrototype);
   if (!buildingOrigin) return;
 
-  moveBuilding(mud, selectedBuilding, buildingOrigin);
+  // change opacity and place construction building
+  const placeholderBuilding = new BuildingConstruction({
+    id: hashEntities(toHex("placeholder"), selectedBuilding),
+    scene,
+    coord: getBuildingBottomLeft(buildingOrigin, buildingPrototype),
+    buildingDimensions: getBuildingDimensions(buildingPrototype),
+  }).spawn();
+
+  const pendingAnim = scene.phaserScene.tweens.add({
+    targets: [selectedBuildingObj, placeholderBuilding],
+    alpha: 0.6,
+    duration: 600,
+    yoyo: true,
+    repeat: -1,
+  });
+
+  moveBuilding(
+    mud,
+    selectedBuilding,
+    buildingOrigin,
+    // on completion
+    () => {
+      pendingAnim.destroy();
+      placeholderBuilding.destroy();
+      selectedBuildingObj?.setAlpha(1);
+    }
+  );
   components.SelectedAction.remove();
 };
 
@@ -63,6 +98,8 @@ export const renderBuildingMoveTool = (scene: PrimodiumScene, mud: MUD) => {
     const tileCoord = components.HoverTile.get();
 
     if (!tileCoord || !buildingPrototype) return;
+
+    const buildingDimensions = getBuildingDimensions(buildingPrototype);
 
     const activeRock = components.ActiveRock.get()?.value as Entity;
     const validPlacement = validateBuildingPlacement(
@@ -87,10 +124,18 @@ export const renderBuildingMoveTool = (scene: PrimodiumScene, mud: MUD) => {
       });
     }
 
-    placementBuilding.setCoordPosition(tileCoord).setAlpha(0.9);
+    placementBuilding
+      .setCoordPosition({ x: tileCoord.x, y: tileCoord.y - buildingDimensions.height + 1 })
+      .setAlpha(0.9)
+      .clearOutline()
+      .setOrigin(0, 1)
+      .setDepth(validPlacement ? DepthLayers.Building - tileCoord.y + buildingDimensions.height : DepthLayers.Building);
 
-    if (validPlacement) placementBuilding.setTint(0xffffff).setDepth(DepthLayers.Building - tileCoord.y);
-    else placementBuilding.setTint(0xff0000).setOutline(0xff0000, 3).setDepth(DepthLayers.Building);
+    if (validPlacement) {
+      placementBuilding.setTint(0xffffff).setOutline(0xffff00, 3);
+    } else {
+      placementBuilding.setTint(0xff0000).setOutline(0xff0000, 3);
+    }
   };
 
   const query = [
