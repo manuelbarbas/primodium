@@ -75,7 +75,7 @@ library LibTransferTwoWay {
   }
 
   /**
-   * @notice Transfers units between entities with the same owner
+   * @notice Transfers units between entities that have the same owning asteroid
    * @param fromEntity The entity to transfer units from
    * @param toEntity The entity to transfer units to
    * @param unitCounts The counts of units to transfer
