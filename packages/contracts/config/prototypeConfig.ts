@@ -2572,12 +2572,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     levels: {
       0: {
         P_Unit: getPUnitData({
-          hp: 80,
+          hp: 200,
           attack: 0,
-          defense: 80,
+          defense: 200,
           cargo: 0,
           speed: 1,
-          trainingTime: 240,
+          trainingTime: 720,
         }),
       },
     },
