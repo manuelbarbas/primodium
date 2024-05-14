@@ -16,7 +16,13 @@ export class WormholeBase extends Building implements IPrimodiumGameObject {
   private resource: Entity;
   private wormholeState: WormholeStates;
 
-  constructor(args: { resource: Entity; id: Entity; scene: PrimodiumScene; coord: Coord }) {
+  constructor(args: {
+    initialState: WormholeStates;
+    resource: Entity;
+    id: Entity;
+    scene: PrimodiumScene;
+    coord: Coord;
+  }) {
     const { scene, coord } = args;
     const buildingType = EntityType.WormholeBase;
 
@@ -35,7 +41,7 @@ export class WormholeBase extends Building implements IPrimodiumGameObject {
     ).setDepth(DepthLayers.Building + 1);
 
     scene.phaserScene.add.existing(this.resourceSprite);
-    this.wormholeState = "active";
+    this.wormholeState = args.initialState ?? "idle";
   }
 
   public setResource(resourceEntity: Entity) {
@@ -56,7 +62,7 @@ export class WormholeBase extends Building implements IPrimodiumGameObject {
     });
   }
   public runExplosionAnimation() {
-    if (this.wormholeState === "overheating") return;
+    if (this.wormholeState === "overheating" || this.wormholeState === "cooldown") return;
     const sequence = {
       at: 0,
       run: () => {
@@ -80,8 +86,7 @@ export class WormholeBase extends Building implements IPrimodiumGameObject {
   }
 
   public runPowerUpAnimation() {
-    if (this.wormholeState === "powerup") return;
-    console.log("running powerup animation");
+    if (this.wormholeState === "powerup" || this.wormholeState === "idle") return;
     const updateCallback = (animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) => {
       if (animation.key === "powerup" && frame.index === 9) {
         this.showResourceAnimation();
@@ -101,21 +106,22 @@ export class WormholeBase extends Building implements IPrimodiumGameObject {
     this._scene.phaserScene.add.timeline(sequence).play();
   }
 
-  private setWormholeState(state: WormholeStates) {
-    console.log("setting state", state);
+  public setWormholeState(state: WormholeStates) {
+    if (this.wormholeState === state) return;
     this.wormholeState = state;
     const assetPair = getWormholeAssetKeyPair(state);
     this.setTexture(Assets.SpriteAtlas, assetPair.sprite);
 
     this.anims.stop();
-    if (state == "idle") {
-      this.resourceSprite.setAlpha(1);
-    } else if (state == "cooldown") this.resourceSprite.setAlpha(0);
+    if (state == "idle") this.resourceSprite.setAlpha(1);
+    else if (state == "cooldown") this.resourceSprite.setAlpha(0);
     if (assetPair.animation) {
       this.play(assetPair.animation);
       this.anims.currentAnim!.key = state;
     }
   }
 
-  public runRechargeAnimation() {}
+  public getWormholeState() {
+    return this.wormholeState;
+  }
 }

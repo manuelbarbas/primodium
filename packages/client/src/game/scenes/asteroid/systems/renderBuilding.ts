@@ -122,9 +122,12 @@ export const renderBuilding = (scene: PrimodiumScene) => {
       if (!origin) return;
       const tilePosition = getBuildingBottomLeft(origin, buildingType);
 
+      const cooldownTime = components.CooldownEnd.get(entity)?.value ?? 0n;
+      const time = components.Time.get()?.value ?? 0n;
       const building =
         buildingType === EntityType.WormholeBase
           ? new WormholeBase({
+              initialState: cooldownTime === 0n || cooldownTime > time ? "idle" : "cooldown",
               id: entity,
               scene,
               coord: tilePosition,

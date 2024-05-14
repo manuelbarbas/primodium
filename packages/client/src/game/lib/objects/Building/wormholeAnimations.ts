@@ -1,6 +1,11 @@
 import { Animations, Sprites } from "@primodiumxyz/assets";
 
-export const wormholeStates = { idle: "idle", overheating: "overheating", cooldown: "cooldown", powerup: "powerup" };
+export const wormholeStates = {
+  idle: "idle",
+  overheating: "overheating",
+  cooldown: "cooldown",
+  powerup: "powerup",
+} as const;
 export type WormholeStates = (typeof wormholeStates)[keyof typeof wormholeStates];
 
 export const WormholeStateToAnimation: Record<WormholeStates, Animations> = {

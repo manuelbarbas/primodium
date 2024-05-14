@@ -778,12 +778,13 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
               notify("error", "No building selected");
               throw new Error("No building selected");
             }
+            const time = components.Time.get()?.value ?? 0n;
             await setComponentValue(
               mud,
               mud.components.CooldownEnd,
               { entity: selectedBuilding as Hex },
               {
-                value: 0n,
+                value: time + 10n,
               }
             );
           },
