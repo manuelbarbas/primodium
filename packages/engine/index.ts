@@ -1,3 +1,2 @@
-import * as api from "./api";
-
-export default api;
+export * as engine from "./api";
+export * as objects from "./objects";

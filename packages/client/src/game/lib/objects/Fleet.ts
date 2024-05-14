@@ -1,18 +1,18 @@
 import Phaser from "phaser";
 import { PrimodiumScene } from "@/game/api/scene";
-import { FleetsContainer } from "./Asteroid/FleetsContainer";
 import { IPrimodiumGameObject } from "./interfaces";
 import { TransitLine } from "./TransitLine";
 import { Assets, Sprites, Animations } from "@primodiumxyz/assets";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "engine/types";
+import { DepthLayers } from "@/game/lib/constants/common";
+// import { ContainerLite } from "engine/objects";
 
 export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObject {
   private _scene: PrimodiumScene;
   private id: Entity;
   private coord: Coord;
   private spawned = false;
-  private orbitRingRef: FleetsContainer | null = null;
   private transitLineRef: TransitLine | null = null;
   private frames: Phaser.Animations.AnimationFrame[];
   private currentRotationFrame: string | number;
@@ -49,12 +49,24 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
       })
       .setAlpha(0.27);
 
+    this.setDepth(DepthLayers.Resources);
+
     this._scene.objects.fleet.add(id, this);
   }
 
   spawn() {
     this.scene.add.existing(this);
     this.spawned = true;
+    return this;
+  }
+
+  detach() {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    this?.rexContainer?.parent?.resetChildState(this)?.remove(this);
+
+    this.reset();
+
     return this;
   }
 
@@ -94,8 +106,12 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
 
   reset() {
     this.setRotationFrame(0);
+    this.setRotation(0);
+    this.setScale(1);
+    this.setAlpha(1);
     this.setFlip(false, false);
-    this.rotation = 0;
+    this.setActive(true).setVisible(true);
+
     return this;
   }
 
@@ -107,25 +123,11 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
   }
 
   getTileCoord() {
-    const container = this.parentContainer;
-    const matrix = container.getWorldTransformMatrix();
-    const point = matrix.transformPoint(this.x, this.y);
-
-    return { x: point.x / this._scene.tiled.tileWidth, y: -point.y / this._scene.tiled.tileHeight };
-  }
-
-  getOrbitRing() {
-    return this.orbitRingRef;
+    return { x: this.x / this._scene.tiled.tileWidth, y: -this.y / this._scene.tiled.tileHeight };
   }
 
   getTransitLine() {
     return this.transitLineRef;
-  }
-
-  setOrbitRingRef(orbitRing: FleetsContainer | null) {
-    this.orbitRingRef = orbitRing;
-
-    return this;
   }
 
   setTransitLineRef(transitLine: TransitLine | null) {
@@ -135,6 +137,8 @@ export class Fleet extends Phaser.GameObjects.Image implements IPrimodiumGameObj
   }
 
   destroy() {
+    //TODO: explosion effect
+    this.detach();
     this._scene.objects.fleet.remove(this.id);
     this.particles.destroy();
     super.destroy();

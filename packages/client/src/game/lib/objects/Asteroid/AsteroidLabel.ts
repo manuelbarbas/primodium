@@ -1,11 +1,13 @@
 import Phaser from "phaser";
 import { MainbaseLevelToEmblem } from "@/game/lib/mappings";
-import { FleetsContainer } from "@/game/lib/objects/Asteroid/FleetsContainer";
+// import { FleetsContainer } from "@/game/lib/objects/Asteroid/FleetsContainer";
 import { Assets, Sprites } from "@primodiumxyz/assets";
 import { PixelCoord } from "engine/types";
 import { PrimodiumScene } from "@/game/api/scene";
+import { ContainerLite } from "engine/objects";
+import { DepthLayers } from "@/game/lib/constants/common";
 
-const MARGIN = 0;
+const MARGIN = 2;
 
 type LabelArgs = {
   ownerLabel: string;
@@ -18,15 +20,15 @@ type LabelArgs = {
   ownerLabelOpacity: number;
 };
 
-export class AsteroidLabel extends Phaser.GameObjects.Container {
+export class AsteroidLabel extends ContainerLite {
   private _scene: PrimodiumScene;
   private coord: PixelCoord;
-  private labelContainer: Phaser.GameObjects.Container;
+  private labelContainer: ContainerLite;
   emblemSprite: Phaser.GameObjects.Image;
   asteroidLabel: Phaser.GameObjects.BitmapText;
   ownerLabel: Phaser.GameObjects.BitmapText;
   allianceLabel: Phaser.GameObjects.BitmapText;
-  fleetsContainer: FleetsContainer | undefined;
+  // fleetsContainer: FleetsContainer | undefined;
   private baseScale = 1;
 
   constructor(
@@ -59,7 +61,11 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
       MainbaseLevelToEmblem[asteroidLevel - 1]
     ).setScale(1.5);
 
-    this.labelContainer = new Phaser.GameObjects.Container(scene.phaserScene, 0, 0);
+    this.labelContainer = new ContainerLite(
+      scene.phaserScene,
+      this.emblemSprite.width + MARGIN,
+      -this.emblemSprite.height / 2
+    );
 
     this.asteroidLabel = new Phaser.GameObjects.BitmapText(scene.phaserScene, 0, 0, "teletactile", asteroidName, 16)
       .setTintFill(asteroidNameColor)
@@ -76,26 +82,21 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
       .setAlpha(0.8)
       .setTintFill(allianceLabelColor);
 
+    this.labelContainer.addLocalMultiple([this.asteroidLabel, this.ownerLabel, this.allianceLabel]);
+    this.addLocalMultiple([this.emblemSprite, this.labelContainer]);
     this._updatePositions();
-    this.labelContainer.add([this.asteroidLabel, this.ownerLabel, this.allianceLabel]);
-    this.add([this.emblemSprite, this.labelContainer]);
-    this.setDepth(10000000);
+
+    this.setDepth(DepthLayers.Marker);
   }
 
   private _updatePositions() {
-    const startX = this.emblemSprite.width + MARGIN;
-    this.asteroidLabel.setPosition(startX, 0);
-    this.allianceLabel.setPosition(startX, this.asteroidLabel.height + MARGIN);
-    this.ownerLabel.setPosition(
-      this.allianceLabel.text ? startX + this.allianceLabel.width + MARGIN : startX,
-      this.allianceLabel.y
+    //set owner position
+    this.labelContainer.setChildLocalPosition(this.allianceLabel, 0, this.asteroidLabel.height + MARGIN);
+    this.labelContainer.setChildLocalPosition(
+      this.ownerLabel,
+      this.allianceLabel.width,
+      this.asteroidLabel.height + MARGIN
     );
-
-    //TODO: find a more reliable method of getting rendered height. Using phaser methods returns unusable values
-    if (this.fleetsContainer) this.fleetsContainer.setPosition(startX, this.ownerLabel.y + 20 + MARGIN);
-
-    //center labels with emblem
-    this.labelContainer.setY(-16);
   }
 
   setProperties(args: Partial<LabelArgs>) {
@@ -120,23 +121,5 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
   update() {
     const zoom = this._scene.camera.phaserCamera.zoom;
     this.setScale(this.baseScale / zoom);
-  }
-
-  attachFleetsContainer(fleetsContainer: FleetsContainer) {
-    this.fleetsContainer = fleetsContainer;
-    this.labelContainer.add(fleetsContainer);
-    this._updatePositions();
-  }
-
-  removeFleetsContainer() {
-    if (!this.fleetsContainer) return;
-
-    this.labelContainer.remove(this.fleetsContainer);
-    this._updatePositions();
-    this.fleetsContainer.setPosition(0, 0);
-    const fleetsContainer = this.fleetsContainer;
-    this.fleetsContainer = undefined;
-
-    return fleetsContainer;
   }
 }

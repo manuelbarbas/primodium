@@ -67,10 +67,11 @@ export const OwnedFleets: React.FC<{ className?: string }> = ({ className }) => 
     if (arrivalTime < time) components.SelectedFleet.set({ value: entity });
 
     const objects = game.STARMAP.objects;
-    const fleet = objects.getFleet(entity);
+    const fleet = objects.fleet.get(entity);
 
     if (!fleet) return;
     const position = fleet.getTileCoord();
+    console.log(fleet);
 
     pan({
       x: position.x,
