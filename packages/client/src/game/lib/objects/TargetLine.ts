@@ -32,7 +32,6 @@ export class TargetLine extends Phaser.GameObjects.Line implements IPrimodiumGam
   }
 
   destroy() {
-    this.scene.events.removeListener("update", this.update, this);
     super.destroy();
   }
 }
