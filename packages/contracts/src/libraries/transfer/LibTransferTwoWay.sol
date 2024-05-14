@@ -14,6 +14,11 @@ import { LibTransfer } from "libraries/transfer/LibTransfer.sol";
  * @dev Library for transferring units and resources between fleets and asteroids, including validations for ownership and capacity.
  */
 library LibTransferTwoWay {
+  /**
+   * @notice Checks cargo capacity and sets fleet to empty if applicable
+   * @param entity The entity to check
+   * @param isFleet Boolean indicating if the entity is a fleet
+   */
   function _checkCargoAndEmpty(bytes32 entity, bool isFleet) private {
     if (isFleet) {
       require(
@@ -24,23 +29,41 @@ library LibTransferTwoWay {
     }
   }
 
+  /**
+   * @notice Transfers units between entities
+   * @param entity The entity to transfer units to/from
+   * @param prototypeId The prototype ID of the unit
+   * @param count The number of units to transfer
+   * @param isFleet Boolean indicating if the entity is a fleet
+   * @param increase Boolean indicating if the transfer is an increase
+   * @param diffAsteroidOwner Boolean indicating if the transfer is between different asteroid owners
+   */
   function _transferUnit(
     bytes32 entity,
     bytes32 prototypeId,
     uint256 count,
     bool isFleet,
     bool increase,
-    bool diffOwner
+    bool diffAsteroidOwner
   ) private {
     if (isFleet) {
-      if (increase) LibFleet.increaseFleetUnit(entity, prototypeId, count, diffOwner);
-      else LibFleet.decreaseFleetUnit(entity, prototypeId, count, diffOwner);
+      if (increase) LibFleet.increaseFleetUnit(entity, prototypeId, count, diffAsteroidOwner);
+      else LibFleet.decreaseFleetUnit(entity, prototypeId, count, diffAsteroidOwner);
     } else {
-      if (increase) LibUnit.increaseUnitCount(entity, prototypeId, count, diffOwner);
-      else LibUnit.decreaseUnitCount(entity, prototypeId, count, diffOwner);
+      if (increase) LibUnit.increaseUnitCount(entity, prototypeId, count, diffAsteroidOwner);
+      else LibUnit.decreaseUnitCount(entity, prototypeId, count, diffAsteroidOwner);
     }
   }
 
+  /**
+   * @notice Transfers resources between entities
+   * @param entity The entity to transfer resources to/from
+   * @param resourceId The ID of the resource
+   * @param count The amount of resources to transfer
+   * @param isFleet Boolean indicating if the entity is a fleet
+   * @param increase Boolean indicating if the transfer is an increase
+   * @dev The increase is unchecked to avoid utility overflow. It is cross-checked with cargo capacity in _checkCargoAndEmpty
+   */
   function _transferResource(bytes32 entity, uint8 resourceId, uint256 count, bool isFleet, bool increase) private {
     if (isFleet) {
       if (increase) LibFleet.uncheckedIncreaseFleetResource(entity, resourceId, count);
@@ -51,7 +74,15 @@ library LibTransferTwoWay {
     }
   }
 
-  function _transferUnitsSameOwner(
+  /**
+   * @notice Transfers units between entities with the same owner
+   * @param fromEntity The entity to transfer units from
+   * @param toEntity The entity to transfer units to
+   * @param unitCounts The counts of units to transfer
+   * @param fromIsFleet Boolean indicating if the fromEntity is a fleet
+   * @param toIsFleet Boolean indicating if the toEntity is a fleet
+   */
+  function _transferUnitsSameAsteroidOwner(
     bytes32 fromEntity,
     bytes32 toEntity,
     int256[] memory unitCounts,
@@ -75,10 +106,15 @@ library LibTransferTwoWay {
   }
 
   /**
-   * @notice  transfers units between different owners
-   * @dev     to avoid utility overflow, we subtract units first and then add units
+   * @notice Transfers units between entities with different asteroid owners
+   * @dev To avoid utility overflow, units are subtracted first and then added
+   * @param fromEntity The entity to transfer units from
+   * @param toEntity The entity to transfer units to
+   * @param unitCounts The counts of units to transfer
+   * @param fromIsFleet Boolean indicating if the fromEntity is a fleet
+   * @param toIsFleet Boolean indicating if the toEntity is a fleet
    */
-  function _transferUnitsDiffOwner(
+  function _transferUnitsDiffAsteroidOwner(
     bytes32 fromEntity,
     bytes32 toEntity,
     int256[] memory unitCounts,
@@ -114,6 +150,14 @@ library LibTransferTwoWay {
     }
   }
 
+  /**
+   * @notice Transfers resources between entities
+   * @param fromEntity The entity to transfer resources from
+   * @param toEntity The entity to transfer resources to
+   * @param resourceCounts The counts of resources to transfer
+   * @param fromIsFleet Boolean indicating if the fromEntity is a fleet
+   * @param toIsFleet Boolean indicating if the toEntity is a fleet
+   */
   function _transferResources(
     bytes32 fromEntity,
     bytes32 toEntity,
@@ -133,40 +177,64 @@ library LibTransferTwoWay {
     }
   }
 
+  /**
+   * @notice Transfers units between two entities
+   * @param leftEntity The first entity
+   * @param rightEntity The second entity
+   * @param unitCounts The counts of units to transfer
+   * @param sameAsteroidOwner Boolean indicating if the entities have the same owner
+   */
   function transferUnitsTwoWay(
     bytes32 leftEntity,
     bytes32 rightEntity,
     int256[] memory unitCounts,
-    bool sameOwner
+    bool sameAsteroidOwner
   ) internal {
     bool leftIsFleet = IsFleet.get(leftEntity);
     bool rightIsFleet = IsFleet.get(rightEntity);
 
-    if (sameOwner) _transferUnitsSameOwner(leftEntity, rightEntity, unitCounts, leftIsFleet, rightIsFleet);
-    else _transferUnitsDiffOwner(leftEntity, rightEntity, unitCounts, leftIsFleet, rightIsFleet);
+    if (sameAsteroidOwner)
+      _transferUnitsSameAsteroidOwner(leftEntity, rightEntity, unitCounts, leftIsFleet, rightIsFleet);
+    else _transferUnitsDiffAsteroidOwner(leftEntity, rightEntity, unitCounts, leftIsFleet, rightIsFleet);
     _checkCargoAndEmpty(leftEntity, leftIsFleet);
     _checkCargoAndEmpty(rightEntity, rightIsFleet);
   }
 
+  /**
+   * @notice Transfers resources between two entities
+   * @param leftEntity The first entity
+   * @param rightEntity The second entity
+   * @param resourceCounts The counts of resources to transfer
+   */
   function transferResourcesTwoWay(bytes32 leftEntity, bytes32 rightEntity, int256[] memory resourceCounts) internal {
     bool leftIsFleet = IsFleet.get(leftEntity);
     bool rightIsFleet = IsFleet.get(rightEntity);
     _transferResources(leftEntity, rightEntity, resourceCounts, leftIsFleet, rightIsFleet);
+
     _checkCargoAndEmpty(leftEntity, leftIsFleet);
     _checkCargoAndEmpty(rightEntity, rightIsFleet);
   }
 
+  /**
+   * @notice Transfers units and resources between two entities
+   * @param leftEntity The first entity
+   * @param rightEntity The second entity
+   * @param unitCounts The counts of units to transfer
+   * @param resourceCounts The counts of resources to transfer
+   * @param sameAsteroidOwner Boolean indicating if the entities have the same owner
+   */
   function transferUnitsAndResourcesTwoWay(
     bytes32 leftEntity,
     bytes32 rightEntity,
     int256[] memory unitCounts,
     int256[] memory resourceCounts,
-    bool sameOwner
+    bool sameAsteroidOwner
   ) internal {
     bool leftIsFleet = IsFleet.get(leftEntity);
     bool rightIsFleet = IsFleet.get(rightEntity);
-    if (sameOwner) _transferUnitsSameOwner(leftEntity, rightEntity, unitCounts, leftIsFleet, rightIsFleet);
-    else _transferUnitsDiffOwner(leftEntity, rightEntity, unitCounts, leftIsFleet, rightIsFleet);
+    if (sameAsteroidOwner)
+      _transferUnitsSameAsteroidOwner(leftEntity, rightEntity, unitCounts, leftIsFleet, rightIsFleet);
+    else _transferUnitsDiffAsteroidOwner(leftEntity, rightEntity, unitCounts, leftIsFleet, rightIsFleet);
 
     _transferResources(leftEntity, rightEntity, resourceCounts, leftIsFleet, rightIsFleet);
     _checkCargoAndEmpty(leftEntity, leftIsFleet);

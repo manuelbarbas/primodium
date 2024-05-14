@@ -162,6 +162,13 @@ library LibFleet {
     ResourceCount.set(fleetEntity, resource, ResourceCount.get(fleetEntity, resource) + amount);
   }
 
+  /**
+   * @notice Increases the amount of a specific resource in a fleet.
+   * @param fleetEntity The identifier of the fleet.
+   * @param resource The type of resource to be added.
+   * @param amount The quantity of the resource to be added.
+   * @dev DOES NOT ENSURE that the fleet has sufficient cargo space to store the added resources.
+   */
   function uncheckedIncreaseFleetResource(bytes32 fleetEntity, uint8 resource, uint256 amount) internal {
     if (amount == 0) return;
     ResourceCount.set(fleetEntity, resource, ResourceCount.get(fleetEntity, resource) + amount);

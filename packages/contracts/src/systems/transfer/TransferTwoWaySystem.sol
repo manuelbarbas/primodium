@@ -17,9 +17,9 @@ contract TransferTwoWaySystem is PrimodiumSystem {
    * @dev Ensures entities are not the same, at least one entity is a fleet, fleets are at destination, and owned by the same player.
    * @param leftEntity The first entity involved in the transfer.
    * @param rightEntity The second entity involved in the transfer.
-   * @return sameOwner A boolean indicating if both entities are owned by the same player.
+   * @return sameAsteroidOwner A boolean indicating if both entities are owned by the same player.
    */
-  function checkCanTransferTwoWay(bytes32 leftEntity, bytes32 rightEntity) private returns (bool sameOwner) {
+  function checkCanTransferTwoWay(bytes32 leftEntity, bytes32 rightEntity) private returns (bool sameAsteroidOwner) {
     require(leftEntity != rightEntity, "[TransferTwoWay] Cannot transfer to self");
     IWorld world = IWorld(_world());
     bytes32 player = _player();
@@ -28,17 +28,14 @@ contract TransferTwoWaySystem is PrimodiumSystem {
 
     require(leftIsFleet || rightIsFleet, "[TransferTwoWay] At least one entity must be a fleet");
     if (leftIsFleet) {
-      require(FleetMovement.getArrivalTime(leftEntity) <= block.timestamp, "[TransferTwoWay] Fleet not at destination");
+      require(FleetMovement.getArrivalTime(leftEntity) <= block.timestamp, "[TransferTwoWay] Fleet in transit");
       require(block.timestamp >= CooldownEnd.get(leftEntity), "[TransferTwoWay] Fleet is in cooldown");
     } else {
       world.Primodium__claimUnits(leftEntity);
       world.Primodium__claimResources(leftEntity);
     }
     if (rightIsFleet) {
-      require(
-        FleetMovement.getArrivalTime(rightEntity) <= block.timestamp,
-        "[TransferTwoWay] Fleet not at destination"
-      );
+      require(FleetMovement.getArrivalTime(rightEntity) <= block.timestamp, "[TransferTwoWay] Fleet in transit");
       require(block.timestamp >= CooldownEnd.get(rightEntity), "[TransferTwoWay] Fleet is in cooldown");
     } else {
       world.Primodium__claimUnits(rightEntity);
@@ -66,9 +63,9 @@ contract TransferTwoWaySystem is PrimodiumSystem {
   function transferUnitsTwoWay(bytes32 leftEntity, bytes32 rightEntity, int256[] calldata unitCounts) public {
     require(unitCounts.length == P_UnitPrototypes.length(), "[TransferTwoWay] Incorrect unit array length");
 
-    bool sameOwner = checkCanTransferTwoWay(leftEntity, rightEntity);
+    bool sameAsteroidOwner = checkCanTransferTwoWay(leftEntity, rightEntity);
 
-    LibTransferTwoWay.transferUnitsTwoWay(leftEntity, rightEntity, unitCounts, sameOwner);
+    LibTransferTwoWay.transferUnitsTwoWay(leftEntity, rightEntity, unitCounts, sameAsteroidOwner);
   }
 
   /**
@@ -101,8 +98,14 @@ contract TransferTwoWaySystem is PrimodiumSystem {
     require(unitCounts.length == P_UnitPrototypes.length(), "[TransferTwoWay] Incorrect unit array length");
     require(resourceCounts.length == P_Transportables.get().length, "[TransferTwoWay] Incorrect resource array length");
 
-    bool sameOwner = checkCanTransferTwoWay(leftEntity, rightEntity);
+    bool sameAsteroidOwner = checkCanTransferTwoWay(leftEntity, rightEntity);
 
-    LibTransferTwoWay.transferUnitsAndResourcesTwoWay(leftEntity, rightEntity, unitCounts, resourceCounts, sameOwner);
+    LibTransferTwoWay.transferUnitsAndResourcesTwoWay(
+      leftEntity,
+      rightEntity,
+      unitCounts,
+      resourceCounts,
+      sameAsteroidOwner
+    );
   }
 }

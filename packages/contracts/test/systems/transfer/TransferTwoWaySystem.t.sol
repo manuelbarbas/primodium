@@ -133,16 +133,16 @@ contract TransferSystemTest is PrimodiumTest {
       if (P_Transportables.getItemValue(i) == Iron) resources[i] = int256(ironCount);
     }
     vm.startPrank(alice);
-    vm.expectRevert("[TransferTwoWay] Fleet not at destination");
+    vm.expectRevert("[TransferTwoWay] Fleet in transit");
     world.Primodium__transferResourcesTwoWay(aliceFleetEntity, aliceFleetEntity2, resources);
 
-    vm.expectRevert("[TransferTwoWay] Fleet not at destination");
+    vm.expectRevert("[TransferTwoWay] Fleet in transit");
     world.Primodium__transferResourcesTwoWay(aliceFleetEntity, aliceFleetEntity2, resources);
 
-    vm.expectRevert("[TransferTwoWay] Fleet not at destination");
+    vm.expectRevert("[TransferTwoWay] Fleet in transit");
     world.Primodium__transferResourcesTwoWay(aliceHomeAsteroid, aliceFleetEntity, resources);
 
-    vm.expectRevert("[TransferTwoWay] Fleet not at destination");
+    vm.expectRevert("[TransferTwoWay] Fleet in transit");
     world.Primodium__transferResourcesTwoWay(aliceFleetEntity, aliceHomeAsteroid, resources);
   }
 
