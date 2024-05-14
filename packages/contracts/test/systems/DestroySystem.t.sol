@@ -25,7 +25,7 @@ contract DestroySystemTest is PrimodiumTest {
     spawn(creator);
     playerEntity = addressToEntity(creator);
     asteroidEntity = Home.get(playerEntity);
-    position = getTilePosition(asteroidEntity, EBuilding.Hangar);
+    position = getTilePosition(asteroidEntity, EBuilding.Market);
     vm.startPrank(creator);
   }
 

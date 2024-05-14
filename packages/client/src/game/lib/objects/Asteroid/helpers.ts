@@ -9,6 +9,13 @@ import {
 } from "../../mappings";
 import { Entity } from "@latticexyz/recs";
 
+export enum LODs {
+  FullyShow = 0,
+  ShowLabelOnly = 1,
+  HideAsteroidAndOwnerLabel = 2,
+  FullyHide = 3,
+}
+
 export const getPrimarySprite = (level: bigint) => {
   return LevelToPrimaryAsteroidSprites[Number(level - 1n)];
 };

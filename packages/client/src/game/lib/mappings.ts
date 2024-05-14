@@ -153,7 +153,7 @@ export const EntityTypeToAnimations: Record<string, (Animations | undefined)[]> 
 export const MaxLevelToTilemap: Record<number, Tilemaps> = {
   1: Tilemaps.AsteroidMicro,
   3: Tilemaps.AsteroidSmall,
-  5: Tilemaps.AsteroidMedium,
+  6: Tilemaps.AsteroidMedium,
   8: Tilemaps.AsteroidLarge,
 };
 

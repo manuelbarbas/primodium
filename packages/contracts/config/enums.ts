@@ -88,19 +88,40 @@ export enum EMap {
 }
 
 export enum EObjectives {
-  // (A) Intro
-  BuildIronMine = 1,
+  // (A) Fundamentals
+  JoinDiscord = 1,
+  FollowTwitter,
+  BuildIronMine,
   BuildCopperMine,
-  BuildIronPlateFactory,
-  UpgradeMainBase,
-  ExpandBase,
+  BuildLithiumMine,
+
+  UpgradeMainBase2,
+  UpgradeMainBase3,
+  UpgradeMainBase4,
+  UpgradeMainBase5,
+
+  ExpandBase2,
+  ExpandBase3,
+  ExpandBase4,
+
+  UpgradeIronMine2,
+  UpgradeIronMine3,
+
+  UpgradeCopperMine2,
+  UpgradeCopperMine3,
+
+  UpgradeLithiumMine2,
+  UpgradeLithiumMine3,
 
   // (A-A) Military basics
   BuildGarage,
+  UpgradeGarage,
   BuildWorkshop,
-  CreateFleet,
+  UpgradeWorkshop,
 
   // (A-A-A) Fleet basics
+  CreateFleet,
+  TransferFromAsteroid,
   TransferFromFleet,
   SendFleet,
 
@@ -129,8 +150,8 @@ export enum EObjectives {
   TeleportResources,
 
   // (A-A-A-C) fleet management
-  TransferFromAsteroid,
   BuildStarmapper,
+  CreateFleet2,
   DefendWithFleet,
   BlockWithFleet,
   LandFleet,
@@ -139,12 +160,12 @@ export enum EObjectives {
   TrainMinutemanMarine,
   TrainTridentMarine,
   TrainLightningCraft,
-  BuildDroneFactory,
 
   // (A-A-B-A) unit management
   UpgradeUnit,
 
   // (A-A-B-B) unit production (cont)
+  BuildDroneFactory,
   TrainAnvilDrone,
   TrainHammerDrone,
   TrainAegisDrone,
@@ -154,25 +175,29 @@ export enum EObjectives {
   BuildHangar,
 
   // (A-A-C) Defense
-  BuildSAMLauncher,
   BuildShieldGenerator,
   BuildVault,
+  BuildSAMLauncher,
 
   // (A-B) Production
-  BuildAlloyFactory,
-  BuildLithiumMine,
-  BuildPVCellFactory,
   BuildStorageUnit,
+  UpgradeStorageUnit2,
+  BuildIronPlateFactory,
+  BuildAlloyFactory,
+  BuildPVCellFactory,
 
   // (A-B-A) Production (cont)
   BuildSolarPanel,
+  UpgradeSolarPanel2,
 
   // (A-B-B) Market
   BuildMarket,
   MarketSwap,
 
-  // (A-C) Alliance
+  // (A-C) Alliance (Social)
   JoinAlliance,
+
+  PrimoPlayer,
 }
 
 export enum EAllianceInviteMode {

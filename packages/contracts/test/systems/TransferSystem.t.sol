@@ -18,6 +18,8 @@ contract TransferSystemTest is PrimodiumTest {
   bytes32 bobHomeAsteroid;
   bytes32 bobEntity;
 
+  uint256[] initResources = new uint256[](uint8(EResource.LENGTH));
+
   function setUp() public override {
     super.setUp();
     aliceEntity = addressToEntity(alice);
@@ -25,6 +27,10 @@ contract TransferSystemTest is PrimodiumTest {
 
     bobEntity = addressToEntity(bob);
     bobHomeAsteroid = spawn(bob);
+
+    for (uint8 i = 0; i < uint8(EResource.LENGTH); i++) {
+      initResources[i] = ResourceCount.get(aliceHomeAsteroid, i);
+    }
   }
 
   function testTransferResourcesAndUnitsFleetToFleet() public {
@@ -86,7 +92,8 @@ contract TransferSystemTest is PrimodiumTest {
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       if (P_IsUtility.get(requiredResources.resources[i]))
         assertEq(
-          ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]),
+          ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]) -
+            initResources[requiredResources.resources[i]],
           0,
           "no utility should be refunded when transfer is between same owner fleets"
         );
@@ -260,7 +267,8 @@ contract TransferSystemTest is PrimodiumTest {
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       if (P_IsUtility.get(requiredResources.resources[i]))
         assertEq(
-          ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]),
+          ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]) -
+            initResources[requiredResources.resources[i]],
           0,
           "no utility should be refunded when transfer is between same owner fleets"
         );
@@ -407,7 +415,8 @@ contract TransferSystemTest is PrimodiumTest {
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       if (P_IsUtility.get(requiredResources.resources[i]))
         assertEq(
-          ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]),
+          ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]) -
+            initResources[requiredResources.resources[i]],
           0,
           "no utility should be refunded when transfer is between same owner fleets"
         );
@@ -468,7 +477,8 @@ contract TransferSystemTest is PrimodiumTest {
     for (uint256 i = 0; i < requiredResources.resources.length; i++) {
       if (P_IsUtility.get(requiredResources.resources[i]))
         assertEq(
-          ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]),
+          ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]) -
+            initResources[requiredResources.resources[i]],
           0,
           "no utility should be refunded when transfer is between same owner fleets"
         );
