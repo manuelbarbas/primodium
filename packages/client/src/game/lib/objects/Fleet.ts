@@ -52,6 +52,7 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
 
   spawn() {
     this.scene.add.existing(this);
+    this.fleetImage.setInteractive();
     this.spawned = true;
     return this;
   }

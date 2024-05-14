@@ -108,7 +108,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     else this.setInlineView();
   }
 
-  setInlineView(offsetX = 16, offsetY = 24) {
+  setInlineView(offsetX = 32, offsetY = 24) {
     this.rotationTween.pause();
     this.orbitRing.setActive(false).setVisible(false);
 
@@ -118,10 +118,10 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     this.fleets.list.forEach((_fleet, i) => {
       const fleet = _fleet as Fleet;
       fleet.reset();
-      const col = Math.floor(i / COL) * (fleet.fleetImage.width / 2 + MARGIN);
-      const row = fleet.fleetImage.width / 2 + (fleet.fleetImage.width / 2 + MARGIN) * i;
-      const posX = row - (col > 0 ? COL : 0) * (fleet.fleetImage.width / 2 + MARGIN);
-      const posY = col;
+      const col = i % COL;
+      const row = Math.floor(i / COL);
+      const posX = col * (fleet.fleetImage.width / 2 + MARGIN);
+      const posY = row * (fleet.fleetImage.height / 2 + MARGIN);
       fleet.setPosition(posX + offsetX, posY + offsetY);
       fleet.deactivateBurn();
     });
