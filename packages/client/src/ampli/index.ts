@@ -230,6 +230,148 @@ export interface SystemAddOrderProperties {
   transactionValid: boolean;
 }
 
+export interface SystemAllianceSystemPrimodiumRevokeInviteProperties {
+  /**
+   * Player rejected or kicked from an alliance.
+   */
+  allianceRejectee: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemAllianceSystemPrimodiumSetAllianceInviteModeProperties {
+  /**
+   * Whether an alliance is invite only
+   */
+  allianceInviteOnly: boolean;
+  /**
+   * Name of an alliance.
+   */
+  allianceName: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemAllianceSystemPrimodiumSetAllianceNameProperties {
+  /**
+   * Name of an alliance.
+   */
+  allianceName: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
 export interface SystemBuildProperties {
   /**
    * Location of an asteroid represented as the \[z\] element in the Position component. This is stored as a single string because the asteroid location is greater than the int32 number limit and has type BigNumber in the client.
@@ -3944,6 +4086,30 @@ export class SystemAddOrder implements BaseEvent {
   }
 }
 
+export class SystemAllianceSystemPrimodiumRevokeInvite implements BaseEvent {
+  event_type = "system.AllianceSystem.Primodium__revokeInvite";
+
+  constructor(public event_properties: SystemAllianceSystemPrimodiumRevokeInviteProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemAllianceSystemPrimodiumSetAllianceInviteMode implements BaseEvent {
+  event_type = "system.AllianceSystem.Primodium__setAllianceInviteMode";
+
+  constructor(public event_properties: SystemAllianceSystemPrimodiumSetAllianceInviteModeProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemAllianceSystemPrimodiumSetAllianceName implements BaseEvent {
+  event_type = "system.AllianceSystem.Primodium__setAllianceName";
+
+  constructor(public event_properties: SystemAllianceSystemPrimodiumSetAllianceNameProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
 export class SystemBuild implements BaseEvent {
   event_type = "system.Build";
 
@@ -4653,6 +4819,57 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemAddOrder(properties), options);
+  }
+
+  /**
+   * system.AllianceSystem.Primodium__revokeInvite
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.AllianceSystem.Primodium__revokeInvite)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. allianceRejectee)
+   * @param options Amplitude event options.
+   */
+  systemAllianceSystemPrimodiumRevokeInvite(
+    properties: SystemAllianceSystemPrimodiumRevokeInviteProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemAllianceSystemPrimodiumRevokeInvite(properties), options);
+  }
+
+  /**
+   * system.AllianceSystem.Primodium__setAllianceInviteMode
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.AllianceSystem.Primodium__setAllianceInviteMode)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. allianceInviteOnly)
+   * @param options Amplitude event options.
+   */
+  systemAllianceSystemPrimodiumSetAllianceInviteMode(
+    properties: SystemAllianceSystemPrimodiumSetAllianceInviteModeProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemAllianceSystemPrimodiumSetAllianceInviteMode(properties), options);
+  }
+
+  /**
+   * system.AllianceSystem.Primodium__setAllianceName
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.AllianceSystem.Primodium__setAllianceName)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. allianceName)
+   * @param options Amplitude event options.
+   */
+  systemAllianceSystemPrimodiumSetAllianceName(
+    properties: SystemAllianceSystemPrimodiumSetAllianceNameProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemAllianceSystemPrimodiumSetAllianceName(properties), options);
   }
 
   /**
