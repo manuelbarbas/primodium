@@ -47,6 +47,7 @@ export const IndexScreen = () => {
     // TODO: better search algorithm
     return allAlliances?.filter((alliance) => alliance.name.toLowerCase().includes(searchTag.toLowerCase()));
   }, [searchTag, allianceEntities, allianceNames, invites, joinRequests]);
+  console.log(alliances);
 
   // Check if the player is not already in an alliance (for disabling buttons & custom display)
   // const playerAlliance = components.PlayerAlliance.use(playerEntity)?.alliance;
