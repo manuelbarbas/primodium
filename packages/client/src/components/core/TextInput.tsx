@@ -1,6 +1,6 @@
 import { cn } from "@/util/client";
 import { useEffect, useRef } from "react";
-import { usePrimodium } from "src/hooks/usePrimodium";
+import { useGame } from "src/hooks/useGame";
 
 export const TextInput: React.FC<{
   topLeftLabel?: string;
@@ -25,10 +25,8 @@ export const TextInput: React.FC<{
   onChange,
   requirePattern,
 }) => {
-  const primodium = usePrimodium();
-  const input = primodium.api("UI").input;
-  const input2 = primodium.api("ASTEROID").input;
-  const input3 = primodium.api("STARMAP").input;
+  const game = useGame();
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -74,16 +72,8 @@ export const TextInput: React.FC<{
         value={value}
         onChange={onChange}
         maxLength={maxLength}
-        onFocus={() => {
-          input.disableInput();
-          input2.disableInput();
-          input3.disableInput();
-        }}
-        onBlur={() => {
-          input.enableInput();
-          input2.enableInput();
-          input3.enableInput();
-        }}
+        onFocus={game.GLOBAL.disableGlobalInput}
+        onBlur={game.GLOBAL.enableGlobalInput}
         required={!!requirePattern}
         pattern={requirePattern}
         placeholder={placeholder ?? "Type here"}

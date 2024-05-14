@@ -28,4 +28,5 @@ export const objectiveCategoryColors: Record<ObjectiveCategory, string> = {
 
   // other
   Alliance: "bg-rose-700",
+  Social: "bg-success",
 };

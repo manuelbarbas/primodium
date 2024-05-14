@@ -1,11 +1,11 @@
 import { Has, defineEnterSystem, defineExitSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
-import { Scene } from "engine/types";
+import { PrimodiumScene } from "@/game/api/scene";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { Tile } from "../../../lib/objects/Tile";
 import { DepthLayers } from "src/game/lib/constants/common";
 
-export const renderHoverTile = (scene: Scene) => {
+export const renderHoverTile = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   const query = [Has(components.HoverTile)];

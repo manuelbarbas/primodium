@@ -1,10 +1,11 @@
-import { generateFrames } from "@latticexyz/phaserx";
-import { createTilemap } from "./createTilemap";
 import { SceneConfig } from "../../types";
-import { createPhaserScene } from "../util/createPhaserScene";
+import { createTilemap } from "./createTilemap";
 import { createCamera } from "./createCamera";
 import createInput from "./createInput";
 import { StaticObjectManager } from "./StaticObjectManager";
+import { generateFrames } from "../util/generateFrames";
+import { createPhaserScene } from "../util/createPhaserScene";
+import { resizePhaserGame } from "../util/resizePhaserGame";
 
 type PhaserAudio =
   | Phaser.Sound.HTML5AudioSoundManager
@@ -55,8 +56,9 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
 
   const input = createInput(scene.input);
 
-  // camera.centerOn(0, 0);
   camera.setZoom(defaultZoom);
+
+  const resizer = resizePhaserGame(phaserGame);
 
   /* -------------------------- Create Audio Channels ------------------------- */
   /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
@@ -88,6 +90,7 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
       music.destroy();
       sfx.destroy();
       ui.destroy();
+      resizer.dispose();
     },
   };
 };

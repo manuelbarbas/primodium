@@ -9,6 +9,7 @@ import { ampli } from "./ampli";
 import { usePersistentStore } from "./game/stores/PersistentStore";
 import { Maintenance } from "./screens/Maintenance";
 import { wagmiConfig } from "./util/web3/wagmi";
+import { cn } from "@/util/client";
 
 const DEV = import.meta.env.PRI_DEV === "true";
 const MAINTENANCE = import.meta.env.PRI_MAINTENANCE === "true";
@@ -29,7 +30,8 @@ export default function App() {
   if (MAINTENANCE) return <Maintenance />;
 
   return (
-    <div className={fontStyle}>
+    <div className={cn("bg-black", fontStyle)}>
+      <div className="absolute top-0 w-full min-h-full star-background opacity-30" />
       <WagmiProvider config={wagmiConfig}>
         <QueryClientProvider client={queryClient}>
           <ToastContainer

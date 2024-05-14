@@ -1,5 +1,4 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { Scene } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { AsteroidMap } from "../../../lib/objects/AsteroidMap/AsteroidMap";
@@ -7,14 +6,17 @@ import { getAsteroidBounds as getAsteroidCurrentBounds, getAsteroidMaxBounds } f
 import { decodeEntity } from "@latticexyz/store-sync/recs";
 import { ResourceEntityLookup } from "src/util/constants";
 import { EResource } from "contracts/config/enums";
+import { PrimodiumScene } from "@/game/api/scene";
 
 //TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
-export const renderAsteroidMap = (scene: Scene) => {
+export const renderAsteroidMap = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   let asteroidMap: AsteroidMap;
 
   defineComponentSystem(systemsWorld, components.ActiveRock, ({ value }) => {
+    if (value[0]?.value === value[1]?.value) return;
+
     const activeRock = value[0]?.value as Entity;
 
     if (!activeRock) return;
@@ -57,7 +59,8 @@ export const renderAsteroidMap = (scene: Scene) => {
 
     if (!bounds) return;
 
-    scene.camera.phaserCamera.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
+    //TODO: FIX WIERD JUMP
+    // scene.camera.phaserCamera.setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
   });
 
   defineComponentSystem(systemsWorld, components.Level, ({ entity }) => {

@@ -1,24 +1,18 @@
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { Scene } from "engine/types";
-import { createAudioApi } from "@/game/api/audio";
-import { createObjectApi } from "@/game/api/objects";
+import { PrimodiumScene } from "@/game/api/scene";
 import { BaseAsteroid } from "@game/lib/objects/Asteroid/BaseAsteroid";
-import { Fleet } from "@game/lib/objects/Fleet";
 import { TransitLine } from "@game/lib/objects/TransitLine";
 import { components } from "@/network/components";
 import { world } from "@/network/world";
-import { isDomInteraction } from "@/util/canvas";
+import { renderFleet } from "@/game/lib/render/renderFleet";
 
-export const renderFleets = (scene: Scene) => {
+export const renderFleets = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
-  const audioApi = createAudioApi(scene);
-  const objects = createObjectApi(scene);
   const transitsToUpdate = new Set<Entity>();
 
   // handle rendering fleets if asteroid is not yet spawned
   const spawnQueue = new Map<Entity, Entity[]>();
-  const unsub = scene.objects.onNewObject((id) => {
+  const unsub = scene.objects.fleet.onNewObject((id) => {
     const asteroidEntity = id as Entity;
     //does fleets exist in spawn queue
     const fleets = spawnQueue.get(asteroidEntity);
@@ -34,27 +28,26 @@ export const renderFleets = (scene: Scene) => {
   function handleFleetTransit(fleet: Entity, origin: Entity, destination: Entity) {
     const originPosition = components.Position.get(origin) ?? { x: 0, y: 0 };
     const destinationPosition = components.Position.get(destination) ?? { x: 0, y: 0 };
-    const originPixelPosition = tileCoordToPixelCoord(
-      { x: originPosition.x, y: -originPosition.y },
-      scene.tiled.tileWidth,
-      scene.tiled.tileHeight
-    );
-    const destinationPixelPosition = tileCoordToPixelCoord(
-      { x: destinationPosition.x, y: -destinationPosition.y },
-      scene.tiled.tileWidth,
-      scene.tiled.tileHeight
-    );
+    const originPixelPosition = scene.utils.tileCoordToPixelCoord({ x: originPosition.x, y: -originPosition.y });
+    const destinationPixelPosition = scene.utils.tileCoordToPixelCoord({
+      x: destinationPosition.x,
+      y: -destinationPosition.y,
+    });
 
     const fleetObject = getFleetObject(fleet);
 
-    transitsToUpdate.add(fleet);
     const transitLine = getTransitLineObject(fleet);
     transitLine.setFleet(fleetObject);
     transitLine.setCoordinates(originPixelPosition, destinationPixelPosition);
+    transitsToUpdate.add(fleet);
+
+    //update the view of the container when fleet moves away from origin. This can mean removing the orbit ring render or updating the inline layout
+    const originAsteroid = scene.objects.asteroid.get(origin as Entity);
+    originAsteroid?.getFleetContainer().updateView();
   }
 
   function handleFleetOrbit(fleet: Entity, asteroidEntity: Entity) {
-    const asteroid = objects.getAsteroid(asteroidEntity);
+    const asteroid = scene.objects.asteroid.get(asteroidEntity);
 
     if (!asteroid) {
       const queue = spawnQueue.get(asteroidEntity) ?? [];
@@ -67,31 +60,15 @@ export const renderFleets = (scene: Scene) => {
 
     const fleetObject = getFleetObject(fleet);
 
-    asteroid.getOrbitRing().addFleet(fleetObject);
+    asteroid.getFleetContainer().addFleet(fleetObject);
   }
 
   function getFleetObject(entity: Entity) {
-    const fleet = objects.getFleet(entity);
+    const fleet = scene.objects.fleet.get(entity);
 
     if (!fleet) {
-      const newFleet = new Fleet(scene, { x: 0, y: 0 })
-        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
-          if (isDomInteraction(pointer, "up")) return;
+      const newFleet = renderFleet({ scene, entity });
 
-          components.SelectedFleet.set({
-            value: entity,
-          });
-          audioApi.play("Bleep", "ui");
-        })
-        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
-          components.HoverEntity.set({
-            value: entity,
-          });
-        })
-        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => {
-          components.HoverEntity.remove();
-        });
-      scene.objects.add(entity, newFleet);
       return newFleet;
     }
 
@@ -99,11 +76,10 @@ export const renderFleets = (scene: Scene) => {
   }
 
   function getTransitLineObject(entity: Entity) {
-    const transitLine = objects.getTransitLine(entity);
+    const transitLine = scene.objects.transitLine.get(entity);
 
     if (!transitLine) {
-      const newTransitLine = new TransitLine(scene, { x: 0, y: 0 }, { x: 0, y: 0 }).spawn();
-      scene.objects.add(`transit_${entity}`, newTransitLine);
+      const newTransitLine = new TransitLine({ id: entity, scene, start: { x: 0, y: 0 }, end: { x: 0, y: 0 } });
       return newTransitLine;
     }
 
@@ -122,75 +98,24 @@ export const renderFleets = (scene: Scene) => {
         handleFleetTransit(update.entity, newMovement.origin as Entity, newMovement.destination as Entity);
       }
     } else if (oldMovement) {
-      const transitLine = objects.getTransitLine(update.entity);
-
+      const transitLine = scene.objects.transitLine.get(update.entity);
       if (transitLine) {
-        scene.objects.remove(`transit_${update.entity}`);
+        transitLine.destroy();
         transitsToUpdate.delete(update.entity);
       } else {
-        const orbitRing = objects.getAsteroid(oldMovement.destination as Entity)?.getOrbitRing();
-        const fleet = objects.getFleet(update.entity);
+        const orbitRing = scene.objects.asteroid.get(oldMovement.destination as Entity)?.getFleetContainer();
+        const fleet = scene.objects.fleet.get(update.entity);
         if (fleet) orbitRing?.removeFleet(fleet);
       }
     }
   });
 
-  defineComponentSystem(systemsWorld, components.SelectedFleet, ({ value }) => {
-    if (value[1]) {
-      const fleet = components.FleetMovement.get(value[1].value);
-
-      if (!fleet) return;
-
-      const asteroid = scene.objects.get(fleet.destination);
-
-      if (asteroid instanceof BaseAsteroid) {
-        asteroid.getOrbitRing().resumeRotation();
-      }
-    }
-
-    if (value[0]) {
-      components.SelectedRock.remove();
-      const fleet = components.FleetMovement.get(value[0].value);
-
-      if (!fleet) return;
-
-      const asteroid = scene.objects.get(fleet.destination);
-
-      if (asteroid instanceof BaseAsteroid) {
-        asteroid.getOrbitRing().pauseRotation();
-      }
-    }
-  });
-
-  defineComponentSystem(systemsWorld, components.SelectedRock, ({ value }) => {
-    if (value[0]) {
-      const asteroid = objects.getAsteroid(value[0].value as Entity);
-
-      if (asteroid) {
-        asteroid.getOrbitRing().pauseRotation();
-      }
-
-      components.SelectedFleet.remove();
-      if (components.Attack.get()?.originFleet) return;
-      if (components.Send.get()?.originFleet) return;
-      components.Attack.reset();
-      components.Send.reset();
-    }
-
-    if (value[1]) {
-      const asteroid = objects.getAsteroid(value[1].value as Entity);
-
-      if (asteroid) {
-        asteroid.getOrbitRing().resumeRotation();
-      }
-    }
-  });
-
+  //handle transits
   defineComponentSystem(systemsWorld, components.Time, ({ value }) => {
     const now = value[0]?.value ?? 0n;
 
     transitsToUpdate.forEach((transit) => {
-      const transitObj = objects.getTransitLine(transit);
+      const transitObj = scene.objects.transitLine.get(transit);
 
       if (!transitObj) return;
 
@@ -206,12 +131,12 @@ export const renderFleets = (scene: Scene) => {
       transitObj.setFleetProgress(progress);
 
       if (progress >= 1) {
-        const fleet = objects.getFleet(transit);
-        const orbitRing = objects.getAsteroid(movement.destination as Entity)?.getOrbitRing();
+        const fleet = scene.objects.fleet.get(transit);
+        const orbitRing = scene.objects.asteroid.get(movement.destination as Entity)?.getFleetContainer();
 
         if (orbitRing && fleet) {
+          scene.objects.transitLine.get(transit)?.destroy();
           orbitRing.addFleet(fleet);
-          scene.objects.remove(`transit_${transit}`);
         }
 
         transitsToUpdate.delete(transit);

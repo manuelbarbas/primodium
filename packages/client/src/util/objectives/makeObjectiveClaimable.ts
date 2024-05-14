@@ -20,6 +20,7 @@ export function makeObjectiveClaimable(playerEntity: Entity, objective: EObjecti
   components.IsObjectiveClaimable.set({ value: true }, objectiveEntity);
 
   const objectiveShown = canShowObjective(playerEntity, objectiveEntity);
+  //TODO: Use notify here once core package is implemented
   if (objectiveShown)
     toast.success(`You completed ${getEntityTypeName(objectiveEntity)}! Go to Objectives to claim your reward.`);
 }

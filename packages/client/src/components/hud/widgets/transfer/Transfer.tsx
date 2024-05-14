@@ -17,7 +17,7 @@ import { ResourceEntityLookup, UnitStorages } from "src/util/constants";
 import { formatResourceCount, parseResourceCount } from "src/util/number";
 import { getFullResourceCount } from "src/util/resource";
 import { getFleetStatsFromUnits } from "src/util/unit";
-import { ResourceIcon } from "../../modals/fleets/ResourceIcon";
+import { ResourceIcon } from "../../global/modals/fleets/ResourceIcon";
 import { useFleetNav } from "../fleets/Fleets";
 import { TransferConfirm } from "./TransferConfirm";
 import { TransferFrom } from "./TransferFrom";
