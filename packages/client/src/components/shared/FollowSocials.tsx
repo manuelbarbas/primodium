@@ -1,11 +1,10 @@
 import { Button } from "@/components/core/Button";
-import { GlassCard } from "@/components/core/Card";
 import { useMud } from "@/hooks";
 import { components } from "@/network/components";
 import { ObjectiveEntityLookup } from "@/util/constants";
 import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 import { EObjectives } from "contracts/config/enums";
-import { FaDiscord, FaTwitter } from "react-icons/fa6";
+import { FaDiscord, FaXTwitter } from "react-icons/fa6";
 import { Hex } from "viem";
 
 export const FollowSocials = () => {
@@ -31,32 +30,30 @@ export const FollowSocials = () => {
 
   if (twitterFollowed && discordFollowed) return null;
   return (
-    <div className="flex flex-row gap-2 ml-4 z-10 pointer-events-auto">
+    <div className="flex flex-row gap-2 ml-2 z-10 pointer-events-auto">
       {!twitterFollowed && (
-        <GlassCard direction="top" className="p-2">
-          <Button
-            tooltip="Follow our Twitter"
-            variant="ghost"
-            size="md"
-            className="h-16 w-16 hover:scale-105"
-            onClick={handleTwitterClick}
-          >
-            <FaTwitter className="w-10 h-10" />
-          </Button>
-        </GlassCard>
+        <Button
+          tooltip="Follow&nbsp;our&nbsp;Twitter"
+          variant="ghost"
+          size="sm"
+          className="h-12 w-12 hover:scale-105 rounded-tl-xl rounded-tr-xl"
+          motion="disabled"
+          onClick={handleTwitterClick}
+        >
+          <FaXTwitter className="w-6 h-6" />
+        </Button>
       )}
       {!discordFollowed && (
-        <GlassCard direction="top" className="p-2">
-          <Button
-            variant="ghost"
-            size="md"
-            tooltip="Join our Discord"
-            className="rounded-t-lg h-16 w-16 hover:scale-105"
-            onClick={handleDiscordClick}
-          >
-            <FaDiscord className="w-10 h-10" />
-          </Button>
-        </GlassCard>
+        <Button
+          variant="ghost"
+          size="sm"
+          tooltip="Join&nbsp;our&nbsp;Discord"
+          className="h-12 w-12 hover:scale-105 rounded-tl-xl rounded-tr-xl"
+          motion="disabled"
+          onClick={handleDiscordClick}
+        >
+          <FaDiscord className="w-6 h-6" />
+        </Button>
       )}
     </div>
   );
