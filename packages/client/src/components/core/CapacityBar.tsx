@@ -21,20 +21,20 @@ export const CapacityBar: FC<SegmentedCapacityBarProps> = ({
   const filledSegments = max !== null && max > 0n ? Math.round((Number(current) / Number(max)) * segments) : 0;
 
   const segmentColor = (index: number) => {
-    if (current === max && index === segments - 1) return "bg-error";
+    // if (current === max && index === segments - 1) return "bg-warning";
     if (resourceType === EntityType.Electricity) {
-      if (index < segments / 3) return "bg-amber-200/80";
-      if (index < (2 * segments) / 3) return "bg-amber-300/90";
-      return "bg-yellow-500";
+      if (index < segments / 3) return "bg-amber-300/80";
+      if (index < (2 * segments) / 3) return "bg-amber-200/90";
+      return "bg-yellow-200";
     } else {
       // Default color scheme
       const pct = index / segments;
-      if (pct < 0.2) return "bg-emerald-400";
-      if (pct < 0.4) return "bg-emerald-500";
+      if (pct < 0.2) return "bg-emerald-800";
+      if (pct < 0.4) return "bg-emerald-700";
       if (pct < 0.6) return "bg-emerald-600";
-      if (pct < 0.8) return "bg-emerald-700";
-      if (pct < 0.9) return "bg-emerald-800";
-      return "bg-emerald-900";
+      if (pct < 0.8) return "bg-emerald-500";
+      if (pct < 0.9) return "bg-emerald-400";
+      return "bg-emerald-300";
     }
   };
 
