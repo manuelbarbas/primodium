@@ -108,6 +108,7 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
             Assets.SpriteAtlas,
             oldAssetPair.sprite
           );
+          this._scene.audio.play("Upgrade", "sfx");
           overlay.setOrigin(0, 1);
           overlay.setDepth(this.depth + 1);
           if (animation.warp) overlay.setScale(animation.warp.x, animation.warp.y);

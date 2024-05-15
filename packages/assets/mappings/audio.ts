@@ -32,6 +32,7 @@ export enum Audio {
   Confirm7 = "Confirm_07",
   Complete = "Complete_01",
   Complete2 = "Complete_02",
+  Upgrade = "sound",
 }
 
 export type AudioKeys = keyof typeof Audio;

@@ -186,14 +186,19 @@
       "end": 79.84251700680272,
       "loop": false
     },
-    "background": {
+    "sound": {
       "start": 81,
-      "end": 265.8480045351474,
+      "end": 82.40571428571428,
+      "loop": false
+    },
+    "background": {
+      "start": 84,
+      "end": 268.8480045351474,
       "loop": true
     },
     "background2": {
-      "start": 267,
-      "end": 470.4959863945578,
+      "start": 270,
+      "end": 473.4959863945578,
       "loop": false
     }
   }
