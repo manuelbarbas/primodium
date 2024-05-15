@@ -207,4 +207,11 @@ export class WormholeBase extends Building implements IPrimodiumGameObject {
   public getWormholeState() {
     return this.wormholeState;
   }
+
+  public destroy() {
+    super.destroy();
+    this.resourceSpriteTop.destroy();
+    this.resourceSpriteBottom.destroy();
+    this.blueTintSprite.destroy();
+  }
 }
