@@ -47,22 +47,39 @@ contract TransferSystemTest is PrimodiumTest {
     );
     bytes32 bobFleetEntity = spawnFleetWithUnitAndResource(
       bobHomeAsteroid,
-      EUnit.AegisDrone,
+      EUnit.HammerDrone,
       100,
-      EResource.Iron,
+      EResource.Copper,
       ironCount
     );
     sendBobFleetToAliceAsteroid(bobFleetEntity);
 
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    int256[] memory units = new int256[](unitPrototypes.length);
+    for (uint256 i = 0; i < units.length; i++) {
+      if (unitPrototypes[i] == AegisDronePrototypeId) units[i] = 1;
+      if (unitPrototypes[i] == HammerDronePrototypeId) units[i] = -1;
+    }
+
     int256[] memory resources = new int256[](P_Transportables.length());
     for (uint256 i = 0; i < resources.length; i++) {
-      if (P_Transportables.getItemValue(i) == Iron) resources[i] = int256(ironCount);
+      if (P_Transportables.getItemValue(i) == Iron) resources[i] = 1;
+      if (P_Transportables.getItemValue(i) == Copper) resources[i] = -1;
     }
     vm.startPrank(alice);
     vm.expectRevert("[TransferTwoWay] Both entities not owned by player");
-    world.Primodium__transferResourcesTwoWay(aliceFleetEntity, bobFleetEntity, resources);
+    world.Primodium__transferUnitsTwoWay(aliceFleetEntity, bobFleetEntity, units);
+    vm.expectRevert("[TransferTwoWay] Both entities not owned by player");
+    world.Primodium__transferUnitsTwoWay(bobFleetEntity, aliceFleetEntity, units);
     vm.expectRevert("[TransferTwoWay] Both entities not owned by player");
     world.Primodium__transferResourcesTwoWay(bobFleetEntity, aliceFleetEntity, resources);
+    vm.expectRevert("[TransferTwoWay] Both entities not owned by player");
+    world.Primodium__transferResourcesTwoWay(aliceFleetEntity, bobFleetEntity, resources);
+
+    vm.expectRevert("[TransferTwoWay] Both entities not owned by player");
+    world.Primodium__transferUnitsAndResourcesTwoWay(aliceFleetEntity, bobFleetEntity, units, resources);
+    vm.expectRevert("[TransferTwoWay] Both entities not owned by player");
+    world.Primodium__transferUnitsAndResourcesTwoWay(bobFleetEntity, aliceFleetEntity, units, resources);
   }
   /* ---------------- left and right arent at the same location --------------- */
   function testTransferTwoWayNotSameLocation() public {

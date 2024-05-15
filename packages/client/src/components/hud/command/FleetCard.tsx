@@ -1,4 +1,5 @@
 import { Tooltip } from "@/components/core/Tooltip";
+import { useMud } from "@/hooks";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EFleetStance } from "contracts/config/enums";
@@ -99,6 +100,8 @@ export const FleetCard: React.FC<{ entity: Entity }> = ({ entity }) => {
   const { inCooldown, duration: coolDownDuration } = useInCooldownEnd(entity);
   const ownerAsteroid = components.OwnedBy.use(entity)?.value as Entity | undefined;
 
+  const playerEntity = useMud().playerAccount.entity;
+  const ownerPlayer = components.OwnedBy.use(ownerAsteroid)?.value as Entity | undefined;
   const fleetStateText = useMemo(() => {
     const arrivalTime = movement?.arrivalTime ?? 0n;
     const inTransit = arrivalTime > (time ?? 0n);
@@ -126,6 +129,7 @@ export const FleetCard: React.FC<{ entity: Entity }> = ({ entity }) => {
       stats={fleetStats}
       cooldown={inCooldown ? coolDownDuration : undefined}
       grace={inGracePeriod ? duration : undefined}
+      hostile={playerEntity !== ownerPlayer}
     />
   );
 };
