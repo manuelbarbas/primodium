@@ -9,6 +9,7 @@ export class ChunkManager {
   private onEnterChunk;
   private onExitChunk;
   private visibleChunks: Set<string>;
+  private knownChunks: Set<string> = new Set();
   private visibleArea: BoundingBox;
   private worldViewUnsub;
 
@@ -74,6 +75,7 @@ export class ChunkManager {
     });
 
     this.visibleArea = currentVisibleArea;
+    this.knownChunks = new Set([...this.knownChunks, ...currentVisibleChunks]);
   }
 
   private getKeyForChunk({ x, y }: Coord): string {
@@ -86,6 +88,10 @@ export class ChunkManager {
 
   getVisibleChunks(): Set<string> {
     return this.visibleChunks;
+  }
+
+  isKnownChunk(chunkCoord: Coord): boolean {
+    return this.knownChunks.has(this.getKeyForChunk(chunkCoord));
   }
 
   isVisibleBoundingBox(boundingBox: BoundingBox): boolean {

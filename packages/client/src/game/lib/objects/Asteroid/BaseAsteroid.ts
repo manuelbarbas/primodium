@@ -7,7 +7,7 @@ import { Assets, Sprites } from "@primodiumxyz/assets";
 import { AsteroidLabel } from "@/game/lib/objects/Asteroid/AsteroidLabel";
 import { Entity } from "@latticexyz/recs";
 import { isValidClick } from "@/game/lib/objects/inputGuards";
-import { DeferredAsteroidRenderContainer } from "@/game/lib/render/renderDeferredAsteroid";
+import { DeferredAsteroidsRenderContainer } from "@/game/lib/objects/Asteroid/DeferredAsteroidsRenderContainer";
 import { LODs } from "@/game/lib/objects/Asteroid/helpers";
 import { DepthLayers } from "@/game/lib/constants/common";
 
@@ -22,6 +22,7 @@ interface LODConfig {
 
 export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IPrimodiumGameObject {
   private id: Entity;
+  private containerId: Entity | undefined;
   private circle: Phaser.GameObjects.Arc;
   private animationTween: Phaser.Tweens.Tween;
 
@@ -34,13 +35,21 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
   protected asteroidLabel: AsteroidLabel;
   protected currentLOD: number = -1;
 
-  constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord; sprite: Sprites; outlineSprite: Sprites }) {
-    const { id, scene, coord, sprite } = args;
+  constructor(args: {
+    id: Entity;
+    scene: PrimodiumScene;
+    coord: Coord;
+    sprite: Sprites;
+    outlineSprite: Sprites;
+    containerId?: Entity;
+  }) {
+    const { id, scene, coord, sprite, containerId } = args;
     const pixelCoord = scene.utils.tileCoordToPixelCoord(coord);
 
     super(scene.phaserScene, pixelCoord.x, -pixelCoord.y);
 
     this.id = id;
+    this.containerId = containerId;
 
     this.asteroidSprite = new Phaser.GameObjects.Image(
       scene.phaserScene,
@@ -70,11 +79,14 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
       .disableInteractive()
       .setDepth(0);
 
-    const renderContainer = scene.objects.deferredRenderContainer.get(id) as
-      | DeferredAsteroidRenderContainer
-      | undefined;
-    this.fleetsContainer =
-      renderContainer?.getFleetsContainer() ?? new FleetsContainer(scene, { x: pixelCoord.x, y: -pixelCoord.y });
+    let fleetsContainer;
+    if (containerId) {
+      const renderContainer = scene.objects.deferredRenderContainer.get(containerId) as
+        | DeferredAsteroidsRenderContainer
+        | undefined;
+      fleetsContainer = renderContainer?.getFleetsContainers(id);
+    }
+    this.fleetsContainer = fleetsContainer ?? new FleetsContainer(scene, { x: pixelCoord.x, y: -pixelCoord.y });
 
     this.coord = coord;
     this._scene = scene;

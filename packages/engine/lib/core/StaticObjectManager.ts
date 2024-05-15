@@ -3,6 +3,7 @@ import { createCamera } from "./createCamera";
 import { Coord } from "../../types";
 import { CoordMap } from "../util/coordMap";
 import { pixelToChunkCoord } from "../util/coords";
+import { BaseSpawnArgs, DeferredRenderContainer } from "@/game/lib/objects/DeferredRenderContainer";
 
 type Spawnable = {
   spawn(): void;
@@ -25,6 +26,8 @@ export class StaticObjectManager {
   private coordMap = new CoordMap<PrimodiumGameObject[]>();
   private objMap = new Map<string, PrimodiumGameObject>();
   private boundingBoxes = new Map<string, BoundingBox[]>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private deferredRenderContainerMap = new Map<string, DeferredRenderContainer<any, any>>();
   private chunkSize: number;
   private count = 0;
   private onNewObjectCallbacks: ((id: string) => void)[] = [];
@@ -40,9 +43,8 @@ export class StaticObjectManager {
   }
 
   private onEnterChunk(chunkCoord: Coord) {
+    // OBJECTS
     const objects = this.coordMap.get(chunkCoord) ?? [];
-    const boundingBoxes = this.boundingBoxes;
-
     objects.forEach((object) => {
       this.count++;
       if (!object.isSpawned()) {
@@ -51,7 +53,9 @@ export class StaticObjectManager {
       object.setActive(true).setVisible(true);
     });
 
-    // same for bounding boxes; considering that we check all boxes here, we don't need to repeat the same logic in `onExitChunk`
+    // BOUNDING BOXES
+    // considering that we check all boxes here, we don't need to repeat the same logic in `onExitChunk`
+    const boundingBoxes = this.boundingBoxes;
     boundingBoxes.forEach((boundingBoxes, id) => {
       const object = this.objMap.get(id);
 
@@ -68,14 +72,23 @@ export class StaticObjectManager {
         object.setActive(isVisible).setVisible(isVisible).spawn();
       }
     });
+
+    // CONTAINERS
+    this.deferredRenderContainerMap.forEach((container) => {
+      // container.onEnterChunk(chunkCoord);
+      if (!this.chunkManager.isKnownChunk(chunkCoord)) container.onNewEnterChunk(chunkCoord);
+    });
   }
 
   private onExitChunk(chunkCoord: Coord) {
     const objects = this.coordMap.get(chunkCoord) ?? [];
+
     objects.forEach((object) => {
       this.count--;
       object.setActive(false).setVisible(false);
     });
+
+    // this.deferredRenderContainerMap.forEach((container) => container.onExitChunk(chunkCoord));
   }
 
   add(id: string, object: PrimodiumGameObject, cull = false) {
@@ -106,6 +119,13 @@ export class StaticObjectManager {
     } else object.spawn();
 
     this.onNewObjectCallbacks.forEach((callback) => callback(id));
+  }
+
+  addContainer<SpawnedObject extends PrimodiumGameObject, SpawnArgs extends BaseSpawnArgs>(
+    id: string,
+    container: DeferredRenderContainer<SpawnedObject, SpawnArgs>
+  ) {
+    this.deferredRenderContainerMap.set(id, container);
   }
 
   setBoundingBoxes(id: string, boundingBoxes: BoundingBox[]) {
@@ -163,6 +183,10 @@ export class StaticObjectManager {
 
   has(id: string) {
     return this.objMap.has(id);
+  }
+
+  getVisibleChunks() {
+    return this.chunkManager.getVisibleChunks();
   }
 
   dispose() {

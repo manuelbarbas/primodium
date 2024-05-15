@@ -3,7 +3,7 @@ import { Fleet } from "../lib/objects/Fleet";
 import { Scene } from "engine/types";
 import { TransitLine } from "@/game/lib/objects/TransitLine";
 import { BaseAsteroid } from "@/game/lib/objects/Asteroid/BaseAsteroid";
-import { DeferredRenderContainer } from "@/game/lib/objects/DeferredRenderContainer";
+import { BaseSpawnArgs, DeferredRenderContainer } from "@/game/lib/objects/DeferredRenderContainer";
 import { Building, BuildingConstruction } from "@/game/lib/objects/Building";
 import { BoundingBox, PrimodiumGameObject } from "engine/lib/core/StaticObjectManager";
 
@@ -12,6 +12,10 @@ type PrimodiumObjectApi<T extends { destroy: () => void }> = {
   get: (entity: Entity) => T | undefined;
   remove: (entity: Entity, destroy?: boolean, decrement?: boolean) => void;
   add: (entity: Entity, object: PrimodiumGameObject, cull?: boolean) => PrimodiumGameObject;
+  addContainer: <SpawnedObject extends PrimodiumGameObject, SpawnArgs extends BaseSpawnArgs>(
+    entity: Entity,
+    container: DeferredRenderContainer<SpawnedObject, SpawnArgs>
+  ) => DeferredRenderContainer<SpawnedObject, SpawnArgs>;
   setBoundingBoxes: (entity: Entity, boundingBoxes: BoundingBox[]) => void;
   onNewObject: (callback: (entity: string) => void) => () => void;
 };
@@ -30,6 +34,17 @@ function factory<T extends { destroy: () => void }>(
         // console.log(object.postFX);
         scene.objects.add(fullId(entity), object, cull);
         return object;
+      } else {
+        throw new Error("Object is not an instance of the expected class");
+      }
+    },
+    addContainer: <SpawnedObject extends PrimodiumGameObject, SpawnArgs extends BaseSpawnArgs>(
+      entity: Entity,
+      container: DeferredRenderContainer<SpawnedObject, SpawnArgs>
+    ) => {
+      if (container instanceof DeferredRenderContainer) {
+        scene.objects.addContainer(entity, container);
+        return container;
       } else {
         throw new Error("Object is not an instance of the expected class");
       }

@@ -1,11 +1,31 @@
-import { Has, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
-import { components } from "src/network/components";
+import { Entity, Has, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
+import { components } from "@/network/components";
+import { world } from "@/network/world";
 import { PrimodiumScene } from "@/game/api/scene";
-import { renderDeferredAsteroid } from "@/game/lib/render/renderDeferredAsteroid";
-import { world } from "src/network/world";
+import { DeferredAsteroidsRenderContainer } from "@/game/lib/objects/Asteroid/DeferredAsteroidsRenderContainer";
+import { renderAsteroid } from "@/game/lib/render/renderAsteroid";
+import { initializeSecondaryAsteroids } from "@/game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
+import { toHex } from "viem";
 
 export const renderAsteroids = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
+
+  const deferredAsteroidsRenderContainer = new DeferredAsteroidsRenderContainer({
+    id: toHex("asteroids") as Entity,
+    scene,
+    spawnCallback: ({ scene, entity, coord, spawnsSecondary }) => {
+      const asteroid = renderAsteroid({
+        scene,
+        entity,
+        coord,
+        addEventHandlers: true,
+      });
+
+      if (spawnsSecondary) initializeSecondaryAsteroids(entity, coord);
+
+      return asteroid;
+    },
+  });
 
   const query = [Has(components.Asteroid), Has(components.Position)];
 
@@ -18,7 +38,7 @@ export const renderAsteroids = (scene: PrimodiumScene) => {
     // //TODO: not sure why this is needed but rendering of unitialized asteroids wont work otherwise
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    renderDeferredAsteroid({
+    deferredAsteroidsRenderContainer.add(entity, coord, {
       scene,
       entity,
       coord,

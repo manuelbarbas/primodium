@@ -1,66 +1,78 @@
 import { Entity } from "@latticexyz/recs";
-import { tileCoordToPixelCoord } from "engine/lib/util/coords";
 import { Coord } from "engine/types";
-import { IPrimodiumGameObject } from "@/game/lib/objects/interfaces";
 import { PrimodiumScene } from "@/game/api/scene";
 import { PrimodiumGameObject } from "engine/lib/core/StaticObjectManager";
 
+export type BaseSpawnArgs = {
+  scene: PrimodiumScene;
+  entity: Entity;
+  coord: Coord;
+};
+
 /**
- * @notice Create a wrapper for the future object at the provided coord, to prevent rendering it on launch/init and causing stutter
+ * @notice Create a wrapper for spawning future objects only when they enter visible chunks, to prevent creating objects + rendering them on launch/init and causing stutter
  *
- * This is useful for objects rendered inside an enter system (probably on initial load), at is will create this basic object at the coords, which when
- * entering the visible chunk will be spawned, effectively creating the actual intended object.
+ * This is useful for objects rendered inside an enter system (probably on initial load), at is will create this basic object containing their info & callback when spawning, which when
+ * entering the visible chunk will effectively create the actual intended object, and this container will forget about this one.
  *
- * The target object will be rendered as the container is destroyed.
- *
- * This is nothing more than a placeholder that delays running the provided callback until the object is actually visible.
- *
- * @param args.id The id of the corresponding entity
+ * @param args.id A unique id for the container
  * @param args.scene The Primodium scene object
- * @param args.coord The coord where the object should be rendered
- * @param args.spawnCallback The callback to run when the object is spawned
- * @param args.render A function to call to render the object
+ * @param args.spawnCallback The callback to run when each object is spawned (gets visible for the first time)
  * @param args.register Whether to register the object on creation (can be useful to delay registration, for instance after intializing the superclass)
  */
-export class DeferredRenderContainer<SpawnedObject extends PrimodiumGameObject = PrimodiumGameObject>
-  extends Phaser.GameObjects.Container
-  implements IPrimodiumGameObject
-{
+export class DeferredRenderContainer<
+  SpawnedObject extends PrimodiumGameObject = PrimodiumGameObject,
+  SpawnArgs extends BaseSpawnArgs = BaseSpawnArgs
+> {
   protected id: Entity;
-  protected coord: Coord;
+  // entity -> spawn callback args
+  protected objects: Map<Entity, SpawnArgs> = new Map();
+  // coords (as string) -> entities at that coord
+  protected chunkCoords: Map<string, Entity[]> = new Map();
+  protected spawned: Map<Entity, boolean> = new Map();
   protected _scene: PrimodiumScene;
-  protected spawned = false;
-  private spawnCallback: () => SpawnedObject | undefined;
-  render: () => SpawnedObject | undefined;
+  // shared callback to spawn objects
+  private spawnCallback: (args: SpawnArgs) => SpawnedObject | undefined;
+  private onObjectSpawnedCallbacks: ((entity: Entity) => void)[] = [];
 
   constructor(args: {
     id: Entity;
     scene: PrimodiumScene;
-    coord: Coord;
-    spawnCallback: () => SpawnedObject | undefined;
-    render: () => SpawnedObject | undefined;
+    spawnCallback: (args: SpawnArgs) => SpawnedObject | undefined;
     register?: boolean;
   }) {
-    const { id, scene, coord, spawnCallback, render, register = true } = args;
-    const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
-    super(scene.phaserScene, pixelCoord.x, -pixelCoord.y);
-
+    const { id, scene, spawnCallback, register = true } = args;
     this.id = id;
-    this.coord = coord;
     this._scene = scene;
     this.spawnCallback = spawnCallback;
-    this.render = render;
 
     if (register) this.register();
   }
 
   register() {
-    this._scene.objects.deferredRenderContainer.add(this.id, this, true);
+    this._scene.objects.deferredRenderContainer.addContainer(this.id, this);
   }
 
-  spawn() {
-    this.spawned = true;
-    const obj = this.spawnCallback();
+  add(entity: Entity, coord: Coord, spawnArgs: SpawnArgs) {
+    this.objects.set(entity, spawnArgs);
+
+    const chunkCoord = this._scene.utils.tileCoordToChunkCoord({ x: coord.x, y: -coord.y });
+    const chunkCoordKey = this._getKeyForChunk(chunkCoord);
+    if (this._scene.utils.getVisibleChunks().has(chunkCoordKey)) {
+      this.spawn(entity);
+      return;
+    }
+
+    const entities = this.chunkCoords.get(chunkCoordKey) ?? [];
+    entities.push(entity);
+    this.chunkCoords.set(this._getKeyForChunk(chunkCoord), entities);
+  }
+
+  spawn(entity: Entity) {
+    const spawnArgs = this.objects.get(entity);
+    if (!spawnArgs) return undefined;
+
+    const obj = this.spawnCallback(spawnArgs);
     if (!obj) return undefined;
 
     // we need to manually spawn and set the object, since at this point (during `onEnterChunk`) the visible chunks were not yet updated
@@ -68,14 +80,40 @@ export class DeferredRenderContainer<SpawnedObject extends PrimodiumGameObject =
     if (!obj.isSpawned()) obj.spawn();
     obj.setActive(true).setVisible(true);
 
-    // we don't need this object anymore: remove, destroy and decrement the count since it won't do it when exiting the chunk as it will not exist anymore
-    // TODO: we can't do this right now as we need it for fleets, as long as they are not decoupled from asteroids
-    // this._scene.objects.deferredRenderContainer.remove(this.id, true, true);
+    this.spawned.set(entity, true);
+    this.objects.delete(entity);
+
+    this.onObjectSpawnedCallbacks.forEach((callback) => callback(entity));
 
     return obj;
   }
 
-  isSpawned() {
-    return this.spawned;
+  isSpawned(entity: Entity) {
+    return this.spawned.get(entity) ?? false;
   }
+
+  private _getKeyForChunk({ x, y }: Coord): string {
+    return `${x}:${y}`;
+  }
+
+  onNewEnterChunk(coord: Coord) {
+    const entities = this.chunkCoords.get(this._getKeyForChunk(coord)) ?? [];
+    entities.forEach((entity) => {
+      if (!this.isSpawned(entity)) this.spawn(entity as Entity);
+    });
+  }
+
+  // onEnterChunk(coord: Coord) {}
+  // onExitChunk(coord: Coord) {}
+
+  onObjectSpawned(callback: (entity: Entity) => void) {
+    this.onObjectSpawnedCallbacks.push(callback);
+
+    return () => {
+      const index = this.onObjectSpawnedCallbacks.indexOf(callback);
+      if (index !== -1) this.onObjectSpawnedCallbacks.splice(index, 1);
+    };
+  }
+
+  destroy() {}
 }

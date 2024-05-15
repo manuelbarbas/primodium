@@ -36,6 +36,10 @@ export const createUtilApi = (scene: Scene) => {
     );
   }
 
+  function getVisibleChunks() {
+    return scene.objects.getVisibleChunks();
+  }
+
   return {
     pixelCoordToTileCoord,
     tileCoordToPixelCoord,
@@ -43,6 +47,7 @@ export const createUtilApi = (scene: Scene) => {
     tileCoordToChunkCoord,
     chunkCoordToPixelCoord,
     chunkCoordToTileCoord,
+    getVisibleChunks,
     addCoords: Coord.addCoords,
     coordEq: Coord.coordEq,
   };
