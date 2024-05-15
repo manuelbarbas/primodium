@@ -23,6 +23,7 @@ export const renderShardAsteroids = (scene: PrimodiumScene) => {
     if (!asteroid && !deferredContainer.isSpawned(entity)) {
       deferredContainer.updatePosition(entity, coord);
       deferredContainer.getFleetsContainers(entity)?.clearOrbit();
+      // no need for exploding, etc; the container will handle moving it, and if it becomes visible it will be spawned
       return;
     }
     if (!asteroid) return;
