@@ -211,11 +211,14 @@ library LibFleet {
     for (uint8 i = 0; i < unitPrototypes.length; i++) {
       uint256 fleetUnitCount = UnitCount.get(fleetEntity, unitPrototypes[i]);
       if (fleetUnitCount == 0) continue;
-      if (!isOwner && unitPrototypes[i] == ColonyShipPrototypeId)
+      if (!isOwner && unitPrototypes[i] == ColonyShipPrototypeId) {
         LibTransfer.checkColonySlot(asteroidEntity, fleetUnitCount);
+      }
       decreaseFleetUnit(fleetEntity, unitPrototypes[i], fleetUnitCount, !isOwner);
       LibUnit.increaseUnitCount(asteroidEntity, unitPrototypes[i], fleetUnitCount, !isOwner);
     }
+
+    LibFleetStance.clearFleetStance(fleetEntity);
 
     if (!isOwner) {
       resetFleetOrbit(fleetEntity);

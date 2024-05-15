@@ -104,5 +104,6 @@ export const objectiveCategories = [
   "Resource Production",
   "Market",
   "Alliance",
+  "Social",
 ] as const;
 export type ObjectiveCategory = (typeof objectiveCategories)[number];

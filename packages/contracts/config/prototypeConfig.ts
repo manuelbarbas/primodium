@@ -33,7 +33,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     keys: [],
     tables: {
       P_AllianceConfig: { maxAllianceMembers: 30n },
-      P_GracePeriod: { asteroid: 60n * 60n * 12n, fleet: 60n * 30n },
+      P_GracePeriod: { asteroid: 60n * 60n * 48n, fleet: 60n * 30n },
       P_Asteroid: maxRange,
       P_GameConfig: {
         admin: encodeAddress("0"),
@@ -1824,12 +1824,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       2: {
         P_RequiredBaseLevel: { value: 9n },
-        P_RequiredResources: getResourceValues({ IronPlate: 250, Alloy: 250, PVCell: 250, U_Electricity: 50 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 500, Alloy: 500, PVCell: 500, U_Electricity: 50 }),
         P_Production: getResourceValues({ U_MaxFleets: 2 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 15n },
-        P_RequiredResources: getResourceValues({ Titanium: 250, Iridium: 250, Platinum: 250, U_Electricity: 250 }),
+        P_RequiredResources: getResourceValues({ Titanium: 500, Iridium: 500, Platinum: 500, U_Electricity: 250 }),
         P_Production: getResourceValues({ U_MaxFleets: 3 }),
       },
     },
@@ -2572,12 +2572,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     levels: {
       0: {
         P_Unit: getPUnitData({
-          hp: 80,
+          hp: 200,
           attack: 0,
-          defense: 80,
+          defense: 200,
           cargo: 0,
           speed: 1,
-          trainingTime: 240,
+          trainingTime: 720,
         }),
       },
     },
@@ -3002,7 +3002,8 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   /* ------------------------ A-A-A-C Fleet Management ------------------------ */
   BuildStarmapper: {
     tables: {
-      P_UnitReward: getUnitValues({ MinutemanMarine: 5, AnvilDrone: 5, HammerDrone: 5, LightningCraft: 10 }),
+      P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
+      P_UnitReward: getUnitValues({ LightningCraft: 10 }),
     },
   },
   DefendWithFleet: {
@@ -3041,7 +3042,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   /* --------------------- A-A-B-A Unit Management (cont) --------------------- */
   UpgradeUnit: {
     tables: {
-      P_ResourceReward: getResourceValues({ Titanium: 10, Iridium: 10, Platinum: 10, Kimberlite: 10 }),
+      P_ResourceReward: getResourceValues({ Titanium: 10, Iridium: 10, Platinum: 10, Kimberlite: 5 }),
     },
   },
 
@@ -3049,7 +3050,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   BuildDroneFactory: {
     tables: {
       P_ResourceReward: getResourceValues({ IronPlate: 100, PVCell: 100 }),
-      P_UnitReward: getUnitValues({ AnvilDrone: 5, HammerDrone: 5, LightningCraft: 5 }),
+      P_UnitReward: getUnitValues({ AnvilDrone: 5, HammerDrone: 5 }),
     },
   },
   TrainAnvilDrone: {
@@ -3089,12 +3090,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   },
   BuildVault: {
     tables: {
-      P_UnitReward: getUnitValues({ LightningCraft: 5 }),
+      P_UnitReward: getUnitValues({ AnvilDrone: 5 }),
     },
   },
   BuildSAMLauncher: {
     tables: {
-      P_UnitReward: getUnitValues({ LightningCraft: 5 }),
+      P_UnitReward: getUnitValues({ HammerDrone: 5 }),
     },
   },
 
@@ -3166,17 +3167,17 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   },
   JoinDiscord: {
     tables: {
-      P_UnitReward: getUnitValues({ LightningCraft: 5 }),
+      P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
     },
   },
   FollowTwitter: {
     tables: {
-      P_UnitReward: getUnitValues({ LightningCraft: 5 }),
+      P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
     },
   },
   PrimoPlayer: {
     tables: {
-      P_UnitReward: getUnitValues({ LightningCraft: 5 }),
+      P_UnitReward: getUnitValues({ LightningCraft: 10 }),
     },
   },
 };

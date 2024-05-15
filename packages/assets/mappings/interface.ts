@@ -35,6 +35,8 @@ import CategoryStorage from "../icons/category/storage.png?url";
 import Wormhole from "../icons/UI_WormholeBase.png?url";
 import ShardSprite from "../sprites/shard/shard.png?url";
 import Fleet from "../icons/UI_Fleet.png?url";
+import Discord from "../icons/discord.svg?url";
+import Twitter from "../icons/twitter.svg?url";
 export const InterfaceIcons = {
   Add,
   Alliance,
@@ -45,6 +47,7 @@ export const InterfaceIcons = {
   Chat,
   Crosshairs,
   Command,
+  Discord,
   EncryptionBlue,
   EncryptionGold,
   Expansion,
@@ -72,4 +75,5 @@ export const InterfaceIcons = {
   CategoryStorage,
   Wormhole,
   Fleet,
+  Twitter,
 };

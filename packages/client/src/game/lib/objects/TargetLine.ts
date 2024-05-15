@@ -4,15 +4,13 @@ import { PrimodiumScene } from "@/game/api/scene";
 import { IPrimodiumGameObject } from "./interfaces";
 
 export class TargetLine extends Phaser.GameObjects.Line implements IPrimodiumGameObject {
-  private _scene: PrimodiumScene;
+  protected _scene: PrimodiumScene;
   private spawned = false;
-  private start;
   constructor(scene: PrimodiumScene, start: PixelCoord, end: PixelCoord, color = 0x808080) {
     super(scene.phaserScene, start.x, start.y, 0, 0, end.x, end.y, color);
     this.setOrigin(0, 0);
     this.setLineWidth(2);
     this._scene = scene;
-    this.start = start;
   }
 
   spawn() {
@@ -30,13 +28,10 @@ export class TargetLine extends Phaser.GameObjects.Line implements IPrimodiumGam
   }
 
   update() {
-    const pointer = this.scene.input.activePointer;
     this.setLineWidth(2 / this._scene.phaserScene.cameras.main.zoom);
-    this.setTo(0, 0, pointer.worldX - this.start.x, pointer.worldY - this.start.y);
   }
 
   destroy() {
-    this.scene.events.removeListener("update", this.update, this);
     super.destroy();
   }
 }

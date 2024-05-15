@@ -1,7 +1,7 @@
 import { Coord } from "engine/types";
 import { PrimodiumScene } from "@/game/api/scene";
 import { BaseAsteroid } from "./BaseAsteroid";
-import { getPrimaryOutlineSprite, getPrimarySprite } from "./helpers";
+import { LODs, getPrimaryOutlineSprite, getPrimarySprite } from "@/game/lib/objects/Asteroid/helpers";
 import { AsteroidRelationship } from "../../constants/common";
 import { Assets } from "@primodiumxyz/assets";
 import { Entity } from "@latticexyz/recs";
@@ -45,15 +45,15 @@ export class PrimaryAsteroid extends BaseAsteroid {
 
   getLod(zoom: number) {
     if (zoom >= 0.75) {
-      return 0;
+      return LODs.FullyShow;
     }
     if (zoom >= 0.12) {
-      return 1;
+      return LODs.ShowLabelOnly;
     }
     if (zoom >= 0) {
-      return 2;
+      return LODs.HideAsteroidAndOwnerLabel;
     }
 
-    return 0;
+    return LODs.FullyShow;
   }
 }

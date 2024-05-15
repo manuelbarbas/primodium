@@ -94,11 +94,8 @@ export const renderBuildingPlacementTool = (scene: PrimodiumScene, mud: MUD) => 
       .setCoordPosition({ x: tileCoord.x, y: tileCoord.y - buildingDimensions.height + 1 })
       .setAlpha(0.9)
       .clearOutline()
-      .setOrigin(0, 1);
-
-    placementBuilding.setDepth(
-      validPlacement ? DepthLayers.Building - tileCoord.y + buildingDimensions.height : DepthLayers.Building
-    );
+      .setOrigin(0, 1)
+      .setDepth(validPlacement ? DepthLayers.Building - tileCoord.y + buildingDimensions.height : DepthLayers.Building);
 
     if (hasEnough && validPlacement) {
       placementBuilding.setTint(0xffffff).setOutline(0xffff00, 3);
