@@ -17,9 +17,10 @@ import { TransferPane } from "./TransferPane";
 import { useTransfer } from "@/hooks/providers/TransferProvider";
 import { Button } from "@/components/core/Button";
 import { useGame } from "@/hooks/useGame";
+import { FaInfoCircle } from "react-icons/fa";
 
 const Transfer: React.FC = () => {
-  const { left, right, hovering, setHovering, deltas, setDeltas, moving, setMoving } = useTransfer();
+  const { left, right, hovering, setHovering, flash, deltas, setDeltas, moving, setMoving } = useTransfer();
 
   const selectedRock = components.ActiveRock.use()?.value;
   if (!selectedRock) throw new Error("No selected rock");
@@ -94,7 +95,7 @@ const Transfer: React.FC = () => {
       document.body.style.userSelect = "";
       if (!moving) return;
 
-      if (hovering === moving.side && rightClick) {
+      if (rightClick && (!hovering || hovering === moving.side)) {
         const newCount = moving.count - parseResourceCount(moving.entity, "1");
         if (newCount <= 0n) {
           setMoving(null);
@@ -144,6 +145,9 @@ const Transfer: React.FC = () => {
 
         const outcome = count + resourceCount;
         amountMoved = bigIntMax(0n, resourceStorage < outcome ? resourceStorage - resourceCount : count);
+        if (amountMoved < count) {
+          flash(hovering);
+        }
 
         const newMap = new Map(deltas);
         const newAmount = (deltas.get(moving.entity) ?? 0n) + (moving.side === "right" ? -amountMoved : amountMoved);
@@ -225,8 +229,11 @@ const Transfer: React.FC = () => {
         <TransferPane side="left" unitCounts={leftUnitCounts} resourceCounts={leftResourceCounts} />
         <div className="flex w-full justify-center items-end w-full">
           <div className="flex flex-col gap-4">
-            <TransferConfirm />
+            <div className="relative flex gap-1">
+              <TransferConfirm />
 
+              <Hints />
+            </div>
             <Button
               disabled={deltas.size === 0}
               variant="error"
@@ -272,3 +279,43 @@ const Moving = ({ entity, count }: { entity?: Entity; count?: bigint }) => {
 };
 
 export default Transfer;
+
+const Hints = () => {
+  return (
+    <div className="absolute right-0 translate-x-full translate-y-1/2 pl-2 flex items-center text-xs z-50">
+      <div className="dropdown dropdown-top">
+        <label tabIndex={0} className="btn btn-circle btn-ghost btn-xs">
+          <FaInfoCircle size={16} />
+        </label>
+        <div
+          tabIndex={0}
+          className="absolute card compact dropdown-content z-[1] shadow bg-base-100 w-60 p-2 m-1 border border-secondary gap-1 right-0"
+        >
+          <div>
+            <p className="text-accent">To select a fleet/resource</p>
+            <p>
+              <span className="opacity-70">Left click:</span> select all
+            </p>
+            <p>
+              <span className="opacity-70">Right click:</span> select one
+            </p>
+          </div>
+          <hr className="opacity-70" />
+
+          <div>
+            <p className="text-accent">While selected</p>
+            <p>
+              <span className="opacity-70">Left click:</span> drop all
+            </p>
+            <p>
+              <span className="opacity-70">Right click:</span> drop one
+            </p>
+            <p>
+              <span className="opacity-70">Arrow keys:</span> change amount to move
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

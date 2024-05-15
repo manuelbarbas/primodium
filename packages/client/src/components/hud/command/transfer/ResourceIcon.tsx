@@ -33,7 +33,7 @@ export const ResourceIcon = ({
       onClick={() => !disabled && onClick?.()}
       onAuxClick={() => !disabled && onClick?.(true)}
       className={cn(
-        "relative flex flex-col gap-1 items-center justify-center cursor-pointer w-full h-full disabled:hover:bg-error",
+        "relative flex flex-col gap-1 items-center justify-center cursor-pointer w-full h-full",
         disabled ? "disabled:opacity-100 disabled:text-opacity-100" : "",
         className
       )}

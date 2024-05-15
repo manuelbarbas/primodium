@@ -67,7 +67,7 @@ export const TransferSelect = ({ side }: { side: "left" | "right" }) => {
     activeEntities.includes(asteroid) || (!playerOwnsRock && opposingSide && opposingSideOwner !== playerEntity);
 
   return (
-    <Card className="w-full h-full" noDecor>
+    <Card className="w-full h-full overflow-y-auto scrollbar" noDecor>
       <div className="grid grid-cols-3 gap-2 w-full">
         <SelectOption entity={asteroid} disabled={disabledAsteroidButton} onSelect={() => handleSelect(asteroid)} />
 

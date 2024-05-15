@@ -13,7 +13,6 @@ import { Objectives } from "@/util/objectives/objectives";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useMemo, useState } from "react";
-import { Mode } from "@/util/constants";
 import { FaExclamationCircle } from "react-icons/fa";
 import { Hex } from "viem";
 import { useShallow } from "zustand/react/shallow";
@@ -21,7 +20,6 @@ import { useShallow } from "zustand/react/shallow";
 export const AvailableObjectives = () => {
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
   const player = useMud().playerAccount.entity;
-  const inCommandCenterHud = components.SelectedMode.use()?.value === Mode.CommandCenter;
   const asteroid = components.ActiveRock.use()?.value;
   const asteroidOwner = components.OwnedBy.use(asteroid)?.value;
 
@@ -56,7 +54,7 @@ export const AvailableObjectives = () => {
     };
   }, []);
 
-  if (inCommandCenterHud || Objectives.size === 0) return null;
+  if (Objectives.size === 0) return null;
   if (availableObjectives.length === 0 || !asteroid || player !== asteroidOwner) return null;
 
   const handleHover = () => {

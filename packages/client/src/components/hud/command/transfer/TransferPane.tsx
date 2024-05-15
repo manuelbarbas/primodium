@@ -22,7 +22,7 @@ import { EResource } from "contracts/config/enums";
 import { getEntityTypeName } from "src/util/common";
 import { getFleetStatsFromUnits } from "src/util/unit";
 import { Hex } from "viem";
-import { FaExclamationTriangle, FaInfoCircle } from "react-icons/fa";
+import { FaExclamationTriangle } from "react-icons/fa";
 import { getPlayerOwner } from "@/hooks/usePlayerOwner";
 
 export const TransferPane = (props: {
@@ -54,19 +54,31 @@ export const _TransferPane = (props: {
   unitCounts: Map<Entity, bigint>;
   resourceCounts: Map<Entity, bigint>;
 }) => {
-  const { left, right, setLeft, setRight, deltas, moving, setHovering, setMoving, hovering, errors, setError } =
-    useTransfer();
+  const {
+    left,
+    right,
+    setLeft,
+    setRight,
+    flashing,
+    deltas,
+    moving,
+    setHovering,
+    setMoving,
+    hovering,
+    errors,
+    setError,
+  } = useTransfer();
 
   const mud = useMud();
   const error = errors[props.side];
   const selectedRock = components.SelectedRock.use()?.value;
   const newFleet = props.entity === "newFleet";
   const isFleet = newFleet || components.IsFleet.has(props.entity as Entity);
-  const ownerRock = isFleet
-    ? !newFleet
-      ? components.OwnedBy.get(props.entity as Entity)?.value
-      : selectedRock
-    : props.entity;
+  const ownerRock = (
+    isFleet ? (!newFleet ? components.OwnedBy.get(props.entity as Entity)?.value : selectedRock) : props.entity
+  ) as Entity;
+  const playerOwner = newFleet ? undefined : getPlayerOwner(props.entity as Entity);
+  const playerEntity = mud.playerAccount.entity;
 
   const Header = useMemo(() => {
     if (!isFleet && props.entity !== "newFleet") {
@@ -86,15 +98,18 @@ export const _TransferPane = (props: {
       data.speed = bigIntMin(data.speed == 0n ? BigInt(10e100) : data.speed, unitData.SPD);
     });
 
-    let owner: Entity | undefined = undefined;
-
     if (!newFleet) {
       data.title = entityToFleetName(props.entity as Entity);
-      owner = components.OwnedBy.get(props.entity as Entity)?.value as Entity | undefined;
     }
 
     return (
-      <_FleetCard stats={data} home={owner} destination={selectedRock} stance={newFleet ? "In Hangar" : "Orbiting"} />
+      <_FleetCard
+        stats={data}
+        home={ownerRock}
+        hostile={props.entity !== "newFleet" && playerOwner !== playerEntity}
+        destination={selectedRock}
+        stance={newFleet ? "In Hangar" : "Orbiting"}
+      />
     );
   }, [isFleet, props.entity, props.unitCounts, newFleet, left, selectedRock]);
 
@@ -132,12 +147,9 @@ export const _TransferPane = (props: {
       setHovering("right");
     }
   };
-  const playerOwner = newFleet ? undefined : getPlayerOwner(props.entity as Entity);
-  const playerEntity = mud.playerAccount.entity;
-
   const onSelect = (entity: Entity, count: bigint) => {
-    if (props.entity !== "newFleet" && playerOwner !== playerEntity) return;
     if (moving !== null) return;
+    if (count === 0n) return;
     setMoving({ side: props.side, entity, count });
   };
 
@@ -146,7 +158,8 @@ export const _TransferPane = (props: {
       <div
         className={cn(
           "grid grid-rows-[10rem_1fr] gap-2 h-full overflow-y-auto scrollbar",
-          hovering === props.side ? "border border-accent" : ""
+          hovering === props.side ? "ring ring-1 ring-accent" : "",
+          flashing === props.side ? "ring ring-1 ring-error" : ""
         )}
         onMouseLeave={() => setHovering(null)}
         onMouseOver={onMouseOver}
@@ -171,16 +184,21 @@ export const _TransferPane = (props: {
                   return <div className="w-full h-full bg-white/10 opacity-50" key={`unit-left-${index}`} />;
                 const [unit, count] = [...props.unitCounts.entries()][index];
                 const delta = deltas?.get(unit) ?? 0n;
+
                 const onClick = (aux?: boolean) => {
-                  const countMoved = aux ? parseResourceCount(unit, "1") : count;
+                  const isPlayerOwner = playerOwner === playerEntity;
+                  const maxToMove = isPlayerOwner ? count : delta;
+
+                  const countMoved = aux ? parseResourceCount(unit, "1") : maxToMove;
                   onSelect(unit, countMoved);
                 };
+
                 return (
                   <ResourceIcon
                     key={`right-unit-${unit}`}
                     onClick={onClick}
                     size="sm"
-                    disabled={moving !== null || playerOwner !== playerEntity}
+                    disabled={moving !== null}
                     resource={unit as Entity}
                     count={count}
                     rawDelta={delta}
@@ -201,7 +219,10 @@ export const _TransferPane = (props: {
                 const [entity, count] = [...props.resourceCounts.entries()][index];
                 const delta = deltas?.get(entity) ?? 0n;
                 const onClick = (aux?: boolean) => {
-                  const countMoved = aux ? parseResourceCount(entity, "1") : count;
+                  const isPlayerOwner = playerOwner === playerEntity;
+                  const maxToMove = isPlayerOwner ? count : delta;
+
+                  const countMoved = aux ? parseResourceCount(entity, "1") : maxToMove;
                   onSelect(entity, countMoved);
                 };
                 return (
@@ -210,7 +231,7 @@ export const _TransferPane = (props: {
                     key={`right-resource-${entity}`}
                     size="sm"
                     className="bg-neutral/50"
-                    disabled={moving !== null || playerOwner !== playerEntity}
+                    disabled={moving !== null}
                     resource={entity as Entity}
                     rawDelta={delta}
                     count={count}
@@ -226,9 +247,9 @@ export const _TransferPane = (props: {
             )}
           </SecondaryCard>
         </TransactionQueueMask>
-        <div className="relative grid grid-cols-8 w-full gap-1">
+        <div className="w-full flex justify-center gap-1">
           <Button
-            className="col-span-7"
+            size="sm"
             onClick={() => {
               if (props.side === "left") {
                 setLeft(undefined);
@@ -239,7 +260,6 @@ export const _TransferPane = (props: {
           >
             back
           </Button>
-          <Hints />
         </div>
       </div>
     </Card>
@@ -319,44 +339,4 @@ const checkErrors = ({
       };
   }
   return { disabled: false, submitMessage: "" };
-};
-
-const Hints = () => {
-  return (
-    <div className="absolute right-0 flex items-center text-xs z-50">
-      <div className="dropdown dropdown-top">
-        <label tabIndex={0} className="btn btn-circle btn-ghost btn-xs">
-          <FaInfoCircle size={16} />
-        </label>
-        <div
-          tabIndex={0}
-          className="absolute card compact dropdown-content z-[1] shadow bg-base-100 w-60 p-2 m-1 border border-secondary gap-1 right-0"
-        >
-          <div>
-            <p className="text-accent">To select a fleet/resource</p>
-            <p>
-              <span className="opacity-70">Left click:</span> select all
-            </p>
-            <p>
-              <span className="opacity-70">Right click:</span> select one
-            </p>
-          </div>
-          <hr className="opacity-70" />
-
-          <div>
-            <p className="text-accent">While selected</p>
-            <p>
-              <span className="opacity-70">Left click:</span> drop all
-            </p>
-            <p>
-              <span className="opacity-70">Right click:</span> drop one
-            </p>
-            <p>
-              <span className="opacity-70">Arrow keys:</span> change amount to move
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 };

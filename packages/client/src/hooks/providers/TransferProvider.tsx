@@ -1,4 +1,4 @@
-import React, { ReactNode, createContext, useContext, useEffect, useState } from "react";
+import React, { ReactNode, createContext, useCallback, useContext, useEffect, useState } from "react";
 import { Entity } from "@latticexyz/recs";
 import { bigIntMax } from "@latticexyz/common/utils";
 
@@ -9,6 +9,8 @@ interface TransferContextType {
   moving: { side: "left" | "right"; entity: Entity; count: bigint } | null;
   hovering: "left" | "right" | null;
   errors: { left: string | null; right: string | null };
+  flashing: "left" | "right" | null;
+  flash: (side: "left" | "right") => void;
   setLeft: (entity: Entity | undefined) => void;
   setRight: (entity: Entity | "newFleet" | undefined) => void;
   setDelta(entity: Entity, count: bigint): void;
@@ -32,13 +34,28 @@ export const TransferContextProvider: React.FC<TransferContextProviderProps> = (
   initialLeft,
   initialRight,
 }) => {
+  const runFlash = useCallback((side: "left" | "right") => {
+    const flashTimes = 1;
+    const flashInterval = 400;
+
+    for (let i = 0; i < flashTimes; i++) {
+      setTimeout(() => {
+        setTransferContext((prev) => ({ ...prev, flashing: side }));
+        setTimeout(() => {
+          setTransferContext((prev) => ({ ...prev, flashing: null }));
+        }, flashInterval / 2);
+      }, i * flashInterval);
+    }
+  }, []);
   const [transferContext, setTransferContext] = useState<TransferContextType>({
     left: initialLeft,
     right: initialRight,
     deltas: new Map(),
     hovering: null,
     moving: null,
+    flashing: null,
     errors: { left: null, right: null },
+    flash: runFlash,
     setLeft: (entity) => setTransferContext((prev) => ({ ...prev, left: entity })),
     setRight: (entity) => setTransferContext((prev) => ({ ...prev, right: entity })),
     setDelta: (entity, count) => setTransferContext((prev) => ({ ...prev, deltas: prev.deltas.set(entity, count) })),
