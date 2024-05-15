@@ -33,7 +33,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     keys: [],
     tables: {
       P_AllianceConfig: { maxAllianceMembers: 30n },
-      P_GracePeriod: { asteroid: 60n * 60n * 12n, fleet: 60n * 30n },
+      P_GracePeriod: { asteroid: 60n * 60n * 48n, fleet: 60n * 30n },
       P_Asteroid: maxRange,
       P_GameConfig: {
         admin: encodeAddress("0"),
@@ -162,12 +162,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       7: {
         P_RequiredUpgradeResources: getResourceValues({ Iron: 25000, Copper: 25000, Lithium: 25000, Kimberlite: 3000 }),
         Dimensions: { width: 31, height: 21 },
-        P_RequiredBaseLevel: { value: 13n },
+        P_RequiredBaseLevel: { value: 14n },
       },
       8: {
         P_RequiredUpgradeResources: getResourceValues({ Iron: 60000, Copper: 60000, Lithium: 60000, Kimberlite: 5000 }),
         Dimensions: { width: maxRange.xBounds, height: maxRange.yBounds },
-        P_RequiredBaseLevel: { value: 13n },
+        P_RequiredBaseLevel: { value: 15n },
       },
     },
   },
@@ -1824,12 +1824,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       2: {
         P_RequiredBaseLevel: { value: 9n },
-        P_RequiredResources: getResourceValues({ IronPlate: 250, Alloy: 250, PVCell: 250, U_Electricity: 50 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 500, Alloy: 500, PVCell: 500, U_Electricity: 50 }),
         P_Production: getResourceValues({ U_MaxFleets: 2 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 15n },
-        P_RequiredResources: getResourceValues({ Titanium: 250, Iridium: 250, Platinum: 250, U_Electricity: 250 }),
+        P_RequiredResources: getResourceValues({ Titanium: 500, Iridium: 500, Platinum: 500, U_Electricity: 250 }),
         P_Production: getResourceValues({ U_MaxFleets: 3 }),
       },
     },
@@ -2222,10 +2222,10 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       0: {
         P_RequiredResources: getResourceValues({ Iron: 25, IronPlate: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
-          hp: 300,
+          hp: 250,
           attack: 200,
-          defense: 250,
-          cargo: 50,
+          defense: 200,
+          cargo: 60,
           speed: 50,
           trainingTime: 600,
         }),
@@ -2235,11 +2235,11 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Iron: 25, IronPlate: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
-          hp: 330,
+          hp: 280,
           attack: 210,
-          defense: 275,
-          cargo: 60,
-          speed: 70,
+          defense: 225,
+          cargo: 64,
+          speed: 60,
           trainingTime: 580,
         }),
       },
@@ -2248,11 +2248,11 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ Iron: 25, IronPlate: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
-          hp: 360,
+          hp: 310,
           attack: 220,
-          defense: 300,
-          cargo: 70,
-          speed: 90,
+          defense: 250,
+          cargo: 68,
+          speed: 70,
           trainingTime: 560,
         }),
       },
@@ -2261,11 +2261,11 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Iron: 25, IronPlate: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
-          hp: 390,
+          hp: 340,
           attack: 230,
-          defense: 325,
-          cargo: 80,
-          speed: 110,
+          defense: 275,
+          cargo: 72,
+          speed: 80,
           trainingTime: 540,
         }),
       },
@@ -2274,11 +2274,11 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredBaseLevel: { value: 10n },
         P_RequiredResources: getResourceValues({ Iron: 25, IronPlate: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
-          hp: 420,
+          hp: 370,
           attack: 240,
-          defense: 350,
-          cargo: 90,
-          speed: 130,
+          defense: 300,
+          cargo: 76,
+          speed: 90,
           trainingTime: 520,
         }),
       },
@@ -2287,11 +2287,11 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredBaseLevel: { value: 15n },
         P_RequiredResources: getResourceValues({ Iron: 25, IronPlate: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
-          hp: 450,
+          hp: 400,
           attack: 250,
-          defense: 400,
-          cargo: 100,
-          speed: 150,
+          defense: 350,
+          cargo: 80,
+          speed: 100,
           trainingTime: 500,
         }),
       },
@@ -2389,9 +2389,9 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredResources: getResourceValues({ Lithium: 25, PVCell: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
           hp: 175,
-          attack: 200,
-          defense: 150,
-          cargo: 60,
+          attack: 300,
+          defense: 200,
+          cargo: 50,
           speed: 50,
           trainingTime: 600,
         }),
@@ -2402,10 +2402,10 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredResources: getResourceValues({ Lithium: 25, PVCell: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
           hp: 190,
-          attack: 220,
-          defense: 160,
-          cargo: 64,
-          speed: 60,
+          attack: 325,
+          defense: 210,
+          cargo: 60,
+          speed: 70,
           trainingTime: 580,
         }),
       },
@@ -2415,10 +2415,10 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredResources: getResourceValues({ Lithium: 25, PVCell: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
           hp: 205,
-          attack: 240,
-          defense: 170,
-          cargo: 68,
-          speed: 70,
+          attack: 350,
+          defense: 220,
+          cargo: 70,
+          speed: 90,
           trainingTime: 560,
         }),
       },
@@ -2428,10 +2428,10 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredResources: getResourceValues({ Lithium: 25, PVCell: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
           hp: 220,
-          attack: 260,
-          defense: 180,
-          cargo: 72,
-          speed: 80,
+          attack: 375,
+          defense: 230,
+          cargo: 80,
+          speed: 110,
           trainingTime: 540,
         }),
       },
@@ -2441,10 +2441,10 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredResources: getResourceValues({ Lithium: 25, PVCell: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
           hp: 235,
-          attack: 280,
-          defense: 190,
-          cargo: 76,
-          speed: 90,
+          attack: 400,
+          defense: 240,
+          cargo: 90,
+          speed: 130,
           trainingTime: 520,
         }),
       },
@@ -2454,10 +2454,10 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredResources: getResourceValues({ Lithium: 25, PVCell: 50, U_Housing: 2 }),
         P_Unit: getPUnitData({
           hp: 250,
-          attack: 300,
-          defense: 200,
-          cargo: 80,
-          speed: 100,
+          attack: 450,
+          defense: 250,
+          cargo: 100,
+          speed: 150,
           trainingTime: 500,
         }),
       },
@@ -2572,12 +2572,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     levels: {
       0: {
         P_Unit: getPUnitData({
-          hp: 80,
+          hp: 200,
           attack: 0,
-          defense: 80,
+          defense: 200,
           cargo: 0,
           speed: 1,
-          trainingTime: 240,
+          trainingTime: 720,
         }),
       },
     },
@@ -2604,7 +2604,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredResources: getResourceValues({ Copper: 25, U_Housing: 1 }),
         P_Unit: getPUnitData({
           hp: 17,
-          attack: 42,
+          attack: 43,
           defense: 22,
           cargo: 44,
           speed: 275,
@@ -2617,7 +2617,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredResources: getResourceValues({ Copper: 25, U_Housing: 1 }),
         P_Unit: getPUnitData({
           hp: 19,
-          attack: 44,
+          attack: 46,
           defense: 24,
           cargo: 48,
           speed: 300,
@@ -2630,7 +2630,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredResources: getResourceValues({ Copper: 25, U_Housing: 1 }),
         P_Unit: getPUnitData({
           hp: 21,
-          attack: 46,
+          attack: 49,
           defense: 26,
           cargo: 52,
           speed: 325,
@@ -2643,7 +2643,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredResources: getResourceValues({ Copper: 25, U_Housing: 1 }),
         P_Unit: getPUnitData({
           hp: 23,
-          attack: 48,
+          attack: 52,
           defense: 28,
           cargo: 56,
           speed: 350,
@@ -2656,7 +2656,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredResources: getResourceValues({ Copper: 25, U_Housing: 1 }),
         P_Unit: getPUnitData({
           hp: 25,
-          attack: 50,
+          attack: 55,
           defense: 30,
           cargo: 60,
           speed: 400,
@@ -3002,7 +3002,8 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   /* ------------------------ A-A-A-C Fleet Management ------------------------ */
   BuildStarmapper: {
     tables: {
-      P_UnitReward: getUnitValues({ MinutemanMarine: 5, AnvilDrone: 5, HammerDrone: 5, LightningCraft: 10 }),
+      P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
+      P_UnitReward: getUnitValues({ LightningCraft: 10 }),
     },
   },
   DefendWithFleet: {
@@ -3041,7 +3042,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   /* --------------------- A-A-B-A Unit Management (cont) --------------------- */
   UpgradeUnit: {
     tables: {
-      P_ResourceReward: getResourceValues({ Titanium: 10, Iridium: 10, Platinum: 10, Kimberlite: 10 }),
+      P_ResourceReward: getResourceValues({ Titanium: 10, Iridium: 10, Platinum: 10, Kimberlite: 5 }),
     },
   },
 
@@ -3049,7 +3050,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   BuildDroneFactory: {
     tables: {
       P_ResourceReward: getResourceValues({ IronPlate: 100, PVCell: 100 }),
-      P_UnitReward: getUnitValues({ AnvilDrone: 5, HammerDrone: 5, LightningCraft: 5 }),
+      P_UnitReward: getUnitValues({ AnvilDrone: 5, HammerDrone: 5 }),
     },
   },
   TrainAnvilDrone: {
@@ -3089,12 +3090,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   },
   BuildVault: {
     tables: {
-      P_UnitReward: getUnitValues({ LightningCraft: 5 }),
+      P_UnitReward: getUnitValues({ AnvilDrone: 5 }),
     },
   },
   BuildSAMLauncher: {
     tables: {
-      P_UnitReward: getUnitValues({ LightningCraft: 5 }),
+      P_UnitReward: getUnitValues({ HammerDrone: 5 }),
     },
   },
 
@@ -3166,17 +3167,17 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   },
   JoinDiscord: {
     tables: {
-      P_UnitReward: getUnitValues({ LightningCraft: 5 }),
+      P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
     },
   },
   FollowTwitter: {
     tables: {
-      P_UnitReward: getUnitValues({ LightningCraft: 5 }),
+      P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
     },
   },
   PrimoPlayer: {
     tables: {
-      P_UnitReward: getUnitValues({ LightningCraft: 5 }),
+      P_UnitReward: getUnitValues({ LightningCraft: 10 }),
     },
   },
 };

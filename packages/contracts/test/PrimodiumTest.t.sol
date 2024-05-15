@@ -550,12 +550,12 @@ contract PrimodiumTest is MudTest {
     FleetMovement.setArrivalTime(fleetEntity, block.timestamp);
     vm.warp(block.timestamp + 1);
 
-    uint256 i = 0;
+    uint256 attackCycle = 0;
     uint256 initDroidDefense = P_Unit.getDefense(DroidPrototypeId, 1);
     P_Unit.setDefense(DroidPrototypeId, 0, 0);
     console.log("Asteroid Level: ", Level.get(targetAsteroid));
     while (OwnedBy.get(targetAsteroid) != playerEntity) {
-      console.log("i: %s", i);
+      console.log("attackCycle: %s", attackCycle);
       switchPrank(player);
       world.Primodium__attack(fleetEntity, targetAsteroid);
       console.log("Remaining Defense: ", LibCombatAttributes.getDefense(targetAsteroid));

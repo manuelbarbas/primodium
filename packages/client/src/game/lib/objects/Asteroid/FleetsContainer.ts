@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import { Coord, TileCoord } from "engine/types";
 import { Fleet } from "../Fleet";
 import { PrimodiumScene } from "@/game/api/scene";
+import { DepthLayers } from "@/game/lib/constants/common";
 
 const WIDTH = 150;
 const HEIGHT = 100;
@@ -11,7 +12,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
   private _scene: PrimodiumScene;
   private coord: TileCoord;
   private orbitRing: Phaser.GameObjects.Graphics;
-  private fleetsContainer: Phaser.GameObjects.Container;
+  private fleets: Phaser.GameObjects.Container;
   private rotationTween: Phaser.Tweens.Tween;
   private prevRotationVal: number = -1;
   private paused = false;
@@ -23,10 +24,10 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
       .lineStyle(2, 0x6ad9d9, 0.1)
       .strokeEllipse(0, 0, WIDTH, HEIGHT);
 
-    this.orbitRing.postFX.addShine();
+    // this.orbitRing.postFX.addShine();
 
-    this.fleetsContainer = scene.phaserScene.add.container(0, 0);
-    this.add([this.orbitRing, this.fleetsContainer]);
+    this.fleets = scene.phaserScene.add.container(0, 0);
+    this.add([this.orbitRing, this.fleets]);
     this.coord = coord;
     this._scene = scene;
 
@@ -40,28 +41,18 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
       onUpdate: (tween) => {
         if (this.prevRotationVal === tween.getValue()) return;
         this.prevRotationVal = tween.getValue();
-        const angleStep = (2 * Math.PI) / this.fleetsContainer.length;
-        this.fleetsContainer.list.forEach((obj, index) => {
+        const angleStep = (2 * Math.PI) / this.fleets.length;
+        const radiusX = WIDTH / 2; // Radius for the x coordinate
+        const radiusY = HEIGHT / 2; // Radius for the y coordinate
+
+        this.fleets.list.forEach((obj, index) => {
           const fleet = obj as Fleet;
           const angle = index * angleStep + tween.getValue();
-          const radiusX = WIDTH / 2; // Radius for the x coordinate
-          const radiusY = HEIGHT / 2; // Radius for the y coordinate
-          fleet.x = this.x + radiusX * Math.cos(angle);
-          fleet.y = this.y + radiusY * Math.sin(angle);
+          fleet.x = radiusX * Math.cos(angle);
+          fleet.y = radiusY * Math.sin(angle);
           fleet.setRotationFrame(Phaser.Math.RadToDeg(angle));
-          fleet.angle = Phaser.Math.RadToDeg(angle) - fleet.getRotationFrameOffset();
-          //TODO: TRAIL PARTICLES
-          fleet.particles.setActive(true).setVisible(true).resume();
-
+          fleet.fleetImage.angle = Phaser.Math.RadToDeg(angle) - fleet.getRotationFrameOffset();
           fleet.particles.angle = Phaser.Math.RadToDeg(angle);
-          fleet.particles.setPosition(fleet.getPixelCoord().x, fleet.getPixelCoord().y);
-          const dx = coord.x - fleet.getPixelCoord().x;
-          const dy = coord.y - fleet.getPixelCoord().y;
-          const magnitude = Math.sqrt(dx * dx + dy * dy);
-          const ux = dx / magnitude;
-          const uy = dy / magnitude;
-          const gravityStrength = 10; // Adjust this value to change the strength of the gravity
-          fleet.particles.setParticleGravity(-ux * gravityStrength, uy * gravityStrength);
         });
       },
     });
@@ -70,7 +61,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
   }
 
   getFleetCount() {
-    return this.fleetsContainer.length;
+    return this.fleets.length;
   }
 
   getPixelCoord() {
@@ -90,55 +81,55 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
   }
 
   addFleet(fleet: Fleet) {
-    if (!this.fleetsContainer.length) {
-      this.setActive(true).setVisible(true);
-      if (!this.paused) this.rotationTween.resume();
+    this.setActive(true).setVisible(true);
+
+    fleet.detach();
+    this.fleets.add(fleet);
+
+    this.updateView();
+
+    return this;
+  }
+
+  removeFleet(fleet: Fleet, destroy = false) {
+    this.fleets.remove(fleet, destroy);
+
+    if (!this.getFleetCount()) {
+      this.setActive(false).setVisible(false);
+      return this;
     }
 
-    fleet.getTransitLine()?.removeFleet();
-    fleet.getOrbitRing()?.removeFleet(fleet);
-    fleet.setOrbitRingRef(this);
-    fleet.setFlip(false, false);
-    fleet.setScale(1);
-    this.fleetsContainer.add(fleet);
+    this.updateView();
 
+    return this;
+  }
+
+  updateView() {
     if (this.inOrbitView) this.setOrbitView();
     else this.setInlineView();
-
-    return this;
   }
 
-  removeFleet(fleet: Fleet) {
-    this.fleetsContainer.remove(fleet);
-    if (!this.fleetsContainer.length) {
-      if (this.inOrbitView) this.setOrbitView();
-      else this.setInlineView();
-      this.setActive(false).setVisible(false);
-      this.rotationTween.pause();
-      fleet.setOrbitRingRef(null);
-    }
-
-    return this;
-  }
-
-  setInlineView() {
+  setInlineView(offsetX = 32, offsetY = 24) {
     this.rotationTween.pause();
     this.orbitRing.setActive(false).setVisible(false);
 
-    this.fleetsContainer.setAlpha(0);
-    this.fleetsContainer.setRotation(0);
+    // this.fleets.setAlpha(0);
+    // this.fleets.setRotation(0);
 
-    this.fleetsContainer.list.forEach((_fleet, i) => {
+    this.setDepth(DepthLayers.Marker);
+    this.fleets.list.forEach((_fleet, i) => {
       const fleet = _fleet as Fleet;
       fleet.reset();
-      const col = Math.floor(i / COL) * (fleet.displayHeight / 2 + MARGIN);
-      const row = fleet.displayWidth / 2 + (fleet.displayWidth / 2 + MARGIN) * i;
-      fleet.setPosition(row - (col > 0 ? COL : 0) * (fleet.displayWidth / 2 + MARGIN), col);
-      fleet.particles.pause().setActive(false).setVisible(false);
+      const col = i % COL;
+      const row = Math.floor(i / COL);
+      const posX = col * (fleet.fleetImage.width / 2 + MARGIN);
+      const posY = row * (fleet.fleetImage.height / 2 + MARGIN);
+      fleet.setPosition(posX + offsetX, posY + offsetY);
+      fleet.deactivateBurn();
     });
 
     this.scene.add.tween({
-      targets: this.fleetsContainer,
+      targets: this.fleets,
       alpha: 1,
       duration: 200,
     });
@@ -147,33 +138,23 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
   }
 
   setOrbitView() {
-    if (!this.paused) this.rotationTween.resume();
-    this.orbitRing.setActive(true).setVisible(true);
+    if (this.getFleetCount()) {
+      //TODO: increase width and height depending on fleet count
+      this.orbitRing.setActive(true).setVisible(true);
+      if (!this.paused) this.rotationTween.resume();
+      this.fleets.each((fleet: Fleet) => fleet.activateBurn());
+    } else this.orbitRing.setActive(false).setVisible(false);
 
     this.prevRotationVal = -1;
-    this.orbitRing.setAlpha(0);
-    this.scene.add.tween({
-      targets: this.orbitRing,
-      alpha: 1,
-      duration: 200,
-    });
-
+    this.setScale(1).setDepth(DepthLayers.Rock);
     this.inOrbitView = true;
+
+    return this;
   }
 
-  clear() {
-    this.fleetsContainer.list.forEach((fleet) => {
-      this.removeFleet(fleet as Fleet);
-    });
-    this.rotationTween.pause();
-  }
-
-  clearAndDestroy() {
-    this.fleetsContainer.list.forEach((fleet) => {
-      this.removeFleet(fleet as Fleet);
-      fleet.destroy();
-    });
-    this.rotationTween.pause();
+  clearOrbit(destroy = false) {
+    this.fleets.removeAll(destroy);
+    this.setActive(false).setVisible(false);
   }
 
   pauseRotation() {
@@ -185,7 +166,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
 
   resumeRotation() {
     this.paused = false;
-    if (!this.fleetsContainer.length) return;
+    if (!this.fleets.length) return;
     if (this.inOrbitView) this.rotationTween.resume();
     return this;
   }
@@ -203,7 +184,15 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
 
     return this;
   }
+
+  update() {
+    if (this.inOrbitView) return;
+
+    this.setScale(1 / this._scene.camera.phaserCamera.zoom);
+  }
+
   destroy() {
+    this.clearOrbit(true);
     this.rotationTween.destroy();
     super.destroy();
   }

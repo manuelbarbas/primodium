@@ -4,7 +4,6 @@ import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EFleetStance } from "contracts/config/enums";
 import { useMemo } from "react";
 import { FaFire } from "react-icons/fa";
-import { Card } from "src/components/core/Card";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Loader } from "src/components/core/Loader";
 import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
@@ -42,10 +41,12 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
 
   if (loading)
     return (
-      <Card className="relative flex items-center justify-center w-56 h-24 px-auto uppercase font-bold gap-2">
-        <Loader />
-        Loading Data
-      </Card>
+      <div className="relative w-56 h-24 px-auto uppercase font-bold">
+        <div className="flex h-full justify-center items-center gap-2">
+          <Loader />
+          Loading Data
+        </div>
+      </div>
     );
 
   return (

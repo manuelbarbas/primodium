@@ -22,7 +22,9 @@ export enum Sprites {
   CopperMine2 = "sprites/miners/coppermine/level2/Miner_Copper_LVL2_1.png",
   CopperMine3 = "sprites/miners/coppermine/level3/Miner_Copper_LVL3_1.png",
 
-  LithiumMine1 = "sprites/miners/lithiummine/Miner_Lithium_LVL1_1.png",
+  LithiumMine1 = "sprites/miners/lithiummine/level1/Miner_Lithium_LVL1_1.png",
+  LithiumMine2 = "sprites/miners/lithiummine/level2/Miner_Lithium_LVL2_1.png",
+  LithiumMine3 = "sprites/miners/lithiummine/level3/Miner_Lithium_LVL3_1.png",
 
   IridiumMine1 = "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_1.png",
   IridiumMine2 = "sprites/miners/iridiummine/level2/Miner_Iridium_LVL2_1.png",
