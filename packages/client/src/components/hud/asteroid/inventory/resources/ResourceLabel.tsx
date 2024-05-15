@@ -34,7 +34,7 @@ export const ResourceLabel = ({ name, resource }: { name: string; resource: Enti
     production == 1n ? "0.6" : formatNumber((production * 60n * worldSpeed) / (SPEED_SCALE * RESOURCE_SCALE));
 
   return (
-    // non-breaking space on the resource names
+    // non-breaking space on the resource names to keep on the same line
     <Tooltip tooltipContent={name.replace(" ", "\u00A0")} direction="left">
       <Badge
         variant={resourceStorage === 0n ? "error" : "neutral"}
