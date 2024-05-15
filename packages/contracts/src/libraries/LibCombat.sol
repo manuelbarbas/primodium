@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
-import { P_ColonyShipConfig, CooldownEnd, DamageDealt, BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, BattleResult, BattleResultData, FleetMovement, GracePeriod, UnitCount, P_Unit, UnitLevel, P_GameConfig, ResourceCount, OwnedBy, P_UnitPrototypes } from "codegen/index.sol";
+import { P_ColonyShipConfig, CooldownEnd, DamageDealt, BattleEncryptionResult, BattleDamageDealtResult, BattleDamageTakenResult, BattleUnitResult, BattleUnitResultData, P_Transportables, IsFleet, BattleResult, BattleResultData, FleetMovement, GracePeriod, UnitCount, P_Unit, UnitLevel, P_GameConfig, ResourceCount, OwnedBy, P_UnitPrototypes, P_CooldownConfig, P_CooldownConfigData } from "codegen/index.sol";
 
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 import { LibMath } from "libraries/LibMath.sol";
@@ -330,15 +330,16 @@ library LibCombat {
    * @notice Calculates the cooldown time for an entity after an attack based on the attack value and whether decryption was involved.
    * @param attackVal The value of the attack which influences the cooldown duration.
    * @param withDecryption Boolean indicating whether decryption was a factor in the attack.
-   * @return time The cooldown time in minutes, adjusted for game speed.
+   * @return time The cooldown time in seconds, adjusted for game speed.
    */
   function getCooldownTime(uint256 attackVal, bool withDecryption) internal view returns (uint256 time) {
+    P_CooldownConfigData memory cooldownConfig = P_CooldownConfig.get();
     time = withDecryption ? P_ColonyShipConfig.getCooldownExtension() : 0;
     attackVal = attackVal / 1e18;
-    if (attackVal <= 20000) time += (attackVal * 24) / 10000;
+    if (attackVal <= cooldownConfig.linSwitch) time += (attackVal * cooldownConfig.linNum) / cooldownConfig.linDen;
     else {
-      int128 divided = Math.add(Math.divu(attackVal, 7500), Math.fromUInt(1));
-      time += Math.mulu(Math.log_2(divided), 27);
+      int128 divided = Math.add(Math.divu(attackVal, cooldownConfig.logDiv), Math.fromUInt(1));
+      time += Math.mulu(Math.log_2(divided), cooldownConfig.logMult) + cooldownConfig.logAdd;
     }
     time *= 60;
     return (time * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();

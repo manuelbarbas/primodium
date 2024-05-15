@@ -90,6 +90,20 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
   },
 
+  Cooldown: {
+    keys: [],
+    tables: {
+      P_CooldownConfig: {
+        linNum: 11n,
+        linDen: 10000n,
+        linSwitch: 20000n,
+        logDiv: 100000n,
+        logMult: 60n,
+        logAdd: 7n,
+      },
+    },
+  },
+
   Wormhole: {
     keys: [],
     tables: {

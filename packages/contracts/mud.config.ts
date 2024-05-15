@@ -616,6 +616,18 @@ export const worldInput = {
       key: ["entity"],
       schema: { entity: "bytes32", value: "uint256" },
     },
+
+    P_CooldownConfig: {
+      key: [],
+      schema: {
+        linNum: "uint256",
+        linDen: "uint256",
+        linSwitch: "uint256",
+        logDiv: "uint256",
+        logMult: "uint256",
+        logAdd: "uint256",
+      },
+    },
     /* ------------------------------ Alliance ----------------------------- */
 
     P_AllianceConfig: {
