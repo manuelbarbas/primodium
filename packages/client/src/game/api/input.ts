@@ -4,8 +4,6 @@ import { Key, Scene } from "engine/types";
 import { usePersistentStore } from "@game/stores/PersistentStore";
 import { KeybindActionKeys } from "@game/lib/constants/keybinds";
 
-const preservedKeys = ["Esc"];
-
 export function createInputApi(scene: Scene) {
   const keybinds = usePersistentStore.getState().keybinds;
   function isDown(keybindAction: KeybindActionKeys) {
@@ -59,8 +57,7 @@ export function createInputApi(scene: Scene) {
     const keybinds = usePersistentStore.getState().keybinds;
     const { input } = scene;
 
-    // disable if input is disabled (except escape preserved keys, e.g. escape)
-    const fn = input.enabled.current() || preservedKeys.includes(keybindAction) ? throttle(callback, wait) : () => {};
+    const fn = throttle(callback, wait);
 
     for (const key of keybinds[keybindAction]!) {
       input.phaserKeys
