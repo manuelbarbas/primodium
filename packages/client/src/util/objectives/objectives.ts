@@ -544,7 +544,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 3n,
       requiredObjectives: [EObjectives.UpgradeStorageUnit2],
       buildingType: EntityType.StarmapperStation,
-      description: "A starmapper station increases the number of fleets you can create.",
+      description: "A Starmapper Station increases the number of fleets you can create.",
     },
   ],
   [
@@ -622,7 +622,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       unitType: EntityType.LightningCraft,
       unitCount: 5n,
       description:
-        "Upgrade a workshop to Level 10 to unlock the ability to train Lightning Ships. Lightning Ships are weak, but are insanely fast high cargo units.",
+        "Upgrade a workshop to Level 10 to unlock the ability to train Lightning Ships. Lightning Ships are weak, but are insanely fast, high cargo units.",
     },
   ],
 
@@ -675,7 +675,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       unitType: EntityType.HammerDrone,
       unitCount: 12n,
       description:
-        "To build a hammer drone, Click on a drone factory. Hammer drones are standard drones tuned for aggression.",
+        "To build a hammer drone, Click on a drone factory. Hammer drones are standard drones that sacrifice armor for more weapons.",
     },
   ],
   [
@@ -688,7 +688,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.TrainAnvilDrone],
       unitCount: 12n,
       description:
-        "Upgrade a drone factory to Level 8 to unlock the ability to build Aegis drones. Aegis drones are robust defensive unit that use lots of housing.",
+        "Upgrade a drone factory to Level 8 to unlock the ability to build Aegis drones. Aegis drones are robust specialized defensive units. They require more housing.",
     },
   ],
   [
@@ -701,7 +701,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       unitType: EntityType.StingerDrone,
       unitCount: 12n,
       description:
-        "Upgrade a drone factory to Level 8 to unlock the ability to build Stinger drones. Stinger drones are powerful assault unit that use lots of housing.",
+        "Upgrade a drone factory to Level 8 to unlock the ability to build Stinger drones. Stinger drones are powerful specialized assault units. They require more housing.",
     },
   ],
 
@@ -714,7 +714,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 5n,
       buildingType: EntityType.Hangar,
       description:
-        "Hangars provide large amounts of housing for units. To build, select the hangar from the Blueprints menu and place it on an empty tile.",
+        "Hangars provide large amounts of housing for units. To build, select the Hangar from the Blueprints menu and place it on an empty tile.",
     },
   ],
 
@@ -738,7 +738,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 7n,
       buildingType: EntityType.Vault,
       description:
-        "Vaults protect your resources from being raided. To build, select the Vault from the Blueprints menu and place it on an empty tile.",
+        "Vaults automatically protect some of your resources from being raided. To build, select the Vault from the Blueprints menu and place it on an empty tile.",
     },
   ],
   [
