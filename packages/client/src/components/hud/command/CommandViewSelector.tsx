@@ -1,14 +1,12 @@
-import { GlassCard } from "@/components/core/Card";
-import { IconLabel } from "@/components/core/IconLabel";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { components } from "@/network/components";
 import { Mode } from "@/util/constants";
-import { Modal } from "@/components/core/Modal";
-import { UnitUpgrades } from "@/components/hud/asteroid/building-menu/screens/UnitUpgrades";
+// import { UnitUpgrades } from "@/components/hud/asteroid/building-menu/screens/UnitUpgrades";
 import { Tabs } from "@/components/core/Tabs";
+import { Join } from "@/components/core/Join";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-const btnClass = "group hover:scale-[115%] bg-gradient-to-r border-l-accent from-secondary/25 to-transparent";
-const iconClass = "text-2xl";
+const btnClass = "group  bg-transparent";
 
 export const CommandViewSelector = () => {
   const commandOpen = components.SelectedMode.use()?.value === Mode.CommandCenter;
@@ -16,50 +14,57 @@ export const CommandViewSelector = () => {
   if (!commandOpen) return null;
 
   return (
-    <GlassCard direction={"left"} className="h-fit w-12 px-5 animate-in slide-in-from-right-full fade-in">
-      <div className="flex flex-col gap-2 items-center pointer-events-auto -translate-x-[10px]">
-        {/* Overview */}
-        <Tabs.Button
+    <div className="flex mt-36 items-center pointer-events-auto -translate-x-[10px]">
+      <Tabs.PrevButton variant="ghost">
+        <FaChevronLeft className="text-accent" />
+      </Tabs.PrevButton>
+      <Join className="hover:bg-neutral">
+        <Tabs.IconButton
           index={0}
-          togglable
           className={btnClass}
-          shape={"square"}
-          size={"lg"}
-          tooltip="Overview"
+          icon={InterfaceIcons.Asteroid}
+          text="Overview"
+          size={"md"}
+          motion="disabled"
           tooltipDirection="left"
-        >
-          <IconLabel imageUri={InterfaceIcons.Asteroid} className={iconClass} />
-        </Tabs.Button>
-        <Tabs.Button
+        />
+        <Tabs.IconButton
           index={1}
           className={btnClass}
-          shape={"square"}
-          size={"lg"}
-          tooltip="Current Activities"
+          icon={InterfaceIcons.Transfer}
+          text="Transfer Inventory"
+          size={"md"}
+          motion="disabled"
           tooltipDirection="left"
-        >
-          <IconLabel imageUri={InterfaceIcons.Fleet} className={iconClass} />
-        </Tabs.Button>
-        {/* Transfer */}
-        <Tabs.Button
+        />
+        <Tabs.IconButton
           index={2}
           className={btnClass}
-          shape={"square"}
-          size={"lg"}
-          tooltip="Transfer Inventory"
+          icon={InterfaceIcons.Add}
+          text="Upgrade Units"
+          size={"md"}
+          motion="disabled"
           tooltipDirection="left"
-        >
+        />
+      </Join>
+      <Tabs.NextButton variant="ghost" maxIndex={2}>
+        <FaChevronRight className="text-accent" />
+      </Tabs.NextButton>
+      {/* Overview */}
+
+      {/* Transfer */}
+      {/* <Tabs.Button index={2} shape={"square"} size={"lg"} tooltip="Transfer Inventory" tooltipDirection="left">
           <IconLabel imageUri={InterfaceIcons.Transfer} className={iconClass} />
-        </Tabs.Button>
-        <Modal title="Upgrade">
+        </Tabs.Button> */}
+
+      {/* <Modal title="Upgrade">
           <Modal.Button className={btnClass} tooltip="upgrade" shape={"square"} size={"lg"} tooltipDirection="left">
             <IconLabel className={iconClass} imageUri={InterfaceIcons.Add} />
           </Modal.Button>
           <Modal.Content className="w-[62rem]">
             <UnitUpgrades />
           </Modal.Content>
-        </Modal>
-      </div>
-    </GlassCard>
+        </Modal> */}
+    </div>
   );
 };

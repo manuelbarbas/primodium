@@ -23,7 +23,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
   private id: Entity;
   private circle: Phaser.GameObjects.Arc;
   private animationTween: Phaser.Tweens.Tween;
-
+  private interactiveCircle;
   protected coord: Coord;
   protected _scene: PrimodiumScene;
   protected fleetCount = 0;
@@ -54,7 +54,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
       coord: { x: pixelCoord.x, y: -pixelCoord.y },
     });
 
-    this.circle = new Phaser.GameObjects.Arc(
+    this.interactiveCircle = this.circle = new Phaser.GameObjects.Arc(
       scene.phaserScene,
       pixelCoord.x,
       -pixelCoord.y,
@@ -65,7 +65,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
       0xffff00,
       0.4
     )
-      .setInteractive(new Phaser.Geom.Circle(0, 0, 32), Phaser.Geom.Circle.Contains)
+      .setInteractive(new Phaser.Geom.Circle(0, 0, this.asteroidSprite.width / 4), Phaser.Geom.Circle.Contains)
       .disableInteractive()
       .setDepth(0);
 
@@ -98,8 +98,9 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     return this;
   }
 
-  onClick(fn: (e: Phaser.Input.Pointer) => void) {
-    this.circle.on(Phaser.Input.Events.POINTER_UP, (e: Phaser.Input.Pointer) => {
+  onClick(fn: (e: Phaser.Input.Pointer) => void, onSprite = false) {
+    const obj = onSprite ? this.asteroidSprite.setInteractive() : this.circle;
+    obj.on(Phaser.Input.Events.POINTER_UP, (e: Phaser.Input.Pointer) => {
       if (!isValidClick(e)) return;
       fn(e);
     });
@@ -114,6 +115,14 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
   onHoverExit(fn: (e: Phaser.Input.Pointer) => void) {
     this.circle.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, fn);
     return this;
+  }
+
+  setOutline(value: number = 0x00ffff) {
+    this.asteroidSprite.postFX?.addGlow(value);
+  }
+
+  removeOutline() {
+    this.asteroidSprite.postFX?.clear();
   }
 
   setActive(value: boolean): this {
@@ -162,6 +171,15 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
 
   isSpawned() {
     return this.spawned;
+  }
+
+  getPixelCoord() {
+    if (this.parentContainer) {
+      const container = this.parentContainer;
+      const matrix = container.getWorldTransformMatrix();
+      return matrix.transformPoint(this.x, this.y);
+    }
+    return { x: this.x, y: this.y };
   }
 
   getCoord() {

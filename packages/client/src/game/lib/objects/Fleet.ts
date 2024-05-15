@@ -101,6 +101,14 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
     return this;
   }
 
+  setOutline(value: number = 0x00ffff) {
+    this.fleetImage.preFX?.addGlow(value);
+  }
+
+  removeOutline() {
+    this.fleetImage.preFX?.clear();
+  }
+
   detach() {
     this.parentContainer?.remove(this);
 
@@ -124,11 +132,12 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
   }
 
   getPixelCoord() {
-    const container = this.parentContainer;
-    const matrix = container.getWorldTransformMatrix();
-    const point = matrix.transformPoint(this.x, this.y);
-
-    return { x: point.x, y: point.y };
+    if (this.parentContainer) {
+      const container = this.parentContainer;
+      const matrix = container.getWorldTransformMatrix();
+      return matrix.transformPoint(this.x, this.y);
+    }
+    return { x: this.x, y: this.y };
   }
 
   setRotationFrame(angle: number) {

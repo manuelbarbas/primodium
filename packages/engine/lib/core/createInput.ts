@@ -19,6 +19,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     phaserKeyboard.disableGlobalCapture();
     phaserKeyboard.enabled = false;
     inputPlugin.enabled = false;
+    // inputPlugin.manager.enabled = false;
   }
 
   function enableInput() {
@@ -28,6 +29,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     phaserKeyboard?.enableGlobalCapture();
     phaserKeyboard.enabled = true;
     inputPlugin.enabled = true;
+    // inputPlugin.manager.enabled = true;
   }
 
   function setCursor(cursor: string) {

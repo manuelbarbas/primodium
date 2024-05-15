@@ -37,7 +37,7 @@ const AsteroidStats = ({ asteroid }: { asteroid: Entity }) => {
 const ActionButtons = () => {
   return (
     <div className="flex gap-2">
-      <Tabs.Button index={2} variant="secondary" size="sm">
+      <Tabs.Button index={1} variant="secondary" size="sm">
         + CREATE FLEET
       </Tabs.Button>
       <Button variant="error" size="sm">

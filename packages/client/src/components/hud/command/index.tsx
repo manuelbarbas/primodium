@@ -7,6 +7,7 @@ import { Mode } from "@/util/constants";
 import { CommandViewSelector } from "@/components/hud/command/CommandViewSelector";
 import { Tabs } from "@/components/core/Tabs";
 import { Overview } from "@/components/hud/command/overview";
+import { BattleMenuPopup } from "@/components/hud/command/markers/BattleMenuPopup";
 
 export const CommandCenterHUD = memo(() => {
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
@@ -17,10 +18,12 @@ export const CommandCenterHUD = memo(() => {
   return (
     <HUD scale={uiScale}>
       <Tabs persistIndexKey="command-center" className="pointer-events-auto">
+        <BattleMenuPopup />
+
         {/* Contains View Buttons */}
-        <HUD.Right>
+        <HUD.TopMiddle>
           <CommandViewSelector />
-        </HUD.Right>
+        </HUD.TopMiddle>
 
         <Tabs.Pane index={0} fragment>
           <Overview />

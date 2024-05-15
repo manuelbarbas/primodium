@@ -74,7 +74,6 @@ export const Game = () => {
             <WidgetProvider>
               <div className="relative z-20 pointer-events-none">
                 {isDead && <YouDied />} <GameHUD />
-                <div id="modal-root" className="pointer-events-auto" />
               </div>
             </WidgetProvider>
           </GameProvider>
