@@ -652,10 +652,10 @@ export const AnimationConfig = [
   {
     key: "vfx/shard-explosion",
     assetKey: "vfx-atlas",
-    frameRate: 5,
+    frameRate: 10,
     startFrame: 1,
     endFrame: 42,
-    prefix: "sprites/fx/shard-explosion/Shard_Explosion_Default",
+    prefix: "vfx/shard-explosion/default/Shard_Explosion_Default",
     suffix: ".png",
   },
 ];
