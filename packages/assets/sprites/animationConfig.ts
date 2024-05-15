@@ -649,4 +649,13 @@ export const AnimationConfig = [
     prefix: "sprites/wormholebase/level1/idle/Wormhole_Idle",
     suffix: ".png",
   },
+  {
+    key: "vfx/shard-explosion",
+    assetKey: "vfx-atlas",
+    frameRate: 10,
+    startFrame: 1,
+    endFrame: 42,
+    prefix: "vfx/shard-explosion/default/Shard_Explosion_Default",
+    suffix: ".png",
+  },
 ];

@@ -4,6 +4,7 @@ export { pack as Pack } from "./pack";
 
 export enum Assets {
   SpriteAtlas = "sprite-atlas",
+  VfxAtlas = "vfx-atlas",
   ResourceTileset = "resource",
   AudioAtlas = "audio-atlas",
 }

@@ -91,6 +91,9 @@ export enum Animations {
   //DECORATIONS
   DroneTop = "decorations/drone-top",
   DroneBottom = "decorations/drone-bottom",
+
+  // EXPLODE
+  ShardExplosionDefault = "vfx/shard-explosion",
 }
 
 export type AnimationKeys = keyof typeof Animations;
