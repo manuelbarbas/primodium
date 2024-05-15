@@ -447,22 +447,22 @@ contract CombatSystemTest is PrimodiumTest {
     assertEq(LibCombat.getCooldownTime(testValue, false), 0);
 
     testValue = 1000 * 1e18;
-    assertEq(LibCombat.getCooldownTime(testValue, false), 2 * 60);
+    assertEq(LibCombat.getCooldownTime(testValue, false), 1 * 60);
 
     testValue = 10000 * 1e18;
-    assertEq(LibCombat.getCooldownTime(testValue, false), 24 * 60);
+    assertEq(LibCombat.getCooldownTime(testValue, false), 11 * 60);
 
     testValue = 20000 * 1e18;
-    assertEq(LibCombat.getCooldownTime(testValue, false), 48 * 60);
+    assertEq(LibCombat.getCooldownTime(testValue, false), 22 * 60);
 
     testValue = 100000 * 1e18;
-    assertApproxEqAbs(LibCombat.getCooldownTime(testValue, false), 103 * 60, 3);
+    assertApproxEqAbs(LibCombat.getCooldownTime(testValue, false), 67 * 60, 3);
 
     testValue = 150000 * 1e18;
-    assertApproxEqAbs(LibCombat.getCooldownTime(testValue, false), 118 * 60, 3);
+    assertApproxEqAbs(LibCombat.getCooldownTime(testValue, false), 86 * 60, 3);
 
     testValue = 250000 * 1e18;
-    assertApproxEqAbs(LibCombat.getCooldownTime(testValue, false), 137 * 60, 3);
+    assertApproxEqAbs(LibCombat.getCooldownTime(testValue, false), 115 * 60, 3);
 
     uint256 extension = P_ColonyShipConfig.getCooldownExtension();
 

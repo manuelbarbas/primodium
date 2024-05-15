@@ -5,10 +5,10 @@ import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
 import { addressToEntity } from "src/utils.sol";
 
 import { EBuilding, EResource, EUnit } from "src/Types.sol";
-import { BuildingKey, ExpansionKey } from "src/Keys.sol";
+import { BuildingKey, ExpansionKey, UnitKey } from "src/Keys.sol";
 import { IronMinePrototypeId, MinutemanMarinePrototypeId } from "codegen/Prototypes.sol";
 
-import { Dimensions, P_RequiredResourcesData, OwnedBy, BuildingType, P_ByLevelMaxResourceUpgrades, P_RequiredBaseLevel, P_EnumToPrototype, PositionData, TilePositions, Level, Home, ProductionRate, ConsumptionRate, P_RequiredDependencyData, P_Production, P_ProductionData, P_RequiredDependency, P_ListMaxResourceUpgrades, MaxResourceCount, P_HasStarmapper } from "codegen/index.sol";
+import { Dimensions, P_RequiredResourcesData, OwnedBy, BuildingType, P_ByLevelMaxResourceUpgrades, P_RequiredBaseLevel, P_EnumToPrototype, PositionData, TilePositions, Level, Home, ProductionRate, ConsumptionRate, P_RequiredDependencyData, P_Production, P_ProductionData, P_RequiredDependency, P_ListMaxResourceUpgrades, MaxResourceCount, ResourceCount, P_HasStarmapper, P_Transportables, P_UnitPrototypes } from "codegen/index.sol";
 
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibBuilding } from "libraries/LibBuilding.sol";
@@ -254,6 +254,51 @@ contract DestroySystemTest is PrimodiumTest {
     vm.stopPrank();
 
     assertEq(P_HasStarmapper.get(Home.get(playerEntity)), false);
+  }
+
+  function testDestroyFailWithMaxFleetsUsed() public {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    //create fleet with 1 minuteman marine
+    bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = 1;
+    }
+
+    //create fleet with 1 iron
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+    for (uint256 i = 0; i < resourceCounts.length; i++) {
+      if (P_Transportables.getItemValue(i) == uint8(EResource.Iron)) resourceCounts[i] = 1;
+    }
+
+    EBuilding building = EBuilding.Starmapper;
+    P_RequiredResourcesData memory requiredResources = getBuildCost(building);
+    provideResources(Home.get(playerEntity), requiredResources);
+    vm.startPrank(creator);
+    P_RequiredBaseLevel.set(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Starmapper)), 1, 0);
+
+    PositionData memory coord = getTilePosition(Home.get(playerEntity), building);
+    coord.y += 3;
+
+    uint256 initFleetsRemaining = ResourceCount.get(asteroidEntity, uint8(EResource.U_MaxFleets));
+    bytes32 starmapperEntity = world.Primodium__build(EBuilding.Starmapper, coord);
+    uint256 fleetsRemaining = ResourceCount.get(asteroidEntity, uint8(EResource.U_MaxFleets));
+
+    assertLt(initFleetsRemaining, fleetsRemaining, "Built Starmapper should have increased available fleets");
+    console.log("fleetsRemaining: ", fleetsRemaining);
+    for (uint256 i = 0; i < fleetsRemaining; i++) {
+      setupCreateFleetNoMaxFleetsGranted(creator, asteroidEntity, unitCounts, resourceCounts);
+      vm.startPrank(creator);
+      world.Primodium__createFleet(asteroidEntity, unitCounts, resourceCounts);
+    }
+
+    setupCreateFleetNoMaxFleetsGranted(creator, asteroidEntity, unitCounts, resourceCounts);
+    vm.startPrank(creator);
+    vm.expectRevert("[Fleet] asteroid has no fleets available");
+    world.Primodium__createFleet(asteroidEntity, unitCounts, resourceCounts);
+
+    vm.expectRevert("[UtilityUsage] Cannot decrease utility amount below 0");
+    world.Primodium__destroy(starmapperEntity);
   }
 
   /* TODO: Add test that includes buildings with utility dependencies */
