@@ -88,7 +88,7 @@ export const Tooltip = ({ className, tooltipContent, children, direction, show =
           }}
           className={cn(
             tooltipVariants({ direction }),
-            "absolute flex text-xs flex-col items-center justify-center bg-neutral heropattern-graphpaper-slate-800/50 z-50 shadow-xl px-4 py-2 pixel-border",
+            "absolute flex text-xs flex-col items-center justify-center bg-neutral heropattern-graphpaper-slate-800/50 z-[1000] shadow-xl px-4 py-2 pixel-border",
             className
           )}
         >
