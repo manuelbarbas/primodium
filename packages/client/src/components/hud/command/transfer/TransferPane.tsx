@@ -332,11 +332,12 @@ const checkErrors = ({
       return [...acc, { entity: resource as Entity, resourceStorage, count }];
     }, [] as { entity: Entity; resourceStorage: bigint; count: bigint }[]);
 
-    if (notEnoughResources.length > 0)
+    if (notEnoughResources.length > 0) {
       return {
         disabled: true,
         submitMessage: `Not enough ${getEntityTypeName(notEnoughResources[0].entity as Entity)} storage`,
       };
+    }
   }
   return { disabled: false, submitMessage: "" };
 };

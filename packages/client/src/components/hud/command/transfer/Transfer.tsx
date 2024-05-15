@@ -30,7 +30,7 @@ const Transfer: React.FC = () => {
   // Resources
   const transportables = components.P_Transportables.use()?.value ?? [];
 
-  const rightInitialResourceCounts = useFullResourceCounts(rightEntity);
+  const rightInitialResourceCounts = useFullResourceCounts(rightEntity, 10);
   const rightResourceCounts = useMemo(
     () =>
       transportables.reduce((acc, transportable) => {
@@ -46,7 +46,7 @@ const Transfer: React.FC = () => {
     [rightInitialResourceCounts, deltas, moving]
   );
 
-  const leftInitialResourceCounts = useFullResourceCounts(left ?? singletonEntity);
+  const leftInitialResourceCounts = useFullResourceCounts(left ?? singletonEntity, 10);
   const leftResourceCounts = useMemo(
     () =>
       transportables.reduce((acc, transportable) => {
@@ -191,10 +191,10 @@ const Transfer: React.FC = () => {
   useEffect(() => {
     if (!api) return;
 
-    const upListener = api.input.addListener("Up", () => handleKeyDown(10), true);
-    const downListener = api.input.addListener("Down", () => handleKeyDown(-10), true);
-    const leftListener = api.input.addListener("Left", () => handleKeyDown(-100), true);
-    const rightListener = api.input.addListener("Right", () => handleKeyDown(100), true);
+    const upListener = api.input.addListener("Up", () => handleKeyDown(100), true);
+    const downListener = api.input.addListener("Down", () => handleKeyDown(-100), true);
+    const leftListener = api.input.addListener("Left", () => handleKeyDown(-10), true);
+    const rightListener = api.input.addListener("Right", () => handleKeyDown(10), true);
 
     return () => {
       upListener.dispose();
@@ -289,31 +289,17 @@ const Hints = () => {
         </label>
         <div
           tabIndex={0}
-          className="absolute card compact dropdown-content z-[1] shadow bg-base-100 w-60 p-2 m-1 border border-secondary gap-1 right-0"
+          className="absolute card compact dropdown-content z-[1] shadow bg-base-100 w-60 p-2 m-1 border border-secondary gap-1 right-0 grid grid-cols-[3fr_2fr]"
         >
-          <div>
-            <p className="text-accent">To select a fleet/resource</p>
-            <p>
-              <span className="opacity-70">Left click:</span> select all
-            </p>
-            <p>
-              <span className="opacity-70">Right click:</span> select one
-            </p>
-          </div>
-          <hr className="opacity-70" />
-
-          <div>
-            <p className="text-accent">While selected</p>
-            <p>
-              <span className="opacity-70">Left click:</span> drop all
-            </p>
-            <p>
-              <span className="opacity-70">Right click:</span> drop one
-            </p>
-            <p>
-              <span className="opacity-70">Arrow keys:</span> change amount to move
-            </p>
-          </div>
+          <p className="text-accent col-span-2">To select a fleet/resource</p>
+          <span className="opacity-70">Left click:</span> select all
+          <span className="opacity-70">Right click:</span> select one
+          <hr className="opacity-70 col-span-2" />
+          <p className="text-accent col-span-2">While selected</p>
+          <span className="opacity-70">Left click:</span> drop all
+          <span className="opacity-70">Right click:</span> drop one
+          <span className="opacity-70">Up/Down Keys:</span> +/- 100
+          <span className="opacity-70">Left/Right Keys:</span> +/- 10
         </div>
       </div>
     </div>
