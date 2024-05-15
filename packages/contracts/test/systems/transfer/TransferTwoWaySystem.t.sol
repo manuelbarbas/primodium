@@ -300,7 +300,7 @@ contract TransferSystemTest is PrimodiumTest {
     assertEq(ResourceCount.get(aliceFleetEntity, Copper), cargoCapacity);
     assertEq(ResourceCount.get(aliceFleetEntity, Iron), 0);
   }
-  
+
   function testTransferTwoWayResourcesStorageOverflow() public {
     uint256 maxStorage = MaxResourceCount.get(aliceHomeAsteroid, Iron);
 
@@ -321,7 +321,9 @@ contract TransferSystemTest is PrimodiumTest {
       if (P_Transportables.getItemValue(i) == Copper) resources[i] = -100;
     }
     vm.startPrank(alice);
-    // vm.expectRevert("[TransferTwoWay] Not enough cargo space");
+    vm.expectRevert("[Fleet] Not enough stored resource to remove");
+    world.Primodium__transferResourcesTwoWay(aliceHomeAsteroid, aliceFleetEntity, resources);
+
     assertEq(ResourceCount.get(aliceHomeAsteroid, Iron), maxStorage);
     world.Primodium__transferResourcesTwoWay(aliceFleetEntity, aliceHomeAsteroid, resources);
     assertEq(ResourceCount.get(aliceHomeAsteroid, Iron), maxStorage);
@@ -653,52 +655,56 @@ contract TransferSystemTest is PrimodiumTest {
     conquerAsteroid(alice, aliceHomeAsteroid, bobHomeAsteroid);
     bytes32 playerEntity = OwnedBy.get(bobHomeAsteroid);
     assertEq(playerEntity, aliceEntity);
-    uint256 cargoCapacity = P_Unit.getCargo(AegisDronePrototypeId, 0) * 100;
+
+    uint256 aegisCargo = P_Unit.getCargo(AegisDronePrototypeId, 0) * 100;
+    bytes32 aliceFleetEntity = spawnFleetWithUnitAndResource(
+      aliceHomeAsteroid,
+      EUnit.AegisDrone,
+      100,
+      EResource.Iron,
+      aegisCargo
+    );
+
+    uint256 hammerCargo = P_Unit.getCargo(HammerDronePrototypeId, 0) * 99;
     bytes32 aliceFleetEntity2 = spawnFleetWithUnitAndResource(
       bobHomeAsteroid,
       EUnit.HammerDrone,
-      100,
+      99,
       EResource.Copper,
-      cargoCapacity
+      hammerCargo
     );
 
     vm.prank(alice);
     world.Primodium__sendFleet(aliceFleetEntity2, aliceHomeAsteroid);
     vm.warp(FleetMovement.getArrivalTime(aliceFleetEntity2) + 1);
 
-    bytes32 aliceFleetEntity = spawnFleetWithUnitAndResource(
-      aliceHomeAsteroid,
-      EUnit.AegisDrone,
-      100,
-      EResource.Iron,
-      cargoCapacity
-    );
-
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
     int256[] memory units = new int256[](unitPrototypes.length);
     for (uint256 i = 0; i < units.length; i++) {
       if (unitPrototypes[i] == AegisDronePrototypeId) units[i] = 100;
-      if (unitPrototypes[i] == HammerDronePrototypeId) units[i] = -100;
+      if (unitPrototypes[i] == HammerDronePrototypeId) units[i] = -99;
     }
 
     int256[] memory resources = new int256[](P_Transportables.length());
     for (uint256 i = 0; i < resources.length; i++) {
-      if (P_Transportables.getItemValue(i) == Iron) resources[i] = int256(cargoCapacity);
-      if (P_Transportables.getItemValue(i) == Copper) resources[i] = -int256(cargoCapacity);
+      if (P_Transportables.getItemValue(i) == Iron) resources[i] = int256(aegisCargo);
+      if (P_Transportables.getItemValue(i) == Copper) resources[i] = -int256(hammerCargo);
     }
     vm.startPrank(alice);
 
-    world.Primodium__transferUnitsTwoWay(aliceFleetEntity, aliceFleetEntity2, units);
+    world.Primodium__transferUnitsAndResourcesTwoWay(aliceFleetEntity, aliceFleetEntity2, units, resources);
+
+    assertEq(UnitCount.get(aliceFleetEntity, HammerDronePrototypeId), 99);
+    assertEq(UnitCount.get(aliceFleetEntity, AegisDronePrototypeId), 0);
+
     assertEq(UnitCount.get(aliceFleetEntity2, AegisDronePrototypeId), 100);
     assertEq(UnitCount.get(aliceFleetEntity2, HammerDronePrototypeId), 0);
 
-    assertEq(UnitCount.get(aliceFleetEntity, HammerDronePrototypeId), 100);
-    assertEq(UnitCount.get(aliceFleetEntity, AegisDronePrototypeId), 0);
+    assertEq(ResourceCount.get(aliceFleetEntity, Copper), hammerCargo);
+    assertEq(ResourceCount.get(aliceFleetEntity, Iron), 0);
 
-    assertEq(ResourceCount.get(aliceFleetEntity2, Iron), 0);
-    assertEq(ResourceCount.get(aliceFleetEntity2, Copper), cargoCapacity);
-    assertEq(ResourceCount.get(aliceFleetEntity, Copper), 0);
-    assertEq(ResourceCount.get(aliceFleetEntity, Iron), cargoCapacity);
+    assertEq(ResourceCount.get(aliceFleetEntity2, Iron), aegisCargo);
+    assertEq(ResourceCount.get(aliceFleetEntity2, Copper), 0);
   }
   /* ----- units and resources two way with intermediary utility overflow ----- */
   function testTransferTwoWayUnitsAndResourcesCargoOverflow() public {
@@ -741,7 +747,7 @@ contract TransferSystemTest is PrimodiumTest {
     }
     vm.startPrank(alice);
 
-    vm.expectRevert("[TransferTwoWay] Not enough utility resources");
+    vm.expectRevert("[LibUnit] Not enough utility resources");
     world.Primodium__transferUnitsTwoWay(aliceFleetEntity, aliceFleetEntity2, units);
   }
   /* ------------------------------ colony ships ------------------------------ */
