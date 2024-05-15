@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 import { ampli } from "src/ampli";
 import { components } from "src/network/components";
 import { execute } from "src/network/txExecute/txExecute";
@@ -12,7 +12,7 @@ import { bigintToNumber } from "src/util/number";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const moveBuilding = async (mud: MUD, building: Entity, coord: Coord) => {
+export const moveBuilding = async (mud: MUD, building: Entity, coord: Coord, onComplete?: () => void) => {
   // todo: find a cleaner way to extract this value in all web3 functions
   const activeAsteroid = components.ActiveRock.get()?.value;
   if (!activeAsteroid) return;
@@ -42,6 +42,7 @@ export const moveBuilding = async (mud: MUD, building: Entity, coord: Coord) => 
     },
     // TODO: we don't need to use coord here any longer
     (receipt) => {
+      onComplete?.();
       const buildingType = components.BuildingType.get(building)?.value as Entity;
       const currLevel = components.Level.get(building)?.value || 0;
 

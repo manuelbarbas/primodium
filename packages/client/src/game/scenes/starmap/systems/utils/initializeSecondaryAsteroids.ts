@@ -1,5 +1,5 @@
 import { ComponentValue, Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 import { EResource, EMap } from "contracts/config/enums";
 import { storageUnitStorageUpgrades } from "contracts/config/storageUpgrades";
 import { components } from "src/network/components";
@@ -35,6 +35,26 @@ const spawnDroidBase = (asteroidEntity: Entity) => {
   );
 };
 
+const spawnWormholeBase = (asteroidEntity: Entity) => {
+  const mainBaseCoord = { x: 21, y: 14 };
+  const wormholeBaseEntity = hashEntities(asteroidEntity, EntityType.WormholeBase);
+  components.Position.set(
+    { ...emptyData, x: mainBaseCoord.x, y: mainBaseCoord.y, parentEntity: asteroidEntity },
+    wormholeBaseEntity
+  );
+  components.BuildingType.set({ ...emptyData, value: EntityType.WormholeBase }, wormholeBaseEntity);
+  components.Level.set({ ...emptyData, value: 1n }, wormholeBaseEntity);
+  components.IsActive.set({ ...emptyData, value: true }, wormholeBaseEntity);
+  components.OwnedBy.set({ ...emptyData, value: asteroidEntity }, wormholeBaseEntity);
+
+  if (components.P_Blueprint.has(EntityType.WormholeBase)) return;
+
+  components.P_Blueprint.set(
+    { ...emptyData, value: components.P_Blueprint.get(EntityType.MainBase)?.value ?? [] },
+    EntityType.WormholeBase
+  );
+};
+
 export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord) {
   const config = components.P_GameConfig.get();
   const wormholeAsteroidConfig = components.P_WormholeAsteroidConfig.get();
@@ -60,7 +80,8 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
     if (!wormholeAsteroid && !isSecondaryAsteroid(asteroidEntity, Number(config.asteroidChanceInv), wormholeAsteroid))
       continue;
 
-    if (!components.OwnedBy.get(asteroidEntity)) spawnDroidBase(asteroidEntity);
+    if (!components.OwnedBy.get(asteroidEntity))
+      wormholeAsteroid ? spawnWormholeBase(asteroidEntity) : spawnDroidBase(asteroidEntity);
 
     world.registerEntity({ id: asteroidEntity });
     components.ReversePosition.setWithKeys({ entity: asteroidEntity as string, ...emptyData }, asteroidPosition);
@@ -99,7 +120,8 @@ function isSecondaryAsteroid(entity: Entity, chanceInv: number, wormholeAsteroid
 }
 
 export function getSecondaryAsteroidUnitsAndEncryption(asteroidEntity: Entity, level: bigint) {
-  const droidCount = 4n ** level + 10n * level ** 2n;
+  // this is a crime but wanted to preserve the const without using an implicit equation.
+  const droidCount = level < 3n ? 5n : level < 6n ? 80n : level < 8n ? 1280n : 20480n;
   const encryption = (level * 300n + 300n) * RESOURCE_SCALE;
   return { droidCount, encryption };
 }

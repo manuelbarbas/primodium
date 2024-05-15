@@ -1,8 +1,8 @@
-import { Primodium } from "@game/api";
+import { PrimodiumGame } from "@game/api";
 // import { EntitytoSpriteKey } from "@game/constants";
 // import { EntityTypetoBuildingSpriteKey } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 import { EResource, MUDEnums } from "contracts/config/enums";
 import { EntityTypetoBuildingSprites } from "src/game/lib/mappings";
 import { components } from "src/network/components";
@@ -165,10 +165,10 @@ export const getBuildingName = (building: Entity) => {
   return `${getEntityTypeName(buildingType)} ${toRomanNumeral(Number(level))}`;
 };
 
-export const getBuildingImage = (primodium: Primodium, building: Entity) => {
+export const getBuildingImage = (primodium: PrimodiumGame, building: Entity) => {
   const buildingType = components.BuildingType.get(building)?.value as Entity;
   const level = components.Level.get(building)?.value ?? 1n;
-  const { getSpriteBase64 } = primodium.api().sprite;
+  const { getSpriteBase64 } = primodium.ASTEROID.sprite;
 
   if (EntityTypetoBuildingSprites[buildingType]) {
     const imageIndex = parseInt(level ? level.toString() : "1") - 1;
@@ -183,9 +183,9 @@ export const getBuildingImage = (primodium: Primodium, building: Entity) => {
   return "";
 };
 
-export const getBuildingImageFromType = (primodium: Primodium, buildingType: Entity) => {
+export const getBuildingImageFromType = (primodium: PrimodiumGame, buildingType: Entity) => {
   const level = components.Level.get(buildingType)?.value ?? 1n;
-  const { getSpriteBase64 } = primodium.api().sprite;
+  const { getSpriteBase64 } = primodium.ASTEROID.sprite;
 
   if (EntityTypetoBuildingSprites[buildingType]) {
     const imageIndex = parseInt(level ? level.toString() : "1") - 1;

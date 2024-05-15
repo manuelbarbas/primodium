@@ -1,19 +1,16 @@
-import { PixelCoord, Scene } from "engine/types";
+import Phaser from "phaser";
+import { PixelCoord } from "engine/types";
+import { PrimodiumScene } from "@/game/api/scene";
 import { IPrimodiumGameObject } from "./interfaces";
 
 export class TargetLine extends Phaser.GameObjects.Line implements IPrimodiumGameObject {
-  private _scene: Scene;
+  protected _scene: PrimodiumScene;
   private spawned = false;
-  private start;
-  constructor(scene: Scene, start: PixelCoord, color = 0x808080) {
-    const pointer = scene.input.phaserInput.activePointer;
-
-    super(scene.phaserScene, start.x, start.y, 0, 0, pointer.worldX - start.x, pointer.worldY - start.y, color);
+  constructor(scene: PrimodiumScene, start: PixelCoord, end: PixelCoord, color = 0x808080) {
+    super(scene.phaserScene, start.x, start.y, 0, 0, end.x, end.y, color);
     this.setOrigin(0, 0);
     this.setLineWidth(2);
     this._scene = scene;
-    this.start = start;
-    this.scene.events.addListener("update", this.update, this);
   }
 
   spawn() {
@@ -26,14 +23,15 @@ export class TargetLine extends Phaser.GameObjects.Line implements IPrimodiumGam
     return this.spawned;
   }
 
-  update() {
-    const pointer = this.scene.input.activePointer;
-    this.setLineWidth(2 / this._scene.camera.phaserCamera.zoom);
-    this.setTo(0, 0, pointer.worldX - this.start.x, pointer.worldY - this.start.y);
+  setCoordinates(start: PixelCoord, end: PixelCoord) {
+    this.setTo(start.x, start.y, end.x, end.y);
   }
 
-  dispose() {
-    this.scene.events.removeListener("update", this.update, this);
-    this.destroy();
+  update() {
+    this.setLineWidth(2 / this._scene.phaserScene.cameras.main.zoom);
+  }
+
+  destroy() {
+    super.destroy();
   }
 }

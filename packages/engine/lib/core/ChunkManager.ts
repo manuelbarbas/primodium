@@ -1,6 +1,7 @@
 import { Coord } from "../../types";
 import type { createCamera } from "./createCamera";
 
+const MARGIN = 5;
 export class ChunkManager {
   private camera;
   private chunkSize;
@@ -27,10 +28,10 @@ export class ChunkManager {
     const cam = this.camera.phaserCamera;
     const chunks = new Set<string>();
 
-    const startX = Math.floor(cam.worldView.x / this.chunkSize);
-    const startY = Math.floor(cam.worldView.y / this.chunkSize);
-    const endX = Math.ceil((cam.worldView.x + cam.worldView.width) / this.chunkSize);
-    const endY = Math.ceil((cam.worldView.y + cam.worldView.height) / this.chunkSize);
+    const startX = Math.floor(cam.worldView.x / this.chunkSize) - MARGIN;
+    const startY = Math.floor(cam.worldView.y / this.chunkSize) - MARGIN;
+    const endX = Math.ceil((cam.worldView.x + cam.worldView.width) / this.chunkSize) + MARGIN;
+    const endY = Math.ceil((cam.worldView.y + cam.worldView.height) / this.chunkSize) + MARGIN;
 
     for (let x = startX; x < endX; x++) {
       for (let y = startY; y < endY; y++) {
@@ -49,6 +50,7 @@ export class ChunkManager {
       if (!this.visibleChunks.has(chunkKey)) {
         const [x, y] = chunkKey.split(":").map(Number);
         this.onEnterChunk({ x, y });
+        this.visibleChunks.add(chunkKey);
       }
     });
 
@@ -57,9 +59,9 @@ export class ChunkManager {
       if (!currentVisible.has(chunkKey)) {
         const [x, y] = chunkKey.split(":").map(Number);
         this.onExitChunk({ x, y });
+        this.visibleChunks.delete(chunkKey);
       }
     });
-    this.visibleChunks = currentVisible;
   }
   private getKeyForChunk({ x, y }: Coord): string {
     return `${x}:${y}`;

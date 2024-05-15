@@ -4,7 +4,7 @@ import { Badge } from "src/components/core/Badge";
 import { useOrbitingFleets } from "src/hooks/useOrbitingFleets";
 import { components } from "src/network/components";
 import { Hex } from "viem";
-import { FleetButton } from "../../modals/fleets/FleetButton";
+import { FleetButton } from "../../global/modals/fleets/FleetButton";
 import { useFleetNav } from "./Fleets";
 
 export const FriendlyFleets: React.FC = () => {

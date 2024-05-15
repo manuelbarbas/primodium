@@ -9,7 +9,7 @@ export enum Sprites {
   Mainbase7 = "sprites/mainbase/level7/Main_Base_LVL7_1.png",
   Mainbase8 = "sprites/mainbase/level8/Main_Base_LVL8_1.png",
 
-  Wormholebase1 = "sprites/wormholebase/level1/WormholeBase_LVL1_1.png",
+  Wormholebase1 = "sprites/wormholebase/level1/idle/Wormhole_Idle1.png",
 
   IronMine1 = "sprites/miners/ironmine/level1/Miner_Iron_LVL1_1.png",
   IronMine2 = "sprites/miners/ironmine/level2/Miner_Iron_LVL2_1.png",
@@ -19,7 +19,9 @@ export enum Sprites {
   CopperMine2 = "sprites/miners/coppermine/level2/Miner_Copper_LVL2_1.png",
   CopperMine3 = "sprites/miners/coppermine/level3/Miner_Copper_LVL3_1.png",
 
-  LithiumMine1 = "sprites/miners/lithiummine/Miner_Lithium_LVL1_1.png",
+  LithiumMine1 = "sprites/miners/lithiummine/level1/Miner_Lithium_LVL1_1.png",
+  LithiumMine2 = "sprites/miners/lithiummine/level2/Miner_Lithium_LVL2_1.png",
+  LithiumMine3 = "sprites/miners/lithiummine/level3/Miner_Lithium_LVL3_1.png",
 
   IridiumMine1 = "sprites/miners/iridiummine/level1/Miner_Iridium_LVL1_1.png",
   IridiumMine2 = "sprites/miners/iridiummine/level2/Miner_Iridium_LVL2_1.png",
@@ -89,9 +91,12 @@ export enum Sprites {
   //ASTEROIDS
   Asteroid1 = "sprites/spacerocks/asteroids/asteroid1.png",
   Asteroid2 = "sprites/spacerocks/asteroids/asteroid2.png",
-  Asteroid3 = "sprites/spacerocks/asteroids/asteroid3.png",
-  Asteroid4 = "sprites/spacerocks/asteroids/asteroid4.png",
-  Asteroid5 = "sprites/spacerocks/asteroids/asteroid5.png",
+  Asteroid3 = "sprites/spacerocks/asteroids/asteroid3_4.png",
+  Asteroid4 = "sprites/spacerocks/asteroids/asteroid3_4.png",
+  Asteroid5 = "sprites/spacerocks/asteroids/asteroid5_6.png",
+  Asteroid6 = "sprites/spacerocks/asteroids/asteroid5_6.png",
+  Asteroid7 = "sprites/spacerocks/asteroids/asteroid7.png",
+  Asteroid8 = "sprites/spacerocks/asteroids/asteroid8.png",
 
   Shard = "sprites/shard/shard.png",
 
@@ -115,6 +120,10 @@ export enum Sprites {
   MotherlodePlatinumSmall = "sprites/spacerocks/motherlodes/motherlode_platinum_small.png",
   MotherlodePlatinumMedium = "sprites/spacerocks/motherlodes/motherlode_platinum_medium.png",
   MotherlodePlatinumLarge = "sprites/spacerocks/motherlodes/motherlode_platinum_large.png",
+
+  CommonMicro = "sprites/spacerocks/motherlodes/basic1.png",
+  CommonSmall = "sprites/spacerocks/motherlodes/basic2.png",
+  Wormhole = "sprites/spacerocks/wormhole/wormhole_asteroid.png",
 
   //ASTEROID BORDERS
   AsteroidPlayer = "sprites/spacerocks/borders/Border_Player.png",
@@ -154,6 +163,7 @@ export enum Sprites {
   IronPlate = "sprites/resources/ironplate.png",
   PVCell = "sprites/resources/photovoltaiccell_resource.png",
   Alloy = "sprites/resources/alloy_resource.png",
+  ShardIcon = "sprites/icons/shard.png",
 
   // Unit Icons
   StingerDrone = "sprites/units/stingerdrone.png",
@@ -173,6 +183,14 @@ export enum Sprites {
   Emblem6 = "sprites/emblems/Emblems_LVL6.png",
   Emblem7 = "sprites/emblems/Emblems_LVL7.png",
   Emblem8 = "sprites/emblems/Emblems_LVL8.png",
+
+  // Decor
+  DroneBottom = "sprites/decorations/drone/bottom/Drones_Bottom_Left1.png",
+  DroneTop = "sprites/decorations/drone/top/Drones_Top_Right1.png",
+
+  FleetPlayer = "sprites/fleets/player/Fleets_Default_Player1.png",
+
+  EMPTY = "sprites/empty.png",
 }
 
 export type SpriteKeys = keyof typeof Sprites;

@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { usePrimodium } from "src/hooks/usePrimodium";
+import { useGame } from "src/hooks/useGame";
 import { getBuildingImageFromType } from "src/util/building";
 
 export const BuildingImageFromType: React.FC<{ buildingType: Entity; blurred?: boolean; isBlueprint?: boolean }> = ({
@@ -8,8 +8,8 @@ export const BuildingImageFromType: React.FC<{ buildingType: Entity; blurred?: b
   blurred,
   isBlueprint = false,
 }) => {
-  const primodium = usePrimodium();
-  const imageUri = useMemo(() => getBuildingImageFromType(primodium, buildingType), [primodium, buildingType]);
+  const game = useGame();
+  const imageUri = useMemo(() => getBuildingImageFromType(game, buildingType), [game, buildingType]);
 
   const divClassName = isBlueprint
     ? "flex flex-col place-items-center cursor-pointer w-[110%]"

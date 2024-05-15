@@ -1,17 +1,20 @@
 // ROOT ENTRY POINT
-import { Game } from "engine/types";
-import { createAudioApi } from "@game/api/audio";
+import { GlobalApi } from "@/game/api/global";
+import { createSceneApi, PrimodiumScene } from "@/game/api/scene";
 import { rootSceneConfig } from "@game/lib/config/rootScene";
+import { runSystems as runRootSystems } from "src/game/scenes/root/systems";
 
-export const initRootScene = async (game: Game) => {
-  const scene = await game.sceneManager.createScene(rootSceneConfig, true);
-  const audio = createAudioApi(scene);
-  audio.initializeAudioVolume();
+export const initRootScene = async (game: GlobalApi): Promise<PrimodiumScene> => {
+  const scene = await game.createScene(rootSceneConfig, true);
 
-  audio.play("Background", "music");
-  audio.play("Background2", "music", {
+  const sceneApi = createSceneApi(scene);
+  sceneApi.audio.play("Background", "music");
+  sceneApi.audio.play("Background2", "music", {
     loop: true,
     volume: 0,
   });
-  audio.setPauseOnBlur(false);
+  sceneApi.audio.setPauseOnBlur(false);
+
+  const runSystems = () => runRootSystems(sceneApi, game);
+  return { ...sceneApi, runSystems };
 };

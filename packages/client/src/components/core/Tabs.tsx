@@ -6,14 +6,18 @@ interface TabProps {
   children?: ReactNode;
   defaultIndex?: number;
   className?: string;
-  onChange?: (index: number | undefined) => void;
+  onChange?: (index?: number) => void;
+  persistIndexKey?: string;
 }
 
 interface IndexContextValue {
   index: number | undefined;
   setIndex: React.Dispatch<React.SetStateAction<number | undefined>>;
+  persistIndexKey?: string;
 }
 
+//TODO: Works for now. Move into a simple localStorage hook down the line.
+const persistedIndexMap = new Map<string, number | undefined>();
 const IndexContext = createContext<IndexContextValue | undefined>(undefined);
 
 const useIndex = (): IndexContextValue => {
@@ -39,13 +43,13 @@ const Pane: FC<{
   return fragment ? (
     <>{children}</>
   ) : (
-    <SecondaryCard className={`overflow-y-auto scrollbar ${className}`}>{children}</SecondaryCard>
+    <SecondaryCard className={`overflow-y-auto scrollbar overflow ${className}`}>{children}</SecondaryCard>
   );
 });
 
 const Button: FC<React.ComponentProps<typeof _Button> & { index: number; togglable?: boolean }> = memo(
   ({ togglable = false, index, ...props }) => {
-    const { index: currIndex, setIndex } = useIndex();
+    const { index: currIndex, setIndex, persistIndexKey } = useIndex();
     const selected = currIndex === index;
 
     return (
@@ -53,8 +57,10 @@ const Button: FC<React.ComponentProps<typeof _Button> & { index: number; togglab
         {...props}
         selected={selected}
         onClick={(e) => {
-          setIndex(selected && togglable ? undefined : index);
+          const _index = selected && togglable ? undefined : index;
+          setIndex(_index);
           if (props.onClick) props.onClick(e);
+          if (persistIndexKey) persistedIndexMap.set(persistIndexKey, _index);
         }}
       />
     );
@@ -64,8 +70,10 @@ const Button: FC<React.ComponentProps<typeof _Button> & { index: number; togglab
 export const Tabs: FC<TabProps> & {
   Button: typeof Button;
   Pane: typeof Pane;
-} = ({ children, defaultIndex = 0, className, onChange }) => {
-  const [currentIndex, setCurrentIndex] = useState<number | undefined>(defaultIndex);
+} = ({ children, defaultIndex = 0, className, onChange, persistIndexKey }) => {
+  const [currentIndex, setCurrentIndex] = useState<number | undefined>(
+    persistedIndexMap.has(persistIndexKey ?? "") ? persistedIndexMap.get(persistIndexKey ?? "") : defaultIndex
+  );
 
   // Ref to check if it's the first render
   const initialRender = useRef(true);
@@ -81,12 +89,7 @@ export const Tabs: FC<TabProps> & {
   }, [currentIndex, onChange]);
 
   return (
-    <IndexContext.Provider
-      value={{
-        index: currentIndex,
-        setIndex: setCurrentIndex,
-      }}
-    >
+    <IndexContext.Provider value={{ index: currentIndex, setIndex: setCurrentIndex, persistIndexKey }}>
       <div className={`${className}`}>{children}</div>
     </IndexContext.Provider>
   );

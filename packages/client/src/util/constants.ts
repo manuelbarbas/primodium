@@ -1,6 +1,6 @@
 import { resourceToHex } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 import { DECIMALS } from "contracts/config/constants";
 import { EBuilding, EObjectives, EPointType, EResource, EUnit } from "contracts/config/enums";
 import { encodeEntity } from "src/util/encode";
@@ -99,12 +99,12 @@ export enum TransactionQueueType {
   PayForColonySlot,
 }
 
-export enum RockRelationship {
-  Ally,
-  Enemy,
-  Neutral,
-  Self,
-}
+export const RockRelationship = {
+  Ally: "Ally",
+  Enemy: "Enemy",
+  Neutral: "Neutral",
+  Self: "Self",
+} as const;
 
 export const RockRelationshipColors = {
   [RockRelationship.Ally]: "success",
@@ -143,6 +143,10 @@ export const EntityType = {
   Iridium: toHex32("Iridium") as Entity,
   Kimberlite: toHex32("Kimberlite") as Entity,
   Platinum: toHex32("Platinum") as Entity,
+
+  //Special Asteroid Types
+  Common: toHex32("Common") as Entity,
+  Wormhole: toHex32("Wormhole") as Entity,
 
   MainBase: toHex32("MainBase") as Entity,
   WormholeBase: toHex32("WormholeBase") as Entity,

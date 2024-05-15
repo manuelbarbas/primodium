@@ -1,21 +1,25 @@
+import Phaser from "phaser";
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
-import { Scene } from "engine/types";
+import { Coord } from "engine/types";
+import { PrimodiumScene } from "@/game/api/scene";
 import { getAssetKeyPair } from "./helpers";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { DepthLayers } from "../../constants/common";
 import { IPrimodiumGameObject } from "../interfaces";
 import { Assets } from "@primodiumxyz/assets";
+import { triggerPlacementAnim } from "@/game/lib/objects/Building/triggerPlacementAnim";
 
 export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGameObject {
+  private id: Entity;
   private buildingType: Entity;
   private coord: Coord;
-  private _scene: Scene;
+  private _scene: PrimodiumScene;
   private level = 1n;
   private spawned = false;
-  constructor(scene: Scene, buildingType: Entity, coord: Coord) {
+
+  constructor(args: { id: Entity; scene: PrimodiumScene; buildingType: Entity; coord: Coord }) {
+    const { id, scene, buildingType, coord } = args;
     const assetPair = getAssetKeyPair(1n, buildingType);
-    const pixelCoord = tileCoordToPixelCoord(coord, scene.tiled.tileWidth, scene.tiled.tileHeight);
+    const pixelCoord = scene.utils.tileCoordToPixelCoord(coord);
     super(
       scene.phaserScene,
       pixelCoord.x,
@@ -23,6 +27,8 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
       Assets.SpriteAtlas,
       assetPair.sprite
     );
+
+    this.id = id;
     assetPair.animation && this.play(assetPair.animation);
     this.setOrigin(0, 1);
     this.setDepth(DepthLayers.Building - coord.y);
@@ -31,10 +37,14 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
     this.buildingType = buildingType;
     this.coord = coord;
     this._scene = scene;
+
+    //add to object pool
+    this._scene.objects.building.add(id, this);
   }
 
   spawn() {
     //TODO: placement animation
+
     this.scene.add.existing(this);
     this.spawned = true;
     return this;
@@ -44,12 +54,16 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
     return this.spawned;
   }
 
+  triggerPlacementAnim() {
+    triggerPlacementAnim(this._scene, this.id, this.coord);
+  }
+
   getCoord() {
     return this.coord;
   }
 
   setCoordPosition(coord: Coord) {
-    const pixelCoord = tileCoordToPixelCoord(coord, this._scene.tiled.tileWidth, this._scene.tiled.tileHeight);
+    const pixelCoord = this._scene.utils.tileCoordToPixelCoord(coord);
     super.setPosition(pixelCoord.x, -pixelCoord.y + this._scene.tiled.tileHeight);
     this.coord = coord;
     return this;
@@ -87,19 +101,21 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
   }
 
   setOutline = (color: number, thickness: number, knockout = false) => {
-    this.postFX.addGlow(color, thickness, undefined, knockout);
+    this.postFX?.addGlow(color, thickness, undefined, knockout);
 
     return this;
   };
 
   clearOutline = () => {
-    this.postFX.clear();
+    this.postFX?.clear();
 
     return this;
   };
 
-  dispose() {
+  destroy() {
     //TODO: despawn animation
-    this.destroy();
+
+    this._scene.objects.building.remove(this.id);
+    super.destroy();
   }
 }

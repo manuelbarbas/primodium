@@ -89,7 +89,9 @@ export enum EMap {
 
 export enum EObjectives {
   // (A) Fundamentals
-  BuildIronMine = 1,
+  JoinDiscord = 1,
+  FollowTwitter,
+  BuildIronMine,
   BuildCopperMine,
   BuildLithiumMine,
 
@@ -194,8 +196,7 @@ export enum EObjectives {
 
   // (A-C) Alliance (Social)
   JoinAlliance,
-  JoinDiscord,
-  FollowTwitter,
+
   PrimoPlayer,
 }
 

@@ -4,7 +4,7 @@ import { Button } from "src/components/core/Button";
 import { SecondaryCard } from "src/components/core/Card";
 import { useMud } from "src/hooks";
 import { components } from "src/network/components";
-import { FleetButton } from "../../modals/fleets/FleetButton";
+import { FleetButton } from "../../global/modals/fleets/FleetButton";
 
 export const HostileFleets: React.FC = () => {
   const {

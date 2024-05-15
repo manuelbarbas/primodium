@@ -1,4 +1,4 @@
-import { usePrimodium } from "src/hooks/usePrimodium";
+import { useGame } from "src/hooks/useGame";
 import { adjustDecimals } from "src/util/number";
 import { Button } from "./Button";
 
@@ -9,10 +9,7 @@ export const NumberInput: React.FC<{
   onChange?: (val: string) => void;
   count: string;
 }> = ({ count, min = 0, max = Infinity, onChange, toFixed = 0 }) => {
-  const primodium = usePrimodium();
-  const input = primodium.api("UI").input;
-  const input2 = primodium.api("ASTEROID").input;
-  const input3 = primodium.api("STARMAP").input;
+  const game = useGame();
 
   const handleUpdate = (newCount: string) => {
     newCount = adjustDecimals(newCount, toFixed);
@@ -57,16 +54,8 @@ export const NumberInput: React.FC<{
           e.preventDefault();
           handleUpdate(e.target.value);
         }}
-        onFocus={() => {
-          input.disableInput();
-          input2.disableInput();
-          input3.disableInput();
-        }}
-        onBlur={() => {
-          input.enableInput();
-          input2.enableInput();
-          input3.enableInput();
-        }}
+        onFocus={game.GLOBAL.disableGlobalInput}
+        onBlur={game.GLOBAL.enableGlobalInput}
         min={0}
         max={max}
       />

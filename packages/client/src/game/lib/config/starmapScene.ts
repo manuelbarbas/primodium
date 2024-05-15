@@ -4,15 +4,15 @@ import { Scenes } from "../constants/common";
 export const starmapSceneConfig: SceneConfig = {
   key: Scenes.Starmap,
   camera: {
-    minZoom: 0.3,
-    maxZoom: 3,
-    defaultZoom: 1,
+    minZoom: 0.07,
+    maxZoom: 1.5,
+    defaultZoom: 0.75,
     pinchSpeed: 0.01,
-    wheelSpeed: 1,
+    wheelSpeed: 2,
   },
-  cullingChunkSize: 128,
+  cullingChunkSize: 512,
   tilemap: {
-    tileWidth: 24,
-    tileHeight: 24,
+    tileWidth: 84,
+    tileHeight: 64,
   },
 };

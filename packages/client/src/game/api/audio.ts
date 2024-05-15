@@ -1,6 +1,6 @@
+import { Assets, Audio, AudioKeys } from "@primodiumxyz/assets";
 import { Scene } from "engine/types";
 import { usePersistentStore } from "../stores/PersistentStore";
-import { Assets, AudioKeys, Audio } from "@primodiumxyz/assets";
 
 export type Channel = "music" | "sfx" | "ui";
 
@@ -48,6 +48,7 @@ export const createAudioApi = (scene: Scene) => {
   }
 
   return {
+    ...scene.audio,
     play,
     get,
     setVolume,
