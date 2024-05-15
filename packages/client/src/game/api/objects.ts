@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { Fleet } from "../lib/objects/Fleet";
-import { Scene } from "engine/types";
+import { Coord, Scene } from "engine/types";
 import { TransitLine } from "@/game/lib/objects/TransitLine";
 import { BaseAsteroid } from "@/game/lib/objects/Asteroid/BaseAsteroid";
 import { BaseSpawnArgs, DeferredRenderContainer } from "@/game/lib/objects/DeferredRenderContainer";
@@ -16,6 +16,7 @@ type PrimodiumObjectApi<T extends { destroy: () => void }> = {
     entity: Entity,
     container: DeferredRenderContainer<SpawnedObject, SpawnArgs>
   ) => DeferredRenderContainer<SpawnedObject, SpawnArgs>;
+  updatePosition: (entity: Entity, coord: Coord) => void;
   setBoundingBoxes: (entity: Entity, boundingBoxes: BoundingBox[]) => void;
   onNewObject: (callback: (entity: string) => void) => () => void;
 };
@@ -48,6 +49,10 @@ function factory<T extends { destroy: () => void }>(
       } else {
         throw new Error("Object is not an instance of the expected class");
       }
+    },
+    updatePosition: (entity: Entity, coord) => {
+      if (!scene.objects.has(fullId(entity))) throw new Error("Object not found");
+      scene.objects.updateObjectPosition(fullId(entity), coord);
     },
     has: (entity: Entity) => scene.objects.has(fullId(entity)),
     get: (entity: Entity) => {

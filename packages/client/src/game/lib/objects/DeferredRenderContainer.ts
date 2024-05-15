@@ -68,6 +68,23 @@ export class DeferredRenderContainer<
     this.chunkCoords.set(this._getKeyForChunk(chunkCoord), entities);
   }
 
+  updatePosition(entity: Entity, coord: Coord) {
+    const spawnArgs = this.objects.get(entity);
+    if (!spawnArgs) return;
+
+    const oldCoord = spawnArgs.coord;
+    const oldChunkCoord = this._scene.utils.tileCoordToChunkCoord({ x: oldCoord.x, y: -oldCoord.y });
+
+    // find in maping and remove
+    const entities = this.chunkCoords.get(this._getKeyForChunk(oldChunkCoord)) ?? [];
+    const index = entities.indexOf(entity);
+    if (index !== -1) entities.splice(index, 1);
+    this.chunkCoords.set(this._getKeyForChunk(oldChunkCoord), entities);
+
+    // just re-add to trigger the spawn if needed
+    this.add(entity, coord, { ...spawnArgs, coord });
+  }
+
   spawn(entity: Entity) {
     const spawnArgs = this.objects.get(entity);
     if (!spawnArgs) return undefined;

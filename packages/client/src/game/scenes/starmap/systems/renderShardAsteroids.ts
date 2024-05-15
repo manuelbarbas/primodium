@@ -11,7 +11,7 @@ export const renderShardAsteroids = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const { objects } = scene;
 
-  const deferredShardAsteroidsRenderContainer = new DeferredAsteroidsRenderContainer({
+  const deferredContainer = new DeferredAsteroidsRenderContainer({
     id: toHex("shardAsteroids") as Entity,
     scene,
     spawnCallback: ({ scene, entity, coord }) => renderShardAsteroid({ scene, entity, coord, addEventHandlers: true }),
@@ -19,13 +19,20 @@ export const renderShardAsteroids = (scene: PrimodiumScene) => {
 
   const renderExplodeAndMoveAsteroid = (entity: Entity, coord: Coord) => {
     const asteroid = objects.asteroid.get(entity);
+    // it might now have been spawned yet, so check the container
+    if (!asteroid && !deferredContainer.isSpawned(entity)) {
+      deferredContainer.updatePosition(entity, coord);
+      deferredContainer.getFleetsContainers(entity)?.clearOrbit();
+      return;
+    }
+    if (!asteroid) return;
 
     // TODO: explode
 
-    if (!asteroid) return;
-
-    asteroid.getFleetsContainer().destroy();
-    asteroid.setTilePosition(coord);
+    asteroid.getFleetsContainer().clearOrbit();
+    // keep pixels to chunk in the object manager scope
+    const pixelCoord = scene.utils.tileCoordToPixelCoord(coord);
+    objects.asteroid.updatePosition(entity, { x: pixelCoord.x, y: -pixelCoord.y });
   };
 
   const query = [Has(components.ShardAsteroid), Has(components.Position)];
@@ -34,7 +41,7 @@ export const renderShardAsteroids = (scene: PrimodiumScene) => {
     const coord = components.Position.get(entity);
     if (!coord) return;
 
-    deferredShardAsteroidsRenderContainer.add(entity, coord, {
+    deferredContainer.add(entity, coord, {
       scene,
       entity,
       coord,

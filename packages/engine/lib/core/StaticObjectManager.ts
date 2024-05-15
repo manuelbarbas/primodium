@@ -128,6 +128,34 @@ export class StaticObjectManager {
     this.deferredRenderContainerMap.set(id, container);
   }
 
+  updateObjectPosition(id: string, coord: Coord) {
+    const object = this.objMap.get(id);
+    if (!object) return;
+
+    const oldChunkCoord = pixelToChunkCoord({ x: object.x, y: object.y }, this.chunkSize);
+    const newChunkCoord = pixelToChunkCoord(coord, this.chunkSize);
+    if (oldChunkCoord === newChunkCoord) return;
+
+    // remove from old chunk
+    const objects = this.coordMap.get(oldChunkCoord) ?? [];
+    const index = objects.indexOf(object);
+    if (index !== -1) objects.splice(index, 1);
+
+    // add to new chunk
+    const newObjects = this.coordMap.get(newChunkCoord) ?? [];
+    newObjects.push(object);
+
+    this.coordMap.set(newChunkCoord, newObjects);
+    this.coordMap.set(oldChunkCoord, objects);
+
+    // update visibility
+    if (this.chunkManager.isVisibleChunk(newChunkCoord)) {
+      object.setActive(true).setVisible(true);
+    } else {
+      object.setActive(false).setVisible(false);
+    }
+  }
+
   setBoundingBoxes(id: string, boundingBoxes: BoundingBox[]) {
     this.boundingBoxes.set(id, boundingBoxes);
     let isVisible = false;
