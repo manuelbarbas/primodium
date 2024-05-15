@@ -188,15 +188,15 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
 
   /* ------------------------------- Marketplace ------------------------------ */
 
-  IronSupply: marketplaceSupplyTable(EResource.Iron, 1e4),
-  CopperSupply: marketplaceSupplyTable(EResource.Copper, 1e4),
-  LithiumSupply: marketplaceSupplyTable(EResource.Lithium, 1e4),
+  IronSupply: marketplaceSupplyTable(EResource.Iron, 330),
+  CopperSupply: marketplaceSupplyTable(EResource.Copper, 330),
+  LithiumSupply: marketplaceSupplyTable(EResource.Lithium, 330),
   TitaniumSupply: marketplaceSupplyTable(EResource.Titanium, 1),
   PlatinumSupply: marketplaceSupplyTable(EResource.Platinum, 1),
   IridiumSupply: marketplaceSupplyTable(EResource.Iridium, 1),
-  IronPlateSupply: marketplaceSupplyTable(EResource.IronPlate, 1e2),
-  AlloySupply: marketplaceSupplyTable(EResource.Alloy, 1e2),
-  PVCellSupply: marketplaceSupplyTable(EResource.PVCell, 1e2),
+  IronPlateSupply: marketplaceSupplyTable(EResource.IronPlate, 137),
+  AlloySupply: marketplaceSupplyTable(EResource.Alloy, 137),
+  PVCellSupply: marketplaceSupplyTable(EResource.PVCell, 137),
 
   MarketplaceConfig: {
     keys: [],
