@@ -131,8 +131,8 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         shardAsteroidSpawnOffset: 25n,
         // limit shard asteroids to <maxShardAsteroids>
         maxShardAsteroids: 10n,
-        shardAsteroidPoints: 100n * BigInt(SCALE),
-        shardAsteroidLifeSpan: 16n * 60n * 60n,
+        shardAsteroidPoints: 50n * BigInt(SCALE),
+        shardAsteroidLifeSpan: 8n * 60n * 60n,
         shardAsteroidEncryption: 1500n * BigInt(SCALE),
         shardAsteroidEncryptionRegen: BigInt(Math.round(0.0336 * SCALE)),
       },
