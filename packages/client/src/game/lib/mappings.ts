@@ -58,7 +58,7 @@ export const EntityTypetoBuildingSprites: Record<Entity, Sprites[]> = {
 
   [EntityType.CopperMine]: [Sprites.CopperMine1, Sprites.CopperMine2, Sprites.CopperMine3],
 
-  [EntityType.LithiumMine]: [Sprites.LithiumMine1],
+  [EntityType.LithiumMine]: [Sprites.LithiumMine1, Sprites.LithiumMine2, Sprites.LithiumMine3],
 
   [EntityType.KimberliteMine]: [Sprites.KimberliteMine1, Sprites.KimberliteMine2, Sprites.KimberliteMine3],
   [EntityType.IridiumMine]: [Sprites.IridiumMine1, Sprites.IridiumMine2, Sprites.IridiumMine3],
@@ -108,7 +108,7 @@ export const EntityTypeToAnimations: Record<string, (Animations | undefined)[]> 
 
   [EntityType.IronMine]: [Animations.IronMine1, Animations.IronMine2, Animations.IronMine3],
   [EntityType.CopperMine]: [Animations.CopperMine1, Animations.CopperMine2, Animations.CopperMine3],
-  [EntityType.LithiumMine]: [Animations.LithiumMine1],
+  [EntityType.LithiumMine]: [Animations.LithiumMine1, Animations.LithiumMine2, Animations.LithiumMine3],
 
   [EntityType.KimberliteMine]: [Animations.KimberliteMine1, Animations.KimberliteMine2, Animations.KimberliteMine3],
   [EntityType.IridiumMine]: [Animations.IridiumMine1, Animations.IridiumMine2, Animations.IridiumMine3],

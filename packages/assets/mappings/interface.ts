@@ -36,7 +36,7 @@ import Wormhole from "../icons/UI_WormholeBase.png?url";
 import ShardSprite from "../sprites/shard/shard.png?url";
 import Fleet from "../icons/UI_Fleet.png?url";
 import Discord from "../icons/discord.svg?url";
-import Twitter from "../icons/twitter.svg?url";
+import Twitter from "../icons/x-twitter.svg?url";
 export const InterfaceIcons = {
   Add,
   Alliance,

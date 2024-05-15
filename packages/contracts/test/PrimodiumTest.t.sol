@@ -418,10 +418,10 @@ contract PrimodiumTest is MudTest {
     if (ResourceCount.get(asteroidEntity, uint8(EResource.U_MaxFleets)) == 0) {
       increaseProduction(asteroidEntity, EResource.U_MaxFleets, 1);
     }
-    setupCreateFleetNoMaxMovesGranted(player, asteroidEntity, unitCounts, resourceCounts);
+    setupCreateFleetNoMaxFleetsGranted(player, asteroidEntity, unitCounts, resourceCounts);
   }
 
-  function setupCreateFleetNoMaxMovesGranted(
+  function setupCreateFleetNoMaxFleetsGranted(
     address player,
     bytes32 asteroidEntity,
     uint256[] memory unitCounts,
