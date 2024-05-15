@@ -1,13 +1,14 @@
 import { useMud } from "@/hooks";
 import { forfeit } from "@/network/setup/contractCalls/forfeit";
 import { ReactNode, useState } from "react";
-import { FaDiscord, FaExclamationTriangle, FaTwitter } from "react-icons/fa";
+import { FaDiscord, FaExclamationTriangle } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
 import { AccountSettings } from "./AccountSettings";
 import { AudioSettings } from "./AudioSettings";
 import { GeneralSettings } from "./GeneralSettings";
+import { FaXTwitter } from "react-icons/fa6";
 
 const params = new URLSearchParams(window.location.search);
 
@@ -106,7 +107,7 @@ export const Settings = () => {
             className="text-sm inline-block hover:text-gray-300"
             rel="noreferrer"
           >
-            <LinkIcon icon={<FaTwitter size="24" />} />
+            <LinkIcon icon={<FaXTwitter size="24" />} />
           </a>
         </div>
       </Navigator.Screen>
