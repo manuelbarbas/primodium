@@ -595,7 +595,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       unitType: EntityType.MinutemanMarine,
       unitCount: 12n,
       description:
-        "Minutemen are expendable offensive units that are trained quickly, move very fast, and carry good amounts of cargo. To train, click on a workshop and select Train Units.",
+        "Minutemen are expendable offensive units that are trained quickly, move very fast, and provide an efficient cargo ability per housing required. To train, click on a workshop and select Train Units.",
     },
   ],
   [
@@ -688,7 +688,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.TrainAnvilDrone],
       unitCount: 12n,
       description:
-        "Upgrade a drone factory to Level 8 to unlock the ability to build Aegis drones. Aegis drones are robust specialized defensive units. They require more housing.",
+        "Upgrade a drone factory to Level 8 to unlock the ability to build Aegis drones. Aegis drones are robust specialized defensive units. They occupy more housing than any other unit.",
     },
   ],
   [
@@ -701,7 +701,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       unitType: EntityType.StingerDrone,
       unitCount: 12n,
       description:
-        "Upgrade a drone factory to Level 8 to unlock the ability to build Stinger drones. Stinger drones are powerful specialized assault units. They require more housing.",
+        "Upgrade a drone factory to Level 8 to unlock the ability to build Stinger drones. Stinger drones are powerful specialized assault units. They occupy more housing than any other unit.",
     },
   ],
 
@@ -774,7 +774,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.StorageUnit,
       level: 2n,
       description:
-        "Upgrade a Storage Unit to increase the quantity and diversity of resources your asteroid can hold. To upgrade, clock on a Storage Unit and select Upgrade.",
+        "Upgrade a Storage Unit to increase the quantity and diversity of resources your asteroid can hold. To upgrade, click on a Storage Unit and select Upgrade.",
     },
   ],
   [
