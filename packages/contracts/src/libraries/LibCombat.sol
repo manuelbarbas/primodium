@@ -335,10 +335,10 @@ library LibCombat {
   function getCooldownTime(uint256 attackVal, bool withDecryption) internal view returns (uint256 time) {
     time = withDecryption ? P_ColonyShipConfig.getCooldownExtension() : 0;
     attackVal = attackVal / 1e18;
-    if (attackVal <= 20000) time += (attackVal * 24) / 10000;
+    if (attackVal <= 20000) time += (attackVal * 11) / 10000;
     else {
-      int128 divided = Math.add(Math.divu(attackVal, 7500), Math.fromUInt(1));
-      time += Math.mulu(Math.log_2(divided), 27);
+      int128 divided = Math.add(Math.divu(attackVal, 100000), Math.fromUInt(1));
+      time += Math.mulu(Math.log_2(divided), 60) + 7;
     }
     time *= 60;
     return (time * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
