@@ -94,6 +94,8 @@ export enum Animations {
 
   // EXPLODE
   ShardExplosionDefault = "vfx/shard-explosion",
+  Upgrade1x1 = "vfx/upgrade/1x1",
+  Upgrade3x3 = "vfx/upgrade/3x3",
 }
 
 export type AnimationKeys = keyof typeof Animations;

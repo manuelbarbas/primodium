@@ -658,4 +658,22 @@ export const AnimationConfig = [
     prefix: "vfx/shard-explosion/default/Shard_Explosion_Default",
     suffix: ".png",
   },
+  {
+    key: "vfx/upgrade/1x1",
+    assetKey: "vfx-atlas",
+    frameRate: 10,
+    startFrame: 1,
+    endFrame: 18,
+    prefix: "vfx/upgrade/1x1/Upgrade1x1_",
+    suffix: ".png",
+  },
+  {
+    key: "vfx/upgrade/3x3",
+    assetKey: "vfx-atlas",
+    frameRate: 10,
+    startFrame: 1,
+    endFrame: 18,
+    prefix: "vfx/upgrade/3x3/Upgrade3x3_",
+    suffix: ".png",
+  },
 ];

@@ -69,11 +69,11 @@ export const renderBuilding = (scene: PrimodiumScene) => {
       }
     }
 
-    const render = ({ entity }: { entity: Entity }) => {
+    const render = ({ entity, showLevelAnimation = false }: { entity: Entity; showLevelAnimation?: boolean }) => {
       if (objects.building.has(entity)) {
         const building = objects.building.get(entity);
         if (!building) return;
-        building.setLevel(components.Level.get(entity)?.value ?? 1n);
+        building.setLevel(components.Level.get(entity)?.value ?? 1n, !showLevelAnimation);
         building.setActive(components.IsActive.get(entity)?.value ?? true);
 
         // at this point, we might be moving a building, so update its position
@@ -82,9 +82,9 @@ export const renderBuilding = (scene: PrimodiumScene) => {
         if (!origin || !buildingPrototype) return;
         const tileCoord = getBuildingBottomLeft(origin, buildingPrototype);
         building.setCoordPosition(tileCoord);
-        building.setDepth(DepthLayers.Building - tileCoord.y);
+        building.setDepth(DepthLayers.Building - tileCoord.y * 5);
         // trigger anim since the building was just moved
-        building.triggerPlacementAnim();
+        if (!showLevelAnimation) building.triggerPlacementAnim();
 
         return;
       }
@@ -122,7 +122,7 @@ export const renderBuilding = (scene: PrimodiumScene) => {
       const tilePosition = getBuildingBottomLeft(origin, buildingType);
 
       const building = new Building({ id: entity, scene, buildingType, coord: tilePosition })
-        .setLevel(components.Level.get(entity)?.value ?? 1n)
+        .setLevel(components.Level.get(entity)?.value ?? 1n, true)
         .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
           if (pointer.getDuration() > 250 || isDomInteraction(pointer, "up")) return;
           components.SelectedBuilding.set({
@@ -170,7 +170,9 @@ export const renderBuilding = (scene: PrimodiumScene) => {
     });
 
     defineEnterSystem(spectateWorld, positionQuery, render);
-    defineUpdateSystem(spectateWorld, positionQuery, render);
+    defineUpdateSystem(spectateWorld, positionQuery, ({ entity, component }) =>
+      render({ entity, showLevelAnimation: component.id === components.Level.id })
+    );
 
     defineExitSystem(spectateWorld, positionQuery, ({ entity }) => {
       const building = objects.building.get(entity);
