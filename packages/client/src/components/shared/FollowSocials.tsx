@@ -5,7 +5,7 @@ import { components } from "@/network/components";
 import { ObjectiveEntityLookup } from "@/util/constants";
 import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 import { EObjectives } from "contracts/config/enums";
-import { FaDiscord, FaTwitter } from "react-icons/fa6";
+import { FaDiscord, FaXTwitter } from "react-icons/fa6";
 import { Hex } from "viem";
 
 export const FollowSocials = () => {
@@ -41,7 +41,7 @@ export const FollowSocials = () => {
             className="h-16 w-16 hover:scale-105"
             onClick={handleTwitterClick}
           >
-            <FaTwitter className="w-10 h-10" />
+            <FaXTwitter className="w-10 h-10" />
           </Button>
         </GlassCard>
       )}
