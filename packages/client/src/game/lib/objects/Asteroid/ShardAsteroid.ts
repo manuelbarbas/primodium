@@ -1,10 +1,10 @@
 import { Coord } from "engine/types";
 import { PrimodiumScene } from "@/game/api/scene";
 import { BaseAsteroid } from "./BaseAsteroid";
-import { Sprites } from "@primodiumxyz/assets";
 import { DepthLayers } from "@/game/lib/constants/common";
 import { Entity } from "@latticexyz/recs";
 import { LODs } from "@/game/lib/objects/Asteroid/helpers";
+import { Animations, Sprites } from "@primodiumxyz/assets";
 
 export class ShardAsteroid extends BaseAsteroid {
   constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord }) {
@@ -37,7 +37,10 @@ export class ShardAsteroid extends BaseAsteroid {
     return 0;
   }
 
-  // setRelationship(relationship: AsteroidRelationship) {
-  //   this.outlineSprite.setTexture(getSecondaryOutlineSprite(relationship, 1n));
-  // }
+  explode() {
+    console.log("ShardAsteroid.explode");
+    const animation = Animations.ShardExplosionDefault;
+    this.asteroidSprite.anims.stop();
+    this.asteroidSprite.play(animation);
+  }
 }

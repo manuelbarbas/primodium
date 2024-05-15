@@ -11,6 +11,8 @@ import { claimShardAsteroid } from "@/network/setup/contractCalls/claimPrimodium
 import { formatResourceCount, formatTime } from "@/util/number";
 import { useShardAsteroid } from "@/hooks/primodium/useShardAsteroid";
 import { useMud } from "@/hooks/useMud";
+import { useGame } from "@/hooks/useGame";
+import { ShardAsteroid } from "@/game/lib/objects/Asteroid/ShardAsteroid";
 
 export const ShardButton: React.FC<{ shardEntity: Entity }> = ({ shardEntity }) => {
   const mud = useMud();
@@ -31,8 +33,8 @@ export const ShardButton: React.FC<{ shardEntity: Entity }> = ({ shardEntity }) 
           <div className="flex flex-start px-1 gap-3 w-full">
             <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Attack} />
             <div className="flex flex-col items-start">
-              <p>EXPLOSION IMINENT</p>
-              <p className="block text-xs opacity-75">EXPLOSION IN T-{formatTime(shardData.timeUntilExplode)}</p>
+              <p>EXPLOSION IMMINENT</p>
+              <p className="block text-xs opacity-75">{formatTime(shardData.timeUntilExplode)}</p>
             </div>
           </div>
         </Button>
@@ -90,10 +92,16 @@ export const InitialScreen = ({ selectedRock }: { selectedRock: Entity }) => {
   const ownedBy = components.OwnedBy.use(selectedRock)?.value;
   const selectedAsteroid = components.SelectedRock.use()?.value;
   const isShard = components.ShardAsteroid.use(selectedRock)?.isShardAsteroid;
+  const game = useGame();
 
+  const onClick = () => {
+    const shardObject = game.STARMAP.objects.asteroid.get(selectedRock) as ShardAsteroid;
+    shardObject.explode();
+  };
   return (
     <Navigator.Screen title="initial" className="gap-2">
       {isShard && <ShardButton shardEntity={selectedRock} />}
+      {isShard && <Button onClick={onClick}>explode</Button>}
       <Navigator.NavButton
         to="travel"
         size="content"

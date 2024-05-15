@@ -1,0 +1,1678 @@
+{
+    "meta": {
+        "app": "",
+        "version": "1.0.0"
+    },
+    "textures": [
+        {
+            "image": "atlas.png?timestamp=1715792213939",
+            "format": "RGBA8888",
+            "size": {
+                "w": 3420,
+                "h": 3322
+            },
+            "scale": 1,
+            "frames": [
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default1.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default10.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 0,
+                        "y": 445,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default11.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 570,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default12.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 570,
+                        "y": 445,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default13.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 0,
+                        "y": 890,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default14.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 570,
+                        "y": 890,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default15.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 1140,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default16.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 1140,
+                        "y": 445,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default17.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 1140,
+                        "y": 890,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default18.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 0,
+                        "y": 1335,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default19.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 570,
+                        "y": 1335,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default2.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 1140,
+                        "y": 1335,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default20.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 1710,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default21.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 1710,
+                        "y": 445,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default22.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 1710,
+                        "y": 890,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default23.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 1710,
+                        "y": 1335,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default24.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 0,
+                        "y": 1780,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default25.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 570,
+                        "y": 1780,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default26.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 1140,
+                        "y": 1780,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default27.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 1710,
+                        "y": 1780,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default28.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 0,
+                        "y": 2225,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default29.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 570,
+                        "y": 2225,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default3.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 1140,
+                        "y": 2225,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default30.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 1710,
+                        "y": 2225,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default31.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 2280,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default32.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 2280,
+                        "y": 445,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default33.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 2280,
+                        "y": 890,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default34.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 2280,
+                        "y": 1335,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default35.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 2280,
+                        "y": 1780,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default36.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 2280,
+                        "y": 2225,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default37.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 0,
+                        "y": 2670,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default38.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 570,
+                        "y": 2670,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default39.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 1140,
+                        "y": 2670,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default4.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 1710,
+                        "y": 2670,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default40.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 2280,
+                        "y": 2670,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default41.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 2850,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default42.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 2850,
+                        "y": 445,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default5.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 2850,
+                        "y": 890,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default6.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 2850,
+                        "y": 1335,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default7.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 2850,
+                        "y": 1780,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default8.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 2850,
+                        "y": 2225,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/shard-explosion/default/Shard_Explosion_Default9.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 570,
+                        "h": 445
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 570,
+                        "h": 445
+                    },
+                    "frame": {
+                        "x": 2850,
+                        "y": 2670,
+                        "w": 570,
+                        "h": 445
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/3x3/Upgrade3x3_1.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 147,
+                        "h": 182
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 147,
+                        "h": 182
+                    },
+                    "frame": {
+                        "x": 0,
+                        "y": 3115,
+                        "w": 147,
+                        "h": 182
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/3x3/Upgrade3x3_10.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 147,
+                        "h": 182
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 147,
+                        "h": 182
+                    },
+                    "frame": {
+                        "x": 147,
+                        "y": 3115,
+                        "w": 147,
+                        "h": 182
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/3x3/Upgrade3x3_11.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 147,
+                        "h": 182
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 147,
+                        "h": 182
+                    },
+                    "frame": {
+                        "x": 294,
+                        "y": 3115,
+                        "w": 147,
+                        "h": 182
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/3x3/Upgrade3x3_12.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 147,
+                        "h": 182
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 147,
+                        "h": 182
+                    },
+                    "frame": {
+                        "x": 441,
+                        "y": 3115,
+                        "w": 147,
+                        "h": 182
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/3x3/Upgrade3x3_13.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 147,
+                        "h": 182
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 147,
+                        "h": 182
+                    },
+                    "frame": {
+                        "x": 588,
+                        "y": 3115,
+                        "w": 147,
+                        "h": 182
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/3x3/Upgrade3x3_14.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 147,
+                        "h": 182
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 147,
+                        "h": 182
+                    },
+                    "frame": {
+                        "x": 735,
+                        "y": 3115,
+                        "w": 147,
+                        "h": 182
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/3x3/Upgrade3x3_15.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 147,
+                        "h": 182
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 147,
+                        "h": 182
+                    },
+                    "frame": {
+                        "x": 882,
+                        "y": 3115,
+                        "w": 147,
+                        "h": 182
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/3x3/Upgrade3x3_16.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 147,
+                        "h": 182
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 147,
+                        "h": 182
+                    },
+                    "frame": {
+                        "x": 1029,
+                        "y": 3115,
+                        "w": 147,
+                        "h": 182
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/3x3/Upgrade3x3_17.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 147,
+                        "h": 182
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 147,
+                        "h": 182
+                    },
+                    "frame": {
+                        "x": 1176,
+                        "y": 3115,
+                        "w": 147,
+                        "h": 182
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/3x3/Upgrade3x3_18.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 147,
+                        "h": 182
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 147,
+                        "h": 182
+                    },
+                    "frame": {
+                        "x": 1323,
+                        "y": 3115,
+                        "w": 147,
+                        "h": 182
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/3x3/Upgrade3x3_2.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 147,
+                        "h": 182
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 147,
+                        "h": 182
+                    },
+                    "frame": {
+                        "x": 1470,
+                        "y": 3115,
+                        "w": 147,
+                        "h": 182
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/3x3/Upgrade3x3_3.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 147,
+                        "h": 182
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 147,
+                        "h": 182
+                    },
+                    "frame": {
+                        "x": 1617,
+                        "y": 3115,
+                        "w": 147,
+                        "h": 182
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/3x3/Upgrade3x3_4.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 147,
+                        "h": 182
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 147,
+                        "h": 182
+                    },
+                    "frame": {
+                        "x": 1764,
+                        "y": 3115,
+                        "w": 147,
+                        "h": 182
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/3x3/Upgrade3x3_5.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 147,
+                        "h": 182
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 147,
+                        "h": 182
+                    },
+                    "frame": {
+                        "x": 1911,
+                        "y": 3115,
+                        "w": 147,
+                        "h": 182
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/3x3/Upgrade3x3_6.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 147,
+                        "h": 182
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 147,
+                        "h": 182
+                    },
+                    "frame": {
+                        "x": 2058,
+                        "y": 3115,
+                        "w": 147,
+                        "h": 182
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/3x3/Upgrade3x3_7.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 147,
+                        "h": 182
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 147,
+                        "h": 182
+                    },
+                    "frame": {
+                        "x": 2205,
+                        "y": 3115,
+                        "w": 147,
+                        "h": 182
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/3x3/Upgrade3x3_8.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 147,
+                        "h": 182
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 147,
+                        "h": 182
+                    },
+                    "frame": {
+                        "x": 2352,
+                        "y": 3115,
+                        "w": 147,
+                        "h": 182
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/3x3/Upgrade3x3_9.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 147,
+                        "h": 182
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 147,
+                        "h": 182
+                    },
+                    "frame": {
+                        "x": 2499,
+                        "y": 3115,
+                        "w": 147,
+                        "h": 182
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/1x1/Upgrade1x1_1.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 69
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 69
+                    },
+                    "frame": {
+                        "x": 2646,
+                        "y": 3115,
+                        "w": 96,
+                        "h": 69
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/1x1/Upgrade1x1_10.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 69
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 69
+                    },
+                    "frame": {
+                        "x": 2646,
+                        "y": 3184,
+                        "w": 96,
+                        "h": 69
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/1x1/Upgrade1x1_11.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 69
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 69
+                    },
+                    "frame": {
+                        "x": 2742,
+                        "y": 3115,
+                        "w": 96,
+                        "h": 69
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/1x1/Upgrade1x1_12.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 69
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 69
+                    },
+                    "frame": {
+                        "x": 2742,
+                        "y": 3184,
+                        "w": 96,
+                        "h": 69
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/1x1/Upgrade1x1_13.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 69
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 69
+                    },
+                    "frame": {
+                        "x": 2838,
+                        "y": 3115,
+                        "w": 96,
+                        "h": 69
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/1x1/Upgrade1x1_14.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 69
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 69
+                    },
+                    "frame": {
+                        "x": 2838,
+                        "y": 3184,
+                        "w": 96,
+                        "h": 69
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/1x1/Upgrade1x1_15.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 69
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 69
+                    },
+                    "frame": {
+                        "x": 2934,
+                        "y": 3115,
+                        "w": 96,
+                        "h": 69
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/1x1/Upgrade1x1_16.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 69
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 69
+                    },
+                    "frame": {
+                        "x": 2934,
+                        "y": 3184,
+                        "w": 96,
+                        "h": 69
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/1x1/Upgrade1x1_17.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 69
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 69
+                    },
+                    "frame": {
+                        "x": 3030,
+                        "y": 3115,
+                        "w": 96,
+                        "h": 69
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/1x1/Upgrade1x1_18.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 69
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 69
+                    },
+                    "frame": {
+                        "x": 3030,
+                        "y": 3184,
+                        "w": 96,
+                        "h": 69
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/1x1/Upgrade1x1_19.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 69
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 69
+                    },
+                    "frame": {
+                        "x": 3126,
+                        "y": 3115,
+                        "w": 96,
+                        "h": 69
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/1x1/Upgrade1x1_2.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 69
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 69
+                    },
+                    "frame": {
+                        "x": 3126,
+                        "y": 3184,
+                        "w": 96,
+                        "h": 69
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/1x1/Upgrade1x1_3.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 69
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 69
+                    },
+                    "frame": {
+                        "x": 3222,
+                        "y": 3115,
+                        "w": 96,
+                        "h": 69
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/1x1/Upgrade1x1_4.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 69
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 69
+                    },
+                    "frame": {
+                        "x": 3318,
+                        "y": 3115,
+                        "w": 96,
+                        "h": 69
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/1x1/Upgrade1x1_5.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 69
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 69
+                    },
+                    "frame": {
+                        "x": 3222,
+                        "y": 3184,
+                        "w": 96,
+                        "h": 69
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/1x1/Upgrade1x1_6.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 69
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 69
+                    },
+                    "frame": {
+                        "x": 3318,
+                        "y": 3184,
+                        "w": 96,
+                        "h": 69
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/1x1/Upgrade1x1_7.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 69
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 69
+                    },
+                    "frame": {
+                        "x": 2646,
+                        "y": 3253,
+                        "w": 96,
+                        "h": 69
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/1x1/Upgrade1x1_8.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 69
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 69
+                    },
+                    "frame": {
+                        "x": 2742,
+                        "y": 3253,
+                        "w": 96,
+                        "h": 69
+                    }
+                },
+                {
+                    "filename": "vfx/upgrade/1x1/Upgrade1x1_9.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 69
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 69
+                    },
+                    "frame": {
+                        "x": 2838,
+                        "y": 3253,
+                        "w": 96,
+                        "h": 69
+                    }
+                }
+            ]
+        }
+    ]
+}
