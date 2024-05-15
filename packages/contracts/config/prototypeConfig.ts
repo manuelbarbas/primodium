@@ -25,7 +25,7 @@ import encodeBytes32, { encodeAddress } from "./util/encodeBytes32";
 
 const maxRange = { xBounds: 37, yBounds: 25 };
 
-const colonySlotsConfigResourceValues = getResourceValues({ Copper: 10000, Lithium: 5000 }); // Order impacts Installment payment index
+const colonySlotsConfigResourceValues = getResourceValues({ IronPlate: 1000, Alloy: 1000, PVCell: 1000 }); // Order impacts Installment payment index
 
 export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = {
   /* ---------------------------------- World --------------------------------- */
@@ -2094,7 +2094,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_ColonySlotsConfig: {
         resources: colonySlotsConfigResourceValues.resources, // Order impacts Installment payment index
         amounts: colonySlotsConfigResourceValues.amounts,
-        multiplier: 4n,
+        multiplier: 3n,
       },
     },
   },
