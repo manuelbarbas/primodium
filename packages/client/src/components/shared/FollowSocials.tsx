@@ -33,28 +33,28 @@ export const FollowSocials = () => {
   return (
     <div className="flex flex-row gap-2 ml-4 z-10 pointer-events-auto">
       {!twitterFollowed && (
-        <GlassCard direction="top" className="p-2">
+        <GlassCard direction="top" className="p-0">
           <Button
-            tooltip="Follow our Twitter"
+            tooltip="Follow&nbsp;our&nbsp;Twitter"
             variant="ghost"
-            size="md"
+            size="sm"
             className="h-16 w-16 hover:scale-105"
             onClick={handleTwitterClick}
           >
-            <FaXTwitter className="w-10 h-10" />
+            <FaXTwitter className="w-8 h-8" />
           </Button>
         </GlassCard>
       )}
       {!discordFollowed && (
-        <GlassCard direction="top" className="p-2">
+        <GlassCard direction="top" className="p-0">
           <Button
             variant="ghost"
-            size="md"
-            tooltip="Join our Discord"
-            className="rounded-t-lg h-16 w-16 hover:scale-105"
+            size="sm"
+            tooltip="Join&nbsp;our&nbsp;Discord"
+            className="h-16 w-16 hover:scale-105"
             onClick={handleDiscordClick}
           >
-            <FaDiscord className="w-10 h-10" />
+            <FaDiscord className="w-8 h-8" />
           </Button>
         </GlassCard>
       )}
