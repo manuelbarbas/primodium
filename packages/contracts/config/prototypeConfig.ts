@@ -162,12 +162,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       7: {
         P_RequiredUpgradeResources: getResourceValues({ Iron: 25000, Copper: 25000, Lithium: 25000, Kimberlite: 3000 }),
         Dimensions: { width: 31, height: 21 },
-        P_RequiredBaseLevel: { value: 13n },
+        P_RequiredBaseLevel: { value: 14n },
       },
       8: {
         P_RequiredUpgradeResources: getResourceValues({ Iron: 60000, Copper: 60000, Lithium: 60000, Kimberlite: 5000 }),
         Dimensions: { width: maxRange.xBounds, height: maxRange.yBounds },
-        P_RequiredBaseLevel: { value: 13n },
+        P_RequiredBaseLevel: { value: 15n },
       },
     },
   },
