@@ -38,7 +38,8 @@ export const FollowSocials = () => {
             tooltip="Follow&nbsp;our&nbsp;Twitter"
             variant="ghost"
             size="sm"
-            className="h-16 w-16 hover:scale-105"
+            className="h-16 w-16 hover:scale-105 rounded-tl-xl rounded-tr-xl"
+            motion="disabled"
             onClick={handleTwitterClick}
           >
             <FaXTwitter className="w-8 h-8" />
@@ -51,7 +52,8 @@ export const FollowSocials = () => {
             variant="ghost"
             size="sm"
             tooltip="Join&nbsp;our&nbsp;Discord"
-            className="h-16 w-16 hover:scale-105"
+            className="h-16 w-16 hover:scale-105 rounded-tl-xl rounded-tr-xl"
+            motion="disabled"
             onClick={handleDiscordClick}
           >
             <FaDiscord className="w-8 h-8" />
