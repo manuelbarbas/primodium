@@ -1,5 +1,4 @@
 import { Button } from "@/components/core/Button";
-import { GlassCard } from "@/components/core/Card";
 import { useMud } from "@/hooks";
 import { components } from "@/network/components";
 import { ObjectiveEntityLookup } from "@/util/constants";
@@ -31,34 +30,30 @@ export const FollowSocials = () => {
 
   if (twitterFollowed && discordFollowed) return null;
   return (
-    <div className="flex flex-row gap-2 ml-4 z-10 pointer-events-auto">
+    <div className="flex flex-row gap-2 ml-2 z-10 pointer-events-auto">
       {!twitterFollowed && (
-        <GlassCard direction="top" className="p-0">
-          <Button
-            tooltip="Follow&nbsp;our&nbsp;Twitter"
-            variant="ghost"
-            size="sm"
-            className="h-16 w-16 hover:scale-105 rounded-tl-xl rounded-tr-xl"
-            motion="disabled"
-            onClick={handleTwitterClick}
-          >
-            <FaXTwitter className="w-8 h-8" />
-          </Button>
-        </GlassCard>
+        <Button
+          tooltip="Follow&nbsp;our&nbsp;Twitter"
+          variant="ghost"
+          size="sm"
+          className="h-12 w-12 hover:scale-105 rounded-tl-xl rounded-tr-xl"
+          motion="disabled"
+          onClick={handleTwitterClick}
+        >
+          <FaXTwitter className="w-6 h-6" />
+        </Button>
       )}
       {!discordFollowed && (
-        <GlassCard direction="top" className="p-0">
-          <Button
-            variant="ghost"
-            size="sm"
-            tooltip="Join&nbsp;our&nbsp;Discord"
-            className="h-16 w-16 hover:scale-105 rounded-tl-xl rounded-tr-xl"
-            motion="disabled"
-            onClick={handleDiscordClick}
-          >
-            <FaDiscord className="w-8 h-8" />
-          </Button>
-        </GlassCard>
+        <Button
+          variant="ghost"
+          size="sm"
+          tooltip="Join&nbsp;our&nbsp;Discord"
+          className="h-12 w-12 hover:scale-105 rounded-tl-xl rounded-tr-xl"
+          motion="disabled"
+          onClick={handleDiscordClick}
+        >
+          <FaDiscord className="w-6 h-6" />
+        </Button>
       )}
     </div>
   );
