@@ -22,7 +22,7 @@ import { EResource } from "contracts/config/enums";
 import { getEntityTypeName } from "src/util/common";
 import { getFleetStatsFromUnits } from "src/util/unit";
 import { Hex } from "viem";
-import { FaExclamationTriangle } from "react-icons/fa";
+import { FaExclamationTriangle, FaInfoCircle } from "react-icons/fa";
 import { getPlayerOwner } from "@/hooks/usePlayerOwner";
 
 export const TransferPane = (props: {
@@ -158,7 +158,7 @@ export const _TransferPane = (props: {
           className="grid grid-rows-[1fr_1.5fr] gap-2 w-full h-full relative"
         >
           {(!left || !right) && (
-            <div className="absolute top-0 left-0 w-full h-full grid place-items-center text-center text-warning bg-black/70 z-30">
+            <div className="absolute top-0 left-0 w-full h-full grid place-items-center text-center text-warning bg-black/70 z-20">
               <p className="w-3/4">Select a fleet or asteroid to trade with</p>
             </div>
           )}
@@ -226,17 +226,21 @@ export const _TransferPane = (props: {
             )}
           </SecondaryCard>
         </TransactionQueueMask>
-        <Button
-          onClick={() => {
-            if (props.side === "left") {
-              setLeft(undefined);
-            } else {
-              setRight(undefined);
-            }
-          }}
-        >
-          back
-        </Button>
+        <div className="relative grid grid-cols-8 w-full gap-1">
+          <Button
+            className="col-span-7"
+            onClick={() => {
+              if (props.side === "left") {
+                setLeft(undefined);
+              } else {
+                setRight(undefined);
+              }
+            }}
+          >
+            back
+          </Button>
+          <Hints />
+        </div>
       </div>
     </Card>
   );
@@ -261,8 +265,8 @@ const checkErrors = ({
 }) => {
   if (!asteroid) return { disabled: true, submitMessage: "No asteroid selected" };
   const isFleet = entity === "newFleet" || components.IsFleet.has(entity as Entity);
+  if (entity === "newFleet" && unitCounts.size === 0) return { disabled: true, submitMessage: "No units" };
   if (isFleet) {
-    if (unitCounts.size === 0) return { disabled: true, submitMessage: "No units" };
     const owner = (entity !== "newFleet" ? components.OwnedBy.get(entity)?.value : undefined) as Entity | undefined;
     const capacity = getFleetStatsFromUnits(unitCounts, owner).cargo;
     const cargo = [...resourceCounts.entries()].reduce((acc, [, count]) => acc + count, 0n);
@@ -315,4 +319,44 @@ const checkErrors = ({
       };
   }
   return { disabled: false, submitMessage: "" };
+};
+
+const Hints = () => {
+  return (
+    <div className="absolute right-0 flex items-center text-xs z-50">
+      <div className="dropdown dropdown-top">
+        <label tabIndex={0} className="btn btn-circle btn-ghost btn-xs">
+          <FaInfoCircle size={16} />
+        </label>
+        <div
+          tabIndex={0}
+          className="absolute card compact dropdown-content z-[1] shadow bg-base-100 w-60 p-2 m-1 border border-secondary gap-1 right-0"
+        >
+          <div>
+            <p className="text-accent">To select a fleet/resource</p>
+            <p>
+              <span className="opacity-70">Left click:</span> select all
+            </p>
+            <p>
+              <span className="opacity-70">Right click:</span> select one
+            </p>
+          </div>
+          <hr className="opacity-70" />
+
+          <div>
+            <p className="text-accent">While selected</p>
+            <p>
+              <span className="opacity-70">Left click:</span> drop all
+            </p>
+            <p>
+              <span className="opacity-70">Right click:</span> drop one
+            </p>
+            <p>
+              <span className="opacity-70">Arrow keys:</span> change amount to move
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };

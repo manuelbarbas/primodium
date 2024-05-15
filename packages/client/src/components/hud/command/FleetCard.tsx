@@ -1,5 +1,4 @@
 import { Tooltip } from "@/components/core/Tooltip";
-import { useMud } from "@/hooks";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EFleetStance } from "contracts/config/enums";
@@ -23,16 +22,15 @@ type FleetCardProps = {
   stats: ReturnType<typeof getFleetStats>;
   cooldown?: bigint;
   grace?: bigint;
+  hostile?: boolean;
 };
 
 const filter =
   "invert(17%) sepia(70%) saturate(605%) hue-rotate(260deg) brightness(101%) contrast(111%) drop-shadow(1px 0px 0px #FF3232) drop-shadow(-1px  0px 0px #FF3232) drop-shadow( 0px  1px 0px #FF3232) drop-shadow( 0px -1px 0px #FF3232)";
 export const _FleetCard: React.FC<FleetCardProps> = (props) => {
-  const { stats, destination, grace, cooldown, home: ownerAsteroid, stance: fleetStateText } = props;
+  const { hostile, stats, destination, grace, cooldown, home: ownerAsteroid, stance: fleetStateText } = props;
 
   const ownerPlayer = components.OwnedBy.use(ownerAsteroid)?.value as Entity | undefined;
-  const playerEntity = useMud().playerAccount.entity;
-  const friendly = ownerPlayer === playerEntity;
 
   return (
     <SecondaryCard className="w-full gap-1">
@@ -40,7 +38,7 @@ export const _FleetCard: React.FC<FleetCardProps> = (props) => {
         <div className="text-sm font-bold uppercase flex flex-col">
           <p>
             {stats.title}
-            {!friendly && <span className="bg-error ml-1 text-[0.6rem] uppercase px-1">hostile</span>}
+            {hostile && <span className="bg-error ml-1 text-[0.6rem] uppercase px-1">hostile</span>}
           </p>
           {ownerAsteroid && (
             <Tooltip content={`Controlled by ${ownerPlayer}`}>
@@ -60,7 +58,7 @@ export const _FleetCard: React.FC<FleetCardProps> = (props) => {
       <div className="flex flex-col text-xs"></div>
       <div className="grid grid-cols-2">
         <div className="flex flex-col gap-2 justify-center items-center">
-          <img src={InterfaceIcons.Fleet} className="h-3/4" style={!friendly ? { filter } : {}} />
+          <img src={InterfaceIcons.Fleet} className="h-3/4" style={hostile ? { filter } : {}} />
           {!!grace && (
             <div className="flex gap-2 text-xs items-center">
               <IconLabel imageUri={InterfaceIcons.Grace} className={`pixel-images w-3 h-3`} />
