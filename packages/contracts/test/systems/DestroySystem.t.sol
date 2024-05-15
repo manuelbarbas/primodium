@@ -8,9 +8,10 @@ import { EBuilding, EResource, EUnit } from "src/Types.sol";
 import { BuildingKey, ExpansionKey } from "src/Keys.sol";
 import { IronMinePrototypeId, MinutemanMarinePrototypeId } from "codegen/Prototypes.sol";
 
-import { Dimensions, P_RequiredResourcesData, OwnedBy, BuildingType, P_ByLevelMaxResourceUpgrades, P_RequiredBaseLevel, P_EnumToPrototype, PositionData, TilePositions, Level, Home, ProductionRate, ConsumptionRate, P_RequiredDependencyData, P_Production, P_ProductionData, P_RequiredDependency, P_ListMaxResourceUpgrades, MaxResourceCount } from "codegen/index.sol";
+import { Dimensions, P_RequiredResourcesData, OwnedBy, BuildingType, P_ByLevelMaxResourceUpgrades, P_RequiredBaseLevel, P_EnumToPrototype, PositionData, TilePositions, Level, Home, ProductionRate, ConsumptionRate, P_RequiredDependencyData, P_Production, P_ProductionData, P_RequiredDependency, P_ListMaxResourceUpgrades, MaxResourceCount, P_HasStarmapper } from "codegen/index.sol";
 
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
+import { LibBuilding } from "libraries/LibBuilding.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 
 contract DestroySystemTest is PrimodiumTest {
@@ -231,6 +232,28 @@ contract DestroySystemTest is PrimodiumTest {
       world.Primodium__destroy(buildingEntity);
       console.log("after", gas - gasleft());
     }
+  }
+
+  function testHasStarmapperIsCleared() public {
+    assertEq(P_HasStarmapper.get(Home.get(playerEntity)), false);
+
+    EBuilding building = EBuilding.Starmapper;
+    P_RequiredResourcesData memory requiredResources = getBuildCost(building);
+    provideResources(Home.get(playerEntity), requiredResources);
+    vm.startPrank(creator);
+    P_RequiredBaseLevel.set(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Starmapper)), 1, 0);
+
+    PositionData memory coord = getTilePosition(Home.get(playerEntity), building);
+
+    coord.y += 3;
+    bytes32 starmapperEntity = world.Primodium__build(EBuilding.Starmapper, coord);
+
+    assertEq(P_HasStarmapper.get(Home.get(playerEntity)), true);
+
+    world.Primodium__destroy(starmapperEntity);
+    vm.stopPrank();
+
+    assertEq(P_HasStarmapper.get(Home.get(playerEntity)), false);
   }
 
   /* TODO: Add test that includes buildings with utility dependencies */
