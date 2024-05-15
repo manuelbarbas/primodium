@@ -74,7 +74,6 @@ export class ShardAsteroid extends BaseAsteroid {
 
             const duration =
               timeElapsedPct < 0.5 ? shakeInterval : timeElapsedPct < 0.8 ? shakeInterval / 2 : shakeInterval / 4;
-            console.log({ timeElapsedPct, deltaX, deltaY, duration });
             this.scene.tweens.add({
               targets: [this.asteroidSprite, overlay],
               x: `+=${deltaX}`,
@@ -117,8 +116,7 @@ export class ShardAsteroid extends BaseAsteroid {
     this.scene.add.timeline(sequence).play();
   }
 
-  respawn(newPosition: Coord) {
-    this.getFleetContainer().clearOrbit();
+  private respawn(newPosition: Coord) {
     this.setTilePosition(newPosition);
 
     const animation = Animations.ShardExplosionDefault;
