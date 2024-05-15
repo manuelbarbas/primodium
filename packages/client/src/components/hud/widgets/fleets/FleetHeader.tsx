@@ -18,7 +18,7 @@ export const FleetHeader = (props: {
   return (
     <div className={`flex flex-col gap-1 w-full ${props.className}`}>
       <div className="flex justify-center uppercase font-bold">
-        <IconLabel imageUri={InterfaceIcons.Outgoing} className="" text={`${props.title}`} />
+        <IconLabel imageUri={InterfaceIcons.Fleet} className="" text={`${props.title}`} />
       </div>
 
       <div className="flex justify-center gap-1">

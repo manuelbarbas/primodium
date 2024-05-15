@@ -1,4 +1,4 @@
-import { deferred } from "@latticexyz/utils";
+import { deferred } from "../util/deferred";
 import { createScene as _createScene } from "./createScene";
 
 export type Scene = Awaited<ReturnType<typeof _createScene>>;
@@ -30,8 +30,8 @@ export const createSceneManager = (phaserGame: Phaser.Game) => {
     key: string,
     target: string,
     duration = 1000,
-    onTransitionStart = (originScene: Scene, targetScene: Scene) => undefined,
-    onTransitionComplete = (originScene: Scene, targetScene: Scene) => undefined,
+    onTransitionStart?: (originScene: Scene, targetScene: Scene) => void,
+    onTransitionComplete?: (originScene: Scene, targetScene: Scene) => void,
     sleep = true
   ) => {
     const [resolve, , promise] = deferred();
@@ -48,9 +48,11 @@ export const createSceneManager = (phaserGame: Phaser.Game) => {
       return;
     }
 
-    onTransitionStart(originScene, targetScene);
+    if (!originScene.phaserScene.scene.isActive() || targetScene.phaserScene.scene.isActive()) return;
 
-    scenes.get(key)?.phaserScene.scene.transition({
+    onTransitionStart?.(originScene, targetScene);
+
+    originScene?.phaserScene.scene.transition({
       target,
       // moveAbove: true,
       sleep,
@@ -62,7 +64,7 @@ export const createSceneManager = (phaserGame: Phaser.Game) => {
 
     await promise;
 
-    onTransitionComplete(originScene, targetScene);
+    onTransitionComplete?.(originScene, targetScene);
   };
 
   return {

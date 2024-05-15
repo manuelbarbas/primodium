@@ -182,7 +182,14 @@ library LibAsteroid {
   }
 
   function getSecondaryAsteroidUnitsAndEncryption(uint256 level) internal pure returns (uint256, uint256) {
-    uint256 droidCount = (4 ** level) + (10 * (level ** 2));
+    // this is a crime but wanted to preserve the const in ts without using an implicit equation, and want this to be identical.
+    uint256 droidCount = level < 3
+      ? 5
+      : level < 6
+        ? 80
+        : level < 8
+          ? 1280
+          : 20480;
     uint256 encryption = (level * 300 + 300) * 1e18;
     return (droidCount, encryption);
   }

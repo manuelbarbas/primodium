@@ -7,21 +7,20 @@ import {
   defineUpdateSystem,
   namespaceWorld,
 } from "@latticexyz/recs";
-import { Scene } from "engine/types";
-import { toast } from "react-toastify";
-import { components } from "@/network/components";
-import { buildBuilding } from "@/network/setup/contractCalls/buildBuilding";
-import { world } from "@/network/world";
-import { MUD } from "@/network/types";
-import { DepthLayers } from "@/game/lib/constants/common";
-import { Building } from "@/game/lib/objects/Building";
-import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "@/util/building";
-import { getEntityTypeName } from "@/util/common";
-import { Action, BuildingEnumLookup } from "@/util/constants";
-import { getRecipe, hasEnoughResources } from "@/util/recipe";
+import { PrimodiumScene } from "@/game/api/scene";
+import { DepthLayers } from "src/game/lib/constants/common";
+import { components } from "src/network/components";
+import { buildBuilding } from "src/network/setup/contractCalls/buildBuilding";
+import { MUD } from "src/network/types";
+import { world } from "src/network/world";
+import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "src/util/building";
+import { getEntityTypeName } from "src/util/common";
+import { Action, BuildingEnumLookup } from "src/util/constants";
+import { getRecipe, hasEnoughResources } from "src/util/recipe";
+import { Building } from "../../../lib/objects/Building";
 import { isDomInteraction } from "@/util/canvas";
 
-export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scene) => {
+export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: PrimodiumScene) => {
   if (pointer?.rightButtonDown()) {
     components.SelectedAction.remove();
     return;
@@ -37,9 +36,9 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scen
   const validPlacement = validateBuildingPlacement(tileCoord, buildingPrototype, asteroid);
 
   if (!hasEnough || !validPlacement) {
-    if (!hasEnough) toast.error("Not enough resources to build " + getEntityTypeName(buildingPrototype));
-    if (!validPlacement) toast.error("Cannot place building here");
-    scene.camera.phaserCamera.shake(200, 0.001);
+    if (!hasEnough) scene.notify("error", "Not enough resources to build " + getEntityTypeName(buildingPrototype));
+    if (!validPlacement) scene.notify("error", "Cannot place building here");
+    scene.camera.shake();
     return;
   }
 
@@ -51,7 +50,7 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Scen
   components.SelectedBuilding.remove();
 };
 
-export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
+export const renderBuildingPlacementTool = (scene: PrimodiumScene, mud: MUD) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   const query = [
@@ -77,7 +76,12 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
     const validPlacement = validateBuildingPlacement(tileCoord, buildingPrototype, asteroid);
 
     if (!placementBuilding) {
-      placementBuilding = new Building(scene, buildingPrototype, tileCoord).spawn();
+      placementBuilding = new Building({
+        id: "placementTool" as Entity,
+        scene,
+        buildingType: buildingPrototype,
+        coord: tileCoord,
+      });
 
       placementBuilding.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
         if (isDomInteraction(pointer, "down")) return;
@@ -90,11 +94,8 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
       .setCoordPosition({ x: tileCoord.x, y: tileCoord.y - buildingDimensions.height + 1 })
       .setAlpha(0.9)
       .clearOutline()
-      .setOrigin(0, 1);
-
-    placementBuilding.setDepth(
-      validPlacement ? DepthLayers.Building - tileCoord.y + buildingDimensions.height : DepthLayers.Building
-    );
+      .setOrigin(0, 1)
+      .setDepth(validPlacement ? DepthLayers.Building - tileCoord.y + buildingDimensions.height : DepthLayers.Building);
 
     if (hasEnough && validPlacement) {
       placementBuilding.setTint(0xffffff).setOutline(0xffff00, 3);
@@ -112,7 +113,7 @@ export const renderBuildingPlacementTool = (scene: Scene, mud: MUD) => {
   defineUpdateSystem(systemsWorld, query, render);
 
   defineExitSystem(systemsWorld, query, () => {
-    placementBuilding?.dispose();
+    placementBuilding?.destroy();
     placementBuilding = undefined;
   });
 };

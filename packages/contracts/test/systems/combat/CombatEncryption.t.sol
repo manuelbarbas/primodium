@@ -92,14 +92,18 @@ contract CombatEncryptionTest is PrimodiumTest {
     increaseResource(bobHomeAsteroid, EResource.Iron, ironAmount);
 
     vm.warp(FleetMovement.getArrivalTime(fleetEntity));
+    uint256 bobAsteroidTargetHp = LibCombatAttributes.getHpWithAllies(bobHomeAsteroid);
+
     vm.startPrank(alice);
     world.Primodium__attack(fleetEntity, bobHomeAsteroid);
     vm.stopPrank();
 
+    uint256 bobHpLost = bobAsteroidTargetHp - LibCombatAttributes.getHpWithAllies(bobHomeAsteroid);
+
     assertEq(
       CooldownEnd.get(fleetEntity),
-      block.timestamp + LibCombat.getCooldownTime(attack, true),
-      "encryption incorrect"
+      block.timestamp + LibCombat.getCooldownTime(bobHpLost, true),
+      "decryption cooldown incorrect"
     );
     assertEq(
       ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_HP)),

@@ -20,8 +20,12 @@ export const createPhaserScene = (options: {
       create && create(this);
     }
 
-    update() {
+    update(time: number, delta: number) {
       update && update(this);
+
+      this.children.each((child) => {
+        child.active && child.update(time, delta);
+      });
     }
   };
 };

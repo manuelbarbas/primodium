@@ -1,23 +1,43 @@
-import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
-import { Scene } from "engine/types";
-import { AsteroidRelationship } from "../../constants/common";
+import { Coord } from "engine/types";
+import { PrimodiumScene } from "@/game/api/scene";
 import { BaseAsteroid } from "./BaseAsteroid";
-import { getSecondaryOutlineSprite } from "./helpers";
 import { Sprites } from "@primodiumxyz/assets";
+import { DepthLayers } from "@/game/lib/constants/common";
+import { Entity } from "@latticexyz/recs";
+import { LODs } from "@/game/lib/objects/Asteroid/helpers";
 
 export class ShardAsteroid extends BaseAsteroid {
-  protected entity: Entity;
-  constructor(scene: Scene, entity: Entity, coord: Coord) {
-    super(scene, coord, Sprites.Shard, Sprites.AegisDrone);
-    this.entity = entity;
+  constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord }) {
+    const { id, scene, coord } = args;
+    super({ id, scene, coord, sprite: Sprites.Shard, outlineSprite: Sprites.AegisDrone });
+    this.asteroidSprite.postFX?.addShine();
+    this.asteroidLabel.setProperties({
+      emblemSprite: Sprites.ShardIcon,
+      nameLabel: "Shard",
+      nameLabelColor: 0xffc0cb,
+      ownerLabel: "shard",
+    });
+    this.setDepth(DepthLayers.Marker);
+    this.setScale(0.75);
   }
 
-  getEntity() {
-    return this.entity;
+  spawn() {
+    super.spawn();
+    return this;
   }
 
-  setRelationship(relationship: AsteroidRelationship) {
-    this.outlineSprite.setTexture(getSecondaryOutlineSprite(relationship, 1n));
+  getLod(zoom: number) {
+    if (zoom >= 0.75) {
+      return LODs.FullyShow;
+    }
+    if (zoom >= 0) {
+      return LODs.ShowLabelOnly;
+    }
+
+    return 0;
   }
+
+  // setRelationship(relationship: AsteroidRelationship) {
+  //   this.outlineSprite.setTexture(getSecondaryOutlineSprite(relationship, 1n));
+  // }
 }

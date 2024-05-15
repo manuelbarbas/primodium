@@ -4,10 +4,10 @@ import { Key, Scene } from "engine/types";
 import { usePersistentStore } from "@game/stores/PersistentStore";
 import { KeybindActionKeys } from "@game/lib/constants/keybinds";
 
-export function createInputApi(targetScene: Scene) {
+export function createInputApi(scene: Scene) {
   const keybinds = usePersistentStore.getState().keybinds;
   function isDown(keybindAction: KeybindActionKeys) {
-    const { input } = targetScene;
+    const { input } = scene;
 
     if (!keybinds[keybindAction]) return false;
 
@@ -32,7 +32,7 @@ export function createInputApi(targetScene: Scene) {
 
   function isUp(keybindAction: KeybindActionKeys) {
     const keybinds = usePersistentStore.getState().keybinds;
-    const { input } = targetScene;
+    const { input } = scene;
 
     if (!keybinds[keybindAction]) return false;
 
@@ -55,7 +55,7 @@ export function createInputApi(targetScene: Scene) {
 
   function addListener(keybindAction: KeybindActionKeys, callback: () => void, emitOnRepeat = false, wait = 0) {
     const keybinds = usePersistentStore.getState().keybinds;
-    const { input } = targetScene;
+    const { input } = scene;
 
     const fn = throttle(callback, wait);
 
@@ -76,7 +76,7 @@ export function createInputApi(targetScene: Scene) {
   }
 
   function transferListeners(oldKey: Key, newKey: Key) {
-    const { input } = targetScene;
+    const { input } = scene;
 
     const oldPhaserKey = input.phaserKeys.get(oldKey);
     const newPhaserKey = input.phaserKeys.get(newKey);
@@ -98,7 +98,7 @@ export function createInputApi(targetScene: Scene) {
   }
 
   function removeListeners(key: Key) {
-    const { input } = targetScene;
+    const { input } = scene;
 
     const phaserKey = input.phaserKeys.get(key);
 
@@ -108,18 +108,19 @@ export function createInputApi(targetScene: Scene) {
   }
 
   function disableInput() {
-    const { input } = targetScene;
+    const { input } = scene;
 
     input.disableInput();
   }
 
   function enableInput() {
-    const { input } = targetScene;
+    const { input } = scene;
 
     input.enableInput();
   }
 
   return {
+    ...scene.input,
     isDown,
     isUp,
     addListener,

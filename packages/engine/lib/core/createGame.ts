@@ -1,9 +1,9 @@
 import { initializeContext } from "../../api";
 import { createSceneManager } from "./createSceneManager";
-import { deferred } from "@latticexyz/utils";
 import { GameConfig } from "../../types";
 import createPhaserScene from "../util/createPhaserScene";
 import { getSceneLoadPromise } from "../util/getSceneLoadPromise";
+import { deferred } from "../util/deferred";
 
 export const createGame = async (config: GameConfig) => {
   //Initialize Phaser Game

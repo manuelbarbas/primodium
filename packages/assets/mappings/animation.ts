@@ -8,7 +8,7 @@ export enum Animations {
   Mainbase7 = "mainbase/level7",
   Mainbase8 = "mainbase/level8",
 
-  Wormholebase1 = "wormholebase/level1",
+  WormholebaseIdle1 = "wormholebase/level1/idle",
 
   IronMine1 = "ironmine/level1",
   IronMine2 = "ironmine/level2",
@@ -19,6 +19,8 @@ export enum Animations {
   CopperMine3 = "coppermine/level3",
 
   LithiumMine1 = "lithiummine/level1",
+  LithiumMine2 = "lithiummine/level2",
+  LithiumMine3 = "lithiummine/level3",
 
   IridiumMine1 = "iridiummine/level1",
   IridiumMine2 = "iridiummine/level2",
@@ -84,8 +86,11 @@ export enum Animations {
 
   DroidBase = "droidbase/level1",
 
+  FleetPlayer = "fleet/player",
+
   //DECORATIONS
-  Drone = "decorations/drone",
+  DroneTop = "decorations/drone-top",
+  DroneBottom = "decorations/drone-bottom",
 }
 
 export type AnimationKeys = keyof typeof Animations;

@@ -1,4 +1,4 @@
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 
 export const deg2rad = (degrees: number) => degrees * (Math.PI / 180);
 

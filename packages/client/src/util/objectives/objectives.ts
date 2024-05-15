@@ -17,16 +17,39 @@ export const getObjective = (objectiveEntity: Entity) => {
 export const Objectives = new Map<EObjectives, Objective>([
   /* ---------------------------------- A Fundamentals --------------------------------- */
   [
-    /*//////////////////////////////////////////////////////////////
+    EObjectives.JoinDiscord,
+    {
+      category: "Social",
+      type: "Claim",
+      description:
+        "Join the Primodium Discord by clicking on the button in the lower left. This is the most important decision you will ever make.",
+      tooltip: "Joined Primodium on Discord",
+      icon: InterfaceIcons.Discord,
+    },
+  ],
+  [
+    EObjectives.FollowTwitter,
+    {
+      category: "Social",
+      type: "Claim",
+      description:
+        "Follow the Primodium Twitter by clicking on the button in the lower left. This is tied for the most important decision you will ever make.",
+      icon: InterfaceIcons.Twitter,
+      tooltip: "Followed Primodium on Twitter",
+    },
+  ],
+
+  /*//////////////////////////////////////////////////////////////
                           Build Mines
   //////////////////////////////////////////////////////////////*/
+  [
     EObjectives.BuildIronMine,
     {
       category: "Fundamentals",
       type: "Build",
       buildingType: EntityType.IronMine,
       description:
-        "Iron mines produce iron, which you can see in the Resources pane. To build, the iron mine on the building menu. Place it on an ore tile. ",
+        "Iron mines produce iron, which is essential to building a strong empire. To build, select the iron mine from the Blueprints menu. Place it on a rainbow ore tile.",
     },
   ],
   [
@@ -35,7 +58,8 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Fundamentals",
       type: "Build",
       buildingType: EntityType.CopperMine,
-      description: "Copper mines produce copper. Select the copper mine on the building menu. Place it on an ore tile.",
+      description:
+        "Copper mines produce copper, which is a critical basic resource. To build, select the copper mine on the Blueprints menu. Place it on a rainbow ore tile.",
     },
   ],
   [
@@ -45,7 +69,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Build",
       buildingType: EntityType.LithiumMine,
       description:
-        "Lithium mines produce lithium. Select the lithium mine in the building menu. Place it on an ore tile.",
+        "Lithium mines produce lithium, which is used to build advanced buildings. To build, select the lithium mine in the Blueprints menu. Place it on an ore tile.",
     },
   ],
 
@@ -60,7 +84,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.MainBase,
       level: 2n,
       description:
-        "Upgrading a main base gives you more resource storage and makes your asteroid stronger. To upgrade, select your main base and select Upgrade.",
+        "Upgrading a main base grants you more resource storage and makes your asteroid stronger. To upgrade, click on your main base and select Upgrade.",
     },
   ],
   [
@@ -73,7 +97,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.MainBase,
       level: 3n,
       description:
-        "Upgrading a main base gives you more resource storage and makes your asteroid stronger. To upgrade, select your main base and select Upgrade.",
+        "Upgrading a main base gives you more resource storage and makes your asteroid stronger. To upgrade, click on your main base and select Upgrade.",
     },
   ],
   [
@@ -86,7 +110,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.MainBase,
       level: 4n,
       description:
-        "Upgrading a main base gives you more resource storage and makes your asteroid stronger. To upgrade, select your main base and select Upgrade.",
+        "Upgrading a main base gives you more resource storage and makes your asteroid stronger. To upgrade, click on your main base and select Upgrade.",
     },
   ],
   [
@@ -99,7 +123,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.MainBase,
       level: 5n,
       description:
-        "Upgrading a main base gives you more resource storage and makes your asteroid stronger. To upgrade, select your main base and select Upgrade.",
+        "Upgrading a main base gives you more resource storage and makes your asteroid stronger. To upgrade, click on your main base and select Upgrade.",
     },
   ],
 
@@ -115,7 +139,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 2n,
       level: 2n,
       description:
-        "Expansion gives you more room to build and unlocks new ores. To Expand, Select your main base and click on Expand base.",
+        "Expansion gives you more room to build and unlocks new ore tiles. To Expand, click on your main base and select Expand Base.",
     },
   ],
   [
@@ -127,7 +151,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 3n,
       level: 3n,
       description:
-        "Expansion gives you more room to build and unlocks new ores. To Expand, Select your main base and click on Expand base.",
+        "Expansion gives you more room to build and unlocks new ore tiles. To Expand, click on your main base and select Expand Base.",
     },
   ],
   [
@@ -139,7 +163,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 5n,
       level: 4n,
       description:
-        "Expansion gives you more room to build and unlocks new ores. To Expand, Select your main base and click on Expand base.",
+        "Expansion gives you more room to build and unlocks new ore tiles. To Expand, click on your main base and select Expand Base.",
     },
   ],
 
@@ -156,7 +180,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.IronMine,
       level: 2n,
       description:
-        "Upgrading a mine produces more resources without needing to expand. To upgrade, select the mine and select Upgrade.",
+        "Upgrading an iron mine produces iron at a faster rate. To upgrade, click on an iron mine and select Upgrade.",
     },
   ],
   [
@@ -169,7 +193,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.IronMine,
       level: 3n,
       description:
-        "Upgrading a mine produces more resources without needing to expand. To upgrade, select the mine and select Upgrade.",
+        "Upgrading an iron mine produces iron at a faster rate. To upgrade, click on an iron mine and select Upgrade.",
     },
   ],
 
@@ -183,7 +207,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.CopperMine,
       level: 2n,
       description:
-        "Upgrading a mine produces more resources without needing to expand. To upgrade, select the mine and select Upgrade.",
+        "Upgrading a copper mine produces copper at a faster rate. To upgrade, click on a copper mine and select Upgrade.",
     },
   ],
   [
@@ -196,7 +220,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.CopperMine,
       level: 3n,
       description:
-        "Upgrading a mine produces more resources without needing to expand. To upgrade, select the mine and select Upgrade.",
+        "Upgrading a copper mine produces copper at a faster rate. To upgrade, click on a copper mine and select Upgrade.",
     },
   ],
 
@@ -210,7 +234,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.LithiumMine,
       level: 2n,
       description:
-        "Upgrading a mine produces more resources without needing to expand. To upgrade, select the mine and select Upgrade.",
+        "Upgrading a lithium mine produces lithium at a faster rate. To upgrade, click on a lithium mine and select Upgrade.",
     },
   ],
   [
@@ -223,7 +247,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.LithiumMine,
       level: 3n,
       description:
-        "Upgrading a mine produces more resources without needing to expand. To upgrade, select the mine and select Upgrade.",
+        "Upgrading a lithium mine produces lithium at a faster rate. To upgrade, click on a lithium mine and select Upgrade.",
     },
   ],
 
@@ -237,7 +261,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BuildWorkshop],
       buildingType: EntityType.Garage,
       description:
-        "Garages provide housing for units. View your asteroid's housing in the Resources pane. To build, Select the garage from the Storage tab of the building menu. Place it on any empty tile.",
+        "Garages provide housing for military units. To build, select the garage from the Storage tab of the Blueprints menu. Place it on any empty tile. View your asteroid's new housing in the Resources pane.",
     },
   ],
   [
@@ -250,7 +274,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.Garage,
       level: 2n,
       description:
-        "Upgrading a garage increases available housing without using more build space. To upgrade, select the garage and select Upgrade.",
+        "Upgrading a garage increases your asteroid's available housing. To upgrade, click on a garage and select Upgrade.",
     },
   ],
   [
@@ -262,7 +286,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.UpgradeMainBase2],
       buildingType: EntityType.Workshop,
       description:
-        "Workshops train marines, which are basic units. To build, select the workshop from the Military tab of the building menu and place it on any empty tile.",
+        "Workshops train Marines, which are basic units. To build, select the workshop from the Military tab of the Blueprints menu and place it on any empty tile.",
     },
   ],
   [
@@ -275,7 +299,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.Workshop,
       level: 2n,
       description:
-        "Upgrading a workshop to produce units more quickly, and unlock new units. To upgrade, select the workshop and select Upgrade.",
+        "Upgrading a workshop produces units more quickly and might unlock new units. To upgrade, click on a workshop and select Upgrade.",
     },
   ],
 
@@ -287,8 +311,8 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.UpgradeGarage],
       description:
-        'Fleets transport units and resources between asteroids. Create a fleet on the starmap by selecting your asteroid and selecting "Add Fleet".',
-      icon: InterfaceIcons.Outgoing,
+        'Fleets transport units and resources between asteroids. Create a fleet by entering the Command Center using the top bar. In the Command Center, select the Transfer Inventory button on the left side bar and click "Add Fleet".',
+      icon: InterfaceIcons.Fleet,
       tooltip: "Created a fleet",
     },
   ],
@@ -298,7 +322,8 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Fleet",
       type: "Claim",
       requiredObjectives: [EObjectives.CreateFleet],
-      description: "Transfer units and resources from a fleet by selecting the fleet and selecting Transfer.",
+      description:
+        "Transfer from a fleet by entering the Command Center using the top bar. In the Command Center, select the Transfer Inventory button on the left side bar and transfer resources from a fleet you own.",
       icon: InterfaceIcons.Trade,
       tooltip: "Executed a transfer",
     },
@@ -309,7 +334,8 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Fleet",
       type: "Claim",
       requiredObjectives: [EObjectives.TransferFromFleet],
-      description: "Transfer units and resources from an asteroid by selecting the asteroid and selecting Transfer.",
+      description:
+        "Transfer from an asteroid by entering the Command Center using the top bar. In the Command Center, select the Transfer Inventory button on the left side bar and transfer resources from a fleet you own.",
       icon: InterfaceIcons.Trade,
       tooltip: "Executed a transfer",
     },
@@ -322,8 +348,8 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.TransferFromAsteroid],
       description:
-        "Sending a fleet to an asteroid allows it to deposit resources and units or fight other fleets. To send, select a fleet and select Send. Then select the target asteroid.",
-      icon: InterfaceIcons.Outgoing,
+        "Sending a fleet to an asteroid allows it to deposit resources and units or fight other fleets. To send, select a target asteroid and select Travel. Then select a fleet to travel.",
+      icon: InterfaceIcons.Fleet,
       tooltip: "Executed a fleet send",
     },
   ],
@@ -335,8 +361,9 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Combat",
       type: "Claim",
       requiredObjectives: [EObjectives.SendFleet],
+      // TODO @NAB5 explain how to attack in the command center
       description:
-        "Battling an asteroid allows you to raid resources and conquer asteroids. To battle, select a fleet and select Attack. Then select the target asteroid.",
+        "Battling an asteroid allows you to raid resources and conquer asteroids. To battle, go to the Command Center. Then select target asteroid and an attacker.",
       icon: InterfaceIcons.Attack,
       tooltip: "Executed an attack",
     },
@@ -348,7 +375,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.BattleAsteroid],
       description:
-        "Open a battle report to see the results of a battle. To open, select Battle Reports in the bottom bar.",
+        "Open a battle report to see the results of a battle. To open, select Battle Reports in the bottom dock.",
       icon: InterfaceIcons.Reports,
       tooltip: "Viewed a battle report",
     },
@@ -360,7 +387,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.OpenBattleReport],
       description:
-        "Battling a fleet lets you defend asteroids and steal resources. To battle, select a fleet or asteroid and select Attack. Then select the target fleet.",
+        "Battling a fleet allows you to raid resources and protect your asteroid. To battle, go to the Command Center. Then select target fleet and an attacker.",
       icon: InterfaceIcons.Attack,
       tooltip: "Executed an attack",
     },
@@ -374,7 +401,8 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Build",
       requiredMainBase: 8n,
       buildingType: EntityType.Shipyard,
-      description: "Shipyards constuct Colony Ships, which colonize asteroids.",
+      description:
+        "Shipyards constuct Colony Ships, which colonize asteroids. To build a shipyard, go to the Blueprints menu and select military. Place a Shipyard on any open tile.",
     },
   ],
   [
@@ -387,7 +415,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       unitType: EntityType.ColonyShip,
       unitCount: 1n,
       description:
-        "Select the Shipyard you placed on the map to build a Colony Ship. Colony ships can decrypt other asteroids and colonize on them.",
+        "To train a colony ship, click on Shipyard and select Commission. Unlock a Colony Ship slot by paying required resources and then commmission a ship. Fleets containing colony ships conquer asteroids.",
     },
   ],
   [
@@ -397,7 +425,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.TrainColonyShip],
       description:
-        "Once an asteroid's decryption reaches zero, you can conquer it. To decrypt an asteroid, attack it using a fleet with a Colony Ship. View the asteroid's decryption when you hover.",
+        " To decrypt an asteroid, attack it using a fleet containing a Colony Ship. Once an asteroid's decryption reaches zero, you can conquer it. An asteroid's decryption is marked by a Lock icon.",
       icon: InterfaceIcons.EncryptionBlue,
       tooltip: "Decrypted an asteroid",
     },
@@ -410,7 +438,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.DecryptAttack],
       asteroidType: "common",
       description:
-        "Capturing an asteroid allows you to take control of it. To capture, you need to reduce an asteroid's encryption to 0 using Colony Ships.",
+        "Capturing an asteroid allows you to take control of it. To capture, reduce an asteroid's encryption to 0 by attacking with fleets containing Colony Ships.",
     },
   ],
 
@@ -439,7 +467,8 @@ export const Objectives = new Map<EObjectives, Objective>([
         EntityType.TitaniumMine,
       ],
       requiredObjectives: [EObjectives.CaptureMotherlodeAsteroid],
-      description: "To extract a rare resource, capture a motherlode asteroid and build a rare mine on an ore tile.",
+      description:
+        "To extract a rare resource, capture a motherlode asteroid and build a rare mine on its special ore tile.",
     },
   ],
 
@@ -452,7 +481,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.CaptureAsteroid],
       description:
-        "Claiming Primodium allows you to win the game. To claim, capture asteroids and hold them until you can claim their Primodium.",
+        "Earning Primodium allows you to win the game. To start earning, capture asteroids and hold them until you can claim their Primodium.",
       icon: InterfaceIcons.Leaderboard,
       tooltip: "Claimed Primodium",
     },
@@ -490,7 +519,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       asteroidType: "wormhole",
       requiredObjectives: [EObjectives.CaptureAsteroid],
       description:
-        "A wormhole asteroid is a special asteroid that lets you earn points on the Extraction leaderboard. To capture, decrypt a nearby Wormhole Asteroid.",
+        "A wormhole asteroid is a special asteroid that lets you earn points on the Wormhole leaderboard by sending it certain resources. To capture, decrypt a nearby Wormhole Asteroid.",
     },
   ],
   [
@@ -500,7 +529,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.CaptureWormholeAsteroid],
       description:
-        "Claiming extraction points improves your rank on the Extraction leaderboard. To claim, click on a Wormhole Generator and send it the resource it currently requires.",
+        "Teleporting resources improves your rank on the Extraction leaderboard. To teleport, click on a Wormhole Generator and send it the resource it currently requires.",
       icon: InterfaceIcons.Leaderboard,
       tooltip: "Claimed extraction points",
     },
@@ -518,18 +547,6 @@ export const Objectives = new Map<EObjectives, Objective>([
       description: "A starmapper station increases the number of fleets you can create.",
     },
   ],
-  // [
-  //   EObjectives.CreateFleet2,
-  //   {
-  //     category: "Fleet",
-  //     type: "Claim",
-  //     requiredObjectives: [EObjectives.BuildStarmapper],
-  //     requiredMainBase: 3n,
-  //     description: "Having a second fleet for cargo movement is useful.  Assign your Lightning Craft here.",
-  //     icon: InterfaceIcons.Outgoing,
-  //     tooltip: "Created another fleet",
-  //   },
-  // ],
   [
     EObjectives.DefendWithFleet,
     {
@@ -537,8 +554,8 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.TransferFromAsteroid],
       description:
-        "Defending an asteroid with a fleet provides the fleet's defense to that asteroid's strength. To defend, go to the fleet's Management pane and select Defend.",
-      icon: InterfaceIcons.Outgoing,
+        "Defending an asteroid with a fleet bolsters that asteroid's strength. To defend, go to the fleet's Management pane in the Command Center and select Defend.",
+      icon: InterfaceIcons.Fleet,
       tooltip: "Landed a fleet",
     },
   ],
@@ -549,8 +566,8 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.DefendWithFleet],
       description:
-        "Blocking with a fleet prevents all other fleets from leaving the current asteroid. To block, go to the fleet's Management pane and select Block.",
-      icon: InterfaceIcons.Outgoing,
+        "Blocking an asteroid with a fleet prevents all fleets from leaving that asteroid. To block, go to the fleet's Management pane in the Command Center and select Block.",
+      icon: InterfaceIcons.Fleet,
       tooltip: "Landed a fleet",
     },
   ],
@@ -561,8 +578,8 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.BlockWithFleet],
       description:
-        "Landing a fleet on an asteroid sets the fleet's owner to that asteroid. It also deposit all resources and units. To land, select a fleet and select Land.",
-      icon: InterfaceIcons.Outgoing,
+        "Landing a fleet on an asteroid sets the fleet's owner to that asteroid. It transfers all fleet resources and units. To land, select a fleet in the Command Center and select Land.",
+      icon: InterfaceIcons.Fleet,
       tooltip: "Landed a fleet",
     },
   ],
@@ -578,7 +595,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       unitType: EntityType.MinutemanMarine,
       unitCount: 12n,
       description:
-        "Minutemen are weak units that are trained quickly, move fast, and carry lots of cargo. To train, select a workshop and select Train Units.",
+        "Minutemen are weak units that are trained quickly, move fast, and carry lots of cargo. To train, click on a workshop and select Train Units.",
     },
   ],
   [
@@ -589,10 +606,10 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 8n,
       requiredObjectives: [EObjectives.TrainMinutemanMarine],
       unitType: EntityType.TridentMarine,
-      unitCount: 8,
+      unitCount: 8n,
 
       description:
-        "Select the workshop you placed on the map to train Trident marines. Trident marines are basic well-rounded units.",
+        "Select the workshop you placed on the map to train Trident marines. Trident marines are basic well-rounded units. To train, click on a workshop and select Train Units.",
     },
   ],
   [
@@ -605,7 +622,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       unitType: EntityType.LightningCraft,
       unitCount: 8n,
       description:
-        "Upgrade the workshop you placed on the map to Level 10 to unlock the ability to train Lightning Ships. Lightning Ships are weak but travel extremely fast without other types of ships.",
+        "Upgrade a workshop to Level 10 to unlock the ability to train Lightning Ships. Lightning Ships are weak but travel extremely fast.",
     },
   ],
 
@@ -617,7 +634,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 5n,
       buildingType: EntityType.DroneFactory,
       description:
-        "Drone factories train drones, which are strong and specialized. To build, select the drone factory from the building menu and place it on any empty tile.",
+        "Drone factories train drones, which are strong and specialized. To build, select the Drone Factory from the Blueprints menu and place it on any empty tile.",
     },
   ],
 
@@ -629,7 +646,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.BuildDroneFactory],
       description:
-        "Upgrading a unit increases its stats. To upgrade, select Upgrade Units next to Battle Reports and choose a unit to upgrade.",
+        "Upgrading a unit increases its stats. To upgrade, select Upgrade in the Command Center left side bar.",
       icon: InterfaceIcons.Add,
       tooltip: "Upgraded a unit",
     },
@@ -644,8 +661,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BuildDroneFactory],
       unitType: EntityType.AnvilDrone,
       unitCount: 8n,
-      description:
-        "Select the drone factory you placed on the map to build anvil drones. Anvil drones are standard defensive drones.",
+      description: "To train an anvil drone, select a drone factory. Anvil drones are standard defensive drones.",
     },
   ],
   [
@@ -657,8 +673,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BuildDroneFactory],
       unitType: EntityType.HammerDrone,
       unitCount: 8n,
-      description:
-        "Select the drone factory you placed on the map to build hammer drones. Hammer drones are standard attacking drones.",
+      description: "To build a hammer drone, Click on a drone factory. Hammer drones are standard attacking drones.",
     },
   ],
   [
@@ -671,7 +686,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.TrainAnvilDrone],
       unitCount: 8n,
       description:
-        "Upgrade the drone factory you placed on the map to Level 2 to unlock the ability to build Aegis drones. Aegis drones are strong but slow defensive units and take up more housing.",
+        "Upgrade a drone factory to Level 2 to unlock the ability to build Aegis drones. Aegis drones are strong and slow defensive units that use lots of housing.",
     },
   ],
   [
@@ -684,7 +699,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       unitType: EntityType.StingerDrone,
       unitCount: 8n,
       description:
-        "Upgrade the drone factory you placed on the map to Level 3 to unlock the ability to build Stinger drones. Stinger drones are strong but slow offensive units and take up more housing.",
+        "Upgrade a drone factory to Level 3 to unlock the ability to build Stinger drones. Stinger drones are strong and slow offensive units that use lots of housing.",
     },
   ],
 
@@ -697,7 +712,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 5n,
       buildingType: EntityType.Hangar,
       description:
-        "Hangars provide large amounts of housing for units. To build, select the hangar from the building menu and place it on an empty tile.",
+        "Hangars provide large amounts of housing for units. To build, select the hangar from the Blueprints menu and place it on an empty tile.",
     },
   ],
 
@@ -710,7 +725,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 5n,
       buildingType: EntityType.ShieldGenerator,
       description:
-        "Shield generators provide strength boosts to supplement defense provided by fleets and SAM launchers.",
+        "Shield Generators provide strength boosts to supplement defense provided by fleets and SAM launchers. To build, select the Hangar from the Blueprints menu and place it on an empty tile.",
     },
   ],
   [
@@ -720,7 +735,8 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Build",
       requiredMainBase: 7n,
       buildingType: EntityType.Vault,
-      description: "Vaults protect your resources from being raided.",
+      description:
+        "Vaults protect your resources from being raided. To build, select the Vault from the Blueprints menu and place it on an empty tile.",
     },
   ],
   [
@@ -731,7 +747,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 8n,
       buildingType: EntityType.SAMLauncher,
       description:
-        "SAM launchers give your asteroid strength, protecting you from enemy attacks! You need electricity to power them.",
+        "SAM launchers give your asteroid strength, protecting you from enemy attacks. You need electricity to power them. To build, select the SAM Launcher from the Blueprints menu and place it on an empty tile.",
     },
   ],
 
@@ -744,7 +760,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 3n,
       buildingType: EntityType.StorageUnit,
       description:
-        "Storage units increase your resource storage. To build, select the Storage Unit from the building menu and place it on any empty tile.",
+        "Storage units increase your resource storage. To build, select the Storage Unit from the Blueprints menu and place it on any empty tile.",
     },
   ],
   [
@@ -756,7 +772,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.StorageUnit,
       level: 2n,
       description:
-        "Upgrading a workshop to produce units more quickly, and unlock new units. To upgrade, select the workshop and select Upgrade.",
+        "Upgrade a workshop to produce units more quickly and unlock new units. To upgrade, clock on a workshop and select Upgrade.",
     },
   ],
   [
@@ -768,7 +784,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BuildIronMine],
       buildingType: EntityType.IronPlateFactory,
       description:
-        "Iron Plate Factories produce iron plates by burning iron. To build, select the factory in the building menu. Place it on any empty tile.",
+        "Iron Plate Factories produce iron plate by burning iron. To build, select a factory in the Blueprints menu. Place it on any empty tile.",
     },
   ],
   [
@@ -780,7 +796,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BuildCopperMine],
       buildingType: EntityType.AlloyFactory,
       description:
-        "Alloy factories produce alloys by burning iron and copper. To build, select the alloy factory in the building menu. Place it on any empty tile.",
+        "Alloy factories produce alloy by burning iron and copper. To build, select the alloy factory in the Blueprints menu. Place it on any empty tile.",
     },
   ],
   [
@@ -792,7 +808,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BuildLithiumMine],
       buildingType: EntityType.PVCellFactory,
       description:
-        "The PV Cell factory produces photovoltaic cells by burning lithium. To build, select the PV Cell factory on the building menu and place it on any empty tile.",
+        "The PV Cell factory produces photovoltaic cells by burning lithium. To build, select the PV Cell factory in the Blueprints menu and place it on any empty tile.",
     },
   ],
 
@@ -806,7 +822,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 4n,
       buildingType: EntityType.SolarPanel,
       description:
-        "Solar panels provide electricity, which is used for advanced buildings. To build, select the solar panel from the building menu and place it on any empty tile.",
+        "Solar panels provide electricity, which is used for advanced buildings. To build, select the Solar Panel from the Blueprints menu and place it on any empty tile.",
     },
   ],
   [
@@ -819,7 +835,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.SolarPanel,
       level: 2n,
       description:
-        "Solar panels provide electricity, which is used for advanced buildings. To upgrade, select the solar panel and select Upgrade.",
+        "Solar panels provide electricity, which is used for advanced buildings. To upgrade, click on a Solar Panel and select Upgrade.",
     },
   ],
 
@@ -833,7 +849,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 6n,
       buildingType: EntityType.Market,
       description:
-        "Markets grant access to the global resource marketplace. It's perfect for moments when you are missing a rare resource!",
+        "Markets grant access to the global resource marketplace. It's perfect for moments when you are missing a rare resource! To build, select the Solar Panel from the Blueprints menu and place it on any empty tile.",
     },
   ],
 
@@ -844,7 +860,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.BuildMarket],
       description:
-        "Swapping resources on the market allows you to get resources you need. To swap, select the Market and select Swap.",
+        "Swapping resources on the market allows you to get resources you need. To swap, select the Market and choose two resources to exchange. Then select Swap.",
       icon: InterfaceIcons.Trade,
       tooltip: "Executed a swap",
     },
@@ -859,34 +875,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.ExpandBase2],
       requiredMainBase: 2n,
       description:
-        "Joining an alliance allows you to combine your points with other players. Select Alliance Management in the bottom bar. Find an Alliance to join and select Join.",
-    },
-  ],
-  [
-    EObjectives.JoinDiscord,
-    {
-      category: "Alliance",
-      type: "JoinAlliance",
-      requiredMainBase: 16n,
-      description: "Joined the Primodium Discord!",
-    },
-  ],
-  [
-    EObjectives.FollowTwitter,
-    {
-      category: "Alliance",
-      type: "JoinAlliance",
-      requiredMainBase: 16n,
-      description: "Followed the Primodium Twitter!",
-    },
-  ],
-  [
-    EObjectives.PrimoPlayer,
-    {
-      category: "Alliance",
-      type: "JoinAlliance",
-      requiredMainBase: 16n,
-      description: "Completed all Objectives",
+        "Joining an alliance allows you to earn glory and the revered Champion badge (and maybe other prizes) with your friends. To join, Select Alliance Management in the bottom dock. Find an alliance to join and select Join.",
     },
   ],
 ]);
