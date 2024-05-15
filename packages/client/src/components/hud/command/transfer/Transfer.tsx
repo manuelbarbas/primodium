@@ -93,12 +93,25 @@ const Transfer: React.FC = () => {
     (rightClick?: boolean) => {
       document.body.style.userSelect = "";
       if (!moving) return;
-      if (!hovering || hovering == moving.side) {
+
+      if (hovering === moving.side && rightClick) {
+        const newCount = moving.count - parseResourceCount(moving.entity, "1");
+        if (newCount <= 0n) {
+          setMoving(null);
+          setHovering(null);
+          return;
+        }
+        setMoving({
+          ...moving,
+          count: newCount,
+        });
+        return;
+      }
+      if (!hovering || moving.side === hovering) {
         setMoving(null);
         setHovering(null);
         return;
       }
-
       const count = rightClick ? parseResourceCount(moving.entity, "1") : moving.count;
       const recipient = hovering === "left" ? left : right;
       let amountMoved = 0n;
