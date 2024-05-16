@@ -73,7 +73,7 @@ export const renderBuilding = (scene: PrimodiumScene) => {
       if (objects.building.has(entity)) {
         const building = objects.building.get(entity);
         if (!building) return;
-        building.setLevel(components.Level.get(entity)?.value ?? 1n, !showLevelAnimation);
+        building.setLevel(components.Level.get(entity)?.value ?? 1n, !initialBuildingsPlaced || !showLevelAnimation);
         building.setActive(components.IsActive.get(entity)?.value ?? true);
 
         // at this point, we might be moving a building, so update its position
@@ -84,7 +84,7 @@ export const renderBuilding = (scene: PrimodiumScene) => {
         building.setCoordPosition(tileCoord);
         building.setDepth(DepthLayers.Building - tileCoord.y * 5);
         // trigger anim since the building was just moved
-        if (!showLevelAnimation) building.triggerPlacementAnim();
+        if (initialBuildingsPlaced && !showLevelAnimation) building.triggerPlacementAnim();
 
         return;
       }
