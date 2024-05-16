@@ -161,6 +161,7 @@ export const renderBuilding = (scene: PrimodiumScene) => {
 
       const newBuilding = objects.building.get(value[0]?.value as Entity);
       if (newBuilding) {
+        scene.audio.play("Sequence7", "ui");
         newBuilding.clearOutline();
         newBuilding.setOutline(0x00ffff, 3);
       }
