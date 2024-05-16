@@ -9,6 +9,9 @@ export enum Animations {
   Mainbase8 = "mainbase/level8",
 
   WormholebaseIdle1 = "wormholebase/level1/idle",
+  WormholebaseCooldown1 = "wormholebase/level1/idle-cooldown",
+  WormholebaseOverheat1 = "wormholebase/level1/overheat",
+  WormholebasePowerUp1 = "wormholebase/level1/powerup",
 
   IronMine1 = "ironmine/level1",
   IronMine2 = "ironmine/level2",

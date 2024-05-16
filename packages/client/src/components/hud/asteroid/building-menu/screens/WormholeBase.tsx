@@ -10,7 +10,6 @@ import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask
 import { useMud } from "src/hooks";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { useWormholeBaseCooldown } from "src/hooks/wormhole/useWormholeBaseCooldown";
-import { useWormholeResource } from "src/hooks/wormhole/useWormholeResource";
 import { components } from "src/network/components";
 import { wormholeDeposit } from "src/network/setup/contractCalls/wormholeDeposit";
 import { getEntityTypeName } from "src/util/common";
@@ -35,7 +34,9 @@ export const WormholeBase: React.FC<{ building: Entity }> = ({ building }) => {
 const WormholeDeposit: React.FC<{ building: Entity; asteroid: Entity }> = ({ building, asteroid }) => {
   const [count, setCount] = useState<string>("0");
   const mud = useMud();
-  const { resource: wormholeResource, nextResource, timeUntilNextResource } = useWormholeResource();
+  const wormholeData = components.WormholeResource.use();
+  if (!wormholeData) throw new Error("WormholeData not found");
+  const { resource: wormholeResource, nextResource, timeUntilNextResource } = wormholeData;
   const resourceData = useFullResourceCount(wormholeResource, asteroid);
   const { inCooldown, timeLeft } = useWormholeBaseCooldown(building);
   const multiplier = components.P_PointMultiplier.useWithKeys({
