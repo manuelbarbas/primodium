@@ -46,7 +46,7 @@ export function getUpgradeAnimation(buildingDimensions: BuildingDimensions) {
   return {
     animation: Animations.Upgrade3x3,
     warp: { x: xWarp, y: yWarp },
-    offset: { x: 26 * xWarp, y: 23 * yWarp },
+    offset: { x: 27 * xWarp, y: 23 * yWarp },
     changeFrame: 13,
   };
 }
