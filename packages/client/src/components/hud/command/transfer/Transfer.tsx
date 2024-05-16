@@ -30,7 +30,7 @@ const Transfer: React.FC = () => {
   // Resources
   const transportables = components.P_Transportables.use()?.value ?? [];
 
-  const rightInitialResourceCounts = useFullResourceCounts(rightEntity, 10);
+  const rightInitialResourceCounts = useFullResourceCounts(rightEntity);
   const rightResourceCounts = useMemo(
     () =>
       transportables.reduce((acc, transportable) => {
@@ -38,15 +38,21 @@ const Transfer: React.FC = () => {
         const resourceCount = rightInitialResourceCounts.get(entity)?.resourceCount;
         const delta = deltas.get(entity) ?? 0n;
         const movingCount = moving?.side == "right" && moving?.entity === entity ? moving.count : 0n;
-        const total = (resourceCount ?? 0n) + delta - movingCount;
+        const maxAtStorageCapacity = components.Asteroid.has(rightEntity);
+        let total = (resourceCount ?? 0n) + delta - movingCount;
         if (total <= 0n) return acc;
+
+        if (maxAtStorageCapacity) {
+          const storage = getFullResourceCount(entity, rightEntity).resourceStorage;
+          total = bigIntMin(storage, total);
+        }
         acc.set(entity, total);
         return acc;
       }, new Map<Entity, bigint>()),
     [rightInitialResourceCounts, deltas, moving]
   );
 
-  const leftInitialResourceCounts = useFullResourceCounts(left ?? singletonEntity, 10);
+  const leftInitialResourceCounts = useFullResourceCounts(left ?? singletonEntity);
   const leftResourceCounts = useMemo(
     () =>
       transportables.reduce((acc, transportable) => {
@@ -54,8 +60,16 @@ const Transfer: React.FC = () => {
         const resourceCount = leftInitialResourceCounts.get(entity)?.resourceCount ?? 0n;
         const delta = deltas.get(entity) ?? 0n;
         const movingCount = moving?.side == "left" && moving?.entity === entity ? moving.count : 0n;
-        const total = resourceCount - delta - movingCount;
+
+        let total = (resourceCount ?? 0n) - delta - movingCount;
         if (total <= 0n) return acc;
+
+        if (components.Asteroid.has(left)) {
+          const storage = getFullResourceCount(entity, left ?? singletonEntity).resourceStorage;
+          total = bigIntMin(storage, total);
+          console.log({ storage, total });
+        }
+
         acc.set(entity, total);
         return acc;
       }, new Map<Entity, bigint>()),
