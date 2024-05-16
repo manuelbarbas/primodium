@@ -128,7 +128,7 @@ export class WormholeBase extends Building implements IPrimodiumGameObject {
         // Listen for the animation update event once
         const updateCallback = (animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) => {
           if (animation.key === "overheating" && frame.index === 4) {
-            this._scene.fx.flashScreen({ duration: 300 });
+            this._scene.fx.flashScreen({ duration: 600 });
             this.hideResourceAnimation(0);
           }
         };

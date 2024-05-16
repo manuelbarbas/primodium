@@ -5,7 +5,6 @@ import { TransitLine } from "../lib/objects/TransitLine";
 import { BaseAsteroid } from "../lib/objects/Asteroid/BaseAsteroid";
 import { Building, BuildingConstruction } from "@/game/lib/objects/Building";
 import { PrimodiumGameObject } from "engine/lib/core/StaticObjectManager";
-import { WormholeBase } from "@/game/lib/objects/Building/Wormhole";
 
 type PrimodiumObjectApi<T extends { destroy: () => void }> = {
   has: (entity: Entity) => boolean;
@@ -55,7 +54,6 @@ export function createObjectApi(scene: Scene) {
     transitLine: factory(scene, TransitLine, "transit"),
     asteroid: factory(scene, BaseAsteroid),
     building: factory(scene, Building),
-    wormholes: factory(scene, WormholeBase, "wormhole"),
     constructionBuilding: factory(scene, BuildingConstruction),
   };
 }

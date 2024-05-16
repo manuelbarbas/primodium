@@ -84,32 +84,22 @@ export const createFxApi = (scene: Scene) => {
       ])
       .play();
   }
+  function getRGBValues(value: number) {
+    const hexValue = value.toString(16).padStart(6, "0");
+    const red = parseInt(hexValue.slice(0, 2), 16);
+    const green = parseInt(hexValue.slice(2, 4), 16);
+    const blue = parseInt(hexValue.slice(4, 6), 16);
+    return { red, green, blue };
+  }
+
   function flashScreen(options?: { duration?: number; color?: number }) {
     const duration = options?.duration ?? 500;
     const color = options?.color ?? 0x0;
     // Create a white rectangle that covers the entire screen
-    const scale = scene.phaserScene.scale;
     const camera = scene.camera;
-    const flash = scene.phaserScene.add
-      .rectangle(camera.phaserCamera.scrollX, camera.phaserCamera.scrollY, scale.width * 10, scale.height * 10, color)
-      .setDepth(DepthLayers.Path);
-
-    // Set the initial alpha to 0 (fully transparent)
-    flash.setAlpha(0);
-
+    const { red, green, blue } = getRGBValues(color);
+    camera.phaserCamera.flash(duration, color % red, green, blue, true);
     camera.phaserCamera.shake(700, 0.02 / camera.phaserCamera.zoom);
-
-    // Create a tween to flash the screen
-    scene.phaserScene.tweens.add({
-      targets: flash,
-      alpha: { from: 0, to: 1 }, // Flash in
-      duration: duration / 2, // First half of the duration
-      ease: "Cubic.easeIn",
-      yoyo: true, // Flash out (reverses the tween)
-      onComplete: () => {
-        flash.destroy(); // Destroy the rectangle after the flash
-      },
-    });
   }
 
   return {
