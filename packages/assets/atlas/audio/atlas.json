@@ -186,19 +186,34 @@
       "end": 79.84251700680272,
       "loop": false
     },
-    "sound": {
+    "Build": {
       "start": 81,
-      "end": 82.40571428571428,
+      "end": 82.37501133786849,
+      "loop": false
+    },
+    "Demolish": {
+      "start": 84,
+      "end": 86.40433106575964,
+      "loop": false
+    },
+    "Upgrade": {
+      "start": 88,
+      "end": 89.40571428571428,
+      "loop": false
+    },
+    "Whoosh": {
+      "start": 91,
+      "end": 93,
       "loop": false
     },
     "background": {
-      "start": 84,
-      "end": 268.8480045351474,
+      "start": 94,
+      "end": 278.8480045351474,
       "loop": true
     },
     "background2": {
-      "start": 270,
-      "end": 473.4959863945578,
+      "start": 280,
+      "end": 483.4959863945578,
       "loop": false
     }
   }

@@ -53,6 +53,7 @@ export class BuildingConstruction extends Phaser.GameObjects.Container implement
     this._scene = scene;
 
     this._scene.objects.constructionBuilding.add(id, this);
+    this._scene.audio.play("Build", "sfx", { loop: true });
   }
 
   setQueueText(text: string) {
@@ -76,6 +77,8 @@ export class BuildingConstruction extends Phaser.GameObjects.Container implement
   }
 
   destroy() {
+    this._scene.audio.get("Build", "sfx")?.stop();
+
     this._scene.objects.constructionBuilding.remove(this.id);
     super.destroy();
   }

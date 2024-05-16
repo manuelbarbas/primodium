@@ -156,9 +156,14 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
     return this;
   };
 
-  destroy() {
+  demolish() {
     //TODO: despawn animation
+    this._scene.audio.play("Demolish", "sfx");
+    triggerPlacementAnim(this._scene, this.id, this.coord);
+    this.destroy();
+  }
 
+  destroy() {
     this._scene.objects.building.remove(this.id);
     super.destroy();
   }

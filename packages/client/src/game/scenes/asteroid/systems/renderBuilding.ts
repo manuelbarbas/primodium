@@ -176,9 +176,7 @@ export const renderBuilding = (scene: PrimodiumScene) => {
 
     defineExitSystem(spectateWorld, positionQuery, ({ entity }) => {
       const building = objects.building.get(entity);
-      if (building) {
-        building.destroy();
-      }
+      if (building) building.demolish();
     });
   });
 };
