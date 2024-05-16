@@ -5,7 +5,7 @@ import { IconLabel } from "@/components/core/IconLabel";
 import { NumberInput } from "@/components/core/NumberInput";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { useMud } from "@/hooks";
-import { useColonySlots, useColonySlotsMultiplier } from "@/hooks/useColonySlots";
+import { useColonySlots, getColonySlotsCostMultiplier } from "@/hooks/useColonySlots";
 import { useFullResourceCount } from "@/hooks/useFullResourceCount";
 import { components } from "@/network/components";
 import { payForColonySlot } from "@/network/setup/contractCalls/payForColonySlot";
@@ -96,7 +96,7 @@ const SlotResourceDisplay: React.FC<{
       resourceIndex: BigInt(index),
     })?.amounts ?? 0n;
 
-  const costMultiplier = useColonySlotsMultiplier(playerEntity);
+  const costMultiplier = getColonySlotsCostMultiplier(playerEntity);
   const cost = config.amounts[index] * costMultiplier;
   const complete = cost == paid;
 
