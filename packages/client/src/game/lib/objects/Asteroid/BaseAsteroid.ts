@@ -28,7 +28,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
   protected _scene: PrimodiumScene;
   protected fleetCount = 0;
   protected spawned = false;
-  protected asteroidSprite: Phaser.GameObjects.Image;
+  protected asteroidSprite: Phaser.GameObjects.Sprite;
   protected asteroidLabel: AsteroidLabel;
   protected fleetsContainer: FleetsContainer;
   protected currentLOD: number = -1;
@@ -41,7 +41,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
 
     this.id = id;
 
-    this.asteroidSprite = new Phaser.GameObjects.Image(
+    this.asteroidSprite = new Phaser.GameObjects.Sprite(
       scene.phaserScene,
       pixelCoord.x,
       -pixelCoord.y,

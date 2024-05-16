@@ -7,8 +7,8 @@ import { memo } from "react";
 
 export const StarmapNavigator = memo(() => {
   return (
-    <Tabs className="pointer-events-auto flex items-center" persistIndexKey="navigator">
-      <Tabs.Pane index={0} fragment>
+    <Tabs className="flex items-center" persistIndexKey="navigator">
+      <Tabs.Pane index={0} fragment className="pointer-events-auto ">
         <GlassCard direction={"right"} className="animate-in slide-in-from-left-full">
           <Card fragment noDecor>
             <StarmapNavigatorPane />
@@ -19,7 +19,7 @@ export const StarmapNavigator = memo(() => {
         index={0}
         togglable
         size={"sm"}
-        className="heropattern-topography-slate-500/10 !border-l-0 animate-in fade-in zoom-in"
+        className="pointer-events-auto heropattern-topography-slate-500/10 !border-l-0 animate-in fade-in zoom-in"
         style={{
           writingMode: "vertical-lr",
         }}

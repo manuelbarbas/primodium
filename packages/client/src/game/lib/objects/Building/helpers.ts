@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { Sprites } from "@primodiumxyz/assets";
+import { Animations, Sprites } from "@primodiumxyz/assets";
 import { EntityTypeToAnimations, EntityTypetoBuildingSprites } from "src/game/lib/mappings";
 import { safeIndex } from "src/util/array";
 
@@ -34,3 +34,19 @@ export type BuildingDimensions = {
   width: number;
   height: number;
 };
+
+export function getUpgradeAnimation(buildingDimensions: BuildingDimensions) {
+  if (buildingDimensions.width === 1 && buildingDimensions.height === 1) {
+    return { animation: Animations.Upgrade1x1, offset: { x: 33, y: 5 }, changeFrame: 12 };
+  }
+
+  const xWarp = buildingDimensions.width / 3;
+  const yWarp = buildingDimensions.height / 3;
+
+  return {
+    animation: Animations.Upgrade3x3,
+    warp: { x: xWarp, y: yWarp },
+    offset: { x: 27 * xWarp, y: 23 * yWarp },
+    changeFrame: 13,
+  };
+}

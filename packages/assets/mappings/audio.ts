@@ -1,6 +1,6 @@
 export enum Audio {
-  Background = "background",
-  Background2 = "background2",
+  Background = "Background",
+  Background2 = "Background2",
   Bleep = "Bleep_01",
   Bleep2 = "Bleep_02",
   Bleep3 = "Bleep_03",
@@ -23,6 +23,7 @@ export enum Audio {
   Execute2 = "Execute_02",
   DataPoint = "Data_Point_01",
   DataPoint2 = "Data_Point_02",
+  DataPoint5 = "Data_Point_05",
   Confirm = "Confirm_01",
   Confirm2 = "Confirm_02",
   Confirm3 = "Confirm_03",
@@ -32,6 +33,10 @@ export enum Audio {
   Confirm7 = "Confirm_07",
   Complete = "Complete_01",
   Complete2 = "Complete_02",
+  Upgrade = "Upgrade",
+  Build = "Build",
+  Demolish = "Demolish",
+  Whoosh = "Whoosh",
 }
 
 export type AudioKeys = keyof typeof Audio;

@@ -1,3 +1,4 @@
+import { useGame } from "@/hooks/useGame";
 import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
@@ -29,6 +30,25 @@ export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
     return resourceCount < production.amount;
   });
 
+  const scene = useGame().ASTEROID;
+  const handleDemolish = () => {
+    const selectedBuildingObj = scene.objects.building.get(building);
+    const pendingAnim = scene.phaserScene.tweens.add({
+      targets: [selectedBuildingObj],
+      alpha: 0.3,
+      duration: 600,
+      yoyo: true,
+      repeat: -1,
+    });
+    selectedBuildingObj?.setTint(0xff0000);
+    demolishBuilding(mud, building, () => {
+      pendingAnim.destroy();
+      selectedBuildingObj?.setAlpha(1);
+      selectedBuildingObj?.clearTint();
+    });
+    components.SelectedBuilding.remove();
+  };
+
   const Content = useMemo(
     () => () =>
       !blockingResource ? (
@@ -56,14 +76,7 @@ export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
         <Content />
 
         <div className="flex gap-2">
-          <Button
-            disabled={!!blockingResource}
-            className="btn-error btn-sm"
-            onClick={() => {
-              demolishBuilding(mud, building);
-              components.SelectedBuilding.remove();
-            }}
-          >
+          <Button disabled={!!blockingResource} className="btn-error btn-sm" onClick={handleDemolish}>
             Demolish
           </Button>
           <Navigator.BackButton className="btn-sm border-secondary" />
