@@ -16,8 +16,6 @@ import { EntityType } from "@/util/constants";
 import { useFullResourceCount } from "@/hooks/useFullResourceCount";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 
-const filter = "invert(17%) sepia(70%) saturate(605%) hue-rotate(260deg) brightness(101%) contrast(111%)";
-
 export const TransferSelect = ({ side }: { side: "left" | "right" }) => {
   const { left, right, setLeft, setRight } = useTransfer();
 
@@ -126,7 +124,11 @@ const SelectOption = ({
   const content = isFleet ? entityToFleetName(entity) : entityToRockName(entity);
   const playerIsOwner = getPlayerOwner(entity) === player;
 
-  const imgSrc = isFleet ? InterfaceIcons.Fleet : getAsteroidImage(primodium, entity);
+  const imgSrc = isFleet
+    ? playerIsOwner
+      ? InterfaceIcons.Fleet
+      : InterfaceIcons.EnemyFleet
+    : getAsteroidImage(primodium, entity);
   useEffect(() => () => components.HoverEntity.remove(), []);
   return (
     <Button
@@ -138,7 +140,7 @@ const SelectOption = ({
       onMouseLeave={() => components.HoverEntity.remove()}
       className={cn(`flex w-full aspect-square flex-col gap-2 items-center`, !playerIsOwner ? "border-error/50" : "")}
     >
-      <img src={imgSrc} className={cn("w-8")} style={!isFleet || playerIsOwner ? {} : { filter }} />
+      <img src={imgSrc} className="w-8" />
       <span className="text-pretty">{content}</span>
     </Button>
   );

@@ -26,8 +26,6 @@ type FleetCardProps = {
   hostile?: boolean;
 };
 
-const filter =
-  "invert(17%) sepia(70%) saturate(605%) hue-rotate(260deg) brightness(101%) contrast(111%) drop-shadow(1px 0px 0px #FF3232) drop-shadow(-1px  0px 0px #FF3232) drop-shadow( 0px  1px 0px #FF3232) drop-shadow( 0px -1px 0px #FF3232)";
 export const _FleetCard: React.FC<FleetCardProps> = (props) => {
   const { hostile, stats, destination, grace, cooldown, home: ownerAsteroid, stance: fleetStateText } = props;
 
@@ -59,7 +57,7 @@ export const _FleetCard: React.FC<FleetCardProps> = (props) => {
       <div className="flex flex-col text-xs"></div>
       <div className="grid grid-cols-2">
         <div className="flex flex-col gap-2 justify-center items-center">
-          <img src={InterfaceIcons.Fleet} className="h-3/4" style={hostile ? { filter } : {}} />
+          <img src={hostile ? InterfaceIcons.EnemyFleet : InterfaceIcons.Fleet} className="h-3/4" />
           {!!grace && (
             <div className="flex gap-2 text-xs items-center">
               <IconLabel imageUri={InterfaceIcons.Grace} className={`pixel-images w-3 h-3`} />
