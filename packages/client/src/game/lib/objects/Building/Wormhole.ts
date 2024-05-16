@@ -17,9 +17,9 @@ export class WormholeBase extends Building implements IPrimodiumGameObject {
   private blueTintSprite: Phaser.GameObjects.Image;
   private resource: Entity;
   private wormholeState: WormholeStates;
-  private bottomAlpha = 0.8;
-  private topAlpha = 0.7;
-  private tintAlpha = 0.1;
+  private bottomAlpha = 0.88;
+  private topAlpha = 0.5;
+  private tintAlpha = 0.15;
   constructor(args: {
     initialState: WormholeStates;
     resource: Entity;
@@ -48,6 +48,7 @@ export class WormholeBase extends Building implements IPrimodiumGameObject {
       .setBlendMode(Phaser.BlendModes.NORMAL)
       .setDepth(DepthLayers.Building + 2);
 
+    this.resourceSpriteBottom.postFX?.addGlow(0x00ffff, 3, 0);
     //  Top resource art layer
     this.resourceSpriteTop = new Phaser.GameObjects.Image(
       scene.phaserScene,
@@ -59,7 +60,6 @@ export class WormholeBase extends Building implements IPrimodiumGameObject {
       .setAlpha(this.topAlpha)
       .setBlendMode(Phaser.BlendModes.ADD)
       .setDepth(DepthLayers.Building + 3);
-    this.resourceSpriteTop.postFX?.addGlow(0x00ffff, 3, undefined);
 
     this.blueTintSprite = new Phaser.GameObjects.Image(
       scene.phaserScene,
