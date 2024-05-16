@@ -84,11 +84,29 @@ export const createFxApi = (scene: Scene) => {
       ])
       .play();
   }
+  function getRGBValues(value: number) {
+    const hexValue = value.toString(16).padStart(6, "0");
+    const red = parseInt(hexValue.slice(0, 2), 16);
+    const green = parseInt(hexValue.slice(2, 4), 16);
+    const blue = parseInt(hexValue.slice(4, 6), 16);
+    return { red, green, blue };
+  }
+
+  function flashScreen(options?: { duration?: number; color?: number }) {
+    const duration = options?.duration ?? 500;
+    const color = options?.color ?? 0x0;
+    // Create a white rectangle that covers the entire screen
+    const camera = scene.camera;
+    const { red, green, blue } = getRGBValues(color);
+    camera.phaserCamera.flash(duration, color % red, green, blue, true);
+    camera.phaserCamera.shake(700, 0.02 / camera.phaserCamera.zoom);
+  }
 
   return {
     outline,
     removeOutline,
     emitExplosion,
     fireMissile,
+    flashScreen,
   };
 };

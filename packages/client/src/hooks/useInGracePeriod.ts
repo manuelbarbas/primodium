@@ -11,7 +11,7 @@ export const useInGracePeriod = (entity: Entity, force = false) => {
 
   return useMemo(() => {
     const inGracePeriod = time < endTime;
-    if (!inGracePeriod || !entity) return { inGracePeriod: false, duration: 0 };
+    if (!inGracePeriod || !entity) return { inGracePeriod: false, duration: 0n };
 
     return { inGracePeriod, duration: endTime - time };
   }, [time, endTime, entity, force]);

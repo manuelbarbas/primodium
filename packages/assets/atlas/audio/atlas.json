@@ -209,12 +209,12 @@
     "Background": {
       "start": 94,
       "end": 278.8480045351474,
-      "loop": false
+      "loop": true
     },
     "Background2": {
       "start": 280,
       "end": 483.4959863945578,
-      "loop": false
+      "loop": true
     }
   }
 }

@@ -24,15 +24,25 @@ export const Landing: React.FC<{ children: React.ReactNode }> = ({ children }) =
           <div className="w-4/5 relative flex flex-col items-center gap-2 h-52">
             <img
               src={"/img/wormholebase.png"}
-              className=" w-44 pixel-images opacity-75 scale-x-[-1] absolute bottom-6 margin-auto z-20"
+              className=" w-56 pixel-images opacity-75 scale-x-[-1] absolute bottom-2 margin-auto z-20"
             />
-            <img
+
+            <motion.img
+              // initial={{ x: "50%", y: "-50%" }}
+              animate={{
+                y: "-3px",
+                transition: {
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  duration: 3,
+                },
+              }}
               src={ResourceImages.Primodium}
               style={{
                 filter:
                   "drop-shadow( 1px  0px 0px rgba(0, 255, 255, 0.5)) drop-shadow(-1px  0px 0px rgba(0, 255, 255, 0.5)) drop-shadow( 0px  1px 0px rgba(0, 255, 255, 0.5)) drop-shadow( 0px -1px 0px rgba(0, 255, 255, 0.5))",
               }}
-              className=" w-5 pixel-images scale-x-[-1] absolute top-9 mix-blend-screen margin-auto z-20"
+              className=" w-10 pixel-images scale-x-[-1] absolute top-1 mix-blend-screen margin-auto z-30"
             />
             <div className="absolute bg-gray-900 blur-[15px] w-56 h-32 margin-auto bottom-0 z-10" />
           </div>

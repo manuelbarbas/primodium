@@ -37,6 +37,8 @@ import ShardSprite from "../sprites/shard/shard.png?url";
 import Fleet from "../icons/UI_Fleet.png?url";
 import Discord from "../icons/discord.svg?url";
 import Twitter from "../icons/x-twitter.svg?url";
+import EnemyFleet from "../icons/UI_Ship_Enemy.png?url";
+
 export const InterfaceIcons = {
   Add,
   Alliance,
@@ -44,17 +46,24 @@ export const InterfaceIcons = {
   Attack,
   Blueprints,
   Build,
+  CategoryInfra,
+  CategoryMilitary,
+  CategoryProduction,
+  CategoryStorage,
   Chat,
-  Crosshairs,
   Command,
+  Crosshairs,
+  Debug,
   Discord,
+  EnemyFleet,
   EncryptionBlue,
   EncryptionGold,
   Expansion,
+  Fleet,
   Grace,
-  Debug,
   Housing,
   Leaderboard,
+  Navigator,
   NotAllowed,
   Objective,
   Reinforcements,
@@ -67,13 +76,7 @@ export const InterfaceIcons = {
   Starmap,
   Trade,
   Transfer,
-  Vault,
-  Navigator,
-  CategoryInfra,
-  CategoryMilitary,
-  CategoryProduction,
-  CategoryStorage,
-  Wormhole,
-  Fleet,
   Twitter,
+  Vault,
+  Wormhole,
 };

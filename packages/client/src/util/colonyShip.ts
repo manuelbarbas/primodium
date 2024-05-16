@@ -4,12 +4,6 @@ import { EntityType } from "@/util/constants";
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { Hex } from "viem";
 
-export function getColonySlotsCostMultiplier(playerEntity: Entity) {
-  const maxColonySlots = components.MaxColonySlots.get(playerEntity)?.value ?? 0n;
-  const multiplier = components.P_ColonySlotsConfig.get()?.multiplier ?? 1n;
-  return multiplier * maxColonySlots;
-}
-
 type ColonyShipType =
   | { type: "asteroid"; asteroidEntity: Entity }
   | { type: "ship"; parentEntity: Entity }

@@ -660,7 +660,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 5n,
       requiredObjectives: [EObjectives.BuildDroneFactory],
       unitType: EntityType.AnvilDrone,
-      unitCount: 12n,
+      unitCount: 20n,
       description:
         "To train an anvil drone, select a drone factory. Anvil drones are standard drones tuned to be a sturdy and reliable.",
     },
@@ -673,7 +673,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 5n,
       requiredObjectives: [EObjectives.BuildDroneFactory],
       unitType: EntityType.HammerDrone,
-      unitCount: 12n,
+      unitCount: 20n,
       description:
         "To build a hammer drone, Click on a drone factory. Hammer drones are standard drones that sacrifice armor for more weapons.",
     },
@@ -686,7 +686,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 8n,
       unitType: EntityType.AegisDrone,
       requiredObjectives: [EObjectives.TrainAnvilDrone],
-      unitCount: 12n,
+      unitCount: 20n,
       description:
         "Upgrade a drone factory to Level 8 to unlock the ability to build Aegis drones. Aegis drones are robust specialized defensive units. They occupy more housing than any other unit.",
     },
@@ -699,7 +699,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 8n,
       requiredObjectives: [EObjectives.TrainHammerDrone],
       unitType: EntityType.StingerDrone,
-      unitCount: 12n,
+      unitCount: 20n,
       description:
         "Upgrade a drone factory to Level 8 to unlock the ability to build Stinger drones. Stinger drones are powerful specialized assault units. They occupy more housing than any other unit.",
     },

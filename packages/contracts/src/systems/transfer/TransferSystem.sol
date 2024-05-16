@@ -2,7 +2,7 @@
 pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { LibTransfer } from "libraries/fleet/LibTransfer.sol";
+import { LibTransfer } from "libraries/transfer/LibTransfer.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 
 /**

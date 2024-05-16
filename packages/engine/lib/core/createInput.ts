@@ -5,15 +5,20 @@ import { Observable, bufferCount, filter, fromEvent, map, merge, throttleTime } 
 import Phaser from "phaser";
 import { Key } from "../../types";
 
+const enabled = {
+  value: true,
+  current: () => enabled.value,
+  set: (value: boolean) => (enabled.value = value),
+};
+
 export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
   const disposers = new Set<() => void>();
   const phaserKeys = new Map<Key, Phaser.Input.Keyboard.Key>();
-  const enabled = { current: true };
 
   inputPlugin.mouse?.disableContextMenu();
 
   function disableInput() {
-    enabled.current = false;
+    enabled.set(false);
     if (!phaserKeyboard) return;
 
     phaserKeyboard.disableGlobalCapture();
@@ -22,7 +27,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
   }
 
   function enableInput() {
-    enabled.current = true;
+    enabled.set(true);
     if (!phaserKeyboard) return;
 
     phaserKeyboard?.enableGlobalCapture();
@@ -37,7 +42,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
   // const keyboard$ = new Subject<Phaser.Input.Keyboard.Key>();
 
   const pointermove$ = fromEvent(inputPlugin.scene.scale.canvas, "mousemove").pipe(
-    filter(() => enabled.current && inputPlugin.scene.scene.isActive()),
+    filter(() => enabled.current() && inputPlugin.scene.scene.isActive()),
     map(() => {
       inputPlugin.manager.activePointer.updateWorldPoint(inputPlugin.scene.cameras.main);
       return inputPlugin.manager?.activePointer;
@@ -50,7 +55,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     pointer: Phaser.Input.Pointer;
     event: MouseEvent;
   }> = fromEvent(inputPlugin.scene.scale.canvas, "pointerdown").pipe(
-    filter(() => enabled.current && inputPlugin.scene.scene.isActive()),
+    filter(() => enabled.current() && inputPlugin.scene.scene.isActive()),
     map((event) => ({
       pointer: inputPlugin.manager?.activePointer,
       event: event as MouseEvent,
@@ -61,7 +66,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     pointer: Phaser.Input.Pointer;
     event: MouseEvent;
   }> = fromEvent(inputPlugin.scene.scale.canvas, "pointerup").pipe(
-    filter(() => enabled.current && inputPlugin.scene.scene.isActive()),
+    filter(() => enabled.current() && inputPlugin.scene.scene.isActive()),
     map((event) => ({
       pointer: inputPlugin.manager?.activePointer,
       event: event as MouseEvent,
@@ -70,7 +75,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
 
   // Click stream
   const click$ = merge(pointerdown$, pointerup$).pipe(
-    filter(() => enabled.current && inputPlugin.scene.scene.isActive()),
+    filter(() => enabled.current() && inputPlugin.scene.scene.isActive()),
     map<{ pointer: Phaser.Input.Pointer; event: MouseEvent }, [boolean, number]>(({ event }) => [
       event.type === "pointerdown",
       Date.now(),
@@ -87,7 +92,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
 
   // Double click stream
   const doubleClick$ = pointerdown$.pipe(
-    filter(() => enabled.current && inputPlugin.scene.scene.isActive()),
+    filter(() => enabled.current() && inputPlugin.scene.scene.isActive()),
     map(() => ({
       time: Date.now(),
     })),
@@ -103,7 +108,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
 
   // Right click stream
   const rightClick$ = merge(pointerdown$, pointerup$).pipe(
-    filter(({ pointer }) => enabled.current && pointer.rightButtonDown() && inputPlugin.scene.scene.isActive()),
+    filter(({ pointer }) => enabled.current() && pointer.rightButtonDown() && inputPlugin.scene.scene.isActive()),
     map(() => inputPlugin.manager?.activePointer), // Return the current pointer
     filter((pointer) => pointer?.downElement?.nodeName === "CANVAS")
   );
