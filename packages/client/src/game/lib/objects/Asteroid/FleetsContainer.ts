@@ -50,9 +50,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
           const angle = index * angleStep + tween.getValue();
           fleet.x = radiusX * Math.cos(angle);
           fleet.y = radiusY * Math.sin(angle);
-          fleet.setRotationFrame(Phaser.Math.RadToDeg(angle));
-          fleet.fleetImage.angle = Phaser.Math.RadToDeg(angle) - fleet.getRotationFrameOffset();
-          fleet.particles.angle = Phaser.Math.RadToDeg(angle);
+          fleet.setRotation(angle);
         });
       },
     });
@@ -85,6 +83,8 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
 
     fleet.detach();
     this.fleets.add(fleet);
+    // console.log(fleet);
+    fleet.reset();
 
     this.updateView();
 
@@ -122,8 +122,8 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
       fleet.reset();
       const col = i % COL;
       const row = Math.floor(i / COL);
-      const posX = col * (fleet.fleetImage.width / 2 + MARGIN);
-      const posY = row * (fleet.fleetImage.height / 2 + MARGIN);
+      const posX = col * (fleet.width / 2 + MARGIN);
+      const posY = row * (fleet.height / 2 + MARGIN);
       fleet.setPosition(posX + offsetX, posY + offsetY);
       fleet.deactivateBurn();
     });
@@ -142,7 +142,10 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
       //TODO: increase width and height depending on fleet count
       this.orbitRing.setActive(true).setVisible(true);
       if (!this.paused) this.rotationTween.resume();
-      this.fleets.each((fleet: Fleet) => fleet.activateBurn());
+      this.fleets.each((fleet: Fleet) => {
+        // fleet.reset();
+        fleet.activateBurn();
+      });
     } else this.orbitRing.setActive(false).setVisible(false);
 
     this.prevRotationVal = -1;

@@ -35,8 +35,8 @@ export const BattleMenuPopup = () => {
       id="fleet-target"
       scene={"COMMAND_CENTER"}
       defaultCoord={{
-        x: 80 * (coord.x < 0 ? -1 : 1),
-        y: 0,
+        x: coord.x + 15 * (coord.x < 0 ? -1 : 1),
+        y: Math.min(16, coord.y),
       }}
       defaultPinned
       draggable

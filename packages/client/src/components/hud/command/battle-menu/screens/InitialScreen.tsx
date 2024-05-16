@@ -6,7 +6,7 @@ import { IconLabel } from "@/components/core/IconLabel";
 import { Button } from "@/components/core/Button";
 
 import { useCallback, useMemo } from "react";
-import { Tabs } from "@/components/core/Tabs";
+// import { Tabs } from "@/components/core/Tabs";
 import { clearFleetStance, setFleetStance } from "@/network/setup/contractCalls/fleetStance";
 import { useMud } from "@/hooks";
 import { EFleetStance } from "contracts/config/enums";
@@ -44,7 +44,7 @@ export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
           onClick={() => setStance(EFleetStance.Defend)}
         >
           <div className="flex flex-start px-1 gap-3 w-full">
-            <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Command} />
+            <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Defense} />
             <div className="flex flex-col items-start">
               <p>{fleetStance === EFleetStance.Defend ? "CLEAR DEFEND STANCE" : "DEFEND ASTEROID"}</p>
               <p className="block text-xs opacity-75 text-wrap text-left">Join the battle during an attack</p>
@@ -60,7 +60,7 @@ export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
           onClick={() => setStance(EFleetStance.Block)}
         >
           <div className="flex flex-start px-1 gap-3 w-full">
-            <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Vault} />
+            <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Block} />
             <div className="flex flex-col items-start">
               <p>{fleetStance === EFleetStance.Block ? "CLEAR BLOCKADE STANCE" : "BLOCKADE ASTEROID"}</p>
               <p className="block text-xs opacity-75 text-wrap text-left">Prevent fleets from leaving orbit</p>
@@ -129,15 +129,15 @@ export const AttackButton = ({ target }: { target: Entity }) => {
       >
         <div className="absolute inset-0 bg-error/25 animate-ping pointer-events-none" />
         <div className="flex flex-start px-1 gap-3">
-          <IconLabel className="text-lg" imageUri={InterfaceIcons.Attack} text="ATTACK" />
+          <IconLabel className="text-lg drop-shadow-hard text-white" imageUri={InterfaceIcons.Attack2} text="ATTACK" />
         </div>
         <div className="absolute bottom-0 right-0 p-1 bg-error/50 text-xs rounded-bl-xl rounded-tl-xl"></div>
-        {inGrace && (
-          <div className="opacity-75">
-            <IconLabel className="text-xs" imageUri={InterfaceIcons.Grace} text={formatTime(gracePeriod - now)} />
-          </div>
-        )}
       </Navigator.NavButton>
+      {inGrace && (
+        <div className="opacity-75">
+          <IconLabel className="text-xs" imageUri={InterfaceIcons.Grace} text={formatTime(gracePeriod - now)} />
+        </div>
+      )}
     </>
   );
 };
@@ -161,7 +161,7 @@ export const InitialScreen = ({ target }: { target: Entity }) => {
     <Navigator.Screen title="initial" className="gap-2 flex h-full w-full">
       {/* Attack if not owned */}
       {!isOwner && <AttackButton target={target} />}
-      <Tabs.Button index={1} variant="neutral" size="content" onClick={() => components.BattleTarget.remove()}>
+      {/* <Tabs.Button index={1} variant="neutral" size="content" onClick={() => components.BattleTarget.remove()}>
         <div className="flex flex-start px-1 gap-3 w-full">
           <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Trade} />
           <div className="flex flex-col items-start">
@@ -169,7 +169,7 @@ export const InitialScreen = ({ target }: { target: Entity }) => {
             <p className="block text-xs opacity-75 text-wrap">TRADE UNITS AND RESOURCES</p>
           </div>
         </div>
-      </Tabs.Button>
+      </Tabs.Button> */}
       {/* Manage buttons if owned and is a fleet */}
       {isOwner && isFleet && <FleetManageButtons fleet={target} />}
     </Navigator.Screen>

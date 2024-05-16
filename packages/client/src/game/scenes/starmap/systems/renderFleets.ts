@@ -135,7 +135,7 @@ export const renderFleets = (scene: PrimodiumScene) => {
         const orbitRing = scene.objects.asteroid.get(movement.destination as Entity)?.getFleetContainer();
 
         if (orbitRing && fleet) {
-          scene.objects.transitLine.get(transit)?.destroy();
+          scene.objects.transitLine.get(transit)?.destroy(true);
           orbitRing.addFleet(fleet);
         }
 

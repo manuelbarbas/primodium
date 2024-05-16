@@ -6,6 +6,9 @@ import { PrimodiumScene } from "@/game/api/scene";
 export function renderFleet(args: { scene: PrimodiumScene; entity: Entity }) {
   const { scene, entity } = args;
   const fleet = scene.objects.fleet.get(entity);
+  const playerEntity = components.Account.get()?.value;
+  const ownerEntity = components.OwnedBy.get(components.OwnedBy.get(entity)?.value as Entity | undefined)?.value;
+  const isOwnedByPlayer = playerEntity === ownerEntity;
 
   if (fleet) return fleet;
 
@@ -24,6 +27,8 @@ export function renderFleet(args: { scene: PrimodiumScene; entity: Entity }) {
     .onHoverExit(() => {
       components.HoverEntity.remove();
     });
+
+  if (!isOwnedByPlayer) newFleet.setRelationship("Enemy");
 
   return newFleet;
 }

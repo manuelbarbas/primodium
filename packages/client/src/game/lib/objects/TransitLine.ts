@@ -70,13 +70,18 @@ export class TransitLine extends TargetLine {
     });
   }
 
-  destroy() {
+  destroy(anim = false) {
     this._scene.objects.transitLine.remove(this.id);
+
+    if (!anim) super.destroy();
 
     this.scene.add.tween({
       targets: this,
       alpha: 0,
       duration: 200,
+      onStart: () => {
+        this.setActive(false);
+      },
       onComplete: () => {
         super.destroy();
       },
@@ -86,15 +91,8 @@ export class TransitLine extends TargetLine {
   private _setFleetAngleAndPos() {
     if (!this.fleet) return;
 
-    let angle = Phaser.Math.RadToDeg(Math.atan2(this.end.y - this.start.y, this.end.x - this.start.x)) - 90;
-
-    if (angle < 0) {
-      angle += 360;
-    }
-
-    this.fleet.setRotationFrame(angle);
-    this.fleet.setAngle(angle - this.fleet.getRotationFrameOffset());
-    this.fleet.particles.setAngle(angle);
+    const angle = Phaser.Math.RadToDeg(Math.atan2(this.end.y - this.start.y, this.end.x - this.start.x)) - 90;
+    this.fleet.setAngle(angle);
     this.fleet.setPosition(this.start.x, this.start.y);
   }
 }
