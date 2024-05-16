@@ -81,7 +81,7 @@ export const _FleetCard: React.FC<FleetCardProps> = (props) => {
           <p className="text-end">{formatResourceCount(EntityType.Iron, stats.cargo, { short: true })}</p>
           <p className="text-accent">SPEED</p>
           <p className="text-end">{formatNumber(stats.speed)}</p>
-          <p className="text-accent">DECRYPTON</p>
+          <p className="text-accent">DECRYPTION</p>
           <p className="text-end">{formatResourceCount(EntityType.Iron, stats.decryption, { short: true })}</p>
         </div>
       </div>
