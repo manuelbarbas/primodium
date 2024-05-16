@@ -76,7 +76,13 @@ export async function initGame(version = "v1") {
       });
     };
 
-    return { primary, secondary };
+    // run after all systems are ready
+    // we can use that to keep the loading screen until all systems are run to prevent annoying stutter while the interface is ready
+    const done = () => {
+      components.SystemsReady.set({ value: true });
+    };
+
+    return { primary, secondary, done };
   }
 
   return { ...api.primary, ...api.secondary, destroy, runSystems };

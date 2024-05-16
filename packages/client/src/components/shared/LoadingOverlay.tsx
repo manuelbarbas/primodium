@@ -8,10 +8,12 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 export const LoadingOverlay = ({
   syncId,
+  ready,
   loadingMessage,
   errorMessage,
 }: {
   syncId?: Entity;
+  ready: boolean;
   loadingMessage?: string;
   errorMessage?: string;
 }) => {
@@ -25,7 +27,7 @@ export const LoadingOverlay = ({
 
   return (
     <AnimatePresence>
-      {loading && (
+      {(loading || !ready) && (
         <motion.div
           key={syncId}
           id={syncId}

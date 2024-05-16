@@ -47,7 +47,9 @@ export const Game = () => {
 
   useEffect(() => {
     if (!game || loadingSecondaryData) return;
-    game.runSystems(mud).secondary();
+    const { secondary, done } = game.runSystems(mud);
+    secondary();
+    done();
   }, [mud, game, loadingSecondaryData]);
 
   useEffect(() => {

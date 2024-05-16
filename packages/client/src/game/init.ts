@@ -30,8 +30,8 @@ async function init(): Promise<InitResult> {
       GLOBAL: globalApi,
     },
     // secondary queries are run after secondary queries were fetched, which is the data required to render
-    // the asteroids, fleets and other players; this helps rendering the home asteroid as fast as possible, and
-    // making sure global systems are run over complete data
+    // the asteroids, fleets and other players; this helps preparing the home asteroid as fast as possible, and
+    // making sure global systems are run afterwards over complete data
     secondary: {
       STARMAP: await initStarmapScene(globalApi),
       COMMAND_CENTER: await initCommandCenter(globalApi),
