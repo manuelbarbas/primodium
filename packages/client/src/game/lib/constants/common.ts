@@ -9,6 +9,16 @@ export const Scenes = {
   CommandCenter: "COMMAND_CENTER",
 } as const;
 
+export const PrimaryScenes = {
+  Root: Scenes.Root,
+  UI: Scenes.UI,
+  Asteroid: Scenes.Asteroid,
+};
+export const SecondaryScenes = {
+  Starmap: Scenes.Starmap,
+  CommandCenter: Scenes.CommandCenter,
+};
+
 export type SceneKeys = (typeof Scenes)[keyof typeof Scenes];
 
 export const DepthLayers = {

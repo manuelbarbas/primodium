@@ -9,17 +9,28 @@ import { initStarmapScene } from "@game/scenes/starmap/init";
 import { initUIScene } from "@game/scenes/ui/init";
 import { engine } from "engine";
 
-async function init(): Promise<Record<SceneKeys, PrimodiumScene> & { GLOBAL: GlobalApi }> {
+type PrimarySceneKeys = Extract<SceneKeys, "ROOT" | "UI" | "ASTEROID">;
+type SecondarySceneKeys = Extract<SceneKeys, "STARMAP" | "COMMAND_CENTER">;
+type InitResult = {
+  primary: Record<PrimarySceneKeys, PrimodiumScene> & { GLOBAL: GlobalApi };
+  secondary: Record<SecondarySceneKeys, PrimodiumScene>;
+};
+
+async function init(): Promise<InitResult> {
   const game = await engine.createGame(gameConfig);
   const globalApi = createGlobalApi(game);
 
   return {
-    ROOT: await initRootScene(globalApi),
-    UI: await initUIScene(globalApi),
-    ASTEROID: await initAsteroidScene(globalApi),
-    STARMAP: await initStarmapScene(globalApi),
-    COMMAND_CENTER: await initCommandCenter(globalApi),
-    GLOBAL: globalApi,
+    primary: {
+      ROOT: await initRootScene(globalApi),
+      UI: await initUIScene(globalApi),
+      ASTEROID: await initAsteroidScene(globalApi),
+      GLOBAL: globalApi,
+    },
+    secondary: {
+      STARMAP: await initStarmapScene(globalApi),
+      COMMAND_CENTER: await initCommandCenter(globalApi),
+    },
   };
 }
 

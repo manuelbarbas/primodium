@@ -15,7 +15,7 @@ import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import _init from "../init";
-import { Scenes } from "@/game/lib/constants/common";
+import { PrimaryScenes, SecondaryScenes } from "@/game/lib/constants/common";
 
 export type PrimodiumGame = Awaited<ReturnType<typeof initGame>>;
 export async function initGame(version = "v1") {
@@ -39,7 +39,7 @@ export async function initGame(version = "v1") {
   const api = await _init();
 
   function destroy() {
-    api.GLOBAL.dispose();
+    api.primary.GLOBAL.dispose();
 
     //dispose game logic
     world.dispose("game");
@@ -47,26 +47,37 @@ export async function initGame(version = "v1") {
   }
 
   function runSystems(mud: MUD) {
-    console.info("[Game] Running systems");
-    world.dispose("systems");
+    const primary = () => {
+      console.info("[Game] Running primary systems");
+      world.dispose("systems");
 
-    components.SelectedMode.set({ value: Mode.Asteroid });
-    setupBuildRock();
-    setupBattleComponents();
-    setupBlockNumber(mud.network.latestBlockNumber$);
-    setupDoubleCounter(mud);
-    setupHangar();
-    setupLeaderboard();
-    setupTime(mud);
-    setupTrainingQueues();
-    setupHomeAsteroid(mud);
-    setupBuildingReversePosition();
-    setupSync(mud);
+      components.SelectedMode.set({ value: Mode.Asteroid });
+      setupBuildRock();
+      setupBattleComponents();
+      setupBlockNumber(mud.network.latestBlockNumber$);
+      setupDoubleCounter(mud);
+      setupHangar();
+      setupLeaderboard();
+      setupTime(mud);
+      setupTrainingQueues();
+      setupHomeAsteroid(mud);
+      setupBuildingReversePosition();
+      setupSync(mud);
 
-    Object.values(Scenes).forEach((scene) => {
-      api[scene].runSystems?.(mud);
-    });
+      Object.values(PrimaryScenes).forEach((scene) => {
+        api.primary[scene].runSystems?.(mud);
+      });
+    };
+
+    const secondary = () => {
+      console.info("[Game] Running secondary systems");
+      Object.values(SecondaryScenes).forEach((scene) => {
+        api.secondary[scene].runSystems?.(mud);
+      });
+    };
+
+    return { primary, secondary };
   }
 
-  return { ...api, destroy, runSystems };
+  return { ...api.primary, ...api.secondary, destroy, runSystems };
 }
