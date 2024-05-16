@@ -15,7 +15,7 @@ export const renderFleets = (scene: PrimodiumScene) => {
   // we need this for both asteroids and shards
   const ids = [toHex("asteroids"), toHex("shardAsteroids")];
   ids.forEach((id) => {
-    const container = scene.objects.deferredRenderContainer.get(id as Entity);
+    const container = scene.objects.deferredRenderContainer.getContainer(id as Entity);
     if (!container) return;
 
     const unsub = container.onObjectSpawned((asteroidEntity) => {

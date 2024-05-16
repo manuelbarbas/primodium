@@ -58,9 +58,8 @@ export class DeferredRenderContainer<
 
     const chunkCoord = this._scene.utils.tileCoordToChunkCoord({ x: coord.x, y: -coord.y });
     const chunkCoordKey = this._getKeyForChunk(chunkCoord);
-    if (this._scene.utils.getVisibleChunks().has(chunkCoordKey)) {
+    if (this._scene.utils.getVisibleChunks().has(chunkCoordKey) && !this.isSpawned(entity)) {
       this.spawn(entity);
-      return;
     }
 
     const entities = this.chunkCoords.get(chunkCoordKey) ?? [];
@@ -121,7 +120,7 @@ export class DeferredRenderContainer<
   }
 
   // onEnterChunk(coord: Coord) {}
-  // onExitChunk(coord: Coord) {}
+  // onExitChunk(coord: Coord) { }
 
   onObjectSpawned(callback: (entity: Entity) => void) {
     this.onObjectSpawnedCallbacks.push(callback);
@@ -130,6 +129,21 @@ export class DeferredRenderContainer<
       const index = this.onObjectSpawnedCallbacks.indexOf(callback);
       if (index !== -1) this.onObjectSpawnedCallbacks.splice(index, 1);
     };
+  }
+
+  $subscribe(updateInterval: number, callback: (visibleEntities: Entity[]) => void) {
+    const interval = setInterval(() => {
+      callback(this.getVisibleEntities());
+    }, updateInterval);
+
+    return () => clearInterval(interval);
+  }
+
+  getVisibleEntities() {
+    const visibleChunks = this._scene.utils.getVisibleChunks();
+    return Array.from(visibleChunks)
+      .map((coord) => this.chunkCoords.get(coord) ?? [])
+      .flat();
   }
 
   destroy() {}

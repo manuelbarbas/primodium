@@ -62,6 +62,7 @@ export class ChunkManager {
         const [x, y] = chunkKey.split(":").map(Number);
         this.onEnterChunk({ x, y });
         this.visibleChunks.add(chunkKey);
+        this.knownChunks.add(chunkKey);
       }
     });
 
@@ -75,7 +76,6 @@ export class ChunkManager {
     });
 
     this.visibleArea = currentVisibleArea;
-    this.knownChunks = new Set([...this.knownChunks, ...currentVisibleChunks]);
   }
 
   private getKeyForChunk({ x, y }: Coord): string {

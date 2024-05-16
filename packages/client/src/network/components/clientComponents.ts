@@ -39,18 +39,6 @@ export default function setupClientComponents() {
   const SelectedAction = createExtendedNumberComponent(world, { id: "SelectedAction" });
   const SelectedMode = createExtendedEntityComponent(world, { id: "SelectedMode" });
 
-  const AsteroidInfo = createExtendedComponent(
-    world,
-    {
-      owner: Type.Entity,
-      expansionLevel: Type.BigInt,
-      ownerAlliance: Type.Entity,
-    },
-    {
-      id: "AsteroidInfo",
-    }
-  );
-
   const ReverseBuildingPosition = createExtendedEntityComponent(world, { id: "ReverseBuildingPosition" });
 
   const TrainingQueue = createExtendedComponent(
@@ -82,6 +70,19 @@ export default function setupClientComponents() {
   const Battle = createBattleComponents();
 
   const BattleRender = createExtendedEntityComponent(world, { id: "BattleRender" });
+
+  // keep updated metadata for a player's alliance
+  const PlayerAllianceInfo = createExtendedComponent(
+    world,
+    {
+      alliance: Type.Entity,
+      name: Type.String,
+      inviteMode: Type.Number,
+    },
+    {
+      id: "PlayerAllianceInfo",
+    }
+  );
 
   const PlayerInvite = createExtendedComponent(
     world,
@@ -155,7 +156,6 @@ export default function setupClientComponents() {
     SelectedBuilding,
     SelectedAction,
     SelectedMode,
-    AsteroidInfo,
     ReverseBuildingPosition,
     TrainingQueue,
     Hangar,
@@ -164,6 +164,7 @@ export default function setupClientComponents() {
     Battle,
     BattleRender,
     Leaderboard,
+    PlayerAllianceInfo,
     PlayerInvite,
     AllianceRequest,
     TransactionQueue,

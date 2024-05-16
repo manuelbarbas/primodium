@@ -9,7 +9,7 @@ import { renderQueuedBuildings } from "./renderQueuedBuildings";
 import { PrimodiumScene } from "@/game/api/scene";
 
 export const runSystems = (scene: PrimodiumScene, mud: MUD) => {
-  //Render world entity's sprites
+  // Render world entity's sprites
   renderAsteroidMap(scene);
   renderBuilding(scene);
 

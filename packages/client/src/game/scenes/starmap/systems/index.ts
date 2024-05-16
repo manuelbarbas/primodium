@@ -4,6 +4,7 @@ import { renderFleets } from "@/game/scenes/starmap/systems/renderFleets";
 import { renderShardAsteroids } from "@/game/scenes/starmap/systems/renderShardAsteroids";
 import { renderTrajectory } from "@/game/scenes/starmap/systems/renderTrajectory";
 import { PrimodiumScene } from "@/game/api/scene";
+import { asteroidLabelSystem } from "@/game/scenes/starmap/systems/asteroidLabelSystem";
 
 export const runSystems = (scene: PrimodiumScene) => {
   renderAsteroids(scene);
@@ -11,4 +12,7 @@ export const runSystems = (scene: PrimodiumScene) => {
   renderFleets(scene);
   renderBattle(scene);
   renderTrajectory(scene);
+
+  // setup asteroids labels updates
+  asteroidLabelSystem(scene);
 };

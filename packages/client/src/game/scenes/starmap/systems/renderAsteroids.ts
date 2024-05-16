@@ -1,5 +1,4 @@
 import { Entity, Has, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { components } from "@/network/components";
 import { world } from "@/network/world";
 import { PrimodiumScene } from "@/game/api/scene";
@@ -29,18 +28,9 @@ export const renderAsteroids = (scene: PrimodiumScene) => {
   });
 
   const query = [Has(components.Asteroid), Has(components.Position)];
-
   defineEnterSystem(systemsWorld, query, async ({ entity }) => {
     const coord = components.Position.get(entity);
     const asteroidData = components.Asteroid.get(entity);
-
-    // init informations
-    const owner = (components.OwnedBy.get(entity)?.value as Entity) ?? singletonEntity;
-    components.AsteroidInfo.set({
-      owner,
-      expansionLevel: components.Level.get(entity)?.value ?? 1n,
-      ownerAlliance: (components.PlayerAlliance.get(owner)?.alliance as Entity) ?? singletonEntity,
-    });
 
     if (!coord) return;
 

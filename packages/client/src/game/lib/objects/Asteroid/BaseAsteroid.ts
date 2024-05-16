@@ -81,7 +81,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
 
     let fleetsContainer;
     if (containerId) {
-      const renderContainer = scene.objects.deferredRenderContainer.get(containerId) as
+      const renderContainer = scene.objects.deferredRenderContainer.getContainer(containerId) as
         | DeferredAsteroidsRenderContainer
         | undefined;
       fleetsContainer = renderContainer?.getFleetsContainers(id);
