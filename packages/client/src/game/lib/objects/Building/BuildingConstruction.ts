@@ -30,10 +30,11 @@ export class BuildingConstruction extends Phaser.GameObjects.Container implement
 
     const spriteName = getConstructionSprite(buildingDimensions);
     if (!spriteName) console.warn("No construction sprite found for building dimensions: ", buildingDimensions);
-    this.sprite = this.scene.add.sprite(0, 0, Assets.SpriteAtlas, spriteName);
-    this.sprite.setOrigin(0, 1);
-    this.sprite.setDepth(DepthLayers.Building - coord.y);
-    this.sprite.setInteractive();
+    this.sprite = this.scene.add
+      .sprite(0, 0, Assets.SpriteAtlas, spriteName)
+      .setOrigin(0, 1)
+      .setDepth(DepthLayers.Building - coord.y);
+    console.log({ depth: DepthLayers.Building - coord.y });
 
     this.text = this.scene.add
       .bitmapText(
@@ -48,6 +49,7 @@ export class BuildingConstruction extends Phaser.GameObjects.Container implement
       .setOrigin(0.5);
 
     this.add([this.sprite, this.text]);
+    this.setDepth(DepthLayers.Building - 5 * coord.y);
 
     this.coord = coord;
     this._scene = scene;

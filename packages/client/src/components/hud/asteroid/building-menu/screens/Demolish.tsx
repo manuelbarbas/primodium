@@ -40,9 +40,11 @@ export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
       yoyo: true,
       repeat: -1,
     });
+    selectedBuildingObj?.setTint(0xff0000);
     demolishBuilding(mud, building, () => {
       pendingAnim.destroy();
       selectedBuildingObj?.setAlpha(1);
+      selectedBuildingObj?.clearTint();
     });
     components.SelectedBuilding.remove();
   };
