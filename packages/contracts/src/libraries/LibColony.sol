@@ -16,7 +16,7 @@ library LibColony {
   function getColonySlotsCostMultiplier(bytes32 playerEntity) internal view returns (uint256) {
     uint256 maxColonySlots = MaxColonySlots.get(playerEntity);
     uint256 multiplier = P_ColonySlotsConfig.getMultiplier();
-    return multiplier * maxColonySlots;
+    return multiplier ** maxColonySlots;
   }
 
   function getColonyShipsPlusAsteroids(bytes32 playerEntity) internal view returns (uint256) {
