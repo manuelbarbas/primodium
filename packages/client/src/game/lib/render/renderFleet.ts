@@ -37,5 +37,9 @@ export function renderFleet(args: { scene: PrimodiumScene; entity: Entity }) {
   const stance = components.FleetStance.get(entity)?.stance as EFleetStance | undefined;
   if (stance) newFleet.setStanceIcon(StanceToIcon[stance]);
 
+  // set empty status
+  const isEmpty = components.IsFleetEmpty.get(entity)?.value;
+  if (isEmpty) newFleet.setAlpha(0.5);
+
   return newFleet;
 }
