@@ -26,6 +26,7 @@ export const getSecondaryQuery = ({
         {
           tableId: tables.Asteroid.tableId,
           include: [
+            { tableId: tables.OwnedBy.tableId },
             { tableId: tables.Position.tableId },
             { tableId: tables.ReversePosition.tableId, on: "entity" },
             { tableId: tables.Level.tableId },
