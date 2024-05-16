@@ -5,10 +5,15 @@ import { TransitLine } from "@game/lib/objects/TransitLine";
 import { components } from "@/network/components";
 import { world } from "@/network/world";
 import { renderFleet } from "@/game/lib/render/renderFleet";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { isAsteroidBlocked } from "@/util/asteroid";
+import { EFleetStance } from "contracts/config/enums";
+import { StanceToIcon } from "@/game/lib/mappings";
 
 export const renderFleets = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const transitsToUpdate = new Set<Entity>();
+  const { objects } = scene;
 
   // handle rendering fleets if asteroid is not yet spawned
   const spawnQueue = new Map<Entity, Entity[]>();
@@ -143,6 +148,33 @@ export const renderFleets = (scene: PrimodiumScene) => {
       }
     });
   });
+
+  //render stances
+  setTimeout(
+    () =>
+      defineComponentSystem(systemsWorld, components.FleetStance, async ({ entity, value }) => {
+        const stance = value[0]?.stance;
+
+        const asteroid = components.FleetMovement.get(entity)?.destination as Entity | undefined;
+
+        const fleetObj = objects.fleet.get(entity);
+
+        if (!fleetObj) return;
+
+        const asteroidObj = objects.asteroid.get(asteroid ?? singletonEntity);
+        if (!stance) {
+          fleetObj.hideStanceIcon(true);
+          if (asteroidObj?.getFleetContainer().getFleetCount() === 1 || !isAsteroidBlocked(asteroid ?? singletonEntity))
+            asteroidObj?.getFleetContainer().hideBlockRing(true);
+          return;
+        }
+
+        fleetObj.setStanceIcon(StanceToIcon[stance as EFleetStance], true, true);
+
+        if (stance === EFleetStance.Block) asteroidObj?.getFleetContainer().showBlockRing(true);
+      }),
+    1000
+  );
 
   systemsWorld.registerDisposer(() => {
     unsub();

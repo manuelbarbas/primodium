@@ -1,6 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { Animations, ResourceTilekeys, Sprites, Tilemaps } from "@primodiumxyz/assets";
-import { EntityType, Mode } from "src/util/constants";
+import { EntityType, Mode } from "@/util/constants";
+import { EFleetStance } from "contracts/config/enums";
 import { Relationship, AsteroidSize, SceneKeys } from "./constants/common";
 
 export const EntityTypeToResourceTilekey: Record<Entity, ResourceTilekeys> = {
@@ -270,3 +271,10 @@ export const MainbaseLevelToEmblem = [
   Sprites.Emblem7,
   Sprites.Emblem8,
 ];
+
+//stance to icon
+export const StanceToIcon = {
+  [EFleetStance.Block]: Sprites.Block,
+  [EFleetStance.Defend]: Sprites.Defend,
+  [EFleetStance.Follow]: Sprites.Defend,
+};

@@ -2,13 +2,12 @@ import { Fleet } from "@/game/lib/objects/Fleet";
 import { components } from "@/network/components";
 import { Entity } from "@latticexyz/recs";
 import { PrimodiumScene } from "@/game/api/scene";
+import { StanceToIcon } from "@/game/lib/mappings";
+import { EFleetStance } from "contracts/config/enums";
 
 export function renderFleet(args: { scene: PrimodiumScene; entity: Entity }) {
   const { scene, entity } = args;
   const fleet = scene.objects.fleet.get(entity);
-  const playerEntity = components.Account.get()?.value;
-  const ownerEntity = components.OwnedBy.get(components.OwnedBy.get(entity)?.value as Entity | undefined)?.value;
-  const isOwnedByPlayer = playerEntity === ownerEntity;
 
   if (fleet) return fleet;
 
@@ -28,7 +27,15 @@ export function renderFleet(args: { scene: PrimodiumScene; entity: Entity }) {
       components.HoverEntity.remove();
     });
 
+  //set ownership
+  const playerEntity = components.Account.get()?.value;
+  const ownerEntity = components.OwnedBy.get(components.OwnedBy.get(entity)?.value as Entity | undefined)?.value;
+  const isOwnedByPlayer = playerEntity === ownerEntity;
   if (!isOwnedByPlayer) newFleet.setRelationship("Enemy");
+
+  // set stance icon
+  const stance = components.FleetStance.get(entity)?.stance as EFleetStance | undefined;
+  if (stance) newFleet.setStanceIcon(StanceToIcon[stance]);
 
   return newFleet;
 }

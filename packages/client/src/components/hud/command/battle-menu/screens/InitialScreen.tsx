@@ -16,6 +16,7 @@ import { landFleet } from "@/network/setup/contractCalls/fleetLand";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { alert } from "@/util/alert";
 import { clearFleet } from "@/network/setup/contractCalls/fleetClear";
+import { cn } from "@/util/client";
 
 export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
   const mud = useMud();
@@ -122,19 +123,23 @@ export const AttackButton = ({ target }: { target: Entity }) => {
     <>
       <Navigator.NavButton
         to="attack"
-        className="py-3 heropattern-topography-slate-100/10 grow flex-col items-center"
+        className={cn("py-3 grow flex-col items-center", !inGrace && "heropattern-topography-slate-100/10")}
         variant="error"
         size="content"
         disabled={inGrace}
       >
-        <div className="absolute inset-0 bg-error/25 animate-ping pointer-events-none" />
+        {!inGrace && <div className="absolute inset-0 bg-error/25 animate-ping pointer-events-none" />}
         <div className="flex flex-start px-1 gap-3">
-          <IconLabel className="text-lg drop-shadow-hard text-white" imageUri={InterfaceIcons.Attack2} text="ATTACK" />
+          <IconLabel
+            className="text-lg drop-shadow-hard text-white"
+            imageUri={InterfaceIcons.Attack2}
+            text={inGrace ? "IN GRACE PERIOD" : "ATTACK"}
+          />
         </div>
         <div className="absolute bottom-0 right-0 p-1 bg-error/50 text-xs rounded-bl-xl rounded-tl-xl"></div>
       </Navigator.NavButton>
       {inGrace && (
-        <div className="opacity-75">
+        <div className="opacity-75 mx-auto">
           <IconLabel className="text-xs" imageUri={InterfaceIcons.Grace} text={formatTime(gracePeriod - now)} />
         </div>
       )}

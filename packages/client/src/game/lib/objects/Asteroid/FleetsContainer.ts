@@ -12,10 +12,12 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
   private _scene: PrimodiumScene;
   private coord: TileCoord;
   private orbitRing: Phaser.GameObjects.Graphics;
+  private blockedRing: Phaser.GameObjects.Graphics;
   private fleets: Phaser.GameObjects.Container;
   private rotationTween: Phaser.Tweens.Tween;
   private prevRotationVal: number = -1;
   private paused = false;
+  private isBlocked = false;
   private inOrbitView = true;
 
   constructor(scene: PrimodiumScene, coord: Coord) {
@@ -23,11 +25,17 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     this.orbitRing = new Phaser.GameObjects.Graphics(scene.phaserScene)
       .lineStyle(2, 0x6ad9d9, 0.1)
       .strokeEllipse(0, 0, WIDTH, HEIGHT);
+    this.blockedRing = new Phaser.GameObjects.Graphics(scene.phaserScene)
+      .lineStyle(4, 0xff0000, 0.1)
+      .strokeEllipse(0, 0, WIDTH, HEIGHT)
+      .setScale(1.5)
+      .setActive(false)
+      .setVisible(false);
 
     // this.orbitRing.postFX.addShine();
 
     this.fleets = scene.phaserScene.add.container(0, 0);
-    this.add([this.orbitRing, this.fleets]);
+    this.add([this.blockedRing, this.orbitRing, this.fleets]);
     this.coord = coord;
     this._scene = scene;
 
@@ -112,6 +120,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
   setInlineView(offsetX = 32, offsetY = 24) {
     this.rotationTween.pause();
     this.orbitRing.setActive(false).setVisible(false);
+    this.blockedRing.setActive(false).setVisible(false);
 
     // this.fleets.setAlpha(0);
     // this.fleets.setRotation(0);
@@ -125,6 +134,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
       const posX = col * (fleet.width / 2 + MARGIN);
       const posY = row * (fleet.height / 2 + MARGIN);
       fleet.setPosition(posX + offsetX, posY + offsetY);
+      fleet.hideStanceIcon();
       fleet.deactivateBurn();
     });
 
@@ -143,10 +153,12 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
       this.orbitRing.setActive(true).setVisible(true);
       if (!this.paused) this.rotationTween.resume();
       this.fleets.each((fleet: Fleet) => {
-        // fleet.reset();
+        fleet.showStanceIcon();
         fleet.activateBurn();
       });
     } else this.orbitRing.setActive(false).setVisible(false);
+
+    if (this.isBlocked) this.blockedRing.setActive(true).setVisible(true);
 
     this.prevRotationVal = -1;
     this.setScale(1).setDepth(DepthLayers.Rock);
@@ -158,6 +170,50 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
   clearOrbit(destroy = false) {
     this.fleets.removeAll(destroy);
     this.setActive(false).setVisible(false);
+  }
+
+  showBlockRing(anim = false) {
+    this.isBlocked = true;
+
+    if (!anim) {
+      this.blockedRing.setActive(true).setVisible(true);
+      return this;
+    }
+
+    //kill existing tween
+    this.scene.tweens.killTweensOf(this.blockedRing);
+    this.scene.add.tween({
+      targets: this.blockedRing,
+      alpha: 1,
+      duration: 200,
+      onComplete: () => {
+        this.blockedRing.setActive(true).setVisible(true);
+      },
+    });
+
+    return this;
+  }
+
+  hideBlockRing(anim = false) {
+    this.isBlocked = false;
+
+    if (!anim) {
+      this.blockedRing.setActive(false).setVisible(false);
+      return this;
+    }
+
+    //kill existing tween
+    this.scene.tweens.killTweensOf(this.blockedRing);
+    this.scene.add.tween({
+      targets: this.blockedRing,
+      alpha: 0,
+      duration: 200,
+      onComplete: () => {
+        this.blockedRing.setActive(false).setVisible(false);
+      },
+    });
+
+    return this;
   }
 
   pauseRotation() {
@@ -180,8 +236,11 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
   }
 
   setActive(value: boolean): this {
-    if (value && !this.paused) this.rotationTween.play();
-    else this.rotationTween.pause();
+    if (value) {
+      if (!this.paused) this.rotationTween.play();
+    } else {
+      this.rotationTween.pause();
+    }
 
     super.setActive(value);
 

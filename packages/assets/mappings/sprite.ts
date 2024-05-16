@@ -184,6 +184,10 @@ export enum Sprites {
   Emblem7 = "sprites/emblems/Emblems_LVL7.png",
   Emblem8 = "sprites/emblems/Emblems_LVL8.png",
 
+  // Stance Icons
+  Block = "sprites/icons/block.png",
+  Defend = "sprites/icons/defend.png",
+
   // Decor
   DroneBottom = "sprites/decorations/drone/bottom/Drones_Bottom_Left1.png",
   DroneTop = "sprites/decorations/drone/top/Drones_Top_Right1.png",

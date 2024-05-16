@@ -17,6 +17,7 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
   private fleetImage: Phaser.GameObjects.Image;
   private particles: Phaser.GameObjects.Particles.ParticleEmitter;
   private fleetOverlay: Phaser.GameObjects.Image;
+  private stanceIcon: Phaser.GameObjects.Image;
 
   constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord }) {
     const { id, scene, coord } = args;
@@ -30,8 +31,13 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
     // Create fleet image
     this.fleetImage = new Phaser.GameObjects.Image(scene.phaserScene, 0, 0, Assets.SpriteAtlas, Sprites.FleetPlayer);
     this.fleetOverlay = new Phaser.GameObjects.Image(scene.phaserScene, 0, 0, Assets.SpriteAtlas, Sprites.FleetPlayer)
-      .setAlpha(0)
+      .setVisible(false)
       .setOrigin(0.5, 0.5);
+    this.stanceIcon = new Phaser.GameObjects.Image(scene.phaserScene, 0, 0, Assets.SpriteAtlas, Sprites.EMPTY)
+      .setVisible(false)
+      .setScale(0.25)
+      .setDisplayOrigin(0, 72);
+
     this.fleetImage.setScale(1).setInteractive().disableInteractive();
     this.frames = this.scene.anims.get(Animations.FleetPlayer).frames;
     this.currentRotationFrame = this.frames[0].textureFrame;
@@ -49,7 +55,7 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
       blendMode: "ADD",
     }).setAlpha(0.27);
 
-    this.add([this.particles, this.fleetImage, this.fleetOverlay]);
+    this.add([this.particles, this.fleetImage, this.fleetOverlay, this.stanceIcon]);
     this.setDepth(DepthLayers.Resources);
 
     this._scene.objects.fleet.add(id, this);
@@ -77,9 +83,12 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
     let angle = degrees ?? 0;
     if (angle < 0) angle += 360;
     this._setRotationFrame(angle);
-    this.particles.angle = this._getRotationFrameOffset();
 
-    return super.setAngle(angle - this._getRotationFrameOffset());
+    super.setAngle(angle - this._getRotationFrameOffset());
+    this.particles.angle = this._getRotationFrameOffset();
+    this.stanceIcon.angle = -this.angle;
+
+    return this;
   }
 
   setRotation(radians?: number | undefined): this {
@@ -91,16 +100,65 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
   setRelationship(value: Relationship) {
     switch (value) {
       case "Ally":
-        this.fleetOverlay.setTintFill(0x00ff00).setAlpha(0.4);
+        this.fleetOverlay.setVisible(true).setTintFill(0x00ff00).setAlpha(0.4);
         break;
       case "Enemy":
-        this.fleetOverlay.setTintFill(0xff0000).setAlpha(0.4);
+        this.fleetOverlay.setVisible(true).setTintFill(0xff0000).setAlpha(0.4);
         break;
       case "Neutral":
       case "Self":
-        this.fleetOverlay.setAlpha(0);
+        this.fleetOverlay.setVisible(false);
         break;
     }
+  }
+
+  setStanceIcon(icon: Sprites, show = true, anim = false) {
+    this.stanceIcon.setFrame(icon);
+    if (show) this.showStanceIcon(anim);
+    return this;
+  }
+
+  showStanceIcon(anim = false) {
+    this.stanceIcon.setVisible(true);
+
+    if (!anim) return this;
+
+    //kill existings tweens on stanceIcon
+    this.scene.tweens.killTweensOf(this.stanceIcon);
+
+    this.scene.tweens.add({
+      targets: this.stanceIcon,
+      alpha: 1,
+      duration: 200,
+      ease: "Linear",
+      onStart: () => {
+        this.stanceIcon.setAlpha(0);
+      },
+    });
+
+    return this;
+  }
+
+  hideStanceIcon(anim = false) {
+    if (!anim) {
+      this.stanceIcon.setVisible(false);
+      return this;
+    }
+
+    //kill existings tweens on stanceIcon
+    this.scene.tweens.killTweensOf(this.stanceIcon);
+
+    this.scene.tweens.add({
+      targets: this.stanceIcon,
+      alpha: 0,
+      duration: 200,
+      ease: "Linear",
+      onComplete: () => {
+        this.stanceIcon.setVisible(false);
+      },
+    });
+
+    return this;
   }
 
   onClick(fn: (e: Phaser.Input.Pointer) => void) {

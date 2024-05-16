@@ -127,6 +127,12 @@ export function getAsteroidInfo(primodium: PrimodiumGame, spaceRock: Entity) {
   };
 }
 
+export function isAsteroidBlocked(spaceRock: Entity) {
+  return !!getOrbitingFleets(spaceRock).find(
+    (fleet) => components.FleetStance.get(fleet)?.stance == EFleetStance.Block
+  );
+}
+
 export const getRockRelationship = (player: Entity, rock: Entity) => {
   if (player === singletonEntity) return RockRelationship.Neutral;
   const playerAlliance = components.PlayerAlliance.get(player)?.alliance;

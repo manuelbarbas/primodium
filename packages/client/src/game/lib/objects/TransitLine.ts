@@ -32,6 +32,7 @@ export class TransitLine extends TargetLine {
     this.fleet = fleet;
     this._setFleetAngleAndPos();
     this.fleet.activateBurn();
+    this.fleet.hideStanceIcon();
 
     return this;
   }
