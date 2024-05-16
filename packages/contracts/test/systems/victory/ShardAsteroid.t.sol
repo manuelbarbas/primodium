@@ -34,14 +34,25 @@ contract ShardAsteroidTest is PrimodiumTest {
 
     uint256 expectedDistance = LibMath.getSpawnDistance(config.shardAsteroidSpawnOffset);
 
+    spawn(alice);
+
+    uint256 seed = uint256(expectedAsteroidEntity);
+    PositionData memory position;
+    do {
+      position = LibMath.getPositionByVector(expectedDistance, LibMath.getRandomDirection(seed));
+      seed++;
+    } while (
+      ReversePosition.get(position.x, position.y) != expectedAsteroidEntity ||
+        LibShardAsteroid.getQuadrant(position) == 0
+    );
+    seed--;
+
     PositionData memory expectedPosition = LibMath.getPositionByVector(
       expectedDistance,
-      LibMath.getRandomDirection(uint256(expectedAsteroidEntity))
+      LibMath.getRandomDirection(seed)
     );
     console.logBytes32(ReversePosition.get(expectedPosition.x, expectedPosition.y));
     console.log("quadrant a", LibShardAsteroid.getQuadrant(expectedPosition));
-
-    spawn(alice);
 
     console.log("quadrant b", LibShardAsteroid.getQuadrant(Position.get(expectedAsteroidEntity)));
     assertTrue(ShardAsteroid.get(expectedAsteroidEntity).isShardAsteroid, "Shard asteroid not created");
