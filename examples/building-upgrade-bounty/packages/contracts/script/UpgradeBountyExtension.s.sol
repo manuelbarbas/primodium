@@ -71,8 +71,8 @@ contract UpgradeBountyExtension is Script {
     world.registerSystem(systemResource, upgrBounSystem, false); // registers the UpgrBounSystem contract address to the UpgrBounSystem namespace and resourceID in the world address
 
     // Register UpgrBounSystem.incrementMessage(string) as a function selector to make it accessible through the World.
-    // When called through the world (MUD version 2.0.0-next.16^), it will be through <namespace>__<function>, e.g. "upgradeBounty__incrementMessage(string)"
-    // If MUD version is 2.0.0-next.15 or lower, it will be through <namespace>_<system>_<function>, e.g. "upgradeBounty_UpgrBounSystem_incrementMessage(string)"
+    // When called through the world, it will be through <namespace>__<function>, e.g. "upgradeBounty__incrementMessage(string)"
+
     world.registerFunctionSelector(systemResource, "depositBounty((int32,int32,bytes32))");
     world.registerFunctionSelector(systemResource, "withdrawBounty((int32,int32,bytes32))");
     world.registerFunctionSelector(systemResource, "upgradeForBounty(address,(int32,int32,bytes32))");

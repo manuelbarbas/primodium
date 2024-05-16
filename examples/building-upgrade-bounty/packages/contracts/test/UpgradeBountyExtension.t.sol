@@ -76,7 +76,7 @@ contract UpgradeBountyExtensionTest is Test {
     IWorld iworld = IWorld(worldAddress);
     // Bob tries to use the UpgrBounSystem before she has given Bob system access.
     vm.expectRevert();
-    bytes memory newBuildingEntity = iworld.upgradeBounty_UpgrBounSystem_upgradeForBounty(deployerAddress, bountyCoord);
+    bytes memory newBuildingEntity = iworld.upgradeBounty__upgradeForBounty(deployerAddress, bountyCoord);
     vm.stopPrank();
   }
 
@@ -84,7 +84,7 @@ contract UpgradeBountyExtensionTest is Test {
     vm.startPrank(deployerAddress);
     vm.deal(deployerAddress, 1 ether);
     IWorld iworld = IWorld(worldAddress);
-    uint256 bountyValue = iworld.upgradeBounty_UpgrBounSystem_depositBounty{ value: bountyAmount }(bountyCoord);
+    uint256 bountyValue = iworld.upgradeBounty__depositBounty{ value: bountyAmount }(bountyCoord);
     vm.stopPrank();
   }
   // More tests to come later
