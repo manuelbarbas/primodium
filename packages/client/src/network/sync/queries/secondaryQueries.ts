@@ -35,6 +35,7 @@ export const getSecondaryQuery = ({
         {
           tableId: tables.ShardAsteroid.tableId,
           include: [
+            { tableId: tables.OwnedBy.tableId },
             { tableId: tables.Position.tableId },
             { tableId: tables.ReversePosition.tableId, on: "entity" },
             { tableId: tables.LastConquered.tableId },

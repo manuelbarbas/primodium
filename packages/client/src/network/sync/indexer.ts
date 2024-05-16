@@ -7,7 +7,7 @@ import { Hex } from "viem";
 import { getNetworkConfig } from "../config/getNetworkConfig";
 import { MUD, SetupResult } from "../types";
 import { getAllianceQuery } from "./queries/allianceQueries";
-import { getActiveAsteroidQuery, getAsteroidQuery } from "./queries/asteroidQueries";
+import { getActiveAsteroidQuery, getAsteroidQuery, getShardAsteroidQuery } from "./queries/asteroidQueries";
 import { getBattleReportQuery } from "./queries/battleReportQueries";
 import { getFleetQuery } from "./queries/fleetQueries";
 import { getInitialQuery } from "./queries/initialQueries";
@@ -148,7 +148,7 @@ export const hydratePlayerData = (playerEntity: Entity | undefined, playerAddres
   });
 };
 
-export const hydrateAsteroidData = (selectedRock: Entity | undefined, mud: MUD) => {
+export const hydrateAsteroidData = (selectedRock: Entity | undefined, mud: MUD, shard?: boolean) => {
   const { network, components } = mud;
   const { tables, world } = network;
   const networkConfig = getNetworkConfig();
@@ -165,15 +165,14 @@ export const hydrateAsteroidData = (selectedRock: Entity | undefined, mud: MUD) 
     return;
   }
 
-  const syncData = Sync.withFilterIndexerRecsSync(
-    getAsteroidQuery({
-      tables,
-      world,
-      indexerUrl: networkConfig.indexerUrl!,
-      asteroid: selectedRock,
-      worldAddress: networkConfig.worldAddress as Hex,
-    })
-  );
+  const params = {
+    tables,
+    world,
+    indexerUrl: networkConfig.indexerUrl!,
+    asteroid: selectedRock,
+    worldAddress: networkConfig.worldAddress as Hex,
+  };
+  const syncData = Sync.withFilterIndexerRecsSync(shard ? getShardAsteroidQuery(params) : getAsteroidQuery(params));
 
   syncData.start(
     ...createSyncHandlers(syncId, {
