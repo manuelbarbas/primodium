@@ -64,7 +64,7 @@ export const renderAsteroid = (args: {
     if (ownedByPlayer) return "You";
     if (ownedBy) return entityToPlayerName(ownedBy as Entity);
     if (asteroidData.wormhole) return "Wormhole";
-    if (asteroidData.mapId === EMap.Common) return "BASIC";
+    if (asteroidData.mapId === EMap.Common) return "COMMON";
     return getEntityTypeName(MapIdToAsteroidType[asteroidData.mapId]);
   })();
 

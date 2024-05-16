@@ -21,6 +21,10 @@ export const EntityTypeToResourceSprites = {
   [EntityType.IronPlate]: Sprites.IronPlate,
   [EntityType.PVCell]: Sprites.PVCell,
   [EntityType.Alloy]: Sprites.Alloy,
+  [EntityType.Kimberlite]: Sprites.Kimberlite,
+  [EntityType.Iridium]: Sprites.Iridium,
+  [EntityType.Platinum]: Sprites.Platinum,
+  [EntityType.Titanium]: Sprites.Titanium,
 };
 
 export const EntityTypeToUnitSprites: Record<Entity, Sprites> = {
@@ -45,14 +49,14 @@ export const EntityTypetoBuildingSprites: Record<Entity, Sprites[]> = {
     Sprites.Mainbase8,
   ],
   [EntityType.WormholeBase]: [
-    Sprites.Wormholebase1,
-    Sprites.Wormholebase1,
-    Sprites.Wormholebase1,
-    Sprites.Wormholebase1,
-    Sprites.Wormholebase1,
-    Sprites.Wormholebase1,
-    Sprites.Wormholebase1,
-    Sprites.Wormholebase1,
+    Sprites.WormholebaseIdle1,
+    Sprites.WormholebaseIdle1,
+    Sprites.WormholebaseIdle1,
+    Sprites.WormholebaseIdle1,
+    Sprites.WormholebaseIdle1,
+    Sprites.WormholebaseIdle1,
+    Sprites.WormholebaseIdle1,
+    Sprites.WormholebaseIdle1,
   ],
 
   [EntityType.IronMine]: [Sprites.IronMine1, Sprites.IronMine2, Sprites.IronMine3],
@@ -148,7 +152,12 @@ export const EntityTypeToAnimations: Record<string, (Animations | undefined)[]> 
   [EntityType.Market]: [Animations.Market1],
   [EntityType.Shipyard]: [Animations.Shipyard1],
   [EntityType.DroidBase]: [Animations.DroidBase],
-  [EntityType.WormholeBase]: [Animations.WormholebaseIdle1],
+  [EntityType.WormholeBase]: [
+    Animations.WormholebaseIdle1,
+    Animations.WormholebaseOverheat1,
+    Animations.WormholebaseCooldown1,
+    Animations.WormholebasePowerUp1,
+  ],
 };
 
 export const MaxLevelToTilemap: Record<number, Tilemaps> = {

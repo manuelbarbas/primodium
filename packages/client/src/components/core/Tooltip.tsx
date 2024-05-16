@@ -66,7 +66,7 @@ export const Tooltip = ({ className, tooltipContent, children, direction, show =
       onMouseMove={handleMouseMove}
       onPointerEnter={() => setVisible(true)}
       onPointerLeave={() => setVisible(false)}
-      className="relative w-fit"
+      className="relative"
     >
       {(visible || show) && (
         <motion.div

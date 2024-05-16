@@ -39,6 +39,12 @@ export default {
       animation: {
         float: "float 5s ease-in-out infinite",
       },
+      cursor: {
+        normal: 'url("/img/cursors/normal.png"), auto',
+
+        pointer: 'url("/img/cursors/pointer.png") 12 0, auto',
+        pointerDown: 'url("/img/cursors/pointerdown.png") 12 0, auto',
+      },
     },
   },
   daisyui: {

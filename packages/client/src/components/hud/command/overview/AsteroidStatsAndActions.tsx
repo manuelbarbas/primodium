@@ -10,7 +10,7 @@ import { EntityToResourceImage } from "@/util/mappings";
 import { formatResourceCount } from "@/util/number";
 import { Entity } from "@latticexyz/recs";
 
-const AsteroidStats = ({ asteroid }: { asteroid: Entity }) => {
+export const AsteroidStats = ({ asteroid, segments = 10 }: { asteroid: Entity; segments?: number }) => {
   const { resourceCount: encryption, resourceStorage: maxEncryption } = useFullResourceCount(
     EntityType.Encryption,
     asteroid
@@ -22,13 +22,13 @@ const AsteroidStats = ({ asteroid }: { asteroid: Entity }) => {
     <div className="flex flex-row gap-4 justify-end">
       <div className="flex gap-2 items-center">
         <img src={encryptionImg} className="w-4 h-4" alt="encryption" />
-        <CapacityBar current={encryption} max={maxEncryption} segments={10} className="w-24" />
-        {formatResourceCount(EntityType.Encryption, encryption, { short: true })}
+        <CapacityBar current={encryption} max={maxEncryption} segments={segments} className="w-24" />
+        <p>{formatResourceCount(EntityType.Encryption, encryption, { short: true })}</p>
       </div>
       <div className="flex gap-2 items-center">
         <img src={strengthImg} className="w-4 h-4" alt="strength" />
-        <CapacityBar current={strength} max={maxStrength} segments={10} className="w-24" />
-        {formatResourceCount(EntityType.Defense, strength, { short: true })}
+        <CapacityBar current={strength} max={maxStrength} segments={segments} className="w-24" />
+        <p className="min-w-5">{formatResourceCount(EntityType.Defense, strength, { short: true })}</p>
       </div>
     </div>
   );

@@ -81,7 +81,7 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
     vessel: EntityType.VesselCapacity,
     electricity: EntityType.Electricity,
     defense: EntityType.Defense,
-    moves: EntityType.FleetCount,
+    fleetCount: EntityType.FleetCount,
     encryption: EntityType.Encryption,
     colonyShipCapacity: EntityType.ColonyShipCapacity,
   };
@@ -778,12 +778,13 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
               notify("error", "No building selected");
               throw new Error("No building selected");
             }
+            const time = components.Time.get()?.value ?? 0n;
             await setComponentValue(
               mud,
               mud.components.CooldownEnd,
               { entity: selectedBuilding as Hex },
               {
-                value: 0n,
+                value: time + 10n,
               }
             );
           },
@@ -822,6 +823,15 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
               { entity: selectedFleet as Hex, unit: unitEntity as Hex },
               {
                 value: BigInt(count),
+              }
+            );
+
+            await setComponentValue(
+              mud,
+              mud.components.IsFleetEmpty,
+              { entity: selectedFleet as Hex },
+              {
+                value: false,
               }
             );
           },

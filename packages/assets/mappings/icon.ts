@@ -39,9 +39,9 @@ import CategoryStorage from "../icons/category/storage.png?url";
 import Wormhole from "../icons/UI_WormholeBase.png?url";
 import ShardSprite from "../sprites/shard/shard.png?url";
 import Fleet from "../icons/UI_Fleet.png?url";
-import FleetEnemy from "../icons/UI_Fleet_Enemy.png?url";
 import Discord from "../icons/discord.svg?url";
 import Twitter from "../icons/x-twitter.svg?url";
+import EnemyFleet from "../icons/UI_Ship_Enemy.png?url";
 
 export const InterfaceIcons = {
   Add,
@@ -52,18 +52,25 @@ export const InterfaceIcons = {
   Block,
   Blueprints,
   Build,
+  CategoryInfra,
+  CategoryMilitary,
+  CategoryProduction,
+  CategoryStorage,
   Chat,
-  Crosshairs,
   Command,
   Defense,
+  Crosshairs,
+  Debug,
   Discord,
+  EnemyFleet,
   EncryptionBlue,
   EncryptionGold,
   Expansion,
+  Fleet,
   Grace,
-  Debug,
   Housing,
   Leaderboard,
+  Navigator,
   NotAllowed,
   Objective,
   Reinforcements,
@@ -77,14 +84,7 @@ export const InterfaceIcons = {
   Strength,
   Trade,
   Transfer,
-  Vault,
-  Navigator,
-  CategoryInfra,
-  CategoryMilitary,
-  CategoryProduction,
-  CategoryStorage,
-  Wormhole,
-  Fleet,
-  FleetEnemy,
   Twitter,
+  Vault,
+  Wormhole,
 };
