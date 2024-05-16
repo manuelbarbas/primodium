@@ -23,6 +23,7 @@ export enum Audio {
   Execute2 = "Execute_02",
   DataPoint = "Data_Point_01",
   DataPoint2 = "Data_Point_02",
+  DataPoint5 = "Data_Point_05",
   Confirm = "Confirm_01",
   Confirm2 = "Confirm_02",
   Confirm3 = "Confirm_03",
