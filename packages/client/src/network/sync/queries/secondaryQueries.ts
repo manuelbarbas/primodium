@@ -1,6 +1,5 @@
 import type { Sync } from "@primodiumxyz/sync-stack";
 import { Hex } from "viem";
-import { EntityType } from "@/util/constants";
 
 export const getSecondaryQuery = ({
   tables,
@@ -22,14 +21,11 @@ export const getSecondaryQuery = ({
         // alliance
         { tableId: tables.Alliance.tableId },
         { tableId: tables.PlayerAlliance.tableId },
-        // main base starting coord
-        { tableId: tables.Position.tableId, where: { column: "entity", operation: "eq", value: EntityType.MainBase } },
         // starbelt
         { tableId: tables.Home.tableId },
         {
           tableId: tables.Asteroid.tableId,
           include: [
-            { tableId: tables.OwnedBy.tableId },
             { tableId: tables.Position.tableId },
             { tableId: tables.ReversePosition.tableId, on: "entity" },
             { tableId: tables.Level.tableId },
@@ -38,7 +34,6 @@ export const getSecondaryQuery = ({
         {
           tableId: tables.ShardAsteroid.tableId,
           include: [
-            { tableId: tables.OwnedBy.tableId },
             { tableId: tables.Position.tableId },
             { tableId: tables.ReversePosition.tableId, on: "entity" },
             { tableId: tables.LastConquered.tableId },

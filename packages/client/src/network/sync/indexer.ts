@@ -10,13 +10,14 @@ import { getAllianceQuery } from "./queries/allianceQueries";
 import { getActiveAsteroidQuery, getAsteroidQuery } from "./queries/asteroidQueries";
 import { getBattleReportQuery } from "./queries/battleReportQueries";
 import { getFleetQuery } from "./queries/fleetQueries";
-import { getInitalQuery } from "./queries/initialQueries";
+import { getInitialQuery } from "./queries/initialQueries";
 import { getSecondaryQuery } from "@/network/sync/queries/secondaryQueries";
 import { getPlayerQuery } from "./queries/playerQueries";
 import { hydrateFromRPC } from "./rpc";
 
 export const hydrateInitialGameState = (
   setupResult: SetupResult,
+  playerAddress: Hex,
   onComplete: () => void,
   onError: (err: unknown) => void
 ) => {
@@ -30,10 +31,11 @@ export const hydrateInitialGameState = (
   if (!networkConfig.indexerUrl) return;
 
   const sync = Sync.withQueryDecodedIndexerRecsSync(
-    getInitalQuery({
+    getInitialQuery({
       tables,
       world,
       indexerUrl: networkConfig.indexerUrl,
+      playerAddress,
       worldAddress: networkConfig.worldAddress as Hex,
     })
   );

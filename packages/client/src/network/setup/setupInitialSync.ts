@@ -3,8 +3,9 @@ import { getNetworkConfig } from "../config/getNetworkConfig";
 import { hydrateInitialGameState, hydrateSecondaryGameState } from "../sync/indexer";
 import { hydrateFromRPC, subToRPC } from "../sync/rpc";
 import { SetupResult } from "../types";
+import { Hex } from "viem";
 
-export const setupInitialSync = async (setupResult: SetupResult) => {
+export const setupInitialSync = async (setupResult: SetupResult, playerAddress: Hex) => {
   const { network, components } = setupResult;
   const { publicClient } = network;
   const networkConfig = getNetworkConfig();
@@ -72,6 +73,7 @@ export const setupInitialSync = async (setupResult: SetupResult) => {
   // hydrate initial game state from indexer
   hydrateInitialGameState(
     setupResult,
+    playerAddress,
     // on complete
     () => {
       components.SyncSource.set({ value: SyncSourceType.Indexer });
