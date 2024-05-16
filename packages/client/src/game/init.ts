@@ -21,12 +21,17 @@ async function init(): Promise<InitResult> {
   const globalApi = createGlobalApi(game);
 
   return {
+    // primary systems are run straight away when the Game component is mounted, meaning
+    // right after initial queries were fetched, which is strictly data required to render the home asteroid
     primary: {
       ROOT: await initRootScene(globalApi),
       UI: await initUIScene(globalApi),
       ASTEROID: await initAsteroidScene(globalApi),
       GLOBAL: globalApi,
     },
+    // secondary queries are run after secondary queries were fetched, which is the data required to render
+    // the asteroids, fleets and other players; this helps rendering the home asteroid as fast as possible, and
+    // making sure global systems are run over complete data
     secondary: {
       STARMAP: await initStarmapScene(globalApi),
       COMMAND_CENTER: await initCommandCenter(globalApi),
