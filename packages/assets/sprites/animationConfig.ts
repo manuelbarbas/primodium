@@ -674,6 +674,7 @@ export const AnimationConfig = [
     startFrame: 1,
     endFrame: 18,
     prefix: "vfx/upgrade/3x3/Upgrade3x3_",
+    suffix: ".png",
   },
   {
     key: "wormholebase/level1/overheat",
