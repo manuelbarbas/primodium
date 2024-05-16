@@ -77,10 +77,9 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
     let angle = degrees ?? 0;
     if (angle < 0) angle += 360;
     this._setRotationFrame(angle);
-    super.setAngle(angle - this._getRotationFrameOffset());
     this.particles.angle = this._getRotationFrameOffset();
 
-    return this;
+    return super.setAngle(angle - this._getRotationFrameOffset());
   }
 
   setRotation(radians?: number | undefined): this {

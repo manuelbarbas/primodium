@@ -90,6 +90,20 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
   },
 
+  Cooldown: {
+    keys: [],
+    tables: {
+      P_CooldownConfig: {
+        linNum: 11n,
+        linDen: 10000n,
+        linSwitch: 20000n,
+        logDiv: 100000n,
+        logMult: 60n,
+        logAdd: 7n,
+      },
+    },
+  },
+
   Wormhole: {
     keys: [],
     tables: {
@@ -111,14 +125,14 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     keys: [],
     tables: {
       P_ConquestConfig: {
-        holdTime: 6n * 60n * 60n,
+        holdTime: 5n * 60n * 60n,
         // spawn a shard asteroid every <shardAsteroidSpawnFrequency> players, starting at the <shardAsteroidOffset>th player
         shardAsteroidSpawnFrequency: 100n,
         shardAsteroidSpawnOffset: 25n,
         // limit shard asteroids to <maxShardAsteroids>
         maxShardAsteroids: 10n,
         shardAsteroidPoints: 50n * BigInt(SCALE),
-        shardAsteroidLifeSpan: 6n * 60n * 60n,
+        shardAsteroidLifeSpan: 8n * 60n * 60n,
         shardAsteroidEncryption: 1500n * BigInt(SCALE),
         shardAsteroidEncryptionRegen: BigInt(Math.round(0.0336 * SCALE)),
       },
@@ -174,15 +188,15 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
 
   /* ------------------------------- Marketplace ------------------------------ */
 
-  IronSupply: marketplaceSupplyTable(EResource.Iron, 1e4),
-  CopperSupply: marketplaceSupplyTable(EResource.Copper, 1e4),
-  LithiumSupply: marketplaceSupplyTable(EResource.Lithium, 1e4),
+  IronSupply: marketplaceSupplyTable(EResource.Iron, 330),
+  CopperSupply: marketplaceSupplyTable(EResource.Copper, 330),
+  LithiumSupply: marketplaceSupplyTable(EResource.Lithium, 330),
   TitaniumSupply: marketplaceSupplyTable(EResource.Titanium, 1),
   PlatinumSupply: marketplaceSupplyTable(EResource.Platinum, 1),
   IridiumSupply: marketplaceSupplyTable(EResource.Iridium, 1),
-  IronPlateSupply: marketplaceSupplyTable(EResource.IronPlate, 1e2),
-  AlloySupply: marketplaceSupplyTable(EResource.Alloy, 1e2),
-  PVCellSupply: marketplaceSupplyTable(EResource.PVCell, 1e2),
+  IronPlateSupply: marketplaceSupplyTable(EResource.IronPlate, 137),
+  AlloySupply: marketplaceSupplyTable(EResource.Alloy, 137),
+  PVCellSupply: marketplaceSupplyTable(EResource.PVCell, 137),
 
   MarketplaceConfig: {
     keys: [],

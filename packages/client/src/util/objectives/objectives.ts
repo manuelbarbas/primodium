@@ -544,7 +544,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 3n,
       requiredObjectives: [EObjectives.UpgradeStorageUnit2],
       buildingType: EntityType.StarmapperStation,
-      description: "A starmapper station increases the number of fleets you can create.",
+      description: "A Starmapper Station increases the number of fleets you can create.",
     },
   ],
   [
@@ -595,7 +595,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       unitType: EntityType.MinutemanMarine,
       unitCount: 12n,
       description:
-        "Minutemen are weak units that are trained quickly, move fast, and carry lots of cargo. To train, click on a workshop and select Train Units.",
+        "Minutemen are expendable offensive units that are trained quickly, move very fast, and provide an efficient cargo ability per housing required. To train, click on a workshop and select Train Units.",
     },
   ],
   [
@@ -606,10 +606,10 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 8n,
       requiredObjectives: [EObjectives.TrainMinutemanMarine],
       unitType: EntityType.TridentMarine,
-      unitCount: 8n,
+      unitCount: 12n,
 
       description:
-        "Select the workshop you placed on the map to train Trident marines. Trident marines are basic well-rounded units. To train, click on a workshop and select Train Units.",
+        "Select the workshop you placed on the map to train Trident marines. Trident marines are well-rounded units with good speed and excellent cargo ability. To train, click on a workshop and select Train Units.",
     },
   ],
   [
@@ -620,9 +620,9 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 10n,
       requiredObjectives: [EObjectives.TrainTridentMarine],
       unitType: EntityType.LightningCraft,
-      unitCount: 8n,
+      unitCount: 5n,
       description:
-        "Upgrade a workshop to Level 10 to unlock the ability to train Lightning Ships. Lightning Ships are weak but travel extremely fast.",
+        "Upgrade a workshop to Level 10 to unlock the ability to train Lightning Ships. Lightning Ships are weak, but are insanely fast, high cargo units.",
     },
   ],
 
@@ -660,8 +660,9 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 5n,
       requiredObjectives: [EObjectives.BuildDroneFactory],
       unitType: EntityType.AnvilDrone,
-      unitCount: 8n,
-      description: "To train an anvil drone, select a drone factory. Anvil drones are standard defensive drones.",
+      unitCount: 20n,
+      description:
+        "To train an anvil drone, select a drone factory. Anvil drones are standard drones tuned to be a sturdy and reliable.",
     },
   ],
   [
@@ -672,8 +673,9 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 5n,
       requiredObjectives: [EObjectives.BuildDroneFactory],
       unitType: EntityType.HammerDrone,
-      unitCount: 8n,
-      description: "To build a hammer drone, Click on a drone factory. Hammer drones are standard attacking drones.",
+      unitCount: 20n,
+      description:
+        "To build a hammer drone, Click on a drone factory. Hammer drones are standard drones that sacrifice armor for more weapons.",
     },
   ],
   [
@@ -684,9 +686,9 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 8n,
       unitType: EntityType.AegisDrone,
       requiredObjectives: [EObjectives.TrainAnvilDrone],
-      unitCount: 8n,
+      unitCount: 20n,
       description:
-        "Upgrade a drone factory to Level 2 to unlock the ability to build Aegis drones. Aegis drones are strong and slow defensive units that use lots of housing.",
+        "Upgrade a drone factory to Level 8 to unlock the ability to build Aegis drones. Aegis drones are robust specialized defensive units. They occupy more housing than any other unit.",
     },
   ],
   [
@@ -697,9 +699,9 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 8n,
       requiredObjectives: [EObjectives.TrainHammerDrone],
       unitType: EntityType.StingerDrone,
-      unitCount: 8n,
+      unitCount: 20n,
       description:
-        "Upgrade a drone factory to Level 3 to unlock the ability to build Stinger drones. Stinger drones are strong and slow offensive units that use lots of housing.",
+        "Upgrade a drone factory to Level 8 to unlock the ability to build Stinger drones. Stinger drones are powerful specialized assault units. They occupy more housing than any other unit.",
     },
   ],
 
@@ -712,7 +714,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 5n,
       buildingType: EntityType.Hangar,
       description:
-        "Hangars provide large amounts of housing for units. To build, select the hangar from the Blueprints menu and place it on an empty tile.",
+        "Hangars provide large amounts of housing for units. To build, select the Hangar from the Blueprints menu and place it on an empty tile.",
     },
   ],
 
@@ -725,7 +727,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 5n,
       buildingType: EntityType.ShieldGenerator,
       description:
-        "Shield Generators provide strength boosts to supplement defense provided by fleets and SAM launchers. To build, select the Hangar from the Blueprints menu and place it on an empty tile.",
+        "Shield Generators boost defense provided by fleets and SAM launchers, and improve asteroid defense recovery. They are very power hungry. To build, select the Shield Generator from the Blueprints menu and place it on an empty tile.",
     },
   ],
   [
@@ -736,7 +738,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 7n,
       buildingType: EntityType.Vault,
       description:
-        "Vaults protect your resources from being raided. To build, select the Vault from the Blueprints menu and place it on an empty tile.",
+        "Vaults automatically protect some of your resources from being raided. To build, select the Vault from the Blueprints menu and place it on an empty tile.",
     },
   ],
   [
@@ -747,7 +749,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 8n,
       buildingType: EntityType.SAMLauncher,
       description:
-        "SAM launchers give your asteroid strength, protecting you from enemy attacks. You need electricity to power them. To build, select the SAM Launcher from the Blueprints menu and place it on an empty tile.",
+        "SAM launchers give your asteroid native defense and additional health, protecting you from enemy attacks. You need electricity to power them. To build, select the SAM Launcher from the Blueprints menu and place it on an empty tile.",
     },
   ],
 
@@ -772,7 +774,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.StorageUnit,
       level: 2n,
       description:
-        "Upgrade a workshop to produce units more quickly and unlock new units. To upgrade, clock on a workshop and select Upgrade.",
+        "Upgrade a Storage Unit to increase the quantity and diversity of resources your asteroid can hold. To upgrade, click on a Storage Unit and select Upgrade.",
     },
   ],
   [
@@ -784,7 +786,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BuildIronMine],
       buildingType: EntityType.IronPlateFactory,
       description:
-        "Iron Plate Factories produce iron plate by burning iron. To build, select a factory in the Blueprints menu. Place it on any empty tile.",
+        "Iron Plate Factories produce iron plate by consuming iron. To build, select the Iron Plate factory in the Blueprints menu. Place it on any empty tile.",
     },
   ],
   [
@@ -796,7 +798,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BuildCopperMine],
       buildingType: EntityType.AlloyFactory,
       description:
-        "Alloy factories produce alloy by burning iron and copper. To build, select the alloy factory in the Blueprints menu. Place it on any empty tile.",
+        "Alloy factories produce alloy by consuming copper. To build, select the Alloy factory in the Blueprints menu. Place it on any empty tile.",
     },
   ],
   [
@@ -808,7 +810,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.BuildLithiumMine],
       buildingType: EntityType.PVCellFactory,
       description:
-        "The PV Cell factory produces photovoltaic cells by burning lithium. To build, select the PV Cell factory in the Blueprints menu and place it on any empty tile.",
+        "The PV Cell factory produces photovoltaic cells by consuming lithium. To build, select the PV Cell factory in the Blueprints menu and place it on any empty tile.",
     },
   ],
 

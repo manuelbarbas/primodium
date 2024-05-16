@@ -164,13 +164,13 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     }
 
     //provide resource and unit requirements to create fleet
-    setupCreateFleetNoMaxMovesGranted(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
+    setupCreateFleetNoMaxFleetsGranted(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
     world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
-    setupCreateFleetNoMaxMovesGranted(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
+    setupCreateFleetNoMaxFleetsGranted(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
     world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
