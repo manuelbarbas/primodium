@@ -10,6 +10,9 @@ import { BoundingBox, PrimodiumGameObject } from "engine/lib/core/StaticObjectMa
 type PrimodiumObjectApi<T extends { destroy: () => void }> = {
   has: (entity: Entity) => boolean;
   get: (entity: Entity) => T | undefined;
+  getContainer: <SpawnedObject extends PrimodiumGameObject, SpawnArgs extends BaseSpawnArgs>(
+    entity: Entity
+  ) => DeferredRenderContainer<SpawnedObject, SpawnArgs> | undefined;
   remove: (entity: Entity, destroy?: boolean, decrement?: boolean) => void;
   add: (entity: Entity, object: PrimodiumGameObject, cull?: boolean) => PrimodiumGameObject;
   addContainer: <SpawnedObject extends PrimodiumGameObject, SpawnArgs extends BaseSpawnArgs>(
@@ -44,7 +47,7 @@ function factory<T extends { destroy: () => void }>(
       container: DeferredRenderContainer<SpawnedObject, SpawnArgs>
     ) => {
       if (container instanceof DeferredRenderContainer) {
-        scene.objects.addContainer(entity, container);
+        scene.objects.addContainer(fullId(entity), container);
         return container;
       } else {
         throw new Error("Object is not an instance of the expected class");
@@ -58,6 +61,12 @@ function factory<T extends { destroy: () => void }>(
     get: (entity: Entity) => {
       const object = scene.objects.get(fullId(entity));
       return object instanceof objectClass ? object : undefined;
+    },
+    getContainer: <SpawnedObject extends PrimodiumGameObject, SpawnArgs extends BaseSpawnArgs>(entity: Entity) => {
+      const container = scene.objects.getContainer(fullId(entity));
+      return container instanceof DeferredRenderContainer
+        ? (container as DeferredRenderContainer<SpawnedObject, SpawnArgs>)
+        : undefined;
     },
     remove: (entity: Entity, destroy = false, decrement = false) => {
       const id = fullId(entity);

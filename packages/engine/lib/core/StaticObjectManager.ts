@@ -209,6 +209,10 @@ export class StaticObjectManager {
     return this.objMap.get(id);
   }
 
+  getContainer(id: string) {
+    return this.deferredRenderContainerMap.get(id);
+  }
+
   has(id: string) {
     return this.objMap.has(id);
   }

@@ -27,10 +27,9 @@ export const renderOverview = (scene: PrimodiumScene) => {
 
     if (!entity) return;
 
-    const asteroid =
-      components.ShardAsteroid.has(entity) && !objects.asteroid.get(entity)
-        ? renderShardAsteroid({ scene, entity })
-        : renderAsteroid({ scene, entity });
+    const asteroid = components.ShardAsteroid.has(entity)
+      ? renderShardAsteroid({ scene, entity })
+      : renderAsteroid({ scene, entity });
 
     for (const fleet of runQuery([HasValue(components.FleetMovement, { destination: entity })])) {
       const fleetObject = renderFleet({ scene, entity: fleet });
