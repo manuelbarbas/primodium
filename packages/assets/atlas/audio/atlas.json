@@ -206,12 +206,12 @@
       "end": 93,
       "loop": false
     },
-    "background": {
+    "Background": {
       "start": 94,
       "end": 278.8480045351474,
-      "loop": true
+      "loop": false
     },
-    "background2": {
+    "Background2": {
       "start": 280,
       "end": 483.4959863945578,
       "loop": false
