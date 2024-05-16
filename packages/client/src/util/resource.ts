@@ -1,4 +1,5 @@
 import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { DECIMALS } from "contracts/config/constants";
 import { EResource, MUDEnums } from "contracts/config/enums";
 import { components, components as comps } from "src/network/components";
@@ -151,5 +152,6 @@ export function getAsteroidResourceCount(asteroid: Entity) {
 }
 
 export function getFullResourceCounts(entity: Entity): Map<Entity, ResourceCountData> {
+  if (entity === singletonEntity) return new Map();
   return components.IsFleet.get(entity) ? getFleetResourceCount(entity) : getAsteroidResourceCount(entity);
 }

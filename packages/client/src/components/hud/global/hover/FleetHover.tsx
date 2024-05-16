@@ -1,3 +1,5 @@
+import { useMud } from "@/hooks";
+import { usePlayerOwner } from "@/hooks/usePlayerOwner";
 import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
@@ -28,6 +30,9 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const { inGracePeriod, duration } = useInGracePeriod(entity);
   const { inCooldown, duration: coolDownDuration } = useInCooldownEnd(entity);
 
+  const playerEntity = useMud().playerAccount.entity;
+  const friendly = usePlayerOwner(entity) === playerEntity;
+
   const fleetStateText = useMemo(() => {
     const arrivalTime = movement?.arrivalTime ?? 0n;
     const inTransit = arrivalTime > (time ?? 0n);
@@ -54,7 +59,10 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
       <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50" />
       <div className="flex flex-col gap-1 z-10">
         <div className="flex gap-1 items-center">
-          <IconLabel imageUri={InterfaceIcons.Fleet} className={`pixel-images w-3 h-3 bg-base-100`} />
+          <IconLabel
+            imageUri={friendly ? InterfaceIcons.Fleet : InterfaceIcons.EnemyFleet}
+            className={`pixel-images w-3 h-3 bg-base-100`}
+          />
           <p className="text-sm font-bold uppercase">{fleetStats.title}</p>
         </div>
         <div className="flex gap-1">
