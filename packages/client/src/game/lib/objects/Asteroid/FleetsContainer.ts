@@ -42,8 +42,8 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     this.rotationTween = this.scene.tweens.addCounter({
       from: 0,
       to: Math.PI * 2,
-      duration: 1000 * 30,
-      ease: (t: number) => Phaser.Math.Easing.Stepped(t, 120),
+      duration: 1000 * 60,
+      ease: (t: number) => Phaser.Math.Easing.Stepped(t, 240),
       repeat: -1,
       paused: true,
       onUpdate: (tween) => {

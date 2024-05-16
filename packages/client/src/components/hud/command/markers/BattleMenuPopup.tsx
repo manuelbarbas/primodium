@@ -11,6 +11,7 @@ import { components } from "@/network/components";
 export const BattleMenuPopup = () => {
   const game = useGame();
   const battleTarget = components.BattleTarget.use()?.value;
+  const selectedRock = components.SelectedRock.use()?.value;
 
   const [coord, name, icon] = useMemo(() => {
     if (!battleTarget) return [{ x: 0, y: 0 }, "", InterfaceIcons.Asteroid];
@@ -27,7 +28,7 @@ export const BattleMenuPopup = () => {
     return [obj.getPixelCoord(), name, icon];
   }, [battleTarget, game]);
 
-  if (!battleTarget) return null;
+  if (!battleTarget || !selectedRock) return null;
 
   return (
     <Widget
@@ -48,7 +49,7 @@ export const BattleMenuPopup = () => {
       noBorder
       icon={icon}
     >
-      <BattleMenu target={battleTarget} />
+      <BattleMenu target={battleTarget} selectedRock={selectedRock} />
     </Widget>
   );
 };

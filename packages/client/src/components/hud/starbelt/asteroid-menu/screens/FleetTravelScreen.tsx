@@ -18,6 +18,7 @@ import { hashEntities } from "@/util/encode";
 import { TransactionQueueType } from "@/util/constants";
 import { sendFleetPosition } from "@/network/setup/contractCalls/fleetSend";
 import { useMud } from "@/hooks";
+import { clearFleetStance } from "@/network/setup/contractCalls/fleetStance";
 
 export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; selectedRock: Entity }> = ({
   fleetEntity,
@@ -87,9 +88,11 @@ export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; select
           </TransactionQueueMask>
         )}
         {stance?.stance && !inCooldown && (
-          <Button size="sm" variant="error">
-            Clear Stance
-          </Button>
+          <TransactionQueueMask queueItemId={"FleetStance" as Entity}>
+            <Button size="sm" variant="error" onClick={() => clearFleetStance(mud, fleetEntity)}>
+              Clear Stance
+            </Button>
+          </TransactionQueueMask>
         )}
         {!inCooldown && <p className="text-xs opacity-75">ETA {formatTime(fleetETA)}</p>}
         {inCooldown && <p className="text-xs opacity-75">COOLDOWN {formatTime(fleetCooldown - now)}</p>}
@@ -163,7 +166,7 @@ export const FleetTravelScreen: React.FC<{ selectedRock: Entity }> = ({ selected
           <div className="text-xs opacity-50 flex gap-2 items-center">
             <FaInfoCircle /> HOVER TO SEE DETAILS
           </div>
-          <div className="flex flex-col gap-1 h-48 w-96 overflow-y-auto hide-scrollbar">
+          <div className="flex flex-col gap-1 h-48 overflow-y-auto hide-scrollbar">
             {orbitingFleets.map((fleet) => (
               <Fleet key={fleet} fleetEntity={fleet} playerEntity={playerEntity} selectedRock={selectedRock} />
             ))}

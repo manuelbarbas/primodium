@@ -123,7 +123,7 @@ export const AttackButton = ({ target }: { target: Entity }) => {
     <>
       <Navigator.NavButton
         to="attack"
-        className={cn("py-3 grow flex-col items-center", !inGrace && "heropattern-topography-slate-100/10")}
+        className={cn("py-3 grow flex-col items-center min-w-72", !inGrace && "heropattern-topography-slate-100/10")}
         variant="error"
         size="content"
         disabled={inGrace}

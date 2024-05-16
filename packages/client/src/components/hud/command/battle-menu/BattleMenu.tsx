@@ -2,20 +2,19 @@ import { Entity } from "@latticexyz/recs";
 import { Navigator } from "@/components/core/Navigator";
 import { Card, GlassCard } from "@/components/core/Card";
 import { InitialScreen } from "@/components/hud/command/battle-menu/screens/InitialScreen";
-// import { InitialScreen } from "@/components/hud/starbelt/asteroid-menu/screens/InitialScreen";
-// import { FleetTravelScreen } from "@/components/hud/starbelt/asteroid-menu/screens/FleetTravelScreen";
 import { memo } from "react";
+import { AttackScreen } from "@/components/hud/command/battle-menu/screens/AttackScreen";
 
-export const BattleMenu: React.FC<{ target: Entity }> = memo(({ target }) => {
+export const BattleMenu: React.FC<{ target: Entity; selectedRock: Entity }> = memo(({ target, selectedRock }) => {
   return (
-    <GlassCard direction={"bottom"} className="w-96">
+    <GlassCard direction={"bottom"} className="">
       <Navigator
         initialScreen="initial"
         className="border-none p-0 relative overflow-visible flex flex-col gap-2 h-full"
       >
         <Card noDecor className="w-full h-full">
           <InitialScreen target={target} />
-          {/* <FleetTravelScreen selectedRock={selectedRock} /> */}
+          <AttackScreen selectedRock={selectedRock} target={target} />
         </Card>
       </Navigator>
     </GlassCard>
