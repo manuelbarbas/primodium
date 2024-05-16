@@ -174,13 +174,13 @@ const shards = [
   {
     name: "Shard of Nova",
     description:
-      "Desmond Nova, Arash's protege, was a portal researcher who opened the first interdimensional rift, a treacherous tunnel connecting our galaxy to resource-abundant asteroid belts. This discovery would one day lead to the Great Belt Wars.",
+      "Desmond Nova, , was a portal researcher and Arash's protege. He opened the first interdimensional rift, a treacherous tunnel connecting our galaxy to resource-abundant asteroid belts. This discovery would one day lead to the Great Belt Wars.",
   },
 
   {
     name: "Shard of Thorne",
     description:
-      "Elara Thorne, a pioneering biologist working alongside Nova, discovered that organic matter couldn't survive passage through the rifts. She secretly engineered the first androids that could withstand the harsh conditions of interrift travel.",
+      "Elara Thorne, a pioneering biologist working alongside portal researcher Desmond Nova, discovered that organic matter couldn't survive passage through the rifts. She secretly engineered the first androids that could withstand the harsh conditions of interrift travel.",
   },
   {
     name: "Shard of Raskin",
