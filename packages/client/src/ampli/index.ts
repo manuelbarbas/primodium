@@ -3691,6 +3691,188 @@ export interface SystemTransferSystemPrimodiumTransferUnitsFromFleetToFleetPrope
   unitCounts: number[];
 }
 
+export interface SystemTransferTwoWaySystemPrimodiumTransferResourcesTwoWayProperties {
+  /**
+   * Corresponds to the `resourceTypes` property in the same order.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | number |
+   */
+  resourceCounts: number[];
+  /**
+   * A space rock entity represented by its Hex string.
+   */
+  spaceRock: string;
+  /**
+   * A space rock entity represented by its Hex string, paired with `spaceRock` as a target for a specific action.
+   */
+  spaceRockTo: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+}
+
+export interface SystemTransferTwoWaySystemPrimodiumTransferUnitsAndResourcesTwoWayProperties {
+  /**
+   * Corresponds to the `resourceTypes` property in the same order.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | number |
+   */
+  resourceCounts: number[];
+  /**
+   * A space rock entity represented by its Hex string.
+   */
+  spaceRock: string;
+  /**
+   * A space rock entity represented by its Hex string, paired with `spaceRock` as a target for a specific action.
+   */
+  spaceRockTo: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+  /**
+   * Corresponds to the `unitTypes` property in the same order.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | number |
+   */
+  unitCounts: number[];
+}
+
+export interface SystemTransferTwoWaySystemPrimodiumTransferUnitsTwoWayProperties {
+  /**
+   * A space rock entity represented by its Hex string.
+   */
+  spaceRock: string;
+  /**
+   * A space rock entity represented by its Hex string, paired with `spaceRock` as a target for a specific action.
+   */
+  spaceRockTo: string;
+  /**
+   * The address this transaction is from. On Amplitude, this is also tracked as the user's unique account address initilized with  `ampli.from()`.
+   */
+  transactionFrom?: string;
+  /**
+   * The amount of gas actually used by this transaction.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   */
+  transactionGasUsed?: number;
+  /**
+   * The hash of the transaction.
+   */
+  transactionHash?: string;
+  /**
+   * The status of a transaction is 1 is successful or 0 if it was reverted. Direcrly read from `receipt.status`, as described in the ethers.js docs (https://docs.ethers.org/v5/api/providers/types/).
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Type | integer |
+   * | Min Value | 0 |
+   * | Max Value | 1 |
+   */
+  transactionStatus?: number;
+  /**
+   * The address this transaction is to. This is `null` if the transaction was an init transaction, used to deploy a contract.
+   *
+   * Since a user will only execute actions on a contract from the frontend, this value will never be null.
+   */
+  transactionTo?: string;
+  /**
+   * If the transaction is recorded on-chain and returns a valid receipt with a transaction hash, whether the transaction reverted or not, `transactionValid` will return `true`. Otherwise, it will return `false`.
+   *
+   *
+   * Note that if `transactionValid` is `true`, `transactionStatus` should be checked if a transaction is successful (status 1) or not (status 0).
+   */
+  transactionValid: boolean;
+  /**
+   * Corresponds to the `unitTypes` property in the same order.
+   *
+   * | Rule | Value |
+   * |---|---|
+   * | Item Type | number |
+   */
+  unitCounts: number[];
+}
+
 export interface SystemUpdateOrderProperties {
   /**
    * Count of a resource, currently only used in Marketplace events. Logged here with identical scaling displayed in the frontend.
@@ -4592,6 +4774,30 @@ export class SystemTransferSystemPrimodiumTransferUnitsFromFleetToFleet implemen
   event_type = "system.TransferSystem.Primodium__transferUnitsFromFleetToFleet";
 
   constructor(public event_properties: SystemTransferSystemPrimodiumTransferUnitsFromFleetToFleetProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemTransferTwoWaySystemPrimodiumTransferResourcesTwoWay implements BaseEvent {
+  event_type = "system.TransferTwoWaySystem.Primodium__transferResourcesTwoWay";
+
+  constructor(public event_properties: SystemTransferTwoWaySystemPrimodiumTransferResourcesTwoWayProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemTransferTwoWaySystemPrimodiumTransferUnitsAndResourcesTwoWay implements BaseEvent {
+  event_type = "system.TransferTwoWaySystem.Primodium__transferUnitsAndResourcesTwoWay";
+
+  constructor(public event_properties: SystemTransferTwoWaySystemPrimodiumTransferUnitsAndResourcesTwoWayProperties) {
+    this.event_properties = event_properties;
+  }
+}
+
+export class SystemTransferTwoWaySystemPrimodiumTransferUnitsTwoWay implements BaseEvent {
+  event_type = "system.TransferTwoWaySystem.Primodium__transferUnitsTwoWay";
+
+  constructor(public event_properties: SystemTransferTwoWaySystemPrimodiumTransferUnitsTwoWayProperties) {
     this.event_properties = event_properties;
   }
 }
@@ -5890,6 +6096,57 @@ export class Ampli {
     options?: EventOptions,
   ) {
     return this.track(new SystemTransferSystemPrimodiumTransferUnitsFromFleetToFleet(properties), options);
+  }
+
+  /**
+   * system.TransferTwoWaySystem.Primodium__transferResourcesTwoWay
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.TransferTwoWaySystem.Primodium__transferResourcesTwoWay)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. resourceCounts)
+   * @param options Amplitude event options.
+   */
+  systemTransferTwoWaySystemPrimodiumTransferResourcesTwoWay(
+    properties: SystemTransferTwoWaySystemPrimodiumTransferResourcesTwoWayProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemTransferTwoWaySystemPrimodiumTransferResourcesTwoWay(properties), options);
+  }
+
+  /**
+   * system.TransferTwoWaySystem.Primodium__transferUnitsAndResourcesTwoWay
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.TransferTwoWaySystem.Primodium__transferUnitsAndResourcesTwoWay)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. resourceCounts)
+   * @param options Amplitude event options.
+   */
+  systemTransferTwoWaySystemPrimodiumTransferUnitsAndResourcesTwoWay(
+    properties: SystemTransferTwoWaySystemPrimodiumTransferUnitsAndResourcesTwoWayProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemTransferTwoWaySystemPrimodiumTransferUnitsAndResourcesTwoWay(properties), options);
+  }
+
+  /**
+   * system.TransferTwoWaySystem.Primodium__transferUnitsTwoWay
+   *
+   * [View in Tracking Plan](https://data.amplitude.com/primodium/primodium-testnet2/events/main/latest/system.TransferTwoWaySystem.Primodium__transferUnitsTwoWay)
+   *
+   * Event has no description in tracking plan.
+   *
+   * @param properties The event's properties (e.g. spaceRock)
+   * @param options Amplitude event options.
+   */
+  systemTransferTwoWaySystemPrimodiumTransferUnitsTwoWay(
+    properties: SystemTransferTwoWaySystemPrimodiumTransferUnitsTwoWayProperties,
+    options?: EventOptions,
+  ) {
+    return this.track(new SystemTransferTwoWaySystemPrimodiumTransferUnitsTwoWay(properties), options);
   }
 
   /**
