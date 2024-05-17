@@ -10,7 +10,7 @@ import { System } from "@latticexyz/world/src/System.sol";
 
 // Create resource identifiers (for the namespace and system)
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-import { WorldResourceIdLib, ROOT_NAMESPACE } from "@latticexyz/world/src/WorldResourceId.sol";
+import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 
 // For registering the table
@@ -83,7 +83,7 @@ contract UpgradeBountyExtension is Script {
     // !! note UpgradeBuildingS is due to 16 byte restriction on function names
     ResourceId upgradeBuildingSystemId = WorldResourceIdLib.encode({
       typeId: RESOURCE_SYSTEM,
-      namespace: ROOT_NAMESPACE,
+      namespace: "Primodium",
       name: "UpgradeBuildingS"
     });
 

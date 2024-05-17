@@ -12,7 +12,7 @@ import { UpgradeBounty } from "../codegen/index.sol";
 import { OwnedBy } from "../codegen/index.sol";
 import { IWorld } from "../codegen/world/IWorld.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
-import { WorldResourceIdLib, ROOT_NAMESPACE } from "@latticexyz/world/src/WorldResourceId.sol";
+import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 import { IWorld as IPrimodiumWorld } from "../primodium-codegen/world/IWorld.sol";
 import { LibHelpers } from "../libraries/LibHelpers.sol";
@@ -98,7 +98,7 @@ contract UpgrBounSystem is System {
     );
 
     // Call the upgradeBuilding function from the World contract
-    ResourceId upgradeBuildingSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, ROOT_NAMESPACE, "UpgradeBuildingS");
+    ResourceId upgradeBuildingSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, "Primodium", "UpgradeBuildingS");
     newBuildingEntity = IPrimodiumWorld(_world()).callFrom(
       bountyPublisherAddress,
       upgradeBuildingSystemId,
