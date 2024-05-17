@@ -11,6 +11,10 @@ import { claimShardAsteroid } from "@/network/setup/contractCalls/claimPrimodium
 import { formatResourceCount, formatTime } from "@/util/number";
 import { useShardAsteroid } from "@/hooks/primodium/useShardAsteroid";
 import { useMud } from "@/hooks/useMud";
+import { entityToShardData } from "@/util/name";
+import { SecondaryCard } from "@/components/core/Card";
+import { FaMinus, FaPlus } from "react-icons/fa";
+import { useState } from "react";
 
 export const ShardButton: React.FC<{ shardEntity: Entity }> = ({ shardEntity }) => {
   const mud = useMud();
@@ -31,13 +35,29 @@ export const ShardButton: React.FC<{ shardEntity: Entity }> = ({ shardEntity }) 
           <div className="flex flex-start px-1 gap-3 w-full">
             <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Attack} />
             <div className="flex flex-col items-start">
-              <p>EXPLOSION IMINENT</p>
-              <p className="block text-xs opacity-75">EXPLOSION IN T-{formatTime(shardData.timeUntilExplode)}</p>
+              <p>EXPLOSION IMMINENT</p>
+              <p className="block text-xs opacity-75">{formatTime(shardData.timeUntilExplode)}</p>
             </div>
           </div>
         </Button>
       )}
-      {shardData && !ownedByPlayer && shardData.canExplode && (
+      {shardData && shardData.canExplode && !ownedBy && (
+        <Button
+          className="w-full py-3 heropattern-topography-slate-100/10 pointer-events-none"
+          variant="error"
+          size="content"
+        >
+          <div className="absolute inset-0 bg-error/25 animate-ping pointer-events-none" />
+          <div className="flex flex-start px-1 gap-3 w-full">
+            <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Attack} />
+            <div className="flex flex-col items-start">
+              <p>EXPLOSION IMMINENT</p>
+              <p className="block text-xs opacity-75">WILL EXPLODE ONCE PLAYER CONQUERS</p>
+            </div>
+          </div>
+        </Button>
+      )}
+      {shardData && ownedByPlayer && shardData.canExplode && (
         <TransactionQueueMask queueItemId={"ClaimPrimodium" as Entity} className="w-full">
           <Button
             onClick={() => claimShardAsteroid(mud, shardEntity)}
@@ -90,6 +110,7 @@ export const InitialScreen = ({ selectedRock }: { selectedRock: Entity }) => {
   const ownedBy = components.OwnedBy.use(selectedRock)?.value;
   const selectedAsteroid = components.SelectedRock.use()?.value;
   const isShard = components.ShardAsteroid.use(selectedRock)?.isShardAsteroid;
+  const shardDescription = entityToShardData(selectedRock)?.description;
 
   return (
     <Navigator.Screen title="initial" className="gap-2">
@@ -148,6 +169,38 @@ export const InitialScreen = ({ selectedRock }: { selectedRock: Entity }) => {
           </div>
         </Button>
       )}
+
+      {shardDescription && <ShardDescription description={shardDescription} />}
     </Navigator.Screen>
+  );
+};
+
+const ShardDescription = ({ description, length = 50 }: { description: string; length?: number }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDescription = () => {
+    setIsOpen(!isOpen);
+  };
+  const getShortenedDescription = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text;
+    const truncated = text.substring(0, maxLength);
+    return truncated.substring(0, truncated.lastIndexOf(" ")) + "...";
+  };
+
+  return (
+    <SecondaryCard className=" relative w-72 flex flex-col gap-1">
+      <p className="text-xs">Belt History</p>
+      <p className="text-xs italic opacity-60 pr-4">
+        {isOpen ? description : getShortenedDescription(description, length)}
+      </p>
+      <Button
+        variant="ghost"
+        size="xs"
+        className="absolute bottom-0 right-0 text-xs text-blue-500"
+        onClick={toggleDescription}
+      >
+        {isOpen ? <FaMinus /> : <FaPlus />}
+      </Button>
+    </SecondaryCard>
   );
 };

@@ -77,7 +77,7 @@ export const BarLayoutUtilityLabel = ({
   const getSuffix = useCallback((resourceId: Entity) => {
     switch (resourceId) {
       case EntityType.Electricity:
-        return "MW";
+        return "GIGAWATTS";
       case EntityType.Housing:
         return "HOUSING";
       default:

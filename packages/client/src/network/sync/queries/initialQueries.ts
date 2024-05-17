@@ -27,6 +27,7 @@ export const getInitalQuery = ({
         { tableId: tables.FunctionSignatures.tableId },
         { tableId: tables.Dimensions.tableId },
         { tableId: tables.GracePeriod.tableId },
+        { tableId: tables.Wormhole.tableId },
         { tableId: tables.Points.tableId },
         { tableId: tables.Alliance.tableId },
         { tableId: tables.PlayerAlliance.tableId },
@@ -34,6 +35,10 @@ export const getInitalQuery = ({
         { tableId: tables.Home.tableId },
         //get main base starting coord
         { tableId: tables.Position.tableId, where: { column: "entity", operation: "eq", value: EntityType.MainBase } },
+        {
+          tableId: tables.Position.tableId,
+          where: { column: "entity", operation: "eq", value: EntityType.WormholeBase },
+        },
         //get asteroids
         {
           tableId: tables.Asteroid.tableId!,

@@ -8,10 +8,10 @@
     "./**/*"
   ],
   "scripts": {
-    "export": "pnpm export-sprites && pnpm export-audio",
-    "export-audio": "audiosprite --channels 2 --loop background --output ./atlas/audio/atlas --path ./audio/ audio/**/*.ogg audio/*.ogg",
-    "export-sprites": "pnpm generate-multiatlas-sprites",
-    "generate-multiatlas-sprites": "node ./scripts/cli.mjs --project ./config-sprites.json"
+    "export": "pnpm export-sprites && pnpm export-vfx && pnpm export-audio",
+    "export-audio": "audiosprite --channels 2 --loop Background --loop Background2 --output ./atlas/audio/atlas --path ./audio/ audio/**/*.ogg audio/*.ogg",
+    "export-sprites": "node ./scripts/cli.mjs --project ./config-sprites.json",
+    "export-vfx": "node ./scripts/cli.mjs --project ./config-vfx.json"
   },
   "devDependencies": {
     "@mapeditor/tiled-api": "^1.8.2",

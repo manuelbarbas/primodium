@@ -65,12 +65,19 @@ export const Modal: React.FC<ModalProps> & {
       game.GLOBAL.enableGlobalInput();
     }
 
-    const escListener = addListener("Esc", handleClose);
     const openListener = keybind ? addListener(keybind, handleOpenPress) : null;
+    // use a dom listener to keep esc in any case
+    const closeOnEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        handleClose();
+      }
+    };
+    addEventListener("keydown", closeOnEsc);
 
     return () => {
-      escListener.dispose();
       openListener?.dispose();
+      removeEventListener("keydown", closeOnEsc);
 
       game.GLOBAL.enableGlobalInput();
     };

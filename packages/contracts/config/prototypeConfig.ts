@@ -25,7 +25,7 @@ import encodeBytes32, { encodeAddress } from "./util/encodeBytes32";
 
 const maxRange = { xBounds: 37, yBounds: 25 };
 
-const colonySlotsConfigResourceValues = getResourceValues({ Copper: 10000, Lithium: 5000 }); // Order impacts Installment payment index
+const colonySlotsConfigResourceValues = getResourceValues({ IronPlate: 1000, Alloy: 1000, PVCell: 1000 }); // Order impacts Installment payment index
 
 export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = {
   /* ---------------------------------- World --------------------------------- */
@@ -125,14 +125,14 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     keys: [],
     tables: {
       P_ConquestConfig: {
-        holdTime: 6n * 60n * 60n,
+        holdTime: 5n * 60n * 60n,
         // spawn a shard asteroid every <shardAsteroidSpawnFrequency> players, starting at the <shardAsteroidOffset>th player
         shardAsteroidSpawnFrequency: 100n,
         shardAsteroidSpawnOffset: 25n,
         // limit shard asteroids to <maxShardAsteroids>
         maxShardAsteroids: 10n,
         shardAsteroidPoints: 50n * BigInt(SCALE),
-        shardAsteroidLifeSpan: 6n * 60n * 60n,
+        shardAsteroidLifeSpan: 8n * 60n * 60n,
         shardAsteroidEncryption: 1500n * BigInt(SCALE),
         shardAsteroidEncryptionRegen: BigInt(Math.round(0.0336 * SCALE)),
       },
@@ -188,15 +188,15 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
 
   /* ------------------------------- Marketplace ------------------------------ */
 
-  IronSupply: marketplaceSupplyTable(EResource.Iron, 1e4),
-  CopperSupply: marketplaceSupplyTable(EResource.Copper, 1e4),
-  LithiumSupply: marketplaceSupplyTable(EResource.Lithium, 1e4),
+  IronSupply: marketplaceSupplyTable(EResource.Iron, 330),
+  CopperSupply: marketplaceSupplyTable(EResource.Copper, 330),
+  LithiumSupply: marketplaceSupplyTable(EResource.Lithium, 330),
   TitaniumSupply: marketplaceSupplyTable(EResource.Titanium, 1),
   PlatinumSupply: marketplaceSupplyTable(EResource.Platinum, 1),
   IridiumSupply: marketplaceSupplyTable(EResource.Iridium, 1),
-  IronPlateSupply: marketplaceSupplyTable(EResource.IronPlate, 1e2),
-  AlloySupply: marketplaceSupplyTable(EResource.Alloy, 1e2),
-  PVCellSupply: marketplaceSupplyTable(EResource.PVCell, 1e2),
+  IronPlateSupply: marketplaceSupplyTable(EResource.IronPlate, 137),
+  AlloySupply: marketplaceSupplyTable(EResource.Alloy, 137),
+  PVCellSupply: marketplaceSupplyTable(EResource.PVCell, 137),
 
   MarketplaceConfig: {
     keys: [],
@@ -2094,7 +2094,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_ColonySlotsConfig: {
         resources: colonySlotsConfigResourceValues.resources, // Order impacts Installment payment index
         amounts: colonySlotsConfigResourceValues.amounts,
-        multiplier: 4n,
+        multiplier: 3n,
       },
     },
   },
@@ -2566,7 +2566,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: {
       0: {
-        P_RequiredResources: getResourceValues({ IronPlate: 3000, Alloy: 3000, PVCell: 3000 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 2500, Alloy: 2500, PVCell: 2500 }),
         P_RequiredBaseLevel: { value: 8n },
         P_Unit: getPUnitData({
           hp: 2000,

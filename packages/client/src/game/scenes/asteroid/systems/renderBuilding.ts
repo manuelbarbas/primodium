@@ -21,6 +21,7 @@ import { getBuildingBottomLeft } from "@/util/building";
 import { hashEntities } from "@/util/encode";
 import { isDomInteraction } from "@/util/canvas";
 import { EMap } from "contracts/config/enums";
+import { WormholeBase } from "@/game/lib/objects/Building/Wormhole";
 
 //TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
 export const renderBuilding = (scene: PrimodiumScene) => {
@@ -69,11 +70,11 @@ export const renderBuilding = (scene: PrimodiumScene) => {
       }
     }
 
-    const render = ({ entity }: { entity: Entity }) => {
+    const render = ({ entity, showLevelAnimation = false }: { entity: Entity; showLevelAnimation?: boolean }) => {
       if (objects.building.has(entity)) {
         const building = objects.building.get(entity);
         if (!building) return;
-        building.setLevel(components.Level.get(entity)?.value ?? 1n);
+        building.setLevel(components.Level.get(entity)?.value ?? 1n, !initialBuildingsPlaced || !showLevelAnimation);
         building.setActive(components.IsActive.get(entity)?.value ?? true);
 
         // at this point, we might be moving a building, so update its position
@@ -82,9 +83,9 @@ export const renderBuilding = (scene: PrimodiumScene) => {
         if (!origin || !buildingPrototype) return;
         const tileCoord = getBuildingBottomLeft(origin, buildingPrototype);
         building.setCoordPosition(tileCoord);
-        building.setDepth(DepthLayers.Building - tileCoord.y);
+        building.setDepth(DepthLayers.Building - tileCoord.y * 5);
         // trigger anim since the building was just moved
-        building.triggerPlacementAnim();
+        if (initialBuildingsPlaced && !showLevelAnimation) building.triggerPlacementAnim();
 
         return;
       }
@@ -121,8 +122,21 @@ export const renderBuilding = (scene: PrimodiumScene) => {
       if (!origin) return;
       const tilePosition = getBuildingBottomLeft(origin, buildingType);
 
-      const building = new Building({ id: entity, scene, buildingType, coord: tilePosition })
-        .setLevel(components.Level.get(entity)?.value ?? 1n)
+      const cooldownTime = components.CooldownEnd.get(entity)?.value ?? 0n;
+      const time = components.Time.get()?.value ?? 0n;
+      const building =
+        buildingType === EntityType.WormholeBase
+          ? new WormholeBase({
+              initialState: cooldownTime === 0n || cooldownTime > time ? "idle" : "cooldown",
+              id: entity,
+              scene,
+              coord: tilePosition,
+              resource: components.WormholeResource.get()?.resource ?? EntityType.Iron,
+            })
+          : new Building({ id: entity, scene, buildingType, coord: tilePosition });
+
+      building
+        .setLevel(components.Level.get(entity)?.value ?? 1n, true)
         .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
           if (pointer.getDuration() > 250 || isDomInteraction(pointer, "up")) return;
           components.SelectedBuilding.set({
@@ -161,6 +175,7 @@ export const renderBuilding = (scene: PrimodiumScene) => {
 
       const newBuilding = objects.building.get(value[0]?.value as Entity);
       if (newBuilding) {
+        scene.audio.play("DataPoint5", "ui", { volume: 0.5 });
         newBuilding.clearOutline();
         newBuilding.setOutline(0x00ffff, 3);
       }
@@ -170,13 +185,13 @@ export const renderBuilding = (scene: PrimodiumScene) => {
     });
 
     defineEnterSystem(spectateWorld, positionQuery, render);
-    defineUpdateSystem(spectateWorld, positionQuery, render);
+    defineUpdateSystem(spectateWorld, positionQuery, ({ entity, component }) =>
+      render({ entity, showLevelAnimation: component.id === components.Level.id })
+    );
 
     defineExitSystem(spectateWorld, positionQuery, ({ entity }) => {
       const building = objects.building.get(entity);
-      if (building) {
-        building.destroy();
-      }
+      if (building) building.demolish();
     });
   });
 };
