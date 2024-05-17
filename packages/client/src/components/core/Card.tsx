@@ -58,7 +58,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
                   onMouseLeave: handleMouseLeave,
                 }
               : {})}
-            className={cn(className)}
+            className={cn("overflow-hidden", className)}
           >
             {children}
           </div>

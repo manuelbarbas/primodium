@@ -21,7 +21,6 @@ export const createAudioApi = (scene: Scene) => {
 
   function get(key: AudioKeys, channel: Channel) {
     const playingSounds = scene.audio[channel].getAllPlaying();
-
     for (const sound of playingSounds) {
       if (sound.currentMarker.name === key) {
         return sound;

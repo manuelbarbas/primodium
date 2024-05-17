@@ -22,10 +22,10 @@ const buttonVariants = cva(
         error: "btn-error ring-error/50",
       },
       size: {
-        xs: "btn-xs ring-1 m-1",
-        sm: "btn-sm ring-2 m-2",
-        md: "btn-md ring-4 m-3",
-        lg: "btn-lg ring-4 m-4",
+        xs: "btn-xs ring-1",
+        sm: "btn-sm ring-2",
+        md: "btn-md ring-4",
+        lg: "btn-lg ring-4",
       },
       modifier: {
         default: "",

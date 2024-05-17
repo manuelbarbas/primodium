@@ -34,7 +34,8 @@ library LibWormhole {
   function getRandomResource(bytes32 seed, uint256 turn, uint8 prevResource) internal view returns (uint8 resource) {
     do {
       seed = keccak256(abi.encode(seed, turn));
-      resource = uint8(uint256(seed) % P_Transportables.length());
+      // one indexed
+      resource = uint8(uint256(seed) % P_Transportables.length()) + 1;
     } while (resource == prevResource);
   }
 }

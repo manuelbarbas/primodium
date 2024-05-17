@@ -17,6 +17,10 @@ import innerBorder from "./tile/tilesets/bounds-innerborder.png?url";
 import spriteAtlas from "./atlas/sprites/atlas.json?url";
 import spriteAtlasTexture from "./atlas/sprites/atlas.png?url";
 
+//sprite atlas and texture
+import vfxAtlas from "./atlas/vfx/atlas.json?url";
+import vfxAtlasTexture from "./atlas/vfx/atlas.png?url";
+
 //audio atlas
 import audioAtlas from "./atlas/audio/atlas.json?url";
 
@@ -104,6 +108,11 @@ export const pack: PackConfig = {
       key: "sprite-atlas",
       textureURL: spriteAtlasTexture,
       atlasURL: spriteAtlas,
+    },
+    {
+      key: "vfx-atlas",
+      textureURL: vfxAtlasTexture,
+      atlasURL: vfxAtlas,
     },
   ],
   tilemapTiledJSON: [

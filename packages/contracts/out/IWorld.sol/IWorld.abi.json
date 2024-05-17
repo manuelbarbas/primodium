@@ -1543,6 +1543,29 @@
   },
   {
     "type": "function",
+    "name": "Primodium__transferResourcesTwoWay",
+    "inputs": [
+      {
+        "name": "leftEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "rightEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "resourceCounts",
+        "type": "int256[]",
+        "internalType": "int256[]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "Primodium__transferUnitsAndResourcesFromAsteroidToFleet",
     "inputs": [
       {
@@ -1627,6 +1650,34 @@
   },
   {
     "type": "function",
+    "name": "Primodium__transferUnitsAndResourcesTwoWay",
+    "inputs": [
+      {
+        "name": "leftEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "rightEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "unitCounts",
+        "type": "int256[]",
+        "internalType": "int256[]"
+      },
+      {
+        "name": "resourceCounts",
+        "type": "int256[]",
+        "internalType": "int256[]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "Primodium__transferUnitsFromAsteroidToFleet",
     "inputs": [
       {
@@ -1689,6 +1740,29 @@
         "name": "unitCounts",
         "type": "uint256[]",
         "internalType": "uint256[]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Primodium__transferUnitsTwoWay",
+    "inputs": [
+      {
+        "name": "leftEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "rightEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "unitCounts",
+        "type": "int256[]",
+        "internalType": "int256[]"
       }
     ],
     "outputs": [],

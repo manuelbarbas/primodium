@@ -10,7 +10,7 @@ import { bigintToNumber } from "src/util/number";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export async function demolishBuilding(mud: MUD, building: Entity) {
+export async function demolishBuilding(mud: MUD, building: Entity, onComplete?: () => void) {
   const position = components.Position.get(building);
 
   if (!position) return;
@@ -28,6 +28,7 @@ export async function demolishBuilding(mud: MUD, building: Entity) {
     },
     // TODO: we don't need to use coord here any longer
     (receipt) => {
+      onComplete?.();
       const buildingType = components.BuildingType.get(building)?.value as Entity;
       const currLevel = components.Level.get(building)?.value || 0;
 

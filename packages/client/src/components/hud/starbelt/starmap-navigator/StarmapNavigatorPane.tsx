@@ -63,45 +63,6 @@ export const StarmapNavigatorPane = () => {
   return (
     <div className="flex gap-0">
       {/* Menu Buttons (hidden when expanded) */}
-      {!arePanesExpanded && (
-        <div className="flex flex-col">
-          {labels.map((label, index) => (
-            <Button
-              key={index}
-              onClick={() => showDiv(index)}
-              className={`!flex !items-center !bg-neutral/100 !border !border-secondary !py-3 px-4 ${
-                index === 3 ? "rounded-bl-lg" : ""
-              }`}
-              style={{ writingMode: "vertical-rl" }}
-            >
-              <img src={imagePaths[index]} alt={label} className="w-4 h-4" />
-              {/* Show title when active */}
-              {visibleDiv === index && (
-                <span
-                  className={` ${
-                    label === "Asteroids"
-                      ? "text-yellow-500"
-                      : label === "Fleets"
-                      ? "text-lime-600"
-                      : label === "Colony Ships"
-                      ? "text-violet-400"
-                      : label === "Volatile Shards"
-                      ? "text-rose-400"
-                      : ""
-                  }`}
-                >
-                  {label}
-                </span>
-              )}
-            </Button>
-          ))}
-          {!hideHotkeys && (
-            <p className="flex text-xs kbd kbd-xs py-2 w-fit self-end" style={{ writingMode: "vertical-rl" }}>
-              {keybinds["Cycle"]?.entries().next().value[0] ?? "?"}
-            </p>
-          )}
-        </div>
-      )}
       <div>
         {/* Pane */}
         <div className={`grid ${arePanesExpanded ? "grid-cols-2" : "grid-cols-1"}`}>
@@ -142,6 +103,45 @@ export const StarmapNavigatorPane = () => {
           </Button>
         </div>
       </div>
+      {!arePanesExpanded && (
+        <div className="flex flex-col">
+          {labels.map((label, index) => (
+            <Button
+              key={index}
+              onClick={() => showDiv(index)}
+              className={`!flex !items-center !bg-neutral/100 !border !border-secondary !py-3 px-4 ${
+                index === 3 ? "rounded-bl-lg" : ""
+              }`}
+              style={{ writingMode: "vertical-rl" }}
+            >
+              <img src={imagePaths[index]} alt={label} className="w-4 h-4" />
+              {/* Show title when active */}
+              {visibleDiv === index && (
+                <span
+                  className={` ${
+                    label === "Asteroids"
+                      ? "text-yellow-500"
+                      : label === "Fleets"
+                      ? "text-lime-600"
+                      : label === "Colony Ships"
+                      ? "text-violet-400"
+                      : label === "Volatile Shards"
+                      ? "text-rose-400"
+                      : ""
+                  }`}
+                >
+                  {label}
+                </span>
+              )}
+            </Button>
+          ))}
+          {!hideHotkeys && (
+            <p className="flex text-xs kbd kbd-xs py-2 w-fit self-end" style={{ writingMode: "vertical-rl" }}>
+              {keybinds["Cycle"]?.entries().next().value[0] ?? "?"}
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 };
