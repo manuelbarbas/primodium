@@ -104,7 +104,7 @@ export class ShardAsteroid extends BaseAsteroid {
           this.asteroidSprite.anims.currentAnim!.key = "explode";
           this.asteroidSprite.once("animationcomplete-explode", () => {
             this.asteroidSprite.setTexture(Assets.SpriteAtlas, Sprites.Shard);
-            this.getFleetContainer().clearOrbit();
+            this.getFleetsContainer().clearOrbit();
             if (newPosition) this.respawn(newPosition);
             else this.asteroidSprite.setTexture(Assets.SpriteAtlas, Sprites.Shard);
             this.asteroidLabel.setVisible(true);
@@ -118,6 +118,9 @@ export class ShardAsteroid extends BaseAsteroid {
 
   private respawn(newPosition: Coord) {
     this.setTilePosition(newPosition);
+    // let the static objects manager know as well for visibility
+    const pixelCoord = this._scene.utils.tileCoordToPixelCoord(newPosition);
+    this._scene.objects.asteroid.updatePosition(this.id, { x: pixelCoord.x, y: -pixelCoord.y });
 
     const animation = Animations.ShardExplosionDefault;
     this.asteroidSprite.playReverse(animation);

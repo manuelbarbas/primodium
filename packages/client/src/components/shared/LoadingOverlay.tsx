@@ -8,18 +8,16 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 export const LoadingOverlay = ({
   syncId,
-  ready,
-  loadingMessage,
-  errorMessage,
+  ready = true,
+  loadingMessage = "Loading Data",
+  errorMessage = "Error syncing data. Please refresh the page.",
 }: {
   syncId?: Entity;
-  ready: boolean;
+  ready?: boolean;
   loadingMessage?: string;
   errorMessage?: string;
 }) => {
   const { loading, error } = useSyncStatus(syncId ?? singletonEntity);
-  loadingMessage = loadingMessage ?? "Loading Data";
-  errorMessage = errorMessage ?? "Error syncing data. Please refresh the page.";
 
   useEffect(() => {
     if (error) toast.error(errorMessage);

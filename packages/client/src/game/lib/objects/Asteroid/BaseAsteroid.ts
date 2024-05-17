@@ -21,11 +21,11 @@ interface LODConfig {
 }
 
 export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IPrimodiumGameObject {
-  private id: Entity;
   private containerId: Entity | undefined;
   private circle: Phaser.GameObjects.Arc;
   private animationTween: Phaser.Tweens.Tween;
 
+  protected id: Entity;
   protected coord: Coord;
   protected _scene: PrimodiumScene;
   protected fleetsContainer: FleetsContainer;
