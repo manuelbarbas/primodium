@@ -4,20 +4,15 @@ import { Coord } from "engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { PrimodiumScene } from "@/game/api/scene";
+import { ShardAsteroid } from "@/game/lib/objects/Asteroid/ShardAsteroid";
 
 export const renderShardAsteroids = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const { objects } = scene;
 
   const renderExplodeAndMoveAsteroid = (entity: Entity, coord: Coord) => {
-    const asteroid = objects.asteroid.get(entity);
-
-    // TODO: explode
-
-    if (!asteroid) return;
-
-    asteroid.getFleetContainer().clear();
-    asteroid.setTilePosition(coord);
+    const asteroid = objects.asteroid.get(entity) as ShardAsteroid;
+    asteroid.explode(coord);
   };
 
   const query = [Has(components.ShardAsteroid), Has(components.Position)];
