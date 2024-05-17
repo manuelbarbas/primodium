@@ -74,7 +74,7 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="grid grid-cols-[3rem_1fr_2rem] gap-2 items-center">
+      <div className="grid grid-cols-[2rem_1fr_2rem] gap-2 items-center">
         <img src={friendly ? InterfaceIcons.Fleet : InterfaceIcons.EnemyFleet} className={`pixel-images w-full`} />
         <div className="flex flex-col text-sm font-bold uppercase">
           <p>{fleetStats.title}</p>
