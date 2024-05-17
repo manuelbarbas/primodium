@@ -67,7 +67,7 @@ export const Fleet: React.FC<{ fleetEntity: Entity; target: Entity }> = ({ fleet
         )}
         {stance?.stance && !inCooldown && !isFleetEmpty && (
           <TransactionQueueMask queueItemId={"FleetStance" as Entity}>
-            <Button size="sm" variant="error" onClick={() => clearFleetStance(mud, fleetEntity)}>
+            <Button size="sm" variant="info" onClick={() => clearFleetStance(mud, fleetEntity)}>
               Clear Stance
             </Button>
           </TransactionQueueMask>

@@ -6,6 +6,7 @@ import { Entity } from "@latticexyz/recs";
 import { Coord } from "engine/types";
 import { Relationship, DepthLayers } from "@/game/lib/constants/common";
 import { isValidClick } from "@/game/lib/objects/inputGuards";
+import { addCoords } from "engine/lib/util/coords";
 
 export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
   private _scene: PrimodiumScene;
@@ -18,6 +19,10 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
   private particles: Phaser.GameObjects.Particles.ParticleEmitter;
   private fleetOverlay: Phaser.GameObjects.Image;
   private stanceIcon: Phaser.GameObjects.Image;
+
+  //fx
+  private fireSeq?: Phaser.Time.Timeline;
+  private laser?: Phaser.GameObjects.Particles.ParticleEmitter;
 
   constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord }) {
     const { id, scene, coord } = args;
@@ -80,15 +85,20 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
   }
 
   setAngle(degrees?: number): this {
-    let angle = degrees ?? 0;
+    //normalize angle
+    let angle = (degrees ?? 0) % 360;
     if (angle < 0) angle += 360;
-    this._setRotationFrame(angle);
 
+    this._setRotationFrame(angle);
     super.setAngle(angle - this._getRotationFrameOffset());
     this.particles.angle = this._getRotationFrameOffset();
     this.stanceIcon.angle = -this.angle;
 
     return this;
+  }
+
+  getAngle(): number {
+    return this.angle + this._getRotationFrameOffset();
   }
 
   setRotation(radians?: number | undefined): this {
@@ -245,10 +255,121 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
     this.particles.setVisible(false).setActive(false).pause();
   }
 
+  fireAt(coord: Coord = { x: 0, y: 0 }) {
+    if (this.fireSeq) return;
+
+    let targetAngle = Phaser.Math.RadToDeg(Math.atan2(coord.y - this.y, coord.x - this.x)) - 90;
+    const currentAngle = this.getAngle();
+
+    // Ensure always rotating clockwise
+    while (targetAngle <= currentAngle) {
+      targetAngle += 360;
+    }
+
+    this.fireSeq = this.scene.add
+      .timeline([
+        {
+          at: 0,
+          run: () => {
+            this._scene.audio.play("Whoosh", "sfx", { detune: -200, volume: 0.5 });
+
+            this.scene.tweens.addCounter({
+              from: currentAngle,
+              to: targetAngle,
+              duration: 500,
+              yoyo: true,
+              hold: 500,
+              ease: "Quad.easeInOut",
+              onUpdate: (tween) => {
+                const val = tween.getValue();
+                this.setAngle(val);
+              },
+            });
+            this.scene.tweens.add({
+              targets: this,
+              scale: 1.2,
+              duration: 500,
+              hold: 500,
+              yoyo: true,
+              ease: "Quad.easeInOut",
+            });
+            this.scene.tweens.add({
+              targets: this,
+              x: [this.x, this.x - 4, this.x + 4],
+              yoyo: true,
+              duration: 500,
+            });
+            this.scene.tweens.add({
+              targets: this,
+              y: [this.y, this.y - 4, this.y + 4],
+              yoyo: true,
+              duration: 500,
+            });
+          },
+        },
+        {
+          at: 500,
+          run: () => {
+            this._scene.audio.play("Blaster", "sfx");
+            this._scene.camera.phaserCamera.shake(300, 0.001);
+
+            this.laser = this.scene.add
+              .particles(this.x, this.y, "flares", {
+                lifespan: 500,
+                frequency: 300 / 3,
+                duration: 300,
+                speed: { min: 100, max: 200 },
+                tintFill: true,
+                maxParticles: 10,
+                // follow: this,
+                angle: targetAngle + 90,
+
+                color: [0xc7e5fd, 0x0ecaff, 0x00207d, 0x0ecaff],
+                scale: { start: 0.1, end: 0.05 },
+                alpha: { start: 1, end: 0.5 },
+                quantity: 10,
+                blendMode: "ADD",
+              })
+              .setDepth(DepthLayers.Path)
+              .start();
+          },
+        },
+        {
+          at: 1000,
+          run: () => {
+            this._scene.fx.emitExplosion(coord, "sm");
+            this.laser?.destroy();
+          },
+        },
+        {
+          at: 1200,
+          run: () => {
+            this._scene.fx.emitExplosion(addCoords({ x: -2, y: -4 }, coord), "sm");
+          },
+        },
+        {
+          at: 1400,
+          run: () => {
+            this._scene.fx.emitExplosion(addCoords({ x: 2, y: 4 }, coord), "md");
+          },
+        },
+        {
+          at: 1500,
+          run: () => {
+            this.fireSeq?.destroy();
+            this.fireSeq = undefined;
+          },
+        },
+      ])
+      .play();
+  }
+
   destroy() {
     //TODO: explosion effect
     // this.detach();
     this._scene.objects.fleet.remove(this.id);
+    this.laser?.destroy();
+    this.fireSeq?.destroy();
     super.destroy();
   }
 

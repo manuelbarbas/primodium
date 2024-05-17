@@ -33,6 +33,10 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
   protected fleetsContainer: FleetsContainer;
   protected currentLOD: number = -1;
 
+  //fx
+  private fireSeq?: Phaser.Time.Timeline;
+  private laser?: Phaser.GameObjects.Particles.ParticleEmitter;
+
   constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord; sprite: Sprites; outlineSprite: Sprites }) {
     const { id, scene, coord, sprite } = args;
     const pixelCoord = scene.utils.tileCoordToPixelCoord(coord);
@@ -131,6 +135,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
       this.circle.setInteractive();
       const zoom = this._scene.camera.phaserCamera.zoom;
       this._setLOD(this.getLod(zoom), true);
+      this.fleetsContainer.updateView();
       //set all objects to active
     } else {
       this.animationTween.pause();
@@ -194,6 +199,63 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     return this.asteroidLabel;
   }
 
+  fireAt(coord: Coord = { x: 0, y: 0 }) {
+    if (this.fireSeq) return;
+
+    const targetAngle = Phaser.Math.RadToDeg(Math.atan2(coord.y - this.y, coord.x - this.x)) - 90;
+
+    // Ensure always rotating clockwise
+    // while (targetAngle <= 0) {
+    //   targetAngle += 360;
+    // }
+
+    this.fireSeq = this.scene.add
+      .timeline([
+        {
+          at: 0,
+          run: () => {
+            this._scene.audio.play("SingleBlaster", "sfx");
+            this._scene.camera.phaserCamera.shake(300, 0.001);
+
+            this.laser = this.scene.add
+              .particles(this.x, this.y, "flares", {
+                lifespan: 250,
+                frequency: 300 / 3,
+                duration: 300,
+                speed: { min: 100, max: 200 },
+                tintFill: true,
+                maxParticles: 10,
+                // follow: this,
+                angle: targetAngle + 90,
+
+                color: [0xc7e5fd, 0x0ecaff, 0x00207d, 0x0ecaff],
+                scale: { start: 0.1, end: 0.1 },
+                alpha: { start: 1, end: 0.75 },
+                quantity: 20,
+                blendMode: "ADD",
+              })
+              .setDepth(DepthLayers.Path)
+              .start();
+          },
+        },
+        {
+          at: 500,
+          run: () => {
+            this._scene.fx.emitExplosion(coord, "lg");
+            this.laser?.destroy();
+          },
+        },
+        {
+          at: 1500,
+          run: () => {
+            this.fireSeq?.destroy();
+            this.fireSeq = undefined;
+          },
+        },
+      ])
+      .play();
+  }
+
   update() {
     const zoom = this._scene.camera.phaserCamera.zoom;
     this.asteroidLabel.update();
@@ -208,6 +270,8 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     this.circle.destroy();
     this.asteroidLabel.destroy();
     this.fleetsContainer.destroy();
+    this.laser?.destroy();
+    this.fireSeq?.destroy();
     this._scene.objects.asteroid.remove(this.id);
     super.destroy();
   }
