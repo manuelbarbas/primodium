@@ -57,7 +57,7 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
   return (
     <div className="flex flex-col gap-2">
       <div className="grid grid-cols-[3rem_1fr_2rem] gap-2 items-center">
-        <img src={image} className={`pixel-images w-full scale-150`} />
+        <img src={image} className={cn("pixel-images w-full")} />
         <div className="flex flex-col text-sm font-bold uppercase">
           <p className="flex gap-1">
             {name}
@@ -86,13 +86,16 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
             </SecondaryCard>
           </div>
         </div>
-        {!ownedBy && <img src={EntityToUnitImage[EntityType.Droid]} className="w-6 h-6" />}
-        {inGracePeriod && (
-          <div className="flex flex-col font-bold gap-1 text-xs items-center">
-            <IconLabel imageUri={InterfaceIcons.Grace} className={`pixel-images w-3 h-3`} />
-            {formatTimeShort(duration)}
-          </div>
-        )}
+        <div className="flex flex-col font-bold gap-1 text-xs items-end">
+          {!ownedBy && <img src={EntityToUnitImage[EntityType.Droid]} className="w-6 h-6" />}
+          {inGracePeriod && (
+            <div className="flex flex-col justify-center items-center">
+              {" "}
+              <IconLabel imageUri={InterfaceIcons.Grace} className={`pixel-images w-3 h-3`} />
+              {formatTimeShort(duration)}
+            </div>
+          )}
+        </div>
       </div>
 
       {desc.primodium > 0n && !!claimConquerTime && (

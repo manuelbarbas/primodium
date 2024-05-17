@@ -48,24 +48,26 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
     <div className="flex flex-col gap-2">
       <div className="grid grid-cols-[3rem_1fr_4rem] gap-2 items-center">
         <img src={InterfaceIcons.Shard} className={`pixel-images w-full`} />
-        <div className="flex flex-col text-sm font-bold uppercase max-w-40">
+        <div className="flex flex-col text-sm font-bold uppercase">
           <div className="flex gap-1">
-            <p className="text-sm font-bold uppercase">{name}</p>
+            <p className="text-sm font-bold uppercase max-w-44">{name}</p>
           </div>
-          <div className="flex font-bold gap-1 text-xs flex-wrap items-center h-4 max-w-48">
+          <div className="flex font-bold gap-1 text-xs items-center h-4 ">
             {ownedBy ? <AccountDisplay className="w-12" player={ownedBy} raw /> : "Unowned"}
-            <span className="text-[0.7rem] text-warning -mt-[0.33rem]">
+            <span className="text-[0.7rem] text-warning">
               [{position.x},{position.y}]
             </span>
           </div>
         </div>
         {shardData.dripPerSec > 0n && (
-          <div className="flex flex-col font-bold gap-1 text-xs items-center">
-            <IconLabel imageUri={ResourceImages.Primodium} className={`pixel-images w-3 h-3`} />+
-            {formatResourceCount(EntityType.Iron, shardData.dripPerSec * 60n * 60n, {
-              fractionDigits: 1,
-            })}
-            /HR
+          <div className="flex font-bold gap-1 text-xs items-end">
+            <div className="flex flex-col justify-center items-center">
+              <IconLabel imageUri={ResourceImages.Primodium} className={`pixel-images w-3 h-3`} />+
+              {formatResourceCount(EntityType.Iron, shardData.dripPerSec * 60n * 60n, {
+                fractionDigits: 1,
+              })}
+              /HR
+            </div>
           </div>
         )}
       </div>
