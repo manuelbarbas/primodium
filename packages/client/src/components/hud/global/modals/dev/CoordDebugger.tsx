@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { FaSquare, FaEyeSlash, FaLocationArrow, FaLayerGroup } from "react-icons/fa";
-import { FaSquareXmark } from "react-icons/fa6";
+import { FaSquare, FaEyeSlash, FaLocationArrow } from "react-icons/fa";
+import { FaCropSimple, FaSquareXmark } from "react-icons/fa6";
 import { Coord } from "engine/types";
 import { components } from "@/network/components";
 import { Button } from "@/components/core/Button";
@@ -81,7 +81,7 @@ export const CoordDebuggerStarmap = () => {
 
   useEffect(() => {
     const pointerMoveSub = scene.input.pointermove$.pipe().subscribe((event) => {
-      const pixelCoord = scene.utils.pixelCoordToTileCoord({ x: event.worldX, y: event.worldY });
+      const pixelCoord = { x: event.worldX, y: event.worldY };
 
       setPixelCoord({ x: Math.round(pixelCoord.x), y: Math.round(pixelCoord.y) });
       setTileCoord(scene.utils.pixelCoordToTileCoord({ x: pixelCoord.x, y: -pixelCoord.y }));
@@ -92,16 +92,16 @@ export const CoordDebuggerStarmap = () => {
   }, []);
 
   return (
-    <div className="grid grid-cols-[12px_60px_minmax(120px,auto)] items-center gap-2 bg-black bg-opacity-70 p-2 rounded-sm">
-      <FaSquare />
-      <CoordCaption caption="px" />
-      <CoordDisplay coord={pixelCoord} />
+    <div className="grid grid-cols-[12px_70px_minmax(120px,auto)] items-center gap-2 bg-black bg-opacity-70 p-2 rounded-sm">
       <FaSquareXmark />
       <CoordCaption caption="tile" />
       <CoordDisplay coord={tileCoord} />
-      <FaLayerGroup />
-      <CoordCaption caption="chunk" />
+      <FaCropSimple />
+      <CoordCaption caption="region" />
       <CoordDisplay coord={chunkCoord} />
+      <FaSquare size={8} className="ml-[2px]" />
+      <CoordCaption caption="px" />
+      <CoordDisplay coord={pixelCoord} />
     </div>
   );
 };
