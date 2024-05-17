@@ -105,7 +105,7 @@ export const Enter: React.FC = () => {
           <div className="grid grid-cols-7 gap-2 items-center pointer-events-auto">
             <button
               onClick={handleDelegate}
-              className="relative btn col-span-6 font-bold outline-none h-fit btn-secondary w-full z-[1] star-background hover:scale-110"
+              className="relative btn col-span-6 font-bold outline-none h-fit btn-secondary w-full star-background hover:scale-105"
             >
               <Tooltip
                 className="w-56 text-left h-fit text-wrap"

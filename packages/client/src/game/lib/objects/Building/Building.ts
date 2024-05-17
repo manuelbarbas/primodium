@@ -2,19 +2,21 @@ import Phaser from "phaser";
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "engine/types";
 import { PrimodiumScene } from "@/game/api/scene";
-import { getAssetKeyPair } from "./helpers";
+import { triggerPlacementAnim } from "@/game/lib/objects/Building/triggerPlacementAnim";
+import { getAssetKeyPair, getUpgradeAnimation } from "./helpers";
 import { DepthLayers } from "../../constants/common";
 import { IPrimodiumGameObject } from "../interfaces";
 import { Assets } from "@primodiumxyz/assets";
-import { triggerPlacementAnim } from "@/game/lib/objects/Building/triggerPlacementAnim";
+import { getBuildingDimensions } from "@/util/building";
 
 export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGameObject {
   private id: Entity;
   private buildingType: Entity;
   private coord: Coord;
-  private _scene: PrimodiumScene;
+  protected _scene: PrimodiumScene;
   private level = 1n;
   private spawned = false;
+  private dimensions: { width: number; height: number } = { width: 1, height: 1 };
 
   constructor(args: { id: Entity; scene: PrimodiumScene; buildingType: Entity; coord: Coord }) {
     const { id, scene, buildingType, coord } = args;
@@ -31,10 +33,12 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
     this.id = id;
     assetPair.animation && this.play(assetPair.animation);
     this.setOrigin(0, 1);
-    this.setDepth(DepthLayers.Building - coord.y);
+    this.setDepth(DepthLayers.Building - 5 * coord.y);
     this.setInteractive();
 
     this.buildingType = buildingType;
+
+    this.dimensions = getBuildingDimensions(buildingType);
     this.coord = coord;
     this._scene = scene;
 
@@ -80,13 +84,53 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
     this.anims.pause();
     return this;
   }
-  setLevel(level: bigint) {
+  setLevel(level: bigint, skipAnimation = false) {
+    const oldAssetPair = getAssetKeyPair(this.level, this.buildingType);
     this.level = level;
-    const assetPair = getAssetKeyPair(level, this.buildingType);
-    this.setTexture(Assets.SpriteAtlas, assetPair.sprite);
+    const newAssetPair = getAssetKeyPair(level, this.buildingType);
+    const setNewAssets = () => {
+      this.setTexture(Assets.SpriteAtlas, newAssetPair.sprite);
+      const assetPair = getAssetKeyPair(level, this.buildingType);
+      this.anims.stop();
+      assetPair.animation && this.play(assetPair.animation);
+    };
+
     //TODO: level up animation
-    this.anims.stop();
-    assetPair.animation && this.play(assetPair.animation);
+    const animation = getUpgradeAnimation(this.dimensions);
+    if (!skipAnimation && animation) {
+      const sequence = {
+        at: 0,
+        run: () => {
+          const overlay = new Phaser.GameObjects.Sprite(
+            this.scene,
+            this.x - animation.offset.x,
+            this.y + animation.offset.y,
+            Assets.SpriteAtlas,
+            oldAssetPair.sprite
+          );
+          this._scene.audio.play("Upgrade", "sfx");
+          overlay.setOrigin(0, 1);
+          overlay.setDepth(this.depth + 1);
+          if (animation.warp) overlay.setScale(animation.warp.x, animation.warp.y);
+          overlay.play(animation.animation);
+          this.scene.add.existing(overlay);
+
+          const updateCallback = (
+            phaserAnimation: Phaser.Animations.Animation,
+            frame: Phaser.Animations.AnimationFrame
+          ) => {
+            if (phaserAnimation.key === animation.animation && frame.index === animation.changeFrame) setNewAssets();
+          };
+          overlay.on(Phaser.Animations.Events.ANIMATION_UPDATE, updateCallback);
+          overlay.once(`animationcomplete-${animation.animation}`, () => {
+            this.off(Phaser.Animations.Events.ANIMATION_UPDATE, updateCallback);
+            overlay.destroy();
+          });
+        },
+      };
+
+      this.scene.add.timeline(sequence).play();
+    } else setNewAssets();
 
     return this;
   }
@@ -112,9 +156,14 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
     return this;
   };
 
-  destroy() {
+  demolish() {
     //TODO: despawn animation
+    this._scene.audio.play("Demolish", "sfx");
+    triggerPlacementAnim(this._scene, this.id, this.coord);
+    this.destroy();
+  }
 
+  destroy() {
     this._scene.objects.building.remove(this.id);
     super.destroy();
   }

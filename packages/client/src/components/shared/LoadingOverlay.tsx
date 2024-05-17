@@ -8,16 +8,16 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 export const LoadingOverlay = ({
   syncId,
-  loadingMessage,
-  errorMessage,
+  ready = true,
+  loadingMessage = "Loading Data",
+  errorMessage = "Error syncing data. Please refresh the page.",
 }: {
   syncId?: Entity;
+  ready?: boolean;
   loadingMessage?: string;
   errorMessage?: string;
 }) => {
   const { loading, error } = useSyncStatus(syncId ?? singletonEntity);
-  loadingMessage = loadingMessage ?? "Loading Data";
-  errorMessage = errorMessage ?? "Error syncing data. Please refresh the page.";
 
   useEffect(() => {
     if (error) toast.error(errorMessage);
@@ -25,7 +25,7 @@ export const LoadingOverlay = ({
 
   return (
     <AnimatePresence>
-      {loading && (
+      {(loading || !ready) && (
         <motion.div
           key={syncId}
           id={syncId}

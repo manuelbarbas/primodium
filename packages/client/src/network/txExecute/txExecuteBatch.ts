@@ -26,7 +26,6 @@ export async function executeBatch<
 ) {
   const account = withSession ? mud.sessionAccount ?? mud.playerAccount : mud.playerAccount;
   const authorizing = account !== mud.playerAccount;
-  console.log({ authorizing });
 
   console.log(
     `[Tx] Executing batch:${systemCalls.map(
@@ -36,14 +35,12 @@ export async function executeBatch<
 
   const queuedTx = async () => {
     if (authorizing && mud.sessionAccount) {
-      console.log("sending with session account");
       const params = encodeSystemCallsFrom(WorldAbi, mud.sessionAccount.entity as Hex, systemCalls).map(
         ([systemId, callData]) => ({ from: mud.playerAccount.address, systemId, callData })
       );
       const tx = await mud.sessionAccount.worldContract.write.batchCallFrom([params]);
       return tx;
     }
-    console.log("sending with main account");
     const params = encodeSystemCalls(WorldAbi, systemCalls).map(([systemId, callData]) => ({ systemId, callData }));
     const tx = await mud.playerAccount.worldContract.write.batchCall([params]);
     return tx;

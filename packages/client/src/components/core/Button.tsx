@@ -129,6 +129,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <Tooltip tooltipContent={tooltip} direction={tooltipDirection}>
         <button
           className={cn(
+            "cursor-pointer active:cursor-pointerDown disabled:opacity-50",
             buttonVariants({ variant, size, motion, modifier, shape, className }),
             selected && "border-1 border-accent z-10"
           )}

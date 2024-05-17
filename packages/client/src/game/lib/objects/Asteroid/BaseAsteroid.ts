@@ -21,17 +21,17 @@ interface LODConfig {
 }
 
 export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IPrimodiumGameObject {
-  private id: Entity;
   private containerId: Entity | undefined;
   private circle: Phaser.GameObjects.Arc;
   private animationTween: Phaser.Tweens.Tween;
 
+  protected id: Entity;
   protected coord: Coord;
   protected _scene: PrimodiumScene;
   protected fleetsContainer: FleetsContainer;
   protected fleetCount = 0;
   protected spawned = false;
-  protected asteroidSprite: Phaser.GameObjects.Image;
+  protected asteroidSprite: Phaser.GameObjects.Sprite;
   protected asteroidLabel: AsteroidLabel;
   protected currentLOD: number = -1;
 
@@ -51,7 +51,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     this.id = id;
     this.containerId = containerId;
 
-    this.asteroidSprite = new Phaser.GameObjects.Image(
+    this.asteroidSprite = new Phaser.GameObjects.Sprite(
       scene.phaserScene,
       pixelCoord.x,
       -pixelCoord.y,

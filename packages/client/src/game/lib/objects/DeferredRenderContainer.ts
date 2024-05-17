@@ -108,7 +108,7 @@ export class DeferredRenderContainer<
     return this.spawned.get(entity) ?? false;
   }
 
-  private _getKeyForChunk({ x, y }: Coord): string {
+  protected _getKeyForChunk({ x, y }: Coord): string {
     return `${x}:${y}`;
   }
 

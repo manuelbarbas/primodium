@@ -1,12 +1,15 @@
+import { EntityType } from "@/util/constants";
 import type { Sync } from "@primodiumxyz/sync-stack";
-import { Hex } from "viem";
+import { Hex, pad } from "viem";
 
-export const getInitalQuery = ({
+export const getInitialQuery = ({
   tables,
   world,
   indexerUrl,
+  playerAddress,
   worldAddress,
 }: Omit<Parameters<typeof Sync.withQueryDecodedIndexerRecsSync>[0], "query"> & {
+  playerAddress: Hex;
   worldAddress: Hex;
 }) => {
   //get all the tables that start with P_
@@ -27,12 +30,15 @@ export const getInitalQuery = ({
         { tableId: tables.Dimensions.tableId },
         { tableId: tables.GracePeriod.tableId },
         { tableId: tables.Reserves.tableId },
+        // main base starting coord
+        { tableId: tables.Position.tableId, where: { column: "entity", operation: "eq", value: EntityType.MainBase } },
+        // player asteroids
         {
           tableId: tables.OwnedBy.tableId,
           where: {
             column: "value",
             operation: "eq",
-            value: "0x000000000000000000000000AD285b5dF24BDE77A8391924569AF2AD2D4eE4A7",
+            value: pad(playerAddress, { size: 32 }),
           },
           include: [{ tableId: tables.Asteroid.tableId }],
         },

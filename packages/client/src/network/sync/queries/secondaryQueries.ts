@@ -1,6 +1,6 @@
+import { EntityType } from "@/util/constants";
 import type { Sync } from "@primodiumxyz/sync-stack";
 import { Hex } from "viem";
-import { EntityType } from "@/util/constants";
 
 export const getSecondaryQuery = ({
   tables,
@@ -22,10 +22,9 @@ export const getSecondaryQuery = ({
         // alliance
         { tableId: tables.Alliance.tableId },
         { tableId: tables.PlayerAlliance.tableId },
-        // main base starting coord
-        { tableId: tables.Position.tableId, where: { column: "entity", operation: "eq", value: EntityType.MainBase } },
         // starbelt
         { tableId: tables.Home.tableId },
+        // asteroid
         {
           tableId: tables.Asteroid.tableId,
           include: [
@@ -35,6 +34,7 @@ export const getSecondaryQuery = ({
             { tableId: tables.Level.tableId },
           ],
         },
+        // shard
         {
           tableId: tables.ShardAsteroid.tableId,
           include: [
@@ -44,6 +44,13 @@ export const getSecondaryQuery = ({
             { tableId: tables.LastConquered.tableId },
           ],
         },
+        // wormhole
+        { tableId: tables.Wormhole.tableId },
+        {
+          tableId: tables.Position.tableId,
+          where: { column: "entity", operation: "eq", value: EntityType.WormholeBase },
+        },
+        // fleets
         {
           tableId: tables.FleetMovement.tableId,
           include: [

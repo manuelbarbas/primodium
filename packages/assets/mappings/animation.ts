@@ -9,6 +9,9 @@ export enum Animations {
   Mainbase8 = "mainbase/level8",
 
   WormholebaseIdle1 = "wormholebase/level1/idle",
+  WormholebaseCooldown1 = "wormholebase/level1/idle-cooldown",
+  WormholebaseOverheat1 = "wormholebase/level1/overheat",
+  WormholebasePowerUp1 = "wormholebase/level1/powerup",
 
   IronMine1 = "ironmine/level1",
   IronMine2 = "ironmine/level2",
@@ -91,6 +94,11 @@ export enum Animations {
   //DECORATIONS
   DroneTop = "decorations/drone-top",
   DroneBottom = "decorations/drone-bottom",
+
+  // EXPLODE
+  ShardExplosionDefault = "vfx/shard-explosion",
+  Upgrade1x1 = "vfx/upgrade/1x1",
+  Upgrade3x3 = "vfx/upgrade/3x3",
 }
 
 export type AnimationKeys = keyof typeof Animations;
