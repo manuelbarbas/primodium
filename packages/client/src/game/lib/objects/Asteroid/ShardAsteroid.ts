@@ -116,11 +116,8 @@ export class ShardAsteroid extends BaseAsteroid {
     this.scene.add.timeline(sequence).play();
   }
 
-  private respawn(newPosition: Coord) {
+  respawn(newPosition: Coord) {
     this.setTilePosition(newPosition);
-    // let the static objects manager know as well for visibility
-    const pixelCoord = this._scene.utils.tileCoordToPixelCoord(newPosition);
-    this._scene.objects.asteroid.updatePosition(this.id, { x: pixelCoord.x, y: -pixelCoord.y });
 
     const animation = Animations.ShardExplosionDefault;
     this.asteroidSprite.playReverse(animation);

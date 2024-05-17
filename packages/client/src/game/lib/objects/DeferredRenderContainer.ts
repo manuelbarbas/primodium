@@ -58,7 +58,7 @@ export class DeferredRenderContainer<
 
     const chunkCoord = this._scene.utils.tileCoordToChunkCoord({ x: coord.x, y: -coord.y });
     const chunkCoordKey = this._getKeyForChunk(chunkCoord);
-    if (this._scene.utils.getVisibleChunks().has(chunkCoordKey)) {
+    if (this._scene.utils.getVisibleChunks().has(chunkCoordKey) && !this.isSpawned(entity)) {
       this.spawn(entity);
       return;
     }
@@ -109,7 +109,7 @@ export class DeferredRenderContainer<
     return this.spawned.get(entity) ?? false;
   }
 
-  private _getKeyForChunk({ x, y }: Coord): string {
+  protected _getKeyForChunk({ x, y }: Coord): string {
     return `${x}:${y}`;
   }
 
