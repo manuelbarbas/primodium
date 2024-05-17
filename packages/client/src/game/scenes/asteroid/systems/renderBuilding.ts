@@ -29,6 +29,8 @@ export const renderBuilding = (scene: PrimodiumScene) => {
   const spectateWorld = namespaceWorld(world, "game_spectate");
   const { objects } = scene;
 
+  const initialBuildingsPlaced = () => components.SystemsReady.get()?.value;
+
   defineComponentSystem(systemsWorld, components.ActiveRock, async ({ value }) => {
     //sleep 1 second to allow for building to be removed
     if (!value[0] || value[0]?.value === value[1]?.value) return;
@@ -36,11 +38,6 @@ export const renderBuilding = (scene: PrimodiumScene) => {
     const activeRock = value[0]?.value as Entity;
 
     world.dispose("game_spectate");
-
-    // Wait for a few seconds for initial buildings to be entered into the query and placed, so we don't trigger
-    // the build anim for them
-    let initialBuildingsPlaced = false;
-    setTimeout(() => (initialBuildingsPlaced = true), 3000);
 
     // Find old buildings that have this asteroid as parent
     const positionQuery = [
@@ -74,7 +71,7 @@ export const renderBuilding = (scene: PrimodiumScene) => {
       if (objects.building.has(entity)) {
         const building = objects.building.get(entity);
         if (!building) return;
-        building.setLevel(components.Level.get(entity)?.value ?? 1n, !initialBuildingsPlaced || !showLevelAnimation);
+        building.setLevel(components.Level.get(entity)?.value ?? 1n, !initialBuildingsPlaced() || !showLevelAnimation);
         building.setActive(components.IsActive.get(entity)?.value ?? true);
 
         // at this point, we might be moving a building, so update its position
@@ -85,7 +82,7 @@ export const renderBuilding = (scene: PrimodiumScene) => {
         building.setCoordPosition(tileCoord);
         building.setDepth(DepthLayers.Building - tileCoord.y * 5);
         // trigger anim since the building was just moved
-        if (initialBuildingsPlaced && !showLevelAnimation) building.triggerPlacementAnim();
+        if (initialBuildingsPlaced() && !showLevelAnimation) building.triggerPlacementAnim();
 
         return;
       }
@@ -165,8 +162,8 @@ export const renderBuilding = (scene: PrimodiumScene) => {
         });
 
       // buildings.set(entity, building);
-      // trigger the build anim if it's a new placement (not initializing)
-      if (initialBuildingsPlaced) building.triggerPlacementAnim();
+      // trigger the build anim if it's a new placement (not when game is initializing)
+      if (initialBuildingsPlaced()) building.triggerPlacementAnim();
     };
 
     // handle selectedBuilding changes
