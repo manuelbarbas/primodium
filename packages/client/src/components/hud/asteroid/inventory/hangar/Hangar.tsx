@@ -55,7 +55,7 @@ export const Hangar = ({ className = "" }: { className?: string }) => {
   );
 
   if (!activeRock) return null;
-  if (!hangar || hangar.units.length === 0) {
+  if (!hangar || hangar.counts.every((count) => count === 0n)) {
     return (
       <Card className={`${className}`} noDecor>
         <div className="w-full h-full flex flex-col justify-center items-center gap-4">

@@ -1,4 +1,4 @@
-import { Entity, Has, HasValue, defineComponentSystem, namespaceWorld, runQuery } from "@latticexyz/recs";
+import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { getUnitTrainingTime } from "src/util/unit";
 import { Hex } from "viem";
 import { components } from "../components";
@@ -6,29 +6,33 @@ import { world } from "../world";
 
 export function setupTrainingQueues() {
   const systemWorld = namespaceWorld(world, "systems");
-  const { BuildingType, OwnedBy, SelectedRock } = components;
+  const { SelectedRock } = components;
 
   // update local queues each second
   // todo: create a component that tracks active asteroids (to be updated each second)
-  defineComponentSystem(systemWorld, components.BlockNumber, (update) => {
-    const selectedRock = components.ActiveRock.get()?.value;
-    const destination = SelectedRock.get()?.value;
-    const parents: string[] = [];
+  defineComponentSystem(systemWorld, components.Time, () => {
+    const activeRock = components.ActiveRock.get()?.value;
+    const selectedRock = SelectedRock.get()?.value;
+    const parents: Entity[] = [];
     if (selectedRock) parents.push(selectedRock);
-    if (origin && selectedRock !== origin) parents.push(origin);
-    if (destination && selectedRock !== destination) parents.push(destination);
+    if (activeRock && selectedRock !== activeRock) parents.push(activeRock);
 
-    const queries = parents.map((parentEntity) => [
-      HasValue(OwnedBy, {
-        value: parentEntity,
-      }),
-      Has(BuildingType),
-    ]);
-    const blockNumber = update?.value[0]?.value;
-    if (!blockNumber) return;
-    const buildings = queries.reduce((acc, query) => [...acc, ...runQuery(query)], [] as Entity[]);
-    buildings.forEach((building) => updateTrainingQueue(building));
+    parents.forEach((asteroid) => updateTrainingQueues(asteroid));
   });
+
+  defineComponentSystem(systemWorld, components.HoverEntity, ({ value: values }) => {
+    const hoverEntity = values[0]?.value;
+    if (!hoverEntity || !components.Asteroid.has(hoverEntity)) return;
+    updateTrainingQueues(hoverEntity);
+  });
+}
+
+function updateTrainingQueues(asteroid: Entity) {
+  const buildings = components.Keys_UnitFactorySet.getWithKeys({ entity: asteroid as Hex })?.value as
+    | Entity[]
+    | undefined;
+  if (!buildings) return;
+  buildings.forEach((building) => updateTrainingQueue(building));
 }
 
 export function updateTrainingQueue(building: Entity) {

@@ -147,8 +147,7 @@ const UnitDisplay = ({ type, count }: { type: Entity; count: bigint }) => {
 // exluding units for now
 const AsteroidResources = ({ entity }: { entity: Entity }) => {
   const resources = useFullResourceCounts(entity);
-  // const units = components.Hangar.use(entity);
-  const units: { units: Entity[]; counts: bigint[] } = { units: [], counts: [] };
+  const units = components.Hangar.use(entity);
   const hasUnits = !!units && units.counts.some((unit) => unit > 0n);
   const noResources = [...ResourceStorages].every((type) => resources.get(type)?.resourceCount === 0n);
   if (noResources && !hasUnits) return null;
