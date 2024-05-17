@@ -1,5 +1,5 @@
 import { components } from "@/network/components";
-import { Tooltip } from "@/components/core/Tooltip";
+import { Tooltip, TooltipDirection } from "@/components/core/Tooltip";
 import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
 import { useGame } from "@/hooks/useGame";
 import { cn } from "@/util/client";
@@ -62,7 +62,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, Var
   clickSound?: AudioKeys;
   keybind?: KeybindActionKeys;
   tooltip?: React.ReactNode;
-  tooltipDirection?: "right" | "left" | "top" | "bottom";
+  tooltipDirection?: TooltipDirection;
   selected?: boolean;
 }
 
