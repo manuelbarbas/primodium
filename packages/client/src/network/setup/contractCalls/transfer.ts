@@ -195,7 +195,15 @@ const transferTwoWay = async (
         args: [left as Hex, right as Hex, unitCounts],
         withSession: true,
       },
-      metadata
+      metadata,
+      (receipt) => {
+        ampli.systemTransferTwoWaySystemPrimodiumTransferUnitsTwoWay({
+          spaceRock: left as Hex,
+          spaceRockTo: right as Hex,
+          unitCounts: unitCounts.map((unitCount) => bigintToNumber(unitCount)),
+          ...parseReceipt(receipt),
+        });
+      }
     );
   }
   if (noUnits) {
@@ -207,7 +215,15 @@ const transferTwoWay = async (
         args: [left as Hex, right as Hex, resourceCounts],
         withSession: true,
       },
-      metadata
+      metadata,
+      (receipt) => {
+        ampli.systemTransferTwoWaySystemPrimodiumTransferResourcesTwoWay({
+          spaceRock: left as Hex,
+          spaceRockTo: right as Hex,
+          resourceCounts: resourceCounts.map((resourceCount) => bigintToNumber(resourceCount)),
+          ...parseReceipt(receipt),
+        });
+      }
     );
   }
 
@@ -219,6 +235,15 @@ const transferTwoWay = async (
       args: [left as Hex, right as Hex, unitCounts, resourceCounts],
       withSession: true,
     },
-    metadata
+    metadata,
+    (receipt) => {
+      ampli.systemTransferTwoWaySystemPrimodiumTransferUnitsAndResourcesTwoWay({
+        spaceRock: left as Hex,
+        spaceRockTo: right as Hex,
+        unitCounts: unitCounts.map((unitCount) => bigintToNumber(unitCount)),
+        resourceCounts: resourceCounts.map((resourceCount) => bigintToNumber(resourceCount)),
+        ...parseReceipt(receipt),
+      });
+    }
   );
 };
