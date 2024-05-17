@@ -6,7 +6,6 @@ import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EFleetStance } from "contracts/config/enums";
 import { useMemo } from "react";
-import { FaFire } from "react-icons/fa";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Loader } from "src/components/core/Loader";
 import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
@@ -95,7 +94,7 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
         )}
         {!inGracePeriod && inCooldown && (
           <div className="flex flex-col font-bold gap-1 text-xs items-center">
-            <FaFire className="text-error w-6 h-6" />
+            <img src={InterfaceIcons.Cooldown} className={`pixel-images w-6 h-6`} />
             {formatTimeShort(cooldownDuration)}
           </div>
         )}
