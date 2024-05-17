@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 
 export const AlertContent: React.FC<{ message: string; onConfirm?: () => void }> = ({ message, onConfirm }) => {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 text-md">
       <div className="absolute inset-0 bg-error/25 animate-ping pointer-events-none" />
       <div className="flex flex-col text-center justify-center items-center gap-2 w-full">
         <FaExclamationTriangle size={24} className="text-warning" />

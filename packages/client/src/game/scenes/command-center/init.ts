@@ -27,6 +27,8 @@ export const initCommandCenter = async (game: GlobalApi): Promise<PrimodiumScene
 
   const sceneApi = createSceneApi(scene);
 
+  sceneApi.audio.setPauseOnBlur(false);
+
   world.registerDisposer(() => {
     clickSub.unsubscribe();
   }, "game");
