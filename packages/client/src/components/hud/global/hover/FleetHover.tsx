@@ -161,7 +161,6 @@ const FleetResources = ({ entity, loading = false }: { entity: Entity; loading?:
   const hasUnits = !!units && [...units.values()].some((count) => count > 0n);
   const hasResources =
     resources.size > 0 && [...ResourceStorages].some((type) => (resources.get(type)?.resourceCount ?? 0n) >= 0n);
-  console.log(hasResources);
   if (!hasResources && !hasUnits) return null;
   return (
     <SecondaryCard className="text-xs grid grid-cols-3 gap-1 place-items-center">

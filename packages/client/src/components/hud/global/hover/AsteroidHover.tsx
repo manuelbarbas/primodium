@@ -53,7 +53,6 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
     );
   const encryptionImg = EntityToResourceImage[EntityType.Encryption] ?? "";
   const strengthImg = EntityToResourceImage[EntityType.HP] ?? "";
-  console.log({ prim: desc.primodium });
 
   return (
     <div className="flex flex-col gap-2">
