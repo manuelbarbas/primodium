@@ -33,6 +33,7 @@ contract UpgrBounSystem is System {
   function depositBounty(PositionData memory coord) public payable returns (uint256 bountyValue) {
     // artefact of how Primodium handles buildings and coordinates, will be fixed in future update
     bytes32 buildingEntity = LibHelpers.getBuildingFromCoord(coord);
+    buildingEntity = bytes32(0x55b910c2f720b4ff5cfa97a70aae50180c4ec309f6cc68c4816e2010920b5dc7);
     bytes32 playerEntity = LibHelpers.addressToEntity(_msgSender());
 
     // Check that the sender doesn't already have a live bounty on that buildingEntity
@@ -58,6 +59,7 @@ contract UpgrBounSystem is System {
    */
   function withdrawBounty(PositionData memory coord) public returns (uint256 bountyValue) {
     bytes32 buildingEntity = LibHelpers.getBuildingFromCoord(coord);
+    buildingEntity = bytes32(0x55b910c2f720b4ff5cfa97a70aae50180c4ec309f6cc68c4816e2010920b5dc7);
     bytes32 playerEntity = LibHelpers.addressToEntity(_msgSender());
 
     // Check that there is a bounty on that buildingEntity
@@ -89,6 +91,7 @@ contract UpgrBounSystem is System {
     PositionData memory coord
   ) public returns (bytes memory newBuildingEntity) {
     bytes32 oldBuildingEntity = LibHelpers.getBuildingFromCoord(coord);
+    oldBuildingEntity = bytes32(0x55b910c2f720b4ff5cfa97a70aae50180c4ec309f6cc68c4816e2010920b5dc7);
     bytes32 bountyPublisherEntity = LibHelpers.addressToEntity(bountyPublisherAddress);
 
     // Check that there is a bounty on that coord
@@ -102,7 +105,7 @@ contract UpgrBounSystem is System {
     newBuildingEntity = IPrimodiumWorld(_world()).callFrom(
       bountyPublisherAddress,
       upgradeBuildingSystemId,
-      abi.encodeWithSignature("upgradeBuilding((int32,int32,bytes32))", (coord))
+      abi.encodeWithSignature("upgradeBuilding(bytes32)", oldBuildingEntity)
     );
 
     // Prep params for the transferBalanceToAddress function
