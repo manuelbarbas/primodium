@@ -82,7 +82,7 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
             {formatResourceCount(EntityType.Iron, shardData.unclaimedPoints, {
               notLocale: true,
               fractionDigits: 1,
-            }).toLocaleString()}
+            }).toLocaleString()}{" "}
             unclaimed points
           </div>
         )}
