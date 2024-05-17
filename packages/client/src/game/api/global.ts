@@ -1,4 +1,4 @@
-import { SceneKeys, Scenes } from "@/game/lib/constants/common";
+import { SceneKeys } from "@/game/lib/constants/common";
 import { Game, Scene } from "engine/types";
 
 export type GlobalApi = ReturnType<typeof createGlobalApi>;
@@ -69,7 +69,6 @@ export function createGlobalApi(game: Game) {
 
   function disableGlobalInput() {
     game.sceneManager.scenes.forEach((scene) => {
-      if (scene.config.key === Scenes.UI) return;
       scene.input.disableInput();
     });
   }

@@ -7,7 +7,7 @@ import { IsFleet, IsFleetEmpty, GracePeriod, P_GracePeriod, P_Transportables, Fl
 import { LibEncode } from "libraries/LibEncode.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
 import { LibStorage } from "libraries/LibStorage.sol";
-import { LibTransfer } from "libraries/fleet/LibTransfer.sol";
+import { LibTransfer } from "libraries/transfer/LibTransfer.sol";
 import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
@@ -31,7 +31,10 @@ library LibFleet {
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
   ) internal returns (bytes32 fleetEntity) {
-    require(ResourceCount.get(asteroidEntity, uint8(EResource.U_MaxFleets)) > 0, "[Fleet] asteroid has no max moves");
+    require(
+      ResourceCount.get(asteroidEntity, uint8(EResource.U_MaxFleets)) > 0,
+      "[Fleet] asteroid has no fleets available"
+    );
     LibStorage.decreaseStoredResource(asteroidEntity, uint8(EResource.U_MaxFleets), 1);
     fleetEntity = LibEncode.getTimedHash(playerEntity, FleetKey);
     uint256 gracePeriodLength = (P_GracePeriod.getFleet() * WORLD_SPEED_SCALE) / P_GameConfig.getWorldSpeed();
@@ -159,6 +162,18 @@ library LibFleet {
     if (amount == 0) return;
     uint256 freeCargoSpace = LibCombatAttributes.getCargoSpace(fleetEntity);
     require(freeCargoSpace >= amount, "[Fleet] Not enough storage to add resource");
+    ResourceCount.set(fleetEntity, resource, ResourceCount.get(fleetEntity, resource) + amount);
+  }
+
+  /**
+   * @notice Increases the amount of a specific resource in a fleet.
+   * @param fleetEntity The identifier of the fleet.
+   * @param resource The type of resource to be added.
+   * @param amount The quantity of the resource to be added.
+   * @dev DOES NOT ENSURE that the fleet has sufficient cargo space to store the added resources.
+   */
+  function uncheckedIncreaseFleetResource(bytes32 fleetEntity, uint8 resource, uint256 amount) internal {
+    if (amount == 0) return;
     ResourceCount.set(fleetEntity, resource, ResourceCount.get(fleetEntity, resource) + amount);
   }
 

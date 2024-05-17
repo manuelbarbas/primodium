@@ -11,7 +11,6 @@ export function getHasAnyRequiredBuilding(asteroid: Entity, objective: BuildAnyO
       HasValue(components.OwnedBy, { value: asteroid as Hex }),
       HasValue(components.BuildingType, { value: buildingType as Hex }),
     ]);
-    console.log(getEntityTypeName(buildingType), buildings.size);
     return buildings.size > 0;
   });
 

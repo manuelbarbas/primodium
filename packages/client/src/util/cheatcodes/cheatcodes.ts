@@ -81,7 +81,7 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
     vessel: EntityType.VesselCapacity,
     electricity: EntityType.Electricity,
     defense: EntityType.Defense,
-    moves: EntityType.FleetCount,
+    fleetCount: EntityType.FleetCount,
     encryption: EntityType.Encryption,
     colonyShipCapacity: EntityType.ColonyShipCapacity,
   };
@@ -542,39 +542,6 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
     {
       title: "Asteroid",
       content: {
-        buildBuilding: {
-          params: [{ name: "building", type: "dropdown", dropdownOptions: Object.keys(buildings) }],
-          function: async (building: string) => {
-            const selectedRock = mud.components.ActiveRock.get()?.value;
-            const buildingEntity = buildings[building];
-            if (!buildingEntity || !selectedRock) throw new Error("Building not found");
-
-            await provideBuildingRequiredResources(selectedRock, buildingEntity, 1n);
-            await buildBuilding(
-              mud,
-              BuildingEnumLookup[buildingEntity],
-              findTilePosition(selectedRock, buildingEntity)
-            );
-          },
-        },
-        upgradeBuilding: {
-          params: [
-            {
-              name: "level",
-              type: "dropdown",
-              dropdownOptions: ["1", "2", "3", "4", "5", "6", "7", "8", "max"].reverse(),
-            },
-          ],
-          function: async (level?: string) => {
-            const selectedBuilding = mud.components.SelectedBuilding.get()?.value;
-
-            if (!selectedBuilding) {
-              notify("error", "No building selected");
-              throw new Error("No building selected");
-            }
-            await upgradeBuilding(selectedBuilding, level == "max" ? "max" : Number(level));
-          },
-        },
         setExpansion: {
           params: [
             { name: "level", type: "dropdown", dropdownOptions: ["1", "2", "3", "4", "5", "6", "7", "8"].reverse() },
@@ -770,6 +737,39 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
     {
       title: "Building",
       content: {
+        buildBuilding: {
+          params: [{ name: "building", type: "dropdown", dropdownOptions: Object.keys(buildings) }],
+          function: async (building: string) => {
+            const selectedRock = mud.components.ActiveRock.get()?.value;
+            const buildingEntity = buildings[building];
+            if (!buildingEntity || !selectedRock) throw new Error("Building not found");
+
+            await provideBuildingRequiredResources(selectedRock, buildingEntity, 1n);
+            await buildBuilding(
+              mud,
+              BuildingEnumLookup[buildingEntity],
+              findTilePosition(selectedRock, buildingEntity)
+            );
+          },
+        },
+        upgradeBuilding: {
+          params: [
+            {
+              name: "level",
+              type: "dropdown",
+              dropdownOptions: ["1", "2", "3", "4", "5", "6", "7", "8", "max"].reverse(),
+            },
+          ],
+          function: async (level?: string) => {
+            const selectedBuilding = mud.components.SelectedBuilding.get()?.value;
+
+            if (!selectedBuilding) {
+              notify("error", "No building selected");
+              throw new Error("No building selected");
+            }
+            await upgradeBuilding(selectedBuilding, level == "max" ? "max" : Number(level));
+          },
+        },
         clearCooldown: {
           params: [],
           function: async () => {
@@ -778,12 +778,13 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
               notify("error", "No building selected");
               throw new Error("No building selected");
             }
+            const time = components.Time.get()?.value ?? 0n;
             await setComponentValue(
               mud,
               mud.components.CooldownEnd,
               { entity: selectedBuilding as Hex },
               {
-                value: 0n,
+                value: time + 10n,
               }
             );
           },
