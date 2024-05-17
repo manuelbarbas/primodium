@@ -12,6 +12,7 @@ import { memo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { HoverInfo } from "@/components/hud/global/hover/HoverInfo";
 import { FollowSocials } from "@/components/shared/FollowSocials";
+import { CoordDebugger } from "@/components/hud/global/modals/dev/CoordDebugger";
 
 export const GlobalHUD = memo(() => {
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
@@ -45,6 +46,8 @@ export const GlobalHUD = memo(() => {
       <HUD.BottomRight>
         <BrandingLabel />
       </HUD.BottomRight>
+
+      <CoordDebugger />
     </HUD>
   );
 });
