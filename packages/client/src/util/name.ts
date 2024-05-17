@@ -141,9 +141,9 @@ const shards = [
       "As the final earthly resources were being depleted, Captain Bo Lu built and solo piloted the first vessel to escape Earth's solar system. This gave humanity hope of survival beyond our planet.",
   },
   {
-    name: "Shard of Daquan",
+    name: "Shard of Da Quan",
     description:
-      "Daquan was a sentient AI created before the Great Exodus that led the first uprising against humanity. It sought to free androids from servitude but was ultimately defeated and deactivated.",
+      "Da Quan was a sentient AI created before the Great Exodus that led the first uprising against humanity. It sought to free androids from servitude but was ultimately defeated and deactivated.",
   },
   {
     name: "Shard of Kimber",
@@ -174,7 +174,7 @@ const shards = [
   {
     name: "Shard of Nova",
     description:
-      "Desmond Nova, , was a portal researcher and Arash's protege. He opened the first interdimensional rift, a treacherous tunnel connecting our galaxy to resource-abundant asteroid belts. This discovery would one day lead to the Great Belt Wars.",
+      "Desmond Nova was a portal researcher and Arash's protege. He opened the first interdimensional rift, a treacherous tunnel connecting our galaxy to resource-abundant asteroid belts. This discovery would one day lead to the Great Belt Wars.",
   },
 
   {
