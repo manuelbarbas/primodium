@@ -81,35 +81,6 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
           {shardData.canExplode ? " IMMINENT" : ` IN ${formatTimeShort(shardData.timeUntilExplode)}`}
         </p>
       </div>
-      <div className="flex gap-1">
-        {shardData.dripPerSec > 0n &&
-          // <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
-          //   {/* todo replace PRI with icon */}
-          //   {formatResourceCount(EntityType.Iron, shardData.dripPerSec * 60n * 60n, {
-          //     notLocale: true,
-          //     fractionDigits: 1,
-          //   }).toLocaleString()}{" "}
-          //   PRI/HR
-          // </div>
-          null}
-      </div>
-      {shardData.unclaimedPoints > 0n &&
-        // <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
-        //   {/* todo replace PRI with icon */}
-        //   {formatResourceCount(EntityType.Iron, shardData.unclaimedPoints, {
-        //     notLocale: true,
-        //     fractionDigits: 1,
-        //   }).toLocaleString()}
-        //   unclaimed points
-        // </div>
-        null}
-      {/* <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
-          <HealthBar
-            imgUrl={EntityToResourceImage[EntityType.Encryption]}
-            health={Number(formatResourceCount(EntityType.Encryption, shardData.encryption, { notLocale: true }))}
-            maxHealth={Number(formatResourceCount(EntityType.Encryption, shardData.maxEncryption, { notLocale: true }))}
-          />
-        </Badge> */}
     </div>
   );
 };
