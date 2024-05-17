@@ -19,7 +19,7 @@ export const HoverInfo = () => {
     );
   };
 
-  const hoverEntity = components.HoverEntity.use()?.value;
+  const hoverEntity = components.SelectedFleet.use()?.value;
 
   if (!hoverEntity) return <></>;
 
