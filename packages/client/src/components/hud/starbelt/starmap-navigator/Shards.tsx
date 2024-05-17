@@ -80,11 +80,16 @@ const Shard = ({
   if (!position || !shardData) return null;
 
   return (
-    <Button size="content" selected={selected} className={`flex-col ${className}`} onClick={onClick}>
+    <Button
+      size="content"
+      selected={selected}
+      className={`flex-col text-balance h-full ${className}`}
+      onClick={onClick}
+    >
       <div className="flex justify-around w-full">
         <img src={imageUri} className=" w-10 h-10" />
         <div className="flex flex-col items-center gap-1">
-          <p className="font-bold text-sm ">{entityToRockName(shardEntity)}</p>
+          <p className="font-bold text-sm text-wrap">{entityToRockName(shardEntity)}</p>
           {shardData.owner ? (
             shardData.owner === playerEntity ? (
               <p className="text-xs text-success">
