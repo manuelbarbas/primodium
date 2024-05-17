@@ -67,7 +67,6 @@ const Transfer: React.FC = () => {
         if (components.Asteroid.has(left)) {
           const storage = getFullResourceCount(entity, left ?? singletonEntity).resourceStorage;
           total = bigIntMin(storage, total);
-          console.log({ storage, total });
         }
 
         acc.set(entity, total);
