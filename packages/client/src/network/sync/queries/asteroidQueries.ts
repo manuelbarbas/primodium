@@ -32,6 +32,10 @@ export const getAsteroidQuery = ({
           key0: asteroid,
         },
         {
+          tableId: tables.Keys_UnitFactorySet.tableId,
+          key0: asteroid,
+        },
+        {
           tableId: tables.ProductionRate.tableId,
           key0: asteroid,
         },

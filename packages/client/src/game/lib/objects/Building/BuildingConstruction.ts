@@ -34,7 +34,6 @@ export class BuildingConstruction extends Phaser.GameObjects.Container implement
       .sprite(0, 0, Assets.SpriteAtlas, spriteName)
       .setOrigin(0, 1)
       .setDepth(DepthLayers.Building - coord.y);
-    console.log({ depth: DepthLayers.Building - coord.y });
 
     this.text = this.scene.add
       .bitmapText(
