@@ -18,7 +18,7 @@ import { getAsteroidDescription, getAsteroidImage } from "src/util/asteroid";
 import { EntityType, Keys, ResourceStorages } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { entityToRockName } from "src/util/name";
-import { formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
+import { formatNumber, formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
 
 export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }> = ({
   entity,
@@ -53,6 +53,7 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
     );
   const encryptionImg = EntityToResourceImage[EntityType.Encryption] ?? "";
   const strengthImg = EntityToResourceImage[EntityType.HP] ?? "";
+  console.log({ prim: desc.primodium });
 
   return (
     <div className="flex flex-col gap-2">
@@ -70,7 +71,7 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
               <AccountDisplay className="w-12" player={ownedBy} raw />
             </div>
           )}
-          <div className="flex gap-1 font-bold text-xs">
+          <div className="flex gap-1 font-bold text-xs opacity-75">
             <p>{desc.size}</p>
             <p
               className={cn(
@@ -80,11 +81,10 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
             >
               {desc.type}
             </p>
-            <div className="flex gap-1 text-xs items-center h-4">
-              {/* todo replace PRI with icon */}
-              {formatResourceCount(EntityType.Iron, desc.primodium, { short: true, showZero: true })}
+            <SecondaryCard className="flex flex-row gap-1 p-1 text-xs items-center h-4 p-1">
               <img src={ResourceImages.Primodium} className={`pixel-images w-4 h-4`} />
-            </div>
+              {formatNumber(desc.primodium, { short: true, showZero: true })}
+            </SecondaryCard>
           </div>
         </div>
         {!ownedBy && <img src={EntityToUnitImage[EntityType.Droid]} className="w-6 h-6" />}
@@ -104,7 +104,7 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
             : ` ${claimConquerTime.points} PTS`}
         </div>
       )}
-      <div className="grid grid-cols-2 gap-2">
+      <SecondaryCard className="grid grid-cols-2 gap-2">
         <div className="flex gap-1 text-xs items-center">
           <img src={encryptionImg} className="w-4 h-4" alt="encryption" />
           <CapacityBar current={encryption} max={maxEncryption} segments={7} className="w-full" />
@@ -115,7 +115,7 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
           <CapacityBar current={strength} max={maxStrength} segments={7} className="w-full" />
           <p>{formatResourceCount(EntityType.Defense, strength, { short: true })}</p>
         </div>
-      </div>
+      </SecondaryCard>
 
       {!hideResources && <AsteroidResources entity={entity} />}
     </div>
