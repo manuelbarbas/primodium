@@ -63,8 +63,8 @@ const useSetupResult = () => {
   );
 
   useEffect(() => {
-    setup().then((network) => setNetwork(network));
-  }, []);
+    if (playerAccount) setup(playerAccount.address).then((network) => setNetwork(network));
+  }, [playerAccount?.address]);
 
   const updateSessionAccount = useCallback(
     async (pKey: Hex) => {

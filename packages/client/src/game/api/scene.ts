@@ -11,7 +11,7 @@ import { MUD } from "@/network/types";
 import { createUtilApi } from "@/game/api/utils";
 
 export type SceneApi = ReturnType<typeof createSceneApi>;
-export type PrimodiumScene = SceneApi & { runSystems?: (mud: MUD) => void };
+export type PrimodiumScene = SceneApi & { runSystems?: (mud: MUD) => void; isPrimary?: boolean };
 
 export function createSceneApi(scene: Scene) {
   const cameraApi = createCameraApi(scene);

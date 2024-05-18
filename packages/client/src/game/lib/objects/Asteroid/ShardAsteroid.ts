@@ -39,7 +39,7 @@ export class ShardAsteroid extends BaseAsteroid {
     return 0;
   }
 
-  explode(newPosition?: Coord) {
+  explode(newPosition?: Coord, onAnimationComplete?: () => void) {
     const animation = Animations.ShardExplosionDefault;
     const shakeDuration = 2000;
     const shakeInterval = 100;
@@ -105,11 +105,9 @@ export class ShardAsteroid extends BaseAsteroid {
           this.asteroidSprite.play(animation);
           this.asteroidSprite.anims.currentAnim!.key = "explode";
           this.asteroidSprite.once("animationcomplete-explode", () => {
+            if (onAnimationComplete) onAnimationComplete();
             this.asteroidSprite.setTexture(Assets.SpriteAtlas, Sprites.Shard);
-            this.getFleetContainer().clearOrbit();
             if (newPosition) this.respawn(newPosition);
-            else this.asteroidSprite.setTexture(Assets.SpriteAtlas, Sprites.Shard);
-            this.asteroidLabel.setVisible(true);
           });
         },
       },
@@ -118,7 +116,7 @@ export class ShardAsteroid extends BaseAsteroid {
     this.scene.add.timeline(sequence).play();
   }
 
-  private respawn(newPosition: Coord) {
+  respawn(newPosition: Coord) {
     this.setTilePosition(newPosition);
 
     const animation = Animations.ShardExplosionDefault;
@@ -126,6 +124,7 @@ export class ShardAsteroid extends BaseAsteroid {
     this.asteroidSprite.anims.currentAnim!.key = "respawn";
     this.asteroidSprite.once("animationcomplete-respawn", () => {
       this.asteroidSprite.setTexture(Assets.SpriteAtlas, Sprites.Shard);
+      this.asteroidLabel.setVisible(true);
     });
   }
 }

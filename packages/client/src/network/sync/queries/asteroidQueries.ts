@@ -60,6 +60,36 @@ export const getAsteroidQuery = ({
   };
 };
 
+export const getShardAsteroidQuery = ({
+  tables,
+  world,
+  indexerUrl,
+  asteroid,
+  worldAddress,
+}: Omit<Parameters<typeof Sync.withFilterIndexerRecsSync>[0], "filter"> & {
+  worldAddress: Hex;
+  asteroid: Entity;
+}) => {
+  return {
+    indexerUrl,
+    tables,
+    world,
+    filter: {
+      address: worldAddress as Hex,
+      filters: [
+        {
+          tableId: tables.ResourceCount.tableId,
+          key0: asteroid,
+        },
+        {
+          tableId: tables.MaxResourceCount.tableId,
+          key0: asteroid,
+        },
+      ],
+    },
+  };
+};
+
 export const getActiveAsteroidQuery = ({
   tables,
   world,

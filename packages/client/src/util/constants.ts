@@ -48,6 +48,7 @@ export const Keys = {
   BATTLE: toHex32("battle") as Entity,
   ASTEROID: toHex32("asteroid.key") as Entity,
   FLEET_OWNED_BY: toHex32("fleet.key") as Entity,
+  SECONDARY: toHex32("secondary") as Entity,
 };
 
 export enum ResourceType {
@@ -144,7 +145,7 @@ export const EntityType = {
   Kimberlite: toHex32("Kimberlite") as Entity,
   Platinum: toHex32("Platinum") as Entity,
 
-  //Special Asteroid Types
+  // Special Asteroid Types
   Common: toHex32("Common") as Entity,
   Wormhole: toHex32("Wormhole") as Entity,
 
@@ -165,7 +166,7 @@ export const EntityType = {
   Garage: toHex32("Garage") as Entity,
   Workshop: toHex32("Workshop") as Entity,
 
-  //Advanced Buildings
+  // Advanced Buildings
   IronPlateFactory: toHex32("IronPlateFactory") as Entity,
   PVCellFactory: toHex32("PVCellFactory") as Entity,
   AlloyFactory: toHex32("AlloyFactory") as Entity,
@@ -285,14 +286,18 @@ export const EntityType = {
   AllianceWormholeLeaderboard: toHex32("Alliance_Wormhole") as Entity,
   AllianceGrandLeaderboard: toHex32("Alliance_Grand") as Entity,
 
-  //Objectives
+  // Objectives
   ...Object.keys(EObjectives).reduce((acc, key) => {
     if (!isNaN(Number(key))) return acc;
     return { ...acc, [key]: toHex32(key) as Entity };
   }, {}),
 
-  //Starmap
+  // Starmap
   Asteroid: toHex32("spacerock.Asteroid") as Entity,
+
+  // Deferred render containers
+  DeferredRenderAsteroids: toHex32("deferred:asteroids") as Entity,
+  DeferredRenderShards: toHex32("deferred:shards") as Entity,
 
   NULL: toHex32("NULL") as Entity,
 };

@@ -12,5 +12,5 @@ export const initUIScene = async (game: GlobalApi): Promise<PrimodiumScene> => {
 
   const sceneApi = createSceneApi(scene);
   const runSystems = (mud: MUD) => runUISystems(sceneApi, mud);
-  return { ...sceneApi, runSystems };
+  return { ...sceneApi, runSystems, isPrimary: true };
 };
