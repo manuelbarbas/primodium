@@ -18,7 +18,6 @@ export const forfeit = async (mud: MUD) => {
         args: [asteroidEntity as Hex],
       } as const)
   );
-  console.log({ abandonCalls });
 
   await executeBatch(
     {
