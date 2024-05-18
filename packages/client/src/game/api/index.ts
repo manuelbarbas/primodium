@@ -48,26 +48,45 @@ export async function initGame(version = "v1") {
   }
 
   function runSystems(mud: MUD) {
-    console.info("[Game] Running systems");
-    world.dispose("systems");
+    const primary = () => {
+      console.info("[Game] Running primary systems");
+      world.dispose("systems");
 
-    components.SelectedMode.set({ value: Mode.Asteroid });
-    setupBuildRock();
-    setupBattleComponents();
-    setupBlockNumber(mud.network.latestBlockNumber$);
-    setupDoubleCounter(mud);
-    setupHangar();
-    setupLeaderboard();
-    setupWormholeResource();
-    setupTime(mud);
-    setupTrainingQueues();
-    setupHomeAsteroid(mud);
-    setupBuildingReversePosition();
-    setupSync(mud);
+      components.SelectedMode.set({ value: Mode.Asteroid });
+      setupBuildRock();
+      setupBattleComponents();
+      setupBlockNumber(mud.network.latestBlockNumber$);
+      setupDoubleCounter(mud);
+      setupHangar();
+      setupLeaderboard();
+      setupWormholeResource();
+      setupTime(mud);
+      setupTrainingQueues();
+      setupHomeAsteroid(mud);
+      setupBuildingReversePosition();
+      setupSync(mud);
 
-    Object.values(Scenes).forEach((scene) => {
-      api[scene].runSystems?.(mud);
-    });
+      Object.values(Scenes).forEach((key) => {
+        const scene = api[key];
+        if (scene.isPrimary) scene.runSystems?.(mud);
+      });
+    };
+
+    const secondary = () => {
+      console.info("[Game] Running secondary systems");
+      Object.values(Scenes).forEach((key) => {
+        const scene = api[key];
+        if (!scene.isPrimary) scene.runSystems?.(mud);
+      });
+    };
+
+    // run after all systems are ready
+    // we can use that to keep the loading screen until all systems are run to prevent annoying stutter while the interface is ready
+    const done = () => {
+      components.SystemsReady.set({ value: true });
+    };
+
+    return { primary, secondary, done };
   }
 
   return { ...api, destroy, runSystems };

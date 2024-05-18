@@ -30,7 +30,6 @@ export const wormholeDeposit = async (
       ...options,
     },
     (receipt) => {
-      console.log("Wormhole deposit complete");
       makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.TeleportResources);
 
       ampli.systemClaimWormholeSystemPrimodiumWormholeDeposit({

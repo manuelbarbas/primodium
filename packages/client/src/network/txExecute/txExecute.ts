@@ -55,7 +55,6 @@ export async function execute<
         functionName,
         args,
       });
-      console.log("params:", params);
       tx = mud.playerAccount.worldContract.write.call(params, callOptions);
     }
     const receipt = await _execute(mud, tx);

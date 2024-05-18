@@ -11,7 +11,6 @@ export const mapOpenFx = (scene: PrimodiumScene) => {
 
   defineComponentSystem(systemsWorld, components.SelectedMode, ({ value }) => {
     const mode = value[0]?.value;
-    console.log({ bg, bg2 });
     if (!bg || !bg2) return;
 
     if (mode === Mode.Asteroid) {

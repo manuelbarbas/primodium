@@ -1,13 +1,15 @@
+import { EntityType } from "@/util/constants";
 import type { Sync } from "@primodiumxyz/sync-stack";
-import { EntityType } from "src/util/constants";
-import { Hex } from "viem";
+import { Hex, pad } from "viem";
 
-export const getInitalQuery = ({
+export const getInitialQuery = ({
   tables,
   world,
   indexerUrl,
+  playerAddress,
   worldAddress,
 }: Omit<Parameters<typeof Sync.withQueryDecodedIndexerRecsSync>[0], "query"> & {
+  playerAddress: Hex;
   worldAddress: Hex;
 }) => {
   //get all the tables that start with P_
@@ -27,47 +29,18 @@ export const getInitalQuery = ({
         { tableId: tables.FunctionSignatures.tableId },
         { tableId: tables.Dimensions.tableId },
         { tableId: tables.GracePeriod.tableId },
-        { tableId: tables.Wormhole.tableId },
-        { tableId: tables.Points.tableId },
-        { tableId: tables.Alliance.tableId },
-        { tableId: tables.PlayerAlliance.tableId },
         { tableId: tables.Reserves.tableId },
-        { tableId: tables.Home.tableId },
-        //get main base starting coord
+        // main base starting coord
         { tableId: tables.Position.tableId, where: { column: "entity", operation: "eq", value: EntityType.MainBase } },
+        // player asteroids
         {
-          tableId: tables.Position.tableId,
-          where: { column: "entity", operation: "eq", value: EntityType.WormholeBase },
-        },
-        //get asteroids
-        {
-          tableId: tables.Asteroid.tableId!,
-          include: [
-            {
-              tableId: tables.OwnedBy.tableId,
-            },
-            {
-              tableId: tables.Position.tableId,
-            },
-            {
-              tableId: tables.ReversePosition.tableId,
-              on: "entity",
-            },
-            {
-              tableId: tables.Level.tableId,
-            },
-          ],
-        },
-        //get fleets
-        {
-          tableId: tables.FleetMovement.tableId,
-          include: [
-            { tableId: tables.IsFleetEmpty.tableId },
-            { tableId: tables.FleetStance.tableId },
-            { tableId: tables.IsFleet.tableId },
-            { tableId: tables.OwnedBy.tableId, on: "entity" },
-            { tableId: tables.CooldownEnd.tableId },
-          ],
+          tableId: tables.OwnedBy.tableId,
+          where: {
+            column: "value",
+            operation: "eq",
+            value: pad(playerAddress, { size: 32 }),
+          },
+          include: [{ tableId: tables.Asteroid.tableId }],
         },
       ],
     } as Parameters<typeof Sync.withQueryDecodedIndexerRecsSync>[0]["query"],

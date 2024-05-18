@@ -37,11 +37,6 @@ export const renderBuilding = (scene: PrimodiumScene) => {
 
     world.dispose("game_spectate");
 
-    // Wait for a few seconds for initial buildings to be entered into the query and placed, so we don't trigger
-    // the build anim for them
-    let initialBuildingsPlaced = false;
-    setTimeout(() => (initialBuildingsPlaced = true), 3000);
-
     // Find old buildings that have this asteroid as parent
     const positionQuery = [
       HasValue(components.Position, {
@@ -71,6 +66,8 @@ export const renderBuilding = (scene: PrimodiumScene) => {
     }
 
     const render = ({ entity, showLevelAnimation = false }: { entity: Entity; showLevelAnimation?: boolean }) => {
+      const initialBuildingsPlaced = components.SystemsReady.get()?.value;
+
       if (objects.building.has(entity)) {
         const building = objects.building.get(entity);
         if (!building) return;
@@ -165,7 +162,7 @@ export const renderBuilding = (scene: PrimodiumScene) => {
         });
 
       // buildings.set(entity, building);
-      // trigger the build anim if it's a new placement (not initializing)
+      // trigger the build anim if it's a new placement (not when game is initializing)
       if (initialBuildingsPlaced) building.triggerPlacementAnim();
     };
 

@@ -6,13 +6,14 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 export const useSyncStatus = (syncId?: Entity) => {
   const { components } = useMud();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
   const syncSource = components.SyncSource.use()?.value;
   const syncEntity = syncSource === SyncSourceType.RPC ? singletonEntity : syncId;
   const syncStatus = components.SyncStatus.use(syncEntity)?.step;
   const syncProgress = components.SyncStatus.use(syncEntity)?.progress;
   const syncMessage = components.SyncStatus.use(syncEntity)?.message;
+
+  const [loading, setLoading] = useState(syncStatus ? syncStatus !== SyncStep.Complete : true);
+  const [error, setError] = useState(syncStatus === SyncStep.Error);
 
   //TODO: sync with time updates
   useEffect(() => {
