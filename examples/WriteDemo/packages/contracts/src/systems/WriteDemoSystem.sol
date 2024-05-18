@@ -66,11 +66,11 @@ contract WriteDemoSystem is System {
     // bytes memory buildingEntity = IPrimodiumWorld(_world()).callFrom(
     //     _msgSender(),
     //     buildSystemId,
-    //     abi.encodeWithSignature("Primodium__build(uint8,(int32,int32,bytes32))", building, (position))
+    //     abi.encodeWithSignature("Pri_11__build(uint8,(int32,int32,bytes32))", building, (position))
     // );
 
     // find the expected function selector
-    bytes4 worldFunctionSelector = IPrimodiumWorld(_world()).Primodium__build.selector;
+    bytes4 worldFunctionSelector = IPrimodiumWorld(_world()).Pri_11__build.selector;
 
     // look up that function selector in the MUD FunctionSelectors talbe, and get the actual function selector.
     // eventually, these should match, but currently that is not the case.
@@ -229,7 +229,7 @@ contract WriteDemoSystem is System {
 //     uint256 requiredMainBaseLevel = P_RequiredBaseLevel.get(P_EnumToPrototype.get(BuildingKey, uint8(building)), 1);
 //     upgradeMainBase(player, requiredMainBaseLevel);
 //     vm.startPrank(player);
-//     bytes32 buildingEntity = world.Primodium__build(building, position);
+//     bytes32 buildingEntity = world.Pri_11__build(building, position);
 //     vm.stopPrank();
 //     return buildingEntity;
 //   }

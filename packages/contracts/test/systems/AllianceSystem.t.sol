@@ -32,7 +32,7 @@ contract AllianceSystemTest is PrimodiumTest {
   // todo: sort these tests. the first test should be a vanilla build system call
 
   function testCreateAlliance() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
     assertEq(Alliance.getName(allianceEntity), bytes32("myAlliance"), "alliance name should be set");
     assertEq(
       Alliance.getInviteMode(allianceEntity),
@@ -45,7 +45,7 @@ contract AllianceSystemTest is PrimodiumTest {
   }
 
   function testCreateAllianceClosed() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Closed);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Closed);
     assertEq(Alliance.getName(allianceEntity), bytes32("myAlliance"), "alliance name should be set");
     assertEq(
       Alliance.getInviteMode(allianceEntity),
@@ -57,11 +57,11 @@ contract AllianceSystemTest is PrimodiumTest {
   }
 
   function testJoinOpenAlliance() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
 
     vm.stopPrank();
     vm.startPrank(bob);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
 
     assertEq(PlayerAlliance.getAlliance(bobEntity), allianceEntity, "bob should be in alliance");
     assertEq(PlayerAlliance.getRole(bobEntity), uint8(EAllianceRole.Member), "bob should be member");
@@ -69,17 +69,17 @@ contract AllianceSystemTest is PrimodiumTest {
   }
 
   function testFailJoinClosedAlliance() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Closed);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Closed);
 
     vm.stopPrank();
     vm.startPrank(bob);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     assertEq(AllianceMemberSet.length(allianceEntity), 1, "alliance should have 1 member");
   }
 
   function testInviteAndJoinAlliance() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Closed);
-    world.Primodium__invite(bob);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Closed);
+    world.Pri_11__invite(bob);
     assertEq(
       AllianceInvitation.getInviter(bobEntity, allianceEntity),
       playerEntity,
@@ -87,35 +87,35 @@ contract AllianceSystemTest is PrimodiumTest {
     );
     vm.stopPrank();
     vm.startPrank(bob);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     assertEq(PlayerAlliance.getAlliance(bobEntity), allianceEntity, "bob should be in alliance");
     assertEq(PlayerAlliance.getRole(bobEntity), uint8(EAllianceRole.Member), "bob should be member");
     assertEq(AllianceMemberSet.length(allianceEntity), 2, "alliance should have 2 member");
   }
 
   function testRequestToJoinAlliance() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Closed);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Closed);
     vm.stopPrank();
     vm.startPrank(bob);
-    world.Primodium__requestToJoin(allianceEntity);
+    world.Pri_11__requestToJoin(allianceEntity);
     assertTrue(AllianceJoinRequest.get(bobEntity, allianceEntity) != 0, "bob should have requested to join alliance");
     vm.stopPrank();
     vm.startPrank(creator);
-    world.Primodium__acceptRequestToJoin(bob);
+    world.Pri_11__acceptRequestToJoin(bob);
     assertEq(PlayerAlliance.getAlliance(bobEntity), allianceEntity, "bob should be in alliance");
     assertEq(PlayerAlliance.getRole(bobEntity), uint8(EAllianceRole.Member), "bob should be member");
   }
 
   function testRejectRequestToJoinAlliance() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Closed);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Closed);
 
     vm.stopPrank();
     vm.startPrank(bob);
-    world.Primodium__requestToJoin(allianceEntity);
+    world.Pri_11__requestToJoin(allianceEntity);
     assertTrue(AllianceJoinRequest.get(bobEntity, allianceEntity) != 0, "bob should have requested to join alliance");
     vm.stopPrank();
     vm.startPrank(creator);
-    world.Primodium__rejectRequestToJoin(bob);
+    world.Pri_11__rejectRequestToJoin(bob);
     assertTrue(
       AllianceJoinRequest.get(bobEntity, allianceEntity) == 0,
       "bobs request to join alliance should have been rejected"
@@ -124,19 +124,19 @@ contract AllianceSystemTest is PrimodiumTest {
   }
 
   function testCanInviteAlliance() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(creator);
-    world.Primodium__grantRole(bob, EAllianceRole.CanInvite);
+    world.Pri_11__grantRole(bob, EAllianceRole.CanInvite);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__invite(alice);
+    world.Pri_11__invite(alice);
     vm.stopPrank();
     assertEq(
       AllianceInvitation.getInviter(aliceEntity, allianceEntity),
@@ -146,36 +146,36 @@ contract AllianceSystemTest is PrimodiumTest {
   }
 
   function testCanKickAlliance() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     assertEq(AllianceMemberSet.length(allianceEntity), 3, "alliance should have 3 member");
     vm.startPrank(creator);
-    world.Primodium__grantRole(bob, EAllianceRole.CanKick);
+    world.Pri_11__grantRole(bob, EAllianceRole.CanKick);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__kick(alice);
+    world.Pri_11__kick(alice);
     vm.stopPrank();
     assertEq(AllianceMemberSet.length(allianceEntity), 2, "alliance should have 2 member");
   }
 
   function testPointsKick() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
     Points.set(bobEntity, uint8(EPointType.Wormhole), 100);
     Points.set(bobEntity, uint8(EPointType.Shard), 500);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     assertEq(Points.get(allianceEntity, uint8(EPointType.Wormhole)), 0, "alliance should have 0 points");
@@ -197,20 +197,20 @@ contract AllianceSystemTest is PrimodiumTest {
     assertEq(Points.get(allianceEntity, uint8(EPointType.Wormhole)), 100, "alliance should have 100 points");
 
     vm.startPrank(creator);
-    world.Primodium__kick(bob);
+    world.Pri_11__kick(bob);
 
     assertEq(Points.get(allianceEntity, uint8(EPointType.Wormhole)), 0, "alliance should have 0 points");
     assertEq(Points.get(bobEntity, uint8(EPointType.Wormhole)), 200, "bob should have 200 points");
   }
 
   function testPointsLeave() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
     Points.set(bobEntity, uint8(EPointType.Wormhole), 100);
     Points.set(bobEntity, uint8(EPointType.Shard), 500);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     assertEq(Points.get(allianceEntity, uint8(EPointType.Wormhole)), 0, "alliance should have 0 points");
@@ -232,40 +232,40 @@ contract AllianceSystemTest is PrimodiumTest {
     assertEq(Points.get(allianceEntity, uint8(EPointType.Wormhole)), 100, "alliance should have 100 points");
 
     vm.startPrank(bob);
-    world.Primodium__leave();
+    world.Pri_11__leave();
 
     assertEq(Points.get(allianceEntity, uint8(EPointType.Wormhole)), 0, "alliance should have 0 points");
     assertEq(Points.get(bobEntity, uint8(EPointType.Wormhole)), 200, "bob should have 200 points");
   }
   function testCanGrantRoleAlliance() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(creator);
-    world.Primodium__grantRole(bob, EAllianceRole.CanGrantRole);
+    world.Pri_11__grantRole(bob, EAllianceRole.CanGrantRole);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__grantRole(alice, EAllianceRole.CanKick);
+    world.Pri_11__grantRole(alice, EAllianceRole.CanKick);
     assertEq(PlayerAlliance.getRole(aliceEntity), uint8(EAllianceRole.CanKick), "alice should be able to kick");
     vm.stopPrank();
   }
 
   function testDeclineInvitation() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
-    world.Primodium__invite(bob);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
+    world.Pri_11__invite(bob);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__declineInvite(creator);
+    world.Pri_11__declineInvite(creator);
     vm.stopPrank();
 
     assertEq(AllianceInvitation.getInviter(allianceEntity, playerEntity), 0);
@@ -273,183 +273,183 @@ contract AllianceSystemTest is PrimodiumTest {
   }
 
   function testFailCantGrantRoleAlliance() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(creator);
-    world.Primodium__grantRole(bob, EAllianceRole.CanKick);
+    world.Pri_11__grantRole(bob, EAllianceRole.CanKick);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__grantRole(alice, EAllianceRole.CanKick);
+    world.Pri_11__grantRole(alice, EAllianceRole.CanKick);
     vm.stopPrank();
   }
 
   function testFailCantGrantRoleToSuperiorAlliance() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(creator);
-    world.Primodium__grantRole(bob, EAllianceRole.CanKick);
-    world.Primodium__grantRole(bob, EAllianceRole.CanKick);
+    world.Pri_11__grantRole(bob, EAllianceRole.CanKick);
+    world.Pri_11__grantRole(bob, EAllianceRole.CanKick);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__grantRole(alice, EAllianceRole.CanKick);
+    world.Pri_11__grantRole(alice, EAllianceRole.CanKick);
     vm.stopPrank();
   }
 
   function testFailKickAlliance() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(creator);
-    world.Primodium__grantRole(bob, EAllianceRole.CanInvite);
+    world.Pri_11__grantRole(bob, EAllianceRole.CanInvite);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__kick(alice);
+    world.Pri_11__kick(alice);
     vm.stopPrank();
   }
 
   function testFailKickWithoutRequiredRoleAlliance() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(creator);
-    world.Primodium__grantRole(bob, EAllianceRole.CanInvite);
+    world.Pri_11__grantRole(bob, EAllianceRole.CanInvite);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__kick(alice);
+    world.Pri_11__kick(alice);
     vm.stopPrank();
   }
 
   function testFailKickSuperiorRoleAlliance() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(creator);
-    world.Primodium__grantRole(bob, EAllianceRole.CanKick);
-    world.Primodium__grantRole(alice, EAllianceRole.CanKick);
+    world.Pri_11__grantRole(bob, EAllianceRole.CanKick);
+    world.Pri_11__grantRole(alice, EAllianceRole.CanKick);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__kick(alice);
+    world.Pri_11__kick(alice);
     vm.stopPrank();
   }
 
   function testFailGrantRoleHigherAlliance() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(creator);
-    world.Primodium__grantRole(bob, EAllianceRole.CanGrantRole);
+    world.Pri_11__grantRole(bob, EAllianceRole.CanGrantRole);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__grantRole(alice, EAllianceRole.Owner);
+    world.Pri_11__grantRole(alice, EAllianceRole.Owner);
     vm.stopPrank();
   }
 
   function testGrantOwnerRoleAlliance() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(creator);
-    world.Primodium__grantRole(bob, EAllianceRole.Owner);
+    world.Pri_11__grantRole(bob, EAllianceRole.Owner);
     assertEq(PlayerAlliance.getRole(bobEntity), uint8(EAllianceRole.Owner), "bob should be owner");
     vm.stopPrank();
   }
 
   function testOwnerLeaveAlliance() public {
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(creator);
-    world.Primodium__grantRole(bob, EAllianceRole.CanGrantRole);
+    world.Pri_11__grantRole(bob, EAllianceRole.CanGrantRole);
     assertEq(PlayerAlliance.getRole(bobEntity), uint8(EAllianceRole.CanGrantRole), "bob should be can grant role");
     vm.stopPrank();
 
     vm.startPrank(creator);
-    world.Primodium__leave();
+    world.Pri_11__leave();
     assertEq(PlayerAlliance.getRole(bobEntity), uint8(EAllianceRole.Owner), "bob should be owner");
   }
 
   function testFailAllianceFull() public {
     P_AllianceConfig.set(2);
-    bytes32 allianceEntity = world.Primodium__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("myAlliance"), EAllianceInviteMode.Open);
     vm.stopPrank();
 
     vm.startPrank(bob);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__join(allianceEntity);
+    world.Pri_11__join(allianceEntity);
   }
 }

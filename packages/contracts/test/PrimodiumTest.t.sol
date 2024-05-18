@@ -135,7 +135,7 @@ contract PrimodiumTest is MudTest {
 
   function spawn(address player) internal returns (bytes32) {
     vm.prank(player);
-    world.Primodium__spawn();
+    world.Pri_11__spawn();
     bytes32 playerEntity = addressToEntity(player);
     bytes32 homeAsteroidEntity = Home.get(playerEntity);
     return homeAsteroidEntity;
@@ -268,7 +268,7 @@ contract PrimodiumTest is MudTest {
     vm.stopPrank();
 
     vm.startPrank(player);
-    world.Primodium__trainUnits(buildingEntity, unitPrototype, count);
+    world.Pri_11__trainUnits(buildingEntity, unitPrototype, count);
     if (fastForward) {
       uint256 unitLevel = UnitLevel.get(Position.getParentEntity(buildingEntity), unitPrototype);
       switchPrank(creator);
@@ -308,7 +308,7 @@ contract PrimodiumTest is MudTest {
     );
     upgradeMainBase(player, requiredMainBaseLevel);
     vm.startPrank(player);
-    world.Primodium__upgradeBuilding(buildingEntity);
+    world.Pri_11__upgradeBuilding(buildingEntity);
     vm.stopPrank();
   }
 
@@ -319,7 +319,7 @@ contract PrimodiumTest is MudTest {
     uint256 requiredMainBaseLevel = P_RequiredBaseLevel.get(P_EnumToPrototype.get(BuildingKey, uint8(building)), 1);
     upgradeMainBase(player, requiredMainBaseLevel);
     vm.startPrank(player);
-    bytes32 buildingEntity = world.Primodium__build(building, position);
+    bytes32 buildingEntity = world.Pri_11__build(building, position);
     vm.stopPrank();
     return buildingEntity;
   }
@@ -347,7 +347,7 @@ contract PrimodiumTest is MudTest {
 
   function claimResources(bytes32 asteroidEntity) internal {
     vm.startPrank(creator);
-    world.Primodium__claimResources(asteroidEntity);
+    world.Pri_11__claimResources(asteroidEntity);
     vm.stopPrank();
   }
 
@@ -567,8 +567,8 @@ contract PrimodiumTest is MudTest {
     }
     setupCreateFleet(player, sourceAsteroid, unitCounts, resourceCounts);
     vm.startPrank(player);
-    bytes32 fleetEntity = world.Primodium__createFleet(sourceAsteroid, unitCounts, resourceCounts);
-    world.Primodium__sendFleet(fleetEntity, targetAsteroid);
+    bytes32 fleetEntity = world.Pri_11__createFleet(sourceAsteroid, unitCounts, resourceCounts);
+    world.Pri_11__sendFleet(fleetEntity, targetAsteroid);
     switchPrank(creator);
     FleetMovement.setArrivalTime(fleetEntity, block.timestamp);
     vm.warp(block.timestamp + 1);
@@ -580,7 +580,7 @@ contract PrimodiumTest is MudTest {
     while (OwnedBy.get(targetAsteroid) != playerEntity) {
       console.log("attackCycle: %s", attackCycle);
       switchPrank(player);
-      world.Primodium__attack(fleetEntity, targetAsteroid);
+      world.Pri_11__attack(fleetEntity, targetAsteroid);
       console.log("Remaining Defense: ", LibCombatAttributes.getDefense(targetAsteroid));
       console.log("Remaining Encryption: ", ResourceCount.get(targetAsteroid, uint8(EResource.R_Encryption)));
       switchPrank(creator);
@@ -610,7 +610,7 @@ contract PrimodiumTest is MudTest {
     }
     setupCreateFleet(player, asteroidEntity, unitCounts, resourceCounts);
     vm.startPrank(player);
-    bytes32 fleetEntity = world.Primodium__createFleet(asteroidEntity, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Pri_11__createFleet(asteroidEntity, unitCounts, resourceCounts);
     vm.stopPrank();
     return fleetEntity;
   }
@@ -637,7 +637,7 @@ contract PrimodiumTest is MudTest {
 
     setupCreateFleet(player, asteroidEntity, unitCounts, resourceCounts);
     vm.startPrank(player);
-    bytes32 fleetEntity = world.Primodium__createFleet(asteroidEntity, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Pri_11__createFleet(asteroidEntity, unitCounts, resourceCounts);
     vm.stopPrank();
     return fleetEntity;
   }

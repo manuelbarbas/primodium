@@ -10,6 +10,7 @@ import { createPrototypes } from "codegen/Prototypes.sol";
 import { createTerrain } from "codegen/scripts/CreateTerrain.sol";
 import { SpawnAllowed } from "codegen/index.sol";
 
+import { ResourceId, WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { StandardDelegationsModule } from "@latticexyz/world-modules/src/modules/std-delegations/StandardDelegationsModule.sol";
 
 contract PostDeploy is Script {
@@ -21,7 +22,7 @@ contract PostDeploy is Script {
     console.log("world address:", worldAddress);
     vm.startBroadcast(deployerPrivateKey);
     StoreSwitch.setStoreAddress(worldAddress);
-    world.Primodium__increment();
+    world.Pri_11__increment();
 
     world.installRootModule(new StandardDelegationsModule(), new bytes(0));
 
@@ -32,6 +33,11 @@ contract PostDeploy is Script {
     setupHooks(world);
     console.log("Hooks setup");
 
+    // register the persistent layer namespace to prevent frontrunning
+    bytes14 namespace = "Primodium";
+    ResourceId namespaceId = WorldResourceIdLib.encodeNamespace(namespace);
+
+    world.registerNamespace(namespaceId);
     // Allow players to spawn. Ensures players cannot spawn until the post-deploy script has finished.
     SpawnAllowed.set(true);
     vm.stopBroadcast();

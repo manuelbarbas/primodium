@@ -133,7 +133,7 @@ contract ReadDemoTest is MudTest {
     console2.log("baseLevelBefore:", baseLevel);
 
     // this time, we're calling a system imported from the Primodium World
-    IPrimodiumWorld(worldAddress).Primodium__spawn();
+    IPrimodiumWorld(worldAddress).Pri_11__spawn();
     baseLevel = IWorld(worldAddress).PluginExamples__readMainBaseLevel();
     vm.stopPrank();
 

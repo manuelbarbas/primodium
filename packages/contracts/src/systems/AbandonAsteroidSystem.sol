@@ -14,6 +14,6 @@ contract AbandonAsteroidSystem is PrimodiumSystem {
     require(Asteroid.getIsAsteroid(asteroidEntity), "[AbandonAsteroidSystem] Entity is not an asteroid");
 
     IWorld world = IWorld(_world());
-    world.Primodium__transferAsteroid(asteroidEntity, bytes32(0));
+    world.Pri_11__transferAsteroid(asteroidEntity, bytes32(0));
   }
 }

@@ -12,7 +12,7 @@ export const claimPrimodium = async (mud: MUD, asteroidEntity: Entity) => {
   await execute(
     {
       mud,
-      functionName: "Primodium__claimPrimodium",
+      functionName: "Pri_11__claimPrimodium",
       systemId: getSystemId("ClaimPrimodiumSystem"),
       args: [asteroidEntity as Hex],
       withSession: true,
@@ -44,7 +44,7 @@ export const claimShardAsteroid = async (mud: MUD, asteroidEntity: Entity) => {
   await execute(
     {
       mud,
-      functionName: "Primodium__claimShardAsteroidPoints",
+      functionName: "Pri_11__claimShardAsteroidPoints",
       systemId: getSystemId("ClaimPrimodiumSystem"),
       args: [asteroidEntity as Hex],
       withSession: true,

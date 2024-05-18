@@ -29,7 +29,7 @@ contract PrimodiumSystem is System {
    * @param asteroidEntity The unique identifier for the asteroid.
    */
   modifier _claimResources(bytes32 asteroidEntity) {
-    IWorld(_world()).Primodium__claimResources(asteroidEntity);
+    IWorld(_world()).Pri_11__claimResources(asteroidEntity);
     _;
   }
 
@@ -38,7 +38,7 @@ contract PrimodiumSystem is System {
    * @param asteroidEntity The unique identifier for the asteroid.
    */
   modifier _claimUnits(bytes32 asteroidEntity) {
-    IWorld(_world()).Primodium__claimUnits(asteroidEntity);
+    IWorld(_world()).Pri_11__claimUnits(asteroidEntity);
     _;
   }
 
@@ -49,7 +49,7 @@ contract PrimodiumSystem is System {
 
   modifier _claimShardAsteroidPoints(bytes32 asteroidEntity) {
     if (ShardAsteroid.getIsShardAsteroid(asteroidEntity)) {
-      IWorld(_world()).Primodium__claimShardAsteroidPoints(asteroidEntity);
+      IWorld(_world()).Pri_11__claimShardAsteroidPoints(asteroidEntity);
     }
     _;
   }

@@ -42,8 +42,8 @@ contract ToggleBuildingSystem is PrimodiumSystem {
     IsActive.set(buildingEntity, isActive);
 
     IWorld world = IWorld(_world());
-    world.Primodium__toggleMaxStorage(buildingEntity);
-    world.Primodium__toggleProductionRate(buildingEntity);
-    world.Primodium__toggleBuildingUtility(buildingEntity);
+    world.Pri_11__toggleMaxStorage(buildingEntity);
+    world.Pri_11__toggleProductionRate(buildingEntity);
+    world.Pri_11__toggleBuildingUtility(buildingEntity);
   }
 }

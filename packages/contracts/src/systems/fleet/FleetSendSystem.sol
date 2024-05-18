@@ -45,7 +45,7 @@ contract FleetSendSystem is PrimodiumSystem {
   function sendFleet(bytes32 fleetEntity, PositionData memory position) public {
     bytes32 asteroidEntity = ReversePosition.get(position.x, position.y);
     if (asteroidEntity == bytes32(0)) {
-      asteroidEntity = IWorld(_world()).Primodium__createSecondaryAsteroid(position);
+      asteroidEntity = IWorld(_world()).Pri_11__createSecondaryAsteroid(position);
     }
     sendFleet(fleetEntity, asteroidEntity);
   }

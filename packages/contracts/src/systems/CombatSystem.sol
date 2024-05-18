@@ -112,7 +112,7 @@ contract CombatSystem is PrimodiumSystem {
 
     IWorld world = IWorld(_world());
     if (battleResult.targetDamage > 0)
-      world.Primodium__applyDamage(
+      world.Pri_11__applyDamage(
         battleEntity,
         defendingPlayerEntity,
         battleResult.aggressorEntity,
@@ -120,20 +120,20 @@ contract CombatSystem is PrimodiumSystem {
       );
 
     if (isRaid) {
-      world.Primodium__battleRaidResolve(battleEntity, battleResult.aggressorEntity, battleResult.targetEntity);
+      world.Pri_11__battleRaidResolve(battleEntity, battleResult.aggressorEntity, battleResult.targetEntity);
     }
     if (isDecryption) {
       //in decryption we resolve encryption first so the fleet decryption unit isn't lost before decrypting
       LibCombat.resolveBattleEncryption(battleEntity, battleResult.targetEntity, battleResult.aggressorEntity);
       if (ResourceCount.get(battleResult.targetEntity, uint8(EResource.R_Encryption)) == 0) {
         if (OwnedBy.get(battleResult.targetEntity) != bytes32(0)) {
-          world.Primodium__transferAsteroid(battleResult.targetEntity, _player());
+          world.Pri_11__transferAsteroid(battleResult.targetEntity, _player());
         } else {
-          world.Primodium__initAsteroidOwner(battleResult.targetEntity, _player());
+          world.Pri_11__initAsteroidOwner(battleResult.targetEntity, _player());
         }
       }
     }
-    world.Primodium__applyDamage(battleEntity, _player(), battleResult.targetEntity, battleResult.aggressorDamage);
+    world.Pri_11__applyDamage(battleEntity, _player(), battleResult.targetEntity, battleResult.aggressorDamage);
 
     if (isAggressorFleet) {
       uint256 damageDealtToTarget = initTargetHp - LibCombatAttributes.getHpWithAllies(battleResult.targetEntity);

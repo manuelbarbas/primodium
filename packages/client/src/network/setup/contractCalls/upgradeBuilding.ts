@@ -22,7 +22,7 @@ export const upgradeBuilding = async (
   await execute(
     {
       mud,
-      functionName: "Primodium__upgradeBuilding",
+      functionName: "Pri_11__upgradeBuilding",
       systemId: getSystemId("UpgradeBuildingSystem"),
       args: [building as Hex],
       withSession: true,

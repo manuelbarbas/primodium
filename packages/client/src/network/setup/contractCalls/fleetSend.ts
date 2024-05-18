@@ -14,7 +14,7 @@ export const sendFleet = async (mud: MUD, fleet: Entity, spaceRock: Entity) => {
   await execute(
     {
       mud,
-      functionName: "Primodium__sendFleet",
+      functionName: "Pri_11__sendFleet",
       systemId: getSystemId("FleetSendSystem"),
       args: [fleet as Hex, spaceRock as Hex],
       withSession: true,
@@ -34,7 +34,7 @@ export const sendFleetPosition = async (mud: MUD, fleet: Entity, position: Coord
   await execute(
     {
       mud,
-      functionName: "Primodium__sendFleet",
+      functionName: "Pri_11__sendFleet",
       systemId: getSystemId("FleetSendSystem"),
       args: [fleet as Hex, { ...position, parentEntity: fleet as Hex }],
       withSession: true,

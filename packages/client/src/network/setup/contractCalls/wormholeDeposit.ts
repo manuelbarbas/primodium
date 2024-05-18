@@ -17,7 +17,7 @@ export const wormholeDeposit = async (
   await execute(
     {
       mud,
-      functionName: "Primodium__wormholeDeposit",
+      functionName: "Pri_11__wormholeDeposit",
       systemId: getSystemId("ClaimWormholeSystem"),
       args: [wormholeBase as Hex, count],
       withSession: true,

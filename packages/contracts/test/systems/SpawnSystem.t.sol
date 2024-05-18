@@ -61,9 +61,9 @@ contract SpawnSystemTest is PrimodiumTest {
       namespace: bytes14("Primodium"),
       name: bytes16("SpawnSystem")
     });
-    console.logBytes8(ISpawnSystem.Primodium__spawn.selector);
+    console.logBytes8(ISpawnSystem.Pri_11__spawn.selector);
     console.logBytes8(SpawnSystem.spawn.selector);
-    systemCalls[1] = SystemCallData(systemId, abi.encodeCall(ISpawnSystem.Primodium__spawn, ()));
+    systemCalls[1] = SystemCallData(systemId, abi.encodeCall(ISpawnSystem.Pri_11__spawn, ()));
 
     vm.expectRevert();
     world.batchCall(systemCalls);
@@ -75,17 +75,17 @@ contract SpawnSystemTest is PrimodiumTest {
   }
 
   function testSpawnTwice() public {
-    world.Primodium__spawn();
+    world.Pri_11__spawn();
     vm.expectRevert(bytes("[SpawnSystem] Already spawned and owns asteroids"));
-    world.Primodium__spawn();
+    world.Pri_11__spawn();
   }
 
   function testRespawn() public {
     vm.startPrank(alice);
     bytes32 aliceEntity = addressToEntity(alice);
-    bytes32 spawnAsteroidEntity = world.Primodium__spawn();
-    world.Primodium__abandonAsteroid(spawnAsteroidEntity);
-    bytes32 respawnAsteroidEntity = world.Primodium__spawn();
+    bytes32 spawnAsteroidEntity = world.Pri_11__spawn();
+    world.Pri_11__abandonAsteroid(spawnAsteroidEntity);
+    bytes32 respawnAsteroidEntity = world.Pri_11__spawn();
     assertTrue(spawnAsteroidEntity != respawnAsteroidEntity, "Respawned asteroid should be different from spawned one");
     assertEq(MaxColonySlots.get(aliceEntity), 1, "Player max colony slots should not increase from respawn");
   }
@@ -121,6 +121,6 @@ contract SpawnSystemTest is PrimodiumTest {
 
   function testBuildBeforeSpawnFail() public {
     vm.expectRevert(bytes("[BuildSystem] Player has not spawned"));
-    world.Primodium__build(EBuilding.IronMine, PositionData(0, 0, 0));
+    world.Pri_11__build(EBuilding.IronMine, PositionData(0, 0, 0));
   }
 }

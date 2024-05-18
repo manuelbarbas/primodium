@@ -14,8 +14,8 @@ contract UpgradeBuildingSystem is PrimodiumSystem {
     uint256 targetLevel = Level.get(buildingEntity) + 1;
     Level.set(buildingEntity, targetLevel);
     IWorld world = IWorld(_world());
-    world.Primodium__increaseMaxStorage(buildingEntity, targetLevel);
-    world.Primodium__upgradeProductionRate(buildingEntity, targetLevel);
-    world.Primodium__spendBuildingRequiredResources(buildingEntity, targetLevel);
+    world.Pri_11__increaseMaxStorage(buildingEntity, targetLevel);
+    world.Pri_11__upgradeProductionRate(buildingEntity, targetLevel);
+    world.Pri_11__spendBuildingRequiredResources(buildingEntity, targetLevel);
   }
 }

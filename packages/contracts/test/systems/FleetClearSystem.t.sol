@@ -49,17 +49,17 @@ contract FleetClearSystemTest is PrimodiumTest {
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.startPrank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Pri_11__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
+    world.Pri_11__sendFleet(fleetEntity, bobHomeAsteroid);
     vm.stopPrank();
 
     vm.warp(block.timestamp + 1);
 
     vm.startPrank(alice);
-    world.Primodium__clearFleet(fleetEntity);
+    world.Pri_11__clearFleet(fleetEntity);
     vm.stopPrank();
     assertEq(UnitCount.get(fleetEntity, unitPrototype), 0, "fleet unit count doesn't match");
     assertEq(UnitCount.get(aliceHomeAsteroid, unitPrototype), 0, "asteroid unit count doesn't match");
@@ -105,17 +105,17 @@ contract FleetClearSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Pri_11__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
+    world.Pri_11__sendFleet(fleetEntity, bobHomeAsteroid);
     vm.stopPrank();
 
     vm.warp(block.timestamp + 1);
 
     vm.startPrank(alice);
-    world.Primodium__clearResources(fleetEntity, resourceCounts);
+    world.Pri_11__clearResources(fleetEntity, resourceCounts);
     vm.stopPrank();
 
     assertEq(UnitCount.get(fleetEntity, unitPrototype), 1, "fleet unit count doesn't match");
@@ -144,7 +144,7 @@ contract FleetClearSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Pri_11__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
@@ -152,7 +152,7 @@ contract FleetClearSystemTest is PrimodiumTest {
     }
 
     vm.startPrank(alice);
-    world.Primodium__clearUnits(fleetEntity, unitCounts);
+    world.Pri_11__clearUnits(fleetEntity, unitCounts);
     vm.stopPrank();
   }
 
@@ -175,17 +175,17 @@ contract FleetClearSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Pri_11__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
+    world.Pri_11__sendFleet(fleetEntity, bobHomeAsteroid);
     vm.stopPrank();
 
     vm.warp(block.timestamp + 1);
 
     vm.startPrank(alice);
-    world.Primodium__clearUnits(fleetEntity, unitCounts);
+    world.Pri_11__clearUnits(fleetEntity, unitCounts);
     vm.stopPrank();
   }
 
@@ -205,17 +205,17 @@ contract FleetClearSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Pri_11__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
+    world.Pri_11__sendFleet(fleetEntity, bobHomeAsteroid);
     vm.stopPrank();
 
     vm.warp(FleetMovement.getArrivalTime(fleetEntity));
 
     vm.startPrank(alice);
-    world.Primodium__clearUnits(fleetEntity, unitCounts);
+    world.Pri_11__clearUnits(fleetEntity, unitCounts);
     vm.stopPrank();
 
     P_RequiredResourcesData memory requiredResources = P_RequiredResources.get(
@@ -244,7 +244,7 @@ contract FleetClearSystemTest is PrimodiumTest {
     bytes32 fleetEntity = spawnFleetWithUnit(aliceHomeAsteroid, EUnit.MinutemanMarine, deaths);
 
     vm.prank(alice);
-    world.Primodium__abandonFleet(fleetEntity);
+    world.Pri_11__abandonFleet(fleetEntity);
 
     assertEq(VictoryStatus.getUnitDeaths(), deaths, "unit deaths doesn't match");
     assertFalse(VictoryStatus.getGameOver(), "game over doesn't match");
@@ -257,7 +257,7 @@ contract FleetClearSystemTest is PrimodiumTest {
     bytes32 fleetEntity = spawnFleetWithUnit(aliceHomeAsteroid, EUnit.MinutemanMarine, deaths);
 
     vm.prank(alice);
-    world.Primodium__abandonFleet(fleetEntity);
+    world.Pri_11__abandonFleet(fleetEntity);
 
     assertEq(VictoryStatus.getUnitDeaths(), deaths, "unit deaths doesn't match");
     assertTrue(VictoryStatus.getGameOver(), "game over doesn't match");

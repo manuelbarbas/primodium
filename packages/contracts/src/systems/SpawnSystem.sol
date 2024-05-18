@@ -36,7 +36,7 @@ contract SpawnSystem is PrimodiumSystem {
 
     bytes32 asteroidEntity = LibAsteroid.createPrimaryAsteroid(playerEntity);
     Spawned.set(playerEntity, true);
-    IWorld(_world()).Primodium__initAsteroidOwner(asteroidEntity, playerEntity);
+    IWorld(_world()).Pri_11__initAsteroidOwner(asteroidEntity, playerEntity);
     Home.set(playerEntity, asteroidEntity);
     for (uint8 i = 1; i < uint8(EPointType.LENGTH); i++) {
       Points.set(playerEntity, i, 0);

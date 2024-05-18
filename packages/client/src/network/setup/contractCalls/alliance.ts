@@ -15,7 +15,7 @@ export const createAlliance = async (mud: MUD, name: string, inviteOnly: boolean
   await execute(
     {
       mud,
-      functionName: "Primodium__create",
+      functionName: "Pri_11__create",
       systemId: getSystemId("AllianceSystem"),
       args: [
         toHex32(name.substring(0, 6).toUpperCase()),
@@ -33,7 +33,7 @@ export const updateAllianceName = async (mud: MUD, allianceEntity: Entity, name:
   await execute(
     {
       mud,
-      functionName: "Primodium__setAllianceName",
+      functionName: "Pri_11__setAllianceName",
       systemId: getSystemId("AllianceSystem"),
       args: [allianceEntity as Hex, toHex32(name.substring(0, 6).toUpperCase())],
       withSession: true,
@@ -48,7 +48,7 @@ export const updateAllianceAccess = async (mud: MUD, allianceEntity: Entity, inv
   await execute(
     {
       mud,
-      functionName: "Primodium__setAllianceInviteMode",
+      functionName: "Pri_11__setAllianceInviteMode",
       systemId: getSystemId("AllianceSystem"),
       args: [allianceEntity as Hex, inviteOnly ? EAllianceInviteMode.Closed : EAllianceInviteMode.Open],
       withSession: true,
@@ -63,7 +63,7 @@ export const leaveAlliance = async (mud: MUD) => {
   execute(
     {
       mud,
-      functionName: "Primodium__leave",
+      functionName: "Pri_11__leave",
       systemId: getSystemId("AllianceSystem"),
       withSession: true,
     },
@@ -83,7 +83,7 @@ export const joinAlliance = async (mud: MUD, alliance: Entity) => {
   execute(
     {
       mud,
-      functionName: "Primodium__join",
+      functionName: "Pri_11__join",
       systemId: getSystemId("AllianceSystem"),
       args: [alliance as Hex],
       withSession: true,
@@ -104,7 +104,7 @@ export const declineInvite = async (mud: MUD, inviter: Entity) => {
   execute(
     {
       mud,
-      functionName: "Primodium__declineInvite",
+      functionName: "Pri_11__declineInvite",
       systemId: getSystemId("AllianceSystem"),
       args: [entityToAddress(inviter as Hex)],
       withSession: true,
@@ -126,7 +126,7 @@ export const requestToJoin = async (mud: MUD, alliance: Entity) => {
   execute(
     {
       mud,
-      functionName: "Primodium__requestToJoin",
+      functionName: "Pri_11__requestToJoin",
       systemId: getSystemId("AllianceSystem"),
       args: [alliance as Hex],
       withSession: true,
@@ -150,7 +150,7 @@ export const kickPlayer = async (mud: MUD, player: Entity) => {
   execute(
     {
       mud,
-      functionName: "Primodium__kick",
+      functionName: "Pri_11__kick",
       systemId: getSystemId("AllianceSystem"),
       args: [entityToAddress(player as Hex)],
       withSession: true,
@@ -174,7 +174,7 @@ export const grantRole = async (mud: MUD, player: Entity, role: EAllianceRole) =
   execute(
     {
       mud,
-      functionName: "Primodium__grantRole",
+      functionName: "Pri_11__grantRole",
       systemId: getSystemId("AllianceSystem"),
       args: [entityToAddress(player as Hex), role],
       withSession: true,
@@ -197,7 +197,7 @@ export const acceptJoinRequest = async (mud: MUD, target: Entity) => {
   execute(
     {
       mud,
-      functionName: "Primodium__acceptRequestToJoin",
+      functionName: "Pri_11__acceptRequestToJoin",
       systemId: getSystemId("AllianceSystem"),
       args: [entityToAddress(target as Hex)],
       withSession: true,
@@ -219,7 +219,7 @@ export const rejectJoinRequest = async (mud: MUD, target: Entity) => {
   execute(
     {
       mud,
-      functionName: "Primodium__rejectRequestToJoin",
+      functionName: "Pri_11__rejectRequestToJoin",
       systemId: getSystemId("AllianceSystem"),
       args: [entityToAddress(target as Hex)],
       withSession: true,
@@ -241,7 +241,7 @@ export const invite = async (mud: MUD, target: Entity) => {
   execute(
     {
       mud,
-      functionName: "Primodium__invite",
+      functionName: "Pri_11__invite",
       systemId: getSystemId("AllianceSystem"),
       args: [entityToAddress(target as Hex)],
       withSession: true,
@@ -263,7 +263,7 @@ export const revokeInvite = async (mud: MUD, target: Entity) => {
   execute(
     {
       mud,
-      functionName: "Primodium__revokeInvite",
+      functionName: "Pri_11__revokeInvite",
       systemId: getSystemId("AllianceSystem"),
       args: [entityToAddress(target as Hex)],
       withSession: true,

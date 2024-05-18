@@ -111,7 +111,7 @@ contract ShardAsteroidTest is PrimodiumTest {
     uint256 encryption = ResourceCount.get(asteroidEntity, uint8(EResource.R_Encryption));
     vm.warp(block.timestamp + 1000);
 
-    world.Primodium__claimResources(asteroidEntity);
+    world.Pri_11__claimResources(asteroidEntity);
     uint256 regen = config.shardAsteroidEncryptionRegen;
     if (regen > 0) {
       assertGt(
@@ -161,7 +161,7 @@ contract ShardAsteroidTest is PrimodiumTest {
     console.log("oneTenthOfLifespan", oneTenthOfLifespan);
     vm.warp(block.timestamp + oneTenthOfLifespan);
 
-    world.Primodium__claimShardAsteroidPoints(asteroidEntity);
+    world.Pri_11__claimShardAsteroidPoints(asteroidEntity);
 
     uint256 oneTenthOfPoints = config.shardAsteroidPoints / 10;
     assertEq(Points.get(addressToEntity(alice), uint8(EPointType.Shard)), oneTenthOfPoints);
@@ -174,7 +174,7 @@ contract ShardAsteroidTest is PrimodiumTest {
     bytes32 fleetEntity = spawnFleetWithUnit(Home.get(addressToEntity(creator)), EUnit.MinutemanMarine, deaths);
 
     vm.prank(creator);
-    world.Primodium__abandonFleet(fleetEntity);
+    world.Pri_11__abandonFleet(fleetEntity);
 
     spawnPlayers(config.shardAsteroidSpawnOffset - 2);
 
@@ -187,7 +187,7 @@ contract ShardAsteroidTest is PrimodiumTest {
     uint256 oneTenthOfLifespan = config.shardAsteroidLifeSpan / 10;
     vm.warp(block.timestamp + oneTenthOfLifespan);
 
-    world.Primodium__claimShardAsteroidPoints(asteroidEntity);
+    world.Pri_11__claimShardAsteroidPoints(asteroidEntity);
 
     assertEq(Points.get(addressToEntity(alice), uint8(EPointType.Shard)), 0);
   }
@@ -214,7 +214,7 @@ contract ShardAsteroidTest is PrimodiumTest {
       (timeNotMissedPct * config.shardAsteroidPoints) /
       100_000;
 
-    world.Primodium__claimShardAsteroidPoints(asteroidEntity);
+    world.Pri_11__claimShardAsteroidPoints(asteroidEntity);
 
     assertEq(Points.get(addressToEntity(alice), uint8(EPointType.Shard)), points);
   }
@@ -230,7 +230,7 @@ contract ShardAsteroidTest is PrimodiumTest {
     vm.warp(ShardAsteroid.getSpawnTime(asteroidEntity) + config.shardAsteroidLifeSpan);
 
     PositionData memory position = Position.get(asteroidEntity);
-    world.Primodium__claimShardAsteroidPoints(asteroidEntity);
+    world.Pri_11__claimShardAsteroidPoints(asteroidEntity);
     assertEq(position, Position.get(asteroidEntity));
   }
 
@@ -252,7 +252,7 @@ contract ShardAsteroidTest is PrimodiumTest {
     vm.warp(explodeTime);
 
     PositionData memory position = Position.get(asteroidEntity);
-    world.Primodium__claimShardAsteroidPoints(asteroidEntity);
+    world.Pri_11__claimShardAsteroidPoints(asteroidEntity);
     checkRespawn(asteroidEntity, position);
   }
 
@@ -282,8 +282,8 @@ contract ShardAsteroidTest is PrimodiumTest {
     setupCreateFleet(creator, Home.get(playerEntity), unitCounts, resourceCounts);
 
     vm.startPrank(creator);
-    bytes32 fleetEntity = world.Primodium__createFleet(Home.get(playerEntity), unitCounts, resourceCounts);
-    world.Primodium__sendFleet(fleetEntity, asteroidEntity);
+    bytes32 fleetEntity = world.Pri_11__createFleet(Home.get(playerEntity), unitCounts, resourceCounts);
+    world.Pri_11__sendFleet(fleetEntity, asteroidEntity);
     vm.stopPrank();
 
     assertGt(FleetMovement.getArrivalTime(fleetEntity), block.timestamp, "Fleet not incoming");
@@ -291,7 +291,7 @@ contract ShardAsteroidTest is PrimodiumTest {
 
     assertGe(incomingFleetEntities.length, 1, "Fleet length not 1 or more");
 
-    world.Primodium__claimShardAsteroidPoints(asteroidEntity);
+    world.Pri_11__claimShardAsteroidPoints(asteroidEntity);
 
     incomingFleetEntities = FleetSet.getFleetEntities(asteroidEntity, FleetIncomingKey);
 
@@ -329,8 +329,8 @@ contract ShardAsteroidTest is PrimodiumTest {
     setupCreateFleet(creator, Home.get(playerEntity), unitCounts, resourceCounts);
 
     vm.startPrank(creator);
-    bytes32 fleetEntity = world.Primodium__createFleet(Home.get(playerEntity), unitCounts, resourceCounts);
-    world.Primodium__sendFleet(fleetEntity, asteroidEntity);
+    bytes32 fleetEntity = world.Pri_11__createFleet(Home.get(playerEntity), unitCounts, resourceCounts);
+    world.Pri_11__sendFleet(fleetEntity, asteroidEntity);
     vm.stopPrank();
 
     vm.warp(FleetMovement.getArrivalTime(fleetEntity) + 1);
@@ -339,7 +339,7 @@ contract ShardAsteroidTest is PrimodiumTest {
 
     assertGe(incomingFleetEntities.length, 1, "Fleet length not 1 or more");
 
-    world.Primodium__claimShardAsteroidPoints(asteroidEntity);
+    world.Pri_11__claimShardAsteroidPoints(asteroidEntity);
 
     incomingFleetEntities = FleetSet.getFleetEntities(asteroidEntity, FleetIncomingKey);
 
@@ -377,11 +377,11 @@ contract ShardAsteroidTest is PrimodiumTest {
     setupCreateFleet(creator, Home.get(playerEntity), unitCounts, resourceCounts);
 
     vm.startPrank(creator);
-    bytes32 fleetEntity = world.Primodium__createFleet(Home.get(playerEntity), unitCounts, resourceCounts);
-    world.Primodium__sendFleet(fleetEntity, asteroidEntity);
+    bytes32 fleetEntity = world.Pri_11__createFleet(Home.get(playerEntity), unitCounts, resourceCounts);
+    world.Pri_11__sendFleet(fleetEntity, asteroidEntity);
 
     vm.warp(FleetMovement.getArrivalTime(fleetEntity) + 1);
-    world.Primodium__sendFleet(fleetEntity, Home.get(playerEntity));
+    world.Pri_11__sendFleet(fleetEntity, Home.get(playerEntity));
     vm.stopPrank();
     assertGt(FleetMovement.getArrivalTime(fleetEntity), block.timestamp, "Fleet not outgoing");
 
@@ -389,7 +389,7 @@ contract ShardAsteroidTest is PrimodiumTest {
 
     assertGe(outgoingFleetEntities.length, 1, "Fleet length not 1 or more");
 
-    world.Primodium__claimShardAsteroidPoints(asteroidEntity);
+    world.Pri_11__claimShardAsteroidPoints(asteroidEntity);
 
     outgoingFleetEntities = FleetSet.getFleetEntities(asteroidEntity, FleetOutgoingKey);
 
@@ -427,11 +427,11 @@ contract ShardAsteroidTest is PrimodiumTest {
     setupCreateFleet(creator, Home.get(playerEntity), unitCounts, resourceCounts);
 
     vm.startPrank(creator);
-    bytes32 fleetEntity = world.Primodium__createFleet(Home.get(playerEntity), unitCounts, resourceCounts);
-    world.Primodium__sendFleet(fleetEntity, asteroidEntity);
+    bytes32 fleetEntity = world.Pri_11__createFleet(Home.get(playerEntity), unitCounts, resourceCounts);
+    world.Pri_11__sendFleet(fleetEntity, asteroidEntity);
 
     vm.warp(FleetMovement.getArrivalTime(fleetEntity) + 1);
-    world.Primodium__sendFleet(fleetEntity, Home.get(playerEntity));
+    world.Pri_11__sendFleet(fleetEntity, Home.get(playerEntity));
     vm.warp(FleetMovement.getArrivalTime(fleetEntity) + 1);
     vm.stopPrank();
 
@@ -440,7 +440,7 @@ contract ShardAsteroidTest is PrimodiumTest {
     assertGe(outgoingFleetEntities.length, 1, "Fleet length not 1 or more");
 
     assertEq(OwnedBy.get(fleetEntity), Home.get(playerEntity), "fleet not owned 1");
-    world.Primodium__claimShardAsteroidPoints(asteroidEntity);
+    world.Pri_11__claimShardAsteroidPoints(asteroidEntity);
 
     outgoingFleetEntities = FleetSet.getFleetEntities(asteroidEntity, FleetOutgoingKey);
 
@@ -472,18 +472,18 @@ contract ShardAsteroidTest is PrimodiumTest {
     setupCreateFleet(creator, Home.get(playerEntity), unitCounts, resourceCounts);
 
     vm.startPrank(creator);
-    bytes32 fleetEntity = world.Primodium__createFleet(Home.get(playerEntity), unitCounts, resourceCounts);
-    world.Primodium__sendFleet(fleetEntity, asteroidEntity);
+    bytes32 fleetEntity = world.Pri_11__createFleet(Home.get(playerEntity), unitCounts, resourceCounts);
+    world.Pri_11__sendFleet(fleetEntity, asteroidEntity);
 
     vm.warp(FleetMovement.getArrivalTime(fleetEntity) + 1);
-    world.Primodium__sendFleet(fleetEntity, Home.get(playerEntity));
+    world.Pri_11__sendFleet(fleetEntity, Home.get(playerEntity));
     vm.warp(FleetMovement.getArrivalTime(fleetEntity) + 1);
     vm.stopPrank();
 
     bytes32 bobAsteroidEntity = spawn(bob);
 
     vm.startPrank(creator);
-    world.Primodium__sendFleet(fleetEntity, bobAsteroidEntity);
+    world.Pri_11__sendFleet(fleetEntity, bobAsteroidEntity);
 
     bytes32[] memory outgoingFleetEntities = FleetSet.getFleetEntities(asteroidEntity, FleetOutgoingKey);
 
