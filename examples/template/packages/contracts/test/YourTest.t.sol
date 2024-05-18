@@ -33,7 +33,7 @@ contract WriteDemoTest is MudTest {
   // namespaces are truncated to 14 bytes, and systems to 16 bytes.
   // namespaces must be unique, so if you get an Already Exists revert, try changing the namespace.
   // systems are also unique within a namespace, but redeploying a system will overwrite the previous version.
-  bytes14 PRIMODIUM_NAMESPACE = bytes14("Primodium");
+  bytes14 PRIMODIUM_NAMESPACE = bytes14("Pri_11");
   bytes14 namespace = bytes14("YourNamespace");
   bytes16 system = bytes16("YourSystem");
 

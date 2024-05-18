@@ -48,11 +48,6 @@ contract BuildSystemTest is PrimodiumTest {
   }
 
   function testBuildLargeBuilding() public {
-    address namespaceOwner = NamespaceOwner.get(WorldResourceIdLib.encodeNamespace(bytes14("Primodium")));
-    console.log("namespace owner:", namespaceOwner);
-    address creator = world.creator();
-    console.log("creator:", creator);
-
     Level.set(Home.get(playerEntity), 2);
     int32[] memory blueprint = get2x2Blueprint();
     bytes32[] memory keys = new bytes32[](1);

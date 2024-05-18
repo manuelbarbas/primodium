@@ -19,7 +19,7 @@ contract PrimodiumSystem is System {
    * @dev Ensures the caller is the admin of the Primodium namespace.
    */
   modifier onlyAdmin() {
-    address namespaceOwner = NamespaceOwner.get(WorldResourceIdLib.encodeNamespace(bytes14("Primodium")));
+    address namespaceOwner = NamespaceOwner.get(WorldResourceIdLib.encodeNamespace(bytes14("Pri_11")));
     require(namespaceOwner == _msgSender(), "[Primodium] Only admin");
     _;
   }
