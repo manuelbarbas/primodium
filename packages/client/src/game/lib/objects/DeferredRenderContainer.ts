@@ -19,13 +19,14 @@ export type BaseSpawnArgs = {
  * Note: it's good practice to always try to interact with the container if an object _could_ have been deferred; it will redirect either to the object directly if it exists, or perform the operation
  * on the container if it doesn't. Even if the object was directly rendered and has absolutely no knowledge of the container.
  *
+ * @dev This class needs to be extended to implement `onEnterChunk` and `onExitChunk`
  * @param args.id A unique id for the container
  * @param args.scene The Primodium scene object
  * @param args.objectApiType The key in the {@link PrimodiumObjectApiMap} to redirect to the associated {@link PrimodiumScene.objects}
  * @param args.spawnCallback The callback to run when each object is spawned (gets visible for the first time)
  * @param args.register Whether to register the object on creation (can be useful to delay registration, for instance after intializing the superclass)
  */
-export class DeferredRenderContainer<
+export abstract class DeferredRenderContainer<
   SpawnedObject extends PrimodiumGameObject = PrimodiumGameObject,
   SpawnArgs extends BaseSpawnArgs = BaseSpawnArgs
 > {
@@ -65,14 +66,14 @@ export class DeferredRenderContainer<
     this.objects.set(entity, spawnArgs);
 
     const chunkCoord = this._scene.utils.tileCoordToChunkCoord({ x: coord.x, y: -coord.y });
-    const chunkCoordKey = this.encodeKeyForChunk(chunkCoord);
+    const chunkCoordKey = this._scene.utils.encodeKeyForChunk(chunkCoord);
     if (this._scene.utils.getVisibleChunks().has(chunkCoordKey) && !this.isSpawned(entity)) {
       this.spawn(entity);
     }
 
     const entities = this.chunkCoords.get(chunkCoordKey) ?? [];
     entities.push(entity);
-    this.chunkCoords.set(this.encodeKeyForChunk(chunkCoord), entities);
+    this.chunkCoords.set(this._scene.utils.encodeKeyForChunk(chunkCoord), entities);
   }
 
   updatePosition(entity: Entity, coord: Coord) {
@@ -86,13 +87,13 @@ export class DeferredRenderContainer<
     const newChunkCoord = this._scene.utils.tileCoordToChunkCoord({ x: coord.x, y: -coord.y });
 
     // update mapping
-    const oldChunkEntities = this.chunkCoords.get(this.encodeKeyForChunk(oldChunkCoord)) ?? [];
+    const oldChunkEntities = this.chunkCoords.get(this._scene.utils.encodeKeyForChunk(oldChunkCoord)) ?? [];
     const index = oldChunkEntities.indexOf(entity);
     if (index !== -1) oldChunkEntities.splice(index, 1);
-    const newChunkEntities = this.chunkCoords.get(this.encodeKeyForChunk(newChunkCoord)) ?? [];
+    const newChunkEntities = this.chunkCoords.get(this._scene.utils.encodeKeyForChunk(newChunkCoord)) ?? [];
     newChunkEntities.push(entity);
-    this.chunkCoords.set(this.encodeKeyForChunk(oldChunkCoord), oldChunkEntities);
-    this.chunkCoords.set(this.encodeKeyForChunk(newChunkCoord), newChunkEntities);
+    this.chunkCoords.set(this._scene.utils.encodeKeyForChunk(oldChunkCoord), oldChunkEntities);
+    this.chunkCoords.set(this._scene.utils.encodeKeyForChunk(newChunkCoord), newChunkEntities);
 
     // update args
     spawnArgs.coord = coord;
@@ -105,7 +106,7 @@ export class DeferredRenderContainer<
       this._objectApi.updatePosition(entity, { x: pixelCoord.x, y: -pixelCoord.y });
     } else {
       // if it's not spawned, we should check if it's now visible and spawn it
-      if (this._scene.utils.getVisibleChunks().has(this.encodeKeyForChunk(newChunkCoord))) {
+      if (this._scene.utils.getVisibleChunks().has(this._scene.utils.encodeKeyForChunk(newChunkCoord))) {
         this.spawn(entity);
       }
     }
@@ -135,17 +136,10 @@ export class DeferredRenderContainer<
     return this.spawned.get(entity) ?? false;
   }
 
-  onNewEnterChunk(coord: Coord) {
-    const entities = this.chunkCoords.get(this.encodeKeyForChunk(coord)) ?? [];
-    entities.forEach((entity) => {
-      if (!this.isSpawned(entity)) this.spawn(entity as Entity);
-    });
+  onNewEnterChunk(chunkCoord: Coord) {
+    const entities = this.chunkCoords.get(this._scene.utils.encodeKeyForChunk(chunkCoord)) ?? [];
+    entities.forEach((entity) => this.spawn(entity as Entity));
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private onEnterChunk(chunkCoord: Coord) {}
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private onExitChunk(chunkCoord: Coord) {}
 
   onObjectSpawned(callback: (entity: Entity) => void) {
     this.onObjectSpawnedCallbacks.push(callback);
@@ -156,24 +150,6 @@ export class DeferredRenderContainer<
     };
   }
 
-  $subscribe(updateInterval: number, callback: (visibleEntities: Entity[]) => void) {
-    const interval = setInterval(() => {
-      callback(this.getVisibleEntities());
-    }, updateInterval);
-
-    return () => clearInterval(interval);
-  }
-
-  getVisibleEntities() {
-    const visibleChunks = this._scene.utils.getVisibleChunks();
-    return Array.from(visibleChunks)
-      .map((coord) => this.chunkCoords.get(coord) ?? [])
-      .flat();
-  }
-
-  destroy() {}
-
-  protected encodeKeyForChunk({ x, y }: Coord): string {
-    return `${x}:${y}`;
-  }
+  abstract onEnterChunk(chunkCoord: Coord): void;
+  abstract onExitChunk(chunkCoord: Coord): void;
 }

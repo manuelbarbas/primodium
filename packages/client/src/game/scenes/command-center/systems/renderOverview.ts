@@ -5,14 +5,12 @@ import { renderFleet } from "@/game/lib/render/renderFleet";
 import { PrimodiumScene } from "@/game/api/scene";
 import { renderShardAsteroid } from "@/game/lib/render/renderShardAsteroid";
 import { renderAsteroid } from "@/game/lib/render/renderAsteroid";
-import { subscribeToAsteroidLabel } from "@/game/scenes/starmap/systems/asteroidLabelSystem";
+import { Mode } from "@/util/constants";
 
 export const renderOverview = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const { objects } = scene;
 
-  let unsub: (() => void) | undefined = undefined;
-  systemsWorld.registerDisposer(() => unsub && unsub());
   defineComponentSystem(systemsWorld, components.SelectedRock, ({ value }) => {
     const entity = value[0]?.value;
     const prevEntity = value[1]?.value;
@@ -26,7 +24,6 @@ export const renderOverview = (scene: PrimodiumScene) => {
         fleetObject?.destroy();
       }
       asteroid?.destroy();
-      if (unsub) unsub();
     }
 
     if (!entity) return;
@@ -34,10 +31,7 @@ export const renderOverview = (scene: PrimodiumScene) => {
     const asteroid = components.ShardAsteroid.has(entity)
       ? renderShardAsteroid({ scene, entity })
       : renderAsteroid({ scene, entity });
-
-    // setup subscription to keep label updated (owner, alliance, expansion level, etc)
-    if (unsub) unsub();
-    if (asteroid) unsub = subscribeToAsteroidLabel(scene, asteroid, entity);
+    components.VisibleAsteroids.set({ value: [entity] }, Mode.CommandCenter);
 
     for (const fleet of runQuery([HasValue(components.FleetMovement, { destination: entity })])) {
       const fleetObject = renderFleet({ scene, entity: fleet });

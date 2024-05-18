@@ -172,6 +172,14 @@ export class StaticObjectManager {
     return this.chunkManager.getVisibleChunks();
   }
 
+  encodeKeyForChunk(coord: Coord) {
+    return this.chunkManager.encodeKeyForChunk(coord);
+  }
+
+  decodeKeyFromChunk(key: string) {
+    return this.chunkManager.decodeKeyFromChunk(key);
+  }
+
   dispose() {
     this.objMap.forEach((object) => object.destroy());
     this.chunkManager.dispose();

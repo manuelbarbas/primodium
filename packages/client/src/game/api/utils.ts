@@ -40,6 +40,14 @@ export const createUtilApi = (scene: Scene) => {
     return scene.objects.getVisibleChunks();
   }
 
+  function encodeKeyForChunk(coord: ChunkCoord) {
+    return scene.objects.encodeKeyForChunk(coord);
+  }
+
+  function decodeKeyFromChunk(key: string) {
+    return scene.objects.decodeKeyFromChunk(key);
+  }
+
   return {
     pixelCoordToTileCoord,
     tileCoordToPixelCoord,
@@ -48,6 +56,8 @@ export const createUtilApi = (scene: Scene) => {
     chunkCoordToPixelCoord,
     chunkCoordToTileCoord,
     getVisibleChunks,
+    encodeKeyForChunk,
+    decodeKeyFromChunk,
     addCoords: Coord.addCoords,
     coordEq: Coord.coordEq,
   };
