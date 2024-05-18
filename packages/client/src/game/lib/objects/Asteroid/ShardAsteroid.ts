@@ -17,7 +17,9 @@ export class ShardAsteroid extends BaseAsteroid {
       nameLabelColor: 0xffc0cb,
       ownerLabel: "shard",
     });
-    this.setDepth(DepthLayers.Marker);
+    this.asteroidLabel.setDepth(DepthLayers.Marker + 100);
+    this.asteroidSprite.setDepth(DepthLayers.Marker + 100);
+    this.setDepth(DepthLayers.Marker + 100);
     this.setScale(0.75);
   }
 
@@ -105,7 +107,6 @@ export class ShardAsteroid extends BaseAsteroid {
           this.asteroidSprite.once("animationcomplete-explode", () => {
             if (onAnimationComplete) onAnimationComplete();
             this.asteroidSprite.setTexture(Assets.SpriteAtlas, Sprites.Shard);
-            this.getFleetsContainer().clearOrbit();
             if (newPosition) this.respawn(newPosition);
           });
         },
