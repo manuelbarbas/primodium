@@ -21,7 +21,7 @@ export class DeferredAsteroidsRenderContainer extends DeferredRenderContainer<Ba
     spawnCallback: (args: AsteroidSpawnArgs) => BaseAsteroid | undefined;
     isShard?: boolean;
   }) {
-    super(args);
+    super({ ...args, objectApiType: "asteroid" });
     this.isShard = args.isShard ?? false;
   }
 
@@ -53,13 +53,14 @@ export class DeferredAsteroidsRenderContainer extends DeferredRenderContainer<Ba
 
     // if it's already spawned into visibility, just explode it and update its position
     if (asteroid) {
-      asteroid.explode(newPosition);
-
-      // update position internally (chunk coords)
-      this.updatePosition(entity, newPosition);
-      // let the static objects manager know as well for visibility
-      const pixelCoord = this._scene.utils.tileCoordToPixelCoord(newPosition);
-      this._scene.objects.asteroid.updatePosition(entity, { x: pixelCoord.x, y: -pixelCoord.y });
+      asteroid.explode(
+        newPosition,
+        // on animation complete
+        () => {
+          // update position internally (chunk coords)
+          this.updatePosition(entity, newPosition);
+        }
+      );
 
       return;
     }
@@ -72,7 +73,7 @@ export class DeferredAsteroidsRenderContainer extends DeferredRenderContainer<Ba
     const newPosChunkCoord = this._scene.utils.tileCoordToChunkCoord(newPosition);
     const isNowVisible = this._scene.utils
       .getVisibleChunks()
-      .has(this._getKeyForChunk({ x: newPosChunkCoord.x, y: -newPosChunkCoord.y }));
+      .has(this.encodeKeyForChunk({ x: newPosChunkCoord.x, y: -newPosChunkCoord.y }));
     if (isNowVisible) {
       (this.asteroids.get(entity) as ShardAsteroid)?.respawn(newPosition);
     }

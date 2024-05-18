@@ -7,7 +7,7 @@ import { BaseSpawnArgs, DeferredRenderContainer } from "@/game/lib/objects/Defer
 import { Building, BuildingConstruction } from "@/game/lib/objects/Building";
 import { BoundingBox, PrimodiumGameObject } from "engine/lib/core/StaticObjectManager";
 
-type PrimodiumObjectApi<T extends { destroy: () => void }> = {
+export type PrimodiumObjectApi<T extends PrimodiumGameObject | DeferredRenderContainer> = {
   has: (entity: Entity) => boolean;
   get: (entity: Entity) => T | undefined;
   getContainer: <SpawnedObject extends PrimodiumGameObject, SpawnArgs extends BaseSpawnArgs>(
@@ -24,7 +24,7 @@ type PrimodiumObjectApi<T extends { destroy: () => void }> = {
   onNewObject: (callback: (entity: string) => void) => () => void;
 };
 
-function factory<T extends { destroy: () => void }>(
+function factory<T extends PrimodiumGameObject | DeferredRenderContainer>(
   scene: Scene,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   objectClass: abstract new (...args: any[]) => T,
@@ -81,14 +81,14 @@ function factory<T extends { destroy: () => void }>(
   };
 }
 
-interface PrimodiumObjectApiMap {
+export type PrimodiumObjectApiMap = {
   fleet: PrimodiumObjectApi<Fleet>;
   transitLine: PrimodiumObjectApi<TransitLine>;
   asteroid: PrimodiumObjectApi<BaseAsteroid>;
   building: PrimodiumObjectApi<Building>;
   constructionBuilding: PrimodiumObjectApi<BuildingConstruction>;
   deferredRenderContainer: PrimodiumObjectApi<DeferredRenderContainer>;
-}
+};
 
 // Wrapper around scene.objects.get to provide type safety
 export function createObjectApi(scene: Scene): PrimodiumObjectApiMap {
