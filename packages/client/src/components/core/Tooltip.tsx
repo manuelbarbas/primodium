@@ -1,6 +1,6 @@
 import { cn } from "@/util/client";
 import { VariantProps, cva } from "class-variance-authority";
-import { motion, useMotionValue } from "framer-motion";
+import { motion, useMotionValue, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
 export type TooltipDirection = "right" | "left" | "top" | "bottom" | "center" | "topRight";
@@ -74,22 +74,24 @@ export const Tooltip = ({ className, tooltipContent, children, direction, show =
       className="relative"
     >
       {(visible || show) && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.6, x: tooltipTranslation[direction ?? "top"].x, y: 20 }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-            y: tooltipTranslation[direction ?? "top"].y,
-          }}
-          exit={{ opacity: 0, y: 20, scale: 0.6 }}
-          className={cn(
-            tooltipVariants({ direction }),
-            "absolute flex text-xs flex-col items-center justify-center bg-neutral heropattern-graphpaper-slate-800/50 z-[1000] shadow-xl px-4 py-2 pixel-border",
-            className
-          )}
-        >
-          {tooltipContent}
-        </motion.div>
+        <AnimatePresence>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.6, x: tooltipTranslation[direction ?? "top"].x, y: 20 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: tooltipTranslation[direction ?? "top"].y,
+            }}
+            exit={{ opacity: 0, y: 20, scale: 0.6 }}
+            className={cn(
+              tooltipVariants({ direction }),
+              "absolute flex text-xs flex-col items-center justify-center bg-neutral heropattern-graphpaper-slate-800/50 shadow-xl px-4 py-2 pixel-border",
+              className
+            )}
+          >
+            {tooltipContent}
+          </motion.div>
+        </AnimatePresence>
       )}
 
       {children}
