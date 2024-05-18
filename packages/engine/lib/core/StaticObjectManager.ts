@@ -42,55 +42,6 @@ export class StaticObjectManager {
     );
   }
 
-  private onEnterChunk(chunkCoord: Coord) {
-    // OBJECTS
-    const objects = this.coordMap.get(chunkCoord) ?? [];
-    objects.forEach((object) => {
-      this.count++;
-      if (!object.isSpawned()) {
-        object.spawn();
-      }
-      object.setActive(true).setVisible(true);
-    });
-
-    // BOUNDING BOXES
-    // considering that we check all boxes here, we don't need to repeat the same logic in `onExitChunk`
-    const boundingBoxes = this.boundingBoxes;
-    boundingBoxes.forEach((boundingBoxes, id) => {
-      const object = this.objMap.get(id);
-
-      if (object) {
-        let isVisible = false;
-
-        for (const boundingBox of boundingBoxes) {
-          if (this.chunkManager.isVisibleBoundingBox(boundingBox)) {
-            isVisible = true;
-            break;
-          }
-        }
-
-        object.setActive(isVisible).setVisible(isVisible).spawn();
-      }
-    });
-
-    // CONTAINERS
-    this.deferredRenderContainerMap.forEach((container) => {
-      // container.onEnterChunk(chunkCoord);
-      if (!this.chunkManager.isKnownChunk(chunkCoord)) container.onNewEnterChunk(chunkCoord);
-    });
-  }
-
-  private onExitChunk(chunkCoord: Coord) {
-    const objects = this.coordMap.get(chunkCoord) ?? [];
-
-    objects.forEach((object) => {
-      this.count--;
-      object.setActive(false).setVisible(false);
-    });
-
-    // this.deferredRenderContainerMap.forEach((container) => container.onExitChunk(chunkCoord));
-  }
-
   add(id: string, object: PrimodiumGameObject, cull = false) {
     if (this.objMap.has(id)) return;
     this.objMap.set(id, object);
@@ -224,5 +175,54 @@ export class StaticObjectManager {
   dispose() {
     this.objMap.forEach((object) => object.destroy());
     this.chunkManager.dispose();
+  }
+
+  private onEnterChunk(chunkCoord: Coord) {
+    // OBJECTS
+    const objects = this.coordMap.get(chunkCoord) ?? [];
+    objects.forEach((object) => {
+      this.count++;
+      if (!object.isSpawned()) {
+        object.spawn();
+      }
+      object.setActive(true).setVisible(true);
+    });
+
+    // BOUNDING BOXES
+    // considering that we check all boxes here, we don't need to repeat the same logic in `onExitChunk`
+    const boundingBoxes = this.boundingBoxes;
+    boundingBoxes.forEach((boundingBoxes, id) => {
+      const object = this.objMap.get(id);
+
+      if (object) {
+        let isVisible = false;
+
+        for (const boundingBox of boundingBoxes) {
+          if (this.chunkManager.isVisibleBoundingBox(boundingBox)) {
+            isVisible = true;
+            break;
+          }
+        }
+
+        object.setActive(isVisible).setVisible(isVisible).spawn();
+      }
+    });
+
+    // CONTAINERS
+    this.deferredRenderContainerMap.forEach((container) => {
+      container.onEnterChunk(chunkCoord);
+      if (!this.chunkManager.isKnownChunk(chunkCoord)) container.onNewEnterChunk(chunkCoord);
+    });
+  }
+
+  private onExitChunk(chunkCoord: Coord) {
+    const objects = this.coordMap.get(chunkCoord) ?? [];
+
+    objects.forEach((object) => {
+      this.count--;
+      object.setActive(false).setVisible(false);
+    });
+
+    this.deferredRenderContainerMap.forEach((container) => container.onExitChunk(chunkCoord));
   }
 }

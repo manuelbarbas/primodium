@@ -1,17 +1,17 @@
-import { Entity, Has, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
+import { Has, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { components } from "@/network/components";
 import { world } from "@/network/world";
 import { PrimodiumScene } from "@/game/api/scene";
 import { DeferredAsteroidsRenderContainer } from "@/game/lib/objects/Asteroid/DeferredAsteroidsRenderContainer";
 import { renderAsteroid } from "@/game/lib/render/renderAsteroid";
 import { initializeSecondaryAsteroids } from "@/game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
-import { toHex } from "viem";
+import { EntityType } from "@/util/constants";
 
 export const renderAsteroids = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   const deferredAsteroidsRenderContainer = new DeferredAsteroidsRenderContainer({
-    id: toHex("asteroids") as Entity,
+    id: EntityType.DeferredRenderAsteroids,
     scene,
     spawnCallback: ({ scene, entity, coord, spawnsSecondary }) => {
       const asteroid = renderAsteroid({

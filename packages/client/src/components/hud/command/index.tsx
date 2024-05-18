@@ -23,28 +23,29 @@ export const CommandCenterHUD = memo(() => {
 
   return (
     <HUD scale={uiScale}>
-      <Tabs className="pointer-events-auto">
-        {/* Contains View Buttons */}
-        <HUD.Left>
-          <CommandViewSelector />
-        </HUD.Left>
-
-        <Tabs.Pane index={0} fragment>
-          <Overview />
-        </Tabs.Pane>
-        <Tabs.Pane index={2} fragment>
-          <HUD.Center>
-            <TransferContextProvider initialLeft={initialLeft}>
-              <Transfer />
-            </TransferContextProvider>
-          </HUD.Center>
-        </Tabs.Pane>
-      </Tabs>
       <LoadingOverlay
         syncId={Keys.SECONDARY}
         loadingMessage="Loading Fleets"
         errorMessage="Error syncing fleets data. Please refresh the page."
-      />
+      >
+        <Tabs className="pointer-events-auto">
+          {/* Contains View Buttons */}
+          <HUD.Left>
+            <CommandViewSelector />
+          </HUD.Left>
+
+          <Tabs.Pane index={0} fragment>
+            <Overview />
+          </Tabs.Pane>
+          <Tabs.Pane index={2} fragment>
+            <HUD.Center>
+              <TransferContextProvider initialLeft={initialLeft}>
+                <Transfer />
+              </TransferContextProvider>
+            </HUD.Center>
+          </Tabs.Pane>
+        </Tabs>
+      </LoadingOverlay>
     </HUD>
   );
 });

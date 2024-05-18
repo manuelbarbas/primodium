@@ -167,14 +167,21 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     return this;
   }
 
+  setPosition(x: number, y: number) {
+    // bail out if it's the super
+    if (this.id === undefined) return super.setPosition(x, y);
+
+    this.asteroidSprite.setPosition(x, y);
+    this.circle.setPosition(x, y);
+    this.fleetsContainer.setPosition(x, y);
+    this.asteroidLabel.setPosition(x, y);
+    return super.setPosition(x, y);
+  }
+
   setTilePosition(coord: Coord) {
     this.coord = coord;
     const pixelCoord = this._scene.utils.tileCoordToPixelCoord(coord);
-    this.asteroidSprite.setPosition(pixelCoord.x, -pixelCoord.y);
-    this.circle.setPosition(pixelCoord.x, -pixelCoord.y);
-    this.fleetsContainer.setPosition(pixelCoord.x, -pixelCoord.y);
-    this.asteroidLabel.setPosition(pixelCoord.x, -pixelCoord.y);
-    return this;
+    return this.setPosition(pixelCoord.x, -pixelCoord.y);
   }
 
   isSpawned() {

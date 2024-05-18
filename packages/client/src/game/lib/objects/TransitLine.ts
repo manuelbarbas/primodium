@@ -54,11 +54,6 @@ export class TransitLine extends TargetLine {
 
     // set the bounding boxes for visibility checks
     this._scene.objects.transitLine.setBoundingBoxes(this.id, generateBoundingBoxes(this.geom, this._scene.camera));
-    // for debugging
-    // const bounding = generateBoundingBoxes(this.geom, this._scene.camera);
-    // bounding.forEach((box) => {
-    //   this._scene.phaserScene.add.rectangle(box.x, box.y, box.width, box.height, 0xff0000, 0.5);
-    // });
   }
 
   setFleetProgress(progress: number) {

@@ -1,6 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { Coord } from "engine/types";
 import { PrimodiumScene } from "@/game/api/scene";
+import { PrimodiumObjectApi, PrimodiumObjectApiMap } from "@/game/api/objects";
 import { PrimodiumGameObject } from "engine/lib/core/StaticObjectManager";
 
 export type BaseSpawnArgs = {
@@ -15,8 +16,12 @@ export type BaseSpawnArgs = {
  * This is useful for objects rendered inside an enter system (probably on initial load), at is will create this basic object containing their info & callback when spawning, which when
  * entering the visible chunk will effectively create the actual intended object, and this container will forget about this one.
  *
+ * Note: it's good practice to always try to interact with the container if an object _could_ have been deferred; it will redirect either to the object directly if it exists, or perform the operation
+ * on the container if it doesn't. Even if the object was directly rendered and has absolutely no knowledge of the container.
+ *
  * @param args.id A unique id for the container
  * @param args.scene The Primodium scene object
+ * @param args.objectApiType The key in the {@link PrimodiumObjectApiMap} to redirect to the associated {@link PrimodiumScene.objects}
  * @param args.spawnCallback The callback to run when each object is spawned (gets visible for the first time)
  * @param args.register Whether to register the object on creation (can be useful to delay registration, for instance after intializing the superclass)
  */
@@ -31,6 +36,7 @@ export class DeferredRenderContainer<
   protected chunkCoords: Map<string, Entity[]> = new Map();
   protected spawned: Map<Entity, boolean> = new Map();
   protected _scene: PrimodiumScene;
+  protected _objectApi: PrimodiumObjectApi<SpawnedObject>;
   // shared callback to spawn objects
   private spawnCallback: (args: SpawnArgs) => SpawnedObject | undefined;
   private onObjectSpawnedCallbacks: ((entity: Entity) => void)[] = [];
@@ -38,12 +44,14 @@ export class DeferredRenderContainer<
   constructor(args: {
     id: Entity;
     scene: PrimodiumScene;
+    objectApiType: keyof Omit<PrimodiumObjectApiMap, "deferredRenderContainer">;
     spawnCallback: (args: SpawnArgs) => SpawnedObject | undefined;
     register?: boolean;
   }) {
-    const { id, scene, spawnCallback, register = true } = args;
+    const { id, scene, objectApiType, spawnCallback, register = true } = args;
     this.id = id;
     this._scene = scene;
+    this._objectApi = scene.objects[objectApiType] as unknown as PrimodiumObjectApi<SpawnedObject>;
     this.spawnCallback = spawnCallback;
 
     if (register) this.register();
@@ -57,14 +65,14 @@ export class DeferredRenderContainer<
     this.objects.set(entity, spawnArgs);
 
     const chunkCoord = this._scene.utils.tileCoordToChunkCoord({ x: coord.x, y: -coord.y });
-    const chunkCoordKey = this._getKeyForChunk(chunkCoord);
+    const chunkCoordKey = this.encodeKeyForChunk(chunkCoord);
     if (this._scene.utils.getVisibleChunks().has(chunkCoordKey) && !this.isSpawned(entity)) {
       this.spawn(entity);
     }
 
     const entities = this.chunkCoords.get(chunkCoordKey) ?? [];
     entities.push(entity);
-    this.chunkCoords.set(this._getKeyForChunk(chunkCoord), entities);
+    this.chunkCoords.set(this.encodeKeyForChunk(chunkCoord), entities);
   }
 
   updatePosition(entity: Entity, coord: Coord) {
@@ -72,16 +80,35 @@ export class DeferredRenderContainer<
     if (!spawnArgs) return;
 
     const oldCoord = spawnArgs.coord;
+    if (oldCoord === coord) return;
+
     const oldChunkCoord = this._scene.utils.tileCoordToChunkCoord({ x: oldCoord.x, y: -oldCoord.y });
+    const newChunkCoord = this._scene.utils.tileCoordToChunkCoord({ x: coord.x, y: -coord.y });
 
-    // find in maping and remove
-    const entities = this.chunkCoords.get(this._getKeyForChunk(oldChunkCoord)) ?? [];
-    const index = entities.indexOf(entity);
-    if (index !== -1) entities.splice(index, 1);
-    this.chunkCoords.set(this._getKeyForChunk(oldChunkCoord), entities);
+    // update mapping
+    const oldChunkEntities = this.chunkCoords.get(this.encodeKeyForChunk(oldChunkCoord)) ?? [];
+    const index = oldChunkEntities.indexOf(entity);
+    if (index !== -1) oldChunkEntities.splice(index, 1);
+    const newChunkEntities = this.chunkCoords.get(this.encodeKeyForChunk(newChunkCoord)) ?? [];
+    newChunkEntities.push(entity);
+    this.chunkCoords.set(this.encodeKeyForChunk(oldChunkCoord), oldChunkEntities);
+    this.chunkCoords.set(this.encodeKeyForChunk(newChunkCoord), newChunkEntities);
 
-    // just re-add to trigger the spawn if needed
-    this.add(entity, coord, { ...spawnArgs, coord });
+    // update args
+    spawnArgs.coord = coord;
+    this.objects.set(entity, spawnArgs);
+
+    // if it's already spawned, update its position in the static object manager
+    const obj = this._objectApi.get(entity);
+    if (obj) {
+      const pixelCoord = this._scene.utils.tileCoordToPixelCoord(coord);
+      this._objectApi.updatePosition(entity, { x: pixelCoord.x, y: -pixelCoord.y });
+    } else {
+      // if it's not spawned, we should check if it's now visible and spawn it
+      if (this._scene.utils.getVisibleChunks().has(this.encodeKeyForChunk(newChunkCoord))) {
+        this.spawn(entity);
+      }
+    }
   }
 
   spawn(entity: Entity) {
@@ -108,19 +135,17 @@ export class DeferredRenderContainer<
     return this.spawned.get(entity) ?? false;
   }
 
-  protected _getKeyForChunk({ x, y }: Coord): string {
-    return `${x}:${y}`;
-  }
-
   onNewEnterChunk(coord: Coord) {
-    const entities = this.chunkCoords.get(this._getKeyForChunk(coord)) ?? [];
+    const entities = this.chunkCoords.get(this.encodeKeyForChunk(coord)) ?? [];
     entities.forEach((entity) => {
       if (!this.isSpawned(entity)) this.spawn(entity as Entity);
     });
   }
 
-  // onEnterChunk(coord: Coord) {}
-  // onExitChunk(coord: Coord) { }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private onEnterChunk(chunkCoord: Coord) {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private onExitChunk(chunkCoord: Coord) {}
 
   onObjectSpawned(callback: (entity: Entity) => void) {
     this.onObjectSpawnedCallbacks.push(callback);
@@ -147,4 +172,8 @@ export class DeferredRenderContainer<
   }
 
   destroy() {}
+
+  protected encodeKeyForChunk({ x, y }: Coord): string {
+    return `${x}:${y}`;
+  }
 }

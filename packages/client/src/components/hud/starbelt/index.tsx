@@ -15,20 +15,20 @@ export const StarbeltHUD = memo(() => {
   if (!isStarbeltOpen) return null;
 
   return (
-    <div className={`screen-container relative`}>
-      <HUD scale={uiScale}>
+    <HUD scale={uiScale}>
+      <LoadingOverlay
+        syncId={Keys.SECONDARY}
+        loadingMessage="Loading Starbelt"
+        errorMessage="Error syncing starbelt data. Please refresh the page."
+        className="screen-container relative"
+      >
         {/* MARKERS */}
         <AsteroidMenuPopup />
 
         <HUD.Left>
           <StarmapNavigator />
         </HUD.Left>
-      </HUD>
-      <LoadingOverlay
-        syncId={Keys.SECONDARY}
-        loadingMessage="Loading Starbelt"
-        errorMessage="Error syncing starbelt data. Please refresh the page."
-      />
-    </div>
+      </LoadingOverlay>
+    </HUD>
   );
 });

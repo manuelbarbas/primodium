@@ -1,6 +1,6 @@
 import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
-import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { Badge } from "src/components/core/Badge";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Loader } from "src/components/core/Loader";
@@ -66,33 +66,29 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
           {shardData.dripPerSec > 0n && (
             <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
               {/* todo replace PRI with icon */}
-              <IconLabel imageUri={ResourceImages.Primodium} />
               {formatResourceCount(EntityType.Iron, shardData.dripPerSec * 60n * 60n, {
                 notLocale: true,
                 fractionDigits: 1,
-              }).toLocaleString()}
-              /HR
+              }).toLocaleString()}{" "}
+              PRI/HR
             </div>
           )}
         </div>
         {shardData.unclaimedPoints > 0n && (
           <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
             {/* todo replace PRI with icon */}
-            <IconLabel imageUri={ResourceImages.Primodium} />
             {formatResourceCount(EntityType.Iron, shardData.unclaimedPoints, {
               notLocale: true,
               fractionDigits: 1,
-            }).toLocaleString()}{" "}
+            }).toLocaleString()}
             unclaimed points
           </div>
         )}
         <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
           <HealthBar
             imgUrl={EntityToResourceImage[EntityType.Encryption]}
-            health={Number(formatResourceCount(EntityType.Encryption, shardData.encryption, { notLocale: true })) || 0}
-            maxHealth={
-              Number(formatResourceCount(EntityType.Encryption, shardData.maxEncryption, { notLocale: true })) || 0
-            }
+            health={Number(formatResourceCount(EntityType.Encryption, shardData.encryption, { notLocale: true }))}
+            maxHealth={Number(formatResourceCount(EntityType.Encryption, shardData.maxEncryption, { notLocale: true }))}
           />
         </Badge>
       </div>
