@@ -58,7 +58,7 @@ contract SpawnSystemTest is PrimodiumTest {
 
     systemId = WorldResourceIdLib.encode({
       typeId: RESOURCE_SYSTEM,
-      namespace: bytes14("Primodium"),
+      namespace: bytes14("Pri_11"),
       name: bytes16("SpawnSystem")
     });
     console.logBytes8(ISpawnSystem.Pri_11__spawn.selector);
