@@ -107,7 +107,6 @@ export class ShardAsteroid extends BaseAsteroid {
           this.asteroidSprite.once("animationcomplete-explode", () => {
             if (onAnimationComplete) onAnimationComplete();
             this.asteroidSprite.setTexture(Assets.SpriteAtlas, Sprites.Shard);
-            this.getFleetsContainer().clearOrbit();
             if (newPosition) this.respawn(newPosition);
           });
         },
