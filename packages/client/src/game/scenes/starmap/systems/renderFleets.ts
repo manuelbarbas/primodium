@@ -4,7 +4,7 @@ import { TransitLine } from "@game/lib/objects/TransitLine";
 import { components } from "@/network/components";
 import { world } from "@/network/world";
 import { renderFleet } from "@/game/lib/render/renderFleet";
-import { toHex } from "viem";
+import { EntityType } from "@/util/constants";
 
 export const renderFleets = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -13,9 +13,9 @@ export const renderFleets = (scene: PrimodiumScene) => {
   // handle rendering fleets if asteroid is not yet spawned
   const spawnQueue = new Map<Entity, Entity[]>();
   // we need this for both asteroids and shards
-  const ids = [toHex("asteroids"), toHex("shardAsteroids")];
+  const ids = [EntityType.DeferredRenderAsteroids, EntityType.DeferredRenderShards];
   ids.forEach((id) => {
-    const container = scene.objects.deferredRenderContainer.getContainer(id as Entity);
+    const container = scene.objects.deferredRenderContainer.getContainer(id);
     if (!container) return;
 
     const unsub = container.onObjectSpawned((asteroidEntity) => {

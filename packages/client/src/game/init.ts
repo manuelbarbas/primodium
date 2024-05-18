@@ -9,33 +9,23 @@ import { initStarmapScene } from "@game/scenes/starmap/init";
 import { initUIScene } from "@game/scenes/ui/init";
 import { engine } from "engine";
 
-type PrimarySceneKeys = Extract<SceneKeys, "ROOT" | "UI" | "ASTEROID">;
-type SecondarySceneKeys = Extract<SceneKeys, "STARMAP" | "COMMAND_CENTER">;
-type InitResult = {
-  primary: Record<PrimarySceneKeys, PrimodiumScene> & { GLOBAL: GlobalApi };
-  secondary: Record<SecondarySceneKeys, PrimodiumScene>;
-};
-
-async function init(): Promise<InitResult> {
+async function init(): Promise<Record<SceneKeys, PrimodiumScene> & { GLOBAL: GlobalApi }> {
   const game = await engine.createGame(gameConfig);
   const globalApi = createGlobalApi(game);
 
   return {
-    // primary systems are run straight away when the Game component is mounted, meaning
-    // right after initial queries were fetched, which is strictly data required to render the home asteroid
-    primary: {
-      ROOT: await initRootScene(globalApi),
-      UI: await initUIScene(globalApi),
-      ASTEROID: await initAsteroidScene(globalApi),
-      GLOBAL: globalApi,
-    },
-    // secondary queries are run after secondary queries were fetched, which is the data required to render
-    // the asteroids, fleets and other players; this helps preparing the home asteroid as fast as possible, and
-    // making sure global systems are run afterwards over complete data
-    secondary: {
-      STARMAP: await initStarmapScene(globalApi),
-      COMMAND_CENTER: await initCommandCenter(globalApi),
-    },
+    // primary systems
+    // run straight away when the Game component is mounted, meaning right after initial queries were fetched,
+    // which is strictly data required to render the home asteroid
+    ROOT: await initRootScene(globalApi),
+    UI: await initUIScene(globalApi),
+    ASTEROID: await initAsteroidScene(globalApi),
+    GLOBAL: globalApi,
+    // secondary systems
+    // run after secondary queries were fetched, which is the data required to render the asteroids, fleets and other players;
+    // this helps preparing the home asteroid as fast as possible, and making sure global systems are run afterwards over complete data
+    STARMAP: await initStarmapScene(globalApi),
+    COMMAND_CENTER: await initCommandCenter(globalApi),
   };
 }
 

@@ -40,6 +40,10 @@ export class DeferredAsteroidsRenderContainer extends DeferredRenderContainer<Ba
   }
 
   getFleetsContainers(entity: Entity) {
+    // in case it's accessed after the object was spawned
+    const obj = this._scene.objects.asteroid.get(entity);
+    if (obj) return obj.getFleetsContainer();
+
     return this.fleetsContainers.get(entity);
   }
 
@@ -55,7 +59,7 @@ export class DeferredAsteroidsRenderContainer extends DeferredRenderContainer<Ba
       this.updatePosition(entity, newPosition);
       // let the static objects manager know as well for visibility
       const pixelCoord = this._scene.utils.tileCoordToPixelCoord(newPosition);
-      this._scene.objects.asteroid.updatePosition(this.id, { x: pixelCoord.x, y: -pixelCoord.y });
+      this._scene.objects.asteroid.updatePosition(entity, { x: pixelCoord.x, y: -pixelCoord.y });
 
       return;
     }

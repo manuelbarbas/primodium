@@ -120,8 +120,11 @@ export class DeferredRenderContainer<
     });
   }
 
-  // onEnterChunk(coord: Coord) {}
-  // onExitChunk(coord: Coord) {}
+  // TODO: we're using this in the upcoming PR
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onEnterChunk(_: Coord) {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onExitChunk(_: Coord) {}
 
   onObjectSpawned(callback: (entity: Entity) => void) {
     this.onObjectSpawnedCallbacks.push(callback);

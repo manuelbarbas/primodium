@@ -5,23 +5,20 @@ import { world } from "src/network/world";
 import { PrimodiumScene } from "@/game/api/scene";
 import { DeferredAsteroidsRenderContainer } from "@/game/lib/objects/Asteroid/DeferredAsteroidsRenderContainer";
 import { renderShardAsteroid } from "@/game/lib/render/renderShardAsteroid";
-import { ShardAsteroid } from "@/game/lib/objects/Asteroid/ShardAsteroid";
-import { toHex } from "viem";
+import { EntityType } from "@/util/constants";
 
 export const renderShardAsteroids = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
-  const { objects } = scene;
 
   const deferredContainer = new DeferredAsteroidsRenderContainer({
-    id: toHex("shardAsteroids") as Entity,
+    id: EntityType.DeferredRenderShards,
     scene,
     spawnCallback: ({ scene, entity, coord }) => renderShardAsteroid({ scene, entity, coord, addEventHandlers: true }),
     isShard: true,
   });
 
   const renderExplodeAndMoveAsteroid = (entity: Entity, coord: Coord) => {
-    const asteroid = objects.asteroid.get(entity) as ShardAsteroid;
-    asteroid.explode(coord);
+    deferredContainer.explode(entity, coord);
   };
 
   const query = [Has(components.ShardAsteroid), Has(components.Position)];

@@ -28,7 +28,50 @@ export class ChunkManager {
     this.worldViewUnsub = camera.worldView$.subscribe(() => this.update());
   }
 
-  private _getVisible(): { chunks: Set<string>; area: Phaser.Geom.Rectangle } {
+  getVisibleChunks(): Set<string> {
+    return this.visibleChunks;
+  }
+
+  isVisibleChunk(chunkCoord: Coord): boolean {
+    return this.visibleChunks.has(this.encodeKeyForChunk(chunkCoord));
+  }
+
+  isKnownChunk(chunkCoord: Coord): boolean {
+    return this.knownChunks.has(this.encodeKeyForChunk(chunkCoord));
+  }
+
+  isVisibleBoundingBox(boundingBox: BoundingBox): boolean {
+    return Phaser.Geom.Intersects.RectangleToRectangle(boundingBox, this.visibleArea);
+  }
+
+  dispose(): void {
+    this.worldViewUnsub.unsubscribe();
+  }
+
+  private update(): void {
+    const { chunks: currentVisibleChunks, area: currentVisibleArea } = this.getVisible();
+
+    // Find chunks that have just become visible
+    currentVisibleChunks.forEach((chunkKey) => {
+      if (!this.visibleChunks.has(chunkKey)) {
+        this.onEnterChunk(this.decodeKeyForChunk(chunkKey));
+        this.visibleChunks.add(chunkKey);
+      }
+    });
+
+    // Find chunks that are no longer visible
+    this.visibleChunks.forEach((chunkKey) => {
+      if (!currentVisibleChunks.has(chunkKey)) {
+        this.onExitChunk(this.decodeKeyForChunk(chunkKey));
+        this.visibleChunks.delete(chunkKey);
+      }
+    });
+
+    this.visibleArea = currentVisibleArea;
+    this.knownChunks = new Set([...this.knownChunks, ...currentVisibleChunks]);
+  }
+
+  private getVisible(): { chunks: Set<string>; area: Phaser.Geom.Rectangle } {
     const cam = this.camera.phaserCamera;
     const chunks = new Set<string>();
 
@@ -39,7 +82,7 @@ export class ChunkManager {
 
     for (let x = startX; x < endX; x++) {
       for (let y = startY; y < endY; y++) {
-        chunks.add(this.getKeyForChunk({ x, y }));
+        chunks.add(this.encodeKeyForChunk({ x, y }));
       }
     }
 
@@ -53,52 +96,12 @@ export class ChunkManager {
     return { chunks, area };
   }
 
-  private update(): void {
-    const { chunks: currentVisibleChunks, area: currentVisibleArea } = this._getVisible();
-
-    // Find chunks that have just become visible
-    currentVisibleChunks.forEach((chunkKey) => {
-      if (!this.visibleChunks.has(chunkKey)) {
-        const [x, y] = chunkKey.split(":").map(Number);
-        this.onEnterChunk({ x, y });
-        this.visibleChunks.add(chunkKey);
-      }
-    });
-
-    // Find chunks that are no longer visible
-    this.visibleChunks.forEach((chunkKey) => {
-      if (!currentVisibleChunks.has(chunkKey)) {
-        const [x, y] = chunkKey.split(":").map(Number);
-        this.onExitChunk({ x, y });
-        this.visibleChunks.delete(chunkKey);
-      }
-    });
-
-    this.visibleArea = currentVisibleArea;
-    this.knownChunks = new Set([...this.knownChunks, ...currentVisibleChunks]);
-  }
-
-  private getKeyForChunk({ x, y }: Coord): string {
+  private encodeKeyForChunk({ x, y }: Coord): string {
     return `${x}:${y}`;
   }
 
-  isVisibleChunk(chunkCoord: Coord): boolean {
-    return this.visibleChunks.has(this.getKeyForChunk(chunkCoord));
-  }
-
-  getVisibleChunks(): Set<string> {
-    return this.visibleChunks;
-  }
-
-  isKnownChunk(chunkCoord: Coord): boolean {
-    return this.knownChunks.has(this.getKeyForChunk(chunkCoord));
-  }
-
-  isVisibleBoundingBox(boundingBox: BoundingBox): boolean {
-    return Phaser.Geom.Intersects.RectangleToRectangle(boundingBox, this.visibleArea);
-  }
-
-  dispose(): void {
-    this.worldViewUnsub.unsubscribe();
+  private decodeKeyForChunk(key: string): Coord {
+    const [x, y] = key.split(":").map(Number);
+    return { x, y };
   }
 }

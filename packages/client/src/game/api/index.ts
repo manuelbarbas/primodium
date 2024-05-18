@@ -15,7 +15,7 @@ import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import _init from "../init";
-import { PrimaryScenes, SecondaryScenes } from "@/game/lib/constants/common";
+import { Scenes } from "@/game/lib/constants/common";
 import { setupWormholeResource } from "@/network/systems/setupWormholeResource";
 
 export type PrimodiumGame = Awaited<ReturnType<typeof initGame>>;
@@ -40,7 +40,7 @@ export async function initGame(version = "v1") {
   const api = await _init();
 
   function destroy() {
-    api.primary.GLOBAL.dispose();
+    api.GLOBAL.dispose();
 
     //dispose game logic
     world.dispose("game");
@@ -66,15 +66,17 @@ export async function initGame(version = "v1") {
       setupBuildingReversePosition();
       setupSync(mud);
 
-      Object.values(PrimaryScenes).forEach((scene) => {
-        api.primary[scene].runSystems?.(mud);
+      Object.values(Scenes).forEach((key) => {
+        const scene = api[key];
+        if (scene.isPrimary) scene.runSystems?.(mud);
       });
     };
 
     const secondary = () => {
       console.info("[Game] Running secondary systems");
-      Object.values(SecondaryScenes).forEach((scene) => {
-        api.secondary[scene].runSystems?.(mud);
+      Object.values(Scenes).forEach((key) => {
+        const scene = api[key];
+        if (!scene.isPrimary) scene.runSystems?.(mud);
       });
     };
 
@@ -87,5 +89,5 @@ export async function initGame(version = "v1") {
     return { primary, secondary, done };
   }
 
-  return { ...api.primary, ...api.secondary, destroy, runSystems };
+  return { ...api, destroy, runSystems };
 }
