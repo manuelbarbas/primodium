@@ -194,6 +194,7 @@ export const EntityType = {
 
   Defense: toHex32("U_Defense") as Entity,
   DefenseMultiplier: toHex32("M_DefenseMultiplier") as Entity,
+  UnitProductionMultiplier: toHex32("M_UnitProductionMultiplier") as Entity,
 
   Encryption: toHex32("R_Encryption") as Entity,
   HP: toHex32("R_HP") as Entity,
