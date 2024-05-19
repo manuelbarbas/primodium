@@ -127,8 +127,8 @@ export const AttackScreen: React.FC<{ selectedRock: Entity; target: Entity }> = 
       )}
 
       {fleets.length === 0 && (
-        <SecondaryCard className="flex-col items-center justify-center h-48">
-          <p className="text-xs">No fleets available to travel</p>
+        <SecondaryCard className="flex-col items-center justify-center h-48 px-10">
+          <p className="text-xs">No fleets available to attack</p>
         </SecondaryCard>
       )}
       <Navigator.BackButton />

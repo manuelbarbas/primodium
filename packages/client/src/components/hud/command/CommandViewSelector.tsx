@@ -11,6 +11,10 @@ import { useEntityQuery } from "@latticexyz/react";
 const btnClass = "group  bg-transparent";
 
 export const CommandViewSelector = () => {
+  const playerEntity = components.Account.use()?.value;
+  const selectedRock = components.SelectedRock.use()?.value;
+  const owner = components.OwnedBy.use(selectedRock)?.value;
+  const ownedByPlayer = owner === playerEntity;
   const commandOpen = components.SelectedMode.use()?.value === Mode.CommandCenter;
 
   if (!commandOpen) return null;
@@ -38,6 +42,7 @@ export const CommandViewSelector = () => {
           text="Upgrade Units"
           size={"md"}
           motion="disabled"
+          disabled={!ownedByPlayer}
           tooltipDirection="left"
         />
       </Join>

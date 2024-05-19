@@ -15,7 +15,6 @@ export const renderBattle = (scene: PrimodiumScene) => {
   const { BattleResult } = components;
 
   const attackAnimation = async (entity: Entity, attacker: Entity, defender: Entity, attackerWinner?: boolean) => {
-    // const attackerPosition = scene.objects.fleet.get(attacker)?.getTileCoord() ?? { x: 0, y: 0 };
     const battleResult = components.BattleResult.get(entity);
     const defenderIsFleet = !!components.IsFleet.get(defender)?.value;
 
@@ -43,7 +42,6 @@ export const renderBattle = (scene: PrimodiumScene) => {
       })
       .filter((item) => item !== null) as Phaser.Types.Time.TimelineEventConfig[];
 
-    //defenderObj.fireAt(attackerPosition);
     const battleRender = scene.phaserScene.add
       .timeline([
         {
