@@ -21,9 +21,9 @@ contract DestroySystem is PrimodiumSystem {
     LibBuilding.checkDestroyRequirements(_player(), buildingEntity);
 
     IWorld world = IWorld(_world());
-    world.Primodium__clearUtilityUsage(buildingEntity);
-    world.Primodium__clearMaxStorageIncrease(buildingEntity);
-    world.Primodium__clearProductionRate(buildingEntity);
+    world.Pri_11__clearUtilityUsage(buildingEntity);
+    world.Pri_11__clearMaxStorageIncrease(buildingEntity);
+    world.Pri_11__clearProductionRate(buildingEntity);
 
     // requirements checked on line 20
     LibBuilding.destroy(_player(), buildingEntity, true);

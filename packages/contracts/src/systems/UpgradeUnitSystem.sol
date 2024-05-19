@@ -29,7 +29,7 @@ contract UpgradeUnitSystem is PrimodiumSystem {
     require(targetLevel <= P_MaxLevel.get(unitPrototype), "[UpgradeUnitSystem] Max level reached");
 
     IWorld world = IWorld(_world());
-    world.Primodium__spendUpgradeResources(asteroidEntity, unitPrototype, targetLevel);
+    world.Pri_11__spendUpgradeResources(asteroidEntity, unitPrototype, targetLevel);
 
     UnitLevel.set(asteroidEntity, unitPrototype, targetLevel);
   }

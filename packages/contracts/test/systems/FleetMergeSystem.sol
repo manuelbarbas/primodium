@@ -50,7 +50,7 @@ contract FleetMergeSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Pri_11__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     increaseResource(aliceHomeAsteroid, EResource.U_MaxFleets, 1);
@@ -58,17 +58,17 @@ contract FleetMergeSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.warp(block.timestamp + 1);
     vm.startPrank(alice);
-    bytes32 secondFleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 secondFleetEntity = world.Pri_11__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     vm.startPrank(alice);
-    world.Primodium__sendFleet(fleetEntity, bobHomeAsteroid);
-    world.Primodium__sendFleet(secondFleetEntity, bobHomeAsteroid);
+    world.Pri_11__sendFleet(fleetEntity, bobHomeAsteroid);
+    world.Pri_11__sendFleet(secondFleetEntity, bobHomeAsteroid);
     vm.warp(FleetMovement.getArrivalTime(fleetEntity));
     bytes32[] memory fleets = new bytes32[](2);
     fleets[0] = fleetEntity;
     fleets[1] = secondFleetEntity;
-    world.Primodium__mergeFleets(fleets);
+    world.Pri_11__mergeFleets(fleets);
     vm.stopPrank();
 
     assertEq(UnitCount.get(fleetEntity, unitPrototype), 4, "fleet unit count doesn't match");

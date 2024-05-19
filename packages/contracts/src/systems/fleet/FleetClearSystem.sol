@@ -21,7 +21,7 @@ contract FleetClearSystem is PrimodiumSystem {
    */
   function clearFleet(bytes32 fleetEntity) public _onlyFleetOwner(fleetEntity) {
     LibFleetClear.clearFleet(fleetEntity);
-    IWorld(_world()).Primodium__resetFleetIfNoUnitsLeft(fleetEntity);
+    IWorld(_world()).Pri_11__resetFleetIfNoUnitsLeft(fleetEntity);
   }
 
   /**
@@ -43,7 +43,7 @@ contract FleetClearSystem is PrimodiumSystem {
     _resourceCountIsValid(resourceCounts)
   {
     LibFleetClear.clearUnitsAndResourcesFromFleet(fleetEntity, unitCounts, resourceCounts);
-    IWorld(_world()).Primodium__resetFleetIfNoUnitsLeft(fleetEntity);
+    IWorld(_world()).Pri_11__resetFleetIfNoUnitsLeft(fleetEntity);
   }
 
   /**
@@ -57,7 +57,7 @@ contract FleetClearSystem is PrimodiumSystem {
     uint256[] calldata unitCounts
   ) public _onlyOrbiting(fleetEntity) _onlyFleetOwner(fleetEntity) _unitCountIsValid(unitCounts) {
     LibFleetClear.clearUnits(fleetEntity, unitCounts);
-    IWorld(_world()).Primodium__resetFleetIfNoUnitsLeft(fleetEntity);
+    IWorld(_world()).Pri_11__resetFleetIfNoUnitsLeft(fleetEntity);
   }
 
   /**

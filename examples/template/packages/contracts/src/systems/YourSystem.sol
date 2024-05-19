@@ -20,7 +20,7 @@ import { console } from "forge-std/console.sol";
 
 // We're building a System, to extend the System contract
 contract YourSystem is System {
-  bytes14 PRIMODIUM_NAMESPACE = bytes14("Primodium");
+  bytes14 PRIMODIUM_NAMESPACE = bytes14("Pri_11");
 
   function YourFunction() public {
     // we want to read from the Primodium World, not the Extension World

@@ -17,7 +17,7 @@ export async function removeComponent<S extends Schema>(mud: MUD, component: Con
   await execute(
     {
       mud,
-      functionName: "Primodium__devDeleteRecord",
+      functionName: "Pri_11__devDeleteRecord",
       systemId: getSystemId("DevSystem"),
       args: [tableId, key],
       withSession: true,
@@ -45,7 +45,7 @@ export async function setComponentValue<S extends Schema, K extends KeySchema>(
     await execute(
       {
         mud,
-        functionName: "Primodium__devSetField",
+        functionName: "Pri_11__devSetField",
         systemId: getSystemId("DevSystem"),
         args: [tableId, key, schemaIndex, data],
         withSession: true,
