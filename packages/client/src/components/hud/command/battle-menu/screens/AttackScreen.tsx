@@ -17,8 +17,13 @@ import { useMud } from "@/hooks";
 import { useOrbitingFleets } from "@/hooks/useOrbitingFleets";
 import { attack } from "@/network/setup/contractCalls/attack";
 import { clearFleetStance } from "@/network/setup/contractCalls/fleetStance";
+import { alert } from "@/util/alert";
 
-export const Fleet: React.FC<{ fleetEntity: Entity; target: Entity }> = ({ fleetEntity, target }) => {
+export const Fleet: React.FC<{ fleetEntity: Entity; target: Entity; willFriendlyFire: boolean }> = ({
+  fleetEntity,
+  target,
+  willFriendlyFire,
+}) => {
   const mud = useMud();
   const movement = components.FleetMovement.use(fleetEntity);
   const stance = components.FleetStance.use(fleetEntity);
@@ -74,7 +79,18 @@ export const Fleet: React.FC<{ fleetEntity: Entity; target: Entity }> = ({ fleet
         )}
         {!inCooldown && !isFleetEmpty && !stance?.stance && (
           <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Attack, fleetEntity, target)}>
-            <Button size="sm" variant="error" onClick={() => attack(mud, fleetEntity, target)}>
+            <Button
+              size="sm"
+              variant="error"
+              onClick={() =>
+                willFriendlyFire
+                  ? alert(
+                      "You have defending fleets protecting this asteroid. Attacking this asteroid fleet will initiate friendly fire! Are you sure you want to proceed?",
+                      () => attack(mud, fleetEntity, target)
+                    )
+                  : attack(mud, fleetEntity, target)
+              }
+            >
               SELECT
             </Button>
           </TransactionQueueMask>
@@ -89,6 +105,10 @@ export const AttackScreen: React.FC<{ selectedRock: Entity; target: Entity }> = 
   const playerEntity = components.Account.use()?.value;
   const fleets = useOrbitingFleets(selectedRock, playerEntity);
 
+  const willFriendlyFire = useMemo(() => {
+    return !!fleets.find((fleet) => components.FleetStance.get(fleet)?.stance == EFleetStance.Defend);
+  }, [fleets]);
+
   if (!playerEntity) return null;
 
   return (
@@ -100,7 +120,7 @@ export const AttackScreen: React.FC<{ selectedRock: Entity; target: Entity }> = 
           </div>
           <div className="flex flex-col gap-1 h-48 w-96 overflow-y-auto hide-scrollbar">
             {fleets.map((fleet) => (
-              <Fleet key={fleet} fleetEntity={fleet} target={target} />
+              <Fleet key={fleet} fleetEntity={fleet} target={target} willFriendlyFire={willFriendlyFire} />
             ))}
           </div>
         </>

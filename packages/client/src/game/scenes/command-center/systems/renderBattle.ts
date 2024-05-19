@@ -51,7 +51,7 @@ export const renderBattle = (scene: PrimodiumScene) => {
             components.FleetMovement.pauseUpdates(attacker);
             components.BattleTarget.pauseUpdates(singletonEntity);
             if (defenderIsFleet) components.FleetMovement.pauseUpdates(defender);
-            if (!defenderIsFleet) (defenderObj as BaseAsteroid).getFleetContainer().pauseRotation();
+            if (!defenderIsFleet) (defenderObj as BaseAsteroid).getFleetsContainer().pauseRotation();
             attackerObj.fireAt(defenderPosition);
           },
         },
@@ -76,7 +76,7 @@ export const renderBattle = (scene: PrimodiumScene) => {
             components.FleetMovement.resumeUpdates(attacker);
             components.BattleTarget.resumeUpdates(singletonEntity);
             if (defenderIsFleet) components.FleetMovement.resumeUpdates(defender);
-            if (!defenderIsFleet) (defenderObj as BaseAsteroid).getFleetContainer().resumeRotation();
+            if (!defenderIsFleet) (defenderObj as BaseAsteroid).getFleetsContainer().resumeRotation();
             battleRender.destroy();
           },
         },
