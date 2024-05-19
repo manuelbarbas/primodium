@@ -183,8 +183,11 @@ export enum EObjectives {
   BuildStorageUnit,
   UpgradeStorageUnit2,
   BuildIronPlateFactory,
+  UpgradeIronPlateFactory2,
   BuildAlloyFactory,
+  UpgradeAlloyFactory2,
   BuildPVCellFactory,
+  UpgradePVCellFactory2,
 
   // (A-B-A) Production (cont)
   BuildSolarPanel,

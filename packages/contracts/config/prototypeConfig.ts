@@ -3124,24 +3124,34 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_ResourceReward: getResourceValues({ Iron: 200, Copper: 200, Lithium: 200 }),
     },
   },
-  UpgradeStorageUnit3: {
-    tables: {
-      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
-    },
-  },
   BuildIronPlateFactory: {
     tables: {
-      P_ResourceReward: getResourceValues({ IronPlate: 25 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 25, Alloy: 25, PVCell: 25 }),
+    },
+  },
+  UpgradeIronPlateFactory2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 50 }),
     },
   },
   BuildAlloyFactory: {
     tables: {
-      P_ResourceReward: getResourceValues({ Alloy: 25 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 25, Alloy: 25, PVCell: 25 }),
+    },
+  },
+  UpgradeAlloyFactory2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Alloy: 50 }),
     },
   },
   BuildPVCellFactory: {
     tables: {
-      P_ResourceReward: getResourceValues({ PVCell: 25 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 25, Alloy: 25, PVCell: 25 }),
+    },
+  },
+  UpgradePVCellFactory2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ PVCell: 50 }),
     },
   },
 

@@ -790,6 +790,18 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
+    EObjectives.UpgradeIronPlateFactory2,
+    {
+      category: "Resource Production",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildIronPlateFactory],
+      buildingType: EntityType.IronPlateFactory,
+      level: 2n,
+      description:
+        "Upgrade Iron Plate Factories to produce more iron plate by consuming more iron. To upgrade, click on an Iron Plate Factory and select Upgrade.",
+    },
+  ],
+  [
     EObjectives.BuildAlloyFactory,
     {
       category: "Resource Production",
@@ -802,6 +814,18 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
+    EObjectives.UpgradeAlloyFactory2,
+    {
+      category: "Resource Production",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildAlloyFactory],
+      buildingType: EntityType.AlloyFactory,
+      level: 2n,
+      description:
+        "Upgrade Alloy Factories to produce more alloy by consuming more copper. To upgrade, click on an Alloy Factory and select Upgrade.",
+    },
+  ],
+  [
     EObjectives.BuildPVCellFactory,
     {
       category: "Resource Production",
@@ -811,6 +835,18 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.PVCellFactory,
       description:
         "The PV Cell factory produces photovoltaic cells by consuming lithium. To build, select the PV Cell factory in the Blueprints menu and place it on any empty tile.",
+    },
+  ],
+  [
+    EObjectives.UpgradePVCellFactory2,
+    {
+      category: "Resource Production",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildPVCellFactory],
+      buildingType: EntityType.PVCellFactory,
+      level: 2n,
+      description:
+        "Upgrade PV Cell Factories to produce more pv cells by consuming more lithium. To upgrade, click on an PV Cell Factory and select Upgrade.",
     },
   ],
 
