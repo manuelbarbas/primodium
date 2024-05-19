@@ -5,7 +5,6 @@ import { renderFleet } from "@/game/lib/render/renderFleet";
 import { PrimodiumScene } from "@/game/api/scene";
 import { renderShardAsteroid } from "@/game/lib/render/renderShardAsteroid";
 import { renderAsteroid } from "@/game/lib/render/renderAsteroid";
-import { Mode } from "@/util/constants";
 
 export const renderOverview = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -31,7 +30,6 @@ export const renderOverview = (scene: PrimodiumScene) => {
     const asteroid = components.ShardAsteroid.has(entity)
       ? renderShardAsteroid({ scene, entity })
       : renderAsteroid({ scene, entity });
-    components.VisibleAsteroids.set({ value: [entity] }, Mode.CommandCenter);
 
     for (const fleet of runQuery([HasValue(components.FleetMovement, { destination: entity })])) {
       const fleetObject = renderFleet({ scene, entity: fleet });

@@ -31,6 +31,7 @@ export class StaticObjectManager {
   private chunkSize: number;
   private count = 0;
   private onNewObjectCallbacks: ((id: string) => void)[] = [];
+  private onObjectEnterChunkCallbacks: ((id: string) => void)[] = [];
 
   constructor(camera: ReturnType<typeof createCamera>, chunkSize: number) {
     this.chunkSize = chunkSize;
@@ -66,6 +67,7 @@ export class StaticObjectManager {
           object.spawn();
         }
         object.setActive(true).setVisible(true);
+        this.onObjectEnterChunkCallbacks.forEach((callback) => callback(id));
       }
     } else object.spawn();
 
@@ -140,6 +142,15 @@ export class StaticObjectManager {
     };
   }
 
+  onObjectEnterChunk(callback: (id: string) => void) {
+    this.onObjectEnterChunkCallbacks.push(callback);
+
+    return () => {
+      const index = this.onObjectEnterChunkCallbacks.indexOf(callback);
+      if (index !== -1) this.onObjectEnterChunkCallbacks.splice(index, 1);
+    };
+  }
+
   remove(id: string, destroy = false, decrement = false) {
     const object = this.objMap.get(id);
     if (!object) return;
@@ -194,6 +205,7 @@ export class StaticObjectManager {
         object.spawn();
       }
       object.setActive(true).setVisible(true);
+      this.onObjectEnterChunkCallbacks.forEach((callback) => callback(object.name));
     });
 
     // BOUNDING BOXES
@@ -218,7 +230,6 @@ export class StaticObjectManager {
 
     // CONTAINERS
     this.deferredRenderContainerMap.forEach((container) => {
-      container.onEnterChunk(chunkCoord);
       if (!this.chunkManager.isKnownChunk(chunkCoord)) container.onNewEnterChunk(chunkCoord);
     });
   }
@@ -230,7 +241,5 @@ export class StaticObjectManager {
       this.count--;
       object.setActive(false).setVisible(false);
     });
-
-    this.deferredRenderContainerMap.forEach((container) => container.onExitChunk(chunkCoord));
   }
 }

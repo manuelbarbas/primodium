@@ -5,8 +5,6 @@ import { BaseSpawnArgs, DeferredRenderContainer } from "@/game/lib/objects/Defer
 import { FleetsContainer } from "@/game/lib/objects/Asteroid/FleetsContainer";
 import { BaseAsteroid } from "@/game/lib/objects/Asteroid/BaseAsteroid";
 import { ShardAsteroid } from "@/game/lib/objects/Asteroid/ShardAsteroid";
-import { components } from "@/network/components";
-import { Mode } from "@/util/constants";
 
 type AsteroidSpawnArgs = BaseSpawnArgs & {
   spawnsSecondary: boolean;
@@ -79,20 +77,5 @@ export class DeferredAsteroidsRenderContainer extends DeferredRenderContainer<Ba
     if (isNowVisible) {
       (this.asteroids.get(entity) as ShardAsteroid)?.respawn(newPosition);
     }
-  }
-
-  onEnterChunk(chunkCoord: Coord): void {
-    const entities = this.chunkCoords.get(this._scene.utils.encodeKeyForChunk(chunkCoord)) ?? [];
-    const currentAsteroids = components.VisibleAsteroids.get(Mode.Starmap)?.value ?? [];
-    components.VisibleAsteroids.set({ value: [...currentAsteroids, ...entities] }, Mode.Starmap);
-  }
-
-  onExitChunk(chunkCoord: Coord): void {
-    const entities = this.chunkCoords.get(this._scene.utils.encodeKeyForChunk(chunkCoord)) ?? [];
-    const currentAsteroids = components.VisibleAsteroids.get(Mode.Starmap)?.value ?? [];
-    components.VisibleAsteroids.set(
-      { value: currentAsteroids.filter((entity) => !entities.includes(entity)) },
-      Mode.Starmap
-    );
   }
 }

@@ -19,14 +19,13 @@ export type BaseSpawnArgs = {
  * Note: it's good practice to always try to interact with the container if an object _could_ have been deferred; it will redirect either to the object directly if it exists, or perform the operation
  * on the container if it doesn't. Even if the object was directly rendered and has absolutely no knowledge of the container.
  *
- * @dev This class needs to be extended to implement `onEnterChunk` and `onExitChunk`
  * @param args.id A unique id for the container
  * @param args.scene The Primodium scene object
  * @param args.objectApiType The key in the {@link PrimodiumObjectApiMap} to redirect to the associated {@link PrimodiumScene.objects}
  * @param args.spawnCallback The callback to run when each object is spawned (gets visible for the first time)
  * @param args.register Whether to register the object on creation (can be useful to delay registration, for instance after intializing the superclass)
  */
-export abstract class DeferredRenderContainer<
+export class DeferredRenderContainer<
   SpawnedObject extends PrimodiumGameObject = PrimodiumGameObject,
   SpawnArgs extends BaseSpawnArgs = BaseSpawnArgs
 > {
@@ -41,6 +40,7 @@ export abstract class DeferredRenderContainer<
   // shared callback to spawn objects
   private spawnCallback: (args: SpawnArgs) => SpawnedObject | undefined;
   private onObjectSpawnedCallbacks: ((entity: Entity) => void)[] = [];
+  private onEventOnceCallbacks: Map<Entity, () => void> = new Map();
 
   constructor(args: {
     id: Entity;
@@ -141,6 +141,7 @@ export abstract class DeferredRenderContainer<
     entities.forEach((entity) => this.spawn(entity as Entity));
   }
 
+  // TODO: we have this in `StaticObjectManager`, bad code
   onObjectSpawned(callback: (entity: Entity) => void) {
     this.onObjectSpawnedCallbacks.push(callback);
 
@@ -150,6 +151,19 @@ export abstract class DeferredRenderContainer<
     };
   }
 
-  abstract onEnterChunk(chunkCoord: Coord): void;
-  abstract onExitChunk(chunkCoord: Coord): void;
+  addOnEventOnce(entity: Entity, callback: () => void) {
+    this.onEventOnceCallbacks.set(entity, callback);
+  }
+
+  hasOnEventOnce(entity: Entity) {
+    return this.onEventOnceCallbacks.has(entity);
+  }
+
+  runOnEventOnce(entity: Entity) {
+    const callback = this.onEventOnceCallbacks.get(entity);
+    if (callback) {
+      callback();
+      this.onEventOnceCallbacks.delete(entity);
+    }
+  }
 }

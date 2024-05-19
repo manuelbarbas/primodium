@@ -75,16 +75,6 @@ export default function setupClientComponents() {
     }
   );
 
-  const VisibleAsteroids = createExtendedComponent(
-    world,
-    {
-      value: Type.EntityArray,
-    },
-    {
-      id: "VisibleAsteroids",
-    }
-  );
-
   const SelectedFleet = createExtendedEntityComponent(world, { id: "SelectedFleet" });
 
   const Battle = createBattleComponents();
@@ -180,7 +170,6 @@ export default function setupClientComponents() {
     ReverseBuildingPosition,
     TrainingQueue,
     Hangar,
-    VisibleAsteroids,
     SelectedFleet,
     IsObjectiveClaimable,
     Battle,
