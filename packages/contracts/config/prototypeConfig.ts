@@ -1242,49 +1242,49 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       4: {
         P_RequiredBaseLevel: { value: 4n },
-        P_RequiredResources: getResourceValues({ IronPlate: 500, Alloy: 500, PVCell: 500, U_Electricity: 50 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 200, Alloy: 200, PVCell: 200, U_Electricity: 50 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(storageUnitStorageUpgrades[4]),
         },
       },
       5: {
         P_RequiredBaseLevel: { value: 5n },
-        P_RequiredResources: getResourceValues({ IronPlate: 1000, Alloy: 1000, PVCell: 1000, U_Electricity: 50 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 500, Alloy: 500, PVCell: 500, U_Electricity: 50 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(storageUnitStorageUpgrades[5]),
         },
       },
       6: {
         P_RequiredBaseLevel: { value: 6n },
-        P_RequiredResources: getResourceValues({ IronPlate: 2500, Alloy: 2500, PVCell: 2500, U_Electricity: 50 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 1000, Alloy: 1000, PVCell: 1000, U_Electricity: 50 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(storageUnitStorageUpgrades[6]),
         },
       },
       7: {
         P_RequiredBaseLevel: { value: 7n },
-        P_RequiredResources: getResourceValues({ IronPlate: 5000, Alloy: 5000, PVCell: 5000, U_Electricity: 100 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 2000, Alloy: 2000, PVCell: 2000, U_Electricity: 100 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(storageUnitStorageUpgrades[7]),
         },
       },
       8: {
         P_RequiredBaseLevel: { value: 8n },
-        P_RequiredResources: getResourceValues({ IronPlate: 10000, Alloy: 10000, PVCell: 10000, Kimberlite: 100 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 4000, Alloy: 4000, PVCell: 4000, Kimberlite: 100 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(storageUnitStorageUpgrades[8]),
         },
       },
       9: {
         P_RequiredBaseLevel: { value: 10n },
-        P_RequiredResources: getResourceValues({ IronPlate: 20000, Alloy: 20000, PVCell: 20000, Kimberlite: 500 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 8000, Alloy: 8000, PVCell: 8000, Kimberlite: 500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(storageUnitStorageUpgrades[9]),
         },
       },
       10: {
         P_RequiredBaseLevel: { value: 12n },
-        P_RequiredResources: getResourceValues({ IronPlate: 50000, Alloy: 50000, PVCell: 50000, Kimberlite: 1000 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 15000, Alloy: 15000, PVCell: 15000, Kimberlite: 1000 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(storageUnitStorageUpgrades[10]),
         },
