@@ -85,7 +85,7 @@ export const UnitUpgrade: React.FC<{ unit: Entity }> = memo(({ unit }) => {
 
   const nextStats = getUnitStatsLevel(unit, level + 1n);
   return (
-    <SecondaryCard className="flex flex-col gap-2 p-3 justify-between items-center">
+    <SecondaryCard className="flex flex-col gap-4 p-6 justify-between items-center">
       <div className="flex gap-1 absolute top-2 left-1/2 -translate-x-1/2">
         {Array(Number(maxLevel + 1n))
           .fill(0)
