@@ -146,7 +146,7 @@ function getAsteroidData(
   const distributionVal = getByteUInt(asteroidEntity, 7, 12) % 100;
 
   let maxLevel = 8;
-  let primodium = 1n;
+  let primodium = 1n * RESOURCE_SCALE;
 
   const asteroidThresholdProb = components.P_AsteroidThresholdProbConfig.get();
   if (!asteroidThresholdProb) throw new Error("asteroidThresholdProb not found");
@@ -157,29 +157,29 @@ function getAsteroidData(
   if (distributionVal < asteroidThresholdProb.common1) {
     // common resources
     maxLevel = 1; // micro
-    primodium = 1n;
+    primodium = 1n * RESOURCE_SCALE;
     mapId = EMap.Common;
   } else if (distributionVal < asteroidThresholdProb.common2) {
     // common + advanced resources
     maxLevel = 3; // small
-    primodium = 2n;
+    primodium = 2n * RESOURCE_SCALE;
     mapId = EMap.Common;
   } else if (distributionVal < asteroidThresholdProb.eliteMicro) {
     // elite resources, micro
     maxLevel = 1;
-    primodium = 3n;
+    primodium = 3n * RESOURCE_SCALE;
   } else if (distributionVal < asteroidThresholdProb.eliteSmall) {
     // elite resources, small
     maxLevel = 3;
-    primodium = 4n;
+    primodium = 4n * RESOURCE_SCALE;
   } else if (distributionVal < asteroidThresholdProb.eliteMedium) {
     // elite resources, medium
     maxLevel = 6;
-    primodium = 5n;
+    primodium = 5n * RESOURCE_SCALE;
   } else {
     // elite resources, large
     maxLevel = 8;
-    primodium = 5n;
+    primodium = 5n * RESOURCE_SCALE;
   }
 
   if (mapId != EMap.Common) {

@@ -10,12 +10,15 @@ import { GameHUD } from "@/components/hud";
 import { WidgetProvider } from "src/hooks/providers/WidgetProvider";
 import { CommandBackgroundEffect } from "@/screens/CommandBackgroundEffect";
 import { BackgroundParallaxEffect } from "@/screens/BackgroundParallaxEffect";
+import { useSyncStatus } from "@/hooks/useSyncStatus";
+import { Keys } from "@/util/constants";
 
 const params = new URLSearchParams(window.location.search);
 
 export const Game = () => {
   const mud = useMud();
   const [game, setGame] = useState<PrimodiumGame | null>(null);
+  const { loading: loadingSecondaryData } = useSyncStatus(Keys.SECONDARY);
 
   const destroy = async () => {
     if (game === null) return;
@@ -40,8 +43,15 @@ export const Game = () => {
 
   useEffect(() => {
     if (!game) return;
-    game.runSystems(mud);
+    game.runSystems(mud).primary();
   }, [mud, game]);
+
+  useEffect(() => {
+    if (!game || loadingSecondaryData) return;
+    const { secondary, done } = game.runSystems(mud);
+    secondary();
+    done();
+  }, [mud, game, loadingSecondaryData]);
 
   useEffect(() => {
     init();

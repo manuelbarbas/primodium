@@ -7,6 +7,7 @@ import { Assets, Sprites } from "@primodiumxyz/assets";
 import { AsteroidLabel } from "@/game/lib/objects/Asteroid/AsteroidLabel";
 import { Entity } from "@latticexyz/recs";
 import { isValidClick } from "@/game/lib/objects/inputGuards";
+import { DeferredAsteroidsRenderContainer } from "@/game/lib/objects/Asteroid/DeferredAsteroidsRenderContainer";
 import { LODs } from "@/game/lib/objects/Asteroid/helpers";
 import { DepthLayers } from "@/game/lib/constants/common";
 
@@ -20,30 +21,40 @@ interface LODConfig {
 }
 
 export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IPrimodiumGameObject {
-  private id: Entity;
+  private containerId: Entity | undefined;
   private circle: Phaser.GameObjects.Arc;
   private animationTween: Phaser.Tweens.Tween;
   private interactiveCircle;
+
+  protected id: Entity;
   protected coord: Coord;
   protected _scene: PrimodiumScene;
+  protected fleetsContainer: FleetsContainer;
   protected fleetCount = 0;
   protected spawned = false;
   protected asteroidSprite: Phaser.GameObjects.Sprite;
   protected asteroidLabel: AsteroidLabel;
-  protected fleetsContainer: FleetsContainer;
   protected currentLOD: number = -1;
 
   //fx
   private fireSeq?: Phaser.Time.Timeline;
   private laser?: Phaser.GameObjects.Particles.ParticleEmitter;
 
-  constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord; sprite: Sprites; outlineSprite: Sprites }) {
-    const { id, scene, coord, sprite } = args;
+  constructor(args: {
+    id: Entity;
+    scene: PrimodiumScene;
+    coord: Coord;
+    sprite: Sprites;
+    outlineSprite: Sprites;
+    containerId?: Entity;
+  }) {
+    const { id, scene, coord, sprite, containerId } = args;
     const pixelCoord = scene.utils.tileCoordToPixelCoord(coord);
 
     super(scene.phaserScene, pixelCoord.x, -pixelCoord.y);
 
     this.id = id;
+    this.containerId = containerId;
 
     this.asteroidSprite = new Phaser.GameObjects.Sprite(
       scene.phaserScene,
@@ -73,7 +84,14 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
       .disableInteractive()
       .setDepth(0);
 
-    this.fleetsContainer = new FleetsContainer(scene, { x: pixelCoord.x, y: -pixelCoord.y });
+    let fleetsContainer;
+    if (containerId) {
+      const renderContainer = scene.objects.deferredRenderContainer.getContainer(containerId) as
+        | DeferredAsteroidsRenderContainer
+        | undefined;
+      fleetsContainer = renderContainer?.getFleetsContainers(id);
+    }
+    this.fleetsContainer = fleetsContainer ?? new FleetsContainer(scene, { x: pixelCoord.x, y: -pixelCoord.y });
 
     this.coord = coord;
     this._scene = scene;
@@ -164,14 +182,21 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     return this;
   }
 
+  setPosition(x: number, y: number) {
+    // bail out if it's the super
+    if (this.id === undefined) return super.setPosition(x, y);
+
+    this.asteroidSprite.setPosition(x, y);
+    this.circle.setPosition(x, y);
+    this.fleetsContainer.setPosition(x, y);
+    this.asteroidLabel.setPosition(x, y);
+    return super.setPosition(x, y);
+  }
+
   setTilePosition(coord: Coord) {
     this.coord = coord;
     const pixelCoord = this._scene.utils.tileCoordToPixelCoord(coord);
-    this.asteroidSprite.setPosition(pixelCoord.x, -pixelCoord.y);
-    this.circle.setPosition(pixelCoord.x, -pixelCoord.y);
-    this.fleetsContainer.setPosition(pixelCoord.x, -pixelCoord.y);
-    this.asteroidLabel.setPosition(pixelCoord.x, -pixelCoord.y);
-    return this;
+    return this.setPosition(pixelCoord.x, -pixelCoord.y);
   }
 
   isSpawned() {
@@ -191,7 +216,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     return this.coord;
   }
 
-  getFleetContainer() {
+  getFleetsContainer() {
     return this.fleetsContainer;
   }
 

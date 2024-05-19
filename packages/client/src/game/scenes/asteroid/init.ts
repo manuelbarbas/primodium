@@ -41,5 +41,5 @@ export const initAsteroidScene = async (game: GlobalApi): Promise<PrimodiumScene
   scene.camera.phaserCamera.fadeIn(1000);
   const runSystems = (mud: MUD) => runAsteroidSystems(sceneApi, mud);
 
-  return { ...sceneApi, runSystems };
+  return { ...sceneApi, runSystems, isPrimary: true };
 };

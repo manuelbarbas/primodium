@@ -100,6 +100,7 @@ export enum Sprites {
   Asteroid6 = "sprites/spacerocks/asteroids/asteroid5_6.png",
   Asteroid7 = "sprites/spacerocks/asteroids/asteroid7.png",
   Asteroid8 = "sprites/spacerocks/asteroids/asteroid8.png",
+  WormholeAsteroid = "sprites/spacerocks/wormhole/wormhole_asteroid.png",
 
   Shard = "sprites/shard/shard.png",
 

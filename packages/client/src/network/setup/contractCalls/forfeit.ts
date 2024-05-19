@@ -14,11 +14,10 @@ export const forfeit = async (mud: MUD) => {
     (asteroidEntity: Entity) =>
       ({
         systemId: getSystemId("AbandonAsteroidSystem"),
-        functionName: "Primodium__abandonAsteroid",
+        functionName: "Pri_11__abandonAsteroid",
         args: [asteroidEntity as Hex],
       } as const)
   );
-  console.log({ abandonCalls });
 
   await executeBatch(
     {
@@ -34,7 +33,7 @@ export const abandonAsteroid = async (mud: MUD, asteroidEntity: Entity) => {
     {
       mud,
       systemId: getSystemId("AbandonAsteroidSystem"),
-      functionName: "Primodium__abandonAsteroid",
+      functionName: "Pri_11__abandonAsteroid",
       args: [asteroidEntity as Hex],
     },
     { id: asteroidEntity }

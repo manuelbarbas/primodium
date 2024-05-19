@@ -10,7 +10,7 @@ export const spawn = async (mud: MUD) => {
     {
       mud,
       systemId: getSystemId("SpawnSystem"),
-      functionName: "Primodium__spawn",
+      functionName: "Pri_11__spawn",
       withSession: true,
     },
     { id: singletonEntity },

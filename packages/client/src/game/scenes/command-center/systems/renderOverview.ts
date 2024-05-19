@@ -1,7 +1,6 @@
 import { namespaceWorld, defineComponentSystem, Entity } from "@latticexyz/recs";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { renderAsteroid } from "@/game/lib/render/renderAsteroid";
 import { renderFleet } from "@/game/lib/render/renderFleet";
 import { PrimodiumScene } from "@/game/api/scene";
 import { renderShardAsteroid } from "@/game/lib/render/renderShardAsteroid";
@@ -10,6 +9,7 @@ import { isAsteroidBlocked } from "@/util/asteroid";
 import { getOrbitingFleets } from "@/util/unit";
 import { StanceToIcon } from "@/game/lib/mappings";
 import { EFleetStance } from "contracts/config/enums";
+import { renderAsteroid } from "@/game/lib/render/renderAsteroid";
 
 export const renderOverview = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -24,7 +24,7 @@ export const renderOverview = (scene: PrimodiumScene) => {
 
     if (prevEntity) {
       const asteroid = objects.asteroid.get(prevEntity);
-      asteroid?.getFleetContainer().clearOrbit(true);
+      asteroid?.getFleetsContainer().clearOrbit(true);
       asteroid?.destroy();
     }
 
@@ -47,11 +47,11 @@ export const renderOverview = (scene: PrimodiumScene) => {
           value: fleet,
         });
       });
-      asteroid?.getFleetContainer().addFleet(fleetObject);
+      asteroid?.getFleetsContainer().addFleet(fleetObject);
     }
 
     // set blocked ring if fleet is in block stance
-    if (isAsteroidBlocked(entity)) asteroid?.getFleetContainer().showBlockRing();
+    if (isAsteroidBlocked(entity)) asteroid?.getFleetsContainer().showBlockRing();
 
     //TODO: handle fleet orbit updates
   });
@@ -70,8 +70,8 @@ export const renderOverview = (scene: PrimodiumScene) => {
     const asteroidObj = objects.asteroid.get(asteroidEntity);
 
     if (!entity) {
-      asteroidObj?.getFleetContainer().resumeRotation();
-    } else asteroidObj?.getFleetContainer().pauseRotation();
+      asteroidObj?.getFleetsContainer().resumeRotation();
+    } else asteroidObj?.getFleetsContainer().pauseRotation();
 
     //set outlines
     const obj = components.IsFleet.get(entity)?.value
@@ -103,13 +103,13 @@ export const renderOverview = (scene: PrimodiumScene) => {
     const asteroidObj = objects.asteroid.get(asteroid ?? singletonEntity);
     if (!stance) {
       fleetObj.hideStanceIcon(true);
-      if (asteroidObj?.getFleetContainer().getFleetCount() === 1 || !isAsteroidBlocked(asteroid ?? singletonEntity))
-        asteroidObj?.getFleetContainer().hideBlockRing(true);
+      if (asteroidObj?.getFleetsContainer().getFleetCount() === 1 || !isAsteroidBlocked(asteroid ?? singletonEntity))
+        asteroidObj?.getFleetsContainer().hideBlockRing(true);
       return;
     }
 
     fleetObj.setStanceIcon(StanceToIcon[stance as EFleetStance], true, true);
 
-    if (stance === EFleetStance.Block) asteroidObj?.getFleetContainer().showBlockRing(true);
+    if (stance === EFleetStance.Block) asteroidObj?.getFleetsContainer().showBlockRing(true);
   });
 };

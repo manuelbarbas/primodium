@@ -42,6 +42,7 @@ import Fleet from "../icons/UI_Fleet.png?url";
 import Discord from "../icons/discord.svg?url";
 import Twitter from "../icons/x-twitter.svg?url";
 import EnemyFleet from "../icons/UI_Ship_Enemy.png?url";
+import Cooldown from "../sprites/cooldown/cooldown.gif";
 
 export const InterfaceIcons = {
   Add,
@@ -59,6 +60,7 @@ export const InterfaceIcons = {
   Chat,
   Command,
   Defense,
+  Cooldown,
   Crosshairs,
   Debug,
   Discord,

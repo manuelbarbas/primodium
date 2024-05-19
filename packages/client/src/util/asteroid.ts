@@ -11,21 +11,29 @@ import { getEntityTypeName } from "./common";
 import { EntityType, ResourceStorages, RockRelationship } from "./constants";
 import { getFullResourceCount } from "./resource";
 import { getOrbitingFleets } from "./unit";
+import { getPrimarySprite, getSecondarySprite } from "@/game/lib/objects/Asteroid/helpers";
 
-//TODO: proper implementation, this is just a placeholder so stuff doesn't break.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function getAsteroidImage(primodium: PrimodiumGame, asteroid: Entity) {
-  if (!asteroid) return InterfaceIcons.NotAllowed;
   const isShard = comps.ShardAsteroid.has(asteroid);
   if (isShard) {
     return InterfaceIcons.Shard;
   }
 
-  const level = comps.Level.get(asteroid)?.value;
-  level;
+  const asteroidData = comps.Asteroid.get(asteroid);
+  if (!asteroidData) return InterfaceIcons.NotAllowed;
 
   const { getSpriteBase64 } = primodium.ASTEROID.sprite;
-  return getSpriteBase64(Sprites.Asteroid1);
+  if (asteroidData.wormhole) return getSpriteBase64(Sprites.WormholeAsteroid);
+
+  const isPrimary = asteroidData.spawnsSecondary;
+  if (!isPrimary) {
+    const resource = MapIdToAsteroidType[asteroidData.mapId] ?? EntityType.Kimberlite;
+    const sprite = getSecondarySprite(resource, asteroidData.maxLevel);
+    return getSpriteBase64(sprite);
+  }
+  const level = comps.Level.get(asteroid)?.value;
+  if (!level) return InterfaceIcons.Asteroid;
+  return getSpriteBase64(getPrimarySprite(level));
 }
 
 export function getAsteroidEmblem(primodium: PrimodiumGame, asteroid?: Entity) {

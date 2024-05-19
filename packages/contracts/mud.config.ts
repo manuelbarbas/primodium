@@ -10,7 +10,7 @@ import { ConfigWithPrototypes } from "./ts/prototypes/types";
 /* -------------------------------------------------------------------------- */
 
 export const worldInput = {
-  namespace: "Primodium",
+  namespace: "Pri_11",
   systems: {
     // these systems are closed access by default
     S_ProductionRateSystem: {},

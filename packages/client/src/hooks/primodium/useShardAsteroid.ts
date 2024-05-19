@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { components } from "src/network/components";
 import { EntityType, SPEED_SCALE } from "src/util/constants";
 import { useFullResourceCount } from "../useFullResourceCount";
+import { entityToShardData } from "@/util/name";
 
 export const useShardAsteroid = (entity: Entity) => {
   const conquestConfigData = components.P_ConquestConfig.use();
@@ -17,6 +18,8 @@ export const useShardAsteroid = (entity: Entity) => {
     EntityType.Encryption,
     entity
   );
+
+  const shardNameData = entityToShardData(entity);
 
   const timeData = useMemo(() => {
     if (!conquestConfigData || !shardAsteroid) return null;
@@ -37,6 +40,8 @@ export const useShardAsteroid = (entity: Entity) => {
 
     return {
       distance: shardAsteroid.distanceFromCenter,
+      name: shardNameData?.name,
+      description: shardNameData?.description,
       points: conquestConfigData.shardAsteroidPoints,
       lifespan,
       regen: conquestConfigData.shardAsteroidEncryptionRegen,

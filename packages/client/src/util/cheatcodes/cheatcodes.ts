@@ -14,6 +14,7 @@ import { MUD } from "src/network/types";
 import { encodeEntity, toHex32 } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
+import { waitForTransactionReceipt } from "viem/actions";
 import { getEntityTypeName } from "../common";
 import {
   BuildingEnumLookup,
@@ -270,18 +271,44 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
     const networkConfig = getNetworkConfig();
     const clientOptions = {
       chain: networkConfig.chain,
-      transport: transportObserver(fallback([webSocket(), http()])),
+      transport: transportObserver(fallback([webSocket(networkConfig.chain.rpcUrls.default.http[0]), http()])),
       pollingInterval: 1000,
     };
 
-    for (let i = 0; i < count; i++) {
+    const walletClients = Array.from({ length: count }, () => {
       const privateKey = generatePrivateKey();
       const burnerAccount = createBurnerAccount(privateKey as Hex);
 
-      const burnerWalletClient = createWalletClient({
+      return createWalletClient({
         ...clientOptions,
         account: burnerAccount,
       });
+    });
+
+    // prepare enough ETH to each account for spawning if on caldera sepolia
+    if (networkConfig.chain.id === 10017) {
+      const playerAddress = mud.sessionAccount?.address ?? mud.playerAccount.address;
+      const requiredAmountToSpawn = BigInt(1e14);
+
+      let balance = await mud.network.publicClient.getBalance({ address: playerAddress });
+      while (balance < requiredAmountToSpawn * BigInt(count)) {
+        console.log("Not enough balance to spawn players, dripping funds");
+        await mud.requestDrip(playerAddress);
+        balance = await mud.network.publicClient.getBalance({ address: playerAddress });
+      }
+    }
+
+    for (let i = 0; i < count; i++) {
+      const burnerWalletClient = walletClients[i];
+      // send some ETH to the burner account for spawning if on caldera sepolia
+      if (networkConfig.chain.id === 10017) {
+        const player = mud.sessionAccount ?? mud.playerAccount;
+        const hash = await player.walletClient.sendTransaction({
+          to: burnerWalletClient.account.address,
+          value: BigInt(1e14),
+        });
+        await waitForTransactionReceipt(mud.network.publicClient, { hash });
+      }
 
       const worldContract = getContract({
         address: networkConfig.worldAddress as Hex,
@@ -293,8 +320,8 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
       });
 
       const randomName = Math.random().toString(36).substring(7);
-      await worldContract.write.Primodium__spawn();
-      await worldContract.write.Primodium__create([
+      await worldContract.write.Pri_11__spawn();
+      await worldContract.write.Pri_11__create([
         toHex32(randomName.substring(0, 6).toUpperCase()),
         EAllianceInviteMode.Closed,
       ]);

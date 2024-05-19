@@ -31,10 +31,10 @@ export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
   let error = "";
   if (atMaxLevel) {
     error = "reached max expansion";
-  } else if (!hasEnough) {
-    error = "Not enough resources";
   } else if (mainBaseLevel < mainBaseLvlReq) {
     error = `Mainbase lvl. ${mainBaseLvlReq} required`;
+  } else if (!hasEnough) {
+    error = "Not enough resources";
   }
   return (
     <SecondaryCard className="w-full items-center space-y-2">

@@ -33,7 +33,7 @@ type FormatOptions = { fractionDigits?: number; short?: boolean; showZero?: bool
 export const bigintMax = (a: bigint, b: bigint) => (a > b ? a : b);
 export const bigintMin = (a: bigint, b: bigint) => (a < b ? a : b);
 export const formatResourceCount = (resource: Entity, amountRaw: bigint, formatOptions?: FormatOptions) => {
-  if (amountRaw === 0n) return formatOptions?.showZero ? "0" : "--";
+  if (amountRaw === 0n) return formatOptions?.showZero ? "0" : "—";
   const decimals = getResourceDecimals(resource);
 
   const formatted = Number(formatUnits(amountRaw, decimals));

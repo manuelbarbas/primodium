@@ -5,7 +5,7 @@
     },
     "textures": [
         {
-            "image": "atlas.png?timestamp=1715893863833",
+            "image": "atlas.png?timestamp=1716140463631",
             "format": "RGBA8888",
             "size": {
                 "w": 2750,
@@ -6209,6 +6209,27 @@
                     }
                 },
                 {
+                    "filename": "sprites/cooldown/cooldown.gif",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 96
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 96
+                    },
+                    "frame": {
+                        "x": 2398,
+                        "y": 2035,
+                        "w": 96,
+                        "h": 96
+                    }
+                },
+                {
                     "filename": "sprites/units/colonyship.png",
                     "rotated": false,
                     "trimmed": false,
@@ -6224,7 +6245,7 @@
                     },
                     "frame": {
                         "x": 2398,
-                        "y": 2035,
+                        "y": 2131,
                         "w": 96,
                         "h": 64
                     }
@@ -6245,34 +6266,13 @@
                     },
                     "frame": {
                         "x": 2398,
-                        "y": 2099,
-                        "w": 96,
-                        "h": 96
-                    }
-                },
-                {
-                    "filename": "sprites/vault/level1/Vault_LVL1_10.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 96,
-                        "h": 96
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 96,
-                        "h": 96
-                    },
-                    "frame": {
-                        "x": 2398,
                         "y": 2195,
                         "w": 96,
                         "h": 96
                     }
                 },
                 {
-                    "filename": "sprites/vault/level1/Vault_LVL1_12.png",
+                    "filename": "sprites/vault/level1/Vault_LVL1_10.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6293,7 +6293,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level1/Vault_LVL1_13.png",
+                    "filename": "sprites/vault/level1/Vault_LVL1_12.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6314,7 +6314,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level1/Vault_LVL1_14.png",
+                    "filename": "sprites/vault/level1/Vault_LVL1_13.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6335,7 +6335,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level1/Vault_LVL1_2.png",
+                    "filename": "sprites/vault/level1/Vault_LVL1_14.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6356,7 +6356,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level1/Vault_LVL1_5.png",
+                    "filename": "sprites/vault/level1/Vault_LVL1_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6377,7 +6377,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level1/Vault_LVL1_6.png",
+                    "filename": "sprites/vault/level1/Vault_LVL1_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6398,7 +6398,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level1/Vault_LVL1_7.png",
+                    "filename": "sprites/vault/level1/Vault_LVL1_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6419,7 +6419,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level1/Vault_LVL1_8.png",
+                    "filename": "sprites/vault/level1/Vault_LVL1_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6440,7 +6440,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level1/Vault_LVL1_9.png",
+                    "filename": "sprites/vault/level1/Vault_LVL1_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6461,7 +6461,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level2/Vault_LVL2_1.png",
+                    "filename": "sprites/vault/level1/Vault_LVL1_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6482,7 +6482,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level2/Vault_LVL2_10.png",
+                    "filename": "sprites/vault/level2/Vault_LVL2_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6503,7 +6503,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level2/Vault_LVL2_12.png",
+                    "filename": "sprites/vault/level2/Vault_LVL2_10.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6524,7 +6524,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level2/Vault_LVL2_13.png",
+                    "filename": "sprites/vault/level2/Vault_LVL2_12.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6545,7 +6545,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level2/Vault_LVL2_14.png",
+                    "filename": "sprites/vault/level2/Vault_LVL2_13.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6566,7 +6566,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level2/Vault_LVL2_2.png",
+                    "filename": "sprites/vault/level2/Vault_LVL2_14.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6587,7 +6587,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level2/Vault_LVL2_5.png",
+                    "filename": "sprites/vault/level2/Vault_LVL2_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6608,7 +6608,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level2/Vault_LVL2_6.png",
+                    "filename": "sprites/vault/level2/Vault_LVL2_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6629,7 +6629,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level2/Vault_LVL2_7.png",
+                    "filename": "sprites/vault/level2/Vault_LVL2_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6650,7 +6650,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level2/Vault_LVL2_8.png",
+                    "filename": "sprites/vault/level2/Vault_LVL2_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6671,7 +6671,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level2/Vault_LVL2_9.png",
+                    "filename": "sprites/vault/level2/Vault_LVL2_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6692,7 +6692,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level3/Vault_LVL3_1.png",
+                    "filename": "sprites/vault/level2/Vault_LVL2_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6713,7 +6713,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level3/Vault_LVL3_10.png",
+                    "filename": "sprites/vault/level3/Vault_LVL3_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6734,7 +6734,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level3/Vault_LVL3_12.png",
+                    "filename": "sprites/vault/level3/Vault_LVL3_10.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6755,7 +6755,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level3/Vault_LVL3_13.png",
+                    "filename": "sprites/vault/level3/Vault_LVL3_12.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6776,7 +6776,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level3/Vault_LVL3_14.png",
+                    "filename": "sprites/vault/level3/Vault_LVL3_13.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6797,7 +6797,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level3/Vault_LVL3_2.png",
+                    "filename": "sprites/vault/level3/Vault_LVL3_14.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6818,7 +6818,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level3/Vault_LVL3_5.png",
+                    "filename": "sprites/vault/level3/Vault_LVL3_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6839,7 +6839,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level3/Vault_LVL3_6.png",
+                    "filename": "sprites/vault/level3/Vault_LVL3_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6860,7 +6860,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level3/Vault_LVL3_7.png",
+                    "filename": "sprites/vault/level3/Vault_LVL3_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6881,7 +6881,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level3/Vault_LVL3_8.png",
+                    "filename": "sprites/vault/level3/Vault_LVL3_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6902,7 +6902,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level3/Vault_LVL3_9.png",
+                    "filename": "sprites/vault/level3/Vault_LVL3_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -6918,6 +6918,27 @@
                     "frame": {
                         "x": 2494,
                         "y": 960,
+                        "w": 96,
+                        "h": 96
+                    }
+                },
+                {
+                    "filename": "sprites/vault/level3/Vault_LVL3_9.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 96
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 96
+                    },
+                    "frame": {
+                        "x": 2494,
+                        "y": 1056,
                         "w": 96,
                         "h": 96
                     }
@@ -7253,7 +7274,7 @@
                     },
                     "frame": {
                         "x": 2494,
-                        "y": 1056,
+                        "y": 1152,
                         "w": 64,
                         "h": 82
                     }
@@ -7274,7 +7295,7 @@
                     },
                     "frame": {
                         "x": 2494,
-                        "y": 1138,
+                        "y": 1234,
                         "w": 64,
                         "h": 82
                     }
@@ -7295,7 +7316,7 @@
                     },
                     "frame": {
                         "x": 2494,
-                        "y": 1220,
+                        "y": 1316,
                         "w": 64,
                         "h": 82
                     }
@@ -7316,7 +7337,7 @@
                     },
                     "frame": {
                         "x": 2494,
-                        "y": 1302,
+                        "y": 1398,
                         "w": 64,
                         "h": 82
                     }
@@ -7337,7 +7358,7 @@
                     },
                     "frame": {
                         "x": 2494,
-                        "y": 1384,
+                        "y": 1480,
                         "w": 64,
                         "h": 82
                     }
@@ -7358,7 +7379,7 @@
                     },
                     "frame": {
                         "x": 2494,
-                        "y": 1466,
+                        "y": 1562,
                         "w": 64,
                         "h": 82
                     }
@@ -7379,7 +7400,7 @@
                     },
                     "frame": {
                         "x": 2494,
-                        "y": 1548,
+                        "y": 1644,
                         "w": 64,
                         "h": 82
                     }
@@ -7400,7 +7421,7 @@
                     },
                     "frame": {
                         "x": 2494,
-                        "y": 1630,
+                        "y": 1726,
                         "w": 64,
                         "h": 82
                     }
@@ -7421,7 +7442,7 @@
                     },
                     "frame": {
                         "x": 2494,
-                        "y": 1712,
+                        "y": 1808,
                         "w": 64,
                         "h": 82
                     }
@@ -7442,7 +7463,7 @@
                     },
                     "frame": {
                         "x": 2494,
-                        "y": 1794,
+                        "y": 1890,
                         "w": 64,
                         "h": 82
                     }
@@ -7463,7 +7484,7 @@
                     },
                     "frame": {
                         "x": 2494,
-                        "y": 1876,
+                        "y": 1972,
                         "w": 64,
                         "h": 82
                     }
@@ -7484,7 +7505,7 @@
                     },
                     "frame": {
                         "x": 2494,
-                        "y": 1958,
+                        "y": 2054,
                         "w": 64,
                         "h": 82
                     }
@@ -7505,7 +7526,7 @@
                     },
                     "frame": {
                         "x": 2494,
-                        "y": 2040,
+                        "y": 2136,
                         "w": 64,
                         "h": 82
                     }
@@ -7526,7 +7547,7 @@
                     },
                     "frame": {
                         "x": 2494,
-                        "y": 2122,
+                        "y": 2218,
                         "w": 64,
                         "h": 82
                     }
@@ -7546,8 +7567,8 @@
                         "h": 82
                     },
                     "frame": {
-                        "x": 2494,
-                        "y": 2204,
+                        "x": 2486,
+                        "y": 2300,
                         "w": 64,
                         "h": 82
                     }
@@ -7567,35 +7588,14 @@
                         "h": 82
                     },
                     "frame": {
-                        "x": 2494,
-                        "y": 2286,
+                        "x": 2486,
+                        "y": 2382,
                         "w": 64,
                         "h": 82
                     }
                 },
                 {
                     "filename": "sprites/plating-factory/level1/Plating_Factory_LVL1_4.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 82
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 82
-                    },
-                    "frame": {
-                        "x": 2486,
-                        "y": 2368,
-                        "w": 64,
-                        "h": 82
-                    }
-                },
-                {
-                    "filename": "sprites/plating-factory/level1/Plating_Factory_LVL1_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -7616,7 +7616,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/plating-factory/level1/Plating_Factory_LVL1_6.png",
+                    "filename": "sprites/plating-factory/level1/Plating_Factory_LVL1_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -7637,7 +7637,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/plating-factory/level1/Plating_Factory_LVL1_7.png",
+                    "filename": "sprites/plating-factory/level1/Plating_Factory_LVL1_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -7658,7 +7658,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/plating-factory/level1/Plating_Factory_LVL1_8.png",
+                    "filename": "sprites/plating-factory/level1/Plating_Factory_LVL1_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -7679,7 +7679,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/plating-factory/level1/Plating_Factory_LVL1_9.png",
+                    "filename": "sprites/plating-factory/level1/Plating_Factory_LVL1_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -7700,7 +7700,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/plating-factory/level2/Plating_Factory_LVL2_1.png",
+                    "filename": "sprites/plating-factory/level1/Plating_Factory_LVL1_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -7721,7 +7721,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/plating-factory/level2/Plating_Factory_LVL2_2.png",
+                    "filename": "sprites/plating-factory/level2/Plating_Factory_LVL2_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -7742,7 +7742,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/plating-factory/level2/Plating_Factory_LVL2_3.png",
+                    "filename": "sprites/plating-factory/level2/Plating_Factory_LVL2_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -7763,7 +7763,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/plating-factory/level2/Plating_Factory_LVL2_4.png",
+                    "filename": "sprites/plating-factory/level2/Plating_Factory_LVL2_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -7784,7 +7784,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/plating-factory/level2/Plating_Factory_LVL2_5.png",
+                    "filename": "sprites/plating-factory/level2/Plating_Factory_LVL2_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -7805,7 +7805,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/plating-factory/level2/Plating_Factory_LVL2_6.png",
+                    "filename": "sprites/plating-factory/level2/Plating_Factory_LVL2_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -7826,7 +7826,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/plating-factory/level2/Plating_Factory_LVL2_7.png",
+                    "filename": "sprites/plating-factory/level2/Plating_Factory_LVL2_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -7847,7 +7847,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/plating-factory/level2/Plating_Factory_LVL2_8.png",
+                    "filename": "sprites/plating-factory/level2/Plating_Factory_LVL2_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -7868,7 +7868,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/plating-factory/level2/Plating_Factory_LVL2_9.png",
+                    "filename": "sprites/plating-factory/level2/Plating_Factory_LVL2_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -7889,28 +7889,28 @@
                     }
                 },
                 {
-                    "filename": "sprites/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_1.png",
+                    "filename": "sprites/plating-factory/level2/Plating_Factory_LVL2_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
                         "w": 64,
-                        "h": 80
+                        "h": 82
                     },
                     "spriteSourceSize": {
                         "x": 0,
                         "y": 0,
                         "w": 64,
-                        "h": 80
+                        "h": 82
                     },
                     "frame": {
                         "x": 896,
                         "y": 2514,
                         "w": 64,
-                        "h": 80
+                        "h": 82
                     }
                 },
                 {
-                    "filename": "sprites/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_2.png",
+                    "filename": "sprites/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -7931,7 +7931,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_3.png",
+                    "filename": "sprites/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -7952,7 +7952,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_4.png",
+                    "filename": "sprites/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -7973,7 +7973,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_5.png",
+                    "filename": "sprites/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -7994,7 +7994,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_6.png",
+                    "filename": "sprites/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8015,7 +8015,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_7.png",
+                    "filename": "sprites/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8036,7 +8036,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_1.png",
+                    "filename": "sprites/photovoltaic-cell-factory/level1/Photovoltaic_Factory_LVL1_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8057,7 +8057,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_2.png",
+                    "filename": "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8078,7 +8078,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_3.png",
+                    "filename": "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8099,7 +8099,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_4.png",
+                    "filename": "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8120,7 +8120,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_5.png",
+                    "filename": "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8141,7 +8141,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_6.png",
+                    "filename": "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8162,7 +8162,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_7.png",
+                    "filename": "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8177,6 +8177,27 @@
                     },
                     "frame": {
                         "x": 1728,
+                        "y": 2514,
+                        "w": 64,
+                        "h": 80
+                    }
+                },
+                {
+                    "filename": "sprites/photovoltaic-cell-factory/level2/Photovoltaic_Factory_LVL2_7.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 80
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 80
+                    },
+                    "frame": {
+                        "x": 1792,
                         "y": 2514,
                         "w": 64,
                         "h": 80
@@ -8218,7 +8239,7 @@
                         "h": 76
                     },
                     "frame": {
-                        "x": 1792,
+                        "x": 1856,
                         "y": 2514,
                         "w": 64,
                         "h": 76
@@ -8239,7 +8260,7 @@
                         "h": 76
                     },
                     "frame": {
-                        "x": 1856,
+                        "x": 1920,
                         "y": 2514,
                         "w": 64,
                         "h": 76
@@ -8260,7 +8281,7 @@
                         "h": 76
                     },
                     "frame": {
-                        "x": 1920,
+                        "x": 1984,
                         "y": 2514,
                         "w": 64,
                         "h": 76
@@ -8281,7 +8302,7 @@
                         "h": 76
                     },
                     "frame": {
-                        "x": 1984,
+                        "x": 2048,
                         "y": 2514,
                         "w": 64,
                         "h": 76
@@ -8302,27 +8323,6 @@
                         "h": 76
                     },
                     "frame": {
-                        "x": 2048,
-                        "y": 2514,
-                        "w": 64,
-                        "h": 76
-                    }
-                },
-                {
-                    "filename": "sprites/storage-facility/level3/Storage_Facility_LVL3_4.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 76
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 76
-                    },
-                    "frame": {
                         "x": 2112,
                         "y": 2500,
                         "w": 64,
@@ -8330,7 +8330,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/storage-facility/level3/Storage_Facility_LVL3_5.png",
+                    "filename": "sprites/storage-facility/level3/Storage_Facility_LVL3_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8351,7 +8351,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/storage-facility/level3/Storage_Facility_LVL3_6.png",
+                    "filename": "sprites/storage-facility/level3/Storage_Facility_LVL3_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8372,28 +8372,28 @@
                     }
                 },
                 {
-                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_1.png",
+                    "filename": "sprites/storage-facility/level3/Storage_Facility_LVL3_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
                         "w": 64,
-                        "h": 75
+                        "h": 76
                     },
                     "spriteSourceSize": {
                         "x": 0,
                         "y": 0,
                         "w": 64,
-                        "h": 75
+                        "h": 76
                     },
                     "frame": {
                         "x": 2304,
                         "y": 2486,
                         "w": 64,
-                        "h": 75
+                        "h": 76
                     }
                 },
                 {
-                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_15.png",
+                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8414,7 +8414,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_2.png",
+                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_15.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8435,49 +8435,28 @@
                     }
                 },
                 {
+                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_2.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 75
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 75
+                    },
+                    "frame": {
+                        "x": 2496,
+                        "y": 2464,
+                        "w": 64,
+                        "h": 75
+                    }
+                },
+                {
                     "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_3.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 75
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 75
-                    },
-                    "frame": {
-                        "x": 2496,
-                        "y": 2450,
-                        "w": 64,
-                        "h": 75
-                    }
-                },
-                {
-                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_4.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 75
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 75
-                    },
-                    "frame": {
-                        "x": 2496,
-                        "y": 2525,
-                        "w": 64,
-                        "h": 75
-                    }
-                },
-                {
-                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8498,7 +8477,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_6.png",
+                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8519,7 +8498,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_7.png",
+                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8540,7 +8519,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_8.png",
+                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8561,7 +8540,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_9.png",
+                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8582,7 +8561,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_1.png",
+                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8603,7 +8582,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_10.png",
+                    "filename": "sprites/solar-panels/level1/Solar_Panels_LVL1_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8624,7 +8603,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_11.png",
+                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8645,7 +8624,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_12.png",
+                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_10.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8666,7 +8645,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_15.png",
+                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_11.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8687,7 +8666,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_16.png",
+                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_12.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8708,7 +8687,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_17.png",
+                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_15.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8729,7 +8708,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_2.png",
+                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_16.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8750,7 +8729,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_3.png",
+                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_17.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8771,7 +8750,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_4.png",
+                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -8792,6 +8771,48 @@
                     }
                 },
                 {
+                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_3.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 75
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 75
+                    },
+                    "frame": {
+                        "x": 2590,
+                        "y": 1125,
+                        "w": 64,
+                        "h": 75
+                    }
+                },
+                {
+                    "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_4.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 75
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 75
+                    },
+                    "frame": {
+                        "x": 2560,
+                        "y": 1200,
+                        "w": 64,
+                        "h": 75
+                    }
+                },
+                {
                     "filename": "sprites/solar-panels/level2/Solar_Panels_LVL2_5.png",
                     "rotated": false,
                     "trimmed": false,
@@ -8806,8 +8827,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 2550,
-                        "y": 2368,
+                        "x": 2560,
+                        "y": 1275,
                         "w": 64,
                         "h": 75
                     }
@@ -8828,7 +8849,7 @@
                     },
                     "frame": {
                         "x": 2560,
-                        "y": 2443,
+                        "y": 1350,
                         "w": 64,
                         "h": 75
                     }
@@ -8849,7 +8870,7 @@
                     },
                     "frame": {
                         "x": 2560,
-                        "y": 2518,
+                        "y": 1425,
                         "w": 64,
                         "h": 75
                     }
@@ -8869,8 +8890,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 2558,
-                        "y": 1125,
+                        "x": 2560,
+                        "y": 1500,
                         "w": 64,
                         "h": 75
                     }
@@ -8890,8 +8911,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 2558,
-                        "y": 1200,
+                        "x": 2560,
+                        "y": 1575,
                         "w": 64,
                         "h": 75
                     }
@@ -8911,8 +8932,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 2558,
-                        "y": 1275,
+                        "x": 2560,
+                        "y": 1650,
                         "w": 64,
                         "h": 74
                     }
@@ -8932,8 +8953,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 2558,
-                        "y": 1349,
+                        "x": 2560,
+                        "y": 1724,
                         "w": 64,
                         "h": 74
                     }
@@ -8953,8 +8974,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 2558,
-                        "y": 1423,
+                        "x": 2560,
+                        "y": 1798,
                         "w": 64,
                         "h": 74
                     }
@@ -8974,8 +8995,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 2558,
-                        "y": 1497,
+                        "x": 2560,
+                        "y": 1872,
                         "w": 64,
                         "h": 74
                     }
@@ -8995,8 +9016,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 2558,
-                        "y": 1571,
+                        "x": 2560,
+                        "y": 1946,
                         "w": 64,
                         "h": 74
                     }
@@ -9016,8 +9037,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 2558,
-                        "y": 1645,
+                        "x": 2560,
+                        "y": 2020,
                         "w": 64,
                         "h": 74
                     }
@@ -9037,8 +9058,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 2558,
-                        "y": 1719,
+                        "x": 2560,
+                        "y": 2094,
                         "w": 64,
                         "h": 74
                     }
@@ -9058,8 +9079,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 2558,
-                        "y": 1793,
+                        "x": 2560,
+                        "y": 2168,
                         "w": 64,
                         "h": 74
                     }
@@ -9079,8 +9100,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 2558,
-                        "y": 1867,
+                        "x": 2560,
+                        "y": 2242,
                         "w": 64,
                         "h": 74
                     }
@@ -9100,8 +9121,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 2558,
-                        "y": 1941,
+                        "x": 2560,
+                        "y": 2316,
                         "w": 64,
                         "h": 74
                     }
@@ -9121,8 +9142,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 2558,
-                        "y": 2015,
+                        "x": 2550,
+                        "y": 2390,
                         "w": 64,
                         "h": 74
                     }
@@ -9142,56 +9163,14 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 2558,
-                        "y": 2089,
+                        "x": 2560,
+                        "y": 2464,
                         "w": 64,
                         "h": 74
                     }
                 },
                 {
                     "filename": "sprites/workshop/level1/Workshop_LVL1_10.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 74
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 74
-                    },
-                    "frame": {
-                        "x": 2558,
-                        "y": 2163,
-                        "w": 64,
-                        "h": 74
-                    }
-                },
-                {
-                    "filename": "sprites/workshop/level1/Workshop_LVL1_11.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 64,
-                        "h": 74
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 64,
-                        "h": 74
-                    },
-                    "frame": {
-                        "x": 2558,
-                        "y": 2237,
-                        "w": 64,
-                        "h": 74
-                    }
-                },
-                {
-                    "filename": "sprites/workshop/level1/Workshop_LVL1_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -9212,7 +9191,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/workshop/level1/Workshop_LVL1_3.png",
+                    "filename": "sprites/workshop/level1/Workshop_LVL1_11.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -9233,7 +9212,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/workshop/level1/Workshop_LVL1_4.png",
+                    "filename": "sprites/workshop/level1/Workshop_LVL1_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -9254,7 +9233,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/workshop/level1/Workshop_LVL1_5.png",
+                    "filename": "sprites/workshop/level1/Workshop_LVL1_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -9275,7 +9254,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/workshop/level1/Workshop_LVL1_6.png",
+                    "filename": "sprites/workshop/level1/Workshop_LVL1_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -9296,7 +9275,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/workshop/level1/Workshop_LVL1_7.png",
+                    "filename": "sprites/workshop/level1/Workshop_LVL1_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -9317,7 +9296,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/workshop/level1/Workshop_LVL1_8.png",
+                    "filename": "sprites/workshop/level1/Workshop_LVL1_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -9338,7 +9317,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/workshop/level1/Workshop_LVL1_9.png",
+                    "filename": "sprites/workshop/level1/Workshop_LVL1_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -9353,7 +9332,49 @@
                     },
                     "frame": {
                         "x": 448,
-                        "y": 2600,
+                        "y": 2596,
+                        "w": 64,
+                        "h": 74
+                    }
+                },
+                {
+                    "filename": "sprites/workshop/level1/Workshop_LVL1_8.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 74
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 74
+                    },
+                    "frame": {
+                        "x": 512,
+                        "y": 2596,
+                        "w": 64,
+                        "h": 74
+                    }
+                },
+                {
+                    "filename": "sprites/workshop/level1/Workshop_LVL1_9.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 64,
+                        "h": 74
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 64,
+                        "h": 74
+                    },
+                    "frame": {
+                        "x": 576,
+                        "y": 2596,
                         "w": 64,
                         "h": 74
                     }
@@ -9373,8 +9394,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 512,
-                        "y": 2600,
+                        "x": 640,
+                        "y": 2596,
                         "w": 64,
                         "h": 74
                     }
@@ -9394,8 +9415,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 576,
-                        "y": 2600,
+                        "x": 704,
+                        "y": 2596,
                         "w": 64,
                         "h": 74
                     }
@@ -9415,8 +9436,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 640,
-                        "y": 2600,
+                        "x": 768,
+                        "y": 2596,
                         "w": 64,
                         "h": 74
                     }
@@ -9436,8 +9457,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 704,
-                        "y": 2600,
+                        "x": 832,
+                        "y": 2596,
                         "w": 64,
                         "h": 74
                     }
@@ -9457,8 +9478,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 768,
-                        "y": 2600,
+                        "x": 896,
+                        "y": 2596,
                         "w": 64,
                         "h": 74
                     }
@@ -9478,8 +9499,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 832,
-                        "y": 2600,
+                        "x": 960,
+                        "y": 2594,
                         "w": 64,
                         "h": 74
                     }
@@ -9499,8 +9520,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 896,
-                        "y": 2600,
+                        "x": 1024,
+                        "y": 2594,
                         "w": 64,
                         "h": 74
                     }
@@ -9520,8 +9541,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 960,
-                        "y": 2600,
+                        "x": 1088,
+                        "y": 2594,
                         "w": 64,
                         "h": 74
                     }
@@ -9541,8 +9562,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 1024,
-                        "y": 2600,
+                        "x": 1152,
+                        "y": 2594,
                         "w": 64,
                         "h": 74
                     }
@@ -9562,8 +9583,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 1088,
-                        "y": 2600,
+                        "x": 1216,
+                        "y": 2594,
                         "w": 64,
                         "h": 74
                     }
@@ -9583,8 +9604,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 1152,
-                        "y": 2600,
+                        "x": 1280,
+                        "y": 2594,
                         "w": 64,
                         "h": 74
                     }
@@ -9604,8 +9625,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 1216,
-                        "y": 2600,
+                        "x": 1344,
+                        "y": 2594,
                         "w": 64,
                         "h": 74
                     }
@@ -9625,8 +9646,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 1280,
-                        "y": 2600,
+                        "x": 1408,
+                        "y": 2594,
                         "w": 64,
                         "h": 74
                     }
@@ -9646,8 +9667,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 1344,
-                        "y": 2600,
+                        "x": 1472,
+                        "y": 2594,
                         "w": 64,
                         "h": 74
                     }
@@ -9667,8 +9688,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 1408,
-                        "y": 2600,
+                        "x": 1536,
+                        "y": 2594,
                         "w": 64,
                         "h": 74
                     }
@@ -9688,8 +9709,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 1472,
-                        "y": 2600,
+                        "x": 1600,
+                        "y": 2594,
                         "w": 64,
                         "h": 74
                     }
@@ -9709,8 +9730,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 1536,
-                        "y": 2600,
+                        "x": 1664,
+                        "y": 2594,
                         "w": 64,
                         "h": 74
                     }
@@ -9730,8 +9751,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 1600,
-                        "y": 2600,
+                        "x": 1728,
+                        "y": 2594,
                         "w": 64,
                         "h": 74
                     }
@@ -9751,8 +9772,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 1664,
-                        "y": 2600,
+                        "x": 1792,
+                        "y": 2594,
                         "w": 64,
                         "h": 74
                     }
@@ -9772,8 +9793,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 1728,
-                        "y": 2600,
+                        "x": 1856,
+                        "y": 2590,
                         "w": 64,
                         "h": 74
                     }
@@ -9793,8 +9814,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 1792,
-                        "y": 2600,
+                        "x": 1920,
+                        "y": 2590,
                         "w": 64,
                         "h": 74
                     }
@@ -9814,8 +9835,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 1856,
-                        "y": 2600,
+                        "x": 1984,
+                        "y": 2590,
                         "w": 64,
                         "h": 74
                     }
@@ -9856,8 +9877,8 @@
                         "h": 70
                     },
                     "frame": {
-                        "x": 1920,
-                        "y": 2600,
+                        "x": 2048,
+                        "y": 2590,
                         "w": 64,
                         "h": 70
                     }
@@ -9919,8 +9940,8 @@
                         "h": 64
                     },
                     "frame": {
-                        "x": 1984,
-                        "y": 2600,
+                        "x": 2560,
+                        "y": 2538,
                         "w": 64,
                         "h": 64
                     }
@@ -9940,8 +9961,8 @@
                         "h": 64
                     },
                     "frame": {
-                        "x": 2048,
-                        "y": 2600,
+                        "x": 2496,
+                        "y": 2539,
                         "w": 64,
                         "h": 64
                     }
@@ -9962,7 +9983,7 @@
                     },
                     "frame": {
                         "x": 2112,
-                        "y": 2600,
+                        "y": 2603,
                         "w": 64,
                         "h": 64
                     }
@@ -9983,7 +10004,7 @@
                     },
                     "frame": {
                         "x": 2176,
-                        "y": 2600,
+                        "y": 2603,
                         "w": 64,
                         "h": 64
                     }
@@ -10004,7 +10025,7 @@
                     },
                     "frame": {
                         "x": 2240,
-                        "y": 2600,
+                        "y": 2603,
                         "w": 64,
                         "h": 64
                     }
@@ -10025,7 +10046,7 @@
                     },
                     "frame": {
                         "x": 2304,
-                        "y": 2600,
+                        "y": 2603,
                         "w": 64,
                         "h": 64
                     }
@@ -10046,7 +10067,7 @@
                     },
                     "frame": {
                         "x": 2368,
-                        "y": 2600,
+                        "y": 2603,
                         "w": 64,
                         "h": 64
                     }
@@ -10088,7 +10109,7 @@
                     },
                     "frame": {
                         "x": 2496,
-                        "y": 2600,
+                        "y": 2603,
                         "w": 64,
                         "h": 64
                     }
@@ -10109,7 +10130,7 @@
                     },
                     "frame": {
                         "x": 2560,
-                        "y": 2593,
+                        "y": 2602,
                         "w": 64,
                         "h": 64
                     }
@@ -10507,7 +10528,7 @@
                         "h": 64
                     },
                     "frame": {
-                        "x": 2624,
+                        "x": 2654,
                         "y": 1152,
                         "w": 64,
                         "h": 64
@@ -10528,8 +10549,8 @@
                         "h": 64
                     },
                     "frame": {
-                        "x": 2624,
-                        "y": 1216,
+                        "x": 2614,
+                        "y": 2390,
                         "w": 64,
                         "h": 64
                     }
@@ -10550,7 +10571,7 @@
                     },
                     "frame": {
                         "x": 2624,
-                        "y": 1280,
+                        "y": 1216,
                         "w": 64,
                         "h": 64
                     }
@@ -10571,7 +10592,7 @@
                     },
                     "frame": {
                         "x": 2624,
-                        "y": 1344,
+                        "y": 2454,
                         "w": 64,
                         "h": 64
                     }
@@ -10592,7 +10613,7 @@
                     },
                     "frame": {
                         "x": 2624,
-                        "y": 1408,
+                        "y": 1280,
                         "w": 64,
                         "h": 64
                     }
@@ -10613,7 +10634,7 @@
                     },
                     "frame": {
                         "x": 2624,
-                        "y": 1472,
+                        "y": 2518,
                         "w": 64,
                         "h": 64
                     }
@@ -10634,7 +10655,7 @@
                     },
                     "frame": {
                         "x": 2624,
-                        "y": 1536,
+                        "y": 1344,
                         "w": 64,
                         "h": 64
                     }
@@ -10655,7 +10676,7 @@
                     },
                     "frame": {
                         "x": 2624,
-                        "y": 1600,
+                        "y": 2582,
                         "w": 64,
                         "h": 64
                     }
@@ -10676,7 +10697,7 @@
                     },
                     "frame": {
                         "x": 2624,
-                        "y": 1664,
+                        "y": 1408,
                         "w": 64,
                         "h": 64
                     }
@@ -10697,7 +10718,7 @@
                     },
                     "frame": {
                         "x": 2624,
-                        "y": 1728,
+                        "y": 1472,
                         "w": 64,
                         "h": 64
                     }
@@ -10718,7 +10739,7 @@
                     },
                     "frame": {
                         "x": 2624,
-                        "y": 1792,
+                        "y": 1536,
                         "w": 64,
                         "h": 64
                     }
@@ -10739,7 +10760,7 @@
                     },
                     "frame": {
                         "x": 2624,
-                        "y": 1856,
+                        "y": 1600,
                         "w": 64,
                         "h": 64
                     }
@@ -10865,7 +10886,7 @@
                     },
                     "frame": {
                         "x": 2558,
-                        "y": 1056,
+                        "y": 1152,
                         "w": 32,
                         "h": 44
                     }
@@ -10969,8 +10990,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2558,
-                        "y": 2311,
+                        "x": 2368,
+                        "y": 2558,
                         "w": 32,
                         "h": 44
                     }
@@ -10990,8 +11011,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2590,
-                        "y": 2311,
+                        "x": 2400,
+                        "y": 2558,
                         "w": 32,
                         "h": 44
                     }
@@ -11011,8 +11032,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 512,
-                        "y": 1863,
+                        "x": 2678,
+                        "y": 1664,
                         "w": 32,
                         "h": 44
                     }
@@ -11032,8 +11053,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 544,
-                        "y": 1863,
+                        "x": 2678,
+                        "y": 1708,
                         "w": 32,
                         "h": 44
                     }
@@ -11053,8 +11074,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2432,
-                        "y": 2622,
+                        "x": 2678,
+                        "y": 1752,
                         "w": 32,
                         "h": 44
                     }
@@ -11074,8 +11095,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2464,
-                        "y": 2622,
+                        "x": 2678,
+                        "y": 1796,
                         "w": 32,
                         "h": 44
                     }
@@ -11095,8 +11116,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1347,
-                        "y": 1990,
+                        "x": 2678,
+                        "y": 1840,
                         "w": 32,
                         "h": 44
                     }
@@ -11116,8 +11137,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2614,
-                        "y": 2355,
+                        "x": 2678,
+                        "y": 1884,
                         "w": 32,
                         "h": 44
                     }
@@ -11137,8 +11158,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2614,
-                        "y": 2399,
+                        "x": 2678,
+                        "y": 1928,
                         "w": 32,
                         "h": 44
                     }
@@ -11158,8 +11179,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2646,
-                        "y": 1920,
+                        "x": 2678,
+                        "y": 1972,
                         "w": 32,
                         "h": 44
                     }
@@ -11180,7 +11201,7 @@
                     },
                     "frame": {
                         "x": 2678,
-                        "y": 1920,
+                        "y": 2016,
                         "w": 32,
                         "h": 44
                     }
@@ -11200,8 +11221,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2646,
-                        "y": 1964,
+                        "x": 2678,
+                        "y": 2060,
                         "w": 32,
                         "h": 44
                     }
@@ -11222,7 +11243,7 @@
                     },
                     "frame": {
                         "x": 2678,
-                        "y": 1964,
+                        "y": 2104,
                         "w": 32,
                         "h": 44
                     }
@@ -11242,8 +11263,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2646,
-                        "y": 2008,
+                        "x": 2678,
+                        "y": 2148,
                         "w": 32,
                         "h": 44
                     }
@@ -11264,7 +11285,7 @@
                     },
                     "frame": {
                         "x": 2678,
-                        "y": 2008,
+                        "y": 2192,
                         "w": 32,
                         "h": 44
                     }
@@ -11284,8 +11305,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2646,
-                        "y": 2052,
+                        "x": 2678,
+                        "y": 2236,
                         "w": 32,
                         "h": 44
                     }
@@ -11306,7 +11327,7 @@
                     },
                     "frame": {
                         "x": 2678,
-                        "y": 2052,
+                        "y": 2280,
                         "w": 32,
                         "h": 44
                     }
@@ -11326,8 +11347,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2646,
-                        "y": 2096,
+                        "x": 2678,
+                        "y": 2324,
                         "w": 32,
                         "h": 44
                     }
@@ -11348,7 +11369,7 @@
                     },
                     "frame": {
                         "x": 2678,
-                        "y": 2096,
+                        "y": 2368,
                         "w": 32,
                         "h": 44
                     }
@@ -11368,8 +11389,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2646,
-                        "y": 2140,
+                        "x": 512,
+                        "y": 1863,
                         "w": 32,
                         "h": 44
                     }
@@ -11389,8 +11410,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2678,
-                        "y": 2140,
+                        "x": 544,
+                        "y": 1863,
                         "w": 32,
                         "h": 44
                     }
@@ -11410,8 +11431,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2646,
-                        "y": 2184,
+                        "x": 2432,
+                        "y": 2622,
                         "w": 32,
                         "h": 44
                     }
@@ -11431,8 +11452,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2678,
-                        "y": 2184,
+                        "x": 2464,
+                        "y": 2622,
                         "w": 32,
                         "h": 44
                     }
@@ -11452,8 +11473,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2646,
-                        "y": 2228,
+                        "x": 2624,
+                        "y": 1664,
                         "w": 32,
                         "h": 44
                     }
@@ -11473,8 +11494,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2678,
-                        "y": 2228,
+                        "x": 2624,
+                        "y": 1708,
                         "w": 32,
                         "h": 44
                     }
@@ -11494,8 +11515,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2622,
-                        "y": 2272,
+                        "x": 2624,
+                        "y": 1752,
                         "w": 32,
                         "h": 44
                     }
@@ -11515,8 +11536,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2654,
-                        "y": 2272,
+                        "x": 2624,
+                        "y": 1796,
                         "w": 32,
                         "h": 44
                     }
@@ -11536,8 +11557,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2686,
-                        "y": 2272,
+                        "x": 2624,
+                        "y": 1840,
                         "w": 32,
                         "h": 44
                     }
@@ -11557,8 +11578,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2646,
-                        "y": 2316,
+                        "x": 2624,
+                        "y": 1884,
                         "w": 32,
                         "h": 44
                     }
@@ -11578,8 +11599,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2678,
-                        "y": 2316,
+                        "x": 2624,
+                        "y": 1928,
                         "w": 32,
                         "h": 44
                     }
@@ -11599,8 +11620,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2646,
-                        "y": 2360,
+                        "x": 2624,
+                        "y": 1972,
                         "w": 32,
                         "h": 44
                     }
@@ -11620,8 +11641,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2678,
-                        "y": 2360,
+                        "x": 2624,
+                        "y": 2016,
                         "w": 32,
                         "h": 44
                     }
@@ -11641,8 +11662,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2646,
-                        "y": 2404,
+                        "x": 2624,
+                        "y": 2060,
                         "w": 32,
                         "h": 44
                     }
@@ -11662,8 +11683,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2678,
-                        "y": 2404,
+                        "x": 2624,
+                        "y": 2104,
                         "w": 32,
                         "h": 44
                     }
@@ -11684,7 +11705,7 @@
                     },
                     "frame": {
                         "x": 2624,
-                        "y": 2448,
+                        "y": 2148,
                         "w": 32,
                         "h": 44
                     }
@@ -11704,8 +11725,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2656,
-                        "y": 2448,
+                        "x": 2624,
+                        "y": 2192,
                         "w": 32,
                         "h": 44
                     }
@@ -11726,7 +11747,7 @@
                     },
                     "frame": {
                         "x": 2624,
-                        "y": 2492,
+                        "y": 2236,
                         "w": 32,
                         "h": 44
                     }
@@ -11746,8 +11767,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2656,
-                        "y": 2492,
+                        "x": 2624,
+                        "y": 2280,
                         "w": 32,
                         "h": 44
                     }
@@ -11768,7 +11789,7 @@
                     },
                     "frame": {
                         "x": 2624,
-                        "y": 2536,
+                        "y": 2324,
                         "w": 32,
                         "h": 44
                     }
@@ -11788,8 +11809,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2656,
-                        "y": 2536,
+                        "x": 1347,
+                        "y": 1990,
                         "w": 32,
                         "h": 44
                     }
@@ -11809,8 +11830,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2624,
-                        "y": 2580,
+                        "x": 0,
+                        "y": 2683,
                         "w": 32,
                         "h": 44
                     }
@@ -11830,8 +11851,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2624,
-                        "y": 2624,
+                        "x": 32,
+                        "y": 2683,
                         "w": 32,
                         "h": 44
                     }
@@ -11851,8 +11872,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2656,
-                        "y": 2580,
+                        "x": 64,
+                        "y": 2683,
                         "w": 32,
                         "h": 44
                     }
@@ -11872,8 +11893,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2656,
-                        "y": 2624,
+                        "x": 96,
+                        "y": 2683,
                         "w": 32,
                         "h": 44
                     }
@@ -11893,7 +11914,7 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 0,
+                        "x": 128,
                         "y": 2683,
                         "w": 32,
                         "h": 44
@@ -11914,7 +11935,7 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 32,
+                        "x": 160,
                         "y": 2683,
                         "w": 32,
                         "h": 44
@@ -11935,7 +11956,7 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 64,
+                        "x": 192,
                         "y": 2683,
                         "w": 32,
                         "h": 44
@@ -11956,7 +11977,7 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 96,
+                        "x": 224,
                         "y": 2683,
                         "w": 32,
                         "h": 44
@@ -11977,7 +11998,7 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 128,
+                        "x": 256,
                         "y": 2683,
                         "w": 32,
                         "h": 44
@@ -11998,7 +12019,7 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 160,
+                        "x": 288,
                         "y": 2683,
                         "w": 32,
                         "h": 44
@@ -12019,7 +12040,7 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 192,
+                        "x": 320,
                         "y": 2683,
                         "w": 32,
                         "h": 44
@@ -12040,7 +12061,7 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 224,
+                        "x": 352,
                         "y": 2683,
                         "w": 32,
                         "h": 44
@@ -12061,7 +12082,7 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 256,
+                        "x": 384,
                         "y": 2683,
                         "w": 32,
                         "h": 44
@@ -12082,7 +12103,7 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 288,
+                        "x": 416,
                         "y": 2683,
                         "w": 32,
                         "h": 44
@@ -12103,8 +12124,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 320,
-                        "y": 2683,
+                        "x": 448,
+                        "y": 2670,
                         "w": 32,
                         "h": 44
                     }
@@ -12124,8 +12145,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 352,
-                        "y": 2683,
+                        "x": 480,
+                        "y": 2670,
                         "w": 32,
                         "h": 44
                     }
@@ -12145,8 +12166,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 384,
-                        "y": 2683,
+                        "x": 512,
+                        "y": 2670,
                         "w": 32,
                         "h": 44
                     }
@@ -12166,8 +12187,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 416,
-                        "y": 2683,
+                        "x": 544,
+                        "y": 2670,
                         "w": 32,
                         "h": 44
                     }
@@ -12187,8 +12208,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 448,
-                        "y": 2674,
+                        "x": 576,
+                        "y": 2670,
                         "w": 32,
                         "h": 44
                     }
@@ -12208,8 +12229,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 480,
-                        "y": 2674,
+                        "x": 608,
+                        "y": 2670,
                         "w": 32,
                         "h": 44
                     }
@@ -12229,8 +12250,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 512,
-                        "y": 2674,
+                        "x": 640,
+                        "y": 2670,
                         "w": 32,
                         "h": 44
                     }
@@ -12250,8 +12271,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 544,
-                        "y": 2674,
+                        "x": 672,
+                        "y": 2670,
                         "w": 32,
                         "h": 44
                     }
@@ -12271,8 +12292,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 576,
-                        "y": 2674,
+                        "x": 704,
+                        "y": 2670,
                         "w": 32,
                         "h": 44
                     }
@@ -12292,8 +12313,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 608,
-                        "y": 2674,
+                        "x": 736,
+                        "y": 2670,
                         "w": 32,
                         "h": 44
                     }
@@ -12313,8 +12334,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 640,
-                        "y": 2674,
+                        "x": 768,
+                        "y": 2670,
                         "w": 32,
                         "h": 44
                     }
@@ -12334,8 +12355,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 672,
-                        "y": 2674,
+                        "x": 800,
+                        "y": 2670,
                         "w": 32,
                         "h": 44
                     }
@@ -12355,8 +12376,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 704,
-                        "y": 2674,
+                        "x": 832,
+                        "y": 2670,
                         "w": 32,
                         "h": 44
                     }
@@ -12376,8 +12397,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 736,
-                        "y": 2674,
+                        "x": 864,
+                        "y": 2670,
                         "w": 32,
                         "h": 44
                     }
@@ -12397,8 +12418,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 768,
-                        "y": 2674,
+                        "x": 896,
+                        "y": 2670,
                         "w": 32,
                         "h": 44
                     }
@@ -12418,8 +12439,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 800,
-                        "y": 2674,
+                        "x": 928,
+                        "y": 2670,
                         "w": 32,
                         "h": 44
                     }
@@ -12439,8 +12460,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 832,
-                        "y": 2674,
+                        "x": 960,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12460,8 +12481,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 864,
-                        "y": 2674,
+                        "x": 992,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12481,8 +12502,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 896,
-                        "y": 2674,
+                        "x": 1024,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12502,8 +12523,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 928,
-                        "y": 2674,
+                        "x": 1056,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12523,8 +12544,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 960,
-                        "y": 2674,
+                        "x": 1088,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12544,8 +12565,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 992,
-                        "y": 2674,
+                        "x": 1120,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12565,8 +12586,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1024,
-                        "y": 2674,
+                        "x": 1152,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12586,8 +12607,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1056,
-                        "y": 2674,
+                        "x": 1184,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12607,8 +12628,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1088,
-                        "y": 2674,
+                        "x": 1216,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12628,8 +12649,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1120,
-                        "y": 2674,
+                        "x": 1248,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12649,8 +12670,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1152,
-                        "y": 2674,
+                        "x": 1280,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12670,8 +12691,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1184,
-                        "y": 2674,
+                        "x": 1312,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12691,8 +12712,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1216,
-                        "y": 2674,
+                        "x": 1344,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12712,8 +12733,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1248,
-                        "y": 2674,
+                        "x": 1376,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12733,8 +12754,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1280,
-                        "y": 2674,
+                        "x": 1408,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12754,8 +12775,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1312,
-                        "y": 2674,
+                        "x": 1440,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12775,8 +12796,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1344,
-                        "y": 2674,
+                        "x": 1472,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12796,8 +12817,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1376,
-                        "y": 2674,
+                        "x": 1504,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12817,8 +12838,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1408,
-                        "y": 2674,
+                        "x": 1536,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12838,8 +12859,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1440,
-                        "y": 2674,
+                        "x": 1568,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12859,8 +12880,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1472,
-                        "y": 2674,
+                        "x": 1600,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12880,8 +12901,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1504,
-                        "y": 2674,
+                        "x": 1632,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12901,8 +12922,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1536,
-                        "y": 2674,
+                        "x": 1664,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12922,8 +12943,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1568,
-                        "y": 2674,
+                        "x": 1696,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12943,8 +12964,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1600,
-                        "y": 2674,
+                        "x": 1728,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12964,8 +12985,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1632,
-                        "y": 2674,
+                        "x": 1760,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -12985,8 +13006,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1664,
-                        "y": 2674,
+                        "x": 1792,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -13006,8 +13027,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1696,
-                        "y": 2674,
+                        "x": 1824,
+                        "y": 2668,
                         "w": 32,
                         "h": 44
                     }
@@ -13027,8 +13048,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1728,
-                        "y": 2674,
+                        "x": 1856,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13048,8 +13069,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1760,
-                        "y": 2674,
+                        "x": 1888,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13069,8 +13090,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1792,
-                        "y": 2674,
+                        "x": 1920,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13090,8 +13111,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1824,
-                        "y": 2674,
+                        "x": 1952,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13111,8 +13132,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1856,
-                        "y": 2674,
+                        "x": 1984,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13132,8 +13153,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1888,
-                        "y": 2674,
+                        "x": 2016,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13153,8 +13174,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1920,
-                        "y": 2670,
+                        "x": 2048,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13174,8 +13195,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1952,
-                        "y": 2670,
+                        "x": 2080,
+                        "y": 2660,
                         "w": 32,
                         "h": 44
                     }
@@ -13195,8 +13216,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 1984,
-                        "y": 2668,
+                        "x": 2112,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13216,8 +13237,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2016,
-                        "y": 2668,
+                        "x": 2144,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13237,8 +13258,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2048,
-                        "y": 2668,
+                        "x": 2176,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13258,8 +13279,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2080,
-                        "y": 2668,
+                        "x": 2208,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13279,8 +13300,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2112,
-                        "y": 2668,
+                        "x": 2240,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13300,8 +13321,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2144,
-                        "y": 2668,
+                        "x": 2272,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13321,8 +13342,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2176,
-                        "y": 2668,
+                        "x": 2304,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13342,8 +13363,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2208,
-                        "y": 2668,
+                        "x": 2336,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13363,8 +13384,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2240,
-                        "y": 2668,
+                        "x": 2368,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13384,8 +13405,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2272,
-                        "y": 2668,
+                        "x": 2400,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13405,8 +13426,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2304,
-                        "y": 2668,
+                        "x": 2432,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13426,8 +13447,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2336,
-                        "y": 2668,
+                        "x": 2464,
+                        "y": 2666,
                         "w": 32,
                         "h": 44
                     }
@@ -13447,8 +13468,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2368,
-                        "y": 2668,
+                        "x": 2496,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13468,8 +13489,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2400,
-                        "y": 2664,
+                        "x": 2528,
+                        "y": 2667,
                         "w": 32,
                         "h": 44
                     }
@@ -13489,8 +13510,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2432,
-                        "y": 2668,
+                        "x": 2560,
+                        "y": 2666,
                         "w": 32,
                         "h": 44
                     }
@@ -13510,8 +13531,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2464,
-                        "y": 2668,
+                        "x": 2592,
+                        "y": 2666,
                         "w": 32,
                         "h": 44
                     }
@@ -13531,8 +13552,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2496,
-                        "y": 2668,
+                        "x": 2624,
+                        "y": 2646,
                         "w": 32,
                         "h": 44
                     }
@@ -13552,98 +13573,14 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2528,
-                        "y": 2668,
+                        "x": 2656,
+                        "y": 2646,
                         "w": 32,
                         "h": 44
                     }
                 },
                 {
                     "filename": "sprites/miners/lithiummine/level3/Miner_Lithium_LVL3_7.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 44
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 44
-                    },
-                    "frame": {
-                        "x": 2560,
-                        "y": 2668,
-                        "w": 32,
-                        "h": 44
-                    }
-                },
-                {
-                    "filename": "sprites/miners/lithiummine/level3/Miner_Lithium_LVL3_8.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 44
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 44
-                    },
-                    "frame": {
-                        "x": 2592,
-                        "y": 2657,
-                        "w": 32,
-                        "h": 44
-                    }
-                },
-                {
-                    "filename": "sprites/miners/lithiummine/level3/Miner_Lithium_LVL3_9.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 44
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 44
-                    },
-                    "frame": {
-                        "x": 2624,
-                        "y": 2668,
-                        "w": 32,
-                        "h": 44
-                    }
-                },
-                {
-                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_1.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 44
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 44
-                    },
-                    "frame": {
-                        "x": 2656,
-                        "y": 2668,
-                        "w": 32,
-                        "h": 44
-                    }
-                },
-                {
-                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13664,7 +13601,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_3.png",
+                    "filename": "sprites/miners/lithiummine/level3/Miner_Lithium_LVL3_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13685,7 +13622,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_4.png",
+                    "filename": "sprites/miners/lithiummine/level3/Miner_Lithium_LVL3_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13706,7 +13643,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_5.png",
+                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13727,7 +13664,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_6.png",
+                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13748,7 +13685,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_7.png",
+                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13769,7 +13706,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_8.png",
+                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13790,7 +13727,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_9.png",
+                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13811,7 +13748,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_1.png",
+                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13832,7 +13769,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_2.png",
+                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13853,7 +13790,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_3.png",
+                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13874,7 +13811,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_4.png",
+                    "filename": "sprites/miners/platinummine/level1/Miner_Platinum_LVL1_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13895,7 +13832,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_5.png",
+                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13916,7 +13853,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_6.png",
+                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13937,7 +13874,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_7.png",
+                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13958,7 +13895,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_8.png",
+                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -13979,7 +13916,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_9.png",
+                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14000,7 +13937,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_1.png",
+                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14021,7 +13958,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_2.png",
+                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14042,7 +13979,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_3.png",
+                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14063,7 +14000,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_4.png",
+                    "filename": "sprites/miners/platinummine/level2/Miner_Platinum_LVL2_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14084,7 +14021,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_5.png",
+                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14105,7 +14042,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_6.png",
+                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14126,7 +14063,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_7.png",
+                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14147,7 +14084,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_8.png",
+                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14168,7 +14105,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_9.png",
+                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14189,7 +14126,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_1.png",
+                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14210,7 +14147,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_2.png",
+                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14231,6 +14168,90 @@
                     }
                 },
                 {
+                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_8.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 2710,
+                        "y": 1232,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/platinummine/level3/Miner_Platinum_LVL3_9.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 2710,
+                        "y": 1276,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_1.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 2710,
+                        "y": 1320,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_2.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 2710,
+                        "y": 1364,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
                     "filename": "sprites/miners/sulfurmine/level1/Miner_Sulfur_LVL1_3.png",
                     "rotated": false,
                     "trimmed": false,
@@ -14245,8 +14266,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 1232,
+                        "x": 2710,
+                        "y": 1408,
                         "w": 32,
                         "h": 44
                     }
@@ -14266,8 +14287,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 1276,
+                        "x": 2710,
+                        "y": 1452,
                         "w": 32,
                         "h": 44
                     }
@@ -14287,8 +14308,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 1320,
+                        "x": 2710,
+                        "y": 1496,
                         "w": 32,
                         "h": 44
                     }
@@ -14308,8 +14329,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 1364,
+                        "x": 2710,
+                        "y": 1540,
                         "w": 32,
                         "h": 44
                     }
@@ -14329,8 +14350,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 1408,
+                        "x": 2710,
+                        "y": 1584,
                         "w": 32,
                         "h": 44
                     }
@@ -14350,8 +14371,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 1452,
+                        "x": 2710,
+                        "y": 1628,
                         "w": 32,
                         "h": 44
                     }
@@ -14371,8 +14392,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 1496,
+                        "x": 2710,
+                        "y": 1672,
                         "w": 32,
                         "h": 44
                     }
@@ -14392,8 +14413,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 1540,
+                        "x": 2710,
+                        "y": 1716,
                         "w": 32,
                         "h": 44
                     }
@@ -14413,8 +14434,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 1584,
+                        "x": 2710,
+                        "y": 1760,
                         "w": 32,
                         "h": 44
                     }
@@ -14434,8 +14455,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 1628,
+                        "x": 2710,
+                        "y": 1804,
                         "w": 32,
                         "h": 44
                     }
@@ -14455,8 +14476,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 1672,
+                        "x": 2710,
+                        "y": 1848,
                         "w": 32,
                         "h": 44
                     }
@@ -14476,8 +14497,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 1716,
+                        "x": 2710,
+                        "y": 1892,
                         "w": 32,
                         "h": 44
                     }
@@ -14497,8 +14518,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 1760,
+                        "x": 2710,
+                        "y": 1936,
                         "w": 32,
                         "h": 44
                     }
@@ -14518,8 +14539,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 1804,
+                        "x": 2710,
+                        "y": 1980,
                         "w": 32,
                         "h": 44
                     }
@@ -14539,8 +14560,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 1848,
+                        "x": 2710,
+                        "y": 2024,
                         "w": 32,
                         "h": 44
                     }
@@ -14560,8 +14581,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 1892,
+                        "x": 2710,
+                        "y": 2068,
                         "w": 32,
                         "h": 44
                     }
@@ -14581,8 +14602,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 1936,
+                        "x": 2710,
+                        "y": 2112,
                         "w": 32,
                         "h": 44
                     }
@@ -14602,8 +14623,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 1980,
+                        "x": 2710,
+                        "y": 2156,
                         "w": 32,
                         "h": 44
                     }
@@ -14623,8 +14644,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 2024,
+                        "x": 2710,
+                        "y": 2200,
                         "w": 32,
                         "h": 44
                     }
@@ -14644,8 +14665,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 2068,
+                        "x": 2710,
+                        "y": 2244,
                         "w": 32,
                         "h": 44
                     }
@@ -14665,98 +14686,14 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2718,
-                        "y": 2112,
-                        "w": 32,
-                        "h": 44
-                    }
-                },
-                {
-                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_6.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 44
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 44
-                    },
-                    "frame": {
-                        "x": 2718,
-                        "y": 2156,
-                        "w": 32,
-                        "h": 44
-                    }
-                },
-                {
-                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_7.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 44
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 44
-                    },
-                    "frame": {
-                        "x": 2718,
-                        "y": 2200,
-                        "w": 32,
-                        "h": 44
-                    }
-                },
-                {
-                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_8.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 44
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 44
-                    },
-                    "frame": {
-                        "x": 2718,
-                        "y": 2244,
-                        "w": 32,
-                        "h": 44
-                    }
-                },
-                {
-                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_9.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 44
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 44
-                    },
-                    "frame": {
-                        "x": 2718,
+                        "x": 2710,
                         "y": 2288,
                         "w": 32,
                         "h": 44
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_1.png",
+                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14777,7 +14714,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_2.png",
+                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14798,7 +14735,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_3.png",
+                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14812,14 +14749,14 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2710,
+                        "x": 2688,
                         "y": 2420,
                         "w": 32,
                         "h": 44
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_4.png",
+                    "filename": "sprites/miners/titaniummine/level2/Miner_Titanium_LVL2_9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14840,7 +14777,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_5.png",
+                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14861,7 +14798,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_6.png",
+                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14882,7 +14819,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_7.png",
+                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14903,7 +14840,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_8.png",
+                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14924,6 +14861,90 @@
                     }
                 },
                 {
+                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_5.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 2080,
+                        "y": 2704,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_6.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 2464,
+                        "y": 2710,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_7.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 0,
+                        "y": 2727,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
+                    "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_8.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 44
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 44
+                    },
+                    "frame": {
+                        "x": 32,
+                        "y": 2727,
+                        "w": 32,
+                        "h": 44
+                    }
+                },
+                {
                     "filename": "sprites/miners/titaniummine/level3/Miner_Titanium_LVL3_9.png",
                     "rotated": false,
                     "trimmed": false,
@@ -14938,8 +14959,8 @@
                         "h": 44
                     },
                     "frame": {
-                        "x": 2400,
-                        "y": 2708,
+                        "x": 64,
+                        "y": 2727,
                         "w": 32,
                         "h": 44
                     }
@@ -14959,14 +14980,14 @@
                         "h": 38
                     },
                     "frame": {
-                        "x": 2592,
-                        "y": 2701,
+                        "x": 384,
+                        "y": 2043,
                         "w": 32,
                         "h": 38
                     }
                 },
                 {
-                    "filename": "sprites/empty.png",
+                    "filename": "sprites/cooldown/cooldown_1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -14987,7 +15008,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player1.png",
+                    "filename": "sprites/cooldown/cooldown_2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15008,7 +15029,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player10.png",
+                    "filename": "sprites/cooldown/cooldown_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15029,28 +15050,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player11.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 32
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 32
-                    },
-                    "frame": {
-                        "x": 2432,
-                        "y": 2739,
-                        "w": 32,
-                        "h": 32
-                    }
-                },
-                {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player12.png",
+                    "filename": "sprites/cooldown/cooldown_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15071,28 +15071,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player13.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 32
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 32
-                    },
-                    "frame": {
-                        "x": 2464,
-                        "y": 2739,
-                        "w": 32,
-                        "h": 32
-                    }
-                },
-                {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player14.png",
+                    "filename": "sprites/cooldown/cooldown_5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15113,91 +15092,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player15.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 32
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 32
-                    },
-                    "frame": {
-                        "x": 2496,
-                        "y": 2739,
-                        "w": 32,
-                        "h": 32
-                    }
-                },
-                {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player16.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 32
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 32
-                    },
-                    "frame": {
-                        "x": 2528,
-                        "y": 2739,
-                        "w": 32,
-                        "h": 32
-                    }
-                },
-                {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player2.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 32
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 32
-                    },
-                    "frame": {
-                        "x": 2560,
-                        "y": 2739,
-                        "w": 32,
-                        "h": 32
-                    }
-                },
-                {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player3.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 32
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 32
-                    },
-                    "frame": {
-                        "x": 2592,
-                        "y": 2739,
-                        "w": 32,
-                        "h": 32
-                    }
-                },
-                {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player4.png",
+                    "filename": "sprites/cooldown/cooldown_6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15218,7 +15113,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player5.png",
+                    "filename": "sprites/cooldown/cooldown_7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15239,7 +15134,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player6.png",
+                    "filename": "sprites/empty.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15260,7 +15155,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player7.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15281,7 +15176,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player8.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player10.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15302,7 +15197,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/fleets/player/Fleets_Default_Player9.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player11.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15323,7 +15218,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/icons/block.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player12.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15344,7 +15239,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/icons/defend.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player13.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15365,7 +15260,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/icons/grace.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player14.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15386,7 +15281,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/icons/shard.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player15.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15407,7 +15302,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/alloy_resource.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player16.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15428,7 +15323,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/copper_resource.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player2.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15449,7 +15344,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/iridium_resource.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15470,7 +15365,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/iron_resource.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15491,7 +15386,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/ironplate_resource.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player5.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15512,7 +15407,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/kimberlite_resource.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player6.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15533,7 +15428,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/lithium_resource.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player7.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15554,7 +15449,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/photovoltaiccell_resource.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player8.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15575,7 +15470,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/platinum_resource.png",
+                    "filename": "sprites/fleets/player/Fleets_Default_Player9.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15596,7 +15491,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource1.png",
+                    "filename": "sprites/icons/block.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15617,7 +15512,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource2.png",
+                    "filename": "sprites/icons/defend.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15638,7 +15533,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource3.png",
+                    "filename": "sprites/icons/grace.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15659,7 +15554,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource4.png",
+                    "filename": "sprites/icons/shard.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15680,7 +15575,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource5.png",
+                    "filename": "sprites/resources/alloy_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15701,49 +15596,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource6.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 32
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 32
-                    },
-                    "frame": {
-                        "x": 384,
-                        "y": 2043,
-                        "w": 32,
-                        "h": 32
-                    }
-                },
-                {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource7.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 32
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 32
-                    },
-                    "frame": {
-                        "x": 2304,
-                        "y": 2561,
-                        "w": 32,
-                        "h": 32
-                    }
-                },
-                {
-                    "filename": "sprites/resources/primodium-resource/primodium_resource8.png",
+                    "filename": "sprites/resources/copper_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15764,28 +15617,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/primodium_resource.gif",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 32
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 32
-                    },
-                    "frame": {
-                        "x": 2336,
-                        "y": 2561,
-                        "w": 32,
-                        "h": 32
-                    }
-                },
-                {
-                    "filename": "sprites/resources/titanium_resource.png",
+                    "filename": "sprites/resources/iridium_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15806,7 +15638,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/advanced_unraidable.png",
+                    "filename": "sprites/resources/iron_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15827,7 +15659,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/building_defense.png",
+                    "filename": "sprites/resources/ironplate_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15848,7 +15680,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/building_defense_mult.png",
+                    "filename": "sprites/resources/kimberlite_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15862,14 +15694,14 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 2368,
-                        "y": 2558,
+                        "x": 2304,
+                        "y": 2562,
                         "w": 32,
                         "h": 32
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/defense.png",
+                    "filename": "sprites/resources/lithium_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15883,77 +15715,14 @@
                         "h": 32
                     },
                     "frame": {
-                        "x": 2400,
-                        "y": 2558,
+                        "x": 2336,
+                        "y": 2562,
                         "w": 32,
                         "h": 32
                     }
                 },
                 {
-                    "filename": "sprites/resources/utility/electricity.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 32
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 32
-                    },
-                    "frame": {
-                        "x": 0,
-                        "y": 2727,
-                        "w": 32,
-                        "h": 32
-                    }
-                },
-                {
-                    "filename": "sprites/resources/utility/encryption.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 32
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 32
-                    },
-                    "frame": {
-                        "x": 32,
-                        "y": 2727,
-                        "w": 32,
-                        "h": 32
-                    }
-                },
-                {
-                    "filename": "sprites/resources/utility/housing.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 32,
-                        "h": 32
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 32,
-                        "h": 32
-                    },
-                    "frame": {
-                        "x": 64,
-                        "y": 2727,
-                        "w": 32,
-                        "h": 32
-                    }
-                },
-                {
-                    "filename": "sprites/resources/utility/unraidable.png",
+                    "filename": "sprites/resources/photovoltaiccell_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15974,7 +15743,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/units/anvildrone.png",
+                    "filename": "sprites/resources/platinum_resource.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -15995,7 +15764,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/units/hammerdrone.png",
+                    "filename": "sprites/resources/primodium-resource/primodium_resource1.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -16016,6 +15785,405 @@
                     }
                 },
                 {
+                    "filename": "sprites/resources/primodium-resource/primodium_resource2.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 192,
+                        "y": 2727,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/primodium-resource/primodium_resource3.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 224,
+                        "y": 2727,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/primodium-resource/primodium_resource4.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 256,
+                        "y": 2727,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/primodium-resource/primodium_resource5.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 288,
+                        "y": 2727,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/primodium-resource/primodium_resource6.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 320,
+                        "y": 2727,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/primodium-resource/primodium_resource7.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 352,
+                        "y": 2727,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/primodium-resource/primodium_resource8.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 384,
+                        "y": 2727,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/primodium_resource.gif",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 416,
+                        "y": 2727,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/titanium_resource.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 448,
+                        "y": 2714,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/utility/advanced_unraidable.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 480,
+                        "y": 2714,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/utility/building_defense.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 512,
+                        "y": 2714,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/utility/building_defense_mult.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 544,
+                        "y": 2714,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/utility/defense.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 576,
+                        "y": 2714,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/utility/electricity.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 608,
+                        "y": 2714,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/utility/encryption.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 640,
+                        "y": 2714,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/utility/housing.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 672,
+                        "y": 2714,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/resources/utility/unraidable.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 704,
+                        "y": 2714,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/units/anvildrone.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 736,
+                        "y": 2714,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
+                    "filename": "sprites/units/hammerdrone.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 32,
+                        "h": 32
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 32,
+                        "h": 32
+                    },
+                    "frame": {
+                        "x": 768,
+                        "y": 2714,
+                        "w": 32,
+                        "h": 32
+                    }
+                },
+                {
                     "filename": "sprites/emblems/Emblems_LVL1.png",
                     "rotated": false,
                     "trimmed": false,
@@ -16030,8 +16198,8 @@
                         "h": 27
                     },
                     "frame": {
-                        "x": 2622,
-                        "y": 1125,
+                        "x": 2112,
+                        "y": 2576,
                         "w": 26,
                         "h": 27
                     }
@@ -16051,8 +16219,8 @@
                         "h": 27
                     },
                     "frame": {
-                        "x": 2432,
-                        "y": 2712,
+                        "x": 2138,
+                        "y": 2576,
                         "w": 26,
                         "h": 27
                     }
@@ -16072,8 +16240,8 @@
                         "h": 27
                     },
                     "frame": {
-                        "x": 2458,
-                        "y": 2712,
+                        "x": 2164,
+                        "y": 2576,
                         "w": 26,
                         "h": 27
                     }
@@ -16093,8 +16261,8 @@
                         "h": 27
                     },
                     "frame": {
-                        "x": 2484,
-                        "y": 2712,
+                        "x": 2190,
+                        "y": 2576,
                         "w": 26,
                         "h": 27
                     }
@@ -16114,8 +16282,8 @@
                         "h": 27
                     },
                     "frame": {
-                        "x": 2510,
-                        "y": 2712,
+                        "x": 2216,
+                        "y": 2576,
                         "w": 26,
                         "h": 27
                     }
@@ -16135,8 +16303,8 @@
                         "h": 27
                     },
                     "frame": {
-                        "x": 2536,
-                        "y": 2712,
+                        "x": 2242,
+                        "y": 2576,
                         "w": 26,
                         "h": 27
                     }
@@ -16156,8 +16324,8 @@
                         "h": 27
                     },
                     "frame": {
-                        "x": 2562,
-                        "y": 2712,
+                        "x": 2268,
+                        "y": 2576,
                         "w": 26,
                         "h": 27
                     }
@@ -16450,8 +16618,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 2558,
-                        "y": 1275,
+                        "x": 2560,
+                        "y": 1650,
                         "w": 64,
                         "h": 74
                     }
@@ -16471,8 +16639,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 2558,
-                        "y": 1349,
+                        "x": 2560,
+                        "y": 1724,
                         "w": 64,
                         "h": 74
                     }
@@ -16492,8 +16660,8 @@
                         "h": 74
                     },
                     "frame": {
-                        "x": 2558,
-                        "y": 1423,
+                        "x": 2560,
+                        "y": 1798,
                         "w": 64,
                         "h": 74
                     }
@@ -16534,8 +16702,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 2304,
-                        "y": 2486,
+                        "x": 2368,
+                        "y": 2483,
                         "w": 64,
                         "h": 75
                     }
@@ -16555,8 +16723,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 2304,
-                        "y": 2486,
+                        "x": 2368,
+                        "y": 2483,
                         "w": 64,
                         "h": 75
                     }
@@ -16576,8 +16744,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 2304,
-                        "y": 2486,
+                        "x": 2368,
+                        "y": 2483,
                         "w": 64,
                         "h": 75
                     }
@@ -16597,8 +16765,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 2304,
-                        "y": 2486,
+                        "x": 2368,
+                        "y": 2483,
                         "w": 64,
                         "h": 75
                     }
@@ -16618,8 +16786,8 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 2304,
-                        "y": 2486,
+                        "x": 2368,
+                        "y": 2483,
                         "w": 64,
                         "h": 75
                     }
@@ -16639,7 +16807,7 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 2368,
+                        "x": 2432,
                         "y": 2483,
                         "w": 64,
                         "h": 75
@@ -16660,7 +16828,7 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 2368,
+                        "x": 2432,
                         "y": 2483,
                         "w": 64,
                         "h": 75
@@ -16681,7 +16849,7 @@
                         "h": 75
                     },
                     "frame": {
-                        "x": 2368,
+                        "x": 2432,
                         "y": 2483,
                         "w": 64,
                         "h": 75
@@ -16703,7 +16871,7 @@
                     },
                     "frame": {
                         "x": 2590,
-                        "y": 375,
+                        "y": 525,
                         "w": 64,
                         "h": 75
                     }
@@ -16724,7 +16892,7 @@
                     },
                     "frame": {
                         "x": 2590,
-                        "y": 525,
+                        "y": 675,
                         "w": 64,
                         "h": 75
                     }
@@ -16745,7 +16913,7 @@
                     },
                     "frame": {
                         "x": 2590,
-                        "y": 675,
+                        "y": 825,
                         "w": 64,
                         "h": 75
                     }
@@ -16997,34 +17165,13 @@
                     },
                     "frame": {
                         "x": 2398,
-                        "y": 2099,
-                        "w": 96,
-                        "h": 96
-                    }
-                },
-                {
-                    "filename": "sprites/vault/level1/Vault_LVL1_11.png",
-                    "rotated": false,
-                    "trimmed": false,
-                    "sourceSize": {
-                        "w": 96,
-                        "h": 96
-                    },
-                    "spriteSourceSize": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 96,
-                        "h": 96
-                    },
-                    "frame": {
-                        "x": 2398,
                         "y": 2195,
                         "w": 96,
                         "h": 96
                     }
                 },
                 {
-                    "filename": "sprites/vault/level1/Vault_LVL1_4.png",
+                    "filename": "sprites/vault/level1/Vault_LVL1_11.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -17045,7 +17192,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level1/Vault_LVL1_3.png",
+                    "filename": "sprites/vault/level1/Vault_LVL1_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -17066,7 +17213,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level2/Vault_LVL2_15.png",
+                    "filename": "sprites/vault/level1/Vault_LVL1_3.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -17080,14 +17227,14 @@
                         "h": 96
                     },
                     "frame": {
-                        "x": 1344,
+                        "x": 672,
                         "y": 2418,
                         "w": 96,
                         "h": 96
                     }
                 },
                 {
-                    "filename": "sprites/vault/level2/Vault_LVL2_11.png",
+                    "filename": "sprites/vault/level2/Vault_LVL2_15.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -17108,7 +17255,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level2/Vault_LVL2_4.png",
+                    "filename": "sprites/vault/level2/Vault_LVL2_11.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -17129,7 +17276,7 @@
                     }
                 },
                 {
-                    "filename": "sprites/vault/level2/Vault_LVL2_3.png",
+                    "filename": "sprites/vault/level2/Vault_LVL2_4.png",
                     "rotated": false,
                     "trimmed": false,
                     "sourceSize": {
@@ -17144,6 +17291,27 @@
                     },
                     "frame": {
                         "x": 1632,
+                        "y": 2418,
+                        "w": 96,
+                        "h": 96
+                    }
+                },
+                {
+                    "filename": "sprites/vault/level2/Vault_LVL2_3.png",
+                    "rotated": false,
+                    "trimmed": false,
+                    "sourceSize": {
+                        "w": 96,
+                        "h": 96
+                    },
+                    "spriteSourceSize": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 96,
+                        "h": 96
+                    },
+                    "frame": {
+                        "x": 1728,
                         "y": 2418,
                         "w": 96,
                         "h": 96
@@ -17165,7 +17333,7 @@
                     },
                     "frame": {
                         "x": 2494,
-                        "y": 0,
+                        "y": 96,
                         "w": 96,
                         "h": 96
                     }
@@ -17186,7 +17354,7 @@
                     },
                     "frame": {
                         "x": 2494,
-                        "y": 96,
+                        "y": 192,
                         "w": 96,
                         "h": 96
                     }
@@ -17207,7 +17375,7 @@
                     },
                     "frame": {
                         "x": 2494,
-                        "y": 192,
+                        "y": 288,
                         "w": 96,
                         "h": 96
                     }
@@ -17228,7 +17396,7 @@
                     },
                     "frame": {
                         "x": 2494,
-                        "y": 288,
+                        "y": 384,
                         "w": 96,
                         "h": 96
                     }

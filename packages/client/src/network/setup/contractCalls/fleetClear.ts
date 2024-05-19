@@ -13,7 +13,7 @@ export const clearFleet = async (mud: MUD, fleet: Entity) => {
   await execute(
     {
       mud,
-      functionName: "Primodium__clearFleet",
+      functionName: "Pri_11__clearFleet",
       systemId: getSystemId("FleetClearSystem"),
       args: [fleet as Hex],
       withSession: true,
@@ -38,7 +38,7 @@ export const clearFleetUnitsResources = async (mud: MUD, fleet: Entity, content:
     return await execute(
       {
         mud,
-        functionName: "Primodium__clearResources",
+        functionName: "Pri_11__clearResources",
         systemId: getSystemId("FleetClearSystem"),
         args: [fleet as Hex, resourceCounts],
         withSession: true,
@@ -53,7 +53,7 @@ export const clearFleetUnitsResources = async (mud: MUD, fleet: Entity, content:
     return await execute(
       {
         mud,
-        functionName: "Primodium__clearUnits",
+        functionName: "Pri_11__clearUnits",
         systemId: getSystemId("FleetClearSystem"),
         args: [fleet as Hex, unitCounts],
         withSession: true,
@@ -67,7 +67,7 @@ export const clearFleetUnitsResources = async (mud: MUD, fleet: Entity, content:
     await execute(
       {
         mud,
-        functionName: "Primodium__clearUnitsAndResourcesFromFleet",
+        functionName: "Pri_11__clearUnitsAndResourcesFromFleet",
         systemId: getSystemId("FleetClearSystem"),
         args: [fleet as Hex, unitCounts, resourceCounts],
         withSession: true,

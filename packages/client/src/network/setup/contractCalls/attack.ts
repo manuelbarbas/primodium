@@ -15,7 +15,7 @@ export const attack = async (mud: MUD, entity: Entity, target: Entity) => {
   await execute(
     {
       mud,
-      functionName: "Primodium__attack",
+      functionName: "Pri_11__attack",
       systemId: getSystemId("CombatSystem"),
       args: [entity as Hex, target as Hex],
       withSession: true,

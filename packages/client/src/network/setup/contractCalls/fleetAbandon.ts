@@ -9,7 +9,7 @@ export const abandonFleet = async (mud: MUD, fleet: Entity) => {
   await execute(
     {
       mud,
-      functionName: "Primodium__abandonFleet",
+      functionName: "Pri_11__abandonFleet",
       systemId: getSystemId("FleetClearSystem"),
       args: [fleet as Hex],
       withSession: true,

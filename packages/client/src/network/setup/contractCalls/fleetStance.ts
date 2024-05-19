@@ -17,7 +17,7 @@ export const setFleetStance = async (mud: MUD, fleet: Entity, stance: EFleetStan
   await execute(
     {
       mud,
-      functionName: "Primodium__setFleetStance",
+      functionName: "Pri_11__setFleetStance",
       systemId: getSystemId("FleetStanceSystem"),
       args: [fleet as Hex, stance, target as Hex],
       withSession: true,
@@ -34,7 +34,7 @@ export const clearFleetStance = async (mud: MUD, fleet: Entity) => {
   await execute(
     {
       mud,
-      functionName: "Primodium__clearFleetStance",
+      functionName: "Pri_11__clearFleetStance",
       systemId: getSystemId("FleetStanceSystem"),
       args: [fleet as Hex],
       withSession: true,
