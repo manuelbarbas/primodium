@@ -554,7 +554,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Fleet",
       type: "Build",
       requiredMainBase: 3n,
-      requiredObjectives: [EObjectives.UpgradeStorageUnit2],
+      requiredObjectives: [EObjectives.BuildStorageUnit],
       buildingType: EntityType.StarmapperStation,
       description: "A Starmapper Station increases the number of fleets you can create.",
     },
