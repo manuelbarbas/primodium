@@ -320,8 +320,8 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
       });
 
       const randomName = Math.random().toString(36).substring(7);
-      await worldContract.write.Primodium__spawn();
-      await worldContract.write.Primodium__create([
+      await worldContract.write.Pri_11__spawn();
+      await worldContract.write.Pri_11__create([
         toHex32(randomName.substring(0, 6).toUpperCase()),
         EAllianceInviteMode.Closed,
       ]);

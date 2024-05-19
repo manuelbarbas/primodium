@@ -9,7 +9,7 @@ export const recallFleet = async (mud: MUD, fleet: Entity) => {
   await execute(
     {
       mud,
-      functionName: "Primodium__recallFleet",
+      functionName: "Pri_11__recallFleet",
       systemId: getSystemId("FleetRecallSystem"),
       args: [fleet as Hex],
       withSession: true,

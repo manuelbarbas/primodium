@@ -18,7 +18,7 @@ export const createFleet = async (
   await execute(
     {
       mud,
-      functionName: "Primodium__createFleet",
+      functionName: "Pri_11__createFleet",
       systemId: getSystemId("FleetCreateSystem"),
       args: [asteroidEntity as Hex, toUnitCountArray(deltas), toTransportableResourceArray(deltas)],
       withSession: true,

@@ -64,10 +64,10 @@ const transferOneWay = async (
 
   if (resourceCounts.every((count) => count == 0n)) {
     const functionName = fromIsAsteroid
-      ? "Primodium__transferUnitsFromAsteroidToFleet"
+      ? "Pri_11__transferUnitsFromAsteroidToFleet"
       : toIsAsteroid
-      ? "Primodium__transferUnitsFromFleetToAsteroid"
-      : "Primodium__transferUnitsFromFleetToFleet";
+      ? "Pri_11__transferUnitsFromFleetToAsteroid"
+      : "Pri_11__transferUnitsFromFleetToFleet";
     await execute(
       {
         mud,
@@ -81,10 +81,10 @@ const transferOneWay = async (
     );
   } else if (unitCounts.every((count) => count == 0n)) {
     const functionName = fromIsAsteroid
-      ? "Primodium__transferResourcesFromAsteroidToFleet"
+      ? "Pri_11__transferResourcesFromAsteroidToFleet"
       : toIsAsteroid
-      ? "Primodium__transferResourcesFromFleetToAsteroid"
-      : "Primodium__transferResourcesFromFleetToFleet";
+      ? "Pri_11__transferResourcesFromFleetToAsteroid"
+      : "Pri_11__transferResourcesFromFleetToFleet";
     await execute(
       {
         mud,
@@ -98,10 +98,10 @@ const transferOneWay = async (
     );
   } else {
     const functionName = fromIsAsteroid
-      ? "Primodium__transferUnitsAndResourcesFromAsteroidToFleet"
+      ? "Pri_11__transferUnitsAndResourcesFromAsteroidToFleet"
       : toIsAsteroid
-      ? "Primodium__transferUnitsAndResourcesFromFleetToAsteroid"
-      : "Primodium__transferUnitsAndResourcesFromFleetToFleet";
+      ? "Pri_11__transferUnitsAndResourcesFromFleetToAsteroid"
+      : "Pri_11__transferUnitsAndResourcesFromFleetToFleet";
     await execute(
       {
         mud,
@@ -134,7 +134,7 @@ const transferTwoWay = async (
     return await execute(
       {
         mud,
-        functionName: "Primodium__transferUnitsTwoWay",
+        functionName: "Pri_11__transferUnitsTwoWay",
         systemId: getSystemId("TransferTwoWaySystem"),
         args: [left as Hex, right as Hex, unitCounts],
         withSession: true,
@@ -146,7 +146,7 @@ const transferTwoWay = async (
     return await execute(
       {
         mud,
-        functionName: "Primodium__transferResourcesTwoWay",
+        functionName: "Pri_11__transferResourcesTwoWay",
         systemId: getSystemId("TransferTwoWaySystem"),
         args: [left as Hex, right as Hex, resourceCounts],
         withSession: true,
@@ -158,7 +158,7 @@ const transferTwoWay = async (
   await execute(
     {
       mud,
-      functionName: "Primodium__transferUnitsAndResourcesTwoWay",
+      functionName: "Pri_11__transferUnitsAndResourcesTwoWay",
       systemId: getSystemId("TransferTwoWaySystem"),
       args: [left as Hex, right as Hex, unitCounts, resourceCounts],
       withSession: true,

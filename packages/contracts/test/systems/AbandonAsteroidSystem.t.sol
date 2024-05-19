@@ -34,7 +34,7 @@ contract AbandonAsteroidSystemTest is PrimodiumTest {
   function testAbandonAsteroidInvalidInput() public {
     vm.startPrank(eve);
     vm.expectRevert("[Primodium] Not asteroid owner");
-    world.Primodium__abandonAsteroid(aliceHomeAsteroid);
+    world.Pri_11__abandonAsteroid(aliceHomeAsteroid);
   }
 
   function testAbandonAsteroid() public {
@@ -49,7 +49,7 @@ contract AbandonAsteroidSystemTest is PrimodiumTest {
 
     prevOwnedAsteroids = AsteroidSet.getAsteroidEntities(aliceEntity, AsteroidOwnedByKey);
     vm.startPrank(alice);
-    world.Primodium__abandonAsteroid(eveHomeAsteroid);
+    world.Pri_11__abandonAsteroid(eveHomeAsteroid);
     vm.stopPrank();
     currentOwnedAsteroids = AsteroidSet.getAsteroidEntities(aliceEntity, AsteroidOwnedByKey);
 

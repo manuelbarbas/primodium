@@ -12,7 +12,7 @@ contract S_CreateSecondaryAsteroidSystem is PrimodiumSystem {
     bytes32 asteroidEntity = LibAsteroid.createSecondaryAsteroid(positionData);
 
     if (Asteroid.getMapId(asteroidEntity) == uint8(EMap.Common)) {
-      IWorld(_world()).Primodium__buildRaidableAsteroid(asteroidEntity);
+      IWorld(_world()).Pri_11__buildRaidableAsteroid(asteroidEntity);
     }
 
     return asteroidEntity;

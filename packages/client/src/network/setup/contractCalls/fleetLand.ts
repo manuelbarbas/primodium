@@ -11,7 +11,7 @@ export const landFleet = async (mud: MUD, fleet: Entity, asteroidEntity: Entity)
   await execute(
     {
       mud,
-      functionName: "Primodium__landFleet",
+      functionName: "Pri_11__landFleet",
       systemId: getSystemId("FleetLandSystem"),
       args: [fleet as Hex, asteroidEntity as Hex],
       withSession: true,

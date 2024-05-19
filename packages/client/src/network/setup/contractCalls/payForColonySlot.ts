@@ -14,7 +14,7 @@ export const payForColonySlot = async (mud: MUD, shipyardEntity: Entity, deltas:
   await execute(
     {
       mud,
-      functionName: "Primodium__payForMaxColonySlots",
+      functionName: "Pri_11__payForMaxColonySlots",
       systemId: getSystemId("ColonySystem"),
       args: [shipyardEntity, resourceCounts],
       withSession: true,
