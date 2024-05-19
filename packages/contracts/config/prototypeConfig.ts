@@ -3102,14 +3102,29 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_ResourceReward: getResourceValues({ IronPlate: 100, Alloy: 100, PVCell: 100 }),
     },
   },
+  UpgradeShieldGenerator2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 100, Alloy: 100, PVCell: 100 }),
+    },
+  },
   BuildVault: {
     tables: {
       P_UnitReward: getUnitValues({ AnvilDrone: 5 }),
     },
   },
+  UpgradeVault2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 25, Alloy: 25, PVCell: 25 }),
+    },
+  },
   BuildSAMLauncher: {
     tables: {
       P_UnitReward: getUnitValues({ HammerDrone: 5 }),
+    },
+  },
+  UpgradeSAMLauncher2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 25, Alloy: 25, PVCell: 25 }),
     },
   },
 

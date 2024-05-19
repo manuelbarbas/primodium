@@ -731,6 +731,18 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
+    EObjectives.UpgradeShieldGenerator2,
+    {
+      category: "Resource Production",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildShieldGenerator],
+      buildingType: EntityType.ShieldGenerator,
+      level: 2n,
+      description:
+        "Upgrade Shield Generators to further increase defense boost and defense recovery. To upgrade, click on a Shield Generator and select Upgrade.",
+    },
+  ],
+  [
     EObjectives.BuildVault,
     {
       category: "Defense",
@@ -742,6 +754,18 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
+    EObjectives.UpgradeVault2,
+    {
+      category: "Resource Production",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildVault],
+      buildingType: EntityType.Vault,
+      level: 2n,
+      description:
+        "Upgrade Vaults to increase quantity and type of resources protected. To upgrade, click on a Vault and select Upgrade.",
+    },
+  ],
+  [
     EObjectives.BuildSAMLauncher,
     {
       category: "Defense",
@@ -750,6 +774,18 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.SAMLauncher,
       description:
         "SAM launchers give your asteroid native defense and additional health, protecting you from enemy attacks. You need electricity to power them. To build, select the SAM Launcher from the Blueprints menu and place it on an empty tile.",
+    },
+  ],
+  [
+    EObjectives.UpgradeSAMLauncher2,
+    {
+      category: "Resource Production",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildSAMLauncher],
+      buildingType: EntityType.SAMLauncher,
+      level: 2n,
+      description:
+        "Upgrade SAM launchers to further increase asteroid native defense and health. To upgrade, click on a SAM launcher and select Upgrade.",
     },
   ],
 
@@ -846,7 +882,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.PVCellFactory,
       level: 2n,
       description:
-        "Upgrade PV Cell Factories to produce more pv cells by consuming more lithium. To upgrade, click on an PV Cell Factory and select Upgrade.",
+        "Upgrade PV Cell Factories to produce more pv cells by consuming more lithium. To upgrade, click on a PV Cell Factory and select Upgrade.",
     },
   ],
 

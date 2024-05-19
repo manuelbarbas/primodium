@@ -176,8 +176,11 @@ export enum EObjectives {
 
   // (A-A-C) Defense
   BuildShieldGenerator,
+  UpgradeShieldGenerator2,
   BuildVault,
+  UpgradeVault2,
   BuildSAMLauncher,
+  UpgradeSAMLauncher2,
 
   // (A-B) Production
   BuildStorageUnit,
