@@ -12,6 +12,7 @@ import { LoadingOverlay } from "@/components/shared/LoadingOverlay";
 import Transfer from "@/components/hud/command/transfer/Transfer";
 import { TransferContextProvider } from "@/hooks/providers/TransferProvider";
 import { useMud } from "@/hooks";
+import { UnitUpgrades } from "@/components/hud/asteroid/building-menu/screens/UnitUpgrades";
 
 export const CommandCenterHUD = memo(() => {
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
@@ -33,18 +34,23 @@ export const CommandCenterHUD = memo(() => {
           <BattleMenuPopup />
 
           {/* Contains View Buttons */}
-          <HUD.Left>
+          <HUD.TopMiddle>
             <CommandViewSelector />
-          </HUD.Left>
+          </HUD.TopMiddle>
 
           <Tabs.Pane index={0} fragment>
             <Overview />
           </Tabs.Pane>
-          <Tabs.Pane index={2} fragment>
+          <Tabs.Pane index={1} fragment>
             <HUD.Center>
               <TransferContextProvider initialLeft={initialLeft}>
                 <Transfer />
               </TransferContextProvider>
+            </HUD.Center>
+          </Tabs.Pane>
+          <Tabs.Pane index={2} fragment>
+            <HUD.Center>
+              <UnitUpgrades />
             </HUD.Center>
           </Tabs.Pane>
         </Tabs>

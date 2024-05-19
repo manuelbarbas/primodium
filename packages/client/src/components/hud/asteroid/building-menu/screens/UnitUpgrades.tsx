@@ -3,6 +3,7 @@ import { EntityType } from "src/util/constants";
 import { UnitUpgrade } from "../widgets/UnitUpgrade";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/core/Button";
+import { Card } from "@/components/core/Card";
 
 export const UnitUpgrades: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -27,7 +28,7 @@ export const UnitUpgrades: React.FC = () => {
   const endIdx = Math.min(startIdx + itemsPerPage - 1, unitEntities.length);
 
   return (
-    <div>
+    <Card>
       <p className="opacity-50 text-xs italic mb-4 flex gap-2 z-10">
         <FaInfoCircle size={16} /> All fleets owned by this asteroid will have their units upgraded.
       </p>
@@ -59,6 +60,6 @@ export const UnitUpgrades: React.FC = () => {
           </div>
         )}
       </div>
-    </div>
+    </Card>
   );
 };
