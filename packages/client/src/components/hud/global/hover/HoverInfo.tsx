@@ -32,7 +32,8 @@ export const HoverInfo = () => {
 
   return (
     <Card
-      className="relative ml-5 pointer-events-none !heropattern-graphpaper-slate-800/50 shadow-2xl shadow-secondary/25 border-0 animate-in fade-in-50 zoom-in-90 duration-150"
+      noPointerEvents
+      className="relative ml-5 !heropattern-graphpaper-slate-800/50 shadow-2xl shadow-secondary/25 border-0 animate-in fade-in-50 zoom-in-90 duration-150"
       noDecor
     >
       {content}
