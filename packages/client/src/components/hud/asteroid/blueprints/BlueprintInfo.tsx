@@ -88,7 +88,7 @@ export const BlueprintInfo: React.FC<{
 
           {/* Function/Effect */}
           {(!!production.length || !!unitProduction?.value?.length || !!storageUpgrades?.length) && (
-            <SecondaryCard className="flex flex-col p-1">
+            <SecondaryCard noPointerEvents className="flex flex-col p-1">
               <span className="mb-2">Effect</span>
 
               <div className="flex flex-col gap-1 w-56 relative bg-transparent border-none -mt-1">
@@ -154,7 +154,7 @@ export const BlueprintInfo: React.FC<{
           )}
 
           {/* Cost */}
-          <SecondaryCard className="flex flex-col">
+          <SecondaryCard noPointerEvents className="flex flex-col">
             <span>Cost</span>
             <RecipeDisplay building={building} asteroid={spaceRock} />
 

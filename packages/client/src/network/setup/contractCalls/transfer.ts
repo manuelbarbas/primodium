@@ -8,6 +8,10 @@ import { getSystemId } from "src/util/encode";
 import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 import { toTransportableResourceArray, toUnitCountArray } from "src/util/send";
 import { Hex } from "viem";
+import { ampli } from "src/ampli";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
+import { bigintToNumber } from "src/util/number";
+
 const metadata = {
   id: "TRANSFER" as Entity,
   type: TransactionQueueType.TransferFleet,
@@ -77,7 +81,24 @@ const transferOneWay = async (
         withSession: true,
       },
       metadata,
-      () => activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, claimableObjective)
+      (receipt) => {
+        activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, claimableObjective);
+
+        const commonProperties = {
+          spaceRock: from as Hex,
+          spaceRockTo: to as Hex,
+          unitCounts: unitCounts.map((unitCount) => bigintToNumber(unitCount)),
+          ...parseReceipt(receipt),
+        };
+
+        if (fromIsAsteroid) {
+          ampli.systemTransferSystemPrimodiumTransferUnitsFromAsteroidToFleet(commonProperties);
+        } else if (toIsAsteroid) {
+          ampli.systemTransferSystemPrimodiumTransferUnitsFromFleetToAsteroid(commonProperties);
+        } else {
+          ampli.systemTransferSystemPrimodiumTransferUnitsFromFleetToFleet(commonProperties);
+        }
+      }
     );
   } else if (unitCounts.every((count) => count == 0n)) {
     const functionName = fromIsAsteroid
@@ -94,7 +115,24 @@ const transferOneWay = async (
         withSession: true,
       },
       metadata,
-      () => activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, claimableObjective)
+      (receipt) => {
+        activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, claimableObjective);
+
+        const commonProperties = {
+          spaceRock: from as Hex,
+          spaceRockTo: to as Hex,
+          resourceCounts: resourceCounts.map((resourceCount) => bigintToNumber(resourceCount)),
+          ...parseReceipt(receipt),
+        };
+
+        if (fromIsAsteroid) {
+          ampli.systemTransferSystemPrimodiumTransferResourcesFromAsteroidToFleet(commonProperties);
+        } else if (toIsAsteroid) {
+          ampli.systemTransferSystemPrimodiumTransferResourcesFromFleetToAsteroid(commonProperties);
+        } else {
+          ampli.systemTransferSystemPrimodiumTransferResourcesFromFleetToFleet(commonProperties);
+        }
+      }
     );
   } else {
     const functionName = fromIsAsteroid
@@ -111,7 +149,25 @@ const transferOneWay = async (
         withSession: true,
       },
       metadata,
-      () => activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, claimableObjective)
+      (receipt) => {
+        activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, claimableObjective);
+
+        const commonProperties = {
+          spaceRock: from as Hex,
+          spaceRockTo: to as Hex,
+          unitCounts: unitCounts.map((unitCount) => bigintToNumber(unitCount)),
+          resourceCounts: resourceCounts.map((resourceCount) => bigintToNumber(resourceCount)),
+          ...parseReceipt(receipt),
+        };
+
+        if (fromIsAsteroid) {
+          ampli.systemTransferSystemPrimodiumTransferUnitsAndResourcesFromAsteroidToFleet(commonProperties);
+        } else if (toIsAsteroid) {
+          ampli.systemTransferSystemPrimodiumTransferUnitsAndResourcesFromFleetToAsteroid(commonProperties);
+        } else {
+          ampli.systemTransferSystemPrimodiumTransferUnitsAndResourcesFromFleetToFleet(commonProperties);
+        }
+      }
     );
   }
 };
@@ -139,7 +195,15 @@ const transferTwoWay = async (
         args: [left as Hex, right as Hex, unitCounts],
         withSession: true,
       },
-      metadata
+      metadata,
+      (receipt) => {
+        ampli.systemTransferTwoWaySystemPrimodiumTransferUnitsTwoWay({
+          spaceRock: left as Hex,
+          spaceRockTo: right as Hex,
+          unitCounts: unitCounts.map((unitCount) => bigintToNumber(unitCount)),
+          ...parseReceipt(receipt),
+        });
+      }
     );
   }
   if (noUnits) {
@@ -151,7 +215,15 @@ const transferTwoWay = async (
         args: [left as Hex, right as Hex, resourceCounts],
         withSession: true,
       },
-      metadata
+      metadata,
+      (receipt) => {
+        ampli.systemTransferTwoWaySystemPrimodiumTransferResourcesTwoWay({
+          spaceRock: left as Hex,
+          spaceRockTo: right as Hex,
+          resourceCounts: resourceCounts.map((resourceCount) => bigintToNumber(resourceCount)),
+          ...parseReceipt(receipt),
+        });
+      }
     );
   }
 
@@ -163,6 +235,15 @@ const transferTwoWay = async (
       args: [left as Hex, right as Hex, unitCounts, resourceCounts],
       withSession: true,
     },
-    metadata
+    metadata,
+    (receipt) => {
+      ampli.systemTransferTwoWaySystemPrimodiumTransferUnitsAndResourcesTwoWay({
+        spaceRock: left as Hex,
+        spaceRockTo: right as Hex,
+        unitCounts: unitCounts.map((unitCount) => bigintToNumber(unitCount)),
+        resourceCounts: resourceCounts.map((resourceCount) => bigintToNumber(resourceCount)),
+        ...parseReceipt(receipt),
+      });
+    }
   );
 };

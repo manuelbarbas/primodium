@@ -16,10 +16,12 @@ const unscaledResources = new Set([
   EntityType.FleetCount,
   EntityType.VesselCapacity,
   EntityType.Housing,
-  EntityType.DefenseMultiplier,
 ]);
 
-export const getResourceDecimals = (resource: Entity) => (unscaledResources.has(resource) ? 0 : DECIMALS);
+const multipliers = new Set([EntityType.DefenseMultiplier, EntityType.UnitProductionMultiplier]);
+
+export const getResourceDecimals = (resource: Entity) =>
+  unscaledResources.has(resource) ? 0 : multipliers.has(resource) ? 2 : DECIMALS;
 
 export type ResourceCountData = {
   resourceCount: bigint;

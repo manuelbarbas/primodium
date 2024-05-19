@@ -175,7 +175,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fundamentals",
       type: "Upgrade",
-      requiredObjectives: [EObjectives.BuildIronMine, EObjectives.OpenBattleReport],
+      requiredObjectives: [EObjectives.BuildIronMine, EObjectives.UpgradeMainBase2],
       requiredMainBase: 2n,
       buildingType: EntityType.IronMine,
       level: 2n,
@@ -202,7 +202,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fundamentals",
       type: "Upgrade",
-      requiredObjectives: [EObjectives.BuildCopperMine, EObjectives.OpenBattleReport],
+      requiredObjectives: [EObjectives.BuildCopperMine, EObjectives.UpgradeMainBase2],
       requiredMainBase: 2n,
       buildingType: EntityType.CopperMine,
       level: 2n,
@@ -229,7 +229,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fundamentals",
       type: "Upgrade",
-      requiredObjectives: [EObjectives.BuildLithiumMine, EObjectives.OpenBattleReport],
+      requiredObjectives: [EObjectives.BuildLithiumMine, EObjectives.UpgradeMainBase2],
       requiredMainBase: 2n,
       buildingType: EntityType.LithiumMine,
       level: 2n,
@@ -644,7 +644,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Unit Management",
       type: "Claim",
-      requiredObjectives: [EObjectives.BuildDroneFactory],
+      requiredMainBase: 8n,
       description:
         "Upgrading a unit increases its stats. To upgrade, select Upgrade in the Command Center left side bar.",
       icon: InterfaceIcons.Add,
@@ -724,7 +724,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Defense",
       type: "Build",
-      requiredMainBase: 5n,
+      requiredMainBase: 7n,
       buildingType: EntityType.ShieldGenerator,
       description:
         "Shield Generators boost defense provided by fleets and SAM launchers, and improve asteroid defense recovery. They are very power hungry. To build, select the Shield Generator from the Blueprints menu and place it on an empty tile.",
@@ -746,7 +746,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Defense",
       type: "Build",
-      requiredMainBase: 8n,
+      requiredMainBase: 6n,
       buildingType: EntityType.SAMLauncher,
       description:
         "SAM launchers give your asteroid native defense and additional health, protecting you from enemy attacks. You need electricity to power them. To build, select the SAM Launcher from the Blueprints menu and place it on an empty tile.",
