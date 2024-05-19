@@ -9,7 +9,7 @@ import { Animations, Assets, Sprites } from "@primodiumxyz/assets";
 export class ShardAsteroid extends BaseAsteroid {
   constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord }) {
     const { id, scene, coord } = args;
-    super({ id, scene, coord, sprite: Sprites.Shard, outlineSprite: Sprites.AegisDrone });
+    super({ id, scene, coord, sprite: Sprites.Shard, outlineSprite: Sprites.AegisDrone, cull: false });
     this.asteroidSprite.postFX?.addShine();
     this.asteroidLabel.setProperties({
       emblemSprite: Sprites.ShardIcon,

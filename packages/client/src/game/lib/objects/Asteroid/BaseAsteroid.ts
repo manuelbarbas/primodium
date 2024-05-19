@@ -21,7 +21,6 @@ interface LODConfig {
 }
 
 export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IPrimodiumGameObject {
-  private containerId: Entity | undefined;
   private circle: Phaser.GameObjects.Arc;
   private animationTween: Phaser.Tweens.Tween;
 
@@ -42,15 +41,14 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     sprite: Sprites;
     outlineSprite: Sprites;
     containerId?: Entity;
+    cull?: boolean;
   }) {
-    const { id, scene, coord, sprite, containerId } = args;
-    const isShard = sprite === Sprites.Shard;
+    const { id, scene, coord, sprite, containerId, cull = true } = args;
     const pixelCoord = scene.utils.tileCoordToPixelCoord(coord);
 
     super(scene.phaserScene, pixelCoord.x, -pixelCoord.y);
 
     this.id = id;
-    this.containerId = containerId;
 
     this.asteroidSprite = new Phaser.GameObjects.Sprite(
       scene.phaserScene,
@@ -81,7 +79,9 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
       .setDepth(0);
 
     let fleetsContainer;
-    if (containerId && !isShard) {
+    // providing a containerId means that the rendering currently happening was deferred
+    // we currently don't need it afterwards
+    if (containerId) {
       const renderContainer = scene.objects.deferredRenderContainer.getContainer(containerId) as
         | DeferredAsteroidsRenderContainer
         | undefined;
@@ -102,7 +102,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     });
 
     // Add to object manager
-    this._scene.objects.asteroid.add(id, this, !isShard);
+    this._scene.objects.asteroid.add(id, this, cull);
   }
 
   spawn() {
