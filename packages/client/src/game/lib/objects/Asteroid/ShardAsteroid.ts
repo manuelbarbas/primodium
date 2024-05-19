@@ -25,6 +25,7 @@ export class ShardAsteroid extends BaseAsteroid {
 
   spawn() {
     super.spawn();
+    this.setActive(true).setVisible(true);
     return this;
   }
 
@@ -39,7 +40,7 @@ export class ShardAsteroid extends BaseAsteroid {
     return 0;
   }
 
-  explode(newPosition?: Coord, onAnimationComplete?: () => void) {
+  explode(newPosition?: Coord) {
     const animation = Animations.ShardExplosionDefault;
     const shakeDuration = 2000;
     const shakeInterval = 100;
@@ -105,7 +106,6 @@ export class ShardAsteroid extends BaseAsteroid {
           this.asteroidSprite.play(animation);
           this.asteroidSprite.anims.currentAnim!.key = "explode";
           this.asteroidSprite.once("animationcomplete-explode", () => {
-            if (onAnimationComplete) onAnimationComplete();
             this.asteroidSprite.setTexture(Assets.SpriteAtlas, Sprites.Shard);
             if (newPosition) this.respawn(newPosition);
           });

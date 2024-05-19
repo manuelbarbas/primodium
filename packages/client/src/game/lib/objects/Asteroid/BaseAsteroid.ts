@@ -44,6 +44,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     containerId?: Entity;
   }) {
     const { id, scene, coord, sprite, containerId } = args;
+    const isShard = sprite === Sprites.Shard;
     const pixelCoord = scene.utils.tileCoordToPixelCoord(coord);
 
     super(scene.phaserScene, pixelCoord.x, -pixelCoord.y);
@@ -80,7 +81,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
       .setDepth(0);
 
     let fleetsContainer;
-    if (containerId) {
+    if (containerId && !isShard) {
       const renderContainer = scene.objects.deferredRenderContainer.getContainer(containerId) as
         | DeferredAsteroidsRenderContainer
         | undefined;
@@ -101,7 +102,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     });
 
     // Add to object manager
-    this._scene.objects.asteroid.add(id, this, true);
+    this._scene.objects.asteroid.add(id, this, !isShard);
   }
 
   spawn() {
