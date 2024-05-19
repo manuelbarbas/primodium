@@ -85,7 +85,7 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
           <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
             {/* todo replace PRI with icon */}
             <IconLabel imageUri={ResourceImages.Primodium} />
-            {desc.primodium.toLocaleString()}
+            {formatResourceCount(EntityType.Iron, desc.primodium)}
           </div>
         </div>
         {inGracePeriod && (
