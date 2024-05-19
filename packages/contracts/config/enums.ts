@@ -132,6 +132,7 @@ export enum EObjectives {
 
   // (A-A-A-B) Conquest (cont)
   BuildShipyard,
+  UpgradeShipyard2,
   TrainColonyShip,
   DecryptAttack,
   CaptureAsteroid,
@@ -151,6 +152,7 @@ export enum EObjectives {
 
   // (A-A-A-C) fleet management
   BuildStarmapper,
+  UpgradeStarmapper2,
   CreateFleet2,
   DefendWithFleet,
   BlockWithFleet,

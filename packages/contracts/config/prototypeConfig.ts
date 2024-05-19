@@ -2954,6 +2954,11 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_UnitReward: getUnitValues({ LightningCraft: 10 }),
     },
   },
+  UpgradeShipyard2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 25, Alloy: 25, PVCell: 25 }),
+    },
+  },
   TrainColonyShip: {
     tables: {
       P_ResourceReward: getResourceValues({ IronPlate: 100, Alloy: 100, PVCell: 100 }),
@@ -3018,6 +3023,11 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
       P_UnitReward: getUnitValues({ LightningCraft: 10 }),
+    },
+  },
+  UpgradeStarmapper2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 25, Alloy: 25, PVCell: 25 }),
     },
   },
   DefendWithFleet: {

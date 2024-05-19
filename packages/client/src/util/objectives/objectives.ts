@@ -406,6 +406,18 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
+    EObjectives.UpgradeShipyard2,
+    {
+      category: "Conquest",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildShipyard],
+      buildingType: EntityType.Shipyard,
+      level: 2n,
+      description:
+        "Upgrading a Shipyard reduces the time required to construct new Colony Ships. To upgrade, click on a Shipyard and select Upgrade.",
+    },
+  ],
+  [
     EObjectives.TrainColonyShip,
     {
       category: "Conquest",
@@ -545,6 +557,18 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredObjectives: [EObjectives.UpgradeStorageUnit2],
       buildingType: EntityType.StarmapperStation,
       description: "A Starmapper Station increases the number of fleets you can create.",
+    },
+  ],
+  [
+    EObjectives.UpgradeStarmapper2,
+    {
+      category: "Fleet",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildStarmapper],
+      buildingType: EntityType.StarmapperStation,
+      level: 2n,
+      description:
+        "Upgrading a Starmapper Station increases the number of fleets you can create. To upgrade, click on a Starmapper Station and select Upgrade.",
     },
   ],
   [
