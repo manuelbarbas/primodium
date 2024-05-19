@@ -6,7 +6,7 @@ import { FleetsContainer } from "@/game/lib/objects/Asteroid/FleetsContainer";
 import { Assets, Sprites } from "@primodiumxyz/assets";
 import { AsteroidLabel } from "@/game/lib/objects/Asteroid/AsteroidLabel";
 import { Entity } from "@latticexyz/recs";
-import { isValidClick } from "@/game/lib/objects/inputGuards";
+import { isDragging, isValidClick } from "@/game/lib/objects/inputGuards";
 import { DeferredAsteroidsRenderContainer } from "@/game/lib/objects/Asteroid/DeferredAsteroidsRenderContainer";
 import { LODs } from "@/game/lib/objects/Asteroid/helpers";
 import { DepthLayers } from "@/game/lib/constants/common";
@@ -129,13 +129,21 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     return this;
   }
 
-  onHoverEnter(fn: (e: Phaser.Input.Pointer) => void) {
-    this.circle.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, fn);
+  onHoverEnter(fn: (e: Phaser.Input.Pointer) => void, onSprite = false) {
+    const obj = onSprite ? this.asteroidSprite : this.circle;
+    obj.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, (e: Phaser.Input.Pointer) => {
+      if (isDragging(e)) return;
+      fn(e);
+    });
     return this;
   }
 
-  onHoverExit(fn: (e: Phaser.Input.Pointer) => void) {
-    this.circle.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, fn);
+  onHoverExit(fn: (e: Phaser.Input.Pointer) => void, onSprite = false) {
+    const obj = onSprite ? this.asteroidSprite : this.circle;
+    obj.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, (e: Phaser.Input.Pointer) => {
+      if (isDragging(e)) return;
+      fn(e);
+    });
     return this;
   }
 

@@ -19,7 +19,6 @@ import { PrimodiumScene } from "@/game/api/scene";
 import { Action, EntityType } from "@/util/constants";
 import { getBuildingBottomLeft } from "@/util/building";
 import { hashEntities } from "@/util/encode";
-import { isDomInteraction } from "@/util/canvas";
 import { EMap } from "contracts/config/enums";
 import { WormholeBase } from "@/game/lib/objects/Building/Wormhole";
 
@@ -134,13 +133,12 @@ export const renderBuilding = (scene: PrimodiumScene) => {
 
       building
         .setLevel(components.Level.get(entity)?.value ?? 1n, true)
-        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, (pointer: Phaser.Input.Pointer) => {
-          if (pointer.getDuration() > 250 || isDomInteraction(pointer, "up")) return;
+        .onClick(() => {
           components.SelectedBuilding.set({
             value: entity,
           });
         })
-        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
+        .onHoverEnter(() => {
           const action = components.SelectedAction.get()?.value;
           // remove annoying tooltips when moving or placing buildings
           if (action !== Action.MoveBuilding && action !== Action.PlaceBuilding) {
@@ -153,7 +151,7 @@ export const renderBuilding = (scene: PrimodiumScene) => {
 
           building.setOutline(0x808080, 3);
         })
-        .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => {
+        .onHoverExit(() => {
           components.HoverEntity.remove();
 
           if (components.SelectedBuilding.get()?.value === entity) return;
