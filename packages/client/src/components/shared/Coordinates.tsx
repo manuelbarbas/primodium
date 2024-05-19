@@ -7,12 +7,15 @@ import { useGame } from "@/hooks/useGame";
 import { Mode } from "@/util/constants";
 import { Tile } from "@/game/lib/objects/Tile";
 import { DepthLayers } from "@/game/lib/constants/common";
+import { usePersistentStore } from "@/game/stores/PersistentStore";
 import { cn } from "@/util/client";
 
 // This will show tile and region coordinates in the starmap, and tile coordinates when hovering a tile in asteroid
 // In dev mode, this will be slightly above the "MUD Dev Tools" button, and be clickable in starmap for more info (pixel coordinates as well)
 export const Coordinates = () => {
   const DEV = import.meta.env.PRI_DEV === "true";
+  const [uiScale] = usePersistentStore((state) => [state.uiScale]);
+  console.log(uiScale);
 
   const selectedMode = components.SelectedMode.use()?.value;
   const asteroidMode = selectedMode === Mode.Asteroid || selectedMode === Mode.Spectate;
@@ -23,7 +26,8 @@ export const Coordinates = () => {
     <div
       className={cn(
         "absolute right-4 flex flex-col gap-1 items-end text-xs",
-        DEV ? "bottom-12 pointer-events-auto" : "bottom-2 pointer-events-none"
+        DEV ? "bottom-12 pointer-events-auto" : "bottom-2 pointer-events-none",
+        uiScale < 0.7 && "text-[10px]"
       )}
     >
       {asteroidMode ? DEV ? <CoordsAsteroidDev /> : <CoordsAsteroid /> : <CoordsStarmap DEV={DEV} />}
@@ -36,8 +40,9 @@ export const CoordsAsteroid = () => {
   const tileCoord = components.HoverTile.use();
 
   return (
-    <div className="grid grid-cols-[12px_48px] items-center gap-2 bg-black bg-opacity-30 p-2 rounded-sm">
+    <div className="grid grid-cols-[12px_40px_48px] items-center gap-2 bg-black bg-opacity-30 p-2 rounded-sm">
       <FaSquareXmark opacity={0.7} />
+      <CoordCaption caption="tile" />
       <CoordDisplay coord={tileCoord} />
     </div>
   );
