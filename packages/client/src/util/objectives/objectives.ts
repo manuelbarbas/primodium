@@ -175,7 +175,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fundamentals",
       type: "Upgrade",
-      requiredObjectives: [EObjectives.BuildIronMine, EObjectives.OpenBattleReport],
+      requiredObjectives: [EObjectives.BuildIronMine, EObjectives.UpgradeMainBase2],
       requiredMainBase: 2n,
       buildingType: EntityType.IronMine,
       level: 2n,
@@ -202,7 +202,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fundamentals",
       type: "Upgrade",
-      requiredObjectives: [EObjectives.BuildCopperMine, EObjectives.OpenBattleReport],
+      requiredObjectives: [EObjectives.BuildCopperMine, EObjectives.UpgradeMainBase2],
       requiredMainBase: 2n,
       buildingType: EntityType.CopperMine,
       level: 2n,
@@ -229,7 +229,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fundamentals",
       type: "Upgrade",
-      requiredObjectives: [EObjectives.BuildLithiumMine, EObjectives.OpenBattleReport],
+      requiredObjectives: [EObjectives.BuildLithiumMine, EObjectives.UpgradeMainBase2],
       requiredMainBase: 2n,
       buildingType: EntityType.LithiumMine,
       level: 2n,
