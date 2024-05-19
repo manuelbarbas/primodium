@@ -644,7 +644,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Unit Management",
       type: "Claim",
-      requiredObjectives: [EObjectives.BuildDroneFactory],
+      requiredMainBase: 8n,
       description:
         "Upgrading a unit increases its stats. To upgrade, select Upgrade in the Command Center left side bar.",
       icon: InterfaceIcons.Add,
