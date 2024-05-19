@@ -1581,7 +1581,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       6: {
         P_RequiredBaseLevel: { value: 7n },
-        P_RequiredResources: getResourceValues({ Copper: 5000, Alloy: 1000, U_Electricity: 50 }),
+        P_RequiredResources: getResourceValues({ Copper: 4000, Alloy: 1000, U_Electricity: 50 }),
         P_UnitProdMultiplier: { value: 130n },
         P_UnitProdTypes: { value: encodeArray(["AnvilDrone", "HammerDrone"]) },
       },
@@ -1996,37 +1996,37 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       4: {
         P_RequiredBaseLevel: { value: 9n },
-        P_RequiredResources: getResourceValues({ IronPlate: 500, Alloy: 500, PVCell: 500, U_Electricity: 50 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 200, Alloy: 200, PVCell: 200, U_Electricity: 50 }),
         P_Production: getResourceValues({ U_Unraidable: 2000, U_AdvancedUnraidable: 500 }),
       },
       5: {
         P_RequiredBaseLevel: { value: 10n },
-        P_RequiredResources: getResourceValues({ IronPlate: 1000, Alloy: 1000, PVCell: 1000, U_Electricity: 50 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 500, Alloy: 500, PVCell: 500, U_Electricity: 50 }),
         P_Production: getResourceValues({ U_Unraidable: 3000, U_AdvancedUnraidable: 1000 }),
       },
       6: {
         P_RequiredBaseLevel: { value: 11n },
-        P_RequiredResources: getResourceValues({ IronPlate: 2500, Alloy: 2500, PVCell: 2500, U_Electricity: 50 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 1000, Alloy: 1000, PVCell: 1000, U_Electricity: 50 }),
         P_Production: getResourceValues({ U_Unraidable: 4000, U_AdvancedUnraidable: 1500 }),
       },
       7: {
         P_RequiredBaseLevel: { value: 12n },
-        P_RequiredResources: getResourceValues({ IronPlate: 5000, Alloy: 5000, PVCell: 5000, U_Electricity: 100 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 2500, Alloy: 2500, PVCell: 2500, U_Electricity: 100 }),
         P_Production: getResourceValues({ U_Unraidable: 5000, U_AdvancedUnraidable: 2000 }),
       },
       8: {
         P_RequiredBaseLevel: { value: 13n },
-        P_RequiredResources: getResourceValues({ IronPlate: 10000, Alloy: 10000, PVCell: 10000, Kimberlite: 100 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 5000, Alloy: 5000, PVCell: 5000, Kimberlite: 100 }),
         P_Production: getResourceValues({ U_Unraidable: 10000, U_AdvancedUnraidable: 2500 }),
       },
       9: {
         P_RequiredBaseLevel: { value: 14n },
-        P_RequiredResources: getResourceValues({ IronPlate: 25000, Alloy: 25000, PVCell: 25000, Kimberlite: 500 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 8000, Alloy: 8000, PVCell: 8000, Kimberlite: 500 }),
         P_Production: getResourceValues({ U_Unraidable: 15000, U_AdvancedUnraidable: 3000 }),
       },
       10: {
         P_RequiredBaseLevel: { value: 15n },
-        P_RequiredResources: getResourceValues({ IronPlate: 50000, Alloy: 50000, PVCell: 50000, Kimberlite: 1000 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 15000, Alloy: 15000, PVCell: 15000, Kimberlite: 1000 }),
         P_Production: getResourceValues({ U_Unraidable: 25000, U_AdvancedUnraidable: 5000 }),
       },
     },
