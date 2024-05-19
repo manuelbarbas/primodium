@@ -1,4 +1,6 @@
+import { EntityType } from "@/util/constants";
 import { EntityToResourceImage } from "@/util/mappings";
+import { formatNumber, formatResourceCount } from "@/util/number";
 import { Entity } from "@latticexyz/recs";
 import { Badge } from "src/components/core/Badge";
 import { SecondaryCard } from "src/components/core/Card";
@@ -6,7 +8,6 @@ import { Navigator } from "src/components/core/Navigator";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useBuildingInfo } from "src/hooks/useBuildingInfo";
 import { getEntityTypeName } from "src/util/common";
-import { RESOURCE_SCALE } from "src/util/constants";
 
 const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
@@ -39,10 +40,10 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
       </DataLabel>
       <div className="grid grid-cols-3 w-full gap-1">
         <DataLabel label="level">
-          <b>{level.toString()}</b>
+          <b>{formatNumber(level)}</b>
         </DataLabel>
         <DataLabel label="max level">
-          <b>{maxLevel.toString()}</b>
+          <b>{formatNumber(maxLevel)}</b>
         </DataLabel>
         <DataLabel label="coord">
           <b>
@@ -133,13 +134,23 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
       {unitProductionMultiplier !== undefined && (
         <div className="grid grid-cols-2 w-full gap-1 ">
           <DataLabel label="unit prod speed">
-            <b>x{(unitProductionMultiplier / RESOURCE_SCALE).toString()}</b>
+            <b>
+              x
+              {formatResourceCount(EntityType.UnitProductionMultiplier, unitProductionMultiplier, {
+                fractionDigits: 2,
+              })}
+            </b>
           </DataLabel>
           <DataLabel label="next level unit prod speed">
             {!upgrade?.nextLevelUnitProductionMultiplier || level === maxLevel ? (
               <b>N/A</b>
             ) : (
-              <b>x{(Number(upgrade?.nextLevelUnitProductionMultiplier) / Number(RESOURCE_SCALE)).toString()}</b>
+              <b>
+                x
+                {formatResourceCount(EntityType.UnitProductionMultiplier, upgrade?.nextLevelUnitProductionMultiplier, {
+                  fractionDigits: 2,
+                })}
+              </b>
             )}
           </DataLabel>
         </div>
