@@ -1023,7 +1023,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     levels: {
       1: {
         P_RequiredBaseLevel: { value: 5n },
-        P_RequiredResources: getResourceValues({ Copper: 500, Lithium: 50 }),
+        P_RequiredResources: getResourceValues({ Copper: 200, Lithium: 50 }),
         P_RequiredDependency: getResourceValue({ Copper: 0.06 }),
         P_Production: getResourceValues({ Alloy: 0.024 }),
       },
