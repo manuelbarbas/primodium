@@ -61,7 +61,7 @@ export const CommandViewSelector = () => {
           >
             <IconLabel className={iconClass} imageUri={InterfaceIcons.Add} />
           </Modal.Button>
-          <Modal.Content className="w-[62rem]">
+          <Modal.Content className="w-[45rem]">
             <UnitUpgrades />
           </Modal.Content>
         </Modal>

@@ -2110,7 +2110,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
 
   LightningCraft: {
     tables: {
-      P_MaxLevel: { value: 0n },
+      P_MaxLevel: { value: 5n },
     },
     levels: {
       0: {
