@@ -8,11 +8,11 @@ export const initRootScene = async (game: GlobalApi): Promise<PrimodiumScene> =>
   const scene = await game.createScene(rootSceneConfig, true);
 
   const sceneApi = createSceneApi(scene);
-  sceneApi.audio.play("Background", "music");
-  sceneApi.audio.play("Background2", "music", {
-    loop: true,
-    volume: 0,
-  });
+  // sceneApi.audio.play("Background", "music");
+  // sceneApi.audio.play("Background2", "music", {
+  //   loop: true,
+  //   volume: 0,
+  // });
   sceneApi.audio.setPauseOnBlur(false);
 
   const runSystems = () => runRootSystems(sceneApi, game);

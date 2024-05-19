@@ -43,6 +43,7 @@ type PersistentState = {
   hideHotkeys: boolean;
   showIntro: boolean;
   showObjectives: boolean;
+  musicMuted: boolean;
 };
 
 type PersistentActions = {
@@ -52,6 +53,7 @@ type PersistentActions = {
   setKeybind: (keybindAction: KeybindActionKeys, keys: Set<Key>) => void;
   setNewPlayer: (val: boolean) => void;
   setVolume: (volume: number, channel: Channel) => void;
+  toggleMusicMuted: () => void;
   setFontStyle: (style: string) => void;
   setUiScale: (scale: number) => void;
   setConsoleHistory: (history: { input: string; output: string }[]) => void;
@@ -71,6 +73,7 @@ const defaults: PersistentState = {
   uiScale: 1,
   consoleHistory: [],
   noExternalAccount: false,
+  musicMuted: false,
   panes: {},
   volume: {
     master: 1,
@@ -155,6 +158,7 @@ export const usePersistentStore = create<PersistentState & PersistentActions>()(
       setVolume: (volume, channel) => {
         set({ volume: { ...get().volume, [channel]: volume } });
       },
+      toggleMusicMuted: () => set((state) => ({ musicMuted: !state.musicMuted })),
       setUiScale: (scale) => {
         set({ uiScale: scale });
       },

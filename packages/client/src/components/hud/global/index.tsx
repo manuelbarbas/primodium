@@ -12,6 +12,7 @@ import { memo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { HoverInfo } from "@/components/hud/global/hover/HoverInfo";
 import { FollowSocials } from "@/components/shared/FollowSocials";
+import { AudioPlayer } from "@/components/hud/global/MusicPlayer";
 
 export const GlobalHUD = memo(() => {
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
@@ -23,6 +24,7 @@ export const GlobalHUD = memo(() => {
 
       <HUD.TopLeft>
         <WarshipPopulation />
+        <AudioPlayer />
       </HUD.TopLeft>
 
       <HUD.TopMiddle className="flex flex-col items-center gap-2">

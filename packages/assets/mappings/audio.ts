@@ -1,6 +1,4 @@
 export enum Audio {
-  Background = "Background",
-  Background2 = "Background2",
   Bleep = "Bleep_01",
   Bleep2 = "Bleep_02",
   Bleep3 = "Bleep_03",
