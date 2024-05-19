@@ -78,15 +78,13 @@ export const CoordsStarmap = ({ DEV }: { DEV: boolean }) => {
     );
 
   return (
-    <div className="flex flex-col items-center gap-y-2 gap-x-4 bg-black bg-opacity-70 p-2 rounded-sm lg:flex-row">
-      <div className="flex w-full min-w-[120px] items-center gap-4">
-        <FaLocationArrow opacity={0.7} className="min-w-[12px]" />
-        <CoordDisplay coord={tileCoord} />
-      </div>
-      <div className="flex w-full min-w-[120px] items-center gap-4">
-        <FaCropSimple opacity={0.7} className="min-w-[12px]" />
-        <CoordDisplay coord={chunkCoord} />
-      </div>
+    <div className="grid grid-cols-[12px_70px_minmax(100px,auto)] items-center gap-y-2 gap-x-4 bg-black bg-opacity-70 p-2 rounded-sm">
+      <FaLocationArrow opacity={0.7} className="min-w-[12px]" />
+      <CoordCaption caption="coords" />
+      <CoordDisplay coord={tileCoord} />
+      <FaCropSimple opacity={0.7} className="min-w-[12px]" />
+      <CoordCaption caption="region" />
+      <CoordDisplay coord={chunkCoord} />
     </div>
   );
 };
@@ -130,7 +128,7 @@ export const CoordsAsteroidDev = () => {
   return (
     <div className="grid grid-cols-[12px_40px_48px] items-center gap-2 bg-black bg-opacity-30 p-2 rounded-sm">
       <FaSquareXmark opacity={0.7} />
-      <CoordCaption caption="tile" />
+      <CoordCaption caption="coords" />
       <CoordDisplay coord={tileCoord} />
     </div>
   );
