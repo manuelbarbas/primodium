@@ -1,5 +1,5 @@
 export function isValidClick(e: Phaser.Input.Pointer) {
-  return e.upElement?.nodeName === "CANVAS" && e.getDuration() <= 250 && e.primaryDown;
+  return e.upElement?.nodeName === "CANVAS" && e.getDuration() <= 250;
 }
 
 export function isDragging(e: Phaser.Input.Pointer) {
@@ -7,5 +7,5 @@ export function isDragging(e: Phaser.Input.Pointer) {
 }
 
 export function isValidHover(e: Phaser.Input.Pointer) {
-  return !isDragging(e) && !isValidClick(e) && e.upElement?.nodeName === "CANVAS";
+  return !isDragging(e) && !e.primaryDown;
 }

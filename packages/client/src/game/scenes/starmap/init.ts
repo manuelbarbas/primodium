@@ -11,7 +11,6 @@ import { runSystems as runStarmapSystems } from "@/game/scenes/starmap/systems";
 
 export const initStarmapScene = async (game: GlobalApi): Promise<PrimodiumScene> => {
   const scene = await game.createScene(starmapSceneConfig, false);
-
   const sceneApi = createSceneApi(scene);
 
   setupBasicCameraMovement(sceneApi, {
