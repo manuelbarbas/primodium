@@ -3067,6 +3067,11 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_UnitReward: getUnitValues({ AnvilDrone: 5, HammerDrone: 5 }),
     },
   },
+  UpgradeDroneFactory2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 25, Alloy: 25, PVCell: 25 }),
+    },
+  },
   TrainAnvilDrone: {
     tables: {
       P_ResourceReward: getResourceValues({ IronPlate: 25 }),
@@ -3092,6 +3097,11 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   BuildHangar: {
     tables: {
       P_UnitReward: getUnitValues({ AnvilDrone: 5, HammerDrone: 5, LightningCraft: 5 }),
+    },
+  },
+  UpgradeHanger2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 25, Alloy: 25, PVCell: 25 }),
     },
   },
 

@@ -166,6 +166,7 @@ export enum EObjectives {
 
   // (A-A-B-B) unit production (cont)
   BuildDroneFactory,
+  UpgradeDroneFactory2,
   TrainAnvilDrone,
   TrainHammerDrone,
   TrainAegisDrone,
@@ -173,6 +174,7 @@ export enum EObjectives {
 
   // (A-A-B-C) unit storage
   BuildHangar,
+  UpgradeHanger2,
 
   // (A-A-C) Defense
   BuildShieldGenerator,

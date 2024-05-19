@@ -637,6 +637,18 @@ export const Objectives = new Map<EObjectives, Objective>([
         "Drone factories train drones, which are strong and specialized. To build, select the Drone Factory from the Blueprints menu and place it on any empty tile.",
     },
   ],
+  [
+    EObjectives.UpgradeDroneFactory2,
+    {
+      category: "Unit Production",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildDroneFactory],
+      buildingType: EntityType.DroneFactory,
+      level: 2n,
+      description:
+        "Upgrading a Drone Factories produces units more quickly and might unlock new units. To upgrade, click on a Drone Factory and select Upgrade.",
+    },
+  ],
 
   /* --------------------- A-A-B-A Unit Management ---------------------------- */
   [
@@ -714,7 +726,19 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 5n,
       buildingType: EntityType.Hangar,
       description:
-        "Hangars provide large amounts of housing for units. To build, select the Hangar from the Blueprints menu and place it on an empty tile.",
+        "Hangars provide large amounts of space-efficient housing for units. To build, select the Hangar from the Blueprints menu and place it on an empty tile.",
+    },
+  ],
+  [
+    EObjectives.UpgradeHanger2,
+    {
+      category: "Unit Storage",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildHangar],
+      buildingType: EntityType.Hangar,
+      level: 2n,
+      description:
+        "Upgrade Hangars to further increase space-efficient housing for units. To upgrade, click on a Hangar and select Upgrade.",
     },
   ],
 
@@ -733,7 +757,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.UpgradeShieldGenerator2,
     {
-      category: "Resource Production",
+      category: "Defense",
       type: "Upgrade",
       requiredObjectives: [EObjectives.BuildShieldGenerator],
       buildingType: EntityType.ShieldGenerator,
@@ -756,7 +780,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.UpgradeVault2,
     {
-      category: "Resource Production",
+      category: "Defense",
       type: "Upgrade",
       requiredObjectives: [EObjectives.BuildVault],
       buildingType: EntityType.Vault,
@@ -779,7 +803,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.UpgradeSAMLauncher2,
     {
-      category: "Resource Production",
+      category: "Defense",
       type: "Upgrade",
       requiredObjectives: [EObjectives.BuildSAMLauncher],
       buildingType: EntityType.SAMLauncher,
@@ -902,7 +926,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.UpgradeSolarPanel2,
     {
-      category: "Fundamentals",
+      category: "Resource Production",
       type: "Upgrade",
       requiredObjectives: [EObjectives.BuildSolarPanel],
       requiredMainBase: 4n,
