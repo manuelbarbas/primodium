@@ -25,6 +25,13 @@ export const createAlliance = async (mud: MUD, name: string, inviteOnly: boolean
     },
     {
       id: hashEntities(TransactionQueueType.CreateAlliance, mud.playerAccount.entity),
+    },
+    (receipt) => {
+      ampli.systemCreate({
+        allianceName: name,
+        allianceInviteOnly: inviteOnly,
+        ...parseReceipt(receipt),
+      });
     }
   );
 };
@@ -40,6 +47,12 @@ export const updateAllianceName = async (mud: MUD, allianceEntity: Entity, name:
     },
     {
       id: hashEntities(TransactionQueueType.UpdateAllianceName, mud.playerAccount.entity),
+    },
+    (receipt) => {
+      ampli.systemAllianceSystemPrimodiumSetAllianceName({
+        allianceName: name,
+        ...parseReceipt(receipt),
+      });
     }
   );
 };
@@ -55,6 +68,13 @@ export const updateAllianceAccess = async (mud: MUD, allianceEntity: Entity, inv
     },
     {
       id: hashEntities(TransactionQueueType.UpdateAllianceAccess, mud.playerAccount.entity),
+    },
+    (receipt) => {
+      ampli.systemAllianceSystemPrimodiumSetAllianceInviteMode({
+        allianceName: getAllianceName(allianceEntity),
+        allianceInviteOnly: inviteOnly,
+        ...parseReceipt(receipt),
+      });
     }
   );
 };
@@ -270,14 +290,12 @@ export const revokeInvite = async (mud: MUD, target: Entity) => {
     },
     {
       id: hashEntities(TransactionQueueType.RevokeInvite, target),
+    },
+    (receipt) => {
+      ampli.systemAllianceSystemPrimodiumRevokeInvite({
+        allianceRejectee: target,
+        ...parseReceipt(receipt),
+      });
     }
-    // TODO: add ampli tracker
-    // (receipt) => {
-    //   ampli.systemRevokeInvite({
-    //     allianceName: getAllianceNameFromPlayer(target),
-    //     allianceRejectee: target,
-    //     ...parseReceipt(receipt),
-    //   });
-    // }
   );
 };

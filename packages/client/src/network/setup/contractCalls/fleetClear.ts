@@ -6,6 +6,8 @@ import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { toTransportableResourceArray, toUnitCountArray } from "src/util/send";
 import { Hex } from "viem";
+import { ampli } from "src/ampli";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 const clearId = "clear" as Entity;
 
@@ -22,7 +24,14 @@ export const clearFleet = async (mud: MUD, fleet: Entity) => {
       id: clearId,
       type: TransactionQueueType.ClearFleet,
     },
-    () => components.SelectedFleet.remove()
+    (receipt) => {
+      components.SelectedFleet.remove();
+
+      ampli.systemFleetClearSystemPrimodiumClearFleet({
+        fleets: [fleet as Hex],
+        ...parseReceipt(receipt),
+      });
+    }
   );
 };
 
@@ -46,6 +55,12 @@ export const clearFleetUnitsResources = async (mud: MUD, fleet: Entity, content:
       {
         id: clearId,
         type: TransactionQueueType.CreateFleet,
+      },
+      (receipt) => {
+        ampli.systemFleetClearSystemPrimodiumClearResources({
+          fleets: [fleet as Hex],
+          ...parseReceipt(receipt),
+        });
       }
     );
   }
@@ -61,6 +76,12 @@ export const clearFleetUnitsResources = async (mud: MUD, fleet: Entity, content:
       {
         id: hashEntities(TransactionQueueType.ClearFleet, fleet),
         type: TransactionQueueType.CreateFleet,
+      },
+      (receipt) => {
+        ampli.systemFleetClearSystemPrimodiumClearUnits({
+          fleets: [fleet as Hex],
+          ...parseReceipt(receipt),
+        });
       }
     );
   } else {
@@ -75,6 +96,12 @@ export const clearFleetUnitsResources = async (mud: MUD, fleet: Entity, content:
       {
         id: hashEntities(TransactionQueueType.ClearFleet, fleet),
         type: TransactionQueueType.CreateFleet,
+      },
+      (receipt) => {
+        ampli.systemFleetClearSystemPrimodiumClearUnitsAndResourcesFromFleet({
+          fleets: [fleet as Hex],
+          ...parseReceipt(receipt),
+        });
       }
     );
   }

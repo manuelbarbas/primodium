@@ -7,6 +7,8 @@ import { MUD } from "src/network/types";
 import { getSystemId } from "src/util/encode";
 import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 import { Hex } from "viem";
+import { ampli } from "src/ampli";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const claimPrimodium = async (mud: MUD, asteroidEntity: Entity) => {
   await execute(
@@ -21,7 +23,14 @@ export const claimPrimodium = async (mud: MUD, asteroidEntity: Entity) => {
       id: "ClaimPrimodium" as Entity,
     },
 
-    () => makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.EarnPrimodiumOnAsteroid)
+    (receipt) => {
+      makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.EarnPrimodiumOnAsteroid);
+
+      ampli.systemClaimPrimodiumSystemPrimodiumClaimPrimodium({
+        spaceRock: asteroidEntity as Hex,
+        ...parseReceipt(receipt),
+      });
+    }
   );
 };
 
@@ -52,8 +61,13 @@ export const claimShardAsteroid = async (mud: MUD, asteroidEntity: Entity) => {
     {
       id: "ClaimPrimodium" as Entity,
     },
-    () => {
+    (receipt) => {
       if (explosive) makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.ExplodeVolatileShard);
+
+      ampli.systemClaimPrimodiumSystemPrimodiumClaimShardAsteroidPoints({
+        spaceRock: asteroidEntity as Hex,
+        ...parseReceipt(receipt),
+      });
     }
   );
 };

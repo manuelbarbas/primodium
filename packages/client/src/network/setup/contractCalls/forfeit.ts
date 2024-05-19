@@ -5,6 +5,8 @@ import { executeBatch } from "src/network/txExecute/txExecuteBatch";
 import { MUD } from "src/network/types";
 import { getSystemId } from "src/util/encode";
 import { Hex } from "viem";
+import { ampli } from "src/ampli";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const forfeit = async (mud: MUD) => {
   const query = [HasValue(components.OwnedBy, { value: mud.playerAccount.entity }), Has(components.Asteroid)];
@@ -24,7 +26,13 @@ export const forfeit = async (mud: MUD) => {
       mud,
       systemCalls: abandonCalls,
     },
-    { id: "FORFEIT" as Entity }
+    { id: "FORFEIT" as Entity },
+    (receipt) => {
+      ampli.systemAbandonAsteroidSystemPrimodiumAbandonAsteroid({
+        spaceRocks: Array.from(asteroids.values()),
+        ...parseReceipt(receipt),
+      });
+    }
   );
 };
 
@@ -36,6 +44,12 @@ export const abandonAsteroid = async (mud: MUD, asteroidEntity: Entity) => {
       functionName: "Pri_11__abandonAsteroid",
       args: [asteroidEntity as Hex],
     },
-    { id: asteroidEntity }
+    { id: asteroidEntity },
+    (receipt) => {
+      ampli.systemAbandonAsteroidSystemPrimodiumAbandonAsteroid({
+        spaceRocks: [asteroidEntity as Hex],
+        ...parseReceipt(receipt),
+      });
+    }
   );
 };

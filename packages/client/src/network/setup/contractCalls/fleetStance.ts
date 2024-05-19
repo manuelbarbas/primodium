@@ -6,6 +6,8 @@ import { TransactionQueueType } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
 import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 import { Hex } from "viem";
+import { ampli } from "src/ampli";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const setFleetStance = async (mud: MUD, fleet: Entity, stance: EFleetStance, target: Entity) => {
   const objective =
@@ -26,7 +28,16 @@ export const setFleetStance = async (mud: MUD, fleet: Entity, stance: EFleetStan
       id: "FleetStance" as Entity,
       type: TransactionQueueType.FleetStance,
     },
-    () => !!objective && makeObjectiveClaimable(mud.playerAccount.entity, objective)
+    (receipt) => {
+      !!objective && makeObjectiveClaimable(mud.playerAccount.entity, objective);
+
+      ampli.systemFleetStanceSystemPrimodiumSetFleetStance({
+        fleets: [fleet as Hex],
+        fleetStance: stance,
+        spaceRock: target as Hex,
+        ...parseReceipt(receipt),
+      });
+    }
   );
 };
 
@@ -42,6 +53,12 @@ export const clearFleetStance = async (mud: MUD, fleet: Entity) => {
     {
       id: "FleetStance" as Entity,
       type: TransactionQueueType.FleetStance,
+    },
+    (receipt) => {
+      ampli.systemFleetStanceSystemPrimodiumClearFleetStance({
+        fleets: [fleet as Hex],
+        ...parseReceipt(receipt),
+      });
     }
   );
 };

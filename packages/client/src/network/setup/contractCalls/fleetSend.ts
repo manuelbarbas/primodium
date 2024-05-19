@@ -8,6 +8,8 @@ import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 import { Hex } from "viem";
+import { ampli } from "src/ampli";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const sendFleet = async (mud: MUD, fleet: Entity, spaceRock: Entity) => {
   const activeAsteroid = components.ActiveRock.get()?.value;
@@ -23,8 +25,14 @@ export const sendFleet = async (mud: MUD, fleet: Entity, spaceRock: Entity) => {
       id: hashEntities(TransactionQueueType.SendFleet, fleet),
       type: TransactionQueueType.SendFleet,
     },
-    () => {
+    (receipt) => {
       activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.SendFleet);
+
+      ampli.systemFleetSendSystemPrimodiumSendFleet({
+        fleets: [fleet as Hex],
+        spaceRock: spaceRock,
+        ...parseReceipt(receipt),
+      });
     }
   );
 };
@@ -43,6 +51,15 @@ export const sendFleetPosition = async (mud: MUD, fleet: Entity, position: Coord
       id: hashEntities(TransactionQueueType.SendFleet, fleet),
       type: TransactionQueueType.SendFleet,
     },
-    () => activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.SendFleet)
+    (receipt) => {
+      activeAsteroid && makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.SendFleet);
+
+      ampli.systemFleetSendSystemPrimodiumSendFleet({
+        fleets: [fleet as Hex],
+        spaceRock: "",
+        spaceRockCoord: [position.x, position.y],
+        ...parseReceipt(receipt),
+      });
+    }
   );
 };
