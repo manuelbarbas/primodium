@@ -46,7 +46,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     Spawned.set(playerEntity, true);
 
     switchPrank(alice);
-    aliceAsteroidEntity = world.Primodium__spawn();
+    aliceAsteroidEntity = world.Pri_11__spawn();
     switchPrank(creator);
   }
 
@@ -64,7 +64,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
 
   function testCannotProduceUnit() public {
     vm.expectRevert(bytes("[TrainUnitsSystem] Building cannot produce unit"));
-    world.Primodium__trainUnits(buildingEntity, unit, 1);
+    world.Pri_11__trainUnits(buildingEntity, unit, 1);
   }
 
   function testTrainUnits() public {
@@ -72,7 +72,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     unitPrototypes[0] = unitPrototype;
     P_UnitProdTypes.set(buildingPrototype, 0, unitPrototypes);
 
-    world.Primodium__trainUnits(buildingEntity, unit, 1);
+    world.Pri_11__trainUnits(buildingEntity, unit, 1);
     Value_UnitProductionQueueData memory data = UnitProductionQueue.peek(buildingEntity);
     assertEq(toString(data.unitEntity), toString(unitPrototype));
     assertEq(data.quantity, 1);
@@ -94,7 +94,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     P_UnitProdTypes.set(buildingPrototype, 0, unitPrototypes);
 
     vm.expectRevert(bytes("[SpendResources] Not enough resources to spend"));
-    world.Primodium__trainUnits(buildingEntity, unit, 1);
+    world.Pri_11__trainUnits(buildingEntity, unit, 1);
   }
 
   function testTrainUnitsUpdateAsteroid() public {
@@ -111,7 +111,7 @@ contract TrainUnitsSystemTest is PrimodiumTest {
     ProductionRate.set(asteroidEntity, Iron, 10);
     LastClaimedAt.set(asteroidEntity, block.timestamp - 10);
 
-    world.Primodium__trainUnits(buildingEntity, unit, 1);
+    world.Pri_11__trainUnits(buildingEntity, unit, 1);
     LibUnit.claimUnits(asteroidEntity);
     assertEq(ResourceCount.get(asteroidEntity, Iron), 100, "resource count");
     assertEq(UnitCount.get(asteroidEntity, unitPrototype), 100, "unit count");
@@ -119,11 +119,11 @@ contract TrainUnitsSystemTest is PrimodiumTest {
 
   function testInvalidBuilding() public {
     vm.expectRevert(bytes("[Primodium] Not building owner"));
-    world.Primodium__trainUnits(bytes32(0), unit, 1);
+    world.Pri_11__trainUnits(bytes32(0), unit, 1);
   }
 
   function testInvalidUnit() public {
     vm.expectRevert();
-    world.Primodium__trainUnits(buildingEntity, EUnit(uint8(100)), 1);
+    world.Pri_11__trainUnits(buildingEntity, EUnit(uint8(100)), 1);
   }
 }

@@ -39,7 +39,6 @@ export class DeferredRenderContainer<
   protected _objectApi: PrimodiumObjectApi<SpawnedObject>;
   // shared callback to spawn objects
   private spawnCallback: (args: SpawnArgs) => SpawnedObject | undefined;
-  private onObjectSpawnedCallbacks: ((entity: Entity) => void)[] = [];
   private onEventOnceCallbacks: Map<Entity, () => void> = new Map();
 
   constructor(args: {
@@ -76,6 +75,7 @@ export class DeferredRenderContainer<
     this.chunkCoords.set(this._scene.utils.encodeKeyForChunk(chunkCoord), entities);
   }
 
+  // TODO: this is ugly, will not live here or not in this form
   updatePosition(entity: Entity, coord: Coord) {
     const spawnArgs = this.objects.get(entity);
     if (!spawnArgs) return;
@@ -127,8 +127,6 @@ export class DeferredRenderContainer<
     this.spawned.set(entity, true);
     this.objects.delete(entity);
 
-    this.onObjectSpawnedCallbacks.forEach((callback) => callback(entity));
-
     return obj;
   }
 
@@ -139,16 +137,6 @@ export class DeferredRenderContainer<
   onNewEnterChunk(chunkCoord: Coord) {
     const entities = this.chunkCoords.get(this._scene.utils.encodeKeyForChunk(chunkCoord)) ?? [];
     entities.forEach((entity) => this.spawn(entity as Entity));
-  }
-
-  // TODO: we have this in `StaticObjectManager`, bad code
-  onObjectSpawned(callback: (entity: Entity) => void) {
-    this.onObjectSpawnedCallbacks.push(callback);
-
-    return () => {
-      const index = this.onObjectSpawnedCallbacks.indexOf(callback);
-      if (index !== -1) this.onObjectSpawnedCallbacks.splice(index, 1);
-    };
   }
 
   addOnEventOnce(entity: Entity, callback: () => void) {

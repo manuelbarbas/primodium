@@ -32,7 +32,7 @@ contract DestroySystemTest is PrimodiumTest {
 
   function buildIronMine() private returns (bytes32) {
     removeRequirements(EBuilding.IronMine);
-    return world.Primodium__build(EBuilding.IronMine, position);
+    return world.Pri_11__build(EBuilding.IronMine, position);
   }
 
   function testShipyardDestroy() public {
@@ -44,16 +44,16 @@ contract DestroySystemTest is PrimodiumTest {
     P_RequiredBaseLevel.set(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Shipyard)), 1, 0);
 
     PositionData memory originalPosition = getTilePosition(Home.get(playerEntity), building);
-    bytes32 buildingEntity = world.Primodium__build(building, originalPosition);
+    bytes32 buildingEntity = world.Pri_11__build(building, originalPosition);
 
     uint256 gas = gasleft();
-    world.Primodium__destroy(buildingEntity);
+    world.Pri_11__destroy(buildingEntity);
     console.log("after", gas - gasleft());
   }
 
   function destroy(bytes32 buildingEntity) public {
     int32[] memory tilePositions = TilePositions.get(buildingEntity);
-    world.Primodium__destroy(buildingEntity);
+    world.Pri_11__destroy(buildingEntity);
 
     assertEq(TilePositions.get(buildingEntity).length, 0);
     for (uint256 i = 0; i < tilePositions.length; i += 2) {
@@ -93,12 +93,12 @@ contract DestroySystemTest is PrimodiumTest {
     switchPrank(creator);
 
     PositionData memory ironPosition = getTilePosition(asteroidEntity, EBuilding.IronMine);
-    bytes32 ironMine = world.Primodium__build(EBuilding.IronMine, ironPosition);
+    bytes32 ironMine = world.Pri_11__build(EBuilding.IronMine, ironPosition);
     uint256 productionIncrease = P_Production.getAmounts(IronMinePrototypeId, 1)[0];
     assertEq(ProductionRate.get(asteroidEntity, uint8(EResource.Iron)), originalProduction + productionIncrease);
     assertEq(ConsumptionRate.get(asteroidEntity, uint8(EResource.Iron)), productionReduction);
 
-    world.Primodium__destroy(ironMine);
+    world.Pri_11__destroy(ironMine);
     assertEq(ConsumptionRate.get(asteroidEntity, uint8(EResource.Iron)), 0);
     assertEq(ProductionRate.get(asteroidEntity, uint8(EResource.Iron)), originalProduction);
   }
@@ -117,13 +117,13 @@ contract DestroySystemTest is PrimodiumTest {
     switchPrank(creator);
 
     PositionData memory ironPosition = getTilePosition(asteroidEntity, EBuilding.IronMine);
-    bytes32 ironMine = world.Primodium__build(EBuilding.IronMine, ironPosition);
+    bytes32 ironMine = world.Pri_11__build(EBuilding.IronMine, ironPosition);
     uint256 productionIncrease = P_Production.getAmounts(IronMinePrototypeId, 1)[0];
     assertEq(ProductionRate.get(asteroidEntity, uint8(EResource.Iron)), originalProduction + productionIncrease);
     assertEq(ConsumptionRate.get(asteroidEntity, uint8(EResource.Iron)), productionReduction);
-    world.Primodium__toggleBuilding(ironMine);
+    world.Pri_11__toggleBuilding(ironMine);
 
-    world.Primodium__destroy(ironMine);
+    world.Pri_11__destroy(ironMine);
     assertEq(ConsumptionRate.get(asteroidEntity, uint8(EResource.Iron)), 0);
     assertEq(ProductionRate.get(asteroidEntity, uint8(EResource.Iron)), originalProduction);
   }
@@ -138,10 +138,10 @@ contract DestroySystemTest is PrimodiumTest {
     switchPrank(creator);
 
     PositionData memory ironPosition = getTilePosition(asteroidEntity, EBuilding.IronMine);
-    bytes32 ironMine = world.Primodium__build(EBuilding.IronMine, ironPosition);
+    bytes32 ironMine = world.Pri_11__build(EBuilding.IronMine, ironPosition);
     assertEq(ProductionRate.get(asteroidEntity, uint8(EResource.Iron)), increase);
 
-    world.Primodium__destroy(ironMine);
+    world.Pri_11__destroy(ironMine);
     assertEq(ProductionRate.get(asteroidEntity, uint8(EResource.Iron)), 0);
   }
 
@@ -155,10 +155,10 @@ contract DestroySystemTest is PrimodiumTest {
     switchPrank(creator);
 
     PositionData memory ironPosition = getTilePosition(asteroidEntity, EBuilding.IronMine);
-    bytes32 ironMine = world.Primodium__build(EBuilding.IronMine, ironPosition);
+    bytes32 ironMine = world.Pri_11__build(EBuilding.IronMine, ironPosition);
     assertEq(ProductionRate.get(asteroidEntity, uint8(EResource.Iron)), increase);
-    world.Primodium__toggleBuilding(ironMine);
-    world.Primodium__destroy(ironMine);
+    world.Pri_11__toggleBuilding(ironMine);
+    world.Pri_11__destroy(ironMine);
     assertEq(ProductionRate.get(asteroidEntity, uint8(EResource.Iron)), 0);
   }
 
@@ -172,10 +172,10 @@ contract DestroySystemTest is PrimodiumTest {
     switchPrank(creator);
     MaxResourceCount.set(asteroidEntity, uint8(EResource.Iron), 0);
     PositionData memory ironPosition = getTilePosition(asteroidEntity, EBuilding.IronMine);
-    bytes32 ironMine = world.Primodium__build(EBuilding.IronMine, ironPosition);
+    bytes32 ironMine = world.Pri_11__build(EBuilding.IronMine, ironPosition);
     assertEq(MaxResourceCount.get(asteroidEntity, uint8(EResource.Iron)), 50);
 
-    world.Primodium__destroy(ironMine);
+    world.Pri_11__destroy(ironMine);
     assertEq(MaxResourceCount.get(asteroidEntity, uint8(EResource.Iron)), 0);
   }
 
@@ -189,11 +189,11 @@ contract DestroySystemTest is PrimodiumTest {
     switchPrank(creator);
     MaxResourceCount.set(asteroidEntity, uint8(EResource.Iron), 0);
     PositionData memory ironPosition = getTilePosition(asteroidEntity, EBuilding.IronMine);
-    bytes32 ironMine = world.Primodium__build(EBuilding.IronMine, ironPosition);
+    bytes32 ironMine = world.Pri_11__build(EBuilding.IronMine, ironPosition);
     assertEq(MaxResourceCount.get(asteroidEntity, uint8(EResource.Iron)), 50);
-    world.Primodium__toggleBuilding(ironMine);
+    world.Pri_11__toggleBuilding(ironMine);
     assertEq(MaxResourceCount.get(asteroidEntity, uint8(EResource.Iron)), 0);
-    world.Primodium__destroy(ironMine);
+    world.Pri_11__destroy(ironMine);
     assertEq(MaxResourceCount.get(asteroidEntity, uint8(EResource.Iron)), 0);
   }
 
@@ -218,18 +218,18 @@ contract DestroySystemTest is PrimodiumTest {
       P_RequiredBaseLevel.set(P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.Workshop)), 1, 0);
 
       PositionData memory originalPosition = getTilePosition(Home.get(playerEntity), building);
-      bytes32 buildingEntity = world.Primodium__build(building, originalPosition);
+      bytes32 buildingEntity = world.Pri_11__build(building, originalPosition);
 
-      world.Primodium__trainUnits(buildingEntity, EUnit.MinutemanMarine, unitCount);
+      world.Pri_11__trainUnits(buildingEntity, EUnit.MinutemanMarine, unitCount);
       uint256 unitTrainTime = LibUnit.getUnitBuildTime(buildingEntity, MinutemanMarinePrototypeId) * unitCount;
 
       vm.expectRevert("[Destroy] Cannot destroy building with units in production");
-      world.Primodium__destroy(buildingEntity);
+      world.Pri_11__destroy(buildingEntity);
 
       vm.warp(block.timestamp + unitTrainTime);
 
       uint256 gas = gasleft();
-      world.Primodium__destroy(buildingEntity);
+      world.Pri_11__destroy(buildingEntity);
       console.log("after", gas - gasleft());
     }
   }
@@ -246,11 +246,11 @@ contract DestroySystemTest is PrimodiumTest {
     PositionData memory coord = getTilePosition(Home.get(playerEntity), building);
 
     coord.y += 3;
-    bytes32 starmapperEntity = world.Primodium__build(EBuilding.Starmapper, coord);
+    bytes32 starmapperEntity = world.Pri_11__build(EBuilding.Starmapper, coord);
 
     assertEq(P_HasStarmapper.get(Home.get(playerEntity)), true);
 
-    world.Primodium__destroy(starmapperEntity);
+    world.Pri_11__destroy(starmapperEntity);
     vm.stopPrank();
 
     assertEq(P_HasStarmapper.get(Home.get(playerEntity)), false);
@@ -281,7 +281,7 @@ contract DestroySystemTest is PrimodiumTest {
     coord.y += 3;
 
     uint256 initFleetsRemaining = ResourceCount.get(asteroidEntity, uint8(EResource.U_MaxFleets));
-    bytes32 starmapperEntity = world.Primodium__build(EBuilding.Starmapper, coord);
+    bytes32 starmapperEntity = world.Pri_11__build(EBuilding.Starmapper, coord);
     uint256 fleetsRemaining = ResourceCount.get(asteroidEntity, uint8(EResource.U_MaxFleets));
 
     assertLt(initFleetsRemaining, fleetsRemaining, "Built Starmapper should have increased available fleets");
@@ -289,16 +289,16 @@ contract DestroySystemTest is PrimodiumTest {
     for (uint256 i = 0; i < fleetsRemaining; i++) {
       setupCreateFleetNoMaxFleetsGranted(creator, asteroidEntity, unitCounts, resourceCounts);
       vm.startPrank(creator);
-      world.Primodium__createFleet(asteroidEntity, unitCounts, resourceCounts);
+      world.Pri_11__createFleet(asteroidEntity, unitCounts, resourceCounts);
     }
 
     setupCreateFleetNoMaxFleetsGranted(creator, asteroidEntity, unitCounts, resourceCounts);
     vm.startPrank(creator);
     vm.expectRevert("[Fleet] asteroid has no fleets available");
-    world.Primodium__createFleet(asteroidEntity, unitCounts, resourceCounts);
+    world.Pri_11__createFleet(asteroidEntity, unitCounts, resourceCounts);
 
     vm.expectRevert("[UtilityUsage] Cannot decrease utility amount below 0");
-    world.Primodium__destroy(starmapperEntity);
+    world.Pri_11__destroy(starmapperEntity);
   }
 
   /* TODO: Add test that includes buildings with utility dependencies */

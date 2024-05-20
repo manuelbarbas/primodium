@@ -18,7 +18,6 @@ import {
 } from "./constants";
 import { outOfBounds } from "./outOfBounds";
 import { getRecipe } from "./recipe";
-import { getScale } from "./resource";
 import { getBuildingAtCoord, getResourceKey } from "./tile";
 
 type Dimensions = { width: number; height: number };
@@ -262,9 +261,6 @@ export function transformProductionData(
         amount = (amount * worldSpeed) / SPEED_SCALE;
       }
 
-      if (type === ResourceType.Multiplier) {
-        amount = amount / BigInt(getScale(resourceEntity));
-      }
       return {
         resource: ResourceEntityLookup[curr as EResource],
         amount,

@@ -12,6 +12,7 @@ import { memo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { HoverInfo } from "@/components/hud/global/hover/HoverInfo";
 import { FollowSocials } from "@/components/shared/FollowSocials";
+import { Coordinates } from "@/components/shared/Coordinates";
 
 export const GlobalHUD = memo(() => {
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
@@ -20,6 +21,7 @@ export const GlobalHUD = memo(() => {
     <HUD scale={uiScale}>
       <div className="absolute top-0 left-0 h-32 w-screen bg-gradient-to-b from-black to-transparent" />
       <Intro />
+      <Coordinates />
 
       <HUD.TopLeft>
         <WarshipPopulation />

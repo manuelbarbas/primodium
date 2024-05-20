@@ -10,7 +10,7 @@ contract DelegationSystemTest is PrimodiumTest {
   function setUp() public override {
     super.setUp();
     vm.startPrank(creator);
-    world.Primodium__spawn();
+    world.Pri_11__spawn();
   }
 
   function testSetUnlimitedAuthorizedAccount() public {

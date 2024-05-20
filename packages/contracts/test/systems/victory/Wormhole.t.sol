@@ -38,8 +38,8 @@ contract WormholeTest is PrimodiumTest {
     setupCreateFleet(alice, asteroidEntity, unitCounts, resourceCounts);
     vm.startPrank(alice);
 
-    bytes32 fleetEntity = world.Primodium__createFleet(asteroidEntity, unitCounts, resourceCounts);
-    world.Primodium__sendFleet(fleetEntity, position);
+    bytes32 fleetEntity = world.Pri_11__createFleet(asteroidEntity, unitCounts, resourceCounts);
+    world.Pri_11__sendFleet(fleetEntity, position);
 
     bytes32 actualAsteroidEntity = ReversePosition.get(position.x, position.y);
     bytes32 expectedAsteroidEntity = keccak256(abi.encode(asteroidEntity, bytes32("asteroid"), position.x, position.y));
@@ -87,7 +87,7 @@ contract WormholeTest is PrimodiumTest {
     increaseResource(wormholeAsteroidEntity, EResource(resource), resourceCount);
 
     vm.prank(alice);
-    world.Primodium__wormholeDeposit(wormholeBaseEntity, resourceCount);
+    world.Pri_11__wormholeDeposit(wormholeBaseEntity, resourceCount);
 
     assertEq(
       Points.get(aliceEntity, uint8(EPointType.Wormhole)),
@@ -114,8 +114,8 @@ contract WormholeTest is PrimodiumTest {
     increaseResource(wormholeAsteroidEntity, EResource(resource), 100);
 
     vm.startPrank(alice);
-    bytes32 allianceEntity = world.Primodium__create(bytes32("alice's alliance"), EAllianceInviteMode.Open);
-    world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
+    bytes32 allianceEntity = world.Pri_11__create(bytes32("alice's alliance"), EAllianceInviteMode.Open);
+    world.Pri_11__wormholeDeposit(wormholeBaseEntity, 100);
 
     assertEq(Points.get(allianceEntity, uint8(EPointType.Wormhole)), 100 * P_PointMultiplier.get(resource), "points");
     assertEq(Points.get(allianceEntity, uint8(EPointType.Shard)), 0, "points");
@@ -128,7 +128,7 @@ contract WormholeTest is PrimodiumTest {
     bytes32 fleetEntity = spawnFleetWithUnit(Home.get(addressToEntity(creator)), EUnit.MinutemanMarine, deaths);
 
     vm.prank(creator);
-    world.Primodium__abandonFleet(fleetEntity);
+    world.Pri_11__abandonFleet(fleetEntity);
 
     bytes32 wormholeAsteroidEntity = testWormholeAsteroidHasWormholeBase();
     bytes32 wormholeBaseEntity = Home.get(wormholeAsteroidEntity);
@@ -143,7 +143,7 @@ contract WormholeTest is PrimodiumTest {
     increaseResource(wormholeAsteroidEntity, EResource(resource), resourceCount);
 
     switchPrank(alice);
-    world.Primodium__wormholeDeposit(wormholeBaseEntity, resourceCount);
+    world.Pri_11__wormholeDeposit(wormholeBaseEntity, resourceCount);
 
     assertEq(Points.get(aliceEntity, uint8(EPointType.Wormhole)), 0, "don't allow points after game end");
   }
@@ -162,7 +162,7 @@ contract WormholeTest is PrimodiumTest {
     increaseResource(wormholeAsteroidEntity, EResource(resource), 100);
 
     vm.prank(alice);
-    world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
+    world.Pri_11__wormholeDeposit(wormholeBaseEntity, 100);
 
     vm.warp(CooldownEnd.get(wormholeBaseEntity) + 1);
 
@@ -175,7 +175,7 @@ contract WormholeTest is PrimodiumTest {
     uint256 prevPoints = Points.get(aliceEntity, uint8(EPointType.Wormhole));
 
     vm.prank(alice);
-    world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
+    world.Pri_11__wormholeDeposit(wormholeBaseEntity, 100);
 
     assertEq(
       Points.get(aliceEntity, uint8(EPointType.Wormhole)),
@@ -200,7 +200,7 @@ contract WormholeTest is PrimodiumTest {
 
     vm.startPrank(alice);
     vm.expectRevert("[StorageUsage] not enough resources to decrease");
-    world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
+    world.Pri_11__wormholeDeposit(wormholeBaseEntity, 100);
   }
 
   function testDepositWormholeFailNotWormholeBase() public {
@@ -209,7 +209,7 @@ contract WormholeTest is PrimodiumTest {
     increaseResource(wormholeAsteroidEntity, EResource(wormholeData.resource), 100);
     vm.startPrank(alice);
     vm.expectRevert("[WormholeDeposit] Building is not a wormhole generator");
-    world.Primodium__wormholeDeposit(wormholeAsteroidEntity, 100);
+    world.Pri_11__wormholeDeposit(wormholeAsteroidEntity, 100);
   }
   function testDepositWormholeFailInCooldown() public {
     WormholeData memory wormholeData = Wormhole.get();
@@ -218,7 +218,7 @@ contract WormholeTest is PrimodiumTest {
     increaseResource(wormholeAsteroidEntity, EResource(wormholeData.resource), 100);
     vm.startPrank(alice);
     vm.expectRevert("[WormholeDeposit] Wormhole in cooldown");
-    world.Primodium__wormholeDeposit((wormholeEntity), 100);
+    world.Pri_11__wormholeDeposit((wormholeEntity), 100);
   }
 
   function testDepositWormholeFailOnlyOwner() public {
@@ -229,7 +229,7 @@ contract WormholeTest is PrimodiumTest {
 
     vm.startPrank(bob);
     vm.expectRevert("[WormholeDeposit] Only owner can deposit");
-    world.Primodium__wormholeDeposit(wormholeEntity, 100);
+    world.Pri_11__wormholeDeposit(wormholeEntity, 100);
   }
 
   function getTurnStartTimestamp(uint256 turn) private returns (uint256) {
@@ -260,7 +260,7 @@ contract WormholeTest is PrimodiumTest {
     increaseResource(wormholeAsteroidEntity, EResource(expectedNewResource), 100);
 
     vm.startPrank(alice);
-    world.Primodium__wormholeDeposit(wormholeBaseEntity, 100);
+    world.Pri_11__wormholeDeposit(wormholeBaseEntity, 100);
 
     assertEq(
       Points.get(aliceEntity, uint8(EPointType.Wormhole)),

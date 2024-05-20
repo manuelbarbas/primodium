@@ -4,7 +4,6 @@ import { TransitLine } from "@game/lib/objects/TransitLine";
 import { components } from "@/network/components";
 import { world } from "@/network/world";
 import { renderFleet } from "@/game/lib/render/renderFleet";
-import { EntityType } from "@/util/constants";
 
 export const renderFleets = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -12,26 +11,20 @@ export const renderFleets = (scene: PrimodiumScene) => {
 
   // handle rendering fleets if asteroid is not yet spawned
   const spawnQueue = new Map<Entity, Entity[]>();
-  // we need this for both asteroids and shards
-  const ids = [EntityType.DeferredRenderAsteroids, EntityType.DeferredRenderShards];
-  ids.forEach((id) => {
-    const container = scene.objects.deferredRenderContainer.getContainer(id);
-    if (!container) return;
+  const unsub = scene.objects.asteroid.onNewObject((id) => {
+    const asteroidEntity = id as Entity;
+    // does fleets exist in spawn queue
+    const fleets = spawnQueue.get(asteroidEntity);
 
-    const unsub = container.onObjectSpawned((asteroidEntity) => {
-      // does fleets exist in spawn queue
-      const fleets = spawnQueue.get(asteroidEntity);
-
-      if (fleets) {
-        fleets.forEach((entity) => {
-          handleFleetOrbit(entity, asteroidEntity);
-        });
-        spawnQueue.delete(asteroidEntity);
-      }
-    });
-
-    systemsWorld.registerDisposer(unsub);
+    if (fleets) {
+      fleets.forEach((entity) => {
+        handleFleetOrbit(entity, asteroidEntity);
+      });
+      spawnQueue.delete(asteroidEntity);
+    }
   });
+
+  systemsWorld.registerDisposer(unsub);
 
   function handleFleetTransit(fleet: Entity, origin: Entity, destination: Entity) {
     const originPosition = components.Position.get(origin) ?? { x: 0, y: 0 };

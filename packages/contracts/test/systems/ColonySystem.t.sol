@@ -46,7 +46,7 @@ contract ColonySystemTest is PrimodiumTest {
   function testChangeHome() public {
     assertEq(Home.get(aliceEntity), aliceHomeAsteroid, "Alice's home asteroid should be set to her primary home");
     vm.startPrank(alice);
-    world.Primodium__changeHome(creatorHomeAsteroid);
+    world.Pri_11__changeHome(creatorHomeAsteroid);
 
     assertEq(Home.get(aliceEntity), creatorHomeAsteroid, "Alice's home asteroid should be set to the new home");
   }
@@ -54,13 +54,13 @@ contract ColonySystemTest is PrimodiumTest {
   function testChangeHomeNotAsteroid() public {
     vm.startPrank(alice);
     vm.expectRevert("[Colony] Entity is not an asteroid");
-    world.Primodium__changeHome(creatorEntity);
+    world.Pri_11__changeHome(creatorEntity);
   }
 
   function testChangeHomeNotOwned() public {
     vm.startPrank(alice);
     vm.expectRevert("[Colony] Asteroid not owned by player");
-    world.Primodium__changeHome(bobHomeAsteroid);
+    world.Pri_11__changeHome(bobHomeAsteroid);
   }
 
   function testForcedChangeHomeWhenHomeConquered() public {

@@ -2,6 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { PrimodiumScene } from "@/game/api/scene";
 import { components } from "src/network/components";
 import { world } from "@/network/world";
+import { Mode } from "@/util/constants";
 
 export const setupKeybinds = (scene: PrimodiumScene) => {
   const mainbaseKeybind = scene.input.addListener("Base", () => {
@@ -23,7 +24,9 @@ export const setupKeybinds = (scene: PrimodiumScene) => {
       components.SelectedAction.remove();
     }
 
-    if (components.SelectedRock.get()) components.SelectedRock.remove();
+    const mode = components.SelectedMode.get()?.value;
+    if (mode === Mode.Starmap && components.SelectedRock.get()) components.SelectedRock.remove();
+    if (mode === Mode.Spectate) components.SelectedMode.set({ value: Mode.Starmap });
   });
 
   world.registerDisposer(() => {

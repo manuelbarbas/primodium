@@ -42,6 +42,7 @@ export const getSecondaryQuery = ({
             { tableId: tables.Position.tableId },
             { tableId: tables.ReversePosition.tableId, on: "entity" },
             { tableId: tables.LastConquered.tableId },
+            { tableId: tables.ShardAsteroidIndex.tableId },
           ],
         },
         // wormhole
