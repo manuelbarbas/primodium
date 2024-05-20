@@ -38,14 +38,14 @@ export class DeferredRenderContainer<
   protected _scene: PrimodiumScene;
   protected _objectApi: PrimodiumObjectApi<SpawnedObject>;
   // shared callback to spawn objects
-  private spawnCallback: (args: SpawnArgs) => SpawnedObject | undefined;
+  private spawnCallback: (args: SpawnArgs) => Promise<SpawnedObject | undefined>;
   private onEventOnceCallbacks: Map<Entity, () => void> = new Map();
 
   constructor(args: {
     id: Entity;
     scene: PrimodiumScene;
     objectApiType: keyof Omit<PrimodiumObjectApiMap, "deferredRenderContainer">;
-    spawnCallback: (args: SpawnArgs) => SpawnedObject | undefined;
+    spawnCallback: (args: SpawnArgs) => Promise<SpawnedObject | undefined>;
     register?: boolean;
   }) {
     const { id, scene, objectApiType, spawnCallback, register = true } = args;
@@ -112,11 +112,11 @@ export class DeferredRenderContainer<
     }
   }
 
-  spawn(entity: Entity) {
+  async spawn(entity: Entity) {
     const spawnArgs = this.objects.get(entity);
     if (!spawnArgs) return undefined;
 
-    const obj = this.spawnCallback(spawnArgs);
+    const obj = await this.spawnCallback(spawnArgs);
     if (!obj) return undefined;
 
     // we need to manually spawn and set the object, since at this point (during `onEnterChunk`) the visible chunks were not yet updated

@@ -19,7 +19,7 @@ export class DeferredAsteroidsRenderContainer extends DeferredRenderContainer<Ba
   constructor(args: {
     id: Entity;
     scene: PrimodiumScene;
-    spawnCallback: (args: AsteroidSpawnArgs) => BaseAsteroid | undefined;
+    spawnCallback: (args: AsteroidSpawnArgs) => Promise<BaseAsteroid | undefined>;
     isShard?: boolean;
   }) {
     super({ ...args, objectApiType: "asteroid" });
@@ -33,8 +33,8 @@ export class DeferredAsteroidsRenderContainer extends DeferredRenderContainer<Ba
     this.fleetsContainers.set(entity, new FleetsContainer(this._scene, { x: pixelCoord.x, y: -pixelCoord.y }));
   }
 
-  spawn(entity: Entity) {
-    const asteroid = super.spawn(entity);
+  async spawn(entity: Entity) {
+    const asteroid = await super.spawn(entity);
     if (asteroid) this.asteroids.set(entity, asteroid);
     return asteroid;
   }

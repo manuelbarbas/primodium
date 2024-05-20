@@ -13,13 +13,16 @@ export const renderAsteroids = (scene: PrimodiumScene) => {
   const deferredAsteroidsRenderContainer = new DeferredAsteroidsRenderContainer({
     id: EntityType.Asteroid,
     scene,
-    spawnCallback: ({ scene, entity, coord, spawnsSecondary }) => {
+    spawnCallback: async ({ scene, entity, coord, spawnsSecondary }) => {
       const asteroid = renderAsteroid({
         scene,
         entity,
         coord,
         addEventHandlers: true,
       });
+
+      // TODO: not sure why this is needed but rendering of unitialized asteroids wont work otherwise
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
       if (spawnsSecondary) initializeSecondaryAsteroids(entity, coord);
 
@@ -28,14 +31,11 @@ export const renderAsteroids = (scene: PrimodiumScene) => {
   });
 
   const query = [Has(components.Asteroid), Has(components.Position)];
-  defineEnterSystem(systemsWorld, query, async ({ entity }) => {
+  defineEnterSystem(systemsWorld, query, ({ entity }) => {
     const coord = components.Position.get(entity);
     const asteroidData = components.Asteroid.get(entity);
 
     if (!coord) return;
-
-    // //TODO: not sure why this is needed but rendering of unitialized asteroids wont work otherwise
-    await new Promise((resolve) => setTimeout(resolve, 0));
 
     deferredAsteroidsRenderContainer.add(entity, coord, {
       scene,
