@@ -3,6 +3,7 @@ import { CrownRank } from "@/components/hud/global/modals/leaderboard/RankCrown"
 import { getAllianceName } from "@/util/alliance";
 import { getFinalLeaderboardData } from "@/util/leaderboard/getFinalLeaderboardData";
 import { Entity } from "@latticexyz/recs";
+import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
 import { useEffect, useState } from "react";
 import { FaSync } from "react-icons/fa";
 import AutoSizer from "react-virtualized-auto-sizer";
@@ -44,12 +45,18 @@ export const GrandLeaderboard = ({ alliance = false }: { alliance?: boolean }) =
           Refresh
         </Button>
       )}
-      <div className={`grid grid-cols-7 w-full p-2 font-bold uppercase`}>
+      <div className={`grid grid-cols-7 w-full p-2 font-bold items-end uppercase pr-5`}>
         <div>Rank</div>
         <div className="col-span-3">Name</div>
-        <div className="opacity-80">Wormhole</div>
-        <div className="opacity-80">Shard</div>
-        <div className="text-warning">Final Score</div>
+        <div className="opacity-80 flex flex-col justify-center items-center">
+          <img src={InterfaceIcons.Wormhole} className="w-8" />
+        </div>
+        <div className="opacity-80 flex flex-col justify-center items-center">
+          <img src={ResourceImages.Primodium} className="w-8" />
+        </div>
+        <div className="opacity-80 flex flex-col justify-center items-center">
+          <img src={InterfaceIcons.Leaderboard} className="w-8" />
+        </div>
       </div>
 
       <div className="flex flex-col w-full h-full justify-between text-xs pointer-events-auto">
@@ -116,7 +123,7 @@ export const GrandLeaderboardItem = ({
 
   return (
     <SecondaryCard
-      className={`grid grid-cols-7 gap-1 w-full h-12 items-center ${
+      className={`grid grid-cols-7 w-full h-12 items-center ${
         special ? "border-success bg-success/20" : ""
       } ${className}`}
     >
@@ -135,17 +142,21 @@ export const GrandLeaderboardItem = ({
       </div>
       {!hideRanks && (
         <>
-          <div className="font-bold w-fit px-2 flex gap-1">
-            <p className="opacity-80">{formatNumber(rankToScore(wormholeRank), { fractionDigits: 1 })}</p>
-            <CrownRank rank={wormholeRank} offset />
+          <div className="relative font-bold w-full px-2 flex justify-center">
+            <div className="relative w-fit">
+              <p className="opacity-80">{formatNumber(rankToScore(wormholeRank), { fractionDigits: 1 })}</p>
+              <CrownRank rank={wormholeRank} offset />
+            </div>
           </div>
-          <div className="font-bold w-fit px-2 flex gap-1">
-            <p className="opacity-80">{formatNumber(rankToScore(shardRank), { fractionDigits: 1 })}</p>
-            <CrownRank rank={shardRank} offset />
+          <div className="font-bold px-2 flex justify-center">
+            <div className="relative w-fit">
+              <p className="opacity-80">{formatNumber(rankToScore(shardRank), { fractionDigits: 1 })}</p>
+              <CrownRank rank={shardRank} offset />
+            </div>
           </div>
         </>
       )}
-      <p className="font-bold w-full px-2 flex text-warning text-right justify-end">
+      <p className="font-bold w-full px-2 flex text-warning text-center justify-center">
         {formatNumber(finalScore, { fractionDigits: 1 })}
       </p>
     </SecondaryCard>

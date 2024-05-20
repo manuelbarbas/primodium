@@ -5,9 +5,8 @@ import { components } from "@/network/components";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Button } from "@/components/core/Button";
 import { EntityType, Mode } from "@/util/constants";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { claimShardAsteroid } from "@/network/setup/contractCalls/claimPrimodium";
+import { claimPrimodium, claimShardAsteroid } from "@/network/setup/contractCalls/claimPrimodium";
 import { formatResourceCount, formatTime } from "@/util/number";
 import { useShardAsteroid } from "@/hooks/primodium/useShardAsteroid";
 import { useMud } from "@/hooks/useMud";
@@ -15,6 +14,7 @@ import { entityToShardData } from "@/util/name";
 import { SecondaryCard } from "@/components/core/Card";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { useState } from "react";
+import { useClaimPrimodium } from "@/hooks/primodium/useClaimPrimodium";
 
 export const ShardButton: React.FC<{ shardEntity: Entity }> = ({ shardEntity }) => {
   const mud = useMud();
@@ -108,13 +108,42 @@ export const ShardButton: React.FC<{ shardEntity: Entity }> = ({ shardEntity }) 
 export const InitialScreen = ({ selectedRock }: { selectedRock: Entity }) => {
   const playerEntity = components.Account.use()?.value;
   const ownedBy = components.OwnedBy.use(selectedRock)?.value;
-  const selectedAsteroid = components.SelectedRock.use()?.value;
   const isShard = components.ShardAsteroid.use(selectedRock)?.isShardAsteroid;
   const shardDescription = entityToShardData(selectedRock)?.description;
+  const mud = useMud();
 
+  const primodiumData = useClaimPrimodium(selectedRock);
   return (
-    <Navigator.Screen title="initial" className="gap-2">
+    <Navigator.Screen title="initial" className="gap-2 max-w-72">
       {isShard && <ShardButton shardEntity={selectedRock} />}
+      {!isShard && playerEntity === ownedBy && !!primodiumData && primodiumData.points > 0 && (
+        <TransactionQueueMask queueItemId={"ClaimPrimodium" as Entity}>
+          <Button
+            className={`w-full py-3 heropattern-topography-slate-100/10 ${
+              primodiumData.canConquer ? "" : "opacity-60"
+            }`}
+            variant="warning"
+            size="content"
+            onClick={() => {
+              if (!primodiumData.canConquer) return;
+              claimPrimodium(mud, selectedRock);
+            }}
+          >
+            {primodiumData.canConquer && (
+              <div className="absolute inset-0 bg-warning/25 animate-ping pointer-events-none" />
+            )}
+            <div className="flex flex-start px-1 gap-3 w-full">
+              <IconLabel className="text-lg drop-shadow-lg" imageUri={ResourceImages.Primodium} />
+              <div className="flex flex-col items-start">
+                <p>Claim Primodium</p>
+                <p className="block text-xs opacity-75">
+                  {primodiumData.canConquer ? "CLAIM NOW" : formatTime(primodiumData.timeUntilClaim)}
+                </p>
+              </div>
+            </div>
+          </Button>
+        </TransactionQueueMask>
+      )}
       <Navigator.NavButton
         to="travel"
         size="content"
@@ -149,7 +178,7 @@ export const InitialScreen = ({ selectedRock }: { selectedRock: Entity }) => {
           size="content"
           variant="neutral"
           onClick={() => {
-            components.ActiveRock.set({ value: selectedAsteroid ?? singletonEntity });
+            components.ActiveRock.set({ value: selectedRock });
             ownedBy === playerEntity
               ? components.SelectedMode.set({ value: Mode.Asteroid })
               : components.SelectedMode.set({ value: Mode.Spectate });
@@ -188,7 +217,7 @@ const ShardDescription = ({ description, length = 50 }: { description: string; l
   };
 
   return (
-    <SecondaryCard className=" relative w-72 flex flex-col gap-1">
+    <SecondaryCard className="relative w-full flex flex-col gap-1">
       <p className="text-xs">Belt History</p>
       <p className="text-xs italic opacity-60 pr-4">
         {isOpen ? description : getShortenedDescription(description, length)}
