@@ -2,9 +2,11 @@ import { Button } from "@/components/core/Button";
 import { CapacityBar } from "@/components/core/CapacityBar";
 import { HUD } from "@/components/core/HUD";
 import { Tabs } from "@/components/core/Tabs";
+import { useMud } from "@/hooks";
 import { useAsteroidStrength } from "@/hooks/useAsteroidStrength";
 import { useFullResourceCount } from "@/hooks/useFullResourceCount";
 import { components } from "@/network/components";
+import { abandonAsteroid } from "@/network/setup/contractCalls/forfeit";
 import { EntityType } from "@/util/constants";
 import { EntityToResourceImage } from "@/util/mappings";
 import { formatResourceCount } from "@/util/number";
@@ -22,6 +24,7 @@ export const AsteroidStats = ({ asteroid, segments = 10 }: { asteroid: Entity; s
   const strengthImg = EntityToResourceImage[EntityType.HP] ?? "";
   return (
     <div className="flex flex-row gap-4 justify-end">
+      <Hints />
       <div className="flex gap-2 items-center">
         <img src={encryptionImg} className="w-4 h-4" alt="encryption" />
         <CapacityBar current={encryption} max={maxEncryption} segments={segments} className="w-24" />
@@ -84,16 +87,20 @@ const Hints = () => {
   );
 };
 
-const ActionButtons = () => {
+const ActionButtons = ({ asteroid }: { asteroid: Entity }) => {
+  const mud = useMud();
+  const playerEntity = mud.playerAccount.entity;
+  const asteroidOwner = components.OwnedBy.use(asteroid)?.value;
+  const canBuildFleet = useFullResourceCount(EntityType.FleetCount, asteroid).resourceCount > 0n;
+  if (!asteroidOwner || asteroidOwner !== playerEntity) return null;
   return (
     <div className="flex gap-2 items-center justify-center">
-      <Tabs.Button index={1} variant="secondary" size="sm">
+      <Tabs.Button disabled={!canBuildFleet} index={1} variant="secondary" size="sm">
         + CREATE FLEET
       </Tabs.Button>
-      <Button variant="error" size="sm">
+      <Button variant="error" size="sm" onClick={() => abandonAsteroid(mud, asteroid)}>
         ABANDON
       </Button>
-      <Hints />
     </div>
   );
 };
@@ -103,12 +110,13 @@ export const AsteroidStatsAndActions = () => {
   const selectedAsteroid = components.SelectedRock.use()?.value;
   const homeAsteroid = components.Home.use(playerEntity)?.value;
 
-  if (!selectedAsteroid && !homeAsteroid) return null;
+  const asteroid = (selectedAsteroid ?? homeAsteroid) as Entity;
+  if (!asteroid) return null;
 
   return (
     <HUD.BottomMiddle className="mb-36 flex flex-col items-center gap-4">
-      <AsteroidStats asteroid={(selectedAsteroid ?? homeAsteroid) as Entity} />
-      <ActionButtons />
+      <AsteroidStats asteroid={asteroid} />
+      <ActionButtons asteroid={asteroid} />
     </HUD.BottomMiddle>
   );
 };
