@@ -39,7 +39,6 @@ export class DeferredRenderContainer<
   protected _objectApi: PrimodiumObjectApi<SpawnedObject>;
   // shared callback to spawn objects
   private spawnCallback: (args: SpawnArgs) => SpawnedObject | undefined;
-  private onObjectSpawnedCallbacks: ((entity: Entity) => void)[] = [];
 
   constructor(args: {
     id: Entity;
@@ -76,6 +75,7 @@ export class DeferredRenderContainer<
     this.chunkCoords.set(this.encodeKeyForChunk(chunkCoord), entities);
   }
 
+  // TODO: this is ugly, will not live here or not in this form
   updatePosition(entity: Entity, coord: Coord) {
     const spawnArgs = this.objects.get(entity);
     if (!spawnArgs) return;
@@ -127,8 +127,6 @@ export class DeferredRenderContainer<
     this.spawned.set(entity, true);
     this.objects.delete(entity);
 
-    this.onObjectSpawnedCallbacks.forEach((callback) => callback(entity));
-
     return obj;
   }
 
@@ -148,15 +146,6 @@ export class DeferredRenderContainer<
   onEnterChunk(_: Coord) {}
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onExitChunk(_: Coord) {}
-
-  onObjectSpawned(callback: (entity: Entity) => void) {
-    this.onObjectSpawnedCallbacks.push(callback);
-
-    return () => {
-      const index = this.onObjectSpawnedCallbacks.indexOf(callback);
-      if (index !== -1) this.onObjectSpawnedCallbacks.splice(index, 1);
-    };
-  }
 
   destroy() {}
 

@@ -1023,7 +1023,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     levels: {
       1: {
         P_RequiredBaseLevel: { value: 5n },
-        P_RequiredResources: getResourceValues({ Copper: 500, Lithium: 50 }),
+        P_RequiredResources: getResourceValues({ Copper: 200, Lithium: 50 }),
         P_RequiredDependency: getResourceValue({ Copper: 0.06 }),
         P_Production: getResourceValues({ Alloy: 0.024 }),
       },
@@ -1857,7 +1857,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 8n },
+        P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ IronPlate: 100, PVCell: 100, Alloy: 100, U_Electricity: 100 }),
         P_Production: getResourceValues({ U_Defense: 400 }),
         P_ListMaxResourceUpgrades: {
@@ -1865,7 +1865,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         },
       },
       2: {
-        P_RequiredBaseLevel: { value: 8n },
+        P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ IronPlate: 200, PVCell: 200, Alloy: 200, U_Electricity: 100 }),
 
         P_Production: getResourceValues({ U_Defense: 800 }),
@@ -1874,7 +1874,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         },
       },
       3: {
-        P_RequiredBaseLevel: { value: 9n },
+        P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ IronPlate: 300, PVCell: 300, Alloy: 300, U_Electricity: 100 }),
 
         P_Production: getResourceValues({ U_Defense: 1200 }),
@@ -1956,14 +1956,14 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 5n },
+        P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ IronPlate: 1000, Alloy: 1000, PVCell: 1000, U_Electricity: 200 }),
-        P_Production: getResourceValues({ M_DefenseMultiplier: 5, R_HP: 0.006 }),
+        P_Production: getResourceValues({ M_DefenseMultiplier: 5, R_HP: 0.008 }),
       },
       2: {
-        P_RequiredBaseLevel: { value: 10n },
+        P_RequiredBaseLevel: { value: 11n },
         P_RequiredResources: getResourceValues({ Titanium: 500, Iridium: 500, Platinum: 500, U_Electricity: 1100 }),
-        P_Production: getResourceValues({ M_DefenseMultiplier: 15, R_HP: 0.012 }),
+        P_Production: getResourceValues({ M_DefenseMultiplier: 15, R_HP: 0.016 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 15n },
@@ -2954,6 +2954,11 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_UnitReward: getUnitValues({ LightningCraft: 10 }),
     },
   },
+  UpgradeShipyard2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 25, Alloy: 25, PVCell: 25 }),
+    },
+  },
   TrainColonyShip: {
     tables: {
       P_ResourceReward: getResourceValues({ IronPlate: 100, Alloy: 100, PVCell: 100 }),
@@ -3020,6 +3025,11 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_UnitReward: getUnitValues({ LightningCraft: 10 }),
     },
   },
+  UpgradeStarmapper2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 25, Alloy: 25, PVCell: 25 }),
+    },
+  },
   DefendWithFleet: {
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
@@ -3063,8 +3073,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   /* --------------------- A-A-B-A Unit Production (cont) --------------------- */
   BuildDroneFactory: {
     tables: {
-      P_ResourceReward: getResourceValues({ IronPlate: 100, PVCell: 100 }),
-      P_UnitReward: getUnitValues({ AnvilDrone: 5, HammerDrone: 5 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 100, Alloy: 100, PVCell: 100 }),
+    },
+  },
+  UpgradeDroneFactory2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 25, Alloy: 25, PVCell: 25 }),
     },
   },
   TrainAnvilDrone: {
@@ -3091,7 +3105,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   /* --------------------- A-A-B-C Unit Storage --------------------- */
   BuildHangar: {
     tables: {
-      P_UnitReward: getUnitValues({ AnvilDrone: 5, HammerDrone: 5, LightningCraft: 5 }),
+      P_UnitReward: getUnitValues({ AnvilDrone: 5, HammerDrone: 5, LightningCraft: 10 }),
+    },
+  },
+  UpgradeHanger2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 25, Alloy: 25, PVCell: 25 }),
     },
   },
 
@@ -3102,14 +3121,29 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_ResourceReward: getResourceValues({ IronPlate: 100, Alloy: 100, PVCell: 100 }),
     },
   },
+  UpgradeShieldGenerator2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 100, Alloy: 100, PVCell: 100 }),
+    },
+  },
   BuildVault: {
     tables: {
       P_UnitReward: getUnitValues({ AnvilDrone: 5 }),
     },
   },
+  UpgradeVault2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 25, Alloy: 25, PVCell: 25 }),
+    },
+  },
   BuildSAMLauncher: {
     tables: {
       P_UnitReward: getUnitValues({ HammerDrone: 5 }),
+    },
+  },
+  UpgradeSAMLauncher2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 25, Alloy: 25, PVCell: 25 }),
     },
   },
 
@@ -3124,24 +3158,34 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_ResourceReward: getResourceValues({ Iron: 200, Copper: 200, Lithium: 200 }),
     },
   },
-  UpgradeStorageUnit3: {
-    tables: {
-      P_ResourceReward: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
-    },
-  },
   BuildIronPlateFactory: {
     tables: {
-      P_ResourceReward: getResourceValues({ IronPlate: 25 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 25, Alloy: 25, PVCell: 25 }),
+    },
+  },
+  UpgradeIronPlateFactory2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ IronPlate: 50 }),
     },
   },
   BuildAlloyFactory: {
     tables: {
-      P_ResourceReward: getResourceValues({ Alloy: 25 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 25, Alloy: 25, PVCell: 25 }),
+    },
+  },
+  UpgradeAlloyFactory2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ Alloy: 50 }),
     },
   },
   BuildPVCellFactory: {
     tables: {
-      P_ResourceReward: getResourceValues({ PVCell: 25 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 25, Alloy: 25, PVCell: 25 }),
+    },
+  },
+  UpgradePVCellFactory2: {
+    tables: {
+      P_ResourceReward: getResourceValues({ PVCell: 50 }),
     },
   },
 
