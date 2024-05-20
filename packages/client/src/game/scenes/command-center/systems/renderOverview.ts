@@ -49,7 +49,7 @@ export const renderOverview = (scene: PrimodiumScene) => {
         components.HoverEntity.remove();
       }, true);
 
-    for (const fleet of getFleets(entity)) {
+    getFleets(entity).forEach((fleet) => {
       if (!isFleetOrbiting(fleet)) {
         transitsToUpdate.add(fleet);
         return;
@@ -61,7 +61,7 @@ export const renderOverview = (scene: PrimodiumScene) => {
         });
       });
       asteroid?.getFleetsContainer().addFleet(fleetObject);
-    }
+    });
 
     // set blocked ring if fleet is in block stance
     if (isAsteroidBlocked(entity)) asteroid?.getFleetsContainer().showBlockRing();
