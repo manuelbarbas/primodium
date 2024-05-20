@@ -1,6 +1,7 @@
 import { Button } from "@/components/core/Button";
 import { CrownRank } from "@/components/hud/global/modals/leaderboard/RankCrown";
 import { Entity } from "@latticexyz/recs";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useMemo, useState } from "react";
 import { FaSync } from "react-icons/fa";
 import AutoSizer from "react-virtualized-auto-sizer";
@@ -20,7 +21,15 @@ type FormattedPlayerData = {
   points: bigint;
 };
 
-export const SubLeaderboard = ({ leaderboard, alliance = false }: { leaderboard: Entity; alliance?: boolean }) => {
+export const SubLeaderboard = ({
+  leaderboard,
+  alliance = false,
+  icon,
+}: {
+  leaderboard: Entity;
+  alliance?: boolean;
+  icon?: string;
+}) => {
   const { playerAccount } = useMud();
   const [data, setData] = useState(components.Leaderboard.get(leaderboard));
   const [showRefresh, setShowRefresh] = useState(false);
@@ -67,11 +76,13 @@ export const SubLeaderboard = ({ leaderboard, alliance = false }: { leaderboard:
           Refresh
         </Button>
       )}
-      <div className={`grid grid-cols-7 w-full p-2 pr-6 font-bold uppercase`}>
+      <div className={`grid grid-cols-7 w-full p-2 pr-6 font-bold uppercase items-end`}>
         <div>Rank</div>
         <div className="col-span-3">Name</div>
-        <div className="opacity-80 col-span-2">Points</div>
-        <div className="text-warning text-right">Score</div>
+        <div className="opacity-80 col-span-2">{icon ? <img src={icon} className="w-8" /> : "points"} </div>
+        <div className="text-warning flex justify-center">
+          <img src={InterfaceIcons.Leaderboard} className="w-8" />
+        </div>
       </div>
       <div className="flex flex-col w-full h-full justify-between text-xs pointer-events-auto">
         <AutoSizer>
@@ -149,7 +160,7 @@ const LeaderboardItem = ({
           fractionDigits: 1,
         })}
       </p>
-      <div className="font-bold text-warning px-2 w-full text-right">
+      <div className="font-bold text-warning px-2 w-full flex justify-center">
         {formatNumber(rankToScore(rank), { fractionDigits: 1 })}
       </div>
     </SecondaryCard>

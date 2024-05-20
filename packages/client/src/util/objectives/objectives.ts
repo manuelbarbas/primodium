@@ -504,7 +504,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.CaptureVolatileShard],
       description:
-        "To explode a shard, select an owned shard when an explosion is imminent and select Explode. Be warned, the explosion kills all fleets in the area!",
+        "To explode a shard, select an owned shard when an explosion is imminent and select Explode. Explosions give lots of Primodium to the shard's owner. Be warned, the explosion kills all fleets in the area!",
       icon: InterfaceIcons.Asteroid,
       tooltip: "Exploded Shard",
     },
