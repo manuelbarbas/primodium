@@ -179,4 +179,15 @@ export const renderOverview = (scene: PrimodiumScene) => {
       }
     });
   });
+
+  //handle fleet emtpy updates
+  defineComponentSystem(systemsWorld, components.IsFleetEmpty, ({ entity, value }) => {
+    const fleetObj = objects.fleet.get(entity);
+    const isEmpty = !!value[0]?.value;
+
+    if (!fleetObj) return;
+
+    if (isEmpty) fleetObj.setAlpha(0.5);
+    else fleetObj.setAlpha(1);
+  });
 };

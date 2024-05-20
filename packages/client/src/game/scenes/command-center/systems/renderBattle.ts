@@ -44,9 +44,13 @@ export const renderBattle = (scene: PrimodiumScene) => {
 
     components.BattleTarget.remove();
     components.FleetMovement.pauseUpdates(attacker);
+    components.IsFleetEmpty.pauseUpdates(attacker);
     components.BattleTarget.blockUpdates(singletonEntity);
     components.SelectedMode.blockUpdates(singletonEntity);
-    if (defenderIsFleet) components.FleetMovement.pauseUpdates(defender);
+    if (defenderIsFleet) {
+      components.FleetMovement.pauseUpdates(defender);
+      components.IsFleetEmpty.pauseUpdates(defender);
+    }
     rockObj?.getFleetsContainer().pauseRotation();
 
     const battleRender = scene.phaserScene.add
@@ -82,7 +86,10 @@ export const renderBattle = (scene: PrimodiumScene) => {
             components.FleetMovement.resumeUpdates(attacker);
             components.BattleTarget.unblockUpdates(singletonEntity);
             components.SelectedMode.unblockUpdates(singletonEntity);
-            if (defenderIsFleet) components.FleetMovement.resumeUpdates(defender);
+            if (defenderIsFleet) {
+              components.FleetMovement.resumeUpdates(defender);
+              components.IsFleetEmpty.resumeUpdates(defender);
+            }
 
             battleNotification(entity);
           },
