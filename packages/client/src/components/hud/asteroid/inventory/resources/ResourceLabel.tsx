@@ -29,7 +29,6 @@ export const ResourceLabel = ({ name, resource }: { name: string; resource: Enti
     return;
   }, [resourceCount, resourceStorage]);
 
-  console.log({ production });
   const productionMin =
     production == 1n
       ? "0.6"
