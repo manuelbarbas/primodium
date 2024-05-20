@@ -77,12 +77,11 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
   };
 
   /* --------------------------------- SYSTEMS -------------------------------- */
-  const subs = scenes.map((scene) => {
-    // run callback when an asteroid becomes visible if it possesses one
-    const deferredContainer = scene.objects.deferredRenderContainer.getContainer(EntityType.Asteroid);
-    return scene.objects.asteroid.onObjectVisible((entity) => {
-      if (deferredContainer?.hasOnEventOnce(entity as Entity)) deferredContainer.runOnEventOnce(entity as Entity);
-    });
+  // run callback when an asteroid becomes visible if it possesses one
+  const deferredStarmapContainer = starmapScene.objects.deferredRenderContainer.getContainer(EntityType.Asteroid);
+  const sub = starmapScene.objects.asteroid.onObjectVisible((entity) => {
+    if (deferredStarmapContainer?.hasOnEventOnce(entity as Entity))
+      deferredStarmapContainer.runOnEventOnce(entity as Entity);
   });
 
   // this is probably cheaper than figuring out which part of the label must be changed exactly;
@@ -179,5 +178,5 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
     }
   });
 
-  systemsWorld.registerDisposer(() => subs.forEach((sub) => sub()));
+  systemsWorld.registerDisposer(sub);
 };
