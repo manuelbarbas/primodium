@@ -3,8 +3,10 @@ pragma solidity >=0.8.24;
 
 import { OwnedBy, FleetMovement, IsFleetEmpty, IsFleet, P_Transportables, UnitCount, ResourceCount, P_UnitPrototypes } from "codegen/index.sol";
 
+import { EResource } from "src/Types.sol";
 import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { LibPoints } from "libraries/LibPoints.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
 import { FleetSet } from "libraries/fleet/FleetSet.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleet.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
@@ -32,6 +34,7 @@ library LibFleetClear {
     FleetMovement.deleteRecord(fleetEntity);
     IsFleet.deleteRecord(fleetEntity);
     OwnedBy.deleteRecord(fleetEntity);
+    LibStorage.increaseStoredResource(ownerAsteroidEntity, uint8(EResource.U_MaxFleets), 1);
   }
 
   function abandonAllOwnedFleets(bytes32 asteroidEntity) internal {
