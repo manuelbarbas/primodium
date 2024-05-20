@@ -11,24 +11,6 @@ import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 const clearId = "clear" as Entity;
 
-export const disbandFleet = async (mud: MUD, fleet: Entity) => {
-  await execute(
-    {
-      mud,
-      functionName: "Pri_11__abandonFleet",
-      systemId: getSystemId("FleetClearSystem"),
-      args: [fleet as Hex],
-      withSession: true,
-    },
-    {
-      id: "disbandFleet" as Entity,
-    },
-    () => {
-      components.SelectedFleet.remove();
-    }
-  );
-};
-
 export const clearFleet = async (mud: MUD, fleet: Entity) => {
   await execute(
     {

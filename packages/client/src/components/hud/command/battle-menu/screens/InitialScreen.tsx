@@ -16,7 +16,8 @@ import { formatTime } from "@/util/number";
 import { landFleet } from "@/network/setup/contractCalls/fleetLand";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { alert } from "@/util/alert";
-import { clearFleet, disbandFleet } from "@/network/setup/contractCalls/fleetClear";
+import { clearFleet } from "@/network/setup/contractCalls/fleetClear";
+import { abandonFleet } from "@/network/setup/contractCalls/fleetAbandon";
 import { cn } from "@/util/client";
 
 export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
@@ -119,7 +120,7 @@ export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
             size="content"
             variant="neutral"
             className="w-full"
-            onClick={() => alert("Are you sure you want to disband fleet?", () => disbandFleet(mud, fleet))}
+            onClick={() => alert("Are you sure you want to disband fleet?", () => abandonFleet(mud, fleet))}
           >
             <div className="flex flex-start px-1 gap-3">
               <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Return} />
