@@ -106,7 +106,7 @@ export const BlueprintInfo: React.FC<{
                       short
                       fontSize="xs"
                       direction="top"
-                      fractionDigits={3}
+                      fractionDigits={1}
                     />
                   </Badge>
                 ))}

@@ -45,7 +45,7 @@ export const calderaSepolia = {
     },
   },
   faucetUrl: "https://caldera-sepolia-faucet.primodium.ai/trpc",
-  indexerUrl: "https://caldera-sepolia-indexer.primodium.ai",
+  indexerUrl: "https://indexer-v11.primodium.ai",
   blockExplorers: {
     default: {
       name: "Blockscout",

@@ -1,4 +1,9 @@
 export enum Audio {
+<<<<<<< HEAD
+=======
+  Background = "background",
+  Background2 = "background2",
+>>>>>>> main
   Bleep = "Bleep_01",
   Bleep2 = "Bleep_02",
   Bleep3 = "Bleep_03",
@@ -35,6 +40,9 @@ export enum Audio {
   Build = "Build",
   Demolish = "Demolish",
   Whoosh = "Whoosh",
+  Blaster = "Blaster",
+  SingleBlaster = "SingleBlaster",
+  Explosion = "Explosion",
 }
 
 export type AudioKeys = keyof typeof Audio;

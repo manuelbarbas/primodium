@@ -83,5 +83,6 @@ export const modeSystem = (game: GlobalApi) => {
 
     components.SelectedBuilding.remove();
     components.HoverEntity.remove();
+    components.BattleTarget.remove();
   });
 };

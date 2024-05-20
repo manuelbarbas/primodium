@@ -12,11 +12,13 @@ import { setupLeaderboard } from "src/network/systems/setupLeaderboard";
 import { setupSync } from "src/network/systems/setupSync";
 import { setupTime } from "src/network/systems/setupTime";
 import { setupTrainingQueues } from "src/network/systems/setupTrainingQueues";
+import { runSystems as runCommonSystems } from "@/game/scenes/common/systems";
 import { MUD } from "src/network/types";
 import { world } from "src/network/world";
 import _init from "../init";
 import { Scenes } from "@/game/lib/constants/common";
 import { setupWormholeResource } from "@/network/systems/setupWormholeResource";
+import { setupBattleNotifications } from "@/network/systems/setupBattleNotifications";
 
 export type PrimodiumGame = Awaited<ReturnType<typeof initGame>>;
 export async function initGame(version = "v1") {
@@ -60,6 +62,7 @@ export async function initGame(version = "v1") {
       setupHangar();
       setupLeaderboard();
       setupWormholeResource();
+      setupBattleNotifications();
       setupTime(mud);
       setupTrainingQueues();
       setupHomeAsteroid(mud);
@@ -81,8 +84,11 @@ export async function initGame(version = "v1") {
     };
 
     // run after all systems are ready
+    // includes common systems that run across all scenes
     // we can use that to keep the loading screen until all systems are run to prevent annoying stutter while the interface is ready
     const done = () => {
+      console.info("[Game] Running common systems");
+      runCommonSystems(api);
       components.SystemsReady.set({ value: true });
     };
 

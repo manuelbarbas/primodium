@@ -44,7 +44,7 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
   const image = getAsteroidImage(game, entity);
   if (loading)
     return (
-      <div className="relative w-56 h-24 px-auto uppercase font-bold">
+      <div className="relative w-60 h-24 px-auto uppercase font-bold">
         <div className="flex h-full justify-center items-center gap-2">
           <Loader />
           Loading Data

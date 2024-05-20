@@ -129,7 +129,7 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
                 amount={amount}
                 resourceType={type}
                 short
-                fractionDigits={3}
+                fractionDigits={1}
               />
             </Badge>
           ))}

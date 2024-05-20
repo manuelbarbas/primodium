@@ -25,6 +25,7 @@ export const forfeit = async (mud: MUD) => {
     {
       mud,
       systemCalls: abandonCalls,
+      withSession: true,
     },
     { id: "FORFEIT" as Entity },
     (receipt) => {
@@ -43,6 +44,7 @@ export const abandonAsteroid = async (mud: MUD, asteroidEntity: Entity) => {
       systemId: getSystemId("AbandonAsteroidSystem"),
       functionName: "Pri_11__abandonAsteroid",
       args: [asteroidEntity as Hex],
+      withSession: true,
     },
     { id: asteroidEntity },
     (receipt) => {

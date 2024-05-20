@@ -6,19 +6,59 @@ type Song = {
 
 export const playlist: Song[] = [
   {
-    title: "Far Away",
-    artist: "DOS-88",
-    url: `https://primodium-assets.s3.us-west-2.amazonaws.com/music/DOS-88+Far+away.mp3`,
+    title: "Aurora",
+    artist: "DaniHaDani",
+    url: `https://primodium-assets.s3.us-west-2.amazonaws.com/music/Aurora+by+DaniHaDani.mp3`,
   },
   {
-    title: "When the Sunrise",
+    title: "Gravity",
+    artist: "Downtown Binary",
+    url: `https://primodium-assets.s3.us-west-2.amazonaws.com/music/Gravity+by+Downtown+Binary.mp3`,
+  },
+  {
+    title: "Isolation",
+    artist: "Linus Johnsson",
+    url: `https://primodium-assets.s3.us-west-2.amazonaws.com/music/Isolation+by+Linus+Johnsson.mp3`,
+  },
+  {
+    title: "No One Is Out Here",
     artist: "Yehezkel Raz",
-    url: `https://primodium-assets.s3.us-west-2.amazonaws.com/music/When+the+Sunrise+Instrumental.mp3`,
+    url: `https://primodium-assets.s3.us-west-2.amazonaws.com/music/No+One+Is+Out+Here+by+Yehezkel+Raz.mp3`,
   },
   {
-    title: "Decision Making",
-    artist: "Itai Argaman",
-    url: `https://primodium-assets.s3.us-west-2.amazonaws.com/music/Itai+Argaman+Decision+Making.mp3`,
+    title: "Particles",
+    artist: "Nobou",
+    url: `https://primodium-assets.s3.us-west-2.amazonaws.com/music/Nobou+Particles.mp3`,
+  },
+  {
+    title: "Offworld",
+    artist: "Downtown Binary",
+    url: `https://primodium-assets.s3.us-west-2.amazonaws.com/music/Offworld+by+Downtown+Binary.mp3`,
+  },
+  {
+    title: "No Reason Why",
+    artist: "Oran Loyfer",
+    url: `https://primodium-assets.s3.us-west-2.amazonaws.com/music/Oran+Loyfer+No+Reason+Why.mp3`,
+  },
+  {
+    title: "Quiet Pull",
+    artist: "Tamuz Dekel",
+    url: `https://primodium-assets.s3.us-west-2.amazonaws.com/music/Quiet+Pull+Tamuz+Dekel.mp3`,
+  },
+  {
+    title: "Silent Dreams",
+    artist: "Nobou",
+    url: `https://primodium-assets.s3.us-west-2.amazonaws.com/music/Silent+Dreams+by+Nobou.mp3`,
+  },
+  {
+    title: "Silent Transmissions",
+    artist: "Tamuz Dekel",
+    url: `https://primodium-assets.s3.us-west-2.amazonaws.com/music/Silent+Transmission+by+Tamuz+Dekel.mp3`,
+  },
+  {
+    title: "The Labyrinth",
+    artist: "DaniHaDani",
+    url: `https://primodium-assets.s3.us-west-2.amazonaws.com/music/Silent+Transmission+by+Tamuz+Dekel.mp3`,
   },
 ];
 

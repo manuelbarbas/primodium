@@ -33,7 +33,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Social",
       type: "Claim",
       description:
-        "Follow the Primodium Twitter by clicking on the button in the lower left. This is tied for the most important decision you will ever make.",
+        "Follow the Primodium Twitter and Retweet the Pinned Post by clicking on the button in the lower left. This is tied for the most important decision you will ever make.",
       icon: InterfaceIcons.Twitter,
       tooltip: "Followed Primodium on Twitter",
     },

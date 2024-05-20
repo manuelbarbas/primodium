@@ -13,14 +13,15 @@ export const CommandBackgroundEffect = memo(() => {
   if (!isCommandOpen) return null;
 
   return (
-    <div className="absolute top-0 left-0 w-full h-full">
+    <div className="absolute top-0 left-0 w-full h-full bg-black">
+      <div className="absolute top-0 left-0 w-full h-full command-background opacity-40" />
       <div
         style={{
           perspective: "1000px",
           transformStyle: "preserve-3d",
           transform: "rotateX(55deg) rotateY(0deg) rotatez(45deg) scale(1)",
         }}
-        className="absolute -top-full -left-full w-[400%] h-[400%] heropattern-graphpaper-gray-500/25 rotate-45 scale-[200%] pointer-events-none animate-in fade-in"
+        className="absolute -top-full -left-full origin-center w-[400%] h-[400%] heropattern-graphpaper-gray-500/25 rotate-45 scale-[200%] pointer-events-none animate-in fade-in"
       />
       <p
         style={{
