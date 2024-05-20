@@ -40,7 +40,7 @@ export const CommandCenterHUD = memo(() => {
         <Tabs className="pointer-events-auto">
           <BattleMenuPopup />
 
-          <HUD.Center className="h-3/4 flex flex-col items-center justify-between">
+          <HUD.Center className="h-3/4 flex flex-col items-center justify-between pointer-events-none">
             <CommandViewSelector setInitialRight={() => setInitialRight(undefined)} />
 
             <div>

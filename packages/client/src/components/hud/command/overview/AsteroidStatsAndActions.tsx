@@ -1,4 +1,5 @@
 import { Button } from "@/components/core/Button";
+import { alert } from "@/util/alert";
 import { CapacityBar } from "@/components/core/CapacityBar";
 import { Tabs } from "@/components/core/Tabs";
 import { useMud } from "@/hooks";
@@ -97,7 +98,11 @@ const ActionButtons = ({ asteroid, onClick }: { asteroid: Entity; onClick?: () =
       <Tabs.Button disabled={!canBuildFleet} index={1} onClick={onClick} variant="secondary" size="sm">
         + CREATE FLEET
       </Tabs.Button>
-      <Button variant="error" size="sm" onClick={() => abandonAsteroid(mud, asteroid)}>
+      <Button
+        variant="error"
+        size="sm"
+        onClick={() => alert("Are you sure you want to abandon this asteroid?", () => abandonAsteroid(mud, asteroid))}
+      >
         ABANDON
       </Button>
     </div>
@@ -113,7 +118,7 @@ export const AsteroidStatsAndActions = ({ onClickCreateFleet }: { onClickCreateF
   if (!asteroid) return null;
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-4 pointer-events-auto">
       <AsteroidStats asteroid={asteroid} />
       <ActionButtons asteroid={asteroid} onClick={onClickCreateFleet} />
     </div>
