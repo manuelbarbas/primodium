@@ -28,7 +28,7 @@ export const UnitUpgrades: React.FC = () => {
   const endIdx = Math.min(startIdx + itemsPerPage - 1, unitEntities.length);
 
   return (
-    <Card>
+    <Card className="w-[44rem]">
       <p className="opacity-50 text-xs italic mb-4 flex gap-2 z-10">
         <FaInfoCircle size={16} /> All fleets owned by this asteroid will have their units upgraded.
       </p>
