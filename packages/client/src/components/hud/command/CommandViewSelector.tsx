@@ -10,7 +10,7 @@ import { useEntityQuery } from "@latticexyz/react";
 
 const btnClass = "group  bg-transparent";
 
-export const CommandViewSelector = () => {
+export const CommandViewSelector = ({ setInitialRight }: { setInitialRight?: () => void }) => {
   const playerEntity = components.Account.use()?.value;
   const selectedRock = components.SelectedRock.use()?.value;
   const owner = components.OwnedBy.use(selectedRock)?.value;
@@ -34,7 +34,7 @@ export const CommandViewSelector = () => {
           motion="disabled"
           tooltipDirection="left"
         />
-        <TransferInventoryButton />
+        <TransferInventoryButton setInitialRight={setInitialRight} />
         <Tabs.IconButton
           index={2}
           className={btnClass}
@@ -53,7 +53,7 @@ export const CommandViewSelector = () => {
   );
 };
 
-const TransferInventoryButton = () => {
+const TransferInventoryButton = ({ setInitialRight }: { setInitialRight?: () => void }) => {
   const selectedRock = components.SelectedRock.use()?.value;
   const playerEntity = useMud().playerAccount.entity;
   const playerOwnsRock = components.OwnedBy.get(selectedRock)?.value === playerEntity;
@@ -73,6 +73,7 @@ const TransferInventoryButton = () => {
     <Tabs.IconButton
       index={1}
       className={btnClass}
+      onClick={setInitialRight}
       disabled={!playerOwnsRock && !playerHasFleetOnRock}
       size={"md"}
       icon={InterfaceIcons.Transfer}

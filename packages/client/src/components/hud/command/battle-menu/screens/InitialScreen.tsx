@@ -18,7 +18,6 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { alert } from "@/util/alert";
 import { clearFleet, disbandFleet } from "@/network/setup/contractCalls/fleetClear";
 import { cn } from "@/util/client";
-import { FaTrash } from "react-icons/fa";
 
 export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
   const mud = useMud();
@@ -106,7 +105,7 @@ export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
             }
           >
             <div className="flex flex-start items-center px-1 gap-3">
-              <FaTrash className="w-8 text-lg drop-shadow-lg text-warning" />
+              <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Trash} />
               <div className="flex flex-col items-start">
                 <p>EMPTY</p>
                 <p className="block text-xs opacity-75  text-wrap text-left">REMOVE ALL CARGO</p>

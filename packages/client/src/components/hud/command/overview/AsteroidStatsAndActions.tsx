@@ -86,7 +86,7 @@ const Hints = () => {
   );
 };
 
-const ActionButtons = ({ asteroid }: { asteroid: Entity }) => {
+const ActionButtons = ({ asteroid, onClick }: { asteroid: Entity; onClick?: () => void }) => {
   const mud = useMud();
   const playerEntity = mud.playerAccount.entity;
   const asteroidOwner = components.OwnedBy.use(asteroid)?.value;
@@ -94,7 +94,7 @@ const ActionButtons = ({ asteroid }: { asteroid: Entity }) => {
   if (!asteroidOwner || asteroidOwner !== playerEntity) return null;
   return (
     <div className="flex gap-2 items-center justify-center">
-      <Tabs.Button disabled={!canBuildFleet} index={1} variant="secondary" size="sm">
+      <Tabs.Button disabled={!canBuildFleet} index={1} onClick={onClick} variant="secondary" size="sm">
         + CREATE FLEET
       </Tabs.Button>
       <Button variant="error" size="sm" onClick={() => abandonAsteroid(mud, asteroid)}>
@@ -104,7 +104,7 @@ const ActionButtons = ({ asteroid }: { asteroid: Entity }) => {
   );
 };
 
-export const AsteroidStatsAndActions = () => {
+export const AsteroidStatsAndActions = ({ onClickCreateFleet }: { onClickCreateFleet?: () => void }) => {
   const playerEntity = components.Account.use()?.value;
   const selectedAsteroid = components.SelectedRock.use()?.value;
   const homeAsteroid = components.Home.use(playerEntity)?.value;
@@ -115,7 +115,7 @@ export const AsteroidStatsAndActions = () => {
   return (
     <div className="flex flex-col items-center gap-4">
       <AsteroidStats asteroid={asteroid} />
-      <ActionButtons asteroid={asteroid} />
+      <ActionButtons asteroid={asteroid} onClick={onClickCreateFleet} />
     </div>
   );
 };

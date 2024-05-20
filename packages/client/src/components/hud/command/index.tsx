@@ -1,6 +1,6 @@
 import { HUD } from "@/components/core/HUD";
 import { usePersistentStore } from "@game/stores/PersistentStore";
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { components } from "@/network/components";
 import { Keys, Mode } from "@/util/constants";
@@ -13,13 +13,20 @@ import Transfer from "@/components/hud/command/transfer/Transfer";
 import { TransferContextProvider } from "@/hooks/providers/TransferProvider";
 import { useMud } from "@/hooks";
 import { UnitUpgrades } from "@/components/hud/asteroid/building-menu/screens/UnitUpgrades";
+import { Entity } from "@latticexyz/recs";
 
 export const CommandCenterHUD = memo(() => {
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
   const inCommandMode = components.SelectedMode.use()?.value === Mode.CommandCenter;
   const selectedRock = components.SelectedRock.use()?.value;
   const playerEntity = useMud().playerAccount.entity;
-  const initialLeft = components.OwnedBy.use(selectedRock)?.value === playerEntity ? selectedRock : undefined;
+  const firstInitialLeft = components.OwnedBy.use(selectedRock)?.value === playerEntity ? selectedRock : undefined;
+  const [initialLeft, setInitialLeft] = useState<Entity>();
+  const [initialRight, setInitialRight] = useState<"newFleet">();
+
+  useEffect(() => {
+    setInitialLeft(firstInitialLeft);
+  }, [firstInitialLeft]);
 
   if (!inCommandMode) return null;
 
@@ -34,14 +41,14 @@ export const CommandCenterHUD = memo(() => {
           <BattleMenuPopup />
 
           <HUD.Center className="h-3/4 flex flex-col items-center justify-between">
-            <CommandViewSelector />
+            <CommandViewSelector setInitialRight={() => setInitialRight(undefined)} />
 
             <div>
               <Tabs.Pane index={0} fragment>
-                <Overview />
+                <Overview onClickCreateFleet={() => setInitialRight("newFleet")} />
               </Tabs.Pane>
               <Tabs.Pane index={1} fragment>
-                <TransferContextProvider initialLeft={initialLeft}>
+                <TransferContextProvider initialLeft={initialLeft} initialRight={initialRight}>
                   <Transfer />
                 </TransferContextProvider>
               </Tabs.Pane>
