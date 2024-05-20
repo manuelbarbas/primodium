@@ -14,15 +14,15 @@ export const renderAsteroids = (scene: PrimodiumScene) => {
     id: EntityType.Asteroid,
     scene,
     spawnCallback: async ({ scene, entity, coord, spawnsSecondary }) => {
+      // TODO: not sure why this is needed but rendering of unitialized asteroids wont work otherwise
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
       const asteroid = renderAsteroid({
         scene,
         entity,
         coord,
         addEventHandlers: true,
       });
-
-      // TODO: not sure why this is needed but rendering of unitialized asteroids wont work otherwise
-      await new Promise((resolve) => setTimeout(resolve, 0));
 
       if (spawnsSecondary) initializeSecondaryAsteroids(entity, coord);
 
