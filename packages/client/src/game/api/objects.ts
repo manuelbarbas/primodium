@@ -22,6 +22,7 @@ export type PrimodiumObjectApi<T extends PrimodiumGameObject | DeferredRenderCon
   updatePosition: (entity: Entity, coord: Coord) => void;
   setBoundingBoxes: (entity: Entity, boundingBoxes: BoundingBox[]) => void;
   onNewObject: (callback: (entity: string) => void) => () => void;
+  onObjectVisible: (callback: (entity: string) => void) => () => void;
 };
 
 function factory<T extends PrimodiumGameObject | DeferredRenderContainer>(
@@ -77,6 +78,9 @@ function factory<T extends PrimodiumGameObject | DeferredRenderContainer>(
     },
     onNewObject: (callback: (entity: string) => void) => {
       return scene.objects.onNewObject(callback);
+    },
+    onObjectVisible: (callback: (entity: string) => void) => {
+      return scene.objects.onObjectEnterChunk(callback);
     },
   };
 }

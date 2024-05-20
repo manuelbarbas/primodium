@@ -83,6 +83,19 @@ export default function setupClientComponents() {
 
   const BattleTarget = createExtendedEntityComponent(world, { id: "BattleTarget" });
 
+  // keep updated metadata for a player's alliance
+  const PlayerAllianceInfo = createExtendedComponent(
+    world,
+    {
+      alliance: Type.Entity,
+      name: Type.String,
+      inviteMode: Type.Number,
+    },
+    {
+      id: "PlayerAllianceInfo",
+    }
+  );
+
   const PlayerInvite = createExtendedComponent(
     world,
     {
@@ -165,6 +178,7 @@ export default function setupClientComponents() {
     Battle,
     BattleRender,
     Leaderboard,
+    PlayerAllianceInfo,
     PlayerInvite,
     AllianceRequest,
     TransactionQueue,

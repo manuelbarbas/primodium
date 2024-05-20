@@ -33,7 +33,6 @@ export const renderAsteroid = (args: {
 
   const ownedBy = components.OwnedBy.get(entity)?.value;
   const ownedByPlayer = ownedBy === playerEntity;
-  const level = components.Level.get(entity)?.value;
 
   const spriteScale = 0.34 + 0.05 * Number(asteroidData.maxLevel);
 
@@ -52,11 +51,11 @@ export const renderAsteroid = (args: {
       id: entity,
       scene,
       coord,
-      level: expansionLevel ?? 1n,
+      level: expansionLevel,
       relationship: getRockRelationship(playerEntity, entity),
     })
       .setScale(spriteScale)
-      .setLevel(level ?? 1n);
+      .setLevel(expansionLevel);
 
   const alliance = components.PlayerAlliance.get(ownedBy as Entity)?.alliance;
 
@@ -71,7 +70,8 @@ export const renderAsteroid = (args: {
   asteroid.getAsteroidLabel().setProperties({
     nameLabel: entityToRockName(entity) + (isHome ? " *" : ""),
     nameLabelColor: ownedByPlayer ? 0xffff00 : asteroidData?.spawnsSecondary ? 0x00ffff : 0xffffff,
-    emblemSprite: MainbaseLevelToEmblem[Phaser.Math.Clamp(Number(level) - 1, 0, MainbaseLevelToEmblem.length - 1)],
+    emblemSprite:
+      MainbaseLevelToEmblem[Phaser.Math.Clamp(Number(expansionLevel) - 1, 0, MainbaseLevelToEmblem.length - 1)],
     ownerLabel: ownerLabel,
     allianceLabel: alliance ? getAllianceName(alliance as Entity) : undefined,
     allianceLabelColor: alliance ? parseInt(entityToColor(alliance as Entity).slice(1), 16) : undefined,

@@ -48,13 +48,22 @@ export class ChunkManager {
     this.worldViewUnsub.unsubscribe();
   }
 
+  encodeKeyForChunk({ x, y }: Coord): string {
+    return `${x}:${y}`;
+  }
+
+  decodeKeyFromChunk(key: string): Coord {
+    const [x, y] = key.split(":").map(Number);
+    return { x, y };
+  }
+
   private update(): void {
     const { chunks: currentVisibleChunks, area: currentVisibleArea } = this.getVisible();
 
     // Find chunks that have just become visible
     currentVisibleChunks.forEach((chunkKey) => {
       if (!this.visibleChunks.has(chunkKey)) {
-        this.onEnterChunk(this.decodeKeyForChunk(chunkKey));
+        this.onEnterChunk(this.decodeKeyFromChunk(chunkKey));
         this.visibleChunks.add(chunkKey);
       }
     });
@@ -62,7 +71,7 @@ export class ChunkManager {
     // Find chunks that are no longer visible
     this.visibleChunks.forEach((chunkKey) => {
       if (!currentVisibleChunks.has(chunkKey)) {
-        this.onExitChunk(this.decodeKeyForChunk(chunkKey));
+        this.onExitChunk(this.decodeKeyFromChunk(chunkKey));
         this.visibleChunks.delete(chunkKey);
       }
     });
@@ -94,14 +103,5 @@ export class ChunkManager {
     );
 
     return { chunks, area };
-  }
-
-  private encodeKeyForChunk({ x, y }: Coord): string {
-    return `${x}:${y}`;
-  }
-
-  private decodeKeyForChunk(key: string): Coord {
-    const [x, y] = key.split(":").map(Number);
-    return { x, y };
   }
 }

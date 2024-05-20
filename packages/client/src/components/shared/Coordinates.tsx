@@ -132,7 +132,7 @@ export const CoordsAsteroidDev = () => {
   return (
     <div className="grid grid-cols-[12px_40px_48px] items-center gap-2 bg-black bg-opacity-30 p-2 rounded-sm">
       <FaSquareXmark opacity={0.7} />
-      <CoordCaption caption="coords" />
+      <CoordCaption caption="tile" />
       <CoordDisplay coord={tileCoord} />
     </div>
   );

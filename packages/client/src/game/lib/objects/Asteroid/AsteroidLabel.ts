@@ -106,6 +106,11 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
     this._updatePositions();
   }
 
+  clearAlliance() {
+    this.allianceLabel.setText("");
+    this._updatePositions();
+  }
+
   setBaseScale(scale: number) {
     this.baseScale = scale;
     return this;
