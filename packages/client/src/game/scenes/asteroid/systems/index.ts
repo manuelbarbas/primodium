@@ -10,7 +10,7 @@ import { PrimodiumScene } from "@/game/api/scene";
 import { renderWormholeAnimations } from "@/game/scenes/asteroid/systems/renderWormholeAnimations";
 
 export const runSystems = (scene: PrimodiumScene, mud: MUD) => {
-  //Render world entity's sprites
+  // Render world entity's sprites
   renderAsteroidMap(scene);
   renderBuilding(scene);
   renderWormholeAnimations(scene);

@@ -296,9 +296,6 @@ export const EntityType = {
   // Starmap
   Asteroid: toHex32("spacerock.Asteroid") as Entity,
 
-  // Deferred render containers
-  DeferredRenderAsteroids: toHex32("deferred:asteroids") as Entity,
-
   NULL: toHex32("NULL") as Entity,
 };
 

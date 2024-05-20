@@ -24,7 +24,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
   private circle: Phaser.GameObjects.Arc;
   private animationTween: Phaser.Tweens.Tween;
 
-  protected id: Entity;
+  id: Entity;
   protected coord: Coord;
   protected _scene: PrimodiumScene;
   protected fleetsContainer: FleetsContainer;

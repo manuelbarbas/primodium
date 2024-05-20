@@ -11,7 +11,7 @@ export const renderAsteroids = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   const deferredAsteroidsRenderContainer = new DeferredAsteroidsRenderContainer({
-    id: EntityType.DeferredRenderAsteroids,
+    id: EntityType.Asteroid,
     scene,
     spawnCallback: ({ scene, entity, coord, spawnsSecondary }) => {
       const asteroid = renderAsteroid({
@@ -28,7 +28,6 @@ export const renderAsteroids = (scene: PrimodiumScene) => {
   });
 
   const query = [Has(components.Asteroid), Has(components.Position)];
-
   defineEnterSystem(systemsWorld, query, async ({ entity }) => {
     const coord = components.Position.get(entity);
     const asteroidData = components.Asteroid.get(entity);
