@@ -32,7 +32,7 @@ library LibAsteroid {
     P_ConquestConfigData memory conquestConfig = P_ConquestConfig.get();
     if (
       // limit shard asteroids to <maxShardAsteroids>
-      asteroidCount / conquestConfig.shardAsteroidSpawnFrequency <= conquestConfig.maxShardAsteroids &&
+      asteroidCount / conquestConfig.shardAsteroidSpawnFrequency < conquestConfig.maxShardAsteroids &&
       // spawn a shard asteroid every <shardAsteroidSpawnFrequency> asteroids, starting at the <shardAsteroidOffset> asteroid
       asteroidCount % conquestConfig.shardAsteroidSpawnFrequency == conquestConfig.shardAsteroidSpawnOffset
     ) {

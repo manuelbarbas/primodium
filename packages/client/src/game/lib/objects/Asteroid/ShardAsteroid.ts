@@ -9,7 +9,7 @@ import { Animations, Assets, Sprites } from "@primodiumxyz/assets";
 export class ShardAsteroid extends BaseAsteroid {
   constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord }) {
     const { id, scene, coord } = args;
-    super({ id, scene, coord, sprite: Sprites.Shard, outlineSprite: Sprites.AegisDrone });
+    super({ id, scene, coord, sprite: Sprites.Shard, outlineSprite: Sprites.AegisDrone, cull: false });
     this.asteroidSprite.postFX?.addShine();
     this.asteroidLabel.setProperties({
       emblemSprite: Sprites.ShardIcon,
@@ -25,6 +25,7 @@ export class ShardAsteroid extends BaseAsteroid {
 
   spawn() {
     super.spawn();
+    this.setActive(true).setVisible(true);
     return this;
   }
 
@@ -106,10 +107,7 @@ export class ShardAsteroid extends BaseAsteroid {
           this.asteroidSprite.anims.currentAnim!.key = "explode";
           this.asteroidSprite.once("animationcomplete-explode", () => {
             this.asteroidSprite.setTexture(Assets.SpriteAtlas, Sprites.Shard);
-            this.getFleetContainer().clearOrbit();
             if (newPosition) this.respawn(newPosition);
-            else this.asteroidSprite.setTexture(Assets.SpriteAtlas, Sprites.Shard);
-            this.asteroidLabel.setVisible(true);
           });
         },
       },
@@ -118,7 +116,7 @@ export class ShardAsteroid extends BaseAsteroid {
     this.scene.add.timeline(sequence).play();
   }
 
-  private respawn(newPosition: Coord) {
+  respawn(newPosition: Coord) {
     this.setTilePosition(newPosition);
 
     const animation = Animations.ShardExplosionDefault;
@@ -126,6 +124,7 @@ export class ShardAsteroid extends BaseAsteroid {
     this.asteroidSprite.anims.currentAnim!.key = "respawn";
     this.asteroidSprite.once("animationcomplete-respawn", () => {
       this.asteroidSprite.setTexture(Assets.SpriteAtlas, Sprites.Shard);
+      this.asteroidLabel.setVisible(true);
     });
   }
 }

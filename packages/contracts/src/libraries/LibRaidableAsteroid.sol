@@ -89,7 +89,7 @@ library LibRaidableAsteroid {
 
   /**
    * @notice Claims the droid units built on a raidable asteroid until its maximum
-   * @dev This function is called by Primodium__claimUnits in the S_ClaimSystem contract
+   * @dev This function is called by Pri_11__claimUnits in the S_ClaimSystem contract
    * @param asteroidEntity Entity ID of the raidable asteroid
    */
   function claimRaidableUnits(bytes32 asteroidEntity) internal {

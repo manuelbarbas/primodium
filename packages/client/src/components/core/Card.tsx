@@ -7,6 +7,7 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
   noDecor?: boolean;
+  noPointerEvents?: boolean;
   fragment?: boolean;
   noMotion?: boolean;
 }
@@ -82,7 +83,11 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
                 onMouseLeave: handleMouseLeave,
               }
             : {})}
-          className={`card bg-neutral pixel-border p-3 bg-opacity-90 relative pointer-events-auto transition-all duration-100 ease-linear ${className} `}
+          className={cn(
+            "card bg-neutral pixel-border p-3 bg-opacity-90 relative transition-all duration-100 ease-linear",
+            props.noPointerEvents ? "pointer-events-none" : "pointer-events-auto",
+            className
+          )}
         >
           <div className="absolute inset-0 bg-gradient-to-br from-transparent to-neutral" />
           <div className="absolute inset-0 pixel-border" />
@@ -104,7 +109,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
   }
 );
 
-const secondaryCardVariants = cva("card p-2 pointer-events-auto", {
+const secondaryCardVariants = cva("card p-2", {
   variants: {
     variant: {
       default: "bg-gradient-to-br from-secondary/15 to-secondary/5 border border-secondary/25 ",
@@ -114,50 +119,62 @@ const secondaryCardVariants = cva("card p-2 pointer-events-auto", {
       true: "",
       false: "hover:shadow-2xl hover:border-secondary/50",
     },
+    noPointerEvents: {
+      true: "pointer-events-none",
+      false: "pointer-events-auto",
+    },
   },
   defaultVariants: {
     variant: "default",
     noDecor: false,
+    noPointerEvents: false,
   },
 });
 
 interface SecondaryCardProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof secondaryCardVariants> {}
 
 export const SecondaryCard = forwardRef<HTMLDivElement, SecondaryCardProps>(
-  ({ children, className, variant, noDecor }, ref) => {
+  ({ children, className, variant, noDecor, noPointerEvents }, ref) => {
     return (
-      <div ref={ref} className={cn(secondaryCardVariants({ variant, noDecor }), className)}>
+      <div ref={ref} className={cn(secondaryCardVariants({ variant, noDecor, noPointerEvents }), className)}>
         {children}
       </div>
     );
   }
 );
 
-const glassProps = cva(
-  "card border border-secondary/50 heropattern-topography-slate-500/10 backdrop-blur-md p-3 pointer-events-auto",
-  {
-    variants: {
-      direction: {
-        left: "rounded-l-xl border-l-accent",
-        right: "rounded-r-xl border-r-accent",
-        top: "rounded-t-xl border-t-accent",
-        bottom: "rounded-b-xl border-b-accent",
-      },
+const glassProps = cva("card border border-secondary/50 heropattern-topography-slate-500/10 backdrop-blur-md p-3", {
+  variants: {
+    direction: {
+      left: "rounded-l-xl border-l-accent",
+      right: "rounded-r-xl border-r-accent",
+      top: "rounded-t-xl border-t-accent",
+      bottom: "rounded-b-xl border-b-accent",
     },
-  }
-);
+    noPointerEvents: {
+      true: "pointer-events-none",
+      false: "pointer-events-auto",
+    },
+  },
+  defaultVariants: {
+    direction: "left",
+    noPointerEvents: false,
+  },
+});
 interface GlassProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof glassProps> {}
 
-export const GlassCard = forwardRef<HTMLDivElement, GlassProps>(({ children, className, direction }, ref) => {
-  return (
-    <div ref={ref} className={cn(glassProps({ direction, className }))}>
-      <div
-        className={cn(
-          "absolute inset-0 !bg-gradient-to-br !border-none from-secondary/25 to-secondary/15",
-          glassProps({ direction })
-        )}
-      />
-      {children}
-    </div>
-  );
-});
+export const GlassCard = forwardRef<HTMLDivElement, GlassProps>(
+  ({ children, className, direction, noPointerEvents }, ref) => {
+    return (
+      <div ref={ref} className={cn(glassProps({ direction, className, noPointerEvents }))}>
+        <div
+          className={cn(
+            "absolute inset-0 !bg-gradient-to-br !border-none from-secondary/25 to-secondary/15",
+            glassProps({ direction })
+          )}
+        />
+        {children}
+      </div>
+    );
+  }
+);

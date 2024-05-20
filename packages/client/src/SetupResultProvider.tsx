@@ -47,7 +47,7 @@ function SetupResultProvider() {
   useEffect(() => {
     if (!network || !playerAccount || mounted.current) return;
     // https://vitejs.dev/guide/env-and-mode.html
-    if (import.meta.env.DEV) {
+    if (import.meta.env.PRI_DEV === "true") {
       import("@latticexyz/dev-tools").then(({ mount: mountDevTools }) =>
         mountDevTools({
           config: network.mudConfig,

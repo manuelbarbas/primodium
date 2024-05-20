@@ -12,10 +12,14 @@ import { IndexScreen } from "@/components/hud/global/modals/alliance-mgmt/IndexS
 import { InvitesScreen } from "@/components/hud/global/modals/alliance-mgmt/InvitesScreen";
 import { LoadingScreen } from "@/components/hud/global/modals/alliance-mgmt/LoadingScreen";
 import { ManageScreen } from "@/components/hud/global/modals/alliance-mgmt/manage/ManageScreen";
+import { Keys } from "@/util/constants";
 
 export const AllianceManagement = () => {
   const mud = useMud();
   const playerEntity = mud.playerAccount.entity;
+  // global alliance data
+  const { loading: globalLoading, error: globalError } = useSyncStatus(Keys.SECONDARY);
+  // player alliance data
   const allianceEntity = (components.PlayerAlliance.use(playerEntity)?.alliance ?? singletonEntity) as Entity;
   const { loading, error } = useSyncStatus(allianceEntity);
 
@@ -24,8 +28,8 @@ export const AllianceManagement = () => {
   }, [allianceEntity, mud]);
 
   const initialScreen = useMemo(() => {
-    if (error) return "error";
-    if (loading) return "loading";
+    if (error || globalError) return "error";
+    if (loading || globalLoading) return "loading";
 
     if (allianceEntity === singletonEntity) return "search";
     return "manage";

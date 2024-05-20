@@ -49,6 +49,10 @@ export const setupSync = (mud: MUD) => {
           //hydrate asteroid info
           hydrateAsteroidData(hoverEntity, mud);
           break;
+        case components.ShardAsteroid.has(hoverEntity):
+          //hydrate shardasteroid info
+          hydrateAsteroidData(hoverEntity, mud, true); // shard = true
+          break;
         case components.FleetMovement.has(hoverEntity):
           //hydrate fleet info
           hydrateFleetData(hoverEntity, mud);

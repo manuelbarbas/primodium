@@ -29,7 +29,6 @@ export function getAsteroidImage(primodium: PrimodiumGame, asteroid: Entity) {
   if (!isPrimary) {
     const resource = MapIdToAsteroidType[asteroidData.mapId] ?? EntityType.Kimberlite;
     const sprite = getSecondarySprite(resource, asteroidData.maxLevel);
-    console.log({ sprite });
     return getSpriteBase64(sprite);
   }
   const level = comps.Level.get(asteroid)?.value;

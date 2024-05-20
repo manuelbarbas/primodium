@@ -119,6 +119,7 @@ export default function setupClientComponents() {
       id: "SyncStatus",
     }
   );
+  const SystemsReady = createExtendedBoolComponent(world, { id: "SystemsReady" });
 
   const IsObjectiveClaimable = createExtendedBoolComponent(world, { id: "IsObjectiveClaimable" });
   /* -------------------------------------------------------------------------- */
@@ -166,6 +167,7 @@ export default function setupClientComponents() {
     TransactionQueue,
     SyncStatus,
     SyncSource,
+    SystemsReady,
     WormholeResource,
   };
 }

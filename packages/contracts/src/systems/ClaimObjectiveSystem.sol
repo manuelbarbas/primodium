@@ -26,7 +26,7 @@ contract ClaimObjectiveSystem is PrimodiumSystem {
     LibObjectives.checkObjectiveRequirements(playerEntity, asteroidEntity, objective);
 
     IWorld world = IWorld(_world());
-    world.Primodium__receiveRewards(asteroidEntity, objectivePrototype);
+    world.Pri_11__receiveRewards(asteroidEntity, objectivePrototype);
 
     CompletedObjective.set(playerEntity, objectivePrototype, true);
   }

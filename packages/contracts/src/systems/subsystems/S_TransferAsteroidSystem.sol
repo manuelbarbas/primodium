@@ -52,7 +52,7 @@ contract S_TransferAsteroidSystem is PrimodiumSystem {
       LibFleetClear.clearFleet(ownedFleets[i]);
 
       IWorld world = IWorld(_world());
-      world.Primodium__resetFleetIfNoUnitsLeft(ownedFleets[i]);
+      world.Pri_11__resetFleetIfNoUnitsLeft(ownedFleets[i]);
     }
   }
 

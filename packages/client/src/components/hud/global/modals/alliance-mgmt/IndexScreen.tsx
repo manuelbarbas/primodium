@@ -79,7 +79,13 @@ export const IndexScreen = () => {
         <div className="flex flex-col w-full h-full justify-between text-xs pointer-events-auto">
           <AutoSizer>
             {({ height, width }: { height: number; width: number }) => (
-              <List height={height} width={width} itemCount={10} itemSize={52} className="scrollbar">
+              <List
+                height={height}
+                width={width}
+                itemCount={Math.min(allianceLength, 10)}
+                itemSize={52}
+                className="scrollbar"
+              >
                 {({ index, style }) => (
                   <div style={style} className="pr-2">
                     <AllianceItem

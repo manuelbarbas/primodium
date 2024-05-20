@@ -31,15 +31,15 @@ contract TransferTwoWaySystem is PrimodiumSystem {
       require(FleetMovement.getArrivalTime(leftEntity) <= block.timestamp, "[TransferTwoWay] Fleet in transit");
       require(block.timestamp >= CooldownEnd.get(leftEntity), "[TransferTwoWay] Fleet is in cooldown");
     } else {
-      world.Primodium__claimUnits(leftEntity);
-      world.Primodium__claimResources(leftEntity);
+      world.Pri_11__claimUnits(leftEntity);
+      world.Pri_11__claimResources(leftEntity);
     }
     if (rightIsFleet) {
       require(FleetMovement.getArrivalTime(rightEntity) <= block.timestamp, "[TransferTwoWay] Fleet in transit");
       require(block.timestamp >= CooldownEnd.get(rightEntity), "[TransferTwoWay] Fleet is in cooldown");
     } else {
-      world.Primodium__claimUnits(rightEntity);
-      world.Primodium__claimResources(rightEntity);
+      world.Pri_11__claimUnits(rightEntity);
+      world.Pri_11__claimResources(rightEntity);
     }
     bytes32 leftAsteroid = leftIsFleet ? FleetMovement.getDestination(leftEntity) : leftEntity;
     bytes32 rightAsteroid = rightIsFleet ? FleetMovement.getDestination(rightEntity) : rightEntity;

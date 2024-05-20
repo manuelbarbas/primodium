@@ -23,13 +23,13 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
   function testUpgradeMaxedBuildingFail() public {
     PositionData memory coord = getTilePosition(asteroidEntity, EBuilding.IronMine);
-    bytes32 ironMine = world.Primodium__build(EBuilding.IronMine, coord);
+    bytes32 ironMine = world.Pri_11__build(EBuilding.IronMine, coord);
     uint256 ironMineMaxLevel = P_MaxLevel.get(IronMinePrototypeId);
 
     Level.set(ironMine, ironMineMaxLevel);
 
     vm.expectRevert(bytes("[UpgradeBuildingSystem] Building has reached max level"));
-    world.Primodium__upgradeBuilding(ironMine);
+    world.Pri_11__upgradeBuilding(ironMine);
     vm.stopPrank();
   }
 
@@ -38,10 +38,10 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     removeRequiredMainBase(EBuilding.IronMine);
     uint256 ironMineMaxLevel = P_MaxLevel.get(IronMinePrototypeId);
     PositionData memory coord = getTilePosition(asteroidEntity, EBuilding.IronMine);
-    bytes32 ironMine = world.Primodium__build(EBuilding.IronMine, coord);
+    bytes32 ironMine = world.Pri_11__build(EBuilding.IronMine, coord);
     for (uint256 i = 1; i < ironMineMaxLevel; i++) {
       assertEq(Level.get(ironMine), i, "building should be level i");
-      world.Primodium__upgradeBuilding(ironMine);
+      world.Pri_11__upgradeBuilding(ironMine);
     }
 
     vm.stopPrank();
@@ -50,7 +50,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
   // TODO: PRI-644
   function testUpgradeBuildingFailRequiredMainBase() public {
     PositionData memory coord = getTilePosition(asteroidEntity, EBuilding.IronMine);
-    bytes32 building = world.Primodium__build(EBuilding.IronMine, coord);
+    bytes32 building = world.Pri_11__build(EBuilding.IronMine, coord);
     upgradeBuilding(creator, building);
     // upgradeBuilding(creator, building);
   }
@@ -73,8 +73,8 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
     switchPrank(creator);
     PositionData memory coord = getTilePosition(asteroidEntity, EBuilding.IronMine);
-    bytes32 ironMine = world.Primodium__build(EBuilding.IronMine, coord);
-    world.Primodium__upgradeBuilding(ironMine);
+    bytes32 ironMine = world.Pri_11__build(EBuilding.IronMine, coord);
+    world.Pri_11__upgradeBuilding(ironMine);
     assertEq(ResourceCount.get(asteroidEntity, Iron), initial - l1 - l2);
   }
 
@@ -96,9 +96,9 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
     switchPrank(creator);
     PositionData memory coord = getTilePosition(asteroidEntity, EBuilding.IronMine);
-    bytes32 ironMine = world.Primodium__build(EBuilding.IronMine, coord);
-    world.Primodium__toggleBuilding(ironMine);
-    world.Primodium__upgradeBuilding(ironMine);
+    bytes32 ironMine = world.Pri_11__build(EBuilding.IronMine, coord);
+    world.Pri_11__toggleBuilding(ironMine);
+    world.Pri_11__upgradeBuilding(ironMine);
     assertEq(ResourceCount.get(asteroidEntity, Iron), initial - l1 - l2);
   }
 
@@ -120,8 +120,8 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
     switchPrank(creator);
     PositionData memory coord = getTilePosition(asteroidEntity, EBuilding.IronMine);
-    bytes32 ironMine = world.Primodium__build(EBuilding.IronMine, coord);
-    world.Primodium__upgradeBuilding(ironMine);
+    bytes32 ironMine = world.Pri_11__build(EBuilding.IronMine, coord);
+    world.Pri_11__upgradeBuilding(ironMine);
 
     assertEq(ProductionRate.get(asteroidEntity, Copper), originalProduction);
     assertEq(ConsumptionRate.get(asteroidEntity, Copper), l2);
@@ -145,10 +145,10 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
     switchPrank(creator);
     PositionData memory coord = getTilePosition(asteroidEntity, EBuilding.IronMine);
-    bytes32 ironMine = world.Primodium__build(EBuilding.IronMine, coord);
-    world.Primodium__toggleBuilding(ironMine);
+    bytes32 ironMine = world.Pri_11__build(EBuilding.IronMine, coord);
+    world.Pri_11__toggleBuilding(ironMine);
 
-    world.Primodium__upgradeBuilding(ironMine);
+    world.Pri_11__upgradeBuilding(ironMine);
 
     assertEq(ProductionRate.get(asteroidEntity, Copper), originalProduction);
     assertEq(ConsumptionRate.get(asteroidEntity, Copper), 0);
@@ -171,8 +171,8 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     switchPrank(creator);
 
     PositionData memory coord = getTilePosition(asteroidEntity, EBuilding.IronMine);
-    bytes32 ironMine = world.Primodium__build(EBuilding.IronMine, coord);
-    world.Primodium__upgradeBuilding(ironMine);
+    bytes32 ironMine = world.Pri_11__build(EBuilding.IronMine, coord);
+    world.Pri_11__upgradeBuilding(ironMine);
     assertEq(ProductionRate.get(asteroidEntity, Iron), increase2);
   }
 
@@ -193,11 +193,11 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     switchPrank(creator);
 
     PositionData memory coord = getTilePosition(asteroidEntity, EBuilding.IronMine);
-    bytes32 ironMine = world.Primodium__build(EBuilding.IronMine, coord);
-    world.Primodium__toggleBuilding(ironMine);
+    bytes32 ironMine = world.Pri_11__build(EBuilding.IronMine, coord);
+    world.Pri_11__toggleBuilding(ironMine);
 
     uint256 gas = gasleft();
-    world.Primodium__upgradeBuilding(ironMine);
+    world.Pri_11__upgradeBuilding(ironMine);
     console.log("used ", gas - gasleft());
     assertEq(ProductionRate.get(asteroidEntity, Iron), 0);
   }
@@ -210,7 +210,7 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
 
     vm.startPrank(creator);
     uint256 gas = gasleft();
-    world.Primodium__upgradeBuilding(mainBase);
+    world.Pri_11__upgradeBuilding(mainBase);
     console.log("after", gas - gasleft());
   }
 
@@ -225,9 +225,9 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     MaxResourceCount.set(asteroidEntity, Iron, 0);
     switchPrank(creator);
     PositionData memory coord = getTilePosition(asteroidEntity, EBuilding.IronMine);
-    bytes32 ironMine = world.Primodium__build(EBuilding.IronMine, coord);
+    bytes32 ironMine = world.Pri_11__build(EBuilding.IronMine, coord);
     uint256 gas = gasleft();
-    world.Primodium__upgradeBuilding(ironMine);
+    world.Pri_11__upgradeBuilding(ironMine);
     console.log("after", gas - gasleft());
 
     assertEq(MaxResourceCount.get(asteroidEntity, Iron), 100);
@@ -244,10 +244,10 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     MaxResourceCount.set(asteroidEntity, Iron, 0);
     switchPrank(creator);
     PositionData memory coord = getTilePosition(asteroidEntity, EBuilding.IronMine);
-    bytes32 ironMine = world.Primodium__build(EBuilding.IronMine, coord);
-    world.Primodium__toggleBuilding(ironMine);
+    bytes32 ironMine = world.Pri_11__build(EBuilding.IronMine, coord);
+    world.Pri_11__toggleBuilding(ironMine);
 
-    world.Primodium__upgradeBuilding(ironMine);
+    world.Pri_11__upgradeBuilding(ironMine);
     assertEq(MaxResourceCount.get(asteroidEntity, Iron), 0);
   }
 }

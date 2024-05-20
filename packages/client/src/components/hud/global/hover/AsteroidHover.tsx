@@ -18,7 +18,7 @@ import { getAsteroidDescription, getAsteroidImage } from "src/util/asteroid";
 import { EntityType, Keys, ResourceStorages } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { entityToRockName } from "src/util/name";
-import { formatNumber, formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
+import { formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
 
 export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }> = ({
   entity,
@@ -82,7 +82,7 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
             </p>
             <SecondaryCard className="flex flex-row gap-1 p-1 text-xs items-center h-4 p-1">
               <img src={ResourceImages.Primodium} className={`pixel-images w-4 h-4`} />
-              {formatNumber(desc.primodium, { short: true, showZero: true })}
+              {formatResourceCount(EntityType.Iron, desc.primodium, { short: true, showZero: true })}
             </SecondaryCard>
           </div>
         </div>
@@ -99,11 +99,11 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
       </div>
 
       {desc.primodium > 0n && !!claimConquerTime && (
-        <div className="flex victory-bg uppercase text-primary font-bold border border-secondary/50 text-sm justify-center items-center">
+        <div className="flex bg-warning uppercase btn-warning font-bold text-sm justify-center items-center">
           CLAIM
           {!claimConquerTime.canConquer
             ? ` IN ${formatTime(claimConquerTime.timeUntilClaim)}`
-            : ` ${claimConquerTime.points} PTS`}
+            : ` ${formatResourceCount(EntityType.Iron, claimConquerTime.points)} PTS`}
         </div>
       )}
       <SecondaryCard className="grid grid-cols-2 gap-2">
