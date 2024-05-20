@@ -19,9 +19,11 @@ import { alert } from "@/util/alert";
 import { clearFleet } from "@/network/setup/contractCalls/fleetClear";
 import { abandonFleet } from "@/network/setup/contractCalls/fleetAbandon";
 import { cn } from "@/util/client";
+import { useGame } from "@/hooks/useGame";
 
 export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
   const mud = useMud();
+  const game = useGame();
   const target = components.FleetMovement.use(fleet)?.destination;
   const fleetStance = components.FleetStance.use(fleet)?.stance;
 
@@ -100,8 +102,10 @@ export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
             variant="neutral"
             className="w-full"
             onClick={() =>
-              alert("Are you sure you want to clear fleet? All resources and units will be lost forever!", () =>
-                clearFleet(mud, fleet)
+              alert(
+                "Are you sure you want to clear fleet? All resources and units will be lost forever!",
+                () => clearFleet(mud, fleet),
+                game
               )
             }
           >
@@ -120,7 +124,7 @@ export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
             size="content"
             variant="neutral"
             className="w-full"
-            onClick={() => alert("Are you sure you want to disband fleet?", () => abandonFleet(mud, fleet))}
+            onClick={() => alert("Are you sure you want to disband fleet?", () => abandonFleet(mud, fleet), game)}
           >
             <div className="flex flex-start px-1 gap-3">
               <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Return} />

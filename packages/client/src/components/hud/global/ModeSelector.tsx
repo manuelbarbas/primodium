@@ -125,7 +125,9 @@ export const ModeSelector = () => {
                 className="!px-3 py-2 border-t-0"
                 keybind="PrevHotbar"
                 onClick={() => {
-                  components.ActiveRock.set({ value: selectedRock ?? singletonEntity });
+                  if (!selectedRock) return;
+
+                  components.ActiveRock.set({ value: selectedRock });
                   components.SelectedMode.set({
                     value: Mode.Spectate,
                   });
