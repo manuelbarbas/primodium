@@ -298,7 +298,6 @@ export const EntityType = {
 
   // Deferred render containers
   DeferredRenderAsteroids: toHex32("deferred:asteroids") as Entity,
-  DeferredRenderShards: toHex32("deferred:shards") as Entity,
 
   NULL: toHex32("NULL") as Entity,
 };
