@@ -11,7 +11,7 @@ export const renderAsteroids = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
 
   const deferredAsteroidsRenderContainer = new DeferredAsteroidsRenderContainer({
-    id: EntityType.DeferredRenderAsteroids,
+    id: EntityType.Asteroid,
     scene,
     spawnCallback: ({ scene, entity, coord, spawnsSecondary }) => {
       const asteroid = renderAsteroid({

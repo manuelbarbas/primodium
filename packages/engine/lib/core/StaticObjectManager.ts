@@ -6,6 +6,7 @@ import { pixelToChunkCoord } from "../util/coords";
 import { BaseSpawnArgs, DeferredRenderContainer } from "@/game/lib/objects/DeferredRenderContainer";
 
 type Spawnable = {
+  id: string;
   spawn(): void;
   isSpawned(): boolean;
   setVisible(visible: boolean): Phaser.GameObjects.GameObject;
@@ -205,7 +206,7 @@ export class StaticObjectManager {
         object.spawn();
       }
       object.setActive(true).setVisible(true);
-      this.onObjectEnterChunkCallbacks.forEach((callback) => callback(object.name));
+      this.onObjectEnterChunkCallbacks.forEach((callback) => callback(object.id));
     });
 
     // BOUNDING BOXES
