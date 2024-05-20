@@ -7,6 +7,7 @@ import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
 import { RESOURCE_SCALE, SPEED_SCALE } from "src/util/constants";
 import { formatNumber, formatResourceCount } from "src/util/number";
+import { Tooltip } from "@/components/core/Tooltip";
 
 export const ResourceLabel = ({ name, resource }: { name: string; resource: Entity }) => {
   const activeRock = components.ActiveRock.use()?.value;
@@ -33,37 +34,40 @@ export const ResourceLabel = ({ name, resource }: { name: string; resource: Enti
     production == 1n ? "0.6" : formatNumber((production * 60n * worldSpeed) / (SPEED_SCALE * RESOURCE_SCALE));
 
   return (
-    <Badge
-      variant={resourceStorage === 0n ? "error" : "neutral"}
-      className={`${resourceStorage === 0n ? "opacity-25" : ""}`}
-    >
-      <ResourceIconTooltip
-        name={name}
-        amount={resourceCount}
-        resource={resource}
-        image={EntityToResourceImage[resource]}
-        fontSize={"sm"}
-        direction="top"
-        className={`${tooltipClass}`}
-      />
-      <b className={`text-gray-400 text-xs opacity-50`}>
-        /
-        {formatResourceCount(resource, resourceStorage, {
-          short: true,
-          fractionDigits: 1,
-        })}
-      </b>
-      {production !== 0n && (
-        <p
-          className={`opacity-50 text-xs ${
-            production > 0 ? "text-success" : production < 0 ? "animate-pulse text-error" : ""
-          }`}
-        >
-          {production > 0 ? "+" : ""}
-          {productionMin}
-          /MIN
-        </p>
-      )}
-    </Badge>
+    // non-breaking space on the resource names to keep on the same line
+    <Tooltip tooltipContent={name.replace(" ", "\u00A0")} direction="left">
+      <Badge
+        variant={resourceStorage === 0n ? "error" : "neutral"}
+        className={`${resourceStorage === 0n ? "opacity-25" : ""}`}
+      >
+        <ResourceIconTooltip
+          name={name}
+          amount={resourceCount}
+          resource={resource}
+          image={EntityToResourceImage[resource]}
+          fontSize={"sm"}
+          direction="top"
+          className={`${tooltipClass}`}
+        />
+        <b className={`text-gray-400 text-xs opacity-50`}>
+          /
+          {formatResourceCount(resource, resourceStorage, {
+            short: true,
+            fractionDigits: 1,
+          })}
+        </b>
+        {production !== 0n && (
+          <p
+            className={`opacity-50 text-xs ${
+              production > 0 ? "text-success" : production < 0 ? "animate-pulse text-error" : ""
+            }`}
+          >
+            {production > 0 ? "+" : ""}
+            {productionMin}
+            /MIN
+          </p>
+        )}
+      </Badge>
+    </Tooltip>
   );
 };

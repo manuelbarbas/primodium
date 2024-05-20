@@ -46,7 +46,7 @@ export const WarshipPopulation = () => {
         <p>Game Over</p>
       ) : (
         <div className="pointer-events-auto">
-          <Tooltip tooltipContent={<TooltipContent />} direction="bottom">
+          <Tooltip tooltipContent={<TooltipContent />} direction="center">
             <p className="flex inline gap-2">
               Warship Casualties:{" "}
               <span className={color}>{((100n * unitDeaths) / unitDeathLimit).toLocaleString()}%</span>
