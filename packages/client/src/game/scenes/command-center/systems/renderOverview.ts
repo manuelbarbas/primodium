@@ -136,7 +136,13 @@ export const renderOverview = (scene: PrimodiumScene) => {
       const arrivalTime = newMovement.arrivalTime ?? 0n;
       if (arrivalTime <= time) {
         const orbitRing = scene.objects.asteroid.get(selectedRock)?.getFleetsContainer();
-        const fleetObj = scene.objects.fleet.get(update.entity) ?? renderFleet({ scene, entity: update.entity });
+        const fleetObj =
+          scene.objects.fleet.get(update.entity) ??
+          renderFleet({ scene, entity: update.entity }).onClick(() => {
+            components.BattleTarget.set({
+              value: update.entity,
+            });
+          });
 
         orbitRing?.addFleet(fleetObj);
       } else {
