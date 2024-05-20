@@ -114,7 +114,7 @@ export const InitialScreen = ({ selectedRock }: { selectedRock: Entity }) => {
 
   const primodiumData = useClaimPrimodium(selectedRock);
   return (
-    <Navigator.Screen title="initial" className="gap-2">
+    <Navigator.Screen title="initial" className="gap-2 max-w-72">
       {isShard && <ShardButton shardEntity={selectedRock} />}
       {!isShard && playerEntity === ownedBy && !!primodiumData && primodiumData.points > 0 && (
         <TransactionQueueMask queueItemId={"ClaimPrimodium" as Entity}>
@@ -217,7 +217,7 @@ const ShardDescription = ({ description, length = 50 }: { description: string; l
   };
 
   return (
-    <SecondaryCard className=" relative w-72 flex flex-col gap-1">
+    <SecondaryCard className="relative w-full flex flex-col gap-1">
       <p className="text-xs">Belt History</p>
       <p className="text-xs italic opacity-60 pr-4">
         {isOpen ? description : getShortenedDescription(description, length)}
