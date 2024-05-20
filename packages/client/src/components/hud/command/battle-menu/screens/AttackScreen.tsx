@@ -18,6 +18,7 @@ import { useOrbitingFleets } from "@/hooks/useOrbitingFleets";
 import { attack } from "@/network/setup/contractCalls/attack";
 import { clearFleetStance } from "@/network/setup/contractCalls/fleetStance";
 import { alert } from "@/util/alert";
+import { useGame } from "@/hooks/useGame";
 
 export const Fleet: React.FC<{ fleetEntity: Entity; target: Entity; willFriendlyFire: boolean }> = ({
   fleetEntity,
@@ -25,6 +26,7 @@ export const Fleet: React.FC<{ fleetEntity: Entity; target: Entity; willFriendly
   willFriendlyFire,
 }) => {
   const mud = useMud();
+  const game = useGame();
   const movement = components.FleetMovement.use(fleetEntity);
   const stance = components.FleetStance.use(fleetEntity);
   const fleetCooldown = components.CooldownEnd.use(fleetEntity)?.value ?? 0n;
@@ -86,7 +88,8 @@ export const Fleet: React.FC<{ fleetEntity: Entity; target: Entity; willFriendly
                 willFriendlyFire
                   ? alert(
                       "You have defending fleets protecting this asteroid. Attacking this asteroid fleet will initiate friendly fire! Are you sure you want to proceed?",
-                      () => attack(mud, fleetEntity, target)
+                      () => attack(mud, fleetEntity, target),
+                      game
                     )
                   : attack(mud, fleetEntity, target)
               }

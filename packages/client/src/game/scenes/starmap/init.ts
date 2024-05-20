@@ -15,6 +15,7 @@ export const initStarmapScene = async (game: GlobalApi): Promise<PrimodiumScene>
 
   setupBasicCameraMovement(sceneApi, {
     translateKeybind: true,
+    doubleClickZoom: false,
   });
   setupKeybinds(sceneApi);
 

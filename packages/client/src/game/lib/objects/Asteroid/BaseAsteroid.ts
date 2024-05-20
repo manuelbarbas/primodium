@@ -39,6 +39,9 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
   private fireSeq?: Phaser.Time.Timeline;
   private laser?: Phaser.GameObjects.Particles.ParticleEmitter;
 
+  private lastClickTime = 0;
+  private singleClickTimeout?: Phaser.Time.TimerEvent;
+
   constructor(args: {
     id: Entity;
     scene: PrimodiumScene;
@@ -125,7 +128,37 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     const obj = onSprite ? this.asteroidSprite.setInteractive() : this.circle;
     obj.on(Phaser.Input.Events.POINTER_UP, (e: Phaser.Input.Pointer) => {
       if (!isValidClick(e)) return;
-      fn(e);
+
+      // Clear any existing timeout
+      if (this.singleClickTimeout) {
+        this.singleClickTimeout.destroy();
+        this.singleClickTimeout = undefined;
+      }
+
+      // Set a new timeout for single-click
+      this.singleClickTimeout = this.scene.time.delayedCall(250, () => {
+        fn(e);
+        this.singleClickTimeout = undefined;
+      });
+    });
+    return this;
+  }
+
+  onDoubleClick(fn: (e: Phaser.Input.Pointer) => void, onSprite = false) {
+    const obj = onSprite ? this.asteroidSprite.setInteractive() : this.circle;
+    obj.on(Phaser.Input.Events.POINTER_UP, (e: Phaser.Input.Pointer) => {
+      if (!isValidClick(e)) return;
+
+      const clickDelay = this.scene.time.now - this.lastClickTime;
+      this.lastClickTime = this.scene.time.now;
+      if (clickDelay < 250) {
+        // If double-click, clear the single-click timeout
+        if (this.singleClickTimeout) {
+          this.singleClickTimeout.destroy();
+          this.singleClickTimeout = undefined;
+        }
+        fn(e);
+      }
     });
     return this;
   }

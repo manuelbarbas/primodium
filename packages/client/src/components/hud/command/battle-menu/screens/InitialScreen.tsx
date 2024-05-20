@@ -18,9 +18,11 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { alert } from "@/util/alert";
 import { clearFleet } from "@/network/setup/contractCalls/fleetClear";
 import { cn } from "@/util/client";
+import { useGame } from "@/hooks/useGame";
 
 export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
   const mud = useMud();
+  const game = useGame();
   const target = components.FleetMovement.use(fleet)?.destination;
   const fleetStance = components.FleetStance.use(fleet)?.stance;
 
@@ -98,8 +100,10 @@ export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
           variant="neutral"
           className="w-full"
           onClick={() =>
-            alert("Are you sure you want to clear fleet? All resources and units will be lost forever!", () =>
-              clearFleet(mud, fleet)
+            alert(
+              "Are you sure you want to clear fleet? All resources and units will be lost forever!",
+              () => clearFleet(mud, fleet),
+              game
             )
           }
         >
