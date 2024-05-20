@@ -1,6 +1,5 @@
 import { Button } from "@/components/core/Button";
 import { CapacityBar } from "@/components/core/CapacityBar";
-import { HUD } from "@/components/core/HUD";
 import { Tabs } from "@/components/core/Tabs";
 import { useMud } from "@/hooks";
 import { useAsteroidStrength } from "@/hooks/useAsteroidStrength";
@@ -114,9 +113,9 @@ export const AsteroidStatsAndActions = () => {
   if (!asteroid) return null;
 
   return (
-    <HUD.BottomMiddle className="mb-36 flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-4">
       <AsteroidStats asteroid={asteroid} />
       <ActionButtons asteroid={asteroid} />
-    </HUD.BottomMiddle>
+    </div>
   );
 };

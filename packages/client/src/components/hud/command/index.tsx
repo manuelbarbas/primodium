@@ -33,26 +33,23 @@ export const CommandCenterHUD = memo(() => {
         <Tabs className="pointer-events-auto">
           <BattleMenuPopup />
 
-          {/* Contains View Buttons */}
-          <HUD.TopMiddle>
+          <HUD.Center className="h-3/4 flex flex-col items-center justify-between">
             <CommandViewSelector />
-          </HUD.TopMiddle>
 
-          <Tabs.Pane index={0} fragment>
-            <Overview />
-          </Tabs.Pane>
-          <Tabs.Pane index={1} fragment>
-            <HUD.Center>
-              <TransferContextProvider initialLeft={initialLeft}>
-                <Transfer />
-              </TransferContextProvider>
-            </HUD.Center>
-          </Tabs.Pane>
-          <Tabs.Pane index={2} fragment>
-            <HUD.Center>
-              <UnitUpgrades />
-            </HUD.Center>
-          </Tabs.Pane>
+            <div>
+              <Tabs.Pane index={0} fragment>
+                <Overview />
+              </Tabs.Pane>
+              <Tabs.Pane index={1} fragment>
+                <TransferContextProvider initialLeft={initialLeft}>
+                  <Transfer />
+                </TransferContextProvider>
+              </Tabs.Pane>
+              <Tabs.Pane index={2} fragment>
+                <UnitUpgrades />
+              </Tabs.Pane>
+            </div>
+          </HUD.Center>
         </Tabs>
       </LoadingOverlay>
     </HUD>

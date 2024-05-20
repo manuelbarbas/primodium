@@ -20,7 +20,7 @@ export const CommandViewSelector = () => {
   if (!commandOpen) return null;
 
   return (
-    <div className="flex mt-36 items-center pointer-events-auto -translate-x-[10px]">
+    <div className="flex items-center pointer-events-auto -translate-x-[10px]">
       <Tabs.PrevButton variant="ghost">
         <FaChevronLeft className="text-accent" />
       </Tabs.PrevButton>
