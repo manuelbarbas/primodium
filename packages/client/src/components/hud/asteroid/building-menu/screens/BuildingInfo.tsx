@@ -83,7 +83,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     resource={resource}
                     amount={amount}
                     resourceType={type}
-                    fractionDigits={3}
+                    fractionDigits={1}
                   />
                 </Badge>
               ))

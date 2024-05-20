@@ -5,8 +5,8 @@ import { Badge } from "src/components/core/Badge";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
-import { RESOURCE_SCALE, SPEED_SCALE } from "src/util/constants";
-import { formatNumber, formatResourceCount } from "src/util/number";
+import { SPEED_SCALE } from "src/util/constants";
+import { formatResourceCount } from "src/util/number";
 
 export const ResourceLabel = ({ name, resource }: { name: string; resource: Entity }) => {
   const activeRock = components.ActiveRock.use()?.value;
@@ -29,8 +29,11 @@ export const ResourceLabel = ({ name, resource }: { name: string; resource: Enti
     return;
   }, [resourceCount, resourceStorage]);
 
+  console.log({ production });
   const productionMin =
-    production == 1n ? "0.6" : formatNumber((production * 60n * worldSpeed) / (SPEED_SCALE * RESOURCE_SCALE));
+    production == 1n
+      ? "0.6"
+      : formatResourceCount(resource, (production * 60n * worldSpeed) / SPEED_SCALE, { fractionDigits: 1 });
 
   return (
     <Badge
