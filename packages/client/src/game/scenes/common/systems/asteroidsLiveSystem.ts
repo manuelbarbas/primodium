@@ -16,6 +16,7 @@ import { entityToPlayerName, entityToRockName } from "@/util/name";
 export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterScene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const scenes = [starmapScene, commandCenterScene];
+  const deferredStarmapContainer = starmapScene.objects.deferredRenderContainer.getContainer(EntityType.Asteroid);
 
   const playerEntity = components.Account.get()?.value;
 
@@ -78,7 +79,6 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
 
   /* --------------------------------- SYSTEMS -------------------------------- */
   // run callback when an asteroid becomes visible if it possesses one
-  const deferredStarmapContainer = starmapScene.objects.deferredRenderContainer.getContainer(EntityType.Asteroid);
   const sub = starmapScene.objects.asteroid.onObjectVisible((entity) => {
     if (deferredStarmapContainer?.hasOnEventOnce(entity as Entity))
       deferredStarmapContainer.runOnEventOnce(entity as Entity);
@@ -87,18 +87,17 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
   // this is probably cheaper than figuring out which part of the label must be changed exactly;
   // if a non-visible asteroid is going through a lot of updates, it will store the callback only the first time, then do nothing until
   // it comes in sight and gets ran
-  const registerCallback = (scene: PrimodiumScene, entity: Entity) => {
-    const deferredContainer = scene.objects.deferredRenderContainer.getContainer(EntityType.Asteroid);
-    if (deferredContainer?.hasOnEventOnce(entity)) return;
+  const registerCallback = (entity: Entity) => {
+    if (deferredStarmapContainer?.hasOnEventOnce(entity)) return;
 
-    deferredContainer?.addOnEventOnce(entity, () => {
+    deferredStarmapContainer?.addOnEventOnce(entity, () => {
       const ownerEntity = (components.OwnedBy.get(entity)?.value as Entity | undefined) ?? singletonEntity;
       const expansionLevel = components.ShardAsteroid.get(entity)
         ? undefined
         : components.Level.get(entity)?.value ?? 1n;
       const ownerAllianceEntity = components.PlayerAlliance.get(ownerEntity)?.alliance as Entity | undefined;
 
-      updateAsteroidLabel(scene, entity, ownerEntity, expansionLevel, ownerAllianceEntity);
+      updateAsteroidLabel(starmapScene, entity, ownerEntity, expansionLevel, ownerAllianceEntity);
     });
   };
 
@@ -108,10 +107,8 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
     // systems will run for other types of entity as well, so we need to filter out asteroids
     if (!components.Asteroid.has(entity) && !components.ShardAsteroid.has(entity)) return undefined;
     const scenesToUpdate = scenes.filter((scene) => scene.objects.asteroid.get(entity)?.active);
-    // if scene is not included, we need to register the callback
-    scenes.forEach((scene) => {
-      if (!scenesToUpdate.includes(scene)) registerCallback(scene, entity);
-    });
+    // if the asteroid is not active in the command center scene, it means that it doesn't exist so it'll be freshly rendered
+    if (!scenesToUpdate.includes(starmapScene)) registerCallback(entity);
 
     return scenesToUpdate.length > 0 ? scenesToUpdate : undefined;
   };
