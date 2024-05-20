@@ -4,9 +4,14 @@ import { TransitLine } from "@game/lib/objects/TransitLine";
 import { components } from "@/network/components";
 import { world } from "@/network/world";
 import { renderFleet } from "@/game/lib/render/renderFleet";
+import { EntityType } from "@/util/constants";
+import { DeferredAsteroidsRenderContainer } from "@/game/lib/objects/Asteroid/DeferredAsteroidsRenderContainer";
 
 export const renderFleets = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
+  const deferredRenderContainer = scene.objects.deferredRenderContainer.getContainer(
+    EntityType.DeferredRenderAsteroids
+  ) as DeferredAsteroidsRenderContainer;
   const transitsToUpdate = new Set<Entity>();
 
   // handle rendering fleets if asteroid is not yet spawned
@@ -53,10 +58,12 @@ export const renderFleets = (scene: PrimodiumScene) => {
     if (asteroid) {
       const fleetObject = getFleetObject(fleet);
       asteroid.getFleetsContainer()?.addFleet(fleetObject);
+      deferredRenderContainer?.removeFleet(fleet);
     } else {
       const queue = spawnQueue.get(asteroidEntity) ?? [];
       if (queue.length) queue.push(fleet);
       else spawnQueue.set(asteroidEntity, [fleet]);
+      deferredRenderContainer?.addFleet(fleet, asteroidEntity);
     }
   }
 

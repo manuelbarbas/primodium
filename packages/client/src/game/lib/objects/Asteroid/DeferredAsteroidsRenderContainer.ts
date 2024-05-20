@@ -4,6 +4,7 @@ import { PrimodiumScene } from "@/game/api/scene";
 import { BaseSpawnArgs, DeferredRenderContainer } from "@/game/lib/objects/DeferredRenderContainer";
 import { FleetsContainer } from "@/game/lib/objects/Asteroid/FleetsContainer";
 import { BaseAsteroid } from "@/game/lib/objects/Asteroid/BaseAsteroid";
+import { components } from "@/network/components";
 
 type AsteroidSpawnArgs = BaseSpawnArgs & {
   spawnsSecondary: boolean;
@@ -11,7 +12,9 @@ type AsteroidSpawnArgs = BaseSpawnArgs & {
 
 export class DeferredAsteroidsRenderContainer extends DeferredRenderContainer<BaseAsteroid, AsteroidSpawnArgs> {
   private asteroids: Map<Entity, BaseAsteroid> = new Map();
-  protected fleetsContainers: Map<string, FleetsContainer> = new Map();
+  private fleetsContainers: Map<string, FleetsContainer> = new Map();
+  // remember coords of asteroid around which fleets are orbiting when the asteroid is not yet spawned
+  private orbitingFleetCoord: Map<Entity, Coord> = new Map();
 
   constructor(args: {
     id: Entity;
@@ -42,5 +45,23 @@ export class DeferredAsteroidsRenderContainer extends DeferredRenderContainer<Ba
     if (obj) return obj.getFleetsContainer();
 
     return this.fleetsContainers.get(entity);
+  }
+
+  addFleet(entity: Entity, asteroid: Entity) {
+    const coord = components.Position.get(asteroid);
+    if (!coord) {
+      this.orbitingFleetCoord.set(entity, { x: 0, y: 0 });
+      return;
+    }
+
+    this.orbitingFleetCoord.set(entity, coord);
+  }
+
+  removeFleet(entity: Entity) {
+    this.orbitingFleetCoord.delete(entity);
+  }
+
+  getFleetCoord(entity: Entity) {
+    return this.orbitingFleetCoord.get(entity);
   }
 }
