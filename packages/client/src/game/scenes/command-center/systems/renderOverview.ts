@@ -65,8 +65,6 @@ export const renderOverview = (scene: PrimodiumScene) => {
 
     // set blocked ring if fleet is in block stance
     if (isAsteroidBlocked(entity)) asteroid?.getFleetsContainer().showBlockRing();
-
-    //TODO: handle fleet orbit updates
   });
 
   //render battle target selection
@@ -175,7 +173,6 @@ export const renderOverview = (scene: PrimodiumScene) => {
         const orbitRing = scene.objects.asteroid.get(movement.destination as Entity)?.getFleetsContainer();
 
         if (orbitRing && fleet) {
-          scene.objects.transitLine.get(transit)?.destroy(true);
           orbitRing.addFleet(fleet);
         }
 

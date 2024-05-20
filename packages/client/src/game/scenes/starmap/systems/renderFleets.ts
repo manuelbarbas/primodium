@@ -178,7 +178,7 @@ export const renderFleets = (scene: PrimodiumScene) => {
     if (stance === EFleetStance.Block) asteroidObj?.getFleetsContainer().showBlockRing(true);
   });
 
-  //handle fleet emtpy updates
+  //handle fleet empty updates
   defineComponentSystem(systemsWorld, components.IsFleetEmpty, ({ entity, value }) => {
     const fleetObj = objects.fleet.get(entity);
     const isEmpty = !!value[0]?.value;
