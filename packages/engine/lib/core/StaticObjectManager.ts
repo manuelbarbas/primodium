@@ -192,6 +192,14 @@ export class StaticObjectManager {
     return this.chunkManager.decodeKeyFromChunk(key);
   }
 
+  isKnownChunk(coord: Coord) {
+    return this.chunkManager.isKnownChunk(coord);
+  }
+
+  resetKnownChunk(coord: Coord) {
+    this.chunkManager.resetKnownChunk(coord);
+  }
+
   dispose() {
     this.objMap.forEach((object) => object.destroy());
     this.chunkManager.dispose();
