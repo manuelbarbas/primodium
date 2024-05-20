@@ -23,7 +23,7 @@ export const Dock = () => {
             shape={"circle"}
             size={"lg"}
             variant={"ghost"}
-            tooltip="alliance management"
+            tooltip="alliance&nbsp;management"
           >
             <IconLabel imageUri={InterfaceIcons.Alliance} className={iconClass} />
           </Modal.Button>
@@ -40,7 +40,13 @@ export const Dock = () => {
           </Modal.Content>
         </Modal>
         <Modal title="battles">
-          <Modal.Button className={btnClass} tooltip="battle reports" shape={"circle"} size={"lg"} variant={"ghost"}>
+          <Modal.Button
+            className={btnClass}
+            tooltip="battle&nbsp;reports"
+            shape={"circle"}
+            size={"lg"}
+            variant={"ghost"}
+          >
             <IconLabel className={iconClass} imageUri={InterfaceIcons.Reports} />
           </Modal.Button>
           <Modal.Content className="w-[50rem] h-[45rem]">

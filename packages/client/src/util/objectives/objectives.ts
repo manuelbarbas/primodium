@@ -516,7 +516,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.CaptureVolatileShard],
       description:
-        "To explode a shard, select an owned shard when an explosion is imminent and select Explode. Be warned, the explosion kills all fleets in the area!",
+        "To explode a shard, select an owned shard when an explosion is imminent and select Explode. Explosions give lots of Primodium to the shard's owner. Be warned, the explosion kills all fleets in the area!",
       icon: InterfaceIcons.Asteroid,
       tooltip: "Exploded Shard",
     },
@@ -617,7 +617,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 2n,
       requiredObjectives: [EObjectives.UpgradeMainBase3],
       unitType: EntityType.MinutemanMarine,
-      unitCount: 12n,
+      unitCount: 32n,
       description:
         "Minutemen are expendable offensive units that are trained quickly, move very fast, and provide an efficient cargo ability per housing required. To train, click on a workshop and select Train Units.",
     },
@@ -630,7 +630,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 8n,
       requiredObjectives: [EObjectives.TrainMinutemanMarine],
       unitType: EntityType.TridentMarine,
-      unitCount: 12n,
+      unitCount: 32n,
 
       description:
         "Select the workshop you placed on the map to train Trident marines. Trident marines are well-rounded units with good speed and excellent cargo ability. To train, click on a workshop and select Train Units.",
@@ -644,7 +644,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 10n,
       requiredObjectives: [EObjectives.TrainTridentMarine],
       unitType: EntityType.LightningCraft,
-      unitCount: 5n,
+      unitCount: 32n,
       description:
         "Upgrade a workshop to Level 10 to unlock the ability to train Lightning Ships. Lightning Ships are weak, but are insanely fast, high cargo units.",
     },
@@ -696,7 +696,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 5n,
       requiredObjectives: [EObjectives.BuildDroneFactory],
       unitType: EntityType.AnvilDrone,
-      unitCount: 20n,
+      unitCount: 32n,
       description:
         "To train an anvil drone, select a drone factory. Anvil drones are standard drones tuned to be a sturdy and reliable.",
     },
@@ -709,7 +709,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 5n,
       requiredObjectives: [EObjectives.BuildDroneFactory],
       unitType: EntityType.HammerDrone,
-      unitCount: 20n,
+      unitCount: 32n,
       description:
         "To build a hammer drone, Click on a drone factory. Hammer drones are standard drones that sacrifice armor for more weapons.",
     },
@@ -722,7 +722,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 8n,
       unitType: EntityType.AegisDrone,
       requiredObjectives: [EObjectives.TrainAnvilDrone],
-      unitCount: 20n,
+      unitCount: 32n,
       description:
         "Upgrade a drone factory to Level 8 to unlock the ability to build Aegis drones. Aegis drones are robust specialized defensive units. They occupy more housing than any other unit.",
     },
@@ -735,7 +735,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 8n,
       requiredObjectives: [EObjectives.TrainHammerDrone],
       unitType: EntityType.StingerDrone,
-      unitCount: 20n,
+      unitCount: 32n,
       description:
         "Upgrade a drone factory to Level 8 to unlock the ability to build Stinger drones. Stinger drones are powerful specialized assault units. They occupy more housing than any other unit.",
     },

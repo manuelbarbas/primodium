@@ -1,6 +1,7 @@
 import { Badge } from "@/components/core/Badge";
 import { CapacityBar } from "@/components/core/CapacityBar";
 import { IconLabel } from "@/components/core/IconLabel";
+import { Tooltip } from "@/components/core/Tooltip";
 import { useFullResourceCount } from "@/hooks/useFullResourceCount";
 import { EntityType } from "@/util/constants";
 import { EntityToResourceImage } from "@/util/mappings";
@@ -85,7 +86,8 @@ export const BarLayoutUtilityLabel = ({
   }, []);
 
   return (
-    <>
+    // non-breaking space on the resource names to keep on the same line
+    <Tooltip tooltipContent={name.replace(" ", "\u00A0")} direction="left">
       <div className="flex flex-row w-full">
         <img src={EntityToResourceImage[resourceId]} className="pixel-images h-5 w-5 mt-0.5" alt={`${name} icon`} />
 
@@ -99,6 +101,6 @@ export const BarLayoutUtilityLabel = ({
           </div>
         </div>
       </div>
-    </>
+    </Tooltip>
   );
 };

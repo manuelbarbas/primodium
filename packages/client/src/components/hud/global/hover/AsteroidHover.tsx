@@ -1,8 +1,10 @@
-import { HealthBar } from "@/components/shared/HealthBar";
-import { EntityToResourceImage } from "@/util/mappings";
+import { CapacityBar } from "@/components/core/CapacityBar";
+import { SecondaryCard } from "@/components/core/Card";
+import { useGame } from "@/hooks/useGame";
+import { cn } from "@/util/client";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
-import { Badge } from "src/components/core/Badge";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Loader } from "src/components/core/Loader";
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
@@ -12,8 +14,8 @@ import { useFullResourceCount, useFullResourceCounts } from "src/hooks/useFullRe
 import { useInGracePeriod } from "src/hooks/useInGracePeriod";
 import { useSyncStatus } from "src/hooks/useSyncStatus";
 import { components } from "src/network/components";
-import { getAsteroidDescription } from "src/util/asteroid";
-import { EntityType, Keys } from "src/util/constants";
+import { getAsteroidDescription, getAsteroidImage } from "src/util/asteroid";
+import { EntityType, Keys, ResourceStorages } from "src/util/constants";
 import { hashEntities } from "src/util/encode";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
@@ -37,6 +39,9 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
   const { strength, maxStrength } = useAsteroidStrength(entity, loading);
   const claimConquerTime = useClaimPrimodium(entity);
 
+  const position = components.Position.use(entity) ?? { x: 0, y: 0 };
+  const game = useGame();
+  const image = getAsteroidImage(game, entity);
   if (loading)
     return (
       <div className="relative w-60 h-24 px-auto uppercase font-bold">
@@ -46,78 +51,75 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
         </div>
       </div>
     );
+  const encryptionImg = EntityToResourceImage[EntityType.Encryption] ?? "";
+  const strengthImg = EntityToResourceImage[EntityType.HP] ?? "";
 
   return (
-    <div className="w-60 relative">
-      <div className="absolute top-0 left-0 w-full h-full topographic-background-sm opacity-50 " />
-      <div className="flex flex-col gap-1 z-10">
-        <div className="grid grid-cols-2 gap-1">
-          <div className="flex gap-1 items-center">
-            <IconLabel imageUri={InterfaceIcons.Asteroid} className={`pixel-images w-3 h-3 bg-base-100`} />
-            <p className="text-sm font-bold uppercase">{name}</p>
-          </div>
-        </div>
-        {wormhole && (
-          <div className="flex rainbow-bg uppercase text-primary font-bold border border-secondary/50 text-sm justify-center items-center">
-            WORMHOLE DETECTED
-          </div>
-        )}
-        {desc.primodium > 0n && !!claimConquerTime && (
-          <div className="flex victory-bg uppercase text-primary font-bold border border-secondary/50 text-sm justify-center items-center">
-            CLAIM
-            {!claimConquerTime.canConquer
-              ? ` IN ${formatTime(claimConquerTime.timeUntilClaim)}`
-              : ` ${claimConquerTime.points} PTS`}
-          </div>
-        )}
-        <div className="flex gap-1">
-          <div className="flex bg-primary uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4 max-w-48">
-            {ownedBy ? <AccountDisplay className="w-12" noColor player={ownedBy} raw /> : "DROID INFESTED"}
-          </div>
-        </div>
-        <div className="flex gap-1">
-          <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
-            {desc.size}
-          </div>
-          <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
-            {desc.type}
-          </div>
-          <div className="flex bg-neutral uppercase font-bold border border-secondary/50 gap-2 text-xs p-1 items-center h-4">
-            {/* todo replace PRI with icon */}
-            <IconLabel imageUri={ResourceImages.Primodium} />
-            {formatResourceCount(EntityType.Iron, desc.primodium)}
-          </div>
-        </div>
-        {inGracePeriod && (
-          <div className="flex bg-success/25 font-bold border border-success/50 gap-2 text-xs p-1 items-center h-4 w-fit">
-            <IconLabel imageUri={InterfaceIcons.Grace} className={`pixel-images w-3 h-3`} />
-            {formatTimeShort(duration)}
-          </div>
-        )}
-        {!inGracePeriod && (
-          <>
-            <div className="grid grid-cols-2 gap-1">
-              <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
-                <HealthBar
-                  imgUrl={EntityToResourceImage[EntityType.Encryption]}
-                  health={Number(formatResourceCount(EntityType.Encryption, encryption, { notLocale: true }))}
-                  maxHealth={Number(formatResourceCount(EntityType.Encryption, maxEncryption, { notLocale: true }))}
-                />
-              </Badge>
-              <Badge className="w-full text-xs text-accent bg-base-100 p-1 border border-secondary">
-                <HealthBar
-                  imgUrl={EntityToResourceImage[EntityType.HP]}
-                  health={Number(formatResourceCount(EntityType.HP, strength, { notLocale: true, showZero: true }))}
-                  maxHealth={Number(
-                    formatResourceCount(EntityType.HP, maxStrength, { notLocale: true, showZero: true })
-                  )}
-                />
-              </Badge>
+    <div className="flex flex-col gap-2">
+      <div className="grid grid-cols-[3rem_1fr_2rem] gap-2 items-center">
+        <img src={image} className={cn("pixel-images w-full")} />
+        <div className="flex flex-col text-sm font-bold uppercase">
+          <p className="flex gap-1">
+            {name}
+            <span className="text-[0.7rem] text-warning">
+              [{position.x},{position.y}]
+            </span>
+          </p>
+          {ownedBy && (
+            <div className="flex font-bold gap-1 text-xs items-center h-4 max-w-48">
+              <AccountDisplay className="w-12" player={ownedBy} raw />
             </div>
-            {!hideResources && <AsteroidResources entity={entity} />}
-          </>
-        )}
+          )}
+          <div className="flex gap-1 font-bold text-xs opacity-75">
+            <p>{desc.size}</p>
+            <p
+              className={cn(
+                "px-1 ",
+                wormhole ? "rainbow-bg text-neutral" : "border border-y-0 border-x-1 border-x-white"
+              )}
+            >
+              {desc.type}
+            </p>
+            <SecondaryCard className="flex flex-row gap-1 p-1 text-xs items-center h-4 p-1">
+              <img src={ResourceImages.Primodium} className={`pixel-images w-4 h-4`} />
+              {formatResourceCount(EntityType.Iron, desc.primodium, { short: true, showZero: true })}
+            </SecondaryCard>
+          </div>
+        </div>
+        <div className="flex flex-col font-bold gap-1 text-xs items-end">
+          {!ownedBy && <img src={EntityToUnitImage[EntityType.Droid]} className="w-6 h-6" />}
+          {inGracePeriod && (
+            <div className="flex flex-col justify-center items-center">
+              {" "}
+              <IconLabel imageUri={InterfaceIcons.Grace} className={`pixel-images w-3 h-3`} />
+              {formatTimeShort(duration)}
+            </div>
+          )}
+        </div>
       </div>
+
+      {desc.primodium > 0n && !!claimConquerTime && (
+        <div className="flex bg-warning uppercase btn-warning font-bold text-sm justify-center items-center">
+          CLAIM
+          {!claimConquerTime.canConquer
+            ? ` IN ${formatTime(claimConquerTime.timeUntilClaim)}`
+            : ` ${formatResourceCount(EntityType.Iron, claimConquerTime.points)} PTS`}
+        </div>
+      )}
+      <SecondaryCard className="grid grid-cols-2 gap-2">
+        <div className="flex gap-1 text-xs items-center">
+          <img src={encryptionImg} className="w-4 h-4" alt="encryption" />
+          <CapacityBar current={encryption} max={maxEncryption} segments={7} className="w-full" />
+          <p>{formatResourceCount(EntityType.Encryption, encryption, { short: true })}</p>
+        </div>
+        <div className="flex gap-1 text-xs items-center">
+          <img src={strengthImg} className="w-4 h-4" alt="strength" />
+          <CapacityBar current={strength} max={maxStrength} segments={7} className="w-full" />
+          <p>{formatResourceCount(EntityType.Defense, strength, { short: true })}</p>
+        </div>
+      </SecondaryCard>
+
+      {!hideResources && <AsteroidResources entity={entity} />}
     </div>
   );
 };
@@ -133,25 +135,33 @@ const ResourceDisplay = ({ type, count }: { type: Entity; count: bigint }) => {
   );
 };
 
+const UnitDisplay = ({ type, count }: { type: Entity; count: bigint }) => {
+  if (count == 0n) return null;
+  return (
+    <IconLabel
+      key={`show-unit-${type}`}
+      imageUri={EntityToUnitImage[type]}
+      text={formatResourceCount(type, count, { short: true })}
+    />
+  );
+};
+
+// exluding units for now
 const AsteroidResources = ({ entity }: { entity: Entity }) => {
   const resources = useFullResourceCounts(entity);
+  const units = components.Hangar.use(entity);
+  const hasUnits = !!units && units.counts.some((unit) => unit > 0n);
+  const noResources = [...ResourceStorages].every((type) => resources.get(type)?.resourceCount === 0n);
+  if (noResources && !hasUnits) return null;
   return (
-    <div className="text-xs grid grid-cols-3 gap-1 divide-x divide-primary/50 pt-1 border-t border-t-primary/50">
-      <div className="uppercase font-bold flex flex-col gap-1 p-1">
-        {[EntityType.Iron, EntityType.Copper, EntityType.Lithium].map((type) => (
+    <SecondaryCard className="text-xs grid grid-cols-3 gap-1 place-items-center">
+      {!noResources &&
+        [...ResourceStorages].map((type) => (
           <ResourceDisplay key={`type-${type}`} type={type} count={resources.get(type)?.resourceCount ?? 0n} />
         ))}
-      </div>
-      <div>
-        {[EntityType.IronPlate, EntityType.PVCell, EntityType.Alloy].map((type) => (
-          <ResourceDisplay key={`type-${type}`} type={type} count={resources.get(type)?.resourceCount ?? 0n} />
-        ))}
-      </div>
-      <div>
-        {[EntityType.Titanium, EntityType.Platinum, EntityType.Iridium, EntityType.Kimberlite].map((type) => (
-          <ResourceDisplay key={`type-${type}`} type={type} count={resources.get(type)?.resourceCount ?? 0n} />
-        ))}
-      </div>
-    </div>
+      {!noResources && hasUnits && <hr className="col-span-3 w-full border-secondary/50 border-0.5 my-1" />}
+      {hasUnits &&
+        units?.units.map((unit, i) => <UnitDisplay key={`unit-${unit}`} type={unit} count={units?.counts[i] ?? 0n} />)}
+    </SecondaryCard>
   );
 };
