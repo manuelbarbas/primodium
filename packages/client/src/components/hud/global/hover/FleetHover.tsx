@@ -64,7 +64,7 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
 
   if (loading)
     return (
-      <div className="relative w-56 h-24 px-auto uppercase font-bold">
+      <div className="relative w-72 h-24 px-auto uppercase font-bold">
         <div className="flex h-full justify-center items-center gap-2">
           <Loader />
           Loading Data
@@ -73,7 +73,7 @@ export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
     );
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="w-72 flex flex-col gap-2">
       <div className="grid grid-cols-[2rem_1fr_2rem] gap-2 items-center">
         <img src={friendly ? InterfaceIcons.Fleet : InterfaceIcons.EnemyFleet} className={`pixel-images w-full`} />
         <div className="flex flex-col text-sm font-bold uppercase">

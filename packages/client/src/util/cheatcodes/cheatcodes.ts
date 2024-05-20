@@ -852,6 +852,15 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
                 value: BigInt(count),
               }
             );
+
+            await setComponentValue(
+              mud,
+              mud.components.IsFleetEmpty,
+              { entity: selectedFleet as Hex },
+              {
+                value: false,
+              }
+            );
           },
         },
         giveFleetResource: {

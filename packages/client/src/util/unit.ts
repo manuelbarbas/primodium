@@ -106,16 +106,22 @@ export const getFleetStatsFromUnits = (units: Map<Entity, bigint>, fleetOwner?: 
   return data;
 };
 
+export const getFleets = (entity: Entity): Entity[] => {
+  return [...runQuery([Has(components.IsFleet), HasValue(components.FleetMovement, { destination: entity })])];
+};
+
+export const isFleetOrbiting = (fleet: Entity) => {
+  const arrivalTime = components.FleetMovement.get(fleet)?.arrivalTime ?? 0n;
+  const now = components.Time.get()?.value ?? 0n;
+  return arrivalTime < now;
+};
+
 export const getOrbitingFleets = (entity: Entity) => {
   const playerEntity = components.Account.get()?.value;
   if (!playerEntity) return [];
 
   return [...runQuery([Has(components.IsFleet), HasValue(components.FleetMovement, { destination: entity })])].filter(
-    (entity) => {
-      const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
-      const now = components.Time.get()?.value ?? 0n;
-      return arrivalTime < now;
-    }
+    (entity) => isFleetOrbiting(entity)
   );
 };
 

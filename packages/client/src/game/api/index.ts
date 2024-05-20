@@ -18,6 +18,7 @@ import { world } from "src/network/world";
 import _init from "../init";
 import { Scenes } from "@/game/lib/constants/common";
 import { setupWormholeResource } from "@/network/systems/setupWormholeResource";
+import { setupBattleNotifications } from "@/network/systems/setupBattleNotifications";
 
 export type PrimodiumGame = Awaited<ReturnType<typeof initGame>>;
 export async function initGame(version = "v1") {
@@ -61,6 +62,7 @@ export async function initGame(version = "v1") {
       setupHangar();
       setupLeaderboard();
       setupWormholeResource();
+      setupBattleNotifications();
       setupTime(mud);
       setupTrainingQueues();
       setupHomeAsteroid(mud);

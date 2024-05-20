@@ -3,10 +3,10 @@ import { PrimaryAsteroid, SecondaryAsteroid } from "@/game/lib/objects/Asteroid"
 import { BaseAsteroid } from "@/game/lib/objects/Asteroid/BaseAsteroid";
 import { components } from "@/network/components";
 import { getAllianceName } from "@/util/alliance";
-import { getRockRelationship } from "@/util/asteroid";
+import { getRockRelationship, isAsteroidBlocked } from "@/util/asteroid";
 import { entityToColor } from "@/util/color";
 import { getEntityTypeName } from "@/util/common";
-import { EntityType } from "@/util/constants";
+import { EntityType, Mode } from "@/util/constants";
 import { MapIdToAsteroidType } from "@/util/mappings";
 import { entityToPlayerName, entityToRockName } from "@/util/name";
 import { Entity } from "@latticexyz/recs";
@@ -80,19 +80,21 @@ export const renderAsteroid = (args: {
   // Add event handlers
   if (!addEventHandlers) return asteroid;
 
+  const sequence = [
+    {
+      at: 0,
+      run: () => scene.camera.pan(coord, { duration: 300 }),
+    },
+    {
+      at: 300,
+      run: () => scene.camera.zoomTo(scene.config.camera.maxZoom, 500),
+    },
+  ];
+
   asteroid
     .onClick(() => {
       //TODO: move to reusable seq in fx
-      const sequence = [
-        {
-          at: 0,
-          run: () => scene.camera.pan(coord, { duration: 300 }),
-        },
-        {
-          at: 300,
-          run: () => scene.camera.zoomTo(scene.config.camera.maxZoom, 500),
-        },
-      ];
+
       //set the selected rock immediately if we are sufficiently zoomed in
       if (scene.camera.phaserCamera.zoom >= scene.config.camera.maxZoom * 0.5)
         components.SelectedRock.set({ value: entity });
@@ -104,12 +106,19 @@ export const renderAsteroid = (args: {
       if (scene.camera.phaserCamera.zoom >= scene.config.camera.maxZoom * 0.5)
         components.SelectedRock.set({ value: entity });
     })
+    .onDoubleClick(() => {
+      components.SelectedRock.set({ value: entity });
+      components.SelectedMode.set({ value: Mode.CommandCenter });
+    })
     .onHoverEnter(() => {
       components.HoverEntity.set({ value: entity });
     })
     .onHoverExit(() => {
       components.HoverEntity.remove();
     });
+
+  //TODO: this is not great since we have to check every asteroid creation, but we are going to be deffering so maybe ok. Reason we need to do this on init currently is because asteroid may not be initialized yet when the fleet stance update comes in. We could set a timeout on that system but not ideal.
+  if (isAsteroidBlocked(entity)) asteroid?.getFleetsContainer().showBlockRing();
 
   return asteroid;
 };

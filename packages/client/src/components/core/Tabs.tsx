@@ -1,6 +1,7 @@
 import { ReactNode, memo, createContext, useContext, useState, FC, useEffect, useRef } from "react";
 import { Button as _Button } from "./Button";
 import { SecondaryCard } from "./Card";
+import { IconLabel } from "@/components/core/IconLabel";
 
 interface TabProps {
   children?: ReactNode;
@@ -67,9 +68,62 @@ const Button: FC<React.ComponentProps<typeof _Button> & { index: number; togglab
   }
 );
 
+const IconButton: FC<
+  React.ComponentProps<typeof _Button> & { index: number; togglable?: boolean; icon: string; text: string }
+> = memo(({ togglable = false, index, icon, text, ...props }) => {
+  const { index: currIndex, setIndex, persistIndexKey } = useIndex();
+  const selected = currIndex === index;
+
+  return (
+    <_Button
+      {...props}
+      selected={selected}
+      onClick={(e) => {
+        const _index = selected && togglable ? undefined : index;
+        setIndex(_index);
+        if (props.onClick) props.onClick(e);
+        if (persistIndexKey) persistedIndexMap.set(persistIndexKey, _index);
+      }}
+    >
+      <IconLabel imageUri={icon} text={text} hideText={!selected} className="px-2" />
+    </_Button>
+  );
+});
+
+const PrevButton: FC<React.ComponentProps<typeof _Button>> = memo((props) => {
+  const { index, setIndex } = useIndex();
+
+  return (
+    <_Button
+      {...props}
+      onClick={(e) => {
+        setIndex(index !== undefined ? Math.max(index - 1, 0) : 0);
+        if (props.onClick) props.onClick(e);
+      }}
+    />
+  );
+});
+
+const NextButton: FC<React.ComponentProps<typeof _Button> & { maxIndex: number }> = memo(({ maxIndex, ...props }) => {
+  const { index, setIndex } = useIndex();
+
+  return (
+    <_Button
+      {...props}
+      onClick={(e) => {
+        setIndex(index !== undefined ? Math.min(index + 1, maxIndex) : 0);
+        if (props.onClick) props.onClick(e);
+      }}
+    />
+  );
+});
+
 export const Tabs: FC<TabProps> & {
   Button: typeof Button;
   Pane: typeof Pane;
+  IconButton: typeof IconButton;
+  PrevButton: typeof PrevButton;
+  NextButton: typeof NextButton;
 } = ({ children, defaultIndex = 0, className, onChange, persistIndexKey }) => {
   const [currentIndex, setCurrentIndex] = useState<number | undefined>(
     persistedIndexMap.has(persistIndexKey ?? "") ? persistedIndexMap.get(persistIndexKey ?? "") : defaultIndex
@@ -97,3 +151,6 @@ export const Tabs: FC<TabProps> & {
 
 Tabs.Button = Button;
 Tabs.Pane = Pane;
+Tabs.IconButton = IconButton;
+Tabs.PrevButton = PrevButton;
+Tabs.NextButton = NextButton;

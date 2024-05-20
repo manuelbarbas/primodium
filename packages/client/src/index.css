@@ -44,10 +44,10 @@
     image-rendering: crisp-edges;
   }
 
-  .star-background-sm {
-    background-image: url("/img/backgrounds/star.png");
+  .command-background {
+    background-image: url("/img/backgrounds/command.png");
     background-repeat: repeat;
-    background-size: 200px;
+    background-size: 1000px;
   }
 
   .star-background {

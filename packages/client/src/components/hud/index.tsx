@@ -8,13 +8,13 @@ import { SpectateHUD } from "@/components/hud/spectate";
 
 export const GameHUD = memo(() => {
   return (
-    <>
+    <div>
       <AsteroidHUD />
       <SpectateHUD />
       <StarbeltHUD />
       <CommandCenterHUD />
       <GlobalHUD />
       <AsteroidLoading />
-    </>
+    </div>
   );
 });

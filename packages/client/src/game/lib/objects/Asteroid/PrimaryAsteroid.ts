@@ -2,18 +2,12 @@ import { Coord } from "engine/types";
 import { PrimodiumScene } from "@/game/api/scene";
 import { BaseAsteroid } from "./BaseAsteroid";
 import { LODs, getPrimaryOutlineSprite, getPrimarySprite } from "@/game/lib/objects/Asteroid/helpers";
-import { AsteroidRelationship } from "../../constants/common";
+import { Relationship } from "../../constants/common";
 import { Assets } from "@primodiumxyz/assets";
 import { Entity } from "@latticexyz/recs";
 
 export class PrimaryAsteroid extends BaseAsteroid {
-  constructor(args: {
-    id: Entity;
-    scene: PrimodiumScene;
-    coord: Coord;
-    level: bigint;
-    relationship?: AsteroidRelationship;
-  }) {
+  constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord; level: bigint; relationship?: Relationship }) {
     const { id, scene, coord, level = 1n, relationship = "Enemy" } = args;
     super({
       id,
