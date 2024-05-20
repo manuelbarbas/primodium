@@ -84,6 +84,7 @@ export const renderBattle = (scene: PrimodiumScene) => {
           run: () => {
             battleRender.destroy();
             components.FleetMovement.resumeUpdates(attacker);
+            components.IsFleetEmpty.resumeUpdates(attacker);
             components.BattleTarget.unblockUpdates(singletonEntity);
             components.SelectedMode.unblockUpdates(singletonEntity);
             if (defenderIsFleet) {

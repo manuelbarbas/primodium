@@ -118,7 +118,7 @@ export const AttackScreen: React.FC<{ selectedRock: Entity; target: Entity }> = 
           <div className="text-xs opacity-50 flex gap-2 items-center">
             <FaInfoCircle /> HOVER TO SEE DETAILS
           </div>
-          <div className="flex flex-col gap-1 h-48 w-96 overflow-y-auto hide-scrollbar">
+          <div className="flex flex-col gap-1 h-48  min-w-96 w-fit overflow-y-auto hide-scrollbar">
             {fleets.map((fleet) => (
               <Fleet key={fleet} fleetEntity={fleet} target={target} willFriendlyFire={willFriendlyFire} />
             ))}

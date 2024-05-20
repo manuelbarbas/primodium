@@ -6,7 +6,7 @@ import { PrimodiumScene } from "@/game/api/scene";
 import { renderShardAsteroid } from "@/game/lib/render/renderShardAsteroid";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { isAsteroidBlocked } from "@/util/asteroid";
-import { getOrbitingFleets } from "@/util/unit";
+import { getFleets, isFleetOrbiting } from "@/util/unit";
 import { StanceToIcon } from "@/game/lib/mappings";
 import { EFleetStance } from "contracts/config/enums";
 import { renderAsteroid } from "@/game/lib/render/renderAsteroid";
@@ -49,7 +49,11 @@ export const renderOverview = (scene: PrimodiumScene) => {
         components.HoverEntity.remove();
       }, true);
 
-    for (const fleet of getOrbitingFleets(entity)) {
+    for (const fleet of getFleets(entity)) {
+      if (!isFleetOrbiting(fleet)) {
+        transitsToUpdate.add(fleet);
+        return;
+      }
       const fleetObject = renderFleet({ scene, entity: fleet });
       fleetObject?.onClick(() => {
         components.BattleTarget.set({

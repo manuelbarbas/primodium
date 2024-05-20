@@ -80,7 +80,6 @@ export class TransitLine extends TargetLine {
   }
 
   setActive(value: boolean): this {
-    this.fleet?.setActive(value);
     return super.setActive(value);
   }
 

@@ -87,13 +87,10 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
   }
 
   addFleet(fleet: Fleet) {
-    this.setActive(true).setVisible(true);
-
     fleet.detach();
     this.fleets.add(fleet);
-    // console.log(fleet);
     fleet.reset();
-
+    this.setActive(true).setVisible(true);
     this.updateView();
 
     return this;

@@ -4,6 +4,7 @@ import { Navigator } from "src/components/core/Navigator";
 import { components } from "@/network/components";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Button } from "@/components/core/Button";
+import { Tabs } from "@/components/core/Tabs";
 
 import { useCallback, useMemo } from "react";
 // import { Tabs } from "@/components/core/Tabs";
@@ -166,7 +167,7 @@ export const InitialScreen = ({ target }: { target: Entity }) => {
     <Navigator.Screen title="initial" className="gap-2 flex h-full w-full">
       {/* Attack if not owned */}
       {!isOwner && <AttackButton target={target} />}
-      {/* <Tabs.Button index={1} variant="neutral" size="content" onClick={() => components.BattleTarget.remove()}>
+      <Tabs.Button index={1} variant="neutral" size="content" onClick={() => components.BattleTarget.remove()}>
         <div className="flex flex-start px-1 gap-3 w-full">
           <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Trade} />
           <div className="flex flex-col items-start">
@@ -174,7 +175,7 @@ export const InitialScreen = ({ target }: { target: Entity }) => {
             <p className="block text-xs opacity-75 text-wrap">TRADE UNITS AND RESOURCES</p>
           </div>
         </div>
-      </Tabs.Button> */}
+      </Tabs.Button>
       {/* Manage buttons if owned and is a fleet */}
       {isOwner && isFleet && <FleetManageButtons fleet={target} />}
     </Navigator.Screen>
