@@ -602,7 +602,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.BlockWithFleet],
       description:
-        "Landing a fleet on an asteroid sets the fleet's owner to that asteroid. It transfers all fleet resources and units. To land, select a fleet in the Command Center and select Land.",
+        "Set Homebase reassigned the fleet's owner to that asteroid. It transfers all fleet resources and units as well. To land, select a fleet in the Command Center and select Set Homebase.",
       icon: InterfaceIcons.Fleet,
       tooltip: "Landed a fleet",
     },
