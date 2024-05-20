@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 // external
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { LibAlliance } from "codegen/Libraries.sol";
+import { LibAlliance } from "libraries/LibAlliance.sol";
 import { EAllianceInviteMode, EAllianceRole } from "src/Types.sol";
+import { addressToEntity } from "src/utils.sol";
 
 contract AllianceSystem is PrimodiumSystem {
   /**
@@ -24,6 +25,14 @@ contract AllianceSystem is PrimodiumSystem {
     return LibAlliance.create(_player(), name, allianceInviteMode);
   }
 
+  function setAllianceName(bytes32 entity, bytes32 newName) public {
+    LibAlliance.setName(_player(), entity, newName);
+  }
+
+  function setAllianceInviteMode(bytes32 entity, EAllianceInviteMode allianceInviteMode) public {
+    LibAlliance.setInviteMode(_player(), entity, allianceInviteMode);
+  }
+
   /**
    * @dev leave an alliance
    */
@@ -35,32 +44,32 @@ contract AllianceSystem is PrimodiumSystem {
    * @dev invite a player to an alliance
    * @param target the entity ID of the player to invite
    */
-  function invite(bytes32 target) public {
-    LibAlliance.invite(_player(), target);
+  function invite(address target) public {
+    LibAlliance.invite(_player(), addressToEntity(target));
   }
 
   /**
    * @dev revoke an invite to an alliance
    * @param target the entity id of the player to revoke the invite from
    */
-  function revokeInvite(bytes32 target) public {
-    LibAlliance.revokeInvite(_player(), target);
+  function revokeInvite(address target) public {
+    LibAlliance.revokeInvite(_player(), addressToEntity(target));
   }
 
   /**
    * @dev revoke an invite to an alliance
    * @param inviter the entity id of the player to revoke the invite from
    */
-  function declineInvite(bytes32 inviter) public {
-    LibAlliance.revokeInvite(inviter, _player());
+  function declineInvite(address inviter) public {
+    LibAlliance.revokeInvite(addressToEntity(inviter), _player());
   }
 
   /**
    * @dev kick a player from an alliance
    * @param target the entity id of the player to kick
    */
-  function kick(bytes32 target) public {
-    LibAlliance.kick(_player(), target);
+  function kick(address target) public {
+    LibAlliance.kick(_player(), addressToEntity(target));
   }
 
   /**
@@ -68,8 +77,8 @@ contract AllianceSystem is PrimodiumSystem {
    * @param target The entity ID of the player being granted the role.
    * @param role The role to grant.
    */
-  function grantRole(bytes32 target, EAllianceRole role) public {
-    LibAlliance.grantRole(_player(), target, role);
+  function grantRole(address target, EAllianceRole role) public {
+    LibAlliance.grantRole(_player(), addressToEntity(target), role);
   }
 
   /**
@@ -84,15 +93,15 @@ contract AllianceSystem is PrimodiumSystem {
    * @dev reject a player's request to join an alliance
    * @param rejectee The entity ID of the the player who has requested to join.
    */
-  function rejectRequestToJoin(bytes32 rejectee) public {
-    LibAlliance.rejectRequestToJoin(_player(), rejectee);
+  function rejectRequestToJoin(address rejectee) public {
+    LibAlliance.rejectRequestToJoin(_player(), addressToEntity(rejectee));
   }
 
   /**
    * @dev accept a player's request to join an alliance
    * @param accepted The entity ID of the the player who has requested to join.
    */
-  function acceptRequestToJoin(bytes32 accepted) public {
-    LibAlliance.acceptRequestToJoin(_player(), accepted);
+  function acceptRequestToJoin(address accepted) public {
+    LibAlliance.acceptRequestToJoin(_player(), addressToEntity(accepted));
   }
 }

@@ -1,40 +1,55 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
+import { decodeEntity } from "@latticexyz/store-sync/recs";
+import { EPointType } from "contracts/config/enums";
 import { world } from "src/network/world";
 import { isPlayer } from "src/util/common";
+import { EntityType, LeaderboardEntityLookup } from "src/util/constants";
 import { components } from "../components";
-import { Leaderboard } from "../components/clientComponents";
-import { MUD } from "../types";
 
-export const setupLeaderboard = (mud: MUD) => {
-  const leaderboardMap = new Map<Entity, number>();
+export const setupLeaderboard = () => {
+  const leaderboardMaps: Record<Entity, Map<Entity, bigint>> = {
+    [EntityType.PlayerShardLeaderboard]: new Map<Entity, bigint>(),
+    [EntityType.PlayerWormholeLeaderboard]: new Map<Entity, bigint>(),
+    [EntityType.AllianceShardLeaderboard]: new Map<Entity, bigint>(),
+    [EntityType.AllianceWormholeLeaderboard]: new Map<Entity, bigint>(),
+  };
   const systemWorld = namespaceWorld(world, "systems");
 
-  defineComponentSystem(systemWorld, mud.components.Score, ({ entity, value }) => {
-    //don't add alliance entries
-    if (components.Alliance.get(entity)) return;
-
-    //check valid player address
-    if (!isPlayer(entity)) return;
-
-    const player = mud.playerAccount.entity;
-
-    const scoreValue = parseInt(value?.at(0)?.value.toString() ?? "0");
-    leaderboardMap.set(entity, scoreValue);
-
-    const leaderboardArray = [...leaderboardMap.entries()].sort((a, b) => b[1] - a[1]);
+  function setLeaderboard(leaderboardMap: Map<Entity, bigint>, leaderboardEntity: Entity) {
+    const leaderboardArray = [...leaderboardMap.entries()].sort((a, b) => Number(b[1] - a[1]));
 
     const players = leaderboardArray.map((entry) => entry[0]);
-    const scores = leaderboardArray.map((entry) => entry[1]);
-
-    const playerIndex = players.indexOf(player);
-    const playerRank = playerIndex !== -1 ? playerIndex + 1 : leaderboardArray.length + 1;
-
-    Leaderboard.set({
-      scores,
-      players,
-      playerRank,
+    const points = leaderboardArray.map((entry) => entry[1]);
+    const ranks: number[] = [];
+    points.forEach((point, index) => {
+      ranks.push(index == 0 ? 1 : point == points[index - 1] ? ranks[index - 1] : index + 1);
     });
+
+    components.Leaderboard.set(
+      {
+        points,
+        players,
+        ranks,
+      },
+      leaderboardEntity
+    );
+  }
+
+  defineComponentSystem(systemWorld, components.Points, ({ entity: rawEntity, value }) => {
+    const pointsValue = value[0]?.value ?? 0n;
+    const { entity, pointType } = decodeEntity(components.Points.metadata.keySchema, rawEntity);
+
+    const entityIsPlayer = isPlayer(entity as Entity);
+
+    const leaderboardEntity = LeaderboardEntityLookup[entityIsPlayer ? "player" : "alliance"][pointType as EPointType];
+    const leaderboardMap = leaderboardMaps[leaderboardEntity];
+
+    if (!leaderboardMap) return;
+
+    leaderboardMap.set(entity as Entity, pointsValue);
+
+    setLeaderboard(leaderboardMap, leaderboardEntity);
   });
 
-  return leaderboardMap;
+  return leaderboardMaps;
 };

@@ -33,7 +33,7 @@ type FormatOptions = { fractionDigits?: number; short?: boolean; showZero?: bool
 export const bigintMax = (a: bigint, b: bigint) => (a > b ? a : b);
 export const bigintMin = (a: bigint, b: bigint) => (a < b ? a : b);
 export const formatResourceCount = (resource: Entity, amountRaw: bigint, formatOptions?: FormatOptions) => {
-  if (amountRaw === 0n) return formatOptions?.showZero ? "0" : "--";
+  if (amountRaw === 0n) return formatOptions?.showZero ? "0" : "—";
   const decimals = getResourceDecimals(resource);
 
   const formatted = Number(formatUnits(amountRaw, decimals));
@@ -48,7 +48,7 @@ export const parseResourceCount = (resource: Entity, amount: string) => {
 const shorten = (n: number, digits: number): string => {
   const units = ["", "K", "M", "B", "T"];
   let unitIndex = 0;
-  while (n >= 1000 && unitIndex < units.length - 1) {
+  while (Math.abs(n) >= 1000 && unitIndex < units.length - 1) {
     n /= 1000;
     unitIndex++;
   }
@@ -96,4 +96,13 @@ export function formatTimeShort(rawSeconds: number | bigint): string {
   if (minutes > 0) return `${minutes}m`;
   const secs = Math.floor(seconds % 60);
   return `${secs}s`;
+}
+
+export function formatTimeAgo(time: number | bigint): string {
+  const now = Math.floor(Date.now() / 1000);
+  const diff = now - Number(time);
+  if (diff < 60) return "Just now";
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  return `${Math.floor(diff / 86400)}d ago`;
 }

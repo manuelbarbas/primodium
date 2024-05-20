@@ -1,9 +1,9 @@
 import { initializeContext } from "../../api";
 import { createSceneManager } from "./createSceneManager";
-import { deferred } from "@latticexyz/utils";
 import { GameConfig } from "../../types";
 import createPhaserScene from "../util/createPhaserScene";
 import { getSceneLoadPromise } from "../util/getSceneLoadPromise";
+import { deferred } from "../util/deferred";
 
 export const createGame = async (config: GameConfig) => {
   //Initialize Phaser Game
@@ -16,21 +16,43 @@ export const createGame = async (config: GameConfig) => {
 
   // Create scene for loading assets
   const phaserScene = createPhaserScene({
-    key: "ROOT",
+    key: "LOAD",
     preload: async (scene: Phaser.Scene) => {
-      scene.load.pack(config.key, config.assetPackUrl, config.key);
+      // Images
+      config.assetPack.image.forEach((image) => {
+        scene.load.image(image.key, image.url);
+      });
+
+      // Atlas
+      config.assetPack.atlas.forEach((atlas) => {
+        scene.load.atlas(atlas.key, atlas.textureURL, atlas.atlasURL);
+      });
+
+      // Audio Sprites
+      config.assetPack.audioSprite.forEach((audioSprite) => {
+        scene.load.audioSprite(audioSprite.key, audioSprite.jsonURL, audioSprite.urls);
+      });
+
+      // Tilemaps
+      config.assetPack.tilemapTiledJSON.forEach((tilemap) => {
+        scene.load.tilemapTiledJSON(tilemap.key, tilemap.url);
+      });
+
+      // Bitmap Fonts
+      config.assetPack.bitmapFont.forEach((bitmapFont) => {
+        scene.load.bitmapFont(bitmapFont.key, bitmapFont.textureURL, bitmapFont.fontDataURL);
+      });
     },
   });
 
+  /* -------------------------- Create Scene Manager -------------------------- */
+
   const loadScene = new phaserScene();
 
-  phaserGame.scene.add("ROOT", loadScene, true);
+  phaserGame.scene.add("LOAD", loadScene, true);
   loadScene.input.enabled = false;
 
   await getSceneLoadPromise(loadScene);
-
-  /* -------------------------- Create Scene Manager -------------------------- */
-
   const sceneManager = createSceneManager(phaserGame);
 
   /* -------------------------------------------------------------------------- */
@@ -39,8 +61,8 @@ export const createGame = async (config: GameConfig) => {
     sceneManager,
     dispose: () => {
       console.log(config.key + ": Disposing");
-      phaserGame.destroy(true);
       sceneManager.dispose();
+      phaserGame.destroy(true, false);
     },
   };
 

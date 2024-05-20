@@ -1,157 +1,104 @@
-import { mudConfig } from "@latticexyz/world/register";
+import { defineWorld } from "@latticexyz/world";
 import { MUDEnums } from "./config/enums";
 import { prototypeConfig } from "./config/prototypeConfig";
+import { ConfigWithPrototypes } from "./ts/prototypes/types";
 
 // Exclude dev systems if not in dev PRI_DEV
-let dev: string[] = [];
-if (typeof process != undefined && typeof process != "undefined") {
-  import("dotenv").then((dotenv) => {
-    dotenv.config({ path: "../../.env" });
-    dev = process.env.PRI_DEV === "true" ? [] : ["DevSystem"];
-  });
-}
 
-const DUMMY_ADDRESS = "0x1234567890AbcdEF1234567890aBcdef12345678";
 /* -------------------------------------------------------------------------- */
 /*                                   Config                                   */
 /* -------------------------------------------------------------------------- */
-export type Config = typeof config;
-export const config = mudConfig({
-  excludeSystems: [...dev],
+
+export const worldInput = {
+  namespace: "Pri_11",
   systems: {
-    S_SpawnPirateAsteroidSystem: {
-      openAccess: false,
-      accessList: [DUMMY_ADDRESS],
-    },
-    S_ProductionRateSystem: {
-      openAccess: false,
-      accessList: [DUMMY_ADDRESS],
-    },
-    S_SpendResourcesSystem: {
-      openAccess: false,
-      accessList: [DUMMY_ADDRESS],
-    },
-    S_RewardsSystem: {
-      openAccess: false,
-      accessList: [DUMMY_ADDRESS],
-    },
-    S_StorageSystem: {
-      openAccess: false,
-      accessList: [DUMMY_ADDRESS],
-    },
-    S_BattleApplyDamageSystem: {
-      openAccess: false,
-      accessList: [DUMMY_ADDRESS],
-      name: "S_BattleApplyDamageSystem",
-    },
-    S_BattleRaidResolveSystem: {
-      openAccess: false,
-      accessList: [DUMMY_ADDRESS],
-      name: "S_BattleRaidResolveSystem",
-    },
-    S_BattleEncryptionResolveSystem: {
-      openAccess: false,
-      accessList: [DUMMY_ADDRESS],
-      name: "S_BattleEncryptionResolveSystem",
-    },
-    S_FleetResetIfNoUnitsLeftSystem: {
-      openAccess: false,
-      accessList: [DUMMY_ADDRESS],
-      name: "S_FleetResetIfNoUnitsLeftSystem",
-    },
-    S_InitializeSpaceRockOwnershipSystem: {
-      openAccess: false,
-      accessList: [DUMMY_ADDRESS],
-      name: "S_InitializeSpaceRockOwnershipSystem",
-    },
-    S_TransferSpaceRockOwnershipSystem: {
-      openAccess: false,
-      accessList: [DUMMY_ADDRESS],
-      name: "S_TransferSpaceRockOwnershipSystem",
-    },
-    S_FleetResolvePirateAsteroidSystem: {
-      openAccess: false,
-      accessList: [DUMMY_ADDRESS],
-      name: "S_FleetResolvePirateAsteroidSystem",
-    },
-    S_CreateSecondaryAsteroidSystem: {
-      openAccess: false,
-      accessList: [DUMMY_ADDRESS],
-      name: "S_CreateSecondaryAsteroidSystem",
-    },
+    // these systems are closed access by default
+    S_ProductionRateSystem: {},
+    S_SpendResourcesSystem: {},
+    S_RewardsSystem: {},
+    S_StorageSystem: {},
+    S_BattleApplyDamageSystem: {},
+    S_BattleRaidResolveSystem: {},
+    S_BattleEncryptionResolveSystem: {},
+    S_FleetClearSystem: {},
+    S_InitAsteroidOwnerSystem: {},
+    S_TransferAsteroidSystem: {},
+    S_CreateSecondaryAsteroidSystem: {},
+    S_BuildRaidableAsteroidSystem: {},
   },
 
-  enums: MUDEnums,
+  // using as any here for now because of a type issue and also because the enums are not being recognized in our codebase rn
+  enums: MUDEnums as unknown as { [key: string]: ["NULL"] },
   tables: {
     /* ----------------------------------- Dev ---------------------------------- */
     Counter: {
-      keySchema: {},
-      valueSchema: "uint256",
+      key: [],
+      schema: { value: "uint256" },
     },
 
     /* --------------------------------- Common --------------------------------- */
     // if the key is a player, value is their home asteroid.
     // if the key is an asteroid, value is its main base.
     Home: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "bytes32",
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "bytes32" },
     },
 
     P_GameConfig: {
-      keySchema: {},
-      valueSchema: {
+      key: [],
+      schema: {
         admin: "address",
         unitProductionRate: "uint256",
         travelTime: "uint256",
         worldSpeed: "uint256",
-        tax: "uint256",
         maxAsteroidsPerPlayer: "uint256",
         asteroidChanceInv: "uint256",
         asteroidDistance: "uint256",
+        unitDeathLimit: "uint256",
       },
     },
 
-    P_CapitalShipConfig: {
-      keySchema: {},
-      valueSchema: {
-        resource: "uint8",
-        initialCost: "uint256",
+    SpawnAllowed: {
+      key: [],
+      schema: { value: "bool" },
+    },
+
+    VictoryStatus: {
+      key: [],
+      schema: { unitDeaths: "uint256", gameOver: "bool" },
+    },
+
+    P_ColonyShipConfig: {
+      key: [],
+      schema: {
         decryption: "uint256",
         cooldownExtension: "uint256",
       },
     },
 
     Position: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        x: "int32",
-        y: "int32",
-        parent: "bytes32",
-      },
+      key: ["entity"],
+      schema: { entity: "bytes32", x: "int32", y: "int32", parentEntity: "bytes32" },
     },
 
     ReversePosition: {
-      keySchema: { x: "int32", y: "int32" },
-      valueSchema: {
-        entity: "bytes32",
-      },
+      key: ["x", "y"],
+      schema: { x: "int32", y: "int32", entity: "bytes32" },
     },
 
     OwnedBy: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        value: "bytes32",
-      },
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "bytes32" },
     },
 
     Level: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "uint256",
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256" },
     },
 
     Spawned: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "bool",
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "bool" },
     },
 
     /*
@@ -162,129 +109,142 @@ export const config = mudConfig({
         It is autogenerated in the build step.
     */
     P_EnumToPrototype: {
-      keySchema: { key: "bytes32", id: "uint8" },
-      valueSchema: "bytes32",
+      key: ["key", "id"],
+      schema: { key: "bytes32", id: "uint8", value: "bytes32" },
     },
 
-    /* ---------------------------------- Rocks --------------------------------- */
+    /* -------------------------------- Asteroids ------------------------------- */
     AsteroidCount: {
-      keySchema: {},
-      valueSchema: "uint256",
+      key: [],
+      schema: { value: "uint256" },
     },
 
     P_Asteroid: {
-      keySchema: {},
-      valueSchema: {
+      key: [],
+      schema: {
         xBounds: "int32",
         yBounds: "int32",
       },
     },
 
+    P_AsteroidThresholdProbConfig: {
+      key: [],
+      schema: {
+        common1: "uint256",
+        common2: "uint256",
+        eliteMicro: "uint256",
+        eliteSmall: "uint256",
+        eliteMedium: "uint256",
+        eliteLarge: "uint256",
+      },
+    },
+
     Asteroid: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
+      key: ["entity"],
+      schema: {
+        entity: "bytes32",
         isAsteroid: "bool",
         maxLevel: "uint256",
         mapId: "uint8",
         spawnsSecondary: "bool",
+        wormhole: "bool",
+        primodium: "uint256",
       },
+    },
+
+    P_WormholeAsteroidConfig: {
+      key: [],
+      schema: { wormholeAsteroidSlot: "uint256", maxLevel: "uint256", mapId: "uint8", primodium: "uint256" },
     },
 
     // note: dimensions will always be positive, but are int32s so they work with coords
     Dimensions: {
-      keySchema: { key: "bytes32", level: "uint256" },
-      valueSchema: {
-        width: "int32",
-        height: "int32",
-      },
+      key: ["key", "level"],
+      schema: { key: "bytes32", level: "uint256", width: "int32", height: "int32" },
     },
 
     P_Terrain: {
-      keySchema: { mapId: "uint8", x: "int32", y: "int32" },
-      valueSchema: "uint8", // EResource
+      key: ["mapId", "x", "y"],
+      schema: { mapId: "uint8", x: "int32", y: "int32", value: "uint8" }, // EResource
     },
 
     Specialty: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "uint8", // EResource
-    },
-
-    IsSpaceRock: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "bool",
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint8" }, // EResource
     },
 
     /* -------------------------------- Resources ------------------------------- */
     P_IsResource: {
-      keySchema: { id: "uint8" }, // EResource
-      valueSchema: {
-        isResource: "bool",
-        isAdvanced: "bool",
-      },
+      key: ["id"],
+      schema: { id: "uint8", isResource: "bool", isAdvanced: "bool" },
     },
 
     P_IsUtility: {
-      keySchema: { id: "uint8" }, // EResource
-      valueSchema: "bool",
+      key: ["id"],
+      schema: { id: "uint8", value: "bool" },
     },
     //when the storage for this resources is provided it is full
     P_IsRecoverable: {
-      keySchema: { id: "uint8" }, // EResource
-      valueSchema: "bool",
+      key: ["id"],
+      schema: { id: "uint8", value: "bool" },
     },
 
     P_Transportables: {
-      keySchema: {},
-      valueSchema: "uint8[]", // EResource
+      key: [],
+      schema: { value: "uint8[]" }, // EResource
+    },
+
+    // contains a bitmap
+    UsedTiles: {
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256[]" },
     },
 
     // tracks the max resource a player can store
     MaxResourceCount: {
-      keySchema: { entity: "bytes32", resource: "uint8" }, // EResource
-      valueSchema: "uint256",
+      key: ["entity", "resource"],
+      schema: { entity: "bytes32", resource: "uint8", value: "uint256" },
     },
 
     LastClaimedAt: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "uint256",
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256" },
     },
 
     ResourceCount: {
-      keySchema: { entity: "bytes32", resource: "uint8" }, //EResource
-      valueSchema: "uint256",
+      key: ["entity", "resource"],
+      schema: { entity: "bytes32", resource: "uint8", value: "uint256" },
     },
 
-    // Used in the building utilities set
-    MapItemUtilities: {
-      keySchema: { entity: "bytes32", utility: "uint8" }, // EResource
-      valueSchema: "uint256",
+    // Used in the mbuilding utilities Map data structure
+    Value_UtilityMap: {
+      key: ["entity", "utility"],
+      schema: { entity: "bytes32", utility: "uint8", value: "uint256" },
     },
-    MapItemStoredUtilities: {
-      keySchema: { entity: "bytes32", utility: "uint8" }, // EResource
-      valueSchema: {
-        stored: "bool",
-        index: "uint256",
-      },
+    Meta_UtilityMap: {
+      key: ["entity", "utility"],
+      schema: { entity: "bytes32", utility: "uint8", stored: "bool", index: "uint256" },
     },
-
-    MapUtilities: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "uint8[]",
+    Keys_UtilityMap: {
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint8[]" },
     },
 
     /* --------------------------- Build Requirements --------------------------- */
     P_RequiredTile: {
-      keySchema: { prototype: "bytes32" },
-      valueSchema: "uint8", // EResource
+      key: ["prototype"],
+      schema: { prototype: "bytes32", value: "uint8" }, // EResource
     },
     P_RequiredBaseLevel: {
-      keySchema: { prototype: "bytes32", level: "uint256" },
-      valueSchema: "uint256",
+      key: ["prototype", "level"],
+      schema: { prototype: "bytes32", level: "uint256", value: "uint256" },
     },
 
     P_RequiredResources: {
-      keySchema: { prototype: "bytes32", level: "uint256" },
-      valueSchema: {
+      key: ["prototype", "level"],
+      schema: {
+        prototype: "bytes32",
+        level: "uint256",
         // mud doesnt recognize EResource arrays so we will manually convert them
         resources: "uint8[]",
         amounts: "uint256[]",
@@ -292,8 +252,10 @@ export const config = mudConfig({
     },
 
     P_RequiredDependency: {
-      keySchema: { prototype: "bytes32", level: "uint256" },
-      valueSchema: {
+      key: ["prototype", "level"],
+      schema: {
+        prototype: "bytes32",
+        level: "uint256",
         // mud doesnt recognize EResource arrays so we will manually convert them
         resource: "uint8",
         amount: "uint256",
@@ -301,27 +263,31 @@ export const config = mudConfig({
     },
 
     P_RequiredUpgradeResources: {
-      keySchema: { prototype: "bytes32", level: "uint256" },
-      valueSchema: {
-        resources: "uint8[]",
-        amounts: "uint256[]",
-      },
+      key: ["prototype", "level"],
+      schema: { prototype: "bytes32", level: "uint256", resources: "uint8[]", amounts: "uint256[]" },
+    },
+
+    P_HasStarmapper: {
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "bool" },
     },
     /* -------------------------------- Buildings ------------------------------- */
 
     P_Blueprint: {
-      keySchema: { prototype: "bytes32" },
-      valueSchema: "int32[]",
+      key: ["prototype"],
+      schema: { prototype: "bytes32", value: "int32[]" },
     },
 
     P_MaxLevel: {
-      keySchema: { prototype: "bytes32" },
-      valueSchema: "uint256",
+      key: ["prototype"],
+      schema: { prototype: "bytes32", value: "uint256" },
     },
 
     P_Production: {
-      keySchema: { prototype: "bytes32", level: "uint256" },
-      valueSchema: {
+      key: ["prototype", "level"],
+      schema: {
+        prototype: "bytes32",
+        level: "uint256",
         // mud doesnt recognize EResource arrays so we will manually convert them
         // EResource
         resources: "uint8[]",
@@ -330,90 +296,77 @@ export const config = mudConfig({
     },
 
     P_UnitProdTypes: {
-      keySchema: { prototype: "bytes32", level: "uint256" },
-      valueSchema: "bytes32[]",
+      key: ["prototype", "level"],
+      schema: { prototype: "bytes32", level: "uint256", value: "bytes32[]" },
     },
 
     P_UnitProdMultiplier: {
-      keySchema: { prototype: "bytes32", level: "uint256" },
-      valueSchema: "uint256",
+      key: ["prototype", "level"],
+      schema: { prototype: "bytes32", level: "uint256", value: "uint256" },
     },
 
-    SetItemUnitFactories: {
-      keySchema: { entity: "bytes32", building: "bytes32" },
-      valueSchema: {
-        stored: "bool",
-        index: "uint256",
-      },
+    Meta_UnitFactorySet: {
+      key: ["entity", "building"],
+      schema: { entity: "bytes32", building: "bytes32", stored: "bool", index: "uint256" },
     },
 
-    SetUnitFactories: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "bytes32[]",
+    Keys_UnitFactorySet: {
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "bytes32[]" },
     },
 
     P_ByLevelMaxResourceUpgrades: {
-      keySchema: { prototype: "bytes32", resource: "uint8", level: "uint256" },
-      valueSchema: "uint256",
+      key: ["prototype", "resource", "level"],
+      schema: { prototype: "bytes32", resource: "uint8", level: "uint256", value: "uint256" },
     },
 
     P_ListMaxResourceUpgrades: {
-      keySchema: { prototype: "bytes32", level: "uint256" },
-      valueSchema: "uint8[]",
+      key: ["prototype", "level"],
+      schema: { prototype: "bytes32", level: "uint256", value: "uint8[]" },
     },
 
     P_ConsumesResource: {
-      keySchema: { resource: "uint8" },
-      valueSchema: "uint8",
+      key: ["resource"],
+      schema: { resource: "uint8", value: "uint8" },
     },
 
     BuildingType: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "bytes32",
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "bytes32" },
     },
 
-    Children: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "bytes32[]",
+    TilePositions: {
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "int32[]" },
     },
 
     ProductionRate: {
-      keySchema: { entity: "bytes32", resource: "uint8" },
-      valueSchema: "uint256",
+      key: ["entity", "resource"],
+      schema: { entity: "bytes32", resource: "uint8", value: "uint256" },
     },
 
     ConsumptionRate: {
-      keySchema: { entity: "bytes32", resource: "uint8" },
-      valueSchema: "uint256",
+      key: ["entity", "resource"],
+      schema: { entity: "bytes32", resource: "uint8", value: "uint256" },
     },
 
     IsActive: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "bool",
-    },
-
-    /* ------------------------------- Motherlode ------------------------------- */
-
-    P_SizeToAmount: {
-      keySchema: { size: "uint8" },
-      valueSchema: "uint256",
-    },
-
-    P_RawResource: {
-      keySchema: { resource: "uint8" },
-      valueSchema: "uint8",
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "bool" },
     },
 
     /* ----------------------------- Unit Production ---------------------------- */
     // stores an array of all unit prototypes in the game
     P_UnitPrototypes: {
-      keySchema: {},
-      valueSchema: "bytes32[]",
+      key: [],
+      schema: { value: "bytes32[]" },
     },
 
     P_Unit: {
-      keySchema: { entity: "bytes32", level: "uint256" },
-      valueSchema: {
+      key: ["entity", "level"],
+      schema: {
+        entity: "bytes32",
+        level: "uint256",
         attack: "uint256",
         defense: "uint256",
         speed: "uint256",
@@ -423,43 +376,72 @@ export const config = mudConfig({
       },
     },
 
-    QueueUnits: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        front: "uint256",
-        back: "uint256",
-        queue: "bytes32[]",
-      },
+    Meta_UnitProductionQueue: {
+      key: ["entity"],
+      schema: { entity: "bytes32", front: "uint256", back: "uint256", queue: "bytes32[]" },
     },
 
-    QueueItemUnits: {
-      keySchema: { entity: "bytes32", index: "uint256" },
-      valueSchema: {
-        unitId: "bytes32",
-        quantity: "uint256",
-      },
+    Value_UnitProductionQueue: {
+      key: ["entity", "index"],
+      schema: { entity: "bytes32", index: "uint256", unitEntity: "bytes32", quantity: "uint256" },
     },
+
     UnitLevel: {
-      keySchema: { entity: "bytes32", unit: "bytes32" },
-      valueSchema: "uint256",
+      key: ["entity", "unit"],
+      schema: { entity: "bytes32", unit: "bytes32", value: "uint256" },
     },
 
     UnitCount: {
-      keySchema: { entity: "bytes32", unit: "bytes32" },
-      valueSchema: "uint256",
+      key: ["entity", "unit"],
+      schema: { entity: "bytes32", unit: "bytes32", value: "uint256" },
     },
 
     // used to record the progress of claiming the current unit
     ClaimOffset: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "uint256",
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256" },
+    },
+
+    DroidRegenTimestamp: {
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256" },
+    },
+
+    // can only increase, never decrease. Assigned to player to prevent weird edge cases of losing asteroids
+    MaxColonySlots: {
+      key: ["playerEntity"],
+      schema: { playerEntity: "bytes32", value: "uint256" },
+    },
+
+    P_ColonySlotsConfig: {
+      key: [],
+      schema: {
+        multiplier: "uint256",
+        resources: "uint8[]",
+        amounts: "uint256[]",
+      },
+    },
+
+    ColonySlotsInstallments: {
+      key: ["playerEntity", "resourceIndex"],
+      schema: {
+        playerEntity: "bytes32",
+        resourceIndex: "uint256", // index of the resource in the P_ColonySlotsConfig
+        amounts: "uint256",
+      },
+    },
+
+    ColonyShipsInTraining: {
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256" },
     },
 
     /* ------------------------------ Sending Units ----------------------------- */
 
     FleetMovement: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
+      key: ["entity"],
+      schema: {
+        entity: "bytes32",
         origin: "bytes32",
         destination: "bytes32",
         sendTime: "uint256",
@@ -468,178 +450,137 @@ export const config = mudConfig({
     },
 
     FleetStance: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        stance: "uint8",
-        target: "bytes32",
-      },
-    },
-
-    MapFleets: {
-      keySchema: { entity: "bytes32", key: "bytes32" },
-      valueSchema: { itemKeys: "bytes32[]" },
-    },
-
-    MapStoredFleets: {
-      keySchema: { entity: "bytes32", key: "bytes32", fleetId: "bytes32" },
-      valueSchema: {
-        stored: "bool",
-        index: "uint256",
-      },
+      key: ["entity"],
+      schema: { entity: "bytes32", stance: "uint8", target: "bytes32" },
     },
 
     IsFleet: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "bool",
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "bool" },
     },
 
     IsFleetEmpty: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "bool",
-      offchainOnly: true,
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "bool" },
+      type: "offchainTable",
+    },
+
+    // used in the Fleet Set
+    Keys_FleetSet: {
+      key: ["entity", "key"],
+      schema: { entity: "bytes32", key: "bytes32", itemKeys: "bytes32[]" },
+    },
+
+    Meta_FleetSet: {
+      key: ["entity", "key", "fleetEntity"],
+      schema: { entity: "bytes32", key: "bytes32", fleetEntity: "bytes32", stored: "bool", index: "uint256" },
     },
 
     /* ------------------------------ Battle Result ----------------------------- */
     BattleResult: {
-      keySchema: { battleId: "bytes32" },
-      valueSchema: {
+      key: ["battleEntity"],
+      schema: {
+        battleEntity: "bytes32",
         aggressorEntity: "bytes32", //can be fleet or space rock
         aggressorDamage: "uint256", //can be fleet or space rock
         targetEntity: "bytes32", //can be fleet or space rock
         targetDamage: "uint256", //can be fleet or space rock
-        winner: "bytes32",
-        rock: "bytes32", // place where battle took place
-        player: "bytes32", // player who initiated the battle
-        targetPlayer: "bytes32", // player who was attacked
+        winnerEntity: "bytes32",
+        asteroidEntity: "bytes32", // place where battle took place
+        playerEntity: "bytes32", // player who initiated the battle
+        targetPlayerEntity: "bytes32", // player who was attacked
         timestamp: "uint256", // timestamp of battle
         aggressorAllies: "bytes32[]", //only fleets
         targetAllies: "bytes32[]", //only fleets
       },
-      offchainOnly: true,
+      type: "offchainTable",
     },
 
     BattleDamageDealtResult: {
-      keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
-      valueSchema: {
-        damageDealt: "uint256",
-      },
-      offchainOnly: true,
+      key: ["battleEntity", "participantEntity"],
+      schema: { battleEntity: "bytes32", participantEntity: "bytes32", damageDealt: "uint256" },
+      type: "offchainTable",
     },
 
     BattleDamageTakenResult: {
-      keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
-      valueSchema: {
-        hpAtStart: "uint256",
-        damageTaken: "uint256",
-      },
-      offchainOnly: true,
+      key: ["battleEntity", "participantEntity"],
+      schema: { battleEntity: "bytes32", participantEntity: "bytes32", hpAtStart: "uint256", damageTaken: "uint256" },
+      type: "offchainTable",
     },
 
     BattleUnitResult: {
-      keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
-      valueSchema: {
+      key: ["battleEntity", "participantEntity"],
+      schema: {
+        battleEntity: "bytes32",
+        participantEntity: "bytes32",
         unitLevels: "uint256[]",
         unitsAtStart: "uint256[]",
         casualties: "uint256[]",
       },
-      offchainOnly: true,
+      type: "offchainTable",
     },
 
     BattleRaidResult: {
-      keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
-      valueSchema: {
+      key: ["battleEntity", "participantEntity"],
+      schema: {
+        battleEntity: "bytes32",
+        participantEntity: "bytes32",
         resourcesAtStart: "uint256[]",
         resourcesAtEnd: "uint256[]",
       },
-      offchainOnly: true,
+      type: "offchainTable",
     },
 
     BattleEncryptionResult: {
-      keySchema: { battleId: "bytes32", participantEntity: "bytes32" },
-      valueSchema: {
+      key: ["battleEntity", "participantEntity"],
+      schema: {
+        battleEntity: "bytes32",
+        participantEntity: "bytes32",
         encryptionAtStart: "uint256",
         encryptionAtEnd: "uint256",
       },
-      offchainOnly: true,
+      type: "offchainTable",
     },
 
     RaidResult: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        defenderValuesBeforeRaid: "uint256[]",
-        raidedAmount: "uint256[]",
-      },
-      offchainOnly: true,
+      key: ["entity"],
+      schema: { entity: "bytes32", defenderValuesBeforeRaid: "uint256[]", raidedAmount: "uint256[]" },
+      type: "offchainTable",
     },
 
     DamageDealt: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "uint256",
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256" },
     },
 
-    /* ---------------------------------- Score --------------------------------- */
+    /* ---------------------------------- Points --------------------------------- */
 
-    P_ScoreMultiplier: {
-      keySchema: { entity: "uint8" },
-      valueSchema: "uint256",
-    },
-    Score: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "uint256",
+    P_PointMultiplier: {
+      key: ["resource"],
+      schema: { resource: "uint8", value: "uint256" },
     },
 
-    /* ------------------------------ Test Hook ----------------------------- */
-    HookedValue: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "uint256",
+    Points: {
+      key: ["entity", "pointType"],
+      schema: { entity: "bytes32", pointType: "uint8", value: "uint256" },
     },
 
-    OnHookChangedValue: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "uint256",
-    },
-    /* ------------------------------ Pirate Asteroids ----------------------------- */
-
-    P_SpawnPirateAsteroid: {
-      keySchema: { prototype: "bytes32" },
-      valueSchema: {
-        x: "int32",
-        y: "int32",
-        resources: "uint8[]",
-        resourceAmounts: "uint256[]",
-        units: "bytes32[]",
-        unitAmounts: "uint256[]",
-      },
-    },
-
-    PirateAsteroid: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        isPirateAsteroid: "bool",
-        isDefeated: "bool",
-        playerEntity: "bytes32",
-        prototype: "bytes32",
-      },
+    AlliancePointContribution: {
+      key: ["alliance", "pointType", "entity"],
+      schema: { alliance: "bytes32", pointType: "uint8", entity: "bytes32", value: "uint256" },
     },
 
     /* ------------------------------ Objectives ----------------------------- */
 
-    P_RequiredObjectives: {
-      keySchema: { prototype: "bytes32" },
-      valueSchema: {
-        // mud doesnt recognize EObjective arrays so we will manually convert them
-        objectives: "bytes32[]",
-      },
-    },
-
     CompletedObjective: {
-      keySchema: { entity: "bytes32", objective: "bytes32" },
-      valueSchema: "bool",
+      key: ["entity", "objective"],
+      schema: { entity: "bytes32", objective: "bytes32", value: "bool" },
     },
 
     P_UnitReward: {
-      keySchema: { prototype: "bytes32" },
-      valueSchema: {
+      key: ["prototype"],
+      schema: {
+        prototype: "bytes32",
         // mud doesnt recognize EUnit arrays so we will manually convert them
         units: "bytes32[]",
         amounts: "uint256[]",
@@ -647,220 +588,206 @@ export const config = mudConfig({
     },
 
     P_ResourceReward: {
-      keySchema: { prototype: "bytes32" },
-      valueSchema: {
+      key: ["prototype"],
+      schema: {
+        prototype: "bytes32",
         // mud doesnt recognize EResource arrays so we will manually convert them
         resources: "uint8[]",
         amounts: "uint256[]",
       },
-    },
-
-    P_HasBuiltBuildings: {
-      keySchema: { prototype: "bytes32" },
-      valueSchema: "bytes32[]",
-    },
-
-    HasBuiltBuilding: {
-      keySchema: { entity: "bytes32", buildingType: "bytes32" },
-      valueSchema: "bool",
-    },
-
-    P_ProducedResources: {
-      keySchema: { prototype: "bytes32" },
-      valueSchema: {
-        // mud doesnt recognize EResource arrays so we will manually convert them
-        resources: "uint8[]",
-        amounts: "uint256[]",
-      },
-    },
-
-    ProducedResource: {
-      keySchema: { entity: "bytes32", resource: "uint8" },
-      valueSchema: "uint256",
-    },
-
-    P_DestroyedUnits: {
-      keySchema: { prototype: "bytes32" },
-      valueSchema: {
-        // mud doesnt recognize EUnit arrays so we will manually convert them
-        units: "bytes32[]",
-        amounts: "uint256[]",
-      },
-    },
-
-    DestroyedUnit: {
-      keySchema: { entity: "bytes32", unit: "bytes32" },
-      valueSchema: "uint256",
-    },
-
-    P_RaidedResources: {
-      keySchema: { prototype: "bytes32" },
-      valueSchema: {
-        // mud doesnt recognize EResource arrays so we will manually convert them
-        resources: "uint8[]",
-        amounts: "uint256[]",
-      },
-    },
-
-    RaidedResource: {
-      keySchema: { entity: "bytes32", resource: "uint8" },
-      valueSchema: "uint256",
-    },
-
-    P_DefeatedPirates: {
-      keySchema: { prototype: "bytes32" },
-      valueSchema: "bytes32[]",
-    },
-
-    DefeatedPirate: {
-      keySchema: { entity: "bytes32", pirate: "bytes32" },
-      valueSchema: "bool",
-    },
-
-    P_RequiredUnits: {
-      keySchema: { prototype: "bytes32" },
-      valueSchema: {
-        // mud doesnt recognize EUnit arrays so we will manually convert them
-        units: "bytes32[]",
-        amounts: "uint256[]",
-      },
-    },
-
-    P_ProducedUnits: {
-      keySchema: { prototype: "bytes32" },
-      valueSchema: {
-        // mud doesnt recognize EUnit arrays so we will manually convert them
-        units: "bytes32[]",
-        amounts: "uint256[]",
-      },
-    },
-
-    ProducedUnit: {
-      keySchema: { entity: "bytes32", unit: "bytes32" },
-      valueSchema: "uint256",
-    },
-
-    P_RequiredExpansion: {
-      keySchema: { prototype: "bytes32" },
-      valueSchema: "uint256",
     },
 
     /* ------------------------------ Defense ----------------------------- */
 
     P_GracePeriod: {
-      keySchema: {},
-      valueSchema: {
-        spaceRock: "uint256",
+      key: [],
+      schema: {
+        asteroid: "uint256",
         fleet: "uint256",
       },
     },
 
     GracePeriod: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "uint256",
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256" },
     },
 
     CooldownEnd: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: "uint256",
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256" },
+    },
+
+    P_CooldownConfig: {
+      key: [],
+      schema: {
+        linNum: "uint256",
+        linDen: "uint256",
+        linSwitch: "uint256",
+        logDiv: "uint256",
+        logMult: "uint256",
+        logAdd: "uint256",
+      },
     },
     /* ------------------------------ Alliance ----------------------------- */
 
     P_AllianceConfig: {
-      keySchema: {},
-      valueSchema: {
+      key: [],
+      schema: {
         maxAllianceMembers: "uint256",
       },
     },
 
     PlayerAlliance: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        alliance: "bytes32",
-        role: "uint8",
-      },
+      key: ["entity"],
+      schema: { entity: "bytes32", alliance: "bytes32", role: "uint8" },
     },
 
     Alliance: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        name: "bytes32",
-        score: "uint256",
-        inviteMode: "uint8",
-      },
+      key: ["entity"],
+      schema: { entity: "bytes32", name: "bytes32", inviteMode: "uint8" },
     },
 
-    SetAllianceMembers: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
-        memberKeys: "bytes32[]",
-      },
+    Keys_AllianceMemberSet: {
+      key: ["entity"],
+      schema: { entity: "bytes32", memberKeys: "bytes32[]" },
     },
 
-    SetIndexForAllianceMembers: {
-      keySchema: { entity: "bytes32", memberKey: "bytes32" },
-      valueSchema: {
-        stored: "bool",
-        index: "uint256",
-      },
+    Meta_AllianceMemberSet: {
+      key: ["entity", "memberKey"],
+      schema: { entity: "bytes32", memberKey: "bytes32", stored: "bool", index: "uint256" },
     },
 
     AllianceInvitation: {
-      keySchema: { entity: "bytes32", alliance: "bytes32" },
-      valueSchema: { inviter: "bytes32", timeStamp: "uint256" },
+      key: ["entity", "alliance"],
+      schema: { entity: "bytes32", alliance: "bytes32", inviter: "bytes32", timeStamp: "uint256" },
     },
 
     AllianceJoinRequest: {
-      keySchema: { entity: "bytes32", alliance: "bytes32" },
-      valueSchema: { timeStamp: "uint256" },
+      key: ["entity", "alliance"],
+      schema: { entity: "bytes32", alliance: "bytes32", timeStamp: "uint256" },
     },
 
     /* ------------------------------- Marketplace ------------------------------ */
     // resource A is always the smaller index in the EResource enum
     Reserves: {
-      keySchema: { resourceA: "uint8", resourceB: "uint8" },
-      valueSchema: {
-        amountA: "uint256",
-        amountB: "uint256",
-      },
+      key: ["resourceA", "resourceB"],
+      schema: { resourceA: "uint8", resourceB: "uint8", amountA: "uint256", amountB: "uint256" },
     },
 
     P_MarketplaceConfig: {
-      keySchema: {},
-      valueSchema: {
+      key: [],
+      schema: {
         feeThousandths: "uint256",
         lock: "bool",
       },
     },
 
     Swap: {
-      keySchema: { entity: "bytes32" },
-      valueSchema: {
+      key: ["entity"],
+      schema: {
+        entity: "bytes32",
         resourceIn: "uint8",
         resourceOut: "uint8",
         amountIn: "uint256",
         amountOut: "uint256",
       },
-      offchainOnly: true,
-    },
-    /* ------------------------------- Colony ------------------------------ */
-
-    MapColonies: {
-      keySchema: { entity: "bytes32", key: "bytes32" },
-      valueSchema: { itemKeys: "bytes32[]" },
+      type: "offchainTable",
     },
 
-    MapStoredColonies: {
-      keySchema: { entity: "bytes32", key: "bytes32", asteroidId: "bytes32" },
-      valueSchema: {
-        stored: "bool",
-        index: "uint256",
+    /* -------------------------------- Wormhole -------------------------------- */
+
+    P_WormholeConfig: {
+      key: [],
+      schema: {
+        initTime: "uint256",
+        turnDuration: "uint256",
+        cooldown: "uint256",
       },
     },
-  },
-});
 
-export default {
-  ...config,
+    Wormhole: {
+      key: [],
+      schema: { resource: "uint8", nextResource: "uint8", turn: "uint256", hash: "bytes32" },
+    },
+
+    /* -------------------------------- Conquest -------------------------------- */
+
+    P_ConquestConfig: {
+      key: [],
+      schema: {
+        holdTime: "uint256",
+        shardAsteroidSpawnOffset: "uint256",
+        shardAsteroidSpawnFrequency: "uint256",
+        maxShardAsteroids: "uint256",
+        // the asteroid leaks this amount during its lifespan and emits this amount when it is claimed
+        shardAsteroidPoints: "uint256",
+        shardAsteroidLifeSpan: "uint256",
+        shardAsteroidEncryption: "uint256",
+        shardAsteroidEncryptionRegen: "uint256",
+      },
+    },
+
+    LastConquered: {
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256" },
+    },
+
+    ShardAsteroid: {
+      key: ["entity"],
+      schema: {
+        entity: "bytes32",
+        isShardAsteroid: "bool",
+        distanceFromCenter: "uint256",
+        spawnTime: "uint256",
+      },
+    },
+
+    ShardAsteroidIndex: {
+      key: ["entity"],
+      schema: { entity: "bytes32", value: "uint256" },
+      type: "offchainTable",
+    },
+    /* ---------------------------- Player Asteroids ---------------------------- */
+
+    Keys_AsteroidSet: {
+      key: ["entity", "key"],
+      schema: { entity: "bytes32", key: "bytes32", itemKeys: "bytes32[]" },
+    },
+
+    Meta_AsteroidSet: {
+      key: ["entity", "key", "asteroidEntity"],
+      schema: { entity: "bytes32", key: "bytes32", asteroidEntity: "bytes32", stored: "bool", index: "uint256" },
+    },
+  },
+} as const;
+
+const getConfig = async () => {
+  let exclude: string[] = [];
+  if (typeof process != undefined && typeof process != "undefined") {
+    const dotenv = await import("dotenv");
+    dotenv.config({ path: "../../.env" });
+    if (process.env.PRI_DEV !== "true") exclude = ["DevSystem"];
+  }
+
+  const world = defineWorld({
+    ...worldInput,
+    modules: [
+      {
+        name: "Unstable_CallWithSignatureModule",
+        root: true,
+        args: [],
+      },
+    ],
+    excludeSystems: exclude,
+  });
+
+  return world;
+};
+
+const config = await getConfig();
+export default config;
+
+export const configInputs: ConfigWithPrototypes<typeof worldInput, (typeof worldInput)["tables"]> = {
+  worldInput,
   prototypeConfig,
 };

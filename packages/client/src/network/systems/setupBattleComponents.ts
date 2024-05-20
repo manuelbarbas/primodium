@@ -3,6 +3,9 @@ import { decodeEntity } from "@latticexyz/store-sync/recs";
 import { components } from "../components";
 import { world } from "../world";
 
+function isZeroHex(value: string): boolean {
+  return /^0x0+$/i.test(value);
+}
 export const setupBattleComponents = () => {
   const systemWorld = namespaceWorld(world, "systems");
   const { RawBattle, RawBattleParticipant, RawBattleParticipants } = components.Battle;
@@ -15,10 +18,10 @@ export const setupBattleComponents = () => {
       attackerDamage: battleData.aggressorDamage,
       defender: battleData.targetEntity as Entity,
       defenderDamage: battleData.targetDamage,
-      attackingPlayer: battleData.player as Entity,
-      defendingPlayer: battleData.targetPlayer as Entity,
-      winner: battleData.winner as Entity,
-      rock: battleData.rock as Entity,
+      attackingPlayer: battleData.playerEntity as Entity,
+      defendingPlayer: isZeroHex(battleData.targetPlayerEntity) ? undefined : (battleData.targetPlayerEntity as Entity),
+      winner: battleData.winnerEntity as Entity,
+      rock: battleData.asteroidEntity as Entity,
       timestamp: battleData.timestamp,
       aggressorAllies: battleData.aggressorAllies as Entity[],
       targetAllies: battleData.targetAllies as Entity[],
@@ -28,7 +31,7 @@ export const setupBattleComponents = () => {
   });
 
   const updateBattleParticipant = ({ entity }: { entity: Entity }) => {
-    const { battleId } = decodeEntity(components.BattleDamageDealtResult.metadata.keySchema, entity);
+    const { battleEntity } = decodeEntity(components.BattleDamageDealtResult.metadata.keySchema, entity);
     const damageDealt = components.BattleDamageDealtResult.get(entity)?.damageDealt ?? 0n;
     const { hpAtStart, damageTaken } = components.BattleDamageTakenResult.get(entity) ?? {
       hpAtStart: 0n,
@@ -65,9 +68,9 @@ export const setupBattleComponents = () => {
     };
 
     RawBattleParticipant.set(newData, entity);
-    const oldParticipantList = RawBattleParticipants.get(battleId as Entity)?.value;
+    const oldParticipantList = RawBattleParticipants.get(battleEntity as Entity)?.value;
     if (oldParticipantList?.includes(entity)) return;
-    RawBattleParticipants.set({ value: oldParticipantList?.concat(entity) ?? [entity] }, battleId as Entity);
+    RawBattleParticipants.set({ value: oldParticipantList?.concat(entity) ?? [entity] }, battleEntity as Entity);
   };
 
   defineEnterSystem(systemWorld, [Has(components.BattleDamageDealtResult)], updateBattleParticipant);

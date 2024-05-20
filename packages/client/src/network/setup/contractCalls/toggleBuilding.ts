@@ -1,9 +1,9 @@
 import { Entity } from "@latticexyz/recs";
 import { ampli } from "src/ampli";
-import { execute } from "src/network/actions";
 import { components } from "src/network/components";
+import { execute } from "src/network/txExecute/txExecute";
 import { MUD } from "src/network/types";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { bigintToNumber } from "src/util/number";
@@ -19,9 +19,9 @@ export async function toggleBuilding(mud: MUD, building: Entity) {
   await execute(
     {
       mud,
-      functionName: "toggleBuilding",
+      functionName: "Pri_11__toggleBuilding",
       systemId: getSystemId("ToggleBuildingSystem"),
-      args: [{ ...position, parent: position.parent as Hex }],
+      args: [building as Hex],
       withSession: true,
     },
     {
@@ -32,8 +32,8 @@ export async function toggleBuilding(mud: MUD, building: Entity) {
       const currLevel = components.Level.get(building)?.value || 0;
 
       ampli.systemToggleBuilding({
-        asteroidCoord: position.parent,
-        buildingType: getBlockTypeName(buildingType),
+        asteroidCoord: position.parentEntity,
+        buildingType: getEntityTypeName(buildingType),
         buildingActiveFrom: active.value,
         coord: [position.x, position.y],
         currLevel: bigintToNumber(currLevel),

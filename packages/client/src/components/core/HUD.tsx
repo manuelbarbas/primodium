@@ -1,4 +1,4 @@
-import { FC, ReactNode, createContext, memo, useContext, useEffect, useState } from "react";
+import { FC, ReactNode, createContext, memo, useContext, useEffect, useRef } from "react";
 
 interface HUDProps {
   children?: ReactNode;
@@ -9,11 +9,6 @@ interface HUDProps {
 interface HUDElementProps {
   children?: ReactNode;
   className?: string;
-}
-
-interface MousePosition {
-  x: number;
-  y: number;
 }
 
 const ScaleContext = createContext<number | undefined>(undefined);
@@ -28,11 +23,14 @@ const useScale = () => {
 
 const CursorFollower: FC<HUDElementProps> = ({ children, className }) => {
   const scale = useScale();
-  const [mousePosition, setMousePosition] = useState<MousePosition>({ x: 0, y: 0 });
+  const divRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
-      setMousePosition({ x: event.clientX, y: event.clientY });
+      if (divRef.current) {
+        divRef.current.style.left = `${event.clientX}px`;
+        divRef.current.style.top = `${event.clientY}px`;
+      }
     };
 
     document.addEventListener("mousemove", handleMouseMove);
@@ -43,14 +41,12 @@ const CursorFollower: FC<HUDElementProps> = ({ children, className }) => {
 
   return (
     <div
+      ref={divRef}
       style={{
-        position: "fixed",
-        left: mousePosition.x,
-        top: mousePosition.y,
-        transform: `scale(${scale})`,
         zIndex: 1001,
+        scale,
       }}
-      className={className}
+      className={`fixed z-[1001] ${className}`}
     >
       {children}
     </div>
@@ -164,7 +160,20 @@ const Right: FC<HUDElementProps> = memo(({ children, className }) => {
     </div>
   );
 });
-
+const Center: FC<HUDElementProps> = memo(({ children, className }) => {
+  const scale = useScale();
+  return (
+    <div
+      style={{
+        transform: `translateY(50%) translateX(50%) scale(${scale})`,
+        transformOrigin: "center center",
+      }}
+      className={`absolute right-1/2 bottom-1/2 ${className}`}
+    >
+      {children}
+    </div>
+  );
+});
 export const HUD: FC<HUDProps> & {
   CursorFollower: typeof CursorFollower;
   TopRight: typeof TopRight;
@@ -175,12 +184,13 @@ export const HUD: FC<HUDProps> & {
   BottomMiddle: typeof BottomMiddle;
   Left: typeof Left;
   Right: typeof Right;
+  Center: typeof Center;
 } = ({ children, scale = 1, pad = false }) => {
   const paddingClass = pad ? "p-3" : "";
   return (
     <ScaleContext.Provider value={scale}>
       <div className={`screen-container ${paddingClass} fixed top-0 right-0 pointer-events-none`}>
-        <div className={`h-full relative`}>{children}</div>
+        <div className={`h-full relative pointer-events-none`}>{children}</div>
       </div>
     </ScaleContext.Provider>
   );
@@ -195,3 +205,4 @@ HUD.TopMiddle = TopMiddle;
 HUD.BottomMiddle = BottomMiddle;
 HUD.Left = Left;
 HUD.Right = Right;
+HUD.Center = Center;

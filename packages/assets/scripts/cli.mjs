@@ -136,8 +136,9 @@ readFile(projectPath, (err, content) => {
   options.appInfo = appInfo;
 
   console.log(white("Start packing ") + magentaBright(projectPath));
-  
+
   texturePacker(files, options, (f, error) => {
+    console.log({ files });
     if (error) {
       console.log(redBright(error));
       process.exit();
@@ -156,13 +157,13 @@ readFile(projectPath, (err, content) => {
         const outJson = file.buffer.toString("utf-8", 0, file.buffer.length);
         const out = JSON.parse(outJson);
         textures.push(out.textures[0]);
-        console.log(
-          white("Adding to output json ") + greenBright(file.name)
-        );
+        console.log(white("Adding to output json ") + greenBright(file.name));
+        writeFileSync(resolve(outputPath, file.name), JSON.stringify(out, null, 4));
       } else {
         lastImageName = file.name;
         let out = resolve(outputPath, file.name);
         console.log(white("Writing ") + greenBright(out));
+
         writeFileSync(out, file.buffer);
       }
     }
@@ -180,10 +181,7 @@ readFile(projectPath, (err, content) => {
     outputJson.textures = textures;
     // add timestamp to atlas image to avoid browser cache
     outputJson.textures[0].image = "atlas.png?timestamp=" + Date.now();
-    writeFileSync(
-      atlasJsonOut,
-      Buffer.from(JSON.stringify(outputJson, null, 4), "utf-8")
-    );
+    writeFileSync(atlasJsonOut, Buffer.from(JSON.stringify(outputJson, null, 4), "utf-8"));
 
     console.log(yellowBright("Done"));
   });

@@ -1,154 +1,148 @@
-import { AudioKeys, KeybindActions, Scenes } from "@game/constants";
-import { useEffect } from "react";
-import { usePrimodium } from "src/hooks/usePrimodium";
-import { getRandomRange } from "src/util/common";
-import { IconLabel } from "./IconLabel";
-import { Loader } from "./Loader";
-import { Tooltip } from "./Tooltip";
+import { components } from "@/network/components";
+import { Tooltip, TooltipDirection } from "@/components/core/Tooltip";
+import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
+import { useGame } from "@/hooks/useGame";
+import { cn } from "@/util/client";
+import { getRandomRange } from "@/util/common";
+import { AudioKeys } from "@primodiumxyz/assets";
+import { cva, type VariantProps } from "class-variance-authority";
+import { forwardRef, useCallback, useEffect } from "react";
 
-export const Button: React.FC<{
-  children: React.ReactNode;
-  className?: string;
-  style?: React.CSSProperties;
-  onClick?: (e?: React.MouseEvent | undefined) => void;
-  onPointerEnter?: (e?: React.PointerEvent) => void;
-  onPointerLeave?: (e?: React.PointerEvent) => void;
-  disabled?: boolean;
-  selected?: boolean;
-  loading?: boolean;
-  tooltip?: string;
-  tooltipDirection?: "right" | "left" | "top" | "bottom";
+const buttonVariants = cva(
+  "btn min-h-fit join-item items-center justify-center whitespace-nowrap ring-offset-background focus-visible:outline-none relative",
+  {
+    variants: {
+      variant: {
+        neutral: "btn-neutral border-2 border-secondary/50",
+        primary: "btn-primary",
+        accent: "btn-accent border border-neutral",
+        secondary: "btn-secondary border border-accent",
+        success: "btn-success",
+        info: "btn-info border-white/50",
+        warning: "btn-warning",
+        error: "btn-error border border-rose-300/50",
+        ghost: "btn-ghost",
+      },
+      size: {
+        xs: "btn-xs",
+        sm: "btn-sm",
+        md: "btn-md",
+        lg: "btn-lg",
+        content: "h-fit p-2",
+      },
+      modifier: {
+        default: "",
+        outline: "btn-outline",
+      },
+      shape: {
+        default: "",
+        block: "btn-block",
+        wide: "btn-wide",
+        circle: "btn-circle",
+        square: "btn-square",
+      },
+      motion: {
+        enabled: "hover:translate-y-[-2px] hover:shadow-xl transition-all",
+        disabled: "",
+      },
+    },
+    defaultVariants: {
+      modifier: "default",
+      motion: "enabled",
+      variant: "neutral",
+      size: "xs",
+      shape: "default",
+    },
+  }
+);
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
   mute?: boolean;
   clickSound?: AudioKeys;
-  keybind?: KeybindActions;
-}> = ({
-  children,
-  className,
-  style,
-  onClick,
-  onPointerEnter,
-  onPointerLeave,
-  disabled,
-  selected = false,
-  loading = false,
-  tooltip,
-  tooltipDirection = "top",
-  mute = false,
-  clickSound = AudioKeys.Confirm2,
-  keybind,
-}) => {
-  const primodium = usePrimodium();
-  const api = primodium.api(Scenes.UI);
-
-  useEffect(() => {
-    if (!keybind || !api || disabled) return;
-
-    const callback = () => {
-      onClick && onClick();
-      !mute &&
-        api.audio.play(clickSound, "ui", {
-          detune: getRandomRange(-100, 100),
-        });
-    };
-
-    const listener = api.input.addListener(keybind, callback);
-
-    return () => {
-      listener.dispose();
-    };
-  }, [keybind, api, clickSound, mute, disabled, onClick]);
-
-  return (
-    <Tooltip text={tooltip} direction={tooltipDirection}>
-      <button
-        style={style}
-        onClick={(e) => {
-          !mute &&
-            api?.audio.play(clickSound, "ui", {
-              detune: getRandomRange(-100, 100),
-            });
-
-          onClick?.(e);
-        }}
-        disabled={disabled}
-        onPointerEnter={() => {
-          !mute &&
-            api?.audio.play(AudioKeys.DataPoint2, "ui", {
-              volume: 0.1,
-              detune: getRandomRange(-200, 200),
-            });
-
-          onPointerEnter?.();
-        }}
-        onPointerLeave={onPointerLeave}
-        className={`btn join-item inline pointer-events-auto font-bold outline-none h-fit bg-opacity-50 ${className} ${
-          selected ? "border-accent z-10 bg-base-100" : ""
-        }`}
-      >
-        {loading && <Loader />}
-        {!loading && children}
-      </button>
-    </Tooltip>
-  );
-};
-
-export const IconButton: React.FC<{
-  imageUri: string;
-  text?: string;
-  hideText?: boolean;
-  className?: string;
-  onClick?: () => void;
-  onDoubleClick?: () => void;
-  disabled?: boolean;
+  keybind?: KeybindActionKeys;
+  tooltip?: React.ReactNode;
+  tooltipDirection?: TooltipDirection;
   selected?: boolean;
-  loading?: boolean;
-  tooltipText?: string;
-  tooltipDirection?: "right" | "left" | "top" | "bottom";
-  mute?: boolean;
-  clickSound?: AudioKeys;
-}> = ({
-  imageUri,
-  text = "",
-  hideText = false,
-  className,
-  onClick,
-  disabled,
-  selected = false,
-  loading = false,
-  tooltipDirection = "right",
-  tooltipText,
-  mute = false,
-  clickSound = AudioKeys.Confirm2,
-  onDoubleClick,
-}) => {
-  const primodium = usePrimodium();
-  const { audio } = primodium.api();
-  return (
-    <Tooltip text={tooltipText} direction={tooltipDirection}>
-      <button
-        onClick={() => {
-          !mute &&
-            audio.play(clickSound, "ui", {
-              detune: getRandomRange(-100, 100),
-            });
-          onClick && onClick();
-        }}
-        disabled={disabled}
-        onDoubleClick={onDoubleClick}
-        onPointerEnter={() => {
-          !mute &&
-            audio.play(AudioKeys.DataPoint2, "ui", {
-              volume: 0.1,
-              detune: getRandomRange(-200, 200),
-            });
-        }}
-        className={`btn join-item inline gap-1 pointer-events-auto font-bold outline-none bg-opacity-50 ${className} ${
-          disabled ? "opacity-50 !pointer-events-auto" : ""
-        } ${selected ? "border-accent z-10 bg-base-100" : ""} `}
-      >
-        {loading && <Loader />}
-        {!loading && <IconLabel imageUri={imageUri} text={text} hideText={hideText} />}
-      </button>
-    </Tooltip>
-  );
-};
+}
+
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      className,
+      variant,
+      size,
+      modifier,
+      shape,
+      motion,
+      mute = false,
+      clickSound = "Bleep7",
+      keybind,
+      tooltip,
+      tooltipDirection,
+      selected,
+      ...props
+    },
+    ref
+  ) => {
+    const game = useGame();
+    const api = game.UI;
+
+    const handleClick = useCallback(
+      (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        !mute &&
+          api.audio.play(clickSound, "ui", {
+            detune: getRandomRange(-100, 100),
+          });
+
+        props.onClick?.(e);
+      },
+      [api.audio, clickSound, mute, props]
+    );
+
+    const handleHoverEnter = useCallback(
+      (e: React.PointerEvent<HTMLButtonElement>) => {
+        !mute &&
+          api.audio.play("DataPoint2", "ui", {
+            volume: 0.1,
+            detune: getRandomRange(-200, 200),
+          });
+
+        props.onPointerEnter?.(e);
+        // if the button is supposed to show a tooltip, remove the hover entity to not render its info as well
+        if (tooltip) components.HoverEntity.remove();
+      },
+      [api.audio, mute, tooltip, props]
+    );
+
+    useEffect(() => {
+      if (!keybind || !api || props.disabled) return;
+
+      const listener = api.input.addListener(keybind, () => handleClick(undefined!));
+
+      return () => {
+        listener.dispose();
+      };
+    }, [keybind, api, clickSound, mute, props.disabled, handleClick]);
+
+    return (
+      <Tooltip tooltipContent={tooltip} direction={tooltipDirection}>
+        <button
+          className={cn(
+            "cursor-pointer active:cursor-pointerDown disabled:opacity-50",
+            buttonVariants({ variant, size, motion, modifier, shape, className }),
+            selected && "border-1 border-accent z-10"
+          )}
+          ref={ref}
+          tabIndex={-1}
+          {...props}
+          onClick={handleClick}
+          onPointerEnter={handleHoverEnter}
+        >
+          {props.children}
+        </button>
+      </Tooltip>
+    );
+  }
+);
+Button.displayName = "Button";

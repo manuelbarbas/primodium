@@ -1,24 +1,36 @@
-import { StaticAbiType } from "@latticexyz/schema-type";
-import { ConfigFieldTypeToPrimitiveType, StoreConfig } from "@latticexyz/store";
+import { StaticAbiType } from "@latticexyz/schema-type/internal";
+import { SchemaInput } from "@latticexyz/store/config/v2";
+import { ConfigFieldTypeToPrimitiveType as FieldToPrimitive } from "@latticexyz/store/internal";
+import { WorldInput } from "@latticexyz/world/ts/config/v2/input";
 
-type Tables<C extends StoreConfig, T = undefined> = {
-  [Table in keyof C["tables"]]?: {
-    [Field in keyof C["tables"][Table]["valueSchema"]]: T extends undefined
-      ? ConfigFieldTypeToPrimitiveType<C["tables"][Table]["valueSchema"][Field]>
-      : C["tables"][Table]["keySchema"] extends T
-      ? ConfigFieldTypeToPrimitiveType<C["tables"][Table]["valueSchema"][Field]>
-      : never;
-  };
+type OmitSchemaKeys<Schema, Keys extends readonly string[]> = Omit<Schema, Keys[number]>;
+
+export type TablesInput = {
+  readonly [key: string]: TableInput;
 };
 
-export type PrototypeConfig<C extends StoreConfig> = {
+export type TableInput = {
+  readonly schema: SchemaInput;
+  readonly key: readonly string[];
+};
+
+type TableStructureWithOmittedKeys<Table extends TableInput> = {
+  [Field in keyof OmitSchemaKeys<Table["schema"], Table["key"]>]: FieldToPrimitive<Table["schema"][Field]>;
+};
+
+type Tables<W extends TablesInput> = {
+  [TableName in keyof W]?: TableStructureWithOmittedKeys<W[TableName]>;
+};
+
+export type PrototypeConfig<W extends TablesInput> = {
   keys?: { [x: string]: StaticAbiType }[];
-  tables?: Tables<C>;
-  levels?: Record<number, Tables<C, { level: "uint256" | "ESize" } | { id: unknown }>>;
+  tables?: Tables<W>;
+  levels?: Record<number, Tables<W>>;
 };
 
-export type PrototypesConfig<C extends StoreConfig> = Record<string, PrototypeConfig<C>>;
+export type PrototypesConfig<W extends TablesInput> = Record<string, PrototypeConfig<W>>;
 
-export type StoreConfigWithPrototypes = StoreConfig & {
-  prototypeConfig: PrototypesConfig<StoreConfig>;
+export type ConfigWithPrototypes<W extends WorldInput = WorldInput, Tables extends TablesInput = TablesInput> = {
+  worldInput: W;
+  prototypeConfig: PrototypesConfig<Tables>;
 };

@@ -1,22 +1,22 @@
 import { throttle } from "lodash";
 
-import { KeybindActions } from "@game/constants";
 import { Key, Scene } from "engine/types";
-import { usePersistentStore } from "../stores/PersistentStore";
+import { usePersistentStore } from "@game/stores/PersistentStore";
+import { KeybindActionKeys } from "@game/lib/constants/keybinds";
 
-export function createInputApi(targetScene: Scene) {
+export function createInputApi(scene: Scene) {
   const keybinds = usePersistentStore.getState().keybinds;
-  function isDown(keybindAction: KeybindActions) {
-    const { input } = targetScene;
+  function isDown(keybindAction: KeybindActionKeys) {
+    const { input } = scene;
 
     if (!keybinds[keybindAction]) return false;
 
-    if (KeybindActions.LeftClick === keybindAction) {
+    if ("LeftClick" === keybindAction) {
       if (input.phaserInput.activePointer.downElement?.nodeName !== "CANVAS") return false;
       return input.phaserInput.activePointer.leftButtonDown();
     }
 
-    if (KeybindActions.RightClick === keybindAction) {
+    if ("RightClick" === keybindAction) {
       if (input.phaserInput.activePointer.downElement?.nodeName !== "CANVAS") return false;
       return input.phaserInput.activePointer.rightButtonDown();
     }
@@ -30,17 +30,17 @@ export function createInputApi(targetScene: Scene) {
     return false;
   }
 
-  function isUp(keybindAction: KeybindActions) {
+  function isUp(keybindAction: KeybindActionKeys) {
     const keybinds = usePersistentStore.getState().keybinds;
-    const { input } = targetScene;
+    const { input } = scene;
 
     if (!keybinds[keybindAction]) return false;
 
-    if (KeybindActions.LeftClick === keybindAction) {
+    if ("LeftClick" === keybindAction) {
       return input.phaserInput.activePointer.leftButtonReleased();
     }
 
-    if (KeybindActions.RightClick === keybindAction) {
+    if ("RightClick" === keybindAction) {
       return input.phaserInput.activePointer.rightButtonReleased();
     }
 
@@ -53,13 +53,13 @@ export function createInputApi(targetScene: Scene) {
     return false;
   }
 
-  function addListener(KeybindActions: KeybindActions, callback: () => void, emitOnRepeat = false, wait = 0) {
+  function addListener(keybindAction: KeybindActionKeys, callback: () => void, emitOnRepeat = false, wait = 0) {
     const keybinds = usePersistentStore.getState().keybinds;
-    const { input } = targetScene;
+    const { input } = scene;
 
     const fn = throttle(callback, wait);
 
-    for (const key of keybinds[KeybindActions]!) {
+    for (const key of keybinds[keybindAction]!) {
       input.phaserKeys
         .get(key as Key)
         ?.on("down", fn)
@@ -68,7 +68,7 @@ export function createInputApi(targetScene: Scene) {
 
     return {
       dispose: () => {
-        for (const key of keybinds[KeybindActions]!) {
+        for (const key of keybinds[keybindAction]!) {
           input.phaserKeys.get(key as Key)?.removeListener("down", fn);
         }
       },
@@ -76,7 +76,7 @@ export function createInputApi(targetScene: Scene) {
   }
 
   function transferListeners(oldKey: Key, newKey: Key) {
-    const { input } = targetScene;
+    const { input } = scene;
 
     const oldPhaserKey = input.phaserKeys.get(oldKey);
     const newPhaserKey = input.phaserKeys.get(newKey);
@@ -98,7 +98,7 @@ export function createInputApi(targetScene: Scene) {
   }
 
   function removeListeners(key: Key) {
-    const { input } = targetScene;
+    const { input } = scene;
 
     const phaserKey = input.phaserKeys.get(key);
 
@@ -108,18 +108,19 @@ export function createInputApi(targetScene: Scene) {
   }
 
   function disableInput() {
-    const { input } = targetScene;
+    const { input } = scene;
 
     input.disableInput();
   }
 
   function enableInput() {
-    const { input } = targetScene;
+    const { input } = scene;
 
     input.enableInput();
   }
 
   return {
+    ...scene.input,
     isDown,
     isUp,
     addListener,

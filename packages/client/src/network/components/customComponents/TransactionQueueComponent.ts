@@ -1,14 +1,20 @@
+import { Entity, Metadata, Type } from "@latticexyz/recs";
 import { useEffect, useState } from "react";
-import { Metadata, Type, Entity } from "@latticexyz/recs";
 import { world } from "src/network/world";
+import { TransactionQueueMetadataTypes, TransactionQueueType } from "src/util/constants";
 import { Options, createExtendedComponent } from "./ExtendedComponent";
-import { TransactionQueue } from "../clientComponents";
-import { TransactionQueueType, TransactionQueueMetadataTypes } from "src/util/constants";
 
 export type MetadataTypes = {
   [K in TransactionQueueType]: K extends keyof TransactionQueueMetadataTypes
     ? TransactionQueueMetadataTypes[K]
     : unknown;
+};
+
+export type TxQueueOptions<T extends keyof MetadataTypes> = {
+  id: Entity;
+  force?: true;
+  type?: T;
+  metadata?: MetadataTypes[T];
 };
 
 export function createTransactionQueueComponent<M extends Metadata>(options?: Options<M>) {
@@ -25,25 +31,20 @@ export function createTransactionQueueComponent<M extends Metadata>(options?: Op
   );
 
   // Add a function to the queue
-  async function enqueue<T extends keyof MetadataTypes>(
-    fn: () => Promise<void>,
-    id: Entity,
-    type?: T,
-    metadata?: MetadataTypes[T]
-  ) {
-    if (component.has(id)) return;
+  async function enqueue<T extends keyof MetadataTypes>(fn: () => Promise<void>, options: TxQueueOptions<T>) {
+    if (!options.force && component.has(options.id)) return;
 
     queue.push({
-      id,
+      id: options.id,
       fn,
     });
 
     component.set(
       {
-        metadata: JSON.stringify(metadata),
-        type,
+        metadata: JSON.stringify(options?.metadata),
+        type: options?.type,
       },
-      id
+      options.id
     );
 
     await run();
@@ -93,7 +94,7 @@ export function createTransactionQueueComponent<M extends Metadata>(options?: Op
     const [position, setPosition] = useState<number>(getIndex(id));
 
     useEffect(() => {
-      const sub = TransactionQueue.update$.subscribe(() => {
+      const sub = component.update$.subscribe(() => {
         const position = getIndex(id);
         setPosition(position);
       });
@@ -110,7 +111,7 @@ export function createTransactionQueueComponent<M extends Metadata>(options?: Op
     const [size, setSize] = useState<number>(getSize());
 
     useEffect(() => {
-      const sub = TransactionQueue.update$.subscribe(() => {
+      const sub = component.update$.subscribe(() => {
         const size = getSize();
         setSize(size);
       });

@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
-import "./PrimodiumTest.t.sol";
+import { PrimodiumTest, console } from "test/PrimodiumTest.t.sol";
+import { LibEncode } from "libraries/LibEncode.sol";
 
 contract ClientEncodeTest is PrimodiumTest {
   function testHashKeyEntity() public view {

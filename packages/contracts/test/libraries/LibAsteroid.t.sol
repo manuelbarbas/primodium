@@ -1,11 +1,21 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
-import "../PrimodiumTest.t.sol";
+import { console, PrimodiumTest } from "test/PrimodiumTest.t.sol";
+import { addressToEntity } from "src/utils.sol";
+
+import { EResource } from "src/Types.sol";
+
+import { LastConquered, Home, OwnedBy, BuildingType, P_EnumToPrototype, P_Transportables, P_UnitPrototypes, Asteroid, AsteroidData, Position, PositionData, Position, PositionData, ReversePosition, MaxResourceCount, UnitCount, ResourceCount, UnitCount, ResourceCount, P_GameConfig, P_GameConfigData, P_WormholeAsteroidConfig, P_WormholeAsteroidConfigData, P_AsteroidThresholdProbConfig, P_AsteroidThresholdProbConfigData } from "codegen/index.sol";
+import { MainBasePrototypeId, DroidPrototypeId } from "codegen/Prototypes.sol";
+import { EUnit, EMap } from "src/Types.sol";
+import { UnitKey } from "src/Keys.sol";
+
+import { LibAsteroid } from "libraries/LibAsteroid.sol";
 
 contract LibAsteroidTest is PrimodiumTest {
-  bytes32 player;
-  bytes32 asteroid;
+  bytes32 playerEntity;
+  bytes32 asteroidEntity;
 
   function setUp() public override {
     super.setUp();
@@ -14,64 +24,90 @@ contract LibAsteroidTest is PrimodiumTest {
     gameConfig.asteroidDistance = 8;
     gameConfig.maxAsteroidsPerPlayer = 12;
     gameConfig.asteroidChanceInv = 2;
-    asteroid = spawn(creator);
+    asteroidEntity = spawn(creator);
     vm.startPrank(creator);
-    player = addressToEntity(creator);
+    playerEntity = addressToEntity(creator);
     P_GameConfig.set(gameConfig);
     vm.stopPrank();
   }
 
   function testIsAsteroid() public {
-    uint256 chanceInv = P_GameConfig.get().asteroidChanceInv;
+    vm.startPrank(creator);
+    uint256 chanceInv = 4;
+    P_GameConfig.setAsteroidChanceInv(4);
     bytes32 entity = 0 << 128;
-    assertFalse(LibAsteroid.isAsteroid(entity, chanceInv));
+    assertTrue(LibAsteroid.isAsteroid(entity, chanceInv, P_WormholeAsteroidConfig.getWormholeAsteroidSlot() + 1));
     entity = bytes32(uint256(1 << 128));
-    assertTrue(LibAsteroid.isAsteroid(entity, chanceInv));
+    assertFalse(LibAsteroid.isAsteroid(entity, chanceInv, P_WormholeAsteroidConfig.getWormholeAsteroidSlot() + 1));
     entity = bytes32(uint256(2 << 128));
-    assertFalse(LibAsteroid.isAsteroid(entity, chanceInv));
+    assertFalse(LibAsteroid.isAsteroid(entity, chanceInv, P_WormholeAsteroidConfig.getWormholeAsteroidSlot() + 1));
   }
 
   function testFuzzAsteroidData(bytes32 entity) public {
-    AsteroidData memory asteroidData = LibAsteroid.getAsteroidData(entity, false);
+    AsteroidData memory asteroidData = LibAsteroid.getAsteroidData(entity, false, false);
     assertTrue(asteroidData.isAsteroid);
     assertFalse(asteroidData.spawnsSecondary);
-    assertLe(asteroidData.mapId, 5, "map id too high");
-    assertGe(asteroidData.mapId, 2, "map id too low");
     assertGe(asteroidData.maxLevel, 1, "max level too low");
     assertLe(asteroidData.maxLevel, 8, "max level too low");
+    if (asteroidData.mapId != uint8(EMap.Common)) {
+      assertGe(asteroidData.mapId, 2, "map id too low");
+      assertLe(asteroidData.mapId, 5, "map id too high");
+    }
   }
 
-  function testCreateSecondaryAsteroid() public {
+  function testAsteroidThresholdProbConfig() public {
+    P_AsteroidThresholdProbConfigData memory asteroidProb = P_AsteroidThresholdProbConfig.get();
+    assertGt(asteroidProb.common2 + 1, asteroidProb.common1, "Common2 probability threshold is too low");
+    assertGt(asteroidProb.eliteMicro + 1, asteroidProb.common2, "EliteMicro probability threshold is too low");
+    assertGt(asteroidProb.eliteSmall + 1, asteroidProb.eliteMicro, "EliteSmall probability threshold is too low");
+    assertGt(asteroidProb.eliteMedium + 1, asteroidProb.eliteSmall, "EliteMedium probability threshold is too low");
+    assertGt(asteroidProb.eliteLarge + 1, asteroidProb.eliteMedium, "EliteLarge probability threshold is too low");
+    assertEq(asteroidProb.eliteLarge, 100, "EliteLarge probability threshold is not 100");
+  }
+
+  function testCreateSecondaryAsteroid() public returns (bytes32) {
+    PositionData memory position = findSecondaryAsteroid(asteroidEntity);
     vm.startPrank(creator);
-    PositionData memory position = findSecondaryAsteroid(player, asteroid);
 
     bytes32 actualAsteroidEntity = LibAsteroid.createSecondaryAsteroid(position);
-    bytes32 asteroidEntity = keccak256(abi.encode(asteroid, bytes32("asteroid"), position.x, position.y));
+    bytes32 expectedAsteroidEntity = keccak256(abi.encode(asteroidEntity, bytes32("asteroid"), position.x, position.y));
 
-    assertEq(actualAsteroidEntity, asteroidEntity, "asteroidEntity");
-    AsteroidData memory expectedAsteroidData = LibAsteroid.getAsteroidData(asteroidEntity, false);
-    AsteroidData memory actualAsteroidData = Asteroid.get(asteroidEntity);
+    assertEq(actualAsteroidEntity, expectedAsteroidEntity, "asteroidEntity");
+    AsteroidData memory expectedAsteroidData = LibAsteroid.getAsteroidData(expectedAsteroidEntity, false, false);
+    AsteroidData memory actualAsteroidData = Asteroid.get(expectedAsteroidEntity);
 
     assertEq(expectedAsteroidData.isAsteroid, actualAsteroidData.isAsteroid, "isAsteroid");
     assertEq(expectedAsteroidData.spawnsSecondary, actualAsteroidData.spawnsSecondary, "spawnsSecondary");
     assertEq(expectedAsteroidData.mapId, actualAsteroidData.mapId, "mapId");
-    assertEq(Position.get(asteroidEntity), position);
-    assertEq(ReversePosition.get(position.x, position.y), asteroidEntity, "reversePosition");
+    assertEq(Position.get(expectedAsteroidEntity), position);
+    assertEq(ReversePosition.get(position.x, position.y), expectedAsteroidEntity, "reversePosition");
+
+    assertGe(expectedAsteroidData.primodium, 0, "primodium");
+    assertEq(LastConquered.get(asteroidEntity), block.timestamp, "last conquered");
+
     assertEq(
-      MaxResourceCount.get(asteroidEntity, uint8(EResource.U_MaxFleets)),
+      MaxResourceCount.get(expectedAsteroidEntity, uint8(EResource.U_MaxFleets)),
       0,
       "Asteroid should have 0 max fleets"
     );
+    return expectedAsteroidEntity;
+  }
+
+  function testSecondaryAsteroidHasMainBase() public {
+    bytes32 secondaryAsteroidEntity = testCreateSecondaryAsteroid();
+    conquerAsteroid(creator, Home.get(playerEntity), secondaryAsteroidEntity);
+
+    assertEq(OwnedBy.get(secondaryAsteroidEntity), playerEntity);
+    assertEq(BuildingType.get(Home.get(secondaryAsteroidEntity)), MainBasePrototypeId);
   }
 
   function testSecondaryAsteroidDefense() public {
+    PositionData memory position = findSecondaryAsteroid(asteroidEntity);
     vm.startPrank(creator);
-    PositionData memory position = findSecondaryAsteroid(player, asteroid);
 
-    bytes32 asteroidEntity = LibAsteroid.createSecondaryAsteroid(position);
+    asteroidEntity = LibAsteroid.createSecondaryAsteroid(position);
     AsteroidData memory asteroidData = Asteroid.get(asteroidEntity);
     (uint256 expectedDroidCount, uint256 expectedEncryption) = LibAsteroid.getSecondaryAsteroidUnitsAndEncryption(
-      asteroidEntity,
       asteroidData.maxLevel
     );
     uint256 actualDroidCount = UnitCount.get(asteroidEntity, DroidPrototypeId);

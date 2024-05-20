@@ -1,16 +1,14 @@
+import { KeybindActionKeys } from "@game/lib/constants/keybinds";
+import { Coord } from "engine/types";
+import { Key } from "engine/types";
+import { mountStoreDevtool } from "simple-zustand-devtools";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { mountStoreDevtool } from "simple-zustand-devtools";
-
-import { KeybindActions } from "@game/constants";
-import { Coord } from "@latticexyz/utils";
-import { Key } from "engine/types";
-
-const VERSION = 5;
+const VERSION = 9;
 
 type Keybinds = Partial<{
-  [key in KeybindActions]: Set<Key>;
+  [key in KeybindActionKeys]: Set<Key>;
 }>;
 
 type Panes = Record<
@@ -37,24 +35,24 @@ type PersistentState = {
   newPlayer: boolean;
   keybinds: Keybinds;
   volume: Volume;
-  allowHackerModal: boolean;
   uiScale: number;
   consoleHistory: { input: string; output: string }[];
   noExternalAccount: boolean;
   panes: Panes;
   fontStyle: string;
   hideHotkeys: boolean;
+  showIntro: boolean;
+  showObjectives: boolean;
 };
 
 type PersistentActions = {
-  replaceKey: (keybindAction: KeybindActions, oldKey: Key, newKey: Key) => void;
-  addKey: (keybindAction: KeybindActions, key: Key) => void;
-  removeKey: (keybindAction: KeybindActions, key: Key) => void;
-  setKeybind: (keybindAction: KeybindActions, keys: Set<Key>) => void;
+  replaceKey: (keybindAction: KeybindActionKeys, oldKey: Key, newKey: Key) => void;
+  addKey: (keybindAction: KeybindActionKeys, key: Key) => void;
+  removeKey: (keybindAction: KeybindActionKeys, key: Key) => void;
+  setKeybind: (keybindAction: KeybindActionKeys, keys: Set<Key>) => void;
   setNewPlayer: (val: boolean) => void;
   setVolume: (volume: number, channel: Channel) => void;
   setFontStyle: (style: string) => void;
-  toggleAllowHackerModal: () => void;
   setUiScale: (scale: number) => void;
   setConsoleHistory: (history: { input: string; output: string }[]) => void;
   setPane: (id: string, coord: Coord, pinned: boolean, locked: boolean, visible: boolean) => void;
@@ -63,12 +61,13 @@ type PersistentActions = {
   setNoExternalAccount: (value: boolean) => void; // Add this action
   removeNoExternalAccount: () => void; // Add this action
   setHideHotkeys: (val: boolean) => void;
+  setShowIntro: (val: boolean) => void;
+  setShowObjectives: (val: boolean) => void;
 };
 
 const defaults: PersistentState = {
   fontStyle: "font-pixel",
   newPlayer: true,
-  allowHackerModal: false,
   uiScale: 1,
   consoleHistory: [],
   noExternalAccount: false,
@@ -79,44 +78,46 @@ const defaults: PersistentState = {
     sfx: 0.5,
     ui: 0.25,
   },
-  hideHotkeys: false,
   keybinds: {
-    [KeybindActions.RightClick]: new Set(["POINTER_RIGHT"]),
-    [KeybindActions.LeftClick]: new Set(["POINTER_LEFT"]),
-    [KeybindActions.Up]: new Set(["W", "UP"]),
-    [KeybindActions.Down]: new Set(["S", "DOWN"]),
-    [KeybindActions.Left]: new Set(["A", "LEFT"]),
-    [KeybindActions.Right]: new Set(["D", "RIGHT"]),
-    [KeybindActions.Base]: new Set(["SPACE"]),
-    [KeybindActions.SpacerockMenu]: new Set(["TAB"]),
-    [KeybindActions.ZoomIn]: new Set(["X", "PLUS"]),
-    [KeybindActions.ZoomOut]: new Set(["Z", "MINUS"]),
-    [KeybindActions.Modifier]: new Set(["SHIFT"]),
-    [KeybindActions.Hotbar0]: new Set(["ONE"]),
-    [KeybindActions.Hotbar1]: new Set(["TWO"]),
-    [KeybindActions.Hotbar2]: new Set(["THREE"]),
-    [KeybindActions.Hotbar3]: new Set(["FOUR"]),
-    [KeybindActions.Hotbar4]: new Set(["FIVE"]),
-    [KeybindActions.Hotbar5]: new Set(["SIX"]),
-    [KeybindActions.Hotbar6]: new Set(["SEVEN"]),
-    [KeybindActions.Hotbar7]: new Set(["EIGHT"]),
-    [KeybindActions.Hotbar8]: new Set(["NINE"]),
-    [KeybindActions.Hotbar9]: new Set(["ZERO"]),
-    [KeybindActions.NextHotbar]: new Set(["E"]),
-    [KeybindActions.PrevHotbar]: new Set(["Q"]),
-    [KeybindActions.Esc]: new Set(["ESC"]),
-    [KeybindActions.Map]: new Set(["M"]),
-    [KeybindActions.Console]: new Set(["BACKTICK"]),
-    [KeybindActions.Account]: new Set(["R"]),
-    [KeybindActions.Blueprints]: new Set(["T"]),
-    [KeybindActions.Objectives]: new Set(["Y"]),
-    [KeybindActions.Resources]: new Set(["U"]),
-    [KeybindActions.Units]: new Set(["I"]),
-    [KeybindActions.Asteroids]: new Set(["O"]),
-    [KeybindActions.Fleets]: new Set(["P"]),
-    [KeybindActions.Chat]: new Set(["OPEN_BRACKET"]),
-    [KeybindActions.HideAll]: new Set(["H"]),
+    RightClick: new Set(["POINTER_RIGHT"]),
+    LeftClick: new Set(["POINTER_LEFT"]),
+    Up: new Set(["W", "UP"]),
+    Down: new Set(["S", "DOWN"]),
+    Left: new Set(["A", "LEFT"]),
+    Right: new Set(["D", "RIGHT"]),
+    Base: new Set(["SPACE"]),
+    Cycle: new Set(["TAB"]),
+    ZoomIn: new Set(["X", "PLUS"]),
+    ZoomOut: new Set(["Z", "MINUS"]),
+    Modifier: new Set(["SHIFT"]),
+    Hotbar0: new Set(["ONE"]),
+    Hotbar1: new Set(["TWO"]),
+    Hotbar2: new Set(["THREE"]),
+    Hotbar3: new Set(["FOUR"]),
+    Hotbar4: new Set(["FIVE"]),
+    Hotbar5: new Set(["SIX"]),
+    Hotbar6: new Set(["SEVEN"]),
+    Hotbar7: new Set(["EIGHT"]),
+    Hotbar8: new Set(["NINE"]),
+    Hotbar9: new Set(["ZERO"]),
+    NextHotbar: new Set(["E"]),
+    PrevHotbar: new Set(["Q"]),
+    Esc: new Set(["ESC"]),
+    Map: new Set(["M"]),
+    Console: new Set(["BACKTICK"]),
+    Account: new Set(["R"]),
+    Blueprints: new Set(["T"]),
+    Objectives: new Set(["Y"]),
+    Resources: new Set(["U"]),
+    Units: new Set(["I"]),
+    Aura: new Set(["O"]),
+    Fleets: new Set(["P"]),
+    Chat: new Set(["OPEN_BRACKET"]),
+    HideAll: new Set(["H"]),
   },
+  hideHotkeys: false,
+  showIntro: true,
+  showObjectives: true,
 };
 
 export const usePersistentStore = create<PersistentState & PersistentActions>()(
@@ -154,10 +155,6 @@ export const usePersistentStore = create<PersistentState & PersistentActions>()(
       setVolume: (volume, channel) => {
         set({ volume: { ...get().volume, [channel]: volume } });
       },
-      toggleAllowHackerModal: () => {
-        const allow = get().allowHackerModal === false ? true : false;
-        set({ allowHackerModal: allow });
-      },
       setUiScale: (scale) => {
         set({ uiScale: scale });
       },
@@ -188,6 +185,8 @@ export const usePersistentStore = create<PersistentState & PersistentActions>()(
       setNoExternalAccount: (value: boolean) => set({ noExternalAccount: value }),
       removeNoExternalAccount: () => set({ noExternalAccount: false }),
       setHideHotkeys: (val: boolean) => set({ hideHotkeys: val }),
+      setShowIntro: (val: boolean) => set({ showIntro: val }),
+      setShowObjectives: (val: boolean) => set({ showObjectives: val }),
     }),
     {
       name: "persistent-storage",
@@ -199,11 +198,11 @@ export const usePersistentStore = create<PersistentState & PersistentActions>()(
           const parsed = JSON.parse(str!);
           const version: number = parsed.version;
           const keybinds = parsed.state.keybinds as Partial<{
-            [key in KeybindActions]: Key[];
+            [key in KeybindActionKeys]: Key[];
           }>;
 
           for (const _action in keybinds) {
-            const action = parseInt(_action) as KeybindActions;
+            const action = _action as KeybindActionKeys;
             const array = keybinds[action];
             const set = new Set(array);
             result[action] = set;
@@ -219,13 +218,13 @@ export const usePersistentStore = create<PersistentState & PersistentActions>()(
         },
         setItem: (key, value) => {
           const result: Partial<{
-            [key in KeybindActions]: Key[];
+            [key in KeybindActionKeys]: Key[];
           }> = {};
           const keybinds = value.state.keybinds as Keybinds;
           const version = value.version;
 
           for (const _action in keybinds) {
-            const action = parseInt(_action) as KeybindActions;
+            const action = _action as KeybindActionKeys;
             const set = keybinds[action];
 
             if (!set) continue;

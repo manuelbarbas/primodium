@@ -1,6 +1,8 @@
-import { Entity, Has, HasValue, Not, runQuery } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
+import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
+import { Coord } from "engine/types";
 import { components } from "src/network/components";
+import { Hex } from "viem";
+import { encodeEntity } from "./encode";
 
 export function getResourceKey(coord: Coord, mapId = 1) {
   const resourceDimensions = { width: 37, length: 25 };
@@ -49,18 +51,13 @@ export const getEntityTileAtCoord = (coord: Coord) => {
 };
 
 export const getBuildingAtCoord = (coord: Coord, asteroid: Entity) => {
-  const entities = runQuery([
-    HasValue(components.Position, {
-      x: coord.x,
-      y: coord.y,
-      parent: asteroid,
-    }),
-    Not(components.BuildingType),
-  ]);
+  const positionEntity = getBuildingPositionEntity(coord, asteroid);
+  return components.ReverseBuildingPosition.get(positionEntity)?.value;
+};
 
-  if (entities.size === 0) return undefined;
-  const tileEntity = [...entities][0];
-
-  const entity = components.OwnedBy.get(tileEntity)?.value;
-  return entity;
+export const getBuildingPositionEntity = (coord: Coord, asteroid: Entity) => {
+  return encodeEntity(
+    { x: "int32", y: "int32", asteroid: "bytes32" },
+    { x: coord.x, y: coord.y, asteroid: asteroid as Hex }
+  );
 };

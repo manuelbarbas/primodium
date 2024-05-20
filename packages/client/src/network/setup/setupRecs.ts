@@ -1,9 +1,11 @@
 import { createBlockStream } from "@latticexyz/block-logs-stream";
 import { isDefined } from "@latticexyz/common/utils";
 import { World as RecsWorld } from "@latticexyz/recs";
-import { ResolvedStoreConfig, StoreConfig, Table, resolveConfig } from "@latticexyz/store";
+import { Store as StoreConfig } from "@latticexyz/store";
 import { StorageAdapterBlock } from "@latticexyz/store-sync";
-import { RecsStorageAdapter, recsStorage } from "@latticexyz/store-sync/recs";
+import { recsStorage } from "@latticexyz/store-sync/recs";
+import { storeToV1 } from "@latticexyz/store/config/v2";
+import { ResolvedStoreConfig, Table, resolveConfig } from "@latticexyz/store/internal";
 import storeConfig from "@latticexyz/store/mud.config";
 import worldConfig from "@latticexyz/world/mud.config";
 import { Read } from "@primodiumxyz/sync-stack";
@@ -32,14 +34,14 @@ export const setupRecs = <config extends StoreConfig, extraTables extends Record
   const { mudConfig, publicClient, world, address, otherTables } = args;
 
   const tables = {
-    ...resolveConfig(mudConfig).tables,
+    ...resolveConfig(storeToV1(mudConfig as StoreConfig)).tables,
     ...(otherTables ?? {}),
-  } as ResolvedStoreConfig<config>["tables"] & extraTables;
+  } as ResolvedStoreConfig<storeToV1<config>>["tables"] & extraTables;
 
   const { components } = recsStorage({
     tables,
     world,
-  }) as { components: RecsStorageAdapter<ResolvedStoreConfig<config>["tables"] & extraTables>["components"] };
+  });
 
   const latestBlock$ = createBlockStream({ publicClient, blockTag: "latest" }).pipe(shareReplay(1));
 
@@ -114,8 +116,8 @@ export const setupRecs = <config extends StoreConfig, extraTables extends Record
   }
 
   //include internal mud tables for recs sync
-  const storeTables = resolveConfig(storeConfig).tables;
-  const worldTables = resolveConfig(worldConfig).tables;
+  const storeTables = resolveConfig(storeToV1(storeConfig)).tables;
+  const worldTables = resolveConfig(storeToV1(worldConfig)).tables;
 
   return {
     components,

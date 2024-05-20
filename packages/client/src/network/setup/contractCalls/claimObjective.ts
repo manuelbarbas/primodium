@@ -1,8 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { ampli } from "src/ampli";
-import { execute } from "src/network/actions";
+import { execute } from "src/network/txExecute/txExecute";
 import { MUD } from "src/network/types";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { ObjectiveEntityLookup, ObjectiveEnumLookup, TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { Hex } from "viem";
@@ -15,7 +15,7 @@ export const claimObjective = async (mud: MUD, rockEntity: Entity, rawObjective:
   await execute(
     {
       mud,
-      functionName: "claimObjective",
+      functionName: "Pri_11__claimObjective",
       systemId: getSystemId("ClaimObjectiveSystem"),
       args: [rockEntity as Hex, objective],
       withSession: true,
@@ -25,7 +25,7 @@ export const claimObjective = async (mud: MUD, rockEntity: Entity, rawObjective:
     },
     (receipt) => {
       ampli.systemClaimObjective({
-        objectiveType: getBlockTypeName(ObjectiveEntityLookup[objective]),
+        objectiveType: getEntityTypeName(ObjectiveEntityLookup[objective]),
         ...parseReceipt(receipt),
       });
     }

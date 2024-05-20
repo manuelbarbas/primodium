@@ -1,3 +1,4 @@
+import path from "path";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
@@ -39,9 +40,9 @@ export default defineConfig({
             "@latticexyz/schema-type",
             "@latticexyz/store",
             "@latticexyz/store-sync",
-            "@latticexyz/utils",
             "@latticexyz/world",
           ],
+          phaser: ["phaser"],
         },
       },
     },
@@ -73,5 +74,11 @@ export default defineConfig({
   envDir: "../../",
   css: {
     postcss,
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+      "@game": path.resolve(__dirname, "./src/game"),
+    },
   },
 });

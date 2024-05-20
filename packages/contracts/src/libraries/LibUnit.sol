@@ -1,17 +1,14 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
-import { Position, P_UnitPrototypes, Asteroid, IsActive, P_RawResource, Spawned, ConsumptionRate, OwnedBy, MaxResourceCount, ProducedUnit, ClaimOffset, BuildingType, ProductionRate, P_UnitProdTypes, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, Home, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, P_EnumToPrototype } from "codegen/index.sol";
-
-import { EUnit, EResource } from "src/Types.sol";
+import { Position, Asteroid, IsActive, OwnedBy, MaxResourceCount, ClaimOffset, BuildingType, P_UnitProdTypes, P_RequiredResourcesData, P_RequiredResources, P_IsUtility, UnitCount, ResourceCount, Level, UnitLevel, BuildingType, P_GameConfig, P_GameConfigData, P_Unit, P_UnitProdMultiplier, LastClaimedAt, MaxColonySlots, ColonyShipsInTraining } from "codegen/index.sol";
+import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
+import { EResource } from "src/Types.sol";
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
 import { LibMath } from "libraries/LibMath.sol";
-import { LibStorage } from "libraries/LibStorage.sol";
-import { LibProduction } from "libraries/LibProduction.sol";
-import { ColoniesMap } from "libraries/ColoniesMap.sol";
 import { UnitProductionQueue, UnitProductionQueueData } from "libraries/UnitProductionQueue.sol";
-import { UnitKey, AsteroidOwnedByKey } from "src/Keys.sol";
 import { WORLD_SPEED_SCALE } from "src/constants.sol";
+import { LibColony } from "libraries/LibColony.sol";
 
 library LibUnit {
   /**
@@ -21,7 +18,11 @@ library LibUnit {
    * @notice Checks if the unit exists and if the building can produce the specified unit.
    */
   function checkTrainUnitsRequirements(bytes32 buildingEntity, bytes32 unitPrototype) internal view {
-    require(IsActive.get(buildingEntity), "[TrainUnitsSystem] Can not train units using an in active building");
+    require(IsActive.get(buildingEntity), "[TrainUnitsSystem] Can not train units using an inactive building");
+    require(
+      unitPrototype != ColonyShipPrototypeId || UnitProductionQueue.size(buildingEntity) == 0,
+      "[TrainUnitsSystem] Cannot train more than one colony ship at a time"
+    );
 
     // Determine the prototype of the unit based on its unit key.
     bytes32 buildingType = BuildingType.get(buildingEntity);
@@ -46,61 +47,70 @@ library LibUnit {
   }
 
   /// @notice Claim units from all player's buildings
-  /// @param spaceRockEntity Entity ID of the player
-  function claimUnits(bytes32 spaceRockEntity) internal {
+  /// @param asteroidEntity Entity ID of the player
+  function claimUnits(bytes32 asteroidEntity) internal {
     // get all player buildings that can produce units
-    bytes32[] memory buildings = UnitFactorySet.getAll(spaceRockEntity);
+    bytes32[] memory buildings = UnitFactorySet.getAll(asteroidEntity);
     for (uint256 i = 0; i < buildings.length; i++) {
-      bytes32 building = buildings[i];
-      claimBuildingUnits(building);
+      bytes32 buildingEntity = buildings[i];
+      claimBuildingUnits(buildingEntity);
     }
   }
 
   /// @notice Claim units for a single building
-  /// @param building Entity ID of the building
-  function claimBuildingUnits(bytes32 building) internal {
-    uint256 startTime = LastClaimedAt.get(building) - ClaimOffset.get(building);
-    LastClaimedAt.set(building, block.timestamp);
-    bytes32 asteroid = OwnedBy.get(building);
-    require(Asteroid.getIsAsteroid(asteroid), "[ClaimBuildingUnits]: Asteroid does not exist");
-    bytes32 player = OwnedBy.get(asteroid);
-    bool stillClaiming = !UnitProductionQueue.isEmpty(building);
+  /// @param buildingEntity Entity ID of the building
+  function claimBuildingUnits(bytes32 buildingEntity) internal {
+    uint256 startTime = LastClaimedAt.get(buildingEntity) - ClaimOffset.get(buildingEntity);
+    LastClaimedAt.set(buildingEntity, block.timestamp);
+    bytes32 asteroidEntity = OwnedBy.get(buildingEntity);
+    require(Asteroid.getIsAsteroid(asteroidEntity), "[ClaimBuildingUnits]: Asteroid does not exist");
+    bytes32 playerEntity = OwnedBy.get(asteroidEntity);
+    bool stillClaiming = !UnitProductionQueue.isEmpty(buildingEntity);
     while (stillClaiming) {
-      UnitProductionQueueData memory item = UnitProductionQueue.peek(building);
-      uint256 trainingTime = getUnitBuildTime(building, item.unitId);
+      UnitProductionQueueData memory item = UnitProductionQueue.peek(buildingEntity);
+      uint256 trainingTime = getUnitBuildTime(buildingEntity, item.unitEntity);
       uint256 trainedUnits = item.quantity;
       if (trainingTime > 0) trainedUnits = LibMath.min(item.quantity, ((block.timestamp - startTime) / (trainingTime)));
 
       if (trainedUnits == 0) {
-        ClaimOffset.set(building, (block.timestamp - startTime) % trainingTime);
+        ClaimOffset.set(buildingEntity, (block.timestamp - startTime) % trainingTime);
         return;
       }
       if (trainedUnits == item.quantity) {
-        UnitProductionQueue.dequeue(building);
-        stillClaiming = !UnitProductionQueue.isEmpty(building);
+        UnitProductionQueue.dequeue(buildingEntity);
+        stillClaiming = !UnitProductionQueue.isEmpty(buildingEntity);
         startTime += trainingTime * trainedUnits;
-        if (!stillClaiming) ClaimOffset.set(building, 0);
+        if (!stillClaiming) ClaimOffset.set(buildingEntity, 0);
       } else {
         item.quantity -= trainedUnits;
-        UnitProductionQueue.updateFront(building, item);
-        ClaimOffset.set(building, (block.timestamp - startTime) % trainingTime);
+        UnitProductionQueue.updateFront(buildingEntity, item);
+        ClaimOffset.set(buildingEntity, (block.timestamp - startTime) % trainingTime);
         stillClaiming = false;
       }
-      ProducedUnit.set(player, item.unitId, ProducedUnit.get(player, item.unitId) + trainedUnits);
 
-      increaseUnitCount(asteroid, item.unitId, trainedUnits, false);
+      if (item.unitEntity == ColonyShipPrototypeId) {
+        uint256 asteroidTrainingShipCount = ColonyShipsInTraining.get(asteroidEntity);
+
+        if (asteroidTrainingShipCount < trainedUnits) {
+          // Some previous error has happened such that there are more colony ships being trained than available slots, so we need to mitigate this back to a valid state. Player unlikely to claim a colony ship in this state.
+          trainedUnits = asteroidTrainingShipCount;
+        }
+        ColonyShipsInTraining.set(asteroidEntity, asteroidTrainingShipCount - trainedUnits);
+      }
+
+      increaseUnitCount(asteroidEntity, item.unitEntity, trainedUnits, false);
     }
   }
 
   /// @notice Get the build time for a unit
-  /// @param building Entity ID of the building
+  /// @param buildingEntity Entity ID of the building
   /// @param unitPrototype Unit prototype to check
   /// @return Time in seconds
-  function getUnitBuildTime(bytes32 building, bytes32 unitPrototype) internal view returns (uint256) {
-    uint256 buildingLevel = Level.get(building);
-    bytes32 buildingType = BuildingType.get(building);
+  function getUnitBuildTime(bytes32 buildingEntity, bytes32 unitPrototype) internal view returns (uint256) {
+    uint256 buildingLevel = Level.get(buildingEntity);
+    bytes32 buildingType = BuildingType.get(buildingEntity);
     uint256 multiplier = P_UnitProdMultiplier.get(buildingType, buildingLevel);
-    uint256 unitLevel = UnitLevel.get(Position.getParent(building), unitPrototype);
+    uint256 unitLevel = UnitLevel.get(Position.getParentEntity(buildingEntity), unitPrototype);
     uint256 rawTrainingTime = P_Unit.getTrainingTime(unitPrototype, unitLevel);
     require(multiplier > 0, "Building has no unit production multiplier");
     P_GameConfigData memory config = P_GameConfig.get();
@@ -110,15 +120,22 @@ library LibUnit {
 
   /**
    * @dev Updates the stored utility resources based on the addition or removal of units.
-   * @param spaceRockEntity The identifier of the player.
+   * @param asteroidEntity The identifier of the player.
    * @param unitType The type of unit.
    * @param count The number of units being added or removed.
    * @param add A boolean indicating whether units are being added (true) or removed (false).
    */
-  function updateStoredUtilities(bytes32 spaceRockEntity, bytes32 unitType, uint256 count, bool add) internal {
+  function updateStoredUtilities(bytes32 asteroidEntity, bytes32 unitType, uint256 count, bool add) internal {
     if (count == 0) return;
-    bytes32 playerEntity = OwnedBy.get(spaceRockEntity);
-    uint256 unitLevel = UnitLevel.get(spaceRockEntity, unitType);
+    uint256 unitLevel = UnitLevel.get(asteroidEntity, unitType);
+
+    // Check the player's colony slot maxColonySlots
+    if (add && (unitType == ColonyShipPrototypeId)) {
+      bytes32 playerEntity = OwnedBy.get(asteroidEntity);
+      uint256 occupiedSlots = LibColony.getColonyShipsPlusAsteroids(playerEntity);
+      uint256 maxColonySlots = MaxColonySlots.get(playerEntity);
+      require(occupiedSlots + count <= maxColonySlots, "[LibUnit] Not enough colony slots");
+    }
 
     P_RequiredResourcesData memory resources = P_RequiredResources.get(unitType, unitLevel);
     for (uint8 i = 0; i < resources.resources.length; i++) {
@@ -126,63 +143,55 @@ library LibUnit {
       if (!P_IsUtility.get(resource)) continue;
       uint256 requiredAmount = resources.amounts[i] * count;
       if (requiredAmount == 0) continue;
-      uint256 currentAmount = ResourceCount.get(spaceRockEntity, resource);
+      uint256 currentAmount = ResourceCount.get(asteroidEntity, resource);
 
       if (add) {
         require(currentAmount >= requiredAmount, "[LibUnit] Not enough utility resources");
-        ResourceCount.set(spaceRockEntity, resource, currentAmount - requiredAmount);
+        ResourceCount.set(asteroidEntity, resource, currentAmount - requiredAmount);
       } else {
         require(
-          currentAmount + requiredAmount <= MaxResourceCount.get(spaceRockEntity, resource),
+          currentAmount + requiredAmount <= MaxResourceCount.get(asteroidEntity, resource),
           "[LibUnit] Can't store more utility resources"
         );
-        ResourceCount.set(spaceRockEntity, resource, currentAmount + requiredAmount);
+        ResourceCount.set(asteroidEntity, resource, currentAmount + requiredAmount);
       }
     }
   }
 
-  function getCapitalShipCostMultiplier(bytes32 playerEntity) internal view returns (uint256) {
-    uint256 multiplier = getCapitalShipsPlusAsteroids(playerEntity);
-    return 2 ** multiplier;
-  }
-
-  function getCapitalShipsPlusAsteroids(bytes32 playerEntity) internal view returns (uint256) {
-    bytes32[] memory ownedAsteroids = ColoniesMap.getAsteroidIds(playerEntity, AsteroidOwnedByKey);
-    uint256 ret = 0;
-    for (uint256 i = 0; i < ownedAsteroids.length; i++) {
-      uint256 ships = MaxResourceCount.get(ownedAsteroids[i], uint8(EResource.U_CapitalShipCapacity)) -
-        ResourceCount.get(ownedAsteroids[i], uint8(EResource.U_CapitalShipCapacity));
-
-      ret += ships;
-    }
-    // subtract one so the first asteroid doesn't count
-    return ret + ownedAsteroids.length - 1;
-  }
-
   /**
-   * @dev Increases the count of a specific unit type for a player's rock entity.
-   * @param rockEntity The identifier of the player's rock entity.
+   * @dev Increases the count of a specific unit type for a player's asteroid.
+   * @param asteroidEntity The identifier of the player's asteroid entity.
    * @param unitType The type of unit to increase.
    * @param unitCount The number of units to increase.
    */
-  function increaseUnitCount(bytes32 rockEntity, bytes32 unitType, uint256 unitCount, bool updatesUtility) internal {
+  function increaseUnitCount(
+    bytes32 asteroidEntity,
+    bytes32 unitType,
+    uint256 unitCount,
+    bool updatesUtility
+  ) internal {
     if (unitCount == 0) return;
-    uint256 prevUnitCount = UnitCount.get(rockEntity, unitType);
-    UnitCount.set(rockEntity, unitType, prevUnitCount + unitCount);
-    if (updatesUtility) updateStoredUtilities(rockEntity, unitType, unitCount, true);
+    uint256 prevUnitCount = UnitCount.get(asteroidEntity, unitType);
+    UnitCount.set(asteroidEntity, unitType, prevUnitCount + unitCount);
+    if (updatesUtility) updateStoredUtilities(asteroidEntity, unitType, unitCount, true);
   }
 
   /**
-   * @dev Decreases the count of a specific unit type for a player's rock entity.
-   * @param rockEntity The identifier of the player's rock entity.
+   * @dev Decreases the count of a specific unit type for a player's asteroid entity.
+   * @param asteroidEntity The identifier of the player's asteroid entity.
    * @param unitType The type of unit to decrease.
    * @param unitCount The number of units to decrease.
    */
-  function decreaseUnitCount(bytes32 rockEntity, bytes32 unitType, uint256 unitCount, bool updatesUtility) internal {
+  function decreaseUnitCount(
+    bytes32 asteroidEntity,
+    bytes32 unitType,
+    uint256 unitCount,
+    bool updatesUtility
+  ) internal {
     if (unitCount == 0) return;
-    uint256 currUnitCount = UnitCount.get(rockEntity, unitType);
+    uint256 currUnitCount = UnitCount.get(asteroidEntity, unitType);
     require(currUnitCount >= unitCount, "[LibUnit] Not enough units to decrease");
-    UnitCount.set(rockEntity, unitType, currUnitCount - unitCount);
-    if (updatesUtility) updateStoredUtilities(rockEntity, unitType, unitCount, false);
+    UnitCount.set(asteroidEntity, unitType, currUnitCount - unitCount);
+    if (updatesUtility) updateStoredUtilities(asteroidEntity, unitType, unitCount, false);
   }
 }

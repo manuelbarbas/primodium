@@ -1,7 +1,4 @@
-import { Gesture } from "@use-gesture/vanilla";
-import { BehaviorSubject, share, Subject } from "rxjs";
-import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { Coord, GestureState, ObjectPool } from "@latticexyz/phaserx/src/types";
+import { BehaviorSubject, share } from "rxjs";
 import { CameraConfig } from "../../types";
 
 export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, options: CameraConfig) {
@@ -14,19 +11,11 @@ export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, option
     share()
   ) as BehaviorSubject<Phaser.Cameras.Scene2D.Camera["worldView"]>;
   const zoom$ = new BehaviorSubject<number>(phaserCamera.zoom).pipe(share()) as BehaviorSubject<number>;
-  const pinchStream$ = new Subject<GestureState<"onPinch">>();
-
-  const gesture = new Gesture(
-    phaserCamera.scene.game.canvas,
-    {
-      onPinch: (state) => pinchStream$.next(state),
-    },
-    {}
-  );
 
   const onResize = () => {
     requestAnimationFrame(() => worldView$.next(phaserCamera.worldView));
   };
+
   phaserCamera.scene.scale.addListener("resize", onResize);
 
   function setZoom(zoom: number) {
@@ -43,20 +32,6 @@ export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, option
     });
   }
 
-  function ignore(objectPool: ObjectPool, ignore: boolean) {
-    objectPool.ignoreCamera(phaserCamera.id, ignore);
-  }
-
-  function centerOnCoord(tileCoord: Coord, tileWidth: number, tileHeight: number) {
-    const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
-    centerOn(pixelCoord.x, pixelCoord.y);
-  }
-
-  function centerOn(x: number, y: number) {
-    phaserCamera.centerOn(x, y);
-    requestAnimationFrame(() => worldView$.next(phaserCamera.worldView));
-  }
-
   function setScroll(x: number, y: number) {
     phaserCamera.setScroll(x, y);
     requestAnimationFrame(() => worldView$.next(phaserCamera.worldView));
@@ -66,15 +41,11 @@ export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, option
     phaserCamera,
     worldView$,
     zoom$,
-    ignore,
     dispose: () => {
-      pinchStream$.unsubscribe();
       zoom$.unsubscribe();
-      gesture.destroy();
+      worldView$.unsubscribe();
       phaserCamera.scene.scale.removeListener("resize", onResize);
     },
-    centerOnCoord,
-    centerOn,
     setScroll,
     setZoom,
   };

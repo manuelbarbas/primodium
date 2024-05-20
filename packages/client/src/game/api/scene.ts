@@ -1,32 +1,38 @@
-import { Scenes } from "@game/constants";
-import { createGame } from "engine/api";
+import { createNotificationApi } from "@/game/api/notification";
 import { Scene } from "engine/types";
+import { createAudioApi } from "./audio";
+import { createCameraApi } from "./camera";
+import { createFxApi } from "./fx";
+import { createHooksApi } from "./hooks";
+import { createInputApi } from "./input";
+import { createSpriteApi } from "./sprite";
+import { createObjectApi } from "@/game/api/objects";
+import { MUD } from "@/network/types";
+import { createUtilApi } from "@/game/api/utils";
 
-export function createSceneApi(game: Awaited<ReturnType<typeof createGame>>) {
-  function getScene(scene: Scenes) {
-    return game.sceneManager.scenes.get(scene);
-  }
-  function getConfig(scene: Scenes) {
-    const config = game.sceneManager.scenes.get(scene)?.config;
+export type SceneApi = ReturnType<typeof createSceneApi>;
+export type PrimodiumScene = SceneApi & { runSystems?: (mud: MUD) => void; isPrimary?: boolean };
 
-    if (!config) throw new Error(`Scene ${scene} does not exist`);
+export function createSceneApi(scene: Scene) {
+  const cameraApi = createCameraApi(scene);
 
-    return config;
-  }
-
-  async function transitionToScene(
-    origin: Scenes,
-    target: Scenes,
-    duration = 0,
-    onTransitionStart?: (originScene: Scene, targetScene: Scene) => undefined,
-    onTransitionEnd?: (originScene: Scene, targetScene: Scene) => undefined
-  ) {
-    await game.sceneManager.transitionToScene(origin, target, duration, onTransitionStart, onTransitionEnd);
-  }
-
-  return {
-    getConfig,
-    getScene,
-    transitionToScene,
+  const apiObject = {
+    phaserScene: scene.phaserScene,
+    audio: createAudioApi(scene),
+    config: scene.config,
+    camera: cameraApi,
+    dispose: scene.dispose,
+    fx: createFxApi(scene),
+    hooks: createHooksApi(scene),
+    input: createInputApi(scene),
+    notify: createNotificationApi(scene),
+    objects: createObjectApi(scene),
+    sprite: createSpriteApi(scene),
+    utils: createUtilApi(scene),
+    tiled: scene.tiled,
   };
+
+  apiObject.audio.initializeAudioVolume();
+
+  return apiObject;
 }

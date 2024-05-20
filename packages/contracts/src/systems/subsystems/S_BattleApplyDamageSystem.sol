@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { LibFleetCombat } from "libraries/fleet/LibFleetCombat.sol";
+import { LibCombat } from "libraries/LibCombat.sol";
 
 contract S_BattleApplyDamageSystem is PrimodiumSystem {
   function applyDamage(
-    bytes32 battleId,
+    bytes32 battleEntity,
     bytes32 attackingPlayer,
     bytes32 defender,
     uint256 damage
   ) public returns (uint256) {
-    return LibFleetCombat.applyDamage(battleId, attackingPlayer, defender, damage);
+    return LibCombat.applyDamage(battleEntity, attackingPlayer, defender, damage);
   }
 }

@@ -1,12 +1,11 @@
-import { createChunks, createCulling, generateFrames } from "@latticexyz/phaserx";
-
 import { SceneConfig } from "../../types";
-import { createPhaserScene } from "../util/createPhaserScene";
+import { createTilemap } from "./createTilemap";
 import { createCamera } from "./createCamera";
 import createInput from "./createInput";
-import { createObjectPool } from "./createObjectPool";
-import { createScriptManager } from "./createScriptManager";
-import { createTilemap } from "./createTilemap";
+import { StaticObjectManager } from "./StaticObjectManager";
+import { generateFrames } from "../util/generateFrames";
+import { createPhaserScene } from "../util/createPhaserScene";
+import { resizePhaserGame } from "../util/resizePhaserGame";
 
 type PhaserAudio =
   | Phaser.Sound.HTML5AudioSoundManager
@@ -39,7 +38,9 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
     defaultZoom,
   });
 
-  const tilemap = createTilemap(scene, tileWidth, tileHeight, defaultKey, tilemapConfig);
+  const objects = new StaticObjectManager(camera, cullingChunkSize);
+
+  const tiled = createTilemap(scene, tileWidth, tileHeight, defaultKey, tilemapConfig);
 
   //create sprite animations
   if (animations) {
@@ -53,34 +54,11 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
     }
   }
 
-  // Setup object pool
-  const objectPool = createObjectPool(scene);
-
-  // Setup chunks for viewport culling
-  const cullingChunks = createChunks(camera.worldView$, cullingChunkSize * tileWidth);
-
-  const scriptManager = createScriptManager(scene);
-
-  // const debug = createDebugger(
-  //   camera,
-  //   cullingChunks,
-  //   scene,
-  //   objectPool,
-  //   tilemap.map
-  // );
-
-  // Setup culling
-  const culling = createCulling(
-    //override since we modified embodied entity
-    objectPool as any,
-    camera,
-    cullingChunks
-  );
-
   const input = createInput(scene.input);
 
-  // camera.centerOn(0, 0);
   camera.setZoom(defaultZoom);
+
+  const resizer = resizePhaserGame(phaserGame);
 
   /* -------------------------- Create Audio Channels ------------------------- */
   /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
@@ -95,13 +73,11 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
 
   return {
     phaserScene: scene,
-    tilemap,
-    scriptManager,
+    tiled,
     camera,
-    culling,
-    objectPool,
     config,
     input,
+    objects,
     audio: {
       music,
       sfx,
@@ -109,12 +85,12 @@ export const createScene = async (phaserGame: Phaser.Game, config: SceneConfig, 
     },
     dispose: () => {
       input.dispose();
-      tilemap.dispose();
       camera.dispose();
-      culling.dispose();
+      objects.dispose();
       music.destroy();
       sfx.destroy();
       ui.destroy();
+      resizer.dispose();
     },
   };
 };

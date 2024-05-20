@@ -1,8 +1,10 @@
 import { Entity, Has, HasValue, defineComponentSystem, namespaceWorld, runQuery } from "@latticexyz/recs";
 import { getUnitTrainingTime } from "src/util/unit";
+import { getAsteroidDroidCount } from "src/util/droidRegen";
 import { Hex } from "viem";
 import { components } from "../components";
 import { world } from "../world";
+import { EntityType } from "@/util/constants";
 // import { SetupResult } from "../types";
 export function createHangar(spaceRock: Entity) {
   const units: Map<Entity, bigint> = new Map();
@@ -24,6 +26,8 @@ export function createHangar(spaceRock: Entity) {
     units.set(unit as Entity, (units.get(unit as Entity) ?? 0n) + count);
   });
 
+  units.set(EntityType.Droid, getAsteroidDroidCount(spaceRock));
+
   const value = { units: [...units.keys()], counts: [...units.values()] };
   components.Hangar.set(value, spaceRock);
   return units;
@@ -34,7 +38,7 @@ function getTrainedUnclaimedUnits(spaceRock: Entity) {
   const query = [
     Has(components.TrainingQueue),
     HasValue(components.Position, {
-      parent: spaceRock,
+      parentEntity: spaceRock,
     }),
   ];
   const buildings = runQuery(query);
@@ -47,13 +51,13 @@ function getTrainedUnclaimedUnits(spaceRock: Entity) {
       components.LastClaimedAt.get(building, { value: 0n }).value -
       components.ClaimOffset.get(building, { value: 0n }).value;
 
-    const queueUnits = components.QueueUnits.getWithKeys({ entity: building as Hex });
+    const queueUnits = components.Meta_UnitProductionQueue.getWithKeys({ entity: building as Hex });
     if (!queueUnits || !owner || !startTime) return components.Hangar.remove(building);
     for (let i = queueUnits.front; i <= queueUnits.back; i++) {
-      const update = components.QueueItemUnits.getWithKeys({ entity: building as Hex, index: i });
+      const update = components.Value_UnitProductionQueue.getWithKeys({ entity: building as Hex, index: i });
       if (!update) continue;
 
-      const trainingTime = getUnitTrainingTime(owner as Entity, building, update.unitId as Entity);
+      const trainingTime = getUnitTrainingTime(owner as Entity, building, update.unitEntity as Entity);
       let trainedUnits = update.quantity;
       const now = components.Time.get()?.value ?? 0n;
       if (trainingTime > 0) trainedUnits = (now - startTime) / trainingTime;
@@ -63,7 +67,7 @@ function getTrainedUnclaimedUnits(spaceRock: Entity) {
       if (trainedUnits > update.quantity) {
         trainedUnits = update.quantity;
       }
-      units.set(update.unitId as Entity, trainedUnits);
+      units.set(update.unitEntity as Entity, trainedUnits);
 
       startTime += trainingTime * trainedUnits;
     }

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, memo } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
 import "react-toastify/dist/ReactToastify.min.css";
 import { Hex } from "viem";
@@ -47,7 +47,7 @@ function SetupResultProvider() {
   useEffect(() => {
     if (!network || !playerAccount || mounted.current) return;
     // https://vitejs.dev/guide/env-and-mode.html
-    if (import.meta.env.DEV) {
+    if (import.meta.env.PRI_DEV === "true") {
       import("@latticexyz/dev-tools").then(({ mount: mountDevTools }) =>
         mountDevTools({
           config: network.mudConfig,

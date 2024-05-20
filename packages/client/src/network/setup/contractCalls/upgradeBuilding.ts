@@ -1,33 +1,37 @@
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
 import { ampli } from "src/ampli";
-import { execute } from "src/network/actions";
 import { components } from "src/network/components";
+import { TxQueueOptions } from "src/network/components/customComponents/TransactionQueueComponent";
+import { execute } from "src/network/txExecute/txExecute";
 import { MUD } from "src/network/types";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { bigintToNumber } from "src/util/number";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
-export const upgradeBuilding = async (mud: MUD, coord: Coord) => {
-  const asteroid = components.ActiveRock.get()?.value;
-  if (!asteroid) return;
+export const upgradeBuilding = async (
+  mud: MUD,
+  building: Entity,
+  options?: Partial<TxQueueOptions<TransactionQueueType.Upgrade>>
+) => {
+  const position = components.Position.get(building);
+  if (!position) return;
 
-  const position = { ...coord, parent: asteroid as Hex };
   await execute(
     {
       mud,
-      functionName: "upgradeBuilding",
+      functionName: "Pri_11__upgradeBuilding",
       systemId: getSystemId("UpgradeBuildingSystem"),
-      args: [position],
+      args: [building as Hex],
       withSession: true,
       options: { gas: 2_500_000n },
     },
     {
-      id: hashEntities(TransactionQueueType.Upgrade, coord.x, coord.y),
+      id: hashEntities(TransactionQueueType.Upgrade, building),
       type: TransactionQueueType.Upgrade,
+      ...options,
     },
     (receipt) => {
       const building = components.SelectedBuilding.get()?.value;
@@ -35,9 +39,9 @@ export const upgradeBuilding = async (mud: MUD, coord: Coord) => {
       const currLevel = components.Level.get(building)?.value || 0n;
 
       ampli.systemUpgrade({
-        asteroidCoord: asteroid!,
-        buildingType: getBlockTypeName(buildingType),
-        coord: [coord.x, coord.y],
+        asteroidCoord: position.parentEntity!,
+        buildingType: getEntityTypeName(buildingType),
+        coord: [position.x, position.y],
         currLevel: bigintToNumber(currLevel),
         ...parseReceipt(receipt),
       });

@@ -1,7 +1,7 @@
 import { resourceToHex } from "@latticexyz/common";
-import { KeySchema, SchemaToPrimitives } from "@latticexyz/protocol-parser";
+import { KeySchema, SchemaToPrimitives } from "@latticexyz/protocol-parser/internal";
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 import {
   Hex,
   concatHex,
@@ -14,7 +14,8 @@ import {
   toHex,
 } from "viem";
 
-export const getSystemId = (name: string, namespace = "") => resourceToHex({ type: "system", namespace, name });
+export const getSystemId = (name: string, namespace = "Pri_11") =>
+  resourceToHex({ type: "system", name, namespace: namespace.toLowerCase() == "core" ? "" : namespace });
 
 export const addressToEntity = (address: Hex) => {
   return encodeAbiParameters([{ type: "address" }], [address]) as Entity;

@@ -1,18 +1,24 @@
 import { ReactNode, memo, createContext, useContext, useState, FC, useEffect, useRef } from "react";
-import { Button as _Button, IconButton as _IconButton } from "./Button";
+import { Button as _Button } from "./Button";
+import { SecondaryCard } from "./Card";
+import { IconLabel } from "@/components/core/IconLabel";
 
 interface TabProps {
   children?: ReactNode;
   defaultIndex?: number;
   className?: string;
-  onChange?: () => void;
+  onChange?: (index?: number) => void;
+  persistIndexKey?: string;
 }
 
 interface IndexContextValue {
   index: number | undefined;
   setIndex: React.Dispatch<React.SetStateAction<number | undefined>>;
+  persistIndexKey?: string;
 }
 
+//TODO: Works for now. Move into a simple localStorage hook down the line.
+const persistedIndexMap = new Map<string, number | undefined>();
 const IndexContext = createContext<IndexContextValue | undefined>(undefined);
 
 const useIndex = (): IndexContextValue => {
@@ -35,41 +41,78 @@ const Pane: FC<{
     return null;
   }
 
-  return fragment ? <>{children}</> : <div className={`overflow-y-auto scrollbar ${className} `}>{children}</div>;
+  return fragment ? (
+    <>{children}</>
+  ) : (
+    <SecondaryCard className={`overflow-y-auto scrollbar overflow ${className}`}>{children}</SecondaryCard>
+  );
 });
 
-const Button: FC<React.ComponentProps<typeof _Button> & { index: number; togglable?: boolean; showActive?: boolean }> =
-  memo((props) => {
-    const { index: currIndex, setIndex } = useIndex();
-    const { togglable = false, index, showActive = false } = props;
-
+const Button: FC<React.ComponentProps<typeof _Button> & { index: number; togglable?: boolean }> = memo(
+  ({ togglable = false, index, ...props }) => {
+    const { index: currIndex, setIndex, persistIndexKey } = useIndex();
     const selected = currIndex === index;
 
     return (
       <_Button
         {...props}
-        selected={selected && showActive}
+        selected={selected}
         onClick={(e) => {
-          setIndex(selected && togglable ? undefined : index);
+          const _index = selected && togglable ? undefined : index;
+          setIndex(_index);
           if (props.onClick) props.onClick(e);
+          if (persistIndexKey) persistedIndexMap.set(persistIndexKey, _index);
         }}
       />
     );
-  });
+  }
+);
 
-const IconButton: React.FC<React.ComponentProps<typeof _IconButton> & { index: number }> = memo((props) => {
-  const { index: currIndex, setIndex } = useIndex();
-  const { index } = props;
-
+const IconButton: FC<
+  React.ComponentProps<typeof _Button> & { index: number; togglable?: boolean; icon: string; text: string }
+> = memo(({ togglable = false, index, icon, text, ...props }) => {
+  const { index: currIndex, setIndex, persistIndexKey } = useIndex();
   const selected = currIndex === index;
 
   return (
-    <_IconButton
+    <_Button
       {...props}
       selected={selected}
-      onClick={() => {
-        setIndex(selected ? undefined : index);
-        if (props.onClick) props.onClick();
+      onClick={(e) => {
+        const _index = selected && togglable ? undefined : index;
+        setIndex(_index);
+        if (props.onClick) props.onClick(e);
+        if (persistIndexKey) persistedIndexMap.set(persistIndexKey, _index);
+      }}
+    >
+      <IconLabel imageUri={icon} text={text} hideText={!selected} className="px-2" />
+    </_Button>
+  );
+});
+
+const PrevButton: FC<React.ComponentProps<typeof _Button>> = memo((props) => {
+  const { index, setIndex } = useIndex();
+
+  return (
+    <_Button
+      {...props}
+      onClick={(e) => {
+        setIndex(index !== undefined ? Math.max(index - 1, 0) : 0);
+        if (props.onClick) props.onClick(e);
+      }}
+    />
+  );
+});
+
+const NextButton: FC<React.ComponentProps<typeof _Button> & { maxIndex: number }> = memo(({ maxIndex, ...props }) => {
+  const { index, setIndex } = useIndex();
+
+  return (
+    <_Button
+      {...props}
+      onClick={(e) => {
+        setIndex(index !== undefined ? Math.min(index + 1, maxIndex) : 0);
+        if (props.onClick) props.onClick(e);
       }}
     />
   );
@@ -77,10 +120,14 @@ const IconButton: React.FC<React.ComponentProps<typeof _IconButton> & { index: n
 
 export const Tabs: FC<TabProps> & {
   Button: typeof Button;
-  IconButton: typeof IconButton;
   Pane: typeof Pane;
-} = ({ children, defaultIndex = 0, className, onChange }) => {
-  const [currentIndex, setCurrentIndex] = useState<number | undefined>(defaultIndex);
+  IconButton: typeof IconButton;
+  PrevButton: typeof PrevButton;
+  NextButton: typeof NextButton;
+} = ({ children, defaultIndex = 0, className, onChange, persistIndexKey }) => {
+  const [currentIndex, setCurrentIndex] = useState<number | undefined>(
+    persistedIndexMap.has(persistIndexKey ?? "") ? persistedIndexMap.get(persistIndexKey ?? "") : defaultIndex
+  );
 
   // Ref to check if it's the first render
   const initialRender = useRef(true);
@@ -92,16 +139,18 @@ export const Tabs: FC<TabProps> & {
       return;
     }
 
-    if (onChange) onChange();
+    if (onChange) onChange(currentIndex);
   }, [currentIndex, onChange]);
 
   return (
-    <IndexContext.Provider value={{ index: currentIndex, setIndex: setCurrentIndex }}>
-      <div className={`gap-1 ${className}`}>{children}</div>
+    <IndexContext.Provider value={{ index: currentIndex, setIndex: setCurrentIndex, persistIndexKey }}>
+      <div className={`${className}`}>{children}</div>
     </IndexContext.Provider>
   );
 };
 
 Tabs.Button = Button;
-Tabs.IconButton = IconButton;
 Tabs.Pane = Pane;
+Tabs.IconButton = IconButton;
+Tabs.PrevButton = PrevButton;
+Tabs.NextButton = NextButton;

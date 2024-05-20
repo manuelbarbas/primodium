@@ -1,44 +1,50 @@
 // MODIFIED FROM LATTICEXYZ/PHASERX
 // https://github.com/latticexyz/mud/blob/main/packages/phaserx/src/createInput.ts
 
-import { Observable, Subject, bufferCount, filter, fromEvent, map, merge, throttleTime } from "rxjs";
-import { observable, reaction, runInAction } from "mobx";
+import { Observable, bufferCount, filter, fromEvent, map, merge, tap, throttleTime } from "rxjs";
 import Phaser from "phaser";
 import { Key } from "../../types";
+
+const enabled = {
+  value: true,
+  current: () => enabled.value,
+  set: (value: boolean) => (enabled.value = value),
+};
 
 export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
   const disposers = new Set<() => void>();
   const phaserKeys = new Map<Key, Phaser.Input.Keyboard.Key>();
-  const enabled = { current: true };
 
   inputPlugin.mouse?.disableContextMenu();
 
   function disableInput() {
-    enabled.current = false;
+    enabled.set(false);
     if (!phaserKeyboard) return;
 
     phaserKeyboard.disableGlobalCapture();
     phaserKeyboard.enabled = false;
     inputPlugin.enabled = false;
+    // inputPlugin.manager.enabled = false;
   }
 
   function enableInput() {
-    enabled.current = true;
+    enabled.set(true);
     if (!phaserKeyboard) return;
 
     phaserKeyboard?.enableGlobalCapture();
     phaserKeyboard.enabled = true;
     inputPlugin.enabled = true;
+    // inputPlugin.manager.enabled = true;
   }
 
   function setCursor(cursor: string) {
     inputPlugin.setDefaultCursor(cursor);
   }
 
-  const keyboard$ = new Subject<Phaser.Input.Keyboard.Key>();
+  // const keyboard$ = new Subject<Phaser.Input.Keyboard.Key>();
 
   const pointermove$ = fromEvent(inputPlugin.scene.scale.canvas, "mousemove").pipe(
-    filter(() => enabled.current && inputPlugin.scene.scene.isActive()),
+    filter(() => enabled.current() && inputPlugin.scene.scene.isActive()),
     map(() => {
       inputPlugin.manager.activePointer.updateWorldPoint(inputPlugin.scene.cameras.main);
       return inputPlugin.manager?.activePointer;
@@ -51,7 +57,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     pointer: Phaser.Input.Pointer;
     event: MouseEvent;
   }> = fromEvent(inputPlugin.scene.scale.canvas, "pointerdown").pipe(
-    filter(() => enabled.current && inputPlugin.scene.scene.isActive()),
+    filter(() => enabled.current() && inputPlugin.scene.scene.isActive()),
     map((event) => ({
       pointer: inputPlugin.manager?.activePointer,
       event: event as MouseEvent,
@@ -62,7 +68,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     pointer: Phaser.Input.Pointer;
     event: MouseEvent;
   }> = fromEvent(inputPlugin.scene.scale.canvas, "pointerup").pipe(
-    filter(() => enabled.current && inputPlugin.scene.scene.isActive()),
+    filter(() => enabled.current() && inputPlugin.scene.scene.isActive()),
     map((event) => ({
       pointer: inputPlugin.manager?.activePointer,
       event: event as MouseEvent,
@@ -71,7 +77,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
 
   // Click stream
   const click$ = merge(pointerdown$, pointerup$).pipe(
-    filter(() => enabled.current && inputPlugin.scene.scene.isActive()),
+    filter(() => enabled.current() && inputPlugin.scene.scene.isActive()),
     map<{ pointer: Phaser.Input.Pointer; event: MouseEvent }, [boolean, number]>(({ event }) => [
       event.type === "pointerdown",
       Date.now(),
@@ -88,7 +94,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
 
   // Double click stream
   const doubleClick$ = pointerdown$.pipe(
-    filter(() => enabled.current && inputPlugin.scene.scene.isActive()),
+    filter(() => enabled.current() && inputPlugin.scene.scene.isActive()),
     map(() => ({
       time: Date.now(),
     })),
@@ -99,47 +105,25 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     }),
     throttleTime(250),
     map(() => inputPlugin.manager?.activePointer),
-    filter((pointer) => pointer?.downElement?.nodeName === "CANVAS")
+    filter((pointer) => pointer?.downElement?.nodeName === "CANVAS"),
+    tap(() => {
+      inputPlugin.manager.activePointer.updateWorldPoint(inputPlugin.scene.cameras.main);
+    })
   );
 
   // Right click stream
   const rightClick$ = merge(pointerdown$, pointerup$).pipe(
-    filter(({ pointer }) => enabled.current && pointer.rightButtonDown() && inputPlugin.scene.scene.isActive()),
+    filter(({ pointer }) => enabled.current() && pointer.rightButtonDown() && inputPlugin.scene.scene.isActive()),
     map(() => inputPlugin.manager?.activePointer), // Return the current pointer
     filter((pointer) => pointer?.downElement?.nodeName === "CANVAS")
   );
 
-  const pressedKeys = observable(new Set<Key>());
+  // const pressedKeys = new BehaviorSubject<Set<Key>>(new Set<Key>());
   const phaserKeyboard = inputPlugin.keyboard;
   const codeToKey = new Map<number, Key>();
 
   // Listen to all keys
   for (const key of Object.keys(Phaser.Input.Keyboard.KeyCodes)) addKey(key);
-
-  // Subscriptions
-  const keySub = keyboard$
-    .pipe(filter(() => enabled.current && inputPlugin.scene.scene.isActive()))
-    .subscribe((key) => {
-      const keyName = codeToKey.get(key.keyCode);
-      if (!keyName) return;
-      runInAction(() => {
-        if (key.isDown) pressedKeys.add(keyName);
-        if (key.isUp) pressedKeys.delete(keyName);
-      });
-    });
-  disposers.add(() => keySub?.unsubscribe());
-
-  const pointerSub = merge(pointerdown$, pointerup$).subscribe(({ pointer }) => {
-    runInAction(() => {
-      if (pointer.leftButtonDown()) pressedKeys.add("POINTER_LEFT");
-      else pressedKeys.delete("POINTER_LEFT");
-
-      if (pointer.rightButtonDown()) pressedKeys.add("POINTER_RIGHT");
-      else pressedKeys.delete("POINTER_RIGHT");
-    });
-    //
-  });
-  disposers.add(() => pointerSub?.unsubscribe());
 
   // Adds a key to include in the state
   function addKey(key: string) {
@@ -158,19 +142,6 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
 
     keyObj.removeAllListeners();
     keyObj.emitOnRepeat = true;
-    keyObj.on("down", (keyEvent: Phaser.Input.Keyboard.Key) => keyboard$.next(keyEvent));
-    keyObj.on("up", (keyEvent: Phaser.Input.Keyboard.Key) => keyboard$.next(keyEvent));
-  }
-
-  function onKeyPress(keySelector: (pressedKeys: Set<Key>) => boolean, callback: () => void) {
-    const disposer = reaction(
-      () => keySelector(pressedKeys),
-      (passes) => {
-        if (passes) callback();
-      },
-      { fireImmediately: true }
-    );
-    disposers.add(disposer);
   }
 
   function dispose() {
@@ -181,7 +152,6 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
   }
 
   return {
-    keyboard$: keyboard$.asObservable(),
     pointermove$,
     pointerdown$,
     pointerup$,
@@ -190,13 +160,11 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     phaserKeys,
     doubleClick$,
     rightClick$,
-    pressedKeys,
     dispose,
     disableInput,
     enableInput,
     setCursor,
     enabled,
-    onKeyPress,
   };
 }
 

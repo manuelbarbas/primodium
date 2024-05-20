@@ -1,19 +1,23 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
-import { entityToAddress } from "src/utils.sol";
 // tables
-import { IsActive, HasBuiltBuilding, Asteroid, P_UnitProdTypes, P_EnumToPrototype, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, Children, OwnedBy, P_Blueprint } from "codegen/index.sol";
+import { TilePositions, IsActive, Asteroid, P_UnitProdTypes, P_MaxLevel, Home, P_RequiredTile, P_RequiredBaseLevel, P_Terrain, P_AsteroidData, P_Asteroid, Spawned, DimensionsData, Dimensions, PositionData, Level, BuildingType, Position, LastClaimedAt, OwnedBy, P_Blueprint, P_HasStarmapper } from "codegen/index.sol";
 
 // libraries
+import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { LibEncode } from "libraries/LibEncode.sol";
+import { LibStorage } from "libraries/LibStorage.sol";
+import { LibProduction } from "libraries/LibProduction.sol";
+
 import { UnitFactorySet } from "libraries/UnitFactorySet.sol";
+import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
 
 // types
-import { BuildingKey, BuildingTileKey, ExpansionKey } from "src/Keys.sol";
-import { Bounds, EBuilding, EResource } from "src/Types.sol";
+import { BuildingKey, ExpansionKey } from "src/Keys.sol";
+import { Bounds, EResource } from "src/Types.sol";
 
-import { MainBasePrototypeId } from "codegen/Prototypes.sol";
+import { MainBasePrototypeId, WormholeBasePrototypeId, StarmapperPrototypeId } from "codegen/Prototypes.sol";
 
 library LibBuilding {
   /**
@@ -32,11 +36,15 @@ library LibBuilding {
   function checkDestroyRequirements(bytes32 playerEntity, bytes32 buildingEntity) internal view {
     bytes32 buildingPrototype = BuildingType.get(buildingEntity);
 
-    require(buildingPrototype != MainBasePrototypeId, "[Destroy] Cannot destroy main base");
     require(
-      OwnedBy.get(Position.getParent(buildingEntity)) == playerEntity,
+      buildingPrototype != MainBasePrototypeId && buildingPrototype != WormholeBasePrototypeId,
+      "[Destroy] Cannot destroy main base"
+    );
+    require(
+      OwnedBy.get(Position.getParentEntity(buildingEntity)) == playerEntity,
       "[Destroy] Only owner can destroy building"
     );
+    require(UnitProductionQueue.isEmpty(buildingEntity), "[Destroy] Cannot destroy building with units in production");
   }
 
   /**
@@ -51,16 +59,24 @@ library LibBuilding {
     PositionData memory coord
   ) internal view {
     require(Spawned.get(playerEntity), "[BuildSystem] Player has not spawned");
-    if (buildingPrototype == MainBasePrototypeId) {
+    if (buildingPrototype == MainBasePrototypeId || buildingPrototype == WormholeBasePrototypeId) {
       require(
-        Home.get(coord.parent) == bytes32(0),
-        "[BuildSystem] Cannot build more than one main base per space rock"
+        Home.get(coord.parentEntity) == bytes32(0),
+        "[BuildSystem] Cannot build more than one main base per asteroid"
       );
     }
-    require(OwnedBy.get(coord.parent) == playerEntity, "[BuildSystem] You can only build on an asteroid you control");
-    require(!Spawned.get(getBuildingFromCoord(coord)), "[BuildSystem] Building already exists");
+    if (buildingPrototype == StarmapperPrototypeId) {
+      require(
+        P_HasStarmapper.get(coord.parentEntity) == false,
+        "[BuildSystem] Cannot build more than one starmapper per asteroid"
+      );
+    }
     require(
-      LibBuilding.hasRequiredBaseLevel(coord.parent, buildingPrototype, 1),
+      OwnedBy.get(coord.parentEntity) == playerEntity,
+      "[BuildSystem] You can only build on an asteroid you control"
+    );
+    require(
+      LibBuilding.hasRequiredBaseLevel(coord.parentEntity, buildingPrototype, 1),
       "[BuildSystem] MainBase level requirement not met"
     );
     require(LibBuilding.canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
@@ -72,7 +88,7 @@ library LibBuilding {
    * @param buildingEntity The building to be placed.
    */
   function checkUpgradeRequirements(bytes32 playerEntity, bytes32 buildingEntity) internal view {
-    bytes32 asteroidEntity = Position.getParent(buildingEntity);
+    bytes32 asteroidEntity = Position.getParentEntity(buildingEntity);
     require(buildingEntity != 0, "[UpgradeBuildingSystem] no building at this coordinate");
 
     uint256 targetLevel = Level.get(buildingEntity) + 1;
@@ -96,30 +112,47 @@ library LibBuilding {
   /// @param playerEntity The entity ID of the player
   /// @param buildingPrototype The type of building to construct
   /// @param coord The coordinate where the building should be placed
+  /// @param uncheckedRequirements If true, requirements will not be checked. Internal use only.
   /// @return buildingEntity The entity ID of the newly constructed building
   function build(
     bytes32 playerEntity,
     bytes32 buildingPrototype,
-    PositionData memory coord
+    PositionData memory coord,
+    bool uncheckedRequirements
   ) internal returns (bytes32 buildingEntity) {
-    checkBuildRequirements(playerEntity, buildingPrototype, coord);
+    if (!uncheckedRequirements) {
+      checkBuildRequirements(playerEntity, buildingPrototype, coord);
+    } else {
+      if (buildingPrototype == MainBasePrototypeId || buildingPrototype == WormholeBasePrototypeId) {
+        require(
+          Home.get(coord.parentEntity) == bytes32(0),
+          "[BuildSystem] Cannot build more than one main base per asteroid"
+        );
+      }
+      require(LibBuilding.canBuildOnTile(buildingPrototype, coord), "[BuildSystem] Cannot build on this tile");
+    }
+
     buildingEntity = LibEncode.getTimedHash(BuildingKey, coord);
 
-    Spawned.set(buildingEntity, true);
     BuildingType.set(buildingEntity, buildingPrototype);
     Position.set(buildingEntity, coord);
     Level.set(buildingEntity, 1);
     LastClaimedAt.set(buildingEntity, block.timestamp);
-    OwnedBy.set(buildingEntity, coord.parent);
-    HasBuiltBuilding.set(playerEntity, buildingPrototype, true);
-    HasBuiltBuilding.set(coord.parent, buildingPrototype, true);
+    OwnedBy.set(buildingEntity, coord.parentEntity);
     IsActive.set(buildingEntity, true);
-    if (buildingPrototype == MainBasePrototypeId) {
-      Home.set(coord.parent, buildingEntity);
+
+    if (buildingPrototype == MainBasePrototypeId || buildingPrototype == WormholeBasePrototypeId) {
+      Home.set(coord.parentEntity, buildingEntity);
     }
+
     if (P_UnitProdTypes.length(buildingPrototype, 1) != 0) {
-      UnitFactorySet.add(coord.parent, buildingEntity);
+      UnitFactorySet.add(coord.parentEntity, buildingEntity);
     }
+
+    if (buildingPrototype == StarmapperPrototypeId) {
+      P_HasStarmapper.set(coord.parentEntity, true);
+    }
+
     placeBuildingTiles(buildingEntity, buildingPrototype, coord);
   }
 
@@ -133,59 +166,37 @@ library LibBuilding {
     PositionData memory position
   ) internal {
     int32[] memory blueprint = P_Blueprint.get(buildingPrototype);
-    Bounds memory bounds = getSpaceRockBounds(position.parent);
+    Bounds memory bounds = getAsteroidBounds(position.parentEntity);
 
-    bytes32[] memory tiles = new bytes32[](blueprint.length / 2);
+    int32[] memory tileCoords = new int32[](blueprint.length);
     for (uint256 i = 0; i < blueprint.length; i += 2) {
-      PositionData memory relativeCoord = PositionData(blueprint[i], blueprint[i + 1], 0);
-      PositionData memory absoluteCoord = PositionData(
-        position.x + relativeCoord.x,
-        position.y + relativeCoord.y,
-        position.parent
+      int32 x = blueprint[i] + position.x;
+      int32 y = blueprint[i + 1] + position.y;
+      require(
+        bounds.minX <= x && bounds.minY <= y && bounds.maxX >= x && bounds.maxY >= y,
+        "[BuildSystem] Building out of bounds"
       );
-      tiles[i / 2] = placeBuildingTile(buildingEntity, bounds, absoluteCoord);
+      tileCoords[i] = x;
+      tileCoords[i + 1] = y;
     }
-    Children.set(buildingEntity, tiles);
+
+    require(LibAsteroid.allTilesAvailable(position.parentEntity, tileCoords), "[BuildSystem] Tile unavailable");
+    LibAsteroid.setTiles(position.parentEntity, tileCoords);
+    TilePositions.set(buildingEntity, tileCoords);
   }
 
-  function removeBuildingTiles(PositionData memory coord) internal {
-    bytes32 buildingEntity = LibBuilding.getBuildingFromCoord(coord);
-
-    bytes32[] memory children = Children.get(buildingEntity);
-    for (uint256 i = 0; i < children.length; i++) {
-      require(OwnedBy.get(children[i]) != 0, "[Destroy] Cannot destroy unowned coordinate");
-      OwnedBy.deleteRecord(children[i]);
-    }
-    Children.deleteRecord(buildingEntity);
+  function removeBuildingTiles(bytes32 buildingEntity) internal {
+    LibAsteroid.removeTiles(Position.getParentEntity(buildingEntity), TilePositions.get(buildingEntity));
+    TilePositions.deleteRecord(buildingEntity);
   }
 
-  /// @notice Places a single building tile at a coordinate
-  /// @param buildingEntity The entity ID of the building
-  /// @param bounds The boundary limits for placing the tile
-  /// @param coord The coordinate where the tile should be placed
-  /// @return tileEntity The entity ID of the newly placed tile
-  function placeBuildingTile(
-    bytes32 buildingEntity,
-    Bounds memory bounds,
-    PositionData memory coord
-  ) private returns (bytes32 tileEntity) {
-    tileEntity = LibEncode.getHash(BuildingTileKey, coord);
-    require(OwnedBy.get(tileEntity) == 0, "[BuildSystem] Cannot build tile on a non-empty coordinate");
-    require(
-      bounds.minX <= coord.x && bounds.minY <= coord.y && bounds.maxX >= coord.x && bounds.maxY >= coord.y,
-      "[BuildSystem] Building out of bounds"
-    );
-    OwnedBy.set(tileEntity, buildingEntity);
-    Position.set(tileEntity, coord);
-  }
-
-  /// @notice Gets the boundary limits for a spaceRock
-  /// @param spaceRockEntity The entity ID of the spaceRock
+  /// @notice Gets the boundary limits for a asteroid
+  /// @param asteroidEntity The entity ID of the asteroid
   /// @return bounds The boundary limits
-  function getSpaceRockBounds(bytes32 spaceRockEntity) internal view returns (Bounds memory bounds) {
-    uint256 spaceRockLevel = Level.get(spaceRockEntity);
+  function getAsteroidBounds(bytes32 asteroidEntity) internal view returns (Bounds memory bounds) {
+    uint256 asteroidLevel = Level.get(asteroidEntity);
     P_AsteroidData memory asteroidDims = P_Asteroid.get();
-    DimensionsData memory range = Dimensions.get(ExpansionKey, spaceRockLevel);
+    DimensionsData memory range = Dimensions.get(ExpansionKey, asteroidLevel);
 
     return
       Bounds({
@@ -194,14 +205,6 @@ library LibBuilding {
         minX: (asteroidDims.xBounds - range.width) / 2,
         minY: (asteroidDims.yBounds - range.height) / 2
       });
-  }
-
-  /// @notice Gets the building entity ID from a coordinate
-  /// @param coord The coordinate to look up
-  /// @return The building entity ID
-  function getBuildingFromCoord(PositionData memory coord) internal view returns (bytes32) {
-    bytes32 buildingTile = LibEncode.getHash(BuildingTileKey, coord);
-    return OwnedBy.get(buildingTile);
   }
 
   /// @notice Gets the base level for a player
@@ -228,7 +231,45 @@ library LibBuilding {
   /// @return True if the building's required terrain matches the terrain of the given coord
   function canBuildOnTile(bytes32 prototype, PositionData memory coord) internal view returns (bool) {
     EResource resource = EResource(P_RequiredTile.get(prototype));
-    uint8 mapId = Asteroid.getMapId(coord.parent);
+    uint8 mapId = Asteroid.getMapId(coord.parentEntity);
     return resource == EResource.NULL || uint8(resource) == P_Terrain.get(mapId, coord.x, coord.y);
+  }
+
+  /// @notice Upgrades a building even if requirements are not met
+  /// @param buildingEntity The building id
+  function uncheckedUpgrade(bytes32 buildingEntity) internal {
+    uint256 targetLevel = Level.get(buildingEntity) + 1;
+    Level.set(buildingEntity, targetLevel);
+    LibStorage.increaseMaxStorage(buildingEntity, targetLevel);
+    LibProduction.upgradeResourceProduction(buildingEntity, targetLevel);
+  }
+
+  /// @notice Destroys a specific building entity
+  /// @param playerEntity The entity ID of the player
+  /// @param buildingEntity entity of the building to be destroyed
+  /// @param uncheckedRequirements If true, requirements will not be checked. Internal use only.
+  function destroy(bytes32 playerEntity, bytes32 buildingEntity, bool uncheckedRequirements) internal {
+    if (!uncheckedRequirements) {
+      checkDestroyRequirements(playerEntity, buildingEntity);
+    }
+
+    bytes32 buildingType = BuildingType.get(buildingEntity);
+    uint256 level = Level.get(buildingEntity);
+
+    removeBuildingTiles(buildingEntity);
+
+    if (P_UnitProdTypes.length(buildingType, level) != 0) {
+      UnitFactorySet.remove(OwnedBy.get(buildingEntity), buildingEntity);
+    }
+
+    if (buildingType == StarmapperPrototypeId) {
+      P_HasStarmapper.set(OwnedBy.get(buildingEntity), false);
+    }
+
+    Level.deleteRecord(buildingEntity);
+    BuildingType.deleteRecord(buildingEntity);
+    OwnedBy.deleteRecord(buildingEntity);
+    Position.deleteRecord(buildingEntity);
+    IsActive.deleteRecord(buildingEntity);
   }
 }

@@ -1,11 +1,11 @@
 import { Entity } from "@latticexyz/recs";
 import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
 import { ampli } from "src/ampli";
-import { execute } from "src/network/actions";
 import { components } from "src/network/components";
+import { execute } from "src/network/txExecute/txExecute";
 import { MUD } from "src/network/types";
-import { world } from "src/network/world";
 import { getAllianceName, getAllianceNameFromPlayer } from "src/util/alliance";
+import { entityToAddress } from "src/util/common";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities, toHex32 } from "src/util/encode";
 import { Hex } from "viem";
@@ -15,7 +15,7 @@ export const createAlliance = async (mud: MUD, name: string, inviteOnly: boolean
   await execute(
     {
       mud,
-      functionName: "create",
+      functionName: "Pri_11__create",
       systemId: getSystemId("AllianceSystem"),
       args: [
         toHex32(name.substring(0, 6).toUpperCase()),
@@ -24,7 +24,7 @@ export const createAlliance = async (mud: MUD, name: string, inviteOnly: boolean
       withSession: true,
     },
     {
-      id: world.registerEntity(),
+      id: hashEntities(TransactionQueueType.CreateAlliance, mud.playerAccount.entity),
     },
     (receipt) => {
       ampli.systemCreate({
@@ -36,16 +36,59 @@ export const createAlliance = async (mud: MUD, name: string, inviteOnly: boolean
   );
 };
 
+export const updateAllianceName = async (mud: MUD, allianceEntity: Entity, name: string) => {
+  await execute(
+    {
+      mud,
+      functionName: "Pri_11__setAllianceName",
+      systemId: getSystemId("AllianceSystem"),
+      args: [allianceEntity as Hex, toHex32(name.substring(0, 6).toUpperCase())],
+      withSession: true,
+    },
+    {
+      id: hashEntities(TransactionQueueType.UpdateAllianceName, mud.playerAccount.entity),
+    },
+    (receipt) => {
+      ampli.systemAllianceSystemPrimodiumSetAllianceName({
+        allianceName: name,
+        ...parseReceipt(receipt),
+      });
+    }
+  );
+};
+
+export const updateAllianceAccess = async (mud: MUD, allianceEntity: Entity, inviteOnly: boolean) => {
+  await execute(
+    {
+      mud,
+      functionName: "Pri_11__setAllianceInviteMode",
+      systemId: getSystemId("AllianceSystem"),
+      args: [allianceEntity as Hex, inviteOnly ? EAllianceInviteMode.Closed : EAllianceInviteMode.Open],
+      withSession: true,
+    },
+    {
+      id: hashEntities(TransactionQueueType.UpdateAllianceAccess, mud.playerAccount.entity),
+    },
+    (receipt) => {
+      ampli.systemAllianceSystemPrimodiumSetAllianceInviteMode({
+        allianceName: getAllianceName(allianceEntity),
+        allianceInviteOnly: inviteOnly,
+        ...parseReceipt(receipt),
+      });
+    }
+  );
+};
+
 export const leaveAlliance = async (mud: MUD) => {
   execute(
     {
       mud,
-      functionName: "leave",
+      functionName: "Pri_11__leave",
       systemId: getSystemId("AllianceSystem"),
       withSession: true,
     },
     {
-      id: world.registerEntity(),
+      id: hashEntities(TransactionQueueType.LeaveAlliance, mud.playerAccount.entity),
     },
     (receipt) => {
       ampli.systemLeave({
@@ -60,7 +103,7 @@ export const joinAlliance = async (mud: MUD, alliance: Entity) => {
   execute(
     {
       mud,
-      functionName: "join",
+      functionName: "Pri_11__join",
       systemId: getSystemId("AllianceSystem"),
       args: [alliance as Hex],
       withSession: true,
@@ -81,9 +124,9 @@ export const declineInvite = async (mud: MUD, inviter: Entity) => {
   execute(
     {
       mud,
-      functionName: "declineInvite",
+      functionName: "Pri_11__declineInvite",
       systemId: getSystemId("AllianceSystem"),
-      args: [inviter as Hex],
+      args: [entityToAddress(inviter as Hex)],
       withSession: true,
     },
     {
@@ -103,7 +146,7 @@ export const requestToJoin = async (mud: MUD, alliance: Entity) => {
   execute(
     {
       mud,
-      functionName: "requestToJoin",
+      functionName: "Pri_11__requestToJoin",
       systemId: getSystemId("AllianceSystem"),
       args: [alliance as Hex],
       withSession: true,
@@ -127,9 +170,9 @@ export const kickPlayer = async (mud: MUD, player: Entity) => {
   execute(
     {
       mud,
-      functionName: "kick",
+      functionName: "Pri_11__kick",
       systemId: getSystemId("AllianceSystem"),
-      args: [player as Hex],
+      args: [entityToAddress(player as Hex)],
       withSession: true,
     },
     {
@@ -151,9 +194,9 @@ export const grantRole = async (mud: MUD, player: Entity, role: EAllianceRole) =
   execute(
     {
       mud,
-      functionName: "grantRole",
+      functionName: "Pri_11__grantRole",
       systemId: getSystemId("AllianceSystem"),
-      args: [player as Hex, role],
+      args: [entityToAddress(player as Hex), role],
       withSession: true,
     },
     {
@@ -174,9 +217,9 @@ export const acceptJoinRequest = async (mud: MUD, target: Entity) => {
   execute(
     {
       mud,
-      functionName: "acceptRequestToJoin",
+      functionName: "Pri_11__acceptRequestToJoin",
       systemId: getSystemId("AllianceSystem"),
-      args: [target as Hex],
+      args: [entityToAddress(target as Hex)],
       withSession: true,
     },
     {
@@ -196,9 +239,9 @@ export const rejectJoinRequest = async (mud: MUD, target: Entity) => {
   execute(
     {
       mud,
-      functionName: "rejectRequestToJoin",
+      functionName: "Pri_11__rejectRequestToJoin",
       systemId: getSystemId("AllianceSystem"),
-      args: [target as Hex],
+      args: [entityToAddress(target as Hex)],
       withSession: true,
     },
     {
@@ -218,18 +261,39 @@ export const invite = async (mud: MUD, target: Entity) => {
   execute(
     {
       mud,
-      functionName: "invite",
+      functionName: "Pri_11__invite",
       systemId: getSystemId("AllianceSystem"),
-      args: [target as Hex],
+      args: [entityToAddress(target as Hex)],
       withSession: true,
     },
     {
-      id: hashEntities(TransactionQueueType.Invite, target),
+      id: "invite" as Entity,
     },
     (receipt) => {
       ampli.systemInvite({
         allianceName: getAllianceNameFromPlayer(target),
         allianceAcceptee: target,
+        ...parseReceipt(receipt),
+      });
+    }
+  );
+};
+
+export const revokeInvite = async (mud: MUD, target: Entity) => {
+  execute(
+    {
+      mud,
+      functionName: "Pri_11__revokeInvite",
+      systemId: getSystemId("AllianceSystem"),
+      args: [entityToAddress(target as Hex)],
+      withSession: true,
+    },
+    {
+      id: hashEntities(TransactionQueueType.RevokeInvite, target),
+    },
+    (receipt) => {
+      ampli.systemAllianceSystemPrimodiumRevokeInvite({
+        allianceRejectee: target,
         ...parseReceipt(receipt),
       });
     }

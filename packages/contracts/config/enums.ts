@@ -1,5 +1,6 @@
 export enum EBuilding {
   MainBase = 1,
+  WormholeBase,
 
   // Mines
   LithiumMine,
@@ -15,7 +16,6 @@ export enum EBuilding {
   IronPlateFactory,
   AlloyFactory,
   PVCellFactory,
-  RocketFuelFactory,
 
   // Utilities
   SolarPanel,
@@ -54,7 +54,6 @@ export enum EResource {
   // Utilities
   U_Electricity,
   U_Housing,
-  U_CapitalShipCapacity,
   U_MaxFleets,
   U_Defense,
   U_Unraidable,
@@ -66,12 +65,6 @@ export enum EResource {
   M_DefenseMultiplier,
 }
 
-export enum ESize {
-  Small = 1,
-  Medium,
-  Large,
-}
-
 export enum EUnit {
   AegisDrone = 1,
   AnvilDrone,
@@ -80,88 +73,141 @@ export enum EUnit {
   MinutemanMarine,
   TridentMarine,
   LightningCraft,
-  CapitalShip,
+  ColonyShip,
   Droid,
 }
 
-export enum ESendType {
-  Reinforce = 1,
-  Invade,
-  Raid,
-  Recall,
-}
-
-export enum EOrderType {
-  Resource = 1,
-  Unit,
+export enum EMap {
+  Primary = 1,
+  Kimberlite = 2,
+  Iridium = 3,
+  Platinum = 4,
+  Titanium = 5,
+  Wormhole = 6,
+  Common = 7,
 }
 
 export enum EObjectives {
-  BuildIronMine = 1,
+  // (A) Fundamentals
+  JoinDiscord = 1,
+  FollowTwitter,
+  BuildIronMine,
   BuildCopperMine,
-  BuildGarage,
-  DefeatPirateBase1,
-  BuildWorkshop,
-
-  UpgradeMainBase,
-  DefeatPirateBase2,
-  DefeatPirateBase3,
-  DefeatPirateBase4,
-  DefeatPirateBase5,
-  DefeatPirateBase6,
-  DefeatPirateBase7,
-  DefeatPirateBase8,
-  DefeatPirateBase9,
-  DefeatPirateBase10,
-  DefeatPirateBase11,
-  DefeatPirateBase12,
-  DefeatPirateBase13,
-  DefeatPirateBase14,
-  DefeatPirateBase15,
-  DefeatPirateBase16,
-  DefeatPirateBase17,
-
   BuildLithiumMine,
-  BuildIronPlateFactory,
-  BuildHangar,
-  BuildPVCellFactory,
-  BuildSolarPanel,
-  BuildDroneFactory,
-  BuildStarmapper,
-  BuildSAMLauncher,
-  BuildVault,
-  BuildShieldGenerator,
 
-  TrainMinutemanMarine1,
-  TrainMinutemanMarine2,
-  TrainMinutemanMarine3,
-  TrainTridentMarine1,
-  TrainTridentMarine2,
-  TrainTridentMarine3,
-  TrainAnvilDrone1,
-  TrainAnvilDrone2,
-  TrainAnvilDrone3,
-  TrainHammerDrone1,
-  TrainHammerDrone2,
-  TrainHammerDrone3,
-  TrainAegisDrone1,
-  TrainAegisDrone2,
-  TrainAegisDrone3,
-  TrainStingerDrone1,
-  TrainStingerDrone2,
-  TrainStingerDrone3,
+  UpgradeMainBase2,
+  UpgradeMainBase3,
+  UpgradeMainBase4,
+  UpgradeMainBase5,
 
-  ExpandBase1,
   ExpandBase2,
   ExpandBase3,
   ExpandBase4,
-  ExpandBase5,
-  ExpandBase6,
-}
 
-export enum EFleetKey {
-  OwnedBy = 1,
-  Incoming = 2,
+  UpgradeIronMine2,
+  UpgradeIronMine3,
+
+  UpgradeCopperMine2,
+  UpgradeCopperMine3,
+
+  UpgradeLithiumMine2,
+  UpgradeLithiumMine3,
+
+  // (A-A) Military basics
+  BuildGarage,
+  UpgradeGarage,
+  BuildWorkshop,
+  UpgradeWorkshop,
+
+  // (A-A-A) Fleet basics
+  CreateFleet,
+  TransferFromAsteroid,
+  TransferFromFleet,
+  SendFleet,
+
+  // (A-A-A-A) Fleet combat
+  BattleAsteroid,
+  OpenBattleReport,
+  BattleFleet,
+
+  // (A-A-A-B) Conquest (cont)
+  BuildShipyard,
+  UpgradeShipyard2,
+  TrainColonyShip,
+  DecryptAttack,
+  CaptureAsteroid,
+
+  // (A-A-A-B-A) Motherlode Extraction
+  CaptureMotherlodeAsteroid,
+  BuildRareMine,
+
+  // (A-A-A-B-B) Victory: Primodium Points
+  EarnPrimodiumOnAsteroid,
+  CaptureVolatileShard,
+  ExplodeVolatileShard,
+
+  // (A-A-A-B-C) Victory; Extraction Points
+  CaptureWormholeAsteroid,
+  TeleportResources,
+
+  // (A-A-A-C) fleet management
+  BuildStarmapper,
+  UpgradeStarmapper2,
+  CreateFleet2,
+  DefendWithFleet,
+  BlockWithFleet,
+  LandFleet,
+
+  // (A-A-B) unit production
+  TrainMinutemanMarine,
+  TrainTridentMarine,
+  TrainLightningCraft,
+
+  // (A-A-B-A) unit management
+  UpgradeUnit,
+
+  // (A-A-B-B) unit production (cont)
+  BuildDroneFactory,
+  UpgradeDroneFactory2,
+  TrainAnvilDrone,
+  TrainHammerDrone,
+  TrainAegisDrone,
+  TrainStingerDrone,
+
+  // (A-A-B-C) unit storage
+  BuildHangar,
+  UpgradeHanger2,
+
+  // (A-A-C) Defense
+  BuildShieldGenerator,
+  UpgradeShieldGenerator2,
+  BuildVault,
+  UpgradeVault2,
+  BuildSAMLauncher,
+  UpgradeSAMLauncher2,
+
+  // (A-B) Production
+  BuildStorageUnit,
+  UpgradeStorageUnit2,
+  BuildIronPlateFactory,
+  UpgradeIronPlateFactory2,
+  BuildAlloyFactory,
+  UpgradeAlloyFactory2,
+  BuildPVCellFactory,
+  UpgradePVCellFactory2,
+
+  // (A-B-A) Production (cont)
+  BuildSolarPanel,
+  UpgradeSolarPanel2,
+
+  // (A-B-B) Market
+  BuildMarket,
+  MarketSwap,
+
+  // (A-C) Alliance (Social)
+  JoinAlliance,
+
+  PrimoPlayer,
 }
 
 export enum EAllianceInviteMode {
@@ -183,18 +229,21 @@ export enum EFleetStance {
   Block,
 }
 
+export enum EPointType {
+  Shard = 1,
+  Wormhole,
+}
+
 export const MUDEnums = {
   EBuilding: enumToArray(EBuilding),
   EResource: enumToArray(EResource),
-  ESize: enumToArray(ESize),
   EUnit: enumToArray(EUnit),
-  ESendType: enumToArray(ESendType),
+  EMap: enumToArray(EMap),
   EObjectives: enumToArray(EObjectives),
   EAllianceInviteMode: enumToArray(EAllianceInviteMode),
   EAllianceRole: enumToArray(EAllianceRole),
-  EOrderType: enumToArray(EOrderType),
-  EFleetKey: enumToArray(EFleetKey),
   EFleetStance: enumToArray(EFleetStance),
+  EPointType: enumToArray(EPointType),
 };
 
 function enumToArray(enumObj: object): string[] {

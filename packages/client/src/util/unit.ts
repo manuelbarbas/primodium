@@ -1,11 +1,9 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
-import { Scene } from "engine/types";
 import { components, components as comps } from "src/network/components";
 import { Hex } from "viem";
-import { EntityType, PIRATE_KEY, SPEED_SCALE, UnitStorages } from "./constants";
+import { EntityType, SPEED_SCALE, UnitStorages } from "./constants";
 import { getInGracePeriod } from "./defense";
-import { hashKeyEntity } from "./encode";
 import { entityToFleetName } from "./name";
 
 export function getFleetUnitCounts(fleet: Entity) {
@@ -48,14 +46,14 @@ export function getUnitStatsLevel(entity: Entity, level: bigint) {
     }
   );
 
-  const decryption = comps.P_CapitalShipConfig.get()?.decryption ?? 0n;
+  const decryption = comps.P_ColonyShipConfig.get()?.decryption ?? 0n;
   return {
     ATK: attack,
     CTR: defense,
     SPD: speed,
     CGO: cargo,
     HP: hp,
-    DEC: entity == EntityType.CapitalShip ? decryption : 0n,
+    DEC: entity == EntityType.ColonyShip ? decryption : 0n,
   };
 }
 
@@ -87,7 +85,7 @@ export const getFleetStats = (fleet: Entity) => {
     ret.hp += unitData.HP * count;
     ret.cargo += unitData.CGO * count;
     ret.speed = bigIntMin(ret.speed == 0n ? BigInt(10e100) : ret.speed, unitData.SPD);
-    ret.decryption = unitEntity === EntityType.CapitalShip ? unitData.DEC : ret.decryption;
+    ret.decryption = unitEntity === EntityType.ColonyShip ? unitData.DEC : ret.decryption;
   });
   return { ...ret, title: entityToFleetName(fleet) };
 };
@@ -108,50 +106,23 @@ export const getFleetStatsFromUnits = (units: Map<Entity, bigint>, fleetOwner?: 
   return data;
 };
 
+export const getFleets = (entity: Entity): Entity[] => {
+  return [...runQuery([Has(components.IsFleet), HasValue(components.FleetMovement, { destination: entity })])];
+};
+
+export const isFleetOrbiting = (fleet: Entity) => {
+  const arrivalTime = components.FleetMovement.get(fleet)?.arrivalTime ?? 0n;
+  const now = components.Time.get()?.value ?? 0n;
+  return arrivalTime < now;
+};
+
 export const getOrbitingFleets = (entity: Entity) => {
   const playerEntity = components.Account.get()?.value;
-  if (
-    !playerEntity ||
-    (components.PirateAsteroid.has(entity) &&
-      hashKeyEntity(PIRATE_KEY, playerEntity) !== components.OwnedBy.get(entity)?.value)
-  )
-    return [];
+  if (!playerEntity) return [];
 
   return [...runQuery([Has(components.IsFleet), HasValue(components.FleetMovement, { destination: entity })])].filter(
-    (entity) => {
-      const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
-      const now = components.Time.get()?.value ?? 0n;
-      return arrivalTime < now;
-    }
+    (entity) => isFleetOrbiting(entity)
   );
-};
-
-export const getFleetTilePosition = (scene: Scene, fleet: Entity) => {
-  const { tileHeight, tileWidth } = scene.tilemap;
-  const pixelPosition = getFleetPixelPosition(scene, fleet);
-
-  // using the helper function rounds to the nearest tile which doesnt work here
-  return { x: pixelPosition.x / tileWidth, y: -pixelPosition.y / tileHeight };
-};
-
-export const getFleetPixelPosition = (scene: Scene, fleet: Entity) => {
-  const movement = components.FleetMovement.get(fleet);
-  if (!movement) throw new Error("Fleet has no movement component");
-  const time = components.Time.get()?.value ?? 0n;
-
-  if (movement.arrivalTime > time) {
-    const fleetTransitId = fleet + "_fleet";
-    const fleetGroup = scene.objectPool.getGroup(fleetTransitId);
-    const fleetIcon = fleetGroup.get(`${fleet}-fleetIcon`, "Graphics");
-    return { x: fleetIcon.position.x, y: fleetIcon.position.y };
-  }
-
-  const spaceRock = movement.destination as Entity;
-  const rockGroup = scene.objectPool.getGroup(spaceRock + "_spacerockOrbits");
-
-  const fleetOrbitId = `fleetOrbit-${spaceRock}-${fleet}`;
-  const gameObject = rockGroup.get(fleetOrbitId, "Graphics")?.getGameObject();
-  return { x: gameObject?.x ?? 0, y: gameObject?.y ?? 0 };
 };
 
 const orbitRadius = 64;
@@ -236,10 +207,5 @@ export function getCanSend(originEntity: Entity, targetEntity: Entity) {
   const currentRock = components.FleetMovement.get(originEntity)?.destination as Entity | undefined;
   if (!currentRock || isFleet || components.BuildingType.has(targetEntity) || currentRock == targetEntity) return false;
 
-  const currentRockIsPirate = components.PirateAsteroid.has(currentRock);
-  if (!currentRockIsPirate) return true;
-
-  const player = components.Account.get()?.value;
-  const playerHome = components.Home.get(player)?.value;
-  return targetEntity == playerHome;
+  return true;
 }

@@ -9,7 +9,6 @@ export const createTilemap = (
   config?: TilemapConfig
 ) => {
   const renderTilemap = (key: string) => {
-    currentMap?.destroy();
     const mapData = scene.cache.tilemap.get(key).data as Phaser.Tilemaps.MapData;
 
     const map = scene.add.tilemap(key);
@@ -20,6 +19,7 @@ export const createTilemap = (
 
     (mapData.layers as Phaser.Tilemaps.LayerData[]).forEach((layer) => {
       const _layer = map.createLayer(layer.name, tilesets, -19 * tileWidth, -50 * tileWidth);
+      _layer?.setPipeline("Light2D");
 
       const depth = config?.[key]?.[layer.name]?.depth;
       if (depth && _layer) {
@@ -27,18 +27,8 @@ export const createTilemap = (
       }
     });
 
-    currentMap = map;
     return map;
   };
 
-  let currentMap: Phaser.Tilemaps.Tilemap | null = defaultKey ? renderTilemap(defaultKey) : null;
-
-  const dispose = () => {
-    // currentMap?.removeAllLayers();
-    currentMap?.destroy();
-  };
-
-  const getMap = () => currentMap;
-
-  return { render: renderTilemap, getMap, tileHeight, tileWidth, dispose };
+  return { render: renderTilemap, tileHeight, tileWidth };
 };

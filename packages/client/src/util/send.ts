@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 import { EResource } from "contracts/config/enums";
 import { components } from "src/network/components";
 import { Hex } from "viem";
@@ -11,7 +11,7 @@ export function toUnitCountArray(map: Map<Entity, bigint>): bigint[] {
   const arr = Array.from({ length: prototypes.length }, () => 0n);
   prototypes.forEach((entity, index) => {
     const count = map.get(entity as Entity);
-    if (count && count > 0n) arr[index] = count;
+    if (count) arr[index] = count;
   });
   return arr;
 }

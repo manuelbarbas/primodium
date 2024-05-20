@@ -16,8 +16,8 @@
     "jsxImportSource": "react",
     "baseUrl": ".",
     "paths": {
-      "@game/api": ["src/game/api"],
-      "@game/constants": ["src/game/constants"]
+      "@/*": ["./src/*"],
+      "@game/*": ["./src/game/*"],
     }
   },
   "include": ["**/*.tsx", "**/*.ts", "../game-tools/src/CheatcodesList.tsx"],

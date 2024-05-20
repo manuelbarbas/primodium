@@ -1,7 +1,6 @@
 @import "@fontsource/space-mono";
 @import "@fontsource/space-mono/700.css";
 @import "@fontsource/silkscreen/400.css";
-/* @import "@fontsource/silkscreen/700.css"; */
 
 @tailwind base;
 @tailwind components;
@@ -18,30 +17,6 @@
 }
 
 @layer utilities {
-  body {
-    cursor: url("/img/cursors/normal.png"), auto !important;
-  }
-
-  canvas {
-    cursor: url("/img/cursors/pointer.png") 12 0, auto;
-  }
-
-  canvas:active {
-    cursor: url("/img/cursors/pointerdown.png") 12 0, auto;
-  }
-
-  button {
-    cursor: url("/img/cursors/pointer.png") 12 0, auto;
-  }
-
-  button:hover {
-    cursor: url("/img/cursors/pointer.png") 12 0, auto;
-  }
-
-  button:active {
-    cursor: url("/img/cursors/pointerdown.png") 12 0, auto;
-  }
-
   .scrollbar::-webkit-scrollbar {
     @apply relative w-[.4rem];
   }
@@ -58,37 +33,9 @@
     background: #4b5563;
   }
 
-  canvas {
-    touch-action: none;
-    @apply h-full w-full;
-  }
-
   .screen-container {
     width: 100vw;
     height: 100vh;
-  }
-
-  .viewport-container {
-    margin-top: env(safe-area-inset-top);
-    margin-right: env(safe-area-inset-right);
-    /* margin-bottom: env(safe-area-inset-bottom); */
-    margin-left: env(safe-area-inset-left);
-  }
-
-  .sidebar-icon {
-    @apply bg-gray-700 w-12 h-12 mt-3 text-white shadow-xl rounded items-center relative flex justify-center hover:text-yellow-100 focus:text-yellow-300;
-  }
-
-  .sidebar-tooltip {
-    @apply bg-slate-50 z-[10000] scale-0 inline-block absolute w-auto p-3 m-3 min-w-max left-12 rounded shadow-xl text-gray-700 font-mono font-bold transition-none origin-left;
-  }
-
-  .building-tooltip {
-    @apply bg-slate-50 z-[10000] scale-0 inline-block absolute w-auto p-3 mt-3 mr-3 mb-3 ml-10 min-w-max rounded shadow-xl text-gray-700 font-mono font-bold;
-  }
-
-  .resource-tooltip {
-    @apply bg-slate-50 z-[10000] scale-0 inline-block absolute w-auto p-2 mb-3 ml-3 min-w-max rounded shadow-xl text-gray-700 font-mono text-sm font-bold;
   }
 
   .pixel-images {
@@ -97,43 +44,131 @@
     image-rendering: crisp-edges;
   }
 
-  .map-container {
-    background-color: rgb(100 116 139);
-  }
-
-  .star-background-sm {
-    background-image: url("/img/backgrounds/star.png");
+  .command-background {
+    background-image: url("/img/backgrounds/command.png");
     background-repeat: repeat;
-    background-size: 200px;
+    background-size: 1000px;
   }
 
   .star-background {
     background-image: url("/img/backgrounds/star.png");
     background-repeat: repeat;
-    background-size: 2000px;
+    background-size: 1000px;
   }
 
   .container {
     position: relative;
   }
 
-  /* remove outline on waltour tooltip containers */
-  #walktour-tooltip-container[tabindex] {
-    @apply focus:outline-none;
+  .hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    webkit-scrollbar-width: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera */
+  }
+
+  .pixel-border {
+    border-image: url("/img/ui/frame3.png") 8; /* The number 16 corresponds to the slice value */
+    border-image-width: 16px;
+    border-image-outset: 0px;
+    border-image-repeat: round; /* or stretch or space */
+    image-rendering: pixelated; /* Ensures the 'nearest neighbor' scaling */
+    box-shadow: inset 0 0 5px rgba(0, 0, 0);
+  }
+
+  @keyframes slideDown {
+    from {
+      transform: translateY(-20%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes glow {
+    0% {
+      box-shadow: inset 0 0 5px rgba(0, 255, 255, 0.25);
+    }
+    50% {
+      box-shadow: inset 0 0 15px rgba(0, 255, 255, 0.5);
+    }
+    100% {
+      box-shadow: inset 0 0 5px rgba(0, 255, 255, 0.25);
+    }
+  }
+
+  @keyframes pan {
+    0% {
+      background-position: 0 0;
+    }
+    25% {
+      background-position: 100% 100%;
+    }
+    50% {
+      background-position: 0% 100%;
+    }
+    75% {
+      background-position: 100% 0%;
+    }
+    100% {
+      background-position: 0% 0%;
+    }
+  }
+
+  @keyframes scroll {
+    0% {
+      background-position: 0 0;
+    }
+    50% {
+      background-position: 100% 0%;
+    }
+    100% {
+      background-position: 0% 0%;
+    }
+  }
+
+  @keyframes float {
+    0% {
+      transform: translatey(0px);
+    }
+    50% {
+      transform: translatey(-10px);
+    }
+    100% {
+      transform: translatey(0px);
+    }
+  }
+
+  .animate-slide-down {
+    animation: slideDown 0.3s ease-out forwards;
   }
 }
 
-@keyframes slideDown {
-  from {
-    transform: translateY(-20%);
-    opacity: 0;
+@keyframes rainbow {
+  0% {
+    background-position: 0% 50%;
   }
-  to {
-    transform: translateY(0);
-    opacity: 1;
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
 
-.animate-slide-down {
-  animation: slideDown 0.3s ease-out forwards;
+.rainbow-bg {
+  @apply bg-gradient-to-r from-pink-500 via-yellow-500 to-blue-500;
+  background-size: 200% 200%;
+  animation: rainbow 4s linear infinite;
+}
+
+.victory-bg {
+  @apply bg-gradient-to-r from-yellow-700 via-yellow-300 to-yellow-700;
+  background-size: 200% 200%;
+  animation: rainbow 4s linear infinite;
 }

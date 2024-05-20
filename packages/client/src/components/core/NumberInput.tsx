@@ -1,5 +1,4 @@
-import { Scenes } from "@game/constants";
-import { usePrimodium } from "src/hooks/usePrimodium";
+import { useGame } from "src/hooks/useGame";
 import { adjustDecimals } from "src/util/number";
 import { Button } from "./Button";
 
@@ -7,20 +6,17 @@ export const NumberInput: React.FC<{
   min?: number;
   max?: number;
   toFixed?: number;
-  onChange: (val: string) => void;
+  onChange?: (val: string) => void;
   count: string;
 }> = ({ count, min = 0, max = Infinity, onChange, toFixed = 0 }) => {
-  const primodium = usePrimodium();
-  const input = primodium.api(Scenes.UI).input;
-  const input2 = primodium.api(Scenes.Asteroid).input;
-  const input3 = primodium.api(Scenes.Starmap).input;
+  const game = useGame();
 
   const handleUpdate = (newCount: string) => {
     newCount = adjustDecimals(newCount, toFixed);
     // const allZeroes = newCount.split("").every((digit) => digit == "0");
 
     if (isNaN(Number(newCount))) {
-      onChange(min.toString());
+      onChange?.(min.toString());
       return;
     }
 
@@ -31,13 +27,14 @@ export const NumberInput: React.FC<{
       newCount = min.toString();
     }
 
-    onChange(newCount);
+    onChange?.(newCount);
   };
 
   return (
-    <div className={`flex my-2 relative`}>
+    <div className={`flex mb-4 relative justify-center items-center gap-2`}>
       <Button
-        className="btn-xs btn-ghost"
+        size={"xs"}
+        variant={"ghost"}
         disabled={Number(count) <= min}
         onClick={(e) => {
           e?.preventDefault();
@@ -48,7 +45,7 @@ export const NumberInput: React.FC<{
       </Button>
       <input
         type="number"
-        className={`bg-transparent text-center w-fit outline-none border-b border-pink-900 ${
+        className={`bg-neutral px-2 text-center w-24 border border-secondary focus:outline-none ${
           Number(count) > max ? "text-error" : ""
         }`}
         value={count}
@@ -57,21 +54,14 @@ export const NumberInput: React.FC<{
           e.preventDefault();
           handleUpdate(e.target.value);
         }}
-        onFocus={() => {
-          input.disableInput();
-          input2.disableInput();
-          input3.disableInput();
-        }}
-        onBlur={() => {
-          input.enableInput();
-          input2.enableInput();
-          input3.enableInput();
-        }}
+        onFocus={game.GLOBAL.disableGlobalInput}
+        onBlur={game.GLOBAL.enableGlobalInput}
         min={0}
         max={max}
       />
       <Button
-        className="btn-xs btn-ghost"
+        size={"xs"}
+        variant={"ghost"}
         disabled={Number(count) >= max}
         onClick={(e) => {
           e?.preventDefault();
@@ -83,7 +73,8 @@ export const NumberInput: React.FC<{
       {max !== Infinity && (
         <div className="absolute right-1/2 -bottom-1/2 translate-x-1/2 translate-y-1/2">
           <Button
-            className={`${Number(count) >= max ? "opacity-50" : ""} btn-xs btn-ghost  opacity-50`}
+            variant={"ghost"}
+            size={"xs"}
             disabled={Number(count) >= max}
             onClick={() => handleUpdate(max.toString())}
           >

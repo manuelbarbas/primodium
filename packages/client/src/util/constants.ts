@@ -1,13 +1,14 @@
 import { resourceToHex } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@latticexyz/utils";
+import { Coord } from "engine/types";
 import { DECIMALS } from "contracts/config/constants";
-import { EBuilding, EObjectives, EResource, EUnit } from "contracts/config/enums";
-import { Key } from "engine/types";
+import { EBuilding, EObjectives, EPointType, EResource, EUnit } from "contracts/config/enums";
 import { encodeEntity } from "src/util/encode";
+import { parseEther } from "viem";
 import { reverseRecord } from "./common";
 import { toHex32 } from "./encode";
 
+export const minEth = parseEther("0.0049");
 export const UNLIMITED_DELEGATION = resourceToHex({ type: "system", namespace: "", name: "unlimited" });
 
 export const encodeEntityLevel = (entity: string, level: number) => {
@@ -38,15 +39,16 @@ export const RESOURCE_SCALE = BigInt(10 ** DECIMALS);
 export const MULTIPLIER_SCALE = BigInt(100);
 export const UNIT_SPEED_SCALE = BigInt(100);
 
-export const PIRATE_KEY = toHex32("pirate");
 export const NUM_UNITS = Object.keys(EUnit).length / 2;
 export const STORAGE_PREFIX = "primodiumSessionKey:";
 
 export const Keys = {
-  PIRATE: toHex32("pirate") as Entity,
   SELECTED: toHex32("selected") as Entity,
   ACTIVE: toHex32("active") as Entity,
   BATTLE: toHex32("battle") as Entity,
+  ASTEROID: toHex32("asteroid.key") as Entity,
+  FLEET_OWNED_BY: toHex32("fleet.key") as Entity,
+  SECONDARY: toHex32("secondary") as Entity,
 };
 
 export enum ResourceType {
@@ -61,20 +63,6 @@ export enum RewardType {
   Unit,
 }
 
-export enum RequirementType {
-  Objectives,
-  MainBase,
-  Expansion,
-  Buildings,
-  ProducedResources,
-  RaidedResources,
-  DestroyedUnits,
-  ProducedUnits,
-  RequiredUnits,
-  DefeatedPirates,
-  RewardUtilities,
-}
-
 export enum TransactionQueueType {
   Build,
   Train,
@@ -83,7 +71,10 @@ export enum TransactionQueueType {
   Demolish,
   Move,
   ClaimObjective,
+  CreateAlliance,
   JoinAlliance,
+  UpdateAllianceAccess,
+  UpdateAllianceName,
   RequestToJoin,
   KickPlayer,
   Promote,
@@ -91,25 +82,30 @@ export enum TransactionQueueType {
   AcceptRequest,
   RejectRequest,
   Invite,
+  RevokeInvite,
   DeclineInvite,
+  LeaveAlliance,
   Toggle,
   Access,
   Attack,
   CreateFleet,
-  DisbandFleet,
+  ClearFleet,
   LandFleet,
   MergeFleets,
+  AbandonFleet,
   SendFleet,
   FleetStance,
   TransferFleet,
+  WormholeDeposit,
+  PayForColonySlot,
 }
 
-export enum RockRelationship {
-  Ally,
-  Enemy,
-  Neutral,
-  Self,
-}
+export const RockRelationship = {
+  Ally: "Ally",
+  Enemy: "Enemy",
+  Neutral: "Neutral",
+  Self: "Self",
+} as const;
 
 export const RockRelationshipColors = {
   [RockRelationship.Ally]: "success",
@@ -132,6 +128,13 @@ export const key = {
   UnitKey: toHex32("Unit"),
 };
 
+export const Mode = {
+  Asteroid: toHex32("mode:Building") as Entity,
+  Starmap: toHex32("mode:Starmap") as Entity,
+  CommandCenter: toHex32("mode:Manager") as Entity,
+  Spectate: toHex32("mode:Spectate") as Entity,
+};
+
 export const EntityType = {
   // Ores
   Iron: toHex32("Iron") as Entity,
@@ -142,13 +145,13 @@ export const EntityType = {
   Kimberlite: toHex32("Kimberlite") as Entity,
   Platinum: toHex32("Platinum") as Entity,
 
+  // Special Asteroid Types
+  Common: toHex32("Common") as Entity,
+  Wormhole: toHex32("Wormhole") as Entity,
+
   MainBase: toHex32("MainBase") as Entity,
+  WormholeBase: toHex32("WormholeBase") as Entity,
   DroidBase: toHex32("DroidBase") as Entity,
-  DebugNode: toHex32("DebugNode") as Entity,
-  Miner: toHex32("Miner") as Entity,
-  LithiumMiner: toHex32("LithiumMiner") as Entity,
-  BulletFactory: toHex32("BulletFactory") as Entity,
-  Silo: toHex32("Silo") as Entity,
 
   // Basic Buildings
   IronMine: toHex32("IronMine") as Entity,
@@ -163,7 +166,7 @@ export const EntityType = {
   Garage: toHex32("Garage") as Entity,
   Workshop: toHex32("Workshop") as Entity,
 
-  //Advanced Buildings
+  // Advanced Buildings
   IronPlateFactory: toHex32("IronPlateFactory") as Entity,
   PVCellFactory: toHex32("PVCellFactory") as Entity,
   AlloyFactory: toHex32("AlloyFactory") as Entity,
@@ -187,10 +190,11 @@ export const EntityType = {
   FleetCount: toHex32("U_MaxFleets") as Entity,
   Unraidable: toHex32("U_Unraidable") as Entity,
   AdvancedUnraidable: toHex32("U_AdvancedUnraidable") as Entity,
-  CapitalShipCapacity: toHex32("U_CapitalShip") as Entity,
+  ColonyShipCapacity: toHex32("U_ColonyShip") as Entity,
 
   Defense: toHex32("U_Defense") as Entity,
   DefenseMultiplier: toHex32("M_DefenseMultiplier") as Entity,
+  UnitProductionMultiplier: toHex32("M_UnitProductionMultiplier") as Entity,
 
   Encryption: toHex32("R_Encryption") as Entity,
   HP: toHex32("R_HP") as Entity,
@@ -215,7 +219,7 @@ export const EntityType = {
   StingerDrone: toHex32("StingerDrone") as Entity,
   AnvilDrone: toHex32("AnvilDrone") as Entity,
   AegisDrone: toHex32("AegisDrone") as Entity,
-  CapitalShip: toHex32("CapitalShip") as Entity,
+  ColonyShip: toHex32("ColonyShip") as Entity,
   Droid: toHex32("Droid") as Entity,
 
   MinutemanMarine: toHex32("MinutemanMarine") as Entity,
@@ -255,11 +259,11 @@ export const EntityType = {
   StingerDroneUpgrade4: encodeEntityLevel("StingerDrone", 4) as Entity,
   StingerDroneUpgrade5: encodeEntityLevel("StingerDrone", 5) as Entity,
 
-  CapitalShipUpgrade1: encodeEntityLevel("CapitalShip", 1) as Entity,
-  CapitalShipUpgrade2: encodeEntityLevel("CapitalShip", 2) as Entity,
-  CapitalShipUpgrade3: encodeEntityLevel("CapitalShip", 3) as Entity,
-  CapitalShipUpgrade4: encodeEntityLevel("CapitalShip", 4) as Entity,
-  CapitalShipUpgrade5: encodeEntityLevel("CapitalShip", 5) as Entity,
+  ColonyShipUpgrade1: encodeEntityLevel("ColonyShip", 1) as Entity,
+  ColonyShipUpgrade2: encodeEntityLevel("ColonyShip", 2) as Entity,
+  ColonyShipUpgrade3: encodeEntityLevel("ColonyShip", 3) as Entity,
+  ColonyShipUpgrade4: encodeEntityLevel("ColonyShip", 4) as Entity,
+  ColonyShipUpgrade5: encodeEntityLevel("ColonyShip", 5) as Entity,
 
   MinutemanMarineUpgrade1: toHex32("MinutemanMarineUpgrade") as Entity,
   MinutemanMarineUpgrade2: toHex32("MinutemanMarineUpgrade") as Entity,
@@ -273,165 +277,29 @@ export const EntityType = {
   TridentMarineUpgrade4: toHex32("TridentMarineUpgrade") as Entity,
   TridentMarineUpgrade5: toHex32("TridentMarineUpgrade") as Entity,
 
-  //Objectives
+  // Leaderboards
+  PlayerShardLeaderboard: toHex32("Player_Primodium") as Entity,
+  PlayerWormholeLeaderboard: toHex32("Player_Wormhole") as Entity,
+  PlayerGrandLeaderboard: toHex32("Player_Grand") as Entity,
+
+  // Leaderboards
+  AllianceShardLeaderboard: toHex32("Alliance_Primodium") as Entity,
+  AllianceWormholeLeaderboard: toHex32("Alliance_Wormhole") as Entity,
+  AllianceGrandLeaderboard: toHex32("Alliance_Grand") as Entity,
+
+  // Objectives
   ...Object.keys(EObjectives).reduce((acc, key) => {
     if (!isNaN(Number(key))) return acc;
     return { ...acc, [key]: toHex32(key) as Entity };
   }, {}),
 
-  //Starmap
+  // Starmap
   Asteroid: toHex32("spacerock.Asteroid") as Entity,
 
   NULL: toHex32("NULL") as Entity,
 };
 
 export const RESERVE_RESOURCE = EntityType.Kimberlite;
-
-export const MapIdToAsteroidType: Record<number, Entity> = {
-  2: EntityType.Kimberlite,
-  3: EntityType.Iridium,
-  4: EntityType.Platinum,
-  5: EntityType.Titanium,
-};
-
-export const BlockIdToKey = Object.entries(EntityType).reduce<{
-  [key: Entity]: string;
-}>((acc, [key, id]) => {
-  acc[id] = key;
-  return acc;
-}, {});
-
-export const BackgroundImage = new Map<Entity, string[]>([
-  //units
-  [EntityType.HammerDrone, ["/img/unit/hammerdrone.png"]],
-  [EntityType.StingerDrone, ["/img/unit/stingerdrone.png"]],
-  [EntityType.AnvilDrone, ["/img/unit/anvildrone.png"]],
-  [EntityType.AegisDrone, ["/img/unit/aegisdrone.png"]],
-  [EntityType.CapitalShip, ["/img/unit/capitalship.png"]],
-  [EntityType.Droid, ["/img/unit/miningvessel.png"]],
-  [EntityType.LightningCraft, ["/img/unit/lightningcraft.png"]],
-  [EntityType.MinutemanMarine, ["/img/unit/minutemen_marine.png"]],
-  [EntityType.TridentMarine, ["/img/unit/trident_marine.png"]],
-]);
-
-export const ResearchImage = new Map<Entity, string>([
-  [EntityType.Iron, "/img/resource/iron_resource.png"],
-  [EntityType.Copper, "/img/resource/copper_resource.png"],
-  [EntityType.Lithium, "/img/resource/lithium_resource.png"],
-  [EntityType.Titanium, "/img/resource/titanium_resource.png"],
-
-  [EntityType.Iridium, "/img/resource/iridium_resource.png"],
-
-  [EntityType.Kimberlite, "/img/resource/kimberlite_resource.png"],
-  [EntityType.Platinum, "/img/resource/platinum_resource.png"],
-
-  [EntityType.ExpansionResearch1, "/img/icons/mainbaseicon.png"],
-  [EntityType.ExpansionResearch2, "/img/icons/mainbaseicon.png"],
-  [EntityType.ExpansionResearch3, "/img/icons/mainbaseicon.png"],
-  [EntityType.ExpansionResearch4, "/img/icons/mainbaseicon.png"],
-  [EntityType.ExpansionResearch5, "/img/icons/mainbaseicon.png"],
-  [EntityType.ExpansionResearch6, "/img/icons/mainbaseicon.png"],
-  [EntityType.ExpansionResearch7, "/img/icons/mainbaseicon.png"],
-
-  [EntityType.AnvilDroneUpgrade1, "/img/unit/anvildrone.png"],
-  [EntityType.AnvilDroneUpgrade2, "/img/unit/anvildrone.png"],
-  [EntityType.AnvilDroneUpgrade3, "/img/unit/anvildrone.png"],
-  [EntityType.AnvilDroneUpgrade4, "/img/unit/anvildrone.png"],
-  [EntityType.AnvilDroneUpgrade5, "/img/unit/anvildrone.png"],
-
-  [EntityType.HammerDroneUpgrade1, "/img/unit/hammerdrone.png"],
-  [EntityType.HammerDroneUpgrade2, "/img/unit/hammerdrone.png"],
-  [EntityType.HammerDroneUpgrade3, "/img/unit/hammerdrone.png"],
-  [EntityType.HammerDroneUpgrade4, "/img/unit/hammerdrone.png"],
-  [EntityType.HammerDroneUpgrade5, "/img/unit/hammerdrone.png"],
-
-  [EntityType.AegisDroneUpgrade1, "/img/unit/aegisdrone.png"],
-  [EntityType.AegisDroneUpgrade2, "/img/unit/aegisdrone.png"],
-  [EntityType.AegisDroneUpgrade3, "/img/unit/aegisdrone.png"],
-  [EntityType.AegisDroneUpgrade4, "/img/unit/aegisdrone.png"],
-  [EntityType.AegisDroneUpgrade5, "/img/unit/aegisdrone.png"],
-
-  [EntityType.StingerDroneUpgrade1, "/img/unit/stingerdrone.png"],
-  [EntityType.StingerDroneUpgrade2, "/img/unit/stingerdrone.png"],
-  [EntityType.StingerDroneUpgrade3, "/img/unit/stingerdrone.png"],
-  [EntityType.StingerDroneUpgrade4, "/img/unit/stingerdrone.png"],
-  [EntityType.StingerDroneUpgrade5, "/img/unit/stingerdrone.png"],
-
-  [EntityType.CapitalShipUpgrade1, "/img/unit/capitalship.png"],
-  [EntityType.CapitalShipUpgrade2, "/img/unit/capitalship.png"],
-  [EntityType.CapitalShipUpgrade3, "/img/unit/capitalship.png"],
-  [EntityType.CapitalShipUpgrade4, "/img/unit/capitalship.png"],
-  [EntityType.CapitalShipUpgrade5, "/img/unit/capitalship.png"],
-
-  [EntityType.TridentMarineUpgrade1, "img/unit/trident_marine.png"],
-  [EntityType.TridentMarineUpgrade2, "img/unit/trident_marine.png"],
-  [EntityType.TridentMarineUpgrade3, "img/unit/trident_marine.png"],
-  [EntityType.TridentMarineUpgrade4, "img/unit/trident_marine.png"],
-  [EntityType.TridentMarineUpgrade5, "img/unit/trident_marine.png"],
-
-  [EntityType.MinutemanMarineUpgrade1, "img/unit/minutemen_marine.png"],
-  [EntityType.MinutemanMarineUpgrade2, "img/unit/minutemen_marine.png"],
-  [EntityType.MinutemanMarineUpgrade3, "img/unit/minutemen_marine.png"],
-  [EntityType.MinutemanMarineUpgrade4, "img/unit/minutemen_marine.png"],
-  [EntityType.MinutemanMarineUpgrade5, "img/unit/minutemen_marine.png"],
-]);
-//images of resource items (think of them like minecraft entities)
-export const ResourceImage = new Map<Entity, string>([
-  [EntityType.Iron, "/img/resource/iron_resource.png"],
-  [EntityType.Copper, "/img/resource/copper_resource.png"],
-  [EntityType.Lithium, "/img/resource/lithium_resource.png"],
-  [EntityType.Titanium, "/img/resource/titanium_resource.png"],
-  [EntityType.Iridium, "/img/resource/iridium_resource.png"],
-  [EntityType.Kimberlite, "/img/resource/kimberlite_resource.png"],
-  [EntityType.Platinum, "/img/resource/platinum_resource.png"],
-
-  [EntityType.IronPlate, "/img/resource/ironplate.png"],
-
-  [EntityType.Alloy, "/img/resource/alloy_resource.png"],
-  [EntityType.PVCell, "/img/resource/photovoltaiccell_resource.png"],
-
-  [EntityType.Electricity, "/img/icons/powericon.png"],
-  [EntityType.Housing, "/img/icons/utilitiesicon.png"],
-  [EntityType.FleetCount, "/img/icons/moveicon.png"],
-  [EntityType.CapitalShipCapacity, "/img/unit/capitalship.png"],
-  [EntityType.Defense, "/img/icons/defenseicon.png"],
-  [EntityType.DefenseMultiplier, "/img/icons/defenseicon.png"],
-  [EntityType.Unraidable, "/img/icons/unraidableicon.png"],
-  [EntityType.AdvancedUnraidable, "/img/icons/advancedunraidableicon.png"],
-  [EntityType.Encryption, "/img/icons/encryptionicon.png"],
-  [EntityType.HP, "/img/icons/reinforcementicon.png"],
-
-  //units
-  [EntityType.HammerDrone, "/img/unit/hammerdrone.png"],
-  [EntityType.StingerDrone, "/img/unit/stingerdrone.png"],
-  [EntityType.AnvilDrone, "/img/unit/anvildrone.png"],
-  [EntityType.AegisDrone, "/img/unit/aegisdrone.png"],
-  [EntityType.CapitalShip, "/img/unit/capitalship.png"],
-  [EntityType.Droid, "/img/unit/droid.png"],
-  [EntityType.MinutemanMarine, "img/unit/minutemen_marine.png"],
-  [EntityType.TridentMarine, "img/unit/trident_marine.png"],
-  [EntityType.LightningCraft, "img/unit/lightningcraft.png"],
-]);
-
-export type DisplayKeyPair = {
-  terrain: Entity | null;
-  resource: Entity | null;
-};
-
-export const KeyImages = new Map<Key, string>([
-  ["ONE", "/img/keys/one.png"],
-  ["TWO", "/img/keys/two.png"],
-  ["THREE", "/img/keys/three.png"],
-  ["FOUR", "/img/keys/four.png"],
-  ["FIVE", "/img/keys/five.png"],
-  ["SIX", "/img/keys/six.png"],
-  ["SEVEN", "/img/keys/seven.png"],
-  ["EIGHT", "/img/keys/eight.png"],
-  ["NINE", "/img/keys/nine.png"],
-  ["ZERO", "/img/keys/zero.png"],
-  ["Q", "/img/keys/q.png"],
-  ["E", "/img/keys/e.png"],
-]);
 
 export const ResourceStorages = new Set([
   EntityType.Iron,
@@ -461,7 +329,7 @@ export const UnitStorages = new Set([
   EntityType.StingerDrone,
   EntityType.AnvilDrone,
   EntityType.AegisDrone,
-  EntityType.CapitalShip,
+  EntityType.ColonyShip,
   EntityType.Droid,
   EntityType.MinutemanMarine,
   EntityType.TridentMarine,
@@ -484,7 +352,6 @@ export const ResourceEnumLookup: Record<Entity, EResource> = {
 
   [EntityType.Electricity]: EResource.U_Electricity,
   [EntityType.Housing]: EResource.U_Housing,
-  [EntityType.CapitalShipCapacity]: EResource.U_CapitalShipCapacity,
   [EntityType.FleetCount]: EResource.U_MaxFleets,
   [EntityType.Defense]: EResource.U_Defense,
   [EntityType.Unraidable]: EResource.U_Unraidable,
@@ -514,6 +381,7 @@ export const BuildingEnumLookup: Record<Entity, EBuilding> = {
   [EntityType.DroneFactory]: EBuilding.DroneFactory,
   [EntityType.Hangar]: EBuilding.Hangar,
   [EntityType.MainBase]: EBuilding.MainBase,
+  [EntityType.WormholeBase]: EBuilding.WormholeBase,
   [EntityType.SAMLauncher]: EBuilding.SAM,
   [EntityType.StarmapperStation]: EBuilding.Starmapper,
   [EntityType.ShieldGenerator]: EBuilding.ShieldGenerator,
@@ -532,7 +400,7 @@ export const UnitEnumLookup: Record<Entity, EUnit> = {
   [EntityType.MinutemanMarine]: EUnit.MinutemanMarine,
   [EntityType.TridentMarine]: EUnit.TridentMarine,
   [EntityType.LightningCraft]: EUnit.LightningCraft,
-  [EntityType.CapitalShip]: EUnit.CapitalShip,
+  [EntityType.ColonyShip]: EUnit.ColonyShip,
   [EntityType.Droid]: EUnit.Droid,
 };
 
@@ -548,3 +416,14 @@ export const ObjectiveEnumLookup: Record<Entity, EObjectives> = {
 };
 
 export const ObjectiveEntityLookup = reverseRecord(ObjectiveEnumLookup);
+
+export const LeaderboardEntityLookup = {
+  player: {
+    [EPointType.Shard]: EntityType.PlayerShardLeaderboard,
+    [EPointType.Wormhole]: EntityType.PlayerWormholeLeaderboard,
+  },
+  alliance: {
+    [EPointType.Shard]: EntityType.AllianceShardLeaderboard,
+    [EPointType.Wormhole]: EntityType.AllianceWormholeLeaderboard,
+  },
+};

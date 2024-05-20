@@ -1,4 +1,4 @@
-import { KeySchema, SchemaToPrimitives, ValueSchema } from "@latticexyz/protocol-parser";
+import { KeySchema, SchemaToPrimitives, ValueSchema } from "@latticexyz/protocol-parser/internal";
 import { Schema } from "@latticexyz/recs";
 import { hexKeyTupleToEntity } from "@latticexyz/store-sync/recs";
 import { SchemaAbiTypeToRecsType } from "@latticexyz/store-sync/src/recs/schemaAbiTypeToRecsType";
@@ -15,6 +15,7 @@ export function encodeEntity<S extends Schema, TKeySchema extends KeySchema>(
       `key length ${Object.keys(key).length} does not match key schema length ${Object.keys(keySchema).length}`
     );
   }
+
   return hexKeyTupleToEntity(
     Object.entries(keySchema).map(([keyName, type]) => encodeAbiParameters([{ type }], [key[keyName]]))
   );

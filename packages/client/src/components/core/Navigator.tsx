@@ -1,6 +1,6 @@
 import { FC, ReactNode, createContext, useCallback, useContext, useLayoutEffect, useState } from "react";
-import { Button } from "./Button";
-import { SecondaryCard } from "./Card";
+import { Button } from "@/components/core/Button";
+import { SecondaryCard } from "@/components/core/Card";
 
 interface NavigationContextValue {
   navigateTo: (screenTitle: string, replace?: boolean) => void;
@@ -72,18 +72,20 @@ const Screen: FC<{
 }> = ({ title, className, children }) => {
   const { history } = useNavigation();
   if (history[history.length - 1] !== title) return null;
-  return <div className={`flex flex-col items-center w-full ${className}`}>{children}</div>;
+  return <div className={`flex flex-col w-full ${className} animate-in fade-in duration-300`}>{children}</div>;
 };
 
-const NavButton: FC<{
-  to: string;
-  children?: ReactNode;
-  className?: string;
-  disabled?: boolean;
-  tooltip?: string;
-  tooltipDirection?: "top" | "bottom" | "right" | "left";
-  onClick?: () => void;
-}> = ({ to, className, children, disabled, onClick, tooltip, tooltipDirection = "top" }) => {
+const NavButton: FC<
+  React.ComponentProps<typeof Button> & {
+    to: string;
+    children?: ReactNode;
+    className?: string;
+    disabled?: boolean;
+    tooltip?: string;
+    tooltipDirection?: "top" | "bottom" | "right" | "left";
+    onClick?: () => void;
+  }
+> = ({ to, className, children, disabled, onClick, tooltip, tooltipDirection = "top", ...props }) => {
   const { navigateTo, history } = useNavigation();
 
   return (
@@ -96,6 +98,7 @@ const NavButton: FC<{
         navigateTo(to, true);
       }}
       disabled={disabled || to === history[history.length - 1]}
+      {...props}
     >
       {children}
     </Button>

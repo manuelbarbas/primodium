@@ -1,13 +1,10 @@
-import { Assets, SpriteKeys } from "@game/constants";
 import { Scene } from "engine/types";
+import { Sprites, Assets } from "@primodiumxyz/assets";
 
-const cache = new Map<SpriteKeys, string>();
+const cache = new Map<Sprites, string>();
 
 export const createSpriteApi = (scene: Scene) => {
-  function getSpriteBase64(
-    spriteKey: SpriteKeys,
-    atlasKey = Assets.SpriteAtlas
-  ) {
+  function getSpriteBase64(spriteKey: Sprites, atlasKey = Assets.SpriteAtlas) {
     if (!cache.has(spriteKey)) {
       const texture = scene.phaserScene.textures.getBase64(atlasKey, spriteKey);
       cache.set(spriteKey, texture);

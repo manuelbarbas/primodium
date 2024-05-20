@@ -1,6 +1,6 @@
-import { Hex } from "viem";
 import { Entity } from "@latticexyz/recs";
 import type { Sync } from "@primodiumxyz/sync-stack";
+import { Hex } from "viem";
 
 export const getAsteroidQuery = ({
   tables,
@@ -32,6 +32,14 @@ export const getAsteroidQuery = ({
           key0: asteroid,
         },
         {
+          tableId: tables.LastConquered.tableId,
+          key0: asteroid,
+        },
+        {
+          tableId: tables.Keys_UnitFactorySet.tableId,
+          key0: asteroid,
+        },
+        {
           tableId: tables.ProductionRate.tableId,
           key0: asteroid,
         },
@@ -49,6 +57,36 @@ export const getAsteroidQuery = ({
         },
         {
           tableId: tables.UnitLevel.tableId,
+          key0: asteroid,
+        },
+      ],
+    },
+  };
+};
+
+export const getShardAsteroidQuery = ({
+  tables,
+  world,
+  indexerUrl,
+  asteroid,
+  worldAddress,
+}: Omit<Parameters<typeof Sync.withFilterIndexerRecsSync>[0], "filter"> & {
+  worldAddress: Hex;
+  asteroid: Entity;
+}) => {
+  return {
+    indexerUrl,
+    tables,
+    world,
+    filter: {
+      address: worldAddress as Hex,
+      filters: [
+        {
+          tableId: tables.ResourceCount.tableId,
+          key0: asteroid,
+        },
+        {
+          tableId: tables.MaxResourceCount.tableId,
           key0: asteroid,
         },
       ],
@@ -75,43 +113,46 @@ export const getActiveAsteroidQuery = ({
       queries: [
         //get buildings
         {
-          tableId: tables.Position.tableId!,
+          tableId: tables.Position.tableId,
           where: {
-            column: "parent",
+            column: "parent_entity",
             operation: "eq",
             value: asteroid as Hex,
           },
           include: [
             {
-              tableId: tables.OwnedBy.tableId!,
+              tableId: tables.OwnedBy.tableId,
             },
             {
-              tableId: tables.BuildingType.tableId!,
+              tableId: tables.TilePositions.tableId,
             },
             {
-              tableId: tables.IsActive.tableId!,
+              tableId: tables.BuildingType.tableId,
             },
             {
-              tableId: tables.Level.tableId!,
+              tableId: tables.IsActive.tableId,
             },
             {
-              tableId: tables.LastClaimedAt.tableId!,
+              tableId: tables.Level.tableId,
             },
             {
-              tableId: tables.ClaimOffset.tableId!,
+              tableId: tables.LastClaimedAt.tableId,
             },
             {
-              tableId: tables.QueueUnits.tableId!,
+              tableId: tables.ClaimOffset.tableId,
             },
             {
-              tableId: tables.QueueItemUnits.tableId!,
+              tableId: tables.Meta_UnitProductionQueue.tableId,
+            },
+            {
+              tableId: tables.Value_UnitProductionQueue.tableId,
               on: "entity",
             },
           ],
         },
         //get expansion level
         {
-          tableId: tables.Level.tableId!,
+          tableId: tables.Level.tableId,
           where: {
             column: "entity",
             operation: "eq",

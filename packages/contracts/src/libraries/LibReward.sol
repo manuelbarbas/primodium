@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 // tables
 import { P_IsUtility, MaxResourceCount, ResourceCount, P_ResourceReward, P_ResourceRewardData, P_UnitReward, P_UnitRewardData } from "codegen/index.sol";
@@ -11,36 +11,56 @@ import { LibUnit } from "libraries/LibUnit.sol";
 
 // types
 import { EResource } from "src/Types.sol";
-
+/**
+ * @title LibReward
+ * @dev Library to handle the distribution of rewards on asteroids in a game.
+ */
 library LibReward {
-  function receiveRewards(bytes32 playerEntity, bytes32 spaceRockEntity, bytes32 prototype) internal {
-    receiveUnitRewards(playerEntity, spaceRockEntity, prototype);
-    receiveResourceRewards(playerEntity, spaceRockEntity, prototype);
+  /**
+   * @notice Distributes both unit and resource rewards to an asteroid based on a given prototype.
+   * @param asteroidEntity The identifier of the asteroid receiving the rewards.
+   * @param prototype The identifier of the prototype that determines the rewards.
+   * @dev Calls `receiveUnitRewards` and `receiveResourceRewards` to handle the distribution of different types of rewards.
+   */
+  function receiveRewards(bytes32 asteroidEntity, bytes32 prototype) internal {
+    receiveUnitRewards(asteroidEntity, prototype);
+    receiveResourceRewards(asteroidEntity, prototype);
   }
-
-  function receiveUnitRewards(bytes32 playerEntity, bytes32 spaceRockEntity, bytes32 prototype) internal {
+  /**
+   * @notice Distributes unit rewards to an asteroid based on a given prototype.
+   * @param asteroidEntity The identifier of the asteroid receiving the unit rewards.
+   * @param prototype The identifier of the prototype that determines the unit rewards.
+   * @dev Iterates through the units defined in the reward data and increases their count on the asteroid.
+   */
+  function receiveUnitRewards(bytes32 asteroidEntity, bytes32 prototype) internal {
     P_UnitRewardData memory rewardData = P_UnitReward.get(prototype);
     for (uint256 i = 0; i < rewardData.units.length; i++) {
-      LibUnit.increaseUnitCount(spaceRockEntity, rewardData.units[i], rewardData.amounts[i], true);
+      LibUnit.increaseUnitCount(asteroidEntity, rewardData.units[i], rewardData.amounts[i], true);
     }
   }
 
-  function receiveResourceRewards(bytes32 playerEntity, bytes32 spaceRockEntity, bytes32 prototype) internal {
+  /**
+   * @notice Distributes resource rewards to an asteroid based on a given prototype.
+   * @param asteroidEntity The identifier of the asteroid receiving the resource rewards.
+   * @param prototype The identifier of the prototype that determines the resource rewards.
+   * @dev Increases resource count or production based on whether the resource is utility or not, ensuring it does not exceed the max resource count.
+   */
+  function receiveResourceRewards(bytes32 asteroidEntity, bytes32 prototype) internal {
     P_ResourceRewardData memory rewardData = P_ResourceReward.get(prototype);
     for (uint256 i = 0; i < rewardData.resources.length; i++) {
       if (P_IsUtility.get(rewardData.resources[i])) {
         LibProduction.increaseResourceProduction(
-          spaceRockEntity,
+          asteroidEntity,
           EResource(rewardData.resources[i]),
           rewardData.amounts[i]
         );
       } else {
         require(
-          rewardData.amounts[i] + ResourceCount.get(spaceRockEntity, rewardData.resources[i]) <=
-            MaxResourceCount.get(spaceRockEntity, rewardData.resources[i]),
+          rewardData.amounts[i] + ResourceCount.get(asteroidEntity, rewardData.resources[i]) <=
+            MaxResourceCount.get(asteroidEntity, rewardData.resources[i]),
           "[LibReward] Resource count exceeds max"
         );
-        LibStorage.increaseStoredResource(spaceRockEntity, rewardData.resources[i], rewardData.amounts[i]);
+        LibStorage.increaseStoredResource(asteroidEntity, rewardData.resources[i], rewardData.amounts[i]);
       }
     }
   }

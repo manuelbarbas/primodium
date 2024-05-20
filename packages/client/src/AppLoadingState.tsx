@@ -1,30 +1,32 @@
-import { minEth } from "@game/constants";
 import { transportObserver } from "@latticexyz/common";
-import { ComponentValue, Entity, Schema } from "@latticexyz/recs";
-import { Browser, ContractComponent } from "@primodiumxyz/mud-game-tools";
 import { useEffect, useMemo, useState } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { setupSessionAccount } from "src/network/systems/setupSessionAccount";
 import { createPublicClient, fallback, http } from "viem";
 import { Progress } from "./components/core/Progress";
 import { useMud } from "./hooks";
 import { useInit } from "./hooks/useInit";
 import { useSyncStatus } from "./hooks/useSyncStatus";
 import { getNetworkConfig } from "./network/config/getNetworkConfig";
-import { setComponentValue } from "./network/setup/contractCalls/dev";
-import { world } from "./network/world";
 import { Enter } from "./screens/Enter";
 import { Game } from "./screens/Game";
 import { Increment } from "./screens/Increment";
+import { Sandbox } from "./screens/Sandbox";
 import { Statistics } from "./screens/Statistics";
-import { setupCheatcodes } from "./util/cheatcodes";
+import { minEth } from "./util/constants";
 
 export const DEV = import.meta.env.PRI_DEV === "true";
 export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
 
 export default function AppLoadingState() {
   const mud = useMud();
-  const initialized = useInit();
+
   const [balance, setBalance] = useState<bigint>();
+
+  useEffect(() => {
+    mud.removeSessionAccount();
+    setupSessionAccount(mud.playerAccount.entity, mud.removeSessionAccount, mud.updateSessionAccount);
+  }, [mud.playerAccount.entity]);
 
   useEffect(() => {
     const networkConfig = getNetworkConfig();
@@ -32,6 +34,7 @@ export default function AppLoadingState() {
       chain: networkConfig.chain,
       transport: transportObserver(fallback([http()])),
     };
+    /* Since this system modifies mud.sessionAccount, it can't have mud as a dependency */
 
     const publicClient = createPublicClient(clientOptions);
 
@@ -49,8 +52,7 @@ export default function AppLoadingState() {
   const ready = useMemo(() => !loading && enoughEth, [loading, enoughEth]);
 
   return (
-    <div className="bg-black h-screen">
-      <div className="absolute w-full h-full star-background opacity-30" />
+    <div className="h-screen relative">
       {!error && (
         <div className="relative">
           {!loading && !enoughEth && (
@@ -83,27 +85,8 @@ export default function AppLoadingState() {
           )}
           {ready && (
             <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Navigate to="/game" replace />} />
-                <Route path="/game" element={initialized ? <Game /> : <Enter />} />
-                <Route path="/increment" element={<Increment />} />
-                <Route path="/statistics" element={<Statistics />} />
-              </Routes>
+              <PrimodiumRoutes />
             </BrowserRouter>
-          )}
-          {DEV && (
-            <div className="font-mono text-xs">
-              <Browser
-                layers={{ react: { world, components: mud.components } }}
-                setContractComponentValue={(
-                  component: ContractComponent<Schema>,
-                  entity: Entity,
-                  newValue: ComponentValue<Schema>
-                ) => setComponentValue(mud, component, entity, newValue)}
-                world={world}
-                cheatcodes={setupCheatcodes(mud)}
-              />
-            </div>
           )}
         </div>
       )}
@@ -117,3 +100,18 @@ export default function AppLoadingState() {
     </div>
   );
 }
+
+export const PrimodiumRoutes = () => {
+  const location = useLocation();
+  const initialized = useInit();
+
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate to={{ pathname: "/game", search: location.search }} />} />
+      <Route path="/game" element={initialized ? <Game /> : <Enter />} />
+      <Route path="/increment" element={<Increment />} />
+      <Route path="/statistics" element={<Statistics />} />
+      <Route path="/sandbox" element={<Sandbox />} />
+    </Routes>
+  );
+};

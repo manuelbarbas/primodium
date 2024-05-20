@@ -1,4 +1,4 @@
-import { StaticAbiType } from "@latticexyz/schema-type";
+import { StaticAbiType } from "@latticexyz/schema-type/internal";
 import { Hex } from "viem";
 import { BASE_RESERVE, RESERVE_RESOURCE, SCALE } from "../../config/constants";
 import { EResource, MUDEnums } from "../../config/enums";
@@ -47,7 +47,7 @@ export const upgradesByLevel = (name: string, upgrades: Record<number, Record<st
     const name32 = encodeBytes32(name);
     const upgradesObject = Object.entries(upgrades).reduce((prev, [resource, max]) => {
       const resourceIndex = MUDEnums.EResource.indexOf(resource);
-      prev[`${name}${resource}L${level}Upgrade`] = {
+      prev[`${name}${resource}L${level}`] = {
         keys: [{ [name32]: "bytes32" }, { [resourceIndex]: "uint8" }, { [level]: "uint32" }],
         tables: {
           P_ByLevelMaxResourceUpgrades: {
@@ -89,12 +89,7 @@ export const getPUnitData = (data: {
  * @returns An object containing the resources and their amounts
  */
 
-const unscaledResources = new Set([
-  EResource.U_Housing,
-  EResource.U_MaxFleets,
-  EResource.U_CapitalShipCapacity,
-  EResource.M_DefenseMultiplier,
-]);
+const unscaledResources = new Set([EResource.U_Housing, EResource.U_MaxFleets, EResource.M_DefenseMultiplier]);
 export const getResourceValues = (resourceValues: Record<string, number>) => {
   // unzip the array
   const [resources, amounts] = Object.entries(resourceValues).reduce(
@@ -107,10 +102,6 @@ export const getResourceValues = (resourceValues: Record<string, number>) => {
     [[], []] as [number[], bigint[]]
   );
   return { resources, amounts };
-};
-export const getPirateObjectiveResourceValues = (resourceValues: Record<string, number>) => {
-  const amounts = getResourceValues(resourceValues);
-  return { ...amounts, resourceAmounts: amounts.amounts };
 };
 
 export const getUnitValues = (unitValues: Record<string, number>) => {

@@ -1,41 +1,40 @@
-import { DepthLayers, Scenes } from "@game/constants";
-import { pixelCoordToTileCoord } from "@latticexyz/phaserx";
-import { Coord } from "@latticexyz/utils";
+import { cn } from "@/util/client";
+import { Coord } from "engine/types";
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaChevronRight } from "react-icons/fa";
-import { usePrimodium } from "src/hooks/usePrimodium";
+import { DepthLayers, SceneKeys } from "src/game/lib/constants/common";
+import { useGame } from "src/hooks/useGame";
 import { calculateAngleBetweenPoints } from "src/util/common";
 import { Button } from "./Button";
 import { IconLabel } from "./IconLabel";
 
-const BoundedMarker: React.FC<{ scene: Scenes; coord: Coord; iconUri: string; degrees: number }> = ({
+const BoundedMarker: React.FC<{ scene: SceneKeys; coord: Coord; iconUri: string; degrees: number }> = ({
   coord,
   scene,
   iconUri,
   degrees,
 }) => {
-  const primodium = usePrimodium();
+  const game = useGame();
 
   const handleClick = useCallback(() => {
     const {
       camera: { pan },
-      scene: { getConfig },
-    } = primodium.api(scene);
+      utils,
+    } = game[scene];
 
-    const config = getConfig(scene);
-
-    const tileCoord = pixelCoordToTileCoord(
-      { x: coord.x, y: -coord.y },
-      config.tilemap.tileWidth,
-      config.tilemap.tileHeight
-    );
+    const tileCoord = utils.pixelCoordToTileCoord({ x: coord.x, y: -coord.y });
 
     pan(tileCoord);
-  }, [coord, primodium, scene]);
+  }, [coord, game, scene]);
 
   return (
-    <Button className="border border-secondary hover:bg-secondary hover:border-accent" onClick={handleClick}>
+    <Button
+      shape="square"
+      size="md"
+      className="border border-secondary hover:bg-secondary hover:border-accent"
+      onClick={handleClick}
+    >
       <IconLabel imageUri={iconUri} className={`text-xl drop-shadow-hard`} />
       <div className="absolute inset-0 pointer-events-none" style={{ transform: `rotate(${degrees}deg)` }}>
         <FaChevronRight size={24} className="text-success font-bold absolute top-1/2 -translate-y-1/2 -right-10" />
@@ -46,9 +45,10 @@ const BoundedMarker: React.FC<{ scene: Scenes; coord: Coord; iconUri: string; de
 
 export const Marker: React.FC<{
   id: string;
-  scene: Scenes;
+  scene: SceneKeys;
   coord: Coord;
   children: ReactNode;
+  noPointerEvents?: boolean;
   offScreenIconUri?: string;
   depth?: number;
   origin?:
@@ -61,14 +61,24 @@ export const Marker: React.FC<{
     | "center-right"
     | "center-top"
     | "center-bottom";
-}> = ({ id, scene, coord, children, offScreenIconUri, depth = DepthLayers.Marker, origin = "center" }) => {
-  const primodium = usePrimodium();
+}> = ({
+  id,
+  scene,
+  coord,
+  noPointerEvents,
+  children,
+  offScreenIconUri,
+  depth = DepthLayers.Marker,
+  origin = "center",
+}) => {
+  const game = useGame();
   const [marker, setMarker] = useState<Phaser.GameObjects.DOMElement>();
   const [container, setContainer] = useState<HTMLDivElement>();
   const [visible, setVisible] = useState(true);
   const [degrees, setDegrees] = useState(0);
-  const camera = useRef(primodium.api(scene).camera).current;
-  const uiCamera = useRef(primodium.api(Scenes.UI).camera).current;
+  const camera = useRef(game[scene].camera).current;
+  const uiCamera = useRef(game.UI.camera).current;
+  const pointerEventsClass = noPointerEvents ? "pointer-events-none" : "pointer-events-auto";
   const translateClass = useMemo(() => {
     switch (origin) {
       case "top-left":
@@ -118,7 +128,12 @@ export const Marker: React.FC<{
       obj.destroy();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [coord, id, visible, offScreenIconUri]);
+  }, [id, visible, offScreenIconUri]);
+
+  useEffect(() => {
+    marker?.setX(coord.x);
+    marker?.setY(coord.y);
+  }, [coord, marker]);
 
   useEffect(() => {
     if (!marker || !container) return;
@@ -167,7 +182,7 @@ export const Marker: React.FC<{
   if (!marker || !container || !camera.phaserCamera.scene.scene.isActive()) return;
 
   return ReactDOM.createPortal(
-    <div className={translateClass}>
+    <div className={cn(pointerEventsClass, translateClass)}>
       {!visible && offScreenIconUri && (
         <BoundedMarker scene={scene} coord={coord} iconUri={offScreenIconUri} degrees={degrees} />
       )}
@@ -179,7 +194,7 @@ export const Marker: React.FC<{
 
 export const IconMarker: React.FC<{
   id: string;
-  scene: Scenes;
+  scene: SceneKeys;
   coord: Coord;
   iconUri: string;
   depth?: number;

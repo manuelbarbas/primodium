@@ -1,22 +1,22 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
-import { P_UnitPrototypes, P_EnumToPrototype, QueueItemUnitsData, OwnedBy } from "codegen/index.sol";
-import { UnitProductionQueue } from "codegen/Libraries.sol";
+import { P_UnitPrototypes, P_EnumToPrototype, Value_UnitProductionQueueData, OwnedBy } from "codegen/index.sol";
+import { UnitProductionQueue } from "libraries/UnitProductionQueue.sol";
 
 import { EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
-import { claimResources, claimUnits } from "libraries/SubsystemCalls.sol";
-import { LibResource } from "codegen/Libraries.sol";
-import { LibUnit } from "codegen/Libraries.sol";
+import { IWorld } from "codegen/world/IWorld.sol";
+import { LibResource } from "libraries/LibResource.sol";
+import { LibUnit } from "libraries/LibUnit.sol";
 
 contract TrainUnitsSystem is PrimodiumSystem {
   /// @notice Trains units based on specified unit type and count
   /// @param buildingEntity Entity identifier of the building
   /// @param unit Unit type to be trained
   /// @param count Quantity of units to be trained
-  function trainUnits(bytes32 buildingEntity, EUnit unit, uint256 count) public {
+  function trainUnits(bytes32 buildingEntity, EUnit unit, uint256 count) public _onlyBuildingOwner(buildingEntity) {
     // Ensure the unit is valid (within the defined range of unit types).
     require(unit > EUnit.NULL && unit < EUnit.LENGTH, "[TrainUnitsSystem] Unit does not exist");
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(unit));
@@ -27,7 +27,11 @@ contract TrainUnitsSystem is PrimodiumSystem {
   /// @param buildingEntity Entity identifier of the building
   /// @param unitPrototype Unit prototype to be trained
   /// @param count Quantity of units to be trained
-  function trainUnits(bytes32 buildingEntity, bytes32 unitPrototype, uint256 count) public {
+  function trainUnits(
+    bytes32 buildingEntity,
+    bytes32 unitPrototype,
+    uint256 count
+  ) public _onlyBuildingOwner(buildingEntity) {
     // Ensure the unit is valid (within the defined range of unit types).
     bool isValid = false;
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
@@ -48,14 +52,17 @@ contract TrainUnitsSystem is PrimodiumSystem {
   function _trainUnits(bytes32 buildingEntity, bytes32 unitPrototype, uint256 count) internal {
     if (count == 0) return;
 
-    bytes32 spaceRockEntity = OwnedBy.get(buildingEntity);
-
-    claimResources(spaceRockEntity);
-    claimUnits(spaceRockEntity);
-    LibResource.spendUnitRequiredResources(spaceRockEntity, unitPrototype, count);
+    bytes32 asteroidEntity = OwnedBy.get(buildingEntity);
+    IWorld world = IWorld(_world());
+    world.Pri_11__claimResources(asteroidEntity);
+    world.Pri_11__claimUnits(asteroidEntity);
+    LibResource.spendUnitRequiredResources(asteroidEntity, unitPrototype, count);
     LibUnit.checkTrainUnitsRequirements(buildingEntity, unitPrototype);
 
-    QueueItemUnitsData memory queueItem = QueueItemUnitsData({ unitId: unitPrototype, quantity: count });
+    Value_UnitProductionQueueData memory queueItem = Value_UnitProductionQueueData({
+      unitEntity: unitPrototype,
+      quantity: count
+    });
     UnitProductionQueue.enqueue(buildingEntity, queueItem);
   }
 }

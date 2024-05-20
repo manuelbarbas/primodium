@@ -1,13 +1,14 @@
 import { Entity } from "@latticexyz/recs";
-import { EUnit } from "contracts/config/enums";
+import { EObjectives, EUnit } from "contracts/config/enums";
 import { ampli } from "src/ampli";
-import { execute } from "src/network/actions";
 import { components } from "src/network/components";
+import { execute } from "src/network/txExecute/txExecute";
 import { MUD } from "src/network/types";
-import { getBlockTypeName } from "src/util/common";
+import { getEntityTypeName } from "src/util/common";
 import { TransactionQueueType, UnitEntityLookup } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { bigintToNumber } from "src/util/number";
+import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 import { Hex } from "viem";
 import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
@@ -15,7 +16,7 @@ export const upgradeUnit = async (mud: MUD, spaceRock: Entity, unit: EUnit) => {
   await execute(
     {
       mud,
-      functionName: "upgradeUnit",
+      functionName: "Pri_11__upgradeUnit",
       systemId: getSystemId("UpgradeUnitSystem"),
       args: [spaceRock as Hex, unit],
       withSession: true,
@@ -24,6 +25,7 @@ export const upgradeUnit = async (mud: MUD, spaceRock: Entity, unit: EUnit) => {
       id: hashEntities(TransactionQueueType.Upgrade, UnitEntityLookup[unit]),
     },
     (receipt) => {
+      makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.UpgradeUnit);
       const unitLevel =
         components.UnitLevel.getWithKeys({
           entity: mud.playerAccount.entity as Hex,
@@ -32,7 +34,7 @@ export const upgradeUnit = async (mud: MUD, spaceRock: Entity, unit: EUnit) => {
 
       ampli.systemUpgradeUnit({
         currLevel: bigintToNumber(unitLevel),
-        unitName: getBlockTypeName(UnitEntityLookup[unit]),
+        unitName: getEntityTypeName(UnitEntityLookup[unit]),
         ...parseReceipt(receipt),
       });
     }

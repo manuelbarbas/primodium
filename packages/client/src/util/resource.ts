@@ -1,4 +1,5 @@
 import { Entity } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { DECIMALS } from "contracts/config/constants";
 import { EResource, MUDEnums } from "contracts/config/enums";
 import { components, components as comps } from "src/network/components";
@@ -15,10 +16,12 @@ const unscaledResources = new Set([
   EntityType.FleetCount,
   EntityType.VesselCapacity,
   EntityType.Housing,
-  EntityType.DefenseMultiplier,
 ]);
 
-export const getResourceDecimals = (resource: Entity) => (unscaledResources.has(resource) ? 0 : DECIMALS);
+const multipliers = new Set([EntityType.DefenseMultiplier, EntityType.UnitProductionMultiplier]);
+
+export const getResourceDecimals = (resource: Entity) =>
+  unscaledResources.has(resource) ? 0 : multipliers.has(resource) ? 2 : DECIMALS;
 
 export type ResourceCountData = {
   resourceCount: bigint;
@@ -71,7 +74,7 @@ export function getAsteroidResourceCount(asteroid: Entity) {
   const timeSinceClaimed =
     ((time - playerLastClaimed) * (comps.P_GameConfig?.get()?.worldSpeed ?? SPEED_SCALE)) / SPEED_SCALE;
 
-  MUDEnums.EResource.forEach((_: string, index: number) => {
+  MUDEnums.EResource.forEach((_: EResource, index: number) => {
     const entity = ResourceEntityLookup[index as EResource];
     if (entity == undefined) return;
     const resource = index as EResource;
@@ -151,5 +154,6 @@ export function getAsteroidResourceCount(asteroid: Entity) {
 }
 
 export function getFullResourceCounts(entity: Entity): Map<Entity, ResourceCountData> {
+  if (entity === singletonEntity) return new Map();
   return components.IsFleet.get(entity) ? getFleetResourceCount(entity) : getAsteroidResourceCount(entity);
 }

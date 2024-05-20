@@ -1,15 +1,20 @@
-import { deferred } from "@latticexyz/utils";
-import { createScene } from "./createScene";
+import { deferred } from "../util/deferred";
+import { createScene as _createScene } from "./createScene";
 
-export type Scene = Awaited<ReturnType<typeof createScene>>;
+export type Scene = Awaited<ReturnType<typeof _createScene>>;
 
 export const createSceneManager = (phaserGame: Phaser.Game) => {
   const scenes = new Map<string, Scene>();
 
-  const addScene = async (config: Parameters<typeof createScene>[1], autoStart = true) => {
-    const scene = await createScene(phaserGame, config, autoStart);
+  const createScene = async (config: Parameters<typeof _createScene>[1], autoStart = true) => {
+    const scene = await _createScene(phaserGame, config, autoStart);
     scenes.set(config.key, scene);
 
+    return scene;
+  };
+
+  const addScene = async (scene: Scene) => {
+    scenes.set(scene.config.key, scene);
     return scene;
   };
 
@@ -25,8 +30,8 @@ export const createSceneManager = (phaserGame: Phaser.Game) => {
     key: string,
     target: string,
     duration = 1000,
-    onTransitionStart = (originScene: Scene, targetScene: Scene) => undefined,
-    onTransitionComplete = (originScene: Scene, targetScene: Scene) => undefined,
+    onTransitionStart?: (originScene: Scene, targetScene: Scene) => void,
+    onTransitionComplete?: (originScene: Scene, targetScene: Scene) => void,
     sleep = true
   ) => {
     const [resolve, , promise] = deferred();
@@ -43,9 +48,11 @@ export const createSceneManager = (phaserGame: Phaser.Game) => {
       return;
     }
 
-    onTransitionStart(originScene, targetScene);
+    if (!originScene.phaserScene.scene.isActive() || targetScene.phaserScene.scene.isActive()) return;
 
-    scenes.get(key)?.phaserScene.scene.transition({
+    onTransitionStart?.(originScene, targetScene);
+
+    originScene?.phaserScene.scene.transition({
       target,
       // moveAbove: true,
       sleep,
@@ -57,11 +64,12 @@ export const createSceneManager = (phaserGame: Phaser.Game) => {
 
     await promise;
 
-    onTransitionComplete(originScene, targetScene);
+    onTransitionComplete?.(originScene, targetScene);
   };
 
   return {
     scenes,
+    createScene,
     addScene,
     removeScene,
     transitionToScene,

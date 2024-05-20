@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 
+//TODO: Use notify here once core package is implemented
 export const copyToClipboard = async (text: string, msgContent?: string) => {
   try {
     await navigator.clipboard.writeText(text);

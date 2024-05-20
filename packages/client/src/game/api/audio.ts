@@ -1,4 +1,4 @@
-import { Assets, AudioKeys } from "@game/constants";
+import { Assets, Audio, AudioKeys } from "@primodiumxyz/assets";
 import { Scene } from "engine/types";
 import { usePersistentStore } from "../stores/PersistentStore";
 
@@ -6,10 +6,7 @@ export type Channel = "music" | "sfx" | "ui";
 
 export const createAudioApi = (scene: Scene) => {
   function play(key: AudioKeys, channel: Channel, config?: Phaser.Types.Sound.SoundConfig) {
-    // const volume = usePersistentStore.getState().volume;
-
-    // setVolume(volume[channel], channel);
-    scene.audio[channel].playAudioSprite(Assets.AudioAtlas, key, {
+    scene.audio[channel].playAudioSprite(Assets.AudioAtlas, Audio[key], {
       ...config,
     });
   }
@@ -24,7 +21,6 @@ export const createAudioApi = (scene: Scene) => {
 
   function get(key: AudioKeys, channel: Channel) {
     const playingSounds = scene.audio[channel].getAllPlaying();
-
     for (const sound of playingSounds) {
       if (sound.currentMarker.name === key) {
         return sound;
@@ -51,6 +47,7 @@ export const createAudioApi = (scene: Scene) => {
   }
 
   return {
+    ...scene.audio,
     play,
     get,
     setVolume,
