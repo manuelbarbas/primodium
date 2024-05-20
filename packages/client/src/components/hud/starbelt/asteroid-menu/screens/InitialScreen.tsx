@@ -113,33 +113,36 @@ export const InitialScreen = ({ selectedRock }: { selectedRock: Entity }) => {
   const mud = useMud();
 
   const primodiumData = useClaimPrimodium(selectedRock);
-  console.log({ primodiumData });
   return (
     <Navigator.Screen title="initial" className="gap-2">
       {isShard && <ShardButton shardEntity={selectedRock} />}
       {!isShard && playerEntity === ownedBy && !!primodiumData && primodiumData.points > 0 && (
-        <Button
-          className={`w-full py-3 heropattern-topography-slate-100/10 ${primodiumData.canConquer ? "" : "opacity-60"}`}
-          variant="warning"
-          size="content"
-          onClick={() => {
-            if (!primodiumData.canConquer) return;
-            claimPrimodium(mud, selectedRock);
-          }}
-        >
-          {primodiumData.canConquer && (
-            <div className="absolute inset-0 bg-warning/25 animate-ping pointer-events-none" />
-          )}
-          <div className="flex flex-start px-1 gap-3 w-full">
-            <IconLabel className="text-lg drop-shadow-lg" imageUri={ResourceImages.Primodium} />
-            <div className="flex flex-col items-start">
-              <p>Claim Primodium</p>
-              <p className="block text-xs opacity-75">
-                {primodiumData.canConquer ? "CLAIM NOW" : formatTime(primodiumData.timeUntilClaim)}
-              </p>
+        <TransactionQueueMask queueItemId={"ClaimPrimodium" as Entity}>
+          <Button
+            className={`w-full py-3 heropattern-topography-slate-100/10 ${
+              primodiumData.canConquer ? "" : "opacity-60"
+            }`}
+            variant="warning"
+            size="content"
+            onClick={() => {
+              if (!primodiumData.canConquer) return;
+              claimPrimodium(mud, selectedRock);
+            }}
+          >
+            {primodiumData.canConquer && (
+              <div className="absolute inset-0 bg-warning/25 animate-ping pointer-events-none" />
+            )}
+            <div className="flex flex-start px-1 gap-3 w-full">
+              <IconLabel className="text-lg drop-shadow-lg" imageUri={ResourceImages.Primodium} />
+              <div className="flex flex-col items-start">
+                <p>Claim Primodium</p>
+                <p className="block text-xs opacity-75">
+                  {primodiumData.canConquer ? "CLAIM NOW" : formatTime(primodiumData.timeUntilClaim)}
+                </p>
+              </div>
             </div>
-          </div>
-        </Button>
+          </Button>
+        </TransactionQueueMask>
       )}
       <Navigator.NavButton
         to="travel"
