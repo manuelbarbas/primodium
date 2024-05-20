@@ -112,7 +112,7 @@ export const renderAsteroid = (args: {
     });
 
   //TODO: this is not great since we have to check every asteroid creation, but we are going to be deffering so maybe ok. Reason we need to do this on init currently is because asteroid may not be initialized yet when the fleet stance update comes in. We could set a timeout on that system but not ideal.
-  if (isAsteroidBlocked(entity)) asteroid?.getFleetContainer().showBlockRing();
+  if (isAsteroidBlocked(entity)) asteroid?.getFleetsContainer().showBlockRing();
 
   return asteroid;
 };

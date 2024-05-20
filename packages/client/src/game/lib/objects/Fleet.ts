@@ -364,13 +364,29 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
       .play();
   }
 
-  destroy() {
-    //TODO: explosion effect
-    // this.detach();
-    this._scene.objects.fleet.remove(this.id);
-    this.laser?.destroy();
-    this.fireSeq?.destroy();
-    super.destroy();
+  destroy(anim = false) {
+    if (!anim) {
+      this._scene.objects.fleet.remove(this.id);
+      this.laser?.destroy();
+      this.fireSeq?.destroy();
+      super.destroy();
+      return;
+    }
+
+    this.scene.add.tween({
+      targets: this,
+      alpha: 0,
+      duration: 200,
+      onStart: () => {
+        this.setActive(false);
+      },
+      onComplete: () => {
+        this._scene.objects.fleet.remove(this.id);
+        this.laser?.destroy();
+        this.fireSeq?.destroy();
+        super.destroy();
+      },
+    });
   }
 
   private _getRotationFrameOffset() {

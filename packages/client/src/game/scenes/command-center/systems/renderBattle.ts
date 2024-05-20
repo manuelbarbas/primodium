@@ -2,12 +2,10 @@ import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs"
 import { PrimodiumScene } from "@/game/api/scene";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { BaseAsteroid } from "@/game/lib/objects/Asteroid/BaseAsteroid";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { addCoords } from "engine/lib/util/coords";
 import { Mode } from "@/util/constants";
 import { battleNotification } from "@/network/systems/setupBattleNotifications";
-// import { entityToFleetName, entityToRockName } from "src/util/name";
 
 const OFFSET = 1000;
 export const renderBattle = (scene: PrimodiumScene) => {
@@ -17,9 +15,11 @@ export const renderBattle = (scene: PrimodiumScene) => {
   const attackAnimation = async (entity: Entity, attacker: Entity, defender: Entity, attackerWinner?: boolean) => {
     const battleResult = components.BattleResult.get(entity);
     const defenderIsFleet = !!components.IsFleet.get(defender)?.value;
+    const selectedRock = components.SelectedRock.get()?.value;
 
     const attackerObj = scene.objects.fleet.get(attacker);
     const defenderObj = defenderIsFleet ? scene.objects.fleet.get(defender) : scene.objects.asteroid.get(defender);
+    const rockObj = scene.objects.asteroid.get(selectedRock ?? singletonEntity);
 
     if (!attackerObj || !defenderObj) return;
 
@@ -42,17 +42,18 @@ export const renderBattle = (scene: PrimodiumScene) => {
       })
       .filter((item) => item !== null) as Phaser.Types.Time.TimelineEventConfig[];
 
+    components.BattleTarget.remove();
+    components.FleetMovement.pauseUpdates(attacker);
+    components.BattleTarget.blockUpdates(singletonEntity);
+    components.SelectedMode.blockUpdates(singletonEntity);
+    if (defenderIsFleet) components.FleetMovement.pauseUpdates(defender);
+    rockObj?.getFleetsContainer().pauseRotation();
+
     const battleRender = scene.phaserScene.add
       .timeline([
         {
           at: 0,
           run: () => {
-            components.BattleTarget.remove();
-            components.FleetMovement.pauseUpdates(attacker);
-            components.BattleTarget.blockUpdates(singletonEntity);
-            components.SelectedMode.blockUpdates(singletonEntity);
-            if (defenderIsFleet) components.FleetMovement.pauseUpdates(defender);
-            if (!defenderIsFleet) (defenderObj as BaseAsteroid).getFleetsContainer().pauseRotation();
             attackerObj.fireAt(defenderPosition);
           },
         },
@@ -71,7 +72,7 @@ export const renderBattle = (scene: PrimodiumScene) => {
               color: 0xff0000,
             });
             scene.fx.emitFloatingText(addCoords(offset, attackerWinner ? attackerPosition : defenderPosition), "WON");
-            if (!defenderIsFleet) (defenderObj as BaseAsteroid).getFleetsContainer().resumeRotation();
+            rockObj?.getFleetsContainer().resumeRotation();
           },
         },
         {

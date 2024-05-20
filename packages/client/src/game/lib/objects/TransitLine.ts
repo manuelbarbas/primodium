@@ -92,7 +92,10 @@ export class TransitLine extends TargetLine {
   destroy(anim = false) {
     this._scene.objects.transitLine.remove(this.id);
 
-    if (!anim) super.destroy();
+    if (!anim) {
+      super.destroy();
+      return;
+    }
 
     this.scene.add.tween({
       targets: this,
