@@ -17,6 +17,7 @@ import { landFleet } from "@/network/setup/contractCalls/fleetLand";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { alert } from "@/util/alert";
 import { clearFleet } from "@/network/setup/contractCalls/fleetClear";
+import { abandonFleet } from "@/network/setup/contractCalls/fleetAbandon";
 import { cn } from "@/util/client";
 import { useGame } from "@/hooks/useGame";
 
@@ -94,28 +95,47 @@ export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
         </Button>
       </TransactionQueueMask>
 
-      <TransactionQueueMask queueItemId={"clear" as Entity}>
-        <Button
-          size="content"
-          variant="neutral"
-          className="w-full"
-          onClick={() =>
-            alert(
-              "Are you sure you want to clear fleet? All resources and units will be lost forever!",
-              () => clearFleet(mud, fleet),
-              game
-            )
-          }
-        >
-          <div className="flex flex-start px-1 gap-3 w-full">
-            <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Return} />
-            <div className="flex flex-col items-start">
-              <p>CLEAR FLEET</p>
-              <p className="block text-xs opacity-75  text-wrap text-left">REMOVE ALL UNITS AND RESOURCES</p>
+      <div className="grid grid-cols-2 gap-2">
+        <TransactionQueueMask queueItemId={"clear" as Entity}>
+          <Button
+            size="content"
+            variant="neutral"
+            className="w-full"
+            onClick={() =>
+              alert(
+                "Are you sure you want to clear fleet? All resources and units will be lost forever!",
+                () => clearFleet(mud, fleet),
+                game
+              )
+            }
+          >
+            <div className="flex flex-start items-center px-1 gap-3">
+              <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Trash} />
+              <div className="flex flex-col items-start">
+                <p>EMPTY</p>
+                <p className="block text-xs opacity-75  text-wrap text-left">REMOVE ALL CARGO</p>
+              </div>
             </div>
-          </div>
-        </Button>
-      </TransactionQueueMask>
+          </Button>
+        </TransactionQueueMask>
+
+        <TransactionQueueMask queueItemId={"disbandFleet" as Entity}>
+          <Button
+            size="content"
+            variant="neutral"
+            className="w-full"
+            onClick={() => alert("Are you sure you want to disband fleet?", () => abandonFleet(mud, fleet), game)}
+          >
+            <div className="flex flex-start px-1 gap-3">
+              <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Return} />
+              <div className="flex flex-col items-start">
+                <p>DISBAND</p>
+                <p className="block text-xs opacity-75  text-wrap text-left">DELETE FROM EMPIRE</p>
+              </div>
+            </div>
+          </Button>
+        </TransactionQueueMask>
+      </div>
     </>
   );
 };

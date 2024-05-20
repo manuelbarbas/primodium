@@ -157,7 +157,6 @@ const glassProps = cva("card border border-secondary/50 heropattern-topography-s
     },
   },
   defaultVariants: {
-    direction: "left",
     noPointerEvents: false,
   },
 });

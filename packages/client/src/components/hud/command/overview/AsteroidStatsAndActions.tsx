@@ -1,10 +1,12 @@
 import { Button } from "@/components/core/Button";
+import { alert } from "@/util/alert";
 import { CapacityBar } from "@/components/core/CapacityBar";
-import { HUD } from "@/components/core/HUD";
 import { Tabs } from "@/components/core/Tabs";
+import { useMud } from "@/hooks";
 import { useAsteroidStrength } from "@/hooks/useAsteroidStrength";
 import { useFullResourceCount } from "@/hooks/useFullResourceCount";
 import { components } from "@/network/components";
+import { abandonAsteroid } from "@/network/setup/contractCalls/forfeit";
 import { EntityType } from "@/util/constants";
 import { EntityToResourceImage } from "@/util/mappings";
 import { formatResourceCount } from "@/util/number";
@@ -12,7 +14,15 @@ import { Entity } from "@latticexyz/recs";
 import { useEffect, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 
-export const AsteroidStats = ({ asteroid, segments = 10 }: { asteroid: Entity; segments?: number }) => {
+export const AsteroidStats = ({
+  asteroid,
+  segments = 10,
+  showHints,
+}: {
+  asteroid: Entity;
+  segments?: number;
+  showHints?: boolean;
+}) => {
   const { resourceCount: encryption, resourceStorage: maxEncryption } = useFullResourceCount(
     EntityType.Encryption,
     asteroid
@@ -21,8 +31,9 @@ export const AsteroidStats = ({ asteroid, segments = 10 }: { asteroid: Entity; s
   const encryptionImg = EntityToResourceImage[EntityType.Encryption] ?? "";
   const strengthImg = EntityToResourceImage[EntityType.HP] ?? "";
   return (
-    <div className="flex flex-row gap-4 justify-end">
+    <div className="flex gap-4 justify-center w-full">
       <div className="flex gap-2 items-center">
+        {showHints && <Hints />}
         <img src={encryptionImg} className="w-4 h-4" alt="encryption" />
         <CapacityBar current={encryption} max={maxEncryption} segments={segments} className="w-24" />
         <p>{formatResourceCount(EntityType.Encryption, encryption, { short: true })}</p>
@@ -84,31 +95,40 @@ const Hints = () => {
   );
 };
 
-const ActionButtons = () => {
+const ActionButtons = ({ asteroid, onClick }: { asteroid: Entity; onClick?: () => void }) => {
+  const mud = useMud();
+  const playerEntity = mud.playerAccount.entity;
+  const asteroidOwner = components.OwnedBy.use(asteroid)?.value;
+  const canBuildFleet = useFullResourceCount(EntityType.FleetCount, asteroid).resourceCount > 0n;
+  if (!asteroidOwner || asteroidOwner !== playerEntity) return null;
   return (
     <div className="flex gap-2 items-center justify-center">
-      <Tabs.Button index={1} variant="secondary" size="sm">
+      <Tabs.Button disabled={!canBuildFleet} index={1} onClick={onClick} variant="secondary" size="sm">
         + CREATE FLEET
       </Tabs.Button>
-      <Button variant="error" size="sm">
+      <Button
+        variant="error"
+        size="sm"
+        onClick={() => alert("Are you sure you want to abandon this asteroid?", () => abandonAsteroid(mud, asteroid))}
+      >
         ABANDON
       </Button>
-      <Hints />
     </div>
   );
 };
 
-export const AsteroidStatsAndActions = () => {
+export const AsteroidStatsAndActions = ({ onClickCreateFleet }: { onClickCreateFleet?: () => void }) => {
   const playerEntity = components.Account.use()?.value;
   const selectedAsteroid = components.SelectedRock.use()?.value;
   const homeAsteroid = components.Home.use(playerEntity)?.value;
 
-  if (!selectedAsteroid && !homeAsteroid) return null;
+  const asteroid = (selectedAsteroid ?? homeAsteroid) as Entity;
+  if (!asteroid) return null;
 
   return (
-    <HUD.BottomMiddle className="mb-36 flex flex-col items-center gap-4">
-      <AsteroidStats asteroid={(selectedAsteroid ?? homeAsteroid) as Entity} />
-      <ActionButtons />
-    </HUD.BottomMiddle>
+    <div className="flex flex-col items-center gap-4 pointer-events-auto">
+      <AsteroidStats asteroid={asteroid} showHints />
+      <ActionButtons asteroid={asteroid} onClick={onClickCreateFleet} />
+    </div>
   );
 };

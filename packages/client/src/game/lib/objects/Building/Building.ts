@@ -122,7 +122,7 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
 
     //TODO: level up animation
     const animation = getUpgradeAnimation(this.dimensions);
-    if (!skipAnimation && animation) {
+    if (level > 1 && !skipAnimation && animation) {
       const sequence = {
         at: 0,
         run: () => {

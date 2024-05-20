@@ -63,10 +63,17 @@ export const renderBuilding = (scene: PrimodiumScene) => {
         building.destroy();
       }
     }
+    let initialBuildingsPlaced = false;
+
+    const timeout = setTimeout(() => {
+      initialBuildingsPlaced = true;
+    }, 1000);
+
+    world.registerDisposer(() => {
+      clearTimeout(timeout);
+    }, "game_spectate");
 
     const render = ({ entity, showLevelAnimation = false }: { entity: Entity; showLevelAnimation?: boolean }) => {
-      const initialBuildingsPlaced = components.SystemsReady.get()?.value;
-
       if (objects.building.has(entity)) {
         const building = objects.building.get(entity);
         if (!building) return;
@@ -180,6 +187,7 @@ export const renderBuilding = (scene: PrimodiumScene) => {
     });
 
     defineEnterSystem(spectateWorld, positionQuery, render);
+
     defineUpdateSystem(spectateWorld, positionQuery, ({ entity, component }) =>
       render({ entity, showLevelAnimation: component.id === components.Level.id })
     );
