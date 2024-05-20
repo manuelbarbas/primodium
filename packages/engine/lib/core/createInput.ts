@@ -1,7 +1,7 @@
 // MODIFIED FROM LATTICEXYZ/PHASERX
 // https://github.com/latticexyz/mud/blob/main/packages/phaserx/src/createInput.ts
 
-import { Observable, bufferCount, filter, fromEvent, map, merge, throttleTime } from "rxjs";
+import { Observable, bufferCount, filter, fromEvent, map, merge, tap, throttleTime } from "rxjs";
 import Phaser from "phaser";
 import { Key } from "../../types";
 
@@ -24,6 +24,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     phaserKeyboard.disableGlobalCapture();
     phaserKeyboard.enabled = false;
     inputPlugin.enabled = false;
+    // inputPlugin.manager.enabled = false;
   }
 
   function enableInput() {
@@ -33,6 +34,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     phaserKeyboard?.enableGlobalCapture();
     phaserKeyboard.enabled = true;
     inputPlugin.enabled = true;
+    // inputPlugin.manager.enabled = true;
   }
 
   function setCursor(cursor: string) {
@@ -103,7 +105,10 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     }),
     throttleTime(250),
     map(() => inputPlugin.manager?.activePointer),
-    filter((pointer) => pointer?.downElement?.nodeName === "CANVAS")
+    filter((pointer) => pointer?.downElement?.nodeName === "CANVAS"),
+    tap(() => {
+      inputPlugin.manager.activePointer.updateWorldPoint(inputPlugin.scene.cameras.main);
+    })
   );
 
   // Right click stream

@@ -52,5 +52,5 @@ export const EntityToResourceImage = {
   [EntityType.Unraidable]: ResourceImages.U_Unraidable,
   [EntityType.AdvancedUnraidable]: ResourceImages.U_AdvancedUnraidable,
   [EntityType.Encryption]: ResourceImages.U_Encryption,
-  [EntityType.HP]: InterfaceIcons.Debug,
+  [EntityType.HP]: InterfaceIcons.Strength,
 };

@@ -18,6 +18,8 @@ import { hashEntities } from "@/util/encode";
 import { TransactionQueueType } from "@/util/constants";
 import { sendFleetPosition } from "@/network/setup/contractCalls/fleetSend";
 import { useMud } from "@/hooks";
+import { clearFleetStance } from "@/network/setup/contractCalls/fleetStance";
+import { isAsteroidBlocked } from "@/util/asteroid";
 
 export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; selectedRock: Entity }> = ({
   fleetEntity,
@@ -40,6 +42,10 @@ export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; select
     return "Orbiting";
   }, [stance]);
 
+  const asteroidBlocked = useMemo(() => {
+    return isAsteroidBlocked(movement?.destination as Entity);
+  }, [now, movement]);
+
   const fleetETA = useMemo(() => {
     const startPos = components.Position.get(movement?.destination as Entity);
     const destPos = components.Position.get(selectedRock);
@@ -57,7 +63,7 @@ export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; select
   return (
     <SecondaryCard
       className="flex-row justify-between gap-10 items-center"
-      onPointerOver={() =>
+      onPointerEnter={() =>
         components.HoverEntity.set({
           value: fleetEntity,
         })
@@ -79,17 +85,24 @@ export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; select
             IN COOLDOWN
           </Button>
         )}
-        {!stance?.stance && !inCooldown && (
+        {stance?.stance && !inCooldown && (
+          <TransactionQueueMask queueItemId={"FleetStance" as Entity}>
+            <Button size="sm" variant="info" onClick={() => clearFleetStance(mud, fleetEntity)}>
+              Clear Stance
+            </Button>
+          </TransactionQueueMask>
+        )}
+        {asteroidBlocked && !inCooldown && !stance?.stance && (
+          <Button size="sm" variant="error" disabled>
+            BLOCKED
+          </Button>
+        )}
+        {!stance?.stance && !inCooldown && !asteroidBlocked && (
           <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.SendFleet, fleetEntity)}>
             <Button size="sm" variant="secondary" onClick={() => sendFleetPosition(mud, fleetEntity, destPos)}>
               Travel
             </Button>
           </TransactionQueueMask>
-        )}
-        {stance?.stance && !inCooldown && (
-          <Button size="sm" variant="error">
-            Clear Stance
-          </Button>
         )}
         {!inCooldown && <p className="text-xs opacity-75">ETA {formatTime(fleetETA)}</p>}
         {inCooldown && <p className="text-xs opacity-75">COOLDOWN {formatTime(fleetCooldown - now)}</p>}
@@ -163,7 +176,7 @@ export const FleetTravelScreen: React.FC<{ selectedRock: Entity }> = ({ selected
           <div className="text-xs opacity-50 flex gap-2 items-center">
             <FaInfoCircle /> HOVER TO SEE DETAILS
           </div>
-          <div className="flex flex-col gap-1 h-48 w-96 overflow-y-auto hide-scrollbar">
+          <div className="flex flex-col gap-1 h-48 overflow-y-auto hide-scrollbar">
             {orbitingFleets.map((fleet) => (
               <Fleet key={fleet} fleetEntity={fleet} playerEntity={playerEntity} selectedRock={selectedRock} />
             ))}
