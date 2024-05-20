@@ -1,16 +1,21 @@
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { PrimodiumScene } from "@/game/api/scene";
 import { TransitLine } from "@game/lib/objects/TransitLine";
 import { components } from "@/network/components";
 import { world } from "@/network/world";
 import { renderFleet } from "@/game/lib/render/renderFleet";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { DeferredAsteroidsRenderContainer } from "@/game/lib/objects/Asteroid/DeferredAsteroidsRenderContainer";
+import { StanceToIcon } from "@/game/lib/mappings";
+import { EntityType } from "@/util/constants";
 import { isAsteroidBlocked } from "@/util/asteroid";
 import { EFleetStance } from "contracts/config/enums";
-import { StanceToIcon } from "@/game/lib/mappings";
 
 export const renderFleets = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
+  const deferredRenderContainer = scene.objects.deferredRenderContainer.getContainer(
+    EntityType.Asteroid
+  ) as DeferredAsteroidsRenderContainer;
   const transitsToUpdate = new Set<Entity>();
   const { objects } = scene;
 
@@ -58,10 +63,12 @@ export const renderFleets = (scene: PrimodiumScene) => {
     if (asteroid) {
       const fleetObject = getFleetObject(fleet);
       asteroid.getFleetsContainer()?.addFleet(fleetObject);
+      deferredRenderContainer?.removeFleet(fleet);
     } else {
       const queue = spawnQueue.get(asteroidEntity) ?? [];
       if (queue.length) queue.push(fleet);
       else spawnQueue.set(asteroidEntity, [fleet]);
+      deferredRenderContainer?.addFleet(fleet, asteroidEntity);
     }
   }
 
