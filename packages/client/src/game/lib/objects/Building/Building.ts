@@ -8,6 +8,7 @@ import { DepthLayers } from "../../constants/common";
 import { IPrimodiumGameObject } from "../interfaces";
 import { Assets } from "@primodiumxyz/assets";
 import { getBuildingDimensions } from "@/util/building";
+import { isValidClick, isValidHover } from "@/game/lib/objects/inputGuards";
 
 export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGameObject {
   private id: Entity;
@@ -34,7 +35,7 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
     assetPair.animation && this.play(assetPair.animation);
     this.setOrigin(0, 1);
     this.setDepth(DepthLayers.Building - 5 * coord.y);
-    this.setInteractive();
+    this.setInteractive(this.scene.input.makePixelPerfect());
 
     this.buildingType = buildingType;
 
@@ -51,6 +52,29 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
 
     this.scene.add.existing(this);
     this.spawned = true;
+    return this;
+  }
+
+  onClick(fn: (e: Phaser.Input.Pointer) => void) {
+    this.on(Phaser.Input.Events.POINTER_UP, (e: Phaser.Input.Pointer) => {
+      if (!isValidClick(e)) return;
+      fn(e);
+    });
+    return this;
+  }
+
+  onHoverEnter(fn: (e: Phaser.Input.Pointer) => void) {
+    this.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, (e: Phaser.Input.Pointer) => {
+      if (!isValidHover(e)) return;
+      fn(e);
+    });
+    return this;
+  }
+
+  onHoverExit(fn: (e: Phaser.Input.Pointer) => void) {
+    this.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, (e: Phaser.Input.Pointer) => {
+      fn(e);
+    });
     return this;
   }
 
@@ -84,6 +108,7 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
     this.anims.pause();
     return this;
   }
+
   setLevel(level: bigint, skipAnimation = false) {
     const oldAssetPair = getAssetKeyPair(this.level, this.buildingType);
     this.level = level;
@@ -97,7 +122,7 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
 
     //TODO: level up animation
     const animation = getUpgradeAnimation(this.dimensions);
-    if (!skipAnimation && animation) {
+    if (level > 1 && !skipAnimation && animation) {
       const sequence = {
         at: 0,
         run: () => {

@@ -81,6 +81,8 @@ export default function setupClientComponents() {
 
   const BattleRender = createExtendedEntityComponent(world, { id: "BattleRender" });
 
+  const BattleTarget = createExtendedEntityComponent(world, { id: "BattleTarget" });
+
   const PlayerInvite = createExtendedComponent(
     world,
     {
@@ -146,6 +148,7 @@ export default function setupClientComponents() {
     Account,
     SelectedRock,
     ActiveRock,
+    BattleTarget,
     BuildRock,
     CurrentTransaction,
     SelectedTile,

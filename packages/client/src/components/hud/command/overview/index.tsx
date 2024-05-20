@@ -1,11 +1,5 @@
 import { AsteroidStatsAndActions } from "@/components/hud/command/overview/AsteroidStatsAndActions";
-import { TopBar } from "@/components/hud/command/overview/Topbar";
 
-export const Overview = () => {
-  return (
-    <>
-      <TopBar />
-      <AsteroidStatsAndActions />
-    </>
-  );
+export const Overview = ({ onClickCreateFleet }: { onClickCreateFleet?: () => void }) => {
+  return <AsteroidStatsAndActions onClickCreateFleet={onClickCreateFleet} />;
 };

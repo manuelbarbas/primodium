@@ -102,7 +102,7 @@ export const ModeSelector = () => {
                 keybind="PrevHotbar"
                 motion="disabled"
                 onClick={() => {
-                  components.ActiveRock.set({ value: selectedRock ?? singletonEntity });
+                  components.ActiveRock.set({ value: selectedRock ?? buildRock ?? playerHome ?? singletonEntity });
                   components.SelectedMode.set({
                     value: Mode.Asteroid,
                   });
@@ -125,7 +125,9 @@ export const ModeSelector = () => {
                 className="!px-3 py-2 border-t-0"
                 keybind="PrevHotbar"
                 onClick={() => {
-                  components.ActiveRock.set({ value: buildRock ?? playerHome ?? singletonEntity });
+                  if (!selectedRock) return;
+
+                  components.ActiveRock.set({ value: selectedRock });
                   components.SelectedMode.set({
                     value: Mode.Spectate,
                   });

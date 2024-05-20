@@ -15,7 +15,6 @@ import { cn } from "@/util/client";
 export const Coordinates = () => {
   const DEV = import.meta.env.PRI_DEV === "true";
   const [uiScale] = usePersistentStore((state) => [state.uiScale]);
-  console.log(uiScale);
 
   const selectedMode = components.SelectedMode.use()?.value;
   const asteroidMode = selectedMode === Mode.Asteroid || selectedMode === Mode.Spectate;

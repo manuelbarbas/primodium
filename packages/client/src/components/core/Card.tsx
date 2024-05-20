@@ -134,9 +134,9 @@ const secondaryCardVariants = cva("card p-2", {
 interface SecondaryCardProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof secondaryCardVariants> {}
 
 export const SecondaryCard = forwardRef<HTMLDivElement, SecondaryCardProps>(
-  ({ children, className, variant, noDecor, noPointerEvents }, ref) => {
+  ({ children, className, variant, noDecor, noPointerEvents, ...props }, ref) => {
     return (
-      <div ref={ref} className={cn(secondaryCardVariants({ variant, noDecor, noPointerEvents }), className)}>
+      <div ref={ref} {...props} className={cn(secondaryCardVariants({ variant, noDecor, noPointerEvents }), className)}>
         {children}
       </div>
     );
@@ -157,7 +157,6 @@ const glassProps = cva("card border border-secondary/50 heropattern-topography-s
     },
   },
   defaultVariants: {
-    direction: "left",
     noPointerEvents: false,
   },
 });

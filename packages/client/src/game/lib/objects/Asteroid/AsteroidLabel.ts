@@ -73,9 +73,7 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
     this.ownerLabel = new Phaser.GameObjects.BitmapText(scene.phaserScene, 0, 0, "teletactile", ownerLabel, 12)
 
       .setAlpha(0.5)
-      .setTintFill(ownerLabelColor)
-      .setCharacterTint(1, -1, true, 0xffffff)
-      .setCharacterTint(0, 1, true, 0xffffff);
+      .setTintFill(ownerLabelColor);
 
     this.allianceLabel = new Phaser.GameObjects.BitmapText(scene.phaserScene, 0, 0, "teletactile", undefined, 12)
       .setAlpha(0.8)

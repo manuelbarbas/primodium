@@ -5,8 +5,8 @@ import { Badge } from "src/components/core/Badge";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { useFullResourceCount } from "src/hooks/useFullResourceCount";
 import { components } from "src/network/components";
-import { RESOURCE_SCALE, SPEED_SCALE } from "src/util/constants";
-import { formatNumber, formatResourceCount } from "src/util/number";
+import { SPEED_SCALE } from "src/util/constants";
+import { formatResourceCount } from "src/util/number";
 import { Tooltip } from "@/components/core/Tooltip";
 
 export const ResourceLabel = ({ name, resource }: { name: string; resource: Entity }) => {
@@ -31,7 +31,9 @@ export const ResourceLabel = ({ name, resource }: { name: string; resource: Enti
   }, [resourceCount, resourceStorage]);
 
   const productionMin =
-    production == 1n ? "0.6" : formatNumber((production * 60n * worldSpeed) / (SPEED_SCALE * RESOURCE_SCALE));
+    production == 1n
+      ? "0.6"
+      : formatResourceCount(resource, (production * 60n * worldSpeed) / SPEED_SCALE, { fractionDigits: 1 });
 
   return (
     // non-breaking space on the resource names to keep on the same line
