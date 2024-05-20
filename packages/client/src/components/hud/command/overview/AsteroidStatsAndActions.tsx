@@ -14,7 +14,15 @@ import { Entity } from "@latticexyz/recs";
 import { useEffect, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
 
-export const AsteroidStats = ({ asteroid, segments = 10 }: { asteroid: Entity; segments?: number }) => {
+export const AsteroidStats = ({
+  asteroid,
+  segments = 10,
+  showHints,
+}: {
+  asteroid: Entity;
+  segments?: number;
+  showHints?: boolean;
+}) => {
   const { resourceCount: encryption, resourceStorage: maxEncryption } = useFullResourceCount(
     EntityType.Encryption,
     asteroid
@@ -23,9 +31,9 @@ export const AsteroidStats = ({ asteroid, segments = 10 }: { asteroid: Entity; s
   const encryptionImg = EntityToResourceImage[EntityType.Encryption] ?? "";
   const strengthImg = EntityToResourceImage[EntityType.HP] ?? "";
   return (
-    <div className="flex flex-row gap-4 justify-end">
-      <Hints />
+    <div className="flex gap-4 justify-center w-full">
       <div className="flex gap-2 items-center">
+        {showHints && <Hints />}
         <img src={encryptionImg} className="w-4 h-4" alt="encryption" />
         <CapacityBar current={encryption} max={maxEncryption} segments={segments} className="w-24" />
         <p>{formatResourceCount(EntityType.Encryption, encryption, { short: true })}</p>
@@ -119,7 +127,7 @@ export const AsteroidStatsAndActions = ({ onClickCreateFleet }: { onClickCreateF
 
   return (
     <div className="flex flex-col items-center gap-4 pointer-events-auto">
-      <AsteroidStats asteroid={asteroid} />
+      <AsteroidStats asteroid={asteroid} showHints />
       <ActionButtons asteroid={asteroid} onClick={onClickCreateFleet} />
     </div>
   );
