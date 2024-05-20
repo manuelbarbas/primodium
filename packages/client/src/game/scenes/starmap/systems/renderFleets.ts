@@ -10,7 +10,7 @@ import { DeferredAsteroidsRenderContainer } from "@/game/lib/objects/Asteroid/De
 export const renderFleets = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
   const deferredRenderContainer = scene.objects.deferredRenderContainer.getContainer(
-    EntityType.DeferredRenderAsteroids
+    EntityType.Asteroid
   ) as DeferredAsteroidsRenderContainer;
   const transitsToUpdate = new Set<Entity>();
 

@@ -75,7 +75,7 @@ export const OwnedColonyShips: React.FC<{ className?: string }> = ({ className }
     if (!position) {
       // the fleet might be around a non-spawned asteroid, so we need to check if it's registered
       const deferredRenderContainer = objects.deferredRenderContainer.getContainer(
-        EntityType.DeferredRenderAsteroids
+        EntityType.Asteroid
       ) as DeferredAsteroidsRenderContainer;
       const asteroidPosition = deferredRenderContainer.getFleetCoord(entity);
 
