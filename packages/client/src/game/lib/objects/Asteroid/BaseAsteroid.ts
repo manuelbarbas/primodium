@@ -136,7 +136,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
       }
 
       // Set a new timeout for single-click
-      this.singleClickTimeout = this.scene.time.delayedCall(250, () => {
+      this.singleClickTimeout = this.scene.time.delayedCall(150, () => {
         fn(e);
         this.singleClickTimeout = undefined;
       });
@@ -151,7 +151,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
 
       const clickDelay = this.scene.time.now - this.lastClickTime;
       this.lastClickTime = this.scene.time.now;
-      if (clickDelay < 250) {
+      if (clickDelay < 150) {
         // If double-click, clear the single-click timeout
         if (this.singleClickTimeout) {
           this.singleClickTimeout.destroy();
