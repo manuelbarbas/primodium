@@ -19,6 +19,7 @@ import { TransactionQueueType } from "@/util/constants";
 import { sendFleetPosition } from "@/network/setup/contractCalls/fleetSend";
 import { useMud } from "@/hooks";
 import { clearFleetStance } from "@/network/setup/contractCalls/fleetStance";
+import { isAsteroidBlocked } from "@/util/asteroid";
 
 export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; selectedRock: Entity }> = ({
   fleetEntity,
@@ -40,6 +41,10 @@ export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; select
     if (stance?.stance === EFleetStance.Defend) return "Defending";
     return "Orbiting";
   }, [stance]);
+
+  const asteroidBlocked = useMemo(() => {
+    return isAsteroidBlocked(movement?.destination as Entity);
+  }, [now, movement]);
 
   const fleetETA = useMemo(() => {
     const startPos = components.Position.get(movement?.destination as Entity);
@@ -80,17 +85,22 @@ export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; select
             IN COOLDOWN
           </Button>
         )}
-        {!stance?.stance && !inCooldown && (
-          <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.SendFleet, fleetEntity)}>
-            <Button size="sm" variant="secondary" onClick={() => sendFleetPosition(mud, fleetEntity, destPos)}>
-              Travel
-            </Button>
-          </TransactionQueueMask>
-        )}
         {stance?.stance && !inCooldown && (
           <TransactionQueueMask queueItemId={"FleetStance" as Entity}>
             <Button size="sm" variant="info" onClick={() => clearFleetStance(mud, fleetEntity)}>
               Clear Stance
+            </Button>
+          </TransactionQueueMask>
+        )}
+        {asteroidBlocked && !inCooldown && !stance?.stance && (
+          <Button size="sm" variant="error" disabled>
+            BLOCKED
+          </Button>
+        )}
+        {!stance?.stance && !inCooldown && !asteroidBlocked && (
+          <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.SendFleet, fleetEntity)}>
+            <Button size="sm" variant="secondary" onClick={() => sendFleetPosition(mud, fleetEntity, destPos)}>
+              Travel
             </Button>
           </TransactionQueueMask>
         )}
