@@ -40,6 +40,14 @@ export const createUtilApi = (scene: Scene) => {
     return scene.objects.getVisibleChunks();
   }
 
+  function isKnownChunk(coord: ChunkCoord) {
+    return scene.objects.isKnownChunk(coord);
+  }
+
+  function resetKnownChunk(coord: ChunkCoord) {
+    scene.objects.resetKnownChunk(coord);
+  }
+
   function encodeKeyForChunk(coord: ChunkCoord) {
     return scene.objects.encodeKeyForChunk(coord);
   }
@@ -56,6 +64,8 @@ export const createUtilApi = (scene: Scene) => {
     chunkCoordToPixelCoord,
     chunkCoordToTileCoord,
     getVisibleChunks,
+    isKnownChunk,
+    resetKnownChunk,
     encodeKeyForChunk,
     decodeKeyFromChunk,
     addCoords: Coord.addCoords,
