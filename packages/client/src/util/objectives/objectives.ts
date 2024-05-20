@@ -580,7 +580,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       description:
         "Defending an asteroid with a fleet bolsters that asteroid's strength. To defend, go to the fleet's Management pane in the Command Center and select Defend.",
       icon: InterfaceIcons.Fleet,
-      tooltip: "Landed a fleet",
+      tooltip: "Defended with a fleet",
     },
   ],
   [
@@ -592,7 +592,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       description:
         "Blocking an asteroid with a fleet prevents all fleets from leaving that asteroid. To block, go to the fleet's Management pane in the Command Center and select Block.",
       icon: InterfaceIcons.Fleet,
-      tooltip: "Landed a fleet",
+      tooltip: "Blocked with a fleet",
     },
   ],
   [
@@ -602,7 +602,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.BlockWithFleet],
       description:
-        "Set Homebase reassigned the fleet's owner to that asteroid. It transfers all fleet resources and units as well. To land, select a fleet in the Command Center and select Set Homebase.",
+        "Set Homebase reassigns the fleet's owner to that asteroid. It transfers all fleet resources and units as well. To land, select a fleet in the Command Center and select Set Homebase.",
       icon: InterfaceIcons.Fleet,
       tooltip: "Landed a fleet",
     },
