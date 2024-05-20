@@ -7,6 +7,8 @@ import { MUD } from "src/network/types";
 import { TransactionQueueType } from "src/util/constants";
 import { getSystemId } from "src/util/encode";
 import { Hex } from "viem";
+import { ampli } from "src/ampli";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const wormholeDeposit = async (
   mud: MUD,
@@ -17,7 +19,7 @@ export const wormholeDeposit = async (
   await execute(
     {
       mud,
-      functionName: "Primodium__wormholeDeposit",
+      functionName: "Pri_11__wormholeDeposit",
       systemId: getSystemId("ClaimWormholeSystem"),
       args: [wormholeBase as Hex, count],
       withSession: true,
@@ -27,8 +29,14 @@ export const wormholeDeposit = async (
       type: TransactionQueueType.WormholeDeposit,
       ...options,
     },
-    () => {
+    (receipt) => {
       makeObjectiveClaimable(mud.playerAccount.entity, EObjectives.TeleportResources);
+
+      ampli.systemClaimWormholeSystemPrimodiumWormholeDeposit({
+        wormholeBase: wormholeBase as Hex,
+        wormholeResourceCount: count.toString(),
+        ...parseReceipt(receipt),
+      });
     }
   );
 };

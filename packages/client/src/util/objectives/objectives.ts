@@ -175,7 +175,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fundamentals",
       type: "Upgrade",
-      requiredObjectives: [EObjectives.BuildIronMine, EObjectives.OpenBattleReport],
+      requiredObjectives: [EObjectives.BuildIronMine, EObjectives.UpgradeMainBase2],
       requiredMainBase: 2n,
       buildingType: EntityType.IronMine,
       level: 2n,
@@ -202,7 +202,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fundamentals",
       type: "Upgrade",
-      requiredObjectives: [EObjectives.BuildCopperMine, EObjectives.OpenBattleReport],
+      requiredObjectives: [EObjectives.BuildCopperMine, EObjectives.UpgradeMainBase2],
       requiredMainBase: 2n,
       buildingType: EntityType.CopperMine,
       level: 2n,
@@ -229,7 +229,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Fundamentals",
       type: "Upgrade",
-      requiredObjectives: [EObjectives.BuildLithiumMine, EObjectives.OpenBattleReport],
+      requiredObjectives: [EObjectives.BuildLithiumMine, EObjectives.UpgradeMainBase2],
       requiredMainBase: 2n,
       buildingType: EntityType.LithiumMine,
       level: 2n,
@@ -406,6 +406,18 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
+    EObjectives.UpgradeShipyard2,
+    {
+      category: "Conquest",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildShipyard],
+      buildingType: EntityType.Shipyard,
+      level: 2n,
+      description:
+        "Upgrading a Shipyard reduces the time required to construct new Colony Ships. To upgrade, click on a Shipyard and select Upgrade.",
+    },
+  ],
+  [
     EObjectives.TrainColonyShip,
     {
       category: "Conquest",
@@ -504,7 +516,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.CaptureVolatileShard],
       description:
-        "To explode a shard, select an owned shard when an explosion is imminent and select Explode. Be warned, the explosion kills all fleets in the area!",
+        "To explode a shard, select an owned shard when an explosion is imminent and select Explode. Explosions give lots of Primodium to the shard's owner. Be warned, the explosion kills all fleets in the area!",
       icon: InterfaceIcons.Asteroid,
       tooltip: "Exploded Shard",
     },
@@ -542,9 +554,21 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Fleet",
       type: "Build",
       requiredMainBase: 3n,
-      requiredObjectives: [EObjectives.UpgradeStorageUnit2],
+      requiredObjectives: [EObjectives.BuildStorageUnit],
       buildingType: EntityType.StarmapperStation,
       description: "A Starmapper Station increases the number of fleets you can create.",
+    },
+  ],
+  [
+    EObjectives.UpgradeStarmapper2,
+    {
+      category: "Fleet",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildStarmapper],
+      buildingType: EntityType.StarmapperStation,
+      level: 2n,
+      description:
+        "Upgrading a Starmapper Station increases the number of fleets you can create. To upgrade, click on a Starmapper Station and select Upgrade.",
     },
   ],
   [
@@ -593,7 +617,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 2n,
       requiredObjectives: [EObjectives.UpgradeMainBase3],
       unitType: EntityType.MinutemanMarine,
-      unitCount: 12n,
+      unitCount: 32n,
       description:
         "Minutemen are expendable offensive units that are trained quickly, move very fast, and provide an efficient cargo ability per housing required. To train, click on a workshop and select Train Units.",
     },
@@ -606,7 +630,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 8n,
       requiredObjectives: [EObjectives.TrainMinutemanMarine],
       unitType: EntityType.TridentMarine,
-      unitCount: 12n,
+      unitCount: 32n,
 
       description:
         "Select the workshop you placed on the map to train Trident marines. Trident marines are well-rounded units with good speed and excellent cargo ability. To train, click on a workshop and select Train Units.",
@@ -620,7 +644,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 10n,
       requiredObjectives: [EObjectives.TrainTridentMarine],
       unitType: EntityType.LightningCraft,
-      unitCount: 5n,
+      unitCount: 32n,
       description:
         "Upgrade a workshop to Level 10 to unlock the ability to train Lightning Ships. Lightning Ships are weak, but are insanely fast, high cargo units.",
     },
@@ -637,6 +661,18 @@ export const Objectives = new Map<EObjectives, Objective>([
         "Drone factories train drones, which are strong and specialized. To build, select the Drone Factory from the Blueprints menu and place it on any empty tile.",
     },
   ],
+  [
+    EObjectives.UpgradeDroneFactory2,
+    {
+      category: "Unit Production",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildDroneFactory],
+      buildingType: EntityType.DroneFactory,
+      level: 2n,
+      description:
+        "Upgrading a Drone Factories produces units more quickly and might unlock new units. To upgrade, click on a Drone Factory and select Upgrade.",
+    },
+  ],
 
   /* --------------------- A-A-B-A Unit Management ---------------------------- */
   [
@@ -644,7 +680,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Unit Management",
       type: "Claim",
-      requiredObjectives: [EObjectives.BuildDroneFactory],
+      requiredMainBase: 8n,
       description:
         "Upgrading a unit increases its stats. To upgrade, select Upgrade in the Command Center left side bar.",
       icon: InterfaceIcons.Add,
@@ -660,7 +696,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 5n,
       requiredObjectives: [EObjectives.BuildDroneFactory],
       unitType: EntityType.AnvilDrone,
-      unitCount: 20n,
+      unitCount: 32n,
       description:
         "To train an anvil drone, select a drone factory. Anvil drones are standard drones tuned to be a sturdy and reliable.",
     },
@@ -673,7 +709,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 5n,
       requiredObjectives: [EObjectives.BuildDroneFactory],
       unitType: EntityType.HammerDrone,
-      unitCount: 20n,
+      unitCount: 32n,
       description:
         "To build a hammer drone, Click on a drone factory. Hammer drones are standard drones that sacrifice armor for more weapons.",
     },
@@ -686,7 +722,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 8n,
       unitType: EntityType.AegisDrone,
       requiredObjectives: [EObjectives.TrainAnvilDrone],
-      unitCount: 20n,
+      unitCount: 32n,
       description:
         "Upgrade a drone factory to Level 8 to unlock the ability to build Aegis drones. Aegis drones are robust specialized defensive units. They occupy more housing than any other unit.",
     },
@@ -699,7 +735,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 8n,
       requiredObjectives: [EObjectives.TrainHammerDrone],
       unitType: EntityType.StingerDrone,
-      unitCount: 20n,
+      unitCount: 32n,
       description:
         "Upgrade a drone factory to Level 8 to unlock the ability to build Stinger drones. Stinger drones are powerful specialized assault units. They occupy more housing than any other unit.",
     },
@@ -714,7 +750,19 @@ export const Objectives = new Map<EObjectives, Objective>([
       requiredMainBase: 5n,
       buildingType: EntityType.Hangar,
       description:
-        "Hangars provide large amounts of housing for units. To build, select the Hangar from the Blueprints menu and place it on an empty tile.",
+        "Hangars provide large amounts of space-efficient housing for units. To build, select the Hangar from the Blueprints menu and place it on an empty tile.",
+    },
+  ],
+  [
+    EObjectives.UpgradeHanger2,
+    {
+      category: "Unit Storage",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildHangar],
+      buildingType: EntityType.Hangar,
+      level: 2n,
+      description:
+        "Upgrade Hangars to further increase space-efficient housing for units. To upgrade, click on a Hangar and select Upgrade.",
     },
   ],
 
@@ -724,10 +772,22 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Defense",
       type: "Build",
-      requiredMainBase: 5n,
+      requiredMainBase: 7n,
       buildingType: EntityType.ShieldGenerator,
       description:
         "Shield Generators boost defense provided by fleets and SAM launchers, and improve asteroid defense recovery. They are very power hungry. To build, select the Shield Generator from the Blueprints menu and place it on an empty tile.",
+    },
+  ],
+  [
+    EObjectives.UpgradeShieldGenerator2,
+    {
+      category: "Defense",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildShieldGenerator],
+      buildingType: EntityType.ShieldGenerator,
+      level: 2n,
+      description:
+        "Upgrade Shield Generators to further increase defense boost and defense recovery. To upgrade, click on a Shield Generator and select Upgrade.",
     },
   ],
   [
@@ -742,14 +802,38 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
+    EObjectives.UpgradeVault2,
+    {
+      category: "Defense",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildVault],
+      buildingType: EntityType.Vault,
+      level: 2n,
+      description:
+        "Upgrade Vaults to increase quantity and type of resources protected. To upgrade, click on a Vault and select Upgrade.",
+    },
+  ],
+  [
     EObjectives.BuildSAMLauncher,
     {
       category: "Defense",
       type: "Build",
-      requiredMainBase: 8n,
+      requiredMainBase: 6n,
       buildingType: EntityType.SAMLauncher,
       description:
         "SAM launchers give your asteroid native defense and additional health, protecting you from enemy attacks. You need electricity to power them. To build, select the SAM Launcher from the Blueprints menu and place it on an empty tile.",
+    },
+  ],
+  [
+    EObjectives.UpgradeSAMLauncher2,
+    {
+      category: "Defense",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildSAMLauncher],
+      buildingType: EntityType.SAMLauncher,
+      level: 2n,
+      description:
+        "Upgrade SAM launchers to further increase asteroid native defense and health. To upgrade, click on a SAM launcher and select Upgrade.",
     },
   ],
 
@@ -790,6 +874,18 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
+    EObjectives.UpgradeIronPlateFactory2,
+    {
+      category: "Resource Production",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildIronPlateFactory],
+      buildingType: EntityType.IronPlateFactory,
+      level: 2n,
+      description:
+        "Upgrade Iron Plate Factories to produce more iron plate by consuming more iron. To upgrade, click on an Iron Plate Factory and select Upgrade.",
+    },
+  ],
+  [
     EObjectives.BuildAlloyFactory,
     {
       category: "Resource Production",
@@ -802,6 +898,18 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
+    EObjectives.UpgradeAlloyFactory2,
+    {
+      category: "Resource Production",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildAlloyFactory],
+      buildingType: EntityType.AlloyFactory,
+      level: 2n,
+      description:
+        "Upgrade Alloy Factories to produce more alloy by consuming more copper. To upgrade, click on an Alloy Factory and select Upgrade.",
+    },
+  ],
+  [
     EObjectives.BuildPVCellFactory,
     {
       category: "Resource Production",
@@ -811,6 +919,18 @@ export const Objectives = new Map<EObjectives, Objective>([
       buildingType: EntityType.PVCellFactory,
       description:
         "The PV Cell factory produces photovoltaic cells by consuming lithium. To build, select the PV Cell factory in the Blueprints menu and place it on any empty tile.",
+    },
+  ],
+  [
+    EObjectives.UpgradePVCellFactory2,
+    {
+      category: "Resource Production",
+      type: "Upgrade",
+      requiredObjectives: [EObjectives.BuildPVCellFactory],
+      buildingType: EntityType.PVCellFactory,
+      level: 2n,
+      description:
+        "Upgrade PV Cell Factories to produce more pv cells by consuming more lithium. To upgrade, click on a PV Cell Factory and select Upgrade.",
     },
   ],
 
@@ -830,7 +950,7 @@ export const Objectives = new Map<EObjectives, Objective>([
   [
     EObjectives.UpgradeSolarPanel2,
     {
-      category: "Fundamentals",
+      category: "Resource Production",
       type: "Upgrade",
       requiredObjectives: [EObjectives.BuildSolarPanel],
       requiredMainBase: 4n,

@@ -16,5 +16,5 @@ export const initRootScene = async (game: GlobalApi): Promise<PrimodiumScene> =>
   sceneApi.audio.setPauseOnBlur(false);
 
   const runSystems = () => runRootSystems(sceneApi, game);
-  return { ...sceneApi, runSystems };
+  return { ...sceneApi, runSystems, isPrimary: true };
 };

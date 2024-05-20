@@ -43,16 +43,11 @@ contract BuildSystemTest is PrimodiumTest {
 
     PositionData memory originalPosition = getTilePosition(Home.get(playerEntity), building);
     uint256 gas = gasleft();
-    world.Primodium__build(building, originalPosition);
+    world.Pri_11__build(building, originalPosition);
     console.log("after", gas - gasleft());
   }
 
   function testBuildLargeBuilding() public {
-    address namespaceOwner = NamespaceOwner.get(WorldResourceIdLib.encodeNamespace(bytes14("Primodium")));
-    console.log("namespace owner:", namespaceOwner);
-    address creator = world.creator();
-    console.log("creator:", creator);
-
     Level.set(Home.get(playerEntity), 2);
     int32[] memory blueprint = get2x2Blueprint();
     bytes32[] memory keys = new bytes32[](1);
@@ -60,7 +55,7 @@ contract BuildSystemTest is PrimodiumTest {
 
     P_Blueprint.set(IronMinePrototypeId, blueprint);
 
-    bytes32 buildingEntity = world.Primodium__build(
+    bytes32 buildingEntity = world.Pri_11__build(
       EBuilding.IronMine,
       getTilePosition(Home.get(playerEntity), EBuilding.IronMine)
     );
@@ -85,45 +80,45 @@ contract BuildSystemTest is PrimodiumTest {
     PositionData memory ironPositionData = getTilePosition(Home.get(playerEntity), EBuilding.IronMine);
 
     vm.expectRevert(bytes("[BuildSystem] Invalid building type"));
-    world.Primodium__build(EBuilding.LENGTH, ironPositionData);
+    world.Pri_11__build(EBuilding.LENGTH, ironPositionData);
   }
 
   function testFailIronMineOnNonIron() public {
     PositionData memory ironPositionData = getTilePosition(Home.get(playerEntity), EBuilding.IronPlateFactory);
 
-    world.Primodium__build(EBuilding.IronMine, ironPositionData);
+    world.Pri_11__build(EBuilding.IronMine, ironPositionData);
   }
 
   function testSameXYCanCollide() public {
     PositionData memory ironPositionData = getTilePosition(Home.get(playerEntity), EBuilding.IronMine);
-    world.Primodium__build(EBuilding.IronMine, ironPositionData);
+    world.Pri_11__build(EBuilding.IronMine, ironPositionData);
     vm.stopPrank();
 
     vm.startPrank(bob);
     ironPositionData.parentEntity = Home.get(addressToEntity(bob));
-    world.Primodium__build(EBuilding.IronMine, ironPositionData);
+    world.Pri_11__build(EBuilding.IronMine, ironPositionData);
   }
 
   function testSameXYZCannotCollideFail() public {
     PositionData memory ironPositionData = getTilePosition(Home.get(playerEntity), EBuilding.IronMine);
     removeRequirements(EBuilding.IronMine);
-    world.Primodium__build(EBuilding.IronMine, ironPositionData);
+    world.Pri_11__build(EBuilding.IronMine, ironPositionData);
 
     vm.expectRevert(bytes("[BuildSystem] Tile unavailable"));
-    world.Primodium__build(EBuilding.IronMine, ironPositionData);
+    world.Pri_11__build(EBuilding.IronMine, ironPositionData);
   }
 
   function testBuiltOnWrongAsteroid() public {
     PositionData memory coord = getTilePosition(Home.get(addressToEntity(bob)), EBuilding.IronMine);
 
     vm.expectRevert(bytes("[BuildSystem] You can only build on an asteroid you control"));
-    world.Primodium__build(EBuilding.IronMine, coord);
+    world.Pri_11__build(EBuilding.IronMine, coord);
   }
 
   function testBuildTwiceMainBaseFail() public {
     PositionData memory coord = getTilePosition(Home.get(playerEntity), EBuilding.MainBase);
     vm.expectRevert(bytes("[BuildSystem] Cannot build more than one main base per asteroid"));
-    world.Primodium__build(EBuilding.MainBase, coord);
+    world.Pri_11__build(EBuilding.MainBase, coord);
   }
 
   function testBuildMainBaseLevelNotMetFail() public {
@@ -134,7 +129,7 @@ contract BuildSystemTest is PrimodiumTest {
     PositionData memory position = getTilePosition(Home.get(playerEntity), building);
     vm.expectRevert(bytes("[BuildSystem] MainBase level requirement not met"));
     vm.prank(creator);
-    world.Primodium__build(building, position);
+    world.Pri_11__build(building, position);
   }
 
   function testBuildMainBaseLevelMet() public {
@@ -142,19 +137,19 @@ contract BuildSystemTest is PrimodiumTest {
 
     P_RequiredBaseLevel.set(IronMinePrototypeId, 0, 2);
     removeRequirements(EBuilding.IronMine);
-    world.Primodium__build(EBuilding.IronMine, coord);
+    world.Pri_11__build(EBuilding.IronMine, coord);
   }
 
   function testIronMineOnNonIronFail() public {
     PositionData memory nonIronCoord = getTilePosition(Home.get(playerEntity), EBuilding.IronPlateFactory);
 
     vm.expectRevert(bytes("[BuildSystem] Cannot build on this tile"));
-    world.Primodium__build(EBuilding.IronMine, nonIronCoord);
+    world.Pri_11__build(EBuilding.IronMine, nonIronCoord);
   }
 
   function testBuildWithResourceReqs() public {
     bytes32 asteroidEntity = Home.get(playerEntity);
-    world.Primodium__build(EBuilding.IronMine, getTilePosition(asteroidEntity, EBuilding.IronMine));
+    world.Pri_11__build(EBuilding.IronMine, getTilePosition(asteroidEntity, EBuilding.IronMine));
     bytes32 ironMinePrototype = P_EnumToPrototype.get(BuildingKey, uint8(EBuilding.IronMine));
     assertGe(
       P_RequiredResources.lengthResources(ironMinePrototype, 2),
@@ -171,7 +166,7 @@ contract BuildSystemTest is PrimodiumTest {
     requiredResourcesData.amounts[0] = 50;
     P_RequiredResources.set(IronMinePrototypeId, 1, requiredResourcesData);
 
-    world.Primodium__build(EBuilding.IronMine, getTilePosition(asteroidEntity, EBuilding.IronMine));
+    world.Pri_11__build(EBuilding.IronMine, getTilePosition(asteroidEntity, EBuilding.IronMine));
 
     assertEq(ResourceCount.get(asteroidEntity, Iron), 50);
   }
@@ -189,7 +184,7 @@ contract BuildSystemTest is PrimodiumTest {
 
     P_RequiredDependency.set(IronMinePrototypeId, 1, requiredDependenciesData);
 
-    world.Primodium__build(EBuilding.IronMine, getTilePosition(asteroidEntity, EBuilding.IronMine));
+    world.Pri_11__build(EBuilding.IronMine, getTilePosition(asteroidEntity, EBuilding.IronMine));
     uint256 productionIncrease = P_Production.getAmounts(IronMinePrototypeId, 1)[0];
     assertEq(ProductionRate.get(asteroidEntity, Iron), originalProduction + productionIncrease);
     assertEq(ConsumptionRate.get(asteroidEntity, Iron), productionReduction);
@@ -203,7 +198,7 @@ contract BuildSystemTest is PrimodiumTest {
     data1.amounts[0] = increase;
     P_Production.set(IronMinePrototypeId, 1, data1);
 
-    world.Primodium__build(EBuilding.IronMine, getTilePosition(asteroidEntity, EBuilding.IronMine));
+    world.Pri_11__build(EBuilding.IronMine, getTilePosition(asteroidEntity, EBuilding.IronMine));
     assertEq(ProductionRate.get(asteroidEntity, Iron), increase);
   }
 
@@ -214,7 +209,7 @@ contract BuildSystemTest is PrimodiumTest {
     P_ByLevelMaxResourceUpgrades.set(IronMinePrototypeId, Iron, 1, 50);
     bytes32 asteroidEntity = Home.get(playerEntity);
     MaxResourceCount.set(asteroidEntity, Iron, 0);
-    world.Primodium__build(EBuilding.IronMine, getTilePosition(asteroidEntity, EBuilding.IronMine));
+    world.Pri_11__build(EBuilding.IronMine, getTilePosition(asteroidEntity, EBuilding.IronMine));
     assertEq(MaxResourceCount.get(asteroidEntity, Iron), 50);
   }
 
@@ -230,7 +225,7 @@ contract BuildSystemTest is PrimodiumTest {
     PositionData memory coord = getTilePosition(Home.get(playerEntity), building);
 
     coord.y += 3;
-    world.Primodium__build(EBuilding.Starmapper, coord);
+    world.Pri_11__build(EBuilding.Starmapper, coord);
 
     vm.stopPrank();
     assertEq(P_HasStarmapper.get(Home.get(playerEntity)), true);
@@ -246,7 +241,7 @@ contract BuildSystemTest is PrimodiumTest {
     PositionData memory coord = getTilePosition(Home.get(playerEntity), building);
 
     coord.y += 3;
-    world.Primodium__build(EBuilding.Starmapper, coord);
+    world.Pri_11__build(EBuilding.Starmapper, coord);
 
     vm.stopPrank();
     provideResources(Home.get(playerEntity), requiredResources);
@@ -254,7 +249,7 @@ contract BuildSystemTest is PrimodiumTest {
     vm.startPrank(creator);
     coord.y -= 6;
     vm.expectRevert(bytes("[BuildSystem] Cannot build more than one starmapper per asteroid"));
-    world.Primodium__build(EBuilding.Starmapper, coord);
+    world.Pri_11__build(EBuilding.Starmapper, coord);
   }
 
   function testBuildDestroyBuildStarmapperSucceeds() public {
@@ -267,7 +262,7 @@ contract BuildSystemTest is PrimodiumTest {
     PositionData memory coord = getTilePosition(Home.get(playerEntity), building);
 
     coord.y += 3;
-    bytes32 starmapperEntity = world.Primodium__build(EBuilding.Starmapper, coord);
+    bytes32 starmapperEntity = world.Pri_11__build(EBuilding.Starmapper, coord);
 
     LibBuilding.destroy(playerEntity, starmapperEntity, false);
     vm.stopPrank();
@@ -275,6 +270,6 @@ contract BuildSystemTest is PrimodiumTest {
     provideResources(Home.get(playerEntity), requiredResources);
 
     vm.startPrank(creator);
-    world.Primodium__build(EBuilding.Starmapper, coord);
+    world.Pri_11__build(EBuilding.Starmapper, coord);
   }
 }

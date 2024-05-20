@@ -31,7 +31,7 @@ contract ClaimPrimodiumSystemTest is PrimodiumTest {
 
     vm.startPrank(creator);
 
-    world.Primodium__claimPrimodium(asteroidEntity);
+    world.Pri_11__claimPrimodium(asteroidEntity);
     assertEq(Points.get(playerEntity, uint8(EPointType.Shard)), asteroidData.primodium);
     assertEq(LastConquered.get(asteroidEntity), block.timestamp);
   }
@@ -49,7 +49,7 @@ contract ClaimPrimodiumSystemTest is PrimodiumTest {
     vm.startPrank(alice);
 
     vm.expectRevert("[Claim Primodium] Only owner can claim Primodium");
-    world.Primodium__claimPrimodium(asteroidEntity);
+    world.Pri_11__claimPrimodium(asteroidEntity);
   }
 
   function testConquerAsteroidFailNoPoints() public {
@@ -65,7 +65,7 @@ contract ClaimPrimodiumSystemTest is PrimodiumTest {
     Asteroid.setPrimodium(asteroidEntity, 0);
 
     vm.expectRevert("[Claim Primodium] This asteroid does not generate Primodium");
-    world.Primodium__claimPrimodium(asteroidEntity);
+    world.Pri_11__claimPrimodium(asteroidEntity);
   }
 
   function testConquerAsteroidFailNotLongEnough() public {
@@ -82,6 +82,6 @@ contract ClaimPrimodiumSystemTest is PrimodiumTest {
 
     vm.startPrank(alice);
     vm.expectRevert("[Claim Primodium] Asteroid hasn't been held long enough to claim Primodium");
-    world.Primodium__claimPrimodium(secondaryAsteroidEntity);
+    world.Pri_11__claimPrimodium(secondaryAsteroidEntity);
   }
 }

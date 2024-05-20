@@ -37,7 +37,7 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.startPrank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    bytes32 fleetEntity = world.Pri_11__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
     assertEq(UnitCount.get(fleetEntity, unitPrototype), 1, "fleet unit count doesn't match");
     assertEq(UnitCount.get(aliceHomeAsteroid, unitPrototype), 0, "asteroid unit count doesn't match");
@@ -69,8 +69,8 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     //provide resource and unit requirements to create fleet
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.startPrank(alice);
-    bytes32 fleetEntity = world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
-    world.Primodium__landFleet(fleetEntity, aliceHomeAsteroid);
+    bytes32 fleetEntity = world.Pri_11__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Pri_11__landFleet(fleetEntity, aliceHomeAsteroid);
     vm.stopPrank();
     assertEq(UnitCount.get(fleetEntity, unitPrototype), 0, "fleet unit count doesn't match");
     assertEq(UnitCount.get(aliceHomeAsteroid, unitPrototype), 1, "asteroid unit count doesn't match");
@@ -101,7 +101,7 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
       }
     }
     vm.startPrank(alice);
-    world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Pri_11__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
   }
 
@@ -126,7 +126,7 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     }
 
     vm.startPrank(alice);
-    world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Pri_11__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
   }
 
@@ -144,7 +144,7 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
 
     //try to create fleet by other player
     vm.startPrank(bob);
-    world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Pri_11__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
   }
 
@@ -167,13 +167,13 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     setupCreateFleetNoMaxFleetsGranted(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Pri_11__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
 
     setupCreateFleetNoMaxFleetsGranted(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Pri_11__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
   }
 
@@ -197,7 +197,7 @@ contract FleetCreateLandSystemTest is PrimodiumTest {
     setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
 
     vm.startPrank(alice);
-    world.Primodium__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    world.Pri_11__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
     vm.stopPrank();
   }
 }

@@ -8,6 +8,8 @@ import { EntityType, TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 import { Hex } from "viem";
+import { ampli } from "src/ampli";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 export const attack = async (mud: MUD, entity: Entity, target: Entity) => {
   const targetIsAsteroid = components.Asteroid.has(target);
@@ -15,7 +17,7 @@ export const attack = async (mud: MUD, entity: Entity, target: Entity) => {
   await execute(
     {
       mud,
-      functionName: "Primodium__attack",
+      functionName: "Pri_11__attack",
       systemId: getSystemId("CombatSystem"),
       args: [entity as Hex, target as Hex],
       withSession: true,
@@ -25,7 +27,7 @@ export const attack = async (mud: MUD, entity: Entity, target: Entity) => {
       type: TransactionQueueType.Attack,
     },
 
-    () => {
+    (receipt) => {
       const targetIsFleet = components.IsFleet.has(target);
 
       const attackerIsFleet = components.IsFleet.has(entity);
@@ -42,6 +44,12 @@ export const attack = async (mud: MUD, entity: Entity, target: Entity) => {
       const objective = targetIsFleet ? EObjectives.BattleFleet : EObjectives.BattleAsteroid;
 
       makeObjectiveClaimable(mud.playerAccount.entity, objective);
+
+      ampli.systemCombatSystemPrimodiumAttack({
+        spaceRock: entity as Hex,
+        spaceRockTo: target as Hex,
+        ...parseReceipt(receipt),
+      });
     }
   );
 };

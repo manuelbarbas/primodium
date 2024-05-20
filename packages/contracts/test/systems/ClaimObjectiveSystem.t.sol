@@ -31,7 +31,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
   }
 
   function testFailClaimInvalidObjective() public {
-    world.Primodium__claimObjective(asteroidEntity, EObjectives.LENGTH);
+    world.Pri_11__claimObjective(asteroidEntity, EObjectives.LENGTH);
   }
 
   function testClaimObjective() public {
@@ -42,7 +42,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     resourceRewardData.amounts[0] = 100;
     P_ResourceReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)), resourceRewardData);
 
-    world.Primodium__claimObjective(asteroidEntity, EObjectives.BuildIronMine);
+    world.Pri_11__claimObjective(asteroidEntity, EObjectives.BuildIronMine);
     assertEq(
       ResourceCount.get(asteroidEntity, uint8(EResource.Iron)),
       resourceRewardData.amounts[0],
@@ -57,7 +57,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     resourceRewardData.resources[0] = uint8(EResource.Iron);
     resourceRewardData.amounts[0] = 100;
     P_ResourceReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)), resourceRewardData);
-    world.Primodium__claimObjective(asteroidEntity, EObjectives.BuildIronMine);
+    world.Pri_11__claimObjective(asteroidEntity, EObjectives.BuildIronMine);
     assertEq(
       ResourceCount.get(asteroidEntity, uint8(EResource.Iron)),
       resourceRewardData.amounts[0],
@@ -73,7 +73,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     P_ResourceReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)), resourceRewardData);
     MaxResourceCount.set(asteroidEntity, uint8(EResource.Iron), 0);
     console.log(ResourceCount.get(asteroidEntity, uint8(EResource.Iron)));
-    world.Primodium__claimObjective(asteroidEntity, EObjectives.BuildIronMine);
+    world.Pri_11__claimObjective(asteroidEntity, EObjectives.BuildIronMine);
     console.log(ResourceCount.get(asteroidEntity, uint8(EResource.Iron)));
   }
 
@@ -98,7 +98,7 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     resourceRewardData.amounts[0] = 100;
     P_ResourceReward.set(P_EnumToPrototype.get(ObjectiveKey, uint8(EObjectives.BuildIronMine)), resourceRewardData);
 
-    world.Primodium__claimObjective(asteroidEntity, EObjectives.BuildIronMine);
+    world.Pri_11__claimObjective(asteroidEntity, EObjectives.BuildIronMine);
     assertEq(UnitCount.get(Home.get(playerEntity), unit1), unitRewardData.amounts[0], "Unit count does not match");
   }
 
@@ -114,11 +114,11 @@ contract ClaimObjectiveSystemTest is PrimodiumTest {
     requiredResourcesData.amounts[0] = 1;
     P_RequiredResources.set(unit1, 0, requiredResourcesData);
 
-    world.Primodium__claimObjective(asteroidEntity, EObjectives.BuildIronMine);
+    world.Pri_11__claimObjective(asteroidEntity, EObjectives.BuildIronMine);
   }
 
   function testFailClaimObjectiveTwice() public {
-    world.Primodium__claimObjective(asteroidEntity, EObjectives.BuildIronMine);
-    world.Primodium__claimObjective(asteroidEntity, EObjectives.BuildIronMine);
+    world.Pri_11__claimObjective(asteroidEntity, EObjectives.BuildIronMine);
+    world.Pri_11__claimObjective(asteroidEntity, EObjectives.BuildIronMine);
   }
 }

@@ -27,8 +27,8 @@ export const BlueprintInfoMarker = () => {
   if (!building || !hoverCoord || buildingType) return null;
 
   return (
-    <Marker id="blueprint-info-target" scene={"ASTEROID"} coord={coord} origin="center-bottom">
-      <Card>
+    <Marker noPointerEvents id="blueprint-info-target" scene={"ASTEROID"} coord={coord} origin="center-bottom">
+      <Card noPointerEvents>
         <BlueprintInfo building={building} />
       </Card>
     </Marker>

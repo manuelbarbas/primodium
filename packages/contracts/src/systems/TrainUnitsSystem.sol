@@ -54,8 +54,8 @@ contract TrainUnitsSystem is PrimodiumSystem {
 
     bytes32 asteroidEntity = OwnedBy.get(buildingEntity);
     IWorld world = IWorld(_world());
-    world.Primodium__claimResources(asteroidEntity);
-    world.Primodium__claimUnits(asteroidEntity);
+    world.Pri_11__claimResources(asteroidEntity);
+    world.Pri_11__claimUnits(asteroidEntity);
     LibResource.spendUnitRequiredResources(asteroidEntity, unitPrototype, count);
     LibUnit.checkTrainUnitsRequirements(buildingEntity, unitPrototype);
 

@@ -1,10 +1,10 @@
 import { HasValue, namespaceWorld, defineComponentSystem, runQuery } from "@latticexyz/recs";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
-import { renderAsteroid } from "@/game/lib/render/renderAsteroid";
 import { renderFleet } from "@/game/lib/render/renderFleet";
 import { PrimodiumScene } from "@/game/api/scene";
 import { renderShardAsteroid } from "@/game/lib/render/renderShardAsteroid";
+import { renderAsteroid } from "@/game/lib/render/renderAsteroid";
 
 export const renderOverview = (scene: PrimodiumScene) => {
   const systemsWorld = namespaceWorld(world, "systems");
@@ -33,7 +33,7 @@ export const renderOverview = (scene: PrimodiumScene) => {
 
     for (const fleet of runQuery([HasValue(components.FleetMovement, { destination: entity })])) {
       const fleetObject = renderFleet({ scene, entity: fleet });
-      asteroid?.getFleetContainer().addFleet(fleetObject);
+      asteroid?.getFleetsContainer().addFleet(fleetObject);
     }
 
     //TODO: handle fleet orbit updates

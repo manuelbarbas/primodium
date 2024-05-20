@@ -13,7 +13,7 @@ export const Inventory = memo(() => {
         index={0}
         togglable
         size={"sm"}
-        className="pointer-events-auto heropattern-topography-slate-500/10 !border-r-0 animate-in fade-in zoom-in"
+        className="pointer-events-auto heropattern-topography-slate-500/10 !border-r-0 animate-in fade-in zoom-in !z-0"
         style={{
           writingMode: "vertical-rl",
         }}

@@ -3,6 +3,7 @@ import { SetupResult } from "../types";
 import { getNetworkConfig } from "../config/getNetworkConfig";
 import { Hex } from "viem";
 import { SyncStep } from "src/util/constants";
+import { Entity } from "@latticexyz/recs";
 
 export const subToRPC = (setupResult: SetupResult) => {
   const { network } = setupResult;
@@ -28,7 +29,8 @@ export const hydrateFromRPC = (
   fromBlock: bigint,
   toBlock: bigint,
   onComplete?: () => void,
-  onError?: (err: unknown) => void
+  onError?: (err: unknown) => void,
+  syncId?: Entity
 ) => {
   const { network, components } = setupResult;
   const { tables, publicClient, world } = network;
@@ -44,18 +46,24 @@ export const hydrateFromRPC = (
   });
 
   sync.start((_, __, progress) => {
-    components.SyncStatus.set({
-      step: SyncStep.Syncing,
-      progress,
-      message: `Hydrating from RPC`,
-    });
+    components.SyncStatus.set(
+      {
+        step: SyncStep.Syncing,
+        progress,
+        message: `Hydrating from RPC`,
+      },
+      syncId
+    );
 
     if (progress === 1) {
-      components.SyncStatus.set({
-        step: SyncStep.Complete,
-        progress: 1,
-        message: `DONE`,
-      });
+      components.SyncStatus.set(
+        {
+          step: SyncStep.Complete,
+          progress: 1,
+          message: `DONE`,
+        },
+        syncId
+      );
 
       onComplete?.();
     }

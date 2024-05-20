@@ -31,7 +31,7 @@ contract LibColonyTest is PrimodiumTest {
     super.setUp();
     vm.startPrank(creator);
     playerEntity = addressToEntity(creator);
-    world.Primodium__spawn();
+    world.Pri_11__spawn();
 
     OwnedBy.set(Home.get(playerEntity), playerEntity);
     creatorHomeAsteroid = Home.get(playerEntity);
@@ -46,7 +46,7 @@ contract LibColonyTest is PrimodiumTest {
   function buildShipyard(bytes32 asteroidEntity) public returns (bytes32) {
     Level.set(asteroidEntity, 3);
 
-    bytes32 shipyardEntity = world.Primodium__build(
+    bytes32 shipyardEntity = world.Pri_11__build(
       EBuilding.Shipyard,
       getTilePosition(asteroidEntity, EBuilding.Shipyard)
     );
@@ -74,7 +74,7 @@ contract LibColonyTest is PrimodiumTest {
     provideResources(Position.getParentEntity(shipyardEntity), requiredResources);
     assertEq(1, MaxColonySlots.get(playerEntity));
     vm.startPrank(creator);
-    world.Primodium__payForMaxColonySlots(shipyardEntity, requiredResources.amounts);
+    world.Pri_11__payForMaxColonySlots(shipyardEntity, requiredResources.amounts);
     assertEq(2, MaxColonySlots.get(playerEntity));
     requiredResources = P_RequiredResources.get(ColonyShipPrototypeId, 0);
     console.log("resources", requiredResources.resources.length);
@@ -98,7 +98,7 @@ contract LibColonyTest is PrimodiumTest {
     provideResources(Position.getParentEntity(shipyardEntity), requiredResources);
 
     vm.startPrank(creator);
-    world.Primodium__trainUnits(shipyardEntity, EUnit.ColonyShip, 1);
+    world.Pri_11__trainUnits(shipyardEntity, EUnit.ColonyShip, 1);
 
     provideResources(Position.getParentEntity(shipyardEntity), requiredResources);
 
@@ -108,7 +108,7 @@ contract LibColonyTest is PrimodiumTest {
 
     vm.startPrank(creator);
     vm.expectRevert("[TrainUnitsSystem] Cannot train more than one colony ship at a time");
-    world.Primodium__trainUnits(shipyardEntity, EUnit.ColonyShip, 1);
+    world.Pri_11__trainUnits(shipyardEntity, EUnit.ColonyShip, 1);
   }
 
   function testGetColonyShipsPlusAsteroids() public {
@@ -149,7 +149,7 @@ contract LibColonyTest is PrimodiumTest {
 
     vm.startPrank(creator);
     // create the fleet
-    world.Primodium__createFleet(creatorHomeAsteroid, unitCounts, resourceCounts);
+    world.Pri_11__createFleet(creatorHomeAsteroid, unitCounts, resourceCounts);
     assertEq(
       LibColony.getColonyShipsPlusAsteroids(playerEntity),
       3,
@@ -196,21 +196,21 @@ contract LibColonyTest is PrimodiumTest {
     vm.startPrank(creator);
     // Pass the various incorrect payment data
     vm.expectRevert("[SpendResources] Payment data does not match cost data");
-    world.Primodium__payForMaxColonySlots(creatorHomeAsteroidShipyard, emptyPaymentAmounts);
+    world.Pri_11__payForMaxColonySlots(creatorHomeAsteroidShipyard, emptyPaymentAmounts);
 
     vm.expectRevert("[SpendResources] Payment data does not match cost data");
-    world.Primodium__payForMaxColonySlots(creatorHomeAsteroidShipyard, undersizedPaymentAmounts);
+    world.Pri_11__payForMaxColonySlots(creatorHomeAsteroidShipyard, undersizedPaymentAmounts);
 
     vm.expectRevert("[SpendResources] Payment data does not match cost data");
-    world.Primodium__payForMaxColonySlots(creatorHomeAsteroidShipyard, oversizedPaymentAmounts);
+    world.Pri_11__payForMaxColonySlots(creatorHomeAsteroidShipyard, oversizedPaymentAmounts);
 
     // Pass a player entity instead of a shipyard entity
     vm.expectRevert("[Primodium] Not building owner");
-    world.Primodium__payForMaxColonySlots(playerEntity, costData.amounts);
+    world.Pri_11__payForMaxColonySlots(playerEntity, costData.amounts);
 
     // Pass an asteroid entity instead of a shipyard entity
     vm.expectRevert("[Primodium] Not building owner");
-    world.Primodium__payForMaxColonySlots(creatorHomeAsteroid, costData.amounts);
+    world.Pri_11__payForMaxColonySlots(creatorHomeAsteroid, costData.amounts);
   }
 
   function testPayForMaxColonySlotsNoResources() public {
@@ -231,7 +231,7 @@ contract LibColonyTest is PrimodiumTest {
       paymentAmounts[i] = amount;
     }
     vm.expectRevert("[SpendResources] Not enough resources to spend");
-    world.Primodium__payForMaxColonySlots(creatorHomeAsteroidShipyard, paymentAmounts);
+    world.Pri_11__payForMaxColonySlots(creatorHomeAsteroidShipyard, paymentAmounts);
   }
 
   function testPayForMaxColonySlots() public {
@@ -246,7 +246,7 @@ contract LibColonyTest is PrimodiumTest {
       paymentAmounts[i] = amount;
     }
 
-    world.Primodium__payForMaxColonySlots(creatorHomeAsteroidShipyard, paymentAmounts);
+    world.Pri_11__payForMaxColonySlots(creatorHomeAsteroidShipyard, paymentAmounts);
     currentMaxColonySlots = MaxColonySlots.get(playerEntity);
     prevColonySlotsCostMultiplier = colonySlotsCostMultiplier;
     colonySlotsCostMultiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);
@@ -271,7 +271,7 @@ contract LibColonyTest is PrimodiumTest {
       ResourceCount.set(creatorHomeAsteroid, resource, amount);
       paymentAmounts[i] = amount;
     }
-    fullPayment = world.Primodium__payForMaxColonySlots(creatorHomeAsteroidShipyard, paymentAmounts);
+    fullPayment = world.Pri_11__payForMaxColonySlots(creatorHomeAsteroidShipyard, paymentAmounts);
     assertEq(fullPayment, false);
     currentMaxColonySlots = MaxColonySlots.get(playerEntity);
     colonySlotsCostMultiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);
@@ -306,7 +306,7 @@ contract LibColonyTest is PrimodiumTest {
       ResourceCount.set(creatorHomeAsteroid, resource, amount);
       paymentAmounts[i] = amount;
     }
-    fullPayment = world.Primodium__payForMaxColonySlots(creatorHomeAsteroidShipyard, paymentAmounts);
+    fullPayment = world.Pri_11__payForMaxColonySlots(creatorHomeAsteroidShipyard, paymentAmounts);
     assertEq(fullPayment, false);
     currentMaxColonySlots = MaxColonySlots.get(playerEntity);
     colonySlotsCostMultiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);
@@ -350,7 +350,7 @@ contract LibColonyTest is PrimodiumTest {
       paymentAmounts[i] = amount;
     }
 
-    fullPayment = world.Primodium__payForMaxColonySlots(creatorHomeAsteroidShipyard, paymentAmounts);
+    fullPayment = world.Pri_11__payForMaxColonySlots(creatorHomeAsteroidShipyard, paymentAmounts);
     assertEq(fullPayment, false);
     currentMaxColonySlots = MaxColonySlots.get(playerEntity);
     colonySlotsCostMultiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);
@@ -391,7 +391,7 @@ contract LibColonyTest is PrimodiumTest {
       paymentAmounts[i] = amount;
     }
 
-    fullPayment = world.Primodium__payForMaxColonySlots(creatorHomeAsteroidShipyard, paymentAmounts);
+    fullPayment = world.Pri_11__payForMaxColonySlots(creatorHomeAsteroidShipyard, paymentAmounts);
     assertEq(fullPayment, true);
     currentMaxColonySlots = MaxColonySlots.get(playerEntity);
     colonySlotsCostMultiplier = LibColony.getColonySlotsCostMultiplier(playerEntity);

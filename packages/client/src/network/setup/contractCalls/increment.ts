@@ -9,7 +9,7 @@ export const increment = async (mud: MUD, withSession?: boolean) => {
   await execute(
     {
       mud,
-      functionName: "Primodium__increment",
+      functionName: "Pri_11__increment",
       systemId: getSystemId("IncrementSystem"),
       withSession,
     },
