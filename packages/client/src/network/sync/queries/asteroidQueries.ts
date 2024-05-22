@@ -40,6 +40,10 @@ export const getAsteroidQuery = ({
           key0: asteroid,
         },
         {
+          tableId: tables.DroidRegenTimestamp.tableId,
+          key0: asteroid,
+        },
+        {
           tableId: tables.ProductionRate.tableId,
           key0: asteroid,
         },
