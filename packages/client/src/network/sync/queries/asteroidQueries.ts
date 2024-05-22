@@ -139,6 +139,9 @@ export const getActiveAsteroidQuery = ({
               tableId: tables.LastClaimedAt.tableId,
             },
             {
+              tableId: tables.CooldownEnd.tableId,
+            },
+            {
               tableId: tables.ClaimOffset.tableId,
             },
             {
