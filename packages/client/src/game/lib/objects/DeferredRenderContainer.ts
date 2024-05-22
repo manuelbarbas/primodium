@@ -66,18 +66,13 @@ export class DeferredRenderContainer<
 
     const chunkCoord = this._scene.utils.tileCoordToChunkCoord({ x: coord.x, y: -coord.y });
     const chunkCoordKey = this._scene.utils.encodeKeyForChunk(chunkCoord);
-    const isVisible = this._scene.utils.getVisibleChunks().has(chunkCoordKey);
-    if (isVisible && !this.isSpawned(entity)) {
+    if (this._scene.utils.getVisibleChunks().has(chunkCoordKey) && !this.isSpawned(entity)) {
       this.spawn(entity);
     }
 
     const entities = this.chunkCoords.get(chunkCoordKey) ?? [];
     entities.push(entity);
     this.chunkCoords.set(this._scene.utils.encodeKeyForChunk(chunkCoord), entities);
-
-    if (!isVisible && this._scene.utils.isKnownChunk(chunkCoord)) {
-      this._scene.utils.resetKnownChunk(chunkCoord);
-    }
   }
 
   // TODO: this is ugly, will not live here or not in this form
