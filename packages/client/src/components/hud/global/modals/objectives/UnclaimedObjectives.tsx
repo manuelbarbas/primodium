@@ -75,7 +75,7 @@ export const UnclaimedObjectives: React.FC<{ highlight?: Entity }> = ({ highligh
           <Button
             className="btn-sm btn-primary"
             onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={(currentPage + 1) * itemsPerPage >= filteredObjectiveEntities.length - 1}
+            disabled={(currentPage + 1) * itemsPerPage >= filteredObjectiveEntities.length}
           >
             <FaChevronRight />
           </Button>
