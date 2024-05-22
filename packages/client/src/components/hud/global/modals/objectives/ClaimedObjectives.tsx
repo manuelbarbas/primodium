@@ -44,7 +44,7 @@ export const ClaimedObjectives: React.FC = () => {
     <div className="flex flex-col gap-4 w-full h-full">
       <div className="grid grid-cols-2 grid-rows-3 gap-2 w-full h-full">
         {paginatedObjectiveEntities.map((objectiveEntity, i) => (
-          <Objective key={i} objectiveEntity={objectiveEntity} asteroidEntity={asteroidEntity} />
+          <Objective key={i} objectiveEntity={objectiveEntity} asteroidEntity={asteroidEntity} claimed />
         ))}
       </div>
       {filteredObjectiveEntities.length > 6 && (
