@@ -2,7 +2,7 @@ import { Buffer } from "buffer";
 import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { createClient } from "viem";
 import { createConfig, http } from "wagmi";
-import { coinbaseWallet, injected, walletConnect } from "wagmi/connectors";
+import { coinbaseWallet, walletConnect } from "wagmi/connectors";
 
 // polyfill Buffer for client
 if (!window.Buffer) {
@@ -21,7 +21,6 @@ export const wagmiConfig = createConfig({
     return createClient({ chain, transport: http() });
   },
   connectors: [
-    injected({ target: "metaMask" }),
     walletConnect({ projectId }),
     coinbaseWallet({ appName: "wagmi" }),
     // injected({target: 'Injected', shimDisconnect: true}),
