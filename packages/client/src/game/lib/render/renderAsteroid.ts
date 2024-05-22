@@ -13,6 +13,7 @@ import { Entity } from "@latticexyz/recs";
 import { EMap } from "contracts/config/enums";
 import { Coord } from "engine/types";
 import { PrimodiumScene } from "@/game/api/scene";
+import { getEnsName } from "@/util/web3/getEnsName";
 
 export const renderAsteroid = (args: {
   scene: PrimodiumScene;
@@ -76,6 +77,13 @@ export const renderAsteroid = (args: {
     allianceLabel: alliance ? getAllianceName(alliance as Entity) : undefined,
     allianceLabelColor: alliance ? parseInt(entityToColor(alliance as Entity).slice(1), 16) : undefined,
   });
+
+  // just trigger rendering the ENS name if available
+  if (ownedBy) {
+    getEnsName(ownedBy as Entity).then((addressObj) => {
+      if (addressObj.ensName) asteroid.getAsteroidLabel().setProperties({ ownerLabel: addressObj.ensName });
+    });
+  }
 
   // Add event handlers
   if (!addEventHandlers) return asteroid;
