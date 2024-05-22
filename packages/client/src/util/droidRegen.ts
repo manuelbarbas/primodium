@@ -1,6 +1,5 @@
 import { Entity } from "@latticexyz/recs";
 import { bigIntMin } from "@latticexyz/common/utils";
-import { EMap } from "contracts/config/enums";
 import { components as comps } from "src/network/components";
 import { Hex } from "viem";
 import { EntityType, SPEED_SCALE, RESOURCE_SCALE } from "./constants";
@@ -8,11 +7,8 @@ import { EntityType, SPEED_SCALE, RESOURCE_SCALE } from "./constants";
 export function getAsteroidDroidCount(asteroid: Entity): bigint {
   const homeHex = asteroid as Hex;
 
-  const mapId = comps.Asteroid.getWithKeys({ entity: homeHex })?.mapId ?? 0n;
   const owner = comps.OwnedBy.getWithKeys({ entity: homeHex })?.value as Entity | undefined;
-  if (mapId != EMap.Common || owner != undefined) {
-    return 0n;
-  }
+  if (owner != undefined) return 0n;
 
   const time = comps.Time.get()?.value ?? 0n;
 
