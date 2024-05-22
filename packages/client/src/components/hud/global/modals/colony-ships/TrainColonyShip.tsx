@@ -7,10 +7,11 @@ import { useMud } from "@/hooks";
 import { components } from "@/network/components";
 import { train } from "@/network/setup/contractCalls/train";
 import { getEntityTypeName } from "@/util/common";
-import { EntityType, ResourceEnumLookup, UnitEnumLookup } from "@/util/constants";
+import { EntityType, UnitEnumLookup } from "@/util/constants";
 import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 import { formatNumber, formatResourceCount } from "@/util/number";
 import { getRecipe } from "@/util/recipe";
+import { getFullResourceCount } from "@/util/resource";
 import { getUnitStats } from "@/util/unit";
 import { Entity } from "@latticexyz/recs";
 import React, { useCallback, useMemo } from "react";
@@ -26,9 +27,7 @@ export const TrainColonyShip: React.FC<{ onCommission?: () => void; buildingEnti
 
   const mud = useMud();
   const unit = EntityType.ColonyShip;
-  const unitLevel = useMemo(() => {
-    return components.UnitLevel.getWithKeys({ entity: asteroid as Hex, unit: unit as Hex })?.value ?? 0n;
-  }, [unit, asteroid]);
+  const unitLevel = components.UnitLevel.useWithKeys({ entity: asteroid as Hex, unit: unit as Hex })?.value ?? 0n;
 
   const recipe = useMemo(() => {
     return getRecipe(unit, unitLevel);
@@ -37,11 +36,7 @@ export const TrainColonyShip: React.FC<{ onCommission?: () => void; buildingEnti
   const shipImage = EntityToUnitImage[unit] ?? "";
 
   const canCommission = recipe.every((resource) => {
-    const resourceCount =
-      components.ResourceCount.getWithKeys({
-        entity: asteroid as Hex,
-        resource: ResourceEnumLookup[resource.id],
-      })?.value ?? 0n;
+    const resourceCount = getFullResourceCount(resource.id, asteroid)?.resourceCount ?? 0n;
     return resourceCount >= resource.amount;
   });
 
@@ -67,7 +62,7 @@ export const TrainColonyShip: React.FC<{ onCommission?: () => void; buildingEnti
         })}
       </div>
       {recipe && (
-        <div className="flex justify-center items-center gap-1">
+        <div className="flex justify-center flex-wrap items-center gap-1">
           {recipe.map((resource, i) => (
             <Badge key={`resource-${i}`}>
               <ResourceIconTooltip

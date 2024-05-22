@@ -41,7 +41,7 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
 
   return (
     <Navigator.Screen title="Commission" className="gap-2">
-      <div className="flex h-[20rem] gap-2">
+      <div className="flex h-[22rem] gap-2">
         <div className="flex flex-col gap-2 ">
           <div className="px-1">
             {queue.length > 0 ? (

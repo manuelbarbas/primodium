@@ -53,8 +53,7 @@ export const UnlockSlot: React.FC<{
     setActiveResourceCount("0");
   };
   return (
-    <SecondaryCard className={`flex flex-col gap-3 p-2 justify-center items-center ${className}`}>
-      <p>Add Slot</p>
+    <SecondaryCard className={`flex flex-col gap-2 justify-center items-center ${className}`}>
       {Object.entries(colonySlotsData.resourceCosts).map(([resource], i) => (
         <SlotResourceDisplay
           key={`slot-resource-${i}`}
