@@ -40,6 +40,10 @@ export const getAsteroidQuery = ({
           key0: asteroid,
         },
         {
+          tableId: tables.DroidRegenTimestamp.tableId,
+          key0: asteroid,
+        },
+        {
           tableId: tables.ProductionRate.tableId,
           key0: asteroid,
         },
@@ -137,6 +141,9 @@ export const getActiveAsteroidQuery = ({
             },
             {
               tableId: tables.LastClaimedAt.tableId,
+            },
+            {
+              tableId: tables.CooldownEnd.tableId,
             },
             {
               tableId: tables.ClaimOffset.tableId,
