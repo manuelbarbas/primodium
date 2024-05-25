@@ -8,6 +8,7 @@ import { decodeAllianceName, getAllianceName } from "@/util/alliance";
 import { entityToColor } from "@/util/color";
 import { EntityType } from "@/util/constants";
 import { entityToPlayerName, entityToRockName } from "@/util/name";
+import { getEnsName } from "@/util/web3/getEnsName";
 
 // Setup the asteroid label updates over visible entities
 // Systems will be executed inside the starmap and command center scenes
@@ -38,8 +39,9 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
     if (ownerEntity) {
       const isHome = playerHomeEntity === asteroidEntity;
       const ownedByPlayer = ownerEntity === playerEntity;
+      const asteroidLabel = asteroid.getAsteroidLabel();
 
-      asteroid.getAsteroidLabel().setProperties({
+      asteroidLabel.setProperties({
         nameLabel: entityToRockName(asteroidEntity) + (isHome ? " *" : ""),
         nameLabelColor: ownedByPlayer
           ? 0xffff00
@@ -51,6 +53,11 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
           : ownerEntity === singletonEntity
           ? "unowned"
           : entityToPlayerName(ownerEntity),
+      });
+
+      // we want to do this after to not block the rest of the update
+      getEnsName(playerEntity).then((addressObj) => {
+        if (addressObj.ensName) asteroidLabel.setProperties({ ownerLabel: addressObj.ensName });
       });
     }
 
