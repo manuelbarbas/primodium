@@ -60,6 +60,11 @@ export const playlist: Song[] = [
     artist: "DaniHaDani",
     url: `https://primodium-assets.s3.us-west-2.amazonaws.com/music/Silent+Transmission+by+Tamuz+Dekel.mp3`,
   },
+  {
+    title: "Digital Abyss",
+    artist: "Stephen Keech",
+    url: `https://primodium-assets.s3.us-west-2.amazonaws.com/music/Digital+Abyss+by+Stephen+Keech.mp3`,
+  },
 ];
 
 export const getRandomSong = () => {
