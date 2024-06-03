@@ -97,7 +97,7 @@ export const BlueprintPane = () => {
 
       {/* Menu Buttons (hidden when expanded) */}
       {!arePanesExpanded && (
-        <div className="flex flex-col">
+        <div>
           {labels.map((label, index) => (
             <Button
               key={index}
