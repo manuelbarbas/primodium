@@ -1,5 +1,5 @@
 {
-  "name": "building-upgrade-bounty",
+  "name": "BuildingUpgradeBounty",
   "private": true,
   "scripts": {
     "assets:export": "pnpm --filter 'assets' export",

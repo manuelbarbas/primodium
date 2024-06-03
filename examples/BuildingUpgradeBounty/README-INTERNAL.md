@@ -1,4 +1,4 @@
-# building-upgrade-bounty
+# BuildingUpgradeBounty
 
 An example of how to extend the Primodium world using namespaces, private systems, and access control.
 
@@ -41,9 +41,9 @@ For faster, easier testing, use the `setWorldSpeed` cheatcode in the dev client 
 
 ### Deploy World Extension
 
-Rename `primodium/examples/building-upgrade-bounty/packages/contracts/.env.example` to `primodium/examples/building-upgrade-bounty/packages/contracts/.env`.
+Rename `primodium/examples/BuildingUpgradeBounty/packages/contracts/.env.example` to `primodium/examples/BuildingUpgradeBounty/packages/contracts/.env`.
 
-Open a new terminal, and navigate to `primodium/examples/building-upgrade-bounty`.
+Open a new terminal, and navigate to `primodium/examples/BuildingUpgradeBounty`.
 
 Execute the following:
 
@@ -52,7 +52,7 @@ pnpm i
 pnpm build
 ```
 
-Navigate to `primodium/examples/building-upgrade-bounty/packages/contracts`.
+Navigate to `primodium/examples/BuildingUpgradeBounty/packages/contracts`.
 
 Next we're going to deploy and register Alice's `upgradeBounty` namespace, systems, functions, and tables to the Admin's world, as well as delegate Alice's `UpgradeBuildingSystem` control to the `UpgrBounSystem` address.
 
@@ -84,7 +84,7 @@ forge script script/UpgradeBountyActions.s.sol --rpc-url http://localhost:8545 -
 ```
 
 Look at the client, notice that a specific Iron Mine has been upgraded to Iron Mine II!
-Additionally, use the `primodium/examples/building-upgrade-bounty/packages/contracts` terminal to check Alice and Bob's ETH balances:
+Additionally, use the `primodium/examples/BuildingUpgradeBounty/packages/contracts` terminal to check Alice and Bob's ETH balances:
 
 ```bash
 source .env
@@ -96,20 +96,20 @@ cast balance $ADDRESS_BOB
 
 Given that the complete contract source code for Primodium is not yet released, the most effective way for a third party to test their World Extension is to fork the live testnet and run tests against it. We will use [Foundry](https://book.getfoundry.sh/cheatcodes/create-select-fork)'s `vm.createSelectFork()` test function to achieve this. Here are the suggested steps to complete building a test by forking the live Primodium testnet:
 
-1. Copy `examples/building-upgrade-bounty/packages/contracts/.env.example` and paste it in the same directory, while renaming it to `.env`.
+1. Copy `examples/BuildingUpgradeBounty/packages/contracts/.env.example` and paste it in the same directory, while renaming it to `.env`.
 2. Change the `PRIMODIUM_RPC_URL` to the appropriate URL. Our current testnet is `https://primodium-sepolia.rpc.caldera.xyz/http`
 3. Change the `WORLD_ADDRESS` to the appropriate contract address. Our current Primodium world address is `0xd5d9aad645671a285d1cadf8e68aef7d74a8a7d0`.
 4. Change the `BLOCK_NUMBER` to the your desired block. The current Primodium world was deployed at block number `3007935`, however you may want to use the most recent block given that we may be updating the chain and it will represent the most recent state of the world.
 5. If you haven't already, make a new test file in the test folder, like `packages/contracts/test/[YOUR_TEST_FILE_NAME].t.sol`
-6. As seen in `examples/building-upgrade-bounty/packages/contracts/test/UpgradeBountyExtension.t.sol`, use `vm.createSelectFork(vm.envString("PRIMODIUM_RPC_URL"), vm.envUint("BLOCK_NUMBER"));` to fork the chain and run Foundry tests against it.
-7. In your test file, make sure to at minimum import the following files. See `examples/building-upgrade-bounty/packages/contracts/test/UpgradeBountyExtension.t.sol` for more useful imports.
+6. As seen in `examples/BuildingUpgradeBounty/packages/contracts/test/UpgradeBountyExtension.t.sol`, use `vm.createSelectFork(vm.envString("PRIMODIUM_RPC_URL"), vm.envUint("BLOCK_NUMBER"));` to fork the chain and run Foundry tests against it.
+7. In your test file, make sure to at minimum import the following files. See `examples/BuildingUpgradeBounty/packages/contracts/test/UpgradeBountyExtension.t.sol` for more useful imports.
 
 ```solidity
 import "forge-std/Test.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 ```
 
-8. In order to run the tests, make sure you have navigated your terminal to `examples/building-upgrade-bounty/packages/contracts` and then run `forge test`.
+8. In order to run the tests, make sure you have navigated your terminal to `examples/BuildingUpgradeBounty/packages/contracts` and then run `forge test`.
 
 Refer to the [Foundry book](https://book.getfoundry.sh/forge/tests?highlight=test#tests) to learn more about building tests.
 
