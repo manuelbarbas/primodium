@@ -1,6 +1,6 @@
 import { transportObserver } from "@latticexyz/common";
 import { useEffect, useMemo, useState } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { setupSessionAccount } from "src/network/systems/setupSessionAccount";
 import { createPublicClient, fallback, http } from "viem";
 import { Progress } from "./components/core/Progress";
@@ -20,7 +20,7 @@ export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
 
 export default function AppLoadingState() {
   const mud = useMud();
-  const initialized = useInit();
+
   const [balance, setBalance] = useState<bigint>();
 
   useEffect(() => {
@@ -85,13 +85,7 @@ export default function AppLoadingState() {
           )}
           {ready && (
             <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Navigate to="/game" replace />} />
-                <Route path="/game" element={initialized ? <Game /> : <Enter />} />
-                <Route path="/increment" element={<Increment />} />
-                <Route path="/statistics" element={<Statistics />} />
-                <Route path="/sandbox" element={<Sandbox />} />
-              </Routes>
+              <PrimodiumRoutes />
             </BrowserRouter>
           )}
         </div>
@@ -106,3 +100,18 @@ export default function AppLoadingState() {
     </div>
   );
 }
+
+export const PrimodiumRoutes = () => {
+  const location = useLocation();
+  const initialized = useInit();
+
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate to={{ pathname: "/game", search: location.search }} />} />
+      <Route path="/game" element={initialized ? <Game /> : <Enter />} />
+      <Route path="/increment" element={<Increment />} />
+      <Route path="/statistics" element={<Statistics />} />
+      <Route path="/sandbox" element={<Sandbox />} />
+    </Routes>
+  );
+};

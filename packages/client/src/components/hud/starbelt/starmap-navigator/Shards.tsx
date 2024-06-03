@@ -1,5 +1,6 @@
 import { Badge } from "@/components/core/Badge";
 import { Card } from "@/components/core/Card";
+import { IconLabel } from "@/components/core/IconLabel";
 import { useMud } from "@/hooks";
 import { useShardAsteroid } from "@/hooks/primodium/useShardAsteroid";
 import { useGame } from "@/hooks/useGame";
@@ -8,6 +9,7 @@ import { EntityType } from "@/util/constants";
 import { formatResourceCount, formatTimeShort } from "@/util/number";
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has } from "@latticexyz/recs";
+import { ResourceImages } from "@primodiumxyz/assets";
 import { Button } from "src/components/core/Button";
 import { getAsteroidImage } from "src/util/asteroid";
 import { entityToRockName } from "src/util/name";
@@ -80,19 +82,24 @@ const Shard = ({
   if (!position || !shardData) return null;
 
   return (
-    <Button size="content" selected={selected} className={`flex-col ${className}`} onClick={onClick}>
+    <Button
+      size="content"
+      selected={selected}
+      className={`flex-col text-balance h-full ${className}`}
+      onClick={onClick}
+    >
       <div className="flex justify-around w-full">
         <img src={imageUri} className=" w-10 h-10" />
         <div className="flex flex-col items-center gap-1">
-          <p className="font-bold text-sm ">{entityToRockName(shardEntity)}</p>
+          <p className="font-bold text-sm text-wrap">{entityToRockName(shardEntity)}</p>
           {shardData.owner ? (
             shardData.owner === playerEntity ? (
-              <p className="text-xs text-success">
-                +
+              <p className="text-xs text-success flex gap-2">
+                <IconLabel imageUri={ResourceImages.Primodium} className={`pixel-images w-3 h-3`} />
                 {formatResourceCount(EntityType.Iron, shardData.dripPerSec * 60n * 60n, {
                   fractionDigits: 1,
-                }).toLocaleString()}{" "}
-                PRI/HR
+                })}
+                /HR
               </p>
             ) : (
               <p className="text-xs text-warning">occupied</p>

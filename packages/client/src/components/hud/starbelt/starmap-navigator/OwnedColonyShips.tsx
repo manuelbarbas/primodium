@@ -11,6 +11,7 @@ import { EntityToUnitImage } from "@/util/mappings";
 import { entityToFleetName, entityToRockName } from "@/util/name";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
+import { DeferredAsteroidsRenderContainer } from "@/game/lib/objects/Asteroid/DeferredAsteroidsRenderContainer";
 
 export const OwnedColonyShip: React.FC<{ parentEntity: Entity; onClick?: () => void }> = ({
   parentEntity,
@@ -68,10 +69,19 @@ export const OwnedColonyShips: React.FC<{ className?: string }> = ({ className }
     if (arrivalTime < time) components.SelectedFleet.set({ value: entity });
 
     const objects = game.STARMAP.objects;
-    const fleet = objects.getFleet(entity);
+    const fleet = objects.fleet.get(entity);
+    let position = fleet?.getTileCoord();
 
-    if (!fleet) return;
-    const position = fleet.getTileCoord();
+    if (!position) {
+      // the fleet might be around a non-spawned asteroid, so we need to check if it's registered
+      const deferredRenderContainer = objects.deferredRenderContainer.getContainer(
+        EntityType.Asteroid
+      ) as DeferredAsteroidsRenderContainer;
+      const asteroidPosition = deferredRenderContainer.getFleetCoord(entity);
+
+      if (!asteroidPosition) return;
+      position = asteroidPosition;
+    }
 
     pan({
       x: position.x,

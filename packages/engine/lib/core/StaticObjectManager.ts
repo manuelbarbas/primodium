@@ -3,8 +3,10 @@ import { createCamera } from "./createCamera";
 import { Coord } from "../../types";
 import { CoordMap } from "../util/coordMap";
 import { pixelToChunkCoord } from "../util/coords";
+import { BaseSpawnArgs, DeferredRenderContainer } from "@/game/lib/objects/DeferredRenderContainer";
 
 type Spawnable = {
+  id: string;
   spawn(): void;
   isSpawned(): boolean;
   setVisible(visible: boolean): Phaser.GameObjects.GameObject;
@@ -18,14 +20,19 @@ export type PrimodiumGameObject = (
   | Phaser.GameObjects.Zone
 ) &
   Spawnable;
+export type BoundingBox = Phaser.Geom.Rectangle;
 
 export class StaticObjectManager {
   private chunkManager;
   private coordMap = new CoordMap<PrimodiumGameObject[]>();
   private objMap = new Map<string, PrimodiumGameObject>();
+  private boundingBoxes = new Map<string, BoundingBox[]>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private deferredRenderContainerMap = new Map<string, DeferredRenderContainer<any, any>>();
   private chunkSize: number;
   private count = 0;
   private onNewObjectCallbacks: ((id: string) => void)[] = [];
+  private onObjectEnterChunkCallbacks: ((id: string) => void)[] = [];
 
   constructor(camera: ReturnType<typeof createCamera>, chunkSize: number) {
     this.chunkSize = chunkSize;
@@ -37,30 +44,17 @@ export class StaticObjectManager {
     );
   }
 
-  private onEnterChunk(chunkCoord: Coord) {
-    const objects = this.coordMap.get(chunkCoord) ?? [];
-    objects.forEach((object) => {
-      this.count++;
-      if (!object.isSpawned()) {
-        object.spawn();
-      }
-      object.setActive(true).setVisible(true);
-    });
-  }
-
-  private onExitChunk(chunkCoord: Coord) {
-    const objects = this.coordMap.get(chunkCoord) ?? [];
-    objects.forEach((object) => {
-      this.count--;
-      object.setActive(false).setVisible(false);
-    });
-  }
-
   add(id: string, object: PrimodiumGameObject, cull = false) {
     if (this.objMap.has(id)) return;
     this.objMap.set(id, object);
 
     if (cull) {
+      // if it's a line, we'll handle after creation with bounding boxes so just set to inactive
+      if (object instanceof Phaser.GameObjects.Line) {
+        object.setActive(false).setVisible(false);
+        return;
+      }
+
       const chunkCoord = pixelToChunkCoord({ x: object.x, y: object.y }, this.chunkSize);
 
       const objects = this.coordMap.get(chunkCoord) ?? [];
@@ -68,16 +62,76 @@ export class StaticObjectManager {
       if (!objects.length) this.coordMap.set(chunkCoord, [object]);
       else objects.push(object);
 
-      if (this.chunkManager.isVisible(chunkCoord)) {
+      if (this.chunkManager.isVisibleChunk(chunkCoord)) {
         this.count--;
         if (!object.isSpawned()) {
           object.spawn();
         }
         object.setActive(true).setVisible(true);
+        this.onObjectEnterChunkCallbacks.forEach((callback) => callback(id));
       }
     } else object.spawn();
 
     this.onNewObjectCallbacks.forEach((callback) => callback(id));
+  }
+
+  addContainer<SpawnedObject extends PrimodiumGameObject, SpawnArgs extends BaseSpawnArgs>(
+    id: string,
+    container: DeferredRenderContainer<SpawnedObject, SpawnArgs>
+  ) {
+    this.deferredRenderContainerMap.set(id, container);
+  }
+
+  updateObjectPosition(id: string, coord: Coord) {
+    const object = this.objMap.get(id);
+    if (!object) return;
+
+    const oldChunkCoord = pixelToChunkCoord({ x: object.x, y: object.y }, this.chunkSize);
+    const newChunkCoord = pixelToChunkCoord(coord, this.chunkSize);
+    if (oldChunkCoord === newChunkCoord) return;
+
+    // remove from old chunk
+    const objects = this.coordMap.get(oldChunkCoord) ?? [];
+    const index = objects.indexOf(object);
+    if (index !== -1) objects.splice(index, 1);
+
+    // add to new chunk
+    const newObjects = this.coordMap.get(newChunkCoord) ?? [];
+    newObjects.push(object);
+
+    this.coordMap.set(newChunkCoord, newObjects);
+    this.coordMap.set(oldChunkCoord, objects);
+
+    // update visibility
+    if (this.chunkManager.isVisibleChunk(newChunkCoord)) {
+      object.setActive(true).setVisible(true);
+    } else {
+      object.setActive(false).setVisible(false);
+    }
+  }
+
+  setBoundingBoxes(id: string, boundingBoxes: BoundingBox[]) {
+    this.boundingBoxes.set(id, boundingBoxes);
+    let isVisible = false;
+
+    for (const boundingBox of boundingBoxes) {
+      if (this.chunkManager.isVisibleBoundingBox(boundingBox)) {
+        isVisible = true;
+        break;
+      }
+    }
+
+    if (isVisible) {
+      const object = this.objMap.get(id);
+      if (!object) return;
+
+      this.count--;
+      if (!object.isSpawned()) {
+        object.spawn();
+      }
+
+      object.setActive(true).setVisible(true);
+    }
   }
 
   onNewObject(callback: (id: string) => void) {
@@ -89,7 +143,16 @@ export class StaticObjectManager {
     };
   }
 
-  remove(id: string, destroy = false) {
+  onObjectEnterChunk(callback: (id: string) => void) {
+    this.onObjectEnterChunkCallbacks.push(callback);
+
+    return () => {
+      const index = this.onObjectEnterChunkCallbacks.indexOf(callback);
+      if (index !== -1) this.onObjectEnterChunkCallbacks.splice(index, 1);
+    };
+  }
+
+  remove(id: string, destroy = false, decrement = false) {
     const object = this.objMap.get(id);
     if (!object) return;
 
@@ -100,19 +163,84 @@ export class StaticObjectManager {
     if (index !== -1) objects.splice(index, 1);
 
     this.objMap.delete(id);
+    this.boundingBoxes.delete(id);
     if (destroy) object.destroy();
+    if (decrement) this.count--;
   }
 
   get(id: string) {
     return this.objMap.get(id);
   }
 
+  getContainer(id: string) {
+    return this.deferredRenderContainerMap.get(id);
+  }
+
   has(id: string) {
     return this.objMap.has(id);
+  }
+
+  getVisibleChunks() {
+    return this.chunkManager.getVisibleChunks();
+  }
+
+  encodeKeyForChunk(coord: Coord) {
+    return this.chunkManager.encodeKeyForChunk(coord);
+  }
+
+  decodeKeyFromChunk(key: string) {
+    return this.chunkManager.decodeKeyFromChunk(key);
   }
 
   dispose() {
     this.objMap.forEach((object) => object.destroy());
     this.chunkManager.dispose();
+  }
+
+  private onEnterChunk(chunkCoord: Coord) {
+    // OBJECTS
+    const objects = this.coordMap.get(chunkCoord) ?? [];
+    objects.forEach((object) => {
+      this.count++;
+      if (!object.isSpawned()) {
+        object.spawn();
+      }
+      object.setActive(true).setVisible(true);
+      this.onObjectEnterChunkCallbacks.forEach((callback) => callback(object.id));
+    });
+
+    // BOUNDING BOXES
+    // considering that we check all boxes here, we don't need to repeat the same logic in `onExitChunk`
+    const boundingBoxes = this.boundingBoxes;
+    boundingBoxes.forEach((boundingBoxes, id) => {
+      const object = this.objMap.get(id);
+
+      if (object) {
+        let isVisible = false;
+
+        for (const boundingBox of boundingBoxes) {
+          if (this.chunkManager.isVisibleBoundingBox(boundingBox)) {
+            isVisible = true;
+            break;
+          }
+        }
+
+        object.setActive(isVisible).setVisible(isVisible).spawn();
+      }
+    });
+
+    // CONTAINERS
+    this.deferredRenderContainerMap.forEach((container) => {
+      if (!this.chunkManager.isKnownChunk(chunkCoord)) container.onNewEnterChunk(chunkCoord);
+    });
+  }
+
+  private onExitChunk(chunkCoord: Coord) {
+    const objects = this.coordMap.get(chunkCoord) ?? [];
+
+    objects.forEach((object) => {
+      this.count--;
+      object.setActive(false).setVisible(false);
+    });
   }
 }

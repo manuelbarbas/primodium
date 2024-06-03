@@ -1,7 +1,7 @@
 [
   {
     "type": "function",
-    "name": "Primodium__abandonAsteroid",
+    "name": "Pri_11__abandonAsteroid",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -14,7 +14,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__abandonFleet",
+    "name": "Pri_11__abandonFleet",
     "inputs": [
       {
         "name": "fleetEntity",
@@ -27,7 +27,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__acceptRequestToJoin",
+    "name": "Pri_11__acceptRequestToJoin",
     "inputs": [
       {
         "name": "accepted",
@@ -40,7 +40,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__addLiquidity",
+    "name": "Pri_11__addLiquidity",
     "inputs": [
       {
         "name": "resourceA",
@@ -68,7 +68,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__applyDamage",
+    "name": "Pri_11__applyDamage",
     "inputs": [
       {
         "name": "battleEntity",
@@ -102,7 +102,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__attack",
+    "name": "Pri_11__attack",
     "inputs": [
       {
         "name": "entity",
@@ -120,7 +120,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__battleRaidResolve",
+    "name": "Pri_11__battleRaidResolve",
     "inputs": [
       {
         "name": "battleEntity",
@@ -143,7 +143,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__build",
+    "name": "Pri_11__build",
     "inputs": [
       {
         "name": "buildingType",
@@ -184,7 +184,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__buildRaidableAsteroid",
+    "name": "Pri_11__buildRaidableAsteroid",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -197,7 +197,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__changeHome",
+    "name": "Pri_11__changeHome",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -210,7 +210,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__claimObjective",
+    "name": "Pri_11__claimObjective",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -228,7 +228,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__claimPrimodium",
+    "name": "Pri_11__claimPrimodium",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -241,7 +241,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__claimResources",
+    "name": "Pri_11__claimResources",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -254,7 +254,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__claimShardAsteroidPoints",
+    "name": "Pri_11__claimShardAsteroidPoints",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -267,7 +267,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__claimUnits",
+    "name": "Pri_11__claimUnits",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -280,7 +280,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__clearFleet",
+    "name": "Pri_11__clearFleet",
     "inputs": [
       {
         "name": "fleetEntity",
@@ -293,7 +293,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__clearFleetStance",
+    "name": "Pri_11__clearFleetStance",
     "inputs": [
       {
         "name": "fleetEntity",
@@ -306,7 +306,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__clearMaxStorageIncrease",
+    "name": "Pri_11__clearMaxStorageIncrease",
     "inputs": [
       {
         "name": "buildingEntity",
@@ -319,7 +319,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__clearProductionRate",
+    "name": "Pri_11__clearProductionRate",
     "inputs": [
       {
         "name": "buildingEntity",
@@ -332,7 +332,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__clearResources",
+    "name": "Pri_11__clearResources",
     "inputs": [
       {
         "name": "fleetEntity",
@@ -350,7 +350,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__clearUnits",
+    "name": "Pri_11__clearUnits",
     "inputs": [
       {
         "name": "fleetEntity",
@@ -368,7 +368,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__clearUnitsAndResourcesFromFleet",
+    "name": "Pri_11__clearUnitsAndResourcesFromFleet",
     "inputs": [
       {
         "name": "fleetEntity",
@@ -391,7 +391,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__clearUtilityUsage",
+    "name": "Pri_11__clearUtilityUsage",
     "inputs": [
       {
         "name": "buildingEntity",
@@ -404,7 +404,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__create",
+    "name": "Pri_11__create",
     "inputs": [
       {
         "name": "name",
@@ -428,7 +428,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__createFleet",
+    "name": "Pri_11__createFleet",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -457,7 +457,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__createSecondaryAsteroid",
+    "name": "Pri_11__createSecondaryAsteroid",
     "inputs": [
       {
         "name": "positionData",
@@ -493,7 +493,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__declineInvite",
+    "name": "Pri_11__declineInvite",
     "inputs": [
       {
         "name": "inviter",
@@ -506,7 +506,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__destroy",
+    "name": "Pri_11__destroy",
     "inputs": [
       {
         "name": "buildingEntity",
@@ -519,302 +519,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__devDeleteRecord",
-    "inputs": [
-      {
-        "name": "tableId",
-        "type": "bytes32",
-        "internalType": "ResourceId"
-      },
-      {
-        "name": "keyTuple",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__devPopFromDynamicField",
-    "inputs": [
-      {
-        "name": "tableId",
-        "type": "bytes32",
-        "internalType": "ResourceId"
-      },
-      {
-        "name": "keyTuple",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
-      },
-      {
-        "name": "dynamicFieldIndex",
-        "type": "uint8",
-        "internalType": "uint8"
-      },
-      {
-        "name": "byteLengthToPop",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__devPushToDynamicField",
-    "inputs": [
-      {
-        "name": "tableId",
-        "type": "bytes32",
-        "internalType": "ResourceId"
-      },
-      {
-        "name": "keyTuple",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
-      },
-      {
-        "name": "dynamicFieldIndex",
-        "type": "uint8",
-        "internalType": "uint8"
-      },
-      {
-        "name": "dataToPush",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__devSetDynamicField",
-    "inputs": [
-      {
-        "name": "tableId",
-        "type": "bytes32",
-        "internalType": "ResourceId"
-      },
-      {
-        "name": "keyTuple",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
-      },
-      {
-        "name": "dynamicFieldIndex",
-        "type": "uint8",
-        "internalType": "uint8"
-      },
-      {
-        "name": "data",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__devSetField",
-    "inputs": [
-      {
-        "name": "tableId",
-        "type": "bytes32",
-        "internalType": "ResourceId"
-      },
-      {
-        "name": "keyTuple",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
-      },
-      {
-        "name": "fieldIndex",
-        "type": "uint8",
-        "internalType": "uint8"
-      },
-      {
-        "name": "data",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__devSetField",
-    "inputs": [
-      {
-        "name": "tableId",
-        "type": "bytes32",
-        "internalType": "ResourceId"
-      },
-      {
-        "name": "keyTuple",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
-      },
-      {
-        "name": "fieldIndex",
-        "type": "uint8",
-        "internalType": "uint8"
-      },
-      {
-        "name": "data",
-        "type": "bytes",
-        "internalType": "bytes"
-      },
-      {
-        "name": "fieldLayout",
-        "type": "bytes32",
-        "internalType": "FieldLayout"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__devSetRecord",
-    "inputs": [
-      {
-        "name": "tableId",
-        "type": "bytes32",
-        "internalType": "ResourceId"
-      },
-      {
-        "name": "keyTuple",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
-      },
-      {
-        "name": "staticData",
-        "type": "bytes",
-        "internalType": "bytes"
-      },
-      {
-        "name": "encodedLengths",
-        "type": "bytes32",
-        "internalType": "EncodedLengths"
-      },
-      {
-        "name": "dynamicData",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__devSetStaticField",
-    "inputs": [
-      {
-        "name": "tableId",
-        "type": "bytes32",
-        "internalType": "ResourceId"
-      },
-      {
-        "name": "keyTuple",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
-      },
-      {
-        "name": "fieldIndex",
-        "type": "uint8",
-        "internalType": "uint8"
-      },
-      {
-        "name": "data",
-        "type": "bytes",
-        "internalType": "bytes"
-      },
-      {
-        "name": "fieldLayout",
-        "type": "bytes32",
-        "internalType": "FieldLayout"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__devSpliceDynamicData",
-    "inputs": [
-      {
-        "name": "tableId",
-        "type": "bytes32",
-        "internalType": "ResourceId"
-      },
-      {
-        "name": "keyTuple",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
-      },
-      {
-        "name": "dynamicFieldIndex",
-        "type": "uint8",
-        "internalType": "uint8"
-      },
-      {
-        "name": "startWithinField",
-        "type": "uint40",
-        "internalType": "uint40"
-      },
-      {
-        "name": "deleteCount",
-        "type": "uint40",
-        "internalType": "uint40"
-      },
-      {
-        "name": "data",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__devSpliceStaticData",
-    "inputs": [
-      {
-        "name": "tableId",
-        "type": "bytes32",
-        "internalType": "ResourceId"
-      },
-      {
-        "name": "keyTuple",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
-      },
-      {
-        "name": "start",
-        "type": "uint48",
-        "internalType": "uint48"
-      },
-      {
-        "name": "data",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__grantRole",
+    "name": "Pri_11__grantRole",
     "inputs": [
       {
         "name": "target",
@@ -832,7 +537,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__increaseMaxStorage",
+    "name": "Pri_11__increaseMaxStorage",
     "inputs": [
       {
         "name": "buildingEntity",
@@ -850,7 +555,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__increment",
+    "name": "Pri_11__increment",
     "inputs": [],
     "outputs": [
       {
@@ -863,7 +568,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__initAsteroidOwner",
+    "name": "Pri_11__initAsteroidOwner",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -881,7 +586,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__invite",
+    "name": "Pri_11__invite",
     "inputs": [
       {
         "name": "target",
@@ -894,7 +599,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__join",
+    "name": "Pri_11__join",
     "inputs": [
       {
         "name": "alliance",
@@ -907,7 +612,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__kick",
+    "name": "Pri_11__kick",
     "inputs": [
       {
         "name": "target",
@@ -920,7 +625,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__landFleet",
+    "name": "Pri_11__landFleet",
     "inputs": [
       {
         "name": "fleetEntity",
@@ -938,14 +643,14 @@
   },
   {
     "type": "function",
-    "name": "Primodium__leave",
+    "name": "Pri_11__leave",
     "inputs": [],
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
-    "name": "Primodium__mergeFleets",
+    "name": "Pri_11__mergeFleets",
     "inputs": [
       {
         "name": "fleets",
@@ -958,7 +663,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__moveBuilding",
+    "name": "Pri_11__moveBuilding",
     "inputs": [
       {
         "name": "buildingEntity",
@@ -993,7 +698,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__payForMaxColonySlots",
+    "name": "Pri_11__payForMaxColonySlots",
     "inputs": [
       {
         "name": "shipyardEntity",
@@ -1017,7 +722,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__recallFleet",
+    "name": "Pri_11__recallFleet",
     "inputs": [
       {
         "name": "fleetEntity",
@@ -1030,7 +735,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__receiveRewards",
+    "name": "Pri_11__receiveRewards",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -1048,7 +753,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__rejectRequestToJoin",
+    "name": "Pri_11__rejectRequestToJoin",
     "inputs": [
       {
         "name": "rejectee",
@@ -1061,7 +766,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__removeLiquidity",
+    "name": "Pri_11__removeLiquidity",
     "inputs": [
       {
         "name": "resourceA",
@@ -1089,7 +794,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__requestToJoin",
+    "name": "Pri_11__requestToJoin",
     "inputs": [
       {
         "name": "alliance",
@@ -1102,7 +807,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__resetFleetIfNoUnitsLeft",
+    "name": "Pri_11__resetFleetIfNoUnitsLeft",
     "inputs": [
       {
         "name": "fleetEntity",
@@ -1115,7 +820,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__resolveBattleEncryption",
+    "name": "Pri_11__resolveBattleEncryption",
     "inputs": [
       {
         "name": "battleEntity",
@@ -1138,7 +843,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__revokeInvite",
+    "name": "Pri_11__revokeInvite",
     "inputs": [
       {
         "name": "target",
@@ -1151,7 +856,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__sendFleet",
+    "name": "Pri_11__sendFleet",
     "inputs": [
       {
         "name": "fleetEntity",
@@ -1186,7 +891,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__sendFleet",
+    "name": "Pri_11__sendFleet",
     "inputs": [
       {
         "name": "fleetEntity",
@@ -1204,7 +909,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__setAllianceInviteMode",
+    "name": "Pri_11__setAllianceInviteMode",
     "inputs": [
       {
         "name": "entity",
@@ -1222,7 +927,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__setAllianceName",
+    "name": "Pri_11__setAllianceName",
     "inputs": [
       {
         "name": "entity",
@@ -1240,7 +945,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__setFleetStance",
+    "name": "Pri_11__setFleetStance",
     "inputs": [
       {
         "name": "fleetEntity",
@@ -1263,7 +968,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__spawn",
+    "name": "Pri_11__spawn",
     "inputs": [],
     "outputs": [
       {
@@ -1276,7 +981,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__spendBuildingRequiredResources",
+    "name": "Pri_11__spendBuildingRequiredResources",
     "inputs": [
       {
         "name": "buildingEntity",
@@ -1294,7 +999,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__spendUpgradeResources",
+    "name": "Pri_11__spendUpgradeResources",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -1317,7 +1022,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__swap",
+    "name": "Pri_11__swap",
     "inputs": [
       {
         "name": "marketEntity",
@@ -1345,7 +1050,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__toggleBuilding",
+    "name": "Pri_11__toggleBuilding",
     "inputs": [
       {
         "name": "buildingEntity",
@@ -1364,7 +1069,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__toggleBuildingUtility",
+    "name": "Pri_11__toggleBuildingUtility",
     "inputs": [
       {
         "name": "buildingEntity",
@@ -1377,14 +1082,14 @@
   },
   {
     "type": "function",
-    "name": "Primodium__toggleMarketplaceLock",
+    "name": "Pri_11__toggleMarketplaceLock",
     "inputs": [],
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
-    "name": "Primodium__toggleMaxStorage",
+    "name": "Pri_11__toggleMaxStorage",
     "inputs": [
       {
         "name": "buildingEntity",
@@ -1397,7 +1102,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__toggleProductionRate",
+    "name": "Pri_11__toggleProductionRate",
     "inputs": [
       {
         "name": "buildingEntity",
@@ -1410,7 +1115,30 @@
   },
   {
     "type": "function",
-    "name": "Primodium__trainUnits",
+    "name": "Pri_11__trainUnits",
+    "inputs": [
+      {
+        "name": "buildingEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "unit",
+        "type": "uint8",
+        "internalType": "enum EUnit"
+      },
+      {
+        "name": "count",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Pri_11__trainUnits",
     "inputs": [
       {
         "name": "buildingEntity",
@@ -1433,30 +1161,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__trainUnits",
-    "inputs": [
-      {
-        "name": "buildingEntity",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "unit",
-        "type": "uint8",
-        "internalType": "enum EUnit"
-      },
-      {
-        "name": "count",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "Primodium__transferAsteroid",
+    "name": "Pri_11__transferAsteroid",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -1474,7 +1179,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__transferResourcesFromAsteroidToFleet",
+    "name": "Pri_11__transferResourcesFromAsteroidToFleet",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -1497,7 +1202,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__transferResourcesFromFleetToAsteroid",
+    "name": "Pri_11__transferResourcesFromFleetToAsteroid",
     "inputs": [
       {
         "name": "fleetEntity",
@@ -1520,7 +1225,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__transferResourcesFromFleetToFleet",
+    "name": "Pri_11__transferResourcesFromFleetToFleet",
     "inputs": [
       {
         "name": "fromFleetEntity",
@@ -1543,7 +1248,30 @@
   },
   {
     "type": "function",
-    "name": "Primodium__transferUnitsAndResourcesFromAsteroidToFleet",
+    "name": "Pri_11__transferResourcesTwoWay",
+    "inputs": [
+      {
+        "name": "leftEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "rightEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "resourceCounts",
+        "type": "int256[]",
+        "internalType": "int256[]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Pri_11__transferUnitsAndResourcesFromAsteroidToFleet",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -1571,7 +1299,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__transferUnitsAndResourcesFromFleetToAsteroid",
+    "name": "Pri_11__transferUnitsAndResourcesFromFleetToAsteroid",
     "inputs": [
       {
         "name": "fromFleetEntity",
@@ -1599,7 +1327,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__transferUnitsAndResourcesFromFleetToFleet",
+    "name": "Pri_11__transferUnitsAndResourcesFromFleetToFleet",
     "inputs": [
       {
         "name": "fromFleetEntity",
@@ -1627,7 +1355,35 @@
   },
   {
     "type": "function",
-    "name": "Primodium__transferUnitsFromAsteroidToFleet",
+    "name": "Pri_11__transferUnitsAndResourcesTwoWay",
+    "inputs": [
+      {
+        "name": "leftEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "rightEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "unitCounts",
+        "type": "int256[]",
+        "internalType": "int256[]"
+      },
+      {
+        "name": "resourceCounts",
+        "type": "int256[]",
+        "internalType": "int256[]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Pri_11__transferUnitsFromAsteroidToFleet",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -1650,7 +1406,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__transferUnitsFromFleetToAsteroid",
+    "name": "Pri_11__transferUnitsFromFleetToAsteroid",
     "inputs": [
       {
         "name": "fromFleetEntity",
@@ -1673,7 +1429,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__transferUnitsFromFleetToFleet",
+    "name": "Pri_11__transferUnitsFromFleetToFleet",
     "inputs": [
       {
         "name": "fromFleetEntity",
@@ -1696,7 +1452,30 @@
   },
   {
     "type": "function",
-    "name": "Primodium__uncheckedAbandonFleet",
+    "name": "Pri_11__transferUnitsTwoWay",
+    "inputs": [
+      {
+        "name": "leftEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "rightEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "unitCounts",
+        "type": "int256[]",
+        "internalType": "int256[]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "Pri_11__uncheckedAbandonFleet",
     "inputs": [
       {
         "name": "fleetEntity",
@@ -1709,7 +1488,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__upgradeBuilding",
+    "name": "Pri_11__upgradeBuilding",
     "inputs": [
       {
         "name": "buildingEntity",
@@ -1722,7 +1501,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__upgradeProductionRate",
+    "name": "Pri_11__upgradeProductionRate",
     "inputs": [
       {
         "name": "buildingEntity",
@@ -1740,7 +1519,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__upgradeRange",
+    "name": "Pri_11__upgradeRange",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -1753,7 +1532,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__upgradeUnit",
+    "name": "Pri_11__upgradeUnit",
     "inputs": [
       {
         "name": "asteroidEntity",
@@ -1771,7 +1550,7 @@
   },
   {
     "type": "function",
-    "name": "Primodium__wormholeDeposit",
+    "name": "Pri_11__wormholeDeposit",
     "inputs": [
       {
         "name": "wormholeBaseEntity",

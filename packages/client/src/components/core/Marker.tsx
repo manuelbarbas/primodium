@@ -48,6 +48,7 @@ export const Marker: React.FC<{
   scene: SceneKeys;
   coord: Coord;
   children: ReactNode;
+  noPointerEvents?: boolean;
   offScreenIconUri?: string;
   depth?: number;
   origin?:
@@ -60,7 +61,16 @@ export const Marker: React.FC<{
     | "center-right"
     | "center-top"
     | "center-bottom";
-}> = ({ id, scene, coord, children, offScreenIconUri, depth = DepthLayers.Marker, origin = "center" }) => {
+}> = ({
+  id,
+  scene,
+  coord,
+  noPointerEvents,
+  children,
+  offScreenIconUri,
+  depth = DepthLayers.Marker,
+  origin = "center",
+}) => {
   const game = useGame();
   const [marker, setMarker] = useState<Phaser.GameObjects.DOMElement>();
   const [container, setContainer] = useState<HTMLDivElement>();
@@ -68,6 +78,7 @@ export const Marker: React.FC<{
   const [degrees, setDegrees] = useState(0);
   const camera = useRef(game[scene].camera).current;
   const uiCamera = useRef(game.UI.camera).current;
+  const pointerEventsClass = noPointerEvents ? "pointer-events-none" : "pointer-events-auto";
   const translateClass = useMemo(() => {
     switch (origin) {
       case "top-left":
@@ -171,7 +182,7 @@ export const Marker: React.FC<{
   if (!marker || !container || !camera.phaserCamera.scene.scene.isActive()) return;
 
   return ReactDOM.createPortal(
-    <div className={cn("pointer-events-auto", translateClass)}>
+    <div className={cn(pointerEventsClass, translateClass)}>
       {!visible && offScreenIconUri && (
         <BoundedMarker scene={scene} coord={coord} iconUri={offScreenIconUri} degrees={degrees} />
       )}

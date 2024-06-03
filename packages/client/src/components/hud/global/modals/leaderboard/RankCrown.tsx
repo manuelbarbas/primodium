@@ -4,7 +4,7 @@ import { FaCrown } from "react-icons/fa6";
 
 export const CrownRank: FC<{ rank: number; offset?: boolean }> = ({ rank, offset = false }) => {
   if (rank > 3) return null;
-  const offsetRotation: string = `translate-x-[-45%] translate-y-[-45%] transform rotate-45 scale-75`;
+  const offsetRotation: string = `absolute -right-2 -top-1 transform rotate-45 scale-75`;
 
   const crownColors: Record<number, string> = {
     1: "text-yellow-500",

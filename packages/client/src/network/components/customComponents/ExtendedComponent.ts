@@ -53,6 +53,8 @@ export type ExtendedComponent<S extends Schema, M extends Metadata, T = unknown>
 
   pauseUpdates: (entity: Entity, value?: ComponentValue<S, T>, skipUpdateStream?: boolean) => void;
   resumeUpdates: (entity: Entity, skipUpdateStream?: boolean) => void;
+  blockUpdates: (entity: Entity) => void;
+  unblockUpdates: (entity: Entity) => void;
 };
 
 export type ContractMetadata<TKeySchema extends KeySchema> = {
@@ -124,6 +126,7 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
   component: Component<S, M, T>
 ): ExtendedComponent<S, M, T> {
   const paused: Map<Entity, boolean> = new Map();
+  const blocked: Map<Entity, boolean> = new Map();
   const pendingUpdate: Map<Entity, ComponentUpdate<S, T>> = new Map();
 
   // Update event stream that takes into account overridden entity values
@@ -137,6 +140,14 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
   function pauseUpdates(entity: Entity, value?: ComponentValue<S, T>, skipUpdateStream = false) {
     paused.set(entity, true);
     if (value) setComponent(component, entity, value, { skipUpdateStream });
+  }
+
+  function blockUpdates(entity: Entity) {
+    blocked.set(entity, true);
+  }
+
+  function unblockUpdates(entity: Entity) {
+    blocked.delete(entity);
   }
 
   // Remove an override from an entity
@@ -173,6 +184,8 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
 
   function set(value: ComponentValue<S, T>, entity?: Entity) {
     entity = entity ?? singletonEntity;
+
+    if (blocked.get(entity)) return;
     if (entity == undefined) throw new Error(`[set ${entity} for ${component.id}] no entity registered`);
     if (paused.get(entity)) {
       const prevValue = pendingUpdate.get(entity)?.value[0] ?? getComponentValue(component, entity);
@@ -292,6 +305,8 @@ export function extendComponent<S extends Schema, M extends Metadata, T = unknow
     use: useValue,
     pauseUpdates,
     resumeUpdates,
+    blockUpdates,
+    unblockUpdates,
   };
   return context;
 }

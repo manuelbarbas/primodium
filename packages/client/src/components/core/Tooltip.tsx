@@ -1,7 +1,9 @@
 import { cn } from "@/util/client";
 import { VariantProps, cva } from "class-variance-authority";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+
+export type TooltipDirection = "right" | "left" | "top" | "bottom" | "center" | "topRight";
 
 const tooltipTranslation = {
   top: {
@@ -20,6 +22,14 @@ const tooltipTranslation = {
     x: "-50%",
     y: "100%",
   },
+  center: {
+    x: "0",
+    y: "0",
+  },
+  topRight: {
+    x: "0",
+    y: "-120%",
+  },
 };
 
 const tooltipVariants = cva(" pointer-events-auto", {
@@ -29,6 +39,8 @@ const tooltipVariants = cva(" pointer-events-auto", {
       left: "bottom-1/2",
       right: "bottom-1/2 left-full",
       bottom: "left-1/2",
+      center: "",
+      topRight: "",
     },
   },
   defaultVariants: {
@@ -39,19 +51,12 @@ const tooltipVariants = cva(" pointer-events-auto", {
 interface TooltipProps extends React.ButtonHTMLAttributes<HTMLDivElement>, VariantProps<typeof tooltipVariants> {
   tooltipContent?: React.ReactNode;
   show?: boolean;
+  rotate?: boolean;
 }
 
 export const Tooltip = ({ className, tooltipContent, children, direction, show = false }: TooltipProps) => {
   const [visible, setVisible] = useState(false);
-  const springConfig = { stiffness: 125, damping: 10 };
   const x = useMotionValue(0); // going to set this value on mouse move
-  // rotate the tooltip
-  const rotate = useSpring(useTransform(x, [-100, 100], [-10, 10]), springConfig);
-  // translate the tooltip
-  const translateX = useSpring(
-    useTransform(x, [-100, 100], direction === "bottom" ? [15, -15] : [-15, 15]),
-    springConfig
-  );
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
@@ -66,34 +71,27 @@ export const Tooltip = ({ className, tooltipContent, children, direction, show =
       onMouseMove={handleMouseMove}
       onPointerEnter={() => setVisible(true)}
       onPointerLeave={() => setVisible(false)}
-      className="relative w-fit"
+      className="relative"
     >
       {(visible || show) && (
-        <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.6, x: tooltipTranslation[direction ?? "top"].x }}
-          animate={{
-            opacity: 1,
-            y: tooltipTranslation[direction ?? "top"].y,
-            scale: 1,
-            transition: {
-              type: "spring",
-              stiffness: 300,
-              damping: 30,
-            },
-          }}
-          exit={{ opacity: 0, y: 20, scale: 0.6 }}
-          style={{
-            translateX: translateX,
-            rotate: rotate,
-          }}
-          className={cn(
-            tooltipVariants({ direction }),
-            "absolute flex text-xs flex-col items-center justify-center bg-neutral heropattern-graphpaper-slate-800/50 z-50 shadow-xl px-4 py-2 pixel-border",
-            className
-          )}
-        >
-          {tooltipContent}
-        </motion.div>
+        <AnimatePresence>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.6, x: tooltipTranslation[direction ?? "top"].x, y: 20 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: tooltipTranslation[direction ?? "top"].y,
+            }}
+            exit={{ opacity: 0, y: 20, scale: 0.6 }}
+            className={cn(
+              tooltipVariants({ direction }),
+              "absolute flex text-xs flex-col items-center justify-center bg-neutral heropattern-graphpaper-slate-800/50 shadow-xl px-4 py-2 pixel-border",
+              className
+            )}
+          >
+            {tooltipContent}
+          </motion.div>
+        </AnimatePresence>
       )}
 
       {children}

@@ -112,7 +112,7 @@ export const AllianceSettings = ({
           <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.LeaveAlliance, playerEntity)}>
             <Button
               tooltip={inviteOnly ? "You will need to request to join again" : undefined}
-              tooltipDirection="top"
+              tooltipDirection="right"
               variant="error"
               onClick={() => (playerRole === EAllianceRole.Owner ? confirmLeaveAlliance(mud) : leaveAlliance(mud))}
               className="btn-sm"

@@ -52,7 +52,7 @@ export default function App() {
           <SetupResultProvider />
         </QueryClientProvider>
       </WagmiProvider>
-      <div id="modal-root" />
+      <div id="modal-root" className="fixed top-0 pointer-events-auto z-50" />
     </div>
   );
 }

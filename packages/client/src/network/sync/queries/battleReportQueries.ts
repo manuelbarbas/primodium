@@ -22,7 +22,7 @@ export const getBattleReportQuery = ({
         {
           tableId: tables.BattleResult.tableId,
           where: {
-            column: "player",
+            column: "player_entity",
             operation: "eq",
             value: playerEntity as Hex,
           },
@@ -52,7 +52,7 @@ export const getBattleReportQuery = ({
         {
           tableId: tables.BattleResult.tableId,
           where: {
-            column: "target_player",
+            column: "target_player_entity",
             operation: "eq",
             value: playerEntity as Hex,
           },

@@ -132,6 +132,7 @@ export enum EObjectives {
 
   // (A-A-A-B) Conquest (cont)
   BuildShipyard,
+  UpgradeShipyard2,
   TrainColonyShip,
   DecryptAttack,
   CaptureAsteroid,
@@ -151,6 +152,7 @@ export enum EObjectives {
 
   // (A-A-A-C) fleet management
   BuildStarmapper,
+  UpgradeStarmapper2,
   CreateFleet2,
   DefendWithFleet,
   BlockWithFleet,
@@ -166,6 +168,7 @@ export enum EObjectives {
 
   // (A-A-B-B) unit production (cont)
   BuildDroneFactory,
+  UpgradeDroneFactory2,
   TrainAnvilDrone,
   TrainHammerDrone,
   TrainAegisDrone,
@@ -173,18 +176,25 @@ export enum EObjectives {
 
   // (A-A-B-C) unit storage
   BuildHangar,
+  UpgradeHanger2,
 
   // (A-A-C) Defense
   BuildShieldGenerator,
+  UpgradeShieldGenerator2,
   BuildVault,
+  UpgradeVault2,
   BuildSAMLauncher,
+  UpgradeSAMLauncher2,
 
   // (A-B) Production
   BuildStorageUnit,
   UpgradeStorageUnit2,
   BuildIronPlateFactory,
+  UpgradeIronPlateFactory2,
   BuildAlloyFactory,
+  UpgradeAlloyFactory2,
   BuildPVCellFactory,
+  UpgradePVCellFactory2,
 
   // (A-B-A) Production (cont)
   BuildSolarPanel,

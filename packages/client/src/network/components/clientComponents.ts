@@ -39,6 +39,16 @@ export default function setupClientComponents() {
   const SelectedAction = createExtendedNumberComponent(world, { id: "SelectedAction" });
   const SelectedMode = createExtendedEntityComponent(world, { id: "SelectedMode" });
 
+  const WormholeResource = createExtendedComponent(
+    world,
+    {
+      timeUntilNextResource: Type.BigInt,
+      nextResource: Type.Entity,
+      resource: Type.Entity,
+    },
+    { id: "WormholeData" }
+  );
+
   const ReverseBuildingPosition = createExtendedEntityComponent(world, { id: "ReverseBuildingPosition" });
 
   const TrainingQueue = createExtendedComponent(
@@ -70,6 +80,21 @@ export default function setupClientComponents() {
   const Battle = createBattleComponents();
 
   const BattleRender = createExtendedEntityComponent(world, { id: "BattleRender" });
+
+  const BattleTarget = createExtendedEntityComponent(world, { id: "BattleTarget" });
+
+  // keep updated metadata for a player's alliance
+  const PlayerAllianceInfo = createExtendedComponent(
+    world,
+    {
+      alliance: Type.Entity,
+      name: Type.String,
+      inviteMode: Type.Number,
+    },
+    {
+      id: "PlayerAllianceInfo",
+    }
+  );
 
   const PlayerInvite = createExtendedComponent(
     world,
@@ -109,6 +134,7 @@ export default function setupClientComponents() {
       id: "SyncStatus",
     }
   );
+  const SystemsReady = createExtendedBoolComponent(world, { id: "SystemsReady" });
 
   const IsObjectiveClaimable = createExtendedBoolComponent(world, { id: "IsObjectiveClaimable" });
   /* -------------------------------------------------------------------------- */
@@ -135,6 +161,7 @@ export default function setupClientComponents() {
     Account,
     SelectedRock,
     ActiveRock,
+    BattleTarget,
     BuildRock,
     CurrentTransaction,
     SelectedTile,
@@ -151,10 +178,13 @@ export default function setupClientComponents() {
     Battle,
     BattleRender,
     Leaderboard,
+    PlayerAllianceInfo,
     PlayerInvite,
     AllianceRequest,
     TransactionQueue,
     SyncStatus,
     SyncSource,
+    SystemsReady,
+    WormholeResource,
   };
 }

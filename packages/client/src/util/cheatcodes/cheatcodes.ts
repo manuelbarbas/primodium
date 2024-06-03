@@ -14,6 +14,7 @@ import { MUD } from "src/network/types";
 import { encodeEntity, toHex32 } from "src/util/encode";
 import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
+import { waitForTransactionReceipt } from "viem/actions";
 import { getEntityTypeName } from "../common";
 import {
   BuildingEnumLookup,
@@ -81,7 +82,7 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
     vessel: EntityType.VesselCapacity,
     electricity: EntityType.Electricity,
     defense: EntityType.Defense,
-    moves: EntityType.FleetCount,
+    fleetCount: EntityType.FleetCount,
     encryption: EntityType.Encryption,
     colonyShipCapacity: EntityType.ColonyShipCapacity,
   };
@@ -270,18 +271,44 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
     const networkConfig = getNetworkConfig();
     const clientOptions = {
       chain: networkConfig.chain,
-      transport: transportObserver(fallback([webSocket(), http()])),
+      transport: transportObserver(fallback([webSocket(networkConfig.chain.rpcUrls.default.http[0]), http()])),
       pollingInterval: 1000,
     };
 
-    for (let i = 0; i < count; i++) {
+    const walletClients = Array.from({ length: count }, () => {
       const privateKey = generatePrivateKey();
       const burnerAccount = createBurnerAccount(privateKey as Hex);
 
-      const burnerWalletClient = createWalletClient({
+      return createWalletClient({
         ...clientOptions,
         account: burnerAccount,
       });
+    });
+
+    // prepare enough ETH to each account for spawning if on caldera sepolia
+    if (networkConfig.chain.id === 10017) {
+      const playerAddress = mud.sessionAccount?.address ?? mud.playerAccount.address;
+      const requiredAmountToSpawn = BigInt(1e14);
+
+      let balance = await mud.network.publicClient.getBalance({ address: playerAddress });
+      while (balance < requiredAmountToSpawn * BigInt(count)) {
+        console.log("Not enough balance to spawn players, dripping funds");
+        await mud.requestDrip(playerAddress);
+        balance = await mud.network.publicClient.getBalance({ address: playerAddress });
+      }
+    }
+
+    for (let i = 0; i < count; i++) {
+      const burnerWalletClient = walletClients[i];
+      // send some ETH to the burner account for spawning if on caldera sepolia
+      if (networkConfig.chain.id === 10017) {
+        const player = mud.sessionAccount ?? mud.playerAccount;
+        const hash = await player.walletClient.sendTransaction({
+          to: burnerWalletClient.account.address,
+          value: BigInt(1e14),
+        });
+        await waitForTransactionReceipt(mud.network.publicClient, { hash });
+      }
 
       const worldContract = getContract({
         address: networkConfig.worldAddress as Hex,
@@ -293,8 +320,8 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
       });
 
       const randomName = Math.random().toString(36).substring(7);
-      await worldContract.write.Primodium__spawn();
-      await worldContract.write.Primodium__create([
+      await worldContract.write.Pri_11__spawn();
+      await worldContract.write.Pri_11__create([
         toHex32(randomName.substring(0, 6).toUpperCase()),
         EAllianceInviteMode.Closed,
       ]);
@@ -542,39 +569,6 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
     {
       title: "Asteroid",
       content: {
-        buildBuilding: {
-          params: [{ name: "building", type: "dropdown", dropdownOptions: Object.keys(buildings) }],
-          function: async (building: string) => {
-            const selectedRock = mud.components.ActiveRock.get()?.value;
-            const buildingEntity = buildings[building];
-            if (!buildingEntity || !selectedRock) throw new Error("Building not found");
-
-            await provideBuildingRequiredResources(selectedRock, buildingEntity, 1n);
-            await buildBuilding(
-              mud,
-              BuildingEnumLookup[buildingEntity],
-              findTilePosition(selectedRock, buildingEntity)
-            );
-          },
-        },
-        upgradeBuilding: {
-          params: [
-            {
-              name: "level",
-              type: "dropdown",
-              dropdownOptions: ["1", "2", "3", "4", "5", "6", "7", "8", "max"].reverse(),
-            },
-          ],
-          function: async (level?: string) => {
-            const selectedBuilding = mud.components.SelectedBuilding.get()?.value;
-
-            if (!selectedBuilding) {
-              notify("error", "No building selected");
-              throw new Error("No building selected");
-            }
-            await upgradeBuilding(selectedBuilding, level == "max" ? "max" : Number(level));
-          },
-        },
         setExpansion: {
           params: [
             { name: "level", type: "dropdown", dropdownOptions: ["1", "2", "3", "4", "5", "6", "7", "8"].reverse() },
@@ -770,6 +764,39 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
     {
       title: "Building",
       content: {
+        buildBuilding: {
+          params: [{ name: "building", type: "dropdown", dropdownOptions: Object.keys(buildings) }],
+          function: async (building: string) => {
+            const selectedRock = mud.components.ActiveRock.get()?.value;
+            const buildingEntity = buildings[building];
+            if (!buildingEntity || !selectedRock) throw new Error("Building not found");
+
+            await provideBuildingRequiredResources(selectedRock, buildingEntity, 1n);
+            await buildBuilding(
+              mud,
+              BuildingEnumLookup[buildingEntity],
+              findTilePosition(selectedRock, buildingEntity)
+            );
+          },
+        },
+        upgradeBuilding: {
+          params: [
+            {
+              name: "level",
+              type: "dropdown",
+              dropdownOptions: ["1", "2", "3", "4", "5", "6", "7", "8", "max"].reverse(),
+            },
+          ],
+          function: async (level?: string) => {
+            const selectedBuilding = mud.components.SelectedBuilding.get()?.value;
+
+            if (!selectedBuilding) {
+              notify("error", "No building selected");
+              throw new Error("No building selected");
+            }
+            await upgradeBuilding(selectedBuilding, level == "max" ? "max" : Number(level));
+          },
+        },
         clearCooldown: {
           params: [],
           function: async () => {
@@ -778,12 +805,13 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
               notify("error", "No building selected");
               throw new Error("No building selected");
             }
+            const time = components.Time.get()?.value ?? 0n;
             await setComponentValue(
               mud,
               mud.components.CooldownEnd,
               { entity: selectedBuilding as Hex },
               {
-                value: 0n,
+                value: time + 10n,
               }
             );
           },
@@ -822,6 +850,15 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
               { entity: selectedFleet as Hex, unit: unitEntity as Hex },
               {
                 value: BigInt(count),
+              }
+            );
+
+            await setComponentValue(
+              mud,
+              mud.components.IsFleetEmpty,
+              { entity: selectedFleet as Hex },
+              {
+                value: false,
               }
             );
           },

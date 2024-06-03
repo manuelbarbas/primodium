@@ -1,9 +1,11 @@
 import { Badge } from "@/components/core/Badge";
 import { Button } from "@/components/core/Button";
 import { Card } from "@/components/core/Card";
+import { DeferredAsteroidsRenderContainer } from "@/game/lib/objects/Asteroid/DeferredAsteroidsRenderContainer";
 import { useMud } from "@/hooks";
 import { useGame } from "@/hooks/useGame";
 import { components } from "@/network/components";
+import { EntityType } from "@/util/constants";
 import { entityToFleetName, entityToRockName } from "@/util/name";
 import { formatTime } from "@/util/number";
 import { useEntityQuery } from "@latticexyz/react";
@@ -68,9 +70,18 @@ export const OwnedFleets: React.FC<{ className?: string }> = ({ className }) => 
 
     const objects = game.STARMAP.objects;
     const fleet = objects.fleet.get(entity);
+    let position = fleet?.getTileCoord();
 
-    if (!fleet) return;
-    const position = fleet.getTileCoord();
+    if (!position) {
+      // the fleet might be around a non-spawned asteroid, so we need to check if it's registered
+      const deferredRenderContainer = objects.deferredRenderContainer.getContainer(
+        EntityType.Asteroid
+      ) as DeferredAsteroidsRenderContainer;
+      const asteroidPosition = deferredRenderContainer.getFleetCoord(entity);
+
+      if (!asteroidPosition) return;
+      position = asteroidPosition;
+    }
 
     pan({
       x: position.x,

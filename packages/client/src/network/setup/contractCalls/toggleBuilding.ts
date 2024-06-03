@@ -19,7 +19,7 @@ export async function toggleBuilding(mud: MUD, building: Entity) {
   await execute(
     {
       mud,
-      functionName: "Primodium__toggleBuilding",
+      functionName: "Pri_11__toggleBuilding",
       systemId: getSystemId("ToggleBuildingSystem"),
       args: [building as Hex],
       withSession: true,

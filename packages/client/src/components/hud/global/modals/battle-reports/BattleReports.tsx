@@ -69,7 +69,7 @@ export const BattleReports = () => {
   }, [loading, error]);
 
   return (
-    <Navigator initialScreen={initialScreen} className="border-none p-0! h-full">
+    <Navigator initialScreen={initialScreen} className="border-none p-0! h-full overflow-y-auto hide-scrollbar">
       <LoadingScreen />
       <ErrorScreen />
       <Navigator.Screen title={"BattleReports"} className="full h-full">

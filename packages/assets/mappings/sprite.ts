@@ -9,7 +9,10 @@ export enum Sprites {
   Mainbase7 = "sprites/mainbase/level7/Main_Base_LVL7_1.png",
   Mainbase8 = "sprites/mainbase/level8/Main_Base_LVL8_1.png",
 
-  Wormholebase1 = "sprites/wormholebase/level1/idle/Wormhole_Idle1.png",
+  WormholebaseIdle1 = "sprites/wormholebase/level1/idle/Wormhole_Idle1.png",
+  WormholebaseOverheat1 = "sprites/wormholebase/level1/overheat/Wormhole_Overheat1.png",
+  WormholebaseCooldown1 = "sprites/wormholebase/level1/idle-cooldown/Wormhole_Cooldown1.png",
+  WormholebasePowerUp1 = "sprites/wormholebase/level1/powerup/Wormhole_PowerUP1.png",
 
   IronMine1 = "sprites/miners/ironmine/level1/Miner_Iron_LVL1_1.png",
   IronMine2 = "sprites/miners/ironmine/level2/Miner_Iron_LVL2_1.png",
@@ -97,6 +100,7 @@ export enum Sprites {
   Asteroid6 = "sprites/spacerocks/asteroids/asteroid5_6.png",
   Asteroid7 = "sprites/spacerocks/asteroids/asteroid7.png",
   Asteroid8 = "sprites/spacerocks/asteroids/asteroid8.png",
+  WormholeAsteroid = "sprites/spacerocks/wormhole/wormhole_asteroid.png",
 
   Shard = "sprites/shard/shard.png",
 
@@ -160,9 +164,13 @@ export enum Sprites {
   Iron = "sprites/resources/iron_resource.png",
   Copper = "sprites/resources/copper_resource.png",
   Lithium = "sprites/resources/lithium_resource.png",
-  IronPlate = "sprites/resources/ironplate.png",
+  IronPlate = "sprites/resources/ironplate_resource.png",
   PVCell = "sprites/resources/photovoltaiccell_resource.png",
   Alloy = "sprites/resources/alloy_resource.png",
+  Kimberlite = "sprites/resources/kimberlite_resource.png",
+  Iridium = "sprites/resources/iridium_resource.png",
+  Platinum = "sprites/resources/platinum_resource.png",
+  Titanium = "sprites/resources/titanium_resource.png",
   ShardIcon = "sprites/icons/shard.png",
 
   // Unit Icons
@@ -183,6 +191,10 @@ export enum Sprites {
   Emblem6 = "sprites/emblems/Emblems_LVL6.png",
   Emblem7 = "sprites/emblems/Emblems_LVL7.png",
   Emblem8 = "sprites/emblems/Emblems_LVL8.png",
+
+  // Stance Icons
+  Block = "sprites/icons/block.png",
+  Defend = "sprites/icons/defend.png",
 
   // Decor
   DroneBottom = "sprites/decorations/drone/bottom/Drones_Bottom_Left1.png",

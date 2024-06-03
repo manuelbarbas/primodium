@@ -13,9 +13,9 @@ export const Blueprints = memo(() => {
   if (!isBuilding) return;
 
   return (
-    <Tabs className="pointer-events-auto flex items-center" persistIndexKey="blueprints">
+    <Tabs className="flex items-center" persistIndexKey="blueprints">
       <Tabs.Pane index={0} fragment>
-        <GlassCard direction={"right"} className="animate-in slide-in-from-left-full">
+        <GlassCard direction={"right"} className="pointer-events-auto animate-in slide-in-from-left-full">
           <Card fragment noDecor>
             <BlueprintPane />
           </Card>
@@ -25,7 +25,7 @@ export const Blueprints = memo(() => {
         index={0}
         togglable
         size={"sm"}
-        className="heropattern-topography-slate-500/10 !border-l-0 animate-in fade-in zoom-in"
+        className="pointer-events-auto heropattern-topography-slate-500/10 !border-l-0 animate-in fade-in zoom-in"
         style={{
           writingMode: "vertical-lr",
         }}

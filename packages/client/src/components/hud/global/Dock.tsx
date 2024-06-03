@@ -17,13 +17,13 @@ export const Dock = () => {
   return (
     <GlassCard direction={"top"} className="h-12 px-5">
       <div className="flex flex-row gap-2 items-center pointer-events-auto -translate-y-[35px]">
-        <Modal title="alliance management">
+        <Modal title="Alliance Management">
           <Modal.Button
             className={btnClass}
             shape={"circle"}
             size={"lg"}
             variant={"ghost"}
-            tooltip="alliance management"
+            tooltip="Alliance&nbsp;Management"
           >
             <IconLabel imageUri={InterfaceIcons.Alliance} className={iconClass} />
           </Modal.Button>
@@ -31,16 +31,22 @@ export const Dock = () => {
             <AllianceManagement />
           </Modal.Content>
         </Modal>
-        <Modal title="leaderboard">
-          <Modal.Button className={btnClass} tooltip="leaderboard" shape={"circle"} size={"lg"} variant={"ghost"}>
+        <Modal title="Leaderboard">
+          <Modal.Button className={btnClass} tooltip="Leaderboard" shape={"circle"} size={"lg"} variant={"ghost"}>
             <IconLabel className={iconClass} imageUri={InterfaceIcons.Leaderboard} />
           </Modal.Button>
           <Modal.Content className="w-[50rem] h-[50rem]">
             <LeaderboardScreen />
           </Modal.Content>
         </Modal>
-        <Modal title="battles">
-          <Modal.Button className={btnClass} tooltip="battle reports" shape={"circle"} size={"lg"} variant={"ghost"}>
+        <Modal title="Battles">
+          <Modal.Button
+            className={btnClass}
+            tooltip="Battle&nbsp;Reports"
+            shape={"circle"}
+            size={"lg"}
+            variant={"ghost"}
+          >
             <IconLabel className={iconClass} imageUri={InterfaceIcons.Reports} />
           </Modal.Button>
           <Modal.Content className="w-[50rem] h-[45rem]">
@@ -55,8 +61,8 @@ export const Dock = () => {
             <ObjectivesScreen />
           </Modal.Content>
         </Modal>
-        <Modal title="settings">
-          <Modal.Button className={btnClass} tooltip="settings" shape={"circle"} size={"lg"} variant={"ghost"}>
+        <Modal title="Settings">
+          <Modal.Button className={btnClass} tooltip="Settings" shape={"circle"} size={"lg"} variant={"ghost"}>
             <IconLabel className={iconClass} imageUri={InterfaceIcons.Settings} />
           </Modal.Button>
           <Modal.Content className="w-132 h-120">
@@ -64,8 +70,8 @@ export const Dock = () => {
           </Modal.Content>
         </Modal>
         {DEV && (
-          <Modal title="cheatcodes">
-            <Modal.Button className={btnClass} tooltip="cheatcodes" shape={"circle"} size={"lg"} variant={"ghost"}>
+          <Modal title="Cheatcodes">
+            <Modal.Button className={btnClass} tooltip="Cheatcodes" shape={"circle"} size={"lg"} variant={"ghost"}>
               <IconLabel className={iconClass} imageUri={InterfaceIcons.Debug} />
             </Modal.Button>
             <Modal.Content className="h-[700px] w-[500px] font-mono">

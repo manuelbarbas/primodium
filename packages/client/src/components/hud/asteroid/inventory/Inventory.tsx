@@ -8,12 +8,12 @@ import { memo } from "react";
 
 export const Inventory = memo(() => {
   return (
-    <Tabs className="pointer-events-auto flex items-center" persistIndexKey="inventory">
+    <Tabs className="flex items-center" persistIndexKey="inventory">
       <Tabs.Button
         index={0}
         togglable
         size={"sm"}
-        className="heropattern-topography-slate-500/10 !border-r-0 animate-in fade-in zoom-in"
+        className="pointer-events-auto heropattern-topography-slate-500/10 !border-r-0 animate-in fade-in zoom-in !z-0"
         style={{
           writingMode: "vertical-rl",
         }}
@@ -21,7 +21,7 @@ export const Inventory = memo(() => {
         <IconLabel text="Inventory" imageUri={EntityToResourceImage[EntityType.Iridium]} className="gap-2 py-4" />
       </Tabs.Button>
 
-      <Tabs.Pane index={0} fragment>
+      <Tabs.Pane index={0} fragment className="pointer-events-auto">
         <GlassCard direction={"left"} className="animate-in slide-in-from-right-full">
           <Card fragment noDecor>
             <InventoryPane />

@@ -1,7 +1,8 @@
 import { Button } from "@/components/core/Button";
 import { BuildingImageFromType } from "@/components/shared/BuildingImage";
 import { KeyNames, KeybindActionKeys } from "@game/lib/constants/keybinds";
-import { Entity } from "@latticexyz/recs";
+import { useEntityQuery } from "@latticexyz/react";
+import { Entity, HasValue } from "@latticexyz/recs";
 import { EMap } from "contracts/config/enums";
 import { useEffect, useMemo } from "react";
 import { FaLock } from "react-icons/fa";
@@ -40,6 +41,12 @@ const BlueprintButton: React.FC<{
 
   const hasEnough = useHasEnoughResources(getRecipe(buildingType, 1n), selectedRockEntity);
 
+  const alreadyBuilt =
+    useEntityQuery([
+      HasValue(components.BuildingType, { value: EntityType.StarmapperStation }),
+      HasValue(components.OwnedBy, { value: selectedRockEntity }),
+    ]).length > 0 && buildingType === EntityType.StarmapperStation;
+
   useEffect(() => {
     if (!keybindActive || !keybind) return;
 
@@ -60,7 +67,7 @@ const BlueprintButton: React.FC<{
     <Button
       className={`hover:scale-110 drop-shadow-hard`}
       variant={buildingType === selectedBuilding ? "warning" : "ghost"}
-      disabled={mainbaseLevel < levelRequirement}
+      disabled={alreadyBuilt || mainbaseLevel < levelRequirement}
       keybind={keybindActive ? keybind : undefined}
       tooltipDirection={tooltipDirection ?? "right"}
       onPointerEnter={() => components.HoverEntity.set({ value: buildingType })}
@@ -78,7 +85,16 @@ const BlueprintButton: React.FC<{
       style={style}
     >
       <BuildingImageFromType buildingType={buildingType} isBlueprint={true} />
-      {!hasMainbaseLevel && (
+      {alreadyBuilt && (
+        <div className="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 gap-1 flex items-center justify-center bg-neutral/50 w-full">
+          <span className="flex items-center flex-col justify-center gap-1 text-warning text-[.6rem] bg-gray-800/50 z-30">
+            <FaLock />
+            <p>One per</p>
+            <p>asteroid</p>
+          </span>
+        </div>
+      )}
+      {!alreadyBuilt && !hasMainbaseLevel && (
         <div className="absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2 gap-1 flex items-center justify-center bg-neutral/50 w-full">
           <span className="h-3 flex items-center justify-center gap-1 text-warning text-[.6rem] bg-gray-800/50 z-30">
             <FaLock />
@@ -86,10 +102,11 @@ const BlueprintButton: React.FC<{
           </span>
         </div>
       )}
-      {!hasEnough && hasMainbaseLevel && (
+
+      {!alreadyBuilt && !hasEnough && hasMainbaseLevel && (
         <div className="absolute inset-0 gap-1 flex items-center justify-center bg-gradient-to-t from-error/30 to-transparent w-full h-full" />
       )}
-      {!hideHotkeys && keybindActive && (
+      {!alreadyBuilt && !hideHotkeys && keybindActive && (
         <p className="absolute bottom-2 right-2 flex text-xs kbd kbd-xs">
           {KeyNames[keybinds[keybind ?? "NULL"]?.entries().next().value[0]] ?? "?"}
         </p>

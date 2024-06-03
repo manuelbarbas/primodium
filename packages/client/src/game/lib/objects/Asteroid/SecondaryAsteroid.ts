@@ -3,7 +3,7 @@ import { PrimodiumScene } from "@/game/api/scene";
 import { BaseAsteroid } from "./BaseAsteroid";
 import { LODs, getSecondaryOutlineSprite, getSecondarySprite } from "./helpers";
 import { Entity } from "@latticexyz/recs";
-import { AsteroidRelationship } from "../../constants/common";
+import { Relationship } from "../../constants/common";
 
 export class SecondaryAsteroid extends BaseAsteroid {
   private maxLevel: bigint;
@@ -13,7 +13,7 @@ export class SecondaryAsteroid extends BaseAsteroid {
     coord: Coord;
     resourceType: Entity;
     maxLevel: bigint;
-    relationship: AsteroidRelationship;
+    relationship: Relationship;
   }) {
     const { id, scene, coord, resourceType, maxLevel, relationship = "Neutral" } = args;
     super({

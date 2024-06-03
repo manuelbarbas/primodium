@@ -15,6 +15,7 @@ export function encodeEntity<S extends Schema, TKeySchema extends KeySchema>(
       `key length ${Object.keys(key).length} does not match key schema length ${Object.keys(keySchema).length}`
     );
   }
+
   return hexKeyTupleToEntity(
     Object.entries(keySchema).map(([keyName, type]) => encodeAbiParameters([{ type }], [key[keyName]]))
   );

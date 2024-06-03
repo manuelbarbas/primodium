@@ -6,9 +6,9 @@ import { Hex } from "viem";
 import { useFullResourceCount } from "./useFullResourceCount";
 
 export const useAsteroidStrength = (asteroid: Entity, force = false) => {
-  const { resourceCount: hp, resourceStorage: maxHp } = useFullResourceCount(EntityType.HP, asteroid, force);
-  const { resourceCount: baseDefense } = useFullResourceCount(EntityType.Defense, asteroid, force);
-  const { resourceCount: defenseMultiplier } = useFullResourceCount(EntityType.DefenseMultiplier, asteroid, force);
+  const { resourceCount: hp, resourceStorage: maxHp } = useFullResourceCount(EntityType.HP, asteroid);
+  const { resourceCount: baseDefense } = useFullResourceCount(EntityType.Defense, asteroid);
+  const { resourceCount: defenseMultiplier } = useFullResourceCount(EntityType.DefenseMultiplier, asteroid);
   const hangar = components.Hangar.use(asteroid);
   return useMemo(() => {
     const unitDefense =
@@ -24,5 +24,5 @@ export const useAsteroidStrength = (asteroid: Entity, force = false) => {
     const finalDefense = maxHp > 0 ? (absDefense * hp) / maxHp : absDefense;
 
     return { strength: finalDefense, maxStrength: absDefense };
-  }, [hangar, baseDefense, defenseMultiplier, maxHp, hp, asteroid]);
+  }, [hangar, baseDefense, defenseMultiplier, maxHp, hp, asteroid, force]);
 };

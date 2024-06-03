@@ -3,6 +3,7 @@ import { Button } from "src/components/core/Button";
 import { EntityType } from "src/util/constants";
 import { GrandLeaderboard } from "./GrandLeaderboard";
 import { SubLeaderboard } from "./SubLeaderboard";
+import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
 
 export const Leaderboards = ({
   activeTab,
@@ -17,24 +18,29 @@ export const Leaderboards = ({
     () => [
       {
         name: "Final",
+        icon: InterfaceIcons.Leaderboard,
         leaderboard: <GrandLeaderboard key={"final"} alliance={alliance} />,
       },
 
       {
         name: "Wormhole",
+        icon: InterfaceIcons.Wormhole,
         leaderboard: (
           <SubLeaderboard
             key={"wormhole"}
+            icon={InterfaceIcons.Wormhole}
             leaderboard={alliance ? EntityType.AllianceWormholeLeaderboard : EntityType.PlayerWormholeLeaderboard}
             alliance={alliance}
           />
         ),
       },
       {
-        name: "Shard",
+        name: "Primodium",
+        icon: ResourceImages.Primodium,
         leaderboard: (
           <SubLeaderboard
-            key={"shard"}
+            key={"primodium"}
+            icon={ResourceImages.Primodium}
             leaderboard={alliance ? EntityType.AllianceShardLeaderboard : EntityType.PlayerShardLeaderboard}
             alliance={alliance}
           />
@@ -55,6 +61,7 @@ export const Leaderboards = ({
             key={tab.name}
             onClick={() => setActiveTab(tab.name)}
           >
+            <img src={tab.icon} className="w-6" />
             {tab.name}
           </Button>
         ))}

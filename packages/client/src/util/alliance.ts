@@ -20,3 +20,8 @@ export const getAllianceNameFromPlayer = (player: Entity, censor = false) => {
   const allianceName = hexToString(allianceData!.name as Hex, { size: 32 });
   return censor ? censorText(allianceName) : allianceName;
 };
+
+export const decodeAllianceName = (allianceName: string, censor = false) => {
+  const decoded = hexToString(allianceName as Hex, { size: 32 });
+  return censor ? censorText(decoded) : decoded;
+};

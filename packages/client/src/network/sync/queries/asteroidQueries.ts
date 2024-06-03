@@ -32,6 +32,18 @@ export const getAsteroidQuery = ({
           key0: asteroid,
         },
         {
+          tableId: tables.LastConquered.tableId,
+          key0: asteroid,
+        },
+        {
+          tableId: tables.Keys_UnitFactorySet.tableId,
+          key0: asteroid,
+        },
+        {
+          tableId: tables.DroidRegenTimestamp.tableId,
+          key0: asteroid,
+        },
+        {
           tableId: tables.ProductionRate.tableId,
           key0: asteroid,
         },
@@ -49,6 +61,36 @@ export const getAsteroidQuery = ({
         },
         {
           tableId: tables.UnitLevel.tableId,
+          key0: asteroid,
+        },
+      ],
+    },
+  };
+};
+
+export const getShardAsteroidQuery = ({
+  tables,
+  world,
+  indexerUrl,
+  asteroid,
+  worldAddress,
+}: Omit<Parameters<typeof Sync.withFilterIndexerRecsSync>[0], "filter"> & {
+  worldAddress: Hex;
+  asteroid: Entity;
+}) => {
+  return {
+    indexerUrl,
+    tables,
+    world,
+    filter: {
+      address: worldAddress as Hex,
+      filters: [
+        {
+          tableId: tables.ResourceCount.tableId,
+          key0: asteroid,
+        },
+        {
+          tableId: tables.MaxResourceCount.tableId,
           key0: asteroid,
         },
       ],
@@ -99,6 +141,9 @@ export const getActiveAsteroidQuery = ({
             },
             {
               tableId: tables.LastClaimedAt.tableId,
+            },
+            {
+              tableId: tables.CooldownEnd.tableId,
             },
             {
               tableId: tables.ClaimOffset.tableId,

@@ -6,6 +6,8 @@ import { TransactionQueueType } from "src/util/constants";
 import { getSystemId, hashEntities } from "src/util/encode";
 import { toTransportableResourceArray, toUnitCountArray } from "src/util/send";
 import { Hex } from "viem";
+import { ampli } from "src/ampli";
+import { parseReceipt } from "../../../util/analytics/parseReceipt";
 
 const clearId = "clear" as Entity;
 
@@ -13,7 +15,7 @@ export const clearFleet = async (mud: MUD, fleet: Entity) => {
   await execute(
     {
       mud,
-      functionName: "Primodium__clearFleet",
+      functionName: "Pri_11__clearFleet",
       systemId: getSystemId("FleetClearSystem"),
       args: [fleet as Hex],
       withSession: true,
@@ -22,7 +24,14 @@ export const clearFleet = async (mud: MUD, fleet: Entity) => {
       id: clearId,
       type: TransactionQueueType.ClearFleet,
     },
-    () => components.SelectedFleet.remove()
+    (receipt) => {
+      components.SelectedFleet.remove();
+
+      ampli.systemFleetClearSystemPrimodiumClearFleet({
+        fleets: [fleet as Hex],
+        ...parseReceipt(receipt),
+      });
+    }
   );
 };
 
@@ -38,7 +47,7 @@ export const clearFleetUnitsResources = async (mud: MUD, fleet: Entity, content:
     return await execute(
       {
         mud,
-        functionName: "Primodium__clearResources",
+        functionName: "Pri_11__clearResources",
         systemId: getSystemId("FleetClearSystem"),
         args: [fleet as Hex, resourceCounts],
         withSession: true,
@@ -46,6 +55,12 @@ export const clearFleetUnitsResources = async (mud: MUD, fleet: Entity, content:
       {
         id: clearId,
         type: TransactionQueueType.CreateFleet,
+      },
+      (receipt) => {
+        ampli.systemFleetClearSystemPrimodiumClearResources({
+          fleets: [fleet as Hex],
+          ...parseReceipt(receipt),
+        });
       }
     );
   }
@@ -53,7 +68,7 @@ export const clearFleetUnitsResources = async (mud: MUD, fleet: Entity, content:
     return await execute(
       {
         mud,
-        functionName: "Primodium__clearUnits",
+        functionName: "Pri_11__clearUnits",
         systemId: getSystemId("FleetClearSystem"),
         args: [fleet as Hex, unitCounts],
         withSession: true,
@@ -61,13 +76,19 @@ export const clearFleetUnitsResources = async (mud: MUD, fleet: Entity, content:
       {
         id: hashEntities(TransactionQueueType.ClearFleet, fleet),
         type: TransactionQueueType.CreateFleet,
+      },
+      (receipt) => {
+        ampli.systemFleetClearSystemPrimodiumClearUnits({
+          fleets: [fleet as Hex],
+          ...parseReceipt(receipt),
+        });
       }
     );
   } else {
     await execute(
       {
         mud,
-        functionName: "Primodium__clearUnitsAndResourcesFromFleet",
+        functionName: "Pri_11__clearUnitsAndResourcesFromFleet",
         systemId: getSystemId("FleetClearSystem"),
         args: [fleet as Hex, unitCounts, resourceCounts],
         withSession: true,
@@ -75,6 +96,12 @@ export const clearFleetUnitsResources = async (mud: MUD, fleet: Entity, content:
       {
         id: hashEntities(TransactionQueueType.ClearFleet, fleet),
         type: TransactionQueueType.CreateFleet,
+      },
+      (receipt) => {
+        ampli.systemFleetClearSystemPrimodiumClearUnitsAndResourcesFromFleet({
+          fleets: [fleet as Hex],
+          ...parseReceipt(receipt),
+        });
       }
     );
   }

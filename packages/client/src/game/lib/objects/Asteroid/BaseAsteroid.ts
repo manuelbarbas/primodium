@@ -6,7 +6,8 @@ import { FleetsContainer } from "@/game/lib/objects/Asteroid/FleetsContainer";
 import { Assets, Sprites } from "@primodiumxyz/assets";
 import { AsteroidLabel } from "@/game/lib/objects/Asteroid/AsteroidLabel";
 import { Entity } from "@latticexyz/recs";
-import { isValidClick } from "@/game/lib/objects/inputGuards";
+import { isValidClick, isValidHover } from "@/game/lib/objects/inputGuards";
+import { DeferredAsteroidsRenderContainer } from "@/game/lib/objects/Asteroid/DeferredAsteroidsRenderContainer";
 import { LODs } from "@/game/lib/objects/Asteroid/helpers";
 import { DepthLayers } from "@/game/lib/constants/common";
 
@@ -20,28 +21,44 @@ interface LODConfig {
 }
 
 export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IPrimodiumGameObject {
-  private id: Entity;
   private circle: Phaser.GameObjects.Arc;
   private animationTween: Phaser.Tweens.Tween;
+  private interactiveCircle;
 
+  id: Entity;
   protected coord: Coord;
   protected _scene: PrimodiumScene;
+  protected fleetsContainer: FleetsContainer;
   protected fleetCount = 0;
   protected spawned = false;
-  protected asteroidSprite: Phaser.GameObjects.Image;
+  protected asteroidSprite: Phaser.GameObjects.Sprite;
   protected asteroidLabel: AsteroidLabel;
-  protected fleetsContainer: FleetsContainer;
   protected currentLOD: number = -1;
 
-  constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord; sprite: Sprites; outlineSprite: Sprites }) {
-    const { id, scene, coord, sprite } = args;
+  //fx
+  private fireSeq?: Phaser.Time.Timeline;
+  private laser?: Phaser.GameObjects.Particles.ParticleEmitter;
+
+  private lastClickTime = 0;
+  private singleClickTimeout?: Phaser.Time.TimerEvent;
+
+  constructor(args: {
+    id: Entity;
+    scene: PrimodiumScene;
+    coord: Coord;
+    sprite: Sprites;
+    outlineSprite: Sprites;
+    containerId?: Entity;
+    cull?: boolean;
+  }) {
+    const { id, scene, coord, sprite, containerId, cull = true } = args;
     const pixelCoord = scene.utils.tileCoordToPixelCoord(coord);
 
     super(scene.phaserScene, pixelCoord.x, -pixelCoord.y);
 
     this.id = id;
 
-    this.asteroidSprite = new Phaser.GameObjects.Image(
+    this.asteroidSprite = new Phaser.GameObjects.Sprite(
       scene.phaserScene,
       pixelCoord.x,
       -pixelCoord.y,
@@ -54,7 +71,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
       coord: { x: pixelCoord.x, y: -pixelCoord.y },
     });
 
-    this.circle = new Phaser.GameObjects.Arc(
+    this.interactiveCircle = this.circle = new Phaser.GameObjects.Arc(
       scene.phaserScene,
       pixelCoord.x,
       -pixelCoord.y,
@@ -65,11 +82,20 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
       0xffff00,
       0.4
     )
-      .setInteractive(new Phaser.Geom.Circle(0, 0, 32), Phaser.Geom.Circle.Contains)
+      .setInteractive(new Phaser.Geom.Circle(0, 0, this.asteroidSprite.width / 4), Phaser.Geom.Circle.Contains)
       .disableInteractive()
       .setDepth(0);
 
-    this.fleetsContainer = new FleetsContainer(scene, { x: pixelCoord.x, y: -pixelCoord.y });
+    let fleetsContainer;
+    // providing a containerId means that the rendering currently happening was deferred
+    // we currently don't need it afterwards
+    if (containerId) {
+      const renderContainer = scene.objects.deferredRenderContainer.getContainer(containerId) as
+        | DeferredAsteroidsRenderContainer
+        | undefined;
+      fleetsContainer = renderContainer?.getFleetsContainers(id);
+    }
+    this.fleetsContainer = fleetsContainer ?? new FleetsContainer(scene, { x: pixelCoord.x, y: -pixelCoord.y });
 
     this.coord = coord;
     this._scene = scene;
@@ -84,7 +110,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     });
 
     // Add to object manager
-    this._scene.objects.asteroid.add(id, this, true);
+    this._scene.objects.asteroid.add(id, this, cull);
   }
 
   spawn() {
@@ -98,22 +124,68 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     return this;
   }
 
-  onClick(fn: (e: Phaser.Input.Pointer) => void) {
-    this.circle.on(Phaser.Input.Events.POINTER_UP, (e: Phaser.Input.Pointer) => {
+  onClick(fn: (e: Phaser.Input.Pointer) => void, onSprite = false) {
+    const obj = onSprite ? this.asteroidSprite.setInteractive() : this.circle;
+    obj.on(Phaser.Input.Events.POINTER_UP, (e: Phaser.Input.Pointer) => {
       if (!isValidClick(e)) return;
+
+      // Clear any existing timeout
+      if (this.singleClickTimeout) {
+        this.singleClickTimeout.destroy();
+        this.singleClickTimeout = undefined;
+      }
+
+      // Set a new timeout for single-click
+      this.singleClickTimeout = this.scene.time.delayedCall(200, () => {
+        fn(e);
+        this.singleClickTimeout = undefined;
+      });
+    });
+    return this;
+  }
+
+  onDoubleClick(fn: (e: Phaser.Input.Pointer) => void, onSprite = false) {
+    const obj = onSprite ? this.asteroidSprite.setInteractive() : this.circle;
+    obj.on(Phaser.Input.Events.POINTER_UP, (e: Phaser.Input.Pointer) => {
+      if (!isValidClick(e)) return;
+
+      const clickDelay = this.scene.time.now - this.lastClickTime;
+      this.lastClickTime = this.scene.time.now;
+      if (clickDelay < 200) {
+        // If double-click, clear the single-click timeout
+        if (this.singleClickTimeout) {
+          this.singleClickTimeout.destroy();
+          this.singleClickTimeout = undefined;
+        }
+        fn(e);
+      }
+    });
+    return this;
+  }
+
+  onHoverEnter(fn: (e: Phaser.Input.Pointer) => void, onSprite = false) {
+    const obj = onSprite ? this.asteroidSprite : this.circle;
+    obj.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, (e: Phaser.Input.Pointer) => {
+      if (!isValidHover(e)) return;
       fn(e);
     });
     return this;
   }
 
-  onHoverEnter(fn: (e: Phaser.Input.Pointer) => void) {
-    this.circle.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, fn);
+  onHoverExit(fn: (e: Phaser.Input.Pointer) => void, onSprite = false) {
+    const obj = onSprite ? this.asteroidSprite : this.circle;
+    obj.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, (e: Phaser.Input.Pointer) => {
+      fn(e);
+    });
     return this;
   }
 
-  onHoverExit(fn: (e: Phaser.Input.Pointer) => void) {
-    this.circle.on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, fn);
-    return this;
+  setOutline(value: number = 0x00ffff) {
+    this.asteroidSprite.postFX?.addGlow(value);
+  }
+
+  removeOutline() {
+    this.asteroidSprite.postFX?.clear();
   }
 
   setActive(value: boolean): this {
@@ -122,6 +194,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
       this.circle.setInteractive();
       const zoom = this._scene.camera.phaserCamera.zoom;
       this._setLOD(this.getLod(zoom), true);
+      this.fleetsContainer.updateView();
       //set all objects to active
     } else {
       this.animationTween.pause();
@@ -150,30 +223,103 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     return this;
   }
 
+  setPosition(x: number, y: number) {
+    // bail out if it's the super
+    if (this.id === undefined) return super.setPosition(x, y);
+
+    this.asteroidSprite.setPosition(x, y);
+    this.circle.setPosition(x, y);
+    this.fleetsContainer.setPosition(x, y);
+    this.asteroidLabel.setPosition(x, y);
+    return super.setPosition(x, y);
+  }
+
   setTilePosition(coord: Coord) {
     this.coord = coord;
     const pixelCoord = this._scene.utils.tileCoordToPixelCoord(coord);
-    this.asteroidSprite.setPosition(pixelCoord.x, -pixelCoord.y);
-    this.circle.setPosition(pixelCoord.x, -pixelCoord.y);
-    this.fleetsContainer.setPosition(pixelCoord.x, -pixelCoord.y);
-    this.asteroidLabel.setPosition(pixelCoord.x, -pixelCoord.y);
-    return this;
+    return this.setPosition(pixelCoord.x, -pixelCoord.y);
   }
 
   isSpawned() {
     return this.spawned;
   }
 
+  getPixelCoord() {
+    if (this.parentContainer) {
+      const container = this.parentContainer;
+      const matrix = container.getWorldTransformMatrix();
+      return matrix.transformPoint(this.x, this.y);
+    }
+    return { x: this.x, y: this.y };
+  }
+
   getCoord() {
     return this.coord;
   }
 
-  getFleetContainer() {
+  getFleetsContainer() {
     return this.fleetsContainer;
   }
 
   getAsteroidLabel() {
     return this.asteroidLabel;
+  }
+
+  fireAt(coord: Coord = { x: 0, y: 0 }) {
+    if (this.fireSeq) return;
+
+    const targetAngle = Phaser.Math.RadToDeg(Math.atan2(coord.y - this.y, coord.x - this.x)) - 90;
+
+    // Ensure always rotating clockwise
+    // while (targetAngle <= 0) {
+    //   targetAngle += 360;
+    // }
+
+    this.fireSeq = this.scene.add
+      .timeline([
+        {
+          at: 0,
+          run: () => {
+            this._scene.audio.play("SingleBlaster", "sfx");
+            this._scene.camera.phaserCamera.shake(300, 0.001);
+
+            this.laser = this.scene.add
+              .particles(this.x, this.y, "flares", {
+                lifespan: 250,
+                frequency: 300 / 3,
+                duration: 300,
+                speed: { min: 100, max: 200 },
+                tintFill: true,
+                maxParticles: 10,
+                // follow: this,
+                angle: targetAngle + 90,
+
+                color: [0xc7e5fd, 0x0ecaff, 0x00207d, 0x0ecaff],
+                scale: { start: 0.1, end: 0.1 },
+                alpha: { start: 1, end: 0.75 },
+                quantity: 20,
+                blendMode: "ADD",
+              })
+              .setDepth(DepthLayers.Path)
+              .start();
+          },
+        },
+        {
+          at: 500,
+          run: () => {
+            this._scene.fx.emitExplosion(coord, "lg");
+            this.laser?.destroy();
+          },
+        },
+        {
+          at: 1500,
+          run: () => {
+            this.fireSeq?.destroy();
+            this.fireSeq = undefined;
+          },
+        },
+      ])
+      .play();
   }
 
   update() {
@@ -190,6 +336,8 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     this.circle.destroy();
     this.asteroidLabel.destroy();
     this.fleetsContainer.destroy();
+    this.laser?.destroy();
+    this.fireSeq?.destroy();
     this._scene.objects.asteroid.remove(this.id);
     super.destroy();
   }

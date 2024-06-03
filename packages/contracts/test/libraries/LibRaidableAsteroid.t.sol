@@ -56,7 +56,7 @@ contract LibRaidableAsteroidTest is PrimodiumTest {
     P_Unit.setTrainingTime(DroidPrototypeId, 0, initialDroidTrainingTime);
     droidTrainingTime = P_Unit.getTrainingTime(DroidPrototypeId, 0);
 
-    world.Primodium__sendFleet(fleetEntity, raidablePosition); // this should init raidable asteroid
+    world.Pri_11__sendFleet(fleetEntity, raidablePosition); // this should init raidable asteroid
     raidableAsteroid = ReversePosition.get(raidablePosition.x, raidablePosition.y);
     assertTrue(raidableAsteroid != bytes32(0), "Raidable asteroid not initialized");
     console.log("asteroid max level before reset: ", Asteroid.getMaxLevel(raidableAsteroid));
@@ -96,16 +96,16 @@ contract LibRaidableAsteroidTest is PrimodiumTest {
 
   function testRegenAfterRaid() public {
     testInitRaidableAsteroidCommon2();
-    world.Primodium__attack(fleetEntity, raidableAsteroid);
+    world.Pri_11__attack(fleetEntity, raidableAsteroid);
 
     assertEq(UnitCount.get(raidableAsteroid, DroidPrototypeId), 0, "Not all droids destroyed");
     assertEq(ResourceCount.get(raidableAsteroid, uint8(EResource.Lithium)), 0, "Resources not looted");
 
     vm.warp(block.timestamp + droidTrainingTime);
-    world.Primodium__claimUnits(raidableAsteroid);
+    world.Pri_11__claimUnits(raidableAsteroid);
     assertEq(UnitCount.get(raidableAsteroid, DroidPrototypeId), 1, "Droids should start regenerating after raid");
 
-    world.Primodium__claimResources(raidableAsteroid);
+    world.Pri_11__claimResources(raidableAsteroid);
     assertGt(
       ResourceCount.get(raidableAsteroid, uint8(EResource.Lithium)),
       0,
@@ -113,7 +113,7 @@ contract LibRaidableAsteroidTest is PrimodiumTest {
     );
 
     vm.warp(block.timestamp + droidTrainingTime * maxDroidCount * 2);
-    world.Primodium__claimUnits(raidableAsteroid);
+    world.Pri_11__claimUnits(raidableAsteroid);
     assertEq(UnitCount.get(raidableAsteroid, DroidPrototypeId), maxDroidCount, "Droid regen should not exceed maximum");
   }
 
@@ -125,13 +125,13 @@ contract LibRaidableAsteroidTest is PrimodiumTest {
 
     vm.warp(block.timestamp + droidTrainingTime * maxDroidCount + 1);
 
-    world.Primodium__claimUnits(raidableAsteroid);
+    world.Pri_11__claimUnits(raidableAsteroid);
     assertEq(UnitCount.get(raidableAsteroid, DroidPrototypeId), 0, "Droids should not regen when owned by player");
   }
 
   function testNoDroidRegenOnNonRaidableAsteroids() public {
     PositionData memory wormholePosition = findWormholeAsteroid(asteroidEntity);
-    bytes32 wormholeAsteroid = world.Primodium__createSecondaryAsteroid(wormholePosition);
+    bytes32 wormholeAsteroid = world.Pri_11__createSecondaryAsteroid(wormholePosition);
     bytes32 eliteMicroAsteroid = manipulateAsteroidMapSpawn("eliteMicro");
     bytes32 eliteSmallAsteroid = manipulateAsteroidMapSpawn("eliteSmall");
     bytes32 eliteMediumAsteroid = manipulateAsteroidMapSpawn("eliteMedium");
@@ -147,12 +147,12 @@ contract LibRaidableAsteroidTest is PrimodiumTest {
     UnitCount.set(eliteLargeAsteroid, DroidPrototypeId, 0);
 
     vm.warp(block.timestamp + droidTrainingTime * maxDroidCount * 2);
-    world.Primodium__claimUnits(asteroidEntity);
-    world.Primodium__claimUnits(wormholeAsteroid);
-    world.Primodium__claimUnits(eliteMicroAsteroid);
-    world.Primodium__claimUnits(eliteSmallAsteroid);
-    world.Primodium__claimUnits(eliteMediumAsteroid);
-    world.Primodium__claimUnits(eliteLargeAsteroid);
+    world.Pri_11__claimUnits(asteroidEntity);
+    world.Pri_11__claimUnits(wormholeAsteroid);
+    world.Pri_11__claimUnits(eliteMicroAsteroid);
+    world.Pri_11__claimUnits(eliteSmallAsteroid);
+    world.Pri_11__claimUnits(eliteMediumAsteroid);
+    world.Pri_11__claimUnits(eliteLargeAsteroid);
 
     assertEq(UnitCount.get(asteroidEntity, DroidPrototypeId), 0, "Droids should not regen on primary asteroid");
     assertEq(UnitCount.get(wormholeAsteroid, DroidPrototypeId), 0, "Droids should not regen on wormhole asteroid");
@@ -165,7 +165,7 @@ contract LibRaidableAsteroidTest is PrimodiumTest {
     );
     assertEq(UnitCount.get(eliteLargeAsteroid, DroidPrototypeId), 0, "Droids should not regen on eliteLarge asteroid");
 
-    world.Primodium__abandonAsteroid(asteroidEntity);
+    world.Pri_11__abandonAsteroid(asteroidEntity);
     vm.warp(block.timestamp + droidTrainingTime * maxDroidCount * 2);
     assertEq(
       UnitCount.get(asteroidEntity, DroidPrototypeId),
@@ -180,7 +180,7 @@ contract LibRaidableAsteroidTest is PrimodiumTest {
     P_GameConfig.setAsteroidChanceInv(1);
     manipulateAsteroidMapSpawnConfig(field);
     PositionData memory asteroidPosition = findSecondaryAsteroid(asteroidEntity);
-    spawnedAsteroid = world.Primodium__createSecondaryAsteroid(asteroidPosition);
+    spawnedAsteroid = world.Pri_11__createSecondaryAsteroid(asteroidPosition);
     vm.startPrank(creator);
     P_GameConfig.setAsteroidChanceInv(initialConfig);
   }
@@ -220,13 +220,13 @@ contract LibRaidableAsteroidTest is PrimodiumTest {
   function testDroid0BuildTime() public {
     testInitRaidableAsteroidCommon2();
     P_Unit.setTrainingTime(DroidPrototypeId, 0, 0);
-    world.Primodium__attack(fleetEntity, raidableAsteroid);
+    world.Pri_11__attack(fleetEntity, raidableAsteroid);
 
     assertEq(UnitCount.get(raidableAsteroid, DroidPrototypeId), 0, "Not all droids destroyed");
     assertEq(ResourceCount.get(raidableAsteroid, uint8(EResource.Lithium)), 0, "Resources not looted");
 
     vm.warp(block.timestamp + 1);
-    world.Primodium__claimUnits(raidableAsteroid);
+    world.Pri_11__claimUnits(raidableAsteroid);
     assertEq(
       UnitCount.get(raidableAsteroid, DroidPrototypeId),
       maxDroidCount,

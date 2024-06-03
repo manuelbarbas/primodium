@@ -45,12 +45,12 @@ export const EntityToResourceImage = {
   //Utility
   [EntityType.Electricity]: ResourceImages.U_Electricity,
   [EntityType.Housing]: ResourceImages.U_Housing,
-  [EntityType.FleetCount]: InterfaceIcons.Outgoing,
+  [EntityType.FleetCount]: InterfaceIcons.Fleet,
   [EntityType.ColonyShipCapacity]: InterfaceIcons.Debug,
   [EntityType.Defense]: ResourceImages.U_BuildingDefense,
   [EntityType.DefenseMultiplier]: ResourceImages.U_BuildingDefenseMult,
   [EntityType.Unraidable]: ResourceImages.U_Unraidable,
   [EntityType.AdvancedUnraidable]: ResourceImages.U_AdvancedUnraidable,
   [EntityType.Encryption]: ResourceImages.U_Encryption,
-  [EntityType.HP]: InterfaceIcons.Debug,
+  [EntityType.HP]: InterfaceIcons.Strength,
 };

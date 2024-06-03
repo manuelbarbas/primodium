@@ -5,6 +5,11 @@ import { PrimodiumScene } from "@/game/api/scene";
 import { Fleet } from "./Fleet";
 import { Entity } from "@latticexyz/recs";
 import { TargetLine } from "@/game/lib/objects/TargetLine";
+import { BoundingBox } from "engine/lib/core/StaticObjectManager";
+
+// These boxes are rendered around the line to check for collisions
+// This is a rough approximation of the line's bounding box, because we don't want to render too many boxes,
+// and it's actually fine
 
 export class TransitLine extends TargetLine {
   private id: Entity;
@@ -22,7 +27,7 @@ export class TransitLine extends TargetLine {
 
     this.id = id;
 
-    this._scene.objects.transitLine.add(id, this, false);
+    this._scene.objects.transitLine.add(id, this, true);
   }
 
   setFleet(fleet: Fleet) {
@@ -32,6 +37,7 @@ export class TransitLine extends TargetLine {
     this.fleet = fleet;
     this._setFleetAngleAndPos();
     this.fleet.activateBurn();
+    this.fleet.hideStanceIcon();
 
     return this;
   }
@@ -46,6 +52,9 @@ export class TransitLine extends TargetLine {
     this.end = end;
     this._setFleetAngleAndPos();
     super.setCoordinates(start, end);
+
+    // set the bounding boxes for visibility checks
+    this._scene.objects.transitLine.setBoundingBoxes(this.id, generateBoundingBoxes(this.geom, this._scene.camera));
   }
 
   setFleetProgress(progress: number) {
@@ -53,7 +62,7 @@ export class TransitLine extends TargetLine {
 
     this.scene.tweens.killTweensOf(this.fleet);
 
-    if (progress === 1) {
+    if (progress === 1 || !this.active) {
       this.fleet.setPosition(
         this.start.x + (this.end.x - this.start.x) * progress,
         this.start.y + (this.end.y - this.start.y) * progress
@@ -70,13 +79,30 @@ export class TransitLine extends TargetLine {
     });
   }
 
-  destroy() {
+  setActive(value: boolean): this {
+    return super.setActive(value);
+  }
+
+  setVisible(value: boolean): this {
+    this.fleet?.setVisible(value);
+    return super.setVisible(value);
+  }
+
+  destroy(anim = false) {
     this._scene.objects.transitLine.remove(this.id);
+
+    if (!anim) {
+      super.destroy();
+      return;
+    }
 
     this.scene.add.tween({
       targets: this,
       alpha: 0,
       duration: 200,
+      onStart: () => {
+        this.setActive(false);
+      },
       onComplete: () => {
         super.destroy();
       },
@@ -86,15 +112,48 @@ export class TransitLine extends TargetLine {
   private _setFleetAngleAndPos() {
     if (!this.fleet) return;
 
-    let angle = Phaser.Math.RadToDeg(Math.atan2(this.end.y - this.start.y, this.end.x - this.start.x)) - 90;
-
-    if (angle < 0) {
-      angle += 360;
-    }
-
-    this.fleet.setRotationFrame(angle);
-    this.fleet.setAngle(angle - this.fleet.getRotationFrameOffset());
-    this.fleet.particles.setAngle(angle);
+    const angle = Phaser.Math.RadToDeg(Math.atan2(this.end.y - this.start.y, this.end.x - this.start.x)) - 90;
+    this.fleet.setAngle(angle);
     this.fleet.setPosition(this.start.x, this.start.y);
   }
 }
+
+// This is an approximation but more than enough for this purpose
+const generateBoundingBoxes = (
+  lineData: Phaser.GameObjects.Line["geom"],
+  camera: PrimodiumScene["camera"]
+): BoundingBox[] => {
+  const { x1, y1, x2, y2 } = lineData;
+  // this is an arbitrary value that seems reasonable
+  const squareDimension = camera.phaserCamera.height;
+  const boundingBoxes: BoundingBox[] = [];
+
+  // calculate the total length of the line and amount of squares needed
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const lineLength = Math.sqrt(dx * dx + dy * dy);
+  const numSquares = Math.ceil(lineLength / squareDimension);
+
+  // calculate the unit vector along the line direction
+  const unitVectorX = dx / lineLength;
+  const unitVectorY = dy / lineLength;
+
+  // generate bounding boxes
+  for (let i = 0; i < numSquares; i++) {
+    // center of the bounding box along the line
+    const centerX = x1 + unitVectorX * (i * squareDimension + squareDimension / 2);
+    const centerY = y1 + unitVectorY * (i * squareDimension + squareDimension / 2);
+
+    // apply offset
+    const offsetX = -squareDimension / 2;
+    const offsetY = -squareDimension / 2;
+
+    // calculate the top left corner of the bounding box
+    const topLeftX = centerX + offsetX * unitVectorX + offsetY * -unitVectorY;
+    const topLeftY = centerY + offsetX * unitVectorY + offsetY * unitVectorX;
+
+    boundingBoxes.push(new Phaser.Geom.Rectangle(topLeftX, topLeftY, squareDimension, squareDimension));
+  }
+
+  return boundingBoxes;
+};

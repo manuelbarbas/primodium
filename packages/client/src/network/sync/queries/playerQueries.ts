@@ -40,6 +40,14 @@ export const getPlayerQuery = ({
           tableId: tables.CompletedObjective.tableId,
           key0: playerEntity,
         },
+        {
+          tableId: tables.MaxColonySlots.tableId,
+          key0: playerEntity,
+        },
+        {
+          tableId: tables.ColonySlotsInstallments.tableId,
+          key0: playerEntity,
+        },
       ],
     },
   };

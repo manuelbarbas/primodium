@@ -186,14 +186,49 @@
       "end": 79.84251700680272,
       "loop": false
     },
-    "background": {
+    "Blaster": {
       "start": 81,
-      "end": 265.8480045351474,
-      "loop": true
+      "end": 83.29167800453514,
+      "loop": false
+    },
+    "Build": {
+      "start": 85,
+      "end": 86.37501133786849,
+      "loop": false
+    },
+    "Demolish": {
+      "start": 88,
+      "end": 90.40433106575964,
+      "loop": false
+    },
+    "Explosion": {
+      "start": 92,
+      "end": 94.81049886621315,
+      "loop": false
+    },
+    "SingleBlaster": {
+      "start": 96,
+      "end": 100.66666666666667,
+      "loop": false
+    },
+    "Upgrade": {
+      "start": 102,
+      "end": 103.40571428571428,
+      "loop": false
+    },
+    "Whoosh": {
+      "start": 105,
+      "end": 107,
+      "loop": false
+    },
+    "background": {
+      "start": 108,
+      "end": 292.8480045351474,
+      "loop": false
     },
     "background2": {
-      "start": 267,
-      "end": 470.4959863945578,
+      "start": 294,
+      "end": 497.4959863945578,
       "loop": false
     }
   }

@@ -26,8 +26,8 @@ contract BuildSystem is PrimodiumSystem {
     buildingEntity = LibBuilding.build(_player(), buildingPrototype, coord, false);
 
     IWorld world = IWorld(_world());
-    world.Primodium__increaseMaxStorage(buildingEntity, 1);
-    world.Primodium__upgradeProductionRate(buildingEntity, 1);
-    world.Primodium__spendBuildingRequiredResources(buildingEntity, 1);
+    world.Pri_11__increaseMaxStorage(buildingEntity, 1);
+    world.Pri_11__upgradeProductionRate(buildingEntity, 1);
+    world.Pri_11__spendBuildingRequiredResources(buildingEntity, 1);
   }
 }

@@ -25,7 +25,8 @@ export const Objective: React.FC<{
   objectiveEntity: Entity;
   asteroidEntity: Entity;
   highlight?: boolean;
-}> = ({ objectiveEntity, asteroidEntity, highlight = false }) => {
+  claimed?: boolean;
+}> = ({ objectiveEntity, asteroidEntity, claimed, highlight = false }) => {
   const playerEntity = components.Account.use()?.value;
   const time = components.Time.use()?.value;
 
@@ -67,41 +68,43 @@ export const Objective: React.FC<{
           <hr className="border-t border-accent/20 w-full my-1" />
           <p className=" col-span-7 flex items-center px-1 opacity-75 font-normal">{description}</p>
           <hr className="border-t border-accent/20 w-full my-1" />
-          <div className="col-span-10 w-full flex flex-wrap gap-1">
-            <span className="flex gap-1 items-center opacity-75">
-              <FaSpinner /> PROGRESS:
-            </span>
-            <div className="flex flex-wrap gap-1">
-              {requirements.map((_req, index) => {
-                const reqComplete = _req.currentValue >= _req.requiredValue;
-                const value = _req.currentValue > _req.requiredValue ? _req.requiredValue : _req.currentValue;
-                if (_req.isBool) {
+          {!claimed && (
+            <div className="col-span-10 w-full flex flex-wrap gap-1">
+              <span className="flex gap-1 items-center opacity-75">
+                <FaSpinner /> PROGRESS:
+              </span>
+              <div className="flex flex-wrap gap-1">
+                {requirements.map((_req, index) => {
+                  const reqComplete = _req.currentValue >= _req.requiredValue;
+                  const value = _req.currentValue > _req.requiredValue ? _req.requiredValue : _req.currentValue;
+                  if (_req.isBool) {
+                    return (
+                      <Badge key={index} className={`text-xs gap-2 ${reqComplete ? "badge-success" : "badge-neutral"}`}>
+                        <IconLabel
+                          imageUri={_req.backgroundImage ?? InterfaceIcons.Build}
+                          text={reqComplete ? "Complete" : "Incomplete"}
+                          className="text-xs font-bold"
+                        />
+                      </Badge>
+                    );
+                  }
                   return (
                     <Badge key={index} className={`text-xs gap-2 ${reqComplete ? "badge-success" : "badge-neutral"}`}>
                       <IconLabel
                         imageUri={_req.backgroundImage ?? InterfaceIcons.Build}
-                        text={reqComplete ? "Complete" : "Incomplete"}
+                        text={formatNumber(value / _req.scale, { short: true, fractionDigits: 3 })}
                         className="text-xs font-bold"
                       />
+
+                      <span className="font-bold">
+                        / {formatNumber(_req.requiredValue / _req.scale, { short: true, fractionDigits: 1 })}
+                      </span>
                     </Badge>
                   );
-                }
-                return (
-                  <Badge key={index} className={`text-xs gap-2 ${reqComplete ? "badge-success" : "badge-neutral"}`}>
-                    <IconLabel
-                      imageUri={_req.backgroundImage ?? InterfaceIcons.Build}
-                      text={formatNumber(value / _req.scale, { short: true, fractionDigits: 3 })}
-                      className="text-xs font-bold"
-                    />
-
-                    <span className="font-bold">
-                      / {formatNumber(_req.requiredValue / _req.scale, { short: true, fractionDigits: 1 })}
-                    </span>
-                  </Badge>
-                );
-              })}
+                })}
+              </div>
             </div>
-          </div>
+          )}
           {rewardRecipe && rewardRecipe.length !== 0 && (
             <div className="col-span-10 w-full flex flex-wrap gap-1">
               <span className="flex gap-1 items-center opacity-75">
