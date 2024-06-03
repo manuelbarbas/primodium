@@ -9,5 +9,5 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IS_TransferAsteroidSystem {
-  function Primodium__transferAsteroid(bytes32 asteroidEntity, bytes32 ownerEntity) external;
+  function Pri_11__transferAsteroid(bytes32 asteroidEntity, bytes32 ownerEntity) external;
 }

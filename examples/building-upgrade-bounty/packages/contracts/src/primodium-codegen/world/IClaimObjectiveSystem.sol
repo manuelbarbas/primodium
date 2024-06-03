@@ -11,5 +11,5 @@ import { EObjectives } from "src/Types.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IClaimObjectiveSystem {
-  function Primodium__claimObjective(bytes32 asteroidEntity, EObjectives objective) external;
+  function Pri_11__claimObjective(bytes32 asteroidEntity, EObjectives objective) external;
 }

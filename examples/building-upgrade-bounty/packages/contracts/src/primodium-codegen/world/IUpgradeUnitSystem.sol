@@ -11,5 +11,5 @@ import { EUnit } from "src/Types.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IUpgradeUnitSystem {
-  function Primodium__upgradeUnit(bytes32 asteroidEntity, EUnit unit) external;
+  function Pri_11__upgradeUnit(bytes32 asteroidEntity, EUnit unit) external;
 }

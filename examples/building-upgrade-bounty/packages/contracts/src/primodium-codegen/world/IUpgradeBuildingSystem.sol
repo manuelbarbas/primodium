@@ -9,5 +9,5 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IUpgradeBuildingSystem {
-  function Primodium__upgradeBuilding(bytes32 buildingEntity) external;
+  function Pri_11__upgradeBuilding(bytes32 buildingEntity) external;
 }

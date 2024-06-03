@@ -9,9 +9,9 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IS_StorageSystem {
-  function Primodium__increaseMaxStorage(bytes32 buildingEntity, uint256 level) external;
+  function Pri_11__increaseMaxStorage(bytes32 buildingEntity, uint256 level) external;
 
-  function Primodium__clearMaxStorageIncrease(bytes32 buildingEntity) external;
+  function Pri_11__clearMaxStorageIncrease(bytes32 buildingEntity) external;
 
-  function Primodium__toggleMaxStorage(bytes32 buildingEntity) external;
+  function Pri_11__toggleMaxStorage(bytes32 buildingEntity) external;
 }

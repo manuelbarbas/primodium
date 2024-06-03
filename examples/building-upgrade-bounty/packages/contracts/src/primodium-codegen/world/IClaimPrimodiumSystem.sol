@@ -9,7 +9,7 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IClaimPrimodiumSystem {
-  function Primodium__claimPrimodium(bytes32 asteroidEntity) external;
+  function Pri_11__claimPrimodium(bytes32 asteroidEntity) external;
 
-  function Primodium__claimShardAsteroidPoints(bytes32 asteroidEntity) external;
+  function Pri_11__claimShardAsteroidPoints(bytes32 asteroidEntity) external;
 }

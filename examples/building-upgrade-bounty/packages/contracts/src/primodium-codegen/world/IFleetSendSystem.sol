@@ -11,7 +11,7 @@ import { PositionData } from "codegen/index.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IFleetSendSystem {
-  function Primodium__sendFleet(bytes32 fleetEntity, PositionData memory position) external;
+  function Pri_11__sendFleet(bytes32 fleetEntity, PositionData memory position) external;
 
-  function Primodium__sendFleet(bytes32 fleetEntity, bytes32 asteroidEntity) external;
+  function Pri_11__sendFleet(bytes32 fleetEntity, bytes32 asteroidEntity) external;
 }

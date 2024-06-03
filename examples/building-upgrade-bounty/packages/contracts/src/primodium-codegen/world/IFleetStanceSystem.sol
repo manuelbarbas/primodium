@@ -9,7 +9,7 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IFleetStanceSystem {
-  function Primodium__clearFleetStance(bytes32 fleetEntity) external;
+  function Pri_11__clearFleetStance(bytes32 fleetEntity) external;
 
-  function Primodium__setFleetStance(bytes32 fleetEntity, uint8 stance, bytes32 target) external;
+  function Pri_11__setFleetStance(bytes32 fleetEntity, uint8 stance, bytes32 target) external;
 }

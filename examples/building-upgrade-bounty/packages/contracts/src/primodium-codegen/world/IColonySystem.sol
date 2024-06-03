@@ -9,10 +9,10 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IColonySystem {
-  function Primodium__payForMaxColonySlots(
+  function Pri_11__payForMaxColonySlots(
     bytes32 shipyardEntity,
     uint256[] calldata paymentAmounts
   ) external returns (bool);
 
-  function Primodium__changeHome(bytes32 asteroidEntity) external;
+  function Pri_11__changeHome(bytes32 asteroidEntity) external;
 }

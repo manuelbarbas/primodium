@@ -9,17 +9,17 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IFleetClearSystem {
-  function Primodium__abandonFleet(bytes32 fleetEntity) external;
+  function Pri_11__abandonFleet(bytes32 fleetEntity) external;
 
-  function Primodium__clearFleet(bytes32 fleetEntity) external;
+  function Pri_11__clearFleet(bytes32 fleetEntity) external;
 
-  function Primodium__clearUnitsAndResourcesFromFleet(
+  function Pri_11__clearUnitsAndResourcesFromFleet(
     bytes32 fleetEntity,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
   ) external;
 
-  function Primodium__clearUnits(bytes32 fleetEntity, uint256[] calldata unitCounts) external;
+  function Pri_11__clearUnits(bytes32 fleetEntity, uint256[] calldata unitCounts) external;
 
-  function Primodium__clearResources(bytes32 fleetEntity, uint256[] calldata resourceCounts) external;
+  function Pri_11__clearResources(bytes32 fleetEntity, uint256[] calldata resourceCounts) external;
 }

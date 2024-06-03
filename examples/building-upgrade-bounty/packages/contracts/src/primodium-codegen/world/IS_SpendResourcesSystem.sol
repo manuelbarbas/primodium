@@ -9,11 +9,11 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IS_SpendResourcesSystem {
-  function Primodium__spendBuildingRequiredResources(bytes32 buildingEntity, uint256 level) external;
+  function Pri_11__spendBuildingRequiredResources(bytes32 buildingEntity, uint256 level) external;
 
-  function Primodium__spendUpgradeResources(bytes32 asteroidEntity, bytes32 upgradePrototype, uint256 level) external;
+  function Pri_11__spendUpgradeResources(bytes32 asteroidEntity, bytes32 upgradePrototype, uint256 level) external;
 
-  function Primodium__toggleBuildingUtility(bytes32 buildingEntity) external;
+  function Pri_11__toggleBuildingUtility(bytes32 buildingEntity) external;
 
-  function Primodium__clearUtilityUsage(bytes32 buildingEntity) external;
+  function Pri_11__clearUtilityUsage(bytes32 buildingEntity) external;
 }

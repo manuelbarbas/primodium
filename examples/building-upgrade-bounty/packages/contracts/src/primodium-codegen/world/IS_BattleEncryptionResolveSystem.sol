@@ -9,7 +9,7 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IS_BattleEncryptionResolveSystem {
-  function Primodium__resolveBattleEncryption(
+  function Pri_11__resolveBattleEncryption(
     bytes32 battleEntity,
     bytes32 targetAsteroid,
     bytes32 aggressorEntity

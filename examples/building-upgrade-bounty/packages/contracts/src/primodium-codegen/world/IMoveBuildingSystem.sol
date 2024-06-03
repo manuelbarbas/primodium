@@ -11,5 +11,5 @@ import { PositionData } from "codegen/index.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IMoveBuildingSystem {
-  function Primodium__moveBuilding(bytes32 buildingEntity, PositionData memory toCoord) external;
+  function Pri_11__moveBuilding(bytes32 buildingEntity, PositionData memory toCoord) external;
 }

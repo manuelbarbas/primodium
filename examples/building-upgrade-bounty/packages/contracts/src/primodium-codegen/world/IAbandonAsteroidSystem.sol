@@ -9,5 +9,5 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IAbandonAsteroidSystem {
-  function Primodium__abandonAsteroid(bytes32 asteroidEntity) external;
+  function Pri_11__abandonAsteroid(bytes32 asteroidEntity) external;
 }

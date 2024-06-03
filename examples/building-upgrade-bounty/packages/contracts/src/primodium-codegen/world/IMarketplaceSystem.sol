@@ -11,26 +11,21 @@ import { EResource } from "src/Types.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IMarketplaceSystem {
-  function Primodium__toggleMarketplaceLock() external;
+  function Pri_11__toggleMarketplaceLock() external;
 
-  function Primodium__addLiquidity(
+  function Pri_11__addLiquidity(
     EResource resourceA,
     EResource resourceB,
     uint256 liquidityA,
     uint256 liquidityB
   ) external;
 
-  function Primodium__removeLiquidity(
+  function Pri_11__removeLiquidity(
     EResource resourceA,
     EResource resourceB,
     uint256 liquidityA,
     uint256 liquidityB
   ) external;
 
-  function Primodium__swap(
-    bytes32 marketEntity,
-    EResource[] memory path,
-    uint256 amountIn,
-    uint256 amountOutMin
-  ) external;
+  function Pri_11__swap(bytes32 marketEntity, EResource[] memory path, uint256 amountIn, uint256 amountOutMin) external;
 }

@@ -9,5 +9,5 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IS_BattleRaidResolveSystem {
-  function Primodium__battleRaidResolve(bytes32 battleEntity, bytes32 raider, bytes32 target) external;
+  function Pri_11__battleRaidResolve(bytes32 battleEntity, bytes32 raider, bytes32 target) external;
 }

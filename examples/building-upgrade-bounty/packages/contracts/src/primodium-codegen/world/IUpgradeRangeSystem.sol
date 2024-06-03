@@ -9,5 +9,5 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IUpgradeRangeSystem {
-  function Primodium__upgradeRange(bytes32 asteroidEntity) external;
+  function Pri_11__upgradeRange(bytes32 asteroidEntity) external;
 }

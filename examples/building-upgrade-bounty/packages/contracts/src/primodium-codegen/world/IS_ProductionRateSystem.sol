@@ -9,9 +9,9 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IS_ProductionRateSystem {
-  function Primodium__upgradeProductionRate(bytes32 buildingEntity, uint256 level) external;
+  function Pri_11__upgradeProductionRate(bytes32 buildingEntity, uint256 level) external;
 
-  function Primodium__toggleProductionRate(bytes32 buildingEntity) external;
+  function Pri_11__toggleProductionRate(bytes32 buildingEntity) external;
 
-  function Primodium__clearProductionRate(bytes32 buildingEntity) external;
+  function Pri_11__clearProductionRate(bytes32 buildingEntity) external;
 }

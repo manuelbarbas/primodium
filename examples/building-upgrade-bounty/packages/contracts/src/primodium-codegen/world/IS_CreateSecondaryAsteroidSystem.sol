@@ -11,5 +11,5 @@ import { PositionData } from "codegen/index.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IS_CreateSecondaryAsteroidSystem {
-  function Primodium__createSecondaryAsteroid(PositionData memory positionData) external returns (bytes32);
+  function Pri_11__createSecondaryAsteroid(PositionData memory positionData) external returns (bytes32);
 }

@@ -11,7 +11,7 @@ import { EUnit } from "src/Types.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface ITrainUnitsSystem {
-  function Primodium__trainUnits(bytes32 buildingEntity, EUnit unit, uint256 count) external;
+  function Pri_11__trainUnits(bytes32 buildingEntity, EUnit unit, uint256 count) external;
 
-  function Primodium__trainUnits(bytes32 buildingEntity, bytes32 unitPrototype, uint256 count) external;
+  function Pri_11__trainUnits(bytes32 buildingEntity, bytes32 unitPrototype, uint256 count) external;
 }

@@ -13,7 +13,7 @@ import { FieldLayout } from "@latticexyz/store/src/FieldLayout.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IDevSystem {
-  function Primodium__devSetRecord(
+  function Pri_11__devSetRecord(
     ResourceId tableId,
     bytes32[] calldata keyTuple,
     bytes calldata staticData,
@@ -21,14 +21,14 @@ interface IDevSystem {
     bytes calldata dynamicData
   ) external;
 
-  function Primodium__devSpliceStaticData(
+  function Pri_11__devSpliceStaticData(
     ResourceId tableId,
     bytes32[] calldata keyTuple,
     uint48 start,
     bytes calldata data
   ) external;
 
-  function Primodium__devSpliceDynamicData(
+  function Pri_11__devSpliceDynamicData(
     ResourceId tableId,
     bytes32[] calldata keyTuple,
     uint8 dynamicFieldIndex,
@@ -37,14 +37,14 @@ interface IDevSystem {
     bytes calldata data
   ) external;
 
-  function Primodium__devSetField(
+  function Pri_11__devSetField(
     ResourceId tableId,
     bytes32[] calldata keyTuple,
     uint8 fieldIndex,
     bytes calldata data
   ) external;
 
-  function Primodium__devSetField(
+  function Pri_11__devSetField(
     ResourceId tableId,
     bytes32[] calldata keyTuple,
     uint8 fieldIndex,
@@ -52,7 +52,7 @@ interface IDevSystem {
     FieldLayout fieldLayout
   ) external;
 
-  function Primodium__devSetStaticField(
+  function Pri_11__devSetStaticField(
     ResourceId tableId,
     bytes32[] calldata keyTuple,
     uint8 fieldIndex,
@@ -60,26 +60,26 @@ interface IDevSystem {
     FieldLayout fieldLayout
   ) external;
 
-  function Primodium__devSetDynamicField(
+  function Pri_11__devSetDynamicField(
     ResourceId tableId,
     bytes32[] calldata keyTuple,
     uint8 dynamicFieldIndex,
     bytes calldata data
   ) external;
 
-  function Primodium__devPushToDynamicField(
+  function Pri_11__devPushToDynamicField(
     ResourceId tableId,
     bytes32[] calldata keyTuple,
     uint8 dynamicFieldIndex,
     bytes calldata dataToPush
   ) external;
 
-  function Primodium__devPopFromDynamicField(
+  function Pri_11__devPopFromDynamicField(
     ResourceId tableId,
     bytes32[] calldata keyTuple,
     uint8 dynamicFieldIndex,
     uint256 byteLengthToPop
   ) external;
 
-  function Primodium__devDeleteRecord(ResourceId tableId, bytes32[] calldata keyTuple) external;
+  function Pri_11__devDeleteRecord(ResourceId tableId, bytes32[] calldata keyTuple) external;
 }

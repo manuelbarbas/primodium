@@ -9,5 +9,5 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IFleetRecallSystem {
-  function Primodium__recallFleet(bytes32 fleetEntity) external;
+  function Pri_11__recallFleet(bytes32 fleetEntity) external;
 }

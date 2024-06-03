@@ -9,57 +9,57 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface ITransferSystem {
-  function Primodium__transferUnitsFromAsteroidToFleet(
+  function Pri_11__transferUnitsFromAsteroidToFleet(
     bytes32 asteroidEntity,
     bytes32 fleetEntity,
     uint256[] calldata unitCounts
   ) external;
 
-  function Primodium__transferResourcesFromAsteroidToFleet(
+  function Pri_11__transferResourcesFromAsteroidToFleet(
     bytes32 asteroidEntity,
     bytes32 fleetEntity,
     uint256[] calldata resourceCounts
   ) external;
 
-  function Primodium__transferUnitsAndResourcesFromAsteroidToFleet(
+  function Pri_11__transferUnitsAndResourcesFromAsteroidToFleet(
     bytes32 asteroidEntity,
     bytes32 fleetEntity,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
   ) external;
 
-  function Primodium__transferUnitsFromFleetToAsteroid(
+  function Pri_11__transferUnitsFromFleetToAsteroid(
     bytes32 fromFleetEntity,
     bytes32 asteroidEntity,
     uint256[] calldata unitCounts
   ) external;
 
-  function Primodium__transferResourcesFromFleetToAsteroid(
+  function Pri_11__transferResourcesFromFleetToAsteroid(
     bytes32 fleetEntity,
     bytes32 asteroidEntity,
     uint256[] calldata resourceCounts
   ) external;
 
-  function Primodium__transferUnitsAndResourcesFromFleetToAsteroid(
+  function Pri_11__transferUnitsAndResourcesFromFleetToAsteroid(
     bytes32 fromFleetEntity,
     bytes32 asteroidEntity,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts
   ) external;
 
-  function Primodium__transferUnitsFromFleetToFleet(
+  function Pri_11__transferUnitsFromFleetToFleet(
     bytes32 fromFleetEntity,
     bytes32 toFleetEntity,
     uint256[] calldata unitCounts
   ) external;
 
-  function Primodium__transferResourcesFromFleetToFleet(
+  function Pri_11__transferResourcesFromFleetToFleet(
     bytes32 fromFleetEntity,
     bytes32 toFleetEntity,
     uint256[] calldata resourceCounts
   ) external;
 
-  function Primodium__transferUnitsAndResourcesFromFleetToFleet(
+  function Pri_11__transferUnitsAndResourcesFromFleetToFleet(
     bytes32 fromFleetEntity,
     bytes32 toFleetEntity,
     uint256[] calldata unitCounts,

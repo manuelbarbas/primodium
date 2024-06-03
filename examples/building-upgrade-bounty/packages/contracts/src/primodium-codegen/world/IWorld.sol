@@ -23,7 +23,6 @@ import { IFleetMergeSystem } from "./IFleetMergeSystem.sol";
 import { IFleetRecallSystem } from "./IFleetRecallSystem.sol";
 import { IFleetSendSystem } from "./IFleetSendSystem.sol";
 import { IFleetStanceSystem } from "./IFleetStanceSystem.sol";
-import { ITransferSystem } from "./ITransferSystem.sol";
 import { IIncrementSystem } from "./IIncrementSystem.sol";
 import { IPrimodiumSystem } from "./IPrimodiumSystem.sol";
 import { IMarketplaceSystem } from "./IMarketplaceSystem.sol";
@@ -42,6 +41,8 @@ import { IS_SpendResourcesSystem } from "./IS_SpendResourcesSystem.sol";
 import { IS_StorageSystem } from "./IS_StorageSystem.sol";
 import { IS_TransferAsteroidSystem } from "./IS_TransferAsteroidSystem.sol";
 import { ITrainUnitsSystem } from "./ITrainUnitsSystem.sol";
+import { ITransferSystem } from "./ITransferSystem.sol";
+import { ITransferTwoWaySystem } from "./ITransferTwoWaySystem.sol";
 import { IUpgradeRangeSystem } from "./IUpgradeRangeSystem.sol";
 import { IUpgradeUnitSystem } from "./IUpgradeUnitSystem.sol";
 import { IClaimPrimodiumSystem } from "./IClaimPrimodiumSystem.sol";
@@ -74,7 +75,6 @@ interface IWorld is
   IFleetRecallSystem,
   IFleetSendSystem,
   IFleetStanceSystem,
-  ITransferSystem,
   IIncrementSystem,
   IPrimodiumSystem,
   IMarketplaceSystem,
@@ -93,6 +93,8 @@ interface IWorld is
   IS_StorageSystem,
   IS_TransferAsteroidSystem,
   ITrainUnitsSystem,
+  ITransferSystem,
+  ITransferTwoWaySystem,
   IUpgradeRangeSystem,
   IUpgradeUnitSystem,
   IClaimPrimodiumSystem,

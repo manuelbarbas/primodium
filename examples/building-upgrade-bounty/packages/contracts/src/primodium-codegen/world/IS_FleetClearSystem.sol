@@ -9,7 +9,7 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IS_FleetClearSystem {
-  function Primodium__uncheckedAbandonFleet(bytes32 fleetEntity) external;
+  function Pri_11__uncheckedAbandonFleet(bytes32 fleetEntity) external;
 
-  function Primodium__resetFleetIfNoUnitsLeft(bytes32 fleetEntity) external;
+  function Pri_11__resetFleetIfNoUnitsLeft(bytes32 fleetEntity) external;
 }

@@ -9,5 +9,5 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IS_BuildRaidableAsteroidSystem {
-  function Primodium__buildRaidableAsteroid(bytes32 asteroidEntity) external;
+  function Pri_11__buildRaidableAsteroid(bytes32 asteroidEntity) external;
 }

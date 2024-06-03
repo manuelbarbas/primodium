@@ -9,7 +9,7 @@ pragma solidity >=0.8.24;
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IFleetCreateSystem {
-  function Primodium__createFleet(
+  function Pri_11__createFleet(
     bytes32 asteroidEntity,
     uint256[] calldata unitCounts,
     uint256[] calldata resourceCounts

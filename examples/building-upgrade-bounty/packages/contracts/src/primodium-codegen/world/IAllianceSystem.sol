@@ -11,32 +11,32 @@ import { EAllianceInviteMode, EAllianceRole } from "src/Types.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IAllianceSystem {
-  function Primodium__join(bytes32 alliance) external;
+  function Pri_11__join(bytes32 alliance) external;
 
-  function Primodium__create(
+  function Pri_11__create(
     bytes32 name,
     EAllianceInviteMode allianceInviteMode
   ) external returns (bytes32 allianceEntity);
 
-  function Primodium__setAllianceName(bytes32 entity, bytes32 newName) external;
+  function Pri_11__setAllianceName(bytes32 entity, bytes32 newName) external;
 
-  function Primodium__setAllianceInviteMode(bytes32 entity, EAllianceInviteMode allianceInviteMode) external;
+  function Pri_11__setAllianceInviteMode(bytes32 entity, EAllianceInviteMode allianceInviteMode) external;
 
-  function Primodium__leave() external;
+  function Pri_11__leave() external;
 
-  function Primodium__invite(address target) external;
+  function Pri_11__invite(address target) external;
 
-  function Primodium__revokeInvite(address target) external;
+  function Pri_11__revokeInvite(address target) external;
 
-  function Primodium__declineInvite(address inviter) external;
+  function Pri_11__declineInvite(address inviter) external;
 
-  function Primodium__kick(address target) external;
+  function Pri_11__kick(address target) external;
 
-  function Primodium__grantRole(address target, EAllianceRole role) external;
+  function Pri_11__grantRole(address target, EAllianceRole role) external;
 
-  function Primodium__requestToJoin(bytes32 alliance) external;
+  function Pri_11__requestToJoin(bytes32 alliance) external;
 
-  function Primodium__rejectRequestToJoin(address rejectee) external;
+  function Pri_11__rejectRequestToJoin(address rejectee) external;
 
-  function Primodium__acceptRequestToJoin(address accepted) external;
+  function Pri_11__acceptRequestToJoin(address accepted) external;
 }
