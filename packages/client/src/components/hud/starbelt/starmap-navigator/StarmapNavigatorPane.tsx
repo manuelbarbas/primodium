@@ -72,25 +72,6 @@ export const StarmapNavigatorPane = () => {
               (arePanesExpanded || visibleDiv === index) && (
                 <div key={index} className={`flex bg-neutral border border-secondary gap-1`}>
                   <Content index={index} />
-                  {/* Show title when expanded */}
-                  {arePanesExpanded && (
-                    <span
-                      className={`text-sm pt-2 text-vert px-1 border-l border-secondary/50 ${
-                        label === "Production"
-                          ? "text-yellow-500"
-                          : label === "Military"
-                          ? "text-lime-600"
-                          : label === "Storage"
-                          ? "text-violet-400"
-                          : label === "Infrastructure"
-                          ? "text-sky-500"
-                          : ""
-                      }`}
-                      style={{ writingMode: "vertical-rl" }}
-                    >
-                      {label}
-                    </span>
-                  )}
                 </div>
               )
           )}
