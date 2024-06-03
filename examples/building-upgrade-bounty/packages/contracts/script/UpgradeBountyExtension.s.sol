@@ -73,9 +73,9 @@ contract UpgradeBountyExtension is Script {
     // Register UpgrBounSystem.incrementMessage(string) as a function selector to make it accessible through the World.
     // When called through the world, it will be through <namespace>__<function>, e.g. "upgradeBounty__incrementMessage(string)"
 
-    world.registerFunctionSelector(systemResource, "depositBounty((int32,int32,bytes32))");
-    world.registerFunctionSelector(systemResource, "withdrawBounty((int32,int32,bytes32))");
-    world.registerFunctionSelector(systemResource, "upgradeForBounty(address,(int32,int32,bytes32))");
+    world.registerFunctionSelector(systemResource, "depositBounty(bytes32)");
+    world.registerFunctionSelector(systemResource, "withdrawBounty(bytes32)");
+    world.registerFunctionSelector(systemResource, "upgradeForBounty(address,bytes32)");
     console.log(
       "Alice successfully registered the upgradeBounty namespace, UpgradeBounty table, and UpgrBounSystem contract to the Admin's world address."
     );
@@ -83,7 +83,7 @@ contract UpgradeBountyExtension is Script {
     // !! note UpgradeBuildingS is due to 16 byte restriction on function names
     ResourceId upgradeBuildingSystemId = WorldResourceIdLib.encode({
       typeId: RESOURCE_SYSTEM,
-      namespace: "Primodium",
+      namespace: "Pri_11",
       name: "UpgradeBuildingS"
     });
 

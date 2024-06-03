@@ -30,9 +30,8 @@ contract UpgrBounSystem is System {
    * @param buildingEntityParam The building to register in the upgrade bounty.
    * @return bountyValue The value of the bounty deposited.
    */
-  function depositBounty(bytes memory buildingEntityParam) public payable returns (uint256 bountyValue) {
-    bytes32 buildingEntity = bytes32(buildingEntityParam);
-    // buildingEntity = bytes32(0x55b910c2f720b4ff5cfa97a70aae50180c4ec309f6cc68c4816e2010920b5dc7);
+  function depositBounty(bytes32 buildingEntityParam) public payable returns (uint256 bountyValue) {
+    bytes32 buildingEntity = buildingEntityParam;
     bytes32 playerEntity = LibHelpers.addressToEntity(_msgSender());
 
     // Check that the sender doesn't already have a live bounty on that buildingEntity
@@ -56,9 +55,8 @@ contract UpgrBounSystem is System {
    * @notice If Alice gives Bob system access, Bob could try to call this function but only can claim his own deposted bounty
    * @notice If Alice delegates her system access to Bob and Bob uses callFrom() on this function, who does Alice's bounty go to?
    */
-  function withdrawBounty(bytes memory buildingEntityParam) public returns (uint256 bountyValue) {
-    bytes32 buildingEntity = bytes32(buildingEntityParam);
-    // buildingEntity = bytes32(0x55b910c2f720b4ff5cfa97a70aae50180c4ec309f6cc68c4816e2010920b5dc7);
+  function withdrawBounty(bytes32 buildingEntityParam) public returns (uint256 bountyValue) {
+    bytes32 buildingEntity = buildingEntityParam;
     bytes32 playerEntity = LibHelpers.addressToEntity(_msgSender());
 
     // Check that there is a bounty on that buildingEntity
@@ -87,9 +85,9 @@ contract UpgrBounSystem is System {
    */
   function upgradeForBounty(
     address bountyPublisherAddress,
-    bytes memory buildingEntityParam
+    bytes32 buildingEntityParam
   ) public returns (bytes memory newBuildingEntity) {
-    bytes32 buildingEntity = bytes32(buildingEntityParam);
+    bytes32 buildingEntity = buildingEntityParam;
     bytes32 bountyPublisherEntity = LibHelpers.addressToEntity(bountyPublisherAddress);
 
     // Check that there is a bounty on that building
@@ -99,7 +97,7 @@ contract UpgrBounSystem is System {
     );
 
     // Call the upgradeBuilding function from the World contract
-    ResourceId upgradeBuildingSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, "Primodium", "UpgradeBuildingS");
+    ResourceId upgradeBuildingSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, "Pri_11", "UpgradeBuildingS");
     newBuildingEntity = IPrimodiumWorld(_world()).callFrom(
       bountyPublisherAddress,
       upgradeBuildingSystemId,

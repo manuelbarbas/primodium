@@ -25,6 +25,7 @@ contract UpgradeBountyExtensionTest is Test {
   address deployerAddress = vm.envAddress("ADDRESS_ALICE");
   address worldAddress = vm.envAddress("WORLD_ADDRESS");
   address delegateeAddress = vm.envAddress("ADDRESS_BOB");
+  bytes32 bountyBuildingBytes = vm.envBytes32("BOUNTY_BUILDING_ENTITY");
 
   // Establish the bounty coordinates.
   PositionData bountyCoord =
@@ -61,9 +62,9 @@ contract UpgradeBountyExtensionTest is Test {
     // Does registerSystem return a ResourceId?
     primodiumWorld.registerSystem(systemResource, upgrBounSystem, false); // registers the UpgrBounSystem contract address to the UpgrBounSystem namespace and resourceID in the world address
 
-    primodiumWorld.registerFunctionSelector(systemResource, "depositBounty((int32,int32,bytes32))");
-    primodiumWorld.registerFunctionSelector(systemResource, "withdrawBounty((int32,int32,bytes32))");
-    primodiumWorld.registerFunctionSelector(systemResource, "upgradeForBounty(address,(int32,int32,bytes32))");
+    primodiumWorld.registerFunctionSelector(systemResource, "depositBounty(bytes32)");
+    primodiumWorld.registerFunctionSelector(systemResource, "withdrawBounty(bytes32)");
+    primodiumWorld.registerFunctionSelector(systemResource, "upgradeForBounty(address,bytes32)");
     console.log(
       "Alice successfully registered the upgradeBounty namespace, UpgradeBounty table, and UpgrBounSystem contract to the Admin's world address."
     );
@@ -76,7 +77,7 @@ contract UpgradeBountyExtensionTest is Test {
     IWorld iworld = IWorld(worldAddress);
     // Bob tries to use the UpgrBounSystem before she has given Bob system access.
     vm.expectRevert();
-    bytes memory newBuildingEntity = iworld.upgradeBounty__upgradeForBounty(deployerAddress, bountyCoord);
+    bytes memory newBuildingEntity = iworld.upgradeBounty__upgradeForBounty(deployerAddress, bountyBuildingBytes);
     vm.stopPrank();
   }
 
@@ -84,7 +85,7 @@ contract UpgradeBountyExtensionTest is Test {
     vm.startPrank(deployerAddress);
     vm.deal(deployerAddress, 1 ether);
     IWorld iworld = IWorld(worldAddress);
-    uint256 bountyValue = iworld.upgradeBounty__depositBounty{ value: bountyAmount }(bountyCoord);
+    uint256 bountyValue = iworld.upgradeBounty__depositBounty{ value: bountyAmount }(bountyBuildingBytes);
     vm.stopPrank();
   }
   // More tests to come later
