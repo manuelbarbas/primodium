@@ -1,9 +1,4 @@
 export enum Audio {
-<<<<<<< HEAD
-=======
-  Background = "background",
-  Background2 = "background2",
->>>>>>> main
   Bleep = "Bleep_01",
   Bleep2 = "Bleep_02",
   Bleep3 = "Bleep_03",
@@ -38,6 +33,7 @@ export enum Audio {
   Complete2 = "Complete_02",
   Upgrade = "Upgrade",
   Build = "Build",
+  Impact = "Impact",
   Demolish = "Demolish",
   Whoosh = "Whoosh",
   Blaster = "Blaster",

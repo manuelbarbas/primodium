@@ -11,7 +11,7 @@ import { getBuildingDimensions } from "@/util/building";
 import { isValidClick, isValidHover } from "@/game/lib/objects/inputGuards";
 
 export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGameObject {
-  private id: Entity;
+  public readonly id: Entity;
   private buildingType: Entity;
   private coord: Coord;
   protected _scene: PrimodiumScene;

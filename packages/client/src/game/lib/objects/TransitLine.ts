@@ -12,7 +12,7 @@ import { BoundingBox } from "engine/lib/core/StaticObjectManager";
 // and it's actually fine
 
 export class TransitLine extends TargetLine {
-  private id: Entity;
+  public readonly id: Entity;
   private start;
   private end;
   private fleet: Fleet | undefined;

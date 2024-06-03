@@ -9,6 +9,7 @@ import { Tile } from "@/game/lib/objects/Tile";
 import { DepthLayers } from "@/game/lib/constants/common";
 import { usePersistentStore } from "@/game/stores/PersistentStore";
 import { cn } from "@/util/client";
+import { SecondaryCard } from "@/components/core/Card";
 
 // This will show tile and region coordinates in the starmap, and tile coordinates when hovering a tile in asteroid
 // In dev mode, this will be slightly above the "MUD Dev Tools" button, and be clickable in starmap for more info (pixel coordinates as well)
@@ -22,15 +23,15 @@ export const Coordinates = () => {
 
   if (!asteroidMode && !starmapMode) return null;
   return (
-    <div
+    <SecondaryCard
       className={cn(
-        "absolute right-4 flex flex-col gap-1 items-end text-xs",
-        DEV ? "bottom-12 pointer-events-auto" : "bottom-2 pointer-events-none",
+        "flex m-2 flex-col gap-1 min-h-9 justify-center text-xs bg-secondary/15 p-0",
+        DEV ? "pointer-events-auto" : "bottom-2 pointer-events-none",
         uiScale < 0.7 && "text-[10px]"
       )}
     >
       {asteroidMode ? DEV ? <CoordsAsteroidDev /> : <CoordsAsteroid /> : <CoordsStarmap DEV={DEV} />}
-    </div>
+    </SecondaryCard>
   );
 };
 
@@ -68,7 +69,7 @@ export const CoordsStarmap = ({ DEV }: { DEV: boolean }) => {
 
   if (DEV)
     return (
-      <div className="grid grid-cols-[12px_70px_minmax(100px,auto)] items-center gap-2 bg-black bg-opacity-70 p-2 rounded-sm">
+      <div className="grid grid-cols-[12px_70px_minmax(100px,auto)] items-center gap-2  p-2 rounded-sm">
         <FaLocationArrow opacity={0.7} />
         <CoordCaption caption="tile" />
         <CoordDisplay coord={tileCoord} />
@@ -82,7 +83,7 @@ export const CoordsStarmap = ({ DEV }: { DEV: boolean }) => {
     );
 
   return (
-    <div className="grid grid-cols-[12px_70px_minmax(100px,auto)] items-center gap-y-2 gap-x-4 bg-black bg-opacity-70 p-2 rounded-sm">
+    <div className="grid grid-cols-[12px_70px_minmax(100px,auto)] items-center gap-y-2 gap-x-4  p-2 rounded-sm">
       <FaLocationArrow opacity={0.7} className="min-w-[12px]" />
       <CoordCaption caption="coords" />
       <CoordDisplay coord={tileCoord} />
@@ -130,7 +131,7 @@ export const CoordsAsteroidDev = () => {
   }, []);
 
   return (
-    <div className="grid grid-cols-[12px_40px_48px] items-center gap-2 bg-black bg-opacity-30 p-2 rounded-sm">
+    <div className="grid grid-cols-[12px_40px_48px] items-center gap-2  p-2 rounded-sm">
       <FaSquareXmark opacity={0.7} />
       <CoordCaption caption="tile" />
       <CoordDisplay coord={tileCoord} />

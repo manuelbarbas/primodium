@@ -38,16 +38,17 @@ export const WarshipPopulation = () => {
   }, [gameOver, unitDeathLimit, unitDeaths]);
 
   return (
-    <div className="font-bold uppercase p-6 flex flex-col gap-5">
+    <div className="font-bold uppercase p-6 flex flex-col 2xl:flex-row gap-5">
       <div>
         ID: <AccountDisplay noColor player={playerEntity} className="text-sm" />
       </div>
+      <p className="hidden 2xl:block opacity-50">|</p>
       {gameOver ? (
         <p>Game Over</p>
       ) : (
         <div className="pointer-events-auto">
           <Tooltip tooltipContent={<TooltipContent />} direction="center">
-            <p className="flex inline gap-2">
+            <p className="flex gap-2">
               Warship Casualties:{" "}
               <span className={color}>{((100n * unitDeaths) / unitDeathLimit).toLocaleString()}%</span>
             </p>

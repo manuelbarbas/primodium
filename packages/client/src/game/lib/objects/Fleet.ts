@@ -9,8 +9,8 @@ import { isValidClick } from "@/game/lib/objects/inputGuards";
 import { addCoords } from "engine/lib/util/coords";
 
 export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
+  public readonly id: Entity;
   private _scene: PrimodiumScene;
-  private id: Entity;
   private coord: Coord;
   private spawned = false;
   private frames: Phaser.Animations.AnimationFrame[];

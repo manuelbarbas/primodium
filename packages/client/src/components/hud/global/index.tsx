@@ -22,11 +22,9 @@ export const GlobalHUD = memo(() => {
     <HUD scale={uiScale}>
       <div className="absolute top-0 left-0 h-32 w-screen bg-gradient-to-b from-black to-transparent" />
       <Intro />
-      <Coordinates />
 
       <HUD.TopLeft>
         <WarshipPopulation />
-        <AudioPlayer />
       </HUD.TopLeft>
 
       <HUD.TopMiddle className="flex flex-col items-center gap-2">
@@ -44,8 +42,12 @@ export const GlobalHUD = memo(() => {
         <HoverInfo />
       </HUD.CursorFollower>
       <HUD.BottomLeft>
-        <FollowSocials />
+        <AudioPlayer />
+        <Coordinates />
       </HUD.BottomLeft>
+      <HUD.BottomRight>
+        <FollowSocials />
+      </HUD.BottomRight>
       <HUD.BottomRight>
         <BrandingLabel />
       </HUD.BottomRight>
