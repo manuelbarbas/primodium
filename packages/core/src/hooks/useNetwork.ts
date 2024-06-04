@@ -1,15 +1,15 @@
-import { getNetworkConfig } from "@/network/config/networkConfig";
-import { SetupResult, UseNetworkResult, BurnerAccount, ExternalAccount } from "@/types";
+import { SetupResult, UseNetworkResult, BurnerAccount, ExternalAccount } from "@/lib/types";
 import { createBurnerAccount as createMudBurnerAccount, transportObserver } from "@latticexyz/common";
 import { createClient as createFaucetClient } from "@latticexyz/faucet";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { minEth } from "src/util/constants";
+import { minEth } from "@/lib/constants";
 import { Address, Hex, createWalletClient, fallback, formatEther, http } from "viem";
 
 import { hydratePlayerData } from "@/sync/indexer";
 import { setup } from "@/network/setup";
 import { createBurnerAccount } from "@/account/createBurnerAccount";
 import { createExternalAccount } from "@/account/createExternalAccount";
+import { getEnvVariable } from "@/utils/global/env";
 
 const useNetwork = (): UseNetworkResult => {
   const [setupResult, setSetupResult] = useState<SetupResult>(); // Created once when the site loads
@@ -19,8 +19,9 @@ const useNetwork = (): UseNetworkResult => {
   const playerAccountInterval = useRef<NodeJS.Timeout | null>(null);
 
   const { externalWalletClient, faucet } = useMemo(() => {
-    const networkConfig = getNetworkConfig();
-    const externalPKey = networkConfig.chainId === "dev" ? import.meta.env.PRI_DEV_PKEY : undefined;
+    if (!setupResult) return { externalWalletClient: undefined, faucet: undefined };
+    const networkConfig = setupResult?.network.config;
+    const externalPKey = networkConfig.chainId === "dev" ? getEnvVariable("PRI_DEV_PKEY") : undefined;
     const faucet = networkConfig.faucetServiceUrl
       ? createFaucetClient({ url: networkConfig.faucetServiceUrl })
       : undefined;
@@ -34,7 +35,7 @@ const useNetwork = (): UseNetworkResult => {
         })
       : undefined;
     return { faucet, externalWalletClient };
-  }, []);
+  }, [setupResult]);
 
   const requestDrip = useCallback(
     async (address: Hex) => {
@@ -69,12 +70,12 @@ const useNetwork = (): UseNetworkResult => {
 
   const updateSessionAccount = useCallback(
     async (pKey: Hex) => {
-      if (!setupResult) return;
+      if (!setupResult) throw new Error("No setup result found");
       const account = await createBurnerAccount(setupResult.network.config, pKey);
 
       setSessionAccount(account);
 
-      if (account.address === playerAccount?.address) return;
+      if (account.address === playerAccount?.address) return account;
       if (sessionAccountInterval.current) {
         clearInterval(sessionAccountInterval.current);
       }
@@ -111,7 +112,7 @@ const useNetwork = (): UseNetworkResult => {
         clearInterval(playerAccountInterval.current);
       }
       requestDrip(account.address);
-      hydratePlayerData(account.entity, account.address, setupResult);
+      hydratePlayerData(setupResult, account.entity, account.address);
       playerAccountInterval.current = setInterval(() => requestDrip(account.address), 4000);
     });
   }

@@ -1,10 +1,10 @@
 import { KeySchema } from "@latticexyz/protocol-parser/internal";
-import { Component, Entity, Schema } from "@latticexyz/recs";
+import { Component, Schema } from "@latticexyz/recs";
 import { ChainConfig } from "@/network/config/chainConfigs";
 import { createNetwork } from "@/network/createNetwork";
 import { createComponents } from "@/components/createComponents";
-import { createBurnerAccount } from "@latticexyz/common";
 import { createExternalAccount } from "@/account/createExternalAccount";
+import { createBurnerAccount } from "@/account/createBurnerAccount";
 import { Address, Hex } from "viem";
 import { createUtils } from "@/utils/core";
 
