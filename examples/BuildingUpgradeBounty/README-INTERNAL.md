@@ -31,13 +31,16 @@ Open up a third terminal in the root Primodium directory and run:
 pnpm dev:client
 ```
 
+Once the world is deployed, copy the resulting world address from the `dev:contracts` terminal and paste it as the `WORLD_ADDRESS` in your `primodium/examples/BuildingUpgradeBounty/packages/contracts/.env.example` file.
+
 ### Staging
 
 Open the client at `localhost:3000/game`. Use Alice's key to connect to the game: `0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d`
 
-Using the client as Alice, construct 3 Iron Mines on the top right plots.
+Using the client as Alice, construct an Iron Mine on coordinate (+21,+15).
+Then using cheatcodes, give Alice's asteroid the Iron that would be required to upgrade her Iron Mine (using cheatcodes, only need 150 atm).
 
-For faster, easier testing, use the `setWorldSpeed` cheatcode in the dev client to hasten the rate of production for all mines.
+Using `MUD Devtools > Components` in the dev client, find the Iron Mine's entity. Easiest approach is to look at the `Pri_11__OwnedBy` table and copy the last entity in the list. Paste that entity as the `BOUNTY_BUILDING_ENTITY` in your `primodium/examples/BuildingUpgradeBounty/packages/contracts/.env.example` file.
 
 ### Deploy World Extension
 
