@@ -12,12 +12,14 @@
   "dependencies": {
     "@latticexyz/common": "2.0.9",
     "@latticexyz/faucet": "2.0.9",
+    "@latticexyz/protocol-parser": "2.0.9",
     "@latticexyz/react": "2.0.9",
     "@latticexyz/recs": "2.0.9",
     "@latticexyz/store-sync": "2.0.9",
     "contracts": "workspace:*",
     "dayjs": "^1.11.10",
     "react": "^18.2.0",
+    "rxjs": "^7.8.1",
     "viem": "2.9.20"
   },
   "devDependencies": {

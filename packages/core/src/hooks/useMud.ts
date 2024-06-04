@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { MudContext } from "./providers/MudProvider";
+import { MudContext } from "@/hooks/providers/MudProvider";
 
 export const useMud = () => {
   const value = useContext(MudContext);
