@@ -292,6 +292,7 @@ export function createBuildingUtils(components: Components) {
 
   return {
     calcDims,
+    convertToCoords,
     relCoordToAbs,
     getBuildingOrigin,
     getBuildingDimensions,

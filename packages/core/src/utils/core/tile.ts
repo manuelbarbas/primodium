@@ -56,6 +56,7 @@ export function createTileUtils(components: Components) {
 
   return {
     getResourceKey,
+    getBuildingPositionEntity,
     getBuildingsOfTypeInRange,
     getEntityTileAtCoord,
     getBuildingAtCoord,

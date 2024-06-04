@@ -25,12 +25,14 @@
     "abitype": "^1.0.2",
     "contracts": "workspace:*",
     "dayjs": "^1.11.10",
+    "debounce": "^2.1.0",
     "obscenity": "^0.1.4",
     "react": "^18.2.0",
     "rxjs": "7.5.5",
     "viem": "2.9.20"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.195",
     "@types/react": "^18.0.26"
   }
 }

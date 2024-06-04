@@ -1,7 +1,7 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { Hex } from "viem";
-import { EntityType, SPEED_SCALE, UnitStorages } from "@/lib/constants";
+import { EntityType, UnitStorages } from "@/lib/constants";
 import { createDefenseUtils } from "./defense";
 import { entityToFleetName } from "../global/name";
 import { Components } from "@/lib/types";
@@ -142,34 +142,6 @@ export function createUnitUtils(components: Components) {
     return { x: x + origin.x, y: y + origin.y };
   }
 
-  // time is in blocks (~1/second)
-  function getUnitTrainingTime(rawPlayer: Entity, rawBuilding: Entity, rawUnit: Entity) {
-    const player = rawPlayer as Hex;
-    const unitEntity = rawUnit as Hex;
-    const building = rawBuilding as Hex;
-
-    const config = components.P_GameConfig.get();
-    if (!config) throw new Error("No game config found");
-    const unitLevel = components.UnitLevel.getWithKeys({ entity: player, unit: unitEntity }, { value: 0n })?.value;
-
-    const buildingLevel = components.Level.get(rawBuilding, { value: 1n }).value;
-    const prototype = components.BuildingType.getWithKeys({ entity: building })?.value as Hex | undefined;
-    if (!prototype) throw new Error("No building type found");
-
-    const multiplier = components.P_UnitProdMultiplier.getWithKeys(
-      {
-        prototype,
-        level: buildingLevel,
-      },
-      {
-        value: 100n,
-      }
-    ).value;
-
-    const rawTrainingTime = components.P_Unit.getWithKeys({ entity: unitEntity, level: unitLevel })?.trainingTime ?? 0n;
-    return (rawTrainingTime * 100n * 100n * SPEED_SCALE) / (multiplier * config.unitProductionRate * config.worldSpeed);
-  }
-
   function getCanAttackSomeone(entity: Entity) {
     const isFleet = components.IsFleet.get(entity);
     const spaceRock = (isFleet ? components.FleetMovement.get(entity)?.destination : entity) as Entity | undefined;
@@ -223,7 +195,6 @@ export function createUnitUtils(components: Components) {
     getFleets,
     getOrbitingFleets,
     calculatePosition,
-    getUnitTrainingTime,
     getCanAttack,
     getCanAttackSomeone,
     getCanSend,

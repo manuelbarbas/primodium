@@ -1,6 +1,6 @@
 import { EntityType } from "@/lib/constants";
-import { updateTrainingQueue } from "@/network/systems/setupTrainingQueues";
 import { Components } from "@/lib/types";
+import { createTrainingQueueUtils } from "@/utils/core/trainingQueue";
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { Hex } from "viem";
 
@@ -10,6 +10,7 @@ type ColonyShipType =
   | { type: "training"; timeRemaining: bigint; shipyardEntity: Entity; asteroidEntity: Entity };
 
 export function createColonyShipUtils(components: Components) {
+  const { updateTrainingQueue } = createTrainingQueueUtils(components);
   function getColonyShipsPlusAsteroids(playerEntity: Entity): Array<ColonyShipType> {
     const query = [HasValue(components.OwnedBy, { value: playerEntity }), Has(components.Asteroid)];
     const ownedAsteroids = runQuery(query);

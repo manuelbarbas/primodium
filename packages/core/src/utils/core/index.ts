@@ -17,6 +17,7 @@ import { createObjectiveUtils } from "@/utils/core/objectives";
 import { createLeaderboardUtils } from "@/utils/core/createLeaderboardUtils";
 import { createDefenseUtils } from "@/utils/core/defense";
 import { createDroidRegenUtils } from "@/utils/core/droidRegen";
+import { createTrainingQueueUtils } from "@/utils/core/trainingQueue";
 
 export const createUtils = (components: Components) => {
   return {
@@ -37,6 +38,7 @@ export const createUtils = (components: Components) => {
     ...createShardNameUtils(components),
     ...createSwapUtils(components),
     ...createTileUtils(components),
+    ...createTrainingQueueUtils(components),
     ...createUnitUtils(components),
     ...createUpgradeUtils(components),
   };
