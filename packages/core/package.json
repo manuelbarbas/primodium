@@ -1,0 +1,26 @@
+{
+  "name": "core",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@latticexyz/common": "2.0.9",
+    "@latticexyz/faucet": "2.0.9",
+    "@latticexyz/react": "2.0.9",
+    "@latticexyz/recs": "2.0.9",
+    "@latticexyz/store-sync": "2.0.9",
+    "contracts": "workspace:*",
+    "dayjs": "^1.11.10",
+    "react": "^18.2.0",
+    "viem": "2.9.20"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.26"
+  }
+}
