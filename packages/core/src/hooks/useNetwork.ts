@@ -1,17 +1,18 @@
+import { getNetworkConfig } from "@/network/config/networkConfig";
+import { SetupResult, UseNetworkResult, BurnerAccount, ExternalAccount } from "@/types";
 import { createBurnerAccount as createMudBurnerAccount, transportObserver } from "@latticexyz/common";
 import { createClient as createFaucetClient } from "@latticexyz/faucet";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { getNetworkConfig } from "src/network/config/getNetworkConfig";
-import { createBurnerAccount } from "src/network/setup/createBurnerAccount";
-import { createExternalAccount } from "src/network/setup/createExternalAccount";
-import { setup } from "src/network/setup/setup";
-import { hydratePlayerData } from "src/network/sync/indexer";
-import { BurnerAccount, ExternalAccount, SetupResult } from "src/network/types";
 import { minEth } from "src/util/constants";
 import { Address, Hex, createWalletClient, fallback, formatEther, http } from "viem";
 
-const useSetupResult = () => {
-  const [network, setNetwork] = useState<SetupResult>(); // Created once when the site loads
+import { hydratePlayerData } from "@/sync/indexer";
+import { setup } from "@/network/setup";
+import { createBurnerAccount } from "@/account/createBurnerAccount";
+import { createExternalAccount } from "@/account/createExternalAccount";
+
+const useNetwork = (): UseNetworkResult => {
+  const [setupResult, setSetupResult] = useState<SetupResult>(); // Created once when the site loads
   const [sessionAccount, setSessionAccount] = useState<BurnerAccount>();
   const [playerAccount, setPlayerAccount] = useState<BurnerAccount | ExternalAccount>();
   const sessionAccountInterval = useRef<NodeJS.Timeout | null>(null);
@@ -37,7 +38,7 @@ const useSetupResult = () => {
 
   const requestDrip = useCallback(
     async (address: Hex) => {
-      const publicClient = network?.network.publicClient;
+      const publicClient = setupResult?.network.publicClient;
       if (!publicClient) return;
       if (faucet) {
         let balance = await publicClient.getBalance({ address });
@@ -59,16 +60,17 @@ const useSetupResult = () => {
         console.info(`[Dev Drip] Dripped ${formatEther(amountToDrip)} to ${address}`);
       }
     },
-    [externalWalletClient, faucet, network?.network.publicClient]
+    [externalWalletClient, faucet, setupResult?.network.publicClient]
   );
 
   useEffect(() => {
-    if (playerAccount) setup(playerAccount.address).then((network) => setNetwork(network));
+    if (playerAccount) setup(playerAccount.address).then((res) => setSetupResult(res));
   }, [playerAccount?.address]);
 
   const updateSessionAccount = useCallback(
     async (pKey: Hex) => {
-      const account = await createBurnerAccount(pKey);
+      if (!setupResult) return;
+      const account = await createBurnerAccount(setupResult.network.config, pKey);
 
       setSessionAccount(account);
 
@@ -94,28 +96,31 @@ const useSetupResult = () => {
   function updatePlayerAccount(options: { address: Address }): void;
   function updatePlayerAccount(options: { burner: true; privateKey?: Hex }): void;
   function updatePlayerAccount(options: { address?: Address; burner?: boolean; privateKey?: Hex }) {
+    if (!setupResult) return;
+    const { config } = setupResult.network;
     const useBurner = options.burner;
     if (!useBurner && !options.address) throw new Error("Must provide address or burner option");
-    (useBurner ? createBurnerAccount(options.privateKey, false) : createExternalAccount(options.address!)).then(
-      (account) => {
-        if (useBurner) localStorage.setItem("primodiumPlayerAccount", account.privateKey ?? "");
-        setPlayerAccount(account);
+    (useBurner
+      ? createBurnerAccount(config, options.privateKey, false)
+      : createExternalAccount(config, options.address!)
+    ).then((account) => {
+      if (useBurner) localStorage.setItem("primodiumPlayerAccount", account.privateKey ?? "");
+      setPlayerAccount(account);
 
-        if (playerAccountInterval.current) {
-          clearInterval(playerAccountInterval.current);
-        }
-        requestDrip(account.address);
-        if (network) hydratePlayerData(account.entity, account.address, network);
-        playerAccountInterval.current = setInterval(() => requestDrip(account.address), 4000);
+      if (playerAccountInterval.current) {
+        clearInterval(playerAccountInterval.current);
       }
-    );
+      requestDrip(account.address);
+      hydratePlayerData(account.entity, account.address, setupResult);
+      playerAccountInterval.current = setInterval(() => requestDrip(account.address), 4000);
+    });
   }
 
   const memoizedUpdatePlayerAccount = useCallback(updatePlayerAccount, [requestDrip]);
 
   return {
-    network: network?.network,
-    components: network?.components,
+    network: setupResult?.network,
+    components: setupResult?.components,
     sessionAccount,
     playerAccount,
     requestDrip,
@@ -125,4 +130,4 @@ const useSetupResult = () => {
   };
 };
 
-export default useSetupResult;
+export default useNetwork;

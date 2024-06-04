@@ -11,7 +11,8 @@ import {
 import { createTransactionQueueComponent } from "./customComponents/TransactionQueueComponent";
 import { CreateNetworkResult } from "@/types";
 
-export default function setupClientComponents({ world }: CreateNetworkResult) {
+export default function setupClientComponents(network: CreateNetworkResult) {
+  const world = network.world;
   const DoubleCounter = createExtendedBigIntComponent(world, { id: "DoubleCounter" });
 
   const BlockNumber = createExtendedComponent(
@@ -77,7 +78,7 @@ export default function setupClientComponents({ world }: CreateNetworkResult) {
 
   const SelectedFleet = createExtendedEntityComponent(world, { id: "SelectedFleet" });
 
-  const Battle = createBattleComponents(world);
+  const Battle = createBattleComponents(network);
 
   const BattleRender = createExtendedEntityComponent(world, { id: "BattleRender" });
 
@@ -121,7 +122,7 @@ export default function setupClientComponents({ world }: CreateNetworkResult) {
     }
   );
 
-  const TransactionQueue = createTransactionQueueComponent({ id: "TransactionQueue" });
+  const TransactionQueue = createTransactionQueueComponent(network, { id: "TransactionQueue" });
 
   const SyncStatus = createExtendedComponent(
     world,

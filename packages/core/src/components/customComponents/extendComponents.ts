@@ -1,6 +1,6 @@
 import { Component } from "@latticexyz/recs";
-import { ContractComponent } from "src/network/types";
 import { ExtendedContractComponent, extendContractComponent } from "./ExtendedComponent";
+import { ContractComponent } from "@/types";
 
 export function extendContractComponents<C extends Components>(components: C): ExtendedContractComponents<C> {
   return Object.fromEntries(

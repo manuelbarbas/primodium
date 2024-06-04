@@ -2,9 +2,7 @@ import setupClientComponents from "@/components/clientComponents";
 import { extendContractComponents } from "@/components/customComponents/extendComponents";
 import { CreateNetworkResult } from "@/types";
 
-export let components: Components;
-
-type Components = ReturnType<typeof _createComponents>;
+export let components: ReturnType<typeof _createComponents>;
 
 /**
  * Creates the components object which contains all the components for the client

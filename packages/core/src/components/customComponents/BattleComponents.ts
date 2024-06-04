@@ -1,4 +1,4 @@
-import { Entity, Type, World } from "@latticexyz/recs";
+import { Entity, Type } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { ResourceEnumLookup } from "src/util/constants";
 import { decodeEntity } from "src/util/encode";
