@@ -27,15 +27,6 @@ contract UpgradeBountyExtensionTest is Test {
   address delegateeAddress = vm.envAddress("ADDRESS_BOB");
   bytes32 bountyBuildingBytes = vm.envBytes32("BOUNTY_BUILDING_ENTITY");
 
-  // Establish the bounty coordinates.
-  PositionData bountyCoord =
-    PositionData({
-      x: int32(vm.envInt("BOUNTY_X_COORD")),
-      y: int32(vm.envInt("BOUNTY_Y_COORD")),
-      parent: vm.envBytes32("BOUNTY_PARENT_ROCK")
-    });
-  uint256 bountyAmount = vm.envUint("BOUNTY_AMOUNT");
-
   function setUp() public {
     // setUp is called before each test. This setUp also registers the namespace and system to the world address.
 
