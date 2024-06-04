@@ -1,8 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { Hex } from "viem";
-import { ObjectiveEntityLookup } from "@/constants";
+import { ObjectiveEntityLookup } from "@/lib/constants";
 import { getObjective } from "../objectives";
-import { Components } from "@/types";
+import { Components } from "@/lib/types";
 
 export function getHasRequiredObjectives(components: Components, objectiveEntity: Entity): boolean {
   const requirement = getObjective(objectiveEntity)?.requiredObjectives;

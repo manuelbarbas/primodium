@@ -2,9 +2,9 @@ import { Entity } from "@latticexyz/recs";
 
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EFleetStance } from "contracts/config/enums";
-import { EntityType, ResourceStorages, RockRelationship } from "@/constants";
-import { MapIdToAsteroidType } from "@/mappings";
-import { Components } from "@/types";
+import { EntityType, ResourceStorages, RockRelationship } from "@/lib/constants";
+import { MapIdToAsteroidType } from "@/lib/mappings";
+import { Components } from "@/lib/types";
 import { createResourceUtils } from "@/utils/core/resource";
 import { createUnitUtils } from "@/utils/core/unit";
 import { getEntityTypeName } from "@/utils/global/common";

@@ -1,16 +1,18 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { components } from "src/network/components";
-import { EntityType } from "src/util/constants";
-import { getFleetStats } from "src/util/unit";
+import { useMud } from "@/hooks/useMud";
+import { EntityType } from "@/lib/constants";
 import { useFullResourceCount } from "./useFullResourceCount";
 
-export const useFleetCount = ({ asteroid }: { asteroid: Entity }) => {
-  const maxMoves = useFullResourceCount(EntityType.FleetCount, asteroid as Entity).resourceCount;
-  return maxMoves;
-};
+export const useFleetCount = ({ asteroid }: { asteroid: Entity }) =>
+  useFullResourceCount(EntityType.FleetCount, asteroid as Entity).resourceCount;
 
 export const useFleetStats = (entity: Entity, force?: boolean) => {
+  const {
+    components,
+    utils: { getFleetStats },
+  } = useMud();
+
   const time = components.Time.use()?.value ?? 0n;
   return useMemo(() => getFleetStats(entity), [entity, time, force]);
 };

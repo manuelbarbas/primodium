@@ -1,5 +1,5 @@
 import { ReactNode, createContext } from "react";
-import { MUD } from "src/network/types";
+import { MUD } from "@/lib/types";
 
 export const MudContext = createContext<MUD | null>(null);
 

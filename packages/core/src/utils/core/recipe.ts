@@ -1,9 +1,15 @@
 import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { Hex } from "viem";
-import { Components, ResourceType } from "@/types";
-import { ResourceEntityLookup } from "@/constants";
+import { Components, ResourceType } from "@/lib/types";
+import { ResourceEntityLookup } from "@/lib/constants";
 import { createResourceUtils } from "@/utils/core/resource";
+
+export type Recipe = {
+  id: Entity;
+  type: ResourceType;
+  amount: bigint;
+}[];
 
 export function createRecipeUtils(components: Components) {
   const { getFullResourceCount } = createResourceUtils(components);

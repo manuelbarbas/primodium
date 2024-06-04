@@ -1,6 +1,6 @@
-import { EntityType } from "@/constants";
+import { EntityType } from "@/lib/constants";
 import { updateTrainingQueue } from "@/network/systems/setupTrainingQueues";
-import { Components } from "@/types";
+import { Components } from "@/lib/types";
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { Hex } from "viem";
 

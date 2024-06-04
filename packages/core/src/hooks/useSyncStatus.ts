@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { useMud } from "./useMud";
-import { SyncSourceType, SyncStep } from "src/util/constants";
+import { SyncSourceType, SyncStep } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 

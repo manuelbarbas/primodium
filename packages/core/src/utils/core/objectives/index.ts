@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { EObjectives } from "contracts/config/enums";
 import { Hex } from "viem";
-import { ObjectiveEntityLookup } from "@/constants";
+import { ObjectiveEntityLookup } from "@/lib/constants";
 import { getHasAsteroid } from "./requirements/getHasAsteroid";
 import { getHasClaimableObjective } from "./requirements/getHasClaimableObjective";
 import { getHasExpansion } from "./requirements/getHasExpansion";
@@ -14,10 +14,13 @@ import { getHasRequiredBuildingUpgrade } from "./requirements/getHasRequiredUpgr
 import { getInAlliance } from "./requirements/getInAlliance";
 import { getObjective } from "./objectives";
 import { ObjectiveReq } from "./types";
-import { Components } from "@/types";
+import { Components } from "@/lib/types";
 import { getHasAnyRequiredBuilding } from "@/utils/core/objectives/requirements/getHasAnyRequiredBuilding";
+import { createResourceUtils } from "@/utils/core/resource";
 
 export function createObjectiveUtils(components: Components) {
+  const resourceUtils = createResourceUtils(components);
+
   function makeObjectiveClaimable(
     playerEntity: Entity,
     objective: EObjectives,
@@ -52,7 +55,7 @@ export function createObjectiveUtils(components: Components) {
   }
 
   function getCanClaimObjective(playerEntity: Entity, asteroidEntity: Entity, objectiveEntity: Entity) {
-    const hasRequiredRewards = getHasRequiredRewards(components, asteroidEntity, objectiveEntity);
+    const hasRequiredRewards = getHasRequiredRewards(components, resourceUtils, asteroidEntity, objectiveEntity);
     const allObjectiveRequirements = getAllObjectiveRequirements(playerEntity, asteroidEntity, objectiveEntity);
     return hasRequiredRewards && isAllRequirementsMet(allObjectiveRequirements);
   }
@@ -60,7 +63,12 @@ export function createObjectiveUtils(components: Components) {
   function getAllObjectiveRequirements(playerEntity: Entity, asteroidEntity: Entity, objectiveEntity: Entity) {
     const objective = getObjective(objectiveEntity);
     if (!objective) return [];
-    const reqs: ObjectiveReq[] = getRewardUtilitiesRequirement(components, objectiveEntity, asteroidEntity);
+    const reqs: ObjectiveReq[] = getRewardUtilitiesRequirement(
+      components,
+      resourceUtils,
+      objectiveEntity,
+      asteroidEntity
+    );
     if (objective.type === "Build") reqs.push(getHasRequiredBuilding(components, asteroidEntity, objective));
     if (objective.type === "BuildAny") reqs.push(getHasAnyRequiredBuilding(components, asteroidEntity, objective));
     if (objective.type === "Upgrade") reqs.push(getHasRequiredBuildingUpgrade(components, asteroidEntity, objective));

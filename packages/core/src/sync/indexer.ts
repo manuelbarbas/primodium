@@ -1,8 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { Sync } from "@primodiumxyz/sync-stack";
-import { Keys, SyncSourceType, SyncStep } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
-import { createSyncHandlers } from "src/util/sync";
+import { SyncSourceType, SyncStep } from "@/lib/types";
+import { Keys } from "@/lib/constants";
+import { hashEntities } from "@/utils/global/encode";
 import { Hex } from "viem";
 import { getAllianceQuery } from "./queries/allianceQueries";
 import { getActiveAsteroidQuery, getAsteroidQuery, getShardAsteroidQuery } from "./queries/asteroidQueries";
@@ -12,8 +12,9 @@ import { getInitialQuery } from "./queries/initialQueries";
 import { getPlayerQuery } from "./queries/playerQueries";
 import { hydrateFromRPC } from "./rpc";
 import { getSecondaryQuery } from "@/sync/queries/secondaryQueries";
-import { MUD, SetupResult } from "@/types";
+import { SetupResult } from "@/lib/types";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { createSyncHandlers } from "@/sync/createSyncHandlers";
 
 export const hydrateInitialGameState = (
   setupResult: SetupResult,
@@ -21,8 +22,10 @@ export const hydrateInitialGameState = (
   onComplete: () => void,
   onError: (err: unknown) => void
 ) => {
-  const { network, components } = setupResult;
-  const { tables, world, config: networkConfig } = network;
+  const {
+    network: { tables, world, config: networkConfig },
+    components,
+  } = setupResult;
 
   // if we're already syncing from RPC, don't hydrate from indexer
   if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
@@ -57,8 +60,10 @@ export const hydrateSecondaryGameState = (
   onComplete: () => void,
   onError: (err: unknown) => void
 ) => {
-  const { network, components } = setupResult;
-  const { tables, world, config: networkConfig } = network;
+  const {
+    network: { tables, world, config: networkConfig },
+    components,
+  } = setupResult;
   let fromBlock = networkConfig.initialBlockNumber;
 
   // if we're already syncing from RPC, don't hydrate from indexer
@@ -90,7 +95,7 @@ export const hydrateSecondaryGameState = (
 
     // hydrate remaining blocks from RPC
     if (progress === 1) {
-      const latestBlockNumber = await network.publicClient.getBlockNumber();
+      const latestBlockNumber = await setupResult.network.publicClient.getBlockNumber();
       hydrateFromRPC(
         setupResult,
         fromBlock,
@@ -107,9 +112,11 @@ export const hydrateSecondaryGameState = (
   world.registerDisposer(sync.unsubscribe);
 };
 
-export const hydratePlayerData = (playerEntity: Entity | undefined, playerAddress: Hex, setupResult: SetupResult) => {
-  const { network, components } = setupResult;
-  const { tables, world, config: networkConfig } = network;
+export const hydratePlayerData = (setupResult: SetupResult, playerEntity: Entity | undefined, playerAddress: Hex) => {
+  const {
+    network: { tables, world, config: networkConfig },
+    components,
+  } = setupResult;
 
   if (!playerEntity) return;
 
@@ -133,7 +140,7 @@ export const hydratePlayerData = (playerEntity: Entity | undefined, playerAddres
   );
 
   syncData.start(
-    ...createSyncHandlers(playerEntity, {
+    ...createSyncHandlers(setupResult, playerEntity, {
       complete: "DONE",
       error: "Failed to Hydrate Player data",
       progress: "Hydrating Player Data",
@@ -145,9 +152,11 @@ export const hydratePlayerData = (playerEntity: Entity | undefined, playerAddres
   });
 };
 
-export const hydrateAsteroidData = (selectedRock: Entity | undefined, mud: MUD, shard?: boolean) => {
-  const { network, components } = mud;
-  const { tables, world, config: networkConfig } = network;
+export const hydrateAsteroidData = (setupResult: SetupResult, selectedRock: Entity | undefined, shard?: boolean) => {
+  const {
+    network: { tables, world, config: networkConfig },
+    components,
+  } = setupResult;
 
   // if we're already syncing from RPC, don't hydrate from indexer
   if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
@@ -171,7 +180,7 @@ export const hydrateAsteroidData = (selectedRock: Entity | undefined, mud: MUD, 
   const syncData = Sync.withFilterIndexerRecsSync(shard ? getShardAsteroidQuery(params) : getAsteroidQuery(params));
 
   syncData.start(
-    ...createSyncHandlers(syncId, {
+    ...createSyncHandlers(setupResult, syncId, {
       complete: "DONE",
       error: "Failed to Hydrate Selected Asteroid data",
       progress: "Hydrating Selected Asteroid Data",
@@ -183,9 +192,11 @@ export const hydrateAsteroidData = (selectedRock: Entity | undefined, mud: MUD, 
   });
 };
 
-export const hydrateActiveAsteroid = (activeRock: Entity | undefined, mud: MUD) => {
-  const { network, components } = mud;
-  const { tables, world, config: networkConfig } = network;
+export const hydrateActiveAsteroid = (setupResult: SetupResult, activeRock: Entity | undefined) => {
+  const {
+    network: { tables, world, config: networkConfig },
+    components,
+  } = setupResult;
 
   // if we're already syncing from RPC, don't hydrate from indexer
   if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
@@ -210,7 +221,7 @@ export const hydrateActiveAsteroid = (activeRock: Entity | undefined, mud: MUD) 
   );
 
   syncData.start(
-    ...createSyncHandlers(syncId, {
+    ...createSyncHandlers(setupResult, syncId, {
       complete: "DONE",
       error: "Failed to Hydrate Active Asteroid data",
       progress: "Hydrating Active Asteroid Data",
@@ -222,9 +233,11 @@ export const hydrateActiveAsteroid = (activeRock: Entity | undefined, mud: MUD) 
   });
 };
 
-export const hydrateAllianceData = (allianceEntity: Entity | undefined, mud: MUD) => {
-  const { network, components } = mud;
-  const { tables, world, config: networkConfig } = network;
+export const hydrateAllianceData = (setupResult: SetupResult, allianceEntity: Entity | undefined) => {
+  const {
+    network: { tables, world, config: networkConfig },
+    components,
+  } = setupResult;
 
   if (!allianceEntity) return;
 
@@ -247,7 +260,7 @@ export const hydrateAllianceData = (allianceEntity: Entity | undefined, mud: MUD
   );
 
   syncData.start(
-    ...createSyncHandlers(allianceEntity, {
+    ...createSyncHandlers(setupResult, allianceEntity, {
       complete: "DONE",
       error: "Failed to Hydrate Alliance data",
       progress: "Hydrating Alliance Data",
@@ -259,9 +272,11 @@ export const hydrateAllianceData = (allianceEntity: Entity | undefined, mud: MUD
   });
 };
 
-export const hydrateFleetData = (fleetEntity: Entity | undefined, mud: MUD) => {
-  const { network, components } = mud;
-  const { tables, world, config: networkConfig } = network;
+export const hydrateFleetData = (setupResult: SetupResult, fleetEntity: Entity | undefined) => {
+  const {
+    network: { tables, world, config: networkConfig },
+    components,
+  } = setupResult;
 
   if (!fleetEntity) return;
 
@@ -273,7 +288,7 @@ export const hydrateFleetData = (fleetEntity: Entity | undefined, mud: MUD) => {
     return;
   }
 
-  const ownerAsteroid = components.OwnedBy.get(fleetEntity)?.value ?? singletonEntity;
+  const ownerAsteroid = (components.OwnedBy.get(fleetEntity)?.value ?? singletonEntity) as Entity;
   const syncData = Sync.withFilterIndexerRecsSync(
     getFleetQuery({
       tables,
@@ -286,7 +301,7 @@ export const hydrateFleetData = (fleetEntity: Entity | undefined, mud: MUD) => {
   );
 
   syncData.start(
-    ...createSyncHandlers(fleetEntity, {
+    ...createSyncHandlers(setupResult, fleetEntity, {
       complete: "DONE",
       error: "Failed to Hydrate Fleet data",
       progress: "Hydrating Fleet Data",
@@ -298,9 +313,11 @@ export const hydrateFleetData = (fleetEntity: Entity | undefined, mud: MUD) => {
   });
 };
 
-export const hydrateBattleReports = (playerEntity: Entity | undefined, mud: MUD) => {
-  const { network, components } = mud;
-  const { tables, world, config: networkConfig } = network;
+export const hydrateBattleReports = (setupResult: SetupResult, playerEntity: Entity | undefined) => {
+  const {
+    network: { tables, world, config: networkConfig },
+    components,
+  } = setupResult;
 
   if (!playerEntity) return;
 
@@ -325,7 +342,7 @@ export const hydrateBattleReports = (playerEntity: Entity | undefined, mud: MUD)
   );
 
   syncData.start(
-    ...createSyncHandlers(syncId, {
+    ...createSyncHandlers(setupResult, syncId, {
       complete: "DONE",
       error: "Failed to Hydrate Battle Reports",
       progress: "Hydrating Battle Reports",

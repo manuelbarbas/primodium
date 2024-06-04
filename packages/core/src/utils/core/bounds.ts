@@ -1,5 +1,5 @@
-import { key } from "@/constants";
-import { Components, Coord } from "@/types";
+import { key } from "@/lib/constants";
+import { Components, Coord } from "@/lib/types";
 import { Entity } from "@latticexyz/recs";
 
 export function createBoundsUtils(components: Components) {

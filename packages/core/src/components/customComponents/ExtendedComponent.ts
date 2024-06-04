@@ -17,9 +17,8 @@ import {
   runQuery,
   updateComponent,
 } from "@latticexyz/recs";
-import { encodeEntity, singletonEntity } from "@latticexyz/store-sync/recs";
+import { decodeEntity, encodeEntity, singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect, useState } from "react";
-import { decodeEntity } from "src/util/encode";
 
 export interface Options<M extends Metadata> {
   id: string;

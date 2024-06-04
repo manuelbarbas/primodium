@@ -2,8 +2,8 @@ import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { Hex } from "viem";
 import { distanceBI } from "../global/common";
-import { ResourceEntityLookup, SPEED_SCALE, UNIT_SPEED_SCALE } from "@/constants";
-import { Components, Coord } from "@/types";
+import { ResourceEntityLookup, SPEED_SCALE, UNIT_SPEED_SCALE } from "@/lib/constants";
+import { Components, Coord } from "@/lib/types";
 
 export function createSendUtils(components: Components) {
   function toUnitCountArray(map: Map<Entity, bigint>): bigint[] {

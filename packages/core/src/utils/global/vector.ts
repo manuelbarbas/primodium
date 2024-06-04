@@ -1,4 +1,4 @@
-import { Coord } from "@/types";
+import { Coord } from "@/lib/types";
 
 export const deg2rad = (degrees: number) => degrees * (Math.PI / 180);
 

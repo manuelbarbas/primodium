@@ -1,8 +1,8 @@
-import { formatName } from "@/util/name";
+import { EntityType } from "@/lib/constants";
+import { Coord } from "@/lib/types";
+import { formatName } from "@/utils/global/name";
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "engine/types";
 import { Hex, getAddress, isAddress, pad, size, trim } from "viem";
-import { EntityType } from "../constants";
 
 export function hasCommonElement<T>(setA: Set<T>, setB: Set<T>) {
   for (const element of setA) {

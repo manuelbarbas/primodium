@@ -1,4 +1,4 @@
-import { EntityType } from "@/constants";
+import { EntityType } from "@/lib/constants";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons, ResourceImages, UnitImages } from "@primodiumxyz/assets";
 import { EMap } from "contracts/config/enums";

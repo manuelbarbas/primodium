@@ -1,13 +1,13 @@
 import { ContractWrite, createBurnerAccount as createMudBurnerAccount, transportObserver } from "@latticexyz/common";
 import { transactionQueue, writeObserver } from "@latticexyz/common/actions";
 import { Subject } from "rxjs";
-import { normalizeAddress } from "src/util/common";
-import { STORAGE_PREFIX } from "src/util/constants";
-import { addressToEntity } from "src/util/encode";
 import { Hex, createPublicClient, createWalletClient, fallback, getContract, http } from "viem";
 import { generatePrivateKey } from "viem/accounts";
-import { WorldAbi } from "@/constants";
-import { NetworkConfig } from "@/types";
+import { NetworkConfig } from "@/lib/types";
+import { STORAGE_PREFIX } from "@/lib/constants";
+import { WorldAbi } from "@/worldAbi";
+import { normalizeAddress } from "@/utils/global/common";
+import { addressToEntity } from "@/utils/global/encode";
 
 export async function createBurnerAccount(networkConfig: NetworkConfig, privateKey?: Hex, saveToStorage = true) {
   const key = privateKey ?? generatePrivateKey();

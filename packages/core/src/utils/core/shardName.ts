@@ -1,4 +1,4 @@
-import { Components } from "@/types";
+import { Components } from "@/lib/types";
 import { Entity } from "@latticexyz/recs";
 
 export function createShardNameUtils(components: Components) {

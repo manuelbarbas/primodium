@@ -1,7 +1,7 @@
 import { AbiParametersToPrimitiveTypes, ExtractAbiFunction } from "abitype";
 import { Abi, ContractFunctionName } from "viem";
 import { SystemCall, encodeSystemCall } from "./encodeSystemCall";
-import { Components } from "@/types";
+import { Components } from "@/lib/types";
 import { WorldAbi } from "@/worldAbi";
 
 /** Encode system calls to be passed as arguments into `World.batchCall` */

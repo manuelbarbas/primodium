@@ -1,5 +1,5 @@
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
-import { Components, Coord } from "@/types";
+import { Components, Coord } from "@/lib/types";
 import { getBuildingPositionEntity } from "@/utils/global/encode";
 
 export function createTileUtils(components: Components) {

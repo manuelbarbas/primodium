@@ -1,15 +1,18 @@
-import { EntityToResourceImage } from "@/mappings";
+import { EntityToResourceImage } from "@/lib/mappings";
 import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { Hex } from "viem";
 import { getEntityTypeName } from "@/utils/global/common";
-import { ResourceEntityLookup, UtilityStorages } from "@/constants";
-import { getFullResourceCount } from "../../resource";
+import { ResourceEntityLookup, UtilityStorages } from "@/lib/constants";
 import { ObjectiveReq } from "../types";
-import { Components, ResourceType } from "@/types";
+import { Components, ResourceType } from "@/lib/types";
+import { createResourceUtils } from "@/utils/core/resource";
+
+type ResourceUtils = ReturnType<typeof createResourceUtils>;
 
 export function getRewardUtilitiesRequirement(
   components: Components,
+  { getFullResourceCount }: ResourceUtils,
   objective: Entity,
   asteroid: Entity
 ): ObjectiveReq[] {
@@ -43,7 +46,12 @@ export function getRewardUtilitiesRequirement(
   });
 }
 
-export function getHasRequiredRewards(components: Components, asteroidEntity: Entity, objectiveEntity: Entity) {
+export function getHasRequiredRewards(
+  components: Components,
+  { getFullResourceCount }: ResourceUtils,
+  asteroidEntity: Entity,
+  objectiveEntity: Entity
+) {
   const rewards = getRewards(components, objectiveEntity);
   return rewards.every((resource) => {
     if (resource.type !== ResourceType.Resource) return true;

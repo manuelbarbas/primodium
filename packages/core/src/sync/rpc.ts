@@ -1,8 +1,7 @@
 import { Sync } from "@primodiumxyz/sync-stack";
 import { Hex } from "viem";
-import { SyncStep } from "src/util/constants";
 import { Entity } from "@latticexyz/recs";
-import { SetupResult } from "@/types";
+import { SetupResult, SyncStep } from "@/lib/types";
 
 export const subToRPC = (setupResult: SetupResult) => {
   const { network } = setupResult;

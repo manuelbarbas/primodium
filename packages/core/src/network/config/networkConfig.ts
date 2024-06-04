@@ -1,6 +1,6 @@
 import worldsJson from "contracts/worlds.json";
 import { chainConfigs } from "./chainConfigs";
-import { NetworkConfig } from "@/types";
+import { NetworkConfig } from "@/lib/types";
 
 const worlds = worldsJson as Partial<Record<string, { address: string; blockNumber?: number }>>;
 

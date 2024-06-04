@@ -7,6 +7,7 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { createWorld } from "@latticexyz/recs";
 import { createClock } from "@/network/createClock";
 import { otherTables } from "@/network/otherTables";
+import { extendContractComponents } from "@/components/customComponents/extendComponents";
 
 export let network: ReturnType<typeof _createNetwork>;
 
@@ -48,7 +49,7 @@ function _createNetwork() {
     publicClient,
     config: networkConfig,
     mudConfig,
-    components,
+    components: extendContractComponents(components),
     clock,
     latestBlock$,
     latestBlockNumber$,

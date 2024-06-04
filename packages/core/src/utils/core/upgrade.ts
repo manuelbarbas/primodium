@@ -1,8 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { Hex } from "viem";
 import { getEntityTypeName } from "../global/common";
-import { EntityType } from "@/constants";
-import { Components } from "@/types";
+import { EntityType } from "@/lib/constants";
+import { Components } from "@/lib/types";
 import { createRecipeUtils } from "@/utils/core/recipe";
 
 export function createUpgradeUtils(components: Components) {

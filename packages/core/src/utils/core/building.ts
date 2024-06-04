@@ -1,5 +1,11 @@
-import { MultiplierStorages, ResourceEntityLookup, ResourceStorages, SPEED_SCALE, UtilityStorages } from "@/constants";
-import { Components, Coord, Dimensions, ResourceType } from "@/types";
+import {
+  MultiplierStorages,
+  ResourceEntityLookup,
+  ResourceStorages,
+  SPEED_SCALE,
+  UtilityStorages,
+} from "@/lib/constants";
+import { Components, Coord, Dimensions, ResourceType } from "@/lib/types";
 import { createBoundsUtils } from "@/utils/core/bounds";
 import { createRecipeUtils } from "@/utils/core/recipe";
 import { createTileUtils } from "@/utils/core/tile";

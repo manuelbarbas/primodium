@@ -1,12 +1,13 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { Hex } from "viem";
-import { EntityType, SPEED_SCALE, UnitStorages } from "@/constants";
-import { getInGracePeriod } from "./defense";
+import { EntityType, SPEED_SCALE, UnitStorages } from "@/lib/constants";
+import { createDefenseUtils } from "./defense";
 import { entityToFleetName } from "../global/name";
-import { Components } from "@/types";
+import { Components } from "@/lib/types";
 
 export function createUnitUtils(components: Components) {
+  const { getInGracePeriod } = createDefenseUtils(components);
   function getFleetUnitCounts(fleet: Entity) {
     return components.P_UnitPrototypes.get(undefined, { value: [] }).value.reduce((acc, entity) => {
       const unitCount = components.UnitCount.getWithKeys({

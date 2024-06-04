@@ -1,41 +1,32 @@
 import { Entity, Metadata, Type } from "@latticexyz/recs";
 import { useEffect, useState } from "react";
-import { TransactionQueueMetadataTypes, TransactionQueueType } from "src/util/constants";
 import { Options, createExtendedComponent } from "./ExtendedComponent";
-import { CreateNetworkResult } from "@/types";
+import { CreateNetworkResult } from "@/lib/types";
 
-export type MetadataTypes = {
-  [K in TransactionQueueType]: K extends keyof TransactionQueueMetadataTypes
-    ? TransactionQueueMetadataTypes[K]
-    : unknown;
-};
-
-export type TxQueueOptions<T extends keyof MetadataTypes> = {
-  id: Entity;
+export type TxQueueOptions<M extends Metadata> = {
+  id: string;
   force?: true;
-  type?: T;
-  metadata?: MetadataTypes[T];
+  metadata?: M;
 };
 
 export function createTransactionQueueComponent<M extends Metadata>(
   { world }: CreateNetworkResult,
   options?: Options<M>
 ) {
-  const queue: { id: Entity; fn: () => Promise<void> }[] = [];
+  const queue: { id: string; fn: () => Promise<void> }[] = [];
   let isRunning = false;
 
   const component = createExtendedComponent(
     world,
     {
       metadata: Type.OptionalString,
-      type: Type.OptionalNumber,
     },
     options
   );
 
   // Add a function to the queue
-  async function enqueue<T extends keyof MetadataTypes>(fn: () => Promise<void>, options: TxQueueOptions<T>) {
-    if (!options.force && component.has(options.id)) return;
+  async function enqueue(fn: () => Promise<void>, options: TxQueueOptions<M>) {
+    if (!options.force && component.has(options.id as Entity)) return;
 
     queue.push({
       id: options.id,
@@ -45,9 +36,8 @@ export function createTransactionQueueComponent<M extends Metadata>(
     component.set(
       {
         metadata: JSON.stringify(options?.metadata),
-        type: options?.type,
       },
-      options.id
+      options.id as Entity
     );
 
     await run();
@@ -71,7 +61,7 @@ export function createTransactionQueueComponent<M extends Metadata>(
           console.error("Error executing function:", error);
         } finally {
           queue.shift();
-          component.remove(id);
+          component.remove(id as Entity);
         }
       }
     }
@@ -87,7 +77,7 @@ export function createTransactionQueueComponent<M extends Metadata>(
     return queue.length;
   }
 
-  function getMetadata<T extends keyof MetadataTypes>(id: Entity): MetadataTypes[T] | undefined {
+  function getMetadata(id: Entity): M | undefined {
     const index = getIndex(id);
     if (index === -1) return undefined;
     return JSON.parse(component.get(id)?.metadata || "");

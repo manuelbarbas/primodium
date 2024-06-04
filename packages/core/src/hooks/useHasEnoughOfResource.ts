@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { ResourceType } from "src/util/constants";
+import { ResourceType } from "@/lib/constants";
 import { useFullResourceCount } from "./useFullResourceCount";
 
 export function useHasEnoughOfResource(

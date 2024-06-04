@@ -1,6 +1,6 @@
 import { Entity, Type } from "@latticexyz/recs";
 import { createExtendedComponent } from "./ExtendedComponent";
-import { CreateNetworkResult } from "@/types";
+import { CreateNetworkResult } from "@/lib/types";
 
 export type NotificationType = "battle" | "arrival-transit" | "arrival-orbit";
 export type Notification = {

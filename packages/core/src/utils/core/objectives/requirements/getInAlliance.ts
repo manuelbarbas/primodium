@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { ObjectiveReq } from "../types";
-import { Components } from "@/types";
+import { Components } from "@/lib/types";
 
 export function getInAlliance(components: Components, asteroidEntity: Entity): ObjectiveReq {
   const playerEntity = components.OwnedBy.get(asteroidEntity)?.value as Entity | undefined;

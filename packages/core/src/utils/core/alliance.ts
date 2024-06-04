@@ -1,7 +1,7 @@
 import { hexToString, Hex } from "viem";
 import { Entity } from "@latticexyz/recs";
 import { censorText } from "@/utils/global/profanity";
-import { Components } from "@/types";
+import { Components } from "@/lib/types";
 
 export const createAllianceUtils = (components: Components) => {
   const getAllianceName = (alliance: Entity, censor = false) => {

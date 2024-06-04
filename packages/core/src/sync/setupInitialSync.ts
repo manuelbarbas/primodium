@@ -1,14 +1,12 @@
-import { SyncSourceType, SyncStep } from "src/util/constants";
-import { getNetworkConfig } from "../network/config/networkConfig";
+import { SyncSourceType, SyncStep } from "@/lib/types";
 import { hydrateInitialGameState, hydrateSecondaryGameState } from "../sync/indexer";
 import { hydrateFromRPC, subToRPC } from "../sync/rpc";
-import { SetupResult } from "../types";
+import { SetupResult } from "../lib/types";
 import { Hex } from "viem";
 
 export const setupInitialSync = async (setupResult: SetupResult, playerAddress: Hex) => {
   const { network, components } = setupResult;
-  const { publicClient } = network;
-  const networkConfig = getNetworkConfig();
+  const { publicClient, config: networkConfig } = network;
 
   const fromBlock = networkConfig.initialBlockNumber;
 

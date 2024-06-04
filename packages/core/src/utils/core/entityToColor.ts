@@ -1,4 +1,4 @@
-import { Components } from "@/types";
+import { Components } from "@/lib/types";
 import { hslToHex } from "@/utils/global/color";
 import { hashEntities } from "@/utils/global/encode";
 import { Entity } from "@latticexyz/recs";

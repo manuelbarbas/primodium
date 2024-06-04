@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
-import { ResourceEnumLookup } from "@/constants";
-import { Components } from "@/types";
+import { ResourceEnumLookup } from "@/lib/constants";
+import { Components } from "@/lib/types";
 
 export function createSwapUtils(components: Components) {
   function getOutAmount(inAmount: bigint, path: Entity[]) {

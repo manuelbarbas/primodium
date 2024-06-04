@@ -3,7 +3,7 @@ import { InterfaceIcons } from "@primodiumxyz/assets";
 import { Hex } from "viem";
 import { ObjectiveReq, UpgradeObjective } from "../types";
 import { getEntityTypeName } from "@/utils/global/common";
-import { Components } from "@/types";
+import { Components } from "@/lib/types";
 
 export function getHasRequiredBuildingUpgrade(
   components: Components,

@@ -1,10 +1,11 @@
-import { censorText } from "@/util/profanity";
+import { censorText } from "@/utils/global/profanity";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { components } from "src/network/components";
+import { useMud } from "@/hooks/useMud";
 import { Hex, hexToString } from "viem";
 
 export const useAllianceName = (alliance: Entity, censor = false) => {
+  const { components } = useMud();
   const allianceData = components.Alliance.use(alliance);
   return useMemo(() => {
     if (!allianceData) return "";

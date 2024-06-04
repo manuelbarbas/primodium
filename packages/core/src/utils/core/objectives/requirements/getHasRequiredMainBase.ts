@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { Hex } from "viem";
 import { getObjective } from "../objectives";
-import { Components } from "@/types";
+import { Components } from "@/lib/types";
 
 export function getHasRequiredMainBase(components: Components, playerEntity: Entity, objectiveEntity: Entity): boolean {
   const requirement = getObjective(objectiveEntity)?.requiredMainBase;

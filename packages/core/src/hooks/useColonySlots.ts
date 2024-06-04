@@ -1,12 +1,16 @@
-import { components } from "@/network/components";
-import { getColonyShipsPlusAsteroids } from "@/util/colonyShip";
-import { ResourceEntityLookup } from "@/util/constants";
+import { useMud } from "@/hooks/useMud";
+import { ResourceEntityLookup } from "@/lib/constants";
 import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { useMemo } from "react";
 import { Hex } from "viem";
 
 export const useColonySlots = (playerEntity: Entity) => {
+  const {
+    components,
+    utils: { getColonyShipsPlusAsteroids },
+  } = useMud();
+
   const maxSlots = components.MaxColonySlots.use(playerEntity)?.value ?? 0n;
   const shipsInTraining = components.ColonyShipsInTraining.use(playerEntity)?.value ?? 0n;
   const config = components.P_ColonySlotsConfig.use();
@@ -44,6 +48,8 @@ export const useColonySlots = (playerEntity: Entity) => {
 };
 
 export const getColonySlotsCostMultiplier = (playerEntity: Entity) => {
+  const { components } = useMud();
+
   const maxColonySlots = components.MaxColonySlots.use(playerEntity)?.value ?? 0n;
   const multiplier = components.P_ColonySlotsConfig.use()?.multiplier ?? 1n;
   return multiplier ** maxColonySlots;

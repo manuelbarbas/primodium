@@ -1,5 +1,5 @@
 import { DECIMALS } from "contracts/config/constants";
-import { EntityType, UnitEnumLookup } from "@/constants";
+import { EntityType, UnitEnumLookup } from "@/lib/constants";
 import { Entity } from "@latticexyz/recs";
 
 export const getScale = (resource: Entity) => {

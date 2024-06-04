@@ -1,8 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { ObjectiveReq, TrainUnitObjective } from "../types";
-import { Components } from "@/types";
+import { Components } from "@/lib/types";
 import { getEntityTypeName } from "@/utils/global/common";
-import { EntityToUnitImage } from "@/mappings";
+import { EntityToUnitImage } from "@/lib/mappings";
 
 export function getHasRequiredUnit(
   components: Components,

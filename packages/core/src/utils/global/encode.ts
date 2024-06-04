@@ -1,18 +1,8 @@
 import { resourceToHex } from "@latticexyz/common";
-import { KeySchema, SchemaToPrimitives } from "@latticexyz/protocol-parser/internal";
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "@/types";
-import {
-  Hex,
-  concatHex,
-  decodeAbiParameters,
-  encodeAbiParameters,
-  isHex,
-  keccak256,
-  size,
-  sliceHex,
-  toHex,
-} from "viem";
+import { Coord } from "@/lib/types";
+import { Hex, encodeAbiParameters, isHex, keccak256, size, sliceHex, toHex } from "viem";
+import { encodeEntity } from "@latticexyz/store-sync/recs";
 
 export const getSystemId = (name: string, namespace = "Pri_11") =>
   resourceToHex({ type: "system", name, namespace: namespace.toLowerCase() == "core" ? "" : namespace });
@@ -48,39 +38,6 @@ export function hashKeyEntity(key: Hex, entity: Entity): Entity {
       [key, entity as Hex]
     )
   ) as Entity;
-}
-
-export function encodeEntity<TKeySchema extends KeySchema>(
-  keySchema: TKeySchema,
-  key: SchemaToPrimitives<TKeySchema>
-): Entity {
-  if (Object.keys(keySchema).length !== Object.keys(key).length) {
-    throw new Error(
-      `key length ${Object.keys(key).length} does not match key schema length ${Object.keys(keySchema).length}`
-    );
-  }
-
-  return concatHex(
-    Object.entries(keySchema).map(([keyName, type]) => encodeAbiParameters([{ type }], [key[keyName]]))
-  ) as Entity;
-}
-
-export function decodeEntity<TKeySchema extends KeySchema>(
-  keySchema: TKeySchema,
-  entity: Entity
-): SchemaToPrimitives<TKeySchema> {
-  const hexKeyTuple = entityToHexKeyTuple(entity);
-  if (hexKeyTuple.length !== Object.keys(keySchema).length) {
-    throw new Error(
-      `entity key tuple length ${hexKeyTuple.length} does not match key schema length ${Object.keys(keySchema).length}`
-    );
-  }
-  return Object.fromEntries(
-    Object.entries(keySchema).map(([key, type], index) => [
-      key,
-      decodeAbiParameters([{ type }], hexKeyTuple[index] as Hex)[0],
-    ])
-  ) as SchemaToPrimitives<TKeySchema>;
 }
 
 export function entityToHexKeyTuple(entity: Entity): readonly Hex[] {

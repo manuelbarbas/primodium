@@ -9,7 +9,7 @@ import {
   createExtendedNumberComponent,
 } from "./customComponents/ExtendedComponent";
 import { createTransactionQueueComponent } from "./customComponents/TransactionQueueComponent";
-import { CreateNetworkResult } from "@/types";
+import { CreateNetworkResult } from "@/lib/types";
 
 export default function setupClientComponents(network: CreateNetworkResult) {
   const world = network.world;

@@ -3,7 +3,7 @@ import { AbiParametersToPrimitiveTypes, ExtractAbiFunction } from "abitype";
 import { Abi, Address, ContractFunctionName, EncodeFunctionDataParameters } from "viem";
 import { encodeFunctionData } from "./encodeFunctionData";
 import { SystemCall } from "./encodeSystemCall";
-import { Components } from "@/types";
+import { Components } from "@/lib/types";
 
 export type SystemCallFrom<abi extends Abi, functionName extends ContractFunctionName<abi>> = SystemCall<
   abi,

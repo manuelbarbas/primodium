@@ -3,8 +3,8 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource, MUDEnums } from "contracts/config/enums";
 import { Hex } from "viem";
 import { clampBigInt } from "../global/common";
-import { ResourceEntityLookup, ResourceEnumLookup, SPEED_SCALE } from "@/constants";
-import { Components } from "@/types";
+import { ResourceEntityLookup, ResourceEnumLookup, SPEED_SCALE } from "@/lib/constants";
+import { Components } from "@/lib/types";
 
 export type ResourceCountData = {
   resourceCount: bigint;

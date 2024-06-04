@@ -1,5 +1,5 @@
 import { createAllianceUtils } from "@/utils/core/alliance";
-import { Components } from "@/types";
+import { Components } from "@/lib/types";
 import { createBuildingUtils } from "@/utils/core/building";
 import { createAsteroidUtils } from "@/utils/core/asteroid";
 import { createColonyShipUtils } from "@/utils/core/colonyShip";
@@ -15,6 +15,8 @@ import { createUnitUtils } from "@/utils/core/unit";
 import { createUpgradeUtils } from "@/utils/core/upgrade";
 import { createObjectiveUtils } from "@/utils/core/objectives";
 import { createLeaderboardUtils } from "@/utils/core/createLeaderboardUtils";
+import { createDefenseUtils } from "@/utils/core/defense";
+import { createDroidRegenUtils } from "@/utils/core/droidRegen";
 
 export const createUtils = (components: Components) => {
   return {
@@ -24,6 +26,8 @@ export const createUtils = (components: Components) => {
     ...createBuildingUtils(components),
     ...createColonyShipUtils(components),
     ...createColorUtils(components),
+    ...createDefenseUtils(components),
+    ...createDroidRegenUtils(components),
     ...createLeaderboardUtils(components),
     ...createObjectiveUtils(components),
     ...createRecipeUtils(components),

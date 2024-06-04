@@ -1,7 +1,7 @@
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { components } from "src/network/components";
+import { useMud } from "@/hooks/useMud";
 
 /**
  *
@@ -11,6 +11,8 @@ import { components } from "src/network/components";
  * @returns an array of fleet entities orbiting the space rock
  */
 export const useOrbitingFleets = (spaceRock: Entity, ownedBy?: Entity) => {
+  const { components } = useMud();
+
   const time = components.Time.use()?.value ?? 0n;
   const entities = useEntityQuery([
     Has(components.IsFleet),

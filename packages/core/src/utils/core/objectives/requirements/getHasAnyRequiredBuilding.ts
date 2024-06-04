@@ -2,7 +2,7 @@ import { Entity, HasValue, runQuery } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { Hex } from "viem";
 import { BuildAnyObjective, ObjectiveReq } from "../types";
-import { Components } from "@/types";
+import { Components } from "@/lib/types";
 import { getEntityTypeName } from "@/utils/global/common";
 
 export function getHasAnyRequiredBuilding(

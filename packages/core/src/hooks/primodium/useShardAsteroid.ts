@@ -1,12 +1,15 @@
 import { bigIntMax } from "@latticexyz/common/utils";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { components } from "src/network/components";
-import { EntityType, SPEED_SCALE } from "src/util/constants";
+import { EntityType, SPEED_SCALE } from "@/lib/constants";
 import { useFullResourceCount } from "../useFullResourceCount";
-import { entityToShardData } from "@/util/name";
+import { useMud } from "@/hooks/useMud";
 
 export const useShardAsteroid = (entity: Entity) => {
+  const {
+    components,
+    utils: { entityToShardData },
+  } = useMud();
   const conquestConfigData = components.P_ConquestConfig.use();
   const shardAsteroid = components.ShardAsteroid.use(entity);
   const worldSpeed = components.P_GameConfig.use()?.worldSpeed ?? 100n;

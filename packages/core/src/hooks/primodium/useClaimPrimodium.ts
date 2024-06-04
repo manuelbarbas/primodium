@@ -1,9 +1,10 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { components } from "src/network/components";
-import { SPEED_SCALE } from "src/util/constants";
+import { SPEED_SCALE } from "@/lib/constants";
+import { useMud } from "@/hooks";
 
 export const useClaimPrimodium = (asteroidEntity: Entity) => {
+  const { components } = useMud();
   const points = components.Asteroid.use(asteroidEntity)?.primodium ?? 0n;
   const owner = components.OwnedBy.use(asteroidEntity)?.value as Entity | undefined;
   const lastConquered = components.LastConquered.use(asteroidEntity)?.value ?? 0n;

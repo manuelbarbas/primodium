@@ -1,4 +1,4 @@
-import { EntityType } from "@/util/constants";
+import { EntityType } from "@/lib/constants";
 import type { Sync } from "@primodiumxyz/sync-stack";
 import { Hex, pad } from "viem";
 

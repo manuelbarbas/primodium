@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { formatUnits, parseUnits } from "viem";
-import { getResourceDecimals } from "../core/resource";
+import { getResourceDecimals } from "@/utils/global/scale";
 
 // For analytics or human-scale user parameters (e.g. building levels) that are known to never exceed the range of a number
 export function bigintToNumber(value: bigint | number) {

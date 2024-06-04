@@ -1,4 +1,4 @@
-import { Components } from "@/types";
+import { Components } from "@/lib/types";
 import { formatAbiItem, type Abi } from "abitype";
 
 import {

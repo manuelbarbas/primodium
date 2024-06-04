@@ -1,9 +1,13 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { components } from "src/network/components";
-import { getRockDefense } from "src/util/defense";
+import { useMud } from "@/hooks/useMud";
 
 export function useRockDefense(rock: Entity) {
+  const {
+    components,
+    utils: { getRockDefense },
+  } = useMud();
+
   const { value: blockNumber } = components.BlockNumber.use(undefined, {
     value: 0n,
     avgBlockTime: 1,

@@ -1,12 +1,15 @@
 import { Entity } from "@latticexyz/recs";
 import { useEffect, useMemo, useState } from "react";
-import { components } from "src/network/components";
-import { decodeAllianceName } from "src/util/alliance";
-import { isPlayer as _isPlayer, entityToAddress, shortenAddress } from "src/util/common";
-import { entityToPlayerName } from "src/util/name";
-import { LinkedAddressResult, getEnsName } from "src/util/web3/getEnsName";
+import { useMud } from "@/hooks/useMud";
+import { isPlayer as _isPlayer, entityToAddress, shortenAddress } from "@/utils/global/common";
+import { getEnsName, LinkedAddressResult } from "@/utils/global/getEnsName";
+import { entityToPlayerName } from "@/utils/global/name";
 
 export function useAccount(playerEntity: Entity, address?: boolean) {
+  const {
+    components,
+    utils: { decodeAllianceName },
+  } = useMud();
   const [linkedAddress, setLinkedAddress] = useState<LinkedAddressResult>();
   const [loading, setLoading] = useState(true);
   const allianceInfo = components.PlayerAllianceInfo.use(playerEntity);

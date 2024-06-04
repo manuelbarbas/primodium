@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { ClaimableObjective, ObjectiveReq } from "../types";
-import { Components } from "@/types";
+import { Components } from "@/lib/types";
 
 export const getHasClaimableObjective = (
   components: Components,

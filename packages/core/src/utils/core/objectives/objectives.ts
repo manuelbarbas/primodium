@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EObjectives } from "contracts/config/enums";
-import { EntityType, ObjectiveEnumLookup } from "@/constants";
+import { EntityType, ObjectiveEnumLookup } from "@/lib/constants";
 import { Objective } from "./types";
 
 export const getObjective = (objectiveEntity: Entity) => {

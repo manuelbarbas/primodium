@@ -1,6 +1,5 @@
 import setupClientComponents from "@/components/clientComponents";
-import { extendContractComponents } from "@/components/customComponents/extendComponents";
-import { CreateNetworkResult } from "@/types";
+import { CreateNetworkResult } from "@/lib/types";
 
 export let components: ReturnType<typeof _createComponents>;
 
@@ -16,11 +15,10 @@ export function createComponents(network: CreateNetworkResult) {
 }
 
 function _createComponents(network: CreateNetworkResult) {
-  const contractComponents = extendContractComponents(network.components);
   const clientComponents = setupClientComponents(network);
 
   const comps = {
-    ...contractComponents,
+    ...network.components,
     ...clientComponents,
   };
   components = comps;

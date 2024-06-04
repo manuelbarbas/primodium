@@ -1,5 +1,5 @@
-import { EntityType } from "@/constants";
-import { Components } from "@/types";
+import { EntityType } from "@/lib/constants";
+import { Components } from "@/lib/types";
 import { rankToScore } from "@/utils/global/score";
 import { Entity } from "@latticexyz/recs";
 

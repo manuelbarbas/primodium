@@ -1,8 +1,9 @@
-import { components } from "src/network/components";
-import { SyncStep } from "./constants";
+import { SyncStep } from "@/lib/types";
 import { Entity } from "@latticexyz/recs";
+import { SetupResult } from "@/lib/types";
 
 export function createSyncHandlers(
+  { components }: SetupResult,
   syncId: Entity,
   message: {
     progress: string;

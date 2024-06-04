@@ -1,9 +1,9 @@
 import { Entity, Type } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { ResourceEnumLookup } from "src/util/constants";
-import { decodeEntity } from "src/util/encode";
 import { createExtendedComponent } from "./ExtendedComponent";
-import { CreateNetworkResult } from "@/types";
+import { CreateNetworkResult } from "@/lib/types";
+import { decodeEntity } from "@latticexyz/store-sync/recs";
+import { ResourceEnumLookup } from "@/lib/constants";
 
 export const createBattleComponents = ({ world, components }: CreateNetworkResult) => {
   const RawBattleParticipants = createExtendedComponent(

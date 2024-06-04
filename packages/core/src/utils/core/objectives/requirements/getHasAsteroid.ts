@@ -1,5 +1,5 @@
 import { MapIdToAsteroidType } from "@/mappings";
-import { Components } from "@/types";
+import { Components } from "@/lib/types";
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { Hex } from "viem";
