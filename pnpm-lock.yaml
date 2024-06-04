@@ -457,15 +457,24 @@ importers:
       '@latticexyz/world-modules':
         specifier: 2.0.9
         version: 2.0.9(typescript@5.1.6)
+      '@primodiumxyz/assets':
+        specifier: workspace:^1.0.0
+        version: link:../assets
       '@primodiumxyz/sync-stack':
         specifier: ^0.6.6
         version: 0.6.6(typescript@5.1.6)
+      abitype:
+        specifier: ^1.0.2
+        version: 1.0.2(typescript@5.1.6)(zod@3.23.6)
       contracts:
         specifier: workspace:*
         version: link:../contracts
       dayjs:
         specifier: ^1.11.10
         version: 1.11.11
+      obscenity:
+        specifier: ^0.1.4
+        version: 0.1.4
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -8424,6 +8433,21 @@ packages:
     dependencies:
       typescript: 5.4.2
       zod: 3.23.6
+
+  /abitype@1.0.2(typescript@5.1.6)(zod@3.23.6):
+    resolution: {integrity: sha512-aFt4k2H+eiAKy/zxtnORa9iIb10BMBeWL18l8v4+QuwYEBXPxxjSB1bFZCzQmKPoj8m7j68K705l3uY+E2gAjg==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+      zod: ^3 >=3.22.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+      zod:
+        optional: true
+    dependencies:
+      typescript: 5.1.6
+      zod: 3.23.6
+    dev: false
 
   /abitype@1.0.2(typescript@5.3.3)(zod@3.23.6):
     resolution: {integrity: sha512-aFt4k2H+eiAKy/zxtnORa9iIb10BMBeWL18l8v4+QuwYEBXPxxjSB1bFZCzQmKPoj8m7j68K705l3uY+E2gAjg==}

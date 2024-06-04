@@ -1,5 +1,5 @@
 import { KeySchema } from "@latticexyz/protocol-parser/internal";
-import { Component, Schema } from "@latticexyz/recs";
+import { Component, Entity, Schema } from "@latticexyz/recs";
 import { ChainConfig } from "@/network/config/chainConfigs";
 import { createNetwork } from "@/network/createNetwork";
 import { createComponents } from "@/components/createComponents";
@@ -53,3 +53,84 @@ export type ContractComponent<S extends Schema = Schema, TKeySchema extends KeyS
     valueSchema: Record<string, string>;
   }
 >;
+
+export type Dimensions = { width: number; height: number };
+
+export type Coord = {
+  x: number;
+  y: number;
+};
+
+export enum SyncSourceType {
+  Indexer,
+  RPC,
+}
+
+export enum SyncStep {
+  Syncing,
+  Error,
+  Complete,
+}
+
+export enum Action {
+  DemolishBuilding,
+  SelectBuilding,
+  PlaceBuilding,
+  MoveBuilding,
+}
+
+export enum ResourceType {
+  Resource,
+  ResourceRate,
+  Utility,
+  Multiplier,
+}
+
+export enum RewardType {
+  Resource,
+  Unit,
+}
+
+export enum TransactionQueueType {
+  Build,
+  Train,
+  Research,
+  Upgrade,
+  Demolish,
+  Move,
+  ClaimObjective,
+  CreateAlliance,
+  JoinAlliance,
+  UpdateAllianceAccess,
+  UpdateAllianceName,
+  RequestToJoin,
+  KickPlayer,
+  Promote,
+  Demote,
+  AcceptRequest,
+  RejectRequest,
+  Invite,
+  RevokeInvite,
+  DeclineInvite,
+  LeaveAlliance,
+  Toggle,
+  Access,
+  Attack,
+  CreateFleet,
+  ClearFleet,
+  LandFleet,
+  MergeFleets,
+  AbandonFleet,
+  SendFleet,
+  FleetStance,
+  TransferFleet,
+  WormholeDeposit,
+  PayForColonySlot,
+}
+
+export type TransactionQueueMetadataTypes = {
+  [TransactionQueueType.Build]: {
+    coord: { x: number; y: number };
+    buildingType: Entity;
+  };
+};

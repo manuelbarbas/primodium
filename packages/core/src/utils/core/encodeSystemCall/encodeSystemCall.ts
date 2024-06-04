@@ -2,6 +2,7 @@ import IWorldCallAbi from "@latticexyz/world/out/IWorldKernel.sol/IWorldCall.abi
 import { AbiParametersToPrimitiveTypes, ExtractAbiFunction } from "abitype";
 import { Abi, EncodeFunctionDataParameters, Hex, type ContractFunctionName } from "viem";
 import { encodeFunctionData } from "./encodeFunctionData";
+import { Components } from "@/types";
 
 export type SystemCall<abi extends Abi, functionName extends ContractFunctionName<abi>> = EncodeFunctionDataParameters<
   abi,
@@ -12,16 +13,17 @@ export type SystemCall<abi extends Abi, functionName extends ContractFunctionNam
 
 /** Encode a system call to be passed as arguments into `World.call` */
 export function encodeSystemCall<abi extends Abi, functionName extends ContractFunctionName<abi>>({
+  components,
   abi,
   systemId,
   functionName,
   args,
-}: SystemCall<abi, functionName>): AbiParametersToPrimitiveTypes<
+}: SystemCall<abi, functionName> & { components: Components }): AbiParametersToPrimitiveTypes<
   ExtractAbiFunction<typeof IWorldCallAbi, "call">["inputs"]
 > {
   return [
     systemId,
-    encodeFunctionData<abi, functionName>({
+    encodeFunctionData<abi, functionName>(components, {
       abi,
       functionName,
       args,

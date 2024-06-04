@@ -1,5 +1,5 @@
+import { Components } from "@/types";
 import { formatAbiItem, type Abi } from "abitype";
-import { components } from "src/network/components";
 
 import {
   ContractFunctionName,
@@ -15,7 +15,7 @@ import {
 export function encodeFunctionData<
   abi extends Abi | readonly unknown[] = Abi | readonly unknown[],
   functionName extends ContractFunctionName<abi> | undefined = undefined
->(parameters: EncodeFunctionDataParameters<abi, functionName>): EncodeFunctionDataReturnType {
+>(components: Components, parameters: EncodeFunctionDataParameters<abi, functionName>): EncodeFunctionDataReturnType {
   const { abi, args, functionName } = parameters as EncodeFunctionDataParameters;
 
   let abiItem = abi[0];
