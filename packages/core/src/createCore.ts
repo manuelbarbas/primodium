@@ -11,6 +11,7 @@ export function createCore(config: CoreConfig): Core {
   const components = createComponents(networkResult);
   const utils = createUtils(components);
   const sync = createSync(config, networkResult, components);
+
   const core = {
     config,
     network: networkResult,
