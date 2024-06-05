@@ -5,7 +5,7 @@ import { isPlayer as _isPlayer, entityToAddress, shortenAddress } from "@/utils/
 import { getEnsName, LinkedAddressResult } from "@/utils/global/ens";
 import { entityToPlayerName } from "@/utils/global/name";
 
-export function useAccount(playerEntity: Entity, address?: boolean) {
+export function usePlayerName(playerEntity: Entity, address?: boolean) {
   const {
     components,
     utils: { decodeAllianceName },
@@ -31,7 +31,8 @@ export function useAccount(playerEntity: Entity, address?: boolean) {
       return;
     }
     const getAddressObj = async () => {
-      const addressObj = await getEnsName(config.accountLinkUrl, playerEntity);
+      const addressObj =
+        !playerEntity || !config.accountLinkUrl ? undefined : await getEnsName(config.accountLinkUrl, playerEntity);
       setLinkedAddress(addressObj);
       setLoading(false);
     };

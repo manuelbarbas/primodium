@@ -8,7 +8,7 @@ import { WorldAbi } from "@/lib/WorldAbi";
 import { normalizeAddress } from "@/utils/global/common";
 import { addressToEntity } from "@/utils/global/encode";
 
-export async function createExternalAccount(coreConfig: CoreConfig, address: Address) {
+export function createExternalAccount(coreConfig: CoreConfig, address: Address) {
   if (typeof window === "undefined") {
     throw new Error("createExternalAccount must be called in a browser environment");
   }

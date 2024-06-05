@@ -4,8 +4,8 @@ import { ChainConfig } from "@/network/config/chainConfigs";
 import { createNetwork } from "@/network/createNetwork";
 import { createComponents } from "@/components/createComponents";
 import { createExternalAccount } from "@/account/createExternalAccount";
-import { createBurnerAccount } from "@/account/createBurnerAccount";
-import { Hex } from "viem";
+import { createLocalAccount } from "@/account/createLocalAccount";
+import { Address, Hex } from "viem";
 import { createUtils } from "@/utils/core";
 
 export type CoreConfig = {
@@ -28,9 +28,17 @@ export type Core = {
   utils: Utils;
 };
 
-export type BurnerAccount = Awaited<ReturnType<typeof createBurnerAccount>>;
+export type LocalAccount = Awaited<ReturnType<typeof createLocalAccount>>;
 export type ExternalAccount = Awaited<ReturnType<typeof createExternalAccount>>;
-export type AnyAccount = BurnerAccount | ExternalAccount;
+
+export interface AccountClient {
+  sessionAccount: LocalAccount | null;
+  playerAccount: ExternalAccount | LocalAccount;
+  setPlayerAccount: (options: { playerAddress?: Address; playerPrivateKey?: Hex }) => void;
+  setSessionAccount: (privateKey: Hex) => void;
+  removeSessionAccount: () => void;
+  requestDrip: (address: Address) => void;
+}
 
 export type ContractComponent<S extends Schema = Schema, TKeySchema extends KeySchema = KeySchema> = Component<
   S,

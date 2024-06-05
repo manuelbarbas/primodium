@@ -11,11 +11,10 @@ export type LinkedAddressResult = {
 
 const addressMap = new Map<string, LinkedAddressResult>();
 export const getEnsName = async (
-  accountLinkUrl: string | undefined,
-  playerEntity: Entity | undefined,
+  accountLinkUrl: string,
+  playerEntity: Entity,
   hard?: boolean
 ): Promise<LinkedAddressResult> => {
-  if (!playerEntity || !accountLinkUrl) return { address: null, ensName: null };
   const address = entityToAddress(playerEntity);
   const retrievedData = addressMap.get(address);
   if (!hard && retrievedData) {

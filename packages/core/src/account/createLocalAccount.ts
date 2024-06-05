@@ -1,4 +1,4 @@
-import { ContractWrite, createBurnerAccount as createMudBurnerAccount, transportObserver } from "@latticexyz/common";
+import { ContractWrite, createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { transactionQueue, writeObserver } from "@latticexyz/common/actions";
 import { Subject } from "rxjs";
 import { Hex, createPublicClient, createWalletClient, fallback, getContract, http } from "viem";
@@ -10,10 +10,10 @@ import { normalizeAddress } from "@/utils/global/common";
 import { addressToEntity } from "@/utils/global/encode";
 import { storage } from "@/utils/global/storage";
 
-export async function createBurnerAccount(coreConfig: CoreConfig, privateKey?: Hex, saveToStorage = true) {
+export function createLocalAccount(coreConfig: CoreConfig, privateKey?: Hex, saveToStorage = true) {
   const key = privateKey ?? generatePrivateKey();
-  const burnerAccount = createMudBurnerAccount(key);
-  if (saveToStorage) storage.setItem(STORAGE_PREFIX + burnerAccount.address, key);
+  const localAccount = createBurnerAccount(key);
+  if (saveToStorage) storage.setItem(STORAGE_PREFIX + localAccount.address, key);
   const clientOptions = {
     chain: coreConfig.chain,
     transport: transportObserver(fallback([http()])),
@@ -24,7 +24,7 @@ export async function createBurnerAccount(coreConfig: CoreConfig, privateKey?: H
 
   const sessionWalletClient = createWalletClient({
     ...clientOptions,
-    account: burnerAccount,
+    account: localAccount,
   });
 
   const write$ = new Subject<ContractWrite>();
