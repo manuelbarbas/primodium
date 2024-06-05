@@ -9,14 +9,7 @@ import { otherTables } from "@/network/otherTables";
 import { extendContractComponents } from "@/components/customComponents/extendComponents";
 import { CoreConfig } from "@/lib/types";
 
-export let network: ReturnType<typeof _createNetwork>;
-
 export function createNetwork(config: CoreConfig) {
-  if (network) return network;
-  return _createNetwork(config);
-}
-
-function _createNetwork(config: CoreConfig) {
   const world = createWorld();
   world.registerEntity({ id: singletonEntity });
 
@@ -55,6 +48,5 @@ function _createNetwork(config: CoreConfig) {
     waitForTransaction,
   };
 
-  network = networkResult;
   return networkResult;
 }

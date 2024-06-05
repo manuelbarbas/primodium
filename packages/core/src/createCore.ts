@@ -1,11 +1,10 @@
 import { createComponents } from "@/components/createComponents";
-import { createNetwork, network } from "@/network/createNetwork";
+import { createNetwork } from "@/network/createNetwork";
 import { setupInitialSync } from "@/sync/setupInitialSync";
 import { CoreConfig, Core } from "@/lib/types";
 import { createUtils } from "@/utils/core";
 
-export async function createCore(config: CoreConfig): Promise<Core> {
-  const hot = network !== undefined;
+export async function createCore(config: CoreConfig, skipSync = false): Promise<Core> {
   const networkResult = createNetwork(config);
   const components = createComponents(networkResult);
   const utils = createUtils(components);
@@ -16,7 +15,7 @@ export async function createCore(config: CoreConfig): Promise<Core> {
     utils,
   };
 
-  if (!hot) setupInitialSync(core);
+  if (!skipSync) setupInitialSync(core);
 
   return core;
 }
