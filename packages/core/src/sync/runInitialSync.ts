@@ -1,11 +1,14 @@
 import { SyncSourceType, SyncStep } from "@/lib/types";
-import { hydrateInitialGameState, hydrateSecondaryGameState } from "../sync/indexer";
-import { hydrateFromRPC, subToRPC } from "../sync/rpc";
 import { Core } from "../lib/types";
 import { Hex } from "viem";
 
-export const setupInitialSync = async (core: Core, playerAddress?: Hex) => {
-  const { network, components, config } = core;
+export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
+  const {
+    network,
+    components,
+    config,
+    sync: { syncFromRPC, subscribeToRPC, syncInitialGameState, syncSecondaryGameState },
+  } = core;
   const { publicClient } = network;
 
   const fromBlock = config.initialBlockNumber ?? 0n;
@@ -13,8 +16,7 @@ export const setupInitialSync = async (core: Core, playerAddress?: Hex) => {
   if (!config.chain.indexerUrl) {
     console.warn("No indexer url found, hydrating from RPC");
     const toBlock = await publicClient.getBlockNumber();
-    hydrateFromRPC(
-      core,
+    syncFromRPC(
       fromBlock,
       toBlock,
       //on complete
@@ -22,17 +24,17 @@ export const setupInitialSync = async (core: Core, playerAddress?: Hex) => {
         components.SyncSource.set({ value: SyncSourceType.RPC });
 
         //finally sync live
-        subToRPC(core);
+        subscribeToRPC();
       },
       //on error
       (err: unknown) => {
         components.SyncStatus.set({
           step: SyncStep.Error,
           progress: 0,
-          message: `Failed to hydrate from RPC`,
+          message: `Failed to sync from RPC`,
         });
 
-        console.warn("Failed to hydrate from RPC");
+        console.warn("Failed to sync from RPC");
         console.log(err);
       }
     );
@@ -44,33 +46,28 @@ export const setupInitialSync = async (core: Core, playerAddress?: Hex) => {
     console.warn("Failed to fetch from indexer, hydrating from RPC", err);
 
     const toBlock = await publicClient.getBlockNumber();
-    hydrateFromRPC(
-      core,
+    syncFromRPC(
       fromBlock,
       toBlock,
       //on complete
       () => {
         components.SyncSource.set({ value: SyncSourceType.RPC });
-
-        //finally sync live
-        subToRPC(core);
+        subscribeToRPC();
       },
       //on error
       (err: unknown) => {
         components.SyncStatus.set({
           step: SyncStep.Error,
           progress: 0,
-          message: `Failed to hydrate from RPC. Please try again.`,
+          message: `Failed to sync from RPC. Please try again.`,
         });
-        console.warn("Failed to hydrate from RPC");
-        console.log(err);
+        console.warn("Failed to sync from RPC ", err);
       }
     );
   };
 
-  // hydrate initial game state from indexer
-  hydrateInitialGameState(
-    core,
+  // sync initial game state from indexer
+  syncInitialGameState(
     playerAddress,
     // on complete
     () => {
@@ -82,10 +79,9 @@ export const setupInitialSync = async (core: Core, playerAddress?: Hex) => {
       });
 
       // initialize secondary state
-      hydrateSecondaryGameState(
-        core,
+      syncSecondaryGameState(
         // on complete
-        () => subToRPC(core),
+        () => subscribeToRPC(),
         onError
       );
     },

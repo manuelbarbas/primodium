@@ -1,21 +1,26 @@
 import { createComponents } from "@/components/createComponents";
 import { createNetwork } from "@/network/createNetwork";
-import { setupInitialSync } from "@/sync/setupInitialSync";
+import { runInitialSync } from "@/sync/runInitialSync";
 import { CoreConfig, Core } from "@/lib/types";
 import { createUtils } from "@/utils/core";
+import { createSync } from "@/sync";
+import { runCoreSystems } from "@/systems";
 
-export async function createCore(config: CoreConfig, skipSync = false): Promise<Core> {
+export function createCore(config: CoreConfig): Core {
   const networkResult = createNetwork(config);
   const components = createComponents(networkResult);
   const utils = createUtils(components);
+  const sync = createSync(config, networkResult, components);
   const core = {
     config,
     network: networkResult,
     components,
     utils,
+    sync,
   };
 
-  if (!skipSync) setupInitialSync(core, config.playerAddress);
+  if (config?.runSync) runInitialSync(core, core.config.playerAddress);
+  if (config?.runSystems) runCoreSystems(core);
 
   return core;
 }

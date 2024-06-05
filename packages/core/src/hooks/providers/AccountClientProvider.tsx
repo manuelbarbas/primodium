@@ -4,7 +4,6 @@ import { createClient as createFaucetClient } from "@latticexyz/faucet";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { createLocalAccount } from "@/account/createLocalAccount";
 import { createExternalAccount } from "@/account/createExternalAccount";
-import { hydratePlayerData } from "@/sync/indexer";
 import { LocalAccount, ExternalAccount, AccountClient } from "@/lib/types";
 import { minEth } from "@/lib/constants";
 import { Address, Hex, createWalletClient, fallback, formatEther, http } from "viem";
@@ -40,6 +39,7 @@ export function AccountClientProvider({ options, children }: AccountProviderProp
     config,
     components,
     network: { publicClient },
+    sync: { syncPlayerData },
   } = core;
 
   const { externalWalletClient, faucet } = useMemo(() => {
@@ -112,7 +112,7 @@ export function AccountClientProvider({ options, children }: AccountProviderProp
     }
 
     requestDrip(account.address);
-    hydratePlayerData(core, account.entity, account.address);
+    syncPlayerData(account.entity, account.address);
     playerAccountInterval.current = setInterval(() => requestDrip(account.address), 4000);
     components.Account.set({ value: account.entity });
     return account;

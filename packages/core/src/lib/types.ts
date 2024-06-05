@@ -7,6 +7,7 @@ import { createExternalAccount } from "@/account/createExternalAccount";
 import { createLocalAccount } from "@/account/createLocalAccount";
 import { Address, Hex } from "viem";
 import { createUtils } from "@/utils/core";
+import { createSync } from "@/sync";
 
 export type CoreConfig = {
   chain: ChainConfig;
@@ -15,17 +16,22 @@ export type CoreConfig = {
   playerAddress?: Address;
   devPrivateKey?: Hex;
   accountLinkUrl?: string;
+
+  runSync?: boolean;
+  runSystems?: boolean;
 };
 
 export type CreateNetworkResult = Awaited<ReturnType<typeof createNetwork>>;
 export type Components = ReturnType<typeof createComponents>;
 export type Utils = ReturnType<typeof createUtils>;
+export type Sync = ReturnType<typeof createSync>;
 
 export type Core = {
   config: CoreConfig;
   network: CreateNetworkResult;
   components: Components;
   utils: Utils;
+  sync: Sync;
 };
 
 export type LocalAccount = Awaited<ReturnType<typeof createLocalAccount>>;

@@ -1,5 +1,4 @@
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { hydrateActiveAsteroid, hydrateFleetData, hydrateAsteroidData } from "../sync/indexer";
 import { debounce } from "lodash";
 import { Core, SyncSourceType } from "@/lib/types";
 
@@ -7,6 +6,7 @@ export const setupSync = (core: Core) => {
   const {
     network: { world },
     components,
+    sync: { syncAsteroidData, syncActiveAsteroid, syncFleetData },
   } = core;
 
   const systemWorld = namespaceWorld(world, "coreSystems");
@@ -19,7 +19,7 @@ export const setupSync = (core: Core) => {
 
     if (!spaceRock || value[0]?.value === value[1]?.value) return;
 
-    hydrateAsteroidData(core, spaceRock);
+    syncAsteroidData(spaceRock);
   });
 
   defineComponentSystem(systemWorld, components.ActiveRock, ({ value }) => {
@@ -27,7 +27,7 @@ export const setupSync = (core: Core) => {
 
     if (!spaceRock || value[0]?.value === value[1]?.value) return;
 
-    hydrateActiveAsteroid(core, spaceRock);
+    syncActiveAsteroid(spaceRock);
   });
 
   defineComponentSystem(systemWorld, components.SelectedFleet, ({ value }) => {
@@ -35,7 +35,7 @@ export const setupSync = (core: Core) => {
 
     if (!fleet || value[0]?.value === value[1]?.value) return;
 
-    hydrateFleetData(core, fleet);
+    syncFleetData(fleet);
   });
 
   defineComponentSystem(
@@ -48,16 +48,16 @@ export const setupSync = (core: Core) => {
 
       switch (true) {
         case components.Asteroid.has(hoverEntity):
-          //hydrate asteroid info
-          hydrateAsteroidData(core, hoverEntity);
+          //sync asteroid info
+          syncAsteroidData(hoverEntity);
           break;
         case components.ShardAsteroid.has(hoverEntity):
-          //hydrate shardasteroid info
-          hydrateAsteroidData(core, hoverEntity, true); // shard = true
+          //sync shardasteroid info
+          syncAsteroidData(hoverEntity, true); // shard = true
           break;
         case components.FleetMovement.has(hoverEntity):
-          //hydrate fleet info
-          hydrateFleetData(core, hoverEntity);
+          //sync fleet info
+          syncFleetData(hoverEntity);
           break;
         default:
           break;
