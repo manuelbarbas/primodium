@@ -1,0 +1,28 @@
+{
+  "name": "@primodiumxyz/game",
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "index.ts",
+  "dependencies": {
+    "@latticexyz/recs": "2.0.9",
+    "@latticexyz/store-sync": "2.0.9",
+    "@primodiumxyz/assets": "1.0.0",
+    "@primodiumxyz/engine": "1.0.0",
+    "@types/lodash": "^4.14.195",
+    "@types/react": "^18.0.26",
+    "contracts": "0.0.0",
+    "lodash": "^4.17.21",
+    "phaser": "^3.80.1",
+    "react": "^18.2.0",
+    "react-toastify": "^9.1.3",
+    "rxjs": "^7.8.1",
+    "viem": "2.9.20",
+    "zustand": "^4.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.3",
+    "simple-zustand-devtools": "^1.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^4.9.5"
+  }
+}
