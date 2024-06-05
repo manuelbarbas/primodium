@@ -1,14 +1,14 @@
-import { SetupResult } from "@/lib/types";
+import { Core } from "@/lib/types";
 import { EResource } from "contracts/config/enums";
 import { EntityType, ResourceEntityLookup, SPEED_SCALE } from "@/lib/constants";
 import { encodeAbiParameters, Hex, keccak256 } from "viem";
 import { defineComponentSystem, Entity, namespaceWorld } from "@latticexyz/recs";
 
-export const setupWormholeResource = async (setupResult: SetupResult) => {
+export const setupWormholeResource = async (core: Core) => {
   const {
     network: { world },
     components,
-  } = setupResult;
+  } = core;
 
   function getRandomResource(seed: Entity, turn: bigint, prevResource: Entity) {
     const transportableLength = components.P_Transportables.get()?.value.length ?? 0;

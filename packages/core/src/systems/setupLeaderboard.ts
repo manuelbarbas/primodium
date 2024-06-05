@@ -3,13 +3,13 @@ import { decodeEntity } from "@latticexyz/store-sync/recs";
 import { EPointType } from "contracts/config/enums";
 import { isPlayer } from "@/utils/global/common";
 import { EntityType, LeaderboardEntityLookup } from "@/lib/constants";
-import { SetupResult } from "@/lib/types";
+import { Core } from "@/lib/types";
 
-export const setupLeaderboard = (setupResult: SetupResult) => {
+export const setupLeaderboard = (core: Core) => {
   const {
     network: { world },
     components,
-  } = setupResult;
+  } = core;
 
   const leaderboardMaps: Record<Entity, Map<Entity, bigint>> = {
     [EntityType.PlayerShardLeaderboard]: new Map<Entity, bigint>(),

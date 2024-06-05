@@ -1,4 +1,4 @@
-import { MUDChain, mudFoundry } from "@latticexyz/common/chains";
+import { MUDChain, mudFoundry, garnet, redstone } from "@latticexyz/common/chains";
 
 export const dev = {
   ...mudFoundry,
@@ -64,4 +64,6 @@ export const chainConfigs: ChainConfigs = {
   caldera,
   calderaSepolia,
   dev,
+  garnet,
+  redstone,
 };

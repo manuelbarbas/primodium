@@ -1,4 +1,4 @@
-import { useMud } from "@/hooks/useMud";
+import { useCore } from "@/hooks/useCore";
 import { ResourceEntityLookup } from "@/lib/constants";
 import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
@@ -9,7 +9,7 @@ export const useColonySlots = (playerEntity: Entity) => {
   const {
     components,
     utils: { getColonyShipsPlusAsteroids },
-  } = useMud();
+  } = useCore();
 
   const maxSlots = components.MaxColonySlots.use(playerEntity)?.value ?? 0n;
   const shipsInTraining = components.ColonyShipsInTraining.use(playerEntity)?.value ?? 0n;
@@ -48,7 +48,7 @@ export const useColonySlots = (playerEntity: Entity) => {
 };
 
 export const getColonySlotsCostMultiplier = (playerEntity: Entity) => {
-  const { components } = useMud();
+  const { components } = useCore();
 
   const maxColonySlots = components.MaxColonySlots.use(playerEntity)?.value ?? 0n;
   const multiplier = components.P_ColonySlotsConfig.use()?.multiplier ?? 1n;

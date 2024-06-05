@@ -1,13 +1,13 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { useMud } from "@/hooks/useMud";
+import { useCore } from "@/hooks/useCore";
 import { Recipe } from "@/utils/core/recipe";
 
 export const useHasEnoughResources = (recipe: Recipe, spaceRock: Entity, count = 1n) => {
   const {
     components,
     utils: { hasEnoughResources },
-  } = useMud();
+  } = useCore();
 
   const time = components.Time.use()?.value ?? 0n;
 

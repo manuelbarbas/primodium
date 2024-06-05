@@ -1,14 +1,14 @@
 import { Entity, Has, HasValue, defineComponentSystem, namespaceWorld, runQuery } from "@latticexyz/recs";
 import { Hex } from "viem";
 import { EntityType } from "@/lib/constants";
-import { SetupResult } from "@/lib/types";
+import { Core } from "@/lib/types";
 
-export function setupHangar(setupResult: SetupResult) {
+export function setupHangar(core: Core) {
   const {
     network: { world },
     components,
     utils: { getUnitTrainingTime, getAsteroidDroidCount },
-  } = setupResult;
+  } = core;
   const systemWorld = namespaceWorld(world, "coreSystems");
 
   defineComponentSystem(systemWorld, components.SelectedRock, ({ value: [value] }) => {

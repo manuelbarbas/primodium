@@ -1,12 +1,12 @@
-import { SetupResult } from "@/lib/types";
+import { Core } from "@/lib/types";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 
-export function setupTrainingQueues(setupResult: SetupResult) {
+export function setupTrainingQueues(core: Core) {
   const {
     network: { world },
     components,
     utils: { updateTrainingQueues },
-  } = setupResult;
+  } = core;
 
   const systemWorld = namespaceWorld(world, "coreSystems");
   const { SelectedRock } = components;

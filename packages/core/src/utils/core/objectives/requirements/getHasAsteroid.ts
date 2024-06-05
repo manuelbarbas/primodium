@@ -1,4 +1,4 @@
-import { MapIdToAsteroidType } from "@/mappings";
+import { MapIdToAsteroidType } from "@/lib/mappings";
 import { Components } from "@/lib/types";
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";

@@ -1,11 +1,11 @@
 import { namespaceWorld } from "@latticexyz/recs";
-import { SetupResult } from "@/lib/types";
+import { Core } from "@/lib/types";
 
-export const setupBlockNumber = (setupResult: SetupResult) => {
+export const setupBlockNumber = (core: Core) => {
   const {
     network: { world, latestBlockNumber$: blockNumber$ },
     components,
-  } = setupResult;
+  } = core;
 
   const span = 100;
   const blockTimes: number[] = [];

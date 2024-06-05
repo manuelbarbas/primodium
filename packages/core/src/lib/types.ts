@@ -5,23 +5,24 @@ import { createNetwork } from "@/network/createNetwork";
 import { createComponents } from "@/components/createComponents";
 import { createExternalAccount } from "@/account/createExternalAccount";
 import { createBurnerAccount } from "@/account/createBurnerAccount";
-import { Address, Hex } from "viem";
+import { Hex } from "viem";
 import { createUtils } from "@/utils/core";
 
-export type NetworkConfig = {
-  chainId: string;
+export type CoreConfig = {
   chain: ChainConfig;
   worldAddress: string;
-  faucetServiceUrl?: string;
   initialBlockNumber: bigint;
-  indexerUrl?: string;
+  playerAddress?: Hex;
+  devPrivateKey?: Hex;
+  accountLinkUrl?: string;
 };
 
 export type CreateNetworkResult = Awaited<ReturnType<typeof createNetwork>>;
 export type Components = ReturnType<typeof createComponents>;
 export type Utils = ReturnType<typeof createUtils>;
 
-export type SetupResult = {
+export type Core = {
+  config: CoreConfig;
   network: CreateNetworkResult;
   components: Components;
   utils: Utils;
@@ -30,22 +31,6 @@ export type SetupResult = {
 export type BurnerAccount = Awaited<ReturnType<typeof createBurnerAccount>>;
 export type ExternalAccount = Awaited<ReturnType<typeof createExternalAccount>>;
 export type AnyAccount = BurnerAccount | ExternalAccount;
-
-export type UseNetworkResult = Partial<SetupResult> & {
-  sessionAccount: BurnerAccount | undefined;
-  playerAccount: AnyAccount | undefined;
-  requestDrip: (address: Address) => Promise<void>;
-  updateSessionAccount: (pKey: Hex) => Promise<BurnerAccount>;
-  removeSessionAccount: () => void;
-
-  updatePlayerAccount(options: { address: Address }): void;
-  updatePlayerAccount(options: { burner: true; privateKey?: Hex }): void;
-};
-
-export type MUD = SetupResult & {
-  sessionAccount?: BurnerAccount | undefined;
-  playerAccount: AnyAccount;
-};
 
 export type ContractComponent<S extends Schema = Schema, TKeySchema extends KeySchema = KeySchema> = Component<
   S,

@@ -1,1 +1,1 @@
-export * from "./useMud";
+export * from "./useCore";

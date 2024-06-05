@@ -1,11 +1,11 @@
-import { useMud } from "@/hooks/useMud";
+import { useCore } from "@/hooks/useCore";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 
 export const useBuildingName = (building: Entity | undefined) => {
   const {
     utils: { getBuildingName },
-  } = useMud();
+  } = useCore();
 
   return useMemo(() => {
     if (!building) return null;

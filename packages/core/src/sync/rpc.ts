@@ -1,16 +1,16 @@
 import { Sync } from "@primodiumxyz/sync-stack";
 import { Hex } from "viem";
 import { Entity } from "@latticexyz/recs";
-import { SetupResult, SyncStep } from "@/lib/types";
+import { Core, SyncStep } from "@/lib/types";
 
-export const subToRPC = (setupResult: SetupResult) => {
-  const { network } = setupResult;
-  const { tables, publicClient, world, config: networkConfig } = network;
+export const subToRPC = (core: Core) => {
+  const { network, config } = core;
+  const { tables, publicClient, world } = network;
 
   const sync = Sync.withLiveRPCRecsSync({
     world,
     tables,
-    address: networkConfig.worldAddress as Hex,
+    address: config.worldAddress as Hex,
     publicClient,
   });
 
@@ -22,20 +22,20 @@ export const subToRPC = (setupResult: SetupResult) => {
 };
 
 export const hydrateFromRPC = (
-  setupResult: SetupResult,
+  core: Core,
   fromBlock: bigint,
   toBlock: bigint,
   onComplete?: () => void,
   onError?: (err: unknown) => void,
   syncId?: Entity
 ) => {
-  const { network, components } = setupResult;
-  const { tables, publicClient, world, config: networkConfig } = network;
+  const { network, components, config } = core;
+  const { tables, publicClient, world } = network;
 
   const sync = Sync.withRPCRecsSync({
     world,
     tables,
-    address: networkConfig.worldAddress as Hex,
+    address: config.worldAddress as Hex,
     fromBlock,
     publicClient,
     toBlock,

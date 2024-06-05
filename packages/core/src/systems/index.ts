@@ -1,4 +1,4 @@
-import { SetupResult } from "@/lib/types";
+import { Core } from "@/lib/types";
 import { setupBattleComponents } from "@/systems/setupBattleComponents";
 import { setupBlockNumber } from "@/systems/setupBlockNumber";
 import { setupBuildingReversePosition } from "@/systems/setupBuildingReversePosition";
@@ -13,20 +13,20 @@ import { setupTime } from "@/systems/setupTime";
 import { setupTrainingQueues } from "@/systems/setupTrainingQueues";
 import { setupWormholeResource } from "@/systems/setupWormholeResource";
 
-export function runCoreSystems(setupResult: SetupResult) {
-  setupResult.network.world.dispose("coreSystems");
+export function runCoreSystems(core: Core) {
+  core.network.world.dispose("coreSystems");
 
-  setupBattleComponents(setupResult);
-  setupBlockNumber(setupResult);
-  setupBuildingReversePosition(setupResult);
-  setupBuildRock(setupResult);
-  setupDoubleCounter(setupResult);
-  setupHangar(setupResult);
-  setupHomeAsteroid(setupResult);
-  setupLeaderboard(setupResult);
-  setupObjectives(setupResult);
-  setupSync(setupResult);
-  setupTime(setupResult);
-  setupTrainingQueues(setupResult);
-  setupWormholeResource(setupResult);
+  setupBattleComponents(core);
+  setupBlockNumber(core);
+  setupBuildingReversePosition(core);
+  setupBuildRock(core);
+  setupDoubleCounter(core);
+  setupHangar(core);
+  setupHomeAsteroid(core);
+  setupLeaderboard(core);
+  setupObjectives(core);
+  setupSync(core);
+  setupTime(core);
+  setupTrainingQueues(core);
+  setupWormholeResource(core);
 }

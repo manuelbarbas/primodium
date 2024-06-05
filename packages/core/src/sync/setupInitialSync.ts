@@ -1,20 +1,20 @@
 import { SyncSourceType, SyncStep } from "@/lib/types";
 import { hydrateInitialGameState, hydrateSecondaryGameState } from "../sync/indexer";
 import { hydrateFromRPC, subToRPC } from "../sync/rpc";
-import { SetupResult } from "../lib/types";
+import { Core } from "../lib/types";
 import { Hex } from "viem";
 
-export const setupInitialSync = async (setupResult: SetupResult, playerAddress: Hex) => {
-  const { network, components } = setupResult;
-  const { publicClient, config: networkConfig } = network;
+export const setupInitialSync = async (core: Core, playerAddress?: Hex) => {
+  const { network, components, config } = core;
+  const { publicClient } = network;
 
-  const fromBlock = networkConfig.initialBlockNumber;
+  const fromBlock = config.initialBlockNumber;
 
-  if (!networkConfig.indexerUrl) {
+  if (!config.chain.indexerUrl) {
     console.warn("No indexer url found, hydrating from RPC");
     const toBlock = await publicClient.getBlockNumber();
     hydrateFromRPC(
-      setupResult,
+      core,
       fromBlock,
       toBlock,
       //on complete
@@ -22,7 +22,7 @@ export const setupInitialSync = async (setupResult: SetupResult, playerAddress: 
         components.SyncSource.set({ value: SyncSourceType.RPC });
 
         //finally sync live
-        subToRPC(setupResult);
+        subToRPC(core);
       },
       //on error
       (err: unknown) => {
@@ -45,7 +45,7 @@ export const setupInitialSync = async (setupResult: SetupResult, playerAddress: 
 
     const toBlock = await publicClient.getBlockNumber();
     hydrateFromRPC(
-      setupResult,
+      core,
       fromBlock,
       toBlock,
       //on complete
@@ -53,7 +53,7 @@ export const setupInitialSync = async (setupResult: SetupResult, playerAddress: 
         components.SyncSource.set({ value: SyncSourceType.RPC });
 
         //finally sync live
-        subToRPC(setupResult);
+        subToRPC(core);
       },
       //on error
       (err: unknown) => {
@@ -70,7 +70,7 @@ export const setupInitialSync = async (setupResult: SetupResult, playerAddress: 
 
   // hydrate initial game state from indexer
   hydrateInitialGameState(
-    setupResult,
+    core,
     playerAddress,
     // on complete
     () => {
@@ -83,9 +83,9 @@ export const setupInitialSync = async (setupResult: SetupResult, playerAddress: 
 
       // initialize secondary state
       hydrateSecondaryGameState(
-        setupResult,
+        core,
         // on complete
-        () => subToRPC(setupResult),
+        () => subToRPC(core),
         onError
       );
     },

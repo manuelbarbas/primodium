@@ -1,12 +1,12 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { useMud } from "@/hooks/useMud";
+import { useCore } from "@/hooks/useCore";
 import { EntityType } from "@/lib/constants";
 import { Hex } from "viem";
 import { useFullResourceCount } from "./useFullResourceCount";
 
 export const useAsteroidStrength = (asteroid: Entity, force = false) => {
-  const { components } = useMud();
+  const { components } = useCore();
   const { resourceCount: hp, resourceStorage: maxHp } = useFullResourceCount(EntityType.HP, asteroid);
   const { resourceCount: baseDefense } = useFullResourceCount(EntityType.Defense, asteroid);
   const { resourceCount: defenseMultiplier } = useFullResourceCount(EntityType.DefenseMultiplier, asteroid);

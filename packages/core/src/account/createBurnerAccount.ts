@@ -3,18 +3,19 @@ import { transactionQueue, writeObserver } from "@latticexyz/common/actions";
 import { Subject } from "rxjs";
 import { Hex, createPublicClient, createWalletClient, fallback, getContract, http } from "viem";
 import { generatePrivateKey } from "viem/accounts";
-import { NetworkConfig } from "@/lib/types";
+import { CoreConfig } from "@/lib/types";
 import { STORAGE_PREFIX } from "@/lib/constants";
-import { WorldAbi } from "@/worldAbi";
+import { WorldAbi } from "@/lib/WorldAbi";
 import { normalizeAddress } from "@/utils/global/common";
 import { addressToEntity } from "@/utils/global/encode";
+import { storage } from "@/utils/global/storage";
 
-export async function createBurnerAccount(networkConfig: NetworkConfig, privateKey?: Hex, saveToStorage = true) {
+export async function createBurnerAccount(coreConfig: CoreConfig, privateKey?: Hex, saveToStorage = true) {
   const key = privateKey ?? generatePrivateKey();
   const burnerAccount = createMudBurnerAccount(key);
-  if (saveToStorage) localStorage.setItem(STORAGE_PREFIX + burnerAccount.address, key);
+  if (saveToStorage) storage.setItem(STORAGE_PREFIX + burnerAccount.address, key);
   const clientOptions = {
-    chain: networkConfig.chain,
+    chain: coreConfig.chain,
     transport: transportObserver(fallback([http()])),
     pollingInterval: 1000,
   };
@@ -30,7 +31,7 @@ export async function createBurnerAccount(networkConfig: NetworkConfig, privateK
   sessionWalletClient.extend(transactionQueue()).extend(writeObserver({ onWrite: (write) => write$.next(write) }));
 
   const sessionWorldContract = getContract({
-    address: networkConfig.worldAddress as Hex,
+    address: coreConfig.worldAddress as Hex,
     abi: WorldAbi,
     client: {
       public: publicClient,

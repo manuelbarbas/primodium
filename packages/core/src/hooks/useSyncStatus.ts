@@ -1,11 +1,11 @@
 import { Entity } from "@latticexyz/recs";
-import { useMud } from "./useMud";
+import { useCore } from "./useCore";
 import { SyncSourceType, SyncStep } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 export const useSyncStatus = (syncId?: Entity) => {
-  const { components } = useMud();
+  const { components } = useCore();
   const syncSource = components.SyncSource.use()?.value;
   const syncEntity = syncSource === SyncSourceType.RPC ? singletonEntity : syncId;
   const syncStatus = components.SyncStatus.use(syncEntity)?.step;

@@ -1,13 +1,13 @@
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { hydrateActiveAsteroid, hydrateFleetData, hydrateAsteroidData } from "../sync/indexer";
 import { debounce } from "lodash";
-import { SetupResult, SyncSourceType } from "@/lib/types";
+import { Core, SyncSourceType } from "@/lib/types";
 
-export const setupSync = (setupResult: SetupResult) => {
+export const setupSync = (core: Core) => {
   const {
     network: { world },
     components,
-  } = setupResult;
+  } = core;
 
   const systemWorld = namespaceWorld(world, "coreSystems");
 
@@ -19,7 +19,7 @@ export const setupSync = (setupResult: SetupResult) => {
 
     if (!spaceRock || value[0]?.value === value[1]?.value) return;
 
-    hydrateAsteroidData(setupResult, spaceRock);
+    hydrateAsteroidData(core, spaceRock);
   });
 
   defineComponentSystem(systemWorld, components.ActiveRock, ({ value }) => {
@@ -27,7 +27,7 @@ export const setupSync = (setupResult: SetupResult) => {
 
     if (!spaceRock || value[0]?.value === value[1]?.value) return;
 
-    hydrateActiveAsteroid(setupResult, spaceRock);
+    hydrateActiveAsteroid(core, spaceRock);
   });
 
   defineComponentSystem(systemWorld, components.SelectedFleet, ({ value }) => {
@@ -35,7 +35,7 @@ export const setupSync = (setupResult: SetupResult) => {
 
     if (!fleet || value[0]?.value === value[1]?.value) return;
 
-    hydrateFleetData(setupResult, fleet);
+    hydrateFleetData(core, fleet);
   });
 
   defineComponentSystem(
@@ -49,15 +49,15 @@ export const setupSync = (setupResult: SetupResult) => {
       switch (true) {
         case components.Asteroid.has(hoverEntity):
           //hydrate asteroid info
-          hydrateAsteroidData(setupResult, hoverEntity);
+          hydrateAsteroidData(core, hoverEntity);
           break;
         case components.ShardAsteroid.has(hoverEntity):
           //hydrate shardasteroid info
-          hydrateAsteroidData(setupResult, hoverEntity, true); // shard = true
+          hydrateAsteroidData(core, hoverEntity, true); // shard = true
           break;
         case components.FleetMovement.has(hoverEntity):
           //hydrate fleet info
-          hydrateFleetData(setupResult, hoverEntity);
+          hydrateFleetData(core, hoverEntity);
           break;
         default:
           break;

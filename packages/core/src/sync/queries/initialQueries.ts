@@ -9,13 +9,27 @@ export const getInitialQuery = ({
   playerAddress,
   worldAddress,
 }: Omit<Parameters<typeof Sync.withQueryDecodedIndexerRecsSync>[0], "query"> & {
-  playerAddress: Hex;
+  playerAddress: Hex | undefined;
   worldAddress: Hex;
 }) => {
   //get all the tables that start with P_
   const configTableQueries = [...Object.keys(tables)]
     .filter((key) => key.startsWith("P_"))
     .map((tableName) => ({ tableId: tables[tableName].tableId }));
+
+  const playerQueries = playerAddress
+    ? [
+        {
+          tableId: tables.OwnedBy.tableId,
+          where: {
+            column: "value",
+            operation: "eq",
+            value: pad(playerAddress, { size: 32 }),
+          },
+          include: [{ tableId: tables.Asteroid.tableId }],
+        },
+      ]
+    : [];
 
   return {
     indexerUrl,
@@ -33,16 +47,7 @@ export const getInitialQuery = ({
         { tableId: tables.VictoryStatus.tableId },
         // main base starting coord
         { tableId: tables.Position.tableId, where: { column: "entity", operation: "eq", value: EntityType.MainBase } },
-        // player asteroids
-        {
-          tableId: tables.OwnedBy.tableId,
-          where: {
-            column: "value",
-            operation: "eq",
-            value: pad(playerAddress, { size: 32 }),
-          },
-          include: [{ tableId: tables.Asteroid.tableId }],
-        },
+        ...playerQueries,
       ],
     } as Parameters<typeof Sync.withQueryDecodedIndexerRecsSync>[0]["query"],
   };

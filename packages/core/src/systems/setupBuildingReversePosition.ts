@@ -1,15 +1,15 @@
-import { SetupResult } from "@/lib/types";
+import { Core } from "@/lib/types";
 import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 
 /**
  * This system sets up the reverse position of a building
  */
-export const setupBuildingReversePosition = (setupResult: SetupResult) => {
+export const setupBuildingReversePosition = (core: Core) => {
   const {
     network: { world },
     components,
     utils: { convertToCoords, getBuildingPositionEntity },
-  } = setupResult;
+  } = core;
 
   const systemWorld = namespaceWorld(world, "coreSystems");
 

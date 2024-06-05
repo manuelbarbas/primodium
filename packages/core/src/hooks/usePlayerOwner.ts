@@ -1,8 +1,8 @@
 import { Entity } from "@latticexyz/recs";
-import { useMud } from "@/hooks/useMud";
+import { useCore } from "@/hooks/useCore";
 
 export const usePlayerOwner = (entity: Entity) => {
-  const { components } = useMud();
+  const { components } = useCore();
 
   const isFleet = components.IsFleet.use(entity)?.value;
   const owner = components.OwnedBy.use(entity)?.value;
@@ -11,7 +11,7 @@ export const usePlayerOwner = (entity: Entity) => {
 };
 
 export const getPlayerOwner = (entity: Entity) => {
-  const { components } = useMud();
+  const { components } = useCore();
 
   const isFleet = components.IsFleet.get(entity)?.value;
   const owner = components.OwnedBy.get(entity)?.value;

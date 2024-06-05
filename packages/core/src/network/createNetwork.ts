@@ -1,28 +1,27 @@
 import { transportObserver } from "@latticexyz/common";
 import mudConfig from "contracts/mud.config";
 import { Hex, createPublicClient, fallback, http } from "viem";
-import { getNetworkConfig } from "./config/networkConfig";
 import { setupRecs } from "../recs/setupRecs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { createWorld } from "@latticexyz/recs";
 import { createClock } from "@/network/createClock";
 import { otherTables } from "@/network/otherTables";
 import { extendContractComponents } from "@/components/customComponents/extendComponents";
+import { CoreConfig } from "@/lib/types";
 
 export let network: ReturnType<typeof _createNetwork>;
 
-export function createNetwork() {
+export function createNetwork(config: CoreConfig) {
   if (network) return network;
-  return _createNetwork();
+  return _createNetwork(config);
 }
 
-function _createNetwork() {
+function _createNetwork(config: CoreConfig) {
   const world = createWorld();
   world.registerEntity({ id: singletonEntity });
 
-  const networkConfig = getNetworkConfig();
   const clientOptions = {
-    chain: networkConfig.chain,
+    chain: config.chain,
     transport: transportObserver(fallback([http()])),
     pollingInterval: 1000,
   };
@@ -33,7 +32,7 @@ function _createNetwork() {
     mudConfig,
     world,
     publicClient,
-    address: networkConfig.worldAddress as Hex,
+    address: config.worldAddress as Hex,
     otherTables,
   });
 
@@ -47,7 +46,6 @@ function _createNetwork() {
     world,
     tables,
     publicClient,
-    config: networkConfig,
     mudConfig,
     components: extendContractComponents(components),
     clock,

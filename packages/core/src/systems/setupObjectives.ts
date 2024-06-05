@@ -1,13 +1,13 @@
-import { SetupResult } from "@/lib/types";
+import { Core } from "@/lib/types";
 import { Has, HasValue, defineComponentSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
 import { EObjectives } from "contracts/config/enums";
 
-export const setupObjectives = (setupResult: SetupResult) => {
+export const setupObjectives = (core: Core) => {
   const {
     network: { world },
     components,
     utils: { makeObjectiveClaimable },
-  } = setupResult;
+  } = core;
 
   const systemWorld = namespaceWorld(world, "coreSystems");
 

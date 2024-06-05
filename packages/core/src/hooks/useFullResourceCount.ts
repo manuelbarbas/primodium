@@ -1,13 +1,13 @@
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMemo } from "react";
-import { useMud } from "@/hooks/useMud";
+import { useCore } from "@/hooks/useCore";
 
 export function useFullResourceCount(resource: Entity, spaceRockEntity: Entity, force = false) {
   const {
     components,
     utils: { getFullResourceCount },
-  } = useMud();
+  } = useCore();
   const time = components.Time.use(undefined)?.value ?? 0n;
 
   return useMemo(() => {
@@ -19,7 +19,7 @@ export function useFullResourceCounts(spaceRockEntity: Entity, force = false) {
   const {
     components,
     utils: { getFullResourceCounts },
-  } = useMud();
+  } = useCore();
   const time = components.Time.use(undefined)?.value ?? 0n;
 
   return useMemo(() => {

@@ -1,9 +1,9 @@
 import { SyncStep } from "@/lib/types";
 import { Entity } from "@latticexyz/recs";
-import { SetupResult } from "@/lib/types";
+import { Core } from "@/lib/types";
 
 export function createSyncHandlers(
-  { components }: SetupResult,
+  { components }: Core,
   syncId: Entity,
   message: {
     progress: string;

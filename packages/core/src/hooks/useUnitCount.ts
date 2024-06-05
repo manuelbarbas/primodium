@@ -1,12 +1,12 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { useMud } from "@/hooks/useMud";
+import { useCore } from "@/hooks/useCore";
 
 export function useUnitCounts(entity?: Entity, force = false) {
   const {
     components,
     utils: { getUnitCounts },
-  } = useMud();
+  } = useCore();
 
   const time = components.Time.use(undefined)?.value ?? 0n;
 

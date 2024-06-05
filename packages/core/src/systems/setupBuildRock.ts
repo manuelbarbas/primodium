@@ -1,12 +1,12 @@
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 
-import { SetupResult } from "@/lib/types";
+import { Core } from "@/lib/types";
 
-export const setupBuildRock = (setupResult: SetupResult) => {
+export const setupBuildRock = (core: Core) => {
   const {
     network: { world },
     components,
-  } = setupResult;
+  } = core;
 
   const systemWorld = namespaceWorld(world, "coreSystems");
   const playerEntity = components.Account.get()?.value;

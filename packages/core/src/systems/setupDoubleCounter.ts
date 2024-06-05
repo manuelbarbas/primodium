@@ -1,11 +1,11 @@
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { SetupResult } from "@/lib/types";
+import { Core } from "@/lib/types";
 
-export const setupDoubleCounter = (setupResult: SetupResult) => {
+export const setupDoubleCounter = (core: Core) => {
   const {
     network: { world },
     components,
-  } = setupResult;
+  } = core;
 
   const systemWorld = namespaceWorld(world, "coreSystems");
 

@@ -1,11 +1,11 @@
-import { SetupResult } from "@/lib/types";
+import { Core } from "@/lib/types";
 import { defineComponentSystem, Entity, namespaceWorld } from "@latticexyz/recs";
 
-export const setupHomeAsteroid = async (setupResult: SetupResult) => {
+export const setupHomeAsteroid = async (core: Core) => {
   const {
     network: { world },
     components,
-  } = setupResult;
+  } = core;
 
   const systemWorld = namespaceWorld(world, "coreSystems");
   defineComponentSystem(systemWorld, components.Account, ({ value: [value] }) => {

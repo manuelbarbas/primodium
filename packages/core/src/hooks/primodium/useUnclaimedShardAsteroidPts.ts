@@ -2,10 +2,10 @@ import { bigIntMax } from "@latticexyz/common/utils";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { SPEED_SCALE } from "@/lib/constants";
-import { useMud } from "@/hooks/useMud";
+import { useCore } from "@/hooks/useCore";
 
 export const usePlayerUnclaimedShardAsteroidPoints = (playerEntity: Entity) => {
-  const { components } = useMud();
+  const { components } = useCore();
   const conquestConfigData = components.P_ConquestConfig.use();
   const worldSpeed = components.P_GameConfig.use()?.worldSpeed ?? 100n;
   const time = components.Time.use()?.value ?? 0n;
@@ -34,7 +34,7 @@ export const usePlayerUnclaimedShardAsteroidPoints = (playerEntity: Entity) => {
 };
 
 export const useAllUnclaimedShardAsteroidPts = () => {
-  const { components } = useMud();
+  const { components } = useCore();
   const conquestConfigData = components.P_ConquestConfig.use();
   const worldSpeed = components.P_GameConfig.use()?.worldSpeed ?? 100n;
   const time = components.Time.use()?.value ?? 0n;

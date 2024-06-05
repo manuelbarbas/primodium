@@ -1,22 +1,22 @@
 import { createComponents } from "@/components/createComponents";
 import { createNetwork, network } from "@/network/createNetwork";
 import { setupInitialSync } from "@/sync/setupInitialSync";
-import { SetupResult } from "@/lib/types";
+import { CoreConfig, Core } from "@/lib/types";
 import { createUtils } from "@/utils/core";
-import { Hex } from "viem";
 
-export async function setup(playerAddress: Hex): Promise<SetupResult> {
+export async function createCore(config: CoreConfig): Promise<Core> {
   const hot = network !== undefined;
-  const networkResult = createNetwork();
+  const networkResult = createNetwork(config);
   const components = createComponents(networkResult);
   const utils = createUtils(components);
-  const setupResult = {
+  const core = {
+    config,
     network: networkResult,
     components,
     utils,
   };
 
-  if (!hot) setupInitialSync(setupResult, playerAddress);
+  if (!hot) setupInitialSync(core);
 
-  return setupResult;
+  return core;
 }

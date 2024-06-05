@@ -1,15 +1,15 @@
-import { SetupResult } from "@/lib/types";
+import { Core } from "@/lib/types";
 import { Entity, Has, defineComponentSystem, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
 import { decodeEntity } from "@latticexyz/store-sync/recs";
 
 function isZeroHex(value: string): boolean {
   return /^0x0+$/i.test(value);
 }
-export const setupBattleComponents = (setupResult: SetupResult) => {
+export const setupBattleComponents = (core: Core) => {
   const {
     network: { world },
     components,
-  } = setupResult;
+  } = core;
 
   const systemWorld = namespaceWorld(world, "coreSystems");
   const { RawBattle, RawBattleParticipant, RawBattleParticipants } = components.Battle;

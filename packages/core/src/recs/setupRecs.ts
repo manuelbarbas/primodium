@@ -24,6 +24,7 @@ import {
 } from "rxjs";
 import { Hex, PublicClient, TransactionReceiptNotFoundError } from "viem";
 
+//TODO: Move this into the reactive-tables package
 export const setupRecs = <config extends StoreConfig, extraTables extends Record<string, Table>>(args: {
   mudConfig: config;
   world: RecsWorld;

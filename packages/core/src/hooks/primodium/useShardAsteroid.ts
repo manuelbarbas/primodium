@@ -3,13 +3,13 @@ import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { EntityType, SPEED_SCALE } from "@/lib/constants";
 import { useFullResourceCount } from "../useFullResourceCount";
-import { useMud } from "@/hooks/useMud";
+import { useCore } from "@/hooks/useCore";
 
 export const useShardAsteroid = (entity: Entity) => {
   const {
     components,
     utils: { entityToShardData },
-  } = useMud();
+  } = useCore();
   const conquestConfigData = components.P_ConquestConfig.use();
   const shardAsteroid = components.ShardAsteroid.use(entity);
   const worldSpeed = components.P_GameConfig.use()?.worldSpeed ?? 100n;
