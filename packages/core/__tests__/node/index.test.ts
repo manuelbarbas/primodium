@@ -1,50 +1,128 @@
 import { createCore } from "@/createCore";
 import { chainConfigs } from "@/network/config/chainConfigs";
-import { expect, test } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 import worldsJson from "contracts/worlds.json";
 import { worldInput } from "contracts/mud.config";
-import { Address } from "viem";
+import { Address, Hex } from "viem";
 import { otherTables } from "@/network/otherTables";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { Entity } from "@latticexyz/recs";
+import { Core, CoreConfig, SyncStep } from "@/index";
+import { createLocalAccount } from "@/account/createLocalAccount";
+import { createExternalAccount } from "@/account/createExternalAccount";
 
-const worlds = worldsJson as Partial<Record<string, { address: string; blockNumber?: number }>>;
+describe("core", () => {
+  /* ----------------------------- Test Skip Flags ---------------------------- */
+  const isAnvilRunning = true;
+  // const isIndexerRunning = false;
 
-const worldAddress = worlds[chainConfigs.dev.id]?.address as Address;
-if (!worldAddress) throw new Error(`No world address found for chain ${chainConfigs.dev.id}.`);
-const config = {
-  chain: chainConfigs.dev,
-  worldAddress,
-  initialBlockNumber: BigInt(0),
-};
+  const privateKey = generatePrivateKey();
+  const address = privateKeyToAccount(privateKey).address;
 
-const randomPrivateKey = generatePrivateKey();
-const randomAddress = privateKeyToAccount(randomPrivateKey).address;
-test("core returns an object", async () => {
-  await createCore(config);
-});
+  /* ---------------------------- Setup core config --------------------------- */
+  const worlds = worldsJson as Partial<Record<string, { address: string; blockNumber?: number }>>;
+  const worldAddress = worlds[chainConfigs.dev.id]?.address as Address;
+  if (!worldAddress) throw new Error(`No world address found for chain ${chainConfigs.dev.id}.`);
 
-test("core contains mud tables", async () => {
-  const core = await createCore(config);
-  const coreComponentKeys = Object.keys(core.components);
-  const mudTableKeys = Object.keys(worldInput.tables);
-  const otherTableKeys = Object.keys(otherTables);
+  const config: CoreConfig = {
+    chain: chainConfigs.dev,
+    worldAddress,
+    initialBlockNumber: BigInt(0),
+    playerAddress: address,
+    runSync: true,
+    runSystems: true,
+  };
 
-  for (const table of [...otherTableKeys, ...mudTableKeys]) {
-    expect(coreComponentKeys).toContain(table);
-  }
-});
+  test("core contains mud tables", () => {
+    const core = createCore(config);
+    const coreComponentKeys = Object.keys(core.components);
+    const mudTableKeys = Object.keys(worldInput.tables);
+    const otherTableKeys = Object.keys(otherTables);
 
-test("core contains random utility", async () => {
-  const core = await createCore(config);
+    for (const table of [...otherTableKeys, ...mudTableKeys]) {
+      expect(coreComponentKeys).toContain(table);
+    }
+  });
 
-  const shardName = core.utils.entityToShardName(randomAddress as Entity);
+  test("core contains random utility", () => {
+    const core = createCore(config);
 
-  expect(shardName).toEqual("UNKNOWN");
-});
+    const shardName = core.utils.entityToShardName(address as Entity);
 
-test("core contains identical config", async () => {
-  const core = await createCore(config);
+    expect(shardName).toEqual("UNKNOWN");
+  });
 
-  expect(core.config).toEqual(config);
+  test("core contains identical config", () => {
+    const core = createCore(config);
+
+    expect(core.config).toEqual(config);
+  });
+
+  describe("account", () => {
+    test("create local account", async () => {
+      const account = createLocalAccount(config, privateKey);
+      expect(account.address).toEqual(address);
+    });
+
+    test("cannot create external account", async () => {
+      expect(() => createExternalAccount(config, privateKey)).toThrowError(
+        "createExternalAccount must be called in a browser environment"
+      );
+    });
+  });
+
+  describe.skipIf(!isAnvilRunning)("live game tests", () => {
+    let core: Core;
+
+    beforeAll(async () => {
+      core = createCore(config);
+      await waitUntilSynced();
+    });
+
+    const waitUntilSynced = async () => {
+      let syncStatus = core.components.SyncStatus.get()?.step ?? SyncStep.Syncing;
+
+      while (syncStatus !== SyncStep.Complete) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        syncStatus = core.components.SyncStatus.get()?.step ?? SyncStep.Syncing;
+      }
+    };
+
+    const waitUntilTxExecution = async (txHash: Hex) => {
+      const publicClient = core.network.publicClient;
+
+      const pollForReceipt = async () => {
+        console.log("polling for receipt");
+        try {
+          let receipt = await publicClient.getTransactionReceipt({ hash: txHash });
+          console.log({ receipt });
+          while (receipt === undefined) {
+            await new Promise((resolve) => setTimeout(resolve, 400));
+            receipt = await publicClient.getTransactionReceipt({ hash: txHash });
+          }
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          return receipt;
+        } catch (error) {
+          await new Promise((resolve) => setTimeout(resolve, 400));
+          return pollForReceipt();
+        }
+      };
+
+      return pollForReceipt();
+    };
+
+    test("spawn allowed is true", async () => {
+      const spawnAllowed = core.components.SpawnAllowed.get()?.value ?? false;
+      expect(spawnAllowed).toEqual(true);
+    });
+
+    test("spawn player", async () => {
+      const account = createLocalAccount(config, privateKey);
+
+      const txHash = await account.worldContract.write.Pri_11__spawn();
+      await waitUntilTxExecution(txHash);
+
+      expect(core.components.Spawned.get(account.entity)?.value).toEqual(true);
+    });
+  });
 });

@@ -1,6 +1,19 @@
 import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { debounce } from "lodash";
 import { Core, SyncSourceType } from "@/lib/types";
+
+function debounce(func: (...args: any[]) => void, wait: number) {
+  let timeout: ReturnType<typeof setTimeout>;
+
+  return function (...args: any[]) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
 
 export const setupSync = (core: Core) => {
   const {

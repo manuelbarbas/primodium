@@ -20,8 +20,12 @@ export function createCore(config: CoreConfig): Core {
     sync,
   };
 
-  if (config?.runSync) runInitialSync(core, core.config.playerAddress);
-  if (config?.runSystems) runCoreSystems(core);
+  if (config?.runSystems && !config.runSync) throw new Error("Cannot run systems without running sync");
+  if (config?.runSync) {
+    runInitialSync(core, core.config.playerAddress).then(() => {
+      if (config?.runSystems) runCoreSystems(core);
+    });
+  }
 
   return core;
 }

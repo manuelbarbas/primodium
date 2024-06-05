@@ -43,7 +43,7 @@ export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
   }
 
   const onError = async (err: unknown) => {
-    console.warn("Failed to fetch from indexer, hydrating from RPC", err);
+    console.warn("Failed to fetch from indexer, hydrating from RPC");
 
     const toBlock = await publicClient.getBlockNumber();
     syncFromRPC(
@@ -61,7 +61,7 @@ export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
           progress: 0,
           message: `Failed to sync from RPC. Please try again.`,
         });
-        console.warn("Failed to sync from RPC ", err);
+        console.warn("Failed to sync from RPC ");
       }
     );
   };

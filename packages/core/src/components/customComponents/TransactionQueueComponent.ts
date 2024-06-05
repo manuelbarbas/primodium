@@ -25,7 +25,7 @@ export function createTransactionQueueComponent<M extends Metadata>(
   );
 
   // Add a function to the queue
-  async function enqueue(fn: () => Promise<void>, options: TxQueueOptions<M>) {
+  async function enqueue(fn: () => Promise<any>, options: TxQueueOptions<M>) {
     if (!options.force && component.has(options.id as Entity)) return;
 
     queue.push({
@@ -69,7 +69,7 @@ export function createTransactionQueueComponent<M extends Metadata>(
     isRunning = false;
   }
 
-  function getIndex(id: Entity) {
+  function getIndex(id: string) {
     return queue.findIndex((item) => item.id === id);
   }
 
@@ -77,13 +77,13 @@ export function createTransactionQueueComponent<M extends Metadata>(
     return queue.length;
   }
 
-  function getMetadata(id: Entity): M | undefined {
+  function getMetadata(id: string): M | undefined {
     const index = getIndex(id);
     if (index === -1) return undefined;
-    return JSON.parse(component.get(id)?.metadata || "");
+    return JSON.parse(component.get(id as Entity)?.metadata || "");
   }
 
-  function useIndex(id: Entity) {
+  function useIndex(id: string) {
     const [position, setPosition] = useState<number>(getIndex(id));
 
     useEffect(() => {
