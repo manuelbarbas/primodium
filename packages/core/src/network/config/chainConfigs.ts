@@ -56,14 +56,10 @@ export const calderaSepolia = {
 
 export type ChainConfig = MUDChain & { indexerUrl?: string };
 
-interface ChainConfigs {
-  [x: string]: ChainConfig;
-}
-
-export const chainConfigs: ChainConfigs = {
+export const chainConfigs = {
   caldera,
   calderaSepolia,
   dev,
   garnet,
   redstone,
-};
+} as const;

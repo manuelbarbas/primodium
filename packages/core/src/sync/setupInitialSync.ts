@@ -8,7 +8,7 @@ export const setupInitialSync = async (core: Core, playerAddress?: Hex) => {
   const { network, components, config } = core;
   const { publicClient } = network;
 
-  const fromBlock = config.initialBlockNumber;
+  const fromBlock = config.initialBlockNumber ?? 0n;
 
   if (!config.chain.indexerUrl) {
     console.warn("No indexer url found, hydrating from RPC");

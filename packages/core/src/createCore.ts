@@ -15,7 +15,7 @@ export async function createCore(config: CoreConfig, skipSync = false): Promise<
     utils,
   };
 
-  if (!skipSync) setupInitialSync(core);
+  if (!skipSync) setupInitialSync(core, config.playerAddress);
 
   return core;
 }

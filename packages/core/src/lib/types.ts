@@ -10,9 +10,9 @@ import { createUtils } from "@/utils/core";
 
 export type CoreConfig = {
   chain: ChainConfig;
-  worldAddress: string;
-  initialBlockNumber: bigint;
-  playerAddress?: Hex;
+  worldAddress: Address;
+  initialBlockNumber?: bigint;
+  playerAddress?: Address;
   devPrivateKey?: Hex;
   accountLinkUrl?: string;
 };

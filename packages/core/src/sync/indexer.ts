@@ -64,7 +64,7 @@ export const hydrateSecondaryGameState = (core: Core, onComplete: () => void, on
     components,
   } = core;
   const indexerUrl = config.chain.indexerUrl;
-  let fromBlock = config.initialBlockNumber;
+  let fromBlock = config.initialBlockNumber ?? 0n;
 
   // if we're already syncing from RPC, don't hydrate from indexer
   if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;

@@ -64,6 +64,7 @@ export function createShardNameUtils(components: Components) {
     }
     return undefined;
   };
+
   const entityToShardName = (entity: Entity) => {
     const shardIndex = components.ShardAsteroidIndex.get(entity)?.value;
     if (shardIndex == undefined) return "UNKNOWN";
