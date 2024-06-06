@@ -4,7 +4,7 @@ import { createClient as createFaucetClient } from "@latticexyz/faucet";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { createLocalAccount } from "@/account/createLocalAccount";
 import { createExternalAccount } from "@/account/createExternalAccount";
-import { LocalAccount, ExternalAccount, AccountClient } from "@/lib/types";
+import { AccountClient, ExternalAccount, LocalAccount } from "@/lib/types";
 import { minEth } from "@/lib/constants";
 import { Address, Hex, createWalletClient, fallback, formatEther, http } from "viem";
 import { storage } from "@/utils/global/storage";

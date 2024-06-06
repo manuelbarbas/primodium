@@ -3,14 +3,14 @@ import { transactionQueue, writeObserver } from "@latticexyz/common/actions";
 import { Subject } from "rxjs";
 import { Hex, createPublicClient, createWalletClient, fallback, getContract, http } from "viem";
 import { generatePrivateKey } from "viem/accounts";
-import { CoreConfig } from "@/lib/types";
+import { CoreConfig, LocalAccount } from "@/lib/types";
 import { STORAGE_PREFIX } from "@/lib/constants";
 import { WorldAbi } from "@/lib/WorldAbi";
 import { normalizeAddress } from "@/utils/global/common";
 import { addressToEntity } from "@/utils/global/encode";
 import { storage } from "@/utils/global/storage";
 
-export function createLocalAccount(coreConfig: CoreConfig, privateKey?: Hex, saveToStorage = true) {
+export function createLocalAccount(coreConfig: CoreConfig, privateKey?: Hex, saveToStorage = true): LocalAccount {
   const key = privateKey ?? generatePrivateKey();
   const localAccount = createBurnerAccount(key);
   if (saveToStorage) storage.setItem(STORAGE_PREFIX + localAccount.address, key);

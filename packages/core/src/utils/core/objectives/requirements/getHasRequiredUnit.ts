@@ -13,7 +13,7 @@ export function getHasRequiredUnit(
   const currentValue =
     hangar?.units.reduce((acc, unit, i) => {
       if (unit !== objective.unitType) return acc;
-      return acc + hangar?.counts[i] ?? 0n;
+      return acc + (hangar?.counts[i] ?? 0n);
     }, 0n) ?? 0n;
 
   return {

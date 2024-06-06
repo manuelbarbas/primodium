@@ -4,13 +4,17 @@
     "module": "ESNext",
     "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
     "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
-
     "strict": true /* Enable all strict type-checking options. */,
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "debug": ["./node_modules/debug"], /* TODO: figure out why this is req to stop TS2742 error */
+      "@latticexyz/store-sync": ["./node_modules/@latticexyz/store-sync"],  /* TODO: figure out why this is req to stop TS2742 error */
     },
+    "typeRoots": [
+      "./types"
+    ],
     "jsx": "react-jsx",
     "jsxImportSource": "react"
   },

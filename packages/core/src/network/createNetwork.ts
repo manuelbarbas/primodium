@@ -1,7 +1,7 @@
 import { transportObserver } from "@latticexyz/common";
 import mudConfig from "contracts/mud.config";
 import { Hex, createPublicClient, fallback, http } from "viem";
-import { setupRecs } from "../recs/setupRecs";
+import { setupRecs } from "@/recs/setupRecs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { createWorld } from "@latticexyz/recs";
 import { createClock } from "@/network/createClock";

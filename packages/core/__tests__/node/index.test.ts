@@ -3,7 +3,7 @@ import { chainConfigs } from "@/network/config/chainConfigs";
 import { beforeAll, describe, expect, test } from "vitest";
 import worldsJson from "contracts/worlds.json";
 import { worldInput } from "contracts/mud.config";
-import { Address, Hex } from "viem";
+import { Address, Hex, TransactionReceipt } from "viem";
 import { otherTables } from "@/network/otherTables";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { Entity } from "@latticexyz/recs";
@@ -91,7 +91,7 @@ describe("core", () => {
     const waitUntilTxExecution = async (txHash: Hex) => {
       const publicClient = core.network.publicClient;
 
-      const pollForReceipt = async () => {
+      const pollForReceipt = async (): Promise<TransactionReceipt> => {
         console.log("polling for receipt");
         try {
           let receipt = await publicClient.getTransactionReceipt({ hash: txHash });

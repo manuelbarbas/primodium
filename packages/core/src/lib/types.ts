@@ -1,13 +1,23 @@
 import { KeySchema } from "@latticexyz/protocol-parser/internal";
-import { Component, Schema } from "@latticexyz/recs";
+import { Component, Entity, Schema } from "@latticexyz/recs";
 import { ChainConfig } from "@/network/config/chainConfigs";
 import { createNetwork } from "@/network/createNetwork";
 import { createComponents } from "@/components/createComponents";
-import { createExternalAccount } from "@/account/createExternalAccount";
-import { createLocalAccount } from "@/account/createLocalAccount";
-import { Address, Hex } from "viem";
+import {
+  Account,
+  Address,
+  CustomTransport,
+  FallbackTransport,
+  GetContractReturnType,
+  Hex,
+  PublicClient,
+  WalletClient,
+} from "viem";
 import { createUtils } from "@/utils/core";
 import { createSync } from "@/sync";
+import { WorldAbi } from "@/lib/WorldAbi";
+import { ContractWrite } from "@latticexyz/common";
+import { Subject } from "rxjs";
 
 export type CoreConfig = {
   chain: ChainConfig;
@@ -34,8 +44,32 @@ export type Core = {
   sync: Sync;
 };
 
-export type LocalAccount = Awaited<ReturnType<typeof createLocalAccount>>;
-export type ExternalAccount = Awaited<ReturnType<typeof createExternalAccount>>;
+type _Account<
+  IsLocalAccount extends boolean = false,
+  TPublicClient extends PublicClient = PublicClient<FallbackTransport, ChainConfig>,
+  TWalletClient extends WalletClient = IsLocalAccount extends true
+    ? WalletClient<FallbackTransport, ChainConfig, Account>
+    : WalletClient<CustomTransport, ChainConfig, Account>
+> = {
+  worldContract: GetContractReturnType<
+    typeof WorldAbi,
+    {
+      public: TPublicClient;
+      wallet: TWalletClient;
+    },
+    Address
+  >;
+  account: Account;
+  address: Address;
+  publicClient: TPublicClient;
+  walletClient: TWalletClient;
+  entity: Entity;
+  write$: Subject<ContractWrite>;
+  privateKey: IsLocalAccount extends true ? Hex : null;
+};
+
+export type ExternalAccount = _Account<false>;
+export type LocalAccount = _Account<true>;
 
 export interface AccountClient {
   sessionAccount: LocalAccount | null;
