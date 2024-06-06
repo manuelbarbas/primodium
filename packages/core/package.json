@@ -1,14 +1,23 @@
 {
-  "name": "core",
+  "name": "@primodiumxyz/core",
   "version": "1.0.0",
   "description": "",
   "keywords": [],
   "license": "ISC",
   "author": "",
   "type": "module",
-  "main": "index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./utils": "./dist/utils.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
+    "dev": "tsup --watch",
     "test": "vitest"
   },
   "dependencies": {
@@ -36,6 +45,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.26",
+    "tsup": "^8.1.0",
     "vitest": "^0.32.2"
   }
 }
