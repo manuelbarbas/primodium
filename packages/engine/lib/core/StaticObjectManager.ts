@@ -5,7 +5,7 @@ import { CoordMap } from "../util/coordMap";
 import { pixelToChunkCoord } from "../util/coords";
 
 //TODO: should not be importing from game.
-import { BaseSpawnArgs, DeferredRenderContainer } from "../../../game/lib/objects/DeferredRenderContainer";
+import { BaseSpawnArgs, DeferredRenderContainer } from "../../../game/src/lib/objects/DeferredRenderContainer";
 
 type Spawnable = {
   readonly id: string;

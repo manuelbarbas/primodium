@@ -13,8 +13,7 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "@primodiumxyz/core/*": ["../../packages/client/src/*"]
+      "@/*": ["./src/*"],
     }
   },
   "include": ["**/*.ts",],

@@ -1,6 +1,7 @@
 import { SceneConfig } from "@primodiumxyz/engine/types";
-import { DepthLayers, Scenes } from "../constants/common";
 import { AnimationConfig, Tilemaps } from "@primodiumxyz/assets";
+
+import { DepthLayers, Scenes } from "@/lib/constants/common";
 
 export const asteroidSceneConfig: SceneConfig = {
   key: Scenes.Asteroid,
