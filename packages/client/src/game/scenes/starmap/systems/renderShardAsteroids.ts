@@ -1,5 +1,5 @@
 import { defineEnterSystem, defineUpdateSystem, Entity, Has, namespaceWorld } from "@latticexyz/recs";
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { PrimodiumScene } from "@/game/api/scene";

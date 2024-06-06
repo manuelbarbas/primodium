@@ -45,7 +45,7 @@
     "comlink": "^4.4.1",
     "contracts": "workspace:*",
     "dayjs": "^1.11.10",
-    "engine": "^1.0.0",
+    "@primodiumxyz/engine": "^1.0.0",
     "ethers": "^5.7.0",
     "framer-motion": "^10.12.18",
     "lodash": "^4.17.21",

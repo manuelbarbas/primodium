@@ -1,6 +1,6 @@
 import { resourceToHex } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 import { DECIMALS } from "contracts/config/constants";
 import { EBuilding, EObjectives, EPointType, EResource, EUnit } from "contracts/config/enums";
 import { encodeEntity } from "src/util/encode";

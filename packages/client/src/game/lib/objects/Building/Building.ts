@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 import { PrimodiumScene } from "@/game/api/scene";
 import { triggerPlacementAnim } from "@/game/lib/objects/Building/triggerPlacementAnim";
 import { getAssetKeyPair, getUpgradeAnimation } from "./helpers";

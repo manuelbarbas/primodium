@@ -7,7 +7,7 @@ import { initAsteroidScene } from "@game/scenes/asteroid/init";
 import { initRootScene } from "@game/scenes/root/init";
 import { initStarmapScene } from "@game/scenes/starmap/init";
 import { initUIScene } from "@game/scenes/ui/init";
-import { engine } from "engine";
+import { engine } from "@primodiumxyz/engine";
 
 export type InitResult = Promise<Record<SceneKeys, PrimodiumScene> & { GLOBAL: GlobalApi }>;
 async function init(): InitResult {

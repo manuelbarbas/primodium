@@ -1,5 +1,5 @@
 import { createNotificationApi } from "@/game/api/notification";
-import { Scene } from "engine/types";
+import { Scene } from "@primodiumxyz/engine/types";
 import { createAudioApi } from "./audio";
 import { createCameraApi } from "./camera";
 import { createFxApi } from "./fx";

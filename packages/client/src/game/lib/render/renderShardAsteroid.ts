@@ -1,7 +1,7 @@
 import { ShardAsteroid } from "@/game/lib/objects/Asteroid/ShardAsteroid";
 import { components } from "@/network/components";
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 import { entityToRockName } from "@/util/name";
 import { PrimodiumScene } from "@/game/api/scene";
 

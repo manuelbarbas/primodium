@@ -1,5 +1,5 @@
-import { coordEq, tileCoordToPixelCoord, pixelCoordToTileCoord } from "engine/lib/util/coords";
-import { Scene, Coord } from "engine/types";
+import { coordEq, tileCoordToPixelCoord, pixelCoordToTileCoord } from "@primodiumxyz/engine/lib/util/coords";
+import { Scene, Coord } from "@primodiumxyz/engine/types";
 
 // const anchorMap =
 export const createCameraApi = (targetScene: Scene) => {

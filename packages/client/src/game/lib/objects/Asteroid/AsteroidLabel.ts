@@ -2,7 +2,7 @@ import Phaser from "phaser";
 import { MainbaseLevelToEmblem } from "@/game/lib/mappings";
 // import { FleetsContainer } from "@/game/lib/objects/Asteroid/FleetsContainer";
 import { Assets, Sprites } from "@primodiumxyz/assets";
-import { PixelCoord } from "engine/types";
+import { PixelCoord } from "@primodiumxyz/engine/types";
 import { PrimodiumScene } from "@/game/api/scene";
 import { DepthLayers } from "@/game/lib/constants/common";
 

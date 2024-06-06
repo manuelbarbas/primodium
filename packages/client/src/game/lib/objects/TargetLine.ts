@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { PixelCoord } from "engine/types";
+import { PixelCoord } from "@primodiumxyz/engine/types";
 import { PrimodiumScene } from "@/game/api/scene";
 import { IPrimodiumGameObject } from "./interfaces";
 

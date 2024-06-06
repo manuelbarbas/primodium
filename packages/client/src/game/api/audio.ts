@@ -1,5 +1,5 @@
 import { Assets, Audio, AudioKeys } from "@primodiumxyz/assets";
-import { Scene } from "engine/types";
+import { Scene } from "@primodiumxyz/engine/types";
 import { usePersistentStore } from "../stores/PersistentStore";
 
 export type Channel = "music" | "sfx" | "ui";

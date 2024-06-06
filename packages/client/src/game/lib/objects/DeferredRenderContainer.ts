@@ -1,8 +1,8 @@
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 import { PrimodiumScene } from "@/game/api/scene";
 import { PrimodiumObjectApi, PrimodiumObjectApiMap } from "@/game/api/objects";
-import { PrimodiumGameObject } from "engine/lib/core/StaticObjectManager";
+import { PrimodiumGameObject } from "@primodiumxyz/engine/lib/core/StaticObjectManager";
 
 export type BaseSpawnArgs = {
   scene: PrimodiumScene;

@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { Coord, TileCoord } from "engine/types";
+import { Coord, TileCoord } from "@primodiumxyz/engine/types";
 import { Fleet } from "../Fleet";
 import { PrimodiumScene } from "@/game/api/scene";
 import { DepthLayers } from "@/game/lib/constants/common";

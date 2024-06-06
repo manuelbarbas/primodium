@@ -1,7 +1,7 @@
 import { resourceToHex } from "@latticexyz/common";
 import { KeySchema, SchemaToPrimitives } from "@latticexyz/protocol-parser/internal";
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 import {
   Hex,
   concatHex,

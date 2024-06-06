@@ -1,4 +1,4 @@
-import { Scene } from "engine/types";
+import { Scene } from "@primodiumxyz/engine/types";
 import { Sprites, Assets } from "@primodiumxyz/assets";
 
 const cache = new Map<Sprites, string>();

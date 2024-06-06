@@ -1,5 +1,5 @@
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 
 export type Dimensions = {
   xBounds: number;

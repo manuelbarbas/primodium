@@ -1,4 +1,4 @@
-import { SceneConfig } from "engine/types";
+import { SceneConfig } from "@primodiumxyz/engine/types";
 import { Scenes } from "../constants/common";
 
 export const commandCenterScene: SceneConfig = {

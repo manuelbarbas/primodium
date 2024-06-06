@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 import { PrimodiumScene } from "@/game/api/scene";
 import { BuildingDimensions, getConstructionSprite } from "./helpers";
 import { IPrimodiumGameObject } from "../interfaces";

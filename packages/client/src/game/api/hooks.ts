@@ -1,4 +1,4 @@
-import { Scene } from "engine/types";
+import { Scene } from "@primodiumxyz/engine/types";
 import { clone, throttle } from "lodash";
 import { useEffect, useState } from "react";
 import { usePersistentStore } from "../stores/PersistentStore";

@@ -1,4 +1,4 @@
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 
 export const deg2rad = (degrees: number) => degrees * (Math.PI / 180);
 

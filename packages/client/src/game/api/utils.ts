@@ -1,5 +1,5 @@
-import { ChunkCoord, PixelCoord, Scene, TileCoord } from "engine/types";
-import * as Coord from "engine/lib/util/coords";
+import { ChunkCoord, PixelCoord, Scene, TileCoord } from "@primodiumxyz/engine/types";
+import * as Coord from "@primodiumxyz/engine/lib/util/coords";
 
 export const createUtilApi = (scene: Scene) => {
   function pixelCoordToTileCoord(coord: PixelCoord): TileCoord {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FaSquare, FaLocationArrow } from "react-icons/fa";
 import { FaCropSimple, FaSquareXmark } from "react-icons/fa6";
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 import { components } from "@/network/components";
 import { useGame } from "@/hooks/useGame";
 import { Mode } from "@/util/constants";

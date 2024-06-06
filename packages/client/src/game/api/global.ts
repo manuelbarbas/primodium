@@ -1,5 +1,5 @@
 import { SceneKeys } from "@/game/lib/constants/common";
-import { Game, Scene } from "engine/types";
+import { Game, Scene } from "@primodiumxyz/engine/types";
 
 export type GlobalApi = ReturnType<typeof createGlobalApi>;
 

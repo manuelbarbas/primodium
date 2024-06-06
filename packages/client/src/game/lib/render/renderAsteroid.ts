@@ -11,7 +11,7 @@ import { MapIdToAsteroidType } from "@/util/mappings";
 import { entityToPlayerName, entityToRockName } from "@/util/name";
 import { Entity } from "@latticexyz/recs";
 import { EMap } from "contracts/config/enums";
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 import { PrimodiumScene } from "@/game/api/scene";
 import { getEnsName } from "@/util/web3/getEnsName";
 

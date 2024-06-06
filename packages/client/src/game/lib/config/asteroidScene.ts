@@ -1,4 +1,4 @@
-import { SceneConfig } from "engine/types";
+import { SceneConfig } from "@primodiumxyz/engine/types";
 import { DepthLayers, Scenes } from "../constants/common";
 import { AnimationConfig, Tilemaps } from "@primodiumxyz/assets";
 

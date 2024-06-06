@@ -1,8 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { components } from "@/network/components";
 import { PrimodiumScene } from "@/game/api/scene";
-import { tileCoordToPixelCoord } from "engine/lib/util/coords";
-import { Coord } from "engine/types";
+import { tileCoordToPixelCoord } from "@primodiumxyz/engine/lib/util/coords";
+import { Coord } from "@primodiumxyz/engine/types";
 import { getBuildingDimensions } from "@/util/building";
 
 export const triggerPlacementAnim = (scene: PrimodiumScene, entity: Entity, mapCoord: Coord) => {

@@ -1,4 +1,4 @@
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 import { PrimodiumScene } from "@/game/api/scene";
 import { BaseAsteroid } from "./BaseAsteroid";
 import { LODs, getSecondaryOutlineSprite, getSecondarySprite } from "./helpers";

@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 import { PrimodiumScene } from "@/game/api/scene";
 import { IPrimodiumGameObject } from "../interfaces";
 import { FleetsContainer } from "@/game/lib/objects/Asteroid/FleetsContainer";

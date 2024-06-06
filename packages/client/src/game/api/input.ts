@@ -1,6 +1,6 @@
 import { throttle } from "lodash";
 
-import { Key, Scene } from "engine/types";
+import { Key, Scene } from "@primodiumxyz/engine/types";
 import { usePersistentStore } from "@game/stores/PersistentStore";
 import { KeybindActionKeys } from "@game/lib/constants/keybinds";
 

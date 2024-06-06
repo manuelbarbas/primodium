@@ -1,5 +1,5 @@
 import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 import { components } from "src/network/components";
 import { Hex } from "viem";
 import { encodeEntity } from "./encode";

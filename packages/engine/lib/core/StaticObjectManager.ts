@@ -3,10 +3,12 @@ import { createCamera } from "./createCamera";
 import { Coord } from "../../types";
 import { CoordMap } from "../util/coordMap";
 import { pixelToChunkCoord } from "../util/coords";
-import { BaseSpawnArgs, DeferredRenderContainer } from "@/game/lib/objects/DeferredRenderContainer";
+
+//TODO: should not be importing from game.
+import { BaseSpawnArgs, DeferredRenderContainer } from "../../../game/lib/objects/DeferredRenderContainer";
 
 type Spawnable = {
-  id: string;
+  readonly id: string;
   spawn(): void;
   isSpawned(): boolean;
   setVisible(visible: boolean): Phaser.GameObjects.GameObject;

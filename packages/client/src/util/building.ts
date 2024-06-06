@@ -2,7 +2,7 @@ import { PrimodiumGame } from "@game/api";
 // import { EntitytoSpriteKey } from "@game/constants";
 // import { EntityTypetoBuildingSpriteKey } from "@game/constants";
 import { Entity } from "@latticexyz/recs";
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 import { EResource, MUDEnums } from "contracts/config/enums";
 import { EntityTypetoBuildingSprites } from "src/game/lib/mappings";
 import { components } from "src/network/components";

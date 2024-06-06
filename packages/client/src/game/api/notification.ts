@@ -1,5 +1,5 @@
 import { createAudioApi } from "@/game/api/audio";
-import { Scene } from "engine/types";
+import { Scene } from "@primodiumxyz/engine/types";
 import { toast, ToastContent, ToastOptions } from "react-toastify";
 
 type ToastType = "success" | "error" | "info" | "warning";

@@ -1,6 +1,6 @@
-import { Scene, Coord } from "engine/types";
+import { Scene, Coord } from "@primodiumxyz/engine/types";
 import { DepthLayers } from "../lib/constants/common";
-import { tileCoordToPixelCoord } from "engine/lib/util/coords";
+import { tileCoordToPixelCoord } from "@primodiumxyz/engine/lib/util/coords";
 import { Assets, Audio } from "@primodiumxyz/assets";
 import { getRandomRange } from "@/util/common";
 

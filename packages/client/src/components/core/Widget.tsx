@@ -4,7 +4,7 @@ import { useGame } from "@/hooks/useGame";
 import { SceneKeys } from "@game/lib/constants/common";
 import { KeybindActionKeys } from "@game/lib/constants/keybinds";
 import { usePersistentStore } from "@game/stores/PersistentStore";
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 import { ReactNode, memo, useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaMinus, FaRegWindowMaximize, FaRegWindowRestore } from "react-icons/fa";

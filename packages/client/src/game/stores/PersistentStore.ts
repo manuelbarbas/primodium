@@ -1,6 +1,6 @@
 import { KeybindActionKeys } from "@game/lib/constants/keybinds";
-import { Coord } from "engine/types";
-import { Key } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
+import { Key } from "@primodiumxyz/engine/types";
 import { mountStoreDevtool } from "simple-zustand-devtools";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";

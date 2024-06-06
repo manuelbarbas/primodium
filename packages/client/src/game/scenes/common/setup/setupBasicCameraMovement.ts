@@ -1,6 +1,6 @@
 import { PrimodiumScene } from "@/game/api/scene";
 import { world } from "@/network/world";
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 
 const SPEED = 750;
 const ZOOM_SPEED = 5;

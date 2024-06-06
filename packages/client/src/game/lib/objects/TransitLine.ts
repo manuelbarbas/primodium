@@ -1,11 +1,11 @@
 import Phaser from "phaser";
 
-import { PixelCoord } from "engine/types";
+import { PixelCoord } from "@primodiumxyz/engine/types";
 import { PrimodiumScene } from "@/game/api/scene";
 import { Fleet } from "./Fleet";
 import { Entity } from "@latticexyz/recs";
 import { TargetLine } from "@/game/lib/objects/TargetLine";
-import { BoundingBox } from "engine/lib/core/StaticObjectManager";
+import { BoundingBox } from "@primodiumxyz/engine/lib/core/StaticObjectManager";
 
 // These boxes are rendered around the line to check for collisions
 // This is a rough approximation of the line's bounding box, because we don't want to render too many boxes,

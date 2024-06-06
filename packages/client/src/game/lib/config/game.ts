@@ -1,4 +1,4 @@
-import { GameConfig } from "engine/types";
+import { GameConfig } from "@primodiumxyz/engine/types";
 import { KEY } from "@game/lib/constants/common";
 import { Pack } from "@primodiumxyz/assets";
 

@@ -3,7 +3,7 @@ import { PrimodiumScene } from "@/game/api/scene";
 import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { addCoords } from "engine/lib/util/coords";
+import { addCoords } from "@primodiumxyz/engine/lib/util/coords";
 import { Mode } from "@/util/constants";
 import { battleNotification } from "@/network/systems/setupBattleNotifications";
 

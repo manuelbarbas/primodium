@@ -5,7 +5,7 @@ import { components } from "src/network/components";
 import { world } from "src/network/world";
 import { outOfBounds } from "src/util/outOfBounds";
 import { PrimodiumScene } from "@/game/api/scene";
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 
 export const setupMouseInputs = (scene: PrimodiumScene) => {
   const clickSub = scene.input.click$.subscribe(([pointer]) => {
