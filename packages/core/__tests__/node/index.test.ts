@@ -1,128 +1,17 @@
-import { createCore } from "@/createCore";
-import { chainConfigs } from "@/network/config/chainConfigs";
-import { beforeAll, describe, expect, test } from "vitest";
-import worldsJson from "contracts/worlds.json";
-import { worldInput } from "contracts/mud.config";
-import { Address, Hex, TransactionReceipt } from "viem";
-import { otherTables } from "@/network/otherTables";
-import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
-import { Entity } from "@latticexyz/recs";
-import { Core, CoreConfig, SyncStep } from "@/index";
-import { createLocalAccount } from "@/account/createLocalAccount";
-import { createExternalAccount } from "@/account/createExternalAccount";
+import { describe, expect, test } from "vitest";
+import { commonTests, createTestConfig } from "../lib/common";
+import { createExternalAccount } from "@/account";
 
-describe("core", () => {
-  /* ----------------------------- Test Skip Flags ---------------------------- */
-  const isAnvilRunning = true;
-  // const isIndexerRunning = false;
+describe("node", () => {
+  const { coreConfig, privateKey, address, isAnvilRunning } = createTestConfig();
 
-  const privateKey = generatePrivateKey();
-  const address = privateKeyToAccount(privateKey).address;
+  commonTests();
 
-  /* ---------------------------- Setup core config --------------------------- */
-  const worlds = worldsJson as Partial<Record<string, { address: string; blockNumber?: number }>>;
-  const worldAddress = worlds[chainConfigs.dev.id]?.address as Address;
-  if (!worldAddress) throw new Error(`No world address found for chain ${chainConfigs.dev.id}.`);
-
-  const config: CoreConfig = {
-    chain: chainConfigs.dev,
-    worldAddress,
-    initialBlockNumber: BigInt(0),
-    playerAddress: address,
-    runSync: true,
-    runSystems: true,
-  };
-
-  test("core contains mud tables", () => {
-    const core = createCore(config);
-    const coreComponentKeys = Object.keys(core.components);
-    const mudTableKeys = Object.keys(worldInput.tables);
-    const otherTableKeys = Object.keys(otherTables);
-
-    for (const table of [...otherTableKeys, ...mudTableKeys]) {
-      expect(coreComponentKeys).toContain(table);
-    }
-  });
-
-  test("core contains random utility", () => {
-    const core = createCore(config);
-
-    const shardName = core.utils.entityToShardName(address as Entity);
-
-    expect(shardName).toEqual("UNKNOWN");
-  });
-
-  test("core contains identical config", () => {
-    const core = createCore(config);
-
-    expect(core.config).toEqual(config);
-  });
-
-  describe("account", () => {
-    test("create local account", async () => {
-      const account = createLocalAccount(config, privateKey);
-      expect(account.address).toEqual(address);
-    });
-
+  describe("node-only", () => {
     test("cannot create external account", async () => {
-      expect(() => createExternalAccount(config, privateKey)).toThrowError(
+      expect(() => createExternalAccount(coreConfig, privateKey)).toThrowError(
         "createExternalAccount must be called in a browser environment"
       );
-    });
-  });
-
-  describe.skipIf(!isAnvilRunning)("live game tests", () => {
-    let core: Core;
-
-    beforeAll(async () => {
-      core = createCore(config);
-      await waitUntilSynced();
-    });
-
-    const waitUntilSynced = async () => {
-      let syncStatus = core.components.SyncStatus.get()?.step ?? SyncStep.Syncing;
-
-      while (syncStatus !== SyncStep.Complete) {
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        syncStatus = core.components.SyncStatus.get()?.step ?? SyncStep.Syncing;
-      }
-    };
-
-    const waitUntilTxExecution = async (txHash: Hex) => {
-      const publicClient = core.network.publicClient;
-
-      const pollForReceipt = async (): Promise<TransactionReceipt> => {
-        console.log("polling for receipt");
-        try {
-          let receipt = await publicClient.getTransactionReceipt({ hash: txHash });
-          console.log({ receipt });
-          while (receipt === undefined) {
-            await new Promise((resolve) => setTimeout(resolve, 400));
-            receipt = await publicClient.getTransactionReceipt({ hash: txHash });
-          }
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          return receipt;
-        } catch (error) {
-          await new Promise((resolve) => setTimeout(resolve, 400));
-          return pollForReceipt();
-        }
-      };
-
-      return pollForReceipt();
-    };
-
-    test("spawn allowed is true", async () => {
-      const spawnAllowed = core.components.SpawnAllowed.get()?.value ?? false;
-      expect(spawnAllowed).toEqual(true);
-    });
-
-    test("spawn player", async () => {
-      const account = createLocalAccount(config, privateKey);
-
-      const txHash = await account.worldContract.write.Pri_11__spawn();
-      await waitUntilTxExecution(txHash);
-
-      expect(core.components.Spawned.get(account.entity)?.value).toEqual(true);
     });
   });
 });

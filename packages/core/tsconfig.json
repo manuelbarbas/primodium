@@ -14,7 +14,7 @@
       "@latticexyz/store-sync": ["./node_modules/@latticexyz/store-sync"],
       "@latticexyz/common": ["./node_modules/@latticexyz/common"]
     },
-    "typeRoots": ["./types"],
+    "typeRoots": ["./types", "./global.d.ts"],
     "jsx": "react-jsx",
     "jsxImportSource": "react"
   },

@@ -9,28 +9,18 @@ import { minEth } from "@/lib/constants";
 import { Address, Hex, createWalletClient, fallback, formatEther, http } from "viem";
 import { storage } from "@/utils/global/storage";
 
-import { createContext, useContext, ReactNode } from "react";
-
-interface UseAccountParams {
-  playerAddress?: Address;
-  playerPrivateKey?: Hex;
-  sessionPrivateKey?: Hex;
-}
-
-const AccountClientContext = createContext<AccountClient | undefined>(undefined);
-
-export const useAccountClientContext = () => {
-  const context = useContext(AccountClientContext);
-  if (!context) {
-    throw new Error("useAccountClientContext must be used within an AccountProvider");
-  }
-  return context;
-};
+import { createContext, ReactNode } from "react";
 
 interface AccountProviderProps {
-  options: UseAccountParams;
+  options: {
+    playerAddress?: Address;
+    playerPrivateKey?: Hex;
+    sessionPrivateKey?: Hex;
+  };
   children: ReactNode;
 }
+
+export const AccountClientContext = createContext<AccountClient | undefined>(undefined);
 
 export function AccountClientProvider({ options, children }: AccountProviderProps) {
   if (!options.playerAddress && !options.playerPrivateKey) throw new Error("Must provide address or private key");
