@@ -9,7 +9,7 @@ export const getScale = (resource: Entity) => {
 const unscaledResources = new Set([
   ...Object.keys(UnitEnumLookup),
   EntityType.FleetCount,
-  EntityType.VesselCapacity,
+  EntityType.ColonyShipCapacity,
   EntityType.Housing,
 ]);
 
