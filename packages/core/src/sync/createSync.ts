@@ -5,11 +5,11 @@ import { Keys } from "@/lib/constants";
 import { hashEntities } from "@/utils/global/encode";
 import { Hex } from "viem";
 import { getAllianceQuery } from "./queries/allianceQueries";
-import { getActiveAsteroidQuery, getAsteroidQuery, getShardAsteroidQuery } from "./queries/asteroidQueries";
+import { getActiveAsteroidQuery, getAsteroidFilter, getShardAsteroidFilter } from "./queries/asteroidQueries";
 import { getBattleReportQuery } from "./queries/battleReportQueries";
-import { getFleetQuery } from "./queries/fleetQueries";
+import { getFleetFilter } from "./queries/fleetQueries";
 import { getInitialQuery } from "./queries/initialQueries";
-import { getPlayerQuery } from "./queries/playerQueries";
+import { getPlayerFilter } from "./queries/playerQueries";
 import { getSecondaryQuery } from "@/sync/queries/secondaryQueries";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 
@@ -133,15 +133,16 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
 
     if (!indexerUrl) return;
 
-    const sync = Sync.withQueryDecodedIndexerRecsSync(
-      getInitialQuery({
+    const sync = Sync.withQueryDecodedIndexerRecsSync({
+      tables,
+      world,
+      indexerUrl,
+      query: getInitialQuery({
         tables,
-        world,
-        indexerUrl,
         playerAddress,
         worldAddress: config.worldAddress as Hex,
-      })
-    );
+      }),
+    });
 
     sync.start(async (_, blockNumber, progress) => {
       components.SyncStatus.set({
@@ -163,14 +164,12 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
     if (!indexerUrl) return;
 
     const syncId = Keys.SECONDARY;
-    const sync = Sync.withQueryDecodedIndexerRecsSync(
-      getSecondaryQuery({
-        tables,
-        world,
-        indexerUrl,
-        worldAddress: config.worldAddress as Hex,
-      })
-    );
+    const sync = Sync.withQueryDecodedIndexerRecsSync({
+      tables,
+      world,
+      indexerUrl,
+      query: getSecondaryQuery({ tables, worldAddress: config.worldAddress as Hex }),
+    });
 
     sync.start(async (_, blockNumber, progress) => {
       components.SyncStatus.set(
@@ -211,16 +210,17 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
       return;
     }
 
-    const syncData = Sync.withFilterIndexerRecsSync(
-      getPlayerQuery({
-        indexerUrl,
+    const syncData = Sync.withFilterIndexerRecsSync({
+      indexerUrl,
+      tables,
+      world,
+      filter: getPlayerFilter({
         tables,
-        world,
         playerAddress,
         playerEntity: playerEntity as Hex,
         worldAddress: config.worldAddress as Hex,
-      })
-    );
+      }),
+    });
 
     syncData.start(
       ...createSyncHandlers(playerEntity, {
@@ -250,12 +250,16 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
 
     const params = {
       tables,
-      world,
-      indexerUrl: indexerUrl,
       asteroid: selectedRock,
       worldAddress: config.worldAddress as Hex,
     };
-    const syncData = Sync.withFilterIndexerRecsSync(shard ? getShardAsteroidQuery(params) : getAsteroidQuery(params));
+
+    const syncData = Sync.withFilterIndexerRecsSync({
+      tables,
+      world,
+      indexerUrl,
+      filter: shard ? getShardAsteroidFilter(params) : getAsteroidFilter(params),
+    });
 
     syncData.start(
       ...createSyncHandlers(syncId, {
@@ -283,15 +287,16 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
       return;
     }
 
-    const syncData = Sync.withQueryDecodedIndexerRecsSync(
-      getActiveAsteroidQuery({
-        tables,
-        world,
-        indexerUrl,
+    const syncData = Sync.withQueryDecodedIndexerRecsSync({
+      tables,
+      world,
+      indexerUrl,
+      query: getActiveAsteroidQuery({
         asteroid: activeRock,
+        tables,
         worldAddress: config.worldAddress as Hex,
-      })
-    );
+      }),
+    });
 
     syncData.start(
       ...createSyncHandlers(syncId, {
@@ -317,15 +322,16 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
       return;
     }
 
-    const syncData = Sync.withQueryDecodedIndexerRecsSync(
-      getAllianceQuery({
+    const syncData = Sync.withQueryDecodedIndexerRecsSync({
+      indexerUrl,
+      world,
+      tables,
+      query: getAllianceQuery({
         tables,
-        world,
-        indexerUrl,
         alliance: allianceEntity,
         worldAddress: config.worldAddress as Hex,
-      })
-    );
+      }),
+    });
 
     syncData.start(
       ...createSyncHandlers(allianceEntity, {
@@ -352,16 +358,17 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
     }
 
     const ownerAsteroid = (components.OwnedBy.get(fleetEntity)?.value ?? singletonEntity) as Entity;
-    const syncData = Sync.withFilterIndexerRecsSync(
-      getFleetQuery({
+    const syncData = Sync.withFilterIndexerRecsSync({
+      indexerUrl,
+      world,
+      tables,
+      filter: getFleetFilter({
         tables,
-        world,
-        indexerUrl,
         fleet: fleetEntity,
         ownerAsteroid,
         worldAddress: config.worldAddress as Hex,
-      })
-    );
+      }),
+    });
 
     syncData.start(
       ...createSyncHandlers(fleetEntity, {
@@ -389,15 +396,16 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
       return;
     }
 
-    const syncData = Sync.withQueryDecodedIndexerRecsSync(
-      getBattleReportQuery({
+    const syncData = Sync.withQueryDecodedIndexerRecsSync({
+      tables,
+      world,
+      indexerUrl,
+      query: getBattleReportQuery({
         tables,
-        world,
-        indexerUrl,
         playerEntity,
         worldAddress: config.worldAddress as Hex,
-      })
-    );
+      }),
+    });
 
     syncData.start(
       ...createSyncHandlers(syncId, {

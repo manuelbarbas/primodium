@@ -1,48 +1,44 @@
 import { Hex } from "viem";
-import type { Sync } from "@primodiumxyz/sync-stack";
 import { Entity } from "@latticexyz/recs";
+import { DecodedIndexerQuery } from "@primodiumxyz/sync-stack/types";
+import { Table } from "@latticexyz/store/internal";
+
 export const getAllianceQuery = ({
   tables,
-  world,
-  indexerUrl,
   alliance,
   worldAddress,
-}: Omit<Parameters<typeof Sync.withQueryDecodedIndexerRecsSync>[0], "query"> & {
+}: {
+  tables: Record<string, Table>;
   worldAddress: Hex;
   alliance: Entity;
-}) => {
+}): DecodedIndexerQuery => {
   return {
-    indexerUrl,
-    tables,
-    world,
-    query: {
-      address: worldAddress as Hex,
-      queries: [
-        {
-          tableId: tables.AllianceJoinRequest.tableId,
-          where: {
-            column: "alliance",
-            operation: "eq",
-            value: alliance as Hex,
-          },
+    address: worldAddress as Hex,
+    queries: [
+      {
+        tableId: tables.AllianceJoinRequest.tableId,
+        where: {
+          column: "alliance",
+          operation: "eq",
+          value: alliance as Hex,
         },
-        {
-          tableId: tables.PlayerAlliance.tableId,
-          where: {
-            column: "alliance",
-            operation: "eq",
-            value: alliance as Hex,
-          },
+      },
+      {
+        tableId: tables.PlayerAlliance.tableId,
+        where: {
+          column: "alliance",
+          operation: "eq",
+          value: alliance as Hex,
         },
-        {
-          tableId: tables.AllianceInvitation.tableId,
-          where: {
-            column: "alliance",
-            operation: "eq",
-            value: alliance as Hex,
-          },
+      },
+      {
+        tableId: tables.AllianceInvitation.tableId,
+        where: {
+          column: "alliance",
+          operation: "eq",
+          value: alliance as Hex,
         },
-      ],
-    } as Parameters<typeof Sync.withQueryDecodedIndexerRecsSync>[0]["query"],
+      },
+    ],
   };
 };
