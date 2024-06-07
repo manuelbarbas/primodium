@@ -66,7 +66,7 @@ contract WriteDemoSystem is System {
     bytes memory buildingEntity = IPrimodiumWorld(_world()).callFrom(
       _msgSender(),
       buildSystemId,
-      abi.encodeWithSignature("Pri_11__build(uint8,(int32,int32,bytes32))", building, (position))
+      abi.encodeWithSignature("build(uint8,(int32,int32,bytes32))", building, (position))
     );
 
     // // find the expected function selector
