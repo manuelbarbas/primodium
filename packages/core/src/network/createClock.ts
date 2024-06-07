@@ -9,6 +9,15 @@ import { Block } from "viem";
  * @param config
  * @returns: {@link Clock}
  */
+
+type Clock = {
+  currentTime: number;
+  lastUpdateTime: number;
+  time$: ReplaySubject<number>;
+  dispose: () => void;
+  update: (time: number) => void;
+};
+
 export function createClock(
   world: World,
   latestBlock$: Observable<Block>,
@@ -17,7 +26,7 @@ export function createClock(
     initialTime: number;
     syncInterval: number;
   }
-) {
+): Clock {
   const { initialTime, period } = config;
 
   const clock = {

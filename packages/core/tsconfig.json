@@ -9,12 +9,12 @@
     "resolveJsonModule": true,
     "paths": {
       "@/*": ["./src/*"],
-      "debug": ["./node_modules/debug"], /* TODO: figure out why this is req to stop TS2742 error */
-      "@latticexyz/store-sync": ["./node_modules/@latticexyz/store-sync"],  /* TODO: figure out why this is req to stop TS2742 error */
+      /* TODO: figure out why this is req to stop TS2742 error */
+      "debug": ["./node_modules/debug"],
+      "@latticexyz/store-sync": ["./node_modules/@latticexyz/store-sync"],
+      "@latticexyz/common": ["./node_modules/@latticexyz/common"]
     },
-    "typeRoots": [
-      "./types"
-    ],
+    "typeRoots": ["./types"],
     "jsx": "react-jsx",
     "jsxImportSource": "react"
   },
