@@ -8,6 +8,7 @@ import { WorldRegistrationSystem } from "@latticexyz/world/src/modules/init/impl
 import { System } from "@latticexyz/world/src/System.sol";
 
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
+import { ResourceIds } from "@latticexyz/store/src/codegen/tables/ResourceIds.sol";
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
@@ -36,7 +37,7 @@ contract WriteDemoTest is MudTest {
 
   // defining these up top for use below.
   // namespaces are truncated to 14 bytes, and systems to 16 bytes.
-  // namespaces must be unique, so if you get an Already Exists revert, try changing the namespace.
+  // namespaces must be unique, so if you get a Setup revert, try changing the namespace.
   // systems are also unique within a namespace, but redeploying a system will overwrite the previous version.
   bytes14 PRIMODIUM_NAMESPACE = bytes14("Pri_11");
   bytes14 namespace = bytes14("PluginExamples");
@@ -72,6 +73,12 @@ contract WriteDemoTest is MudTest {
     // interacting with the chain requires us to pretend to be someone
     // here, we are pretending to be the extension deployer
     vm.startPrank(extensionDeployerAddress);
+
+    // check if the namespace already exists
+    // if you own the namespace, you can change/deregister it via other code
+    // if you do not own the namespace but it is already registered, you will need to change your namespace
+    bool existingNamespaceCheck = ResourceIds.getExists(namespaceResource);
+    assertFalse(existingNamespaceCheck, "Namespace already exists.");
 
     // register the namespace
     world.registerNamespace(namespaceResource);
