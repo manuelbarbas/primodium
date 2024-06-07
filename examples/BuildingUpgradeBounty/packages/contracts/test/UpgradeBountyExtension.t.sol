@@ -26,6 +26,7 @@ contract UpgradeBountyExtensionTest is Test {
   address worldAddress = vm.envAddress("WORLD_ADDRESS");
   address delegateeAddress = vm.envAddress("ADDRESS_BOB");
   bytes32 bountyBuildingBytes = vm.envBytes32("BOUNTY_BUILDING_ENTITY");
+  uint256 bountyAmount = vm.envUint("BOUNTY_AMOUNT");
 
   function setUp() public {
     // setUp is called before each test. This setUp also registers the namespace and system to the world address.
