@@ -469,9 +469,6 @@ importers:
       dayjs:
         specifier: ^1.11.10
         version: 1.11.11
-      debounce:
-        specifier: ^2.1.0
-        version: 2.1.0
       obscenity:
         specifier: ^0.1.4
         version: 0.1.4
@@ -10364,11 +10361,6 @@ packages:
 
   /dayjs@1.11.11:
     resolution: {integrity: sha512-okzr3f11N6WuqYtZSvm+F776mB41wRZMhKP+hc34YdW+KmtYYK9iqvHSwo2k9FEH3fhGXvOPV6yz2IcSrfRUDg==}
-    dev: false
-
-  /debounce@2.1.0:
-    resolution: {integrity: sha512-OkL3+0pPWCqoBc/nhO9u6TIQNTK44fnBnzuVtJAbp13Naxw9R6u21x+8tVTka87AhDZ3htqZ2pSSsZl9fqL2Wg==}
-    engines: {node: '>=18'}
     dev: false
 
   /debug@2.6.9:
