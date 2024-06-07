@@ -60,10 +60,12 @@ contract WriteDemoSystem is System {
     // if we didn't revert in the above step, then we have found a valid tile position to build on
 
     ResourceId buildSystemId = WorldResourceIdLib.encode(RESOURCE_SYSTEM, PRIMODIUM_NAMESPACE, "BuildSystem");
-    bytes memory buildingEntity = IPrimodiumWorld(_world()).callFrom(
-      _msgSender(),
-      buildSystemId,
-      abi.encodeWithSignature("build(uint8,(int32,int32,bytes32))", building, (position))
+    buildingEntity = bytes32(
+      IPrimodiumWorld(_world()).callFrom(
+        _msgSender(),
+        buildSystemId,
+        abi.encodeWithSignature("build(uint8,(int32,int32,bytes32))", building, (position))
+      )
     );
     // Notice that the called function is "build" and not "Pri_11__build", because the namespace encoding happens with buildSystemId
   }

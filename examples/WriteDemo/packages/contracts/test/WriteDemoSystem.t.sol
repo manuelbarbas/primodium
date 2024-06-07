@@ -113,9 +113,12 @@ contract WriteDemoTest is MudTest {
     // attempting to spawn the player if they have not started the game yet
     bytes32 playerEntity = bytes32(uint256(uint160(playerAddressBob)));
     bool playerIsSpawned = Spawned.get(playerEntity);
+    bytes32 asteroidEntity;
     if (!playerIsSpawned) {
       console2.log("Spawning Player");
-      IPrimodiumWorld(worldAddress).Pri_11__spawn();
+      asteroidEntity = IPrimodiumWorld(worldAddress).Pri_11__spawn();
+      assertTrue(Spawned.get(playerEntity), "player did not spawn");
+      playerIsSpawned = true;
     }
 
     // build an iron mine on their home base
@@ -123,7 +126,7 @@ contract WriteDemoTest is MudTest {
     bytes32 buildingEntity = IWorld(worldAddress).PluginExamples__buildIronMine();
 
     // assert that the iron mine was built
-    assert(uint256(buildingEntity) != 0);
+    assertTrue(uint256(buildingEntity) != 0, "iron mine was not built");
     console2.log("confirmed new IronMine Entity: %x", uint256(buildingEntity));
 
     // stop interacting with the chain
