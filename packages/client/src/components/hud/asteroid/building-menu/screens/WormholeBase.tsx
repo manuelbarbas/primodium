@@ -42,6 +42,7 @@ const WormholeDeposit: React.FC<{ building: Entity; asteroid: Entity }> = ({ bui
   const multiplier = components.P_PointMultiplier.useWithKeys({
     resource: ResourceEnumLookup[wormholeResource],
   })?.value;
+  const isGameOver = components.VictoryStatus.use()?.gameOver ?? false;
   const points =
     components.Points.useWithKeys({
       entity: mud.playerAccount.entity as Hex,
@@ -63,7 +64,8 @@ const WormholeDeposit: React.FC<{ building: Entity; asteroid: Entity }> = ({ bui
           className="w-8 h-8"
         />
         <p>
-          {(multiplier ?? 1n).toString()} pt{multiplier != 1n ? "s" : ""} / {getEntityTypeName(wormholeResource)}
+          {(isGameOver ? 0n : multiplier ?? 1n).toString()} pt{multiplier != 1n ? "s" : ""} /{" "}
+          {getEntityTypeName(wormholeResource)}
         </p>
       </div>
       <p className="text-xs opacity-70">

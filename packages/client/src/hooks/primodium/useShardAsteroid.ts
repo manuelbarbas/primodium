@@ -1,9 +1,9 @@
 import { bigIntMax } from "@latticexyz/common/utils";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { components } from "src/network/components";
-import { EntityType, SPEED_SCALE } from "src/util/constants";
 import { useFullResourceCount } from "../useFullResourceCount";
+import { EntityType, SPEED_SCALE } from "@/util/constants";
+import { components } from "@/network/components";
 import { entityToShardData } from "@/util/name";
 
 export const useShardAsteroid = (entity: Entity) => {
@@ -20,6 +20,7 @@ export const useShardAsteroid = (entity: Entity) => {
   );
 
   const shardNameData = entityToShardData(entity);
+  const isGameOver = components.VictoryStatus.use()?.gameOver ?? false;
 
   const timeData = useMemo(() => {
     if (!conquestConfigData || !shardAsteroid) return null;
@@ -28,14 +29,16 @@ export const useShardAsteroid = (entity: Entity) => {
     const explodeTime = shardAsteroid.spawnTime + lifespan;
     const canExplode = time >= explodeTime;
     const timeUntilExplode = canExplode ? 0n : Number(explodeTime - time);
-    const dripPerSec = conquestConfigData.shardAsteroidPoints / lifespan;
+
+    const shardAsteroidPoints = isGameOver ? 0n : conquestConfigData.shardAsteroidPoints;
+    const dripPerSec = shardAsteroidPoints / lifespan;
 
     let unclaimedPoints = 0n;
     if (!!owner && owner === player) {
       const endTime = time > explodeTime ? explodeTime : time;
       const timeSinceClaimed = bigIntMax(0n, endTime - lastConquered);
       const holdPct = (timeSinceClaimed * 100000n) / lifespan;
-      unclaimedPoints = (holdPct * conquestConfigData.shardAsteroidPoints) / 100000n;
+      unclaimedPoints = (holdPct * shardAsteroidPoints) / 100000n;
     }
 
     return {
@@ -52,7 +55,7 @@ export const useShardAsteroid = (entity: Entity) => {
       owner,
       dripPerSec,
       unclaimedPoints,
-      explodePoints: conquestConfigData.shardAsteroidPoints,
+      explodePoints: shardAsteroidPoints,
     };
   }, [conquestConfigData, shardAsteroid, worldSpeed, time, owner, player, lastConquered]);
 
