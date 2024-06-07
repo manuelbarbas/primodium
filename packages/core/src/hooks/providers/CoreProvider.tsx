@@ -1,4 +1,4 @@
-import { ReactNode, createContext } from "react";
+import React, { ReactNode, createContext } from "react";
 import { Core } from "@/lib/types";
 
 export const CoreContext = createContext<Core | null>(null);

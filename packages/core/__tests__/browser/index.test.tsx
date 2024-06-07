@@ -3,11 +3,12 @@ import { commonTests, createTestConfig } from "../lib/common";
 import { render, screen } from "@testing-library/react";
 import React from "react";
 
-import { CoreProvider, useCore } from "@/hooks";
+import { AccountClientProvider, CoreProvider, useCore } from "@/hooks";
 import { createCore } from "@/createCore";
+import { useAccountClient } from "@/hooks/useAccountClient";
 
 describe("browser", () => {
-  const { coreConfig, address } = createTestConfig();
+  const { coreConfig, address, privateKey } = createTestConfig();
 
   commonTests();
 
@@ -21,13 +22,38 @@ describe("browser", () => {
           </div>
         );
       };
+
       const core = createCore(coreConfig);
+
       render(
         <CoreProvider {...core}>
           <TestCoreComponent />
         </CoreProvider>
       );
-      expect(screen.getByText(address)).toBeInTheDocument();
+
+      expect(screen.getAllByText(address)[0]).toBeInTheDocument();
+    });
+
+    it("should contain account client in a hook", () => {
+      const TestCoreComponent = () => {
+        const { playerAccount } = useAccountClient();
+        return (
+          <div>
+            <p>{playerAccount.address}</p>
+          </div>
+        );
+      };
+
+      const core = createCore(coreConfig);
+
+      render(
+        <CoreProvider {...core}>
+          <AccountClientProvider playerPrivateKey={privateKey}>
+            <TestCoreComponent />
+          </AccountClientProvider>
+        </CoreProvider>
+      );
+      expect(screen.getAllByText(address)[0]).toBeInTheDocument();
     });
   });
 });

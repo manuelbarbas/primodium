@@ -1,7 +1,7 @@
 import { useCore } from "@/hooks/useCore";
 import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { createClient as createFaucetClient } from "@latticexyz/faucet";
-import { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { createLocalAccount } from "@/account/createLocalAccount";
 import { createExternalAccount } from "@/account/createExternalAccount";
 import { AccountClient, ExternalAccount, LocalAccount } from "@/lib/types";
@@ -11,18 +11,17 @@ import { storage } from "@/utils/global/storage";
 
 import { createContext, ReactNode } from "react";
 
-interface AccountProviderProps {
-  options: {
-    playerAddress?: Address;
-    playerPrivateKey?: Hex;
-    sessionPrivateKey?: Hex;
-  };
-  children: ReactNode;
-}
+type AccountClientOptions = {
+  playerAddress?: Address;
+  playerPrivateKey?: Hex;
+  sessionPrivateKey?: Hex;
+};
+
+type AccountProviderProps = AccountClientOptions & { children: ReactNode };
 
 export const AccountClientContext = createContext<AccountClient | undefined>(undefined);
 
-export function AccountClientProvider({ options, children }: AccountProviderProps) {
+export function AccountClientProvider({ children, ...options }: AccountProviderProps) {
   if (!options.playerAddress && !options.playerPrivateKey) throw new Error("Must provide address or private key");
   const core = useCore();
   const {
@@ -74,12 +73,12 @@ export function AccountClientProvider({ options, children }: AccountProviderProp
 
   /* ----------------------------- Player Account ----------------------------- */
 
+  const playerAccountInterval = useRef<NodeJS.Timeout | null>(null);
+
   const [playerAccount, setPlayerAccount] = useState<LocalAccount | ExternalAccount>(
     // this is a hack to make typescript happy with overloaded function params
     _updatePlayerAccount(options as { playerAddress: Address })
   );
-
-  const playerAccountInterval = useRef<NodeJS.Timeout | null>(null);
 
   function _updatePlayerAccount(options: { playerAddress: Address }): ExternalAccount;
   function _updatePlayerAccount(options: { playerPrivateKey: Hex }): LocalAccount;
@@ -95,7 +94,6 @@ export function AccountClientProvider({ options, children }: AccountProviderProp
       : createExternalAccount(config, options.playerAddress!);
 
     if (useLocal) storage.setItem("primodiumPlayerAccount", account.privateKey ?? "");
-    setPlayerAccount(account);
 
     if (playerAccountInterval.current) {
       clearInterval(playerAccountInterval.current);
