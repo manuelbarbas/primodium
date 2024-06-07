@@ -7,7 +7,6 @@ import { setupDoubleCounter } from "@/systems/setupDoubleCounter";
 import { setupHangar } from "@/systems/setupHangar";
 import { setupHomeAsteroid } from "@/systems/setupHomeAsteroid";
 import { setupLeaderboard } from "@/systems/setupLeaderboard";
-import { setupObjectives } from "@/systems/setupObjectives";
 import { setupSync } from "@/systems/setupSync";
 import { setupTime } from "@/systems/setupTime";
 import { setupTrainingQueues } from "@/systems/setupTrainingQueues";
@@ -24,7 +23,6 @@ export function runCoreSystems(core: Core) {
   setupHangar(core);
   setupHomeAsteroid(core);
   setupLeaderboard(core);
-  setupObjectives(core);
   setupSync(core);
   setupTime(core);
   setupTrainingQueues(core);

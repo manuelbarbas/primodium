@@ -13,7 +13,6 @@ import { createSwapUtils } from "@/utils/core/swap";
 import { createTileUtils } from "@/utils/core/tile";
 import { createUnitUtils } from "@/utils/core/unit";
 import { createUpgradeUtils } from "@/utils/core/upgrade";
-import { createObjectiveUtils } from "@/utils/core/objectives";
 import { createLeaderboardUtils } from "@/utils/core/createLeaderboardUtils";
 import { createDefenseUtils } from "@/utils/core/defense";
 import { createDroidRegenUtils } from "@/utils/core/droidRegen";
@@ -30,7 +29,6 @@ export const createUtils = (components: Components) => {
     ...createDefenseUtils(components),
     ...createDroidRegenUtils(components),
     ...createLeaderboardUtils(components),
-    ...createObjectiveUtils(components),
     ...createRecipeUtils(components),
     ...createResourceUtils(components),
     ...createRecipeUtils(components),

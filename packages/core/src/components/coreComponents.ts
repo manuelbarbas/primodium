@@ -11,7 +11,7 @@ import {
 import { createTransactionQueueComponent } from "./customComponents/TransactionQueueComponent";
 import { CreateNetworkResult } from "@/lib/types";
 
-export default function setupClientComponents(network: CreateNetworkResult) {
+export default function setupCoreComponents(network: CreateNetworkResult) {
   const world = network.world;
   const DoubleCounter = createExtendedBigIntComponent(world, { id: "DoubleCounter" });
 
