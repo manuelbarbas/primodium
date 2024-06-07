@@ -10,6 +10,7 @@ import { System } from "@latticexyz/world/src/System.sol";
 
 // Create resource identifiers (for the namespace and system)
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
+import { ResourceIds } from "@latticexyz/store/src/codegen/tables/ResourceIds.sol";
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { RESOURCE_SYSTEM } from "@latticexyz/world/src/worldResourceTypes.sol";
 
@@ -59,6 +60,12 @@ contract UpgradeBountyExtension is Script {
     console.log("System ID:    %x", uint256(ResourceId.unwrap(systemResource)));
 
     vm.startBroadcast(deployerPrivateKey);
+
+    // check if the namespace already exists
+    // if you own the namespace, you can change/deregister it via other code
+    // if you do not own the namespace but it is already registered, you will need to change your namespace
+    bool existingNamespaceCheck = ResourceIds.getExists(namespaceResource);
+    require(!existingNamespaceCheck, "Namespace already exists.");
 
     world.registerNamespace(namespaceResource); // registers namespace to world address
     StoreSwitch.setStoreAddress(worldAddress); // sets the store address to the world address

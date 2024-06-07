@@ -99,6 +99,4 @@ interface IWorld is
   IUpgradeUnitSystem,
   IClaimPrimodiumSystem,
   IClaimWormholeSystem
-{
-
-}
+{}
