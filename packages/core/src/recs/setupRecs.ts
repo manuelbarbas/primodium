@@ -24,7 +24,7 @@ import {
 } from "rxjs";
 import { Block, Hex, PublicClient, TransactionReceiptNotFoundError } from "viem";
 
-type Recs<config extends StoreConfig, extraTables extends Record<string, Table>> = {
+export type Recs<config extends StoreConfig, extraTables extends Record<string, Table>> = {
   components: TablesToComponents<ResolvedStoreConfig<storeToV1<config>>["tables"] & extraTables>;
   latestBlock$: Observable<Block<bigint, false, "latest">>;
   latestBlockNumber$: Observable<bigint>;

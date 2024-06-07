@@ -48,7 +48,7 @@ describe("browser", () => {
 
       render(
         <CoreProvider {...core}>
-          <AccountClientProvider playerPrivateKey={privateKey}>
+          <AccountClientProvider playerPrivateKey={privateKey} sessionPrivateKey={privateKey}>
             <TestCoreComponent />
           </AccountClientProvider>
         </CoreProvider>

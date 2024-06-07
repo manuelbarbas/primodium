@@ -1,3 +1,4 @@
+import { Clock } from "@/lib";
 import { World } from "@latticexyz/recs";
 import { Observable, ReplaySubject, filter, map } from "rxjs";
 import { Block } from "viem";
@@ -9,14 +10,6 @@ import { Block } from "viem";
  * @param config
  * @returns: {@link Clock}
  */
-
-type Clock = {
-  currentTime: number;
-  lastUpdateTime: number;
-  time$: ReplaySubject<number>;
-  dispose: () => void;
-  update: (time: number) => void;
-};
 
 export function createClock(
   world: World,

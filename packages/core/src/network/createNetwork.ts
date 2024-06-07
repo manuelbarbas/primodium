@@ -7,9 +7,9 @@ import { createWorld } from "@latticexyz/recs";
 import { createClock } from "@/network/createClock";
 import { otherTables } from "@/network/otherTables";
 import { extendContractComponents } from "@/components/customComponents/extendComponents";
-import { CoreConfig } from "@/lib/types";
+import { CoreConfig, CreateNetworkResult } from "@/lib/types";
 
-export function createNetwork(config: CoreConfig) {
+export function createNetwork(config: CoreConfig): CreateNetworkResult {
   const world = createWorld();
   world.registerEntity({ id: singletonEntity });
 
@@ -35,7 +35,7 @@ export function createNetwork(config: CoreConfig) {
     syncInterval: 10000,
   });
 
-  const networkResult = {
+  return {
     world,
     tables,
     publicClient,
@@ -47,6 +47,4 @@ export function createNetwork(config: CoreConfig) {
     storedBlockLogs$,
     waitForTransaction,
   };
-
-  return networkResult;
 }

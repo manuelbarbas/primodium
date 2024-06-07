@@ -147,16 +147,16 @@ export function createBuildingUtils(components: Components) {
     return true;
   };
 
-  const getBuildingName = (building: Entity) => {
+  const getBuildingName = (building: Entity): string => {
     const buildingType = components.BuildingType.get(building)?.value as Entity;
     const level = components.Level.get(building)?.value ?? 1n;
 
-    if (!buildingType) return null;
+    if (!buildingType) return "";
 
     return `${getEntityTypeName(buildingType)} ${toRomanNumeral(Number(level))}`;
   };
 
-  const getBuildingStorages = (buildingType: Entity, level: bigint) => {
+  const getBuildingStorages = (buildingType: Entity, level: bigint): ResourceData[] => {
     const resourceStorages = MUDEnums.EResource.map((_, i) => {
       const storage = components.P_ByLevelMaxResourceUpgrades.getWithKeys({
         prototype: buildingType as Hex,
@@ -168,16 +168,12 @@ export function createBuildingUtils(components: Components) {
 
       return {
         resource: ResourceEntityLookup[i as EResource],
-        resourceType: components.P_IsUtility.getWithKeys({ id: i }) ? ResourceType.Resource : ResourceType.Utility,
+        type: components.P_IsUtility.getWithKeys({ id: i }) ? ResourceType.Resource : ResourceType.Utility,
         amount: storage,
       };
     });
 
-    return resourceStorages.filter((storage) => !!storage) as {
-      resource: Entity;
-      resourceType: ResourceType;
-      amount: bigint;
-    }[];
+    return resourceStorages.filter((storage) => !!storage);
   };
 
   function getBuildingLevelStorageUpgrades(buildingType: Entity, level: bigint) {
@@ -194,9 +190,8 @@ export function createBuildingUtils(components: Components) {
     }));
   }
 
-  function transformProductionData(
-    production: { resources: number[]; amounts: bigint[] } | undefined
-  ): { resource: Entity; amount: bigint; type: ResourceType }[] {
+  type ResourceData = { resource: Entity; amount: bigint; type: ResourceType };
+  function transformProductionData(production: { resources: number[]; amounts: bigint[] } | undefined): ResourceData[] {
     if (!production) return [];
 
     return production.resources
@@ -244,12 +239,12 @@ export function createBuildingUtils(components: Components) {
     const unitProduction = components.P_UnitProdTypes.getWithKeys(buildingLevelKeys)?.value;
     const storages = getBuildingStorages(buildingTypeEntity, level);
     const unitProductionMultiplier = components.P_UnitProdMultiplier.getWithKeys(buildingLevelKeys)?.value;
-    const position = components.Position.get(building) ?? { x: 0, y: 0, parentEntity: undefined };
+    const position = (components.Position.get(building) ?? { x: 0, y: 0 }) as Coord;
 
     const nextLevel = level + 1n;
     const maxLevel = components.P_MaxLevel.getWithKeys({ prototype: buildingType })?.value ?? 1n;
 
-    let upgrade = undefined;
+    let nextLevelData = undefined;
     if (nextLevel <= maxLevel) {
       const buildingNextLevelKeys = { prototype: buildingType, level: nextLevel };
       const nextLevelProduction = transformProductionData(components.P_Production.getWithKeys(buildingNextLevelKeys));
@@ -264,7 +259,7 @@ export function createBuildingUtils(components: Components) {
         components.P_UnitProdMultiplier.getWithKeys(buildingNextLevelKeys)?.value;
       const upgradeRecipe = getRecipe(buildingTypeEntity, nextLevel);
       const mainBaseLvlReq = components.P_RequiredBaseLevel.getWithKeys(buildingNextLevelKeys)?.value ?? 1;
-      upgrade = {
+      nextLevelData = {
         unitProduction: unitNextLevelProduction,
         production: nextLevelProduction,
         storages: nextLevelStorages,
@@ -286,7 +281,7 @@ export function createBuildingUtils(components: Components) {
       position,
       unitProductionMultiplier,
       requiredDependencies,
-      upgrade,
+      upgrade: nextLevelData,
     };
   };
 

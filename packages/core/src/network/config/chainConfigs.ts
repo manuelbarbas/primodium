@@ -1,15 +1,14 @@
 import { MUDChain, mudFoundry, garnet, redstone } from "@latticexyz/common/chains";
 
-export const dev = {
+const dev: ChainConfig = {
   ...mudFoundry,
   //COMMENT OUT INDEXER URL TO USE ONLY RPC
   indexerUrl: "http://localhost:3001",
 };
 
-export const caldera = {
+const caldera: ChainConfig = {
   name: "Caldera",
   id: 12523,
-  network: "caldera",
   nativeCurrency: { decimals: 18, name: "Ether", symbol: "ETH" },
   rpcUrls: {
     default: {
@@ -31,10 +30,9 @@ export const caldera = {
   },
 };
 
-export const calderaSepolia = {
+const calderaSepolia: ChainConfig = {
   name: "Caldera Sepolia",
   id: 10017,
-  network: "calderaSepolia",
   nativeCurrency: { decimals: 18, name: "Ether", symbol: "ETH" },
   rpcUrls: {
     default: {
@@ -60,6 +58,6 @@ export const chainConfigs = {
   caldera,
   calderaSepolia,
   dev,
-  garnet,
-  redstone,
+  garnet: garnet as ChainConfig,
+  redstone: redstone as ChainConfig,
 } as const;

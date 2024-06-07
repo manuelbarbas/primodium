@@ -4,7 +4,7 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EFleetStance } from "contracts/config/enums";
 import { EntityType, ResourceStorages, RockRelationship } from "@/lib/constants";
 import { MapIdToAsteroidType } from "@/lib/mappings";
-import { Components } from "@/lib/types";
+import { Components, Coord } from "@/lib/types";
 import { createResourceUtils } from "@/utils/core/resource";
 import { createUnitUtils } from "@/utils/core/unit";
 import { getEntityTypeName } from "@/utils/global/common";
@@ -59,7 +59,7 @@ export function createAsteroidUtils(components: Components) {
       x: 0,
       y: 0,
       parentEntity: "0" as Entity,
-    });
+    }) as Coord;
 
     const resources = [...ResourceStorages].reduce((acc, resource) => {
       const { resourceCount } = getFullResourceCount(resource, spaceRock);
@@ -67,11 +67,11 @@ export function createAsteroidUtils(components: Components) {
 
       if (amount) {
         // only add to the array if amount is non-zero
-        acc.push({ id: resource, amount });
+        acc.push({ resource, amount });
       }
 
       return acc;
-    }, [] as { id: Entity; amount: bigint }[]);
+    }, [] as { resource: Entity; amount: bigint }[]);
     const { resourceCount: encryption } = getFullResourceCount(EntityType.Encryption, spaceRock);
 
     const hangar = components.Hangar.get(spaceRock);
