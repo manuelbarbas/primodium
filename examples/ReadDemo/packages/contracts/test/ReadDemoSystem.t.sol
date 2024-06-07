@@ -134,7 +134,7 @@ contract ReadDemoTest is MudTest {
 
   function test_SpawnAndReadMainBaseLevel() public {
     vm.startPrank(playerAddressInactive);
-    console2.log("\ntest_SpawnAndReadMainaseLevel worldAddress: ", worldAddress);
+    console2.log("\ntest_SpawnAndReadMainBaseLevel worldAddress: ", worldAddress);
 
     uint32 baseLevel = IWorld(worldAddress).PluginExamples__readMainBaseLevel();
     console2.log("baseLevelBefore:", baseLevel);
