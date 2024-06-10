@@ -17,7 +17,7 @@ import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { hashEntities } from "@/util/encode";
 import { TransactionQueueType } from "@/util/constants";
 import { sendFleetPosition } from "@/network/setup/contractCalls/fleetSend";
-import { useMud } from "@/hooks";
+import { useMud } from "@/react/hooks";
 import { clearFleetStance } from "@/network/setup/contractCalls/fleetStance";
 import { isAsteroidBlocked } from "@/util/asteroid";
 

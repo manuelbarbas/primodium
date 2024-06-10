@@ -2,7 +2,7 @@ import { Badge } from "@/components/core/Badge";
 import { CapacityBar } from "@/components/core/CapacityBar";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Tooltip } from "@/components/core/Tooltip";
-import { useFullResourceCount } from "@/hooks/useFullResourceCount";
+import { useFullResourceCount } from "@/react/hooks/useFullResourceCount";
 import { EntityType } from "@/util/constants";
 import { EntityToResourceImage } from "@/util/mappings";
 import { formatResourceCount } from "@/util/number";

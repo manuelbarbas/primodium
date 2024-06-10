@@ -1,6 +1,6 @@
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
-import { useCore } from "@/hooks/useCore";
+import { useCore } from "@/react/hooks/useCore";
 
 /**
  * Retrieves the asteroids owned by a player entity.

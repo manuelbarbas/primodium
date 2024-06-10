@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { useCore } from "@/hooks/useCore";
+import { useCore } from "@/react/hooks/useCore";
 import { EntityType } from "@/lib/constants";
 import { Hex } from "viem";
 import { useResourceCount } from "./useResourceCount";

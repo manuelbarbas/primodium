@@ -1,4 +1,4 @@
-import { AccountClientContext } from "@/hooks/providers/AccountClientProvider";
+import { AccountClientContext } from "@/react/hooks/providers/AccountClientProvider";
 import { useContext } from "react";
 
 /**

@@ -1,4 +1,4 @@
-import { useGame } from "@/hooks/useGame";
+import { useGame } from "@/react/hooks/useGame";
 import { EntityToResourceImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";

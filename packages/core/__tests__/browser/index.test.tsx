@@ -3,9 +3,9 @@ import { commonTests, createTestConfig } from "../lib/common";
 import { render, screen } from "@testing-library/react";
 import React from "react";
 
-import { AccountClientProvider, CoreProvider, useCore } from "@/hooks";
+import { AccountClientProvider, CoreProvider, useCore } from "@/react/hooks";
 import { createCore } from "@/createCore";
-import { useAccountClient } from "@/hooks/useAccountClient";
+import { useAccountClient } from "@/react/hooks/useAccountClient";
 
 describe("browser", () => {
   const { coreConfig, address, privateKey } = createTestConfig();

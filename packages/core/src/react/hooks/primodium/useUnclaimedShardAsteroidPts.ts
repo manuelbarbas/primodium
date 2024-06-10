@@ -2,7 +2,7 @@ import { bigIntMax } from "@latticexyz/common/utils";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { SPEED_SCALE } from "@/lib/constants";
-import { useCore } from "@/hooks/useCore";
+import { useCore } from "@/react/hooks/useCore";
 
 /**
  * Calculates the total unclaimed shard asteroid points for a given player entity.

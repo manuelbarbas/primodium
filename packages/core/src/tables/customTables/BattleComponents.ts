@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { createExtendedComponent } from "./ExtendedComponent";
 import { CreateNetworkResult } from "@/lib/types";
 import { decodeEntity } from "@latticexyz/store-sync/recs";
-import { ResourceEnumLookup } from "@/lib/constants";
+import { ResourceEnumLookup } from "@/lib";
 
 export const createBattleComponents = ({ world, tables }: CreateNetworkResult) => {
   const RawBattleParticipants = createExtendedComponent(

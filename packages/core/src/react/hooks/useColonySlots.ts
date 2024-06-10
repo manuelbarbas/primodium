@@ -1,4 +1,4 @@
-import { useCore } from "@/hooks/useCore";
+import { useCore } from "@/react/hooks/useCore";
 import { ResourceEntityLookup } from "@/lib";
 import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";

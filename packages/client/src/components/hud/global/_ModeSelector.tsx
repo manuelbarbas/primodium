@@ -2,7 +2,7 @@ import { Badge } from "@/components/core/Badge";
 import { Button } from "@/components/core/Button";
 import { GlassCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
-import { useMud } from "@/hooks";
+import { useMud } from "@/react/hooks";
 import { cn } from "@/util/client";
 
 import { Mode } from "@/util/constants";

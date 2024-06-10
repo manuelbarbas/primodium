@@ -5,7 +5,7 @@ import { Badge } from "@/components/core/Badge";
 import { IconLabel } from "@/components/core/IconLabel";
 import { SecondaryCard } from "@/components/core/Card";
 import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
-import { useHasEnoughResources } from "@/hooks/useHasEnoughResources";
+import { useHasEnoughResources } from "@/react/hooks/useHasEnoughResources";
 import { components } from "@/network/components";
 import { getBuildingLevelStorageUpgrades, transformProductionData, getBuildingDimensions } from "@/util/building";
 import { getEntityTypeName } from "@/util/common";

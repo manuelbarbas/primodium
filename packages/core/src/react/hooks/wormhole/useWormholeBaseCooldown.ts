@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { useCore } from "@/hooks/useCore";
+import { useCore } from "@/react/hooks/useCore";
 
 /**
  * Calculates cooldown status and remaining time for a wormhole base entity.

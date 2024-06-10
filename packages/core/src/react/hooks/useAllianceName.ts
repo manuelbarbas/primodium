@@ -1,7 +1,7 @@
 import { censorText } from "@/utils/global/profanity";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { useCore } from "@/hooks/useCore";
+import { useCore } from "@/react/hooks/useCore";
 import { Hex, hexToString } from "viem";
 
 /**

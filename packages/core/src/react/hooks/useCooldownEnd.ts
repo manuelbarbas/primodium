@@ -2,7 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import { useMemo } from "react";
-import { useCore } from "@/hooks/useCore";
+import { useCore } from "@/react/hooks/useCore";
 dayjs.extend(duration);
 
 /**

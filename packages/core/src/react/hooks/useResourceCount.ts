@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useMemo } from "react";
-import { useCore } from "@/hooks/useCore";
+import { useCore } from "@/react/hooks/useCore";
 
 /**
  * Gets the count of a specific resource associated with a space rock entity.

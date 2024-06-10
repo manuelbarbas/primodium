@@ -1,6 +1,6 @@
 import { SecondaryCard } from "@/components/core/Card";
-import { useMud } from "@/hooks";
-import { usePlayerOwner } from "@/hooks/usePlayerOwner";
+import { useMud } from "@/react/hooks";
+import { usePlayerOwner } from "@/react/hooks/usePlayerOwner";
 import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";

@@ -1,4 +1,4 @@
-import { useCore } from "@/hooks/useCore";
+import { useCore } from "@/react/hooks/useCore";
 import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { createClient as createFaucetClient } from "@latticexyz/faucet";
 import React, { useCallback, useMemo, useRef, useState } from "react";

@@ -2,7 +2,7 @@ import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs"
 import { decodeEntity } from "@latticexyz/store-sync/recs";
 import { EPointType } from "contracts/config/enums";
 import { isPlayer } from "@/utils/global/common";
-import { EntityType, LeaderboardEntityLookup } from "@/lib/constants";
+import { EntityType, LeaderboardEntityLookup } from "@/lib";
 import { Core } from "@/lib/types";
 
 export const setupLeaderboard = (core: Core) => {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useMud } from "src/hooks/useMud";
 
-import { usePlayerAsteroids } from "@/hooks/usePlayerAsteroids";
+import { usePlayerAsteroids } from "@/react/hooks/usePlayerAsteroids";
 import { YouDied } from "@/screens/YouDied";
 import { PrimodiumGame, initGame } from "@game/api";
 import { Progress } from "src/components/core/Progress";
@@ -10,7 +10,7 @@ import { GameHUD } from "@/components/hud";
 import { WidgetProvider } from "src/hooks/providers/WidgetProvider";
 import { CommandBackgroundEffect } from "@/screens/CommandBackgroundEffect";
 import { BackgroundParallaxEffect } from "@/screens/BackgroundParallaxEffect";
-import { useSyncStatus } from "@/hooks/useSyncStatus";
+import { useSyncStatus } from "@/react/hooks/useSyncStatus";
 import { Keys } from "@/util/constants";
 
 const params = new URLSearchParams(window.location.search);

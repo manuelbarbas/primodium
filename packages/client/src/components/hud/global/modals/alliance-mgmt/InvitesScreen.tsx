@@ -3,7 +3,7 @@ import { SecondaryCard } from "@/components/core/Card";
 import { Navigator } from "@/components/core/Navigator";
 import { Tooltip } from "@/components/core/Tooltip";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { useMud } from "@/hooks";
+import { useMud } from "@/react/hooks";
 import { components } from "@/network/components";
 import { declineInvite, joinAlliance } from "@/network/setup/contractCalls/alliance";
 import { getAllianceName } from "@/util/alliance";

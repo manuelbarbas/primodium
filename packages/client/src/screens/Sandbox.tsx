@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useMud } from "src/hooks/useMud";
 
-import { GameProvider } from "@/hooks/providers/GameProvider";
+import { GameProvider } from "@/react/hooks/providers/GameProvider";
 import { PrimodiumGame, initGame } from "@game/api";
 import { Progress } from "src/components/core/Progress";
 import { setupSessionAccount } from "src/network/systems/setupSessionAccount";

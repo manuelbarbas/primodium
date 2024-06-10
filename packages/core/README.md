@@ -29,31 +29,53 @@ pnpm install @primodiumxyz/core
 
 ## Usage
 
-```js
- import { createCore,chainConfigs  } from '@primodiumxyz/core';
-
-  const coreConfig = {
-    chain: chainConfigs.dev,
-    worldAddress: '0x0',
-    initialBlockNumber: BigInt(0),
-    runSync: true, // runs default sync process if indexer url provided in chain config
-    runSystems: true, // runs default systems to keep core table data updated as blockchain state changes
-  };
-
- const coreConfig =
-      const core = createCore(coreConfig);
-
- coreConfig.
-```
-
 ### Node
 
-## API
+```js
+import { createCore, chainConfigs } from "@primodiumxyz/core";
 
-### Tables
+const coreConfig = {
+  chain: chainConfigs.dev,
+  worldAddress: "0x0",
+  initialBlockNumber: BigInt(0),
+  runSync: true, // runs default sync process if indexer url provided in chain config
+  runSystems: true, // runs default systems to keep core table data updated as blockchain state changes
+};
 
-Tables contain data. [See here](https://github.com/primodiumxyz/reactive-tables) for details on using tables to read and write data.
+const core = createCore(coreConfig);
 
-The Core object has the following data:
-are split into contract and local tables. Contract tables correlate to onchain state, while local tables are used only in the core object and its extensions.
-Contract Tables: [Documented here](https://developer.primodium.com/overview-source/tables)
+const time = core.components.Time.get()?.value;
+```
+
+### React
+
+```js
+import { createCore, chainConfigs } from "@primodiumxyz/core";
+import { CoreProvider, AccountClientProvider, useCore, useAccountClient } from "@primodiumxyz/core/react";
+
+const App = () => {
+  const core = createCore(coreConfig);
+  const privateKey = <PRIVATE_KEY>
+
+  // AccountClientProvider must be defined within the core context
+  return (
+    <CoreProvider {...core}>
+      <AccountClientProvider playerPrivateKey={privateKey} sessionPrivateKey={privateKey}>
+        <Content />
+      </AccountClientProvider>
+    </CoreProvider>
+  );
+};
+
+const Content = () => {
+  const core = useCore();
+  const account = useAccountClient();
+
+  return (
+    <div>
+      {account.playerAccount.address}
+    </div>
+  )
+}
+
+```

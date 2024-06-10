@@ -1,8 +1,14 @@
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { SPEED_SCALE } from "@/lib/constants";
-import { useCore } from "@/hooks";
+import { useCore } from "@/react";
 
+/**
+ * Custom hook that calculates the time until an asteroid can be claimed in the Primodium game.
+ *
+ * @param asteroidEntity - The entity representing the asteroid.
+ * @returns An object containing information about the claim status and time until claim.
+ */
 export const useClaimPrimodium = (asteroidEntity: Entity) => {
   const { tables } = useCore();
   const points = tables.Asteroid.use(asteroidEntity)?.primodium ?? 0n;

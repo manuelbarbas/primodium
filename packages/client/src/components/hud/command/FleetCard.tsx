@@ -1,5 +1,5 @@
 import { Tooltip } from "@/components/core/Tooltip";
-import { useMud } from "@/hooks";
+import { useMud } from "@/react/hooks";
 import { Entity } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EFleetStance } from "contracts/config/enums";

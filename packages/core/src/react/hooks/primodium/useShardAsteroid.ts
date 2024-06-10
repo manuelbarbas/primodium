@@ -2,9 +2,15 @@ import { bigIntMax } from "@latticexyz/common/utils";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { EntityType, SPEED_SCALE } from "@/lib/constants";
-import { useCore } from "@/hooks/useCore";
-import { useResourceCount } from "@/hooks";
+import { useCore } from "@/react";
+import { useResourceCount } from "@/react/hooks/useResourceCount";
 
+/**
+ * Custom hook that retrieves data related to a shard asteroid for a given entity.
+ *
+ * @param entity - The entity for which to retrieve the shard asteroid data.
+ * @returns An object containing various properties related to the shard asteroid, or `null` if the data is not available.
+ */
 export const useShardAsteroid = (entity: Entity) => {
   const {
     tables,

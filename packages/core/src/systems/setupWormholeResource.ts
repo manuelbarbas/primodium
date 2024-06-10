@@ -1,6 +1,6 @@
 import { Core } from "@/lib/types";
 import { EResource } from "contracts/config/enums";
-import { EntityType, ResourceEntityLookup, SPEED_SCALE } from "@/lib/constants";
+import { EntityType, ResourceEntityLookup, SPEED_SCALE } from "@/lib";
 import { encodeAbiParameters, Hex, keccak256 } from "viem";
 import { defineComponentSystem, Entity, namespaceWorld } from "@latticexyz/recs";
 import { bigIntMin } from "@latticexyz/common/utils";

@@ -1,7 +1,7 @@
 import { useEntityQuery } from "@latticexyz/react";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { useCore } from "@/hooks/useCore";
+import { useCore } from "@/react/hooks/useCore";
 
 /**
  *

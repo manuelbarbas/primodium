@@ -8,13 +8,13 @@ import { EntityType, Mode } from "@/util/constants";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { claimPrimodium, claimShardAsteroid } from "@/network/setup/contractCalls/claimPrimodium";
 import { formatResourceCount, formatTime } from "@/util/number";
-import { useShardAsteroid } from "@/hooks/primodium/useShardAsteroid";
-import { useMud } from "@/hooks/useMud";
+import { useShardAsteroid } from "@/react/hooks/primodium/useShardAsteroid";
+import { useMud } from "@/react/hooks/useMud";
 import { entityToShardData } from "@/util/name";
 import { SecondaryCard } from "@/components/core/Card";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { useState } from "react";
-import { useClaimPrimodium } from "@/hooks/primodium/useClaimPrimodium";
+import { useClaimPrimodium } from "@/react/hooks/primodium/useClaimPrimodium";
 
 export const ShardButton: React.FC<{ shardEntity: Entity }> = ({ shardEntity }) => {
   const mud = useMud();

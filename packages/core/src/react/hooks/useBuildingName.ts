@@ -1,4 +1,4 @@
-import { useCore } from "@/hooks/useCore";
+import { useCore } from "@/react/hooks/useCore";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 

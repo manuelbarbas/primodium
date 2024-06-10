@@ -13,12 +13,12 @@ import { FaInfoCircle } from "react-icons/fa";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { hashEntities } from "@/util/encode";
 import { TransactionQueueType } from "@/util/constants";
-import { useMud } from "@/hooks";
-import { useOrbitingFleets } from "@/hooks/useOrbitingFleets";
+import { useMud } from "@/react/hooks";
+import { useOrbitingFleets } from "@/react/hooks/useOrbitingFleets";
 import { attack } from "@/network/setup/contractCalls/attack";
 import { clearFleetStance } from "@/network/setup/contractCalls/fleetStance";
 import { alert } from "@/util/alert";
-import { useGame } from "@/hooks/useGame";
+import { useGame } from "@/react/hooks/useGame";
 
 export const Fleet: React.FC<{ fleetEntity: Entity; target: Entity; willFriendlyFire: boolean }> = ({
   fleetEntity,
