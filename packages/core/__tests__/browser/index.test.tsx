@@ -24,6 +24,7 @@ describe("browser", () => {
       };
 
       const core = createCore(coreConfig);
+      core.network.world;
 
       render(
         <CoreProvider {...core}>

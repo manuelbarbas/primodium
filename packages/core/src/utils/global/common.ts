@@ -32,15 +32,23 @@ export function clampedIndex(index: number, length: number): number {
 export const getRandomRange = (min: number, max: number) => {
   return Math.random() * (max - min) + min;
 };
-
+/**
+ * Get the distance between two coordinates in bigint
+ */
 export const distanceBI = (a: Coord, b: Coord) => {
   return BigInt(Math.round(Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2))));
 };
 
+/**
+ * Get the distance between two coordinates
+ */
 export const getDistance = (a: Coord, b: Coord) => {
   return Math.round(Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2)));
 };
 
+/**
+ * Converts a number to a roman numeral
+ */
 export function toRomanNumeral(number: number) {
   const romanNumerals = [
     { value: 1000, symbol: "M" },
@@ -70,6 +78,9 @@ export function toRomanNumeral(number: number) {
   return result;
 }
 
+/**
+ * Gets the name of an entity type constant
+ */
 export const getEntityTypeName = (blockType: Entity | undefined) => {
   const BlockIdToKey = Object.entries(EntityType).reduce<{
     [key: Entity]: string;
@@ -120,6 +131,10 @@ export function clampBigInt(value: bigint, min: bigint, max: bigint) {
   return value < BigInt(min) ? BigInt(min) : value > BigInt(max) ? BigInt(max) : value;
 }
 
+/**
+ * Calculate the angle between two points
+ * @returns both radians and degrees
+ */
 export function calculateAngleBetweenPoints(point1: Coord, point2: Coord) {
   const dy = point2.y - point1.y;
   const dx = point2.x - point1.x;

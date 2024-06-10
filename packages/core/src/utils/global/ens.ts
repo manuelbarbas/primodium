@@ -7,8 +7,13 @@ export type LinkedAddressResult = {
   ensName: Hex | null;
 };
 
-// NOTE: This function will be replaced with account abstraction in a future update.
-
+/**
+ * Retrieves the ENS name associated with the given player entity.
+ * @param accountLinkUrl - The URL for the account link.
+ * @param playerEntity - The player entity.
+ * @param hard - Whether to force a hard retrieval.
+ * @returns The linked address result.
+ */
 const addressMap = new Map<string, LinkedAddressResult>();
 export const getEnsName = async (
   accountLinkUrl: string,
@@ -31,6 +36,10 @@ export const getEnsName = async (
   }
 };
 
+/**
+ * Removes a linked address from the address map.
+ * @param address - The address to remove.
+ */
 export const removeLinkedAddress = (address: Hex) => {
   addressMap.delete(address);
 };

@@ -8,8 +8,8 @@ import { runCoreSystems } from "@/systems";
 
 /**
  *
- * @param config core configuration,
- * @returns
+ * @param config {@link CoreConfig}
+ * @returns: {@link Core}
  */
 export function createCore(config: CoreConfig): Core {
   const networkResult = createNetwork(config);
