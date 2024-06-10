@@ -59,7 +59,7 @@ export const commonTests = () => {
     test("core contains random utility", () => {
       const core = createCore(coreConfig);
 
-      const shardName = core.utils.entityToShardName(address as Entity);
+      const shardName = core.utils.getShardName(address as Entity);
 
       expect(shardName).toEqual("UNKNOWN");
     });

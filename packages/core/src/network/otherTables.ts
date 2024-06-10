@@ -3,6 +3,9 @@ import { resourceToHex } from "@latticexyz/common";
 const UserDelegationControlTableId = resourceToHex({ type: "table", namespace: "", name: "UserDelegationControl" });
 const CallWithSignatureNoncesTableId = resourceToHex({ type: "table", namespace: "", name: "CallWithSignatur" });
 
+/**
+ * Other tables that are registered after deployed and therefore are not part of the core tables
+ */
 export const otherTables = {
   UserDelegationControl: {
     namespace: "world",

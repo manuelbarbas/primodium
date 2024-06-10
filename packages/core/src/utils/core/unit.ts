@@ -8,7 +8,11 @@ import { Tables } from "@/lib/types";
 
 export function createUnitUtils(tables: Tables) {
   const { getInGracePeriod } = createDefenseUtils(tables);
-  function getFleetUnitCounts(fleet: Entity) {
+
+  /**
+   * Gets the unit counts for a fleet
+   */
+  function getFleetUnitCounts(fleet: Entity): Map<Entity, bigint> {
     return tables.P_UnitPrototypes.get(undefined, { value: [] }).value.reduce((acc, entity) => {
       const unitCount = tables.UnitCount.getWithKeys({
         entity: fleet as Hex,
@@ -20,7 +24,11 @@ export function createUnitUtils(tables: Tables) {
     }, new Map() as Map<Entity, bigint>);
   }
 
-  function getSpaceRockUnitCounts(spaceRock: Entity) {
+  /**
+   * Gets the unit counts for a space rock
+   * @param spaceRock
+   */
+  function getAsteroidUnitCounts(spaceRock: Entity): Map<Entity, bigint> {
     const hangar = tables.Hangar.get(spaceRock);
     const map: Map<Entity, bigint> = new Map();
     if (!hangar) return map;
@@ -31,10 +39,19 @@ export function createUnitUtils(tables: Tables) {
     }, map);
   }
 
+  /**
+   * Gets the unit counts for an entity
+   * @param entity entity (asteroid or fleet)
+   */
   function getUnitCounts(entity: Entity): Map<Entity, bigint> {
-    return tables.IsFleet.get(entity) ? getFleetUnitCounts(entity) : getSpaceRockUnitCounts(entity);
+    return tables.IsFleet.get(entity) ? getFleetUnitCounts(entity) : getAsteroidUnitCounts(entity);
   }
 
+  /**
+   * Gets the stats for a unit at given level
+   * @param entity unit entity
+   * @param level level
+   */
   function getUnitStatsLevel(entity: Entity, level: bigint) {
     const { hp, attack, defense, speed, cargo } = tables.P_Unit.getWithKeys(
       { entity: entity as Hex, level },
@@ -59,14 +76,24 @@ export function createUnitUtils(tables: Tables) {
     };
   }
 
-  function getUnitStats(unitEntity: Entity, spaceRockEntity: Entity) {
+  /**
+   * Gets the stats for a unit at a given asteroid
+   * @param entity unit entity
+   * @param asteroidEntity asteroid entity
+   */
+  function getUnitStats(unitEntity: Entity, asteroidEntity: Entity) {
     const unitLevel = tables.UnitLevel.getWithKeys(
-      { entity: spaceRockEntity as Hex, unit: unitEntity as Hex },
+      { entity: asteroidEntity as Hex, unit: unitEntity as Hex },
       { value: 0n }
     )?.value;
     return getUnitStatsLevel(unitEntity, unitLevel);
   }
 
+  /**
+   * Gets the stats for a fleet
+   * @param fleet fleet entity
+   * @returns attack, defense, speed, hp, cargo, decryption, and title
+   */
   const getFleetStats = (fleet: Entity) => {
     const spaceRock = tables.OwnedBy.get(fleet)?.value as Entity;
     if (!spaceRock) throw new Error("Fleet must be owned by a space rock");
@@ -92,6 +119,12 @@ export function createUnitUtils(tables: Tables) {
     return { ...ret, title: entityToFleetName(fleet) };
   };
 
+  /**
+   * Gets the stats for a fleet from a map of units
+   * @param units map of units and their counts
+   * @param fleetOwner fleet owner
+   * @returns attack, defense, speed, hp, cargo, decryption, and title
+   */
   const getFleetStatsFromUnits = (units: Map<Entity, bigint>, fleetOwner?: Entity | undefined) => {
     const selectedRock = tables.ActiveRock.get()?.value as Entity;
     const data = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
@@ -108,16 +141,27 @@ export function createUnitUtils(tables: Tables) {
     return data;
   };
 
+  /**
+   * Gets all fleets traveling to or orbiting a given entity
+   * @param entity target entity
+   * @returns array of fleets
+   */
   const getFleets = (entity: Entity): Entity[] => {
     return [...runQuery([Has(tables.IsFleet), HasValue(tables.FleetMovement, { destination: entity })])];
   };
 
-  const isFleetOrbiting = (fleet: Entity) => {
+  /**
+   * Checks if a fleet is orbiting or in transit
+   */
+  const isFleetOrbiting = (fleet: Entity): boolean => {
     const arrivalTime = tables.FleetMovement.get(fleet)?.arrivalTime ?? 0n;
     const now = tables.Time.get()?.value ?? 0n;
     return arrivalTime < now;
   };
 
+  /**
+   * Gets a list of fleets orbiting a given entity
+   */
   const getOrbitingFleets = (entity: Entity) => {
     const playerEntity = tables.Account.get()?.value;
     if (!playerEntity) return [];
@@ -128,6 +172,9 @@ export function createUnitUtils(tables: Tables) {
   };
 
   const orbitRadius = 64;
+  /**
+   * Gets the position of a unit in orbit around a given origin
+   */
   function calculatePosition(
     angleInDegrees: number,
     origin: { x: number; y: number },
@@ -142,6 +189,9 @@ export function createUnitUtils(tables: Tables) {
     return { x: x + origin.x, y: y + origin.y };
   }
 
+  /**
+   * checks if a fleet can attack someone on the same asteroid
+   */
   function getCanAttackSomeone(entity: Entity) {
     const isFleet = tables.IsFleet.get(entity);
     const spaceRock = (isFleet ? tables.FleetMovement.get(entity)?.destination : entity) as Entity | undefined;
@@ -149,6 +199,9 @@ export function createUnitUtils(tables: Tables) {
     return [spaceRock, ...getOrbitingFleets(spaceRock)].some((target) => getCanAttack(entity, target));
   }
 
+  /**
+   * checks if a fleet can attack someone on the same asteroid
+   */
   function getCanAttack(originEntity: Entity, targetEntity: Entity) {
     if (originEntity === targetEntity) return false;
     if (getInGracePeriod(targetEntity).inGracePeriod) return false;
@@ -175,6 +228,9 @@ export function createUnitUtils(tables: Tables) {
     return true;
   }
 
+  /**
+   * checks if a fleet can travel to a given entity
+   */
   function getCanSend(originEntity: Entity, targetEntity: Entity) {
     const isFleet = tables.IsFleet.get(targetEntity);
 

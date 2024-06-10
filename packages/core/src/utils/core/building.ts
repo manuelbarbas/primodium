@@ -1,10 +1,4 @@
-import {
-  MultiplierStorages,
-  ResourceEntityLookup,
-  ResourceStorages,
-  SPEED_SCALE,
-  UtilityStorages,
-} from "@/lib/constants";
+import { MultiplierStorages, ResourceEntityLookup, ResourceStorages, SPEED_SCALE, UtilityStorages } from "@/lib";
 import { Tables, Coord, Dimensions, ResourceType } from "@/lib/types";
 import { createBoundsUtils } from "@/utils/core/bounds";
 import { createRecipeUtils } from "@/utils/core/recipe";
@@ -20,6 +14,11 @@ export function createBuildingUtils(tables: Tables) {
   const { getResourceKey, getBuildingAtCoord } = createTileUtils(tables);
   const blueprintCache = new Map<Entity, Dimensions>();
 
+  /**
+   * Gets the dimensions of a building
+   * @param entity building entity
+   * @param coordinates coordinates of the building
+   */
   function calcDims(entity: Entity, coordinates: Coord[]): Dimensions {
     if (blueprintCache.has(entity)) return blueprintCache.get(entity)!;
     let minX = coordinates[0].x;
@@ -41,6 +40,11 @@ export function createBuildingUtils(tables: Tables) {
     return { width, height };
   }
 
+  /**
+   * Converts a string of [x1, y1, x2, y2, ...] to an array of [{x: x1, y: y1}, {x: x2, y: y2}, ...]
+   * @param numbers  array of numbers
+   * @returns  array of coordinates
+   */
   function convertToCoords(numbers: number[]): Coord[] {
     if (numbers.length % 2 !== 0) {
       throw new Error("Input array must contain an even number of elements");
@@ -55,6 +59,12 @@ export function createBuildingUtils(tables: Tables) {
     return coordinates;
   }
 
+  /**
+   * Converts relative coordinates to absolute coordinates from given origin
+   * @param coordinates coordinates to convert
+   * @param origin origin of the coordinates
+   * @returns converted coordinates
+   */
   function relCoordToAbs(coordinates: Coord[], origin: Coord): Coord[] {
     return coordinates.map((coord) => ({
       x: coord.x + origin.x,
@@ -62,7 +72,13 @@ export function createBuildingUtils(tables: Tables) {
     }));
   }
 
-  function getBuildingOrigin(source: Coord, building: Entity) {
+  /**
+   * Gets the origin of a building from a source coordinate
+   * @param source source coordinate
+   * @param building building entity
+   * @returns origin of the building relative to the source (if building exists at source)
+   */
+  function getBuildingOrigin(source: Coord, building: Entity): Coord | undefined {
     const blueprint = tables.P_Blueprint.get(building)?.value;
     if (!blueprint) return;
     const topLeftCoord = getTopLeftCoord(convertToCoords(blueprint));
@@ -71,7 +87,10 @@ export function createBuildingUtils(tables: Tables) {
     return { x: source.x - topLeftCoord.x, y: source.y - topLeftCoord.y };
   }
 
-  function getBuildingTopLeft(origin: Coord, buildingType: Entity) {
+  /**
+   * Gets the top left coordinate of a building from a source coordinate
+   */
+  function getBuildingTopLeft(origin: Coord, buildingType: Entity): Coord {
     const rawBlueprint = tables.P_Blueprint.get(buildingType)?.value;
     if (!rawBlueprint) throw new Error("No blueprint found");
 
@@ -79,7 +98,9 @@ export function createBuildingUtils(tables: Tables) {
 
     return { x: origin.x + relativeTopLeft.x, y: origin.y + relativeTopLeft.y };
   }
-
+  /**
+   * Gets the bottom left coordinate of a building from a source coordinate
+   */
   function getBuildingBottomLeft(origin: Coord, buildingType: Entity) {
     const rawBlueprint = tables.P_Blueprint.get(buildingType)?.value;
     if (!rawBlueprint) throw new Error("No blueprint found");
@@ -88,7 +109,6 @@ export function createBuildingUtils(tables: Tables) {
 
     return { x: origin.x + relativeBottomLeft.x, y: origin.y + relativeBottomLeft.y };
   }
-
   function getTopLeftCoord(coordinates: Coord[]): Coord {
     if (coordinates.length === 0) throw new Error("Cannot get top left coordinate of empty array");
     if (coordinates.length === 1) return coordinates[0];
@@ -119,6 +139,11 @@ export function createBuildingUtils(tables: Tables) {
     return { x: minX, y: minY };
   }
 
+  /**
+   * Gets the dimensions of a building
+   * @param entity building entity
+   * @param coordinates coordinates of the building
+   */
   function getBuildingDimensions(building: Entity) {
     const blueprint = tables.P_Blueprint.get(building)?.value;
 
@@ -127,6 +152,13 @@ export function createBuildingUtils(tables: Tables) {
     return dimensions;
   }
 
+  /**
+   * Validates if a building can be placed at a given coordinate
+   * @param coord coordinate to place building
+   * @param buildingPrototype Type of building to place
+   * @param asteroid asteroid entity
+   * @param building building entity (if updating)
+   */
   const validateBuildingPlacement = (coord: Coord, buildingPrototype: Entity, asteroid: Entity, building?: Entity) => {
     //get building dimesions
     const buildingDimensions = getBuildingDimensions(buildingPrototype);
@@ -147,6 +179,11 @@ export function createBuildingUtils(tables: Tables) {
     return true;
   };
 
+  /**
+   * Gets building name from building entity
+   * @param building entity
+   * @returns building name
+   */
   const getBuildingName = (building: Entity): string => {
     const buildingType = tables.BuildingType.get(building)?.value as Entity;
     const level = tables.Level.get(building)?.value ?? 1n;
@@ -156,6 +193,11 @@ export function createBuildingUtils(tables: Tables) {
     return `${getEntityTypeName(buildingType)} ${toRomanNumeral(Number(level))}`;
   };
 
+  /**
+   * Gets max storage of all resources a building can hold
+   * @param buildingType building entity
+   * @param level building level
+   */
   const getBuildingStorages = (buildingType: Entity, level: bigint): ResourceData[] => {
     const resourceStorages = MUDEnums.EResource.map((_, i) => {
       const storage = tables.P_ByLevelMaxResourceUpgrades.getWithKeys({
@@ -176,6 +218,9 @@ export function createBuildingUtils(tables: Tables) {
     return resourceStorages.filter((storage) => !!storage);
   };
 
+  /**
+   * Gets upgrades of building storage at a given level
+   */
   function getBuildingLevelStorageUpgrades(buildingType: Entity, level: bigint) {
     const storageUpgrade = tables.P_ListMaxResourceUpgrades.getWithKeys({
       prototype: buildingType as Hex,
@@ -222,6 +267,10 @@ export function createBuildingUtils(tables: Tables) {
       .filter((item) => item !== null) as { resource: Entity; amount: bigint; type: ResourceType }[];
   }
 
+  /**
+   * Gets bundle of building info
+   * @param building building entity
+   */
   const getBuildingInfo = (building: Entity) => {
     const buildingType = tables.BuildingType.get(building)?.value as Hex | undefined;
     if (!buildingType) throw new Error("No building type found");
@@ -285,7 +334,6 @@ export function createBuildingUtils(tables: Tables) {
   };
 
   return {
-    calcDims,
     convertToCoords,
     relCoordToAbs,
     getBuildingOrigin,

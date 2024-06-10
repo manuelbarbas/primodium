@@ -2,13 +2,13 @@ import { bigIntMax } from "@latticexyz/common/utils";
 import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { EntityType, SPEED_SCALE } from "@/lib/constants";
-import { useFullResourceCount } from "../useFullResourceCount";
 import { useCore } from "@/hooks/useCore";
+import { useResourceCount } from "@/hooks";
 
 export const useShardAsteroid = (entity: Entity) => {
   const {
     tables,
-    utils: { entityToShardData },
+    utils: { getShardData },
   } = useCore();
   const conquestConfigData = tables.P_ConquestConfig.use();
   const shardAsteroid = tables.ShardAsteroid.use(entity);
@@ -17,12 +17,9 @@ export const useShardAsteroid = (entity: Entity) => {
   const owner = tables.OwnedBy.use(entity)?.value;
   const player = tables.Account.use()?.value;
   const lastConquered = tables.LastConquered.use(entity)?.value ?? 0n;
-  const { resourceCount: encryption, resourceStorage: maxEncryption } = useFullResourceCount(
-    EntityType.Encryption,
-    entity
-  );
+  const { resourceCount: encryption, resourceStorage: maxEncryption } = useResourceCount(EntityType.Encryption, entity);
 
-  const shardNameData = entityToShardData(entity);
+  const shardNameData = getShardData(entity);
 
   const timeData = useMemo(() => {
     if (!conquestConfigData || !shardAsteroid) return null;

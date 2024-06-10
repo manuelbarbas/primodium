@@ -13,7 +13,7 @@ import { createSwapUtils } from "@/utils/core/swap";
 import { createTileUtils } from "@/utils/core/tile";
 import { createUnitUtils } from "@/utils/core/unit";
 import { createUpgradeUtils } from "@/utils/core/upgrade";
-import { createLeaderboardUtils } from "@/utils/core/createLeaderboardUtils";
+import { createLeaderboardUtils } from "@/utils/core/leaderboard";
 import { createDefenseUtils } from "@/utils/core/defense";
 import { createDroidRegenUtils } from "@/utils/core/droidRegen";
 import { createTrainingQueueUtils } from "@/utils/core/trainingQueue";

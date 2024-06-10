@@ -2,7 +2,7 @@ import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { Hex } from "viem";
 import { Tables, ResourceType } from "@/lib/types";
-import { ResourceEntityLookup } from "@/lib/constants";
+import { ResourceEntityLookup } from "@/lib";
 import { createResourceUtils } from "@/utils/core/resource";
 
 export type Recipe = {
@@ -12,7 +12,14 @@ export type Recipe = {
 }[];
 
 export function createRecipeUtils(tables: Tables) {
-  const { getFullResourceCount } = createResourceUtils(tables);
+  const { getResourceCount } = createResourceUtils(tables);
+
+  /**
+   * Gets recipe for a given entity and level
+   * @param rawEntityType entity (building, unit, etc.)
+   * @param level level of the entity
+   * @param upgrade whether to get the upgrade recipe (default: false)
+   */
   function getRecipe(rawEntityType: Entity, level: bigint, upgrade = false) {
     const entityType = rawEntityType as Hex;
     const requiredResources = (upgrade ? tables.P_RequiredUpgradeResources : tables.P_RequiredResources).getWithKeys(
@@ -47,9 +54,12 @@ export function createRecipeUtils(tables: Tables) {
     return [...resources, ...resourceRate];
   }
 
+  /**
+   * Checks if a space rock has enough resources for the recipe
+   */
   function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, spaceRock: Entity, count = 1n) {
     const resourceAmounts = recipe.map((resource) => {
-      return getFullResourceCount(resource.id, spaceRock);
+      return getResourceCount(resource.id, spaceRock);
     });
 
     for (const [index, resource] of recipe.entries()) {
@@ -73,6 +83,7 @@ export function createRecipeUtils(tables: Tables) {
     return true;
   }
 
+  /** Gets the difference between two recipes */
   function getRecipeDifference(firstRecipe: ReturnType<typeof getRecipe>, secondRecipe: ReturnType<typeof getRecipe>) {
     const difference = firstRecipe.map((resource) => {
       let amount = resource.amount;
@@ -94,9 +105,10 @@ export function createRecipeUtils(tables: Tables) {
     return difference;
   }
 
+  /** Gets the max count of a given recipe */
   function getMaxCountOfRecipe(recipe: ReturnType<typeof getRecipe>, spaceRock: Entity) {
     const resourceAmounts = recipe.map((resource) => {
-      return getFullResourceCount(resource.id, spaceRock);
+      return getResourceCount(resource.id, spaceRock);
     });
 
     let count;

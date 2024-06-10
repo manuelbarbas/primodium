@@ -3,20 +3,26 @@ import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EFleetStance } from "contracts/config/enums";
 import { EntityType, ResourceStorages, RockRelationship } from "@/lib/constants";
-import { MapIdToAsteroidType } from "@/lib/mappings";
+import { MapEntityLookup } from "@/lib/lookups";
 import { Tables, Coord } from "@/lib/types";
 import { createResourceUtils } from "@/utils/core/resource";
 import { createUnitUtils } from "@/utils/core/unit";
 import { getEntityTypeName } from "@/utils/global/common";
 
 export function createAsteroidUtils(tables: Tables) {
-  const { getFullResourceCount } = createResourceUtils(tables);
+  const { getResourceCount } = createResourceUtils(tables);
   const { getOrbitingFleets } = createUnitUtils(tables);
-  function getAsteroidName(spaceRock: Entity) {
-    const expansionLevel = tables.Level.get(spaceRock)?.value;
-    const asteroidData = tables.Asteroid.get(spaceRock);
 
-    const asteroidResource = MapIdToAsteroidType[asteroidData?.mapId ?? 0];
+  /**
+   * Gets asteroid name from entity
+   * @param asteroid  entity of asteroid
+   * @returns asteroid name
+   */
+  function getAsteroidName(asteroid: Entity): string {
+    const expansionLevel = tables.Level.get(asteroid)?.value;
+    const asteroidData = tables.Asteroid.get(asteroid);
+
+    const asteroidResource = MapEntityLookup[asteroidData?.mapId ?? 0];
     const asteroidSize = asteroidResource
       ? {
           1: "Micro",
@@ -31,10 +37,15 @@ export function createAsteroidUtils(tables: Tables) {
     } ${"Asteroid"}`;
   }
 
-  function getAsteroidDescription(asteroid: Entity) {
+  /**
+   * Gets asteroid description from entity
+   * @param asteroid entity of asteroid
+   * @returns asteroid description
+   * */
+  function getAsteroidDescription(asteroid: Entity): { type: string; size: string; primodium: bigint } {
     const asteroidData = tables.Asteroid.get(asteroid);
 
-    const asteroidResource = MapIdToAsteroidType[asteroidData?.mapId ?? 0];
+    const asteroidResource = MapEntityLookup[asteroidData?.mapId ?? 0];
     const asteroidSize = {
       1: "Micro",
       3: "Small",
@@ -44,25 +55,30 @@ export function createAsteroidUtils(tables: Tables) {
 
     return {
       type: asteroidResource ? getEntityTypeName(asteroidResource) : "Common",
-      size: asteroidSize,
+      size: asteroidSize ?? "Small",
       primodium: asteroidData?.primodium ?? 0n,
     };
   }
 
-  function getAsteroidInfo(spaceRock: Entity) {
-    const ownedBy = tables.OwnedBy.get(spaceRock)?.value as Entity | undefined;
-    const mainBaseEntity = tables.Home.get(spaceRock)?.value as Entity;
+  /**
+   * Gets asteroid info from entity
+   * @param asteroid entity of asteroid
+   * @returns asteroid info
+   */
+  function getAsteroidInfo(asteroid: Entity) {
+    const ownedBy = tables.OwnedBy.get(asteroid)?.value as Entity | undefined;
+    const mainBaseEntity = tables.Home.get(asteroid)?.value as Entity;
     const mainBaseLevel = tables.Level.get(mainBaseEntity)?.value;
-    const asteroidData = tables.Asteroid.get(spaceRock);
+    const asteroidData = tables.Asteroid.get(asteroid);
 
-    const position = tables.Position.get(spaceRock, {
+    const position = tables.Position.get(asteroid, {
       x: 0,
       y: 0,
       parentEntity: "0" as Entity,
     }) as Coord;
 
     const resources = [...ResourceStorages].reduce((acc, resource) => {
-      const { resourceCount } = getFullResourceCount(resource, spaceRock);
+      const { resourceCount } = getResourceCount(resource, asteroid);
       const amount = resourceCount;
 
       if (amount) {
@@ -72,15 +88,15 @@ export function createAsteroidUtils(tables: Tables) {
 
       return acc;
     }, [] as { resource: Entity; amount: bigint }[]);
-    const { resourceCount: encryption } = getFullResourceCount(EntityType.Encryption, spaceRock);
+    const { resourceCount: encryption } = getResourceCount(EntityType.Encryption, asteroid);
 
-    const hangar = tables.Hangar.get(spaceRock);
+    const hangar = tables.Hangar.get(asteroid);
 
     const gracePeriodValue = tables.GracePeriod.get(ownedBy)?.value ?? 0n;
     const now = tables.Time.get()?.value ?? 0n;
     const isInGracePeriod = gracePeriodValue > 0n && gracePeriodValue > now;
 
-    const isBlocked = !!getOrbitingFleets(spaceRock).find(
+    const isBlocked = !!getOrbitingFleets(asteroid).find(
       (fleet) => tables.FleetStance.get(fleet)?.stance == EFleetStance.Block
     );
 
@@ -90,8 +106,8 @@ export function createAsteroidUtils(tables: Tables) {
       mainBaseLevel,
       hangar,
       position,
-      name: getAsteroidName(spaceRock),
-      entity: spaceRock,
+      name: getAsteroidName(asteroid),
+      entity: asteroid,
       isInGracePeriod,
       gracePeriodValue,
       asteroidData,
@@ -100,11 +116,21 @@ export function createAsteroidUtils(tables: Tables) {
     };
   }
 
-  function isAsteroidBlocked(spaceRock: Entity) {
-    return !!getOrbitingFleets(spaceRock).find((fleet) => tables.FleetStance.get(fleet)?.stance == EFleetStance.Block);
+  /**
+   * Gets whether asteroid is blocked
+   * @param asteroid  entity of asteroid
+   */
+  function isAsteroidBlocked(asteroid: Entity): boolean {
+    return !!getOrbitingFleets(asteroid).find((fleet) => tables.FleetStance.get(fleet)?.stance == EFleetStance.Block);
   }
 
-  const getRockRelationship = (player: Entity, rock: Entity) => {
+  /**
+   * Gets the relationship between a player and a rock
+   * @param player Player entity
+   * @param rock Rock entity
+   * @returns Relationship
+   */
+  const getRockRelationship = (player: Entity, rock: Entity): keyof typeof RockRelationship => {
     if (player === singletonEntity) return RockRelationship.Neutral;
     const playerAlliance = tables.PlayerAlliance.get(player)?.alliance;
     const rockOwner = tables.OwnedBy.get(rock)?.value as Entity;

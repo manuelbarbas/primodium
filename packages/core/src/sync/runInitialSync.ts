@@ -2,6 +2,12 @@ import { SyncSourceType, SyncStep } from "@/lib/types";
 import { Core } from "../lib/types";
 import { Hex } from "viem";
 
+/**
+ * Runs default initial sync process. Syncs to indexer. If indexer is not available, syncs to RPC.
+ *
+ * @param core {@link Core}
+ * @param playerAddress player address (optional). If included, will fetch player data on initial sync
+ */
 export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
   const {
     network,

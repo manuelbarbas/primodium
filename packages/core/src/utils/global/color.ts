@@ -1,4 +1,8 @@
-export function hslToHex(h: number, s: number, l: number) {
+/**
+ * Convert hex color to RGB
+ * @returns rgb string
+ */
+export function hslToHex(h: number, s: number, l: number): string {
   let r, g, b;
 
   if (s === 0) {

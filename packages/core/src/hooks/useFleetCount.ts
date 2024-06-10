@@ -2,10 +2,10 @@ import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { useCore } from "@/hooks/useCore";
 import { EntityType } from "@/lib/constants";
-import { useFullResourceCount } from "./useFullResourceCount";
+import { useResourceCount } from "./useResourceCount";
 
 export const useFleetCount = ({ asteroid }: { asteroid: Entity }) =>
-  useFullResourceCount(EntityType.FleetCount, asteroid as Entity).resourceCount;
+  useResourceCount(EntityType.FleetCount, asteroid as Entity).resourceCount;
 
 export const useFleetStats = (entity: Entity, force?: boolean) => {
   const {

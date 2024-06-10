@@ -6,6 +6,11 @@ import { createUtils } from "@/utils/core";
 import { createSync } from "@/sync";
 import { runCoreSystems } from "@/systems";
 
+/**
+ *
+ * @param config core configuration,
+ * @returns
+ */
 export function createCore(config: CoreConfig): Core {
   const networkResult = createNetwork(config);
   const tables = createTables(networkResult);

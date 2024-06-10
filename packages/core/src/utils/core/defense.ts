@@ -5,6 +5,7 @@ import { MULTIPLIER_SCALE } from "@/lib/constants";
 
 import { Tables } from "@/lib/types";
 export function createDefenseUtils(tables: Tables) {
+  /** Get defense points and multiplier for a rock */
   function getRockDefense(rockEntity: Entity) {
     const player = tables.OwnedBy.get(rockEntity)?.value as Hex | undefined;
     const units = tables.Hangar.get(rockEntity);
@@ -38,6 +39,9 @@ export function createDefenseUtils(tables: Tables) {
     return { points: defensePoints, multiplier };
   }
 
+  /**
+   * Gets if entity is in grace period
+   */
   const getInGracePeriod = (entity: Entity) => {
     const time = tables.Time.get()?.value ?? 0n;
     const endTime = tables.GracePeriod.get(entity)?.value ?? 0n;
@@ -46,6 +50,9 @@ export function createDefenseUtils(tables: Tables) {
     return { inGracePeriod, duration: endTime - time };
   };
 
+  /**
+   * Gets if entity is in cooldown end
+   */
   const getInCooldownEnd = (entity: Entity) => {
     const time = tables.Time.get()?.value ?? 0n;
     const endTime = tables.CooldownEnd.get(entity)?.value ?? 0n;

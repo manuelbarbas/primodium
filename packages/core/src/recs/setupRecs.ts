@@ -28,7 +28,7 @@ export type Recs<config extends StoreConfig, extraTables extends Record<string, 
   tables: TablesToComponents<ResolvedStoreConfig<storeToV1<config>>["tables"] & extraTables>;
   latestBlock$: Observable<Block<bigint, false, "latest">>;
   latestBlockNumber$: Observable<bigint>;
-  rawTables: Record<string, Table>;
+  tableMetadata: Record<string, Table>;
   storedBlockLogs$: Observable<StorageAdapterBlock>;
   waitForTransaction: (tx: Hex) => Promise<void>;
 };
@@ -43,13 +43,13 @@ export const setupRecs = <config extends StoreConfig, extraTables extends Record
 }): Recs<config, extraTables> => {
   const { mudConfig, publicClient, world, address, otherTables } = args;
 
-  const rawTables = {
+  const tableMetadata = {
     ...resolveConfig(storeToV1(mudConfig as StoreConfig)).tables,
     ...(otherTables ?? {}),
   } as ResolvedStoreConfig<storeToV1<config>>["tables"] & extraTables;
 
   const { components: tables } = recsStorage({
-    tables: rawTables,
+    tables: tableMetadata,
     world,
   });
 
@@ -133,7 +133,7 @@ export const setupRecs = <config extends StoreConfig, extraTables extends Record
     tables,
     latestBlock$,
     latestBlockNumber$,
-    rawTables: { ...rawTables, ...storeTables, ...worldTables },
+    tableMetadata: { ...tableMetadata, ...storeTables, ...worldTables },
     storedBlockLogs$,
     waitForTransaction,
   };

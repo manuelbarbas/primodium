@@ -6,7 +6,13 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 export function createColorUtils(tables: Tables) {
   const entityColor = new Map<Entity, string>();
-  function entityToColor(entity: Entity | undefined) {
+
+  /**
+   * Get color for entity
+   * @param entity entity to get color for
+   * @returns color for entity
+   * */
+  function getEntityColor(entity: Entity | undefined) {
     if (!entity || entity === singletonEntity) return "#999999";
     const alliance = tables.PlayerAlliance.get(entity)?.alliance as Entity;
     entity = alliance ?? entity;
@@ -29,6 +35,6 @@ export function createColorUtils(tables: Tables) {
   }
 
   return {
-    entityToColor,
+    getEntityColor,
   };
 }

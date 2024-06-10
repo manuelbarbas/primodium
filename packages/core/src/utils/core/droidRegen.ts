@@ -5,6 +5,9 @@ import { EntityType, SPEED_SCALE, RESOURCE_SCALE } from "@/lib/constants";
 import { Tables } from "@/lib/types";
 
 export function createDroidRegenUtils(tables: Tables) {
+  /**
+   * Gets the droid count for an asteroid
+   */
   function getAsteroidDroidCount(asteroid: Entity): bigint {
     const homeHex = asteroid as Hex;
 
@@ -19,7 +22,7 @@ export function createDroidRegenUtils(tables: Tables) {
 
     const maxLevel = tables.Asteroid.getWithKeys({ entity: homeHex })?.maxLevel ?? 0n;
 
-    const maxDroidCount = getSecondaryAsteroidUnitsAndEncryption(asteroid, maxLevel).droidCount;
+    const maxDroidCount = getSecondaryAsteroidUnitsAndEncryption(maxLevel).droidCount;
 
     const droidCount = tables.UnitCount.getWithKeys({ entity: homeHex, unit: EntityType.Droid as Hex })?.value ?? 0n;
 
@@ -29,8 +32,10 @@ export function createDroidRegenUtils(tables: Tables) {
 
     return bigIntMin(totalDroidCount, maxDroidCount);
   }
-
-  function getSecondaryAsteroidUnitsAndEncryption(asteroidEntity: Entity, level: bigint) {
+  /**
+   * Gets the droid count and encryption of an asteroid
+   */
+  function getSecondaryAsteroidUnitsAndEncryption(level: bigint) {
     // this is a crime but wanted to preserve the const without using an implicit equation.
     const droidCount = level < 3n ? 5n : level < 6n ? 80n : level < 8n ? 1280n : 20480n;
     const encryption = (level * 300n + 300n) * RESOURCE_SCALE;

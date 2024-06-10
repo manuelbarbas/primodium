@@ -7,6 +7,13 @@ import { createRecipeUtils } from "@/utils/core/recipe";
 
 export function createUpgradeUtils(tables: Tables) {
   const { getRecipe } = createRecipeUtils(tables);
+
+  /**
+   * Gets upgrade info for a given research (building or unit upgrade) on a given asteroid
+   * @param research upgrade entity
+   * @param asteroid
+   * @returns upgrade info
+   */
   function getUpgradeInfo(research: Entity, asteroid: Entity) {
     const level =
       research === EntityType.Expansion

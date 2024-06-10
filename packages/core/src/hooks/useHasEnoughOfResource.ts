@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { ResourceType } from "@/lib/types";
-import { useFullResourceCount } from "./useFullResourceCount";
+import { useResourceCount } from "./useResourceCount";
 
 export function useHasEnoughOfResource(
   resource: Entity,
@@ -8,7 +8,7 @@ export function useHasEnoughOfResource(
   spaceRock: Entity,
   resourceType = ResourceType.Resource
 ) {
-  const { resourceCount, production } = useFullResourceCount(resource, spaceRock);
+  const { resourceCount, production } = useResourceCount(resource, spaceRock);
   switch (resourceType) {
     case ResourceType.Resource:
       return resourceCount >= amount;

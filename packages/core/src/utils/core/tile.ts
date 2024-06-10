@@ -3,7 +3,13 @@ import { Tables, Coord } from "@/lib/types";
 import { getBuildingPositionEntity } from "@/utils/global/encode";
 
 export function createTileUtils(tables: Tables) {
-  function getResourceKey(coord: Coord, mapId = 1) {
+  /**
+   * Gets the resource key at a given coord
+   * @param coord
+   * @param mapId
+   * @returns
+   */
+  function getResourceKey(coord: Coord, mapId = 1): number | null {
     const resourceDimensions = { width: 37, length: 25 };
 
     if (coord.x < 0 || coord.x > resourceDimensions.width || coord.y < 0 || coord.y > resourceDimensions.length) {
@@ -15,7 +21,15 @@ export function createTileUtils(tables: Tables) {
     return resource;
   }
 
-  function getBuildingsOfTypeInRange(origin: Coord, type: Entity, range: number) {
+  /**
+   * Gets all buildings of a given type within a range of a given origin
+   * @param origin origin coord
+   * @param type building type
+   * @param range range to search
+   * @returns array of  coords
+   */
+
+  function getBuildingsOfTypeInRange(origin: Coord, type: Entity, range: number): Coord[] {
     const tiles: Coord[] = [];
 
     for (let x = -range; x <= range; x++) {
@@ -36,15 +50,9 @@ export function createTileUtils(tables: Tables) {
     return tiles;
   }
 
-  const getEntityTileAtCoord = (coord: Coord) => {
-    const entities = runQuery([Has(tables.BuildingType), Has(tables.OwnedBy), HasValue(tables.Position, coord)]);
-    if (!entities.size) return undefined;
-
-    const tileEntity = entities.values().next().value;
-
-    return tables.BuildingType.get(tileEntity)?.value;
-  };
-
+  /**
+   * Gets the building at a given coord
+   */
   const getBuildingAtCoord = (coord: Coord, asteroid: Entity) => {
     const positionEntity = getBuildingPositionEntity(coord, asteroid);
     return tables.ReverseBuildingPosition.get(positionEntity)?.value;
@@ -54,7 +62,6 @@ export function createTileUtils(tables: Tables) {
     getResourceKey,
     getBuildingPositionEntity,
     getBuildingsOfTypeInRange,
-    getEntityTileAtCoord,
     getBuildingAtCoord,
   };
 }

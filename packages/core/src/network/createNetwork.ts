@@ -9,6 +9,12 @@ import { otherTables } from "@/network/otherTables";
 import { extendContractComponents } from "@/tables/customTables/extendComponents";
 import { CoreConfig, CreateNetworkResult } from "@/lib/types";
 
+/**
+ * Creates network object
+ *
+ * @param config configuration of core object {@link CoreConfig}
+ * @returns: {@link CreateNetworkResult}
+ */
 export function createNetwork(config: CoreConfig): CreateNetworkResult {
   const world = createWorld();
   world.registerEntity({ id: singletonEntity });
@@ -21,7 +27,7 @@ export function createNetwork(config: CoreConfig): CreateNetworkResult {
 
   const publicClient = createPublicClient(clientOptions);
 
-  const { tables, latestBlock$, latestBlockNumber$, rawTables, storedBlockLogs$, waitForTransaction } = setupRecs({
+  const { tableMetadata, latestBlock$, latestBlockNumber$, tables, storedBlockLogs$, waitForTransaction } = setupRecs({
     mudConfig,
     world,
     publicClient,
@@ -37,7 +43,7 @@ export function createNetwork(config: CoreConfig): CreateNetworkResult {
 
   return {
     world,
-    rawTables,
+    tableMetadata,
     publicClient,
     mudConfig,
     tables: extendContractComponents(tables),

@@ -3,7 +3,7 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EResource, MUDEnums } from "contracts/config/enums";
 import { Hex } from "viem";
 import { clampBigInt } from "../global/common";
-import { ResourceEntityLookup, ResourceEnumLookup, SPEED_SCALE } from "@/lib/constants";
+import { ResourceEntityLookup, ResourceEnumLookup, SPEED_SCALE } from "@/lib";
 import { Tables } from "@/lib/types";
 
 export type ResourceCountData = {
@@ -13,6 +13,9 @@ export type ResourceCountData = {
 };
 
 export function createResourceUtils(tables: Tables) {
+  /**
+   * Checks if resource is a utility
+   */
   function isUtility(resource: Entity) {
     const id = ResourceEnumLookup[resource];
     return tables.P_IsUtility.getWithKeys({ id })?.value ?? false;
@@ -26,9 +29,12 @@ export function createResourceUtils(tables: Tables) {
     }
   > = new Map();
 
-  function getFullResourceCount(resource: Entity, entity: Entity) {
+  /**
+   * Gets the resource count for a given entity (asteroid or fleet)
+   */
+  function getResourceCount(resource: Entity, entity: Entity) {
     return (
-      getFullResourceCounts(entity).get(resource) ?? {
+      getResourceCounts(entity).get(resource) ?? {
         resourceCount: 0n,
         resourceStorage: 0n,
         production: 0n,
@@ -36,6 +42,9 @@ export function createResourceUtils(tables: Tables) {
     );
   }
 
+  /**
+   * Gets all resource counts for a given fleets
+   */
   function getFleetResourceCount(fleet: Entity) {
     const transportables = tables.P_Transportables.get()?.value ?? [];
     return transportables.reduce((acc, resource) => {
@@ -46,6 +55,9 @@ export function createResourceUtils(tables: Tables) {
     }, new Map() as Map<Entity, ResourceCountData>);
   }
 
+  /**
+   * Gets all resource counts for a given asteroid
+   */
   function getAsteroidResourceCount(asteroid: Entity) {
     const time = tables.Time.get()?.value ?? 0n;
 
@@ -137,16 +149,19 @@ export function createResourceUtils(tables: Tables) {
     return result;
   }
 
-  function getFullResourceCounts(entity: Entity): Map<Entity, ResourceCountData> {
+  /**
+   * Gets all resource counts for a given entity (asteroid or fleet)
+   */
+  function getResourceCounts(entity: Entity): Map<Entity, ResourceCountData> {
     if (entity === singletonEntity) return new Map();
     return tables.IsFleet.get(entity) ? getFleetResourceCount(entity) : getAsteroidResourceCount(entity);
   }
 
   return {
     isUtility,
-    getFullResourceCount,
+    getResourceCount,
     getFleetResourceCount,
     getAsteroidResourceCount,
-    getFullResourceCounts,
+    getResourceCounts,
   };
 }

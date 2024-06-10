@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { Sync } from "@primodiumxyz/sync-stack";
-import { Tables, CoreConfig, CreateNetworkResult, SyncSourceType, SyncStep } from "@/lib/types";
+import { Tables, CoreConfig, CreateNetworkResult, SyncSourceType, SyncStep, Sync as SyncType } from "@/lib/types";
 import { Keys } from "@/lib/constants";
 import { hashEntities } from "@/utils/global/encode";
 import { Hex } from "viem";
@@ -13,8 +13,16 @@ import { getPlayerFilter } from "./queries/playerQueries";
 import { getSecondaryQuery } from "@/sync/queries/secondaryQueries";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 
+/**
+ * Creates sync object. Includes methods to sync data from RPC and Indexer
+ *
+ * @param config core configuration {@link CoreConfig}
+ * @param network network object created in {@link createNetwork} {@link CreateNetworkResult}
+ * @param tables tables generated for core object
+ * @returns {@link SyncType Sync}
+ */
 export function createSync(config: CoreConfig, network: CreateNetworkResult, tables: Tables) {
-  const { rawTables, world, publicClient } = network;
+  const { tableMetadata, world, publicClient } = network;
   const indexerUrl = config.chain.indexerUrl;
   const fromBlock = config.initialBlockNumber ?? 0n;
 
@@ -27,7 +35,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
   ) => {
     const sync = Sync.withRPCRecsSync({
       world,
-      tables: rawTables,
+      tables: tableMetadata,
       address: config.worldAddress as Hex,
       fromBlock,
       publicClient,
@@ -64,7 +72,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
   const subscribeToRPC = () => {
     const sync = Sync.withLiveRPCRecsSync({
       world,
-      tables: rawTables,
+      tables: tableMetadata,
       address: config.worldAddress as Hex,
       publicClient,
     });
@@ -132,11 +140,11 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     if (!indexerUrl) return;
 
     const sync = Sync.withQueryDecodedIndexerRecsSync({
-      tables: rawTables,
+      tables: tableMetadata,
       world,
       indexerUrl,
       query: getInitialQuery({
-        tables: rawTables,
+        tables: tableMetadata,
         playerAddress,
         worldAddress: config.worldAddress as Hex,
       }),
@@ -163,10 +171,10 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
 
     const syncId = Keys.SECONDARY;
     const sync = Sync.withQueryDecodedIndexerRecsSync({
-      tables: rawTables,
+      tables: tableMetadata,
       world,
       indexerUrl,
-      query: getSecondaryQuery({ tables: rawTables, worldAddress: config.worldAddress as Hex }),
+      query: getSecondaryQuery({ tables: tableMetadata, worldAddress: config.worldAddress as Hex }),
     });
 
     sync.start(async (_, blockNumber, progress) => {
@@ -210,10 +218,10 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
 
     const syncData = Sync.withFilterIndexerRecsSync({
       indexerUrl,
-      tables: rawTables,
+      tables: tableMetadata,
       world,
       filter: getPlayerFilter({
-        tables: rawTables,
+        tables: tableMetadata,
         playerAddress,
         playerEntity: playerEntity as Hex,
         worldAddress: config.worldAddress as Hex,
@@ -247,13 +255,13 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     }
 
     const params = {
-      tables: rawTables,
+      tables: tableMetadata,
       asteroid: selectedRock,
       worldAddress: config.worldAddress as Hex,
     };
 
     const syncData = Sync.withFilterIndexerRecsSync({
-      tables: rawTables,
+      tables: tableMetadata,
       world,
       indexerUrl,
       filter: shard ? getShardAsteroidFilter(params) : getAsteroidFilter(params),
@@ -286,12 +294,12 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     }
 
     const syncData = Sync.withQueryDecodedIndexerRecsSync({
-      tables: rawTables,
+      tables: tableMetadata,
       world,
       indexerUrl,
       query: getActiveAsteroidQuery({
         asteroid: activeRock,
-        tables: rawTables,
+        tables: tableMetadata,
         worldAddress: config.worldAddress as Hex,
       }),
     });
@@ -323,9 +331,9 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     const syncData = Sync.withQueryDecodedIndexerRecsSync({
       indexerUrl,
       world,
-      tables: rawTables,
+      tables: tableMetadata,
       query: getAllianceQuery({
-        tables: rawTables,
+        tables: tableMetadata,
         alliance: allianceEntity,
         worldAddress: config.worldAddress as Hex,
       }),
@@ -359,9 +367,9 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     const syncData = Sync.withFilterIndexerRecsSync({
       indexerUrl,
       world,
-      tables: rawTables,
+      tables: tableMetadata,
       filter: getFleetFilter({
-        tables: rawTables,
+        tables: tableMetadata,
         fleet: fleetEntity,
         ownerAsteroid,
         worldAddress: config.worldAddress as Hex,
@@ -395,11 +403,11 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     }
 
     const syncData = Sync.withQueryDecodedIndexerRecsSync({
-      tables: rawTables,
+      tables: tableMetadata,
       world,
       indexerUrl,
       query: getBattleReportQuery({
-        tables: rawTables,
+        tables: tableMetadata,
         playerEntity,
         worldAddress: config.worldAddress as Hex,
       }),

@@ -11,6 +11,9 @@ type ColonyShipType =
 
 export function createColonyShipUtils(tables: Tables) {
   const { updateTrainingQueue } = createTrainingQueueUtils(tables);
+  /**
+   * Gets all colony ships and asteroids owned by a player
+   */
   function getColonyShipsPlusAsteroids(playerEntity: Entity): Array<ColonyShipType> {
     const query = [HasValue(tables.OwnedBy, { value: playerEntity }), Has(tables.Asteroid)];
     const ownedAsteroids = runQuery(query);

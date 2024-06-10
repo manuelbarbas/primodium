@@ -3,13 +3,13 @@ import { useMemo } from "react";
 import { useCore } from "@/hooks/useCore";
 import { EntityType } from "@/lib/constants";
 import { Hex } from "viem";
-import { useFullResourceCount } from "./useFullResourceCount";
+import { useResourceCount } from "./useResourceCount";
 
 export const useAsteroidStrength = (asteroid: Entity, force = false) => {
   const { tables } = useCore();
-  const { resourceCount: hp, resourceStorage: maxHp } = useFullResourceCount(EntityType.HP, asteroid);
-  const { resourceCount: baseDefense } = useFullResourceCount(EntityType.Defense, asteroid);
-  const { resourceCount: defenseMultiplier } = useFullResourceCount(EntityType.DefenseMultiplier, asteroid);
+  const { resourceCount: hp, resourceStorage: maxHp } = useResourceCount(EntityType.HP, asteroid);
+  const { resourceCount: baseDefense } = useResourceCount(EntityType.Defense, asteroid);
+  const { resourceCount: defenseMultiplier } = useResourceCount(EntityType.DefenseMultiplier, asteroid);
   const hangar = tables.Hangar.use(asteroid);
   return useMemo(() => {
     const unitDefense =

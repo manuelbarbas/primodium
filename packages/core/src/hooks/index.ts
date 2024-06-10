@@ -1,5 +1,3 @@
-import { useFullResourceCount } from "@/hooks/useFullResourceCount";
-
 export * from "./useCore";
 export * from "./primodium/useClaimPrimodium";
 export * from "./primodium/useShardAsteroid";
@@ -17,7 +15,7 @@ export * from "./useBuildingName";
 export * from "./useColonySlots";
 export * from "./useCooldownEnd";
 export * from "./useFleetCount";
-export * from "./useFullResourceCount";
+export * from "./useResourceCount";
 export * from "./useHasEnoughOfResource";
 export * from "./useHasEnoughResources";
 export * from "./useInGracePeriod";

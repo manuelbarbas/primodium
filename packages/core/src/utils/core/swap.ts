@@ -1,13 +1,25 @@
 import { Entity } from "@latticexyz/recs";
-import { ResourceEnumLookup } from "@/lib/constants";
+import { ResourceEnumLookup } from "@/lib";
 import { Tables } from "@/lib/types";
 
 export function createSwapUtils(tables: Tables) {
-  function getOutAmount(inAmount: bigint, path: Entity[]) {
+  /**
+   * (Market) Gets the amount of out resource given an amount of in resource
+   * @param inAmount unscaled amount of in resource
+   * @param path array of entities representing the path of the swap
+   * @returns
+   */
+  function getOutAmount(inAmount: bigint, path: Entity[]): bigint {
     return getPathResult(inAmount, path);
   }
 
-  function getInAmount(outAmount: bigint, path: Entity[]) {
+  /**
+   * (Market) Gets the amount of in resource given an amount of out resource
+   * @param inAmount unscaled amount of in resource
+   * @param path array of entities representing the path of the swap
+   * @returns
+   */
+  function getInAmount(outAmount: bigint, path: Entity[]): bigint {
     return getPathResult(outAmount, path.reverse(), true);
   }
 

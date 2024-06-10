@@ -10,6 +10,13 @@ import { normalizeAddress } from "@/utils/global/common";
 import { addressToEntity } from "@/utils/global/encode";
 import { storage } from "@/utils/global/storage";
 
+/**
+ *
+ * @param coreConfig configuration of core object
+ * @param privateKey private key of the session account. If not provided, a new private key will be generated
+ * @param saveToStorage (browser only) whether to save the private key to local storage (default: true)
+ * @returns: {@link LocalAccount}
+ */
 export function createLocalAccount(coreConfig: CoreConfig, privateKey?: Hex, saveToStorage = true): LocalAccount {
   const key = privateKey ?? generatePrivateKey();
   const localAccount = createBurnerAccount(key);

@@ -2,27 +2,35 @@ import { reverseRecord } from "@/utils/global/common";
 import { toHex32 } from "@/utils/global/encode";
 import { resourceToHex } from "@latticexyz/common";
 import { Entity } from "@latticexyz/recs";
-import { encodeEntity } from "@latticexyz/store-sync/recs";
 import { DECIMALS } from "contracts/config/constants";
 import { EBuilding, EObjectives, EPointType, EResource, EUnit } from "contracts/config/enums";
 import { parseEther } from "viem";
 
+/** minimum eth required to get drip */
 export const minEth = parseEther("0.0049");
+
+/** resource id of unlimited delegation system  */
 export const UNLIMITED_DELEGATION = resourceToHex({ type: "system", namespace: "", name: "unlimited" });
 
-export const encodeEntityLevel = (entity: string, level: number) => {
-  return encodeEntity({ entity: "bytes32", level: "uint256" }, { entity: toHex32(entity), level: BigInt(level) });
-};
-
+/** speed scale of the world. Note: This is not the actual speed of the world. That is found in the P_GameConfig table.  */
 export const SPEED_SCALE = BigInt(100);
+
+/** Precision of resource decimals  */
 export const RESOURCE_DECIMALS = DECIMALS;
+
+/** Scale of resource decimals  */
 export const RESOURCE_SCALE = BigInt(10 ** DECIMALS);
+
+/** Scale of multipliers. Used in multiplier tables.  */
 export const MULTIPLIER_SCALE = BigInt(100);
+
+/** Scale of unit speed.  */
 export const UNIT_SPEED_SCALE = BigInt(100);
 
 export const NUM_UNITS = Object.keys(EUnit).length / 2;
 export const STORAGE_PREFIX = "primodiumSessionKey:";
 
+/** Encoded keys. Used in prototype tables to prevent collisions  */
 export const Keys = {
   SELECTED: toHex32("selected") as Entity,
   ACTIVE: toHex32("active") as Entity,
@@ -30,6 +38,8 @@ export const Keys = {
   ASTEROID: toHex32("asteroid.key") as Entity,
   FLEET_OWNED_BY: toHex32("fleet.key") as Entity,
   SECONDARY: toHex32("secondary") as Entity,
+
+  EXPANSION: toHex32("Expansion"),
 };
 
 export const RockRelationship = {
@@ -46,13 +56,6 @@ export const RockRelationshipColors = {
   [RockRelationship.Self]: "accent",
 };
 
-export const key = {
-  BuildingTileKey: toHex32("building:tile"),
-  ExpansionKey: toHex32("Expansion"),
-  BuildingKey: toHex32("Building"),
-  UnitKey: toHex32("Unit"),
-};
-
 export const Mode = {
   Asteroid: toHex32("mode:Building") as Entity,
   Starmap: toHex32("mode:Starmap") as Entity,
@@ -60,6 +63,7 @@ export const Mode = {
   Spectate: toHex32("mode:Spectate") as Entity,
 };
 
+/** Stores entity types. These entities are used in prototype tables. */
 export const EntityType = {
   // Ores
   Iron: toHex32("Iron") as Entity,
@@ -159,8 +163,10 @@ export const EntityType = {
   NULL: toHex32("NULL") as Entity,
 };
 
+/** Used in DEX protocol. All bonding curves pair with the Reserve resource. */
 export const RESERVE_RESOURCE = EntityType.Kimberlite;
 
+/** All resources in the game. */
 export const ResourceStorages = new Set([
   EntityType.Iron,
   EntityType.Copper,
@@ -174,6 +180,7 @@ export const ResourceStorages = new Set([
   EntityType.Kimberlite,
 ]);
 
+/** All utilities in the game. */
 export const UtilityStorages = new Set([
   EntityType.Housing,
   EntityType.Electricity,
@@ -184,6 +191,7 @@ export const UtilityStorages = new Set([
   EntityType.AdvancedUnraidable,
 ]);
 
+/** All units in the game. */
 export const UnitStorages = new Set([
   EntityType.HammerDrone,
   EntityType.StingerDrone,
@@ -196,94 +204,5 @@ export const UnitStorages = new Set([
   EntityType.LightningCraft,
 ]);
 
+/** All multipliers in the game. */
 export const MultiplierStorages = new Set([EntityType.DefenseMultiplier]);
-
-export const ResourceEnumLookup: Record<Entity, EResource> = {
-  [EntityType.Iron]: EResource.Iron,
-  [EntityType.Copper]: EResource.Copper,
-  [EntityType.Lithium]: EResource.Lithium,
-  [EntityType.Titanium]: EResource.Titanium,
-  [EntityType.Iridium]: EResource.Iridium,
-  [EntityType.Platinum]: EResource.Platinum,
-  [EntityType.Kimberlite]: EResource.Kimberlite,
-  [EntityType.Alloy]: EResource.Alloy,
-  [EntityType.PVCell]: EResource.PVCell,
-  [EntityType.IronPlate]: EResource.IronPlate,
-
-  [EntityType.Electricity]: EResource.U_Electricity,
-  [EntityType.Housing]: EResource.U_Housing,
-  [EntityType.FleetCount]: EResource.U_MaxFleets,
-  [EntityType.Defense]: EResource.U_Defense,
-  [EntityType.Unraidable]: EResource.U_Unraidable,
-  [EntityType.AdvancedUnraidable]: EResource.U_AdvancedUnraidable,
-  [EntityType.DefenseMultiplier]: EResource.M_DefenseMultiplier,
-  [EntityType.Encryption]: EResource.R_Encryption,
-  [EntityType.HP]: EResource.R_HP,
-};
-
-export const ResourceEntityLookup = reverseRecord(ResourceEnumLookup);
-
-export const BuildingEnumLookup: Record<Entity, EBuilding> = {
-  [EntityType.IronMine]: EBuilding.IronMine,
-  [EntityType.CopperMine]: EBuilding.CopperMine,
-  [EntityType.LithiumMine]: EBuilding.LithiumMine,
-  [EntityType.TitaniumMine]: EBuilding.TitaniumMine,
-  [EntityType.IridiumMine]: EBuilding.IridiumMine,
-  [EntityType.KimberliteMine]: EBuilding.KimberliteMine,
-  [EntityType.PlatinumMine]: EBuilding.PlatinumMine,
-  [EntityType.IronPlateFactory]: EBuilding.IronPlateFactory,
-  [EntityType.AlloyFactory]: EBuilding.AlloyFactory,
-  [EntityType.PVCellFactory]: EBuilding.PVCellFactory,
-  [EntityType.Garage]: EBuilding.Garage,
-  [EntityType.Workshop]: EBuilding.Workshop,
-  [EntityType.StorageUnit]: EBuilding.StorageUnit,
-  [EntityType.SolarPanel]: EBuilding.SolarPanel,
-  [EntityType.DroneFactory]: EBuilding.DroneFactory,
-  [EntityType.Hangar]: EBuilding.Hangar,
-  [EntityType.MainBase]: EBuilding.MainBase,
-  [EntityType.WormholeBase]: EBuilding.WormholeBase,
-  [EntityType.SAMLauncher]: EBuilding.SAM,
-  [EntityType.StarmapperStation]: EBuilding.Starmapper,
-  [EntityType.ShieldGenerator]: EBuilding.ShieldGenerator,
-  [EntityType.Vault]: EBuilding.Vault,
-  [EntityType.Market]: EBuilding.Market,
-  [EntityType.Shipyard]: EBuilding.Shipyard,
-};
-
-export const BuildingEntityLookup = reverseRecord(BuildingEnumLookup);
-
-export const UnitEnumLookup: Record<Entity, EUnit> = {
-  [EntityType.HammerDrone]: EUnit.HammerDrone,
-  [EntityType.StingerDrone]: EUnit.StingerDrone,
-  [EntityType.AnvilDrone]: EUnit.AnvilDrone,
-  [EntityType.AegisDrone]: EUnit.AegisDrone,
-  [EntityType.MinutemanMarine]: EUnit.MinutemanMarine,
-  [EntityType.TridentMarine]: EUnit.TridentMarine,
-  [EntityType.LightningCraft]: EUnit.LightningCraft,
-  [EntityType.ColonyShip]: EUnit.ColonyShip,
-  [EntityType.Droid]: EUnit.Droid,
-};
-
-export const UnitEntityLookup = reverseRecord(UnitEnumLookup);
-export const ObjectiveEnumLookup: Record<Entity, EObjectives> = {
-  ...Object.keys(EObjectives).reduce((acc, key) => {
-    const elem = EObjectives[key as keyof typeof EObjectives];
-    if (typeof elem === "number") {
-      return { ...acc, [toHex32(key)]: elem };
-    }
-    return acc;
-  }, {} as Record<string, EObjectives>),
-};
-
-export const ObjectiveEntityLookup = reverseRecord(ObjectiveEnumLookup);
-
-export const LeaderboardEntityLookup = {
-  player: {
-    [EPointType.Shard]: EntityType.PlayerShardLeaderboard,
-    [EPointType.Wormhole]: EntityType.PlayerWormholeLeaderboard,
-  },
-  alliance: {
-    [EPointType.Shard]: EntityType.AllianceShardLeaderboard,
-    [EPointType.Wormhole]: EntityType.AllianceWormholeLeaderboard,
-  },
-};
