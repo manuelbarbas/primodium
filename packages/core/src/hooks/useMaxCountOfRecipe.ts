@@ -5,11 +5,11 @@ import { Recipe } from "@/utils/core/recipe";
 
 export function useMaxCountOfRecipe(recipe: Recipe, spaceRock: Entity) {
   const {
-    components,
+    tables,
     utils: { getMaxCountOfRecipe },
   } = useCore();
 
-  const { value: blockNumber } = components.BlockNumber.use(undefined, {
+  const { value: blockNumber } = tables.BlockNumber.use(undefined, {
     value: 0n,
     avgBlockTime: 1,
   });

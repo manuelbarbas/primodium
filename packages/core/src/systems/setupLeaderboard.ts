@@ -8,7 +8,7 @@ import { Core } from "@/lib/types";
 export const setupLeaderboard = (core: Core) => {
   const {
     network: { world },
-    components,
+    tables,
   } = core;
 
   const leaderboardMaps: Record<Entity, Map<Entity, bigint>> = {
@@ -29,7 +29,7 @@ export const setupLeaderboard = (core: Core) => {
       ranks.push(index == 0 ? 1 : point == points[index - 1] ? ranks[index - 1] : index + 1);
     });
 
-    components.Leaderboard.set(
+    tables.Leaderboard.set(
       {
         points,
         players,
@@ -39,9 +39,9 @@ export const setupLeaderboard = (core: Core) => {
     );
   }
 
-  defineComponentSystem(systemWorld, components.Points, ({ entity: rawEntity, value }) => {
+  defineComponentSystem(systemWorld, tables.Points, ({ entity: rawEntity, value }) => {
     const pointsValue = value[0]?.value ?? 0n;
-    const { entity, pointType } = decodeEntity(components.Points.metadata.keySchema, rawEntity);
+    const { entity, pointType } = decodeEntity(tables.Points.metadata.keySchema, rawEntity);
 
     const entityIsPlayer = isPlayer(entity as Entity);
 

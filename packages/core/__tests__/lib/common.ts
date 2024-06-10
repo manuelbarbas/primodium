@@ -47,12 +47,12 @@ export const commonTests = () => {
 
     test("core contains mud tables", () => {
       const core = createCore(coreConfig);
-      const coreComponentKeys = Object.keys(core.components);
+      const coreTableKeys = Object.keys(core.tables);
       const mudTableKeys = Object.keys(worldInput.tables);
       const otherTableKeys = Object.keys(otherTables);
 
       for (const table of [...otherTableKeys, ...mudTableKeys]) {
-        expect(coreComponentKeys).toContain(table);
+        expect(coreTableKeys).toContain(table);
       }
     });
 
@@ -86,11 +86,11 @@ export const commonTests = () => {
       });
 
       const waitUntilSynced = async () => {
-        let syncStatus = core.components.SyncStatus.get()?.step ?? SyncStep.Syncing;
+        let syncStatus = core.tables.SyncStatus.get()?.step ?? SyncStep.Syncing;
 
         while (syncStatus !== SyncStep.Complete) {
           await new Promise((resolve) => setTimeout(resolve, 100));
-          syncStatus = core.components.SyncStatus.get()?.step ?? SyncStep.Syncing;
+          syncStatus = core.tables.SyncStatus.get()?.step ?? SyncStep.Syncing;
         }
       };
 
@@ -118,7 +118,7 @@ export const commonTests = () => {
       };
 
       test("spawn allowed is true", async () => {
-        const spawnAllowed = core.components.SpawnAllowed.get()?.value ?? false;
+        const spawnAllowed = core.tables.SpawnAllowed.get()?.value ?? false;
         expect(spawnAllowed).toEqual(true);
       });
 
@@ -128,7 +128,7 @@ export const commonTests = () => {
         const txHash = await account.worldContract.write.Pri_11__spawn();
         await waitUntilTxExecution(txHash);
 
-        expect(core.components.Spawned.get(account.entity)?.value).toEqual(true);
+        expect(core.tables.Spawned.get(account.entity)?.value).toEqual(true);
       });
     });
   });

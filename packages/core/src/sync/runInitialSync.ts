@@ -5,7 +5,7 @@ import { Hex } from "viem";
 export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
   const {
     network,
-    components,
+    tables,
     config,
     sync: { syncFromRPC, subscribeToRPC, syncInitialGameState, syncSecondaryGameState },
   } = core;
@@ -21,14 +21,14 @@ export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
       toBlock,
       //on complete
       () => {
-        components.SyncSource.set({ value: SyncSourceType.RPC });
+        tables.SyncSource.set({ value: SyncSourceType.RPC });
 
         //finally sync live
         subscribeToRPC();
       },
       //on error
       (err: unknown) => {
-        components.SyncStatus.set({
+        tables.SyncStatus.set({
           step: SyncStep.Error,
           progress: 0,
           message: `Failed to sync from RPC`,
@@ -51,12 +51,12 @@ export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
       toBlock,
       //on complete
       () => {
-        components.SyncSource.set({ value: SyncSourceType.RPC });
+        tables.SyncSource.set({ value: SyncSourceType.RPC });
         subscribeToRPC();
       },
       //on error
       (err: unknown) => {
-        components.SyncStatus.set({
+        tables.SyncStatus.set({
           step: SyncStep.Error,
           progress: 0,
           message: `Failed to sync from RPC. Please try again.`,
@@ -71,8 +71,8 @@ export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
     playerAddress,
     // on complete
     () => {
-      components.SyncSource.set({ value: SyncSourceType.Indexer });
-      components.SyncStatus.set({
+      tables.SyncSource.set({ value: SyncSourceType.Indexer });
+      tables.SyncStatus.set({
         step: SyncStep.Complete,
         progress: 1,
         message: `DONE`,

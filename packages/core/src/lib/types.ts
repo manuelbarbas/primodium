@@ -17,13 +17,13 @@ import { ReplaySubject, Subject } from "rxjs";
 
 import CallWithSignatureAbi from "@latticexyz/world-modules/out/Unstable_CallWithSignatureSystem.sol/Unstable_CallWithSignatureSystem.abi.json";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
-import setupCoreComponents from "@/components/coreComponents";
+import setupCoreTables from "@/tables/coreTables";
 import { Table } from "@latticexyz/store/internal";
 import { ChainConfig } from "@/network/config/chainConfigs";
 import { Recs } from "@/recs/setupRecs";
 import { otherTables } from "@/network/otherTables";
 import mudConfig from "contracts/mud.config";
-import { ExtendedContractComponents } from "@/components/customComponents/extendComponents";
+import { ExtendedContractComponents } from "@/tables/customTables/extendComponents";
 
 export type CoreConfig = {
   chain: ChainConfig;
@@ -52,22 +52,22 @@ export type World = {
 
 type MudConfig = typeof mudConfig;
 
-export type CreateNetworkResult = Omit<Recs<MudConfig, typeof otherTables>, "components"> & {
+export type CreateNetworkResult = Omit<Recs<MudConfig, typeof otherTables>, "tables"> & {
   world: World;
-  tables: Record<string, Table>;
+  rawTables: Record<string, Table>;
   mudConfig: MudConfig;
-  components: ExtendedContractComponents<Recs<MudConfig, typeof otherTables>["components"]>;
+  tables: ExtendedContractComponents<Recs<MudConfig, typeof otherTables>["tables"]>;
   publicClient: PublicClient<FallbackTransport, ChainConfig, undefined>;
   clock: Clock;
 };
-export type Components = CreateNetworkResult["components"] & ReturnType<typeof setupCoreComponents>;
+export type Tables = CreateNetworkResult["tables"] & ReturnType<typeof setupCoreTables>;
 export type Utils = ReturnType<typeof createUtils>;
 export type Sync = ReturnType<typeof createSync>;
 
 export type Core = {
   config: CoreConfig;
   network: CreateNetworkResult;
-  components: Components;
+  tables: Tables;
   utils: Utils;
   sync: Sync;
 };

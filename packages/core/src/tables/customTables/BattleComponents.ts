@@ -5,7 +5,7 @@ import { CreateNetworkResult } from "@/lib/types";
 import { decodeEntity } from "@latticexyz/store-sync/recs";
 import { ResourceEnumLookup } from "@/lib/constants";
 
-export const createBattleComponents = ({ world, components }: CreateNetworkResult) => {
+export const createBattleComponents = ({ world, tables }: CreateNetworkResult) => {
   const RawBattleParticipants = createExtendedComponent(
     world,
     {
@@ -53,10 +53,10 @@ export const createBattleComponents = ({ world, components }: CreateNetworkResul
     const participant = RawBattleParticipant.get(participantEntity);
     if (!participant) return;
     const { participantEntity: entity } = decodeEntity(
-      components.BattleDamageDealtResult.metadata.keySchema,
+      tables.BattleDamageDealtResult.metadata.keySchema,
       participantEntity
     );
-    const unitPrototypes = components.P_UnitPrototypes.get()?.value ?? [];
+    const unitPrototypes = tables.P_UnitPrototypes.get()?.value ?? [];
     const units = unitPrototypes.reduce((acc, entity, index) => {
       const level = participant.unitLevels ? participant.unitLevels[index] : 0n;
       const unitsAtStart = participant.unitsAtStart ? participant.unitsAtStart[index] : 0n;

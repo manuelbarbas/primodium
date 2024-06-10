@@ -1,5 +1,5 @@
 import { createAllianceUtils } from "@/utils/core/alliance";
-import { Components } from "@/lib/types";
+import { Tables } from "@/lib/types";
 import { createBuildingUtils } from "@/utils/core/building";
 import { createAsteroidUtils } from "@/utils/core/asteroid";
 import { createColonyShipUtils } from "@/utils/core/colonyShip";
@@ -18,26 +18,26 @@ import { createDefenseUtils } from "@/utils/core/defense";
 import { createDroidRegenUtils } from "@/utils/core/droidRegen";
 import { createTrainingQueueUtils } from "@/utils/core/trainingQueue";
 
-export const createUtils = (components: Components) => {
+export const createUtils = (tables: Tables) => {
   return {
-    ...createAllianceUtils(components),
-    ...createAsteroidUtils(components),
-    ...createBoundsUtils(components),
-    ...createBuildingUtils(components),
-    ...createColonyShipUtils(components),
-    ...createColorUtils(components),
-    ...createDefenseUtils(components),
-    ...createDroidRegenUtils(components),
-    ...createLeaderboardUtils(components),
-    ...createRecipeUtils(components),
-    ...createResourceUtils(components),
-    ...createRecipeUtils(components),
-    ...createSendUtils(components),
-    ...createShardNameUtils(components),
-    ...createSwapUtils(components),
-    ...createTileUtils(components),
-    ...createTrainingQueueUtils(components),
-    ...createUnitUtils(components),
-    ...createUpgradeUtils(components),
+    ...createAllianceUtils(tables),
+    ...createAsteroidUtils(tables),
+    ...createBoundsUtils(tables),
+    ...createBuildingUtils(tables),
+    ...createColonyShipUtils(tables),
+    ...createColorUtils(tables),
+    ...createDefenseUtils(tables),
+    ...createDroidRegenUtils(tables),
+    ...createLeaderboardUtils(tables),
+    ...createRecipeUtils(tables),
+    ...createResourceUtils(tables),
+    ...createRecipeUtils(tables),
+    ...createSendUtils(tables),
+    ...createShardNameUtils(tables),
+    ...createSwapUtils(tables),
+    ...createTileUtils(tables),
+    ...createTrainingQueueUtils(tables),
+    ...createUnitUtils(tables),
+    ...createUpgradeUtils(tables),
   };
 };

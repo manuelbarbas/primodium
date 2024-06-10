@@ -7,22 +7,22 @@ import { Hex } from "viem";
 
 export const useColonySlots = (playerEntity: Entity) => {
   const {
-    components,
+    tables,
     utils: { getColonyShipsPlusAsteroids },
   } = useCore();
 
-  const maxSlots = components.MaxColonySlots.use(playerEntity)?.value ?? 0n;
-  const shipsInTraining = components.ColonyShipsInTraining.use(playerEntity)?.value ?? 0n;
-  const config = components.P_ColonySlotsConfig.use();
+  const maxSlots = tables.MaxColonySlots.use(playerEntity)?.value ?? 0n;
+  const shipsInTraining = tables.ColonyShipsInTraining.use(playerEntity)?.value ?? 0n;
+  const config = tables.P_ColonySlotsConfig.use();
   const costMultiplier = getColonySlotsCostMultiplier(playerEntity);
-  const time = components.Time.use()?.value ?? 0n;
+  const time = tables.Time.use()?.value ?? 0n;
   const data = useMemo(() => {
     if (!config) throw new Error("No colony slots config found");
     const occupiedSlots = getColonyShipsPlusAsteroids(playerEntity);
 
     const resourceCosts = config.resources.reduce((acc, resource, i) => {
       const paid =
-        components.ColonySlotsInstallments.getWithKeys({
+        tables.ColonySlotsInstallments.getWithKeys({
           playerEntity: playerEntity as Hex,
           resourceIndex: BigInt(i),
         })?.amounts ?? 0n;
@@ -48,9 +48,9 @@ export const useColonySlots = (playerEntity: Entity) => {
 };
 
 export const getColonySlotsCostMultiplier = (playerEntity: Entity) => {
-  const { components } = useCore();
+  const { tables } = useCore();
 
-  const maxColonySlots = components.MaxColonySlots.use(playerEntity)?.value ?? 0n;
-  const multiplier = components.P_ColonySlotsConfig.use()?.multiplier ?? 1n;
+  const maxColonySlots = tables.MaxColonySlots.use(playerEntity)?.value ?? 0n;
+  const multiplier = tables.P_ColonySlotsConfig.use()?.multiplier ?? 1n;
   return multiplier ** maxColonySlots;
 };

@@ -1,7 +1,7 @@
-import { Components } from "@/lib/types";
+import { Tables } from "@/lib/types";
 import { Entity } from "@latticexyz/recs";
 
-export function createShardNameUtils(components: Components) {
+export function createShardNameUtils(tables: Tables) {
   const shards = [
     {
       name: "Shard of Bo Lu",
@@ -58,7 +58,7 @@ export function createShardNameUtils(components: Components) {
   ];
 
   const entityToShardData = (entity: Entity) => {
-    const shardIndex = components.ShardAsteroidIndex.get(entity)?.value;
+    const shardIndex = tables.ShardAsteroidIndex.get(entity)?.value;
     if (shardIndex !== undefined) {
       return shards[Number(shardIndex) % shards.length];
     }
@@ -66,7 +66,7 @@ export function createShardNameUtils(components: Components) {
   };
 
   const entityToShardName = (entity: Entity) => {
-    const shardIndex = components.ShardAsteroidIndex.get(entity)?.value;
+    const shardIndex = tables.ShardAsteroidIndex.get(entity)?.value;
     if (shardIndex == undefined) return "UNKNOWN";
     const shardData = shards[Number(shardIndex) % shards.length];
     return shardData.name;

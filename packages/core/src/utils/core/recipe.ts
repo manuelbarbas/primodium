@@ -1,7 +1,7 @@
 import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { Hex } from "viem";
-import { Components, ResourceType } from "@/lib/types";
+import { Tables, ResourceType } from "@/lib/types";
 import { ResourceEntityLookup } from "@/lib/constants";
 import { createResourceUtils } from "@/utils/core/resource";
 
@@ -11,20 +11,18 @@ export type Recipe = {
   amount: bigint;
 }[];
 
-export function createRecipeUtils(components: Components) {
-  const { getFullResourceCount } = createResourceUtils(components);
+export function createRecipeUtils(tables: Tables) {
+  const { getFullResourceCount } = createResourceUtils(tables);
   function getRecipe(rawEntityType: Entity, level: bigint, upgrade = false) {
     const entityType = rawEntityType as Hex;
-    const requiredResources = (
-      upgrade ? components.P_RequiredUpgradeResources : components.P_RequiredResources
-    ).getWithKeys(
+    const requiredResources = (upgrade ? tables.P_RequiredUpgradeResources : tables.P_RequiredResources).getWithKeys(
       { prototype: entityType, level: level },
       {
         resources: [],
         amounts: [],
       }
     );
-    const requiredProduction = components.P_RequiredDependency.getWithKeys(
+    const requiredProduction = tables.P_RequiredDependency.getWithKeys(
       { prototype: entityType, level: level },
       undefined
     );
@@ -32,9 +30,7 @@ export function createRecipeUtils(components: Components) {
     const resources = requiredResources.resources.map((resource: EResource, index: number) => ({
       id: ResourceEntityLookup[resource],
       type:
-        components.P_IsUtility.getWithKeys({ id: resource })?.value == true
-          ? ResourceType.Utility
-          : ResourceType.Resource,
+        tables.P_IsUtility.getWithKeys({ id: resource })?.value == true ? ResourceType.Utility : ResourceType.Resource,
       amount: requiredResources.amounts[index],
     }));
 

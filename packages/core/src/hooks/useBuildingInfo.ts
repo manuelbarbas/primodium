@@ -4,10 +4,10 @@ import { useCore } from "@/hooks/useCore";
 
 export const useBuildingInfo = (building: Entity) => {
   const {
-    components,
+    tables,
     utils: { getBuildingInfo },
   } = useCore();
-  const buildingLevel = components.Level.use(building)?.value;
+  const buildingLevel = tables.Level.use(building)?.value;
 
   return useMemo(() => getBuildingInfo(building), [building, buildingLevel]);
 };

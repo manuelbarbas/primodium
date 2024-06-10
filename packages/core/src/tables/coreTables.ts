@@ -1,5 +1,5 @@
 import { Type } from "@latticexyz/recs";
-import { createBattleComponents } from "./customComponents/BattleComponents";
+import { createBattleComponents } from "./customTables/BattleComponents";
 import {
   createExtendedBigIntComponent,
   createExtendedBoolComponent,
@@ -7,11 +7,11 @@ import {
   createExtendedCoordComponent,
   createExtendedEntityComponent,
   createExtendedNumberComponent,
-} from "./customComponents/ExtendedComponent";
-import { createTransactionQueueComponent } from "./customComponents/TransactionQueueComponent";
+} from "./customTables/ExtendedComponent";
+import { createTransactionQueueComponent } from "./customTables/TransactionQueueComponent";
 import { CreateNetworkResult } from "@/lib/types";
 
-export default function setupCoreComponents(network: CreateNetworkResult) {
+export default function setupCoreTables(network: CreateNetworkResult) {
   const world = network.world;
   const DoubleCounter = createExtendedBigIntComponent(world, { id: "DoubleCounter" });
 

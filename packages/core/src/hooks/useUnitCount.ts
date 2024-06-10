@@ -4,11 +4,11 @@ import { useCore } from "@/hooks/useCore";
 
 export function useUnitCounts(entity?: Entity, force = false) {
   const {
-    components,
+    tables,
     utils: { getUnitCounts },
   } = useCore();
 
-  const time = components.Time.use(undefined)?.value ?? 0n;
+  const time = tables.Time.use(undefined)?.value ?? 0n;
 
   return useMemo(() => {
     return entity ? getUnitCounts(entity) : (new Map() as Map<Entity, bigint>);

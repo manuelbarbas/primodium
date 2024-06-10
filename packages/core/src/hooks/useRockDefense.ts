@@ -4,11 +4,11 @@ import { useCore } from "@/hooks/useCore";
 
 export function useRockDefense(rock: Entity) {
   const {
-    components,
+    tables,
     utils: { getRockDefense },
   } = useCore();
 
-  const { value: blockNumber } = components.BlockNumber.use(undefined, {
+  const { value: blockNumber } = tables.BlockNumber.use(undefined, {
     value: 0n,
     avgBlockTime: 1,
   });

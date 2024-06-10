@@ -7,14 +7,14 @@ import { entityToPlayerName } from "@/utils/global/name";
 
 export function usePlayerName(playerEntity: Entity, address?: boolean) {
   const {
-    components,
+    tables,
     utils: { decodeAllianceName },
     config,
   } = useCore();
 
   const [linkedAddress, setLinkedAddress] = useState<LinkedAddressResult>();
   const [loading, setLoading] = useState(true);
-  const allianceInfo = components.PlayerAllianceInfo.use(playerEntity);
+  const allianceInfo = tables.PlayerAllianceInfo.use(playerEntity);
   const allianceName = decodeAllianceName(allianceInfo?.name ?? "");
   const isPlayer = _isPlayer(playerEntity);
 

@@ -5,10 +5,10 @@ import { useCore } from "@/hooks/useCore";
 
 export function useFullResourceCount(resource: Entity, spaceRockEntity: Entity, force = false) {
   const {
-    components,
+    tables,
     utils: { getFullResourceCount },
   } = useCore();
-  const time = components.Time.use(undefined)?.value ?? 0n;
+  const time = tables.Time.use(undefined)?.value ?? 0n;
 
   return useMemo(() => {
     return getFullResourceCount(resource, spaceRockEntity);
@@ -17,10 +17,10 @@ export function useFullResourceCount(resource: Entity, spaceRockEntity: Entity, 
 
 export function useFullResourceCounts(spaceRockEntity: Entity, force = false) {
   const {
-    components,
+    tables,
     utils: { getFullResourceCounts },
   } = useCore();
-  const time = components.Time.use(undefined)?.value ?? 0n;
+  const time = tables.Time.use(undefined)?.value ?? 0n;
 
   return useMemo(() => {
     if (spaceRockEntity === singletonEntity) return new Map() as ReturnType<typeof getFullResourceCounts>;

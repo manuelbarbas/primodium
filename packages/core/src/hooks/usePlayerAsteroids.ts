@@ -3,8 +3,8 @@ import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { useCore } from "@/hooks/useCore";
 
 export const usePlayerAsteroids = (playerEntity: Entity) => {
-  const { components } = useCore();
+  const { tables } = useCore();
 
-  const query = [HasValue(components.OwnedBy, { value: playerEntity }), Has(components.Asteroid)];
+  const query = [HasValue(tables.OwnedBy, { value: playerEntity }), Has(tables.Asteroid)];
   return useEntityQuery(query);
 };

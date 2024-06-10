@@ -25,10 +25,10 @@ import {
 import { Block, Hex, PublicClient, TransactionReceiptNotFoundError } from "viem";
 
 export type Recs<config extends StoreConfig, extraTables extends Record<string, Table>> = {
-  components: TablesToComponents<ResolvedStoreConfig<storeToV1<config>>["tables"] & extraTables>;
+  tables: TablesToComponents<ResolvedStoreConfig<storeToV1<config>>["tables"] & extraTables>;
   latestBlock$: Observable<Block<bigint, false, "latest">>;
   latestBlockNumber$: Observable<bigint>;
-  tables: Record<string, Table>;
+  rawTables: Record<string, Table>;
   storedBlockLogs$: Observable<StorageAdapterBlock>;
   waitForTransaction: (tx: Hex) => Promise<void>;
 };
@@ -43,13 +43,13 @@ export const setupRecs = <config extends StoreConfig, extraTables extends Record
 }): Recs<config, extraTables> => {
   const { mudConfig, publicClient, world, address, otherTables } = args;
 
-  const tables = {
+  const rawTables = {
     ...resolveConfig(storeToV1(mudConfig as StoreConfig)).tables,
     ...(otherTables ?? {}),
   } as ResolvedStoreConfig<storeToV1<config>>["tables"] & extraTables;
 
-  const { components } = recsStorage({
-    tables,
+  const { components: tables } = recsStorage({
+    tables: rawTables,
     world,
   });
 
@@ -130,10 +130,10 @@ export const setupRecs = <config extends StoreConfig, extraTables extends Record
   const worldTables = resolveConfig(storeToV1(worldConfig)).tables;
 
   return {
-    components,
+    tables,
     latestBlock$,
     latestBlockNumber$,
-    tables: { ...tables, ...storeTables, ...worldTables },
+    rawTables: { ...rawTables, ...storeTables, ...worldTables },
     storedBlockLogs$,
     waitForTransaction,
   };

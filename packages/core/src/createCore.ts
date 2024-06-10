@@ -1,4 +1,4 @@
-import { createComponents } from "@/components/createComponents";
+import { createTables } from "@/tables/createTables";
 import { createNetwork } from "@/network/createNetwork";
 import { runInitialSync } from "@/sync/runInitialSync";
 import { CoreConfig, Core } from "@/lib/types";
@@ -8,14 +8,14 @@ import { runCoreSystems } from "@/systems";
 
 export function createCore(config: CoreConfig): Core {
   const networkResult = createNetwork(config);
-  const components = createComponents(networkResult);
-  const utils = createUtils(components);
-  const sync = createSync(config, networkResult, components);
+  const tables = createTables(networkResult);
+  const utils = createUtils(tables);
+  const sync = createSync(config, networkResult, tables);
 
   const core = {
     config,
     network: networkResult,
-    components,
+    tables,
     utils,
     sync,
   };

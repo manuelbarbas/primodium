@@ -1,8 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { ResourceEnumLookup } from "@/lib/constants";
-import { Components } from "@/lib/types";
+import { Tables } from "@/lib/types";
 
-export function createSwapUtils(components: Components) {
+export function createSwapUtils(tables: Tables) {
   function getOutAmount(inAmount: bigint, path: Entity[]) {
     return getPathResult(inAmount, path);
   }
@@ -22,7 +22,7 @@ export function createSwapUtils(components: Components) {
 
   function _swap(resourceIn: Entity, resourceOut: Entity, amountIn: bigint, backwards = false) {
     const [resourceA, resourceB] = getResourcePair(resourceIn, resourceOut);
-    const reserves = components.Reserves.getWithKeys({
+    const reserves = tables.Reserves.getWithKeys({
       resourceA: ResourceEnumLookup[resourceA],
       resourceB: ResourceEnumLookup[resourceB],
     });
@@ -36,7 +36,7 @@ export function createSwapUtils(components: Components) {
 
   // Assuming P_MarketplaceConfig.getSlippageThousandths() is a function that returns a BigNumber
   function getOutAmountTrade(amountIn: bigint, reserveIn: bigint, reserveOut: bigint, backwards = false): bigint {
-    const fee = components.P_MarketplaceConfig.get()?.feeThousandths ?? 0n;
+    const fee = tables.P_MarketplaceConfig.get()?.feeThousandths ?? 0n;
     const amountInWithFee = amountIn * (1000n - (backwards ? -fee : fee));
     const numerator = amountInWithFee * reserveOut;
     const denominator = reserveIn * 1000n + amountInWithFee;

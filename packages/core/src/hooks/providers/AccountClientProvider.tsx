@@ -26,7 +26,7 @@ export function AccountClientProvider({ children, ...options }: AccountProviderP
   const core = useCore();
   const {
     config,
-    components,
+    tables,
     network: { publicClient },
     sync: { syncPlayerData },
   } = core;
@@ -102,7 +102,7 @@ export function AccountClientProvider({ children, ...options }: AccountProviderP
     requestDrip(account.address);
     syncPlayerData(account.entity, account.address);
     playerAccountInterval.current = setInterval(() => requestDrip(account.address), 4000);
-    components.Account.set({ value: account.entity });
+    tables.Account.set({ value: account.entity });
     return account;
   }
 

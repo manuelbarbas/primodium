@@ -9,10 +9,10 @@ export const useFleetCount = ({ asteroid }: { asteroid: Entity }) =>
 
 export const useFleetStats = (entity: Entity, force?: boolean) => {
   const {
-    components,
+    tables,
     utils: { getFleetStats },
   } = useCore();
 
-  const time = components.Time.use()?.value ?? 0n;
+  const time = tables.Time.use()?.value ?? 0n;
   return useMemo(() => getFleetStats(entity), [entity, time, force]);
 };

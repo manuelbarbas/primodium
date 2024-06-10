@@ -4,17 +4,17 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { EFleetStance } from "contracts/config/enums";
 import { EntityType, ResourceStorages, RockRelationship } from "@/lib/constants";
 import { MapIdToAsteroidType } from "@/lib/mappings";
-import { Components, Coord } from "@/lib/types";
+import { Tables, Coord } from "@/lib/types";
 import { createResourceUtils } from "@/utils/core/resource";
 import { createUnitUtils } from "@/utils/core/unit";
 import { getEntityTypeName } from "@/utils/global/common";
 
-export function createAsteroidUtils(components: Components) {
-  const { getFullResourceCount } = createResourceUtils(components);
-  const { getOrbitingFleets } = createUnitUtils(components);
+export function createAsteroidUtils(tables: Tables) {
+  const { getFullResourceCount } = createResourceUtils(tables);
+  const { getOrbitingFleets } = createUnitUtils(tables);
   function getAsteroidName(spaceRock: Entity) {
-    const expansionLevel = components.Level.get(spaceRock)?.value;
-    const asteroidData = components.Asteroid.get(spaceRock);
+    const expansionLevel = tables.Level.get(spaceRock)?.value;
+    const asteroidData = tables.Asteroid.get(spaceRock);
 
     const asteroidResource = MapIdToAsteroidType[asteroidData?.mapId ?? 0];
     const asteroidSize = asteroidResource
@@ -32,7 +32,7 @@ export function createAsteroidUtils(components: Components) {
   }
 
   function getAsteroidDescription(asteroid: Entity) {
-    const asteroidData = components.Asteroid.get(asteroid);
+    const asteroidData = tables.Asteroid.get(asteroid);
 
     const asteroidResource = MapIdToAsteroidType[asteroidData?.mapId ?? 0];
     const asteroidSize = {
@@ -50,12 +50,12 @@ export function createAsteroidUtils(components: Components) {
   }
 
   function getAsteroidInfo(spaceRock: Entity) {
-    const ownedBy = components.OwnedBy.get(spaceRock)?.value as Entity | undefined;
-    const mainBaseEntity = components.Home.get(spaceRock)?.value as Entity;
-    const mainBaseLevel = components.Level.get(mainBaseEntity)?.value;
-    const asteroidData = components.Asteroid.get(spaceRock);
+    const ownedBy = tables.OwnedBy.get(spaceRock)?.value as Entity | undefined;
+    const mainBaseEntity = tables.Home.get(spaceRock)?.value as Entity;
+    const mainBaseLevel = tables.Level.get(mainBaseEntity)?.value;
+    const asteroidData = tables.Asteroid.get(spaceRock);
 
-    const position = components.Position.get(spaceRock, {
+    const position = tables.Position.get(spaceRock, {
       x: 0,
       y: 0,
       parentEntity: "0" as Entity,
@@ -74,14 +74,14 @@ export function createAsteroidUtils(components: Components) {
     }, [] as { resource: Entity; amount: bigint }[]);
     const { resourceCount: encryption } = getFullResourceCount(EntityType.Encryption, spaceRock);
 
-    const hangar = components.Hangar.get(spaceRock);
+    const hangar = tables.Hangar.get(spaceRock);
 
-    const gracePeriodValue = components.GracePeriod.get(ownedBy)?.value ?? 0n;
-    const now = components.Time.get()?.value ?? 0n;
+    const gracePeriodValue = tables.GracePeriod.get(ownedBy)?.value ?? 0n;
+    const now = tables.Time.get()?.value ?? 0n;
     const isInGracePeriod = gracePeriodValue > 0n && gracePeriodValue > now;
 
     const isBlocked = !!getOrbitingFleets(spaceRock).find(
-      (fleet) => components.FleetStance.get(fleet)?.stance == EFleetStance.Block
+      (fleet) => tables.FleetStance.get(fleet)?.stance == EFleetStance.Block
     );
 
     return {
@@ -101,16 +101,14 @@ export function createAsteroidUtils(components: Components) {
   }
 
   function isAsteroidBlocked(spaceRock: Entity) {
-    return !!getOrbitingFleets(spaceRock).find(
-      (fleet) => components.FleetStance.get(fleet)?.stance == EFleetStance.Block
-    );
+    return !!getOrbitingFleets(spaceRock).find((fleet) => tables.FleetStance.get(fleet)?.stance == EFleetStance.Block);
   }
 
   const getRockRelationship = (player: Entity, rock: Entity) => {
     if (player === singletonEntity) return RockRelationship.Neutral;
-    const playerAlliance = components.PlayerAlliance.get(player)?.alliance;
-    const rockOwner = components.OwnedBy.get(rock)?.value as Entity;
-    const rockAlliance = components.PlayerAlliance.get(rockOwner)?.alliance;
+    const playerAlliance = tables.PlayerAlliance.get(player)?.alliance;
+    const rockOwner = tables.OwnedBy.get(rock)?.value as Entity;
+    const rockAlliance = tables.PlayerAlliance.get(rockOwner)?.alliance;
 
     if (player === rockOwner) return RockRelationship.Self;
     if (playerAlliance && playerAlliance === rockAlliance) return RockRelationship.Ally;

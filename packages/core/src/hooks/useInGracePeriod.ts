@@ -6,9 +6,9 @@ import { useCore } from "@/hooks/useCore";
 dayjs.extend(duration);
 
 export const useInGracePeriod = (entity: Entity, force = false) => {
-  const { components } = useCore();
-  const time = components.Time.use()?.value ?? 0n;
-  const endTime = components.GracePeriod.use(entity)?.value ?? 0n;
+  const { tables } = useCore();
+  const time = tables.Time.use()?.value ?? 0n;
+  const endTime = tables.GracePeriod.use(entity)?.value ?? 0n;
 
   return useMemo(() => {
     const inGracePeriod = time < endTime;

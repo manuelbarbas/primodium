@@ -5,8 +5,8 @@ import { useCore } from "@/hooks/useCore";
 import { Hex, hexToString } from "viem";
 
 export const useAllianceName = (alliance: Entity, censor = false) => {
-  const { components } = useCore();
-  const allianceData = components.Alliance.use(alliance);
+  const { tables } = useCore();
+  const allianceData = tables.Alliance.use(alliance);
   return useMemo(() => {
     if (!allianceData) return "";
 

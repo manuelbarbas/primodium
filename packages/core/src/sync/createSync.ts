@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
 import { Sync } from "@primodiumxyz/sync-stack";
-import { Components, CoreConfig, CreateNetworkResult, SyncSourceType, SyncStep } from "@/lib/types";
+import { Tables, CoreConfig, CreateNetworkResult, SyncSourceType, SyncStep } from "@/lib/types";
 import { Keys } from "@/lib/constants";
 import { hashEntities } from "@/utils/global/encode";
 import { Hex } from "viem";
@@ -13,8 +13,8 @@ import { getPlayerFilter } from "./queries/playerQueries";
 import { getSecondaryQuery } from "@/sync/queries/secondaryQueries";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 
-export function createSync(config: CoreConfig, network: CreateNetworkResult, components: Components) {
-  const { tables, world, publicClient } = network;
+export function createSync(config: CoreConfig, network: CreateNetworkResult, tables: Tables) {
+  const { rawTables, world, publicClient } = network;
   const indexerUrl = config.chain.indexerUrl;
   const fromBlock = config.initialBlockNumber ?? 0n;
 
@@ -25,11 +25,9 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
     onError?: (err: unknown) => void,
     syncId?: Entity
   ) => {
-    const { tables, publicClient, world } = network;
-
     const sync = Sync.withRPCRecsSync({
       world,
-      tables,
+      tables: rawTables,
       address: config.worldAddress as Hex,
       fromBlock,
       publicClient,
@@ -37,7 +35,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
     });
 
     sync.start((_, __, progress) => {
-      components.SyncStatus.set(
+      tables.SyncStatus.set(
         {
           step: SyncStep.Syncing,
           progress,
@@ -47,7 +45,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
       );
 
       if (progress === 1) {
-        components.SyncStatus.set(
+        tables.SyncStatus.set(
           {
             step: SyncStep.Complete,
             progress: 1,
@@ -66,7 +64,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
   const subscribeToRPC = () => {
     const sync = Sync.withLiveRPCRecsSync({
       world,
-      tables,
+      tables: rawTables,
       address: config.worldAddress as Hex,
       publicClient,
     });
@@ -88,7 +86,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
   ) {
     return [
       (_: number, ___: bigint, progress: number) => {
-        components.SyncStatus.set(
+        tables.SyncStatus.set(
           {
             step: SyncStep.Syncing,
             progress,
@@ -98,7 +96,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
         );
 
         if (progress === 1) {
-          components.SyncStatus.set(
+          tables.SyncStatus.set(
             {
               step: SyncStep.Complete,
               progress,
@@ -111,7 +109,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
       // on error
       (e: unknown) => {
         console.error(e);
-        components.SyncStatus.set(
+        tables.SyncStatus.set(
           {
             step: SyncStep.Error,
             progress: 0,
@@ -129,23 +127,23 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
     onError: (err: unknown) => void
   ) => {
     // if we're already syncing from RPC, don't sync from indexer
-    if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
+    if (tables.SyncSource.get()?.value === SyncSourceType.RPC) return;
 
     if (!indexerUrl) return;
 
     const sync = Sync.withQueryDecodedIndexerRecsSync({
-      tables,
+      tables: rawTables,
       world,
       indexerUrl,
       query: getInitialQuery({
-        tables,
+        tables: rawTables,
         playerAddress,
         worldAddress: config.worldAddress as Hex,
       }),
     });
 
     sync.start(async (_, blockNumber, progress) => {
-      components.SyncStatus.set({
+      tables.SyncStatus.set({
         step: SyncStep.Syncing,
         progress,
         message: `Hydrating from Indexer`,
@@ -159,20 +157,20 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
 
   const syncSecondaryGameState = (onComplete: () => void, onError: (err: unknown) => void) => {
     // if we're already syncing from RPC, don't sync from indexer
-    if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
+    if (tables.SyncSource.get()?.value === SyncSourceType.RPC) return;
 
     if (!indexerUrl) return;
 
     const syncId = Keys.SECONDARY;
     const sync = Sync.withQueryDecodedIndexerRecsSync({
-      tables,
+      tables: rawTables,
       world,
       indexerUrl,
-      query: getSecondaryQuery({ tables, worldAddress: config.worldAddress as Hex }),
+      query: getSecondaryQuery({ tables: rawTables, worldAddress: config.worldAddress as Hex }),
     });
 
     sync.start(async (_, blockNumber, progress) => {
-      components.SyncStatus.set(
+      tables.SyncStatus.set(
         {
           step: SyncStep.Syncing,
           progress,
@@ -203,19 +201,19 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
     if (!playerEntity || !indexerUrl) return;
 
     // if we're already syncing from RPC, don't sync from indexer
-    if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
+    if (tables.SyncSource.get()?.value === SyncSourceType.RPC) return;
 
-    if (components.SyncStatus.get(playerEntity)) {
+    if (tables.SyncStatus.get(playerEntity)) {
       console.log("Skipping sync for player (exists):", playerEntity);
       return;
     }
 
     const syncData = Sync.withFilterIndexerRecsSync({
       indexerUrl,
-      tables,
+      tables: rawTables,
       world,
       filter: getPlayerFilter({
-        tables,
+        tables: rawTables,
         playerAddress,
         playerEntity: playerEntity as Hex,
         worldAddress: config.worldAddress as Hex,
@@ -237,25 +235,25 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
 
   const syncAsteroidData = (selectedRock: Entity | undefined, shard?: boolean) => {
     // if we're already syncing from RPC, don't sync from indexer
-    if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
+    if (tables.SyncSource.get()?.value === SyncSourceType.RPC) return;
 
     if (!selectedRock || !indexerUrl) return;
 
     const syncId = hashEntities(Keys.SELECTED, selectedRock);
 
-    if (components.SyncStatus.get(syncId)) {
+    if (tables.SyncStatus.get(syncId)) {
       console.log("Skipping sync for selected spacerock (exists):", selectedRock);
       return;
     }
 
     const params = {
-      tables,
+      tables: rawTables,
       asteroid: selectedRock,
       worldAddress: config.worldAddress as Hex,
     };
 
     const syncData = Sync.withFilterIndexerRecsSync({
-      tables,
+      tables: rawTables,
       world,
       indexerUrl,
       filter: shard ? getShardAsteroidFilter(params) : getAsteroidFilter(params),
@@ -276,24 +274,24 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
 
   const syncActiveAsteroid = (activeRock: Entity | undefined) => {
     // if we're already syncing from RPC, don't sync from indexer
-    if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
+    if (tables.SyncSource.get()?.value === SyncSourceType.RPC) return;
 
     if (!activeRock || !indexerUrl) return;
 
     const syncId = hashEntities(Keys.ACTIVE, activeRock);
 
-    if (components.SyncStatus.get(syncId)) {
+    if (tables.SyncStatus.get(syncId)) {
       console.log("Skipping sync for active spacerock (exists):", activeRock);
       return;
     }
 
     const syncData = Sync.withQueryDecodedIndexerRecsSync({
-      tables,
+      tables: rawTables,
       world,
       indexerUrl,
       query: getActiveAsteroidQuery({
         asteroid: activeRock,
-        tables,
+        tables: rawTables,
         worldAddress: config.worldAddress as Hex,
       }),
     });
@@ -315,9 +313,9 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
     if (!allianceEntity || !indexerUrl) return;
 
     // if we're already syncing from RPC, don't sync from indexer
-    if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
+    if (tables.SyncSource.get()?.value === SyncSourceType.RPC) return;
 
-    if (components.SyncStatus.get(allianceEntity)) {
+    if (tables.SyncStatus.get(allianceEntity)) {
       console.log("Skipping sync for alliance (exists):", allianceEntity);
       return;
     }
@@ -325,9 +323,9 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
     const syncData = Sync.withQueryDecodedIndexerRecsSync({
       indexerUrl,
       world,
-      tables,
+      tables: rawTables,
       query: getAllianceQuery({
-        tables,
+        tables: rawTables,
         alliance: allianceEntity,
         worldAddress: config.worldAddress as Hex,
       }),
@@ -350,20 +348,20 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
     if (!fleetEntity || !indexerUrl) return;
 
     // if we're already syncing from RPC, don't sync from indexer
-    if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
+    if (tables.SyncSource.get()?.value === SyncSourceType.RPC) return;
 
-    if (components.SyncStatus.get(fleetEntity)) {
+    if (tables.SyncStatus.get(fleetEntity)) {
       console.log("Skipping sync for fleet (exists):", fleetEntity);
       return;
     }
 
-    const ownerAsteroid = (components.OwnedBy.get(fleetEntity)?.value ?? singletonEntity) as Entity;
+    const ownerAsteroid = (tables.OwnedBy.get(fleetEntity)?.value ?? singletonEntity) as Entity;
     const syncData = Sync.withFilterIndexerRecsSync({
       indexerUrl,
       world,
-      tables,
+      tables: rawTables,
       filter: getFleetFilter({
-        tables,
+        tables: rawTables,
         fleet: fleetEntity,
         ownerAsteroid,
         worldAddress: config.worldAddress as Hex,
@@ -389,19 +387,19 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, com
     const syncId = hashEntities(Keys.BATTLE, playerEntity);
 
     // if we're already syncing from RPC, don't sync from indexer
-    if (components.SyncSource.get()?.value === SyncSourceType.RPC) return;
+    if (tables.SyncSource.get()?.value === SyncSourceType.RPC) return;
 
-    if (components.SyncStatus.get(syncId)) {
+    if (tables.SyncStatus.get(syncId)) {
       console.log("Skipping sync for battle reports (exists):", playerEntity);
       return;
     }
 
     const syncData = Sync.withQueryDecodedIndexerRecsSync({
-      tables,
+      tables: rawTables,
       world,
       indexerUrl,
       query: getBattleReportQuery({
-        tables,
+        tables: rawTables,
         playerEntity,
         worldAddress: config.worldAddress as Hex,
       }),

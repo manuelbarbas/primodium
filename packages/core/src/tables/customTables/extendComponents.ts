@@ -2,9 +2,9 @@ import { Component } from "@latticexyz/recs";
 import { ExtendedContractComponent, extendContractComponent } from "./ExtendedComponent";
 import { ContractComponent } from "@/lib/types";
 
-export function extendContractComponents<C extends Components>(components: C): ExtendedContractComponents<C> {
+export function extendContractComponents<C extends Components>(tables: C): ExtendedContractComponents<C> {
   return Object.fromEntries(
-    Object.entries(components).map(([key, value]) => [key, extendContractComponent(value)])
+    Object.entries(tables).map(([key, value]) => [key, extendContractComponent(value)])
   ) as ExtendedContractComponents<C>;
 }
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

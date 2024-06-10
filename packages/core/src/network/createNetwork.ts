@@ -6,7 +6,7 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { createWorld } from "@latticexyz/recs";
 import { createClock } from "@/network/createClock";
 import { otherTables } from "@/network/otherTables";
-import { extendContractComponents } from "@/components/customComponents/extendComponents";
+import { extendContractComponents } from "@/tables/customTables/extendComponents";
 import { CoreConfig, CreateNetworkResult } from "@/lib/types";
 
 export function createNetwork(config: CoreConfig): CreateNetworkResult {
@@ -21,7 +21,7 @@ export function createNetwork(config: CoreConfig): CreateNetworkResult {
 
   const publicClient = createPublicClient(clientOptions);
 
-  const { components, latestBlock$, latestBlockNumber$, tables, storedBlockLogs$, waitForTransaction } = setupRecs({
+  const { tables, latestBlock$, latestBlockNumber$, rawTables, storedBlockLogs$, waitForTransaction } = setupRecs({
     mudConfig,
     world,
     publicClient,
@@ -37,10 +37,10 @@ export function createNetwork(config: CoreConfig): CreateNetworkResult {
 
   return {
     world,
-    tables,
+    rawTables,
     publicClient,
     mudConfig,
-    components: extendContractComponents(components),
+    tables: extendContractComponents(tables),
     clock,
     latestBlock$,
     latestBlockNumber$,

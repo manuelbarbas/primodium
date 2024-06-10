@@ -4,7 +4,7 @@ import { EResource, MUDEnums } from "contracts/config/enums";
 import { Hex } from "viem";
 import { clampBigInt } from "../global/common";
 import { ResourceEntityLookup, ResourceEnumLookup, SPEED_SCALE } from "@/lib/constants";
-import { Components } from "@/lib/types";
+import { Tables } from "@/lib/types";
 
 export type ResourceCountData = {
   resourceCount: bigint;
@@ -12,10 +12,10 @@ export type ResourceCountData = {
   production: bigint;
 };
 
-export function createResourceUtils(components: Components) {
+export function createResourceUtils(tables: Tables) {
   function isUtility(resource: Entity) {
     const id = ResourceEnumLookup[resource];
-    return components.P_IsUtility.getWithKeys({ id })?.value ?? false;
+    return tables.P_IsUtility.getWithKeys({ id })?.value ?? false;
   }
 
   const asteroidResources: Map<
@@ -37,9 +37,9 @@ export function createResourceUtils(components: Components) {
   }
 
   function getFleetResourceCount(fleet: Entity) {
-    const transportables = components.P_Transportables.get()?.value ?? [];
+    const transportables = tables.P_Transportables.get()?.value ?? [];
     return transportables.reduce((acc, resource) => {
-      const resourceCount = components.ResourceCount.getWithKeys({ entity: fleet as Hex, resource })?.value ?? 0n;
+      const resourceCount = tables.ResourceCount.getWithKeys({ entity: fleet as Hex, resource })?.value ?? 0n;
       if (!resourceCount) return acc;
       acc.set(ResourceEntityLookup[resource as EResource], { resourceStorage: 0n, production: 0n, resourceCount });
       return acc;
@@ -47,29 +47,29 @@ export function createResourceUtils(components: Components) {
   }
 
   function getAsteroidResourceCount(asteroid: Entity) {
-    const time = components.Time.get()?.value ?? 0n;
+    const time = tables.Time.get()?.value ?? 0n;
 
     const consumptionTimeLengths: Record<number, bigint> = {};
     const result: Map<Entity, ResourceCountData> = new Map();
 
     const homeHex = asteroid as Hex;
 
-    const playerLastClaimed = components.LastClaimedAt.getWithKeys({ entity: homeHex })?.value ?? 0n;
+    const playerLastClaimed = tables.LastClaimedAt.getWithKeys({ entity: homeHex })?.value ?? 0n;
     const timeSinceClaimed =
-      ((time - playerLastClaimed) * (components.P_GameConfig?.get()?.worldSpeed ?? SPEED_SCALE)) / SPEED_SCALE;
+      ((time - playerLastClaimed) * (tables.P_GameConfig?.get()?.worldSpeed ?? SPEED_SCALE)) / SPEED_SCALE;
 
     MUDEnums.EResource.forEach((_: string, index: number) => {
       const entity = ResourceEntityLookup[index as EResource];
       if (entity == undefined) return;
       const resource = index as EResource;
 
-      const resourceStorage = components.MaxResourceCount.getWithKeys({ entity: homeHex, resource })?.value ?? 0n;
+      const resourceStorage = tables.MaxResourceCount.getWithKeys({ entity: homeHex, resource })?.value ?? 0n;
 
-      const resourceCount = components.ResourceCount.getWithKeys({ entity: homeHex, resource })?.value ?? 0n;
+      const resourceCount = tables.ResourceCount.getWithKeys({ entity: homeHex, resource })?.value ?? 0n;
 
-      let productionRate = components.ProductionRate.getWithKeys({ entity: homeHex, resource })?.value ?? 0n;
+      let productionRate = tables.ProductionRate.getWithKeys({ entity: homeHex, resource })?.value ?? 0n;
 
-      const consumptionRate = components.ConsumptionRate.getWithKeys({ entity: homeHex, resource })?.value ?? 0n;
+      const consumptionRate = tables.ConsumptionRate.getWithKeys({ entity: homeHex, resource })?.value ?? 0n;
 
       if (productionRate == 0n && consumptionRate == 0n)
         return result.set(entity, {
@@ -81,7 +81,7 @@ export function createResourceUtils(components: Components) {
       let increase = 0n;
       //first we calculate production
       if (productionRate > 0n) {
-        const consumedResource = (components.P_ConsumesResource.getWithKeys({ resource })?.value ?? 0) as EResource;
+        const consumedResource = (tables.P_ConsumesResource.getWithKeys({ resource })?.value ?? 0) as EResource;
 
         //check if the consumed resource isn't consumed by the space rock
         const consumedTime = consumptionTimeLengths[consumedResource] ?? 0n;
@@ -139,7 +139,7 @@ export function createResourceUtils(components: Components) {
 
   function getFullResourceCounts(entity: Entity): Map<Entity, ResourceCountData> {
     if (entity === singletonEntity) return new Map();
-    return components.IsFleet.get(entity) ? getFleetResourceCount(entity) : getAsteroidResourceCount(entity);
+    return tables.IsFleet.get(entity) ? getFleetResourceCount(entity) : getAsteroidResourceCount(entity);
   }
 
   return {

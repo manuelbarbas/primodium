@@ -5,23 +5,23 @@ import { Core } from "@/lib/types";
 export const setupBuildRock = (core: Core) => {
   const {
     network: { world },
-    components,
+    tables,
   } = core;
 
   const systemWorld = namespaceWorld(world, "coreSystems");
-  const playerEntity = components.Account.get()?.value;
+  const playerEntity = tables.Account.get()?.value;
 
   const activeRockWorld = namespaceWorld(world, "activeRock");
-  defineComponentSystem(systemWorld, components.ActiveRock, ({ value }) => {
+  defineComponentSystem(systemWorld, tables.ActiveRock, ({ value }) => {
     activeRockWorld.dispose();
     const spaceRock = value[0]?.value;
-    const ownedBy = components.OwnedBy.get(spaceRock)?.value;
+    const ownedBy = tables.OwnedBy.get(spaceRock)?.value;
 
     if (!spaceRock) return;
 
-    if (playerEntity === ownedBy) components.BuildRock.set({ value: spaceRock });
+    if (playerEntity === ownedBy) tables.BuildRock.set({ value: spaceRock });
 
-    defineComponentSystem(activeRockWorld, components.OwnedBy, ({ entity, value }) => {
+    defineComponentSystem(activeRockWorld, tables.OwnedBy, ({ entity, value }) => {
       if (entity !== spaceRock) return;
       const newOwner = value[0]?.value;
 
@@ -30,7 +30,7 @@ export const setupBuildRock = (core: Core) => {
       }
 
       if (newOwner === playerEntity) {
-        components.BuildRock.set({ value: spaceRock });
+        tables.BuildRock.set({ value: spaceRock });
       }
     });
   });

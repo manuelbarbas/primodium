@@ -5,19 +5,19 @@ import { SPEED_SCALE } from "@/lib/constants";
 import { useCore } from "@/hooks/useCore";
 
 export const usePlayerUnclaimedShardAsteroidPoints = (playerEntity: Entity) => {
-  const { components } = useCore();
-  const conquestConfigData = components.P_ConquestConfig.use();
-  const worldSpeed = components.P_GameConfig.use()?.worldSpeed ?? 100n;
-  const time = components.Time.use()?.value ?? 0n;
-  const shardAsteroids = components.ShardAsteroid.useAll();
+  const { tables } = useCore();
+  const conquestConfigData = tables.P_ConquestConfig.use();
+  const worldSpeed = tables.P_GameConfig.use()?.worldSpeed ?? 100n;
+  const time = tables.Time.use()?.value ?? 0n;
+  const shardAsteroids = tables.ShardAsteroid.useAll();
 
   return useMemo(() => {
     if (!conquestConfigData) return 0n;
     return shardAsteroids.reduce((acc, asteroidEntity) => {
-      const owner = components.OwnedBy.get(asteroidEntity)?.value;
+      const owner = tables.OwnedBy.get(asteroidEntity)?.value;
       if (!owner || owner !== playerEntity) return acc;
-      const shardAsteroid = components.ShardAsteroid.get(asteroidEntity)!;
-      const lastConquered = components.LastConquered.get(asteroidEntity)?.value ?? 0n;
+      const shardAsteroid = tables.ShardAsteroid.get(asteroidEntity)!;
+      const lastConquered = tables.LastConquered.get(asteroidEntity)?.value ?? 0n;
       const lifespan = (conquestConfigData.shardAsteroidLifeSpan * SPEED_SCALE) / worldSpeed;
 
       const explodeTime = shardAsteroid.spawnTime + lifespan;
@@ -34,18 +34,18 @@ export const usePlayerUnclaimedShardAsteroidPoints = (playerEntity: Entity) => {
 };
 
 export const useAllUnclaimedShardAsteroidPts = () => {
-  const { components } = useCore();
-  const conquestConfigData = components.P_ConquestConfig.use();
-  const worldSpeed = components.P_GameConfig.use()?.worldSpeed ?? 100n;
-  const time = components.Time.use()?.value ?? 0n;
-  const shardAsteroids = components.ShardAsteroid.useAll();
+  const { tables } = useCore();
+  const conquestConfigData = tables.P_ConquestConfig.use();
+  const worldSpeed = tables.P_GameConfig.use()?.worldSpeed ?? 100n;
+  const time = tables.Time.use()?.value ?? 0n;
+  const shardAsteroids = tables.ShardAsteroid.useAll();
   return useMemo(() => {
     if (!conquestConfigData) return new Map<Entity, bigint>();
     return shardAsteroids.reduce((acc, asteroidEntity) => {
-      const owner = components.OwnedBy.get(asteroidEntity)?.value as Entity;
+      const owner = tables.OwnedBy.get(asteroidEntity)?.value as Entity;
       if (!owner) return acc;
-      const shardAsteroid = components.ShardAsteroid.get(asteroidEntity)!;
-      const lastConquered = components.LastConquered.get(asteroidEntity)?.value ?? 0n;
+      const shardAsteroid = tables.ShardAsteroid.get(asteroidEntity)!;
+      const lastConquered = tables.LastConquered.get(asteroidEntity)?.value ?? 0n;
       const lifespan = (conquestConfigData.shardAsteroidLifeSpan * SPEED_SCALE) / worldSpeed;
 
       const explodeTime = shardAsteroid.spawnTime + lifespan;

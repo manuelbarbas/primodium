@@ -1,11 +1,11 @@
 import { hexToString, Hex } from "viem";
 import { Entity } from "@latticexyz/recs";
 import { censorText } from "@/utils/global/profanity";
-import { Components } from "@/lib/types";
+import { Tables } from "@/lib/types";
 
-export const createAllianceUtils = (components: Components) => {
+export const createAllianceUtils = (tables: Tables) => {
   const getAllianceName = (alliance: Entity, censor = false) => {
-    const allianceData = components.Alliance.get(alliance);
+    const allianceData = tables.Alliance.get(alliance);
     if (!allianceData) return "";
 
     const allianceName = hexToString(allianceData.name as Hex, { size: 32 });
@@ -14,8 +14,8 @@ export const createAllianceUtils = (components: Components) => {
   };
 
   const getAllianceNameFromPlayer = (player: Entity, censor = false) => {
-    const alliance = components.PlayerAlliance.get(player)?.alliance as Entity;
-    const allianceData = components.Alliance.get(alliance);
+    const alliance = tables.PlayerAlliance.get(player)?.alliance as Entity;
+    const allianceData = tables.Alliance.get(alliance);
     if (!allianceData) return "";
 
     const allianceName = hexToString(allianceData!.name as Hex, { size: 32 });

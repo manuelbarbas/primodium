@@ -7,16 +7,16 @@ import { useCore } from "@/hooks/useCore";
 
 export const useShardAsteroid = (entity: Entity) => {
   const {
-    components,
+    tables,
     utils: { entityToShardData },
   } = useCore();
-  const conquestConfigData = components.P_ConquestConfig.use();
-  const shardAsteroid = components.ShardAsteroid.use(entity);
-  const worldSpeed = components.P_GameConfig.use()?.worldSpeed ?? 100n;
-  const time = components.Time.use()?.value ?? 0n;
-  const owner = components.OwnedBy.use(entity)?.value;
-  const player = components.Account.use()?.value;
-  const lastConquered = components.LastConquered.use(entity)?.value ?? 0n;
+  const conquestConfigData = tables.P_ConquestConfig.use();
+  const shardAsteroid = tables.ShardAsteroid.use(entity);
+  const worldSpeed = tables.P_GameConfig.use()?.worldSpeed ?? 100n;
+  const time = tables.Time.use()?.value ?? 0n;
+  const owner = tables.OwnedBy.use(entity)?.value;
+  const player = tables.Account.use()?.value;
+  const lastConquered = tables.LastConquered.use(entity)?.value ?? 0n;
   const { resourceCount: encryption, resourceStorage: maxEncryption } = useFullResourceCount(
     EntityType.Encryption,
     entity

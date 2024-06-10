@@ -1,16 +1,16 @@
-import { Components } from "@/lib/types";
+import { Tables } from "@/lib/types";
 import { hslToHex } from "@/utils/global/color";
 import { hashEntities } from "@/utils/global/encode";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 
-export function createColorUtils(components: Components) {
+export function createColorUtils(tables: Tables) {
   const entityColor = new Map<Entity, string>();
   function entityToColor(entity: Entity | undefined) {
     if (!entity || entity === singletonEntity) return "#999999";
-    const alliance = components.PlayerAlliance.get(entity)?.alliance as Entity;
+    const alliance = tables.PlayerAlliance.get(entity)?.alliance as Entity;
     entity = alliance ?? entity;
-    if (entity === components.Account.get()?.value) return "#22d3ee";
+    if (entity === tables.Account.get()?.value) return "#22d3ee";
     if (entityColor.has(entity)) return entityColor.get(entity) as string;
     const hash = hashEntities(entity);
 

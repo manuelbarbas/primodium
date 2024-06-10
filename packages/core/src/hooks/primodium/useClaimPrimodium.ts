@@ -4,13 +4,13 @@ import { SPEED_SCALE } from "@/lib/constants";
 import { useCore } from "@/hooks";
 
 export const useClaimPrimodium = (asteroidEntity: Entity) => {
-  const { components } = useCore();
-  const points = components.Asteroid.use(asteroidEntity)?.primodium ?? 0n;
-  const owner = components.OwnedBy.use(asteroidEntity)?.value as Entity | undefined;
-  const lastConquered = components.LastConquered.use(asteroidEntity)?.value ?? 0n;
-  const time = components.Time.use()?.value ?? 0n;
-  const conquestConfig = components.P_ConquestConfig.use();
-  const gameConfig = components.P_GameConfig.use();
+  const { tables } = useCore();
+  const points = tables.Asteroid.use(asteroidEntity)?.primodium ?? 0n;
+  const owner = tables.OwnedBy.use(asteroidEntity)?.value as Entity | undefined;
+  const lastConquered = tables.LastConquered.use(asteroidEntity)?.value ?? 0n;
+  const time = tables.Time.use()?.value ?? 0n;
+  const conquestConfig = tables.P_ConquestConfig.use();
+  const gameConfig = tables.P_GameConfig.use();
 
   return useMemo(() => {
     if (points === 0n || !owner || !conquestConfig || !gameConfig) return null;

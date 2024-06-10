@@ -6,10 +6,10 @@ import { useCore } from "@/hooks/useCore";
 dayjs.extend(duration);
 
 export const useInCooldownEnd = (entity: Entity) => {
-  const { components } = useCore();
+  const { tables } = useCore();
 
-  const time = components.Time.use()?.value ?? 0n;
-  const endTime = components.CooldownEnd.use(entity)?.value ?? 0n;
+  const time = tables.Time.use()?.value ?? 0n;
+  const endTime = tables.CooldownEnd.use(entity)?.value ?? 0n;
 
   return useMemo(() => {
     const inCooldown = time < endTime;

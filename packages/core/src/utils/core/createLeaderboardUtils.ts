@@ -1,5 +1,5 @@
 import { EntityType } from "@/lib/constants";
-import { Components } from "@/lib/types";
+import { Tables } from "@/lib/types";
 import { rankToScore } from "@/utils/global/score";
 import { Entity } from "@latticexyz/recs";
 
@@ -11,16 +11,16 @@ export type FinalLeaderboardData = {
   shardRank?: number;
 };
 
-export function createLeaderboardUtils(components: Components) {
+export function createLeaderboardUtils(tables: Tables) {
   const getFinalLeaderboardData = (
     playerEntity: Entity,
     alliance: boolean
   ): { allPlayers: FinalLeaderboardData[]; player?: FinalLeaderboardData } => {
-    const selfEntity = alliance ? (components.PlayerAlliance.get(playerEntity)?.alliance as Entity) : playerEntity;
-    const wormholeData = components.Leaderboard.get(
+    const selfEntity = alliance ? (tables.PlayerAlliance.get(playerEntity)?.alliance as Entity) : playerEntity;
+    const wormholeData = tables.Leaderboard.get(
       alliance ? EntityType.AllianceWormholeLeaderboard : EntityType.PlayerWormholeLeaderboard
     );
-    const shardData = components.Leaderboard.get(
+    const shardData = tables.Leaderboard.get(
       alliance ? EntityType.AllianceShardLeaderboard : EntityType.PlayerShardLeaderboard
     );
 

@@ -11,23 +11,20 @@ import { useCore } from "@/hooks/useCore";
  * @returns an array of fleet entities orbiting the space rock
  */
 export const useOrbitingFleets = (spaceRock: Entity, ownedBy?: Entity) => {
-  const { components } = useCore();
+  const { tables } = useCore();
 
-  const time = components.Time.use()?.value ?? 0n;
-  const entities = useEntityQuery([
-    Has(components.IsFleet),
-    HasValue(components.FleetMovement, { destination: spaceRock }),
-  ]);
+  const time = tables.Time.use()?.value ?? 0n;
+  const entities = useEntityQuery([Has(tables.IsFleet), HasValue(tables.FleetMovement, { destination: spaceRock })]);
   return useMemo(
     () =>
       entities.filter((entity) => {
-        const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
+        const arrivalTime = tables.FleetMovement.get(entity)?.arrivalTime ?? 0n;
         if (arrivalTime > time) return false;
 
         if (!ownedBy) return true;
-        const fleetOwnerRock = components.OwnedBy.get(entity)?.value;
+        const fleetOwnerRock = tables.OwnedBy.get(entity)?.value;
         if (!fleetOwnerRock) return false;
-        const rockOwner = components.OwnedBy.get(fleetOwnerRock as Entity)?.value;
+        const rockOwner = tables.OwnedBy.get(fleetOwnerRock as Entity)?.value;
         return rockOwner === ownedBy;
       }),
     [entities, ownedBy, time]
