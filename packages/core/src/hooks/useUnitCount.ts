@@ -2,6 +2,13 @@ import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { useCore } from "@/hooks/useCore";
 
+/**
+ * Gets a map of unit counts for a given entity.
+ *
+ * @param entity - The entity for which to retrieve the unit counts.
+ * @param force - Optional parameter to force the recalculation of unit counts.
+ * @returns A memoized map of unit counts for the specified entity.
+ */
 export function useUnitCounts(entity?: Entity, force = false) {
   const {
     tables,

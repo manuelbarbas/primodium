@@ -1,10 +1,16 @@
 import { useCore } from "@/hooks/useCore";
-import { ResourceEntityLookup } from "@/lib/constants";
+import { ResourceEntityLookup } from "@/lib";
 import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { useMemo } from "react";
 import { Hex } from "viem";
 
+/**
+ * Calculates colony slot information for a given player entity.
+ *
+ * @param playerEntity - The player entity for which to calculate colony slot information.
+ * @returns An object containing colony slot information.
+ */
 export const useColonySlots = (playerEntity: Entity) => {
   const {
     tables,

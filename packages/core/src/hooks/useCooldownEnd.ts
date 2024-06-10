@@ -5,6 +5,12 @@ import { useMemo } from "react";
 import { useCore } from "@/hooks/useCore";
 dayjs.extend(duration);
 
+/**
+ * Gets information about the cooldown status of an entity.
+ *
+ * @param entity - The entity for which to check the cooldown status.
+ * @returns An object containing the cooldown status and duration.
+ */
 export const useInCooldownEnd = (entity: Entity) => {
   const { tables } = useCore();
 

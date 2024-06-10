@@ -2,6 +2,12 @@ import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { useCore } from "@/hooks/useCore";
 
+/**
+ * Calculates cooldown status and remaining time for a wormhole base entity.
+ *
+ * @param wormholeBaseEntity - The wormhole base entity.
+ * @returns An object containing the cooldown status, cooldown end time, and remaining time.
+ */
 export const useWormholeBaseCooldown = (
   wormholeBaseEntity: Entity
 ): { inCooldown: boolean; cooldownEnd: bigint; timeLeft: bigint } => {

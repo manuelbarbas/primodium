@@ -3,7 +3,14 @@ import { useMemo } from "react";
 import { useCore } from "@/hooks/useCore";
 import { Recipe } from "@/utils/core/recipe";
 
-export function useMaxCountOfRecipe(recipe: Recipe, spaceRock: Entity) {
+/**
+ * Calculates the maximum count of a recipe for a given space rock.
+ *
+ * @param recipe - The recipe to calculate the maximum count for.
+ * @param asteroid - The asteroid entity.
+ * @returns The maximum count of the recipe for the space rock.
+ */
+export function useMaxCountOfRecipe(recipe: Recipe, asteroid: Entity) {
   const {
     tables,
     utils: { getMaxCountOfRecipe },
@@ -15,6 +22,6 @@ export function useMaxCountOfRecipe(recipe: Recipe, spaceRock: Entity) {
   });
 
   return useMemo(() => {
-    return getMaxCountOfRecipe(recipe, spaceRock);
-  }, [blockNumber, recipe, spaceRock]);
+    return getMaxCountOfRecipe(recipe, asteroid);
+  }, [blockNumber, recipe, asteroid]);
 }

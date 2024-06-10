@@ -5,6 +5,13 @@ import { isPlayer as _isPlayer, entityToAddress, shortenAddress } from "@/utils/
 import { getEnsName, LinkedAddressResult } from "@/utils/global/ens";
 import { entityToPlayerName } from "@/utils/global/name";
 
+/**
+ * Retrieves the player name and related information.
+ *
+ * @param playerEntity - The player entity.
+ * @param address - Optional boolean flag indicating whether to include the player's address.
+ * @returns An object containing the linked address, alliance name, player address, loading state, and player flag.
+ */
 export function usePlayerName(playerEntity: Entity, address?: boolean) {
   const {
     tables,

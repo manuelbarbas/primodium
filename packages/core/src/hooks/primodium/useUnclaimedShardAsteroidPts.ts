@@ -4,6 +4,12 @@ import { useMemo } from "react";
 import { SPEED_SCALE } from "@/lib/constants";
 import { useCore } from "@/hooks/useCore";
 
+/**
+ * Calculates the total unclaimed shard asteroid points for a given player entity.
+ *
+ * @param playerEntity - The player entity for which to calculate the unclaimed shard asteroid points.
+ * @returns The total unclaimed shard asteroid points for the player.
+ */
 export const usePlayerUnclaimedShardAsteroidPoints = (playerEntity: Entity) => {
   const { tables } = useCore();
   const conquestConfigData = tables.P_ConquestConfig.use();
@@ -33,6 +39,10 @@ export const usePlayerUnclaimedShardAsteroidPoints = (playerEntity: Entity) => {
   }, [conquestConfigData, shardAsteroids, playerEntity, worldSpeed, time]);
 };
 
+/**
+ * Calculates the unclaimed shard asteroid points for each owner.
+ * @returns A map containing the unclaimed points for each owner.
+ */
 export const useAllUnclaimedShardAsteroidPts = () => {
   const { tables } = useCore();
   const conquestConfigData = tables.P_ConquestConfig.use();

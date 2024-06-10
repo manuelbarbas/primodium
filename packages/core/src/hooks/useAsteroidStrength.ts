@@ -5,6 +5,13 @@ import { EntityType } from "@/lib/constants";
 import { Hex } from "viem";
 import { useResourceCount } from "./useResourceCount";
 
+/**
+ * Calculates the strength and maximum strength of an asteroid.
+ *
+ * @param asteroid - The asteroid entity.
+ * @param force - Optional parameter to force recalculation of the strength.
+ * @returns An object containing the strength and maximum strength of the asteroid.
+ */
 export const useAsteroidStrength = (asteroid: Entity, force = false) => {
   const { tables } = useCore();
   const { resourceCount: hp, resourceStorage: maxHp } = useResourceCount(EntityType.HP, asteroid);

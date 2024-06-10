@@ -4,6 +4,12 @@ import { SyncSourceType, SyncStep } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 
+/**
+ * Provides the sync status of a given sync id.
+ *
+ * @param syncId - The ID of the entity to sync.
+ * @returns An object containing the sync status information.
+ */
 export const useSyncStatus = (syncId?: Entity) => {
   const { tables } = useCore();
   const syncSource = tables.SyncSource.use()?.value;

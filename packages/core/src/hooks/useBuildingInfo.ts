@@ -2,6 +2,11 @@ import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { useCore } from "@/hooks/useCore";
 
+/**
+ * Retrieves building information based on the provided building entity.
+ * @param building - The building entity for which to retrieve information.
+ * @returns The building information.
+ */
 export const useBuildingInfo = (building: Entity) => {
   const {
     tables,

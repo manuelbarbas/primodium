@@ -21,6 +21,14 @@ type AccountProviderProps = AccountClientOptions & { children: ReactNode };
 
 export const AccountClientContext = createContext<AccountClient | undefined>(undefined);
 
+/**
+ * Provides the account client context to its children components.
+ *
+ * @param children - The child components to be wrapped by the account client context.
+ * @param options - The options for the account provider.
+ * @throws Will throw an error if neither playerAddress nor playerPrivateKey is provided.
+ * @returns The account client provider.
+ */
 export function AccountClientProvider({ children, ...options }: AccountProviderProps) {
   if (!options.playerAddress && !options.playerPrivateKey) throw new Error("Must provide address or private key");
   const core = useCore();
