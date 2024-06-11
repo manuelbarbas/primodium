@@ -14,16 +14,16 @@ import { createUtils } from "@/utils/core";
 import { createSync } from "@/sync";
 import { ContractWrite } from "@latticexyz/common";
 import { ReplaySubject, Subject } from "rxjs";
+import { World, WrapperResult } from "@primodiumxyz/reactive-tables";
 
 import CallWithSignatureAbi from "@latticexyz/world-modules/out/Unstable_CallWithSignatureSystem.sol/Unstable_CallWithSignatureSystem.abi.json";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
-import setupCoreComponents from "@/components/coreComponents";
-import { Table } from "@latticexyz/store/internal";
+import setupCoreTables from "@/tables/coreTables";
+import { SyncTables } from "@/tables/syncTables";
 import { ChainConfig } from "@/network/config/chainConfigs";
 import { Recs } from "@/recs/setupRecs";
 import { otherTables } from "@/network/otherTables";
 import mudConfig from "contracts/mud.config";
-import { ExtendedContractComponents } from "@/components/customComponents/extendComponents";
 
 export type CoreConfig = {
   chain: ChainConfig;
@@ -37,37 +37,22 @@ export type CoreConfig = {
   runSystems?: boolean;
 };
 
-// they got their own type wrong
-export type World = {
-  registerEntity: (options?: { id?: string; idSuffix?: string }) => Entity;
-  registerComponent: (component: Component) => void;
-  components: Component[];
-  getEntities: () => IterableIterator<Entity>;
-  dispose: (namespace?: string) => void;
-  registerDisposer: (disposer: () => void) => void;
-  hasEntity: (entity: Entity) => boolean;
-  deleteEntity: (entity: Entity) => void;
-  entitySymbols: Set<EntitySymbol>;
-};
-
 type MudConfig = typeof mudConfig;
 
 export type CreateNetworkResult = Omit<Recs<MudConfig, typeof otherTables>, "components"> & {
   world: World;
-  tables: Record<string, Table>;
   mudConfig: MudConfig;
-  components: ExtendedContractComponents<Recs<MudConfig, typeof otherTables>["components"]>;
   publicClient: PublicClient<FallbackTransport, ChainConfig, undefined>;
   clock: Clock;
-};
-export type Components = CreateNetworkResult["components"] & ReturnType<typeof setupCoreComponents>;
+} & WrapperResult<MudConfig, typeof otherTables>;
+export type Tables = CreateNetworkResult["tables"] & ReturnType<typeof setupCoreTables> & SyncTables;
 export type Utils = ReturnType<typeof createUtils>;
 export type Sync = ReturnType<typeof createSync>;
 
 export type Core = {
   config: CoreConfig;
   network: CreateNetworkResult;
-  components: Components;
+  tables: Tables;
   utils: Utils;
   sync: Sync;
 };
@@ -143,6 +128,7 @@ export enum SyncStep {
   Syncing,
   Error,
   Complete,
+  Live,
 }
 
 export enum Action {

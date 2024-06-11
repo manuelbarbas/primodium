@@ -1,12 +1,11 @@
-import { Entity, Type } from "@latticexyz/recs";
 import { useMemo } from "react";
-import { createExtendedComponent } from "./ExtendedComponent";
+import { createLocalTable, Entity, Type } from "@primodiumxyz/reactive-tables";
+import { decodeEntity } from "@primodiumxyz/reactive-tables/utils";
 import { CreateNetworkResult } from "@/lib/types";
-import { decodeEntity } from "@latticexyz/store-sync/recs";
 import { ResourceEnumLookup } from "@/lib/constants";
 
-export const createBattleComponents = ({ world, components }: CreateNetworkResult) => {
-  const RawBattleParticipants = createExtendedComponent(
+export const createBattleTables = ({ world, tables }: CreateNetworkResult) => {
+  const RawBattleParticipants = createLocalTable(
     world,
     {
       value: Type.EntityArray,
@@ -14,7 +13,7 @@ export const createBattleComponents = ({ world, components }: CreateNetworkResul
     { id: "RawBattleParticipants" }
   );
 
-  const RawBattle = createExtendedComponent(
+  const RawBattle = createLocalTable(
     world,
     {
       attacker: Type.Entity,
@@ -32,7 +31,7 @@ export const createBattleComponents = ({ world, components }: CreateNetworkResul
     { id: "RawBattle" }
   );
 
-  const RawBattleParticipant = createExtendedComponent(
+  const RawBattleParticipant = createLocalTable(
     world,
     {
       damageDealt: Type.BigInt,
@@ -53,10 +52,10 @@ export const createBattleComponents = ({ world, components }: CreateNetworkResul
     const participant = RawBattleParticipant.get(participantEntity);
     if (!participant) return;
     const { participantEntity: entity } = decodeEntity(
-      components.BattleDamageDealtResult.metadata.keySchema,
+      tables.BattleDamageDealtResult.metadata.abiKeySchema,
       participantEntity
     );
-    const unitPrototypes = components.P_UnitPrototypes.get()?.value ?? [];
+    const unitPrototypes = tables.P_UnitPrototypes.get()?.value ?? [];
     const units = unitPrototypes.reduce((acc, entity, index) => {
       const level = participant.unitLevels ? participant.unitLevels[index] : 0n;
       const unitsAtStart = participant.unitsAtStart ? participant.unitsAtStart[index] : 0n;

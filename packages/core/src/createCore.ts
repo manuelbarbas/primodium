@@ -1,21 +1,25 @@
-import { createComponents } from "@/components/createComponents";
+import { createTables } from "@/tables/createTables";
 import { createNetwork } from "@/network/createNetwork";
 import { runInitialSync } from "@/sync/runInitialSync";
 import { CoreConfig, Core } from "@/lib/types";
 import { createUtils } from "@/utils/core";
 import { createSync } from "@/sync";
 import { runCoreSystems } from "@/systems";
+import { createWorld } from "@primodiumxyz/reactive-tables";
+import setupSyncTables from "@/tables/syncTables";
 
 export function createCore(config: CoreConfig): Core {
-  const networkResult = createNetwork(config);
-  const components = createComponents(networkResult);
-  const utils = createUtils(components);
-  const sync = createSync(config, networkResult, components);
+  const world = createWorld();
+  const syncTables = setupSyncTables(world);
+  const networkResult = createNetwork(config, syncTables);
+  const tables = createTables(networkResult, syncTables);
+  const utils = createUtils(tables);
+  const sync = createSync(config, networkResult, tables);
 
   const core = {
     config,
     network: networkResult,
-    components,
+    tables,
     utils,
     sync,
   };

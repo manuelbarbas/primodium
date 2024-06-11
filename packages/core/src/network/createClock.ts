@@ -1,5 +1,5 @@
 import { Clock } from "@/lib";
-import { World } from "@latticexyz/recs";
+import { World } from "@primodiumxyz/reactive-tables";
 import { Observable, ReplaySubject, filter, map } from "rxjs";
 import { Block } from "viem";
 

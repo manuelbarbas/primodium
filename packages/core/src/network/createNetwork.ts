@@ -2,16 +2,14 @@ import { transportObserver } from "@latticexyz/common";
 import mudConfig from "contracts/mud.config";
 import { Hex, createPublicClient, fallback, http } from "viem";
 import { setupRecs } from "@/recs/setupRecs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { createWorld } from "@latticexyz/recs";
+import { createWorld } from "@primodiumxyz/reactive-tables";
 import { createClock } from "@/network/createClock";
 import { otherTables } from "@/network/otherTables";
-import { extendContractComponents } from "@/components/customComponents/extendComponents";
+import { SyncTables } from "@/tables/syncTables";
 import { CoreConfig, CreateNetworkResult } from "@/lib/types";
 
-export function createNetwork(config: CoreConfig): CreateNetworkResult {
+export function createNetwork(config: CoreConfig, syncTables: SyncTables): CreateNetworkResult {
   const world = createWorld();
-  world.registerEntity({ id: singletonEntity });
 
   const clientOptions = {
     chain: config.chain,
@@ -21,12 +19,22 @@ export function createNetwork(config: CoreConfig): CreateNetworkResult {
 
   const publicClient = createPublicClient(clientOptions);
 
-  const { components, latestBlock$, latestBlockNumber$, tables, storedBlockLogs$, waitForTransaction } = setupRecs({
+  const {
+    tables,
+    tableDefs,
+    storageAdapter,
+    triggerUpdateStream,
+    latestBlock$,
+    latestBlockNumber$,
+    storedBlockLogs$,
+    waitForTransaction,
+  } = setupRecs({
     mudConfig,
     world,
     publicClient,
     address: config.worldAddress as Hex,
     otherTables,
+    syncTables,
   });
 
   const clock = createClock(world, latestBlock$, {
@@ -38,9 +46,11 @@ export function createNetwork(config: CoreConfig): CreateNetworkResult {
   return {
     world,
     tables,
+    tableDefs,
+    storageAdapter,
+    triggerUpdateStream,
     publicClient,
     mudConfig,
-    components: extendContractComponents(components),
     clock,
     latestBlock$,
     latestBlockNumber$,

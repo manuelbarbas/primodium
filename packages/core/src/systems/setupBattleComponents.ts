@@ -35,7 +35,7 @@ export const setupBattleComponents = (core: Core) => {
   });
 
   const updateBattleParticipant = ({ entity }: { entity: Entity }) => {
-    const { battleEntity } = decodeEntity(components.BattleDamageDealtResult.metadata.keySchema, entity);
+    const { battleEntity } = decodeEntity(components.BattleDamageDealtResult.metadata.abiKeySchema, entity);
     const damageDealt = components.BattleDamageDealtResult.get(entity)?.damageDealt ?? 0n;
     const { hpAtStart, damageTaken } = components.BattleDamageTakenResult.get(entity) ?? {
       hpAtStart: 0n,

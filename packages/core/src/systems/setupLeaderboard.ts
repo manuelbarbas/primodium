@@ -41,7 +41,7 @@ export const setupLeaderboard = (core: Core) => {
 
   defineComponentSystem(systemWorld, components.Points, ({ entity: rawEntity, value }) => {
     const pointsValue = value[0]?.value ?? 0n;
-    const { entity, pointType } = decodeEntity(components.Points.metadata.keySchema, rawEntity);
+    const { entity, pointType } = decodeEntity(components.Points.metadata.abiKeySchema, rawEntity);
 
     const entityIsPlayer = isPlayer(entity as Entity);
 

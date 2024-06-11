@@ -463,6 +463,9 @@ importers:
       '@latticexyz/world-modules':
         specifier: 2.0.9
         version: 2.0.9(typescript@5.1.6)
+      '@primodiumxyz/reactive-tables':
+        specifier: ^2.0.0
+        version: 2.0.0(prettier@3.2.5)(react-dom@18.3.1)(typescript@5.1.6)(zod@3.22.4)
       '@primodiumxyz/sync-stack':
         specifier: ^0.6.9
         version: 0.6.9(typescript@5.1.6)
@@ -489,7 +492,7 @@ importers:
         version: 2.9.20(typescript@5.1.6)(zod@3.22.4)
       vite:
         specifier: ^3.2.3
-        version: 3.2.8(@types/node@18.19.32)
+        version: 3.2.8(@types/node@14.18.33)
     devDependencies:
       '@testing-library/jest-dom':
         specifier: ^6.4.5
@@ -6650,6 +6653,44 @@ packages:
       - utf-8-validate
     dev: true
 
+  /@primodiumxyz/reactive-tables@2.0.0(prettier@3.2.5)(react-dom@18.3.1)(typescript@5.1.6)(zod@3.22.4):
+    resolution: {integrity: sha512-nUxiLcw45eo2s+kdKrsJvPoMYPMMKlZdPkcdI2+InentnzcsB4pIH2IRrkeRHm0qcZr705wJIFz4toRhJml0hQ==}
+    engines: {node: 20.x, pnpm: 8.x}
+    dependencies:
+      '@latticexyz/common': 2.0.9(typescript@5.1.6)(zod@3.22.4)
+      '@latticexyz/protocol-parser': 2.0.9(typescript@5.1.6)(zod@3.22.4)
+      '@latticexyz/schema-type': 2.0.9(typescript@5.1.6)(zod@3.22.4)
+      '@latticexyz/store': 2.0.9(typescript@5.1.6)
+      '@primodiumxyz/sync-stack': 0.6.9(typescript@5.1.6)
+      fast-deep-equal: 3.1.3
+      mobx: 6.12.3
+      react: 18.3.1
+      rxjs: 7.8.1
+      tinybase: 4.8.11(prettier@3.2.5)(react-dom@18.3.1)(react@18.3.1)
+      viem: 2.9.20(typescript@5.1.6)(zod@3.22.4)
+    transitivePeerDependencies:
+      - '@automerge/automerge-repo'
+      - '@aws-sdk/client-kms'
+      - '@journeyapps/powersync-sdk-common'
+      - '@libsql/client'
+      - '@sqlite.org/sqlite-wasm'
+      - '@vlcn.io/crsqlite-wasm'
+      - asn1.js
+      - bufferutil
+      - electric-sql
+      - expo-sqlite
+      - partykit
+      - partysocket
+      - prettier
+      - react-dom
+      - sqlite3
+      - supports-color
+      - typescript
+      - utf-8-validate
+      - yjs
+      - zod
+    dev: false
+
   /@primodiumxyz/sync-stack@0.6.6(typescript@5.3.3):
     resolution: {integrity: sha512-ZcBHIBgkU3MT33OwRQP5fHbinPDF6ThGabUYX/syUGwr0OLoiqQWn9gJXQ5OlQ0e1MumZX3AvBDChPoI2kXcKw==}
     dependencies:
@@ -8380,7 +8421,6 @@ packages:
 
   /@types/node@14.18.33:
     resolution: {integrity: sha512-qelS/Ra6sacc4loe/3MSjXNL1dNQ/GjxNHVzuChwMfmk7HuycRLVQN2qNY3XahK+fZc5E2szqQSKUyAF0E+2bg==}
-    dev: true
 
   /@types/node@18.19.32:
     resolution: {integrity: sha512-2bkg93YBSDKk8DLmmHnmj/Rwr18TLx7/n+I23BigFwgexUJoMHZOd8X1OFxuF/W3NN0S2W2E5sVabI5CPinNvA==}
@@ -15586,6 +15626,10 @@ packages:
   /mobx@6.12.1:
     resolution: {integrity: sha512-HN5/fmWCnePVI4u3Y487x3G0LIQ+qnQjowylhVxXPvBmbwottKm8R7GrsYAqljzekZUj+LoBcAUp3l8/3EPCGQ==}
 
+  /mobx@6.12.3:
+    resolution: {integrity: sha512-c8NKkO4R2lShkSXZ2Ongj1ycjugjzFFo/UswHBnS62y07DMcTc9Rvo03/3nRyszIvwPNljlkd4S828zIBv/piw==}
+    dev: false
+
   /motion@10.16.2:
     resolution: {integrity: sha512-p+PurYqfUdcJZvtnmAqu5fJgV2kR0uLFQuBKtLeFVTrYEVllI99tiOTSefVNYuip9ELTEkepIIDftNdze76NAQ==}
     dependencies:
@@ -17114,7 +17158,6 @@ packages:
       loose-envify: 1.4.0
       react: 18.3.1
       scheduler: 0.23.2
-    dev: true
 
   /react-error-boundary@3.1.4(react@18.3.1):
     resolution: {integrity: sha512-uM9uPzZJTF6wRQORmSrvOIgt4lJ9MC1sNgEOj2XGsDTRE4kmpWxg7ENK9EWNKJRMAOY9z0MuF4yIfl6gp4sotA==}
@@ -17908,7 +17951,6 @@ packages:
     resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
     dependencies:
       loose-envify: 1.4.0
-    dev: true
 
   /scheduler@0.24.0-canary-efb381bbf-20230505:
     resolution: {integrity: sha512-ABvovCDe/k9IluqSh4/ISoq8tIJnW8euVAWYt5j/bg6dRnqwQwiGO1F/V4AyK96NGF/FB04FhOUDuWj8IKfABA==}
@@ -19040,6 +19082,59 @@ packages:
   /tiny-decoders@7.0.1:
     resolution: {integrity: sha512-P1LaHTLASl/lCrdtwgAAVwxt4bEAPmxpf9HMQrlCkAseaT8oH8oxm8ndy4nx5rLTcL5U/Qxp1a+FDoQfS/ZgQQ==}
     dev: true
+
+  /tinybase@4.8.11(prettier@3.2.5)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-QqeF1jhUTSSkAi6Xv9wIo1V97kcKU8d9Z36n55tCyQV9vub0LHC798N3dOcixHzFUoBTmoovcvsdvSOu7vI5Rg==}
+    hasBin: true
+    peerDependencies:
+      '@automerge/automerge-repo': ^1.1.12
+      '@journeyapps/powersync-sdk-common': ^1.6.0
+      '@libsql/client': ^0.6.2
+      '@sqlite.org/sqlite-wasm': ^3.46.0-build1
+      '@vlcn.io/crsqlite-wasm': ^0.16.0
+      electric-sql: ^0.11.3
+      expo-sqlite: ^13.2.1
+      partykit: ^0.0.105
+      partysocket: ^1.0.1
+      prettier: ^3.3.0
+      react: ^18.3.1
+      react-dom: ^18.3.1
+      sqlite3: ^5.1.7
+      yjs: ^13.6.15
+    peerDependenciesMeta:
+      '@automerge/automerge-repo':
+        optional: true
+      '@journeyapps/powersync-sdk-common':
+        optional: true
+      '@libsql/client':
+        optional: true
+      '@sqlite.org/sqlite-wasm':
+        optional: true
+      '@vlcn.io/crsqlite-wasm':
+        optional: true
+      electric-sql:
+        optional: true
+      expo-sqlite:
+        optional: true
+      partykit:
+        optional: true
+      partysocket:
+        optional: true
+      prettier:
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+      sqlite3:
+        optional: true
+      yjs:
+        optional: true
+    dependencies:
+      prettier: 3.2.5
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    dev: false
 
   /tinybench@2.6.0:
     resolution: {integrity: sha512-N8hW3PG/3aOoZAN5V/NSAEDz0ZixDSSt5b/a05iqtpgfLWMSVuCo7w0k2vVvEjdrIoeGqZzweX2WlyioNIHchA==}
@@ -20318,7 +20413,6 @@ packages:
       rollup: 2.79.1
     optionalDependencies:
       fsevents: 2.3.3
-    dev: true
 
   /vite@3.2.8(@types/node@18.19.32):
     resolution: {integrity: sha512-EtQU16PLIJpAZol2cTLttNP1mX6L0SyI0pgQB1VOoWeQnMSvtiwovV3D6NcjN8CZQWWyESD2v5NGnpz5RvgOZA==}
@@ -20352,6 +20446,7 @@ packages:
       rollup: 2.79.1
     optionalDependencies:
       fsevents: 2.3.3
+    dev: true
 
   /vite@3.2.8(@types/node@18.19.8):
     resolution: {integrity: sha512-EtQU16PLIJpAZol2cTLttNP1mX6L0SyI0pgQB1VOoWeQnMSvtiwovV3D6NcjN8CZQWWyESD2v5NGnpz5RvgOZA==}
