@@ -1,6 +1,6 @@
 import { PushButton } from "@/components/core/PushButton";
-import { useMud } from "@/react/hooks";
-import { useTransfer } from "@/react/hooks/providers/TransferProvider";
+import { useMud } from "@/hooks";
+import { useTransfer } from "@/hooks/providers/TransferProvider";
 import { createFleet } from "@/network/setup/contractCalls/createFleet";
 import { transfer } from "@/network/setup/contractCalls/transfer";
 import { Entity } from "@latticexyz/recs";

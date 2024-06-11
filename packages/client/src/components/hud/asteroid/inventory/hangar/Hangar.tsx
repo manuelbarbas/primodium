@@ -1,7 +1,7 @@
 import { Card, SecondaryCard } from "@/components/core/Card";
 import { Tooltip } from "@/components/core/Tooltip";
-import { useMud } from "@/react/hooks";
-import { useGame } from "@/react/hooks/useGame";
+import { useMud } from "@/hooks";
+import { useGame } from "@/hooks/useGame";
 import { components } from "@/network/components";
 import { getBuildingImageFromType } from "@/util/building";
 import { getEntityTypeName } from "@/util/common";

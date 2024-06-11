@@ -11,7 +11,7 @@ import { hashEntities } from "src/util/encode";
 import { entityToRockName } from "src/util/name";
 import { formatResourceCount, formatTimeShort } from "src/util/number";
 import { CapacityBar } from "@/components/core/CapacityBar";
-import { useFullResourceCount } from "@/react/hooks/useFullResourceCount";
+import { useFullResourceCount } from "@/hooks/useFullResourceCount";
 import { IconLabel } from "@/components/core/IconLabel";
 
 export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {

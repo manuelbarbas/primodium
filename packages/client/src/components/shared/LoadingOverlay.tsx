@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useSyncStatus } from "@/react/hooks/useSyncStatus";
+import { useSyncStatus } from "@/hooks/useSyncStatus";
 import { Loader } from "@/components/core/Loader";
 import { useEffect } from "react";
 import { toast } from "react-toastify";

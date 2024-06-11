@@ -1,6 +1,6 @@
 import { Card } from "@/components/core/Card";
-import { useWidgets } from "@/react/hooks/providers/WidgetProvider";
-import { useGame } from "@/react/hooks/useGame";
+import { useWidgets } from "@/hooks/providers/WidgetProvider";
+import { useGame } from "@/hooks/useGame";
 import { SceneKeys } from "@game/lib/constants/common";
 import { KeybindActionKeys } from "@game/lib/constants/keybinds";
 import { usePersistentStore } from "@game/stores/PersistentStore";

@@ -4,7 +4,7 @@ import { Navigator } from "@/components/core/Navigator";
 import { RadioGroup } from "@/components/core/Radio";
 import { TextInput } from "@/components/core/TextInput";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { useMud } from "@/react/hooks";
+import { useMud } from "@/hooks";
 import { createAlliance } from "@/network/setup/contractCalls/alliance";
 import { TransactionQueueType } from "@/util/constants";
 import { hashEntities } from "@/util/encode";

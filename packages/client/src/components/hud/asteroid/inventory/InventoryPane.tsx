@@ -3,7 +3,7 @@ import { Card } from "@/components/core/Card";
 import { AllResourceLabels } from "@/components/hud/asteroid/inventory/resources/AllResourceLabels";
 import { AllUtilityLabels } from "@/components/hud/asteroid/inventory/resources/AllUtilityLabels";
 import { usePersistentStore } from "@/game/stores/PersistentStore";
-import { useGame } from "@/react/hooks/useGame";
+import { useGame } from "@/hooks/useGame";
 import { EntityType } from "@/util/constants";
 import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 import { useEffect, useRef, useState } from "react";

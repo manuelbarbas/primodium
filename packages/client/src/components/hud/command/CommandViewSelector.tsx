@@ -4,7 +4,7 @@ import { Mode } from "@/util/constants";
 import { Tabs } from "@/components/core/Tabs";
 import { Join } from "@/components/core/Join";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { useMud } from "@/react/hooks";
+import { useMud } from "@/hooks";
 import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { useEntityQuery } from "@latticexyz/react";
 
