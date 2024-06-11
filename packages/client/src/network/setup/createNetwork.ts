@@ -2,7 +2,7 @@ import { otherTables } from "@/network/otherTables";
 import { transportObserver } from "@latticexyz/common";
 import mudConfig from "contracts/mud.config";
 import { Hex, createPublicClient, fallback, http } from "viem";
-import { getNetworkConfig } from "../config/getNetworkConfig";
+import { getNetworkConfig } from "../config/getCoreConfig";
 import { createClock } from "../createClock";
 import { world } from "../world";
 import { setupRecs } from "./setupRecs";

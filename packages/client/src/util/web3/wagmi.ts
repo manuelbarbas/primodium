@@ -1,5 +1,5 @@
+import { getCoreConfig } from "@/network/getCoreConfig";
 import { Buffer } from "buffer";
-import { getNetworkConfig } from "src/network/config/getNetworkConfig";
 import { createClient } from "viem";
 import { createConfig, http } from "wagmi";
 import { coinbaseWallet, walletConnect } from "wagmi/connectors";
@@ -12,7 +12,7 @@ if (!window.Buffer) {
 const env = import.meta.env;
 const projectId = env.PRI_WALLETCONNECT_PROJECT_ID;
 
-const chain = getNetworkConfig().chain;
+const { chain } = getCoreConfig();
 
 export const wagmiConfig = createConfig({
   chains: [chain],

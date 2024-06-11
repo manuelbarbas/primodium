@@ -1,61 +1,34 @@
-import { transportObserver } from "@latticexyz/common";
-import { useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { setupSessionAccount } from "src/network/systems/setupSessionAccount";
-import { createPublicClient, fallback, http } from "viem";
 import { Progress } from "./components/core/Progress";
-import { useMud } from "./hooks";
 import { useInit } from "./hooks/useInit";
-import { useSyncStatus } from "./hooks/useSyncStatus";
-import { getNetworkConfig } from "./network/config/getNetworkConfig";
 import { Enter } from "./screens/Enter";
 import { Game } from "./screens/Game";
 import { Increment } from "./screens/Increment";
 import { Sandbox } from "./screens/Sandbox";
 import { Statistics } from "./screens/Statistics";
-import { minEth } from "./util/constants";
-
-export const DEV = import.meta.env.PRI_DEV === "true";
-export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
+import { useUpdateSessionAccount } from "@/hooks/useUpdateSessionAccount";
+import { useMountDevTools } from "@/hooks/useMountDevTools";
+import { useBalance } from "wagmi";
+import { useMemo } from "react";
+import { useAccountClient, useSyncStatus } from "@primodiumxyz/core/react";
+import { minEth } from "@primodiumxyz/core";
 
 export default function AppLoadingState() {
-  const mud = useMud();
+  useUpdateSessionAccount();
+  useMountDevTools();
+  const playerAddress = useAccountClient().playerAccount.address;
 
-  const [balance, setBalance] = useState<bigint>();
+  const { data } = useBalance({ address: playerAddress });
+  const balance = data?.value ?? 0n;
+  const { loading, error, progress, message } = useSyncStatus();
+  console.log({ loading, error, progress, message });
 
-  useEffect(() => {
-    mud.removeSessionAccount();
-    setupSessionAccount(mud.playerAccount.entity, mud.removeSessionAccount, mud.updateSessionAccount);
-  }, [mud.playerAccount.entity]);
-
-  useEffect(() => {
-    const networkConfig = getNetworkConfig();
-    const clientOptions = {
-      chain: networkConfig.chain,
-      transport: transportObserver(fallback([http()])),
-    };
-    /* Since this system modifies mud.sessionAccount, it can't have mud as a dependency */
-
-    const publicClient = createPublicClient(clientOptions);
-
-    const updateBalance = setInterval(async () => {
-      if (DEV_CHAIN || (balance ?? 0n) > minEth) return;
-      const bal = await publicClient.getBalance({ address: mud.playerAccount.address });
-      setBalance(bal);
-    }, 1000);
-    return () => clearInterval(updateBalance);
-  }, [balance, mud.playerAccount.address, mud.playerAccount.publicClient]);
-
-  const { loading, message, progress, error } = useSyncStatus();
-
-  const enoughEth = useMemo(() => DEV_CHAIN || (balance ?? 0n) >= minEth, [balance]);
-  const ready = useMemo(() => !loading && enoughEth, [loading, enoughEth]);
-
+  const ready = useMemo(() => !loading && balance >= minEth, [loading, balance]);
   return (
     <div className="h-screen relative">
       {!error && (
         <div className="relative">
-          {!loading && !enoughEth && (
+          {!loading && balance < minEth && (
             <div className="flex flex-col items-center justify-center h-screen text-white gap-4">
               <p className="text-lg text-white">
                 <span className="">Dripping Eth to Primodium account</span>

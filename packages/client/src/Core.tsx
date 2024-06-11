@@ -1,33 +1,44 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useMemo } from "react";
 
 import "react-toastify/dist/ReactToastify.min.css";
+import { useShallow } from "zustand/react/shallow";
 import { useAccount } from "wagmi";
 import AppLoadingState from "./AppLoadingState";
 import { Initializing } from "./components/shared/Initializing";
 import { Maintenance } from "./screens/Maintenance";
-import { Core as CoreType, createCore } from "@primodiumxyz/core";
+import { createCore } from "@primodiumxyz/core";
 import { AccountClientProvider, CoreProvider } from "@primodiumxyz/core/react";
-import { getNetworkConfig } from "@/network/config/getNetworkConfig";
+import { getCoreConfig } from "@/network/getCoreConfig";
+import { usePersistentStore } from "@/game/stores/PersistentStore";
+import { Hex } from "viem";
+import { privateKeyToAddress } from "viem/accounts";
 
 const MAINTENANCE = import.meta.env.PRI_MAINTENANCE === "true";
 
 function Core() {
-  const [core, setCore] = useState<CoreType>();
   const externalAccount = useAccount();
+  const { noExternalAccount } = usePersistentStore(
+    useShallow((state) => ({ noExternalAccount: state.noExternalAccount }))
+  );
 
-  useEffect(() => {
-    const config = getNetworkConfig();
-    const core = createCore({ ...config, playerAddress: externalAccount.address });
-    setCore(core);
+  const { playerPrivateKey, playerAddress, core } = useMemo(() => {
+    const config = getCoreConfig();
+    const playerPrivateKey = noExternalAccount
+      ? (localStorage.getItem("primodiumPlayerAccount") as Hex) ?? undefined
+      : undefined;
+    const playerAddress = playerPrivateKey ? privateKeyToAddress(playerPrivateKey) : externalAccount.address;
+    const core = createCore({ ...config, playerAddress, playerPrivateKey });
+    const ret = { playerPrivateKey, playerAddress, core };
+    return ret;
   }, []);
   if (MAINTENANCE) return <Maintenance />;
 
-  if (!externalAccount.isConnected) return null;
-  if (!core || !externalAccount.address) return <Initializing />;
+  if (!noExternalAccount && !externalAccount.isConnected) return null;
+  if (!core) return <Initializing />;
 
   return (
     <CoreProvider {...core}>
-      <AccountClientProvider playerAddress={externalAccount.address}>
+      <AccountClientProvider playerAddress={playerAddress} playerPrivateKey={playerPrivateKey}>
         <AppLoadingState />
       </AccountClientProvider>
     </CoreProvider>

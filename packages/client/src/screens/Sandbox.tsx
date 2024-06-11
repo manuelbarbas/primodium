@@ -1,22 +1,20 @@
 import { useEffect, useState } from "react";
-import { useMud } from "src/hooks/useMud";
 
 import { GameProvider } from "@/hooks/providers/GameProvider";
 import { PrimodiumGame, initGame } from "@game/api";
 import { Progress } from "src/components/core/Progress";
-import { setupSessionAccount } from "src/network/systems/setupSessionAccount";
 import { _Sandbox } from "../components/_Sandbox";
+import { useCore } from "@primodiumxyz/core/react";
+import { useUpdateSessionAccount } from "@/hooks/useUpdateSessionAccount";
 
 const params = new URLSearchParams(window.location.search);
 
 export const Sandbox = () => {
-  const mud = useMud();
-  const [game, setGame] = useState<PrimodiumGame | null>(null);
+  const mud = useCore();
 
-  /* Since this system modifies mud.sessionAccount, it can't have mud as a dependency */
-  useEffect(() => {
-    setupSessionAccount(mud.playerAccount.entity, mud.removeSessionAccount, mud.updateSessionAccount);
-  }, [mud.playerAccount.entity, mud.removeSessionAccount, mud.updateSessionAccount]);
+  useUpdateSessionAccount();
+
+  const [game, setGame] = useState<PrimodiumGame | null>(null);
 
   useEffect(() => {
     if (!game) return;

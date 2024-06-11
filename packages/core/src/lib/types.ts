@@ -88,9 +88,6 @@ export type CreateNetworkResult = Omit<Recs<MudConfig, typeof otherTableDefs>, "
 } & WrapperResult<MudConfig, typeof otherTableDefs> & {
     tables: ContractTables<AllTableDefs<MudConfig, typeof otherTableDefs>> & SyncTables;
   };
-export type Tables = CreateNetworkResult["tables"] & ReturnType<typeof setupCoreTables>;
-export type Utils = ReturnType<typeof createUtils>;
-export type Sync = ReturnType<typeof createSync>;
 
 export type Core = {
   /**
@@ -98,12 +95,10 @@ export type Core = {
    */
   config: CoreConfig;
   network: CreateNetworkResult;
-  /**
-   * Tables contain data and methods to interact with game state. See [reactive tables](https://github.com/primodiumxyz/reactive-tables)
-   */
-  tables: Tables;
-  utils: Utils;
-  sync: Sync;
+  /** Tables contain data and methods to interact with game state. See [reactive tables](https://github.com/primodiumxyz/reactive-tables) */
+  tables: CreateNetworkResult["tables"] & ReturnType<typeof setupCoreTables>;
+  utils: ReturnType<typeof createUtils>;
+  sync: ReturnType<typeof createSync>;
 };
 
 export type Clock = {

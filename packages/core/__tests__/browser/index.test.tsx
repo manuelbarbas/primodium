@@ -3,9 +3,9 @@ import { commonTests, createTestConfig } from "../lib/common";
 import { render, screen } from "@testing-library/react";
 import React from "react";
 
-import { AccountClientProvider, CoreProvider, useCore } from "@/react";
-import { createCore } from "@/createCore";
-import { useAccountClient } from "@/react/hooks/useAccountClient";
+import { AccountClientProvider, CoreProvider, useCore } from "../../src/react";
+import { createCore } from "../../src/createCore";
+import { useAccountClient } from "../../src/react/hooks/useAccountClient";
 
 describe("browser", () => {
   const { coreConfig, address, privateKey } = createTestConfig();
@@ -16,6 +16,7 @@ describe("browser", () => {
     it("should contain core object in a hook", () => {
       const TestCoreComponent = () => {
         const core = useCore();
+
         return (
           <div>
             <p>{core.config.playerAddress}</p>
