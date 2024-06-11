@@ -1,0 +1,14 @@
+name: Build Core
+description: Install dependencies and build core
+runs:
+  using: composite
+  steps:
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --prefer-frozen-lockfile --ignore-scripts
+      
+    - name: Build Core
+      shell: bash
+      env:
+        NODE_OPTIONS: "--max_old_space_size=4096"
+      run: pnpm --filter core run build
