@@ -1,4 +1,4 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
 import { useCore } from "@/react/hooks/useCore";
 

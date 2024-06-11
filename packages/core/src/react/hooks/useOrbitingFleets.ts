@@ -1,5 +1,4 @@
-import { useEntityQuery } from "@latticexyz/react";
-import { Entity, Has, HasValue } from "@latticexyz/recs";
+import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
 import { useCore } from "@/react/hooks/useCore";
 
@@ -14,7 +13,11 @@ export const useOrbitingFleets = (spaceRock: Entity, ownedBy?: Entity) => {
   const { tables } = useCore();
 
   const time = tables.Time.use()?.value ?? 0n;
-  const entities = useEntityQuery([Has(tables.IsFleet), HasValue(tables.FleetMovement, { destination: spaceRock })]);
+  const entities = useQuery({
+    with: [tables.IsFleet],
+    withProperties: [{ table: tables.FleetMovement, properties: { destination: spaceRock } }],
+  });
+
   return useMemo(
     () =>
       entities.filter((entity) => {

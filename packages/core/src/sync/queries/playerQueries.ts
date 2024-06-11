@@ -1,4 +1,4 @@
-import { Table } from "@latticexyz/store/internal";
+import { ContractTableDefs } from "@primodiumxyz/reactive-tables";
 import { LogFilter } from "@primodiumxyz/sync-stack/types";
 import { Hex, pad } from "viem";
 
@@ -8,7 +8,7 @@ export const getPlayerFilter = ({
   playerEntity,
   worldAddress,
 }: {
-  tables: Record<string, Table>;
+  tables: ContractTableDefs;
   playerAddress: Hex;
   playerEntity: Hex;
   worldAddress: Hex;

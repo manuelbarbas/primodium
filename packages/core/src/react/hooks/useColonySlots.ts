@@ -1,6 +1,6 @@
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useCore } from "@/react/hooks/useCore";
 import { ResourceEntityLookup } from "@/lib";
-import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { useMemo } from "react";
 import { Hex } from "viem";

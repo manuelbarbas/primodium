@@ -1,4 +1,4 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useEffect, useMemo, useState } from "react";
 import { useCore } from "@/react/hooks/useCore";
 import { isPlayer as _isPlayer, entityToAddress, shortenAddress } from "@/utils/global/common";
