@@ -3,9 +3,9 @@
  */
 export default {
   branches: ["main", {
-    name: "release/*",
+    name: "release*",
     channel: "alpha",
-    prerelease: "alpha",
+    prerelease: "alpha"
   }],
   extends: "semantic-release-monorepo"
-};
+}

@@ -33,4 +33,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: pnpm --filter core exec -- npx --no-install semantic-release -e semantic-release-monorepo
+        run: pnpm --filter core exec -- npx --no-install semantic-release

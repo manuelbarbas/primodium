@@ -3,10 +3,6 @@ description: Install dependencies and build core
 runs:
   using: composite
   steps:
-    - name: Install dependencies
-      shell: bash
-      run: pnpm install --prefer-frozen-lockfile --ignore-scripts
-      
     - name: Build Core
       shell: bash
       env:
