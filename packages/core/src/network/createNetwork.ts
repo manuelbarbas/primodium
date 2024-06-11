@@ -5,8 +5,8 @@ import { setupRecs } from "@/recs/setupRecs";
 import { createWorld } from "@primodiumxyz/reactive-tables";
 import { createClock } from "@/network/createClock";
 import { otherTableDefs } from "@/network/otherTableDefs";
-import { SyncTables } from "@/tables/syncTables";
 import { CoreConfig, CreateNetworkResult } from "@/lib/types";
+import { setupSyncTables } from "@/tables/syncTables";
 
 /**
  * Creates network object
@@ -14,7 +14,7 @@ import { CoreConfig, CreateNetworkResult } from "@/lib/types";
  * @param config configuration of core object {@link CoreConfig}
  * @returns: {@link CreateNetworkResult}
  */
-export function createNetwork(config: CoreConfig, syncTables: SyncTables): CreateNetworkResult {
+export function createNetwork(config: CoreConfig): CreateNetworkResult {
   const world = createWorld();
 
   const clientOptions = {
@@ -25,6 +25,7 @@ export function createNetwork(config: CoreConfig, syncTables: SyncTables): Creat
 
   const publicClient = createPublicClient(clientOptions);
 
+  const syncTables = setupSyncTables(world);
   const {
     tables,
     tableDefs,
@@ -51,7 +52,7 @@ export function createNetwork(config: CoreConfig, syncTables: SyncTables): Creat
 
   return {
     world,
-    tables,
+    tables: { ...tables, ...syncTables },
     tableDefs,
     storageAdapter,
     triggerUpdateStream,

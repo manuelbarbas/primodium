@@ -50,7 +50,7 @@ export const setupRecs = <config extends StoreConfig, extraTables extends Contra
     mudConfig,
     world,
     otherTableDefs,
-    shouldSkipUpdateStream: () => syncTables?.SyncStatus.get()?.step === SyncStep.Live ?? false,
+    shouldSkipUpdateStream: () => syncTables?.SyncStatus.get()?.step === SyncStep.Live,
   });
 
   const latestBlock$ = createBlockStream({ publicClient, blockTag: "latest" }).pipe(shareReplay(1));

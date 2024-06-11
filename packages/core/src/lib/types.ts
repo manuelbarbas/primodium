@@ -12,7 +12,7 @@ import { createUtils } from "@/utils/core";
 import { createSync } from "@/sync";
 import { ContractWrite } from "@latticexyz/common";
 import { ReplaySubject, Subject } from "rxjs";
-import { Entity, World, WrapperResult } from "@primodiumxyz/reactive-tables";
+import { AllTableDefs, ContractTables, Entity, World, WrapperResult } from "@primodiumxyz/reactive-tables";
 
 import CallWithSignatureAbi from "@latticexyz/world-modules/out/Unstable_CallWithSignatureSystem.sol/Unstable_CallWithSignatureSystem.abi.json";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
@@ -85,8 +85,10 @@ export type CreateNetworkResult = Omit<Recs<MudConfig, typeof otherTableDefs>, "
   mudConfig: MudConfig;
   publicClient: PublicClient<FallbackTransport, ChainConfig, undefined>;
   clock: Clock;
-} & WrapperResult<MudConfig, typeof otherTableDefs>;
-export type Tables = CreateNetworkResult["tables"] & ReturnType<typeof setupCoreTables> & SyncTables;
+} & WrapperResult<MudConfig, typeof otherTableDefs> & {
+    tables: ContractTables<AllTableDefs<MudConfig, typeof otherTableDefs>> & SyncTables;
+  };
+export type Tables = CreateNetworkResult["tables"] & ReturnType<typeof setupCoreTables>;
 export type Utils = ReturnType<typeof createUtils>;
 export type Sync = ReturnType<typeof createSync>;
 

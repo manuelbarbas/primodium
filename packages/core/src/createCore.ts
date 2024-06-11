@@ -1,12 +1,10 @@
 import { createTables } from "@/tables/createTables";
-import { createSyncTables } from "@/tables/syncTables";
 import { createNetwork } from "@/network/createNetwork";
 import { runInitialSync } from "@/sync/runInitialSync";
 import { CoreConfig, Core } from "@/lib/types";
 import { createUtils } from "@/utils/core";
 import { createSync } from "@/sync";
 import { runCoreSystems } from "@/systems";
-import { createWorld } from "@primodiumxyz/reactive-tables";
 
 /**
  *
@@ -14,10 +12,8 @@ import { createWorld } from "@primodiumxyz/reactive-tables";
  * @returns: {@link Core}
  */
 export function createCore(config: CoreConfig): Core {
-  const world = createWorld();
-  const syncTables = createSyncTables(world);
-  const networkResult = createNetwork(config, syncTables);
-  const tables = createTables(networkResult, syncTables);
+  const networkResult = createNetwork(config);
+  const tables = createTables(networkResult);
   const utils = createUtils(tables);
   const sync = createSync(config, networkResult, tables);
 
