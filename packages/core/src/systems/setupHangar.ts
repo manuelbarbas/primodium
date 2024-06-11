@@ -1,7 +1,9 @@
-import { Entity, Has, HasValue, defineComponentSystem, namespaceWorld, runQuery } from "@latticexyz/recs";
+import { Entity, QueryOptions, namespaceWorld } from "@primodiumxyz/reactive-tables";
+import { queries } from "@primodiumxyz/reactive-tables/utils";
 import { Hex } from "viem";
 import { EntityType } from "@/lib/constants";
 import { Core } from "@/lib/types";
+const { runQuery } = queries;
 
 export function setupHangar(core: Core) {
   const {
@@ -11,22 +13,31 @@ export function setupHangar(core: Core) {
   } = core;
   const systemWorld = namespaceWorld(world, "coreSystems");
 
-  defineComponentSystem(systemWorld, tables.SelectedRock, ({ value: [value] }) => {
-    if (!value?.value) return;
-    createHangar(value.value);
+  tables.SelectedRock.watch({
+    world: systemWorld,
+    onUpdate: ({ properties: { current } }) => {
+      if (!current?.value) return;
+      createHangar(current.value);
+    },
   });
 
-  defineComponentSystem(systemWorld, tables.HoverEntity, ({ value: [value] }) => {
-    const entity = value?.value;
-    if (!entity) return;
-    if (tables.Asteroid.has(entity)) createHangar(entity);
+  tables.HoverEntity.watch({
+    world: systemWorld,
+    onUpdate: ({ properties: { current } }) => {
+      const entity = current?.value;
+      if (!entity) return;
+      if (tables.Asteroid.has(entity)) createHangar(entity);
+    },
   });
 
-  defineComponentSystem(systemWorld, tables.Time, () => {
-    const selectedRock = tables.ActiveRock.get()?.value as Entity;
-    if (selectedRock) createHangar(selectedRock);
-    const hoverEntity = tables.HoverEntity.get()?.value as Entity;
-    if (tables.Asteroid.has(hoverEntity)) createHangar(hoverEntity);
+  tables.Time.watch({
+    world: systemWorld,
+    onUpdate: () => {
+      const selectedRock = tables.ActiveRock.get()?.value as Entity;
+      if (selectedRock) createHangar(selectedRock);
+      const hoverEntity = tables.HoverEntity.get()?.value as Entity;
+      if (tables.Asteroid.has(hoverEntity)) createHangar(hoverEntity);
+    },
   });
 
   function createHangar(spaceRock: Entity) {
@@ -58,15 +69,22 @@ export function setupHangar(core: Core) {
 
   function getTrainedUnclaimedUnits(spaceRock: Entity) {
     const units = new Map<Entity, bigint>();
-    const query = [
-      Has(tables.TrainingQueue),
-      HasValue(tables.Position, {
-        parentEntity: spaceRock,
-      }),
-    ];
+    const query = {
+      with: [tables.TrainingQueue],
+      withProperties: [
+        {
+          table: tables.Position,
+          properties: {
+            parentEntity: spaceRock,
+          },
+        },
+      ],
+    } as const satisfies QueryOptions;
     const buildings = runQuery(query);
+
     const config = tables.P_GameConfig.get();
     if (!config) return units;
+
     buildings.forEach((building) => {
       const owner = tables.OwnedBy.get(building)?.value;
 

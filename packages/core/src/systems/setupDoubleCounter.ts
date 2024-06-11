@@ -1,4 +1,4 @@
-import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
+import { namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { Core } from "@/lib/types";
 
 export const setupDoubleCounter = (core: Core) => {
@@ -9,8 +9,11 @@ export const setupDoubleCounter = (core: Core) => {
 
   const systemWorld = namespaceWorld(world, "coreSystems");
 
-  defineComponentSystem(systemWorld, tables.Counter, (update) => {
-    const value = update?.value[0]?.value ?? 0;
-    tables.DoubleCounter.set({ value: BigInt(value) * BigInt(2) });
+  tables.Counter.watch({
+    world: systemWorld,
+    onUpdate: (update) => {
+      const value = update?.properties.current?.value ?? 0;
+      tables.DoubleCounter.set({ value: BigInt(value) * BigInt(2) });
+    },
   });
 };

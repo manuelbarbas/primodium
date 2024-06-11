@@ -1,5 +1,5 @@
-import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { decodeEntity } from "@latticexyz/store-sync/recs";
+import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
+import { decodeEntity } from "@primodiumxyz/reactive-tables/utils";
 import { EPointType } from "contracts/config/enums";
 import { isPlayer } from "@/utils/global/common";
 import { EntityType, LeaderboardEntityLookup } from "@/lib";
@@ -39,20 +39,24 @@ export const setupLeaderboard = (core: Core) => {
     );
   }
 
-  defineComponentSystem(systemWorld, tables.Points, ({ entity: rawEntity, value }) => {
-    const pointsValue = value[0]?.value ?? 0n;
-    const { entity, pointType } = decodeEntity(tables.Points.metadata.abiKeySchema, rawEntity);
+  tables.Points.watch({
+    world: systemWorld,
+    onUpdate: ({ entity: rawEntity, properties }) => {
+      const pointsValue = properties.current?.value ?? 0n;
+      const { entity, pointType } = decodeEntity(tables.Points.metadata.abiKeySchema, rawEntity);
 
-    const entityIsPlayer = isPlayer(entity as Entity);
+      const entityIsPlayer = isPlayer(entity as Entity);
 
-    const leaderboardEntity = LeaderboardEntityLookup[entityIsPlayer ? "player" : "alliance"][pointType as EPointType];
-    const leaderboardMap = leaderboardMaps[leaderboardEntity];
+      const leaderboardEntity =
+        LeaderboardEntityLookup[entityIsPlayer ? "player" : "alliance"][pointType as EPointType];
+      const leaderboardMap = leaderboardMaps[leaderboardEntity];
 
-    if (!leaderboardMap) return;
+      if (!leaderboardMap) return;
 
-    leaderboardMap.set(entity as Entity, pointsValue);
+      leaderboardMap.set(entity as Entity, pointsValue);
 
-    setLeaderboard(leaderboardMap, leaderboardEntity);
+      setLeaderboard(leaderboardMap, leaderboardEntity);
+    },
   });
 
   return leaderboardMaps;

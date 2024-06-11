@@ -1,5 +1,5 @@
+import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { Core } from "@/lib/types";
-import { defineComponentSystem, Entity, namespaceWorld } from "@latticexyz/recs";
 
 export const setupHomeAsteroid = async (core: Core) => {
   const {
@@ -8,19 +8,28 @@ export const setupHomeAsteroid = async (core: Core) => {
   } = core;
 
   const systemWorld = namespaceWorld(world, "coreSystems");
-  defineComponentSystem(systemWorld, tables.Account, ({ value: [value] }) => {
-    world.dispose("homeAsteroidAccount");
-    const account = value?.value;
-    if (!account) return;
-    const accountWorld = namespaceWorld(world, "homeAsteroidAccount");
+  tables.Account.watch({
+    world: systemWorld,
+    onUpdate: ({ properties: { current } }) => {
+      world.dispose("homeAsteroidAccount");
 
-    defineComponentSystem(accountWorld, tables.Home, ({ entity, value }) => {
-      if (entity !== account) return;
-      const newHome = value[0]?.value as Entity | undefined;
-      if (!newHome) return;
-      tables.SelectedRock.set({ value: newHome });
-      tables.ActiveRock.set({ value: newHome });
-      tables.BuildRock.set({ value: newHome });
-    });
+      const account = current?.value;
+      if (!account) return;
+
+      const accountWorld = namespaceWorld(world, "homeAsteroidAccount");
+      tables.Home.watch({
+        world: accountWorld,
+        onUpdate: ({ entity, properties }) => {
+          if (entity !== account) return;
+
+          const newHome = properties.current?.value as Entity | undefined;
+          if (!newHome) return;
+
+          tables.SelectedRock.set({ value: newHome });
+          tables.ActiveRock.set({ value: newHome });
+          tables.BuildRock.set({ value: newHome });
+        },
+      });
+    },
   });
 };
