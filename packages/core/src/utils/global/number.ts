@@ -1,4 +1,4 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { formatUnits, parseUnits } from "viem";
 import { getResourceDecimals } from "@/utils/global/scale";
 

@@ -1,4 +1,4 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { EResource } from "contracts/config/enums";
 import { Hex } from "viem";
 import { distanceBI } from "../global/common";

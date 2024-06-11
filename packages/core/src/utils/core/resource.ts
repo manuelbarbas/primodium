@@ -1,5 +1,4 @@
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { EResource, MUDEnums } from "contracts/config/enums";
 import { Hex } from "viem";
 import { clampBigInt } from "../global/common";
@@ -153,7 +152,7 @@ export function createResourceUtils(tables: Tables) {
    * Gets all resource counts for a given entity (asteroid or fleet)
    */
   function getResourceCounts(entity: Entity): Map<Entity, ResourceCountData> {
-    if (entity === singletonEntity) return new Map();
+    if (entity === defaultEntity) return new Map();
     return tables.IsFleet.get(entity) ? getFleetResourceCount(entity) : getAsteroidResourceCount(entity);
   }
 

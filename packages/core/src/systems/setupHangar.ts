@@ -1,9 +1,7 @@
-import { Entity, QueryOptions, namespaceWorld } from "@primodiumxyz/reactive-tables";
-import { queries } from "@primodiumxyz/reactive-tables/utils";
+import { Entity, namespaceWorld, query } from "@primodiumxyz/reactive-tables";
 import { Hex } from "viem";
 import { EntityType } from "@/lib/constants";
 import { Core } from "@/lib/types";
-const { runQuery } = queries;
 
 export function setupHangar(core: Core) {
   const {
@@ -69,7 +67,7 @@ export function setupHangar(core: Core) {
 
   function getTrainedUnclaimedUnits(spaceRock: Entity) {
     const units = new Map<Entity, bigint>();
-    const query = {
+    const buildings = query({
       with: [tables.TrainingQueue],
       withProperties: [
         {
@@ -79,8 +77,7 @@ export function setupHangar(core: Core) {
           },
         },
       ],
-    } as const satisfies QueryOptions;
-    const buildings = runQuery(query);
+    });
 
     const config = tables.P_GameConfig.get();
     if (!config) return units;

@@ -1,7 +1,7 @@
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { EntityType } from "@/lib/constants";
 import { Tables } from "@/lib/types";
 import { rankToScore } from "@/utils/global/score";
-import { Entity } from "@latticexyz/recs";
 
 export type FinalLeaderboardData = {
   player: Entity;

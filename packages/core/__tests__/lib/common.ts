@@ -6,7 +6,7 @@ import { worldInput } from "contracts/mud.config";
 import { Address, Hex, TransactionReceipt } from "viem";
 import { otherTableDefs } from "@/network/otherTableDefs";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Core, CoreConfig, SyncStep } from "@/index";
 import { createLocalAccount } from "@/account/createLocalAccount";
 

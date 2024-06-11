@@ -1,5 +1,4 @@
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { hashEntities } from "./encode";
 
 const adjectives = [
@@ -117,7 +116,7 @@ const entityPlayerName = new Map<Entity, string>();
  * @returns The player name.
  */
 export const entityToPlayerName = (entity: Entity | undefined): string => {
-  if (!entity || entity == singletonEntity) return "Nobody";
+  if (!entity || entity == defaultEntity) return "Nobody";
   if (entityPlayerName.has(entity)) return entityPlayerName.get(entity) as string;
 
   const hash = hashEntities(entity);

@@ -1,5 +1,4 @@
 import { createBlockStream } from "@latticexyz/block-logs-stream";
-import { StorageAdapterBlock } from "@latticexyz/store-sync";
 import { Read } from "@primodiumxyz/sync-stack";
 import {
   createWrapper,
@@ -8,6 +7,7 @@ import {
   World as RecsWorld,
   WrapperResult,
 } from "@primodiumxyz/reactive-tables";
+import { StorageAdapterBlock } from "@primodiumxyz/reactive-tables/utils";
 import {
   Observable,
   concatMap,

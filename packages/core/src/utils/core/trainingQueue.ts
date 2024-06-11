@@ -1,6 +1,6 @@
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { SPEED_SCALE } from "@/lib/constants";
 import { Tables } from "@/lib/types";
-import { Entity } from "@latticexyz/recs";
 import { Hex } from "viem";
 
 export function createTrainingQueueUtils(tables: Tables) {

@@ -1,8 +1,7 @@
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { Tables } from "@/lib/types";
 import { hslToHex } from "@/utils/global/color";
 import { hashEntities } from "@/utils/global/encode";
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 export function createColorUtils(tables: Tables) {
   const entityColor = new Map<Entity, string>();
@@ -13,7 +12,7 @@ export function createColorUtils(tables: Tables) {
    * @returns color for entity
    * */
   function getEntityColor(entity: Entity | undefined) {
-    if (!entity || entity === singletonEntity) return "#999999";
+    if (!entity || entity === defaultEntity) return "#999999";
     const alliance = tables.PlayerAlliance.get(entity)?.alliance as Entity;
     entity = alliance ?? entity;
     if (entity === tables.Account.get()?.value) return "#22d3ee";

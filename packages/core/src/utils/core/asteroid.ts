@@ -1,6 +1,4 @@
-import { Entity } from "@latticexyz/recs";
-
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { EFleetStance } from "contracts/config/enums";
 import { EntityType, ResourceStorages, RockRelationship } from "@/lib/constants";
 import { MapEntityLookup } from "@/lib/lookups";
@@ -131,7 +129,7 @@ export function createAsteroidUtils(tables: Tables) {
    * @returns Relationship
    */
   const getRockRelationship = (player: Entity, rock: Entity): keyof typeof RockRelationship => {
-    if (player === singletonEntity) return RockRelationship.Neutral;
+    if (player === defaultEntity) return RockRelationship.Neutral;
     const playerAlliance = tables.PlayerAlliance.get(player)?.alliance;
     const rockOwner = tables.OwnedBy.get(rock)?.value as Entity;
     const rockAlliance = tables.PlayerAlliance.get(rockOwner)?.alliance;

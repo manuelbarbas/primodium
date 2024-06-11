@@ -1,4 +1,4 @@
-import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
+import { Entity, query } from "@primodiumxyz/reactive-tables";
 import { Tables, Coord } from "@/lib/types";
 import { getBuildingPositionEntity } from "@/utils/global/encode";
 
@@ -37,7 +37,10 @@ export function createTileUtils(tables: Tables) {
         const currentCoord = { x: origin.x + x, y: origin.y + y };
 
         //get entity at coord
-        const entities = runQuery([HasValue(tables.Position, currentCoord), Has(tables.BuildingType)]);
+        const entities = query({
+          withProperties: [{ table: tables.Position, properties: currentCoord }],
+          with: [tables.BuildingType],
+        });
 
         const buildingType = tables.BuildingType.get(entities.values().next().value)?.value;
 
