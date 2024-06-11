@@ -24,7 +24,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build
-        uses: ./.github/actions/build
+        uses: ./.github/actions/build-core
 
       - name: Release
         env:
