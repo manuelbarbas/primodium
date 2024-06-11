@@ -3,7 +3,7 @@ import { commonTests, createTestConfig } from "../lib/common";
 import { render, screen } from "@testing-library/react";
 import React from "react";
 
-import { AccountClientProvider, CoreProvider, useCore } from "@/react/hooks";
+import { AccountClientProvider, CoreProvider, useCore } from "@/react";
 import { createCore } from "@/createCore";
 import { useAccountClient } from "@/react/hooks/useAccountClient";
 
