@@ -30,6 +30,7 @@ export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
         tables.SyncSource.set({ value: SyncSourceType.RPC });
 
         //finally sync live
+        network.triggerUpdateStream();
         subscribeToRPC();
       },
       //on error
@@ -58,6 +59,7 @@ export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
       //on complete
       () => {
         tables.SyncSource.set({ value: SyncSourceType.RPC });
+        network.triggerUpdateStream();
         subscribeToRPC();
       },
       //on error

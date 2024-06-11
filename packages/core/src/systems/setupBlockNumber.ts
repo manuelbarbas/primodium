@@ -1,4 +1,4 @@
-import { namespaceWorld } from "@latticexyz/recs";
+import { namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { Core } from "@/lib/types";
 
 export const setupBlockNumber = (core: Core) => {

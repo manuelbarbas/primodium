@@ -1,6 +1,12 @@
-import { Entity, Metadata, Type } from "@latticexyz/recs";
 import { useEffect, useState } from "react";
-import { Options, createExtendedComponent } from "./ExtendedComponent";
+import {
+  BaseTableMetadata,
+  createLocalTable,
+  Entity,
+  Metadata,
+  TableOptions,
+  Type,
+} from "@primodiumxyz/reactive-tables";
 import { CreateNetworkResult } from "@/lib/types";
 
 export type TxQueueOptions<M extends Metadata> = {
@@ -9,14 +15,14 @@ export type TxQueueOptions<M extends Metadata> = {
   metadata?: M;
 };
 
-export function createTransactionQueueComponent<M extends Metadata>(
+export function createTransactionQueueTable<M extends BaseTableMetadata>(
   { world }: CreateNetworkResult,
-  options?: Options<M>
+  options?: TableOptions<M>
 ) {
   const queue: { id: string; fn: () => Promise<void> }[] = [];
   let isRunning = false;
 
-  const component = createExtendedComponent(
+  const table = createLocalTable(
     world,
     {
       metadata: Type.OptionalString,
@@ -25,15 +31,16 @@ export function createTransactionQueueComponent<M extends Metadata>(
   );
 
   // Add a function to the queue
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async function enqueue(fn: () => Promise<any>, options: TxQueueOptions<M>) {
-    if (!options.force && component.has(options.id as Entity)) return;
+    if (!options.force && table.has(options.id as Entity)) return;
 
     queue.push({
       id: options.id,
       fn,
     });
 
-    component.set(
+    table.set(
       {
         metadata: JSON.stringify(options?.metadata),
       },
@@ -61,7 +68,7 @@ export function createTransactionQueueComponent<M extends Metadata>(
           console.error("Error executing function:", error);
         } finally {
           queue.shift();
-          component.remove(id as Entity);
+          table.remove(id as Entity);
         }
       }
     }
@@ -80,14 +87,14 @@ export function createTransactionQueueComponent<M extends Metadata>(
   function getMetadata(id: string): M | undefined {
     const index = getIndex(id);
     if (index === -1) return undefined;
-    return JSON.parse(component.get(id as Entity)?.metadata || "");
+    return JSON.parse(table.get(id as Entity)?.metadata || "");
   }
 
   function useIndex(id: string) {
     const [position, setPosition] = useState<number>(getIndex(id));
 
     useEffect(() => {
-      const sub = component.update$.subscribe(() => {
+      const sub = table.update$.subscribe(() => {
         const position = getIndex(id);
         setPosition(position);
       });
@@ -104,7 +111,7 @@ export function createTransactionQueueComponent<M extends Metadata>(
     const [size, setSize] = useState<number>(getSize());
 
     useEffect(() => {
-      const sub = component.update$.subscribe(() => {
+      const sub = table.update$.subscribe(() => {
         const size = getSize();
         setSize(size);
       });
@@ -118,7 +125,7 @@ export function createTransactionQueueComponent<M extends Metadata>(
   }
 
   return {
-    ...component,
+    ...table,
     enqueue,
     run,
     getIndex,

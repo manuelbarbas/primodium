@@ -1,5 +1,5 @@
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Tables } from "@/lib/types";
-import { Entity } from "@latticexyz/recs";
 
 export function createShardNameUtils(tables: Tables) {
   const shards = [

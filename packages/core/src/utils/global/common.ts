@@ -1,7 +1,7 @@
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { EntityType } from "@/lib/constants";
 import { Coord } from "@/lib/types";
 import { formatName } from "@/utils/global/name";
-import { Entity } from "@latticexyz/recs";
 import { Hex, getAddress, isAddress, pad, size, trim } from "viem";
 
 /**

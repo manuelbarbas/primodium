@@ -1,5 +1,4 @@
-import { Entity } from "@latticexyz/recs";
-import { Table } from "@latticexyz/store/internal";
+import { ContractTableDefs, Entity } from "@primodiumxyz/reactive-tables";
 import { DecodedIndexerQuery, LogFilter } from "@primodiumxyz/sync-stack/types";
 import { Hex } from "viem";
 
@@ -8,7 +7,7 @@ export const getAsteroidFilter = ({
   asteroid,
   worldAddress,
 }: {
-  tables: Record<string, Table>;
+  tables: ContractTableDefs;
   worldAddress: Hex;
   asteroid: Entity;
 }): LogFilter => {
@@ -68,7 +67,7 @@ export const getShardAsteroidFilter = ({
   asteroid,
   worldAddress,
 }: {
-  tables: Record<string, Table>;
+  tables: ContractTableDefs;
   worldAddress: Hex;
   asteroid: Entity;
 }): LogFilter => {
@@ -92,7 +91,7 @@ export const getActiveAsteroidQuery = ({
   asteroid,
   worldAddress,
 }: {
-  tables: Record<string, Table>;
+  tables: ContractTableDefs;
   worldAddress: Hex;
   asteroid: Entity;
 }): DecodedIndexerQuery => {

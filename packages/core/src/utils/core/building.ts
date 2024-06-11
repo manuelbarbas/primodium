@@ -1,10 +1,10 @@
 import { MultiplierStorages, ResourceEntityLookup, ResourceStorages, SPEED_SCALE, UtilityStorages } from "@/lib";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Tables, Coord, Dimensions, ResourceType } from "@/lib/types";
 import { createBoundsUtils } from "@/utils/core/bounds";
 import { createRecipeUtils } from "@/utils/core/recipe";
 import { createTileUtils } from "@/utils/core/tile";
 import { getEntityTypeName, toRomanNumeral } from "@/utils/global/common";
-import { Entity } from "@latticexyz/recs";
 import { EResource, MUDEnums } from "contracts/config/enums";
 import { Hex } from "viem";
 

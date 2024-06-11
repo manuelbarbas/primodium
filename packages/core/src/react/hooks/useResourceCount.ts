@@ -1,5 +1,4 @@
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
 import { useCore } from "@/react/hooks/useCore";
 
@@ -38,7 +37,7 @@ export function useResourceCounts(spaceRockEntity: Entity, force = false) {
   const time = tables.Time.use(undefined)?.value ?? 0n;
 
   return useMemo(() => {
-    if (spaceRockEntity === singletonEntity) return new Map() as ReturnType<typeof getResourceCounts>;
+    if (spaceRockEntity === defaultEntity) return new Map() as ReturnType<typeof getResourceCounts>;
     return getResourceCounts(spaceRockEntity);
   }, [spaceRockEntity, force, time]);
 }

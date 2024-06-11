@@ -1,8 +1,8 @@
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { encodeEntity } from "@primodiumxyz/reactive-tables/utils";
 import { resourceToHex } from "@latticexyz/common";
-import { Entity } from "@latticexyz/recs";
 import { Coord } from "@/lib/types";
 import { Hex, encodeAbiParameters, isHex, keccak256, size, sliceHex, toHex } from "viem";
-import { encodeEntity } from "@latticexyz/store-sync/recs";
 
 /**
  * Generates a system ID based on name and namespace.

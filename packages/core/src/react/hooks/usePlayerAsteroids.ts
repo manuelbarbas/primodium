@@ -1,5 +1,4 @@
-import { useEntityQuery } from "@latticexyz/react";
-import { Entity, Has, HasValue } from "@latticexyz/recs";
+import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
 import { useCore } from "@/react/hooks/useCore";
 
 /**
@@ -11,6 +10,8 @@ import { useCore } from "@/react/hooks/useCore";
 export const usePlayerAsteroids = (playerEntity: Entity) => {
   const { tables } = useCore();
 
-  const query = [HasValue(tables.OwnedBy, { value: playerEntity }), Has(tables.Asteroid)];
-  return useEntityQuery(query);
+  return useQuery({
+    withProperties: [{ table: tables.OwnedBy, properties: { value: playerEntity } }],
+    with: [tables.Asteroid],
+  });
 };

@@ -1,7 +1,6 @@
+import { ContractTableDefs, Entity } from "@primodiumxyz/reactive-tables";
 import { Hex } from "viem";
-import { Entity } from "@latticexyz/recs";
 import { LogFilter } from "@primodiumxyz/sync-stack/types";
-import { Table } from "@latticexyz/store/internal";
 
 export const getFleetFilter = ({
   tables,
@@ -9,7 +8,7 @@ export const getFleetFilter = ({
   worldAddress,
   ownerAsteroid,
 }: {
-  tables: Record<string, Table>;
+  tables: ContractTableDefs;
   worldAddress: Hex;
   fleet: Entity;
   ownerAsteroid: Entity;

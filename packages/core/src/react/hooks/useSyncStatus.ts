@@ -1,8 +1,7 @@
-import { Entity } from "@latticexyz/recs";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { useCore } from "./useCore";
 import { SyncSourceType, SyncStep } from "@/lib/types";
 import { useEffect, useState } from "react";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 /**
  * Provides the sync status of a given sync id.
@@ -13,7 +12,7 @@ import { singletonEntity } from "@latticexyz/store-sync/recs";
 export const useSyncStatus = (syncId?: Entity) => {
   const { tables } = useCore();
   const syncSource = tables.SyncSource.use()?.value;
-  const syncEntity = syncSource === SyncSourceType.RPC ? singletonEntity : syncId;
+  const syncEntity = syncSource === SyncSourceType.RPC ? defaultEntity : syncId;
   const syncStatus = tables.SyncStatus.use(syncEntity)?.step;
   const syncProgress = tables.SyncStatus.use(syncEntity)?.progress;
   const syncMessage = tables.SyncStatus.use(syncEntity)?.message;

@@ -1,4 +1,4 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { ResourceType } from "@/lib/types";
 import { useResourceCount } from "./useResourceCount";
 

@@ -1,4 +1,4 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { bigIntMin } from "@latticexyz/common/utils";
 import { Hex } from "viem";
 import { EntityType, SPEED_SCALE, RESOURCE_SCALE } from "@/lib/constants";

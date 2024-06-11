@@ -1,6 +1,6 @@
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Keys } from "@/lib/constants";
 import { Tables, Coord, Dimensions } from "@/lib/types";
-import { Entity } from "@latticexyz/recs";
 
 export function createBoundsUtils(tables: Tables) {
   /**

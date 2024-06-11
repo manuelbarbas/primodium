@@ -2,12 +2,11 @@ import { transportObserver } from "@latticexyz/common";
 import mudConfig from "contracts/mud.config";
 import { Hex, createPublicClient, fallback, http } from "viem";
 import { setupRecs } from "@/recs/setupRecs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { createWorld } from "@latticexyz/recs";
+import { createWorld } from "@primodiumxyz/reactive-tables";
 import { createClock } from "@/network/createClock";
-import { otherTables } from "@/network/otherTables";
-import { extendContractComponents } from "@/tables/customTables/extendComponents";
+import { otherTableDefs } from "@/network/otherTableDefs";
 import { CoreConfig, CreateNetworkResult } from "@/lib/types";
+import { setupSyncTables } from "@/tables/syncTables";
 
 /**
  * Creates network object
@@ -17,7 +16,6 @@ import { CoreConfig, CreateNetworkResult } from "@/lib/types";
  */
 export function createNetwork(config: CoreConfig): CreateNetworkResult {
   const world = createWorld();
-  world.registerEntity({ id: singletonEntity });
 
   const clientOptions = {
     chain: config.chain,
@@ -27,12 +25,23 @@ export function createNetwork(config: CoreConfig): CreateNetworkResult {
 
   const publicClient = createPublicClient(clientOptions);
 
-  const { tableMetadata, latestBlock$, latestBlockNumber$, tables, storedBlockLogs$, waitForTransaction } = setupRecs({
+  const syncTables = setupSyncTables(world);
+  const {
+    tables,
+    tableDefs,
+    storageAdapter,
+    triggerUpdateStream,
+    latestBlock$,
+    latestBlockNumber$,
+    storedBlockLogs$,
+    waitForTransaction,
+  } = setupRecs({
     mudConfig,
     world,
     publicClient,
     address: config.worldAddress as Hex,
-    otherTables,
+    otherTableDefs,
+    syncTables,
   });
 
   const clock = createClock(world, latestBlock$, {
@@ -43,10 +52,12 @@ export function createNetwork(config: CoreConfig): CreateNetworkResult {
 
   return {
     world,
-    tableMetadata,
+    tables: { ...tables, ...syncTables },
+    tableDefs,
+    storageAdapter,
+    triggerUpdateStream,
     publicClient,
     mudConfig,
-    tables: extendContractComponents(tables),
     clock,
     latestBlock$,
     latestBlockNumber$,

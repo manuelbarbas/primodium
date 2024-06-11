@@ -1,5 +1,5 @@
 import { hexToString, Hex } from "viem";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { censorText } from "@/utils/global/profanity";
 import { Tables } from "@/lib/types";
 

@@ -1,14 +1,13 @@
+import { ContractTableDefs, Entity } from "@primodiumxyz/reactive-tables";
 import { Hex } from "viem";
-import { Entity } from "@latticexyz/recs";
 import { DecodedIndexerQuery } from "@primodiumxyz/sync-stack/types";
-import { Table } from "@latticexyz/store/internal";
 
 export const getAllianceQuery = ({
   tables,
   alliance,
   worldAddress,
 }: {
-  tables: Record<string, Table>;
+  tables: ContractTableDefs;
   worldAddress: Hex;
   alliance: Entity;
 }): DecodedIndexerQuery => {

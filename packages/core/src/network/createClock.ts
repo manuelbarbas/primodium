@@ -1,7 +1,7 @@
-import { Clock } from "@/lib";
-import { World } from "@latticexyz/recs";
+import { World } from "@primodiumxyz/reactive-tables";
 import { Observable, ReplaySubject, filter, map } from "rxjs";
 import { Block } from "viem";
+import { Clock } from "@/lib";
 
 /**
  * Create a clock optimistically keeping track of the current chain time.
