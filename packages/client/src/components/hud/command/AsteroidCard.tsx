@@ -12,9 +12,9 @@ import { formatTimeShort } from "src/util/number";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { SecondaryCard } from "@/components/core/Card";
 import { getAsteroidEmblem, getAsteroidImage } from "@/util/asteroid";
-import { useGame } from "@/hooks/useGame";
+import { useGame } from "@/react/hooks/useGame";
 import { AsteroidStats } from "@/components/hud/command/overview/AsteroidStatsAndActions";
-import { useMud } from "@/hooks";
+import { useMud } from "@/react/hooks";
 const filter =
   "drop-shadow(1px 0px 0px #FF3232) drop-shadow(-1px  0px 0px #FF3232) drop-shadow( 0px  1px 0px #FF3232) drop-shadow( 0px -1px 0px #FF3232)";
 

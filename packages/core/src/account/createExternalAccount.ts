@@ -18,6 +18,12 @@ import { WorldAbi } from "@/lib/WorldAbi";
 import { normalizeAddress } from "@/utils/global/common";
 import { addressToEntity } from "@/utils/global/encode";
 
+/**
+ *
+ * @param coreConfig configuration of core object
+ * @param address address of the account
+ * @returns: {@link ExternalAccount}
+ */
 export function createExternalAccount(coreConfig: CoreConfig, address: Address): ExternalAccount {
   if (typeof window === "undefined") {
     throw new Error("createExternalAccount must be called in a browser environment");

@@ -1,9 +1,9 @@
-import setupCoreTables from "@/tables/coreTables";
+import createCoreTables from "@/tables/coreTables";
 import { SyncTables } from "@/tables/syncTables";
-import { Tables, CreateNetworkResult } from "@/lib/types";
+import { CreateNetworkResult, Tables } from "@/lib/types";
 
 export function createTables(network: CreateNetworkResult, syncTables: SyncTables): Tables {
-  const coreTables = setupCoreTables(network);
+  const coreTables = createCoreTables(network);
 
   return {
     ...network.tables,

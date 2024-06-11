@@ -8,6 +8,12 @@ import { otherTables } from "@/network/otherTables";
 import { SyncTables } from "@/tables/syncTables";
 import { CoreConfig, CreateNetworkResult } from "@/lib/types";
 
+/**
+ * Creates network object
+ *
+ * @param config configuration of core object {@link CoreConfig}
+ * @returns: {@link CreateNetworkResult}
+ */
 export function createNetwork(config: CoreConfig, syncTables: SyncTables): CreateNetworkResult {
   const world = createWorld();
 

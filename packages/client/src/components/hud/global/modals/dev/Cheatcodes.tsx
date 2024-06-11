@@ -1,4 +1,4 @@
-import { useGame } from "@/hooks/useGame";
+import { useGame } from "@/react/hooks/useGame";
 import { CheatcodesList } from "@primodiumxyz/mud-game-tools";
 import { useMud } from "src/hooks";
 import { setupCheatcodes } from "src/util/cheatcodes/cheatcodes";

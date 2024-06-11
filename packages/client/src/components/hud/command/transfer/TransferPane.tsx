@@ -7,7 +7,7 @@ import { ResourceIcon } from "./ResourceIcon";
 import { hydrateFleetData } from "src/network/sync/indexer";
 import { useMud } from "src/hooks";
 import { TransferSelect } from "@/components/hud/command/transfer/TransferSelect";
-import { useTransfer } from "@/hooks/providers/TransferProvider";
+import { useTransfer } from "@/react/hooks/providers/TransferProvider";
 import { Card, GlassCard, SecondaryCard } from "@/components/core/Card";
 import { AsteroidCard } from "@/components/hud/command/AsteroidCard";
 import { _FleetCard } from "@/components/hud/command/FleetCard";
@@ -23,7 +23,7 @@ import { getEntityTypeName } from "src/util/common";
 import { getFleetStatsFromUnits } from "src/util/unit";
 import { Hex } from "viem";
 import { FaExclamationTriangle } from "react-icons/fa";
-import { getPlayerOwner } from "@/hooks/usePlayerOwner";
+import { getPlayerOwner } from "@/react/hooks/usePlayerOwner";
 
 export const TransferPane = (props: {
   side: "left" | "right";

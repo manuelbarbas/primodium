@@ -1,4 +1,4 @@
-import { useOrbitingFleets } from "@/hooks/useOrbitingFleets";
+import { useOrbitingFleets } from "@/react/hooks/useOrbitingFleets";
 import { components } from "@/network/components";
 import { Mode } from "@/util/constants";
 import { singletonEntity } from "@latticexyz/store-sync/recs";

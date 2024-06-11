@@ -1,6 +1,6 @@
 import { Navigator } from "@/components/core/Navigator";
-import { useMud } from "@/hooks";
-import { useSyncStatus } from "@/hooks/useSyncStatus";
+import { useMud } from "@/react/hooks";
+import { useSyncStatus } from "@/react/hooks/useSyncStatus";
 import { components } from "@/network/components";
 import { hydrateAllianceData } from "@/network/sync/indexer";
 import { Entity } from "@latticexyz/recs";

@@ -9,7 +9,7 @@ import { Tabs } from "@/components/core/Tabs";
 import { useCallback, useMemo } from "react";
 // import { Tabs } from "@/components/core/Tabs";
 import { clearFleetStance, setFleetStance } from "@/network/setup/contractCalls/fleetStance";
-import { useMud } from "@/hooks";
+import { useMud } from "@/react/hooks";
 import { EFleetStance } from "contracts/config/enums";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { formatTime } from "@/util/number";
@@ -19,7 +19,7 @@ import { alert } from "@/util/alert";
 import { clearFleet } from "@/network/setup/contractCalls/fleetClear";
 import { abandonFleet } from "@/network/setup/contractCalls/fleetAbandon";
 import { cn } from "@/util/client";
-import { useGame } from "@/hooks/useGame";
+import { useGame } from "@/react/hooks/useGame";
 
 export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
   const mud = useMud();

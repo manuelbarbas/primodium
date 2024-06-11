@@ -1,8 +1,8 @@
 import { Entity } from "@latticexyz/recs";
 import { EResource } from "contracts/config/enums";
 import { Hex } from "viem";
-import { Components, ResourceType } from "@/lib/types";
-import { ResourceEntityLookup } from "@/lib/constants";
+import { Tables, ResourceType } from "@/lib/types";
+import { ResourceEntityLookup } from "@/lib";
 import { createResourceUtils } from "@/utils/core/resource";
 
 export type Recipe = {
@@ -11,20 +11,25 @@ export type Recipe = {
   amount: bigint;
 }[];
 
-export function createRecipeUtils(components: Components) {
-  const { getFullResourceCount } = createResourceUtils(components);
+export function createRecipeUtils(tables: Tables) {
+  const { getResourceCount } = createResourceUtils(tables);
+
+  /**
+   * Gets recipe for a given entity and level
+   * @param rawEntityType entity (building, unit, etc.)
+   * @param level level of the entity
+   * @param upgrade whether to get the upgrade recipe (default: false)
+   */
   function getRecipe(rawEntityType: Entity, level: bigint, upgrade = false) {
     const entityType = rawEntityType as Hex;
-    const requiredResources = (
-      upgrade ? components.P_RequiredUpgradeResources : components.P_RequiredResources
-    ).getWithKeys(
+    const requiredResources = (upgrade ? tables.P_RequiredUpgradeResources : tables.P_RequiredResources).getWithKeys(
       { prototype: entityType, level: level },
       {
         resources: [],
         amounts: [],
       }
     );
-    const requiredProduction = components.P_RequiredDependency.getWithKeys(
+    const requiredProduction = tables.P_RequiredDependency.getWithKeys(
       { prototype: entityType, level: level },
       undefined
     );
@@ -32,9 +37,7 @@ export function createRecipeUtils(components: Components) {
     const resources = requiredResources.resources.map((resource: EResource, index: number) => ({
       id: ResourceEntityLookup[resource],
       type:
-        components.P_IsUtility.getWithKeys({ id: resource })?.value == true
-          ? ResourceType.Utility
-          : ResourceType.Resource,
+        tables.P_IsUtility.getWithKeys({ id: resource })?.value == true ? ResourceType.Utility : ResourceType.Resource,
       amount: requiredResources.amounts[index],
     }));
 
@@ -51,9 +54,12 @@ export function createRecipeUtils(components: Components) {
     return [...resources, ...resourceRate];
   }
 
+  /**
+   * Checks if a space rock has enough resources for the recipe
+   */
   function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, spaceRock: Entity, count = 1n) {
     const resourceAmounts = recipe.map((resource) => {
-      return getFullResourceCount(resource.id, spaceRock);
+      return getResourceCount(resource.id, spaceRock);
     });
 
     for (const [index, resource] of recipe.entries()) {
@@ -77,6 +83,7 @@ export function createRecipeUtils(components: Components) {
     return true;
   }
 
+  /** Gets the difference between two recipes */
   function getRecipeDifference(firstRecipe: ReturnType<typeof getRecipe>, secondRecipe: ReturnType<typeof getRecipe>) {
     const difference = firstRecipe.map((resource) => {
       let amount = resource.amount;
@@ -98,9 +105,10 @@ export function createRecipeUtils(components: Components) {
     return difference;
   }
 
+  /** Gets the max count of a given recipe */
   function getMaxCountOfRecipe(recipe: ReturnType<typeof getRecipe>, spaceRock: Entity) {
     const resourceAmounts = recipe.map((resource) => {
-      return getFullResourceCount(resource.id, spaceRock);
+      return getResourceCount(resource.id, spaceRock);
     });
 
     let count;

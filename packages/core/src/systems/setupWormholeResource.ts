@@ -1,6 +1,6 @@
 import { Core } from "@/lib/types";
 import { EResource } from "contracts/config/enums";
-import { EntityType, ResourceEntityLookup, SPEED_SCALE } from "@/lib/constants";
+import { EntityType, ResourceEntityLookup, SPEED_SCALE } from "@/lib";
 import { encodeAbiParameters, Hex, keccak256 } from "viem";
 import { defineComponentSystem, Entity, namespaceWorld } from "@latticexyz/recs";
 import { bigIntMin } from "@latticexyz/common/utils";
@@ -8,11 +8,11 @@ import { bigIntMin } from "@latticexyz/common/utils";
 export const setupWormholeResource = async (core: Core) => {
   const {
     network: { world },
-    components,
+    tables,
   } = core;
 
   function getRandomResource(seed: Entity, turn: bigint, prevResource: Entity) {
-    const transportableLength = components.P_Transportables.get()?.value.length ?? 0;
+    const transportableLength = tables.P_Transportables.get()?.value.length ?? 0;
     let resource = EntityType.NULL;
     console.log({ seed, turn });
     do {
@@ -33,11 +33,11 @@ export const setupWormholeResource = async (core: Core) => {
   }
 
   const systemWorld = namespaceWorld(world, "coreSystems");
-  defineComponentSystem(systemWorld, components.Time, ({ value }) => {
+  defineComponentSystem(systemWorld, tables.Time, ({ value }) => {
     const time = value[0]?.value;
-    const wormholeData = components.Wormhole.get();
-    const wormholeConfig = components.P_WormholeConfig.get();
-    const gameConfig = components.P_GameConfig.get();
+    const wormholeData = tables.Wormhole.get();
+    const wormholeConfig = tables.P_WormholeConfig.get();
+    const gameConfig = tables.P_GameConfig.get();
 
     if (!time || !wormholeData || !wormholeConfig || !gameConfig) return;
     const storedTurn = wormholeData.turn;
@@ -50,7 +50,7 @@ export const setupWormholeResource = async (core: Core) => {
     const resourceEntity = ResourceEntityLookup[wormholeData.resource as EResource];
     const nextResourceEntity = ResourceEntityLookup[wormholeData.nextResource as EResource];
     if (storedTurn === expectedTurn) {
-      components.WormholeResource.set({
+      tables.WormholeResource.set({
         timeUntilNextResource,
         nextResource: nextResourceEntity,
         resource: resourceEntity,
@@ -62,6 +62,6 @@ export const setupWormholeResource = async (core: Core) => {
       nextResource: getRandomResource(wormholeData.hash as Entity, expectedTurn, nextResourceEntity),
       resource: nextResourceEntity,
     };
-    components.WormholeResource.set(newData);
+    tables.WormholeResource.set(newData);
   });
 };

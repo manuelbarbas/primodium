@@ -4,23 +4,23 @@ import { defineComponentSystem, Entity, namespaceWorld } from "@latticexyz/recs"
 export const setupHomeAsteroid = async (core: Core) => {
   const {
     network: { world },
-    components,
+    tables,
   } = core;
 
   const systemWorld = namespaceWorld(world, "coreSystems");
-  defineComponentSystem(systemWorld, components.Account, ({ value: [value] }) => {
+  defineComponentSystem(systemWorld, tables.Account, ({ value: [value] }) => {
     world.dispose("homeAsteroidAccount");
     const account = value?.value;
     if (!account) return;
     const accountWorld = namespaceWorld(world, "homeAsteroidAccount");
 
-    defineComponentSystem(accountWorld, components.Home, ({ entity, value }) => {
+    defineComponentSystem(accountWorld, tables.Home, ({ entity, value }) => {
       if (entity !== account) return;
       const newHome = value[0]?.value as Entity | undefined;
       if (!newHome) return;
-      components.SelectedRock.set({ value: newHome });
-      components.ActiveRock.set({ value: newHome });
-      components.BuildRock.set({ value: newHome });
+      tables.SelectedRock.set({ value: newHome });
+      tables.ActiveRock.set({ value: newHome });
+      tables.BuildRock.set({ value: newHome });
     });
   });
 };

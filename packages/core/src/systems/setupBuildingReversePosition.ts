@@ -7,14 +7,14 @@ import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs"
 export const setupBuildingReversePosition = (core: Core) => {
   const {
     network: { world },
-    components,
+    tables,
     utils: { convertToCoords, getBuildingPositionEntity },
   } = core;
 
   const systemWorld = namespaceWorld(world, "coreSystems");
 
-  defineComponentSystem(systemWorld, components.TilePositions, ({ entity, value: [newVal, oldVal] }) => {
-    const asteroid = components.OwnedBy.get(entity)?.value as Entity;
+  defineComponentSystem(systemWorld, tables.TilePositions, ({ entity, value: [newVal, oldVal] }) => {
+    const asteroid = tables.OwnedBy.get(entity)?.value as Entity;
     if (!asteroid) return;
 
     // remove old reverse position
@@ -22,7 +22,7 @@ export const setupBuildingReversePosition = (core: Core) => {
       const coords = convertToCoords(oldVal.value);
       coords.forEach((coord) => {
         const positionEntity = getBuildingPositionEntity(coord, asteroid);
-        components.ReverseBuildingPosition.remove(positionEntity);
+        tables.ReverseBuildingPosition.remove(positionEntity);
       });
     }
 
@@ -31,7 +31,7 @@ export const setupBuildingReversePosition = (core: Core) => {
       const coords = convertToCoords(newVal.value);
       coords.forEach((coord) => {
         const positionEntity = getBuildingPositionEntity(coord, asteroid);
-        components.ReverseBuildingPosition.set({ value: entity }, positionEntity);
+        tables.ReverseBuildingPosition.set({ value: entity }, positionEntity);
       });
     }
   });

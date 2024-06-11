@@ -13,6 +13,7 @@ import { CreateNetworkResult } from "@/lib/types";
 
 export default function setupCoreTables(network: CreateNetworkResult) {
   const world = network.world;
+
   const DoubleCounter = createLocalBigIntTable(world, { id: "DoubleCounter" });
 
   const BlockNumber = createLocalTable(

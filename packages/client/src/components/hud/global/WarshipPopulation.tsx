@@ -1,7 +1,7 @@
 import { Tooltip } from "@/components/core/Tooltip";
 import { HealthBar } from "@/components/shared/HealthBar";
 import { AccountDisplay } from "@/components/shared/AccountDisplay";
-import { useMud } from "@/hooks";
+import { useMud } from "@/react/hooks";
 import { formatNumber } from "@/util/number";
 import { useMemo } from "react";
 import { components } from "src/network/components";

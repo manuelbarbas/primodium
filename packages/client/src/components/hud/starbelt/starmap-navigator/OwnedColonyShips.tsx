@@ -1,9 +1,9 @@
 import { Button } from "@/components/core/Button";
 import { Badge } from "@/components/core/Badge";
 import { Card } from "@/components/core/Card";
-import { useMud } from "@/hooks";
-import { useColonySlots } from "@/hooks/useColonySlots";
-import { useGame } from "@/hooks/useGame";
+import { useMud } from "@/react/hooks";
+import { useColonySlots } from "@/react/hooks/useColonySlots";
+import { useGame } from "@/react/hooks/useGame";
 import { components } from "@/network/components";
 import { getAsteroidInfo } from "@/util/asteroid";
 import { EntityType } from "@/util/constants";

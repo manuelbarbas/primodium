@@ -4,7 +4,10 @@ import { formatName } from "@/utils/global/name";
 import { Entity } from "@latticexyz/recs";
 import { Hex, getAddress, isAddress, pad, size, trim } from "viem";
 
-export function hasCommonElement<T>(setA: Set<T>, setB: Set<T>) {
+/**
+ * Check if two sets have common elements
+ */
+export function hasCommonElement<T>(setA: Set<T>, setB: Set<T>): boolean {
   for (const element of setA) {
     if (setB.has(element)) {
       return true; // Found a common element
@@ -13,7 +16,10 @@ export function hasCommonElement<T>(setA: Set<T>, setB: Set<T>) {
   return false; // No common elements found
 }
 
-export function clampedIndex(index: number, length: number) {
+/**
+ * Get the index clamped to the range [0, length)
+ */
+export function clampedIndex(index: number, length: number): number {
   if (index < 0) {
     return 0;
   }
@@ -23,22 +29,26 @@ export function clampedIndex(index: number, length: number) {
   return index;
 }
 
-export const wrap = (index: number, length: number) => {
-  return ((index % length) + length) % length;
-};
-
 export const getRandomRange = (min: number, max: number) => {
   return Math.random() * (max - min) + min;
 };
-
+/**
+ * Get the distance between two coordinates in bigint
+ */
 export const distanceBI = (a: Coord, b: Coord) => {
   return BigInt(Math.round(Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2))));
 };
 
+/**
+ * Get the distance between two coordinates
+ */
 export const getDistance = (a: Coord, b: Coord) => {
   return Math.round(Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2)));
 };
 
+/**
+ * Converts a number to a roman numeral
+ */
 export function toRomanNumeral(number: number) {
   const romanNumerals = [
     { value: 1000, symbol: "M" },
@@ -68,6 +78,9 @@ export function toRomanNumeral(number: number) {
   return result;
 }
 
+/**
+ * Gets the name of an entity type constant
+ */
 export const getEntityTypeName = (blockType: Entity | undefined) => {
   const BlockIdToKey = Object.entries(EntityType).reduce<{
     [key: Entity]: string;
@@ -118,6 +131,10 @@ export function clampBigInt(value: bigint, min: bigint, max: bigint) {
   return value < BigInt(min) ? BigInt(min) : value > BigInt(max) ? BigInt(max) : value;
 }
 
+/**
+ * Calculate the angle between two points
+ * @returns both radians and degrees
+ */
 export function calculateAngleBetweenPoints(point1: Coord, point2: Coord) {
   const dy = point2.y - point1.y;
   const dx = point2.x - point1.x;

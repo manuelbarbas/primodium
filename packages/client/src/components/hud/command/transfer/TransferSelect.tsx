@@ -6,14 +6,14 @@ import { useMud } from "src/hooks";
 import { components } from "src/network/components";
 import { entityToFleetName, entityToRockName } from "@/util/name";
 import { getAsteroidImage } from "@/util/asteroid";
-import { useTransfer } from "@/hooks/providers/TransferProvider";
+import { useTransfer } from "@/react/hooks/providers/TransferProvider";
 import { cn } from "@/util/client";
 import { Card } from "@/components/core/Card";
 import { useEffect } from "react";
-import { getPlayerOwner } from "@/hooks/usePlayerOwner";
-import { useGame } from "@/hooks/useGame";
+import { getPlayerOwner } from "@/react/hooks/usePlayerOwner";
+import { useGame } from "@/react/hooks/useGame";
 import { EntityType } from "@/util/constants";
-import { useFullResourceCount } from "@/hooks/useFullResourceCount";
+import { useFullResourceCount } from "@/react/hooks/useFullResourceCount";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 export const TransferSelect = ({ side }: { side: "left" | "right" }) => {

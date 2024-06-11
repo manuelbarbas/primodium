@@ -8,13 +8,13 @@ function isZeroHex(value: string): boolean {
 export const setupBattleComponents = (core: Core) => {
   const {
     network: { world },
-    components,
+    tables,
   } = core;
 
   const systemWorld = namespaceWorld(world, "coreSystems");
-  const { RawBattle, RawBattleParticipant, RawBattleParticipants } = components.Battle;
+  const { RawBattle, RawBattleParticipant, RawBattleParticipants } = tables.Battle;
 
-  defineComponentSystem(systemWorld, components.BattleResult, ({ entity, value }) => {
+  defineComponentSystem(systemWorld, tables.BattleResult, ({ entity, value }) => {
     const battleData = value[0];
     if (!battleData) return RawBattle.remove(entity);
     const data = {
@@ -35,22 +35,22 @@ export const setupBattleComponents = (core: Core) => {
   });
 
   const updateBattleParticipant = ({ entity }: { entity: Entity }) => {
-    const { battleEntity } = decodeEntity(components.BattleDamageDealtResult.metadata.abiKeySchema, entity);
-    const damageDealt = components.BattleDamageDealtResult.get(entity)?.damageDealt ?? 0n;
-    const { hpAtStart, damageTaken } = components.BattleDamageTakenResult.get(entity) ?? {
+    const { battleEntity } = decodeEntity(tables.BattleDamageDealtResult.metadata.abiKeySchema, entity);
+    const damageDealt = tables.BattleDamageDealtResult.get(entity)?.damageDealt ?? 0n;
+    const { hpAtStart, damageTaken } = tables.BattleDamageTakenResult.get(entity) ?? {
       hpAtStart: 0n,
       damageTaken: 0n,
     };
-    const { unitLevels, casualties, unitsAtStart } = components.BattleUnitResult.get(entity) ?? {
+    const { unitLevels, casualties, unitsAtStart } = tables.BattleUnitResult.get(entity) ?? {
       unitLevels: undefined,
       casualties: undefined,
       unitsAtStart: undefined,
     };
-    const { resourcesAtStart, resourcesAtEnd } = components.BattleRaidResult.get(entity) ?? {
+    const { resourcesAtStart, resourcesAtEnd } = tables.BattleRaidResult.get(entity) ?? {
       resourcesAtStart: undefined,
       resourcesAtEnd: undefined,
     };
-    const { encryptionAtStart, encryptionAtEnd } = components.BattleEncryptionResult.get(entity) ?? {
+    const { encryptionAtStart, encryptionAtEnd } = tables.BattleEncryptionResult.get(entity) ?? {
       encryptionAtStart: undefined,
       encryptionAtEnd: undefined,
     };
@@ -77,11 +77,11 @@ export const setupBattleComponents = (core: Core) => {
     RawBattleParticipants.set({ value: oldParticipantList?.concat(entity) ?? [entity] }, battleEntity as Entity);
   };
 
-  defineEnterSystem(systemWorld, [Has(components.BattleDamageDealtResult)], updateBattleParticipant);
+  defineEnterSystem(systemWorld, [Has(tables.BattleDamageDealtResult)], updateBattleParticipant);
 
-  defineEnterSystem(systemWorld, [Has(components.BattleDamageTakenResult)], updateBattleParticipant);
+  defineEnterSystem(systemWorld, [Has(tables.BattleDamageTakenResult)], updateBattleParticipant);
 
-  defineEnterSystem(systemWorld, [Has(components.BattleUnitResult)], updateBattleParticipant);
-  defineEnterSystem(systemWorld, [Has(components.BattleRaidResult)], updateBattleParticipant);
-  defineEnterSystem(systemWorld, [Has(components.BattleEncryptionResult)], updateBattleParticipant);
+  defineEnterSystem(systemWorld, [Has(tables.BattleUnitResult)], updateBattleParticipant);
+  defineEnterSystem(systemWorld, [Has(tables.BattleRaidResult)], updateBattleParticipant);
+  defineEnterSystem(systemWorld, [Has(tables.BattleEncryptionResult)], updateBattleParticipant);
 };

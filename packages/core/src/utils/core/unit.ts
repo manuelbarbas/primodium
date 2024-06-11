@@ -4,13 +4,17 @@ import { Hex } from "viem";
 import { EntityType, UnitStorages } from "@/lib/constants";
 import { createDefenseUtils } from "./defense";
 import { entityToFleetName } from "../global/name";
-import { Components } from "@/lib/types";
+import { Tables } from "@/lib/types";
 
-export function createUnitUtils(components: Components) {
-  const { getInGracePeriod } = createDefenseUtils(components);
-  function getFleetUnitCounts(fleet: Entity) {
-    return components.P_UnitPrototypes.get(undefined, { value: [] }).value.reduce((acc, entity) => {
-      const unitCount = components.UnitCount.getWithKeys({
+export function createUnitUtils(tables: Tables) {
+  const { getInGracePeriod } = createDefenseUtils(tables);
+
+  /**
+   * Gets the unit counts for a fleet
+   */
+  function getFleetUnitCounts(fleet: Entity): Map<Entity, bigint> {
+    return tables.P_UnitPrototypes.get(undefined, { value: [] }).value.reduce((acc, entity) => {
+      const unitCount = tables.UnitCount.getWithKeys({
         entity: fleet as Hex,
         unit: entity as Hex,
       })?.value;
@@ -20,8 +24,12 @@ export function createUnitUtils(components: Components) {
     }, new Map() as Map<Entity, bigint>);
   }
 
-  function getSpaceRockUnitCounts(spaceRock: Entity) {
-    const hangar = components.Hangar.get(spaceRock);
+  /**
+   * Gets the unit counts for a space rock
+   * @param spaceRock
+   */
+  function getAsteroidUnitCounts(spaceRock: Entity): Map<Entity, bigint> {
+    const hangar = tables.Hangar.get(spaceRock);
     const map: Map<Entity, bigint> = new Map();
     if (!hangar) return map;
     return hangar.units.reduce((acc, unit, i) => {
@@ -31,12 +39,21 @@ export function createUnitUtils(components: Components) {
     }, map);
   }
 
+  /**
+   * Gets the unit counts for an entity
+   * @param entity entity (asteroid or fleet)
+   */
   function getUnitCounts(entity: Entity): Map<Entity, bigint> {
-    return components.IsFleet.get(entity) ? getFleetUnitCounts(entity) : getSpaceRockUnitCounts(entity);
+    return tables.IsFleet.get(entity) ? getFleetUnitCounts(entity) : getAsteroidUnitCounts(entity);
   }
 
+  /**
+   * Gets the stats for a unit at given level
+   * @param entity unit entity
+   * @param level level
+   */
   function getUnitStatsLevel(entity: Entity, level: bigint) {
-    const { hp, attack, defense, speed, cargo } = components.P_Unit.getWithKeys(
+    const { hp, attack, defense, speed, cargo } = tables.P_Unit.getWithKeys(
       { entity: entity as Hex, level },
       {
         attack: 0n,
@@ -48,7 +65,7 @@ export function createUnitUtils(components: Components) {
       }
     );
 
-    const decryption = components.P_ColonyShipConfig.get()?.decryption ?? 0n;
+    const decryption = tables.P_ColonyShipConfig.get()?.decryption ?? 0n;
     return {
       ATK: attack,
       CTR: defense,
@@ -59,23 +76,33 @@ export function createUnitUtils(components: Components) {
     };
   }
 
-  function getUnitStats(unitEntity: Entity, spaceRockEntity: Entity) {
-    const unitLevel = components.UnitLevel.getWithKeys(
-      { entity: spaceRockEntity as Hex, unit: unitEntity as Hex },
+  /**
+   * Gets the stats for a unit at a given asteroid
+   * @param entity unit entity
+   * @param asteroidEntity asteroid entity
+   */
+  function getUnitStats(unitEntity: Entity, asteroidEntity: Entity) {
+    const unitLevel = tables.UnitLevel.getWithKeys(
+      { entity: asteroidEntity as Hex, unit: unitEntity as Hex },
       { value: 0n }
     )?.value;
     return getUnitStatsLevel(unitEntity, unitLevel);
   }
 
+  /**
+   * Gets the stats for a fleet
+   * @param fleet fleet entity
+   * @returns attack, defense, speed, hp, cargo, decryption, and title
+   */
   const getFleetStats = (fleet: Entity) => {
-    const spaceRock = components.OwnedBy.get(fleet)?.value as Entity;
+    const spaceRock = tables.OwnedBy.get(fleet)?.value as Entity;
     if (!spaceRock) throw new Error("Fleet must be owned by a space rock");
     const ret = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
 
     [...UnitStorages].forEach((unit) => {
       const unitEntity = unit as Entity;
 
-      const count = components.UnitCount.getWithKeys(
+      const count = tables.UnitCount.getWithKeys(
         { entity: fleet as Hex, unit: unitEntity as Hex },
         { value: 0n }
       )?.value;
@@ -92,8 +119,14 @@ export function createUnitUtils(components: Components) {
     return { ...ret, title: entityToFleetName(fleet) };
   };
 
+  /**
+   * Gets the stats for a fleet from a map of units
+   * @param units map of units and their counts
+   * @param fleetOwner fleet owner
+   * @returns attack, defense, speed, hp, cargo, decryption, and title
+   */
   const getFleetStatsFromUnits = (units: Map<Entity, bigint>, fleetOwner?: Entity | undefined) => {
-    const selectedRock = components.ActiveRock.get()?.value as Entity;
+    const selectedRock = tables.ActiveRock.get()?.value as Entity;
     const data = { attack: 0n, defense: 0n, speed: 0n, hp: 0n, cargo: 0n, decryption: 0n };
 
     units.forEach((count, unit) => {
@@ -108,26 +141,40 @@ export function createUnitUtils(components: Components) {
     return data;
   };
 
+  /**
+   * Gets all fleets traveling to or orbiting a given entity
+   * @param entity target entity
+   * @returns array of fleets
+   */
   const getFleets = (entity: Entity): Entity[] => {
-    return [...runQuery([Has(components.IsFleet), HasValue(components.FleetMovement, { destination: entity })])];
+    return [...runQuery([Has(tables.IsFleet), HasValue(tables.FleetMovement, { destination: entity })])];
   };
 
-  const isFleetOrbiting = (fleet: Entity) => {
-    const arrivalTime = components.FleetMovement.get(fleet)?.arrivalTime ?? 0n;
-    const now = components.Time.get()?.value ?? 0n;
+  /**
+   * Checks if a fleet is orbiting or in transit
+   */
+  const isFleetOrbiting = (fleet: Entity): boolean => {
+    const arrivalTime = tables.FleetMovement.get(fleet)?.arrivalTime ?? 0n;
+    const now = tables.Time.get()?.value ?? 0n;
     return arrivalTime < now;
   };
 
+  /**
+   * Gets a list of fleets orbiting a given entity
+   */
   const getOrbitingFleets = (entity: Entity) => {
-    const playerEntity = components.Account.get()?.value;
+    const playerEntity = tables.Account.get()?.value;
     if (!playerEntity) return [];
 
-    return [...runQuery([Has(components.IsFleet), HasValue(components.FleetMovement, { destination: entity })])].filter(
+    return [...runQuery([Has(tables.IsFleet), HasValue(tables.FleetMovement, { destination: entity })])].filter(
       (entity) => isFleetOrbiting(entity)
     );
   };
 
   const orbitRadius = 64;
+  /**
+   * Gets the position of a unit in orbit around a given origin
+   */
   function calculatePosition(
     angleInDegrees: number,
     origin: { x: number; y: number },
@@ -142,47 +189,53 @@ export function createUnitUtils(components: Components) {
     return { x: x + origin.x, y: y + origin.y };
   }
 
+  /**
+   * checks if a fleet can attack someone on the same asteroid
+   */
   function getCanAttackSomeone(entity: Entity) {
-    const isFleet = components.IsFleet.get(entity);
-    const spaceRock = (isFleet ? components.FleetMovement.get(entity)?.destination : entity) as Entity | undefined;
+    const isFleet = tables.IsFleet.get(entity);
+    const spaceRock = (isFleet ? tables.FleetMovement.get(entity)?.destination : entity) as Entity | undefined;
     if (!spaceRock) return false;
     return [spaceRock, ...getOrbitingFleets(spaceRock)].some((target) => getCanAttack(entity, target));
   }
 
+  /**
+   * checks if a fleet can attack someone on the same asteroid
+   */
   function getCanAttack(originEntity: Entity, targetEntity: Entity) {
     if (originEntity === targetEntity) return false;
     if (getInGracePeriod(targetEntity).inGracePeriod) return false;
-    const isOriginFleet = components.IsFleet.get(originEntity);
-    const isTargetFleet = components.IsFleet.get(targetEntity);
+    const isOriginFleet = tables.IsFleet.get(originEntity);
+    const isTargetFleet = tables.IsFleet.get(targetEntity);
     if (!isOriginFleet && !isTargetFleet) return false;
 
-    const targetRock = (isTargetFleet ? components.FleetMovement.get(targetEntity)?.destination : targetEntity) as
+    const targetRock = (isTargetFleet ? tables.FleetMovement.get(targetEntity)?.destination : targetEntity) as
       | Entity
       | undefined;
-    const targetOwnerRock = (isTargetFleet ? components.OwnedBy.get(targetEntity)?.value : targetEntity) as
+    const targetOwnerRock = (isTargetFleet ? tables.OwnedBy.get(targetEntity)?.value : targetEntity) as
       | Entity
       | undefined;
-    const targetRockOwner = components.OwnedBy.get(targetOwnerRock)?.value;
+    const targetRockOwner = tables.OwnedBy.get(targetOwnerRock)?.value;
 
-    const originEntityRock = (
-      isOriginFleet ? components.FleetMovement.get(originEntity)?.destination : originEntity
-    ) as Entity | undefined;
-    const originEntityOwnerRock = (
-      isOriginFleet ? components.OwnedBy.get(originEntity)?.value : originEntity
-    ) as Entity;
-    const originEntityOwnerRockOwner = components.OwnedBy.get(originEntityOwnerRock)?.value;
+    const originEntityRock = (isOriginFleet ? tables.FleetMovement.get(originEntity)?.destination : originEntity) as
+      | Entity
+      | undefined;
+    const originEntityOwnerRock = (isOriginFleet ? tables.OwnedBy.get(originEntity)?.value : originEntity) as Entity;
+    const originEntityOwnerRockOwner = tables.OwnedBy.get(originEntityOwnerRock)?.value;
 
     if (!originEntityOwnerRockOwner || !targetOwnerRock) return false;
     if (targetRock !== originEntityRock || targetRockOwner === originEntityOwnerRockOwner) return false;
     return true;
   }
 
+  /**
+   * checks if a fleet can travel to a given entity
+   */
   function getCanSend(originEntity: Entity, targetEntity: Entity) {
-    const isFleet = components.IsFleet.get(targetEntity);
+    const isFleet = tables.IsFleet.get(targetEntity);
 
-    const currentRock = components.FleetMovement.get(originEntity)?.destination as Entity | undefined;
-    if (!currentRock || isFleet || components.BuildingType.has(targetEntity) || currentRock == targetEntity)
-      return false;
+    const currentRock = tables.FleetMovement.get(originEntity)?.destination as Entity | undefined;
+    if (!currentRock || isFleet || tables.BuildingType.has(targetEntity) || currentRock == targetEntity) return false;
 
     return true;
   }

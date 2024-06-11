@@ -8,6 +8,11 @@ import { runCoreSystems } from "@/systems";
 import { createWorld } from "@primodiumxyz/reactive-tables";
 import setupSyncTables from "@/tables/syncTables";
 
+/**
+ *
+ * @param config {@link CoreConfig}
+ * @returns: {@link Core}
+ */
 export function createCore(config: CoreConfig): Core {
   const world = createWorld();
   const syncTables = setupSyncTables(world);

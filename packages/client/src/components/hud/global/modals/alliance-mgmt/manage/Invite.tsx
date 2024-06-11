@@ -2,7 +2,7 @@ import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { TextInput } from "@/components/core/TextInput";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { useMud } from "@/hooks";
+import { useMud } from "@/react/hooks";
 import { invite } from "@/network/setup/contractCalls/alliance";
 import { Entity } from "@latticexyz/recs";
 import { useState } from "react";

@@ -4,17 +4,17 @@ import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs"
 export function setupTrainingQueues(core: Core) {
   const {
     network: { world },
-    components,
+    tables,
     utils: { updateTrainingQueues },
   } = core;
 
   const systemWorld = namespaceWorld(world, "coreSystems");
-  const { SelectedRock } = components;
+  const { SelectedRock } = tables;
 
   // update local queues each second
   // todo: create a component that tracks active asteroids (to be updated each second)
-  defineComponentSystem(systemWorld, components.Time, () => {
-    const activeRock = components.ActiveRock.get()?.value;
+  defineComponentSystem(systemWorld, tables.Time, () => {
+    const activeRock = tables.ActiveRock.get()?.value;
     const selectedRock = SelectedRock.get()?.value;
     const parents: Entity[] = [];
     if (selectedRock) parents.push(selectedRock);
@@ -23,9 +23,9 @@ export function setupTrainingQueues(core: Core) {
     parents.forEach((asteroid) => updateTrainingQueues(asteroid));
   });
 
-  defineComponentSystem(systemWorld, components.HoverEntity, ({ value: values }) => {
+  defineComponentSystem(systemWorld, tables.HoverEntity, ({ value: values }) => {
     const hoverEntity = values[0]?.value;
-    if (!hoverEntity || !components.Asteroid.has(hoverEntity)) return;
+    if (!hoverEntity || !tables.Asteroid.has(hoverEntity)) return;
     updateTrainingQueues(hoverEntity);
   });
 }

@@ -4,7 +4,7 @@ import { Navigator } from "@/components/core/Navigator";
 import { TextInput } from "@/components/core/TextInput";
 import { ALLIANCE_TAG_SIZE } from "@/components/hud/global/modals/alliance-mgmt/CreateScreen";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { useMud } from "@/hooks";
+import { useMud } from "@/react/hooks";
 import { components } from "@/network/components";
 import { joinAlliance, requestToJoin } from "@/network/setup/contractCalls/alliance";
 import { getAllianceName } from "@/util/alliance";

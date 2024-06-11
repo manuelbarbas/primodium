@@ -1,4 +1,4 @@
-import { useMud } from "@/hooks";
+import { useMud } from "@/react/hooks";
 import { forfeit } from "@/network/setup/contractCalls/forfeit";
 import { ReactNode, useState } from "react";
 import { FaDiscord, FaExclamationTriangle } from "react-icons/fa";

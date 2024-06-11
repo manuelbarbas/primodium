@@ -25,21 +25,64 @@ import { Recs } from "@/recs/setupRecs";
 import { otherTables } from "@/network/otherTables";
 import mudConfig from "contracts/mud.config";
 
+/**
+ * Core configuration
+ */
 export type CoreConfig = {
+  /**
+   * Chain configuration. Default configurations can be found in the {@link chainConfigs object chainConfigs} object
+   */
   chain: ChainConfig;
   worldAddress: Address;
   initialBlockNumber?: bigint;
+  /**
+   * Used to fetch player data on initial sync when syncing from indexer
+   */
   playerAddress?: Address;
+
+  /**
+   * Used to automatically drip eth to accounts in dev mode.
+   *
+   * If using anvil, this value is 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+   */
   devPrivateKey?: Hex;
+  /**
+   * Used to fetch player ens names
+   */
   accountLinkUrl?: string;
 
+  /**
+   * Run the default initial sync? (default: false)
+   *
+   * If using RPC, will hydrate full game state.
+   * If using indexer, default sync only fetches prototype data and player data (if playerAddress is set)
+   */
   runSync?: boolean;
+  /**
+   * Run the default initial systems? (default: false)
+   *
+   * Setups up systems to keep core tables and simplified tables in sync with contract tables
+   */
   runSystems?: boolean;
 };
 
 type MudConfig = typeof mudConfig;
 
-export type CreateNetworkResult = Omit<Recs<MudConfig, typeof otherTables>, "components"> & {
+/**
+ * @typedef {Object} CreateNetworkResult
+ * @property {Record<string, Table>} tableMetadata - Contains contract table metadata.
+ * @property {MudConfig} mudConfig - Configuration for MUD.
+ * @property {ExtendedContractComponents<Recs<MudConfig, typeof otherTables>["tables"]>} tables - The extended contract components.
+ * @property {PublicClient<FallbackTransport, ChainConfig, undefined>} publicClient - The public client.
+ * @property {Clock} clock - The clock instance.
+ *
+ * Contains contract table metadata.
+ *
+ * See [mud.config.ts](https://github.com/primodiumxyz/contracts/blob/main/mud.config.ts#L85-L97) for more details.
+ */
+
+export type CreateNetworkResult = Omit<Recs<MudConfig, typeof otherTables>, "tables"> & {
+  /** @property {World} world - The world instance. */
   world: World;
   mudConfig: MudConfig;
   publicClient: PublicClient<FallbackTransport, ChainConfig, undefined>;
@@ -50,8 +93,14 @@ export type Utils = ReturnType<typeof createUtils>;
 export type Sync = ReturnType<typeof createSync>;
 
 export type Core = {
+  /**
+   * Chain configuration. Default configurations can be found in the {@link chainConfigs object chainConfigs} object
+   */
   config: CoreConfig;
   network: CreateNetworkResult;
+  /**
+   * Tables contain data and methods to interact with game state. See [reactive tables](https://github.com/primodiumxyz/reactive-tables)
+   */
   tables: Tables;
   utils: Utils;
   sync: Sync;
@@ -65,6 +114,9 @@ export type Clock = {
   update: (time: number) => void;
 };
 
+/**
+ * World Abi. Combination of IWorld abi and CallWithSignature abi.
+ */
 export type WorldAbiType = ((typeof IWorldAbi)[number] | (typeof CallWithSignatureAbi)[number])[];
 
 type _Account<

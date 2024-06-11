@@ -1,7 +1,7 @@
 import { Card } from "@/components/core/Card";
 import { Marker } from "@/components/core/Marker";
 import { BlueprintInfo } from "@/components/hud/asteroid/blueprints/BlueprintInfo";
-import { useGame } from "@/hooks/useGame";
+import { useGame } from "@/react/hooks/useGame";
 import { components } from "@/network/components";
 import { getBuildingDimensions } from "@/util/building";
 import { singletonEntity } from "@latticexyz/store-sync/recs";

@@ -1,4 +1,4 @@
-import { Components } from "@/lib/types";
+import { Tables } from "@/lib/types";
 import { formatAbiItem, type Abi } from "abitype";
 
 import {
@@ -15,7 +15,7 @@ import {
 export function encodeFunctionData<
   abi extends Abi | readonly unknown[] = Abi | readonly unknown[],
   functionName extends ContractFunctionName<abi> | undefined = undefined
->(components: Components, parameters: EncodeFunctionDataParameters<abi, functionName>): EncodeFunctionDataReturnType {
+>(tables: Tables, parameters: EncodeFunctionDataParameters<abi, functionName>): EncodeFunctionDataReturnType {
   const { abi, args, functionName } = parameters as EncodeFunctionDataParameters;
 
   let abiItem = abi[0];
@@ -33,7 +33,7 @@ export function encodeFunctionData<
 
   const definition = formatAbiItem(abiItem);
   const rawSignature = toFunctionSelector(definition);
-  const signature = components.FunctionSelectors.getWithKeys({ worldFunctionSelector: rawSignature })
+  const signature = tables.FunctionSelectors.getWithKeys({ worldFunctionSelector: rawSignature })
     ?.systemFunctionSelector as Hex;
   if (!signature) throw new Error("System Function Selector Not Found");
   const data = "inputs" in abiItem && abiItem.inputs ? encodeAbiParameters(abiItem.inputs, args ?? []) : undefined;

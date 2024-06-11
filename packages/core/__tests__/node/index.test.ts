@@ -3,7 +3,7 @@ import { commonTests, createTestConfig } from "../lib/common";
 import { createExternalAccount } from "@/account";
 
 describe("node", () => {
-  const { coreConfig, privateKey, address, isAnvilRunning } = createTestConfig();
+  const { coreConfig, privateKey } = createTestConfig();
 
   commonTests();
 
