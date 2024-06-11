@@ -7,11 +7,9 @@
     "strict": true /* Enable all strict type-checking options. */,
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      /* TODO: figure out why this is req to stop TS2742 error */
-      "debug": ["./node_modules/debug"],
-      "@latticexyz/common": ["./node_modules/@latticexyz/common"]
+      "@/*": ["./src/*"]
     },
     "typeRoots": ["./types", "./global.d.ts"],
     "jsx": "react-jsx",

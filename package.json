@@ -44,7 +44,7 @@
     "run-pty": "4.0.4",
     "semantic-release": "^24.0.0",
     "semantic-release-monorepo": "^8.0.2",
-    "typescript": "5.1.6"
+    "typescript": "5.5.0-beta"
   },
   "engines": {
     "node": "18.x",
