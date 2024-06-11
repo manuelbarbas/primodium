@@ -1,5 +1,4 @@
 import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
-import { decodeEntity } from "@primodiumxyz/reactive-tables/utils";
 import { EPointType } from "contracts/config/enums";
 import { isPlayer } from "@/utils/global/common";
 import { EntityType, LeaderboardEntityLookup } from "@/lib";
@@ -43,7 +42,7 @@ export const setupLeaderboard = (core: Core) => {
     world: systemWorld,
     onUpdate: ({ entity: rawEntity, properties }) => {
       const pointsValue = properties.current?.value ?? 0n;
-      const { entity, pointType } = decodeEntity(tables.Points.metadata.abiKeySchema, rawEntity);
+      const { entity, pointType } = tables.Points.getEntityKeys(rawEntity);
 
       const entityIsPlayer = isPlayer(entity as Entity);
 

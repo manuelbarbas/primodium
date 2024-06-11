@@ -1,8 +1,7 @@
 import { useMemo } from "react";
 import { createLocalTable, Entity, Type } from "@primodiumxyz/reactive-tables";
-import { decodeEntity } from "@primodiumxyz/reactive-tables/utils";
 import { CreateNetworkResult } from "@/lib/types";
-import { ResourceEnumLookup } from "@/lib/constants";
+import { ResourceEnumLookup } from "@/lib/lookups";
 
 export const createBattleTables = ({ world, tables }: CreateNetworkResult) => {
   const RawBattleParticipants = createLocalTable(
@@ -51,10 +50,7 @@ export const createBattleTables = ({ world, tables }: CreateNetworkResult) => {
   const getParticipant = (participantEntity: Entity) => {
     const participant = RawBattleParticipant.get(participantEntity);
     if (!participant) return;
-    const { participantEntity: entity } = decodeEntity(
-      tables.BattleDamageDealtResult.metadata.abiKeySchema,
-      participantEntity
-    );
+    const { participantEntity: entity } = tables.BattleDamageDealtResult.getEntityKeys(participantEntity);
     const unitPrototypes = tables.P_UnitPrototypes.get()?.value ?? [];
     const units = unitPrototypes.reduce((acc, entity, index) => {
       const level = participant.unitLevels ? participant.unitLevels[index] : 0n;

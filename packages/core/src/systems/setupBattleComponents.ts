@@ -1,6 +1,5 @@
 import { Core } from "@/lib/types";
 import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
-import { decodeEntity } from "@primodiumxyz/reactive-tables/utils";
 
 function isZeroHex(value: string): boolean {
   return /^0x0+$/i.test(value);
@@ -41,7 +40,7 @@ export const setupBattleComponents = (core: Core) => {
   });
 
   const updateBattleParticipant = ({ entity }: { entity: Entity }) => {
-    const { battleEntity } = decodeEntity(tables.BattleDamageDealtResult.metadata.abiKeySchema, entity);
+    const { battleEntity } = tables.BattleDamageDealtResult.getEntityKeys(entity);
     const damageDealt = tables.BattleDamageDealtResult.get(entity)?.damageDealt ?? 0n;
     const { hpAtStart, damageTaken } = tables.BattleDamageTakenResult.get(entity) ?? {
       hpAtStart: 0n,
