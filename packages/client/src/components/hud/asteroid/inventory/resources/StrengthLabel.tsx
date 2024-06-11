@@ -3,7 +3,7 @@ import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Badge } from "@/components/core/Badge";
 import { IconLabel } from "@/components/core/IconLabel";
-import { useAsteroidStrength } from "@/react/hooks/useAsteroidStrength";
+import { useAsteroidStrength } from "@/hooks/useAsteroidStrength";
 import { components } from "@/network/components";
 import { EntityType } from "@/util/constants";
 import { formatResourceCount } from "@/util/number";

@@ -1,5 +1,5 @@
 import { ModeToSceneKey } from "@/game/lib/mappings";
-import { useGame } from "@/react/hooks/useGame";
+import { useGame } from "@/hooks/useGame";
 import { components } from "@/network/components";
 import { lerp } from "@/util/common";
 import { Mode } from "@/util/constants";

@@ -1,6 +1,6 @@
 import { Button } from "@/components/core/Button";
 import { IconLabel } from "@/components/core/IconLabel";
-import { useMud } from "@/react/hooks";
+import { useMud } from "@/hooks";
 
 import { Mode } from "@/util/constants";
 import { Entity } from "@latticexyz/recs";

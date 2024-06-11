@@ -1,9 +1,9 @@
 import { Badge } from "@/components/core/Badge";
 import { Card } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
-import { useMud } from "@/react/hooks";
-import { useShardAsteroid } from "@/react/hooks/primodium/useShardAsteroid";
-import { useGame } from "@/react/hooks/useGame";
+import { useMud } from "@/hooks";
+import { useShardAsteroid } from "@/hooks/primodium/useShardAsteroid";
+import { useGame } from "@/hooks/useGame";
 import { components } from "@/network/components";
 import { EntityType } from "@/util/constants";
 import { formatResourceCount, formatTimeShort } from "@/util/number";

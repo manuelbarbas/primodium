@@ -1,6 +1,6 @@
 import { CapacityBar } from "@/components/core/CapacityBar";
 import { SecondaryCard } from "@/components/core/Card";
-import { useGame } from "@/react/hooks/useGame";
+import { useGame } from "@/hooks/useGame";
 import { cn } from "@/util/client";
 import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 import { Entity } from "@latticexyz/recs";

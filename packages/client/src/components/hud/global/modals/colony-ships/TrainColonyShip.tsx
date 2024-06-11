@@ -3,7 +3,7 @@ import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { useMud } from "@/react/hooks";
+import { useMud } from "@/hooks";
 import { components } from "@/network/components";
 import { train } from "@/network/setup/contractCalls/train";
 import { getEntityTypeName } from "@/util/common";

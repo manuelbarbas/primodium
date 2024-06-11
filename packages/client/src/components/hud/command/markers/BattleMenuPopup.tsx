@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Widget } from "@/components/core/Widget";
-import { useGame } from "@/react/hooks/useGame";
+import { useGame } from "@/hooks/useGame";
 // import { components } from "@/network/components";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { entityToFleetName, entityToRockName } from "@/util/name";

@@ -1,5 +1,5 @@
 import { Tooltip } from "@/components/core/Tooltip";
-import { useGame } from "@/react/hooks/useGame";
+import { useGame } from "@/hooks/useGame";
 import { useEffect, forwardRef, useCallback } from "react";
 import { components } from "@/network/components";
 import { AudioKeys } from "@primodiumxyz/assets";

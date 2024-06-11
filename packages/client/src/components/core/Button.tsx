@@ -1,7 +1,7 @@
 import { components } from "@/network/components";
 import { Tooltip, TooltipDirection } from "@/components/core/Tooltip";
 import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
-import { useGame } from "@/react/hooks/useGame";
+import { useGame } from "@/hooks/useGame";
 import { cn } from "@/util/client";
 import { getRandomRange } from "@/util/common";
 import { AudioKeys } from "@primodiumxyz/assets";

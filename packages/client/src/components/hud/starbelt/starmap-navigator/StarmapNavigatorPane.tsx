@@ -4,7 +4,7 @@ import { OwnedColonyShips } from "@/components/hud/starbelt/starmap-navigator/Ow
 import { OwnedFleets } from "@/components/hud/starbelt/starmap-navigator/OwnedFleets";
 import { Shards } from "@/components/hud/starbelt/starmap-navigator/Shards";
 import { usePersistentStore } from "@/game/stores/PersistentStore";
-import { useGame } from "@/react/hooks/useGame";
+import { useGame } from "@/hooks/useGame";
 import { EntityType } from "@/util/constants";
 import { EntityToUnitImage } from "@/util/mappings";
 import { InterfaceIcons } from "@primodiumxyz/assets";

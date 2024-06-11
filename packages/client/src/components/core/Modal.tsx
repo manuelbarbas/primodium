@@ -1,7 +1,7 @@
 import { Button } from "@/components/core/Button";
 import { Card } from "@/components/core/Card";
 import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
-import { useGame } from "@/react/hooks/useGame";
+import { useGame } from "@/hooks/useGame";
 import { components } from "@/network/components";
 import React, { ReactNode, createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";

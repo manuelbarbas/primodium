@@ -1,7 +1,7 @@
 import { Button } from "@/components/core/Button";
 import { BuildingBlueprints } from "@/components/hud/asteroid/blueprints/BuildingBlueprints";
 import { usePersistentStore } from "@/game/stores/PersistentStore";
-import { useGame } from "@/react/hooks/useGame";
+import { useGame } from "@/hooks/useGame";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";

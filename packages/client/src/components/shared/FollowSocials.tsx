@@ -1,5 +1,5 @@
 import { Button } from "@/components/core/Button";
-import { useMud } from "@/react/hooks";
+import { useMud } from "@/hooks";
 import { components } from "@/network/components";
 import { ObjectiveEntityLookup } from "@/util/constants";
 import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";

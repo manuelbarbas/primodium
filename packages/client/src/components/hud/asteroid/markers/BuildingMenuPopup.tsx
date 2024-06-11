@@ -1,7 +1,7 @@
 import { Card, GlassCard } from "@/components/core/Card";
 import { Widget } from "@/components/core/Widget";
 import { BuildingMenu } from "@/components/hud/asteroid/building-menu/BuildingMenu";
-import { useGame } from "@/react/hooks/useGame";
+import { useGame } from "@/hooks/useGame";
 import { components } from "@/network/components";
 import { getBuildingDimensions, getBuildingName } from "@/util/building";
 import { Entity } from "@latticexyz/recs";

@@ -14,9 +14,9 @@ import { getFleetStatsFromUnits } from "src/util/unit";
 import { ResourceIcon } from "./ResourceIcon";
 import { TransferConfirm } from "./TransferConfirm";
 import { TransferPane } from "./TransferPane";
-import { useTransfer } from "@/react/hooks/providers/TransferProvider";
+import { useTransfer } from "@/hooks/providers/TransferProvider";
 import { Button } from "@/components/core/Button";
-import { useGame } from "@/react/hooks/useGame";
+import { useGame } from "@/hooks/useGame";
 import { FaInfoCircle } from "react-icons/fa";
 
 const Transfer: React.FC = () => {

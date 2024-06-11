@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Widget } from "@/components/core/Widget";
-import { useGame } from "@/react/hooks/useGame";
+import { useGame } from "@/hooks/useGame";
 import { components } from "@/network/components";
 import { GlassCard } from "@/components/core/Card";
 import { InterfaceIcons } from "@primodiumxyz/assets";

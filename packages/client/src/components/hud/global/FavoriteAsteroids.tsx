@@ -1,6 +1,6 @@
 import { CapacityBar } from "@/components/core/CapacityBar";
 import { Dropdown } from "@/components/core/Dropdown";
-import { usePlayerAsteroids } from "@/react/hooks/usePlayerAsteroids";
+import { usePlayerAsteroids } from "@/hooks/usePlayerAsteroids";
 import { EntityToResourceImage } from "@/util/mappings";
 import { formatResourceCount } from "@/util/number";
 import { Entity } from "@latticexyz/recs";
