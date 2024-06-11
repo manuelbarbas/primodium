@@ -1,7 +1,7 @@
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { EntityType } from "@/lib/constants";
 import { reverseRecord } from "@/utils/global/common";
 import { toHex32 } from "@/utils/global/encode";
-import { Entity } from "@latticexyz/recs";
 import { EBuilding, EUnit, EMap, EObjectives, EPointType, EResource } from "contracts/config/enums";
 
 export const MapEntityLookup: Record<number, Entity> = {

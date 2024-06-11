@@ -4,7 +4,7 @@ import { beforeAll, describe, expect, test } from "vitest";
 import worldsJson from "contracts/worlds.json";
 import { worldInput } from "contracts/mud.config";
 import { Address, Hex, TransactionReceipt } from "viem";
-import { otherTables } from "@/network/otherTables";
+import { otherTableDefs } from "@/network/otherTableDefs";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { Entity } from "@latticexyz/recs";
 import { Core, CoreConfig, SyncStep } from "@/index";
@@ -49,7 +49,7 @@ export const commonTests = () => {
       const core = createCore(coreConfig);
       const coreTableKeys = Object.keys(core.tables);
       const mudTableKeys = Object.keys(worldInput.tables);
-      const otherTableKeys = Object.keys(otherTables);
+      const otherTableKeys = Object.keys(otherTableDefs);
 
       for (const table of [...otherTableKeys, ...mudTableKeys]) {
         expect(coreTableKeys).toContain(table);

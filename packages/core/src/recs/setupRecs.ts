@@ -41,15 +41,15 @@ export const setupRecs = <config extends StoreConfig, extraTables extends Contra
   world: RecsWorld;
   publicClient: PublicClient;
   address: Hex;
-  otherTables?: extraTables;
+  otherTableDefs?: extraTables;
   syncTables?: SyncTables;
 }): Recs<config, extraTables> => {
-  const { mudConfig, publicClient, world, address, otherTables, syncTables } = args;
+  const { mudConfig, publicClient, world, address, otherTableDefs, syncTables } = args;
 
   const { tables, tableDefs, storageAdapter, triggerUpdateStream } = createWrapper({
     mudConfig,
     world,
-    otherTableDefs: otherTables,
+    otherTableDefs,
     shouldSkipUpdateStream: () => syncTables?.SyncStatus.get()?.step === SyncStep.Live ?? false,
   });
 

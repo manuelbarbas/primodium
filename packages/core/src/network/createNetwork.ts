@@ -4,7 +4,7 @@ import { Hex, createPublicClient, fallback, http } from "viem";
 import { setupRecs } from "@/recs/setupRecs";
 import { createWorld } from "@primodiumxyz/reactive-tables";
 import { createClock } from "@/network/createClock";
-import { otherTables } from "@/network/otherTables";
+import { otherTableDefs } from "@/network/otherTableDefs";
 import { SyncTables } from "@/tables/syncTables";
 import { CoreConfig, CreateNetworkResult } from "@/lib/types";
 
@@ -39,7 +39,7 @@ export function createNetwork(config: CoreConfig, syncTables: SyncTables): Creat
     world,
     publicClient,
     address: config.worldAddress as Hex,
-    otherTables,
+    otherTableDefs,
     syncTables,
   });
 

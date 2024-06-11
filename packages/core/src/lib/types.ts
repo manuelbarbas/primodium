@@ -1,5 +1,3 @@
-import { KeySchema } from "@latticexyz/protocol-parser/internal";
-import { Component, Entity, EntitySymbol, Schema } from "@latticexyz/recs";
 import {
   Account,
   Address,
@@ -14,7 +12,7 @@ import { createUtils } from "@/utils/core";
 import { createSync } from "@/sync";
 import { ContractWrite } from "@latticexyz/common";
 import { ReplaySubject, Subject } from "rxjs";
-import { World, WrapperResult } from "@primodiumxyz/reactive-tables";
+import { Entity, World, WrapperResult } from "@primodiumxyz/reactive-tables";
 
 import CallWithSignatureAbi from "@latticexyz/world-modules/out/Unstable_CallWithSignatureSystem.sol/Unstable_CallWithSignatureSystem.abi.json";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
@@ -22,7 +20,7 @@ import setupCoreTables from "@/tables/coreTables";
 import { SyncTables } from "@/tables/syncTables";
 import { ChainConfig } from "@/network/config/chainConfigs";
 import { Recs } from "@/recs/setupRecs";
-import { otherTables } from "@/network/otherTables";
+import { otherTableDefs } from "@/network/otherTableDefs";
 import mudConfig from "contracts/mud.config";
 
 /**
@@ -70,24 +68,24 @@ type MudConfig = typeof mudConfig;
 
 /**
  * @typedef {Object} CreateNetworkResult
- * @property {Record<string, Table>} tableMetadata - Contains contract table metadata.
+ * @property {World} world - The world instance.
  * @property {MudConfig} mudConfig - Configuration for MUD.
- * @property {ExtendedContractComponents<Recs<MudConfig, typeof otherTables>["tables"]>} tables - The extended contract components.
  * @property {PublicClient<FallbackTransport, ChainConfig, undefined>} publicClient - The public client.
  * @property {Clock} clock - The clock instance.
+ * @property {WrapperResult<MudConfig, typeof otherTableDefs>} - The wrapper result containing all tables and their definitions and the storage adapter.
  *
  * Contains contract table metadata.
  *
  * See [mud.config.ts](https://github.com/primodiumxyz/contracts/blob/main/mud.config.ts#L85-L97) for more details.
  */
 
-export type CreateNetworkResult = Omit<Recs<MudConfig, typeof otherTables>, "tables"> & {
+export type CreateNetworkResult = Omit<Recs<MudConfig, typeof otherTableDefs>, "tables"> & {
   /** @property {World} world - The world instance. */
   world: World;
   mudConfig: MudConfig;
   publicClient: PublicClient<FallbackTransport, ChainConfig, undefined>;
   clock: Clock;
-} & WrapperResult<MudConfig, typeof otherTables>;
+} & WrapperResult<MudConfig, typeof otherTableDefs>;
 export type Tables = CreateNetworkResult["tables"] & ReturnType<typeof setupCoreTables> & SyncTables;
 export type Utils = ReturnType<typeof createUtils>;
 export type Sync = ReturnType<typeof createSync>;
@@ -154,15 +152,6 @@ export interface AccountClient {
   removeSessionAccount: () => void;
   requestDrip: (address: Address) => void;
 }
-
-export type ContractComponent<S extends Schema = Schema, TKeySchema extends KeySchema = KeySchema> = Component<
-  S,
-  {
-    componentName: string;
-    keySchema: TKeySchema;
-    valueSchema: Record<string, string>;
-  }
->;
 
 export type Dimensions = { width: number; height: number };
 
