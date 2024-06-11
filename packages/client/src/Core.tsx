@@ -22,7 +22,8 @@ function Core() {
   }, []);
   if (MAINTENANCE) return <Maintenance />;
 
-  if (!core) return <Initializing />;
+  if (!externalAccount.isConnected) return null;
+  if (!core || !externalAccount.address) return <Initializing />;
 
   return (
     <CoreProvider {...core}>
