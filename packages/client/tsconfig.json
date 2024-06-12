@@ -5,7 +5,7 @@
     "useDefineForClassFields": true,
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "strict": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -17,7 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@game/*": ["./src/game/*"],
+      "@game/*": ["./src/game/*"]
     }
   },
   "include": ["**/*.tsx", "**/*.ts", "../game-tools/src/CheatcodesList.tsx"],

@@ -7,21 +7,16 @@ import { Increment } from "./screens/Increment";
 import { Sandbox } from "./screens/Sandbox";
 import { Statistics } from "./screens/Statistics";
 import { useUpdateSessionAccount } from "@/hooks/useUpdateSessionAccount";
-import { useMountDevTools } from "@/hooks/useMountDevTools";
-import { useBalance } from "wagmi";
 import { useMemo } from "react";
-import { useAccountClient, useSyncStatus } from "@primodiumxyz/core/react";
+import { useSyncStatus } from "@primodiumxyz/core/react";
 import { minEth } from "@primodiumxyz/core";
+import { useDripAccount } from "@/hooks/useDripAccount";
 
 export default function AppLoadingState() {
   useUpdateSessionAccount();
-  useMountDevTools();
-  const playerAddress = useAccountClient().playerAccount.address;
+  const { playerAccountBalance: balance } = useDripAccount();
 
-  const { data } = useBalance({ address: playerAddress });
-  const balance = data?.value ?? 0n;
   const { loading, error, progress, message } = useSyncStatus();
-  console.log({ loading, error, progress, message });
 
   const ready = useMemo(() => !loading && balance >= minEth, [loading, balance]);
   return (

@@ -5,21 +5,18 @@ import { getPrivateKey } from "src/util/localStorage";
 import { Address } from "viem";
 import { useAccountClient, useCore } from "@primodiumxyz/core/react";
 import { useEffect } from "react";
-import { Core } from "@primodiumxyz/core";
 
 export const useUpdateSessionAccount = () => {
   const {
     setSessionAccount,
-    // removeSessionAccount,
+    removeSessionAccount,
     playerAccount: { address },
   } = useAccountClient();
-  console.log;
-  const core = useCore() as Core;
+  const core = useCore();
   const {
     network: { world },
     tables,
   } = core;
-  console.log({ world, tables });
 
   useEffect(() => {
     world.dispose("session");
@@ -46,15 +43,17 @@ export const useUpdateSessionAccount = () => {
       return true;
     }
 
-    // tables.UserDelegationControl.onUpdate(
-    //   (update) => {
-    //     const key = decodeEntity(tables.UserDelegationControl.metadata.keySchema, entity);
-    //     if (key.delegator !== address) return;
-    //     const newAuthorized = key.delegatee;
-    //     if (!value[0]) return removeSessionAccount();
-    //     setAuthorized(newAuthorized as string);
-    //   },
-    //   { runOnInit: false }
-    // );
+    tables.UserDelegationControl.watch(
+      {
+        onChange: ({ entity, current }) => {
+          const key = decodeEntity(tables.UserDelegationControl.metadata.keySchema, entity);
+          if (key.delegator !== address) return;
+          const newAuthorized = key.delegatee;
+          if (!current) return removeSessionAccount();
+          setAuthorized(newAuthorized as string);
+        },
+      },
+      { runOnInit: false }
+    );
   }, [address]);
 };

@@ -1,23 +1,25 @@
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { useMud } from "src/hooks";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 
 import { Tooltip } from "@/components/core/Tooltip";
-import { grantAccessWithSignature } from "@/network/setup/contractCalls/access";
-import { spawn } from "@/network/setup/contractCalls/spawn";
-import { STORAGE_PREFIX } from "@/util/constants";
+// import { grantAccessWithSignature } from "@/network/setup/contractCalls/access";
+// import { spawn } from "@/network/setup/contractCalls/spawn";
 import { findEntriesWithPrefix } from "@/util/localStorage";
 import { useEffect, useState } from "react";
 import { FaExclamationTriangle, FaInfoCircle } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { components } from "src/network/components";
 import { Landing } from "./Landing";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
+import { defaultEntity } from "@primodiumxyz/reactive-tables";
+import { STORAGE_PREFIX } from "@primodiumxyz/core";
 
 export const Enter: React.FC = () => {
-  const mud = useMud();
-  const playerEntity = mud.playerAccount.entity;
+  const { tables } = useCore();
+  const {
+    playerAccount: { entity: playerEntity },
+    sessionAccount,
+  } = useAccountClient();
   const navigate = useNavigate();
   const location = useLocation();
   const [showingToast, setShowingToast] = useState(false);
@@ -69,22 +71,22 @@ export const Enter: React.FC = () => {
     );
   };
   useEffect(() => {
-    if (!mud.sessionAccount) {
+    if (!sessionAccount) {
       setState("delegate");
     } else {
       setState("play");
     }
-  }, [mud.sessionAccount]);
+  }, [sessionAccount]);
 
   useEffect(() => {
-    if (!mud.sessionAccount) return;
-    toast.success(`Session account detected! (${mud.sessionAccount.address.slice(0, 7)})`);
-  }, [mud.sessionAccount]);
+    if (!sessionAccount) return;
+    toast.success(`Session account detected! (${sessionAccount.address.slice(0, 7)})`);
+  }, [sessionAccount]);
 
   const handlePlay = async () => {
-    const hasSpawned = !!components.Home.get(playerEntity)?.value;
+    const hasSpawned = !!tables.Home.get(playerEntity)?.value;
     if (!hasSpawned) {
-      await spawn(mud);
+      // await spawn(mud);
     }
     navigate("/game" + location.search);
   };
@@ -95,12 +97,12 @@ export const Enter: React.FC = () => {
     const account = privateKeyToAccount(privateKey);
     localStorage.setItem(STORAGE_PREFIX + account.address, privateKey);
 
-    await grantAccessWithSignature(mud, privateKey, { id: singletonEntity });
+    // await grantAccessWithSignature(mud, privateKey, { id: defaultEntity });
   };
 
   return (
     <Landing>
-      <TransactionQueueMask queueItemId={singletonEntity} className="w-4/5 z-20">
+      <TransactionQueueMask queueItemId={defaultEntity} className="w-4/5 z-20">
         {state === "delegate" && (
           <div className="grid grid-cols-7 gap-2 items-center pointer-events-auto">
             <button

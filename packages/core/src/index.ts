@@ -1,6 +1,10 @@
 export { createCore } from "./createCore";
 
+//types
 export * from "./lib/types";
+export * from "./tables/types";
+
+// logic
 export * from "./lib/lookups";
 export * from "./lib/constants";
 export * from "./lib/WorldAbi";
