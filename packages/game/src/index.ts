@@ -1,1 +1,1 @@
-export * as engine from "./src/api";
+export * as engine from "./api";

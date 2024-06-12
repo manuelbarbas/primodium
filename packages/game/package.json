@@ -4,11 +4,11 @@
   "license": "MIT",
   "main": "index.ts",
   "dependencies": {
-    "@latticexyz/recs": "2.0.9",
     "@latticexyz/store-sync": "2.0.9",
     "@primodiumxyz/assets": "1.0.0",
-    "@primodiumxyz/core": "link:../core",
+    "@primodiumxyz/core": "workspace:*",
     "@primodiumxyz/engine": "1.0.0",
+    "@primodiumxyz/reactive-tables": "^2.0.7",
     "@types/lodash": "^4.14.195",
     "@types/react": "^18.0.26",
     "contracts": "0.0.0",

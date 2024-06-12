@@ -1,1 +1,0 @@
-export { AsteroidMap } from "./AsteroidMap";

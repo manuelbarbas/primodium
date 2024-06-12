@@ -16,10 +16,9 @@ import { MUD } from "@primodiumxyz/core/network/types";
 import { world } from "@primodiumxyz/core/network/world";
 import { setupWormholeResource } from "@primodiumxyz/core/network/systems/setupWormholeResource";
 import { setupBattleNotifications } from "@primodiumxyz/core/network/systems/setupBattleNotifications";
-import _init from "@/init";
+import _init from "init";
 import { Scenes } from "@/lib/constants/common";
 import { runSystems as runCommonSystems } from "@/scenes/common/systems";
-import {} from "@primodiumxyz/core";
 
 export type PrimodiumGame = Awaited<ReturnType<typeof initGame>>;
 export async function initGame(version = "v1") {
@@ -55,20 +54,21 @@ export async function initGame(version = "v1") {
       console.info("[Game] Running primary systems");
       world.dispose("systems");
 
-      components.SelectedMode.set({ value: Mode.Asteroid });
-      setupBuildRock();
-      setupBattleComponents();
-      setupBlockNumber(mud.network.latestBlockNumber$);
-      setupDoubleCounter(mud);
-      setupHangar();
-      setupLeaderboard();
-      setupWormholeResource();
-      setupBattleNotifications();
-      setupTime(mud);
-      setupTrainingQueues();
-      setupHomeAsteroid(mud);
-      setupBuildingReversePosition();
-      setupSync(mud);
+      // core runs this at start
+      // components.SelectedMode.set({ value: Mode.Asteroid });
+      // setupBuildRock();
+      // setupBattleComponents();
+      // setupBlockNumber(mud.network.latestBlockNumber$);
+      // setupDoubleCounter(mud);
+      // setupHangar();
+      // setupLeaderboard();
+      // setupWormholeResource();
+      // setupBattleNotifications();
+      // setupTime(mud);
+      // setupTrainingQueues();
+      // setupHomeAsteroid(mud);
+      // setupBuildingReversePosition();
+      // setupSync(mud);
 
       Object.values(Scenes).forEach((key) => {
         const scene = api[key];

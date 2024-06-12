@@ -464,8 +464,8 @@ importers:
         specifier: 2.0.9
         version: 2.0.9(typescript@5.5.0-beta)
       '@primodiumxyz/reactive-tables':
-        specifier: ^2.0.6
-        version: 2.0.6(prettier@3.2.5)(react-dom@18.3.1)(typescript@5.5.0-beta)(zod@3.23.8)
+        specifier: ^2.0.7
+        version: 2.0.7(prettier@3.2.5)(react-dom@18.3.1)(typescript@5.5.0-beta)(zod@3.23.8)
       '@primodiumxyz/sync-stack':
         specifier: ^0.6.9
         version: 0.6.9(typescript@5.5.0-beta)
@@ -492,7 +492,7 @@ importers:
         version: 2.9.20(typescript@5.5.0-beta)(zod@3.23.8)
       vite:
         specifier: ^3.2.3
-        version: 3.2.8(@types/node@18.19.32)
+        version: 3.2.8(@types/node@18.19.8)
     devDependencies:
       '@testing-library/jest-dom':
         specifier: ^6.4.5
@@ -555,9 +555,6 @@ importers:
 
   packages/game:
     dependencies:
-      '@latticexyz/recs':
-        specifier: 2.0.9
-        version: 2.0.9(typescript@5.5.0-beta)(zod@3.23.8)
       '@latticexyz/store-sync':
         specifier: 2.0.9
         version: 2.0.9(@types/react@18.3.1)(react@18.3.1)(typescript@5.5.0-beta)
@@ -565,11 +562,14 @@ importers:
         specifier: 1.0.0
         version: link:../assets
       '@primodiumxyz/core':
-        specifier: link:../core
+        specifier: workspace:*
         version: link:../core
       '@primodiumxyz/engine':
         specifier: 1.0.0
         version: link:../engine
+      '@primodiumxyz/reactive-tables':
+        specifier: ^2.0.7
+        version: 2.0.7(prettier@3.2.5)(react-dom@18.3.1)(typescript@5.5.0-beta)(zod@3.23.8)
       '@types/lodash':
         specifier: ^4.14.195
         version: 4.14.202
@@ -6504,8 +6504,8 @@ packages:
       - zod
     dev: false
 
-  /@primodiumxyz/reactive-tables@2.0.6(prettier@3.2.5)(react-dom@18.3.1)(typescript@5.5.0-beta)(zod@3.23.8):
-    resolution: {integrity: sha512-c26BY+GUr43GBC7vJ7zophdxSCBZgQK7xLsHwuKRZ9QzLNvoBxd/9B7HyOLGEMckppVxW706FyxS5NEu2gGR6w==}
+  /@primodiumxyz/reactive-tables@2.0.7(prettier@3.2.5)(react-dom@18.3.1)(typescript@5.5.0-beta)(zod@3.23.8):
+    resolution: {integrity: sha512-gRzHa4OAIKF8DhqAzVeB4wgAYpIMqkACsuc6V52pWXFvLaSbVuht0Bl4pmOkPwyblMeFhvURi9guqyuIHUFaFw==}
     engines: {node: 20.x, pnpm: 8.x}
     dependencies:
       '@latticexyz/common': 2.0.9(typescript@5.5.0-beta)(zod@3.23.8)
@@ -8305,7 +8305,6 @@ packages:
     resolution: {integrity: sha512-g1pZtPhsvGVTwmeVoexWZLTQaOvXwoSq//pTL0DHeNzUDrFnir4fgETdhjhIxjVnN+hKOuh98+E1eMLnUXstFg==}
     dependencies:
       undici-types: 5.26.5
-    dev: true
 
   /@types/normalize-package-data@2.4.4:
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -20261,6 +20260,7 @@ packages:
       rollup: 2.79.1
     optionalDependencies:
       fsevents: 2.3.3
+    dev: true
 
   /vite@3.2.8(@types/node@18.19.8):
     resolution: {integrity: sha512-EtQU16PLIJpAZol2cTLttNP1mX6L0SyI0pgQB1VOoWeQnMSvtiwovV3D6NcjN8CZQWWyESD2v5NGnpz5RvgOZA==}
@@ -20294,7 +20294,6 @@ packages:
       rollup: 2.79.1
     optionalDependencies:
       fsevents: 2.3.3
-    dev: true
 
   /vitest@0.32.4(happy-dom@14.12.0)(jsdom@24.1.0):
     resolution: {integrity: sha512-3czFm8RnrsWwIzVDu/Ca48Y/M+qh3vOnF16czJm98Q/AN1y3B6PBsyV8Re91Ty5s7txKNjEhpgtGPcfdbh2MZg==}

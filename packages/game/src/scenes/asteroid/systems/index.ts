@@ -1,4 +1,4 @@
-import { MUD } from "@primodiumxyz/core/network/types";
+import { Core } from "@primodiumxyz/core";
 
 import { PrimodiumScene } from "@/api/scene";
 import { renderWormholeAnimations } from "@/scenes/asteroid/systems/renderWormholeAnimations";
@@ -10,16 +10,16 @@ import { renderAsteroidMap } from "@/scenes/asteroid/systems/renderAsteroidMap";
 import { renderHoverTile } from "@/scenes/asteroid/systems/renderHoverTile";
 import { renderQueuedBuildings } from "@/scenes/asteroid/systems/renderQueuedBuildings";
 
-export const runSystems = (scene: PrimodiumScene, mud: MUD) => {
+export const runSystems = (scene: PrimodiumScene, core: Core) => {
   // Render world entity's sprites
-  renderAsteroidMap(scene);
-  renderBuilding(scene);
-  renderWormholeAnimations(scene);
+  renderAsteroidMap(scene, core);
+  renderBuilding(scene, core);
+  renderWormholeAnimations(scene, core);
 
   // Render map utility elements, placement indicators, etc
-  renderHoverTile(scene);
-  renderBuildingPlacementTool(scene, mud);
-  renderBuildingMoveTool(scene, mud);
-  focusMainbase(scene);
-  renderQueuedBuildings(scene);
+  renderHoverTile(scene, core);
+  renderBuildingPlacementTool(scene, core);
+  renderBuildingMoveTool(scene, core);
+  focusMainbase(scene, core);
+  renderQueuedBuildings(scene, core);
 };
