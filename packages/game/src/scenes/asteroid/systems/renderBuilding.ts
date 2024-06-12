@@ -1,5 +1,5 @@
 import { Entity, namespaceWorld, query, $query } from "@primodiumxyz/reactive-tables";
-import { Action, Core, EntityType } from "@primodiumxyz/core";
+import { Action, Core, EntityType, hashEntities } from "@primodiumxyz/core";
 import { EMap } from "contracts/config/enums";
 
 import { Building } from "@/lib/objects/building";
@@ -8,7 +8,6 @@ import { DepthLayers } from "@/lib/constants/common";
 import { PrimodiumScene } from "@/api/scene";
 import { WormholeBase } from "@/lib/objects/building/Wormhole";
 
-//TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
 export const renderBuilding = (scene: PrimodiumScene, core: Core) => {
   const {
     network: { world },
@@ -56,6 +55,8 @@ export const renderBuilding = (scene: PrimodiumScene, core: Core) => {
       world.registerDisposer(() => {
         clearTimeout(timeout);
       }, "game_spectate");
+
+      if (!activeRock) return;
 
       const render = ({ entity, showLevelAnimation = false }: { entity: Entity; showLevelAnimation?: boolean }) => {
         if (objects.building.has(entity)) {

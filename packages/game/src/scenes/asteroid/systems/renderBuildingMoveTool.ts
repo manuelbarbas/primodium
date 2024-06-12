@@ -1,49 +1,34 @@
-import {
-  Entity,
-  Has,
-  HasValue,
-  defineEnterSystem,
-  defineExitSystem,
-  defineUpdateSystem,
-  namespaceWorld,
-} from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { toHex } from "viem";
-import { components } from "@primodiumxyz/core/network/components";
-import { moveBuilding } from "@primodiumxyz/core/network/setup/contractCalls/moveBuilding";
-import { MUD } from "@primodiumxyz/core/network/types";
-import { world } from "@primodiumxyz/core/network/world";
-import {
-  getBuildingBottomLeft,
-  getBuildingDimensions,
-  getBuildingOrigin,
-  validateBuildingPlacement,
-} from "@primodiumxyz/core/util/building";
-import { Action } from "@primodiumxyz/core/util/constants";
-import { isDomInteraction } from "@primodiumxyz/core/util/canvas";
-import { hashEntities } from "@primodiumxyz/core/util/encode";
+import { Entity, namespaceWorld, $query } from "@primodiumxyz/reactive-tables";
+import { Action, Core } from "@primodiumxyz/core";
 
-import { Building, BuildingConstruction } from "@/lib/objects/building";
+import { Building } from "@/lib/objects/building";
 import { DepthLayers } from "@/lib/constants/common";
 import { PrimodiumScene } from "@/api/scene";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 
-export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: PrimodiumScene) => {
+export const handleClick = (pointer: Phaser.Input.Pointer, core: Core, scene: PrimodiumScene) => {
+  const {
+    // network: { world },
+    tables,
+    utils,
+  } = core;
+
   if (pointer?.rightButtonDown()) {
-    components.SelectedAction.remove();
+    tables.SelectedAction.remove();
     return;
   }
 
-  const selectedBuilding = components.SelectedBuilding.get()?.value;
+  const selectedBuilding = tables.SelectedBuilding.get()?.value;
   if (!selectedBuilding) return;
   const selectedBuildingObj = scene.objects.building.get(selectedBuilding);
 
-  const tileCoord = components.HoverTile.get();
-  const activeRock = components.ActiveRock.get()?.value as Entity;
-  const buildingPrototype = components.BuildingType.get(selectedBuilding)?.value as Entity | undefined;
+  const tileCoord = tables.HoverTile.get();
+  const activeRock = tables.ActiveRock.get()?.value as Entity;
+  const buildingPrototype = tables.BuildingType.get(selectedBuilding)?.value as Entity | undefined;
 
   if (!tileCoord || !buildingPrototype || !activeRock) return;
 
-  const validPlacement = validateBuildingPlacement(tileCoord, buildingPrototype, activeRock, selectedBuilding);
+  const validPlacement = utils.validateBuildingPlacement(tileCoord, buildingPrototype, activeRock, selectedBuilding);
 
   if (!validPlacement) {
     scene.notify("error", "Cannot place building here");
@@ -51,58 +36,64 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Prim
     return;
   }
 
-  const buildingOrigin = getBuildingOrigin(tileCoord, buildingPrototype);
+  const buildingOrigin = utils.getBuildingOrigin(tileCoord, buildingPrototype);
   if (!buildingOrigin) return;
 
-  // change opacity and place construction building
-  const placeholderBuilding = new BuildingConstruction({
-    id: hashEntities(toHex("placeholder"), selectedBuilding),
-    scene,
-    coord: getBuildingBottomLeft(buildingOrigin, buildingPrototype),
-    buildingDimensions: getBuildingDimensions(buildingPrototype),
-  }).spawn();
+  // // change opacity and place construction building
+  // const placeholderBuilding = new BuildingConstruction({
+  //   id: hashEntities(toHex("placeholder"), selectedBuilding),
+  //   scene,
+  //   coord: utils.getBuildingBottomLeft(buildingOrigin, buildingPrototype),
+  //   buildingDimensions: utils.getBuildingDimensions(buildingPrototype),
+  // }).spawn();
 
-  const pendingAnim = scene.phaserScene.tweens.add({
-    targets: [selectedBuildingObj, placeholderBuilding],
-    alpha: 0.6,
-    duration: 600,
-    yoyo: true,
-    repeat: -1,
-  });
+  // const pendingAnim = scene.phaserScene.tweens.add({
+  //   targets: [selectedBuildingObj, placeholderBuilding],
+  //   alpha: 0.6,
+  //   duration: 600,
+  //   yoyo: true,
+  //   repeat: -1,
+  // });
 
-  moveBuilding(
-    mud,
-    selectedBuilding,
-    buildingOrigin,
-    // on completion
-    () => {
-      pendingAnim.destroy();
-      placeholderBuilding.destroy();
-      selectedBuildingObj?.setAlpha(1);
-    }
-  );
-  components.SelectedAction.remove();
+  // moveBuilding(
+  //   mud,
+  //   selectedBuilding,
+  //   buildingOrigin,
+  //   // on completion
+  //   () => {
+  //     pendingAnim.destroy();
+  //     placeholderBuilding.destroy();
+  //     selectedBuildingObj?.setAlpha(1);
+  //   }
+  // );
+  tables.SelectedAction.remove();
 };
 
 //TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
-export const renderBuildingMoveTool = (scene: PrimodiumScene, mud: MUD) => {
+export const renderBuildingMoveTool = (scene: PrimodiumScene, core: Core) => {
+  const {
+    network: { world },
+    tables,
+    utils,
+  } = core;
+
   const systemsWorld = namespaceWorld(world, "systems");
 
   let placementBuilding: Building | undefined;
 
   const render = () => {
-    const selectedBuilding = components.SelectedBuilding.get()?.value;
+    const selectedBuilding = tables.SelectedBuilding.get()?.value;
     if (!selectedBuilding) return;
-    const buildingPrototype = components.BuildingType.get(selectedBuilding)?.value as Entity | undefined;
+    const buildingPrototype = tables.BuildingType.get(selectedBuilding)?.value as Entity | undefined;
 
-    const tileCoord = components.HoverTile.get();
+    const tileCoord = tables.HoverTile.get();
 
     if (!tileCoord || !buildingPrototype) return;
 
-    const buildingDimensions = getBuildingDimensions(buildingPrototype);
+    const buildingDimensions = utils.getBuildingDimensions(buildingPrototype);
 
-    const activeRock = components.ActiveRock.get()?.value as Entity;
-    const validPlacement = validateBuildingPlacement(
+    const activeRock = tables.ActiveRock.get()?.value as Entity;
+    const validPlacement = utils.validateBuildingPlacement(
       tileCoord,
       buildingPrototype,
       activeRock ?? singletonEntity,
@@ -118,9 +109,8 @@ export const renderBuildingMoveTool = (scene: PrimodiumScene, mud: MUD) => {
       });
       // .spawn();
 
-      placementBuilding.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
-        if (isDomInteraction(pointer, "down")) return;
-        handleClick(pointer, mud, scene);
+      placementBuilding.onClick((pointer: Phaser.Input.Pointer) => {
+        handleClick(pointer, core, scene);
       });
     }
 
@@ -138,18 +128,17 @@ export const renderBuildingMoveTool = (scene: PrimodiumScene, mud: MUD) => {
     }
   };
 
-  const query = [
-    Has(components.HoverTile),
-    HasValue(components.SelectedAction, {
-      value: Action.MoveBuilding,
-    }),
-  ];
+  const query = {
+    with: [tables.HoverTile],
+    withoutProperties: [{ table: tables.SelectedAction, properties: { value: Action.MoveBuilding } }],
+  };
 
-  defineEnterSystem(systemsWorld, query, render);
-  defineUpdateSystem(systemsWorld, query, render);
-
-  defineExitSystem(systemsWorld, query, () => {
-    placementBuilding?.destroy();
-    placementBuilding = undefined;
+  $query(systemsWorld, query, {
+    onEnter: render,
+    onChange: render,
+    onExit: () => {
+      placementBuilding?.destroy();
+      placementBuilding = undefined;
+    },
   });
 };
