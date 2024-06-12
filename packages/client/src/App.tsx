@@ -4,12 +4,12 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import { WagmiProvider } from "wagmi";
 import { Connect } from "./Connect";
-import SetupResultProvider from "./SetupResultProvider";
 import { ampli } from "./ampli";
 import { usePersistentStore } from "./game/stores/PersistentStore";
 import { Maintenance } from "./screens/Maintenance";
 import { wagmiConfig } from "./util/web3/wagmi";
 import { cn } from "@/util/client";
+import Core from "@/Core";
 
 const DEV = import.meta.env.PRI_DEV === "true";
 const MAINTENANCE = import.meta.env.PRI_MAINTENANCE === "true";
@@ -49,7 +49,7 @@ export default function App() {
             theme="dark"
           />
           <Connect />
-          <SetupResultProvider />
+          <Core />
         </QueryClientProvider>
       </WagmiProvider>
       <div id="modal-root" className="fixed top-0 pointer-events-auto z-50" />

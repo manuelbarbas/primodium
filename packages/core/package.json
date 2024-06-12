@@ -8,9 +8,18 @@
   "type": "module",
   "exports": {
     ".": "./dist/index.js",
-    "./react": "./dist/react.js"
+    "./react": "./dist/react/index.js"
   },
-  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "index": [
+        "./dist/index.ts"
+      ],
+      "react": [
+        "./dist/react/index.ts"
+      ]
+    }
+  },
   "files": [
     "dist"
   ],
@@ -49,6 +58,7 @@
     "happy-dom": "^14.12.0",
     "jsdom": "^24.1.0",
     "tsup": "^8.1.0",
+    "typescript": "5.5.0-beta",
     "vitest": "^0.32.4"
   },
   "publishConfig": {

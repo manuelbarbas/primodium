@@ -42,7 +42,7 @@
     "husky": ">=6",
     "lint-staged": ">=10",
     "rimraf": "^3.0.2",
-    "run-pty": "4.0.4",
+    "run-pty": "^5.0.0",
     "semantic-release": "^24.0.0",
     "semantic-release-monorepo": "^8.0.2",
     "typescript": "5.5.0-beta"
