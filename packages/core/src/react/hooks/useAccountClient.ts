@@ -1,4 +1,4 @@
-import { AccountClient } from "@/lib";
+import { AccountClient } from "@/lib/types";
 import { AccountClientContext } from "@/react/hooks/providers/AccountClientProvider";
 import { useContext } from "react";
 
