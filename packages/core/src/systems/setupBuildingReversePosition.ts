@@ -1,5 +1,5 @@
 import { Core } from "@/lib/types";
-import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
+import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 
 /**
  * This system sets up the reverse position of a building
@@ -13,26 +13,29 @@ export const setupBuildingReversePosition = (core: Core) => {
 
   const systemWorld = namespaceWorld(world, "coreSystems");
 
-  defineComponentSystem(systemWorld, tables.TilePositions, ({ entity, value: [newVal, oldVal] }) => {
-    const asteroid = tables.OwnedBy.get(entity)?.value as Entity;
-    if (!asteroid) return;
+  tables.TilePositions.watch({
+    world: systemWorld,
+    onUpdate: ({ entity, properties: { current, prev } }) => {
+      const asteroid = tables.OwnedBy.get(entity)?.value as Entity;
+      if (!asteroid) return;
 
-    // remove old reverse position
-    if (oldVal?.value) {
-      const coords = convertToCoords(oldVal.value);
-      coords.forEach((coord) => {
-        const positionEntity = getBuildingPositionEntity(coord, asteroid);
-        tables.ReverseBuildingPosition.remove(positionEntity);
-      });
-    }
+      // remove old reverse position
+      if (prev?.value) {
+        const coords = convertToCoords(prev.value);
+        coords.forEach((coord) => {
+          const positionEntity = getBuildingPositionEntity(coord, asteroid);
+          tables.ReverseBuildingPosition.remove(positionEntity);
+        });
+      }
 
-    // add new reverse position
-    if (newVal?.value) {
-      const coords = convertToCoords(newVal.value);
-      coords.forEach((coord) => {
-        const positionEntity = getBuildingPositionEntity(coord, asteroid);
-        tables.ReverseBuildingPosition.set({ value: entity }, positionEntity);
-      });
-    }
+      // add new reverse position
+      if (current?.value) {
+        const coords = convertToCoords(current.value);
+        coords.forEach((coord) => {
+          const positionEntity = getBuildingPositionEntity(coord, asteroid);
+          tables.ReverseBuildingPosition.set({ value: entity }, positionEntity);
+        });
+      }
+    },
   });
 };

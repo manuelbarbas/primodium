@@ -1,6 +1,6 @@
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { DECIMALS } from "contracts/config/constants";
 import { EntityType, UnitEnumLookup } from "@/lib";
-import { Entity } from "@latticexyz/recs";
 
 /**
  * Gets the scale of a resource.

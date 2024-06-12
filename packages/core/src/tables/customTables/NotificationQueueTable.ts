@@ -1,5 +1,4 @@
-import { Entity, Type } from "@latticexyz/recs";
-import { createExtendedComponent } from "./ExtendedComponent";
+import { createLocalTable, Entity, Type } from "@primodiumxyz/reactive-tables";
 import { CreateNetworkResult } from "@/lib/types";
 
 export type NotificationType = "battle" | "arrival-transit" | "arrival-orbit";
@@ -10,8 +9,8 @@ export type Notification = {
   type: NotificationType;
 };
 
-export const NotificationQueueComponent = ({ world }: CreateNetworkResult) => {
-  const component = createExtendedComponent(
+export const NotificationQueueTable = ({ world }: CreateNetworkResult) => {
+  const table = createLocalTable(
     world,
     {
       ids: Type.StringArray,
@@ -21,12 +20,12 @@ export const NotificationQueueComponent = ({ world }: CreateNetworkResult) => {
     },
     {
       id: "NotificationQueue",
-      metadata: { contractId: `component.NotificationQueue` },
+      metadata: { contractId: `table.NotificationQueue` },
     }
   );
 
   const addNotification = (notification: Notification) => {
-    const currentData = component.get() || {
+    const currentData = table.get() || {
       ids: new Array<string>(),
       entities: new Array<Entity>(),
       timestamp: new Array<number>(),
@@ -36,11 +35,11 @@ export const NotificationQueueComponent = ({ world }: CreateNetworkResult) => {
     currentData.entities.push(notification.entity);
     currentData.timestamp.push(notification.timestamp);
     currentData.type.push(notification.type);
-    component.set(currentData);
+    table.set(currentData);
   };
 
   const removeNotification = (id: string) => {
-    const currentData = component.get() || {
+    const currentData = table.get() || {
       ids: [],
       entities: [],
       timestamp: [],
@@ -53,11 +52,11 @@ export const NotificationQueueComponent = ({ world }: CreateNetworkResult) => {
       currentData.timestamp.splice(index, 1);
       currentData.type.splice(index, 1);
     }
-    component.set(currentData);
+    table.set(currentData);
   };
 
   return {
-    ...component,
+    ...table,
     addNotification,
     removeNotification,
   };

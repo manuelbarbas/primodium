@@ -1,22 +1,22 @@
-import { Type } from "@latticexyz/recs";
-import { createBattleComponents } from "./customTables/BattleComponents";
+import { createBattleTables } from "./customTables/BattleTables";
 import {
-  createExtendedBigIntComponent,
-  createExtendedBoolComponent,
-  createExtendedComponent,
-  createExtendedCoordComponent,
-  createExtendedEntityComponent,
-  createExtendedNumberComponent,
-} from "./customTables/ExtendedComponent";
-import { createTransactionQueueComponent } from "./customTables/TransactionQueueComponent";
+  createLocalTable,
+  createLocalBigIntTable,
+  createLocalBoolTable,
+  createLocalCoordTable,
+  createLocalEntityTable,
+  createLocalNumberTable,
+  Type,
+} from "@primodiumxyz/reactive-tables";
+import { createTransactionQueueTable } from "./customTables/TransactionQueueTable";
 import { CreateNetworkResult } from "@/lib/types";
 
 export default function setupCoreTables(network: CreateNetworkResult) {
   const world = network.world;
 
-  const DoubleCounter = createExtendedBigIntComponent(world, { id: "DoubleCounter" });
+  const DoubleCounter = createLocalBigIntTable(world, { id: "DoubleCounter" });
 
-  const BlockNumber = createExtendedComponent(
+  const BlockNumber = createLocalTable(
     world,
     {
       value: Type.BigInt,
@@ -27,21 +27,21 @@ export default function setupCoreTables(network: CreateNetworkResult) {
     }
   );
 
-  const Time = createExtendedBigIntComponent(world, { id: "Time" });
-  const Account = createExtendedEntityComponent(world, { id: "Account" });
-  const SelectedRock = createExtendedEntityComponent(world, { id: "SelectedRock" });
-  const ActiveRock = createExtendedEntityComponent(world, { id: "ActiveRock" });
-  const BuildRock = createExtendedEntityComponent(world, { id: "BuildRock" });
-  const CurrentTransaction = createExtendedBoolComponent(world, { id: "CurrentTransaction" });
+  const Time = createLocalBigIntTable(world, { id: "Time" });
+  const Account = createLocalEntityTable(world, { id: "Account" });
+  const SelectedRock = createLocalEntityTable(world, { id: "SelectedRock" });
+  const ActiveRock = createLocalEntityTable(world, { id: "ActiveRock" });
+  const BuildRock = createLocalEntityTable(world, { id: "BuildRock" });
+  const CurrentTransaction = createLocalBoolTable(world, { id: "CurrentTransaction" });
 
-  const SelectedTile = createExtendedCoordComponent(world, { id: "SelectedTile" });
-  const HoverTile = createExtendedCoordComponent(world, { id: "HoverTile" });
-  const HoverEntity = createExtendedEntityComponent(world, { id: "HoverEntity" });
-  const SelectedBuilding = createExtendedComponent(world, { value: Type.Entity }, { id: "SelectedBuilding" });
-  const SelectedAction = createExtendedNumberComponent(world, { id: "SelectedAction" });
-  const SelectedMode = createExtendedEntityComponent(world, { id: "SelectedMode" });
+  const SelectedTile = createLocalCoordTable(world, { id: "SelectedTile" });
+  const HoverTile = createLocalCoordTable(world, { id: "HoverTile" });
+  const HoverEntity = createLocalEntityTable(world, { id: "HoverEntity" });
+  const SelectedBuilding = createLocalTable(world, { value: Type.Entity }, { id: "SelectedBuilding" });
+  const SelectedAction = createLocalNumberTable(world, { id: "SelectedAction" });
+  const SelectedMode = createLocalEntityTable(world, { id: "SelectedMode" });
 
-  const WormholeResource = createExtendedComponent(
+  const WormholeResource = createLocalTable(
     world,
     {
       timeUntilNextResource: Type.BigInt,
@@ -51,9 +51,9 @@ export default function setupCoreTables(network: CreateNetworkResult) {
     { id: "WormholeData" }
   );
 
-  const ReverseBuildingPosition = createExtendedEntityComponent(world, { id: "ReverseBuildingPosition" });
+  const ReverseBuildingPosition = createLocalEntityTable(world, { id: "ReverseBuildingPosition" });
 
-  const TrainingQueue = createExtendedComponent(
+  const TrainingQueue = createLocalTable(
     world,
     {
       units: Type.EntityArray,
@@ -66,7 +66,7 @@ export default function setupCoreTables(network: CreateNetworkResult) {
     }
   );
 
-  const Hangar = createExtendedComponent(
+  const Hangar = createLocalTable(
     world,
     {
       units: Type.EntityArray,
@@ -77,16 +77,16 @@ export default function setupCoreTables(network: CreateNetworkResult) {
     }
   );
 
-  const SelectedFleet = createExtendedEntityComponent(world, { id: "SelectedFleet" });
+  const SelectedFleet = createLocalEntityTable(world, { id: "SelectedFleet" });
 
-  const Battle = createBattleComponents(network);
+  const Battle = createBattleTables(network);
 
-  const BattleRender = createExtendedEntityComponent(world, { id: "BattleRender" });
+  const BattleRender = createLocalEntityTable(world, { id: "BattleRender" });
 
-  const BattleTarget = createExtendedEntityComponent(world, { id: "BattleTarget" });
+  const BattleTarget = createLocalEntityTable(world, { id: "BattleTarget" });
 
   // keep updated metadata for a player's alliance
-  const PlayerAllianceInfo = createExtendedComponent(
+  const PlayerAllianceInfo = createLocalTable(
     world,
     {
       alliance: Type.Entity,
@@ -98,7 +98,7 @@ export default function setupCoreTables(network: CreateNetworkResult) {
     }
   );
 
-  const PlayerInvite = createExtendedComponent(
+  const PlayerInvite = createLocalTable(
     world,
     {
       target: Type.Entity,
@@ -111,7 +111,7 @@ export default function setupCoreTables(network: CreateNetworkResult) {
     }
   );
 
-  const AllianceRequest = createExtendedComponent(
+  const AllianceRequest = createLocalTable(
     world,
     {
       player: Type.Entity,
@@ -123,26 +123,15 @@ export default function setupCoreTables(network: CreateNetworkResult) {
     }
   );
 
-  const TransactionQueue = createTransactionQueueComponent(network, { id: "TransactionQueue" });
+  const TransactionQueue = createTransactionQueueTable(network, { id: "TransactionQueue" });
 
-  const SyncStatus = createExtendedComponent(
-    world,
-    {
-      step: Type.Number,
-      message: Type.String,
-      progress: Type.Number,
-    },
-    {
-      id: "SyncStatus",
-    }
-  );
-  const SystemsReady = createExtendedBoolComponent(world, { id: "SystemsReady" });
+  const SystemsReady = createLocalBoolTable(world, { id: "SystemsReady" });
 
-  const IsObjectiveClaimable = createExtendedBoolComponent(world, { id: "IsObjectiveClaimable" });
+  const IsObjectiveClaimable = createLocalBoolTable(world, { id: "IsObjectiveClaimable" });
   /* -------------------------------------------------------------------------- */
   /*                                 Leaderboard                                */
   /* -------------------------------------------------------------------------- */
-  const Leaderboard = createExtendedComponent(
+  const Leaderboard = createLocalTable(
     world,
     {
       players: Type.EntityArray,
@@ -153,8 +142,6 @@ export default function setupCoreTables(network: CreateNetworkResult) {
       id: "Leaderboard",
     }
   );
-
-  const SyncSource = createExtendedNumberComponent(world, { id: "SyncSource" });
 
   return {
     DoubleCounter,
@@ -184,8 +171,6 @@ export default function setupCoreTables(network: CreateNetworkResult) {
     PlayerInvite,
     AllianceRequest,
     TransactionQueue,
-    SyncStatus,
-    SyncSource,
     SystemsReady,
     WormholeResource,
   };

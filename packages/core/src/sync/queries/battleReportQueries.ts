@@ -1,5 +1,4 @@
-import { Entity } from "@latticexyz/recs";
-import { Table } from "@latticexyz/store/internal";
+import { ContractTableDefs, Entity } from "@primodiumxyz/reactive-tables";
 import { DecodedIndexerQuery } from "@primodiumxyz/sync-stack/types";
 import { Hex } from "viem";
 
@@ -8,7 +7,7 @@ export const getBattleReportQuery = ({
   playerEntity,
   worldAddress,
 }: {
-  tables: Record<string, Table>;
+  tables: ContractTableDefs;
   worldAddress: Hex;
   playerEntity: Entity;
 }): DecodedIndexerQuery => {

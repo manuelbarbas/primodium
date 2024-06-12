@@ -1,4 +1,4 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { ResourceEnumLookup } from "@/lib";
 import { Tables } from "@/lib/types";
 

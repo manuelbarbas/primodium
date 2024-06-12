@@ -1,9 +1,9 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { EResource } from "contracts/config/enums"; // Assuming EResource is imported this way
 import { Hex } from "viem";
 import { MULTIPLIER_SCALE } from "@/lib/constants";
-
 import { Tables } from "@/lib/types";
+
 export function createDefenseUtils(tables: Tables) {
   /** Get defense points and multiplier for a rock */
   function getRockDefense(rockEntity: Entity) {

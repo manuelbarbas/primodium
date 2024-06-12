@@ -1,4 +1,4 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Hex } from "viem";
 import { entityToAddress } from "@/utils/global/common";
 

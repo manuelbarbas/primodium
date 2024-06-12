@@ -1,5 +1,5 @@
 import { bigIntMax } from "@latticexyz/common/utils";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
 import { EntityType, SPEED_SCALE } from "@/lib/constants";
 import { useCore } from "@/react";

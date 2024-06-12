@@ -1,5 +1,5 @@
+import { ContractTableDefs } from "@primodiumxyz/reactive-tables";
 import { EntityType } from "@/lib/constants";
-import { Table } from "@latticexyz/store/internal";
 import { DecodedIndexerQuery } from "@primodiumxyz/sync-stack/types";
 import { Hex } from "viem";
 
@@ -7,7 +7,7 @@ export const getSecondaryQuery = ({
   tables,
   worldAddress,
 }: {
-  tables: Record<string, Table>;
+  tables: ContractTableDefs;
   worldAddress: Hex;
 }): DecodedIndexerQuery => {
   return {

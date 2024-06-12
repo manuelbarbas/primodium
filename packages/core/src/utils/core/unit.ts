@@ -1,5 +1,5 @@
+import { Entity, query } from "@primodiumxyz/reactive-tables";
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
-import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { Hex } from "viem";
 import { EntityType, UnitStorages } from "@/lib/constants";
 import { createDefenseUtils } from "./defense";
@@ -147,7 +147,10 @@ export function createUnitUtils(tables: Tables) {
    * @returns array of fleets
    */
   const getFleets = (entity: Entity): Entity[] => {
-    return [...runQuery([Has(tables.IsFleet), HasValue(tables.FleetMovement, { destination: entity })])];
+    return query({
+      with: [tables.IsFleet],
+      withProperties: [{ table: tables.FleetMovement, properties: { destination: entity } }],
+    });
   };
 
   /**
@@ -166,9 +169,10 @@ export function createUnitUtils(tables: Tables) {
     const playerEntity = tables.Account.get()?.value;
     if (!playerEntity) return [];
 
-    return [...runQuery([Has(tables.IsFleet), HasValue(tables.FleetMovement, { destination: entity })])].filter(
-      (entity) => isFleetOrbiting(entity)
-    );
+    return query({
+      with: [tables.IsFleet],
+      withProperties: [{ table: tables.FleetMovement, properties: { destination: entity } }],
+    }).filter(isFleetOrbiting);
   };
 
   const orbitRadius = 64;

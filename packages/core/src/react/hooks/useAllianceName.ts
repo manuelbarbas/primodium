@@ -1,5 +1,5 @@
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { censorText } from "@/utils/global/profanity";
-import { Entity } from "@latticexyz/recs";
 import { useMemo } from "react";
 import { useCore } from "@/react/hooks/useCore";
 import { Hex, hexToString } from "viem";

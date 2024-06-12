@@ -1,7 +1,7 @@
 import { EntityType } from "@/lib/constants";
 import { Tables } from "@/lib/types";
 import { createTrainingQueueUtils } from "@/utils/core/trainingQueue";
-import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
+import { Entity, query } from "@primodiumxyz/reactive-tables";
 import { Hex } from "viem";
 
 type ColonyShipType =
@@ -15,8 +15,10 @@ export function createColonyShipUtils(tables: Tables) {
    * Gets all colony ships and asteroids owned by a player
    */
   function getColonyShipsPlusAsteroids(playerEntity: Entity): Array<ColonyShipType> {
-    const query = [HasValue(tables.OwnedBy, { value: playerEntity }), Has(tables.Asteroid)];
-    const ownedAsteroids = runQuery(query);
+    const ownedAsteroids = query({
+      withProperties: [{ table: tables.OwnedBy, properties: { value: playerEntity } }],
+      with: [tables.Asteroid],
+    });
 
     const ret: Array<ColonyShipType> = [];
     ownedAsteroids.forEach((asteroidEntity) => {
@@ -24,10 +26,12 @@ export function createColonyShipUtils(tables: Tables) {
       // Colony ships being trained on each asteroid
       const shipsInTraining = tables.ColonyShipsInTraining.get(asteroidEntity as Entity)?.value ?? 0n;
       if (shipsInTraining > 0) {
-        const shipyards = runQuery([
-          HasValue(tables.OwnedBy, { value: asteroidEntity }),
-          HasValue(tables.BuildingType, { value: EntityType.Shipyard }),
-        ]);
+        const shipyards = query({
+          withProperties: [
+            { table: tables.OwnedBy, properties: { value: asteroidEntity } },
+            { table: tables.BuildingType, properties: { value: EntityType.Shipyard } },
+          ],
+        });
 
         shipyards.forEach((shipyardEntity) => {
           // update the training queue before calculating ships on asteroid
@@ -50,8 +54,10 @@ export function createColonyShipUtils(tables: Tables) {
       }
 
       // Fleets are owned by asteroids
-      const fleetQuery = [HasValue(tables.OwnedBy, { value: asteroidEntity }), Has(tables.IsFleet)];
-      const ownedFleets = [...runQuery(fleetQuery)];
+      const ownedFleets = query({
+        withProperties: [{ table: tables.OwnedBy, properties: { value: asteroidEntity } }],
+        with: [tables.IsFleet],
+      });
 
       for (let j = 0; j < ownedFleets.length; j++) {
         const shipsOnFleet =

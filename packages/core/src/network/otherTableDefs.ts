@@ -6,7 +6,7 @@ const CallWithSignatureNoncesTableId = resourceToHex({ type: "table", namespace:
 /**
  * Other tables that are registered after deployed and therefore are not part of the core tables
  */
-export const otherTables = {
+export const otherTableDefs = {
   UserDelegationControl: {
     namespace: "world",
     name: "UserDelegationControl",

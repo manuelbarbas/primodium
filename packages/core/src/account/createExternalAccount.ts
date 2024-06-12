@@ -41,6 +41,7 @@ export function createExternalAccount(coreConfig: CoreConfig, address: Address):
   });
   const walletClient = createWalletClient({
     ...clientOptions,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     transport: custom((window as unknown as { ethereum: any }).ethereum),
   });
 
