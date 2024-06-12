@@ -1,8 +1,8 @@
+import { Core } from "@primodiumxyz/core";
 import { toast } from "react-toastify";
 import { CallExecutionError, ContractFunctionExecutionError, Hex, PublicClient, TransactionReceipt } from "viem";
-import { MUD } from "../types";
 
-export async function _execute({ network: { waitForTransaction, publicClient } }: MUD, txPromise: Promise<Hex>) {
+export async function _execute({ network: { waitForTransaction, publicClient } }: Core, txPromise: Promise<Hex>) {
   let receipt: TransactionReceipt | undefined = undefined;
 
   try {

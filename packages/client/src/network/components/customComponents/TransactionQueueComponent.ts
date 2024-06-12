@@ -11,7 +11,7 @@ export type MetadataTypes = {
 };
 
 export type TxQueueOptions<T extends keyof MetadataTypes> = {
-  id: Entity;
+  id: string;
   force?: true;
   type?: T;
   metadata?: MetadataTypes[T];
@@ -32,10 +32,10 @@ export function createTransactionQueueComponent<M extends Metadata>(options?: Op
 
   // Add a function to the queue
   async function enqueue<T extends keyof MetadataTypes>(fn: () => Promise<void>, options: TxQueueOptions<T>) {
-    if (!options.force && component.has(options.id)) return;
+    if (!options.force && component.has(options.id as Entity)) return;
 
     queue.push({
-      id: options.id,
+      id: options.id as Entity,
       fn,
     });
 
@@ -44,7 +44,7 @@ export function createTransactionQueueComponent<M extends Metadata>(options?: Op
         metadata: JSON.stringify(options?.metadata),
         type: options?.type,
       },
-      options.id
+      options.id as Entity
     );
 
     await run();

@@ -1,8 +1,6 @@
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 
 import { Tooltip } from "@/components/core/Tooltip";
-// import { grantAccessWithSignature } from "@/network/setup/contractCalls/access";
-// import { spawn } from "@/network/setup/contractCalls/spawn";
 import { findEntriesWithPrefix } from "@/util/localStorage";
 import { useEffect, useState } from "react";
 import { FaExclamationTriangle, FaInfoCircle } from "react-icons/fa";
@@ -13,6 +11,7 @@ import { useAccountClient, useCore } from "@primodiumxyz/core/react";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { defaultEntity } from "@primodiumxyz/reactive-tables";
 import { STORAGE_PREFIX } from "@primodiumxyz/core";
+import { useContractCalls } from "@/hooks/useContractCalls";
 
 export const Enter: React.FC = () => {
   const { tables } = useCore();
@@ -20,6 +19,8 @@ export const Enter: React.FC = () => {
     playerAccount: { entity: playerEntity },
     sessionAccount,
   } = useAccountClient();
+
+  const { grantAccessWithSignature, spawn } = useContractCalls();
   const navigate = useNavigate();
   const location = useLocation();
   const [showingToast, setShowingToast] = useState(false);
@@ -86,7 +87,7 @@ export const Enter: React.FC = () => {
   const handlePlay = async () => {
     const hasSpawned = !!tables.Home.get(playerEntity)?.value;
     if (!hasSpawned) {
-      // await spawn(mud);
+      await spawn();
     }
     navigate("/game" + location.search);
   };
@@ -97,7 +98,7 @@ export const Enter: React.FC = () => {
     const account = privateKeyToAccount(privateKey);
     localStorage.setItem(STORAGE_PREFIX + account.address, privateKey);
 
-    // await grantAccessWithSignature(mud, privateKey, { id: defaultEntity });
+    await grantAccessWithSignature(privateKey, { id: defaultEntity });
   };
 
   return (

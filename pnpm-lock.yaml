@@ -168,8 +168,8 @@ importers:
         specifier: ^1.0.15
         version: 1.0.15(@types/react@18.2.48)(csstype@3.1.3)(typescript@5.3.3)(zod@3.23.8)
       '@primodiumxyz/reactive-tables':
-        specifier: ^2.0.5
-        version: 2.0.5(prettier@2.8.4)(react-dom@18.2.0)(typescript@5.3.3)(zod@3.23.8)
+        specifier: ^2.0.6
+        version: 2.0.6(prettier@2.8.4)(react-dom@18.2.0)(typescript@5.3.3)(zod@3.23.8)
       '@primodiumxyz/sync-stack':
         specifier: ^0.6.6
         version: 0.6.6(typescript@5.3.3)
@@ -479,8 +479,8 @@ importers:
         specifier: ^1.11.10
         version: 1.11.11
       obscenity:
-        specifier: ^0.1.4
-        version: 0.1.4
+        specifier: ^0.2.1
+        version: 0.2.1
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -6975,8 +6975,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@primodiumxyz/reactive-tables@2.0.5(prettier@2.8.4)(react-dom@18.2.0)(typescript@5.3.3)(zod@3.23.8):
-    resolution: {integrity: sha512-evKGqDGTE6V8ID3BJJdZg5I4TnW1/PfpegZqLL1VaZwjc5Dk4JWe6oZCv4DMUeYpJeaUG9z5ULyitoJgKDWm6Q==}
+  /@primodiumxyz/reactive-tables@2.0.6(prettier@2.8.4)(react-dom@18.2.0)(typescript@5.3.3)(zod@3.23.8):
+    resolution: {integrity: sha512-c26BY+GUr43GBC7vJ7zophdxSCBZgQK7xLsHwuKRZ9QzLNvoBxd/9B7HyOLGEMckppVxW706FyxS5NEu2gGR6w==}
     engines: {node: 20.x, pnpm: 8.x}
     dependencies:
       '@latticexyz/common': 2.0.9(typescript@5.3.3)(zod@3.23.8)
@@ -6988,7 +6988,7 @@ packages:
       fast-deep-equal: 3.1.3
       mobx: 6.12.3
       react: 18.3.1
-      rxjs: 7.8.1
+      rxjs: 7.5.5
       tinybase: 4.8.11(prettier@2.8.4)(react-dom@18.2.0)(react@18.3.1)
       viem: 2.9.20(typescript@5.3.3)(zod@3.23.8)
     transitivePeerDependencies:
@@ -16538,6 +16538,11 @@ packages:
   /obscenity@0.1.4:
     resolution: {integrity: sha512-Uw0uCWcwF038YLIiYjdjXZ7fn5WKDEqMVZ2xIs9/dSm1Ho0+EpZANOzO/6rmu/ziRRXaopbPCeh5hid/O8zdZw==}
     engines: {node: '>=12.0.0'}
+    dev: false
+
+  /obscenity@0.2.1:
+    resolution: {integrity: sha512-84l2MZo41ZipfgYgYdRc3FNcktS/KCyun4LZSGgwkJD++BdMM4d+95fkKqWtxasSdfNKWHxdd6bswbEg0UtdXQ==}
+    engines: {node: '>=14.0.0'}
     dev: false
 
   /ofetch@1.3.3:

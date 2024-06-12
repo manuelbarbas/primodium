@@ -1,8 +1,9 @@
+import { useContractCalls } from "@/hooks/useContractCalls";
 import { useMud } from "src/hooks";
-import { increment } from "src/network/setup/contractCalls/increment";
 
 export function Increment() {
   const { components } = useMud();
+  const { increment } = useContractCalls();
 
   const counter = components.Counter.use();
   const doubleCounter = components.DoubleCounter.use();
@@ -21,7 +22,7 @@ export function Increment() {
         <br />
         Double Counter!: <span>{doubleCounter?.value.toString() ?? "??"}</span>
       </div>
-      <button type="button" onClick={() => increment(mud)}>
+      <button type="button" onClick={() => increment()}>
         Increment
       </button>
     </div>

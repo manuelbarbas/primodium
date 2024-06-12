@@ -3,7 +3,7 @@ import { Card, SecondaryCard } from "@/components/core/Card";
 import { BattleDetails } from "@/components/hud/global/modals/battle-reports/BattleDetails";
 import { BattleButton, ErrorScreen, LoadingScreen } from "@/components/hud/global/modals/battle-reports/BattleReports";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { spawn } from "@/network/setup/contractCalls/spawn";
+import { useContractCalls } from "@/hooks/useContractCalls";
 import { hydrateBattleReports } from "@/network/sync/indexer";
 import { Entity } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
@@ -15,6 +15,7 @@ import { components } from "src/network/components";
 
 export const YouDied = () => {
   const mud = useMud();
+  const { spawn } = useContractCalls();
   const {
     playerAccount: { entity: playerEntity },
   } = mud;
@@ -37,7 +38,7 @@ export const YouDied = () => {
       </div>
       <div className="w-full grid place-items-center">
         <TransactionQueueMask queueItemId={singletonEntity}>
-          <Button variant="secondary" size="md" onClick={() => spawn(mud)} className="!w-56">
+          <Button variant="secondary" size="md" onClick={() => spawn()} className="!w-56">
             Respawn
           </Button>
         </TransactionQueueMask>

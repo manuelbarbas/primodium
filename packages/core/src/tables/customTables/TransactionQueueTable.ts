@@ -3,7 +3,7 @@ import { BaseTableMetadata, createLocalTable, Entity, TableOptions, Type } from 
 import { CreateNetworkResult } from "@/lib/types";
 import { TxQueueOptions } from "@/tables/types";
 
-export function createTransactionQueueTable<M extends BaseTableMetadata>(
+export function createTransactionQueueTable<M extends BaseTableMetadata = BaseTableMetadata>(
   { world }: CreateNetworkResult,
   options?: TableOptions<M>
 ) {
