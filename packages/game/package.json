@@ -7,8 +7,8 @@
     "@latticexyz/recs": "2.0.9",
     "@latticexyz/store-sync": "2.0.9",
     "@primodiumxyz/assets": "1.0.0",
+    "@primodiumxyz/core": "link:../core",
     "@primodiumxyz/engine": "1.0.0",
-    "@primodiumxyz/core": "1.0.0",
     "@types/lodash": "^4.14.195",
     "@types/react": "^18.0.26",
     "contracts": "0.0.0",
@@ -24,6 +24,6 @@
     "@types/node": "^18.19.3",
     "simple-zustand-devtools": "^1.1.0",
     "ts-node": "^10.9.2",
-    "typescript": "^4.9.5"
+    "typescript": "5.5.0-beta"
   }
 }
