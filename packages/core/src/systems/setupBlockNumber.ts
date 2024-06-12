@@ -1,10 +1,10 @@
-import { namespaceWorld } from "@latticexyz/recs";
+import { namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { Core } from "@/lib/types";
 
 export const setupBlockNumber = (core: Core) => {
   const {
     network: { world, latestBlockNumber$: blockNumber$ },
-    components,
+    tables,
   } = core;
 
   const span = 100;
@@ -32,7 +32,7 @@ export const setupBlockNumber = (core: Core) => {
     const total = blockTimes.reduce((sum, time) => sum + time, 0);
     const avgBlockTime = Math.round(total / blockTimes.length);
 
-    components.BlockNumber.set({ value: blockNumber, avgBlockTime: avgBlockTime });
+    tables.BlockNumber.set({ value: blockNumber, avgBlockTime: avgBlockTime });
   });
 
   systemWorld.registerDisposer(() => blockListener.unsubscribe());

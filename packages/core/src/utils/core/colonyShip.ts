@@ -1,7 +1,7 @@
 import { EntityType } from "@/lib/constants";
-import { Components } from "@/lib/types";
+import { Tables } from "@/lib/types";
 import { createTrainingQueueUtils } from "@/utils/core/trainingQueue";
-import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
+import { Entity, query } from "@primodiumxyz/reactive-tables";
 import { Hex } from "viem";
 
 type ColonyShipType =
@@ -9,27 +9,34 @@ type ColonyShipType =
   | { type: "ship"; parentEntity: Entity }
   | { type: "training"; timeRemaining: bigint; shipyardEntity: Entity; asteroidEntity: Entity };
 
-export function createColonyShipUtils(components: Components) {
-  const { updateTrainingQueue } = createTrainingQueueUtils(components);
+export function createColonyShipUtils(tables: Tables) {
+  const { updateTrainingQueue } = createTrainingQueueUtils(tables);
+  /**
+   * Gets all colony ships and asteroids owned by a player
+   */
   function getColonyShipsPlusAsteroids(playerEntity: Entity): Array<ColonyShipType> {
-    const query = [HasValue(components.OwnedBy, { value: playerEntity }), Has(components.Asteroid)];
-    const ownedAsteroids = runQuery(query);
+    const ownedAsteroids = query({
+      withProperties: [{ table: tables.OwnedBy, properties: { value: playerEntity } }],
+      with: [tables.Asteroid],
+    });
 
     const ret: Array<ColonyShipType> = [];
     ownedAsteroids.forEach((asteroidEntity) => {
       ret.push({ type: "asteroid", asteroidEntity: asteroidEntity as Entity });
       // Colony ships being trained on each asteroid
-      const shipsInTraining = components.ColonyShipsInTraining.get(asteroidEntity as Entity)?.value ?? 0n;
+      const shipsInTraining = tables.ColonyShipsInTraining.get(asteroidEntity as Entity)?.value ?? 0n;
       if (shipsInTraining > 0) {
-        const shipyards = runQuery([
-          HasValue(components.OwnedBy, { value: asteroidEntity }),
-          HasValue(components.BuildingType, { value: EntityType.Shipyard }),
-        ]);
+        const shipyards = query({
+          withProperties: [
+            { table: tables.OwnedBy, properties: { value: asteroidEntity } },
+            { table: tables.BuildingType, properties: { value: EntityType.Shipyard } },
+          ],
+        });
 
         shipyards.forEach((shipyardEntity) => {
           // update the training queue before calculating ships on asteroid
           updateTrainingQueue(shipyardEntity as Entity);
-          const queue = components.TrainingQueue.get(shipyardEntity as Entity);
+          const queue = tables.TrainingQueue.get(shipyardEntity as Entity);
           if (!queue || queue?.units.length == 0) return;
           ret.push({
             type: "training",
@@ -39,7 +46,7 @@ export function createColonyShipUtils(components: Components) {
           });
         });
       }
-      const hangar = components.Hangar.get(asteroidEntity as Entity);
+      const hangar = tables.Hangar.get(asteroidEntity as Entity);
       if (hangar) {
         const shipIndex = hangar.units.indexOf(EntityType.ColonyShip);
         const shipsOnAsteroid = shipIndex == -1 ? 0n : hangar.counts[shipIndex];
@@ -47,13 +54,15 @@ export function createColonyShipUtils(components: Components) {
       }
 
       // Fleets are owned by asteroids
-      const fleetQuery = [HasValue(components.OwnedBy, { value: asteroidEntity }), Has(components.IsFleet)];
-      const ownedFleets = [...runQuery(fleetQuery)];
+      const ownedFleets = query({
+        withProperties: [{ table: tables.OwnedBy, properties: { value: asteroidEntity } }],
+        with: [tables.IsFleet],
+      });
 
       for (let j = 0; j < ownedFleets.length; j++) {
         const shipsOnFleet =
-          components.UnitCount.getWithKeys({ entity: ownedFleets[j] as Hex, unit: EntityType.ColonyShip as Hex })
-            ?.value ?? 0n;
+          tables.UnitCount.getWithKeys({ entity: ownedFleets[j] as Hex, unit: EntityType.ColonyShip as Hex })?.value ??
+          0n;
         for (let k = 0; k < shipsOnFleet; k++) ret.push({ type: "ship", parentEntity: ownedFleets[j] as Entity });
       }
     });

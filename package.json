@@ -5,6 +5,7 @@
     "build": "pnpm recursive run build",
     "clean": "bash clean.sh",
     "clean:indexer": "pnpm clean-local-docker-indexer",
+    "clean:modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + && find . -name 'pnpm-lock.yaml' -type f -prune -exec rm -rf '{}' +",
     "deploy:caldera": "pnpm --filter 'contracts' deploy:caldera",
     "deploy:caldera-sepolia": "pnpm --filter 'contracts' deploy:caldera-sepolia",
     "deploy:redstone-holesky": "pnpm --filter 'contracts' deploy:redstone-holesky",
@@ -42,10 +43,17 @@
     "lint-staged": ">=10",
     "rimraf": "^3.0.2",
     "run-pty": "4.0.4",
-    "typescript": "5.1.6"
+    "semantic-release": "^24.0.0",
+    "semantic-release-monorepo": "^8.0.2",
+    "typescript": "5.5.0-beta"
   },
   "engines": {
     "node": "18.x",
     "pnpm": "8.x"
+  },
+  "paths": {
+    "@primodiumxyz/core": [
+      "packages/core/src"
+    ]
   }
 }

@@ -1,4 +1,4 @@
-import { Entity, Has, HasValue, defineComponentSystem, namespaceWorld, runQuery } from "@latticexyz/recs";
+import { Entity, namespaceWorld, query } from "@primodiumxyz/reactive-tables";
 import { Hex } from "viem";
 import { EntityType } from "@/lib/constants";
 import { Core } from "@/lib/types";
@@ -6,35 +6,44 @@ import { Core } from "@/lib/types";
 export function setupHangar(core: Core) {
   const {
     network: { world },
-    components,
+    tables,
     utils: { getUnitTrainingTime, getAsteroidDroidCount },
   } = core;
   const systemWorld = namespaceWorld(world, "coreSystems");
 
-  defineComponentSystem(systemWorld, components.SelectedRock, ({ value: [value] }) => {
-    if (!value?.value) return;
-    createHangar(value.value);
+  tables.SelectedRock.watch({
+    world: systemWorld,
+    onUpdate: ({ properties: { current } }) => {
+      if (!current?.value) return;
+      createHangar(current.value);
+    },
   });
 
-  defineComponentSystem(systemWorld, components.HoverEntity, ({ value: [value] }) => {
-    const entity = value?.value;
-    if (!entity) return;
-    if (components.Asteroid.has(entity)) createHangar(entity);
+  tables.HoverEntity.watch({
+    world: systemWorld,
+    onUpdate: ({ properties: { current } }) => {
+      const entity = current?.value;
+      if (!entity) return;
+      if (tables.Asteroid.has(entity)) createHangar(entity);
+    },
   });
 
-  defineComponentSystem(systemWorld, components.Time, () => {
-    const selectedRock = components.ActiveRock.get()?.value as Entity;
-    if (selectedRock) createHangar(selectedRock);
-    const hoverEntity = components.HoverEntity.get()?.value as Entity;
-    if (components.Asteroid.has(hoverEntity)) createHangar(hoverEntity);
+  tables.Time.watch({
+    world: systemWorld,
+    onUpdate: () => {
+      const selectedRock = tables.ActiveRock.get()?.value as Entity;
+      if (selectedRock) createHangar(selectedRock);
+      const hoverEntity = tables.HoverEntity.get()?.value as Entity;
+      if (tables.Asteroid.has(hoverEntity)) createHangar(hoverEntity);
+    },
   });
 
   function createHangar(spaceRock: Entity) {
     const units: Map<Entity, bigint> = new Map();
 
     // get all units and find their counts on the space rock
-    components.P_UnitPrototypes.get()?.value.forEach((entity) => {
-      const unitCount = components.UnitCount.getWithKeys({
+    tables.P_UnitPrototypes.get()?.value.forEach((entity) => {
+      const unitCount = tables.UnitCount.getWithKeys({
         entity: spaceRock as Hex,
         unit: entity as Hex,
       })?.value;
@@ -52,37 +61,42 @@ export function setupHangar(core: Core) {
     units.set(EntityType.Droid, getAsteroidDroidCount(spaceRock));
 
     const value = { units: [...units.keys()], counts: [...units.values()] };
-    components.Hangar.set(value, spaceRock);
+    tables.Hangar.set(value, spaceRock);
     return units;
   }
 
   function getTrainedUnclaimedUnits(spaceRock: Entity) {
     const units = new Map<Entity, bigint>();
-    const query = [
-      Has(components.TrainingQueue),
-      HasValue(components.Position, {
-        parentEntity: spaceRock,
-      }),
-    ];
-    const buildings = runQuery(query);
-    const config = components.P_GameConfig.get();
+    const buildings = query({
+      with: [tables.TrainingQueue],
+      withProperties: [
+        {
+          table: tables.Position,
+          properties: {
+            parentEntity: spaceRock,
+          },
+        },
+      ],
+    });
+
+    const config = tables.P_GameConfig.get();
     if (!config) return units;
+
     buildings.forEach((building) => {
-      const owner = components.OwnedBy.get(building)?.value;
+      const owner = tables.OwnedBy.get(building)?.value;
 
       let startTime =
-        components.LastClaimedAt.get(building, { value: 0n }).value -
-        components.ClaimOffset.get(building, { value: 0n }).value;
+        tables.LastClaimedAt.get(building, { value: 0n }).value - tables.ClaimOffset.get(building, { value: 0n }).value;
 
-      const queueUnits = components.Meta_UnitProductionQueue.getWithKeys({ entity: building as Hex });
-      if (!queueUnits || !owner || !startTime) return components.Hangar.remove(building);
+      const queueUnits = tables.Meta_UnitProductionQueue.getWithKeys({ entity: building as Hex });
+      if (!queueUnits || !owner || !startTime) return tables.Hangar.remove(building);
       for (let i = queueUnits.front; i <= queueUnits.back; i++) {
-        const update = components.Value_UnitProductionQueue.getWithKeys({ entity: building as Hex, index: i });
+        const update = tables.Value_UnitProductionQueue.getWithKeys({ entity: building as Hex, index: i });
         if (!update) continue;
 
         const trainingTime = getUnitTrainingTime(owner as Entity, building, update.unitEntity as Entity);
         let trainedUnits = update.quantity;
-        const now = components.Time.get()?.value ?? 0n;
+        const now = tables.Time.get()?.value ?? 0n;
         if (trainingTime > 0) trainedUnits = (now - startTime) / trainingTime;
 
         if (trainedUnits == 0n) return;

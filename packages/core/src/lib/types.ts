@@ -1,41 +1,150 @@
-import { KeySchema } from "@latticexyz/protocol-parser/internal";
-import { Component, Schema } from "@latticexyz/recs";
-import { ChainConfig } from "@/network/config/chainConfigs";
-import { createNetwork } from "@/network/createNetwork";
-import { createComponents } from "@/components/createComponents";
-import { createExternalAccount } from "@/account/createExternalAccount";
-import { createLocalAccount } from "@/account/createLocalAccount";
-import { Address, Hex } from "viem";
+import {
+  Account,
+  Address,
+  CustomTransport,
+  FallbackTransport,
+  GetContractReturnType,
+  Hex,
+  PublicClient,
+  WalletClient,
+} from "viem";
 import { createUtils } from "@/utils/core";
 import { createSync } from "@/sync";
+import { ContractWrite } from "@latticexyz/common";
+import { ReplaySubject, Subject } from "rxjs";
+import { AllTableDefs, ContractTables, Entity, World, WrapperResult } from "@primodiumxyz/reactive-tables";
 
+import CallWithSignatureAbi from "@latticexyz/world-modules/out/Unstable_CallWithSignatureSystem.sol/Unstable_CallWithSignatureSystem.abi.json";
+import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
+import setupCoreTables from "@/tables/coreTables";
+import { SyncTables } from "@/tables/syncTables";
+import { ChainConfig } from "@/network/config/chainConfigs";
+import { Recs } from "@/recs/setupRecs";
+import { otherTableDefs } from "@/network/otherTableDefs";
+import mudConfig from "contracts/mud.config";
+
+/**
+ * Core configuration
+ */
 export type CoreConfig = {
+  /**
+   * Chain configuration. Default configurations can be found in the {@link chainConfigs object chainConfigs} object
+   */
   chain: ChainConfig;
   worldAddress: Address;
   initialBlockNumber?: bigint;
+  /**
+   * Used to fetch player data on initial sync when syncing from indexer
+   */
   playerAddress?: Address;
+
+  /**
+   * Used to automatically drip eth to accounts in dev mode.
+   *
+   * If using anvil, this value is 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+   */
   devPrivateKey?: Hex;
+  /**
+   * Used to fetch player ens names
+   */
   accountLinkUrl?: string;
 
+  /**
+   * Run the default initial sync? (default: false)
+   *
+   * If using RPC, will hydrate full game state.
+   * If using indexer, default sync only fetches prototype data and player data (if playerAddress is set)
+   */
   runSync?: boolean;
+  /**
+   * Run the default initial systems? (default: false)
+   *
+   * Setups up systems to keep core tables and simplified tables in sync with contract tables
+   */
   runSystems?: boolean;
 };
 
-export type CreateNetworkResult = Awaited<ReturnType<typeof createNetwork>>;
-export type Components = ReturnType<typeof createComponents>;
+type MudConfig = typeof mudConfig;
+
+/**
+ * @typedef {Object} CreateNetworkResult
+ * @property {World} world - The world instance.
+ * @property {MudConfig} mudConfig - Configuration for MUD.
+ * @property {PublicClient<FallbackTransport, ChainConfig, undefined>} publicClient - The public client.
+ * @property {Clock} clock - The clock instance.
+ * @property {WrapperResult<MudConfig, typeof otherTableDefs>} - The wrapper result containing all tables and their definitions and the storage adapter.
+ *
+ * Contains contract table metadata.
+ *
+ * See [mud.config.ts](https://github.com/primodiumxyz/contracts/blob/main/mud.config.ts#L85-L97) for more details.
+ */
+
+export type CreateNetworkResult = Omit<Recs<MudConfig, typeof otherTableDefs>, "tables"> & {
+  /** @property {World} world - The world instance. */
+  world: World;
+  mudConfig: MudConfig;
+  publicClient: PublicClient<FallbackTransport, ChainConfig, undefined>;
+  clock: Clock;
+} & WrapperResult<MudConfig, typeof otherTableDefs> & {
+    tables: ContractTables<AllTableDefs<MudConfig, typeof otherTableDefs>> & SyncTables;
+  };
+export type Tables = CreateNetworkResult["tables"] & ReturnType<typeof setupCoreTables>;
 export type Utils = ReturnType<typeof createUtils>;
 export type Sync = ReturnType<typeof createSync>;
 
 export type Core = {
+  /**
+   * Chain configuration. Default configurations can be found in the {@link chainConfigs object chainConfigs} object
+   */
   config: CoreConfig;
   network: CreateNetworkResult;
-  components: Components;
+  /**
+   * Tables contain data and methods to interact with game state. See [reactive tables](https://github.com/primodiumxyz/reactive-tables)
+   */
+  tables: Tables;
   utils: Utils;
   sync: Sync;
 };
 
-export type LocalAccount = Awaited<ReturnType<typeof createLocalAccount>>;
-export type ExternalAccount = Awaited<ReturnType<typeof createExternalAccount>>;
+export type Clock = {
+  currentTime: number;
+  lastUpdateTime: number;
+  time$: ReplaySubject<number>;
+  dispose: () => void;
+  update: (time: number) => void;
+};
+
+/**
+ * World Abi. Combination of IWorld abi and CallWithSignature abi.
+ */
+export type WorldAbiType = ((typeof IWorldAbi)[number] | (typeof CallWithSignatureAbi)[number])[];
+
+type _Account<
+  IsLocalAccount extends boolean = false,
+  TPublicClient extends PublicClient = PublicClient<FallbackTransport, ChainConfig>,
+  TWalletClient extends WalletClient = IsLocalAccount extends true
+    ? WalletClient<FallbackTransport, ChainConfig, Account>
+    : WalletClient<CustomTransport, ChainConfig, Account>
+> = {
+  worldContract: GetContractReturnType<
+    WorldAbiType,
+    {
+      public: TPublicClient;
+      wallet: TWalletClient;
+    },
+    Address
+  >;
+  account: Account;
+  address: Address;
+  publicClient: TPublicClient;
+  walletClient: TWalletClient;
+  entity: Entity;
+  write$: Subject<ContractWrite>;
+  privateKey: IsLocalAccount extends true ? Hex : null;
+};
+
+export type ExternalAccount = _Account<false>;
+export type LocalAccount = _Account<true>;
 
 export interface AccountClient {
   sessionAccount: LocalAccount | null;
@@ -45,15 +154,6 @@ export interface AccountClient {
   removeSessionAccount: () => void;
   requestDrip: (address: Address) => void;
 }
-
-export type ContractComponent<S extends Schema = Schema, TKeySchema extends KeySchema = KeySchema> = Component<
-  S,
-  {
-    componentName: string;
-    keySchema: TKeySchema;
-    valueSchema: Record<string, string>;
-  }
->;
 
 export type Dimensions = { width: number; height: number };
 
@@ -71,6 +171,7 @@ export enum SyncStep {
   Syncing,
   Error,
   Complete,
+  Live,
 }
 
 export enum Action {

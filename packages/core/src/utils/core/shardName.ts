@@ -1,7 +1,7 @@
-import { Components } from "@/lib/types";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { Tables } from "@/lib/types";
 
-export function createShardNameUtils(components: Components) {
+export function createShardNameUtils(tables: Tables) {
   const shards = [
     {
       name: "Shard of Bo Lu",
@@ -57,23 +57,29 @@ export function createShardNameUtils(components: Components) {
     },
   ];
 
-  const entityToShardData = (entity: Entity) => {
-    const shardIndex = components.ShardAsteroidIndex.get(entity)?.value;
+  /**
+   * Gets shard data for a given entity
+   */
+  const getShardData = (entity: Entity) => {
+    const shardIndex = tables.ShardAsteroidIndex.get(entity)?.value;
     if (shardIndex !== undefined) {
       return shards[Number(shardIndex) % shards.length];
     }
     return undefined;
   };
 
-  const entityToShardName = (entity: Entity) => {
-    const shardIndex = components.ShardAsteroidIndex.get(entity)?.value;
+  /**
+   * Gets shard name for a given entity
+   */
+  const getShardName = (entity: Entity) => {
+    const shardIndex = tables.ShardAsteroidIndex.get(entity)?.value;
     if (shardIndex == undefined) return "UNKNOWN";
     const shardData = shards[Number(shardIndex) % shards.length];
     return shardData.name;
   };
 
   return {
-    entityToShardData,
-    entityToShardName,
+    getShardData,
+    getShardName,
   };
 }

@@ -1,9 +1,11 @@
-import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
+import { namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { Core, SyncSourceType } from "@/lib/types";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function debounce(func: (...args: any[]) => void, wait: number) {
   let timeout: ReturnType<typeof setTimeout>;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return function (...args: any[]) {
     const later = () => {
       clearTimeout(timeout);
@@ -18,63 +20,67 @@ function debounce(func: (...args: any[]) => void, wait: number) {
 export const setupSync = (core: Core) => {
   const {
     network: { world },
-    components,
+    tables,
     sync: { syncAsteroidData, syncActiveAsteroid, syncFleetData },
   } = core;
 
   const systemWorld = namespaceWorld(world, "coreSystems");
 
   //only run sync systems if we are using the indexer
-  if (components.SyncSource.get()?.value !== SyncSourceType.Indexer) return;
+  if (tables.SyncSource.get()?.value !== SyncSourceType.Indexer) return;
 
-  defineComponentSystem(systemWorld, components.SelectedRock, ({ value }) => {
-    const spaceRock = value[0]?.value;
+  tables.SelectedRock.watch({
+    world: systemWorld,
+    onUpdate: ({ properties }) => {
+      const spaceRock = properties.current?.value;
+      if (!spaceRock || properties.current?.value === properties.prev?.value) return;
 
-    if (!spaceRock || value[0]?.value === value[1]?.value) return;
-
-    syncAsteroidData(spaceRock);
+      syncAsteroidData(spaceRock);
+    },
   });
 
-  defineComponentSystem(systemWorld, components.ActiveRock, ({ value }) => {
-    const spaceRock = value[0]?.value;
+  tables.ActiveRock.watch({
+    world: systemWorld,
+    onUpdate: ({ properties }) => {
+      const spaceRock = properties.current?.value;
+      if (!spaceRock || properties.current?.value === properties.prev?.value) return;
 
-    if (!spaceRock || value[0]?.value === value[1]?.value) return;
-
-    syncActiveAsteroid(spaceRock);
+      syncActiveAsteroid(spaceRock);
+    },
   });
 
-  defineComponentSystem(systemWorld, components.SelectedFleet, ({ value }) => {
-    const fleet = value[0]?.value;
+  tables.SelectedFleet.watch({
+    world: systemWorld,
+    onUpdate: ({ properties }) => {
+      const fleet = properties.current?.value;
+      if (!fleet || properties.current?.value === properties.prev?.value) return;
 
-    if (!fleet || value[0]?.value === value[1]?.value) return;
-
-    syncFleetData(fleet);
+      syncFleetData(fleet);
+    },
   });
 
-  defineComponentSystem(
-    systemWorld,
-    components.HoverEntity,
-    debounce(({ value }) => {
-      const hoverEntity = value[0]?.value;
-
-      if (!hoverEntity || value[0]?.value === value[1]?.value) return;
+  tables.HoverEntity.watch({
+    world: systemWorld,
+    onUpdate: debounce(({ properties }) => {
+      const hoverEntity = properties.current?.value;
+      if (!hoverEntity || properties.current?.value === properties.prev?.value) return;
 
       switch (true) {
-        case components.Asteroid.has(hoverEntity):
+        case tables.Asteroid.has(hoverEntity):
           //sync asteroid info
           syncAsteroidData(hoverEntity);
           break;
-        case components.ShardAsteroid.has(hoverEntity):
+        case tables.ShardAsteroid.has(hoverEntity):
           //sync shardasteroid info
           syncAsteroidData(hoverEntity, true); // shard = true
           break;
-        case components.FleetMovement.has(hoverEntity):
+        case tables.FleetMovement.has(hoverEntity):
           //sync fleet info
           syncFleetData(hoverEntity);
           break;
         default:
           break;
       }
-    }, 250)
-  );
+    }, 250),
+  });
 };

@@ -1,8 +1,10 @@
-import { defineRxSystem, namespaceWorld } from "@latticexyz/recs";
+import { namespaceWorld } from "@primodiumxyz/reactive-tables";
+import { systems } from "@primodiumxyz/reactive-tables/utils";
 import { Core } from "@/lib/types";
+const { defineRxSystem } = systems;
 
 export function setupTime({
-  components,
+  tables,
   network: {
     world,
     clock: { time$ },
@@ -10,6 +12,6 @@ export function setupTime({
 }: Core) {
   const systemWorld = namespaceWorld(world, "coreSystems");
   defineRxSystem(systemWorld, time$, (time) => {
-    components.Time.set({ value: BigInt(time) });
+    tables.Time.set({ value: BigInt(time) });
   });
 }

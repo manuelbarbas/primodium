@@ -1,7 +1,19 @@
 import { Coord } from "@/lib/types";
 
+/**
+ * Converts degrees to radians.
+ * @param degrees - The angle in degrees.
+ * @returns The angle in radians.
+ */
 export const deg2rad = (degrees: number) => degrees * (Math.PI / 180);
 
+/**
+ * Calculate the position by vector.
+ * @param distance - The distance.
+ * @param direction - The direction.
+ * @param origin - The origin.
+ * @returns The position.
+ */
 export function getPositionByVector(distance: number, direction: number, origin: Coord = { x: 0, y: 0 }) {
   direction = direction % 360;
   const flip = direction >= 180;
@@ -18,6 +30,12 @@ export function getPositionByVector(distance: number, direction: number, origin:
   };
 }
 
+/**
+ * Calculate the angle between two points.
+ * @param p1 - The first point.
+ * @param p2 - The second point.
+ * @returns The angle between the points.
+ */
 export function getAngleBetweenPoints(p1: Coord, p2: Coord) {
   const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
   return (angle * 180) / Math.PI;
@@ -40,7 +58,11 @@ const PI = BigInt("3141592653589793238");
 export const TWO_PI = TWO * PI;
 const PI_OVER_TWO: bigint = PI / TWO;
 
-// in radians
+/**
+ * Calculate the sine of an angle in degrees.
+ * @param _angle - The angle in degrees.
+ * @returns The sine value in radians.
+ */
 export function solSinDegrees(_angle: number): bigint {
   const angle = BigInt(Math.round(_angle) % 360);
   const angleDegsTimes10000 = angle * BigInt(1745);
@@ -50,6 +72,12 @@ export function solSinDegrees(_angle: number): bigint {
   const value = solSin(angleRads);
   return value;
 }
+
+/**
+ * Calculate the cosine of an angle in degrees.
+ * @param _angle - The angle in degrees.
+ * @returns The cosine value.
+ */
 export function solCosDegrees(_angle: number) {
   const angle = BigInt(Math.round(_angle) % 360);
   const angleDegsTimes10000 = angle * BigInt(1745);
@@ -60,6 +88,11 @@ export function solCosDegrees(_angle: number) {
   return value;
 }
 
+/**
+ * Calculate the sine of an angle in radians.
+ * @param angle - The angle in radians.
+ * @returns The sine value.
+ */
 export function solSin(angle: bigint): bigint {
   angle = (ANGLES_IN_CYCLE * (angle % TWO_PI)) / TWO_PI;
 
@@ -79,6 +112,11 @@ export function solSin(angle: bigint): bigint {
   return (sine * TENe18) / BigInt(2147483647);
 }
 
+/**
+ * Calculate the cosine of an angle.
+ * @param _angle - The angle in radians.
+ * @returns The cosine value.
+ */
 export function solCos(_angle: bigint) {
   return solSin(_angle + PI_OVER_TWO);
 }

@@ -1,7 +1,7 @@
 import { AbiParametersToPrimitiveTypes, ExtractAbiFunction } from "abitype";
 import { Abi, EncodeFunctionDataParameters, Hex, type ContractFunctionName } from "viem";
 import { encodeFunctionData } from "./encodeFunctionData";
-import { Components } from "@/lib/types";
+import { Tables } from "@/lib/types";
 import { WorldAbi } from "@/lib/WorldAbi";
 
 export type SystemCall<abi extends Abi, functionName extends ContractFunctionName<abi>> = EncodeFunctionDataParameters<
@@ -13,17 +13,17 @@ export type SystemCall<abi extends Abi, functionName extends ContractFunctionNam
 
 /** Encode a system call to be passed as arguments into `World.call` */
 export function encodeSystemCall<abi extends Abi, functionName extends ContractFunctionName<abi>>({
-  components,
+  tables,
   abi,
   systemId,
   functionName,
   args,
-}: SystemCall<abi, functionName> & { components: Components }): AbiParametersToPrimitiveTypes<
+}: SystemCall<abi, functionName> & { tables: Tables }): AbiParametersToPrimitiveTypes<
   ExtractAbiFunction<typeof WorldAbi, "call">["inputs"]
 > {
   return [
     systemId,
-    encodeFunctionData<abi, functionName>(components, {
+    encodeFunctionData<abi, functionName>(tables, {
       abi,
       functionName,
       args,

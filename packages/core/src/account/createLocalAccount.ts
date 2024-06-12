@@ -3,14 +3,21 @@ import { transactionQueue, writeObserver } from "@latticexyz/common/actions";
 import { Subject } from "rxjs";
 import { Hex, createPublicClient, createWalletClient, fallback, getContract, http } from "viem";
 import { generatePrivateKey } from "viem/accounts";
-import { CoreConfig } from "@/lib/types";
+import { CoreConfig, LocalAccount } from "@/lib/types";
 import { STORAGE_PREFIX } from "@/lib/constants";
 import { WorldAbi } from "@/lib/WorldAbi";
 import { normalizeAddress } from "@/utils/global/common";
 import { addressToEntity } from "@/utils/global/encode";
 import { storage } from "@/utils/global/storage";
 
-export function createLocalAccount(coreConfig: CoreConfig, privateKey?: Hex, saveToStorage = true) {
+/**
+ *
+ * @param coreConfig configuration of core object
+ * @param privateKey private key of the session account. If not provided, a new private key will be generated
+ * @param saveToStorage (browser only) whether to save the private key to local storage (default: true)
+ * @returns: {@link LocalAccount}
+ */
+export function createLocalAccount(coreConfig: CoreConfig, privateKey?: Hex, saveToStorage = true): LocalAccount {
   const key = privateKey ?? generatePrivateKey();
   const localAccount = createBurnerAccount(key);
   if (saveToStorage) storage.setItem(STORAGE_PREFIX + localAccount.address, key);

@@ -1,17 +1,21 @@
 import { transportObserver } from "@latticexyz/common";
 import mudConfig from "contracts/mud.config";
 import { Hex, createPublicClient, fallback, http } from "viem";
-import { setupRecs } from "../recs/setupRecs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { createWorld } from "@latticexyz/recs";
+import { setupRecs } from "@/recs/setupRecs";
+import { createWorld } from "@primodiumxyz/reactive-tables";
 import { createClock } from "@/network/createClock";
-import { otherTables } from "@/network/otherTables";
-import { extendContractComponents } from "@/components/customComponents/extendComponents";
-import { CoreConfig } from "@/lib/types";
+import { otherTableDefs } from "@/network/otherTableDefs";
+import { CoreConfig, CreateNetworkResult } from "@/lib/types";
+import { setupSyncTables } from "@/tables/syncTables";
 
-export function createNetwork(config: CoreConfig) {
+/**
+ * Creates network object
+ *
+ * @param config configuration of core object {@link CoreConfig}
+ * @returns: {@link CreateNetworkResult}
+ */
+export function createNetwork(config: CoreConfig): CreateNetworkResult {
   const world = createWorld();
-  world.registerEntity({ id: singletonEntity });
 
   const clientOptions = {
     chain: config.chain,
@@ -21,12 +25,23 @@ export function createNetwork(config: CoreConfig) {
 
   const publicClient = createPublicClient(clientOptions);
 
-  const { components, latestBlock$, latestBlockNumber$, tables, storedBlockLogs$, waitForTransaction } = setupRecs({
+  const syncTables = setupSyncTables(world);
+  const {
+    tables,
+    tableDefs,
+    storageAdapter,
+    triggerUpdateStream,
+    latestBlock$,
+    latestBlockNumber$,
+    storedBlockLogs$,
+    waitForTransaction,
+  } = setupRecs({
     mudConfig,
     world,
     publicClient,
     address: config.worldAddress as Hex,
-    otherTables,
+    otherTableDefs,
+    syncTables,
   });
 
   const clock = createClock(world, latestBlock$, {
@@ -35,18 +50,18 @@ export function createNetwork(config: CoreConfig) {
     syncInterval: 10000,
   });
 
-  const networkResult = {
+  return {
     world,
-    tables,
+    tables: { ...tables, ...syncTables },
+    tableDefs,
+    storageAdapter,
+    triggerUpdateStream,
     publicClient,
     mudConfig,
-    components: extendContractComponents(components),
     clock,
     latestBlock$,
     latestBlockNumber$,
     storedBlockLogs$,
     waitForTransaction,
   };
-
-  return networkResult;
 }

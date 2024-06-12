@@ -6,12 +6,21 @@ const matcher = new RegExpMatcher({
   ...englishRecommendedTransformers,
 });
 
-export const isProfane = (text: string) => {
+/**
+ * Checks if the given text contains profanity.
+ * @param text - The text to check.
+ * @returns True if the text contains profanity, otherwise false.
+ */
+export const isProfane = (text: string): boolean => {
   return matcher.hasMatch(text);
 };
 
-export const censorText = (text: string) => {
+/**
+ * Censors profanity in the given text.
+ * @param text - The text to censor.
+ * @returns The censored text.
+ */
+export const censorText = (text: string): string => {
   const matches = matcher.getAllMatches(text.toString());
-
   return censor.applyTo(text, matches);
 };

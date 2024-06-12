@@ -1,14 +1,13 @@
-import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { decodeEntity } from "@latticexyz/store-sync/recs";
+import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { EPointType } from "contracts/config/enums";
 import { isPlayer } from "@/utils/global/common";
-import { EntityType, LeaderboardEntityLookup } from "@/lib/constants";
+import { EntityType, LeaderboardEntityLookup } from "@/lib";
 import { Core } from "@/lib/types";
 
 export const setupLeaderboard = (core: Core) => {
   const {
     network: { world },
-    components,
+    tables,
   } = core;
 
   const leaderboardMaps: Record<Entity, Map<Entity, bigint>> = {
@@ -29,7 +28,7 @@ export const setupLeaderboard = (core: Core) => {
       ranks.push(index == 0 ? 1 : point == points[index - 1] ? ranks[index - 1] : index + 1);
     });
 
-    components.Leaderboard.set(
+    tables.Leaderboard.set(
       {
         points,
         players,
@@ -39,20 +38,24 @@ export const setupLeaderboard = (core: Core) => {
     );
   }
 
-  defineComponentSystem(systemWorld, components.Points, ({ entity: rawEntity, value }) => {
-    const pointsValue = value[0]?.value ?? 0n;
-    const { entity, pointType } = decodeEntity(components.Points.metadata.keySchema, rawEntity);
+  tables.Points.watch({
+    world: systemWorld,
+    onUpdate: ({ entity: rawEntity, properties }) => {
+      const pointsValue = properties.current?.value ?? 0n;
+      const { entity, pointType } = tables.Points.getEntityKeys(rawEntity);
 
-    const entityIsPlayer = isPlayer(entity as Entity);
+      const entityIsPlayer = isPlayer(entity as Entity);
 
-    const leaderboardEntity = LeaderboardEntityLookup[entityIsPlayer ? "player" : "alliance"][pointType as EPointType];
-    const leaderboardMap = leaderboardMaps[leaderboardEntity];
+      const leaderboardEntity =
+        LeaderboardEntityLookup[entityIsPlayer ? "player" : "alliance"][pointType as EPointType];
+      const leaderboardMap = leaderboardMaps[leaderboardEntity];
 
-    if (!leaderboardMap) return;
+      if (!leaderboardMap) return;
 
-    leaderboardMap.set(entity as Entity, pointsValue);
+      leaderboardMap.set(entity as Entity, pointsValue);
 
-    setLeaderboard(leaderboardMap, leaderboardEntity);
+      setLeaderboard(leaderboardMap, leaderboardEntity);
+    },
   });
 
   return leaderboardMaps;

@@ -1,6 +1,7 @@
-import { World } from "@latticexyz/recs";
+import { World } from "@primodiumxyz/reactive-tables";
 import { Observable, ReplaySubject, filter, map } from "rxjs";
 import { Block } from "viem";
+import { Clock } from "@/lib";
 
 /**
  * Create a clock optimistically keeping track of the current chain time.
@@ -9,6 +10,7 @@ import { Block } from "viem";
  * @param config
  * @returns: {@link Clock}
  */
+
 export function createClock(
   world: World,
   latestBlock$: Observable<Block>,
@@ -17,7 +19,7 @@ export function createClock(
     initialTime: number;
     syncInterval: number;
   }
-) {
+): Clock {
   const { initialTime, period } = config;
 
   const clock = {

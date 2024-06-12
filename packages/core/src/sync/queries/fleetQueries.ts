@@ -1,51 +1,45 @@
+import { ContractTableDefs, Entity } from "@primodiumxyz/reactive-tables";
 import { Hex } from "viem";
-import { Entity } from "@latticexyz/recs";
-import type { Sync } from "@primodiumxyz/sync-stack";
+import { LogFilter } from "@primodiumxyz/sync-stack/types";
 
-export const getFleetQuery = ({
+export const getFleetFilter = ({
   tables,
-  world,
-  indexerUrl,
   fleet,
   worldAddress,
   ownerAsteroid,
-}: Omit<Parameters<typeof Sync.withFilterIndexerRecsSync>[0], "filter"> & {
+}: {
+  tables: ContractTableDefs;
   worldAddress: Hex;
   fleet: Entity;
   ownerAsteroid: Entity;
-}) => {
+}): LogFilter => {
   return {
-    indexerUrl,
-    tables,
-    world,
-    filter: {
-      address: worldAddress as Hex,
-      filters: [
-        {
-          tableId: tables.ResourceCount.tableId,
-          key0: fleet,
-        },
-        {
-          tableId: tables.MaxResourceCount.tableId,
-          key0: fleet,
-        },
-        {
-          tableId: tables.LastClaimedAt.tableId,
-          key0: fleet,
-        },
-        {
-          tableId: tables.ProductionRate.tableId,
-          key0: fleet,
-        },
-        {
-          tableId: tables.UnitCount.tableId,
-          key0: fleet,
-        },
-        {
-          tableId: tables.UnitLevel.tableId,
-          key0: ownerAsteroid,
-        },
-      ],
-    },
+    address: worldAddress as Hex,
+    filters: [
+      {
+        tableId: tables.ResourceCount.tableId,
+        key0: fleet,
+      },
+      {
+        tableId: tables.MaxResourceCount.tableId,
+        key0: fleet,
+      },
+      {
+        tableId: tables.LastClaimedAt.tableId,
+        key0: fleet,
+      },
+      {
+        tableId: tables.ProductionRate.tableId,
+        key0: fleet,
+      },
+      {
+        tableId: tables.UnitCount.tableId,
+        key0: fleet,
+      },
+      {
+        tableId: tables.UnitLevel.tableId,
+        key0: ownerAsteroid,
+      },
+    ],
   };
 };

@@ -1,31 +1,38 @@
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { SPEED_SCALE } from "@/lib/constants";
-import { Components } from "@/lib/types";
-import { Entity } from "@latticexyz/recs";
+import { Tables } from "@/lib/types";
 import { Hex } from "viem";
 
-export function createTrainingQueueUtils(components: Components) {
+export function createTrainingQueueUtils(tables: Tables) {
+  /**
+   * Updates training queues for all unit production buildings on a given asteroid
+   * @param asteroid asteroid entity
+   */
   function updateTrainingQueues(asteroid: Entity) {
-    const buildings = components.Keys_UnitFactorySet.getWithKeys({ entity: asteroid as Hex })?.value as
+    const buildings = tables.Keys_UnitFactorySet.getWithKeys({ entity: asteroid as Hex })?.value as
       | Entity[]
       | undefined;
     if (!buildings) return;
     buildings.forEach((building) => updateTrainingQueue(building));
   }
 
-  function getUnitTrainingTime(rawPlayer: Entity, rawBuilding: Entity, rawUnit: Entity) {
-    const player = rawPlayer as Hex;
-    const unitEntity = rawUnit as Hex;
-    const building = rawBuilding as Hex;
+  /**
+   * Gets the training time for a unit based on the player, building, and unit
+   */
+  function getUnitTrainingTime(player: Entity, building: Entity, unit: Entity) {
+    const playerHex = player as Hex;
+    const unitEntityHex = unit as Hex;
+    const buildingHex = building as Hex;
 
-    const config = components.P_GameConfig.get();
+    const config = tables.P_GameConfig.get();
     if (!config) throw new Error("No game config found");
-    const unitLevel = components.UnitLevel.getWithKeys({ entity: player, unit: unitEntity }, { value: 0n })?.value;
+    const unitLevel = tables.UnitLevel.getWithKeys({ entity: playerHex, unit: unitEntityHex }, { value: 0n })?.value;
 
-    const buildingLevel = components.Level.get(rawBuilding, { value: 1n }).value;
-    const prototype = components.BuildingType.getWithKeys({ entity: building })?.value as Hex | undefined;
+    const buildingLevel = tables.Level.get(building, { value: 1n }).value;
+    const prototype = tables.BuildingType.getWithKeys({ entity: buildingHex })?.value as Hex | undefined;
     if (!prototype) throw new Error("No building type found");
 
-    const multiplier = components.P_UnitProdMultiplier.getWithKeys(
+    const multiplier = tables.P_UnitProdMultiplier.getWithKeys(
       {
         prototype,
         level: buildingLevel,
@@ -35,18 +42,21 @@ export function createTrainingQueueUtils(components: Components) {
       }
     ).value;
 
-    const rawTrainingTime = components.P_Unit.getWithKeys({ entity: unitEntity, level: unitLevel })?.trainingTime ?? 0n;
+    const rawTrainingTime = tables.P_Unit.getWithKeys({ entity: unitEntityHex, level: unitLevel })?.trainingTime ?? 0n;
     return (rawTrainingTime * 100n * 100n * SPEED_SCALE) / (multiplier * config.unitProductionRate * config.worldSpeed);
   }
 
+  /**
+   * Updates the training queue for a given building
+   */
   function updateTrainingQueue(building: Entity) {
     const { LastClaimedAt, ClaimOffset, OwnedBy, Meta_UnitProductionQueue, Value_UnitProductionQueue, TrainingQueue } =
-      components;
+      tables;
     const owner = OwnedBy.get(OwnedBy.get(building)?.value as Entity)?.value as Entity | undefined;
-    const config = components.P_GameConfig.get();
+    const config = tables.P_GameConfig.get();
     let startTime = LastClaimedAt.get(building, { value: 0n }).value - ClaimOffset.get(building, { value: 0n }).value;
     if (!owner || !startTime || !config) return;
-    const now = components.Time.get()?.value ?? 0n;
+    const now = tables.Time.get()?.value ?? 0n;
     const queueUnits = Meta_UnitProductionQueue.getWithKeys({
       entity: building as Hex,
     });
