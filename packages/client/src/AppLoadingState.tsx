@@ -7,28 +7,34 @@ import { Increment } from "./screens/Increment";
 import { Sandbox } from "./screens/Sandbox";
 import { Statistics } from "./screens/Statistics";
 import { useUpdateSessionAccount } from "@/hooks/useUpdateSessionAccount";
-import { useMountDevTools } from "@/hooks/useMountDevTools";
-import { useBalance } from "wagmi";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useAccountClient, useSyncStatus } from "@primodiumxyz/core/react";
 import { minEth } from "@primodiumxyz/core";
+import { useDripAccount } from "@/hooks/useDripAccount";
 
 export default function AppLoadingState() {
   useUpdateSessionAccount();
-  useMountDevTools();
-  const playerAddress = useAccountClient().playerAccount.address;
+  const { playerAccountBalance, sessionAccountBalance, requestDrip } = useDripAccount();
+  const { sessionAccount, playerAccount } = useAccountClient();
 
-  const { data } = useBalance({ address: playerAddress });
-  const balance = data?.value ?? 0n;
+  useEffect(() => {
+    if (!sessionAccount?.address || sessionAccountBalance >= minEth) return;
+    requestDrip(sessionAccount.address);
+  }, [sessionAccount?.address, sessionAccountBalance]);
+
+  useEffect(() => {
+    if (sessionAccountBalance >= minEth) return;
+    requestDrip(playerAccount.address);
+  }, [playerAccount.address, playerAccountBalance]);
+
   const { loading, error, progress, message } = useSyncStatus();
-  console.log({ loading, error, progress, message });
 
-  const ready = useMemo(() => !loading && balance >= minEth, [loading, balance]);
+  const ready = useMemo(() => !loading && playerAccountBalance >= minEth, [loading, playerAccountBalance]);
   return (
     <div className="h-screen relative">
       {!error && (
         <div className="relative">
-          {!loading && balance < minEth && (
+          {!loading && playerAccountBalance < minEth && (
             <div className="flex flex-col items-center justify-center h-screen text-white gap-4">
               <p className="text-lg text-white">
                 <span className="">Dripping Eth to Primodium account</span>

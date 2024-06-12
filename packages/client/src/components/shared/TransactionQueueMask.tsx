@@ -1,6 +1,6 @@
 import { Entity } from "@latticexyz/recs";
-import { components } from "src/network/components";
 import { Loader } from "../core/Loader";
+import { useCore } from "@primodiumxyz/core/react";
 
 export const TransactionQueueMask: React.FC<{
   children: React.ReactNode;
@@ -8,7 +8,8 @@ export const TransactionQueueMask: React.FC<{
   className?: string;
   size?: "sm" | "xs";
 }> = ({ children, queueItemId, className, size = "sm" }) => {
-  const queuePosition = components.TransactionQueue.useIndex(queueItemId);
+  const { tables } = useCore();
+  const queuePosition = tables.TransactionQueue.useIndex(queueItemId);
 
   if (queuePosition === -1) return <div className={className}>{children}</div>;
 

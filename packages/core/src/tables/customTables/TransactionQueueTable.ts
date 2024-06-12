@@ -1,21 +1,9 @@
 import { useEffect, useState } from "react";
-import {
-  BaseTableMetadata,
-  createLocalTable,
-  Entity,
-  Metadata,
-  TableOptions,
-  Type,
-} from "@primodiumxyz/reactive-tables";
+import { BaseTableMetadata, createLocalTable, Entity, TableOptions, Type } from "@primodiumxyz/reactive-tables";
 import { CreateNetworkResult } from "@/lib/types";
+import { TxQueueOptions } from "@/tables/types";
 
-export type TxQueueOptions<M extends Metadata> = {
-  id: string;
-  force?: true;
-  metadata?: M;
-};
-
-export function createTransactionQueueTable<M extends BaseTableMetadata>(
+export function createTransactionQueueTable<M extends BaseTableMetadata = BaseTableMetadata>(
   { world }: CreateNetworkResult,
   options?: TableOptions<M>
 ) {

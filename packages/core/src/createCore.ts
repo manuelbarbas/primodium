@@ -2,7 +2,7 @@ import { createTables } from "@/tables/createTables";
 import { createNetwork } from "@/network/createNetwork";
 import { runInitialSync } from "@/sync/runInitialSync";
 import { CoreConfig, Core } from "@/lib/types";
-import { createUtils } from "@/utils/core";
+import { createUtils } from "@/utils/core/createUtils";
 import { createSync } from "@/sync";
 import { runCoreSystems } from "@/systems";
 

@@ -16,6 +16,6 @@ type Props = Core & {
  * @param {object} props.value - The value to be provided by the context.
  * @returns {JSX.Element} The rendered component.
  */
-export const CoreProvider = ({ children, ...value }: Props) => {
+export const CoreProvider = ({ children, ...value }: Props): JSX.Element => {
   return <CoreContext.Provider value={value}>{children}</CoreContext.Provider>;
 };

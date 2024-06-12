@@ -1,4 +1,5 @@
 import {
+  Abi,
   Account,
   Address,
   CustomTransport,
@@ -8,7 +9,7 @@ import {
   PublicClient,
   WalletClient,
 } from "viem";
-import { createUtils } from "@/utils/core";
+import { createUtils } from "@/utils";
 import { createSync } from "@/sync";
 import { ContractWrite } from "@latticexyz/common";
 import { ReplaySubject, Subject } from "rxjs";
@@ -126,7 +127,8 @@ export type Clock = {
 /**
  * World Abi. Combination of IWorld abi and CallWithSignature abi.
  */
-export type WorldAbiType = ((typeof IWorldAbi)[number] | (typeof CallWithSignatureAbi)[number])[];
+
+export type WorldAbiType = typeof IWorldAbi & typeof CallWithSignatureAbi;
 
 type _Account<
   IsLocalAccount extends boolean = false,

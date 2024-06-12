@@ -27,7 +27,7 @@ function Core() {
       ? (localStorage.getItem("primodiumPlayerAccount") as Hex) ?? undefined
       : undefined;
     const playerAddress = playerPrivateKey ? privateKeyToAddress(playerPrivateKey) : externalAccount.address;
-    const core = createCore({ ...config, playerAddress, playerPrivateKey });
+    const core = createCore({ ...config, playerAddress });
     const ret = { playerPrivateKey, playerAddress, core };
     return ret;
   }, []);

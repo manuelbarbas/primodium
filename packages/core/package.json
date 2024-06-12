@@ -42,7 +42,7 @@
     "abitype": "^1.0.2",
     "contracts": "workspace:*",
     "dayjs": "^1.11.10",
-    "obscenity": "^0.1.4",
+    "obscenity": "^0.2.1",
     "react": "^18.3.1",
     "rxjs": "7.5.5",
     "viem": "2.9.20",
