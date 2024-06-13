@@ -164,22 +164,22 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
 
       5: {
-        P_RequiredUpgradeResources: getResourceValues({ Iron: 3000, Copper: 3000, Lithium: 3000, Kimberlite: 300 }),
+        P_RequiredUpgradeResources: getResourceValues({ Iron: 3000, Copper: 3000, Lithium: 3000, Kimberlite: 100 }),
         Dimensions: { width: 21, height: 15 },
         P_RequiredBaseLevel: { value: 8n },
       },
       6: {
-        P_RequiredUpgradeResources: getResourceValues({ Iron: 7500, Copper: 7500, Lithium: 7500, Kimberlite: 1500 }),
+        P_RequiredUpgradeResources: getResourceValues({ Iron: 7500, Copper: 7500, Lithium: 7500, Kimberlite: 1000 }),
         Dimensions: { width: 25, height: 17 },
         P_RequiredBaseLevel: { value: 13n },
       },
       7: {
-        P_RequiredUpgradeResources: getResourceValues({ Iron: 25000, Copper: 25000, Lithium: 25000, Kimberlite: 3000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Iron: 25000, Copper: 25000, Lithium: 25000, Kimberlite: 1000 }),
         Dimensions: { width: 31, height: 21 },
         P_RequiredBaseLevel: { value: 14n },
       },
       8: {
-        P_RequiredUpgradeResources: getResourceValues({ Iron: 60000, Copper: 60000, Lithium: 60000, Kimberlite: 5000 }),
+        P_RequiredUpgradeResources: getResourceValues({ Iron: 60000, Copper: 60000, Lithium: 60000, Kimberlite: 1000 }),
         Dimensions: { width: maxRange.xBounds, height: maxRange.yBounds },
         P_RequiredBaseLevel: { value: 15n },
       },
@@ -258,7 +258,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.015, U_Housing: 100, U_Defense: 1400 }),
       },
       6: {
-        P_RequiredResources: getResourceValues({ IronPlate: 800, Alloy: 800, PVCell: 800, U_Electricity: 20 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 500, Alloy: 500, PVCell: 500, U_Electricity: 20 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(mainBaseStorageUpgrades[6]),
         },
@@ -266,9 +266,9 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       7: {
         P_RequiredResources: getResourceValues({
-          IronPlate: 1500,
-          Alloy: 1500,
-          PVCell: 1500,
+          IronPlate: 1200,
+          Alloy: 1200,
+          PVCell: 1200,
           U_Electricity: 20,
         }),
         P_ListMaxResourceUpgrades: {
@@ -278,9 +278,9 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       8: {
         P_RequiredResources: getResourceValues({
-          IronPlate: 2500,
-          Alloy: 2500,
-          PVCell: 2500,
+          IronPlate: 2000,
+          Alloy: 2000,
+          PVCell: 2000,
           U_Electricity: 50,
         }),
         P_ListMaxResourceUpgrades: {
@@ -290,9 +290,9 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       9: {
         P_RequiredResources: getResourceValues({
-          IronPlate: 4000,
-          Alloy: 4000,
-          PVCell: 4000,
+          IronPlate: 3200,
+          Alloy: 3200,
+          PVCell: 3200,
           U_Electricity: 100,
         }),
         P_ListMaxResourceUpgrades: {
@@ -422,7 +422,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_Production: getResourceValues({ R_Encryption: 0.0168, R_HP: 0.03, U_Housing: 200 }),
       },
       6: {
-        P_RequiredResources: getResourceValues({ IronPlate: 1200, Alloy: 1200, PVCell: 1200 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 500, Alloy: 500, PVCell: 500 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(wormholeBaseStorageUpgrades[6]),
         },
@@ -430,9 +430,9 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       7: {
         P_RequiredResources: getResourceValues({
-          IronPlate: 2000,
-          Alloy: 2000,
-          PVCell: 2000,
+          IronPlate: 1200,
+          Alloy: 1200,
+          PVCell: 1200,
         }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(wormholeBaseStorageUpgrades[7]),
@@ -441,10 +441,10 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       8: {
         P_RequiredResources: getResourceValues({
-          IronPlate: 3000,
-          Alloy: 3000,
-          PVCell: 3000,
-          Kimberlite: 100,
+          IronPlate: 2000,
+          Alloy: 2000,
+          PVCell: 2000,
+          Kimberlite: 50,
         }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(wormholeBaseStorageUpgrades[8]),
@@ -453,10 +453,10 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       9: {
         P_RequiredResources: getResourceValues({
-          IronPlate: 4000,
-          Alloy: 4000,
-          PVCell: 4000,
-          Kimberlite: 200,
+          IronPlate: 3200,
+          Alloy: 3200,
+          PVCell: 3200,
+          Kimberlite: 50,
         }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(wormholeBaseStorageUpgrades[9]),
@@ -465,9 +465,9 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       10: {
         P_RequiredResources: getResourceValues({
-          Titanium: 800,
-          Iridium: 800,
-          Platinum: 800,
+          Titanium: 500,
+          Iridium: 500,
+          Platinum: 500,
           Kimberlite: 100,
         }),
         P_ListMaxResourceUpgrades: {
@@ -492,7 +492,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           Titanium: 1500,
           Iridium: 1500,
           Platinum: 1500,
-          Kimberlite: 250,
+          Kimberlite: 100,
         }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(wormholeBaseStorageUpgrades[12]),
@@ -504,7 +504,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           Titanium: 2000,
           Iridium: 2000,
           Platinum: 2000,
-          Kimberlite: 800,
+          Kimberlite: 100,
         }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(wormholeBaseStorageUpgrades[13]),
@@ -516,7 +516,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           Titanium: 3000,
           Iridium: 3000,
           Platinum: 3000,
-          Kimberlite: 1200,
+          Kimberlite: 100,
         }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(wormholeBaseStorageUpgrades[14]),
@@ -528,7 +528,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           Titanium: 4000,
           Iridium: 4000,
           Platinum: 4000,
-          Kimberlite: 2000,
+          Kimberlite: 100,
         }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(wormholeBaseStorageUpgrades[15]),
