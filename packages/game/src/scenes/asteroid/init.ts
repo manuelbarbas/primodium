@@ -1,5 +1,5 @@
 // ASTEROID MAP ENTRY POINT
-import { MUD } from "@primodiumxyz/core/network/types";
+import { Core } from "@primodiumxyz/core";
 
 import { createSceneApi, PrimodiumScene } from "@/api/scene";
 import { asteroidSceneConfig } from "@/lib/config/asteroidScene";
@@ -9,12 +9,12 @@ import { setupMouseInputs } from "@/scenes/asteroid/setup/setupMouseInputs";
 import { runSystems as runAsteroidSystems } from "@/scenes/asteroid/systems";
 import { GlobalApi } from "@/api/global";
 
-export const initAsteroidScene = async (game: GlobalApi): Promise<PrimodiumScene> => {
+export const initAsteroidScene = async (game: GlobalApi, core: Core): Promise<PrimodiumScene> => {
   const scene = await game.createScene(asteroidSceneConfig, true);
 
   const sceneApi = createSceneApi(scene);
 
-  setupMouseInputs(sceneApi);
+  setupMouseInputs(sceneApi, core);
   setupBasicCameraMovement(sceneApi);
   setupKeybinds(sceneApi);
 
@@ -40,7 +40,7 @@ export const initAsteroidScene = async (game: GlobalApi): Promise<PrimodiumScene
   });
 
   scene.camera.phaserCamera.fadeIn(1000);
-  const runSystems = (mud: MUD) => runAsteroidSystems(sceneApi, mud);
+  const runSystems = () => runAsteroidSystems(sceneApi, core);
 
   return { ...sceneApi, runSystems, isPrimary: true };
 };

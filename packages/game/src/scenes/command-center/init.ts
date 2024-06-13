@@ -1,13 +1,16 @@
 // COMMAND CENTER ENTRY POINT
-import { components } from "@primodiumxyz/core/network/components";
-import { world } from "@primodiumxyz/core/network/world";
+import { Core } from "@primodiumxyz/core";
 
 import { GlobalApi } from "@/api/global";
 import { createSceneApi, PrimodiumScene } from "@/api/scene";
 import { commandCenterScene } from "@/lib/config/commandCenterScene";
 import { runSystems as runCommandSystems } from "@/scenes/command-center/systems";
 
-export const initCommandCenter = async (game: GlobalApi): Promise<PrimodiumScene> => {
+export const initCommandCenter = async (game: GlobalApi, core: Core): Promise<PrimodiumScene> => {
+  const {
+    tables,
+    network: { world },
+  } = core;
   const scene = await game.createScene(commandCenterScene, false);
 
   const clickSub = scene.input.click$.subscribe(([pointer, objects]) => {
@@ -22,8 +25,8 @@ export const initCommandCenter = async (game: GlobalApi): Promise<PrimodiumScene
 
     if (objects.length !== 0) return;
 
-    components.SelectedFleet.remove();
-    components.BattleTarget.remove();
+    tables.SelectedFleet.remove();
+    tables.BattleTarget.remove();
   });
 
   const sceneApi = createSceneApi(scene);
@@ -34,6 +37,6 @@ export const initCommandCenter = async (game: GlobalApi): Promise<PrimodiumScene
     clickSub.unsubscribe();
   }, "game");
 
-  const runSystems = () => runCommandSystems(sceneApi);
+  const runSystems = () => runCommandSystems(sceneApi, core);
   return { ...sceneApi, runSystems };
 };

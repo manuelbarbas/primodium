@@ -1,26 +1,25 @@
-import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { Mode } from "@primodiumxyz/core/util/constants";
-import { components } from "@primodiumxyz/core/network/components";
-import { world } from "@primodiumxyz/core/network/world";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { addCoords } from "@primodiumxyz/engine/lib/util/coords";
-import { battleNotification } from "@primodiumxyz/core/network/systems/setupBattleNotifications";
+import { Entity, namespaceWorld, defaultEntity } from "@primodiumxyz/reactive-tables";
+import { Core, Mode } from "@primodiumxyz/core";
 
 import { PrimodiumScene } from "@/api/scene";
 
 const OFFSET = 1000;
-export const renderBattle = (scene: PrimodiumScene) => {
+export const renderBattle = (scene: PrimodiumScene, core: Core) => {
+  const {
+    tables,
+    network: { world },
+  } = core;
   const systemsWorld = namespaceWorld(world, "systems");
-  const { BattleResult } = components;
 
   const attackAnimation = async (entity: Entity, attacker: Entity, defender: Entity, attackerWinner?: boolean) => {
-    const battleResult = components.BattleResult.get(entity);
-    const defenderIsFleet = !!components.IsFleet.get(defender)?.value;
-    const selectedRock = components.SelectedRock.get()?.value;
+    const battleResult = tables.BattleResult.get(entity);
+    const defenderIsFleet = !!tables.IsFleet.get(defender)?.value;
+    const selectedRock = tables.SelectedRock.get()?.value;
 
     const attackerObj = scene.objects.fleet.get(attacker);
     const defenderObj = defenderIsFleet ? scene.objects.fleet.get(defender) : scene.objects.asteroid.get(defender);
-    const rockObj = scene.objects.asteroid.get(selectedRock ?? singletonEntity);
+    const rockObj = scene.objects.asteroid.get(selectedRock ?? defaultEntity);
 
     if (!attackerObj || !defenderObj) return;
 
@@ -43,14 +42,14 @@ export const renderBattle = (scene: PrimodiumScene) => {
       })
       .filter((item) => item !== null) as Phaser.Types.Time.TimelineEventConfig[];
 
-    components.BattleTarget.remove();
-    components.FleetMovement.pauseUpdates(attacker);
-    components.IsFleetEmpty.pauseUpdates(attacker);
-    components.BattleTarget.blockUpdates(singletonEntity);
-    components.SelectedMode.blockUpdates(singletonEntity);
+    tables.BattleTarget.remove();
+    tables.FleetMovement.pauseUpdates(attacker);
+    tables.IsFleetEmpty.pauseUpdates(attacker);
+    tables.BattleTarget.blockUpdates(defaultEntity);
+    tables.SelectedMode.blockUpdates(defaultEntity);
     if (defenderIsFleet) {
-      components.FleetMovement.pauseUpdates(defender);
-      components.IsFleetEmpty.pauseUpdates(defender);
+      tables.FleetMovement.pauseUpdates(defender);
+      tables.IsFleetEmpty.pauseUpdates(defender);
     }
     rockObj?.getFleetsContainer().pauseRotation();
 
@@ -84,38 +83,39 @@ export const renderBattle = (scene: PrimodiumScene) => {
           at: defenderAnimationStart + OFFSET * defenderAllies.length + OFFSET + 1000,
           run: () => {
             battleRender.destroy();
-            components.FleetMovement.resumeUpdates(attacker);
-            components.IsFleetEmpty.resumeUpdates(attacker);
-            components.BattleTarget.unblockUpdates(singletonEntity);
-            components.SelectedMode.unblockUpdates(singletonEntity);
+            tables.FleetMovement.resumeUpdates(attacker);
+            tables.IsFleetEmpty.resumeUpdates(attacker);
+            tables.BattleTarget.unblockUpdates(defaultEntity);
+            tables.SelectedMode.unblockUpdates(defaultEntity);
             if (defenderIsFleet) {
-              components.FleetMovement.resumeUpdates(defender);
-              components.IsFleetEmpty.resumeUpdates(defender);
+              tables.FleetMovement.resumeUpdates(defender);
+              tables.IsFleetEmpty.resumeUpdates(defender);
             }
 
-            battleNotification(entity);
+            //TODO: battle notification
+            // battleNotification(entity);
           },
         },
       ])
       .play();
   };
 
-  defineComponentSystem(systemsWorld, BattleResult, (update) => {
-    const now = components.Time.get()?.value ?? 0n;
+  tables.BattleResult.watch({
+    world: systemsWorld,
+    onUpdate: ({ entity }) => {
+      const now = tables.Time.get()?.value ?? 0n;
 
-    const battle = components.Battle.get(update.entity);
+      const battle = tables.Battle.get(entity);
 
-    if (!battle) return;
+      if (!battle) return;
 
-    if (battle.timestamp + 30n < now) return;
+      if (battle.timestamp + 30n < now) return;
 
-    //only render for selected rock in command view
-    if (
-      components.SelectedMode.get()?.value !== Mode.CommandCenter ||
-      components.SelectedRock.get()?.value !== battle.rock
-    )
-      return;
+      //only render for selected rock in command view
+      if (tables.SelectedMode.get()?.value !== Mode.CommandCenter || tables.SelectedRock.get()?.value !== battle.rock)
+        return;
 
-    attackAnimation(update.entity, battle.attacker, battle.defender, battle.attacker === battle.winner);
+      attackAnimation(entity, battle.attacker, battle.defender, battle.attacker === battle.winner);
+    },
   });
 };

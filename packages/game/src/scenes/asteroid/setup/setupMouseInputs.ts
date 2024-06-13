@@ -1,42 +1,44 @@
-import { getBuildingAtCoord } from "@primodiumxyz/core/util/tile";
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { Core } from "@primodiumxyz/core";
 import { Coord } from "@primodiumxyz/engine/types";
-import { components } from "@primodiumxyz/core/network/components";
-import { world } from "@primodiumxyz/core/network/world";
-import { outOfBounds } from "@primodiumxyz/core/util/outOfBounds";
+import { singletonEntity } from "@latticexyz/store-sync/recs";
 
 import { PrimodiumScene } from "@/api/scene";
 
-export const setupMouseInputs = (scene: PrimodiumScene) => {
-  const clickSub = scene.input.click$.subscribe(([pointer]) => {
-    const activeRock = components.ActiveRock.get()?.value;
+export const setupMouseInputs = (scene: PrimodiumScene, core: Core) => {
+  const {
+    tables,
+    network: { world },
+    utils,
+  } = core;
 
-    if (components.Account.get()?.value !== components.OwnedBy.get(activeRock)?.value) return;
+  const clickSub = scene.input.click$.subscribe(([pointer]) => {
+    const activeRock = tables.ActiveRock.get()?.value;
+
+    if (tables.Account.get()?.value !== tables.OwnedBy.get(activeRock)?.value) return;
 
     const { x, y } = scene.utils.pixelCoordToTileCoord({ x: pointer.worldX, y: pointer.worldY });
 
     const gameCoord = { x, y: -y };
 
-    if (!activeRock || outOfBounds(gameCoord, activeRock)) {
-      components.SelectedBuilding.remove();
-      components.SelectedTile.remove();
-      components.SelectedAction.remove();
+    if (!activeRock || utils.outOfBounds(gameCoord, activeRock)) {
+      tables.SelectedBuilding.remove();
+      tables.SelectedTile.remove();
+      tables.SelectedAction.remove();
       return;
     }
 
-    const selectedAction = components.SelectedAction.get()?.value;
+    const selectedAction = tables.SelectedAction.get()?.value;
 
     if (selectedAction !== undefined) return;
 
-    const building = getBuildingAtCoord(gameCoord, (activeRock as Entity) ?? singletonEntity) as Entity;
+    const building = utils.getBuildingAtCoord(gameCoord, activeRock ?? singletonEntity);
 
     if (!building) {
-      components.SelectedBuilding.remove();
-      components.SelectedTile.set(gameCoord);
+      tables.SelectedBuilding.remove();
+      tables.SelectedTile.set(gameCoord);
     } else {
-      components.SelectedBuilding.set({ value: building });
-      components.SelectedTile.remove();
+      tables.SelectedBuilding.set({ value: building });
+      tables.SelectedTile.remove();
     }
   });
 
@@ -46,16 +48,16 @@ export const setupMouseInputs = (scene: PrimodiumScene) => {
     const mouseCoord = { x, y: -y } as Coord;
 
     //set hover tile if it is different
-    const currentHoverTile = components.HoverTile.get();
+    const currentHoverTile = tables.HoverTile.get();
     if (scene.utils.coordEq(currentHoverTile, mouseCoord)) return;
 
-    const selectedRock = components.ActiveRock.get()?.value;
-    if (!selectedRock || outOfBounds(mouseCoord, selectedRock)) {
-      components.HoverTile.remove();
+    const selectedRock = tables.ActiveRock.get()?.value;
+    if (!selectedRock || utils.outOfBounds(mouseCoord, selectedRock)) {
+      tables.HoverTile.remove();
       return;
     }
 
-    components.HoverTile.set(mouseCoord);
+    tables.HoverTile.set(mouseCoord);
   });
 
   world.registerDisposer(() => {

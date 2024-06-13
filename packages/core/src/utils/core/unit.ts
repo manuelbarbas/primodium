@@ -255,5 +255,6 @@ export function createUnitUtils(tables: Tables) {
     getCanAttack,
     getCanAttackSomeone,
     getCanSend,
+    isFleetOrbiting,
   };
 }

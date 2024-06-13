@@ -1,33 +1,35 @@
-import { Entity } from "@latticexyz/recs";
-import { components } from "@primodiumxyz/core/network/components";
-import { world } from "@primodiumxyz/core/network/world";
-import { Mode } from "@primodiumxyz/core/util/constants";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { Core, Mode } from "@primodiumxyz/core";
 
 import { PrimodiumScene } from "@/api/scene";
 
-export const setupKeybinds = (scene: PrimodiumScene) => {
+export const setupKeybinds = (scene: PrimodiumScene, core: Core) => {
+  const {
+    tables,
+    network: { world },
+  } = core;
   const mainbaseKeybind = scene.input.addListener("Base", () => {
     //TODO - fix converting to entity
-    const selectedRockEntity = components.SelectedRock.get()?.value;
+    const selectedRockEntity = tables.SelectedRock.get()?.value;
     if (!selectedRockEntity) return;
-    const mainBase = components.Home.get(selectedRockEntity) as Entity | undefined;
+    const mainBase = tables.Home.get(selectedRockEntity) as Entity | undefined;
 
     if (!mainBase) return;
 
-    const mainBaseCoord = components.Position.get(mainBase);
+    const mainBaseCoord = tables.Position.get(mainBase);
     if (mainBaseCoord) scene.camera.pan(mainBaseCoord);
   });
 
   const escapeKeybind = scene.input.addListener("Esc", () => {
     // todo: dont run this if a modal is open
-    if (components.SelectedBuilding.get()) {
-      components.SelectedBuilding.remove();
-      components.SelectedAction.remove();
+    if (tables.SelectedBuilding.get()) {
+      tables.SelectedBuilding.remove();
+      tables.SelectedAction.remove();
     }
 
-    const mode = components.SelectedMode.get()?.value;
-    if (mode === Mode.Starmap && components.SelectedRock.get()) components.SelectedRock.remove();
-    if (mode === Mode.Spectate) components.SelectedMode.set({ value: Mode.Starmap });
+    const mode = tables.SelectedMode.get()?.value;
+    if (mode === Mode.Starmap && tables.SelectedRock.get()) tables.SelectedRock.remove();
+    if (mode === Mode.Spectate) tables.SelectedMode.set({ value: Mode.Starmap });
   });
 
   world.registerDisposer(() => {

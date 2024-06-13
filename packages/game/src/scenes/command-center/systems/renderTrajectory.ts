@@ -1,12 +1,15 @@
-import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { components } from "@primodiumxyz/core/network/components";
-import { world } from "@primodiumxyz/core/network/world";
+import { namespaceWorld } from "@primodiumxyz/reactive-tables";
+import { Core } from "@primodiumxyz/core";
 
 import { TargetLine } from "@/lib/objects/TargetLine";
 import { PrimodiumScene } from "@/api/scene";
 
-export const renderTrajectory = (scene: PrimodiumScene) => {
+export const renderTrajectory = (scene: PrimodiumScene, core: Core) => {
+  const {
+    tables,
+    network: { world },
+  } = core;
   const systemsWorld = namespaceWorld(world, "systems");
   const trajectoryLine = new TargetLine(scene, { x: 0, y: 0 }, { x: 0, y: 0 }, 0xff0000)
     .setAlpha(0.3)
@@ -15,28 +18,31 @@ export const renderTrajectory = (scene: PrimodiumScene) => {
     .setVisible(false)
     .setDepth(0);
 
-  defineComponentSystem(systemsWorld, components.HoverEntity, async ({ value }) => {
-    const entity = value[0]?.value as Entity;
-    const destination = components.BattleTarget.get()?.value;
+  tables.HoverEntity.watch({
+    world: systemsWorld,
+    onUpdate: ({ properties: { current } }) => {
+      const entity = current?.value;
+      const destination = tables.BattleTarget.get()?.value;
 
-    if (!destination || !entity) {
-      trajectoryLine.setActive(false).setVisible(false);
-      return;
-    }
+      if (!destination || !entity) {
+        trajectoryLine.setActive(false).setVisible(false);
+        return;
+      }
 
-    const fleetObj = scene.objects.fleet.get(entity);
+      const fleetObj = scene.objects.fleet.get(entity);
 
-    const targetObj = components.IsFleet.get(destination)?.value
-      ? scene.objects.fleet.get(destination ?? singletonEntity)
-      : scene.objects.asteroid.get(destination ?? singletonEntity);
+      const targetObj = tables.IsFleet.get(destination)?.value
+        ? scene.objects.fleet.get(destination ?? singletonEntity)
+        : scene.objects.asteroid.get(destination ?? singletonEntity);
 
-    if (!fleetObj || !targetObj) {
-      trajectoryLine.setActive(false).setVisible(false);
-      return;
-    }
+      if (!fleetObj || !targetObj) {
+        trajectoryLine.setActive(false).setVisible(false);
+        return;
+      }
 
-    trajectoryLine.setActive(true).setVisible(true);
-    trajectoryLine.setCoordinates(fleetObj.getPixelCoord(), targetObj.getPixelCoord());
+      trajectoryLine.setActive(true).setVisible(true);
+      trajectoryLine.setCoordinates(fleetObj.getPixelCoord(), targetObj.getPixelCoord());
+    },
   });
 
   systemsWorld.registerDisposer(() => {
