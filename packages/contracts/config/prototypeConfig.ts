@@ -1691,19 +1691,19 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ Iron: 1000, Copper: 800, Lithium: 1000, U_Electricity: 10 }),
         P_UnitProdMultiplier: { value: 120n },
-        P_UnitProdTypes: { value: encodeArray(["MinutemanMarine"]) },
+        P_UnitProdTypes: { value: encodeArray(["TridentMarine", "MinutemanMarine"]) },
       },
       6: {
         P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Copper: 2500, Alloy: 500, U_Electricity: 10 }),
         P_UnitProdMultiplier: { value: 125n },
-        P_UnitProdTypes: { value: encodeArray(["MinutemanMarine"]) },
+        P_UnitProdTypes: { value: encodeArray(["TridentMarine", "MinutemanMarine"]) },
       },
       7: {
         P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ Copper: 5000, Alloy: 1000, U_Electricity: 10 }),
         P_UnitProdMultiplier: { value: 130n },
-        P_UnitProdTypes: { value: encodeArray(["MinutemanMarine"]) },
+        P_UnitProdTypes: { value: encodeArray(["TridentMarine", "MinutemanMarine"]) },
       },
       8: {
         P_RequiredBaseLevel: { value: 8n },
@@ -2697,7 +2697,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       1: {
         P_RequiredUpgradeResources: getResourceValues({ Iridium: 200 }),
-        P_RequiredBaseLevel: { value: 9n },
+        P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ Copper: 10, Alloy: 10, U_Housing: 1 }),
         P_Unit: getPUnitData({
           hp: 64,
@@ -2710,7 +2710,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       2: {
         P_RequiredUpgradeResources: getResourceValues({ Iridium: 600 }),
-        P_RequiredBaseLevel: { value: 10n },
+        P_RequiredBaseLevel: { value: 9n },
         P_RequiredResources: getResourceValues({ Copper: 10, Alloy: 10, U_Housing: 1 }),
         P_Unit: getPUnitData({
           hp: 68,

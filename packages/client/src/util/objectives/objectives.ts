@@ -627,7 +627,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Unit Production",
       type: "Train",
-      requiredMainBase: 8n,
+      requiredMainBase: 5n,
       requiredObjectives: [EObjectives.TrainMinutemanMarine],
       unitType: EntityType.TridentMarine,
       unitCount: 32n,
