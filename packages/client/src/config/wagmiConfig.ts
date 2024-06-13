@@ -1,13 +1,7 @@
 import { getCoreConfig } from "@/config/getCoreConfig";
-import { Buffer } from "buffer";
 import { createClient } from "viem";
 import { createConfig, http } from "wagmi";
 import { coinbaseWallet, walletConnect } from "wagmi/connectors";
-
-// polyfill Buffer for client
-if (!window.Buffer) {
-  window.Buffer = Buffer;
-}
 
 const env = import.meta.env;
 const projectId = env.PRI_WALLETCONNECT_PROJECT_ID;

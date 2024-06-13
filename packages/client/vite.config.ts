@@ -1,5 +1,4 @@
 import path from "path";
-import { sentryVitePlugin } from "@sentry/vite-plugin";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { comlink } from "vite-plugin-comlink";
@@ -7,15 +6,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import postcss from "./postcss.config";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    comlink(),
-    tsconfigPaths(),
-    sentryVitePlugin({
-      org: "primodium",
-      project: "primodium",
-    }),
-  ],
+  plugins: [react(), comlink(), tsconfigPaths()],
   server: {
     port: 3000,
     fs: {
@@ -33,12 +24,8 @@ export default defineConfig({
           react: ["react", "react-dom"],
           mud: [
             "@latticexyz/common",
-            "@latticexyz/protocol-parser",
-            "@latticexyz/dev-tools",
             "@latticexyz/react",
             "@latticexyz/recs",
-            "@latticexyz/schema-type",
-            "@latticexyz/store",
             "@latticexyz/store-sync",
             "@latticexyz/world",
           ],
@@ -57,7 +44,6 @@ export default defineConfig({
     },
 
     include: [
-      "proxy-deep",
       "bn.js",
       "js-sha3",
       "hash.js",
