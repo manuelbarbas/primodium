@@ -117,10 +117,18 @@ library LibCombat {
         encryptionAtEnd = ResourceCount.get(targetAsteroidEntity, uint8(EResource.R_Encryption));
       }
     }
-    if (encryptionAtEnd == 0) {
-      LibFleet.decreaseFleetUnit(aggressorEntity, ColonyShipPrototypeId, 1, true);
-    }
     BattleEncryptionResult.set(battleEntity, targetAsteroidEntity, encryptionAtStart, encryptionAtEnd);
+  }
+
+  function resolveConquerColonyShip(bytes32 asteroidTargetEntity, bytes32 aggressorEntity) internal {
+    if (
+      OwnedBy.get(asteroidTargetEntity) == OwnedBy.get(OwnedBy.get(aggressorEntity)) &&
+      UnitCount.get(aggressorEntity, ColonyShipPrototypeId) > 0
+    ) {
+      LibFleet.decreaseFleetUnit(aggressorEntity, ColonyShipPrototypeId, 1, true);
+      LibFleet.resetFleetIfNoUnitsLeft(aggressorEntity);
+      LibCombat.applyLostCargo(aggressorEntity);
+    }
   }
 
   /**
