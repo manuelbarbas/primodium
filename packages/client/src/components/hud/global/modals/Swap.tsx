@@ -2,24 +2,27 @@
 import { SecondaryCard } from "@/components/core/Card";
 import { Dropdown } from "@/components/core/Dropdown";
 import { IconLabel } from "@/components/core/IconLabel";
-import { EntityToResourceImage } from "@/util/mappings";
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { useContractCalls } from "@/hooks/useContractCalls";
+import { EntityToResourceImage } from "@/util/image";
+import {
+  EntityType,
+  formatResourceCount,
+  getEntityTypeName,
+  parseResourceCount,
+  RESERVE_RESOURCE,
+  ResourceStorages,
+} from "@primodiumxyz/core";
+import { useAccountClient, useCore, useResourceCount } from "@primodiumxyz/core/react";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FaExchangeAlt } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { useMud } from "src/hooks";
-import { useFullResourceCount } from "src/hooks/useFullResourceCount";
-import { components } from "src/network/components";
-import { swap } from "src/network/setup/contractCalls/swap";
-import { getEntityTypeName } from "src/util/common";
-import { EntityType, RESERVE_RESOURCE, ResourceStorages } from "src/util/constants";
-import { formatResourceCount, parseResourceCount } from "src/util/number";
-import { getInAmount, getOutAmount } from "src/util/swap";
 
 export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
-  const mud = useMud();
+  const { tables, utils } = useCore();
+  const { playerAccount } = useAccountClient();
+  const { swap } = useContractCalls();
 
   const [fromResource, setFromResource] = useState<Entity>(EntityType.Iron);
   const [toResource, setToResource] = useState<Entity>(EntityType.Copper);
@@ -29,7 +32,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
   const [slippageRendered, setSlippageRendered] = useState<string>("0.5");
   const [outAmountMinRendered, setOutAmountMinRendered] = useState<string>("");
 
-  const selectedRock = components.ActiveRock.use()?.value;
+  const selectedRock = tables.ActiveRock.use()?.value;
   if (!selectedRock) throw new Error("[Swap] No active rock");
   const getPath = useCallback((resourceIn: Entity, resourceOut: Entity) => {
     if (resourceIn == RESERVE_RESOURCE || resourceOut == RESERVE_RESOURCE) return [resourceIn, resourceOut];
@@ -63,7 +66,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
       setInAmountRendered(inAmountRendered);
       const inAmount = parseResourceCount(resourceIn, inAmountRendered);
       const path = getPath(resourceIn, resourceOut);
-      const out = getOutAmount(inAmount, path);
+      const out = utils.getOutAmount(inAmount, path);
       if (out == 0n) return "";
       const outString = formatResourceCount(resourceOut, out, { fractionDigits: 9, notLocale: true });
       setOutAmountRendered(outString);
@@ -74,7 +77,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
     [getPath, changeOutAmountMin, slippageRendered]
   );
 
-  const swapUpdate = components.Swap.use(mud.playerAccount.entity);
+  const swapUpdate = tables.Swap.use(playerAccount.entity);
 
   // update price after swap occurs
   useEffect(() => {
@@ -92,7 +95,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
       setOutAmountRendered(outAmountRendered);
       const outAmount = parseResourceCount(toResource, outAmountRendered);
       const path = getPath(fromResource, toResource);
-      const inAmount = getInAmount(outAmount, path);
+      const inAmount = utils.getInAmount(outAmount, path);
       if (inAmount == 0n) return "";
       const inString = formatResourceCount(fromResource, inAmount, { fractionDigits: 9, notLocale: true });
       setInAmountRendered(inString);
@@ -131,8 +134,8 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
     setLastEdited(lastEdited === "in" ? "out" : "in");
   }, [lastEdited, changeInAmount, toResource, fromResource, outAmountRendered, changeOutAmount, inAmountRendered]);
 
-  const { resourceCount: fromResourceCount } = useFullResourceCount(fromResource, selectedRock);
-  const { resourceCount: toResourceCount, resourceStorage: toResourceStorage } = useFullResourceCount(
+  const { resourceCount: fromResourceCount } = useResourceCount(fromResource, selectedRock);
+  const { resourceCount: toResourceCount, resourceStorage: toResourceStorage } = useResourceCount(
     toResource,
     selectedRock
   );
@@ -160,8 +163,8 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
     const outAmountMin = parseResourceCount(toResource, outAmountMinRendered);
     const path = getPath(fromResource, toResource);
     if (path.length < 2) return;
-    swap(mud, marketEntity, path, inAmount, outAmountMin);
-  }, [fromResource, inAmountRendered, getPath, toResource, outAmountMinRendered, mud, marketEntity]);
+    swap(marketEntity, path, inAmount, outAmountMin);
+  }, [fromResource, inAmountRendered, getPath, toResource, outAmountMinRendered, marketEntity]);
 
   return (
     <div className="w-[30rem] h-fit flex flex-col gap-2 m-3 items-center">
@@ -197,7 +200,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
           amount={slippageRendered}
           onAmountChange={(amount) => changeSlippage(amount)}
         />
-        <TransactionQueueMask queueItemId={singletonEntity} className="justify-self-end">
+        <TransactionQueueMask queueItemId={defaultEntity} className="justify-self-end">
           <Button className="btn-primary btn-lg justify-self-end" disabled={disabled} onClick={handleSubmit}>
             {swapButtonMsg}
           </Button>
@@ -218,8 +221,9 @@ interface ResourceSelectorProps {
 }
 
 const ResourceSelector: React.FC<ResourceSelectorProps> = (props) => {
-  const selectedAsteroid = components.ActiveRock.use()?.value ?? singletonEntity;
-  const { resourceCount, resourceStorage } = useFullResourceCount(props.resource, selectedAsteroid);
+  const { tables } = useCore();
+  const selectedAsteroid = tables.ActiveRock.use()?.value ?? defaultEntity;
+  const { resourceCount, resourceStorage } = useResourceCount(props.resource, selectedAsteroid);
 
   return (
     <SecondaryCard className={`w-full h-20 relative grid grid-cols-10 p-2 items-center ${props.className}`}>

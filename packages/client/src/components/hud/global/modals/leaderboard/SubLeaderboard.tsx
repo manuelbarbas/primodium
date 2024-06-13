@@ -1,6 +1,6 @@
 import { Button } from "@/components/core/Button";
 import { CrownRank } from "@/components/hud/global/modals/leaderboard/RankCrown";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useMemo, useState } from "react";
 import { FaSync } from "react-icons/fa";

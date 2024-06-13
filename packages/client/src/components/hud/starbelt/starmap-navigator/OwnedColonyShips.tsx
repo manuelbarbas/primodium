@@ -9,7 +9,7 @@ import { getAsteroidInfo } from "@/util/asteroid";
 import { EntityType } from "@/util/constants";
 import { EntityToUnitImage } from "@/util/mappings";
 import { entityToFleetName, entityToRockName } from "@/util/name";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { DeferredAsteroidsRenderContainer } from "@/game/lib/objects/Asteroid/DeferredAsteroidsRenderContainer";
 

@@ -1,4 +1,4 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 
 import { Join } from "src/components/core/Join";
 import { Tabs } from "src/components/core/Tabs";

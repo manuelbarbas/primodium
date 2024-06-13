@@ -1,10 +1,9 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { Loader } from "../core/Loader";
 import { useCore } from "@primodiumxyz/core/react";
 
 export const TransactionQueueMask: React.FC<{
   children: React.ReactNode;
-  queueItemId: Entity;
+  queueItemId: string;
   className?: string;
   size?: "sm" | "xs";
 }> = ({ children, queueItemId, className, size = "sm" }) => {
