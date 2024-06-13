@@ -1,8 +1,9 @@
 import { ampli } from "src/ampli";
 import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
 import { getSystemId } from "@primodiumxyz/core";
 import { defaultEntity } from "@primodiumxyz/reactive-tables";
+
+import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createSpawn = ({ execute }: ExecuteFunctions) => {
   return async () =>

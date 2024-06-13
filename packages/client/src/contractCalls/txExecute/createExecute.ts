@@ -108,7 +108,7 @@ export function createExecute(core: Core, { playerAccount, sessionAccount }: Acc
 
     const queuedTx = async () => {
       if (authorizing && sessionAccount) {
-        const params = encodeSystemCallsFrom(WorldAbi, sessionAccount.entity as Hex, systemCalls).map(
+        const params = encodeSystemCallsFrom(WorldAbi, sessionAccount.entity, systemCalls).map(
           ([systemId, callData]) => ({ from: playerAccount.address, systemId, callData })
         );
         const tx = await sessionAccount.worldContract.write.batchCallFrom([params]);

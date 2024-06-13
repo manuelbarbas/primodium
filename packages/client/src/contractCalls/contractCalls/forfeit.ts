@@ -3,7 +3,7 @@ import { ampli } from "src/ampli";
 import { AccountClient, Core, getSystemId } from "@primodiumxyz/core";
 import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
 import { Entity, query } from "@primodiumxyz/reactive-tables";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
+import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createForfeitCalls = (
   { tables }: Core,
@@ -19,7 +19,7 @@ export const createForfeitCalls = (
     const abandonCalls = [...asteroids].map((asteroidEntity: Entity) => ({
       systemId: getSystemId("AbandonAsteroidSystem"),
       functionName: "Pri_11__abandonAsteroid",
-      args: [asteroidEntity as Hex],
+      args: [asteroidEntity],
     })) as {
       systemId: Hex;
       functionName: "Pri_11__abandonAsteroid";
@@ -46,13 +46,13 @@ export const createForfeitCalls = (
       {
         systemId: getSystemId("AbandonAsteroidSystem"),
         functionName: "Pri_11__abandonAsteroid",
-        args: [asteroidEntity as Hex],
+        args: [asteroidEntity],
         withSession: true,
       },
       { id: asteroidEntity },
       (receipt) => {
         ampli.systemAbandonAsteroidSystemPrimodiumAbandonAsteroid({
-          spaceRocks: [asteroidEntity as Hex],
+          spaceRocks: [asteroidEntity],
           ...parseReceipt(receipt),
         });
       }

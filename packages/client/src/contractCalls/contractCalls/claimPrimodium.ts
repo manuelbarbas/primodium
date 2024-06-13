@@ -1,11 +1,11 @@
 import { EObjectives } from "contracts/config/enums";
 import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
-import { Hex } from "viem";
 import { ampli } from "src/ampli";
-import { Core, AccountClient, getSystemId } from "@primodiumxyz/core";
+import { Core, AccountClient, getSystemId, SPEED_SCALE } from "@primodiumxyz/core";
 import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
+
+import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createClaimPointsCalls = (
   { tables }: Core,
@@ -17,7 +17,7 @@ export const createClaimPointsCalls = (
       {
         functionName: "Pri_11__claimPrimodium",
         systemId: getSystemId("ClaimPrimodiumSystem"),
-        args: [asteroidEntity as Hex],
+        args: [asteroidEntity],
         withSession: true,
       },
       {
@@ -65,7 +65,7 @@ export const createClaimPointsCalls = (
         if (explosive) makeObjectiveClaimable(playerAccount.entity, EObjectives.ExplodeVolatileShard);
 
         ampli.systemClaimPrimodiumSystemPrimodiumClaimShardAsteroidPoints({
-          spaceRock: asteroidEntity as Hex,
+          spaceRock: asteroidEntity,
           ...parseReceipt(receipt),
         });
       }

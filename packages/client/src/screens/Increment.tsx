@@ -1,22 +1,23 @@
 import { useContractCalls } from "@/hooks/useContractCalls";
-import { useMud } from "src/hooks";
+import { useCore, useAccountClient } from "@primodiumxyz/core/react";
 
 export function Increment() {
-  const { components } = useMud();
+  const { tables } = useCore();
+  const {
+    playerAccount: { entity },
+  } = useAccountClient();
   const { increment } = useContractCalls();
 
-  const counter = components.Counter.use();
-  const doubleCounter = components.DoubleCounter.use();
-  const blockNumber = components.BlockNumber.use();
+  const counter = tables.Counter.use();
+  const doubleCounter = tables.DoubleCounter.use();
+  const blockNumber = tables.BlockNumber.use();
 
-  const mud = useMud();
-  const playerEntity = mud.playerAccount.entity;
   return (
     <div className="flex flex-col text-white">
       <div className="h-20">
         Block Number: <span>{blockNumber?.value.toString() ?? "??"}</span>
         <br />
-        Account: <span>{playerEntity ?? "??"}</span>
+        Account: <span>{entity ?? "??"}</span>
         <br />
         Counter: <span>{counter?.value.toString() ?? "??"}</span>
         <br />

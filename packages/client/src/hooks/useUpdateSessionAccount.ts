@@ -1,10 +1,10 @@
 import { query } from "@primodiumxyz/reactive-tables";
-import { entityToAddress } from "src/util/common";
-import { decodeEntity } from "src/util/encode";
 import { getPrivateKey } from "src/util/localStorage";
 import { Address } from "viem";
 import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { entityToAddress } from "@primodiumxyz/core";
 import { useEffect } from "react";
+import { decodeEntity } from "@primodiumxyz/reactive-tables/utils";
 
 export const useUpdateSessionAccount = () => {
   const {
@@ -23,7 +23,7 @@ export const useUpdateSessionAccount = () => {
     // const authorizedWorld = namespaceWorld(world, "session");
 
     const potentialAuthorizeds = query({ with: [tables.UserDelegationControl] }).reduce((prev, entity) => {
-      const key = decodeEntity(tables.UserDelegationControl.metadata.keySchema, entity) as {
+      const key = decodeEntity(tables.UserDelegationControl.metadata.abiKeySchema, entity) as {
         delegator: Address;
         delegatee: Address;
       };
@@ -45,8 +45,8 @@ export const useUpdateSessionAccount = () => {
 
     tables.UserDelegationControl.watch(
       {
-        onChange: ({ entity, current }) => {
-          const key = decodeEntity(tables.UserDelegationControl.metadata.keySchema, entity);
+        onChange: ({ entity, properties: { current } }) => {
+          const key = decodeEntity(tables.UserDelegationControl.metadata.abiKeySchema, entity);
           if (key.delegator !== address) return;
           const newAuthorized = key.delegatee;
           if (!current) return removeSessionAccount();

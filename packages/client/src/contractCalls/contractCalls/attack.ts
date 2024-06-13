@@ -1,11 +1,10 @@
 import { EObjectives } from "contracts/config/enums";
 import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
-import { Hex } from "viem";
 import { ampli } from "src/ampli";
 import { AccountClient, Core, getSystemId, EntityType } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
 import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
+import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createAttack =
   ({ tables, utils }: Core, { playerAccount }: AccountClient, { execute }: ExecuteFunctions) =>
@@ -18,7 +17,7 @@ export const createAttack =
       {
         functionName: "Pri_11__attack",
         systemId: getSystemId("CombatSystem"),
-        args: [entity as Hex, target as Hex],
+        args: [entity, target],
         withSession: true,
       },
       {
@@ -30,7 +29,7 @@ export const createAttack =
 
         const attackerIsFleet = tables.IsFleet.has(entity);
         const attackerHasColonyShip =
-          tables.UnitCount.getWithKeys({ unit: EntityType.ColonyShip as Hex, entity: entity as Hex })?.value ?? 0n > 0n;
+          tables.UnitCount.getWithKeys({ unit: EntityType.ColonyShip, entity: entity })?.value ?? 0n > 0n;
 
         const isDecryptionAttack = attackerIsFleet && attackerHasColonyShip;
         if (isDecryptionAttack) {
@@ -43,8 +42,8 @@ export const createAttack =
         makeObjectiveClaimable(playerAccount.entity, objective);
 
         ampli.systemCombatSystemPrimodiumAttack({
-          spaceRock: entity as Hex,
-          spaceRockTo: target as Hex,
+          spaceRock: entity,
+          spaceRockTo: target,
           ...parseReceipt(receipt),
         });
       }

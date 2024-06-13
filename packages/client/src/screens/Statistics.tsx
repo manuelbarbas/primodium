@@ -1,9 +1,10 @@
 import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { components } from "src/network/components";
-import { entityToAddress, isPlayer } from "src/util/common";
+import { entityToAddress, isPlayer } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
 
 export const Statistics = () => {
-  const data = components.Leaderboard.use();
+  const { tables } = useCore();
+  const data = tables.Leaderboard.use();
   if (!data) return null;
 
   return (
@@ -11,7 +12,7 @@ export const Statistics = () => {
       <p>score,primodium_account,external_wallet</p>
       {data.players.map((_, index: number) => {
         const player = data.players[index];
-        const score = data.scores[index];
+        const score = data.points[index];
         if (isPlayer(player)) {
           return (
             <p key={index}>

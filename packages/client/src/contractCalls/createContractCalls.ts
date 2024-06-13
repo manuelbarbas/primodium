@@ -21,6 +21,7 @@ import { createFleetCalls } from "@/contractCalls/contractCalls/fleet";
 import { createTransferCalls } from "@/contractCalls/contractCalls/transfer";
 
 export type ContractCalls = ReturnType<typeof createContractCalls>;
+
 export const createContractCalls = (
   core: Core,
   accountClient: AccountClient,

@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { useMud } from "src/hooks/useMud";
 
-import { usePlayerAsteroids } from "@/hooks/usePlayerAsteroids";
 import { YouDied } from "@/screens/YouDied";
 import { PrimodiumGame, initGame } from "@game/api";
 import { Progress } from "src/components/core/Progress";
@@ -10,13 +8,16 @@ import { GameHUD } from "@/components/hud";
 import { WidgetProvider } from "src/hooks/providers/WidgetProvider";
 import { CommandBackgroundEffect } from "@/screens/CommandBackgroundEffect";
 import { BackgroundParallaxEffect } from "@/screens/BackgroundParallaxEffect";
-import { useSyncStatus } from "@/hooks/useSyncStatus";
-import { Keys } from "@/util/constants";
+import { useSyncStatus, usePlayerAsteroids, useCore, useAccountClient } from "@primodiumxyz/core/react";
+import { Keys } from "@primodiumxyz/core";
 
 const params = new URLSearchParams(window.location.search);
 
 export const Game = () => {
-  const mud = useMud();
+  const mud = useCore();
+  const {
+    playerAccount: { entity },
+  } = useAccountClient();
   const [game, setGame] = useState<PrimodiumGame | null>(null);
   const { loading: loadingSecondaryData } = useSyncStatus(Keys.SECONDARY);
 
@@ -61,7 +62,7 @@ export const Game = () => {
     };
   }, []);
 
-  const isDead = usePlayerAsteroids(mud.playerAccount.entity).length === 0;
+  const isDead = usePlayerAsteroids(entity).length === 0;
   return (
     <div>
       {!game && (

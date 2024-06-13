@@ -1,10 +1,10 @@
 import { Core, AccountClient, getSystemId, TxQueueOptions, Coord } from "@primodiumxyz/core";
 import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
 import { EFleetStance, EObjectives } from "contracts/config/enums";
 import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 import { ampli } from "src/ampli";
+import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createFleetCalls = (
   { tables, utils }: Core,

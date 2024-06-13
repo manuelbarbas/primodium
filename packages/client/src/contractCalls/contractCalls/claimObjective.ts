@@ -1,9 +1,8 @@
 import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
 import { Core, ObjectiveEnumLookup, getSystemId, getEntityTypeName, ObjectiveEntityLookup } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { ampli } from "src/ampli";
-import { Hex } from "viem";
+import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createClaimObjective =
   (core: Core, { execute }: ExecuteFunctions) =>
@@ -15,7 +14,7 @@ export const createClaimObjective =
       {
         functionName: "Pri_11__claimObjective",
         systemId: getSystemId("ClaimObjectiveSystem"),
-        args: [rockEntity as Hex, objective],
+        args: [rockEntity, objective],
         withSession: true,
       },
       {

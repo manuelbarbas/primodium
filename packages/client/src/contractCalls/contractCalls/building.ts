@@ -1,7 +1,6 @@
 import { Coord } from "engine/types";
 import { EBuilding } from "contracts/config/enums";
 import { ampli } from "src/ampli";
-import { Hex } from "viem";
 import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
 import {
   Core,
@@ -11,13 +10,13 @@ import {
   TxQueueOptions,
   bigintToNumber,
 } from "@primodiumxyz/core";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
 import { Entity } from "@primodiumxyz/reactive-tables";
+import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createBuildingCalls = ({ utils, tables }: Core, { execute }: ExecuteFunctions) => {
   const buildBuilding = async (
     building: EBuilding,
-    coord: Coord & { parentEntity?: Hex },
+    coord: Coord & { parentEntity?: Entity },
     options?: Partial<TxQueueOptions>
   ) => {
     const activeAsteroid = tables.ActiveRock.get()?.value;

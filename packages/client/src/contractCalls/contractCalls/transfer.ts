@@ -1,11 +1,10 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { EObjectives } from "contracts/config/enums";
 import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
-import { Hex } from "viem";
 import { ampli } from "src/ampli";
 import { Core, AccountClient, bigintToNumber, getSystemId } from "@primodiumxyz/core";
 import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
+import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createTransferCalls = (
   { tables, utils }: Core,
@@ -75,7 +74,7 @@ export const createTransferCalls = (
         {
           functionName,
           systemId: getSystemId("TransferSystem"),
-          args: [from as Hex, to as Hex, unitCounts],
+          args: [from, to, unitCounts],
           withSession: true,
         },
         metadata,
@@ -83,8 +82,8 @@ export const createTransferCalls = (
           activeAsteroid && makeObjectiveClaimable(playerAccount.entity, claimableObjective);
 
           const commonProperties = {
-            spaceRock: from as Hex,
-            spaceRockTo: to as Hex,
+            spaceRock: from,
+            spaceRockTo: to,
             unitCounts: unitCounts.map((unitCount) => bigintToNumber(unitCount)),
             ...parseReceipt(receipt),
           };
@@ -108,7 +107,7 @@ export const createTransferCalls = (
         {
           functionName,
           systemId: getSystemId("TransferSystem"),
-          args: [from as Hex, to as Hex, resourceCounts],
+          args: [from, to, resourceCounts],
           withSession: true,
         },
         metadata,
@@ -116,8 +115,8 @@ export const createTransferCalls = (
           activeAsteroid && makeObjectiveClaimable(playerAccount.entity, claimableObjective);
 
           const commonProperties = {
-            spaceRock: from as Hex,
-            spaceRockTo: to as Hex,
+            spaceRock: from,
+            spaceRockTo: to,
             resourceCounts: resourceCounts.map((resourceCount) => bigintToNumber(resourceCount)),
             ...parseReceipt(receipt),
           };
@@ -141,7 +140,7 @@ export const createTransferCalls = (
         {
           functionName,
           systemId: getSystemId("TransferSystem"),
-          args: [from as Hex, to as Hex, unitCounts, resourceCounts],
+          args: [from, to, unitCounts, resourceCounts],
           withSession: true,
         },
         metadata,
@@ -149,8 +148,8 @@ export const createTransferCalls = (
           activeAsteroid && makeObjectiveClaimable(playerAccount.entity, claimableObjective);
 
           const commonProperties = {
-            spaceRock: from as Hex,
-            spaceRockTo: to as Hex,
+            spaceRock: from,
+            spaceRockTo: to,
             unitCounts: unitCounts.map((unitCount) => bigintToNumber(unitCount)),
             resourceCounts: resourceCounts.map((resourceCount) => bigintToNumber(resourceCount)),
             ...parseReceipt(receipt),
@@ -186,14 +185,14 @@ export const createTransferCalls = (
         {
           functionName: "Pri_11__transferUnitsTwoWay",
           systemId: getSystemId("TransferTwoWaySystem"),
-          args: [left as Hex, right as Hex, unitCounts],
+          args: [left, right, unitCounts],
           withSession: true,
         },
         metadata,
         (receipt) => {
           ampli.systemTransferTwoWaySystemPrimodiumTransferUnitsTwoWay({
-            spaceRock: left as Hex,
-            spaceRockTo: right as Hex,
+            spaceRock: left,
+            spaceRockTo: right,
             unitCounts: unitCounts.map((unitCount) => bigintToNumber(unitCount)),
             ...parseReceipt(receipt),
           });
@@ -205,14 +204,14 @@ export const createTransferCalls = (
         {
           functionName: "Pri_11__transferResourcesTwoWay",
           systemId: getSystemId("TransferTwoWaySystem"),
-          args: [left as Hex, right as Hex, resourceCounts],
+          args: [left, right, resourceCounts],
           withSession: true,
         },
         metadata,
         (receipt) => {
           ampli.systemTransferTwoWaySystemPrimodiumTransferResourcesTwoWay({
-            spaceRock: left as Hex,
-            spaceRockTo: right as Hex,
+            spaceRock: left,
+            spaceRockTo: right,
             resourceCounts: resourceCounts.map((resourceCount) => bigintToNumber(resourceCount)),
             ...parseReceipt(receipt),
           });
@@ -224,14 +223,14 @@ export const createTransferCalls = (
       {
         functionName: "Pri_11__transferUnitsAndResourcesTwoWay",
         systemId: getSystemId("TransferTwoWaySystem"),
-        args: [left as Hex, right as Hex, unitCounts, resourceCounts],
+        args: [left, right, unitCounts, resourceCounts],
         withSession: true,
       },
       metadata,
       (receipt) => {
         ampli.systemTransferTwoWaySystemPrimodiumTransferUnitsAndResourcesTwoWay({
-          spaceRock: left as Hex,
-          spaceRockTo: right as Hex,
+          spaceRock: left,
+          spaceRockTo: right,
           unitCounts: unitCounts.map((unitCount) => bigintToNumber(unitCount)),
           resourceCounts: resourceCounts.map((resourceCount) => bigintToNumber(resourceCount)),
           ...parseReceipt(receipt),

@@ -3,7 +3,7 @@ import { ampli } from "src/ampli";
 import { Core, getSystemId, getEntityTypeName, bigintToNumber, UnitEntityLookup } from "@primodiumxyz/core";
 import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
+import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createTrainCalls =
   ({ tables }: Core, { execute }: ExecuteFunctions) =>
