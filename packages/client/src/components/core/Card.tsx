@@ -1,5 +1,5 @@
 import { cn } from "@/util/client";
-import { lerp } from "@/util/common";
+import { lerp } from "@primodiumxyz/core";
 import { VariantProps, cva } from "class-variance-authority";
 import { forwardRef, useCallback, useRef } from "react";
 
