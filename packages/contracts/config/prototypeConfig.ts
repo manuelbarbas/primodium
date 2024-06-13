@@ -477,9 +477,9 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       11: {
         P_RequiredResources: getResourceValues({
-          Titanium: 1500,
-          Iridium: 1500,
-          Platinum: 1500,
+          Titanium: 1000,
+          Iridium: 1000,
+          Platinum: 1000,
           Kimberlite: 100,
         }),
         P_ListMaxResourceUpgrades: {
@@ -489,9 +489,9 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       12: {
         P_RequiredResources: getResourceValues({
-          Titanium: 2500,
-          Iridium: 2500,
-          Platinum: 2500,
+          Titanium: 1500,
+          Iridium: 1500,
+          Platinum: 1500,
           Kimberlite: 250,
         }),
         P_ListMaxResourceUpgrades: {
@@ -501,9 +501,9 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       13: {
         P_RequiredResources: getResourceValues({
-          Titanium: 4000,
-          Iridium: 4000,
-          Platinum: 4000,
+          Titanium: 2000,
+          Iridium: 2000,
+          Platinum: 2000,
           Kimberlite: 800,
         }),
         P_ListMaxResourceUpgrades: {
@@ -513,9 +513,9 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       14: {
         P_RequiredResources: getResourceValues({
-          Titanium: 6000,
-          Iridium: 6000,
-          Platinum: 6000,
+          Titanium: 3000,
+          Iridium: 3000,
+          Platinum: 3000,
           Kimberlite: 1200,
         }),
         P_ListMaxResourceUpgrades: {
@@ -525,9 +525,9 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       15: {
         P_RequiredResources: getResourceValues({
-          Titanium: 10000,
-          Iridium: 10000,
-          Platinum: 10000,
+          Titanium: 4000,
+          Iridium: 4000,
+          Platinum: 4000,
           Kimberlite: 2000,
         }),
         P_ListMaxResourceUpgrades: {
