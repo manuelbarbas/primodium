@@ -1,27 +1,24 @@
 import { Button } from "@/components/core/Button";
 import { Badge } from "@/components/core/Badge";
 import { Card } from "@/components/core/Card";
-import { useMud } from "@/hooks";
-import { useColonySlots } from "@/hooks/useColonySlots";
 import { useGame } from "@/hooks/useGame";
-import { components } from "@/network/components";
-import { getAsteroidInfo } from "@/util/asteroid";
-import { EntityType } from "@/util/constants";
-import { EntityToUnitImage } from "@/util/mappings";
-import { entityToFleetName, entityToRockName } from "@/util/name";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { DeferredAsteroidsRenderContainer } from "@/game/lib/objects/Asteroid/DeferredAsteroidsRenderContainer";
+import { useAccountClient, useColonySlots, useCore } from "@primodiumxyz/core/react";
+import { entityToFleetName, entityToRockName, EntityType } from "@primodiumxyz/core";
+import { EntityToUnitImage } from "@/util/image";
 
 export const OwnedColonyShip: React.FC<{ parentEntity: Entity; onClick?: () => void }> = ({
   parentEntity,
   onClick,
 }) => {
-  const isFleet = components.IsFleet.has(parentEntity);
+  const { tables } = useCore();
+  const isFleet = tables.IsFleet.has(parentEntity);
   const name = isFleet ? entityToFleetName(parentEntity) : entityToRockName(parentEntity);
 
   const image = isFleet ? InterfaceIcons.Fleet : InterfaceIcons.Asteroid;
-  const Selected = isFleet ? components.SelectedFleet : components.SelectedRock;
+  const Selected = isFleet ? tables.SelectedFleet : tables.SelectedRock;
 
   const selected = Selected.use()?.value === parentEntity;
 
@@ -42,16 +39,17 @@ export const OwnedColonyShip: React.FC<{ parentEntity: Entity; onClick?: () => v
 export const OwnedColonyShips: React.FC<{ className?: string }> = ({ className }) => {
   const {
     playerAccount: { entity: playerEntity },
-  } = useMud();
+  } = useAccountClient();
+  const { tables, utils } = useCore();
   const game = useGame();
 
   const colonyShips = useColonySlots(playerEntity).occupiedSlots.filter((slot) => slot.type === "ship");
 
   const handleSelectRock = (entity: Entity) => {
-    const { position } = getAsteroidInfo(game, entity);
+    const { position } = utils.getAsteroidInfo(entity);
     const { pan, zoomTo } = game.STARMAP.camera;
 
-    components.SelectedRock.set({ value: entity });
+    tables.SelectedRock.set({ value: entity });
 
     pan({
       x: position.x,
@@ -63,10 +61,10 @@ export const OwnedColonyShips: React.FC<{ className?: string }> = ({ className }
 
   const handleSelectFleet = (entity: Entity) => {
     const { pan, zoomTo } = game.STARMAP.camera;
-    const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
-    const time = components.Time.get()?.value ?? 0n;
+    const arrivalTime = tables.FleetMovement.get(entity)?.arrivalTime ?? 0n;
+    const time = tables.Time.get()?.value ?? 0n;
 
-    if (arrivalTime < time) components.SelectedFleet.set({ value: entity });
+    if (arrivalTime < time) tables.SelectedFleet.set({ value: entity });
 
     const objects = game.STARMAP.objects;
     const fleet = objects.fleet.get(entity);
@@ -103,7 +101,7 @@ export const OwnedColonyShips: React.FC<{ className?: string }> = ({ className }
             key={`colonyship-${shipData.parentEntity}-${i}`}
             parentEntity={shipData.parentEntity}
             onClick={() =>
-              components.IsFleet.has(shipData.parentEntity)
+              tables.IsFleet.has(shipData.parentEntity)
                 ? handleSelectFleet(shipData.parentEntity)
                 : handleSelectRock(shipData.parentEntity)
             }

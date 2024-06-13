@@ -1,26 +1,22 @@
 import { Badge } from "@/components/core/Badge";
 import { Card } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
-import { useMud } from "@/hooks";
-import { useShardAsteroid } from "@/hooks/primodium/useShardAsteroid";
+import { useAsteroidImage } from "@/hooks/useAsteroidImage";
 import { useGame } from "@/hooks/useGame";
-import { components } from "@/network/components";
-import { EntityType } from "@/util/constants";
-import { formatResourceCount, formatTimeShort } from "@/util/number";
-import { useEntityQuery } from "@latticexyz/react";
-import { Entity, Has } from "@latticexyz/recs";
 import { ResourceImages } from "@primodiumxyz/assets";
+import { entityToRockName, EntityType, formatResourceCount, formatTimeShort } from "@primodiumxyz/core";
+import { useAccountClient, useCore, useShardAsteroid } from "@primodiumxyz/core/react";
+import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
 import { Button } from "src/components/core/Button";
-import { getAsteroidImage } from "src/util/asteroid";
-import { entityToRockName } from "src/util/name";
 
 export const Shards = ({ className = "" }: { className?: string }) => {
   const {
     playerAccount: { entity: playerEntity },
-  } = useMud();
-  const query = [Has(components.ShardAsteroid)];
-  const shards = useEntityQuery(query).sort((a) => {
-    const aOwner = components.OwnedBy.get(a)?.value;
+  } = useAccountClient();
+  const { tables } = useCore();
+
+  const shards = useQuery({ with: [tables.ShardAsteroid] }).sort((a) => {
+    const aOwner = tables.OwnedBy.get(a)?.value;
     if (!aOwner) return 0;
     if (aOwner === playerEntity) return -1;
     return -1;
@@ -28,11 +24,11 @@ export const Shards = ({ className = "" }: { className?: string }) => {
   const game = useGame();
 
   const handleSelectShard = (entity: Entity) => {
-    const position = components.Position.get(entity);
+    const position = tables.Position.get(entity);
     if (!position) return;
     const { pan, zoomTo } = game.STARMAP.camera;
 
-    components.SelectedRock.set({ value: entity });
+    tables.SelectedRock.set({ value: entity });
 
     pan({
       x: position.x,
@@ -73,12 +69,12 @@ const Shard = ({
 }) => {
   const {
     playerAccount: { entity: playerEntity },
-  } = useMud();
-  const game = useGame();
-  const imageUri = getAsteroidImage(game, shardEntity);
-  const position = components.Position.get(shardEntity);
+  } = useAccountClient();
+  const { tables } = useCore();
+  const imageUri = useAsteroidImage(shardEntity);
+  const position = tables.Position.get(shardEntity);
   const shardData = useShardAsteroid(shardEntity);
-  const selected = components.SelectedRock.use()?.value === shardEntity;
+  const selected = tables.SelectedRock.use()?.value === shardEntity;
   if (!position || !shardData) return null;
 
   return (
