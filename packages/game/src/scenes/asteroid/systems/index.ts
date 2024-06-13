@@ -1,4 +1,5 @@
 import { Core } from "@primodiumxyz/core";
+import { createContractCalls, ContractCalls } from "../../../../../client/src/contractCalls/createContractCalls";
 
 import { PrimodiumScene } from "@/api/scene";
 import { renderWormholeAnimations } from "@/scenes/asteroid/systems/renderWormholeAnimations";
@@ -10,7 +11,7 @@ import { renderAsteroidMap } from "@/scenes/asteroid/systems/renderAsteroidMap";
 import { renderHoverTile } from "@/scenes/asteroid/systems/renderHoverTile";
 import { renderQueuedBuildings } from "@/scenes/asteroid/systems/renderQueuedBuildings";
 
-export const runSystems = (scene: PrimodiumScene, core: Core) => {
+export const runSystems = (scene: PrimodiumScene, core: Core, contractCalls: ContractCalls) => {
   // Render world entity's sprites
   renderAsteroidMap(scene, core);
   renderBuilding(scene, core);

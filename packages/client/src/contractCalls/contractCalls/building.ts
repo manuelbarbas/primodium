@@ -38,6 +38,7 @@ export const createBuildingCalls = ({ utils, tables }: Core, { execute }: Execut
           coord: utils.getBuildingBottomLeft(coord, BuildingEntityLookup[building]),
           buildingType: BuildingEntityLookup[building],
         },
+        type: "build",
         ...options,
       },
       (receipt) => {

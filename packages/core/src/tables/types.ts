@@ -1,4 +1,4 @@
-import { BaseTableMetadata, Entity } from "@primodiumxyz/reactive-tables";
+import { Entity } from "@primodiumxyz/reactive-tables";
 
 export type NotificationType = "battle" | "arrival-transit" | "arrival-orbit";
 export type Notification = {
@@ -8,8 +8,9 @@ export type Notification = {
   type: NotificationType;
 };
 
-export type TxQueueOptions<M extends BaseTableMetadata = BaseTableMetadata> = {
+export type TxQueueOptions = {
   id: string;
   force?: true;
-  metadata?: M;
+  metadata?: Record<string, any>;
+  type?: string;
 };

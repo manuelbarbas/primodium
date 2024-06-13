@@ -1,6 +1,5 @@
 import { Abi, ContractFunctionName, Hex, TransactionReceipt } from "viem";
 import { components } from "../../network/components";
-import { MetadataTypes, TxQueueOptions } from "../../network/components/customComponents/TransactionQueueComponent";
 import {
   encodeSystemCall,
   encodeSystemCallFrom,
@@ -9,7 +8,7 @@ import {
   SystemCall,
   SystemCallFrom,
 } from "../../network/setup/encodeSystemCall";
-import { AccountClient, Core, WorldAbi, WorldAbiType } from "@primodiumxyz/core";
+import { AccountClient, Core, WorldAbi, WorldAbiType, TxQueueOptions } from "@primodiumxyz/core";
 import { _execute } from "@/network/txExecute/_execute";
 
 // Function that takes in a transaction promise that resolves to a completed transaction
@@ -26,25 +25,25 @@ type ExecuteCallOptions<abi extends Abi, functionName extends ContractFunctionNa
 };
 
 export type ExecuteFunctions = {
-  execute: <T extends keyof MetadataTypes, functionName extends ContractFunctionName<WorldAbiType>>(
+  execute: <functionName extends ContractFunctionName<WorldAbiType>>(
     options: ExecuteCallOptions<WorldAbiType, functionName>,
-    txQueueOptions?: TxQueueOptions<T>,
+    txQueueOptions?: TxQueueOptions,
     onComplete?: (receipt: TransactionReceipt | undefined) => void
   ) => Promise<void>;
-  executeBatch: <T extends keyof MetadataTypes, functionName extends ContractFunctionName<WorldAbiType>>(
+  executeBatch: <functionName extends ContractFunctionName<WorldAbiType>>(
     options: {
       systemCalls: readonly Omit<SystemCallFrom<WorldAbiType, functionName>, "abi" | "from">[];
       withSession?: boolean;
     },
-    txQueueOptions?: TxQueueOptions<T>,
+    txQueueOptions?: TxQueueOptions,
     onComplete?: (receipt: TransactionReceipt | undefined) => void
   ) => Promise<void>;
 };
 
 export function createExecute(core: Core, { playerAccount, sessionAccount }: AccountClient): ExecuteFunctions {
-  async function execute<T extends keyof MetadataTypes, functionName extends ContractFunctionName<WorldAbiType>>(
+  async function execute<functionName extends ContractFunctionName<WorldAbiType>>(
     { withSession, systemId, functionName, args, options: callOptions }: ExecuteCallOptions<WorldAbiType, functionName>,
-    txQueueOptions?: TxQueueOptions<T>,
+    txQueueOptions?: TxQueueOptions,
     onComplete?: (receipt: TransactionReceipt | undefined) => void
   ) {
     const account = withSession ? sessionAccount ?? playerAccount : playerAccount;
@@ -86,7 +85,7 @@ export function createExecute(core: Core, { playerAccount, sessionAccount }: Acc
     }
   }
 
-  async function executeBatch<T extends keyof MetadataTypes, functionName extends ContractFunctionName<WorldAbiType>>(
+  async function executeBatch<functionName extends ContractFunctionName<WorldAbiType>>(
     {
       systemCalls,
       withSession,
@@ -94,7 +93,7 @@ export function createExecute(core: Core, { playerAccount, sessionAccount }: Acc
       systemCalls: readonly Omit<SystemCallFrom<WorldAbiType, functionName>, "abi" | "from">[];
       withSession?: boolean;
     },
-    txQueueOptions?: TxQueueOptions<T>,
+    txQueueOptions?: TxQueueOptions,
     onComplete?: (receipt: TransactionReceipt | undefined) => void
   ) {
     const account = withSession ? sessionAccount ?? playerAccount : playerAccount;

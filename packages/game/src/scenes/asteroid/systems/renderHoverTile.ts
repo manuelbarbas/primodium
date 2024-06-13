@@ -1,19 +1,22 @@
-import { Has, defineEnterSystem, defineExitSystem, defineUpdateSystem, namespaceWorld } from "@latticexyz/recs";
-import { components } from "@primodiumxyz/core/network/components";
-import { world } from "@primodiumxyz/core/network/world";
-import { DepthLayers } from "@primodiumxyz/core/game/lib/constants/common";
-
+import { Core } from "@primodiumxyz/core";
+import { $query, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { PrimodiumScene } from "@/api/scene";
+import { DepthLayers } from "@/lib/constants/common";
 import { Tile } from "@/lib/objects/Tile";
 
-export const renderHoverTile = (scene: PrimodiumScene) => {
+export const renderHoverTile = (scene: PrimodiumScene, core: Core) => {
+  const {
+    network: { world },
+    tables,
+  } = core;
+
   const systemsWorld = namespaceWorld(world, "systems");
 
-  const query = [Has(components.HoverTile)];
+  const query = { with: [tables.HoverTile] };
 
   let hoverTile: Tile | undefined;
   const render = () => {
-    const tileCoord = components.HoverTile.get();
+    const tileCoord = tables.HoverTile.get();
 
     if (!tileCoord) return;
 
@@ -25,14 +28,12 @@ export const renderHoverTile = (scene: PrimodiumScene) => {
     hoverTile.setCoordPosition(tileCoord);
   };
 
-  defineEnterSystem(systemsWorld, query, () => {
-    render();
-  });
-
-  defineUpdateSystem(systemsWorld, query, render);
-
-  defineExitSystem(systemsWorld, query, () => {
-    hoverTile?.dispose();
-    hoverTile = undefined;
+  $query(systemsWorld, query, {
+    onEnter: render,
+    onChange: render,
+    onExit: () => {
+      hoverTile?.dispose();
+      hoverTile = undefined;
+    },
   });
 };

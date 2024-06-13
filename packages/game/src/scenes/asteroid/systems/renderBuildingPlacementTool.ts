@@ -1,40 +1,27 @@
-import {
-  Entity,
-  Has,
-  HasValue,
-  defineEnterSystem,
-  defineExitSystem,
-  defineUpdateSystem,
-  namespaceWorld,
-} from "@latticexyz/recs";
-import { Action, BuildingEnumLookup } from "@primodiumxyz/core/util/constants";
-import { getRecipe, hasEnoughResources } from "@primodiumxyz/core/util/recipe";
-import { isDomInteraction } from "@primodiumxyz/core/util/canvas";
-import { DepthLayers } from "@primodiumxyz/core/game/lib/constants/common";
-import { components } from "@primodiumxyz/core/network/components";
-import { buildBuilding } from "@primodiumxyz/core/network/setup/contractCalls/buildBuilding";
-import { MUD } from "@primodiumxyz/core/network/types";
-import { world } from "@primodiumxyz/core/network/world";
-import { getBuildingDimensions, getBuildingOrigin, validateBuildingPlacement } from "@primodiumxyz/core/util/building";
-import { getEntityTypeName } from "@primodiumxyz/core/util/common";
+import { Action, Core, getEntityTypeName } from "@primodiumxyz/core";
+import { $query, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 
 import { Building } from "@/lib/objects/building";
 import { PrimodiumScene } from "@/api/scene";
+import { DepthLayers } from "@/lib/constants/common";
+import { table } from "console";
 
-export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: PrimodiumScene) => {
+export const handleClick = (pointer: Phaser.Input.Pointer, core: Core, scene: PrimodiumScene) => {
+  const { tables, utils } = core;
+
   if (pointer?.rightButtonDown()) {
-    components.SelectedAction.remove();
+    tables.SelectedAction.remove();
     return;
   }
 
-  const asteroid = components.ActiveRock.get()?.value as Entity;
-  const buildingPrototype = components.SelectedBuilding.get()?.value;
-  const tileCoord = components.HoverTile.get();
+  const asteroid = tables.ActiveRock.get()?.value;
+  const buildingPrototype = tables.SelectedBuilding.get()?.value;
+  const tileCoord = tables.HoverTile.get();
 
   if (!asteroid || !buildingPrototype || !tileCoord) return;
 
-  const hasEnough = hasEnoughResources(getRecipe(buildingPrototype, 1n), asteroid);
-  const validPlacement = validateBuildingPlacement(tileCoord, buildingPrototype, asteroid);
+  const hasEnough = utils.hasEnoughResources(utils.getRecipe(buildingPrototype, 1n), asteroid);
+  const validPlacement = utils.validateBuildingPlacement(tileCoord, buildingPrototype, asteroid);
 
   if (!hasEnough || !validPlacement) {
     if (!hasEnough) scene.notify("error", "Not enough resources to build " + getEntityTypeName(buildingPrototype));
@@ -43,38 +30,36 @@ export const handleClick = (pointer: Phaser.Input.Pointer, mud: MUD, scene: Prim
     return;
   }
 
-  const buildingOrigin = getBuildingOrigin(tileCoord, buildingPrototype);
+  const buildingOrigin = utils.getBuildingOrigin(tileCoord, buildingPrototype);
   if (!buildingOrigin) return;
 
-  buildBuilding(mud, BuildingEnumLookup[buildingPrototype], buildingOrigin);
-  components.SelectedAction.remove();
-  components.SelectedBuilding.remove();
+  // buildBuilding(mud, BuildingEnumLookup[buildingPrototype], buildingOrigin);
+  tables.SelectedAction.remove();
+  tables.SelectedBuilding.remove();
 };
 
-export const renderBuildingPlacementTool = (scene: PrimodiumScene, mud: MUD) => {
+export const renderBuildingPlacementTool = (scene: PrimodiumScene, core: Core) => {
+  const {
+    network: { world },
+    tables,
+    utils,
+  } = core;
   const systemsWorld = namespaceWorld(world, "systems");
-
-  const query = [
-    Has(components.HoverTile),
-    HasValue(components.SelectedAction, {
-      value: Action.PlaceBuilding,
-    }),
-  ];
 
   let placementBuilding: Building | undefined;
   const render = () => {
-    const buildingPrototype = components.SelectedBuilding.get()?.value;
+    const buildingPrototype = tables.SelectedBuilding.get()?.value;
 
-    const tileCoord = components.HoverTile.get();
+    const tileCoord = tables.HoverTile.get();
 
     if (!tileCoord || !buildingPrototype) return;
 
-    const buildingDimensions = getBuildingDimensions(buildingPrototype);
+    const buildingDimensions = utils.getBuildingDimensions(buildingPrototype);
 
-    const asteroid = components.ActiveRock.get()?.value as Entity;
+    const asteroid = tables.ActiveRock.get()?.value as Entity;
     if (!asteroid) throw new Error("No active rock active");
-    const hasEnough = hasEnoughResources(getRecipe(buildingPrototype, 1n), asteroid);
-    const validPlacement = validateBuildingPlacement(tileCoord, buildingPrototype, asteroid);
+    const hasEnough = utils.hasEnoughResources(utils.getRecipe(buildingPrototype, 1n), asteroid);
+    const validPlacement = utils.validateBuildingPlacement(tileCoord, buildingPrototype, asteroid);
 
     if (!placementBuilding) {
       placementBuilding = new Building({
@@ -84,9 +69,8 @@ export const renderBuildingPlacementTool = (scene: PrimodiumScene, mud: MUD) => 
         coord: tileCoord,
       });
 
-      placementBuilding.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
-        if (isDomInteraction(pointer, "down")) return;
-        handleClick(pointer, mud, scene);
+      placementBuilding.onClick((pointer: Phaser.Input.Pointer) => {
+        handleClick(pointer, core, scene);
       });
     }
 
@@ -105,16 +89,27 @@ export const renderBuildingPlacementTool = (scene: PrimodiumScene, mud: MUD) => 
     }
   };
 
-  defineEnterSystem(systemsWorld, query, () => {
-    render();
+  const query = {
+    with: [tables.HoverTile],
+    withProperties: [
+      {
+        table: tables.SelectedAction,
+        properties: {
+          value: Action.PlaceBuilding,
+        },
+      },
+    ],
+  };
 
-    console.info("[ENTER SYSTEM](renderBuildingPlacement) Building placement tool has been added");
-  });
-
-  defineUpdateSystem(systemsWorld, query, render);
-
-  defineExitSystem(systemsWorld, query, () => {
-    placementBuilding?.destroy();
-    placementBuilding = undefined;
+  $query(systemsWorld, query, {
+    onEnter: () => {
+      render();
+      console.info("[ENTER SYSTEM](renderBuildingPlacement) Building placement tool has been added");
+    },
+    onChange: render,
+    onExit: () => {
+      placementBuilding?.destroy();
+      placementBuilding = undefined;
+    },
   });
 };

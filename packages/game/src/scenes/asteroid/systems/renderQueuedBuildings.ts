@@ -1,43 +1,31 @@
-import {
-  ComponentUpdate,
-  Entity,
-  Has,
-  HasValue,
-  defineEnterSystem,
-  defineExitSystem,
-  namespaceWorld,
-  runQuery,
-} from "@latticexyz/recs";
-import { getBuildingDimensions } from "@primodiumxyz/core/util/building";
-import { TransactionQueueType } from "@primodiumxyz/core/util/constants";
-import { components } from "@primodiumxyz/core/network/components";
-import { world } from "@primodiumxyz/core/network/world";
+import { Core } from "@primodiumxyz/core";
+import { Coord } from "@primodiumxyz/engine/types";
+import { namespaceWorld, $query, Entity } from "@primodiumxyz/reactive-tables";
 
 import { PrimodiumScene } from "@/api/scene";
 import { BuildingConstruction } from "@/lib/objects/building";
 
-const getQueuePositionString = (entity: Entity) => {
-  const position = components.TransactionQueue.getIndex(entity);
+const getQueuePositionString = (entity: Entity, core: Core) => {
+  const { tables } = core;
+  const position = tables.TransactionQueue.getIndex(entity);
 
   return position > 0 ? position.toString() : "*";
 };
 
-export const renderQueuedBuildings = (scene: PrimodiumScene) => {
+export const renderQueuedBuildings = (scene: PrimodiumScene, core: Core) => {
+  const {
+    network: { world },
+    tables,
+    utils,
+  } = core;
   const systemsWorld = namespaceWorld(world, "systems");
 
-  const query = [
-    Has(components.TransactionQueue),
-    HasValue(components.TransactionQueue, {
-      type: TransactionQueueType.Build,
-    }),
-  ];
-
-  const render = ({ entity }: ComponentUpdate) => {
-    const metadata = components.TransactionQueue.getMetadata<TransactionQueueType.Build>(entity);
+  const render = (entity: Entity) => {
+    const metadata = tables.TransactionQueue.getMetadata(entity) as { coord: Coord; buildingType: Entity };
 
     if (!metadata) return;
 
-    const dimensions = getBuildingDimensions(metadata.buildingType);
+    const dimensions = utils.getBuildingDimensions(metadata.buildingType);
 
     if (scene.objects.constructionBuilding.has(entity)) return;
 
@@ -46,26 +34,27 @@ export const renderQueuedBuildings = (scene: PrimodiumScene) => {
       scene,
       coord: metadata.coord,
       buildingDimensions: dimensions,
-      queueText: getQueuePositionString(entity),
+      queueText: getQueuePositionString(entity, core),
     });
   };
 
-  defineEnterSystem(systemsWorld, query, (update) => {
-    render(update);
+  const query = {
+    withProperties: [{ table: tables.TransactionQueue, properties: { type: "build" } }],
+  };
 
-    console.info("[ENTER SYSTEM](transaction queued)");
-  });
+  $query(systemsWorld, query, {
+    onEnter: ({ entity }) => {
+      render(entity);
+      console.info("[ENTER SYSTEM](transaction queued)");
+    },
+    onExit: ({ entity }) => {
+      scene.objects.constructionBuilding.get(entity)?.destroy();
 
-  defineExitSystem(systemsWorld, [Has(components.TransactionQueue)], ({ entity }) => {
-    const construction = scene.objects.constructionBuilding.get(entity);
-    if (construction) {
-      construction.destroy();
-    }
-
-    //udpate text for remaining queued items
-    for (const entity of runQuery([Has(components.TransactionQueue)])) {
-      scene.objects.constructionBuilding.get(entity)?.setQueueText(getQueuePositionString(entity));
-    }
-    console.info("[EXIT SYSTEM](transaction completed)");
+      //udpate text for remaining queued items
+      for (const entity of tables.TransactionQueue.getAll()) {
+        scene.objects.constructionBuilding.get(entity)?.setQueueText(getQueuePositionString(entity, core));
+      }
+      console.info("[EXIT SYSTEM](transaction completed)");
+    },
   });
 };
