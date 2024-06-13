@@ -1,7 +1,6 @@
-import { Entity } from "@latticexyz/recs";
 import { Coord } from "@primodiumxyz/engine/types";
-import { components } from "@primodiumxyz/core/network/components";
-import { entityToRockName } from "@primodiumxyz/core/util/name";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { entityToRockName, Tables } from "@primodiumxyz/core";
 
 import { PrimodiumScene } from "@/api/scene";
 import { ShardAsteroid } from "@/lib/objects/asteroid/ShardAsteroid";
@@ -11,10 +10,11 @@ export const renderShardAsteroid = (args: {
   entity: Entity;
   coord?: Coord;
   addEventHandlers?: boolean;
+  tables: Tables;
 }) => {
-  const { scene, entity, coord = { x: 0, y: 0 }, addEventHandlers = false } = args;
+  const { scene, entity, coord = { x: 0, y: 0 }, addEventHandlers = false, tables } = args;
   //TODO: replace with hanks fancy api stuff
-  const asteroidData = components.ShardAsteroid.get(entity);
+  const asteroidData = tables.ShardAsteroid.get(entity);
   if (!asteroidData) throw new Error("Shard asteroid data not found");
 
   const asteroid = new ShardAsteroid({ id: entity, scene, coord });
@@ -39,20 +39,20 @@ export const renderShardAsteroid = (args: {
       ];
       //set the selected rock immediately if we are sufficiently zoomed in
       if (scene.camera.phaserCamera.zoom >= scene.config.camera.maxZoom * 0.5)
-        components.SelectedRock.set({ value: entity });
-      else sequence.push({ at: 800, run: () => components.SelectedRock.set({ value: entity }) });
+        tables.SelectedRock.set({ value: entity });
+      else sequence.push({ at: 800, run: () => tables.SelectedRock.set({ value: entity }) });
 
       scene.phaserScene.add.timeline(sequence).play();
 
       //set the selected rock immediately if we are sufficiently zoomed in
       if (scene.camera.phaserCamera.zoom >= scene.config.camera.maxZoom * 0.5)
-        components.SelectedRock.set({ value: entity });
+        tables.SelectedRock.set({ value: entity });
     })
     .onHoverEnter(() => {
-      components.HoverEntity.set({ value: entity });
+      tables.HoverEntity.set({ value: entity });
     })
     .onHoverExit(() => {
-      components.HoverEntity.remove();
+      tables.HoverEntity.remove();
     });
 
   return asteroid;

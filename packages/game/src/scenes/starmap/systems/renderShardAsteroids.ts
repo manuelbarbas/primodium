@@ -28,7 +28,7 @@ export const renderShardAsteroids = (scene: PrimodiumScene, core: Core) => {
         const coord = tables.Position.get(entity);
         if (!coord) return;
 
-        renderShardAsteroid({ scene, entity, coord, addEventHandlers: true });
+        renderShardAsteroid({ scene, entity, coord, tables, addEventHandlers: true });
       },
       onChange: ({ entity, table }) => {
         if (table.id === tables.Position.id) return;

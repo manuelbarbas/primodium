@@ -79,7 +79,7 @@ export const renderFleets = (scene: PrimodiumScene, core: Core) => {
     const fleet = scene.objects.fleet.get(entity);
 
     if (!fleet) {
-      const newFleet = renderFleet({ scene, entity });
+      const newFleet = renderFleet({ scene, entity, tables });
       return newFleet;
     }
 

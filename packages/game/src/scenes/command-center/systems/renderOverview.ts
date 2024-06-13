@@ -38,7 +38,7 @@ export const renderOverview = (scene: PrimodiumScene, core: Core) => {
       if (!entity) return;
 
       const asteroid = tables.ShardAsteroid.has(entity)
-        ? renderShardAsteroid({ scene, entity })
+        ? renderShardAsteroid({ scene, entity, tables })
         : renderAsteroid({ scene, entity });
 
       asteroid
@@ -59,7 +59,7 @@ export const renderOverview = (scene: PrimodiumScene, core: Core) => {
           transitsToUpdate.add(fleet);
           return;
         }
-        const fleetObject = renderFleet({ scene, entity: fleet });
+        const fleetObject = renderFleet({ scene, entity: fleet, tables });
         fleetObject?.onClick(() => {
           tables.BattleTarget.set({
             value: fleet,
@@ -154,7 +154,7 @@ export const renderOverview = (scene: PrimodiumScene, core: Core) => {
           const orbitRing = scene.objects.asteroid.get(selectedRock)?.getFleetsContainer();
           const fleetObj =
             scene.objects.fleet.get(entity) ??
-            renderFleet({ scene, entity }).onClick(() => {
+            renderFleet({ scene, entity, tables }).onClick(() => {
               tables.BattleTarget.set({
                 value: entity,
               });
@@ -194,7 +194,7 @@ export const renderOverview = (scene: PrimodiumScene, core: Core) => {
         const progress = Number(timeTraveled) / Number(totaltime);
 
         if (progress >= 1) {
-          const fleet = scene.objects.fleet.get(transit) ?? renderFleet({ scene, entity: transit });
+          const fleet = scene.objects.fleet.get(transit) ?? renderFleet({ scene, entity: transit, tables });
           const orbitRing = scene.objects.asteroid.get(movement.destination as Entity)?.getFleetsContainer();
 
           if (orbitRing && fleet) {

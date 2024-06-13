@@ -25,6 +25,7 @@ export const renderAsteroids = (scene: PrimodiumScene, core: Core) => {
         scene,
         entity,
         coord,
+        core,
         addEventHandlers: true,
       });
 
