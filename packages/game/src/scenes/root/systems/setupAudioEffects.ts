@@ -1,19 +1,25 @@
-import { defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { components } from "@primodiumxyz/core/network/components";
-import { world } from "@primodiumxyz/core/network/world";
-import { getRandomRange } from "@primodiumxyz/core/util/common";
+import { Core, getRandomRange } from "@primodiumxyz/core";
+import { namespaceWorld } from "@primodiumxyz/reactive-tables";
 
 import { PrimodiumScene } from "@/api/scene";
 
-export const setupAudioEffects = (scene: PrimodiumScene) => {
+export const setupAudioEffects = (scene: PrimodiumScene, core: Core) => {
+  const {
+    tables,
+    network: { world },
+  } = core;
   const systemsWorld = namespaceWorld(world, "systems");
 
-  defineComponentSystem(systemsWorld, components.HoverEntity, ({ value }) => {
-    if (!value[0]) return;
+  tables.HoverEntity.watch({
+    world: systemsWorld,
+    onUpdate: ({ properties: { current } }) => {
+      const entity = current?.value;
+      if (!entity) return;
 
-    scene.audio.play("DataPoint2", "ui", {
-      volume: 0.1,
-      detune: getRandomRange(-200, 200),
-    });
+      scene.audio.play("DataPoint2", "ui", {
+        volume: 0.1,
+        detune: getRandomRange(-200, 200),
+      });
+    },
   });
 };
