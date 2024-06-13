@@ -1,6 +1,6 @@
+import { shortenAddress } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
 import { useEffect, useState } from "react";
-import { useMud } from "src/hooks";
-import { shortenAddress } from "src/util/common";
 import { Hex } from "viem";
 
 const ensNames: Record<Hex, string | null> = {};
@@ -13,7 +13,7 @@ export const AddressDisplay = ({
   address: Hex;
   notShort?: boolean;
 }) => {
-  const client = useMud().network.publicClient;
+  const client = useCore().network.publicClient;
 
   const [ensName, setEnsName] = useState<string>();
 

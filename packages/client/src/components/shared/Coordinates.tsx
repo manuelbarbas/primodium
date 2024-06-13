@@ -2,21 +2,22 @@ import { useEffect, useState } from "react";
 import { FaSquare, FaLocationArrow } from "react-icons/fa";
 import { FaCropSimple, FaSquareXmark } from "react-icons/fa6";
 import { Coord } from "engine/types";
-import { components } from "@/network/components";
 import { useGame } from "@/hooks/useGame";
-import { Mode } from "@/util/constants";
 import { Tile } from "@/game/lib/objects/Tile";
 import { DepthLayers } from "@/game/lib/constants/common";
 import { usePersistentStore } from "@/game/stores/PersistentStore";
 import { cn } from "@/util/client";
+import { useCore } from "@primodiumxyz/core/react";
+import { Mode } from "@primodiumxyz/core";
 
 // This will show tile and region coordinates in the starmap, and tile coordinates when hovering a tile in asteroid
 // In dev mode, this will be slightly above the "MUD Dev Tools" button, and be clickable in starmap for more info (pixel coordinates as well)
 export const Coordinates = () => {
   const DEV = import.meta.env.PRI_DEV === "true";
   const [uiScale] = usePersistentStore((state) => [state.uiScale]);
+  const { tables } = useCore();
 
-  const selectedMode = components.SelectedMode.use()?.value;
+  const selectedMode = tables.SelectedMode.use()?.value;
   const asteroidMode = selectedMode === Mode.Asteroid || selectedMode === Mode.Spectate;
   const starmapMode = selectedMode === Mode.Starmap;
 
@@ -36,7 +37,8 @@ export const Coordinates = () => {
 
 /* ---------------------------------- USER ---------------------------------- */
 export const CoordsAsteroid = () => {
-  const tileCoord = components.HoverTile.use();
+  const { tables } = useCore();
+  const tileCoord = tables.HoverTile.use();
 
   return (
     <div className="grid grid-cols-[12px_40px_48px] items-center gap-2 bg-black bg-opacity-30 p-2 rounded-sm">
@@ -95,10 +97,11 @@ export const CoordsStarmap = ({ DEV }: { DEV: boolean }) => {
 
 /* ----------------------------------- DEV ---------------------------------- */
 export const CoordsAsteroidDev = () => {
+  const { tables } = useCore();
   const scene = useGame().ASTEROID;
   const [tileCoord, setTileCoord] = useState<Coord | undefined>(undefined);
 
-  const originalTile = components.HoverTile.use();
+  const originalTile = tables.HoverTile.use();
   let devTile: Tile | undefined;
 
   useEffect(() => {

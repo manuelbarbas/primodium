@@ -3,27 +3,26 @@ import { List } from "@/components/core/List";
 import { Modal } from "@/components/core/Modal";
 import { ObjectivesScreen } from "@/components/hud/global/modals/objectives/ObjectivesScreen";
 import { usePersistentStore } from "@/game/stores/PersistentStore";
-import { useMud } from "@/hooks";
-import { components } from "@/network/components";
 import { cn } from "@/util/client";
-import { getEntityTypeName } from "@/util/common";
-import { ObjectiveEntityLookup } from "@/util/constants";
 import { canShowObjective, getCanClaimObjective } from "@/util/objectives/objectiveRequirements";
 import { Objectives } from "@/util/objectives/objectives";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useMemo, useState } from "react";
 import { FaExclamationCircle } from "react-icons/fa";
 import { Hex } from "viem";
 import { useShallow } from "zustand/react/shallow";
+import { getEntityTypeName, ObjectiveEntityLookup } from "@primodiumxyz/core";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
 
 export const AvailableObjectives = () => {
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
-  const player = useMud().playerAccount.entity;
-  const asteroid = components.ActiveRock.use()?.value;
-  const asteroidOwner = components.OwnedBy.use(asteroid)?.value;
+  const { tables } = useCore();
+  const player = useAccountClient().playerAccount.entity;
+  const asteroid = tables.ActiveRock.use()?.value;
+  const asteroidOwner = tables.OwnedBy.use(asteroid)?.value;
 
-  const time = components.Time.use()?.value;
+  const time = tables.Time.use()?.value;
   const { showObjectives, setShowObjectives } = usePersistentStore(
     useShallow((state) => ({ setShowObjectives: state.setShowObjectives, showObjectives: state.showObjectives }))
   );
@@ -31,7 +30,7 @@ export const AvailableObjectives = () => {
     return [...Objectives.entries()].filter(([key]) => {
       const objectiveEntity = ObjectiveEntityLookup[key];
 
-      const completed = components.CompletedObjective.hasWithKeys({
+      const completed = tables.CompletedObjective.hasWithKeys({
         entity: player as Hex,
         objective: objectiveEntity as Hex,
       });
@@ -135,15 +134,16 @@ const AvailableObjectiveItem = ({
   objectiveEntity: Entity;
   onClick?: () => void;
 }) => {
-  const time = components.Time.use()?.value;
+  const { tables } = useCore();
+  const time = tables.Time.use()?.value;
   const claimable = useMemo(
     () => getCanClaimObjective(playerEntity, asteroidEntity, objectiveEntity),
     [time, asteroidEntity]
   );
 
   const claimed =
-    components.CompletedObjective.useWithKeys({ entity: playerEntity as Hex, objective: objectiveEntity as Hex })
-      ?.value ?? false;
+    tables.CompletedObjective.useWithKeys({ entity: playerEntity as Hex, objective: objectiveEntity as Hex })?.value ??
+    false;
 
   return (
     <List.Item strikethrough={claimed} active={claimable && !claimed} bullet>
