@@ -15,7 +15,7 @@ export const initAsteroidScene = async (game: GlobalApi, core: Core): Promise<Pr
   const sceneApi = createSceneApi(scene);
 
   setupMouseInputs(sceneApi, core);
-  setupBasicCameraMovement(sceneApi, core);
+  setupBasicCameraMovement(sceneApi, core.network.world);
   setupKeybinds(sceneApi, core);
 
   scene.phaserScene.lights.enable();

@@ -1,19 +1,20 @@
-import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { PrimodiumScene } from "@/api/scene";
-import { components } from "@primodiumxyz/core/network/components";
-import { world } from "@primodiumxyz/core/network/world";
-
-import { EntityType } from "@primodiumxyz/core/util/constants";
-import { isAsteroidBlocked } from "@primodiumxyz/core/util/asteroid";
+import { Core, EntityType } from "@primodiumxyz/core";
+import { defaultEntity, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { EFleetStance } from "contracts/config/enums";
 
 import { TransitLine } from "@/lib/objects/TransitLine";
 import { renderFleet } from "@/lib/render/renderFleet";
 import { DeferredAsteroidsRenderContainer } from "@/lib/objects/asteroid/DeferredAsteroidsRenderContainer";
 import { StanceToIcon } from "@/lib/mappings";
+import { PrimodiumScene } from "@/api/scene";
 
-export const renderFleets = (scene: PrimodiumScene) => {
+export const renderFleets = (scene: PrimodiumScene, core: Core) => {
+  const {
+    tables,
+    network: { world },
+    utils,
+  } = core;
+
   const systemsWorld = namespaceWorld(world, "systems");
   const deferredRenderContainer = scene.objects.deferredRenderContainer.getContainer(
     EntityType.Asteroid
@@ -39,8 +40,8 @@ export const renderFleets = (scene: PrimodiumScene) => {
   systemsWorld.registerDisposer(unsub);
 
   function handleFleetTransit(fleet: Entity, origin: Entity, destination: Entity) {
-    const originPosition = components.Position.get(origin) ?? { x: 0, y: 0 };
-    const destinationPosition = components.Position.get(destination) ?? { x: 0, y: 0 };
+    const originPosition = tables.Position.get(origin) ?? { x: 0, y: 0 };
+    const destinationPosition = tables.Position.get(destination) ?? { x: 0, y: 0 };
     const originPixelPosition = scene.utils.tileCoordToPixelCoord({ x: originPosition.x, y: -originPosition.y });
     const destinationPixelPosition = scene.utils.tileCoordToPixelCoord({
       x: destinationPosition.x,
@@ -96,105 +97,119 @@ export const renderFleets = (scene: PrimodiumScene) => {
     return transitLine;
   }
 
-  defineComponentSystem(systemsWorld, components.FleetMovement, async (update) => {
-    const [newMovement, oldMovement] = update.value;
-
-    // if this fleet was in the spawn queue for the previous asteroid, remove it
-    if (oldMovement && spawnQueue.has(oldMovement.destination as Entity)) {
-      const fleets = spawnQueue.get(oldMovement.destination as Entity);
-      if (fleets) {
-        const index = fleets.indexOf(update.entity);
-        if (index !== -1) {
-          fleets.splice(index, 1);
+  //render fleets
+  tables.FleetMovement.watch({
+    world: systemsWorld,
+    onUpdate: ({ entity, properties: { current: newMovement, prev: oldMovement } }) => {
+      // if this fleet was in the spawn queue for the previous asteroid, remove it
+      if (oldMovement && spawnQueue.has(oldMovement.destination as Entity)) {
+        const fleets = spawnQueue.get(oldMovement.destination as Entity);
+        if (fleets) {
+          const index = fleets.indexOf(entity);
+          if (index !== -1) {
+            fleets.splice(index, 1);
+          }
         }
       }
-    }
 
-    if (newMovement) {
-      const time = components.Time.get()?.value ?? 0n;
-      const arrivalTime = newMovement.arrivalTime ?? 0n;
-      if (arrivalTime <= time) {
-        handleFleetOrbit(update.entity, newMovement.destination as Entity);
-      } else {
-        handleFleetTransit(update.entity, newMovement.origin as Entity, newMovement.destination as Entity);
+      if (newMovement) {
+        const time = tables.Time.get()?.value ?? 0n;
+        const arrivalTime = newMovement.arrivalTime ?? 0n;
+        if (arrivalTime <= time) {
+          handleFleetOrbit(entity, newMovement.destination as Entity);
+        } else {
+          handleFleetTransit(entity, newMovement.origin as Entity, newMovement.destination as Entity);
+        }
+      } else if (oldMovement) {
+        const transitLine = scene.objects.transitLine.get(entity);
+        if (transitLine) {
+          transitLine.destroy();
+          transitsToUpdate.delete(entity);
+        } else {
+          const orbitRing = scene.objects.asteroid.get(oldMovement.destination as Entity)?.getFleetsContainer();
+          const fleet = scene.objects.fleet.get(entity);
+          if (fleet) orbitRing?.removeFleet(fleet);
+        }
       }
-    } else if (oldMovement) {
-      const transitLine = scene.objects.transitLine.get(update.entity);
-      if (transitLine) {
-        transitLine.destroy();
-        transitsToUpdate.delete(update.entity);
-      } else {
-        const orbitRing = scene.objects.asteroid.get(oldMovement.destination as Entity)?.getFleetsContainer();
-        const fleet = scene.objects.fleet.get(update.entity);
-        if (fleet) orbitRing?.removeFleet(fleet);
-      }
-    }
+    },
   });
 
-  //handle transits
-  defineComponentSystem(systemsWorld, components.Time, ({ value }) => {
-    const now = value[0]?.value ?? 0n;
+  //handle updating fleets in transit
+  tables.Time.watch({
+    world: systemsWorld,
+    onUpdate: ({ properties: { current } }) => {
+      const now = current?.value ?? 0n;
 
-    transitsToUpdate.forEach((transit) => {
-      const transitObj = scene.objects.transitLine.get(transit);
-      if (!transitObj) return;
+      transitsToUpdate.forEach((transit) => {
+        const transitObj = scene.objects.transitLine.get(transit);
+        if (!transitObj) return;
 
-      const movement = components.FleetMovement.get(transit);
-      if (!movement) return;
+        const movement = tables.FleetMovement.get(transit);
+        if (!movement) return;
 
-      const timeTraveled = now - movement.sendTime;
-      const totaltime = movement.arrivalTime - movement.sendTime;
+        const timeTraveled = now - movement.sendTime;
+        const totaltime = movement.arrivalTime - movement.sendTime;
 
-      const progress = Number(timeTraveled) / Number(totaltime);
+        const progress = Number(timeTraveled) / Number(totaltime);
 
-      transitObj.setFleetProgress(progress);
+        transitObj.setFleetProgress(progress);
 
-      if (progress >= 1) {
-        const fleet = scene.objects.fleet.get(transit);
-        const orbitRing = scene.objects.asteroid.get(movement.destination as Entity)?.getFleetsContainer();
+        if (progress >= 1) {
+          const fleet = scene.objects.fleet.get(transit);
+          const orbitRing = scene.objects.asteroid.get(movement.destination as Entity)?.getFleetsContainer();
 
-        if (orbitRing && fleet) {
-          scene.objects.transitLine.get(transit)?.destroy(true);
-          orbitRing.addFleet(fleet);
+          if (orbitRing && fleet) {
+            scene.objects.transitLine.get(transit)?.destroy(true);
+            orbitRing.addFleet(fleet);
+          }
+
+          transitsToUpdate.delete(transit);
         }
-
-        transitsToUpdate.delete(transit);
-      }
-    });
+      });
+    },
   });
 
   //render stances
-  defineComponentSystem(systemsWorld, components.FleetStance, async ({ entity, value }) => {
-    const stance = value[0]?.stance;
+  tables.FleetStance.watch({
+    world: systemsWorld,
+    onUpdate: ({ entity, properties: { current } }) => {
+      const stance = current?.stance;
 
-    const asteroid = components.FleetMovement.get(entity)?.destination as Entity | undefined;
+      const asteroid = tables.FleetMovement.get(entity)?.destination as Entity | undefined;
 
-    const fleetObj = objects.fleet.get(entity);
+      const fleetObj = objects.fleet.get(entity);
 
-    if (!fleetObj) return;
+      if (!fleetObj) return;
 
-    const asteroidObj = objects.asteroid.get(asteroid ?? singletonEntity);
+      const asteroidObj = objects.asteroid.get(asteroid ?? defaultEntity);
 
-    if (!stance) {
-      fleetObj.hideStanceIcon(true);
-      if (asteroidObj?.getFleetsContainer().getFleetCount() === 1 || !isAsteroidBlocked(asteroid ?? singletonEntity))
-        asteroidObj?.getFleetsContainer().hideBlockRing(true);
-      return;
-    }
+      if (!stance) {
+        fleetObj.hideStanceIcon(true);
+        if (
+          asteroidObj?.getFleetsContainer().getFleetCount() === 1 ||
+          !utils.isAsteroidBlocked(asteroid ?? defaultEntity)
+        )
+          asteroidObj?.getFleetsContainer().hideBlockRing(true);
+        return;
+      }
 
-    fleetObj.setStanceIcon(StanceToIcon[stance as EFleetStance], true, true);
+      fleetObj.setStanceIcon(StanceToIcon[stance as EFleetStance], true, true);
 
-    if (stance === EFleetStance.Block) asteroidObj?.getFleetsContainer().showBlockRing(true);
+      if (stance === EFleetStance.Block) asteroidObj?.getFleetsContainer().showBlockRing(true);
+    },
   });
 
   //handle fleet empty updates
-  defineComponentSystem(systemsWorld, components.IsFleetEmpty, ({ entity, value }) => {
-    const fleetObj = objects.fleet.get(entity);
-    const isEmpty = !!value[0]?.value;
+  tables.IsFleetEmpty.watch({
+    world: systemsWorld,
+    onUpdate: ({ entity, properties: { current } }) => {
+      const fleetObj = objects.fleet.get(entity);
+      const isEmpty = !!current?.value;
 
-    if (!fleetObj) return;
+      if (!fleetObj) return;
 
-    if (isEmpty) fleetObj.setAlpha(0.5);
-    else fleetObj.setAlpha(1);
+      if (isEmpty) fleetObj.setAlpha(0.5);
+      else fleetObj.setAlpha(1);
+    },
   });
 };

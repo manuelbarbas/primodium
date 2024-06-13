@@ -20,14 +20,14 @@ async function init(core: Core): InitResult {
     // primary scenes
     // run straight away when the Game component is mounted, meaning right after initial queries were fetched,
     // which is strictly data required to render the home asteroid
-    ROOT: await initRootScene(globalApi),
+    ROOT: await initRootScene(globalApi, core),
     UI: await initUIScene(globalApi),
     ASTEROID: await initAsteroidScene(globalApi, core),
     GLOBAL: globalApi,
     // secondary scenes
     // run after secondary queries were fetched, which is the data required to render the asteroids, fleets and other players;
     // this helps preparing the home asteroid as fast as possible, and making sure global systems are run afterwards over complete data
-    STARMAP: await initStarmapScene(globalApi),
+    STARMAP: await initStarmapScene(globalApi, core),
     COMMAND_CENTER: await initCommandCenter(globalApi, core),
   };
 }

@@ -1,13 +1,16 @@
-import { defineEnterSystem, defineUpdateSystem, Entity, Has, namespaceWorld } from "@latticexyz/recs";
+import { Core } from "@primodiumxyz/core";
 import { Coord } from "@primodiumxyz/engine/types";
-import { components } from "@primodiumxyz/core/network/components";
-import { world } from "@primodiumxyz/core/network/world";
+import { $query, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 
 import { PrimodiumScene } from "@/api/scene";
 import { renderShardAsteroid } from "@/lib/render/renderShardAsteroid";
 import { ShardAsteroid } from "@/lib/objects/asteroid/ShardAsteroid";
 
-export const renderShardAsteroids = (scene: PrimodiumScene) => {
+export const renderShardAsteroids = (scene: PrimodiumScene, core: Core) => {
+  const {
+    network: { world },
+    tables,
+  } = core;
   const systemsWorld = namespaceWorld(world, "systems");
 
   const renderExplodeAndMoveAsteroid = (entity: Entity, coord: Coord) => {
@@ -15,21 +18,26 @@ export const renderShardAsteroids = (scene: PrimodiumScene) => {
     asteroid.explode(coord);
   };
 
-  const query = [Has(components.ShardAsteroid), Has(components.Position)];
+  $query(
+    systemsWorld,
+    {
+      with: [tables.ShardAsteroid, tables.Position],
+    },
+    {
+      onEnter: ({ entity }) => {
+        const coord = tables.Position.get(entity);
+        if (!coord) return;
 
-  defineEnterSystem(systemsWorld, query, async ({ entity }) => {
-    const coord = components.Position.get(entity);
-    if (!coord) return;
+        renderShardAsteroid({ scene, entity, coord, addEventHandlers: true });
+      },
+      onChange: ({ entity, table }) => {
+        if (table.id === tables.Position.id) return;
+        const coord = tables.Position.get(entity);
 
-    renderShardAsteroid({ scene, entity, coord, addEventHandlers: true });
-  });
+        if (!coord) return;
 
-  defineUpdateSystem(systemsWorld, query, async ({ entity, component }) => {
-    if (component.id !== components.Position.id) return;
-    const coord = components.Position.get(entity);
-
-    if (!coord) return;
-
-    renderExplodeAndMoveAsteroid(entity, coord);
-  });
+        renderExplodeAndMoveAsteroid(entity, coord);
+      },
+    }
+  );
 };

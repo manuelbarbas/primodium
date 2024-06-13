@@ -1,6 +1,5 @@
 // STAR MAP ENTRY POINT
-import { components } from "@primodiumxyz/core/network/components";
-import { world } from "@primodiumxyz/core/network/world";
+import { Core } from "@primodiumxyz/core";
 
 import { starmapSceneConfig } from "@/lib/config/starmapScene";
 import { createSceneApi, PrimodiumScene } from "@/api/scene";
@@ -8,11 +7,16 @@ import { setupBasicCameraMovement } from "@/scenes/common/setup/setupBasicCamera
 import { GlobalApi } from "@/api/global";
 import { runSystems as runStarmapSystems } from "@/scenes/starmap/systems";
 
-export const initStarmapScene = async (game: GlobalApi): Promise<PrimodiumScene> => {
+export const initStarmapScene = async (game: GlobalApi, core: Core): Promise<PrimodiumScene> => {
+  const {
+    tables,
+    network: { world },
+  } = core;
+
   const scene = await game.createScene(starmapSceneConfig, false);
   const sceneApi = createSceneApi(scene);
 
-  setupBasicCameraMovement(sceneApi, {
+  setupBasicCameraMovement(sceneApi, world, {
     translateKeybind: true,
     doubleClickZoom: false,
   });
@@ -28,15 +32,15 @@ export const initStarmapScene = async (game: GlobalApi): Promise<PrimodiumScene>
     }
 
     if (objects.length !== 0) return;
-    components.SelectedRock.remove();
-    components.SelectedFleet.remove();
+    tables.SelectedRock.remove();
+    tables.SelectedFleet.remove();
   });
 
   world.registerDisposer(() => {
     clickSub.unsubscribe();
   }, "game");
 
-  const runSystems = () => runStarmapSystems(sceneApi);
+  const runSystems = () => runStarmapSystems(sceneApi, core);
 
   return { ...sceneApi, runSystems };
 };

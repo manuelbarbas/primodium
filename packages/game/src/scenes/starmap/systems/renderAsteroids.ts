@@ -1,14 +1,17 @@
-import { Has, defineEnterSystem, namespaceWorld } from "@latticexyz/recs";
-import { components } from "@primodiumxyz/core/network/components";
-import { world } from "@primodiumxyz/core/network/world";
-import { EntityType } from "@primodiumxyz/core/util/constants";
+import { Core, EntityType } from "@primodiumxyz/core";
+import { $query, namespaceWorld } from "@primodiumxyz/reactive-tables";
 
 import { PrimodiumScene } from "@/api/scene";
 import { DeferredAsteroidsRenderContainer } from "@/lib/objects/asteroid/DeferredAsteroidsRenderContainer";
 import { renderAsteroid } from "@/lib/render/renderAsteroid";
 import { initializeSecondaryAsteroids } from "@/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
 
-export const renderAsteroids = (scene: PrimodiumScene) => {
+export const renderAsteroids = (scene: PrimodiumScene, core: Core) => {
+  const {
+    tables,
+    network: { world },
+  } = core;
+
   const systemsWorld = namespaceWorld(world, "systems");
 
   const deferredAsteroidsRenderContainer = new DeferredAsteroidsRenderContainer({
@@ -25,24 +28,29 @@ export const renderAsteroids = (scene: PrimodiumScene) => {
         addEventHandlers: true,
       });
 
-      if (spawnsSecondary) initializeSecondaryAsteroids(entity, coord);
+      if (spawnsSecondary) initializeSecondaryAsteroids(entity, coord, core);
 
       return asteroid;
     },
   });
 
-  const query = [Has(components.Asteroid), Has(components.Position)];
-  defineEnterSystem(systemsWorld, query, ({ entity }) => {
-    const coord = components.Position.get(entity);
-    const asteroidData = components.Asteroid.get(entity);
+  $query(
+    systemsWorld,
+    { with: [tables.Asteroid, tables.Position] },
+    {
+      onEnter: ({ entity }) => {
+        const coord = tables.Position.get(entity);
+        const asteroidData = tables.Asteroid.get(entity);
 
-    if (!coord) return;
+        if (!coord) return;
 
-    deferredAsteroidsRenderContainer.add(entity, coord, {
-      scene,
-      entity,
-      coord,
-      spawnsSecondary: asteroidData?.spawnsSecondary ?? false,
-    });
-  });
+        deferredAsteroidsRenderContainer.add(entity, coord, {
+          scene,
+          entity,
+          coord,
+          spawnsSecondary: asteroidData?.spawnsSecondary ?? false,
+        });
+      },
+    }
+  );
 };
