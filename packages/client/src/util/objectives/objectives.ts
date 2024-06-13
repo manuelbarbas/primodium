@@ -818,7 +818,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Defense",
       type: "Build",
-      requiredMainBase: 6n,
+      requiredMainBase: 4n,
       buildingType: EntityType.SAMLauncher,
       description:
         "SAM launchers give your asteroid native defense and additional health, protecting you from enemy attacks. You need electricity to power them. To build, select the SAM Launcher from the Blueprints menu and place it on an empty tile.",

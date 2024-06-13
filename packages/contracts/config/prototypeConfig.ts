@@ -1857,7 +1857,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 6n },
+        P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ IronPlate: 100, PVCell: 100, Alloy: 100, U_Electricity: 100 }),
         P_Production: getResourceValues({ U_Defense: 400 }),
         P_ListMaxResourceUpgrades: {
@@ -1865,7 +1865,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         },
       },
       2: {
-        P_RequiredBaseLevel: { value: 7n },
+        P_RequiredBaseLevel: { value: 4n },
         P_RequiredResources: getResourceValues({ IronPlate: 200, PVCell: 200, Alloy: 200, U_Electricity: 100 }),
 
         P_Production: getResourceValues({ U_Defense: 800 }),
@@ -1874,7 +1874,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         },
       },
       3: {
-        P_RequiredBaseLevel: { value: 8n },
+        P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ IronPlate: 300, PVCell: 300, Alloy: 300, U_Electricity: 100 }),
 
         P_Production: getResourceValues({ U_Defense: 1200 }),
@@ -1883,7 +1883,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         },
       },
       4: {
-        P_RequiredBaseLevel: { value: 9n },
+        P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ IronPlate: 500, PVCell: 500, Alloy: 500, U_Electricity: 100 }),
 
         P_Production: getResourceValues({ U_Defense: 1600 }),
@@ -1892,7 +1892,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         },
       },
       5: {
-        P_RequiredBaseLevel: { value: 10n },
+        P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Titanium: 100, Iridium: 100, Platinum: 100, U_Electricity: 100 }),
 
         P_Production: getResourceValues({ U_Defense: 2000 }),
@@ -1901,7 +1901,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         },
       },
       6: {
-        P_RequiredBaseLevel: { value: 11n },
+        P_RequiredBaseLevel: { value: 6n },
         P_RequiredResources: getResourceValues({ Titanium: 200, Iridium: 200, Platinum: 200, U_Electricity: 100 }),
 
         P_Production: getResourceValues({ U_Defense: 2500 }),
@@ -1910,7 +1910,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         },
       },
       7: {
-        P_RequiredBaseLevel: { value: 12n },
+        P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ Titanium: 300, Iridium: 300, Platinum: 300, U_Electricity: 100 }),
 
         P_Production: getResourceValues({ U_Defense: 3000 }),
@@ -1919,7 +1919,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         },
       },
       8: {
-        P_RequiredBaseLevel: { value: 13n },
+        P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Titanium: 500, Iridium: 500, Platinum: 500, U_Electricity: 100 }),
 
         P_Production: getResourceValues({ U_Defense: 3500 }),
@@ -1928,7 +1928,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         },
       },
       9: {
-        P_RequiredBaseLevel: { value: 14n },
+        P_RequiredBaseLevel: { value: 9n },
         P_RequiredResources: getResourceValues({ Titanium: 500, Iridium: 500, Platinum: 500, Kimberlite: 500 }),
 
         P_Production: getResourceValues({ U_Defense: 4000 }),
@@ -1937,7 +1937,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         },
       },
       10: {
-        P_RequiredBaseLevel: { value: 15n },
+        P_RequiredBaseLevel: { value: 10n },
         P_RequiredResources: getResourceValues({ Titanium: 1000, Iridium: 1000, Platinum: 1000, Kimberlite: 1000 }),
 
         P_Production: getResourceValues({ U_Defense: 5000 }),
