@@ -1,21 +1,25 @@
-import { Entity, HasValue, runQuery } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { components } from "src/network/components";
-import { Hex } from "viem";
-import { getEntityTypeName } from "../common";
 import { BuildObjective, ObjectiveReq } from "./types";
+import { Entity, query } from "@primodiumxyz/reactive-tables";
+import { Core, getEntityTypeName } from "@primodiumxyz/core";
 
-export function getHasRequiredBuilding(asteroid: Entity, objective: BuildObjective): ObjectiveReq {
-  const buildings = runQuery([
-    HasValue(components.OwnedBy, { value: asteroid as Hex }),
-    HasValue(components.BuildingType, { value: objective.buildingType as Hex }),
-  ]);
+export function getHasRequiredBuilding({ tables }: Core, asteroid: Entity, objective: BuildObjective): ObjectiveReq {
+  const buildings = query({
+    withProperties: [
+      {
+        table: tables.OwnedBy,
+        properties: { value: asteroid },
+      },
+
+      { table: tables.BuildingType, properties: { value: objective.buildingType } },
+    ],
+  });
 
   return {
     tooltipText: `Build a ${getEntityTypeName(objective.buildingType)}`,
     backgroundImage: InterfaceIcons.Build,
     requiredValue: 1n,
-    currentValue: BigInt(buildings.size),
+    currentValue: BigInt(buildings.length),
     isBool: true,
     scale: 1n,
   };

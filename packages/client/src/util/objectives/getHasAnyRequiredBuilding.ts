@@ -1,17 +1,21 @@
-import { Entity, HasValue, runQuery } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { components } from "src/network/components";
-import { Hex } from "viem";
-import { getEntityTypeName } from "../common";
 import { BuildAnyObjective, ObjectiveReq } from "./types";
+import { Entity, query } from "@primodiumxyz/reactive-tables";
+import { Core, getEntityTypeName } from "@primodiumxyz/core";
 
-export function getHasAnyRequiredBuilding(asteroid: Entity, objective: BuildAnyObjective): ObjectiveReq {
+export function getHasAnyRequiredBuilding(
+  { tables }: Core,
+  asteroid: Entity,
+  objective: BuildAnyObjective
+): ObjectiveReq {
   const complete = objective.buildingTypes.some((buildingType) => {
-    const buildings = runQuery([
-      HasValue(components.OwnedBy, { value: asteroid as Hex }),
-      HasValue(components.BuildingType, { value: buildingType as Hex }),
-    ]);
-    return buildings.size > 0;
+    const buildings = query({
+      withProperties: [
+        { table: tables.OwnedBy, properties: { value: asteroid } },
+        { table: tables.BuildingType, properties: { value: buildingType } },
+      ],
+    });
+    return buildings.length > 0;
   });
 
   const message = objective.buildingTypes
