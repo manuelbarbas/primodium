@@ -5,7 +5,7 @@ import ReactDOM from "react-dom";
 import { FaChevronRight } from "react-icons/fa";
 import { DepthLayers, SceneKeys } from "src/game/lib/constants/common";
 import { useGame } from "src/hooks/useGame";
-import { calculateAngleBetweenPoints } from "src/util/common";
+import { calculateAngleBetweenPoints } from "@primodiumxyz/core";
 import { Button } from "./Button";
 import { IconLabel } from "./IconLabel";
 

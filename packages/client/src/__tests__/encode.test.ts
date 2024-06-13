@@ -1,4 +1,4 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { expect, test } from "vitest";
 import { hashKeyEntity, toHex32 } from "../util/encode";
 

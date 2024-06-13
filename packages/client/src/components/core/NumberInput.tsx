@@ -1,5 +1,5 @@
 import { useGame } from "src/hooks/useGame";
-import { adjustDecimals } from "src/util/number";
+import { adjustDecimals } from "@primodiumxyz/core";
 import { Button } from "./Button";
 
 export const NumberInput: React.FC<{

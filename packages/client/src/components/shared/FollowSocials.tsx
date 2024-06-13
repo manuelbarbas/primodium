@@ -1,19 +1,19 @@
 import { Button } from "@/components/core/Button";
-import { useMud } from "@/hooks";
-import { components } from "@/network/components";
-import { ObjectiveEntityLookup } from "@/util/constants";
+import { ObjectiveEntityLookup } from "@primodiumxyz/core";
 import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 import { EObjectives } from "contracts/config/enums";
 import { FaDiscord, FaXTwitter } from "react-icons/fa6";
 import { Hex } from "viem";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
 
 export const FollowSocials = () => {
-  const playerEntity = useMud().playerAccount.entity;
-  const twitterFollowed = !!components.CompletedObjective.useWithKeys({
+  const playerEntity = useAccountClient().playerAccount.entity;
+  const { tables } = useCore();
+  const twitterFollowed = !!tables.CompletedObjective.useWithKeys({
     entity: playerEntity as Hex,
     objective: ObjectiveEntityLookup[EObjectives.FollowTwitter] as Hex,
   })?.value;
-  const discordFollowed = !!components.CompletedObjective.useWithKeys({
+  const discordFollowed = !!tables.CompletedObjective.useWithKeys({
     entity: playerEntity as Hex,
     objective: ObjectiveEntityLookup[EObjectives.JoinDiscord] as Hex,
   })?.value;

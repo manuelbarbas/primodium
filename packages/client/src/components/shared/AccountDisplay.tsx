@@ -1,12 +1,7 @@
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { useMud } from "src/hooks";
-import { useAccount } from "src/hooks/useAccount";
+import { Entity, defaultEntity } from "@primodiumxyz/reactive-tables";
+import { Mode, RockRelationshipColors } from "@primodiumxyz/core";
+import { useCore, useAccountClient, usePlayerName } from "@primodiumxyz/core/react";
 import { useGame } from "src/hooks/useGame";
-import { components } from "src/network/components";
-import { getRockRelationship } from "src/util/asteroid";
-import { entityToColor } from "src/util/color";
-import { Mode, RockRelationshipColors } from "src/util/constants";
 import { Modal } from "../core/Modal";
 
 export const AccountDisplay: React.FC<{
@@ -19,19 +14,20 @@ export const AccountDisplay: React.FC<{
   raw?: boolean;
 }> = ({ player, className, noColor, overridePlayerColor, showAddress, showAlliance = true, raw = false }) => {
   const game = useGame();
-  const { playerAccount } = useMud();
-  const playerEntity = player ?? singletonEntity;
+  const { playerAccount } = useAccountClient();
+  const { tables, utils } = useCore();
+  const playerEntity = player ?? defaultEntity;
 
-  const myHomeAsteroid = components.Home.use(playerAccount.entity)?.value;
-  const playerHomeAsteroid = components.Home.use(playerEntity)?.value;
-  const { allianceName, loading, address, linkedAddress } = useAccount(playerEntity, showAddress);
+  const myHomeAsteroid = tables.Home.use(playerAccount.entity)?.value;
+  const playerHomeAsteroid = tables.Home.use(playerEntity)?.value;
+  const { allianceName, loading, address, linkedAddress } = usePlayerName(playerEntity, showAddress);
   const playerColor =
-    overridePlayerColor ?? RockRelationshipColors[getRockRelationship(playerEntity, myHomeAsteroid as Entity)];
+    overridePlayerColor ?? RockRelationshipColors[utils.getRockRelationship(playerEntity, myHomeAsteroid as Entity)];
 
   const Content = ({ className = "" }: { className?: string }) => (
     <div className={`w-full flex gap-2 ${className}`}>
       {allianceName && showAlliance && (
-        <div className="font-bold text-accent" style={{ color: noColor ? "auto" : entityToColor(player) }}>
+        <div className="font-bold text-accent" style={{ color: noColor ? "auto" : utils.getEntityColor(player) }}>
           [{allianceName.toUpperCase()}]
         </div>
       )}
@@ -41,26 +37,28 @@ export const AccountDisplay: React.FC<{
     </div>
   );
 
+  const handleClick = () => {
+    if (!playerHomeAsteroid) return;
+
+    const playerHomeAsteroidPosition = tables.Position.get(playerHomeAsteroid as Entity);
+
+    if (!playerHomeAsteroidPosition) return;
+
+    if (tables.SelectedMode.get()?.value !== Mode.Starmap) {
+      tables.SelectedMode.set({ value: Mode.Starmap });
+    }
+
+    tables.SelectedRock.set({ value: playerHomeAsteroid as Entity });
+    game.STARMAP.camera.pan({ x: playerHomeAsteroidPosition.x, y: playerHomeAsteroidPosition.y });
+  };
+
   if (raw) return <Content className={className} />;
 
   return (
     <Modal.CloseButton
       variant="ghost"
       size="xs"
-      onClick={() => {
-        if (!playerHomeAsteroid) return;
-
-        const playerHomeAsteroidPosition = components.Position.get(playerHomeAsteroid as Entity);
-
-        if (!playerHomeAsteroidPosition) return;
-
-        if (components.SelectedMode.get()?.value !== Mode.Starmap) {
-          components.SelectedMode.set({ value: Mode.Starmap });
-        }
-
-        components.SelectedRock.set({ value: playerHomeAsteroid as Entity });
-        game.STARMAP.camera.pan({ x: playerHomeAsteroidPosition.x, y: playerHomeAsteroidPosition.y });
-      }}
+      onClick={handleClick}
       className={`p-0 uppercase inline-flex font-bold gap-1 ${className} ${loading ? "animate-pulse" : ""}`}
     >
       <Content />
