@@ -127,12 +127,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_ConquestConfig: {
         holdTime: 5n * 60n * 60n,
         // spawn a shard asteroid every <shardAsteroidSpawnFrequency> players, starting at the <shardAsteroidOffset>th player
-        shardAsteroidSpawnFrequency: 100n,
+        shardAsteroidSpawnFrequency: 125n,
         shardAsteroidSpawnOffset: 25n,
         // limit shard asteroids to <maxShardAsteroids>
-        maxShardAsteroids: 10n,
+        maxShardAsteroids: 5n,
         shardAsteroidPoints: 50n * BigInt(SCALE),
-        shardAsteroidLifeSpan: 8n * 60n * 60n,
+        shardAsteroidLifeSpan: 24n * 60n * 60n,
         shardAsteroidEncryption: 1500n * BigInt(SCALE),
         shardAsteroidEncryptionRegen: BigInt(Math.round(0.0336 * SCALE)),
       },
