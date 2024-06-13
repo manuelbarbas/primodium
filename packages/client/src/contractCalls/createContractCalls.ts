@@ -36,7 +36,7 @@ export const createContractCalls = (
   const claimObjective = createClaimObjective(core, execute);
   const claimPoints = createClaimPointsCalls(core, accountClient, execute);
   const claimUnits = createClaimUnits(core, execute);
-  const colonySlots = createColonySlotsCalls(core, execute);
+  const payForColonySlot = createColonySlotsCalls(core, execute);
   const devCalls = createDevCalls(execute);
   const fleetCalls = createFleetCalls(core, accountClient, execute);
   const forfeitCalls = createForfeitCalls(core, accountClient, execute);
@@ -64,7 +64,7 @@ export const createContractCalls = (
     ...claimPoints,
     claimUnits,
     swap,
-    colonySlots,
+    payForColonySlot,
     train,
     ...fleetCalls,
     transfer,
