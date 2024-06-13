@@ -126,8 +126,8 @@ library LibCombat {
       UnitCount.get(aggressorEntity, ColonyShipPrototypeId) > 0
     ) {
       LibFleet.decreaseFleetUnit(aggressorEntity, ColonyShipPrototypeId, 1, true);
-      LibFleet.resetFleetIfNoUnitsLeft(aggressorEntity);
       LibCombat.applyLostCargo(aggressorEntity);
+      LibFleet.resetFleetIfNoUnitsLeft(aggressorEntity);
     }
   }
 
