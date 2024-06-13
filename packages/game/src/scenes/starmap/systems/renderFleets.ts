@@ -71,7 +71,8 @@ export const renderFleets = (scene: PrimodiumScene, core: Core) => {
       const queue = spawnQueue.get(asteroidEntity) ?? [];
       if (queue.length) queue.push(fleet);
       else spawnQueue.set(asteroidEntity, [fleet]);
-      deferredRenderContainer?.addFleet(fleet, asteroidEntity);
+      const coord = tables.Position.get(asteroid);
+      deferredRenderContainer?.addFleet(fleet, asteroidEntity, coord);
     }
   }
 

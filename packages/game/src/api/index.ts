@@ -1,27 +1,17 @@
-import { setupHomeAsteroid } from "@primodiumxyz/core/network/systems/setupHomeAsteroid";
-import { Mode } from "@primodiumxyz/core/util/constants";
-import { namespaceWorld } from "@latticexyz/recs";
-import { components } from "@primodiumxyz/core/network/components";
-import { setupBattleComponents } from "@primodiumxyz/core/network/systems/setupBattleComponents";
-import { setupBlockNumber } from "@primodiumxyz/core/network/systems/setupBlockNumber";
-import { setupBuildRock } from "@primodiumxyz/core/network/systems/setupBuildRock";
-import { setupBuildingReversePosition } from "@primodiumxyz/core/network/systems/setupBuildingReversePosition";
-import { setupDoubleCounter } from "@primodiumxyz/core/network/systems/setupDoubleCounter";
-import { setupHangar } from "@primodiumxyz/core/network/systems/setupHangar";
-import { setupLeaderboard } from "@primodiumxyz/core/network/systems/setupLeaderboard";
-import { setupSync } from "@primodiumxyz/core/network/systems/setupSync";
-import { setupTime } from "@primodiumxyz/core/network/systems/setupTime";
-import { setupTrainingQueues } from "@primodiumxyz/core/network/systems/setupTrainingQueues";
-import { MUD } from "@primodiumxyz/core/network/types";
-import { world } from "@primodiumxyz/core/network/world";
-import { setupWormholeResource } from "@primodiumxyz/core/network/systems/setupWormholeResource";
-import { setupBattleNotifications } from "@primodiumxyz/core/network/systems/setupBattleNotifications";
-import _init from "init";
+import { Core } from "@primodiumxyz/core";
+import { namespaceWorld } from "@primodiumxyz/reactive-tables";
+
+import init from "@/init";
 import { Scenes } from "@/lib/constants/common";
 import { runSystems as runCommonSystems } from "@/scenes/common/systems";
 
 export type PrimodiumGame = Awaited<ReturnType<typeof initGame>>;
-export async function initGame(version = "v1") {
+export async function initGame(core: Core, version = "v1") {
+  const {
+    network: { world },
+    tables,
+  } = core;
+
   const asciiArt = `
 
   ██████╗ ██████╗ ██╗███╗   ███╗ ██████╗ ██████╗ ██╗██╗   ██╗███╗   ███╗
@@ -39,7 +29,7 @@ export async function initGame(version = "v1") {
 
   namespaceWorld(world, "game");
 
-  const api = await _init();
+  const api = await init(core);
 
   function destroy() {
     api.GLOBAL.dispose();
@@ -49,30 +39,13 @@ export async function initGame(version = "v1") {
     world.dispose("systems");
   }
 
-  function runSystems(mud: MUD) {
+  function runSystems() {
     const primary = () => {
       console.info("[Game] Running primary systems");
-      world.dispose("systems");
-
-      // core runs this at start
-      // components.SelectedMode.set({ value: Mode.Asteroid });
-      // setupBuildRock();
-      // setupBattleComponents();
-      // setupBlockNumber(mud.network.latestBlockNumber$);
-      // setupDoubleCounter(mud);
-      // setupHangar();
-      // setupLeaderboard();
-      // setupWormholeResource();
-      // setupBattleNotifications();
-      // setupTime(mud);
-      // setupTrainingQueues();
-      // setupHomeAsteroid(mud);
-      // setupBuildingReversePosition();
-      // setupSync(mud);
 
       Object.values(Scenes).forEach((key) => {
         const scene = api[key];
-        if (scene.isPrimary) scene.runSystems?.(mud);
+        if (scene.isPrimary) scene.runSystems?.();
       });
     };
 
@@ -80,7 +53,7 @@ export async function initGame(version = "v1") {
       console.info("[Game] Running secondary systems");
       Object.values(Scenes).forEach((key) => {
         const scene = api[key];
-        if (!scene.isPrimary) scene.runSystems?.(mud);
+        if (!scene.isPrimary) scene.runSystems?.();
       });
     };
 
@@ -89,8 +62,8 @@ export async function initGame(version = "v1") {
     // we can use that to keep the loading screen until all systems are run to prevent annoying stutter while the interface is ready
     const done = () => {
       console.info("[Game] Running common systems");
-      runCommonSystems(api);
-      components.SystemsReady.set({ value: true });
+      runCommonSystems(api, core);
+      tables.SystemsReady.set({ value: true });
     };
 
     return { primary, secondary, done };

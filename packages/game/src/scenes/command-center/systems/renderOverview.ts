@@ -1,6 +1,5 @@
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { Core } from "@primodiumxyz/core";
-import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
+import { defaultEntity, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { EFleetStance } from "contracts/config/enums";
 
 import { renderAsteroid } from "@/lib/render/renderAsteroid";
@@ -39,7 +38,7 @@ export const renderOverview = (scene: PrimodiumScene, core: Core) => {
 
       const asteroid = tables.ShardAsteroid.has(entity)
         ? renderShardAsteroid({ scene, entity, tables })
-        : renderAsteroid({ scene, entity });
+        : renderAsteroid({ scene, entity, core });
 
       asteroid
         ?.onClick(() => {
@@ -93,14 +92,10 @@ export const renderOverview = (scene: PrimodiumScene, core: Core) => {
       } else asteroidObj?.getFleetsContainer().pauseRotation();
 
       //set outlines
-      const obj = tables.IsFleet.get(entity)
-        ? objects.fleet.get(entity ?? singletonEntity)
-        : entity
-        ? asteroidObj
-        : null;
+      const obj = tables.IsFleet.get(entity) ? objects.fleet.get(entity ?? defaultEntity) : entity ? asteroidObj : null;
 
       const prevObj = tables.IsFleet.get(prevEntity)
-        ? objects.fleet.get(prevEntity ?? singletonEntity)
+        ? objects.fleet.get(prevEntity ?? defaultEntity)
         : prevEntity
         ? asteroidObj
         : null;
@@ -122,12 +117,12 @@ export const renderOverview = (scene: PrimodiumScene, core: Core) => {
 
       if (!fleetObj) return;
 
-      const asteroidObj = objects.asteroid.get(asteroid ?? singletonEntity);
+      const asteroidObj = objects.asteroid.get((asteroid ?? defaultEntity) as Entity);
       if (!stance) {
         fleetObj.hideStanceIcon(true);
         if (
           asteroidObj?.getFleetsContainer().getFleetCount() === 1 ||
-          !utils.isAsteroidBlocked((asteroid as Entity) ?? singletonEntity)
+          !utils.isAsteroidBlocked((asteroid as Entity) ?? defaultEntity)
         )
           asteroidObj?.getFleetsContainer().hideBlockRing(true);
         return;

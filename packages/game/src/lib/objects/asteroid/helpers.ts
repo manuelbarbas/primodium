@@ -1,4 +1,3 @@
-import { Entity } from "@latticexyz/recs";
 import { Sprites } from "@primodiumxyz/assets";
 
 import { Relationship } from "@/lib/constants/common";
@@ -9,6 +8,7 @@ import {
   RelationshipSizeToSecondaryAsteroidOutlineSprites,
   RelationshipToPrimaryAsteroidOutlineSprites,
 } from "@/lib/mappings";
+import { Entity } from "@primodiumxyz/reactive-tables";
 
 export enum LODs {
   FullyShow = 0,

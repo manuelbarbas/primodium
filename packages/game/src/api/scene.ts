@@ -1,4 +1,3 @@
-import { Core } from "@primodiumxyz/core";
 import { Scene } from "@primodiumxyz/engine/types";
 
 import { createAudioApi } from "@/api/audio";
@@ -12,7 +11,7 @@ import { createNotificationApi } from "@/api/notification";
 import { createUtilApi } from "@/api/utils";
 
 export type SceneApi = ReturnType<typeof createSceneApi>;
-export type PrimodiumScene = SceneApi & { runSystems?: (core: Core) => void; isPrimary?: boolean };
+export type PrimodiumScene = SceneApi & { runSystems?: () => void; isPrimary?: boolean };
 
 export function createSceneApi(scene: Scene) {
   const cameraApi = createCameraApi(scene);

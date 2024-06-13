@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import { Coord } from "@primodiumxyz/engine/types";
-import { Entity } from "@latticexyz/recs";
 import { Assets, Sprites } from "@primodiumxyz/assets";
+import { Entity } from "@primodiumxyz/reactive-tables";
 
 import { PrimodiumScene } from "@/api/scene";
 import { IPrimodiumGameObject } from "@/lib/objects/interfaces";

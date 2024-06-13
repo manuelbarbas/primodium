@@ -1,5 +1,5 @@
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { namespaceWorld } from "@primodiumxyz/reactive-tables";
+import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { Core } from "@primodiumxyz/core";
 
 import { TargetLine } from "@/lib/objects/TargetLine";
@@ -11,7 +11,7 @@ export const renderTrajectory = (scene: PrimodiumScene, core: Core) => {
     network: { world },
   } = core;
   const systemsWorld = namespaceWorld(world, "systems");
-  const trajectoryLine = new TargetLine(scene, { x: 0, y: 0 }, { x: 0, y: 0 }, 0xff0000)
+  const trajectoryLine = new TargetLine("trajectoryLine" as Entity, scene, { x: 0, y: 0 }, { x: 0, y: 0 }, 0xff0000)
     .setAlpha(0.3)
     .spawn()
     .setActive(false)

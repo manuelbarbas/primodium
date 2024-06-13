@@ -1,12 +1,13 @@
 import Phaser from "phaser";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { addCoords } from "@primodiumxyz/engine/lib/util/coords";
+import { Assets, Sprites, Animations } from "@primodiumxyz/assets";
+import { Coord } from "@primodiumxyz/engine/types";
+
 import { PrimodiumScene } from "@/api/scene";
 import { IPrimodiumGameObject } from "./interfaces";
-import { Assets, Sprites, Animations } from "@primodiumxyz/assets";
-import { Entity } from "@latticexyz/recs";
-import { Coord } from "@primodiumxyz/engine/types";
 import { Relationship, DepthLayers } from "@/lib/constants/common";
 import { isValidClick } from "@/lib/objects/inputGuards";
-import { addCoords } from "@primodiumxyz/engine/lib/util/coords";
 
 export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
   readonly id: Entity;

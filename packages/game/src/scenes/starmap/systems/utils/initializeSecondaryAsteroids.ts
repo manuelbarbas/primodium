@@ -66,7 +66,6 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
   const {
     tables,
     network: { world },
-    utils,
   } = core;
   const config = tables.P_GameConfig.get();
   const wormholeAsteroidConfig = tables.P_WormholeAsteroidConfig.get();

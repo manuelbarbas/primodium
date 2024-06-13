@@ -1,7 +1,8 @@
-import { Entity } from "@latticexyz/recs";
+import { EntityType, Mode } from "@primodiumxyz/core";
+import { Entity } from "@primodiumxyz/reactive-tables";
+
 import { EFleetStance } from "contracts/config/enums";
 import { Animations, ResourceTilekeys, Sprites, Tilemaps } from "@primodiumxyz/assets";
-import { EntityType, Mode } from "@primodiumxyz/core/util/constants";
 
 import { Relationship, AsteroidSize, SceneKeys } from "@/lib/constants/common";
 

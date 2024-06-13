@@ -4,7 +4,6 @@ import { $query, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { Building } from "@/lib/objects/building";
 import { PrimodiumScene } from "@/api/scene";
 import { DepthLayers } from "@/lib/constants/common";
-import { table } from "console";
 
 export const handleClick = (pointer: Phaser.Input.Pointer, core: Core, scene: PrimodiumScene) => {
   const { tables, utils } = core;
@@ -67,6 +66,7 @@ export const renderBuildingPlacementTool = (scene: PrimodiumScene, core: Core) =
         scene,
         buildingType: buildingPrototype,
         coord: tileCoord,
+        dimensions: buildingDimensions,
       });
 
       placementBuilding.onClick((pointer: Phaser.Input.Pointer) => {

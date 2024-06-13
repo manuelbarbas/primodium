@@ -1,8 +1,8 @@
 import { Core } from "@primodiumxyz/core";
+import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 
 import { TargetLine } from "@/lib/objects/TargetLine";
 import { PrimodiumScene } from "@/api/scene";
-import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 
 export const renderTrajectory = (scene: PrimodiumScene, core: Core) => {
   const {
@@ -10,7 +10,7 @@ export const renderTrajectory = (scene: PrimodiumScene, core: Core) => {
     tables,
   } = core;
   const systemsWorld = namespaceWorld(world, "systems");
-  const trajectoryLine = new TargetLine(scene, { x: 0, y: 0 }, { x: 0, y: 0 })
+  const trajectoryLine = new TargetLine("trajectoryLine" as Entity, scene, { x: 0, y: 0 }, { x: 0, y: 0 })
     .setAlpha(0.3)
     .spawn()
     .setActive(false)

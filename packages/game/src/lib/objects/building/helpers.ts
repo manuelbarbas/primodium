@@ -1,6 +1,6 @@
-import { Entity } from "@latticexyz/recs";
 import { Animations, Sprites } from "@primodiumxyz/assets";
-import { safeIndex } from "@primodiumxyz/core/util/array";
+import { safeIndex } from "@primodiumxyz/core";
+import { Entity } from "@primodiumxyz/reactive-tables";
 
 import { EntityTypeToAnimations, EntityTypetoBuildingSprites } from "@/lib/mappings";
 

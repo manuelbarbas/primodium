@@ -93,7 +93,7 @@ export const renderBuilding = (scene: PrimodiumScene, core: Core) => {
           tables.OwnedBy.remove(droidBaseEntity);
           // if droidbaseactive is defined, remove raidable asteroid. if not, it means it was already removed
           if (droidBaseActive && tables.Asteroid.get(activeRock)?.mapId === EMap.Common) {
-            removeRaidableAsteroid(activeRock);
+            removeRaidableAsteroid(activeRock, tables);
           }
         }
 
@@ -112,6 +112,7 @@ export const renderBuilding = (scene: PrimodiumScene, core: Core) => {
 
         const cooldownTime = tables.CooldownEnd.get(entity)?.value ?? 0n;
         const time = tables.Time.get()?.value ?? 0n;
+        const dimensions = utils.getBuildingDimensions(buildingType);
         const building =
           buildingType === EntityType.WormholeBase
             ? new WormholeBase({
@@ -120,8 +121,9 @@ export const renderBuilding = (scene: PrimodiumScene, core: Core) => {
                 scene,
                 coord: tilePosition,
                 resource: tables.WormholeResource.get()?.resource ?? EntityType.Iron,
+                dimensions,
               })
-            : new Building({ id: entity, scene, buildingType, coord: tilePosition });
+            : new Building({ id: entity, scene, buildingType, coord: tilePosition, dimensions });
 
         building
           .setLevel(tables.Level.get(entity)?.value ?? 1n, true)

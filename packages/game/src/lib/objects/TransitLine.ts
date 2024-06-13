@@ -1,32 +1,28 @@
 import Phaser from "phaser";
-
+import { BoundingBox } from "@primodiumxyz/engine/lib/core/StaticObjectManager";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { PixelCoord } from "@primodiumxyz/engine/types";
+
 import { PrimodiumScene } from "@/api/scene";
 import { Fleet } from "./Fleet";
-import { Entity } from "@latticexyz/recs";
 import { TargetLine } from "@/lib/objects/TargetLine";
-import { BoundingBox } from "@primodiumxyz/engine/lib/core/StaticObjectManager";
 
 // These boxes are rendered around the line to check for collisions
 // This is a rough approximation of the line's bounding box, because we don't want to render too many boxes,
 // and it's actually fine
 
 export class TransitLine extends TargetLine {
-  readonly id: Entity;
-
   private start;
   private end;
   private fleet: Fleet | undefined;
 
   constructor(args: { id: Entity; scene: PrimodiumScene; start: PixelCoord; end: PixelCoord }) {
     const { id, scene, start, end } = args;
-    super(scene, start, end, 0x6ad9d9);
+    super(id, scene, start, end, 0x6ad9d9);
 
     this.setAlpha(0.25);
     this.start = start;
     this.end = end;
-
-    this.id = id;
 
     this._scene.objects.transitLine.add(id, this, true);
   }

@@ -1,6 +1,5 @@
-import { Entity } from "@latticexyz/recs";
 import { Coord } from "@primodiumxyz/engine/types";
-import { components } from "@primodiumxyz/core/network/components";
+import { Entity } from "@primodiumxyz/reactive-tables";
 
 import { BaseSpawnArgs, DeferredRenderContainer } from "@/lib/objects/DeferredRenderContainer";
 import { PrimodiumScene } from "@/api/scene";
@@ -48,8 +47,7 @@ export class DeferredAsteroidsRenderContainer extends DeferredRenderContainer<Ba
     return this.fleetsContainers.get(entity);
   }
 
-  addFleet(entity: Entity, asteroid: Entity) {
-    const coord = components.Position.get(asteroid);
+  addFleet(entity: Entity, asteroid: Entity, coord?: Coord) {
     if (!coord) {
       this.orbitingFleetCoord.set(entity, { x: 0, y: 0 });
       return;

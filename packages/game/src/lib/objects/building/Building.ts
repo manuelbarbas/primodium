@@ -1,8 +1,8 @@
 import Phaser from "phaser";
-import { Entity } from "@latticexyz/recs";
 import { Coord } from "@primodiumxyz/engine/types";
 import { Assets } from "@primodiumxyz/assets";
-import { getBuildingDimensions } from "@primodiumxyz/core/util/building";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { Dimensions } from "@primodiumxyz/core";
 
 import { PrimodiumScene } from "@/api/scene";
 import { triggerPlacementAnim } from "@/lib/objects/building/triggerPlacementAnim";
@@ -19,10 +19,10 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
   protected _scene: PrimodiumScene;
   private level = 1n;
   private spawned = false;
-  private dimensions: { width: number; height: number } = { width: 1, height: 1 };
+  private dimensions: Dimensions = { width: 1, height: 1 };
 
-  constructor(args: { id: Entity; scene: PrimodiumScene; buildingType: Entity; coord: Coord }) {
-    const { id, scene, buildingType, coord } = args;
+  constructor(args: { id: Entity; scene: PrimodiumScene; buildingType: Entity; coord: Coord; dimensions: Dimensions }) {
+    const { id, scene, buildingType, coord, dimensions } = args;
     const assetPair = getAssetKeyPair(1n, buildingType);
     const pixelCoord = scene.utils.tileCoordToPixelCoord(coord);
     super(
@@ -41,7 +41,7 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
 
     this.buildingType = buildingType;
 
-    this.dimensions = getBuildingDimensions(buildingType);
+    this.dimensions = dimensions;
     this.coord = coord;
     this._scene = scene;
 
@@ -85,7 +85,7 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
   }
 
   triggerPlacementAnim() {
-    triggerPlacementAnim(this._scene, this.id, this.coord);
+    triggerPlacementAnim(this._scene, this.id, this.coord, this.dimensions);
   }
 
   getCoord() {
@@ -186,7 +186,7 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
   demolish() {
     //TODO: despawn animation
     this._scene.audio.play("Demolish", "sfx");
-    triggerPlacementAnim(this._scene, this.id, this.coord);
+    triggerPlacementAnim(this._scene, this.id, this.coord, this.dimensions);
     this.destroy();
   }
 

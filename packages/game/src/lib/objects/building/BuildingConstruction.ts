@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import { Assets } from "@primodiumxyz/assets";
-import { Entity } from "@latticexyz/recs";
 import { Coord } from "@primodiumxyz/engine/types";
+import { Entity } from "@primodiumxyz/reactive-tables";
 
 import { PrimodiumScene } from "@/api/scene";
 import { BuildingDimensions, getConstructionSprite } from "@/lib/objects/building/helpers";

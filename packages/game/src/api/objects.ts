@@ -1,11 +1,12 @@
-import { Entity } from "@latticexyz/recs";
-import { Fleet } from "../lib/objects/Fleet";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Coord, Scene } from "@primodiumxyz/engine/types";
+import { BoundingBox, PrimodiumGameObject } from "@primodiumxyz/engine/lib/core/StaticObjectManager";
+
 import { TransitLine } from "@/lib/objects/TransitLine";
 import { BaseAsteroid } from "@/lib/objects/asteroid/BaseAsteroid";
 import { BaseSpawnArgs, DeferredRenderContainer } from "@/lib/objects/DeferredRenderContainer";
 import { Building, BuildingConstruction } from "@/lib/objects/building";
-import { BoundingBox, PrimodiumGameObject } from "@primodiumxyz/engine/lib/core/StaticObjectManager";
+import { Fleet } from "@/lib/objects/Fleet";
 
 export type PrimodiumObjectApi<T extends PrimodiumGameObject | DeferredRenderContainer> = {
   has: (entity: Entity) => boolean;

@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { MaxLevelToTilemap } from "@primodiumxyz/core/game/lib/mappings";
+import { MaxLevelToTilemap } from "@/lib/mappings";
 
 import { PrimodiumScene } from "@/api/scene";
 import { Bounds, Dimensions, ResourceTile } from "@/lib/objects/asteroid-map/helpers";

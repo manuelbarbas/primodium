@@ -1,12 +1,16 @@
-import { Entity } from "@latticexyz/recs";
-import { components } from "@primodiumxyz/core/network/components";
-import { getBuildingDimensions } from "@primodiumxyz/core/util/building";
 import { Coord } from "@primodiumxyz/engine/types";
 import { tileCoordToPixelCoord } from "@primodiumxyz/engine/lib/util/coords";
+import { Dimensions } from "@primodiumxyz/core";
 
 import { PrimodiumScene } from "@/api/scene";
+import { Entity } from "@primodiumxyz/reactive-tables";
 
-export const triggerPlacementAnim = (scene: PrimodiumScene, entity: Entity, mapCoord: Coord) => {
+export const triggerPlacementAnim = (
+  scene: PrimodiumScene,
+  entity: Entity,
+  mapCoord: Coord,
+  dimensions: Dimensions
+) => {
   const flare = (absoluteCoord: Coord, size = 1) => {
     scene.audio.play("Whoosh", "sfx", { rate: 2 });
     scene.phaserScene.add
@@ -25,23 +29,20 @@ export const triggerPlacementAnim = (scene: PrimodiumScene, entity: Entity, mapC
   const {
     tiled: { tileWidth, tileHeight },
   } = scene;
-  const buildingType = components.BuildingType.get(entity)?.value as Entity | undefined;
-  if (!buildingType) return;
 
-  const buildingDimensions = getBuildingDimensions(buildingType);
   // convert coords from bottom left to top left
   const mapCoordTopLeft = {
     x: mapCoord.x,
-    y: mapCoord.y + buildingDimensions.height - 1,
+    y: mapCoord.y + dimensions.height - 1,
   };
   const pixelCoord = tileCoordToPixelCoord(mapCoordTopLeft, tileWidth, tileHeight);
 
   // throw up dust on build
   flare(
     {
-      x: pixelCoord.x + (tileWidth * buildingDimensions.width) / 2,
-      y: -pixelCoord.y + (tileHeight * buildingDimensions.height) / 2,
+      x: pixelCoord.x + (tileWidth * dimensions.width) / 2,
+      y: -pixelCoord.y + (tileHeight * dimensions.height) / 2,
     },
-    buildingDimensions.width
+    dimensions.width
   );
 };

@@ -1,5 +1,5 @@
-import { Entity } from "@latticexyz/recs";
 import { Coord } from "@primodiumxyz/engine/types";
+import { Entity } from "@primodiumxyz/reactive-tables";
 
 export type Dimensions = {
   xBounds: number;

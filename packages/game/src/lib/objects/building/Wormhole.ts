@@ -1,8 +1,7 @@
 import Phaser from "phaser";
-import { Entity } from "@latticexyz/recs";
 import { Coord } from "@primodiumxyz/engine/types";
 import { Assets } from "@primodiumxyz/assets";
-import { EntityType } from "@primodiumxyz/core/util/constants";
+import { Dimensions, EntityType } from "@primodiumxyz/core";
 
 import { PrimodiumScene } from "@/api/scene";
 import { DepthLayers } from "@/lib/constants/common";
@@ -11,6 +10,7 @@ import { Building } from "@/lib/objects/building";
 import { EntityTypeToResourceSprites } from "@/lib/mappings";
 import { getWormholeAssetKeyPair } from "@/lib/objects/building/wormholeAnimations";
 import { WormholeStates } from "@/lib/objects/building/wormholeAnimations";
+import { Entity } from "@primodiumxyz/reactive-tables";
 
 export class WormholeBase extends Building implements IPrimodiumGameObject {
   private resourceSpriteTop: Phaser.GameObjects.Image;
@@ -27,6 +27,7 @@ export class WormholeBase extends Building implements IPrimodiumGameObject {
     id: Entity;
     scene: PrimodiumScene;
     coord: Coord;
+    dimensions: Dimensions;
   }) {
     const { scene, coord } = args;
     const buildingType = EntityType.WormholeBase;

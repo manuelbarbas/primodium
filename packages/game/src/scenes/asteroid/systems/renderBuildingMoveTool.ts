@@ -106,6 +106,7 @@ export const renderBuildingMoveTool = (scene: PrimodiumScene, core: Core) => {
         scene,
         buildingType: buildingPrototype,
         coord: tileCoord,
+        dimensions: buildingDimensions,
       });
       // .spawn();
 

@@ -1,4 +1,4 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Coord } from "@primodiumxyz/engine/types";
 import { PrimodiumScene } from "@/api/scene";
 import { PrimodiumObjectApi, PrimodiumObjectApiMap } from "@/api/objects";
