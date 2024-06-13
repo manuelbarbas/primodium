@@ -1,6 +1,4 @@
-import { getNetworkConfig } from "@/config/getNetworkConfig";
 import { hexToResource } from "@latticexyz/common";
-import { callWithSignatureTypes } from "@latticexyz/world/internal";
 import { Core } from "@primodiumxyz/core";
 import { Account, Address, Chain, Hex, toHex, Transport, WalletClient } from "viem";
 import { signTypedData } from "viem/actions";
@@ -14,9 +12,19 @@ type SignCallOptions = {
   nonce?: bigint | null;
 };
 
+const callWithSignatureTypes = {
+  Call: [
+    { name: "signer", type: "address" },
+    { name: "systemNamespace", type: "string" },
+    { name: "systemName", type: "string" },
+    { name: "callData", type: "bytes" },
+    { name: "nonce", type: "uint256" },
+  ],
+} as const;
+
 //TODO: improve the devex by making the systemId and call data typesafe
 export async function signCall({
-  core: { tables },
+  core: { tables, config },
   userAccountClient,
   worldAddress,
   systemId,
@@ -30,7 +38,7 @@ export async function signCall({
 
   const { namespace: systemNamespace, name: systemName } = hexToResource(systemId);
 
-  const chainId = getNetworkConfig().chain.id;
+  const chainId = config.chain.id;
   return await signTypedData(userAccountClient, {
     account: userAccountClient.account,
     domain: {

@@ -1,9 +1,6 @@
 import { _execute } from "@/contractCalls/txExecute/_execute";
 import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
 import { signCall } from "@/contractCalls/txExecute/signCall";
-import { WorldAbi } from "@/network/world";
-import { TransactionQueueType } from "@/util/constants";
-import { decodeEntity } from "@latticexyz/store-sync/recs";
 import {
   createLocalAccount,
   TxQueueOptions,
@@ -12,8 +9,10 @@ import {
   UNLIMITED_DELEGATION,
   AccountClient,
   getSystemId,
+  WorldAbi,
 } from "@primodiumxyz/core";
 import { defaultEntity, query } from "@primodiumxyz/reactive-tables";
+import { decodeEntity } from "@primodiumxyz/reactive-tables/utils";
 import { toast } from "react-toastify";
 import { Address, encodeFunctionData, Hex } from "viem";
 
@@ -98,7 +97,6 @@ export const createAccessCalls = (
       },
       {
         id: defaultEntity,
-        type: TransactionQueueType.Access,
       }
     );
   };
@@ -113,17 +111,13 @@ export const createAccessCalls = (
       },
       {
         id: defaultEntity,
-        type: TransactionQueueType.Access,
       }
     );
   };
 
   const revokeAllAccess = async () => {
     const allAuthorized = query({ with: [tables.UserDelegationControl] }).reduce((prev, entity) => {
-      const key = decodeEntity(tables.UserDelegationControl.metadata.abiKeySchema, entity) as {
-        delegator: Address;
-        delegatee: Address;
-      };
+      const key = decodeEntity(tables.UserDelegationControl.metadata.abiKeySchema, entity);
       if (key.delegator !== accountClient.playerAccount.address) return prev;
       return [...prev, key.delegatee];
     }, [] as Address[]);
@@ -142,7 +136,6 @@ export const createAccessCalls = (
       { systemCalls },
       {
         id: defaultEntity,
-        type: TransactionQueueType.Access,
       }
     );
   };

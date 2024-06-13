@@ -3,7 +3,6 @@ import { EObjectives } from "contracts/config/enums";
 import { ampli } from "src/ampli";
 import { Core, AccountClient, getSystemId, TxQueueOptions } from "@primodiumxyz/core";
 import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
 
