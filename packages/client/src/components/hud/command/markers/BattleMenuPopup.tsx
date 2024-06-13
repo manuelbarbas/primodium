@@ -1,21 +1,20 @@
 import { useMemo } from "react";
 import { Widget } from "@/components/core/Widget";
 import { useGame } from "@/hooks/useGame";
-// import { components } from "@/network/components";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { entityToFleetName, entityToRockName } from "@/util/name";
-// import { Mode } from "@/util/constants";
 import { BattleMenu } from "@/components/hud/command/battle-menu/BattleMenu";
-import { components } from "@/network/components";
+import { entityToFleetName, entityToRockName } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
 
 export const BattleMenuPopup = () => {
   const game = useGame();
-  const battleTarget = components.BattleTarget.use()?.value;
-  const selectedRock = components.SelectedRock.use()?.value;
+  const { tables } = useCore();
+  const battleTarget = tables.BattleTarget.use()?.value;
+  const selectedRock = tables.SelectedRock.use()?.value;
 
   const [coord, name, icon] = useMemo(() => {
     if (!battleTarget) return [{ x: 0, y: 0 }, "", InterfaceIcons.Asteroid];
-    const isFleet = components.IsFleet.get(battleTarget)?.value;
+    const isFleet = tables.IsFleet.get(battleTarget)?.value;
     const name = isFleet ? entityToFleetName(battleTarget) : entityToRockName(battleTarget);
     const icon = isFleet ? InterfaceIcons.Fleet : InterfaceIcons.Asteroid;
 

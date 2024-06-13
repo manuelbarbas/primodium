@@ -1,40 +1,35 @@
-import { Entity } from "@latticexyz/recs";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { Navigator } from "src/components/core/Navigator";
-import { components } from "@/network/components";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Button } from "@/components/core/Button";
 import { Tabs } from "@/components/core/Tabs";
 
 import { useCallback, useMemo } from "react";
-// import { Tabs } from "@/components/core/Tabs";
-import { clearFleetStance, setFleetStance } from "@/network/setup/contractCalls/fleetStance";
-import { useMud } from "@/hooks";
 import { EFleetStance } from "contracts/config/enums";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { formatTime } from "@/util/number";
-import { landFleet } from "@/network/setup/contractCalls/fleetLand";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { alert } from "@/util/alert";
-import { clearFleet } from "@/network/setup/contractCalls/fleetClear";
-import { abandonFleet } from "@/network/setup/contractCalls/fleetAbandon";
 import { cn } from "@/util/client";
 import { useGame } from "@/hooks/useGame";
+import { useCore } from "@primodiumxyz/core/react";
+import { useContractCalls } from "@/hooks/useContractCalls";
+import { formatTime } from "@primodiumxyz/core";
 
 export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
-  const mud = useMud();
+  const { tables } = useCore();
   const game = useGame();
-  const target = components.FleetMovement.use(fleet)?.destination;
-  const fleetStance = components.FleetStance.use(fleet)?.stance;
+  const target = tables.FleetMovement.use(fleet)?.destination;
+  const fleetStance = tables.FleetStance.use(fleet)?.stance;
+  const { clearFleetStance, setFleetStance, landFleet, clearFleet, abandonFleet } = useContractCalls();
 
   const setStance = useCallback(
     (stance: EFleetStance) => {
       if (stance === fleetStance) {
-        clearFleetStance(mud, fleet);
+        clearFleetStance(fleet);
         return;
       }
 
-      setFleetStance(mud, fleet, stance, target as Entity);
+      setFleetStance(fleet, stance, target as Entity);
     },
     [fleetStance, fleet, target]
   );
@@ -81,7 +76,7 @@ export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
           onClick={() =>
             alert(
               "Are you sure you want to change fleet ownership? All resources and units will be transferred to the current asteroid!",
-              () => landFleet(mud, fleet, (target ?? singletonEntity) as Entity)
+              () => landFleet(fleet, (target ?? defaultEntity) as Entity)
             )
           }
         >
@@ -104,7 +99,7 @@ export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
             onClick={() =>
               alert(
                 "Are you sure you want to clear fleet? All resources and units will be lost forever!",
-                () => clearFleet(mud, fleet),
+                () => clearFleet(fleet),
                 game
               )
             }
@@ -124,7 +119,7 @@ export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
             size="content"
             variant="neutral"
             className="w-full"
-            onClick={() => alert("Are you sure you want to disband fleet?", () => abandonFleet(mud, fleet), game)}
+            onClick={() => alert("Are you sure you want to disband fleet?", () => abandonFleet(fleet), game)}
           >
             <div className="flex flex-start px-1 gap-3">
               <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Return} />
@@ -141,8 +136,9 @@ export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
 };
 
 export const AttackButton = ({ target }: { target: Entity }) => {
-  const gracePeriod = components.GracePeriod.use(target)?.value ?? 0n;
-  const now = components.Time.use()?.value ?? 0n;
+  const { tables } = useCore();
+  const gracePeriod = tables.GracePeriod.use(target)?.value ?? 0n;
+  const now = tables.Time.use()?.value ?? 0n;
   const inGrace = now < gracePeriod;
   return (
     <>
@@ -173,25 +169,24 @@ export const AttackButton = ({ target }: { target: Entity }) => {
 };
 
 export const InitialScreen = ({ target }: { target: Entity }) => {
-  const playerEntity = components.Account.use()?.value;
-  const isFleet = !!components.IsFleet.use(target)?.value;
+  const { tables } = useCore();
+  const playerEntity = tables.Account.use()?.value;
+  const isFleet = !!tables.IsFleet.use(target)?.value;
 
   const isOwner = useMemo(() => {
     if (!playerEntity) return false;
 
     if (isFleet)
-      return (
-        components.OwnedBy.get(components.OwnedBy.get(target)?.value as Entity | undefined)?.value === playerEntity
-      );
+      return tables.OwnedBy.get(tables.OwnedBy.get(target)?.value as Entity | undefined)?.value === playerEntity;
 
-    return components.OwnedBy.get(target)?.value === playerEntity;
+    return tables.OwnedBy.get(target)?.value === playerEntity;
   }, [playerEntity, target, isFleet]);
 
   return (
     <Navigator.Screen title="initial" className="gap-2 flex h-full w-full">
       {/* Attack if not owned */}
       {!isOwner && <AttackButton target={target} />}
-      <Tabs.Button index={1} variant="neutral" size="content" onClick={() => components.BattleTarget.remove()}>
+      <Tabs.Button index={1} variant="neutral" size="content" onClick={() => tables.BattleTarget.remove()}>
         <div className="flex flex-start px-1 gap-3 w-full">
           <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Transfer} />
           <div className="flex flex-col items-start">

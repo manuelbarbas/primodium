@@ -2,17 +2,13 @@ import { Button } from "@/components/core/Button";
 import { alert } from "@/util/alert";
 import { CapacityBar } from "@/components/core/CapacityBar";
 import { Tabs } from "@/components/core/Tabs";
-import { useMud } from "@/hooks";
-import { useAsteroidStrength } from "@/hooks/useAsteroidStrength";
-import { useFullResourceCount } from "@/hooks/useFullResourceCount";
-import { components } from "@/network/components";
-import { abandonAsteroid } from "@/network/setup/contractCalls/forfeit";
-import { EntityType } from "@/util/constants";
-import { EntityToResourceImage } from "@/util/mappings";
-import { formatResourceCount } from "@/util/number";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useEffect, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
+import { useAccountClient, useAsteroidStrength, useCore, useResourceCount } from "@primodiumxyz/core/react";
+import { EntityToResourceImage } from "@/util/image";
+import { EntityType, formatResourceCount } from "@primodiumxyz/core";
+import { useContractCalls } from "@/hooks/useContractCalls";
 
 export const AsteroidStats = ({
   asteroid,
@@ -23,7 +19,7 @@ export const AsteroidStats = ({
   segments?: number;
   showHints?: boolean;
 }) => {
-  const { resourceCount: encryption, resourceStorage: maxEncryption } = useFullResourceCount(
+  const { resourceCount: encryption, resourceStorage: maxEncryption } = useResourceCount(
     EntityType.Encryption,
     asteroid
   );
@@ -96,10 +92,11 @@ const Hints = () => {
 };
 
 const ActionButtons = ({ asteroid, onClick }: { asteroid: Entity; onClick?: () => void }) => {
-  const mud = useMud();
-  const playerEntity = mud.playerAccount.entity;
-  const asteroidOwner = components.OwnedBy.use(asteroid)?.value;
-  const canBuildFleet = useFullResourceCount(EntityType.FleetCount, asteroid).resourceCount > 0n;
+  const { tables } = useCore();
+  const { abandonAsteroid } = useContractCalls();
+  const playerEntity = useAccountClient().playerAccount.entity;
+  const asteroidOwner = tables.OwnedBy.use(asteroid)?.value;
+  const canBuildFleet = useResourceCount(EntityType.FleetCount, asteroid).resourceCount > 0n;
   if (!asteroidOwner || asteroidOwner !== playerEntity) return null;
   return (
     <div className="flex gap-2 items-center justify-center">
@@ -109,7 +106,7 @@ const ActionButtons = ({ asteroid, onClick }: { asteroid: Entity; onClick?: () =
       <Button
         variant="error"
         size="sm"
-        onClick={() => alert("Are you sure you want to abandon this asteroid?", () => abandonAsteroid(mud, asteroid))}
+        onClick={() => alert("Are you sure you want to abandon this asteroid?", () => abandonAsteroid(asteroid))}
       >
         ABANDON
       </Button>
@@ -118,9 +115,10 @@ const ActionButtons = ({ asteroid, onClick }: { asteroid: Entity; onClick?: () =
 };
 
 export const AsteroidStatsAndActions = ({ onClickCreateFleet }: { onClickCreateFleet?: () => void }) => {
-  const playerEntity = components.Account.use()?.value;
-  const selectedAsteroid = components.SelectedRock.use()?.value;
-  const homeAsteroid = components.Home.use(playerEntity)?.value;
+  const { tables } = useCore();
+  const playerEntity = tables.Account.use()?.value;
+  const selectedAsteroid = tables.SelectedRock.use()?.value;
+  const homeAsteroid = tables.Home.use(playerEntity)?.value;
 
   const asteroid = (selectedAsteroid ?? homeAsteroid) as Entity;
   if (!asteroid) return null;

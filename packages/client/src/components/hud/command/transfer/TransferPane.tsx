@@ -1,29 +1,27 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useEffect, useMemo } from "react";
-import { components } from "src/network/components";
-import { getUnitStats } from "src/util/unit";
 import { ResourceIcon } from "./ResourceIcon";
-import { hydrateFleetData } from "src/network/sync/indexer";
-import { useMud } from "src/hooks";
 import { TransferSelect } from "@/components/hud/command/transfer/TransferSelect";
 import { useTransfer } from "@/hooks/providers/TransferProvider";
 import { Card, GlassCard, SecondaryCard } from "@/components/core/Card";
 import { AsteroidCard } from "@/components/hud/command/AsteroidCard";
 import { _FleetCard } from "@/components/hud/command/FleetCard";
-import { entityToFleetName } from "@/util/name";
 import { cn } from "@/util/client";
-import { parseResourceCount } from "@/util/number";
 import { Button } from "@/components/core/Button";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { getFullResourceCount } from "@/util/resource";
-import { ResourceEntityLookup, UnitStorages, UtilityStorages } from "@/util/constants";
 import { EResource } from "contracts/config/enums";
-import { getEntityTypeName } from "src/util/common";
-import { getFleetStatsFromUnits } from "src/util/unit";
 import { Hex } from "viem";
 import { FaExclamationTriangle } from "react-icons/fa";
-import { getPlayerOwner } from "@/hooks/usePlayerOwner";
+import { useAccountClient, useCore, usePlayerOwner } from "@primodiumxyz/core/react";
+import {
+  entityToFleetName,
+  getEntityTypeName,
+  parseResourceCount,
+  ResourceEntityLookup,
+  UnitStorages,
+  UtilityStorages,
+} from "@primodiumxyz/core";
 
 export const TransferPane = (props: {
   side: "left" | "right";
@@ -69,16 +67,16 @@ export const _TransferPane = (props: {
     setError,
   } = useTransfer();
 
-  const mud = useMud();
+  const { tables, utils, sync } = useCore();
   const error = errors[props.side];
-  const selectedRock = components.SelectedRock.use()?.value;
+  const selectedRock = tables.SelectedRock.use()?.value;
   const newFleet = props.entity === "newFleet";
-  const isFleet = newFleet || components.IsFleet.has(props.entity as Entity);
+  const isFleet = newFleet || tables.IsFleet.has(props.entity as Entity);
   const ownerRock = (
-    isFleet ? (!newFleet ? components.OwnedBy.get(props.entity as Entity)?.value : selectedRock) : props.entity
+    isFleet ? (!newFleet ? tables.OwnedBy.get(props.entity as Entity)?.value : selectedRock) : props.entity
   ) as Entity;
-  const playerOwner = newFleet ? undefined : getPlayerOwner(props.entity as Entity);
-  const playerEntity = mud.playerAccount.entity;
+  const playerOwner = usePlayerOwner(newFleet ? undefined : (props.entity as Entity));
+  const playerEntity = useAccountClient().playerAccount.entity;
 
   const Header = useMemo(() => {
     if (!isFleet && props.entity !== "newFleet") {
@@ -89,7 +87,7 @@ export const _TransferPane = (props: {
     if (!ownerRock) return <></>;
 
     props.unitCounts.forEach((count, unit) => {
-      const unitData = getUnitStats(unit as Entity, ownerRock as Entity);
+      const unitData = utils.getUnitStats(unit as Entity, ownerRock as Entity);
       data.attack += unitData.ATK * count;
       data.defense += unitData.CTR * count;
       data.hp += unitData.HP * count;
@@ -114,17 +112,93 @@ export const _TransferPane = (props: {
   }, [isFleet, props.entity, props.unitCounts, newFleet, left, selectedRock]);
 
   useEffect(() => {
-    if (props.entity === "newFleet" || !components.IsFleet.get(props.entity)?.value) return;
+    if (props.entity === "newFleet" || !tables.IsFleet.get(props.entity)?.value) return;
 
-    hydrateFleetData(props.entity, mud);
-  }, [props.entity, mud]);
+    sync.syncFleetData(props.entity);
+  }, [props.entity]);
 
   const otherEntityOwnerRock = useMemo(() => {
     const otherEntity = props.side === "left" ? right : left;
     if (otherEntity === "newFleet") return undefined;
-    const isFleet = components.IsFleet.get(otherEntity)?.value;
-    return isFleet ? components.OwnedBy.get(otherEntity)?.value : otherEntity;
+    const isFleet = tables.IsFleet.get(otherEntity)?.value;
+    return isFleet ? tables.OwnedBy.get(otherEntity)?.value : otherEntity;
   }, [props.side, left, right]);
+
+  const checkErrors = ({
+    entity,
+    asteroid,
+    deltas,
+    unitCounts,
+    resourceCounts,
+    invert,
+    sameOwnerRock,
+  }: {
+    entity: Entity | "newFleet";
+    asteroid: Entity | undefined;
+    deltas: Map<Entity, bigint>;
+    unitCounts: Map<Entity, bigint>;
+    resourceCounts: Map<Entity, bigint>;
+    invert?: boolean;
+    sameOwnerRock?: boolean;
+  }) => {
+    if (!asteroid) return { disabled: true, submitMessage: "No asteroid selected" };
+    const isFleet = entity === "newFleet" || tables.IsFleet.has(entity as Entity);
+    if (entity === "newFleet" && unitCounts.size === 0) return { disabled: true, submitMessage: "No units" };
+    if (isFleet) {
+      const owner = (entity !== "newFleet" ? tables.OwnedBy.get(entity)?.value : undefined) as Entity | undefined;
+      const capacity = utils.getFleetStatsFromUnits(unitCounts, owner).cargo;
+      const cargo = [...resourceCounts.entries()].reduce((acc, [, count]) => acc + count, 0n);
+      if (cargo > capacity) return { disabled: true, submitMessage: "Cargo capacity exceeded" };
+      if (entity === "newFleet") return { disabled: false, submitMessage: "" };
+    }
+
+    // make sure we have enough storage for housing
+    const utilitiesAdded = [...deltas.entries()].reduce((acc, [unit, count]) => {
+      if (!UnitStorages.has(unit)) return acc;
+      const level = tables.UnitLevel.getWithKeys({ unit: unit as Hex, entity: entity as Hex })?.value ?? 0n;
+      const requiredResources = tables.P_RequiredResources.getWithKeys({ prototype: unit as Hex, level });
+      if (!requiredResources) return acc;
+      requiredResources.resources.forEach((rawResource, i) => {
+        const resource = ResourceEntityLookup[rawResource as EResource];
+        if (!UtilityStorages.has(resource)) return;
+        const amount = requiredResources.amounts[i] * (invert ? -count : count);
+        acc[resource] ? (acc[resource] += amount) : (acc[resource] = amount);
+      });
+      return acc;
+    }, {} as Record<Entity, bigint>);
+
+    if (!sameOwnerRock) {
+      const notEnoughUtilities = Object.entries(utilitiesAdded).reduce((acc, [resource, count]) => {
+        const { resourceCount } = utils.getResourceCount(resource as Entity, asteroid);
+        if (count <= resourceCount) return acc;
+        return [...acc, { entity: resource as Entity, resourceCount, count }];
+      }, [] as { entity: Entity; resourceCount: bigint; count: bigint }[]);
+
+      if (notEnoughUtilities.length > 0)
+        return {
+          disabled: true,
+          submitMessage: `Not enough ${getEntityTypeName(notEnoughUtilities[0].entity)} (-${
+            notEnoughUtilities[0].count
+          })`,
+        };
+    }
+    if (!isFleet) {
+      // make sure we have enough storage for resources
+      const notEnoughResources = [...resourceCounts.entries()].reduce((acc, [resource, count]) => {
+        const { resourceStorage } = utils.getResourceCount(resource as Entity, asteroid);
+        if (count <= resourceStorage) return acc;
+        return [...acc, { entity: resource as Entity, resourceStorage, count }];
+      }, [] as { entity: Entity; resourceStorage: bigint; count: bigint }[]);
+
+      if (notEnoughResources.length > 0) {
+        return {
+          disabled: true,
+          submitMessage: `Not enough ${getEntityTypeName(notEnoughResources[0].entity as Entity)} storage`,
+        };
+      }
+    }
+    return { disabled: false, submitMessage: "" };
+  };
 
   useEffect(() => {
     const { disabled, submitMessage } = checkErrors({
@@ -264,80 +338,4 @@ export const _TransferPane = (props: {
       </div>
     </Card>
   );
-};
-
-const checkErrors = ({
-  entity,
-  asteroid,
-  deltas,
-  unitCounts,
-  resourceCounts,
-  invert,
-  sameOwnerRock,
-}: {
-  entity: Entity | "newFleet";
-  asteroid: Entity | undefined;
-  deltas: Map<Entity, bigint>;
-  unitCounts: Map<Entity, bigint>;
-  resourceCounts: Map<Entity, bigint>;
-  invert?: boolean;
-  sameOwnerRock?: boolean;
-}) => {
-  if (!asteroid) return { disabled: true, submitMessage: "No asteroid selected" };
-  const isFleet = entity === "newFleet" || components.IsFleet.has(entity as Entity);
-  if (entity === "newFleet" && unitCounts.size === 0) return { disabled: true, submitMessage: "No units" };
-  if (isFleet) {
-    const owner = (entity !== "newFleet" ? components.OwnedBy.get(entity)?.value : undefined) as Entity | undefined;
-    const capacity = getFleetStatsFromUnits(unitCounts, owner).cargo;
-    const cargo = [...resourceCounts.entries()].reduce((acc, [, count]) => acc + count, 0n);
-    if (cargo > capacity) return { disabled: true, submitMessage: "Cargo capacity exceeded" };
-    if (entity === "newFleet") return { disabled: false, submitMessage: "" };
-  }
-
-  // make sure we have enough storage for housing
-  const utilitiesAdded = [...deltas.entries()].reduce((acc, [unit, count]) => {
-    if (!UnitStorages.has(unit)) return acc;
-    const level = components.UnitLevel.getWithKeys({ unit: unit as Hex, entity: entity as Hex })?.value ?? 0n;
-    const requiredResources = components.P_RequiredResources.getWithKeys({ prototype: unit as Hex, level });
-    if (!requiredResources) return acc;
-    requiredResources.resources.forEach((rawResource, i) => {
-      const resource = ResourceEntityLookup[rawResource as EResource];
-      if (!UtilityStorages.has(resource)) return;
-      const amount = requiredResources.amounts[i] * (invert ? -count : count);
-      acc[resource] ? (acc[resource] += amount) : (acc[resource] = amount);
-    });
-    return acc;
-  }, {} as Record<Entity, bigint>);
-
-  if (!sameOwnerRock) {
-    const notEnoughUtilities = Object.entries(utilitiesAdded).reduce((acc, [resource, count]) => {
-      const { resourceCount } = getFullResourceCount(resource as Entity, asteroid);
-      if (count <= resourceCount) return acc;
-      return [...acc, { entity: resource as Entity, resourceCount, count }];
-    }, [] as { entity: Entity; resourceCount: bigint; count: bigint }[]);
-
-    if (notEnoughUtilities.length > 0)
-      return {
-        disabled: true,
-        submitMessage: `Not enough ${getEntityTypeName(notEnoughUtilities[0].entity)} (-${
-          notEnoughUtilities[0].count
-        })`,
-      };
-  }
-  if (!isFleet) {
-    // make sure we have enough storage for resources
-    const notEnoughResources = [...resourceCounts.entries()].reduce((acc, [resource, count]) => {
-      const { resourceStorage } = getFullResourceCount(resource as Entity, asteroid);
-      if (count <= resourceStorage) return acc;
-      return [...acc, { entity: resource as Entity, resourceStorage, count }];
-    }, [] as { entity: Entity; resourceStorage: bigint; count: bigint }[]);
-
-    if (notEnoughResources.length > 0) {
-      return {
-        disabled: true,
-        submitMessage: `Not enough ${getEntityTypeName(notEnoughResources[0].entity as Entity)} storage`,
-      };
-    }
-  }
-  return { disabled: false, submitMessage: "" };
 };
