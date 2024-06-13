@@ -32,7 +32,7 @@ export function getCanClaimObjective(
   playerEntity: Entity,
   asteroidEntity: Entity,
   objectiveEntity: Entity
-) {
+): boolean {
   const hasRequiredRewards = getHasRequiredRewards(core, asteroidEntity, objectiveEntity);
   const allObjectiveRequirements = getAllObjectiveRequirements(core, playerEntity, asteroidEntity, objectiveEntity);
   return hasRequiredRewards && isAllRequirementsMet(allObjectiveRequirements);
@@ -43,7 +43,7 @@ export function getAllObjectiveRequirements(
   playerEntity: Entity,
   asteroidEntity: Entity,
   objectiveEntity: Entity
-) {
+): ObjectiveReq[] {
   const objective = getObjective(objectiveEntity);
   if (!objective) return [];
   const reqs: ObjectiveReq[] = getRewardUtilitiesRequirement(core, objectiveEntity, asteroidEntity);

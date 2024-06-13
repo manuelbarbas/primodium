@@ -2,22 +2,12 @@ import { Badge } from "@/components/core/Badge";
 import { Shipyard } from "@/components/hud/asteroid/building-menu/screens/shipyard/Shipyard";
 import { CommissionColonyShips } from "@/components/hud/global/modals/colony-ships/CommissionColonyShips";
 import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
-import { useBuildingInfo } from "@/hooks/useBuildingInfo";
-import { useGame } from "@/hooks/useGame";
-import { getBuildingImage } from "@/util/building";
-import { getEntityTypeName, toRomanNumeral } from "@/util/common";
-import { EntityToResourceImage } from "@/util/mappings";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
 import { FaArrowsAlt, FaInfoCircle, FaPowerOff, FaTimes, FaTrash } from "react-icons/fa";
 import { Button } from "src/components/core/Button";
 import { Navigator } from "src/components/core/Navigator";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { useMud } from "src/hooks";
-import { components } from "src/network/components";
-import { toggleBuilding } from "src/network/setup/contractCalls/toggleBuilding";
-import { Action, EntityType, TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
 import { Basic } from "./screens/Basic";
 import { BuildQueue } from "./screens/BuildQueue";
 import { BuildUnit } from "./screens/BuildUnit";
@@ -28,15 +18,21 @@ import { Market } from "./screens/Market";
 import { Move } from "./screens/Move";
 import { UnitFactory } from "./screens/UnitFactory";
 import { WormholeBase } from "./screens/WormholeBase";
+import { useBuildingInfo, useCore } from "@primodiumxyz/core/react";
+import { Action, EntityType, getEntityTypeName, toRomanNumeral } from "@primodiumxyz/core";
+import { useBuildingImage } from "@/hooks/image/useBuildingImage";
+import { EntityToResourceImage } from "@/util/image";
+import { useContractCalls } from "@/hooks/useContractCalls";
 
 export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedBuilding }) => {
+  const { tables } = useCore();
   const buildingType = useMemo(() => {
-    return components.BuildingType.get(selectedBuilding)?.value as Entity | undefined;
+    return tables.BuildingType.get(selectedBuilding)?.value as Entity | undefined;
   }, [selectedBuilding]);
 
   const handleClose = () => {
-    components.SelectedBuilding.remove();
-    components.SelectedAction.remove();
+    tables.SelectedBuilding.remove();
+    tables.SelectedAction.remove();
   };
 
   const RenderScreen = () => {
@@ -69,18 +65,18 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
         </Button>
         {buildingType !== EntityType.MainBase && buildingType !== EntityType.WormholeBase && (
           <>
-            <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Move, selectedBuilding)}>
+            <TransactionQueueMask queueItemId={`move-${selectedBuilding}`}>
               <Navigator.NavButton
                 tooltip="Move"
                 tooltipDirection="top"
                 className=" btn-square btn-xs font-bold border border-secondary inline-flex"
                 to="Move"
-                onClick={() => components.SelectedAction.set({ value: Action.MoveBuilding })}
+                onClick={() => tables.SelectedAction.set({ value: Action.MoveBuilding })}
               >
                 <FaArrowsAlt size={12} />
               </Navigator.NavButton>
             </TransactionQueueMask>
-            <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Demolish, selectedBuilding)}>
+            <TransactionQueueMask queueItemId={`demolish-${selectedBuilding}`}>
               <Navigator.NavButton
                 tooltip="Demolish"
                 tooltipDirection="top"
@@ -99,8 +95,7 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
   };
 
   const Header = () => {
-    const game = useGame();
-    const buildingImage = getBuildingImage(game, selectedBuilding);
+    const buildingImage = useBuildingImage(selectedBuilding);
     const buildingName = buildingType ? getEntityTypeName(buildingType) : "";
     const info = useBuildingInfo(selectedBuilding);
 
@@ -163,18 +158,19 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
 };
 
 const ToggleButton = ({ buildingEntity }: { buildingEntity: Entity }) => {
-  const mud = useMud();
-  const active = components.IsActive.use(buildingEntity)?.value;
-  const canToggle = !components.TrainingQueue.use(buildingEntity)?.units.length;
+  const { tables } = useCore();
+  const { toggleBuilding } = useContractCalls();
+  const active = tables.IsActive.use(buildingEntity)?.value;
+  const canToggle = !tables.TrainingQueue.use(buildingEntity)?.units.length;
 
   return (
-    <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Toggle, buildingEntity)}>
+    <TransactionQueueMask queueItemId={`toggle-${buildingEntity}`}>
       <Button
         tooltip={active ? "Deactivate" : "Activate"}
         disabled={!canToggle}
         tooltipDirection="top"
         className={`btn-square btn-xs font-bold border ${active ? "border-error" : "border-success"} inline-flex`}
-        onClick={() => toggleBuilding(mud, buildingEntity)}
+        onClick={() => toggleBuilding(buildingEntity)}
       >
         <FaPowerOff size={12} />
       </Button>

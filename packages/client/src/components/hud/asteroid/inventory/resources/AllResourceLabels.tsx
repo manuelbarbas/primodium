@@ -1,11 +1,12 @@
 import { SecondaryCard } from "src/components/core/Card";
-import { components } from "src/network/components";
-import { EntityType } from "src/util/constants";
 import { ResourceLabel } from "./ResourceLabel";
 import { VaultUtilityLabel } from "./UtilityLabel";
+import { useCore } from "@primodiumxyz/core/react";
+import { EntityType } from "@primodiumxyz/core";
 
 export const AllResourceLabels = () => {
-  const activeRock = components.ActiveRock.use()?.value;
+  const { tables } = useCore();
+  const activeRock = tables.ActiveRock.use()?.value;
   if (!activeRock) return null;
   return (
     <div className="flex flex-col items-end p-2 border-b border-secondary/25 w-full">

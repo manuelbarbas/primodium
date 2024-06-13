@@ -3,7 +3,7 @@ import { Card } from "src/components/core/Card";
 import { Badge } from "@/components/core/Badge";
 import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
 import { useAccountClient, useAsteroidStrength, useCore, useResourceCount } from "@primodiumxyz/core/react";
-import { useAsteroidImage } from "@/hooks/useAsteroidImage";
+import { useAsteroidImage } from "@/hooks/image/useAsteroidImage";
 import { entityToRockName, EntityType, formatResourceCount } from "@primodiumxyz/core";
 import { EntityToResourceImage } from "@/util/image";
 import { useGame } from "@/hooks/useGame";

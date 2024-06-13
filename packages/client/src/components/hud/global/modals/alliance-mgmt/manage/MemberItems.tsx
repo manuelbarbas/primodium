@@ -2,7 +2,7 @@ import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { AccountDisplay } from "@/components/shared/AccountDisplay";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { useAsteroidEmblem } from "@/hooks/useAsteroidEmblem";
+import { useAsteroidEmblem } from "@/hooks/image/useAsteroidEmblem";
 import { useAccountClient, useCore } from "@primodiumxyz/core/react";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { EAllianceRole } from "contracts/config/enums";

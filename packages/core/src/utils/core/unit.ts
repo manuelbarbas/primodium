@@ -52,7 +52,7 @@ export function createUnitUtils(tables: Tables) {
    * @param entity unit entity
    * @param level level
    */
-  function getUnitStatsLevel(entity: Entity, level: bigint) {
+  function getUnitLevelStats(entity: Entity, level: bigint) {
     const { hp, attack, defense, speed, cargo } = tables.P_Unit.getWithKeys(
       { entity: entity as Hex, level },
       {
@@ -86,7 +86,7 @@ export function createUnitUtils(tables: Tables) {
       { entity: asteroidEntity as Hex, unit: unitEntity as Hex },
       { value: 0n }
     )?.value;
-    return getUnitStatsLevel(unitEntity, unitLevel);
+    return getUnitLevelStats(unitEntity, unitLevel);
   }
 
   /**
@@ -245,8 +245,10 @@ export function createUnitUtils(tables: Tables) {
   }
 
   return {
+    getFleetUnitCounts,
     getUnitCounts,
     getUnitStats,
+    getUnitLevelStats,
     getFleetStats,
     getFleetStatsFromUnits,
     getFleets,

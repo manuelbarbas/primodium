@@ -1,24 +1,19 @@
 import { Card, SecondaryCard } from "@/components/core/Card";
 import { Tooltip } from "@/components/core/Tooltip";
-import { useMud } from "@/hooks";
-import { useGame } from "@/hooks/useGame";
-import { components } from "@/network/components";
-import { getBuildingImageFromType } from "@/util/building";
-import { getEntityTypeName } from "@/util/common";
-import { EntityType } from "@/util/constants";
-import { EntityToUnitImage } from "@/util/mappings";
-import { formatResourceCount } from "@/util/number";
-import { Entity } from "@latticexyz/recs";
+import { useBuildingTypeImage } from "@/hooks/image/useBuildingTypeImage";
+import { EntityToUnitImage } from "@/util/image";
+import { EntityType, formatResourceCount, getEntityTypeName, toRomanNumeral } from "@primodiumxyz/core";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
-import { toRomanNumeral } from "src/util/common";
 import { Hex } from "viem";
 
 export const Hangar = ({ className = "" }: { className?: string }) => {
-  const activeRock = components.ActiveRock.use()?.value;
-  const player = useMud().playerAccount.entity;
-  const ownedByPlayer = components.OwnedBy.use(activeRock)?.value == player;
-  const hangar = components.Hangar.use(activeRock);
-  const game = useGame();
+  const { tables } = useCore();
+  const activeRock = tables.ActiveRock.use()?.value;
+  const player = useAccountClient().playerAccount.entity;
+  const ownedByPlayer = tables.OwnedBy.use(activeRock)?.value == player;
+  const hangar = tables.Hangar.use(activeRock);
 
   const getCounts = (units: Entity[]) => {
     if (!hangar) return { total: 0n, unitCounts: {} };
@@ -54,6 +49,8 @@ export const Hangar = ({ className = "" }: { className?: string }) => {
     [hangar]
   );
 
+  const workshopImage = useBuildingTypeImage(EntityType.Workshop);
+  const droneFactoryImage = useBuildingTypeImage(EntityType.DroneFactory);
   if (!activeRock) return null;
   if (!hangar || hangar.counts.every((count) => count === 0n)) {
     return (
@@ -65,14 +62,10 @@ export const Hangar = ({ className = "" }: { className?: string }) => {
               <p className="text-xs opacity-70">Train Units at</p>
               <div className="flex gap-4 justify-center items-center">
                 <Tooltip tooltipContent="Workshop" direction="bottom">
-                  <img src={getBuildingImageFromType(game, EntityType.Workshop)} alt="Workshop" className="w-12 h-12" />
+                  <img src={workshopImage} alt="Workshop" className="w-12 h-12" />
                 </Tooltip>
                 <Tooltip tooltipContent="Drone Factory" direction="bottom">
-                  <img
-                    src={getBuildingImageFromType(game, EntityType.DroneFactory)}
-                    alt="DroneFactory"
-                    className="w-12 h-12"
-                  />
+                  <img src={droneFactoryImage} alt="DroneFactory" className="w-12 h-12" />
                 </Tooltip>
               </div>
             </SecondaryCard>
@@ -131,7 +124,8 @@ export const Hangar = ({ className = "" }: { className?: string }) => {
 };
 
 export const Unit = ({ unit, asteroid, className = "" }: { unit: Entity; asteroid: Entity; className?: string }) => {
-  const level = components.UnitLevel.getWithKeys({ entity: asteroid as Hex, unit: unit as Hex })?.value ?? 0n;
+  const { tables } = useCore();
+  const level = tables.UnitLevel.getWithKeys({ entity: asteroid as Hex, unit: unit as Hex })?.value ?? 0n;
   return (
     <p className={className}>
       {getEntityTypeName(unit)} {toRomanNumeral(Number(level + 1n))}

@@ -1,5 +1,5 @@
 import { MultiplierStorages, ResourceEntityLookup, ResourceStorages, SPEED_SCALE, UtilityStorages } from "@/lib";
-import { Entity } from "@primodiumxyz/reactive-tables";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { Tables, Coord, Dimensions, ResourceType } from "@/lib/types";
 import { createBoundsUtils } from "@/utils/core/bounds";
 import { createRecipeUtils } from "@/utils/core/recipe";
@@ -288,7 +288,9 @@ export function createBuildingUtils(tables: Tables) {
     const unitProduction = tables.P_UnitProdTypes.getWithKeys(buildingLevelKeys)?.value;
     const storages = getBuildingStorages(buildingTypeEntity, level);
     const unitProductionMultiplier = tables.P_UnitProdMultiplier.getWithKeys(buildingLevelKeys)?.value;
-    const position = (tables.Position.get(building) ?? { x: 0, y: 0 }) as Coord;
+    const position = (tables.Position.get(building) ?? { x: 0, y: 0, parentEntity: defaultEntity }) as Coord & {
+      parentEntity: Entity;
+    };
 
     const nextLevel = level + 1n;
     const maxLevel = tables.P_MaxLevel.getWithKeys({ prototype: buildingType })?.value ?? 1n;
@@ -342,6 +344,7 @@ export function createBuildingUtils(tables: Tables) {
     getBuildingStorages,
     getBuildingLevelStorageUpgrades,
     validateBuildingPlacement,
+    transformProductionData,
     getBuildingInfo,
     getBuildingTopLeft,
     getBuildingBottomLeft,

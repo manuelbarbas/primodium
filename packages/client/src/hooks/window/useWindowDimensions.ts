@@ -10,9 +10,7 @@ function getWindowDimensions() {
 
 // https://stackoverflow.com/a/36862446/1394915
 export default function useWindowDimensions() {
-  const [windowDimensions, setWindowDimensions] = useState(
-    getWindowDimensions()
-  );
+  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
 
   useEffect(() => {
     function handleResize() {

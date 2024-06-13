@@ -1,7 +1,7 @@
 import { Badge } from "@/components/core/Badge";
 import { Card } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
-import { useAsteroidImage } from "@/hooks/useAsteroidImage";
+import { useAsteroidImage } from "@/hooks/image/useAsteroidImage";
 import { useGame } from "@/hooks/useGame";
 import { ResourceImages } from "@primodiumxyz/assets";
 import { entityToRockName, EntityType, formatResourceCount, formatTimeShort } from "@primodiumxyz/core";

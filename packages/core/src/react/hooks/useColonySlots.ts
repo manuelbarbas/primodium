@@ -20,7 +20,7 @@ export const useColonySlots = (playerEntity: Entity) => {
   const maxSlots = tables.MaxColonySlots.use(playerEntity)?.value ?? 0n;
   const shipsInTraining = tables.ColonyShipsInTraining.use(playerEntity)?.value ?? 0n;
   const config = tables.P_ColonySlotsConfig.use();
-  const costMultiplier = getColonySlotsCostMultiplier(playerEntity);
+  const costMultiplier = useColonySlotsCostMultiplier(playerEntity);
   const time = tables.Time.use()?.value ?? 0n;
   const data = useMemo(() => {
     if (!config) throw new Error("No colony slots config found");
@@ -53,7 +53,7 @@ export const useColonySlots = (playerEntity: Entity) => {
   };
 };
 
-export const getColonySlotsCostMultiplier = (playerEntity: Entity) => {
+export const useColonySlotsCostMultiplier = (playerEntity: Entity) => {
   const { tables } = useCore();
 
   const maxColonySlots = tables.MaxColonySlots.use(playerEntity)?.value ?? 0n;

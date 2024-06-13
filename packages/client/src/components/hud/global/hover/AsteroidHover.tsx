@@ -24,7 +24,7 @@ import {
   Keys,
   ResourceStorages,
 } from "@primodiumxyz/core";
-import { useAsteroidImage } from "@/hooks/useAsteroidImage";
+import { useAsteroidImage } from "@/hooks/image/useAsteroidImage";
 import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
 import { AccountDisplay } from "@/components/shared/AccountDisplay";
 

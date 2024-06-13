@@ -6,9 +6,9 @@ import { InterfaceIcons } from "@primodiumxyz/assets";
 import { SecondaryCard } from "@/components/core/Card";
 import { AsteroidStats } from "@/components/hud/command/overview/AsteroidStatsAndActions";
 import { useSyncStatus, useInGracePeriod, useCore, useAccountClient } from "@primodiumxyz/core/react";
-import { useAsteroidEmblem } from "@/hooks/useAsteroidEmblem";
+import { useAsteroidEmblem } from "@/hooks/image/useAsteroidEmblem";
 import { entityToRockName, formatTimeShort, hashEntities, Keys } from "@primodiumxyz/core";
-import { useAsteroidImage } from "@/hooks/useAsteroidImage";
+import { useAsteroidImage } from "@/hooks/image/useAsteroidImage";
 const filter =
   "drop-shadow(1px 0px 0px #FF3232) drop-shadow(-1px  0px 0px #FF3232) drop-shadow( 0px  1px 0px #FF3232) drop-shadow( 0px -1px 0px #FF3232)";
 

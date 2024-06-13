@@ -1,20 +1,19 @@
-import { EntityToResourceImage } from "@/util/mappings";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
 import { Badge } from "src/components/core/Badge";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
-import { useFullResourceCount } from "src/hooks/useFullResourceCount";
-import { components } from "src/network/components";
-import { SPEED_SCALE } from "src/util/constants";
-import { formatResourceCount } from "src/util/number";
 import { Tooltip } from "@/components/core/Tooltip";
+import { formatResourceCount, SPEED_SCALE } from "@primodiumxyz/core";
+import { useCore, useResourceCount } from "@primodiumxyz/core/react";
+import { EntityToResourceImage } from "@/util/image";
 
 export const ResourceLabel = ({ name, resource }: { name: string; resource: Entity }) => {
-  const activeRock = components.ActiveRock.use()?.value;
+  const { tables } = useCore();
+  const activeRock = tables.ActiveRock.use()?.value;
   if (!activeRock) throw new Error("[ResourceLabel] No active rock");
 
-  const worldSpeed = components.P_GameConfig.use()?.worldSpeed ?? SPEED_SCALE;
-  const { resourceCount, production, resourceStorage } = useFullResourceCount(resource, activeRock);
+  const worldSpeed = tables.P_GameConfig.use()?.worldSpeed ?? SPEED_SCALE;
+  const { resourceCount, production, resourceStorage } = useResourceCount(resource, activeRock);
 
   const tooltipClass = useMemo(() => {
     if (resourceStorage <= BigInt(0)) return;

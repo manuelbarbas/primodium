@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { useAccountClient, useCore, usePlayerOwner, useResourceCount } from "@primodiumxyz/core/react";
 import { entityToFleetName, entityToRockName, EntityType } from "@primodiumxyz/core";
 import { defaultEntity, Entity, useQuery } from "@primodiumxyz/reactive-tables";
-import { useAsteroidImage } from "@/hooks/useAsteroidImage";
+import { useAsteroidImage } from "@/hooks/image/useAsteroidImage";
 
 export const TransferSelect = ({ side }: { side: "left" | "right" }) => {
   const { left, right, setLeft, setRight } = useTransfer();
