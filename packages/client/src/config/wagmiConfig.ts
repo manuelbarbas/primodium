@@ -1,4 +1,4 @@
-import { getCoreConfig } from "@/network/getCoreConfig";
+import { getCoreConfig } from "@/config/getCoreConfig";
 import { Buffer } from "buffer";
 import { createClient } from "viem";
 import { createConfig, http } from "wagmi";

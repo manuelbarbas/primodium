@@ -5,7 +5,7 @@ import { Coord } from "engine/types";
 import { Cheatcode, Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import { EAllianceInviteMode, EPointType, EResource } from "contracts/config/enums";
 import { components } from "src/network/components";
-import { getNetworkConfig } from "src/network/config/getNetworkConfig";
+import { getNetworkConfig } from "@/config/getNetworkConfig";
 import { buildBuilding } from "src/network/setup/contractCalls/buildBuilding";
 import { createFleet as callCreateFleet } from "src/network/setup/contractCalls/createFleet";
 import { setComponentValue } from "src/network/setup/contractCalls/dev";

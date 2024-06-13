@@ -5,6 +5,7 @@ import { Core, AccountClient, getSystemId, TxQueueOptions } from "@primodiumxyz/
 import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
 import { parseReceipt } from "@/util/analytics/parseReceipt";
 import { Entity } from "@primodiumxyz/reactive-tables";
+import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createWormholeDeposit = (core: Core, { playerAccount }: AccountClient, { execute }: ExecuteFunctions) => {
   const wormholeDeposit = async (wormholeBase: Entity, count: bigint, options?: Partial<TxQueueOptions>) => {

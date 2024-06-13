@@ -1,14 +1,14 @@
-import { useOrbitingFleets } from "@/hooks/useOrbitingFleets";
-import { components } from "@/network/components";
-import { Mode } from "@/util/constants";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { memo } from "react";
+import { useCore, useOrbitingFleets } from "@primodiumxyz/core/react";
+import { Mode } from "@primodiumxyz/core";
+import { defaultEntity } from "@primodiumxyz/reactive-tables";
 
 export const CommandBackgroundEffect = memo(() => {
-  const isCommandOpen = components.SelectedMode.use()?.value === Mode.CommandCenter;
-  const selectedRock = components.SelectedRock.use()?.value;
-  const position = components.Position.use(selectedRock);
-  const fleets = useOrbitingFleets(selectedRock ?? singletonEntity);
+  const { tables } = useCore();
+  const isCommandOpen = tables.SelectedMode.use()?.value === Mode.CommandCenter;
+  const selectedRock = tables.SelectedRock.use()?.value;
+  const position = tables.Position.use(selectedRock);
+  const fleets = useOrbitingFleets(selectedRock ?? defaultEntity);
 
   if (!isCommandOpen) return null;
 

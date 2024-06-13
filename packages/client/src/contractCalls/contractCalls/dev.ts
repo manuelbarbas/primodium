@@ -1,18 +1,16 @@
-import { uuid } from "@/util/uuid";
 import { encodeField, encodeKey, SchemaToPrimitives } from "@latticexyz/protocol-parser/internal";
 import { StaticAbiType } from "@latticexyz/schema-type/internal";
 import { entityToHexKeyTuple } from "@latticexyz/store-sync/recs";
-import { getSystemId, hashEntities } from "src/util/encode";
-import { Hex } from "viem";
 import { Entity, ContractTableDef, ContractTable, Properties } from "@primodiumxyz/reactive-tables";
 import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
+import { getSystemId } from "@primodiumxyz/core";
 
 export function createDevCalls({ execute }: ExecuteFunctions) {
   async function removeTable<tableDef extends ContractTableDef = ContractTableDef>(
     table: ContractTable<tableDef>,
     entity: Entity
   ) {
-    const tableId = table.id as Hex;
+    const tableId = table.id;
     const key = entityToHexKeyTuple(entity);
 
     await execute(
@@ -23,7 +21,7 @@ export function createDevCalls({ execute }: ExecuteFunctions) {
         withSession: true,
       },
       {
-        id: hashEntities(tableId, entity),
+        id: entity,
       }
     );
   }
@@ -33,7 +31,7 @@ export function createDevCalls({ execute }: ExecuteFunctions) {
     keys: SchemaToPrimitives<PS>,
     newValues: Partial<Properties<PS>>
   ) {
-    const tableId = table.id as Hex;
+    const tableId = table.id;
 
     const schema = Object.keys(table.metadata.abiPropertiesSchema);
     const key = encodeKey(table.metadata.abiKeySchema, keys);

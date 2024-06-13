@@ -1,10 +1,9 @@
 import { ampli } from "src/ampli";
-import { Hex } from "viem";
 import { Core, AccountClient, getSystemId, toHex32, entityToAddress } from "@primodiumxyz/core";
 import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
+import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createAllianceCalls = (
   { tables, utils }: Core,
@@ -40,7 +39,7 @@ export const createAllianceCalls = (
       {
         functionName: "Pri_11__setAllianceName",
         systemId: getSystemId("AllianceSystem"),
-        args: [allianceEntity as Hex, toHex32(name.substring(0, 6).toUpperCase())],
+        args: [allianceEntity, toHex32(name.substring(0, 6).toUpperCase())],
         withSession: true,
       },
       {
@@ -60,7 +59,7 @@ export const createAllianceCalls = (
       {
         functionName: "Pri_11__setAllianceInviteMode",
         systemId: getSystemId("AllianceSystem"),
-        args: [allianceEntity as Hex, inviteOnly ? EAllianceInviteMode.Closed : EAllianceInviteMode.Open],
+        args: [allianceEntity, inviteOnly ? EAllianceInviteMode.Closed : EAllianceInviteMode.Open],
         withSession: true,
       },
       {
@@ -101,7 +100,7 @@ export const createAllianceCalls = (
       {
         functionName: "Pri_11__join",
         systemId: getSystemId("AllianceSystem"),
-        args: [alliance as Hex],
+        args: [alliance],
         withSession: true,
       },
       {
@@ -121,7 +120,7 @@ export const createAllianceCalls = (
       {
         functionName: "Pri_11__declineInvite",
         systemId: getSystemId("AllianceSystem"),
-        args: [entityToAddress(inviter as Hex)],
+        args: [entityToAddress(inviter)],
         withSession: true,
       },
       {
@@ -142,7 +141,7 @@ export const createAllianceCalls = (
       {
         functionName: "Pri_11__requestToJoin",
         systemId: getSystemId("AllianceSystem"),
-        args: [alliance as Hex],
+        args: [alliance],
         withSession: true,
       },
       {
@@ -165,7 +164,7 @@ export const createAllianceCalls = (
       {
         functionName: "Pri_11__kick",
         systemId: getSystemId("AllianceSystem"),
-        args: [entityToAddress(player as Hex)],
+        args: [entityToAddress(player)],
         withSession: true,
       },
       {
@@ -188,7 +187,7 @@ export const createAllianceCalls = (
       {
         functionName: "Pri_11__grantRole",
         systemId: getSystemId("AllianceSystem"),
-        args: [entityToAddress(player as Hex), role],
+        args: [entityToAddress(player), role],
         withSession: true,
       },
       {
@@ -210,7 +209,7 @@ export const createAllianceCalls = (
       {
         functionName: "Pri_11__acceptRequestToJoin",
         systemId: getSystemId("AllianceSystem"),
-        args: [entityToAddress(target as Hex)],
+        args: [entityToAddress(target)],
         withSession: true,
       },
       {
@@ -231,7 +230,7 @@ export const createAllianceCalls = (
       {
         functionName: "Pri_11__rejectRequestToJoin",
         systemId: getSystemId("AllianceSystem"),
-        args: [entityToAddress(target as Hex)],
+        args: [entityToAddress(target)],
         withSession: true,
       },
       {
@@ -252,7 +251,7 @@ export const createAllianceCalls = (
       {
         functionName: "Pri_11__invite",
         systemId: getSystemId("AllianceSystem"),
-        args: [entityToAddress(target as Hex)],
+        args: [entityToAddress(target)],
         withSession: true,
       },
       {
@@ -273,7 +272,7 @@ export const createAllianceCalls = (
       {
         functionName: "Pri_11__revokeInvite",
         systemId: getSystemId("AllianceSystem"),
-        args: [entityToAddress(target as Hex)],
+        args: [entityToAddress(target)],
         withSession: true,
       },
       {

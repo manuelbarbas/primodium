@@ -1,9 +1,8 @@
-import { Hex } from "viem";
 import { ampli } from "src/ampli";
 import { Core, getSystemId } from "@primodiumxyz/core";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
+import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createClaimUnits =
   (core: Core, { execute }: ExecuteFunctions) =>
@@ -12,7 +11,7 @@ export const createClaimUnits =
       {
         functionName: "Pri_11__claimUnits",
         systemId: getSystemId("ClaimUnitsSystem"),
-        args: [rock as Hex],
+        args: [rock],
         withSession: true,
       },
       {
@@ -20,7 +19,7 @@ export const createClaimUnits =
       },
       (receipt) => {
         ampli.systemClaimUnitsSystemPrimodiumClaimUnits({
-          spaceRock: rock as Hex,
+          spaceRock: rock,
           ...parseReceipt(receipt),
         });
       }

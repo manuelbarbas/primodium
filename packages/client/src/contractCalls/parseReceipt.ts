@@ -1,5 +1,5 @@
 import { TransactionReceipt, zeroAddress } from "viem";
-import { bigintToNumber } from "../number";
+import { bigintToNumber } from "@primodiumxyz/core";
 
 // See Amplitude dashboard for more details on the event properties:
 type ParsedReceipt =

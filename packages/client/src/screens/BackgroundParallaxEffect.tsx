@@ -1,12 +1,12 @@
 import { ModeToSceneKey } from "@/game/lib/mappings";
 import { useGame } from "@/hooks/useGame";
-import { components } from "@/network/components";
-import { lerp } from "@/util/common";
-import { Mode } from "@/util/constants";
+import { useCore } from "@primodiumxyz/core/react";
+import { lerp, Mode } from "@primodiumxyz/core";
 import { memo, useEffect, useRef } from "react";
 
 export const BackgroundParallaxEffect = memo(() => {
-  const selectedMode = components.SelectedMode.use()?.value;
+  const { tables } = useCore();
+  const selectedMode = tables.SelectedMode.use()?.value;
   const game = useGame();
   const ref = useRef<HTMLDivElement>(null);
 

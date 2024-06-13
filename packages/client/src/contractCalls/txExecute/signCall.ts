@@ -1,4 +1,4 @@
-import { getNetworkConfig } from "@/network/config/getNetworkConfig";
+import { getNetworkConfig } from "@/config/getNetworkConfig";
 import { hexToResource } from "@latticexyz/common";
 import { callWithSignatureTypes } from "@latticexyz/world/internal";
 import { Core } from "@primodiumxyz/core";

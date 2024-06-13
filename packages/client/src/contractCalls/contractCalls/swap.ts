@@ -10,8 +10,8 @@ import {
   formatResourceCount,
 } from "@primodiumxyz/core";
 import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
 import { Entity, defaultEntity } from "@primodiumxyz/reactive-tables";
+import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createSwapCalls =
   ({ utils }: Core, { playerAccount }: AccountClient, { execute }: ExecuteFunctions) =>

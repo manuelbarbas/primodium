@@ -7,7 +7,7 @@ import { Connect } from "./Connect";
 import { ampli } from "./ampli";
 import { usePersistentStore } from "./game/stores/PersistentStore";
 import { Maintenance } from "./screens/Maintenance";
-import { wagmiConfig } from "./util/web3/wagmi";
+import { wagmiConfig } from "@/config/wagmiConfig";
 import { cn } from "@/util/client";
 import Core from "@/Core";
 

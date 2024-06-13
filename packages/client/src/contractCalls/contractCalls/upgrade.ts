@@ -12,7 +12,7 @@ import {
   UnitEntityLookup,
 } from "@primodiumxyz/core";
 import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
-import { parseReceipt } from "@/util/analytics/parseReceipt";
+import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createUpgrade = (
   { tables, utils }: Core,
