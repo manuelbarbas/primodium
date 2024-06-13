@@ -1,5 +1,5 @@
-import { world } from "@primodiumxyz/core/network/world";
 import { Coord } from "@primodiumxyz/engine/types";
+import { Core } from "@primodiumxyz/core";
 
 import { PrimodiumScene } from "@/api/scene";
 
@@ -9,6 +9,7 @@ const SMOOTHNESS = 0.9;
 
 export const setupBasicCameraMovement = (
   scene: PrimodiumScene,
+  core: Core,
   options: {
     zoomKeybind?: boolean;
     drag?: boolean;
@@ -174,7 +175,7 @@ export const setupBasicCameraMovement = (
     }
   );
 
-  world.registerDisposer(() => {
+  core.network.world.registerDisposer(() => {
     doubleClickSub.unsubscribe();
     scene.input.phaserInput.off("wheel");
     scene.phaserScene.events.removeListener("update", handleGameTickMovement);

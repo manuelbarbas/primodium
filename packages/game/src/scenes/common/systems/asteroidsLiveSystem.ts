@@ -1,12 +1,5 @@
-import { Entity, defineComponentSystem, namespaceWorld } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { components } from "@primodiumxyz/core/network/components";
-import { world } from "@primodiumxyz/core/network/world";
-import { decodeAllianceName, getAllianceName } from "@primodiumxyz/core/util/alliance";
-import { entityToColor } from "@primodiumxyz/core/util/color";
-import { EntityType } from "@primodiumxyz/core/util/constants";
-import { entityToPlayerName, entityToRockName } from "@primodiumxyz/core/util/name";
-import { getEnsName } from "@primodiumxyz/core/util/web3/getEnsName";
+import { Core, entityToPlayerName, entityToRockName, EntityType, getEnsName } from "@primodiumxyz/core";
+import { defaultEntity, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 
 import { PrimodiumScene } from "@/api/scene";
 import { MainbaseLevelToEmblem } from "@/lib/mappings";
@@ -15,12 +8,18 @@ import { MainbaseLevelToEmblem } from "@/lib/mappings";
 // Systems will be executed inside the starmap and command center scenes
 // They will fire on any change to entities only if they are visible, otherwise it will wait for it to become visible to run the update
 // (meaning moving inside the starmap, or entering/exiting the command center)
-export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterScene: PrimodiumScene) => {
+export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterScene: PrimodiumScene, core: Core) => {
+  const {
+    tables,
+    network: { world },
+    config,
+    utils,
+  } = core;
   const systemsWorld = namespaceWorld(world, "systems");
   const scenes = [starmapScene, commandCenterScene];
   const deferredStarmapContainer = starmapScene.objects.deferredRenderContainer.getContainer(EntityType.Asteroid);
 
-  const playerEntity = components.Account.get()?.value;
+  const playerEntity = tables.Account.get()?.value;
 
   /* --------------------------------- UPDATE --------------------------------- */
 
@@ -35,7 +34,7 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
     const asteroid = scene.objects.asteroid.get(asteroidEntity);
     if (!asteroid) return;
 
-    const playerHomeEntity = components.Home.get(playerEntity)?.value as Entity | undefined;
+    const playerHomeEntity = tables.Home.get(playerEntity)?.value as Entity | undefined;
 
     if (ownerEntity) {
       const isHome = playerHomeEntity === asteroidEntity;
@@ -46,18 +45,17 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
         nameLabel: entityToRockName(asteroidEntity) + (isHome ? " *" : ""),
         nameLabelColor: ownedByPlayer
           ? 0xffff00
-          : components.Asteroid.get(asteroidEntity)?.spawnsSecondary
+          : tables.Asteroid.get(asteroidEntity)?.spawnsSecondary
           ? 0x00ffff
           : 0xffffff,
-        ownerLabel: ownedByPlayer
-          ? "You"
-          : ownerEntity === singletonEntity
-          ? "unowned"
-          : entityToPlayerName(ownerEntity),
+        ownerLabel: ownedByPlayer ? "You" : ownerEntity === defaultEntity ? "unowned" : entityToPlayerName(ownerEntity),
       });
 
       // we want to do this after to not block the rest of the update
-      getEnsName(playerEntity).then((addressObj) => {
+
+      if (!config.accountLinkUrl || !playerEntity) return;
+
+      getEnsName(config.accountLinkUrl, playerEntity).then((addressObj) => {
         if (addressObj.ensName) asteroidLabel.setProperties({ ownerLabel: addressObj.ensName });
       });
     }
@@ -70,14 +68,14 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
     }
 
     if (ownerAllianceEntity) {
-      const hasAlliance = ownerAllianceEntity && ownerAllianceEntity !== singletonEntity;
+      const hasAlliance = ownerAllianceEntity && ownerAllianceEntity !== defaultEntity;
 
       if (hasAlliance) {
         asteroid.getAsteroidLabel().setProperties({
           allianceLabel: ownerAllianceName
-            ? decodeAllianceName(ownerAllianceName, true)
-            : getAllianceName(ownerAllianceEntity, true),
-          allianceLabelColor: parseInt(entityToColor(ownerAllianceEntity).slice(1), 16),
+            ? utils.decodeAllianceName(ownerAllianceName, true)
+            : utils.getAllianceName(ownerAllianceEntity, true),
+          allianceLabelColor: parseInt(utils.getEntityColor(ownerAllianceEntity).slice(1), 16),
         });
       } else {
         asteroid.getAsteroidLabel().clearAlliance();
@@ -99,11 +97,9 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
     if (deferredStarmapContainer?.hasOnEventOnce(entity)) return;
 
     deferredStarmapContainer?.addOnEventOnce(entity, () => {
-      const ownerEntity = (components.OwnedBy.get(entity)?.value as Entity | undefined) ?? singletonEntity;
-      const expansionLevel = components.ShardAsteroid.get(entity)
-        ? undefined
-        : components.Level.get(entity)?.value ?? 1n;
-      const ownerAllianceEntity = components.PlayerAlliance.get(ownerEntity)?.alliance as Entity | undefined;
+      const ownerEntity = (tables.OwnedBy.get(entity)?.value as Entity | undefined) ?? defaultEntity;
+      const expansionLevel = tables.ShardAsteroid.get(entity) ? undefined : tables.Level.get(entity)?.value ?? 1n;
+      const ownerAllianceEntity = tables.PlayerAlliance.get(ownerEntity)?.alliance as Entity | undefined;
 
       updateAsteroidLabel(starmapScene, entity, ownerEntity, expansionLevel, ownerAllianceEntity);
     });
@@ -113,7 +109,7 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
   // return the scenes in which it's active (so should be updated)
   const _update = (entity: Entity) => {
     // systems will run for other types of entity as well, so we need to filter out asteroids
-    if (!components.Asteroid.has(entity) && !components.ShardAsteroid.has(entity)) return undefined;
+    if (!tables.Asteroid.has(entity) && !tables.ShardAsteroid.has(entity)) return undefined;
     const scenesToUpdate = scenes.filter((scene) => scene.objects.asteroid.get(entity)?.active);
     // if the asteroid is not active in the command center scene, it means that it doesn't exist so it'll be freshly rendered
     if (!scenesToUpdate.includes(starmapScene)) registerCallback(entity);
@@ -122,65 +118,78 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
   };
 
   /* ---------------------------------- OWNER --------------------------------- */
-  defineComponentSystem(systemsWorld, components.OwnedBy, ({ entity, value: [current] }) => {
-    const scenesToUpdate = _update(entity);
-    if (!scenesToUpdate) return;
+  tables.OwnedBy.watch({
+    world: systemsWorld,
+    onUpdate: ({ entity, properties: { current } }) => {
+      const scenesToUpdate = _update(entity);
+      if (!scenesToUpdate) return;
 
-    const ownerEntity = (current?.value as Entity | undefined) ?? singletonEntity;
-    // we also need to update the alliance label if the owner is in an alliance
-    const ownerAllianceEntity = components.PlayerAlliance.get(ownerEntity)?.alliance as Entity | undefined;
+      const ownerEntity = (current?.value as Entity | undefined) ?? defaultEntity;
+      // we also need to update the alliance label if the owner is in an alliance
+      const ownerAllianceEntity = tables.PlayerAlliance.get(ownerEntity)?.alliance as Entity | undefined;
 
-    scenesToUpdate.forEach((scene) => {
-      updateAsteroidLabel(scene, entity, ownerEntity, undefined, ownerAllianceEntity ?? singletonEntity);
-    });
+      scenesToUpdate.forEach((scene) => {
+        updateAsteroidLabel(scene, entity, ownerEntity, undefined, ownerAllianceEntity ?? defaultEntity);
+      });
+    },
   });
 
   /* ---------------------------------- LEVEL --------------------------------- */
-  defineComponentSystem(systemsWorld, components.Level, ({ entity, value: [current] }) => {
-    const scenesToUpdate = _update(entity);
-    if (!scenesToUpdate) return;
-    // we don't want to set a level label on shards
-    if (components.ShardAsteroid.has(entity)) return;
+  tables.Level.watch({
+    world: systemsWorld,
+    onUpdate: ({ entity, properties: { current } }) => {
+      const scenesToUpdate = _update(entity);
+      if (!scenesToUpdate) return;
 
-    scenesToUpdate.forEach((scene) => {
-      updateAsteroidLabel(scene, entity, undefined, current?.value);
-    });
+      // we don't want to set a level label on shards
+      if (tables.ShardAsteroid.has(entity)) return;
+
+      scenesToUpdate.forEach((scene) => {
+        updateAsteroidLabel(scene, entity, undefined, current?.value);
+      });
+    },
   });
 
   /* ----------------------------- OWNER ALLIANCE ----------------------------- */
   // react to changes in alliance membership (but will miss creating an alliance as `Alliance` gets synced slightly after `PlayerAlliance`;
   // but this case is handled in the below system)
-  defineComponentSystem(systemsWorld, components.PlayerAlliance, ({ entity, value: [current] }) => {
-    const ownedAsteroids = components.OwnedBy.getAllWith({ value: entity });
+  tables.PlayerAlliance.watch({
+    world: systemsWorld,
+    onUpdate: ({ entity, properties: { current } }) => {
+      const ownedAsteroids = tables.OwnedBy.getAllWith({ value: entity });
 
-    for (const asteroid of ownedAsteroids) {
-      const scenesToUpdate = _update(asteroid);
-      if (!scenesToUpdate) continue;
+      for (const asteroid of ownedAsteroids) {
+        const scenesToUpdate = _update(asteroid);
+        if (!scenesToUpdate) continue;
 
-      const allianceEntity = (current?.alliance as Entity | undefined) ?? singletonEntity;
-      scenesToUpdate.forEach((scene) => {
-        updateAsteroidLabel(scene, asteroid, undefined, undefined, allianceEntity);
-      });
-    }
+        const allianceEntity = (current?.alliance as Entity | undefined) ?? defaultEntity;
+        scenesToUpdate.forEach((scene) => {
+          updateAsteroidLabel(scene, asteroid, undefined, undefined, allianceEntity);
+        });
+      }
+    },
   });
 
   // react to changes in alliance name, and will also handle a new alliance
   // TODO(review): this is quite expensive, should we react to changes in alliance name? knowing that this would be updated
   // on visibility change, this is only for the live updates to currently visible asteroids
-  defineComponentSystem(systemsWorld, components.Alliance, ({ entity, value: [current] }) => {
-    if (!current) return;
+  tables.Alliance.watch({
+    world: systemsWorld,
+    onUpdate: ({ entity, properties: { current } }) => {
+      if (!current) return;
 
-    const allianceMembers = components.PlayerAlliance.getAllWith({ alliance: entity });
-    const allianceAsteroids = allianceMembers.map((member) => components.OwnedBy.getAllWith({ value: member })).flat();
+      const allianceMembers = tables.PlayerAlliance.getAllWith({ alliance: entity });
+      const allianceAsteroids = allianceMembers.map((member) => tables.OwnedBy.getAllWith({ value: member })).flat();
 
-    for (const asteroid of allianceAsteroids) {
-      const scenesToUpdate = _update(asteroid);
-      if (!scenesToUpdate) continue;
+      for (const asteroid of allianceAsteroids) {
+        const scenesToUpdate = _update(asteroid);
+        if (!scenesToUpdate) continue;
 
-      scenesToUpdate.forEach((scene) => {
-        updateAsteroidLabel(scene, asteroid, undefined, undefined, entity, current?.name);
-      });
-    }
+        scenesToUpdate.forEach((scene) => {
+          updateAsteroidLabel(scene, asteroid, undefined, undefined, entity, current?.name);
+        });
+      }
+    },
   });
 
   systemsWorld.registerDisposer(sub);
