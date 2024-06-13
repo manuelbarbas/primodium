@@ -43,7 +43,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         unitProductionRate: 100n,
         travelTime: 10n,
         worldSpeed: 100n,
-        unitDeathLimit: 1_000_000n,
+        unitDeathLimit: 10_000_000n,
       },
 
       P_WormholeAsteroidConfig: {
