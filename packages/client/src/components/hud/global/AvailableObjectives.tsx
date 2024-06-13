@@ -17,7 +17,8 @@ import { useAccountClient, useCore } from "@primodiumxyz/core/react";
 
 export const AvailableObjectives = () => {
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
-  const { tables } = useCore();
+  const core = useCore();
+  const { tables } = core;
   const player = useAccountClient().playerAccount.entity;
   const asteroid = tables.ActiveRock.use()?.value;
   const asteroidOwner = tables.OwnedBy.use(asteroid)?.value;
@@ -37,7 +38,7 @@ export const AvailableObjectives = () => {
 
       if (completed) return false;
 
-      const canShow = canShowObjective(player, objectiveEntity);
+      const canShow = canShowObjective(core, player, objectiveEntity);
 
       if (!canShow) return false;
       return true;
@@ -134,10 +135,11 @@ const AvailableObjectiveItem = ({
   objectiveEntity: Entity;
   onClick?: () => void;
 }) => {
-  const { tables } = useCore();
+  const core = useCore();
+  const { tables } = core;
   const time = tables.Time.use()?.value;
-  const claimable = useMemo(
-    () => getCanClaimObjective(playerEntity, asteroidEntity, objectiveEntity),
+  const claimable: boolean = useMemo(
+    () => getCanClaimObjective(core, playerEntity, asteroidEntity, objectiveEntity),
     [time, asteroidEntity]
   );
 

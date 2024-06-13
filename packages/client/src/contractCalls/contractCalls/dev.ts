@@ -1,28 +1,27 @@
-import { entityToHexKeyTuple } from "@latticexyz/store-sync/recs";
-import { Entity, ContractTableDef, ContractTable } from "@primodiumxyz/reactive-tables";
+import { Entity, ContractTable } from "@primodiumxyz/reactive-tables";
 import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
-import { getSystemId } from "@primodiumxyz/core";
 
 export function createDevCalls({ execute }: ExecuteFunctions) {
-  async function removeTable<tableDef extends ContractTableDef = ContractTableDef>(
-    table: ContractTable<tableDef>,
-    entity: Entity
-  ) {
-    const tableId = table.id;
-    const key = entityToHexKeyTuple(entity);
+  execute;
+  // async function removeTable<tableDef extends ContractTableDef = ContractTableDef>(
+  //   table: ContractTable<tableDef>,
+  //   entity: Entity
+  // ) {
+  //   const tableId = table.id;
+  //   const key = entityToHexKeyTuple(entity);
 
-    await execute(
-      {
-        functionName: "Pri_11__devDeleteRecord",
-        systemId: getSystemId("DevSystem"),
-        args: [tableId, key],
-        withSession: true,
-      },
-      {
-        id: entity,
-      }
-    );
-  }
+  //   await execute(
+  //     {
+  //       functionName: "Pri_11__devDeleteRecord",
+  //       systemId: getSystemId("DevSystem"),
+  //       args: [tableId, key],
+  //       withSession: true,
+  //     },
+  //     {
+  //       id: entity,
+  //     }
+  //   );
+  // }
 
   // async function setTableValue<tableDef extends ContractTableDef = ContractTableDef>(
   //   table: ContractTable<tableDef, PS>,
@@ -53,7 +52,15 @@ export function createDevCalls({ execute }: ExecuteFunctions) {
   // }
 
   return {
-    removeTable,
-    // setTableValue,
+    removeTable: async (table: ContractTable, entity: Entity) => {
+      table;
+      entity;
+    },
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+    setTableValue: async (table: any, keys: any, newValues: any) => {
+      table;
+      keys;
+      newValues;
+    },
   };
 }

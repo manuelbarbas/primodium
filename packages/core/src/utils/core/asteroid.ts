@@ -141,11 +141,19 @@ export function createAsteroidUtils(tables: Tables) {
     return RockRelationship.Neutral;
   };
 
+  const getPlayerOwner = (entity: Entity) => {
+    const isFleet = tables.IsFleet.get(entity)?.value;
+    const owner = tables.OwnedBy.get(entity)?.value;
+    const rockEntity = isFleet ? owner : entity;
+    return tables.OwnedBy.get(rockEntity as Entity)?.value as Entity | undefined;
+  };
+
   return {
     getAsteroidName,
     getAsteroidDescription,
     getAsteroidInfo,
     isAsteroidBlocked,
     getRockRelationship,
+    getPlayerOwner,
   };
 }

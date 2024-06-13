@@ -1,4 +1,4 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { SecondaryCard } from "src/components/core/Card";
 import { Modal } from "src/components/core/Modal";

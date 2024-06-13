@@ -1,3 +1,7 @@
+import { initGame } from "@/api";
+
+export type PrimodiumGame = Awaited<ReturnType<typeof initGame>>;
+
 export type CameraConfig = {
   pinchSpeed: number;
   wheelSpeed: number;

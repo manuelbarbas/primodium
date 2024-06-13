@@ -1,14 +1,15 @@
-import { EntityToUnitImage } from "@/util/mappings";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { components } from "src/network/components";
-import { getEntityTypeName } from "src/util/common";
+import { useCore } from "@primodiumxyz/core/react";
+import { getEntityTypeName } from "@primodiumxyz/core";
+import { EntityToUnitImage } from "@/util/image";
 
 export const BuildQueue: React.FC<{ building: Entity }> = ({ building }) => {
-  const rawQueue = components.TrainingQueue.use(building);
+  const { tables } = useCore();
+  const rawQueue = tables.TrainingQueue.use(building);
 
   const queue = rawQueue ? convertTrainingQueue(rawQueue) : [];
 

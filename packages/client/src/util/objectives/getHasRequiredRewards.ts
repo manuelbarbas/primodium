@@ -1,20 +1,18 @@
-import { EntityToResourceImage } from "@/util/mappings";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { EResource } from "contracts/config/enums";
-import { components } from "src/network/components";
 import { Hex } from "viem";
-import { getEntityTypeName } from "../common";
-import { ResourceEntityLookup, ResourceType, UtilityStorages } from "../constants";
-import { getFullResourceCount } from "../resource";
 import { ObjectiveReq } from "./types";
+import { Core, getEntityTypeName, ResourceEntityLookup, ResourceType, UtilityStorages } from "@primodiumxyz/core";
+import { EntityToResourceImage } from "@/util/image";
 
-export function getRewardUtilitiesRequirement(objective: Entity, asteroid: Entity): ObjectiveReq[] {
-  const rewards = getRewards(objective);
+export function getRewardUtilitiesRequirement(core: Core, objective: Entity, asteroid: Entity): ObjectiveReq[] {
+  const { tables, utils } = core;
+  const rewards = getRewards(core, objective);
   const requiredUtilities = rewards.reduce((acc, cur) => {
     if (cur.type !== ResourceType.Utility) return acc;
     const prototype = cur.id as Hex;
-    const level = components.UnitLevel.getWithKeys({ unit: prototype, entity: asteroid as Hex })?.value ?? 0n;
-    const requiredResources = components.P_RequiredResources.getWithKeys({ prototype, level });
+    const level = tables.UnitLevel.getWithKeys({ unit: prototype, entity: asteroid as Hex })?.value ?? 0n;
+    const requiredResources = tables.P_RequiredResources.getWithKeys({ prototype, level });
     if (!requiredResources) return acc;
     requiredResources.resources.forEach((rawResource, i) => {
       const resource = ResourceEntityLookup[rawResource as EResource];
@@ -26,7 +24,7 @@ export function getRewardUtilitiesRequirement(objective: Entity, asteroid: Entit
   }, {} as Record<Entity, bigint>);
 
   return Object.entries(requiredUtilities).map(([entity, requiredValue]) => {
-    const { resourceCount, resourceStorage } = getFullResourceCount(entity as Entity, asteroid);
+    const { resourceCount, resourceStorage } = utils.getResourceCount(entity as Entity, asteroid);
     const val = requiredValue + (resourceStorage - resourceCount);
     return {
       entity: entity as Entity,
@@ -39,23 +37,23 @@ export function getRewardUtilitiesRequirement(objective: Entity, asteroid: Entit
   });
 }
 
-export function getHasRequiredRewards(asteroidEntity: Entity, objectiveEntity: Entity) {
-  const rewards = getRewards(objectiveEntity);
+export function getHasRequiredRewards(core: Core, asteroidEntity: Entity, objectiveEntity: Entity) {
+  const { utils } = core;
+  const rewards = getRewards(core, objectiveEntity);
   return rewards.every((resource) => {
     if (resource.type !== ResourceType.Resource) return true;
-    const { resourceCount, resourceStorage } = getFullResourceCount(resource.id, asteroidEntity);
+    const { resourceCount, resourceStorage } = utils.getResourceCount(resource.id, asteroidEntity);
     return resourceCount + resource.amount < resourceStorage;
   });
 }
 
-export function getRewards(entityId: Entity) {
-  const { P_ResourceReward, P_UnitReward } = components;
-  const rawResourceRewards = P_ResourceReward.get(entityId, {
+export function getRewards({ tables }: Core, entityId: Entity) {
+  const rawResourceRewards = tables.P_ResourceReward.get(entityId, {
     resources: [],
     amounts: [],
   });
 
-  const rawUnitRewards = P_UnitReward.get(entityId, {
+  const rawUnitRewards = tables.P_UnitReward.get(entityId, {
     units: [],
     amounts: [],
   });

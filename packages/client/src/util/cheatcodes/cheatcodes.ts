@@ -1,41 +1,48 @@
-import { WorldAbi } from "@/network/world";
 import { createBurnerAccount, transportObserver } from "@latticexyz/common";
-import { Entity } from "@latticexyz/recs";
 import { Coord } from "@primodiumxyz/engine/types";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Cheatcode, Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import { EAllianceInviteMode, EPointType, EResource } from "contracts/config/enums";
-import { components } from "src/network/components";
-import { getNetworkConfig } from "@/config/getNetworkConfig";
-import { buildBuilding } from "src/network/setup/contractCalls/buildBuilding";
-import { createFleet as callCreateFleet } from "src/network/setup/contractCalls/createFleet";
-import { setComponentValue } from "src/network/setup/contractCalls/dev";
-import { upgradeBuilding as upgradeBuildingCall } from "src/network/setup/contractCalls/upgradeBuilding";
-import { MUD } from "src/network/types";
-import { encodeEntity, toHex32 } from "src/util/encode";
-import { Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
+import { Address, Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
 import { waitForTransactionReceipt } from "viem/actions";
-import { getEntityTypeName } from "../common";
+import { TesterPack, testerPacks } from "./testerPacks";
+import { PrimodiumGame } from "@primodiumxyz/game/types";
 import {
+  AccountClient,
   BuildingEnumLookup,
+  Core,
+  entityToRockName,
   EntityType,
+  formatResourceCount,
+  getEntityTypeName,
+  parseResourceCount,
   RESOURCE_SCALE,
   ResourceEntityLookup,
   ResourceEnumLookup,
+  toHex32,
   UtilityStorages,
-} from "../constants";
-import { entityToRockName } from "../name";
-import { formatResourceCount, parseResourceCount } from "../number";
-import { getAsteroidBounds, outOfBounds } from "../outOfBounds";
-import { getFullResourceCount } from "../resource";
-import { getBuildingAtCoord } from "../tile";
-import { TesterPack, testerPacks } from "./testerPacks";
-import { PrimodiumGame } from "@/game/api";
+  WorldAbi,
+} from "@primodiumxyz/core";
+import { encodeEntity } from "@primodiumxyz/reactive-tables/utils";
+import { ContractCalls } from "@/contractCalls/createContractCalls";
 
-export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
+export const setupCheatcodes = (
+  { tables, utils, config, network }: Core,
+  { playerAccount, sessionAccount }: AccountClient,
+  calls: ContractCalls,
+  game: PrimodiumGame,
+  requestDrip?: (address: Address) => Promise<void>
+): Cheatcodes => {
   const {
     UI: { notify },
   } = game;
+  const {
+    setTableValue,
+    createFleet: createFleetCall,
+    upgradeBuilding: upgradeBuildingCall,
+    buildBuilding: buildBuildingCall,
+  } = calls;
   const buildings: Record<string, Entity> = {
     mainbase: EntityType.MainBase,
     droidbase: EntityType.DroidBase,
@@ -79,7 +86,6 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
     alloy: EntityType.Alloy,
     pvcell: EntityType.PVCell,
     housing: EntityType.Housing,
-    vessel: EntityType.VesselCapacity,
     electricity: EntityType.Electricity,
     defense: EntityType.Defense,
     fleetCount: EntityType.FleetCount,
@@ -102,18 +108,17 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
   const provideResource = async (spaceRock: Entity, resource: Entity, value: bigint) => {
     const resourceIndex = ResourceEnumLookup[resource];
     const systemCalls: Promise<unknown>[] = [];
-    const entity = encodeEntity(components.ProductionRate.metadata.keySchema, {
+    const entity = encodeEntity(tables.ProductionRate.metadata.abiKeySchema, {
       entity: spaceRock as Hex,
       resource: resourceIndex,
     });
-    const currentResourceCount = components.ResourceCount.get(entity)?.value ?? 0n;
+    const currentResourceCount = tables.ResourceCount.get(entity)?.value ?? 0n;
     const newResourceCount = currentResourceCount + value;
-    const maxResourceCount = components.MaxResourceCount.get(entity)?.value ?? 0n;
+    const maxResourceCount = tables.MaxResourceCount.get(entity)?.value ?? 0n;
     if (maxResourceCount < newResourceCount) {
       systemCalls.push(
-        setComponentValue(
-          mud,
-          mud.components.MaxResourceCount,
+        setTableValue(
+          tables.MaxResourceCount,
           { entity: spaceRock as Hex, resource: resourceIndex },
           {
             value: newResourceCount,
@@ -122,9 +127,8 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
       );
     }
     systemCalls.push(
-      setComponentValue(
-        mud,
-        mud.components.ResourceCount,
+      setTableValue(
+        tables.ResourceCount,
         { entity: spaceRock as Hex, resource: resourceIndex },
         {
           value: newResourceCount,
@@ -139,17 +143,16 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
   };
 
   const provideUnit = async (spaceRock: Entity, unit: Entity, value: bigint) => {
-    const level = components.UnitLevel.getWithKeys({ unit: unit as Hex, entity: spaceRock as Hex })?.value ?? 1n;
+    const level = tables.UnitLevel.getWithKeys({ unit: unit as Hex, entity: spaceRock as Hex })?.value ?? 1n;
 
     const unitRequiredResources = getTrainCost(unit, level, value);
 
     [...unitRequiredResources.entries()].map(async ([resource, count]) => {
       if (!UtilityStorages.has(resource)) return;
-      const { resourceStorage } = getFullResourceCount(resource, spaceRock);
+      const { resourceStorage } = utils.getResourceCount(resource, spaceRock);
 
-      await setComponentValue(
-        mud,
-        mud.components.MaxResourceCount,
+      await setTableValue(
+        tables.MaxResourceCount,
         { entity: spaceRock as Hex, resource: ResourceEnumLookup[resource as Entity] },
         {
           value: resourceStorage + count,
@@ -157,19 +160,16 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
       );
     });
     if (unit === EntityType.ColonyShip) {
-      const colonyShipCap = components.MaxColonySlots.get(mud.playerAccount.entity)?.value ?? 0n;
-      await setComponentValue(
-        mud,
-        components.MaxColonySlots,
-        { playerEntity: mud.playerAccount.entity as Hex },
+      const colonyShipCap = tables.MaxColonySlots.get(playerAccount.entity)?.value ?? 0n;
+      await setTableValue(
+        tables.MaxColonySlots,
+        { playerEntity: playerAccount.entity as Hex },
         { value: colonyShipCap + value }
       );
     }
-    const prevUnitCount =
-      components.UnitCount.getWithKeys({ unit: unit as Hex, entity: spaceRock as Hex })?.value ?? 0n;
-    await setComponentValue(
-      mud,
-      mud.components.UnitCount,
+    const prevUnitCount = tables.UnitCount.getWithKeys({ unit: unit as Hex, entity: spaceRock as Hex })?.value ?? 0n;
+    await setTableValue(
+      tables.UnitCount,
       {
         entity: spaceRock as Hex,
         unit: unit as Hex,
@@ -182,12 +182,11 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
 
   const provideBuildingRequiredResources = async (spaceRock: Entity, building: Entity, level: bigint) => {
     const requiredBaseLevel =
-      components.P_RequiredBaseLevel.getWithKeys({ prototype: building as Hex, level })?.value ?? 0n;
-    const mainBase = mud.components.Home.get(spaceRock)?.value as Entity | undefined;
-    if (requiredBaseLevel > (components.Level.get(mainBase)?.value ?? 0n)) {
-      await setComponentValue(
-        mud,
-        mud.components.Level,
+      tables.P_RequiredBaseLevel.getWithKeys({ prototype: building as Hex, level })?.value ?? 0n;
+    const mainBase = tables.Home.get(spaceRock)?.value as Entity | undefined;
+    if (requiredBaseLevel > (tables.Level.get(mainBase)?.value ?? 0n)) {
+      await setTableValue(
+        tables.Level,
         { entity: mainBase as Hex },
         {
           value: requiredBaseLevel,
@@ -195,7 +194,7 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
       );
       notify("success", `Main Base Level set to ${requiredBaseLevel}`);
     }
-    const requiredResources = components.P_RequiredResources.getWithKeys({ prototype: building as Hex, level });
+    const requiredResources = tables.P_RequiredResources.getWithKeys({ prototype: building as Hex, level });
     if (!requiredResources) return;
     for (let i = 0; i < requiredResources.resources.length; i++) {
       const resource = ResourceEntityLookup[requiredResources.resources[i] as EResource];
@@ -204,7 +203,7 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
   };
 
   function getTrainCost(unitPrototype: Entity, level: bigint, count: bigint) {
-    const requiredResources = components.P_RequiredResources.getWithKeys({ prototype: unitPrototype as Hex, level });
+    const requiredResources = tables.P_RequiredResources.getWithKeys({ prototype: unitPrototype as Hex, level });
     const ret: Map<Entity, bigint> = new Map();
     if (!requiredResources) return ret;
     for (let i = 0; i < requiredResources.resources.length; i++) {
@@ -218,7 +217,7 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
     units: { unit: Entity; count: number }[],
     resources: { resource: Entity; count: number }[]
   ) {
-    const asteroid = mud.components.ActiveRock.get()?.value;
+    const asteroid = tables.ActiveRock.get()?.value;
     if (!asteroid) throw new Error("No asteroid found");
     await provideResource(asteroid, EntityType.FleetCount, 1n);
     const unitPromises: Promise<void>[] = [];
@@ -229,8 +228,7 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
       unitPromises.push(provideResource(asteroid, resource, parseResourceCount(resource, count.toString())));
     });
     await Promise.all(unitPromises);
-    await callCreateFleet(
-      mud,
+    await createFleetCall(
       asteroid,
       new Map([
         ...(units.map(({ unit, count }) => [unit, BigInt(count)]) as [Entity, bigint][]),
@@ -243,17 +241,17 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
   }
 
   async function upgradeBuilding(building: Entity, level: number | "max" = "max") {
-    const position = components.Position.get(building);
+    const position = tables.Position.get(building);
     if (!position) {
       notify("error", "No building position ");
       throw new Error("No building position");
     }
 
-    const prototype = components.BuildingType.get(building)?.value ?? EntityType.IronMine;
-    let currLevel = components.Level.get(building)?.value ?? 1n;
+    const prototype = tables.BuildingType.get(building)?.value ?? EntityType.IronMine;
+    let currLevel = tables.Level.get(building)?.value ?? 1n;
     let newLevel: bigint;
-    if (!level) newLevel = components.Level.get(building)?.value ?? 1n + 1n;
-    else if (level === "max") newLevel = components.P_MaxLevel.get(prototype as Entity)?.value ?? 1n;
+    if (!level) newLevel = tables.Level.get(building)?.value ?? 1n + 1n;
+    else if (level === "max") newLevel = tables.P_MaxLevel.get(prototype as Entity)?.value ?? 1n;
     else newLevel = BigInt(level);
 
     if (newLevel < currLevel) {
@@ -262,16 +260,15 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
     }
     while (currLevel < newLevel) {
       await provideBuildingRequiredResources(position.parentEntity as Entity, prototype as Entity, currLevel + 1n);
-      await upgradeBuildingCall(mud, building, { force: true });
+      await upgradeBuildingCall(building, { force: true });
       currLevel++;
     }
   }
 
   async function spawnPlayers(count: number) {
-    const networkConfig = getNetworkConfig();
     const clientOptions = {
-      chain: networkConfig.chain,
-      transport: transportObserver(fallback([webSocket(networkConfig.chain.rpcUrls.default.http[0]), http()])),
+      chain: config.chain,
+      transport: transportObserver(fallback([webSocket(config.chain.rpcUrls.default.http[0]), http()])),
       pollingInterval: 1000,
     };
 
@@ -286,35 +283,35 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
     });
 
     // prepare enough ETH to each account for spawning if on caldera sepolia
-    if (networkConfig.chain.id === 10017) {
-      const playerAddress = mud.sessionAccount?.address ?? mud.playerAccount.address;
+    if (requestDrip && config.chain.id === 10017) {
+      const playerAddress = sessionAccount?.address ?? playerAccount.address;
       const requiredAmountToSpawn = BigInt(1e14);
 
-      let balance = await mud.network.publicClient.getBalance({ address: playerAddress });
+      let balance = await network.publicClient.getBalance({ address: playerAddress });
       while (balance < requiredAmountToSpawn * BigInt(count)) {
         console.log("Not enough balance to spawn players, dripping funds");
-        await mud.requestDrip(playerAddress);
-        balance = await mud.network.publicClient.getBalance({ address: playerAddress });
+        await requestDrip(playerAddress);
+        balance = await network.publicClient.getBalance({ address: playerAddress });
       }
     }
 
     for (let i = 0; i < count; i++) {
       const burnerWalletClient = walletClients[i];
       // send some ETH to the burner account for spawning if on caldera sepolia
-      if (networkConfig.chain.id === 10017) {
-        const player = mud.sessionAccount ?? mud.playerAccount;
+      if (config.chain.id === 10017) {
+        const player = sessionAccount ?? playerAccount;
         const hash = await player.walletClient.sendTransaction({
           to: burnerWalletClient.account.address,
           value: BigInt(1e14),
         });
-        await waitForTransactionReceipt(mud.network.publicClient, { hash });
+        await waitForTransactionReceipt(network.publicClient, { hash });
       }
 
       const worldContract = getContract({
-        address: networkConfig.worldAddress as Hex,
+        address: config.worldAddress as Hex,
         abi: WorldAbi,
         client: {
-          public: mud.network.publicClient,
+          public: network.publicClient,
           wallet: burnerWalletClient,
         },
       });
@@ -329,10 +326,10 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
   }
 
   async function waitUntilTxQueueEmpty() {
-    let txQueueSize = components.TransactionQueue.getSize();
+    let txQueueSize = tables.TransactionQueue.getSize();
     while (txQueueSize > 0) {
       await new Promise((resolve) => setTimeout(resolve, 100));
-      txQueueSize = components.TransactionQueue.getSize();
+      txQueueSize = tables.TransactionQueue.getSize();
     }
   }
   function setupTesterPackCheatcodes(testerPacks: Record<string, TesterPack>): Record<string, Cheatcode> {
@@ -347,9 +344,8 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
               notify("info", `running cheatcode: ${name}`);
               // world speed
               pack.worldSpeed &&
-                (await setComponentValue(
-                  mud,
-                  mud.components.P_GameConfig,
+                (await setTableValue(
+                  tables.P_GameConfig,
                   {},
                   {
                     worldSpeed: BigInt(pack.worldSpeed),
@@ -359,7 +355,7 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
               // spawn players
               pack.players && (await spawnPlayers(pack.players));
 
-              const activeAsteroid = mud.components.ActiveRock.get()?.value;
+              const activeAsteroid = tables.ActiveRock.get()?.value;
               if (!activeAsteroid) throw new Error("No active asteroid found");
               if (pack.resources) {
                 // provide resources
@@ -375,9 +371,8 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
                 for (const [resource, count] of pack.storages.entries()) {
                   const value = BigInt(count * Number(RESOURCE_SCALE));
 
-                  await setComponentValue(
-                    mud,
-                    mud.components.MaxResourceCount,
+                  await setTableValue(
+                    tables.MaxResourceCount,
                     { entity: activeAsteroid as Hex, resource: ResourceEnumLookup[resource] },
                     {
                       value,
@@ -396,7 +391,7 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
                 }
               }
               if (pack.mainBaseLevel) {
-                const mainBase = mud.components.Home.get(activeAsteroid)?.value;
+                const mainBase = tables.Home.get(activeAsteroid)?.value;
                 //upgrade main base
                 if (mainBase) {
                   await upgradeBuilding(mainBase as Entity, pack.mainBaseLevel);
@@ -406,9 +401,8 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
               }
               // upgrade expansion
               if (pack.expansion) {
-                await setComponentValue(
-                  mud,
-                  mud.components.Level,
+                await setTableValue(
+                  tables.Level,
                   { entity: activeAsteroid as Hex },
                   {
                     value: BigInt(pack.expansion),
@@ -424,7 +418,7 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
                   await provideBuildingRequiredResources(activeAsteroid, building, 1n);
                   const position = findTilePosition(activeAsteroid, building, usedCoords);
                   usedCoords.push(position);
-                  await buildBuilding(mud, BuildingEnumLookup[building], position, {
+                  await buildBuildingCall(BuildingEnumLookup[building], position, {
                     force: true,
                   });
                   await waitUntilTxQueueEmpty();
@@ -460,7 +454,7 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
     position: Coord,
     usedCoords?: Coord[]
   ) {
-    const blueprint = components.P_Blueprint.get(buildingPrototype)?.value ?? [];
+    const blueprint = tables.P_Blueprint.get(buildingPrototype)?.value ?? [];
     const absoluteCoords = [];
     for (let i = 0; i < blueprint.length; i += 2) {
       const relativeCoord = { x: blueprint[i], y: blueprint[i + 1] };
@@ -471,7 +465,10 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
       absoluteCoords.push(absoluteCoord);
       if (usedCoords?.some((usedCoord) => absoluteCoord.x === usedCoord.x && absoluteCoord.y === usedCoord.y))
         return false;
-      if (getBuildingAtCoord(absoluteCoord, asteroidEntity as Entity) || outOfBounds(absoluteCoord, asteroidEntity))
+      if (
+        utils.getBuildingAtCoord(absoluteCoord, asteroidEntity as Entity) ||
+        utils.outOfBounds(absoluteCoord, asteroidEntity)
+      )
         return false;
     }
 
@@ -480,18 +477,17 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
   }
 
   function findTilePosition(asteroidEntity: Entity, building: Entity, usedCoords?: Coord[]) {
-    const mapId = components.Asteroid.get(asteroidEntity)?.mapId ?? 1;
-    const bounds = getAsteroidBounds(asteroidEntity);
+    const mapId = tables.Asteroid.get(asteroidEntity)?.mapId ?? 1;
+    const bounds = utils.getAsteroidBounds(asteroidEntity);
     for (let i = bounds.minX; i < bounds.maxX; i++) {
       for (let j = bounds.minY; j < bounds.maxY; j++) {
         const coord = { x: i, y: j, asteroidEntity };
         if (usedCoords?.some((usedCoord) => coord.x === usedCoord.x && coord.y === usedCoord.y)) continue;
 
-        if (getBuildingAtCoord(coord, asteroidEntity as Entity)) continue;
+        if (utils.getBuildingAtCoord(coord, asteroidEntity as Entity)) continue;
 
-        const resource = components.P_RequiredTile.get(building)?.value;
-        if (!!resource && resource !== components.P_Terrain.getWithKeys({ mapId, x: coord.x, y: coord.y })?.value)
-          continue;
+        const resource = tables.P_RequiredTile.get(building)?.value;
+        if (!!resource && resource !== tables.P_Terrain.getWithKeys({ mapId, x: coord.x, y: coord.y })?.value) continue;
         if (!canPlaceBuildingTiles(asteroidEntity, building, coord, usedCoords)) continue;
         return coord;
       }
@@ -512,9 +508,8 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
           params: [{ name: "value", type: "number" }],
           function: async (value: number) => {
             notify("info", "running cheatcode: Set World Speed");
-            await setComponentValue(
-              mud,
-              mud.components.P_GameConfig,
+            await setTableValue(
+              tables.P_GameConfig,
               {},
               {
                 worldSpeed: BigInt(value),
@@ -526,9 +521,8 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
           params: [{ name: "value", type: "number" }],
           function: async (value: number) => {
             notify("info", "running cheatcode: Set World Speed");
-            await setComponentValue(
-              mud,
-              mud.components.P_GameConfig,
+            await setTableValue(
+              tables.P_GameConfig,
               {},
               {
                 unitDeathLimit: BigInt(value),
@@ -540,7 +534,7 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
           params: [],
           function: async () => {
             notify("info", "running cheatcode: Stop Grace Period");
-            setComponentValue(mud, components.P_GracePeriod, {}, { asteroid: 0n });
+            setTableValue(tables.P_GracePeriod, {}, { asteroid: 0n });
           },
         },
         givePlayersRandomPoints: {
@@ -550,11 +544,11 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
           ],
           function: async (type: "shard" | "wormhole", range: number) => {
             notify("info", "running cheatcode: Give Players Random Points");
-            const allPlayers = components.Spawned.getAll();
+            const allPlayers = tables.Spawned.getAll();
             const pointType = type === "shard" ? EPointType.Shard : EPointType.Wormhole;
             allPlayers.forEach((player) => {
               const points = BigInt(Math.floor(Math.random() * range)) * RESOURCE_SCALE;
-              setComponentValue(mud, components.Points, { entity: player as Hex, pointType }, { value: points });
+              setTableValue(tables.Points, { entity: player as Hex, pointType }, { value: points });
             });
           },
         },
@@ -574,11 +568,10 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
             { name: "level", type: "dropdown", dropdownOptions: ["1", "2", "3", "4", "5", "6", "7", "8"].reverse() },
           ],
           function: async (level: string) => {
-            const selectedRock = mud.components.ActiveRock.get()?.value;
+            const selectedRock = tables.ActiveRock.get()?.value;
             if (!selectedRock) throw new Error("No rock found");
-            await setComponentValue(
-              mud,
-              mud.components.Level,
+            await setTableValue(
+              tables.Level,
               { entity: selectedRock as Hex },
               {
                 value: BigInt(level),
@@ -598,7 +591,7 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
 
             if (!unitEntity) throw new Error("Unit not found");
 
-            const rock = mud.components.ActiveRock.get()?.value;
+            const rock = tables.ActiveRock.get()?.value;
             if (!rock) throw new Error("No asteroid found");
             provideUnit(rock, unitEntity, BigInt(count));
             notify("success", `${count} ${unit} given to ${entityToRockName(rock)}`);
@@ -610,9 +603,9 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
             { name: "count", type: "number" },
           ],
           function: async (resource: string, count: number) => {
-            const player = mud.playerAccount.entity;
+            const player = playerAccount.entity;
             if (!player) throw new Error("No player found");
-            const selectedRock = mud.components.ActiveRock.get()?.value;
+            const selectedRock = tables.ActiveRock.get()?.value;
 
             const resourceEntity = resources[resource];
 
@@ -627,19 +620,18 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
             { name: "count", type: "number" },
           ],
           function: async (resource: string, count: number) => {
-            const player = mud.playerAccount.entity;
+            const player = playerAccount.entity;
             if (!player) throw new Error("No player found");
 
-            const selectedRock = mud.components.ActiveRock.get()?.value;
+            const selectedRock = tables.ActiveRock.get()?.value;
             const resourceEntity = resources[resource];
 
             if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
 
             const value = BigInt(count * Number(RESOURCE_SCALE));
 
-            await setComponentValue(
-              mud,
-              mud.components.MaxResourceCount,
+            await setTableValue(
+              tables.MaxResourceCount,
               { entity: selectedRock as Hex, resource: ResourceEnumLookup[resourceEntity] },
               {
                 value,
@@ -654,15 +646,14 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
             { name: "resource", type: "dropdown", dropdownOptions: Object.keys(resources) },
           ],
           function: async (count: number, resource: string) => {
-            const selectedRock = mud.components.SelectedRock.get()?.value;
+            const selectedRock = tables.SelectedRock.get()?.value;
             const resourceEntity = resources[resource];
             if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
 
             const value = BigInt(count * Number(RESOURCE_SCALE));
 
-            await setComponentValue(
-              mud,
-              mud.components.ResourceCount,
+            await setTableValue(
+              tables.ResourceCount,
               { entity: selectedRock as Hex, resource: ResourceEnumLookup[resourceEntity] },
               {
                 value,
@@ -674,13 +665,12 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
         increaseMaxColonySlots: {
           params: [{ name: "count", type: "number" }],
           function: async (count: number) => {
-            const player = mud.playerAccount.entity;
+            const player = playerAccount.entity;
             if (!player) throw new Error("No player found");
 
-            const colonyShipCap = components.MaxColonySlots.get(player)?.value ?? 0n;
-            await setComponentValue(
-              mud,
-              components.MaxColonySlots,
+            const colonyShipCap = tables.MaxColonySlots.get(player)?.value ?? 0n;
+            await setTableValue(
+              tables.MaxColonySlots,
               { playerEntity: player as Hex },
               { value: colonyShipCap + BigInt(count) }
             );
@@ -690,47 +680,37 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
         conquerAsteroid: {
           params: [{ name: "baseType", type: "dropdown", dropdownOptions: ["MainBase", "WormholeBase"] }],
           function: async (baseType: string) => {
-            const selectedRock = mud.components.SelectedRock.get()?.value;
+            const selectedRock = tables.SelectedRock.get()?.value;
             if (!selectedRock) {
               notify("error", `No rock selected`);
               throw new Error("No asteroid found");
             }
             notify("info", `Conquering ${entityToRockName(selectedRock)}`);
-            const staticData = components.Asteroid.get(selectedRock)?.__staticData;
-            if (staticData === "") {
+            const staticData = tables.Asteroid.get(selectedRock)?.__staticData;
+            if (!staticData) {
               await createFleet([{ unit: EntityType.LightningCraft, count: 1 }], []);
               notify("error", "Asteroid not initialized. Send fleet to initialize it");
               throw new Error("Asteroid not initialized");
             }
             const entity = baseType == "MainBase" ? EntityType.MainBase : EntityType.WormholeBase;
-            const player = mud.playerAccount.entity;
-            const colonyShipCap = components.MaxColonySlots.get(player)?.value ?? 0n;
-            await setComponentValue(
-              mud,
-              components.MaxColonySlots,
-              { playerEntity: player as Hex },
-              { value: colonyShipCap + 1n }
-            );
-            await setComponentValue(mud, components.OwnedBy, { entity: selectedRock as Hex }, { value: player });
-            const position = components.Position.get(entity);
+            const player = playerAccount.entity;
+            const colonyShipCap = tables.MaxColonySlots.get(player)?.value ?? 0n;
+            await setTableValue(tables.MaxColonySlots, { playerEntity: player as Hex }, { value: colonyShipCap + 1n });
+            await setTableValue(tables.OwnedBy, { entity: selectedRock as Hex }, { value: player });
+            const position = tables.Position.get(entity);
             if (!position) throw new Error("No main base found");
-            await buildBuilding(mud, BuildingEnumLookup[entity], { ...position, parentEntity: selectedRock as Hex });
+            await buildBuildingCall(BuildingEnumLookup[entity], { ...position, parentEntity: selectedRock });
             notify("success", `Asteroid ${entityToRockName(selectedRock)} conquered`);
           },
         },
         conquerAllPrimaryAsteroids: {
           params: [],
           function: async () => {
-            const asteroids = mud.components.Asteroid.getAllWith({ spawnsSecondary: true });
+            const asteroids = tables.Asteroid.getAllWith({ spawnsSecondary: true });
             for (const asteroid of asteroids) {
-              const position = components.Position.get(asteroid);
+              const position = tables.Position.get(asteroid);
               if (!position) continue;
-              await setComponentValue(
-                mud,
-                mud.components.OwnedBy,
-                { entity: asteroid as Hex },
-                { value: mud.playerAccount.entity }
-              );
+              await setTableValue(tables.OwnedBy, { entity: asteroid as Hex }, { value: playerAccount.entity });
             }
             notify("success", "All primary asteroids conquered");
           },
@@ -742,15 +722,14 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
             { name: "y", type: "number" },
           ],
           function: async (resource: string, x: number, y: number) => {
-            const selectedRock = mud.components.ActiveRock.get()?.value;
+            const selectedRock = tables.ActiveRock.get()?.value;
             const resourceEntity = resources[resource];
-            const mapId = components.Asteroid.get(selectedRock)?.mapId ?? 1;
+            const mapId = tables.Asteroid.get(selectedRock)?.mapId ?? 1;
 
             if (!resourceEntity || !selectedRock) throw new Error("Resource not found");
 
-            await setComponentValue(
-              mud,
-              mud.components.P_Terrain,
+            await setTableValue(
+              tables.P_Terrain,
               { mapId, x, y },
               {
                 value: ResourceEnumLookup[resourceEntity],
@@ -767,16 +746,12 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
         buildBuilding: {
           params: [{ name: "building", type: "dropdown", dropdownOptions: Object.keys(buildings) }],
           function: async (building: string) => {
-            const selectedRock = mud.components.ActiveRock.get()?.value;
+            const selectedRock = tables.ActiveRock.get()?.value;
             const buildingEntity = buildings[building];
             if (!buildingEntity || !selectedRock) throw new Error("Building not found");
 
             await provideBuildingRequiredResources(selectedRock, buildingEntity, 1n);
-            await buildBuilding(
-              mud,
-              BuildingEnumLookup[buildingEntity],
-              findTilePosition(selectedRock, buildingEntity)
-            );
+            await buildBuildingCall(BuildingEnumLookup[buildingEntity], findTilePosition(selectedRock, buildingEntity));
           },
         },
         upgradeBuilding: {
@@ -788,7 +763,7 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
             },
           ],
           function: async (level?: string) => {
-            const selectedBuilding = mud.components.SelectedBuilding.get()?.value;
+            const selectedBuilding = tables.SelectedBuilding.get()?.value;
 
             if (!selectedBuilding) {
               notify("error", "No building selected");
@@ -800,15 +775,14 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
         clearCooldown: {
           params: [],
           function: async () => {
-            const selectedBuilding = mud.components.SelectedBuilding.get()?.value;
+            const selectedBuilding = tables.SelectedBuilding.get()?.value;
             if (!selectedBuilding) {
               notify("error", "No building selected");
               throw new Error("No building selected");
             }
-            const time = components.Time.get()?.value ?? 0n;
-            await setComponentValue(
-              mud,
-              mud.components.CooldownEnd,
+            const time = tables.Time.get()?.value ?? 0n;
+            await setTableValue(
+              tables.CooldownEnd,
               { entity: selectedBuilding as Hex },
               {
                 value: time + 10n,
@@ -836,26 +810,24 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
             { name: "count", type: "number" },
           ],
           function: async (unit: string, count: number) => {
-            const player = mud.playerAccount.entity;
+            const player = playerAccount.entity;
             if (!player) throw new Error("No player found");
-            const selectedFleet = mud.components.SelectedFleet.get()?.value;
+            const selectedFleet = tables.SelectedFleet.get()?.value;
 
             const unitEntity = units[unit];
 
             if (!unitEntity || !selectedFleet) throw new Error("Resource not found");
 
-            await setComponentValue(
-              mud,
-              mud.components.UnitCount,
+            await setTableValue(
+              tables.UnitCount,
               { entity: selectedFleet as Hex, unit: unitEntity as Hex },
               {
                 value: BigInt(count),
               }
             );
 
-            await setComponentValue(
-              mud,
-              mud.components.IsFleetEmpty,
+            await setTableValue(
+              tables.IsFleetEmpty,
               { entity: selectedFleet as Hex },
               {
                 value: false,
@@ -869,9 +841,9 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
             { name: "count", type: "number" },
           ],
           function: async (resource: string, count: number) => {
-            const player = mud.playerAccount.entity;
+            const player = playerAccount.entity;
             if (!player) throw new Error("No player found");
-            const selectedFleet = mud.components.SelectedFleet.get()?.value;
+            const selectedFleet = tables.SelectedFleet.get()?.value;
 
             const resourceEntity = resources[resource];
 
@@ -879,9 +851,8 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
 
             const value = BigInt(count * Number(RESOURCE_SCALE));
 
-            await setComponentValue(
-              mud,
-              mud.components.ResourceCount,
+            await setTableValue(
+              tables.ResourceCount,
               { entity: selectedFleet as Hex, resource: ResourceEnumLookup[resourceEntity] },
               {
                 value,
@@ -892,15 +863,14 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
         setFleetCooldown: {
           params: [{ name: "value", type: "number" }],
           function: async (value: number) => {
-            const timestamp = (components.Time.get()?.value ?? 0n) + BigInt(value);
-            const selectedFleet = mud.components.SelectedFleet.get()?.value;
+            const timestamp = (tables.Time.get()?.value ?? 0n) + BigInt(value);
+            const selectedFleet = tables.SelectedFleet.get()?.value;
             if (!selectedFleet) {
               notify("error", "No fleet selected");
               throw new Error("No fleet selected");
             }
-            await setComponentValue(
-              mud,
-              mud.components.CooldownEnd,
+            await setTableValue(
+              tables.CooldownEnd,
               { entity: selectedFleet as Hex },
               {
                 value: BigInt(timestamp),
@@ -916,9 +886,8 @@ export const setupCheatcodes = (mud: MUD, game: PrimodiumGame): Cheatcodes => {
         setMaxAllianceCount: {
           params: [{ name: "value", type: "number" }],
           function: async (value: number) => {
-            await setComponentValue(
-              mud,
-              mud.components.P_AllianceConfig,
+            await setTableValue(
+              tables.P_AllianceConfig,
               {},
               {
                 maxAllianceMembers: BigInt(value),

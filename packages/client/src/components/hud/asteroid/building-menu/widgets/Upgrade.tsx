@@ -1,32 +1,28 @@
 import { Button } from "@/components/core/Button";
-import { EntityToResourceImage } from "@/util/mappings";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { Badge } from "src/components/core/Badge";
 import { SecondaryCard } from "src/components/core/Card";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { useMud } from "src/hooks";
-import { useBuildingInfo } from "src/hooks/useBuildingInfo";
-import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
-import { components } from "src/network/components";
-import { upgradeBuilding } from "src/network/setup/contractCalls/upgradeBuilding";
-import { getEntityTypeName } from "src/util/common";
-import { TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
+import { useCore, useHasEnoughResources, useBuildingInfo } from "@primodiumxyz/core/react";
+import { getEntityTypeName } from "@primodiumxyz/core";
+import { EntityToResourceImage } from "@/util/image";
+import { useContractCalls } from "@/hooks/useContractCalls";
 
 export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
-  const mud = useMud();
+  const { tables } = useCore();
 
-  const spaceRock = components.Position.use(building)?.parentEntity as Entity | undefined;
+  const spaceRock = tables.Position.use(building)?.parentEntity as Entity | undefined;
   if (!spaceRock) throw new Error("[Upgrade] Building has no parentEntity");
-  const mainBaseEntity = components.Home.use(spaceRock)?.value as Entity;
-  const mainBaseLevel = components.Level.use(mainBaseEntity, {
+  const mainBaseEntity = tables.Home.use(spaceRock)?.value as Entity;
+  const mainBaseLevel = tables.Level.use(mainBaseEntity, {
     value: 1n,
   }).value;
 
   const buildingInfo = useBuildingInfo(building);
   const hasEnough = useHasEnoughResources(buildingInfo?.upgrade?.recipe ?? [], spaceRock);
+  const { upgradeBuilding } = useContractCalls();
 
   if (!buildingInfo || !spaceRock) return null;
   const { level, maxLevel, upgrade } = buildingInfo;
@@ -88,8 +84,8 @@ export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
             );
           })}
       </div>
-      <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, building)}>
-        <Button size="sm" variant="secondary" disabled={!canUpgrade} onClick={() => upgradeBuilding(mud, building)}>
+      <TransactionQueueMask queueItemId={`upgrade-${building}`}>
+        <Button size="sm" variant="secondary" disabled={!canUpgrade} onClick={() => upgradeBuilding(building)}>
           Upgrade
         </Button>
       </TransactionQueueMask>

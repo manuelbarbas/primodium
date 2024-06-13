@@ -1,47 +1,55 @@
 import { CapacityBar } from "@/components/core/CapacityBar";
 import { SecondaryCard } from "@/components/core/Card";
-import { useGame } from "@/hooks/useGame";
 import { cn } from "@/util/client";
-import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
 import { IconLabel } from "src/components/core/IconLabel";
 import { Loader } from "src/components/core/Loader";
-import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { useClaimPrimodium } from "src/hooks/primodium/useClaimPrimodium";
-import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
-import { useFullResourceCount, useFullResourceCounts } from "src/hooks/useFullResourceCount";
-import { useInGracePeriod } from "src/hooks/useInGracePeriod";
-import { useSyncStatus } from "src/hooks/useSyncStatus";
-import { components } from "src/network/components";
-import { getAsteroidDescription, getAsteroidImage } from "src/util/asteroid";
-import { EntityType, Keys, ResourceStorages } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
-import { entityToRockName } from "src/util/name";
-import { formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
+import {
+  useAsteroidStrength,
+  useClaimPrimodium,
+  useCore,
+  useInGracePeriod,
+  useResourceCount,
+  useResourceCounts,
+  useSyncStatus,
+} from "@primodiumxyz/core/react";
+import {
+  entityToRockName,
+  EntityType,
+  formatResourceCount,
+  formatTime,
+  formatTimeShort,
+  hashEntities,
+  Keys,
+  ResourceStorages,
+} from "@primodiumxyz/core";
+import { useAsteroidImage } from "@/hooks/image/useAsteroidImage";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
+import { AccountDisplay } from "@/components/shared/AccountDisplay";
 
 export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }> = ({
   entity,
   hideResources = false,
 }) => {
+  const { tables, utils } = useCore();
   const { loading } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
   const name = entityToRockName(entity);
-  const wormhole = components.Asteroid.get(entity)?.wormhole;
-  const desc = getAsteroidDescription(entity);
+  const wormhole = tables.Asteroid.get(entity)?.wormhole;
+  const desc = utils.getAsteroidDescription(entity);
   const { inGracePeriod, duration } = useInGracePeriod(entity, loading);
-  const { resourceCount: encryption, resourceStorage: maxEncryption } = useFullResourceCount(
+  const { resourceCount: encryption, resourceStorage: maxEncryption } = useResourceCount(
     EntityType.Encryption,
     entity,
     loading
   );
 
-  const ownedBy = components.OwnedBy.use(entity)?.value as Entity | undefined;
+  const ownedBy = tables.OwnedBy.use(entity)?.value as Entity | undefined;
   const { strength, maxStrength } = useAsteroidStrength(entity, loading);
   const claimConquerTime = useClaimPrimodium(entity);
 
-  const position = components.Position.use(entity) ?? { x: 0, y: 0 };
-  const game = useGame();
-  const image = getAsteroidImage(game, entity);
+  const position = tables.Position.use(entity) ?? { x: 0, y: 0 };
+  const image = useAsteroidImage(entity);
   if (loading)
     return (
       <div className="relative w-60 h-24 px-auto uppercase font-bold">
@@ -148,8 +156,9 @@ const UnitDisplay = ({ type, count }: { type: Entity; count: bigint }) => {
 
 // exluding units for now
 const AsteroidResources = ({ entity }: { entity: Entity }) => {
-  const resources = useFullResourceCounts(entity);
-  const units = components.Hangar.use(entity);
+  const { tables } = useCore();
+  const resources = useResourceCounts(entity);
+  const units = tables.Hangar.use(entity);
   const hasUnits = !!units && units.counts.some((unit) => unit > 0n);
   const noResources = [...ResourceStorages].every((type) => resources.get(type)?.resourceCount === 0n);
   if (noResources && !hasUnits) return null;

@@ -1,8 +1,8 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EObjectives } from "contracts/config/enums";
-import { EntityType, ObjectiveEnumLookup } from "../constants";
 import { Objective } from "./types";
+import { EntityType, ObjectiveEnumLookup } from "@primodiumxyz/core";
 
 export const getObjective = (objectiveEntity: Entity) => {
   const objectiveEnum = ObjectiveEnumLookup[objectiveEntity];

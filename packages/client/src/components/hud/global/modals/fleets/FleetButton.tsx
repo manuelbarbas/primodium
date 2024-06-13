@@ -1,4 +1,4 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { ComponentProps } from "react";
 import { Button } from "src/components/core/Button";
 import { components } from "src/network/components";

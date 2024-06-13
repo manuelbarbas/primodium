@@ -1,29 +1,28 @@
 import { Button } from "@/components/core/Button";
-import { EntityToResourceImage } from "@/util/mappings";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { Badge } from "src/components/core/Badge";
 import { SecondaryCard } from "src/components/core/Card";
 import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
 import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { useMud } from "src/hooks";
-import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
-import { components } from "src/network/components";
-import { upgradeRange } from "src/network/setup/contractCalls/upgradeRange";
-import { getEntityTypeName } from "src/util/common";
-import { EntityType, TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
-import { getUpgradeInfo } from "src/util/upgrade";
+import { useCore, useAccountClient, useHasEnoughResources } from "@primodiumxyz/core/react";
+import { EntityType, getEntityTypeName } from "@primodiumxyz/core";
+import { EntityToResourceImage } from "@/util/image";
+import { useContractCalls } from "@/hooks/useContractCalls";
 
 export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
-  asteroid;
-  const mud = useMud();
-  const { playerAccount } = mud;
-  const mainBaseEntity = components.Home.use(asteroid)?.value as Entity;
-  const mainBaseLevel = components.Level.use(mainBaseEntity, {
+  const { tables, utils } = useCore();
+  const { upgradeRange } = useContractCalls();
+
+  const { playerAccount } = useAccountClient();
+  const mainBaseEntity = tables.Home.use(asteroid)?.value as Entity;
+  const mainBaseLevel = tables.Level.use(mainBaseEntity, {
     value: 1n,
   }).value;
-  const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(EntityType.Expansion, asteroid);
+  const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = utils.getUpgradeInfo(
+    EntityType.Expansion,
+    asteroid
+  );
   const hasEnough = useHasEnoughResources(recipe, asteroid);
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && !isResearched;
   const atMaxLevel = level >= maxLevel;
@@ -79,8 +78,8 @@ export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
             );
           })}
       </div>
-      <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, playerAccount.entity)}>
-        <Button size="sm" variant="secondary" disabled={!canUpgrade} onClick={() => upgradeRange(mud, asteroid)}>
+      <TransactionQueueMask queueItemId={`upgrade-${playerAccount.entity}`}>
+        <Button size="sm" variant="secondary" disabled={!canUpgrade} onClick={() => upgradeRange(asteroid)}>
           Expand
         </Button>
       </TransactionQueueMask>

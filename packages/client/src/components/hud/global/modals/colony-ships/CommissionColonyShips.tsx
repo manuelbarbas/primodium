@@ -2,17 +2,13 @@ import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { TrainColonyShip } from "@/components/hud/global/modals/colony-ships/TrainColonyShip";
 import { UnlockSlot } from "@/components/hud/global/modals/colony-ships/UnlockSlot";
-import { useMud } from "@/hooks";
-import { useColonySlots } from "@/hooks/useColonySlots";
-import { components } from "@/network/components";
-import { EntityType } from "@/util/constants";
-import { EntityToUnitImage } from "@/util/mappings";
-import { entityToRockName } from "@/util/name";
-import { formatTime } from "@/util/number";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import React from "react";
 import { Navigator } from "src/components/core/Navigator";
+import { useAccountClient, useCore, useColonySlots } from "@primodiumxyz/core/react";
+import { EntityToUnitImage } from "@/util/image";
+import { entityToRockName, EntityType, formatTime } from "@primodiumxyz/core";
 
 type Tile =
   | { type: "training"; unit: Entity; progress: bigint; timeRemaining: bigint; count: bigint }
@@ -23,8 +19,9 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
   const [activeTile, setActiveTile] = React.useState<number | null>(null);
   const {
     playerAccount: { entity: playerEntity },
-  } = useMud();
-  const asteroid = components.OwnedBy.use(buildingEntity)?.value as Entity;
+  } = useAccountClient();
+  const { tables } = useCore();
+  const asteroid = tables.OwnedBy.use(buildingEntity)?.value as Entity;
   if (!asteroid) throw new Error("[ColonyShipData] No asteroid selected");
 
   const colonySlotsData = useColonySlots(playerEntity);
@@ -32,7 +29,7 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
   const trainingShips = colonySlotsData.occupiedSlots.filter(
     (slot): slot is typeof slot & { type: "training" } => slot.type === "training"
   );
-  const rawQueue = components.TrainingQueue.use(buildingEntity);
+  const rawQueue = tables.TrainingQueue.use(buildingEntity);
 
   const queue = rawQueue ? convertTrainingQueue(rawQueue) : [];
 

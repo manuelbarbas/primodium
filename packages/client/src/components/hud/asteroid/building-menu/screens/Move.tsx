@@ -1,11 +1,11 @@
-import { Entity } from "@latticexyz/recs";
+import { useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { SecondaryCard } from "src/components/core/Card";
 import { Navigator } from "src/components/core/Navigator";
-import { components } from "src/network/components";
-import { getBuildingName } from "src/util/building";
 
 export const Move: React.FC<{ building: Entity }> = ({ building }) => {
-  const name = getBuildingName(building);
+  const { tables, utils } = useCore();
+  const name = utils.getBuildingName(building);
   return (
     <Navigator.Screen title="Move">
       <SecondaryCard className="space-y-3 items-center text-center w-full">
@@ -17,7 +17,7 @@ export const Move: React.FC<{ building: Entity }> = ({ building }) => {
           <Navigator.BackButton
             className="btn-sm border-secondary"
             onClick={() => {
-              components.SelectedAction.remove();
+              tables.SelectedAction.remove();
             }}
           />
         </div>

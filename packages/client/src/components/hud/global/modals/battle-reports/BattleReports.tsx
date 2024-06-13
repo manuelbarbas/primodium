@@ -1,20 +1,14 @@
 import { AccountDisplay } from "@/components/shared/AccountDisplay";
-import { formatTimeAgo } from "@/util/number";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useMemo, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { SecondaryCard } from "src/components/core/Card";
 import { Loader } from "src/components/core/Loader";
 import { Navigator } from "src/components/core/Navigator";
-import { useMud } from "src/hooks";
-import { useSyncStatus } from "src/hooks/useSyncStatus";
-import { components } from "src/network/components";
-import { hydrateBattleReports } from "src/network/sync/indexer";
-import { Keys } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
-import { entityToFleetName, entityToRockName } from "src/util/name";
 import { BattleDetails } from "./BattleDetails";
+import { useAccountClient, useCore, useSyncStatus } from "@primodiumxyz/core/react";
+import { entityToFleetName, entityToRockName, formatTimeAgo, hashEntities, Keys } from "@primodiumxyz/core";
 
 export const LoadingScreen = () => {
   return (
@@ -45,20 +39,20 @@ export const ErrorScreen = () => {
 };
 
 export const BattleReports = () => {
-  const mud = useMud();
+  const { tables, sync } = useCore();
   const {
     playerAccount: { entity: playerEntity },
-  } = mud;
+  } = useAccountClient();
   const [selectedBattle, setSelectedBattle] = useState<Entity>();
   const { loading, error } = useSyncStatus(hashEntities(Keys.BATTLE, playerEntity));
 
-  const battles = components.Battle.useAllPlayerBattles(playerEntity).sort((a, b) =>
-    Number(components.Battle.get(b)?.timestamp! - components.Battle.get(a)?.timestamp!)
+  const battles = tables.Battle.useAllPlayerBattles(playerEntity).sort((a, b) =>
+    Number(tables.Battle.get(b)?.timestamp! - tables.Battle.get(a)?.timestamp!)
   );
 
   useEffect(() => {
-    hydrateBattleReports(playerEntity, mud);
-  }, [playerEntity, mud]);
+    sync.syncBattleReports(playerEntity);
+  }, [playerEntity]);
 
   const initialScreen = useMemo(() => {
     if (error) return "error";
@@ -99,17 +93,18 @@ export const BattleButton = ({
 }) => {
   const {
     playerAccount: { entity: playerEntity },
-  } = useMud();
+  } = useAccountClient();
+  const { tables } = useCore();
 
-  const battle = components.Battle.use(battleEntity);
+  const battle = tables.Battle.use(battleEntity);
 
   const attackingPlayer = battle?.attackingPlayer as Entity;
   const defendingPlayer = battle?.defendingPlayer as Entity;
 
   const playerIsAttacker = attackingPlayer === playerEntity;
   const playerIsWinner = (battle?.winner as Entity) === battle?.attacker ? playerIsAttacker : !playerIsAttacker;
-  const attackerIsFleet = components.IsFleet.use(battle?.attacker);
-  const defenderIsFleet = components.IsFleet.use(battle?.defender);
+  const attackerIsFleet = tables.IsFleet.use(battle?.attacker);
+  const defenderIsFleet = tables.IsFleet.use(battle?.defender);
 
   if (!battle) return <></>;
 

@@ -5,7 +5,6 @@ import init from "@/init";
 import { Scenes } from "@/lib/constants/common";
 import { runSystems as runCommonSystems } from "@/scenes/common/systems";
 
-export type PrimodiumGame = Awaited<ReturnType<typeof initGame>>;
 export async function initGame(core: Core, version = "v1") {
   const {
     network: { world },

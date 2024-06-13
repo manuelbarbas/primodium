@@ -1,19 +1,14 @@
 import { Button } from "@/components/core/Button";
 import { BuildingImageFromType } from "@/components/shared/BuildingImage";
 import { KeyNames, KeybindActionKeys } from "@game/lib/constants/keybinds";
-import { useEntityQuery } from "@latticexyz/react";
-import { Entity, HasValue } from "@latticexyz/recs";
+import { Action, EntityType } from "@primodiumxyz/core";
+import { useCore, useHasEnoughResources } from "@primodiumxyz/core/react";
+import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
 import { EMap } from "contracts/config/enums";
 import { useEffect, useMemo } from "react";
 import { FaLock } from "react-icons/fa";
 import { usePersistentStore } from "src/game/stores/PersistentStore";
 import { useGame } from "src/hooks/useGame";
-import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
-import { components } from "src/network/components";
-import { getBuildingDimensions } from "src/util/building";
-import { Action, EntityType } from "src/util/constants";
-import { getRecipe } from "src/util/recipe";
-import { Hex } from "viem";
 import { useShallow } from "zustand/react/shallow";
 
 const BlueprintButton: React.FC<{
@@ -28,36 +23,38 @@ const BlueprintButton: React.FC<{
     hooks: { useKeybinds },
     input: { addListener },
   } = useGame().ASTEROID;
+  const { tables, utils } = useCore();
   const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
   const keybinds = useKeybinds();
-  const selectedRockEntity = components.ActiveRock.use()?.value as Entity | undefined;
+  const selectedRockEntity = tables.ActiveRock.use()?.value as Entity | undefined;
   if (!selectedRockEntity) throw new Error("No active rock entity found");
-  const rockMainBase = components.Home.use(selectedRockEntity)?.value;
-  const selectedBuilding = components.SelectedBuilding.use()?.value;
-  const mainbaseLevel = components.Level.use(rockMainBase as Entity)?.value ?? 1n;
-  const levelRequirement =
-    components.P_RequiredBaseLevel.getWithKeys({ prototype: buildingType as Hex, level: 1n })?.value ?? 1n;
+  const rockMainBase = tables.Home.use(selectedRockEntity)?.value;
+  const selectedBuilding = tables.SelectedBuilding.use()?.value;
+  const mainbaseLevel = tables.Level.use(rockMainBase as Entity)?.value ?? 1n;
+  const levelRequirement = tables.P_RequiredBaseLevel.getWithKeys({ prototype: buildingType, level: 1n })?.value ?? 1n;
   const hasMainbaseLevel = mainbaseLevel >= levelRequirement;
 
-  const hasEnough = useHasEnoughResources(getRecipe(buildingType, 1n), selectedRockEntity);
+  const hasEnough = useHasEnoughResources(utils.getRecipe(buildingType, 1n), selectedRockEntity);
 
   const alreadyBuilt =
-    useEntityQuery([
-      HasValue(components.BuildingType, { value: EntityType.StarmapperStation }),
-      HasValue(components.OwnedBy, { value: selectedRockEntity }),
-    ]).length > 0 && buildingType === EntityType.StarmapperStation;
+    useQuery({
+      withProperties: [
+        { table: tables.BuildingType, properties: { value: EntityType.StarmapperStation } },
+        { table: tables.OwnedBy, properties: { value: selectedRockEntity } },
+      ],
+    }).length > 0 && buildingType === EntityType.StarmapperStation;
 
   useEffect(() => {
     if (!keybindActive || !keybind) return;
 
     const key = addListener(keybind, () => {
       if (selectedBuilding === buildingType) {
-        components.SelectedBuilding.remove();
-        components.SelectedAction.remove();
+        tables.SelectedBuilding.remove();
+        tables.SelectedAction.remove();
         return;
       }
 
-      components.SelectedBuilding.set({ value: buildingType });
+      tables.SelectedBuilding.set({ value: buildingType });
     });
 
     return () => key.dispose();
@@ -70,17 +67,17 @@ const BlueprintButton: React.FC<{
       disabled={alreadyBuilt || mainbaseLevel < levelRequirement}
       keybind={keybindActive ? keybind : undefined}
       tooltipDirection={tooltipDirection ?? "right"}
-      onPointerEnter={() => components.HoverEntity.set({ value: buildingType })}
-      onPointerLeave={() => components.HoverEntity.remove()}
+      onPointerEnter={() => tables.HoverEntity.set({ value: buildingType })}
+      onPointerLeave={() => tables.HoverEntity.remove()}
       clickSound={"Bleep7"}
       onClick={() => {
         if (selectedBuilding === buildingType) {
-          components.SelectedBuilding.remove();
-          components.SelectedAction.remove();
+          tables.SelectedBuilding.remove();
+          tables.SelectedAction.remove();
           return;
         }
-        components.SelectedBuilding.set({ value: buildingType });
-        components.SelectedAction.set({ value: Action.PlaceBuilding });
+        tables.SelectedBuilding.set({ value: buildingType });
+        tables.SelectedAction.set({ value: Action.PlaceBuilding });
       }}
       style={style}
     >
@@ -127,8 +124,9 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({
   active,
   showHighlight,
 }) => {
-  const selectedRockEntity = components.ActiveRock.use()?.value;
-  const mapId = components.Asteroid.use(selectedRockEntity)?.mapId;
+  const { tables, utils } = useCore();
+  const selectedRockEntity = tables.ActiveRock.use()?.value;
+  const mapId = tables.Asteroid.use(selectedRockEntity)?.mapId;
 
   const productionBuildings = useMemo(() => {
     let mines: Entity[] = [];
@@ -210,7 +208,7 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({
   const buildingsWithDimensions = useMemo(
     () =>
       buildingsToShow.map((building) => {
-        const dimensions = getBuildingDimensions(building);
+        const dimensions = utils.getBuildingDimensions(building);
         return {
           type: building,
           dimensions,

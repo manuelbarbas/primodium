@@ -1,4 +1,4 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Navigator } from "src/components/core/Navigator";
 import { BuildUnit } from "../widgets/BuildUnit";
 import { Upgrade } from "../widgets/Upgrade";

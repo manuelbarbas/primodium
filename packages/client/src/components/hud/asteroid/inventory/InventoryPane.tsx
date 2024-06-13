@@ -4,11 +4,11 @@ import { AllResourceLabels } from "@/components/hud/asteroid/inventory/resources
 import { AllUtilityLabels } from "@/components/hud/asteroid/inventory/resources/AllUtilityLabels";
 import { usePersistentStore } from "@/game/stores/PersistentStore";
 import { useGame } from "@/hooks/useGame";
-import { EntityType } from "@/util/constants";
-import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 import { useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { Hangar } from "@/components/hud/asteroid/inventory/hangar/Hangar";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
+import { EntityType } from "@primodiumxyz/core";
 
 export const InventoryPane = () => {
   const [visibleDiv, setVisibleDiv] = useState(0);

@@ -1,25 +1,19 @@
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import React, { memo, useMemo } from "react";
 import { Badge } from "@/components/core/Badge";
 import { IconLabel } from "@/components/core/IconLabel";
 import { SecondaryCard } from "@/components/core/Card";
 import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
-import { useHasEnoughResources } from "@/hooks/useHasEnoughResources";
-import { components } from "@/network/components";
-import { getBuildingLevelStorageUpgrades, transformProductionData, getBuildingDimensions } from "@/util/building";
-import { getEntityTypeName } from "@/util/common";
-import { ResourceType } from "@/util/constants";
-import { getRecipe } from "@/util/recipe";
-import { Hex } from "viem";
-
-import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
+import { useCore, useHasEnoughResources } from "@primodiumxyz/core/react";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
+import { getEntityTypeName, ResourceType } from "@primodiumxyz/core";
 
 export const RecipeDisplay: React.FC<{
   building: Entity;
   asteroid: Entity;
 }> = memo(({ building, asteroid }) => {
-  const recipe = getRecipe(building, 1n);
+  const { utils } = useCore();
+  const recipe = utils.getRecipe(building, 1n);
 
   // cost of the building
   return (
@@ -57,22 +51,23 @@ export const RecipeDisplay: React.FC<{
 export const BlueprintInfo: React.FC<{
   building: Entity;
 }> = memo(({ building }) => {
-  const spaceRock = components.ActiveRock.use()?.value;
+  const { tables, utils } = useCore();
+  const spaceRock = tables.ActiveRock.use()?.value;
   if (!spaceRock) throw new Error("No space rock found");
-  const rawProduction = components.P_Production.useWithKeys({ prototype: building as Hex, level: 1n });
-  const production = useMemo(() => transformProductionData(rawProduction), [rawProduction]);
+  const rawProduction = tables.P_Production.useWithKeys({ prototype: building, level: 1n });
+  const production = useMemo(() => utils.transformProductionData(rawProduction), [rawProduction]);
 
-  const unitProduction = components.P_UnitProdTypes.useWithKeys({ prototype: building as Hex, level: 1n });
+  const unitProduction = tables.P_UnitProdTypes.useWithKeys({ prototype: building, level: 1n });
   const storageUpgrades = useMemo(
-    () => (building ? getBuildingLevelStorageUpgrades(building, 1n) : undefined),
+    () => (building ? utils.getBuildingLevelStorageUpgrades(building, 1n) : undefined),
     [building]
   );
 
   const buildingName = useMemo(() => getEntityTypeName(building), [building]);
 
-  const dimensions = useMemo(() => getBuildingDimensions(building), [building]);
+  const dimensions = useMemo(() => utils.getBuildingDimensions(building), [building]);
 
-  const hasEnough = useHasEnoughResources(getRecipe(building ?? singletonEntity, 1n), spaceRock);
+  const hasEnough = useHasEnoughResources(utils.getRecipe(building ?? defaultEntity, 1n), spaceRock);
 
   if (!building) return <div className="items-center p-0 w-full z-100 h-24">Select a building</div>;
   if (!getEntityTypeName(building)) return <></>;

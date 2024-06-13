@@ -1,16 +1,14 @@
-import { EntityToResourceImage } from "@/util/mappings";
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { Badge } from "@/components/core/Badge";
 import { IconLabel } from "@/components/core/IconLabel";
-import { useAsteroidStrength } from "@/hooks/useAsteroidStrength";
-import { components } from "@/network/components";
-import { EntityType } from "@/util/constants";
-import { formatResourceCount } from "@/util/number";
+import { useCore, useAsteroidStrength } from "@primodiumxyz/core/react";
+import { EntityType, formatResourceCount } from "@primodiumxyz/core";
+import { EntityToResourceImage } from "@/util/image";
 
 export const StrengthLabel = ({ player }: { player?: Entity }) => {
-  player = player ?? components.Account.use()?.value ?? singletonEntity;
-  const rock = components.ActiveRock.use()?.value;
+  const { tables } = useCore();
+  player = player ?? tables.Account.use()?.value ?? defaultEntity;
+  const rock = tables.ActiveRock.use()?.value;
   const { strength, maxStrength } = useAsteroidStrength(rock as Entity);
 
   if (!player || !rock) return null;
