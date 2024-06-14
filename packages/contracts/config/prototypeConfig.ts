@@ -1589,7 +1589,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ Copper: 10000, Alloy: 2000, U_Electricity: 20 }),
         P_UnitProdMultiplier: { value: 140n },
-        P_UnitProdTypes: { value: encodeArray(["AnvilDrone", "HammerDrone", "AegisDrone", "StingerDrone"]) },
+        P_UnitProdTypes: { value: encodeArray(["AnvilDrone", "HammerDrone"]) },
       },
       8: {
         P_RequiredBaseLevel: { value: 8n },
@@ -2337,7 +2337,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 575,
           cargo: 32,
           speed: 60,
-          trainingTime: 1800,
+          trainingTime: 1740,
         }),
       },
       2: {
@@ -2350,7 +2350,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 650,
           cargo: 34,
           speed: 70,
-          trainingTime: 1800,
+          trainingTime: 1680,
         }),
       },
       3: {
@@ -2363,7 +2363,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 725,
           cargo: 36,
           speed: 80,
-          trainingTime: 1800,
+          trainingTime: 1620,
         }),
       },
       4: {
@@ -2376,7 +2376,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 800,
           cargo: 38,
           speed: 90,
-          trainingTime: 1800,
+          trainingTime: 1560,
         }),
       },
       5: {
@@ -2389,7 +2389,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 1000,
           cargo: 40,
           speed: 100,
-          trainingTime: 1800,
+          trainingTime: 1500,
         }),
       },
     },
@@ -2503,7 +2503,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 100,
           cargo: 30,
           speed: 120,
-          trainingTime: 1800,
+          trainingTime: 1740,
         }),
       },
       2: {
@@ -2516,7 +2516,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 125,
           cargo: 35,
           speed: 140,
-          trainingTime: 1800,
+          trainingTime: 1680,
         }),
       },
       3: {
@@ -2529,7 +2529,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 150,
           cargo: 40,
           speed: 160,
-          trainingTime: 1800,
+          trainingTime: 1620,
         }),
       },
       4: {
@@ -2542,7 +2542,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 175,
           cargo: 45,
           speed: 180,
-          trainingTime: 1800,
+          trainingTime: 1560,
         }),
       },
       5: {
@@ -2555,7 +2555,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 200,
           cargo: 50,
           speed: 200,
-          trainingTime: 1800,
+          trainingTime: 1500,
         }),
       },
     },
