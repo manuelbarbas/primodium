@@ -1963,12 +1963,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       2: {
         P_RequiredBaseLevel: { value: 11n },
         P_RequiredResources: getResourceValues({ Titanium: 500, Iridium: 500, Platinum: 500, U_Electricity: 400 }),
-        P_Production: getResourceValues({ M_DefenseMultiplier: 15, R_HP: 0.016 }),
+        P_Production: getResourceValues({ M_DefenseMultiplier: 10, R_HP: 0.016 }),
       },
       3: {
         P_RequiredBaseLevel: { value: 15n },
         P_RequiredResources: getResourceValues({ Kimberlite: 4000, U_Electricity: 700 }),
-        P_Production: getResourceValues({ M_DefenseMultiplier: 30, R_HP: 0.024 }),
+        P_Production: getResourceValues({ M_DefenseMultiplier: 20, R_HP: 0.024 }),
       },
     },
   },
