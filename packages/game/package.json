@@ -2,7 +2,7 @@
   "name": "@primodiumxyz/game",
   "version": "1.0.0",
   "license": "MIT",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "dependencies": {
     "@latticexyz/store-sync": "2.0.9",
     "@primodiumxyz/assets": "1.0.0",

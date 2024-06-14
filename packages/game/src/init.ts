@@ -2,7 +2,7 @@ import { engine } from "@primodiumxyz/engine";
 import { Core } from "@primodiumxyz/core";
 
 import { createGlobalApi, GlobalApi } from "@/api/global";
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { SceneKeys } from "@/lib/constants/common";
 import { initCommandCenter } from "@/scenes/command-center/init";
 import gameConfig from "@/lib/config/game";
@@ -21,7 +21,7 @@ async function init(core: Core): InitResult {
     // run straight away when the Game component is mounted, meaning right after initial queries were fetched,
     // which is strictly data required to render the home asteroid
     ROOT: await initRootScene(globalApi, core),
-    UI: await initUIScene(globalApi),
+    UI: await initUIScene(globalApi, core),
     ASTEROID: await initAsteroidScene(globalApi, core),
     GLOBAL: globalApi,
     // secondary scenes

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { YouDied } from "@/screens/YouDied";
-import { PrimodiumGame, initGame } from "@game/api";
+import { initGame, PrimodiumGame } from "@primodiumxyz/game";
 import { Progress } from "src/components/core/Progress";
 import { GameProvider } from "src/hooks/providers/GameProvider";
 import { GameHUD } from "@/components/hud";
@@ -35,7 +35,7 @@ export const Game = () => {
   const init = async () => {
     try {
       await destroy();
-      const pri = await initGame(params.get("version") ? params.get("version")! : "🔥");
+      const pri = await initGame(mud, params.get("version") ? params.get("version")! : "🔥");
       setGame(pri);
     } catch (e) {
       console.log(e);
@@ -49,7 +49,7 @@ export const Game = () => {
 
   useEffect(() => {
     if (!game || loadingSecondaryData) return;
-    const { secondary, done } = game.runSystems(mud);
+    const { secondary, done } = game.runSystems();
     secondary();
     done();
   }, [mud, game, loadingSecondaryData]);

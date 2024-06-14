@@ -85,19 +85,6 @@ export default function setupCoreTables(network: CreateNetworkResult) {
 
   const BattleTarget = createLocalEntityTable(world, { id: "BattleTarget" });
 
-  // keep updated metadata for a player's alliance
-  const PlayerAllianceInfo = createLocalTable(
-    world,
-    {
-      alliance: Type.Entity,
-      name: Type.String,
-      inviteMode: Type.Number,
-    },
-    {
-      id: "PlayerAllianceInfo",
-    }
-  );
-
   const PlayerInvite = createLocalTable(
     world,
     {
@@ -167,7 +154,6 @@ export default function setupCoreTables(network: CreateNetworkResult) {
     Battle,
     BattleRender,
     Leaderboard,
-    PlayerAllianceInfo,
     PlayerInvite,
     AllianceRequest,
     TransactionQueue,

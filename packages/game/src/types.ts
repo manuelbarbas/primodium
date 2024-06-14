@@ -1,5 +1,8 @@
-import { initGame } from "@/api";
+import { createSceneApi } from "@/api/scene";
+import { initGame } from "@/index";
 
+export type SceneApi = ReturnType<typeof createSceneApi>;
+export type PrimodiumScene = SceneApi & { runSystems?: () => void; isPrimary?: boolean };
 export type PrimodiumGame = Awaited<ReturnType<typeof initGame>>;
 
 export type CameraConfig = {

@@ -10,9 +10,6 @@ import { createObjectApi } from "@/api/objects";
 import { createNotificationApi } from "@/api/notification";
 import { createUtilApi } from "@/api/utils";
 
-export type SceneApi = ReturnType<typeof createSceneApi>;
-export type PrimodiumScene = SceneApi & { runSystems?: () => void; isPrimary?: boolean };
-
 export function createSceneApi(scene: Scene) {
   const cameraApi = createCameraApi(scene);
 

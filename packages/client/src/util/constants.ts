@@ -114,13 +114,6 @@ export const RockRelationshipColors = {
   [RockRelationship.Self]: "accent",
 };
 
-export type TransactionQueueMetadataTypes = {
-  [TransactionQueueType.Build]: {
-    coord: Coord;
-    buildingType: Entity;
-  };
-};
-
 export const key = {
   BuildingTileKey: toHex32("building:tile"),
   ExpansionKey: toHex32("Expansion"),

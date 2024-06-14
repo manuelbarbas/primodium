@@ -7,7 +7,7 @@ import { Address, Hex, createWalletClient, fallback, getContract, http, webSocke
 import { generatePrivateKey } from "viem/accounts";
 import { waitForTransactionReceipt } from "viem/actions";
 import { TesterPack, testerPacks } from "./testerPacks";
-import { PrimodiumGame } from "@primodiumxyz/game/types";
+import { PrimodiumGame } from "@primodiumxyz/game/src/types";
 import {
   AccountClient,
   BuildingEnumLookup,
