@@ -14,13 +14,14 @@ export function createTransactionQueueTable<M extends BaseTableMetadata = BaseTa
     world,
     {
       metadata: Type.OptionalString,
+      type: Type.OptionalString,
     },
     options
   );
 
   // Add a function to the queue
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async function enqueue(fn: () => Promise<any>, options: TxQueueOptions<M>) {
+  async function enqueue(fn: () => Promise<any>, options: TxQueueOptions) {
     if (!options.force && table.has(options.id as Entity)) return;
 
     queue.push({
@@ -31,6 +32,7 @@ export function createTransactionQueueTable<M extends BaseTableMetadata = BaseTa
     table.set(
       {
         metadata: JSON.stringify(options?.metadata),
+        type: options.type,
       },
       options.id as Entity
     );
@@ -72,7 +74,7 @@ export function createTransactionQueueTable<M extends BaseTableMetadata = BaseTa
     return queue.length;
   }
 
-  function getMetadata(id: string): M | undefined {
+  function getMetadata(id: string): object | undefined {
     const index = getIndex(id);
     if (index === -1) return undefined;
     return JSON.parse(table.get(id as Entity)?.metadata || "");

@@ -11,7 +11,7 @@ export function encodeSystemCalls<abi extends Abi, functionName extends Contract
   systemCalls: readonly Omit<SystemCall<abi, functionName>, "abi">[]
 ): AbiParametersToPrimitiveTypes<ExtractAbiFunction<typeof WorldAbi, "call">["inputs"]>[] {
   return systemCalls.map((systemCall) => {
-    const call = { ...systemCall, abi } as SystemCall<abi, functionName> & { tables: Tables };
-    return encodeSystemCall(call);
+    const call = { ...systemCall, abi } as SystemCall<abi, functionName>;
+    return encodeSystemCall(tables, call);
   });
 }
