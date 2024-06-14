@@ -26,7 +26,7 @@
     "@primodiumxyz/engine": "workspace:*",
     "@primodiumxyz/game": "workspace:*",
     "@primodiumxyz/mud-game-tools": "^1.0.15",
-    "@primodiumxyz/reactive-tables": "^2.0.7",
+    "@primodiumxyz/reactive-tables": "^3.0.0",
     "@primodiumxyz/sync-stack": "^0.6.6",
     "@tanstack/react-query": "^5.28.6",
     "@vercel/analytics": "^1.0.1",

@@ -5,27 +5,24 @@ import {
   AccountClient,
   Core,
   getEntityTypeName,
-  getSystemId,
   ResourceEnumLookup,
   formatResourceCount,
+  ExecuteFunctions,
 } from "@primodiumxyz/core";
-import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
 import { Entity, defaultEntity } from "@primodiumxyz/reactive-tables";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createSwapCalls =
-  ({ utils }: Core, { playerAccount }: AccountClient, { execute }: ExecuteFunctions) =>
+  (core: Core, { playerAccount }: AccountClient, { execute }: ExecuteFunctions) =>
   async (marketEntity: Entity, path: Entity[], amountIn: bigint, amountOutMin: bigint) => {
+    const { utils } = core;
     const enumPath = path.map((p) => ResourceEnumLookup[p]);
-    await execute(
-      {
-        systemId: getSystemId("MarketplaceSystem"),
-        functionName: "Pri_11__swap",
-        args: [marketEntity, enumPath, amountIn, amountOutMin],
-        withSession: true,
-      },
-      { id: defaultEntity },
-      (receipt) => {
+    await execute({
+      functionName: "Pri_11__swap",
+      args: [marketEntity, enumPath, amountIn, amountOutMin],
+      withSession: true,
+      txQueueOptions: { id: defaultEntity },
+      onComplete: (receipt) => {
         const resourceIn = path[0];
         const resourceOut = path[path.length - 1];
         const amountOut = utils.getOutAmount(amountIn, path);
@@ -45,7 +42,7 @@ export const createSwapCalls =
           ...parseReceipt(receipt),
         });
 
-        makeObjectiveClaimable(playerAccount.entity, EObjectives.MarketSwap);
-      }
-    );
+        makeObjectiveClaimable(core, playerAccount.entity, EObjectives.MarketSwap);
+      },
+    });
   };

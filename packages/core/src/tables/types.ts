@@ -11,6 +11,6 @@ export type Notification = {
 export type TxQueueOptions = {
   id: string;
   force?: true;
-  metadata?: Record<string, any>;
+  metadata?: object;
   type?: string;
 };

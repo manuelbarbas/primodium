@@ -31,7 +31,7 @@ export const setupSync = (core: Core) => {
 
   tables.SelectedRock.watch({
     world: systemWorld,
-    onUpdate: ({ properties }) => {
+    onChange: ({ properties }) => {
       const spaceRock = properties.current?.value;
       if (!spaceRock || properties.current?.value === properties.prev?.value) return;
 
@@ -41,7 +41,7 @@ export const setupSync = (core: Core) => {
 
   tables.ActiveRock.watch({
     world: systemWorld,
-    onUpdate: ({ properties }) => {
+    onChange: ({ properties }) => {
       const spaceRock = properties.current?.value;
       if (!spaceRock || properties.current?.value === properties.prev?.value) return;
 
@@ -51,7 +51,7 @@ export const setupSync = (core: Core) => {
 
   tables.SelectedFleet.watch({
     world: systemWorld,
-    onUpdate: ({ properties }) => {
+    onChange: ({ properties }) => {
       const fleet = properties.current?.value;
       if (!fleet || properties.current?.value === properties.prev?.value) return;
 
@@ -61,7 +61,7 @@ export const setupSync = (core: Core) => {
 
   tables.HoverEntity.watch({
     world: systemWorld,
-    onUpdate: debounce(({ properties }) => {
+    onChange: debounce(({ properties }) => {
       const hoverEntity = properties.current?.value;
       if (!hoverEntity || properties.current?.value === properties.prev?.value) return;
 

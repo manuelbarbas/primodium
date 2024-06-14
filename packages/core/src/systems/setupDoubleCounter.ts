@@ -11,7 +11,7 @@ export const setupDoubleCounter = (core: Core) => {
 
   tables.Counter.watch({
     world: systemWorld,
-    onUpdate: (update) => {
+    onChange: (update) => {
       const value = update?.properties.current?.value ?? 0;
       tables.DoubleCounter.set({ value: BigInt(value) * BigInt(2) });
     },

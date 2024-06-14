@@ -1,14 +1,13 @@
 import { Coord } from "engine/types";
 import { EBuilding } from "contracts/config/enums";
 import { ampli } from "src/ampli";
-import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
 import {
   Core,
-  getSystemId,
   BuildingEntityLookup,
   getEntityTypeName,
   TxQueueOptions,
   bigintToNumber,
+  ExecuteFunctions,
 } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
@@ -24,15 +23,13 @@ export const createBuildingCalls = ({ utils, tables }: Core, { execute }: Execut
 
     const position = { ...coord, parentEntity: coord.parentEntity ?? activeAsteroid };
 
-    await execute(
-      {
-        functionName: "Pri_11__build",
-        systemId: getSystemId("BuildSystem"),
-        args: [building, position],
-        withSession: true,
-        options: { gas: 7000000n },
-      },
-      {
+    await execute({
+      functionName: "Pri_11__build",
+
+      args: [building, position],
+      withSession: true,
+      options: { gas: 7000000n },
+      txQueueOptions: {
         id: `build-${building}-${coord.x}-${coord.y}`,
         metadata: {
           coord: utils.getBuildingBottomLeft(coord, BuildingEntityLookup[building]),
@@ -41,7 +38,7 @@ export const createBuildingCalls = ({ utils, tables }: Core, { execute }: Execut
         type: "build",
         ...options,
       },
-      (receipt) => {
+      onComplete: (receipt) => {
         ampli.systemBuild({
           asteroidCoord: activeAsteroid,
           buildingType: getEntityTypeName(BuildingEntityLookup[building]),
@@ -49,8 +46,8 @@ export const createBuildingCalls = ({ utils, tables }: Core, { execute }: Execut
           currLevel: 0,
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };
   const moveBuilding = async (building: Entity, coord: Coord, onComplete?: () => void) => {
     // todo: find a cleaner way to extract this value in all web3 functions
@@ -63,15 +60,13 @@ export const createBuildingCalls = ({ utils, tables }: Core, { execute }: Execut
 
     if (!prevPosition || !buildingType) return;
 
-    await execute(
-      {
-        functionName: "Pri_11__moveBuilding",
-        systemId: getSystemId("MoveBuildingSystem"),
-        args: [building, position],
-        withSession: true,
-        options: { gas: 3_000_000n },
-      },
-      {
+    await execute({
+      functionName: "Pri_11__moveBuilding",
+
+      args: [building, position],
+      withSession: true,
+      options: { gas: 3_000_000n },
+      txQueueOptions: {
         id: `move-${building}-${coord.x}-${coord.y}`,
         metadata: {
           buildingType,
@@ -79,7 +74,7 @@ export const createBuildingCalls = ({ utils, tables }: Core, { execute }: Execut
         },
       },
       // TODO: we don't need to use coord here any longer
-      (receipt) => {
+      onComplete: (receipt) => {
         onComplete?.();
         const buildingType = tables.BuildingType.get(building)?.value;
         const currLevel = tables.Level.get(building)?.value || 0;
@@ -92,8 +87,8 @@ export const createBuildingCalls = ({ utils, tables }: Core, { execute }: Execut
           currLevel: bigintToNumber(currLevel),
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };
 
   async function demolishBuilding(building: Entity, onComplete?: () => void) {
@@ -101,18 +96,16 @@ export const createBuildingCalls = ({ utils, tables }: Core, { execute }: Execut
 
     if (!position) return;
 
-    await execute(
-      {
-        functionName: "Pri_11__destroy",
-        systemId: getSystemId("DestroySystem"),
-        args: [building],
-        withSession: true,
-      },
-      {
+    await execute({
+      functionName: "Pri_11__destroy",
+
+      args: [building],
+      withSession: true,
+      txQueueOptions: {
         id: `demolish-${building}`,
       },
       // TODO: we don't need to use coord here any longer
-      (receipt) => {
+      onComplete: (receipt) => {
         onComplete?.();
         const buildingType = tables.BuildingType.get(building)?.value;
         const currLevel = tables.Level.get(building)?.value || 0;
@@ -124,8 +117,8 @@ export const createBuildingCalls = ({ utils, tables }: Core, { execute }: Execut
           currLevel: bigintToNumber(currLevel),
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   }
 
   async function toggleBuilding(building: Entity) {
@@ -134,17 +127,15 @@ export const createBuildingCalls = ({ utils, tables }: Core, { execute }: Execut
 
     if (!position || !active) return;
 
-    await execute(
-      {
-        functionName: "Pri_11__toggleBuilding",
-        systemId: getSystemId("ToggleBuildingSystem"),
-        args: [building],
-        withSession: true,
-      },
-      {
+    await execute({
+      functionName: "Pri_11__toggleBuilding",
+
+      args: [building],
+      withSession: true,
+      txQueueOptions: {
         id: `toggle-${building}`,
       },
-      (receipt) => {
+      onComplete: (receipt) => {
         const buildingType = tables.BuildingType.get(building)?.value;
         const currLevel = tables.Level.get(building)?.value || 0;
 
@@ -156,8 +147,8 @@ export const createBuildingCalls = ({ utils, tables }: Core, { execute }: Execut
           currLevel: bigintToNumber(currLevel),
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   }
 
   return {

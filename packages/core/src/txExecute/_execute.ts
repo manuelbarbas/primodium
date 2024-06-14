@@ -1,5 +1,4 @@
-import { Core } from "@primodiumxyz/core";
-import { toast } from "react-toastify";
+import { Core } from "@/lib/types";
 import { CallExecutionError, ContractFunctionExecutionError, Hex, PublicClient, TransactionReceipt } from "viem";
 
 export async function _execute({ network: { waitForTransaction, publicClient } }: Core, txPromise: Promise<Hex>) {
@@ -16,7 +15,7 @@ export async function _execute({ network: { waitForTransaction, publicClient } }
     if (receipt && receipt.status === "reverted") {
       // Force a CallExecutionError such that we can get the revert reason
       await callTransaction(publicClient, txHash);
-      toast.error("[Insufficient Gas Limit] You're moving fast! Please wait a moment and then try again.");
+      console.error("[Insufficient Gas Limit] You're moving fast! Please wait a moment and then try again.");
     }
     return receipt;
   } catch (error) {
@@ -25,15 +24,15 @@ export async function _execute({ network: { waitForTransaction, publicClient } }
       if (error instanceof ContractFunctionExecutionError) {
         // Thrown by network.waitForTransaction, no receipt is returned
         const reason = error.cause.shortMessage;
-        toast.warn(reason);
+        console.warn(reason);
         return receipt;
       } else if (error instanceof CallExecutionError) {
         // Thrown by callTransaction, receipt is returned
         const reason = error.cause.shortMessage;
-        toast.warn(reason);
+        console.warn(reason);
         return receipt;
       } else {
-        toast.error(`${error}`);
+        console.error(`${error}`);
         return receipt;
       }
     } catch (error) {
@@ -44,7 +43,7 @@ export async function _execute({ network: { waitForTransaction, publicClient } }
       // However, this is not the case for MUDv2, as network.waitForTransaction no longer
       // throws an error if the transaction fails.
       // We should be on the lookout for other errors that could be thrown here.
-      toast.error(`${error}`);
+      console.error(`${error}`);
       return receipt;
     }
   }

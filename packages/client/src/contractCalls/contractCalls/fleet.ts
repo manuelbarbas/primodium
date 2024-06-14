@@ -1,82 +1,73 @@
-import { Core, AccountClient, getSystemId, TxQueueOptions, Coord } from "@primodiumxyz/core";
-import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
+import { Core, AccountClient, TxQueueOptions, Coord, ExecuteFunctions } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { EFleetStance, EObjectives } from "contracts/config/enums";
 import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 import { ampli } from "src/ampli";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
 
-export const createFleetCalls = (
-  { tables, utils }: Core,
-  { playerAccount }: AccountClient,
-  { execute }: ExecuteFunctions
-) => {
+export const createFleetCalls = (core: Core, { playerAccount }: AccountClient, { execute }: ExecuteFunctions) => {
+  const { tables, utils } = core;
   const createFleet = async (
     asteroidEntity: Entity,
     deltas: Map<Entity, bigint>,
     options?: Partial<TxQueueOptions>
   ) => {
-    await execute(
-      {
-        functionName: "Pri_11__createFleet",
-        systemId: getSystemId("FleetCreateSystem"),
-        args: [asteroidEntity, utils.toUnitCountArray(deltas), utils.toTransportableResourceArray(deltas)],
-        withSession: true,
-      },
-      {
+    await execute({
+      functionName: "Pri_11__createFleet",
+
+      args: [asteroidEntity, utils.toUnitCountArray(deltas), utils.toTransportableResourceArray(deltas)],
+      withSession: true,
+      txQueueOptions: {
         id: "TRANSFER",
         ...options,
       },
-      (receipt) => {
-        makeObjectiveClaimable(playerAccount.entity, EObjectives.CreateFleet);
+      onComplete: (receipt) => {
+        makeObjectiveClaimable(core, playerAccount.entity, EObjectives.CreateFleet);
 
         ampli.systemFleetCreateSystemPrimodiumCreateFleet({
           spaceRock: asteroidEntity,
           ...parseReceipt(receipt),
         });
-      }
-    );
-  };
-  const abandonFleet = async (fleet: Entity) => {
-    await execute(
-      {
-        functionName: "Pri_11__abandonFleet",
-        systemId: getSystemId("FleetClearSystem"),
-        args: [fleet],
-        withSession: true,
       },
-      {
+    });
+  };
+
+  const abandonFleet = async (fleet: Entity) => {
+    await execute({
+      functionName: "Pri_11__abandonFleet",
+
+      args: [fleet],
+      withSession: true,
+      txQueueOptions: {
         id: "abandonFleet",
       },
-      (receipt) => {
+      onComplete: (receipt) => {
         ampli.systemFleetClearSystemPrimodiumAbandonFleet({
           fleets: [fleet],
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };
 
   const clearFleet = async (fleet: Entity) => {
-    await execute(
-      {
-        functionName: "Pri_11__clearFleet",
-        systemId: getSystemId("FleetClearSystem"),
-        args: [fleet],
-        withSession: true,
-      },
-      {
+    await execute({
+      functionName: "Pri_11__clearFleet",
+
+      args: [fleet],
+      withSession: true,
+      txQueueOptions: {
         id: `clear-${fleet}`,
       },
-      (receipt) => {
+      onComplete: (receipt) => {
         tables.SelectedFleet.remove();
 
         ampli.systemFleetClearSystemPrimodiumClearFleet({
           fleets: [fleet],
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };
 
   const clearFleetUnitsResources = async (fleet: Entity, content: Map<Entity, bigint>) => {
@@ -88,161 +79,145 @@ export const createFleetCalls = (
     if (totalUnits == 0n && totalResources == 0n) return;
 
     if (totalUnits == 0n) {
-      return await execute(
-        {
-          functionName: "Pri_11__clearResources",
-          systemId: getSystemId("FleetClearSystem"),
-          args: [fleet, resourceCounts],
-          withSession: true,
-        },
-        {
+      return await execute({
+        functionName: "Pri_11__clearResources",
+
+        args: [fleet, resourceCounts],
+        withSession: true,
+        txQueueOptions: {
           id: `clear-${fleet}`,
         },
-        (receipt) => {
+        onComplete: (receipt) => {
           ampli.systemFleetClearSystemPrimodiumClearResources({
             fleets: [fleet],
             ...parseReceipt(receipt),
           });
-        }
-      );
+        },
+      });
     }
     if (totalResources == 0n) {
-      return await execute(
-        {
-          functionName: "Pri_11__clearUnits",
-          systemId: getSystemId("FleetClearSystem"),
-          args: [fleet, unitCounts],
-          withSession: true,
-        },
-        {
+      return await execute({
+        functionName: "Pri_11__clearUnits",
+
+        args: [fleet, unitCounts],
+        withSession: true,
+        txQueueOptions: {
           id: `clear-${fleet}`,
         },
-        (receipt) => {
+        onComplete: (receipt) => {
           ampli.systemFleetClearSystemPrimodiumClearUnits({
             fleets: [fleet],
             ...parseReceipt(receipt),
           });
-        }
-      );
-    } else {
-      await execute(
-        {
-          functionName: "Pri_11__clearUnitsAndResourcesFromFleet",
-          systemId: getSystemId("FleetClearSystem"),
-          args: [fleet, unitCounts, resourceCounts],
-          withSession: true,
         },
-        {
+      });
+    } else {
+      await execute({
+        functionName: "Pri_11__clearUnitsAndResourcesFromFleet",
+
+        args: [fleet, unitCounts, resourceCounts],
+        withSession: true,
+        txQueueOptions: {
           id: `clear-${fleet}`,
         },
-        (receipt) => {
+        onComplete: (receipt) => {
           ampli.systemFleetClearSystemPrimodiumClearUnitsAndResourcesFromFleet({
             fleets: [fleet],
             ...parseReceipt(receipt),
           });
-        }
-      );
+        },
+      });
     }
   };
   const landFleet = async (fleet: Entity, asteroidEntity: Entity) => {
-    await execute(
-      {
-        functionName: "Pri_11__landFleet",
-        systemId: getSystemId("FleetLandSystem"),
-        args: [fleet, asteroidEntity],
-        withSession: true,
-      },
-      {
+    await execute({
+      functionName: "Pri_11__landFleet",
+
+      args: [fleet, asteroidEntity],
+      withSession: true,
+      txQueueOptions: {
         id: "landFleet",
       },
-      (receipt) => {
-        makeObjectiveClaimable(playerAccount.entity, EObjectives.LandFleet);
+      onComplete: (receipt) => {
+        makeObjectiveClaimable(core, playerAccount.entity, EObjectives.LandFleet);
 
         ampli.systemFleetLandSystemPrimodiumLandFleet({
           fleets: [fleet],
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };
   const mergeFleets = async (fleets: Entity[]) => {
-    await execute(
-      {
-        functionName: "Pri_11__mergeFleets",
-        systemId: getSystemId("FleetMergeSystem"),
-        args: [fleets],
-        withSession: true,
-      },
-      {
+    await execute({
+      functionName: "Pri_11__mergeFleets",
+
+      args: [fleets],
+      withSession: true,
+      txQueueOptions: {
         id: `merge-${fleets.map((f) => f).join("-")}`,
       },
-      (receipt) => {
+      onComplete: (receipt) => {
         ampli.systemFleetMergeSystemPrimodiumMergeFleets({
           fleets,
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };
 
   const recallFleet = async (fleet: Entity) => {
-    await execute(
-      {
-        functionName: "Pri_11__recallFleet",
-        systemId: getSystemId("FleetRecallSystem"),
-        args: [fleet],
-        withSession: true,
-      },
-      {
+    await execute({
+      functionName: "Pri_11__recallFleet",
+
+      args: [fleet],
+      withSession: true,
+      txQueueOptions: {
         id: `recall-${fleet}`,
       },
-      (receipt) => {
+      onComplete: (receipt) => {
         ampli.systemFleetRecallSystemPrimodiumRecallFleet({
           fleets: [fleet],
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };
 
   const sendFleet = async (fleet: Entity, spaceRock: Entity) => {
     const activeAsteroid = tables.ActiveRock.get()?.value;
-    await execute(
-      {
-        functionName: "Pri_11__sendFleet",
-        systemId: getSystemId("FleetSendSystem"),
-        args: [fleet, spaceRock],
-        withSession: true,
-      },
-      {
+    await execute({
+      functionName: "Pri_11__sendFleet",
+
+      args: [fleet, spaceRock],
+      withSession: true,
+      txQueueOptions: {
         id: `send-${fleet}-${spaceRock}`,
       },
-      (receipt) => {
-        activeAsteroid && makeObjectiveClaimable(playerAccount.entity, EObjectives.SendFleet);
+      onComplete: (receipt) => {
+        activeAsteroid && makeObjectiveClaimable(core, playerAccount.entity, EObjectives.SendFleet);
 
         ampli.systemFleetSendSystemPrimodiumSendFleet({
           fleets: [fleet],
           spaceRock: spaceRock,
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };
 
   const sendFleetPosition = async (fleet: Entity, position: Coord) => {
     const activeAsteroid = tables.ActiveRock.get()?.value;
-    await execute(
-      {
-        functionName: "Pri_11__sendFleet",
-        systemId: getSystemId("FleetSendSystem"),
-        args: [fleet, { ...position, parentEntity: fleet }],
-        withSession: true,
-      },
-      {
+    await execute({
+      functionName: "Pri_11__sendFleet",
+
+      args: [fleet, { ...position, parentEntity: fleet }],
+      withSession: true,
+      txQueueOptions: {
         id: `send-${fleet}`,
       },
-      (receipt) => {
-        activeAsteroid && makeObjectiveClaimable(playerAccount.entity, EObjectives.SendFleet);
+      onComplete: (receipt) => {
+        activeAsteroid && makeObjectiveClaimable(core, playerAccount.entity, EObjectives.SendFleet);
 
         ampli.systemFleetSendSystemPrimodiumSendFleet({
           fleets: [fleet],
@@ -250,8 +225,8 @@ export const createFleetCalls = (
           spaceRockCoord: [position.x, position.y],
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };
 
   const setFleetStance = async (fleet: Entity, stance: EFleetStance, target: Entity) => {
@@ -261,18 +236,16 @@ export const createFleetCalls = (
         : stance == EFleetStance.Block
         ? EObjectives.BlockWithFleet
         : undefined;
-    await execute(
-      {
-        functionName: "Pri_11__setFleetStance",
-        systemId: getSystemId("FleetStanceSystem"),
-        args: [fleet, stance, target],
-        withSession: true,
-      },
-      {
+    await execute({
+      functionName: "Pri_11__setFleetStance",
+
+      args: [fleet, stance, target],
+      withSession: true,
+      txQueueOptions: {
         id: "FleetStance",
       },
-      (receipt) => {
-        !!objective && makeObjectiveClaimable(playerAccount.entity, objective);
+      onComplete: (receipt) => {
+        !!objective && makeObjectiveClaimable(core, playerAccount.entity, objective);
 
         ampli.systemFleetStanceSystemPrimodiumSetFleetStance({
           fleets: [fleet],
@@ -280,28 +253,26 @@ export const createFleetCalls = (
           spaceRock: target,
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };
 
   const clearFleetStance = async (fleet: Entity) => {
-    await execute(
-      {
-        functionName: "Pri_11__clearFleetStance",
-        systemId: getSystemId("FleetStanceSystem"),
-        args: [fleet],
-        withSession: true,
-      },
-      {
+    await execute({
+      functionName: "Pri_11__clearFleetStance",
+
+      args: [fleet],
+      withSession: true,
+      txQueueOptions: {
         id: "FleetStance",
       },
-      (receipt) => {
+      onComplete: (receipt) => {
         ampli.systemFleetStanceSystemPrimodiumClearFleetStance({
           fleets: [fleet],
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };
 
   return {

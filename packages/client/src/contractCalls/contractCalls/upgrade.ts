@@ -1,7 +1,6 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { EObjectives, EUnit } from "contracts/config/enums";
 import { ampli } from "src/ampli";
-import { getSystemId } from "src/util/encode";
 import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 import {
   Core,
@@ -10,28 +9,23 @@ import {
   getEntityTypeName,
   bigintToNumber,
   UnitEntityLookup,
+  ExecuteFunctions,
 } from "@primodiumxyz/core";
-import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
 
-export const createUpgrade = (
-  { tables, utils }: Core,
-  { playerAccount }: AccountClient,
-  { execute }: ExecuteFunctions
-) => {
+export const createUpgrade = (core: Core, { playerAccount }: AccountClient, { execute }: ExecuteFunctions) => {
+  const { tables, utils } = core;
   const upgradeUnit = async (spaceRock: Entity, unit: EUnit) => {
-    await execute(
-      {
-        functionName: "Pri_11__upgradeUnit",
-        systemId: getSystemId("UpgradeUnitSystem"),
-        args: [spaceRock, unit],
-        withSession: true,
-      },
-      {
+    await execute({
+      functionName: "Pri_11__upgradeUnit",
+
+      args: [spaceRock, unit],
+      withSession: true,
+      txQueueOptions: {
         id: `upgrade-${UnitEntityLookup[unit]}`,
       },
-      (receipt) => {
-        makeObjectiveClaimable(playerAccount.entity, EObjectives.UpgradeUnit);
+      onComplete: (receipt) => {
+        makeObjectiveClaimable(core, playerAccount.entity, EObjectives.UpgradeUnit);
         const unitLevel =
           tables.UnitLevel.getWithKeys({
             entity: playerAccount.entity,
@@ -43,22 +37,20 @@ export const createUpgrade = (
           unitName: getEntityTypeName(UnitEntityLookup[unit]),
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };
 
   const upgradeRange = async (asteroid: Entity) => {
-    await execute(
-      {
-        functionName: "Pri_11__upgradeRange",
-        systemId: getSystemId("UpgradeRangeSystem"),
-        args: [asteroid],
-        withSession: true,
-      },
-      {
+    await execute({
+      functionName: "Pri_11__upgradeRange",
+
+      args: [asteroid],
+      withSession: true,
+      txQueueOptions: {
         id: `upgrade-${playerAccount.entity}`,
       },
-      (receipt) => {
+      onComplete: (receipt) => {
         const level = tables.Level.get(asteroid)?.value ?? 1n;
         const bounds = utils.getAsteroidBounds(asteroid);
 
@@ -68,27 +60,25 @@ export const createUpgrade = (
           currBounds: [bounds.minX, bounds.minY, bounds.maxX, bounds.maxY],
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };
 
   const upgradeBuilding = async (building: Entity, options?: Partial<TxQueueOptions>) => {
     const position = tables.Position.get(building);
     if (!position) return;
 
-    await execute(
-      {
-        functionName: "Pri_11__upgradeBuilding",
-        systemId: getSystemId("UpgradeBuildingSystem"),
-        args: [building],
-        withSession: true,
-        options: { gas: 2_500_000n },
-      },
-      {
+    await execute({
+      functionName: "Pri_11__upgradeBuilding",
+
+      args: [building],
+      withSession: true,
+      options: { gas: 2_500_000n },
+      txQueueOptions: {
         id: `upgrade-${building}`,
         ...options,
       },
-      (receipt) => {
+      onComplete: (receipt) => {
         const building = tables.SelectedBuilding.get()?.value;
         const buildingType = tables.BuildingType.get(building)?.value;
         const currLevel = tables.Level.get(building)?.value || 0n;
@@ -100,8 +90,8 @@ export const createUpgrade = (
           currLevel: bigintToNumber(currLevel),
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };
 
   return {

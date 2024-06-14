@@ -74,7 +74,7 @@ export function createTransactionQueueTable<M extends BaseTableMetadata = BaseTa
     return queue.length;
   }
 
-  function getMetadata(id: string): Record<string, any> | undefined {
+  function getMetadata(id: string): object | undefined {
     const index = getIndex(id);
     if (index === -1) return undefined;
     return JSON.parse(table.get(id as Entity)?.metadata || "");

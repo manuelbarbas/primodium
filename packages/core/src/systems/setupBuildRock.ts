@@ -13,7 +13,7 @@ export const setupBuildRock = (core: Core) => {
   const activeRockWorld = namespaceWorld(world, "activeRock");
   tables.ActiveRock.watch({
     world: systemWorld,
-    onUpdate: ({ properties }) => {
+    onChange: ({ properties }) => {
       activeRockWorld.dispose();
       const spaceRock = properties.current?.value;
       const ownedBy = tables.OwnedBy.get(spaceRock)?.value;
@@ -24,7 +24,7 @@ export const setupBuildRock = (core: Core) => {
 
       tables.OwnedBy.watch({
         world: activeRockWorld,
-        onUpdate: ({ entity, properties }) => {
+        onChange: ({ entity, properties }) => {
           if (entity !== spaceRock) return;
           const newOwner = properties.current?.value;
 

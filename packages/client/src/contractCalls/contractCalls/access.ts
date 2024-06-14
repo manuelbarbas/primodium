@@ -1,6 +1,3 @@
-import { _execute } from "@/contractCalls/txExecute/_execute";
-import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
-import { signCall } from "@/contractCalls/txExecute/signCall";
 import {
   createLocalAccount,
   TxQueueOptions,
@@ -10,6 +7,9 @@ import {
   AccountClient,
   getSystemId,
   WorldAbi,
+  signCall,
+  _execute,
+  ExecuteFunctions,
 } from "@primodiumxyz/core";
 import { defaultEntity, query } from "@primodiumxyz/reactive-tables";
 import { decodeEntity } from "@primodiumxyz/reactive-tables/utils";
@@ -65,9 +65,11 @@ export const createAccessCalls = (
       });
 
       const signature = await signCall({
+        core,
         userAccountClient: accountClient.playerAccount.walletClient,
         worldAddress: accountClient.playerAccount.worldContract.address,
         systemId: getSystemId("Registration", "CORE"),
+
         callData: delegateCallData,
       });
 
@@ -88,31 +90,25 @@ export const createAccessCalls = (
   };
 
   const grantAccess = async (address: Hex) => {
-    await execute(
-      {
-        systemId: getSystemId("Registration", "CORE"),
-        functionName: "registerDelegation",
-        args: [address, UNLIMITED_DELEGATION, "0x0"],
-        withSession: false,
-      },
-      {
+    await execute({
+      functionName: "registerDelegation",
+      args: [address, UNLIMITED_DELEGATION, "0x0"],
+      withSession: false,
+      txQueueOptions: {
         id: defaultEntity,
-      }
-    );
+      },
+    });
   };
 
   const revokeAccess = async (address: Address) => {
-    await execute(
-      {
-        systemId: getSystemId("Registration", "CORE"),
-        functionName: "unregisterDelegation",
-        args: [address],
-        withSession: true,
-      },
-      {
+    await execute({
+      functionName: "unregisterDelegation",
+      args: [address],
+      withSession: true,
+      txQueueOptions: {
         id: defaultEntity,
-      }
-    );
+      },
+    });
   };
 
   const revokeAllAccess = async () => {
@@ -123,7 +119,6 @@ export const createAccessCalls = (
     }, [] as Address[]);
 
     const systemCalls = allAuthorized.map((authorized) => ({
-      systemId: getSystemId("Registration", "CORE"),
       functionName: "unregisterDelegation",
       args: [authorized],
     })) as {
@@ -132,12 +127,12 @@ export const createAccessCalls = (
       args: [Hex];
     }[];
 
-    await executeBatch(
-      { systemCalls },
-      {
+    await executeBatch({
+      systemCalls,
+      txQueueOptions: {
         id: defaultEntity,
-      }
-    );
+      },
+    });
   };
 
   return {

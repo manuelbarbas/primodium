@@ -12,15 +12,10 @@ export type SystemCall<abi extends Abi, functionName extends ContractFunctionNam
 };
 
 /** Encode a system call to be passed as arguments into `World.call` */
-export function encodeSystemCall<abi extends Abi, functionName extends ContractFunctionName<abi>>({
-  tables,
-  abi,
-  systemId,
-  functionName,
-  args,
-}: SystemCall<abi, functionName> & { tables: Tables }): AbiParametersToPrimitiveTypes<
-  ExtractAbiFunction<typeof WorldAbi, "call">["inputs"]
-> {
+export function encodeSystemCall<abi extends Abi, functionName extends ContractFunctionName<abi>>(
+  tables: Tables,
+  { abi, systemId, functionName, args }: SystemCall<abi, functionName>
+): AbiParametersToPrimitiveTypes<ExtractAbiFunction<typeof WorldAbi, "call">["inputs"]> {
   return [
     systemId,
     encodeFunctionData<abi, functionName>(tables, {
