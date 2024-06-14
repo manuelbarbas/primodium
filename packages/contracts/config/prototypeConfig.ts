@@ -2763,22 +2763,6 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
   },
 
-  PointMultipliers: {
-    keys: [],
-    levels: {
-      [MUDEnums.EResource.indexOf("Iron")]: { P_PointMultiplier: { value: 1n } },
-      [MUDEnums.EResource.indexOf("Copper")]: { P_PointMultiplier: { value: 1n } },
-      [MUDEnums.EResource.indexOf("Lithium")]: { P_PointMultiplier: { value: 1n } },
-      [MUDEnums.EResource.indexOf("Titanium")]: { P_PointMultiplier: { value: 75n } },
-      [MUDEnums.EResource.indexOf("Iridium")]: { P_PointMultiplier: { value: 300n } },
-      [MUDEnums.EResource.indexOf("Kimberlite")]: { P_PointMultiplier: { value: 800n } },
-      [MUDEnums.EResource.indexOf("Platinum")]: { P_PointMultiplier: { value: 150n } },
-      [MUDEnums.EResource.indexOf("IronPlate")]: { P_PointMultiplier: { value: 5n } },
-      [MUDEnums.EResource.indexOf("PVCell")]: { P_PointMultiplier: { value: 5n } },
-      [MUDEnums.EResource.indexOf("Alloy")]: { P_PointMultiplier: { value: 5n } },
-    },
-  },
-
   /* ------------------------------- Objectives ------------------------------- */
   Objectives: {
     levels: idsToPrototypes(MUDEnums.EObjectives),
