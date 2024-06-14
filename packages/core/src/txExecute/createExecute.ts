@@ -12,9 +12,7 @@ import { executeBatch as rawExecuteBatch } from "@/txExecute/executeBatch";
 
 export type ExecuteFunctions = {
   execute: <functionName extends ContractFunctionName<WorldAbiType>>(
-    options: ExecuteCallOptions<WorldAbiType, functionName>,
-    txQueueOptions?: TxQueueOptions,
-    onComplete?: (receipt: TransactionReceipt | undefined) => void
+    options: ExecuteCallOptions<WorldAbiType, functionName>
   ) => Promise<void>;
   executeBatch: <functionName extends ContractFunctionName<WorldAbiType>>(options: {
     systemCalls: readonly Omit<SystemCallFrom<WorldAbiType, functionName>, "abi" | "from" | "systemId">[];
