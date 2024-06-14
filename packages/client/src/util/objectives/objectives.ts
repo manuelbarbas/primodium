@@ -427,7 +427,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       unitType: EntityType.ColonyShip,
       unitCount: 1n,
       description:
-        "To train a colony ship, click on Shipyard and select Commission. Unlock a Colony Ship slot by paying required resources and then commmission a ship. Fleets containing colony ships conquer asteroids.",
+        "To train a colony ship, click on Shipyard and select Commission. Unlock a Colony Ship slot by paying required resources and then commission a ship. Fleets containing colony ships conquer asteroids.",
     },
   ],
   [

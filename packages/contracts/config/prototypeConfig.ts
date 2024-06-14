@@ -2574,7 +2574,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 50,
           cargo: 2000,
           speed: 100,
-          trainingTime: 43200,
+          trainingTime: 10800,
         }),
       },
     },
@@ -2950,7 +2950,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
   /* -------------------------- A-A-A-B Conquest (continued) ------------------------- */
   BuildShipyard: {
     tables: {
-      P_ResourceReward: getResourceValues({ IronPlate: 100, Alloy: 100, PVCell: 100 }),
+      P_ResourceReward: getResourceValues({ IronPlate: 3000, Alloy: 3000, PVCell: 3000 }),
       P_UnitReward: getUnitValues({ LightningCraft: 10 }),
     },
   },
