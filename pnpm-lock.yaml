@@ -141,8 +141,8 @@ importers:
         specifier: ^1.0.15
         version: 1.0.15(@types/react@18.2.48)(csstype@3.1.3)(typescript@5.3.3)(zod@3.23.8)
       '@primodiumxyz/reactive-tables':
-        specifier: ^2.0.6
-        version: 2.0.6(prettier@2.8.4)(react-dom@18.2.0)(typescript@5.3.3)(zod@3.23.8)
+        specifier: ^3.0.0
+        version: 3.0.0(prettier@2.8.4)(react-dom@18.2.0)(typescript@5.3.3)(zod@3.23.8)
       '@primodiumxyz/sync-stack':
         specifier: ^0.6.6
         version: 0.6.6(typescript@5.3.3)
@@ -435,7 +435,7 @@ importers:
         version: 2.9.20(typescript@5.5.0-beta)(zod@3.22.4)
       vite:
         specifier: ^3.2.3
-        version: 3.2.8(@types/node@14.18.33)
+        version: 3.2.8(@types/node@18.19.8)
     devDependencies:
       '@testing-library/jest-dom':
         specifier: ^6.4.5
@@ -6757,21 +6757,21 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@primodiumxyz/reactive-tables@2.0.6(prettier@2.8.4)(react-dom@18.2.0)(typescript@5.3.3)(zod@3.23.8):
-    resolution: {integrity: sha512-c26BY+GUr43GBC7vJ7zophdxSCBZgQK7xLsHwuKRZ9QzLNvoBxd/9B7HyOLGEMckppVxW706FyxS5NEu2gGR6w==}
+  /@primodiumxyz/reactive-tables@3.0.0(prettier@2.8.4)(react-dom@18.2.0)(typescript@5.3.3)(zod@3.23.8):
+    resolution: {integrity: sha512-F+qDNNS5INaLEymTdFRCC1PhnJHcQEAZHri5YM+DqCy2VgUMDz/ip7ceYQ2KrX/GJ5fEOQLn15GRTKU77wQulQ==}
     engines: {node: 20.x, pnpm: 8.x}
     dependencies:
       '@latticexyz/common': 2.0.9(typescript@5.3.3)(zod@3.23.8)
       '@latticexyz/protocol-parser': 2.0.9(typescript@5.3.3)(zod@3.23.8)
       '@latticexyz/schema-type': 2.0.9(typescript@5.3.3)(zod@3.23.8)
       '@latticexyz/store': 2.0.9(typescript@5.3.3)
-      '@primodiumxyz/sync-stack': 0.6.9(typescript@5.3.3)
+      '@primodiumxyz/sync-stack': 0.6.6(typescript@5.3.3)
       debug: 4.3.5
       fast-deep-equal: 3.1.3
-      mobx: 6.12.3
-      react: 18.3.1
+      mobx: 6.12.4
+      react: 18.2.0
       rxjs: 7.5.5
-      tinybase: 4.8.11(prettier@2.8.4)(react-dom@18.2.0)(react@18.3.1)
+      tinybase: 4.8.12(prettier@2.8.4)(react-dom@18.2.0)(react@18.2.0)
       viem: 2.9.20(typescript@5.3.3)(zod@3.23.8)
     transitivePeerDependencies:
       - '@automerge/automerge-repo'
@@ -6837,28 +6837,6 @@ packages:
 
   /@primodiumxyz/sync-stack@0.6.6(typescript@5.3.3):
     resolution: {integrity: sha512-ZcBHIBgkU3MT33OwRQP5fHbinPDF6ThGabUYX/syUGwr0OLoiqQWn9gJXQ5OlQ0e1MumZX3AvBDChPoI2kXcKw==}
-    dependencies:
-      '@latticexyz/block-logs-stream': 2.0.9(typescript@5.3.3)(zod@3.23.8)
-      '@latticexyz/common': 2.0.9(typescript@5.3.3)(zod@3.23.8)
-      '@latticexyz/protocol-parser': 2.0.9(typescript@5.3.3)(zod@3.23.8)
-      '@latticexyz/recs': 2.0.9(typescript@5.3.3)(zod@3.23.8)
-      '@latticexyz/schema-type': 2.0.9(typescript@5.3.3)(zod@3.23.8)
-      '@latticexyz/store': 2.0.9(typescript@5.3.3)
-      debug: 4.3.5
-      eventemitter3: 5.0.1
-      viem: 2.9.20(typescript@5.3.3)(zod@3.23.8)
-      zod: 3.23.8
-    transitivePeerDependencies:
-      - '@aws-sdk/client-kms'
-      - asn1.js
-      - bufferutil
-      - supports-color
-      - typescript
-      - utf-8-validate
-    dev: false
-
-  /@primodiumxyz/sync-stack@0.6.9(typescript@5.3.3):
-    resolution: {integrity: sha512-TA0YMiaHvVnyZNedyOzYHYQw2PnjJgnudlDriSxCwkFB92M7xrhiSGwKaPD9Q3LHX3n4isP9Ht1oofBHhaAQDw==}
     dependencies:
       '@latticexyz/block-logs-stream': 2.0.9(typescript@5.3.3)(zod@3.23.8)
       '@latticexyz/common': 2.0.9(typescript@5.3.3)(zod@3.23.8)
@@ -8372,6 +8350,7 @@ packages:
 
   /@types/node@14.18.33:
     resolution: {integrity: sha512-qelS/Ra6sacc4loe/3MSjXNL1dNQ/GjxNHVzuChwMfmk7HuycRLVQN2qNY3XahK+fZc5E2szqQSKUyAF0E+2bg==}
+    dev: true
 
   /@types/node@18.19.32:
     resolution: {integrity: sha512-2bkg93YBSDKk8DLmmHnmj/Rwr18TLx7/n+I23BigFwgexUJoMHZOd8X1OFxuF/W3NN0S2W2E5sVabI5CPinNvA==}
@@ -15657,10 +15636,6 @@ packages:
   /mobx@6.12.1:
     resolution: {integrity: sha512-HN5/fmWCnePVI4u3Y487x3G0LIQ+qnQjowylhVxXPvBmbwottKm8R7GrsYAqljzekZUj+LoBcAUp3l8/3EPCGQ==}
 
-  /mobx@6.12.3:
-    resolution: {integrity: sha512-c8NKkO4R2lShkSXZ2Ongj1ycjugjzFFo/UswHBnS62y07DMcTc9Rvo03/3nRyszIvwPNljlkd4S828zIBv/piw==}
-    dev: false
-
   /mobx@6.12.4:
     resolution: {integrity: sha512-uIymg89x+HmItX1p3MG+d09irn2k63J6biftZ5Ok+UpNojS1I3NJPLfcmJT9ANnUltNlHi+HQqrVyxiAN8ISYg==}
     dev: false
@@ -19048,24 +19023,24 @@ packages:
     resolution: {integrity: sha512-gQB+za3EW9JN1ASDmrVl1a1I6Q/jzg4M75YLI9ToHCdCW4/9KvBTTNH4u3kFbg8e+/8Zn68VRF+ayuiPNqYAmg==}
     dev: true
 
-  /tinybase@4.8.11(prettier@2.8.4)(react-dom@18.2.0)(react@18.3.1):
-    resolution: {integrity: sha512-QqeF1jhUTSSkAi6Xv9wIo1V97kcKU8d9Z36n55tCyQV9vub0LHC798N3dOcixHzFUoBTmoovcvsdvSOu7vI5Rg==}
+  /tinybase@4.8.12(prettier@2.8.4)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-bLtT/aFQmC16xVvLg3Aojy+AJqmg1meMlXEb06K1s31u1Ttj2csj4cjKzWjL6GC901t+TpDUs2+1yjwwTd1uHw==}
     hasBin: true
     peerDependencies:
       '@automerge/automerge-repo': ^1.1.12
       '@journeyapps/powersync-sdk-common': ^1.6.0
       '@libsql/client': ^0.6.2
-      '@sqlite.org/sqlite-wasm': ^3.46.0-build1
+      '@sqlite.org/sqlite-wasm': ^3.46.0-build2
       '@vlcn.io/crsqlite-wasm': ^0.16.0
-      electric-sql: ^0.11.3
-      expo-sqlite: ^13.2.1
+      electric-sql: ^0.12.0
+      expo-sqlite: 13.2.1
       partykit: ^0.0.105
       partysocket: ^1.0.1
-      prettier: ^3.3.0
+      prettier: ^3.3.1
       react: ^18.3.1
       react-dom: ^18.3.1
       sqlite3: ^5.1.7
-      yjs: ^13.6.15
+      yjs: ^13.6.16
     peerDependenciesMeta:
       '@automerge/automerge-repo':
         optional: true
@@ -19097,7 +19072,7 @@ packages:
         optional: true
     dependencies:
       prettier: 2.8.4
-      react: 18.3.1
+      react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
@@ -20469,6 +20444,7 @@ packages:
       rollup: 2.79.1
     optionalDependencies:
       fsevents: 2.3.3
+    dev: true
 
   /vite@3.2.8(@types/node@18.19.32):
     resolution: {integrity: sha512-EtQU16PLIJpAZol2cTLttNP1mX6L0SyI0pgQB1VOoWeQnMSvtiwovV3D6NcjN8CZQWWyESD2v5NGnpz5RvgOZA==}
@@ -20536,7 +20512,6 @@ packages:
       rollup: 2.79.1
     optionalDependencies:
       fsevents: 2.3.3
-    dev: true
 
   /vitest@0.32.4(happy-dom@14.12.0)(jsdom@24.1.0):
     resolution: {integrity: sha512-3czFm8RnrsWwIzVDu/Ca48Y/M+qh3vOnF16czJm98Q/AN1y3B6PBsyV8Re91Ty5s7txKNjEhpgtGPcfdbh2MZg==}

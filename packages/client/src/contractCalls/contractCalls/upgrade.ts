@@ -1,13 +1,13 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { EObjectives, EUnit } from "contracts/config/enums";
 import { ampli } from "src/ampli";
-import { getSystemId } from "src/util/encode";
 import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 import {
   Core,
   AccountClient,
   TxQueueOptions,
   getEntityTypeName,
+  getSystemId,
   bigintToNumber,
   UnitEntityLookup,
 } from "@primodiumxyz/core";
