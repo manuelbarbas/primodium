@@ -15,7 +15,7 @@ export const setupBuildingReversePosition = (core: Core) => {
 
   tables.TilePositions.watch({
     world: systemWorld,
-    onUpdate: ({ entity, properties: { current, prev } }) => {
+    onChange: ({ entity, properties: { current, prev } }) => {
       const asteroid = tables.OwnedBy.get(entity)?.value as Entity;
       if (!asteroid) return;
 

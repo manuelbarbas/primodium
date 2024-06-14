@@ -13,7 +13,7 @@ export function setupHangar(core: Core) {
 
   tables.SelectedRock.watch({
     world: systemWorld,
-    onUpdate: ({ properties: { current } }) => {
+    onChange: ({ properties: { current } }) => {
       if (!current?.value) return;
       createHangar(current.value);
     },
@@ -21,7 +21,7 @@ export function setupHangar(core: Core) {
 
   tables.HoverEntity.watch({
     world: systemWorld,
-    onUpdate: ({ properties: { current } }) => {
+    onChange: ({ properties: { current } }) => {
       const entity = current?.value;
       if (!entity) return;
       if (tables.Asteroid.has(entity)) createHangar(entity);
@@ -30,7 +30,7 @@ export function setupHangar(core: Core) {
 
   tables.Time.watch({
     world: systemWorld,
-    onUpdate: () => {
+    onChange: () => {
       const selectedRock = tables.ActiveRock.get()?.value as Entity;
       if (selectedRock) createHangar(selectedRock);
       const hoverEntity = tables.HoverEntity.get()?.value as Entity;

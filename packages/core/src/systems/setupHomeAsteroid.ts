@@ -10,7 +10,7 @@ export const setupHomeAsteroid = async (core: Core) => {
   const systemWorld = namespaceWorld(world, "coreSystems");
   tables.Account.watch({
     world: systemWorld,
-    onUpdate: ({ properties: { current } }) => {
+    onChange: ({ properties: { current } }) => {
       world.dispose("homeAsteroidAccount");
 
       const account = current?.value;
@@ -19,7 +19,7 @@ export const setupHomeAsteroid = async (core: Core) => {
       const accountWorld = namespaceWorld(world, "homeAsteroidAccount");
       tables.Home.watch({
         world: accountWorld,
-        onUpdate: ({ entity, properties }) => {
+        onChange: ({ entity, properties }) => {
           if (entity !== account) return;
 
           const newHome = properties.current?.value as Entity | undefined;
