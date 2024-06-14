@@ -610,12 +610,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       14: {
         P_RequiredBaseLevel: { value: 14n },
-        P_RequiredResources: getResourceValues({ Iron: 250000, Titanium: 8000, Kimberlite: 1500 }),
+        P_RequiredResources: getResourceValues({ Iron: 150000, Titanium: 8000, Kimberlite: 1500 }),
         P_Production: getResourceValues({ Iron: 0.87 }),
       },
       15: {
         P_RequiredBaseLevel: { value: 15n },
-        P_RequiredResources: getResourceValues({ Iron: 500000, Titanium: 10000, Kimberlite: 2000 }),
+        P_RequiredResources: getResourceValues({ Iron: 200000, Titanium: 10000, Kimberlite: 2000 }),
         P_Production: getResourceValues({ Iron: 1.0 }),
       },
     },
@@ -690,12 +690,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       14: {
         P_RequiredBaseLevel: { value: 14n },
-        P_RequiredResources: getResourceValues({ Iron: 250000, Iridium: 8000, Kimberlite: 1500 }),
+        P_RequiredResources: getResourceValues({ Iron: 150000, Iridium: 8000, Kimberlite: 1500 }),
         P_Production: getResourceValues({ Copper: 0.87 }),
       },
       15: {
         P_RequiredBaseLevel: { value: 15n },
-        P_RequiredResources: getResourceValues({ Iron: 500000, Iridium: 10000, Kimberlite: 2000 }),
+        P_RequiredResources: getResourceValues({ Iron: 200000, Iridium: 10000, Kimberlite: 2000 }),
         P_Production: getResourceValues({ Copper: 1.0 }),
       },
     },
@@ -770,12 +770,12 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       14: {
         P_RequiredBaseLevel: { value: 14n },
-        P_RequiredResources: getResourceValues({ Iron: 250000, Platinum: 8000, Kimberlite: 1500 }),
+        P_RequiredResources: getResourceValues({ Iron: 150000, Platinum: 8000, Kimberlite: 1500 }),
         P_Production: getResourceValues({ Lithium: 0.87 }),
       },
       15: {
         P_RequiredBaseLevel: { value: 15n },
-        P_RequiredResources: getResourceValues({ Iron: 500000, Platinum: 10000, Kimberlite: 2000 }),
+        P_RequiredResources: getResourceValues({ Iron: 200000, Platinum: 10000, Kimberlite: 2000 }),
         P_Production: getResourceValues({ Lithium: 1.0 }),
       },
     },
@@ -997,19 +997,19 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       13: {
         P_RequiredBaseLevel: { value: 13n },
-        P_RequiredResources: getResourceValues({ Lithium: 200000, Titanium: 5000, Kimberlite: 1000 }),
+        P_RequiredResources: getResourceValues({ Lithium: 150000, Titanium: 5000, Kimberlite: 1000 }),
         P_RequiredDependency: getResourceValue({ Iron: 1.18 }),
         P_Production: getResourceValues({ IronPlate: 0.48 }),
       },
       14: {
         P_RequiredBaseLevel: { value: 14n },
-        P_RequiredResources: getResourceValues({ Lithium: 300000, Titanium: 8000, Kimberlite: 1500 }),
+        P_RequiredResources: getResourceValues({ Lithium: 200000, Titanium: 8000, Kimberlite: 1500 }),
         P_RequiredDependency: getResourceValue({ Iron: 1.44 }),
         P_Production: getResourceValues({ IronPlate: 0.58 }),
       },
       15: {
         P_RequiredBaseLevel: { value: 15n },
-        P_RequiredResources: getResourceValues({ Lithium: 500000, Titanium: 10000, Kimberlite: 2000 }),
+        P_RequiredResources: getResourceValues({ Lithium: 250000, Titanium: 10000, Kimberlite: 2000 }),
         P_RequiredDependency: getResourceValue({ Iron: 1.75 }),
         P_Production: getResourceValues({ IronPlate: 0.7 }),
       },
@@ -1095,19 +1095,19 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       13: {
         P_RequiredBaseLevel: { value: 13n },
-        P_RequiredResources: getResourceValues({ Lithium: 200000, Iridium: 5000, Kimberlite: 1000 }),
+        P_RequiredResources: getResourceValues({ Lithium: 150000, Iridium: 5000, Kimberlite: 1000 }),
         P_RequiredDependency: getResourceValue({ Copper: 1.18 }),
         P_Production: getResourceValues({ Alloy: 0.48 }),
       },
       14: {
         P_RequiredBaseLevel: { value: 14n },
-        P_RequiredResources: getResourceValues({ Lithium: 300000, Iridium: 8000, Kimberlite: 1500 }),
+        P_RequiredResources: getResourceValues({ Lithium: 200000, Iridium: 8000, Kimberlite: 1500 }),
         P_RequiredDependency: getResourceValue({ Copper: 1.44 }),
         P_Production: getResourceValues({ Alloy: 0.58 }),
       },
       15: {
         P_RequiredBaseLevel: { value: 15n },
-        P_RequiredResources: getResourceValues({ Lithium: 500000, Iridium: 10000, Kimberlite: 2000 }),
+        P_RequiredResources: getResourceValues({ Lithium: 250000, Iridium: 10000, Kimberlite: 2000 }),
         P_RequiredDependency: getResourceValue({ Copper: 1.75 }),
         P_Production: getResourceValues({ Alloy: 0.7 }),
       },
@@ -1193,19 +1193,19 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       13: {
         P_RequiredBaseLevel: { value: 13n },
-        P_RequiredResources: getResourceValues({ Lithium: 200000, Platinum: 5000, Kimberlite: 1000 }),
+        P_RequiredResources: getResourceValues({ Lithium: 150000, Platinum: 5000, Kimberlite: 1000 }),
         P_RequiredDependency: getResourceValue({ Lithium: 1.18 }),
         P_Production: getResourceValues({ PVCell: 0.48 }),
       },
       14: {
         P_RequiredBaseLevel: { value: 14n },
-        P_RequiredResources: getResourceValues({ Lithium: 300000, Platinum: 8000, Kimberlite: 1500 }),
+        P_RequiredResources: getResourceValues({ Lithium: 200000, Platinum: 8000, Kimberlite: 1500 }),
         P_RequiredDependency: getResourceValue({ Lithium: 1.44 }),
         P_Production: getResourceValues({ PVCell: 0.58 }),
       },
       15: {
         P_RequiredBaseLevel: { value: 15n },
-        P_RequiredResources: getResourceValues({ Lithium: 500000, Platinum: 10000, Kimberlite: 2000 }),
+        P_RequiredResources: getResourceValues({ Lithium: 250000, Platinum: 10000, Kimberlite: 2000 }),
         P_RequiredDependency: getResourceValue({ Lithium: 1.75 }),
         P_Production: getResourceValues({ PVCell: 0.7 }),
       },
@@ -1625,7 +1625,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       13: {
         P_RequiredBaseLevel: { value: 13n },
         P_RequiredResources: getResourceValues({
-          Copper: 200000,
+          Copper: 150000,
           Iridium: 5000,
           Kimberlite: 1000,
           U_Electricity: 40,
@@ -1636,7 +1636,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       14: {
         P_RequiredBaseLevel: { value: 14n },
         P_RequiredResources: getResourceValues({
-          Copper: 300000,
+          Copper: 200000,
           Iridium: 8000,
           Kimberlite: 1500,
           U_Electricity: 45,
@@ -1647,7 +1647,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       15: {
         P_RequiredBaseLevel: { value: 15n },
         P_RequiredResources: getResourceValues({
-          Copper: 500000,
+          Copper: 250000,
           Iridium: 10000,
           Kimberlite: 2000,
           U_Electricity: 50,
@@ -1749,7 +1749,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       15: {
         P_RequiredBaseLevel: { value: 15n },
-        P_RequiredResources: getResourceValues({ Copper: 250000, Iridium: 5000, Kimberlite: 1000 }),
+        P_RequiredResources: getResourceValues({ Copper: 200000, Iridium: 5000, Kimberlite: 1000 }),
         P_UnitProdMultiplier: { value: 200n },
         P_UnitProdTypes: { value: encodeArray(["TridentMarine", "MinutemanMarine", "LightningCraft"]) },
       },
