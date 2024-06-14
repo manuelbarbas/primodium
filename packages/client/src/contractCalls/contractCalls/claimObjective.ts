@@ -1,5 +1,10 @@
-import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
-import { Core, ObjectiveEnumLookup, getSystemId, getEntityTypeName, ObjectiveEntityLookup } from "@primodiumxyz/core";
+import {
+  Core,
+  ObjectiveEnumLookup,
+  getEntityTypeName,
+  ObjectiveEntityLookup,
+  ExecuteFunctions,
+} from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { ampli } from "src/ampli";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
@@ -10,21 +15,19 @@ export const createClaimObjective =
     const objective = ObjectiveEnumLookup[rawObjective];
     if (!objective) throw new Error(`Objective ${rawObjective} not found in ObjectiveEnumLookup`);
 
-    await execute(
-      {
-        functionName: "Pri_11__claimObjective",
-        systemId: getSystemId("ClaimObjectiveSystem"),
-        args: [rockEntity, objective],
-        withSession: true,
-      },
-      {
+    await execute({
+      functionName: "Pri_11__claimObjective",
+
+      args: [rockEntity, objective],
+      withSession: true,
+      txQueueOptions: {
         id: `claim-${rawObjective}`,
       },
-      (receipt) => {
+      onComplete: (receipt) => {
         ampli.systemClaimObjective({
           objectiveType: getEntityTypeName(ObjectiveEntityLookup[objective]),
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };

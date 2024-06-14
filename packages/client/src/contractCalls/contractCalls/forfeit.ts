@@ -1,7 +1,6 @@
 import { Hex } from "viem";
 import { ampli } from "src/ampli";
-import { AccountClient, Core, getSystemId } from "@primodiumxyz/core";
-import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
+import { AccountClient, Core, ExecuteFunctions } from "@primodiumxyz/core";
 import { Entity, query } from "@primodiumxyz/reactive-tables";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
 
@@ -17,46 +16,39 @@ export const createForfeitCalls = (
     });
 
     const abandonCalls = [...asteroids].map((asteroidEntity: Entity) => ({
-      systemId: getSystemId("AbandonAsteroidSystem"),
       functionName: "Pri_11__abandonAsteroid",
       args: [asteroidEntity],
     })) as {
-      systemId: Hex;
       functionName: "Pri_11__abandonAsteroid";
       args: [Hex];
     }[];
 
-    await executeBatch(
-      {
-        systemCalls: abandonCalls,
-        withSession: true,
-      },
-      { id: "FORFEIT" as Entity },
-      (receipt) => {
+    await executeBatch({
+      systemCalls: abandonCalls,
+      withSession: true,
+      txQueueOptions: { id: "FORFEIT" as Entity },
+      onComplete: (receipt) => {
         ampli.systemAbandonAsteroidSystemPrimodiumAbandonAsteroid({
           spaceRocks: Array.from(asteroids.values()),
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };
 
   const abandonAsteroid = async (asteroidEntity: Entity) => {
-    await execute(
-      {
-        systemId: getSystemId("AbandonAsteroidSystem"),
-        functionName: "Pri_11__abandonAsteroid",
-        args: [asteroidEntity],
-        withSession: true,
-      },
-      { id: asteroidEntity },
-      (receipt) => {
+    await execute({
+      functionName: "Pri_11__abandonAsteroid",
+      args: [asteroidEntity],
+      withSession: true,
+      txQueueOptions: { id: asteroidEntity },
+      onComplete: (receipt) => {
         ampli.systemAbandonAsteroidSystemPrimodiumAbandonAsteroid({
           spaceRocks: [asteroidEntity],
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };
 
   return {

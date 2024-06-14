@@ -2,16 +2,12 @@ import { Entity } from "@primodiumxyz/reactive-tables";
 import { EObjectives } from "contracts/config/enums";
 import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 import { ampli } from "src/ampli";
-import { Core, AccountClient, bigintToNumber, getSystemId } from "@primodiumxyz/core";
-import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
+import { Core, AccountClient, bigintToNumber, ExecuteFunctions } from "@primodiumxyz/core";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
 
-export const createTransferCalls = (
-  { tables, utils }: Core,
-  { playerAccount }: AccountClient,
-  { execute }: ExecuteFunctions
-) => {
-  const metadata = {
+export const createTransferCalls = (core: Core, { playerAccount }: AccountClient, { execute }: ExecuteFunctions) => {
+  const { tables, utils } = core;
+  const txQueueOptions = {
     id: "TRANSFER",
   } as const;
 
@@ -70,16 +66,14 @@ export const createTransferCalls = (
         : toIsAsteroid
         ? "Pri_11__transferUnitsFromFleetToAsteroid"
         : "Pri_11__transferUnitsFromFleetToFleet";
-      await execute(
-        {
-          functionName,
-          systemId: getSystemId("TransferSystem"),
-          args: [from, to, unitCounts],
-          withSession: true,
-        },
-        metadata,
-        (receipt) => {
-          activeAsteroid && makeObjectiveClaimable(playerAccount.entity, claimableObjective);
+      await execute({
+        functionName,
+
+        args: [from, to, unitCounts],
+        withSession: true,
+        txQueueOptions,
+        onComplete: (receipt) => {
+          activeAsteroid && makeObjectiveClaimable(core, playerAccount.entity, claimableObjective);
 
           const commonProperties = {
             spaceRock: from,
@@ -95,24 +89,22 @@ export const createTransferCalls = (
           } else {
             ampli.systemTransferSystemPrimodiumTransferUnitsFromFleetToFleet(commonProperties);
           }
-        }
-      );
+        },
+      });
     } else if (unitCounts.every((count) => count == 0n)) {
       const functionName = fromIsAsteroid
         ? "Pri_11__transferResourcesFromAsteroidToFleet"
         : toIsAsteroid
         ? "Pri_11__transferResourcesFromFleetToAsteroid"
         : "Pri_11__transferResourcesFromFleetToFleet";
-      await execute(
-        {
-          functionName,
-          systemId: getSystemId("TransferSystem"),
-          args: [from, to, resourceCounts],
-          withSession: true,
-        },
-        metadata,
-        (receipt) => {
-          activeAsteroid && makeObjectiveClaimable(playerAccount.entity, claimableObjective);
+      await execute({
+        functionName,
+
+        args: [from, to, resourceCounts],
+        withSession: true,
+        txQueueOptions,
+        onComplete: (receipt) => {
+          activeAsteroid && makeObjectiveClaimable(core, playerAccount.entity, claimableObjective);
 
           const commonProperties = {
             spaceRock: from,
@@ -128,24 +120,22 @@ export const createTransferCalls = (
           } else {
             ampli.systemTransferSystemPrimodiumTransferResourcesFromFleetToFleet(commonProperties);
           }
-        }
-      );
+        },
+      });
     } else {
       const functionName = fromIsAsteroid
         ? "Pri_11__transferUnitsAndResourcesFromAsteroidToFleet"
         : toIsAsteroid
         ? "Pri_11__transferUnitsAndResourcesFromFleetToAsteroid"
         : "Pri_11__transferUnitsAndResourcesFromFleetToFleet";
-      await execute(
-        {
-          functionName,
-          systemId: getSystemId("TransferSystem"),
-          args: [from, to, unitCounts, resourceCounts],
-          withSession: true,
-        },
-        metadata,
-        (receipt) => {
-          activeAsteroid && makeObjectiveClaimable(playerAccount.entity, claimableObjective);
+      await execute({
+        functionName,
+
+        args: [from, to, unitCounts, resourceCounts],
+        withSession: true,
+        txQueueOptions,
+        onComplete: (receipt) => {
+          activeAsteroid && makeObjectiveClaimable(core, playerAccount.entity, claimableObjective);
 
           const commonProperties = {
             spaceRock: from,
@@ -162,8 +152,8 @@ export const createTransferCalls = (
           } else {
             ampli.systemTransferSystemPrimodiumTransferUnitsAndResourcesFromFleetToFleet(commonProperties);
           }
-        }
-      );
+        },
+      });
     }
   };
   const transferTwoWay = async (
@@ -181,53 +171,47 @@ export const createTransferCalls = (
     const noResources = resourceCounts.every((count) => count == 0n);
     if (noUnits && noResources) return;
     if (noResources) {
-      return await execute(
-        {
-          functionName: "Pri_11__transferUnitsTwoWay",
-          systemId: getSystemId("TransferTwoWaySystem"),
-          args: [left, right, unitCounts],
-          withSession: true,
-        },
-        metadata,
-        (receipt) => {
+      return await execute({
+        functionName: "Pri_11__transferUnitsTwoWay",
+
+        args: [left, right, unitCounts],
+        withSession: true,
+        txQueueOptions,
+        onComplete: (receipt) => {
           ampli.systemTransferTwoWaySystemPrimodiumTransferUnitsTwoWay({
             spaceRock: left,
             spaceRockTo: right,
             unitCounts: unitCounts.map((unitCount) => bigintToNumber(unitCount)),
             ...parseReceipt(receipt),
           });
-        }
-      );
+        },
+      });
     }
     if (noUnits) {
-      return await execute(
-        {
-          functionName: "Pri_11__transferResourcesTwoWay",
-          systemId: getSystemId("TransferTwoWaySystem"),
-          args: [left, right, resourceCounts],
-          withSession: true,
-        },
-        metadata,
-        (receipt) => {
+      return await execute({
+        functionName: "Pri_11__transferResourcesTwoWay",
+
+        args: [left, right, resourceCounts],
+        withSession: true,
+        txQueueOptions,
+        onComplete: (receipt) => {
           ampli.systemTransferTwoWaySystemPrimodiumTransferResourcesTwoWay({
             spaceRock: left,
             spaceRockTo: right,
             resourceCounts: resourceCounts.map((resourceCount) => bigintToNumber(resourceCount)),
             ...parseReceipt(receipt),
           });
-        }
-      );
+        },
+      });
     }
 
-    await execute(
-      {
-        functionName: "Pri_11__transferUnitsAndResourcesTwoWay",
-        systemId: getSystemId("TransferTwoWaySystem"),
-        args: [left, right, unitCounts, resourceCounts],
-        withSession: true,
-      },
-      metadata,
-      (receipt) => {
+    await execute({
+      functionName: "Pri_11__transferUnitsAndResourcesTwoWay",
+
+      args: [left, right, unitCounts, resourceCounts],
+      withSession: true,
+      txQueueOptions,
+      onComplete: (receipt) => {
         ampli.systemTransferTwoWaySystemPrimodiumTransferUnitsAndResourcesTwoWay({
           spaceRock: left,
           spaceRockTo: right,
@@ -235,8 +219,8 @@ export const createTransferCalls = (
           resourceCounts: resourceCounts.map((resourceCount) => bigintToNumber(resourceCount)),
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };
 
   return transfer;

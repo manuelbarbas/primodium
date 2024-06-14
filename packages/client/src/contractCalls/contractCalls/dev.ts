@@ -1,5 +1,5 @@
+import { ExecuteFunctions } from "@primodiumxyz/core";
 import { Entity, ContractTable } from "@primodiumxyz/reactive-tables";
-import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
 
 export function createDevCalls({ execute }: ExecuteFunctions) {
   execute;
@@ -13,7 +13,7 @@ export function createDevCalls({ execute }: ExecuteFunctions) {
   //   await execute(
   //     {
   //       functionName: "Pri_11__devDeleteRecord",
-  //       systemId: getSystemId("DevSystem"),
+  //
   //       args: [tableId, key],
   //       withSession: true,
   //     },
@@ -39,7 +39,7 @@ export function createDevCalls({ execute }: ExecuteFunctions) {
   //     await execute(
   //       {
   //         functionName: "Pri_11__devSetField",
-  //         systemId: getSystemId("DevSystem"),
+  //
   //         args: [tableId, key, schemaIndex, data],
   //         withSession: true,
   //       },

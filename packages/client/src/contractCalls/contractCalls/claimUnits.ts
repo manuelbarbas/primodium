@@ -1,27 +1,24 @@
 import { ampli } from "src/ampli";
-import { Core, getSystemId } from "@primodiumxyz/core";
+import { Core, ExecuteFunctions } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createClaimUnits =
   (core: Core, { execute }: ExecuteFunctions) =>
   async (rock: Entity) => {
-    await execute(
-      {
-        functionName: "Pri_11__claimUnits",
-        systemId: getSystemId("ClaimUnitsSystem"),
-        args: [rock],
-        withSession: true,
-      },
-      {
+    await execute({
+      functionName: "Pri_11__claimUnits",
+
+      args: [rock],
+      withSession: true,
+      txQueueOptions: {
         id: `claimUnits-${rock}`,
       },
-      (receipt) => {
+      onComplete: (receipt) => {
         ampli.systemClaimUnitsSystemPrimodiumClaimUnits({
           spaceRock: rock,
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };

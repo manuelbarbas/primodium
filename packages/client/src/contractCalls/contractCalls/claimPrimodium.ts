@@ -1,38 +1,32 @@
 import { EObjectives } from "contracts/config/enums";
 import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
 import { ampli } from "src/ampli";
-import { Core, AccountClient, getSystemId, SPEED_SCALE } from "@primodiumxyz/core";
-import { ExecuteFunctions } from "@/contractCalls/txExecute/createExecute";
+import { Core, AccountClient, SPEED_SCALE, ExecuteFunctions } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
 
 import { parseReceipt } from "@/contractCalls/parseReceipt";
 
-export const createClaimPointsCalls = (
-  { tables }: Core,
-  { playerAccount }: AccountClient,
-  { execute }: ExecuteFunctions
-) => {
+export const createClaimPointsCalls = (core: Core, { playerAccount }: AccountClient, { execute }: ExecuteFunctions) => {
+  const { tables } = core;
   const claimPrimodium = async (asteroidEntity: Entity) => {
-    await execute(
-      {
-        functionName: "Pri_11__claimPrimodium",
-        systemId: getSystemId("ClaimPrimodiumSystem"),
-        args: [asteroidEntity],
-        withSession: true,
-      },
-      {
+    await execute({
+      functionName: "Pri_11__claimPrimodium",
+
+      args: [asteroidEntity],
+      withSession: true,
+      txQueueOptions: {
         id: "ClaimPrimodium",
       },
 
-      (receipt) => {
-        makeObjectiveClaimable(playerAccount.entity, EObjectives.EarnPrimodiumOnAsteroid);
+      onComplete: (receipt) => {
+        makeObjectiveClaimable(core, playerAccount.entity, EObjectives.EarnPrimodiumOnAsteroid);
 
         ampli.systemClaimPrimodiumSystemPrimodiumClaimPrimodium({
           spaceRock: asteroidEntity,
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };
 
   const claimShardAsteroid = async (asteroidEntity: Entity) => {
@@ -51,25 +45,23 @@ export const createClaimPointsCalls = (
         explosive = true;
       }
     }
-    await execute(
-      {
-        functionName: "Pri_11__claimShardAsteroidPoints",
-        systemId: getSystemId("ClaimPrimodiumSystem"),
-        args: [asteroidEntity],
-        withSession: true,
-      },
-      {
+    await execute({
+      functionName: "Pri_11__claimShardAsteroidPoints",
+
+      args: [asteroidEntity],
+      withSession: true,
+      txQueueOptions: {
         id: "ClaimPrimodium",
       },
-      (receipt) => {
-        if (explosive) makeObjectiveClaimable(playerAccount.entity, EObjectives.ExplodeVolatileShard);
+      onComplete: (receipt) => {
+        if (explosive) makeObjectiveClaimable(core, playerAccount.entity, EObjectives.ExplodeVolatileShard);
 
         ampli.systemClaimPrimodiumSystemPrimodiumClaimShardAsteroidPoints({
           spaceRock: asteroidEntity,
           ...parseReceipt(receipt),
         });
-      }
-    );
+      },
+    });
   };
 
   return {
