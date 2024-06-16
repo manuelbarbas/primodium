@@ -2317,7 +2317,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: {
       0: {
-        P_RequiredResources: getResourceValues({ Iron: 400, IronPlate: 100, Titanium: 5, U_Housing: 3 }),
+        P_RequiredResources: getResourceValues({ Iron: 250, IronPlate: 100, Titanium: 5, U_Housing: 3 }),
         P_Unit: getPUnitData({
           hp: 600,
           attack: 100,
@@ -2330,7 +2330,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       1: {
         P_RequiredUpgradeResources: getResourceValues({ Titanium: 200 }),
         P_RequiredBaseLevel: { value: 9n },
-        P_RequiredResources: getResourceValues({ Iron: 400, IronPlate: 100, Titanium: 5, U_Housing: 3 }),
+        P_RequiredResources: getResourceValues({ Iron: 250, IronPlate: 100, Titanium: 5, U_Housing: 3 }),
         P_Unit: getPUnitData({
           hp: 720,
           attack: 112,
@@ -2343,7 +2343,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       2: {
         P_RequiredUpgradeResources: getResourceValues({ Titanium: 600 }),
         P_RequiredBaseLevel: { value: 10n },
-        P_RequiredResources: getResourceValues({ Iron: 400, IronPlate: 100, Titanium: 5, U_Housing: 3 }),
+        P_RequiredResources: getResourceValues({ Iron: 250, IronPlate: 100, Titanium: 5, U_Housing: 3 }),
         P_Unit: getPUnitData({
           hp: 840,
           attack: 124,
@@ -2356,7 +2356,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       3: {
         P_RequiredUpgradeResources: getResourceValues({ Titanium: 2000 }),
         P_RequiredBaseLevel: { value: 11n },
-        P_RequiredResources: getResourceValues({ Iron: 400, IronPlate: 100, Titanium: 5, U_Housing: 3 }),
+        P_RequiredResources: getResourceValues({ Iron: 250, IronPlate: 100, Titanium: 5, U_Housing: 3 }),
         P_Unit: getPUnitData({
           hp: 960,
           attack: 136,
@@ -2369,7 +2369,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       4: {
         P_RequiredUpgradeResources: getResourceValues({ Titanium: 4000 }),
         P_RequiredBaseLevel: { value: 13n },
-        P_RequiredResources: getResourceValues({ Iron: 400, IronPlate: 100, Titanium: 5, U_Housing: 3 }),
+        P_RequiredResources: getResourceValues({ Iron: 250, IronPlate: 100, Titanium: 5, U_Housing: 3 }),
         P_Unit: getPUnitData({
           hp: 1080,
           attack: 148,
@@ -2382,7 +2382,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       5: {
         P_RequiredUpgradeResources: getResourceValues({ Titanium: 10000 }),
         P_RequiredBaseLevel: { value: 15n },
-        P_RequiredResources: getResourceValues({ Iron: 400, IronPlate: 100, Titanium: 5, U_Housing: 3 }),
+        P_RequiredResources: getResourceValues({ Iron: 250, IronPlate: 100, Titanium: 5, U_Housing: 3 }),
         P_Unit: getPUnitData({
           hp: 1200,
           attack: 160,
@@ -2483,7 +2483,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: {
       0: {
-        P_RequiredResources: getResourceValues({ Lithium: 400, PVCell: 100, Platinum: 5, U_Housing: 3 }),
+        P_RequiredResources: getResourceValues({ Lithium: 250, PVCell: 100, Platinum: 5, U_Housing: 3 }),
         P_Unit: getPUnitData({
           hp: 500,
           attack: 600,
@@ -2496,7 +2496,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       1: {
         P_RequiredUpgradeResources: getResourceValues({ Platinum: 200 }),
         P_RequiredBaseLevel: { value: 9n },
-        P_RequiredResources: getResourceValues({ Lithium: 400, PVCell: 100, Platinum: 5, U_Housing: 3 }),
+        P_RequiredResources: getResourceValues({ Lithium: 250, PVCell: 100, Platinum: 5, U_Housing: 3 }),
         P_Unit: getPUnitData({
           hp: 600,
           attack: 720,
@@ -2509,7 +2509,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       2: {
         P_RequiredUpgradeResources: getResourceValues({ Platinum: 600 }),
         P_RequiredBaseLevel: { value: 10n },
-        P_RequiredResources: getResourceValues({ Lithium: 400, PVCell: 100, Platinum: 5, U_Housing: 3 }),
+        P_RequiredResources: getResourceValues({ Lithium: 250, PVCell: 100, Platinum: 5, U_Housing: 3 }),
         P_Unit: getPUnitData({
           hp: 700,
           attack: 840,
@@ -2522,7 +2522,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       3: {
         P_RequiredUpgradeResources: getResourceValues({ Platinum: 2000 }),
         P_RequiredBaseLevel: { value: 11n },
-        P_RequiredResources: getResourceValues({ Lithium: 400, PVCell: 100, Platinum: 5, U_Housing: 3 }),
+        P_RequiredResources: getResourceValues({ Lithium: 250, PVCell: 100, Platinum: 5, U_Housing: 3 }),
         P_Unit: getPUnitData({
           hp: 800,
           attack: 960,
@@ -2535,7 +2535,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       4: {
         P_RequiredUpgradeResources: getResourceValues({ Platinum: 4000 }),
         P_RequiredBaseLevel: { value: 13n },
-        P_RequiredResources: getResourceValues({ Lithium: 400, PVCell: 100, Platinum: 5, U_Housing: 3 }),
+        P_RequiredResources: getResourceValues({ Lithium: 250, PVCell: 100, Platinum: 5, U_Housing: 3 }),
         P_Unit: getPUnitData({
           hp: 900,
           attack: 1080,
@@ -2548,7 +2548,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       5: {
         P_RequiredUpgradeResources: getResourceValues({ Platinum: 10000 }),
         P_RequiredBaseLevel: { value: 15n },
-        P_RequiredResources: getResourceValues({ Lithium: 400, PVCell: 100, Platinum: 5, U_Housing: 3 }),
+        P_RequiredResources: getResourceValues({ Lithium: 250, PVCell: 100, Platinum: 5, U_Housing: 3 }),
         P_Unit: getPUnitData({
           hp: 1000,
           attack: 1200,
