@@ -3,7 +3,7 @@ import { Entity } from "@primodiumxyz/reactive-tables";
 import { EFleetStance } from "contracts/config/enums";
 
 import { Fleet } from "@/lib/objects/Fleet";
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { StanceToIcon } from "@/lib/mappings";
 
 export function renderFleet(args: { scene: PrimodiumScene; entity: Entity; tables: Tables }) {

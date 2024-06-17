@@ -1,6 +1,6 @@
 import { Coord } from "@primodiumxyz/engine/types";
 import { World } from "@primodiumxyz/reactive-tables";
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 
 const SPEED = 750;
 const ZOOM_SPEED = 5;

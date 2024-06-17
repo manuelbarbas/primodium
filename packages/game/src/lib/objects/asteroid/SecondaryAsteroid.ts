@@ -1,7 +1,7 @@
 import { Coord } from "@primodiumxyz/engine/types";
 import { Entity } from "@primodiumxyz/reactive-tables";
 
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { BaseAsteroid } from "@/lib/objects/asteroid/BaseAsteroid";
 import { LODs, getSecondaryOutlineSprite, getSecondarySprite } from "@/lib/objects/asteroid/helpers";
 import { Relationship } from "@/lib/constants/common";

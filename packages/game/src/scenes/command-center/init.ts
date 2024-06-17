@@ -2,7 +2,8 @@
 import { Core } from "@primodiumxyz/core";
 
 import { GlobalApi } from "@/api/global";
-import { createSceneApi, PrimodiumScene } from "@/api/scene";
+import { createSceneApi } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { commandCenterScene } from "@/lib/config/commandCenterScene";
 import { runSystems as runCommandSystems } from "@/scenes/command-center/systems";
 

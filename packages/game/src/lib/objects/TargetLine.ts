@@ -2,7 +2,7 @@ import Phaser from "phaser";
 import { PixelCoord } from "@primodiumxyz/engine/types";
 import { Entity } from "@primodiumxyz/reactive-tables";
 
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { IPrimodiumGameObject } from "./interfaces";
 
 export class TargetLine extends Phaser.GameObjects.Line implements IPrimodiumGameObject {

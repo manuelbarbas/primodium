@@ -2,7 +2,7 @@ import { addCoords } from "@primodiumxyz/engine/lib/util/coords";
 import { Entity, namespaceWorld, defaultEntity } from "@primodiumxyz/reactive-tables";
 import { Core, Mode } from "@primodiumxyz/core";
 
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 
 const OFFSET = 1000;
 export const renderBattle = (scene: PrimodiumScene, core: Core) => {

@@ -2,7 +2,7 @@ import { Action, Core, getEntityTypeName } from "@primodiumxyz/core";
 import { $query, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 
 import { Building } from "@/lib/objects/building";
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { DepthLayers } from "@/lib/constants/common";
 
 export const handleClick = (pointer: Phaser.Input.Pointer, core: Core, scene: PrimodiumScene) => {

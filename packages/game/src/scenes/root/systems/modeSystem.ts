@@ -33,6 +33,11 @@ export const modeSystem = (game: GlobalApi, core: Core) => {
 
       const sceneKey = ModeToSceneKey[mode];
 
+      if (!sceneKey) {
+        console.error("No scene key found for mode in mode system", mode);
+        return;
+      }
+
       let position = { x: 0, y: 0 };
       switch (mode) {
         case Mode.Asteroid:
@@ -64,7 +69,7 @@ export const modeSystem = (game: GlobalApi, core: Core) => {
       }
 
       game.transitionToScene(
-        ModeToSceneKey[prevMode ?? Mode.Asteroid],
+        ModeToSceneKey[prevMode ?? Mode.Asteroid]!,
         sceneKey,
         0,
         (_, targetScene) => {

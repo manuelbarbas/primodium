@@ -21,6 +21,7 @@ export default defineConfig([
       // outFile: 'dist/react.d.ts',
     },
     minify: true,
+    tsconfig: "./tsconfig.json",
     clean: true, // Don't clean the dist folder when building the React file
   },
 ]);

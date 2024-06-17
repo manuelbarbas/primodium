@@ -44,7 +44,7 @@ export const Game = () => {
 
   useEffect(() => {
     if (!game) return;
-    game.runSystems(mud).primary();
+    game.runSystems().primary();
   }, [mud, game]);
 
   useEffect(() => {

@@ -1,7 +1,8 @@
 // ASTEROID MAP ENTRY POINT
 import { Core } from "@primodiumxyz/core";
 
-import { createSceneApi, PrimodiumScene } from "@/api/scene";
+import { createSceneApi } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { asteroidSceneConfig } from "@/lib/config/asteroidScene";
 import { setupBasicCameraMovement } from "@/scenes/common/setup/setupBasicCameraMovement";
 import { setupKeybinds } from "@/scenes/asteroid/setup/setupKeybinds";

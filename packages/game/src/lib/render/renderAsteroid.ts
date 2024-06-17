@@ -12,7 +12,7 @@ import { Entity } from "@primodiumxyz/reactive-tables";
 import { EMap } from "contracts/config/enums";
 
 import { Coord } from "@primodiumxyz/engine/types";
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { MainbaseLevelToEmblem } from "@/lib/mappings";
 import { PrimaryAsteroid, SecondaryAsteroid } from "@/lib/objects/asteroid";
 import { BaseAsteroid } from "@/lib/objects/asteroid/BaseAsteroid";

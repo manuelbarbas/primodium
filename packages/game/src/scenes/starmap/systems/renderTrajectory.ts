@@ -2,7 +2,7 @@ import { Core } from "@primodiumxyz/core";
 import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 
 import { TargetLine } from "@/lib/objects/TargetLine";
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 
 export const renderTrajectory = (scene: PrimodiumScene, core: Core) => {
   const {

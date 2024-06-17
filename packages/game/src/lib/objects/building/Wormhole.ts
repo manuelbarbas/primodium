@@ -3,7 +3,7 @@ import { Coord } from "@primodiumxyz/engine/types";
 import { Assets } from "@primodiumxyz/assets";
 import { Dimensions, EntityType } from "@primodiumxyz/core";
 
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { DepthLayers } from "@/lib/constants/common";
 import { IPrimodiumGameObject } from "@/lib/objects/interfaces";
 import { Building } from "@/lib/objects/building";

@@ -4,7 +4,7 @@ import { Assets } from "@primodiumxyz/assets";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { Dimensions } from "@primodiumxyz/core";
 
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { triggerPlacementAnim } from "@/lib/objects/building/triggerPlacementAnim";
 import { getAssetKeyPair, getUpgradeAnimation } from "@/lib/objects/building/helpers";
 import { DepthLayers } from "@/lib/constants/common";

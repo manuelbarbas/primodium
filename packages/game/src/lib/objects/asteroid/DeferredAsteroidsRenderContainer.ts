@@ -2,7 +2,7 @@ import { Coord } from "@primodiumxyz/engine/types";
 import { Entity } from "@primodiumxyz/reactive-tables";
 
 import { BaseSpawnArgs, DeferredRenderContainer } from "@/lib/objects/DeferredRenderContainer";
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { FleetsContainer } from "@/lib/objects/asteroid/FleetsContainer";
 import { BaseAsteroid } from "@/lib/objects/asteroid/BaseAsteroid";
 

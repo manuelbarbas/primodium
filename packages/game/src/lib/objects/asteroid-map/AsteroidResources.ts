@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import { Tilesets } from "@primodiumxyz/assets";
 
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { Bounds, Dimensions, ResourceTile, isOutOfBounds } from "@/lib/objects/asteroid-map/helpers";
 import { EntityTypeToResourceTilekey } from "@/lib/mappings";
 import { DepthLayers } from "@/lib/constants/common";

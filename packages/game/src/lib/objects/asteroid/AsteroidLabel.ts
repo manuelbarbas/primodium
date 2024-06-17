@@ -3,7 +3,7 @@ import { PixelCoord } from "@primodiumxyz/engine/types";
 import { Assets, Sprites } from "@primodiumxyz/assets";
 
 import { MainbaseLevelToEmblem } from "@/lib/mappings";
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { DepthLayers } from "@/lib/constants/common";
 
 const MARGIN = 2;

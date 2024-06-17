@@ -5,7 +5,7 @@ import { EMap } from "contracts/config/enums";
 import { Building } from "@/lib/objects/building";
 import { removeRaidableAsteroid } from "@/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
 import { DepthLayers } from "@/lib/constants/common";
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { WormholeBase } from "@/lib/objects/building/Wormhole";
 
 export const renderBuilding = (scene: PrimodiumScene, core: Core) => {
@@ -175,7 +175,8 @@ export const renderBuilding = (scene: PrimodiumScene, core: Core) => {
         },
       });
 
-      $query(spectateWorld, positionQuery, {
+      $query(positionQuery, {
+        world: systemsWorld,
         onEnter: render,
         onChange: ({ entity, table }) => {
           render({ entity, showLevelAnimation: table.id === tables.Level.id });

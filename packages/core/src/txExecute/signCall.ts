@@ -1,5 +1,5 @@
+import { Core } from "@/lib";
 import { hexToResource } from "@latticexyz/common";
-import { Core } from "@primodiumxyz/core";
 import { Account, Address, Chain, Hex, toHex, Transport, WalletClient } from "viem";
 import { signTypedData } from "viem/actions";
 

@@ -1,6 +1,6 @@
 import { Core, EntityType } from "@primodiumxyz/core";
 
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { WormholeBase } from "@/lib/objects/building/Wormhole";
 import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 

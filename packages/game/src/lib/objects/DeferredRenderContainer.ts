@@ -1,6 +1,6 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { Coord } from "@primodiumxyz/engine/types";
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { PrimodiumObjectApi, PrimodiumObjectApiMap } from "@/api/objects";
 import { PrimodiumGameObject } from "@primodiumxyz/engine/lib/core/StaticObjectManager";
 

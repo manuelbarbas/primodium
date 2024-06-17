@@ -1,9 +1,9 @@
 import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
+import { decodeEntity } from "@primodiumxyz/reactive-tables/utils";
 import { Core, ResourceEntityLookup } from "@primodiumxyz/core";
-import { decodeEntity } from "@latticexyz/store-sync/recs";
 
 import { EResource } from "contracts/config/enums";
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { AsteroidMap } from "@/lib/objects/asteroid-map/AsteroidMap";
 
 //TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation

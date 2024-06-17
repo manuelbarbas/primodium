@@ -13,10 +13,10 @@
   "typesVersions": {
     "*": {
       "index": [
-        "./dist/index.ts"
+        "./dist/index.d.ts"
       ],
       "react": [
-        "./dist/react/index.ts"
+        "./dist/react/index.d.ts"
       ]
     }
   },

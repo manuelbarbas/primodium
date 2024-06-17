@@ -2,7 +2,7 @@ import { Core } from "@primodiumxyz/core";
 import { Coord } from "@primodiumxyz/engine/types";
 import { namespaceWorld, $query, Entity } from "@primodiumxyz/reactive-tables";
 
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { BuildingConstruction } from "@/lib/objects/building";
 
 const getQueuePositionString = (entity: Entity, core: Core) => {

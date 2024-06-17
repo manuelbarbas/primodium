@@ -5,7 +5,7 @@ import { EFleetStance } from "contracts/config/enums";
 import { renderAsteroid } from "@/lib/render/renderAsteroid";
 import { renderShardAsteroid } from "@/lib/render/renderShardAsteroid";
 import { renderFleet } from "@/lib/render/renderFleet";
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { StanceToIcon } from "@/lib/mappings";
 
 export const renderOverview = (scene: PrimodiumScene, core: Core) => {

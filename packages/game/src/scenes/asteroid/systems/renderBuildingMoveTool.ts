@@ -1,10 +1,9 @@
-import { Entity, namespaceWorld, $query } from "@primodiumxyz/reactive-tables";
+import { Entity, namespaceWorld, $query, defaultEntity } from "@primodiumxyz/reactive-tables";
 import { Action, Core } from "@primodiumxyz/core";
 
 import { Building } from "@/lib/objects/building";
 import { DepthLayers } from "@/lib/constants/common";
-import { PrimodiumScene } from "@/api/scene";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { PrimodiumScene } from "@/types";
 
 export const handleClick = (pointer: Phaser.Input.Pointer, core: Core, scene: PrimodiumScene) => {
   const {
@@ -96,7 +95,7 @@ export const renderBuildingMoveTool = (scene: PrimodiumScene, core: Core) => {
     const validPlacement = utils.validateBuildingPlacement(
       tileCoord,
       buildingPrototype,
-      activeRock ?? singletonEntity,
+      activeRock ?? defaultEntity,
       selectedBuilding
     );
 
@@ -134,9 +133,10 @@ export const renderBuildingMoveTool = (scene: PrimodiumScene, core: Core) => {
     withoutProperties: [{ table: tables.SelectedAction, properties: { value: Action.MoveBuilding } }],
   };
 
-  $query(systemsWorld, query, {
+  $query(query, {
+    world: systemsWorld,
     onEnter: render,
-    onChange: render,
+    onUpdate: render,
     onExit: () => {
       placementBuilding?.destroy();
       placementBuilding = undefined;

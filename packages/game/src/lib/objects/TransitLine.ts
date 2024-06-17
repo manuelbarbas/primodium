@@ -3,7 +3,7 @@ import { BoundingBox } from "@primodiumxyz/engine/lib/core/StaticObjectManager";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { PixelCoord } from "@primodiumxyz/engine/types";
 
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { Fleet } from "./Fleet";
 import { TargetLine } from "@/lib/objects/TargetLine";
 
@@ -39,12 +39,12 @@ export class TransitLine extends TargetLine {
     return this;
   }
 
-  update() {
+  override update() {
     this.fleet?.setScale(Math.max(1, 1 / this._scene.camera.phaserCamera.zoom));
     super.update();
   }
 
-  setCoordinates(start: PixelCoord, end: PixelCoord) {
+  override setCoordinates(start: PixelCoord, end: PixelCoord) {
     this.start = start;
     this.end = end;
     this._setFleetAngleAndPos();
@@ -76,16 +76,16 @@ export class TransitLine extends TargetLine {
     });
   }
 
-  setActive(value: boolean): this {
+  override setActive(value: boolean): this {
     return super.setActive(value);
   }
 
-  setVisible(value: boolean): this {
+  override setVisible(value: boolean): this {
     this.fleet?.setVisible(value);
     return super.setVisible(value);
   }
 
-  destroy(anim = false) {
+  override destroy(anim = false) {
     this._scene.objects.transitLine.remove(this.id);
 
     if (!anim) {

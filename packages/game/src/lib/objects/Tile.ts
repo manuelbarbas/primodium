@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import { Coord } from "@primodiumxyz/engine/types";
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 
 export class Tile extends Phaser.GameObjects.Rectangle {
   private _scene: PrimodiumScene;

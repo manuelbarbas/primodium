@@ -2,7 +2,7 @@ import { Coord } from "@primodiumxyz/engine/types";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { entityToRockName, Tables } from "@primodiumxyz/core";
 
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { ShardAsteroid } from "@/lib/objects/asteroid/ShardAsteroid";
 
 export const renderShardAsteroid = (args: {

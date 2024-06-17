@@ -1,6 +1,6 @@
 import { Core } from "@primodiumxyz/core";
 
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { renderWormholeAnimations } from "@/scenes/asteroid/systems/renderWormholeAnimations";
 import { focusMainbase } from "@/scenes/asteroid/systems/focusMainbase";
 import { renderBuilding } from "@/scenes/asteroid/systems/renderBuilding";

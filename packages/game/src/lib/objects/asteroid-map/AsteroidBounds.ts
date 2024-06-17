@@ -3,7 +3,7 @@ import { Animations, Assets, Sprites, Tilesets } from "@primodiumxyz/assets";
 
 import { Bounds, Dimensions, getRelativeCoord } from "@/lib/objects/asteroid-map/helpers";
 import { DepthLayers } from "@/lib/constants/common";
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 
 export class AsteroidBounds {
   private scene: PrimodiumScene;

@@ -1,8 +1,8 @@
 import { Core } from "@primodiumxyz/core";
 import { Coord } from "@primodiumxyz/engine/types";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { defaultEntity } from "@primodiumxyz/reactive-tables";
 
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 
 export const setupMouseInputs = (scene: PrimodiumScene, core: Core) => {
   const {
@@ -31,7 +31,7 @@ export const setupMouseInputs = (scene: PrimodiumScene, core: Core) => {
 
     if (selectedAction !== undefined) return;
 
-    const building = utils.getBuildingAtCoord(gameCoord, activeRock ?? singletonEntity);
+    const building = utils.getBuildingAtCoord(gameCoord, activeRock ?? defaultEntity);
 
     if (!building) {
       tables.SelectedBuilding.remove();

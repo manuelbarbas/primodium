@@ -6,7 +6,7 @@ import { TransitLine } from "@/lib/objects/TransitLine";
 import { renderFleet } from "@/lib/render/renderFleet";
 import { DeferredAsteroidsRenderContainer } from "@/lib/objects/asteroid/DeferredAsteroidsRenderContainer";
 import { StanceToIcon } from "@/lib/mappings";
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 
 export const renderFleets = (scene: PrimodiumScene, core: Core) => {
   const {

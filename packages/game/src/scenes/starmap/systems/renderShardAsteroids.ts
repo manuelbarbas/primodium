@@ -2,7 +2,7 @@ import { Core } from "@primodiumxyz/core";
 import { Coord } from "@primodiumxyz/engine/types";
 import { $query, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { renderShardAsteroid } from "@/lib/render/renderShardAsteroid";
 import { ShardAsteroid } from "@/lib/objects/asteroid/ShardAsteroid";
 

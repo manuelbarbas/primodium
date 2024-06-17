@@ -1,7 +1,7 @@
 import { Core, getRandomRange } from "@primodiumxyz/core";
 import { namespaceWorld } from "@primodiumxyz/reactive-tables";
 
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 
 export const setupAudioEffects = (scene: PrimodiumScene, core: Core) => {
   const {

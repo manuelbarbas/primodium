@@ -3,7 +3,7 @@ import { Coord } from "@primodiumxyz/engine/types";
 import { Assets, Sprites } from "@primodiumxyz/assets";
 import { Entity } from "@primodiumxyz/reactive-tables";
 
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { IPrimodiumGameObject } from "@/lib/objects/interfaces";
 import { FleetsContainer } from "@/lib/objects/asteroid/FleetsContainer";
 import { AsteroidLabel } from "@/lib/objects/asteroid/AsteroidLabel";

@@ -4,7 +4,7 @@ import { addCoords } from "@primodiumxyz/engine/lib/util/coords";
 import { Assets, Sprites, Animations } from "@primodiumxyz/assets";
 import { Coord } from "@primodiumxyz/engine/types";
 
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { IPrimodiumGameObject } from "./interfaces";
 import { Relationship, DepthLayers } from "@/lib/constants/common";
 import { isValidClick } from "@/lib/objects/inputGuards";

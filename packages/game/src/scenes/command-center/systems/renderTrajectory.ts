@@ -1,9 +1,8 @@
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
+import { Entity, namespaceWorld, defaultEntity } from "@primodiumxyz/reactive-tables";
 import { Core } from "@primodiumxyz/core";
 
 import { TargetLine } from "@/lib/objects/TargetLine";
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 
 export const renderTrajectory = (scene: PrimodiumScene, core: Core) => {
   const {
@@ -32,8 +31,8 @@ export const renderTrajectory = (scene: PrimodiumScene, core: Core) => {
       const fleetObj = scene.objects.fleet.get(entity);
 
       const targetObj = tables.IsFleet.get(destination)?.value
-        ? scene.objects.fleet.get(destination ?? singletonEntity)
-        : scene.objects.asteroid.get(destination ?? singletonEntity);
+        ? scene.objects.fleet.get(destination ?? defaultEntity)
+        : scene.objects.asteroid.get(destination ?? defaultEntity);
 
       if (!fleetObj || !targetObj) {
         trajectoryLine.setActive(false).setVisible(false);

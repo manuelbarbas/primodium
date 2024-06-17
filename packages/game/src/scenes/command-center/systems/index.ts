@@ -1,6 +1,6 @@
 import { Core } from "@primodiumxyz/core";
 
-import { PrimodiumScene } from "@/api/scene";
+import { PrimodiumScene } from "@/types";
 import { renderBattle } from "@/scenes/command-center/systems/renderBattle";
 import { renderOverview } from "@/scenes/command-center/systems/renderOverview";
 import { renderTrajectory } from "@/scenes/command-center/systems/renderTrajectory";
