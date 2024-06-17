@@ -7,6 +7,7 @@
     "lib": ["ESNext", "DOM"],
     "moduleResolution": "Bundler",
     "strict": true,
+    "composite": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
@@ -21,5 +22,6 @@
     }
   },
   "include": ["**/*.tsx", "**/*.ts", "../game-tools/src/CheatcodesList.tsx"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist"],
+  "references": [{"path": "../game"}, {"path": "../core"}, {"path": "../assets"}]
 }

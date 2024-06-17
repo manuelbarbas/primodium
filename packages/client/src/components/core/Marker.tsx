@@ -1,5 +1,5 @@
 import { cn } from "@/util/client";
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaChevronRight } from "react-icons/fa";

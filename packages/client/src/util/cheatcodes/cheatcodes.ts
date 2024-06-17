@@ -1,13 +1,13 @@
 import { createBurnerAccount, transportObserver } from "@latticexyz/common";
+import { Coord } from "@primodiumxyz/engine/types";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { Coord } from "engine/types";
 import { Cheatcode, Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import { EAllianceInviteMode, EPointType, EResource } from "contracts/config/enums";
 import { Address, Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
 import { waitForTransactionReceipt } from "viem/actions";
 import { TesterPack, testerPacks } from "./testerPacks";
-import { PrimodiumGame } from "@/game/api";
+import { PrimodiumGame } from "@primodiumxyz/game/src/types";
 import {
   AccountClient,
   BuildingEnumLookup,
