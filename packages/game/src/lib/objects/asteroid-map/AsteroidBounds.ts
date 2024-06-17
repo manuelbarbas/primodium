@@ -204,13 +204,13 @@ export class AsteroidBounds {
 
     //DRONES
     //top-left
-    this.drones[0].setPosition(maxBounds.minX * tileWidth - 10, -maxBounds.maxY * tileHeight + 17);
+    this.drones[0]?.setPosition(maxBounds.minX * tileWidth - 10, -maxBounds.maxY * tileHeight + 17);
     //top-right
-    this.drones[1].setPosition((maxBounds.maxX + 1) * tileWidth - 20, -maxBounds.maxY * tileHeight + 17);
+    this.drones[1]?.setPosition((maxBounds.maxX + 1) * tileWidth - 20, -maxBounds.maxY * tileHeight + 17);
     //bottom-left
-    this.drones[2].setPosition(maxBounds.minX * tileWidth - 14, -(maxBounds.minY - 2) * tileHeight - 17);
+    this.drones[2]?.setPosition(maxBounds.minX * tileWidth - 14, -(maxBounds.minY - 2) * tileHeight - 17);
     //bottom-right
-    this.drones[3].setPosition((maxBounds.maxX + 1) * tileWidth - 18, -(maxBounds.minY - 2) * tileHeight - 17);
+    this.drones[3]?.setPosition((maxBounds.maxX + 1) * tileWidth - 18, -(maxBounds.minY - 2) * tileHeight - 17);
 
     //EFFECTS
     const glowEffect = outerBordersLayer.postFX.addGlow(0x008b8b, 4, 0, false, 0.05, 30);

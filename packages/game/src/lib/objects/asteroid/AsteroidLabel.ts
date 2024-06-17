@@ -115,7 +115,7 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
     return this;
   }
 
-  update() {
+  override update() {
     const zoom = this._scene.camera.phaserCamera.zoom;
     this.setScale(this.baseScale / zoom);
   }

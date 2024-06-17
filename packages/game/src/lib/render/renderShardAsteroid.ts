@@ -13,7 +13,6 @@ export const renderShardAsteroid = (args: {
   tables: Tables;
 }) => {
   const { scene, entity, coord = { x: 0, y: 0 }, addEventHandlers = false, tables } = args;
-  //TODO: replace with hanks fancy api stuff
   const asteroidData = tables.ShardAsteroid.get(entity);
   if (!asteroidData) throw new Error("Shard asteroid data not found");
 

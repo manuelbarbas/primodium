@@ -42,7 +42,8 @@ export const renderQueuedBuildings = (scene: PrimodiumScene, core: Core) => {
     withProperties: [{ table: tables.TransactionQueue, properties: { type: "build" } }],
   };
 
-  $query(systemsWorld, query, {
+  $query(query, {
+    world: systemsWorld,
     onEnter: ({ entity }) => {
       render(entity);
       console.info("[ENTER SYSTEM](transaction queued)");

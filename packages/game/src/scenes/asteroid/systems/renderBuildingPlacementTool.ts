@@ -101,12 +101,13 @@ export const renderBuildingPlacementTool = (scene: PrimodiumScene, core: Core) =
     ],
   };
 
-  $query(systemsWorld, query, {
+  $query(query, {
+    world: systemsWorld,
     onEnter: () => {
       render();
       console.info("[ENTER SYSTEM](renderBuildingPlacement) Building placement tool has been added");
     },
-    onChange: render,
+    onUpdate: render,
     onExit: () => {
       placementBuilding?.destroy();
       placementBuilding = undefined;

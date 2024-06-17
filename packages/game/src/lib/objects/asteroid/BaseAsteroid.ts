@@ -189,7 +189,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     this.asteroidSprite.postFX?.clear();
   }
 
-  setActive(value: boolean): this {
+  override setActive(value: boolean): this {
     if (value) {
       this.animationTween.play();
       this.circle.setInteractive();
@@ -210,7 +210,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     return super.setActive(value);
   }
 
-  setVisible(value: boolean): this {
+  override setVisible(value: boolean): this {
     this.fleetsContainer.setVisible(value);
     this.circle.setVisible(value);
     this.asteroidSprite.setVisible(value);
@@ -219,12 +219,12 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     return super.setVisible(value);
   }
 
-  setScale(x?: number, y?: number) {
+  override setScale(x?: number, y?: number) {
     this.asteroidSprite.setScale(x, y);
     return this;
   }
 
-  setPosition(x: number, y: number) {
+  override setPosition(x: number, y: number) {
     // bail out if it's the super
     if (this.id === undefined) return super.setPosition(x, y);
 
@@ -323,7 +323,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
       .play();
   }
 
-  update() {
+  override update() {
     const zoom = this._scene.camera.phaserCamera.zoom;
     this.asteroidLabel.update();
     this.fleetsContainer.update();
@@ -331,7 +331,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     this._setLOD(this.getLod(zoom));
   }
 
-  destroy() {
+  override destroy() {
     this.animationTween.destroy();
     this.asteroidSprite.destroy();
     this.circle.destroy();

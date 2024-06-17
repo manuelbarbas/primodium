@@ -40,7 +40,7 @@ export class AsteroidResources {
       const { resourceType, x, y } = tile;
 
       if (isOutOfBounds({ x, y }, maxBounds)) return this;
-      this.resourcesMap?.putTileAt(EntityTypeToResourceTilekey[resourceType], x, this.asteroidDimensions.yBounds - y);
+      this.resourcesMap?.putTileAt(EntityTypeToResourceTilekey[resourceType]!, x, this.asteroidDimensions.yBounds - y);
     });
 
     return this;

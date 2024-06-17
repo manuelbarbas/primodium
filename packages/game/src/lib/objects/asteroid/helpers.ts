@@ -18,12 +18,12 @@ export enum LODs {
 }
 
 export const getPrimarySprite = (level: bigint) => {
-  return LevelToPrimaryAsteroidSprites[Number(level - 1n)];
+  return LevelToPrimaryAsteroidSprites[Number(level - 1n)]!;
 };
 
 export const getSecondarySprite = (resourceType: Entity, maxLevel: bigint) => {
-  const size = MaxLevelToAsteroidSpriteSize[Number(maxLevel)];
-  return EntityTypeSizeToSecondaryAsteroidSprites[resourceType][size] ?? Sprites.MotherlodeKimberliteSmall;
+  const size = MaxLevelToAsteroidSpriteSize[Number(maxLevel)]!;
+  return EntityTypeSizeToSecondaryAsteroidSprites[resourceType]![size] ?? Sprites.MotherlodeKimberliteSmall;
 };
 
 export const getPrimaryOutlineSprite = (rockRelationship: Relationship) => {
@@ -31,6 +31,6 @@ export const getPrimaryOutlineSprite = (rockRelationship: Relationship) => {
 };
 
 export const getSecondaryOutlineSprite = (relationship: Relationship, maxLevel: bigint) => {
-  const size = MaxLevelToAsteroidSpriteSize[Number(maxLevel)];
+  const size = MaxLevelToAsteroidSpriteSize[Number(maxLevel)]!;
   return RelationshipSizeToSecondaryAsteroidOutlineSprites[relationship][size] ?? Sprites.MotherlodeNeutralSmall;
 };

@@ -24,7 +24,7 @@ export class ShardAsteroid extends BaseAsteroid {
     this.setScale(0.75);
   }
 
-  spawn() {
+  override spawn() {
     super.spawn();
     this.setActive(true).setVisible(true);
     return this;

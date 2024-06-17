@@ -233,7 +233,7 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     return this;
   }
 
-  setActive(value: boolean): this {
+  override setActive(value: boolean): this {
     if (value) {
       if (!this.paused) this.rotationTween.play();
     } else {
@@ -245,13 +245,13 @@ export class FleetsContainer extends Phaser.GameObjects.Container {
     return this;
   }
 
-  update() {
+  override update() {
     if (this.inOrbitView) return;
 
     this.setScale(1 / this._scene.camera.phaserCamera.zoom);
   }
 
-  destroy() {
+  override destroy() {
     this.clearOrbit(true);
     this.rotationTween.destroy();
     super.destroy();

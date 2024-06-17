@@ -9,7 +9,6 @@ export const setupKeybinds = (scene: PrimodiumScene, core: Core) => {
     network: { world },
   } = core;
   const mainbaseKeybind = scene.input.addListener("Base", () => {
-    //TODO - fix converting to entity
     const selectedRockEntity = tables.SelectedRock.get()?.value;
     if (!selectedRockEntity) return;
     const mainBase = tables.Home.get(selectedRockEntity) as Entity | undefined;

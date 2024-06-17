@@ -79,7 +79,7 @@ export class BuildingConstruction extends Phaser.GameObjects.Container implement
     return this.spawned;
   }
 
-  destroy() {
+  override destroy() {
     this._scene.audio.get("Build", "sfx")?.stop();
 
     this._scene.objects.constructionBuilding.remove(this.id);

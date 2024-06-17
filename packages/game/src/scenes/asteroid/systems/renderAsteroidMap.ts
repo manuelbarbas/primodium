@@ -20,7 +20,7 @@ export const renderAsteroidMap = (scene: PrimodiumScene, core: Core) => {
 
   tables.ActiveRock.watch({
     world: systemsWorld,
-    onUpdate: ({ properties: { current, prev } }) => {
+    onChange: ({ properties: { current, prev } }) => {
       if (current?.value === prev?.value) return;
 
       const activeRock = current?.value;
@@ -59,7 +59,7 @@ export const renderAsteroidMap = (scene: PrimodiumScene, core: Core) => {
 
   tables.Level.watch({
     world: systemsWorld,
-    onUpdate: ({ entity }) => {
+    onChange: ({ entity }) => {
       const activeRock = tables.ActiveRock.get()?.value;
       if (!activeRock || activeRock !== entity) return;
 

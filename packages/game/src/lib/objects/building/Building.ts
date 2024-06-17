@@ -99,7 +99,7 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
     return this;
   }
 
-  setActive(active: boolean) {
+  override setActive(active: boolean) {
     if (active) {
       this.setTint(0xffffff);
       this.anims.resume();
@@ -190,7 +190,7 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
     this.destroy();
   }
 
-  destroy() {
+  override destroy() {
     this._scene.objects.building.remove(this.id);
     super.destroy();
   }

@@ -19,18 +19,18 @@ export const renderShardAsteroids = (scene: PrimodiumScene, core: Core) => {
   };
 
   $query(
-    systemsWorld,
     {
       with: [tables.ShardAsteroid, tables.Position],
     },
     {
+      world: systemsWorld,
       onEnter: ({ entity }) => {
         const coord = tables.Position.get(entity);
         if (!coord) return;
 
         renderShardAsteroid({ scene, entity, coord, tables, addEventHandlers: true });
       },
-      onChange: ({ entity, table }) => {
+      onUpdate: ({ entity, table }) => {
         if (table.id === tables.Position.id) return;
         const coord = tables.Position.get(entity);
 

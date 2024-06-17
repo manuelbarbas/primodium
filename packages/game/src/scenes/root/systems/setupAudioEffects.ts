@@ -12,7 +12,7 @@ export const setupAudioEffects = (scene: PrimodiumScene, core: Core) => {
 
   tables.HoverEntity.watch({
     world: systemsWorld,
-    onUpdate: ({ properties: { current } }) => {
+    onChange: ({ properties: { current } }) => {
       const entity = current?.value;
       if (!entity) return;
 

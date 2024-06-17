@@ -20,7 +20,7 @@ export const renderBuilding = (scene: PrimodiumScene, core: Core) => {
 
   tables.ActiveRock.watch({
     world: systemsWorld,
-    onUpdate: ({ properties: { current, prev } }) => {
+    onChange: ({ properties: { current, prev } }) => {
       if (current?.value === prev?.value) return;
 
       const activeRock = current?.value;
@@ -160,7 +160,7 @@ export const renderBuilding = (scene: PrimodiumScene, core: Core) => {
 
       tables.SelectedBuilding.watch({
         world: spectateWorld,
-        onUpdate: ({ properties: { current, prev } }) => {
+        onChange: ({ properties: { current, prev } }) => {
           if (current?.value === prev?.value) return;
 
           const newBuilding = objects.building.get(current?.value as Entity);
@@ -178,7 +178,7 @@ export const renderBuilding = (scene: PrimodiumScene, core: Core) => {
       $query(positionQuery, {
         world: systemsWorld,
         onEnter: render,
-        onChange: ({ entity, table }) => {
+        onUpdate: ({ entity, table }) => {
           render({ entity, showLevelAnimation: table.id === tables.Level.id });
         },
         onExit: ({ entity }) => {

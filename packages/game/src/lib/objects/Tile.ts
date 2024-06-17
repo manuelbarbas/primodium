@@ -24,7 +24,7 @@ export class Tile extends Phaser.GameObjects.Rectangle {
     return this;
   }
 
-  dispose() {
+  override destroy() {
     this.destroy();
   }
 }

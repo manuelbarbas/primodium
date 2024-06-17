@@ -21,7 +21,7 @@ export class PrimaryAsteroid extends BaseAsteroid {
     this.asteroidLabel.setBaseScale(0.9);
   }
 
-  spawn() {
+  override spawn() {
     super.spawn();
     return this;
   }

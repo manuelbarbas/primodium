@@ -26,7 +26,7 @@ export class AsteroidMap {
 
   drawMap(maxLevel: bigint) {
     this.asteroidTiledMap?.destroy();
-    this.asteroidTiledMap = this.scene.tiled.render(MaxLevelToTilemap[Number(maxLevel)]);
+    this.asteroidTiledMap = this.scene.tiled.render(MaxLevelToTilemap[Number(maxLevel)]!);
     return this;
   }
 

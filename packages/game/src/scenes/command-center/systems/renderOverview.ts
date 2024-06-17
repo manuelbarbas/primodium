@@ -21,7 +21,7 @@ export const renderOverview = (scene: PrimodiumScene, core: Core) => {
   //render selected rock and its fleets
   tables.SelectedRock.watch({
     world: systemsWorld,
-    onUpdate: ({ properties: { current, prev } }) => {
+    onChange: ({ properties: { current, prev } }) => {
       const entity = current?.value;
       const prevEntity = prev?.value;
 
@@ -75,7 +75,7 @@ export const renderOverview = (scene: PrimodiumScene, core: Core) => {
   //render battle target selection
   tables.BattleTarget.watch({
     world: systemsWorld,
-    onUpdate: ({ properties: { current, prev } }) => {
+    onChange: ({ properties: { current, prev } }) => {
       const entity = current?.value;
       const prevEntity = prev?.value;
 
@@ -108,7 +108,7 @@ export const renderOverview = (scene: PrimodiumScene, core: Core) => {
   //render stances
   tables.FleetStance.watch({
     world: systemsWorld,
-    onUpdate: ({ entity, properties: { current } }) => {
+    onChange: ({ entity, properties: { current } }) => {
       const stance = current?.stance;
 
       const asteroid = tables.FleetMovement.get(entity)?.destination;
@@ -137,7 +137,7 @@ export const renderOverview = (scene: PrimodiumScene, core: Core) => {
   //update orbiting fleets
   tables.FleetMovement.watch({
     world: systemsWorld,
-    onUpdate: ({ entity, properties: { current: newMovement, prev: oldMovement } }) => {
+    onChange: ({ entity, properties: { current: newMovement, prev: oldMovement } }) => {
       const selectedRock = tables.SelectedRock.get()?.value;
 
       if (selectedRock !== newMovement?.destination && selectedRock !== oldMovement?.destination) return;
@@ -176,7 +176,7 @@ export const renderOverview = (scene: PrimodiumScene, core: Core) => {
   //handle fleets in transit
   tables.Time.watch({
     world: systemsWorld,
-    onUpdate: ({ properties: { current } }) => {
+    onChange: ({ properties: { current } }) => {
       const now = current?.value ?? 0n;
 
       transitsToUpdate.forEach((transit) => {
@@ -205,7 +205,7 @@ export const renderOverview = (scene: PrimodiumScene, core: Core) => {
   //handle fleet emtpy updates
   tables.IsFleetEmpty.watch({
     world: systemsWorld,
-    onUpdate: ({ entity, properties: { current } }) => {
+    onChange: ({ entity, properties: { current } }) => {
       const fleetObj = objects.fleet.get(entity);
       const isEmpty = !!current?.value;
 

@@ -120,7 +120,7 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
   /* ---------------------------------- OWNER --------------------------------- */
   tables.OwnedBy.watch({
     world: systemsWorld,
-    onUpdate: ({ entity, properties: { current } }) => {
+    onChange: ({ entity, properties: { current } }) => {
       const scenesToUpdate = _update(entity);
       if (!scenesToUpdate) return;
 
@@ -137,7 +137,7 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
   /* ---------------------------------- LEVEL --------------------------------- */
   tables.Level.watch({
     world: systemsWorld,
-    onUpdate: ({ entity, properties: { current } }) => {
+    onChange: ({ entity, properties: { current } }) => {
       const scenesToUpdate = _update(entity);
       if (!scenesToUpdate) return;
 
@@ -155,7 +155,7 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
   // but this case is handled in the below system)
   tables.PlayerAlliance.watch({
     world: systemsWorld,
-    onUpdate: ({ entity, properties: { current } }) => {
+    onChange: ({ entity, properties: { current } }) => {
       const ownedAsteroids = tables.OwnedBy.getAllWith({ value: entity });
 
       for (const asteroid of ownedAsteroids) {
@@ -175,7 +175,7 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
   // on visibility change, this is only for the live updates to currently visible asteroids
   tables.Alliance.watch({
     world: systemsWorld,
-    onUpdate: ({ entity, properties: { current } }) => {
+    onChange: ({ entity, properties: { current } }) => {
       if (!current) return;
 
       const allianceMembers = tables.PlayerAlliance.getAllWith({ alliance: entity });

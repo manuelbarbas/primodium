@@ -16,7 +16,7 @@ export const modeSystem = (game: GlobalApi, core: Core) => {
 
   tables.SelectedMode.watch({
     world: systemsWorld,
-    onUpdate: ({ properties: { current, prev } }) => {
+    onChange: ({ properties: { current, prev } }) => {
       const mode = current?.value;
       const prevMode = prev?.value;
 

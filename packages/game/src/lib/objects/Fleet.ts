@@ -47,7 +47,7 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
 
     this.fleetImage.setScale(1).setInteractive().disableInteractive();
     this.frames = this.scene.anims.get(Animations.FleetPlayer).frames;
-    this.currentRotationFrame = this.frames[0].textureFrame;
+    this.currentRotationFrame = this.frames[0]!.textureFrame;
     this.setSize(this.fleetImage.width, this.fleetImage.height);
 
     // Create particles
@@ -75,7 +75,7 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
     return this;
   }
 
-  setActive(value: boolean): this {
+  override setActive(value: boolean): this {
     if (value) {
       this.fleetImage.setInteractive();
       //set all objects to active
@@ -86,7 +86,7 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
     return super.setActive(value);
   }
 
-  setAngle(degrees?: number): this {
+  override setAngle(degrees?: number): this {
     //normalize angle
     let angle = (degrees ?? 0) % 360;
     if (angle < 0) angle += 360;
@@ -103,7 +103,7 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
     return this.angle + this._getRotationFrameOffset();
   }
 
-  setRotation(radians?: number | undefined): this {
+  override setRotation(radians?: number | undefined): this {
     this.setAngle(Phaser.Math.RadToDeg(radians ?? 0));
 
     return this;
@@ -366,7 +366,7 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
       .play();
   }
 
-  destroy(anim = false) {
+  override destroy(anim = false) {
     if (!anim) {
       this._scene.objects.fleet.remove(this.id);
       this.laser?.destroy();
@@ -401,7 +401,7 @@ export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGam
   private _setRotationFrame(angle: number) {
     const segmentWidth = 360 / this.frames.length;
     const index = Math.floor(((angle + segmentWidth / 2) % 360) / segmentWidth);
-    const frame = this.frames[index].textureFrame;
+    const frame = this.frames[index]!.textureFrame;
 
     if (this.currentRotationFrame === frame) return this;
 

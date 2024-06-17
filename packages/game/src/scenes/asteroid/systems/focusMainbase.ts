@@ -20,6 +20,6 @@ export const focusMainbase = (scene: PrimodiumScene, core: Core) => {
 
   tables.ActiveRock.watch({
     world: systemsWorld,
-    onUpdate: handleMove,
+    onChange: handleMove,
   });
 };

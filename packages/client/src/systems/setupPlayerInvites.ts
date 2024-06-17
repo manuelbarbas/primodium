@@ -1,14 +1,13 @@
-import { Core, entityToPlayerName } from "@primodiumxyz/core";
+import { Core } from "@primodiumxyz/core";
 import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { decodeEntity } from "@primodiumxyz/reactive-tables/utils";
 import { EAllianceRole } from "contracts/config/enums";
-import { Hex, hexToString, padHex, zeroAddress } from "viem";
+import { Hex, padHex, zeroAddress } from "viem";
 
 export function setupInvitations(core: Core): void {
   const {
     network: { world },
     tables,
-    utils,
   } = core;
 
   const systemWorld = namespaceWorld(world, "clientSystems");
@@ -16,7 +15,7 @@ export function setupInvitations(core: Core): void {
 
   tables.AllianceInvitation.watch({
     world: systemWorld,
-    onUpdate: ({ entity, properties: { current } }) => {
+    onChange: ({ entity, properties: { current } }) => {
       const { alliance, entity: player } = decodeEntity(tables.AllianceInvitation.metadata.abiKeySchema, entity);
 
       if (current?.inviter === padHex(zeroAddress, { size: 32 })) {
@@ -38,7 +37,7 @@ export function setupInvitations(core: Core): void {
 
   tables.AllianceJoinRequest.watch({
     world: systemWorld,
-    onUpdate: ({ entity, properties: { current } }) => {
+    onChange: ({ entity, properties: { current } }) => {
       const { alliance, entity: player } = decodeEntity(tables.AllianceJoinRequest.metadata.abiKeySchema, entity);
 
       if (!current?.timeStamp) {
@@ -46,7 +45,7 @@ export function setupInvitations(core: Core): void {
         if (player !== playerEntity) return;
 
         // Notify the player about the outcome
-        const allianceName = utils.getAllianceName(alliance as Entity);
+        // const allianceName = utils.getAllianceName(alliance as Entity);
         if (tables.PlayerAlliance.get(playerEntity)?.alliance === alliance) {
           //TODO
           // scene.notify("success", `You have been accepted into [${allianceName}]!`);
@@ -72,7 +71,7 @@ export function setupInvitations(core: Core): void {
         alliance,
       }).filter((p) => tables.PlayerAlliance.get(p)?.role !== EAllianceRole.Member);
       if (playerEntity && officers.includes(playerEntity)) {
-        const playerName = entityToPlayerName(player as Entity);
+        // const playerName = entityToPlayerName(player as Entity);
         //TODO
         // scene.notify("info", `${playerName} has requested to join the alliance`);
       }
@@ -81,7 +80,7 @@ export function setupInvitations(core: Core): void {
 
   tables.PlayerInvite.watch({
     world: systemWorld,
-    onUpdate: ({ entity, properties: { current } }) => {
+    onChange: ({ entity, properties: { current } }) => {
       if (!current) return;
 
       if (current?.player === padHex(zeroAddress, { size: 32 })) {
@@ -97,7 +96,7 @@ export function setupInvitations(core: Core): void {
 
       if (!inviteAlliance || invite?.target !== playerEntity) return;
 
-      const allianceName = hexToString(inviteAlliance, { size: 32 });
+      // const allianceName = hexToString(inviteAlliance, { size: 32 });
 
       //TODO
       // scene.notify("info", `You have been invited to join [${allianceName}]`);

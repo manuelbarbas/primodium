@@ -36,9 +36,9 @@ export const renderAsteroids = (scene: PrimodiumScene, core: Core) => {
   });
 
   $query(
-    systemsWorld,
     { with: [tables.Asteroid, tables.Position] },
     {
+      world: systemsWorld,
       onEnter: ({ entity }) => {
         const coord = tables.Position.get(entity);
         const asteroidData = tables.Asteroid.get(entity);

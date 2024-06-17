@@ -101,7 +101,7 @@ export const renderFleets = (scene: PrimodiumScene, core: Core) => {
   //render fleets
   tables.FleetMovement.watch({
     world: systemsWorld,
-    onUpdate: ({ entity, properties: { current: newMovement, prev: oldMovement } }) => {
+    onChange: ({ entity, properties: { current: newMovement, prev: oldMovement } }) => {
       // if this fleet was in the spawn queue for the previous asteroid, remove it
       if (oldMovement && spawnQueue.has(oldMovement.destination as Entity)) {
         const fleets = spawnQueue.get(oldMovement.destination as Entity);
@@ -138,7 +138,7 @@ export const renderFleets = (scene: PrimodiumScene, core: Core) => {
   //handle updating fleets in transit
   tables.Time.watch({
     world: systemsWorld,
-    onUpdate: ({ properties: { current } }) => {
+    onChange: ({ properties: { current } }) => {
       const now = current?.value ?? 0n;
 
       transitsToUpdate.forEach((transit) => {
@@ -173,7 +173,7 @@ export const renderFleets = (scene: PrimodiumScene, core: Core) => {
   //render stances
   tables.FleetStance.watch({
     world: systemsWorld,
-    onUpdate: ({ entity, properties: { current } }) => {
+    onChange: ({ entity, properties: { current } }) => {
       const stance = current?.stance;
 
       const asteroid = tables.FleetMovement.get(entity)?.destination as Entity | undefined;
@@ -203,7 +203,7 @@ export const renderFleets = (scene: PrimodiumScene, core: Core) => {
   //handle fleet empty updates
   tables.IsFleetEmpty.watch({
     world: systemsWorld,
-    onUpdate: ({ entity, properties: { current } }) => {
+    onChange: ({ entity, properties: { current } }) => {
       const fleetObj = objects.fleet.get(entity);
       const isEmpty = !!current?.value;
 

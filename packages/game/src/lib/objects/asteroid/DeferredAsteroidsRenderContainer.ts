@@ -25,7 +25,7 @@ export class DeferredAsteroidsRenderContainer extends DeferredRenderContainer<Ba
     super({ ...args, objectApiType: "asteroid" });
   }
 
-  add(entity: Entity, coord: Coord, spawnArgs: AsteroidSpawnArgs) {
+  override add(entity: Entity, coord: Coord, spawnArgs: AsteroidSpawnArgs) {
     super.add(entity, coord, spawnArgs);
 
     // register the fleets container so the asteroid can grab it when spawning
@@ -33,7 +33,7 @@ export class DeferredAsteroidsRenderContainer extends DeferredRenderContainer<Ba
     this.fleetsContainers.set(entity, new FleetsContainer(this._scene, { x: pixelCoord.x, y: -pixelCoord.y }));
   }
 
-  async spawn(entity: Entity) {
+  override async spawn(entity: Entity) {
     const asteroid = await super.spawn(entity);
     if (asteroid) this.asteroids.set(entity, asteroid);
     return asteroid;

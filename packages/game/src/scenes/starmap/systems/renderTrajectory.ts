@@ -19,7 +19,7 @@ export const renderTrajectory = (scene: PrimodiumScene, core: Core) => {
 
   tables.HoverEntity.watch({
     world: systemsWorld,
-    onUpdate: ({ properties: { current } }) => {
+    onChange: ({ properties: { current } }) => {
       const entity = current?.value;
       const origin = tables.FleetMovement.get(entity)?.destination;
       const destination = tables.SelectedRock.get()?.value;

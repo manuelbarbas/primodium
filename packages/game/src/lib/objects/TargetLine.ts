@@ -32,11 +32,11 @@ export class TargetLine extends Phaser.GameObjects.Line implements IPrimodiumGam
     this.setTo(start.x, start.y, end.x, end.y);
   }
 
-  update() {
+  override update() {
     this.setLineWidth(2 / this._scene.phaserScene.cameras.main.zoom);
   }
 
-  destroy() {
+  override destroy() {
     super.destroy();
   }
 }

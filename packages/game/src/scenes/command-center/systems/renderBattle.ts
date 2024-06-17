@@ -102,7 +102,7 @@ export const renderBattle = (scene: PrimodiumScene, core: Core) => {
 
   tables.BattleResult.watch({
     world: systemsWorld,
-    onUpdate: ({ entity }) => {
+    onChange: ({ entity }) => {
       const now = tables.Time.get()?.value ?? 0n;
 
       const battle = tables.Battle.get(entity);

@@ -10,7 +10,7 @@ export function setupMoveNotifications(core: Core) {
 
   tables.FleetMovement.watch({
     world: systemWorld,
-    onUpdate: ({ entity, properties: { current } }) => {
+    onChange: ({ entity, properties: { current } }) => {
       const ownerRock = tables.OwnedBy.get(entity)?.value as Entity | undefined;
       const ownerRockOwner = tables.OwnedBy.get(ownerRock)?.value;
       const player = tables.Account.get()?.value;
@@ -25,9 +25,9 @@ export function setupMoveNotifications(core: Core) {
       if (arrival.sendTime + 30n < now || arrival.arrivalTime - 5n) {
         return;
       }
-      const minutes = (arrival.arrivalTime - now) / 60n;
-      const seconds = (arrival.arrivalTime - now) % 60n;
-      const output = minutes > 0 ? `${minutes} minute(s)` : `${seconds} seconds`;
+      // const minutes = (arrival.arrivalTime - now) / 60n;
+      // const seconds = (arrival.arrivalTime - now) % 60n;
+      // const output = minutes > 0 ? `${minutes} minute(s)` : `${seconds} seconds`;
 
       if (arrival.arrivalTime > now) {
         //TODO
@@ -40,7 +40,7 @@ export function setupMoveNotifications(core: Core) {
 
   tables.Time.watch({
     world: systemWorld,
-    onUpdate: ({ properties: { current } }) => {
+    onChange: ({ properties: { current } }) => {
       const now = current?.value ?? 0n;
 
       fleetTransitQueue.forEach((arrivalTime, entityId) => {
@@ -48,7 +48,7 @@ export function setupMoveNotifications(core: Core) {
 
         if (!arrival || now == 0n) return;
 
-        const destination = tables.Position.get(arrival.destination as Entity);
+        // const destination = tables.Position.get(arrival.destination as Entity);
         if (now > arrivalTime) {
           //TODO
           // scene.notify("info", `Your fleet has arrived at [${destination?.x ?? 0}, ${destination?.y ?? 0}].`);

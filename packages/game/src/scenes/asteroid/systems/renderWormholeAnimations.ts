@@ -17,7 +17,7 @@ export const renderWormholeAnimations = (scene: PrimodiumScene, core: Core) => {
 
   tables.ActiveRock.watch({
     world: systemsWorld,
-    onUpdate: ({ properties: { current } }) => {
+    onChange: ({ properties: { current } }) => {
       const activeRock = current?.value;
       if (!activeRock) return;
       const mainBase = tables.Home.get(activeRock)?.value as Entity | undefined;
@@ -32,7 +32,7 @@ export const renderWormholeAnimations = (scene: PrimodiumScene, core: Core) => {
       tables.CooldownEnd.watch(
         {
           world: wormholeWorld,
-          onUpdate: ({ entity, properties: { current } }) => {
+          onChange: ({ entity, properties: { current } }) => {
             if (entity !== mainBase) return;
             const time = tables.Time.get(entity)?.value ?? 0n;
             const newCooldown = current?.value ?? 0n;
@@ -62,7 +62,7 @@ export const renderWormholeAnimations = (scene: PrimodiumScene, core: Core) => {
       tables.Time.watch(
         {
           world: wormholeWorld,
-          onUpdate: ({ properties: { current } }) => {
+          onChange: ({ properties: { current } }) => {
             const resource = tables.WormholeResource.get()?.resource;
             if (resource) updateResource(resource);
             powerUp(current?.value ?? 0n);

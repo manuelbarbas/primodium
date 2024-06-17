@@ -28,11 +28,12 @@ export const renderHoverTile = (scene: PrimodiumScene, core: Core) => {
     hoverTile.setCoordPosition(tileCoord);
   };
 
-  $query(systemsWorld, query, {
+  $query(query, {
+    world: systemsWorld,
     onEnter: render,
-    onChange: render,
+    onUpdate: render,
     onExit: () => {
-      hoverTile?.dispose();
+      hoverTile?.destroy();
       hoverTile = undefined;
     },
   });
