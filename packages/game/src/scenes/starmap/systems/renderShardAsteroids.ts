@@ -2,9 +2,9 @@ import { Core } from "@primodiumxyz/core";
 import { Coord } from "@primodiumxyz/engine/types";
 import { $query, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 
-import { PrimodiumScene } from "@/types";
-import { renderShardAsteroid } from "@/lib/render/renderShardAsteroid";
-import { ShardAsteroid } from "@/lib/objects/asteroid/ShardAsteroid";
+import { PrimodiumScene } from "@game/types";
+import { renderShardAsteroid } from "@game/lib/render/renderShardAsteroid";
+import { ShardAsteroid } from "@game/lib/objects/asteroid/ShardAsteroid";
 
 export const renderShardAsteroids = (scene: PrimodiumScene, core: Core) => {
   const {

@@ -9,7 +9,7 @@ import { Maintenance } from "./screens/Maintenance";
 import { createCore } from "@primodiumxyz/core";
 import { AccountClientProvider, CoreProvider } from "@primodiumxyz/core/react";
 import { getCoreConfig } from "@/config/getCoreConfig";
-import { usePersistentStore } from "@/game/stores/PersistentStore";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { Hex } from "viem";
 import { privateKeyToAddress } from "viem/accounts";
 

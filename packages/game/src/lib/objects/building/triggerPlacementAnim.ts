@@ -2,7 +2,7 @@ import { Coord } from "@primodiumxyz/engine/types";
 import { tileCoordToPixelCoord } from "@primodiumxyz/engine/lib/util/coords";
 import { Dimensions } from "@primodiumxyz/core";
 
-import { PrimodiumScene } from "@/types";
+import { PrimodiumScene } from "@game/types";
 import { Entity } from "@primodiumxyz/reactive-tables";
 
 export const triggerPlacementAnim = (

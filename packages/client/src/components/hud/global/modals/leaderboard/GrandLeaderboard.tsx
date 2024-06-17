@@ -1,26 +1,24 @@
 import { Button } from "@/components/core/Button";
 import { CrownRank } from "@/components/hud/global/modals/leaderboard/RankCrown";
-import { getAllianceName } from "@/util/alliance";
-import { getFinalLeaderboardData } from "@/util/leaderboard/getFinalLeaderboardData";
-import { Entity } from "@primodiumxyz/reactive-tables";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
 import { useEffect, useState } from "react";
 import { FaSync } from "react-icons/fa";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
-import { SecondaryCard } from "src/components/core/Card";
-import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { useMud } from "src/hooks";
-import { components } from "src/network/components";
-import { formatNumber } from "src/util/number";
-import { rankToScore } from "src/util/score";
+import { SecondaryCard } from "@/components/core/Card";
+import { AccountDisplay } from "@/components/shared/AccountDisplay";
+import { useCore } from "@primodiumxyz/core/react";
+import { formatNumber, rankToScore } from "@primodiumxyz/core";
 
 export const GrandLeaderboard = ({ alliance = false }: { alliance?: boolean }) => {
-  const { playerAccount } = useMud();
-  const [data, setData] = useState(getFinalLeaderboardData(playerAccount.entity, alliance));
+  const core = useCore();
+  const { tables, utils } = core;
+  const playerEntity = tables.Account.get()?.value ?? defaultEntity;
+  const [data, setData] = useState(utils.getFinalLeaderboardData(playerEntity, alliance));
   const [showRefresh, setShowRefresh] = useState(false);
 
-  const refresh = () => setData(getFinalLeaderboardData(playerAccount.entity, alliance));
+  const refresh = () => setData(utils.getFinalLeaderboardData(playerEntity, alliance));
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -29,9 +27,7 @@ export const GrandLeaderboard = ({ alliance = false }: { alliance?: boolean }) =
     return () => clearInterval(interval);
   });
 
-  const entity = alliance
-    ? (components.PlayerAlliance.get(playerAccount.entity)?.alliance as Entity)
-    : playerAccount.entity;
+  const entity = alliance ? (tables.PlayerAlliance.get(playerEntity)?.alliance as Entity) : playerEntity;
 
   if (!data || !data.allPlayers.length)
     return (
@@ -116,10 +112,10 @@ export const GrandLeaderboardItem = ({
   hideRanks?: boolean;
   special?: boolean;
 }) => {
-  const {
-    playerAccount: { entity: playerEntity },
-  } = useMud();
-  const entity = alliance ? (components.PlayerAlliance.get(playerEntity)?.alliance as Entity) : playerEntity;
+  const core = useCore();
+  const { tables, utils } = core;
+  const playerEntity = tables.Account.get()?.value ?? defaultEntity;
+  const entity = alliance ? (tables.PlayerAlliance.get(playerEntity)?.alliance as Entity) : playerEntity;
 
   return (
     <SecondaryCard
@@ -136,7 +132,11 @@ export const GrandLeaderboardItem = ({
       </div>
       <div className="col-span-3 flex gap-1 justify-between items-center">
         <div className="flex items-center gap-1">
-          {alliance ? `[${getAllianceName(player, true)}]` : <AccountDisplay noColor={!special} player={player} />}
+          {alliance ? (
+            `[${utils.getAllianceName(player, true)}]`
+          ) : (
+            <AccountDisplay noColor={!special} player={player} />
+          )}
           {player === entity && <p className="text-accent">(You)</p>}
         </div>
       </div>

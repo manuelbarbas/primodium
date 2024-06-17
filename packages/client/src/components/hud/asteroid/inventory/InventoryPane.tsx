@@ -2,7 +2,7 @@ import { Button } from "@/components/core/Button";
 import { Card } from "@/components/core/Card";
 import { AllResourceLabels } from "@/components/hud/asteroid/inventory/resources/AllResourceLabels";
 import { AllUtilityLabels } from "@/components/hud/asteroid/inventory/resources/AllUtilityLabels";
-import { usePersistentStore } from "@/game/stores/PersistentStore";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { useGame } from "@/hooks/useGame";
 import { useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";

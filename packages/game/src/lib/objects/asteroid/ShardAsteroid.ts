@@ -2,10 +2,10 @@ import { Animations, Assets, Sprites } from "@primodiumxyz/assets";
 import { Coord } from "@primodiumxyz/engine/types";
 import { Entity } from "@primodiumxyz/reactive-tables";
 
-import { PrimodiumScene } from "@/types";
-import { BaseAsteroid } from "@/lib/objects/asteroid/BaseAsteroid";
-import { DepthLayers } from "@/lib/constants/common";
-import { LODs } from "@/lib/objects/asteroid/helpers";
+import { PrimodiumScene } from "@game/types";
+import { BaseAsteroid } from "@game/lib/objects/asteroid/BaseAsteroid";
+import { DepthLayers } from "@game/lib/constants/common";
+import { LODs } from "@game/lib/objects/asteroid/helpers";
 
 export class ShardAsteroid extends BaseAsteroid {
   constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord }) {

@@ -3,13 +3,13 @@ import { Coord } from "@primodiumxyz/engine/types";
 import { Assets } from "@primodiumxyz/assets";
 import { Dimensions, EntityType } from "@primodiumxyz/core";
 
-import { PrimodiumScene } from "@/types";
-import { DepthLayers } from "@/lib/constants/common";
-import { IPrimodiumGameObject } from "@/lib/objects/interfaces";
-import { Building } from "@/lib/objects/building";
-import { EntityTypeToResourceSprites } from "@/lib/mappings";
-import { getWormholeAssetKeyPair } from "@/lib/objects/building/wormholeAnimations";
-import { WormholeStates } from "@/lib/objects/building/wormholeAnimations";
+import { PrimodiumScene } from "@game/types";
+import { DepthLayers } from "@game/lib/constants/common";
+import { IPrimodiumGameObject } from "@game/lib/objects/interfaces";
+import { Building } from "@game/lib/objects/building";
+import { EntityTypeToResourceSprites } from "@game/lib/mappings";
+import { getWormholeAssetKeyPair } from "@game/lib/objects/building/wormholeAnimations";
+import { WormholeStates } from "@game/lib/objects/building/wormholeAnimations";
 import { Entity } from "@primodiumxyz/reactive-tables";
 
 export class WormholeBase extends Building implements IPrimodiumGameObject {

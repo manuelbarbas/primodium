@@ -1,4 +1,4 @@
-import { ampli } from "src/ampli";
+import { ampli } from "@/ampli";
 import { defaultEntity } from "@primodiumxyz/reactive-tables";
 
 import { parseReceipt } from "@/contractCalls/parseReceipt";

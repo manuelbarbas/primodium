@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import { Button } from "src/components/core/Button";
-import { EntityType } from "src/util/constants";
+import { Button } from "@/components/core/Button";
 import { GrandLeaderboard } from "./GrandLeaderboard";
 import { SubLeaderboard } from "./SubLeaderboard";
 import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
+import { EntityType } from "@primodiumxyz/core";
 
 export const Leaderboards = ({
   activeTab,

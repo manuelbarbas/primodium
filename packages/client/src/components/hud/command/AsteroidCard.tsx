@@ -1,7 +1,7 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { IconLabel } from "src/components/core/IconLabel";
-import { Loader } from "src/components/core/Loader";
-import { AccountDisplay } from "src/components/shared/AccountDisplay";
+import { IconLabel } from "@/components/core/IconLabel";
+import { Loader } from "@/components/core/Loader";
+import { AccountDisplay } from "@/components/shared/AccountDisplay";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { SecondaryCard } from "@/components/core/Card";
 import { AsteroidStats } from "@/components/hud/command/overview/AsteroidStatsAndActions";

@@ -1,4 +1,4 @@
-import { ModeToSceneKey } from "@/game/lib/mappings";
+import { ModeToSceneKey } from "@primodiumxyz/game";
 import { useGame } from "@/hooks/useGame";
 import { useCore } from "@primodiumxyz/core/react";
 import { lerp, Mode } from "@primodiumxyz/core";

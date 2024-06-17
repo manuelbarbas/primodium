@@ -1,8 +1,8 @@
 import { Core } from "@primodiumxyz/core";
 import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 
-import { TargetLine } from "@/lib/objects/TargetLine";
-import { PrimodiumScene } from "@/types";
+import { TargetLine } from "@game/lib/objects/TargetLine";
+import { PrimodiumScene } from "@game/types";
 
 export const renderTrajectory = (scene: PrimodiumScene, core: Core) => {
   const {

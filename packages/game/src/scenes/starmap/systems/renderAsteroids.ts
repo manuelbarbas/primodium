@@ -1,10 +1,10 @@
 import { Core, EntityType } from "@primodiumxyz/core";
 import { $query, namespaceWorld } from "@primodiumxyz/reactive-tables";
 
-import { PrimodiumScene } from "@/types";
-import { DeferredAsteroidsRenderContainer } from "@/lib/objects/asteroid/DeferredAsteroidsRenderContainer";
-import { renderAsteroid } from "@/lib/render/renderAsteroid";
-import { initializeSecondaryAsteroids } from "@/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
+import { PrimodiumScene } from "@game/types";
+import { DeferredAsteroidsRenderContainer } from "@game/lib/objects/asteroid/DeferredAsteroidsRenderContainer";
+import { renderAsteroid } from "@game/lib/render/renderAsteroid";
+import { initializeSecondaryAsteroids } from "@game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
 
 export const renderAsteroids = (scene: PrimodiumScene, core: Core) => {
   const {

@@ -1,6 +1,6 @@
 import { EObjectives } from "contracts/config/enums";
-import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
-import { ampli } from "src/ampli";
+import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
+import { ampli } from "@/ampli";
 import { Core, AccountClient, SPEED_SCALE, ExecuteFunctions } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
 

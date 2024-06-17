@@ -1,15 +1,15 @@
 import { Button } from "@/components/core/Button";
 import { BuildingImageFromType } from "@/components/shared/BuildingImage";
-import { KeyNames, KeybindActionKeys } from "@game/lib/constants/keybinds";
 import { Action, EntityType } from "@primodiumxyz/core";
 import { useCore, useHasEnoughResources } from "@primodiumxyz/core/react";
 import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
 import { EMap } from "contracts/config/enums";
 import { useEffect, useMemo } from "react";
 import { FaLock } from "react-icons/fa";
-import { usePersistentStore } from "src/game/stores/PersistentStore";
-import { useGame } from "src/hooks/useGame";
+import { useGame } from "@/hooks/useGame";
 import { useShallow } from "zustand/react/shallow";
+import { KeybindActionKeys, KeyNames } from "@primodiumxyz/game";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 
 const BlueprintButton: React.FC<{
   buildingType: Entity;

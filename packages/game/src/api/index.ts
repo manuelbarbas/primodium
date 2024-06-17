@@ -1,9 +1,9 @@
 import { Core } from "@primodiumxyz/core";
 import { namespaceWorld } from "@primodiumxyz/reactive-tables";
 
-import init from "@/init";
-import { Scenes } from "@/lib/constants/common";
-import { runSystems as runCommonSystems } from "@/scenes/common/systems";
+import init from "@game/init";
+import { Scenes } from "@game/lib/constants/common";
+import { runSystems as runCommonSystems } from "@game/scenes/common/systems";
 
 export async function initGame(core: Core, version = "v1") {
   const {

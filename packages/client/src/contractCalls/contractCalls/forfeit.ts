@@ -1,5 +1,5 @@
 import { Hex } from "viem";
-import { ampli } from "src/ampli";
+import { ampli } from "@/ampli";
 import { AccountClient, Core, ExecuteFunctions } from "@primodiumxyz/core";
 import { Entity, query } from "@primodiumxyz/reactive-tables";
 import { parseReceipt } from "@/contractCalls/parseReceipt";

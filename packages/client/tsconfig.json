@@ -18,10 +18,12 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@game/*": ["./src/game/*"]
     }
   },
   "include": ["**/*.tsx", "**/*.ts", "../game-tools/src/CheatcodesList.tsx"],
   "exclude": ["node_modules", "dist"],
-  "references": [{"path": "../game"}, {"path": "../core"}, {"path": "../assets"}]
+  "references": [{"path": "../game"}, 
+    // {"path": "../core"}, composite mode does not work bc of tsup
+    {"path": "../assets"}
+  ]
 }

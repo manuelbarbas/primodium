@@ -1,5 +1,5 @@
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { Button } from "src/components/core/Button";
+import { Button } from "@/components/core/Button";
 import { useTransfer } from "@/hooks/providers/TransferProvider";
 import { cn } from "@/util/client";
 import { Card } from "@/components/core/Card";

@@ -1,7 +1,7 @@
 import { GameConfig } from "@primodiumxyz/engine/types";
 import { Pack } from "@primodiumxyz/assets";
 
-import { KEY } from "@/lib/constants/common";
+import { KEY } from "@game/lib/constants/common";
 
 const gameConfig: GameConfig = {
   key: KEY,

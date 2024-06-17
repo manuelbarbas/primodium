@@ -1,5 +1,6 @@
 import { Core } from "@primodiumxyz/core";
 import { namespaceWorld, Entity } from "@primodiumxyz/reactive-tables";
+
 export function setupMoveNotifications(core: Core) {
   const {
     tables,

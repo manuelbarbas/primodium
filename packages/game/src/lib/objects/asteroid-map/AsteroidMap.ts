@@ -1,10 +1,10 @@
 import Phaser from "phaser";
-import { MaxLevelToTilemap } from "@/lib/mappings";
+import { MaxLevelToTilemap } from "@game/lib/mappings";
 
-import { PrimodiumScene } from "@/types";
-import { Bounds, Dimensions, ResourceTile } from "@/lib/objects/asteroid-map/helpers";
-import { AsteroidBounds } from "@/lib/objects/asteroid-map/AsteroidBounds";
-import { AsteroidResources } from "@/lib/objects/asteroid-map/AsteroidResources";
+import { PrimodiumScene } from "@game/types";
+import { Bounds, Dimensions, ResourceTile } from "@game/lib/objects/asteroid-map/helpers";
+import { AsteroidBounds } from "@game/lib/objects/asteroid-map/AsteroidBounds";
+import { AsteroidResources } from "@game/lib/objects/asteroid-map/AsteroidResources";
 
 export class AsteroidMap {
   private scene: PrimodiumScene;

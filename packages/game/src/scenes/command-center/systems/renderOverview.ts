@@ -2,11 +2,11 @@ import { Core } from "@primodiumxyz/core";
 import { defaultEntity, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { EFleetStance } from "contracts/config/enums";
 
-import { renderAsteroid } from "@/lib/render/renderAsteroid";
-import { renderShardAsteroid } from "@/lib/render/renderShardAsteroid";
-import { renderFleet } from "@/lib/render/renderFleet";
-import { PrimodiumScene } from "@/types";
-import { StanceToIcon } from "@/lib/mappings";
+import { renderAsteroid } from "@game/lib/render/renderAsteroid";
+import { renderShardAsteroid } from "@game/lib/render/renderShardAsteroid";
+import { renderFleet } from "@game/lib/render/renderFleet";
+import { PrimodiumScene } from "@game/types";
+import { StanceToIcon } from "@game/lib/mappings";
 
 export const renderOverview = (scene: PrimodiumScene, core: Core) => {
   const {

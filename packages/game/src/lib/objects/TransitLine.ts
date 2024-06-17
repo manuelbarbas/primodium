@@ -3,9 +3,9 @@ import { BoundingBox } from "@primodiumxyz/engine/lib/core/StaticObjectManager";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { PixelCoord } from "@primodiumxyz/engine/types";
 
-import { PrimodiumScene } from "@/types";
+import { PrimodiumScene } from "@game/types";
 import { Fleet } from "./Fleet";
-import { TargetLine } from "@/lib/objects/TargetLine";
+import { TargetLine } from "@game/lib/objects/TargetLine";
 
 // These boxes are rendered around the line to check for collisions
 // This is a rough approximation of the line's bounding box, because we don't want to render too many boxes,

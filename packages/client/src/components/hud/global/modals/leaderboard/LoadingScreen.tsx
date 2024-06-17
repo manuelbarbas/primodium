@@ -1,5 +1,5 @@
-import { SecondaryCard } from "src/components/core/Card";
-import { Loader } from "src/components/core/Loader";
+import { SecondaryCard } from "@/components/core/Card";
+import { Loader } from "@/components/core/Loader";
 
 export const LoadingScreen = () => {
   return (

@@ -4,12 +4,12 @@ import { Assets } from "@primodiumxyz/assets";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { Dimensions } from "@primodiumxyz/core";
 
-import { PrimodiumScene } from "@/types";
-import { triggerPlacementAnim } from "@/lib/objects/building/triggerPlacementAnim";
-import { getAssetKeyPair, getUpgradeAnimation } from "@/lib/objects/building/helpers";
-import { DepthLayers } from "@/lib/constants/common";
-import { IPrimodiumGameObject } from "@/lib/objects/interfaces";
-import { isValidClick, isValidHover } from "@/lib/objects/inputGuards";
+import { PrimodiumScene } from "@game/types";
+import { triggerPlacementAnim } from "@game/lib/objects/building/triggerPlacementAnim";
+import { getAssetKeyPair, getUpgradeAnimation } from "@game/lib/objects/building/helpers";
+import { DepthLayers } from "@game/lib/constants/common";
+import { IPrimodiumGameObject } from "@game/lib/objects/interfaces";
+import { isValidClick, isValidHover } from "@game/lib/objects/inputGuards";
 
 export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGameObject {
   readonly id: Entity;

@@ -2,8 +2,8 @@ import { Core } from "@primodiumxyz/core";
 import { Coord } from "@primodiumxyz/engine/types";
 import { namespaceWorld, $query, Entity } from "@primodiumxyz/reactive-tables";
 
-import { PrimodiumScene } from "@/types";
-import { BuildingConstruction } from "@/lib/objects/building";
+import { PrimodiumScene } from "@game/types";
+import { BuildingConstruction } from "@game/lib/objects/building";
 
 const getQueuePositionString = (entity: Entity, core: Core) => {
   const { tables } = core;

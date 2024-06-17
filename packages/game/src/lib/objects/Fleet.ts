@@ -4,10 +4,10 @@ import { addCoords } from "@primodiumxyz/engine/lib/util/coords";
 import { Assets, Sprites, Animations } from "@primodiumxyz/assets";
 import { Coord } from "@primodiumxyz/engine/types";
 
-import { PrimodiumScene } from "@/types";
+import { PrimodiumScene } from "@game/types";
 import { IPrimodiumGameObject } from "./interfaces";
-import { Relationship, DepthLayers } from "@/lib/constants/common";
-import { isValidClick } from "@/lib/objects/inputGuards";
+import { Relationship, DepthLayers } from "@game/lib/constants/common";
+import { isValidClick } from "@game/lib/objects/inputGuards";
 
 export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
   readonly id: Entity;

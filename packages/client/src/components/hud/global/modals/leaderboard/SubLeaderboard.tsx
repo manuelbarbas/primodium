@@ -6,14 +6,10 @@ import { useEffect, useMemo, useState } from "react";
 import { FaSync } from "react-icons/fa";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
-import { SecondaryCard } from "src/components/core/Card";
-import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { useMud } from "src/hooks";
-import { components } from "src/network/components";
-import { getAllianceName } from "src/util/alliance";
-import { EntityType } from "src/util/constants";
-import { formatNumber, formatResourceCount } from "src/util/number";
-import { rankToScore } from "src/util/score";
+import { SecondaryCard } from "@/components/core/Card";
+import { AccountDisplay } from "@/components/shared/AccountDisplay";
+import { useCore } from "@primodiumxyz/core/react";
+import { EntityType, formatNumber, formatResourceCount, rankToScore } from "@primodiumxyz/core";
 
 type FormattedPlayerData = {
   player: Entity;
@@ -30,8 +26,10 @@ export const SubLeaderboard = ({
   alliance?: boolean;
   icon?: string;
 }) => {
-  const { playerAccount } = useMud();
-  const [data, setData] = useState(components.Leaderboard.get(leaderboard));
+  const core = useCore();
+  const { tables } = core;
+  const playerEntity = tables.Account.get()?.value;
+  const [data, setData] = useState(tables.Leaderboard.get(leaderboard));
   const [showRefresh, setShowRefresh] = useState(false);
 
   useEffect(() => {
@@ -40,10 +38,8 @@ export const SubLeaderboard = ({
     }, 1000);
     return () => clearInterval(interval);
   });
-  const refresh = () => setData(components.Leaderboard.get(leaderboard));
-  const entity = alliance
-    ? (components.PlayerAlliance.get(playerAccount.entity)?.alliance as Entity)
-    : playerAccount.entity;
+  const refresh = () => setData(tables.Leaderboard.get(leaderboard));
+  const entity = alliance ? (tables.PlayerAlliance.get(playerEntity)?.alliance as Entity) : playerEntity;
 
   const formattedData = useMemo(() => {
     const ret: { allPlayers: FormattedPlayerData[]; player?: FormattedPlayerData } = {
@@ -130,11 +126,11 @@ const LeaderboardItem = ({
   alliance?: boolean;
   special?: boolean;
 }) => {
-  const {
-    playerAccount: { entity: playerEntity },
-  } = useMud();
+  const core = useCore();
+  const { tables, utils } = core;
+  const playerEntity = tables.Account.get()?.value;
 
-  const entity = alliance ? (components.PlayerAlliance.get(playerEntity)?.alliance as Entity) : playerEntity;
+  const entity = alliance ? (tables.PlayerAlliance.get(playerEntity)?.alliance as Entity) : playerEntity;
 
   const rankSuffix = rank == 1 ? "st" : rank == 2 ? "nd" : rank == 3 ? "rd" : "th";
   return (
@@ -151,7 +147,11 @@ const LeaderboardItem = ({
       </div>
       <div className="col-span-3 flex gap-1 justify-between items-center">
         <div className="flex items-center gap-1">
-          {alliance ? `[${getAllianceName(player, true)}]` : <AccountDisplay noColor={!special} player={player} />}
+          {alliance ? (
+            `[${utils.getAllianceName(player, true)}]`
+          ) : (
+            <AccountDisplay noColor={!special} player={player} />
+          )}
           {player === entity && <p className="text-accent">(You)</p>}
         </div>
       </div>

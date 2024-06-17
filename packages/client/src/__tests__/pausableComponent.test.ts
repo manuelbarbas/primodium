@@ -1,7 +1,7 @@
 import { Type, defineComponent } from "@latticexyz/recs";
 import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { extendComponent } from "src/network/components/customComponents/ExtendedComponent";
-import { world } from "src/network/world";
+import { extendComponent } from "@/network/components/customComponents/ExtendedComponent";
+import { world } from "@/network/world";
 import { expect, test } from "vitest";
 
 const Pausable = extendComponent(defineComponent(world, { value: Type.Number }, { id: "Pause" }));

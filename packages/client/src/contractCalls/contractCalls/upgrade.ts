@@ -1,7 +1,7 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { EObjectives, EUnit } from "contracts/config/enums";
-import { ampli } from "src/ampli";
-import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
+import { ampli } from "@/ampli";
+import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 import {
   Core,
   AccountClient,

@@ -3,14 +3,14 @@ import { Coord } from "@primodiumxyz/engine/types";
 import { Assets, Sprites } from "@primodiumxyz/assets";
 import { Entity } from "@primodiumxyz/reactive-tables";
 
-import { PrimodiumScene } from "@/types";
-import { IPrimodiumGameObject } from "@/lib/objects/interfaces";
-import { FleetsContainer } from "@/lib/objects/asteroid/FleetsContainer";
-import { AsteroidLabel } from "@/lib/objects/asteroid/AsteroidLabel";
-import { isValidClick, isValidHover } from "@/lib/objects/inputGuards";
-import { DeferredAsteroidsRenderContainer } from "@/lib/objects/asteroid/DeferredAsteroidsRenderContainer";
-import { LODs } from "@/lib/objects/asteroid/helpers";
-import { DepthLayers } from "@/lib/constants/common";
+import { PrimodiumScene } from "@game/types";
+import { IPrimodiumGameObject } from "@game/lib/objects/interfaces";
+import { FleetsContainer } from "@game/lib/objects/asteroid/FleetsContainer";
+import { AsteroidLabel } from "@game/lib/objects/asteroid/AsteroidLabel";
+import { isValidClick, isValidHover } from "@game/lib/objects/inputGuards";
+import { DeferredAsteroidsRenderContainer } from "@game/lib/objects/asteroid/DeferredAsteroidsRenderContainer";
+import { LODs } from "@game/lib/objects/asteroid/helpers";
+import { DepthLayers } from "@game/lib/constants/common";
 
 interface LODConfig {
   asteroidAlpha: number;

@@ -1,5 +1,5 @@
-import { createSceneApi } from "@/api/scene";
-import { initGame } from "@/index";
+import { createSceneApi } from "@game/api/scene";
+import { initGame } from "@game/api";
 
 export type SceneApi = ReturnType<typeof createSceneApi>;
 export type PrimodiumScene = SceneApi & { runSystems?: () => void; isPrimary?: boolean };
@@ -95,3 +95,5 @@ export type PixelCoord = Coord;
 export type TileCoord = Coord;
 export type ChunkCoord = Coord;
 export type WorldCoord = Coord;
+
+export type Channel = "music" | "sfx" | "ui";

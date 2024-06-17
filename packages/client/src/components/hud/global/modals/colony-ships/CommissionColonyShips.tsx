@@ -5,7 +5,7 @@ import { UnlockSlot } from "@/components/hud/global/modals/colony-ships/UnlockSl
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import React from "react";
-import { Navigator } from "src/components/core/Navigator";
+import { Navigator } from "@/components/core/Navigator";
 import { useAccountClient, useCore, useColonySlots } from "@primodiumxyz/core/react";
 import { EntityToUnitImage } from "@/util/image";
 import { entityToRockName, EntityType, formatTime } from "@primodiumxyz/core";

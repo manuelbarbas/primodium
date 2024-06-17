@@ -16,8 +16,8 @@ import { useAccountClient, useCore, useResourceCount } from "@primodiumxyz/core/
 import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FaExchangeAlt } from "react-icons/fa";
-import { Button } from "src/components/core/Button";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { Button } from "@/components/core/Button";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 
 export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
   const { tables, utils } = useCore();

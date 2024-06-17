@@ -1,7 +1,7 @@
 import { findEntriesWithPrefix } from "@/util/localStorage";
 import { useEffect, useState } from "react";
 import { FaClipboard, FaExclamationCircle, FaEye, FaEyeSlash, FaInfoCircle, FaTimes, FaUnlink } from "react-icons/fa";
-import { copyToClipboard } from "src/util/clipboard";
+import { copyToClipboard } from "@/util/clipboard";
 import { Address, Hex } from "viem";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { Button } from "../core/Button";

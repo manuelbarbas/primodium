@@ -2,7 +2,7 @@ import { Core } from "@primodiumxyz/core";
 import { Coord } from "@primodiumxyz/engine/types";
 import { defaultEntity } from "@primodiumxyz/reactive-tables";
 
-import { PrimodiumScene } from "@/types";
+import { PrimodiumScene } from "@game/types";
 
 export const setupMouseInputs = (scene: PrimodiumScene, core: Core) => {
   const {

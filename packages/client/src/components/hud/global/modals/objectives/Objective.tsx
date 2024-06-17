@@ -3,23 +3,20 @@ import { Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
 
 import { FaGift, FaMedal, FaSpinner } from "react-icons/fa";
-import { Badge } from "src/components/core/Badge";
-import { SecondaryCard } from "src/components/core/Card";
-import { IconLabel } from "src/components/core/IconLabel";
-import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
-import { getEntityTypeName } from "src/util/common";
+import { Badge } from "@/components/core/Badge";
+import { SecondaryCard } from "@/components/core/Card";
+import { IconLabel } from "@/components/core/IconLabel";
+import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
 
-import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { components } from "src/network/components";
-import { ResourceType } from "src/util/constants";
-import { formatNumber } from "src/util/number";
-import { getRewards } from "src/util/objectives/getHasRequiredRewards";
-import { objectiveCategoryColors } from "src/util/objectives/objectiveCategoryColors";
-import { getAllObjectiveRequirements } from "src/util/objectives/objectiveRequirements";
-import { getObjective } from "src/util/objectives/objectives";
-import { getFullResourceCount } from "src/util/resource";
+import { getRewards } from "@/util/objectives/getHasRequiredRewards";
+import { objectiveCategoryColors } from "@/util/objectives/objectiveCategoryColors";
+import { getAllObjectiveRequirements } from "@/util/objectives/objectiveRequirements";
+import { getObjective } from "@/util/objectives/objectives";
 import { ClaimObjectiveButton } from "./ClaimObjectiveButton";
+import { useCore } from "@primodiumxyz/core/react";
+import { formatNumber, getEntityTypeName, ResourceType } from "@primodiumxyz/core";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
 
 export const Objective: React.FC<{
   objectiveEntity: Entity;
@@ -27,17 +24,18 @@ export const Objective: React.FC<{
   highlight?: boolean;
   claimed?: boolean;
 }> = ({ objectiveEntity, asteroidEntity, claimed, highlight = false }) => {
-  const playerEntity = components.Account.use()?.value;
-  const time = components.Time.use()?.value;
+  const core = useCore();
+  const { tables, utils } = core;
+  const playerEntity = tables.Account.use()?.value;
+  const time = tables.Time.use()?.value;
 
   const objectiveName = getEntityTypeName(objectiveEntity);
-
   const objective = getObjective(objectiveEntity);
   const description = objective?.description ?? "A Primodium objective.";
-  const rewardRecipe = getRewards(objectiveEntity);
+  const rewardRecipe = getRewards(core, objectiveEntity);
 
   const requirements = useMemo(
-    () => (playerEntity ? getAllObjectiveRequirements(playerEntity, asteroidEntity, objectiveEntity) : []),
+    () => (playerEntity ? getAllObjectiveRequirements(core, playerEntity, asteroidEntity, objectiveEntity) : []),
     [asteroidEntity, time, playerEntity, objectiveEntity]
   );
 
@@ -114,7 +112,7 @@ export const Objective: React.FC<{
               {rewardRecipe.map((resource) => {
                 let canClaim = true;
                 if (resource.type === ResourceType.Resource) {
-                  const { resourceCount, resourceStorage: maxStorage } = getFullResourceCount(
+                  const { resourceCount, resourceStorage: maxStorage } = utils.getResourceCount(
                     resource.id,
                     asteroidEntity
                   );

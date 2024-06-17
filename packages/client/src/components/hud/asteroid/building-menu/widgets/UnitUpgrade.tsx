@@ -1,11 +1,11 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { memo } from "react";
-import { Badge } from "src/components/core/Badge";
-import { Button } from "src/components/core/Button";
-import { SecondaryCard } from "src/components/core/Card";
-import { IconLabel } from "src/components/core/IconLabel";
-import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { Badge } from "@/components/core/Badge";
+import { Button } from "@/components/core/Button";
+import { SecondaryCard } from "@/components/core/Card";
+import { IconLabel } from "@/components/core/IconLabel";
+import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { ResourceType, getEntityTypeName } from "@primodiumxyz/core";
 import { EntityToResourceImage } from "@/util/image";
 import { useCore, useHasEnoughResources } from "@primodiumxyz/core/react";

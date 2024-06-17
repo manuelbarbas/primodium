@@ -1,5 +1,5 @@
-import { Button } from "src/components/core/Button";
-import { Card } from "src/components/core/Card";
+import { Button } from "@/components/core/Button";
+import { Card } from "@/components/core/Card";
 import { Badge } from "@/components/core/Badge";
 import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
 import { useAccountClient, useAsteroidStrength, useCore, useResourceCount } from "@primodiumxyz/core/react";

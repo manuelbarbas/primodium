@@ -7,7 +7,7 @@ import { ResourceImages } from "@primodiumxyz/assets";
 import { entityToRockName, EntityType, formatResourceCount, formatTimeShort } from "@primodiumxyz/core";
 import { useAccountClient, useCore, useShardAsteroid } from "@primodiumxyz/core/react";
 import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
-import { Button } from "src/components/core/Button";
+import { Button } from "@/components/core/Button";
 
 export const Shards = ({ className = "" }: { className?: string }) => {
   const {

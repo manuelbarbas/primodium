@@ -1,9 +1,8 @@
 import { Assets, Audio, AudioKeys } from "@primodiumxyz/assets";
 import { Scene } from "@primodiumxyz/engine/types";
 
-import { usePersistentStore } from "@/stores/PersistentStore";
-
-export type Channel = "music" | "sfx" | "ui";
+import { usePersistentStore } from "@game/stores/PersistentStore";
+import { Channel } from "@game/types";
 
 export const createAudioApi = (scene: Scene) => {
   function play(key: AudioKeys, channel: Channel, config?: Phaser.Types.Sound.SoundConfig) {

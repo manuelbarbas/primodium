@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 
 import { YouDied } from "@/screens/YouDied";
 import { initGame, PrimodiumGame } from "@primodiumxyz/game";
-import { Progress } from "src/components/core/Progress";
-import { GameProvider } from "src/hooks/providers/GameProvider";
+import { Progress } from "@/components/core/Progress";
+import { GameProvider } from "@/hooks/providers/GameProvider";
 import { GameHUD } from "@/components/hud";
-import { WidgetProvider } from "src/hooks/providers/WidgetProvider";
+import { WidgetProvider } from "@/hooks/providers/WidgetProvider";
 import { CommandBackgroundEffect } from "@/screens/CommandBackgroundEffect";
 import { BackgroundParallaxEffect } from "@/screens/BackgroundParallaxEffect";
 import { useSyncStatus, usePlayerAsteroids, useCore, useAccountClient } from "@primodiumxyz/core/react";

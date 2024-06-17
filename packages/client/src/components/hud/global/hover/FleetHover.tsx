@@ -3,8 +3,8 @@ import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EFleetStance } from "contracts/config/enums";
 import { useMemo } from "react";
-import { IconLabel } from "src/components/core/IconLabel";
-import { Loader } from "src/components/core/Loader";
+import { IconLabel } from "@/components/core/IconLabel";
+import { Loader } from "@/components/core/Loader";
 import {
   useAccountClient,
   useCore,

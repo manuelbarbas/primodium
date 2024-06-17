@@ -1,5 +1,5 @@
 import { EUnit } from "contracts/config/enums";
-import { ampli } from "src/ampli";
+import { ampli } from "@/ampli";
 import { Core, getEntityTypeName, bigintToNumber, UnitEntityLookup, ExecuteFunctions } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { parseReceipt } from "@/contractCalls/parseReceipt";

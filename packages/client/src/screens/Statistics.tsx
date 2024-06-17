@@ -1,4 +1,4 @@
-import { AccountDisplay } from "src/components/shared/AccountDisplay";
+import { AccountDisplay } from "@/components/shared/AccountDisplay";
 import { entityToAddress, isPlayer } from "@primodiumxyz/core";
 import { useCore } from "@primodiumxyz/core/react";
 

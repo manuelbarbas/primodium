@@ -2,7 +2,7 @@ import { SecondaryCard } from "@/components/core/Card";
 import { List } from "@/components/core/List";
 import { Modal } from "@/components/core/Modal";
 import { ObjectivesScreen } from "@/components/hud/global/modals/objectives/ObjectivesScreen";
-import { usePersistentStore } from "@/game/stores/PersistentStore";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { cn } from "@/util/client";
 import { canShowObjective, getCanClaimObjective } from "@/util/objectives/objectiveRequirements";
 import { Objectives } from "@/util/objectives/objectives";

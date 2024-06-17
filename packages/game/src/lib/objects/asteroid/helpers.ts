@@ -1,13 +1,13 @@
 import { Sprites } from "@primodiumxyz/assets";
 
-import { Relationship } from "@/lib/constants/common";
+import { Relationship } from "@game/lib/constants/common";
 import {
   EntityTypeSizeToSecondaryAsteroidSprites,
   LevelToPrimaryAsteroidSprites,
   MaxLevelToAsteroidSpriteSize,
   RelationshipSizeToSecondaryAsteroidOutlineSprites,
   RelationshipToPrimaryAsteroidOutlineSprites,
-} from "@/lib/mappings";
+} from "@game/lib/mappings";
 import { Entity } from "@primodiumxyz/reactive-tables";
 
 export enum LODs {

@@ -6,7 +6,14 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import postcss from "./postcss.config";
 
 export default defineConfig({
-  plugins: [react(), comlink(), tsconfigPaths()],
+  plugins: [
+    tsconfigPaths({
+      projects: ["../game"],
+      parseNative: true,
+    }),
+    react(),
+    comlink(),
+  ],
   server: {
     port: 3000,
     fs: {
@@ -42,7 +49,6 @@ export default defineConfig({
         bigint: true,
       },
     },
-
     include: [
       "bn.js",
       "js-sha3",
@@ -54,7 +60,9 @@ export default defineConfig({
       "is-observable",
       "nice-grpc-web",
       "@improbable-eng/grpc-web",
+      // "@primodiumxyz/game",
     ],
+    exclude: ["@primodiumxyz/assets", "contract"],
   },
   envPrefix: "PRI_",
   envDir: "../../",
@@ -64,7 +72,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "@game": path.resolve(__dirname, "./src/game"),
     },
   },
 });

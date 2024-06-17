@@ -1,8 +1,8 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { SecondaryCard } from "src/components/core/Card";
-import { Navigator } from "src/components/core/Navigator";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { SecondaryCard } from "@/components/core/Card";
+import { Navigator } from "@/components/core/Navigator";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { useCore } from "@primodiumxyz/core/react";
 import { getEntityTypeName } from "@primodiumxyz/core";
 import { EntityToUnitImage } from "@/util/image";

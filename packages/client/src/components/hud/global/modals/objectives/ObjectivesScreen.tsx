@@ -1,22 +1,22 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
 
-import { Join } from "src/components/core/Join";
-import { Tabs } from "src/components/core/Tabs";
-import { useMud } from "src/hooks";
-import { components } from "src/network/components";
-import { ObjectiveEntityLookup } from "src/util/constants";
+import { Join } from "@/components/core/Join";
+import { Tabs } from "@/components/core/Tabs";
 import { Hex } from "viem";
 import { ClaimedObjectives } from "./ClaimedObjectives";
 import { UnclaimedObjectives } from "./UnclaimedObjectives";
+import { ObjectiveEntityLookup } from "@primodiumxyz/core";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
 
 export const ObjectivesScreen: React.FC<{ highlight?: Entity }> = ({ highlight }) => {
   const {
     playerAccount: { entity: playerEntity },
-  } = useMud();
+  } = useAccountClient();
+  const { tables } = useCore();
 
   const completedEntities = Object.values(ObjectiveEntityLookup).filter((objective) => {
     const claimed =
-      components.CompletedObjective.getWithKeys({ entity: playerEntity as Hex, objective: objective as Hex })?.value ??
+      tables.CompletedObjective.getWithKeys({ entity: playerEntity as Hex, objective: objective as Hex })?.value ??
       false;
 
     return claimed;

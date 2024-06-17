@@ -2,10 +2,10 @@ import { Assets } from "@primodiumxyz/assets";
 import { Coord } from "@primodiumxyz/engine/types";
 import { Entity } from "@primodiumxyz/reactive-tables";
 
-import { PrimodiumScene } from "@/types";
-import { BaseAsteroid } from "@/lib/objects/asteroid/BaseAsteroid";
-import { LODs, getPrimaryOutlineSprite, getPrimarySprite } from "@/lib/objects/asteroid/helpers";
-import { Relationship } from "@/lib/constants/common";
+import { PrimodiumScene } from "@game/types";
+import { BaseAsteroid } from "@game/lib/objects/asteroid/BaseAsteroid";
+import { LODs, getPrimaryOutlineSprite, getPrimarySprite } from "@game/lib/objects/asteroid/helpers";
+import { Relationship } from "@game/lib/constants/common";
 
 export class PrimaryAsteroid extends BaseAsteroid {
   constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord; level: bigint; relationship?: Relationship }) {

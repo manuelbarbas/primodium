@@ -3,8 +3,8 @@ import { SecondaryCard } from "@/components/core/Card";
 import { cn } from "@/util/client";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
-import { IconLabel } from "src/components/core/IconLabel";
-import { Loader } from "src/components/core/Loader";
+import { IconLabel } from "@/components/core/IconLabel";
+import { Loader } from "@/components/core/Loader";
 import {
   useAsteroidStrength,
   useClaimPrimodium,

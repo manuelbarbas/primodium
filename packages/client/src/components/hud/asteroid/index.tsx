@@ -3,7 +3,7 @@ import { Blueprints } from "@/components/hud/asteroid/blueprints/Blueprints";
 import { Inventory } from "@/components/hud/asteroid/inventory/Inventory";
 import { BlueprintInfoMarker } from "@/components/hud/asteroid/markers/BlueprintInfoMarker";
 import { BuildingMenuPopup } from "@/components/hud/asteroid/markers/BuildingMenuPopup";
-import { usePersistentStore } from "@game/stores/PersistentStore";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { Mode } from "@primodiumxyz/core";
 import { useCore } from "@primodiumxyz/core/react";
 import { memo } from "react";

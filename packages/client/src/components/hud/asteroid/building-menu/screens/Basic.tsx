@@ -1,5 +1,5 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { Navigator } from "src/components/core/Navigator";
+import { Navigator } from "@/components/core/Navigator";
 import { Upgrade } from "../widgets/Upgrade";
 
 export const Basic: React.FC<{ building: Entity }> = ({ building }) => {

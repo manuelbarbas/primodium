@@ -1,9 +1,9 @@
 import { Core, Mode } from "@primodiumxyz/core";
 import { defaultEntity, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 
-import { createCameraApi } from "@/api/camera";
-import { GlobalApi } from "@/api/global";
-import { ModeToSceneKey } from "@/lib/mappings";
+import { createCameraApi } from "@game/api/camera";
+import { GlobalApi } from "@game/api/global";
+import { ModeToSceneKey } from "@game/lib/mappings";
 
 export const modeSystem = (game: GlobalApi, core: Core) => {
   const {

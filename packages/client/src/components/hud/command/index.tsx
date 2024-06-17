@@ -1,5 +1,5 @@
 import { HUD } from "@/components/core/HUD";
-import { usePersistentStore } from "@game/stores/PersistentStore";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { memo, useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { CommandViewSelector } from "@/components/hud/command/CommandViewSelector";

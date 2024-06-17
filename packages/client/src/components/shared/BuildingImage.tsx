@@ -1,7 +1,6 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
-import { useGame } from "src/hooks/useGame";
-import { getBuildingImageFromType } from "src/util/building";
+import { useGame } from "@/hooks/useGame";
 
 export const BuildingImageFromType: React.FC<{ buildingType: Entity; blurred?: boolean; isBlueprint?: boolean }> = ({
   buildingType,
@@ -9,7 +8,7 @@ export const BuildingImageFromType: React.FC<{ buildingType: Entity; blurred?: b
   isBlueprint = false,
 }) => {
   const game = useGame();
-  const imageUri = useMemo(() => getBuildingImageFromType(game, buildingType), [game, buildingType]);
+  const imageUri = useMemo(() => game.ASTEROID.sprite.getBuildingSprite(buildingType, 1n), [game, buildingType]);
 
   const divClassName = isBlueprint
     ? "flex flex-col place-items-center cursor-pointer w-[110%]"

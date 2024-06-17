@@ -1,6 +1,6 @@
 import { UnitImages } from "@primodiumxyz/assets";
-import { SecondaryCard } from "src/components/core/Card";
-import { Navigator } from "src/components/core/Navigator";
+import { SecondaryCard } from "@/components/core/Card";
+import { Navigator } from "@/components/core/Navigator";
 
 export const BuildUnit: React.FC = () => {
   return (

@@ -3,7 +3,7 @@ import { tileCoordToPixelCoord } from "@primodiumxyz/engine/lib/util/coords";
 import { Assets, Audio } from "@primodiumxyz/assets";
 import { getRandomRange } from "@primodiumxyz/core";
 
-import { DepthLayers } from "@/lib/constants/common";
+import { DepthLayers } from "@game/lib/constants/common";
 
 export const createFxApi = (scene: Scene) => {
   function outline(

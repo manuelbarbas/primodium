@@ -1,6 +1,5 @@
-import { getPrimarySprite, getSecondarySprite } from "@/game/lib/objects/Asteroid/helpers";
 import { useGame } from "@/hooks/useGame";
-import { InterfaceIcons, Sprites } from "@primodiumxyz/assets";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EntityType, MapEntityLookup } from "@primodiumxyz/core";
 import { useCore } from "@primodiumxyz/core/react";
 import { Entity } from "@primodiumxyz/reactive-tables";
@@ -16,16 +15,15 @@ export const useAsteroidImage = (asteroid: Entity): string => {
   const asteroidData = tables.Asteroid.use(asteroid);
   if (!asteroidData) return InterfaceIcons.NotAllowed;
 
-  const { getSpriteBase64 } = game.ASTEROID.sprite;
-  if (asteroidData.wormhole) return getSpriteBase64(Sprites.WormholeAsteroid);
+  const { getWormholeSprite, getPrimaryAsteroidSprite, getSecondaryAsteroidSprite } = game.STARMAP.sprite;
+  if (asteroidData.wormhole) return getWormholeSprite();
 
   const isPrimary = asteroidData.spawnsSecondary;
   if (!isPrimary) {
     const resource = MapEntityLookup[asteroidData.mapId] ?? EntityType.Kimberlite;
-    const sprite = getSecondarySprite(resource, asteroidData.maxLevel);
-    return getSpriteBase64(sprite);
+    return getSecondaryAsteroidSprite(resource, asteroidData.maxLevel);
   }
   const level = tables.Level.use(asteroid)?.value;
   if (!level) return InterfaceIcons.Asteroid;
-  return getSpriteBase64(getPrimarySprite(level));
+  return getPrimaryAsteroidSprite(level);
 };

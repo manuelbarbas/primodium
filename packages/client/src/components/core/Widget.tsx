@@ -1,11 +1,11 @@
 import { Card } from "@/components/core/Card";
 import { useWidgets } from "@/hooks/providers/WidgetProvider";
 import { useGame } from "@/hooks/useGame";
-import { SceneKeys } from "@game/lib/constants/common";
-import { KeybindActionKeys } from "@game/lib/constants/keybinds";
-import { usePersistentStore } from "@game/stores/PersistentStore";
+import { KeybindActionKeys } from "@primodiumxyz/game/src/lib/constants/keybinds";
+import { SceneKeys } from "@primodiumxyz/game/src/lib/constants/common";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { useCore } from "@primodiumxyz/core/react";
-import { Coord } from "engine/types";
+import { Coord } from "@primodiumxyz/engine/types";
 import { ReactNode, memo, useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaMinus, FaRegWindowMaximize, FaRegWindowRestore } from "react-icons/fa";

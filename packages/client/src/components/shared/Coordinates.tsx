@@ -3,12 +3,12 @@ import { FaSquare, FaLocationArrow } from "react-icons/fa";
 import { FaCropSimple, FaSquareXmark } from "react-icons/fa6";
 import { Coord } from "@primodiumxyz/engine/types";
 import { useGame } from "@/hooks/useGame";
-import { Tile } from "@/game/lib/objects/Tile";
-import { DepthLayers } from "@/game/lib/constants/common";
-import { usePersistentStore } from "@/game/stores/PersistentStore";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { cn } from "@/util/client";
 import { useCore } from "@primodiumxyz/core/react";
 import { Mode } from "@primodiumxyz/core";
+import { DepthLayers } from "@primodiumxyz/game";
+import { Tile } from "@primodiumxyz/game/src/lib/objects/Tile";
 
 // This will show tile and region coordinates in the starmap, and tile coordinates when hovering a tile in asteroid
 // In dev mode, this will be slightly above the "MUD Dev Tools" button, and be clickable in starmap for more info (pixel coordinates as well)

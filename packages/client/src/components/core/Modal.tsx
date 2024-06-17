@@ -1,8 +1,8 @@
 import { Button } from "@/components/core/Button";
 import { Card } from "@/components/core/Card";
-import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
 import { useGame } from "@/hooks/useGame";
 import { useCore } from "@primodiumxyz/core/react";
+import { KeybindActionKeys } from "@primodiumxyz/game";
 import React, { ReactNode, createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaTimes } from "react-icons/fa";

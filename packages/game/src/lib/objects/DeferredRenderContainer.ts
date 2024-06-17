@@ -1,7 +1,7 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { Coord } from "@primodiumxyz/engine/types";
-import { PrimodiumScene } from "@/types";
-import { PrimodiumObjectApi, PrimodiumObjectApiMap } from "@/api/objects";
+import { PrimodiumScene } from "@game/types";
+import { PrimodiumObjectApi, PrimodiumObjectApiMap } from "@game/api/objects";
 import { PrimodiumGameObject } from "@primodiumxyz/engine/lib/core/StaticObjectManager";
 
 export type BaseSpawnArgs = {

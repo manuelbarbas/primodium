@@ -2,11 +2,11 @@ import { Entity } from "@primodiumxyz/reactive-tables";
 import { Coord, Scene } from "@primodiumxyz/engine/types";
 import { BoundingBox, PrimodiumGameObject } from "@primodiumxyz/engine/lib/core/StaticObjectManager";
 
-import { TransitLine } from "@/lib/objects/TransitLine";
-import { BaseAsteroid } from "@/lib/objects/asteroid/BaseAsteroid";
-import { BaseSpawnArgs, DeferredRenderContainer } from "@/lib/objects/DeferredRenderContainer";
-import { Building, BuildingConstruction } from "@/lib/objects/building";
-import { Fleet } from "@/lib/objects/Fleet";
+import { TransitLine } from "@game/lib/objects/TransitLine";
+import { BaseAsteroid } from "@game/lib/objects/asteroid/BaseAsteroid";
+import { BaseSpawnArgs, DeferredRenderContainer } from "@game/lib/objects/DeferredRenderContainer";
+import { Building, BuildingConstruction } from "@game/lib/objects/building";
+import { Fleet } from "@game/lib/objects/Fleet";
 
 export type PrimodiumObjectApi<T extends PrimodiumGameObject | DeferredRenderContainer> = {
   has: (entity: Entity) => boolean;

@@ -1,4 +1,4 @@
-import { ampli } from "src/ampli";
+import { ampli } from "@/ampli";
 import { Core, AccountClient, toHex32, entityToAddress, ExecuteFunctions } from "@primodiumxyz/core";
 import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
 import { Entity } from "@primodiumxyz/reactive-tables";

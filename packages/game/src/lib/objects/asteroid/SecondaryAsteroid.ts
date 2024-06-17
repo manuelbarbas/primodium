@@ -1,10 +1,10 @@
 import { Coord } from "@primodiumxyz/engine/types";
 import { Entity } from "@primodiumxyz/reactive-tables";
 
-import { PrimodiumScene } from "@/types";
-import { BaseAsteroid } from "@/lib/objects/asteroid/BaseAsteroid";
-import { LODs, getSecondaryOutlineSprite, getSecondarySprite } from "@/lib/objects/asteroid/helpers";
-import { Relationship } from "@/lib/constants/common";
+import { PrimodiumScene } from "@game/types";
+import { BaseAsteroid } from "@game/lib/objects/asteroid/BaseAsteroid";
+import { LODs, getSecondaryOutlineSprite, getSecondarySprite } from "@game/lib/objects/asteroid/helpers";
+import { Relationship } from "@game/lib/constants/common";
 
 export class SecondaryAsteroid extends BaseAsteroid {
   private maxLevel: bigint;

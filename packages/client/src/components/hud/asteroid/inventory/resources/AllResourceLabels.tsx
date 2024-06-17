@@ -1,4 +1,4 @@
-import { SecondaryCard } from "src/components/core/Card";
+import { SecondaryCard } from "@/components/core/Card";
 import { ResourceLabel } from "./ResourceLabel";
 import { VaultUtilityLabel } from "./UtilityLabel";
 import { useCore } from "@primodiumxyz/core/react";

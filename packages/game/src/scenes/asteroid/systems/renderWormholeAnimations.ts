@@ -1,7 +1,7 @@
 import { Core, EntityType } from "@primodiumxyz/core";
 
-import { PrimodiumScene } from "@/types";
-import { WormholeBase } from "@/lib/objects/building/Wormhole";
+import { PrimodiumScene } from "@game/types";
+import { WormholeBase } from "@game/lib/objects/building/Wormhole";
 import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 
 export const renderWormholeAnimations = (scene: PrimodiumScene, core: Core) => {

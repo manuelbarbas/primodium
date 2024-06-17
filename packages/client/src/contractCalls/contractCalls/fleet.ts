@@ -2,7 +2,7 @@ import { Core, AccountClient, TxQueueOptions, Coord, ExecuteFunctions } from "@p
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { EFleetStance, EObjectives } from "contracts/config/enums";
 import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
-import { ampli } from "src/ampli";
+import { ampli } from "@/ampli";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createFleetCalls = (core: Core, { playerAccount }: AccountClient, { execute }: ExecuteFunctions) => {

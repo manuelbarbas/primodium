@@ -1,7 +1,7 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
-import { Badge } from "src/components/core/Badge";
-import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
+import { Badge } from "@/components/core/Badge";
+import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
 import { Tooltip } from "@/components/core/Tooltip";
 import { formatResourceCount, SPEED_SCALE } from "@primodiumxyz/core";
 import { useCore, useResourceCount } from "@primodiumxyz/core/react";

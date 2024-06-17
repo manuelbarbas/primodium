@@ -1,7 +1,7 @@
 import { useCore } from "@primodiumxyz/core/react";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { SecondaryCard } from "src/components/core/Card";
-import { Navigator } from "src/components/core/Navigator";
+import { SecondaryCard } from "@/components/core/Card";
+import { Navigator } from "@/components/core/Navigator";
 
 export const Move: React.FC<{ building: Entity }> = ({ building }) => {
   const { tables, utils } = useCore();

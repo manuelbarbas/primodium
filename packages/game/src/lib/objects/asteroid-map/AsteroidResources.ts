@@ -1,10 +1,10 @@
 import Phaser from "phaser";
 import { Tilesets } from "@primodiumxyz/assets";
 
-import { PrimodiumScene } from "@/types";
-import { Bounds, Dimensions, ResourceTile, isOutOfBounds } from "@/lib/objects/asteroid-map/helpers";
-import { EntityTypeToResourceTilekey } from "@/lib/mappings";
-import { DepthLayers } from "@/lib/constants/common";
+import { PrimodiumScene } from "@game/types";
+import { Bounds, Dimensions, ResourceTile, isOutOfBounds } from "@game/lib/objects/asteroid-map/helpers";
+import { EntityTypeToResourceTilekey } from "@game/lib/mappings";
+import { DepthLayers } from "@game/lib/constants/common";
 
 export class AsteroidResources {
   private scene: PrimodiumScene;

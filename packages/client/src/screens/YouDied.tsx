@@ -6,7 +6,7 @@ import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { useContractCalls } from "@/hooks/useContractCalls";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useState } from "react";
-import { Navigator } from "src/components/core/Navigator";
+import { Navigator } from "@/components/core/Navigator";
 import { useCore, useAccountClient } from "@primodiumxyz/core/react";
 import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 

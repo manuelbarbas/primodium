@@ -2,9 +2,9 @@ import Phaser from "phaser";
 import { PixelCoord } from "@primodiumxyz/engine/types";
 import { Assets, Sprites } from "@primodiumxyz/assets";
 
-import { MainbaseLevelToEmblem } from "@/lib/mappings";
-import { PrimodiumScene } from "@/types";
-import { DepthLayers } from "@/lib/constants/common";
+import { MainbaseLevelToEmblem } from "@game/lib/mappings";
+import { PrimodiumScene } from "@game/types";
+import { DepthLayers } from "@game/lib/constants/common";
 
 const MARGIN = 2;
 

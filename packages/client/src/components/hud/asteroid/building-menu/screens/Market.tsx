@@ -1,5 +1,5 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { Navigator } from "src/components/core/Navigator";
+import { Navigator } from "@/components/core/Navigator";
 import { OpenMarket } from "../widgets/OpenMarket";
 import { Upgrade } from "../widgets/Upgrade";
 

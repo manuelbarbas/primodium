@@ -2,7 +2,7 @@ import { cn } from "@/util/client";
 import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
 import { formatResourceCount, UnitStorages } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { Button } from "src/components/core/Button";
+import { Button } from "@/components/core/Button";
 
 export const ResourceIcon = ({
   resource,

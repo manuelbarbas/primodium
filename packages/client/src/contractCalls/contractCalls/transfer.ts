@@ -1,7 +1,7 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { EObjectives } from "contracts/config/enums";
-import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
-import { ampli } from "src/ampli";
+import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
+import { ampli } from "@/ampli";
 import { Core, AccountClient, bigintToNumber, ExecuteFunctions } from "@primodiumxyz/core";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
 

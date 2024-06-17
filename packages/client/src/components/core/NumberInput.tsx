@@ -1,4 +1,4 @@
-import { useGame } from "src/hooks/useGame";
+import { useGame } from "@/hooks/useGame";
 import { adjustDecimals } from "@primodiumxyz/core";
 import { Button } from "./Button";
 

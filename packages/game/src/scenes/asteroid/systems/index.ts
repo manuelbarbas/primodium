@@ -1,14 +1,14 @@
 import { Core } from "@primodiumxyz/core";
 
-import { PrimodiumScene } from "@/types";
-import { renderWormholeAnimations } from "@/scenes/asteroid/systems/renderWormholeAnimations";
-import { focusMainbase } from "@/scenes/asteroid/systems/focusMainbase";
-import { renderBuilding } from "@/scenes/asteroid/systems/renderBuilding";
-import { renderBuildingMoveTool } from "@/scenes/asteroid/systems/renderBuildingMoveTool";
-import { renderBuildingPlacementTool } from "@/scenes/asteroid/systems/renderBuildingPlacementTool";
-import { renderAsteroidMap } from "@/scenes/asteroid/systems/renderAsteroidMap";
-import { renderHoverTile } from "@/scenes/asteroid/systems/renderHoverTile";
-import { renderQueuedBuildings } from "@/scenes/asteroid/systems/renderQueuedBuildings";
+import { PrimodiumScene } from "@game/types";
+import { renderWormholeAnimations } from "@game/scenes/asteroid/systems/renderWormholeAnimations";
+import { focusMainbase } from "@game/scenes/asteroid/systems/focusMainbase";
+import { renderBuilding } from "@game/scenes/asteroid/systems/renderBuilding";
+import { renderBuildingMoveTool } from "@game/scenes/asteroid/systems/renderBuildingMoveTool";
+import { renderBuildingPlacementTool } from "@game/scenes/asteroid/systems/renderBuildingPlacementTool";
+import { renderAsteroidMap } from "@game/scenes/asteroid/systems/renderAsteroidMap";
+import { renderHoverTile } from "@game/scenes/asteroid/systems/renderHoverTile";
+import { renderQueuedBuildings } from "@game/scenes/asteroid/systems/renderQueuedBuildings";
 
 export const runSystems = (scene: PrimodiumScene, core: Core) => {
   // Render world entity's sprites

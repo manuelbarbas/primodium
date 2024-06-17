@@ -1,5 +1,5 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { Navigator } from "src/components/core/Navigator";
+import { Navigator } from "@/components/core/Navigator";
 import { ExpandRange } from "../widgets/ExpandRange";
 import { Upgrade } from "../widgets/Upgrade";
 import { useCore } from "@primodiumxyz/core/react";

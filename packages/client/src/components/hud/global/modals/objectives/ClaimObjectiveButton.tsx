@@ -1,45 +1,42 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 
 import { useMemo } from "react";
 
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { FaCheck } from "react-icons/fa";
-import { Button } from "src/components/core/Button";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { useMud } from "src/hooks";
-import { components as comps } from "src/network/components";
-import { claimObjective } from "src/network/setup/contractCalls/claimObjective";
+import { Button } from "@/components/core/Button";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 
-import { TransactionQueueType } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
-import { getCanClaimObjective } from "src/util/objectives/objectiveRequirements";
+import { getCanClaimObjective } from "@/util/objectives/objectiveRequirements";
 import { Hex } from "viem";
+import { useCore } from "@primodiumxyz/core/react";
+import { useContractCalls } from "@/hooks/useContractCalls";
 
 export const ClaimObjectiveButton: React.FC<{
   objectiveEntity: Entity;
 }> = ({ objectiveEntity }) => {
-  const mud = useMud();
-  const selectedRock = comps.ActiveRock.use()?.value ?? singletonEntity;
+  const core = useCore();
+  const { claimObjective } = useContractCalls();
+  const { tables } = core;
+  const playerEntity = tables.Account.use()?.value;
+  const selectedRock = tables.ActiveRock.use()?.value ?? defaultEntity;
 
-  const player = mud.playerAccount.entity;
   const hasCompletedObjective =
-    comps.CompletedObjective.useWithKeys({ objective: objectiveEntity as Hex, entity: player as Hex })?.value ?? false;
+    tables.CompletedObjective.useWithKeys({ objective: objectiveEntity as Hex, entity: playerEntity as Hex })?.value ??
+    false;
 
-  const time = comps.Time.use()?.value;
+  const time = tables.Time.use()?.value;
   const canClaim = useMemo(() => {
-    return getCanClaimObjective(mud.playerAccount.entity, selectedRock, objectiveEntity);
-  }, [selectedRock, objectiveEntity, time]);
+    if (!playerEntity) return false;
+    return getCanClaimObjective(core, playerEntity, selectedRock, objectiveEntity);
+  }, [selectedRock, objectiveEntity, time, playerEntity]);
 
   if (!hasCompletedObjective)
     return (
-      <TransactionQueueMask
-        className="w-full mt-2"
-        queueItemId={hashEntities(TransactionQueueType.ClaimObjective, objectiveEntity)}
-      >
+      <TransactionQueueMask className="w-full mt-2" queueItemId={`claim-${objectiveEntity}`}>
         <Button
           disabled={!canClaim}
           className={`btn-sm btn-secondary border-accent w-full`}
-          onClick={() => claimObjective(mud, selectedRock, objectiveEntity)}
+          onClick={() => claimObjective(selectedRock, objectiveEntity)}
         >
           Claim
         </Button>

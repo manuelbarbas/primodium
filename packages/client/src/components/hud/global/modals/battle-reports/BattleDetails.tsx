@@ -7,8 +7,8 @@ import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EObjectives } from "contracts/config/enums";
 import React, { useEffect } from "react";
-import { Navigator } from "src/components/core/Navigator";
-import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
+import { Navigator } from "@/components/core/Navigator";
+import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 import { useAccountClient, useCore } from "@primodiumxyz/core/react";
 import { entityToFleetName, entityToRockName, formatResourceCount, EntityType } from "@primodiumxyz/core";
 

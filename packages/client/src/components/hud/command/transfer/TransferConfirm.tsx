@@ -2,7 +2,7 @@ import { PushButton } from "@/components/core/PushButton";
 import { useTransfer } from "@/hooks/providers/TransferProvider";
 import { useContractCalls } from "@/hooks/useContractCalls";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 
 export const TransferConfirm = () => {
   const { left, right, setRight, deltas, setDeltas, errors } = useTransfer();

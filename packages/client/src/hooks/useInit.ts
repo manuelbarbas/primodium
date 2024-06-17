@@ -1,9 +1,9 @@
-import { setupInvitations } from "@/systems/setupPlayerInvites";
-import { setupMovementNotifications } from "@/systems/setupMovementNotifications";
-import { setupSwapNotifications } from "@/systems/setupSwapNotifications";
+// import { setupInvitations } from "@/systems/setupPlayerInvites";
+// import { setupMovementNotifications } from "@/systems/setupMovementNotifications";
+// import { setupSwapNotifications } from "@/systems/setupSwapNotifications";
 import { useAccountClient, useCore } from "@primodiumxyz/core/react";
 import { useEffect } from "react";
-import { ampli } from "src/ampli";
+import { ampli } from "@/ampli";
 
 export const useInit = () => {
   const core = useCore();
@@ -17,9 +17,9 @@ export const useInit = () => {
   useEffect(() => {
     if (!initialized) return;
     tables.Account.set({ value: entity });
-    setupInvitations(core);
-    setupMovementNotifications(core);
-    setupSwapNotifications(core);
+    // setupInvitations(core);
+    // setupMovementNotifications(core);
+    // setupSwapNotifications(core);
 
     return () => {
       world.dispose("clientSystems");

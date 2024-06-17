@@ -1,6 +1,6 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
-import { Navigator } from "src/components/core/Navigator";
+import { Navigator } from "@/components/core/Navigator";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Button } from "@/components/core/Button";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";

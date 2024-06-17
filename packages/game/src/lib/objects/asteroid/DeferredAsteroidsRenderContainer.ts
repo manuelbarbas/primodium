@@ -1,10 +1,10 @@
 import { Coord } from "@primodiumxyz/engine/types";
 import { Entity } from "@primodiumxyz/reactive-tables";
 
-import { BaseSpawnArgs, DeferredRenderContainer } from "@/lib/objects/DeferredRenderContainer";
-import { PrimodiumScene } from "@/types";
-import { FleetsContainer } from "@/lib/objects/asteroid/FleetsContainer";
-import { BaseAsteroid } from "@/lib/objects/asteroid/BaseAsteroid";
+import { BaseSpawnArgs, DeferredRenderContainer } from "@game/lib/objects/DeferredRenderContainer";
+import { PrimodiumScene } from "@game/types";
+import { FleetsContainer } from "@game/lib/objects/asteroid/FleetsContainer";
+import { BaseAsteroid } from "@game/lib/objects/asteroid/BaseAsteroid";
 
 type AsteroidSpawnArgs = BaseSpawnArgs & {
   spawnsSecondary: boolean;

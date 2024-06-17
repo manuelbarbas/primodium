@@ -1,5 +1,5 @@
 import { Coord } from "@primodiumxyz/engine/types";
-import { TWO_PI, getPositionByVector, solSinDegrees } from "src/util/vector";
+import { TWO_PI, getPositionByVector, solSinDegrees } from "@/util/vector";
 import { expect, test } from "vitest";
 
 const moveResults = [

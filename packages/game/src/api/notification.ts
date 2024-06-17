@@ -1,5 +1,5 @@
 //TODO: move into client
-import { createAudioApi } from "@/api/audio";
+import { createAudioApi } from "@game/api/audio";
 import { Scene } from "@primodiumxyz/engine/types";
 import { toast, ToastContent, ToastOptions } from "react-toastify";
 

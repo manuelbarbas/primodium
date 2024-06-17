@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
 import { GameProvider } from "@/hooks/providers/GameProvider";
-import { PrimodiumGame, initGame } from "@game/api";
-import { Progress } from "src/components/core/Progress";
+import { PrimodiumGame, initGame } from "@primodiumxyz/game";
+import { Progress } from "@/components/core/Progress";
 import { _Sandbox } from "../components/_Sandbox";
 import { useCore } from "@primodiumxyz/core/react";
 import { useUpdateSessionAccount } from "@/hooks/useUpdateSessionAccount";
@@ -18,13 +18,13 @@ export const Sandbox = () => {
 
   useEffect(() => {
     if (!game) return;
-    game.runSystems(mud);
+    game.runSystems();
   }, [mud, game]);
 
   useEffect(() => {
     (async () => {
       try {
-        const pri = await initGame(params.get("version") ? params.get("version")! : "🔥");
+        const pri = await initGame(mud, params.get("version") ? params.get("version")! : "🔥");
         setGame(pri);
       } catch (e) {
         console.log(e);

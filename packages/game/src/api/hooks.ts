@@ -1,7 +1,7 @@
 import { Scene } from "@primodiumxyz/engine/types";
 import { clone, throttle } from "lodash";
 import { useEffect, useState } from "react";
-import { usePersistentStore } from "@/stores/PersistentStore";
+import { usePersistentStore } from "@game/stores/PersistentStore";
 
 export function createHooksApi(targetScene: Scene) {
   function useKeybinds() {

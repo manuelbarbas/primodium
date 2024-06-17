@@ -1,8 +1,8 @@
 import { throttle } from "lodash";
 
 import { Key, Scene } from "@primodiumxyz/engine/types";
-import { usePersistentStore } from "@/stores/PersistentStore";
-import { KeybindActionKeys } from "@/lib/constants/keybinds";
+import { usePersistentStore } from "@game/stores/PersistentStore";
+import { KeybindActionKeys } from "@game/lib/constants/keybinds";
 
 export function createInputApi(scene: Scene) {
   const keybinds = usePersistentStore.getState().keybinds;

@@ -1,5 +1,5 @@
 import { query } from "@primodiumxyz/reactive-tables";
-import { getPrivateKey } from "src/util/localStorage";
+import { getPrivateKey } from "@/util/localStorage";
 import { Address } from "viem";
 import { useAccountClient, useCore } from "@primodiumxyz/core/react";
 import { entityToAddress } from "@primodiumxyz/core";

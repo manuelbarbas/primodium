@@ -5,10 +5,10 @@ import { ResourceType } from "@primodiumxyz/core";
 import { useBuildingInfo, useBuildingName, useCore } from "@primodiumxyz/core/react";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
-import { Button } from "src/components/core/Button";
-import { SecondaryCard } from "src/components/core/Card";
-import { IconLabel } from "src/components/core/IconLabel";
-import { Navigator } from "src/components/core/Navigator";
+import { Button } from "@/components/core/Button";
+import { SecondaryCard } from "@/components/core/Card";
+import { IconLabel } from "@/components/core/IconLabel";
+import { Navigator } from "@/components/core/Navigator";
 
 export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
   const { tables, utils } = useCore();

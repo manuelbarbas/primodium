@@ -1,8 +1,8 @@
 import { Core, entityToPlayerName, entityToRockName, EntityType, getEnsName } from "@primodiumxyz/core";
 import { defaultEntity, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 
-import { PrimodiumScene } from "@/types";
-import { MainbaseLevelToEmblem } from "@/lib/mappings";
+import { PrimodiumScene } from "@game/types";
+import { MainbaseLevelToEmblem } from "@game/lib/mappings";
 
 // Setup the asteroid label updates over visible entities
 // Systems will be executed inside the starmap and command center scenes

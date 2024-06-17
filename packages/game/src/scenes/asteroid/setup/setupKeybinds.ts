@@ -1,7 +1,7 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { Core, Mode } from "@primodiumxyz/core";
 
-import { PrimodiumScene } from "@/types";
+import { PrimodiumScene } from "@game/types";
 
 export const setupKeybinds = (scene: PrimodiumScene, core: Core) => {
   const {

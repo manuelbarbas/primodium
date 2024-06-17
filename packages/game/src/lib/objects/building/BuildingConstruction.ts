@@ -3,10 +3,10 @@ import { Assets } from "@primodiumxyz/assets";
 import { Coord } from "@primodiumxyz/engine/types";
 import { Entity } from "@primodiumxyz/reactive-tables";
 
-import { PrimodiumScene } from "@/types";
-import { BuildingDimensions, getConstructionSprite } from "@/lib/objects/building/helpers";
-import { IPrimodiumGameObject } from "@/lib/objects/interfaces";
-import { DepthLayers } from "@/lib/constants/common";
+import { PrimodiumScene } from "@game/types";
+import { BuildingDimensions, getConstructionSprite } from "@game/lib/objects/building/helpers";
+import { IPrimodiumGameObject } from "@game/lib/objects/interfaces";
+import { DepthLayers } from "@game/lib/constants/common";
 
 export class BuildingConstruction extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
   readonly id: Entity;

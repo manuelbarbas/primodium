@@ -1,9 +1,9 @@
 import { Entity, namespaceWorld, $query, defaultEntity } from "@primodiumxyz/reactive-tables";
 import { Action, Core } from "@primodiumxyz/core";
 
-import { Building } from "@/lib/objects/building";
-import { DepthLayers } from "@/lib/constants/common";
-import { PrimodiumScene } from "@/types";
+import { Building } from "@game/lib/objects/building";
+import { DepthLayers } from "@game/lib/constants/common";
+import { PrimodiumScene } from "@game/types";
 
 export const handleClick = (pointer: Phaser.Input.Pointer, core: Core, scene: PrimodiumScene) => {
   const {

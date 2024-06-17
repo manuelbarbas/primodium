@@ -1,6 +1,6 @@
 import { Coord } from "engine/types";
 import { EBuilding } from "contracts/config/enums";
-import { ampli } from "src/ampli";
+import { ampli } from "@/ampli";
 import {
   Core,
   BuildingEntityLookup,

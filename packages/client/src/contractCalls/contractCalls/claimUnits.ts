@@ -1,4 +1,4 @@
-import { ampli } from "src/ampli";
+import { ampli } from "@/ampli";
 import { Core, ExecuteFunctions } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { parseReceipt } from "@/contractCalls/parseReceipt";

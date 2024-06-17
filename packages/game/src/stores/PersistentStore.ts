@@ -1,4 +1,4 @@
-import { KeybindActionKeys } from "@/lib/constants/keybinds";
+import { KeybindActionKeys } from "@game/lib/constants/keybinds";
 import { Coord } from "@primodiumxyz/engine/types";
 import { Key } from "@primodiumxyz/engine/types";
 import { mountStoreDevtool } from "simple-zustand-devtools";

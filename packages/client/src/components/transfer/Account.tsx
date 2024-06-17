@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { FaClipboard, FaExclamationCircle, FaExclamationTriangle } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { usePersistentStore } from "src/game/stores/PersistentStore";
-import { copyToClipboard } from "src/util/clipboard";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
+import { copyToClipboard } from "@/util/clipboard";
 import { useDisconnect } from "wagmi";
 import { useShallow } from "zustand/react/shallow";
 import { Button } from "../core/Button";

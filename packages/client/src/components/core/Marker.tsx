@@ -3,11 +3,11 @@ import { Coord } from "@primodiumxyz/engine/types";
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaChevronRight } from "react-icons/fa";
-import { DepthLayers, SceneKeys } from "src/game/lib/constants/common";
-import { useGame } from "src/hooks/useGame";
+import { useGame } from "@/hooks/useGame";
 import { calculateAngleBetweenPoints } from "@primodiumxyz/core";
 import { Button } from "./Button";
 import { IconLabel } from "./IconLabel";
+import { DepthLayers, SceneKeys } from "@primodiumxyz/game";
 
 const BoundedMarker: React.FC<{ scene: SceneKeys; coord: Coord; iconUri: string; degrees: number }> = ({
   coord,

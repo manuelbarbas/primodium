@@ -1,7 +1,7 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
-import { Loader } from "src/components/core/Loader";
-import { AccountDisplay } from "src/components/shared/AccountDisplay";
+import { Loader } from "@/components/core/Loader";
+import { AccountDisplay } from "@/components/shared/AccountDisplay";
 import { CapacityBar } from "@/components/core/CapacityBar";
 import { IconLabel } from "@/components/core/IconLabel";
 import { useCore, useResourceCount, useShardAsteroid, useSyncStatus } from "@primodiumxyz/core/react";

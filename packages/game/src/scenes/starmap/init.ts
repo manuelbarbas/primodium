@@ -1,11 +1,11 @@
 // STAR MAP ENTRY POINT
 import { Core } from "@primodiumxyz/core";
 
-import { starmapSceneConfig } from "@/lib/config/starmapScene";
-import { createSceneApi, PrimodiumScene } from "@/api/scene";
-import { setupBasicCameraMovement } from "@/scenes/common/setup/setupBasicCameraMovement";
-import { GlobalApi } from "@/api/global";
-import { runSystems as runStarmapSystems } from "@/scenes/starmap/systems";
+import { starmapSceneConfig } from "@game/lib/config/starmapScene";
+import { createSceneApi, PrimodiumScene } from "@game/api/scene";
+import { setupBasicCameraMovement } from "@game/scenes/common/setup/setupBasicCameraMovement";
+import { GlobalApi } from "@game/api/global";
+import { runSystems as runStarmapSystems } from "@game/scenes/starmap/systems";
 
 export const initStarmapScene = async (game: GlobalApi, core: Core): Promise<PrimodiumScene> => {
   const {
