@@ -145,7 +145,7 @@ library LibAsteroid {
     } else if (distributionVal < asteroidThresholdProb.common2) {
       // common + advanced resources
       maxLevel = 3; // small
-      primodium = 2 * RESOURCE_SCALE;
+      primodium = 5 * RESOURCE_SCALE;
       mapId = uint8(EMap.Common);
     } else if (distributionVal < asteroidThresholdProb.eliteMicro) {
       // elite resources, micro
@@ -154,15 +154,15 @@ library LibAsteroid {
     } else if (distributionVal < asteroidThresholdProb.eliteSmall) {
       // elite resources, small
       maxLevel = 3;
-      primodium = 4 * RESOURCE_SCALE;
+      primodium = 6 * RESOURCE_SCALE;
     } else if (distributionVal < asteroidThresholdProb.eliteMedium) {
       // elite resources, medium
       maxLevel = 6;
-      primodium = 5 * RESOURCE_SCALE;
+      primodium = 10 * RESOURCE_SCALE;
     } else {
       // elite resources, large
       maxLevel = 8;
-      primodium = 5 * RESOURCE_SCALE;
+      primodium = 20 * RESOURCE_SCALE;
     }
 
     if (mapId != uint8(EMap.Common)) {

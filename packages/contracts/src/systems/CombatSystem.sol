@@ -6,6 +6,7 @@ import { UnitCount, ResourceCount, IsFleet, BattleResult, BattleResultData, Grac
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
+import { LibFleet } from "libraries/fleet/LibFleet.sol";
 import { EResource } from "src/Types.sol";
 import { ColonyShipPrototypeId } from "codegen/Prototypes.sol";
 
@@ -124,7 +125,7 @@ contract CombatSystem is PrimodiumSystem {
     }
     if (isDecryption) {
       //in decryption we resolve encryption first so the fleet decryption unit isn't lost before decrypting
-      LibCombat.resolveBattleEncryption(battleEntity, battleResult.targetEntity, battleResult.aggressorEntity);
+      world.Pri_11__resolveBattleEncryption(battleEntity, battleResult.targetEntity, battleResult.aggressorEntity);
       if (ResourceCount.get(battleResult.targetEntity, uint8(EResource.R_Encryption)) == 0) {
         if (OwnedBy.get(battleResult.targetEntity) != bytes32(0)) {
           world.Pri_11__transferAsteroid(battleResult.targetEntity, _player());
@@ -136,11 +137,22 @@ contract CombatSystem is PrimodiumSystem {
     world.Pri_11__applyDamage(battleEntity, _player(), battleResult.targetEntity, battleResult.aggressorDamage);
 
     if (isAggressorFleet) {
-      uint256 damageDealtToTarget = initTargetHp - LibCombatAttributes.getHpWithAllies(battleResult.targetEntity);
+      uint256 damageDealtToTarget;
+      if (OwnedBy.get(battleResult.targetEntity) == _player()) {
+        damageDealtToTarget = initTargetHp;
+      } else {
+        damageDealtToTarget = initTargetHp - LibCombatAttributes.getHpWithAllies(battleResult.targetEntity);
+      }
+
       CooldownEnd.set(
         battleResult.aggressorEntity,
         block.timestamp + LibCombat.getCooldownTime(damageDealtToTarget, decrypt)
       );
+    }
+
+    // if asteroid was conquered and a colony ship was not yet destroyed in battle, destroy one now.
+    if (isDecryption) {
+      world.Pri_11__resolveConquerColonyShip(battleResult.targetEntity, battleResult.aggressorEntity);
     }
   }
 }
