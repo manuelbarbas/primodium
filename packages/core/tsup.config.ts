@@ -10,6 +10,7 @@ export default defineConfig([
     dts: true,
     clean: true,
     minify: true,
+    sourcemap: true,
     tsconfig: "./tsconfig.json",
   },
   {
@@ -21,6 +22,7 @@ export default defineConfig([
       // outFile: 'dist/react.d.ts',
     },
     minify: true,
+    sourcemap: true,
     tsconfig: "./tsconfig.json",
     clean: true, // Don't clean the dist folder when building the React file
   },
