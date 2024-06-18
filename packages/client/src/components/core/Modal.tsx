@@ -85,7 +85,15 @@ export const Modal: React.FC<ModalProps> & {
   }, [isOpen, audio, keybind, keybindClose, addListener, game, handleClose]);
 
   return (
-    <ModalContext.Provider value={{ isOpen, handleClose, title, handleOpen: () => setIsOpen(true), blockClose }}>
+    <ModalContext.Provider
+      value={{
+        isOpen,
+        handleClose,
+        title,
+        handleOpen: () => setIsOpen(true),
+        blockClose,
+      }}
+    >
       {children}
     </ModalContext.Provider>
   );

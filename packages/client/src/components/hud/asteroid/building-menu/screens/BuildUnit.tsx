@@ -20,7 +20,7 @@ export const BuildUnit: React.FC<{
 
   const { tables, utils } = useCore();
   const { P_UnitProdTypes, BuildingType, Level } = tables;
-  const activeRock = tables.ActiveRock.use()?.value;
+  const activeRock = tables.ActiveRock.use()?.value ?? tables.ActiveRock.get()?.value;
   if (!activeRock) throw new Error("[BuildUnit] No active rock selected");
 
   const buildingType = (BuildingType.get(building)?.value as Entity) ?? EntityType.NULL;

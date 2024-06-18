@@ -21,7 +21,7 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
     playerAccount: { entity: playerEntity },
   } = useAccountClient();
   const { tables } = useCore();
-  const asteroid = tables.OwnedBy.use(buildingEntity)?.value as Entity;
+  const asteroid = (tables.OwnedBy.use(buildingEntity)?.value ?? tables.OwnedBy.get(buildingEntity)?.value) as Entity;
   if (!asteroid) throw new Error("[ColonyShipData] No asteroid selected");
 
   const colonySlotsData = useColonySlots(playerEntity);

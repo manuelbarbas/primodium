@@ -13,7 +13,10 @@ import { useContractCalls } from "@/hooks/useContractCalls";
 export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
   const { tables } = useCore();
 
-  const spaceRock = tables.Position.use(building)?.parentEntity as Entity | undefined;
+  const spaceRock = (tables.Position.use(building)?.parentEntity ?? tables.Position.get(building)?.parentEntity) as
+    | Entity
+    | undefined;
+
   if (!spaceRock) throw new Error("[Upgrade] Building has no parentEntity");
   const mainBaseEntity = tables.Home.use(spaceRock)?.value as Entity;
   const mainBaseLevel = tables.Level.use(mainBaseEntity, {

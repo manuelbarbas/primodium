@@ -83,7 +83,7 @@ const SlotResourceDisplay: React.FC<{
   const { tables } = useCore();
   const resourceCount = useResourceCount(resource, asteroidEntity)?.resourceCount;
 
-  const config = tables.P_ColonySlotsConfig.use();
+  const config = tables.P_ColonySlotsConfig.use() ?? tables.P_ColonySlotsConfig.get();
   if (!config) throw new Error("No colony slots config found");
   const index = config?.resources.findIndex((r) => r === ResourceEnumLookup[resource]);
   const paid =

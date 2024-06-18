@@ -1,4 +1,3 @@
-import { Coord } from "engine/types";
 import { EBuilding } from "contracts/config/enums";
 import { ampli } from "@/ampli";
 import {
@@ -8,6 +7,7 @@ import {
   TxQueueOptions,
   bigintToNumber,
   ExecuteFunctions,
+  Coord,
 } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
