@@ -114,7 +114,7 @@ contract LibPlayerRegistryTest is PrimodiumTest {
     assertEq(playerEntities[1], eveEntity);
   }
 
-  function tstRemoveFromManyByIndex() public {
+  function testRemoveFromManyByIndex() public {
     LibPlayerRegistry.add(aliceEntity);
     LibPlayerRegistry.add(bobEntity);
     LibPlayerRegistry.add(eveEntity);
