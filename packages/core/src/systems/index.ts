@@ -1,3 +1,4 @@
+import { Mode } from "@/lib";
 import { Core } from "@/lib/types";
 import { setupBattleComponents } from "@/systems/setupBattleComponents";
 import { setupBlockNumber } from "@/systems/setupBlockNumber";
@@ -13,14 +14,16 @@ import { setupWormholeResource } from "@/systems/setupWormholeResource";
 
 export function runCoreSystems(core: Core) {
   core.network.world.dispose("coreSystems");
+  const { tables } = core;
 
+  tables.SelectedMode.set({ value: Mode.Asteroid });
+  setupHomeAsteroid(core);
   setupBattleComponents(core);
   setupBlockNumber(core);
   setupBuildingReversePosition(core);
   setupBuildRock(core);
   setupDoubleCounter(core);
   setupHangar(core);
-  setupHomeAsteroid(core);
   setupLeaderboard(core);
   setupTime(core);
   setupTrainingQueues(core);

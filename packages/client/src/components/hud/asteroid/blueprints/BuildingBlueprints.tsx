@@ -27,7 +27,12 @@ const BlueprintButton: React.FC<{
   const { tables, utils } = useCore();
   const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
   const keybinds = useKeybinds();
-  const rockMainBase = tables.Home.use(selectedRock)?.value;
+  const selectedRockEntity = tables.ActiveRock.use(undefined, {
+    value: tables.ActiveRock.get()?.value,
+  })?.value;
+
+  if (!selectedRockEntity) throw new Error("No active rock entity found");
+  const rockMainBase = tables.Home.use(selectedRockEntity)?.value;
   const selectedBuilding = tables.SelectedBuilding.use()?.value;
   const mainbaseLevel = tables.Level.use(rockMainBase as Entity)?.value ?? 1n;
   const levelRequirement = tables.P_RequiredBaseLevel.getWithKeys({ prototype: buildingType, level: 1n })?.value ?? 1n;

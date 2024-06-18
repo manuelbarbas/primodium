@@ -52,7 +52,9 @@ export const BlueprintInfo: React.FC<{
   building: Entity;
 }> = memo(({ building }) => {
   const { tables, utils } = useCore();
-  const spaceRock = tables.ActiveRock.use()?.value;
+  const spaceRock = tables.ActiveRock.use(undefined, {
+    value: tables.ActiveRock.get()?.value,
+  })?.value;
   if (!spaceRock) throw new Error("No space rock found");
   const rawProduction = tables.P_Production.useWithKeys({ prototype: building, level: 1n });
   const production = useMemo(() => utils.transformProductionData(rawProduction), [rawProduction]);
