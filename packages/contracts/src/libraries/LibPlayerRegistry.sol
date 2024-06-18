@@ -28,7 +28,7 @@ library LibPlayerRegistry {
    * @param entity The player's entity identifier.
    */
   function add(bytes32 entity) internal {
-    // if (LibPlayerRegistry.indexOf(entity) == -1) return; // TODO: Fix this line
+    if (LibPlayerRegistry.indexOf(entity) != -1) return;
     Keys_PlayerRegistry.push(entity);
   }
 
