@@ -29,7 +29,7 @@ export const AllianceManagement = () => {
 
     if (allianceEntity === defaultEntity) return "search";
     return "manage";
-  }, [loading, error, allianceEntity]);
+  }, [loading, error, allianceEntity, globalLoading, globalError]);
 
   return (
     <Navigator initialScreen={initialScreen} className="border-none p-0! h-full">
