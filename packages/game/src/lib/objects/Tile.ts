@@ -23,8 +23,4 @@ export class Tile extends Phaser.GameObjects.Rectangle {
     this.setPosition(pixelCoord.x, -pixelCoord.y);
     return this;
   }
-
-  override destroy() {
-    this.destroy();
-  }
 }

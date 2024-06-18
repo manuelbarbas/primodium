@@ -127,7 +127,7 @@ export const renderBuildingMoveTool = (scene: PrimodiumScene, core: Core, calls:
 
   const query = {
     with: [tables.HoverTile],
-    withoutProperties: [{ table: tables.SelectedAction, properties: { value: Action.MoveBuilding } }],
+    withProperties: [{ table: tables.SelectedAction, properties: { value: Action.MoveBuilding } }],
   };
 
   $query(query, {
