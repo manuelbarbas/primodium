@@ -8,10 +8,8 @@ export function useAsteroidEmblem(asteroid?: Entity): string {
   const game = useGame();
   const { tables } = useCore();
   const level = tables.Level.use(asteroid)?.value ?? tables.Level.get(asteroid)?.value ?? 1n;
-  console.log({ level, asteroid });
 
   return useMemo(() => {
-    console.log({ level, asteroid });
     return !asteroid ? InterfaceIcons.NotAllowed : game.STARMAP.sprite.getEmblemSprite(level);
   }, [level, game.STARMAP.sprite, asteroid]);
 }
