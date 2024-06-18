@@ -16,7 +16,7 @@ export const TransferSelect = ({ side }: { side: "left" | "right" }) => {
   const opposingSide = side === "left" ? right : left;
   const opposingSideOwner = usePlayerOwner(!opposingSide || opposingSide === "newFleet" ? undefined : opposingSide);
   const playerEntity = useAccountClient().playerAccount.entity;
-  const asteroid = tables.SelectedRock.use()?.value;
+  const asteroid = tables.SelectedRock.use()?.value ?? tables.SelectedRock.get()?.value;
   const playerOwnsRock = tables.OwnedBy.use(asteroid)?.value === playerEntity;
 
   // only show new fleet if you own the selected asteroid and there are new fleet slots available

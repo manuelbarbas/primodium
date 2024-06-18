@@ -18,7 +18,7 @@ export const ClaimObjectiveButton: React.FC<{
   const { claimObjective } = useContractCalls();
   const { tables } = core;
   const playerEntity = tables.Account.use()?.value ?? tables.Account.get()?.value;
-  const selectedRock = tables.ActiveRock.use()?.value ?? defaultEntity;
+  const selectedRock = tables.ActiveRock.use()?.value ?? tables.ActiveRock.get()?.value ?? defaultEntity;
   if (!playerEntity || !selectedRock) throw new Error("No player entity or selected entity");
 
   const hasCompletedObjective =

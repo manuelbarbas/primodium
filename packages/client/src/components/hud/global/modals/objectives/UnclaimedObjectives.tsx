@@ -16,8 +16,8 @@ export const UnclaimedObjectives: React.FC<{ highlight?: Entity }> = ({ highligh
   const { tables } = core;
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 6;
-  const player = tables.Account.use()?.value ?? defaultEntity;
-  const asteroidEntity = tables.ActiveRock.use()?.value;
+  const player = tables.Account.use()?.value ?? tables.Account.get()?.value ?? defaultEntity;
+  const asteroidEntity = tables.ActiveRock.use()?.value ?? tables.ActiveRock.get()?.value;
   const time = tables.Time.use()?.value;
   const objectives = Object.values(ObjectiveEntityLookup);
 

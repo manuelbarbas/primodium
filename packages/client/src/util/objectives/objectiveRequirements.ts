@@ -46,6 +46,7 @@ export function getAllObjectiveRequirements(
 ): ObjectiveReq[] {
   const objective = getObjective(objectiveEntity);
   if (!objective) return [];
+
   const reqs: ObjectiveReq[] = getRewardUtilitiesRequirement(core, objectiveEntity, asteroidEntity);
   if (objective.type === "Build") reqs.push(getHasRequiredBuilding(core, asteroidEntity, objective));
   if (objective.type === "BuildAny") reqs.push(getHasAnyRequiredBuilding(core, asteroidEntity, objective));

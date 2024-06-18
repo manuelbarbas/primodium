@@ -17,7 +17,7 @@ const Transfer: React.FC = () => {
   const { left, right, hovering, setHovering, flash, deltas, setDeltas, moving, setMoving } = useTransfer();
   const { tables, utils } = useCore();
 
-  const selectedRock = tables.ActiveRock.use()?.value;
+  const selectedRock = tables.ActiveRock.use()?.value ?? tables.ActiveRock.get()?.value;
   if (!selectedRock) throw new Error("No selected rock");
 
   const rightEntity = right === "newFleet" || right === undefined ? defaultEntity : right;

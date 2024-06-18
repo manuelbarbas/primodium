@@ -58,7 +58,7 @@ export const UnitUpgrade: React.FC<{ unit: Entity }> = memo(({ unit }) => {
   const { tables, utils } = useCore();
   const { upgradeUnit } = useContractCalls();
 
-  const asteroid = tables.ActiveRock.use()?.value as Entity | undefined;
+  const asteroid = tables.ActiveRock.use()?.value ?? (tables.ActiveRock.get()?.value as Entity | undefined);
   if (!asteroid) throw new Error("No active rock entity found");
   const mainBaseEntity = tables.Home.use(asteroid)?.value as Entity;
   const mainBaseLevel = tables.Level.use(mainBaseEntity, {
