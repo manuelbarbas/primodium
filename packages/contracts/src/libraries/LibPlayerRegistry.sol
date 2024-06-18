@@ -23,7 +23,7 @@ library LibPlayerRegistry {
   }
 
   /**
-   * @dev Adds player to registry
+   * @dev Adds player to registry. Duplicates prevented.
    * If the player already exists, it does nothing.
    * @param entity The player's entity identifier.
    */
@@ -33,10 +33,18 @@ library LibPlayerRegistry {
   }
 
   /**
-   * @dev Retrieves all players registered in the registry.
-   * @return playerEntities array of player entity identifiers for the asteroids.
+   * @dev Retrieves a player's entity identifier by index
+   * @return playerEntity player entity identifier
    */
-  function getPlayerEntities() internal view returns (bytes32[] memory playerEntities) {
+  function getIndex(uint256 index) internal view returns (bytes32 playerEntity) {
+    return Keys_PlayerRegistry.getItem(index);
+  }
+
+  /**
+   * @dev Retrieves all players registered in the registry.
+   * @return playerEntities array of player entity identifiers
+   */
+  function getAll() internal view returns (bytes32[] memory playerEntities) {
     return Keys_PlayerRegistry.get();
   }
 
@@ -44,7 +52,7 @@ library LibPlayerRegistry {
    * @dev Removes a registered player from the registry.
    * @param entity The player's entity identifier.
    */
-  function remove(bytes32 entity) internal {
+  function removeEntity(bytes32 entity) internal {
     int256 index = LibPlayerRegistry.indexOf(entity);
     if (index == -1) return;
 
@@ -52,11 +60,22 @@ library LibPlayerRegistry {
       Keys_PlayerRegistry.pop();
       return;
     }
+    removeIndex(uint256(index));
+  }
+
+  /**
+   * @dev Removes a registered player from the registry.
+   * @param index The player's entity index in the registry.
+   */
+  function removeIndex(uint256 index) internal {
+    if (LibPlayerRegistry.size() <= index) {
+      return;
+    }
 
     bytes32 replacement = Keys_PlayerRegistry.getItem(LibPlayerRegistry.size() - 1);
 
     // copy last player to the index being removed, overwriting the player being removed
-    Keys_PlayerRegistry.update(uint256(index), replacement);
+    Keys_PlayerRegistry.update(index, replacement);
 
     // remove the last registered player (now a duplicate) from the list
     Keys_PlayerRegistry.pop();

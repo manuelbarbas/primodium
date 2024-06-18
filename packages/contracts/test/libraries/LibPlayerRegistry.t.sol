@@ -23,7 +23,7 @@ contract LibPlayerRegistryTest is PrimodiumTest {
   }
 
   function testGetEmpty() public {
-    bytes32[] memory playerEntities = LibPlayerRegistry.getPlayerEntities();
+    bytes32[] memory playerEntities = LibPlayerRegistry.getAll();
     assertEq(playerEntities.length, 0);
   }
 
@@ -39,18 +39,24 @@ contract LibPlayerRegistryTest is PrimodiumTest {
     assertEq(LibPlayerRegistry.size(), 3);
   }
 
-  function testAddAndGetSingle() public {
+  function testAddAndGetSingleEntity() public {
     LibPlayerRegistry.add(aliceEntity);
-    bytes32[] memory playerEntities = LibPlayerRegistry.getPlayerEntities();
+    bytes32[] memory playerEntities = LibPlayerRegistry.getAll();
     assertEq(playerEntities.length, 1);
     assertEq(playerEntities[0], aliceEntity);
+  }
+
+  function testAddAndGetSingleIndex() public {
+    LibPlayerRegistry.add(aliceEntity);
+    bytes32 playerEntity = LibPlayerRegistry.getIndex(0);
+    assertEq(playerEntity, aliceEntity);
   }
 
   function testAddAndGetMultiple() public {
     LibPlayerRegistry.add(eveEntity);
     LibPlayerRegistry.add(aliceEntity);
     LibPlayerRegistry.add(bobEntity);
-    bytes32[] memory playerEntities = LibPlayerRegistry.getPlayerEntities();
+    bytes32[] memory playerEntities = LibPlayerRegistry.getAll();
     assertEq(playerEntities.length, 3);
     assertEq(playerEntities[0], eveEntity);
     assertEq(playerEntities[1], aliceEntity);
@@ -85,25 +91,37 @@ contract LibPlayerRegistryTest is PrimodiumTest {
   }
 
   function testRemoveEmpty() public {
-    LibPlayerRegistry.remove(aliceEntity);
+    LibPlayerRegistry.removeEntity(aliceEntity);
     assertEq(LibPlayerRegistry.size(), 0);
   }
 
   function testRemoveFromSingle() public {
     LibPlayerRegistry.add(aliceEntity);
     assertEq(LibPlayerRegistry.size(), 1);
-    LibPlayerRegistry.remove(aliceEntity);
+    LibPlayerRegistry.removeEntity(aliceEntity);
     assertEq(LibPlayerRegistry.size(), 0);
   }
 
-  function testRemoveFromMany() public {
+  function testRemoveFromManyByEntity() public {
     LibPlayerRegistry.add(aliceEntity);
     LibPlayerRegistry.add(bobEntity);
     LibPlayerRegistry.add(eveEntity);
     assertEq(LibPlayerRegistry.size(), 3);
-    LibPlayerRegistry.remove(bobEntity);
+    LibPlayerRegistry.removeEntity(bobEntity);
     assertEq(LibPlayerRegistry.size(), 2);
-    bytes32[] memory playerEntities = LibPlayerRegistry.getPlayerEntities();
+    bytes32[] memory playerEntities = LibPlayerRegistry.getAll();
+    assertEq(playerEntities[0], aliceEntity);
+    assertEq(playerEntities[1], eveEntity);
+  }
+
+  function tstRemoveFromManyByIndex() public {
+    LibPlayerRegistry.add(aliceEntity);
+    LibPlayerRegistry.add(bobEntity);
+    LibPlayerRegistry.add(eveEntity);
+    assertEq(LibPlayerRegistry.size(), 3);
+    LibPlayerRegistry.removeIndex(1);
+    assertEq(LibPlayerRegistry.size(), 2);
+    bytes32[] memory playerEntities = LibPlayerRegistry.getAll();
     assertEq(playerEntities[0], aliceEntity);
     assertEq(playerEntities[1], eveEntity);
   }
@@ -123,7 +141,7 @@ contract LibPlayerRegistryTest is PrimodiumTest {
     vm.startPrank(alice);
     world.Pri_11__spawn();
 
-    bytes32[] memory playerEntities = LibPlayerRegistry.getPlayerEntities();
+    bytes32[] memory playerEntities = LibPlayerRegistry.getAll();
     assertEq(playerEntities.length, 1);
     assertEq(playerEntities[0], aliceEntity);
   }
@@ -139,7 +157,7 @@ contract LibPlayerRegistryTest is PrimodiumTest {
     vm.startPrank(eve);
     world.Pri_11__spawn();
 
-    bytes32[] memory playerEntities = LibPlayerRegistry.getPlayerEntities();
+    bytes32[] memory playerEntities = LibPlayerRegistry.getAll();
     assertEq(playerEntities.length, 3);
     assertEq(playerEntities[0], aliceEntity);
     assertEq(playerEntities[1], bobEntity);
