@@ -4,8 +4,9 @@ import { namespaceWorld } from "@primodiumxyz/reactive-tables";
 import init from "@game/init";
 import { Scenes } from "@game/lib/constants/common";
 import { runSystems as runCommonSystems } from "@game/scenes/common/systems";
+import { ContractCalls } from "@client/contractCalls/createContractCalls";
 
-export async function initGame(core: Core, version = "v1") {
+export async function initGame(core: Core, calls: ContractCalls, version = "v1") {
   const {
     network: { world },
     tables,
@@ -28,7 +29,7 @@ export async function initGame(core: Core, version = "v1") {
 
   namespaceWorld(world, "game");
 
-  const api = await init(core);
+  const api = await init(core, calls);
 
   function destroy() {
     api.GLOBAL.dispose();

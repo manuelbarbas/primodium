@@ -1,4 +1,5 @@
 import { Core } from "@primodiumxyz/core";
+import { ContractCalls } from "@client/contractCalls/createContractCalls";
 
 import { PrimodiumScene } from "@game/types";
 import { renderWormholeAnimations } from "@game/scenes/asteroid/systems/renderWormholeAnimations";
@@ -10,7 +11,7 @@ import { renderAsteroidMap } from "@game/scenes/asteroid/systems/renderAsteroidM
 import { renderHoverTile } from "@game/scenes/asteroid/systems/renderHoverTile";
 import { renderQueuedBuildings } from "@game/scenes/asteroid/systems/renderQueuedBuildings";
 
-export const runSystems = (scene: PrimodiumScene, core: Core) => {
+export const runSystems = (scene: PrimodiumScene, core: Core, calls: ContractCalls) => {
   // Render world entity's sprites
   renderAsteroidMap(scene, core);
   renderBuilding(scene, core);
@@ -18,8 +19,8 @@ export const runSystems = (scene: PrimodiumScene, core: Core) => {
 
   // Render map utility elements, placement indicators, etc
   renderHoverTile(scene, core);
-  renderBuildingPlacementTool(scene, core);
-  renderBuildingMoveTool(scene, core);
+  renderBuildingPlacementTool(scene, core, calls);
+  renderBuildingMoveTool(scene, core, calls);
   focusMainbase(scene, core);
   renderQueuedBuildings(scene, core);
 };

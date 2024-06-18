@@ -1,16 +1,14 @@
 import { Entity, namespaceWorld, $query, defaultEntity } from "@primodiumxyz/reactive-tables";
-import { Action, Core } from "@primodiumxyz/core";
+import { Action, Core, hashEntities } from "@primodiumxyz/core";
+import { ContractCalls } from "@client/contractCalls/createContractCalls";
 
-import { Building } from "@game/lib/objects/building";
+import { Building, BuildingConstruction } from "@game/lib/objects/building";
 import { DepthLayers } from "@game/lib/constants/common";
 import { PrimodiumScene } from "@game/types";
+import { toHex } from "viem";
 
-export const handleClick = (pointer: Phaser.Input.Pointer, core: Core, scene: PrimodiumScene) => {
-  const {
-    // network: { world },
-    tables,
-    utils,
-  } = core;
+export const handleClick = (pointer: Phaser.Input.Pointer, core: Core, scene: PrimodiumScene, calls: ContractCalls) => {
+  const { tables, utils } = core;
 
   if (pointer?.rightButtonDown()) {
     tables.SelectedAction.remove();
@@ -38,38 +36,37 @@ export const handleClick = (pointer: Phaser.Input.Pointer, core: Core, scene: Pr
   const buildingOrigin = utils.getBuildingOrigin(tileCoord, buildingPrototype);
   if (!buildingOrigin) return;
 
-  // // change opacity and place construction building
-  // const placeholderBuilding = new BuildingConstruction({
-  //   id: hashEntities(toHex("placeholder"), selectedBuilding),
-  //   scene,
-  //   coord: utils.getBuildingBottomLeft(buildingOrigin, buildingPrototype),
-  //   buildingDimensions: utils.getBuildingDimensions(buildingPrototype),
-  // }).spawn();
+  // change opacity and place construction building
+  const placeholderBuilding = new BuildingConstruction({
+    id: hashEntities(toHex("placeholder"), selectedBuilding),
+    scene,
+    coord: utils.getBuildingBottomLeft(buildingOrigin, buildingPrototype),
+    buildingDimensions: utils.getBuildingDimensions(buildingPrototype),
+  }).spawn();
 
-  // const pendingAnim = scene.phaserScene.tweens.add({
-  //   targets: [selectedBuildingObj, placeholderBuilding],
-  //   alpha: 0.6,
-  //   duration: 600,
-  //   yoyo: true,
-  //   repeat: -1,
-  // });
+  const pendingAnim = scene.phaserScene.tweens.add({
+    targets: [selectedBuildingObj, placeholderBuilding],
+    alpha: 0.6,
+    duration: 600,
+    yoyo: true,
+    repeat: -1,
+  });
 
-  // moveBuilding(
-  //   mud,
-  //   selectedBuilding,
-  //   buildingOrigin,
-  //   // on completion
-  //   () => {
-  //     pendingAnim.destroy();
-  //     placeholderBuilding.destroy();
-  //     selectedBuildingObj?.setAlpha(1);
-  //   }
-  // );
+  calls.moveBuilding(
+    selectedBuilding,
+    buildingOrigin,
+    // on completion
+    () => {
+      pendingAnim.destroy();
+      placeholderBuilding.destroy();
+      selectedBuildingObj?.setAlpha(1);
+    }
+  );
   tables.SelectedAction.remove();
 };
 
 //TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
-export const renderBuildingMoveTool = (scene: PrimodiumScene, core: Core) => {
+export const renderBuildingMoveTool = (scene: PrimodiumScene, core: Core, calls: ContractCalls) => {
   const {
     network: { world },
     tables,
@@ -110,7 +107,7 @@ export const renderBuildingMoveTool = (scene: PrimodiumScene, core: Core) => {
       // .spawn();
 
       placementBuilding.onClick((pointer: Phaser.Input.Pointer) => {
-        handleClick(pointer, core, scene);
+        handleClick(pointer, core, scene, calls);
       });
     }
 

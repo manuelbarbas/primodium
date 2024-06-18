@@ -11,7 +11,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "noEmit": true,
+    "noEmit": false,
     "skipLibCheck": true,
     "jsx": "react-jsx",
     "jsxImportSource": "react",

@@ -10,11 +10,13 @@ import { CommandBackgroundEffect } from "@/screens/CommandBackgroundEffect";
 import { BackgroundParallaxEffect } from "@/screens/BackgroundParallaxEffect";
 import { useSyncStatus, usePlayerAsteroids, useCore, useAccountClient } from "@primodiumxyz/core/react";
 import { Keys } from "@primodiumxyz/core";
+import { useContractCalls } from "@/hooks/useContractCalls";
 
 const params = new URLSearchParams(window.location.search);
 
 export const Game = () => {
   const mud = useCore();
+  const calls = useContractCalls();
   const {
     playerAccount: { entity },
   } = useAccountClient();
@@ -35,7 +37,7 @@ export const Game = () => {
   const init = async () => {
     try {
       await destroy();
-      const pri = await initGame(mud, params.get("version") ? params.get("version")! : "🔥");
+      const pri = await initGame(mud, calls, params.get("version") ? params.get("version")! : "🔥");
       setGame(pri);
     } catch (e) {
       console.log(e);

@@ -1,11 +1,12 @@
-import { Action, Core, getEntityTypeName } from "@primodiumxyz/core";
+import { Action, BuildingEnumLookup, Core, getEntityTypeName } from "@primodiumxyz/core";
 import { $query, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
+import { ContractCalls } from "@client/contractCalls/createContractCalls";
 
 import { Building } from "@game/lib/objects/building";
 import { PrimodiumScene } from "@game/types";
 import { DepthLayers } from "@game/lib/constants/common";
 
-export const handleClick = (pointer: Phaser.Input.Pointer, core: Core, scene: PrimodiumScene) => {
+export const handleClick = (pointer: Phaser.Input.Pointer, core: Core, scene: PrimodiumScene, calls: ContractCalls) => {
   const { tables, utils } = core;
 
   if (pointer?.rightButtonDown()) {
@@ -32,12 +33,16 @@ export const handleClick = (pointer: Phaser.Input.Pointer, core: Core, scene: Pr
   const buildingOrigin = utils.getBuildingOrigin(tileCoord, buildingPrototype);
   if (!buildingOrigin) return;
 
-  // buildBuilding(mud, BuildingEnumLookup[buildingPrototype], buildingOrigin);
+  const buildingEnum = BuildingEnumLookup[buildingPrototype];
+  if (!buildingEnum) return;
+
+  calls.buildBuilding(buildingEnum, buildingOrigin);
+
   tables.SelectedAction.remove();
   tables.SelectedBuilding.remove();
 };
 
-export const renderBuildingPlacementTool = (scene: PrimodiumScene, core: Core) => {
+export const renderBuildingPlacementTool = (scene: PrimodiumScene, core: Core, calls: ContractCalls) => {
   const {
     network: { world },
     tables,
@@ -70,7 +75,7 @@ export const renderBuildingPlacementTool = (scene: PrimodiumScene, core: Core) =
       });
 
       placementBuilding.onClick((pointer: Phaser.Input.Pointer) => {
-        handleClick(pointer, core, scene);
+        handleClick(pointer, core, scene, calls);
       });
     }
 

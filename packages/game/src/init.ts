@@ -1,5 +1,6 @@
 import { engine } from "@primodiumxyz/engine";
 import { Core } from "@primodiumxyz/core";
+import type { ContractCalls } from "@client/contractCalls/createContractCalls";
 
 import { createGlobalApi, GlobalApi } from "@game/api/global";
 import { PrimodiumScene } from "@game/types";
@@ -12,7 +13,7 @@ import { initStarmapScene } from "@game/scenes/starmap/init";
 import { initUIScene } from "@game/scenes/ui/init";
 
 export type InitResult = Promise<Record<SceneKeys, PrimodiumScene> & { GLOBAL: GlobalApi }>;
-async function init(core: Core): InitResult {
+async function init(core: Core, calls: ContractCalls): InitResult {
   const game = await engine.createGame(gameConfig);
   const globalApi = createGlobalApi(game);
 
@@ -22,7 +23,7 @@ async function init(core: Core): InitResult {
     // which is strictly data required to render the home asteroid
     ROOT: await initRootScene(globalApi, core),
     UI: await initUIScene(globalApi),
-    ASTEROID: await initAsteroidScene(globalApi, core),
+    ASTEROID: await initAsteroidScene(globalApi, core, calls),
     GLOBAL: globalApi,
     // secondary scenes
     // run after secondary queries were fetched, which is the data required to render the asteroids, fleets and other players;
