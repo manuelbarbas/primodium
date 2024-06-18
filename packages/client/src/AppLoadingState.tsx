@@ -14,27 +14,35 @@ import { useDripAccount } from "@/hooks/useDripAccount";
 
 export default function AppLoadingState() {
   useUpdateSessionAccount();
-  const { playerAccountBalance, sessionAccountBalance, requestDrip } = useDripAccount();
+  const { playerBalanceData, sessionBalanceData, requestDrip } = useDripAccount();
   const { sessionAccount, playerAccount } = useAccountClient();
 
   useEffect(() => {
-    if (!sessionAccount?.address || sessionAccountBalance >= minEth) return;
+    const sessionBalance = sessionBalanceData.data?.value;
+    if (!sessionAccount?.address || sessionBalanceData.isLoading || !sessionBalance || sessionBalance >= minEth) return;
+    console.log("dripping session account");
     requestDrip(sessionAccount.address);
-  }, [sessionAccount?.address, sessionAccountBalance]);
+  }, [sessionAccount?.address, sessionBalanceData.data?.value, sessionBalanceData.isLoading]);
 
   useEffect(() => {
-    if (sessionAccountBalance >= minEth) return;
+    const playerBalance = playerBalanceData.data?.value;
+    if (sessionBalanceData.isLoading || !playerBalance || playerBalance >= minEth) return;
+    console.log("dripping player account");
     requestDrip(playerAccount.address);
-  }, [playerAccount.address, playerAccountBalance]);
+  }, [playerAccount.address, sessionBalanceData.isLoading, playerBalanceData.data?.value]);
 
   const { loading, error, progress, message } = useSyncStatus();
 
-  const ready = useMemo(() => !loading && playerAccountBalance >= minEth, [loading, playerAccountBalance]);
+  const balanceReady = useMemo(() => {
+    const playerBalanceReady = playerBalanceData.data?.value ?? 0n >= minEth;
+    const sessionBalanceReady = !sessionAccount || (sessionBalanceData.data?.value ?? 0n >= minEth);
+    return playerBalanceReady && sessionBalanceReady;
+  }, [loading, playerBalanceData, sessionAccount, sessionBalanceData]);
   return (
     <div className="h-screen relative">
       {!error && (
         <div className="relative">
-          {!loading && playerAccountBalance < minEth && (
+          {!loading && !balanceReady && (
             <div className="flex flex-col items-center justify-center h-screen text-white gap-4">
               <p className="text-lg text-white">
                 <span className="">Dripping Eth to Primodium account</span>
@@ -62,7 +70,7 @@ export default function AppLoadingState() {
               </div>
             </div>
           )}
-          {ready && (
+          {!loading && balanceReady && (
             <BrowserRouter>
               <PrimodiumRoutes />
             </BrowserRouter>
@@ -80,7 +88,7 @@ export default function AppLoadingState() {
   );
 }
 
-export const PrimodiumRoutes = () => {
+const PrimodiumRoutes = () => {
   const location = useLocation();
   const initialized = useInit();
 

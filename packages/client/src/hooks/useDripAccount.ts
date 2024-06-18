@@ -4,13 +4,13 @@ import { createClient as createFaucetClient } from "@latticexyz/faucet";
 import { Hex, createWalletClient, fallback, formatEther, http } from "viem";
 import { createBurnerAccount as createMudBurnerAccount, transportObserver } from "@latticexyz/common";
 import { minEth } from "@primodiumxyz/core";
-import { useBalance } from "wagmi";
+import { useBalance, UseBalanceReturnType } from "wagmi";
 
 export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
 
 export type DripAccountHook = {
-  playerAccountBalance: bigint;
-  sessionAccountBalance: bigint;
+  sessionBalanceData: UseBalanceReturnType;
+  playerBalanceData: UseBalanceReturnType;
   requestDrip: (address: Hex) => void;
 };
 export const useDripAccount = (): DripAccountHook => {
@@ -51,12 +51,15 @@ export const useDripAccount = (): DripAccountHook => {
     [externalWalletClient, faucet, network?.publicClient]
   );
 
-  const playerAccountBalance =
-    useBalance({ address: playerAccount.address, chainId: config.chain.id, query: { staleTime: 2000 } }).data?.value ??
-    0n;
-  const sessionAccountBalance =
-    useBalance({ address: sessionAccount?.address, chainId: config.chain.id, query: { staleTime: 2000 } }).data
-      ?.value ?? 0n;
-
-  return { playerAccountBalance, sessionAccountBalance, requestDrip };
+  const playerBalanceData = useBalance({
+    address: playerAccount.address,
+    chainId: config.chain.id,
+    query: { staleTime: 2000 },
+  });
+  const sessionBalanceData = useBalance({
+    address: sessionAccount?.address,
+    chainId: config.chain.id,
+    query: { staleTime: 2000 },
+  });
+  return { playerBalanceData, sessionBalanceData, requestDrip };
 };

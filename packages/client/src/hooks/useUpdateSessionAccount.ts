@@ -8,15 +8,15 @@ import { decodeEntity } from "@primodiumxyz/reactive-tables/utils";
 
 export const useUpdateSessionAccount = () => {
   const {
+    network: { world },
+    tables,
+  } = useCore();
+
+  const {
     setSessionAccount,
     removeSessionAccount,
     playerAccount: { address },
   } = useAccountClient();
-  const core = useCore();
-  const {
-    network: { world },
-    tables,
-  } = core;
 
   useEffect(() => {
     world.dispose("session");
@@ -55,5 +55,5 @@ export const useUpdateSessionAccount = () => {
       },
       { runOnInit: false }
     );
-  }, [address]);
+  }, [address, world, tables.UserDelegationControl, setSessionAccount, removeSessionAccount]);
 };
