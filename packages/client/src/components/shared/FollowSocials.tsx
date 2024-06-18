@@ -8,7 +8,8 @@ import { useAccountClient, useCore } from "@primodiumxyz/core/react";
 
 export const FollowSocials = () => {
   const playerEntity = useAccountClient().playerAccount.entity;
-  const { tables } = useCore();
+  const core = useCore();
+  const { tables } = core;
   const twitterFollowed = !!tables.CompletedObjective.useWithKeys({
     entity: playerEntity as Hex,
     objective: ObjectiveEntityLookup[EObjectives.FollowTwitter] as Hex,
@@ -20,12 +21,12 @@ export const FollowSocials = () => {
 
   const handleTwitterClick = () => {
     window.open("https://twitter.com/intent/follow?screen_name=primodiumgame", "_blank");
-    makeObjectiveClaimable(playerEntity, EObjectives.FollowTwitter);
+    makeObjectiveClaimable(core, playerEntity, EObjectives.FollowTwitter);
   };
 
   const handleDiscordClick = () => {
     window.open("https://discord.gg/primodium", "_blank");
-    makeObjectiveClaimable(playerEntity, EObjectives.JoinDiscord);
+    makeObjectiveClaimable(core, playerEntity, EObjectives.JoinDiscord);
   };
 
   if (twitterFollowed && discordFollowed) return null;

@@ -15,8 +15,8 @@ export const ClaimedObjectives: React.FC = () => {
   const { tables } = core;
   const itemsPerPage = 6;
 
-  const player = tables.Account.use()?.value ?? defaultEntity;
-  const asteroidEntity = tables.ActiveRock.use()?.value;
+  const player = tables.Account.use()?.value ?? tables.Account.get()?.value ?? defaultEntity;
+  const asteroidEntity = tables.ActiveRock.use()?.value ?? tables.ActiveRock.get()?.value;
 
   const filteredObjectiveEntities = Object.values(ObjectiveEntityLookup).filter((objective) => {
     const claimed =
