@@ -82,7 +82,7 @@ export const Game = () => {
       <div id="game-container" className="screen-container">
         <div id="phaser-container" className="cursor-pointer screen-container absolute pointer-events-auto z-10"></div>
         {!!game && (
-          <GameProvider {...game}>
+          <GameProvider game={game}>
             <BackgroundParallaxEffect />
             <CommandBackgroundEffect />
             <WidgetProvider>
