@@ -1,7 +1,6 @@
 import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { Coord } from "@primodiumxyz/engine/types";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { Cheatcode, Cheatcodes } from "@primodiumxyz/mud-game-tools";
 import { EAllianceInviteMode, EPointType, EResource } from "contracts/config/enums";
 import { Address, Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
