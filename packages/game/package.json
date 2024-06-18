@@ -15,7 +15,7 @@
     "@primodiumxyz/assets": "workspace:*",
     "@primodiumxyz/core": "workspace:*",
     "@primodiumxyz/engine": "workspace:*",
-    "@primodiumxyz/reactive-tables": "^3.0.1",
+    "@primodiumxyz/reactive-tables": "^3.0.2",
     "contracts": "0.0.0",
     "lodash": "^4.17.21",
     "phaser": "^3.80.1",
