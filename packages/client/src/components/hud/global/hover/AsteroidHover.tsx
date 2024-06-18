@@ -35,7 +35,7 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
   const { tables, utils } = useCore();
   const { loading } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
   const name = entityToRockName(entity);
-  const wormhole = tables.Asteroid.get(entity)?.wormhole;
+  const wormhole = tables.Asteroid.use(entity)?.wormhole;
   const desc = utils.getAsteroidDescription(entity);
   const { inGracePeriod, duration } = useInGracePeriod(entity, loading);
   const { resourceCount: encryption, resourceStorage: maxEncryption } = useResourceCount(

@@ -15,7 +15,7 @@ import { useContractCalls } from "@/hooks/useContractCalls";
 const params = new URLSearchParams(window.location.search);
 
 export const Game = () => {
-  const mud = useCore();
+  const core = useCore();
   const calls = useContractCalls();
   const {
     playerAccount: { entity },
@@ -37,7 +37,7 @@ export const Game = () => {
   const init = async () => {
     try {
       await destroy();
-      const pri = await initGame(mud, calls, params.get("version") ? params.get("version")! : "🔥");
+      const pri = await initGame(core, calls, params.get("version") ? params.get("version")! : "🔥");
       setGame(pri);
     } catch (e) {
       console.log(e);
@@ -47,14 +47,14 @@ export const Game = () => {
   useEffect(() => {
     if (!game) return;
     game.runSystems().primary();
-  }, [mud, game]);
+  }, [core, game]);
 
   useEffect(() => {
     if (!game || loadingSecondaryData) return;
     const { secondary, done } = game.runSystems();
     secondary();
     done();
-  }, [mud, game, loadingSecondaryData]);
+  }, [core, game, loadingSecondaryData]);
 
   useEffect(() => {
     init();
@@ -65,6 +65,7 @@ export const Game = () => {
   }, []);
 
   const isDead = usePlayerAsteroids(entity).length === 0;
+
   return (
     <div>
       {!game && (
@@ -86,7 +87,8 @@ export const Game = () => {
             <CommandBackgroundEffect />
             <WidgetProvider>
               <div className="relative z-20 pointer-events-none">
-                {isDead && <YouDied />} <GameHUD />
+                {isDead && <YouDied />}
+                <GameHUD />
               </div>
             </WidgetProvider>
           </GameProvider>

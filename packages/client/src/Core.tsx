@@ -15,11 +15,6 @@ import { generatePrivateKey, privateKeyToAddress } from "viem/accounts";
 
 const MAINTENANCE = import.meta.env.PRI_MAINTENANCE === "true";
 
-const Test = () => {
-  console.log("Test ");
-  return <></>;
-};
-
 function Core() {
   const externalAccount = useAccount();
   const { noExternalAccount } = usePersistentStore(
@@ -45,7 +40,6 @@ function Core() {
   return (
     <CoreProvider {...core}>
       <AccountClientProvider playerAddress={playerAddress} playerPrivateKey={playerPrivateKey}>
-        <Test />
         <AppLoadingState />
       </AccountClientProvider>
     </CoreProvider>

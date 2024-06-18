@@ -12,13 +12,14 @@ import { KeybindActionKeys, KeyNames } from "@primodiumxyz/game";
 import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 
 const BlueprintButton: React.FC<{
+  selectedRock: Entity;
   buildingType: Entity;
   tooltipDirection?: "left" | "right" | "top" | "bottom";
   keybind?: KeybindActionKeys;
   keybindActive?: boolean;
   className?: string;
   style?: React.CSSProperties;
-}> = ({ buildingType, tooltipDirection, keybind, keybindActive = true, style }) => {
+}> = ({ selectedRock, buildingType, tooltipDirection, keybind, keybindActive = true, style }) => {
   const {
     hooks: { useKeybinds },
     input: { addListener },
@@ -26,21 +27,19 @@ const BlueprintButton: React.FC<{
   const { tables, utils } = useCore();
   const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
   const keybinds = useKeybinds();
-  const selectedRockEntity = tables.ActiveRock.use()?.value as Entity | undefined;
-  if (!selectedRockEntity) throw new Error("No active rock entity found");
-  const rockMainBase = tables.Home.use(selectedRockEntity)?.value;
+  const rockMainBase = tables.Home.use(selectedRock)?.value;
   const selectedBuilding = tables.SelectedBuilding.use()?.value;
   const mainbaseLevel = tables.Level.use(rockMainBase as Entity)?.value ?? 1n;
   const levelRequirement = tables.P_RequiredBaseLevel.getWithKeys({ prototype: buildingType, level: 1n })?.value ?? 1n;
   const hasMainbaseLevel = mainbaseLevel >= levelRequirement;
 
-  const hasEnough = useHasEnoughResources(utils.getRecipe(buildingType, 1n), selectedRockEntity);
+  const hasEnough = useHasEnoughResources(utils.getRecipe(buildingType, 1n), selectedRock);
 
   const alreadyBuilt =
     useQuery({
       withProperties: [
         { table: tables.BuildingType, properties: { value: EntityType.StarmapperStation } },
-        { table: tables.OwnedBy, properties: { value: selectedRockEntity } },
+        { table: tables.OwnedBy, properties: { value: selectedRock } },
       ],
     }).length > 0 && buildingType === EntityType.StarmapperStation;
 
@@ -226,10 +225,11 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({
       >
         {buildingsWithDimensions.map(({ type, dimensions }, i) => {
           // for dummies
-          if (type === EntityType.NULL) return <div key={i} className="w-24 h-16" />;
+          if (!selectedRockEntity || type === EntityType.NULL) return <div key={i} className="w-24 h-16" />;
 
           return (
             <BlueprintButton
+              selectedRock={selectedRockEntity}
               key={i}
               buildingType={type}
               keybind={

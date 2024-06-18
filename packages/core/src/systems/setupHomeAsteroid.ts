@@ -17,6 +17,12 @@ export const setupHomeAsteroid = async (core: Core) => {
       if (!account) return;
 
       const accountWorld = namespaceWorld(world, "homeAsteroidAccount");
+      const home = tables.Home.get(account)?.value as Entity;
+      if (home) {
+        tables.SelectedRock.set({ value: home });
+        tables.ActiveRock.set({ value: home });
+        tables.BuildRock.set({ value: home });
+      }
       tables.Home.watch({
         world: accountWorld,
         onChange: ({ entity, properties }) => {

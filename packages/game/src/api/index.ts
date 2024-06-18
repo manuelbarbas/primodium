@@ -1,4 +1,4 @@
-import { Core } from "@primodiumxyz/core";
+import { Core, Mode } from "@primodiumxyz/core";
 import { namespaceWorld } from "@primodiumxyz/reactive-tables";
 
 import init from "@game/init";
@@ -41,6 +41,8 @@ export async function initGame(core: Core, calls: ContractCalls, version = "v1")
 
   function runSystems() {
     const primary = () => {
+      tables.SelectedMode.set({ value: Mode.Asteroid });
+
       console.info("[Game] Running primary systems");
 
       Object.values(Scenes).forEach((key) => {

@@ -32,7 +32,6 @@ export default function AppLoadingState() {
   }, [playerAccount.address, sessionBalanceData.isLoading, playerBalanceData.data?.value]);
 
   const { loading, error, progress, message } = useSyncStatus();
-
   const balanceReady = useMemo(() => {
     const playerBalanceReady = playerBalanceData.data?.value ?? 0n >= minEth;
     const sessionBalanceReady = !sessionAccount || (sessionBalanceData.data?.value ?? 0n >= minEth);

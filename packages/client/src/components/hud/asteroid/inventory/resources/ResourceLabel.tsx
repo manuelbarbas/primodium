@@ -1,4 +1,4 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
 import { Badge } from "@/components/core/Badge";
 import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
@@ -9,8 +9,7 @@ import { EntityToResourceImage } from "@/util/image";
 
 export const ResourceLabel = ({ name, resource }: { name: string; resource: Entity }) => {
   const { tables } = useCore();
-  const activeRock = tables.ActiveRock.use()?.value;
-  if (!activeRock) throw new Error("[ResourceLabel] No active rock");
+  const activeRock = tables.ActiveRock.use()?.value ?? defaultEntity;
 
   const worldSpeed = tables.P_GameConfig.use()?.worldSpeed ?? SPEED_SCALE;
   const { resourceCount, production, resourceStorage } = useResourceCount(resource, activeRock);
