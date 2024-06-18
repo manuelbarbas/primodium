@@ -60,7 +60,7 @@ export const functionSystemIds: {
 
   Pri_11__upgradeUnit: getSystemId("UpgradeUnitSystem"),
 
-  Pri_11__build: getSystemId("BuildingSystem"),
+  Pri_11__build: getSystemId("BuildSystem"),
 
   Pri_11__destroy: getSystemId("DestroySystem"),
 
