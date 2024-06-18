@@ -11,7 +11,8 @@ import { useContext } from "react";
 export const useAccountClient = (): AccountClient => {
   const context = useContext(AccountClientContext);
   if (!context) {
-    throw new Error("useAccountClientContext must be used within an AccountProvider");
+    throw new Error("useAccountClient must be used within an AccountProvider");
   }
+
   return context;
 };

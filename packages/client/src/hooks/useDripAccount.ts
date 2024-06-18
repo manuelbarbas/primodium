@@ -52,9 +52,11 @@ export const useDripAccount = (): DripAccountHook => {
   );
 
   const playerAccountBalance =
-    useBalance({ address: playerAccount.address, chainId: config.chain.id }).data?.value ?? 0n;
+    useBalance({ address: playerAccount.address, chainId: config.chain.id, query: { staleTime: 2000 } }).data?.value ??
+    0n;
   const sessionAccountBalance =
-    useBalance({ address: sessionAccount?.address, chainId: config.chain.id }).data?.value ?? 0n;
+    useBalance({ address: sessionAccount?.address, chainId: config.chain.id, query: { staleTime: 2000 } }).data
+      ?.value ?? 0n;
 
   return { playerAccountBalance, sessionAccountBalance, requestDrip };
 };

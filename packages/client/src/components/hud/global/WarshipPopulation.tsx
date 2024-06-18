@@ -12,6 +12,7 @@ export const WarshipPopulation = () => {
   const playerEntity = useAccountClient().playerAccount.entity;
 
   const TooltipContent: React.FC = () => {
+    if (unitDeathLimit === 0n) return null;
     return (
       <div className="flex flex-col w-96 gap-1">
         <p>
@@ -30,13 +31,14 @@ export const WarshipPopulation = () => {
   };
 
   const color = useMemo(() => {
-    if (gameOver) return "text-error";
+    if (gameOver || unitDeathLimit === 0n) return "text-error";
     const pct = (100n * unitDeaths) / unitDeathLimit;
     if (pct < 70) return "text-success";
     if (pct < 90) return "text-warning";
     return "text-error";
   }, [gameOver, unitDeathLimit, unitDeaths]);
 
+  if (unitDeathLimit === 0n) return null;
   return (
     <div className="font-bold uppercase p-6 flex flex-col gap-5">
       <div>
