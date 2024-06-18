@@ -23,16 +23,13 @@ library LibPlayerRegistry {
   }
 
   /**
-   * @dev Sets an asteroid for a specific entity.
-   * If the player already exists, it updates the existing one.
+   * @dev Adds player to registry
+   * If the player already exists, it does nothing.
    * @param entity The player's entity identifier.
    */
   function add(bytes32 entity) internal {
-    // if (LibPlayerRegistry.indexOf(entity) == -1) return;
+    // if (LibPlayerRegistry.indexOf(entity) == -1) return; // TODO: Fix this line
     Keys_PlayerRegistry.push(entity);
-    // bytes32[] memory playerEntities = Keys_PlayerRegistry.get();
-    // playerEntities.push(entity);
-    // Keys_PlayerRegistry.set(playerEntities);
   }
 
   /**

@@ -113,6 +113,7 @@ contract LibPlayerRegistryTest is PrimodiumTest {
     LibPlayerRegistry.add(aliceEntity);
     LibPlayerRegistry.add(bobEntity);
     LibPlayerRegistry.add(eveEntity);
+    assertEq(LibPlayerRegistry.size(), 3);
     LibPlayerRegistry.clear();
     assertEq(LibPlayerRegistry.size(), 0);
   }
