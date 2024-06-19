@@ -28,7 +28,7 @@ library LibPlayerRegistry {
    * @param entity The player's entity identifier.
    */
   function add(bytes32 entity) internal {
-    if (LibPlayerRegistry.indexOf(entity) != -1) return;
+    if (indexOf(entity) != -1) return;
     Keys_PlayerRegistry.push(entity);
   }
 
@@ -53,10 +53,10 @@ library LibPlayerRegistry {
    * @param entity The player's entity identifier.
    */
   function removeEntity(bytes32 entity) internal {
-    int256 index = LibPlayerRegistry.indexOf(entity);
+    int256 index = indexOf(entity);
     if (index == -1) return;
 
-    if (LibPlayerRegistry.size() == 1) {
+    if (size() == 1) {
       Keys_PlayerRegistry.pop();
       return;
     }
@@ -68,11 +68,11 @@ library LibPlayerRegistry {
    * @param index The player's entity index in the registry.
    */
   function removeIndex(uint256 index) internal {
-    if (LibPlayerRegistry.size() <= index) {
+    if (size() <= index) {
       return;
     }
 
-    bytes32 replacement = Keys_PlayerRegistry.getItem(LibPlayerRegistry.size() - 1);
+    bytes32 replacement = Keys_PlayerRegistry.getItem(size() - 1);
 
     // copy last player to the index being removed, overwriting the player being removed
     Keys_PlayerRegistry.update(index, replacement);
@@ -94,7 +94,7 @@ library LibPlayerRegistry {
    * @dev Clears all registered player from the registry
    */
   function clear() internal {
-    uint256 listSize = LibPlayerRegistry.size();
+    uint256 listSize = size();
     if (listSize == 0) return;
 
     for (uint256 i = 0; i < listSize; i++) {

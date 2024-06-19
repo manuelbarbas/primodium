@@ -56,7 +56,7 @@ library LibAllianceRegistry {
     int256 index = indexOf(entity);
     if (index == -1) return;
 
-    if (LibAllianceRegistry.size() == 1) {
+    if (size() == 1) {
       Keys_AllianceRegistry.pop();
       return;
     }
@@ -68,11 +68,11 @@ library LibAllianceRegistry {
    * @param index The alliance's entity index in the registry.
    */
   function removeIndex(uint256 index) internal {
-    if (LibAllianceRegistry.size() <= index) {
+    if (size() <= index) {
       return;
     }
 
-    bytes32 replacement = Keys_AllianceRegistry.getItem(LibAllianceRegistry.size() - 1);
+    bytes32 replacement = Keys_AllianceRegistry.getItem(size() - 1);
 
     // copy last alliance to the index being removed, overwriting the alliance being removed
     Keys_AllianceRegistry.update(index, replacement);
@@ -94,7 +94,7 @@ library LibAllianceRegistry {
    * @dev Clears all registered alliance from the registry
    */
   function clear() internal {
-    uint256 listSize = LibAllianceRegistry.size();
+    uint256 listSize = size();
     if (listSize == 0) return;
 
     for (uint256 i = 0; i < listSize; i++) {
