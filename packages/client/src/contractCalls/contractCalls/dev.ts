@@ -34,13 +34,10 @@ export function createDevCalls({ execute }: ExecuteFunctions) {
     });
   }
 
-  async function setTableValue<
-    tableDef extends ContractTableDef = ContractTableDef,
-    table extends ContractTable<tableDef> = ContractTable<tableDef>
-  >(
-    table: table,
-    keys: Properties<AbiToSchema<table["metadata"]["abiKeySchema"]>>,
-    newValues: Partial<Properties<table["propertiesSchema"]>>
+  async function setTableValue<tableDef extends ContractTableDef = ContractTableDef>(
+    table: ContractTable<tableDef>,
+    keys: Properties<AbiToSchema<ContractTable<tableDef>["metadata"]["abiKeySchema"]>>,
+    newValues: Partial<Properties<ContractTable<tableDef>["propertiesSchema"]>>
   ) {
     if (Object.entries(keys).length === 0) keys = { entity: padHex(defaultEntity, { size: 32 }) };
     const tableId = table.id as Hex;
