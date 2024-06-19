@@ -53,7 +53,7 @@ library LibAllianceRegistry {
    * @param entity The alliance's entity identifier.
    */
   function removeEntity(bytes32 entity) internal {
-    int256 index = LibAllianceRegistry.indexOf(entity);
+    int256 index = indexOf(entity);
     if (index == -1) return;
 
     if (LibAllianceRegistry.size() == 1) {
