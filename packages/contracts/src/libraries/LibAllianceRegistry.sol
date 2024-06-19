@@ -28,7 +28,7 @@ library LibAllianceRegistry {
    * @param entity The alliance's entity identifier.
    */
   function add(bytes32 entity) internal {
-    if (LibAllianceRegistry.indexOf(entity) != -1) return;
+    if (indexOf(entity) != -1) return;
     Keys_AllianceRegistry.push(entity);
   }
 
