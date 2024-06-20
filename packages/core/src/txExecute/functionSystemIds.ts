@@ -84,6 +84,7 @@ export const functionSystemIds: {
   Pri_11__recallFleet: getSystemId("FleetRecallSystem"),
 
   Pri_11__sendFleet: getSystemId("FleetSendSystem"),
+  Pri_11__clearFleet: getSystemId("FleetClearSystem"),
 
   Pri_11__clearFleetStance: getSystemId("FleetStanceSystem"),
   Pri_11__setFleetStance: getSystemId("FleetStanceSystem"),

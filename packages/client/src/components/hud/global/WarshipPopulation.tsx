@@ -4,6 +4,7 @@ import { AccountDisplay } from "@/components/shared/AccountDisplay";
 import { useMemo } from "react";
 import { useAccountClient, useCore } from "@primodiumxyz/core/react";
 import { formatNumber } from "@primodiumxyz/core";
+import { bigIntMin } from "@latticexyz/common/utils";
 
 export const WarshipPopulation = () => {
   const { tables } = useCore();
@@ -16,12 +17,13 @@ export const WarshipPopulation = () => {
     return (
       <div className="flex flex-col w-96 gap-1">
         <p>
-          Warship Casualties: {formatNumber(unitDeaths)} / {formatNumber(unitDeathLimit)}
+          Warship Casualties: {formatNumber(bigIntMin(unitDeaths, unitDeathLimit))} / {formatNumber(unitDeathLimit)}
         </p>
         <HealthBar health={Number(unitDeaths)} maxHealth={Number(unitDeathLimit)} hideValue />
+
         <p className="opacity-70 pt-2 text-center text-wrap">
           {gameOver
-            ? "The connect to the belt has closed. Game Over."
+            ? "The connect to the belt has closed. Nobody can earn anymore points. Good game!"
             : `Once warship casualties of all players reach ${formatNumber(unitDeathLimit, {
                 short: true,
               })}, Star Command will close the rift to the belt, ending the round.`}

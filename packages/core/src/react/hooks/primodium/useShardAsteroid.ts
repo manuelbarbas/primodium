@@ -25,7 +25,8 @@ export const useShardAsteroid = (entity: Entity) => {
   const lastConquered = tables.LastConquered.use(entity)?.value ?? 0n;
   const { resourceCount: encryption, resourceStorage: maxEncryption } = useResourceCount(EntityType.Encryption, entity);
 
-  const shardNameData = getShardData(entity);
+  const shardName = getShardData(entity);
+  const isGameOver = tables.VictoryStatus.use()?.gameOver ?? false;
 
   const timeData = useMemo(() => {
     if (!conquestConfigData || !shardAsteroid) return null;
@@ -34,20 +35,22 @@ export const useShardAsteroid = (entity: Entity) => {
     const explodeTime = shardAsteroid.spawnTime + lifespan;
     const canExplode = time >= explodeTime;
     const timeUntilExplode = canExplode ? 0n : Number(explodeTime - time);
-    const dripPerSec = conquestConfigData.shardAsteroidPoints / lifespan;
+
+    const shardAsteroidPoints = isGameOver ? 0n : conquestConfigData.shardAsteroidPoints;
+    const dripPerSec = shardAsteroidPoints / lifespan;
 
     let unclaimedPoints = 0n;
     if (!!owner && owner === player) {
       const endTime = time > explodeTime ? explodeTime : time;
       const timeSinceClaimed = bigIntMax(0n, endTime - lastConquered);
       const holdPct = (timeSinceClaimed * 100000n) / lifespan;
-      unclaimedPoints = (holdPct * conquestConfigData.shardAsteroidPoints) / 100000n;
+      unclaimedPoints = (holdPct * shardAsteroidPoints) / 100000n;
     }
 
     return {
       distance: shardAsteroid.distanceFromCenter,
-      name: shardNameData?.name,
-      description: shardNameData?.description,
+      name: shardName?.name,
+      description: shardName?.description,
       points: conquestConfigData.shardAsteroidPoints,
       lifespan,
       regen: conquestConfigData.shardAsteroidEncryptionRegen,
@@ -58,7 +61,7 @@ export const useShardAsteroid = (entity: Entity) => {
       owner,
       dripPerSec,
       unclaimedPoints,
-      explodePoints: conquestConfigData.shardAsteroidPoints,
+      explodePoints: shardAsteroidPoints,
     };
   }, [conquestConfigData, shardAsteroid, worldSpeed, time, owner, player, lastConquered]);
 
