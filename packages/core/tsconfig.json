@@ -17,4 +17,5 @@
   },
   // "exclude": ["node_modules", "dist"],
   "include": ["./src/**/*", "./src/**/*"],
+  "references": [{ "path": "../contracts"}]
 }

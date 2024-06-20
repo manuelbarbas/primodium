@@ -1,5 +1,4 @@
 import {
-  Abi,
   Account,
   Address,
   CustomTransport,
